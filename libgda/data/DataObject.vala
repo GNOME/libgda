@@ -28,7 +28,7 @@ namespace GdaData {
         private Value? _id_value;
         private DataModelIterable _model;
         
-        public abstract string table { get; }
+        public abstract string table { get; construct; }
         
         public DataModelIterable record {
         	get {

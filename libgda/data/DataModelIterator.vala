@@ -560,7 +560,7 @@
 					}
 				}
 			} catch {}		
-			return l.iterator<A> ();
+			return l.iterator ();
 		}
  	}
  }

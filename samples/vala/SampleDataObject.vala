@@ -26,6 +26,7 @@ namespace Sample {
 		
 		public override string table { 
 			get { return "book"; }
+			construct {}
 		}
 		
 		public Collection accounts {
@@ -36,19 +37,7 @@ namespace Sample {
 				return (Collection) new DataModelIterable (accs);
 			}
 		}
-		
-		public static Book create ( Gda.Connection cnn, string name, string manager)
-			requires (cnn.is_open ())
-			throws Error
-		{
-			string table = this._table;
-			string sql = @"INSERT INTO $table (name, manager) VALUES ($name, $manager)";
-			cnn.execute_non_select_command(sql);
-			var b = new Book ();
-			b.connection = cnn;
-			b.open (name);
-		}
-		
+				
 		public bool open (string name) 
 			throws Error
 		{
@@ -63,6 +52,7 @@ namespace Sample {
 	class Account : GdaData.Object {
 		public override string table { 
 			get { return "account"; }
+			construct {}
 		}
 		public Book book { get; set; }
 		/* Is possible to create properties to easy access to any field in the database row */
@@ -92,7 +82,9 @@ namespace Sample {
 				var model_debit = this.connection.execute_select (sql_debit);
 				var credit = model_credit.get_value_at (0, 0);
 				var debit = model_debit.get_value_at (0, 0);
-				
+				var balance = (double) credit - (double) debit;
+				var ret = new Gda.Numeric ();
+				ret.set_from_string (ret.parse ());
 			}
 		}
 		
@@ -106,8 +98,21 @@ namespace Sample {
 	class Transaction : GdaData.Object {
 		public override string table { 
 			get { return "transaction"; }
+			construct {}
 		}
-		public Account account { get; set; }
+		public Account account { 
+			get {
+				var acc = new Account ();
+				Value idacc = this.get_value ("account");
+				acc.set_id ("id", idacc);
+				return acc;
+			}
+			set {
+				Account acc = value;
+				var id = acc.get_value ("id");
+				this.set_value ("account", id);
+			}
+		}
 		public string description { 
 			get {
 				this.get_value ("description");
@@ -117,21 +122,35 @@ namespace Sample {
 			}
 		}
 		
-		public Gda.Numeric debit { 
+		public double debit { 
 			get {
-				this.get_value ("debit");
+				var credit = (bool) this.get_value ("credit");
+				if (!credit)
+					return (double) this.get_value ("amount");
+				else
+					return 0;
 			} 
 			set {
-				this.set_value ("debit", value);
+				this.set_value ("amount", value);
+				bool credit = false;
+				Value v = credit;
+				this.set_value ("debit", v);
 			}
 		}
 		
-		public Gda.Numeric credit {
+		public double credit { 
 			get {
-				this.get_value ("credit");
+				var credit = (bool) this.get_value ("credit");
+				if (credit)
+					return (double) this.get_value ("amount");
+				else
+					return -1;
 			} 
 			set {
-				this.set_value ("credit", value);
+				this.set_value ("amount", value);
+				bool credit = true;
+				Value v = credit;
+				this.set_value ("debit", v);
 			}
 		}
 	}
@@ -148,12 +167,15 @@ namespace Sample {
 				stdout.printf("Creating table 'user'...\n");
 				this.connection.execute_non_select_command("CREATE TABLE book (id int PRIMARY KEY AUTOINCREMENT, name string NOT NULL UNIQUE, manager string)");
 				
-				this.connection.execute_non_select_command("INSERT INTO book (name, manager) VALUES (\"General Book\", \"Jhon\")");
+				this.connection.execute_non_select_command("INSERT INTO book (id, name, manager) VALUES (1, \"General Book\", \"Jhon\")");
 				
 				stdout.printf("Creating table 'company'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE account (id int PRIMARY KEY AUTOINCREMENT, name string, description string)");
-				this.connection.execute_non_select_command("INSERT INTO account (name) VALUES (\"Incomes\"");
-				this.connection.execute_non_select_command("INSERT INTO account (name) VALUES (\"Expenses\"");
+				this.connection.execute_non_select_command("CREATE TABLE account (id int PRIMARY KEY AUTOINCREMENT, name string UNIQUE, description string)");
+				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (1, \"Incomes\"");
+				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (2, \"Expenses\"");
+				this.connection.execute_non_select_command("CREATE TABLE transaction (id int PRIMARY KEY AUTOINCREMENT, account int, description string, amount double, credit bool)");
+				this.connection.execute_non_select_command("INSERT INTO account (id, description, amount, credit) VALUES (1, \"Salary\"", );
+				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (2, \"Expenses\"");
 				this.connection.update_meta_store(null);
 			}
 			catch (Error e) {

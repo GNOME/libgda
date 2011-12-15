@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="Gee" version="0.8"/>
+<include name="Gda" version="5.0"/>
+<package name="gdadata-5.0"/>
+<c:include name="libgdadata.h"/>
+<namespace name="GdaData" version="5.0" c:prefix="GdaData">
+	<annotation key="ccode.cheader-filename" value="libgdadata.h"/>
+	<class name="Object" c:type="GdaDataObject" glib:type-name="GdaDataObject" glib:get-type="gda_data_object_get_type" glib:type-struct="ObjectClass" parent="GObject.Object" abstract="1">
+		<field name="parent_instance">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv">
+			<type name="ObjectPrivate" c:type="GdaDataObjectPrivate*"/>
+		</field>
+		<method name="get_field_id" c:identifier="gda_data_object_get_field_id">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</method>
+		<method name="get_value_id" c:identifier="gda_data_object_get_value_id">
+			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GObject.Value" c:type="GValue"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="set_id" c:identifier="gda_data_object_set_id" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="v" transfer-ownership="none">
+					<type name="GObject.Value" c:type="GValue"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="get_value" c:identifier="gda_data_object_get_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="none" allow-none="1">
+				<type name="GObject.Value" c:type="GValue*"/>
+			</return-value>
+		</method>
+		<method name="set_value" c:identifier="gda_data_object_set_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="v" transfer-ownership="none">
+					<type name="GObject.Value" c:type="GValue"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="save" c:identifier="gda_data_object_save" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="update" c:identifier="gda_data_object_update" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="sql" c:identifier="gda_data_object_sql">
+			<return-value transfer-ownership="full">
+				<type name="Gda.SqlBuilder" c:type="GdaSqlBuilder*"/>
+			</return-value>
+		</method>
+		<property name="table" writable="1" construct-only="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="record">
+			<type name="GdaData.DataModelIterable" c:type="GdaDataDataModelIterable*"/>
+		</property>
+		<property name="connection" writable="1">
+			<type name="Gda.Connection" c:type="GdaConnection*"/>
+		</property>
+	</class>
+	<record name="ObjectClass" c:type="GdaDataObjectClass" glib:is-gtype-struct-for="Object">
+		<field name="parent_class">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="ObjectPrivate" c:type="GdaDataObjectPrivate" disguised="1"/>
+	<class name="DataModelIterable" c:type="GdaDataDataModelIterable" glib:type-name="GdaDataDataModelIterable" glib:get-type="gda_data_data_model_iterable_get_type" glib:type-struct="DataModelIterableClass" parent="Gee.AbstractCollection">
+		<implements name="Gda.DataModel"/>
+		<field name="parent_instance">
+			<type name="Gee.AbstractCollection" c:type="GeeAbstractCollection"/>
+		</field>
+		<field name="priv">
+			<type name="DataModelIterablePrivate" c:type="GdaDataDataModelIterablePrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gda_data_data_model_iterable_new">
+			<parameters>
+				<parameter name="model" transfer-ownership="none">
+					<type name="Gda.DataModel" c:type="GdaDataModel*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DataModelIterable" c:type="GdaDataDataModelIterable*"/>
+			</return-value>
+		</constructor>
+		<method name="foreach" c:identifier="gda_data_data_model_iterable_foreach">
+			<parameters>
+				<parameter name="f" transfer-ownership="none" closure="1">
+					<type name="Gee.ForallFunc" c:type="GeeForallFunc"/>
+				</parameter>
+				<parameter name="f_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<property name="element-type">
+			<type name="GObject.Type" c:type="GType"/>
+		</property>
+	</class>
+	<record name="DataModelIterableClass" c:type="GdaDataDataModelIterableClass" glib:is-gtype-struct-for="DataModelIterable">
+		<field name="parent_class">
+			<type name="Gee.AbstractCollectionClass" c:type="GeeAbstractCollectionClass"/>
+		</field>
+	</record>
+	<record name="DataModelIterablePrivate" c:type="GdaDataDataModelIterablePrivate" disguised="1"/>
+	<class name="DataModelIterator" c:type="GdaDataDataModelIterator" glib:type-name="GdaDataDataModelIterator" glib:get-type="gda_data_data_model_iterator_get_type" glib:type-struct="DataModelIteratorClass" parent="GObject.Object">
+		<implements name="Gee.Traversable"/>
+		<implements name="Gee.Iterator"/>
+		<field name="parent_instance">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv">
+			<type name="DataModelIteratorPrivate" c:type="GdaDataDataModelIteratorPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gda_data_data_model_iterator_new">
+			<parameters>
+				<parameter name="model" transfer-ownership="none">
+					<type name="Gda.DataModel" c:type="GdaDataModel*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DataModelIterator" c:type="GdaDataDataModelIterator*"/>
+			</return-value>
+		</constructor>
+		<property name="current-column">
+			<type name="gint" c:type="gint"/>
+		</property>
+		<property name="current-row">
+			<type name="gint" c:type="gint"/>
+		</property>
+	</class>
+	<record name="DataModelIteratorClass" c:type="GdaDataDataModelIteratorClass" glib:is-gtype-struct-for="DataModelIterator">
+		<field name="parent_class">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="DataModelIteratorPrivate" c:type="GdaDataDataModelIteratorPrivate" disguised="1"/>
+</namespace>
+</repository>

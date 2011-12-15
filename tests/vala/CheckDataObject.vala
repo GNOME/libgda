@@ -24,8 +24,8 @@ namespace Check {
 	class Tests : GdaData.Object {
 		private string t;
 		public override string table { 
-			set construct { this.t = "user"; }
 			get { return this.t; }
+			construct { this.t = "user"; }
 		}
 		Tests()
 		{
@@ -69,8 +69,8 @@ namespace Check {
 				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("DataObject points to, in table '%s':\n", this.table);
-			stdout.printf("%s\n", this._model.dump_as_string());
+			stdout.printf("DataObject points to, in table "+ this.table + ":\n", this.table);
+			stdout.printf("%s\n", this.record.dump_as_string());
 			
 			stdout.printf("Getting ID value...\n");
 			var i = (int) this.get_value_id();
@@ -95,13 +95,13 @@ namespace Check {
 			Value n = "Daniel Espinosa";
 			this.set_value ("name", n);
 			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", this.table);
-			stdout.printf("%s\n", this._model.dump_as_string());
+			stdout.printf("%s\n", this.record.dump_as_string());
 			
 			stdout.printf("Saving changes...\n");
 			try {
 				this.save();
 				stdout.printf("DataObject points to modified value, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this._model.dump_as_string());
+				stdout.printf("%s\n", this.record.dump_as_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -120,7 +120,7 @@ namespace Check {
 			try {
 				this.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this._model.dump_as_string());
+				stdout.printf("%s\n", this.record.dump_as_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -128,12 +128,12 @@ namespace Check {
 			}
 			
 			stdout.printf("No Common Operation: Setting a new Table... \n");
-			this._t = "company";
+			this.t = "company";
 			stdout.printf("Updating values from database using a new table 'company'...\n");
 			try {
 				this.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this._model.dump_as_string());
+				stdout.printf("%s\n", this.record.dump_as_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -145,7 +145,7 @@ namespace Check {
 			try {
 				this.set_id ("id", v);
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this._model.dump_as_string());
+				stdout.printf("%s\n", this.record.dump_as_string());
 			}
 			catch (Error e) {
 				fails++;

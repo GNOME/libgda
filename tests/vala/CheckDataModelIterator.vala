@@ -204,7 +204,7 @@ namespace Check {
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			var itermodel = new DataModelIterable (model);
 			
-			
+			return fails;
 		}
 				
 		public static int main (string[] args) {
