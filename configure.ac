@@ -487,7 +487,7 @@ then
 	then
         have_vala=yes
 	    AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
-	fi
+	fi,
 	if test "$enable_vala" = "yes"
 	then
 	    AC_MSG_ERROR([Vala support requested but not found])
