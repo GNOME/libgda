@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-02 14:53+0000\n"
-"PO-Revision-Date: 2011-12-02 16:25+0100\n"
+"POT-Creation-Date: 2011-12-16 13:21+0000\n"
+"PO-Revision-Date: 2011-12-16 21:46+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -98,8 +98,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:285
 #: ../libgda/gda-connection.c:1699
-#: ../libgda/gda-data-model.c:2222
-#: ../libgda/gda-data-model.c:2230
+#: ../libgda/gda-data-model.c:2221
+#: ../libgda/gda-data-model.c:2229
 #: ../libgda/gda-data-model-dir.c:388
 #: ../libgda/gda-data-model-import.c:1679
 #: ../libgda/gda-data-pivot.c:1280
@@ -117,13 +117,13 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/gda-set.c:567
 #: ../libgda/gda-tree-mgr-select.c:187
 #: ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2620
-#: ../libgda/sqlite/gda-sqlite-provider.c:2632
-#: ../libgda/sqlite/gda-sqlite-provider.c:2654
-#: ../libgda/sqlite/gda-sqlite-provider.c:2844
-#: ../libgda/sqlite/gda-sqlite-provider.c:3186
-#: ../libgda/sqlite/gda-sqlite-provider.c:3198
-#: ../libgda/sqlite/gda-sqlite-provider.c:3297
+#: ../libgda/sqlite/gda-sqlite-provider.c:2649
+#: ../libgda/sqlite/gda-sqlite-provider.c:2661
+#: ../libgda/sqlite/gda-sqlite-provider.c:2683
+#: ../libgda/sqlite/gda-sqlite-provider.c:2873
+#: ../libgda/sqlite/gda-sqlite-provider.c:3215
+#: ../libgda/sqlite/gda-sqlite-provider.c:3227
+#: ../libgda/sqlite/gda-sqlite-provider.c:3326
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:283
@@ -627,7 +627,7 @@ msgstr "Datoteka"
 msgid "List of installed providers"
 msgstr "Seznam nameščenih ponudnikov"
 
-#: ../libgda/gda-config.c:1578
+#: ../libgda/gda-config.c:1588
 #: ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:3
@@ -640,7 +640,7 @@ msgstr "Uporabniško ime"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1580
+#: ../libgda/gda-config.c:1590
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:60
@@ -649,7 +649,7 @@ msgstr "Uporabniško ime"
 msgid "Password"
 msgstr "Geslo"
 
-#: ../libgda/gda-config.c:1650
+#: ../libgda/gda-config.c:1660
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Napaka med nalaganjem ponudnika '%s': %s"
@@ -974,7 +974,7 @@ msgstr "Poskus spreminjanja podatkovnega modela le za branje."
 
 #: ../libgda/gda-data-model-array.c:710
 #: ../libgda/gda-data-model-array.c:749
-#: ../libgda/gda-data-model.c:822
+#: ../libgda/gda-data-model.c:821
 msgid "Too many values in list"
 msgstr "Preveč je spremenljivk v seznamu"
 
@@ -1016,123 +1016,123 @@ msgstr "Pričakovana je vrednost GdaBinary, pridobljena pa %s"
 msgid "Key modification is not supported"
 msgstr "Spreminjanje ključa ni podprto"
 
-#: ../libgda/gda-data-model.c:663
+#: ../libgda/gda-data-model.c:662
 msgid "Data model does not support getting individual value"
 msgstr "Podatkovni model ne podpira pridobivanja posameznih vrednosti"
 
-#: ../libgda/gda-data-model.c:706
-#: ../libgda/gda-data-model.c:716
+#: ../libgda/gda-data-model.c:705
+#: ../libgda/gda-data-model.c:715
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Podatkovni model je vrnil neveljavno vrednost vrste '%s'"
 
-#: ../libgda/gda-data-model.c:713
+#: ../libgda/gda-data-model.c:712
 msgid "Data model returned invalid NULL value"
 msgstr "Podatkovni model je vrnil neveljavno NULL vrednost"
 
-#: ../libgda/gda-data-model.c:783
+#: ../libgda/gda-data-model.c:782
 msgid "Data model does not support setting individual value"
 msgstr "Podatkovni model ne podpira določanja posameznih vrednosti"
 
-#: ../libgda/gda-data-model.c:841
+#: ../libgda/gda-data-model.c:840
 msgid "Data model does not support setting values"
 msgstr "Podatkovni model ne podpira določevanja vrednosti"
 
-#: ../libgda/gda-data-model.c:918
-#: ../libgda/gda-data-model.c:954
+#: ../libgda/gda-data-model.c:917
+#: ../libgda/gda-data-model.c:953
 msgid "Data model does not support row append"
 msgstr "Podatkovni model ne podpira pripenjanja vrstic"
 
-#: ../libgda/gda-data-model.c:945
+#: ../libgda/gda-data-model.c:944
 msgid "Model does not allow row insertion"
 msgstr "Model ne dovoli vstavljanja vrstic"
 
-#: ../libgda/gda-data-model.c:982
+#: ../libgda/gda-data-model.c:981
 msgid "Model does not allow row deletion"
 msgstr "Model ne dovoli brisanja vrstic"
 
-#: ../libgda/gda-data-model.c:991
+#: ../libgda/gda-data-model.c:990
 msgid "Data model does not support row removal"
 msgstr "Podatkovni model ne podpira odstranjevanja vrstic"
 
-#: ../libgda/gda-data-model.c:1168
-#: ../libgda/gda-data-model.c:1209
-#: ../libgda/gda-data-model.c:1223
+#: ../libgda/gda-data-model.c:1167
+#: ../libgda/gda-data-model.c:1208
+#: ../libgda/gda-data-model.c:1222
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Parameter '%s' mora vsebovati vrednost niza, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1232
-#: ../libgda/gda-data-model.c:1242
-#: ../libgda/gda-data-model.c:1252
-#: ../libgda/gda-data-model.c:1292
-#: ../libgda/gda-data-model.c:1390
+#: ../libgda/gda-data-model.c:1231
+#: ../libgda/gda-data-model.c:1241
+#: ../libgda/gda-data-model.c:1251
+#: ../libgda/gda-data-model.c:1291
+#: ../libgda/gda-data-model.c:1389
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Parameter '%s' mora vsebovati logično vrednost, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1398
+#: ../libgda/gda-data-model.c:1397
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Datoteka '%s' že obstaja"
 
-#: ../libgda/gda-data-model.c:1567
+#: ../libgda/gda-data-model.c:1566
 msgid "Exported Data"
 msgstr "Izvoženi podatki"
 
-#: ../libgda/gda-data-model.c:1688
+#: ../libgda/gda-data-model.c:1687
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr "Pričakovana je oznaka <gda_value> ali <gda_array_value>, pridobljena pa <%s>, zato je opravilo prezrto."
 
-#: ../libgda/gda-data-model.c:1718
+#: ../libgda/gda-data-model.c:1717
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr "Ni mogoče pridobiti podatkov vrste stolpca (vrsta ni znana ali pa ni določena)"
 
-#: ../libgda/gda-data-model.c:1802
+#: ../libgda/gda-data-model.c:1801
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Pričakovano <gda_array_data>, dobljeno <%s>"
 
-#: ../libgda/gda-data-model.c:1874
+#: ../libgda/gda-data-model.c:1873
 msgid "Could not get an iterator for source data model"
 msgstr "Ni mogoče pridobiti ponavljalnika podatkovnega modela vira"
 
-#: ../libgda/gda-data-model.c:1891
+#: ../libgda/gda-data-model.c:1890
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Neobstoječ stolpec v izvornem podatkovnem modelu: %d"
 
-#: ../libgda/gda-data-model.c:1905
+#: ../libgda/gda-data-model.c:1904
 #, c-format
 msgid "Destination column %d can't be NULL but has no correspondence in the source data model"
 msgstr "Ciljni stolpec %d ne sme imeti določene vrednosti NULL, vendar nima povezave z izvornim podatkovnim modelom"
 
-#: ../libgda/gda-data-model.c:1915
+#: ../libgda/gda-data-model.c:1914
 #, c-format
 msgid "Destination column %d has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr "Ciljni stolpec %d je vrste gda (%s) in je neskladen z izvornim stolpcem vrste %d (%s)"
 
-#: ../libgda/gda-data-model.c:2011
+#: ../libgda/gda-data-model.c:2010
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Ni mogoče pretvoriti '%s' iz GDA vrste %s v vrsto %s"
 
-#: ../libgda/gda-data-model.c:2221
+#: ../libgda/gda-data-model.c:2220
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Ni mogoče spustiti atributov podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2229
+#: ../libgda/gda-data-model.c:2228
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Ni mogoče spustiti vsebine podatkovnega modela: %s"
 
-#: ../libgda/gda-data-model.c:2508
+#: ../libgda/gda-data-model.c:2507
 msgid "Data model does not support backward cursor move, not displaying data"
 msgstr "Podatkovni model ne podpira povratnega premika kazalnika, zato podatki ne bodo prikazani."
 
-#: ../libgda/gda-data-model.c:2631
+#: ../libgda/gda-data-model.c:2630
 #: ../tools/browser/common/gdaui-entry-import.c:213
 #: ../tools/browser/query-exec/query-result.c:228
 #, c-format
@@ -1143,7 +1143,7 @@ msgstr[1] "%d vrstica"
 msgstr[2] "%d vrstici"
 msgstr[3] "%d vrstice"
 
-#: ../libgda/gda-data-model.c:2633
+#: ../libgda/gda-data-model.c:2632
 #, c-format
 msgid "0 row"
 msgstr "0 vrstic"
@@ -2240,27 +2240,27 @@ msgstr "Neimenovano"
 msgid "Can't handle default value of type '%s'"
 msgstr "Ni mogoče upravljati s privzeto vrednostjo vrste '%s'"
 
-#: ../libgda/gda-statement.c:771
+#: ../libgda/gda-statement.c:774
 msgid "Missing SQL code"
 msgstr "Manjka SQL koda"
 
-#: ../libgda/gda-statement.c:791
+#: ../libgda/gda-statement.c:794
 #, c-format
 msgid "No data handler for type '%s'"
 msgstr "Ni podatkovnega upravljalnika za vrsto '%s'"
 
-#: ../libgda/gda-statement.c:1314
+#: ../libgda/gda-statement.c:1341
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr "Napačen parameter za vrsto '%s': pričakovana je vrsta '%s', dobljena pa '%s'"
 
-#: ../libgda/gda-statement.c:1326
+#: ../libgda/gda-statement.c:1353
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "Manjkajoči parameter '%s'"
 
-#: ../libgda/gda-statement.c:1338
-#: ../libgda/sqlite/gda-sqlite-provider.c:3029
+#: ../libgda/gda-statement.c:1365
+#: ../libgda/sqlite/gda-sqlite-provider.c:3058
 #: ../providers/jdbc/gda-jdbc-provider.c:1370
 #: ../providers/mysql/gda-mysql-provider.c:2293
 #: ../providers/postgres/gda-postgres-provider.c:1966
@@ -2269,19 +2269,19 @@ msgstr "Manjkajoči parameter '%s'"
 msgid "Parameter '%s' is invalid"
 msgstr "Parameter '%s' ni veljaven"
 
-#: ../libgda/gda-statement.c:1384
+#: ../libgda/gda-statement.c:1411
 msgid "Unnamed parameter"
 msgstr "Neimenovan parameter"
 
-#: ../libgda/gda-statement.c:1660
+#: ../libgda/gda-statement.c:1687
 msgid "Malformed table name"
 msgstr "Izmaličeno ime razpredelnice"
 
-#: ../libgda/gda-statement.c:2148
+#: ../libgda/gda-statement.c:2175
 msgid "Join is not in a FROM statement"
 msgstr "Izjave JOIN ni v izjavi FORM"
 
-#: ../libgda/gda-statement.c:2155
+#: ../libgda/gda-statement.c:2182
 msgid "Could not find target the join is for"
 msgstr "Ni mogoče najti cilja za povezavo"
 
@@ -2425,7 +2425,7 @@ msgstr "Ni mogoče prepisati privzete vrednosti ročnika stavka UPDATE"
 #: ../libgda/gda-util.c:1776
 #: ../libgda/gda-util.c:1833
 #: ../libgda/gda-util.c:1873
-#: ../libgda/sqlite/gda-sqlite-provider.c:3010
+#: ../libgda/sqlite/gda-sqlite-provider.c:3039
 #: ../providers/jdbc/gda-jdbc-provider.c:1341
 #: ../providers/mysql/gda-mysql-provider.c:2273
 #: ../providers/postgres/gda-postgres-provider.c:1948
@@ -2646,71 +2646,75 @@ msgstr "Manjka ime podatkovne zbirke ali mapa"
 msgid "Transactions are not supported in read-only mode"
 msgstr "Prenosi niso podprti v načinu le za branje"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1889
-#: ../libgda/sqlite/gda-sqlite-provider.c:1899
+#: ../libgda/sqlite/gda-sqlite-provider.c:1871
+msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
+msgstr "Sistem SQLite ne podpira določevanja polj s stavki DISTINCT."
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:1918
+#: ../libgda/sqlite/gda-sqlite-provider.c:1928
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Predmet '%s' ni podprt s SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2506
+#: ../libgda/sqlite/gda-sqlite-provider.c:2535
 #: ../providers/jdbc/gda-jdbc-provider.c:1122
 #: ../providers/postgres/gda-postgres-provider.c:1540
 #: ../providers/web/gda-web-provider.c:1269
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2619
-#: ../libgda/sqlite/gda-sqlite-provider.c:2631
+#: ../libgda/sqlite/gda-sqlite-provider.c:2648
+#: ../libgda/sqlite/gda-sqlite-provider.c:2660
 #: ../providers/mysql/gda-mysql-provider.c:2005
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgstr "Ni mogoče izgraditi izjave SELECT za pridobitev zadnje vstavljene vrstice: %s)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2653
+#: ../libgda/sqlite/gda-sqlite-provider.c:2682
 #: ../providers/mysql/gda-mysql-provider.c:2020
 #: ../providers/postgres/gda-postgres-provider.c:1698
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Ni mogoče izvesti izjave SELECT za pridobitev zadnje vstavljene vrstice: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2666
+#: ../libgda/sqlite/gda-sqlite-provider.c:2695
 #: ../providers/mysql/gda-mysql-provider.c:2033
 #: ../providers/postgres/gda-postgres-provider.c:1711
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, ni bilo mogoče pridobiti nobene vrstice."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2670
+#: ../libgda/sqlite/gda-sqlite-provider.c:2699
 #: ../providers/mysql/gda-mysql-provider.c:2037
 #: ../providers/postgres/gda-postgres-provider.c:1715
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr "Z izjavo SELECT za izbiro zadnje vstavljene vrstice, je bilo pridobljeno preveč (%d) vrstic."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2735
+#: ../libgda/sqlite/gda-sqlite-provider.c:2764
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Pripravljena izjava ni povezana s predmetom GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2775
-#: ../libgda/sqlite/gda-sqlite-provider.c:2812
+#: ../libgda/sqlite/gda-sqlite-provider.c:2804
+#: ../libgda/sqlite/gda-sqlite-provider.c:2841
 msgid "Can't create SQLite BLOB handle"
 msgstr "Ni mogoče ustvariti SQLite upravljalnika predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2779
-#: ../libgda/sqlite/gda-sqlite-provider.c:2817
+#: ../libgda/sqlite/gda-sqlite-provider.c:2808
+#: ../libgda/sqlite/gda-sqlite-provider.c:2846
 msgid "Can't write to SQLite's BLOB"
 msgstr "Ni mogoče pisati v SQLite's predmet BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2802
+#: ../libgda/sqlite/gda-sqlite-provider.c:2831
 #, c-format
 msgid "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgstr "Ni mogoče pridobiti ročnika SQLite BLOB (poročana napaka je '%s'). O napaki pošljite poročilo na http://bugzilla.gnome.org/ za paket \"libgda\"."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2827
+#: ../libgda/sqlite/gda-sqlite-provider.c:2856
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpolnjevanje"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2875
+#: ../libgda/sqlite/gda-sqlite-provider.c:2904
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:380
 #: ../providers/jdbc/gda-jdbc-provider.c:1220
 #: ../providers/ldap/gda-ldap-provider.c:518
@@ -2720,14 +2724,14 @@ msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpol
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Ponudnik ne podpira asinhronega izvajanja izjav"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2943
+#: ../libgda/sqlite/gda-sqlite-provider.c:2972
 #: ../tools/browser/mgr-favorites.c:248
 #: ../tools/browser/mgr-favorites.c:290
 msgid "Empty statement"
 msgstr "Prazna izjava"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2985
-#: ../libgda/sqlite/gda-sqlite-provider.c:2988
+#: ../libgda/sqlite/gda-sqlite-provider.c:3014
+#: ../libgda/sqlite/gda-sqlite-provider.c:3017
 #: ../providers/jdbc/gda-jdbc-provider.c:1307
 #: ../providers/jdbc/gda-jdbc-provider.c:1310
 #: ../providers/mysql/gda-mysql-provider.c:2248
@@ -2740,7 +2744,7 @@ msgstr "Prazna izjava"
 msgid "Missing parameter(s) to execute query"
 msgstr "Manjka parameter za izvedbo poizvedbe"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3048
+#: ../libgda/sqlite/gda-sqlite-provider.c:3077
 #: ../providers/jdbc/gda-jdbc-provider.c:1389
 #: ../providers/mysql/gda-mysql-provider.c:2312
 #: ../providers/postgres/gda-postgres-provider.c:1985
@@ -2748,53 +2752,53 @@ msgstr "Manjka parameter za izvedbo poizvedbe"
 msgid "Can't rewrite statement handle default values"
 msgstr "Ni mogoče prepisati privzete vrednosti ročnika stavka"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3168
+#: ../libgda/sqlite/gda-sqlite-provider.c:3197
 #: ../providers/mysql/gda-mysql-provider.c:2558
 msgid "Can't get BLOB's length"
 msgstr "Ni mogoče pridobiti dolžine predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3170
+#: ../libgda/sqlite/gda-sqlite-provider.c:3199
 #: ../providers/mysql/gda-mysql-provider.c:2560
 msgid "BLOB is too big"
 msgstr "Predmet BLOB je prevelik"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3252
+#: ../libgda/sqlite/gda-sqlite-provider.c:3281
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Neupravljana vrsta podatkov '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3319
+#: ../libgda/sqlite/gda-sqlite-provider.c:3348
 msgid "Could not start transaction to create BLOB"
 msgstr "Ni mogoče začeti prenosa za ustvarjanje predmeta BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3484
-#: ../libgda/sqlite/gda-sqlite-provider.c:3505
-#: ../libgda/sqlite/gda-sqlite-provider.c:3596
-#: ../libgda/sqlite/gda-sqlite-provider.c:3616
-#: ../libgda/sqlite/gda-sqlite-provider.c:3639
+#: ../libgda/sqlite/gda-sqlite-provider.c:3513
+#: ../libgda/sqlite/gda-sqlite-provider.c:3534
+#: ../libgda/sqlite/gda-sqlite-provider.c:3625
+#: ../libgda/sqlite/gda-sqlite-provider.c:3645
+#: ../libgda/sqlite/gda-sqlite-provider.c:3668
 msgid "Function requires one argument"
 msgstr "Funkcija zahteva en argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3537
-#: ../libgda/sqlite/gda-sqlite-provider.c:3671
+#: ../libgda/sqlite/gda-sqlite-provider.c:3566
+#: ../libgda/sqlite/gda-sqlite-provider.c:3700
 msgid "Function requires two arguments"
 msgstr "Funkcija zahteva dva argumenta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3576
+#: ../libgda/sqlite/gda-sqlite-provider.c:3605
 msgid "Function requires one or two arguments"
 msgstr "Funkcija zahteva en ali dva argumenta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3711
-#: ../libgda/sqlite/gda-sqlite-provider.c:3818
+#: ../libgda/sqlite/gda-sqlite-provider.c:3740
+#: ../libgda/sqlite/gda-sqlite-provider.c:3847
 msgid "Function requires two or three arguments"
 msgstr "Funkcija zahteva dva ali tri argumente"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3765
+#: ../libgda/sqlite/gda-sqlite-provider.c:3794
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Napaka logičnega izraza SQLite '%s':"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3766
+#: ../libgda/sqlite/gda-sqlite-provider.c:3795
 msgid "Invalid regular expression"
 msgstr "Neveljavni logični izraz"
 
@@ -4622,7 +4626,7 @@ msgstr "-"
 
 #: ../providers/bdb/libmain.c:75
 msgid "Provider for Berkeley databases"
-msgstr "Ponudnik Berkeley podatkovnih zbirk"
+msgstr "Ponudnik podatkovnih zbirk Berkeley"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:1
@@ -5316,7 +5320,15 @@ msgstr "Ni mogoče najti libdb_sql-5."
 
 #: ../providers/bdbsql/libmain.c:89
 msgid "Provider for BDB SQL databases"
-msgstr "Ponudnik BDB SQL podatkovnih zbirk"
+msgstr "Ponudnik podatkovnih zbirk BDB SQL"
+
+#: ../providers/firebird/libmain-client.c:51
+msgid "Provider for Firebird databases"
+msgstr "Ponudnik podatkovnih zbirk Firebird"
+
+#: ../providers/firebird/libmain-embed.c:51
+msgid "Provider for embedded Firebird databases"
+msgstr "Ponudnik podatkovnih zbirk Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48
 #: ../providers/jdbc/GdaInputStream.c:122
@@ -5606,7 +5618,7 @@ msgstr "Vrsta %s ni preslikana za vrednost %s"
 
 #: ../providers/mysql/libmain.c:74
 msgid "Provider for MySQL databases"
-msgstr "Ponudnik MySQL podatkovnih zbirk"
+msgstr "Ponudnik podatkovnih zbirk MySQL"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:1
 msgid "Add the column after the specified column"
@@ -6417,7 +6429,7 @@ msgstr "Neveljavna dvojiška predstavitev niti '%s ...'"
 
 #: ../providers/postgres/libmain.c:82
 msgid "Provider for PostgreSQL databases"
-msgstr "Ponudnik PostgreSQL podatkovnih zbirk"
+msgstr "Ponudnik podatkovnih zbirk PostgreSQL"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Don't add the column to descendants of the table"
@@ -7038,7 +7050,7 @@ msgstr "Šifrirno geslo"
 
 #: ../providers/sqlite/libmain.c:75
 msgid "Provider for SQLite databases"
-msgstr "Ponudnik SQLite podatkovnih zbirk"
+msgstr "Ponudnik podatkovnih zbirk SQLite"
 
 #: ../providers/web/gda-web-provider.c:289
 #: ../providers/web/gda-web-util.c:293
@@ -7508,7 +7520,7 @@ msgid ""
 msgstr ""
 "Uporabite povezavo za ustvarjanje\n"
 "novo vezno povezavo za dostop do\n"
-"več podatkovnih zbirk hkrati"
+"več podatkovnih zbirk hkrati."
 
 #: ../tools/browser/browser-window.c:284
 msgid "Connection properties"
