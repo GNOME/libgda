@@ -22,10 +22,9 @@ using GdaData;
 
 namespace Check {
 	class Tests : GdaData.Object {
-		private string t;
+		private static string t = "user";
 		public override string table { 
 			get { return this.t; }
-			construct { this.t = "user"; }
 		}
 		Tests()
 		{

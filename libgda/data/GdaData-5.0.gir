@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
 <include name="GObject" version="2.0"/>
-<include name="Gee" version="0.8"/>
 <include name="Gda" version="5.0"/>
+<include name="Gee" version="0.8"/>
 <package name="gdadata-5.0"/>
-<c:include name="libgdadata.h"/>
+<c:include name="../../libgda/libgdadata.h"/>
 <namespace name="GdaData" version="5.0" c:prefix="GdaData">
+	<annotation key="ccode.gir-version" value="5.0"/>
+	<annotation key="ccode.gir-namespace" value="GdaData"/>
 	<annotation key="ccode.cheader-filename" value="libgdadata.h"/>
 	<class name="Object" c:type="GdaDataObject" glib:type-name="GdaDataObject" glib:get-type="gda_data_object_get_type" glib:type-struct="ObjectClass" parent="GObject.Object" abstract="1">
 		<field name="parent_instance">
@@ -80,7 +82,7 @@
 				<type name="Gda.SqlBuilder" c:type="GdaSqlBuilder*"/>
 			</return-value>
 		</method>
-		<property name="table" writable="1" construct-only="1">
+		<property name="table">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
 		<property name="record">

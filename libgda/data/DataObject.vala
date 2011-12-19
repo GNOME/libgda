@@ -19,6 +19,7 @@
 
 using Gda;
 
+[CCode (gir_namespace = "GdaData", gir_version = "5.0")]
 [CCode (cheader_filename="libgdadata.h")]
 namespace GdaData {
 
@@ -28,7 +29,7 @@ namespace GdaData {
         private Value? _id_value;
         private DataModelIterable _model;
         
-        public abstract string table { get; construct; }
+        public abstract string table { get; }
         
         public DataModelIterable record {
         	get {

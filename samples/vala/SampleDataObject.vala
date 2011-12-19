@@ -74,7 +74,7 @@ namespace Sample {
 			}
 		}
 		
-		public Gda.Numeric balance {
+		public double balance {
 			get {
 				string sql_debit = @"SELECT sum (debit) FROM transactions WHERE account = $id";
 				string sql_credit = @"SELECT sum (credit) FROM transactions WHERE account = $id";
@@ -82,9 +82,7 @@ namespace Sample {
 				var model_debit = this.connection.execute_select (sql_debit);
 				var credit = model_credit.get_value_at (0, 0);
 				var debit = model_debit.get_value_at (0, 0);
-				var balance = (double) credit - (double) debit;
-				var ret = new Gda.Numeric ();
-				ret.set_from_string (ret.parse ());
+				return (double) credit - (double) debit;
 			}
 		}
 		
@@ -155,10 +153,10 @@ namespace Sample {
 		}
 	}
 	
-	class App : GdaData.Object {
+	class App : GLib.Object {
 		public Gda.Connection connection;
 		
-		Tests()
+		App ()
 		{
 			try {
 				GLib.FileUtils.unlink("dataobject.db");
@@ -173,9 +171,10 @@ namespace Sample {
 				this.connection.execute_non_select_command("CREATE TABLE account (id int PRIMARY KEY AUTOINCREMENT, name string UNIQUE, description string)");
 				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (1, \"Incomes\"");
 				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (2, \"Expenses\"");
-				this.connection.execute_non_select_command("CREATE TABLE transaction (id int PRIMARY KEY AUTOINCREMENT, account int, description string, amount double, credit bool)");
-				this.connection.execute_non_select_command("INSERT INTO account (id, description, amount, credit) VALUES (1, \"Salary\"", );
-				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (2, \"Expenses\"");
+				this.connection.execute_non_select_command("INSERT INTO account (id, name) VALUES (3, \"Bank\"");
+				this.connection.execute_non_select_command("CREATE TABLE transaction (id int PRIMARY KEY AUTOINCREMENT, credit int, debit int, description string, amount double)");
+				this.connection.execute_non_select_command("INSERT INTO account (id, credit, debit, description, amount, credit) VALUES (1, 3, 1, \"Salary\", 3100.0, TRUE");
+				this.connection.execute_non_select_command("INSERT INTO account (id, credit, debit, description, amount, credit) VALUES (2, 2, 3, \"Expenses of the week\"");
 				this.connection.update_meta_store(null);
 			}
 			catch (Error e) {
@@ -183,18 +182,15 @@ namespace Sample {
 			}
 		}
 		
-		public int get_value ()
-			throws Error
-		{
-			
-			return 0;
-		}
-		
+				
 		public static int main (string[] args) {
 			stdout.printf ("Checking Gda.DataObject implementation...\n");
 			int failures = 0;
-			var app = new Tests ();
-			failures += app.t1 ();
+			var app = new App ();
+			app.get_balance ("Incomes");
+			app.get_balance ("Expenses");
+			app.get_balance ("Bank");
+			app.get_operations ("Bank");
 			return failures != 0 ? 1 : 0;
 		}
 	}
