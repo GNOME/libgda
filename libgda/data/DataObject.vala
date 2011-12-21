@@ -19,8 +19,7 @@
 
 using Gda;
 
-[CCode (gir_namespace = "GdaData", gir_version = "5.0")]
-[CCode (cheader_filename="libgda/libgdadata.h")]
+[CCode (gir_namespace = "GdaData", gir_version = "5.0", cheader_filename="libgda/libgdadata.h")]
 namespace GdaData {
 
     public abstract class Object : GLib.Object {
