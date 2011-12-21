@@ -42,6 +42,11 @@ libgdadata_5_0_la_SOURCES = \
 	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(NULL)	
 
+vapi: gdadata-5.0.vapi
+
+vapidir = $(VAPIDIR)
+vapi_DATA = gdadata-5.0.vapi
+
 gdadata-5.0.vapi gdadata.vala.stamp GdaData-5.0.gir: $(libgdadata_5_0_la_VALASOURCES)
 	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-5.0.gir --library gdadata-5.0 $^
 	@touch $@
@@ -91,9 +96,6 @@ GdaData-5.0.typelib: $(INTROSPECTION_GIRS)
 
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = GdaData-5.0.typelib
-
-vapidir = $(VALA_VAPIDIR)
-vapi_DATA = gdadata-5.0.vapi
 
 CLEANFILES += \
     $(typelibs_DATA) \

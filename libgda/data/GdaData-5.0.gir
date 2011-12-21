@@ -8,7 +8,7 @@
 <namespace name="GdaData" version="5.0" c:prefix="GdaData">
 	<annotation key="ccode.gir-version" value="5.0"/>
 	<annotation key="ccode.gir-namespace" value="GdaData"/>
-	<annotation key="ccode.cheader-filename" value="libgdadata.h"/>
+	<annotation key="ccode.cheader-filename" value="libgda/libgdadata.h"/>
 	<class name="Object" c:type="GdaDataObject" glib:type-name="GdaDataObject" glib:get-type="gda_data_object_get_type" glib:type-struct="ObjectClass" parent="GObject.Object" abstract="1">
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
