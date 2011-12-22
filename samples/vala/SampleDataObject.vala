@@ -86,24 +86,20 @@ namespace Sample {
 	class App : GLib.Object {
 		public Gda.Connection connection;
 		
-		App ()
+		public void init ()
+			throws Error
 		{
-			try {
-				GLib.FileUtils.unlink("dataobject.db");
-				stdout.printf("Creating Database...\n");
-				this.connection = Connection.open_from_string("SQLite", 
-									"DB_DIR=.;DB_NAME=dataobject", null, 
-									Gda.ConnectionOptions.NONE);
-				stdout.printf("Creating table 'user'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE user (id int PRIMARY KEY AUTOINCREMENT, name string UNIQUE, functions string, security_number int)");
-				this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (1, \"Martin Stewart\", \"Programmer, QA\", 2334556");
-				this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (2, \"Jane Castle\", \"Accountant\", 3002884");
-				
-				this.connection.update_meta_store(null);
-			}
-			catch (Error e) {
-				stdout.printf ("Can't create temporary database...\nERROR: " + e.message + "\n");
-			}
+			GLib.FileUtils.unlink("dataobject.db");
+			stdout.printf("Creating Database...\n");
+			this.connection = Connection.open_from_string("SQLite", 
+								"DB_DIR=.;DB_NAME=dataobject", null, 
+								Gda.ConnectionOptions.NONE);
+			stdout.printf("Creating table 'user'...\n");
+			this.connection.execute_non_select_command("CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, name string UNIQUE, functions string, security_number integer)");
+			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (1, \"Martin Stewart\", \"Programmer, QA\", 2334556");
+			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (2, \"Jane Castle\", \"Accountant\", 3002884");
+			
+			this.connection.update_meta_store(null);
 		}
 		
 		public void modify_record (string name)
@@ -112,11 +108,13 @@ namespace Sample {
 			var rcd = new DbRecord ();
 			rcd.open (name);
 			
-			stdout.printf ("Modifing user: " + rcd.name);
-			foreach (Value v in rcd.record) {
+			stdout.printf ("Initial Values: " + rcd.name + "\n");
+			var record = new DataModelIterable (rcd.record);
+			foreach (Value v in record) {
 				stdout.printf ("Field Value: " + Gda.value_stringify (v));
 			}
 			
+			stdout.printf ("Modifing user: " + rcd.name + "\n");
 			// Changing functions
 			rcd.functions += ", Hardware Maintenance";
 			
@@ -126,13 +124,22 @@ namespace Sample {
 			// Changing non class property value in the record
 			// You must know the field name refer to
 			string v = (string) rcd.get_value ("security_number");
-			stdout.printf ("Taken value from a field in the DB: " + Gda.value_stringify (v));
+			stdout.printf ("Taken value from a field in the DB: " + Gda.value_stringify (v) + "\n");
+			
+			rcd.set_value ("security_number", 1002335);
+			
+			stdout.printf ("Modified Values: " + rcd.name);
+			record = new DataModelIterable (rcd.record);
+			foreach (Value v2 in record) {
+				stdout.printf ("Field Value: " + Gda.value_stringify (v2) + "\n");
+			}
 		}
 			
 		public static int main (string[] args) {
 			stdout.printf ("Gda.DataObject Example...\n");
 			var app = new App ();
 			try {
+				app.init ();
 				app.modify_record ("Martin Stewart");
 				app.modify_record ("Jane Castle");
 				return 0;

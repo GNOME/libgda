@@ -86,7 +86,7 @@
 			<type name="utf8" c:type="gchar*"/>
 		</property>
 		<property name="record">
-			<type name="GdaData.DataModelIterable" c:type="GdaDataDataModelIterable*"/>
+			<type name="Gda.DataModel" c:type="GdaDataModel*"/>
 		</property>
 		<property name="connection" writable="1">
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
@@ -99,7 +99,6 @@
 	</record>
 	<record name="ObjectPrivate" c:type="GdaDataObjectPrivate" disguised="1"/>
 	<class name="DataModelIterable" c:type="GdaDataDataModelIterable" glib:type-name="GdaDataDataModelIterable" glib:get-type="gda_data_data_model_iterable_get_type" glib:type-struct="DataModelIterableClass" parent="Gee.AbstractCollection">
-		<implements name="Gda.DataModel"/>
 		<field name="parent_instance">
 			<type name="Gee.AbstractCollection" c:type="GeeAbstractCollection"/>
 		</field>
@@ -127,6 +126,106 @@
 			</parameters>
 			<return-value transfer-ownership="full">
 				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="append_row" c:identifier="gda_data_data_model_iterable_append_row" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="gint" c:type="gint"/>
+			</return-value>
+		</method>
+		<method name="create_iter" c:identifier="gda_data_data_model_iterable_create_iter">
+			<return-value transfer-ownership="full">
+				<type name="Gda.DataModelIter" c:type="GdaDataModelIter*"/>
+			</return-value>
+		</method>
+		<method name="describe_column" c:identifier="gda_data_data_model_iterable_describe_column">
+			<parameters>
+				<parameter name="col" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="none">
+				<type name="Gda.Column" c:type="GdaColumn*"/>
+			</return-value>
+		</method>
+		<method name="get_access_flags" c:identifier="gda_data_data_model_iterable_get_access_flags">
+			<return-value transfer-ownership="full">
+				<type name="Gda.DataModelAccessFlags" c:type="GdaDataModelAccessFlags"/>
+			</return-value>
+		</method>
+		<method name="get_attributes_at" c:identifier="gda_data_data_model_iterable_get_attributes_at">
+			<parameters>
+				<parameter name="col" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="row" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="Gda.ValueAttribute" c:type="GdaValueAttribute"/>
+			</return-value>
+		</method>
+		<method name="get_n_columns" c:identifier="gda_data_data_model_iterable_get_n_columns">
+			<return-value transfer-ownership="full">
+				<type name="gint" c:type="gint"/>
+			</return-value>
+		</method>
+		<method name="get_n_rows" c:identifier="gda_data_data_model_iterable_get_n_rows">
+			<return-value transfer-ownership="full">
+				<type name="gint" c:type="gint"/>
+			</return-value>
+		</method>
+		<method name="get_value_at" c:identifier="gda_data_data_model_iterable_get_value_at" throws="1">
+			<parameters>
+				<parameter name="col" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="row" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="none" allow-none="1">
+				<type name="GObject.Value" c:type="GValue*"/>
+			</return-value>
+		</method>
+		<method name="remove_row" c:identifier="gda_data_data_model_iterable_remove_row" throws="1">
+			<parameters>
+				<parameter name="row" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+		</method>
+		<method name="send_hint" c:identifier="gda_data_data_model_iterable_send_hint">
+			<parameters>
+				<parameter name="hint" transfer-ownership="none">
+					<type name="Gda.DataModelHint" c:type="GdaDataModelHint"/>
+				</parameter>
+				<parameter name="hint_value" transfer-ownership="none" allow-none="1">
+					<type name="GObject.Value" c:type="GValue*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="set_value_at" c:identifier="gda_data_data_model_iterable_set_value_at" throws="1">
+			<parameters>
+				<parameter name="col" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="row" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="value" transfer-ownership="none">
+					<type name="GObject.Value" c:type="GValue"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 		</method>
 		<property name="element-type">
