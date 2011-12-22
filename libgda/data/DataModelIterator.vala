@@ -22,7 +22,7 @@
  
  namespace GdaData {
  	
- 	public class DataModelIterable : Gee.AbstractCollection<Value?>
+ 	public class DataModelIterable : Gee.AbstractCollection<Value?>, Gda.DataModel
  	{
  		private Gda.DataModel model;
  		
@@ -329,30 +329,31 @@
 		}
 		
 		// THIS FUNCTIONS HAVEN'T DEFAULT IMPLEMENTATION OR PUBLIC API AND THEN CAN'T BE IMPLEMENTED HERE
-//		public bool i_get_notify () {
-//			return this.model.notify_changes i_get_notify ();
-//		}
+		public bool get_notify () {
+			
+			return this.model.get_notify ();
+		}
 
-//		public bool i_iter_at_row (Gda.DataModelIter iter, int row) {
-//			return ((Gda.DataSelect)this.model).i_iter_at_row (iter, row);
-//		}
-//		
-//		public bool i_iter_next (Gda.DataModelIter iter) {
-//			return ((Gda.DataSelect)this.model).i_iter_next (iter);
-//		}
-//		
-//		public bool i_iter_prev (Gda.DataModelIter iter) {
-//			return ((Gda.DataSelect)this.model).i_iter_prev (iter);
-//		}
-//		
-//		public bool i_iter_set_value (Gda.DataModelIter iter, int col, GLib.Value value) throws GLib.Error {
-//			return ((Gda.DataSelect)this.model).i_iter_set_value (iter, col, value);
-//		}
-//		
-//		public void i_set_notify (bool do_notify_changes)
-//		{
-//			((Gda.DataSelect)this.model).i_set_notify (do_notify_changes);
-//		}
+		public bool iter_at_row (Gda.DataModelIter iter, int row) {
+			return this.model.iter_at_row (iter, row);
+		}
+		
+		public bool iter_next (Gda.DataModelIter iter) {
+			return this.model.iter_next (iter);
+		}
+		
+		public bool iter_prev (Gda.DataModelIter iter) {
+			return this.model.iter_prev (iter);
+		}
+		
+		public bool iter_set_value (Gda.DataModelIter iter, int col, GLib.Value value) throws GLib.Error {
+			return this.model.iter_set_value (iter, col, value);
+		}
+		
+		public void set_notify (bool do_notify_changes)
+		{
+			this.model.set_notify (do_notify_changes);
+		}
 		public bool remove_row (int row) throws GLib.Error {
 			return this.model.remove_row (row);
 		}
