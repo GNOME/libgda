@@ -8,7 +8,7 @@ LDFLAGS = `pkg-config --libs libgdadata-5.0`
 
 VALAFLAGS = --pkg libgda-5.0 --pkg gdadata-5.0 --pkg gee-0.8 --pkg libxml-2.0
 
-all: sampledataobject 
+all: sampledataobject sampledatamodeliterable
 
 SampleDataObject.c: 
 	valac $(VALAFLAGS) -C SampleDataObject.vala 
@@ -16,10 +16,15 @@ SampleDataObject.c:
 sampledataobject: SampleDataObject.c 
 	$(CC) -o sampledataobject SampleDataObject.c $(CFLAGS) $(LDFLAGS)
 
+SampleDataModelIterable.c:
+	valac $(VALAFLAGS) -C SampleDataModelIterable.vala
 
+sampledatamodeliterable: SampleDataModelIterable.c
+	$(CC) -o sampledatamodeliterable SampleDataModelIterable.c $(CFLAGS) $(LDFLAGS)
+    
 clean:
 	rm -f *~
 	rm -f *.o
 	rm -f *.c
 	rm -f *.db
-	rm sampledataobject
+	rm sampledataobject sampledatamodeliterable
