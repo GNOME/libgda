@@ -95,26 +95,25 @@ namespace Sample {
 								"DB_DIR=.;DB_NAME=dataobject", null, 
 								Gda.ConnectionOptions.NONE);
 			stdout.printf("Creating table 'user'...\n");
-			this.connection.execute_non_select_command("CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, name string UNIQUE, functions string, security_number integer)");
-			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (1, \"Martin Stewart\", \"Programmer, QA\", 2334556");
-			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions) VALUES (2, \"Jane Castle\", \"Accountant\", 3002884");
+			this.connection.execute_non_select_command("CREATE TABLE user (id INTEGER PRIMARY KEY, name string UNIQUE, functions string, security_number integer)");
+			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions, security_number) VALUES (1, \"Martin Stewart\", \"Programmer, QA\", 2334556)");
+			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions, security_number) VALUES (2, \"Jane Castle\", \"Accountant\", 3002884)");
 			
 			this.connection.update_meta_store(null);
 		}
 		
-		public void modify_record (string name)
+		public void demo_modify_record (string name)
 			throws Error
 		{
+			stdout.printf (">>> DEMO: Modifying Records\n");
 			var rcd = new DbRecord ();
-			rcd.open (name);
+			rcd.connection = this.connection;
+			try { rcd.open (name); }
+			catch (Error e) { stdout.printf ("ERROR: Record no opened\n" + e.message + "\n"); }
 			
-			stdout.printf ("Initial Values: " + rcd.name + "\n");
-			var record = new DataModelIterable (rcd.record);
-			foreach (Value v in record) {
-				stdout.printf ("Field Value: " + Gda.value_stringify (v));
-			}
+			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
 			
-			stdout.printf ("Modifing user: " + rcd.name + "\n");
+			stdout.printf ("Modifying user: " + rcd.name + "\n");
 			// Changing functions
 			rcd.functions += ", Hardware Maintenance";
 			
@@ -123,32 +122,54 @@ namespace Sample {
 			
 			// Changing non class property value in the record
 			// You must know the field name refer to
-			string v = (string) rcd.get_value ("security_number");
-			stdout.printf ("Taken value from a field in the DB: " + Gda.value_stringify (v) + "\n");
-			
+			var v = rcd.get_value ("security_number");
+			stdout.printf ("Initial value for field 'security_number' in the DB: " + Gda.value_stringify (v) + "\n");
 			rcd.set_value ("security_number", 1002335);
 			
-			stdout.printf ("Modified Values: " + rcd.name);
-			record = new DataModelIterable (rcd.record);
-			foreach (Value v2 in record) {
-				stdout.printf ("Field Value: " + Gda.value_stringify (v2) + "\n");
-			}
+			try { rcd.save (); }
+			catch (Error e) { stdout.printf ("ERROR: Can't save modifycations'\n" + e.message + "\n"); }
+			stdout.printf ("Modified Values: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+		}
+		
+		public void simulate_external_modifications ()
+				throws Error
+		{
+			stdout.printf (">>> DEMO: Updating Records modified externally\n");
+			var rcd = new DbRecord ();
+			rcd.connection = this.connection;
+			rcd.open ("Jane Castle PhD.");
+			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+			this.connection.execute_non_select_command("UPDATE user SET functions = \"Secretary\" WHERE id = 2");
+			rcd.update ();
+			stdout.printf ("Updated Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
 		}
 			
 		public static int main (string[] args) {
 			stdout.printf ("Gda.DataObject Example...\n");
 			var app = new App ();
+			
 			try {
 				app.init ();
-				app.modify_record ("Martin Stewart");
-				app.modify_record ("Jane Castle");
+				try {
+					/* These will open and modify records with the given name */
+					app.demo_modify_record ("Martin Stewart");
+					app.demo_modify_record ("Jane Castle");
+				}
+				catch (Error e) { stdout.printf ("Can't modify record\nERROR: " + e.message + "\n"); }
+				
+				try {
+					/* Simulating an 'external' application modifying DB records and how to update */
+					app.simulate_external_modifications ();
+				}
+				catch (Error e) { stdout.printf ("Can't update record\nERROR: " + e.message + "\n"); }
+				
 				return 0;
 			}
-			catch (Error e) {
-				stdout.printf ("Can't modify record\nERROR: " + e.message + "\n");
+			catch (Error e) 
+			{
+				stdout.printf ("Error on Initializing DB\nERROR: " + e.message + "\n");
 			}
-			
-			return 0;
+			return 1;
 		}
 	}
 }
