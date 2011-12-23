@@ -31,10 +31,33 @@ VALAFLAGS = \
     --pkg libgda-5.0 \
     $(NULL)
 
-libgdadata_5_0_la_VALASOURCES = \
+object_persistance_sources = \
 	DataObject.vala \
 	SelectQuery.vala \
+	$(NULL)
+
+db_collection_sources = \
+	DbCollection.vala \
+	DbTable.vala \
+	DbRecord.vala \
+	DbField.vala \
+	DbSchema.vala \
+	$(NULL)
+
+selectable_sources = \
+	SqlWhere.vala \
+	SqlExpression.vala \
+	$(NULL)
+
+data_model_collection_sources = \
 	DataModelIterator.vala \
+	DataModelIterable.vala \
+	$(NULL)
+
+libgdadata_5_0_la_VALASOURCES = \
+	$(object_persistance_sources) \
+	$(db_collection_sources) \
+	$(data_model_collection_sources) \
 	$(NULL)
 
 libgdadata_5_0_la_SOURCES = \

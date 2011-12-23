@@ -22,14 +22,14 @@ using Gda;
 
 namespace GdaData
 {
-	public interface SqlWhere<Expression> : Object, Traversable<Expression>, Iterable<Expression>, Collection<Expression>
+	public class SqlWhere<Expression> : GLib.Object, Traversable<Expression>, Iterable<Expression>, Collection<Expression>
 	{
 		/**
 		 * Verify that all expressions are valid in the context of the given database collection
 		 */
 		public static Collection<Expression> verify (DbCollection db) 
 		{
-			var l = new Gee.List<Expression> ();
+			var l = new ArrayList<Expression> ();
 			var iter = this.iterator ();
 			while (iter.next ())
 			{
@@ -37,7 +37,7 @@ namespace GdaData
 				if (!e.verify (db))
 					l.add (e);
 			}
-			return l;
+			return (Collection) l;
 		}
 	}
 }

@@ -22,7 +22,7 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbSchema : Object
+	public interface DbSchema : GLib.Object
 	{
 		public abstract string name { get; set; }
 		public abstract Collection<DbTable> tables { get; }

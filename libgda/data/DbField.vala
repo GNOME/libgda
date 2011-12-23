@@ -22,10 +22,10 @@ using Gda;
 
 namespace GdaData
 {
-	public abstract class DbField<G> : Object
+	public abstract class DbField<G> : GLib.Object
 	{
-		public abstract DbRecord record { get; set construct; };
-		public abstract G value { get; set; };
+		public abstract DbRecord record { get; set construct; }
+		public abstract G value { get; set; }
 		public abstract string name { get; set; }
 		public abstract string column_name { get; set; }
 		public abstract DbField.Attribute attributes { get; set construct; }

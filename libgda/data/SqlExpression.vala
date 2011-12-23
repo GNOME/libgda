@@ -22,10 +22,10 @@ using Gda;
 
 namespace GdaData
 {
-	public interface SqlExpression<A,G> : Object
+	public interface SqlExpression<A,G> : GLib.Object
 	{
-		public Gee.HashTable<A,G> fields { get; }
-		public Gee.HashTable<A,G> values { get; }
+		public abstract Gee.HashMap<A,G> fields { get; }
+		public abstract Gee.HashMap<A,G> values { get; }
 		
 		public abstract bool verify (DbCollection db);
 		

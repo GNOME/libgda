@@ -22,10 +22,13 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbCollection : GLib.Object 
+	public interface DbTable : GLib.Object
 	{
-		public abstract Collection<DbSchema> schemas { get; }
-		
-		public abstract Collection<DbTable> get_tables (string schema);
+		public abstract DbSchema schema { get; set construct; }
+		public abstract string name { get; set; }
+		public abstract Collection<DbRecord> tables { get; }
+		public abstract Collection<DbTable> fk_depends { get; }
+		public abstract Collection<DbTable> fk { get; }
+		public abstract Iterator<DbRecord> iterator ();
 	}
 }
