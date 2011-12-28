@@ -365,6 +365,10 @@
 		public bool set_value_at (int col, int row, GLib.Value value) throws GLib.Error {
 			return this.model.set_value_at (col, row, value);
 		}
+		
+		public unowned GLib.Error[] get_exceptions () {
+			return this.model.get_exceptions ();
+		}
  	}
  }
  
