@@ -363,7 +363,7 @@ endif
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
+CLEANFILES += $(typelibs_DATA)
 endif
 
 if ENABLE_VALA
@@ -379,6 +379,4 @@ vapi_DATA=libgda-5.0.vapi
 EXTRA_DIST += \
 	Gda-5.0.metadata \
         $(vapi_DATA)
-
-CLEANFILES += libgda-5.0.vapi
 endif
