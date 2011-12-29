@@ -1,6 +1,6 @@
 m4_define(major, 5)
-m4_define(minor, 0)
-m4_define(micro, 3)
+m4_define(minor, 1)
+m4_define(micro, 0)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
@@ -51,7 +51,7 @@ m4_define([req_ver_glib],[2.28.0])
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
 GDA_CURRENT=5
-GDA_REVISION=0
+GDA_REVISION=1
 GDA_AGE=1
 
 AC_SUBST(GDA_CURRENT)
