@@ -553,7 +553,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
+#if GLIB_CHECK_VERSION(2,31,7)
+						g_value_set_schar (value, (gchar) i);
+#else
 						g_value_set_char (value, (gchar) i);
+#endif
 				}
 				else if (type == G_TYPE_UCHAR) {
 					gint64 i;

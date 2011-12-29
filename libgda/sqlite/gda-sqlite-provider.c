@@ -66,7 +66,6 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 #define FILE_EXTENSION ".db"
-static GStaticRecMutex cnc_mutex = G_STATIC_REC_MUTEX_INIT;
 static gchar *get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos);
 
 /* TMP */
@@ -727,6 +726,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
+	static GStaticMutex cnc_mutex = G_STATIC_MUTEX_INIT;
 #ifdef SQLITE_HAS_CODEC
 	const gchar *passphrase = NULL;
 #endif
@@ -739,7 +739,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
                 return FALSE;
 	}
 
-	g_static_rec_mutex_lock (&cnc_mutex);
+	g_static_mutex_lock (&cnc_mutex);
 
 	/* get all parameters received */
 	dirname = gda_quark_list_find (params, "DB_DIR");
@@ -764,7 +764,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			if (!str) {
 				gda_connection_add_event_string (cnc,
 								 _("The connection string must contain DB_DIR and DB_NAME values"));
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 			else {
@@ -794,7 +794,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 									   "DB_DIR (the path to the database file) and DB_NAME "
 									   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
 					g_free (dup);
-					g_static_rec_mutex_unlock (&cnc_mutex);
+					g_static_mutex_unlock (&cnc_mutex);
 					return FALSE;
 				}
 				else
@@ -816,7 +816,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 _("The DB_DIR part of the connection string must point "
 								   "to a valid directory"));
 				g_free (dup);
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 
@@ -857,7 +857,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		gda_connection_add_event_string (cnc, SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 		gda_sqlite_free_cnc_data (cdata);
 
-		g_static_rec_mutex_unlock (&cnc_mutex);
+		g_static_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
 
@@ -873,7 +873,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		if (errmsg != SQLITE_OK) {
 			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_static_rec_mutex_unlock (&cnc_mutex);
+			g_static_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -894,7 +894,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		else {
 			gda_connection_add_event_string (cnc, _("Extension loading is not supported"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_static_rec_mutex_unlock (&cnc_mutex);
+			g_static_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -940,7 +940,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			SQLITE3_CALL (sqlite3_free) (errmsg);
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_static_rec_mutex_unlock (&cnc_mutex);
+			g_static_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -965,7 +965,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_static_rec_mutex_unlock (&cnc_mutex);
+			g_static_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -978,7 +978,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1006,7 +1006,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1026,7 +1026,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1045,7 +1045,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_rec_mutex_unlock (&cnc_mutex);
+				g_static_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1056,7 +1056,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	else
 		g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
 
-	g_static_rec_mutex_unlock (&cnc_mutex);
+	g_static_mutex_unlock (&cnc_mutex);
 	return TRUE;
 }
 
@@ -3180,7 +3180,11 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_USHORT)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, gda_value_get_ushort (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR)
+#if GLIB_CHECK_VERSION(2,31,7)
+			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_schar (value));
+#else
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_char (value));
+#endif
 		else if (G_VALUE_TYPE (value) == G_TYPE_UCHAR)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_uchar (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {

@@ -42,7 +42,11 @@ struct _BrowserConnectionPrivate {
         GdaSqlParser  *parser;
 
 	GdaDsnInfo     dsn_info;
+#if GLIB_CHECK_VERSION(2,31,7)
+	GMutex        mstruct_mutex;
+#else
 	GMutex        *p_mstruct_mutex;
+#endif
 	GSList        *p_mstruct_list; /* private GdaMetaStruct list: while they are being created */
 	GdaMetaStruct *c_mstruct; /* last GdaMetaStruct up to date, ready to be passed as @mstruct */
 	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */

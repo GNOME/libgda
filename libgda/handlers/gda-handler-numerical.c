@@ -314,7 +314,11 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 	else if (type == G_TYPE_CHAR) {
 		if (!*endptr && (llint >= G_MININT8) && (llint <= G_MAXINT8)) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_CHAR);
-			g_value_set_char (value, (gchar) llint);
+#if GLIB_CHECK_VERSION(2,31,7)
+			g_value_set_schar (value, (gchar) llint);
+#else
+			g_value_set_char (value, (gint8) llint);
+#endif
 		}
 	}
 	else if (type == G_TYPE_UINT64) {

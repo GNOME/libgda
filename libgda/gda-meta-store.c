@@ -87,7 +87,15 @@ static void gda_meta_store_get_property (GObject *object,
 static gboolean initialize_cnc_struct (GdaMetaStore *store, GError **error);
 static void gda_meta_store_change_free (GdaMetaStoreChange *change);
 
+#if GLIB_CHECK_VERSION(2,31,7)
+static GRecMutex init_rmutex;
+#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
+#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
+#else
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
+#define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
+#define MUTEX_UNLOCK() g_static_rec_mutex_unlock(&init_mutex)
+#endif
 
 /* simple predefined statements */
 enum {
@@ -306,10 +314,10 @@ gda_meta_store_get_type (void) {
 			0
 		};
 
-		g_static_rec_mutex_lock (&init_mutex);
+		MUTEX_LOCK();
 		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStore", &info, 0);
-		g_static_rec_mutex_unlock (&init_mutex);
+		MUTEX_UNLOCK();
 	}
 	return type;
 }
@@ -373,7 +381,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	g_static_rec_mutex_lock (&init_mutex);
+	MUTEX_LOCK();
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
@@ -521,7 +529,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	g_string_free (string, TRUE);
 #endif
 
-	g_static_rec_mutex_unlock (&init_mutex);
+	MUTEX_UNLOCK();
 }
 
 
@@ -562,7 +570,7 @@ gda_meta_store_constructor (GType type,
 	GdaMetaStore *store;
 	gboolean been_specified = FALSE;
 
-	g_static_rec_mutex_lock (&init_mutex);
+	MUTEX_LOCK();
 	object = G_OBJECT_CLASS (parent_class)->constructor (type,
 		n_construct_properties,
 		construct_properties);
@@ -608,7 +616,7 @@ gda_meta_store_constructor (GType type,
 		else
 			create_db_objects (klass, store);
 	}
-	g_static_rec_mutex_unlock (&init_mutex);
+	MUTEX_UNLOCK();
 
 	return object;
 }
@@ -657,12 +665,12 @@ gda_meta_store_new (const gchar *cnc_string)
 	GObject *obj;
 	GdaMetaStore *store;
 
-	g_static_rec_mutex_lock (&init_mutex);
+	MUTEX_LOCK();
 	if (cnc_string)
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", cnc_string, NULL);
 	else
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=__gda_tmp", NULL);
-	g_static_rec_mutex_unlock (&init_mutex);
+	MUTEX_UNLOCK();
 	store = GDA_META_STORE (obj);
 	if (!store->priv->cnc) {
 		g_object_unref (store);
