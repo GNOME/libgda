@@ -28,7 +28,7 @@ static GRecMutex init_rmutex;
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
 #else
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
-define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
+#define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
 #define MUTEX_UNLOCK() g_static_rec_mutex_unlock(&init_mutex)
 #endif
 static void browser_perspective_class_init (gpointer g_class);
