@@ -1642,6 +1642,16 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 	else
 		gdaui_entry_shell_set_unknown (GDAUI_ENTRY_SHELL (entry),
 					       !gda_holder_is_valid (param));
+
+	/* correctly update the NULLOK status */
+	GdaValueAttribute attr;
+	gboolean nullok;
+	attr = gdaui_data_entry_get_attributes (entry);
+	nullok = !gda_holder_get_not_null (param);
+	if (((attr & GDA_VALUE_ATTR_CAN_BE_NULL) && !nullok) ||
+	    (! (attr & GDA_VALUE_ATTR_CAN_BE_NULL) && nullok))
+		gdaui_data_entry_set_attributes (entry, nullok ? GDA_VALUE_ATTR_CAN_BE_NULL : 0,
+						 GDA_VALUE_ATTR_CAN_BE_NULL);
 }
 
 /**
