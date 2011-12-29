@@ -658,6 +658,49 @@ text_view_draw (GtkTextView *tv, cairo_t *cr, QueryEditor *editor)
 }
 
 static void
+copy_all_in_signle_line_cb (GtkMenuItem *mitem, QueryEditor *editor)
+{
+	gchar *all, *ptr;
+	GString *string;
+	GtkClipboard *clipboard;
+
+	all = query_editor_get_all_text (editor);
+	if (!all)
+		return;
+
+	string = g_string_new ("");
+	for (ptr = all; *ptr; ptr++) {
+		if (*ptr == '\n') {
+			if ((ptr > all) && (ptr[-1] != ' '))
+				g_string_append_c (string, ' ');
+		}
+		else {
+			if ((*ptr == '-') && (ptr[1] == '-')) {
+				/* comment => skip till end of line */
+				for (; *ptr && *ptr != '\n'; ptr++);
+			}
+			else
+				g_string_append_c (string, *ptr);
+		}
+	}
+	g_free (all);
+	clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+	gtk_clipboard_set_text (clipboard, string->str, -1);
+	g_string_free (string, TRUE);
+}
+
+static void
+text_view_populate_popup_cb (GtkTextView *entry, GtkMenu *menu, QueryEditor *editor)
+{
+	GtkWidget *mitem;
+	mitem = gtk_menu_item_new_with_label (_("Copy all in a single line"));
+	g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (copy_all_in_signle_line_cb),
+			  editor);
+        gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+        gtk_widget_show (mitem);
+}
+
+static void
 query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 {
 	int tab = 8;
@@ -726,6 +769,8 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 			  G_CALLBACK (text_buffer_changed_cb), editor);
 	g_signal_connect (editor->priv->text, "draw",
 			  G_CALLBACK (text_view_draw), editor);
+	g_signal_connect (editor->priv->text, "populate-popup",
+			  G_CALLBACK (text_view_populate_popup_cb), editor);
 
 	/* create some tags */
 	GtkTextBuffer *buffer;
