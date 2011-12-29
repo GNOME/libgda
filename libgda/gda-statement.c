@@ -1729,7 +1729,11 @@ default_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, 
 			g_string_append (string, ", ");
 		str = context->render_expr (list->data, context, NULL, NULL, error);
 		if (!str) goto err;
+		if (((GdaSqlExpr*) list->data)->select)
+			g_string_append_c (string, '(');
 		g_string_append (string, str);
+		if (((GdaSqlExpr*) list->data)->select)
+			g_string_append_c (string, ')');
 		g_free (str);
 	}
 	g_string_append_c (string, ')');
