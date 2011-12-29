@@ -544,7 +544,6 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 /*
  * callbacks for the date 
  */
-static void internal_set_time (GtkWidget *widget, GdauiEntryCommonTime *mgtim);
 static gint date_delete_popup (GtkWidget *widget, GdauiEntryCommonTime *mgtim);
 static gint date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTime *mgtim);
 static gint date_button_press_popup (GtkWidget *widget, GdkEventButton *event, GdauiEntryCommonTime *mgtim);
@@ -585,8 +584,6 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
 	gtk_widget_show (wid);
 	mgtim->priv->entry_date = wid;
-	g_signal_connect (G_OBJECT (wid), "changed",
-			  G_CALLBACK (internal_set_time), mgtim);
 	
 	/* window to hold the calendar popup */
 	window = gtk_window_new (GTK_WINDOW_POPUP);
@@ -653,9 +650,15 @@ entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 		}
 		else if (type == GDA_TYPE_TIMESTAMP) {
 			GValue *tsvalue;
+			gchar *str;
+			GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
+			str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
 			tsvalue = gda_value_new_timestamp_from_timet (time (NULL));
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), tsvalue);
 			gda_value_free (tsvalue);
+			if (str && g_ascii_isdigit (*str))
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), str);
+			g_free (str);
 		}
 	}
 	else {
@@ -706,34 +709,6 @@ entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 		}
 	}
 	gda_value_free (value);
-}
-
-static void
-internal_set_time (G_GNUC_UNUSED GtkWidget *widget, GdauiEntryCommonTime *mgtim)
-{
-	/* the aim is that when the mode is TIMESTAMP, when the user sets a date,
-	 * then the time automatically sets to 00:00:00
-	 */
-
-	GType type;
-
-	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
-	if (type == GDA_TYPE_TIMESTAMP) {
-		GdaDataHandler *dh;
-		gchar *str, *str2;
-		GValue *value;
-
-		dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-		str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
-		str2 = g_strdup_printf ("01.01.2000 %s", str);
-		g_free (str);
-		value = gda_data_handler_get_value_from_str (dh, str2, type);
-		if (!value || gda_value_is_null (value)) 
-			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), "00:00:00");
-		if (value)
-			gda_value_free (value);
-		g_free (str2);
-	}
 }
 
 static void
@@ -1058,8 +1033,10 @@ entry_time_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 	if (!value)
 		return;
 
-	if ((type == GDA_TYPE_TIME) && 
-	    (insert_char == g_utf8_get_char (" "))) {
+	if (insert_char != g_utf8_get_char (" "))
+		return;
+
+	if (type == GDA_TYPE_TIME) {
 		/* set current time */
 		gda_value_reset_with_type (value, type);
 		struct tm *ltm;
@@ -1078,6 +1055,32 @@ entry_time_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 			gda_value_set_time (value, (const GdaTime *) &tim);
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
 		}
+	}
+	else if (type == GDA_TYPE_TIMESTAMP && (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP)) {
+		const GdaTimestamp *ts;
+		ts = gda_value_get_timestamp (value);
+		if (ts) {
+			struct tm *ltm;
+			time_t val;
+		
+			val = time (NULL);
+			ltm = localtime ((const time_t *) &val);
+			if (ltm) {
+				GdaTimestamp tim;
+				tim = *ts;
+				tim.hour = ltm->tm_hour;
+				tim.minute = ltm->tm_min;
+				tim.second = ltm->tm_sec;
+				tim.fraction = 0;
+				tim.timezone = GDA_TIMEZONE_INVALID;
+				gda_value_set_timestamp (value, (const GdaTimestamp *) &tim);
+				real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
+			}
+		}
+	}
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		/* value is GDA_TYPE_NULL */
+		entry_date_insert_func (NULL, insert_char, 0, data);
 	}
 	
 	gda_value_free (value);
