@@ -28,7 +28,15 @@
 #include "handlers/gda-handler-time.h"
 #include "handlers/gda-handler-type.h"
 
+#if GLIB_CHECK_VERSION(2,31,7)
+static GRecMutex init_rmutex;
+#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
+#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
+#else
 static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
+#define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
+#define MUTEX_UNLOCK() g_static_rec_mutex_unlock(&init_mutex)
+#endif
 static void gda_data_handler_iface_init (gpointer g_class);
 
 GType
@@ -49,13 +57,13 @@ gda_data_handler_get_type (void)
 			(GInstanceInitFunc) NULL,
 			0
 		};
-		
-		g_static_rec_mutex_lock (&init_mutex);
+
+		MUTEX_LOCK();
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_INTERFACE, "GdaDataHandler", &info, 0);
 			g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
 		}
-		g_static_rec_mutex_unlock (&init_mutex);
+		MUTEX_UNLOCK();
 	}
 	return type;
 }
@@ -66,11 +74,11 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
 {
 	static gboolean initialized = FALSE;
 
-	g_static_rec_mutex_lock (&init_mutex);
+	MUTEX_LOCK();
 	if (! initialized) {
 		initialized = TRUE;
 	}
-	g_static_rec_mutex_unlock (&init_mutex);
+	MUTEX_UNLOCK();
 }
 
 /**

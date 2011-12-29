@@ -533,7 +533,11 @@ gda_set_new_inline (gint nb, ...)
 		else if (type == GDA_TYPE_USHORT)
 			gda_value_set_ushort (value, va_arg (ap, guint));
 		else if (type == G_TYPE_CHAR)
+#if GLIB_CHECK_VERSION(2,31,7)
+			g_value_set_schar (value, va_arg (ap, gint));
+#else
 			g_value_set_char (value, va_arg (ap, int));
+#endif
 		else if (type == G_TYPE_UCHAR)
 			g_value_set_uchar (value, va_arg (ap, guint));
 		else if (type == G_TYPE_FLOAT)
@@ -637,7 +641,11 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 	else if (type == GDA_TYPE_USHORT)
 		gda_value_set_ushort (value, va_arg (ap, guint));
 	else if (type == G_TYPE_CHAR)
+#if GLIB_CHECK_VERSION(2,31,7)
+		g_value_set_schar (value, va_arg (ap, gint));
+#else
 		g_value_set_char (value, va_arg (ap, int));
+#endif
 	else if (type == G_TYPE_UCHAR)
 		g_value_set_uchar (value, va_arg (ap, guint));
 	else if (type == G_TYPE_FLOAT)

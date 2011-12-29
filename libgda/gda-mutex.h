@@ -28,7 +28,11 @@
 
 G_BEGIN_DECLS
 
+#if GLIB_CHECK_VERSION(2,31,7)
+typedef GRecMutex GdaMutex;
+#else
 typedef struct _GdaMutex GdaMutex;
+#endif
 
 /**
  * SECTION:gda-mutex

@@ -140,9 +140,15 @@ static void lock_notify_changes (void);
 static void unlock_notify_changes (void);
 #endif
 
+#if GLIB_CHECK_VERSION(2,31,7)
+static GRecMutex gda_rmutex;
+#define GDA_CONFIG_LOCK() g_rec_mutex_lock(&gda_rmutex)
+#define GDA_CONFIG_UNLOCK() g_rec_mutex_unlock(&gda_rmutex)
+#else
 static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
 #define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
 #define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
+#endif
 
 /* GdaServerProvider for SQLite as a shortcut, available
  * even if the SQLite provider is not installed

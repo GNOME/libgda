@@ -48,8 +48,6 @@ static void gda_sql_builder_get_property (GObject *object,
 					 GValue *value,
 					 GParamSpec *pspec);
 
-static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
-
 
 typedef struct {
 	GdaSqlAnyPart *part;
@@ -84,6 +82,7 @@ gda_sql_builder_get_type (void) {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
 			sizeof (GdaSqlBuilderClass),
 			(GBaseInitFunc) NULL,
@@ -97,10 +96,10 @@ gda_sql_builder_get_type (void) {
 			0
 		};
 
-		g_static_rec_mutex_lock (&init_mutex);
+		g_static_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlBuilder", &info, 0);
-		g_static_rec_mutex_unlock (&init_mutex);
+		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -552,7 +551,11 @@ create_typed_value (GType type, va_list *ap)
 	else if (type == GDA_TYPE_USHORT)
 		gda_value_set_ushort ((v = gda_value_new (GDA_TYPE_USHORT)), va_arg (*ap, guint));
 	else if (type == G_TYPE_CHAR)
+#if GLIB_CHECK_VERSION(2,31,7)
+		g_value_set_schar ((v = gda_value_new (G_TYPE_CHAR)), va_arg (*ap, gint));
+#else
 		g_value_set_char ((v = gda_value_new (G_TYPE_CHAR)), va_arg (*ap, gint));
+#endif
 	else if (type == G_TYPE_UCHAR)
 		g_value_set_uchar ((v = gda_value_new (G_TYPE_UCHAR)), va_arg (*ap, guint));
 	else if (type == G_TYPE_FLOAT)

@@ -141,6 +141,9 @@ gda_init (void)
 	g_free (file);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+#if GLIB_CHECK_VERSION(2,31,7)
+	/* threading cannot ne disabled */
+#else
 	/* Threading support if possible */
 	if (!getenv ("LIBGDA_NO_THREADS")) { /* Flawfinder: ignore */
 #ifdef G_THREADS_ENABLED
@@ -150,6 +153,7 @@ gda_init (void)
 #endif
 #endif
 	}
+#endif
 
 	g_type_init ();
 

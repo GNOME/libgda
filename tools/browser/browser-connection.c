@@ -353,7 +353,11 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->parser = NULL;
 	bcnc->priv->variables = NULL;
 	memset (&(bcnc->priv->dsn_info), 0, sizeof (GdaDsnInfo));
+#if GLIB_CHECK_VERSION(2,31,7)
+	g_mutex_init (&bcnc->priv->mstruct_mutex);
+#else
 	bcnc->priv->p_mstruct_mutex = g_mutex_new ();
+#endif
 	bcnc->priv->p_mstruct_list = NULL;
 	bcnc->priv->c_mstruct = NULL;
 	bcnc->priv->mstruct = NULL;
@@ -395,7 +399,11 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	gboolean retval = TRUE;
 	GdaMetaStruct *mstruct;
 
+#if GLIB_CHECK_VERSION(2,31,7)
+	g_mutex_lock (&bcnc->priv->mstruct_mutex);
+#else
 	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+#endif
 	g_assert (bcnc->priv->p_mstruct_list);
 	mstruct = (GdaMetaStruct *) bcnc->priv->p_mstruct_list->data;
 	/*g_print ("%s() for GdaMetaStruct %p\n", __FUNCTION__, mstruct);*/
@@ -404,7 +412,11 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	if (bcnc->priv->p_mstruct_list) {
 		/* don't care about this one */
 		g_object_unref (G_OBJECT (mstruct));
+#if GLIB_CHECK_VERSION(2,31,7)
+		g_mutex_unlock (&bcnc->priv->mstruct_mutex);
+#else
 		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+#endif
 		return GINT_TO_POINTER (3);
 	}
 	else {
@@ -414,7 +426,11 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 
 		/*g_print ("Meta struct sync for %p\n", mstruct);*/
 		retval = gda_meta_struct_complement_all (mstruct, error);
+#if GLIB_CHECK_VERSION(2,31,7)
+		g_mutex_unlock (&bcnc->priv->mstruct_mutex);
+#else
 		g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+#endif
 	}
 
 #ifdef GDA_DEBUG_NO
@@ -446,12 +462,20 @@ meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 	GError *lerror = NULL;
 	GdaMetaStruct *mstruct;
 	
+#if GLIB_CHECK_VERSION(2,31,7)
+	g_mutex_lock (&bcnc->priv->mstruct_mutex);
+#else
 	g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+#endif
 	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (bcnc->priv->cnc),
 				       GDA_META_STRUCT_FEATURE_ALL);
 	bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list, mstruct);
 	/*g_print ("%s() Added %p to p_mstruct_list\n", __FUNCTION__, mstruct);*/
+#if GLIB_CHECK_VERSION(2,31,7)
+	g_mutex_unlock (&bcnc->priv->mstruct_mutex);
+#else
 	g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+#endif
 	job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
 					     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
 					     g_object_ref (bcnc), g_object_unref, &lerror);
@@ -696,8 +720,12 @@ browser_connection_dispose (GObject *object)
 			g_slist_foreach (bcnc->priv->p_mstruct_list, (GFunc) g_object_unref, NULL);
 			g_slist_free (bcnc->priv->p_mstruct_list);
 		}
+#if GLIB_CHECK_VERSION(2,31,7)
+		g_mutex_clear (&bcnc->priv->mstruct_mutex);
+#else
 		if (bcnc->priv->p_mstruct_mutex)
 			g_mutex_free (bcnc->priv->p_mstruct_mutex);
+#endif
 
 		if (bcnc->priv->cnc)
 			g_object_unref (bcnc->priv->cnc);
@@ -780,7 +808,11 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 				/* nothing to do */
 			}
 			else {
+#if GLIB_CHECK_VERSION(2,31,7)
+				g_mutex_lock (&bcnc->priv->mstruct_mutex);
+#else
 				g_mutex_lock (bcnc->priv->p_mstruct_mutex);
+#endif
 				
 				if (bcnc->priv->c_mstruct) {
 					GdaMetaStruct *old_mstruct;
@@ -802,7 +834,11 @@ check_for_wrapper_result (BrowserConnection *bcnc)
 #endif
 					g_signal_emit (bcnc, browser_connection_signals [META_CHANGED], 0, bcnc->priv->mstruct);
 				}
+#if GLIB_CHECK_VERSION(2,31,7)
+				g_mutex_unlock (&bcnc->priv->mstruct_mutex);
+#else
 				g_mutex_unlock (bcnc->priv->p_mstruct_mutex);
+#endif
 			}
 			break;
 		}

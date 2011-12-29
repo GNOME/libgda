@@ -169,7 +169,11 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == G_TYPE_CHAR) {
 		lvalue = strtol (as_string, endptr, 10);
 		if (*as_string!=0 && **endptr==0) {
+#if GLIB_CHECK_VERSION(2,31,7)
+			g_value_set_schar(value,(gint)lvalue);
+#else
 			g_value_set_char(value,(gchar)lvalue);
+#endif
 			retval = TRUE;
 		}
 	}
@@ -2573,8 +2577,13 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 	}
 
 	else if (type == G_TYPE_CHAR) {
+#if GLIB_CHECK_VERSION(2,31,7)
+		gint8 c1 = g_value_get_schar (value1);
+		gint8 c2 = g_value_get_schar (value2);
+#else
 		gchar c1 = g_value_get_char (value1);
 		gchar c2 = g_value_get_char (value2);
+#endif
 		return (c1 > c2) ? 1 : ((c1 == c2) ? 0 : -1);
 	}
 
