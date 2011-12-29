@@ -40,7 +40,11 @@
  * by the worker thread. It is used to avoid creating signal data for threads for which
  * no job is being performed 
  */
+#if GLIB_CHECK_VERSION(2,31,7)
 GPrivate worker_thread_current_queue;
+#else
+GStaticPrivate worker_thread_current_queue = G_STATIC_PRIVATE_INIT;
+#endif
 
 typedef struct _ThreadData ThreadData;
 typedef struct _Job Job;
@@ -113,7 +117,11 @@ pipe_unref (Pipe *p)
 #endif
 		if (p->ref_count == 0) {
 			/* destroy @p */
+#if GLIB_CHECK_VERSION(2,31,7)
 			GMutex *m = &(p->mutex);
+#else
+			GMutex *m = p->mutex;
+#endif
 
 			if (p->ioc)
 				g_io_channel_unref (p->ioc);
