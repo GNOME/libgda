@@ -287,6 +287,13 @@ text_view_realized_cb (GtkWidget *tv, GdauiRtEditor *rte)
 	}
 }
 
+static gboolean
+focus_changed_cb (GtkWidget *textview, GdkEventFocus *ev, GdauiRtEditor *rte)
+{
+	show_hide_toolbar (rte);
+	return FALSE;
+}
+
 static void
 gdaui_rt_editor_init (GdauiRtEditor *rte)
 {
@@ -324,6 +331,10 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 				G_CALLBACK (insert_text_after_cb), rte);
 	g_signal_connect (rte->priv->textview, "populate-popup",
 			  G_CALLBACK (populate_popup_cb), rte);
+	g_signal_connect (rte->priv->textview, "focus-in-event",
+			  G_CALLBACK (focus_changed_cb), rte);
+	g_signal_connect (rte->priv->textview, "focus-out-event",
+			  G_CALLBACK (focus_changed_cb), rte);
 
 	/* tags. REM: leave the LIST* and BULLET tags defined 1st as they will be with less priority
 	 * and it affects the result returned by gtk_text_iter_get_tags() */
@@ -389,7 +400,8 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_MENU);
 	rte->priv->toolbar = toolbar;
 	gtk_box_pack_end (GTK_BOX (rte), toolbar, FALSE, FALSE, 0);
-	gtk_widget_show (toolbar);
+
+	show_hide_toolbar (rte);
 }
 
 /**
@@ -1948,8 +1960,13 @@ show_hide_toolbar (GdauiRtEditor *editor)
 {
 	gboolean enable_markup = TRUE;
 	GtkAction *action;
-	
-	if (gtk_text_view_get_editable (editor->priv->textview))
+	gboolean doshow = FALSE;
+
+	if (gtk_text_view_get_editable (editor->priv->textview) &&
+	    gtk_widget_has_focus (GTK_WIDGET (editor->priv->textview)))
+		doshow = TRUE;
+
+	if (doshow)
 		gtk_widget_show (editor->priv->toolbar);
 	else
 		gtk_widget_hide (editor->priv->toolbar);
