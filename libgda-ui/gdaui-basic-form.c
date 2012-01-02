@@ -47,6 +47,7 @@ static void gdaui_basic_form_get_property (GObject *object,
 					   guint param_id,
 					   GValue *value,
 					   GParamSpec *pspec);
+static void gdaui_basic_form_widget_grab_focus (GtkWidget *widget);
 
 typedef struct {
 	GdaHolder *holder;
@@ -202,11 +203,12 @@ gdaui_basic_form_get_type (void)
 }
 
 static void
-gdaui_basic_form_class_init (GdauiBasicFormClass * class)
+gdaui_basic_form_class_init (GdauiBasicFormClass *klass)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (class);
+	parent_class = g_type_class_peek_parent (klass);
+	GTK_WIDGET_CLASS (klass)->grab_focus = gdaui_basic_form_widget_grab_focus;
 
 	/* signals */
 	/**
@@ -272,9 +274,9 @@ gdaui_basic_form_class_init (GdauiBasicFormClass * class)
                               _gdaui_marshal_VOID__OBJECT, G_TYPE_NONE,
 			      1, GTK_TYPE_MENU);
 
-	class->holder_changed = NULL;
-	class->activated = NULL;
-	class->layout_changed = NULL;
+	klass->holder_changed = NULL;
+	klass->activated = NULL;
+	klass->layout_changed = NULL;
 	object_class->dispose = gdaui_basic_form_dispose;
 
 	/* Properties */
@@ -1914,24 +1916,46 @@ gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboo
 	sentry->prog_hidden = !show;
 }
 
+static void
+gdaui_basic_form_widget_grab_focus (GtkWidget *widget)
+{
+	gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (widget), NULL);
+}
+
 /**
  * gdaui_basic_form_entry_grab_focus:
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object
+ * @param: (allow-none): a #GdaHolder object, or %NULL
  *
- * Makes the data entry corresponding to @param grab the focus for the window it's in
+ * Makes the data entry corresponding to @param grab the focus for the window it's in. If @param is %NULL,
+ * then the focus is on the first entry which needs attention.
  *
  * Since: 4.2
  */
 void
 gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
 {
-	GtkWidget *entry;
+	GtkWidget *entry = NULL;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 
-	entry = gdaui_basic_form_get_entry_widget (form, param);
+	if (param) {
+		g_return_if_fail (GDA_IS_HOLDER (param));
+		entry = gdaui_basic_form_get_entry_widget (form, param);
+	}
 
+	if (!entry && form->priv->set) {
+		GSList *list;
+		for (list = form->priv->set->holders; list; list = list->next) {
+			GdaHolder *holder;
+			holder = GDA_HOLDER (list->data);
+			if (!gda_holder_is_valid (holder)) {
+				entry = gdaui_basic_form_get_entry_widget (form, holder);
+				if (entry)
+					break;
+			}
+		}
+	}
 	if (entry)
 		gdaui_data_entry_grab_focus (GDAUI_DATA_ENTRY (entry));
 }
