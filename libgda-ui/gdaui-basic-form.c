@@ -1116,6 +1116,8 @@ create_entries (GdauiBasicForm *form)
 	gdaui_basic_form_show_entry_actions (form, form->priv->show_actions);
 	/* Set the Auto entries default in the entries */
 	gdaui_basic_form_set_entries_auto_default (form, form->priv->entries_auto_default);
+
+	gdaui_basic_form_reset (form);
 }
 
 static void
