@@ -31,7 +31,7 @@ static void login_dialog_class_init (LoginDialogClass * class);
 static void login_dialog_init (LoginDialog *dialog);
 static void login_dialog_dispose (GObject *object);
 
-static GdaConnection *real_open_connection (const GdaDsnInfo *cncinfo, GError **error);
+static GdaConnection *real_open_connection (GdaThreadWrapper *wrapper, const GdaDsnInfo *cncinfo, GError **error);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -40,6 +40,7 @@ struct _LoginDialogPrivate
 {
 	GtkWidget *login;
 	GtkWidget *spinner;
+	GdaThreadWrapper *wrapper;
 };
 
 /* module error */
@@ -168,6 +169,8 @@ login_dialog_dispose (GObject *object)
 	LoginDialog *dialog;
 	dialog = LOGIN_DIALOG (object);
 	if (dialog->priv) {
+		if (dialog->priv->wrapper)
+			g_object_unref (dialog->priv->wrapper);
 		g_free (dialog->priv);
 		dialog->priv = NULL;
 	}
@@ -224,8 +227,11 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 			const GdaDsnInfo *info;
 			GError *lerror = NULL;
 			
+			if (!dialog->priv->wrapper)
+				dialog->priv->wrapper = gda_thread_wrapper_new ();
+
 			info = gdaui_login_get_connection_information (GDAUI_LOGIN (dialog->priv->login));
-			cnc = real_open_connection (info, &lerror);
+			cnc = real_open_connection (dialog->priv->wrapper, info, &lerror);
 			browser_spinner_stop (BROWSER_SPINNER (dialog->priv->spinner));
 			if (cnc)
 				goto out;
@@ -260,12 +266,6 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 	gtk_widget_hide (GTK_WIDGET (dialog));
 	return cnc;
 }
-
-/*
- * Open a connection in a sub thread
- */
-
-static GdaThreadWrapper *wrapper = NULL;
 
 /*
  * executed in a sub thread
@@ -308,6 +308,7 @@ typedef struct {
 	guint cncid;
 	GMainLoop *loop;
 	GError **error;
+	GdaThreadWrapper *wrapper;
 
 	/* out */
 	GdaConnection *cnc;
@@ -318,7 +319,7 @@ check_for_cnc (MainloopData *data)
 {
 	GdaConnection *cnc;
 	GError *lerror = NULL;
-	cnc = gda_thread_wrapper_fetch_result (wrapper, FALSE, data->cncid, &lerror);
+	cnc = gda_thread_wrapper_fetch_result (data->wrapper, FALSE, data->cncid, &lerror);
 	if (cnc || (!cnc && lerror)) {
 		/* waiting is finished! */
 		data->cnc = cnc;
@@ -340,14 +341,11 @@ check_for_cnc (MainloopData *data)
  * Returns: a new #GdaConnection, or %NULL if an error occurred
  */
 static GdaConnection *
-real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
+real_open_connection (GdaThreadWrapper *wrapper, const GdaDsnInfo *cncinfo, GError **error)
 {
 	
 	GdaDsnInfo *info;
 	guint cncid;
-
-	if (!wrapper)
-		wrapper = gda_thread_wrapper_new ();
 
 	info = g_new0 (GdaDsnInfo, 1);
 	if (cncinfo->name)
@@ -376,6 +374,7 @@ real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 	data.error = error;
 	data.loop = loop;
 	data.cnc = NULL;
+	data.wrapper = wrapper;
 
 	g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
 	g_main_loop_run (loop);

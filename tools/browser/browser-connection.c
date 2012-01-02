@@ -524,6 +524,108 @@ browser_connection_meta_data_changed (BrowserConnection *bcnc)
 	meta_changed_cb (NULL, NULL, NULL, 0, NULL, NULL, bcnc);
 }
 
+static gpointer
+wrapper_have_meta_store_ready (BrowserConnection *bcnc, GError **error)
+{
+	gchar *dict_file_name = NULL;
+	gboolean update_store = FALSE;
+	GdaMetaStore *store;
+	gchar *cnc_string, *cnc_info;
+
+	g_object_get (G_OBJECT (bcnc->priv->cnc),
+		      "dsn", &cnc_info,
+		      "cnc-string", &cnc_string, NULL);
+	dict_file_name = config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
+							     cnc_string);
+	g_free (cnc_string);
+	if (dict_file_name) {
+		if (BROWSER_IS_VIRTUAL_CONNECTION (bcnc))
+			/* force meta store update in case of virtual connection */
+			update_store = TRUE;
+		else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
+			update_store = TRUE;
+		store = gda_meta_store_new_with_file (dict_file_name);
+	}
+	else {
+		store = gda_meta_store_new (NULL);
+		if (store)
+			update_store = TRUE;
+	}
+	config_info_update_meta_store_properties (store, bcnc->priv->cnc);
+
+	bcnc->priv->dict_file_name = dict_file_name;
+	g_object_set (G_OBJECT (bcnc->priv->cnc), "meta-store", store, NULL);
+	if (update_store) {
+		gboolean retval;
+		GdaMetaContext context = {"_tables", 0, NULL, NULL};
+		retval = gda_connection_update_meta_store (bcnc->priv->cnc, &context, error);
+		if (!retval) {
+			g_object_unref (store);
+			return NULL;
+		}
+	}
+
+	gboolean retval = TRUE;
+	GdaMetaStruct *mstruct;
+	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+	MUTEX_LOCK (bcnc);
+	if (bcnc->priv->c_mstruct) {
+		g_object_unref (bcnc->priv->c_mstruct);
+		bcnc->priv->c_mstruct = NULL;
+	}
+	bcnc->priv->mstruct = mstruct;
+	retval = gda_meta_struct_complement_all (mstruct, error);
+	MUTEX_UNLOCK (bcnc);
+
+#ifdef GDA_DEBUG_NO
+	GSList *all, *list;
+	g_print ("%s() %p:\n", __FUNCTION__, bcnc->priv->mstruct);
+	all = gda_meta_struct_get_all_db_objects (bcnc->priv->mstruct);
+	for (list = all; list; list = list->next) {
+		GdaMetaDbObject *dbo = (GdaMetaDbObject *) list->data;
+		g_print ("DBO, Type %d: short=>[%s] schema=>[%s] full=>[%s]\n", dbo->obj_type,
+			 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
+	}
+	g_slist_free (all);
+#endif
+	bcnc->priv->meta_store_signal =
+		gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
+						FALSE, FALSE,
+						(GdaThreadWrapperCallback) meta_changed_cb,
+						bcnc);
+	g_object_unref (store);
+	return retval ? (void*) 0x01 : NULL;
+}
+
+typedef struct {
+        guint jid;
+        GMainLoop *loop;
+        GError **error;
+        GdaThreadWrapper *wrapper;
+
+        /* out */
+	gboolean retval;
+} MainloopData;
+
+static gboolean
+check_for_meta_store_ready (MainloopData *data)
+{
+	gpointer retval;
+        GError *lerror = NULL;
+
+        retval = gda_thread_wrapper_fetch_result (data->wrapper, FALSE, data->jid, &lerror);
+        if (retval || (!retval && lerror)) {
+                /* waiting is finished! */
+                data->retval = retval ? TRUE : FALSE;
+                if (lerror)
+                        g_propagate_error (data->error, lerror);
+                g_main_loop_quit (data->loop);
+                return FALSE;
+        }
+        return TRUE;
+}
+
+
 static void
 browser_connection_set_property (GObject *object,
 				 guint param_id,
@@ -553,80 +655,37 @@ browser_connection_set_property (GObject *object,
 								bcnc);
 
 
-			/* meta store */
-			gchar *dict_file_name = NULL;
-			gboolean update_store = FALSE;
-			GdaMetaStore *store;
-			gchar *cnc_string, *cnc_info;
-			
-			g_object_get (G_OBJECT (bcnc->priv->cnc),
-				      "dsn", &cnc_info,
-				      "cnc-string", &cnc_string, NULL);
-			dict_file_name = config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
-									     cnc_string);
-			g_free (cnc_string);
-			if (dict_file_name) {
-				if (BROWSER_IS_VIRTUAL_CONNECTION (bcnc))
-					/* force meta store update in case of virtual connection */
-					update_store = TRUE;
-				else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
-					update_store = TRUE;
-				store = gda_meta_store_new_with_file (dict_file_name);
+			/* meta store, open it in a sub thread to avoid locking the GTK thread */
+			gpointer retval;
+			GError *lerror = NULL;
+			guint jid;
+			jid = gda_thread_wrapper_execute (bcnc->priv->wrapper,
+							  (GdaThreadWrapperFunc) wrapper_have_meta_store_ready,
+							  (gpointer) bcnc,
+							  NULL, &lerror);
+			if (jid == 0) {
+				browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
+						    lerror->message ? lerror->message : _("No detail"));
+				g_clear_error (&lerror);
 			}
 			else {
-				store = gda_meta_store_new (NULL);
-				if (store)
-					update_store = TRUE;
-			}
-			config_info_update_meta_store_properties (store, bcnc->priv->cnc);
+				GMainLoop *loop;
+				MainloopData data;
 
-			bcnc->priv->dict_file_name = dict_file_name;
-			g_object_set (G_OBJECT (bcnc->priv->cnc), "meta-store", store, NULL);
-			if (update_store) {
-				GError *lerror = NULL;
-				guint job_id;
-				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-								     (GdaThreadWrapperFunc) wrapper_meta_store_update,
-								     g_object_ref (bcnc), g_object_unref, &lerror);
-				if (job_id > 0)
-					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STORE_UPDATE,
-							  _("Getting database schema information"),
-							  NULL, NULL);
-				else if (lerror) {
+				loop = g_main_loop_new (NULL, FALSE);
+				data.jid = jid;
+				data.loop = loop;
+				data.error = &lerror;
+				data.wrapper = bcnc->priv->wrapper;
+				g_timeout_add (200, (GSourceFunc) check_for_meta_store_ready, &data);
+				g_main_loop_run (loop);
+				g_main_loop_unref (loop);
+				if (!data.retval) {
 					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
 							    lerror->message ? lerror->message : _("No detail"));
-					g_error_free (lerror);
+					g_clear_error (&lerror);
 				}
 			}
-			else {
-				guint job_id;
-				GError *lerror = NULL;
-				GdaMetaStruct *mstruct;
-
-				mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
-				bcnc->priv->p_mstruct_list = g_slist_append (bcnc->priv->p_mstruct_list,
-									     mstruct);
-				/*g_print ("%s() Added %p to p_mstruct_list\n", __FUNCTION__, mstruct);*/
-				job_id = gda_thread_wrapper_execute (bcnc->priv->wrapper,
-								     (GdaThreadWrapperFunc) wrapper_meta_struct_sync,
-								     g_object_ref (bcnc), g_object_unref, &lerror);
-				if (job_id > 0)
-					push_wrapper_job (bcnc, job_id, JOB_TYPE_META_STRUCT_SYNC,
-							  _("Analysing database schema"),
-							  NULL, NULL);
-				else if (lerror) {
-					browser_show_error (NULL, _("Error while fetching meta data from the connection: %s"),
-							    lerror->message ? lerror->message : _("No detail"));
-					g_error_free (lerror);
-				}
-				g_object_unref (store);
-				bcnc->priv->meta_store_signal =
-					gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
-									FALSE, FALSE,
-									(GdaThreadWrapperCallback) meta_changed_cb,
-									bcnc);
-			}
-
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
