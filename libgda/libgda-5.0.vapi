@@ -819,7 +819,7 @@ namespace Gda {
 		public Set.from_spec_string (string xml_spec) throws GLib.Error;
 		public Gda.SetGroup get_group (Gda.Holder holder);
 		public unowned Gda.Holder get_holder (string holder_id);
-		public GLib.Value get_holder_value (string holder_id);
+		public unowned GLib.Value? get_holder_value (string holder_id);
 		public Gda.SetNode get_node (Gda.Holder holder);
 		public unowned Gda.Holder get_nth_holder (int pos);
 		public Gda.SetSource get_source (Gda.Holder holder);
