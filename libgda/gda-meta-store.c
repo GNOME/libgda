@@ -664,13 +664,21 @@ gda_meta_store_new (const gchar *cnc_string)
 {
 	GObject *obj;
 	GdaMetaStore *store;
-
+#ifdef GDA_DEBUG_NO
+	GTimer *timer;
+	timer = g_timer_new ();
+#endif
 	MUTEX_LOCK();
 	if (cnc_string)
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", cnc_string, NULL);
 	else
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=__gda_tmp", NULL);
 	MUTEX_UNLOCK();
+#ifdef GDA_DEBUG_NO
+	g_timer_stop (timer);
+	g_print ("GdaMetaStore took %.03f sec. to create.\n", g_timer_elapsed (timer, NULL));
+	g_timer_destroy (timer);
+#endif
 	store = GDA_META_STORE (obj);
 	if (!store->priv->cnc) {
 		g_object_unref (store);
