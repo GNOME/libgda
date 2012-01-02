@@ -168,6 +168,7 @@ update_ad_auth (AuthData *ad)
 			
 			g_strfreev (array);
 		}
+		gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (ad->auth_widget), NULL);
 	}
 }
 
