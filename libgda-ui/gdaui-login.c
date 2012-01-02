@@ -139,6 +139,12 @@ config_dsn_changed_cb (G_GNUC_UNUSED GdaConfig *config, GdaDsnInfo *dsn, GdauiLo
 }
 
 static void
+auth_data_changed_cb (GdauiProviderAuthEditor *auth, GdauiLogin *login)
+{
+	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
+}
+
+static void
 gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 {
 	GtkWidget *table;
@@ -217,6 +223,8 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	login->priv->auth_widget = _gdaui_provider_auth_editor_new (NULL);
 	gtk_table_attach_defaults (GTK_TABLE (table), login->priv->auth_widget, 1, 3, 3, 4);
 	gtk_widget_show (login->priv->auth_widget);
+	g_signal_connect (login->priv->auth_widget, "changed",
+			  G_CALLBACK (auth_data_changed_cb), login);
 
 	prov_entry_changed_cb (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector), login);
 }
