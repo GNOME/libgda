@@ -37,17 +37,19 @@ struct _GdauiProviderAuthEditorPrivate {
 
 static void gdaui_provider_auth_editor_class_init (GdauiProviderAuthEditorClass *klass);
 static void gdaui_provider_auth_editor_init       (GdauiProviderAuthEditor *auth,
-						      GdauiProviderAuthEditorClass *klass);
+						   GdauiProviderAuthEditorClass *klass);
 static void gdaui_provider_auth_editor_finalize   (GObject *object);
 
 static void gdaui_provider_auth_editor_set_property (GObject *object,
-							guint param_id,
-							const GValue *value,
-							GParamSpec *pspec);
+						     guint param_id,
+						     const GValue *value,
+						     GParamSpec *pspec);
 static void gdaui_provider_auth_editor_get_property (GObject *object,
-							guint param_id,
-							GValue *value,
-							GParamSpec *pspec);
+						     guint param_id,
+						     GValue *value,
+						     GParamSpec *pspec);
+
+static void gdaui_provider_auth_editor_grab_focus (GtkWidget *widget);
 
 enum {
 	PROP_0,
@@ -78,6 +80,7 @@ gdaui_provider_auth_editor_class_init (GdauiProviderAuthEditorClass *klass)
 	object_class->set_property = gdaui_provider_auth_editor_set_property;
 	object_class->get_property = gdaui_provider_auth_editor_get_property;
 	klass->changed = NULL;
+	GTK_WIDGET_CLASS (klass)->grab_focus = gdaui_provider_auth_editor_grab_focus;
 
 	g_object_class_install_property (object_class, PROP_PROVIDER,
 	                                 g_param_spec_string ("provider", NULL, NULL, NULL,
@@ -92,6 +95,14 @@ gdaui_provider_auth_editor_class_init (GdauiProviderAuthEditorClass *klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
+}
+
+static void
+gdaui_provider_auth_editor_grab_focus (GtkWidget *widget)
+{
+	GdauiProviderAuthEditor *aed = GDAUI_PROVIDER_AUTH_EDITOR (widget);
+	if (aed->priv->auth_widget)
+		gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (aed->priv->auth_widget), NULL);
 }
 
 static void
