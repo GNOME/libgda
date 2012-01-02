@@ -467,6 +467,9 @@ dsn_entry_changed_cb (GdauiDsnSelector *sel, GdauiLogin *login)
 	_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
 					       info ? info->cnc_string : NULL);
 
+	if (login->priv->auth_widget)
+		gtk_widget_grab_focus (login->priv->auth_widget);
+
 	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
 }
 
@@ -485,6 +488,9 @@ prov_entry_changed_cb (GdauiProviderSelector *sel, GdauiLogin *login)
 						 prov);
 	_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
 						 prov);
+
+	if (login->priv->auth_widget)
+		gtk_widget_grab_focus (login->priv->auth_widget);
 
 	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
 }
