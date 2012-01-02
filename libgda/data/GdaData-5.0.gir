@@ -9,6 +9,11 @@
 	<annotation key="ccode.gir-version" value="5.0"/>
 	<annotation key="ccode.cheader-filename" value="libgda/libgdadata.h"/>
 	<annotation key="ccode.gir-namespace" value="GdaData"/>
+	<errordomain name="ObjectError" get-quark="gda_data_object_error_quark" codes="ObjectError">
+</errordomain>
+	<enumeration name="ObjectError" c:type="GdaDataObjectError">
+		<member name="append" c:identifier="GDA_DATA_OBJECT_ERROR_APPEND" value="0"/>
+	</enumeration>
 	<class name="Object" c:type="GdaDataObject" glib:type-name="GdaDataObject" glib:get-type="gda_data_object_get_type" glib:type-struct="ObjectClass" parent="GObject.Object" abstract="1">
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
@@ -82,6 +87,16 @@
 				<type name="Gda.SqlBuilder" c:type="GdaSqlBuilder*"/>
 			</return-value>
 		</method>
+		<method name="append" c:identifier="gda_data_object_append" throws="1">
+			<return-value transfer-ownership="full" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</return-value>
+		</method>
+		<virtual-method name="append" invoker="append" throws="1">
+			<return-value transfer-ownership="full" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</return-value>
+		</virtual-method>
 		<property name="table">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
@@ -95,6 +110,18 @@
 	<record name="ObjectClass" c:type="GdaDataObjectClass" glib:is-gtype-struct-for="Object">
 		<field name="parent_class">
 			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+				<field name="append">
+			<callback name="append" c:type="append" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.Object" c:type="GdaDataObject*"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</return-value>
+			</callback>
 		</field>
 	</record>
 	<record name="ObjectPrivate" c:type="GdaDataObjectPrivate" disguised="1"/>

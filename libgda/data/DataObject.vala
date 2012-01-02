@@ -19,23 +19,34 @@
 
 using Gda;
 
-[CCode (gir_namespace = "GdaData", gir_version = "5.0", cheader_filename="libgda/libgdadata.h")]
 namespace GdaData {
 
-    public abstract class Object : GLib.Object {
+    public errordomain ObjectError {
+    	APPEND
+    }
+    public abstract class Object<G> : GLib.Object {
         
         private string? _field_id;
         private Value? _id_value;
         private DataModel _model;
         
+        /**
+         * Derived classes must implement this property to set the table used to get data from.
+         */
         public abstract string table { get; }
         
+        /**
+         * Returns a Gda.DataModel with the data stored by this object.
+         */
         public DataModel record {
         	get {
         		return this._model;
         	}
         }
         
+        /**
+         * Set the connection to be used to get/set data.
+         */
         public Connection connection { get; set; }
         
         public string get_field_id ()
@@ -64,24 +75,37 @@ namespace GdaData {
         	this._model= (DataModel) DataProxy.new (m);
         }
         
+        /**
+         * Returns a GLib.Value containing the value stored in the given field.
+         */
         public unowned Value? get_value (string field)
         	throws Error
         {
         	return this._model.get_value_at (this._model.get_column_index (field), 0);
         }
         
+        /**
+         * Set the value to a field with the given @name
+         */
         public void set_value (string field, Value v)
         	throws Error
         {
         	this._model.set_value_at (this._model.get_column_index (field), 0, v);
         }
         
+        /**
+         * Saves any modficiation made to in memory representation of the data directly to
+         * the database.
+         */
         public void save ()
         	throws Error
         {
         	((DataProxy) this._model).apply_all_changes ();
         }
         
+        /**
+         * Re-load the data stored in the dabase.
+         */
         public void update ()
         	throws Error
         	requires (this.table != "")
@@ -89,6 +113,10 @@ namespace GdaData {
         	set_id (this._field_id, this._id_value);
         }
         
+        /**
+         * Returns a #SqlBuilder object with the query used to select the data in the used
+         * that points this object to.
+         */
         public SqlBuilder sql ()
         	requires (this.table != null || this.table != "")
         	requires (this._field_id != null || this._field_id != "")
@@ -103,5 +131,12 @@ namespace GdaData {
 			q.select_add_field ("*", null, null);
 			return q;			
         }
+        
+        /**
+         * abstract function to be implemented in derived classes to add new objects to the database.<BR>
+         * 
+         * Error code must be ObjectError.APPEND.
+         */
+        public abstract G append () throws ObjectError;
     }
 }
