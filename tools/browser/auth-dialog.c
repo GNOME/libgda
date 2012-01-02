@@ -382,6 +382,23 @@ auth_form_activated_cb (G_GNUC_UNUSED GdauiBasicForm *form, AuthDialog *dialog)
 	gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
 }
 
+static void
+auth_contents_changed_cb (GdauiBasicForm *form, GdaHolder *h, gboolean is_user_modif, AuthDialog *dialog)
+{
+	GSList *list;
+	for (list = dialog->priv->auth_list; list; list = list->next) {
+		AuthData *ad = (AuthData*) list->data;
+		if (! gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (ad->auth_widget)))
+			break;
+	}
+
+	gboolean is_valid;
+	is_valid = list ? FALSE : TRUE;
+	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, is_valid);
+        if (is_valid)
+                gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+}
+
 /**
  * auth_dialog_add_cnc_string
  */
@@ -504,6 +521,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
                 ad->auth_widget = gdaui_basic_form_new (set);
                 g_signal_connect (G_OBJECT (ad->auth_widget), "activated",
 				  G_CALLBACK (auth_form_activated_cb), dialog);
+                g_signal_connect (G_OBJECT (ad->auth_widget), "holder-changed",
+				  G_CALLBACK (auth_contents_changed_cb), dialog);
                 g_object_unref (set);
 
 		/* add widget */
