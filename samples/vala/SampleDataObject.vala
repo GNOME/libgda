@@ -22,7 +22,7 @@ using GdaData;
 
 namespace Sample {
 
-	class DbRecord : GdaData.Object {
+	class DbRecord : GdaData.Object<DbRecord> {
 		private static string dbtable = "user";
 		
 		/**
@@ -64,6 +64,25 @@ namespace Sample {
 				}
 				catch {}
 			}
+		}
+		
+		public override DbRecord append ()
+			throws ObjectError
+		{
+			var sql = new SqlBuilder (SqlStatementType.INSERT);
+			sql.set_table (this.table);
+			sql.add_field_value_as_gvalue ("functions", functions);
+			sql.add_field_value_as_gvalue ("name", name);
+			Set last_inserted;
+			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, out last_inserted);
+			if (i != 1) {
+				throw new GdaData.ObjectError.APPEND ("Have been added more or less rows than expected");
+			}
+			var id = last_inserted.get_holder_value ("0");
+			var n = new DbRecord ();
+			n.connection = this.connection;
+			n.set_id ("id", id);
+			return n;
 		}
 		
 		/**
