@@ -55,6 +55,7 @@ data_model_collection_sources = \
 	$(NULL)
 
 libgdadata_5_0_la_VALASOURCES = \
+	NamespaceInfo.vala \
 	$(object_persistance_sources) \
 	$(db_collection_sources) \
 	$(data_model_collection_sources) \
