@@ -56,6 +56,7 @@ browser_connection_open (GError **error)
 		browser_core_take_window (nbwin);
 		browser_core_take_connection (bcnc);
 	}
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 	return bcnc;
 }
 
