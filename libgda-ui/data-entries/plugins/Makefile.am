@@ -29,6 +29,7 @@ plugins_headers = \
 	gdaui-data-cell-renderer-pict.h \
 	gdaui-entry-filesel.h \
 	gdaui-entry-cidr.h \
+	gdaui-entry-format.h \
 	gdaui-entry-text.h \
 	gdaui-entry-pict.h \
 	gdaui-entry-rt.h \
@@ -45,6 +46,7 @@ libgda_ui_plugins_la_SOURCES = \
 	gdaui-data-cell-renderer-pict.c \
 	gdaui-entry-filesel.c \
 	gdaui-entry-cidr.c \
+	gdaui-entry-format.c \
 	gdaui-entry-text.c \
 	gdaui-entry-pict.c \
 	gdaui-entry-rt.c \
@@ -65,7 +67,8 @@ xml_in_files = \
 	gdaui-entry-pict-spec_string.xml.in \
 	gdaui-entry-filesel-spec.xml.in \
 	gdaui-entry-password.xml.in \
-	gdaui-entry-text-spec.xml.in
+	gdaui-entry-text-spec.xml.in \
+	gdaui-entry-format-spec.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 

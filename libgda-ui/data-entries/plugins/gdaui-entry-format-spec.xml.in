@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="FORMAT" _name="Format" _descr="Allowed characters at each position('0':digit, '9': digit except 0, '@':alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other character will be left unmodified)" gdatype="string"/>
+    <parameter id="MASK" _name="Mask" _descr="Writing mask for corresponding characters in format ('_': writable, '-':writable, removed from actual value, ' ': not writable)" gdatype="string"/>
+  </parameters>
+</data-set-spec>
