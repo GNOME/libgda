@@ -316,6 +316,8 @@ gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, G_GNU
 	gint i, pos;
 
 	fentry = (GdauiFormattedEntry*) entry;
+	if (!fentry->priv->format)
+		return;
 
 	const gchar *ptr, *fptr;
 	pos = *virt_pos;
@@ -333,8 +335,10 @@ gdaui_formatted_entry_assume_insert (GdauiEntry *entry, const gchar *text, G_GNU
 		while ((pos < fentry->priv->format_clen) &&
 		       !is_writable (fentry, pos, fptr)) {
 			fptr = g_utf8_next_char (fptr);
-			if (!fptr || !*fptr)
+			if (!fptr || !*fptr) {
+				_gdaui_entry_unblock_changes (entry);
 				return;
+			}
 			pos++;
 		}
 		
@@ -374,6 +378,8 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
 	gint i;
 
 	fentry = (GdauiFormattedEntry*) entry;
+	if (!fentry->priv->format)
+		return;
 
 #ifdef GDA_DEBUG
 	gint clen;
@@ -410,8 +416,10 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
 					fptr = g_utf8_find_prev_char (fentry->priv->format, fptr);
 					npos --;
 				}
-				if (i < 0)
+				if (i < 0) {
+					_gdaui_entry_unblock_changes (entry);
 					return;
+				}
 				else
 					gtk_editable_set_position ((GtkEditable*) entry, npos);
 			}
