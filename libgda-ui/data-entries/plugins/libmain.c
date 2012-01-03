@@ -31,6 +31,7 @@
 #include "gdaui-entry-pict.h"
 #include "gdaui-entry-rt.h"
 #include "gdaui-data-cell-renderer-pict.h"
+#include "gdaui-entry-format.h"
 
 #ifdef HAVE_LIBGCRYPT
 #include "gdaui-entry-password.h"
@@ -51,6 +52,7 @@
 
 static GdauiDataEntry *plugin_entry_filesel_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, const gchar *options);
+static GdauiDataEntry *plugin_entry_format_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_text_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_rt_create_func (GdaDataHandler *handler, GType type, const gchar *options);
 static GdauiDataEntry *plugin_entry_pict_create_func (GdaDataHandler *handler, GType type, const gchar *options);
@@ -104,6 +106,30 @@ plugin_init (GError **error)
 	plugin->entry_create_func = plugin_entry_cidr_create_func;
 	plugin->cell_create_func = NULL;
 	retlist = g_slist_append (retlist, plugin);
+
+	/* FORMAT */
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "format";
+	plugin->plugin_descr = "Text entry with specific format";
+	plugin->plugin_file = NULL; /* always leave NULL */
+	plugin->nb_g_types = 1;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = G_TYPE_STRING;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = plugin_entry_format_create_func;
+	plugin->cell_create_func = NULL;
+	retlist = g_slist_append (retlist, plugin);
+	file = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "plugins", "gdaui-entry-format-spec.xml", NULL);
+	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
+		if (error && !*error)
+			g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_FILE_NOT_FOUND_ERROR,
+				     _("Missing spec. file '%s'"), file);
+        }
+	else {
+		gsize len;
+		g_file_get_contents (file, &(plugin->options_xml_spec), &len, error);
+	}
+	g_free (file);
 
 #ifdef HAVE_LIBGCRYPT
 	/* PASSWORD */
@@ -299,6 +325,12 @@ static GdauiDataEntry *
 plugin_entry_cidr_create_func (GdaDataHandler *handler, GType type, G_GNUC_UNUSED const gchar *options)
 {
 	return (GdauiDataEntry *) gdaui_entry_cidr_new (handler, type);
+}
+
+static GdauiDataEntry *
+plugin_entry_format_create_func (GdaDataHandler *handler, GType type, const gchar *options)
+{
+	return (GdauiDataEntry *) gdaui_entry_format_new (handler, type, options);
 }
 
 static GdauiDataEntry *
