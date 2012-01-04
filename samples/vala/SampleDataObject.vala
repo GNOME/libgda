@@ -22,7 +22,7 @@ using GdaData;
 
 namespace Sample {
 
-	class Record : GdaData.ObjectSingleId<string> {
+	class Record : GdaData.ObjectSingleId {
 		private static string dbtable = "user";
 		
 		/**
@@ -51,7 +51,7 @@ namespace Sample {
 		 * get_value(string) function.
 		 */
 		public string functions {
-			get {
+			owned get {
 					return (string) this.get_value ("functions");
 			}
 			set {
@@ -63,7 +63,7 @@ namespace Sample {
 		}
 		
 		public string name {
-			get {
+			owned get {
 				return (string) this.get_value ("name");
 			}
 			
@@ -104,7 +104,7 @@ namespace Sample {
 			try { rcd.set_id (name); }
 			catch (Error e) { stdout.printf ("ERROR: Record no opened\n" + e.message + "\n"); }
 			
-			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.to_string () + "\n");
 			
 			stdout.printf ("Modifying user: " + rcd.name + "\n");
 			// Changing functions
@@ -121,7 +121,7 @@ namespace Sample {
 			
 			try { rcd.save (); }
 			catch (Error e) { stdout.printf ("ERROR: Can't save modifycations'\n" + e.message + "\n"); }
-			stdout.printf ("Modified Values: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+			stdout.printf ("Modified Values: " + rcd.name + "\n" + rcd.to_string () + "\n");
 		}
 		
 		public void simulate_external_modifications ()
@@ -131,10 +131,10 @@ namespace Sample {
 			var rcd = new Record ();
 			rcd.connection = this.connection;
 			rcd.set_id ("Jane Castle PhD.");
-			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.to_string () + "\n");
 			this.connection.execute_non_select_command("UPDATE user SET functions = \"Secretary\" WHERE name = \"Jane Castle PhD.\"");
 			rcd.update ();
-			stdout.printf ("Updated Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+			stdout.printf ("Updated Values for: " + rcd.name + "\n" + rcd.to_string () + "\n");
 		}
 		
 		public void append_objects (string name, string functions)
@@ -144,7 +144,7 @@ namespace Sample {
 			var ob = new Record ();
 			ob.connection = this.connection;
 			ob.set_id ("Jane Castle PhD.");
-			string id;
+			Value id;
 			ob.append (out id);
 			var m = this.connection.execute_select_command ("SELECT * FROM user");
 			stdout.printf ("Appended Values:\n" + m.dump_as_string () + "\n");

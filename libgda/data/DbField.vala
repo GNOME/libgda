@@ -29,6 +29,8 @@ namespace GdaData
 		public abstract string column_name { get; construct; }
 		public abstract DbField.Attribute attributes { get; construct; }
 		
+		public abstract string to_string ();
+		
 		[Flags]
 		public enum Attribute {
 			NONE,

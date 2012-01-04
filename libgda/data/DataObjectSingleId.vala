@@ -89,6 +89,7 @@ namespace GdaData {
 			var f_id = sql.add_id (this.field_id);
 			var e_id = sql.add_expr_value (null, this._id_value);
 			var c_id = sql.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
+			sql.set_where (c_id);
 			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, null);
 			if (i != 1) {
 				throw new DbObjectError.APPEND ("Have been saved more or less rows than expected");
@@ -114,6 +115,18 @@ namespace GdaData {
         	requires (this.table != "")
         {
         	set_id (this._id_value);
+        }
+        public override string to_string () 
+        {
+        	string r = "";
+			foreach (Field<Value?> f in this.fields) {
+				r += "|" + f.name;
+			}
+			
+			foreach (Field<Value?> f in this.fields) {
+				r += "|" + f.to_string ();
+			}
+			return r;
         }
 	}
 }

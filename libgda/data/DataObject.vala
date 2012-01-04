@@ -18,12 +18,13 @@
  */
 
 using Gda;
+using Gee;
 
 namespace GdaData {
 
     public abstract class Object<G> : GLib.Object {
         
-        protected Gee.HashMap<string,Field<Value?>> _model;
+        protected HashMap<string,Field<G>> _model;
         /**
          * Derived classes must implement this property to set the table used to get data from.
          */
@@ -31,7 +32,7 @@ namespace GdaData {
         /**
          * Returns a Gda.DataModel with the data stored by this object.
          */
-        public abstract DataModel record { get; }
+        public Collection<Field<G>> fields { owned get { return _model.values; } }
         /**
          * Set the connection to be used to get/set data.
          */
@@ -39,15 +40,16 @@ namespace GdaData {
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
-        public Value? get_value (string field)
+        public G get_value (string field)
         	throws Error
         {
-        	return (this._model.get (field)).value;
+        	var f = this._model.get (field);
+        	return f.value;
         }
 		/**
          * Set the value to a field with the given @name.
          */
-        public void set_value (string field, Value v)
+        public void set_value (string field, G v)
         	throws Error
         {
         	var f = _model.get (field);
@@ -68,5 +70,7 @@ namespace GdaData {
          * default value for each field is set.
          */
         public abstract void append (out G id) throws Error;
+        
+        public abstract string to_string ();
     }
 }

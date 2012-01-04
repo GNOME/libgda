@@ -399,7 +399,7 @@
 </reflist>
 </generalization>
 <name>
-<val><![CDATA[MultipleId]]></val>
+<val><![CDATA[ObjectMultipleId]]></val>
 </name>
 <package>
 <ref refid="636fb4ee-362f-11e1-a9fe-0026b913ee39"/>
@@ -596,7 +596,7 @@
 </reflist>
 </generalization>
 <name>
-<val><![CDATA[SingleId]]></val>
+<val><![CDATA[ObjectSingleId]]></val>
 </name>
 <package>
 <ref refid="636fb4ee-362f-11e1-a9fe-0026b913ee39"/>
@@ -609,7 +609,7 @@
 </Class>
 <Class id="916d80b8-3631-11e1-a9fe-0026b913ee39">
 <name>
-<val><![CDATA[Record]]></val>
+<val><![CDATA[GdaData.Object]]></val>
 </name>
 <package>
 <ref refid="636fb4ee-362f-11e1-a9fe-0026b913ee39"/>
@@ -674,10 +674,10 @@
 <val>1</val>
 </drawing-style>
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 225.0, 261.0)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 219.0, 261.0)</val>
 </matrix>
 <width>
-<val>100.0</val>
+<val>113.0</val>
 </width>
 <height>
 <val>51.0</val>
@@ -700,13 +700,13 @@
 <val>1</val>
 </drawing-style>
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 303.0, 112.0)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 299.0, 111.0)</val>
 </matrix>
 <width>
-<val>100.0</val>
+<val>110.0</val>
 </width>
 <height>
-<val>50.0</val>
+<val>51.0</val>
 </height>
 <subject>
 <ref refid="916d80b8-3631-11e1-a9fe-0026b913ee39"/>
@@ -726,10 +726,10 @@
 <val>1</val>
 </drawing-style>
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 382.0, 261.0)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 381.0, 259.0)</val>
 </matrix>
 <width>
-<val>100.0</val>
+<val>102.0</val>
 </width>
 <height>
 <val>51.0</val>
@@ -749,7 +749,7 @@
 <val>0</val>
 </show_stereotypes_attrs>
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 346.0, 162.0)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 346.3, 162.0)</val>
 </matrix>
 <orthogonal>
 <val>0</val>
@@ -758,7 +758,7 @@
 <val>0</val>
 </horizontal>
 <points>
-<val>[(0.0, 0.0), (0.0, 67.0), (-71.0, 66.0), (-71.0, 99.0)]</val>
+<val>[(0.0, 0.0), (-0.30000000000001137, 67.0), (-71.30000000000001, 66.0), (-70.30000000000001, 99.0)]</val>
 </points>
 <head-connection>
 <ref refid="1e9b8adc-3643-11e1-a9fe-0026b913ee39"/>
@@ -775,7 +775,7 @@
 <val>0</val>
 </show_stereotypes_attrs>
 <matrix>
-<val>(1.0, 0.0, 0.0, 1.0, 346.0, 162.0)</val>
+<val>(1.0, 0.0, 0.0, 1.0, 346.3, 162.0)</val>
 </matrix>
 <orthogonal>
 <val>0</val>
@@ -784,7 +784,7 @@
 <val>0</val>
 </horizontal>
 <points>
-<val>[(0.0, 0.0), (0.0, 66.0), (88.0, 67.0), (88.0, 99.0)]</val>
+<val>[(0.0, 0.0), (-0.30000000000001137, 66.0), (87.69999999999999, 67.0), (87.74000000000001, 97.0)]</val>
 </points>
 <head-connection>
 <ref refid="1e9b8adc-3643-11e1-a9fe-0026b913ee39"/>

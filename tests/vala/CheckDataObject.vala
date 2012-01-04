@@ -21,7 +21,7 @@ using Gda;
 using GdaData;
 
 namespace Check {
-	class Tests : GdaData.ObjectSingleId<int> {
+	class Tests : GdaData.ObjectSingleId {
 		private static string t = "user";
 		public override string table { 
 			get { return this.t; }
@@ -70,7 +70,7 @@ namespace Check {
 			}
 			
 			stdout.printf("DataObject points to, in table "+ this.table + ":\n", this.table);
-			stdout.printf("%s\n", this.record.dump_as_string());
+			stdout.printf("%s\n", this.to_string());
 			
 			stdout.printf("Getting ID value...\n");
 			var i = (int) this.get_id ();
@@ -95,13 +95,13 @@ namespace Check {
 			Value n = "Daniel Espinosa";
 			this.set_value ("name", n);
 			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", this.table);
-			stdout.printf("%s\n", this.record.dump_as_string());
+			stdout.printf("%s\n", this.to_string());
 			
 			stdout.printf("Saving changes...\n");
 			try {
 				this.save();
 				stdout.printf("DataObject points to modified value, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.record.dump_as_string());
+				stdout.printf("%s\n", this.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -120,7 +120,7 @@ namespace Check {
 			try {
 				this.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.record.dump_as_string());
+				stdout.printf("%s\n", this.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -133,7 +133,7 @@ namespace Check {
 			try {
 				this.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.record.dump_as_string());
+				stdout.printf("%s\n", this.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -144,7 +144,7 @@ namespace Check {
 			try {
 				this.set_id (2);
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.record.dump_as_string());
+				stdout.printf("%s\n", this.to_string());
 			}
 			catch (Error e) {
 				fails++;

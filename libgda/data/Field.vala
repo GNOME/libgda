@@ -47,6 +47,7 @@ namespace GdaData
 				_attributes = value;
 			}
 		}
+		public string to_string () { return (string) val; }
 		public Field (string col_name, DbField.Attribute attr) 
 		{
 			GLib.Object (column_name: col_name, attributes: attr);
