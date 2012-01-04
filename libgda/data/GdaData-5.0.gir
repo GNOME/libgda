@@ -4,10 +4,10 @@
 <include name="Gee" version="0.8"/>
 <include name="Gda" version="5.0"/>
 <package name="gdadata-5.0"/>
-<c:include name="libgda/libgdadata.h"/>
+<c:include name="libgda/data/libgdadata.h"/>
 <namespace name="GdaData" version="5.0" c:prefix="GdaData">
 	<annotation key="ccode.gir-version" value="5.0"/>
-	<annotation key="ccode.cheader-filename" value="libgda/libgdadata.h"/>
+	<annotation key="ccode.cheader-filename" value="libgda/data/libgdadata.h"/>
 	<annotation key="ccode.gir-namespace" value="GdaData"/>
 	<errordomain name="DbObjectError" get-quark="gda_data_db_object_error_quark" codes="DbObjectError">
 </errordomain>

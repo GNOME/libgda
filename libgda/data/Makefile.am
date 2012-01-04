@@ -93,7 +93,7 @@ include_HEADERS = \
 	libgdadata.h \
 	$(NULL)
 
-gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
+gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/data
 gdadatainclude_HEADERS = libgdadata.h
 
 pkgconfigdir = $(libdir)/pkgconfig
