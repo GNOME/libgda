@@ -53,7 +53,7 @@ check_datamodeliterator.vala.stamp: $(check_datamodeliterator_VALASOURCES)
 
 check_dataobject_SOURCES = $(check_dataobject_VALASOURCES:.vala=.c) check_dataobject.h
 check_dataobject_CFLAGS= \
-    -I$(top_builddir)/libgda/data \
+    -I$(top_builddir) \
     $(NULL)
 check_dataobject_LDADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
@@ -62,7 +62,7 @@ check_dataobject_LDADD = \
 
 check_datamodeliterator_SOURCES = $(check_datamodeliterator_VALASOURCES:.vala=.c) check_datamodeliterator.h
 check_datamodeliterator_CFLAGS= \
-    -I$(top_builddir)/libgda/data \
+    -I$(top_builddir) \
     $(NULL)
 check_datamodeliterator_LDADD = \
     $(top_builddir)/libgda/libgda-5.0.la \

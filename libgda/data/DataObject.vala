@@ -21,122 +21,52 @@ using Gda;
 
 namespace GdaData {
 
-    public errordomain ObjectError {
-    	APPEND
-    }
     public abstract class Object<G> : GLib.Object {
         
-        private string? _field_id;
-        private Value? _id_value;
-        private DataModel _model;
-        
+        protected Gee.HashMap<string,Field<Value?>> _model;
         /**
          * Derived classes must implement this property to set the table used to get data from.
          */
         public abstract string table { get; }
-        
         /**
          * Returns a Gda.DataModel with the data stored by this object.
          */
-        public DataModel record {
-        	get {
-        		return this._model;
-        	}
-        }
-        
+        public abstract DataModel record { get; }
         /**
          * Set the connection to be used to get/set data.
          */
         public Connection connection { get; set; }
-        
-        public string get_field_id ()
-        {
-        	return this._field_id;
-        }
-        
-        public Value get_value_id ()
-        {
-        	return this._id_value;
-        }
-        
-        /* 
-         * Set a condition to get only one row data from the table in the database.
-         */
-        public void set_id (string field, Value v)
-        	throws Error
-        	requires (this.table != "")
-        {
-        	this._field_id = field;
-        	this._id_value = v;
-        	var q = this.sql ();
-        	var s = q.get_statement ();
-        	var m = this.connection.statement_execute_select (s, null);
-        	((DataSelect) m).compute_modification_statements ();
-        	this._model= (DataModel) DataProxy.new (m);
-        }
-        
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
-        public unowned Value? get_value (string field)
+        public Value? get_value (string field)
         	throws Error
         {
-        	return this._model.get_value_at (this._model.get_column_index (field), 0);
+        	return (this._model.get (field)).value;
         }
-        
-        /**
-         * Set the value to a field with the given @name
+		/**
+         * Set the value to a field with the given @name.
          */
         public void set_value (string field, Value v)
         	throws Error
         {
-        	this._model.set_value_at (this._model.get_column_index (field), 0, v);
+        	var f = _model.get (field);
+        	f.value = v;
+        	this._model.set (field, f);
         }
-        
         /**
          * Saves any modficiation made to in memory representation of the data directly to
          * the database.
          */
-        public void save ()
-        	throws Error
-        {
-        	((DataProxy) this._model).apply_all_changes ();
-        }
-        
+        public abstract void save () throws Error;
         /**
-         * Re-load the data stored in the dabase.
+         * Updates values stored in database.
          */
-        public void update ()
-        	throws Error
-        	requires (this.table != "")
-        {
-        	set_id (this._field_id, this._id_value);
-        }
-        
+        public abstract void update () throws Error;
         /**
-         * Returns a #SqlBuilder object with the query used to select the data in the used
-         * that points this object to.
+         * Append a new row to the defined table and returns its ID. If defaults is set to true,
+         * default value for each field is set.
          */
-        public SqlBuilder sql ()
-        	requires (this.table != null || this.table != "")
-        	requires (this._field_id != null || this._field_id != "")
-        	requires (this._id_value != null)
-        {
-        	var q = new SqlBuilder (SqlStatementType.SELECT);
-        	q.select_add_target (this.table, null);
-        	var f_id = q.add_id (this._field_id);
-			var e_id = q.add_expr_value (null, this._id_value);
-			var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
-			q.set_where (c_id);
-			q.select_add_field ("*", null, null);
-			return q;			
-        }
-        
-        /**
-         * abstract function to be implemented in derived classes to add new objects to the database.<BR>
-         * 
-         * Error code must be ObjectError.APPEND.
-         */
-        public abstract G append () throws ObjectError;
+        public abstract void append (out G id) throws Error;
     }
 }

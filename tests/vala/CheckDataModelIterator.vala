@@ -202,7 +202,12 @@ namespace Check {
 							+ ">>> Testing Collection Interface\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			var itermodel = new DataModelIterable (model);
+			((DataSelect) model).compute_modification_statements ();
+			var pxy = (Gda.DataModel) Gda.DataProxy.new (model);
+			
+			var itermodel = new DataModelIterable (pxy);
+			if ( !itermodel.add (1))
+				fails++;
 			
 			return fails;
 		}

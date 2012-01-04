@@ -1270,8 +1270,10 @@ namespace Gda {
 	public struct MetaContext {
 		public weak string table_name;
 		public int size;
-		public weak string column_names;
-		public GLib.Value column_values;
+		[CCode (array_length_cname = "size")]
+		public weak string[] column_names;
+		[CCode (array_length_cname = "size")]
+		public weak GLib.Value[] column_values;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public struct MetaDbObject {

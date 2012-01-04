@@ -33,15 +33,18 @@ VALAFLAGS = \
 
 object_persistance_sources = \
 	DataObject.vala \
+	DataObjectSingleId.vala \
 	SelectQuery.vala \
 	$(NULL)
 
 db_collection_sources = \
+	DbObject.vala \
 	DbCollection.vala \
 	DbTable.vala \
 	DbRecord.vala \
 	DbField.vala \
 	DbSchema.vala \
+	Field.vala \
 	$(NULL)
 
 selectable_sources = \

@@ -20,11 +20,22 @@
 using Gee;
 using Gda;
 
-namespace GdaData
-{
-	public interface DbRecord : DbObject
-	{
-		public abstract DbTable              table { get; set construct; }
-		public abstract Collection<DbField>  fields { get; }
+namespace GdaData {
+	public interface DbObject : GLib.Object {
+		public abstract Connection   connection { get; set; }
+		public abstract DbObject     append ();
+		public abstract void         update ();
+		public abstract void         save ();
 	}
+	
+	public interface DbNamedObject : DbObject {
+		public abstract string       name { get; set; }
+	}
+	
+	public errordomain DbObjectError {
+    	APPEND,
+    	UPDATE,
+    	SAVE
+    }
+
 }

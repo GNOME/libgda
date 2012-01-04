@@ -22,7 +22,7 @@ using GdaData;
 
 namespace Sample {
 
-	class DbRecord : GdaData.Object<DbRecord> {
+	class Record : GdaData.ObjectSingleId<string> {
 		private static string dbtable = "user";
 		
 		/**
@@ -33,7 +33,16 @@ namespace Sample {
 		public override string table { 
 			get { return this.dbtable; }
 		}
-		
+		/**
+		 * On derived classes you must implement this property.
+		 * Is intended that implementors set ID field's name and its column index
+		 */
+		public override string field_id {
+			get { return "name";}
+		}
+		public override int field_id_index {
+			get { return 0; }
+		}
 		/**
 		 * Wrapping database fields.
 		 * You can define properties that use database stored values.
@@ -65,41 +74,6 @@ namespace Sample {
 				catch {}
 			}
 		}
-		
-		public override DbRecord append ()
-			throws ObjectError
-		{
-			var sql = new SqlBuilder (SqlStatementType.INSERT);
-			sql.set_table (this.table);
-			sql.add_field_value_as_gvalue ("functions", functions);
-			sql.add_field_value_as_gvalue ("name", name);
-			Set last_inserted;
-			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, out last_inserted);
-			if (i != 1) {
-				throw new GdaData.ObjectError.APPEND ("Have been added more or less rows than expected");
-			}
-			var id = last_inserted.get_holder_value ("0");
-			var n = new DbRecord ();
-			n.connection = this.connection;
-			n.set_id ("id", id);
-			return n;
-		}
-		
-		/**
-		 * This function is a wrapper to set the id field
-		 * and id value used to retrieve a record from the
-		 * database.
-		 * 
-		 * In this example 'user' table have two keys, id and
-		 * name (declared as UNIQUE), then we can use the last
-		 * to identify any record.
-		 */
-		public void open (Value name) 
-			throws Error
-		{
-			this.set_id ("name", name);
-		}
-		
 	}
 
 	class App : GLib.Object {
@@ -114,9 +88,9 @@ namespace Sample {
 								"DB_DIR=.;DB_NAME=dataobject", null, 
 								Gda.ConnectionOptions.NONE);
 			stdout.printf("Creating table 'user'...\n");
-			this.connection.execute_non_select_command("CREATE TABLE user (id INTEGER PRIMARY KEY, name string UNIQUE, functions string, security_number integer)");
-			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions, security_number) VALUES (1, \"Martin Stewart\", \"Programmer, QA\", 2334556)");
-			this.connection.execute_non_select_command("INSERT INTO user (id, name, functions, security_number) VALUES (2, \"Jane Castle\", \"Accountant\", 3002884)");
+			this.connection.execute_non_select_command("CREATE TABLE user (name string PRIMARY KEY, functions string, security_number integer)");
+			this.connection.execute_non_select_command("INSERT INTO user (name, functions, security_number) VALUES (\"Martin Stewart\", \"Programmer, QA\", 2334556)");
+			this.connection.execute_non_select_command("INSERT INTO user (name, functions, security_number) VALUES (\"Jane Castle\", \"Accountant\", 3002884)");
 			
 			this.connection.update_meta_store(null);
 		}
@@ -125,9 +99,9 @@ namespace Sample {
 			throws Error
 		{
 			stdout.printf (">>> DEMO: Modifying Records\n");
-			var rcd = new DbRecord ();
+			var rcd = new Record ();
 			rcd.connection = this.connection;
-			try { rcd.open (name); }
+			try { rcd.set_id (name); }
 			catch (Error e) { stdout.printf ("ERROR: Record no opened\n" + e.message + "\n"); }
 			
 			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
@@ -154,13 +128,33 @@ namespace Sample {
 				throws Error
 		{
 			stdout.printf (">>> DEMO: Updating Records modified externally\n");
-			var rcd = new DbRecord ();
+			var rcd = new Record ();
 			rcd.connection = this.connection;
-			rcd.open ("Jane Castle PhD.");
+			rcd.set_id ("Jane Castle PhD.");
 			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
-			this.connection.execute_non_select_command("UPDATE user SET functions = \"Secretary\" WHERE id = 2");
+			this.connection.execute_non_select_command("UPDATE user SET functions = \"Secretary\" WHERE name = \"Jane Castle PhD.\"");
 			rcd.update ();
 			stdout.printf ("Updated Values for: " + rcd.name + "\n" + rcd.record.dump_as_string () + "\n");
+		}
+		
+		public void append_objects (string name, string functions)
+			throws Error
+		{
+			stdout.printf("DEMO: Appending Objects...\n");
+			var ob = new Record ();
+			ob.connection = this.connection;
+			ob.set_id ("Jane Castle PhD.");
+			string id;
+			ob.append (out id);
+			var m = this.connection.execute_select_command ("SELECT * FROM user");
+			stdout.printf ("Appended Values:\n" + m.dump_as_string () + "\n");
+			var o = new Record ();
+			o.connection = this.connection;
+			o.set_id (id);
+			o.name = name;
+			o.functions = functions;
+			stdout.printf ("name = " + o.name + "\nfunctions = " + o.functions);
+			o.save ();
 		}
 			
 		public static int main (string[] args) {
@@ -181,6 +175,12 @@ namespace Sample {
 					app.simulate_external_modifications ();
 				}
 				catch (Error e) { stdout.printf ("Can't update record\nERROR: " + e.message + "\n"); }
+				
+				try {
+					/* Append a new object with the same */
+					app.append_objects ("Jack MacJason", "Maintener");
+				}
+				catch (Error e) { stdout.printf ("Can't append record\nERROR: " + e.message + "\n"); }
 				
 				return 0;
 			}

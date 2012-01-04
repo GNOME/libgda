@@ -21,11 +21,18 @@ using Gda;
 using GdaData;
 
 namespace Check {
-	class Tests : GdaData.Object {
+	class Tests : GdaData.ObjectSingleId<int> {
 		private static string t = "user";
 		public override string table { 
 			get { return this.t; }
 		}
+		public override string field_id {
+			get { return "id";}
+		}
+		public override int field_id_index {
+			get { return 0;}
+		}
+		
 		Tests()
 		{
 			try {
@@ -33,7 +40,7 @@ namespace Check {
 				stdout.printf("Creating Database...\n");
 				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=dataobject", null, Gda.ConnectionOptions.NONE);
 				stdout.printf("Creating table 'user'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE user (id int PRIMARY KEY, name string, city string)");
+				this.connection.execute_non_select_command("CREATE TABLE user (id int PRIMARY KEY AUTOINCREMENT, name string, city string)");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (1, \"Daniel\", \"Mexico\")");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (2, \"Jhon\", \"USA\")");
 				
@@ -53,15 +60,9 @@ namespace Check {
 		{
 			stdout.printf(">>> NEW TEST: Gda.DataObject API tests\n");
 			int fails = 0;
-			Value v = 1;
-			stdout.printf("Setting ID to %i\n", (int) v);
+			stdout.printf("Setting ID to 1\n");
 			try {
-				this.set_id ("id", v);
-				var f = this.get_field_id();
-				if ( f != "id") {
-					fails++;
-					stdout.printf("FAILS: %i\n", fails);
-				}
+				this.set_id (1);
 			}
 			catch (Error e) {
 				fails++;
@@ -72,7 +73,7 @@ namespace Check {
 			stdout.printf("%s\n", this.record.dump_as_string());
 			
 			stdout.printf("Getting ID value...\n");
-			var i = (int) this.get_value_id();
+			var i = (int) this.get_id ();
 			if (i != 1 ){
 				fails++;
 				stdout.printf("FAILS: %i\n", fails);
@@ -139,10 +140,9 @@ namespace Check {
 				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
-			v = 2;
-			stdout.printf("Setting ID to %i\n", (int) v);
+			stdout.printf("Setting ID to 2\n");
 			try {
-				this.set_id ("id", v);
+				this.set_id (2);
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
 				stdout.printf("%s\n", this.record.dump_as_string());
 			}
@@ -150,7 +150,31 @@ namespace Check {
 				fails++;
 				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
-			
+			this.t = "user"; // Reset to default
+			return fails;
+		}
+		
+		public int t2()
+			throws Error
+		{
+			stdout.printf(">>> NEW TEST: Gda.DataObject Adding new objects to DB\n");
+			int fails = 0;
+			try {
+				Value id;
+				this.append (out id);
+				var n = new Tests ();
+				n.set_value ("id", 3);
+				n.set_value ("name", "GdaDataNewName");
+				n.set_value ("city", "GdaDataNewCity");
+				n.save ();
+				var m = n.connection.execute_select_command ("SELECT * FROM user");
+				if (m.get_n_rows () != 3) fails++;
+				stdout.printf ("All records:\n" + m.dump_as_string () + "\n");
+			}
+			catch (Error e) {
+				fails++;
+				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+			}
 			return fails;
 		}
 		
@@ -158,7 +182,11 @@ namespace Check {
 			stdout.printf ("Checking Gda.DataObject implementation...\n");
 			int failures = 0;
 			var app = new Tests ();
-			failures += app.t1 ();
+			try {
+				failures += app.t1 ();
+				failures += app.t2 ();
+			}
+			catch (Error e) { stdout.printf ("ERROR: " + e.message); }
 			return failures != 0 ? 1 : 0;
 		}
 	}

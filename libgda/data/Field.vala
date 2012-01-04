@@ -22,9 +22,35 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbRecord : DbObject
+	public class Field<G> : GLib.Object
 	{
-		public abstract DbTable              table { get; set construct; }
-		public abstract Collection<DbField>  fields { get; }
+		private G                 val;
+		private string            _name;
+		private string            _column_name;
+		private DbField.Attribute _attributes;
+		
+		public G value { 
+			get { return val; } 
+			set { val = value; }
+		}
+		public string name { 
+			get { return _name; } 
+			set { _name = value; }
+		}
+		public string column_name { 
+			get { return _column_name; } 
+			construct { _column_name = value; }
+		}
+		public DbField.Attribute attributes { 
+			get { return _attributes; } 
+			construct {
+				_attributes = value;
+			}
+		}
+		public Field (string col_name, DbField.Attribute attr) 
+		{
+			GLib.Object (column_name: col_name, attributes: attr);
+			_name = col_name;
+		}
 	}
 }
