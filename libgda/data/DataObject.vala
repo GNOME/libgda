@@ -24,7 +24,7 @@ namespace GdaData {
 
     public abstract class Object<G> : GLib.Object {
         
-        protected HashMap<string,Field<G>> _model;
+        protected HashMap<string,Field<G>> _model = new HashMap<string,Field<G>> ();
         /**
          * Derived classes must implement this property to set the table used to get data from.
          */
@@ -52,9 +52,18 @@ namespace GdaData {
         public void set_value (string field, G v)
         	throws Error
         {
-        	var f = _model.get (field);
-        	f.value = v;
-        	this._model.set (field, f);
+        	if (_model.has_key (field)) {
+		    	var f = this._model.get (field);
+		    	f.value = v;
+		    	this._model.set (field, f);
+        	}
+        	else {
+        		// FIXME: Get default attributes from table
+        		var n = new Field<G> (field, DbField.Attribute.NONE); 
+        		n.value = v;
+        		this._model.set (field, n);
+        	}
+        	
         }
         /**
          * Saves any modficiation made to in memory representation of the data directly to
@@ -69,7 +78,7 @@ namespace GdaData {
          * Append a new row to the defined table and returns its ID. If defaults is set to true,
          * default value for each field is set.
          */
-        public abstract void append (out G id) throws Error;
+        public abstract bool append () throws Error;
         
         public abstract string to_string ();
     }

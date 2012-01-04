@@ -21,8 +21,9 @@ using Gda;
 using GdaData;
 
 namespace Check {
-	class Tests : GdaData.ObjectSingleId {
-		private static string t = "user";
+	class Record : GdaData.ObjectSingleId
+	{
+		public static string t = "user";
 		public override string table { 
 			get { return this.t; }
 		}
@@ -32,6 +33,9 @@ namespace Check {
 		public override int field_id_index {
 			get { return 0;}
 		}
+	}
+	class Tests :  GLib.Object {
+		public Gda.Connection connection { get; set; }
 		
 		Tests()
 		{
@@ -40,7 +44,7 @@ namespace Check {
 				stdout.printf("Creating Database...\n");
 				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=dataobject", null, Gda.ConnectionOptions.NONE);
 				stdout.printf("Creating table 'user'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE user (id int PRIMARY KEY AUTOINCREMENT, name string, city string)");
+				this.connection.execute_non_select_command("CREATE TABLE user (id integer PRIMARY KEY AUTOINCREMENT, name string, city string)");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (1, \"Daniel\", \"Mexico\")");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (2, \"Jhon\", \"USA\")");
 				
@@ -60,27 +64,29 @@ namespace Check {
 		{
 			stdout.printf(">>> NEW TEST: Gda.DataObject API tests\n");
 			int fails = 0;
+			var r = new Record ();
+			r.connection = this.connection;
 			stdout.printf("Setting ID to 1\n");
 			try {
-				this.set_id (1);
+				r.set_id (1);
 			}
 			catch (Error e) {
 				fails++;
 				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("DataObject points to, in table "+ this.table + ":\n", this.table);
-			stdout.printf("%s\n", this.to_string());
+			stdout.printf("DataObject points to, in table "+ r.table + ":\n", r.table);
+			stdout.printf("%s\n", r.to_string());
 			
 			stdout.printf("Getting ID value...\n");
-			var i = (int) this.get_id ();
+			var i = (int) r.get_id ();
 			if (i != 1 ){
 				fails++;
 				stdout.printf("FAILS: %i\n", fails);
 			}
 			
 			stdout.printf("Getting value at 'name'...\n");
-			var vdb = (string) this.get_value ("name");
+			var vdb = (string) r.get_value ("name");
 			if (vdb == null ){
 				fails++;
 				stdout.printf("FAILS: %i\n", fails);
@@ -93,15 +99,15 @@ namespace Check {
 			
 			stdout.printf("Setting value at 'name'...\n");
 			Value n = "Daniel Espinosa";
-			this.set_value ("name", n);
-			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", this.table);
-			stdout.printf("%s\n", this.to_string());
+			r.set_value ("name", n);
+			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", r.table);
+			stdout.printf("%s\n", r.to_string());
 			
 			stdout.printf("Saving changes...\n");
 			try {
-				this.save();
-				stdout.printf("DataObject points to modified value, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.to_string());
+				r.save();
+				stdout.printf("DataObject points to modified value, in table '%s':\n", r.table);
+				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -109,18 +115,19 @@ namespace Check {
 			}
 			
 			try {
+				stdout.printf ("Simulating external database update\n");
 				this.connection.execute_non_select_command("UPDATE user SET name = \"Jhon Strauss\", city =\"New Jersey\"");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't manual update table '%s'...\nFAILS: %i\nERROR: %s\n", this.table, fails, e.message);
+				stdout.printf ("Couln't manual update table '%s'...\nFAILS: %i\nERROR: %s\n", r.table, fails, e.message);
 			}
 			
 			stdout.printf("Updating values from database...\n");
 			try {
-				this.update();
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.to_string());
+				r.update();
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -128,12 +135,12 @@ namespace Check {
 			}
 			
 			stdout.printf("No Common Operation: Setting a new Table... \n");
-			this.t = "company";
+			r.t = "company";
 			stdout.printf("Updating values from database using a new table 'company'...\n");
 			try {
-				this.update();
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.to_string());
+				r.update();
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
 				fails++;
@@ -142,15 +149,15 @@ namespace Check {
 			
 			stdout.printf("Setting ID to 2\n");
 			try {
-				this.set_id (2);
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", this.table);
-				stdout.printf("%s\n", this.to_string());
+				r.set_id (2);
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
 				fails++;
 				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
-			this.t = "user"; // Reset to default
+			r.t = "user"; // Reset to default
 			return fails;
 		}
 		
@@ -160,13 +167,14 @@ namespace Check {
 			stdout.printf(">>> NEW TEST: Gda.DataObject Adding new objects to DB\n");
 			int fails = 0;
 			try {
-				Value id;
-				this.append (out id);
-				var n = new Tests ();
+				var n = new Record ();
+				n.connection = this.connection;
 				n.set_value ("id", 3);
 				n.set_value ("name", "GdaDataNewName");
 				n.set_value ("city", "GdaDataNewCity");
-				n.save ();
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", n.table);
+				stdout.printf("%s\n", n.to_string());
+				n.append ();
 				var m = n.connection.execute_select_command ("SELECT * FROM user");
 				if (m.get_n_rows () != 3) fails++;
 				stdout.printf ("All records:\n" + m.dump_as_string () + "\n");

@@ -56,6 +56,7 @@ namespace GdaData {
         			string col_name = m.get_column_name (c);
         			var f = new Field<Value?> (col_name, (DbField.Attribute) attr);
         			f.value = m.get_value_at (c, r);
+        			this._model.set (f.name, f);
         		}
         	}
         }
@@ -90,12 +91,16 @@ namespace GdaData {
 			var e_id = sql.add_expr_value (null, this._id_value);
 			var c_id = sql.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
 			sql.set_where (c_id);
+//			stdout.printf ("DEBUG: UPDATE statement to execute: \n"+ 
+//							(sql.get_statement()).to_sql_extended (this.connection, null, 
+//																	StatementSqlFlag.PRETTY, null)
+//							+ "\n");
 			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, null);
 			if (i != 1) {
 				throw new DbObjectError.APPEND ("Have been saved more or less rows than expected");
 			}
         }
-        public override void append (out Value? id) throws Error
+        public override bool append () throws Error
         {
         	var sql = new SqlBuilder (SqlStatementType.INSERT);
 			sql.set_table (this.table);
@@ -103,12 +108,16 @@ namespace GdaData {
 			foreach (Field<Value?> f in _model.values) {
 				sql.add_field_value_as_gvalue (f.column_name, f.value);
 			}
+//			stdout.printf ("DEBUG: INSERT statement to execute: \n"+ 
+//				(sql.get_statement()).to_sql_extended (this.connection, null, 
+//														StatementSqlFlag.PRETTY, null)
+//				+ "\n");
 			Set last_inserted;
-			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, out last_inserted);
+			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, null);
 			if (i != 1) {
 				throw new DbObjectError.APPEND ("Have been added more or less rows than expected");
 			}
-			id = last_inserted.get_holder_value (this.field_id_index.to_string ());
+			return true;
         }
 		public override void update ()
         	throws Error
@@ -122,10 +131,11 @@ namespace GdaData {
 			foreach (Field<Value?> f in this.fields) {
 				r += "|" + f.name;
 			}
-			
+			r+="\n";
 			foreach (Field<Value?> f in this.fields) {
-				r += "|" + f.to_string ();
+				r += "|" + Gda.value_stringify (f.value);
 			}
+			r+="\n";
 			return r;
         }
 	}

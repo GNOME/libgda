@@ -143,18 +143,10 @@ namespace Sample {
 			stdout.printf("DEMO: Appending Objects...\n");
 			var ob = new Record ();
 			ob.connection = this.connection;
-			ob.set_id ("Jane Castle PhD.");
-			Value id;
-			ob.append (out id);
+			ob.name = "Jacob Sanders PhD.";
+			ob.append ();
 			var m = this.connection.execute_select_command ("SELECT * FROM user");
 			stdout.printf ("Appended Values:\n" + m.dump_as_string () + "\n");
-			var o = new Record ();
-			o.connection = this.connection;
-			o.set_id (id);
-			o.name = name;
-			o.functions = functions;
-			stdout.printf ("name = " + o.name + "\nfunctions = " + o.functions);
-			o.save ();
 		}
 			
 		public static int main (string[] args) {

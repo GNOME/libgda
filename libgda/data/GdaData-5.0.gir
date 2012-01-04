@@ -75,23 +75,13 @@
 			</return-value>
 		</virtual-method>
 		<method name="append" c:identifier="gda_data_object_append" throws="1">
-			<parameters>
-				<parameter name="id" direction="out" transfer-ownership="full" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
-				</parameter>
-			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 		</method>
 		<virtual-method name="append" invoker="append" throws="1">
-			<parameters>
-				<parameter name="id" direction="out" transfer-ownership="full" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
-				</parameter>
-			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 		</virtual-method>
 		<method name="to_string" c:identifier="gda_data_object_to_string">
@@ -152,12 +142,9 @@
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.Object" c:type="GdaDataObject*"/>
 					</parameter>
-					<parameter name="id" direction="out" transfer-ownership="full" allow-none="1">
-						<type name="gpointer" c:type="gpointer"/>
-					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="gboolean" c:type="gboolean"/>
 				</return-value>
 			</callback>
 		</field>
