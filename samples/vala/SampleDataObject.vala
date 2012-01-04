@@ -22,7 +22,7 @@ using GdaData;
 
 namespace Sample {
 
-	class Record : GdaData.ObjectSingleId {
+	class Record : RecordSingleId {
 		private static string dbtable = "user";
 		
 		/**
@@ -76,7 +76,7 @@ namespace Sample {
 		}
 	}
 
-	class App : GLib.Object {
+	class App : Object {
 		public Gda.Connection connection;
 		
 		public void init ()
@@ -99,7 +99,7 @@ namespace Sample {
 			throws Error
 		{
 			stdout.printf (">>> DEMO: Modifying Records\n");
-			var rcd = new Record ();
+			var rcd = new Sample.Record ();
 			rcd.connection = this.connection;
 			try { rcd.set_id (name); }
 			catch (Error e) { stdout.printf ("ERROR: Record no opened\n" + e.message + "\n"); }
@@ -141,7 +141,7 @@ namespace Sample {
 			throws Error
 		{
 			stdout.printf("DEMO: Appending Objects...\n");
-			var ob = new Record ();
+			var ob = new Sample.Record ();
 			ob.connection = this.connection;
 			ob.name = "Jacob Sanders PhD.";
 			ob.append ();

@@ -21,7 +21,7 @@ using Gda;
 using GdaData;
 
 namespace Check {
-	class Record : GdaData.ObjectSingleId
+	class Record : RecordSingleId
 	{
 		public static string t = "user";
 		public override string table { 
@@ -64,7 +64,7 @@ namespace Check {
 		{
 			stdout.printf(">>> NEW TEST: Gda.DataObject API tests\n");
 			int fails = 0;
-			var r = new Record ();
+			var r = new Check.Record ();
 			r.connection = this.connection;
 			stdout.printf("Setting ID to 1\n");
 			try {
@@ -167,7 +167,7 @@ namespace Check {
 			stdout.printf(">>> NEW TEST: Gda.DataObject Adding new objects to DB\n");
 			int fails = 0;
 			try {
-				var n = new Record ();
+				var n = new Check.Record ();
 				n.connection = this.connection;
 				n.set_value ("id", 3);
 				n.set_value ("name", "GdaDataNewName");

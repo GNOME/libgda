@@ -32,8 +32,8 @@ VALAFLAGS = \
     $(NULL)
 
 object_persistance_sources = \
-	DataObject.vala \
-	DataObjectSingleId.vala \
+	Record.vala \
+	RecordSingleId.vala \
 	SelectQuery.vala \
 	$(NULL)
 
