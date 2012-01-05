@@ -609,6 +609,7 @@ namespace Gda {
 		public bool complement_schema (GLib.Value? catalog, GLib.Value? schema) throws GLib.Error;
 		public string dump_as_graph (Gda.MetaGraphInfo info) throws GLib.Error;
 		public static GLib.Quark error_quark ();
+		public GLib.SList<weak Gda.MetaDbObject> get_all_db_objects ();
 		public Gda.MetaDbObject get_db_object (GLib.Value? catalog, GLib.Value? schema, GLib.Value name);
 		public bool sort_db_objects (Gda.MetaSortType sort_type) throws GLib.Error;
 		[NoAccessorMethod]
