@@ -22,12 +22,28 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbTable : DbNamedObject
+	public class DataBase : Object 
 	{
-		public abstract DbSchema schema { get; set construct; }
-		public abstract Collection<DbRecord> records { get; }
-		public abstract Collection<DbTable> fk_depends { get; }
-		public abstract Collection<DbTable> fk { get; }
-		public abstract Iterator<DbRecord> iterator ();
+		public HashMap<string,DbSchema> schemas_container;
+		// DbObject Interface
+		public Connection connection { get; set; }
+		public void update () throws Error
+		{
+			connection.update_meta_store (null);
+			var store = connection.get_meta_store ();
+			var mstruct = Gda.MetaStruct.new (store, Gda.MetaStructFeature.ALL);
+			var msch =  store.extract ("SELECT * FROM _schemata");
+			int c, r;
+			for ( r = 0; r < msch.get_n_rows (); r++) {
+				var schema = new Schema ();
+				schema.connection = this.connection;
+				schema.name = (string) msch.get_value_at (msch.get_column_index ("schema_name"),r);
+				_schemas.set (schema.name, (DbSchema) schema);
+			}
+		}
+		public void save () {}
+		public void append () {}
+		// DbCollection Interface
+		public abstract Collection<DbSchema> schemas { get { _schemas.values; }}
 	}
 }

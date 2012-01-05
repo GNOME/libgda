@@ -208,17 +208,13 @@
 	</record>
 	<record name="RecordSingleIdPrivate" c:type="GdaDataRecordSingleIdPrivate" disguised="1"/>
 	<class name="Field" c:type="GdaDataField" glib:type-name="GdaDataField" glib:get-type="gda_data_field_get_type" glib:type-struct="FieldClass" parent="GObject.Object">
+		<implements name="GdaData.DbField"/>
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
 		<field name="priv">
 			<type name="FieldPrivate" c:type="GdaDataFieldPrivate*"/>
 		</field>
-		<method name="to_string" c:identifier="gda_data_field_to_string">
-			<return-value transfer-ownership="full">
-				<type name="utf8" c:type="gchar*"/>
-			</return-value>
-		</method>
 		<constructor name="new" c:identifier="gda_data_field_new">
 			<parameters>
 				<parameter name="col_name" transfer-ownership="none">
@@ -232,18 +228,6 @@
 				<type name="GdaData.Field" c:type="GdaDataField*"/>
 			</return-value>
 		</constructor>
-		<property name="value" writable="1">
-			<type name="gpointer" c:type="gpointer"/>
-		</property>
-		<property name="name" writable="1">
-			<type name="utf8" c:type="gchar*"/>
-		</property>
-		<property name="column-name" writable="1" construct-only="1">
-			<type name="utf8" c:type="gchar*"/>
-		</property>
-		<property name="attributes" writable="1" construct-only="1">
-			<type name="GdaData.DbFieldAttribute" c:type="GdaDataDbFieldAttribute"/>
-		</property>
 	</class>
 	<record name="FieldClass" c:type="GdaDataFieldClass" glib:is-gtype-struct-for="Field">
 		<field name="parent_class">
@@ -413,7 +397,7 @@
 		</field>
 	</record>
 	<interface name="DbCollection" c:type="GdaDataDbCollection" glib:type-name="GdaDataDbCollection" glib:get-type="gda_data_db_collection_get_type" glib:type-struct="DbCollectionIface">
-		<prerequisite name="GObject.Object"/>
+		<prerequisite name="GdaData.DbNamedObject"/>
 		<method name="get_tables" c:identifier="gda_data_db_collection_get_tables">
 			<parameters>
 				<parameter name="schema" transfer-ownership="none">
@@ -467,7 +451,7 @@
 		</field>
 	</record>
 	<interface name="DbTable" c:type="GdaDataDbTable" glib:type-name="GdaDataDbTable" glib:get-type="gda_data_db_table_get_type" glib:type-struct="DbTableIface">
-		<prerequisite name="GObject.Object"/>
+		<prerequisite name="GdaData.DbNamedObject"/>
 		<method name="iterator" c:identifier="gda_data_db_table_iterator">
 			<return-value transfer-ownership="full">
 				<type name="Gee.Iterator" c:type="GeeIterator*">
@@ -485,10 +469,7 @@
 		<property name="schema" writable="1" construct="1">
 			<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
 		</property>
-		<property name="name" writable="1">
-			<type name="utf8" c:type="gchar*"/>
-		</property>
-		<property name="tables">
+		<property name="records">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 			</type>
@@ -557,10 +538,10 @@
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
-		<property name="column-name" writable="1" construct-only="1">
+		<property name="column-name">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
-		<property name="attributes" writable="1" construct-only="1">
+		<property name="attributes">
 			<type name="GdaData.DbFieldAttribute" c:type="GdaDataDbFieldAttribute"/>
 		</property>
 	</interface>
@@ -595,10 +576,7 @@
 		<member name="unused" c:identifier="GDA_DATA_DB_FIELD_ATTRIBUTE_UNUSED" value="1024"/>
 	</bitfield>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
-		<prerequisite name="GObject.Object"/>
-		<property name="name" writable="1">
-			<type name="utf8" c:type="gchar*"/>
-		</property>
+		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="tables">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>

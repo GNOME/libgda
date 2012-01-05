@@ -22,14 +22,14 @@ using Gda;
 
 namespace GdaData
 {
-	public class Field<G> : GLib.Object
+	public class Field<G> : Object, DbField<G>
 	{
 		private G                 val;
 		private string            _name;
 		private string            _column_name;
 		private DbField.Attribute _attributes;
 		
-		public G value { 
+		public G @value { 
 			get { return val; } 
 			set { val = value; }
 		}
@@ -38,19 +38,16 @@ namespace GdaData
 			set { _name = value; }
 		}
 		public string column_name { 
-			get { return _column_name; } 
-			construct { _column_name = value; }
+			get { return _column_name; }
 		}
 		public DbField.Attribute attributes { 
-			get { return _attributes; } 
-			construct {
-				_attributes = value;
-			}
+			get { return _attributes; }
 		}
 		public string to_string () { return (string) val; }
 		public Field (string col_name, DbField.Attribute attr) 
 		{
-			GLib.Object (column_name: col_name, attributes: attr);
+			_column_name = col_name;
+			_attributes = attr;
 			_name = col_name;
 		}
 	}

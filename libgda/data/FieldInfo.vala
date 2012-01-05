@@ -1,6 +1,6 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * libgdadata
+ * libgdavala
  * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
@@ -17,17 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using Gee;
 using Gda;
 
-namespace GdaData
-{
-	public interface DbTable : DbNamedObject
+namespace GdaData {
+	public class FieldInfo<G> : Object, DbFieldInfo
 	{
-		public abstract DbSchema schema { get; set construct; }
-		public abstract Collection<DbRecord> records { get; }
-		public abstract Collection<DbTable> fk_depends { get; }
-		public abstract Collection<DbTable> fk { get; }
-		public abstract Iterator<DbRecord> iterator ();
+		private DbField.Attribute _attr;
+		private G _default_value;
+		private string _name;
+		
+		public override DbField.Attribute  attributes {
+			get { return _attr; }
+		}
+		
+		public override G default_value { 
+			get { return _default_value; }
+		}
+		public override string name { 
+			get { return _name; }
+		}
+		FieldInfo (string name, DbField.Attribute attr, G default_val)
+		{
+			_name = name;
+			_attr = attr;
+			_default_value = default_val;
+		}
 	}
 }

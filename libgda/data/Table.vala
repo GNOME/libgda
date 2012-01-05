@@ -22,12 +22,23 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbTable : DbNamedObject
+	public interface Table : Object
 	{
-		public abstract DbSchema schema { get; set construct; }
-		public abstract Collection<DbRecord> records { get; }
-		public abstract Collection<DbTable> fk_depends { get; }
-		public abstract Collection<DbTable> fk { get; }
-		public abstract Iterator<DbRecord> iterator ();
+		// DbObject Interface
+		public Connection connection { get; set; }
+		public void update ()
+		{
+			
+		}
+		// DbNamedObject Interface
+		public string name { get; set; }
+		
+		// DbTable Interface
+		public Collection<FieldInfo<G>> info_fields {}
+		public DbSchema schema { get; set; }
+//		public Collection<DbRecord> records { get; }
+//		public Collection<DbTable> fk_depends { get; }
+//		public Collection<DbTable> fk { get; }
+//		public Iterator<DbRecord> iterator ();
 	}
 }

@@ -21,7 +21,7 @@ using Gee;
 using Gda;
 
 namespace GdaData {
-	public interface DbObject : GLib.Object {
+	public interface DbObject : Object {
 		public abstract Connection   connection { get; set; }
 		public abstract DbObject     append ();
 		public abstract void         update ();

@@ -32,6 +32,9 @@ VALAFLAGS = \
     $(NULL)
 
 object_persistance_sources = \
+	DataBase.vala \
+	Schema.vala \
+	Table.vala \
 	Record.vala \
 	RecordSingleId.vala \
 	SelectQuery.vala \
@@ -43,8 +46,11 @@ db_collection_sources = \
 	DbTable.vala \
 	DbRecord.vala \
 	DbField.vala \
+	DbFieldInfo.vala \
 	DbSchema.vala \
 	Field.vala \
+	FieldInfo.vala \
+	IdField.vala \
 	$(NULL)
 
 selectable_sources = \
