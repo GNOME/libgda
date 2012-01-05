@@ -399,7 +399,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 		if (with_question)
 			msg2 =_("You may now choose to correct it, or to discard "
 				"the modifications.\n\n"
-				"What do you wan to do?");
+				"What do you want to do?");
 		else
 			msg2 = _("please correct it and try again, or discard "
 				 "the modifications.");
