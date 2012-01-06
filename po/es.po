@@ -7,7 +7,7 @@
 # 
 # 
 # Jorge González <jorgegonz@svn.gnome.org>, 200, 2010, 2011., 2011.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2011.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2012.
 #
 #: ../libgda/gda-connection.c:416
 msgid ""
@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-12-29 17:53+0000\n"
-"PO-Revision-Date: 2011-12-31 18:53+0100\n"
+"POT-Creation-Date: 2012-01-05 21:17+0000\n"
+"PO-Revision-Date: 2012-01-06 19:46+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -141,7 +141,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:423
 #: ../libgda-ui/data-entries/plugins/common-pict.c:535
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:159
-#: ../libgda-ui/gdaui-init.c:507 ../libgda-ui/gdaui-login.c:430
+#: ../libgda-ui/gdaui-init.c:507 ../libgda-ui/gdaui-login.c:438
 #: ../libgda-ui/gdaui-rt-editor.c:741
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
@@ -162,19 +162,19 @@ msgstr "No se pudo ejecutar el visor"
 #: ../providers/postgres/gda-postgres-provider.c:1699
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
-#: ../tools/browser/auth-dialog.c:686 ../tools/browser/auth-dialog.c:689
-#: ../tools/browser/browser-connection.c:487
-#: ../tools/browser/browser-connection.c:576
-#: ../tools/browser/browser-connection.c:598
-#: ../tools/browser/browser-connection.c:784
-#: ../tools/browser/browser-connection.c:804
-#: ../tools/browser/browser-connection.c:1081
-#: ../tools/browser/browser-connection.c:1296
+#: ../tools/browser/auth-dialog.c:706 ../tools/browser/auth-dialog.c:709
+#: ../tools/browser/browser-connection.c:508
+#: ../tools/browser/browser-connection.c:668
+#: ../tools/browser/browser-connection.c:685
+#: ../tools/browser/browser-connection.c:864
+#: ../tools/browser/browser-connection.c:884
+#: ../tools/browser/browser-connection.c:1153
+#: ../tools/browser/browser-connection.c:1368
 #: ../tools/browser/browser-window.c:919 ../tools/browser/browser-window.c:933
 #: ../tools/browser/browser-window.c:947
 #: ../tools/browser/browser-window.c:1172
 #: ../tools/browser/browser-window.c:1213
-#: ../tools/browser/browser-window.c:1481 ../tools/browser/login-dialog.c:235
+#: ../tools/browser/browser-window.c:1481 ../tools/browser/login-dialog.c:241
 #: ../tools/browser/main.c:131 ../tools/browser/main.c:150
 #: ../tools/browser/main.c:206 ../tools/browser/main.c:220
 #: ../tools/browser/main.c:247
@@ -405,14 +405,14 @@ msgstr ""
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:221 ../libgda/gda-config.c:1418
-#: ../tools/browser/auth-dialog.c:284 ../tools/config-info.c:204
+#: ../tools/browser/auth-dialog.c:285 ../tools/config-info.c:204
 #: ../tools/config-info.c:364
 msgid "Authentication"
 msgstr "Autenticación"
 
 #: ../control-center/gdaui-login-dialog.c:75
 #: ../control-center/gdaui-login-dialog.c:83
-#: ../tools/browser/auth-dialog.c:230 ../tools/browser/login-dialog.c:189
+#: ../tools/browser/auth-dialog.c:231 ../tools/browser/login-dialog.c:192
 msgid "Connection opening"
 msgstr "Abriendo conexión"
 
@@ -432,7 +432,7 @@ msgstr ""
 "confirme la apertura de la conexión"
 
 #: ../control-center/main.c:51 ../libgda-ui/internal/utility.c:481
-#: ../tools/browser/support.c:150
+#: ../tools/browser/support.c:151
 msgid "Error:"
 msgstr "Error:"
 
@@ -571,7 +571,7 @@ msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr ""
 "No se pudo eliminar la información de autenticación para la DSN «%s»: %s"
 
-#: ../libgda/gda-config.c:1077 ../libgda-ui/gdaui-login.c:641
+#: ../libgda/gda-config.c:1077 ../libgda-ui/gdaui-login.c:655
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "DSN «%s» desconocido"
@@ -746,8 +746,8 @@ msgid "Datasource configuration error: no provider specified"
 msgstr ""
 "Error de configuración de la fuente de datos: no se especificó el proveedor"
 
-#: ../libgda/gda-connection.c:1321 ../tools/browser/auth-dialog.c:429
-#: ../tools/browser/auth-dialog.c:466 ../tools/gda-sql.c:1444
+#: ../libgda/gda-connection.c:1321 ../tools/browser/auth-dialog.c:447
+#: ../tools/browser/auth-dialog.c:484 ../tools/gda-sql.c:1444
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Cadena de conexión «%s» mal formada"
@@ -781,7 +781,7 @@ msgid "Provider does not support statement preparation"
 msgstr "El proveedor no soporta la preparación de declaraciones"
 
 #: ../libgda/gda-connection.c:3201 ../libgda/gda-connection.c:3295
-#: ../libgda/gda-connection.c:3365 ../libgda/gda-meta-store.c:683
+#: ../libgda/gda-connection.c:3365 ../libgda/gda-meta-store.c:691
 #, c-format
 msgid "Can't obtain connection lock"
 msgstr "No se puede abrir la conexión virtual"
@@ -1766,137 +1766,137 @@ msgstr ""
 "Se especificó el catálogo pero no el esquema, el almacenamiento no será "
 "usable"
 
-#: ../libgda/gda-meta-store.c:929 ../libgda/gda-meta-store.c:938
-#: ../libgda/gda-meta-store.c:2067 ../libgda/gda-meta-store.c:2076
+#: ../libgda/gda-meta-store.c:937 ../libgda/gda-meta-store.c:946
+#: ../libgda/gda-meta-store.c:2075 ../libgda/gda-meta-store.c:2084
 msgid "Could not set the internal schema's version"
 msgstr "No se pudo establecer la versión interna del esquema"
 
-#: ../libgda/gda-meta-store.c:1244
+#: ../libgda/gda-meta-store.c:1252
 msgid "Missing view name from <view> node"
 msgstr "Falta el nombre de la vista en el nodo <view>"
 
-#: ../libgda/gda-meta-store.c:1284
+#: ../libgda/gda-meta-store.c:1292
 msgid "Missing view definition from <view> node"
 msgstr "Falta la definición de la vista en el nodo <view>"
 
-#: ../libgda/gda-meta-store.c:1298
+#: ../libgda/gda-meta-store.c:1306
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
 "La definición de la vista contiene más de una declaración (para la vista "
 "«%s»)"
 
-#: ../libgda/gda-meta-store.c:1325
+#: ../libgda/gda-meta-store.c:1333
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
 "La definición de la vista no es una declaración de selección (para la vista "
 "«%s»)"
 
-#: ../libgda/gda-meta-store.c:1352 ../libgda/gda-meta-struct-io.c:176
+#: ../libgda/gda-meta-store.c:1360 ../libgda/gda-meta-struct-io.c:176
 msgid "Missing table name from <table> node"
 msgstr "Falta el nombre de la tabla del nodo <table>"
 
-#: ../libgda/gda-meta-store.c:1588
+#: ../libgda/gda-meta-store.c:1596
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "La columna «%s» ya existe y tiene características diferentes"
 
-#: ../libgda/gda-meta-store.c:1623
+#: ../libgda/gda-meta-store.c:1631
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
 "Falta el nombre de la tabla referenciada por las claves externas (para la "
 "tabla «%s»)"
 
-#: ../libgda/gda-meta-store.c:1677
+#: ../libgda/gda-meta-store.c:1685
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Falta el nombre de la columna de claves externas (para la tabla «%s»)"
 
-#: ../libgda/gda-meta-store.c:1689
+#: ../libgda/gda-meta-store.c:1697
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "No se encontró la columna «%s» en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:1944 ../libgda/gda-meta-struct.c:1321
+#: ../libgda/gda-meta-store.c:1952 ../libgda/gda-meta-struct.c:1321
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "La clave de la columna externa «%s» no se encontró en la tabla «%s»"
 
-#: ../libgda/gda-meta-store.c:2124
+#: ../libgda/gda-meta-store.c:2132
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr ""
 "La descripción del esquema no contiene el objeto «%s», compruebe la "
 "instalación"
 
-#: ../libgda/gda-meta-store.c:2216 ../libgda/gda-meta-store.c:2227
-#: ../libgda/gda-meta-store.c:2259
+#: ../libgda/gda-meta-store.c:2224 ../libgda/gda-meta-store.c:2235
+#: ../libgda/gda-meta-store.c:2267
 msgid "Could not get the internal schema's version"
 msgstr "No se pudo obtener la versión interna del esquema"
 
-#: ../libgda/gda-meta-store.c:2383 ../libgda/gda-meta-store.c:2505
+#: ../libgda/gda-meta-store.c:2391 ../libgda/gda-meta-store.c:2513
 #: ../tools/gda-sql.c:1101
 msgid "More than one SQL statement"
 msgstr "Más de una declaración SQL"
 
-#: ../libgda/gda-meta-store.c:2412 ../libgda/gda-meta-store.c:2533
+#: ../libgda/gda-meta-store.c:2420 ../libgda/gda-meta-store.c:2541
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "El parámetro «%s» no está presente en la declaración"
 
-#: ../libgda/gda-meta-store.c:2429 ../libgda/gda-meta-store.c:2547
+#: ../libgda/gda-meta-store.c:2437 ../libgda/gda-meta-store.c:2555
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "No se estableció un valor para el parámetro «%s»"
 
-#: ../libgda/gda-meta-store.c:3135
+#: ../libgda/gda-meta-store.c:3143
 msgid "Data models should have the same number of columns"
 msgstr "El modelo de datos debería tener el mismo número de columnas"
 
-#: ../libgda/gda-meta-store.c:3196 ../libgda/gda-meta-store.c:4243
-#: ../libgda/gda-meta-store.c:4346
+#: ../libgda/gda-meta-store.c:3204 ../libgda/gda-meta-store.c:4251
+#: ../libgda/gda-meta-store.c:4354
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Objeto de la base de datos «%s» desconocido"
 
-#: ../libgda/gda-meta-store.c:3212
+#: ../libgda/gda-meta-store.c:3220
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "No se pudo establecer el valor para el parámetro «%s»"
 
-#: ../libgda/gda-meta-store.c:3241
+#: ../libgda/gda-meta-store.c:3249
 msgid "Could not create SELECT statement"
 msgstr "No se pudo crear la declaración SELECT"
 
-#: ../libgda/gda-meta-store.c:3256
+#: ../libgda/gda-meta-store.c:3264
 msgid "Could not create DELETE statement"
 msgstr "No se pudo crear la declaración DELETE"
 
-#: ../libgda/gda-meta-store.c:3306
+#: ../libgda/gda-meta-store.c:3314
 msgid "A transaction has already been started"
 msgstr "Ya se ha iniciado una transacción"
 
-#: ../libgda/gda-meta-store.c:3693
+#: ../libgda/gda-meta-store.c:3701
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "No se encontró el atributo «%s»"
 
-#: ../libgda/gda-meta-store.c:3696
+#: ../libgda/gda-meta-store.c:3704
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "El atributo «%s» tiene %d valor"
 msgstr[1] "El atributo «%s» tiene %d valor"
 
-#: ../libgda/gda-meta-store.c:3743
+#: ../libgda/gda-meta-store.c:3751
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Los atributos con nombres que empiezan por «_» están reservados para uso "
 "interno"
 
-#: ../libgda/gda-meta-store.c:3771
+#: ../libgda/gda-meta-store.c:3779
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1904,17 +1904,17 @@ msgstr ""
 "No se pudo iniciar una transacción porque ya hay una iniciada, esto podría "
 "llevar a problemas con los atributos de GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:3886
+#: ../libgda/gda-meta-store.c:3894
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "No se pudo analizar la descripción XML del objeto personalizado de la base "
 "de datos que añadir"
 
-#: ../libgda/gda-meta-store.c:3900
+#: ../libgda/gda-meta-store.c:3908
 msgid "Missing custom database object name"
 msgstr "Falta el nombre personalizado del objeto de la base de datos"
 
-#: ../libgda/gda-meta-store.c:3905
+#: ../libgda/gda-meta-store.c:3913
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1922,49 +1922,49 @@ msgstr ""
 "Los nombres personalizados de objetos de la base de datos que comienzan por "
 "«_» están reservados para uso interno"
 
-#: ../libgda/gda-meta-store.c:4003
+#: ../libgda/gda-meta-store.c:4011
 msgid "Another object with the same name already exists"
 msgstr "Ya existe un objeto con el mismo nombre"
 
-#: ../libgda/gda-meta-store.c:4105
+#: ../libgda/gda-meta-store.c:4113
 #, c-format
 msgid "Missing table name in meta data context"
 msgstr "Falta el nombre de la tabla en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4132
+#: ../libgda/gda-meta-store.c:4140
 #, c-format
 msgid "Missing column name in meta data context"
 msgstr "Falta el nombre de la columna en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4148
+#: ../libgda/gda-meta-store.c:4156
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Falta la condición en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4173
+#: ../libgda/gda-meta-store.c:4181
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Condición malformada en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4190
+#: ../libgda/gda-meta-store.c:4198
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Nombre de columna «%s» desconocido en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4212
+#: ../libgda/gda-meta-store.c:4220
 #, c-format
 msgid "Unknown table in meta data context"
 msgstr "Tabla desconocida en el contexto de los metadatos"
 
-#: ../libgda/gda-meta-store.c:4485 ../libgda/gda-meta-store.c:4515
-#: ../libgda/gda-meta-store.c:4704 ../libgda/gda-meta-store.c:4733
+#: ../libgda/gda-meta-store.c:4493 ../libgda/gda-meta-store.c:4523
+#: ../libgda/gda-meta-store.c:4712 ../libgda/gda-meta-store.c:4741
 #: ../libgda/gda-meta-struct.c:504 ../libgda/gda-meta-struct.c:519
 #: ../libgda/gda-meta-struct.c:536
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "No se pudo encontrar el objeto llamado «%s»"
 
-#: ../libgda/gda-meta-store.c:4583 ../libgda/gda-meta-store.c:4602
+#: ../libgda/gda-meta-store.c:4591 ../libgda/gda-meta-store.c:4610
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "No se pudo encontrar la columna «%s» en la tabla «%s»"
@@ -2644,12 +2644,13 @@ msgstr "No se pudo definir el cotejamiento «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1202
 #: ../libgda/sqlite/gda-sqlite-provider.c:1244
-#: ../libgda-ui/data-entries/plugins/libmain.c:87
+#: ../libgda-ui/data-entries/plugins/libmain.c:89
 #: ../libgda-ui/data-entries/plugins/libmain.c:126
-#: ../libgda-ui/data-entries/plugins/libmain.c:155
-#: ../libgda-ui/data-entries/plugins/libmain.c:163
-#: ../libgda-ui/data-entries/plugins/libmain.c:256
-#: ../libgda-ui/data-entries/plugins/libmain.c:281
+#: ../libgda-ui/data-entries/plugins/libmain.c:152
+#: ../libgda-ui/data-entries/plugins/libmain.c:181
+#: ../libgda-ui/data-entries/plugins/libmain.c:189
+#: ../libgda-ui/data-entries/plugins/libmain.c:282
+#: ../libgda-ui/data-entries/plugins/libmain.c:307
 #: ../providers/mysql/gda-mysql-provider.c:860
 #: ../providers/mysql/gda-mysql-provider.c:902
 #: ../providers/postgres/gda-postgres-provider.c:747
@@ -3093,8 +3094,8 @@ msgstr "No se encontró la tabla «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:798
 #: ../libgda/sql-parser/gda-statement-struct.c:813
-#: ../tools/browser/browser-connection.c:2042
-#: ../tools/browser/browser-connection.c:2096
+#: ../tools/browser/browser-connection.c:2114
+#: ../tools/browser/browser-connection.c:2168
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "No se pudo identificar la tabla para el campo «%s»"
@@ -3462,7 +3463,7 @@ msgstr "Tamaño de datos"
 #: ../libgda-ui/data-entries/common-bin.c:301
 #: ../providers/ldap/gda-ldap-provider.c:698
 #: ../providers/mysql/gda-mysql-provider.c:635
-#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:444
+#: ../providers/mysql/gda-mysql-util.c:63 ../tools/browser/support.c:445
 #: ../tools/browser/ldap-browser/entry-properties.c:584
 #: ../tools/browser/schema-browser/table-columns.c:515
 #: ../tools/tools-utils.c:35
@@ -3492,7 +3493,7 @@ msgstr "Tipo de dato"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:186
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
-#: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:869
+#: ../libgda-ui/gdaui-basic-form.c:836 ../libgda-ui/gdaui-basic-form.c:871
 #: ../libgda-ui/gdaui-raw-grid.c:788 ../providers/ldap/gda-ldap-provider.c:712
 #: ../tools/config-info.c:121 ../tools/config-info.c:290
 #: ../tools/gda-sql.c:4105
@@ -3979,7 +3980,7 @@ msgstr ""
 "<i>demo_dict</i> los crea el «framework» y están disponibles\n"
 "para todos los elementos demostrados."
 
-#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:414
+#: ../libgda-ui/internal/gdaui-provider-auth-editor.c:425
 msgid "Can't set authentification string: no authentication is needed"
 msgstr ""
 "No se puede establecer la cadena de autenticación: no se necesita "
@@ -4015,10 +4016,14 @@ msgid "Current modified data is invalid"
 msgstr "Los datos actualmente modificados no son válidos"
 
 #: ../libgda-ui/internal/utility.c:375
+#| msgid ""
+#| "You may now choose to correct it, or to discard the modifications.\n"
+#| "\n"
+#| "What do you wan to do?"
 msgid ""
 "You may now choose to correct it, or to discard the modifications.\n"
 "\n"
-"What do you wan to do?"
+"What do you want to do?"
 msgstr ""
 "Ahora puede elegir corregir, o descartar las modificaciones.\n"
 "\n"
@@ -4048,7 +4053,7 @@ msgstr "Descartar datos modificados"
 msgid "Correct data first"
 msgstr "Corregir datos primero"
 
-#: ../libgda-ui/gdaui-basic-form.c:286
+#: ../libgda-ui/gdaui-basic-form.c:288
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -4056,50 +4061,50 @@ msgstr ""
 "Puntero a una especificación de distribución de datos XML (como un "
 "xmlNodePtr hacia un nodo <gdaui_form>)"
 
-#: ../libgda-ui/gdaui-basic-form.c:290
+#: ../libgda-ui/gdaui-basic-form.c:292
 msgid "List of parameters to show in the form"
 msgstr "Lista de parámetros para mostrar en el formulario"
 
-#: ../libgda-ui/gdaui-basic-form.c:294
+#: ../libgda-ui/gdaui-basic-form.c:296
 msgid "Entry headers are sensitive"
 msgstr "Las cabeceras de entrada son sensibles"
 
-#: ../libgda-ui/gdaui-basic-form.c:299
+#: ../libgda-ui/gdaui-basic-form.c:301
 msgid "Show Entry actions"
 msgstr "Mostrar acciones de las entradas"
 
-#: ../libgda-ui/gdaui-basic-form.c:304
+#: ../libgda-ui/gdaui-basic-form.c:306
 msgid "Entries Auto-default"
 msgstr "Entradas autopredeterminadas"
 
-#: ../libgda-ui/gdaui-basic-form.c:309
+#: ../libgda-ui/gdaui-basic-form.c:311
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario verticalmente"
 
-#: ../libgda-ui/gdaui-basic-form.c:333
+#: ../libgda-ui/gdaui-basic-form.c:335
 msgid "Shown data entries"
 msgstr "Entradas de datos mostradas"
 
-#: ../libgda-ui/gdaui-basic-form.c:955 ../libgda-ui/gdaui-raw-grid.c:829
+#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:829
 #: ../libgda-ui/gdaui-raw-grid.c:2783
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1907
+#: ../libgda-ui/gdaui-basic-form.c:1911
 msgid "Can't find data entry for GdaHolder"
 msgstr "No se puede encontrar la entrada para el GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2145
+#: ../libgda-ui/gdaui-basic-form.c:2171
 msgid "Values to be defined"
 msgstr "Valores que definir"
 
-#: ../libgda-ui/gdaui-basic-form.c:2218 ../libgda-ui/gdaui-raw-grid.c:2610
+#: ../libgda-ui/gdaui-basic-form.c:2244 ../libgda-ui/gdaui-raw-grid.c:2610
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:2228 ../libgda-ui/gdaui-raw-grid.c:2620
+#: ../libgda-ui/gdaui-basic-form.c:2254 ../libgda-ui/gdaui-raw-grid.c:2620
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4108,7 +4113,7 @@ msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2360
+#: ../libgda-ui/gdaui-basic-form.c:2386
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4211,20 +4216,20 @@ msgid "Plugins load warning: %s"
 msgstr "Aviso en la carga de complementos: %s"
 
 #. radio buttons
-#: ../libgda-ui/gdaui-login.c:170
+#: ../libgda-ui/gdaui-login.c:176
 msgid "Use data source:"
 msgstr "Usar fuente de datos:"
 
-#: ../libgda-ui/gdaui-login.c:178
+#: ../libgda-ui/gdaui-login.c:184
 msgid "Specify connection:"
 msgstr "Especificar conexión:"
 
 #. Create the DSN add button
-#: ../libgda-ui/gdaui-login.c:192
+#: ../libgda-ui/gdaui-login.c:198
 msgid "Data sources..."
 msgstr "Fuentes de datos…"
 
-#: ../libgda-ui/gdaui-login.c:429
+#: ../libgda-ui/gdaui-login.c:437
 msgid "Could not execute the Database access control center"
 msgstr "No se pudo ejecutar el centro de control de acceso a la base de datos"
 
@@ -7460,15 +7465,15 @@ msgstr "Establecer como original"
 msgid "Set as default"
 msgstr "Establecer como predeterminado"
 
-#: ../tools/browser/auth-dialog.c:530
+#: ../tools/browser/auth-dialog.c:550
 msgid "For connection"
 msgstr "Para la conexión"
 
-#: ../tools/browser/auth-dialog.c:531
+#: ../tools/browser/auth-dialog.c:551
 msgid "enter authentication information"
 msgstr "introducir información de autenticación"
 
-#: ../tools/browser/auth-dialog.c:687 ../tools/browser/login-dialog.c:234
+#: ../tools/browser/auth-dialog.c:707 ../tools/browser/login-dialog.c:240
 #, c-format
 msgid ""
 "Could not open connection:\n"
@@ -7477,49 +7482,47 @@ msgstr ""
 "No se pudo abrir la conexión:\n"
 "%s"
 
-#: ../tools/browser/browser-connection.c:351
+#: ../tools/browser/browser-connection.c:392
 #, c-format
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/browser/browser-connection.c:484
-#: ../tools/browser/browser-connection.c:594
+#: ../tools/browser/browser-connection.c:505
 msgid "Analysing database schema"
 msgstr "Analizando el esquema de la base de datos"
 
-#: ../tools/browser/browser-connection.c:486
-#: ../tools/browser/browser-connection.c:575
-#: ../tools/browser/browser-connection.c:597
-#: ../tools/browser/browser-connection.c:1080
+#: ../tools/browser/browser-connection.c:507
+#: ../tools/browser/browser-connection.c:667
+#: ../tools/browser/browser-connection.c:684
+#: ../tools/browser/browser-connection.c:1152
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Error al obtener los metadatos de la conexión: %s"
 
-#: ../tools/browser/browser-connection.c:572
-#: ../tools/browser/browser-connection.c:1078
-msgid "Getting database schema information"
-msgstr "Obteniendo la información de esquema de la base de datos"
-
-#: ../tools/browser/browser-connection.c:783
-#: ../tools/browser/browser-connection.c:803
+#: ../tools/browser/browser-connection.c:863
+#: ../tools/browser/browser-connection.c:883
 #, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "Error al analizar el esquema de la base de datos: %s"
 
-#: ../tools/browser/browser-connection.c:944
+#: ../tools/browser/browser-connection.c:1016
 #: ../tools/browser/browser-window.c:279
 msgid "Connection"
 msgstr "Conexión"
 
-#: ../tools/browser/browser-connection.c:946
+#: ../tools/browser/browser-connection.c:1018
 msgid "unnamed"
 msgstr "sin nombre"
 
-#: ../tools/browser/browser-connection.c:949
+#: ../tools/browser/browser-connection.c:1021
 msgid "data source"
 msgstr "fuente de datos"
 
-#: ../tools/browser/browser-connection.c:1294
+#: ../tools/browser/browser-connection.c:1150
+msgid "Getting database schema information"
+msgstr "Obteniendo la información de esquema de la base de datos"
+
+#: ../tools/browser/browser-connection.c:1366
 msgid ""
 "Execution reported an undefined error, please report error to http://"
 "bugzilla.gnome.org/ for the \"libgda\" product"
@@ -7527,25 +7530,25 @@ msgstr ""
 "Se ha producido un error no definido, por favor informe del error en http://"
 "bugzilla.gnome.org/ para el producto «libgda»"
 
-#: ../tools/browser/browser-connection.c:1344
-#: ../tools/browser/browser-connection.c:1394
+#: ../tools/browser/browser-connection.c:1416
+#: ../tools/browser/browser-connection.c:1466
 msgid "Executing a query"
 msgstr "Ejecutando una consulta"
 
-#: ../tools/browser/browser-connection.c:1691
+#: ../tools/browser/browser-connection.c:1763
 #, c-format
 msgid "Connection not yet opened"
 msgstr "La conexión aún no está abierta"
 
-#: ../tools/browser/browser-connection.c:1697
+#: ../tools/browser/browser-connection.c:1769
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
 "No se puede inicializar el diccionario para almacenar las preferencias de la "
 "tabla"
 
-#: ../tools/browser/browser-connection.c:1743
-#: ../tools/browser/browser-connection.c:1749
-#: ../tools/browser/browser-connection.c:1885
+#: ../tools/browser/browser-connection.c:1815
+#: ../tools/browser/browser-connection.c:1821
+#: ../tools/browser/browser-connection.c:1957
 #: ../tools/browser/browser-favorites.c:553
 #: ../tools/browser/browser-favorites.c:559
 #: ../tools/browser/browser-favorites.c:986
@@ -7553,26 +7556,26 @@ msgstr ""
 msgid "Can't initialize transaction to access favorites"
 msgstr "No se puede inicializar la transacción para acceder a los favoritos"
 
-#: ../tools/browser/browser-connection.c:1830
+#: ../tools/browser/browser-connection.c:1902
 #: ../tools/browser/browser-favorites.c:732
 #: ../tools/browser/browser-favorites.c:1044
 msgid "Can't commit transaction to access favorites"
 msgstr "No se puede efectuar la transacción para acceder a los favoritos"
 
-#: ../tools/browser/browser-connection.c:2393
+#: ../tools/browser/browser-connection.c:2465
 #, c-format
 msgid "Could not execute LDAP search"
 msgstr "No se pudo ejecutar la búsqueda LDAP"
 
-#: ../tools/browser/browser-connection.c:2438
+#: ../tools/browser/browser-connection.c:2510
 msgid "Executing LDAP search"
 msgstr "Ejecutando búsqueda LDAP"
 
-#: ../tools/browser/browser-connection.c:2498
+#: ../tools/browser/browser-connection.c:2570
 msgid "Fetching LDAP entry's attributes"
 msgstr "Obteniendo atributos de la entrada LDAP"
 
-#: ../tools/browser/browser-connection.c:2558
+#: ../tools/browser/browser-connection.c:2630
 msgid "Fetching LDAP entry's children"
 msgstr "Obteniendo hijos de la entrada LDAP"
 
@@ -7849,7 +7852,7 @@ msgstr "Deshacer la transacción actual"
 msgid "LDAP browser"
 msgstr "Visor LDAP"
 
-#: ../tools/browser/browser-window.c:817 ../tools/browser/support.c:80
+#: ../tools/browser/browser-window.c:817 ../tools/browser/support.c:81
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "¿Quiere cerrar la conexión «%s»?"
@@ -7994,11 +7997,11 @@ msgstr ""
 msgid "Browse your database's contents"
 msgstr "Examinar el contenido de su base de datos"
 
-#: ../tools/browser/login-dialog.c:138
+#: ../tools/browser/login-dialog.c:139
 msgid "Connection opening:"
 msgstr "Apertura de conexión:"
 
-#: ../tools/browser/login-dialog.c:139
+#: ../tools/browser/login-dialog.c:140
 msgid ""
 "Select a named data source, or specify\n"
 "parameters to open a connection to a \n"
@@ -8008,7 +8011,7 @@ msgstr ""
 "especificar parámetros para abrir una conexión\n"
 "con una fuente de datos no definida"
 
-#: ../tools/browser/login-dialog.c:248
+#: ../tools/browser/login-dialog.c:254
 #, c-format
 msgid "Cancelled by the user"
 msgstr "Cancelado por el usuario"
@@ -8116,11 +8119,11 @@ msgstr ""
 "arrastre un elemento\n"
 "para definir uno"
 
-#: ../tools/browser/support.c:192
+#: ../tools/browser/support.c:193
 msgid "Information:"
 msgstr "Información:"
 
-#: ../tools/browser/support.c:245
+#: ../tools/browser/support.c:246
 msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
@@ -8128,27 +8131,27 @@ msgstr ""
 "No se pudo mostrar la ayuda. Asegúrese de que el paquete de documentación "
 "está instalado."
 
-#: ../tools/browser/support.c:262
+#: ../tools/browser/support.c:263
 msgid "Unable to open help file"
 msgstr "No se puede abrir el archivo de ayuda"
 
-#: ../tools/browser/support.c:272 ../tools/browser/support.c:274
+#: ../tools/browser/support.c:273 ../tools/browser/support.c:275
 msgid "Help is being loaded, please wait..."
 msgstr "Se está cargando la ayuda, espere…"
 
-#: ../tools/browser/support.c:320
+#: ../tools/browser/support.c:321
 msgid "Close tab"
 msgstr "Cerrar pestaña"
 
-#: ../tools/browser/support.c:438
+#: ../tools/browser/support.c:439
 msgid "Abstract"
 msgstr "Abstracta"
 
-#: ../tools/browser/support.c:440
+#: ../tools/browser/support.c:441
 msgid "Structural"
 msgstr "Estructural"
 
-#: ../tools/browser/support.c:442
+#: ../tools/browser/support.c:443
 msgid "Auxilliary"
 msgstr "Auxiliar"
 
