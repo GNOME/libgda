@@ -171,6 +171,10 @@ gda_g_type_from_string (const gchar *str)
 			type = G_TYPE_CHAR;
 		else if (!g_ascii_strcasecmp (str, "uchar"))
 			type = G_TYPE_UCHAR;
+		else if (!g_ascii_strcasecmp (str, "gshort"))
+			type = GDA_TYPE_SHORT;
+		else if (!g_ascii_strcasecmp (str, "gushort"))
+			type = GDA_TYPE_USHORT;
 		else
 			/* could not find a valid GType for @str */
 			type = G_TYPE_INVALID;
