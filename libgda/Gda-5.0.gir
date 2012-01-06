@@ -10524,7 +10524,7 @@ SQL identifiers are represented in @store, see the
           <parameter name="vars" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a hash table with all variables names as keys and GValue* as value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be omitted.</doc>
             <type name="GLib.HashTable" c:type="GHashTable*">
-              <type name="gchar"/>
+              <type name="utf8"/>
               <type name="GObject.Value"/>
             </type>
           </parameter>

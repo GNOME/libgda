@@ -571,7 +571,7 @@ namespace Gda {
 		public Gda.DataModel create_modify_data_model (string table_name);
 		public bool declare_foreign_key (Gda.MetaStruct? mstruct, string fk_name, string? catalog, string? schema, string table, string? ref_catalog, string? ref_schema, string ref_table, [CCode (array_length_cname = "nb_cols", array_length_pos = 8.5, array_length_type = "guint")] string[] colnames, [CCode (array_length_cname = "nb_cols", array_length_pos = 8.5, array_length_type = "guint")] string[] ref_colnames) throws GLib.Error;
 		public static GLib.Quark error_quark ();
-		public Gda.DataModel extract_v (string select_sql, GLib.HashTable<char,GLib.Value>? vars) throws GLib.Error;
+		public Gda.DataModel extract_v (string select_sql, GLib.HashTable<string,GLib.Value>? vars) throws GLib.Error;
 		public bool get_attribute_value (string att_name, out string att_value) throws GLib.Error;
 		public unowned Gda.Connection get_internal_connection ();
 		public int get_version ();
