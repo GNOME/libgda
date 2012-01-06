@@ -933,7 +933,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
-		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra, c.column_comments FROM _tables as t LEFT NATURAL JOIN _columns as c WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
+		gchar *sql = "SELECT c.column_name, c.data_type, c.gtype, c.is_nullable, t.table_short_name, t.table_full_name, c.column_default, t.table_owner, c.array_spec, c.extra, c.column_comments, coalesce (c.character_maximum_length, c.character_octet_length) FROM _tables as t LEFT NATURAL JOIN _columns as c WHERE table_catalog = ##tc::string AND table_schema = ##ts::string AND table_name = ##tname::string ORDER BY ordinal_position";
 		GdaMetaTable *mt;
 		GdaDataModel *model;
 		gint i, nrows;
@@ -981,6 +981,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		for (i = 0; i < nrows; i++) {
 			GdaMetaTableColumn *tcol;
 			const gchar *cstr = NULL;
+			gint len = -1;
 			tcol = g_new0 (GdaMetaTableColumn, 1); /* Note: tcol->pkey is not determined here */
 			mt->columns = g_slist_prepend (mt->columns, tcol);
 
@@ -992,8 +993,18 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			if (!cvalue) goto onerror;
 			if (!gda_value_is_null (cvalue))
 				cstr = g_value_get_string (cvalue);
-			if (cstr && *cstr)
-				tcol->column_type = g_strdup (cstr);
+
+			cvalue = gda_data_model_get_value_at (model, 11, i, error);
+			if (!cvalue) goto onerror;
+			if (!gda_value_is_null (cvalue))
+				len = g_value_get_int (cvalue);
+
+			if (cstr && *cstr) {
+				if (len >= 0)
+					tcol->column_type = g_strdup_printf ("%s (%d)", cstr, len);
+				else
+					tcol->column_type = g_strdup (cstr);
+			}
 			else {
 				cvalue = gda_data_model_get_value_at (model, 8, i, error);
 				if (!cvalue) goto onerror;
