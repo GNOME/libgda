@@ -331,6 +331,8 @@ _gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
 		break;
 	case MYSQL_TYPE_DECIMAL:
 	case MYSQL_TYPE_NEWDECIMAL:
+		gtype = GDA_TYPE_NUMERIC;
+		break;
 	case MYSQL_TYPE_DOUBLE:
 		gtype = G_TYPE_DOUBLE;
 		break;
@@ -649,6 +651,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		case MYSQL_TYPE_TINY_BLOB:
 		case MYSQL_TYPE_MEDIUM_BLOB:
 		case MYSQL_TYPE_LONG_BLOB:
+		case MYSQL_TYPE_DECIMAL:
 		case MYSQL_TYPE_NEWDECIMAL:
 		case MYSQL_TYPE_BIT:
 			mysql_bind_result[i].buffer = g_malloc0 (field->max_length + 1);
@@ -909,6 +912,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		case MYSQL_TYPE_MEDIUM_BLOB:
 		case MYSQL_TYPE_LONG_BLOB:
 		case MYSQL_TYPE_NEWDECIMAL:
+		case MYSQL_TYPE_DECIMAL:
 		case MYSQL_TYPE_BIT: {
 			char *strvalue = NULL;
 			g_memmove (&length, mysql_bind_result[i].length, sizeof(unsigned long));
@@ -933,6 +937,19 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				 * so we return the whole BLOB at once */
 				GdaBlob blob = { {(guchar*) strvalue, length}, NULL };
 				gda_value_set_blob (value, &blob);
+			}
+			else if (type == GDA_TYPE_NUMERIC) {
+				setlocale (LC_NUMERIC, "C");
+				if (length > 0) {
+					GdaNumeric *numeric;
+					numeric = gda_numeric_new ();
+					gda_numeric_set_from_string (numeric, strvalue);
+					gda_numeric_set_precision (numeric, 6);
+					gda_numeric_set_width (numeric, length);
+					gda_value_set_numeric (value, numeric);
+					gda_numeric_free (numeric);
+				}
+				setlocale (LC_NUMERIC, gda_numeric_locale);
 			}
 			else if (type == G_TYPE_DOUBLE) {
 				if (length > 0) {
