@@ -942,115 +942,87 @@ _gda_mysql_meta_tables_views (G_GNUC_UNUSED GdaServerProvider  *prov,
  * Returns a newly created GValue string.
  */
 static inline GValue *
-map_mysql_type_to_gda (const GValue  *value)
+map_mysql_type_to_gda (const GValue *value, const gchar *vlength)
 {
 	const gchar *string = g_value_get_string (value);
 	GValue *newvalue;
 	const gchar *newstring;
 
-	if (strcmp (string, "bool") == 0)
+	if (!strcmp (string, "bool"))
 		newstring = "gboolean";
-	else
-	if (strcmp (string, "blob") == 0)
+	else if (!strcmp (string, "blob"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "bigint") == 0)
+	else if (!strcmp (string, "bigint"))
 		newstring = "gint64";
-	else
-	if (strcmp (string, "bigint unsigned") == 0)
+	else if (!strcmp (string, "bigint unsigned"))
 		newstring = "guint64";
-	else
-	if (strcmp (string, "char") == 0)
-		newstring = "gchar";
-	else
-	if (strcmp (string, "date") == 0)
+	else if (!strcmp (string, "char")) {
+		if (vlength && (G_VALUE_TYPE (vlength) == G_TYPE_INT) &&
+		    (g_value_get_int (vlength) > 1))
+			newstring = "gchararray";
+		else
+			newstring = "gchar";
+	}
+	else if (!strcmp (string, "date"))
 		newstring = "GDate";
-	else
-	if (strcmp (string, "datetime") == 0)
+	else if (!strcmp (string, "datetime"))
 		newstring = "GdaTimestamp";
-	else
-	if (strcmp (string, "decimal") == 0)
+	else if (!strcmp (string, "decimal"))
 		newstring = "GdaNumeric";
-	else
-	if (strcmp (string, "double") == 0)
+	else if (!strcmp (string, "double"))
 		newstring = "gdouble";
-	else
-	if (strcmp (string, "double unsigned") == 0)
+	else if (!strcmp (string, "double unsigned"))
 		newstring = "double";
-	else
-	if (strcmp (string, "enum") == 0)
+	else if (!strcmp (string, "enum"))
 		newstring = "gchararray";
-	else
-	if (strcmp (string, "float") == 0)
+	else if (!strcmp (string, "float"))
 		newstring = "gfloat";
-	else
-	if (strcmp (string, "float unsigned") == 0)
+	else if (!strcmp (string, "float unsigned"))
 		newstring = "gfloat";
-	else
-	if (strcmp (string, "int") == 0)
+	else if (!strcmp (string, "int"))
 		newstring = "int";
-	else
-	if (strcmp (string, "unsigned int") == 0)
+	else if (!strcmp (string, "unsigned int"))
 		newstring = "guint";
-	else
-	if (strcmp (string, "long") == 0)
+	else if (!strcmp (string, "long"))
 		newstring = "glong";
-	else
-	if (strcmp (string, "unsigned long") == 0)
+	else if (!strcmp (string, "unsigned long"))
 		newstring = "gulong";
-	else
-	if (strcmp (string, "longblob") == 0)
+	else if (!strcmp (string, "longblob"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "longtext") == 0)
+	else if (!strcmp (string, "longtext"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "mediumint") == 0)
+	else if (!strcmp (string, "mediumint"))
 		newstring = "gint";
-	else
-	if (strcmp (string, "mediumint unsigned") == 0)
+	else if (!strcmp (string, "mediumint unsigned"))
 		newstring = "guint";
-	else
-	if (strcmp (string, "mediumblob") == 0)
+	else if (!strcmp (string, "mediumblob"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "mediumtext") == 0)
+	else if (!strcmp (string, "mediumtext"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "set") == 0)
+	else if (!strcmp (string, "set"))
 		newstring = "gchararray";
-	else
-	if (strcmp (string, "smallint") == 0)
+	else if (!strcmp (string, "smallint"))
 		newstring = "gshort";
-	else
-	if (strcmp (string, "smallint unsigned") == 0)
+	else if (!strcmp (string, "smallint unsigned"))
 		newstring = "gushort";
-	else
-	if (strcmp (string, "text") == 0)
+	else if (!strcmp (string, "text"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "tinyint") == 0)
+	else if (!strcmp (string, "tinyint"))
 		newstring = "gchar";
-	else
-	if (strcmp (string, "tinyint unsigned") == 0)
+	else if (!strcmp (string, "tinyint unsigned"))
 		newstring = "guchar";
-	else
-	if (strcmp (string, "tinyblob") == 0)
+	else if (!strcmp (string, "tinyblob"))
 		newstring = "GdaBinary";
-	else
-	if (strcmp (string, "time") == 0)
+	else if (!strcmp (string, "time"))
 		newstring = "GdaTime";
-	else
-	if (strcmp (string, "timestamp") == 0)
+	else if (!strcmp (string, "timestamp"))
 		newstring = "GdaTimestamp";
-	else
-	if (strcmp (string, "varchar") == 0)
+	else if (!strcmp (string, "varchar"))
 		newstring = "gchararray";
-	else
-	if (strcmp (string, "year") == 0)
+	else if (!strcmp (string, "year"))
 		newstring = "gint";
 	else
-		newstring = "";
+		newstring = "gchararray";
 
 	g_value_set_string (newvalue = gda_value_new (G_TYPE_STRING),
 			    newstring);
@@ -1093,13 +1065,16 @@ _gda_mysql_meta__columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 		gint n_rows = gda_data_model_get_n_rows (model);
 		gint i;
 		for (i = 0; i < n_rows; ++i) {
-			const GValue *value = gda_data_model_get_value_at (model, 7, i, error);
-			if (!value) {
+			const GValue *value1, *value2 = NULL;
+			value1 = gda_data_model_get_value_at (model, 7, i, error);
+			if (value1)
+				value2 = gda_data_model_get_value_at (model, 10, i, error);
+			if (!value1 || !value2) {
 				retval = FALSE;
 				break;
 			}
 
-			GValue *newvalue = map_mysql_type_to_gda (value);
+			GValue *newvalue = map_mysql_type_to_gda (value1, value2);
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
@@ -1165,13 +1140,16 @@ _gda_mysql_meta_columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 		gint n_rows = gda_data_model_get_n_rows (model);
 		gint i;
 		for (i = 0; i < n_rows; ++i) {
-			const GValue *value = gda_data_model_get_value_at (model, 7, i, error);
-			if (!value) {
+			const GValue *value1, *value2 = NULL;
+			value1 = gda_data_model_get_value_at (model, 7, i, error);
+			if (value1)
+				value2 = gda_data_model_get_value_at (model, 10, i, error);
+			if (!value1 || !value2) {
 				retval = FALSE;
 				break;
 			}
 
-			GValue *newvalue = map_mysql_type_to_gda (value);
+			GValue *newvalue = map_mysql_type_to_gda (value1, value2);
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
