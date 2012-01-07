@@ -23,7 +23,7 @@
 
 G_BEGIN_DECLS
 
-const GdaSqlStatement *_gda_statement_get_internal_struct (GdaStatement *stmt);
+GdaSqlStatement *_gda_statement_get_internal_struct (GdaStatement *stmt);
 const GType *_gda_statement_get_requested_types (GdaStatement *stmt);
 
 G_END_DECLS
