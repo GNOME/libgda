@@ -106,6 +106,7 @@ libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c
 libgda-ui/data-entries/plugins/gdaui-entry-cidr.c
 libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-filesel.c
+libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in
