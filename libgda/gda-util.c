@@ -51,6 +51,7 @@
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-blob-op.h>
+#include <libgda/gda-statement-priv.h>
 
 #include <libgda/binreloc/gda-binreloc.h>
 
@@ -1894,6 +1895,62 @@ stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd, GdaSet *params,
 	}
 
 	return TRUE;
+}
+
+
+static gboolean
+foreach_modify_param_type (GdaSqlAnyPart *part, GdaDataModel *model, G_GNUC_UNUSED GError **error)
+{
+	if (part->type != GDA_SQL_ANY_EXPR)
+		return TRUE;
+
+	GdaSqlParamSpec *pspec;
+	pspec = ((GdaSqlExpr*) part)->param_spec;
+	if (!pspec || !pspec->name)
+		return TRUE;
+
+	if ((pspec->name [0] == '+') || (pspec->name [0] == '-')) {
+		long int li;
+		char *end;
+		li = strtol ((pspec->name) + 1, &end, 10);
+		if ((! *end) && (li <= G_MAXINT) && (li >= G_MININT) && (li < gda_data_model_get_n_columns (model)))  {
+			GdaColumn *col;
+			col = gda_data_model_describe_column (model, (gint) li);
+			if (col && (gda_column_get_g_type (col) != GDA_TYPE_NULL))
+				pspec->g_type = gda_column_get_g_type (col);
+		}
+	}
+	return TRUE;
+}
+
+/**
+ * gda_modify_statement_param_types:
+ * @stmt: a #GdaStatement
+ * @model: a #GdaDataModel
+ *
+ * Modifies the parameters in @stmt which will be mapped to columns in @model (using the +&lt;colindex&gt; or
+ * -&lt;colindex&gt; syntax) to map the column types of @model.
+ *
+ * Since: 5.2
+ */
+void
+gda_modify_statement_param_types (GdaStatement *stmt, GdaDataModel *model)
+{
+	g_return_if_fail (GDA_IS_STATEMENT (stmt));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	GdaSqlStatement *sqlst;
+
+	sqlst = _gda_statement_get_internal_struct (stmt);
+	if (!sqlst || !sqlst->contents)
+		return;
+
+	if ((sqlst->stmt_type == GDA_SQL_STATEMENT_INSERT) ||
+	    (sqlst->stmt_type == GDA_SQL_STATEMENT_UPDATE) ||
+	    (sqlst->stmt_type == GDA_SQL_STATEMENT_DELETE)) {
+		GdaSqlAnyPart *top;
+		top = (GdaSqlAnyPart*) sqlst->contents;
+		gda_sql_any_part_foreach (top, (GdaSqlForeachFunc) foreach_modify_param_type, model, NULL);
+	}
 }
 
 /**
