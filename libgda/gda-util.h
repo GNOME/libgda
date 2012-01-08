@@ -102,7 +102,7 @@ GdaSqlStatement *gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement 
 								gboolean *out_modified, GError **error);
 gboolean         gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
 							    GdaStatement **out_stmt, GError **error);
-void             gda_modify_statement_param_types (GdaStatement *stmt, GdaDataModel *model);
+void             _gda_modify_statement_param_types (GdaStatement *stmt, GdaDataModel *model);
 
 /*
  * DSN and connection string manipulations

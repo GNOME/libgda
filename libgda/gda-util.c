@@ -1923,8 +1923,8 @@ foreach_modify_param_type (GdaSqlAnyPart *part, GdaDataModel *model, G_GNUC_UNUS
 	return TRUE;
 }
 
-/**
- * gda_modify_statement_param_types:
+/*
+ * _gda_modify_statement_param_types:
  * @stmt: a #GdaStatement
  * @model: a #GdaDataModel
  *
@@ -1934,7 +1934,7 @@ foreach_modify_param_type (GdaSqlAnyPart *part, GdaDataModel *model, G_GNUC_UNUS
  * Since: 5.2
  */
 void
-gda_modify_statement_param_types (GdaStatement *stmt, GdaDataModel *model)
+_gda_modify_statement_param_types (GdaStatement *stmt, GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_STATEMENT (stmt));
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
