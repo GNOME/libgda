@@ -1649,6 +1649,9 @@ g_object_unref (eng);
     <index id="index-5-0-2" role="5.0.2">
       <title>Index of new symbols in 5.0.2</title>
     </index>
+    <index id="index-5-2-0" role="5.2.0">
+      <title>Index of new symbols in 5.2.0</title>
+    </index>
     <index id="index-deprecated" role="deprecated">
       <title>Index of deprecated symbols</title>
     </index>
