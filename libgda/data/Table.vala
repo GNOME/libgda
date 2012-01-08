@@ -22,23 +22,42 @@ using Gda;
 
 namespace GdaData
 {
-	public interface Table : Object
+	public class Table<G> : Object, DbObject, DbNamedObject, DbTable<G>
 	{
+		protected DbRecordCollection _records;
+		protected HashMap<string,DbFieldInfo<G>> _fields = new HashMap<string,DbFieldInfo<G>> ();
+		protected HashMap<string,DbTable<G>> _fk_depends = new HashMap<string,DbTable<G>> ();
+		protected HashMap<string,DbTable<G>> _fk = new HashMap<string,DbTable<G>> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
-		public void update ()
-		{
-			
-		}
+		public void update () throws Error {}
+		public void save () throws Error {}
+		public bool append () throws Error { return false; }
 		// DbNamedObject Interface
 		public string name { get; set; }
 		
 		// DbTable Interface
-		public Collection<FieldInfo<G>> info_fields {}
-		public DbSchema schema { get; set; }
-//		public Collection<DbRecord> records { get; }
-//		public Collection<DbTable> fk_depends { get; }
-//		public Collection<DbTable> fk { get; }
-//		public Iterator<DbRecord> iterator ();
+		public Collection<DbFieldInfo<G>> fields { 
+			owned get { return _fields.values; } 
+			set construct { 
+				foreach (DbFieldInfo<G> f in value) {
+					_fields.set (f.name, f);
+				}
+			}
+		}
+		public DbSchema schema { get; set construct; }
+		public Collection<DbRecord> records { 
+			owned get  {
+				var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
+				q.set_table (name);
+				q.select_add_field ("*", null, null);
+				var s = q.get_statement ();
+	    		var m = this.connection.statement_execute_select (s, null);
+				_records = new RecordCollection (m, this);
+				return _records;
+			}
+		}
+		public Collection<DbTable> fk_depends { owned get { return _fk_depends.values; } }
+		public Collection<DbTable> fk { owned get { return _fk.values; } }
 	}
 }

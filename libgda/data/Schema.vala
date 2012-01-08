@@ -22,30 +22,33 @@ using Gda;
 
 namespace GdaData
 {
-	public class Schema : Object
+	public class Schema<G> : Object, DbObject, DbNamedObject, DbSchema<G>
 	{
-		public HashMap<string,DbTable> tables = new HashMap<string,DbTable> ();
+		public HashMap<string,DbTable<G>> _tables = new HashMap<string,DbTable<G>> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
-		public update () 
+		public void update () throws Error
 		{
 			connection.update_meta_store (null); // FIXME: just update schemas
 			var store = connection.get_meta_store ();
 			tables.clear ();
-			var mt = store.extract (@"SELECT * FROM _tables WHERE schema_name = $name");
+			var vals = new HashTable<string,Value?> (str_hash,str_equal);
+			Value v = name;
+			vals.set ("name", v);
+			var mt = store.extract_v ("SELECT * FROM _tables WHERE schema_name = ##name::string", vals);
 			for (int r = 0; r < mt.get_n_rows (); r++) {
-				var t = new Table ();
+				var t = new Table<G> ();
 				t.connection = connection;
 				t.name = (string) mt.get_value_at (mt.get_column_index ("table_name"), r);
 				t.schema = (DbSchema) this;
 				tables.set (t.name, (DbTable) t);
 			}
 		}
-		public void save () {}
-		public void append () {}
+		public void save () throws Error {}
+		public bool append () throws Error { return false; }
 		// DbNamedObject Interface
 		public string name { get; set; }
 		// DbSchema Interface
-		public Collection<DbTable> tables { get { return tables.values; } }
+		public Collection<DbTable> tables { owned get { return _tables.values; } }
 	}
 }

@@ -22,9 +22,17 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbRecord : DbObject
+	public interface DbRecord<G> : DbObject, Comparable<DbRecord<G>>
 	{
-		public abstract DbTable              table { get; set construct; }
-		public abstract Collection<DbField>  fields { get; }
+		public abstract DbTable<G>                    table  { get; set construct; }
+		public abstract Collection<DbField<G>>        fields { owned get; }
+        public abstract Collection<DbField<G>>        keys   { owned get; }
+        /**
+         * Returns a GLib.Value containing the value stored in the given field.
+         */
+        public abstract G                             get_value (string field) throws Error;
+        public abstract void                          set_field (string field, Value? v) throws Error;
+        public abstract void                          set_key (string field, G v) throws Error;
+        public abstract DbField<G>                    get_field (string field) throws Error;
 	}
 }

@@ -21,18 +21,10 @@ using Gda;
 using GdaData;
 
 namespace Check {
-	class Record : RecordSingleId
+	class Record : GdaData.Record
 	{
 		public static string t = "user";
-		public override string table { 
-			get { return this.t; }
-		}
-		public override string field_id {
-			get { return "id";}
-		}
-		public override int field_id_index {
-			get { return 0;}
-		}
+		
 	}
 	class Tests :  GLib.Object {
 		public Gda.Connection connection { get; set; }

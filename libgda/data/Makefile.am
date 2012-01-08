@@ -36,7 +36,6 @@ object_persistance_sources = \
 	Schema.vala \
 	Table.vala \
 	Record.vala \
-	RecordSingleId.vala \
 	SelectQuery.vala \
 	$(NULL)
 
@@ -48,9 +47,10 @@ db_collection_sources = \
 	DbField.vala \
 	DbFieldInfo.vala \
 	DbSchema.vala \
+	DbRecordCollection.vala \
+	RecordCollection.vala \
 	Field.vala \
 	FieldInfo.vala \
-	IdField.vala \
 	$(NULL)
 
 selectable_sources = \
@@ -58,16 +58,10 @@ selectable_sources = \
 	SqlExpression.vala \
 	$(NULL)
 
-data_model_collection_sources = \
-	DataModelIterator.vala \
-	DataModelIterable.vala \
-	$(NULL)
-
 libgdadata_5_0_la_VALASOURCES = \
 	NamespaceInfo.vala \
 	$(object_persistance_sources) \
 	$(db_collection_sources) \
-	$(data_model_collection_sources) \
 	$(NULL)
 
 libgdadata_5_0_la_SOURCES = \

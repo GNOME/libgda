@@ -24,7 +24,8 @@
  	/**
  	 * Iterator that implements [@link [Gee.Iterator] and [@link [Gee.Traversable]]
  	 */
- 	public class DataModelIterator : GLib.Object, Gee.Traversable <Value?>, Gee.Iterator <Value?>
+ 	public class DataModelIterator : GLib.Object, Gee.Traversable <Value?>, Gee.Iterator <Value?>,  
+ 		Gee.Traversable <DbRecord>, Gee.Iterator<DbRecord>
  	{
  		private Gda.DataModelIter iter;
  		private int _current_pos;
@@ -144,7 +145,7 @@
  		
  		public void remove () {}
  		
- 		/* Traversable  Interface */
+ 		// Traversable  Interface
  		public Gee.Iterator<Value?> chop (int offset, int length = -1) 
  			requires ( offset >= 0)
  		{

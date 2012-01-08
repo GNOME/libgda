@@ -23,9 +23,9 @@ using Gda;
 namespace GdaData {
 	public interface DbObject : Object {
 		public abstract Connection   connection { get; set; }
-		public abstract DbObject     append ();
-		public abstract void         update ();
-		public abstract void         save ();
+		public abstract bool         append () throws Error;
+		public abstract void         update () throws Error;
+		public abstract void         save () throws Error;
 	}
 	
 	public interface DbNamedObject : DbObject {

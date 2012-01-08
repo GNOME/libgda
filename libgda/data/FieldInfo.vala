@@ -20,20 +20,20 @@
 using Gda;
 
 namespace GdaData {
-	public class FieldInfo<G> : Object, DbFieldInfo
+	public class FieldInfo<G> : Object, DbFieldInfo<G>
 	{
 		private DbField.Attribute _attr;
 		private G _default_value;
 		private string _name;
 		
-		public override DbField.Attribute  attributes {
+		public DbField.Attribute  attributes {
 			get { return _attr; }
 		}
 		
-		public override G default_value { 
+		public G default_value { 
 			get { return _default_value; }
 		}
-		public override string name { 
+		public string name { 
 			get { return _name; }
 		}
 		FieldInfo (string name, DbField.Attribute attr, G default_val)
