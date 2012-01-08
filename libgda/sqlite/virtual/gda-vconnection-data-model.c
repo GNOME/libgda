@@ -37,6 +37,8 @@ static void gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass 
 static void gda_vconnection_data_model_init       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelClass *klass);
 static void gda_vconnection_data_model_dispose   (GObject *object);
 
+static gboolean get_rid_of_vtable (GdaVconnectionDataModel *cnc, GdaVConnectionTableData *td, gboolean force, GError **error);
+
 enum {
 	VTABLE_CREATED,
 	VTABLE_DROPPED,
@@ -147,8 +149,12 @@ gda_vconnection_data_model_dispose (GObject *object)
 
 	/* free memory */
 	if (cnc->priv) {
+		while (cnc->priv->table_data_list) {
+			GdaVConnectionTableData *td;
+			td = (GdaVConnectionTableData *) cnc->priv->table_data_list->data;
+			get_rid_of_vtable (cnc, td, TRUE, NULL);
+		}
 		gda_connection_close_no_warning ((GdaConnection *) cnc);
-		g_assert (!cnc->priv->table_data_list);
 
 		g_free (cnc->priv);
 		cnc->priv = NULL;
@@ -337,6 +343,44 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	return retval;
 }
 
+static gboolean
+get_rid_of_vtable (GdaVconnectionDataModel *cnc, GdaVConnectionTableData *td, gboolean force, GError **error)
+{
+	gchar *str;
+	int rc;
+	char *zErrMsg = NULL;
+	gboolean allok = TRUE;
+
+	SqliteConnectionData *scnc;
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error ((GdaConnection *) cnc, error);
+	if (!scnc && !force)
+		return FALSE;
+
+	if (scnc) {
+		str = g_strdup_printf ("DROP TABLE %s", td->table_name);
+		rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
+		g_free (str);
+
+		if (rc != SQLITE_OK) {
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     "%s", zErrMsg);
+			SQLITE3_CALL (sqlite3_free) (zErrMsg);
+			allok = FALSE;
+			if (!force)
+				return FALSE;
+		}
+	}
+
+	/* clean the cnc->priv->table_data_list list */
+	cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
+	g_signal_emit (G_OBJECT (cnc), gda_vconnection_data_model_signals[VTABLE_DROPPED], 0,
+		       td->table_name);
+	/*g_print ("Virtual connection: removed table %s (%p)\n", td->table_name, td->spec->data_model);*/
+	gda_vconnection_data_model_table_data_free (td);
+
+	return allok;
+}
 
 /**
  * gda_vconnection_data_model_remove:
@@ -354,18 +398,8 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 {
 	GdaVConnectionTableData *td;
 
-	gchar *str;
-	int rc;
-	char *zErrMsg = NULL;
-	gboolean retval = TRUE;
-	SqliteConnectionData *scnc;
-
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
-
-	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error ((GdaConnection *) cnc, error);
-	if (!scnc) 
-		return FALSE;
 
 	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (!td) {
@@ -375,28 +409,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 		return FALSE;
 	}
 
-	str = g_strdup_printf ("DROP TABLE %s", td->table_name);
-	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
-	g_free (str);
-
-	if (rc != SQLITE_OK) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     "%s", zErrMsg);
-		SQLITE3_CALL (sqlite3_free) (zErrMsg);
-		return FALSE;
-	}
-	else {
-		/* clean the cnc->priv->table_data_list list */
-		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
-		g_signal_emit (G_OBJECT (cnc), gda_vconnection_data_model_signals[VTABLE_DROPPED], 0,
-			       td->table_name);
-		/*g_print ("Virtual connection: removed table %s (%p)\n", td->table_name, td->spec->data_model);*/
-		gda_vconnection_data_model_table_data_free (td);
-		return TRUE;
-	}
-
-	return retval;
+	return get_rid_of_vtable (cnc, td, FALSE, error);
 }
 
 /**
@@ -494,20 +507,19 @@ void
 gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc, 
 				    GdaVconnectionDataModelFunc func, gpointer data)
 {
-	GSList *list, *next;
+	GSList *copy, *list;
 	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
 	g_return_if_fail (cnc->priv);
 
-	if (!func)
+	if (!func || !cnc->priv->table_data_list)
 		return;
 
-	list = cnc->priv->table_data_list;
-	while (list) {
+	copy = g_slist_copy (cnc->priv->table_data_list);
+	for (list = copy; list; list = list->next) {
 		GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
-		next = list->next;
 		func (td->spec->data_model, td->table_name, data);
-		list = next;
 	}
+	g_slist_free (copy);
 }
 
 /* 
