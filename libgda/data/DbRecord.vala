@@ -35,5 +35,6 @@ namespace GdaData
         public abstract DbField<G>                    get_field (string name) throws Error;
         public abstract void                          set_key   (DbField<G> field) throws Error;
         public abstract DbField<G>                    get_key   (string name) throws Error;
+        public abstract string                        to_string ();
 	}
 }

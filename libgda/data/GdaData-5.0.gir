@@ -151,11 +151,6 @@
 				</type>
 			</type>
 		</field>
-		<method name="to_string" c:identifier="gda_data_record_to_string">
-			<return-value transfer-ownership="full">
-				<type name="utf8" c:type="gchar*"/>
-			</return-value>
-		</method>
 		<constructor name="new" c:identifier="gda_data_record_new">
 			<return-value transfer-ownership="full">
 				<type name="GdaData.Record" c:type="GdaDataRecord*"/>
@@ -189,6 +184,11 @@
 				<type name="GdaData.RecordCollection" c:type="GdaDataRecordCollection*"/>
 			</return-value>
 		</constructor>
+		<method name="to_string" c:identifier="gda_data_record_collection_to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</method>
 		<property name="model">
 			<type name="Gda.DataModel" c:type="GdaDataModel*"/>
 		</property>
@@ -533,6 +533,16 @@
 				</type>
 			</return-value>
 		</virtual-method>
+		<method name="to_string" c:identifier="gda_data_db_record_to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</method>
+		<virtual-method name="to_string" invoker="to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</virtual-method>
 		<property name="table" writable="1" construct="1">
 			<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
 				<type name="gpointer" c:type="gpointer"/>
@@ -637,6 +647,18 @@
 					<type name="GdaData.DbField" c:type="GdaDataDbField*">
 						<type name="gpointer" c:type="gpointer"/>
 					</type>
+				</return-value>
+			</callback>
+		</field>
+		<field name="to_string">
+			<callback name="to_string" c:type="to_string">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="utf8" c:type="gchar*"/>
 				</return-value>
 			</callback>
 		</field>

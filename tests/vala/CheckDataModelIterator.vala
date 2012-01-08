@@ -50,163 +50,80 @@ namespace Check {
 		public int t1()
 			throws Error
 		{
-			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n"
+			stdout.printf (">>> NEW TEST: GdaData.RecordCollection & RecordCollectionIterator API tests\n"
 						 	+ ">>> Testing Iterable, Traversable Interfaces\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			var itermodel = new DataModelIterable (model);
+			var t = new Table<Value?> ();
+			t.connection = this.connection;
+			t.name = "user";
+			var itermodel = new RecordCollection (model, t);
 
-			stdout.printf ("Iterating over all Values in DataModel\n");
-			foreach (Value v in itermodel) {
-				stdout.printf ("%s\t%s\n", v.type_name (), Gda.value_stringify (v));
+			stdout.printf ("Iterating over all Records in DataModel\n");
+			foreach (DbRecord r in itermodel) {
+				stdout.printf (r.to_string ());
 			}
 			
-			stdout.printf ("Choping to get first Value = 1\n");
+			stdout.printf ("Choping to get first record id= 1\n");
 			var iter = itermodel.chop (0,0);
 			iter.next ();
-			Value v = iter.get ();
+			var v = iter.get ().get_field ("id").value;
 			if (v.type () == typeof (int))
-				stdout.printf ("ID=%i; Row = %i Col = %i\n", (int) v, 
-							  ((GdaData.DataModelIterator) iter).current_row, 
-							  ((GdaData.DataModelIterator) iter).current_column);
+				stdout.printf ("ID=%i\n", (int) v);
 			else {
 				fails++;
 				stdout.printf ("FAIL:'%i': Expected type = '%s'," +
 							   " but Value is type = '%s'" +
-							   " with value = %s\n" + 
-							   " : Current Row = %i Col = %i\n", 
+							   " with value = %s\n",
 							   fails, typeof (int).name (), v.type_name (), 
-							   Gda.value_stringify (v),
-							   ((GdaData.DataModelIterator) iter).current_row, 
-							   ((GdaData.DataModelIterator) iter).current_column);			
+							   Gda.value_stringify (v));			
 			}
 			
 			stdout.printf ("Choping to get 5th Value = 'Jhon'\n");
-			var iter2 = itermodel.chop (4,0);
-			stdout.printf ("Row = %i Col = %i\n", 
-							   ((GdaData.DataModelIterator) iter2).current_row, 
-							   ((GdaData.DataModelIterator) iter2).current_column);
+			var iter2 = itermodel.chop (1,0);
 			iter2.next ();
-			Value v2 = iter2.get ();
+			var v2 = iter2.get ().get_value ("name");
 			if (v2.type () == typeof (string))
-				stdout.printf ("Name = %s; Row = %i Col = %i\n", (string) v2,
-							   ((GdaData.DataModelIterator) iter2).current_row, 
-							   ((GdaData.DataModelIterator) iter2).current_column);
+				stdout.printf ("Name = %s;\n", (string) v2);
 			else {
 				fails++;
 				stdout.printf ("FAIL:'%i': Expected type = '%s'," +
 							   " but Value is type = '%s'" +
-							   " with value = %s" + 
-							   " : Current Row = %i Col = %i\n", 
+							   " with value = %s\n", 
 							   fails, typeof (string).name (), v2.type_name (), 
-							   Gda.value_stringify (v2),
-							   ((GdaData.DataModelIterator) iter2).current_row, 
-							   ((GdaData.DataModelIterator) iter2).current_column);			
+							   Gda.value_stringify (v2));			
 			}
-			
-			stdout.printf ("Choping to get 2nd to 5th Values...\n");
-			var iter3 = itermodel.chop (1,4);
-			stdout.printf ("TYPE\t\tVALUE\n");
-			while (iter3.next ()) {
-				Value v3 = iter3.get ();
-				stdout.printf ("%s\t\t%s\n", typeof (int).name (), Gda.value_stringify (v3));
-				if (((GdaData.DataModelIterator) iter3).current_row == 0 
-					&& ((GdaData.DataModelIterator) iter3).current_column == 1) {
-						string name1 = (string) v3;
-						if (name1 != "Daniel") {
-							fails++;
-							break;
-						}
-				}
-				if (((GdaData.DataModelIterator) iter3).current_row == 0 
-					&& ((GdaData.DataModelIterator) iter3).current_column == 2) {
-						string name1 = (string) v3;
-						if (name1 != "Mexico") {
-							fails++;
-							break;
-						}
-				}
-				if (((GdaData.DataModelIterator) iter3).current_row == 1 
-					&& ((GdaData.DataModelIterator) iter3).current_column == 0) {
-						int id1 = (int) v3;
-						if (id1 != 2) {
-							fails++;
-							break;
-						}
-				}
-				if (((GdaData.DataModelIterator) iter3).current_row == 1 
-					&& ((GdaData.DataModelIterator) iter3).current_column == 1) {
-						string name1 = (string) v3;
-						if (name1 != "Jhon") {
-							fails++;
-							break;
-						}
-				}
-			}
-			
-			stdout.printf ("Filtering Values: Any STRING with a letter 'n'...\n");
-			Gee.Predicate <Value?> f = (g) => {
-						bool ret = false;
-						if (g.type () == typeof (string)) {
-							string t = (string) g;
-							if (t.contains ("n"))
-								ret = true;
-							else
-								ret = false;
-						}
-						else
-							ret = false;
-						stdout.printf ("To be Included?: %s, %s\n", 
-										Gda.value_stringify (g), ret == true ? "TRUE" : "FALSE");
-						return ret;
-					};
-			
-			var iter4 = itermodel.filter (f);
-			stdout.printf ("Printing Filtered Values...\n");
-			while (iter4.next ()) {
-				Value v4 = iter4.get ();
-				stdout.printf ("Row: %i, Col: %i\t%s\t\t%s\n", 
-						((GdaData.DataModelIterator) iter4).current_row,
-					    ((GdaData.DataModelIterator) iter4).current_column,
-					    typeof (int).name (), Gda.value_stringify (v4));
-			}
-			
-			/* FIXME: This code doesn't return YIELDED strings maybe becasue Lazy is not correctly build. 
-				In theory stream() function is working correctly*/
-			stdout.printf ("Streaming Values: Any STRING will be YIELDED...\n");
-			Gee.StreamFunc<Value?,string> s = (state, g, lazy) =>	{
-						if (state == Gee.Traversable.Stream.CONTINUE) {
-							Value vs = g.get ();
-							stdout.printf ("Value to YIELD: %s\n", Gda.value_stringify (vs));
-							string ts = "YIELDED Value = " + Gda.value_stringify (vs) + "\n";
-							lazy = new Gee.Lazy<string>.from_value (ts.dup ());
-							stdout.printf (ts);
-							return Gee.Traversable.Stream.YIELD;
-						}
-						return Gee.Traversable.Stream.END;
-					};
-			
-			var iter5 = itermodel.stream<string> (s);
-			stdout.printf ("Printing Streamed Values...\n");
-			while (iter5.next ()) {
-				string sv = iter5.get ();
-				stdout.printf ("%s\n", sv);
-			}	
-				
+			// FIXME: test filter and stream
 			return fails;
 		}
 		
 		public int t2 ()
 		{
-			stdout.printf (">>> NEW TEST: Gda.DataModelIterable & DataModelIterator API tests\n"
+			stdout.printf (">>> NEW TEST: GdaData.RecordCollection & RecordCollectionIterator API tests\n"
 							+ ">>> Testing Collection Interface\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			((DataSelect) model).compute_modification_statements ();
 			var pxy = (Gda.DataModel) Gda.DataProxy.new (model);
-			
-			var itermodel = new DataModelIterable (pxy);
-			if ( !itermodel.add (1))
+			var t = new Table<Value?>();
+			t.connection = this.connection;
+			t.name = "user";
+			var itermodel = new RecordCollection (pxy,t);
+			var row = new Record ();
+			row.table = t;
+			var f = new Field<Value?>("id", DbField.Attribute.NONE);
+			f.value = 10;
+			row.set_field (f);
+			f.name = "name";
+			f.value = "Samanta";
+			row.set_field (f);
+			f.name = "city";
+			f.value = "San Francisco";
+			row.set_field (f);
+			if ( itermodel.add (row)) {
+				stdout.printf("New contents in DataModel:\n" + itermodel.to_string ());
+			}
+			else
 				fails++;
 			
 			return fails;
