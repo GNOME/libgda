@@ -51,41 +51,43 @@ namespace GdaData {
 		/**
          * Set the value to a field with the given @name.
          */
-        public void set_field (string field, Value? v)
-        	throws Error
+        public void set_field (DbField<Value?> field) throws Error
         {
-        	if (_fields.has_key (field)) {
-		    	var f = this._fields.get (field);
-		    	f.value = v;
-		    	this._fields.set (field, f);
+        	if (_fields.has_key (field.name)) {
+		    	var f = this._fields.get (field.name);
+		    	f.value = field.value;
+		    	this._fields.set (field.name, f);
         	}
         	else {
         		// FIXME: Get default attributes from table
-        		var n = new Field<Value?> (field, DbField.Attribute.NONE); 
+        		var n = new Field<Value?> (field.name, DbField.Attribute.NONE); 
         		n.connection = connection;
-        		n.value = v;
-        		this._fields.set (field, n);
+        		n.value = field.value;
+        		this._fields.set (field.name, n);
         	}
         	
         }
-        
-        public void set_key (string field, Value? v)
+        public DbField<Value?> get_field (string name) throws Error
         {
-        	if (_keys.has_key (field)) {
-		    	var f = _keys.get (field);
-		    	f.value = v;
-		    	_keys.set (field, f);
+        	return _fields.get (name);
+        }
+        public void set_key (DbField<Value?> field)
+        {
+        	if (_keys.has_key (field.name)) {
+		    	var f = _keys.get (field.name);
+		    	f.value = field.value;
+		    	_keys.set (field.name, f);
         	}
         	else {
         		// FIXME: Get default attributes from table
-        		var n = new Field<Value?> (field, DbField.Attribute.NONE); 
-        		n.value = v;
-        		_keys.set (field, n);
+        		var n = new Field<Value?> (field.name, DbField.Attribute.NONE); 
+        		n.value = field.value;
+        		_keys.set (field.name, n);
         	}
         }
-        public DbField<Value?> get_field (string field) throws Error
+        public DbField<Value?> get_key (string name) throws Error
         {
-        	return _fields.get (field);
+        	return _keys.get (name);
         }
         /**
          * Saves any modficiation made to in memory representation of the data directly to
