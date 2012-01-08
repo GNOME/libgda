@@ -58,47 +58,56 @@ namespace Check {
 			int fails = 0;
 			var r = new Check.Record ();
 			r.connection = this.connection;
+			var t = new Table<Value?> ();
+			t.name = "user";
+			t.connection = this.connection;
+			r.table = t;
+			var k = new Field<Value?>("id", DbField.Attribute.NONE);
+			k.connection = this.connection;
 			stdout.printf("Setting ID to 1\n");
 			try {
-				r.set_id (1);
+				k.value = 1;
+				r.set_key (k);
+				r.update ();
 			}
 			catch (Error e) {
 				fails++;
 				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("DataObject points to, in table "+ r.table + ":\n", r.table);
+			stdout.printf("DataObject points to, in table "+ r.table.name + ":\n", r.table);
 			stdout.printf("%s\n", r.to_string());
 			
 			stdout.printf("Getting ID value...\n");
-			var i = (int) r.get_id ();
+			var i = (int) (r.get_key ("id")).value;
 			if (i != 1 ){
 				fails++;
 				stdout.printf("FAILS: %i\n", fails);
 			}
 			
 			stdout.printf("Getting value at 'name'...\n");
-			var vdb = (string) r.get_value ("name");
+			var vdb = (string) (r.get_field ("name")).value;
 			if (vdb == null ){
 				fails++;
 				stdout.printf("FAILS: %i\n", fails);
 			}
 			else
-				if ( (string)vdb != "Daniel"){
+				if ( vdb != "Daniel"){
 					fails++;
 					stdout.printf("FAILS: %i\n", fails);
 				}
 			
 			stdout.printf("Setting value at 'name'...\n");
-			Value n = "Daniel Espinosa";
-			r.set_value ("name", n);
-			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", r.table);
+			var f = r.get_field ("name");
+			f.name = "Daniel Espinosa";
+			r.set_field (f);
+			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", r.table.name);
 			stdout.printf("%s\n", r.to_string());
 			
 			stdout.printf("Saving changes...\n");
 			try {
 				r.save();
-				stdout.printf("DataObject points to modified value, in table '%s':\n", r.table);
+				stdout.printf("DataObject points to modified value, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
@@ -112,13 +121,13 @@ namespace Check {
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't manual update table '%s'...\nFAILS: %i\nERROR: %s\n", r.table, fails, e.message);
+				stdout.printf ("Couln't manual update table '%s'...\nFAILS: %i\nERROR: %s\n", r.table.name, fails, e.message);
 			}
 			
 			stdout.printf("Updating values from database...\n");
 			try {
 				r.update();
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
@@ -126,12 +135,15 @@ namespace Check {
 				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("No Common Operation: Setting a new Table... \n");
-			r.t = "company";
+			stdout.printf("Setting a new Table... \n");
+			var t2 = new Table<Value?>();
+			t2.name = "company";
+			t2.connection = this.connection;
+			r.table = t2;
 			stdout.printf("Updating values from database using a new table 'company'...\n");
 			try {
 				r.update();
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
@@ -141,8 +153,9 @@ namespace Check {
 			
 			stdout.printf("Setting ID to 2\n");
 			try {
-				r.set_id (2);
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table);
+				k.value = 2;
+				r.set_key (k);
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
 			}
 			catch (Error e) {
@@ -161,10 +174,16 @@ namespace Check {
 			try {
 				var n = new Check.Record ();
 				n.connection = this.connection;
-				n.set_value ("id", 3);
-				n.set_value ("name", "GdaDataNewName");
-				n.set_value ("city", "GdaDataNewCity");
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", n.table);
+				var f = new Field<Value?>("id", DbField.Attribute.NONE);
+				f.connection = this.connection;
+				f.value = 3;
+				n.set_field (f);
+				f.name = "name";
+				f.value = "GdaDataNewName";
+				n.set_field (f);
+				f.name = "city";
+				f.value = "GdaDataNewCity";
+				stdout.printf("DataObject points to actual stored values, in table '%s':\n", n.table.name);
 				stdout.printf("%s\n", n.to_string());
 				n.append ();
 				var m = n.connection.execute_select_command ("SELECT * FROM user");
