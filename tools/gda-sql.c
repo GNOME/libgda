@@ -133,6 +133,7 @@ typedef struct {
 	MainData *main_data;
 GString *prompt = NULL;
 GMainLoop *main_loop = NULL;
+gboolean exit_requested = FALSE;
 
 static ConnectionSetting *get_current_connection_settings (SqlConsole *console);
 static char   **completion_func (const char *text, int start, int end);
@@ -413,6 +414,9 @@ main (int argc, char *argv[])
 		}
 	}
 
+	if (exit_requested)
+		goto cleanup;
+
 	/* set up interactive commands */
 	setup_sigint_handler ();
 	init_input ((TreatLineFunc) treat_line_func, prompt_func, NULL);
@@ -513,6 +517,7 @@ treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok)
 				display_result (res);
 				if (res->type == GDA_INTERNAL_COMMAND_RESULT_EXIT) {
 					gda_internal_command_exec_result_free (res);
+					exit_requested = TRUE;
 					goto exit;
 				}
 				gda_internal_command_exec_result_free (res);
@@ -529,7 +534,8 @@ treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok)
 
  exit:
 	g_free (loc_cmde);
-	g_main_loop_quit (main_loop);
+	if (main_loop)
+		g_main_loop_quit (main_loop);
 	return FALSE;
 }
 
