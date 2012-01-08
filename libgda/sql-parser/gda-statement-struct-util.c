@@ -283,9 +283,16 @@ _string_is_identifier (const gchar *str)
 		ptr = str + 1;
 	else
 		ptr = str;
-	for (; 
-	     IdChar(*ptr) || (*ptr == '*') || (*ptr == '.') || (*ptr == '-') || (((*ptr == '"') || (*ptr == '`')) && ptr[1] == 0); 
-	     ptr++);
+	for (; IdChar(*ptr) ||
+		     (*ptr == '*') ||
+		     (*ptr == '.') ||
+		     (*ptr == '-') ||
+		     ((*ptr == '"') && (ptr[1] == '"')) ||
+		     (((*ptr == '"') || (*ptr == '`')) && ptr[1] == 0);
+	     ptr++) {
+		if ((*ptr == '"') && (ptr[1] == '"'))
+			ptr++;
+	}
 	if (*ptr) 
 		return FALSE;
 	if (((*str == '"') && (ptr[-1] == '"')) ||
@@ -395,8 +402,13 @@ _split_identifier_string (gchar *str, gchar **remain, gchar **last)
 	}
 
 	for (ptr = str + strlen (str) - 1; ptr >= str; ptr--) {
-		if (*ptr == '"') 
+		if (*ptr == '"') {
+			if ((ptr > str) && (ptr[-1] == '"')) {
+				ptr--;
+				continue;
+			}
 			inq = !inq;
+		}
 		else if ((*ptr == '.') && !inq) {
 			*ptr = 0;
 			*remain = str;
