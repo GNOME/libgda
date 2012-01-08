@@ -2876,6 +2876,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						goto out;
 					}
 					if (change) {
+						/*g_print ("CH %p key=[%s] value=[%s]\n", change, pid, gda_value_stringify (value)); */
 						g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 						pid = NULL;
 					}
@@ -2921,6 +2922,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 							goto out;
 						}
 						if (change) {
+							/* g_print ("CH %p key=[%s] value=[%s]\n", change, pid, gda_value_stringify (value)); */
 							g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 							pid = NULL;
 						}
@@ -3019,26 +3021,23 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				for (j = 0; j < current_n_cols; j++) {
 					gchar *pid = g_strdup_printf ("-%d", j);
 					GdaHolder *h;
-					h = gda_set_get_holder (schema_set->params, pid);
-					if (h) {
-						const GValue *value;
-						value = gda_data_model_get_value_at (current, j, i, error);
-						if (!value) {
-							g_free (pid);
-							retval = FALSE;
-							goto out;
-						}
-						if (! gda_holder_set_value (h, value, error)) {
-							g_free (pid);
-							retval = FALSE;
-							goto out;
-						}
-						if (change) {
-							g_hash_table_insert (change->keys, pid, gda_value_copy (value));
-							pid = NULL;
-						}
+					const GValue *value;
+					value = gda_data_model_get_value_at (current, j, i, error);
+					if (!value) {
+						g_free (pid);
+						retval = FALSE;
+						goto out;
 					}
-					g_free (pid);
+
+					h = gda_set_get_holder (schema_set->params, pid);
+					if (h && ! gda_holder_set_value (h, value, error)) {
+						g_free (pid);
+						retval = FALSE;
+						goto out;
+					}
+
+					/* g_print ("CH %p key=[%s] value=[%s]\n", change, pid, gda_value_stringify (value)); */
+					g_hash_table_insert (change->keys, pid, gda_value_copy (value));
 				}
 #ifdef DEBUG_STORE_MODIFY
 				g_print ("Delete existing row %d from table %s\n", i, table_name);
