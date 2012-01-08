@@ -6897,27 +6897,80 @@ gchar *
 _gda_connection_compute_table_virtual_name (GdaConnection *cnc, const gchar *table_name)
 {
 	gchar **array;
-	gchar *tmp;
-	GString *string = NULL;
-	gint i;
 
 	g_assert (table_name && *table_name);
 	array = gda_sql_identifier_split (table_name);
-	for (i = 0; ; i++) {
-		if (array [i]) {
-			tmp = gda_sql_identifier_quote (array[i], cnc, NULL, TRUE, FALSE);
-			if (string) {
-				g_string_append_c (string, '.');
-				g_string_append (string, tmp);
+	if (array) {
+		GString *string = NULL;
+		gint i;
+		gchar *tmp;
+		for (i = 0; ; i++) {
+			if (array [i]) {
+				tmp = gda_sql_identifier_quote (array[i], cnc, NULL, TRUE, FALSE);
+				if (string) {
+					g_string_append_c (string, '.');
+					g_string_append (string, tmp);
+				}
+				else
+					string = g_string_new (tmp);
 			}
 			else
-				string = g_string_new (tmp);
+				break;
 		}
-		else
-			break;
+		g_strfreev (array);
+		return g_string_free (string, FALSE);
 	}
-	g_strfreev (array);
-	return g_string_free (string, FALSE);
+	else {
+		/*
+		** If X is a character that can be used in an identifier then
+		** IdChar(X) will be true.  Otherwise it is false.
+		**  
+		** For ASCII, any character with the high-order bit set is
+		** allowed in an identifier.  For 7-bit characters, 
+		** sqlite3IsIdChar[X] must be 1. 
+		*/
+		static const char AsciiIdChar[] = {
+			/* x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 xA xB xC xD xE xF */
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 2x */
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,  /* 3x */
+			0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 4x */
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1,  /* 5x */
+			0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 6x */
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,  /* 7x */
+		};
+#define IdChar(C) (((c=C)&0x80)!=0 || (c>0x1f && AsciiIdChar[c-0x20]))
+		gchar *tmp, *ptr, c;
+		tmp = g_strdup (table_name);
+
+		/* first try removing some double quotes only */
+		for (ptr = tmp; *ptr; ptr++) {
+			if (! IdChar(*ptr)) {
+				if ((*ptr == '"') && (ptr[1] == '"')) {
+					gchar *ptr2;
+					for (ptr2 = ptr; ptr2[2]; ptr2++)
+						*ptr2 = ptr2[2];
+					*ptr2 = 0;
+				}
+				else if ((*ptr != '"') && (*ptr != '.'))
+					*ptr = '_';
+			}
+		}
+
+		ptr = NULL;
+		if (strcmp (tmp, table_name))
+			ptr = _gda_connection_compute_table_virtual_name (cnc, tmp);
+
+		/* if it dow not work, replace all non IdChar character with '_' */
+		if (!ptr) {
+			for (ptr = tmp; *ptr; ptr++) {
+				if (! IdChar(*ptr))
+					*ptr = '_';
+			}
+			ptr = _gda_connection_compute_table_virtual_name (cnc, tmp);
+		}
+		g_free (tmp);
+		return ptr;
+	}
 }
 
 /*
