@@ -6263,7 +6263,7 @@ gda_connection_internal_get_provider_data (GdaConnection *cnc)
  *
  * Get or initializes the #GdaMetaStore associated to @cnc
  *
- * Returns: (transfer full): a #GdaMetaStore object
+ * Returns: (transfer none): a #GdaMetaStore object
  */
 GdaMetaStore *
 gda_connection_get_meta_store (GdaConnection *cnc)
