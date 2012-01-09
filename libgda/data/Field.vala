@@ -22,18 +22,12 @@ using Gda;
 
 namespace GdaData
 {
-	public class Field<G> : Object, DbField<G>, DbObject
+	public class Field<G> : Object, DbField<G>
 	{
 		private G                 val;
 		private string            _name;
 		private string            _column_name;
 		private DbField.Attribute _attributes;
-		
-		// DbObject Interface
-		public Connection connection { get; set; }
-		public bool     append () throws Error { return false; }
-		public void     update () throws Error {}
-		public void     save () throws Error {}
 		// DbField Interface
 		public G @value { 
 			get { return val; } 

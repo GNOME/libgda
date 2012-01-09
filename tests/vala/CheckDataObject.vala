@@ -19,6 +19,7 @@
 
 using Gda;
 using GdaData;
+using Gee;
 
 namespace Check {
 	class Record : GdaData.Record
@@ -54,85 +55,113 @@ namespace Check {
 		public int t1()
 			throws Error
 		{
-			stdout.printf(">>> NEW TEST: Gda.DataObject API tests\n");
+			stdout.printf(">>> NEW TEST: GdaData.DbRecord API tests\n");
 			int fails = 0;
+			stdout.printf("Creating new record\n");
 			var r = new Check.Record ();
+			stdout.printf("Setting connection\n");
 			r.connection = this.connection;
+			stdout.printf("Setting up DbTable\n");
 			var t = new Table<Value?> ();
+			stdout.printf("Setting DbTable name\n");
 			t.name = "user";
+			stdout.printf("Setting DbTable connection\n");
 			t.connection = this.connection;
+			stdout.printf(">>> Setting table to record\n");
 			r.table = t;
+			stdout.printf(">>> Setting up Key 'id'\n");
 			var k = new Field<Value?>("id", DbField.Attribute.NONE);
-			k.connection = this.connection;
-			stdout.printf("Setting ID to 1\n");
+			stdout.printf("Setting record ID to 1...");
 			try {
 				k.value = 1;
 				r.set_key (k);
+				foreach (DbField<Value?> kv in r.keys) {
+					stdout.printf ("KEY: " + kv.name + " VALUE: " + Gda.value_stringify(kv.value) + "\n");
+				}
 				r.update ();
+				foreach (DbField<Value?> kv in r.fields) {
+					stdout.printf ("FIELD: " + kv.name + " VALUE: " + Gda.value_stringify(kv.value) + "\n");
+				}
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't set ID...ERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("DataObject points to, in table "+ r.table.name + ":\n", r.table);
+			stdout.printf("DbRecord points to, in table "+ r.table.name + ":\n", r.table);
 			stdout.printf("%s\n", r.to_string());
 			
-			stdout.printf("Getting ID value...\n");
+			stdout.printf("Getting ID value...");
 			var i = (int) (r.get_key ("id")).value;
 			if (i != 1 ){
 				fails++;
-				stdout.printf("FAILS: %i\n", fails);
+				stdout.printf("FAIL: %i\n", fails);
 			}
+			else
+				stdout.printf("PASS\n");
 			
-			stdout.printf("Getting value at 'name'...\n");
+			stdout.printf("Getting value at 'name'...");
 			var vdb = (string) (r.get_field ("name")).value;
 			if (vdb == null ){
 				fails++;
-				stdout.printf("FAILS: %i\n", fails);
+				stdout.printf("FAIL: %i\n", fails);
 			}
-			else
+			else 
 				if ( vdb != "Daniel"){
 					fails++;
-					stdout.printf("FAILS: %i\n", fails);
+					stdout.printf("FAIL: %i\nERROR: Value not match. Expected 'Daniel' but value is %s:\n", 
+									fails, vdb);
 				}
+				else
+					stdout.printf("PASS\n");
 			
-			stdout.printf("Setting value at 'name'...\n");
-			var f = r.get_field ("name");
-			f.name = "Daniel Espinosa";
-			r.set_field (f);
-			stdout.printf("DataObject points to in memory modified value, in table '%s':\n", r.table.name);
-			stdout.printf("%s\n", r.to_string());
-			
-			stdout.printf("Saving changes...\n");
+			stdout.printf("Setting value at 'name'...");
+			try {
+				var f = r.get_field ("name");
+				f.value = "Daniel Espinosa";
+				r.set_field (f);
+				stdout.printf("DataObject points to in memory modified value, in table '%s':\n", r.table.name);
+				stdout.printf("%s\n", r.to_string());
+				stdout.printf("PASS\n");
+			}
+			catch (Error e) {
+				fails++;
+				stdout.printf ("FAIL: %i\nCouln't modify record...ERROR: %s\n", fails, e.message);
+			}
+			stdout.printf("Saving changes...");
 			try {
 				r.save();
 				stdout.printf("DataObject points to modified value, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't SAVE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't SAVE...ERROR: %s\n", fails, e.message);
 			}
 			
 			try {
-				stdout.printf ("Simulating external database update\n");
+				stdout.printf ("Simulating external database update...");
 				this.connection.execute_non_select_command("UPDATE user SET name = \"Jhon Strauss\", city =\"New Jersey\"");
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't manual update table '%s'...\nFAILS: %i\nERROR: %s\n", r.table.name, fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't manual update table '%s'...ERROR: %s\n", 
+								fails, r.table.name,  e.message);
 			}
 			
-			stdout.printf("Updating values from database...\n");
+			stdout.printf("Updating values from database...");
 			try {
 				r.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
+				
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't UPDATE...ERROR: %s\n", fails, e.message);
 			}
 			
 			stdout.printf("Setting a new Table... \n");
@@ -140,27 +169,29 @@ namespace Check {
 			t2.name = "company";
 			t2.connection = this.connection;
 			r.table = t2;
-			stdout.printf("Updating values from database using a new table 'company'...\n");
+			stdout.printf("Updating values from database using a new table '" + r.table.name + "'...");
 			try {
 				r.update();
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't UPDATE...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't UPDATE...ERROR: %s\n", fails, e.message);
 			}
 			
-			stdout.printf("Setting ID to 2\n");
+			stdout.printf("Setting ID to 2...");
 			try {
 				k.value = 2;
 				r.set_key (k);
 				stdout.printf("DataObject points to actual stored values, in table '%s':\n", r.table.name);
 				stdout.printf("%s\n", r.to_string());
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't set ID...ERROR: %s\n", fails, e.message);
 			}
 			r.t = "user"; // Reset to default
 			return fails;
@@ -169,36 +200,41 @@ namespace Check {
 		public int t2()
 			throws Error
 		{
-			stdout.printf(">>> NEW TEST: Gda.DataObject Adding new objects to DB\n");
+			stdout.printf(">>> NEW TEST: Gda.DbRecord - Adding new objects to DB...\n");
 			int fails = 0;
 			try {
 				var n = new Check.Record ();
 				n.connection = this.connection;
-				var f = new Field<Value?>("id", DbField.Attribute.NONE);
-				f.connection = this.connection;
-				f.value = 3;
-				n.set_field (f);
-				f.name = "name";
-				f.value = "GdaDataNewName";
-				n.set_field (f);
-				f.name = "city";
-				f.value = "GdaDataNewCity";
-				stdout.printf("DataObject points to actual stored values, in table '%s':\n", n.table.name);
+				var t = new Table<Value?> ();
+				t.name = "user";
+				t.connection = this.connection;
+				n.table = t;
+				var f = new HashMap<string,Value?> ();
+				f.set ("id", 3);
+				f.set ("name", "GdaDataNewName");
+				f.set ("city","GdaDataNewCity");
+				foreach (string k in f.keys) {
+					var field = new Field<Value?>(k, DbField.Attribute.NONE);
+					field.value = f.get (k);
+					n.set_field (field);
+				}
+				stdout.printf("DbRecord in memory values, to added to table '%s':\n", n.table.name);
 				stdout.printf("%s\n", n.to_string());
 				n.append ();
 				var m = n.connection.execute_select_command ("SELECT * FROM user");
 				if (m.get_n_rows () != 3) fails++;
 				stdout.printf ("All records:\n" + m.dump_as_string () + "\n");
+				stdout.printf("PASS\n");
 			}
 			catch (Error e) {
 				fails++;
-				stdout.printf ("Couln't set ID...\nFAILS: %i\nERROR: %s\n", fails, e.message);
+				stdout.printf ("FAIL: %i\nCouln't set add new record...-ERROR: %s\n", fails, e.message);
 			}
 			return fails;
 		}
 		
 		public static int main (string[] args) {
-			stdout.printf ("Checking Gda.DataObject implementation...\n");
+			stdout.printf ("Checking GdaData.DbRecord implementation...\n");
 			int failures = 0;
 			var app = new Tests ();
 			try {

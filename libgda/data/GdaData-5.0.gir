@@ -113,6 +113,21 @@
 				</type>
 			</type>
 		</field>
+		<constructor name="with_fields_info" c:identifier="gda_data_table_new_with_fields_info">
+			<parameters>
+				<parameter name="fields" transfer-ownership="none">
+					<type name="Gee.HashMap" c:type="GeeHashMap*">
+						<type name="utf8" c:type="gchar*"/>
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*">
+							<type name="gpointer" c:type="gpointer"/>
+						</type>
+					</type>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.Table" c:type="GdaDataTable*"/>
+			</return-value>
+		</constructor>
 		<constructor name="new" c:identifier="gda_data_table_new">
 			<return-value transfer-ownership="full">
 				<type name="GdaData.Table" c:type="GdaDataTable*"/>
@@ -127,8 +142,8 @@
 	<record name="TablePrivate" c:type="GdaDataTablePrivate" disguised="1"/>
 	<class name="Record" c:type="GdaDataRecord" glib:type-name="GdaDataRecord" glib:get-type="gda_data_record_get_type" glib:type-struct="RecordClass" parent="GObject.Object">
 		<implements name="GdaData.DbObject"/>
-		<implements name="GdaData.DbRecord"/>
 		<implements name="Gee.Comparable"/>
+		<implements name="GdaData.DbRecord"/>
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -230,7 +245,6 @@
 	<record name="RecordCollectionIteratorPrivate" c:type="GdaDataRecordCollectionIteratorPrivate" disguised="1"/>
 	<class name="Field" c:type="GdaDataField" glib:type-name="GdaDataField" glib:get-type="gda_data_field_get_type" glib:type-struct="FieldClass" parent="GObject.Object">
 		<implements name="GdaData.DbField"/>
-		<implements name="GdaData.DbObject"/>
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -276,12 +290,12 @@
 		<prerequisite name="GObject.Object"/>
 		<method name="append" c:identifier="gda_data_db_object_append" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="gboolean" c:type="gboolean"/>
+				<type name="none"/>
 			</return-value>
 		</method>
 		<virtual-method name="append" invoker="append" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="gboolean" c:type="gboolean"/>
+				<type name="none"/>
 			</return-value>
 		</virtual-method>
 		<method name="update" c:identifier="gda_data_db_object_update" throws="1">
@@ -320,7 +334,7 @@
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
-					<type name="gboolean" c:type="gboolean"/>
+					<type name="none"/>
 				</return-value>
 			</callback>
 		</field>
@@ -376,6 +390,7 @@
 		</field>
 	</record>
 	<interface name="DbTable" c:type="GdaDataDbTable" glib:type-name="GdaDataDbTable" glib:get-type="gda_data_db_table_get_type" glib:type-struct="DbTableIface">
+		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="schema" writable="1" construct="1">
 			<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
@@ -401,7 +416,7 @@
 				</type>
 			</type>
 		</property>
-		<property name="fields" writable="1" construct="1">
+		<property name="fields">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*">
 					<type name="gpointer" c:type="gpointer"/>
@@ -665,7 +680,6 @@
 	</record>
 	<interface name="DbField" c:type="GdaDataDbField" glib:type-name="GdaDataDbField" glib:get-type="gda_data_db_field_get_type" glib:type-struct="DbFieldIface">
 		<prerequisite name="GObject.Object"/>
-		<prerequisite name="GdaData.DbObject"/>
 		<method name="to_string" c:identifier="gda_data_db_field_to_string">
 			<return-value transfer-ownership="full">
 				<type name="utf8" c:type="gchar*"/>
@@ -737,6 +751,7 @@
 		</field>
 	</record>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
+		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="tables">
 			<type name="Gee.Collection" c:type="GeeCollection*">

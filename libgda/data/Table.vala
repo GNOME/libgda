@@ -28,25 +28,27 @@ namespace GdaData
 		protected HashMap<string,DbFieldInfo<G>> _fields = new HashMap<string,DbFieldInfo<G>> ();
 		protected HashMap<string,DbTable<G>> _fk_depends = new HashMap<string,DbTable<G>> ();
 		protected HashMap<string,DbTable<G>> _fk = new HashMap<string,DbTable<G>> ();
+		
+		public Table.with_fields_info (HashMap<string,DbFieldInfo<G>> fields)
+		{
+			foreach (DbFieldInfo<G> f in fields.values) {
+				_fields.set (f.name, f);
+			}
+		}
 		// DbObject Interface
 		public Connection connection { get; set; }
 		public void update () throws Error {}
 		public void save () throws Error {}
-		public bool append () throws Error { return false; }
+		public void append () throws Error {}
 		// DbNamedObject Interface
 		public string name { get; set; }
 		
 		// DbTable Interface
 		public Collection<DbFieldInfo<G>> fields { 
 			owned get { return _fields.values; } 
-			set construct { 
-				foreach (DbFieldInfo<G> f in value) {
-					_fields.set (f.name, f);
-				}
-			}
 		}
 		public DbSchema schema { get; set construct; }
-		public Collection<DbRecord> records { 
+		public Collection<DbRecord<G>> records { 
 			owned get  {
 				var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
 				q.set_table (name);
@@ -57,7 +59,7 @@ namespace GdaData
 				return _records;
 			}
 		}
-		public Collection<DbTable> fk_depends { owned get { return _fk_depends.values; } }
-		public Collection<DbTable> fk { owned get { return _fk.values; } }
+		public Collection<DbTable<G>> fk_depends { owned get { return _fk_depends.values; } }
+		public Collection<DbTable<G>> fk { owned get { return _fk.values; } }
 	}
 }

@@ -23,7 +23,7 @@ using Gda;
 namespace GdaData {
 	public interface DbObject : Object {
 		public abstract Connection   connection { get; set; }
-		public abstract bool         append () throws Error;
+		public abstract void         append () throws Error;
 		public abstract void         update () throws Error;
 		public abstract void         save () throws Error;
 	}

@@ -22,7 +22,7 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbField<G> : Object, DbObject
+	public interface DbField<G> : Object
 	{
 		public abstract G @value { get; set; }
 		public abstract string name { get; set; }

@@ -22,7 +22,7 @@ using Gee;
 
 namespace GdaData {
 
-    public class Record : Object, DbObject, DbRecord<Value?>, Comparable<DbRecord>
+    public class Record : Object, DbObject, Comparable<DbRecord<Value?>>, DbRecord<Value?>
     {
         protected HashMap<string,DbField<Value?>> _fields = new HashMap<string,DbField<Value?>> ();
         protected HashMap<string,DbField<Value?>> _keys = new HashMap<string,DbField<Value?>> ();
@@ -61,7 +61,6 @@ namespace GdaData {
         	else {
         		// FIXME: Get default attributes from table
         		var n = new Field<Value?> (field.name, DbField.Attribute.NONE); 
-        		n.connection = connection;
         		n.value = field.value;
         		this._fields.set (field.name, n);
         	}
@@ -95,17 +94,21 @@ namespace GdaData {
          */
         public void save ()  throws Error
         {
-        	var q = new SqlBuilder (SqlStatementType.UPDATE);
+        	if (fields.size <= 0)
+        		throw new DbObjectError.SAVE ("No fields has been set");
+        	if (keys.size <= 0)
+        		throw new DbObjectError.SAVE ("No Keys has been set");
+			var q = new SqlBuilder (SqlStatementType.UPDATE);
 			q.set_table (table.name);
 			foreach (DbField<Value?> f in fields) {
 				q.add_field_value_as_gvalue (f.column_name, f.value);
 			}
 			SqlBuilderId cond = -1;
-			foreach (DbField<Value?> f in fields) {
+			foreach (DbField<Value?> f in keys) {
 				var f_id = q.add_id (f.name);
 				var e_id = q.add_expr_value (null, f.value);
 				var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
-				if (cond < 0) 
+				if (cond == -1) 
 					cond = c_id;
 				else
 					cond = q.add_cond (SqlOperatorType.AND, cond, c_id, 0);
@@ -117,7 +120,7 @@ namespace GdaData {
 //							+ "\n");
 			var i = this.connection.statement_execute_non_select (q.get_statement (), null, null);
 			if (i != 1) {
-				throw new DbObjectError.APPEND ("Have been saved more or less rows than expected");
+				throw new DbObjectError.SAVE ("Have been saved more or less rows than expected");
 			}
         }
         /**
@@ -125,36 +128,49 @@ namespace GdaData {
          */
         public void update ()  throws Error
         {
-        	var q = new SqlBuilder (SqlStatementType.SELECT);
+        	if (keys.size <= 0)
+        		throw new DbObjectError.UPDATE ("No Keys has been set");
+			var q = new SqlBuilder (SqlStatementType.SELECT);
         	q.select_add_target (table.name, null);
-        	SqlBuilderId cond = -1;
-			foreach (DbField<Value?> f in fields) {
+        	q.select_add_field ("*", null, null);
+			SqlBuilderId cond = -1;
+        	foreach (DbField<Value?> f in keys) {
 				var f_id = q.add_id (f.name);
 				var e_id = q.add_expr_value (null, f.value);
 				var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
-				if (cond < 0) 
+				if (cond == -1) {
 					cond = c_id;
-				else
+				}
+				else {
 					cond = q.add_cond (SqlOperatorType.AND, cond, c_id, 0);
+				}
 			}
 			q.set_where (cond);
-			q.select_add_field ("*", null, null);
-//			stdout.printf ("DEBUG: UPDATE statement to execute: \n"+ 
+//			stdout.printf ("DEBUG: SELECT statement to execute: \n"+ 
 //							(q.get_statement()).to_sql_extended (this.connection, null, 
 //																	StatementSqlFlag.PRETTY, null)
 //							+ "\n");
-			var i = this.connection.statement_execute_non_select (q.get_statement (), null, null);
-			if (i != 1) {
-				throw new DbObjectError.UPDATE ("Have been updated more or less rows than expected");
+			var m = this.connection.statement_execute_select (q.get_statement (), null);
+			if (m.get_n_rows () != 1) {
+				throw new DbObjectError.UPDATE ("Returning number of rows are more than 1");
+			}
+			
+			for (int c = 0; c < m.get_n_columns (); c++) {
+				var f = new Field<Value?> (m.get_column_name (c), 
+											(DbField.Attribute) m.get_attributes_at (c, 0));
+				f.value = m.get_value_at (c,0);
+				this.set_field (f);
 			}
         }
         /**
          * Append a new row to the defined table and returns its ID. If defaults is set to true,
          * default value for each field is set.
          */
-        public bool append () throws Error
+        public void append () throws Error
         {
-        	var sql = new SqlBuilder (SqlStatementType.INSERT);
+        	if (fields.size <= 0)
+        		throw new DbObjectError.APPEND ("No fields has been set");
+			var sql = new SqlBuilder (SqlStatementType.INSERT);
 			sql.set_table (table.name);
 			// FIXME: MetaData is required
 			foreach (DbField<Value?> f in _fields.values) {
@@ -166,9 +182,8 @@ namespace GdaData {
 //				+ "\n");
 			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, null);
 			if (i != 1) {
-				throw new DbObjectError.UPDATE ("Have been added more or less rows than expected");
+				throw new DbObjectError.UPDATE ("Have been updated more or less rows than expected");
 			}
-			return true;
 		}
         // 
         public string to_string ()

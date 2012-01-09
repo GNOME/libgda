@@ -41,7 +41,7 @@ namespace GdaData
 			}
 		}
 		public void save () throws Error {}
-		public bool append () throws Error { return false; }
+		public void append () throws Error {}
 		// DbNamedObject
 		public string name { get; set; }
 		// DbCollection Interface

@@ -22,12 +22,12 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbTable<G> : DbNamedObject
+	public interface DbTable<G> : DbObject, DbNamedObject
 	{
 		public abstract DbSchema                     schema     { get; set construct; }
 		public abstract Collection<DbRecord<G>>      records    { owned get; }
 		public abstract Collection<DbTable<G>>       fk_depends { owned get; }
 		public abstract Collection<DbTable<G>>       fk         { owned get; }
-		public abstract Collection<DbFieldInfo<G>>   fields     { owned get; set construct; }
+		public abstract Collection<DbFieldInfo<G>>   fields     { owned get; }
 	}
 }
