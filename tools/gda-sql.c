@@ -3341,12 +3341,14 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 		vprovider = gda_vprovider_hub_new ();
 	g_assert (vprovider);
 
-	virtual = gda_virtual_connection_open (vprovider, NULL);
+	virtual = gda_virtual_connection_open_extended (vprovider, GDA_CONNECTION_OPTIONS_THREAD_SAFE |
+							GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
 	if (!virtual) {
 		g_set_error (error, 0, 0, "%s", _("Could not create virtual connection"));
 		return NULL;
 	}
 	g_object_set (G_OBJECT (virtual), "execution-timer", TRUE, NULL);
+	gda_connection_get_meta_store (virtual); /* force create of meta store */
 
 	/* add existing connections to virtual connection */
 	string = g_string_new (_("Bound connections are as:"));
