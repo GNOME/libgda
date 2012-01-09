@@ -6615,19 +6615,48 @@ _gda_connection_signal_meta_table_update (GdaConnection *cnc, const gchar *table
 		return;
 
 	GdaMetaContext *context;
+	gchar **split;
 	gchar *tmp;
-	/*g_print ("CONTEXT: update for table [%s]\n", tname);*/
+	/*g_print ("CONTEXT: update for table [%s]\n", table_name);*/
+	split = gda_sql_identifier_split (table_name);
+	if (!split)
+		return;
+	if (!split [0]) {
+		g_strfreev (split);
+		return;
+	}
+
 	context = g_new0 (GdaMetaContext, 1);
 	context->table_name = "_tables";
-	context->size = 1;
-	context->column_names = g_new0 (gchar *, 1);
-	context->column_names[0] = "table_name";
-	context->column_values = g_new0 (GValue *, 1);
-	tmp = gda_sql_identifier_quote (table_name, cnc, cnc->priv->provider_obj,
-					TRUE,
-					cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
-	g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
-			     tmp);
+
+	if (split [1]) {
+		context->size = 2;
+		context->column_names = g_new0 (gchar *, context->size);
+		context->column_names[0] = "table_schema";
+		context->column_names[1] = "table_name";
+		context->column_values = g_new0 (GValue *, context->size);
+		tmp = gda_sql_identifier_quote (split[0], cnc, cnc->priv->provider_obj,
+						TRUE,
+						cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+		g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
+				     tmp);
+		tmp = gda_sql_identifier_quote (split[1], cnc, cnc->priv->provider_obj,
+						TRUE,
+						cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+		g_value_take_string ((context->column_values[1] = gda_value_new (G_TYPE_STRING)),
+				     tmp);
+	}
+	else {
+		context->size = 1;
+		context->column_names = g_new0 (gchar *, context->size);
+		context->column_names[0] = "table_name";
+		context->column_values = g_new0 (GValue *, context->size);
+		tmp = gda_sql_identifier_quote (split[0], cnc, cnc->priv->provider_obj,
+						TRUE,
+						cnc->priv->options & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+		g_value_take_string ((context->column_values[0] = gda_value_new (G_TYPE_STRING)),
+				     tmp);
+	}
 
 	GError *lerror = NULL;
 	if (! gda_connection_update_meta_store (cnc, context, &lerror))
@@ -6637,6 +6666,8 @@ _gda_connection_signal_meta_table_update (GdaConnection *cnc, const gchar *table
 		g_array_prepend_val (cnc->priv->trans_meta_context, context);
 	else
 		auto_update_meta_context_free (context);
+
+	g_strfreev (split);
 }
 
 /*
