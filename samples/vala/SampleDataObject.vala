@@ -22,27 +22,7 @@ using GdaData;
 
 namespace Sample {
 
-	class Record : RecordSingleId {
-		private static string dbtable = "user";
-		
-		/**
-		 * On derived classes you must implement this property.
-		 * Is intended that implementors set table and don't change it in the object live time
-		 * in order to keep a good reference to the data the object refers to.
-		 */
-		public override string table { 
-			get { return this.dbtable; }
-		}
-		/**
-		 * On derived classes you must implement this property.
-		 * Is intended that implementors set ID field's name and its column index
-		 */
-		public override string field_id {
-			get { return "name";}
-		}
-		public override int field_id_index {
-			get { return 0; }
-		}
+	class Record : GdaData.Record {
 		/**
 		 * Wrapping database fields.
 		 * You can define properties that use database stored values.
@@ -56,7 +36,7 @@ namespace Sample {
 			}
 			set {
 				try {
-					this.set_value ("functions", value);
+					this.set_field_value ("functions", value);
 				}
 				catch {}
 			}
@@ -69,10 +49,21 @@ namespace Sample {
 			
 			set {
 				try {
-					this.set_value ("name", value);
+					this.set_field_value ("name", value);
 				}
 				catch {}
 			}
+		}
+		
+		/**
+		 * This will create a default table to 'user'.
+		 */
+		public Record ()
+		{
+			var t = new Table<Value?> ();
+			t.name = "user";
+			t.connection = this.connection;
+			this.table = t;
 		}
 	}
 
@@ -89,7 +80,7 @@ namespace Sample {
 								Gda.ConnectionOptions.NONE);
 			stdout.printf("Creating table 'user'...\n");
 			this.connection.execute_non_select_command("CREATE TABLE user (name string PRIMARY KEY, functions string, security_number integer)");
-			this.connection.execute_non_select_command("INSERT INTO user (name, functions, security_number) VALUES (\"Martin Stewart\", \"Programmer, QA\", 2334556)");
+			this.connection.execute_non_select_command("INSERT INTO user (name, functions, security_number) VALUES ( \"Martin Stewart\", \"Programmer, QA\", 2334556)");
 			this.connection.execute_non_select_command("INSERT INTO user (name, functions, security_number) VALUES (\"Jane Castle\", \"Accountant\", 3002884)");
 			
 			this.connection.update_meta_store(null);
@@ -101,7 +92,10 @@ namespace Sample {
 			stdout.printf (">>> DEMO: Modifying Records\n");
 			var rcd = new Sample.Record ();
 			rcd.connection = this.connection;
-			try { rcd.set_id (name); }
+			try { 
+				rcd.set_key_value ("name", name);
+				rcd.update ();
+			}
 			catch (Error e) { stdout.printf ("ERROR: Record no opened\n" + e.message + "\n"); }
 			
 			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.to_string () + "\n");
@@ -117,7 +111,7 @@ namespace Sample {
 			// You must know the field name refer to
 			var v = rcd.get_value ("security_number");
 			stdout.printf ("Initial value for field 'security_number' in the DB: " + Gda.value_stringify (v) + "\n");
-			rcd.set_value ("security_number", 1002335);
+			rcd.set_field_value ("security_number", 1002335);
 			
 			try { rcd.save (); }
 			catch (Error e) { stdout.printf ("ERROR: Can't save modifycations'\n" + e.message + "\n"); }
@@ -130,7 +124,7 @@ namespace Sample {
 			stdout.printf (">>> DEMO: Updating Records modified externally\n");
 			var rcd = new Record ();
 			rcd.connection = this.connection;
-			rcd.set_id ("Jane Castle PhD.");
+			rcd.set_key_value ("name", "Jane Castle PhD.");
 			stdout.printf ("Initial Values for: " + rcd.name + "\n" + rcd.to_string () + "\n");
 			this.connection.execute_non_select_command("UPDATE user SET functions = \"Secretary\" WHERE name = \"Jane Castle PhD.\"");
 			rcd.update ();

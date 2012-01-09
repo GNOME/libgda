@@ -23439,25 +23439,6 @@ can also be used in hash tables as a #GEqualFunc.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="modify_statement_param_types"
-              c:identifier="gda_modify_statement_param_types"
-              version="5.2">
-      <doc xml:whitespace="preserve">Modifies the parameters in @stmt which will be mapped to columns in @model (using the +&amp;lt;colindex&amp;gt; or
--&amp;lt;colindex&amp;gt; syntax) to map the column types of @model.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="stmt" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #GdaStatement</doc>
-          <type name="Statement" c:type="GdaStatement*"/>
-        </parameter>
-        <parameter name="model" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #GdaDataModel</doc>
-          <type name="DataModel" c:type="GdaDataModel*"/>
-        </parameter>
-      </parameters>
-    </function>
     <function name="mutex_new"
               c:identifier="gda_mutex_new"
               moved-to="Mutex.new"

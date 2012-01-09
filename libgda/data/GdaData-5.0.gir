@@ -476,6 +476,32 @@
 				<type name="none"/>
 			</return-value>
 		</virtual-method>
+		<method name="set_field_value" c:identifier="gda_data_db_record_set_field_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="val" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<virtual-method name="set_field_value" invoker="set_field_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="val" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</virtual-method>
 		<method name="get_field" c:identifier="gda_data_db_record_get_field" throws="1">
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
@@ -518,6 +544,32 @@
 					<type name="GdaData.DbField" c:type="GdaDataDbField*">
 						<type name="gpointer" c:type="gpointer"/>
 					</type>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</virtual-method>
+		<method name="set_key_value" c:identifier="gda_data_db_record_set_key_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="val" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<virtual-method name="set_key_value" invoker="set_key_value" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="val" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -614,6 +666,24 @@
 				</return-value>
 			</callback>
 		</field>
+		<field name="set_field_value">
+			<callback name="set_field_value" c:type="set_field_value" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="utf8" c:type="const gchar*"/>
+					</parameter>
+					<parameter name="val" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="gpointer"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+			</callback>
+		</field>
 		<field name="get_field">
 			<callback name="get_field" c:type="get_field" throws="1">
 				<parameters>
@@ -641,6 +711,24 @@
 						<type name="GdaData.DbField" c:type="GdaDataDbField*">
 							<type name="gpointer" c:type="gpointer"/>
 						</type>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+			</callback>
+		</field>
+		<field name="set_key_value">
+			<callback name="set_key_value" c:type="set_key_value" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="utf8" c:type="const gchar*"/>
+					</parameter>
+					<parameter name="val" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="gpointer"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">

@@ -214,9 +214,7 @@ namespace Check {
 				f.set ("name", "GdaDataNewName");
 				f.set ("city","GdaDataNewCity");
 				foreach (string k in f.keys) {
-					var field = new Field<Value?>(k, DbField.Attribute.NONE);
-					field.value = f.get (k);
-					n.set_field (field);
+					n.set_field_value (k, f.get (k));
 				}
 				stdout.printf("DbRecord in memory values, to added to table '%s':\n", n.table.name);
 				stdout.printf("%s\n", n.to_string());

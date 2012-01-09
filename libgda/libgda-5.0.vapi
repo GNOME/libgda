@@ -2031,8 +2031,6 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static bool log_is_enabled ();
 	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void modify_statement_param_types (Gda.Statement stmt, Gda.DataModel model);
-	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static bool parse_iso8601_date (GLib.Date gdate, string value);
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static bool parse_iso8601_time (Gda.Time timegda, string value);

@@ -66,6 +66,12 @@ namespace GdaData {
         	}
         	
         }
+        public void set_field_value (string field, Value? val) throws Error
+        {
+        	var n = new Field<Value?> (field, DbField.Attribute.NONE); 
+    		n.value = val;
+    		this.set_field (n);
+        }
         public DbField<Value?> get_field (string name) throws Error
         {
         	return _fields.get (name);
@@ -83,6 +89,12 @@ namespace GdaData {
         		n.value = field.value;
         		_keys.set (field.name, n);
         	}
+        }
+        public void set_key_value (string key, Value? val) throws Error
+        {
+        	var n = new Field<Value?> (key, DbField.Attribute.NONE); 
+    		n.value = val;
+    		this.set_key (n);
         }
         public DbField<Value?> get_key (string name) throws Error
         {

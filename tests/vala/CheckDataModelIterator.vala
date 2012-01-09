@@ -58,10 +58,7 @@ namespace Check {
 			t.connection = this.connection;
 			t.name = "user";
 			var itermodel = new RecordCollection (model, t);
-			var iter = itermodel.iterator ();
-			var iter.next ();
-			var r = iter.get ();
-			stdout.printf ("First Record contents: \n" + r.to_string ());
+//			stdout.printf ("First Record contents: \n" + r.to_string ());
 			stdout.printf ("Iterating over all Records in DataModel\n");
 			foreach (DbRecord<Value?> r in itermodel) {
 				stdout.printf (r.to_string ());

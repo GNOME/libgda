@@ -24,17 +24,19 @@ namespace GdaData
 {
 	public interface DbRecord<G> : DbObject, Comparable<DbRecord<G>>
 	{
-		public abstract DbTable<G>                    table  { get; set construct; }
-		public abstract Collection<DbField<G>>        fields { owned get; }
-        public abstract Collection<DbField<G>>        keys   { owned get; }
+		public abstract DbTable<G>                table  { get; set construct; }
+		public abstract Collection<DbField<G>>    fields { owned get; }
+        public abstract Collection<DbField<G>>    keys   { owned get; }
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
-        public abstract G                             get_value (string name) throws Error;
-        public abstract void                          set_field (DbField<G> field) throws Error;
-        public abstract DbField<G>                    get_field (string name) throws Error;
-        public abstract void                          set_key   (DbField<G> field) throws Error;
-        public abstract DbField<G>                    get_key   (string name) throws Error;
-        public abstract string                        to_string ();
+        public abstract G                         get_value        (string name) throws Error;
+        public abstract void                      set_field        (DbField<G> field) throws Error;
+        public abstract void                      set_field_value  (string field, G val) throws Error;
+        public abstract DbField<G>                get_field        (string name) throws Error;
+        public abstract void                      set_key          (DbField<G> field) throws Error;
+        public abstract void                      set_key_value    (string field, G val) throws Error;
+        public abstract DbField<G>                get_key          (string name) throws Error;
+        public abstract string                    to_string        ();
 	}
 }
