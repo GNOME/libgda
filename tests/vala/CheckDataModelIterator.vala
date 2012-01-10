@@ -52,24 +52,13 @@ namespace Check {
 			throws Error
 		{
 			int fails = 0;
-			stdout.printf ("Iterating over all Records in DataModel using foreach...\n");
+			stdout.printf (">>> TESTING: Iterating over all Records in DataModel using foreach...\n");
 			int i = 0;
-			foreach (DbRecord<Value?> r in itermodel) {
-				string t = r.to_string ();
-				if (t == null) {
-					fails++;
-					break;
-				}
-				i++;
-				stdout.printf (t + "\n");
-			}
-			if (fails > 0 || i != 6)
-				stdout.printf ("----- FAIL "+ fails.to_string () + "\n");
-			else
-				stdout.printf ("+++++ PASS\n");
-			stdout.printf ("Iterating using an Gee.Iterator...\n");
+			stdout.printf ("Iterating using a Gee.Iterator...\n");
 			i = 0;
 			var iter = itermodel.iterator ();
+			if (iter == null)
+				stdout.printf ("----- FAIL "+ (++fails).to_string () + "\n");
 			while (iter.next ()) {
 				string t2 = iter.get ().to_string ();
 				if (t2 == null) {
@@ -85,43 +74,116 @@ namespace Check {
 				stdout.printf ("----- FAIL "+ fails.to_string () + "\n");
 			else
 				stdout.printf ("+++++ PASS\n");
+			stdout.printf ("Iterating using foreach instruction...\n");
+			i = 0;
+			foreach (DbRecord<Value?> r in itermodel) {
+				string t = r.to_string ();
+				if (t == null) {
+					fails++;
+					break;
+				}
+				i++;
+				stdout.printf (t + "\n");
+			}
+			if (fails > 0 || i != 6)
+				stdout.printf ("----- FAIL "+ fails.to_string () + "\n");
+			else
+				stdout.printf ("+++++ PASS\n");
 			return fails;
 		}
 		
 		public int choping ()
 		{
 			int fails = 0;
-			stdout.printf ("Choping to get the 2nd DbRecord...\n");
+			stdout.printf (">>> TESTING: Chopping...\n");
+			stdout.printf (" to get the 2nd DbRecord...\n");
 			var iter = itermodel.chop (1);
+			if (!iter.valid)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 			stdout.printf (iter.get ().to_string () + "\n");
 			var name = (string) iter.get().get_value ("name");
 			if (name == "Jhon")
 				stdout.printf ("+++++ PASS\n");
 			else {
 				fails++;
-				stdout.printf ("----- FAIL: " + (fails++).to_string () + "\n");
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 			}
+			
 			stdout.printf ("Choping to get the 4th to 5th DbRecords...\n");
-			var iter2 = itermodel.chop (3,4);
+			var iter2 = itermodel.chop (3,2);
+			if (!iter2.valid)
+				stdout.printf ("----- FAIL: " + (fails++).to_string () + "\n");
+			
 			stdout.printf ("Iterating over chopped records...\n");
-			while (iter2.next ()) {
-				stdout.printf (iter2.get ().to_string ());
-				var name2 = (string) iter.get().get_value ("name");
-				if (name2 == "Jack" || name2 == "Elsy")
-					stdout.printf ("+++++ PASS\n");
-				else {
-					fails++;
-					stdout.printf ("----- FAIL: " + (fails++).to_string () + "\n");
+			int i = 0;
+			while (iter2.valid) {
+				i++;
+				stdout.printf (iter2.get ().to_string () + "\n");
+				var name2 = (string) iter2.get().get_value ("name");
+				if (i==1) {
+					if (name2 != "Jack") {
+						fails++;
+						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+						break;
+					}
 				}
+				if (i==2) {
+					if (name2 != "Elsy") {
+						fails++;
+						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+						break;
+					}
+				}
+				iter2.next ();
 			}
-			stdout.printf ("\n");
+			if (i!=2) {
+				fails++;
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			}
+			stdout.printf ("+++++ PASS\n");
+			
+			stdout.printf ("Choping offset = 7 must fail...\n");
+			var iter3 = itermodel.chop (7);
+			if (iter3.valid)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (!iter3.next ())
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (fails == 0)
+				stdout.printf ("+++++ PASS\n");
+			stdout.printf ("Choping offset = 6 length = 0 must fail...\n");
+			var iter4 = itermodel.chop (6,0);
+			if (iter4.valid)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (!iter4.next ())
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (fails == 0)
+				stdout.printf ("+++++ PASS\n");
+			
+			stdout.printf ("Choping offset = 5 length = 1...\n");
+			var iter5 = itermodel.chop (5,1);
+			if (!iter5.valid)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (iter5.next ())
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			if (fails == 0)
+				stdout.printf ("+++++ PASS\n");
+			stdout.printf ("Choping offset = 3 length = 1...\n");
+			var iter6 = itermodel.chop (3,2);
+			if (!iter6.valid)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			var tr = iter6.get().get_value ("name");
+			if (tr==null)
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+
+			if (fails == 0)
+				stdout.printf ("+++++ PASS: " + "\n");
 			return fails;
 		}
 		
 		public int filtering ()
 		{
 			int fails = 0;			
-			stdout.printf ("Filtering Records: Any field type STRING with a letter 'x'...\n");
+			stdout.printf (">>> TESTING: Filtering Records: Any field type STRING with a letter 'J'...\n");
 			
 			var iter = itermodel.filter (
 			(g) => {
@@ -129,7 +191,7 @@ namespace Check {
 				foreach (DbField<Value?> fl in g.fields) {
 					string t = Gda.value_stringify (fl.value);
 					stdout.printf ("Value to check: " + t);
-					if (t.contains ("x")) {
+					if (t.contains ("J")) { 
 						ret = true;
 						stdout.printf ("...SELECTED\n");
 						break;
@@ -143,15 +205,13 @@ namespace Check {
 				return ret;
 			}
 			);
-			stdout.printf ("Printing Filtered Values...\n");
-			iter.next ();
-			stdout.printf ("Row 1:\n" + iter.get ().to_string () + "\n");
-			iter.next ();
-			stdout.printf ("Row 2:\n" + iter.get ().to_string () + "\n");
-			if(iter.next ()) {
-				fails++;
-				stdout.printf ("(INCORRECT) )Row 3:\n" + iter.get().to_string () + "\n");
-				stdout.printf ("----- FAIL" + fails.to_string () + "\n");
+			stdout.printf ("\nPrinting Filtered Values...\n");
+			int i = 0;
+			while (iter.next ()) {
+				stdout.printf ("Row"+(++i).to_string()+":\n" + iter.get ().to_string () + "\n");
+			}
+			if(i != 3) {
+				stdout.printf ("----- FAIL" + (++fails).to_string () + "\n");
 			}
 			else
 				stdout.printf ("+++++ PASS\n");
@@ -162,7 +222,7 @@ namespace Check {
 			int fails = 0;
 			/* FIXME: This code doesn't return YIELDED strings maybe becasue Lazy is not correctly built. 
 				In theory stream() function is working correctly*/
-			stdout.printf ("Streaming Values: Fist field type STRING will be YIELDED...\n");
+			stdout.printf (">>> TESTING: Streaming Values: Fist field type STRING will be YIELDED...\n");
 			var iter = itermodel.stream<string> (
 				(state, g, out lazy) =>	{
 					if (state == Gee.Traversable.Stream.CONTINUE) {
@@ -189,68 +249,25 @@ namespace Check {
 		public int InitIter()
 			throws Error
 		{
-			stdout.printf (">>> NEW TEST: GdaData.RecordCollection & RecordCollectionIterator API tests\n"
-						 	+ ">>> Testing Iterable, Traversable Interfaces\n");
+			stdout.printf (">>> TESTING: Initializing DbRecordCollection/RecordCollection\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			stdout.printf ("DataModel rows:\n" + model.dump_as_string ());
 			stdout.printf ("Setting up Table...");
 			var t = new Table<Value?> ();
 			t.connection = this.connection;
 			t.name = "user";
 			stdout.printf ("+++++ PASS\n");
-			stdout.printf ("Setting up DbRecordCollection...\n");
+			stdout.printf ("Setting up DbRecordCollection...");
 			itermodel = new RecordCollection (model, t);
-			
-//			stdout.printf ("Getting iterator...\n");
-//			var iter = itermodel.iterator ();
-//			stdout.printf ("Go to first row...\n");
-//			iter.next ();
-//			stdout.printf ("Getting firts row...\n");
-//			var r = iter.get ();
-//			stdout.printf ("First Record contents: \n" + r.to_string ());
-//			stdout.printf ("Iterating over all Records in DataModel\n");
-//			foreach (DbRecord<Value?> record in itermodel) {
-//				stdout.printf (record.to_string ());
-//			}
-//			
-//			stdout.printf ("Choping to get first record id= 1\n");
-//			var iter2 = itermodel.chop (0,0);
-//			iter2.next ();
-//			var v = iter.get ().get_field ("id").value;
-//			if (v.type () == typeof (int))
-//				stdout.printf ("ID=%i\n", (int) v);
-//			else {
-//				fails++;
-//				stdout.printf ("FAIL:'%i': Expected type = '%s'," +
-//							   " but Value is type = '%s'" +
-//							   " with value = %s\n",
-//							   fails, typeof (int).name (), v.type_name (), 
-//							   Gda.value_stringify (v));			
-//			}
-//			
-//			stdout.printf ("Choping to get 5th Value = 'Jhon'\n");
-//			var iter3 = itermodel.chop (1,0);
-//			iter3.next ();
-//			var v2 = iter2.get ().get_value ("name");
-//			if (v2.type () == typeof (string))
-//				stdout.printf ("Name = %s;\n", (string) v2);
-//			else {
-//				fails++;
-//				stdout.printf ("FAIL:'%i': Expected type = '%s'," +
-//							   " but Value is type = '%s'" +
-//							   " with value = %s\n", 
-//							   fails, typeof (string).name (), v2.type_name (), 
-//							   Gda.value_stringify (v2));			
-//			}
-			// FIXME: test filter and stream
+			stdout.printf ("+++++ PASS\n");
+			stdout.printf ("DataModel rows:\n" + model.dump_as_string ());
 			return fails;
 		}
 		
 		public int t2 ()
 		{
 			stdout.printf (">>> NEW TEST: GdaData.RecordCollection & RecordCollectionIterator API tests\n"
-							+ ">>> Testing Collection Interface\n");
+							+ ">>> Testing Collection, Iterator, Traversable Interfaces implementation\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			((DataSelect) model).compute_modification_statements ();

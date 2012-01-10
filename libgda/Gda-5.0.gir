@@ -2286,7 +2286,7 @@ Warning: the @cnc object may change the list if connection events occur</doc>
       <method name="get_meta_store"
               c:identifier="gda_connection_get_meta_store">
         <doc xml:whitespace="preserve">Get or initializes the #GdaMetaStore associated to @cnc</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">a #GdaMetaStore object</doc>
           <type name="MetaStore" c:type="GdaMetaStore*"/>
         </return-value>

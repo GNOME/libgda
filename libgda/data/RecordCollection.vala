@@ -139,60 +139,66 @@ namespace GdaData {
 		private DataModelIter _iter;
 		private DbTable<Value?> _table;
 		private int _length = -1;
-		private HashMap<int,int> _elements = new HashMap<int,int>();
+		private int init_row = -1;
+		private HashMap<int,int> _elements;
 		private int filter_pos = -1;
 		
 		public RecordCollectionIterator (DataModelIter iter, DbTable<Value?> table)
 		{
 			_iter = iter;
 			_table = table;
-			_length = _iter.data_model.get_n_rows ();
+			_elements = new HashMap<int,int>();
 		}
 		
-		private RecordCollectionIterator.filtered_elements (DataModelIter iter, DbTable table, 
-															HashMap<int,int> elements)
+		private RecordCollectionIterator.filtered (DataModelIter iter, DbTable<Value?> table, 
+											int init, int offset, int length, 
+											HashMap<int,int> elements, int filter_pos)
 		{
 			_iter = iter;
 			_table = table;
-			_length = _iter.data_model.get_n_rows ();
 			_elements = elements;
-		}
-		private RecordCollectionIterator.with_lenght (DataModelIter iter, DbTable table, int length)
-		{
-			_iter = iter;
-			_table = table;
-			if (length >= 0 && _iter.is_valid ())
-				_length = _iter.current_row + length;
-			if (_length > _iter.data_model.get_n_rows ())
-				_length = _iter.data_model.get_n_rows ();
+			this.filter_pos = filter_pos;
+			if (init < 0 && offset >= 0) init = 0;
+			if (init >= 0 && init < _iter.data_model.get_n_rows ()
+				&& init + offset >= 0
+				&& init + offset < _iter.data_model.get_n_rows ())
+			{
+				_iter.move_to_row (init + offset);
+				init_row = _iter.current_row;
+				if (length >= 0 && init + length < _iter.data_model.get_n_rows ())
+				{
+					_length = length;
+				}
+			}
+			else
+				init_row = -10; // Invalidate all the interator
+			if (_elements.size > 0)
+				init_row = -1; // Validate interator due to filtered values
 		}
 		
 		// Traversable Interface
 		public Gee.Iterator<DbRecord<Value?>> chop (int offset, int length = -1) 
-			requires (offset <= _iter.data_model.get_n_rows ())
-			requires (offset + length <= _iter.data_model.get_n_rows ())
 		{
 			var iter = _iter.data_model.create_iter ();
-			iter.move_to_row (offset);
-			return new RecordCollectionIterator.with_lenght (iter, _table, length);
+			return new RecordCollectionIterator.filtered (iter, _table, _iter.current_row, 
+									offset, length, _elements, filter_pos);
 		}
 		public Gee.Iterator<DbRecord<Value?>> filter (owned Gee.Predicate<DbRecord<Value?>> f) 
 		{
 			var elements = new Gee.HashMap <int,int> ();
-			while (_iter.move_next ()) {
+			int pos = -1;
+			while (this.next ()) {
 				var r = this.get ();
 				if (f(r)) {
-					stdout.printf ("SELECTED row: " + _iter.current_row.to_string () 
-									+ "Values:\n" + this.get().to_string ());
-					elements.set (++filter_pos, _iter.current_row);
+					elements.set (++pos, _iter.current_row);
 				}
 			}
 			var iter = _iter.data_model.create_iter ();
-			return new RecordCollectionIterator.filtered_elements (iter, _table, elements);
+			return new RecordCollectionIterator.filtered (iter, _table, -1, 0, -1, elements, -1);
 		}
 		public new void @foreach (Gee.ForallFunc<DbRecord<Value?>> f) 
 		{
-			while (_iter.move_next ()) {
+			while (this.next ()) {
 				var r = this.get ();
 				f(r);
 			}
@@ -215,24 +221,25 @@ namespace GdaData {
 		}
 		public bool has_next () 
 		{
-			return (_iter.current_row + 1 <= _iter.data_model.get_n_rows ()) ||
-					(_iter.current_row + 1 <= _length) ? true : false;
+			if ((_length >= 0) && (_iter.current_row + 1 < _length + init_row)
+					&& (_iter.current_row + 1 > _iter.data_model.get_n_rows ())) 
+				return false;
+			if (_elements.size > 0)
+				return filter_pos + 1 < _elements.size ? true : false;
+			
+			return _iter.current_row + 1 <= _iter.data_model.get_n_rows () ? true : false;
 		}
 		public bool next () 
 		{ 
-			bool ret = false;
-			if (_elements.size > 0 && ++filter_pos < _elements.size) {
-				_iter.move_to_row (_elements.get (filter_pos));
-			}
-			else {
-				if (this.has_next ())
-					ret = _iter.move_next ();
-				else {
-					ret = false;
-					_iter.invalidate_contents ();
+			if (this.has_next ()) {
+				if (_elements.size > 0) {
+					_iter.move_to_row (_elements.get (++filter_pos));
+					return true;
 				}
+				else
+					return _iter.move_next ();
 			}
-			return ret;
+			return false;
 		}
 		public void remove () { _iter.data_model.remove_row (_iter.current_row); }
 		public bool read_only 
@@ -244,6 +251,20 @@ namespace GdaData {
 					return false;
 			}
 		}
-		public bool valid { get { return _iter.is_valid (); } }
+		public bool valid { 
+			get { 
+				if (init_row == -10)
+					return false;
+					
+				if (_length >= 0)
+					return (_iter.current_row >= init_row)
+							&& (_iter.current_row < _length + init_row) ? true : false;
+				if (_elements.size > 0)
+					return filter_pos < _elements.size;
+				
+				return (_iter.current_row >= 0) && 
+						(_iter.current_row < _iter.data_model.get_n_rows ())? true : false; 
+			}
+		}
 	}
 }

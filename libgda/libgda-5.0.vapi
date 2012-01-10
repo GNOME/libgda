@@ -142,7 +142,7 @@ namespace Gda {
 		public unowned string get_cnc_string ();
 		public unowned string get_dsn ();
 		public unowned GLib.List<Gda.ConnectionEvent> get_events ();
-		public Gda.MetaStore get_meta_store ();
+		public unowned Gda.MetaStore get_meta_store ();
 		public Gda.DataModel get_meta_store_data_v (Gda.ConnectionMetaType meta_type, GLib.List<Gda.Holder> filters) throws GLib.Error;
 		public Gda.ConnectionOptions get_options ();
 		public unowned Gda.PStmt get_prepared_statement (Gda.Statement gda_stmt);

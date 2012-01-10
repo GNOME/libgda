@@ -62,11 +62,11 @@ namespace Sample {
 			foreach (DbRecord<Value?> r in itermodel) {
 				stdout.printf (r.to_string ());
 			}
-			stdout.printf ("Iterating over all Records in DataModel using a Gee.Iterator\n");
+			stdout.printf ("\nIterating over all Records in DataModel using a Gee.Iterator\n");
 			var iter = itermodel.iterator ();
 			while (iter.next ())
 			{
-				stdout.printf (iter.get ().to_string ());
+				stdout.printf (iter.get ().to_string () + "\n");
 			}
 			stdout.printf ("\n");
 		}
@@ -117,33 +117,6 @@ namespace Sample {
 			}
 			stdout.printf ("\n");
 		}
-		public void streaming ()
-		{
-			/* FIXME: This code doesn't return YIELDED strings maybe becasue Lazy is not correctly built. 
-				In theory stream() function is working correctly*/
-			stdout.printf ("Streaming Values: Fist field type STRING will be YIELDED...\n");
-			var iter = itermodel.stream<string> (
-				(state, g, out lazy) =>	{
-					if (state == Gee.Traversable.Stream.CONTINUE) {
-						var r = g.value;
-						foreach (DbField<Value?> f in r.fields) {
-							if (f.value.type () == typeof (string)) {
-								stdout.printf ("Value to YIELD: %s\n", Gda.value_stringify (f.value));
-								string ts = "YIELDED Value = " + Gda.value_stringify (f.value) + "\n";
-								lazy = new Gee.Lazy<string>.from_value (ts.dup ());
-							}
-						}
-						return Gee.Traversable.Stream.YIELD;
-					}
-					return Gee.Traversable.Stream.END;
-				}
-			);
-			stdout.printf ("Printing Streamed Values...\n");
-			while (iter.next ()) {
-				stdout.printf (iter.get());
-			}
-			stdout.printf ("\n");
-		}
 				
 		public static int main (string[] args) {
 			stdout.printf ("Demo for Gda.DataModelIterator...\n");
@@ -156,7 +129,6 @@ namespace Sample {
 				return 1;
 			}
 			app.iterating ();
-			app.streaming ();
 			app.choping ();
 			app.filtering ();
 			return 0;
