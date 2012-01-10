@@ -192,7 +192,9 @@
 					<type name="Gda.DataModel" c:type="GdaDataModel*"/>
 				</parameter>
 				<parameter name="table" transfer-ownership="none">
-					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
+						<type name="GObject.Value" c:type="GValue*"/>
+					</type>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -229,7 +231,9 @@
 					<type name="Gda.DataModelIter" c:type="GdaDataModelIter*"/>
 				</parameter>
 				<parameter name="table" transfer-ownership="none">
-					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
+						<type name="GObject.Value" c:type="GValue*"/>
+					</type>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">

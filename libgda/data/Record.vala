@@ -208,7 +208,6 @@ namespace GdaData {
 			foreach (DbField<Value?> f in this.fields) {
 				r += "|" + Gda.value_stringify (f.value);
 			}
-			r+="\n";
 			return r;
         }
         // Comparable Interface

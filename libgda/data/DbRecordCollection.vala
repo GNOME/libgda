@@ -21,9 +21,10 @@ using Gee;
 using Gda;
 
 namespace GdaData {
-	public interface DbRecordCollection<A,G> : Object, Traversable<G>, Iterable<G>, Collection<G>
+	public interface DbRecordCollection<G> : Object, Traversable<DbRecord<Value?>>, 
+				Iterable<DbRecord<Value?>>, Collection<DbRecord<Value?>>
 	{
 		public abstract Connection   connection { get; set; }
-		public abstract DbTable<A>   table      { get; }
+		public abstract DbTable<G>   table      { get; }
 	}
 }
