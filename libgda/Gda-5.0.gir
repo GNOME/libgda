@@ -11787,6 +11787,7 @@ Free-function: gda_numeric_free</doc>
         </return-value>
         <parameters>
           <parameter name="str" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a string representing a number</doc>
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -11800,6 +11801,7 @@ Free-function: gda_numeric_free</doc>
         </return-value>
         <parameters>
           <parameter name="precision" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #glong</doc>
             <type name="glong" c:type="glong"/>
           </parameter>
         </parameters>
@@ -11813,6 +11815,7 @@ Free-function: gda_numeric_free</doc>
         </return-value>
         <parameters>
           <parameter name="width" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #glong</doc>
             <type name="glong" c:type="glong"/>
           </parameter>
         </parameters>
