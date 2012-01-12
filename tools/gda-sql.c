@@ -2630,7 +2630,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
-	c->name = g_strdup_printf (_("%s SELECT ROW_FIELDS COLUMN_FIELDS [DATA_FIELDS]"), "pivot");
+	c->name = g_strdup_printf (_("%s \"SELECT\" ROW_FIELDS [COLUMN_FIELDS [DATA_FIELDS ...]]"), "pivot");
 	c->description = _("Performs a statistical analysis on the data from SELECT, "
 			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");
 	c->args = NULL;
