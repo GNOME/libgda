@@ -149,6 +149,12 @@
 |-- bin
 |   `-- gda-sql-5.0
  `-- share
+    |-- gnome
+    |   `-- help
+    |       `-- gda-sql
+    |           |-- C
+    |           `[···]
+    |-- libgda-5.0
     |   `-- web
     |       |-- cnc.js
     |       |-- gda-print.css

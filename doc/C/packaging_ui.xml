@@ -137,17 +137,11 @@
     |-- gnome
     |   `-- help
     |       `-- gda-browser
-    |           `-- C
-    |               |-- data-manager-perspective.page
-    |               [···]
-    |               |-- figures
-    |               |   |-- cnc_open.png
-    |               |   [···]
-    |               |   `-- trans-rollback.png
-    |               `-- variables.page
+    |           |-- C
+    |           `[···]
     `-- pixmaps
         |-- gda-browser-auth-big.png
-        [···]
+        |[···]
         `-- gda-browser.png
 	</programlisting>
       </para>
