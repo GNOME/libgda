@@ -290,7 +290,7 @@ main (int argc, char *argv[])
 		g_print (_("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
 		g_print ("\n\n");
 		g_print (_("Type: .copyright to show usage and distribution terms\n"
-			   "      .? for help with internal commands\n"
+			   "      .? or .h for help with internal commands\n"
 			   "      .q (or CTRL-D) to quit\n"
 			   "      (the '.' can be replaced by a '\\')\n"
 			   "      or any query terminated by a semicolon\n\n"));
@@ -985,6 +985,11 @@ find_command (GdaInternalCommandsList *commands_list, const gchar *command_str, 
 		else
 			command = NULL;
 	}
+
+	if (!command &&
+	    ((command_str[1] == 'h') || (command_str[1] == 'H')) &&
+	    ((command_str[2] == ' ') || !command_str[2]))
+		command = find_command (commands_list, ".?", command_complete);
 
 	/* FIXME */
 	if (command_complete)
@@ -2158,7 +2163,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s [FILE]"), "s");
+	c->name = g_strdup_printf (_("%s [<FILE>]"), "s");
 	c->description = _("Show commands history, or save it to file");
 	c->args = NULL;
 	c->command_func = gda_internal_command_history;
@@ -2170,7 +2175,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [META DATA TYPE]"), "meta");
+	c->name = g_strdup_printf (_("%s [<META DATA TYPE>]"), "meta");
 	c->description = _("Force reading the database meta data (or part of the meta data, ex:\"tables\")");
 	c->args = NULL;
 	c->command_func = gda_internal_command_dict_sync;
@@ -2206,7 +2211,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [TABLE]"), "dt");
+	c->name = g_strdup_printf (_("%s [<TABLE>]"), "dt");
 	c->description = _("List all tables (or named table)");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_tables;
@@ -2218,7 +2223,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [VIEW]"), "dv");
+	c->name = g_strdup_printf (_("%s [<VIEW>]"), "dv");
 	c->description = _("List all views (or named view)");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_views;
@@ -2230,7 +2235,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [SCHEMA]"), "dn");
+	c->name = g_strdup_printf (_("%s [<SCHEMA>]"), "dn");
 	c->description = _("List all schemas (or named schema)");
 	c->args = NULL;
 	c->command_func = gda_internal_command_list_schemas;
@@ -2242,7 +2247,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [OBJ_NAME|SCHEMA.*]"), "d");
+	c->name = g_strdup_printf (_("%s [<OBJ_NAME>|<SCHEMA>.*]"), "d");
 	c->description = _("Describe object or full list of objects");
 	c->args = NULL;
 	c->command_func = gda_internal_command_detail;
@@ -2254,7 +2259,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [TABLE1 [TABLE2...]]"), "graph");
+	c->name = g_strdup_printf (_("%s [<TABLE1> [<TABLE2>...]]"), "graph");
 	c->description = _("Create a graph of all or the listed tables");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_graph;
@@ -2267,7 +2272,7 @@ build_internal_commands_list (void)
 #ifdef HAVE_LIBSOUP
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
-	c->name = g_strdup_printf (_("%s [port [authentication token]]"), "http");
+	c->name = g_strdup_printf (_("%s [<port> [<authentication token>]]"), "http");
 	c->description = _("Start/stop embedded HTTP server (on given port or on 12345 by default)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_httpd;
@@ -2281,7 +2286,7 @@ build_internal_commands_list (void)
 	/* specific commands */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s [CNC_NAME [DSN|CONNECTION STRING]]"), "c");
+	c->name = g_strdup_printf (_("%s [<CNC_NAME> [<DSN>|<CONNECTION STRING>]]"), "c");
 	c->description = _("Opens a new connection or lists opened connections");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_manage_cnc;
@@ -2293,7 +2298,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s [CNC_NAME]"), "close");
+	c->name = g_strdup_printf (_("%s [<CNC_NAME>]"), "close");
 	c->description = _("Close a connection");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_close_cnc;
@@ -2305,8 +2310,8 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"), "bind");
-	c->description = _("Bind several connections together into the CNC_NAME virtual connection");
+	c->name = g_strdup_printf (_("%s <CNC_NAME> <CNC_NAME1> <CNC_NAME2> [<CNC_NAME> ...]"), "bind");
+	c->description = _("Bind two or more connections into a single new one (allowing SQL commands to be executed across multiple connections)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc)extra_command_bind_cnc;
 	c->user_data = NULL;
@@ -2317,7 +2322,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->name = g_strdup_printf (_("%s [DSN]"), "l");
+	c->name = g_strdup_printf (_("%s [<DSN>]"), "l");
 	c->description = _("List all DSN (or named DSN's attributes)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_dsn;
@@ -2329,7 +2334,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->name = g_strdup_printf (_("%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"), "lc");
+	c->name = g_strdup_printf (_("%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"), "lc");
 	c->description = _("Create (or modify) a DSN");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_create_dsn;
@@ -2341,7 +2346,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->name = g_strdup_printf (_("%s DSN_NAME [DSN_NAME...]"), "lr");
+	c->name = g_strdup_printf (_("%s <DSN_NAME> [<DSN_NAME>...]"), "lr");
 	c->description = _("Remove a DSN");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_remove_dsn;
@@ -2353,7 +2358,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->name = g_strdup_printf (_("%s [PROVIDER]"), "lp");
+	c->name = g_strdup_printf (_("%s [<PROVIDER>]"), "lp");
 	c->description = _("List all installed database providers (or named one's attributes)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_list_providers;
@@ -2365,7 +2370,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = g_strdup_printf (_("%s FILE"), "i");
+	c->name = g_strdup_printf (_("%s <FILE>"), "i");
 	c->description = _("Execute commands from file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_input;
@@ -2377,7 +2382,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = g_strdup_printf (_("%s [FILE]"), "o");
+	c->name = g_strdup_printf (_("%s [<FILE>]"), "o");
 	c->description = _("Send output to a file or |pipe");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output;
@@ -2389,8 +2394,8 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = g_strdup_printf (_("%s [TEXT]"), "echo");
-	c->description = _("Send output to stdout");
+	c->name = g_strdup_printf (_("%s [<TEXT>]"), "echo");
+	c->description = _("Print TEXT or an empty line to standard output");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_echo;
 	c->user_data = NULL;
@@ -2401,8 +2406,8 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
-	c->name = g_strdup_printf (_("%s [TEXT]"), "qecho");
-	c->description = _("Send output to output stream");
+	c->name = g_strdup_printf (_("%s [<TEXT>]"), "qecho");
+	c->description = _("Send TEXT or an empty line to current output stream");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_qecho;
 	c->user_data = NULL;
@@ -2425,7 +2430,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = g_strdup_printf (_("%s [DIR]"), "cd");
+	c->name = g_strdup_printf (_("%s [<DIR>]"), "cd");
 	c->description = _("Change the current working directory");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_cd;
@@ -2449,7 +2454,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [FILE]"), "e");
+	c->name = g_strdup_printf (_("%s [<FILE>]"), "e");
 	c->description = _("Edit the query buffer (or file) with external editor");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_edit_buffer;
@@ -2461,7 +2466,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [FILE]"), "qr");
+	c->name = g_strdup_printf (_("%s [<FILE>]"), "qr");
 	c->description = _("Reset the query buffer (fill buffer with contents of file)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_reset_buffer;
@@ -2485,7 +2490,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [QUERY_BUFFER_NAME]"), "g");
+	c->name = g_strdup_printf (_("%s [<QUERY_BUFFER_NAME>]"), "g");
 	c->description = _("Execute contents of query buffer, or named query buffer");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_exec_buffer;
@@ -2497,7 +2502,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s FILE"), "qw");
+	c->name = g_strdup_printf (_("%s <FILE>"), "qw");
 	c->description = _("Write query buffer to file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_write_buffer;
@@ -2509,7 +2514,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "qs");
+	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "qs");
 	c->description = _("Save query buffer to dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_to_dict;
@@ -2521,7 +2526,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "ql");
+	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "ql");
 	c->description = _("Load query buffer from dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_from_dict;
@@ -2533,7 +2538,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s QUERY_BUFFER_NAME"), "qd");
+	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "qd");
 	c->description = _("Delete query buffer from dictionary");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_delete_dict;
@@ -2570,7 +2575,7 @@ build_internal_commands_list (void)
 	/*
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s FILE TABLE BLOB_COLUMN ROW_CONDITION"), "lo_update");
+	c->name = g_strdup_printf (_("%s <FILE> <TABLE> <BLOB_COLUMN> <ROW_CONDITION>"), "lo_update");
 	c->description = _("Import a blob into the database");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_lo_update;
@@ -2582,7 +2587,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"), "export");
+	c->name = g_strdup_printf (_("%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"), "export");
 	c->description = _("Export internal parameter or table's value to the FILE file");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_export;
@@ -2594,8 +2599,8 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
-	c->name = g_strdup_printf (_("%s [NAME [VALUE|_null_]]"), "set");
-	c->description = _("Set or show internal parameter, or list all if no parameters");
+	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>|_null_]]"), "set");
+	c->description = _("Set or show internal parameter, or list all if no parameter specified ");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set;
 	c->user_data = NULL;
@@ -2606,7 +2611,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
-	c->name = g_strdup_printf (_("%s [NAME]"), "unset");
+	c->name = g_strdup_printf (_("%s [<NAME>]"), "unset");
 	c->description = _("Unset (delete) internal named parameter (or all parameters)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_unset;
@@ -2618,7 +2623,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
-	c->name = g_strdup_printf (_("%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"), "setex");
+	c->name = g_strdup_printf (_("%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"), "setex");
 	c->description = _("Set internal parameter as the contents of the FILE file or from an existing table's value");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set2;
@@ -2630,7 +2635,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
-	c->name = g_strdup_printf (_("%s \"SELECT\" ROW_FIELDS [COLUMN_FIELDS [DATA_FIELDS ...]]"), "pivot");
+	c->name = g_strdup_printf (_("%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"), "pivot");
 	c->description = _("Performs a statistical analysis on the data from SELECT, "
 			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");
 	c->args = NULL;
@@ -2644,8 +2649,8 @@ build_internal_commands_list (void)
 	/* comes last */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
-	c->name = "?";
-	c->description = _("List all available commands");
+	c->name = g_strdup_printf (_("%s [command]"), "?");
+	c->description = _("List all available commands or give help for the specified command");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) gda_internal_command_help;
 	c->user_data = commands;
