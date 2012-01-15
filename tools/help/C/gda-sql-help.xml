@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<gda-sql-help>
+  <!-- "." command -->
+  <command name="">
+    <shortdescription>
+    </shortdescription>
+    <usage>
+      <synopsis>.</synopsis>
+      <comment></comment>
+    </usage>
+    <example>
+      <synopsis>.</synopsis>
+      <comment></comment>
+    </example>
+  </command>
+
+  <!-- ".bind" command -->
+  <command name="bind">
+    <shortdescription>Bind two or more connections into a single new one (allowing SQL commands to be executed across multiple connections).
+    </shortdescription>
+    <usage>
+      <synopsis>.bind @CNC_NAME@ @CNC_NAME1@ @CNC_NAME2@ [@CNC_NAME@ ...]</synopsis>
+      <comment>creates a new connection named @CNC_NAME@ which binds the tables of the @CNC_NAME1@, @CNC_NAME2@ and any other connection specified.</comment>
+    </usage>
+    <example>
+      <synopsis>.bind attached c0 c1</synopsis>
+      <comment>creates the "attached" connection where all the tables from connection "c1" are mapped to the "c1" schema and all the tables from connection "c2" are mapped to the "c2" schema.</comment>
+    </example>
+  </command>
+
+  <!-- ".c" command -->
+  <command name="c">
+    <shortdescription>Opens a new connection or lists opened connections</shortdescription>
+    <usage>
+      <synopsis>.c [@CNC_NAME@ [@DSN@|@CONNECTION STRING@]]</synopsis>
+      <comment>Opens a new connection, named @CNC_NAME@ using either a DSN name (use the ".l" command to list all declared DSN), or a connection string (use the ".lp" command to list database providers and see which argument their connection string accepts).</comment>
+      <comment>If only a connection name is passed as argument, then the named connection becomes the current active connection. As a side note, using "~" as a connection name will switch to a (new or already opened) connection which contains the meta data for the active connection.</comment>
+      <comment>If no connection name is specified, then this command lists all the opened connections</comment>
+    </usage>
+    <example>
+      <synopsis>.c st SalesTest</synopsis>
+      <synopsis>.c ht htsql_demo.db</synopsis>
+      <synopsis>.c</synopsis>
+      <raw>                      List of opened connections
+Name | Provider | DSN or connection string                         | Username
+-----+----------+--------------------------------------------------+---------
+ht   | SQLite   | DB_DIR=.;EXTRA_FUNCTIONS=TRUE;DB_NAME=htsql_demo |         
+st   | SQLite   | SalesTest                                        |         
+(2 rows)</raw>
+      <comment>This example opens two SQLite connections, named "ht" and "st"</comment>
+    </example>
+
+    <example>
+      <synopsis>.c ~</synopsis>
+      <synopsis>.d</synopsis>
+      <raw>Schema | Name                             | Type       | Owner
+-------+----------------------------------+------------+------
+main   | __declared_fk                    | BASE TABLE |      
+main   | _all_types                       | VIEW       |      
+main   | _attributes                      | BASE TABLE |
+[...]
+(32 rows)</raw>
+      <comment>This command switches to the connection containing the currently active connection's meta data, the ".d" command displays all the tables and views of the current active connection.</comment>
+    </example>
+
+    <example>
+      <synopsis>.c</synopsis>
+      <comment>This command lists all opened connections (including the meta data connections)</comment>
+      <raw>                                              List of opened connections
+Name | Provider | DSN or connection string                                                                   
+-----+----------+--------------------------------------------------------------------------------------------
+ht   | SQLite   | DB_DIR=.;EXTRA_FUNCTIONS=TRUE;DB_NAME=htsql_demo                                           
+st   | SQLite   | SalesTest                                                                                  
+~st  | SQLite   | DB_DIR=/home/vivien/.local/share/libgda;DB_NAME=gda-sql-SalesTest                          
+~ht  | SQLite   | DB_DIR=/home/vivien/.local/share/libgda;DB_NAME=gda-sql-ab1b5c41e024d87d739797e820dadb05d26
+(4 rows)</raw>
+    </example>
+  </command>
+
+  <!-- ".l" command -->
+  <command name="l">
+    <shortdescription>List all defined data source (DSN), or named DSN's attributes.
+    </shortdescription>
+    <usage>
+      <synopsis>.l [@DSN@]</synopsis>
+      <comment>If no @DSN@ argument is specified, then lists all the DSN, otherwise gives information about the specified DSN</comment>
+    </usage>
+    <example>
+      <synopsis>.l</synopsis>
+      <raw>                       DSN list
+DSN       | Description                          | Provider  
+----------+--------------------------------------+-----------
+mysales   |                                      | MySQL     
+pgsales   |                                      | PostgreSQL
+SalesTest | Test database for a sales department | SQLite    
+(3 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>.l mysales</synopsis>
+      <raw>   DSN 'mysales' description
+Attribute      | Value            
+---------------+------------------
+DSN name       | mysales          
+Provider       | MySQL            
+Description    |                  
+Parameters     | HOST: gda        
+                 DB_NAME: test1   
+Authentication | USERNAME: gdauser
+System DSN?    | No               
+(6 rows)</raw>
+      <comment>The output above shows that the "mysales" DSN uses a MySQL server, hosted on the "gda" machine, for the database "test1", and that the username will be "gdauser"</comment>
+    </example>
+  </command>
+
+  <!-- ".lp" command -->
+  <command name="lp">
+    <shortdescription>List all installed database providers (or named one's attributes)
+    </shortdescription>
+    <usage>
+      <synopsis>.lp [@PROVIDER@]</synopsis>
+      <comment>Shows information about database providers installed, or about a specific database provider if specified. Use this information to create connection strings</comment>
+    </usage>
+    <example>
+      <synopsis>.lp</synopsis>
+      <raw>                                    Installed providers list
+Provider      | Description                                                                        
+--------------+------------------------------------------------------------------------------------
+BDBSql        | Provider for BDB SQL databases                                                     
+Berkeley-DB   | Provider for Berkeley databases                                                    
+Firebird      | Provider for Firebird databases                                                    
+FirebirdEmbed | Provider for embedded Firebird databases                                           
+Ldap          | Provider for database where tables are based on data contained in an LDAP directory
+MSAccess      | Provider for Microsoft Access files                                                
+MySQL         | Provider for MySQL databases                                                       
+Oracle        | Provider for Oracle databases                                                      
+PostgreSQL    | Provider for PostgreSQL databases                                                  
+SQLCipher     | Provider for SQLCipher                                                             
+SQLite        | Provider for SQLite databases                                                      
+Web           | Provider for web server proxies                                                    
+(12 rows)</raw>
+      <synopsis>.lp MySQL</synopsis>
+      <raw>                                         Provider 'MySQL' description
+Attribute      | Value                                                                                         
+---------------+-----------------------------------------------------------------------------------------------
+Provider       | MySQL                                                                                         
+Description    | Provider for MySQL databases                                                                  
+DSN parameters | DB_NAME: Database name. The name of a database to connect to (string),                        
+                 HOST: Database server. Host on which the database server is running (string),                 
+                 PORT: Port. Database server port (int),                                                       
+                 UNIX_SOCKET: UNIX Socket. Full path of the UNIX socket to use when connecting locally (string)
+                 USE_SSL: Require SSL. Whether or not to use SSL to establish the connection (boolean),        
+                 COMPRESS: Compress. Use compression protocol (boolean)                                        
+Authentication | USERNAME (string),                                                                            
+                 PASSWORD (string)                                                                             
+File           | /usrlib/libgda-5.0/providers/libgda-mysql.so                                         
+(5 rows)</raw>
+      <comment>This output shows all the arguments accepted by the MySQL provider (DB_NAME, HOST, PORT, ...)</comment>
+    </example>
+  </command>
+
+  <!-- ".pivot" command -->
+  <command name="pivot">
+    <shortdescription>Performs a statistical analysis on the data from SELECT, using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data.</shortdescription>
+    <usage>
+      <synopsis>.@SELECT@ @ROW_FIELDS@ [@COLUMN_FIELDS@ [@DATA_FIELDS@ ...]]</synopsis>
+      <comment>The @SELECT@ defines the data set to perform summarization on.</comment>
+      <comment></comment>
+      <comment>The  @ROW_FIELDS@ defines the fields from the data set from which each individual value will
+              yield to a row in the analysis (it can be any valid selectable SQL  expression  on  the  data
+              set's fields); multiple expressions can be provided, separated by commas (forming a valid SQL
+              expression).  In this case a row will be created for each combination of values  of  each  of
+              the expression.
+      </comment>
+      <comment></comment>
+      <comment>The @COLUMN_FIELDS@ defines  the  fields from the data set from which each individual value
+              will yield to a column in the analysis. Its syntax is similar to the @ROW_FIELDS@ one. If not
+              specified  (or  if  specified  as a single dash ("-") caracter), then only one column will be
+              created.  Note that, if the @DATA_FIELDS@ argument is specified each column created from  the
+              @COLUMN_FIELDS@  will  in  fact  lead to the creation of as many @DATA_FIELDS@ arguments pro‐
+              vided.
+      </comment>
+      <comment></comment>
+      <comment>The @DATA_FIELDS@ arguments are entirely optional and indicates the way data summarization is
+              done  for  each pair of (row,column) values (the default is to count occurrences). The syntax
+              for each @DATA_FIELDS@ argument is: [aggregate]@SQL_expression@, where the aggregate part  is
+              optional  and,  if  present  must be among [SUM], [COUNT], [AVG], [MIN] or [MAX], and the SQL
+              expression is a valid selectable SQL expression of the data set's fields.
+      </comment>
+    </usage>
+    <example>
+      <comment>Suppose for these example that we have a table named "student" where students of schools are
+      are listed (this example comes from the HTSQL tutorial database, see http://htsql.org/doc/tutorial.html).
+      Part of this table's contents is the following:
+      </comment>
+      <raw>name                | gender | dob        | school_code | program_code | start_date
+--------------------+--------+------------+-------------+--------------+-----------
+Linda Wright        | f      | 1988-10-03 | ns          | umth         | 2007-08-15
+Beth Thompson       | f      | 1988-01-24 | ns          | gmth         | 2007-08-15
+Sheri Sanchez       | f      | 1985-05-14 | edu         | gedu         | 2007-08-15
+John Stone          | m      | 1984-01-28 | bus         | pbusad       | 2007-08-15
+Helen Johnson       | f      | 1986-02-03 | eng         | ucompsci     | 2007-08-15
+Anna Carroll        | f      | 1985-03-29 | edu         | gedu         | 2007-08-15
+Carol Walden        | f      | 1988-04-09 | ns          | uphys        | 2007-08-15</raw>
+
+      <synopsis>.pivot "select * from student" gender</synopsis>
+      <comment>The output will show one line per gender and will show the number of students for each gender
+      </comment>
+      <raw>gender |    
+-------+----
+f      | 284
+m      | 172
+(2 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>pivot "select name, gender, strftime ('%Y', dob) as year_of_birth from student order by year_of_birth" gender year_of_birth</synopsis>
+      <comment>This example displays, by gender of students, the number of students for each year where
+      at least one student is born</comment>
+      <raw>gender | 1982 | 1983 | 1984 | 1985 | 1986 | 1987 | 1988 | 1989 | 1990 | 1991 | 1992
+-------+------+------+------+------+------+------+------+------+------+------+-----
+m      |   11 |   26 |   39 |   50 |   30 |   13 |    3 |      |      |      |     
+f      |      |      |      |   12 |   38 |   36 |   56 |   61 |   33 |   37 |   11
+(2 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>.pivot "select name, gender, strftime ('%Y', dob) as year_of_birth from student order by year_of_birth" year_of_birth gender</synopsis>
+      <comment>This example displays the same information as the one above, but with one row per year</comment>
+      <raw>year_of_birth | m  | f 
+--------------+----+---
+1982          | 11 |   
+1983          | 26 |   
+1984          | 39 |   
+1985          | 50 | 12
+1986          | 30 | 38
+1987          | 13 | 36
+1988          |  3 | 56
+1989          |    | 61
+1990          |    | 33
+1991          |    | 37
+1992          |    | 11
+(11 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>.pivot "select name, gender, strftime ('%Y', dob) as year_of_birth, school_code from student order by year_of_birth" year_of_birth school_code</synopsis>
+      <comment>This example is similar to the one above, but replaces the gender by the school_code for the columns</comment>
+      <raw>year_of_birth | art | bus | edu | eng | la | ns | ph
+--------------+-----+-----+-----+-----+----+----+---
+1982          |  11 |     |     |     |    |    |   
+1983          |  18 |   8 |     |     |    |    |   
+1984          |  15 |  18 |   6 |     |    |    |   
+1985          |  16 |  18 |  18 |  10 |    |    |   
+1986          |   2 |  12 |  23 |  17 | 14 |    |   
+1987          |     |   2 |  16 |  16 | 12 |  3 |   
+1988          |     |     |   6 |  14 | 14 | 22 |  3
+1989          |     |     |     |   5 | 22 | 13 | 21
+1990          |     |     |     |     | 10 |  7 | 16
+1991          |     |     |     |     |    | 16 | 21
+1992          |     |     |     |     |    |    | 11
+(11 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>.pivot "select school_code, program_code, julianday(Date('now')) - julianday(start_date) as days from vs;" program_code - [avg]days</synopsis>
+      <comment>This example displays, for each program code, the average number of days since the course
+      was started</comment>
+      <raw>program_code | avg_days   
+-------------+------------
+umth         | 1163.153846
+gmth         | 1106.923077
+gedu         | 1180.909091
+pbusad       | 1134.846154
+ucompsci     | 1186.583333
+uphys        | 1206.777778
+psci         | 1156.125000
+uspan        | 1137.800000
+[...]
+(39 rows)</raw>
+    </example>
+
+    <example>
+      <synopsis>.pivot "select school_code, program_code, (julianday(Date('now')) - julianday(start_date))::int as days from vs;" program_code school_code [max]days</synopsis>
+      <comment>This example is similar to the one above, but it shows the maximum number of days since the course was started, and is split in columns by school code</comment>
+      <raw>program_code | ns[max_days] | edu[max_days] | bus[max_days] | eng[max_days] | la[max_days] | ph[max_days] | art[max_days]
+-------------+--------------+---------------+---------------+---------------+--------------+--------------+--------------
+umth         |         1613 |               |               |               |              |              |              
+gmth         |         1613 |               |               |               |              |              |              
+gedu         |              |          1613 |               |               |              |              |              
+pbusad       |              |               |          1613 |               |              |              |              
+ucompsci     |              |               |               |          1613 |              |              |              
+uphys        |         1613 |               |               |               |              |              |              
+psci         |              |          1613 |               |               |              |              |              
+uspan        |              |               |               |               |         1613 |              |
+[...]
+(39 rows)</raw>
+    </example>
+  </command>
+
+  <!-- ".set" command -->
+  <command name="set">
+    <shortdescription>Set or show internal parameter, or list all if no parameter specified
+    </shortdescription>
+    <usage>
+      <synopsis>.set [@NAME@ [@VALUE@|_null_]]</synopsis>
+      <comment>Use this command to define or re-define variables which can later be used in stataments. Use the ".unset" command to undefine a variable. If you want set a variable to the SQL NULL, then use the "_null_" constant value.</comment>
+    </usage>
+    <example>
+      <synopsis>.set ID 23</synopsis>
+      <synopsis>.set ID</synopsis>
+      <comment>This example defines the ID variabe (beware, case sensitive) ID to 23. Later you can then run a query like "SELECT * FROM customers WHERE id=##ID::int"</comment>
+    </example>
+  </command>
+</gda-sql-help>
