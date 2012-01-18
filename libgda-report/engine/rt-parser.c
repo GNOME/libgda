@@ -264,8 +264,13 @@ get_markup_token (const gchar *alltext, const gchar *start, gint *out_nb_spaces_
 		ptr++;
 		c = *ptr;
 		if (c == '/') {
-			SET_OUT;
-			return MARKUP_ITALIC;
+			const gchar *bptr;
+			bptr = ptr-2;
+			if ((bptr > alltext) && (*bptr == ':')) {}
+			else {
+				SET_OUT;
+				return MARKUP_ITALIC;
+			}
 		}
 	}
 	else if (c == '_') {
@@ -1075,21 +1080,29 @@ rt_parse_text (const gchar *text)
 	return retnode;
 }
 
+
 /*
- * DocBook rendering
+ *
+ * Rendering
+ *
+ */
+
+/*
+ * @hash: key = rtnode, value = corresponding xmlNodePtr
  */
 static gint file_nb = 0;
 typedef struct {
 	GHashTable *hash;
 	gchar      *file_path;
 	gchar      *file_prefix;
-} ContextDocbook;
+} RenderingContext;
+
 
 /*
- * @hash: key = rtnode, value = corresponding xmlNodePtr
+ * DocBook rendering
  */
 static void
-rich_text_node_to_docbook (ContextDocbook *context, xmlNodePtr top_parent, RtNode *rtnode, xmlNodePtr parent)
+rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtNode *rtnode, xmlNodePtr parent)
 {
 	xmlNodePtr pattach = NULL, cattach = NULL;
 	gchar *realtext;
@@ -1273,7 +1286,7 @@ void
 parse_rich_text_to_docbook (xmlNodePtr top, const gchar *text)
 {
 	RtNode *rtnode;
-	ContextDocbook context;
+	RenderingContext context;
 
 	context.hash = g_hash_table_new (NULL, NULL);
 	context.file_path = ".";
@@ -1282,6 +1295,197 @@ parse_rich_text_to_docbook (xmlNodePtr top, const gchar *text)
 	rtnode = rt_parse_text (text);
 	/*rt_dump_tree (rtnode);*/
 	rich_text_node_to_docbook (&context, top, rtnode, top);
+	g_hash_table_destroy (context.hash);
+	rt_free_node (rtnode);
+}
+
+/*
+ * HTML rendering
+ */
+static void
+rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode *rtnode, xmlNodePtr parent)
+{
+	xmlNodePtr pattach = NULL, cattach = NULL;
+	gchar *realtext;
+	g_assert (parent);
+	g_assert (context);
+
+	if (rtnode->text) {
+		gchar *optr, *nptr;
+		gint len;
+		len = strlen ((gchar*) rtnode->text);
+		realtext = g_new (gchar, len + 1);
+		for (optr = (gchar*) rtnode->text, nptr = realtext; *optr; optr++) {
+			if (*optr != '\n') {
+				*nptr = *optr;
+				nptr++;
+			}
+		}
+		*nptr = 0;
+	}
+	else
+		realtext = (gchar *) rtnode->text;
+
+	switch (rtnode->markup) {
+	case RT_MARKUP_NONE:
+		if (parent) {
+			xmlNodeAddContent (parent, BAD_CAST realtext);
+			cattach = parent;
+		}
+		else {
+			cattach = xmlNewNode (NULL, BAD_CAST "para");
+			xmlNodeAddContent (cattach, BAD_CAST realtext);
+		}
+		break;
+	case RT_MARKUP_BOLD:
+		cattach = xmlNewChild (parent, NULL, BAD_CAST "b", BAD_CAST realtext);
+		break;
+	case RT_MARKUP_PARA:
+		pattach = parent;
+		if ((parent != top_parent) &&
+		     ! strcmp ((gchar*) parent->name, "p"))
+			pattach = parent->parent;
+		cattach = xmlNewChild (pattach, NULL, BAD_CAST "p", BAD_CAST realtext);
+		parent = cattach;
+		break;
+	case RT_MARKUP_TT:
+	case RT_MARKUP_VERBATIM:
+	case RT_MARKUP_ITALIC:
+		cattach = xmlNewChild (parent, NULL, BAD_CAST "i", BAD_CAST realtext);
+		break;
+	case RT_MARKUP_STRIKE:
+		cattach = xmlNewChild (parent, NULL, BAD_CAST "del", BAD_CAST realtext);
+		break;
+	case RT_MARKUP_UNDERLINE:
+		cattach = xmlNewChild (parent, NULL, BAD_CAST "ins", BAD_CAST realtext);
+		break;
+	case RT_MARKUP_PICTURE: {
+		gboolean saved = FALSE;
+		gint type = 2; /* 0 for image, 1 for TXT and 2 for general binary */
+		gchar *file, *tmp;
+		tmp = g_strdup_printf ("%s_%04d.jpg", context->file_prefix,
+				       file_nb ++);
+		file = g_build_filename (context->file_path, tmp, NULL);
+		g_free (tmp);
+
+#ifdef HAVE_GDKPIXBUF
+		GdkPixdata pixdata;
+		if (rtnode->binary.data &&
+		    gdk_pixdata_deserialize (&pixdata, rtnode->binary.binary_length,
+					     (guint8*) rtnode->binary.data, NULL)) {
+                        GdkPixbuf *pixbuf;
+                        pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);
+                        if (pixbuf) {
+				/* write to file */
+				if (gdk_pixbuf_save (pixbuf, file, "jpeg", NULL,
+						     "quality", "100", NULL)) {
+					g_print ("Writen JPG file '%s'\n", file);
+					saved = TRUE;
+					type = 0;
+				}
+				
+				g_object_unref (pixbuf);
+                        }
+                }
+#endif
+
+		if (!saved) {
+			if (rtnode->binary.data &&
+			    g_file_set_contents (file, (gchar*) rtnode->binary.data,
+						 rtnode->binary.binary_length, NULL)) {
+				g_print ("Writen BIN file '%s'\n", file);
+				saved = TRUE;
+				type = 2;
+			}
+			else if (rtnode->text)
+				type = 1;
+		}
+		if (! saved && (type != 1))
+			TO_IMPLEMENT;
+		else {
+			switch (type) {
+ 			case 0:
+				pattach =  xmlNewChild (parent, NULL, BAD_CAST "img",
+							NULL);
+				xmlSetProp (cattach, BAD_CAST "src", BAD_CAST file);
+				break;
+ 			case 1:
+				xmlNodeAddContent (parent, BAD_CAST (rtnode->text));
+				break;
+ 			case 2:
+				cattach = xmlNewChild (parent, NULL, BAD_CAST "ulink",
+						       BAD_CAST _("link"));
+				xmlSetProp (cattach, BAD_CAST "url", BAD_CAST file);
+				break;
+			default:
+				g_assert_not_reached ();
+			}
+		}
+		g_free (file);
+		break;
+	}
+	case RT_MARKUP_TITLE: {
+		gchar *sect;
+		pattach = parent;
+		if (!strcmp ((gchar*) parent->name, "para"))
+			pattach = parent->parent;
+		sect = g_strdup_printf ("h%d", rtnode->offset + 1);
+		cattach = xmlNewChild (pattach, NULL, BAD_CAST sect, BAD_CAST realtext);
+		g_free (sect);
+		break;
+	}
+	case RT_MARKUP_LIST: {
+		xmlNodePtr tmp = NULL;
+
+		if (rtnode->prev &&
+		    (rtnode->prev->markup == RT_MARKUP_LIST)) {
+			tmp = g_hash_table_lookup (context->hash, rtnode->prev);
+			g_assert (tmp);
+			/* use the same <itemizedlist> */
+			g_assert (!strcmp ((gchar*) tmp->name, "ul"));
+			g_assert (rtnode->prev->offset == rtnode->offset);
+			g_hash_table_insert (context->hash, rtnode, tmp);
+			tmp = xmlNewChild (tmp, NULL, BAD_CAST "li", NULL);
+			cattach = xmlNewChild (tmp, NULL, BAD_CAST "p", BAD_CAST realtext);
+		}
+		else {
+			pattach = xmlNewChild (parent, NULL, BAD_CAST "ul", NULL);
+			g_hash_table_insert (context->hash, rtnode, pattach);
+			pattach = xmlNewChild (pattach, NULL, BAD_CAST "li", NULL);
+			cattach = xmlNewChild (pattach, NULL, BAD_CAST "p", BAD_CAST realtext);
+		}
+		break;
+	}
+	default:
+		if (rtnode->parent)
+			g_assert_not_reached ();
+		else
+			cattach = parent;
+		break;
+	}
+
+	if (rtnode->text)
+		g_free (realtext);
+
+	if (rtnode->child)
+		rich_text_node_to_html (context, top_parent, rtnode->child, cattach);
+	if (rtnode->next)
+		rich_text_node_to_html (context, top_parent, rtnode->next, parent);
+}
+
+void
+parse_rich_text_to_html (xmlNodePtr top, const gchar *text)
+{
+	RtNode *rtnode;
+	RenderingContext context;
+
+	context.hash = g_hash_table_new (NULL, NULL);
+	context.file_path = ".";
+	context.file_prefix = "IMG";
+
+	rtnode = rt_parse_text (text);
+	/*rt_dump_tree (rtnode);*/
+	rich_text_node_to_html (&context, top, rtnode, top);
 	g_hash_table_destroy (context.hash);
 	rt_free_node (rtnode);
 }
