@@ -718,7 +718,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	label = gtk_label_new (_("Current flags: "));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
-	gtk_widget_show (label);	
+	gtk_widget_show (label);
 
 	label = gtk_label_new (_("--"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
@@ -780,7 +780,10 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 5, 6, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	if (expand)
+		gtk_table_attach_defaults (GTK_TABLE (table), entry, 0, 2, 5, 6);
+	else
+		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 5, 6, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label (_("Set as original"));
 	g_object_set_data (G_OBJECT (button), "entry", entry);
@@ -793,7 +796,10 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 6, 7, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	if (expand)
+		gtk_table_attach_defaults (GTK_TABLE (table), entry, 0, 2, 6, 7);
+	else
+		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 6, 7, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label (_("Set as default"));
 	g_object_set_data (G_OBJECT (button), "entry", entry);
