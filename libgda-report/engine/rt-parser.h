@@ -64,6 +64,7 @@ void    rt_dump_tree (RtNode *tree);
 gchar  *rt_dump_to_string (RtNode *tree);
 
 void parse_rich_text_to_docbook (xmlNodePtr top, const gchar *text);
+void parse_rich_text_to_html (xmlNodePtr top, const gchar *text);
 
 G_END_DECLS
 

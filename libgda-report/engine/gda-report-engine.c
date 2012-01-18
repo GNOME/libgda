@@ -1239,6 +1239,11 @@ value_to_node (G_GNUC_UNUSED GdaReportEngine *engine, G_GNUC_UNUSED RunContext *
 						parse_rich_text_to_docbook (retnode, str);
 						converted = TRUE;
 					}
+					else if (array[1] && !strcmp (array[1], "html")) {
+						retnode = xmlNewNode (NULL, BAD_CAST "p");
+						parse_rich_text_to_html (retnode, str);
+						converted = TRUE;
+					}
 				}
 			}
 		}
