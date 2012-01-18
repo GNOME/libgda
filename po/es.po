@@ -13,16 +13,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-16 13:56+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-01-18 18:42+0100\n"
 "PO-Revision-Date: 2012-01-17 18:06+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
@@ -543,8 +542,8 @@ msgstr "Error al crear la carpeta de configuración específica del usuario «%s
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
-"La carpeta de configuración específica del usuario «%s» ya existe y no es una "
-"carpeta"
+"La carpeta de configuración específica del usuario «%s» ya existe y no es "
+"una carpeta"
 
 #: ../libgda/gda-config.c:899
 #, c-format
@@ -1427,9 +1426,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
-"error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:2134
 #, c-format
@@ -1439,9 +1438,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
-"o «fila eliminada». Esto puede ser un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila "
+"actualizada» o «fila eliminada». Esto puede ser un error de la "
+"implementación de %s (informe del error)."
 
 #: ../libgda/gda-data-proxy.c:3028 ../libgda/gda-data-proxy.c:3041
 msgid "Error in filter expression"
@@ -1517,8 +1516,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
-"%s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería "
+"ser %s"
 
 #: ../libgda/gda-data-select.c:1376
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1784,14 +1783,15 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista «%s»)"
+"La definición de la vista contiene más de una declaración (para la vista "
+"«%s»)"
 
 #: ../libgda/gda-meta-store.c:1333
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista «%"
-"s»)"
+"La definición de la vista no es una declaración de selección (para la vista "
+"«%s»)"
 
 #: ../libgda/gda-meta-store.c:1360 ../libgda/gda-meta-struct-io.c:176
 msgid "Missing table name from <table> node"
@@ -2151,8 +2151,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
-"s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
+"«%s»"
 
 #: ../libgda/gda-server-provider.c:947 ../libgda/gda-server-provider.c:981
 #, c-format
@@ -2275,7 +2275,8 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
+"«%s»"
 
 #: ../libgda/gda-statement.c:1353
 #, c-format
@@ -3154,8 +3155,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1161
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
-"que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
+"campos que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1170
 msgid "Empty FROM clause"
@@ -3365,7 +3366,8 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:920
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr ""
+"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1058
 #, c-format
@@ -3382,7 +3384,8 @@ msgstr "La expresión «%s» debería devolver exactamente un valor"
 msgid "Binary data"
 msgstr "Dato binario"
 
-#: ../libgda-report/engine/rt-parser.c:1207
+#: ../libgda-report/engine/rt-parser.c:1220
+#: ../libgda-report/engine/rt-parser.c:1412
 msgid "link"
 msgstr "enlace"
 
@@ -3585,8 +3588,9 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
-"usando la propiedad «manejador») espere algún comportamiento no deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
+"establecer usando la propiedad «manejador») espere algún comportamiento no "
+"deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:428
 msgid "Value is NULL"
@@ -3843,9 +3847,9 @@ msgid ""
 "alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
 "character will be left unmodified)"
 msgstr ""
-"Caracteres permitidos en cada posición («0»:dígito, «9»: dígito, excepto 0, «@»:"
-"alfabético, «^»:mayúscula, «#»:alfanumérico, «*»:cualquier carácter, cualquier "
-"otro carácter se dejará sin modificar)"
+"Caracteres permitidos en cada posición («0»:dígito, «9»: dígito, excepto 0, "
+"«@»:alfabético, «^»:mayúscula, «#»:alfanumérico, «*»:cualquier carácter, "
+"cualquier otro carácter se dejará sin modificar)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:2
 msgid "Format"
@@ -5688,8 +5692,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
-"s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
+"%s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:600
 msgid "The connection string must contain the DB_NAME values"
@@ -7412,79 +7416,6 @@ msgstr "No puede abrir la conexión especificada: %s\n"
 msgid "Connection successfully opened!\n"
 msgstr "Conexión abierta con éxito\n"
 
-#: ../testing/gdaui-test-data-entries.c:258
-msgid "_File"
-msgstr "_Archivo"
-
-#: ../testing/gdaui-test-data-entries.c:271
-msgid "_Tested Widgets"
-msgstr "Widgets p_robados"
-
-#: ../testing/gdaui-test-data-entries.c:278
-msgid "Default individual data entry widgets"
-msgstr "Widgets individuales de entrada de datos predeterminados"
-
-#: ../testing/gdaui-test-data-entries.c:285
-msgid "Default data entry widgets in a form"
-msgstr "Widgets de entrada de datos predeterminados en un formulario"
-
-#: ../testing/gdaui-test-data-entries.c:292
-msgid "Default data cell renderers in a grid"
-msgstr "Renderizador de la celda de datos predeterminado en una rejilla"
-
-#: ../testing/gdaui-test-data-entries.c:302
-msgid "Plugins individual data entry widgets"
-msgstr "Widgets de entrada individuales para los complementos"
-
-#: ../testing/gdaui-test-data-entries.c:309
-msgid "Plugins data entry widgets in a form"
-msgstr "Widgets de entrada para los complementos en formularios"
-
-#: ../testing/gdaui-test-data-entries.c:316
-msgid "Plugins data cell renderers in a grid"
-msgstr "Renderizadores de las celdas de datos para los complementos en rejilla"
-
-#: ../testing/gdaui-test-data-entries.c:698
-msgid "No GdaDataHandler available for this type"
-msgstr "No hay un GdaDataHandler disponible para este tipo"
-
-#. Other widgets
-#: ../testing/gdaui-test-data-entries.c:718
-msgid "Current flags: "
-msgstr "Marcas actuales: "
-
-#: ../testing/gdaui-test-data-entries.c:723
-msgid "--"
-msgstr "--"
-
-#: ../testing/gdaui-test-data-entries.c:729
-msgid "Current value: "
-msgstr "Valor actual: "
-
-#: ../testing/gdaui-test-data-entries.c:747
-msgid "NULL ok"
-msgstr "NULL ok"
-
-#: ../testing/gdaui-test-data-entries.c:755
-msgid "DEFAULT ok"
-msgstr "DEFAULT ok"
-
-#: ../testing/gdaui-test-data-entries.c:763
-msgid "Actions?"
-msgstr "¿Acciones?"
-
-#: ../testing/gdaui-test-data-entries.c:771
-msgid "Editable?"
-msgstr "¿Editable?"
-
-#: ../testing/gdaui-test-data-entries.c:785
-msgid "Set as original"
-msgstr "Establecer como original"
-
-#: ../testing/gdaui-test-data-entries.c:798
-msgid "Set as default"
-msgstr "Establecer como predeterminado"
-
 #: ../tools/browser/auth-dialog.c:550
 msgid "For connection"
 msgstr "Para la conexión"
@@ -7935,7 +7866,8 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
+"«%s»"
 
 #: ../tools/browser/connection-binding-properties.c:153
 msgid "New virtual connection"
@@ -8062,8 +7994,8 @@ msgstr ""
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:259
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: %"
-"s\n"
+"Error while purging files used to store information about each connection: "
+"%s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -8968,7 +8900,8 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
+"«%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:163
 #: ../tools/browser/schema-browser/table-columns.c:303
@@ -9676,8 +9609,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
-"referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
+"primaria referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:385
 #, c-format
@@ -10080,13 +10013,6 @@ msgstr "Bienvenido a la consola GDA SQL, versión "
 
 #: ../tools/gda-sql.c:292
 #, c-format
-#| msgid ""
-#| "Type: .copyright to show usage and distribution terms\n"
-#| "      .? for help with internal commands\n"
-#| "      .q (or CTRL-D) to quit\n"
-#| "      (the '.' can be replaced by a '\\')\n"
-#| "      or any query terminated by a semicolon\n"
-#| "\n"
 msgid ""
 "Type: .copyright to show usage and distribution terms\n"
 "      .? or .h for help with internal commands\n"
@@ -10200,11 +10126,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1606
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the '%"
-"s' file\n"
+"All the information related to the '%s' connection will be stored in the "
+"'%s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
-"s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
+"«%s»\n"
 
 #: ../tools/gda-sql.c:1636
 #, c-format
@@ -10217,8 +10143,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
-"algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede "
+"llevar algún tiempo… "
 
 #: ../tools/gda-sql.c:1651 ../tools/gda-sql.c:1804 ../tools/gda-sql.c:3146
 #, c-format
@@ -10443,7 +10369,6 @@ msgid "Print TEXT or an empty line to standard output"
 msgstr "Imprimir texto o una línea vacía al flujo de salida actual"
 
 #: ../tools/gda-sql.c:2410
-#| msgid "Send output to output stream"
 msgid "Send TEXT or an empty line to current output stream"
 msgstr "Enviar texto o una línea vacía al flujo de salida actual"
 
@@ -10482,7 +10407,6 @@ msgstr "Mostrar el contenido del búfer de la consulta"
 
 #: ../tools/gda-sql.c:2493
 #, c-format
-#| msgid "%s [QUERY_BUFFER_NAME]"
 msgid "%s [<QUERY_BUFFER_NAME>]"
 msgstr "[<NOMBRE_DE_LA_CONSULTA>] %s"
 
@@ -10498,7 +10422,6 @@ msgstr "Escribir el búfer de consulta en un archivo"
 
 #: ../tools/gda-sql.c:2517 ../tools/gda-sql.c:2529 ../tools/gda-sql.c:2541
 #, c-format
-#| msgid "%s QUERY_BUFFER_NAME"
 msgid "%s <QUERY_BUFFER_NAME>"
 msgstr "<NOMBRE_DE_LA_CONSULTA> %s"
 
@@ -10552,7 +10475,6 @@ msgid "%s [<NAME> [<VALUE>|_null_]]"
 msgstr "[<NOMBRE> [<VALOR>|_null_]] %s"
 
 #: ../tools/gda-sql.c:2603
-#| msgid "Set or show internal parameter, or list all if no parameters"
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Establecer o mostrar el parámetro interno, o una listar todos si no hay "
@@ -10986,6 +10908,61 @@ msgstr "Objetos"
 msgid "Triggers"
 msgstr "Disparadores"
 
+#~ msgid "_File"
+#~ msgstr "_Archivo"
+
+#~ msgid "_Tested Widgets"
+#~ msgstr "Widgets p_robados"
+
+#~ msgid "Default individual data entry widgets"
+#~ msgstr "Widgets individuales de entrada de datos predeterminados"
+
+#~ msgid "Default data entry widgets in a form"
+#~ msgstr "Widgets de entrada de datos predeterminados en un formulario"
+
+#~ msgid "Default data cell renderers in a grid"
+#~ msgstr "Renderizador de la celda de datos predeterminado en una rejilla"
+
+#~ msgid "Plugins individual data entry widgets"
+#~ msgstr "Widgets de entrada individuales para los complementos"
+
+#~ msgid "Plugins data entry widgets in a form"
+#~ msgstr "Widgets de entrada para los complementos en formularios"
+
+#~ msgid "Plugins data cell renderers in a grid"
+#~ msgstr ""
+#~ "Renderizadores de las celdas de datos para los complementos en rejilla"
+
+#~ msgid "No GdaDataHandler available for this type"
+#~ msgstr "No hay un GdaDataHandler disponible para este tipo"
+
+#~ msgid "Current flags: "
+#~ msgstr "Marcas actuales: "
+
+#~ msgid "--"
+#~ msgstr "--"
+
+#~ msgid "Current value: "
+#~ msgstr "Valor actual: "
+
+#~ msgid "NULL ok"
+#~ msgstr "NULL ok"
+
+#~ msgid "DEFAULT ok"
+#~ msgstr "DEFAULT ok"
+
+#~ msgid "Actions?"
+#~ msgstr "¿Acciones?"
+
+#~ msgid "Editable?"
+#~ msgstr "¿Editable?"
+
+#~ msgid "Set as original"
+#~ msgstr "Establecer como original"
+
+#~ msgid "Set as default"
+#~ msgstr "Establecer como predeterminado"
+
 #~ msgid ""
 #~ "Bind several connections together into the CNC_NAME virtual connection"
 #~ msgstr ""
@@ -11018,8 +10995,8 @@ msgstr "Disparadores"
 
 #~ msgid "%s(%p) [%d] Could not change iter's value for column %d: %s"
 #~ msgstr ""
-#~ "%s(%p) [%d] No se pudo cambiar el valor de iteración para la columna %d: %"
-#~ "s"
+#~ "%s(%p) [%d] No se pudo cambiar el valor de iteración para la columna %d: "
+#~ "%s"
 
 #~ msgid "Execution delay: %.03f"
 #~ msgstr "Retardo de la ejecución: %.03f"
@@ -11246,9 +11223,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
-#~ "data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
+#~ "or more data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -11275,15 +11252,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
-#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
-#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
-#~ "opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
-#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
+#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
+#~ "atributos opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
+#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
