@@ -880,7 +880,6 @@ meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, HubConnecti
 	for (list = changes; list; list = list->next) {
 		GdaMetaStoreChange *ch = (GdaMetaStoreChange*) list->data;
 		GValue *tsn, *tn;
-			
 		/* we are only intsrested in changes occurring in the "_tables" table */
 		if (!strcmp (ch->table_name, "_tables")) {
 			switch (ch->c_type) {
@@ -935,7 +934,8 @@ table_add (HubConnection *hc, const GValue *table_name, GError **error)
 	lspec->table_name = gda_value_copy (table_name);
 	lspec->hc = hc;
 	tmp = get_complete_table_name (hc, lspec->table_name);
-	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hc->hub), (GdaVconnectionDataModelSpec*) lspec, 
+	/*g_print ("%s (HC=%p, table_name=%s) name=%s\n", __FUNCTION__, hc, g_value_get_string (table_name), tmp);*/
+	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (hc->hub), (GdaVconnectionDataModelSpec*) lspec,
 					     (GDestroyNotify) local_spec_free, tmp, error)) {
 		g_free (tmp);
 		return FALSE;
@@ -950,6 +950,7 @@ table_remove (HubConnection *hc, const GValue *table_name)
 	gchar *name;
 
 	name = get_complete_table_name (hc, table_name);
+	/*g_print ("%s (HC=%p, table_name=%s) name=%s\n", __FUNCTION__, hc, g_value_get_string (table_name), name);*/
 	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (hc->hub), name, NULL);
 	g_free (name);
 }

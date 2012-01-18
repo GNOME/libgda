@@ -349,8 +349,12 @@ static void
 cnc_close_foreach_func (G_GNUC_UNUSED GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
 {
 	/*g_print ("---- FOREACH: Removing virtual table '%s'\n", table_name);*/
-	if (! gda_vconnection_data_model_remove (cnc, table_name, NULL))
-		g_warning ("Internal GdaVproviderDataModel error");
+	GError *lerror = NULL;
+	if (! gda_vconnection_data_model_remove (cnc, table_name, &lerror)) {
+		g_warning ("Internal GdaVproviderDataModel error: %s",
+			   lerror && lerror->message ? lerror->message : _("No detail"));
+		g_clear_error (&lerror);
+	}
 }
 
 static gboolean
