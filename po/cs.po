@@ -10,16 +10,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-15 19:53+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-01-18 18:42+0100\n"
 "PO-Revision-Date: 2012-01-16 10:16+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. title
@@ -3298,7 +3297,8 @@ msgstr "Výraz „%s“ by měl vrátit právě jednu hodnotu"
 msgid "Binary data"
 msgstr "Binární data"
 
-#: ../libgda-report/engine/rt-parser.c:1207
+#: ../libgda-report/engine/rt-parser.c:1220
+#: ../libgda-report/engine/rt-parser.c:1412
 msgid "link"
 msgstr "odkaz"
 
@@ -7298,79 +7298,6 @@ msgstr "Nelze otevřít zadané připojení: %s\n"
 msgid "Connection successfully opened!\n"
 msgstr "Připojení bylo úspěšně otevřeno!\n"
 
-#: ../testing/gdaui-test-data-entries.c:258
-msgid "_File"
-msgstr "_Soubor"
-
-#: ../testing/gdaui-test-data-entries.c:271
-msgid "_Tested Widgets"
-msgstr "_Testované widgety"
-
-#: ../testing/gdaui-test-data-entries.c:278
-msgid "Default individual data entry widgets"
-msgstr "Výchozí widget samostatného datového záznamu"
-
-#: ../testing/gdaui-test-data-entries.c:285
-msgid "Default data entry widgets in a form"
-msgstr "Výchozí widget datového záznamu ve formuláři"
-
-#: ../testing/gdaui-test-data-entries.c:292
-msgid "Default data cell renderers in a grid"
-msgstr "Výchozí vykreslování datového záznamu v mřížce"
-
-#: ../testing/gdaui-test-data-entries.c:302
-msgid "Plugins individual data entry widgets"
-msgstr "Widgety zásuvných modulů jednotlivých datových záznamů"
-
-#: ../testing/gdaui-test-data-entries.c:309
-msgid "Plugins data entry widgets in a form"
-msgstr "Widgety zásuvných modulů datových záznamů ve formuláři"
-
-#: ../testing/gdaui-test-data-entries.c:316
-msgid "Plugins data cell renderers in a grid"
-msgstr "Widgety zásuvných modulů datových záznamů v mřížce"
-
-#: ../testing/gdaui-test-data-entries.c:698
-msgid "No GdaDataHandler available for this type"
-msgstr "Pro tento typ není dostupný žádný GdaDataHandler"
-
-#. Other widgets
-#: ../testing/gdaui-test-data-entries.c:718
-msgid "Current flags: "
-msgstr "Současné příznaky:"
-
-#: ../testing/gdaui-test-data-entries.c:723
-msgid "--"
-msgstr "--"
-
-#: ../testing/gdaui-test-data-entries.c:729
-msgid "Current value: "
-msgstr "Současná hodnota:"
-
-#: ../testing/gdaui-test-data-entries.c:747
-msgid "NULL ok"
-msgstr "Může být prázdné"
-
-#: ../testing/gdaui-test-data-entries.c:755
-msgid "DEFAULT ok"
-msgstr "Může být výchozí"
-
-#: ../testing/gdaui-test-data-entries.c:763
-msgid "Actions?"
-msgstr "Akce?"
-
-#: ../testing/gdaui-test-data-entries.c:771
-msgid "Editable?"
-msgstr "Upravitelné?"
-
-#: ../testing/gdaui-test-data-entries.c:785
-msgid "Set as original"
-msgstr "Natavit jako původní"
-
-#: ../testing/gdaui-test-data-entries.c:798
-msgid "Set as default"
-msgstr "Nastavit jako výchozí"
-
 #: ../tools/browser/auth-dialog.c:550
 msgid "For connection"
 msgstr "Pro připojení"
@@ -10860,3 +10787,57 @@ msgstr "Objekty"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Triggery"
+
+#~ msgid "_File"
+#~ msgstr "_Soubor"
+
+#~ msgid "_Tested Widgets"
+#~ msgstr "_Testované widgety"
+
+#~ msgid "Default individual data entry widgets"
+#~ msgstr "Výchozí widget samostatného datového záznamu"
+
+#~ msgid "Default data entry widgets in a form"
+#~ msgstr "Výchozí widget datového záznamu ve formuláři"
+
+#~ msgid "Default data cell renderers in a grid"
+#~ msgstr "Výchozí vykreslování datového záznamu v mřížce"
+
+#~ msgid "Plugins individual data entry widgets"
+#~ msgstr "Widgety zásuvných modulů jednotlivých datových záznamů"
+
+#~ msgid "Plugins data entry widgets in a form"
+#~ msgstr "Widgety zásuvných modulů datových záznamů ve formuláři"
+
+#~ msgid "Plugins data cell renderers in a grid"
+#~ msgstr "Widgety zásuvných modulů datových záznamů v mřížce"
+
+#~ msgid "No GdaDataHandler available for this type"
+#~ msgstr "Pro tento typ není dostupný žádný GdaDataHandler"
+
+#~ msgid "Current flags: "
+#~ msgstr "Současné příznaky:"
+
+#~ msgid "--"
+#~ msgstr "--"
+
+#~ msgid "Current value: "
+#~ msgstr "Současná hodnota:"
+
+#~ msgid "NULL ok"
+#~ msgstr "Může být prázdné"
+
+#~ msgid "DEFAULT ok"
+#~ msgstr "Může být výchozí"
+
+#~ msgid "Actions?"
+#~ msgstr "Akce?"
+
+#~ msgid "Editable?"
+#~ msgstr "Upravitelné?"
+
+#~ msgid "Set as original"
+#~ msgstr "Natavit jako původní"
+
+#~ msgid "Set as default"
+#~ msgstr "Nastavit jako výchozí"

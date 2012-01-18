@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#include <glib/gi18n-lib.h>
 #include <libgda-ui/libgda-ui.h>
 #include <libgda-ui/gdaui-plugin.h>
 #include <gtk/gtk.h>
@@ -255,7 +254,7 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 	menubar1 = gtk_menu_bar_new ();
 	gtk_widget_show (menubar1);
 
-	menuitem1 = gtk_menu_item_new_with_mnemonic (_("_File"));
+	menuitem1 = gtk_menu_item_new_with_mnemonic ("_File");
 	gtk_widget_show (menuitem1);
 	gtk_container_add (GTK_CONTAINER (menubar1), menuitem1);
 	
@@ -268,28 +267,28 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (destroy), NULL);
 
-	menuitem2 = gtk_menu_item_new_with_mnemonic (_("_Tested Widgets"));
+	menuitem2 = gtk_menu_item_new_with_mnemonic ("_Tested Widgets");
 	gtk_widget_show (menuitem2);
 	gtk_container_add (GTK_CONTAINER (menubar1), menuitem2);
 	
 	menuitem2_menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem2), menuitem2_menu);
 	
-	mitem = gtk_menu_item_new_with_mnemonic (_("Default individual data entry widgets"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Default individual data entry widgets");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_BASIC));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_default_handlers_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic (_("Default data entry widgets in a form"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Default data entry widgets in a form");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_FORM));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_default_handlers_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic (_("Default data cell renderers in a grid"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Default data cell renderers in a grid");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_GRID));
@@ -299,21 +298,21 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 	mitem = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 
-	mitem = gtk_menu_item_new_with_mnemonic (_("Plugins individual data entry widgets"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins individual data entry widgets");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_BASIC));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_plugins_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic (_("Plugins data entry widgets in a form"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins data entry widgets in a form");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_FORM));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_plugins_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic (_("Plugins data cell renderers in a grid"));
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins data cell renderers in a grid");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_GRID));
@@ -695,7 +694,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 					gda_data_handler_get_descr (dh));
 	else
 		g_string_append_printf (string, "<b>Data handler description:</b> %s\n",
-					_("No GdaDataHandler available for this type"));
+					"No GdaDataHandler available for this type");
 	label = gtk_label_new ("");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
@@ -715,18 +714,18 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	gtk_widget_show (wid);
 
 	/* Other widgets */
-	label = gtk_label_new (_("Current flags: "));
+	label = gtk_label_new ("Current flags: ");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
 
-	label = gtk_label_new (_("--"));
+	label = gtk_label_new ("--");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 1, 3, 2, 3, 0, 0, 0, 0);
 	g_object_set_data (G_OBJECT (wid), "flags", label);
 	gtk_widget_show (label);
 
-	label = gtk_label_new (_("Current value: "));
+	label = gtk_label_new ("Current value: ");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, 0, 0, 0);
 	gtk_widget_show (label);
@@ -744,7 +743,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_table_attach (GTK_TABLE (table), bbox, 0, 3, 4, 5, 0, 0, 0, 0);
 		
-	button = gtk_toggle_button_new_with_label (_("NULL ok"));
+	button = gtk_toggle_button_new_with_label ("NULL ok");
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (null_toggled_cb), wid);
 	gtk_container_add (GTK_CONTAINER (bbox), button);
@@ -752,7 +751,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wid)) & 
 				      GDA_VALUE_ATTR_CAN_BE_NULL);
 
-	button = gtk_toggle_button_new_with_label (_("DEFAULT ok"));
+	button = gtk_toggle_button_new_with_label ("DEFAULT ok");
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (default_toggled_cb), wid);
 	gtk_container_add (GTK_CONTAINER (bbox), button);
@@ -760,7 +759,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wid)) & 
 				      GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 
-	button = gtk_toggle_button_new_with_label (_("Actions?"));
+	button = gtk_toggle_button_new_with_label ("Actions?");
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (actions_toggled_cb), wid);
 	gtk_container_add (GTK_CONTAINER (bbox), button);
@@ -768,7 +767,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wid)) & 
 				      GDA_VALUE_ATTR_ACTIONS_SHOWN);
 
-	button = gtk_toggle_button_new_with_label (_("Editable?"));
+	button = gtk_toggle_button_new_with_label ("Editable?");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (editable_toggled_cb), wid);
@@ -785,7 +784,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	else
 		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 5, 6, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	gtk_widget_show (entry);
-	button = gtk_button_new_with_label (_("Set as original"));
+	button = gtk_button_new_with_label ("Set as original");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
 	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 5, 6, 0, 0, 0, 0);
 	gtk_widget_show (button);
@@ -801,7 +800,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	else
 		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 6, 7, GTK_FILL | GTK_EXPAND, 0, 0, 0);
 	gtk_widget_show (entry);
-	button = gtk_button_new_with_label (_("Set as default"));
+	button = gtk_button_new_with_label ("Set as default");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
 	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 6, 7, 0, 0, 0, 0);
 	gtk_widget_show (button);
