@@ -855,7 +855,7 @@ gda_numeric_get_type (void)
 
 /**
  * gda_numeric_copy:
- * @boxed: source to get a copy from.
+ * @src: source to get a copy from.
  *
  * Creates a new #GdaNumeric structure from an existing one.
 
@@ -880,7 +880,7 @@ gda_numeric_copy (GdaNumeric *src)
 
 /**
  * gda_numeric_free:
- * @boxed: (transfer full): a #GdaNumeric pointer
+ * @numeric: (transfer full): a #GdaNumeric pointer
  *
  * Deallocates all memory associated to the given @boxed
  */
@@ -912,7 +912,7 @@ gda_numeric_new (void)
 /**
  * gda_numeric_set_from_string:
  * @numeric: a #GdaNumeric
- * @number: a string representing a number
+ * @str: a string representing a number
  *
  * Sets @numeric with a number represented by @str.
  *
@@ -967,7 +967,7 @@ gda_numeric_get_double (GdaNumeric *numeric)
 /**
  * gda_numeric_set_width:
  * @numeric: a #GdaNumeric
- * @number: a #glong
+ * @width: a #glong
  *
  * Sets the width of a #GdaNumeric. (Not yet implemented).
  *
@@ -999,7 +999,7 @@ gda_numeric_get_width (GdaNumeric *numeric)
 /**
  * gda_numeric_set_precision:
  * @numeric: a #GdaNumeric
- * @number: a #glong
+ * @precision: a #glong
  *
  * Sets the precision of a #GdaNumeric.
  *
