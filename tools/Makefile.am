@@ -2,7 +2,7 @@ if HAVE_UI
 BROWSER_DIR=browser
 endif
 
-SUBDIRS = $(BROWSER_DIR)
+SUBDIRS = $(BROWSER_DIR) help
 
 bin_PROGRAMS = \
 	gda-list-config-4.0 \
