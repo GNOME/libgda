@@ -21,7 +21,6 @@
 #include <glib/gi18n-lib.h>
 #include "data-manager-perspective.h"
 #include "data-console.h"
-#include "../browser-favorites.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
 #include "data-favorite-selector.h"
@@ -129,7 +128,7 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
                                       const gchar *selection, DataManagerPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
@@ -231,7 +230,7 @@ add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 }
 
 static void
-fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
                           const gchar *selection, DataManagerPerspective *perspective)
 {
 	/* find or create page for this favorite */
@@ -239,7 +238,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserF
 	gint current_page, npages, i;
 	DataConsole *page_to_reuse = NULL;
 
-	if (fav_type != BROWSER_FAVORITES_DATA_MANAGERS)
+	if (fav_type != TOOLS_FAVORITES_DATA_MANAGERS)
 		return;
 
 	/* change current page if possible */

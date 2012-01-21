@@ -25,7 +25,6 @@
 #include "ldap-search-page.h"
 #include "../support.h"
 #include "../browser-page.h"
-#include "../browser-favorites.h"
 #include "ldap-favorite-selector.h"
 #include "../browser-stock-icons.h"
 
@@ -127,7 +126,7 @@ close_button_clicked_cb (G_GNUC_UNUSED GtkWidget *wid, GtkWidget *page_widget)
 	gtk_widget_destroy (page_widget);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
 				      const gchar *selection, LdapBrowserPerspective *bpers);
 /**
  * ldap_browser_perspective_new
@@ -185,13 +184,13 @@ ldap_browser_perspective_new (BrowserWindow *bwin)
 
 static void
 fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gint fav_id,
-			  BrowserFavoritesType fav_type,
+			  ToolsFavoritesType fav_type,
 			  const gchar *selection, LdapBrowserPerspective *bpers)
 {
-	if (fav_type == BROWSER_FAVORITES_LDAP_DN) {
+	if (fav_type == TOOLS_FAVORITES_LDAP_DN) {
 		ldap_browser_perspective_display_ldap_entry (bpers, selection);
 	}
-	if (fav_type == BROWSER_FAVORITES_LDAP_CLASS) {
+	if (fav_type == TOOLS_FAVORITES_LDAP_CLASS) {
 		ldap_browser_perspective_display_ldap_class (bpers, selection);
 	}
 #ifdef GDA_DEBUG_NO
@@ -329,7 +328,7 @@ ldab_search_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 
 static const GtkToggleActionEntry ui_toggle_actions [] =
 	{
-		{ "LdapBrowserFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+		{ "LdapToolsFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
 	};
 
 static GtkActionEntry ui_actions[] = {
@@ -346,7 +345,7 @@ static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
 	"    <menu name='Display' action='Display'>"
-	"      <menuitem name='LdapBrowserFavoritesShow' action='LdapBrowserFavoritesShow'/>"
+	"      <menuitem name='LdapToolsFavoritesShow' action='LdapToolsFavoritesShow'/>"
         "    </menu>"
 	"    <placeholder name='MenuExtension'>"
         "      <menu name='LDAP' action='LDAP'>"
@@ -374,7 +373,7 @@ ldap_browser_perspective_get_actions_group (BrowserPerspective *bpers)
 	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
 					     bpers);
 	GtkAction *action;
-	action = gtk_action_group_get_action (agroup, "LdapBrowserFavoritesShow");
+	action = gtk_action_group_get_action (agroup, "LdapToolsFavoritesShow");
 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
 				      LDAP_BROWSER_PERSPECTIVE (bpers)->priv->favorites_shown);	
 

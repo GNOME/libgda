@@ -20,7 +20,7 @@
 #define __BROWSER_CONNECTION_H_
 
 #include <libgda/libgda.h>
-#include "browser-favorites.h"
+#include "../tools-favorites.h"
 #include "decl.h"
 #include "support.h"
 #ifdef HAVE_LDAP
@@ -87,7 +87,7 @@ GdaMetaStruct      *browser_connection_get_meta_struct        (BrowserConnection
 GdaMetaStore       *browser_connection_get_meta_store         (BrowserConnection *bcnc);
 const gchar        *browser_connection_get_dictionary_file    (BrowserConnection *bcnc);
 
-BrowserFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
+ToolsFavorites   *browser_connection_get_favorites          (BrowserConnection *bcnc);
 
 gchar             **browser_connection_get_completions        (BrowserConnection *bcnc, const gchar *sql,
 							       gint start, gint end);

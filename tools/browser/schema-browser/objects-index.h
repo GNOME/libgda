@@ -44,7 +44,7 @@ struct _ObjectsIndexClass {
 
 	/* signals */
 	void                (*selection_changed) (ObjectsIndex *sel,
-						  BrowserFavoritesType fav_type, const gchar *fav_contents);
+						  ToolsFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    objects_index_get_type (void) G_GNUC_CONST;

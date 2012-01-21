@@ -29,6 +29,7 @@
 #include "../browser-stock-icons.h"
 #include "widget-overlay.h"
 #include <libgda/gda-data-model-extra.h>
+#include "favorites-actions.h"
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
 #endif
@@ -494,7 +495,7 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 
 	/* actions */
 	GSList *actions_list, *list;
-	actions_list = browser_favorites_get_actions (browser_connection_get_favorites (bcnc),
+	actions_list = tools_favorites_get_actions (browser_connection_get_favorites (bcnc),
 						      bcnc, GDA_SET (iter));
 	if (actions_list) {
 		GtkWidget *mitem, *submenu;
@@ -505,12 +506,12 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 		submenu = gtk_menu_new ();
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
 		for (list = actions_list; list; list = list->next) {
-			BrowserFavoriteAction *act = (BrowserFavoriteAction*) list->data;
+			ToolsFavoriteAction *act = (ToolsFavoriteAction*) list->data;
 			mitem = gtk_menu_item_new_with_label (act->name);
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 			g_object_set_data_full (G_OBJECT (mitem), "action", act,
-						(GDestroyNotify) browser_favorites_free_action);
+						(GDestroyNotify) tools_favorites_free_action);
 			g_signal_connect (mitem, "activate",
 					  G_CALLBACK (execute_action_mitem_cb), formgrid);
 		}
@@ -788,13 +789,13 @@ statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 static void
 execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 {
-	BrowserFavoriteAction *act;
+	ToolsFavoriteAction *act;
 	GtkWidget *dlg;
 	gchar *tmp;
 	gint response;
 	GtkWidget *toplevel;
 
-	act = (BrowserFavoriteAction*) g_object_get_data (G_OBJECT (menuitem), "action");
+	act = (ToolsFavoriteAction*) g_object_get_data (G_OBJECT (menuitem), "action");
 	toplevel = gtk_widget_get_toplevel ((GtkWidget*) formgrid);
 	tmp = g_strdup_printf (_("Set or confirm the parameters to execute\n"
 				 "action '%s'"), act->name);

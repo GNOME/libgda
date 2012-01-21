@@ -27,7 +27,6 @@
 #include "../support.h"
 #include "marshal.h"
 #include "../cc-gray-bar.h"
-#include "../browser-favorites.h"
 #include <gdk/gdkkeysyms.h>
 
 struct _FavoriteSelectorPrivate {
@@ -42,7 +41,7 @@ static void favorite_selector_init       (FavoriteSelector *tsel,
 				       FavoriteSelectorClass *klass);
 static void favorite_selector_dispose   (GObject *object);
 
-static void favorites_changed_cb (BrowserFavorites *bfav, FavoriteSelector *tsel);
+static void favorites_changed_cb (ToolsFavorites *bfav, FavoriteSelector *tsel);
 
 enum {
 	SELECTION_CHANGED,
@@ -156,15 +155,15 @@ key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector 
 		
 		select = gtk_tree_view_get_selection (treeview);
 		if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-			BrowserFavorites *bfav;
-			BrowserFavoritesAttributes fav;
+			ToolsFavorites *bfav;
+			ToolsFavoritesAttributes fav;
 			GError *lerror = NULL;
 
-			memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+			memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 			gtk_tree_model_get (model, &iter,
 					    COLUMN_ID, &(fav.id), -1);
 			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-			if (!browser_favorites_delete (bfav, 0, &fav, NULL)) {
+			if (!tools_favorites_delete (bfav, 0, &fav, NULL)) {
 				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
 						    _("Could not remove favorite: %s"),
 						    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -229,7 +228,7 @@ favorite_selector_new (BrowserConnection *bcnc)
 	
 	/* create tree managers */
 	tsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_TABLES | BROWSER_FAVORITES_DIAGRAMS,
+	manager = mgr_favorites_new (bcnc, TOOLS_FAVORITES_TABLES | TOOLS_FAVORITES_DIAGRAMS,
 				     ORDER_KEY_SCHEMA);
         gda_tree_add_manager (tsel->priv->tree, manager);
 	g_object_unref (manager);
@@ -330,14 +329,14 @@ static gboolean
 tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 			 GtkSelectionData *selection_data, FavoriteSelector *tsel)
 {
-	BrowserFavorites *bfav;
-	BrowserFavoritesAttributes fav;
+	ToolsFavorites *bfav;
+	ToolsFavoritesAttributes fav;
 	GError *error = NULL;
 	gint pos;
 
-	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = -1;
-	fav.type = BROWSER_FAVORITES_TABLES;
+	fav.type = TOOLS_FAVORITES_TABLES;
 	fav.name = NULL;
 	fav.descr = NULL;
 	fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
@@ -346,7 +345,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {
+	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -394,7 +393,7 @@ tree_store_drag_get_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 }
 
 static void
-favorites_changed_cb (G_GNUC_UNUSED BrowserFavorites *bfav, FavoriteSelector *tsel)
+favorites_changed_cb (G_GNUC_UNUSED ToolsFavorites *bfav, FavoriteSelector *tsel)
 {
 	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
 		if (tsel->priv->idle_update_favorites == 0)

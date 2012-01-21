@@ -737,7 +737,7 @@ clear_dsn_info (BrowserConnection *bcnc)
 }
 
 static void
-fav_changed_cb (G_GNUC_UNUSED BrowserFavorites *bfav, BrowserConnection *bcnc)
+fav_changed_cb (G_GNUC_UNUSED ToolsFavorites *bfav, BrowserConnection *bcnc)
 {
 	g_signal_emit (bcnc, browser_connection_signals [FAV_CHANGED], 0);
 }
@@ -1258,14 +1258,14 @@ browser_connection_rollback (BrowserConnection *bcnc, GError **error)
  *
  * Get @bcnc's favorites handler
  *
- * Returns: (transfer none): the #BrowserFavorites used by @bcnc
+ * Returns: (transfer none): the #ToolsFavorites used by @bcnc
  */
-BrowserFavorites *
+ToolsFavorites *
 browser_connection_get_favorites (BrowserConnection *bcnc)
 {
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 	if (!bcnc->priv->bfav && !BROWSER_IS_VIRTUAL_CONNECTION (bcnc)) {
-		bcnc->priv->bfav = browser_favorites_new (gda_connection_get_meta_store (bcnc->priv->cnc));
+		bcnc->priv->bfav = tools_favorites_new (gda_connection_get_meta_store (bcnc->priv->cnc));
 		g_signal_connect (bcnc->priv->bfav, "favorites-changed",
 				  G_CALLBACK (fav_changed_cb), bcnc);
 	}

@@ -43,7 +43,7 @@ struct _LdapFavoriteSelectorClass {
 	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (LdapFavoriteSelector *sel, gint fav_id,
-						  BrowserFavoritesType fav_type, const gchar *fav_contents);
+						  ToolsFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    ldap_favorite_selector_get_type (void) G_GNUC_CONST;

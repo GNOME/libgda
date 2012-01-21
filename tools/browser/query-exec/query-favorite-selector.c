@@ -28,7 +28,6 @@
 #include "../support.h"
 #include "marshal.h"
 #include "../cc-gray-bar.h"
-#include "../browser-favorites.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
 #include "query-editor.h"
@@ -54,7 +53,7 @@ static void query_favorite_selector_init       (QueryFavoriteSelector *tsel,
 				       QueryFavoriteSelectorClass *klass);
 static void query_favorite_selector_dispose   (GObject *object);
 
-static void favorites_changed_cb (BrowserFavorites *bfav, QueryFavoriteSelector *tsel);
+static void favorites_changed_cb (ToolsFavorites *bfav, QueryFavoriteSelector *tsel);
 
 enum {
 	SELECTION_CHANGED,
@@ -177,15 +176,15 @@ favorite_delete_selected (QueryFavoriteSelector *tsel)
 	
 	select = gtk_tree_view_get_selection (GTK_TREE_VIEW (tsel->priv->treeview));
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-		BrowserFavorites *bfav;
-		BrowserFavoritesAttributes fav;
+		ToolsFavorites *bfav;
+		ToolsFavoritesAttributes fav;
 		GError *lerror = NULL;
 		
-		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+		memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 		gtk_tree_model_get (model, &iter,
 				    COLUMN_ID, &(fav.id), -1);
 		bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-		if (!browser_favorites_delete (bfav, 0, &fav, NULL)) {
+		if (!tools_favorites_delete (bfav, 0, &fav, NULL)) {
 			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
 					    _("Could not remove favorite: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -197,9 +196,9 @@ favorite_delete_selected (QueryFavoriteSelector *tsel)
 			gint id;
 			gchar *tmp;
 			tmp = g_strdup_printf ("QUERY%d", fav.id);
-			id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+			id = tools_favorites_find (bfav, 0, tmp, &fav, NULL);
 			if (id >= 0) {
-				browser_favorites_delete (bfav, 0, &fav, NULL);
+				tools_favorites_delete (bfav, 0, &fav, NULL);
 				/*g_print ("ACTION_DELETED %d: %s\n", fav.id, tmp);*/
 			}
 			g_free (tmp);
@@ -244,21 +243,21 @@ selection_changed_cb (GtkTreeView *treeview, G_GNUC_UNUSED GtkTreePath *path,
 static gboolean
 prop_save_timeout (QueryFavoriteSelector *tsel)
 {
-	BrowserFavorites *bfav;
-	BrowserFavoritesAttributes fav;
+	ToolsFavorites *bfav;
+	ToolsFavoritesAttributes fav;
 	GError *error = NULL;
 	gboolean allok, actiondel = TRUE;
 
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 
-	memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = tsel->priv->properties_id;
-	fav.type = BROWSER_FAVORITES_QUERIES;
+	fav.type = TOOLS_FAVORITES_QUERIES;
 	fav.name = (gchar*) gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_name));
 	fav.descr = NULL;
 	fav.contents = query_editor_get_all_text (QUERY_EDITOR (tsel->priv->properties_text));
 
-	allok = browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES,
+	allok = tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES,
 				       tsel->priv->properties_position, &error);
 	if (! allok) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
@@ -275,11 +274,11 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 		is_action = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (tsel->priv->properties_action));
 		if (is_action) {
 			fav.id = -1;
-			fav.type = BROWSER_FAVORITES_ACTIONS;
+			fav.type = TOOLS_FAVORITES_ACTIONS;
 			fav.name = (gchar*) gtk_entry_get_text (GTK_ENTRY (tsel->priv->properties_name));
 			fav.descr = NULL;
 			fav.contents = g_strdup_printf ("QUERY%d", qid);
-			allok = browser_favorites_add (bfav, 0, &fav, -1,
+			allok = tools_favorites_add (bfav, 0, &fav, -1,
 						       tsel->priv->properties_position, &error);
 			if (! allok) {
 				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
@@ -300,9 +299,9 @@ prop_save_timeout (QueryFavoriteSelector *tsel)
 		gint id;
 		gchar *tmp;
 		tmp = g_strdup_printf ("QUERY%d", tsel->priv->properties_id);
-		id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+		id = tools_favorites_find (bfav, 0, tmp, &fav, NULL);
 		if (id >= 0) {
-			browser_favorites_delete (bfav, 0, &fav, NULL);
+			tools_favorites_delete (bfav, 0, &fav, NULL);
 			/*g_print ("ACTION_DELETED %d: %s\n", fav.id, tmp);*/
 		}
 		g_free (tmp);
@@ -434,11 +433,11 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		if (tsel->priv->properties_id >= 0) {
 			gint id;
 			gchar *tmp;
-			BrowserFavorites *bfav;
-			BrowserFavoritesAttributes fav;
+			ToolsFavorites *bfav;
+			ToolsFavoritesAttributes fav;
 			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 			tmp = g_strdup_printf ("QUERY%d", tsel->priv->properties_id);
-			id = browser_favorites_find (bfav, 0, tmp, &fav, NULL);
+			id = tools_favorites_find (bfav, 0, tmp, &fav, NULL);
 			if (id >= 0) {
 				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tsel->priv->properties_action),
 							      TRUE);
@@ -547,7 +546,7 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 	
 	/* create tree managers */
 	tsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, BROWSER_FAVORITES_QUERIES, ORDER_KEY_QUERIES);
+	manager = mgr_favorites_new (bcnc, TOOLS_FAVORITES_QUERIES, ORDER_KEY_QUERIES);
         gda_tree_add_manager (tsel->priv->tree, manager);
 	g_object_unref (manager);
 
@@ -679,20 +678,20 @@ static gboolean
 tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 			 GtkSelectionData *selection_data, QueryFavoriteSelector *tsel)
 {
-	BrowserFavorites *bfav;
-	BrowserFavoritesAttributes fav;
+	ToolsFavorites *bfav;
+	ToolsFavoritesAttributes fav;
 	GError *error = NULL;
 	gint pos;
 	gboolean retval = TRUE;
 	gint id;
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
 
-	id = browser_favorites_find (bfav, 0, (gchar*) gtk_selection_data_get_data (selection_data),
+	id = tools_favorites_find (bfav, 0, (gchar*) gtk_selection_data_get_data (selection_data),
 				     &fav, NULL);
 	if (id < 0) {
-		memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+		memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 		fav.id = -1;
-		fav.type = BROWSER_FAVORITES_QUERIES;
+		fav.type = TOOLS_FAVORITES_QUERIES;
 		fav.name = _("Unnamed query");
 		fav.descr = NULL;
 		fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
@@ -701,7 +700,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	pos = atoi (path);
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
-	if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, pos, &error)) {
+	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -711,7 +710,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	}
 	
 	if (id >= 0)
-		browser_favorites_reset_attributes (&fav);
+		tools_favorites_reset_attributes (&fav);
 
 	return retval;
 }
@@ -753,7 +752,7 @@ tree_store_drag_get_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 }
 
 static void
-favorites_changed_cb (G_GNUC_UNUSED BrowserFavorites *bfav, QueryFavoriteSelector *tsel)
+favorites_changed_cb (G_GNUC_UNUSED ToolsFavorites *bfav, QueryFavoriteSelector *tsel)
 {
 	if (! gda_tree_update_all (tsel->priv->tree, NULL)) {
 		if (tsel->priv->idle_update_favorites == 0)

@@ -51,7 +51,7 @@ struct _BrowserConnectionPrivate {
 	GdaMetaStruct *c_mstruct; /* last GdaMetaStruct up to date, ready to be passed as @mstruct */
 	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */
 
-	BrowserFavorites *bfav;
+	ToolsFavorites *bfav;
 
 	gboolean  busy;
 	gchar    *busy_reason;
