@@ -21,7 +21,6 @@
 #define __DATA_SOURCE_H_
 
 #include <libgda-ui/libgda-ui.h>
-#include "browser-favorites.h"
 #include "decl.h"
 
 G_BEGIN_DECLS

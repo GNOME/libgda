@@ -133,7 +133,7 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
                                       const gchar *selection, QueryExecPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
@@ -207,7 +207,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 
 static void
 fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
-			  G_GNUC_UNUSED BrowserFavoritesType fav_type, const gchar *selection,
+			  G_GNUC_UNUSED ToolsFavoritesType fav_type, const gchar *selection,
 			  QueryExecPerspective *perspective)
 {
 	GtkNotebook *nb;

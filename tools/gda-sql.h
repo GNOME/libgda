@@ -26,6 +26,7 @@
 #include <libgda/libgda.h>
 #include <tools/gda-threader.h>
 #include <sql-parser/gda-sql-parser.h>
+#include "tools-favorites.h"
 
 G_BEGIN_DECLS
 
@@ -33,13 +34,14 @@ G_BEGIN_DECLS
  * structure representing an opened connection
  */
 typedef struct {
-	gchar         *name;
-	GdaConnection *cnc;
-	GdaSqlParser  *parser;
-	GString       *query_buffer;
+	gchar          *name;
+	GdaConnection  *cnc;
+	GdaSqlParser   *parser;
+	GString        *query_buffer;
+	ToolsFavorites *favorites;
 
-	GdaThreader   *threader;
-	guint          meta_job_id;
+	GdaThreader    *threader;
+	guint           meta_job_id;
 } ConnectionSetting;
 
 typedef enum {

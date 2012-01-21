@@ -2453,7 +2453,7 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "e");
 	c->description = _("Edit the query buffer (or file) with external editor");
 	c->args = NULL;
@@ -2465,9 +2465,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "qr");
-	c->description = _("Reset the query buffer (fill buffer with contents of file)");
+	c->description = _("Reset the query buffer (or load file into query buffer)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_reset_buffer;
 	c->user_data = NULL;
@@ -2477,7 +2477,7 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = "qp";
 	c->description = _("Show the contents of the query buffer");
 	c->args = NULL;
@@ -2489,9 +2489,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s [<QUERY_BUFFER_NAME>]"), "g");
-	c->description = _("Execute contents of query buffer, or named query buffer");
+	c->group = _("Query buffer & query favorites");
+	c->name = g_strdup_printf (_("%s [<FAVORITE_NAME>]"), "g");
+	c->description = _("Execute contents of query buffer, or execute specified query favorite");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_exec_buffer;
 	c->user_data = NULL;
@@ -2501,7 +2501,7 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s <FILE>"), "qw");
 	c->description = _("Write query buffer to file");
 	c->args = NULL;
@@ -2513,9 +2513,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "qs");
-	c->description = _("Save query buffer to dictionary");
+	c->group = _("Query buffer & query favorites");
+	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qs");
+	c->description = _("Save query buffer as favorite");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_to_dict;
 	c->user_data = NULL;
@@ -2525,9 +2525,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "ql");
-	c->description = _("Load query buffer from dictionary");
+	c->group = _("Query buffer & query favorites");
+	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "ql");
+	c->description = _("Load a query favorite into query buffer");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_from_dict;
 	c->user_data = NULL;
@@ -2537,9 +2537,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
-	c->name = g_strdup_printf (_("%s <QUERY_BUFFER_NAME>"), "qd");
-	c->description = _("Delete query buffer from dictionary");
+	c->group = _("Query buffer & query favorites");
+	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qd");
+	c->description = _("Delete a query favorite");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_delete_dict;
 	c->user_data = NULL;
@@ -2549,9 +2549,9 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s"), "qa");
-	c->description = _("List all saved query buffers in dictionary");
+	c->description = _("List all query favorites");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_query_buffer_list_dict;
 	c->user_data = NULL;
@@ -2574,7 +2574,7 @@ build_internal_commands_list (void)
 
 	/*
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s <FILE> <TABLE> <BLOB_COLUMN> <ROW_CONDITION>"), "lo_update");
 	c->description = _("Import a blob into the database");
 	c->args = NULL;
@@ -2586,7 +2586,7 @@ build_internal_commands_list (void)
 	*/	
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Query buffer");
+	c->group = _("Query buffer & query favorites");
 	c->name = g_strdup_printf (_("%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"), "export");
 	c->description = _("Export internal parameter or table's value to the FILE file");
 	c->args = NULL;
@@ -3754,14 +3754,6 @@ extra_command_write_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cn
 }
 
 #define QUERY_BUFFERS_TABLE_NAME "gda_sql_query_buffers"
-#define QUERY_BUFFERS_TABLE_DESC \
-	"<table name=\"" QUERY_BUFFERS_TABLE_NAME "\"> "			    \
-	"   <column name=\"id\" type=\"gint\" pkey=\"TRUE\" autoinc=\"TRUE\"/>"	    \
-	"   <column name=\"name\"/>"				    \
-	"   <column name=\"sql\"/>"				    \
-	"</table>"
-#define QUERY_BUFFERS_TABLE_INSERT \
-	"INSERT INTO " QUERY_BUFFERS_TABLE_NAME " (name, sql) VALUES (##name::string, ##sql::string)"
 #define QUERY_BUFFERS_TABLE_SELECT \
 	"SELECT name, sql FROM " QUERY_BUFFERS_TABLE_NAME " ORDER BY name"
 #define QUERY_BUFFERS_TABLE_SELECT_ONE \
@@ -3774,6 +3766,7 @@ extra_command_query_buffer_list_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 				      GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
+	GdaDataModel *retmodel;
 
 	if (console) {
 		GdaInternalCommandResult *res;
@@ -3789,35 +3782,91 @@ extra_command_query_buffer_list_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 		return NULL;
 	}
 
-	/* Meta store's init */
+	/* initialize returned data model */
+	retmodel = gda_data_model_array_new_with_g_types (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+	gda_data_model_set_column_title (retmodel, 0, _("Favorite name"));
+	gda_data_model_set_column_title (retmodel, 1, _("Comments"));
+	gda_data_model_set_column_title (retmodel, 2, _("SQL"));
+
 	GdaMetaStore *mstore;
 	mstore = gda_connection_get_meta_store (main_data->current->cnc);
-	if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Can't initialize dictionary to store query buffers"));
+
+	/* Use tools favorites */
+	if (! main_data->current->favorites)
+		main_data->current->favorites = tools_favorites_new (mstore);
+
+	GSList *favlist, *list;
+	GError *lerror = NULL;
+	favlist = tools_favorites_list (main_data->current->favorites, 0, TOOLS_FAVORITES_QUERIES,
+					ORDER_KEY_QUERIES, &lerror);
+	if (lerror) {
+		g_propagate_error (error, lerror);
+		g_object_unref (retmodel);
 		return NULL;
 	}
-		
-	/* actual list retrieval */
-	static GdaStatement *sel_stmt = NULL;
-	GdaDataModel *model;
-	if (!sel_stmt) {
-		sel_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
-							QUERY_BUFFERS_TABLE_SELECT, NULL, NULL);
-		g_assert (sel_stmt);
+	for (list = favlist; list; list = list->next) {
+		ToolsFavoritesAttributes *att = (ToolsFavoritesAttributes*) list->data;
+		gint i;
+		GValue *value = NULL;
+		i = gda_data_model_append_row (retmodel, error);
+		if (i == -1)
+			goto cleanloop;
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), att->name);
+		if (! gda_data_model_set_value_at (retmodel, 0, i, value, error))
+			goto cleanloop;
+		g_value_set_string (value, att->descr);
+		if (! gda_data_model_set_value_at (retmodel, 1, i, value, error))
+			goto cleanloop;
+		g_value_set_string (value, att->contents);
+		if (! gda_data_model_set_value_at (retmodel, 2, i, value, error))
+			goto cleanloop;
+		gda_value_free (value);
+		continue;
+	cleanloop:
+		gda_value_free (value);
+		tools_favorites_free_list (favlist);
+		g_object_unref (retmodel);
+		return NULL;
 	}
+	if (favlist)
+		tools_favorites_free_list (favlist);
 
+	/* Use query buffer which used to be stored differently in previous versions of GdaSql:
+	 * in the "gda_sql_query_buffers" table */
+	GdaStatement *sel_stmt = NULL;
+	GdaDataModel *model;
+	sel_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
+						QUERY_BUFFERS_TABLE_SELECT, NULL, NULL);
+	g_assert (sel_stmt);
 	GdaConnection *store_cnc;
 	store_cnc = gda_meta_store_get_internal_connection (mstore);
-	model = gda_connection_statement_execute_select (store_cnc, sel_stmt, NULL, error);
-	if (!model)
-		return NULL;
+	model = gda_connection_statement_execute_select (store_cnc, sel_stmt, NULL, NULL);
+	g_object_unref (sel_stmt);
+	if (model) {
+		gint r, nrows;
+		nrows = gda_data_model_get_n_rows (model);
+		for (r = 0; r < nrows; r++) {
+			const GValue *cvalue = NULL;
+			gint i;
+			i = gda_data_model_append_row (retmodel, NULL);
+			if (i == -1)
+				break;
+			cvalue = gda_data_model_get_value_at (model, 0, r, NULL);
+			if (!cvalue)
+				break;
+			gda_data_model_set_value_at (retmodel, 0, i, cvalue, NULL);
 
-	gda_data_model_set_column_title (model, 0, _("Query buffer name"));
-	gda_data_model_set_column_title (model, 1, _("SQL"));
+			cvalue = gda_data_model_get_value_at (model, 1, r, NULL);
+			if (!cvalue)
+				break;
+			gda_data_model_set_value_at (retmodel, 2, i, cvalue, NULL);
+		}
+		g_object_unref (model);
+	}
+	
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = model;
+	res->u.model = retmodel;
 
 	return res;
 }
@@ -3844,6 +3893,7 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 
 	if (!main_data->current->query_buffer) 
 		main_data->current->query_buffer = g_string_new ("");
+
 	if (*main_data->current->query_buffer->str != 0) {
 		/* find a suitable name */
 		gchar *qname;
@@ -3855,53 +3905,25 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 			return NULL;
 		}
 
-		/* Meta store's init */
+		/* Use tools favorites */
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (main_data->current->cnc);
-		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0, "%s", 
-				     _("Can't initialize dictionary to store query buffers"));
-			g_free (qname);
-			return NULL;
-		}
-		
-		/* actual store of the statement */
-		static GdaStatement *ins_stmt = NULL, *del_stmt;
-		static GdaSet *ins_params = NULL;
-		if (!ins_stmt) {
-			ins_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
-								QUERY_BUFFERS_TABLE_INSERT, NULL, NULL);
-			g_assert (ins_stmt);
-			g_assert (gda_statement_get_parameters (ins_stmt, &ins_params, NULL));
+		if (! main_data->current->favorites)
+			main_data->current->favorites = tools_favorites_new (mstore);
 
-			del_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
-								QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
-			g_assert (del_stmt);
-		}
+		ToolsFavoritesAttributes att;
+		att.id = -1;
+		att.type = TOOLS_FAVORITES_QUERIES;
+		att.name = qname;
+		att.descr = NULL;
+		att.contents = main_data->current->query_buffer->str;
 
-		if (! gda_set_set_holder_value (ins_params, error, "name", qname) ||
-		    ! gda_set_set_holder_value (ins_params, error, "sql", main_data->current->query_buffer->str)) {
+		if (! tools_favorites_add (main_data->current->favorites, 0,
+					   &att, ORDER_KEY_QUERIES, G_MAXINT, error)) {
 			g_free (qname);
 			return NULL;
 		}
 		g_free (qname);
-		
-		GdaConnection *store_cnc;
-		gboolean intrans;
-		store_cnc = gda_meta_store_get_internal_connection (mstore);
-		intrans = gda_connection_begin_transaction (store_cnc, NULL,
-							    GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL);
-
-		if ((gda_connection_statement_execute_non_select (store_cnc, del_stmt, ins_params,
-								  NULL, error) == -1) ||
-		    (gda_connection_statement_execute_non_select (store_cnc, ins_stmt, ins_params,
-								  NULL, error) == -1)) {
-			if (intrans)
-				gda_connection_rollback_transaction (store_cnc, NULL, NULL);
-			return NULL;
-		}
-		if (intrans)
-			gda_connection_commit_transaction (store_cnc, NULL, NULL);
 
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -3937,46 +3959,58 @@ extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 		main_data->current->query_buffer = g_string_new ("");
 
 	if (args[0] && *args[0]) {
-		/* Meta store's init */
+		/* Use tools favorites */
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (main_data->current->cnc);
-		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0, "%s", 
-				     _("Can't initialize dictionary to store query buffers"));
-			return NULL;
-		}
-		
-		/* query retrieval */
-		static GdaStatement *sel_stmt = NULL;
-		static GdaSet *sel_params = NULL;
-		GdaDataModel *model;
-		const GValue *cvalue;
-		if (!sel_stmt) {
-			sel_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
-								QUERY_BUFFERS_TABLE_SELECT_ONE, NULL, NULL);
-			g_assert (sel_stmt);
-			g_assert (gda_statement_get_parameters (sel_stmt, &sel_params, NULL));
-		}
+		if (! main_data->current->favorites)
+			main_data->current->favorites = tools_favorites_new (mstore);
 
-		if (! gda_set_set_holder_value (sel_params, error, "name", args[0]))
-			return NULL;
-
-		GdaConnection *store_cnc;
-		store_cnc = gda_meta_store_get_internal_connection (mstore);
-		model = gda_connection_statement_execute_select (store_cnc, sel_stmt, sel_params, error);
-		if (!model)
-			return NULL;
-		
-		if ((gda_data_model_get_n_rows (model) == 1) &&
-		    (cvalue = gda_data_model_get_value_at (model, 0, 0, NULL))) {
-			g_string_assign (main_data->current->query_buffer, g_value_get_string (cvalue));
+		ToolsFavoritesAttributes att;
+		gint favid;
+		favid = tools_favorites_find_by_name (main_data->current->favorites, 0, TOOLS_FAVORITES_QUERIES,
+						      args[0], &att, NULL);      
+		if (favid >= 0) {
+			g_string_assign (main_data->current->query_buffer, att.contents);
 			res = g_new0 (GdaInternalCommandResult, 1);
 			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 		}
-		else 
-			g_set_error (error, 0, 0,
-				     _("Could not find query buffer named '%s'"), args[0]);
-		g_object_unref (model);
+		else {
+			/* query retrieval */
+			static GdaStatement *sel_stmt = NULL;
+			static GdaSet *sel_params = NULL;
+			GdaDataModel *model;
+			const GValue *cvalue;
+			GError *lerror = NULL;
+
+			g_set_error (&lerror, 0, 0, "%s", _("Could not find favorite"));
+			if (!sel_stmt) {
+				sel_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
+									QUERY_BUFFERS_TABLE_SELECT_ONE, NULL, NULL);
+				g_assert (sel_stmt);
+				g_assert (gda_statement_get_parameters (sel_stmt, &sel_params, NULL));
+			}
+
+			if (! gda_set_set_holder_value (sel_params, error, "name", args[0])) {
+				g_propagate_error (error, lerror);
+				return NULL;
+			}
+
+			GdaConnection *store_cnc;
+			store_cnc = gda_meta_store_get_internal_connection (mstore);
+			model = gda_connection_statement_execute_select (store_cnc, sel_stmt, sel_params, NULL);
+			if (!model) {
+				g_propagate_error (error, lerror);
+				return NULL;
+			}
+
+			if ((gda_data_model_get_n_rows (model) == 1) &&
+			    (cvalue = gda_data_model_get_value_at (model, 0, 0, NULL))) {
+				g_string_assign (main_data->current->query_buffer, g_value_get_string (cvalue));
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+			}
+			g_object_unref (model);
+		}
 	}
 	else
 		g_set_error (error, 0, 0, "%s", 
@@ -4009,33 +4043,47 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaCo
 		main_data->current->query_buffer = g_string_new ("");
 
 	if (args[0] && *args[0]) {
-		/* Meta store's init */
+		/* Use tools favorites */
 		GdaMetaStore *mstore;
 		mstore = gda_connection_get_meta_store (main_data->current->cnc);
-		if (!gda_meta_store_schema_add_custom_object (mstore, QUERY_BUFFERS_TABLE_DESC, NULL)) {
-			g_set_error (error, 0, 0, "%s", 
-				     _("Can't initialize dictionary to store query buffers"));
-			return NULL;
-		}
-		
-		/* query retrieval */
-		static GdaStatement *del_stmt = NULL;
-		static GdaSet *del_params = NULL;
-		if (!del_stmt) {
-			del_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
-								QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
-			g_assert (del_stmt);
-			g_assert (gda_statement_get_parameters (del_stmt, &del_params, NULL));
-		}
+		if (! main_data->current->favorites)
+			main_data->current->favorites = tools_favorites_new (mstore);
 
-		if (! gda_set_set_holder_value (del_params, error, "name", args[0]))
-			return NULL;
+		ToolsFavoritesAttributes att;
+		GError *lerror = NULL;
+		att.id = -1;
+		att.type = TOOLS_FAVORITES_QUERIES;
+		att.name = args[0];
+		att.descr = NULL;
+		att.contents = NULL;
 
-		GdaConnection *store_cnc;
-		store_cnc = gda_meta_store_get_internal_connection (mstore);
-		if (gda_connection_statement_execute_non_select (store_cnc, del_stmt, del_params,
-								 NULL, error) == -1)
-			return NULL;
+		if (! tools_favorites_delete (main_data->current->favorites, 0,
+					      &att, &lerror)) {		
+			/* query retrieval */
+			static GdaStatement *del_stmt = NULL;
+			static GdaSet *del_params = NULL;
+			if (!del_stmt) {
+				del_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
+									QUERY_BUFFERS_TABLE_DELETE, NULL, NULL);
+				g_assert (del_stmt);
+				g_assert (gda_statement_get_parameters (del_stmt, &del_params, NULL));
+			}
+
+			if (! gda_set_set_holder_value (del_params, NULL, "name", args[0])) {
+				g_propagate_error (error, lerror);
+				return NULL;
+			}
+
+			GdaConnection *store_cnc;
+			store_cnc = gda_meta_store_get_internal_connection (mstore);
+			if (gda_connection_statement_execute_non_select (store_cnc, del_stmt, del_params,
+									 NULL, NULL) > 0)
+				g_clear_error (&lerror);
+			else {
+				g_propagate_error (error, lerror);
+				return NULL;
+			}
+		}
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}

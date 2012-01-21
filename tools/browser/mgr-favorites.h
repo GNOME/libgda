@@ -52,7 +52,7 @@ struct _MgrFavoritesClass {
  */
 
 GType           mgr_favorites_get_type                 (void) G_GNUC_CONST;
-GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, BrowserFavoritesType type,
+GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, ToolsFavoritesType type,
 							gint order_key);
 
 /* name of the attribute which stores the favorite name */

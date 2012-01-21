@@ -34,7 +34,11 @@ libcommon_la_SOURCES = \
 	fk-declare.c \
 	fk-declare.h \
 	widget-overlay.c \
-	widget-overlay.h
+	widget-overlay.h \
+	favorites-actions.c \
+	favorites-actions.h \
+	../../tools-favorites.h \
+	../../tools-favorites.c
 
 $(OBJECTS): marshal.c marshal.h
 

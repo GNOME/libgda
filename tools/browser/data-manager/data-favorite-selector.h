@@ -43,7 +43,7 @@ struct _DataFavoriteSelectorClass {
 	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (DataFavoriteSelector *sel, gint fav_id,
-						  BrowserFavoritesType fav_type, const gchar *fav_contents);
+						  ToolsFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    data_favorite_selector_get_type (void) G_GNUC_CONST;

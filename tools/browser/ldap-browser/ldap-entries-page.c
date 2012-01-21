@@ -463,21 +463,21 @@ ldap_entries_page_set_current_dn (LdapEntriesPage *ldap_entries_page, const gcha
 static void
 action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapEntriesPage *ebrowser)
 {
-	BrowserFavorites *bfav;
-        BrowserFavoritesAttributes fav;
+	ToolsFavorites *bfav;
+        ToolsFavoritesAttributes fav;
         GError *error = NULL;
 	const gchar *cn;
 
 	hierarchy_view_get_current_dn (HIERARCHY_VIEW (ebrowser->priv->entries_view), &cn);
-        memset (&fav, 0, sizeof (BrowserFavoritesAttributes));
+        memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
         fav.id = -1;
-        fav.type = BROWSER_FAVORITES_LDAP_DN;
+        fav.type = TOOLS_FAVORITES_LDAP_DN;
         fav.name = ldap_entries_page_to_selection (ebrowser);
         fav.descr = (gchar*) cn;
         fav.contents = ldap_entries_page_to_selection (ebrowser);
 
         bfav = browser_connection_get_favorites (ebrowser->priv->bcnc);
-        if (! browser_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
+        if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
                 browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) ebrowser),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));

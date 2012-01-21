@@ -69,8 +69,6 @@ libbrowser_la_SOURCES=\
 	browser-connection.c \
 	browser-connection.h \
 	browser-connection-priv.h \
-	browser-favorites.c \
-	browser-favorites.h \
 	browser-variable.c \
 	browser-variable.h \
 	browser-virtual-connection.c \

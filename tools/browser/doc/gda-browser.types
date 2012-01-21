@@ -1,6 +1,6 @@
 #include <browser-core.h>
 #include <browser-connection.h>
-#include <browser-favorites.h>
+#include <common/favorites-actions.h>
 #include <browser-window.h>
 #include <browser-page.h>
 #include <cc-gray-bar.h>
@@ -12,7 +12,7 @@
 #include <mgr-favorites.h>
 browser_core_get_type
 browser_connection_get_type
-browser_favorites_get_type
+tools_favorites_get_type
 browser_window_get_type
 browser_perspective_get_type
 browser_page_get_type

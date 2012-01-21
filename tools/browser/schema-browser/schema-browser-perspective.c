@@ -122,9 +122,9 @@ schema_browser_perspective_init (SchemaBrowserPerspective *perspective)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
 				      const gchar *selection, SchemaBrowserPerspective *bpers);
-static void objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
+static void objects_index_selection_changed_cb (GtkWidget *widget, ToolsFavoritesType fav_type,
 						const gchar *selection, SchemaBrowserPerspective *bpers);
 /**
  * schema_browser_perspective_new
@@ -193,7 +193,7 @@ close_button_clicked_cb (G_GNUC_UNUSED GtkWidget *wid, GtkWidget *page_widget)
 }
 
 static void
-objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_type,
+objects_index_selection_changed_cb (GtkWidget *widget, ToolsFavoritesType fav_type,
 				    const gchar *selection, SchemaBrowserPerspective *bpers)
 {
 	fav_selection_changed_cb (widget, -1, fav_type, selection, bpers);
@@ -201,10 +201,10 @@ objects_index_selection_changed_cb (GtkWidget *widget, BrowserFavoritesType fav_
 
 
 static void
-fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserFavoritesType fav_type,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
 			  const gchar *selection, SchemaBrowserPerspective *bpers)
 {
-	if (fav_type == BROWSER_FAVORITES_TABLES) {
+	if (fav_type == TOOLS_FAVORITES_TABLES) {
 		GdaQuarkList *ql;
 		const gchar *type;
 		const gchar *schema = NULL, *table = NULL, *short_name = NULL;
@@ -248,7 +248,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, BrowserF
 		if (ql)
 			gda_quark_list_free (ql);
 	}
-	else if (fav_type == BROWSER_FAVORITES_DIAGRAMS) {
+	else if (fav_type == TOOLS_FAVORITES_DIAGRAMS) {
 #ifdef HAVE_GOOCANVAS
 		schema_browser_perspective_display_diagram (bpers, fav_id);
 #else
@@ -304,7 +304,7 @@ favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
 
 static const GtkToggleActionEntry ui_toggle_actions [] =
 {
-        { "SchemaBrowserFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+        { "SchemaToolsFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
 };
 
 static GtkActionEntry ui_actions[] = {
@@ -319,7 +319,7 @@ static const gchar *ui_actions_info =
         "<ui>"
         "  <menubar name='MenuBar'>"
 	"    <menu name='Display' action='Display'>"
-	"      <menuitem name='SchemaBrowserFavoritesShow' action='SchemaBrowserFavoritesShow'/>"
+	"      <menuitem name='SchemaToolsFavoritesShow' action='SchemaToolsFavoritesShow'/>"
         "    </menu>"
 #ifdef HAVE_GOOCANVAS
         "    <placeholder name='MenuExtension'>"
@@ -346,7 +346,7 @@ schema_browser_perspective_get_actions_group (BrowserPerspective *perspective)
 					     G_N_ELEMENTS (ui_toggle_actions),
 					     bpers);
 	GtkAction *action;
-	action = gtk_action_group_get_action (agroup, "SchemaBrowserFavoritesShow");
+	action = gtk_action_group_get_action (agroup, "SchemaToolsFavoritesShow");
 	if (bpers->priv->favorites)
 		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
 					      bpers->priv->favorites_shown);

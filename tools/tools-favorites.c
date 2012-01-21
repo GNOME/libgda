@@ -20,14 +20,12 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include "browser-favorites.h"
+#include "tools-favorites.h"
 #include <libgda/thread-wrapper/gda-thread-wrapper.h>
-#include "support.h"
-#include "marshal.h"
 #include <libgda/gda-sql-builder.h>
 #include <sql-parser/gda-sql-parser.h>
 
-struct _BrowserFavoritesPrivate {
+struct _ToolsFavoritesPrivate {
 	GdaMetaStore  *store;
 	GdaConnection *store_cnc;
 };
@@ -36,9 +34,9 @@ struct _BrowserFavoritesPrivate {
 /*
  * Main static functions
  */
-static void browser_favorites_class_init (BrowserFavoritesClass *klass);
-static void browser_favorites_init (BrowserFavorites *bfav);
-static void browser_favorites_dispose (GObject *object);
+static void tools_favorites_class_init (ToolsFavoritesClass *klass);
+static void tools_favorites_init (ToolsFavorites *bfav);
+static void tools_favorites_dispose (GObject *object);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -49,74 +47,74 @@ enum {
 	LAST_SIGNAL
 };
 
-gint browser_favorites_signals [LAST_SIGNAL] = { 0 };
+gint tools_favorites_signals [LAST_SIGNAL] = { 0 };
 
 GType
-browser_favorites_get_type (void)
+tools_favorites_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		static const GTypeInfo info = {
-			sizeof (BrowserFavoritesClass),
+			sizeof (ToolsFavoritesClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) browser_favorites_class_init,
+			(GClassInitFunc) tools_favorites_class_init,
 			NULL,
 			NULL,
-			sizeof (BrowserFavorites),
+			sizeof (ToolsFavorites),
 			0,
-			(GInstanceInitFunc) browser_favorites_init,
+			(GInstanceInitFunc) tools_favorites_init,
 			0
 		};
 
 
 		g_static_mutex_lock (&registering);
 		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "BrowserFavorites", &info, 0);
+			type = g_type_register_static (G_TYPE_OBJECT, "ToolsFavorites", &info, 0);
 		g_static_mutex_unlock (&registering);
 	}
 	return type;
 }
 
 static void
-browser_favorites_class_init (BrowserFavoritesClass *klass)
+tools_favorites_class_init (ToolsFavoritesClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
-	browser_favorites_signals [FAV_CHANGED] =
+	tools_favorites_signals [FAV_CHANGED] =
 		g_signal_new ("favorites-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST | G_SIGNAL_DETAILED,
-                              G_STRUCT_OFFSET (BrowserFavoritesClass, favorites_changed),
+                              G_STRUCT_OFFSET (ToolsFavoritesClass, favorites_changed),
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
                               0);
 
 	klass->favorites_changed = NULL;
 
-	object_class->dispose = browser_favorites_dispose;
+	object_class->dispose = tools_favorites_dispose;
 }
 
 static void
-browser_favorites_init (BrowserFavorites *bfav)
+tools_favorites_init (ToolsFavorites *bfav)
 {
-	bfav->priv = g_new0 (BrowserFavoritesPrivate, 1);
+	bfav->priv = g_new0 (ToolsFavoritesPrivate, 1);
 	bfav->priv->store = NULL;
 	bfav->priv->store_cnc = NULL;
 }
 
 static void
-browser_favorites_dispose (GObject *object)
+tools_favorites_dispose (GObject *object)
 {
-	BrowserFavorites *bfav;
+	ToolsFavorites *bfav;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (BROWSER_IS_FAVORITES (object));
+	g_return_if_fail (TOOLS_IS_FAVORITES (object));
 
-	bfav = BROWSER_FAVORITES (object);
+	bfav = TOOLS_FAVORITES (object);
 	if (bfav->priv) {
 		if (bfav->priv->store)
 			g_object_unref (bfav->priv->store);
@@ -132,50 +130,50 @@ browser_favorites_dispose (GObject *object)
 }
 
 /**
- * browser_favorites_new
+ * tools_favorites_new
  *
- * Creates a new #BrowserFavorites object
+ * Creates a new #ToolsFavorites object
  *
  * Returns: the new object
  */
-BrowserFavorites*
-browser_favorites_new (GdaMetaStore *store)
+ToolsFavorites*
+tools_favorites_new (GdaMetaStore *store)
 {
-	BrowserFavorites *bfav;
+	ToolsFavorites *bfav;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 
-	bfav = BROWSER_FAVORITES (g_object_new (BROWSER_TYPE_FAVORITES, NULL));
+	bfav = TOOLS_FAVORITES (g_object_new (TOOLS_TYPE_FAVORITES, NULL));
 	bfav->priv->store = g_object_ref (store);
 
 	return bfav;
 }
 
 #define FAVORITES_TABLE_NAME "gda_sql_favorites"
-#define FAVORITES_TABLE_DESC \
-        "<table name=\"" FAVORITES_TABLE_NAME "\"> "                            \
-        "   <column name=\"id\" type=\"gint\" pkey=\"TRUE\" autoinc=\"TRUE\"/>"             \
-        "   <column name=\"session\" type=\"gint\"/>"             \
-        "   <column name=\"type\"/>"                              \
-        "   <column name=\"name\" nullok=\"TRUE\"/>"                              \
-        "   <column name=\"contents\"/>"                          \
-        "   <column name=\"descr\" nullok=\"TRUE\"/>"                           \
-        "   <unique>"                             \
-        "     <column name=\"session\"/>"                             \
-        "     <column name=\"type\"/>"                             \
-        "     <column name=\"contents\"/>"                             \
-        "   </unique>"                             \
+#define FAVORITES_TABLE_DESC						\
+        "<table name=\"" FAVORITES_TABLE_NAME "\"> "			\
+        "   <column name=\"id\" type=\"gint\" pkey=\"TRUE\" autoinc=\"TRUE\"/>"	\
+        "   <column name=\"session\" type=\"gint\"/>"			\
+        "   <column name=\"type\"/>"					\
+        "   <column name=\"name\" nullok=\"TRUE\"/>"			\
+        "   <column name=\"contents\"/>"				\
+        "   <column name=\"descr\" nullok=\"TRUE\"/>"			\
+        "   <unique>"							\
+        "     <column name=\"session\"/>"				\
+        "     <column name=\"type\"/>"					\
+        "     <column name=\"contents\"/>"				\
+        "   </unique>"							\
         "</table>"
 #define FAVORDER_TABLE_NAME "gda_sql_favorder"
-#define FAVORDER_TABLE_DESC \
-        "<table name=\"" FAVORDER_TABLE_NAME "\"> "                            \
-        "   <column name=\"order_key\" type=\"gint\" pkey=\"TRUE\"/>"          \
-        "   <column name=\"fav_id\" type=\"gint\" pkey=\"TRUE\"/>"             \
-        "   <column name=\"rank\" type=\"gint\"/>"             \
+#define FAVORDER_TABLE_DESC						\
+        "<table name=\"" FAVORDER_TABLE_NAME "\"> "			\
+        "   <column name=\"order_key\" type=\"gint\" pkey=\"TRUE\"/>"	\
+        "   <column name=\"fav_id\" type=\"gint\" pkey=\"TRUE\"/>"	\
+        "   <column name=\"rank\" type=\"gint\"/>"			\
         "</table>"
 
 static gboolean
-meta_store_addons_init (BrowserFavorites *bfav, GError **error)
+meta_store_addons_init (ToolsFavorites *bfav, GError **error)
 {
 	GError *lerror = NULL;
 	if (bfav->priv->store_cnc)
@@ -205,28 +203,28 @@ meta_store_addons_init (BrowserFavorites *bfav, GError **error)
 }
 
 /**
- * browser_favorites_type_to_string:
- * @type: a #BrowserFavoritesType
+ * tools_favorites_type_to_string:
+ * @type: a #ToolsFavoritesType
  *
  * Returns: a string representing @type
  */
 const gchar *
-browser_favorites_type_to_string (BrowserFavoritesType type)
+tools_favorites_type_to_string (ToolsFavoritesType type)
 {
 	switch (type) {
-	case BROWSER_FAVORITES_TABLES:
+	case TOOLS_FAVORITES_TABLES:
 		return "TABLE";
-	case BROWSER_FAVORITES_DIAGRAMS:
+	case TOOLS_FAVORITES_DIAGRAMS:
 		return "DIAGRAM";
-	case BROWSER_FAVORITES_QUERIES:
+	case TOOLS_FAVORITES_QUERIES:
 		return "QUERY";
-	case BROWSER_FAVORITES_DATA_MANAGERS:
+	case TOOLS_FAVORITES_DATA_MANAGERS:
 		return "DATAMAN";
-	case BROWSER_FAVORITES_ACTIONS:
+	case TOOLS_FAVORITES_ACTIONS:
 		return "ACTION";
-	case BROWSER_FAVORITES_LDAP_DN:
+	case TOOLS_FAVORITES_LDAP_DN:
 		return "LDAP_DN";
-	case BROWSER_FAVORITES_LDAP_CLASS:
+	case TOOLS_FAVORITES_LDAP_CLASS:
 		return "LDAP_CLASS";
 	default:
 		g_warning ("Unknown type of favorite");
@@ -235,26 +233,26 @@ browser_favorites_type_to_string (BrowserFavoritesType type)
 	return "";
 }
 
-static BrowserFavoritesType
+static ToolsFavoritesType
 favorite_string_to_type (const gchar *str)
 {
 	if (*str == 'T')
-		return BROWSER_FAVORITES_TABLES;
+		return TOOLS_FAVORITES_TABLES;
 	else if (*str == 'D') {
 		if (str[1] == 'I')
-			return BROWSER_FAVORITES_DIAGRAMS;
+			return TOOLS_FAVORITES_DIAGRAMS;
 		else
-			return BROWSER_FAVORITES_DATA_MANAGERS;
+			return TOOLS_FAVORITES_DATA_MANAGERS;
 	}
 	else if (*str == 'Q')
-		return BROWSER_FAVORITES_QUERIES;
+		return TOOLS_FAVORITES_QUERIES;
 	else if (*str == 'A')
-		return BROWSER_FAVORITES_ACTIONS;
+		return TOOLS_FAVORITES_ACTIONS;
 	else if (*str == 'L') {
 		if (strlen (str) == 7)
-			return BROWSER_FAVORITES_LDAP_DN;
+			return TOOLS_FAVORITES_LDAP_DN;
 		else
-			return BROWSER_FAVORITES_LDAP_CLASS;
+			return TOOLS_FAVORITES_LDAP_CLASS;
 	}
 	else
 		g_warning ("Unknown type '%s' of favorite", str);
@@ -262,7 +260,7 @@ favorite_string_to_type (const gchar *str)
 }
 
 static gint
-find_favorite_position (BrowserFavorites *bfav, gint fav_id, gint order_key)
+find_favorite_position (ToolsFavorites *bfav, gint fav_id, gint order_key)
 {
 	GdaSqlBuilder *b;
 	GdaStatement *stmt;
@@ -274,17 +272,17 @@ find_favorite_position (BrowserFavorites *bfav, gint fav_id, gint order_key)
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "rank"), 0);
+					    gda_sql_builder_add_id (b, "rank"), 0);
 	gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, NULL);
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND,
-				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							 gda_sql_builder_add_id (b, "fav_id"),
-							 gda_sql_builder_add_param (b, "favid", G_TYPE_INT, FALSE), 0),
-				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							 gda_sql_builder_add_id (b, "order_key"),
-							 gda_sql_builder_add_param (b, "okey", G_TYPE_INT, FALSE), 0),
-							 0));
+							     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+										       gda_sql_builder_add_id (b, "fav_id"),
+										       gda_sql_builder_add_param (b, "favid", G_TYPE_INT, FALSE), 0),
+							     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+										       gda_sql_builder_add_id (b, "order_key"),
+										       gda_sql_builder_add_param (b, "okey", G_TYPE_INT, FALSE), 0),
+							     0));
 
 	stmt = gda_sql_builder_get_statement (b, NULL);
 	g_object_unref (G_OBJECT (b));
@@ -313,17 +311,9 @@ find_favorite_position (BrowserFavorites *bfav, gint fav_id, gint order_key)
 	return pos;	
 }
 
-/*
- * Find a favorite ID from its ID or from its contents
- *
- * Returns: the ID or -1 if not found (and sets ERROR).
- *
- * if @out_existing_fav is not %NULL, then its attributes are set, use browser_favorites_reset_attributes()
- * to free.
- */
 static gint
-find_favorite (BrowserFavorites *bfav, guint session_id, gint id, const gchar *contents,
-	       BrowserFavoritesAttributes *out_existing_fav, GError **error)
+find_favorite_by_name (ToolsFavorites *bfav, guint session_id, const gchar *name, ToolsFavoritesType type,
+		       ToolsFavoritesAttributes *out_existing_fav, GError **error)
 {
 	GdaSqlBuilder *b;
 	GdaStatement *stmt;
@@ -332,39 +322,124 @@ find_favorite (BrowserFavorites *bfav, guint session_id, gint id, const gchar *c
 	gint favid = -1;
 
 	if (out_existing_fav)
-		memset (out_existing_fav, 0, sizeof (BrowserFavoritesAttributes));
+		memset (out_existing_fav, 0, sizeof (ToolsFavoritesAttributes));
+	g_return_val_if_fail (name, -1);
+
+	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_id (b, "id"), 0);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_id (b, "type"), 0);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_id (b, "name"), 0);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_id (b, "descr"), 0);
+	gda_sql_builder_add_field_value_id (b,
+					    gda_sql_builder_add_id (b, "contents"), 0);
+	gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, NULL);
+	gda_sql_builder_set_where (b,
+				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND,
+							     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+										       gda_sql_builder_add_id (b, "session"),
+										       gda_sql_builder_add_param (b, "session", G_TYPE_INT, FALSE), 0),
+							     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+										       gda_sql_builder_add_id (b, "name"),
+										       gda_sql_builder_add_param (b, "name", G_TYPE_INT, FALSE), 0),
+							     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+										       gda_sql_builder_add_id (b, "type"),
+										       gda_sql_builder_add_param (b, "type", G_TYPE_STRING, FALSE), 0)));
+
+ 	stmt = gda_sql_builder_get_statement (b, error);
+	g_object_unref (G_OBJECT (b));
+	if (!stmt)
+		return -1;
+	params = gda_set_new_inline (3,
+				     "session", G_TYPE_INT, session_id,
+				     "type", G_TYPE_STRING, tools_favorites_type_to_string (type),
+				     "name", G_TYPE_STRING, name);
+	model = gda_connection_statement_execute_select (bfav->priv->store_cnc, stmt, params, error);
+	g_object_unref (stmt);
+	g_object_unref (params);
+
+	if (model && gda_data_model_get_n_rows (model) == 1) {
+		const GValue *cvalue;
+		cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
+		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_INT))
+			favid = g_value_get_int (cvalue);
+
+		if (out_existing_fav) {
+			out_existing_fav->id = favid;
+			cvalue = gda_data_model_get_value_at (model, 1, 0, error);
+			if (cvalue)
+				out_existing_fav->type = favorite_string_to_type (g_value_get_string (cvalue));
+			cvalue = gda_data_model_get_value_at (model, 2, 0, error);
+			if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING))
+				out_existing_fav->name = g_value_dup_string (cvalue);
+			cvalue = gda_data_model_get_value_at (model, 3, 0, error);
+			if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING))
+				out_existing_fav->descr = g_value_dup_string (cvalue);
+			cvalue = gda_data_model_get_value_at (model, 4, 0, error);
+			if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING))
+				out_existing_fav->contents = g_value_dup_string (cvalue);
+		}
+	}
+	if (model)
+		g_object_unref (model);
+	return favid;
+}
+
+/*
+ * Find a favorite ID from its ID or from its contents
+ *
+ * Returns: the ID or -1 if not found (and sets ERROR).
+ *
+ * if @out_existing_fav is not %NULL, then its attributes are set, use tools_favorites_reset_attributes()
+ * to free.
+ */
+static gint
+find_favorite (ToolsFavorites *bfav, guint session_id, gint id, const gchar *contents,
+	       ToolsFavoritesAttributes *out_existing_fav, GError **error)
+{
+	GdaSqlBuilder *b;
+	GdaStatement *stmt;
+	GdaSet *params = NULL;
+	GdaDataModel *model;
+	gint favid = -1;
+
+	if (out_existing_fav)
+		memset (out_existing_fav, 0, sizeof (ToolsFavoritesAttributes));
 	g_return_val_if_fail ((id >= 0) || contents, -1);
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "id"), 0);
+					    gda_sql_builder_add_id (b, "id"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "type"), 0);
+					    gda_sql_builder_add_id (b, "type"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "name"), 0);
+					    gda_sql_builder_add_id (b, "name"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "descr"), 0);
+					    gda_sql_builder_add_id (b, "descr"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "contents"), 0);
+					    gda_sql_builder_add_id (b, "contents"), 0);
 	gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, NULL);
 
 	if (id >= 0) {
 		/* lookup from ID */
 		gda_sql_builder_set_where (b,
-		    gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-					  gda_sql_builder_add_id (b, "id"),
-					  gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE), 0));
+					   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+								     gda_sql_builder_add_id (b, "id"),
+								     gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE), 0));
 	}
 	else {
 		/* lookup using session and contents */
 		gda_sql_builder_set_where (b,
-	            gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND,
-					  gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-						   gda_sql_builder_add_id (b, "session"),
-						   gda_sql_builder_add_param (b, "session", G_TYPE_INT, FALSE), 0),
-					  gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-						   gda_sql_builder_add_id (b, "contents"),
-						   gda_sql_builder_add_param (b, "contents", G_TYPE_INT, FALSE), 0), 0));
+					   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND,
+								     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+											       gda_sql_builder_add_id (b, "session"),
+											       gda_sql_builder_add_param (b, "session", G_TYPE_INT, FALSE), 0),
+								     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
+											       gda_sql_builder_add_id (b, "contents"),
+											       gda_sql_builder_add_param (b, "contents", G_TYPE_INT, FALSE), 0), 0));
 	}
  	stmt = gda_sql_builder_get_statement (b, error);
 	g_object_unref (G_OBJECT (b));
@@ -413,7 +488,7 @@ find_favorite (BrowserFavorites *bfav, guint session_id, gint id, const gchar *c
  * Reorders the favorites for @order_key, making sure @id is at position @new_pos
  */
 static gboolean
-favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos, GError **error)
+favorites_reorder (ToolsFavorites *bfav, gint order_key, gint id, gint new_pos, GError **error)
 {
 	GdaSqlBuilder *b;
 	GdaStatement *stmt;
@@ -429,8 +504,8 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 	gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, NULL);
 	
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-				    gda_sql_builder_add_id (b, "order_key"),
-				    gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE), 0));
+								gda_sql_builder_add_id (b, "order_key"),
+								gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE), 0));
 	gda_sql_builder_select_order_by (b,
 					 gda_sql_builder_add_id (b, "rank"), TRUE, NULL);
 	stmt = gda_sql_builder_get_statement (b, error);
@@ -459,16 +534,16 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_UPDATE);
 	gda_sql_builder_set_table (b, FAVORDER_TABLE_NAME);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "rank"),
-				   gda_sql_builder_add_param (b, "rank", G_TYPE_INT, FALSE));
+					    gda_sql_builder_add_id (b, "rank"),
+					    gda_sql_builder_add_param (b, "rank", G_TYPE_INT, FALSE));
 	const GdaSqlBuilderId id_cond1 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-			      gda_sql_builder_add_id (b, "fav_id"),
-			      gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
-			      0);
+								   gda_sql_builder_add_id (b, "fav_id"),
+								   gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
+								   0);
 	const GdaSqlBuilderId id_cond2 = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-			      gda_sql_builder_add_id (b, "order_key"),
-			      gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE),
-			      0);
+								   gda_sql_builder_add_id (b, "order_key"),
+								   gda_sql_builder_add_param (b, "orderkey", G_TYPE_INT, FALSE),
+								   0);
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_AND, id_cond1, id_cond2, 0));
 	stmt = gda_sql_builder_get_statement (b, error);
 	if (!stmt) {
@@ -508,10 +583,10 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
 }
 
 /**
- * browser_favorites_add
- * @bfav: a #BrowserFavorites object
+ * tools_favorites_add
+ * @bfav: a #ToolsFavorites object
  * @session_id: session ID (0)
- * @fav: a pointer to a #BrowserFavoritesAttributes structure
+ * @fav: a pointer to a #ToolsFavoritesAttributes structure
  * @order_key: ordering key or -1 for none
  * @pos: position (ignored if @order_key < 0)
  * @error: a place to store errors, or %NULL
@@ -520,7 +595,7 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
  * NOTE:
  * <itemizedlist>
  *   <listitem><para>if @fav->id is < 0 then it's either an update or an insert (depending if fav->contents exists)
- *     and if it's not it is an UPDATE </para></listitem>
+ *     and if it's not it is an INSERT </para></listitem>
  *   <listitem><para>@fav->type can't be 0</para></listitem>
  *   <listitem><para>@fav->contents can't be %NULL</para></listitem>
  * </itemizedlist>
@@ -530,17 +605,17 @@ favorites_reorder (BrowserFavorites *bfav, gint order_key, gint id, gint new_pos
  * if @order_key is negative, then no ordering is done and @pos is ignored.
  */
 gboolean
-browser_favorites_add (BrowserFavorites *bfav, guint session_id,
-		       BrowserFavoritesAttributes *fav,
-		       gint order_key, gint pos,
-		       GError **error)
+tools_favorites_add (ToolsFavorites *bfav, guint session_id,
+		     ToolsFavoritesAttributes *fav,
+		     gint order_key, gint pos,
+		     GError **error)
 {
 	GdaConnection *store_cnc;
 	GdaSet *params = NULL;
 	gint favid = -1;
-	BrowserFavoritesAttributes efav; /* existing favorite */
+	ToolsFavoritesAttributes efav; /* existing favorite */
 
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (fav, FALSE);
 	g_return_val_if_fail (fav->contents, FALSE);
 
@@ -573,7 +648,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 	params = gda_set_new_inline (8,
 				     "session", G_TYPE_INT, session_id,
 				     "id", G_TYPE_INT, fav->id,
-				     "type", G_TYPE_STRING, browser_favorites_type_to_string (rtype),
+				     "type", G_TYPE_STRING, tools_favorites_type_to_string (rtype),
 				     "name", G_TYPE_STRING, fav->name ? fav->name : efav.name,
 				     "contents", G_TYPE_STRING, fav->contents,
 				     "rank", G_TYPE_INT, pos,
@@ -590,20 +665,20 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		gda_sql_builder_set_table (builder, FAVORITES_TABLE_NAME);
 
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "session"),
-					   gda_sql_builder_add_param (builder, "session", G_TYPE_INT, FALSE));
+						    gda_sql_builder_add_id (builder, "session"),
+						    gda_sql_builder_add_param (builder, "session", G_TYPE_INT, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "type"),
-					   gda_sql_builder_add_param (builder, "type", G_TYPE_INT, FALSE));
+						    gda_sql_builder_add_id (builder, "type"),
+						    gda_sql_builder_add_param (builder, "type", G_TYPE_INT, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "name"),
-					   gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, TRUE));
+						    gda_sql_builder_add_id (builder, "name"),
+						    gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, TRUE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "contents"),
-					   gda_sql_builder_add_param (builder, "contents", G_TYPE_STRING, FALSE));
+						    gda_sql_builder_add_id (builder, "contents"),
+						    gda_sql_builder_add_param (builder, "contents", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "descr"),
-					   gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING, TRUE));
+						    gda_sql_builder_add_id (builder, "descr"),
+						    gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING, TRUE));
 		stmt = gda_sql_builder_get_statement (builder, error);
 		g_object_unref (G_OBJECT (builder));
 		if (!stmt)
@@ -627,30 +702,30 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		gda_sql_builder_set_table (builder, FAVORITES_TABLE_NAME);
 
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "name"),
-					   gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, TRUE));
+						    gda_sql_builder_add_id (builder, "name"),
+						    gda_sql_builder_add_param (builder, "name", G_TYPE_STRING, TRUE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "contents"),
-					   gda_sql_builder_add_param (builder, "contents", G_TYPE_STRING, FALSE));
+						    gda_sql_builder_add_id (builder, "contents"),
+						    gda_sql_builder_add_param (builder, "contents", G_TYPE_STRING, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "descr"),
-					   gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING, TRUE));
+						    gda_sql_builder_add_id (builder, "descr"),
+						    gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING, TRUE));
 
 		gda_sql_builder_set_where (builder,
 					   gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
-								 gda_sql_builder_add_id (builder, "id"),
-								 gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE),
-								 0));
+								     gda_sql_builder_add_id (builder, "id"),
+								     gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE),
+								     0));
 		if (fav->id == favid) {
 			/* alter name and description only if fav->id was OK */
 			gda_sql_builder_add_field_value_id (builder,
-						   gda_sql_builder_add_id (builder, "name"),
-						   gda_sql_builder_add_param (builder, "name", G_TYPE_STRING,
-									  TRUE));
+							    gda_sql_builder_add_id (builder, "name"),
+							    gda_sql_builder_add_param (builder, "name", G_TYPE_STRING,
+										       TRUE));
 			gda_sql_builder_add_field_value_id (builder,
-						   gda_sql_builder_add_id (builder, "descr"),
-						   gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING,
-									  TRUE));
+							    gda_sql_builder_add_id (builder, "descr"),
+							    gda_sql_builder_add_param (builder, "descr", G_TYPE_STRING,
+										       TRUE));
 		}
 
 		stmt = gda_sql_builder_get_statement (builder, error);
@@ -664,7 +739,7 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		g_object_unref (stmt);
 		fav->id = favid;
 	}
-	browser_favorites_reset_attributes (&efav);
+	tools_favorites_reset_attributes (&efav);
 
 	if (order_key >= 0) {
 		GdaSqlBuilder *builder;
@@ -682,15 +757,15 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
 		gda_sql_builder_set_table (builder, FAVORDER_TABLE_NAME);
 		gda_sql_builder_set_where (builder,
-		      gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_AND,
-			    gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
-						  gda_sql_builder_add_id (builder, "fav_id"),
-						  gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE),
-						  0),
-			    gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
-						  gda_sql_builder_add_id (builder, "order_key"),
-						  gda_sql_builder_add_param (builder, "orderkey", G_TYPE_INT, FALSE),
-						  0), 0));
+					   gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_AND,
+								     gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+											       gda_sql_builder_add_id (builder, "fav_id"),
+											       gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE),
+											       0),
+								     gda_sql_builder_add_cond (builder, GDA_SQL_OPERATOR_TYPE_EQ,
+											       gda_sql_builder_add_id (builder, "order_key"),
+											       gda_sql_builder_add_param (builder, "orderkey", G_TYPE_INT, FALSE),
+											       0), 0));
 		stmt = gda_sql_builder_get_statement (builder, error);
 		g_object_unref (G_OBJECT (builder));
 		if (!stmt)
@@ -704,14 +779,14 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 		builder = gda_sql_builder_new (GDA_SQL_STATEMENT_INSERT);
 		gda_sql_builder_set_table (builder, FAVORDER_TABLE_NAME);
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "fav_id"),
-					   gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE));
+						    gda_sql_builder_add_id (builder, "fav_id"),
+						    gda_sql_builder_add_param (builder, "id", G_TYPE_INT, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "rank"),
-					   gda_sql_builder_add_param (builder, "rank", G_TYPE_INT, FALSE));
+						    gda_sql_builder_add_id (builder, "rank"),
+						    gda_sql_builder_add_param (builder, "rank", G_TYPE_INT, FALSE));
 		gda_sql_builder_add_field_value_id (builder,
-					   gda_sql_builder_add_id (builder, "order_key"),
-					   gda_sql_builder_add_param (builder, "orderkey", G_TYPE_STRING, TRUE));
+						    gda_sql_builder_add_id (builder, "order_key"),
+						    gda_sql_builder_add_param (builder, "orderkey", G_TYPE_STRING, TRUE));
 		stmt = gda_sql_builder_get_statement (builder, error);
 		g_object_unref (G_OBJECT (builder));
 		if (!stmt)
@@ -736,8 +811,8 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 	if (params)
 		g_object_unref (params);
 	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-		       g_quark_from_string (browser_favorites_type_to_string (rtype)));
+	g_signal_emit (bfav, tools_favorites_signals [FAV_CHANGED],
+		       g_quark_from_string (tools_favorites_type_to_string (rtype)));
 	return TRUE;
 
  err:
@@ -749,44 +824,44 @@ browser_favorites_add (BrowserFavorites *bfav, guint session_id,
 }
 
 /**
- * browser_favorites_free_list
- * @fav_list: a list of #BrowserFavoritesAttributes
+ * tools_favorites_free_list
+ * @fav_list: a list of #ToolsFavoritesAttributes
  *
- * Frees all the #BrowserFavoritesAttributes of the @fav_list list, and frees the list
+ * Frees all the #ToolsFavoritesAttributes of the @fav_list list, and frees the list
  * itself.
  */
 void
-browser_favorites_free_list (GSList *fav_list)
+tools_favorites_free_list (GSList *fav_list)
 {
 	GSList *list;
 	if (!fav_list)
 		return;
 	for (list = fav_list; list; list = list->next) {
-		BrowserFavoritesAttributes *fav = (BrowserFavoritesAttributes*) list->data;
-		browser_favorites_reset_attributes (fav);
+		ToolsFavoritesAttributes *fav = (ToolsFavoritesAttributes*) list->data;
+		tools_favorites_reset_attributes (fav);
 		g_free (fav);
 	}
 	g_slist_free (fav_list);
 }
 
 /**
- * browser_favorites_reset_attributes
- * @fav: a pointer to a #BrowserFavoritesAttributes
+ * tools_favorites_reset_attributes
+ * @fav: a pointer to a #ToolsFavoritesAttributes
  *
  * Resets @fav with empty attributes; it does not free @fav.
  */
 void
-browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav)
+tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav)
 {
 	g_free (fav->name);
 	g_free (fav->descr);
 	g_free (fav->contents);
-	memset (fav, 0, sizeof (BrowserFavoritesAttributes));
+	memset (fav, 0, sizeof (ToolsFavoritesAttributes));
 }
 
 /**
- * browser_favorites_list
- * @bfav: a #BrowserFavorites
+ * tools_favorites_list
+ * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @type: filter the type of attributes to be listed
  * @order_key: a key to order the listed favorites, such as #ORDER_KEY_SCHEMA
@@ -794,12 +869,12 @@ browser_favorites_reset_attributes (BrowserFavoritesAttributes *fav)
  *
  * Extract some favorites.
  *
- * Returns: a new list of #BrowserFavoritesAttributes pointers. The list has to
- *          be freed using browser_favorites_free_list()
+ * Returns: a new list of #ToolsFavoritesAttributes pointers. The list has to
+ *          be freed using tools_favorites_free_list()
  */
 GSList *
-browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavoritesType type,
-			gint order_key, GError **error)
+tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type,
+		      gint order_key, GError **error)
 {
 	GdaSqlBuilder *b;
 	GdaSet *params = NULL;
@@ -810,10 +885,10 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 	guint and_cond_ids [3];
 	int and_cond_size = 0;
-	guint or_cond_ids [BROWSER_FAVORITES_NB_TYPES];
+	guint or_cond_ids [TOOLS_FAVORITES_NB_TYPES];
 	int or_cond_size = 0;
 
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), NULL);
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), NULL);
 	g_return_val_if_fail ((type != 0) || (order_key >= 0), NULL);
 
 	if (! meta_store_addons_init (bfav, error))
@@ -821,56 +896,56 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "fav.contents"), 0);
+					    gda_sql_builder_add_id (b, "fav.contents"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "fav.descr"), 0);
+					    gda_sql_builder_add_id (b, "fav.descr"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "fav.name"), 0);
+					    gda_sql_builder_add_id (b, "fav.name"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "fav.type"), 0);
+					    gda_sql_builder_add_id (b, "fav.type"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "fav.id"), 0);
+					    gda_sql_builder_add_id (b, "fav.id"), 0);
 
 	t1 = gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, "fav");
 	if (order_key > 0) {
 		t2 = gda_sql_builder_select_add_target (b, FAVORDER_TABLE_NAME, "o");
 		gda_sql_builder_select_join_targets (b, t1, t2, GDA_SQL_SELECT_JOIN_LEFT,
 						     gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-									   gda_sql_builder_add_id (b, "fav.id"),
-									   gda_sql_builder_add_id (b, "o.fav_id"),
-									   0));
+									       gda_sql_builder_add_id (b, "fav.id"),
+									       gda_sql_builder_add_id (b, "o.fav_id"),
+									       0));
 		gda_sql_builder_select_order_by (b,
 						 gda_sql_builder_add_id (b, "o.rank"), TRUE, NULL);
 
 		and_cond_ids [and_cond_size] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							     gda_sql_builder_add_id (b, "o.order_key"),
-							     gda_sql_builder_add_param (b, "okey", G_TYPE_INT, FALSE),
-							     0);
+									 gda_sql_builder_add_id (b, "o.order_key"),
+									 gda_sql_builder_add_param (b, "okey", G_TYPE_INT, TRUE),
+									 0);
 		and_cond_size++;
 	}
 
 	and_cond_ids [and_cond_size] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-						     gda_sql_builder_add_id (b, "fav.session"),
-						     gda_sql_builder_add_param (b, "session", G_TYPE_INT, FALSE), 0);
+								 gda_sql_builder_add_id (b, "fav.session"),
+								 gda_sql_builder_add_param (b, "session", G_TYPE_INT, FALSE), 0);
 	and_cond_size++;
 
 	gint i;
 	gint flag;
-	for (i = 0, flag = 1; i < BROWSER_FAVORITES_NB_TYPES; i++, flag <<= 1) {
+	for (i = 0, flag = 1; i < TOOLS_FAVORITES_NB_TYPES; i++, flag <<= 1) {
 		if (type & flag) {
 			gchar *str;
-			str = g_strdup_printf ("'%s'", browser_favorites_type_to_string (flag));
+			str = g_strdup_printf ("'%s'", tools_favorites_type_to_string (flag));
 			or_cond_ids [or_cond_size] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							     gda_sql_builder_add_id (b, "fav.type"),
-							     gda_sql_builder_add_id (b, str),
-							     0);
+									       gda_sql_builder_add_id (b, "fav.type"),
+									       gda_sql_builder_add_id (b, str),
+									       0);
 			g_free (str);
 			or_cond_size++;
 		}
 	}
 	if (or_cond_size >= 1) {
 		and_cond_ids [and_cond_size] = gda_sql_builder_add_cond_v (b, GDA_SQL_OPERATOR_TYPE_OR,
-								       or_cond_ids, or_cond_size);
+									   or_cond_ids, or_cond_size);
 		and_cond_size++;
 	}
 
@@ -923,8 +998,8 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 		if (type)
 			id = gda_data_model_get_value_at (model, 4, i, error);
 		if (id) {
-			BrowserFavoritesAttributes *fav;
-			fav = g_new0 (BrowserFavoritesAttributes, 1);
+			ToolsFavoritesAttributes *fav;
+			fav = g_new0 (ToolsFavoritesAttributes, 1);
 			fav->id = g_value_get_int (id);
 			fav->type = favorite_string_to_type (g_value_get_string (type));
 			if (G_VALUE_TYPE (descr) == G_TYPE_STRING)
@@ -935,7 +1010,7 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 			fav_list = g_slist_prepend (fav_list, fav);
 		}
 		else {
-			browser_favorites_free_list (fav_list);
+			tools_favorites_free_list (fav_list);
 			fav_list = NULL;
 			goto out;
 		}
@@ -952,10 +1027,10 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
 
 
 /**
- * browser_favorites_delete
- * @bfav: a #BrowserFavorites
+ * tools_favorites_delete
+ * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
- * @fav: a pointer to a #BrowserFavoritesAttributes definning which favorite to delete
+ * @fav: a pointer to a #ToolsFavoritesAttributes definning which favorite to delete
  * @error: a place to store errors, or %NULL
  *
  * Delete a favorite
@@ -963,21 +1038,21 @@ browser_favorites_list (BrowserFavorites *bfav, guint session_id, BrowserFavorit
  * Returns: %TRUE if no error occurred.
  */
 gboolean
-browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
-			  BrowserFavoritesAttributes *fav, GError **error)
+tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
+			ToolsFavoritesAttributes *fav, GError **error)
 {
 	GdaSqlBuilder *b;
 	GdaSet *params = NULL;
 	GdaStatement *stmt;
 	gboolean retval = FALSE;
-	gint favid;
-	BrowserFavoritesAttributes efav;
+	gint favid = -1;
+	ToolsFavoritesAttributes efav;
 
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (fav, FALSE);
-	g_return_val_if_fail ((fav->id >= 0) || fav->contents, FALSE);
+	g_return_val_if_fail ((fav->id >= 0) || fav->contents || fav->name , FALSE);
 	
-	memset (&efav, 0, sizeof (BrowserFavoritesAttributes));
+	memset (&efav, 0, sizeof (ToolsFavoritesAttributes));
 	if (! meta_store_addons_init (bfav, error))
 		return FALSE;
 
@@ -995,25 +1070,42 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
                 return FALSE;
 	}
 
-	favid = find_favorite (bfav, session_id, fav->id, fav->contents, &efav, error);
-	if (favid < 0)
+	GError *lerror = NULL;
+	if ((fav->id >= 0) || fav->contents) {
+		favid = find_favorite (bfav, session_id, fav->id, fav->contents, &efav, &lerror);
+		if (lerror) {
+			g_propagate_error (error, lerror);
+			goto out;
+		}
+	}
+	if ((favid < 0) && fav->name) {
+		favid = find_favorite_by_name (bfav, session_id, fav->name, fav->type,
+					       &efav, &lerror);
+		if (lerror) {
+			g_propagate_error (error, lerror);
+			goto out;
+		}
+	}
+	if (favid < 0) {
+		g_set_error (error, 0, 0,
+			     "%s", _("Could not find favorite"));
 		goto out;
+	}
 
 	/* remove entry from favorites' list */
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
 	gda_sql_builder_set_table (b, FAVORITES_TABLE_NAME);
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							    gda_sql_builder_add_id (b, "id"),
-							    gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
-							    0));
+								gda_sql_builder_add_id (b, "id"),
+								gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
+								0));
 
 	stmt = gda_sql_builder_get_statement (b, error);
 	g_object_unref (G_OBJECT (b));
 	if (!stmt)
 		goto out;
 
-	params = gda_set_new_inline (1,
-				     "id", G_TYPE_INT, favid);
+	params = gda_set_new_inline (1, "id", G_TYPE_INT, favid);
 
 	if (gda_connection_statement_execute_non_select (bfav->priv->store_cnc, stmt, params, NULL, error) == -1) {
 		g_object_unref (stmt);
@@ -1025,9 +1117,9 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_DELETE);
 	gda_sql_builder_set_table (b, FAVORDER_TABLE_NAME);
 	gda_sql_builder_set_where (b, gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							    gda_sql_builder_add_id (b, "fav_id"),
-							    gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
-							    0));
+								gda_sql_builder_add_id (b, "fav_id"),
+								gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE),
+								0));
 
 	stmt = gda_sql_builder_get_statement (b, error);
 	g_object_unref (G_OBJECT (b));
@@ -1052,9 +1144,9 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 
 	gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
 	if (retval)
-		g_signal_emit (bfav, browser_favorites_signals [FAV_CHANGED],
-			       g_quark_from_string (browser_favorites_type_to_string (efav.type)));
-	browser_favorites_reset_attributes (&efav);
+		g_signal_emit (bfav, tools_favorites_signals [FAV_CHANGED],
+			       g_quark_from_string (tools_favorites_type_to_string (efav.type)));
+	tools_favorites_reset_attributes (&efav);
 	if (params)
 		g_object_unref (G_OBJECT (params));
 
@@ -1062,43 +1154,73 @@ browser_favorites_delete (BrowserFavorites *bfav, guint session_id,
 }
 
 /**
- * browser_favorites_find
- * @bfav: a #BrowserFavorites
+ * tools_favorites_find
+ * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @contents: the favorite's contents
- * @out_fav: (allow-none): a #BrowserFavoritesAttributes to be filled with the favorite's attributes, or %NULL
+ * @out_fav: (allow-none): a #ToolsFavoritesAttributes to be filled with the favorite's attributes, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure. Use browser_favorites_reset_attributes() to reset @out_fav's contents.
+ * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: the requested's favorite ID, or -1 if not found
  */
 gint
-browser_favorites_find (BrowserFavorites *bfav, guint session_id, const gchar *contents,
-			BrowserFavoritesAttributes *out_fav, GError **error)
+tools_favorites_find (ToolsFavorites *bfav, guint session_id, const gchar *contents,
+		      ToolsFavoritesAttributes *out_fav, GError **error)
 {
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), -1);
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), -1);
 	g_return_val_if_fail (contents, -1);
 
+	if (! meta_store_addons_init (bfav, error))
+		return -1;
 	return find_favorite (bfav, session_id, -1, contents, out_fav, error);
 }
 
 /**
- * browser_favorites_get
- * @bfav: a #BrowserFavorites
- * @fav_id: the favorite's ID
- * @out_fav: a #BrowserFavoritesAttributes to be filled with the favorite's attributes
+ * tools_favorites_find_by_name:
+ * @bfav: a #ToolsFavorites
+ * @session_id: 0 for now
+ * @type: the favorite's type
+ * @name: the favorite's name
+ * @out_fav: (allow-none): a #ToolsFavoritesAttributes to be filled with the favorite's attributes, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure. Use browser_favorites_reset_attributes() to reset @out_fav's contents.
+ * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
+ *
+ * Retuns: the requested's favorite ID, or -1 if not found
+ */
+gint
+tools_favorites_find_by_name (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type, const gchar *name,
+			      ToolsFavoritesAttributes *out_fav, GError **error)
+{
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), -1);
+	g_return_val_if_fail (name, -1);
+
+	if (! meta_store_addons_init (bfav, error))
+		return -1;
+	return find_favorite_by_name (bfav, session_id, name, type, out_fav, error);
+}
+
+
+
+/**
+ * tools_favorites_get
+ * @bfav: a #ToolsFavorites
+ * @fav_id: the favorite's ID
+ * @out_fav: a #ToolsFavoritesAttributes to be filled with the favorite's attributes
+ * @error: a place to store errors, or %NULL
+ *
+ * Get all the information about a favorite from its id: fills the @out_fav
+ * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: %TRUE if no error occurred.
  */
 gboolean
-browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
-		       BrowserFavoritesAttributes *out_fav, GError **error)
+tools_favorites_get (ToolsFavorites *bfav, gint fav_id,
+		     ToolsFavoritesAttributes *out_fav, GError **error)
 {
 	GdaSqlBuilder *b;
 	GdaStatement *stmt;
@@ -1106,29 +1228,29 @@ browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
 	GdaDataModel *model;
 	gboolean retval = FALSE;
 
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (out_fav, FALSE);
 	g_return_val_if_fail (fav_id >= 0, FALSE);
 
-	memset (out_fav, 0, sizeof (BrowserFavoritesAttributes));
+	memset (out_fav, 0, sizeof (ToolsFavoritesAttributes));
 
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "id"), 0);
+					    gda_sql_builder_add_id (b, "id"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "type"), 0);
+					    gda_sql_builder_add_id (b, "type"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "name"), 0);
+					    gda_sql_builder_add_id (b, "name"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "descr"), 0);
+					    gda_sql_builder_add_id (b, "descr"), 0);
 	gda_sql_builder_add_field_value_id (b,
-				   gda_sql_builder_add_id (b, "contents"), 0);
+					    gda_sql_builder_add_id (b, "contents"), 0);
 	gda_sql_builder_select_add_target (b, FAVORITES_TABLE_NAME, NULL);
 
 	gda_sql_builder_set_where (b,
 				   gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
-							 gda_sql_builder_add_id (b, "id"),
-						     gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE), 0));
+							     gda_sql_builder_add_id (b, "id"),
+							     gda_sql_builder_add_param (b, "id", G_TYPE_INT, FALSE), 0));
 	stmt = gda_sql_builder_get_statement (b, error);
 	g_object_unref (G_OBJECT (b));
 	if (!stmt)
@@ -1166,155 +1288,4 @@ browser_favorites_get (BrowserFavorites *bfav, gint fav_id,
  out:
 	g_object_unref (G_OBJECT (model));
 	return retval;
-}
-
-static gint
-actions_sort_func (BrowserFavoriteAction *act1, BrowserFavoriteAction *act2)
-{
-	return act2->nb_bound - act1->nb_bound;
-}
-
-/**
- * browser_favorites_get_actions
- * @bfav: a #BrowserFavorites
- * @bcnc: a #BrowserConnection
- * @set: a #GdaSet
- *
- * Get a list of #BrowserFavoriteAction which can be executed with the data in @set.
- *
- * Returns: a new list of #BrowserFavoriteAction, free list with browser_favorites_free_actions()
- */
-GSList *
-browser_favorites_get_actions (BrowserFavorites *bfav, BrowserConnection *bcnc, GdaSet *set)
-{
-	GSList *fav_list, *list, *retlist = NULL;
-	g_return_val_if_fail (BROWSER_IS_FAVORITES (bfav), NULL);
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
-	g_return_val_if_fail (!set || GDA_IS_SET (set), NULL);
-
-	fav_list = browser_favorites_list (bfav, 0, BROWSER_FAVORITES_ACTIONS, -1, NULL);
-	if (! fav_list)
-		return NULL;
-
-	for (list = fav_list; list; list = list->next) {
-		BrowserFavoritesAttributes *fa = (BrowserFavoritesAttributes*) list->data;
-		BrowserFavoritesAttributes qfa;
-		if (! g_str_has_prefix (fa->contents, "QUERY")) {
-			g_warning ("Malformed action contents '%s', please report error to "
-				   "http://bugzilla.gnome.org/ for the \"libgda\" product",
-				   fa->contents);
-			continue;
-		}
-		if (browser_favorites_get (bfav, atoi (fa->contents + 5), &qfa, NULL)) {
-			GdaSet *params;
-			GSList *plist;
-			GdaBatch *batch;
-			GdaStatement *stmt = NULL;
-			GdaSqlParser *parser;
-			const gchar *remain;
-			const GSList *stmt_list;
-			gint nb_bound = 0;
-
-			parser = browser_connection_create_parser (bcnc);
-			batch = gda_sql_parser_parse_string_as_batch (parser, qfa.contents, &remain, NULL);
-			g_object_unref (parser);
-			if (!batch) {
-				browser_favorites_reset_attributes (&qfa);
-				continue;
-			}
-			stmt_list = gda_batch_get_statements (batch);
-			for (plist = (GSList*) stmt_list; plist; plist = plist->next) {
-				if (! gda_statement_is_useless (GDA_STATEMENT (plist->data))) {
-					if (stmt)
-						break;
-					else
-						stmt = g_object_ref (GDA_STATEMENT (plist->data));
-				}
-			}
-			g_object_unref (batch);
-			if (!stmt || plist) {
-				browser_favorites_reset_attributes (&qfa);
-				continue;
-			}
-			
-			if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
-				g_object_unref (stmt);
-				browser_favorites_reset_attributes (&qfa);
-				continue;
-			}
-			browser_connection_define_ui_plugins_for_stmt (bcnc, stmt, params);
-			
-			for (plist = params->holders; plist; plist = plist->next) {
-				/* try to find holder in @set */
-				GdaHolder *req_holder, *in_holder;
-				req_holder = GDA_HOLDER (plist->data);
-				in_holder = gda_set_get_holder (set, gda_holder_get_id (req_holder));
-				if (in_holder && gda_holder_set_bind (req_holder, in_holder, NULL)) {
-					/* bound this holder to the oune found */
-					nb_bound++;
-				}
-			}
-
-			if (nb_bound > 0) {
-				/* at least 1 holder was found=> keep the action */
-				BrowserFavoriteAction *act;
-				act = g_new0 (BrowserFavoriteAction, 1);
-				retlist = g_slist_insert_sorted (retlist, act,
-								 (GCompareFunc) actions_sort_func);
-				act->params = g_object_ref (params);
-				act->id = fa->id;
-				act->name = g_strdup (fa->name);
-				act->stmt = g_object_ref (stmt);
-				act->nb_bound = nb_bound;
-
-				/*g_print ("Action identified: ID=%d Bound=%d name=[%s] SQL=[%s]\n",
-				  act->id, act->nb_bound,
-				  act->name, qfa.contents);*/
-			}
-
-			g_object_unref (stmt);
-			g_object_unref (params);
-			browser_favorites_reset_attributes (&qfa);
-		}
-	}
-	browser_favorites_free_list (fav_list);
-
-	return retlist;
-}
-
-/**
- * browser_favorites_free_action
- * @action: (allow-none): a #BrowserFavoriteAction, or %NULL
- *
- * Frees @action
- */
-void
-browser_favorites_free_action (BrowserFavoriteAction *action)
-{
-	if (! action)
-		return;
-	g_free (action->name);
-	if (action->stmt)
-		g_object_unref (action->stmt);
-	if (action->params)
-		g_object_unref (action->params);
-	g_free (action);
-}
-
-/**
- * browser_favorites_free_actions_list
- * @actions_list: (allow-none): a list of #BrowserFavoriteAction, or %NULL
- *
- * Free a list of #BrowserFavoriteAction (frees the list and each #BrowserFavoriteAction)
- */
-void
-browser_favorites_free_actions_list (GSList *actions_list)
-{
-	GSList *list;
-	if (!actions_list)
-		return;
-
-	for (list = actions_list; list; list = list->next)
-		browser_favorites_free_action ((BrowserFavoriteAction*) list->data);
-	g_slist_free (actions_list);
 }
