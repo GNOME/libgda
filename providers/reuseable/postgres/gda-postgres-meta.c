@@ -2111,7 +2111,7 @@ concatenate_index_details (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	nrows = gda_data_model_get_n_rows (index_oid_model);
 	if (nrows == 0) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("could not determine the indexed columns for index"));
+			     "%s", _("could not determine the indexed columns for index"));
 		return NULL;
 	}
 	for (i = 0; i < nrows; i++) {

@@ -1924,7 +1924,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			gda_connection_event_set_description (event, _("Missing parameter(s) to execute query"));
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-				     _("Missing parameter(s) to execute query"));
+				     "%s", _("Missing parameter(s) to execute query"));
 			break;
 		}
 

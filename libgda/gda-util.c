@@ -1726,7 +1726,7 @@ gda_statement_rewrite_for_default_values (GdaStatement *stmt, GdaSet *params, gb
 		if (remove)
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
-				     _("Can't rewrite UPDATE statement to handle default values"));
+				     "%s", _("Can't rewrite UPDATE statement to handle default values"));
 		else
 			ok = stmt_rewrite_update_default_keyword ((GdaSqlStatementUpdate*) sqlst->contents,
 								  params, error);
@@ -1734,7 +1734,7 @@ gda_statement_rewrite_for_default_values (GdaStatement *stmt, GdaSet *params, gb
 	default:
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
-			     "Can't rewrite statement is not INSERT or UPDATE");
+			     "%s", _("Can't rewrite statement which is not INSERT or UPDATE"));
 		break;
 	}
 
@@ -1761,7 +1761,7 @@ stmt_rewrite_insert_remove (GdaSqlStatementInsert *ins, GdaSet *params, GError *
 		TO_IMPLEMENT;
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_DEFAULT_VALUE_HANDLING_ERROR,
-			     "Not yet implemented");
+			     "%s", "Not yet implemented");
 		return FALSE;
 	}
 

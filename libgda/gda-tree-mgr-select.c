@@ -297,7 +297,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 	if (!mgr->priv->cnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No connection specified"));
+			     "%s", _("No connection specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -305,7 +305,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 	if (!mgr->priv->stmt) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No SELECT statement specified"));
+			     "%s", _("No SELECT statement specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -361,7 +361,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 				if (out_error)
 					*out_error = TRUE;
 				g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-					     _("Unable to get iterator's value"));
+					     "%s", _("Unable to get iterator's value"));
 				return NULL;
 			}
 

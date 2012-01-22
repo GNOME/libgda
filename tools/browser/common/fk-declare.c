@@ -557,7 +557,7 @@ fk_declare_write (FkDeclare *decl, BrowserWindow *bwin, GError **error)
 
 	if (! decl->priv->dialog_sensitive) {
 		g_set_error (error, 0, 0,
-			     _("Missing information to declare foreign key"));
+			     "%s", _("Missing information to declare foreign key"));
 		return FALSE;
 	}
 
@@ -639,7 +639,7 @@ fk_declare_undeclare (GdaMetaStruct *mstruct, BrowserWindow *bwin, GdaMetaTableF
 	    !decl_fk->depend_on->obj_schema ||
 	    !decl_fk->depend_on->obj_name) {
 		g_set_error (error, 0, 0,
-			     _("Missing information to undeclare foreign key"));
+			     "%s", _("Missing information to undeclare foreign key"));
 		return FALSE;
 	}
 

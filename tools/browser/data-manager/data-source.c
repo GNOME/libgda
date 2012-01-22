@@ -434,7 +434,7 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 	mstruct = browser_connection_get_meta_struct (source->priv->bcnc);
 	if (! mstruct) {
 		g_set_error (error, 0, 0,
-			     _("Not ready"));
+			     "%s", _("Not ready"));
 		return NULL;
 	}
 
@@ -482,7 +482,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 	if (!tname) {
 		g_set_error (error, 0, 0,
 			     /* Translators: Do not translate "name" */
-			     _("Missing attribute \"name\" for table"));
+			     "%s", _("Missing attribute \"name\" for table"));
 		return FALSE;
 	}
 
@@ -808,7 +808,7 @@ exec_end_timeout_cb (DataSource *source)
 		else {
 			g_object_unref (obj);
 			g_set_error (&source->priv->exec_error, 0, 0,
-				     _("Statement to execute is not a selection statement"));
+				     "%s", _("Statement to execute is not a selection statement"));
 		}
 
 		source->priv->exec_id = 0;
@@ -948,7 +948,7 @@ data_source_execute (DataSource *source, GError **error)
 			g_propagate_error (error, source->priv->init_error);
 		else
 			g_set_error (error, 0, 0,
-				     _("No SELECT statement to execute"));
+				     "%s", _("No SELECT statement to execute"));
 	}
 
 	if (source->priv->model) {
@@ -1218,7 +1218,7 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 	source->priv->builder = b;
 	if (! gda_sql_builder_select_add_target (b, table, NULL)) {
 		g_set_error (error, 0, 0,
-			     _("Could not build SELECT statement"));
+			     "%s", _("Could not build SELECT statement"));
 		return FALSE;
 	}
 	gda_sql_builder_select_set_limit (b,
@@ -1285,7 +1285,7 @@ data_source_set_query (DataSource *source, const gchar *sql, GError **warning)
 
 	if (remain)
 		g_set_error (warning, 0, 0,
-			     _("Multiple statements detected, only the first will be used"));
+			     "%s", _("Multiple statements detected, only the first will be used"));
 
 	/* try to normalize the statement */
 	GdaSqlStatement *sqlst;

@@ -4109,7 +4109,7 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 
 	if (!context->table_name || !(*context->table_name)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
-			     _("Missing table name in meta data context"));
+			     "%s", _("Missing table name in meta data context"));
 		return NULL;
 	}
 
@@ -4136,7 +4136,7 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 
 			if (!context->column_names [i]) {
 				g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
-					     _("Missing column name in meta data context"));
+					     "%s", _("Missing column name in meta data context"));
 				goto onerror;
 			}
 			lcontext->column_names [i] = g_strdup (context->column_names [i]);
@@ -4216,7 +4216,7 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 	}
 	else {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
-			     _("Unknown table in meta data context"));
+			     "%s", _("Unknown table in meta data context"));
 		return NULL;
 	}
 }

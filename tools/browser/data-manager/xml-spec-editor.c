@@ -168,7 +168,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 	if (!doc) {
 		TO_IMPLEMENT;
 		g_set_error (&lerror, 0, 0,
-			     _("Error parsing XML specifications"));
+			     "%s", _("Error parsing XML specifications"));
 		goto out;
 	}
 

@@ -733,7 +733,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 	if (res == MYSQL_NO_DATA) {
 		/* should not happen */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     "No more data, please report this bug to "
+			     "%s", "No more data, please report this bug to "
 			     "http://bugzilla.gnome.org/ for the \"libgda\" product and the MySQL provider.");
 	}
 	else if (res == MYSQL_DATA_TRUNCATED) {

@@ -1053,7 +1053,7 @@ validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *set)
 	/* signal the holder validate-change */
 	GError *error = NULL;
 	if (set->priv->read_only)
-		g_set_error (&error, GDA_SET_ERROR, GDA_SET_READ_ONLY_ERROR, _("Data set does not allow modifications"));
+		g_set_error (&error, GDA_SET_ERROR, GDA_SET_READ_ONLY_ERROR, "%s", _("Data set does not allow modifications"));
 	else {
 #ifdef GDA_DEBUG_signal
 		g_print (">> 'VALIDATE_HOLDER_CHANGE' from %s\n", __FUNCTION__);

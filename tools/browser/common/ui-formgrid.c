@@ -650,7 +650,7 @@ exec_end_timeout_cb (ActionExecutedData *aed)
                 else {
 			g_object_unref (obj);
                         g_set_error (&error, 0, 0,
-                                     _("Statement to execute is not a selection statement"));
+                                     "%s", _("Statement to execute is not a selection statement"));
                 }
         }
 

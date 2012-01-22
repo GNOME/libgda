@@ -299,7 +299,7 @@ gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node
 
 	if (!mgr->priv->cnc && !mgr->priv->mstore) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No connection and no GdaMetaStore specified"));
+			     "%s", _("No connection and no GdaMetaStore specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -385,7 +385,7 @@ gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node
 
 	if (!schema_specified) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No schema specified"));
+			     "%s", _("No schema specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -393,7 +393,7 @@ gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node
 
 	if (!table_specified) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No table specified"));
+			     "%s", _("No table specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -422,7 +422,7 @@ gda_tree_mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node
 			if (out_error)
 				*out_error = TRUE;
 			g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-				     _("Unable to get column name"));
+				     "%s", _("Unable to get column name"));
 			return NULL;
 		}
 

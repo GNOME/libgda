@@ -315,7 +315,7 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 	return virtual;
 #else
         sleep (5);
-        g_set_error (error, 0, 0, "Timeout!!!");
+        g_set_error (error, 0, 0, "%s", "Timeout!!!");
         return NULL;
 #endif
 }
