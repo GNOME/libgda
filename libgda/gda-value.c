@@ -39,6 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <locale.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-blob-op.h>
 #include <libgda/gda-util.h>
@@ -52,6 +53,7 @@
 #define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
 #endif
 
+extern gchar *gda_numeric_locale;
 
 #  ifdef GSEAL_ENABLE
 /**
@@ -944,7 +946,9 @@ gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 	g_return_if_fail (numeric);
 	if (numeric->number)
 		g_free (numeric->number);
+	setlocale (LC_NUMERIC, "C");
 	numeric->number = g_strdup_printf ("%lf", number);
+	setlocale (LC_NUMERIC, gda_numeric_locale);
 }
 
 /**
