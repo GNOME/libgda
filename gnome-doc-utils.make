@@ -95,6 +95,7 @@ DOC_MODULE ?=
 ## @ DOC_ID
 ## The unique identifier for a Mallard document
 DOC_ID ?=
+_DOC_CHECK = $(if $(DOC_NOCHECK),,$(DOC_NOCHECK))
 
 ## @ DOC_PAGES
 ## Page files in a Mallard document
@@ -504,7 +505,7 @@ dist-doc-dsk:
 .PHONY: check-doc-docs check-doc-omf
 check:							\
 	$(if $(DOC_MODULE),check-doc-docs)		\
-	$(if $(DOC_ID),check-doc-pages)			\
+	$(if $(_DOC_CHECK),check-doc-pages)			\
 	$(if $(_DOC_OMF_IN),check-doc-omf)
 
 check-doc-docs: $(_DOC_C_DOCS) $(_DOC_LC_DOCS)
