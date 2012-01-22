@@ -258,7 +258,6 @@ testing/gdaui-test-data-entries.c
 tools/browser/auth-dialog.c
 tools/browser/browser-connection.c
 tools/browser/browser-connections-list.c
-tools/browser/browser-favorites.c
 tools/browser/browser-stock-icons.c
 tools/browser/browser-virtual-connection.c
 tools/browser/browser-window.c
@@ -326,5 +325,6 @@ tools/gda-list-server-op.c
 tools/gda-sql.c
 tools/html-doc.c
 tools/tools-input.c
+tools/tools-favorites.c
 tools/tools-utils.c
 tools/web-server.c
