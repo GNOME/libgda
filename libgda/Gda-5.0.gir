@@ -11779,7 +11779,8 @@ Free-function: gda_numeric_free</doc>
       </method>
       <method name="set_from_string"
               c:identifier="gda_numeric_set_from_string">
-        <doc xml:whitespace="preserve">Sets @numeric with a number represented by @str.
+        <doc xml:whitespace="preserve">Sets @numeric with a number represented by @str. By default converts @str to
+#gdouble.
 
 * Since: 5.0.2</doc>
         <return-value transfer-ownership="none">
