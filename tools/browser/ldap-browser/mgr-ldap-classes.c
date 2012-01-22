@@ -183,7 +183,7 @@ mgr_ldap_classes_update_children_nonflat (MgrLdapClasses *mgr, GdaTreeNode *node
 	gchar *real_class = NULL;
 	if (!mgr->priv->bcnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No LDAP connection specified"));
+			     "%s", _("No LDAP connection specified"));
 		if (out_error)
 			*out_error = TRUE;
 		goto onerror;
@@ -271,7 +271,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 {
 	if (!mgr->priv->bcnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No LDAP connection specified"));
+			     "%s", _("No LDAP connection specified"));
 		if (out_error)
 			*out_error = TRUE;
 		goto onerror;

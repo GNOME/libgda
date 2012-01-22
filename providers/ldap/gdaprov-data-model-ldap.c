@@ -853,7 +853,7 @@ update_iter_from_ldap_row (GdaDataModelLdap *imodel, GdaDataModelIter *iter)
 			GError *e;
 			g_set_error (&e, GDA_DATA_MODEL_ERROR,
 				     GDA_DATA_MODEL_TRUNCATED_ERROR,
-				     _("Truncated result because LDAP server limit encountered"));
+				     "%s", _("Truncated result because LDAP server limit encountered"));
 			add_exception (imodel, e);
 		}
 	}
@@ -1110,7 +1110,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			GError *e;
 			g_set_error (&e, GDA_DATA_MODEL_ERROR,
 				     GDA_DATA_MODEL_TRUNCATED_ERROR,
-				     _("Truncated result because LDAP server limit encountered"));
+				     "%s", _("Truncated result because LDAP server limit encountered"));
 			add_exception (imodel, e);
 		}
 		g_signal_emit_by_name (iter, "end-of-data");

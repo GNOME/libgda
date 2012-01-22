@@ -284,7 +284,7 @@ gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 	if (!mgr->priv->cnc && !mgr->priv->mstore) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-			     _("No connection and no GdaMetaStore specified"));
+			     "%s", _("No connection and no GdaMetaStore specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
@@ -388,7 +388,7 @@ gda_tree_mgr_tables_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 			if (out_error)
 				*out_error = TRUE;
 			g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
-				     _("Unable to get table name"));
+				     "%s", _("Unable to get table name"));
 			return NULL;
 		}
 

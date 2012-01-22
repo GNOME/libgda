@@ -635,7 +635,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		if (rc == SQLITE_IOERR_TRUNCATE)
 			g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
-				     GDA_DATA_MODEL_TRUNCATED_ERROR, _("Truncated data"));
+				     GDA_DATA_MODEL_TRUNCATED_ERROR, "%s", _("Truncated data"));
 		else
 			g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 

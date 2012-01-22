@@ -251,7 +251,7 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 		else {
 			/* cancelled connection opening */
 			g_set_error (error, LOGIN_DIALOG_ERROR, LOGIN_DIALOG_CANCELLED_ERROR,
-				     _("Cancelled by the user"));
+				     "%s", _("Cancelled by the user"));
 			goto out;
 		}
 		
@@ -289,7 +289,7 @@ sub_thread_open_cnc (GdaDsnInfo *info, GError **error)
 	return cnc;
 #else
 	sleep (5);
-	g_set_error (error, 0, 0, "Oooo");
+	g_set_error (error, 0, 0, "%s", "Oooo");
 	return NULL;
 #endif
 }

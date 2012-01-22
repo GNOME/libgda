@@ -3576,7 +3576,7 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 	}
         else if (systemres == 127) {
 		g_set_error (error, 0, 0,
-			     _("Could not start /bin/sh"));
+			     "%s", _("Could not start /bin/sh"));
 		goto end_of_command;
 	}
 	else {
@@ -4231,7 +4231,7 @@ parse_fk_decl_spec (const gchar *spec, gboolean columns_required, GError **error
 
 	if (!spec || !*spec) {
 		g_set_error (error, 0, 0,
-			     _("Missing foreign key declaration specification"));
+			     "%s", _("Missing foreign key declaration specification"));
 		return NULL;
 	}
 	dspec = g_strstrip (g_strdup (spec));
@@ -4348,7 +4348,7 @@ parse_fk_decl_spec (const gchar *spec, gboolean columns_required, GError **error
  onerror:
 	fk_decl_data_free (decldata);
 	g_set_error (error, 0, 0,
-		     _("Malformed foreign key declaration specification"));
+		     "%s", _("Malformed foreign key declaration specification"));
 	return NULL;
 }
 
@@ -4468,7 +4468,7 @@ extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 	}
 	else
 		g_set_error (error, 0, 0,
-			     _("Missing foreign key name argument"));
+			     "%s", _("Missing foreign key name argument"));
 	return res;
 }
 
@@ -4542,7 +4542,7 @@ extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 	}
 	else
 		g_set_error (error, 0, 0,
-			     _("Missing foreign key name argument"));
+			     "%s", _("Missing foreign key name argument"));
 	return res;
 }
 

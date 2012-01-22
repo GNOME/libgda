@@ -275,7 +275,7 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 	mstruct = browser_connection_get_meta_struct (mgr->priv->bcnc);
 	if (!mstruct) {
 		g_set_error (error, MGR_COLUMNS_ERROR, MGR_COLUMNS_NO_META_STRUCT,
-                             _("Not ready"));
+                             "%s", _("Not ready"));
                 if (out_error)
                         *out_error = TRUE;
 		return NULL;
@@ -293,14 +293,14 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 
 	if (!dbo) {
 		g_set_error (error, MGR_COLUMNS_ERROR, MGR_COLUMNS_TABLE_NOT_FOUND,
-                             _("Table not found"));
+                             "%s", _("Table not found"));
                 if (out_error)
                         *out_error = TRUE;
 		return NULL;
 	}
 	if ((dbo->obj_type != GDA_META_DB_TABLE) && (dbo->obj_type != GDA_META_DB_VIEW)) {
 		g_set_error (error, MGR_COLUMNS_ERROR, MGR_COLUMNS_WRONG_OBJ_TYPE,
-                             _("Requested object is not a table or view"));
+                             "%s", _("Requested object is not a table or view"));
                 if (out_error)
                         *out_error = TRUE;
 		return NULL;

@@ -652,7 +652,7 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 	else if (type == GDA_TYPE_BLOB) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_DATA_ERROR,
-			     _("Blob constraints are not handled in virtual table condition"));
+			     "%s", _("Blob constraints are not handled in virtual table condition"));
 		allok = FALSE;
 	}
 	else if (type == G_TYPE_BOOLEAN) {

@@ -96,11 +96,11 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 	gtk_text_buffer_get_end_iter (buffer1, &end1);
 	gtk_text_buffer_get_end_iter (buffer2, &end2);
 	if (gtk_text_iter_compare (&iter1, &end1)) {
-		g_set_error (error, 0, 0, "textbuffer1 is shorter than textbuffer2");
+		g_set_error (error, 0, 0, "%s", "textbuffer1 is shorter than textbuffer2");
 		return FALSE;
 	}
 	if (gtk_text_iter_compare (&iter2, &end2)) {
-		g_set_error (error, 0, 0, "textbuffer2 is shorter than textbuffer1");
+		g_set_error (error, 0, 0, "%s", "textbuffer2 is shorter than textbuffer1");
 		return FALSE;
 	}
 	return TRUE;

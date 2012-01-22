@@ -317,7 +317,7 @@ sub_thread_open_cnc (AuthData *ad, GError **error)
 	return cnc;
 #else
 	sleep (5);
-	g_set_error (error, 0, 0, "Oooo");
+	g_set_error (error, 0, 0, "%s", "Oooo");
 	return NULL;
 #endif
 }

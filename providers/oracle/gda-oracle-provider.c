@@ -1413,7 +1413,7 @@ oracle_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *conte
 		
 		if (stmt->limit_offset) {
 			g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
-				     _("Oracle does not support the offset with a limit"));
+				     "%s", _("Oracle does not support the offset with a limit"));
 			goto err;
 		}
 		else {

@@ -1365,7 +1365,7 @@ wrapper_statement_execute (StmtExecData *data, GError **error)
 		else {
 			g_warning (_("Execution reported an undefined error, please report error to "
 				     "http://bugzilla.gnome.org/ for the \"libgda\" product"));
-			g_set_error (error, 0, 0, _("No detail"));
+			g_set_error (error, 0, 0, "%s", _("No detail"));
 		}
 	}
 	return obj ? obj : (gpointer) 0x01;
@@ -1760,7 +1760,7 @@ meta_store_addons_init (BrowserConnection *bcnc, GError **error)
 
 	if (!bcnc->priv->cnc) {
 		g_set_error (error, 0, 0,
-			     _("Connection not yet opened"));
+			     "%s", _("Connection not yet opened"));
 		return FALSE;
 	}
 	store = gda_connection_get_meta_store (bcnc->priv->cnc);
@@ -2462,7 +2462,7 @@ wrapper_ldap_search (LdapSearchData *data, GError **error)
 					 data->filter, data->attributes, data->scope);
 	if (!model) {
 		g_set_error (error, 0, 0,
-			     _("Could not execute LDAP search"));
+			     "%s", _("Could not execute LDAP search"));
 		return (gpointer) 0x01;
 	}
 	else {

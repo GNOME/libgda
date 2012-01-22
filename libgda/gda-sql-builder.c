@@ -341,7 +341,7 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), NULL);
 	if (!builder->priv->main_stmt) {
 		g_set_error (error, GDA_SQL_BUILDER_ERROR, GDA_SQL_BUILDER_MISUSE_ERROR,
-			     _("SqlBuilder is empty"));
+			     "%s", _("SqlBuilder is empty"));
 		return NULL;
 	}
 	if (! gda_sql_statement_check_structure (builder->priv->main_stmt, error))

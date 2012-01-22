@@ -371,7 +371,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	doc = xmlParseDoc (BAD_CAST fav.contents);
 	if (!doc) {
 		g_set_error (error, 0, 0,
-			     _("Error parsing favorite's contents"));
+			     "%s", _("Error parsing favorite's contents"));
 		goto out;
 	}
 
@@ -430,7 +430,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 				if (name)
 					xmlFree (name);
 				g_set_error (error, 0, 0,
-					     _("Missing table attribute in favorite's contents"));
+					     "%s", _("Missing table attribute in favorite's contents"));
 				gtk_widget_destroy ((GtkWidget*) diagram);
 				diagram = NULL;
 				goto out;

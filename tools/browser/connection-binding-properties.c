@@ -472,7 +472,7 @@ part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *ho
 			    ((ptr != str) && (*ptr != '_') && !g_ascii_isalnum (*ptr))) {
 				GError *error = NULL;
 				g_set_error (&error, 0, 0,
-					     _("Invalid schema name"));
+					     "%s", _("Invalid schema name"));
 				return error;
 			}
 		}
