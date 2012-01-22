@@ -439,7 +439,7 @@ main (int argc, char *argv[])
 
 	g_free (data);
 
-	return EXIT_SUCCESS;
+	return exit_status;
 }
 
 static const char *
@@ -4053,7 +4053,7 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaCo
 		GError *lerror = NULL;
 		att.id = -1;
 		att.type = TOOLS_FAVORITES_QUERIES;
-		att.name = args[0];
+		att.name = (gchar*) args[0];
 		att.descr = NULL;
 		att.contents = NULL;
 
