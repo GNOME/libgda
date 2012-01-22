@@ -201,13 +201,10 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
-		GdaNumeric numeric;
-		/* FIXME: what test whould i do for numeric? Use GMP (http://gmplib.org/) ?*/
-		numeric.number = g_strdup (as_string);
-		numeric.precision = 0; /* FIXME */
-		numeric.width = 0; /* FIXME */
+		GdaNumeric *numeric = gda_numeric_new ();
+		gda_numeric_set_from_string (as_string);
 		gda_value_set_numeric (value, &numeric);
-		g_free (numeric.number);
+		gda_numeric_free (numeric);
 		retval = TRUE;
 	}
 	else if (type == G_TYPE_DATE) {
