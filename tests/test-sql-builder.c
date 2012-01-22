@@ -59,7 +59,7 @@ ATest tests[] = {
 	{"build10", build10, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"}}}"},
 	{"build11", build11, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"true\",\"distinct_on\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"},\"fields\":[{\"expr\":{\"value\":\"fav_id\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"value\":\"rank\",\"sqlident\":\"TRUE\"}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"mytable\",\"sqlident\":\"TRUE\"},\"table_name\":\"mytable\"}]},\"limit\":{\"value\":\"5\"},\"offset\":{\"value\":\"2\"}}}"},
 	{"build12", build12, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}},{\"expr\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}}}],\"from\":{\"targets\":[{\"expr\":{\"value\":\"stores\",\"sqlident\":\"TRUE\"},\"table_name\":\"stores\"}]},\"group_by\":[{\"value\":\"store_name\",\"sqlident\":\"TRUE\"}],\"having\":{\"operation\":{\"operator\":\">\",\"operand0\":{\"func\":{\"function_name\":\"sum\",\"function_args\":[{\"value\":\"sales\",\"sqlident\":\"TRUE\"}]}},\"operand1\":{\"value\":\"10\"}}}}}"},
-	{"build13", build13, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"'A''string'\"}},{\"expr\":{\"value\":\"234\"}},{\"expr\":{\"value\":\"TRUE\"}},{\"expr\":{\"value\":\"123.4567890\"}},{\"expr\":{\"value\":\"'05-27-1972'\"}},{\"expr\":{\"value\":\"'abc''de\\\\\\\\\\\\\\\\fgh'\"}}]}}"}
+	{"build13", build13, "{\"sql\":null,\"stmt_type\":\"SELECT\",\"contents\":{\"distinct\":\"false\",\"fields\":[{\"expr\":{\"value\":\"'A''string'\"}},{\"expr\":{\"value\":\"234\"}},{\"expr\":{\"value\":\"TRUE\"}},{\"expr\":{\"value\":\"123.456789\"}},{\"expr\":{\"value\":\"1972-05-27\"}},{\"expr\":{\"value\":\"abc'de\\\\\\\\fgh\"}}]}}"}
 };
 
 int
@@ -619,10 +619,11 @@ build13 (void)
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_BOOLEAN, TRUE), 0);
 	GdaNumeric *numval;
 	numval = gda_numeric_new ();
-	gda_numeric_set_from_string (numval, "123.4567890");
+	gda_numeric_set_from_string (numval, "123.456789");
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_NUMERIC, numval), 0);
 	gda_numeric_free (numval);
+
 	GDate *date = g_date_new_dmy (27, G_DATE_MAY, 1972);
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, G_TYPE_DATE, date), 0);
