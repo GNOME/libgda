@@ -119,7 +119,8 @@ EXTRA_DIST = \
 	mkinstalldirs \
 	$(example_files) \
 	getsp.class \
-	getsp.java
+	getsp.java \
+	gnome-doc-utils.make
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \
