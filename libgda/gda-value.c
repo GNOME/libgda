@@ -904,8 +904,9 @@ GdaNumeric*
 gda_numeric_new (void)
 {
 	GdaNumeric *n = g_new0 (GdaNumeric, 1);
-	n->number = g_strdup_printf ("0.0");
-	return n;
+	setlocale (LC_NUMERIC, "C");
+	numeric->number = g_strdup_printf ("%lf", 0.0);
+	setlocale (LC_NUMERIC, gda_numeric_locale);
 }
 
 /**
@@ -913,7 +914,8 @@ gda_numeric_new (void)
  * @numeric: a #GdaNumeric
  * @str: a string representing a number
  *
- * Sets @numeric with a number represented by @str.
+ * Sets @numeric with a number represented by @str. By default converts @str to
+ * #gdouble.
  *
  * * Since: 5.0.2
  */
@@ -924,7 +926,11 @@ gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
 	g_return_if_fail (str);
 	if (numeric->number)
 		g_free (numeric->number);
-	numeric->number = g_strdup (str); // FIXME: May a pre-verification is required in order to check string validity
+	// FIXME: By default convert string to gdouble, for other number types we need to check string format
+	gdouble n = g_strtod (str);
+	setlocale (LC_NUMERIC, "C");
+	numeric->number = g_strdup_printf ("%lf", n);
+	setlocale (LC_NUMERIC, gda_numeric_locale);
 }
 
 
