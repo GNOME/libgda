@@ -122,8 +122,16 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 		gchar *gstr = stringify_a_change ((GdaMetaStoreChange *) gl->data);
 		if (!find_expected_change (gstr)) {
 			g_print ("Unexpected GdaMetaStoreChange: %s", gstr);
+			g_free (gstr);
+			if (expected_changes) {
+				gchar *estr = (gchar *) expected_changes->data;
+				g_print ("Expected: %s\n", estr);
+			}
+			else
+				g_print ("No change expected\n");
 			exit (EXIT_FAILURE);
 		}
+		g_free (gstr);
 	}
 	if (expected_changes) {
 		/* expected more changes */
@@ -491,7 +499,13 @@ test_builtin_data_types (GdaMetaStore *store)
 	/* remove last line */
 	GValue *v1;
 	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "pg_catalog.to_remove");
-	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-1", "pg_catalog.to_remove", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "to_remove",
+		     "-1", "pg_catalog.to_remove",
+		     "-2", "NULL",
+		     "-3", "NULL",
+		     "-4", "NULL",
+		     "-5", "TRUE",
+		     NULL);
 	TEST_MODIFY (store, TNAME, NULL, 
 		     "full_type_name=##ftn::string", &error, 
 		     "ftn", v1, NULL);
@@ -552,8 +566,16 @@ test_views (GdaMetaStore *store)
 	TEST_END (import);
 
 	/* remove some lines */
-	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_stats", NULL);
-	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_locks", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_locks",
+		     "-3", "SELECT l.locktype, l.\"database\", l.relation, l.page, l.tuple, l.transactionid, l.classid, l.objid, l.objsubid, l.\"transaction\", l.pid, l.\"mode\", l.\"granted\" FROM pg_lock_status() l(locktype text, \"database\" oid, relation oid, page integer, tuple smallint, transactionid xid, classid oid, objid oid, objsubid smallint, \"transaction\" xid, pid integer, \"mode\" text, \"granted\" boolean);",
+		     "-4", "NULL",
+		     "-5", "FALSE",
+		     NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "pg_catalog", "-2", "pg_stats",
+		     "-3", "SELECT n.nspname AS schemaname, c.relname AS tablename, a.attname, s.stanullfrac AS null_frac, s.stawidth AS avg_width, s.stadistinct AS n_distinct, CASE 1 WHEN s.stakind1 THEN s.stavalues1 WHEN s.stakind2 THEN s.stavalues2 WHEN s.stakind3 THEN s.stavalues3 WHEN s.stakind4 THEN s.stavalues4 ELSE NULL::anyarray END AS most_common_vals, CASE 1 WHEN s.stakind1 THEN s.stanumbers1 WHEN s.stakind2 THEN s.stanumbers2 WHEN s.stakind3 THEN s.stanumbers3 WHEN s.stakind4 THEN s.stanumbers4 ELSE NULL::real[] END AS most_common_freqs, CASE 2 WHEN s.stakind1 THEN s.stavalues1 WHEN s.stakind2 THEN s.stavalues2 WHEN s.stakind3 THEN s.stavalues3 WHEN s.stakind4 THEN s.stavalues4 ELSE NULL::anyarray END AS histogram_bounds, CASE 3 WHEN s.stakind1 THEN s.stanumbers1[1] WHEN s.stakind2 THEN s.stanumbers2[1] WHEN s.stakind3 THEN s.stanumbers3[1] WHEN s.stakind4 THEN s.stanumbers4[1] ELSE NULL::real END AS correlation FROM pg_statistic s JOIN pg_class c ON c.oid = s.starelid JOIN pg_attribute a ON c.oid = a.attrelid AND a.attnum = s.staattnum LEFT JOIN pg_namespace n ON n.oid = c.relnamespace WHERE has_table_privilege(c.oid, 'select'::text);",
+		     "-4", "NULL",
+		     "-5", "FALSE",
+		     NULL);
 	TEST_MODIFY (store, TNAME, NULL, 
 		     "table_catalog='meta' AND table_schema='pg_catalog'", &error, NULL);
 	TEST_END (NULL);
@@ -573,7 +595,28 @@ test_routines (GdaMetaStore *store)
 	TEST_END (import);
 
 	/* remove some lines */
-	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "information_schema", "-2", "_pg_numeric_precision_radix_11324", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_REMOVE, "-0", "meta", "-1", "information_schema",
+		     "-2", "_pg_numeric_precision_radix_11324",
+		     "-3", "meta",
+		     "-4", "information_schema",
+		     "-5", "_pg_numeric_precision_radix",
+		     "-6", "FUNCTION",
+		     "-7", "pg_catalog.int4",
+		     "-8", "FALSE",
+		     "-9", "2",
+		     "-10", "SQL",
+		     "-11", "SELECT CASE WHEN $1 IN (21, 23, 20, 700, 701) THEN 2 WHEN $1 IN (1700) THEN 10 ELSE null END",
+		     "-12", "NULL",
+		     "-13", "SQL",
+		     "-14", "GENERAL",
+		     "-15", "TRUE",
+		     "-16", "MODIFIES",
+		     "-17", "TRUE",
+		     "-18", "NULL",
+		     "-19", "information_schema._pg_numeric_precision_radix",
+		     "-20", "information_schema._pg_numeric_precision_radix",
+		     "-21", "postgres",
+		     NULL);
 	TEST_MODIFY (store, TNAME, NULL, 
 		     "specific_name='_pg_numeric_precision_radix_11324'", &error, NULL);
 	TEST_END (NULL);
