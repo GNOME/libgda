@@ -203,7 +203,7 @@ set_from_string (GValue *value, const gchar *as_string)
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric *numeric = gda_numeric_new ();
 		gda_numeric_set_from_string (numeric, as_string);
-		gda_value_set_numeric (value, &numeric);
+		gda_value_set_numeric (value, numeric);
 		gda_numeric_free (numeric);
 		retval = TRUE;
 	}
@@ -870,10 +870,10 @@ gda_numeric_copy (GdaNumeric *src)
 
 	g_return_val_if_fail (src, NULL);
 
-	copy = gda_numeric_new();
-	gda_numeric_set_from_string(copy, gda_numeric_get_string(src));
-	gda_numeric_set_width(copy, gda_numeric_get_width(src));
-	gda_numeric_set_precision(copy, gda_numeric_get_precision(src));
+	copy = gda_numeric_new ();
+	gda_numeric_set_from_string (copy, gda_numeric_get_string (src));
+	gda_numeric_set_width (copy, gda_numeric_get_width (src));
+	gda_numeric_set_precision (copy, gda_numeric_get_precision (src));
 	return copy;
 }
 
@@ -907,6 +907,7 @@ gda_numeric_new (void)
 	setlocale (LC_NUMERIC, "C");
 	n->number = g_strdup_printf ("%lf", 0.0);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
+	return n;
 }
 
 /**
@@ -924,8 +925,7 @@ gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
 {
 	g_return_if_fail (numeric);
 	g_return_if_fail (str);
-	if (numeric->number)
-		g_free (numeric->number);
+	g_free (numeric->number);
 	// FIXME: By default convert string to gdouble, for other number types we need to check string format
 	gdouble n = g_strtod (str, NULL);
 	setlocale (LC_NUMERIC, "C");
@@ -947,8 +947,7 @@ void
 gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 {
 	g_return_if_fail (numeric);
-	if (numeric->number)
-		g_free (numeric->number);
+	g_free (numeric->number);
 	setlocale (LC_NUMERIC, "C");
 	numeric->number = g_strdup_printf ("%lf", number);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
