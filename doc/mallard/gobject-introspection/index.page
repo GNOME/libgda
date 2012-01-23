@@ -1,0 +1,22 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	type="guide" id="index">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-01-20" status="incomplete"/>
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+  </info>
+
+  <title>
+    GObject Introspection on GDA
+  </title>
+  <p>
+  This guide will shows you how to deal with GObject Introspection (GI) in GDA.
+  </p>
+
+</page>

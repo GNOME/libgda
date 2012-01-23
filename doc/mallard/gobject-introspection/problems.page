@@ -1,0 +1,22 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="problems">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-01-18" status="incomplete" />
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <link type="topic" xref="index" />
+  </info>
+
+  <title>
+    Common problems
+  </title>
+  
+  <p>
+  </p>
+</page>

@@ -1,0 +1,30 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="gir-generation">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-01-18" status="incomplete"/>
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <link type="topic" xref="index" />
+  </info>
+
+  <title>
+    How to generate GI information
+  </title>
+  <section id="gi-generation-general">
+  <title>General</title>
+  <p>
+  GDA has support for GObject Introspection (GI) since 4.2.x at build time. Always GI is found installed in your
+  system, Autotools automatically generates GIR and TYPELIB files for you. After success build with <code>make</code> you can <code>make install</code> to install these files and you are ready to use your favorite language.
+  </p>
+  </section>
+  <section id="gi-generation-autotools">
+  
+  </section>
+  
+</page>

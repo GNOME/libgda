@@ -1,0 +1,46 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="api-stability">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-01-18" status="incomplete" />
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <links type="section" />
+    <link type="topic" xref="index" />
+  </info>
+  <title>API stability and GI</title>
+  <section id="api-stability-introduction">
+   <title>Introduction</title> 
+  <p>
+  In GDA, stable versions are numbered by even numbers in minor releases: 5.2 is an stable release. API must be
+  stable along a major release, this mean that any software compiled and running using a 5.2 version must keep 
+  compling and running in any later version.
+  </p>
+  <p>
+  This must be true even for bindings using GObject Introspection. Before to make a release you must check that your
+  modifications will not make API breaks.
+  </p>
+    
+  </section>
+    
+  <section id="api-stability-breaks">
+  <title>How to avoid API breaks using GIR</title>
+    <p>
+  When GDA is compiled you must check GIR changes. You must read http://live.gnome.org/GObjectIntrospection/Annotations in order to know the effect for each annotation you made. GIR format is documented at http://developer.gnome.org/gi/stable/gi-gir.html
+  </p>
+  <p>You must check at least:</p>
+  <steps>
+  	<item>No Objects or methods has been deleted or renamed</item>
+  	<item>Meta data just fix issues, no function names, nor number and type of parameters</item>
+  	<item> </item>
+  	<item> </item>
+  	<item> </item>
+  	<item> </item>
+  </steps>
+  </section>
+</page>
