@@ -44,4 +44,6 @@ Holder.get_value nullable=true
 Row.get_value nullable=true
 Numeric.get_string nullable=true
 //Numeric.number hidden=true
+// Set Gda.DataProxy() as default
+DataProxy.new skip=true
 
