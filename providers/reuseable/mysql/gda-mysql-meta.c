@@ -957,8 +957,8 @@ map_mysql_type_to_gda (const GValue *value, const gchar *vlength)
 	else if (!strcmp (string, "bigint unsigned"))
 		newstring = "guint64";
 	else if (!strcmp (string, "char")) {
-		if (vlength && (G_VALUE_TYPE (vlength) == G_TYPE_INT) &&
-		    (g_value_get_int (vlength) > 1))
+		if (vlength && (G_VALUE_TYPE ((GValue*)vlength) == G_TYPE_INT) &&
+		    (g_value_get_int ((GValue*)vlength) > 1))
 			newstring = "gchararray";
 		else
 			newstring = "gchar";
@@ -1074,7 +1074,7 @@ _gda_mysql_meta__columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 				break;
 			}
 
-			GValue *newvalue = map_mysql_type_to_gda (value1, value2);
+			GValue *newvalue = map_mysql_type_to_gda (value1, (const char*)(value2));
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
@@ -1149,7 +1149,7 @@ _gda_mysql_meta_columns (G_GNUC_UNUSED GdaServerProvider  *prov,
 				break;
 			}
 
-			GValue *newvalue = map_mysql_type_to_gda (value1, value2);
+			GValue *newvalue = map_mysql_type_to_gda (value1, (const char*)value2);
 
 			retval = gda_data_model_set_value_at (GDA_DATA_MODEL(proxy), 9, i, newvalue, error);
 			gda_value_free (newvalue);
