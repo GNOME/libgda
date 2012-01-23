@@ -415,7 +415,7 @@ AC_SUBST(JSON_GLIB_LIBS)
 dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
-GOBJECT_INTROSPECTION_CHECK([0.10.0])
+GOBJECT_INTROSPECTION_CHECK([1.31.10])
 AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])

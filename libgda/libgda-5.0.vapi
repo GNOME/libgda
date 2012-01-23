@@ -332,8 +332,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public class DataProxy : GLib.Object, Gda.DataModel, Gda.DataModel {
-		[CCode (has_construct_function = false)]
-		protected DataProxy ();
+		[CCode (has_construct_function = false, type = "GObject*")]
+		public DataProxy (Gda.DataModel model);
 		public void alter_value_attributes (int proxy_row, int col, Gda.ValueAttribute alter_flags);
 		public bool apply_all_changes () throws GLib.Error;
 		public bool apply_row_changes (int proxy_row) throws GLib.Error;
