@@ -518,7 +518,8 @@ then
         then
             AC_MSG_ERROR([Vala found but vapigen not found])
         fi
-        VAPIDIR=`pkg-config $VALA_MODULES --variable=vapidir`
+        VALA_DATADIR=`pkg-config $VALA_MODULES --variable=datadir`
+        VAPIDIR="$VALA_DATADIR/vala/vapi"
         AC_SUBST(VAPIGEN)
         AC_SUBST(VAPIDIR)
     fi
