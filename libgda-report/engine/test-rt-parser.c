@@ -100,7 +100,7 @@ main ()
 		xmlNodePtr node;
 		xmlKeepBlanksDefault(0);
 		node = xmlNewNode (NULL, BAD_CAST "top");
-		parse_rich_text_to_docbook (node, test->in);
+		parse_rich_text_to_docbook (NULL, node, test->in);
 		xmlBufferPtr buf;
 		buf = xmlBufferCreate ();
 		xmlNodeDump (buf, NULL, node, 1, 1);
