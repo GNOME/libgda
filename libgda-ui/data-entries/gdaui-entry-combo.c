@@ -54,6 +54,8 @@ static void            gdaui_entry_combo_set_attributes    (GdauiDataEntry *de, 
 static GdaValueAttribute gdaui_entry_combo_get_attributes    (GdauiDataEntry *de);
 static gboolean        gdaui_entry_combo_can_expand  (GdauiDataEntry *de, gboolean horiz);
 static void            gdaui_entry_combo_grab_focus        (GdauiDataEntry *de);
+static void            gdaui_entry_combo_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
+							    gdouble blue, gdouble alpha);
 
 static void           _gdaui_entry_combo_construct(GdauiEntryCombo* combo, 
 						   GdauiSet *paramlist, GdauiSetSource *source);
@@ -142,6 +144,7 @@ gdaui_entry_combo_data_entry_init (GdauiDataEntryIface *iface)
         iface->get_handler = NULL;
         iface->can_expand = gdaui_entry_combo_can_expand;
 	iface->grab_focus = gdaui_entry_combo_grab_focus;
+	iface->set_unknown_color = gdaui_entry_combo_set_unknown_color;
 }
 
 
@@ -1048,4 +1051,11 @@ gdaui_entry_combo_grab_focus (GdauiDataEntry *iface)
 
 	if (combo->priv->combo_entry)
 		gtk_widget_grab_focus (combo->priv->combo_entry);
+}
+
+static void
+gdaui_entry_combo_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
+				     gdouble blue, gdouble alpha)
+{
+	gdaui_entry_shell_set_ucolor (GDAUI_ENTRY_SHELL (de), red, green, blue, alpha);
 }

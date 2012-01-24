@@ -169,6 +169,12 @@ struct _GdauiBasicFormPriv
 	GSList     *size_groups; /* list of SizeGroup pointers */
 
 	GtkWidget  *mainbox;
+
+	/* unknown value color */
+	gdouble     red;
+	gdouble     green;
+	gdouble     blue;
+	gdouble     alpha;
 };
 
 
@@ -414,6 +420,11 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 			  G_CALLBACK (popup_menu_cb), wid);
 	g_signal_connect (evbox, "button-press-event",
 			  G_CALLBACK (button_press_event_cb), wid);
+
+	wid->priv->red = .98;
+	wid->priv->green = .93;
+	wid->priv->blue = .25;
+	wid->priv->alpha = .50;
 }
 
 /**
@@ -1058,6 +1069,9 @@ create_entry_widget (SingleEntry *sentry)
 	sentry->entry = GDAUI_DATA_ENTRY (entry);
 	g_object_ref_sink (sentry->entry);
 	gdaui_data_entry_set_editable (sentry->entry, editable);
+	gdaui_data_entry_set_unknown_color (sentry->entry, sentry->form->priv->red,
+					    sentry->form->priv->green, sentry->form->priv->blue,
+					    sentry->form->priv->alpha);
 
 	GSList *list;
 	for (list = sentry->form->priv->size_groups; list; list = list->next) {
@@ -2409,5 +2423,38 @@ gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *siz
 		default:
 			g_assert_not_reached ();
 		}
+	}
+}
+
+/**
+ * gdaui_basic_form_set_unknown_color:
+ * @form: a #GdauiBasicForm widget
+ * @red: the red component of a color
+ * @green: the green component of a color
+ * @blue: the blue component of a color
+ * @alpha: the alpha component of a color
+ *
+ * Defines the color to be used when @form displays an invalid value. Any value not
+ * between 0. and 1. will result in the default hard coded values to be used (grayish).
+ *
+ * Since: 4.2.13
+ */
+void
+gdaui_basic_form_set_unknown_color (GdauiBasicForm *form, gdouble red, gdouble green,
+				    gdouble blue, gdouble alpha)
+{
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	form->priv->red = red;
+	form->priv->green = green;
+	form->priv->blue = blue;
+	form->priv->alpha = alpha;
+
+	GSList *list;
+	for (list = form->priv->s_entries; list; list = list->next) {
+		SingleEntry *se;
+		se = (SingleEntry *) list->data;
+		gdaui_data_entry_set_unknown_color (se->entry, form->priv->red,
+						    form->priv->green, form->priv->blue,
+						    form->priv->alpha);
 	}
 }

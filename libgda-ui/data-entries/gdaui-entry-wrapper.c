@@ -57,6 +57,8 @@ static gboolean        gdaui_entry_wrapper_can_expand        (GdauiDataEntry *de
 static void            gdaui_entry_wrapper_set_editable      (GdauiDataEntry *de, gboolean editable);
 static gboolean        gdaui_entry_wrapper_get_editable      (GdauiDataEntry *de);
 static void            gdaui_entry_wrapper_grab_focus        (GdauiDataEntry *de);
+static void            gdaui_entry_wrapper_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
+							      gdouble blue, gdouble alpha);
 
 /* properties */
 enum {
@@ -138,6 +140,7 @@ gdaui_entry_wrapper_data_entry_init (GdauiDataEntryIface *iface)
 	iface->set_editable = gdaui_entry_wrapper_set_editable;
 	iface->get_editable = gdaui_entry_wrapper_get_editable;
 	iface->grab_focus = gdaui_entry_wrapper_grab_focus;
+	iface->set_unknown_color = gdaui_entry_wrapper_set_unknown_color;
 }
 
 
@@ -880,4 +883,11 @@ gdaui_entry_wrapper_grab_focus (GdauiDataEntry *iface)
 		if (canfocus)
 			gtk_widget_grab_focus (mgwrap->priv->entry);
 	}
+}
+
+static void
+gdaui_entry_wrapper_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
+				       gdouble blue, gdouble alpha)
+{
+	gdaui_entry_shell_set_ucolor (GDAUI_ENTRY_SHELL (de), red, green, blue, alpha);
 }

@@ -460,7 +460,7 @@ gdaui_entry_shell_refresh (GdauiEntryShell *shell)
 
 /**
  * gdaui_entry_shell_set_unknown:
- * @shell: the GdauiEntryShell widget to refresh
+ * @shell: the #GdauiEntryShell widget to refresh
  * @unknown: set to %TRUE if @shell's contents is unavailable and should not be modified
  *
  * Defines if @shell's contents is in an undefined state (shows or hides @shell's contents)
@@ -480,4 +480,25 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
 		gtk_widget_show (shell->priv->embedder);
 	*/
 #endif
+}
+
+/**
+ * gdaui_entry_shell_set_ucolor:
+ * @shell: a #GdauiEntryShell
+ * @red: the red component of a color
+ * @green: the green component of a color
+ * @blue: the blue component of a color
+ * @alpha: the alpha component of a color
+ *
+ * Defines the color to be used when @de displays an invalid value. Any value not
+ * between 0. and 1. will result in the default hard coded values to be used (grayish).
+ *
+ * Since: 4.2.13
+ */
+void
+gdaui_entry_shell_set_ucolor (GdauiEntryShell *shell, gdouble red, gdouble green,
+			      gdouble blue, gdouble alpha)
+{
+	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
+	widget_embedder_set_ucolor ((WidgetEmbedder*) shell->priv->embedder, red, green, blue, alpha);
 }

@@ -18,6 +18,7 @@
 	gdaui_basic_form_set_as_reference
 	gdaui_basic_form_set_entries_to_default
 	gdaui_basic_form_set_layout_from_file
+	gdaui_basic_form_set_unknown_color
 	gdaui_cloud_create_filter_widget
 	gdaui_cloud_filter
 	gdaui_cloud_get_type
@@ -58,6 +59,7 @@
 	gdaui_data_entry_set_reference_value
 	gdaui_data_entry_set_value
 	gdaui_data_entry_set_value_type
+	gdaui_data_entry_set_unknown_color
 	gdaui_data_filter_get_type
 	gdaui_data_filter_new
 	gdaui_data_proxy_column_set_editable
@@ -101,6 +103,7 @@
 	gdaui_entry_combo_set_default_values
 	gdaui_entry_combo_set_values
 	gdaui_entry_combo_set_reference_values
+	gdaui_entry_combo_set_unknown_color
 	gdaui_entry_common_time_get_type
 	gdaui_entry_common_time_new
 	gdaui_entry_date_get_type
@@ -121,6 +124,7 @@
 	gdaui_entry_shell_get_type
 	gdaui_entry_shell_pack_entry
 	gdaui_entry_shell_refresh
+	gdaui_entry_shell_set_ucolor
 	gdaui_entry_string_get_type
 	gdaui_entry_string_new
 	gdaui_entry_time_get_type
@@ -130,6 +134,7 @@
 	gdaui_entry_wrapper_contents_activated
 	gdaui_entry_wrapper_contents_changed
 	gdaui_entry_wrapper_get_type
+	gdaui_entry_wrapper_set_unknown_color
 	gdaui_formatted_entry_get_text
 	gdaui_formatted_entry_get_type
 	gdaui_formatted_entry_new

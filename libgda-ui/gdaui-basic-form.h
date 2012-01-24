@@ -92,6 +92,9 @@ void              gdaui_basic_form_add_to_size_group        (GdauiBasicForm *for
 void              gdaui_basic_form_remove_from_size_group   (GdauiBasicForm *form, GtkSizeGroup *size_group,
 							     GdauiBasicFormPart part);
 
+void              gdaui_basic_form_set_unknown_color        (GdauiBasicForm *form, gdouble red, gdouble green,
+							     gdouble blue, gdouble alpha);
+
 G_END_DECLS
 
 #endif

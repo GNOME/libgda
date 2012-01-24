@@ -94,6 +94,10 @@ widget_embedder_init (WidgetEmbedder *bin)
 {
 	gtk_widget_set_has_window (GTK_WIDGET (bin), TRUE);
 	bin->valid = TRUE;
+	bin->red = -1.;
+	bin->green = -1.;
+	bin->blue = -1.;
+	bin->alpha = -1.;
 }
 
 GtkWidget *
@@ -361,12 +365,25 @@ widget_embedder_damage (GtkWidget      *widget,
 	return TRUE;
 }
 
+void
+widget_embedder_set_ucolor (WidgetEmbedder *bin, gdouble red, gdouble green,
+			    gdouble blue, gdouble alpha)
+{
+	bin->red = red;
+	bin->green = green;
+	bin->blue = blue;
+	bin->alpha = alpha;
+	gtk_widget_queue_draw (GTK_WIDGET (bin));
+}
+
+
 static gboolean
 widget_embedder_expose (GtkWidget      *widget,
                         GdkEventExpose *event)
 {
 	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
 	gint width, height;
+#define MARGIN 1.5
 
 	if (gtk_widget_is_drawable (widget)) {
 		GdkWindow *win;
@@ -392,9 +409,17 @@ widget_embedder_expose (GtkWidget      *widget,
 				cairo_paint (cr);
 
 				if (! bin->valid) {
-					cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
-					cairo_rectangle (cr, child_area.x, child_area.y,
-							 child_area.width, child_area.height);
+					if ((bin->red >= 0.) && (bin->red <= 1.) &&
+					    (bin->green >= 0.) && (bin->green <= 1.) &&
+					    (bin->blue >= 0.) && (bin->blue <= 1.) &&
+					    (bin->alpha >= 0.) && (bin->alpha <= 1.))
+						cairo_set_source_rgba (cr, bin->red, bin->green,
+								       bin->blue, bin->alpha);
+					else
+						cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
+					cairo_rectangle (cr, child_area.x + MARGIN, child_area.y + MARGIN,
+							 child_area.width - 2. * MARGIN,
+							 child_area.height - 2. * MARGIN);
 					cairo_fill (cr);
 				}
 				cairo_destroy (cr);
