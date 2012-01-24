@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-23 10:31+0000\n"
-"PO-Revision-Date: 2012-01-23 15:57+0100\n"
+"POT-Creation-Date: 2012-01-24 19:58+0000\n"
+"PO-Revision-Date: 2012-01-24 21:43+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -87,7 +87,7 @@ msgstr "Ni mogoče odpreti povezave"
 
 #: ../control-center/dsn-properties-dialog.c:231
 #: ../control-center/gdaui-dsn-assistant.c:137
-#: ../libgda-ui/gdaui-raw-form.c:625
+#: ../libgda-ui/gdaui-raw-form.c:628
 msgid "Unknown error"
 msgstr "Neznana napaka"
 
@@ -128,7 +128,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:283
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:356
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1332
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1354
 #: ../libgda/thread-wrapper/gda-thread-provider.c:452
 #: ../libgda/thread-wrapper/gda-thread-provider.c:532
 #: ../libgda-ui/data-entries/common-bin.c:80
@@ -2326,8 +2326,8 @@ msgid "Could not bind SELECT statement's parameter '%s' to provided parameters: 
 msgstr "Ni mogoče povezati parametra izjave SELECT '%s' ponujenemu parametru: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:300
-#: ../libgda-report/engine/gda-report-engine.c:589
-#: ../libgda-report/engine/gda-report-engine.c:616
+#: ../libgda-report/engine/gda-report-engine.c:612
+#: ../libgda-report/engine/gda-report-engine.c:639
 #: ../tools/gda-sql.c:901
 #: ../tools/gda-sql.c:1092
 #: ../tools/gda-sql.c:4708
@@ -2916,65 +2916,65 @@ msgid "Internal error: invalid provider handle"
 msgstr "Notranja napaka: neveljaven upravljalnik ponudnika"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:470
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:471
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "Napačna uporaba navideznih razpredelnic Libgda"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:478
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:479
 msgid "Data model must have at least one column"
 msgstr "Podatkovni model mora imeti vsaj en stolpec"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:495
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:496
 msgid "Could not compute virtual table's columns"
 msgstr "Ni mogoče izračunati stolpcev navidezne razpredelnice"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:517
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:519
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Ni mogoče dobiti opisa podatkovnega modela za stolpec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:531
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Ni mogoče pridobiti vrste podatkovnega modela za stolpec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:589
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:611
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:709
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:731
 msgid "Column not found"
 msgstr "Stolpca ni mogoče najti"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:951
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:973
 msgid "Can't obtain an iterator located on the first row"
 msgstr "Ni mogoče pridobiti ponavljalnika prve vrstice"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1182
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1204
 msgid "Data model representing the table is read only"
 msgstr "Podatkovni model razpredelnice je le za branje"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1212
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1234
 msgid "No statement provided to modify the data"
 msgstr "Ni določene izjave za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1219
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1241
 msgid "Invalid statement provided to modify the data"
 msgstr "Določena je neveljavna izjava za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1238
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1291
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1299
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1260
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1313
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1321
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Neveljavno določilo v izjavi za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1259
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1269
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1281
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1291
 msgid "Could not retreive row to delete"
 msgstr "Ni mogoče pridobiti vrstice za brisanje"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1331
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1353
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Spreminjanje podatkov je spodletelo: %s"
@@ -3224,28 +3224,28 @@ msgstr "Ni mogoče najti DocBook XSL slogovne predloge za HTML"
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
 msgstr "Ni mogoče najti DocBook XSL slogovne predloge za oblikovane predmete"
 
-#: ../libgda-report/engine/gda-report-engine.c:311
+#: ../libgda-report/engine/gda-report-engine.c:334
 #, c-format
 msgid "Object type '%s' cannot be declared in this context"
 msgstr "Predmeta vrste '%s' ni mogoče napovedati na ta način"
 
-#: ../libgda-report/engine/gda-report-engine.c:319
+#: ../libgda-report/engine/gda-report-engine.c:342
 #, c-format
 msgid "An object with the '%s' name has already been declared"
 msgstr "Predmet z imenom '%s' je že napovedan"
 
-#: ../libgda-report/engine/gda-report-engine.c:354
+#: ../libgda-report/engine/gda-report-engine.c:377
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
 msgstr "Predmeta vrste '%s' ni mogoče zahtevati na ta način"
 
-#: ../libgda-report/engine/gda-report-engine.c:573
+#: ../libgda-report/engine/gda-report-engine.c:596
 #, c-format
 msgid "Unknown query '%s'"
 msgstr "Neznana poizvedba '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:584
-#: ../libgda-report/engine/gda-report-engine.c:611
+#: ../libgda-report/engine/gda-report-engine.c:607
+#: ../libgda-report/engine/gda-report-engine.c:634
 #: ../tools/gda-sql.c:3079
 #: ../tools/gda-sql.c:3161
 #: ../tools/gda-sql.c:3262
@@ -3254,46 +3254,46 @@ msgstr "Neznana poizvedba '%s'"
 msgid "No connection named '%s' found"
 msgstr "Ni mogoče najti povezave z imenom '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:656
+#: ../libgda-report/engine/gda-report-engine.c:679
 msgid "Query is not specified (not named and not defined)"
 msgstr "Poizvedba ni določena (ni imenovana in ni določena)"
 
-#: ../libgda-report/engine/gda-report-engine.c:821
-#: ../libgda-report/engine/gda-report-engine.c:972
-#: ../libgda-report/engine/gda-report-engine.c:1029
+#: ../libgda-report/engine/gda-report-engine.c:844
+#: ../libgda-report/engine/gda-report-engine.c:995
+#: ../libgda-report/engine/gda-report-engine.c:1052
 #, c-format
 msgid "Unknown parameter '%s'"
 msgstr "Neznan parameter '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:847
+#: ../libgda-report/engine/gda-report-engine.c:870
 msgid "Parameter name not specified"
 msgstr "Ime parametra ni navedeno"
 
-#: ../libgda-report/engine/gda-report-engine.c:897
+#: ../libgda-report/engine/gda-report-engine.c:920
 msgid "No expression specified"
 msgstr "Ni določenega izraza"
 
-#: ../libgda-report/engine/gda-report-engine.c:920
+#: ../libgda-report/engine/gda-report-engine.c:943
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
 msgstr "Ni mogoče prenesti vrednosti iz vrste '%s' na vrsto '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:1058
+#: ../libgda-report/engine/gda-report-engine.c:1081
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
 msgstr "Ni mogoče prenesti parametra iz vrste '%s' na vrsto '%s'"
 
-#: ../libgda-report/engine/gda-report-engine.c:1151
+#: ../libgda-report/engine/gda-report-engine.c:1174
 #, c-format
 msgid "Expression '%s' should return exactly one value"
 msgstr "Izraz '%s' mora vrniti natanko eno vrednost"
 
-#: ../libgda-report/engine/gda-report-engine.c:1191
+#: ../libgda-report/engine/gda-report-engine.c:1214
 msgid "Binary data"
 msgstr "_Dvojiški podatki"
 
 #: ../libgda-report/engine/rt-parser.c:1220
-#: ../libgda-report/engine/rt-parser.c:1412
+#: ../libgda-report/engine/rt-parser.c:1426
 msgid "link"
 msgstr "povezava"
 
@@ -3405,9 +3405,9 @@ msgstr "Podatkovna vrsta"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:186
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
-#: ../libgda-ui/gdaui-basic-form.c:836
-#: ../libgda-ui/gdaui-basic-form.c:871
-#: ../libgda-ui/gdaui-raw-grid.c:788
+#: ../libgda-ui/gdaui-basic-form.c:847
+#: ../libgda-ui/gdaui-basic-form.c:882
+#: ../libgda-ui/gdaui-raw-grid.c:807
 #: ../providers/ldap/gda-ldap-provider.c:712
 #: ../tools/config-info.c:121
 #: ../tools/config-info.c:290
@@ -3958,62 +3958,63 @@ msgstr "Zavrzi spremenjene podatke"
 msgid "Correct data first"
 msgstr "Najprej pravilni podatki"
 
-#: ../libgda-ui/gdaui-basic-form.c:288
+#: ../libgda-ui/gdaui-basic-form.c:294
 msgid "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> node)"
 msgstr "Kazalnik do določil razporeditve XML (kot xmlNodePtr za <gdaui_form> vozlišče)"
 
-#: ../libgda-ui/gdaui-basic-form.c:292
+#: ../libgda-ui/gdaui-basic-form.c:298
 msgid "List of parameters to show in the form"
 msgstr "Seznam parametrov prikazanih v obrazcu"
 
-#: ../libgda-ui/gdaui-basic-form.c:296
+#: ../libgda-ui/gdaui-basic-form.c:302
 msgid "Entry headers are sensitive"
 msgstr "Glave vnosov so občutljive"
 
-#: ../libgda-ui/gdaui-basic-form.c:301
+#: ../libgda-ui/gdaui-basic-form.c:307
 msgid "Show Entry actions"
 msgstr "Pokaži dejanja vnosa"
 
-#: ../libgda-ui/gdaui-basic-form.c:306
+#: ../libgda-ui/gdaui-basic-form.c:312
 msgid "Entries Auto-default"
 msgstr "Samodejno privzeti vnosi"
 
-#: ../libgda-ui/gdaui-basic-form.c:311
+#: ../libgda-ui/gdaui-basic-form.c:317
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Izbrana možnost je uporabna, kadar ima navpično razširjanje obrazca pomen."
 
-#: ../libgda-ui/gdaui-basic-form.c:335
+#: ../libgda-ui/gdaui-basic-form.c:341
 msgid "Shown data entries"
 msgstr "Prikazani vnosi podatkov"
 
-#: ../libgda-ui/gdaui-basic-form.c:957
-#: ../libgda-ui/gdaui-raw-grid.c:829
-#: ../libgda-ui/gdaui-raw-grid.c:2783
+#: ../libgda-ui/gdaui-basic-form.c:968
+#: ../libgda-ui/gdaui-raw-grid.c:848
+#: ../libgda-ui/gdaui-raw-grid.c:2904
+#: ../libgda-ui/gdaui-raw-grid.c:2959
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1911
+#: ../libgda-ui/gdaui-basic-form.c:1925
 msgid "Can't find data entry for GdaHolder"
 msgstr "Ni mogoče najti podatkovnega vnosa za GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2171
+#: ../libgda-ui/gdaui-basic-form.c:2185
 msgid "Values to be defined"
 msgstr "Vrednosti, ki bodo določene"
 
-#: ../libgda-ui/gdaui-basic-form.c:2244
-#: ../libgda-ui/gdaui-raw-grid.c:2610
+#: ../libgda-ui/gdaui-basic-form.c:2258
+#: ../libgda-ui/gdaui-raw-grid.c:2731
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2254
-#: ../libgda-ui/gdaui-raw-grid.c:2620
+#: ../libgda-ui/gdaui-basic-form.c:2268
+#: ../libgda-ui/gdaui-raw-grid.c:2741
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2386
+#: ../libgda-ui/gdaui-basic-form.c:2400
 msgid "size group was not taken into account using gdaui_basic_form_add_to_size_group()"
 msgstr "velikost skupine ni vzeta v račun ob uporabi skupine gdaui_basic_form_add_to_size_group()"
 
@@ -4073,11 +4074,15 @@ msgstr "Filter"
 msgid "any valid SQL expression"
 msgstr "katerakoli veljavni SQL izraz"
 
-#: ../libgda-ui/gdaui-data-filter.c:226
+#: ../libgda-ui/gdaui-data-filter.c:214
+msgid "Columns can be referenced by thair name or more easily using <b><tt>_&lt;column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 like 'doe%'</tt></b> to filter rows where the 2nd column starts with <tt>doe</tt>."
+msgstr "Stolpce je mogoče sklicevati po imenu ali z uporabo <b><tt>_&lt;številke stolpca&gt;</tt></b>. Veljaven izraz je lahko na primer: <b><tt>_2 kot 'cena%'</tt></b> za filtriranje vrstic v katerih se drugi stolpec začne s <tt>cena</tt>."
+
+#: ../libgda-ui/gdaui-data-filter.c:231
 msgid "Set filter"
 msgstr "Nastavitev filtra"
 
-#: ../libgda-ui/gdaui-data-filter.c:231
+#: ../libgda-ui/gdaui-data-filter.c:236
 msgid "Clear filter"
 msgstr "Počisti filter"
 
@@ -4129,27 +4134,27 @@ msgid "Could not execute the Database access control center"
 msgstr "Ni mogoče izvesti nadzornega središča dostopa do podatkovne zbirke"
 
 #: ../libgda-ui/gdaui-raw-form.c:182
-#: ../libgda-ui/gdaui-raw-grid.c:303
+#: ../libgda-ui/gdaui-raw-grid.c:314
 msgid "Data to display"
 msgstr "Podatki za prikaz"
 
 #: ../libgda-ui/gdaui-raw-form.c:198
-#: ../libgda-ui/gdaui-raw-grid.c:183
+#: ../libgda-ui/gdaui-raw-grid.c:194
 msgid "Delete the current record"
 msgstr "Izbriši trenutni zapis"
 
 #: ../libgda-ui/gdaui-raw-form.c:202
-#: ../libgda-ui/gdaui-raw-grid.c:187
+#: ../libgda-ui/gdaui-raw-grid.c:198
 msgid "Create a new record"
 msgstr "Ustvari nov zapis"
 
 #: ../libgda-ui/gdaui-raw-form.c:203
-#: ../libgda-ui/gdaui-raw-grid.c:188
+#: ../libgda-ui/gdaui-raw-grid.c:199
 msgid "Commit the modifications"
 msgstr "Uveljavi spremembe"
 
 #: ../libgda-ui/gdaui-raw-form.c:204
-#: ../libgda-ui/gdaui-raw-grid.c:189
+#: ../libgda-ui/gdaui-raw-grid.c:200
 msgid "Clear all the modifications"
 msgstr "Počisti vse spremembe"
 
@@ -4170,154 +4175,154 @@ msgid "Go to next record"
 msgstr "Skoči na naslednji zapis"
 
 #: ../libgda-ui/gdaui-raw-form.c:209
-#: ../libgda-ui/gdaui-raw-grid.c:194
+#: ../libgda-ui/gdaui-raw-grid.c:205
 msgid "Filter records"
 msgstr "Filtriranje zapisov"
 
-#: ../libgda-ui/gdaui-raw-form.c:624
+#: ../libgda-ui/gdaui-raw-form.c:627
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Ni mogoče pripeti vrstice podatkovnem modelu: %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:190
+#: ../libgda-ui/gdaui-raw-grid.c:201
 msgid "Go to first chunck"
 msgstr "Skoči na prvi del"
 
-#: ../libgda-ui/gdaui-raw-grid.c:191
+#: ../libgda-ui/gdaui-raw-grid.c:202
 msgid "Go to last chunck"
 msgstr "Skoči na zadnji del"
 
-#: ../libgda-ui/gdaui-raw-grid.c:192
+#: ../libgda-ui/gdaui-raw-grid.c:203
 msgid "Go to previous chunck"
 msgstr "Skoči na predhodni del"
 
-#: ../libgda-ui/gdaui-raw-grid.c:193
+#: ../libgda-ui/gdaui-raw-grid.c:204
 msgid "Go to next chunck"
 msgstr "Skoči na naslednji del"
 
-#: ../libgda-ui/gdaui-raw-grid.c:308
+#: ../libgda-ui/gdaui-raw-grid.c:319
 msgid "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> node)"
 msgstr "Kazalnik do določil razporeditve XML (kot xmlNodePtr za <gdaui_grid> vozlišče)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:311
+#: ../libgda-ui/gdaui-raw-grid.c:322
 msgid "Info cell visible"
 msgstr "Celica podrobnosti je vidna"
 
-#: ../libgda-ui/gdaui-raw-grid.c:315
+#: ../libgda-ui/gdaui-raw-grid.c:326
 msgid "Global Actions visible"
 msgstr "Splošna dejanja so vidna"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:791
-#: ../libgda-ui/gdaui-raw-grid.c:814
+#: ../libgda-ui/gdaui-raw-grid.c:810
+#: ../libgda-ui/gdaui-raw-grid.c:833
 msgid "Can't be NULL"
 msgstr "Vrednost NULL ni mogoča"
 
-#: ../libgda-ui/gdaui-raw-grid.c:822
+#: ../libgda-ui/gdaui-raw-grid.c:841
 msgid "No title"
 msgstr "Brez naslova"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1800
+#: ../libgda-ui/gdaui-raw-grid.c:1921
 msgid "Shown columns"
 msgstr "Prikazani stolpci"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1832
+#: ../libgda-ui/gdaui-raw-grid.c:1953
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1837
+#: ../libgda-ui/gdaui-raw-grid.c:1958
 msgid "_Clear Selection"
 msgstr "_Počisti izbrano"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1840
+#: ../libgda-ui/gdaui-raw-grid.c:1961
 msgid "Show Column _Titles"
 msgstr "Pokaži _naslove stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1845
+#: ../libgda-ui/gdaui-raw-grid.c:1966
 msgid "_Set filter"
 msgstr "_Nastavi filter"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1848
+#: ../libgda-ui/gdaui-raw-grid.c:1969
 msgid "_Unset filter"
 msgstr "_Počisti filter"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2034
+#: ../libgda-ui/gdaui-raw-grid.c:2155
 msgid "Saving Data"
 msgstr "Shranjevanje podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2042
+#: ../libgda-ui/gdaui-raw-grid.c:2163
 msgid "Saving data to a file"
 msgstr "Shranjevanje podatkov v datoteko"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2043
+#: ../libgda-ui/gdaui-raw-grid.c:2164
 msgid "The data will be exported to the selected file."
 msgstr "Podatki bodo izvoženi v izbrano datoteko."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2053
+#: ../libgda-ui/gdaui-raw-grid.c:2174
 #: ../tools/config-info.c:425
 msgid "File name"
 msgstr "Ime datoteke"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:2074
+#: ../libgda-ui/gdaui-raw-grid.c:2195
 #: ../tools/browser/schema-browser/table-columns.c:664
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:2095
+#: ../libgda-ui/gdaui-raw-grid.c:2216
 msgid "File type:"
 msgstr "Vrsta datoteke:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2105
+#: ../libgda-ui/gdaui-raw-grid.c:2226
 msgid "Tab-delimited"
 msgstr "Podatki ločeni s tabulatorji"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2106
+#: ../libgda-ui/gdaui-raw-grid.c:2227
 msgid "Comma-delimited"
 msgstr "Podatki ločeni z vejicami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2107
+#: ../libgda-ui/gdaui-raw-grid.c:2228
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:2114
+#: ../libgda-ui/gdaui-raw-grid.c:2235
 msgid "Data to save:"
 msgstr "Shranjevanje podatkov:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2129
+#: ../libgda-ui/gdaui-raw-grid.c:2250
 msgid "All data (without any local modification)"
 msgstr "vsi podatki (brez krajevnih sprememb)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2130
+#: ../libgda-ui/gdaui-raw-grid.c:2251
 msgid "Only displayed data"
 msgstr "le prikazani podatki"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2132
+#: ../libgda-ui/gdaui-raw-grid.c:2253
 msgid "Only selected data"
 msgstr "le izbrani podatki"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2137
+#: ../libgda-ui/gdaui-raw-grid.c:2258
 msgid "Other options"
 msgstr "Druge možnosti"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2144
+#: ../libgda-ui/gdaui-raw-grid.c:2265
 msgid "Empty string when NULL?"
 msgstr "Ali naj se izpraznijo niti, kadar so te vrednosti NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2147
-#: ../libgda-ui/gdaui-raw-grid.c:2152
+#: ../libgda-ui/gdaui-raw-grid.c:2268
+#: ../libgda-ui/gdaui-raw-grid.c:2273
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Izvozi vrednosti NULL kot prazen \"\" niz"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2154
+#: ../libgda-ui/gdaui-raw-grid.c:2275
 msgid "Invalid data as NULL?"
 msgstr "Ali so podatki vrednosti NULL neveljavni?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2157
-#: ../libgda-ui/gdaui-raw-grid.c:2162
+#: ../libgda-ui/gdaui-raw-grid.c:2278
+#: ../libgda-ui/gdaui-raw-grid.c:2283
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4325,29 +4330,29 @@ msgstr ""
 "Namesto neveljavnih podatkov,\n"
 "izvozi podatke z vrednostmi NULL."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2164
+#: ../libgda-ui/gdaui-raw-grid.c:2285
 msgid "Field names on first row?"
 msgstr "Ali so v prvi vrstici imena polj?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2167
-#: ../libgda-ui/gdaui-raw-grid.c:2172
+#: ../libgda-ui/gdaui-raw-grid.c:2288
+#: ../libgda-ui/gdaui-raw-grid.c:2293
 msgid "Add a row at beginning with columns names"
 msgstr "Dodaj vrstico na začetku z imeni stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2348
+#: ../libgda-ui/gdaui-raw-grid.c:2469
 #, c-format
 msgid "Could not save file %s"
 msgstr "Ni mogoče shraniti datoteke %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2356
+#: ../libgda-ui/gdaui-raw-grid.c:2477
 msgid "You must specify a file name"
 msgstr "Navesti je treba ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2362
+#: ../libgda-ui/gdaui-raw-grid.c:2483
 msgid "Got empty file while converting the data"
 msgstr "Dobljena prazna datoteka med pretvarjanjem podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2375
+#: ../libgda-ui/gdaui-raw-grid.c:2496
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4356,7 +4361,7 @@ msgstr ""
 "Datoteka '%s' že obstaja.\n"
 "Ali jo želite prepisati?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2385
+#: ../libgda-ui/gdaui-raw-grid.c:2506
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
@@ -8458,14 +8463,14 @@ msgstr "Neimenovan upravljalnik podatkov"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:331
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:331
-#: ../tools/browser/query-exec/query-exec-perspective.c:306
+#: ../tools/browser/query-exec/query-exec-perspective.c:312
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
 msgid "_Show favorites"
 msgstr "_Pokaži priljubljene"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:331
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:331
-#: ../tools/browser/query-exec/query-exec-perspective.c:306
+#: ../tools/browser/query-exec/query-exec-perspective.c:312
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
 msgid "Show or hide favorites"
 msgstr "Pokaži ali skrij priljubljene"
@@ -9154,19 +9159,19 @@ msgstr[1] "pred %lu dnevom\n"
 msgstr[2] "pred %lu dnevoma\n"
 msgstr[3] "pred %lu dnevi\n"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:310
+#: ../tools/browser/query-exec/query-exec-perspective.c:316
 msgid "_Query"
 msgstr "_Poizvedba"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:310
+#: ../tools/browser/query-exec/query-exec-perspective.c:316
 msgid "Query"
 msgstr "Poizvedba"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:311
+#: ../tools/browser/query-exec/query-exec-perspective.c:317
 msgid "_New editor"
 msgstr "_Nov urejevalnik"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:311
+#: ../tools/browser/query-exec/query-exec-perspective.c:317
 msgid "Open a new query editor"
 msgstr "Odpri nov urejevalnik poizvedbe"
 
