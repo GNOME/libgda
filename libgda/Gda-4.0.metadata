@@ -39,3 +39,7 @@ DataModelIter.get_value_for_field unowned=true
 DataModelIter.get_value_for_field nullable=true
 Holder.get_value nullable=true
 Row.get_value nullable=true
+MetaContext.column_names array=true
+MetaContext.column_names array_length_field="size"
+MetaContext.column_values array=true
+MetaContext.column_values array_length_field="size"

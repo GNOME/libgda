@@ -2436,7 +2436,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
  * gda_meta_store_extract_v:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @vars: (element-type gchar GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as 
+ * @vars: (element-type utf8 GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as 
  * value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be
  * omitted.
  * @error: a place to store errors, or %NULL
