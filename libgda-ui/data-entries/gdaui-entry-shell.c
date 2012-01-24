@@ -500,7 +500,7 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
  * Defines the color to be used when @de displays an invalid value. Any value not
  * between 0. and 1. will result in the default hard coded values to be used (grayish).
  *
- * Since: 4.2.13
+ * Since: 5.0.3
  */
 void
 gdaui_entry_shell_set_ucolor (GdauiEntryShell *shell, gdouble red, gdouble green,

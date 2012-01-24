@@ -499,7 +499,7 @@ gdaui_data_entry_grab_focus (GdauiDataEntry *de)
  * Defines the color to be used when @de displays an invalid value. Any value not
  * between 0. and 1. will result in the default hard coded values to be used (grayish).
  *
- * Since: 4.2.13
+ * Since: 5.0.3
  */
 void
 gdaui_data_entry_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
