@@ -72,6 +72,11 @@ void       gdaui_raw_grid_set_sample_start      (GdauiRawGrid *grid, gint sample
 
 void       gdaui_raw_grid_set_layout_from_file  (GdauiRawGrid *grid, const gchar *file_name, const gchar *grid_name);
 
+typedef void (*GdauiRawGridFormatFunc) (GtkCellRenderer *cell, GtkTreeViewColumn *column, gint column_pos, GdaDataModel *model, gint row, gpointer data);
+void       gdaui_raw_grid_add_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func,
+						   gpointer data, GDestroyNotify dnotify);
+void       gdaui_raw_grid_remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func);
+
 /* private API */
 GList     *_gdaui_raw_grid_get_selection        (GdauiRawGrid *grid);
 
