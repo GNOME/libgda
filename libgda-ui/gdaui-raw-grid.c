@@ -1187,7 +1187,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 		gint col;
 		gint offset;
 		GValue *value;
-		gint row;
 
 		offset = gda_data_model_get_n_columns (gda_data_proxy_get_proxied_model (grid->priv->proxy));
 
@@ -1196,7 +1195,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				     GDA_SET_NODE (group->group->nodes->data)->holder);
 		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
 				    GDAUI_DATA_STORE_COL_TO_DELETE, &to_be_deleted,
-				    GDAUI_DATA_STORE_COL_MODEL_ROW, &row,
 				    col, &value,
 				    offset + col, &attributes, -1);
 		g_object_set (G_OBJECT (cell),
