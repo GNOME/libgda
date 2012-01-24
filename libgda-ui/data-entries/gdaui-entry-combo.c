@@ -541,9 +541,8 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	combo->priv->data_valid = !err;
 	g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
 
-	if (!err) 
-		/* notify the status and contents changed */
-		gdaui_entry_combo_emit_signal (combo);
+	/* notify the status and contents changed */
+	gdaui_entry_combo_emit_signal (combo);
 
 	return !err;
 }
