@@ -2429,7 +2429,7 @@ gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *siz
  * Defines the color to be used when @form displays an invalid value. Any value not
  * between 0. and 1. will result in the default hard coded values to be used (grayish).
  *
- * Since: 4.2.13
+ * Since: 5.0.3
  */
 void
 gdaui_basic_form_set_unknown_color (GdauiBasicForm *form, gdouble red, gdouble green,

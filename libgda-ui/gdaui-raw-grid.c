@@ -1036,7 +1036,7 @@ remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func)
  * whenever the rendering of a cell in @grid needs to be done. It is similar in purpose
  * to the gtk_tree_view_column_set_cell_data_func() function.
  *
- * Since: 4.2.13
+ * Since: 5.0.3
  */
 void
 gdaui_raw_grid_add_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func,
@@ -1064,7 +1064,7 @@ gdaui_raw_grid_add_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFu
  *
  * This function undoes what has been specified before by gdaui_raw_grid_add_formatting_function()
  *
- * Since: 4.2.13
+ * Since: 5.0.3
  */
 void
 gdaui_raw_grid_remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func)
