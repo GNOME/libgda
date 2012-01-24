@@ -106,6 +106,15 @@ static ColumnData *get_column_data_for_group (GdauiRawGrid *grid, GdauiSetGroup 
 static ColumnData *get_column_data_for_holder (GdauiRawGrid *grid, GdaHolder *holder);
 static ColumnData *get_column_data_for_id (GdauiRawGrid *grid, const gchar *id);
 
+typedef struct {
+	GdauiRawGridFormatFunc  func;
+	gpointer                data;
+	GDestroyNotify          dnotify;
+} FormattingFuncData;
+static FormattingFuncData *formatting_func_new (GdauiRawGridFormatFunc func,
+						gpointer data, GDestroyNotify dnotify);
+static void                formatting_func_destroy (FormattingFuncData *fd);
+
 struct _GdauiRawGridPriv
 {
 	GdaDataModel               *data_model;  /* data model provided by set_model() */
@@ -134,6 +143,8 @@ struct _GdauiRawGridPriv
 	/* store the position of the mouse for popup menu on button press event */
 	gint                        bin_x;
 	gint                        bin_y;
+
+	GSList                     *formatting_funcs; /* list of #FormattingFuncData structures */
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -408,6 +419,8 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 
 	grid->priv->filter = NULL;
 	grid->priv->filter_window = NULL;
+
+	grid->priv->formatting_funcs = NULL;
 }
 
 /**
@@ -453,6 +466,12 @@ gdaui_raw_grid_dispose (GObject *object)
 			gtk_widget_destroy (grid->priv->filter);
 		if (grid->priv->filter_window)
 			gtk_widget_destroy (grid->priv->filter_window);
+
+		if (grid->priv->formatting_funcs) {
+			g_slist_foreach (grid->priv->formatting_funcs, (GFunc) formatting_func_destroy,
+					 NULL);
+			g_slist_free (grid->priv->formatting_funcs);
+		}
 
 		/* the private area itself */
 		g_free (grid->priv);
@@ -989,6 +1008,95 @@ reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_node)
 	}
 }
 
+static gboolean
+remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func)
+{
+	if (grid->priv->formatting_funcs) {
+		GSList *list;
+		for (list = grid->priv->formatting_funcs; list; list = list->next) {
+			FormattingFuncData *fd = (FormattingFuncData*) list->data;
+			if (fd->func == func) {
+				grid->priv->formatting_funcs = g_slist_remove (grid->priv->formatting_funcs, fd);
+				formatting_func_destroy (fd);				
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
+
+/**
+ * gdaui_raw_grid_add_formatting_function:
+ * @grid: a #GdauiRawGrid widget
+ * @func: a #GdauiRawGridFormatFunc function pointer
+ * @data: (allow-none): a pointer to pass to the @func function when called
+ * @dnotify: (allow-none): destroy notifier for @data
+ *
+ * This function allows you to specify that the @func function needs to be called
+ * whenever the rendering of a cell in @grid needs to be done. It is similar in purpose
+ * to the gtk_tree_view_column_set_cell_data_func() function.
+ *
+ * Since: 4.2.13
+ */
+void
+gdaui_raw_grid_add_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func,
+					gpointer data, GDestroyNotify dnotify)
+{
+	g_return_if_fail (GDAUI_IS_RAW_GRID (grid));
+	g_return_if_fail (func);
+
+	/* remove existing function */
+	remove_formatting_function (grid, func);
+	
+	/* add new one */
+	FormattingFuncData *fd;
+	fd = formatting_func_new (func, data, dnotify);
+	grid->priv->formatting_funcs = g_slist_append (grid->priv->formatting_funcs, fd);
+
+	/* redraw grid to take new function into account */
+	TO_IMPLEMENT;
+}
+
+/**
+ * gdaui_raw_grid_remove_formatting_function:
+ * @grid: a #GdauiRawGrid widget
+ * @func: a #GdauiRawGridFormatFunc function pointer
+ *
+ * This function undoes what has been specified before by gdaui_raw_grid_add_formatting_function()
+ *
+ * Since: 4.2.13
+ */
+void
+gdaui_raw_grid_remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func)
+{
+	g_return_if_fail (GDAUI_IS_RAW_GRID (grid));
+	g_return_if_fail (func);
+
+	remove_formatting_function (grid, func);
+
+	/* redraw grid to take new function into account */
+	TO_IMPLEMENT;
+}
+
+static FormattingFuncData *
+formatting_func_new (GdauiRawGridFormatFunc func, gpointer data, GDestroyNotify dnotify)
+{
+	FormattingFuncData *fd;
+	fd = g_new0 (FormattingFuncData, 1);
+	fd->func = func;
+	fd->data = data;
+	fd->dnotify = dnotify;
+	return fd;
+}
+
+static void
+formatting_func_destroy (FormattingFuncData *fd)
+{
+	if (fd->dnotify)
+		fd->dnotify (fd->data);
+	g_free (fd);
+}
+
 /*
  * Set the attributes for each cell renderer which is not the information cell renderer,
  * called by each cell renderer before actually displaying anything.
@@ -1037,7 +1145,23 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 		values = _gdaui_utility_proxy_compute_values_for_group (group, grid->priv->store,
 									grid->priv->iter, iter,
 									TRUE);
-		if (!values) {
+		if (values) {
+
+			g_object_set (G_OBJECT (cell),
+				      "values-display", values,
+				      "value-attributes", attributes,
+				      "editable",
+				      !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
+				      "show-expander",
+				      !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
+				      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
+				      "cell_background-set",
+				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
+				      "to-be-deleted", to_be_deleted,
+				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
+				      NULL);
+		}
+		else {
 			values = _gdaui_utility_proxy_compute_values_for_group (group, grid->priv->store,
 										grid->priv->iter, iter, FALSE);
 			g_object_set (G_OBJECT (cell),
@@ -1053,24 +1177,10 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				      "to-be-deleted", to_be_deleted,
 				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 				      NULL);
-			g_list_free (values);
 		}
-		else {
-			g_object_set (G_OBJECT (cell),
-				      "values-display", values,
-				      "value-attributes", attributes,
-				      "editable",
-				      !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "show-expander",
-				      !cdata->data_locked && !(attributes & GDA_VALUE_ATTR_NO_MODIF),
-				      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
-				      "cell_background-set",
-				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
-				      "to-be-deleted", to_be_deleted,
-				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
-				      NULL);
+
+		if (values)
 			g_list_free (values);
-		}
 	}
 	else {
 		/* single direct parameter */
@@ -1100,6 +1210,19 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 			      "to-be-deleted", to_be_deleted,
 			      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 			      NULL);
+	}
+
+	if (grid->priv->formatting_funcs) {
+		gint row, col_index;
+		GSList *list;
+
+		col_index = g_slist_index (grid->priv->columns_data, cdata);
+		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
+				    GDAUI_DATA_STORE_COL_MODEL_ROW, &row, -1);
+		for (list = grid->priv->formatting_funcs; list; list = list->next) {
+			FormattingFuncData *fd = (FormattingFuncData*) list->data;
+			fd->func (cell, cdata->column, col_index, (GdaDataModel*) grid->priv->proxy, row, fd->data);
+		}
 	}
 }
 
