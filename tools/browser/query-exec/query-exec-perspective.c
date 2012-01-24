@@ -36,6 +36,8 @@ static void query_exec_perspective_init (QueryExecPerspective *stmt);
 static void query_exec_perspective_dispose (GObject *object);
 
 static void query_exec_perspective_grab_focus (GtkWidget *widget);
+static void query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers);
+
 
 /* BrowserPerspective interface */
 static void                 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface);
@@ -213,8 +215,12 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
 
 	nb = GTK_NOTEBOOK (perspective->priv->notebook);
 	page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
-	if (!page)
-		return;
+	if (!page) {
+		query_exec_add_cb (NULL, BROWSER_PERSPECTIVE (perspective));
+		page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
+		if (!page)
+			return;
+	}
 	if (IS_QUERY_CONSOLE_PAGE_PAGE (page)) {
 		query_console_page_set_text (QUERY_CONSOLE_PAGE (page), selection, fav_id);
 		gtk_widget_grab_focus (page);
