@@ -28,6 +28,7 @@
 #include <libxml/tree.h>
 #include <glib.h>
 #include <gda-value.h>
+#include "gda-report-engine.h"
 
 G_BEGIN_DECLS
 
@@ -63,8 +64,8 @@ void    rt_free_node (RtNode *node);
 void    rt_dump_tree (RtNode *tree);
 gchar  *rt_dump_to_string (RtNode *tree);
 
-void parse_rich_text_to_docbook (xmlNodePtr top, const gchar *text);
-void parse_rich_text_to_html (xmlNodePtr top, const gchar *text);
+void parse_rich_text_to_docbook (GdaReportEngine *eng, xmlNodePtr top, const gchar *text);
+void parse_rich_text_to_html (GdaReportEngine *eng, xmlNodePtr top, const gchar *text);
 
 G_END_DECLS
 

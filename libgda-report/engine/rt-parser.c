@@ -1283,20 +1283,34 @@ rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtN
 }
 
 void
-parse_rich_text_to_docbook (xmlNodePtr top, const gchar *text)
+parse_rich_text_to_docbook (GdaReportEngine *eng, xmlNodePtr top, const gchar *text)
 {
 	RtNode *rtnode;
 	RenderingContext context;
+	g_return_if_fail (!eng || GDA_IS_REPORT_ENGINE (eng));
 
 	context.hash = g_hash_table_new (NULL, NULL);
 	context.file_path = ".";
+	if (eng)
+		g_object_get (eng, "output-directory", &context.file_path, NULL);
 	context.file_prefix = "IMG";
-
 	rtnode = rt_parse_text (text);
 	/*rt_dump_tree (rtnode);*/
 	rich_text_node_to_docbook (&context, top, rtnode, top);
 	g_hash_table_destroy (context.hash);
 	rt_free_node (rtnode);
+
+	if (eng)
+		g_free (context.file_path);
+}
+
+static xmlNodePtr
+new_html_child (xmlNodePtr parent, const gchar *ns, const gchar *name, const gchar *contents)
+{
+	if (!parent || (parent->name && (*parent->name != 'h')))
+		return xmlNewChild (parent, NULL, BAD_CAST name, BAD_CAST contents);
+	else
+		return new_html_child (parent->parent, ns, name, contents);
 }
 
 /*
@@ -1338,26 +1352,26 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 		}
 		break;
 	case RT_MARKUP_BOLD:
-		cattach = xmlNewChild (parent, NULL, BAD_CAST "b", BAD_CAST realtext);
+		cattach = new_html_child (parent, NULL, "b", realtext);
 		break;
 	case RT_MARKUP_PARA:
 		pattach = parent;
 		if ((parent != top_parent) &&
 		     ! strcmp ((gchar*) parent->name, "p"))
 			pattach = parent->parent;
-		cattach = xmlNewChild (pattach, NULL, BAD_CAST "p", BAD_CAST realtext);
+		cattach = new_html_child (pattach, NULL, "p", realtext);
 		parent = cattach;
 		break;
 	case RT_MARKUP_TT:
 	case RT_MARKUP_VERBATIM:
 	case RT_MARKUP_ITALIC:
-		cattach = xmlNewChild (parent, NULL, BAD_CAST "i", BAD_CAST realtext);
+		cattach = new_html_child (parent, NULL, "i", realtext);
 		break;
 	case RT_MARKUP_STRIKE:
-		cattach = xmlNewChild (parent, NULL, BAD_CAST "del", BAD_CAST realtext);
+		cattach = new_html_child (parent, NULL, "del", realtext);
 		break;
 	case RT_MARKUP_UNDERLINE:
-		cattach = xmlNewChild (parent, NULL, BAD_CAST "ins", BAD_CAST realtext);
+		cattach = new_html_child (parent, NULL, "ins", realtext);
 		break;
 	case RT_MARKUP_PICTURE: {
 		gboolean saved = FALSE;
@@ -1405,16 +1419,16 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 		else {
 			switch (type) {
  			case 0:
-				pattach =  xmlNewChild (parent, NULL, BAD_CAST "img",
+				pattach =  new_html_child (parent, NULL, "img",
 							NULL);
-				xmlSetProp (cattach, BAD_CAST "src", BAD_CAST file);
+				xmlSetProp (pattach, BAD_CAST "src", BAD_CAST file);
 				break;
  			case 1:
 				xmlNodeAddContent (parent, BAD_CAST (rtnode->text));
 				break;
  			case 2:
-				cattach = xmlNewChild (parent, NULL, BAD_CAST "ulink",
-						       BAD_CAST _("link"));
+				cattach = new_html_child (parent, NULL, "ulink",
+						       _("link"));
 				xmlSetProp (cattach, BAD_CAST "url", BAD_CAST file);
 				break;
 			default:
@@ -1430,7 +1444,7 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 		if (!strcmp ((gchar*) parent->name, "para"))
 			pattach = parent->parent;
 		sect = g_strdup_printf ("h%d", rtnode->offset + 1);
-		cattach = xmlNewChild (pattach, NULL, BAD_CAST sect, BAD_CAST realtext);
+		cattach = new_html_child (pattach, NULL, sect, realtext);
 		g_free (sect);
 		break;
 	}
@@ -1445,14 +1459,14 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 			g_assert (!strcmp ((gchar*) tmp->name, "ul"));
 			g_assert (rtnode->prev->offset == rtnode->offset);
 			g_hash_table_insert (context->hash, rtnode, tmp);
-			tmp = xmlNewChild (tmp, NULL, BAD_CAST "li", NULL);
-			cattach = xmlNewChild (tmp, NULL, BAD_CAST "p", BAD_CAST realtext);
+			tmp = new_html_child (tmp, NULL, "li", NULL);
+			cattach = new_html_child (tmp, NULL, "p", realtext);
 		}
 		else {
-			pattach = xmlNewChild (parent, NULL, BAD_CAST "ul", NULL);
+			pattach = new_html_child (parent, NULL, "ul", NULL);
 			g_hash_table_insert (context->hash, rtnode, pattach);
-			pattach = xmlNewChild (pattach, NULL, BAD_CAST "li", NULL);
-			cattach = xmlNewChild (pattach, NULL, BAD_CAST "p", BAD_CAST realtext);
+			pattach = new_html_child (pattach, NULL, "li", NULL);
+			cattach = new_html_child (pattach, NULL, "p", realtext);
 		}
 		break;
 	}
@@ -1474,18 +1488,23 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 }
 
 void
-parse_rich_text_to_html (xmlNodePtr top, const gchar *text)
+parse_rich_text_to_html (GdaReportEngine *eng, xmlNodePtr top, const gchar *text)
 {
 	RtNode *rtnode;
 	RenderingContext context;
+	g_return_if_fail (!eng || GDA_IS_REPORT_ENGINE (eng));
 
 	context.hash = g_hash_table_new (NULL, NULL);
 	context.file_path = ".";
+	if (eng)
+		g_object_get (eng, "output-directory", &context.file_path, NULL);
 	context.file_prefix = "IMG";
-
 	rtnode = rt_parse_text (text);
 	/*rt_dump_tree (rtnode);*/
 	rich_text_node_to_html (&context, top, rtnode, top);
 	g_hash_table_destroy (context.hash);
 	rt_free_node (rtnode);
+
+	if (eng)
+		g_free (context.file_path);
 }
