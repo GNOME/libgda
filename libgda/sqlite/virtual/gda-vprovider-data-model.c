@@ -451,6 +451,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	gint i, ncols;
 	gchar *spec_name, *tmp;
 	GdaVConnectionTableData *td;
+	GHashTable *hash;
 
 	TRACE (NULL, NULL);
 
@@ -504,11 +505,12 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	g_string_append (sql, tmp);
 	g_free (tmp);
 	g_string_append (sql, " (");
+	hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	for (i = 0; i < ncols; i++) {
 		GdaColumn *column;
 		const gchar *name, *type;
 		GType gtype;
-		gchar *newcolname;
+		gchar *newcolname, *tmp;
 
 		if (i != 0)
 			g_string_append (sql, ", ");
@@ -524,6 +526,24 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			newcolname = g_strdup_printf ("_%d", i + 1);
 		else
 			newcolname = gda_sql_identifier_quote (name, GDA_CONNECTION (cnc), NULL, FALSE, FALSE);
+
+		tmp = g_ascii_strdown (newcolname, -1);
+		if (g_hash_table_lookup (hash, tmp)) {
+			gint i;
+			g_free (tmp);
+			for (i = 0; ; i++) {
+				gchar *nc2;
+				nc2 = g_strdup_printf ("%s%d", newcolname, i);
+				tmp = g_ascii_strdown (nc2, -1);
+				if (! g_hash_table_lookup (hash, tmp)) {
+					g_free (newcolname);
+					newcolname = nc2;
+					break;
+				}
+				g_free (tmp);
+				g_free (nc2);
+			}
+		}
 
 		gtype = gda_column_get_g_type (column);
 		type = g_type_name (gtype);
@@ -562,6 +582,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "text";
 
 		g_string_append (sql, newcolname);
+		g_hash_table_insert (hash, tmp, (gpointer) 0x01);
 		g_free (newcolname);
 		g_string_append_c (sql, ' ');
 		g_string_append (sql, type);
@@ -570,6 +591,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		if (gtype == G_TYPE_STRING)
 			g_string_append (sql, " COLLATE LOCALE");
 	}
+	g_hash_table_destroy (hash);
 
 	/* add a hidden column which contains the row number of the data model */
 	if (ncols != 0)
