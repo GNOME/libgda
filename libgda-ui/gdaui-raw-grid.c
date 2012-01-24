@@ -2980,6 +2980,22 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 		}
 		create_tree_view_column (grid, cdata, pos);
 	}
+	else if (!strcmp (att_name, GDA_ATTRIBUTE_NAME)) {
+		ColumnData *cdata;
+		cdata = get_column_data_for_holder (grid, param);
+		if (!cdata)
+			return;
+		if (att_value) {
+			if (G_VALUE_TYPE (att_value) == G_TYPE_STRING) {
+				g_free (cdata->title);
+				cdata->title = g_value_dup_string (att_value);
+				gtk_tree_view_column_set_title (cdata->column, cdata->title);
+			}
+			else
+				g_warning (_("The '%s' attribute should be a G_TYPE_STRING value"),
+					   GDA_ATTRIBUTE_NAME);
+		}
+	}
 }
 
 static GError *
