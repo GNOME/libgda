@@ -24,6 +24,20 @@ static void destroy (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer dat
 	gtk_main_quit ();
 }
 
+static gboolean change_unknow_color (GdauiBasicForm *form)
+{
+	static gdouble red = .3;
+	static gdouble green = .1;
+	static gdouble blue = .1;
+	static gdouble alpha = .5;
+
+	red += .075;
+	if (red >= 1.)
+		red = .3;
+	gdaui_basic_form_set_unknown_color (form, red, green, blue, alpha);
+	return TRUE; /* keep timer */
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -50,6 +64,11 @@ main (int argc, char *argv[])
 	/* main form to list customers */
 	form = gdaui_form_new (model);
 	gtk_box_pack_start (GTK_BOX (vbox), form, FALSE, FALSE, 0);
+
+	GtkWidget *raw;
+	g_object_get (form, "raw-form", &raw, NULL);
+	g_timeout_add (80, (GSourceFunc) change_unknow_color, raw);
+	g_object_unref (raw);
 
         g_object_set (G_OBJECT (form),
 		      "info-flags",

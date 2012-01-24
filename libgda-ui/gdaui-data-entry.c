@@ -487,3 +487,26 @@ gdaui_data_entry_grab_focus (GdauiDataEntry *de)
 	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->grab_focus)
 		(GDAUI_DATA_ENTRY_GET_IFACE (de)->grab_focus) (de);
 }
+
+/**
+ * gdaui_data_entry_set_unknown_color:
+ * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
+ * @red: the red component of a color
+ * @green: the green component of a color
+ * @blue: the blue component of a color
+ * @alpha: the alpha component of a color
+ *
+ * Defines the color to be used when @de displays an invalid value. Any value not
+ * between 0. and 1. will result in the default hard coded values to be used (grayish).
+ *
+ * Since: 4.2.13
+ */
+void
+gdaui_data_entry_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
+				     gdouble blue, gdouble alpha)
+{
+	g_return_if_fail (GDAUI_IS_DATA_ENTRY (de));
+
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->set_unknown_color)
+		(GDAUI_DATA_ENTRY_GET_IFACE (de)->set_unknown_color) (de, red, green, blue, alpha);
+}

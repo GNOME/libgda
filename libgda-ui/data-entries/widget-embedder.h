@@ -35,6 +35,12 @@ struct _WidgetEmbedder
 	GtkWidget *child;
 	GdkWindow *offscreen_window;
 	gboolean   valid;
+
+	/* unknown colors */
+	gdouble red;
+	gdouble green;
+	gdouble blue;
+	gdouble alpha;
 };
 
 struct _WidgetEmbedderClass
@@ -42,7 +48,9 @@ struct _WidgetEmbedderClass
 	GtkContainerClass parent_class;
 };
 
-GType      widget_embedder_get_type  (void) G_GNUC_CONST;
-GtkWidget* widget_embedder_new       (void);
-void       widget_embedder_set_valid (WidgetEmbedder *bin, gboolean valid);
+GType      widget_embedder_get_type   (void) G_GNUC_CONST;
+GtkWidget* widget_embedder_new        (void);
+void       widget_embedder_set_valid  (WidgetEmbedder *bin, gboolean valid);
+void       widget_embedder_set_ucolor (WidgetEmbedder *bin, gdouble red, gdouble green,
+				       gdouble blue, gdouble alpha);
 

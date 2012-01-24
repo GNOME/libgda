@@ -292,6 +292,9 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 
 	wid->priv->filter = NULL;
 	wid->priv->filter_window = NULL;
+
+	/* raw forms' default unknown color */
+	gdaui_basic_form_set_unknown_color ((GdauiBasicForm*) wid, -1., -1., -1., -1.);
 }
 
 /**

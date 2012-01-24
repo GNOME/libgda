@@ -73,11 +73,13 @@ struct _GdauiDataEntryIface
 	void            (*grab_focus)            (GdauiDataEntry *de);
 
 	/* another signal */
-	void            (* expand_changed)       (GdauiDataEntry *de);
+	void            (*expand_changed)        (GdauiDataEntry *de);
+
+	void            (*set_unknown_color)     (GdauiDataEntry *de, gdouble red, gdouble green,
+						  gdouble blue, gdouble alpha);
 
 	/*< private >*/
 	/* Padding for future expansion */
-        void (*_gdaui_reserved1) (void);
         void (*_gdaui_reserved2) (void);
         void (*_gdaui_reserved3) (void);
         void (*_gdaui_reserved4) (void);
@@ -134,6 +136,9 @@ gboolean        gdaui_data_entry_can_expand             (GdauiDataEntry *de, gbo
 void            gdaui_data_entry_set_editable           (GdauiDataEntry *de, gboolean editable);
 gboolean        gdaui_data_entry_get_editable           (GdauiDataEntry *de);
 void            gdaui_data_entry_grab_focus             (GdauiDataEntry *de);
+
+void            gdaui_data_entry_set_unknown_color      (GdauiDataEntry *de, gdouble red, gdouble green,
+							 gdouble blue, gdouble alpha);
 
 G_END_DECLS
 
