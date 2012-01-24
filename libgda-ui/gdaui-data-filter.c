@@ -211,6 +211,11 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 
+	gtk_widget_set_tooltip_markup (label, _("Columns can be referenced by thair name or more easily "
+						"using <b><tt>_&lt;column number&gt;</tt></b>. For example a valid "
+						"expression can be: <b><tt>_2 like 'doe%'</tt></b> "
+						"to filter rows where the 2nd column starts with <tt>doe</tt>."));
+
 	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_SHRINK, 0, 0, 0);
 	entry = gtk_entry_new ();
 	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
