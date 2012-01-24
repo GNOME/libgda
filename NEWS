@@ -1,3 +1,23 @@
+libgda 5.0.3, 2012-01-24
+
+ - Fixed BDBSql building and running
+ - Some MySQL provider corrections
+ - Many small corrections and improvements (UI extension, GdaNumeric, GdaBrowser, GdaSql)
+ - GdaSql: improved inline help and better uniform handling of query favorites
+   with GdaBrowser
+ - Report engine can now convert rich text to HTML
+ - Handle deprecated symbols for Glib 2.32
+ - Bugs corrected: #665917, #668411, #667837
+ - Translations:
+	- sl (Matej Urbančič)
+	- es (Daniel Mustieles)
+	- nb (Kjartan Maraas)
+	- it (Marco Ciampa)
+	- zh_CN (Aron Xu)
+	- de (Mario Blättermann)
+	- cs (Marek Černocký)
+	- ja (Jiro Matsuzawa)
+
 libgda 5.0.2, 2011-11-20
 
  - Gobject introspection improvements
