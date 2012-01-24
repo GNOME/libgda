@@ -242,6 +242,9 @@ static sqlite3_module Module = {
 	virtualRollback,              /* xRollback - rollback transaction */
 	NULL,                         /* xFindFunction - function overloading */
 	virtualRename,                /* Rename - Notification that the table will be given a new name */
+	NULL,                         /* xSavepoint */  
+	NULL,                         /* xRelease */
+	NULL                          /* xRollbackTo */
 };
 
 /*
