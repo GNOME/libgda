@@ -1,16 +1,16 @@
-# Norwegian translation of gnome-db (bokmål dialect).
+# Norwegian bokmål translation of libgda.
 # Copyright (C) 1999-2004 Free Software Foundation, Inc.
-# Kjartan Maraas <kmaraas@gnome.org>, 1999-2011.
+# Kjartan Maraas <kmaraas@gnome.org>, 1999-2012.
 #
 #: ../libgda/gda-connection.c:416
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 5.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-18 18:42+0100\n"
-"PO-Revision-Date: 2011-12-02 13:16+0100\n"
+"POT-Creation-Date: 2012-01-24 18:18+0100\n"
+"PO-Revision-Date: 2012-01-24 18:23+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
-"Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
+"Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: no\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,7 +125,7 @@ msgstr "Kunne ikke kjøre program for å bla gjennom databaser"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:535
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:159
 #: ../libgda-ui/gdaui-init.c:507 ../libgda-ui/gdaui-login.c:438
-#: ../libgda-ui/gdaui-rt-editor.c:741
+#: ../libgda-ui/gdaui-rt-editor.c:747
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
 #: ../providers/jdbc/gda-jdbc-provider.c:1360
@@ -163,22 +163,22 @@ msgstr "Kunne ikke kjøre program for å bla gjennom databaser"
 #: ../tools/browser/main.c:247
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
-#: ../tools/browser/common/ui-formgrid.c:662
-#: ../tools/browser/common/ui-formgrid.c:690
-#: ../tools/browser/common/ui-formgrid.c:721
-#: ../tools/browser/common/ui-formgrid.c:831
+#: ../tools/browser/common/ui-formgrid.c:663
+#: ../tools/browser/common/ui-formgrid.c:691
+#: ../tools/browser/common/ui-formgrid.c:722
+#: ../tools/browser/common/ui-formgrid.c:832
 #: ../tools/browser/data-manager/analyser.c:278
 #: ../tools/browser/data-manager/data-console.c:563
-#: ../tools/browser/data-manager/data-favorite-selector.c:201
-#: ../tools/browser/data-manager/data-favorite-selector.c:259
-#: ../tools/browser/data-manager/data-favorite-selector.c:619
+#: ../tools/browser/data-manager/data-favorite-selector.c:200
+#: ../tools/browser/data-manager/data-favorite-selector.c:258
+#: ../tools/browser/data-manager/data-favorite-selector.c:618
 #: ../tools/browser/data-manager/data-widget.c:387
 #: ../tools/browser/ldap-browser/entry-properties.c:243
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:477
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:483
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:190
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:600
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:189
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
 #: ../tools/browser/ldap-browser/ldap-search-page.c:383
 #: ../tools/browser/query-exec/query-console-page.c:816
 #: ../tools/browser/query-exec/query-console-page.c:846
@@ -186,14 +186,14 @@ msgstr "Kunne ikke kjøre program for å bla gjennom databaser"
 #: ../tools/browser/query-exec/query-console-page.c:1076
 #: ../tools/browser/query-exec/query-console-page.c:1107
 #: ../tools/browser/query-exec/query-console-page.c:1160
-#: ../tools/browser/query-exec/query-favorite-selector.c:191
-#: ../tools/browser/query-exec/query-favorite-selector.c:266
-#: ../tools/browser/query-exec/query-favorite-selector.c:287
-#: ../tools/browser/query-exec/query-favorite-selector.c:707
+#: ../tools/browser/query-exec/query-favorite-selector.c:190
+#: ../tools/browser/query-exec/query-favorite-selector.c:265
+#: ../tools/browser/query-exec/query-favorite-selector.c:286
+#: ../tools/browser/query-exec/query-favorite-selector.c:706
 #: ../tools/browser/query-exec/query-result.c:285
 #: ../tools/browser/query-exec/query-result.c:502
-#: ../tools/browser/schema-browser/favorite-selector.c:170
-#: ../tools/browser/schema-browser/favorite-selector.c:352
+#: ../tools/browser/schema-browser/favorite-selector.c:169
+#: ../tools/browser/schema-browser/favorite-selector.c:351
 #: ../tools/browser/schema-browser/relations-diagram.c:241
 #: ../tools/browser/schema-browser/table-columns.c:948
 #: ../tools/browser/schema-browser/table-info.c:468
@@ -208,7 +208,6 @@ msgstr "Kunne ikke kjøre program for å bla gjennom databaser"
 #: ../tools/gda-sql.c:1637 ../tools/gda-sql.c:1652 ../tools/gda-sql.c:1805
 #: ../tools/gda-sql.c:3147 ../tools/tools-input.c:128
 #: ../tools/web-server.c:2020
-#, c-format
 msgid "No detail"
 msgstr "Ingen detaljer"
 
@@ -554,7 +553,7 @@ msgstr "Tilbyder"
 #: ../libgda/gda-config.c:1416 ../libgda/gda-data-model-dsn-list.c:115
 #: ../libgda/gda-data-model-dsn-list.c:116
 #: ../tools/browser/data-manager/data-source-editor.c:165
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:306
 #: ../tools/config-info.c:69 ../tools/config-info.c:143
 #: ../tools/config-info.c:326 ../tools/gda-sql.c:2871
 msgid "Description"
@@ -1800,12 +1799,10 @@ msgid "Another object with the same name already exists"
 msgstr "Et annet objekt med samme navn eksisterer allerede"
 
 #: ../libgda/gda-meta-store.c:4112
-#, c-format
 msgid "Missing table name in meta data context"
 msgstr "Mangler tabellnavn i metadatakontekst"
 
 #: ../libgda/gda-meta-store.c:4139
-#, c-format
 msgid "Missing column name in meta data context"
 msgstr "Mangler kolonnenavn i metadatakontekst"
 
@@ -1825,7 +1822,6 @@ msgid "Unknown column name '%s' in meta data context"
 msgstr "Ukjent spørring «%s»"
 
 #: ../libgda/gda-meta-store.c:4219
-#, c-format
 msgid "Unknown table in meta data context"
 msgstr "Ukjent tabell i metadatakontekst"
 
@@ -2042,7 +2038,7 @@ msgid "Missing node <parameters>: '%s'"
 msgstr ""
 
 #: ../libgda/gda-set.c:1056
-#, fuzzy, c-format
+#, fuzzy
 msgid "Data set does not allow modifications"
 msgstr "Datakilde «%s» ble ikke funnet i konfigurasjonen"
 
@@ -2071,7 +2067,6 @@ msgid "Unknown part type"
 msgstr "Ukjent parameter «%s»"
 
 #: ../libgda/gda-sql-builder.c:344
-#, c-format
 msgid "SqlBuilder is empty"
 msgstr ""
 
@@ -2164,22 +2159,20 @@ msgstr "Kunne ikke definere etter posisjon"
 
 #: ../libgda/gda-tree-mgr-columns.c:302 ../libgda/gda-tree-mgr-schemas.c:255
 #: ../libgda/gda-tree-mgr-tables.c:287
-#, fuzzy, c-format
+#, fuzzy
 msgid "No connection and no GdaMetaStore specified"
 msgstr "Ingen tilkobling spesifisert"
 
 #: ../libgda/gda-tree-mgr-columns.c:388
-#, fuzzy, c-format
+#, fuzzy
 msgid "No schema specified"
 msgstr "Ingen DSN eller tilkoblingsstreng spesifisert"
 
 #: ../libgda/gda-tree-mgr-columns.c:396
-#, c-format
 msgid "No table specified"
 msgstr "Ingen tabell spesifisert"
 
 #: ../libgda/gda-tree-mgr-columns.c:425
-#, c-format
 msgid "Unable to get column name"
 msgstr "Kan ikke hente kolonnenavn"
 
@@ -2196,7 +2189,6 @@ msgid "No LDAP connection specified"
 msgstr "Ingen LDAP-tilkobling spesifisert"
 
 #: ../libgda/gda-tree-mgr-schemas.c:310
-#, c-format
 msgid "Unable to get schema name"
 msgstr "Kan ikke hente navn på skjema"
 
@@ -2214,13 +2206,12 @@ msgstr ""
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:589
 #: ../libgda-report/engine/gda-report-engine.c:616 ../tools/gda-sql.c:901
-#: ../tools/gda-sql.c:1092 ../tools/gda-sql.c:4660
-#, c-format
+#: ../tools/gda-sql.c:1092 ../tools/gda-sql.c:4708
 msgid "No connection specified"
 msgstr "Ingen tilkobling spesifisert"
 
 #: ../libgda/gda-tree-mgr-select.c:308
-#, fuzzy, c-format
+#, fuzzy
 msgid "No SELECT statement specified"
 msgstr "Ingen tilbyder spesifisert"
 
@@ -2230,12 +2221,12 @@ msgid "No value specified for parameter '%s'"
 msgstr "Ugyldig argument"
 
 #: ../libgda/gda-tree-mgr-select.c:364
-#, fuzzy, c-format
+#, fuzzy
 msgid "Unable to get iterator's value"
 msgstr "Kunne ikke hente datatype for parameter"
 
 #: ../libgda/gda-tree-mgr-tables.c:391
-#, fuzzy, c-format
+#, fuzzy
 msgid "Unable to get table name"
 msgstr "Navn på tabell"
 
@@ -2293,8 +2284,11 @@ msgid "Missing table name in UPDATE statement"
 msgstr "Navn på parameter"
 
 #: ../libgda/gda-util.c:1729
-#, c-format
 msgid "Can't rewrite UPDATE statement to handle default values"
+msgstr ""
+
+#: ../libgda/gda-util.c:1737
+msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr ""
 
 #: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
@@ -2626,7 +2620,6 @@ msgstr "Tomt uttrykk"
 #: ../providers/postgres/gda-postgres-provider.c:1927
 #: ../providers/web/gda-web-provider.c:1480
 #: ../providers/web/gda-web-provider.c:1483
-#, c-format
 msgid "Missing parameter(s) to execute query"
 msgstr ""
 
@@ -2743,7 +2736,7 @@ msgid "SQLite provider fatal internal error"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:638
-#, fuzzy, c-format
+#, fuzzy
 msgid "Truncated data"
 msgstr "Avkuttede data"
 
@@ -2774,17 +2767,17 @@ msgid "Error recreating LDAP tables: %s"
 msgstr "Feil under oppretting av database: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:773
-#, fuzzy, c-format
+#, fuzzy
 msgid "Can't remove non LDAP virtual table"
 msgstr "Tilkoblingstabeller"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:821
-#, fuzzy, c-format
+#, fuzzy
 msgid "Can't describe non LDAP virtual table"
 msgstr "Tilkoblingstabeller"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:828
-#, fuzzy, c-format
+#, fuzzy
 msgid "Unknown LDAP virtual table"
 msgstr "Ukjent parameter «%s»"
 
@@ -2813,7 +2806,6 @@ msgid "Integer value is out of bounds"
 msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:655
-#, c-format
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr ""
 
@@ -3250,7 +3242,7 @@ msgstr "Velg fil som skal lastes"
 
 #: ../libgda-ui/data-entries/common-bin.c:78
 #: ../libgda-ui/data-entries/plugins/common-pict.c:421
-#: ../libgda-ui/gdaui-rt-editor.c:739
+#: ../libgda-ui/gdaui-rt-editor.c:745
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3333,7 +3325,7 @@ msgstr "Datatype"
 #: ../libgda-ui/gdaui-basic-form.c:836 ../libgda-ui/gdaui-basic-form.c:871
 #: ../libgda-ui/gdaui-raw-grid.c:788 ../providers/ldap/gda-ldap-provider.c:712
 #: ../tools/config-info.c:121 ../tools/config-info.c:290
-#: ../tools/gda-sql.c:4118
+#: ../tools/gda-sql.c:4166
 msgid "Value"
 msgstr "Verdi"
 
@@ -3543,7 +3535,7 @@ msgid "_Save image"
 msgstr "L_agre bilde"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:359
-#: ../libgda-ui/gdaui-rt-editor.c:698
+#: ../libgda-ui/gdaui-rt-editor.c:704
 msgid "Select image to load"
 msgstr "Velg vilde som skal lastes"
 
@@ -4282,7 +4274,7 @@ msgstr ""
 msgid "If you choose yes, the contents will be lost."
 msgstr "Hvis du velger ja vil innholdet gå tapt."
 
-#: ../libgda-ui/gdaui-rt-editor.c:91
+#: ../libgda-ui/gdaui-rt-editor.c:93
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4309,91 +4301,91 @@ msgid ""
 "Raw areas are enclosed inside three doublequotes and no markup is interpreted"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "_Bold"
 msgstr "_Fet"
 
-#: ../libgda-ui/gdaui-rt-editor.c:158
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "Bold text"
 msgstr "Fet tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "_Italic"
 msgstr "Kurs_iv"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "Italic text"
 msgstr "Kursiv tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "_Underline"
 msgstr "_Understrek"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "Underline text"
 msgstr "Understrek tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:161
+#: ../libgda-ui/gdaui-rt-editor.c:163
 msgid "_Strike through"
 msgstr "Gjennom_strek"
 
-#: ../libgda-ui/gdaui-rt-editor.c:161
+#: ../libgda-ui/gdaui-rt-editor.c:163
 msgid "Strike through text"
 msgstr "Gjennomstrek tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "_Syntax help"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "Show syntax help"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
+#: ../libgda-ui/gdaui-rt-editor.c:168
 msgid "_Add image"
 msgstr "_Legg til bilde"
 
-#: ../libgda-ui/gdaui-rt-editor.c:166
+#: ../libgda-ui/gdaui-rt-editor.c:168
 msgid "Insert image"
 msgstr "Sett inn bilde"
 
-#: ../libgda-ui/gdaui-rt-editor.c:167
+#: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "_Normal text"
 msgstr "_Normal tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:167
+#: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "Reset to normal text"
 msgstr "Nullstill til normal tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:242
+#: ../libgda-ui/gdaui-rt-editor.c:244
 msgid "Don't display a specific background for the text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:252
+#: ../libgda-ui/gdaui-rt-editor.c:254
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:263
+#: ../libgda-ui/gdaui-rt-editor.c:265
 msgid "The buffer which is displayed"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:274
+#: ../libgda-ui/gdaui-rt-editor.c:276
 msgid "Determines if the contents appears in a scrolled window"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:905
+#: ../libgda-ui/gdaui-rt-editor.c:911
 msgid "Reset font size"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:911
+#: ../libgda-ui/gdaui-rt-editor.c:917
 msgid "Decrease font size (zoom out)"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:917
+#: ../libgda-ui/gdaui-rt-editor.c:923
 msgid "Increase font size (zoom in)"
 msgstr ""
 
-#: ../libgda-ui/gdaui-rt-editor.c:923
+#: ../libgda-ui/gdaui-rt-editor.c:929
 msgid "Show source markup"
 msgstr ""
 
@@ -4829,10 +4821,10 @@ msgstr "Indeksert(e) felt(er) "
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:3
-#: ../tools/browser/data-manager/data-favorite-selector.c:304
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
-#: ../tools/browser/query-exec/query-favorite-selector.c:352
-#: ../tools/command-exec.c:974 ../tools/gda-sql.c:3184 ../tools/gda-sql.c:4117
+#: ../tools/browser/data-manager/data-favorite-selector.c:303
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:298
+#: ../tools/browser/query-exec/query-favorite-selector.c:351
+#: ../tools/command-exec.c:974 ../tools/gda-sql.c:3184 ../tools/gda-sql.c:4165
 msgid "Name"
 msgstr "Navn"
 
@@ -5310,7 +5302,6 @@ msgstr "Mangler navn på tilbyder"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:856
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1113
-#, c-format
 msgid "Truncated result because LDAP server limit encountered"
 msgstr ""
 
@@ -7005,7 +6996,7 @@ msgid "Can't import data from web server"
 msgstr ""
 
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2114
-#, fuzzy, c-format
+#, fuzzy
 msgid "could not determine the indexed columns for index"
 msgstr "Kunne ikke definere etter posisjon"
 
@@ -7235,7 +7226,7 @@ msgid "Executing a query"
 msgstr ""
 
 #: ../tools/browser/browser-connection.c:1763
-#, fuzzy, c-format
+#, fuzzy
 msgid "Connection not yet opened"
 msgstr "Ingen tilkobling åpnet"
 
@@ -7245,22 +7236,19 @@ msgstr ""
 
 #: ../tools/browser/browser-connection.c:1815
 #: ../tools/browser/browser-connection.c:1821
-#: ../tools/browser/browser-connection.c:1957
-#: ../tools/browser/browser-favorites.c:553
-#: ../tools/browser/browser-favorites.c:559
-#: ../tools/browser/browser-favorites.c:986
-#: ../tools/browser/browser-favorites.c:993
+#: ../tools/browser/browser-connection.c:1957 ../tools/tools-favorites.c:628
+#: ../tools/tools-favorites.c:634 ../tools/tools-favorites.c:1061
+#: ../tools/tools-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
 msgstr ""
 
-#: ../tools/browser/browser-connection.c:1902
-#: ../tools/browser/browser-favorites.c:732
-#: ../tools/browser/browser-favorites.c:1044
+#: ../tools/browser/browser-connection.c:1902 ../tools/tools-favorites.c:807
+#: ../tools/tools-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
 msgstr ""
 
 #: ../tools/browser/browser-connection.c:2465
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not execute LDAP search"
 msgstr "Kunne ikke kjøre program for å bla gjennom databaser"
 
@@ -7335,11 +7323,6 @@ msgstr "Koble til"
 #: ../tools/browser/browser-connections-list.c:402
 msgid "Open a new connection"
 msgstr "Åpne en ny tilkobling"
-
-#: ../tools/browser/browser-favorites.c:186
-#: ../tools/browser/browser-favorites.c:195
-msgid "Can't initialize dictionary to store favorites"
-msgstr ""
 
 #: ../tools/browser/browser-stock-icons.c:44
 msgid "History"
@@ -7545,7 +7528,7 @@ msgid "Rollback current transaction"
 msgstr "Locale som skal brukes for tilkoblingen"
 
 #: ../tools/browser/browser-window.c:515 ../tools/browser/browser-window.c:570
-#: ../tools/browser/common/ui-formgrid.c:847
+#: ../tools/browser/common/ui-formgrid.c:848
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:971
 msgid "LDAP browser"
@@ -7666,7 +7649,7 @@ msgid "Remove this bind"
 msgstr ""
 
 #: ../tools/browser/connection-binding-properties.c:475
-#, fuzzy, c-format
+#, fuzzy
 msgid "Invalid schema name"
 msgstr "Navn på tabell"
 
@@ -7705,7 +7688,6 @@ msgid ""
 msgstr ""
 
 #: ../tools/browser/login-dialog.c:254
-#, c-format
 msgid "Cancelled by the user"
 msgstr ""
 
@@ -8064,12 +8046,10 @@ msgid "Referenced column"
 msgstr "Referert felt"
 
 #: ../tools/browser/common/fk-declare.c:560
-#, c-format
 msgid "Missing information to declare foreign key"
 msgstr ""
 
 #: ../tools/browser/common/fk-declare.c:642
-#, c-format
 msgid "Missing information to undeclare foreign key"
 msgstr ""
 
@@ -8212,38 +8192,37 @@ msgstr[1] ""
 msgid "None"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:342
+#: ../tools/browser/common/ui-formgrid.c:343
 msgid "Enable or disable auto update of data"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:360
+#: ../tools/browser/common/ui-formgrid.c:361
 msgid "Toggle between grid and form presentations"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:501
+#: ../tools/browser/common/ui-formgrid.c:502
 #, fuzzy
 msgid "Execute action"
 msgstr "Ekstra funksjoner"
 
-#: ../tools/browser/common/ui-formgrid.c:549
+#: ../tools/browser/common/ui-formgrid.c:550
 msgid "View LDAP entry's details"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:564
-#: ../tools/browser/common/ui-formgrid.c:575
+#: ../tools/browser/common/ui-formgrid.c:565
+#: ../tools/browser/common/ui-formgrid.c:576
 #: ../tools/browser/data-manager/data-source-editor.c:111
 msgid "Zoom..."
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:652
+#: ../tools/browser/common/ui-formgrid.c:653
 #: ../tools/browser/data-manager/data-source.c:811
-#, c-format
 msgid "Statement to execute is not a selection statement"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:660
-#: ../tools/browser/common/ui-formgrid.c:688
-#: ../tools/browser/common/ui-formgrid.c:719
+#: ../tools/browser/common/ui-formgrid.c:661
+#: ../tools/browser/common/ui-formgrid.c:689
+#: ../tools/browser/common/ui-formgrid.c:720
 #: ../tools/browser/query-exec/query-console-page.c:1044
 #: ../tools/browser/query-exec/query-console-page.c:1074
 #: ../tools/browser/schema-browser/table-info.c:519
@@ -8253,25 +8232,25 @@ msgid ""
 "%s"
 msgstr "Feil under oppretting av database: %s"
 
-#: ../tools/browser/common/ui-formgrid.c:778
-#: ../tools/browser/common/ui-formgrid.c:782
+#: ../tools/browser/common/ui-formgrid.c:779
+#: ../tools/browser/common/ui-formgrid.c:783
 #, fuzzy
 msgid "Action successfully executed"
 msgstr "Åpning av tilkobling fullført!"
 
-#: ../tools/browser/common/ui-formgrid.c:799
+#: ../tools/browser/common/ui-formgrid.c:800
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
 "action '%s'"
 msgstr ""
 
-#: ../tools/browser/common/ui-formgrid.c:803
+#: ../tools/browser/common/ui-formgrid.c:804
 #, fuzzy
 msgid "Execution of action"
 msgstr "Ekstra alternativer for tilkobling"
 
-#: ../tools/browser/common/ui-formgrid.c:830
+#: ../tools/browser/common/ui-formgrid.c:831
 #: ../tools/browser/query-exec/query-console-page.c:1159
 #: ../tools/browser/schema-browser/table-info.c:547
 #, fuzzy, c-format
@@ -8431,83 +8410,83 @@ msgstr ""
 msgid "Switch between compose and execute modes"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:200
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:189
-#: ../tools/browser/query-exec/query-favorite-selector.c:190
-#: ../tools/browser/schema-browser/favorite-selector.c:169
+#: ../tools/browser/data-manager/data-favorite-selector.c:199
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:188
+#: ../tools/browser/query-exec/query-favorite-selector.c:189
+#: ../tools/browser/schema-browser/favorite-selector.c:168
 #, fuzzy, c-format
 msgid "Could not remove favorite: %s"
 msgstr "Kunne ikke åpne fil %s"
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:258
-#: ../tools/browser/data-manager/data-favorite-selector.c:618
+#: ../tools/browser/data-manager/data-favorite-selector.c:257
+#: ../tools/browser/data-manager/data-favorite-selector.c:617
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:476
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:482
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:251
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:598
 #: ../tools/browser/query-exec/query-console-page.c:815
 #: ../tools/browser/query-exec/query-console-page.c:845
-#: ../tools/browser/query-exec/query-favorite-selector.c:265
-#: ../tools/browser/query-exec/query-favorite-selector.c:706
-#: ../tools/browser/schema-browser/favorite-selector.c:351
+#: ../tools/browser/query-exec/query-favorite-selector.c:264
+#: ../tools/browser/query-exec/query-favorite-selector.c:705
+#: ../tools/browser/schema-browser/favorite-selector.c:350
 #: ../tools/browser/schema-browser/table-info.c:467
 #, fuzzy, c-format
 msgid "Could not add favorite: %s"
 msgstr "Kunne ikke laste fil «%s»"
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:289
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:283
-#: ../tools/browser/query-exec/query-favorite-selector.c:336
+#: ../tools/browser/data-manager/data-favorite-selector.c:288
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:282
+#: ../tools/browser/query-exec/query-favorite-selector.c:335
 #, fuzzy
 msgid "Favorite's properties"
 msgstr "Ugyldig argument"
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:311
+#: ../tools/browser/data-manager/data-favorite-selector.c:310
 #, fuzzy
 msgid "Specifications"
 msgstr "Det finnes ingen åpen tilkobling"
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:482
+#: ../tools/browser/data-manager/data-favorite-selector.c:481
 #, fuzzy
 msgid "Saved"
 msgstr "Skala"
 
-#: ../tools/browser/data-manager/data-favorite-selector.c:608
+#: ../tools/browser/data-manager/data-favorite-selector.c:607
 #, fuzzy
 msgid "Unnamed data manager"
 msgstr "Parameter uten navn"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:332
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
+#: ../tools/browser/data-manager/data-manager-perspective.c:331
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:331
 #: ../tools/browser/query-exec/query-exec-perspective.c:306
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
 msgid "_Show favorites"
 msgstr ""
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:332
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
+#: ../tools/browser/data-manager/data-manager-perspective.c:331
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:331
 #: ../tools/browser/query-exec/query-exec-perspective.c:306
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:307
 #, fuzzy
 msgid "Show or hide favorites"
 msgstr "Kunne ikke laste fil «%s»"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:336
+#: ../tools/browser/data-manager/data-manager-perspective.c:335
 #, fuzzy
 msgid "_Manager"
 msgstr "Databasenavn"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:336
+#: ../tools/browser/data-manager/data-manager-perspective.c:335
 #, fuzzy
 msgid "Manager"
 msgstr "Databasenavn"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:337
+#: ../tools/browser/data-manager/data-manager-perspective.c:336
 #, fuzzy
 msgid "_New data manager"
 msgstr "Databasenavn"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:337
+#: ../tools/browser/data-manager/data-manager-perspective.c:336
 #, fuzzy
 msgid "New data manager"
 msgstr "Databasenavn"
@@ -8520,7 +8499,6 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-source.c:437
 #: ../tools/browser/schema-browser/mgr-columns.c:278
-#, c-format
 msgid "Not ready"
 msgstr ""
 
@@ -8541,7 +8519,7 @@ msgstr ""
 
 #. Translators: Do not translate "name"
 #: ../tools/browser/data-manager/data-source.c:485
-#, fuzzy, c-format
+#, fuzzy
 msgid "Missing attribute \"name\" for table"
 msgstr "Ugyldig argument"
 
@@ -8556,7 +8534,7 @@ msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr ""
 
 #: ../tools/browser/data-manager/data-source.c:951
-#, fuzzy, c-format
+#, fuzzy
 msgid "No SELECT statement to execute"
 msgstr "Ingen tilbyder spesifisert"
 
@@ -8570,12 +8548,11 @@ msgid "Contents of '%s'"
 msgstr "Kunne ikke opprette fil %s"
 
 #: ../tools/browser/data-manager/data-source.c:1221
-#, fuzzy, c-format
+#, fuzzy
 msgid "Could not build SELECT statement"
 msgstr "Kunne ikke forberede Oracle uttrykk"
 
 #: ../tools/browser/data-manager/data-source.c:1288
-#, c-format
 msgid "Multiple statements detected, only the first will be used"
 msgstr ""
 
@@ -8671,7 +8648,7 @@ msgid "Selected data source's properties:"
 msgstr "Egenskaper for datakilde"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:171
-#, fuzzy, c-format
+#, fuzzy
 msgid "Error parsing XML specifications"
 msgstr "Kunne ikke åpne fil %s"
 
@@ -8791,41 +8768,41 @@ msgstr ""
 msgid "Could not find LDAP entry whith DN '%s'"
 msgstr "Fant ikke spørring med navn «%s»"
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:335
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:558
 #: ../tools/browser/ldap-browser/ldap-search-page.c:463
 msgid "_LDAP"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:335
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:552
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:558
 #: ../tools/browser/ldap-browser/ldap-search-page.c:463
 msgid "LDAP"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 msgid "_New LDAP entries browser"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 msgid "Open a new LDAP entries browser"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:338
 msgid "_New LDAP classes browser"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:338
 msgid "Open a new LDAP classes browser"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:340
 msgid "_New LDAP search"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:340
 msgid "Open a new LDAP search form"
 msgstr ""
 
@@ -8909,9 +8886,9 @@ msgstr ""
 msgid "LDAP entries"
 msgstr ""
 
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:477
-#: ../tools/browser/query-exec/query-favorite-selector.c:563
-#: ../tools/browser/schema-browser/favorite-selector.c:245
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:476
+#: ../tools/browser/query-exec/query-favorite-selector.c:562
+#: ../tools/browser/schema-browser/favorite-selector.c:244
 msgid "Favorites"
 msgstr ""
 
@@ -9084,7 +9061,7 @@ msgid "Favorite's name"
 msgstr "Navn på tabell"
 
 #: ../tools/browser/query-exec/query-console-page.c:789
-#: ../tools/browser/query-exec/query-favorite-selector.c:696
+#: ../tools/browser/query-exec/query-favorite-selector.c:695
 #, fuzzy
 msgid "Unnamed query"
 msgstr "Uten navn"
@@ -9206,21 +9183,21 @@ msgstr ""
 msgid "Open a new query editor"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:286
+#: ../tools/browser/query-exec/query-favorite-selector.c:285
 #, fuzzy, c-format
 msgid "Could not add action: %s"
 msgstr "Kunne ikke laste fil «%s»"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:360
+#: ../tools/browser/query-exec/query-favorite-selector.c:359
 msgid "SQL Code"
 msgstr ""
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:367
+#: ../tools/browser/query-exec/query-favorite-selector.c:366
 #, fuzzy
 msgid "Is action"
 msgstr "Ingen handling"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:370
+#: ../tools/browser/query-exec/query-favorite-selector.c:369
 msgid ""
 "Check this option to make this favorite an action\n"
 "which can be proposed for execution from grids\n"
@@ -9264,12 +9241,11 @@ msgid "Execution error:\n"
 msgstr ""
 
 #: ../tools/browser/schema-browser/mgr-columns.c:296
-#, fuzzy, c-format
+#, fuzzy
 msgid "Table not found"
 msgstr "Tabell «%s» ikke funnet"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:303
-#, c-format
 msgid "Requested object is not a table or view"
 msgstr ""
 
@@ -9311,7 +9287,6 @@ msgid "Relations diagram"
 msgstr "Lokasjon"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:374
-#, c-format
 msgid "Error parsing favorite's contents"
 msgstr ""
 
@@ -9322,7 +9297,7 @@ msgid "'%s' diagram"
 msgstr "Parameter uten navn"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:433
-#, fuzzy, c-format
+#, fuzzy
 msgid "Missing table attribute in favorite's contents"
 msgstr "Navn på parameter"
 
@@ -9585,8 +9560,8 @@ msgstr ""
 
 #: ../tools/command-exec.c:666 ../tools/command-exec.c:703
 #: ../tools/command-exec.c:747 ../tools/command-exec.c:790
-#: ../tools/command-exec.c:923 ../tools/gda-sql.c:3090 ../tools/gda-sql.c:4584
-#: ../tools/gda-sql.c:4824 ../tools/gda-sql.c:5049 ../tools/gda-sql.c:5150
+#: ../tools/command-exec.c:923 ../tools/gda-sql.c:3090 ../tools/gda-sql.c:4632
+#: ../tools/gda-sql.c:4872 ../tools/gda-sql.c:5097 ../tools/gda-sql.c:5198
 #, fuzzy
 msgid "No current connection"
 msgstr "Locale som skal brukes for tilkoblingen"
@@ -10153,15 +10128,16 @@ msgstr ""
 #: ../tools/gda-sql.c:2492 ../tools/gda-sql.c:2504 ../tools/gda-sql.c:2516
 #: ../tools/gda-sql.c:2528 ../tools/gda-sql.c:2540 ../tools/gda-sql.c:2552
 #: ../tools/gda-sql.c:2589
-msgid "Query buffer"
-msgstr "Spørringsbuffer"
+#, fuzzy
+msgid "Query buffer & query favorites"
+msgstr "Feltnavn"
 
 #: ../tools/gda-sql.c:2458
 msgid "Edit the query buffer (or file) with external editor"
 msgstr ""
 
 #: ../tools/gda-sql.c:2470
-msgid "Reset the query buffer (fill buffer with contents of file)"
+msgid "Reset the query buffer (or load file into query buffer)"
 msgstr ""
 
 #: ../tools/gda-sql.c:2482
@@ -10169,12 +10145,12 @@ msgid "Show the contents of the query buffer"
 msgstr ""
 
 #: ../tools/gda-sql.c:2493
-#, c-format
-msgid "%s [<QUERY_BUFFER_NAME>]"
-msgstr ""
+#, fuzzy, c-format
+msgid "%s [<FAVORITE_NAME>]"
+msgstr "%s NAVN"
 
 #: ../tools/gda-sql.c:2494
-msgid "Execute contents of query buffer, or named query buffer"
+msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
 
 #: ../tools/gda-sql.c:2506
@@ -10182,20 +10158,21 @@ msgid "Write query buffer to file"
 msgstr ""
 
 #: ../tools/gda-sql.c:2517 ../tools/gda-sql.c:2529 ../tools/gda-sql.c:2541
-#, c-format
-msgid "%s <QUERY_BUFFER_NAME>"
-msgstr ""
+#, fuzzy, c-format
+msgid "%s <FAVORITE_NAME>"
+msgstr "%s NAVN"
 
 #: ../tools/gda-sql.c:2518
-msgid "Save query buffer to dictionary"
-msgstr ""
+#, fuzzy
+msgid "Save query buffer as favorite"
+msgstr "Feltnavn"
 
 #: ../tools/gda-sql.c:2530
-msgid "Load query buffer from dictionary"
+msgid "Load a query favorite into query buffer"
 msgstr ""
 
 #: ../tools/gda-sql.c:2542
-msgid "Delete query buffer from dictionary"
+msgid "Delete a query favorite"
 msgstr ""
 
 #: ../tools/gda-sql.c:2553
@@ -10204,8 +10181,9 @@ msgid "%s"
 msgstr "%s"
 
 #: ../tools/gda-sql.c:2554
-msgid "List all saved query buffers in dictionary"
-msgstr ""
+#, fuzzy
+msgid "List all query favorites"
+msgstr "Kunne ikke åpne fil %s"
 
 #: ../tools/gda-sql.c:2564
 msgid "Formatting"
@@ -10290,7 +10268,7 @@ msgstr ""
 msgid "DSN list"
 msgstr "DSN-liste"
 
-#: ../tools/gda-sql.c:2926 ../tools/gda-sql.c:5173
+#: ../tools/gda-sql.c:2926 ../tools/gda-sql.c:5221
 msgid "Missing arguments"
 msgstr "Mangler argumenter"
 
@@ -10352,9 +10330,9 @@ msgid "Could not change working directory to '%s': %s"
 msgstr "Kunne ikke tolke fil ved %s"
 
 #: ../tools/gda-sql.c:3520 ../tools/gda-sql.c:3623 ../tools/gda-sql.c:3666
-#: ../tools/gda-sql.c:3695 ../tools/gda-sql.c:3737 ../tools/gda-sql.c:3788
-#: ../tools/gda-sql.c:3841 ../tools/gda-sql.c:3932 ../tools/gda-sql.c:4004
-#: ../tools/gda-sql.c:4349 ../tools/gda-sql.c:4435
+#: ../tools/gda-sql.c:3695 ../tools/gda-sql.c:3737 ../tools/gda-sql.c:3781
+#: ../tools/gda-sql.c:3890 ../tools/gda-sql.c:3954 ../tools/gda-sql.c:4038
+#: ../tools/gda-sql.c:4397 ../tools/gda-sql.c:4483
 msgid "No connection opened"
 msgstr "Ingen tilkobling åpnet"
 
@@ -10369,7 +10347,6 @@ msgid "could not start editor '%s'"
 msgstr "Kunne ikke starte redigering «%s»"
 
 #: ../tools/gda-sql.c:3579
-#, c-format
 msgid "Could not start /bin/sh"
 msgstr "Kunne ikke starte /bin/sh"
 
@@ -10377,110 +10354,110 @@ msgstr "Kunne ikke starte /bin/sh"
 msgid "Missing FILE to write to"
 msgstr ""
 
-#: ../tools/gda-sql.c:3797 ../tools/gda-sql.c:3863 ../tools/gda-sql.c:3945
-#: ../tools/gda-sql.c:4017
-msgid "Can't initialize dictionary to store query buffers"
-msgstr ""
-
-#: ../tools/gda-sql.c:3816
+#: ../tools/gda-sql.c:3787
 #, fuzzy
-msgid "Query buffer name"
-msgstr "Feltnavn"
+msgid "Favorite name"
+msgstr "Navn på tabell"
 
-#: ../tools/gda-sql.c:3817
+#: ../tools/gda-sql.c:3788
+#, fuzzy
+msgid "Comments"
+msgstr "Kommentar"
+
+#: ../tools/gda-sql.c:3789
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/gda-sql.c:3854 ../tools/gda-sql.c:3983 ../tools/gda-sql.c:4044
+#: ../tools/gda-sql.c:3904 ../tools/gda-sql.c:4017 ../tools/gda-sql.c:4092
 #, fuzzy
 msgid "Missing query buffer name"
 msgstr "Mangler navn på parameter"
 
-#: ../tools/gda-sql.c:3911
+#: ../tools/gda-sql.c:3933
 msgid "Query buffer is empty"
 msgstr ""
 
-#: ../tools/gda-sql.c:3978
-#, fuzzy, c-format
-msgid "Could not find query buffer named '%s'"
-msgstr "Fant ikke spørring med navn «%s»"
+#: ../tools/gda-sql.c:3985 ../tools/tools-favorites.c:1091
+#, fuzzy
+msgid "Could not find favorite"
+msgstr "Kunne ikke laste fil «%s»"
 
-#: ../tools/gda-sql.c:4108 ../tools/gda-sql.c:4862 ../tools/gda-sql.c:4940
+#: ../tools/gda-sql.c:4156 ../tools/gda-sql.c:4910 ../tools/gda-sql.c:4988
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr ""
 
-#: ../tools/gda-sql.c:4119
+#: ../tools/gda-sql.c:4167
 msgid "List of defined parameters"
 msgstr ""
 
-#: ../tools/gda-sql.c:4186
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:4234
+#, fuzzy
 msgid "Missing foreign key declaration specification"
 msgstr "Kunne ikke åpne fil %s"
 
-#: ../tools/gda-sql.c:4303
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:4351
+#, fuzzy
 msgid "Malformed foreign key declaration specification"
 msgstr "Kunne ikke åpne fil %s"
 
-#: ../tools/gda-sql.c:4335
+#: ../tools/gda-sql.c:4383
 #, fuzzy, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Navn på tabell"
 
-#: ../tools/gda-sql.c:4423 ../tools/gda-sql.c:4497
-#, fuzzy, c-format
+#: ../tools/gda-sql.c:4471 ../tools/gda-sql.c:4545
+#, fuzzy
 msgid "Missing foreign key name argument"
 msgstr "Mangler argumenter"
 
-#: ../tools/gda-sql.c:4529 ../tools/gda-sql.c:5201
+#: ../tools/gda-sql.c:4577 ../tools/gda-sql.c:5249
 msgid "Wrong row condition"
 msgstr ""
 
-#: ../tools/gda-sql.c:4557
+#: ../tools/gda-sql.c:4605
 msgid "No unique row identified"
 msgstr "Ingen unik rad identifisert"
 
-#: ../tools/gda-sql.c:4598 ../tools/gda-sql.c:4840 ../tools/gda-sql.c:5164
+#: ../tools/gda-sql.c:4646 ../tools/gda-sql.c:4888 ../tools/gda-sql.c:5212
 #, c-format
 msgid "Too many arguments"
 msgstr "For mange argumenter"
 
-#: ../tools/gda-sql.c:4646 ../tools/gda-sql.c:4868
+#: ../tools/gda-sql.c:4694 ../tools/gda-sql.c:4916
 msgid "Wrong number of arguments"
 msgstr "Feil antall argumenter"
 
-#: ../tools/gda-sql.c:4679
+#: ../tools/gda-sql.c:4727
 #, fuzzy
 msgid "Missing data on which to operate"
 msgstr "Navn på parameter"
 
-#: ../tools/gda-sql.c:4684
+#: ../tools/gda-sql.c:4732
 #, fuzzy
 msgid "Missing row fields specifications"
 msgstr "Kunne ikke åpne fil %s"
 
-#: ../tools/gda-sql.c:4702
+#: ../tools/gda-sql.c:4750
 #, fuzzy
 msgid "Wrong SELECT argument"
 msgstr "Feil antall argumenter"
 
-#: ../tools/gda-sql.c:4740 ../tools/gda-sql.c:4768
+#: ../tools/gda-sql.c:4788 ../tools/gda-sql.c:4816
 #, fuzzy
 msgid "Wrong data field argument"
 msgstr "Feil antall argumenter"
 
-#: ../tools/gda-sql.c:4880 ../tools/gda-sql.c:4894
+#: ../tools/gda-sql.c:4928 ../tools/gda-sql.c:4942
 msgid "Could not write file"
 msgstr "Kunne ikke skrive fil"
 
-#: ../tools/gda-sql.c:5019
+#: ../tools/gda-sql.c:5067
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Graf skrevet til «%s»\n"
 
-#: ../tools/gda-sql.c:5022
+#: ../tools/gda-sql.c:5070
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -10490,24 +10467,24 @@ msgid ""
 "to view the graph\n"
 msgstr ""
 
-#: ../tools/gda-sql.c:5093
+#: ../tools/gda-sql.c:5141
 msgid "HTTPD server stopped"
 msgstr "HTTPD-tjener stoppet"
 
-#: ../tools/gda-sql.c:5112
+#: ../tools/gda-sql.c:5160
 #, fuzzy
 msgid "Could not start HTTPD server"
 msgstr "Kunne ikke starte /bin/sh"
 
-#: ../tools/gda-sql.c:5116
+#: ../tools/gda-sql.c:5164
 msgid "HTTPD server started"
 msgstr "HTTPD-tjener startet"
 
-#: ../tools/gda-sql.c:5121
+#: ../tools/gda-sql.c:5169
 msgid "Invalid port specification"
 msgstr "Ugyldig portspesifikasjon"
 
-#: ../tools/gda-sql.c:5336
+#: ../tools/gda-sql.c:5384
 #, c-format
 msgid "Command is incomplete"
 msgstr "Kommandoen er ufullstendig"
@@ -10524,6 +10501,10 @@ msgstr "Konsoll"
 #, fuzzy, c-format
 msgid "Could not save history file to '%s': %s"
 msgstr "Kunne ikke lagre fil %s"
+
+#: ../tools/tools-favorites.c:184 ../tools/tools-favorites.c:193
+msgid "Can't initialize dictionary to store favorites"
+msgstr ""
 
 #: ../tools/tools-utils.c:37
 msgid "not enforced"
@@ -10660,25 +10641,3 @@ msgstr "Objekter"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Utløsere"
-
-#~ msgid "_File"
-#~ msgstr "_Fil"
-
-#, fuzzy
-#~ msgid "No GdaDataHandler available for this type"
-#~ msgstr "Kunne ikke hente datatype for felt for Oracle"
-
-#~ msgid "--"
-#~ msgstr "--"
-
-#~ msgid "Actions?"
-#~ msgstr "Handlinger?"
-
-#~ msgid "Editable?"
-#~ msgstr "Redigerbar?"
-
-#~ msgid "Set as default"
-#~ msgstr "Sett som forvalg"
-
-#~ msgid "List all available commands"
-#~ msgstr "Vis alle tilgjengelige kommandoer"
