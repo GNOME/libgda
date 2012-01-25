@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-01-24 19:58+0000\n"
-"PO-Revision-Date: 2012-01-24 21:43+0100\n"
+"POT-Creation-Date: 2012-01-25 15:31+0000\n"
+"PO-Revision-Date: 2012-01-25 21:55+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -4075,7 +4075,7 @@ msgid "any valid SQL expression"
 msgstr "katerakoli veljavni SQL izraz"
 
 #: ../libgda-ui/gdaui-data-filter.c:214
-msgid "Columns can be referenced by thair name or more easily using <b><tt>_&lt;column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 like 'doe%'</tt></b> to filter rows where the 2nd column starts with <tt>doe</tt>."
+msgid "Columns can be referenced by their name or more easily using <b><tt>_&lt;column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 like 'doe%'</tt></b> to filter rows where the 2nd column starts with <tt>doe</tt>."
 msgstr "Stolpce je mogoče sklicevati po imenu ali z uporabo <b><tt>_&lt;številke stolpca&gt;</tt></b>. Veljaven izraz je lahko na primer: <b><tt>_2 kot 'cena%'</tt></b> za filtriranje vrstic v katerih se drugi stolpec začne s <tt>cena</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:231
