@@ -60,7 +60,7 @@ namespace GdaData {
         	}
         	else {
         		// FIXME: Get default attributes from table
-        		var n = new Field<Value?> (field.name, DbField.Attribute.NONE); 
+        		var n = new Field (field.name, DbField.Attribute.NONE); 
         		n.value = field.value;
         		this._fields.set (field.name, n);
         	}
@@ -68,7 +68,7 @@ namespace GdaData {
         }
         public void set_field_value (string field, Value? val) throws Error
         {
-        	var n = new Field<Value?> (field, DbField.Attribute.NONE); 
+        	var n = new Field (field, DbField.Attribute.NONE); 
     		n.value = val;
     		this.set_field (n);
         }
@@ -85,14 +85,14 @@ namespace GdaData {
         	}
         	else {
         		// FIXME: Get default attributes from table
-        		var n = new Field<Value?> (field.name, DbField.Attribute.NONE); 
+        		var n = new Field (field.name, DbField.Attribute.NONE); 
         		n.value = field.value;
         		_keys.set (field.name, n);
         	}
         }
         public void set_key_value (string key, Value? val) throws Error
         {
-        	var n = new Field<Value?> (key, DbField.Attribute.NONE); 
+        	var n = new Field (key, DbField.Attribute.NONE); 
     		n.value = val;
     		this.set_key (n);
         }
@@ -168,7 +168,7 @@ namespace GdaData {
 			}
 			
 			for (int c = 0; c < m.get_n_columns (); c++) {
-				var f = new Field<Value?> (m.get_column_name (c), 
+				var f = new Field (m.get_column_name (c), 
 											(DbField.Attribute) m.get_attributes_at (c, 0));
 				f.value = m.get_value_at (c,0);
 				this.set_field (f);

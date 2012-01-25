@@ -20,23 +20,23 @@
 using Gda;
 
 namespace GdaData {
-	public class FieldInfo<G> : Object, DbFieldInfo<G>
+	public class FieldInfo : Object, DbFieldInfo<Value?>
 	{
 		private DbField.Attribute _attr;
-		private G _default_value;
+		private Value? _default_value;
 		private string _name;
 		
 		public DbField.Attribute  attributes {
 			get { return _attr; }
 		}
 		
-		public G default_value { 
+		public Value? default_value { 
 			get { return _default_value; }
 		}
 		public string name { 
 			get { return _name; }
 		}
-		FieldInfo (string name, DbField.Attribute attr, G default_val)
+		FieldInfo (string name, DbField.Attribute attr, Value? default_val)
 		{
 			_name = name;
 			_attr = attr;

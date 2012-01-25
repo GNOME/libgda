@@ -62,7 +62,7 @@ namespace Check {
 			stdout.printf("Setting connection\n");
 			r.connection = this.connection;
 			stdout.printf("Setting up DbTable\n");
-			var t = new Table<Value?> ();
+			var t = new Table ();
 			stdout.printf("Setting DbTable name\n");
 			t.name = "user";
 			stdout.printf("Setting DbTable connection\n");
@@ -70,7 +70,7 @@ namespace Check {
 			stdout.printf(">>> Setting table to record\n");
 			r.table = t;
 			stdout.printf(">>> Setting up Key 'id'\n");
-			var k = new Field<Value?>("id", DbField.Attribute.NONE);
+			var k = new Field ("id", DbField.Attribute.NONE);
 			stdout.printf("Setting record ID to 1...");
 			try {
 				k.value = 1;
@@ -165,7 +165,7 @@ namespace Check {
 			}
 			
 			stdout.printf("Setting a new Table... \n");
-			var t2 = new Table<Value?>();
+			var t2 = new Table ();
 			t2.name = "company";
 			t2.connection = this.connection;
 			r.table = t2;
@@ -205,7 +205,7 @@ namespace Check {
 			try {
 				var n = new Check.Record ();
 				n.connection = this.connection;
-				var t = new Table<Value?> ();
+				var t = new Table ();
 				t.name = "user";
 				t.connection = this.connection;
 				n.table = t;

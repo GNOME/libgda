@@ -60,7 +60,7 @@ namespace Sample {
 		 */
 		public Record ()
 		{
-			var t = new Table<Value?> ();
+			var t = new Table ();
 			t.name = "user";
 			t.connection = this.connection;
 			this.table = t;

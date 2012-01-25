@@ -22,9 +22,9 @@ using Gda;
 
 namespace GdaData
 {
-	public class Schema<G> : Object, DbObject, DbNamedObject, DbSchema<G>
+	public class Schema : Object, DbObject, DbNamedObject, DbSchema<Value?>
 	{
-		public HashMap<string,DbTable<G>> _tables = new HashMap<string,DbTable<G>> ();
+		public HashMap<string,DbTable<Value?>> _tables = new HashMap<string,DbTable<Value?>> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
 		public void update () throws Error
@@ -37,7 +37,7 @@ namespace GdaData
 			vals.set ("name", v);
 			var mt = store.extract_v ("SELECT * FROM _tables WHERE schema_name = ##name::string", vals);
 			for (int r = 0; r < mt.get_n_rows (); r++) {
-				var t = new Table<G> ();
+				var t = new Table ();
 				t.connection = connection;
 				t.name = (string) mt.get_value_at (mt.get_column_index ("table_name"), r);
 				t.schema = (DbSchema) this;

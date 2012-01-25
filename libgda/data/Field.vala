@@ -22,9 +22,9 @@ using Gda;
 
 namespace GdaData
 {
-	public class Field<G> : Object, DbField<G>
+	public class Field : Object, DbField<Value?>
 	{
-		private G                 val;
+		private Value?            val;
 		private string            _name;
 		private string            _column_name;
 		private DbField.Attribute _attributes;
@@ -43,7 +43,7 @@ namespace GdaData
 		public DbField.Attribute attributes { 
 			get { return _attributes; }
 		}
-		public string to_string () { return "GdaData.Field"; }
+		public string to_string () { return Gda.value_stringify (val); }
 		public Field (string col_name, DbField.Attribute attr) 
 		{
 			_column_name = col_name;

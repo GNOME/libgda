@@ -48,7 +48,7 @@ namespace Sample {
 			this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (2, \"Viasa\", \"Accessories\")");
 			this.connection.update_meta_store(null);
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			var t = new Table<Value?> ();
+			var t = new Table ();
 			t.connection = connection;
 			t.name = "user";
 			this.itermodel = new RecordCollection (model, t);

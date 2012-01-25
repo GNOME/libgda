@@ -22,16 +22,16 @@ using Gda;
 
 namespace GdaData
 {
-	public class Table<G> : Object, DbObject, DbNamedObject, DbTable<G>
+	public class Table : Object, DbObject, DbNamedObject, DbTable<Value?>
 	{
 		protected DbRecordCollection _records;
-		protected HashMap<string,DbFieldInfo<G>> _fields = new HashMap<string,DbFieldInfo<G>> ();
-		protected HashMap<string,DbTable<G>> _fk_depends = new HashMap<string,DbTable<G>> ();
-		protected HashMap<string,DbTable<G>> _fk = new HashMap<string,DbTable<G>> ();
+		protected HashMap<string,DbFieldInfo<Value?>> _fields = new HashMap<string,DbFieldInfo<Value?>> ();
+		protected HashMap<string,DbTable<Value?>> _fk_depends = new HashMap<string,DbTable<Value?>> ();
+		protected HashMap<string,DbTable<Value?>> _fk = new HashMap<string,DbTable<Value?>> ();
 		
-		public Table.with_fields_info (HashMap<string,DbFieldInfo<G>> fields)
+		public Table.with_fields_info (HashMap<string,DbFieldInfo<Value?>> fields)
 		{
-			foreach (DbFieldInfo<G> f in fields.values) {
+			foreach (DbFieldInfo<Value?> f in fields.values) {
 				_fields.set (f.name, f);
 			}
 		}
@@ -44,11 +44,11 @@ namespace GdaData
 		public string name { get; set; }
 		
 		// DbTable Interface
-		public Collection<DbFieldInfo<G>> fields { 
+		public Collection<DbFieldInfo<Value?>> fields { 
 			owned get { return _fields.values; } 
 		}
 		public DbSchema schema { get; set construct; }
-		public Collection<DbRecord<G>> records { 
+		public Collection<DbRecord<Value?>> records { 
 			owned get  {
 				var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
 				q.set_table (name);
@@ -59,7 +59,7 @@ namespace GdaData
 				return _records;
 			}
 		}
-		public Collection<DbTable<G>> fk_depends { owned get { return _fk_depends.values; } }
-		public Collection<DbTable<G>> fk { owned get { return _fk.values; } }
+		public Collection<DbTable<Value?>> fk_depends { owned get { return _fk_depends.values; } }
+		public Collection<DbTable<Value?>> fk { owned get { return _fk.values; } }
 	}
 }

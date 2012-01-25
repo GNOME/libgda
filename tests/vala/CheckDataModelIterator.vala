@@ -253,7 +253,7 @@ namespace Check {
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			stdout.printf ("Setting up Table...");
-			var t = new Table<Value?> ();
+			var t = new Table ();
 			t.connection = this.connection;
 			t.name = "user";
 			stdout.printf ("+++++ PASS\n");
@@ -272,13 +272,13 @@ namespace Check {
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			((DataSelect) model).compute_modification_statements ();
 			var pxy = (Gda.DataModel) Gda.DataProxy.new (model);
-			var t = new Table<Value?>();
+			var t = new Table ();
 			t.connection = this.connection;
 			t.name = "user";
 			var itermodel = new RecordCollection (pxy,t);
 			var row = new Record ();
 			row.table = t;
-			var f = new Field<Value?>("id", DbField.Attribute.NONE);
+			var f = new Field ("id", DbField.Attribute.NONE);
 			f.value = 10;
 			row.set_field (f);
 			f.name = "name";
