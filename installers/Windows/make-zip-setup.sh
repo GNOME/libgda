@@ -472,6 +472,8 @@ files=(gda-sql-5.0.exe libgda-5.0-4.dll libgda-report-5.0-4.dll libgda-ui-5.0-4.
 add_files_to_zip $archive $prefix bin $files
 add_found_files_to_nsh core bin
 
+add_all_files_to_zip $archive $prefix share/gnome/help/gda-sql/C
+
 files=(gda-test-connection-5.0.exe)
 add_files_to_zip $archive $prefix bin $files
 
