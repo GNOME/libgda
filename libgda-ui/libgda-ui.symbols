@@ -103,7 +103,6 @@
 	gdaui_entry_combo_set_default_values
 	gdaui_entry_combo_set_values
 	gdaui_entry_combo_set_reference_values
-	gdaui_entry_combo_set_unknown_color
 	gdaui_entry_common_time_get_type
 	gdaui_entry_common_time_new
 	gdaui_entry_date_get_type
@@ -134,7 +133,6 @@
 	gdaui_entry_wrapper_contents_activated
 	gdaui_entry_wrapper_contents_changed
 	gdaui_entry_wrapper_get_type
-	gdaui_entry_wrapper_set_unknown_color
 	gdaui_formatted_entry_get_text
 	gdaui_formatted_entry_get_type
 	gdaui_formatted_entry_new
