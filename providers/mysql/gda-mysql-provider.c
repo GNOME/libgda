@@ -578,7 +578,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 				    GdaConnection                   *cnc,
 				    GdaQuarkList                    *params,
 				    GdaQuarkList                    *auth,
-				    G_GNUC_UNUSED guint                           *task_id,
+				    G_GNUC_UNUSED guint             *task_id,
 				    GdaServerProviderAsyncCallback   async_cb,
 				    gpointer                         cb_data)
 {
@@ -652,49 +652,11 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 		return FALSE;
 	}
 
-	/* get case sensitiveness of tables */
-	res = mysql_query (mysql, "SHOW VARIABLES WHERE Variable_name = 'lower_case_table_names'");
-	if (res != 0) {
-		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
-		return FALSE;
-	}
-
-	MYSQL_RES *mdata;
-	mdata = mysql_store_result (mysql);
-	if (!mdata) {
-		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
-		return FALSE;
-	}
-
-	MYSQL_ROW mrow;
-	gboolean case_sensitive = FALSE;
-	mrow = mysql_fetch_row (mdata);
-	if (!mrow) {
-		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
-		mysql_free_result (mdata);
-		return FALSE;
-	}
-	switch (atoi (mrow[1])) {
-	case 0:
-		case_sensitive = TRUE;
-		break;
-	case 1:
-	case 2:
-		break;
-	default:
-		g_warning ("Unknown 'lower_case_table_names' variable value: %s\n", mrow[1]);
-	}
-	
-	mysql_free_result (mdata);
-	
-	
-
 	/* Create a new instance of the provider specific data associated to a connection (MysqlConnectionData),
 	 * and set its contents */
 	MysqlConnectionData *cdata;
 	cdata = g_new0 (MysqlConnectionData, 1);
 	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_mysql_free_cnc_data);
-	
 	cdata->cnc = cnc;
 	cdata->mysql = mysql;
 
@@ -702,8 +664,21 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	GdaProviderReuseableOperations *ops;
 	ops = _gda_mysql_reuseable_get_ops ();
 	cdata->reuseable = (GdaMysqlReuseable*) ops->re_new_data ();
-	_gda_mysql_compute_version (cnc, cdata->reuseable, NULL);
-	cdata->reuseable->identifiers_case_sensitive = case_sensitive;
+	if (! _gda_mysql_compute_version (cnc, cdata->reuseable, &error)) {
+		GdaConnectionEvent *event_error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+		gda_connection_event_set_sqlstate (event_error, _("Unknown"));
+		gda_connection_event_set_description (event_error,
+						      error && error->message ? error->message :
+						      _("No description"));
+		gda_connection_event_set_code (event_error, GDA_CONNECTION_EVENT_CODE_UNKNOWN);
+		gda_connection_event_set_source (event_error, "gda-mysql");
+		gda_connection_add_event (cnc, event_error);
+		g_clear_error (&error);
+
+		gda_mysql_free_cnc_data (cdata);
+		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
+		return FALSE;
+	}
 
 	return TRUE;
 }

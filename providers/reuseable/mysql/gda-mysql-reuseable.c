@@ -198,17 +198,18 @@ _gda_mysql_compute_version (GdaConnection *cnc, GdaMysqlReuseable *rdata, GError
 
 	g_object_unref (model);
 
-	/*
-	g_print ("VERSIONS: [%ld] [%d.%d.%d]\n", rdata->version_long,
+	/*g_print ("VERSIONS: [%ld] [%d.%d.%d]\n", rdata->version_long,
 		 ((GdaProviderReuseable*)rdata)->major,
 		 ((GdaProviderReuseable*)rdata)->minor,
-		 ((GdaProviderReuseable*)rdata)->micro);
-	*/
+		 ((GdaProviderReuseable*)rdata)->micro);*/
 
-	model = execute_select (cnc, rdata, "SHOW VARIABLES WHERE Variable_name = 'lower_case_table_names'", error);
+	if ((rdata->version_long / 10000) < 5)
+		model = execute_select (cnc, rdata, "SHOW VARIABLES LIKE 'lower_case_table_names'", error);
+	else
+		model = execute_select (cnc, rdata, "SHOW VARIABLES WHERE Variable_name = 'lower_case_table_names'", error);
 	if (!model)
 		return FALSE;
-	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
+	cvalue = gda_data_model_get_value_at (model, 1, 0, NULL);
 	if (!cvalue) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
                              GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
