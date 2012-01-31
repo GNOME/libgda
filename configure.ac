@@ -415,10 +415,10 @@ AC_SUBST(JSON_GLIB_LIBS)
 dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
-GOBJECT_INTROSPECTION_CHECK([1.31.10])
+GOBJECT_INTROSPECTION_CHECK([1.30.0])
 AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
-    [enable_gda_gi=$enableval],[enable_gda_gi=auto])
+    [enable_gda_gi=$enableval],[enable_gda_gi=no])
 
 if test "x$found_introspection" = "xyes"
 then
@@ -440,7 +440,7 @@ AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi], [Enable GObject Introspection for libgda-ui [default=auto]]),
-    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
+    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=no])
 
 if test "x$found_introspection" = "xyes"
 then
@@ -472,7 +472,7 @@ dnl ******************************
 
 AC_ARG_ENABLE([vala],
     AS_HELP_STRING([--enable-vala], [Enable support for Vala bindings generation [default=auto]]),
-    [enable_vala=$enableval],[enable_vala=auto])
+    [enable_vala=$enableval],[enable_vala=no])
 
 AC_ARG_ENABLE([vala-extensions],
     AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
