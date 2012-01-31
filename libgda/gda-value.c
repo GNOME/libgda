@@ -635,21 +635,23 @@ gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 static void
 geometric_point_to_string (const GValue *src, GValue *dest)
 {
-	gchar *str;
 	GdaGeometricPoint *point;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_GEOMETRIC_POINT (src));
 
 	point = (GdaGeometricPoint *) gda_value_get_geometric_point ((GValue *) src);
-
-	str = g_strdup_printf ("(%.*g,%.*g)",
-				  DBL_DIG,
-				  point->x,
-				  DBL_DIG,
-				  point->y);
-
-	g_value_take_string (dest, str);
+	if (point) {
+		gchar *str;
+		str = g_strdup_printf ("(%.*g,%.*g)",
+				       DBL_DIG,
+				       point->x,
+				       DBL_DIG,
+				       point->y);
+		g_value_take_string (dest, str);
+	}
+	else
+		g_value_set_string (dest, "NULL");
 }
 
 /* Transform a String GValue to a GdaGeometricPoint from a string like "(3.2,5.6)" */
@@ -740,7 +742,7 @@ numeric_to_string (const GValue *src, GValue *dest)
 	if (numeric)
 		g_value_set_string (dest, numeric->number);
 	else
-		g_value_set_string (dest, "");
+		g_value_set_string (dest, "NULL");
 }
 
 static void
@@ -1057,26 +1059,30 @@ static void
 time_to_string (const GValue *src, GValue *dest)
 {
 	GdaTime *gdatime;
-	GString *string;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_TIME (src));
 
 	gdatime = (GdaTime *) gda_value_get_time ((GValue *) src);
 
-	string = g_string_new ("");
-	g_string_append_printf (string, "%02u:%02u:%02u",
-				gdatime->hour,
-				gdatime->minute,
-				gdatime->second);
-	if (gdatime->fraction != 0)
-		g_string_append_printf (string, ".%lu", gdatime->fraction);
+	if (gdatime) {
+		GString *string;
+		string = g_string_new ("");
+		g_string_append_printf (string, "%02u:%02u:%02u",
+					gdatime->hour,
+					gdatime->minute,
+					gdatime->second);
+		if (gdatime->fraction != 0)
+			g_string_append_printf (string, ".%lu", gdatime->fraction);
 
-	if (gdatime->timezone != GDA_TIMEZONE_INVALID)
-		g_string_append_printf (string, "%+02d", (int) gdatime->timezone / 3600);
+		if (gdatime->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d", (int) gdatime->timezone / 3600);
 
-	g_value_take_string (dest, string->str);
-	g_string_free (string, FALSE);
+		g_value_take_string (dest, string->str);
+		g_string_free (string, FALSE);
+	}
+	else
+		g_value_set_string (dest, "NULL");
 }
 
 /* Transform a String GValue to a GdaTime from a string like "12:30:15+01" */
@@ -1265,28 +1271,31 @@ static void
 timestamp_to_string (const GValue *src, GValue *dest)
 {
 	GdaTimestamp *timestamp;
-	GString *string;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (src));
 
 	timestamp = (GdaTimestamp *) gda_value_get_timestamp ((GValue *) src);
-
-	string = g_string_new ("");
-	g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
-				timestamp->year,
-				timestamp->month,
-				timestamp->day,
-				timestamp->hour,
-				timestamp->minute,
-				timestamp->second);
-	if (timestamp->fraction > 0)
-		g_string_append_printf (string, ".%lu", timestamp->fraction);
-	if (timestamp->timezone != GDA_TIMEZONE_INVALID)
-		g_string_append_printf (string, "%+02d",
-					(int) timestamp->timezone/3600);
-	g_value_take_string (dest, string->str);
-	g_string_free (string, FALSE);
+	if (timestamp) {
+		GString *string;
+		string = g_string_new ("");
+		g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
+					timestamp->year,
+					timestamp->month,
+					timestamp->day,
+					timestamp->hour,
+					timestamp->minute,
+					timestamp->second);
+		if (timestamp->fraction > 0)
+			g_string_append_printf (string, ".%lu", timestamp->fraction);
+		if (timestamp->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d",
+						(int) timestamp->timezone/3600);
+		g_value_take_string (dest, string->str);
+		g_string_free (string, FALSE);
+	}
+	else
+		g_value_set_string (dest, "NULL");
 }
 
 GType
