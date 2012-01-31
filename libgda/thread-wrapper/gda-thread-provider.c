@@ -340,7 +340,7 @@ gda_thread_provider_create_connection (GdaServerProvider *provider)
 typedef struct {
 	const gchar *dsn;
 
-	const gchar *prov_name;
+	gchar *prov_name;
 	const gchar *cnc_string;
 
 	const gchar *auth_string;
@@ -398,17 +398,16 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 						  dsninfo->provider);
 	}
 	else if (cnc_string) {
+		const gchar *tmp;
 		data = g_new0 (NewConnectionData, 1);
 		if (params) {
-			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
-			if (data->prov_name)
-				data->prov_name = g_strdup (data->prov_name);
+			tmp = gda_quark_list_find (params, "PROVIDER_NAME");
+			data->prov_name = tmp ? g_strdup (tmp) : NULL;
 		}
 		else {
 			params = gda_quark_list_new_from_string (cnc_string);
-			data->prov_name = gda_quark_list_find (params, "PROVIDER_NAME");
-			if (data->prov_name)
-				data->prov_name = g_strdup (data->prov_name);
+			tmp = gda_quark_list_find (params, "PROVIDER_NAME");
+			data->prov_name = tmp ? g_strdup (tmp) : NULL;
 			gda_quark_list_free (params);
 			params = NULL;
 		}

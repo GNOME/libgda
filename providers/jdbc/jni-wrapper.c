@@ -556,12 +556,21 @@ jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object,
 		break;
 	case 'B':
 		g_value_init (retval, G_TYPE_CHAR);
+#if GLIB_CHECK_VERSION(2,31,7)
+		if (method->is_static)
+			g_value_set_schar (retval,
+					   (*jenv)->CallStaticByteMethodV (jenv, method->klass, method->mid, args));
+		else
+			g_value_set_schar (retval,
+					   (*jenv)->CallByteMethodV (jenv, jobj, method->mid, args));
+#else
 		if (method->is_static)
 			g_value_set_char (retval,
 					  (*jenv)->CallStaticByteMethodV (jenv, method->klass, method->mid, args));
 		else
 			g_value_set_char (retval,
 					  (*jenv)->CallByteMethodV (jenv, jobj, method->mid, args));
+#endif
 		break;
 	case 'C':
 		g_value_init (retval, G_TYPE_INT); // FIXME: should be an unsigned 16 bits value
@@ -768,12 +777,21 @@ jni_wrapper_field_get (JNIEnv *jenv, JniWrapperField *field, GValue *object, GEr
 		break;
 	case 'B':
 		g_value_init (retval, G_TYPE_CHAR);
+#if GLIB_CHECK_VERSION(2,31,7)
+		if (field->is_static)
+			g_value_set_schar (retval,
+					   (*jenv)->GetStaticByteField (jenv, field->klass, field->fid));
+		else
+			g_value_set_schar (retval,
+					   (*jenv)->GetByteField (jenv, jobj, field->fid));
+#else
 		if (field->is_static)
 			g_value_set_char (retval,
 					  (*jenv)->GetStaticByteField (jenv, field->klass, field->fid));
 		else
 			g_value_set_char (retval,
 					  (*jenv)->GetByteField (jenv, jobj, field->fid));
+#endif
 		break;
 	case 'C':
 		g_value_init (retval, G_TYPE_INT); // FIXME: should be an unsigned 16 bits value
@@ -923,10 +941,17 @@ jni_wrapper_field_set (JNIEnv *jenv, JniWrapperField *field,
 	case 'B':
 		if (G_VALUE_TYPE (value) != G_TYPE_CHAR)
 			goto wrong_type;
+#if GLIB_CHECK_VERSION(2,31,7)
+		if (field->is_static)
+			(*jenv)->SetStaticByteField (jenv, field->klass, field->fid, g_value_get_schar (value));
+		else
+			(*jenv)->SetByteField (jenv, jobj, field->fid, g_value_get_schar (value));
+#else
 		if (field->is_static)
 			(*jenv)->SetStaticByteField (jenv, field->klass, field->fid, g_value_get_char (value));
 		else
 			(*jenv)->SetByteField (jenv, jobj, field->fid, g_value_get_char (value));
+#endif
 		break;
 	case 'C':
 		if (G_VALUE_TYPE (value) != G_TYPE_INT)

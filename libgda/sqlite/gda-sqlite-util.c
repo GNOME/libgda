@@ -315,10 +315,6 @@ _gda_sqlite_identifier_quote (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 			     gboolean for_meta_store, gboolean force_quotes)
 {
         GdaSqlReservedKeywordsFunc kwfunc;
-        SqliteConnectionData *cdata = NULL;
-
-        if (cnc)
-                cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
         kwfunc = _gda_sqlite_get_reserved_keyword_func ();
 
 	if (for_meta_store) {

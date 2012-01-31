@@ -1482,7 +1482,7 @@ gda_data_select_compute_modification_statements_ext (GdaDataSelect *model,
 	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
 		/* take into account the column type of "[+-]xxx" parameters */
 		if (modif_stmts[mtype])
-			_gda_modify_statement_param_types (modif_stmts[mtype], model);
+			_gda_modify_statement_param_types (modif_stmts[mtype], (GdaDataModel*) model);
 #ifdef GDA_DEBUG_NO
 		if (modif_stmts[mtype]) {
 			gchar *sql;

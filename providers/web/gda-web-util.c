@@ -338,12 +338,21 @@ start_worker (GdaConnection *cnc, WebConnectionData *cdata)
 	cdata->worker_running = TRUE;
 	gda_mutex_unlock (cdata->mutex);
 
+#if GLIB_CHECK_VERSION(2,31,7)
+	if (! g_thread_new ("web-worker", (GThreadFunc) start_worker_in_sub_thread,
+			    thdata)) {
+		g_free (thdata);
+		gda_connection_add_event_string (cnc, _("Can't start new thread"));
+		return;
+	}
+#else
 	if (! g_thread_create ((GThreadFunc) start_worker_in_sub_thread,
 			       thdata, FALSE, NULL)) {
 		g_free (thdata);
 		gda_connection_add_event_string (cnc, _("Can't start new thread"));
 		return;
 	}
+#endif
 	
 	gint nb_retries;
 	for (nb_retries = 0; nb_retries < 10; nb_retries++) {

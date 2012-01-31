@@ -2468,12 +2468,18 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			mysql_bind_param[i].length = NULL;
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR) {
+#if GLIB_CHECK_VERSION(2,31,7)
+			gint8 *pv;
+			pv = g_new (gint8, 1);
+			*pv = g_value_get_schar (value);
+#else
 			gchar *pv;
 			pv = g_new (gchar, 1);
-			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_char (value);
+#endif
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			mysql_bind_param[i].buffer_type= MYSQL_TYPE_TINY;
-			mysql_bind_param[i].buffer= pv;
+			mysql_bind_param[i].buffer = pv;
 			mysql_bind_param[i].buffer_length = sizeof (gchar);
 			mysql_bind_param[i].length = NULL;
 		}
