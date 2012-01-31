@@ -25,21 +25,25 @@ _gda_firebird_make_error (GdaConnection *cnc, const gint statement_type)
 {
 	FirebirdConnectionData *cdata;
 	GdaConnectionEvent *error_ev;
-        gchar *description;
 
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data (cnc);
 	if (!cdata) 
-		return FALSE;
+		return NULL;
 
-        error_ev = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
-        gda_connection_event_set_code (error_ev, isc_sqlcode (cdata->status));
-        description = fb_sqlerror_get_description (cdata, statement_type);
-        gda_connection_event_set_source (error_ev, "[GDA Firebird]");
-        gda_connection_event_set_description (error_ev, description);
-        gda_connection_add_event (cnc, error_ev);
-        g_free (description);
+	error_ev = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+	gda_connection_event_set_code (error_ev, isc_sqlcode (cdata->status));
+	ISC_SCHAR *description;
+	const ISC_STATUS *p = cdata->status;
 
-        return error_ev;
+	description = g_new0 (ISC_SCHAR, 512);
+	fb_interpret (description, 511, &p);
+	g_print ("MAKE_ERROR [%s]\n", description);
+	gda_connection_event_set_source (error_ev, "[GDA Firebird]");
+	gda_connection_event_set_description (error_ev, description);
+	gda_connection_add_event (cnc, error_ev);
+	g_free (description);
+
+	return error_ev;
 }

@@ -40,7 +40,7 @@ struct _GdaFirebirdPStmt {
 	isc_stmt_handle	stmt_h;
 	ISC_STATUS	status[20];
 	XSQLDA 	       *sqlda;
-
+	XSQLDA 	       *input_sqlda;
 	gint		statement_type;
 	gboolean	is_non_select;
 };

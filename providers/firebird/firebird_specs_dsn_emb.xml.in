@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to connect to (without the .fdb)" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="DB_DIR" _name="Directory" _descr="Directory where the database file is stored" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
+  </parameters>
+</data-set-spec>

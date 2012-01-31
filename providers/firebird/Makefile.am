@@ -65,6 +65,7 @@ libgda_firebird_embed_la_LIBADD = \
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	firebird_specs_dsn.xml.in \
+	firebird_specs_dsn_emb.xml.in \
 	firebird_specs_create_table.xml.in 
 
 @INTLTOOL_XML_RULE@

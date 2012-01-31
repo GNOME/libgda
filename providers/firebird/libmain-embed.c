@@ -57,9 +57,20 @@ plugin_get_dsn_spec (void)
 	gchar *ret, *dir;
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-	ret = gda_server_provider_load_file_contents (module_path, dir, "firebird_specs_dsn.xml");
+	ret = gda_server_provider_load_file_contents (module_path, dir, "firebird_specs_dsn_emb.xml");
 	g_free (dir);
 	return ret;
+}
+
+gchar *
+plugin_get_auth_spec (void)
+{
+#define AUTH "<?xml version=\"1.0\"?>" \
+             "<data-set-spec>" \
+             "  <parameters/>" \
+             "</data-set-spec>"
+
+        return g_strdup (AUTH);
 }
 
 GdaServerProvider *

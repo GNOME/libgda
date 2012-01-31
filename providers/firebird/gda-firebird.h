@@ -52,22 +52,21 @@
 
 #include <libgda/libgda.h>
 #include <ibase.h>
-
+	
 /*
  * Provider's specific connection data
  */
 
 typedef struct
 {
-	//GdaConnection	*cnc;
-	gchar	       *dbname;
-	gchar	       *server_version;
-	isc_db_handle	handle;
-	ISC_STATUS	status[20];
-	gchar		dpb_buffer[128];
-	gshort		dpb_length;
+	gchar           *dpb;
+	isc_db_handle	 handle;
 
-	isc_tr_handle	*ftr;
+	gchar	        *dbname;
+	gchar	        *server_version;
+
+	ISC_STATUS_ARRAY status;
+	isc_tr_handle   *ftr;
 } FirebirdConnectionData;
 
 #endif
