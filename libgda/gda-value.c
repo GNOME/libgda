@@ -636,22 +636,19 @@ static void
 geometric_point_to_string (const GValue *src, GValue *dest)
 {
 	GdaGeometricPoint *point;
-
+	gchar *str;
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_GEOMETRIC_POINT (src));
 
 	point = (GdaGeometricPoint *) gda_value_get_geometric_point ((GValue *) src);
-	if (point) {
-		gchar *str;
-		str = g_strdup_printf ("(%.*g,%.*g)",
-				       DBL_DIG,
-				       point->x,
-				       DBL_DIG,
-				       point->y);
-		g_value_take_string (dest, str);
-	}
+	if (point)
+		str = g_strdup_printf ("(%.*g,%.*g)", DBL_DIG, point->x,
+				       DBL_DIG, point->y);
 	else
-		g_value_set_string (dest, "NULL");
+		str = g_strdup_printf ("(%.*g,%.*g)",
+				       DBL_DIG, 0.,
+				       DBL_DIG, 0.);
+	g_value_take_string (dest, str);
 }
 
 /* Transform a String GValue to a GdaGeometricPoint from a string like "(3.2,5.6)" */
@@ -742,7 +739,7 @@ numeric_to_string (const GValue *src, GValue *dest)
 	if (numeric)
 		g_value_set_string (dest, numeric->number);
 	else
-		g_value_set_string (dest, "NULL");
+		g_value_set_string (dest, "0.0");
 }
 
 static void
@@ -1082,7 +1079,7 @@ time_to_string (const GValue *src, GValue *dest)
 		g_string_free (string, FALSE);
 	}
 	else
-		g_value_set_string (dest, "NULL");
+		g_value_set_string (dest, "00:00:00");
 }
 
 /* Transform a String GValue to a GdaTime from a string like "12:30:15+01" */
@@ -1295,7 +1292,7 @@ timestamp_to_string (const GValue *src, GValue *dest)
 		g_string_free (string, FALSE);
 	}
 	else
-		g_value_set_string (dest, "NULL");
+		g_value_set_string (dest, "0000-00-00 00:00:00");
 }
 
 GType
