@@ -1020,7 +1020,7 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
  * @sql: an SQL text
  * @error: a place to store errors, or %NULL
  *
- * Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement
+ * Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement.
  *
  * Returns: TRUE if no error occurred.
  */
@@ -1107,13 +1107,34 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
  *
  * If @mod_stmt is:
  * <itemizedlist>
- *  <listitem><para>an UPDATE statement, then all the rows in @model will be modifyable</para></listitem>
+ *  <listitem><para>an UPDATE statement, then all the rows in @model will be writable</para></listitem>
  *  <listitem><para>a DELETE statement, then it will be possible to delete rows in @model</para></listitem>
  *  <listitem><para>in INSERT statement, then it will be possible to add some rows to @model</para></listitem>
  *  <listitem><para>any other statement, then this method will return an error</para></listitem>
  * </itemizedlist>
  *
- * This method can be called several times to specify different types of modification.
+ * This method can be called several times to specify different types of modification statements. 
+ *
+ * Each modification statement will be executed when one or more values are modified in the data model;
+ * each statement should then include variables which will be set to either the old value or the
+ * new value of a column at the specified modified row (but can also contain other variables). Each variable
+ * named as "+&lt;number&gt;" will be mapped to the new value of the number'th column (starting at 0), and
+ * each variable named as "-&lt;number&gt;" will be mapped to the old value of the number'th column.
+ *
+ * Examples of the SQL equivalent of each statement are (for example if "mytable" has the "id" field as
+ * primary key, and if that field is auto incremented and if the data model is the result of
+ * executing "<![CDATA[SELECT * from mytable]]>").
+ *
+ * <itemizedlist>
+ *  <listitem><para>"<![CDATA[INSERT INTO mytable (name) VALUES (##+1::string)]]>": the column ID can not be set
+ *   for new rows</para></listitem>
+ *  <listitem><para>"<![CDATA[DELETE FROM mytable WHERE id=##-0::int]]>"</para></listitem>
+ *  <listitem><para>"<![CDATA[UPDATE mytable SET name=##+1::string WHERE id=##-0::int]]>": the column ID cannot be
+ *   modified</para></listitem>
+ * </itemizedlist>
+ *
+ * Also see the gda_data_select_set_row_selection_condition_sql() for more information about the WHERE
+ * part of the UPDATE and DELETE statement types.
  *
  * If @mod_stmt is an UPDATE or DELETE statement then it should have a WHERE part which identifies
  * a unique row in @model (please note that this property can't be checked but may result
@@ -1128,7 +1149,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
  * or gda_data_select_set_row_selection_condition_sql() have not yet been successfully be called before, then
  * the WHERE part of @mod_stmt will be used as if one of these functions had been called.
  *
- * Returns: TRUE if no error occurred.
+ * Returns: %TRUE if no error occurred.
  */
 gboolean
 gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *mod_stmt, GError **error)
@@ -1415,7 +1436,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
  *
- * This function is similar to calling gda_data_select_compute_modification_statements_ext with
+ * This function is similar to calling gda_data_select_compute_modification_statements_ext() with
  * @cond_type set to %GDA_DATA_SELECT_COND_PK
  *
  * Returns: %TRUE if no error occurred. If %FALSE is returned, then some modification statement may still have been computed
