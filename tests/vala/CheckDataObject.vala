@@ -75,11 +75,11 @@ namespace Check {
 			try {
 				k.value = 1;
 				r.set_key (k);
-				foreach (DbField<Value?> kv in r.keys) {
+				foreach (DbField kv in r.keys) {
 					stdout.printf ("KEY: " + kv.name + " VALUE: " + Gda.value_stringify(kv.value) + "\n");
 				}
 				r.update ();
-				foreach (DbField<Value?> kv in r.fields) {
+				foreach (DbField kv in r.fields) {
 					stdout.printf ("FIELD: " + kv.name + " VALUE: " + Gda.value_stringify(kv.value) + "\n");
 				}
 				stdout.printf("PASS\n");

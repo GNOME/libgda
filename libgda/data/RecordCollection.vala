@@ -21,28 +21,28 @@ using Gee;
 using Gda;
 
 namespace GdaData {
-	public class RecordCollection : AbstractCollection<DbRecord<Value?>>, DbRecordCollection<Value?>
+	public class RecordCollection : AbstractCollection<DbRecord>, DbRecordCollection
 	{
 		private DataModel _model;
-		private DbTable<Value?> _table;
+		private DbTable   _table;
 		
-		public DbTable<Value?> table { get { return table; } }
+		public DbTable    table { get { return table; } }
 		
-		public DataModel model { get { return _model; } }
+		public DataModel  model { get { return _model; } }
 		
 		public Connection connection { get; set; }
 		
-		public RecordCollection (DataModel m, DbTable<Value?> table)
+		public RecordCollection (DataModel m, DbTable table)
 		{
 			_model = m;
 			_table = table;
 		}
 		// AbstractCollection Implementation
-		public override bool add (DbRecord<Value?> item) 
+		public override bool add (DbRecord item) 
 		{ 
 			try {
 				int r = _model.append_row ();
-				foreach (DbField<Value?> f in item.fields) {
+				foreach (DbField f in item.fields) {
 					_model.set_value_at (_model.get_column_index (f.name), r, f.value);
 				}
 				return true;
@@ -57,12 +57,12 @@ namespace GdaData {
 			}
 			((DataProxy) _model).apply_all_changes ();
 		}
-		public override bool contains (DbRecord<Value?> item)
+		public override bool contains (DbRecord item)
 		{
 			var iter = _model.create_iter ();
 			while (iter.move_next ()) {
 				bool found = true;
-				foreach (DbField<Value?> k in item.keys) {
+				foreach (DbField k in item.keys) {
 					Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
 					Value v = k.value;
 					if (Gda.value_compare (id,v) != 0)
@@ -72,17 +72,17 @@ namespace GdaData {
 			}
 			return false;
 		}
-		public override Gee.Iterator<DbRecord<Value?>> iterator () 
+		public override Gee.Iterator<DbRecord> iterator () 
 		{ 
 			var iter = _model.create_iter ();
 			return new RecordCollectionIterator (iter, _table); 
 		}
-		public override bool remove (DbRecord<Value?> item)
+		public override bool remove (DbRecord item)
 		{
 			var iter = _model.create_iter ();
 			while (iter.move_next ()) {
 				bool found = true;
-				foreach (DbField<Value?> k in item.keys) {
+				foreach (DbField k in item.keys) {
 					Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
 					Value v = k.value;
 					if (Gda.value_compare (id,v) != 0)
@@ -115,15 +115,15 @@ namespace GdaData {
 			} 
 		}
 		// Traversable Interface
-		public override Iterator<DbRecord<Value?>> chop (int offset, int length = -1)
+		public override Iterator<DbRecord> chop (int offset, int length = -1)
 		{
 			return this.iterator().chop (offset, length);
 		}
-		public override Gee.Iterator<DbRecord<Value?>> filter (owned Gee.Predicate<DbRecord<Value?>> f)
+		public override Gee.Iterator<DbRecord> filter (owned Gee.Predicate<DbRecord<Value?>> f)
 		{
 			return this.iterator().filter (f);			
 		}
-		public override Iterator<A> stream<A> (owned StreamFunc<DbRecord<Value?>, A> f)
+		public override Iterator<A> stream<A> (owned StreamFunc<DbRecord, A> f)
 		{
 			return this.iterator().stream<A> (f);
 		}
@@ -134,23 +134,23 @@ namespace GdaData {
 		}
 	}
 	
-	public class RecordCollectionIterator : Object, Traversable<DbRecord<Value?>>, Iterator<DbRecord<Value?>>
+	public class RecordCollectionIterator : Object, Traversable<DbRecord>, Iterator<DbRecord>
 	{
 		private DataModelIter _iter;
-		private DbTable<Value?> _table;
+		private DbTable _table;
 		private int _length = -1;
 		private int init_row = -1;
 		private HashMap<int,int> _elements;
 		private int filter_pos = -1;
 		
-		public RecordCollectionIterator (DataModelIter iter, DbTable<Value?> table)
+		public RecordCollectionIterator (DataModelIter iter, DbTable table)
 		{
 			_iter = iter;
 			_table = table;
 			_elements = new HashMap<int,int>();
 		}
 		
-		private RecordCollectionIterator.filtered (DataModelIter iter, DbTable<Value?> table, 
+		private RecordCollectionIterator.filtered (DataModelIter iter, DbTable table, 
 											int init, int offset, int length, 
 											HashMap<int,int> elements, int filter_pos)
 		{
@@ -177,13 +177,13 @@ namespace GdaData {
 		}
 		
 		// Traversable Interface
-		public Gee.Iterator<DbRecord<Value?>> chop (int offset, int length = -1) 
+		public Gee.Iterator<DbRecord> chop (int offset, int length = -1) 
 		{
 			var iter = _iter.data_model.create_iter ();
 			return new RecordCollectionIterator.filtered (iter, _table, _iter.current_row, 
 									offset, length, _elements, filter_pos);
 		}
-		public Gee.Iterator<DbRecord<Value?>> filter (owned Gee.Predicate<DbRecord<Value?>> f) 
+		public Gee.Iterator<DbRecord> filter (owned Gee.Predicate<DbRecord> f) 
 		{
 			var elements = new Gee.HashMap <int,int> ();
 			int pos = -1;
@@ -196,20 +196,20 @@ namespace GdaData {
 			var iter = _iter.data_model.create_iter ();
 			return new RecordCollectionIterator.filtered (iter, _table, -1, 0, -1, elements, -1);
 		}
-		public new void @foreach (Gee.ForallFunc<DbRecord<Value?>> f) 
+		public new void @foreach (Gee.ForallFunc<DbRecord> f) 
 		{
 			while (this.next ()) {
 				var r = this.get ();
 				f(r);
 			}
 		}
-		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<DbRecord<Value?>,A> f) 
+		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<DbRecord,A> f) 
 		{
-			return stream_impl<DbRecord<Value?>, A> (this, f);
+			return stream_impl<DbRecord, A> (this, f);
 		}
 		
 		// Iterator Interface
-		public new DbRecord<Value?> @get ()
+		public new DbRecord @get ()
 		{
 			var r = new Record ();
 			r.connection = _table.connection;

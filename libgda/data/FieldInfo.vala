@@ -20,27 +20,35 @@
 using Gda;
 
 namespace GdaData {
-	public class FieldInfo : Object, DbFieldInfo<Value?>
+	public class FieldInfo : Object, DbFieldInfo
 	{
-		private DbField.Attribute _attr;
-		private Value? _default_value;
-		private string _name;
+		private DbFieldInfo.Attribute      _attr;
+		private Value?                 _default_value;
+		private string                 _name;
+		private string                 _desc;
+		private int                    _precision = -1;
+		private int                    _scale = -1;
+		private DbFieldInfo.ForeignKey _fk;
 		
-		public DbField.Attribute  attributes {
-			get { return _attr; }
+		public DbFieldInfo.Attribute  attributes {
+			get { return _attr; } set { _attr = value; }
 		}
 		
 		public Value? default_value { 
 			get { return _default_value; }
+			set { _default_value = value; }
 		}
+		
 		public string name { 
 			get { return _name; }
+			set { _name = value; }
 		}
-		FieldInfo (string name, DbField.Attribute attr, Value? default_val)
-		{
-			_name = name;
-			_attr = attr;
-			_default_value = default_val;
-		}
+		
+		public string desc { get { return _desc; } set { _desc = value; } }
+		
+		public int precision   { get { return _precision; } set { _precision = value; } }
+		public int scale       { get { return _scale; } set { _scale = value; } }
+		
+		public DbFieldInfo.ForeignKey  fkey   { get  { return _fk; } set { _fk = value.copy (); } }
 	}
 }

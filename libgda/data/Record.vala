@@ -22,10 +22,10 @@ using Gee;
 
 namespace GdaData {
 
-    public class Record : Object, DbObject, Comparable<DbRecord<Value?>>, DbRecord<Value?>
+    public class Record : Object, DbObject, Comparable<DbRecord>, DbRecord
     {
-        protected HashMap<string,DbField<Value?>> _fields = new HashMap<string,DbField<Value?>> ();
-        protected HashMap<string,DbField<Value?>> _keys = new HashMap<string,DbField<Value?>> ();
+        protected HashMap<string,DbField> _fields = new HashMap<string,DbField> ();
+        protected HashMap<string,DbField> _keys = new HashMap<string,DbField> ();
         /**
          * Derived classes must implement this property to set the table used to get data from.
          */
@@ -33,8 +33,8 @@ namespace GdaData {
         /**
          * Returns a Gee.Collection with the data stored by this object.
          */
-        public Collection<DbField<Value?>> fields { owned get { return _fields.values; } }
-        public Collection<DbField<Value?>> keys { owned get { return _keys.values; } }
+        public Collection<DbField> fields { owned get { return _fields.values; } }
+        public Collection<DbField> keys { owned get { return _keys.values; } }
         /**
          * Set the connection to be used to get/set data.
          */
@@ -51,7 +51,7 @@ namespace GdaData {
 		/**
          * Set the value to a field with the given @name.
          */
-        public void set_field (DbField<Value?> field) throws Error
+        public void set_field (DbField field) throws Error
         {
         	if (_fields.has_key (field.name)) {
 		    	var f = this._fields.get (field.name);
@@ -72,11 +72,11 @@ namespace GdaData {
     		n.value = val;
     		this.set_field (n);
         }
-        public DbField<Value?> get_field (string name) throws Error
+        public DbField get_field (string name) throws Error
         {
         	return _fields.get (name);
         }
-        public void set_key (DbField<Value?> field)
+        public void set_key (DbField field)
         {
         	if (_keys.has_key (field.name)) {
 		    	var f = _keys.get (field.name);
@@ -96,7 +96,7 @@ namespace GdaData {
     		n.value = val;
     		this.set_key (n);
         }
-        public DbField<Value?> get_key (string name) throws Error
+        public DbField get_key (string name) throws Error
         {
         	return _keys.get (name);
         }
@@ -112,11 +112,11 @@ namespace GdaData {
         		throw new DbObjectError.SAVE ("No Keys has been set");
 			var q = new SqlBuilder (SqlStatementType.UPDATE);
 			q.set_table (table.name);
-			foreach (DbField<Value?> f in fields) {
+			foreach (DbField f in fields) {
 				q.add_field_value_as_gvalue (f.column_name, f.value);
 			}
 			SqlBuilderId cond = -1;
-			foreach (DbField<Value?> f in keys) {
+			foreach (DbField f in keys) {
 				var f_id = q.add_id (f.name);
 				var e_id = q.add_expr_value (null, f.value);
 				var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
@@ -146,7 +146,7 @@ namespace GdaData {
         	q.select_add_target (table.name, null);
         	q.select_add_field ("*", null, null);
 			SqlBuilderId cond = -1;
-        	foreach (DbField<Value?> f in keys) {
+        	foreach (DbField f in keys) {
 				var f_id = q.add_id (f.name);
 				var e_id = q.add_expr_value (null, f.value);
 				var c_id = q.add_cond (SqlOperatorType.EQ, f_id, e_id, 0);
@@ -185,7 +185,7 @@ namespace GdaData {
 			var sql = new SqlBuilder (SqlStatementType.INSERT);
 			sql.set_table (table.name);
 			// FIXME: MetaData is required
-			foreach (DbField<Value?> f in _fields.values) {
+			foreach (DbField f in _fields.values) {
 				sql.add_field_value_as_gvalue (f.column_name, f.value);
 			}
 //			stdout.printf ("DEBUG: INSERT statement to execute: \n"+ 
@@ -201,11 +201,11 @@ namespace GdaData {
         public string to_string ()
         {
         	string r = "";
-			foreach (DbField<Value?> f in this.fields) {
+			foreach (DbField f in this.fields) {
 				r += "|" + f.name;
 			}
 			r+="\n";
-			foreach (DbField<Value?> f in this.fields) {
+			foreach (DbField f in this.fields) {
 				r += "|" + Gda.value_stringify (f.value);
 			}
 			return r;
@@ -216,10 +216,10 @@ namespace GdaData {
          *
          * @Returns: 0 if keys are equal or -1 if they are different.
          */
-        public int compare_to (DbRecord<Value?> object)
+        public int compare_to (DbRecord object)
         {
         	int r = 0;
-        	foreach (DbField<Value?> f in fields) {
+        	foreach (DbField f in fields) {
         		var fl = object.get_field (f.name);
         		if (Gda.value_compare (f.value, fl.value) != 0)
         			return -1;

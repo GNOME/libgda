@@ -33,6 +33,7 @@ VALAFLAGS = \
 
 object_persistance_sources = \
 	DataBase.vala \
+	Catalog.vala \
 	Schema.vala \
 	Table.vala \
 	Record.vala \
@@ -42,6 +43,7 @@ object_persistance_sources = \
 db_collection_sources = \
 	DbObject.vala \
 	DbCollection.vala \
+	DbCatalog.vala \
 	DbTable.vala \
 	DbRecord.vala \
 	DbField.vala \

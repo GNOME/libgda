@@ -76,7 +76,7 @@ namespace Check {
 				stdout.printf ("+++++ PASS\n");
 			stdout.printf ("Iterating using foreach instruction...\n");
 			i = 0;
-			foreach (DbRecord<Value?> r in itermodel) {
+			foreach (DbRecord r in itermodel) {
 				string t = r.to_string ();
 				if (t == null) {
 					fails++;
@@ -188,7 +188,7 @@ namespace Check {
 			var iter = itermodel.filter (
 			(g) => {
 				bool ret = false;
-				foreach (DbField<Value?> fl in g.fields) {
+				foreach (DbField fl in g.fields) {
 					string t = Gda.value_stringify (fl.value);
 					stdout.printf ("Value to check: " + t);
 					if (t.contains ("J")) { 
@@ -227,7 +227,7 @@ namespace Check {
 				(state, g, out lazy) =>	{
 					if (state == Gee.Traversable.Stream.CONTINUE) {
 						var r = g.value;
-						foreach (DbField<Value?> f in r.fields) {
+						foreach (DbField f in r.fields) {
 							if (f.value.type () == typeof (string)) {
 								stdout.printf ("Value to YIELD: %s\n", Gda.value_stringify (f.value));
 								string ts = "YIELDED Value = " + Gda.value_stringify (f.value) + "\n";

@@ -22,12 +22,46 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbTable<G> : DbObject, DbNamedObject
+	public interface DbTable : DbObject, DbNamedObject
 	{
-		public abstract DbSchema                     schema     { get; set construct; }
-		public abstract Collection<DbRecord<G>>      records    { owned get; }
-		public abstract Collection<DbTable<G>>       fk_depends { owned get; }
-		public abstract Collection<DbTable<G>>       fk         { owned get; }
-		public abstract Collection<DbFieldInfo<G>>   fields     { owned get; }
+		public abstract DbCatalog                        catalog    { get; set; }
+		public abstract DbSchema                         schema     { get; set; }
+		public abstract TableType                        table_type { get; set; }
+		public abstract Collection<DbRecord>             records    { owned get; }
+		public abstract Collection<DbTable>              fk_depends { owned get; }
+		public abstract Collection<DbTable>              fk         { owned get; }
+		public abstract HashMap<string,DbFieldInfo>      fields     { get; }
+//		public abstract Iterator<DbFieldInfo>            pk_fields  { get; } // FIXME: Implement
+		
+		public enum TableType {
+			NONE,
+			BASE_TABLE,
+			VIEW, 
+			LOCAL_TEMPORARY,
+			SYSTEM_TABLE,
+			GLOBAL_TEMPORARY,
+			ALIAS,
+			SYNONYM
+		}
+		
+		public static TableType type_from_string (string str)
+		{
+			if (str == "BASE TABLE")
+				return TableType.BASE_TABLE;
+			if (str == "VIEW")
+				return TableType.VIEW;
+			if (str == "LOCAL TEMPORARY")
+				return TableType.LOCAL_TEMPORARY;
+			if (str == "SYSTEM TABLE")
+				return TableType.SYSTEM_TABLE;
+			if (str == "GLOBAL TEMPORARY")
+				return TableType.GLOBAL_TEMPORARY;
+			if (str == "ALIAS")
+				return TableType.ALIAS;
+			if (str == "SYNONYM")
+				return TableType.SYNONYM;
+			
+			return TableType.NONE;
+		}
 	}
 }

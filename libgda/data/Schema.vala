@@ -22,9 +22,9 @@ using Gda;
 
 namespace GdaData
 {
-	public class Schema : Object, DbObject, DbNamedObject, DbSchema<Value?>
+	public class Schema : Object, DbObject, DbNamedObject, DbSchema
 	{
-		public HashMap<string,DbTable<Value?>> _tables = new HashMap<string,DbTable<Value?>> ();
+		public HashMap<string,DbTable> _tables = new HashMap<string,DbTable> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
 		public void update () throws Error
@@ -40,8 +40,10 @@ namespace GdaData
 				var t = new Table ();
 				t.connection = connection;
 				t.name = (string) mt.get_value_at (mt.get_column_index ("table_name"), r);
-				t.schema = (DbSchema) this;
-				tables.set (t.name, (DbTable) t);
+				t.table_type = 
+						DbTable.type_from_string((string) mt.get_value_at (mt.get_column_index ("table_type"), r));
+				t.schema = this;
+				tables.set (t.name, t);
 			}
 		}
 		public void save () throws Error {}
@@ -49,6 +51,7 @@ namespace GdaData
 		// DbNamedObject Interface
 		public string name { get; set; }
 		// DbSchema Interface
+		public DbCatalog           catalog { get; set; }
 		public Collection<DbTable> tables { owned get { return _tables.values; } }
 	}
 }

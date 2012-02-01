@@ -22,15 +22,15 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbField<G> : Object
+	public interface DbField : Object
 	{
-		public abstract G @value { get; set; }
-		public abstract string name { get; set; }
-		public abstract string column_name { get; }
-		public abstract DbField.Attribute attributes { get; }
+		public abstract Value?             @value      { get; set; }
+		public abstract string             name        { get; set; }
+		public abstract string             column_name { get; }
+		public abstract DbField.Attribute  attributes  { get; }
 		
 		public abstract string to_string ();
-		
+	
 		[Flags]
 		public enum Attribute {
 			NONE,

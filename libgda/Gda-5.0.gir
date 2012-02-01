@@ -7648,7 +7648,12 @@ still forming a valid SQL syntax).</doc>
            glib:get-type="gda_data_proxy_get_type"
            glib:type-struct="DataProxyClass">
       <implements name="DataModel"/>
-      <constructor name="new" c:identifier="gda_data_proxy_new">
+      <function name="error_quark" c:identifier="gda_data_proxy_error_quark">
+        <return-value transfer-ownership="none">
+          <type name="GLib.Quark" c:type="GQuark"/>
+        </return-value>
+      </function>
+      <function name="new" c:identifier="gda_data_proxy_new">
         <doc xml:whitespace="preserve">Creates a new proxy for @model</doc>
         <return-value transfer-ownership="full">
           <doc xml:whitespace="preserve">a new #GdaDataProxy object</doc>
@@ -7660,11 +7665,6 @@ still forming a valid SQL syntax).</doc>
             <type name="DataModel" c:type="GdaDataModel*"/>
           </parameter>
         </parameters>
-      </constructor>
-      <function name="error_quark" c:identifier="gda_data_proxy_error_quark">
-        <return-value transfer-ownership="none">
-          <type name="GLib.Quark" c:type="GQuark"/>
-        </return-value>
       </function>
       <virtual-method name="filter_changed">
         <return-value transfer-ownership="none">

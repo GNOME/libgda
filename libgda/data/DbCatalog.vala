@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * libgdadata
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * libgdavala
+ * Copyright (C) Daniel Espinosa Ortiz 2012 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-using Gee;
 using Gda;
+using Gee;
 
-namespace GdaData
-{
-	public interface DbCollection : DbNamedObject 
+namespace GdaData {
+	public interface DbCatalog : Object, DbObject, DbNamedObject
 	{
-		public abstract Collection<DbSchema> schemas { owned get; }
+		public abstract Collection<DbSchema> shemas { get; set; }
 	}
 }

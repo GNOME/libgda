@@ -22,9 +22,9 @@ using Gda;
 
 namespace GdaData
 {
-	public class DataBase : Object, DbObject, DbNamedObject, DbCollection<Value?>
+	public class DataBase : Object, DbObject, DbNamedObject, DbCollection
 	{
-		public HashMap<string,DbSchema<Value?>> _schemas = new HashMap<string,DbSchema<Value?>> ();
+		public HashMap<string,DbSchema> _schemas = new HashMap<string,DbSchema> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
 		public void update () throws Error

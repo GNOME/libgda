@@ -29,9 +29,7 @@
 		<field name="_schemas">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
 			</type>
 		</field>
 		<constructor name="new" c:identifier="gda_data_data_base_new">
@@ -46,6 +44,28 @@
 		</field>
 	</record>
 	<record name="DataBasePrivate" c:type="GdaDataDataBasePrivate" disguised="1"/>
+	<class name="Catalog" c:type="GdaDataCatalog" glib:type-name="GdaDataCatalog" glib:get-type="gda_data_catalog_get_type" glib:type-struct="CatalogClass" parent="GObject.Object">
+		<implements name="GdaData.DbObject"/>
+		<implements name="GdaData.DbNamedObject"/>
+		<implements name="GdaData.DbCatalog"/>
+		<field name="parent_instance">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv">
+			<type name="CatalogPrivate" c:type="GdaDataCatalogPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gda_data_catalog_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.Catalog" c:type="GdaDataCatalog*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="CatalogClass" c:type="GdaDataCatalogClass" glib:is-gtype-struct-for="Catalog">
+		<field name="parent_class">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="CatalogPrivate" c:type="GdaDataCatalogPrivate" disguised="1"/>
 	<class name="Schema" c:type="GdaDataSchema" glib:type-name="GdaDataSchema" glib:get-type="gda_data_schema_get_type" glib:type-struct="SchemaClass" parent="GObject.Object">
 		<implements name="GdaData.DbObject"/>
 		<implements name="GdaData.DbNamedObject"/>
@@ -59,9 +79,7 @@
 		<field name="_tables">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</field>
 		<constructor name="new" c:identifier="gda_data_schema_new">
@@ -86,31 +104,28 @@
 		<field name="priv">
 			<type name="TablePrivate" c:type="GdaDataTablePrivate*"/>
 		</field>
+		<field name="_type">
+			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+		</field>
 		<field name="_records">
 			<type name="GdaData.DbRecordCollection" c:type="GdaDataDbRecordCollection*"/>
 		</field>
 		<field name="_fields">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 			</type>
 		</field>
 		<field name="_fk_depends">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</field>
 		<field name="_fk">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</field>
 		<constructor name="with_fields_info" c:identifier="gda_data_table_new_with_fields_info">
@@ -118,9 +133,7 @@
 				<parameter name="fields" transfer-ownership="none">
 					<type name="Gee.HashMap" c:type="GeeHashMap*">
 						<type name="utf8" c:type="gchar*"/>
-						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*">
-							<type name="gpointer" c:type="gpointer"/>
-						</type>
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 					</type>
 				</parameter>
 			</parameters>
@@ -153,17 +166,13 @@
 		<field name="_fields">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="GObject.Value" c:type="GValue*"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</type>
 		</field>
 		<field name="_keys">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="GObject.Value" c:type="GValue*"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</type>
 		</field>
 		<constructor name="new" c:identifier="gda_data_record_new">
@@ -192,9 +201,7 @@
 					<type name="Gda.DataModel" c:type="GdaDataModel*"/>
 				</parameter>
 				<parameter name="table" transfer-ownership="none">
-					<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-						<type name="GObject.Value" c:type="GValue*"/>
-					</type>
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -231,9 +238,7 @@
 					<type name="Gda.DataModelIter" c:type="GdaDataModelIter*"/>
 				</parameter>
 				<parameter name="table" transfer-ownership="none">
-					<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-						<type name="GObject.Value" c:type="GValue*"/>
-					</type>
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -283,6 +288,11 @@
 		<field name="priv">
 			<type name="FieldInfoPrivate" c:type="GdaDataFieldInfoPrivate*"/>
 		</field>
+		<constructor name="new" c:identifier="gda_data_field_info_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.FieldInfo" c:type="GdaDataFieldInfo*"/>
+			</return-value>
+		</constructor>
 	</class>
 	<record name="FieldInfoClass" c:type="GdaDataFieldInfoClass" glib:is-gtype-struct-for="FieldInfo">
 		<field name="parent_class">
@@ -382,9 +392,7 @@
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="schemas">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
 			</type>
 		</property>
 	</interface>
@@ -393,38 +401,62 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
+	<interface name="DbCatalog" c:type="GdaDataDbCatalog" glib:type-name="GdaDataDbCatalog" glib:get-type="gda_data_db_catalog_get_type" glib:type-struct="DbCatalogIface">
+		<prerequisite name="GObject.Object"/>
+		<prerequisite name="GdaData.DbObject"/>
+		<prerequisite name="GdaData.DbNamedObject"/>
+		<property name="shemas" writable="1">
+			<type name="Gee.Collection" c:type="GeeCollection*">
+				<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
+			</type>
+		</property>
+	</interface>
+	<record name="DbCatalogIface" c:type="GdaDataDbCatalogIface" glib:is-gtype-struct-for="DbCatalog">
+		<field name="parent_iface">
+			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+	</record>
 	<interface name="DbTable" c:type="GdaDataDbTable" glib:type-name="GdaDataDbTable" glib:get-type="gda_data_db_table_get_type" glib:type-struct="DbTableIface">
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
-		<property name="schema" writable="1" construct="1">
+		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
+			<parameters>
+				<parameter name="str" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+			</return-value>
+		</function>
+		<property name="catalog" writable="1">
+			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
+		</property>
+		<property name="schema" writable="1">
 			<type name="GdaData.DbSchema" c:type="GdaDataDbSchema*"/>
+		</property>
+		<property name="table-type" writable="1">
+			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
 		</property>
 		<property name="records">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 			</type>
 		</property>
 		<property name="fk-depends">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
 		<property name="fk">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
 		<property name="fields">
-			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+			<type name="Gee.HashMap" c:type="GeeHashMap*">
+				<type name="utf8" c:type="gchar*"/>
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 			</type>
 		</property>
 	</interface>
@@ -433,6 +465,16 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
+	<enumeration name="DbTableTableType" c:type="GdaDataDbTableTableType" glib:type-name="GdaDataDbTableTableType" glib:get-type="gda_data_db_table_table_type_get_type">
+		<member name="none" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_NONE" value="0"/>
+		<member name="base_table" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_BASE_TABLE" value="1"/>
+		<member name="view" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_VIEW" value="2"/>
+		<member name="local_temporary" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_LOCAL_TEMPORARY" value="3"/>
+		<member name="system_table" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_SYSTEM_TABLE" value="4"/>
+		<member name="global_temporary" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_GLOBAL_TEMPORARY" value="5"/>
+		<member name="alias" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_ALIAS" value="6"/>
+		<member name="synonym" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_SYNONYM" value="7"/>
+	</enumeration>
 	<interface name="DbRecord" c:type="GdaDataDbRecord" glib:type-name="GdaDataDbRecord" glib:get-type="gda_data_db_record_get_type" glib:type-struct="DbRecordIface">
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="Gee.Comparable"/>
@@ -443,7 +485,7 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full" allow-none="1">
-				<type name="gpointer" c:type="gpointer"/>
+				<type name="GObject.Value" c:type="GValue*"/>
 			</return-value>
 		</method>
 		<virtual-method name="get_value" invoker="get_value" throws="1">
@@ -453,15 +495,13 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full" allow-none="1">
-				<type name="gpointer" c:type="gpointer"/>
+				<type name="GObject.Value" c:type="GValue*"/>
 			</return-value>
 		</virtual-method>
 		<method name="set_field" c:identifier="gda_data_db_record_set_field" throws="1">
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -471,9 +511,7 @@
 		<virtual-method name="set_field" invoker="set_field" throws="1">
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -486,7 +524,7 @@
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 				<parameter name="val" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
+					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -499,7 +537,7 @@
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 				<parameter name="val" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
+					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -513,9 +551,7 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</return-value>
 		</method>
 		<virtual-method name="get_field" invoker="get_field" throws="1">
@@ -525,17 +561,13 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</return-value>
 		</virtual-method>
 		<method name="set_key" c:identifier="gda_data_db_record_set_key" throws="1">
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -545,9 +577,7 @@
 		<virtual-method name="set_key" invoker="set_key" throws="1">
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -560,7 +590,7 @@
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 				<parameter name="val" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
+					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -573,7 +603,7 @@
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 				<parameter name="val" transfer-ownership="none" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
+					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
@@ -587,9 +617,7 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</return-value>
 		</method>
 		<virtual-method name="get_key" invoker="get_key" throws="1">
@@ -599,9 +627,7 @@
 				</parameter>
 			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</return-value>
 		</virtual-method>
 		<method name="to_string" c:identifier="gda_data_db_record_to_string">
@@ -615,22 +641,16 @@
 			</return-value>
 		</virtual-method>
 		<property name="table" writable="1" construct="1">
-			<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-				<type name="gpointer" c:type="gpointer"/>
-			</type>
+			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 		</property>
 		<property name="fields">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</type>
 		</property>
 		<property name="keys">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 			</type>
 		</property>
 	</interface>
@@ -649,7 +669,7 @@
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full" allow-none="1">
-					<type name="gpointer" c:type="gpointer"/>
+					<type name="GObject.Value" c:type="GValue*"/>
 				</return-value>
 			</callback>
 		</field>
@@ -660,9 +680,7 @@
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 					</parameter>
 					<parameter name="field" transfer-ownership="none">
-						<type name="GdaData.DbField" c:type="GdaDataDbField*">
-							<type name="gpointer" c:type="gpointer"/>
-						</type>
+						<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
@@ -680,7 +698,7 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 					<parameter name="val" transfer-ownership="none" allow-none="1">
-						<type name="gpointer" c:type="gpointer"/>
+						<type name="GObject.Value" c:type="GValue*"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
@@ -699,9 +717,7 @@
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</return-value>
 			</callback>
 		</field>
@@ -712,9 +728,7 @@
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 					</parameter>
 					<parameter name="field" transfer-ownership="none">
-						<type name="GdaData.DbField" c:type="GdaDataDbField*">
-							<type name="gpointer" c:type="gpointer"/>
-						</type>
+						<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
@@ -732,7 +746,7 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 					<parameter name="val" transfer-ownership="none" allow-none="1">
-						<type name="gpointer" c:type="gpointer"/>
+						<type name="GObject.Value" c:type="GValue*"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
@@ -751,9 +765,7 @@
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*">
-						<type name="gpointer" c:type="gpointer"/>
-					</type>
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</return-value>
 			</callback>
 		</field>
@@ -783,7 +795,7 @@
 			</return-value>
 		</virtual-method>
 		<property name="value" writable="1">
-			<type name="gpointer" c:type="gpointer"/>
+			<type name="GObject.Value" c:type="GValue*"/>
 		</property>
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
@@ -827,14 +839,36 @@
 	</bitfield>
 	<interface name="DbFieldInfo" c:type="GdaDataDbFieldInfo" glib:type-name="GdaDataDbFieldInfo" glib:get-type="gda_data_db_field_info_get_type" glib:type-struct="DbFieldInfoIface">
 		<prerequisite name="GObject.Object"/>
-		<property name="attributes">
-			<type name="GdaData.DbFieldAttribute" c:type="GdaDataDbFieldAttribute"/>
+		<function name="attribute_from_string" c:identifier="gda_data_db_field_info_attribute_from_string">
+			<parameters>
+				<parameter name="str" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
+			</return-value>
+		</function>
+		<property name="attributes" writable="1">
+			<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
 		</property>
-		<property name="default-value">
-			<type name="gpointer" c:type="gpointer"/>
+		<property name="default-value" writable="1">
+			<type name="GObject.Value" c:type="GValue*"/>
 		</property>
-		<property name="name">
+		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="desc" writable="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="precision" writable="1">
+			<type name="gint" c:type="gint"/>
+		</property>
+		<property name="scale" writable="1">
+			<type name="gint" c:type="gint"/>
+		</property>
+		<property name="fkey" writable="1">
+			<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
 		</property>
 	</interface>
 	<record name="DbFieldInfoIface" c:type="GdaDataDbFieldInfoIface" glib:is-gtype-struct-for="DbFieldInfo">
@@ -842,14 +876,87 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
+	<enumeration name="DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute" glib:type-name="GdaDataDbFieldInfoAttribute" glib:get-type="gda_data_db_field_info_attribute_get_type">
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_NONE" value="0"/>
+		<member name="primary_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_PRIMARY_KEY" value="1"/>
+		<member name="unique" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_UNIQUE" value="2"/>
+		<member name="foreign_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_FOREIGN_KEY" value="3"/>
+		<member name="check" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CHECK" value="4"/>
+		<member name="have_default" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_HAVE_DEFAULT" value="5"/>
+		<member name="is_auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_IS_AUTO_INCREMENT" value="6"/>
+	</enumeration>
+	<record name="DbFieldInfoForeignKey">
+		<field name="name">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
+		<field name="refname">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
+		<field name="reftable">
+			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+		</field>
+		<field name="match">
+			<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+		</field>
+		<field name="update_rule">
+			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+		</field>
+		<field name="delete_rule">
+			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+		</field>
+		<method name="copy" c:identifier="gda_data_db_field_info_foreign_key_copy">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
+			</return-value>
+		</method>
+		<function name="match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
+			<parameters>
+				<parameter name="str" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+			</return-value>
+		</function>
+		<function name="rule_from_string" c:identifier="gda_data_db_field_info_foreign_key_rule_from_string">
+			<parameters>
+				<parameter name="str" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+			</return-value>
+		</function>
+		<constructor name="new" c:identifier="gda_data_db_field_info_foreign_key_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
+			</return-value>
+		</constructor>
+	</record>
+	<enumeration name="DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch" glib:type-name="GdaDataDbFieldInfoForeignKeyMatch" glib:get-type="gda_data_db_field_info_foreign_key_match_get_type">
+		<member name="full" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_FULL" value="0"/>
+		<member name="partial" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_PARTIAL" value="1"/>
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_NONE" value="2"/>
+	</enumeration>
+	<enumeration name="DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule" glib:type-name="GdaDataDbFieldInfoForeignKeyRule" glib:get-type="gda_data_db_field_info_foreign_key_rule_get_type">
+		<member name="cascade" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_CASCADE" value="0"/>
+		<member name="set_null" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_NULL" value="1"/>
+		<member name="set_default" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_DEFAULT" value="2"/>
+		<member name="restrict" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_RESTRICT" value="3"/>
+		<member name="no_action" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NO_ACTION" value="4"/>
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NONE" value="5"/>
+	</enumeration>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
+		<property name="catalog" writable="1">
+			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
+		</property>
 		<property name="tables">
 			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-					<type name="gpointer" c:type="gpointer"/>
-				</type>
+				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
 	</interface>
@@ -867,9 +974,7 @@
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
 		</property>
 		<property name="table">
-			<type name="GdaData.DbTable" c:type="GdaDataDbTable*">
-				<type name="gpointer" c:type="gpointer"/>
-			</type>
+			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 		</property>
 	</interface>
 	<record name="DbRecordCollectionIface" c:type="GdaDataDbRecordCollectionIface" glib:is-gtype-struct-for="DbRecordCollection">
