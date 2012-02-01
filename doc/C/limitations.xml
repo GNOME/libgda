@@ -150,7 +150,7 @@
     </sect2>
   </sect1>
 
-  <sect1 id="limitations_sqlcipher"><title>For SqlCipher</title>
+  <sect1 id="limitations_sqlcipher"><title>For SQLCipher</title>
     <para>
       The following limitations apply to SQLite database accessed through the SQLCipher database
       provider. The SQLCipher database provider allows one to connect to a database encrypted using the
