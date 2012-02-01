@@ -52,14 +52,15 @@ namespace Sample {
 			t.connection = connection;
 			t.name = "user";
 			this.itermodel = new RecordCollection (model, t);
-
+			var pxy = new DataProxy.with_data_model (model);
+			stdout.printf(pxy.dump_as_string ());
 		}
 		
 		public void iterating ()
 			throws Error
 		{
 			stdout.printf ("Iterating over all Records in DataModel using foreach\n");
-			foreach (DbRecord<Value?> r in itermodel) {
+			foreach (DbRecord r in itermodel) {
 				stdout.printf (r.to_string ());
 			}
 			stdout.printf ("\nIterating over all Records in DataModel using a Gee.Iterator\n");
@@ -94,7 +95,7 @@ namespace Sample {
 			var iter = itermodel.filter (
 			(g) => {
 				bool ret = false;
-				foreach (DbField<Value?> fl in g.fields) {
+				foreach (DbField fl in g.fields) {
 					string t = Gda.value_stringify (fl.value);
 					stdout.printf ("Value to check: " + t);
 					if (t.contains ("x")) {

@@ -317,6 +317,7 @@
 	gda_data_proxy_has_changed
 	gda_data_proxy_is_read_only
 	gda_data_proxy_new
+	gda_data_proxy_new_with_data_model
 	gda_data_proxy_row_has_changed
 	gda_data_proxy_row_is_deleted
 	gda_data_proxy_row_is_inserted

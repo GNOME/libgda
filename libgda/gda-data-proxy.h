@@ -182,6 +182,7 @@ struct _GdaDataProxyClass
 
 GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;
 GObject          *gda_data_proxy_new                      (GdaDataModel *model);
+GdaDataProxy     *gda_data_proxy_new_with_data_model      (GdaDataModel *model);
 
 GdaDataModel     *gda_data_proxy_get_proxied_model        (GdaDataProxy *proxy);
 gint              gda_data_proxy_get_proxied_model_n_cols (GdaDataProxy *proxy);

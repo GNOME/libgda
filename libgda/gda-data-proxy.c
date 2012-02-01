@@ -767,7 +767,7 @@ static void proxied_model_access_changed_cb (GdaDataModel *model, GdaDataProxy *
  * gda_data_proxy_new:
  * @model: (transfer none): Data model to be proxied
  *
- * Creates a new proxy for @model
+ * Creates a new proxy for @model. For bindings use @gda_data_proxy_new_with_data_model. 
  *
  * Returns: (transfer full): a new #GdaDataProxy object
  */
@@ -781,6 +781,29 @@ gda_data_proxy_new (GdaDataModel *model)
 	obj = g_object_new (GDA_TYPE_DATA_PROXY, "model", model, NULL);
 
 	return obj;
+}
+
+/**
+ * gda_data_proxy_new_with_data_model:
+ * @model: (transfer none): Data model to be proxied
+ *
+ * Creates a new proxy for @model. This is the preferred method to create 
+ * #GdaDataProxy objects by bindings.
+ *
+ * Returns: (transfer full): a new #GdaDataProxy object
+ *
+ * Since: 5.2.0
+ */
+GdaDataProxy*
+gda_data_proxy_new_with_data_model (GdaDataModel *model)
+{
+	GObject *obj;
+
+	g_return_val_if_fail (model && GDA_IS_DATA_MODEL (model), NULL);
+
+	obj = g_object_new (GDA_TYPE_DATA_PROXY, "model", model, NULL);
+
+	return (GdaDataProxy*) obj;
 }
 
 static void

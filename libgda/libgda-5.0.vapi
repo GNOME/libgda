@@ -365,6 +365,8 @@ namespace Gda {
 		public void set_sample_size (int sample_size);
 		public void set_sample_start (int sample_start);
 		public void undelete (int proxy_row);
+		[CCode (has_construct_function = false)]
+		public DataProxy.with_data_model (Gda.DataModel model);
 		[NoAccessorMethod]
 		public bool defer_sync { get; set; }
 		[NoAccessorMethod]
