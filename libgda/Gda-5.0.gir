@@ -8487,7 +8487,7 @@ default value, the precision and scale for numeric values.</doc>
         <doc xml:whitespace="preserve">Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
 Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
 
-This function is similar to calling gda_data_select_compute_modification_statements_ext with
+This function is similar to calling gda_data_select_compute_modification_statements_ext() with
 @cond_type set to %GDA_DATA_SELECT_COND_PK</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">%TRUE if no error occurred. If %FALSE is returned, then some modification statement may still have been computed</doc>
@@ -8556,13 +8556,34 @@ using @mod_stmt to propagate those modifications into the database.
 
 If @mod_stmt is:
 &lt;itemizedlist&gt;
-&lt;listitem&gt;&lt;para&gt;an UPDATE statement, then all the rows in @model will be modifyable&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;an UPDATE statement, then all the rows in @model will be writable&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;a DELETE statement, then it will be possible to delete rows in @model&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;in INSERT statement, then it will be possible to add some rows to @model&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;any other statement, then this method will return an error&lt;/para&gt;&lt;/listitem&gt;
 &lt;/itemizedlist&gt;
 
-This method can be called several times to specify different types of modification.
+This method can be called several times to specify different types of modification statements. 
+
+Each modification statement will be executed when one or more values are modified in the data model;
+each statement should then include variables which will be set to either the old value or the
+new value of a column at the specified modified row (but can also contain other variables). Each variable
+named as "+&amp;lt;number&amp;gt;" will be mapped to the new value of the number'th column (starting at 0), and
+each variable named as "-&amp;lt;number&amp;gt;" will be mapped to the old value of the number'th column.
+
+Examples of the SQL equivalent of each statement are (for example if "mytable" has the "id" field as
+primary key, and if that field is auto incremented and if the data model is the result of
+executing "&lt;![CDATA[SELECT * from mytable]]&gt;").
+
+&lt;itemizedlist&gt;
+&lt;listitem&gt;&lt;para&gt;"&lt;![CDATA[INSERT INTO mytable (name) VALUES (##+1::string)]]&gt;": the column ID can not be set
+for new rows&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;"&lt;![CDATA[DELETE FROM mytable WHERE id=##-0::int]]&gt;"&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;"&lt;![CDATA[UPDATE mytable SET name=##+1::string WHERE id=##-0::int]]&gt;": the column ID cannot be
+modified&lt;/para&gt;&lt;/listitem&gt;
+&lt;/itemizedlist&gt;
+
+Also see the gda_data_select_set_row_selection_condition_sql() for more information about the WHERE
+part of the UPDATE and DELETE statement types.
 
 If @mod_stmt is an UPDATE or DELETE statement then it should have a WHERE part which identifies
 a unique row in @model (please note that this property can't be checked but may result
@@ -8577,7 +8598,7 @@ NOTE2: if gda_data_select_set_row_selection_condition()
 or gda_data_select_set_row_selection_condition_sql() have not yet been successfully be called before, then
 the WHERE part of @mod_stmt will be used as if one of these functions had been called.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">TRUE if no error occurred.</doc>
+          <doc xml:whitespace="preserve">%TRUE if no error occurred.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -8590,7 +8611,7 @@ the WHERE part of @mod_stmt will be used as if one of these functions had been c
       <method name="set_modification_statement_sql"
               c:identifier="gda_data_select_set_modification_statement_sql"
               throws="1">
-        <doc xml:whitespace="preserve">Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement</doc>
+        <doc xml:whitespace="preserve">Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement.</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">TRUE if no error occurred.</doc>
           <type name="gboolean" c:type="gboolean"/>

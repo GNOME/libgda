@@ -1,5 +1,7 @@
 #! python
-from gi.repository import GLib, Gda
+from gi.repository import GLib
+from gi.repository import Gda
+print Gda
 GLib.unlink ("dataproxy.db")
 c = Gda.Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=dataproxy", None, Gda.ConnectionOptions.NONE)
 c.execute_non_select_command("CREATE TABLE user (name string PRIMARY KEY, functions string, security_number integer)")
