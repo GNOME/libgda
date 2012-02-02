@@ -794,6 +794,19 @@
 				<type name="utf8" c:type="gchar*"/>
 			</return-value>
 		</virtual-method>
+		<function name="value_from_string" c:identifier="gda_data_db_field_value_from_string">
+			<parameters>
+				<parameter name="as_string" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+				<parameter name="type" transfer-ownership="none">
+					<type name="GObject.Type" c:type="GType"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full" allow-none="1">
+				<type name="GObject.Value" c:type="GValue*"/>
+			</return-value>
+		</function>
 		<property name="value" writable="1">
 			<type name="GObject.Value" c:type="GValue*"/>
 		</property>

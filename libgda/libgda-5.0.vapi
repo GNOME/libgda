@@ -2071,8 +2071,6 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static int value_compare (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_copy (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static int value_differ (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static void value_free (owned GLib.Value? value);
@@ -2096,24 +2094,6 @@ namespace Gda {
 	public static bool value_is_null (GLib.Value value);
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static bool value_is_number (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new (GLib.Type type);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_binary (uint8 val, long size);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_blob (uint8 val, long size);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_blob_from_file (string filename);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_default (string? default_val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_from_string (string as_string, GLib.Type type);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_from_xml ([CCode (type = "xmlNodePtr")] Xml.Node* node);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_null ();
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static GLib.Value value_new_timestamp_from_timet (long val);
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static void value_reset_with_type (GLib.Value value, GLib.Type type);
 	[CCode (cheader_filename = "libgda/libgda.h")]

@@ -59,7 +59,7 @@ namespace GdaData
 				string fdv = (string) mt.get_value_at (mt.get_column_index ("column_default"), r);
 				if (fdv != null) {
 					attr = attr & DbField.Attribute.CAN_BE_DEFAULT;
-					//Value? dv = Gda.value_new_from_string (fdv, ft);
+					var dv = DbField.value_from_string (fdv, ft);
 				}
 				string fai = (string) mt.get_value_at (mt.get_column_index ("extras"), r);
 				bool fai_b = false;

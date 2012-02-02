@@ -52,8 +52,6 @@ namespace Sample {
 			t.connection = connection;
 			t.name = "user";
 			this.itermodel = new RecordCollection (model, t);
-			var pxy = new DataProxy.with_data_model (model);
-			stdout.printf(pxy.dump_as_string ());
 		}
 		
 		public void iterating ()
