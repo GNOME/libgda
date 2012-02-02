@@ -5048,7 +5048,7 @@ suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext 
  *   <listitem><para>One knows that a database object has changed (for example a table created), and
  *                   may use the @context to request that only the information about that table be updated
  *             </para></listitem>
- *   <listitem><para>One is only interrested in the list of views, and may request that only the information
+ *   <listitem><para>One is only interested in the list of views, and may request that only the information
  *                   about views may be updated</para></listitem>
  * </itemizedlist>
  *

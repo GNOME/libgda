@@ -76,7 +76,7 @@ main (int argc, char *argv[])
 	list_table_columns (data);
 	g_object_unref (data);
 
-	/* Request partial update for the table we are interrested in 
+	/* Request partial update for the table we are interested in 
 	 * the GdaMetaContext specifies to update the "_tables" table, where the "table_name"
 	 * attribute is TABLE_NAME */
 	g_print ("\nPartial metastore update for table '%s'...\n", TABLE_NAME);
