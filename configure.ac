@@ -476,7 +476,7 @@ AC_ARG_ENABLE([vala],
 have_vala=no
 if test "x$found_introspection" = "xyes"
 then
-    VALA_MODULES="libvala-0.14 >= 0.14"
+    VALA_MODULES="libvala-0.16 >= 0.15.1"
     PKG_CHECK_MODULES(VALA, $VALA_MODULES,
         if test "$enable_vala" = "yes" -o "$enable_vala" = "auto"
 	then
