@@ -10204,7 +10204,16 @@ This function can be used even if g_thread_init() has not yet been called, and, 
     <record name="MetaContext" c:type="GdaMetaContext">
       <doc xml:whitespace="preserve">The &lt;structname&gt;GdaMetaContext&lt;/structname&gt; represents a meta data modification
 context: the &lt;emphasis&gt;how&lt;/emphasis&gt; when used with gda_meta_store_modify_with_context(),
-and the &lt;emphasis&gt;what&lt;/emphasis&gt; when used with gda_connection_update_meta_store().</doc>
+and the &lt;emphasis&gt;what&lt;/emphasis&gt; when used with gda_connection_update_meta_store().
+
+To create a new #GdaMetaContext use #gda_meta_context_new. 
+
+To add a new column/value pair use #gda_meta_context_add_column.
+
+To free a #GdaMetaContext, created by #gda_meta_context_new, use #gda_attributes_manager_free.
+
+Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+Don't try to use #gda_meta_context_free on a struct that was created manually.</doc>
       <field name="table_name" writable="1">
         <type name="utf8" c:type="gchar*"/>
       </field>
@@ -10217,6 +10226,93 @@ and the &lt;emphasis&gt;what&lt;/emphasis&gt; when used with gda_connection_upda
       <field name="column_values" writable="1">
         <type name="GObject.Value" c:type="GValue**"/>
       </field>
+      <field name="columns" introspectable="0" writable="1">
+        <type name="GLib.HashTable" c:type="GHashTable*">
+          <type name="utf8"/>
+          <type name="GLib.GValue"/>
+        </type>
+      </field>
+      <method name="add_column" c:identifier="gda_meta_context_add_column">
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="column" transfer-ownership="none">
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <type name="GObject.Value" c:type="GValue*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="free" c:identifier="gda_meta_context_free" version="5.2">
+        <doc xml:whitespace="preserve">Frees any resources taken by @ctx struct.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
+      <method name="get_table"
+              c:identifier="gda_meta_context_get_table"
+              version="5.2">
+        <doc xml:whitespace="preserve">Get table's name to used in the context.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">A string with the table's name used in the context.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+      </method>
+      <method name="set_columns"
+              c:identifier="gda_meta_context_set_columns"
+              version="5.2"
+              introspectable="0">
+        <doc xml:whitespace="preserve">Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
+to represent its value.
+
+@columns incements its reference counting. Is recommended to use #gda_meta_context_free in order to free them.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="columns" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #GHashTable with the table's columns' name and their values to use in context.</doc>
+            <type name="GLib.HashTable" c:type="GHashTable*">
+              <type name="utf8"/>
+              <type name="GLib.Value"/>
+            </type>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_table"
+              c:identifier="gda_meta_context_set_table"
+              version="5.2">
+        <doc xml:whitespace="preserve">Set table's name to use in the context.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <parameter name="table" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a string with the table's name to use in context</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <function name="new"
+                c:identifier="gda_meta_context_new"
+                version="5.2"
+                introspectable="0">
+        <doc xml:whitespace="preserve">Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
+given @table in the context.
+
+store column name/value pairs.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaMetaContext struct with a copied table's name and a new created hash to</doc>
+          <type name="MetaContext" c:type="GdaMetaContext*"/>
+        </return-value>
+        <parameters>
+          <parameter name="table_name" transfer-ownership="none">
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
     </record>
     <record name="MetaDbObject" c:type="GdaMetaDbObject">
       <doc xml:whitespace="preserve">Struture to hold information about each database object (tables, views, ...),
@@ -10956,7 +11052,7 @@ See gda_meta_store_declare_foreign_key() for more information anout the @catalog
       <field name="priv">
         <type name="MetaStorePrivate" c:type="GdaMetaStorePrivate*"/>
       </field>
-      <glib:signal name="meta-changed" when="first" introspectable="0">
+      <glib:signal name="meta-changed" when="first">
         <doc xml:whitespace="preserve">This signal is emitted when the @store's contents have changed (the changes are in the @changes list)</doc>
         <return-value transfer-ownership="none">
           <type name="none"/>
@@ -10964,7 +11060,9 @@ See gda_meta_store_declare_foreign_key() for more information anout the @catalog
         <parameters>
           <parameter name="changes" transfer-ownership="none">
             <doc xml:whitespace="preserve">a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)</doc>
-            <type/>
+            <type name="GLib.SList">
+              <type name="MetaStoreChange"/>
+            </type>
           </parameter>
         </parameters>
       </glib:signal>

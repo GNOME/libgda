@@ -69,22 +69,39 @@ typedef struct {
 	                               * value = a GValue pointer */
 } GdaMetaStoreChange;
 
+
+/* Pointer type for GdaMetaContext (not a boxed type!) */
+#define GDA_TYPE_META_CONTEXT (_gda_meta_context_get_type())
+
 /**
  * GdaMetaContext:
  * @table_name: the name of the table <emphasis>in the GdaMetaStore's internal database</emphasis>
  * @size: the size of the @column_names and @column_values arrays
  * @column_names: (array length=size): an array of column names (columns of the @table_name table)
  * @column_values: (array length=size): an array of values, one for each column named in @column_names
+ * @columns: (element-type utf8 GLib.GValue): A #GHashTable storing columns' name as key and #GValue as column's
+ * value.
  *
  * The <structname>GdaMetaContext</structname> represents a meta data modification
  * context: the <emphasis>how</emphasis> when used with gda_meta_store_modify_with_context(),
  * and the <emphasis>what</emphasis> when used with gda_connection_update_meta_store().
+ *
+ * To create a new #GdaMetaContext use #gda_meta_context_new. 
+ *
+ * To add a new column/value pair use #gda_meta_context_add_column.
+ * 
+ * To free a #GdaMetaContext, created by #gda_meta_context_new, use #gda_attributes_manager_free.
+ *
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_meta_context_free on a struct that was created manually.
  */
 typedef struct {
 	gchar                  *table_name;
 	gint                    size;
 	gchar                 **column_names;
 	GValue                **column_values;
+	/* Added since 5.2 */
+	GHashTable             *columns;
 } GdaMetaContext;
 
 /* struct for the object's data */
@@ -183,6 +200,15 @@ gboolean          gda_meta_store_undeclare_foreign_key    (GdaMetaStore *store, 
 							   const gchar *catalog, const gchar *schema, const gchar *table,
 							   const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
 							   GError **error);
+
+GType             _gda_meta_context_get_type              (void) G_GNUC_CONST;
+GdaMetaContext*   gda_meta_context_new                    (const gchar* table_name);
+void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
+const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);
+void              gda_meta_context_add_column             (GdaMetaContext *ctx, const gchar* column, 
+                               const GValue* value);
+void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns);
+void              gda_meta_context_free                   (GdaMetaContext *ctx);
 
 G_END_DECLS
 

@@ -37,11 +37,6 @@ G_BEGIN_DECLS
 typedef GSList GdaSList;
 GType   _gda_slist_get_type (void) G_GNUC_CONST;
 
-/* Pointer type for GdaMetaContext (not a boxed type!) */
-#define GDA_TYPE_META_CONTEXT (_gda_meta_context_get_type())
-GType   _gda_meta_context_get_type (void) G_GNUC_CONST;
-
-
 G_END_DECLS
 
 #endif

@@ -332,8 +332,8 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_proxy_get_type ()")]
 	public class DataProxy : GLib.Object, Gda.DataModel {
-		[CCode (has_construct_function = false)]
-		protected DataProxy ();
+		[CCode (has_construct_function = false, type = "GObject*")]
+		public DataProxy (Gda.DataModel model);
 		public void alter_value_attributes (int proxy_row, int col, Gda.ValueAttribute alter_flags);
 		public bool apply_all_changes () throws GLib.Error;
 		public bool apply_row_changes (int proxy_row) throws GLib.Error;
@@ -356,7 +356,6 @@ namespace Gda {
 		public GLib.SList<weak GLib.Value> get_values (int proxy_row, [CCode (array_length = false)] int[] cols_index, int n_cols);
 		public bool has_changed ();
 		public bool is_read_only ();
-		public static GLib.Object @new (Gda.DataModel model);
 		public bool row_has_changed (int proxy_row);
 		public bool row_is_deleted (int proxy_row);
 		public bool row_is_inserted (int proxy_row);
@@ -598,6 +597,7 @@ namespace Gda {
 		public Gda.Connection cnc { owned get; construct; }
 		public string cnc_string { construct; }
 		public string schema { construct; }
+		public signal void meta_changed (GLib.SList<Gda.MetaStoreChange> changes);
 		public virtual signal void meta_reset ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_meta_struct_get_type ()")]
@@ -618,14 +618,6 @@ namespace Gda {
 		public uint features { get; construct; }
 		[NoAccessorMethod]
 		public Gda.MetaStore meta_store { owned get; construct; }
-	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	[Compact]
-	public class Mutex {
-		public void free ();
-		public void @lock ();
-		public bool trylock ();
-		public void unlock ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_null_get_type ()")]
 	[Compact]
@@ -653,6 +645,7 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_pstmt_get_type ()")]
 	public abstract class PStmt : GLib.Object {
 		public int ncols;
+		public weak GLib.SList<string> param_ids;
 		public weak string sql;
 		public GLib.Type types;
 		[CCode (has_construct_function = false)]
@@ -1277,6 +1270,10 @@ namespace Gda {
 		public weak string[] column_names;
 		[CCode (array_length_cname = "size")]
 		public weak GLib.Value[] column_values;
+		public void add_column (string column, GLib.Value value);
+		public void free ();
+		public unowned string get_table ();
+		public void set_table (string table);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public struct MetaDbObject {
@@ -2073,55 +2070,5 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static int value_differ (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_free (owned GLib.Value? value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.Binary value_get_binary (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.Blob value_get_blob (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.GeometricPoint value_get_geometric_point (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.Numeric value_get_numeric (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static short value_get_short (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.Time value_get_time (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static unowned Gda.Timestamp value_get_timestamp (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static ushort value_get_ushort (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static bool value_is_null (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static bool value_is_number (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_reset_with_type (GLib.Value value, GLib.Type type);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_binary (GLib.Value value, Gda.Binary binary);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_blob (GLib.Value value, Gda.Blob blob);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static bool value_set_from_string (GLib.Value value, string as_string, GLib.Type type);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static bool value_set_from_value (GLib.Value value, GLib.Value from);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_geometric_point (GLib.Value value, Gda.GeometricPoint val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_null (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_numeric (GLib.Value value, Gda.Numeric val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_short (GLib.Value value, short val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_time (GLib.Value value, Gda.Time val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_timestamp (GLib.Value value, Gda.Timestamp val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_set_ushort (GLib.Value value, ushort val);
-	[CCode (cheader_filename = "libgda/libgda.h")]
 	public static string value_stringify (GLib.Value value);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_take_binary (GLib.Value value, owned Gda.Binary binary);
-	[CCode (cheader_filename = "libgda/libgda.h")]
-	public static void value_take_blob (GLib.Value value, owned Gda.Blob blob);
 }

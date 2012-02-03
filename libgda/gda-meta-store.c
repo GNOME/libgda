@@ -65,6 +65,151 @@
 #include "gda-data-meta-wrapper.h"
 
 /*
+   Register GdaMetaContext type
+*/
+GType
+_gda_meta_context_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		g_static_mutex_lock (&registering);
+                if (type == 0)
+			type = g_pointer_type_register_static ("GdaMetaContext");
+		g_static_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+
+/*
+	IMPLEMENTATION NOTES:
+	In this implementation, for 5.2, the new API for GdaMetaContext struct doesn't touch size, column_names and
+	column_values members, but added a HashTable member in order to make more easy to access to column/value
+	elements.
+	
+	Take care about to use gda_meta_context_free or g_free on this struct if you don't use the new API because 
+	unexpected results.
+	
+	Changes include: table string is copied and columns are stored in a GHashTable witch it's reference counting
+	is incremented. When is freed, table string is freed and hash ref is decremented.
+*/
+
+
+/**
+ * gda_meta_context_new:
+ * @ctx: a #GdaMetaContext struct to add column/value pais to
+ * @table: (transfer none): the column's value
+ * 
+ * Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
+ * given @table in the context.
+ *
+ * Return: (transfer full): a new #GdaMetaContext struct with a copied table's name and a new created hash to
+ * store column name/value pairs.
+ *
+ * Since: 5.2
+ */
+GdaMetaContext*
+gda_meta_context_new (const gchar* table_name)
+{
+	g_return_if_fail (table_name);
+	GdaMetaContext *ctx = g_new0 (GdaMetaContext, 1);
+	ctx->table_name = g_strdup (table_name);
+	ctx->columns = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, 
+							(GDestroyNotify) gda_value_free);
+	return ctx;
+}
+/**
+ * gda_meta_context_set_table:
+ * @ctx: a #GdaMetaContext struct to set table to
+ * @table: a string with the table's name to use in context
+ * 
+ * Set table's name to use in the context.
+ *
+ * Since: 5.2
+ */
+void
+gda_meta_context_set_table (GdaMetaContext *ctx, const gchar *table_name)
+{
+	g_return_if_fail (ctx && table_name);
+	ctx->table_name = g_strdup (table_name);
+}
+
+/**
+ * gda_meta_context_get_table:
+ * @ctx: a #GdaMetaContext struct to get table's name from
+ * 
+ * Get table's name to used in the context.
+ *
+ * Return: (transfer none): A string with the table's name used in the context.
+ *
+ * Since: 5.2
+ */
+const gchar*
+gda_meta_context_get_table (GdaMetaContext *ctx)
+{
+	g_return_if_fail (ctx);
+	return ctx->table_name;
+}
+
+/**
+ * gda_meta_context_insert_column:
+ * @ctx: a #GdaMetaContext struct to add column/value pais to
+ * @column: (transfer none): the column's name
+ * @value: (transfer none): the column's value
+ * 
+ * Insert a new column/value pair to the given context @ctx. Column's name and value is copied and destroied
+ * when #gda_meta_context_free is called.
+ *
+ * Since: 5.2
+ */
+void
+gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GValue* value)
+{
+	g_return_if_fail (column && value);
+	g_hash_table_insert (ctx->columns, (gpointer) g_strdup (column), (gpointer) gda_value_copy (value));
+}
+
+/**
+ * gda_meta_context_set_columns:
+ * @ctx: a #GdaMetaContext struct to set colums to
+ * @columns: (element-type utf8 GLib.Value): a #GHashTable with the table's columns' name and their values
+ * to use in context.
+ * 
+ * Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
+ * to represent its value.
+ * 
+ * @columns incements its reference counting. Is recommended to use #gda_meta_context_free in order to free them.
+ *
+ * Since: 5.2
+ */
+void
+gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns)
+{
+	g_return_if_fail (ctx && columns);
+	g_hash_table_unref (ctx->columns);
+	ctx->columns = g_hash_table_ref (columns);
+}
+
+/**
+ * gda_meta_context_free:
+ * @ctx: a #GdaMetaContext struct to free
+ * 
+ * Frees any resources taken by @ctx struct.
+ *
+ * Since: 5.2
+ */
+void
+gda_meta_context_free (GdaMetaContext *ctx)
+{
+	g_return_if_fail (ctx);
+	g_free (ctx->table_name);
+	g_hash_table_unref (ctx->columns);
+	g_free (ctx);
+}
+
+/*
  * Main static functions
  */
 static void gda_meta_store_class_init (GdaMetaStoreClass *klass);
@@ -385,7 +530,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaMetaStore::suggest-update
+	 * GdaMetaStore::suggest-update:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 * @suggest: the suggested update, as a #GdaMetaContext structure
 	 *
@@ -405,9 +550,9 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		_gda_marshal_ERROR__METACONTEXT, G_TYPE_ERROR,
 		1, GDA_TYPE_META_CONTEXT);
 	/**
-	 * GdaMetaStore::meta-changed
+	 * GdaMetaStore::meta-changed:
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @changes: (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
+	 * @changes: (type GLib.SList) (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
 	 * This signal is emitted when the @store's contents have changed (the changes are in the @changes list)
 	 */
@@ -418,9 +563,9 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_changed),
 		NULL, NULL,
 		_gda_marshal_VOID__SLIST, G_TYPE_NONE,
-		1, GDA_TYPE_SLIST);
+		1, G_TYPE_POINTER);
 	/**
-	 * GdaMetaStore::meta-reset
+	 * GdaMetaStore::meta-reset:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 *
 	 * This signal is emitted when the @store's contents have been reset completely and when
