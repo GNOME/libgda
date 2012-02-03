@@ -38,7 +38,7 @@ typedef struct _GdaPStmtClass   GdaPStmtClass;
 /**
  * GdaPStmt:
  * @sql: actual SQL code used for this prepared statement, mem freed by GdaPStmt
- * @param_ids: (element-type string): list of parameters' IDs (as gchar *), mem freed by GdaPStmt
+ * @param_ids: (element-type utf8): list of parameters' IDs (as gchar *), mem freed by GdaPStmt
  * @ncols: number of types in array
  * @types: (array length=ncols) (element-type GLib.Type): array of ncols types
  * @tmpl_columns: (element-type Gda.Colum): list of #GdaColumn objects which data models created from this prep. statement can copy

@@ -15,6 +15,9 @@ and/or use gtk-doc annotations.  -->
              shared-library="libgda-5.0.so.4"
              c:identifier-prefixes="Gda"
              c:symbol-prefixes="gda">
+    <alias name="Mutex" c:type="GdaMutex" introspectable="0">
+      <type c:type="GRecMutex"/>
+    </alias>
     <alias name="SqlBuilderId" c:type="GdaSqlBuilderId">
       <type name="guint" c:type="guint"/>
     </alias>
@@ -3195,7 +3198,7 @@ context may be useful for example in the following situations:
 &lt;listitem&gt;&lt;para&gt;One knows that a database object has changed (for example a table created), and
 may use the @context to request that only the information about that table be updated
 &lt;/para&gt;&lt;/listitem&gt;
-&lt;listitem&gt;&lt;para&gt;One is only interrested in the list of views, and may request that only the information
+&lt;listitem&gt;&lt;para&gt;One is only interested in the list of views, and may request that only the information
 about views may be updated&lt;/para&gt;&lt;/listitem&gt;
 &lt;/itemizedlist&gt;
 
@@ -7648,6 +7651,19 @@ still forming a valid SQL syntax).</doc>
            glib:get-type="gda_data_proxy_get_type"
            glib:type-struct="DataProxyClass">
       <implements name="DataModel"/>
+      <constructor name="new" c:identifier="gda_data_proxy_new">
+        <doc xml:whitespace="preserve">Creates a new proxy for @model. For bindings use @gda_data_proxy_new_with_data_model.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaDataProxy object</doc>
+          <type name="GObject.Object" c:type="GObject*"/>
+        </return-value>
+        <parameters>
+          <parameter name="model" transfer-ownership="none">
+            <doc xml:whitespace="preserve">Data model to be proxied</doc>
+            <type name="DataModel" c:type="GdaDataModel*"/>
+          </parameter>
+        </parameters>
+      </constructor>
       <constructor name="new_with_data_model"
                    c:identifier="gda_data_proxy_new_with_data_model"
                    version="5.2.0">
@@ -7668,19 +7684,6 @@ still forming a valid SQL syntax).</doc>
         <return-value transfer-ownership="none">
           <type name="GLib.Quark" c:type="GQuark"/>
         </return-value>
-      </function>
-      <function name="new" c:identifier="gda_data_proxy_new">
-        <doc xml:whitespace="preserve">Creates a new proxy for @model. For bindings use @gda_data_proxy_new_with_data_model.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaDataProxy object</doc>
-          <type name="GObject.Object" c:type="GObject*"/>
-        </return-value>
-        <parameters>
-          <parameter name="model" transfer-ownership="none">
-            <doc xml:whitespace="preserve">Data model to be proxied</doc>
-            <type name="DataModel" c:type="GdaDataModel*"/>
-          </parameter>
-        </parameters>
       </function>
       <virtual-method name="filter_changed">
         <return-value transfer-ownership="none">
@@ -11668,55 +11671,6 @@ its contents must not be modified.</doc>
         <type name="gpointer" c:type="gpointer"/>
       </field>
     </record>
-    <record name="Mutex" c:type="GdaMutex" disguised="1">
-      <method name="free" c:identifier="gda_mutex_free">
-        <doc xml:whitespace="preserve">Destroys @mutex.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="lock" c:identifier="gda_mutex_lock">
-        <doc xml:whitespace="preserve">Locks @mutex. If @mutex is already locked by another thread, the current thread will block until @mutex is unlocked by the other thread.
-
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
-
-Note: unlike g_mutex_lock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
-to unlock it as many times to actually unlock it).</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="trylock" c:identifier="gda_mutex_trylock">
-        <doc xml:whitespace="preserve">Tries to lock @mutex. If @mutex is already locked by another thread, it immediately returns FALSE.
-Otherwise it locks @mutex and returns TRUE
-
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will immediately return TRUE.
-
-Note: Unlike g_mutex_trylock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
-to unlock it as many times to actually unlock it)</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">TRUE, if @mutex could be locked.</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-      </method>
-      <method name="unlock" c:identifier="gda_mutex_unlock">
-        <doc xml:whitespace="preserve">Unlocks @mutex. If another thread is blocked in a gda_mutex_lock() call for @mutex, it wil
-be woken and can lock @mutex itself.
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <function name="new" c:identifier="gda_mutex_new" introspectable="0">
-        <doc xml:whitespace="preserve">Creates a new #GdaMutex.
-
-Note: Unlike g_mutex_new(), this function will return %NULL if g_thread_init() has not been called yet.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaMutex</doc>
-          <type name="Mutex" c:type="GdaMutex*"/>
-        </return-value>
-      </function>
-    </record>
     <glib:boxed glib:name="Null"
                 c:symbol-prefix="null"
                 glib:type-name="GdaNull"
@@ -11912,9 +11866,9 @@ will return %NULL</doc>
       <field name="sql">
         <type name="utf8" c:type="gchar*"/>
       </field>
-      <field name="param_ids" introspectable="0">
+      <field name="param_ids">
         <type name="GLib.SList" c:type="GSList*">
-          <type c:type="string"/>
+          <type name="utf8"/>
         </type>
       </field>
       <field name="ncols">
@@ -23480,10 +23434,40 @@ can also be used in hash tables as a #GEqualFunc.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="mutex_new"
-              c:identifier="gda_mutex_new"
-              moved-to="Mutex.new"
+    <function name="mutex_free"
+              c:identifier="gda_mutex_free"
               introspectable="0">
+      <doc xml:whitespace="preserve">Destroys @mutex.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="full">
+          <doc xml:whitespace="preserve">a #GdaMutex</doc>
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_lock"
+              c:identifier="gda_mutex_lock"
+              introspectable="0">
+      <doc xml:whitespace="preserve">Locks @mutex. If @mutex is already locked by another thread, the current thread will block until @mutex is unlocked by the other thread.
+
+This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
+
+Note: unlike g_mutex_lock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
+to unlock it as many times to actually unlock it).</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <doc xml:whitespace="preserve">a #GdaMutex</doc>
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_new" c:identifier="gda_mutex_new" introspectable="0">
       <doc xml:whitespace="preserve">Creates a new #GdaMutex.
 
 Note: Unlike g_mutex_new(), this function will return %NULL if g_thread_init() has not been called yet.</doc>
@@ -23491,6 +23475,43 @@ Note: Unlike g_mutex_new(), this function will return %NULL if g_thread_init() h
         <doc xml:whitespace="preserve">a new #GdaMutex</doc>
         <type name="Mutex" c:type="GdaMutex*"/>
       </return-value>
+    </function>
+    <function name="mutex_trylock"
+              c:identifier="gda_mutex_trylock"
+              introspectable="0">
+      <doc xml:whitespace="preserve">Tries to lock @mutex. If @mutex is already locked by another thread, it immediately returns FALSE.
+Otherwise it locks @mutex and returns TRUE
+
+This function can be used even if g_thread_init() has not yet been called, and, in that case, will immediately return TRUE.
+
+Note: Unlike g_mutex_trylock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
+to unlock it as many times to actually unlock it)</doc>
+      <return-value transfer-ownership="none">
+        <doc xml:whitespace="preserve">TRUE, if @mutex could be locked.</doc>
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <doc xml:whitespace="preserve">a #GdaMutex</doc>
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_unlock"
+              c:identifier="gda_mutex_unlock"
+              introspectable="0">
+      <doc xml:whitespace="preserve">Unlocks @mutex. If another thread is blocked in a gda_mutex_lock() call for @mutex, it wil
+be woken and can lock @mutex itself.
+This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <doc xml:whitespace="preserve">a #GdaMutex</doc>
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
     </function>
     <function name="parse_iso8601_date" c:identifier="gda_parse_iso8601_date">
       <doc xml:whitespace="preserve">Extracts date parts from @value, and sets @gdate's contents
@@ -24337,7 +24358,9 @@ an integer greater than 0 if @value1 is greater than @value2.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_copy" c:identifier="gda_value_copy">
+    <function name="value_copy"
+              c:identifier="gda_value_copy"
+              introspectable="0">
       <doc xml:whitespace="preserve">Creates a new #GValue from an existing one.
 
 
@@ -24380,7 +24403,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_free" c:identifier="gda_value_free">
+    <function name="value_free"
+              c:identifier="gda_value_free"
+              introspectable="0">
       <doc xml:whitespace="preserve">Deallocates all memory associated to a #GValue.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24392,7 +24417,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_binary" c:identifier="gda_value_get_binary">
+    <function name="value_get_binary"
+              c:identifier="gda_value_get_binary"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="Binary" c:type="GdaBinary*"/>
@@ -24404,7 +24431,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_blob" c:identifier="gda_value_get_blob">
+    <function name="value_get_blob"
+              c:identifier="gda_value_get_blob"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="Blob" c:type="GdaBlob*"/>
@@ -24417,7 +24446,8 @@ compared to a GDA_TYPE_NULL value, specifically:
       </parameters>
     </function>
     <function name="value_get_geometric_point"
-              c:identifier="gda_value_get_geometric_point">
+              c:identifier="gda_value_get_geometric_point"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="GeometricPoint" c:type="GdaGeometricPoint*"/>
@@ -24429,7 +24459,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_numeric" c:identifier="gda_value_get_numeric">
+    <function name="value_get_numeric"
+              c:identifier="gda_value_get_numeric"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="Numeric" c:type="GdaNumeric*"/>
@@ -24441,7 +24473,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_short" c:identifier="gda_value_get_short">
+    <function name="value_get_short"
+              c:identifier="gda_value_get_short"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="gshort" c:type="gshort"/>
@@ -24453,7 +24487,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_time" c:identifier="gda_value_get_time">
+    <function name="value_get_time"
+              c:identifier="gda_value_get_time"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="Time" c:type="GdaTime*"/>
@@ -24466,7 +24502,8 @@ compared to a GDA_TYPE_NULL value, specifically:
       </parameters>
     </function>
     <function name="value_get_timestamp"
-              c:identifier="gda_value_get_timestamp">
+              c:identifier="gda_value_get_timestamp"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="Timestamp" c:type="GdaTimestamp*"/>
@@ -24478,7 +24515,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_get_ushort" c:identifier="gda_value_get_ushort">
+    <function name="value_get_ushort"
+              c:identifier="gda_value_get_ushort"
+              introspectable="0">
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">the value stored in @value.</doc>
         <type name="gushort" c:type="gushort"/>
@@ -24490,7 +24529,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_is_null" c:identifier="gda_value_is_null">
+    <function name="value_is_null"
+              c:identifier="gda_value_is_null"
+              introspectable="0">
       <doc xml:whitespace="preserve">Tests if a given @value is of type #GDA_TYPE_NULL.</doc>
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">a boolean that says whether or not @value is of type #GDA_TYPE_NULL.</doc>
@@ -24503,7 +24544,9 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_is_number" c:identifier="gda_value_is_number">
+    <function name="value_is_number"
+              c:identifier="gda_value_is_number"
+              introspectable="0">
       <doc xml:whitespace="preserve">Gets whether the value stored in the given #GValue is of numeric type or not.</doc>
       <return-value transfer-ownership="none">
         <doc xml:whitespace="preserve">%TRUE if a number, %FALSE otherwise.</doc>
@@ -24516,7 +24559,7 @@ compared to a GDA_TYPE_NULL value, specifically:
         </parameter>
       </parameters>
     </function>
-    <function name="value_new" c:identifier="gda_value_new">
+    <function name="value_new" c:identifier="gda_value_new" introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type @type.
 
 
@@ -24532,7 +24575,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_new_binary" c:identifier="gda_value_new_binary">
+    <function name="value_new_binary"
+              c:identifier="gda_value_new_binary"
+              introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
 
 
@@ -24552,7 +24597,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_new_blob" c:identifier="gda_value_new_blob">
+    <function name="value_new_blob"
+              c:identifier="gda_value_new_blob"
+              introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type #GDA_TYPE_BLOB with the data contained by @val.
 
 
@@ -24573,7 +24620,8 @@ Free-function: gda_value_free</doc>
       </parameters>
     </function>
     <function name="value_new_blob_from_file"
-              c:identifier="gda_value_new_blob_from_file">
+              c:identifier="gda_value_new_blob_from_file"
+              introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type #GDA_TYPE_BLOB interfacing with the contents of the file
 named @filename
 
@@ -24592,7 +24640,8 @@ Free-function: gda_value_free</doc>
     </function>
     <function name="value_new_default"
               c:identifier="gda_value_new_default"
-              version="4.2.9">
+              version="4.2.9"
+              introspectable="0">
       <doc xml:whitespace="preserve">Creates a new default value.</doc>
       <return-value transfer-ownership="full">
         <doc xml:whitespace="preserve">a new #GValue of the type #GDA_TYPE_DEFAULT</doc>
@@ -24606,7 +24655,8 @@ Free-function: gda_value_free</doc>
       </parameters>
     </function>
     <function name="value_new_from_string"
-              c:identifier="gda_value_new_from_string">
+              c:identifier="gda_value_new_from_string"
+              introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type @type from its string representation.
 
 For more information
@@ -24631,7 +24681,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_new_from_xml" c:identifier="gda_value_new_from_xml">
+    <function name="value_new_from_xml"
+              c:identifier="gda_value_new_from_xml"
+              introspectable="0">
       <doc xml:whitespace="preserve">Creates a GValue from an XML representation of it. That XML
 node corresponds to the following string representation:
 &amp;lt;value type="gdatype"&amp;gt;value&amp;lt;/value&amp;gt;
@@ -24654,7 +24706,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_new_null" c:identifier="gda_value_new_null">
+    <function name="value_new_null"
+              c:identifier="gda_value_new_null"
+              introspectable="0">
       <doc xml:whitespace="preserve">Creates a new #GValue initiated to a #GdaNull structure with a #GDA_TYPE_NULL, to
 represent a NULL in the database.</doc>
       <return-value transfer-ownership="full">
@@ -24663,7 +24717,8 @@ represent a NULL in the database.</doc>
       </return-value>
     </function>
     <function name="value_new_timestamp_from_timet"
-              c:identifier="gda_value_new_timestamp_from_timet">
+              c:identifier="gda_value_new_timestamp_from_timet"
+              introspectable="0">
       <doc xml:whitespace="preserve">Makes a new #GValue of type #GDA_TYPE_TIMESTAMP with value @val
 (of type time_t).
 
@@ -24681,7 +24736,8 @@ Free-function: gda_value_free</doc>
       </parameters>
     </function>
     <function name="value_reset_with_type"
-              c:identifier="gda_value_reset_with_type">
+              c:identifier="gda_value_reset_with_type"
+              introspectable="0">
       <doc xml:whitespace="preserve">Resets the #GValue and set a new type to #GType.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24697,7 +24753,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_binary" c:identifier="gda_value_set_binary">
+    <function name="value_set_binary"
+              c:identifier="gda_value_set_binary"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24713,7 +24771,9 @@ Free-function: gda_value_free</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_blob" c:identifier="gda_value_set_blob">
+    <function name="value_set_blob"
+              c:identifier="gda_value_set_blob"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24730,7 +24790,8 @@ Free-function: gda_value_free</doc>
       </parameters>
     </function>
     <function name="value_set_from_string"
-              c:identifier="gda_value_set_from_string">
+              c:identifier="gda_value_set_from_string"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores the value data from its string representation as @type.
 
 The accepted formats are:
@@ -24767,7 +24828,8 @@ successfully, just that the transformation is available. %FALSE otherwise.</doc>
       </parameters>
     </function>
     <function name="value_set_from_value"
-              c:identifier="gda_value_set_from_value">
+              c:identifier="gda_value_set_from_value"
+              introspectable="0">
       <doc xml:whitespace="preserve">Sets the value of a #GValue from another #GValue. This
 is different from #gda_value_copy, which creates a new #GValue.
 #gda_value_set_from_value, on the other hand, copies the contents
@@ -24791,7 +24853,8 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
       </parameters>
     </function>
     <function name="value_set_geometric_point"
-              c:identifier="gda_value_set_geometric_point">
+              c:identifier="gda_value_set_geometric_point"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24807,7 +24870,9 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_null" c:identifier="gda_value_set_null">
+    <function name="value_set_null"
+              c:identifier="gda_value_set_null"
+              introspectable="0">
       <doc xml:whitespace="preserve">Sets the type of @value to #GDA_TYPE_NULL.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24819,7 +24884,9 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_numeric" c:identifier="gda_value_set_numeric">
+    <function name="value_set_numeric"
+              c:identifier="gda_value_set_numeric"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24835,7 +24902,9 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_short" c:identifier="gda_value_set_short">
+    <function name="value_set_short"
+              c:identifier="gda_value_set_short"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24851,7 +24920,9 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_time" c:identifier="gda_value_set_time">
+    <function name="value_set_time"
+              c:identifier="gda_value_set_time"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24868,7 +24939,8 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
       </parameters>
     </function>
     <function name="value_set_timestamp"
-              c:identifier="gda_value_set_timestamp">
+              c:identifier="gda_value_set_timestamp"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24884,7 +24956,9 @@ If values are incompatible (see @g_value_type_compatible) then @value is set to 
         </parameter>
       </parameters>
     </function>
-    <function name="value_set_ushort" c:identifier="gda_value_set_ushort">
+    <function name="value_set_ushort"
+              c:identifier="gda_value_set_ushort"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -24918,7 +24992,9 @@ Dates are converted in a YYYY-MM-DD format.</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="value_take_binary" c:identifier="gda_value_take_binary">
+    <function name="value_take_binary"
+              c:identifier="gda_value_take_binary"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value, but on the contrary to gda_value_set_binary(), the @binary
 argument is not copied, but used as-is and it should be considered owned by @value.</doc>
       <return-value transfer-ownership="none">
@@ -24935,7 +25011,9 @@ argument is not copied, but used as-is and it should be considered owned by @val
         </parameter>
       </parameters>
     </function>
-    <function name="value_take_blob" c:identifier="gda_value_take_blob">
+    <function name="value_take_blob"
+              c:identifier="gda_value_take_blob"
+              introspectable="0">
       <doc xml:whitespace="preserve">Stores @val into @value, but on the contrary to gda_value_set_blob(), the @blob
 argument is not copied, but used as-is and it should be considered owned by @value.</doc>
       <return-value transfer-ownership="none">
