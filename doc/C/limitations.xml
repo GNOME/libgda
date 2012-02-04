@@ -158,10 +158,26 @@
     </para>
   </sect1>
 
-  <sect1 id="limitations_ldap"><title>For LDAP</title>
-    <para>
-      TODO.
-    </para>
+  <sect1 id="limitations_ldap">
+    <title>For LDAP</title>
+    <sect2>
+      <title>SSL/TLS certificate validation</title>
+      <para>
+	The TLS_REQCERT and TLS_CACERT options are taken into account by the LDAP provider, and
+	passed to the OpenLDAP library which is actually used. These options are global and set
+	by the first opened LDAP connection (i.e. all other LDAP connections share the same
+	settings, regardless of their TLS_REQCERT and TLS_CACERT options).
+      </para>
+      <para>
+	The TLS_REQCERT and TLS_CACERT options have a higher priority compared to the
+	options set in the <filename>$HOME/.ldaprc</filename>.
+      </para>
+      <para>
+	If the server certificate can't he checked (i.e. the certification chain established and
+	verified) when it is required that it be, then the connection will not he established and the
+	returned error will be "Can't contact LDAP server".
+      </para>
+    </sect2>
   </sect1>
 
   <sect1 id="limitations_jdbc"><title>For JDBC based providers</title>
