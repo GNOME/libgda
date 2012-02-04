@@ -1065,6 +1065,9 @@ gda_ldap_parse_dn (const char *attr, gchar **out_userdn)
 	if (out_userdn)
 		*out_userdn = NULL;
 
+	if (!attr)
+		return FALSE;
+
 	/* decoding */
 	if (ldap_str2dn (attr, &tmpDN, LDAP_DN_FORMAT_LDAPV3) != LDAP_SUCCESS) {
 		if (ldap_str2dn (attr, &tmpDN, LDAP_DN_FORMAT_LDAPV2) != LDAP_SUCCESS) {
