@@ -19,6 +19,9 @@ This test program offers 2 operations which are to store the contents of a file 
 database (which returns the ID of the stored data), and to fetch a stored data from
 the database from its ID (which creates a fetched_<ID> file).
 
+This program also shows that transactions are created when reading BLOBs, and that these
+transactions need to be rolled back after the BLOB "handle" (data model and/or GValue) has been released.
+
 Compiling and running:
 ----------------------
 
@@ -27,15 +30,20 @@ To compile (make sure Libgda is installed prior to this):
 
 and to run (stores the blobtest executable file):
 > ./blobtest store blobtest
+Before writing BLOB: No transaction started
 STORING file 'blobtest' to database BLOB
+After writing BLOB: Transaction started
 Inserted row is (for each numbered column in the table):
   [+0] = [1]
-  [+1] = [\177ELF\001\001\001\000\000\000\000\000\000\000\000\000\002\000\003\000\001\000\000\000p\215\004\0104\000\000\000\260/\000\000\000\000\000\000]
+  [+1] = [\177ELF\001\001\001\000\000\000\000\000\000\000\000\000\002\000\003\000\001\000\000\000\020\216\004\0104\000\000\000\2542\000\000\000\000\000\000]
+After rolling back blob READ transaction: No transaction started
 Ok.
-> /blobtest fetch 1
+> ./blobtest fetch 1
+Before reading BLOB: No transaction started
 FETCHING BLOB with ID 1 to file 'fetched_1'
+After reading BLOB: Transaction started
+After rolling back blob READ transaction: No transaction started
 Ok.
-
 > cmp blobtest fetched_1
 
 Should not return any difference

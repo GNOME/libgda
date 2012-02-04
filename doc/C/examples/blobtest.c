@@ -41,6 +41,9 @@ main (int argc, char *argv[])
 		result = do_store (cnc, filename, &error);
 	else
 		result = do_fetch (cnc, id, &error);
+
+	if (gda_connection_get_transaction_status (cnc))
+		g_print ("Still in a transaction, all modifications will be lost when connection is closed\n");
         gda_connection_close (cnc);
 
 	if (!result) {
@@ -112,10 +115,16 @@ do_store (GdaConnection *cnc, const gchar *filename, GError **error)
 	blob = (GdaBlob*) gda_value_get_blob (value);
 	g_assert (gda_holder_take_value (holder, value, NULL));
 
+	g_print ("Before writing BLOB: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
+
 	g_print ("STORING file '%s' to database BLOB\n", filename);
 	res = gda_connection_statement_execute_non_select (cnc, stmt, params, &newrow, error);
 	g_object_unref (params);
 	g_object_unref (stmt);
+
+	g_print ("After writing BLOB: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
 
 	if (newrow) {
 		GSList *list;
@@ -133,6 +142,10 @@ do_store (GdaConnection *cnc, const gchar *filename, GError **error)
 	else
 		g_print ("Provider did not return the inserted row\n");
 
+	gda_connection_rollback_transaction (cnc, NULL, NULL);
+	g_print ("After rolling back blob READ transaction: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
+
 	return (res == -1) ? FALSE : TRUE;
 }
 
@@ -146,6 +159,9 @@ do_fetch (GdaConnection *cnc, gint id, GError **error)
 	const GValue *value;
 	GdaBlob *blob;
 	gboolean result = TRUE;
+
+	g_print ("Before reading BLOB: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
 
 	gchar *filename;
 	filename = g_strdup_printf ("fetched_%d", id);
@@ -170,6 +186,9 @@ do_fetch (GdaConnection *cnc, gint id, GError **error)
 	if (! model)
 		return FALSE;
 
+	g_print ("After reading BLOB: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
+
 	value = gda_data_model_get_value_at (model, 0, 0, error);
 	if (!value) {
 		g_object_unref (model);
@@ -191,6 +210,12 @@ do_fetch (GdaConnection *cnc, gint id, GError **error)
 		result = g_file_set_contents (filename, (gchar *) ((GdaBinary*)blob)->data,
 					     ((GdaBinary*)blob)->binary_length, error);
 	g_free (filename);
+	g_object_unref (model);
+
+	gda_connection_rollback_transaction (cnc, NULL, NULL);
+	g_print ("After rolling back blob READ transaction: %s\n", gda_connection_get_transaction_status (cnc) ?
+		 "Transaction started" : "No transaction started");
+
 	return result;
 }
 ]]>
