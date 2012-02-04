@@ -169,7 +169,7 @@ gda_data_model_ldap_get_type (void)
  * @cnc: an LDAP opened connection (must be a balid #GdaLdapConnection)
  * @base_dn: (allow-none): the base DN to search on, or %NULL
  * @filter: (allow-none): an LDAP filter, for example "(objectClass=*)"
- * @attributes: (allow-none): the list of attributes to fetch, each in the format &lt;attname&gt;[::&lt;GType&gt;] (CSV)
+ * @attributes: (allow-none): the list (CSV format) of attributes to fetch, each in the format &lt;attname&gt;[::&lt;GType&gt;]
  * @scope: the search scope
  *
  * Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
