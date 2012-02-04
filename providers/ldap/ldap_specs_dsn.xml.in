@@ -5,8 +5,34 @@
     <parameter id="HOST" _name="Database server" _descr="Host on which the LDAP server is running" gdatype="gchararray"/>
     <parameter id="PORT" _name="Port" _descr="Database server port (leave this field empty to use the default port)" gdatype="gint"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
+    <parameter id="TLS_REQCERT" _name="Certificate check type" _descr="Specifies what checks to perform on server certificates in a SSL/TLS session" gdatype="string" source="methods:0"/>
+    <parameter id="TLS_CACERT" _name="Certificates file" _descr="Specifies the file that contains certificates for all of the recognized Certificate Authorities, in a SSL/TLS session" gdatype="string" plugin="filesel:MODE=OPEN"/>
     <parameter id="USE_CACHE" _name="Cache server data" _descr="Use a cache to store some static server data (the cached files are in the user's cache directory), default is TRUE" gdatype="gboolean">
       <gda_value>TRUE</gda_value>
     </parameter>
   </parameters>
+  <sources>
+    <gda_array name="methods">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>NEVER</gda_value>
+          <_gda_value>Never: certificate not requested or checked</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>ALLOW</gda_value>
+          <_gda_value>Allow: certificate requested, none or a bad one accepted.</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>TRY</gda_value>
+          <_gda_value>Try: certificate requested, none accepted, otherwise checked.</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>DEMAND</gda_value>
+          <_gda_value>Demand: certificate requested and checked</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+  </sources>
 </data-set-spec>
