@@ -166,6 +166,16 @@
   <sect1 id="limitations_ldap">
     <title>For LDAP</title>
     <sect2>
+      <title>User name</title>
+      <para>
+	LDAP requires a Distinguished Name (DN) to bind a connection. Libgda also accepts a user name which is
+	not a DN; in this case it will first connect anonymously to the server, search for the DN corresponding
+	to the user name, and then bind again using the found DN. The search is done on the "uid" attribute matching
+	the username, and the object class being "inetOrgPerson" (the LDAP filter
+	is "(&amp;(uid=?)(objectclass=inetOrgPerson))" where the question mark is replaced by the username).
+      </para>
+    </sect2>
+    <sect2>
       <title>SSL/TLS certificate validation</title>
       <para>
 	The TLS_REQCERT and TLS_CACERT options are taken into account by the LDAP provider, and

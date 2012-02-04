@@ -223,6 +223,106 @@ compute_data_file_name (GdaQuarkList *params, gboolean is_cache, const gchar *da
 	return fname;
 }
 
+/*
+ * Using @url and @username, performs the following tasks:
+ * - bind to the LDAP server anonymously
+ * - search the directory to identify the entry for the provided user name,
+ *   filter: (&(uid=##uid)(objectclass=inetOrgPerson))
+ * - if one and only one entry is returned, get the DN of the entry and check that the UID is correct
+ *
+ * If all the steps are right, it returns the DN of the identified entry as a new string.
+ */
+static gchar *
+fetch_user_dn (const gchar *url, const gchar *base, const gchar *username)
+{
+	LDAP *ld;
+	int res;
+	int version = LDAP_VERSION3;
+	gchar *dn = NULL;
+	LDAPMessage *msg = NULL;
+
+	if (! username)
+		return NULL;
+
+	res = ldap_initialize (&ld, url);
+	if (res != LDAP_SUCCESS)
+		return NULL;
+
+	res = ldap_set_option (ld, LDAP_OPT_PROTOCOL_VERSION, &version);
+        if (res != LDAP_SUCCESS) {
+		if (res == LDAP_PROTOCOL_ERROR) {
+			version = LDAP_VERSION2;
+			res = ldap_set_option (ld, LDAP_OPT_PROTOCOL_VERSION, &version);
+		}
+		if (res != LDAP_SUCCESS)
+			goto out;
+        }
+
+	struct berval cred;
+        memset (&cred, 0, sizeof (cred));
+	res = ldap_sasl_bind_s (ld, NULL, NULL, &cred, NULL, NULL, NULL);
+	if (res != LDAP_SUCCESS)
+		goto out;
+
+	GString *filter;
+	const gchar *ptr;
+	gchar *attributes[] = {"uid", NULL};
+	filter = g_string_new ("(&(uid=");
+	for (ptr = username; *ptr; ptr++) {
+		if ((*ptr == ',') || (*ptr == '\\') || (*ptr == '#') || (*ptr == '+') || (*ptr == '<') ||
+		    (*ptr == '>') || (*ptr == ';') || (*ptr == '"') || (*ptr == '=') || (*ptr == '*'))
+			g_string_append_c (filter, '\\');
+		g_string_append_c (filter, *ptr);
+	}
+	g_string_append (filter, ")(objectclass=inetOrgPerson))");
+	res = ldap_search_ext_s (ld, base, LDAP_SCOPE_SUBTREE,
+				 filter->str, attributes, 0,
+				 NULL, NULL, NULL, 2, &msg);
+	g_string_free (filter, TRUE);
+	if (res != LDAP_SUCCESS)
+		goto out;
+
+	LDAPMessage *ldap_row;
+	for (ldap_row = ldap_first_entry (ld, msg);
+	     ldap_row;
+	     ldap_row = ldap_next_entry (ld, ldap_row)) {
+		char *attr, *uid;
+		attr = ldap_get_dn (ld, ldap_row);
+		if (attr) {
+			BerElement* ber;
+			for (uid = ldap_first_attribute (ld, ldap_row, &ber);
+			     uid;
+			     uid = ldap_next_attribute (ld, ldap_row, ber)) {
+				BerValue **bvals;
+				bvals = ldap_get_values_len (ld, ldap_row, uid);
+				if (!bvals || !bvals[0] || bvals[1] || strcmp (bvals[0]->bv_val, username)) {
+					g_free (dn);
+					dn = NULL;
+				}
+				ldap_value_free_len (bvals);
+				ldap_memfree (uid);
+			}
+
+			if (dn) {
+				/* more than 1 entry => unique DN could not be identified */
+				g_free (dn);
+				dn = NULL;
+				goto out;
+			}
+
+			dn = g_strdup (attr);
+			ldap_memfree (attr);
+		}
+	}
+
+ out:
+	if (msg)
+		ldap_msgfree (msg);
+	ldap_unbind_ext (ld, NULL, NULL);
+	/*g_print ("Identified DN: [%s]\n", dn);*/
+	return dn;
+}
+
 /* 
  * Open connection request
  *
@@ -257,6 +357,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	const gchar *tmp;
 	const gchar *port;
 	const gchar *user = NULL;
+	gchar *dnuser = NULL;
         const gchar *pwd = NULL;
         const gchar *tls_method = NULL;
         const gchar *tls_cacert = NULL;
@@ -318,15 +419,58 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	LDAP *ld;
         int res;
 	gchar *url;
-	if (use_ssl)
+
+	if (use_ssl) {
+		/* Configuring SSL/TLS options:
+		 * this is for texting purpose only, and should actually be done through LDAP's conf.
+		 * files, see: man 5 ldap.conf
+		 *
+		 * For example ~/.ldaprc can contain:
+		 * TLS_REQCERT demand
+		 * TLS_CACERT /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt
+		 *
+		 * Note: if server certificate verification fails,
+		 * the error message is: "Can't contact LDAP server"
+		 */
+		if (rtls_method >= 0) {
+			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_REQUIRE_CERT, &rtls_method);
+			if (res != LDAP_SUCCESS) {
+				gda_connection_add_event_string (cnc, ldap_err2string (res));
+				return FALSE;
+			}
+		}
+
+		if (tls_cacert && *tls_cacert) {
+			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_CACERTFILE, tls_cacert);
+			if (res != LDAP_SUCCESS) {
+				gda_connection_add_event_string (cnc, ldap_err2string (res));
+				return FALSE;
+			}
+		}
+
 		url = g_strdup_printf ("ldaps://%s:%d", host, rport);
+	}
 	else
 		url = g_strdup_printf ("ldap://%s:%d", host, rport);
-	res = ldap_initialize (&ld, url);
 
+	if (! gda_ldap_parse_dn (user, NULL)) { /* analysing the @user parameter */
+		/* the user name is not a DN => we need to fetch the DN of the entry where the
+		 * uid or mail attribute are equal to @user */
+		gchar *tmp;
+		tmp = fetch_user_dn (url, base_dn, user);
+		if (tmp)
+			dnuser = tmp;
+		else {
+			gda_connection_add_event_string (cnc, _("Invalid user name"));
+			return FALSE;
+		}
+	}
+
+	res = ldap_initialize (&ld, url);
         if (res != LDAP_SUCCESS) {
 		gda_connection_add_event_string (cnc, ldap_err2string (res));
 		g_free (url);
+		g_free (dnuser);
                 return FALSE;
         }
 
@@ -348,56 +492,31 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 		if (res != LDAP_SUCCESS) {
 			gda_connection_add_event_string (cnc, ldap_err2string (res));
 			gda_ldap_free_cnc_data (cdata);
+			g_free (dnuser);
 			return FALSE;
 		}
         }
 	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, LDAP_OPT_ON);
-
-	if (use_ssl) {
-		/* Configuring SSL/TLS options:
-		 * this is for texting purpose only, and should actually be done through LDAP's conf.
-		 * files, see: man 5 ldap.conf
-		 *
-		 * For example ~/.ldaprc can contain:
-		 * TLS_REQCERT demand
-		 * TLS_CACERT /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt
-		 *
-		 * Note: if server certificate verification fails,
-		 * the error message is: "Can't contact LDAP server"
-		 */
-		if (rtls_method >= 0) {
-			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_REQUIRE_CERT, &rtls_method);
-			if (res != LDAP_SUCCESS) {
-				gda_connection_add_event_string (cnc, ldap_err2string (res));
-				gda_ldap_free_cnc_data (cdata);
-				return FALSE;
-			}
-		}
-
-		if (tls_cacert && *tls_cacert) {
-			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_CACERTFILE, tls_cacert);
-			if (res != LDAP_SUCCESS) {
-				gda_connection_add_event_string (cnc, ldap_err2string (res));
-				gda_ldap_free_cnc_data (cdata);
-				return FALSE;
-			}
-		}
-	}
 
 	/* authentication */
 	struct berval cred;
         memset (&cred, 0, sizeof (cred));
         cred.bv_len = pwd && *pwd ? strlen (pwd) : 0;
         cred.bv_val = pwd && *pwd ? (char *) pwd : NULL;
-        res = ldap_sasl_bind_s (ld, user, NULL, &cred, NULL, NULL, NULL);
+        res = ldap_sasl_bind_s (ld, dnuser ? dnuser : user, NULL, &cred, NULL, NULL, NULL);
 	if (res != LDAP_SUCCESS) {
 		gda_connection_add_event_string (cnc, ldap_err2string (res));
 		gda_ldap_free_cnc_data (cdata);
+		g_free (dnuser);
                 return FALSE;
 	}
 	if (pwd)
 		cdata->pass = g_strdup (pwd);
-	if (user)
+	if (dnuser) {
+		cdata->user = dnuser;
+		dnuser = NULL;
+	}
+	else if (user)
 		cdata->user = g_strdup (user);
 
 	/* set startup file name */
