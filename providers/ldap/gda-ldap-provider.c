@@ -258,12 +258,15 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	const gchar *port;
 	const gchar *user = NULL;
         const gchar *pwd = NULL;
+        const gchar *tls_method = NULL;
+        const gchar *tls_cacert = NULL;
+	int rtls_method = -1;
 	gint rport;
 	gboolean use_ssl, use_cache;
 
         base_dn = gda_quark_list_find (params, "DB_NAME");
         if (!base_dn) {
-                gda_connection_add_event_string (cnc,
+                gda_connection_add_event_string (cnc, "%s",
                                                  _("The connection string must contain the DB_NAME value"));
                 return FALSE;
         }
@@ -289,6 +292,26 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
         pwd = gda_quark_list_find (auth, "PASSWORD");
         if (!pwd)
                 pwd = gda_quark_list_find (params, "PASSWORD");
+
+	tls_cacert = gda_quark_list_find (params, "TLS_CACERT");
+	tls_method = gda_quark_list_find (params, "TLS_REQCERT");
+	if (tls_method && *tls_method) {
+		if (! g_ascii_strcasecmp (tls_method, "never"))
+			rtls_method = LDAP_OPT_X_TLS_NEVER;
+		else if (! g_ascii_strcasecmp (tls_method, "hard"))
+			rtls_method = LDAP_OPT_X_TLS_HARD;
+		else if (! g_ascii_strcasecmp (tls_method, "demand"))
+			rtls_method = LDAP_OPT_X_TLS_DEMAND;
+		else if (! g_ascii_strcasecmp (tls_method, "allow"))
+			rtls_method = LDAP_OPT_X_TLS_ALLOW;
+		else if (! g_ascii_strcasecmp (tls_method, "try"))
+			rtls_method = LDAP_OPT_X_TLS_TRY;
+		else {
+			gda_connection_add_event_string (cnc, "%s",
+							 _("Invalid value for 'TLS_REQCERT'"));
+			return FALSE;
+		}
+	}
 
 	/* open LDAP connection */
 	LdapConnectionData *cdata;
@@ -330,7 +353,6 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
         }
 	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, LDAP_OPT_ON);
 
-#ifdef NO
 	if (use_ssl) {
 		/* Configuring SSL/TLS options:
 		 * this is for texting purpose only, and should actually be done through LDAP's conf.
@@ -343,15 +365,24 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 		 * Note: if server certificate verification fails,
 		 * the error message is: "Can't contact LDAP server"
 		 */
-		int opt = LDAP_OPT_X_TLS_DEMAND;
-		res = ldap_set_option (cdata->handle, LDAP_OPT_X_TLS_REQUIRE_CERT, &opt);
-		if (res != LDAP_SUCCESS) {
-			gda_connection_add_event_string (cnc, ldap_err2string (res));
-			gda_ldap_free_cnc_data (cdata);
-			return FALSE;
+		if (rtls_method >= 0) {
+			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_REQUIRE_CERT, &rtls_method);
+			if (res != LDAP_SUCCESS) {
+				gda_connection_add_event_string (cnc, ldap_err2string (res));
+				gda_ldap_free_cnc_data (cdata);
+				return FALSE;
+			}
+		}
+
+		if (tls_cacert && *tls_cacert) {
+			res = ldap_set_option (NULL, LDAP_OPT_X_TLS_CACERTFILE, tls_cacert);
+			if (res != LDAP_SUCCESS) {
+				gda_connection_add_event_string (cnc, ldap_err2string (res));
+				gda_ldap_free_cnc_data (cdata);
+				return FALSE;
+			}
 		}
 	}
-#endif
 
 	/* authentication */
 	struct berval cred;
