@@ -528,6 +528,7 @@ _ldap_compute_columns (GdaConnection *cnc, const gchar *attributes,
 		}
 		col = gda_column_new ();
 		gda_column_set_name (col, sub [0]);
+		gda_column_set_description (col, sub [0]);
 		g_hash_table_insert (colnames, g_strdup (sub [0]), (gpointer) 0x01);
 		gda_column_set_g_type (col, coltype);
 		gda_column_set_allow_null (col, TRUE);

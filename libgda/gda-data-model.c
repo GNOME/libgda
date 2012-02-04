@@ -2185,7 +2185,6 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 					value = (GValue *) (avlist->data);
 				}
 			}
-			g_assert (value);
 
 			values = g_list_prepend (values, value);
 
