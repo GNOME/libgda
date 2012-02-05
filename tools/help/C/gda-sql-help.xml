@@ -312,4 +312,64 @@ uspan        |              |               |               |               |   
       <comment>This example defines the ID variabe (beware, case sensitive) ID to 23. Later you can then run a query like "SELECT * FROM customers WHERE id=##ID::int"</comment>
     </example>
   </command>
+
+  <!-- ".ldap_attributes" command -->
+  <command name="ldap_attributes">
+    <shortdescription>Set or show the list of attributes take into account by LDAP commands
+    </shortdescription>
+    <usage>
+      <synopsis>.ldap_attributes [attribute,[attribute],...]</synopsis>
+      <comment>Use this command to specify or display which attributes the LDAP commands operate on; if no
+      argument is passed, then the current list of attributes is shown</comment>
+      <comment>The attributes list is a CVS separated list of individual LDAP attributes, for example "cn,uid,email"</comment>
+      <comment>LDAP allows some attributes to be multi valued (e.g. the "objectClass" attribute). When dealing with multi
+      valued attributes, the default behaviour is to return an error for the corresponding value. This default behaviour can
+      be changed by specifying a modifier among "CVS" (values are listed in a CVS syntax), "*" (each row is duplicated with
+      each value of the attribute), "1" (only the 1st value of the attribute is shown), "CONCAT" (all the values are
+      made into a string, separated by newlines) or "NULL" (a NULL value is used).
+      </comment>
+    </usage>
+    <example>
+      <synopsis>.ldap_attributes</synopsis>
+      <comment>Shows the current attributes (by default the "cn" attribute)</comment>
+      <raw>cn</raw>
+    </example>
+    <example>
+      <synopsis>.ldap_attributes cn,objectClass::*</synopsis>
+      <comment>Define the attibutes as "cn" and "objectClass", and because "objectClass" is generally multi valued,
+      specify that a new row be created in the output for each value of "objectClass" for each entry</comment>
+    </example>
+  </command>
+
+  <!-- ".ldap_search" command -->
+  <command name="ldap_search">
+    <shortdescription>Search LDAP entries using a filter and various criteria
+    </shortdescription>
+    <usage>
+      <synopsis>.ldap_search @filter@ [@base|onelevel|subtree@ [@base DN@]]</synopsis>
+      <comment>The @filter@ argument is the only mandatory and has to be a valid LDAP filter expression. The
+      other arguments, if present are in order the search scope (among "base", "onelevel" and "subtree"), and the
+      base DN (which is the starting point of the search)</comment>
+      <comment>The results of the search will be a table where the first column is the DN of the entry, and
+      the other columns are mapped to the LDAP attributes (see the "ldap_attributes" command)</comment>
+      <comment>LDAP filters must respect the RFC 2254 (see http://www.faqs.org/rfcs/rfc2254.html) and what the
+      actual LDAP server understands. Note that if the outer most opening and cloding parenthesis are omitted, they
+      will be automatically added. Examples of LDAP search filter are: "(objectClass=*)" to fetch all objects,
+      "(&amp;(objectClass=inetOrgPerson)(!cn=tom))" to fetch all persons except "tom". Operators are: "=" for equal,
+      "~=" for approximately equal "&lt;=" "&gt;=" for lexicographically less than or equal and greater than or equal
+      respectively, "&amp;", "|" and "!" for the AND, OR and NOT logical operators respectively.</comment>
+    </usage>
+    <example>
+      <synopsis>.ldap_attributes cn,uid,mail</synopsis>
+      <synopsis>.ldap_search cn=* onelevel "ou=People,dc=example,dc=gnome-db"</synopsis>
+      <comment></comment>
+      <raw>Distinguished name                              | cn                 | uid        | mail                  
+------------------------------------------------+--------------------+------------+-----------------------
+uid=abarnes,ou=People,dc=example,dc=gnome-db    | Anne-Louise Barnes | abarnes    | abarnes@example.com   
+uid=abergin,ou=People,dc=example,dc=gnome-db    | Andy Bergin        | abergin    | abergin@example.com   
+uid=achassin,ou=People,dc=example,dc=gnome-db   | Ashley Chassin     | achassin   | achassin@example.com
+[...]
+(150 rows)</raw>
+    </example>
+  </command>
 </gda-sql-help>
