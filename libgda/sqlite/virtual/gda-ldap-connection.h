@@ -170,6 +170,14 @@ GdaLdapEntry **gda_ldap_get_entry_children         (GdaLdapConnection *cnc, cons
 gchar        **gda_ldap_dn_split                   (const gchar *dn, gboolean all);
 gboolean       gda_ldap_is_dn                      (const gchar *dn);
 
+typedef struct {
+	gchar   *name;
+	GType    g_type;
+	gboolean required;
+} GdaLdapAttributeDefinition;
+void           gda_ldap_attributes_list_free      (GSList *list);
+GSList        *gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry);
+
 
 /**
  * GdaLdapClassKind:

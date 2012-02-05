@@ -1445,3 +1445,79 @@ gdaprov_ldap_get_base_dn (GdaLdapConnection *cnc)
 	else
 		return cdata->base_dn;
 }
+
+static gint
+def_cmp_func (GdaLdapAttributeDefinition *def1, GdaLdapAttributeDefinition *def2)
+{
+	return strcmp (def1->name, def2->name);
+}
+
+GSList *
+gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *object_class_attr)
+{
+	LdapConnectionData *cdata;
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (object_class_attr, NULL);
+
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata)
+                return NULL;
+
+	guint i;
+	const gchar *tmp;
+	GHashTable *hash;
+	GSList *retlist = NULL;
+
+	hash = g_hash_table_new (g_str_hash, g_str_equal);
+	for (i = 0; i < object_class_attr->nb_values; i++) {
+		if (G_VALUE_TYPE (object_class_attr->values [i]) != G_TYPE_STRING) {
+			g_warning (_("Unexpected data type '%s' for objectClass attribute!"),
+				   gda_g_type_to_string (G_VALUE_TYPE (object_class_attr->values [i])));
+			continue;
+		}
+		tmp = g_value_get_string (object_class_attr->values [i]);
+		/*g_print ("Class [%s]\n", tmp);*/
+		GdaLdapClass *kl;
+		kl = gdaprov_ldap_get_class_info (cnc, tmp);
+		if (!kl) {
+			g_warning (_("Can't get information about '%s' class"), tmp);
+			continue;
+		}
+		guint j;
+		for (j = 0; j < kl->nb_req_attributes; j++) {
+			/*g_print ("  attr [%s] REQ\n", kl->req_attributes [j]);*/
+			GdaLdapAttributeDefinition *def;
+			LdapAttribute *latt;
+			latt = gda_ldap_get_attr_info (cdata, kl->req_attributes [j]);
+			def = g_hash_table_lookup (hash, kl->req_attributes [j]);
+			if (def)
+				def->required = TRUE;
+			else {
+				def = g_new0 (GdaLdapAttributeDefinition, 1);
+				def->name = g_strdup (kl->req_attributes [j]);
+				def->required = TRUE;
+				def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
+				g_hash_table_insert (hash, def->name, def);
+				retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
+			}
+		}
+		for (j = 0; j < kl->nb_opt_attributes; j++) {
+			/*g_print ("  attr [%s] OPT\n", kl->opt_attributes [j]);*/
+			GdaLdapAttributeDefinition *def;
+			LdapAttribute *latt;
+			latt = gda_ldap_get_attr_info (cdata, kl->opt_attributes [j]);
+			def = g_hash_table_lookup (hash, kl->opt_attributes [j]);
+			if (!def) {
+				def = g_new0 (GdaLdapAttributeDefinition, 1);
+				def->name = g_strdup (kl->opt_attributes [j]);
+				def->required = FALSE;
+				def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
+				g_hash_table_insert (hash, def->name, def);
+				retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
+			}
+		}
+	}
+	g_hash_table_destroy (hash);
+
+	return retlist;
+}

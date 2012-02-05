@@ -413,6 +413,7 @@
 	gda_init
 	gda_lang_locale
 #ifdef HAVE_LDAP
+	gda_ldap_attributes_list_free
 	gda_ldap_connection_get_type
 	gda_ldap_get_class_info
 	gda_ldap_get_top_classes
@@ -423,6 +424,7 @@
 	gda_ldap_describe_entry
 	gda_ldap_dn_split
 	gda_ldap_entry_free
+	gda_ldap_entry_get_attributes_list
 	gda_ldap_get_entry_children
 	gda_ldap_is_dn
 #endif

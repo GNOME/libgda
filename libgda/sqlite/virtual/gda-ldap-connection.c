@@ -1023,3 +1023,48 @@ gda_ldap_get_top_classes (GdaLdapConnection *cnc)
 
 	return _gda_ldap_get_top_classes (cnc);
 }
+
+GSList *_gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry, GdaLdapAttribute *object_class_attr);
+/**
+ * gda_ldap_entry_get_attributes_list:
+ * @entry: a #GdaLdapEntry
+ *
+ * Get a list of all the possible attributes which @entry can have. Each possible attribute is represented
+ * by a #GdaLdapAttributeDefinition strunture.
+ *
+ * Returns: (transfer full) (element-type GdaLdapAttributeDefinition): a #GSList of #GdaLdapAttributeDefinition pointers, free the list using gda_ldap_attributes_list_free()
+ *
+ * Since: 5.2.0
+ */
+GSList *
+gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry)
+{
+	g_return_val_if_fail (entry, NULL);
+
+	return _gda_ldap_entry_get_attributes_list (cnc, entry, NULL);
+}
+
+/**
+ * gda_ldap_attributes_list_free:
+ * @list: (allow-none): a #GSList of #GdaLdapAttributeDefinition pointers, or %NULL
+ *
+ * Frees the list returned by gda_ldap_entry_get_attributes_list().
+ *
+ * Since: 5.2.0
+ */
+void
+gda_ldap_attributes_list_free (GSList *list)
+{
+	GSList *l;
+	if (!list)
+		return;
+	for (l = list; l; l = l->next) {
+		GdaLdapAttributeDefinition *def;
+		def = (GdaLdapAttributeDefinition*) l->data;
+		if (def) {
+			g_free (def->name);
+			g_free (def);
+		}
+	}
+	g_slist_free (list);
+}
