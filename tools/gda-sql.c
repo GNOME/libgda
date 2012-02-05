@@ -2673,7 +2673,7 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
 	c->name = g_strdup_printf (_("%s [attribute,[attribute],...]"), "ldap_attributes");
-	c->description = _("Set or get the default attrbutes manipulated by LDAP commands");
+	c->description = _("Set or get the default attributes manipulated by LDAP commands");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_attributes;
 	c->user_data = NULL;
