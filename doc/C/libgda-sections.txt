@@ -256,6 +256,9 @@ gda_ldap_dn_split
 gda_ldap_describe_entry
 gda_ldap_entry_free
 gda_ldap_get_entry_children
+GdaLdapAttributeDefinition
+gda_ldap_entry_get_attributes_list
+gda_ldap_attributes_list_free
 <SUBSECTION>
 GdaLdapClassKind
 GdaLdapClass

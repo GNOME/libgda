@@ -403,3 +403,33 @@ _gda_ldap_get_top_classes (GdaLdapConnection *cnc)
 	
 	return func (cnc);
 }
+
+/*
+ * _gda_ldap_entry_get_attributes_list:
+ * proxy for gda_ldap_entry_get_attributes_list()
+ */
+GSList *
+_gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry, GdaLdapAttribute *object_class_attr)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (entry || object_class_attr, NULL);
+	if (!object_class_attr) {
+		g_return_val_if_fail (entry->attributes_hash, NULL);
+		object_class_attr = g_hash_table_lookup (entry->attributes_hash, "objectClass");
+		g_return_val_if_fail (object_class_attr, NULL);
+	}
+
+	typedef GSList *(*Func) (GdaLdapConnection *, GdaLdapAttribute *);
+	static Func func = NULL;
+
+	if (!func) {
+		load_ldap_module ();
+		if (!ldap_prov_module)
+			return NULL;
+
+		if (!g_module_symbol (ldap_prov_module, "gdaprov_ldap_get_attributes_list", (void **) &func))
+			return NULL;
+	}
+
+	return func (cnc, object_class_attr);
+}
