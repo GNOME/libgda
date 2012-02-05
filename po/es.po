@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-05 14:53+0000\n"
-"PO-Revision-Date: 2012-02-05 18:42+0100\n"
+"POT-Creation-Date: 2012-02-05 18:31+0000\n"
+"PO-Revision-Date: 2012-02-05 19:31+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -5506,7 +5506,6 @@ msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Valor no válido para «TLS_REQCERT»"
 
 #: ../providers/ldap/gda-ldap-provider.c:464
-#| msgid "Invalid schema name"
 msgid "Invalid user name"
 msgstr "Nombre de usuario no válido"
 
@@ -10542,7 +10541,6 @@ msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
 msgstr "%s <filtro> [<base|un_nivel|subárbol> [<DN base>]]"
 
 #: ../tools/gda-sql.c:2664
-#| msgid "LDAP entries"
 msgid "Search LDAP entries"
 msgstr "Buscar entradas LDAP"
 
@@ -10552,7 +10550,8 @@ msgid "%s [attribute,[attribute],...]"
 msgstr "%s [atributo,[atributo],...]"
 
 #: ../tools/gda-sql.c:2676
-msgid "Set or get the default attrbutes manipulated by LDAP commands"
+#| msgid "Set or get the default attrbutes manipulated by LDAP commands"
+msgid "Set or get the default attributes manipulated by LDAP commands"
 msgstr ""
 "Establecer u obtener los atributos predeterminados manipulados por comandos "
 "de LDAP"
@@ -10747,18 +10746,15 @@ msgid "Wrong data field argument"
 msgstr "Argumento del campo de datos erróneo"
 
 #: ../tools/gda-sql.c:4901
-#| msgid "Connection string for the internal connection to use"
 msgid "Connection is not an LDAP connection"
 msgstr "No es una conexión LDAP"
 
 #: ../tools/gda-sql.c:4922
 #, c-format
-#| msgid "Unknown query '%s'"
 msgid "Unknown search scope '%s'"
 msgstr "Ámbito de búsqueda «%s» desconocido"
 
 #: ../tools/gda-sql.c:4932
-#| msgid "Missing data on which to operate"
 msgid "Missing filter which to operate"
 msgstr "Faltan el filtro sobre el que operar"
 
