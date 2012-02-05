@@ -30,6 +30,7 @@
 #endif
 #include <sql-parser/gda-statement-struct-util.h>
 #include "tools-utils.h"
+#include <virtual/gda-ldap-connection.h>
 
 /*
  *  gda_internal_command_arg_remove_quotes
@@ -485,7 +486,7 @@ help_xml_doc_to_string (xmlDocPtr helpdoc, const gchar *command_name, gint width
 }
 
 GdaInternalCommandResult *
-gda_internal_command_help (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
+gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 			   const gchar **args, G_GNUC_UNUSED GError **error,
 			   GdaInternalCommandsList *clist)
 {
@@ -565,6 +566,9 @@ gda_internal_command_help (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 			GdaInternalCommand *command = (GdaInternalCommand*) list->data;
 			gint clen;
 			if (console && command->limit_to_main)
+				continue;
+
+			if (g_str_has_prefix (command->name, "ldap") && cnc && !GDA_IS_LDAP_CONNECTION (cnc))
 				continue;
 
 			if (!current_group || strcmp (current_group, command->group)) {

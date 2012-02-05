@@ -125,6 +125,7 @@ typedef struct {
 	GString *partial_command;
 
 	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaParameter */
+	gchar *ldap_attributes; /* default LDAP attributes */
 
 #ifdef HAVE_LIBSOUP
 	WebServer *server;
@@ -192,6 +193,7 @@ main (int argc, char *argv[])
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+	data->ldap_attributes = g_strdup ("cn");
 	main_data = data;
 
 	/* output file */
@@ -1866,6 +1868,9 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 	static gboolean env_set = FALSE;
 	OutputFormat of;
 
+	if (!GDA_IS_DATA_MODEL (model))
+		return NULL;
+
 	if (!env_set) {
 		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
 			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
@@ -2154,6 +2159,13 @@ static GdaInternalCommandResult *extra_command_declare_fk (SqlConsole *console, 
 static GdaInternalCommandResult *extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 							     const gchar **args,
 							     GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc,
+							    const gchar **args,
+							    GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_ldap_attributes (SqlConsole *console, GdaConnection *cnc,
+								const gchar **args,
+								GError **error, gpointer data);
 
 static GdaInternalCommandsList *
 build_internal_commands_list (void)
@@ -2640,6 +2652,30 @@ build_internal_commands_list (void)
 			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_pivot;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("LDAP");
+	c->name = g_strdup_printf (_("%s <filter> [<base|onelevel|subtree> [<base DN>]]"), "ldap_search");
+	c->description = _("Search LDAP entries");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_search;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("LDAP");
+	c->name = g_strdup_printf (_("%s [attribute,[attribute],...]"), "ldap_attributes");
+	c->description = _("Set or get the default attrbutes manipulated by LDAP commands");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_attributes;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -4847,6 +4883,93 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 }
 
 static GdaInternalCommandResult *
+extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			   GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	ConnectionSetting *cs;
+	GdaDataModel *model, *copy;
+	cs = get_current_connection_settings (console);
+	if (!cs) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("No connection specified"));
+		return NULL;
+	}
+
+	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Connection is not an LDAP connection"));
+		return NULL;
+	}
+
+	const gchar *filter = NULL;
+	gchar *lfilter = NULL;
+	const gchar *scope = NULL;
+	const gchar *base_dn = NULL;
+	GdaLdapSearchScope lscope = GDA_LDAP_SEARCH_SUBTREE;
+
+        if (args[0] && *args[0]) {
+                filter = args[0];
+                if (args[1] && *args[1]) {
+			scope = args [1];
+			if (!g_ascii_strcasecmp (scope, "base"))
+				lscope = GDA_LDAP_SEARCH_BASE;
+			else if (!g_ascii_strcasecmp (scope, "onelevel"))
+				lscope = GDA_LDAP_SEARCH_ONELEVEL;
+			else if (!g_ascii_strcasecmp (scope, "subtree"))
+				lscope = GDA_LDAP_SEARCH_SUBTREE;
+			else {
+				g_set_error (error, 0, 0, _("Unknown search scope '%s'"), scope);
+				return NULL;
+			}
+			if (args[2] && *args[2])
+				base_dn = args[2];
+		}
+        }
+
+	if (!filter) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Missing filter which to operate"));
+		return NULL;
+	}
+
+	if (*filter != '(')
+		lfilter = g_strdup_printf ("(%s)", filter);
+	
+	model = gda_data_model_ldap_new (cs->cnc, base_dn, lfilter ? lfilter : filter, main_data->ldap_attributes, lscope);
+	g_free (lfilter);
+	copy = (GdaDataModel*) gda_data_model_array_copy_model (model, error);
+	g_object_unref (model);
+	if (!copy)
+		return NULL;
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = copy;
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_ldap_attributes (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
+			       GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+        if (args[0] && *args[0]) {
+		g_free (main_data->ldap_attributes);
+		main_data->ldap_attributes = g_strdup (args[0]);
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+        }
+	else {
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+		res->u.txt = g_string_new (main_data->ldap_attributes);
+	}
+	return res;
+}
+
+static GdaInternalCommandResult *
 extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 		      GError **error, gpointer data)
 {
@@ -5115,6 +5238,8 @@ extra_command_graph (SqlConsole *console, GdaConnection *cnc, const gchar **args
 	else 
 		return NULL;
 }
+
+
 
 #ifdef HAVE_LIBSOUP
 static GdaInternalCommandResult *
