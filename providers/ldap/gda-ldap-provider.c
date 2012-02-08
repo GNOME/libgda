@@ -223,6 +223,16 @@ compute_data_file_name (GdaQuarkList *params, gboolean is_cache, const gchar *da
 	return fname;
 }
 
+typedef struct {
+	gchar *filter_format;
+	gchar *attribute;
+} LdapAuthMapping;
+
+LdapAuthMapping mappings[] = {
+	{"(&(uid=%s)(objectclass=inetOrgPerson))", "uid"},
+	{"(sAMAccountName=%s)", "sAMAccountName"}, /* Active Directory */
+};
+
 /*
  * Using @url and @username, performs the following tasks:
  * - bind to the LDAP server anonymously
@@ -233,7 +243,7 @@ compute_data_file_name (GdaQuarkList *params, gboolean is_cache, const gchar *da
  * If all the steps are right, it returns the DN of the identified entry as a new string.
  */
 static gchar *
-fetch_user_dn (const gchar *url, const gchar *base, const gchar *username)
+fetch_user_dn (const gchar *url, const gchar *base, const gchar *username, LdapAuthMapping *mapping)
 {
 	LDAP *ld;
 	int res;
@@ -264,21 +274,14 @@ fetch_user_dn (const gchar *url, const gchar *base, const gchar *username)
 	if (res != LDAP_SUCCESS)
 		goto out;
 
-	GString *filter;
-	const gchar *ptr;
-	gchar *attributes[] = {"uid", NULL};
-	filter = g_string_new ("(&(uid=");
-	for (ptr = username; *ptr; ptr++) {
-		if ((*ptr == ',') || (*ptr == '\\') || (*ptr == '#') || (*ptr == '+') || (*ptr == '<') ||
-		    (*ptr == '>') || (*ptr == ';') || (*ptr == '"') || (*ptr == '=') || (*ptr == '*'))
-			g_string_append_c (filter, '\\');
-		g_string_append_c (filter, *ptr);
-	}
-	g_string_append (filter, ")(objectclass=inetOrgPerson))");
+	gchar *filter;
+	gchar *attributes[] = {NULL, NULL};
+	attributes[0] = mapping->attribute;
+	filter = g_strdup_printf (mapping->filter_format, username);
 	res = ldap_search_ext_s (ld, base, LDAP_SCOPE_SUBTREE,
-				 filter->str, attributes, 0,
+				 filter, attributes, 0,
 				 NULL, NULL, NULL, 2, &msg);
-	g_string_free (filter, TRUE);
+	g_free (filter);
 	if (res != LDAP_SUCCESS)
 		goto out;
 
@@ -453,14 +456,33 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	else
 		url = g_strdup_printf ("ldap://%s:%d", host, rport);
 
-	if (! gda_ldap_parse_dn (user, NULL)) { /* analysing the @user parameter */
-		/* the user name is not a DN => we need to fetch the DN of the entry where the
-		 * uid or mail attribute are equal to @user */
-		gchar *tmp;
-		tmp = fetch_user_dn (url, base_dn, user);
-		if (tmp)
-			dnuser = tmp;
-		else {
+	if (! gda_ldap_parse_dn (user, NULL) && *user) {
+		/* analysing the @user parameter */
+		/* the user name is not a DN => we need to fetch the DN of the entry
+		 * using filters defined in the "mappings" array @user */
+		guint i;
+		const gchar *ptr;
+		GString *rname;
+		rname = g_string_new ("");
+		for (ptr = user; *ptr; ptr++) {
+			if ((*ptr == ',') || (*ptr == '\\') || (*ptr == '#') ||
+			    (*ptr == '+') || (*ptr == '<') ||
+			    (*ptr == '>') || (*ptr == ';') || (*ptr == '"') ||
+			    (*ptr == '=') || (*ptr == '*'))
+				g_string_append_c (rname, '\\');
+			g_string_append_c (rname, *ptr);
+		}
+		for (i = 0; i < sizeof (mappings) / sizeof (LdapAuthMapping); i++) {
+			gchar *tmp;
+			tmp = fetch_user_dn (url, base_dn, rname->str, &(mappings[i]));
+			if (tmp) {
+				dnuser = tmp;
+				break;
+			}
+		}
+		g_string_free (rname, TRUE);
+
+		if (!dnuser) {
 			gda_connection_add_event_string (cnc, _("Invalid user name"));
 			return FALSE;
 		}
