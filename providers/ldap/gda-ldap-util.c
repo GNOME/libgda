@@ -1452,6 +1452,52 @@ def_cmp_func (GdaLdapAttributeDefinition *def1, GdaLdapAttributeDefinition *def2
 	return strcmp (def1->name, def2->name);
 }
 
+static GSList *
+handle_ldap_class (LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist, GHashTable *hash)
+{
+	guint j;
+	/*g_print ("Class [%s] (%s)\n", kl->oid, kl->names[0]);*/
+	for (j = 0; j < kl->nb_req_attributes; j++) {
+		/*g_print ("  attr [%s] REQ\n", kl->req_attributes [j]);*/
+		GdaLdapAttributeDefinition *def;
+		LdapAttribute *latt;
+		latt = gda_ldap_get_attr_info (cdata, kl->req_attributes [j]);
+		def = g_hash_table_lookup (hash, kl->req_attributes [j]);
+		if (def)
+			def->required = TRUE;
+		else {
+			def = g_new0 (GdaLdapAttributeDefinition, 1);
+			def->name = g_strdup (kl->req_attributes [j]);
+			def->required = TRUE;
+			def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
+			g_hash_table_insert (hash, def->name, def);
+			retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
+		}
+	}
+	for (j = 0; j < kl->nb_opt_attributes; j++) {
+		/*g_print ("  attr [%s] OPT\n", kl->opt_attributes [j]);*/
+		GdaLdapAttributeDefinition *def;
+		LdapAttribute *latt;
+		latt = gda_ldap_get_attr_info (cdata, kl->opt_attributes [j]);
+		def = g_hash_table_lookup (hash, kl->opt_attributes [j]);
+		if (!def) {
+			def = g_new0 (GdaLdapAttributeDefinition, 1);
+			def->name = g_strdup (kl->opt_attributes [j]);
+			def->required = FALSE;
+			def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
+			g_hash_table_insert (hash, def->name, def);
+			retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
+		}
+	}
+
+	/* handle parents */
+	GSList *list;
+	for (list = kl->parents; list; list = list->next)
+		retlist = handle_ldap_class (cdata, (GdaLdapClass*) list->data, retlist, hash);
+
+	return retlist;
+}
+
 GSList *
 gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *object_class_attr)
 {
@@ -1476,46 +1522,14 @@ gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *obje
 			continue;
 		}
 		tmp = g_value_get_string (object_class_attr->values [i]);
-		/*g_print ("Class [%s]\n", tmp);*/
+
 		GdaLdapClass *kl;
 		kl = gdaprov_ldap_get_class_info (cnc, tmp);
 		if (!kl) {
 			g_warning (_("Can't get information about '%s' class"), tmp);
 			continue;
 		}
-		guint j;
-		for (j = 0; j < kl->nb_req_attributes; j++) {
-			/*g_print ("  attr [%s] REQ\n", kl->req_attributes [j]);*/
-			GdaLdapAttributeDefinition *def;
-			LdapAttribute *latt;
-			latt = gda_ldap_get_attr_info (cdata, kl->req_attributes [j]);
-			def = g_hash_table_lookup (hash, kl->req_attributes [j]);
-			if (def)
-				def->required = TRUE;
-			else {
-				def = g_new0 (GdaLdapAttributeDefinition, 1);
-				def->name = g_strdup (kl->req_attributes [j]);
-				def->required = TRUE;
-				def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
-				g_hash_table_insert (hash, def->name, def);
-				retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
-			}
-		}
-		for (j = 0; j < kl->nb_opt_attributes; j++) {
-			/*g_print ("  attr [%s] OPT\n", kl->opt_attributes [j]);*/
-			GdaLdapAttributeDefinition *def;
-			LdapAttribute *latt;
-			latt = gda_ldap_get_attr_info (cdata, kl->opt_attributes [j]);
-			def = g_hash_table_lookup (hash, kl->opt_attributes [j]);
-			if (!def) {
-				def = g_new0 (GdaLdapAttributeDefinition, 1);
-				def->name = g_strdup (kl->opt_attributes [j]);
-				def->required = FALSE;
-				def->g_type = latt ? latt->type->gtype : G_TYPE_STRING;
-				g_hash_table_insert (hash, def->name, def);
-				retlist = g_slist_insert_sorted (retlist, def, (GCompareFunc) def_cmp_func);
-			}
-		}
+		retlist = handle_ldap_class (cdata, kl, retlist, hash);
 	}
 	g_hash_table_destroy (hash);
 
