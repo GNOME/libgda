@@ -2166,6 +2166,9 @@ static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console,
 static GdaInternalCommandResult *extra_command_ldap_attributes (SqlConsole *console, GdaConnection *cnc,
 								const gchar **args,
 								GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_ldap_descr (SqlConsole *console, GdaConnection *cnc,
+							   const gchar **args,
+							   GError **error, gpointer data);
 
 static GdaInternalCommandsList *
 build_internal_commands_list (void)
@@ -2676,6 +2679,22 @@ build_internal_commands_list (void)
 	c->description = _("Set or get the default attributes manipulated by LDAP commands");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_attributes;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("LDAP");
+	c->name = g_strdup_printf (_("%s <DN> [\"all\"|\"set\"|\"unset\"]"), "ldap_descr");
+	c->description = _("Shows all the attributes for the entry identified by its DN. If the "
+			   "\"set\" 2nd parameter is passed, then all set attributes are show, if "
+			   "the \"all\" 2nd parameter is passed, then the unset attributes are "
+			   "also shown, and if the \"unset\" 2nd parameter "
+			   "is passed, then only non set attributes are shown.");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_descr;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -4910,7 +4929,7 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 
         if (args[0] && *args[0]) {
                 filter = args[0];
-                if (args[1] && *args[1]) {
+                if (args[1]) {
 			scope = args [1];
 			if (!g_ascii_strcasecmp (scope, "base"))
 				lscope = GDA_LDAP_SEARCH_BASE;
@@ -4922,7 +4941,7 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 				g_set_error (error, 0, 0, _("Unknown search scope '%s'"), scope);
 				return NULL;
 			}
-			if (args[2] && *args[2])
+			if (args[2])
 				base_dn = args[2];
 		}
         }
@@ -4968,6 +4987,222 @@ extra_command_ldap_attributes (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED 
 	}
 	return res;
 }
+
+typedef struct {
+	GValue *attr_name;
+	GValue *req;
+	GArray *values; /* array of #GValue */
+} AttRow;
+
+static gint
+att_row_cmp (AttRow *r1, AttRow *r2)
+{
+	return strcmp (g_value_get_string (r1->attr_name), g_value_get_string (r2->attr_name));
+}
+
+static GdaInternalCommandResult *
+extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
+			  GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+
+	ConnectionSetting *cs;
+	cs = get_current_connection_settings (console);
+	if (!cs) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("No connection specified"));
+		return NULL;
+	}
+
+	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Connection is not an LDAP connection"));
+		return NULL;
+	}
+
+	const gchar *dn = NULL;
+	GHashTable *attrs_hash = NULL;
+	gint options = 0; /* 0 => show attributes specified with .ldap_attributes
+			   * 1 => show all attributes
+			   * 2 => show non set attributes only
+			   * 3 => show all set attributes only
+			   */
+
+        if (!args[0] || !*args[0]) {
+		g_set_error (error, 0, 0, "%s", 
+			     _("Missing DN (Distinguished name) argument"));		
+		return NULL;
+        }
+	dn = args[0];
+	if (args [1] && *args[1]) {
+		if (!g_ascii_strcasecmp (args [1], "all"))
+			options = 1;
+		else if (!g_ascii_strcasecmp (args [1], "unset"))
+			options = 2;
+		else if (!g_ascii_strcasecmp (args [1], "set"))
+			options = 3;
+		else {
+			g_set_error (error, 0, 0, 
+				     _("Unknown '%s' argument"), args[1]);
+			return NULL;
+		}
+	}
+
+	GdaLdapEntry *entry;
+	GdaDataModel *model;
+	entry = gda_ldap_describe_entry (GDA_LDAP_CONNECTION (cs->cnc), dn, error);
+	if (!entry) {
+		if (error && !*error)
+			g_set_error (error, 0, 0,
+				     _("Could not find entry with DN '%s'"), dn);
+		return NULL;
+	}
+
+	model = gda_data_model_array_new_with_g_types (3,
+						       G_TYPE_STRING,
+						       G_TYPE_BOOLEAN,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Attribute"));
+	gda_data_model_set_column_title (model, 1, _("Required?"));
+	gda_data_model_set_column_title (model, 2, _("Value"));
+	g_object_set_data (G_OBJECT (model), "name", _("LDAP entry's Attributes"));
+
+	/* parse attributes to use */
+	if ((options == 0) && main_data->ldap_attributes) {
+		gchar **array;
+		guint i;
+		array = g_strsplit (main_data->ldap_attributes, ",", 0);
+		for (i = 0; array [i]; i++) {
+			gchar *tmp;
+			for (tmp = array [i]; *tmp && (*tmp != ':'); tmp++);
+			*tmp = 0;
+			g_strstrip (array [i]);
+			if (!attrs_hash)
+				attrs_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free,
+								    NULL);
+			g_hash_table_insert (attrs_hash, array [i], (gpointer) 0x01);
+		}
+		g_free (array);
+	}
+
+	/* Prepare rows */
+	GSList *rows_list = NULL; /* sorted list of #AttRow, used to create the data model */
+	GHashTable *rows_hash; /* key = att name, value = #AttRow */	
+	rows_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+	/* 1st pass: all actual entry's attributes */
+	if (options != 2) {
+		guint i;
+		for (i = 0; i < entry->nb_attributes; i++) {
+			GdaLdapAttribute *attr;
+			guint j;
+			attr = (GdaLdapAttribute*) entry->attributes[i];
+
+			if (attrs_hash && !g_hash_table_lookup (attrs_hash, attr->attr_name))
+				continue;
+
+			AttRow *row;
+			row = g_new0 (AttRow, 1);
+			g_value_set_string ((row->attr_name = gda_value_new (G_TYPE_STRING)),
+					    attr->attr_name);
+			row->req = NULL;
+			row->values = g_array_new (FALSE, FALSE, sizeof (GValue*));
+			for (j = 0; j < attr->nb_values; j++) {
+				GValue *copy;
+				copy = gda_value_copy (attr->values [j]);
+				g_array_append_val (row->values, copy);
+			}
+
+			g_hash_table_insert (rows_hash, (gpointer) g_value_get_string (row->attr_name), row);
+			rows_list = g_slist_insert_sorted (rows_list, row, (GCompareFunc) att_row_cmp);
+		}
+	}
+
+	/* 2nd pass: use the class's attributes */
+	GSList *attrs_list, *list;
+	attrs_list = gda_ldap_entry_get_attributes_list (GDA_LDAP_CONNECTION (cs->cnc), entry);
+	for (list = attrs_list; list; list = list->next) {
+		GdaLdapAttributeDefinition *def;
+		def = (GdaLdapAttributeDefinition*) list->data;
+		GdaLdapAttribute *vattr;
+		vattr = g_hash_table_lookup (entry->attributes_hash, def->name);
+		if (! (((options == 0) && vattr) ||
+		       ((options == 3) && vattr) ||
+		       (options == 1) ||
+		       ((options == 2) && !vattr)))
+			continue;
+
+		if (attrs_hash && !g_hash_table_lookup (attrs_hash, def->name))
+				continue;
+
+		AttRow *row;
+		row = g_hash_table_lookup (rows_hash, def->name);
+		if (row) {
+			if (!row->req)
+				g_value_set_boolean ((row->req = gda_value_new (G_TYPE_BOOLEAN)),
+						     def->required);
+		}
+		else {
+			row = g_new0 (AttRow, 1);
+			g_value_set_string ((row->attr_name = gda_value_new (G_TYPE_STRING)),
+					    def->name);
+			g_value_set_boolean ((row->req = gda_value_new (G_TYPE_BOOLEAN)),
+					     def->required);
+			row->values = NULL;
+			g_hash_table_insert (rows_hash, (gpointer) g_value_get_string (row->attr_name), row);
+			rows_list = g_slist_insert_sorted (rows_list, row, (GCompareFunc) att_row_cmp);
+		}
+	}
+	gda_ldap_attributes_list_free (attrs_list);
+
+	if (attrs_hash)
+		g_hash_table_destroy (attrs_hash);
+
+	/* store all rows in data model */
+	GValue *nvalue = NULL;
+	nvalue = gda_value_new_null ();
+	for (list = rows_list; list; list = list->next) {
+		AttRow *row;
+		GList *vlist;
+		guint i;
+		row = (AttRow*) list->data;
+		vlist = g_list_append (NULL, row->attr_name);
+		if (row->req)
+			vlist = g_list_append (vlist, row->req);
+		else
+			vlist = g_list_append (vlist, nvalue);
+		if (row->values) {
+			for (i = 0; i < row->values->len; i++) {
+				GValue *value;
+				value = g_array_index (row->values, GValue*, i);
+				vlist = g_list_append (vlist, value);
+				g_assert (gda_data_model_append_values (model, vlist, NULL) != -1);
+				gda_value_free (value);
+				vlist = g_list_remove (vlist, value);
+			}
+			g_array_free (row->values, TRUE);
+		}
+		else {
+			vlist = g_list_append (vlist, nvalue);
+			g_assert (gda_data_model_append_values (model, vlist, NULL) != -1);
+		}
+		g_list_free (vlist);
+		gda_value_free (row->attr_name);
+		gda_value_free (row->req);
+		g_free (row);
+	}
+	g_slist_free (rows_list);
+
+
+	gda_ldap_entry_free (entry);
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = model;
+
+	return res;
+}
+
+
 
 static GdaInternalCommandResult *
 extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **args,
