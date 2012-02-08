@@ -92,6 +92,7 @@ static void row_multiplier_set_holders (RowMultiplier *rm);
 struct _GdaDataModelLdapPrivate {
 	GdaConnection      *cnc;
 	gchar              *base_dn;
+	gboolean            use_rdn;
 	gchar              *filter;
 	GArray             *attributes;
 	GdaLdapSearchScope  scope;
@@ -118,7 +119,8 @@ enum {
 	PROP_BASE,
 	PROP_FILTER,
 	PROP_ATTRIBUTES,
-	PROP_SCOPE
+	PROP_SCOPE,
+	PROP_USE_RDN
 };
 
 static void gda_data_model_ldap_class_init (GdaDataModelLdapClass *klass);
@@ -195,6 +197,8 @@ gda_data_model_ldap_init (GdaDataModelLdap *model,
 
 	model->priv = g_new0 (GdaDataModelLdapPrivate, 1);
 	model->priv->cnc = NULL;
+	model->priv->base_dn = NULL;
+	model->priv->use_rdn = FALSE;
 	model->priv->filter = g_strdup ("(objectClass=*)");
 	model->priv->iter_row = -1;
 	model->priv->default_mv_action = MULTIPLE_VALUE_ACTION_SET_INVALID;
@@ -252,6 +256,11 @@ gda_data_model_ldap_class_init (GdaDataModelLdapClass *klass)
 							   GDA_LDAP_SEARCH_BASE,
 							   G_PARAM_WRITABLE | G_PARAM_READABLE |
 							   G_PARAM_CONSTRUCT_ONLY));
+
+	g_object_class_install_property (object_class, PROP_USE_RDN,
+                                         g_param_spec_boolean ("use-rdn", NULL, "Return Relative DN instead of complete DN",
+							       FALSE, G_PARAM_WRITABLE | G_PARAM_READABLE));
+
 
 	/* virtual functions */
 	object_class->dispose = gda_data_model_ldap_dispose;
@@ -398,12 +407,27 @@ gda_data_model_ldap_set_property (GObject *object,
 									      &model->priv->attributes,
 									      model->priv->default_mv_action,
 									      &model->priv->column_mv_actions);
+				if (model->priv->use_rdn)
+					gda_column_set_description (GDA_COLUMN (model->priv->columns->data),
+								    _("Relative distinguished name"));
+				else
+					gda_column_set_description (GDA_COLUMN (model->priv->columns->data),
+								    _("Distinguished name"));
 				model->priv->n_columns = g_list_length (model->priv->columns);
 			}
 			break;
 		}
 		case PROP_SCOPE:
 			model->priv->scope = g_value_get_int (value);
+			break;
+		case PROP_USE_RDN:
+			model->priv->use_rdn = g_value_get_boolean (value);
+			if (model->priv->columns && model->priv->use_rdn)
+				gda_column_set_description (GDA_COLUMN (model->priv->columns->data),
+							    _("Relative distinguished name"));
+			else
+				gda_column_set_description (GDA_COLUMN (model->priv->columns->data),
+							    _("Distinguished name"));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -434,6 +458,9 @@ gda_data_model_ldap_get_property (GObject *object,
 			break;
 		case PROP_SCOPE:
 			g_value_set_int (value, model->priv->scope);
+			break;
+		case PROP_USE_RDN:
+		        g_value_set_boolean (value, model->priv->use_rdn);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -487,7 +514,6 @@ _ldap_compute_columns (GdaConnection *cnc, const gchar *attributes,
 	gda_column_set_name (col, "dn");
 	gda_column_set_g_type (col, G_TYPE_STRING);
 	gda_column_set_allow_null (col, FALSE);
-	gda_column_set_description (col, _("Distinguished name"));
 	columns = g_list_prepend (NULL, col);
 	g_hash_table_insert (colnames, g_strdup ("dn"), (gpointer) 0x01);
 
@@ -684,6 +710,18 @@ update_iter_from_ldap_row (GdaDataModelLdap *imodel, GdaDataModelIter *iter)
 	if (attr) {
 		gchar *userdn;
 		if (gda_ldap_parse_dn (attr, &userdn)) {
+			if (imodel->priv->base_dn && *imodel->priv->base_dn &&
+			    imodel->priv->use_rdn &&
+			    g_str_has_suffix (userdn, imodel->priv->base_dn)) {
+				gint i;
+				i = strlen (userdn) - strlen (imodel->priv->base_dn);
+				if (i > 0) {
+					userdn [i] = 0;
+					for (i--; (i >= 0) && (userdn [i] != ','); i--);
+					if ((i >= 0) && userdn [i] == ',')
+						userdn [i] = 0;
+				}
+			}
 			gda_holder_set_value_str (holder, NULL, userdn, NULL);
 			g_free (userdn);
 		}
