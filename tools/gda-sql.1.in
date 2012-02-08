@@ -263,6 +263,31 @@ non alphanumeric characters, they should be represented as specified by the RFC 
 If a DSN with a similar name already exists, it is first removed.
 
 For example: ".lc mydsn PostgreSQL://HOST=moon;DB_NAME=mydb".
+.IP \fB.ldap_attributes\fP
+Defines or list the attributes handled by LDAP commands; this command only works if the
+current connection is an LDAP connection. Full syntax is: \fB.ldap_attributes [<attribute>[,<attribute>...]]\fP.
+
+For multi valued attributes (such as "objectClass"), it is possible to specify how multiple
+values are handled by appending \fB::csv\fP (values are listed in a CVS syntax), \fB::*\fP
+(each row is duplicated with each value of the attribute), \fB::1\fP (only the 1st value of
+the attribute is shown), \fB::concat\fP (all the values are made into a string, separated
+by newlines) or \fB::null\fP (a NULL value is used). The default is an error value.
+.IP \fB.ldap_descr\fP
+Describes an LDAP entry; this command only works if the current connection is an LDAP connection.
+Full syntax is: \fB.ldap_descr <DN> ["all"|"set"|"unset"]\fP.
+
+If the \fBset\fP option is passed, then all the set attributes are shown, if the \fBall\fP option
+is passed, then all attributes are shown,
+and if the \fBunset\fP option is passed, then only attributes which don't have a value are
+shown. The default is to show only the set attributes specified by the \fB.ldap_attributes\fP command.
+.IP \fB.ldap_search\fP
+Searches the LDAP directory for entries; this command only works if the current connection is
+an LDAP connection. Full syntax is: \fB.ldap_search <filter> ["base"|"onelevel"|"subtree" [<base DN>]]\fP.
+
+Filter must be a valid LDAP filter expression (outer most parenthesis are optional though), "base",
+"onelevel" or "subtree" can optionally specify the search scope (default is subtree), and
+\fB.<base DN>\fP can be used to specify a different DN to search from (the default is to use the
+base DN specified when opening the connection).
 .IP \fB.lr\fP
 Removes a DSN declaration. Full syntax is: \fB.lc <DSN_NAME>\fP.
 .IP \fB.meta\fP
