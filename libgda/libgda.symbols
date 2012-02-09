@@ -181,6 +181,7 @@
 	gda_connection_value_to_sql_string
 	gda_data_access_wrapper_get_type
 	gda_data_access_wrapper_new
+	gda_data_access_wrapper_set_mapping
 	gda_data_comparator_compute_diff
 	gda_data_comparator_error_get_type
 	gda_data_comparator_error_quark
