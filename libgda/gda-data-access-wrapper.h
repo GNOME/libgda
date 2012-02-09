@@ -58,12 +58,14 @@ struct _GdaDataAccessWrapperClass {
  * @stability: Stable
  * @see_also: #GdaDataModel
  *
- * The #GdaDataAccessWrapper object simply wraps around another #GdaDataModel data model object
+ * The #GdaDataAccessWrapper object simply wraps another #GdaDataModel data model object
  * and allows data to be accessed in a random way while remaining memory efficient as much as possible.
  */
 
 GType         gda_data_access_wrapper_get_type    (void) G_GNUC_CONST;
 GdaDataModel *gda_data_access_wrapper_new         (GdaDataModel *model);
+gboolean      gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper,
+						   gint *mapping, gint mapping_size);
 
 G_END_DECLS
 

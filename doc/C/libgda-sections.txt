@@ -331,6 +331,7 @@ GdaDataAccessWrapper
 GdaDataAccessWrapperClass
 GdaDataAccessWrapperPrivate
 gda_data_access_wrapper_new
+gda_data_access_wrapper_set_mapping
 <SUBSECTION Standard>
 GDA_DATA_ACCESS_WRAPPER
 GDA_DATA_ACCESS_WRAPPER_CLASS
