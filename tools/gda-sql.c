@@ -4907,7 +4907,7 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 {
 	GdaInternalCommandResult *res = NULL;
 	ConnectionSetting *cs;
-	GdaDataModel *model, *copy;
+	GdaDataModel *model, *wrapper;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
 		g_set_error (error, 0, 0, "%s", 
@@ -4954,17 +4954,43 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 
 	if (*filter != '(')
 		lfilter = g_strdup_printf ("(%s)", filter);
-	
+
+	GdaHolder *param;
+	param = g_hash_table_lookup (main_data->parameters, "ldap_show_dn");
 	model = gda_data_model_ldap_new (cs->cnc, base_dn, lfilter ? lfilter : filter, main_data->ldap_attributes, lscope);
 	g_free (lfilter);
-	copy = (GdaDataModel*) gda_data_model_array_copy_model (model, error);
+	wrapper = gda_data_access_wrapper_new (model);
 	g_object_unref (model);
-	if (!copy)
-		return NULL;
+
+	if (param) {
+		const GValue *cvalue;
+		gchar *tmp = NULL;
+		cvalue = gda_holder_get_value (param);
+		if (cvalue)
+			tmp = gda_value_stringify (cvalue);
+		if (tmp) {
+			if (!g_ascii_strcasecmp (tmp, "rdn"))
+				g_object_set ((GObject *) model, "use-rdn", TRUE, NULL);
+			else if (!g_ascii_strncasecmp (tmp, "no", 2)) {
+				gint nbcols;
+				nbcols = gda_data_model_get_n_columns (wrapper);
+				if (nbcols > 1) {
+					gint *map, i;
+					map = g_new (gint, nbcols - 1);
+					for (i = 0; i < nbcols - 1; i++)
+						map [i] = i+1;
+					gda_data_access_wrapper_set_mapping (GDA_DATA_ACCESS_WRAPPER (wrapper),
+									     map, nbcols - 1);
+					g_free (map);
+				}
+			}
+			g_free (tmp);
+		}
+	}
 
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = copy;
+	res->u.model = wrapper;
 	return res;
 }
 
