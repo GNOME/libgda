@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-08 16:22+0000\n"
-"PO-Revision-Date: 2012-02-09 16:57+0100\n"
+"POT-Creation-Date: 2012-02-09 22:26+0000\n"
+"PO-Revision-Date: 2012-02-10 14:56+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -4679,6 +4679,7 @@ msgstr "Archivo de base de datos Berkeley DB que usar"
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:8
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:8
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:3
+#: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:3
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:8
@@ -4691,6 +4692,7 @@ msgstr "Carpeta"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:4
+#: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:4
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:4
@@ -4702,6 +4704,7 @@ msgstr "Carpeta donde se almacena el archivo con la base de datos"
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:1
+#: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:1
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
@@ -5440,6 +5443,11 @@ msgstr "No se pude encontrar libdb_sql-5."
 msgid "Provider for BDB SQL databases"
 msgstr "Proveedor para bases de datos SQL BDB"
 
+#: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
+#| msgid "The name of a database to use (without the .db)"
+msgid "The name of a database to connect to (without the .fdb)"
+msgstr "El nombre de la base de datos a la que conectarse (sin el .fdb)"
+
 #: ../providers/firebird/libmain-client.c:51
 msgid "Provider for Firebird databases"
 msgstr "Proveedor para bases de datos Firebird"
@@ -5531,7 +5539,6 @@ msgstr "Tipo de dato «%s» no esperado para el atributo objectClass."
 
 #: ../providers/ldap/gda-ldap-util.c:1529
 #, c-format
-#| msgid "Could not get information about LDAP class"
 msgid "Can't get information about '%s' class"
 msgstr "No se pudo obtener la información sobre la clase «%s»"
 
@@ -5543,7 +5550,6 @@ msgstr "Nombre distintivo"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:412
 #: ../providers/ldap/gdaprov-data-model-ldap.c:427
-#| msgid "Distinguished name"
 msgid "Relative distinguished name"
 msgstr "Nombre distintivo relativo"
 
@@ -10790,29 +10796,24 @@ msgid "Missing filter which to operate"
 msgstr "Faltan el filtro sobre el que operar"
 
 #: ../tools/gda-sql.c:5033
-#| msgid "Missing foreign key name argument"
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Falta el argumento DN (nombre distintivo)"
 
 #: ../tools/gda-sql.c:5046
 #, c-format
-#| msgid "Unknown statement"
 msgid "Unknown '%s' argument"
 msgstr "Argumento «%s» desconocido"
 
 #: ../tools/gda-sql.c:5057
 #, c-format
-#| msgid "Could not find LDAP entry whith DN '%s'"
 msgid "Could not find entry with DN '%s'"
 msgstr "No se pudo encontrar ninguna entrada con DN «%s»"
 
 #: ../tools/gda-sql.c:5066
-#| msgid "Requires:"
 msgid "Required?"
 msgstr "¿Requerido?"
 
 #: ../tools/gda-sql.c:5068
-#| msgid "Fetching LDAP entry's attributes"
 msgid "LDAP entry's Attributes"
 msgstr "Atributos de la entrada LDAP"
 
