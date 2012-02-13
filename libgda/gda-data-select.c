@@ -1884,7 +1884,7 @@ static const GValue *
 gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
 	GdaRow *prow;
-	gint int_row, irow;
+	gint int_row;
 	GdaDataSelect *imodel;
 
 	imodel = (GdaDataSelect *) model;
@@ -2119,7 +2119,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaDataSelect *imodel;
 	GdaRow *prow = NULL;
 	gint target_iter_row;
-	gint irow, int_row;
+	gint int_row;
 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
@@ -2165,7 +2165,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaDataSelect *imodel;
 	GdaRow *prow = NULL;
 	gint target_iter_row;
-	gint irow, int_row;
+	gint int_row;
 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
@@ -2213,7 +2213,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 {
 	GdaDataSelect *imodel;
 	GdaRow *prow = NULL;
-	gint irow, int_row, *ptr;
+	gint int_row;
 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);

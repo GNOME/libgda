@@ -113,7 +113,7 @@ _gda_meta_context_get_type (void)
 GdaMetaContext*
 gda_meta_context_new (const gchar* table_name)
 {
-	g_return_if_fail (table_name);
+	g_return_val_if_fail (table_name, null);
 	GdaMetaContext *ctx = g_new0 (GdaMetaContext, 1);
 	ctx->table_name = g_strdup (table_name);
 	ctx->columns = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, 
@@ -149,7 +149,7 @@ gda_meta_context_set_table (GdaMetaContext *ctx, const gchar *table_name)
 const gchar*
 gda_meta_context_get_table (GdaMetaContext *ctx)
 {
-	g_return_if_fail (ctx);
+	g_return_val_if_fail (ctx, null);
 	return ctx->table_name;
 }
 
@@ -532,7 +532,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	/**
 	 * GdaMetaStore::suggest-update:
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @suggest: the suggested update, as a #GdaMetaContext structure
+	 * @suggest: (type Gda.MetaContext): the suggested update, as a #GdaMetaContext structure
 	 *
 	 * This signal is emitted when the contents of a table should be updated (data to update or insert only;
 	 * deleting data is done automatically). This signal is used for internal purposes by the #GdaConnection
@@ -548,7 +548,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
 		suggest_update_accumulator, NULL,
 		_gda_marshal_ERROR__METACONTEXT, G_TYPE_ERROR,
-		1, GDA_TYPE_META_CONTEXT);
+		1, G_TYPE_POINTER);
 	/**
 	 * GdaMetaStore::meta-changed:
 	 * @store: the #GdaMetaStore instance that emitted the signal
