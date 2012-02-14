@@ -7453,6 +7453,171 @@ row it was on was the last one).</doc>
             c:type="GdaDataModelIterPrivate"
             disguised="1">
     </record>
+    <class name="DataModelLdap"
+           c:symbol-prefix="data_model_ldap"
+           c:type="GdaDataModelLdap"
+           parent="GObject.Object"
+           glib:type-name="GdaDataModelLdap"
+           glib:get-type="gda_data_model_ldap_get_type"
+           glib:type-struct="DataModelLdapClass">
+      <implements name="DataModel"/>
+      <function name="compute_columns"
+                c:identifier="gda_data_model_ldap_compute_columns"
+                version="4.2.8">
+        <doc xml:whitespace="preserve">Computes the #GdaColumn of the data model which would be created using @attributes when calling
+gda_data_model_ldap_new().</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a list of #GdaColumn objects</doc>
+          <type name="GLib.List" c:type="GList*">
+            <type name="Column"/>
+          </type>
+        </return-value>
+        <parameters>
+          <parameter name="cnc" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #GdaConnection</doc>
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
+          <parameter name="attributes"
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">a string describing which LDAP attributes to retreive, or %NULL</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <function name="new"
+                c:identifier="gda_data_model_ldap_new"
+                version="4.2.8">
+        <doc xml:whitespace="preserve">Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
+contain one row for each LDAP entry returned by the search, and will
+always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
+may be mapped to other columns, see the @attributes argument.
+
+Note that the actual LDAP search command is not executed until necessary (when using the returned
+data model).
+
+The @base_dn is the point in the LDAP's DIT (Directory Information Tree) from where the search will
+occur, for example "dc=gda,dc=org". A %NULL value indicates that the starting point for the
+search will be the one specified when opening the LDAP connection.
+
+The @filter argument is a valid LDAP filter string, for example "(uidNumber=1001)". If %NULL, then
+a default search filter of "(objectClass=*)" will be used.
+
+@attributes specifies which LDAP attributes the search must return. It is a comma separated list
+of attribute names, for example "uidNumber, mail, uid, jpegPhoto" (spaces between attribute names
+are ignored). If %NULL, then no attribute will be fetched. See gda_ldap_connection_declare_table()
+for more information about this argument.
+
+@scope is the scope of search specified when the LDAP search is actually executed.
+
+In case of multi valued attributes, an error will be returned when trying to read the attribute:
+gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaDataModel</doc>
+          <type name="DataModel" c:type="GdaDataModel*"/>
+        </return-value>
+        <parameters>
+          <parameter name="cnc" transfer-ownership="none">
+            <doc xml:whitespace="preserve">an LDAP opened connection (must be a balid #GdaLdapConnection)</doc>
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
+          <parameter name="base_dn" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">the base DN to search on, or %NULL</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="filter" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">an LDAP filter, for example "(objectClass=*)"</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="attributes"
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">the list (CSV format) of attributes to fetch, each in the format &amp;lt;attname&amp;gt;[::&amp;lt;GType&amp;gt;]</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="scope" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the search scope</doc>
+            <type name="LdapSearchScope" c:type="GdaLdapSearchScope"/>
+          </parameter>
+        </parameters>
+      </function>
+      <property name="attributes"
+                readable="0"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="utf8"/>
+      </property>
+      <property name="base"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="utf8"/>
+      </property>
+      <property name="cnc"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="Connection"/>
+      </property>
+      <property name="filter"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="utf8"/>
+      </property>
+      <property name="scope"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="gint"/>
+      </property>
+      <field name="object">
+        <type name="GObject.Object" c:type="GObject"/>
+      </field>
+      <field name="priv">
+        <type name="DataModelLdapPrivate" c:type="GdaDataModelLdapPrivate*"/>
+      </field>
+    </class>
+    <record name="DataModelLdapClass"
+            c:type="GdaDataModelLdapClass"
+            glib:is-gtype-struct-for="DataModelLdap">
+      <field name="parent_class">
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
+      </field>
+      <field name="_gda_reserved1" introspectable="0">
+        <callback name="_gda_reserved1">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved2" introspectable="0">
+        <callback name="_gda_reserved2">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved3" introspectable="0">
+        <callback name="_gda_reserved3">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved4" introspectable="0">
+        <callback name="_gda_reserved4">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+    </record>
+    <record name="DataModelLdapPrivate"
+            c:type="GdaDataModelLdapPrivate"
+            disguised="1">
+    </record>
     <class name="DataPivot"
            c:symbol-prefix="data_pivot"
            c:type="GdaDataPivot"
@@ -10102,6 +10267,14 @@ otherwise.</doc>
     </enumeration>
     <record name="HolderPrivate" c:type="GdaHolderPrivate" disguised="1">
     </record>
+    <enumeration name="LdapSearchScope" c:type="GdaLdapSearchScope">
+      <doc xml:whitespace="preserve">Defines the search scope of an LDAP search command, relative to the base object.</doc>
+      <member name="base" value="1" c:identifier="GDA_LDAP_SEARCH_BASE"/>
+      <member name="onelevel"
+              value="2"
+              c:identifier="GDA_LDAP_SEARCH_ONELEVEL"/>
+      <member name="subtree" value="3" c:identifier="GDA_LDAP_SEARCH_SUBTREE"/>
+    </enumeration>
     <interface name="Lockable"
                c:symbol-prefix="lockable"
                c:type="GdaLockable"
@@ -10201,7 +10374,11 @@ This function can be used even if g_thread_init() has not yet been called, and, 
         </callback>
       </field>
     </record>
-    <record name="MetaContext" c:type="GdaMetaContext">
+    <record name="MetaContext"
+            c:type="GdaMetaContext"
+            glib:type-name="GdaMetaContext"
+            glib:get-type="gda_meta_context_get_type"
+            c:symbol-prefix="meta_context">
       <doc xml:whitespace="preserve">The &lt;structname&gt;GdaMetaContext&lt;/structname&gt; represents a meta data modification
 context: the &lt;emphasis&gt;how&lt;/emphasis&gt; when used with gda_meta_store_modify_with_context(),
 and the &lt;emphasis&gt;what&lt;/emphasis&gt; when used with gda_connection_update_meta_store().
@@ -10232,18 +10409,46 @@ Don't try to use #gda_meta_context_free on a struct that was created manually.</
           <type name="GLib.GValue"/>
         </type>
       </field>
-      <method name="add_column" c:identifier="gda_meta_context_add_column">
+      <constructor name="new"
+                   c:identifier="gda_meta_context_new"
+                   version="5.2">
+        <doc xml:whitespace="preserve">Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
+given @table_name in the context.
+
+store column name/value pairs.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaMetaContext struct with a copied table's name and a new created hash to</doc>
+          <type name="MetaContext" c:type="GdaMetaContext*"/>
+        </return-value>
+        <parameters>
+          <parameter name="table_name" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the column's value</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <method name="add_column"
+              c:identifier="gda_meta_context_add_column"
+              version="5.2">
+        <doc xml:whitespace="preserve">Insert a new column/value pair to the given context @ctx. Column, must be a column in the given table's
+name setted by #gda_meta_context_set_table () (a table in the &lt;link linkend="information_schema"&gt;database
+schema&lt;/link&gt;).
+
+Column's name and value is copied and destroied when #gda_meta_context_free is called.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <parameter name="column" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the column's name</doc>
             <type name="utf8" c:type="gchar*"/>
           </parameter>
           <parameter name="value" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the column's value</doc>
             <type name="GObject.Value" c:type="GValue*"/>
           </parameter>
-          <parameter name="cnc" transfer-ownership="none">
+          <parameter name="cnc" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">a #GdaConnection to be used when identifier are normalized, or NULL</doc>
             <type name="Connection" c:type="GdaConnection*"/>
           </parameter>
         </parameters>
@@ -10304,24 +10509,6 @@ about database's tables.</doc>
           </parameter>
         </parameters>
       </method>
-      <function name="new"
-                c:identifier="gda_meta_context_new"
-                version="5.2"
-                introspectable="0">
-        <doc xml:whitespace="preserve">Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
-given @table in the context.
-
-store column name/value pairs.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaMetaContext struct with a copied table's name and a new created hash to</doc>
-          <type name="MetaContext" c:type="GdaMetaContext*"/>
-        </return-value>
-        <parameters>
-          <parameter name="table_name" transfer-ownership="none">
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-        </parameters>
-      </function>
     </record>
     <record name="MetaDbObject" c:type="GdaMetaDbObject">
       <doc xml:whitespace="preserve">Struture to hold information about each database object (tables, views, ...),
@@ -22143,6 +22330,65 @@ priority over the GdaTreeMgrColumns:connection property.</doc>
       </field>
     </record>
     <record name="TreeMgrLabelPriv" c:type="GdaTreeMgrLabelPriv" disguised="1">
+    </record>
+    <class name="TreeMgrLdap"
+           c:symbol-prefix="tree_mgr_ldap"
+           c:type="GdaTreeMgrLdap"
+           parent="TreeManager"
+           glib:type-name="GdaTreeMgrLdap"
+           glib:get-type="gda_tree_mgr_ldap_get_type"
+           glib:type-struct="TreeMgrLdapClass">
+      <constructor name="new"
+                   c:identifier="gda_tree_mgr_ldap_new"
+                   version="4.2.8">
+        <doc xml:whitespace="preserve">Creates a new #GdaTreeManager object which will list the children of the LDAP entry which Distinguished name
+is @dn. If @dn is %NULL, then the tree manager will look in the tree itself for an attribute named "dn" and
+use it.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaTreeManager object</doc>
+          <type name="TreeManager" c:type="GdaTreeManager*"/>
+        </return-value>
+        <parameters>
+          <parameter name="cnc" transfer-ownership="none">
+            <doc xml:whitespace="preserve">a #GdaConnection object</doc>
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
+          <parameter name="dn" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">an LDAP Distinguished Name or %NULL</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+        </parameters>
+      </constructor>
+      <property name="connection"
+                introspectable="0"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Defines the #GdaLdapConnection to get information from.</doc>
+        <type/>
+      </property>
+      <property name="dn"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Defines the Distinguised Name of the LDAP entry to list children from</doc>
+        <type name="utf8"/>
+      </property>
+      <field name="object">
+        <type name="TreeManager" c:type="GdaTreeManager"/>
+      </field>
+      <field name="priv">
+        <type name="TreeMgrLdapPriv" c:type="GdaTreeMgrLdapPriv*"/>
+      </field>
+    </class>
+    <record name="TreeMgrLdapClass"
+            c:type="GdaTreeMgrLdapClass"
+            glib:is-gtype-struct-for="TreeMgrLdap">
+      <field name="object_class">
+        <type name="TreeManagerClass" c:type="GdaTreeManagerClass"/>
+      </field>
+    </record>
+    <record name="TreeMgrLdapPriv" c:type="GdaTreeMgrLdapPriv" disguised="1">
     </record>
     <class name="TreeMgrSchemas"
            c:symbol-prefix="tree_mgr_schemas"

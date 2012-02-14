@@ -89,7 +89,7 @@ objattrs_unref (ObjAttrs *attrs)
 }
 
 /**
- * gda_attributes_manager_new: (skip)
+ * gda_attributes_manager_new:
  * @for_objects: set to TRUE if attributes will be set on objects.
  * @signal_func: (allow-none): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called

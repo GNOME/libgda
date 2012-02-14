@@ -70,8 +70,8 @@ typedef struct {
 } GdaMetaStoreChange;
 
 
-/* Pointer type for GdaMetaContext (not a boxed type!) */
-#define GDA_TYPE_META_CONTEXT (_gda_meta_context_get_type())
+/* Pointer type for GdaMetaContext */
+#define GDA_TYPE_META_CONTEXT (gda_meta_context_get_type())
 
 /**
  * GdaMetaContext:
@@ -201,7 +201,7 @@ gboolean          gda_meta_store_undeclare_foreign_key    (GdaMetaStore *store, 
 							   const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
 							   GError **error);
 
-GType             _gda_meta_context_get_type              (void) G_GNUC_CONST;
+GType             gda_meta_context_get_type              (void) G_GNUC_CONST;
 GdaMetaContext*   gda_meta_context_new                    (const gchar* table_name);
 void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
 const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);

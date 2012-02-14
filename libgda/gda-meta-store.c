@@ -76,7 +76,7 @@ gda_meta_context_copy (GdaMetaContext *ctx)
    Register GdaMetaContext type
 */
 GType
-_gda_meta_context_get_type (void)
+gda_meta_context_get_type (void)
 {
 	static GType type = 0;
 
@@ -109,11 +109,10 @@ _gda_meta_context_get_type (void)
 
 /**
  * gda_meta_context_new:
- * @ctx: a #GdaMetaContext struct to add column/value pais to
- * @table: (transfer none): the column's value
+ * @table_name: (transfer none): the column's value
  * 
  * Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
- * given @table in the context.
+ * given @table_name in the context.
  *
  * Return: (transfer full): a new #GdaMetaContext struct with a copied table's name and a new created hash to
  * store column name/value pairs.
@@ -166,7 +165,7 @@ gda_meta_context_get_table (GdaMetaContext *ctx)
 }
 
 /**
- * gda_meta_context_insert_column:
+ * gda_meta_context_add_column:
  * @ctx: a #GdaMetaContext struct to add column/value pais to
  * @column: (transfer none): the column's name
  * @value: (transfer none): the column's value

@@ -439,6 +439,7 @@
 	gda_log_error
 	gda_log_is_enabled
 	gda_log_message
+	gda_meta_context_get_type
 	gda_meta_context_new
 	gda_meta_context_set_table
 	gda_meta_context_get_table
