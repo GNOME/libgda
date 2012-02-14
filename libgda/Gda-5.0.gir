@@ -10243,6 +10243,9 @@ Don't try to use #gda_meta_context_free on a struct that was created manually.</
           <parameter name="value" transfer-ownership="none">
             <type name="GObject.Value" c:type="GValue*"/>
           </parameter>
+          <parameter name="cnc" transfer-ownership="none">
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="free" c:identifier="gda_meta_context_free" version="5.2">
@@ -10279,12 +10282,18 @@ to represent its value.
               <type name="GLib.Value"/>
             </type>
           </parameter>
+          <parameter name="cnc" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">a #GdaConnection to used to normalize identifiers quoting, or NULL</doc>
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
         </parameters>
       </method>
       <method name="set_table"
               c:identifier="gda_meta_context_set_table"
               version="5.2">
-        <doc xml:whitespace="preserve">Set table's name to use in the context.</doc>
+        <doc xml:whitespace="preserve">Set table's name to use in the context. The table is one of &lt;link linkend="information_schema"&gt;database
+schema&lt;/link&gt; used to store meta information about the database. Use "_tables" to update meta information
+about database's tables.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -11073,7 +11082,7 @@ no detailed changes are available</doc>
           <type name="none"/>
         </return-value>
       </glib:signal>
-      <glib:signal name="suggest-update" when="last" introspectable="0">
+      <glib:signal name="suggest-update" when="last">
         <doc xml:whitespace="preserve">This signal is emitted when the contents of a table should be updated (data to update or insert only;
 deleting data is done automatically). This signal is used for internal purposes by the #GdaConnection
 object.
@@ -11086,7 +11095,7 @@ signal, or %NULL if signal propagation should continue</doc>
         <parameters>
           <parameter name="suggest" transfer-ownership="none">
             <doc xml:whitespace="preserve">the suggested update, as a #GdaMetaContext structure</doc>
-            <type/>
+            <type name="MetaContext"/>
           </parameter>
         </parameters>
       </glib:signal>

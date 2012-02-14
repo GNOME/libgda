@@ -587,8 +587,6 @@ namespace Gda {
 		public void set_identifiers_style (Gda.SqlIdentifierStyle style);
 		public void set_reserved_keywords_func (Gda.SqlReservedKeywordsFunc? func);
 		public static string sql_identifier_quote (string id, Gda.Connection cnc);
-		[NoWrapper]
-		public virtual GLib.Error suggest_update (Gda.MetaContext suggest);
 		public bool undeclare_foreign_key (Gda.MetaStruct? mstruct, string fk_name, string? catalog, string? schema, string table, string? ref_catalog, string? ref_schema, string ref_table) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public MetaStore.with_file (string file_name);
@@ -599,6 +597,7 @@ namespace Gda {
 		public string schema { construct; }
 		public signal void meta_changed (GLib.SList<Gda.MetaStoreChange> changes);
 		public virtual signal void meta_reset ();
+		public virtual signal GLib.Error suggest_update (Gda.MetaContext suggest);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_meta_struct_get_type ()")]
 	public class MetaStruct : GLib.Object {
@@ -1270,7 +1269,7 @@ namespace Gda {
 		public weak string[] column_names;
 		[CCode (array_length_cname = "size")]
 		public weak GLib.Value[] column_values;
-		public void add_column (string column, GLib.Value value);
+		public void add_column (string column, GLib.Value value, Gda.Connection cnc);
 		public void free ();
 		public unowned string get_table ();
 		public void set_table (string table);

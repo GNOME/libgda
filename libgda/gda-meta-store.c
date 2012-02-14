@@ -64,6 +64,14 @@
 #include "gda-types.h"
 #include "gda-data-meta-wrapper.h"
 
+static GdaMetaContext* 
+gda_meta_context_copy (GdaMetaContext *ctx)
+{
+	GdaMetaContext *n = gda_meta_context_new (gda_meta_context_get_table (ctx));
+	gda_meta_context_set_columns (n, ctx->columns, NULL);
+	return n;
+}
+
 /*
    Register GdaMetaContext type
 */
@@ -76,7 +84,9 @@ _gda_meta_context_get_type (void)
 		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		g_static_mutex_lock (&registering);
                 if (type == 0)
-			type = g_pointer_type_register_static ("GdaMetaContext");
+			type = type = g_boxed_type_register_static ("GdaMetaContext",
+                                                    (GBoxedCopyFunc) gda_meta_context_copy,
+                                                    (GBoxedFreeFunc) gda_meta_context_free);
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -113,7 +123,7 @@ _gda_meta_context_get_type (void)
 GdaMetaContext*
 gda_meta_context_new (const gchar* table_name)
 {
-	g_return_val_if_fail (table_name, null);
+	g_return_val_if_fail (table_name, NULL);
 	GdaMetaContext *ctx = g_new0 (GdaMetaContext, 1);
 	ctx->table_name = g_strdup (table_name);
 	ctx->columns = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, 
@@ -125,7 +135,9 @@ gda_meta_context_new (const gchar* table_name)
  * @ctx: a #GdaMetaContext struct to set table to
  * @table: a string with the table's name to use in context
  * 
- * Set table's name to use in the context.
+ * Set table's name to use in the context. The table is one of <link linkend="information_schema">database
+ * schema</link> used to store meta information about the database. Use "_tables" to update meta information
+ * about database's tables.
  *
  * Since: 5.2
  */
@@ -149,7 +161,7 @@ gda_meta_context_set_table (GdaMetaContext *ctx, const gchar *table_name)
 const gchar*
 gda_meta_context_get_table (GdaMetaContext *ctx)
 {
-	g_return_val_if_fail (ctx, null);
+	g_return_val_if_fail (ctx, NULL);
 	return ctx->table_name;
 }
 
@@ -158,17 +170,29 @@ gda_meta_context_get_table (GdaMetaContext *ctx)
  * @ctx: a #GdaMetaContext struct to add column/value pais to
  * @column: (transfer none): the column's name
  * @value: (transfer none): the column's value
+ * @cnc: (allow-none): a #GdaConnection to be used when identifier are normalized, or NULL
  * 
- * Insert a new column/value pair to the given context @ctx. Column's name and value is copied and destroied
- * when #gda_meta_context_free is called.
+ * Insert a new column/value pair to the given context @ctx. Column, must be a column in the given table's
+ * name setted by #gda_meta_context_set_table () (a table in the <link linkend="information_schema">database
+ * schema</link>).
+ *
+ * Column's name and value is copied and destroied when #gda_meta_context_free is called.
  *
  * Since: 5.2
  */
 void
-gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GValue* value)
+gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GValue* value, GdaConnection *cnc)
 {
-	g_return_if_fail (column && value);
-	g_hash_table_insert (ctx->columns, (gpointer) g_strdup (column), (gpointer) gda_value_copy (value));
+	g_return_if_fail (ctx && column && value);
+	GValue *v;
+	if (G_VALUE_HOLDS_STRING((GValue*)value)) {
+		v = gda_value_new (G_TYPE_STRING);
+		g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), cnc, NULL,
+										TRUE, FALSE));
+		g_hash_table_insert (ctx->columns, (gpointer) g_strdup (column), (gpointer) v);
+	}
+	else
+		g_hash_table_insert (ctx->columns, (gpointer) g_strdup (column), (gpointer) gda_value_copy (value));
 }
 
 /**
@@ -176,6 +200,7 @@ gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GVa
  * @ctx: a #GdaMetaContext struct to set colums to
  * @columns: (element-type utf8 GLib.Value): a #GHashTable with the table's columns' name and their values
  * to use in context.
+ * @cnc: (allow-none): a #GdaConnection to used to normalize identifiers quoting, or NULL
  * 
  * Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
  * to represent its value.
@@ -185,11 +210,40 @@ gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GVa
  * Since: 5.2
  */
 void
-gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns)
+gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConnection *cnc)
 {
-	g_return_if_fail (ctx && columns);
+	g_return_if_fail (ctx && columns && cnc);
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_hash_table_unref (ctx->columns);
 	ctx->columns = g_hash_table_ref (columns);
+	// FIXME: Old but necesary initialization
+	// FIXME: Remove code that use column_names and column_values arrays
+	if (ctx->column_names)
+		g_free (ctx->column_names);
+	if (ctx->column_values)
+		g_free (ctx->column_values);
+	ctx->column_names = g_new (gchar*, g_hash_table_size (ctx->columns));
+	ctx->column_values = g_new (GValue*, g_hash_table_size (ctx->columns));
+	
+	GHashTableIter iter;
+	gpointer key, value;
+	gint i = 0; // FIXME: Code to remove
+	g_hash_table_iter_init (&iter, ctx->columns);
+	while (g_hash_table_iter_next (&iter, &key, &value))
+	{
+		// Normalize identifier quote
+		if (G_VALUE_HOLDS_STRING((GValue*)value)) 
+		{
+			GValue *v = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), cnc, NULL,
+											TRUE, FALSE));
+			g_hash_table_insert (ctx->columns, key, (gpointer) v);
+		}
+		// FIXME: Code to remove
+		ctx->column_names[i] = (gchar*) key;
+		ctx->column_names[i] = (GValue*) value;
+		i++;
+	}
 }
 
 /**
@@ -207,6 +261,7 @@ gda_meta_context_free (GdaMetaContext *ctx)
 	g_free (ctx->table_name);
 	g_hash_table_unref (ctx->columns);
 	g_free (ctx);
+	// REMIND: ctx->column_names and ctx->column_values must not be freed
 }
 
 /*
@@ -1600,7 +1655,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
                         cname = xmlGetProp (cnode, BAD_CAST "name");
                         if (!cname)
                                 g_error ("Missing column name (table=%s)", complete_obj_name);
-			if (g_str_has_suffix (cname, "gtype"))
+			if (g_str_has_suffix ((const gchar*) cname, "gtype"))
 				TABLE_INFO (dbobj)->gtype_column = colindex;
 
                         xstr = xmlGetProp (cnode, BAD_CAST "pkey");

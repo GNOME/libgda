@@ -206,8 +206,9 @@ GdaMetaContext*   gda_meta_context_new                    (const gchar* table_na
 void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
 const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);
 void              gda_meta_context_add_column             (GdaMetaContext *ctx, const gchar* column, 
-                               const GValue* value);
-void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns);
+                               const GValue* value, GdaConnection *cnc);
+void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns,
+							   GdaConnection *cnc);
 void              gda_meta_context_free                   (GdaMetaContext *ctx);
 
 G_END_DECLS
