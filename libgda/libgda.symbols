@@ -275,6 +275,7 @@
 	gda_data_model_ldap_compute_columns
 	gda_data_model_ldap_get_type
 	gda_data_model_ldap_new
+	gda_data_model_ldap_new_with_config
 #endif
 	gda_data_model_remove_row
 	gda_data_model_reset
