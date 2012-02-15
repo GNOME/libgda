@@ -709,15 +709,19 @@ g_object_unref (mstruct);
       <programlisting><![CDATA[
 GdaConnection *connection=...
 GError *error = NULL;
-GdaMetaContext mcontext = {"_tables", 1, NULL, NULL};
+GValue *table;
+GdaMetaContext *mcontext = gda_meta_context_new ();
+/* This is a table in the dababase schema for Meta Store to update */
+gda_meta_context_set_table ("_tables");
+/* Next setup a value to be used as the column in the last table to be used as a condition in the update
+   in this case we will use the column 'table_name' and update for 'customers'*/
+table = gda_value_new (G_TYPE_STRING);
+g_value_set_string (table, "customers");
+gda_meta_context_set_column ("table_name", table);
 gboolean result;
-mcontext.column_names = g_new (gchar *, 1);
-mcontext.column_names[0] = "table_name";
-mcontext.column_values = g_new (GValue *, 1);
-g_value_take_string ((mcontext.column_values[0] = gda_value_new (G_TYPE_STRING)),
-                     gda_sql_identifier_quote ("customers"));
-result = gda_connection_update_meta_store (connection, &mcontext, &error);
-gda_value_free (mcontext.column_values[0]);
+result = gda_connection_update_meta_store (connection, mcontext, &error);
+gda_value_free (table);
+gda_meta_context_free (mcontext);
 if (!result) {
     /* handle the error */
     g_error_free (error);
@@ -725,16 +729,13 @@ if (!result) {
       </programlisting>
     </para>
     <para>
-      An important note about the <link linkend="gda-sql-identifier-quote">gda_sql_identifier_quote()</link> call
-      which has been added to ensure
-      that the contents of <code>mcontext.column_values</code> values is
-      conform to the convention used by the <link linkend="GdaMetaStore">GdaMetaStore</link>
-      to represent SQL identifiers when the
+      Internally <link linkend="gda-sql-identifier-quote">gda_meta_context_set_column()</link> calls 
+      <link linkend="gda-sql-identifier-quote">gda_sql_identifier_quote()</link> which ensure that the contents of 
+      <code>mcontext.column_values</code> values is conform to the convention used by the 
+      <link linkend="GdaMetaStore">GdaMetaStore</link> to represent SQL identifiers when the
       values represent an SQL identifier (which is the case in the example above). For more information,
       see the <link linkend="information_schema:sql_identifiers">meta data section about SQL identifiers</link>.
-    </para>
-    <para>
-      Even though not strictly necessary, it can safely be used all the time.
+      Even though not strictly necessary, it used all the time.
       For example if the table name for which a meta data update is requested had been <emphasis>"Customers"</emphasis>
       (note the upper case C at the beginning and the double quotes) because this is how the database know it, then
       not using <link linkend="gda-sql-identifier-quote">gda_sql_identifier_quote()</link> may not have done as
