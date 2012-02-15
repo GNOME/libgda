@@ -271,7 +271,7 @@ namespace Check {
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			((DataSelect) model).compute_modification_statements ();
-			var pxy = (Gda.DataModel) Gda.DataProxy.new (model);
+			var pxy = new Gda.DataProxy.with_data_model (model);
 			var t = new Table ();
 			t.connection = this.connection;
 			t.name = "user";

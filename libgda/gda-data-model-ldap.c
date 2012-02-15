@@ -165,7 +165,7 @@ gda_data_model_ldap_get_type (void)
 }
 
 /**
- * gda_data_model_ldap_new: (skip):
+ * gda_data_model_ldap_new:
  * @cnc: an LDAP opened connection (must be a balid #GdaLdapConnection)
  * @base_dn: (allow-none): the base DN to search on, or %NULL
  * @filter: (allow-none): an LDAP filter, for example "(objectClass=*)"
@@ -198,7 +198,9 @@ gda_data_model_ldap_get_type (void)
  * gda_data_model_iter_get_value_at() will return %NULL when using an iterator.
  *
  * Returns: (transfer full): a new #GdaDataModel
- *
+ * 
+ * Deprecated: 5.2: use #gda_data_model_ldap_new_with_config
+ * 
  * Since: 4.2.8
  */
 GdaDataModel *

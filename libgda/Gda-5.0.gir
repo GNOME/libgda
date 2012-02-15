@@ -15,9 +15,6 @@ and/or use gtk-doc annotations.  -->
              shared-library="libgda-5.0.so.4"
              c:identifier-prefixes="Gda"
              c:symbol-prefixes="gda">
-    <alias name="Mutex" c:type="GdaMutex" introspectable="0">
-      <type c:type="GRecMutex"/>
-    </alias>
     <alias name="SqlBuilderId" c:type="GdaSqlBuilderId">
       <type name="guint" c:type="guint"/>
     </alias>
@@ -7461,6 +7458,64 @@ row it was on was the last one).</doc>
            glib:get-type="gda_data_model_ldap_get_type"
            glib:type-struct="DataModelLdapClass">
       <implements name="DataModel"/>
+      <constructor name="new_with_config"
+                   c:identifier="gda_data_model_ldap_new_with_config"
+                   version="5.2">
+        <doc xml:whitespace="preserve">Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
+contain one row for each LDAP entry returned by the search, and will
+always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
+may be mapped to other columns, see the @attributes argument.
+
+Note that the actual LDAP search command is not executed until necessary (when using the returned
+data model).
+
+The @base_dn is the point in the LDAP's DIT (Directory Information Tree) from where the search will
+occur, for example "dc=gda,dc=org". A %NULL value indicates that the starting point for the
+search will be the one specified when opening the LDAP connection.
+
+The @filter argument is a valid LDAP filter string, for example "(uidNumber=1001)". If %NULL, then
+a default search filter of "(objectClass=*)" will be used.
+
+@attributes specifies which LDAP attributes the search must return. It is a comma separated list
+of attribute names, for example "uidNumber, mail, uid, jpegPhoto" (spaces between attribute names
+are ignored). If %NULL, then no attribute will be fetched. See gda_ldap_connection_declare_table()
+for more information about this argument.
+
+@scope is the scope of search specified when the LDAP search is actually executed.
+
+In case of multi valued attributes, an error will be returned when trying to read the attribute:
+gda_data_model_iter_get_value_at() will return %NULL when using an iterator.
+
+This is a convenience function intended to be used by bindings.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new #GdaDataModelLdap object</doc>
+          <type name="DataModelLdap" c:type="GdaDataModelLdap*"/>
+        </return-value>
+        <parameters>
+          <parameter name="cnc" transfer-ownership="none">
+            <doc xml:whitespace="preserve">an LDAP opened connection (must be a balid #GdaLdapConnection)</doc>
+            <type name="Connection" c:type="GdaConnection*"/>
+          </parameter>
+          <parameter name="base_dn" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">the base DN to search on, or %NULL</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="filter" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">an LDAP filter, for example "(objectClass=*)"</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="attributes"
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">the list (CSV format) of attributes to fetch, each in the format &amp;lt;attname&amp;gt;[::&amp;lt;GType&amp;gt;]</doc>
+            <type name="utf8" c:type="gchar*"/>
+          </parameter>
+          <parameter name="scope" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the search scope</doc>
+            <type name="LdapSearchScope" c:type="GdaLdapSearchScope"/>
+          </parameter>
+        </parameters>
+      </constructor>
       <function name="compute_columns"
                 c:identifier="gda_data_model_ldap_compute_columns"
                 version="4.2.8">
@@ -7487,7 +7542,9 @@ gda_data_model_ldap_new().</doc>
       </function>
       <function name="new"
                 c:identifier="gda_data_model_ldap_new"
-                version="4.2.8">
+                version="4.2.8"
+                deprecated="use #gda_data_model_ldap_new_with_config"
+                deprecated-version="5.2">
         <doc xml:whitespace="preserve">Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
 contain one row for each LDAP entry returned by the search, and will
 always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
@@ -10406,7 +10463,7 @@ Don't try to use #gda_meta_context_free on a struct that was created manually.</
       <field name="columns" introspectable="0" writable="1">
         <type name="GLib.HashTable" c:type="GHashTable*">
           <type name="utf8"/>
-          <type name="GLib.GValue"/>
+          <type name="GLib.Value"/>
         </type>
       </field>
       <constructor name="new"
@@ -11294,10 +11351,10 @@ signal, or %NULL if signal propagation should continue</doc>
       <field name="table_name" writable="1">
         <type name="utf8" c:type="gchar*"/>
       </field>
-      <field name="keys" writable="1">
+      <field name="keys" introspectable="0" writable="1">
         <type name="GLib.HashTable" c:type="GHashTable*">
-          <type name="gpointer" c:type="gpointer"/>
-          <type name="gpointer" c:type="gpointer"/>
+          <type name="utf8"/>
+          <type name="GLib.Value"/>
         </type>
       </field>
     </record>
@@ -23784,85 +23841,6 @@ can also be used in hash tables as a #GEqualFunc.</doc>
         <parameter transfer-ownership="none">
           <varargs>
           </varargs>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="mutex_free"
-              c:identifier="gda_mutex_free"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Destroys @mutex.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="mutex" transfer-ownership="full">
-          <doc xml:whitespace="preserve">a #GdaMutex</doc>
-          <type name="Mutex" c:type="GdaMutex*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="mutex_lock"
-              c:identifier="gda_mutex_lock"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Locks @mutex. If @mutex is already locked by another thread, the current thread will block until @mutex is unlocked by the other thread.
-
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
-
-Note: unlike g_mutex_lock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
-to unlock it as many times to actually unlock it).</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="mutex" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #GdaMutex</doc>
-          <type name="Mutex" c:type="GdaMutex*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="mutex_new" c:identifier="gda_mutex_new" introspectable="0">
-      <doc xml:whitespace="preserve">Creates a new #GdaMutex.
-
-Note: Unlike g_mutex_new(), this function will return %NULL if g_thread_init() has not been called yet.</doc>
-      <return-value transfer-ownership="full">
-        <doc xml:whitespace="preserve">a new #GdaMutex</doc>
-        <type name="Mutex" c:type="GdaMutex*"/>
-      </return-value>
-    </function>
-    <function name="mutex_trylock"
-              c:identifier="gda_mutex_trylock"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Tries to lock @mutex. If @mutex is already locked by another thread, it immediately returns FALSE.
-Otherwise it locks @mutex and returns TRUE
-
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will immediately return TRUE.
-
-Note: Unlike g_mutex_trylock(), the #GdaMutex is recursive, which means a thread can lock it several times (and has
-to unlock it as many times to actually unlock it)</doc>
-      <return-value transfer-ownership="none">
-        <doc xml:whitespace="preserve">TRUE, if @mutex could be locked.</doc>
-        <type name="gboolean" c:type="gboolean"/>
-      </return-value>
-      <parameters>
-        <parameter name="mutex" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #GdaMutex</doc>
-          <type name="Mutex" c:type="GdaMutex*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="mutex_unlock"
-              c:identifier="gda_mutex_unlock"
-              introspectable="0">
-      <doc xml:whitespace="preserve">Unlocks @mutex. If another thread is blocked in a gda_mutex_lock() call for @mutex, it wil
-be woken and can lock @mutex itself.
-This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.</doc>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="mutex" transfer-ownership="none">
-          <doc xml:whitespace="preserve">a #GdaMutex</doc>
-          <type name="Mutex" c:type="GdaMutex*"/>
         </parameter>
       </parameters>
     </function>
