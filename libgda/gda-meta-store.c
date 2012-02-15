@@ -109,26 +109,24 @@ gda_meta_context_get_type (void)
 
 /**
  * gda_meta_context_new:
- * @table_name: (transfer none): the column's value
  * 
- * Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
- * given @table_name in the context.
+ * Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs.
  *
- * Return: (transfer full): a new #GdaMetaContext struct with a copied table's name and a new created hash to
+ * Return: (transfer full): a new #GdaMetaContext struct with a new created hash to
  * store column name/value pairs.
  *
  * Since: 5.2
  */
 GdaMetaContext*
-gda_meta_context_new (const gchar* table_name)
+gda_meta_context_new ()
 {
-	g_return_val_if_fail (table_name, NULL);
 	GdaMetaContext *ctx = g_new0 (GdaMetaContext, 1);
-	ctx->table_name = g_strdup (table_name);
+	ctx->table_name = g_strdup ("");
 	ctx->columns = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, 
 							(GDestroyNotify) gda_value_free);
 	return ctx;
 }
+
 /**
  * gda_meta_context_set_table:
  * @ctx: a #GdaMetaContext struct to set table to
@@ -165,22 +163,22 @@ gda_meta_context_get_table (GdaMetaContext *ctx)
 }
 
 /**
- * gda_meta_context_add_column:
+ * gda_meta_context_set_column:
  * @ctx: a #GdaMetaContext struct to add column/value pais to
  * @column: (transfer none): the column's name
  * @value: (transfer none): the column's value
  * @cnc: (allow-none): a #GdaConnection to be used when identifier are normalized, or NULL
  * 
- * Insert a new column/value pair to the given context @ctx. Column, must be a column in the given table's
+ * Sets a new column/value pair to the given context @ctx. Column, must be a column in the given table's
  * name setted by #gda_meta_context_set_table () (a table in the <link linkend="information_schema">database
- * schema</link>).
+ * schema</link>). If the given @column already exists it's value is overwrited.
  *
- * Column's name and value is copied and destroied when #gda_meta_context_free is called.
+ * Column's name and value is copied and destroyed when #gda_meta_context_free is called.
  *
  * Since: 5.2
  */
 void
-gda_meta_context_add_column (GdaMetaContext *ctx, const gchar* column, const GValue* value, GdaConnection *cnc)
+gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GValue* value, GdaConnection *cnc)
 {
 	g_return_if_fail (ctx && column && value);
 	GValue *v;

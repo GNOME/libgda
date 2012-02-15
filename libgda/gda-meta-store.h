@@ -207,10 +207,10 @@ gboolean          gda_meta_store_undeclare_foreign_key    (GdaMetaStore *store, 
 							   GError **error);
 
 GType             gda_meta_context_get_type              (void) G_GNUC_CONST;
-GdaMetaContext*   gda_meta_context_new                    (const gchar* table_name);
+GdaMetaContext*   gda_meta_context_new                    ();
 void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
 const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);
-void              gda_meta_context_add_column             (GdaMetaContext *ctx, const gchar* column, 
+void              gda_meta_context_set_column             (GdaMetaContext *ctx, const gchar* column, 
                                const GValue* value, GdaConnection *cnc);
 void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns,
 							   GdaConnection *cnc);

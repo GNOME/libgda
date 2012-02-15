@@ -444,7 +444,7 @@
 	gda_meta_context_new
 	gda_meta_context_set_table
 	gda_meta_context_get_table
-	gda_meta_context_add_column
+	gda_meta_context_set_column
 	gda_meta_context_set_columns
 	gda_meta_context_free
 	gda_meta_db_object_type_get_type

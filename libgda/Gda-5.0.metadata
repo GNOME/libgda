@@ -42,3 +42,4 @@ DataModelIter.get_value_for_field nullable=true
 Holder.get_value nullable=true
 Row.get_value nullable=true
 Numeric.get_string nullable=true
+MetaStore.extract_v name="extract"

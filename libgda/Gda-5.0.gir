@@ -7612,10 +7612,11 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
         <type name="utf8"/>
       </property>
       <property name="cnc"
+                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
-        <type name="Connection"/>
+        <type/>
       </property>
       <property name="filter"
                 writable="1"
@@ -7628,6 +7629,9 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 construct-only="1"
                 transfer-ownership="none">
         <type name="gint"/>
+      </property>
+      <property name="use-rdn" writable="1" transfer-ownership="none">
+        <type name="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -10469,29 +10473,37 @@ Don't try to use #gda_meta_context_free on a struct that was created manually.</
       <constructor name="new"
                    c:identifier="gda_meta_context_new"
                    version="5.2">
-        <doc xml:whitespace="preserve">Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs, using
-given @table_name in the context.
+        <doc xml:whitespace="preserve">Creates a new #GdaMetaContext struct with a #GHashTable to store column/value pairs.
 
 store column name/value pairs.</doc>
         <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaMetaContext struct with a copied table's name and a new created hash to</doc>
+          <doc xml:whitespace="preserve">a new #GdaMetaContext struct with a new created hash to</doc>
           <type name="MetaContext" c:type="GdaMetaContext*"/>
         </return-value>
-        <parameters>
-          <parameter name="table_name" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the column's value</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-        </parameters>
       </constructor>
-      <method name="add_column"
-              c:identifier="gda_meta_context_add_column"
+      <method name="free" c:identifier="gda_meta_context_free" version="5.2">
+        <doc xml:whitespace="preserve">Frees any resources taken by @ctx struct.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
+      <method name="get_table"
+              c:identifier="gda_meta_context_get_table"
               version="5.2">
-        <doc xml:whitespace="preserve">Insert a new column/value pair to the given context @ctx. Column, must be a column in the given table's
+        <doc xml:whitespace="preserve">Get table's name to used in the context.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">A string with the table's name used in the context.</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+      </method>
+      <method name="set_column"
+              c:identifier="gda_meta_context_set_column"
+              version="5.2">
+        <doc xml:whitespace="preserve">Sets a new column/value pair to the given context @ctx. Column, must be a column in the given table's
 name setted by #gda_meta_context_set_table () (a table in the &lt;link linkend="information_schema"&gt;database
-schema&lt;/link&gt;).
+schema&lt;/link&gt;). If the given @column already exists it's value is overwrited.
 
-Column's name and value is copied and destroied when #gda_meta_context_free is called.</doc>
+Column's name and value is copied and destroyed when #gda_meta_context_free is called.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -10509,21 +10521,6 @@ Column's name and value is copied and destroied when #gda_meta_context_free is c
             <type name="Connection" c:type="GdaConnection*"/>
           </parameter>
         </parameters>
-      </method>
-      <method name="free" c:identifier="gda_meta_context_free" version="5.2">
-        <doc xml:whitespace="preserve">Frees any resources taken by @ctx struct.</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-      </method>
-      <method name="get_table"
-              c:identifier="gda_meta_context_get_table"
-              version="5.2">
-        <doc xml:whitespace="preserve">Get table's name to used in the context.</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">A string with the table's name used in the context.</doc>
-          <type name="utf8" c:type="gchar*"/>
-        </return-value>
       </method>
       <method name="set_columns"
               c:identifier="gda_meta_context_set_columns"
