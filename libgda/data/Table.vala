@@ -163,7 +163,8 @@ namespace GdaData
 				var pk = new Gee.HashMap<string,DbFieldInfo> ();
 				foreach (DbFieldInfo f in fields)
 				{
-					if (DbFieldInfo.Attribute.PRIMARY_KEY in f.attributes)
+					if (DbFieldInfo.Attribute.PRIMARY_KEY in f.attributes
+						|| DbFieldInfo.Attribute.UNIQUE in f.attributes)
 					{
 						pk.set (f.name, f);
 					}
