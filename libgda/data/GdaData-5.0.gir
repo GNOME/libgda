@@ -116,13 +116,13 @@
 				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 			</type>
 		</field>
-		<field name="_fk_depends">
+		<field name="_depends">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</field>
-		<field name="_fk">
+		<field name="_references">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
@@ -443,19 +443,23 @@
 				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 			</type>
 		</property>
-		<property name="fk-depends">
+		<property name="depends">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
-		<property name="fk">
+		<property name="references">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
 		<property name="fields">
-			<type name="Gee.HashMap" c:type="GeeHashMap*">
-				<type name="utf8" c:type="gchar*"/>
+			<type name="Gee.Collection" c:type="GeeCollection*">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</type>
+		</property>
+		<property name="primary-keys">
+			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 			</type>
 		</property>
@@ -889,15 +893,15 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
-	<enumeration name="DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute" glib:type-name="GdaDataDbFieldInfoAttribute" glib:get-type="gda_data_db_field_info_attribute_get_type">
-		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_NONE" value="0"/>
-		<member name="primary_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_PRIMARY_KEY" value="1"/>
-		<member name="unique" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_UNIQUE" value="2"/>
-		<member name="foreign_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_FOREIGN_KEY" value="3"/>
-		<member name="check" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CHECK" value="4"/>
-		<member name="have_default" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_HAVE_DEFAULT" value="5"/>
-		<member name="is_auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_IS_AUTO_INCREMENT" value="6"/>
-	</enumeration>
+	<bitfield name="DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute" glib:type-name="GdaDataDbFieldInfoAttribute" glib:get-type="gda_data_db_field_info_attribute_get_type">
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_NONE" value="1"/>
+		<member name="primary_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_PRIMARY_KEY" value="2"/>
+		<member name="unique" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_UNIQUE" value="4"/>
+		<member name="foreign_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_FOREIGN_KEY" value="8"/>
+		<member name="check" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CHECK" value="16"/>
+		<member name="have_default" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_HAVE_DEFAULT" value="32"/>
+		<member name="is_auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_IS_AUTO_INCREMENT" value="64"/>
+	</bitfield>
 	<record name="DbFieldInfoForeignKey">
 		<field name="name">
 			<type name="utf8" c:type="gchar*"/>

@@ -72,8 +72,8 @@ namespace GdaData
 				return long.parse (as_string);
 //			if (type == typeof (float))
 //				return float.parse (as_string);
-//			if (type == typeof (double))
-//				return double.parse (as_string);
+			if (type == typeof (double))
+				return double.parse (as_string);
 			if (type == typeof (Gda.Numeric))
 			{
 				var n = new Gda.Numeric ();

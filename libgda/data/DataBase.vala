@@ -31,7 +31,7 @@ namespace GdaData
 		{
 			connection.update_meta_store (null);
 			var store = connection.get_meta_store ();
-			var msch =  store.extract_v ("SELECT * FROM _schemata", null);
+			var msch =  store.extract ("SELECT * FROM _schemata", null);
 			int r;
 			for ( r = 0; r < msch.get_n_rows (); r++) {
 				var schema = new Schema ();

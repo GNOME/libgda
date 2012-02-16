@@ -22,14 +22,17 @@ using Gda;
 namespace GdaData {
 	public interface DbFieldInfo : Object
 	{
-		public abstract DbFieldInfo.Attribute  attributes { get; set; }
-		public abstract Value?                 default_value { get; set; }
-		public abstract string                 name { get; set; }
-		public abstract string                 desc { get; set; }
+		public abstract DbFieldInfo.Attribute  attributes        { get; set; }
+		public abstract Value?                 default_value     { get; set; }
+		public abstract string                 name              { get; set; }
+		public abstract string                 desc              { get; set; }
 		
 		// Numeric and Datetime attributes
-		public abstract int                    precision   { get; set; }
-		public abstract int                    scale       { get; set; }
+		public abstract int                    precision         { get; set; }
+		public abstract int                    scale             { get; set; }
+		
+		// Check clause expression
+//		public abstract DbSqlExpression        check_expression  { get; set; }
 		
 		public static Attribute attribute_from_string (string str)
 		{
@@ -50,6 +53,7 @@ namespace GdaData {
 			
 			return Attribute.NONE;
 		}
+		[Flags]
 		public enum Attribute {
 			NONE,
 			PRIMARY_KEY,

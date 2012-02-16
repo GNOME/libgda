@@ -35,7 +35,7 @@ namespace GdaData
 			var vals = new HashTable<string,Value?> (str_hash,str_equal);
 			Value v = name;
 			vals.set ("name", v);
-			var mt = store.extract_v ("SELECT * FROM _tables WHERE schema_name = ##name::string", vals);
+			var mt = store.extract ("SELECT * FROM _tables WHERE schema_name = ##name::string", vals);
 			for (int r = 0; r < mt.get_n_rows (); r++) {
 				var t = new Table ();
 				t.connection = connection;

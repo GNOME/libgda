@@ -22,7 +22,7 @@ using Gda;
 
 namespace GdaData
 {
-	public interface SqlExpression<A,G> : GLib.Object
+	public interface DbSqlExpression<A,G> : GLib.Object
 	{
 		public abstract Gee.HashMap<A,G> fields { get; }
 		public abstract Gee.HashMap<A,G> values { get; }
@@ -40,7 +40,7 @@ namespace GdaData
 		
 		struct DbExpressionRelation {
 			A id;
-			DbExpressionOperator value;
+			DbExpressionOperator oper;
 		}
 		
 	}
