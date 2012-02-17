@@ -721,18 +721,20 @@ _gda_sqlite_meta_schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 		if (!schema_name_n || 
 		    !gda_value_compare (schema_name_n, cvalue)) {
 			const gchar *cstr;
-			GValue *v1;
+			GValue *v1, *v2;
 
 			cstr = g_value_get_string (cvalue); /* VMA */
 			if (!cstr || !strncmp (cstr, TMP_DATABASE_NAME, 4))
 				continue;
 
 			g_value_set_boolean ((v1 = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
-			retval = append_a_row (model, error, 4, 
+			g_value_set_boolean ((v2 = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
+			retval = append_a_row (model, error, 5, 
 					       FALSE, catalog_value,
 					       TRUE, new_caseless_value (cvalue), 
 					       FALSE, NULL,
-					       TRUE, v1);
+					       TRUE, v1,
+					       TRUE, v2);
 		}
 	}
 	g_object_unref (tmpmodel);
