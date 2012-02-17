@@ -28,7 +28,7 @@ namespace GdaData
 		protected DbRecordCollection          _records;
 		protected HashMap<string,DbFieldInfo> _fields = new HashMap<string,DbFieldInfo> ();
 		protected HashMap<string,DbTable>     _depends = new HashMap<string,DbTable> ();
-		protected HashMap<string,DbTable>     _references = new HashMap<string,DbTable> ();
+		protected HashMap<string,DbTable>     _referenced = new HashMap<string,DbTable> ();
 		
 		public Table.with_fields_info (HashMap<string,DbFieldInfo> fields)
 		{
@@ -42,6 +42,7 @@ namespace GdaData
 		{
 			var store = connection.get_meta_store ();
 			_fields.clear ();
+			string cond = "";
 			
 			var ctx = new Gda.MetaContext ();
 			ctx.set_table ("_columns");
@@ -51,28 +52,55 @@ namespace GdaData
 			
 			var vals = new HashTable<string,Value?> (str_hash,str_equal);
 			vals.set ("name", name);
-			vals.set ("schema", schema.name);
-			vals.set ("catalog", schema.catalog.name);
-			var mt = store.extract ("SELECT * FROM _columns WHERE table_schema = ##schema::string AND table_catalog = ##catalog::string AND table_name  = ##name::string", vals);
-			for (int r = 0; r < mt.get_n_columns (); r++) 
+			if (schema == null)
+			{
+				var cxc = new Gda.MetaContext ();
+				cxc.set_table ("_information_schema_catalog_name");
+				connection.update_meta_store (cxc);
+				var catm = store.extract ("SELECT * FROM _information_schema_catalog_name", null);
+				catalog = new Catalog ();
+				catalog.connection = connection;
+				catalog.name = (string) catm.get_value_at (catm.get_column_index ("catalog_name"), 0);
+				var cxs = new Gda.MetaContext ();
+				cxs.set_table ("_schemata");
+				connection.update_meta_store (cxs);
+				var schm = store.extract ("SELECT * FROM _schemata WHERE schema_default = TRUE", null);
+				schema = new Schema ();
+				schema.connection = connection;
+				schema.name = (string) schm.get_value_at (schm.get_column_index ("schema_name"), 0);
+			}
+			else
+			{
+				vals.set ("schema", schema.name);
+				cond += " AND table_schema = ##schema::string";
+			}
+			if (catalog != null)
+			{
+				// Not using default catalog
+				vals.set ("catalog", schema.catalog.name);
+				cond += " AND table_catalog = ##catalog::string";
+			}
+			
+			var mt = store.extract ("SELECT * FROM _columns WHERE table_name  = ##name::string" + cond, vals);
+			for (int r = 0; r < mt.get_n_rows (); r++) 
 			{
 				var fi = new FieldInfo ();
 				fi.name = (string) mt.get_value_at (mt.get_column_index ("column_name"), r);
-				
+				fi.desc = (string) mt.get_value_at (mt.get_column_index ("column_comments"), r);
 				// Set attributes
 				fi.attributes = DbFieldInfo.Attribute.NONE;
 				bool fcbn = (bool) mt.get_value_at (mt.get_column_index ("is_nullable"), r);
 				if (fcbn)
-					fi.attributes = fi.attributes & DbField.Attribute.CAN_BE_NULL;
-				string fai = (string) mt.get_value_at (mt.get_column_index ("extras"), r);
+					fi.attributes = fi.attributes | DbFieldInfo.Attribute.CAN_BE_NULL;
+				string fai = (string) mt.get_value_at (mt.get_column_index ("extra"), r);
 				if (fai == "AUTO_INCREMENT")
-					fi.attributes = fi.attributes & DbFieldInfo.Attribute.IS_AUTO_INCREMENT;
+					fi.attributes = fi.attributes | DbFieldInfo.Attribute.AUTO_INCREMENT;
 				
 				// Default Value
 				string fdv = (string) mt.get_value_at (mt.get_column_index ("column_default"), r);
-				Type ft = (Type) mt.get_value_at (mt.get_column_index ("gtype"), r);
+				Type ft = Gda.g_type_from_string ((string) mt.get_value_at (mt.get_column_index ("gtype"), r));
 				if (fdv != null) {
-					fi.attributes = fi.attributes & DbField.Attribute.CAN_BE_DEFAULT;
+					fi.attributes = fi.attributes | DbFieldInfo.Attribute.HAVE_DEFAULT;
 					fi.default_value = DbField.value_from_string (fdv, ft);
 				}
 				
@@ -89,32 +117,31 @@ namespace GdaData
 				_fields.set (fi.name, fi);
 			}
 			// Constraints
+			stdout.printf ("Cheking FiledInfo Constraints ...\n");
 			ctx.set_table ("_table_constraints");
 			connection.update_meta_store (ctx);
 			ctx.set_table ("_key_column_usage");
 			connection.update_meta_store (ctx);
-			ctx.set_table ("_referential_constraints");
-			connection.update_meta_store (ctx);
-			var mc = store.extract ("SELECT * FROM _table_constraints WHERE table_schema = ##schema::string AND table_catalog = ##catalog::string AND table_name  = ##name::string", vals);
-			for (int r = 0; r < mc.get_n_columns (); r++) 
+			var mc = store.extract ("SELECT * FROM _table_constraints WHERE table_name  = ##name::string" + cond,
+									vals);
+			stdout.printf ("table REF_CONST: \n"+mc.dump_as_string ());
+			for (int r = 0; r < mc.get_n_rows (); r++) 
 			{
 				string ct = (string) mc.get_value_at (mc.get_column_index ("constraint_type"), r);
 				string cn = (string) mc.get_value_at (mc.get_column_index ("constraint_name"), r);
-				var vals2 = new HashTable<string,Value?> (str_hash,str_equal);
-				vals2.set ("name", name);
-				vals2.set ("schema", schema);
-				vals2.set ("catalog", schema.catalog.name);
-				vals2.set ("constraint_name", cn);
-				var mpk = store.extract ("SELECT * FROM _key_column_usage WHERE table_schema = ##schema::string AND table_catalog = ##catalog::string AND table_name  = ##name::string AND constraint_name = ##constraint", vals2);
-				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), r);
-				
+				vals.set ("constraint_name", cn);
+				var mpk = store.extract ("SELECT * FROM _key_column_usage WHERE table_name  = ##name::string AND constraint_name = ##constraint_name::string" + cond, vals);
+				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
-				f.attributes = f.attributes & DbFieldInfo.attribute_from_string (ct);
+				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
+				stdout.printf("Conts type: " + ct + " : Getted Field: " + f.name + ": Attrib= " + ((int)f.attributes).to_string () + "\n");
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
-					f.attributes = f.attributes & DbFieldInfo.Attribute.FOREIGN_KEY;
-					var mfk = store.extract ("SELECT * FROM _referential_constraints WHERE table_schema = ##schema::string AND table_catalog = ##catalog::string AND table_name  = ##name::string AND constraint_name = ##constraint", vals2);
+					ctx.set_table ("_referential_constraints");
+					connection.update_meta_store (ctx);
+					var mfk = store.extract ("SELECT * FROM _referential_constraints WHERE table_name  = ##name::string AND constraint_name = ##constraint_name::string" + cond, vals);
+					stdout.printf ("REF_CONST: \n"+mfk.dump_as_string ());
 					f.fkey = new DbFieldInfo.ForeignKey ();
 					f.fkey.name = cn;
 					f.fkey.refname = (string) mfk.get_value_at (mfk.get_column_index ("ref_constraint_name"), 0);
@@ -144,8 +171,9 @@ namespace GdaData
 				}
 				if (DbFieldInfo.Attribute.CHECK in  f.attributes) 
 				{
-					// FIXME: Implement
+					// FIXME: Implement save CHECK expression 
 				}
+				_fields.set (f.name, f);
 			}
 		}
 		public void save () throws Error {}
@@ -176,29 +204,39 @@ namespace GdaData
 		public DbSchema  schema { get; set; }
 		public Collection<DbRecord> records { 
 			owned get  {
-				var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
-				q.set_table (name);
-				q.select_add_field ("*", null, null);
-				var s = q.get_statement ();
-	    		var m = this.connection.statement_execute_select (s, null);
-				_records = new RecordCollection (m, this);
+				try {
+					var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
+					q.set_table (name);
+					q.select_add_field ("*", null, null);
+					var s = q.get_statement ();
+					var m = this.connection.statement_execute_select (s, null);
+					_records = new RecordCollection (m, this);
+				}
+				catch (Error e) { GLib.warning (e.message); }
 				return _records;
 			}
 		}
 		public Collection<DbTable> depends    { owned get { return _depends.values; } }
-		public Collection<DbTable> references { 
+		public Collection<DbTable> referenced { 
 			owned get {
-				foreach (DbTable t in schema.tables) {
-					t.update ();
-					foreach (DbTable td in t.depends) {
-						if (name == td.name && schema.name == td.schema.name && catalog.name == td.catalog.name)
-						{
-							_references.set (t.name, t);
-							break;
+				try {
+					if (schema == null)
+						this.update ();
+					foreach (DbTable t in schema.tables) {
+						t.update ();
+						foreach (DbTable td in t.depends) {
+							if (name == td.name && 
+								schema.name == td.schema.name && 
+								catalog.name == td.catalog.name)
+							{
+								_referenced.set (t.name, t);
+								break;
+							}
 						}
 					}
-				}
-				return _references.values; 
+				} 
+				catch (Error e) { GLib.warning (e.message); }
+				return _referenced.values; 
 			} 
 		}
 	}

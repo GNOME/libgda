@@ -39,55 +39,55 @@ namespace GdaData {
         
         public Connection connection { set; get; }
         
-        public SelectQuery()
-        {
-        	this._fields.add ("*");
-        	this.table = "";
-        }
-        
-        public void add_field (string field)
-        {
-        	if (this._fields.get (0) == "*")
-        	{
-        		this._fields.clear ();
-        	}
-	        
-	        this._fields.add (field);
-        }
-        
-        public SqlBuilder build ()
-        	requires (this.table != "")
-        {
-        	this._sql = new SqlBuilder (Gda.SqlStatementType.SELECT);
-        	
-        	foreach (string f in this._fields) {
-	        	this._sql.select_add_field (f, null, null);
-	        }            
-			return this._sql;
-        }
-        
-        public void set_fields_to_all () 
-        {
-        	this._fields.clear ();
-        	this._fields.add ("*");
-        }
-        
-        public void set_condition (string field, Value v, SqlOperatorType op) 
-        {
-        	var f_id = this._sql.add_id (field);
-			var e_id = this._sql.add_expr_value (null, v);
-			var c_id = this._sql.add_cond (op, f_id, e_id, 0);
-			this._sql.set_where (c_id);
-        }
-        
-        public DataModel execute () 
-            throws Error 
-            requires (this.connection.is_opened ())
-        {
-            /* Build Select Query */
-            var b = this.build ();
-		    var s = b.get_statement ();
-		    return this.connection.statement_execute_select (s, null);
-        }
+//        public SelectQuery()
+//        {
+//        	this._fields.add ("*");
+//        	this.table = "";
+//        }
+//        
+//        public void add_field (string field)
+//        {
+//        	if (this._fields.get (0) == "*")
+//        	{
+//        		this._fields.clear ();
+//        	}
+//	        
+//	        this._fields.add (field);
+//        }
+//        
+//        public SqlBuilder build ()
+//        	requires (this.table != "")
+//        {
+//        	this._sql = new SqlBuilder (Gda.SqlStatementType.SELECT);
+//        	
+//        	foreach (string f in this._fields) {
+//	        	this._sql.select_add_field (f, null, null);
+//	        }            
+//			return this._sql;
+//        }
+//        
+//        public void set_fields_to_all () 
+//        {
+//        	this._fields.clear ();
+//        	this._fields.add ("*");
+//        }
+//        
+//        public void set_condition (string field, Value v, SqlOperatorType op) 
+//        {
+//        	var f_id = this._sql.add_id (field);
+//			var e_id = this._sql.add_expr_value (null, v);
+//			var c_id = this._sql.add_cond (op, f_id, e_id, 0);
+//			this._sql.set_where (c_id);
+//        }
+//        
+//        public DataModel execute () 
+//            throws Error 
+//            requires (this.connection.is_opened ())
+//        {
+//            /* Build Select Query */
+//            var b = this.build ();
+//		    var s = b.get_statement ();
+//		    return this.connection.statement_execute_select (s, null);
+//        }
     }
 }

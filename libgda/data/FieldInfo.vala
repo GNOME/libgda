@@ -49,6 +49,6 @@ namespace GdaData {
 		public int precision   { get { return _precision; } set { _precision = value; } }
 		public int scale       { get { return _scale; } set { _scale = value; } }
 		
-		public DbFieldInfo.ForeignKey  fkey   { get  { return _fk; } set { _fk = value.copy (); } }
+		public DbFieldInfo.ForeignKey  fkey   { get  { return _fk; } set { _fk = value; } }
 	}
 }

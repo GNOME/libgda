@@ -105,10 +105,10 @@ static gchar *internal_sql[] = {
 	"SELECT t.typname, 'pg_catalog.' || t.typname, 'gchararray', pg_catalog.obj_description(t.oid), NULL, CASE WHEN t.typname ~ '^_' THEN TRUE WHEN typtype = 'p' THEN TRUE WHEN t.typname in ('any', 'anyarray', 'anyelement', 'cid', 'cstring', 'int2vector', 'internal', 'language_handler', 'oidvector', 'opaque', 'record', 'refcursor', 'regclass', 'regoper', 'regoperator', 'regproc', 'regprocedure', 'regtype', 'SET', 'smgr', 'tid', 'trigger', 'unknown', 'void', 'xid', 'oid', 'aclitem') THEN TRUE ELSE FALSE END, CAST (t.oid AS varchar) FROM pg_catalog.pg_type t, pg_catalog.pg_user u, pg_catalog.pg_namespace n WHERE t.typowner=u.usesysid AND n.oid = t.typnamespace AND pg_catalog.pg_type_is_visible(t.oid) AND (typtype='b' OR typtype='p') AND typelem = 0",
 
 	/* I_STMT_SCHEMAS */
-	"SELECT current_database() AS catalog_name, n.nspname AS schema_name, u.rolname AS schema_owner, CASE WHEN n.nspname ~ '^pg_' THEN TRUE WHEN n.nspname = 'information_schema' THEN TRUE ELSE FALSE END FROM pg_namespace n, pg_roles u WHERE n.nspowner = u.oid AND current_database() = ##cat::string",
+	"SELECT current_database() AS catalog_name, n.nspname AS schema_name, u.rolname AS schema_owner, CASE WHEN n.nspname ~ '^pg_' THEN TRUE WHEN n.nspname = 'information_schema' THEN TRUE ELSE FALSE END, CASE WHEN n.nspname = 'public' THEN TRUE ELSE FALSE END AS schema_default FROM pg_namespace n, pg_roles u WHERE n.nspowner = u.oid AND current_database() = ##cat::string",
 
 	/* I_STMT_SCHEMAS_ALL */
-	"SELECT current_database() AS catalog_name, n.nspname AS schema_name, u.rolname AS schema_owner, CASE WHEN n.nspname ~ '^pg_' THEN TRUE WHEN n.nspname = 'information_schema' THEN TRUE ELSE FALSE END FROM pg_namespace n, pg_roles u WHERE n.nspowner = u.oid",
+	"SELECT current_database() AS catalog_name, n.nspname AS schema_name, u.rolname AS schema_owner, CASE WHEN n.nspname ~ '^pg_' THEN TRUE WHEN n.nspname = 'information_schema' THEN TRUE ELSE FALSE END, CASE WHEN n.nspname = 'public' THEN TRUE ELSE FALSE END AS schema_default FROM pg_namespace n, pg_roles u WHERE n.nspowner = u.oid",
 
 	/* I_STMT_SCHEMA_NAMED */
 	"SELECT current_database() AS catalog_name, n.nspname AS schema_name, u.rolname AS schema_owner, CASE WHEN n.nspname ~ '^pg_' THEN TRUE WHEN n.nspname = 'information_schema' THEN TRUE ELSE FALSE END FROM pg_namespace n, pg_roles u WHERE n.nspowner = u.oid AND current_database() = ##cat::string AND n.nspname = ##name::string",

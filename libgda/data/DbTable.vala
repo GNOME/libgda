@@ -29,7 +29,7 @@ namespace GdaData
 		public abstract TableType                        table_type    { get; set; }
 		public abstract Collection<DbRecord>             records       { owned get; }
 		public abstract Collection<DbTable>              depends       { owned get; }
-		public abstract Collection<DbTable>              references    { owned get; }
+		public abstract Collection<DbTable>              referenced    { owned get; }
 		public abstract Collection<DbFieldInfo>          fields        { owned get; }
 		public abstract Collection<DbFieldInfo>          primary_keys  { owned get; }
 		

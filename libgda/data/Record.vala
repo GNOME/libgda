@@ -219,11 +219,14 @@ namespace GdaData {
         public int compare_to (DbRecord object)
         {
         	int r = 0;
-        	foreach (DbField f in fields) {
-        		var fl = object.get_field (f.name);
-        		if (Gda.value_compare (f.value, fl.value) != 0)
-        			return -1;
-        	}
+        	try {
+		    	foreach (DbField f in fields) {
+		    		var fl = object.get_field (f.name);
+		    		if (Gda.value_compare (f.value, fl.value) != 0)
+		    			return -1;
+		    	}
+		    }
+		    catch (Error e) { GLib.warning (e.message); }
         	return r;
         }
     }

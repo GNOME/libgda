@@ -33,8 +33,9 @@
  *      version 1 for libgda between 4.0.0 and 4.1.3
  *      version 2 for libgda >= 4.1.4: added the "_table_indexes" and "_index_column_usage" tables
  *      version 3 for libgda >= 4.2.4: added the "__declared_fk" table
+ *      version 4 for libgda >= 5.2.0: added "schema_default" to "_schemata" table
  */
-#define CURRENT_SCHEMA_VERSION "3"
+#define CURRENT_SCHEMA_VERSION "4"
 
 #include <string.h>
 #include <glib/gi18n-lib.h>

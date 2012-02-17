@@ -122,7 +122,7 @@
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</field>
-		<field name="_references">
+		<field name="_referenced">
 			<type name="Gee.HashMap" c:type="GeeHashMap*">
 				<type name="utf8" c:type="gchar*"/>
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
@@ -417,6 +417,7 @@
 		</field>
 	</record>
 	<interface name="DbTable" c:type="GdaDataDbTable" glib:type-name="GdaDataDbTable" glib:get-type="gda_data_db_table_get_type" glib:type-struct="DbTableIface">
+		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
@@ -448,7 +449,7 @@
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
 		</property>
-		<property name="references">
+		<property name="referenced">
 			<type name="Gee.Collection" c:type="GeeCollection*">
 				<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 			</type>
@@ -900,32 +901,10 @@
 		<member name="foreign_key" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_FOREIGN_KEY" value="8"/>
 		<member name="check" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CHECK" value="16"/>
 		<member name="have_default" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_HAVE_DEFAULT" value="32"/>
-		<member name="is_auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_IS_AUTO_INCREMENT" value="64"/>
+		<member name="can_be_null" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CAN_BE_NULL" value="64"/>
+		<member name="auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_AUTO_INCREMENT" value="128"/>
 	</bitfield>
 	<record name="DbFieldInfoForeignKey">
-		<field name="name">
-			<type name="utf8" c:type="gchar*"/>
-		</field>
-		<field name="refname">
-			<type name="utf8" c:type="gchar*"/>
-		</field>
-		<field name="reftable">
-			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
-		</field>
-		<field name="match">
-			<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
-		</field>
-		<field name="update_rule">
-			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
-		</field>
-		<field name="delete_rule">
-			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
-		</field>
-		<method name="copy" c:identifier="gda_data_db_field_info_foreign_key_copy">
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
-			</return-value>
-		</method>
 		<function name="match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
@@ -938,7 +917,7 @@
 		</function>
 		<function name="rule_from_string" c:identifier="gda_data_db_field_info_foreign_key_rule_from_string">
 			<parameters>
-				<parameter name="str" transfer-ownership="none">
+				<parameter name="str" transfer-ownership="none" allow-none="1">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
@@ -951,6 +930,24 @@
 				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
 			</return-value>
 		</constructor>
+		<property name="name" writable="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="refname" writable="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="reftable" writable="1">
+			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+		</property>
+		<property name="match" writable="1">
+			<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+		</property>
+		<property name="update-rule" writable="1">
+			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+		</property>
+		<property name="delete-rule" writable="1">
+			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+		</property>
 	</record>
 	<enumeration name="DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch" glib:type-name="GdaDataDbFieldInfoForeignKeyMatch" glib:get-type="gda_data_db_field_info_foreign_key_match_get_type">
 		<member name="full" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_FULL" value="0"/>

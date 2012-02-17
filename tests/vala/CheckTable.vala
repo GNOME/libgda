@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * libgdadata Unit Tests
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * Copyright (C) Daniel Espinosa Ortiz 2012 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -31,36 +31,42 @@ namespace Check {
 			try {
 				GLib.FileUtils.unlink("table.db");
 				stdout.printf("Creating Database...\n");
-				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=dataobject", null, Gda.ConnectionOptions.NONE);
+				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, Gda.ConnectionOptions.NONE);
 				stdout.printf("Creating table 'user'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE user (id integer PRIMARY KEY AUTOINCREMENT, name string UNIQUE, city string)");
-				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (1, \"Daniel\", \"Mexico\")");
-				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (2, \"Jhon\", \"USA\")");
+				this.connection.execute_non_select_command("CREATE TABLE user (id integer PRIMARY KEY AUTOINCREMENT, name string UNIQUE, city string, company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
+				this.connection.execute_non_select_command("INSERT INTO user (id, name, city, company) VALUES (1, \"Daniel\", \"Mexico\", 1)");
+				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (2, \"Jhon\", \"USA\", 2)");
 				
 				stdout.printf("Creating table 'company'...\n");
 				this.connection.execute_non_select_command("CREATE TABLE company (id int PRIMARY KEY, name string, responsability string)");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (1, \"Telcsa\", \"Programing\")");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (2, \"Viasa\", \"Accessories\")");
-				this.connection.update_meta_store(null);
+				this.connection.execute_non_select_command("CREATE TABLE salary (id integer PRIMARY KEY AUTOINCREMENT, user integer REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE, income float DEFAULT 10.0)");
+				this.connection.execute_non_select_command("INSERT INTO salary (id, user, income) VALUES (1,1,55.0)");
+				this.connection.execute_non_select_command("INSERT INTO salary (id, user, income) VALUES (2,2,65.0)");
 			}
 			catch (Error e) {
 				stdout.printf ("Couln't create temporary database...\nERROR: %s\n", e.message);
 			}
 		}
 		
+		public void init ()
+			throws Error
+		{
+			stdout.printf("Creating new table\n");
+			table = new Table ();
+			stdout.printf("Setting connection\n");
+			table.connection = this.connection;
+			stdout.printf("Setting name\n");
+			table.name = "user";
+		}
 		public int update ()
 			throws Error
 		{
 			stdout.printf(">>> NEW TEST: GdaData.DbTable -- Update\n");
 			int fails = 0;
-			stdout.printf("Creating new table\n");
-			table = new Table ();
-			stdout.printf("Setting connection\n");
-			t.connection = this.connection;
-			stdout.printf("Setting name\n");
-			t.name = "user";
 			stdout.printf(">>> Updating meta information\n");
-			t.update ();
+			table.update ();
 			return fails;
 		}
 		
@@ -69,24 +75,47 @@ namespace Check {
 		{
 			stdout.printf(">>> NEW TEST: Gda.DbTable - Fields...\n");
 			int fails = 0;
-			var f = new Gee.HashSet<string> ();
-			f.add ("id");
-			f.add ("name");
-			f.add ("city");
+			var f = new Gee.HashMap<string,int> ();
+			f.set ("id", 0);
+			f.set ("name", 0);
+			f.set ("city", 0);
+			f.set ("company",0);
 			foreach (DbFieldInfo fi in table.fields)
 			{
-				if (! f.contains (fi.name))
+				if (! f.keys.contains (fi.name))
 				{
 					fails++;
 					break;
 				}
 			}
-			var f2 = new Gee.HashSet<string> ();
-			f2.add ("id");
-			f2.add ("name");
+			var f2 = new Gee.HashMap<string,int> ();
+			f2.set ("id",0);
+			f2.set ("name",0);
 			foreach (DbFieldInfo fi2 in table.primary_keys)
 			{
-				if (! f2.contains (fi2.name))
+				if (! f2.keys.contains (fi2.name))
+				{
+					fails++;
+					break;
+				}
+			}
+			
+			var f3 = new Gee.HashMap<string,int> ();
+			f3.set ("company",0);
+			foreach (DbTable t in table.depends)
+			{
+				if (! f3.keys.contains (t.name))
+				{
+					fails++;
+					break;
+				}
+			}
+			
+			var f4 = new Gee.HashMap<string,int> ();
+			f4.set ("salary",0);
+			foreach (DbTable t2 in table.referenced)
+			{
+				if (! f4.keys.contains (t2.name))
 				{
 					fails++;
 					break;
@@ -103,6 +132,7 @@ namespace Check {
 			int failures = 0;
 			var app = new Tests ();
 			try {
+				app.init ();
 				failures += app.update ();
 				failures += app.fields ();
 				//failures += app.records ();

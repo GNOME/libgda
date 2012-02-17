@@ -46,56 +46,70 @@ namespace GdaData {
 					_model.set_value_at (_model.get_column_index (f.name), r, f.value);
 				}
 				return true;
-			} catch {}
+			} 
+			catch (Error e) { GLib.warning (e.message); }
 			return false; 
 		}
 		public override void clear ()
 		{ 
-			var iter = _model.create_iter ();
-			while (iter.move_next ()) {
-				_model.remove_row (iter.get_row ());
+			try {
+				var iter = _model.create_iter ();
+				while (iter.move_next ()) {
+					_model.remove_row (iter.get_row ());
+				}
+				((DataProxy) _model).apply_all_changes ();
 			}
-			((DataProxy) _model).apply_all_changes ();
+			catch (Error e) { GLib.warning (e.message); }
 		}
 		public override bool contains (DbRecord item)
 		{
-			var iter = _model.create_iter ();
-			while (iter.move_next ()) {
-				bool found = true;
-				foreach (DbField k in item.keys) {
-					Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
-					Value v = k.value;
-					if (Gda.value_compare (id,v) != 0)
-						found = false;
+			try {
+				var iter = _model.create_iter ();
+				while (iter.move_next ()) {
+					bool found = true;
+					foreach (DbField k in item.keys) {
+						Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
+						Value v = k.value;
+						if (Gda.value_compare (id,v) != 0)
+							found = false;
+					}
+					if (found) return true;
 				}
-				if (found) return true;
 			}
+			catch (Error e) { GLib.warning (e.message); }
 			return false;
 		}
 		public override Gee.Iterator<DbRecord> iterator () 
 		{ 
-			var iter = _model.create_iter ();
+			Gda.DataModelIter iter;
+			try {
+				iter = _model.create_iter ();
+			}
+			catch (Error e) { GLib.warning (e.message); }
 			return new RecordCollectionIterator (iter, _table); 
 		}
 		public override bool remove (DbRecord item)
 		{
-			var iter = _model.create_iter ();
-			while (iter.move_next ()) {
-				bool found = true;
-				foreach (DbField k in item.keys) {
-					Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
-					Value v = k.value;
-					if (Gda.value_compare (id,v) != 0)
-						found = false;
-				}
-				if (found) {
-					try {
-						_model.remove_row (iter.get_row ());
-						((DataProxy)_model).apply_all_changes ();
-						return true;
-					} catch {}
+			try {
+				var iter = _model.create_iter ();
+				while (iter.move_next ()) {
+					bool found = true;
+					foreach (DbField k in item.keys) {
+						Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
+						Value v = k.value;
+						if (Gda.value_compare (id,v) != 0)
+							found = false;
+					}
+					if (found) {
+						try {
+							_model.remove_row (iter.get_row ());
+							((DataProxy)_model).apply_all_changes ();
+							return true;
+						} catch {}
+					}
 				}
 			}
+			catch (Error e) { GLib.warning (e.message); }
 			return false;
 		}
 		public override bool read_only { 
@@ -214,9 +228,12 @@ namespace GdaData {
 			var r = new Record ();
 			r.connection = _table.connection;
 			r.table = _table;
-			for (int c = 0; c < _iter.data_model.get_n_columns (); c++) {
-				r.set_field_value (_iter.data_model.get_column_name (c), _iter.get_value_at (c));
+			try {
+				for (int c = 0; c < _iter.data_model.get_n_columns (); c++) {
+					r.set_field_value (_iter.data_model.get_column_name (c), _iter.get_value_at (c));
+				}
 			}
+			catch (Error e) { GLib.message (e.message); }
 			return r;
 		}
 		public bool has_next () 
@@ -231,17 +248,24 @@ namespace GdaData {
 		}
 		public bool next () 
 		{ 
-			if (this.has_next ()) {
-				if (_elements.size > 0) {
-					_iter.move_to_row (_elements.get (++filter_pos));
-					return true;
+			try {
+				if (this.has_next ()) {
+					if (_elements.size > 0) {
+						_iter.move_to_row (_elements.get (++filter_pos));
+						return true;
+					}
+					else
+						return _iter.move_next ();
 				}
-				else
-					return _iter.move_next ();
 			}
+			catch (Error e) { GLib.message (e.message); }
 			return false;
 		}
-		public void remove () { _iter.data_model.remove_row (_iter.current_row); }
+		public void remove () 
+		{ 
+			try { _iter.data_model.remove_row (_iter.current_row); }
+			catch (Error e) { GLib.message (e.message); }
+		}
 		public bool read_only 
 		{ 
 			get { 

@@ -40,16 +40,22 @@ namespace GdaData {
 				return Attribute.NONE;
 			if (str == "PRIMARY_KEY")
 				return Attribute.PRIMARY_KEY;
+			if (str == "PRIMARY KEY")
+				return Attribute.PRIMARY_KEY;
 			if (str == "UNIQUE")
 				return Attribute.UNIQUE;
 			if (str == "FOREIGN_KEY")
+				return Attribute.FOREIGN_KEY;
+			if (str == "FOREIGN KEY")
 				return Attribute.FOREIGN_KEY;
 			if (str == "CHECK")
 				return Attribute.CHECK;
 			if (str == "HAVE_DEFAULT")
 				return Attribute.HAVE_DEFAULT;
-			if (str == "IS_AUTO_INCREMENT")
-				return Attribute.IS_AUTO_INCREMENT;
+			if (str == "CAN_BE_NULL")
+				return Attribute.CAN_BE_NULL;
+			if (str == "AUTO_INCREMENT")
+				return Attribute.AUTO_INCREMENT;
 			
 			return Attribute.NONE;
 		}
@@ -61,22 +67,20 @@ namespace GdaData {
 			FOREIGN_KEY,
 			CHECK,
 			HAVE_DEFAULT,
-			IS_AUTO_INCREMENT
+			CAN_BE_NULL,
+			AUTO_INCREMENT
 		}
 		
 		// Constrains
 		public abstract ForeignKey  fkey   { get; set; }
 		
-		[Compact]
 		public class ForeignKey {
-			public string    name;
-			public string    refname;
-			public DbTable   reftable;
-			public Match     match;
-			public Rule      update_rule;
-			public Rule      delete_rule;
-			
-			public ForeignKey copy () { return new ForeignKey (); }
+			public string    name          { get; set; }
+			public string    refname       { get; set; }
+			public DbTable   reftable      { get; set; }
+			public Match     match         { get; set; }
+			public Rule      update_rule   { get; set; }
+			public Rule      delete_rule   { get; set; }
 			
 			public static Match match_from_string (string str)
 			{
@@ -88,16 +92,22 @@ namespace GdaData {
 				return Match.NONE;
 			}
 			
-			public static Rule rule_from_string (string str)
+			public static Rule rule_from_string (string? str)
 			{
 				if (str == "CASCADE")
 					return Rule.CASCADE;
+				if (str == "SET_NULL")
+					return Rule.SET_NULL;
 				if (str == "SET NULL")
 					return Rule.SET_NULL;
+				if (str == "SET_DEFAULT")
+					return Rule.SET_DEFAULT;
 				if (str == "SET DEFAULT")
 					return Rule.SET_DEFAULT;
 				if (str == "RESTRICT")
 					return Rule.RESTRICT;
+				if (str == "NO_ACTION")
+					return Rule.NO_ACTION;
 				if (str == "NO ACTION")
 					return Rule.NO_ACTION;
 	
