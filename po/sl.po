@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-02-14 20:49+0000\n"
-"PO-Revision-Date: 2012-02-15 20:26+0100\n"
+"POT-Creation-Date: 2012-02-15 19:27+0000\n"
+"PO-Revision-Date: 2012-02-18 13:34+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-Language: Slovenian\n"
@@ -5337,9 +5337,8 @@ msgid "Provider for BDB SQL databases"
 msgstr "Ponudnik podatkovnih zbirk BDB SQL"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
-#, fuzzy
 msgid "The name of a database to connect to (without the .fdb)"
-msgstr "Ime podatkovne zbirke za uporabo (brez pripone .db)"
+msgstr "Ime podatkovne zbirke za povezavo (brez pripone .fdb)"
 
 #: ../providers/firebird/libmain-client.c:51
 msgid "Provider for Firebird databases"
@@ -5402,9 +5401,8 @@ msgid "The connection string must contain the DB_NAME value"
 msgstr "Niz povezave mora vključevati vrednost DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:415
-#, fuzzy
 msgid "Invalid value for 'TLS_REQCERT'"
-msgstr "Neveljavna vrednost za lastnost ‘%s’: %s"
+msgstr "Neveljavna vrednost za 'TLS_REQCERT'"
 
 #: ../providers/ldap/gda-ldap-provider.c:486
 msgid "Invalid user name"
@@ -5431,7 +5429,7 @@ msgstr "Ni mogoče razčleniti razločnega imena, ki ga je vrnil strežnik LDAP"
 #: ../providers/ldap/gda-ldap-util.c:1520
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
-msgstr ""
+msgstr "Nepričakovana vrsta podatkov '%s' za atribut objectClass!"
 
 #: ../providers/ldap/gda-ldap-util.c:1529
 #, c-format
@@ -5446,9 +5444,8 @@ msgstr "Razločno ime"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:412
 #: ../providers/ldap/gdaprov-data-model-ldap.c:427
-#, fuzzy
 msgid "Relative distinguished name"
-msgstr "Z uporabo razločnega imena (DN)"
+msgstr "Relativno razločno ime"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:895
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1152
@@ -5518,13 +5515,12 @@ msgid "Whether or not to use SSL to establish the connection"
 msgstr "Ali naj bo uporabljen SSL za ustvarjanje povezave"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
-#, fuzzy
 msgid "Certificate check type"
-msgstr "Vrsta potrdila Netscapa"
+msgstr "Vrsta preverjanja potrdila"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:10
 msgid "Specifies what checks to perform on server certificates in a SSL/TLS session"
-msgstr ""
+msgstr "Določa, katera preverjanja strežniških potrdil je treba opraviti v sejah SSL/TLS"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:11
 msgid "Certificates file"
@@ -5532,7 +5528,7 @@ msgstr "Datoteka potrdila"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:12
 msgid "Specifies the file that contains certificates for all of the recognized Certificate Authorities, in a SSL/TLS session"
-msgstr ""
+msgstr "Določa datoteko, ki vsebuje potrdila za vse prepoznane izdajatelje potrdil v seji SSL/TLS"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:13
 msgid "Cache server data"
@@ -5544,19 +5540,19 @@ msgstr "Uporabi predpomnilnik za shranjevanje statičnih podatkov strežnika (te
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Never: certificate not requested or checked"
-msgstr ""
+msgstr "Nikoli: potrdilo ni zahtevano ali preverjeno."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid "Allow: certificate requested, none or a bad one accepted."
-msgstr ""
+msgstr "Dovoli: potrdilo je zahtevano, vendar ga ni ali pa je sprejeto neustrezno potrdilo."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Try: certificate requested, none accepted, otherwise checked."
-msgstr ""
+msgstr "Poskusi: potrdilo je zahtevano, ni sprejeto, sicer preverjeno."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
 msgid "Demand: certificate requested and checked"
-msgstr ""
+msgstr "Zahtevaj: potrdilo je zahtevano in preverjeno."
 
 #: ../providers/ldap/libmain.c:75
 msgid "Provider for database where tables are based on data contained in an LDAP directory"
@@ -10327,7 +10323,7 @@ msgstr "Izvede statistično analizo podatkov izjave SELECT, z uporabo kriterija 
 #: ../tools/gda-sql.c:2666
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
-msgstr ""
+msgstr "%s <filter> [<osnovni|enoravenski|poddrevesni> [<osnovno razločno ime DN>]]"
 
 #: ../tools/gda-sql.c:2667
 msgid "Search LDAP entries"
@@ -10340,16 +10336,16 @@ msgstr "%s [atribut,[atribut], ...]"
 
 #: ../tools/gda-sql.c:2679
 msgid "Set or get the default attributes manipulated by LDAP commands"
-msgstr ""
+msgstr "Določi ali pridobi privzete atribute, s katerimi delujejo ukazi LDAP"
 
 #: ../tools/gda-sql.c:2690
-#, fuzzy, c-format
+#, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
-msgstr "Nastavi za vse uporabnike"
+msgstr "%s <razločno_ime_DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/gda-sql.c:2691
 msgid "Shows all the attributes for the entry identified by its DN. If the \"set\" 2nd parameter is passed, then all set attributes are show, if the \"all\" 2nd parameter is passed, then the unset attributes are also shown, and if the \"unset\" 2nd parameter is passed, then only non set attributes are shown."
-msgstr ""
+msgstr "Pokaže vse atribute za vnos, ki ga določa njegovo razločno ime (DN). Če je podan drug parameter \"set\", so prikazani vsi nastavljeni atributi, če je podan drugi parameter \"all\", potem so prikazani tudi nedoločeni parametri, če pa je podan drugi parameter \"unset\", so prikazani zgolj nedoločeni atributi."
 
 #: ../tools/gda-sql.c:2707
 #, c-format
@@ -10562,29 +10558,28 @@ msgid "Connection is not an LDAP connection"
 msgstr "Povezava ni povezava LDAP"
 
 #: ../tools/gda-sql.c:4941
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown search scope '%s'"
-msgstr "Poišči in zamenjaj obseg"
+msgstr "Neznan obseg iskanja '%s'"
 
 #: ../tools/gda-sql.c:4951
 #, fuzzy
 msgid "Missing filter which to operate"
-msgstr "Manjkajo podatki za obdelavo"
+msgstr "Manjka filter za delovanje"
 
 #: ../tools/gda-sql.c:5033
-#, fuzzy
 msgid "Missing DN (Distinguished name) argument"
-msgstr "Manjka argument tujega ključa"
+msgstr "Manjka argument razločnega imena"
 
 #: ../tools/gda-sql.c:5046
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown '%s' argument"
 msgstr "Neznan argument '%s'"
 
 #: ../tools/gda-sql.c:5057
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find entry with DN '%s'"
-msgstr "Ni mogoče najti vnosa LDAP z razločnim imenom '%s'"
+msgstr "Ni mogoče najti vnosa z razločnim imenom (DN) '%s'"
 
 #: ../tools/gda-sql.c:5066
 msgid "Required?"
@@ -10793,114 +10788,3 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Sprožilniki"
-
-#~ msgid "Query buffer"
-#~ msgstr "Medpomnilnik poizvedbe"
-
-#~ msgid "Reset the query buffer (fill buffer with contents of file)"
-#~ msgstr ""
-#~ "Počisti medpomnilnik poizvedbe (zapolni medpomnilnik z vsebino datoteke)"
-
-#~ msgid "%s [<QUERY_BUFFER_NAME>]"
-#~ msgstr "%s [<ime medpomnilnika poizvedbe>]"
-
-#~ msgid "%s <QUERY_BUFFER_NAME>"
-#~ msgstr "%s <ime medpomnilnika poizvedbe>"
-
-#~ msgid "Load query buffer from dictionary"
-#~ msgstr "Naloži medpomnilnik poizvedbe iz slovarja"
-
-#~ msgid "Delete query buffer from dictionary"
-#~ msgstr "Izbriši medpomnilnik poizvedbe iz slovarja"
-
-#~ msgid "List all saved query buffers in dictionary"
-#~ msgstr "Izpiši vse shranjene medpomnilnike v slovar"
-
-#~ msgid "Can't initialize dictionary to store query buffers"
-#~ msgstr "Ni mogoče začeti slovarja za shranjevanje medpomnilnikov poizvedb"
-
-#~ msgid "Could not find query buffer named '%s'"
-#~ msgstr "Ni mogoče najti medpomnilnika '%s'"
-
-#~ msgid "_File"
-#~ msgstr "_Datoteka"
-
-#~ msgid "_Tested Widgets"
-#~ msgstr "_Preizkušeni gradniki"
-
-#~ msgid "Default individual data entry widgets"
-#~ msgstr "Privzeti posamezni gradniki vnosa podatkov"
-
-#~ msgid "Default data entry widgets in a form"
-#~ msgstr "Privzeti posamezni gradniki vnosa v obrazcu"
-
-#~ msgid "Default data cell renderers in a grid"
-#~ msgstr "Privzeti izrisevalniki podatkov celic v mreži"
-
-#~ msgid "Plugins individual data entry widgets"
-#~ msgstr "Gradniki vstavkov posameznih vnosov podatkov"
-
-#~ msgid "Plugins data entry widgets in a form"
-#~ msgstr "Gradniki vstavkov posameznih vnosov podatkov v obrazcu"
-
-#~ msgid "Plugins data cell renderers in a grid"
-#~ msgstr "Gradniki vstavkov za izrisevanje podatkov celic v mreži"
-
-#~ msgid "No GdaDataHandler available for this type"
-#~ msgstr "Za to vrsto datotek ni razpoložljivega GdaDataHandler"
-
-#~ msgid "Current flags: "
-#~ msgstr "Trenutne zastavice:"
-
-#~ msgid "--"
-#~ msgstr "--"
-
-#~ msgid "Current value: "
-#~ msgstr "Trenutna vrednost:"
-
-#~ msgid "NULL ok"
-#~ msgstr "NULL v redu"
-
-#~ msgid "DEFAULT ok"
-#~ msgstr "DEFAULT ok"
-
-#~ msgid "Actions?"
-#~ msgstr "Dejanja?"
-
-#~ msgid "Editable?"
-#~ msgstr "Ali je uredljivo?"
-
-#~ msgid "Set as original"
-#~ msgstr "Nastavi kot prvotno"
-
-#~ msgid "Set as default"
-#~ msgstr "Nastavi kot privzeto"
-
-#~ msgid ""
-#~ "Bind several connections together into the CNC_NAME virtual connection"
-#~ msgstr "Poveži več povezav skupaj v navidezno CNC_IME povezavo"
-
-#~ msgid "Send output to stdout"
-#~ msgstr "Pošlji izpis na stdout"
-
-#~ msgid "List all available commands"
-#~ msgstr "Izpis vseh ukazov na voljo"
-
-#~ msgid "Unhandled data type '%s'"
-#~ msgstr "Neupravljana vrsta podatkov '%s'"
-
-#~ msgid "Could not convert value to type '%s'"
-#~ msgstr "Ni mogoče pretvoriti vrednosti v vrsto '%s'"
-
-#~ msgid ""
-#~ "The data will be exported without any of the modifications which may have "
-#~ "been made and have not been committed."
-#~ msgstr ""
-#~ "Podatki bodo izvoženi brez sprememb, ki so bile narejene, vendar niso "
-#~ "bile objavljene."
-
-#~ msgid "Limit to selection?"
-#~ msgstr "Ali naj se omeji na izbiro?"
-
-#~ msgid "Mask settings"
-#~ msgstr "Nastavitve maske"
