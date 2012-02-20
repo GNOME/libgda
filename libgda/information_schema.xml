@@ -4,7 +4,7 @@
     This is the base schema and can be extended by applications by adding new
     DBMS objects, but: the '_' prefix is reserved for Libgda's internals...
 
-    NOTE: when modified, please:
+    IMPORTANT NOTE: when modified, please:
     * run tools/information-schema-doc and move the generated file to doc/C/
     * run tools/information-schema-types and move the generated file to libgda/providers-support/
     * increment the CURRENT_SCHEMA_VERSION define in libgda/gda-meta-store.c and implement the corresponding
@@ -48,7 +48,7 @@
     <column name="schema_name" pkey="TRUE" ident="TRUE"/>
     <column name="schema_owner" nullok="TRUE" descr="Name of the schema"/>
     <column name="schema_internal" type="boolean"  descr="Tells if the schema is specific to the database implementation (and usually can't be modified)"/>
-    <column name="schema_default" type="boolean"  descr="Tells if the schema is used by default when creating a new table without schema name"/>
+    <column name="schema_default" nullok="TRUE" type="boolean"  descr="Tells if the schema is used by default when creating a new table without schema name"/>
     <fkey ref_table="_information_schema_catalog_name">
       <part column="catalog_name" ref_column="catalog_name"/>
     </fkey>

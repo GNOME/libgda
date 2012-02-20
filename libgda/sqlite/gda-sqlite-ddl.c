@@ -320,7 +320,6 @@ _gda_sqlite_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	}
 
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
-	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_DEFAULT");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
 		const gchar *str = g_value_get_string (value);
 		if (str && *str) {

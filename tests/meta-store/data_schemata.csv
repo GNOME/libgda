@@ -1,3 +1,3 @@
-"meta","pg_catalog","a user",TRUE
-"meta","pub","postgres",FALSE
-"meta","information_schema","postgres",TRUE
+"meta","pg_catalog","a user",TRUE,FALSE
+"meta","pub","postgres",FALSE,FALSE
+"meta","information_schema","postgres",TRUE,TRUE

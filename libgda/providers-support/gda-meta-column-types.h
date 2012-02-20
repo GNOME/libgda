@@ -44,6 +44,7 @@ static GType _col_types_schemata[] = {
 , G_TYPE_STRING  /* column: schema_name */
 , G_TYPE_STRING  /* column: schema_owner */
 , G_TYPE_BOOLEAN  /* column: schema_internal */
+, G_TYPE_BOOLEAN  /* column: schema_default */
 , G_TYPE_NONE /* end of array marker */
 };
 

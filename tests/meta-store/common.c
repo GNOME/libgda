@@ -454,10 +454,10 @@ test_schemata_1 (GdaMetaStore *store)
 #define TNAME "_schemata"
 	TEST_HEADER;
 
-	import = common_load_csv_file ("data_schemata.csv", 3, "gboolean", -1);
-	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pg_catalog", "+2", "a user", "+3", "TRUE", NULL);
-	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pub", "+2", "postgres", "+3", "FALSE", NULL);
-	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "information_schema", "+2", "postgres", "+3", "TRUE", NULL);
+	import = common_load_csv_file ("data_schemata.csv", 3, "gboolean", 4, "gboolean", -1);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pg_catalog", "+2", "a user", "+3", "TRUE", "+4", "FALSE", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "pub", "+2", "postgres", "+3", "FALSE", "+4", "FALSE", NULL);
+	DECL_CHANGE (TNAME, GDA_META_STORE_ADD, "+0", "meta", "+1", "information_schema", "+2", "postgres", "+3", "TRUE", "+4", "TRUE", NULL);
 	TEST_MODIFY (store, TNAME, import, NULL, &error, NULL);
 	TEST_END (import);
 #undef TNAME
@@ -469,8 +469,8 @@ test_schemata_2 (GdaMetaStore *store)
 #define TNAME "_schemata"
 	TEST_HEADER;
 
-	import = common_load_csv_file ("data_schemata_1.csv", 3, "gboolean", -1);	
-	DECL_CHANGE (TNAME, GDA_META_STORE_MODIFY, "-0", "meta", "-1", "pg_catalog", "+0", "meta", "+1", "pg_catalog", "+2", "postgres", "+3", "TRUE", NULL);
+	import = common_load_csv_file ("data_schemata_1.csv", 3, "gboolean", 4, "gboolean", -1);	
+	DECL_CHANGE (TNAME, GDA_META_STORE_MODIFY, "-0", "meta", "-1", "pg_catalog", "+0", "meta", "+1", "pg_catalog", "+2", "postgres", "+3", "TRUE", "+4", "FALSE", NULL);
 	
 	GValue *v1, *v2;
 	g_value_set_string (v1 = gda_value_new (G_TYPE_STRING), "meta");

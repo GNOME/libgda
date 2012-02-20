@@ -85,9 +85,9 @@ gda_meta_context_get_type (void)
 		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
 		g_static_mutex_lock (&registering);
                 if (type == 0)
-			type = type = g_boxed_type_register_static ("GdaMetaContext",
-                                                    (GBoxedCopyFunc) gda_meta_context_copy,
-                                                    (GBoxedFreeFunc) gda_meta_context_free);
+			type = g_boxed_type_register_static ("GdaMetaContext",
+							     (GBoxedCopyFunc) gda_meta_context_copy,
+							     (GBoxedFreeFunc) gda_meta_context_free);
 		g_static_mutex_unlock (&registering);
 	}
 
@@ -227,19 +227,18 @@ gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConne
 	gpointer key, value;
 	gint i = 0; // FIXME: Code to remove
 	g_hash_table_iter_init (&iter, ctx->columns);
-	while (g_hash_table_iter_next (&iter, &key, &value))
-	{
+	while (g_hash_table_iter_next (&iter, &key, &value)) {
 		// Normalize identifier quote
-		if (G_VALUE_HOLDS_STRING((GValue*)value)) 
-		{
+		if (G_VALUE_HOLDS_STRING((GValue*)value)) {
 			GValue *v = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), cnc, NULL,
 											TRUE, FALSE));
 			g_hash_table_insert (ctx->columns, key, (gpointer) v);
 		}
+
 		// FIXME: Code to remove
 		ctx->column_names[i] = (gchar*) key;
-		ctx->column_names[i] = (GValue*) value;
+		ctx->column_values[i] = (GValue*) value;
 		i++;
 	}
 }
@@ -2343,6 +2342,72 @@ create_a_dbobj (GdaMetaStore *store, const gchar *obj_name, GError **error)
 	return retval;
 }
 
+/*
+ * Create a database object from its name,
+ * to be used by functions implementing versions migrations
+ */
+static gboolean
+add_a_column (GdaMetaStore *store, const gchar *table_name, const gchar *column_name, GError **error)
+{
+	DbObject *dbobj;
+	GdaMetaStoreClass *klass;
+	GdaServerProvider *prov;
+	gboolean retval = FALSE;
+
+	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, table_name);
+	if (!dbobj) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
+			     _("Schema description does not contain the object '%s', check installation"),
+			     table_name);
+		return FALSE;
+	}
+	prov = gda_connection_get_provider (store->priv->cnc);
+	
+	GdaServerOperation *op;
+	op = gda_server_provider_create_operation (prov, store->priv->cnc, GDA_SERVER_OPERATION_ADD_COLUMN, NULL, error);
+	if (!op)
+		return FALSE;
+
+	GSList *list;
+	if (! gda_server_operation_set_value_at (op, table_name, error, "/COLUMN_DEF_P/TABLE_NAME"))
+		goto out;
+
+	for (list = TABLE_INFO (dbobj)->columns; list; list = list->next) {
+		TableColumn *tcol = TABLE_COLUMN (list->data);
+		if (!strcmp (tcol->column_name, column_name)) {
+			const gchar *repl;
+			if (! gda_server_operation_set_value_at (op, tcol->column_name,
+								 error, "/COLUMN_DEF_P/COLUMN_NAME"))
+				goto out;
+			repl = provider_specific_match (klass->cpriv->provider_specifics, prov,
+							tcol->column_type ? tcol->column_type : "string",
+							"/FIELDS_A/@COLUMN_TYPE");
+			if (! gda_server_operation_set_value_at (op, repl ? repl : "string", error,
+								 "/COLUMN_DEF_P/COLUMN_TYPE"))
+				goto out;
+			if (! gda_server_operation_set_value_at (op, NULL, error,
+								 "/COLUMN_DEF_P/COLUMN_SIZE"))
+				goto out;
+			if (! gda_server_operation_set_value_at (op, tcol->nullok ? "FALSE" : "TRUE", error,
+								 "/COLUMN_DEF_P/COLUMN_NNUL"))
+				goto out;
+			break;
+		}
+	}
+	if (!list) {
+		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+			     _("Could not find description for column named '%s'"), column_name);
+		goto out;
+	}
+
+	retval = gda_server_provider_perform_operation (prov, store->priv->cnc, op, error);
+
+ out:
+	g_object_unref (op);
+	return retval;
+}
+
 /* migrate schema from version 1 to 2 */
 static void
 migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
@@ -2403,6 +2468,34 @@ migrate_schema_from_v2_to_v3 (GdaMetaStore *store, GError **error)
 	}
 }
 
+/* migrate schema from version 2 to 3 */
+static void
+migrate_schema_from_v3_to_v4 (GdaMetaStore *store, GError **error)
+{
+	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+
+	/* begin a transaction if possible */
+	gboolean transaction_started = FALSE;
+	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+		return;
+
+	if (! add_a_column (store, "_schemata", "schema_default", error))
+		goto out;
+
+	/* set version info to CURRENT_SCHEMA_VERSION */
+	update_schema_version (store, "4", error);
+
+ out:
+	if (transaction_started) {
+		/* handle transaction started if necessary */
+		if (store->priv->version != 4)
+			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		else
+			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+	}
+}
+
 static gboolean
 handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **error)
 {
@@ -2444,7 +2537,9 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			case 2:
 				migrate_schema_from_v2_to_v3 (store, error);
 			case 3:
-				/* function call for migration from V3 will be here */
+				migrate_schema_from_v3_to_v4 (store, error);
+			case 4:
+				/* function call for migration from V4 will be here */
 				break;
 			default:
 				/* no downgrade to do */
