@@ -228,6 +228,7 @@ GdaDataModelLdapClass
 GdaDataModelLdapPrivate
 GdaLdapSearchScope
 gda_data_model_ldap_new
+gda_data_model_ldap_new_with_config
 gda_data_model_ldap_compute_columns
 <SUBSECTION Standard>
 GDA_DATA_MODEL_LDAP
@@ -1453,6 +1454,14 @@ gda_meta_store_schema_add_custom_object
 gda_meta_store_get_internal_connection
 gda_meta_store_declare_foreign_key
 gda_meta_store_undeclare_foreign_key
+<SUBSECTION>
+gda_meta_context_get_type
+gda_meta_context_new
+gda_meta_context_set_table
+gda_meta_context_get_table
+gda_meta_context_set_column
+gda_meta_context_set_columns
+gda_meta_context_free
 <SUBSECTION Standard>
 GDA_IS_META_STORE
 GDA_META_STORE

@@ -206,12 +206,12 @@ gboolean          gda_meta_store_undeclare_foreign_key    (GdaMetaStore *store, 
 							   const gchar *ref_catalog, const gchar *ref_schema, const gchar *ref_table,
 							   GError **error);
 
-GType             gda_meta_context_get_type              (void) G_GNUC_CONST;
+GType             gda_meta_context_get_type               (void) G_GNUC_CONST;
 GdaMetaContext*   gda_meta_context_new                    ();
 void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
 const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);
 void              gda_meta_context_set_column             (GdaMetaContext *ctx, const gchar* column, 
-                               const GValue* value, GdaConnection *cnc);
+							   const GValue* value, GdaConnection *cnc);
 void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns,
 							   GdaConnection *cnc);
 void              gda_meta_context_free                   (GdaMetaContext *ctx);
