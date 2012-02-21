@@ -33,7 +33,9 @@ namespace Check {
 				stdout.printf("Creating Database...\n");
 				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, Gda.ConnectionOptions.NONE);
 				stdout.printf("Creating table 'user'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE user (id integer PRIMARY KEY AUTOINCREMENT, name string UNIQUE, city string, company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
+				this.connection.execute_non_select_command("CREATE TABLE user (id integer PRIMARY KEY AUTOINCREMENT, name string UNIQUE,"+
+				                                           " city string DEFAULT \"New Yield\","+
+				                                           " company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city, company) VALUES (1, \"Daniel\", \"Mexico\", 1)");
 				this.connection.execute_non_select_command("INSERT INTO user (id, name, city) VALUES (2, \"Jhon\", \"USA\", 2)");
 				
@@ -41,7 +43,9 @@ namespace Check {
 				this.connection.execute_non_select_command("CREATE TABLE company (id int PRIMARY KEY, name string, responsability string)");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (1, \"Telcsa\", \"Programing\")");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (2, \"Viasa\", \"Accessories\")");
-				this.connection.execute_non_select_command("CREATE TABLE salary (id integer PRIMARY KEY AUTOINCREMENT, user integer REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE, income float DEFAULT 10.0)");
+				this.connection.execute_non_select_command("CREATE TABLE salary (id integer PRIMARY KEY AUTOINCREMENT,"+
+				                                           " user integer REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,"+
+				                                           " income float DEFAULT 10.0)");
 				this.connection.execute_non_select_command("INSERT INTO salary (id, user, income) VALUES (1,1,55.0)");
 				this.connection.execute_non_select_command("INSERT INTO salary (id, user, income) VALUES (2,2,65.0)");
 			}
@@ -122,8 +126,18 @@ namespace Check {
 				}
 			}
 			
-			//FIXME: Add test for default values
-			
+			// Test for default values
+			int found = 0;
+			foreach (DbFieldInfo fi3 in table.fields) {
+				if (DbFieldInfo.Attribute.HAVE_DEFAULT in fi3.attributes
+						&& fi3.name == "city") {
+					found++;
+				}
+			}
+			if (found == 0) {
+				stdout.printf ("Check Default Values: FAIL\n");
+				fails++;
+			}
 			return fails;
 		}
 		

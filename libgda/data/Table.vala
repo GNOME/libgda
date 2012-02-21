@@ -38,6 +38,7 @@ namespace GdaData
 		}
 		// DbObject Interface
 		public Connection connection { get; set; }
+		
 		public void update () throws Error 
 		{
 			var store = connection.get_meta_store ();
@@ -66,14 +67,14 @@ namespace GdaData
 				connection.update_meta_store (cxs);
 				var schm = store.extract ("SELECT * FROM _schemata WHERE schema_default = TRUE", null);
 				schema = new Schema ();
+				schema.catalog = catalog;
 				schema.connection = connection;
 				schema.name = (string) schm.get_value_at (schm.get_column_index ("schema_name"), 0);
 			}
-			else
-			{
-				vals.set ("schema", schema.name);
-				cond += " AND table_schema = ##schema::string";
-			}
+
+			vals.set ("schema", schema.name);
+			cond += " AND table_schema = ##schema::string";
+			
 			if (catalog != null)
 			{
 				// Not using default catalog
@@ -81,8 +82,10 @@ namespace GdaData
 				cond += " AND table_catalog = ##catalog::string";
 			}
 			
-			var mt = store.extract ("SELECT * FROM _columns WHERE table_name  = ##name::string" + cond, vals);
-			for (int r = 0; r < mt.get_n_rows (); r++) 
+			var mt = store.extract ("SELECT * FROM _columns"+
+			                       " WHERE table_name  = ##name::string" + cond, vals);
+			int r;
+			for (r = 0; r < mt.get_n_rows (); r++) 
 			{
 				var fi = new FieldInfo ();
 				fi.name = (string) mt.get_value_at (mt.get_column_index ("column_name"), r);
@@ -122,15 +125,18 @@ namespace GdaData
 			connection.update_meta_store (ctx);
 			ctx.set_table ("_key_column_usage");
 			connection.update_meta_store (ctx);
-			var mc = store.extract ("SELECT * FROM _table_constraints WHERE table_name  = ##name::string" + cond,
+			var mc = store.extract ("SELECT * FROM _table_constraints"+
+			                        " WHERE table_name  = ##name::string" + cond,
 									vals);
 			stdout.printf ("table REF_CONST: \n"+mc.dump_as_string ());
-			for (int r = 0; r < mc.get_n_rows (); r++) 
+			for (r = 0; r < mc.get_n_rows (); r++) 
 			{
 				string ct = (string) mc.get_value_at (mc.get_column_index ("constraint_type"), r);
 				string cn = (string) mc.get_value_at (mc.get_column_index ("constraint_name"), r);
 				vals.set ("constraint_name", cn);
-				var mpk = store.extract ("SELECT * FROM _key_column_usage WHERE table_name  = ##name::string AND constraint_name = ##constraint_name::string" + cond, vals);
+				var mpk = store.extract ("SELECT * FROM _key_column_usage"+
+				                         " WHERE table_name  = ##name::string"+
+				                         " AND constraint_name = ##constraint_name::string" + cond, vals);
 				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
 				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
@@ -140,7 +146,9 @@ namespace GdaData
 				{
 					ctx.set_table ("_referential_constraints");
 					connection.update_meta_store (ctx);
-					var mfk = store.extract ("SELECT * FROM _referential_constraints WHERE table_name  = ##name::string AND constraint_name = ##constraint_name::string" + cond, vals);
+					var mfk = store.extract ("SELECT * FROM _referential_constraints"+
+					                         " WHERE table_name  = ##name::string "+
+					                         "AND constraint_name = ##constraint_name::string" + cond, vals);
 					stdout.printf ("REF_CONST: \n"+mfk.dump_as_string ());
 					f.fkey = new DbFieldInfo.ForeignKey ();
 					f.fkey.name = cn;
@@ -175,17 +183,33 @@ namespace GdaData
 				}
 				_fields.set (f.name, f);
 			}
+			// Table referencing this
+			var mtr = store.extract ("SELECT * FROM "+
+			                     	 "_detailed_fk WHERE fk_table_name  = ##name::string"+
+			                         " AND fk_table_catalog = ##catalog::string"+
+			                         " AND fk_table_schema = ##schema::string", vals);
+			for (r = 0; r < mtr.get_n_rows (); r++) {
+				var tn = (string) mtr.get_value_at (mtr.get_column_index ("fk_table_name"), r);
+				var tr = new Table ();
+				tr.connection = connection;
+				tr.name = tn;
+				_referenced.set (tr.name, tr);
+			}
 		}
 		public void save () throws Error {}
+		
 		public void append () throws Error {}
+		
 		// DbNamedObject Interface
 		public string name { get; set; }
 		
 		// DbTable Interface
 		public DbTable.TableType table_type { get { return _type; } set { _type = value; } }
+
 		public Collection<DbFieldInfo> fields { 
 			owned get { return _fields.values; } 
 		}
+		
 		public Collection<DbFieldInfo> primary_keys { 
 			owned get { 
 				var pk = new Gee.HashMap<string,DbFieldInfo> ();
@@ -201,7 +225,9 @@ namespace GdaData
 			} 
 		}
 		public DbCatalog catalog { get; set; }
+		
 		public DbSchema  schema { get; set; }
+		
 		public Collection<DbRecord> records { 
 			owned get  {
 				try {
@@ -216,28 +242,11 @@ namespace GdaData
 				return _records;
 			}
 		}
+		
 		public Collection<DbTable> depends    { owned get { return _depends.values; } }
+		
 		public Collection<DbTable> referenced { 
-			owned get {
-				try {
-					if (schema == null)
-						this.update ();
-					foreach (DbTable t in schema.tables) {
-						t.update ();
-						foreach (DbTable td in t.depends) {
-							if (name == td.name && 
-								schema.name == td.schema.name && 
-								catalog.name == td.catalog.name)
-							{
-								_referenced.set (t.name, t);
-								break;
-							}
-						}
-					}
-				} 
-				catch (Error e) { GLib.warning (e.message); }
-				return _referenced.values; 
-			} 
+			owned get { return _referenced.values; } 
 		}
 	}
 }
