@@ -120,7 +120,6 @@ namespace GdaData
 				_fields.set (fi.name, fi);
 			}
 			// Constraints
-			stdout.printf ("Cheking FiledInfo Constraints ...\n");
 			ctx.set_table ("_table_constraints");
 			connection.update_meta_store (ctx);
 			ctx.set_table ("_key_column_usage");
@@ -128,7 +127,6 @@ namespace GdaData
 			var mc = store.extract ("SELECT * FROM _table_constraints"+
 			                        " WHERE table_name  = ##name::string" + cond,
 									vals);
-			stdout.printf ("table REF_CONST: \n"+mc.dump_as_string ());
 			for (r = 0; r < mc.get_n_rows (); r++) 
 			{
 				string ct = (string) mc.get_value_at (mc.get_column_index ("constraint_type"), r);
@@ -140,7 +138,6 @@ namespace GdaData
 				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
 				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
-				stdout.printf("Conts type: " + ct + " : Getted Field: " + f.name + ": Attrib= " + ((int)f.attributes).to_string () + "\n");
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
@@ -149,7 +146,6 @@ namespace GdaData
 					var mfk = store.extract ("SELECT * FROM _referential_constraints"+
 					                         " WHERE table_name  = ##name::string "+
 					                         "AND constraint_name = ##constraint_name::string" + cond, vals);
-					stdout.printf ("REF_CONST: \n"+mfk.dump_as_string ());
 					f.fkey = new DbFieldInfo.ForeignKey ();
 					f.fkey.name = cn;
 					f.fkey.refname = (string) mfk.get_value_at (mfk.get_column_index ("ref_constraint_name"), 0);
@@ -185,9 +181,9 @@ namespace GdaData
 			}
 			// Table referencing this
 			var mtr = store.extract ("SELECT * FROM "+
-			                     	 "_detailed_fk WHERE fk_table_name  = ##name::string"+
-			                         " AND fk_table_catalog = ##catalog::string"+
-			                         " AND fk_table_schema = ##schema::string", vals);
+			                     	 "_detailed_fk WHERE ref_table_name  = ##name::string"+
+			                         " AND ref_table_catalog = ##catalog::string"+
+			                         " AND ref_table_schema = ##schema::string", vals);
 			for (r = 0; r < mtr.get_n_rows (); r++) {
 				var tn = (string) mtr.get_value_at (mtr.get_column_index ("fk_table_name"), r);
 				var tr = new Table ();
