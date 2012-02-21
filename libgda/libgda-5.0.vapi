@@ -224,6 +224,7 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		protected DataAccessWrapper ();
 		public static Gda.DataModel @new (Gda.DataModel model);
+		public bool set_mapping ([CCode (array_length_cname = "mapping_size", array_length_pos = 1.1)] int[]? mapping);
 		[NoAccessorMethod]
 		public Gda.DataModel model { owned get; construct; }
 	}

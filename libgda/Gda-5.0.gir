@@ -3989,6 +3989,42 @@ only if @model can only be accessed using cursor based method.</doc>
           </parameter>
         </parameters>
       </function>
+      <method name="set_mapping"
+              c:identifier="gda_data_access_wrapper_set_mapping"
+              version="5.2">
+        <doc xml:whitespace="preserve">@wrapper will report as many columns as @mapping_size, and for each value at position 'i' in @mapping,
+@wrapper will report the 'i'th column, mapped to the wrapped data model column at position mapping[i].
+For example if mapping is {3, 4, 0}, then @wrapper will report 3 columns, respectively mapped to the 4th,
+5th and 1st columns of the wrapped data model (as column numbers start at 0).
+
+If @mapping is %NULL, then no mapping is done and @wrapper's columns will be the same as the wrapped
+data model.
+
+If a column in @mapping does not exist in the wrapped data model, then it is simply ignored (no error
+reported).
+
+Please note that if @wrapper has already been used and if the wrapped data model offers a cursor forward
+access mode, then this method will return %FALSE and no action will be done.
+
+If the mapping is applied, then any existing iterator will be invalid, and @wrapper is reset as if it
+had just been created.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">%TRUE if the mapping actually changed</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <parameter name="mapping" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">an array of #gint which represents the mapping between @wrapper's columns and the columns of the wrapped data model</doc>
+            <array length="1" zero-terminated="0" c:type="gint*">
+              <type name="gint" c:type="gint"/>
+            </array>
+          </parameter>
+          <parameter name="mapping_size" transfer-ownership="none">
+            <doc xml:whitespace="preserve">the size of @mapping.</doc>
+            <type name="gint" c:type="gint"/>
+          </parameter>
+        </parameters>
+      </method>
       <property name="model"
                 writable="1"
                 construct-only="1"
