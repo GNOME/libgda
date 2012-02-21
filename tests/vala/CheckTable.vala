@@ -42,7 +42,7 @@ namespace Check {
 				                                           " city string DEFAULT \"New Yield\","+
 				                                           " company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
 				this.connection.execute_non_select_command("INSERT INTO customer (id, name, city, company) VALUES (1, \"Daniel\", \"Mexico\", 1)");
-				this.connection.execute_non_select_command("INSERT INTO customer (id, name, city) VALUES (2, \"Jhon\", \"USA\")");
+				this.connection.execute_non_select_command("INSERT INTO customer (id, name, city) VALUES (2, \"Jhon\", \"Springfield\")");
 				this.connection.execute_non_select_command("INSERT INTO customer (id, name) VALUES (3, \"Jack\")");
 				stdout.printf("Creating table 'salary'...\n");
 				this.connection.execute_non_select_command("CREATE TABLE salary (id integer PRIMARY KEY AUTOINCREMENT,"+
@@ -162,6 +162,21 @@ namespace Check {
 				stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
 			return fails;
 		}
+
+		public int records ()
+			throws Error
+		{
+			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Records...\n");
+			int fails = 0;
+			foreach (DbRecord r in table.records) {
+				stdout.printf (r.to_string () + "\n");
+			}
+			if (fails > 0)
+				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
+			else
+				stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
+			return fails;
+		}
 		
 		public static int main (string[] args) {
 			stdout.printf ("\n\n\n>>>>>>>>>>>>>>>> NEW TEST: Checking GdaData.DbRecord implementation... <<<<<<<<<< \n");
@@ -171,10 +186,10 @@ namespace Check {
 				app.init ();
 				failures += app.update ();
 				failures += app.fields ();
-				//failures += app.records ();
-				//failures += app.depends ();
-				//failures += app.references ();
-				//failures += app.check_expression ();
+				failures += app.records ();
+				//failures += app.expression ();
+				//failures += app.append ();
+				//failures += app.save ();
 			}
 			catch (Error e) 
 			{ 

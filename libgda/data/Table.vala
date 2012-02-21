@@ -220,15 +220,16 @@ namespace GdaData
 				return  pk.values;
 			} 
 		}
+		
 		public DbCatalog catalog { get; set; }
 		
 		public DbSchema  schema { get; set; }
 		
-		public Collection<DbRecord> records { 
+		public DbRecordCollection records { 
 			owned get  {
 				try {
 					var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
-					q.set_table (name);
+					q.select_add_target (name, null);
 					q.select_add_field ("*", null, null);
 					var s = q.get_statement ();
 					var m = this.connection.statement_execute_select (s, null);

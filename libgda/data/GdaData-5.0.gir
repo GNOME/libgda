@@ -440,9 +440,7 @@
 			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
 		</property>
 		<property name="records">
-			<type name="Gee.Collection" c:type="GeeCollection*">
-				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
-			</type>
+			<type name="GdaData.DbRecordCollection" c:type="GdaDataDbRecordCollection*"/>
 		</property>
 		<property name="depends">
 			<type name="Gee.Collection" c:type="GeeCollection*">

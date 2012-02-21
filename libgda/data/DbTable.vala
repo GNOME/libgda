@@ -24,14 +24,14 @@ namespace GdaData
 {
 	public interface DbTable : Object, DbObject, DbNamedObject
 	{
-		public abstract DbCatalog                        catalog       { get; set; }
-		public abstract DbSchema                         schema        { get; set; }
-		public abstract TableType                        table_type    { get; set; }
-		public abstract Collection<DbRecord>             records       { owned get; }
-		public abstract Collection<DbTable>              depends       { owned get; }
-		public abstract Collection<DbTable>              referenced    { owned get; }
-		public abstract Collection<DbFieldInfo>          fields        { owned get; }
-		public abstract Collection<DbFieldInfo>          primary_keys  { owned get; }
+		public abstract DbCatalog                   catalog       { get; set; }
+		public abstract DbSchema                    schema        { get; set; }
+		public abstract TableType                   table_type    { get; set; }
+		public abstract DbRecordCollection          records       { owned get; }
+		public abstract Collection<DbTable>         depends       { owned get; }
+		public abstract Collection<DbTable>         referenced    { owned get; }
+		public abstract Collection<DbFieldInfo>     fields        { owned get; }
+		public abstract Collection<DbFieldInfo>     primary_keys  { owned get; }
 		
 		public enum TableType {
 			NONE,
