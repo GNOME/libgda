@@ -18,10 +18,13 @@
  */
 
 using Gda;
+using Gee;
 
 namespace GdaData {
 	public interface DbFieldInfo : Object
 	{
+		public abstract int                    ordinal           { get; set; }
+		public abstract Type                   value_type        { get; set; }
 		public abstract DbFieldInfo.Attribute  attributes        { get; set; }
 		public abstract Value?                 default_value     { get; set; }
 		public abstract string                 name              { get; set; }
@@ -33,6 +36,9 @@ namespace GdaData {
 		
 		// Check clause expression
 //		public abstract DbSqlExpression        check_expression  { get; set; }
+
+		// Constrains
+		public abstract ForeignKey  fkey   { get; set; }
 		
 		public static Attribute attribute_from_string (string str)
 		{
@@ -71,16 +77,21 @@ namespace GdaData {
 			AUTO_INCREMENT
 		}
 		
-		// Constrains
-		public abstract ForeignKey  fkey   { get; set; }
+		
 		
 		public class ForeignKey {
-			public string    name          { get; set; }
-			public string    refname       { get; set; }
-			public DbTable   reftable      { get; set; }
-			public Match     match         { get; set; }
-			public Rule      update_rule   { get; set; }
-			public Rule      delete_rule   { get; set; }
+			public string                 name        { get; set; }
+			public string                 refname     { get; set; }
+			public DbTable                reftable    { get; set; }
+			public ArrayList<string>      refcol      { get; set; }
+			public Match                  match       { get; set; }
+			public Rule                   update_rule { get; set; }
+			public Rule                   delete_rule { get; set; }
+			
+			public ForeignKey ()
+			{
+				refcol = new ArrayList<string> ();
+			}
 			
 			public static Match match_from_string (string str)
 			{
@@ -113,18 +124,35 @@ namespace GdaData {
 	
 				return Rule.NONE;
 			}
+			
+			public static string rule_to_string (Rule r)
+			{
+				if (r == Rule.CASCADE)
+					return "CASCADE";
+				if (r == Rule.SET_NULL)
+					return "SET NULL";
+				if (r == Rule.SET_DEFAULT)
+					return "SET DEFAULT";
+				if (r == Rule.RESTRICT)
+					return "RESTRICT";
+				if (r == Rule.NO_ACTION)
+					return "NO ACTION";
+	
+				return "NONE";
+			}
+			
 			public enum Match {
 				FULL,
 				PARTIAL,
 				NONE
 			}
 			public enum Rule {
+				NONE,
 				CASCADE,
 				SET_NULL,
 				SET_DEFAULT,
 				RESTRICT,
-				NO_ACTION,
-				NONE
+				NO_ACTION
 			} 
 		}
 	}

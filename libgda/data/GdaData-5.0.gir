@@ -141,6 +141,26 @@
 				<type name="GdaData.Table" c:type="GdaDataTable*"/>
 			</return-value>
 		</constructor>
+		<method name="set_field" c:identifier="gda_data_table_set_field" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<method name="get_field" c:identifier="gda_data_table_get_field" throws="1">
+			<parameters>
+				<parameter name="name" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</return-value>
+		</method>
 		<constructor name="new" c:identifier="gda_data_table_new">
 			<return-value transfer-ownership="full">
 				<type name="GdaData.Table" c:type="GdaDataTable*"/>
@@ -440,7 +460,9 @@
 			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
 		</property>
 		<property name="records">
-			<type name="GdaData.DbRecordCollection" c:type="GdaDataDbRecordCollection*"/>
+			<type name="Gee.Collection" c:type="GeeCollection*">
+				<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
+			</type>
 		</property>
 		<property name="depends">
 			<type name="Gee.Collection" c:type="GeeCollection*">
@@ -865,6 +887,12 @@
 				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
 			</return-value>
 		</function>
+		<property name="ordinal" writable="1">
+			<type name="gint" c:type="gint"/>
+		</property>
+		<property name="value-type" writable="1">
+			<type name="GObject.Type" c:type="GType"/>
+		</property>
 		<property name="attributes" writable="1">
 			<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
 		</property>
@@ -903,6 +931,11 @@
 		<member name="auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_AUTO_INCREMENT" value="128"/>
 	</bitfield>
 	<record name="DbFieldInfoForeignKey">
+		<constructor name="new" c:identifier="gda_data_db_field_info_foreign_key_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
+			</return-value>
+		</constructor>
 		<function name="match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
@@ -923,11 +956,16 @@
 				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
 			</return-value>
 		</function>
-		<constructor name="new" c:identifier="gda_data_db_field_info_foreign_key_new">
+		<function name="rule_to_string" c:identifier="gda_data_db_field_info_foreign_key_rule_to_string">
+			<parameters>
+				<parameter name="r" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+				</parameter>
+			</parameters>
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
+				<type name="utf8" c:type="gchar*"/>
 			</return-value>
-		</constructor>
+		</function>
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
@@ -936,6 +974,11 @@
 		</property>
 		<property name="reftable" writable="1">
 			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+		</property>
+		<property name="refcol" writable="1">
+			<type name="Gee.ArrayList" c:type="GeeArrayList*">
+				<type name="utf8" c:type="gchar*"/>
+			</type>
 		</property>
 		<property name="match" writable="1">
 			<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
@@ -953,12 +996,12 @@
 		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_NONE" value="2"/>
 	</enumeration>
 	<enumeration name="DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule" glib:type-name="GdaDataDbFieldInfoForeignKeyRule" glib:get-type="gda_data_db_field_info_foreign_key_rule_get_type">
-		<member name="cascade" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_CASCADE" value="0"/>
-		<member name="set_null" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_NULL" value="1"/>
-		<member name="set_default" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_DEFAULT" value="2"/>
-		<member name="restrict" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_RESTRICT" value="3"/>
-		<member name="no_action" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NO_ACTION" value="4"/>
-		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NONE" value="5"/>
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NONE" value="0"/>
+		<member name="cascade" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_CASCADE" value="1"/>
+		<member name="set_null" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_NULL" value="2"/>
+		<member name="set_default" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_SET_DEFAULT" value="3"/>
+		<member name="restrict" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_RESTRICT" value="4"/>
+		<member name="no_action" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NO_ACTION" value="5"/>
 	</enumeration>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
 		<prerequisite name="GdaData.DbObject"/>

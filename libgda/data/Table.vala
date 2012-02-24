@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * libgdadata
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * Copyright (C) Daniel Espinosa Ortiz 2012 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -24,6 +24,9 @@ namespace GdaData
 {
 	public class Table : Object, DbObject, DbNamedObject, DbTable
 	{
+		private bool _read_only = false;
+		private int  _n_cols = -1;
+		
 		protected DbTable.TableType           _type;
 		protected DbRecordCollection          _records;
 		protected HashMap<string,DbFieldInfo> _fields = new HashMap<string,DbFieldInfo> ();
@@ -36,7 +39,9 @@ namespace GdaData
 				_fields.set (f.name, f);
 			}
 		}
+		
 		// DbObject Interface
+		
 		public Connection connection { get; set; }
 		
 		public void update () throws Error 
@@ -90,6 +95,7 @@ namespace GdaData
 				var fi = new FieldInfo ();
 				fi.name = (string) mt.get_value_at (mt.get_column_index ("column_name"), r);
 				fi.desc = (string) mt.get_value_at (mt.get_column_index ("column_comments"), r);
+				fi.ordinal = (int) mt.get_value_at (mt.get_column_index ("ordinal_position"), r);
 				// Set attributes
 				fi.attributes = DbFieldInfo.Attribute.NONE;
 				bool fcbn = (bool) mt.get_value_at (mt.get_column_index ("is_nullable"), r);
@@ -102,6 +108,7 @@ namespace GdaData
 				// Default Value
 				string fdv = (string) mt.get_value_at (mt.get_column_index ("column_default"), r);
 				Type ft = Gda.g_type_from_string ((string) mt.get_value_at (mt.get_column_index ("gtype"), r));
+				fi.value_type = ft;
 				if (fdv != null) {
 					fi.attributes = fi.attributes | DbFieldInfo.Attribute.HAVE_DEFAULT;
 					fi.default_value = DbField.value_from_string (fdv, ft);
@@ -172,6 +179,16 @@ namespace GdaData
 					var delete_rule = (string) mfk.get_value_at (
 														mfk.get_column_index ("delete_rule"), 0);
 					f.fkey.delete_rule = DbFieldInfo.ForeignKey.rule_from_string (delete_rule);
+					
+					var mfkr = store.extract ("SELECT * FROM _detailed_fk " + 
+											" WHERE fk_table_name  = ##name::string"+
+				                         " AND fk_constraint_name = ##constraint_name::string" +
+				                         " AND fk_table_catalog = ##catalog::string"+
+				                         " AND fk_table_schema = ##schema::string", vals);
+					for (int r2 = 0; r2 < mfkr.get_n_rows (); r2++) {
+						var rc = (string) mfkr.get_value_at (mfkr.get_column_index ("ref_column"), r2);
+						f.fkey.refcol.add (rc);
+					}
 				}
 				if (DbFieldInfo.Attribute.CHECK in  f.attributes) 
 				{
@@ -179,7 +196,9 @@ namespace GdaData
 				}
 				_fields.set (f.name, f);
 			}
+			
 			// Table referencing this
+			
 			var mtr = store.extract ("SELECT * FROM "+
 			                     	 "_detailed_fk WHERE ref_table_name  = ##name::string"+
 			                         " AND ref_table_catalog = ##catalog::string"+
@@ -191,15 +210,70 @@ namespace GdaData
 				tr.name = tn;
 				_referenced.set (tr.name, tr);
 			}
+			_read_only = true;
+			_n_cols = _fields.size;
 		}
-		public void save () throws Error {}
 		
-		public void append () throws Error {}
+		public void save () throws Error 
+		{
+			throw new DbTableError.READ_ONLY ("Table's definition is read only");
+		}
+		
+		public void append () throws Error 
+		{
+			var op = connection.create_operation (Gda.ServerOperationType.CREATE_TABLE, null);
+			op.set_value_at_path (name, "/TABLE_DEF_P/TABLE_NAME");
+			if (DbTable.TableType.LOCAL_TEMPORARY in table_type)
+				op.set_value_at_path ("TRUE","/TABLE_DEF_P/TABLE_TEMP");
+			int refs = 0;
+			foreach (DbFieldInfo f in fields) {
+				op.set_value_at_path (f.name, "/FIELDS_A/@COLUMN_NAME/" + f.ordinal.to_string ());
+				op.set_value_at_path (Gda.g_type_to_string (f.value_type), 
+										"/FIELDS_A/@COLUMN_TYPE/" + f.ordinal.to_string ());
+				if (DbFieldInfo.Attribute.PRIMARY_KEY in f.attributes) {
+					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_PKEY/" + f.ordinal.to_string ());
+				}
+				if (DbFieldInfo.Attribute.CAN_BE_NULL in f.attributes) {
+					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_NNUL/" + f.ordinal.to_string ());
+				}
+				if (DbFieldInfo.Attribute.AUTO_INCREMENT in f.attributes) {
+					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_AUTOINC/" + f.ordinal.to_string ());
+				}
+				if (DbFieldInfo.Attribute.UNIQUE in f.attributes) {
+					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_UNIQUE/" + f.ordinal.to_string ());
+				}
+				if (DbFieldInfo.Attribute.HAVE_DEFAULT in f.attributes) {
+					op.set_value_at_path (connection.value_to_sql_string (f.default_value),
+											"/FIELDS_A/@COLUMN_DEFAULT/" + f.ordinal.to_string ());
+				}
+				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) {
+					op.set_value_at_path (f.fkey.reftable.name, "/FKEY_S/" + refs.to_string () + 
+									"/FKEY_REF_TABLE");
+					int rc = 0;
+					foreach (string fkc in f.fkey.refcol) {
+						op.set_value_at_path (f.name, "/FKEY_S/" + refs.to_string ()
+										+ "/FKEY_FIELDS_A/@FK_FIELD/" + rc.to_string ());
+						op.set_value_at_path (fkc, "/FKEY_S/" + refs.to_string ()
+										+ "/FKEY_FIELDS_A/@FK_REF_PK_FIELD/" + rc.to_string ());
+						rc++;
+					}
+
+					op.set_value_at_path (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.update_rule),
+										"/FKEY_S/" + refs.to_string () + "/FKEY_ONUPDATE");
+					op.set_value_at_path (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.delete_rule),
+										"/FKEY_S/" + refs.to_string () + "/FKEY_ONDELETE");
+					refs++;
+				}
+			}
+			connection.perform_operation (op);
+		}
 		
 		// DbNamedObject Interface
+		
 		public string name { get; set; }
 		
 		// DbTable Interface
+		
 		public DbTable.TableType table_type { get { return _type; } set { _type = value; } }
 
 		public Collection<DbFieldInfo> fields { 
@@ -225,7 +299,7 @@ namespace GdaData
 		
 		public DbSchema  schema { get; set; }
 		
-		public DbRecordCollection records { 
+		public Collection<DbRecord> records { 
 			owned get  {
 				try {
 					var q = new Gda.SqlBuilder (SqlStatementType.SELECT);
@@ -244,6 +318,25 @@ namespace GdaData
 		
 		public Collection<DbTable> referenced { 
 			owned get { return _referenced.values; } 
+		}
+		
+		public void set_field (DbFieldInfo field) throws Error
+		{
+			if (_read_only) {
+				throw new DbTableError.READ_ONLY ("Table's definition is read only");
+			}
+			if (field.ordinal < 0) {
+				_n_cols++;
+				field.ordinal = _n_cols;
+			}
+			_fields.set (field.name, field);
+		}
+		
+		public DbFieldInfo get_field (string name) throws Error
+		{
+			if (!_fields.has_key (name))
+				throw new DbTableError.FIELD ("Field '" + name + "' not found");
+			return _fields.get (name);
 		}
 	}
 }

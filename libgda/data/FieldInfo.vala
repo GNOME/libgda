@@ -22,33 +22,41 @@ using Gda;
 namespace GdaData {
 	public class FieldInfo : Object, DbFieldInfo
 	{
-		private DbFieldInfo.Attribute      _attr;
-		private Value?                 _default_value;
-		private string                 _name;
-		private string                 _desc;
-		private int                    _precision = -1;
-		private int                    _scale = -1;
-		private DbFieldInfo.ForeignKey _fk;
+		private Value?                  _default_value;
+		private DbFieldInfo.ForeignKey  _fkey;
 		
-		public DbFieldInfo.Attribute  attributes {
-			get { return _attr; } set { _attr = value; }
-		}
-		
-		public Value? default_value { 
+		public int                    ordinal           { get; set; }
+		public Type                   value_type        { get; set; }
+		public DbFieldInfo.Attribute  attributes        { get; set; }
+		public Value?                 default_value     
+		{ 
 			get { return _default_value; }
-			set { _default_value = value; }
+			set {
+				attributes = attributes | DbFieldInfo.Attribute.HAVE_DEFAULT;
+				_default_value = value;
+			}
+		}
+		public string                 name              { get; set; }
+		public string                 desc              { get; set; }
+		
+		// Numeric and Datetime attributes
+		public int                    precision         { get; set; }
+		public int                    scale             { get; set; }
+		
+		// Constrains
+		public DbFieldInfo.ForeignKey  fkey   
+		{ 
+			get { return _fkey; }
+			set {
+				attributes = attributes | DbFieldInfo.Attribute.FOREIGN_KEY;
+				_fkey = value;
+			}
 		}
 		
-		public string name { 
-			get { return _name; }
-			set { _name = value; }
+		public FieldInfo ()
+		{
+			ordinal = -1;
 		}
-		
-		public string desc { get { return _desc; } set { _desc = value; } }
-		
-		public int precision   { get { return _precision; } set { _precision = value; } }
-		public int scale       { get { return _scale; } set { _scale = value; } }
-		
-		public DbFieldInfo.ForeignKey  fkey   { get  { return _fk; } set { _fk = value; } }
+
 	}
 }

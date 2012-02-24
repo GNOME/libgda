@@ -152,6 +152,22 @@ namespace Check {
 				}
 			}
 			
+			// DbFieldInfo
+			
+			var fl = new FieldInfo ();
+			fl.name = "FieldName1";
+			if (GLib.strcmp (fl.name, "FieldName1") != 0) {
+				fails++;
+				stdout.printf (">>>>>>>> Default Value No Match. Holded \'"+
+				               (string) fl.name + "\' But Expected \"FieldName1\" : FAIL\n");
+			}
+			fl.name = "NewFieldName";
+			if (GLib.strcmp (fl.name, "NewFieldName") != 0) {
+				fails++;
+				stdout.printf (">>>>>>>> Default Value No Match. Holded \'"+
+				               (string) fl.name + "\' But Expected \"NewFieldName\" : FAIL\n");
+			}
+			
 			if (found == 0) {
 				stdout.printf (">>>>>>>> Check Default Values: FAIL\n");
 				fails++;
@@ -178,6 +194,90 @@ namespace Check {
 			return fails;
 		}
 		
+		public int append ()
+			throws Error
+		{
+			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Append...\n");
+			int fails = 0;
+			
+			var t = new Table ();
+			t.name = "created_table";
+			t.connection = connection;
+			var field = new FieldInfo ();
+			field.name = "id";
+			field.value_type = typeof (int);
+			field.attributes = DbFieldInfo.Attribute.PRIMARY_KEY | 
+								DbFieldInfo.Attribute.AUTO_INCREMENT;
+			t.set_field (field);
+			
+			var field1 = new FieldInfo ();
+			field1.name = "name";
+			field1.value_type = typeof (string);
+			field1.attributes = DbFieldInfo.Attribute.NONE;
+			t.set_field (field1);
+			
+			var field2 = new FieldInfo ();
+			field2.name = "company";
+			field2.value_type = typeof (int);
+			field2.default_value = 1;
+			var fk = new DbFieldInfo.ForeignKey ();
+			var rt = new Table ();
+			rt.name = "company";
+			fk.reftable = rt;
+			fk.refcol.add ("id");
+			fk.update_rule = DbFieldInfo.ForeignKey.Rule.CASCADE;
+			fk.delete_rule = DbFieldInfo.ForeignKey.Rule.SET_DEFAULT;
+			field2.fkey = fk;
+			t.set_field (field2);
+			
+			foreach (DbFieldInfo f in t.fields) {
+				stdout.printf ("Field: " + f.name + 
+								"\nType: " + Gda.g_type_to_string (f.value_type) +
+								"\nAttr: " + ((int)f.attributes).to_string () + "\n");
+			}
+			
+			t.append ();
+			
+			var m = connection.execute_select_command ("SELECT * FROM created_table");
+			
+			bool f = false;
+			if (m.get_column_index ("id") != 0)
+				f = true;
+			if (m.get_column_index ("name") != 1)
+				f = true;
+			if (m.get_column_index ("company") != 2)
+				f = true;
+			if (f) {
+				fails++;
+				stdout.printf ("Check Ordinal position: FAILED\n");
+			}
+			
+			connection.execute_non_select_command ("INSERT INTO created_table (name) VALUES (\"Nancy\")");
+			
+			var m2 = connection.execute_select_command ("SELECT * FROM created_table");
+			bool f2 = false;
+			if (m2.get_n_rows () != 1) 
+				f2 = true;
+			int id = (int) m2.get_value_at (0,0);
+			if (id != 1)
+				f2 = true;
+			string name = (string) m2.get_value_at (1,0);
+			if (GLib.strcmp (name, "Nancy") != 0)
+				f2 = true;
+			int company = (int) m2.get_value_at (2,0);
+			if (company != 1)
+				f2 = true;
+			if (f) {
+				fails++;
+				stdout.printf ("Check Table Values: FAILED\n");
+			}
+			if (fails > 0)
+				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
+			else
+				stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
+			return fails;
+		}
+		
 		public static int main (string[] args) {
 			stdout.printf ("\n\n\n>>>>>>>>>>>>>>>> NEW TEST: Checking GdaData.DbRecord implementation... <<<<<<<<<< \n");
 			int failures = 0;
@@ -188,7 +288,7 @@ namespace Check {
 				failures += app.fields ();
 				failures += app.records ();
 				//failures += app.expression ();
-				//failures += app.append ();
+				failures += app.append ();
 				//failures += app.save ();
 			}
 			catch (Error e) 

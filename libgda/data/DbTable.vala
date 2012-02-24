@@ -27,7 +27,7 @@ namespace GdaData
 		public abstract DbCatalog                   catalog       { get; set; }
 		public abstract DbSchema                    schema        { get; set; }
 		public abstract TableType                   table_type    { get; set; }
-		public abstract DbRecordCollection          records       { owned get; }
+		public abstract Collection<DbRecord>        records       { owned get; }
 		public abstract Collection<DbTable>         depends       { owned get; }
 		public abstract Collection<DbTable>         referenced    { owned get; }
 		public abstract Collection<DbFieldInfo>     fields        { owned get; }
@@ -63,5 +63,10 @@ namespace GdaData
 			
 			return TableType.NONE;
 		}
+	}
+	
+	errordomain DbTableError {
+		READ_ONLY,
+		FIELD
 	}
 }
