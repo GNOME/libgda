@@ -6,7 +6,10 @@ CFLAGS = \
 
 LDFLAGS = `pkg-config --libs libgdadata-5.0` 
 
-VALAFLAGS = -g --save-temps --pkg libgda-5.0 --pkg gdadata-5.0 --pkg gee-0.8 --pkg libxml-2.0
+VALA_DATADIR=`pkg-config $VALA_MODULES --variable=datadir`
+VAPIDIR="$VALA_DATADIR/vala/vapi"
+
+VALAFLAGS = -g --save-temps --vapidir=$(VAPIDIR) --pkg libgda-5.0 --pkg gdadata-5.0 --pkg gee-0.8 --pkg libxml-2.0
 
 all: sampledataobject sampledatamodeliterable
 

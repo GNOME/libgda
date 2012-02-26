@@ -22,7 +22,7 @@ using Gda;
 
 namespace GdaData
 {
-	public interface DbRecord : DbObject, Comparable<DbRecord>
+	public interface DbRecord : Object, DbObject, Comparable<DbRecord>
 	{
 		public abstract DbTable                   table  { get; set construct; }
 		public abstract Collection<DbField>       fields { owned get; }

@@ -25,6 +25,7 @@ lib_LTLIBRARIES = libgdadata-5.0.la
 
 VALAFLAGS = \
     --vapidir=$(top_srcdir)/libgda \
+    --vapidir=$(VAPIDIR) \
     --includedir=$(top_srcdir)/libgda \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \

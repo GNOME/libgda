@@ -63,21 +63,24 @@ namespace GdaData {
 		}
 		public override bool contains (DbRecord item)
 		{
+			bool found = true;
 			try {
 				var iter = _model.create_iter ();
 				while (iter.move_next ()) {
-					bool found = true;
 					foreach (DbField k in item.keys) {
 						Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
 						Value v = k.value;
 						if (Gda.value_compare (id,v) != 0)
 							found = false;
 					}
-					if (found) return true;
+					if (found) break;
 				}
 			}
-			catch (Error e) { GLib.warning (e.message); }
-			return false;
+			catch (Error e) { 
+				GLib.warning (e.message); 
+				found = false;
+			}
+			return found;
 		}
 		public override Gee.Iterator<DbRecord> iterator () 
 		{ 

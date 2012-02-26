@@ -21,14 +21,16 @@ using Gee;
 using Gda;
 
 namespace GdaData {
-	public interface DbObject : Object {
+	public interface DbObject : Object 
+	{
 		public abstract Connection   connection { get; set; }
 		public abstract void         append () throws Error;
 		public abstract void         update () throws Error;
 		public abstract void         save () throws Error;
 	}
 	
-	public interface DbNamedObject : DbObject {
+	public interface DbNamedObject : Object, DbObject 
+	{
 		public abstract string       name { get; set; }
 	}
 	

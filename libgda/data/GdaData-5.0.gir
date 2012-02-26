@@ -398,6 +398,7 @@
 		</field>
 	</record>
 	<interface name="DbNamedObject" c:type="GdaDataDbNamedObject" glib:type-name="GdaDataDbNamedObject" glib:get-type="gda_data_db_named_object_get_type" glib:type-struct="DbNamedObjectIface">
+		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
@@ -409,6 +410,8 @@
 		</field>
 	</record>
 	<interface name="DbCollection" c:type="GdaDataDbCollection" glib:type-name="GdaDataDbCollection" glib:get-type="gda_data_db_collection_get_type" glib:type-struct="DbCollectionIface">
+		<prerequisite name="GObject.Object"/>
+		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="schemas">
 			<type name="Gee.Collection" c:type="GeeCollection*">
@@ -501,6 +504,7 @@
 		<member name="synonym" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_SYNONYM" value="7"/>
 	</enumeration>
 	<interface name="DbRecord" c:type="GdaDataDbRecord" glib:type-name="GdaDataDbRecord" glib:get-type="gda_data_db_record_get_type" glib:type-struct="DbRecordIface">
+		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="Gee.Comparable"/>
 		<method name="get_value" c:identifier="gda_data_db_record_get_value" throws="1">
@@ -1004,6 +1008,7 @@
 		<member name="no_action" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NO_ACTION" value="5"/>
 	</enumeration>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
+		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<property name="catalog" writable="1">

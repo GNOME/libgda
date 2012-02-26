@@ -36,6 +36,7 @@ VALAFLAGS = \
     --includedir=$(top_builddir) \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(top_builddir)/libgda/data \
+    --vapidir=$(VAPIDIR) \
     $(NULL)
 
 check_dataobject_VALASOURCES = \
