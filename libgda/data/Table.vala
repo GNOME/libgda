@@ -26,6 +26,7 @@ namespace GdaData
 	{
 		private bool _read_only = false;
 		private int  _n_cols = -1;
+		private bool _updated_meta = false;
 		
 		protected DbTable.TableType           _type;
 		protected DbRecordCollection          _records;
@@ -46,30 +47,60 @@ namespace GdaData
 		
 		public void update () throws Error 
 		{
-			var store = connection.get_meta_store ();
 			_fields.clear ();
+			_updated_meta = false;
 			string cond = "";
 			
 			var ctx = new Gda.MetaContext ();
 			ctx.set_table ("_columns");
 			ctx.set_column ("table_name", name, connection);
-			// May be is necesary to set schema and catalog
-			connection.update_meta_store (ctx);
+			try { connection.update_meta_store (ctx); }
+			catch (Error e) {
+				GLib.message ("Updating meta store for _columns fails with error: " + e.message+"\n");
+				GLib.message ("Trying to update all...");
+				_updated_meta = connection.update_meta_store (null);
+				_updated_meta = true;
+			}
+			
+			var store = connection.get_meta_store ();
 			
 			var vals = new HashTable<string,Value?> (str_hash,str_equal);
 			vals.set ("name", name);
 			if (schema == null)
 			{
-				var cxc = new Gda.MetaContext ();
-				cxc.set_table ("_information_schema_catalog_name");
-				connection.update_meta_store (cxc);
+				if (!_updated_meta) {
+					try { 
+						var cxc = new Gda.MetaContext ();
+						cxc.set_table ("_information_schema_catalog_name");
+						connection.update_meta_store (cxc); 
+					}
+					catch (Error e) {
+						GLib.message ("Updating meta store for _information_schema_catalog_name fails with error: "
+										 + e.message+"\n");
+						GLib.message ("Trying to update all...");
+						_updated_meta = connection.update_meta_store (null);
+						if (_updated_meta)
+							GLib.message ("Meta store update ... Ok");
+					}
+				}
 				var catm = store.extract ("SELECT * FROM _information_schema_catalog_name", null);
 				catalog = new Catalog ();
 				catalog.connection = connection;
 				catalog.name = (string) catm.get_value_at (catm.get_column_index ("catalog_name"), 0);
-				var cxs = new Gda.MetaContext ();
-				cxs.set_table ("_schemata");
-				connection.update_meta_store (cxs);
+				if (!_updated_meta) {
+					try { 
+						var cxs = new Gda.MetaContext ();
+						cxs.set_table ("_schemata");
+						connection.update_meta_store (cxs); 
+					}
+					catch (Error e) {
+						GLib.message ("Updating meta store for _schemata fails with error: " + e.message+"\n");
+						GLib.message ("Trying to update all...");
+						_updated_meta = connection.update_meta_store (null);
+						if (_updated_meta)
+							GLib.message ("Meta store update ... Ok");
+					}
+				}
 				var schm = store.extract ("SELECT * FROM _schemata WHERE schema_default = TRUE", null);
 				schema = new Schema ();
 				schema.catalog = catalog;
@@ -94,19 +125,32 @@ namespace GdaData
 			{
 				var fi = new FieldInfo ();
 				fi.name = (string) mt.get_value_at (mt.get_column_index ("column_name"), r);
-				fi.desc = (string) mt.get_value_at (mt.get_column_index ("column_comments"), r);
+				Value v = mt.get_value_at (mt.get_column_index ("column_comments"), r);
+				if (v.holds (typeof (string)))
+					fi.desc = (string) v;
+				else
+					fi.desc = "";
 				fi.ordinal = (int) mt.get_value_at (mt.get_column_index ("ordinal_position"), r);
 				// Set attributes
 				fi.attributes = DbFieldInfo.Attribute.NONE;
 				bool fcbn = (bool) mt.get_value_at (mt.get_column_index ("is_nullable"), r);
 				if (fcbn)
 					fi.attributes = fi.attributes | DbFieldInfo.Attribute.CAN_BE_NULL;
-				string fai = (string) mt.get_value_at (mt.get_column_index ("extra"), r);
+				string fai;
+				v = mt.get_value_at (mt.get_column_index ("extra"), r);
+				if (v.holds (typeof (string)))
+					fai = (string) v;
+				else
+					fai = "";
 				if (fai == "AUTO_INCREMENT")
 					fi.attributes = fi.attributes | DbFieldInfo.Attribute.AUTO_INCREMENT;
-				
 				// Default Value
-				string fdv = (string) mt.get_value_at (mt.get_column_index ("column_default"), r);
+				string fdv;
+				v = mt.get_value_at (mt.get_column_index ("column_default"), r);
+				if (v.holds (typeof (string)))
+					fdv = (string) v;
+				else
+					fdv = "";
 				Type ft = Gda.g_type_from_string ((string) mt.get_value_at (mt.get_column_index ("gtype"), r));
 				fi.value_type = ft;
 				if (fdv != null) {
@@ -127,32 +171,75 @@ namespace GdaData
 				_fields.set (fi.name, fi);
 			}
 			// Constraints
-			ctx.set_table ("_table_constraints");
-			connection.update_meta_store (ctx);
-			ctx.set_table ("_key_column_usage");
-			connection.update_meta_store (ctx);
+			if (!_updated_meta) {
+				try { 
+					var cxcr = new Gda.MetaContext ();
+					cxcr.set_table ("_table_constraints");
+					connection.update_meta_store (cxcr); 
+				}
+				catch (Error e) {
+					GLib.message ("Updating meta store for _table_constraints usage fails with error: " 
+									+ e.message+"\n");
+					GLib.message ("Trying to update all...");
+					_updated_meta = connection.update_meta_store (null);
+					if (_updated_meta)
+							GLib.message ("Meta store update ... Ok");
+				}
+			}
+			if (!_updated_meta) {
+				try { 
+					var cxcr2 = new Gda.MetaContext ();
+					cxcr2.set_table ("_key_column_usage");
+					connection.update_meta_store (cxcr2); 
+				}
+				catch (Error e) {
+					GLib.message ("Updating meta store for _key_column_usage usage fails with error: "
+									 + e.message+"\n");
+					GLib.message ("Trying to update all...");
+					_updated_meta = connection.update_meta_store (null);
+					if (_updated_meta)
+							GLib.message ("Meta store update ... Ok");
+				}
+			}
 			var mc = store.extract ("SELECT * FROM _table_constraints"+
 			                        " WHERE table_name  = ##name::string" + cond,
 									vals);
+			stdout.printf ("EXTRACTED _table_constraints:\n" + mc.dump_as_string ());
 			for (r = 0; r < mc.get_n_rows (); r++) 
 			{
 				string ct = (string) mc.get_value_at (mc.get_column_index ("constraint_type"), r);
 				string cn = (string) mc.get_value_at (mc.get_column_index ("constraint_name"), r);
+				GLib.message ("Constraint Name = " + cn + "Type = " + ct + "\n");
 				vals.set ("constraint_name", cn);
 				var mpk = store.extract ("SELECT * FROM _key_column_usage"+
 				                         " WHERE table_name  = ##name::string"+
 				                         " AND constraint_name = ##constraint_name::string" + cond, vals);
+				stdout.printf ("EXTRACTED _key_column_usagess:\n" + mpk.dump_as_string ());
 				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
 				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
-					ctx.set_table ("_referential_constraints");
-					connection.update_meta_store (ctx);
+					if (!_updated_meta) {
+						try { 
+							var cxcr3 = new Gda.MetaContext ();
+							cxcr3.set_table ("_referential_constraints");
+							connection.update_meta_store (cxcr3); 
+						}
+						catch (Error e) {
+							GLib.message ("Updating for _referential_constraints usage fails with error: " 
+											+ e.message+"\n");
+							GLib.message ("Trying to update all...");
+							_updated_meta = connection.update_meta_store (null);
+							if (_updated_meta)
+									GLib.message ("Meta store update ... Ok");
+						}
+					}
 					var mfk = store.extract ("SELECT * FROM _referential_constraints"+
 					                         " WHERE table_name  = ##name::string "+
 					                         "AND constraint_name = ##constraint_name::string" + cond, vals);
+					stdout.printf ("EXTRACTED _referential_constraints:\n" + mfk.dump_as_string ());
 					f.fkey = new DbFieldInfo.ForeignKey ();
 					f.fkey.name = cn;
 					f.fkey.refname = (string) mfk.get_value_at (mfk.get_column_index ("ref_constraint_name"), 0);
@@ -185,6 +272,7 @@ namespace GdaData
 				                         " AND fk_constraint_name = ##constraint_name::string" +
 				                         " AND fk_table_catalog = ##catalog::string"+
 				                         " AND fk_table_schema = ##schema::string", vals);
+					stdout.printf ("EXTRACTED _detailed_fk 1:\n" + mfkr.dump_as_string ());
 					for (int r2 = 0; r2 < mfkr.get_n_rows (); r2++) {
 						var rc = (string) mfkr.get_value_at (mfkr.get_column_index ("ref_column"), r2);
 						f.fkey.refcol.add (rc);
@@ -203,6 +291,9 @@ namespace GdaData
 			                     	 "_detailed_fk WHERE ref_table_name  = ##name::string"+
 			                         " AND ref_table_catalog = ##catalog::string"+
 			                         " AND ref_table_schema = ##schema::string", vals);
+			if (mtr.get_n_rows () == 0)
+				GLib.message ("Rows = 0");
+			GLib.message ("EXTRACTED _detailed_fk 2:\n" + mtr.dump_as_string ());
 			for (r = 0; r < mtr.get_n_rows (); r++) {
 				var tn = (string) mtr.get_value_at (mtr.get_column_index ("fk_table_name"), r);
 				var tr = new Table ();
@@ -228,7 +319,7 @@ namespace GdaData
 			int refs = 0;
 			foreach (DbFieldInfo f in fields) {
 				op.set_value_at_path (f.name, "/FIELDS_A/@COLUMN_NAME/" + f.ordinal.to_string ());
-				op.set_value_at_path (Gda.g_type_to_string (f.value_type), 
+				op.set_value_at_path (connection.get_provider ().get_default_dbms_type (connection, f.value_type), 
 										"/FIELDS_A/@COLUMN_TYPE/" + f.ordinal.to_string ());
 				if (DbFieldInfo.Attribute.PRIMARY_KEY in f.attributes) {
 					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_PKEY/" + f.ordinal.to_string ());

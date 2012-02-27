@@ -30,10 +30,82 @@ namespace Check {
 		{
 			try {
 				GLib.FileUtils.unlink("table.db");
+				bool usepg = false;
+				stdout.printf ("Trying to use PostgreSQL provider\n");
+				try {
+					this.connection = Connection.open_from_string ("PostgreSQL", 
+										"DB_NAME=test", null,
+										Gda.ConnectionOptions.NONE);
+					if (this.connection.is_opened ()) {
+						usepg = true;
+						init_pg ();
+					}
+				}
+			 	catch (Error e) { 
+					stdout.printf ("ERROR: Not using PostgreSQL provider. Message: " + e.message); 
+				}
 				stdout.printf("Creating Database...\n");
-				this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, Gda.ConnectionOptions.NONE);
+				if (!usepg) {
+					this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, 
+									Gda.ConnectionOptions.NONE);
+					Init_sqlite ();
+				}
+			}
+			catch (Error e) {
+				stdout.printf ("Couln't initalize database...\nERROR: %s\n", e.message);
+			}
+		}
+		
+		private void init_pg () throws Error
+		{
+			try {
+				try {this.connection.execute_non_select_command("DROP TABLE IF EXISTS company CASCADE");}
+				catch (Error e) { stdout.printf ("Error on dopping table company: "+e.message+"\n"); }
 				stdout.printf("Creating table 'company'...\n");
-				this.connection.execute_non_select_command("CREATE TABLE company (id int PRIMARY KEY, name string, responsability string)");
+				this.connection.execute_non_select_command("CREATE TABLE company (id serial PRIMARY KEY, " +
+				"name text, responsability text)");
+				this.connection.execute_non_select_command("INSERT INTO company (name, responsability) " + 
+					"VALUES (\'Telcsa\', \'Programing\')");
+				this.connection.execute_non_select_command("INSERT INTO company (name, responsability) " + 
+					"VALUES (\'Viasa\', \'Accessories\')");
+			}
+			catch (Error e) { stdout.printf ("Error on Create company table: " + e.message+"\n"); }
+			try {
+				try {this.connection.execute_non_select_command("DROP TABLE IF EXISTS customer CASCADE");}
+				catch (Error e) { stdout.printf ("Error on dopping table customer: "+e.message+"\n"); }
+				stdout.printf("Creating table 'customer'...\n");
+				this.connection.execute_non_select_command("CREATE TABLE customer (id serial PRIMARY KEY, " +
+							"name text UNIQUE,"+
+							" city text DEFAULT \'New Yield\',"+
+							" company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
+				this.connection.execute_non_select_command("INSERT INTO customer (name, city, company) " +
+					"VALUES (\'Daniel\', \'Mexico\', 1)");
+				this.connection.execute_non_select_command("INSERT INTO customer (name, city) VALUES " +
+					"(\'Jhon\', \'Springfield\')");
+				this.connection.execute_non_select_command("INSERT INTO customer (name) VALUES (\'Jack\')");
+			}
+			catch (Error e) { stdout.printf ("Error on Create customer table: " + e.message + "\n"); }
+			try {
+				try {this.connection.execute_non_select_command("DROP TABLE IF EXISTS salary CASCADE");}
+				catch (Error e) { stdout.printf ("Error on dopping table salary: "+e.message+"\n"); }
+				stdout.printf("Creating table 'salary'...\n");
+				this.connection.execute_non_select_command("CREATE TABLE salary (id serial PRIMARY KEY,"+
+				                                           " customer integer REFERENCES customer (id) "+
+				                                           " ON DELETE CASCADE ON UPDATE CASCADE,"+
+				                                           " income float DEFAULT 10.0)");
+				this.connection.execute_non_select_command("INSERT INTO salary (customer, income) VALUES " +
+					" (1,55.0)");
+				this.connection.execute_non_select_command("INSERT INTO salary (customer, income) VALUES " +
+					" (2,65.0)");
+				this.connection.execute_non_select_command("INSERT INTO salary (customer) VALUES (3)");
+			}
+			catch (Error e) { stdout.printf ("Error on Create company table: " + e.message + "\n"); }
+			this.connection.update_meta_store (null);
+		}
+		
+		private void Init_sqlite () throws Error
+		{
+			this.connection.execute_non_select_command("CREATE TABLE company (id int PRIMARY KEY, name string, responsability string)");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (1, \"Telcsa\", \"Programing\")");
 				this.connection.execute_non_select_command("INSERT INTO company (id, name, responsability) VALUES (2, \"Viasa\", \"Accessories\")");
 				
@@ -51,16 +123,13 @@ namespace Check {
 				this.connection.execute_non_select_command("INSERT INTO salary (id, customer, income) VALUES (1,1,55.0)");
 				this.connection.execute_non_select_command("INSERT INTO salary (id, customer, income) VALUES (2,2,65.0)");
 				this.connection.execute_non_select_command("INSERT INTO salary (customer) VALUES (3)");
-			}
-			catch (Error e) {
-				stdout.printf ("Couln't create temporary database...\nERROR: %s\n", e.message);
-			}
 		}
+		
 		
 		public void init ()
 			throws Error
 		{
-			stdout.printf("Creating new table\n");
+			stdout.printf("\nCreating new table\n");
 			table = new Table ();
 			stdout.printf("Setting connection\n");
 			table.connection = this.connection;
@@ -73,7 +142,11 @@ namespace Check {
 			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: GdaData.DbTable -- Update\n");
 			int fails = 0;
 			stdout.printf(">>>>>> Updating meta information\n");
-			table.update ();
+			try { table.update (); }
+			catch (Error e) { 
+				fails++; 
+				stdout.printf ("Error on Updating: "+e.message+"\n");
+			}
 			if (fails > 0)
 				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
 			else
@@ -252,7 +325,13 @@ namespace Check {
 				stdout.printf ("Check Ordinal position: FAILED\n");
 			}
 			
-			connection.execute_non_select_command ("INSERT INTO created_table (name) VALUES (\"Nancy\")");
+			var r = new Record ();
+			r.connection = connection;
+			var nt = new Table ();
+			nt.name = "created_table";
+			r.table = nt;
+			r.set_field_value ("name", "Nancy");
+			r.append ();
 			
 			var m2 = connection.execute_select_command ("SELECT * FROM created_table");
 			bool f2 = false;
@@ -279,7 +358,7 @@ namespace Check {
 		}
 		
 		public static int main (string[] args) {
-			stdout.printf ("\n\n\n>>>>>>>>>>>>>>>> NEW TEST: Checking GdaData.DbRecord implementation... <<<<<<<<<< \n");
+			stdout.printf ("\n\n\n>>>>>>>>>>>>>>>> NEW TEST: Checking GdaData.DbTable implementation... <<<<<<<<<< \n");
 			int failures = 0;
 			var app = new Tests ();
 			try {
