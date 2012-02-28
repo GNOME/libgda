@@ -204,17 +204,18 @@ namespace GdaData
 			var mc = store.extract ("SELECT * FROM _table_constraints"+
 			                        " WHERE table_name  = ##name::string" + cond,
 									vals);
-			stdout.printf ("EXTRACTED _table_constraints:\n" + mc.dump_as_string ());
 			for (r = 0; r < mc.get_n_rows (); r++) 
 			{
 				string ct = (string) mc.get_value_at (mc.get_column_index ("constraint_type"), r);
 				string cn = (string) mc.get_value_at (mc.get_column_index ("constraint_name"), r);
-				GLib.message ("Constraint Name = " + cn + "Type = " + ct + "\n");
 				vals.set ("constraint_name", cn);
 				var mpk = store.extract ("SELECT * FROM _key_column_usage"+
 				                         " WHERE table_name  = ##name::string"+
 				                         " AND constraint_name = ##constraint_name::string" + cond, vals);
-				stdout.printf ("EXTRACTED _key_column_usagess:\n" + mpk.dump_as_string ());
+				if (mpk.get_n_rows () != 1) {
+					GLib.warning ("Constraint '" + cn + "' type '" + ct + "' not found. Skipped!");
+					continue;
+				}
 				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
 				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
@@ -239,7 +240,6 @@ namespace GdaData
 					var mfk = store.extract ("SELECT * FROM _referential_constraints"+
 					                         " WHERE table_name  = ##name::string "+
 					                         "AND constraint_name = ##constraint_name::string" + cond, vals);
-					stdout.printf ("EXTRACTED _referential_constraints:\n" + mfk.dump_as_string ());
 					f.fkey = new DbFieldInfo.ForeignKey ();
 					f.fkey.name = cn;
 					f.fkey.refname = (string) mfk.get_value_at (mfk.get_column_index ("ref_constraint_name"), 0);
@@ -272,7 +272,6 @@ namespace GdaData
 				                         " AND fk_constraint_name = ##constraint_name::string" +
 				                         " AND fk_table_catalog = ##catalog::string"+
 				                         " AND fk_table_schema = ##schema::string", vals);
-					stdout.printf ("EXTRACTED _detailed_fk 1:\n" + mfkr.dump_as_string ());
 					for (int r2 = 0; r2 < mfkr.get_n_rows (); r2++) {
 						var rc = (string) mfkr.get_value_at (mfkr.get_column_index ("ref_column"), r2);
 						f.fkey.refcol.add (rc);
@@ -293,7 +292,6 @@ namespace GdaData
 			                         " AND ref_table_schema = ##schema::string", vals);
 			if (mtr.get_n_rows () == 0)
 				GLib.message ("Rows = 0");
-			GLib.message ("EXTRACTED _detailed_fk 2:\n" + mtr.dump_as_string ());
 			for (r = 0; r < mtr.get_n_rows (); r++) {
 				var tn = (string) mtr.get_value_at (mtr.get_column_index ("fk_table_name"), r);
 				var tr = new Table ();
@@ -313,50 +311,56 @@ namespace GdaData
 		public void append () throws Error 
 		{
 			var op = connection.create_operation (Gda.ServerOperationType.CREATE_TABLE, null);
-			op.set_value_at_path (name, "/TABLE_DEF_P/TABLE_NAME");
+			op.set_value_at (name, "/TABLE_DEF_P/TABLE_NAME");
 			if (DbTable.TableType.LOCAL_TEMPORARY in table_type)
-				op.set_value_at_path ("TRUE","/TABLE_DEF_P/TABLE_TEMP");
+				op.set_value_at ("TRUE","/TABLE_DEF_P/TABLE_TEMP");
 			int refs = 0;
 			foreach (DbFieldInfo f in fields) {
-				op.set_value_at_path (f.name, "/FIELDS_A/@COLUMN_NAME/" + f.ordinal.to_string ());
-				op.set_value_at_path (connection.get_provider ().get_default_dbms_type (connection, f.value_type), 
+				op.set_value_at (f.name, "/FIELDS_A/@COLUMN_NAME/" + f.ordinal.to_string ());
+				op.set_value_at (connection.get_provider ().get_default_dbms_type (connection, f.value_type), 
 										"/FIELDS_A/@COLUMN_TYPE/" + f.ordinal.to_string ());
 				if (DbFieldInfo.Attribute.PRIMARY_KEY in f.attributes) {
-					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_PKEY/" + f.ordinal.to_string ());
+					op.set_value_at ("TRUE", "/FIELDS_A/@COLUMN_PKEY/" + f.ordinal.to_string ());
 				}
 				if (DbFieldInfo.Attribute.CAN_BE_NULL in f.attributes) {
-					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_NNUL/" + f.ordinal.to_string ());
+					op.set_value_at ("TRUE", "/FIELDS_A/@COLUMN_NNUL/" + f.ordinal.to_string ());
 				}
 				if (DbFieldInfo.Attribute.AUTO_INCREMENT in f.attributes) {
-					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_AUTOINC/" + f.ordinal.to_string ());
+					op.set_value_at ("TRUE", "/FIELDS_A/@COLUMN_AUTOINC/" + f.ordinal.to_string ());
 				}
 				if (DbFieldInfo.Attribute.UNIQUE in f.attributes) {
-					op.set_value_at_path ("TRUE", "/FIELDS_A/@COLUMN_UNIQUE/" + f.ordinal.to_string ());
+					op.set_value_at ("TRUE", "/FIELDS_A/@COLUMN_UNIQUE/" + f.ordinal.to_string ());
 				}
 				if (DbFieldInfo.Attribute.HAVE_DEFAULT in f.attributes) {
-					op.set_value_at_path (connection.value_to_sql_string (f.default_value),
+					op.set_value_at (connection.value_to_sql_string (f.default_value),
 											"/FIELDS_A/@COLUMN_DEFAULT/" + f.ordinal.to_string ());
 				}
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) {
-					op.set_value_at_path (f.fkey.reftable.name, "/FKEY_S/" + refs.to_string () + 
+					op.set_value_at (f.fkey.reftable.name, "/FKEY_S/" + refs.to_string () + 
 									"/FKEY_REF_TABLE");
 					int rc = 0;
 					foreach (string fkc in f.fkey.refcol) {
-						op.set_value_at_path (f.name, "/FKEY_S/" + refs.to_string ()
+						op.set_value_at (f.name, "/FKEY_S/" + refs.to_string ()
 										+ "/FKEY_FIELDS_A/@FK_FIELD/" + rc.to_string ());
-						op.set_value_at_path (fkc, "/FKEY_S/" + refs.to_string ()
+						op.set_value_at (fkc, "/FKEY_S/" + refs.to_string ()
 										+ "/FKEY_FIELDS_A/@FK_REF_PK_FIELD/" + rc.to_string ());
 						rc++;
 					}
 
-					op.set_value_at_path (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.update_rule),
+					op.set_value_at (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.update_rule),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONUPDATE");
-					op.set_value_at_path (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.delete_rule),
+					op.set_value_at (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.delete_rule),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONDELETE");
 					refs++;
 				}
 			}
 			connection.perform_operation (op);
+		}
+		
+		public void drop (bool cascade) throws Error
+		{
+			var op = Gda.ServerOperation.prepare_drop_table (connection, name);
+			op.perform_drop_table ();
 		}
 		
 		// DbNamedObject Interface

@@ -763,7 +763,8 @@ namespace Gda {
 		public virtual void seq_item_added (string seq_path, int item_index);
 		[NoWrapper]
 		public virtual void seq_item_remove (string seq_path, int item_index);
-		public bool set_value_at_path (string? value, string path) throws GLib.Error;
+		[CCode (cname = "gda_server_operation_set_value_at_path")]
+		public bool set_value_at (string? value, string path) throws GLib.Error;
 		public static Gda.ServerOperationType string_to_op_type (string str);
 		[NoAccessorMethod]
 		public Gda.Connection connection { owned get; construct; }

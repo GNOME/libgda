@@ -100,7 +100,6 @@ namespace Check {
 				this.connection.execute_non_select_command("INSERT INTO salary (customer) VALUES (3)");
 			}
 			catch (Error e) { stdout.printf ("Error on Create company table: " + e.message + "\n"); }
-			this.connection.update_meta_store (null);
 		}
 		
 		private void Init_sqlite () throws Error
@@ -125,7 +124,6 @@ namespace Check {
 				this.connection.execute_non_select_command("INSERT INTO salary (customer) VALUES (3)");
 		}
 		
-		
 		public void init ()
 			throws Error
 		{
@@ -136,6 +134,7 @@ namespace Check {
 			stdout.printf("Setting name\n");
 			table.name = "customer";
 		}
+		
 		public int update ()
 			throws Error
 		{
@@ -216,7 +215,9 @@ namespace Check {
 				if (DbFieldInfo.Attribute.HAVE_DEFAULT in fi3.attributes
 						&& fi3.name == "city") {
 					found++;
-					if (GLib.strcmp ((string)fi3.default_value,"\"New Yield\"") != 0) {
+					var dh = table.connection.get_provider ().get_data_handler_g_type (table.connection, 
+								typeof (string));
+					if (GLib.strcmp ((string)fi3.default_value,dh.get_sql_from_value("New Yield")) != 0) {
 						fails++;
 						stdout.printf (">>>>>>>> Default Value No Match. Holded \'"+
 						               (string) fi3.default_value + "\' But Expected \"New Yield\" : FAIL\n");
@@ -276,6 +277,19 @@ namespace Check {
 			var t = new Table ();
 			t.name = "created_table";
 			t.connection = connection;
+			
+			try {
+				if (t.records.size > 0) {
+					stdout.printf ("Table exists and is not empty. Deleting it!!\n");
+					t.drop (false);
+				}
+			}
+			catch (Error e) {
+				stdout.printf ("Error on dropping table with error message: " + e.message + "\n");
+				fails++;
+			}
+			
+			
 			var field = new FieldInfo ();
 			field.name = "id";
 			field.value_type = typeof (int);
@@ -350,6 +364,15 @@ namespace Check {
 				fails++;
 				stdout.printf ("Check Table Values: FAILED\n");
 			}
+			
+			try {
+					t.drop (false);
+			}
+			catch (Error e) {
+				stdout.printf ("Dropping table Fails: " + e.message + "\n");
+				fails++;
+			}
+			
 			if (fails > 0)
 				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
 			else

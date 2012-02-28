@@ -197,6 +197,7 @@ namespace GdaData {
 				throw new DbObjectError.UPDATE ("Have been updated more or less rows than expected");
 			}
 		}
+		public void drop (bool cascade) throws Error {}
         // 
         public string to_string ()
         {

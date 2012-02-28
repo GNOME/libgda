@@ -27,6 +27,7 @@ namespace GdaData {
 		public abstract void         append () throws Error;
 		public abstract void         update () throws Error;
 		public abstract void         save () throws Error;
+		public abstract void         drop (bool cascade) throws Error;
 	}
 	
 	public interface DbNamedObject : Object, DbObject 

@@ -352,6 +352,26 @@
 				<type name="none"/>
 			</return-value>
 		</virtual-method>
+		<method name="drop" c:identifier="gda_data_db_object_drop" throws="1">
+			<parameters>
+				<parameter name="cascade" transfer-ownership="none">
+					<type name="gboolean" c:type="gboolean"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<virtual-method name="drop" invoker="drop" throws="1">
+			<parameters>
+				<parameter name="cascade" transfer-ownership="none">
+					<type name="gboolean" c:type="gboolean"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</virtual-method>
 		<property name="connection" writable="1">
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
 		</property>
@@ -389,6 +409,21 @@
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+			</callback>
+		</field>
+		<field name="drop">
+			<callback name="drop" c:type="drop" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
+					</parameter>
+					<parameter name="cascade" transfer-ownership="none">
+						<type name="gboolean" c:type="gboolean"/>
 					</parameter>
 				</parameters>
 				<return-value transfer-ownership="full">

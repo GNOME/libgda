@@ -43,3 +43,4 @@ Holder.get_value nullable=true
 Row.get_value nullable=true
 Numeric.get_string nullable=true
 MetaStore.extract_v name="extract"
+ServerOperation.set_value_at_path name="set_value_at"
