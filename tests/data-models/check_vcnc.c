@@ -98,6 +98,8 @@ main (int argc, char *argv[])
 
         gda_connection_close (virtual);
         gda_connection_close (out_cnc);
+
+	g_print ("All Ok\n");
         return 0;
 }
 

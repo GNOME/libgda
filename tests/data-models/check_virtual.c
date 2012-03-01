@@ -23,17 +23,39 @@
 
 static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql);
 static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql);
+static gboolean test1 (void);
+static gboolean test2 (void);
 
 int 
 main (int argc, char **argv)
+{
+	gint nfailed = 0;
+	gda_init ();
+
+	if (! test1 ())
+		nfailed++;
+	if (! test2 ())
+		nfailed++;
+
+	if (nfailed == 0) {
+		g_print ("Ok, all tests passed\n");
+		return EXIT_SUCCESS;
+	}
+	else {
+		g_print ("%d failed\n", nfailed);
+		return EXIT_FAILURE;
+	} 
+}
+
+static gboolean
+test1 (void)
 {
 	GError *error = NULL;	
 	GdaConnection *cnc;
 	GdaVirtualProvider *provider;
 	GdaDataModel *rw_model;
 	gchar *file;
-	
-	gda_init ();
+	gboolean retval = FALSE;
 
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, NULL);
@@ -53,6 +75,7 @@ main (int argc, char **argv)
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "country.csv", NULL);
 	country_model = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
+	file = NULL;
 	g_object_unref (options);
 
 	/* Add data models to connection */
@@ -83,11 +106,14 @@ main (int argc, char **argv)
 						  NULL, 0, NULL, 0, NULL);
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "check_virtual.csv", NULL);
 	if (!g_file_get_contents (file, &expected, NULL, NULL))
-		return EXIT_FAILURE;
-	g_free (file);
+		goto out;
 	if (strcmp (export, expected))
-		return EXIT_FAILURE;
+		goto out;
 
+	retval = TRUE;
+ out:
+
+	g_free (file);
 	g_free (export);
 	g_free (expected);
 	g_object_unref (city_model);
@@ -95,8 +121,54 @@ main (int argc, char **argv)
 	g_object_unref (cnc);
 	g_object_unref (provider);
 
-	g_print ("Ok.\n");
-	return EXIT_SUCCESS;
+	return retval;
+}
+
+static gboolean
+test2 (void)
+{
+	GError *error = NULL;	
+	GdaConnection *cnc;
+	GdaVirtualProvider *provider;
+	gchar *file;
+	gboolean retval = FALSE;
+
+	provider = gda_vprovider_data_model_new ();
+	cnc = gda_virtual_connection_open (provider, NULL);
+	g_assert (cnc);
+
+	/* load CSV data models */
+	GdaDataModel *country_model, *city_model;
+	GdaSet *options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", "city.csv", NULL);
+	city_model = gda_data_model_import_new_file (file, TRUE, options);
+	g_free (file);
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", "country.csv", NULL);
+	country_model = gda_data_model_import_new_file (file, TRUE, options);
+	g_free (file);
+	g_object_unref (options);
+
+	/* Add data models to connection */
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), city_model, "city", &error)) 
+		g_error ("Add city model error: %s\n", error && error->message ? error->message : "no detail");
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
+		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
+
+	/* test */
+	GdaDataModel *model;
+	model = run_sql_select (cnc, "SELECT c.*, o.name FROM city c INNER JOIN country o ON (c.countrycode = o.code)");
+	gda_data_model_dump (model, stdout);
+	g_object_unref (model);
+
+	retval = TRUE;
+ out:
+
+	g_object_unref (city_model);
+	g_object_unref (country_model);
+	g_object_unref (cnc);
+	g_object_unref (provider);
+
+	return retval;
 }
 
 static GdaDataModel *
