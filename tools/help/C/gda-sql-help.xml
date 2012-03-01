@@ -16,15 +16,19 @@
 
   <!-- ".bind" command -->
   <command name="bind">
-    <shortdescription>Bind two or more connections into a single new one (allowing SQL commands to be executed across multiple connections).
+    <shortdescription>Bind two or more connections or datasets into a single new one (allowing SQL commands to be executed across multiple connections and datasets).
     </shortdescription>
     <usage>
-      <synopsis>.bind @CNC_NAME@ @CNC_NAME1@ @CNC_NAME2@ [@CNC_NAME@ ...]</synopsis>
-      <comment>creates a new connection named @CNC_NAME@ which binds the tables of the @CNC_NAME1@, @CNC_NAME2@ and any other connection specified.</comment>
+      <synopsis>.bind @CNC NAME@ @OBJ NAME1@ @OBJ NAME2@ [@OBJ NAME@ ...]</synopsis>
+      <comment>creates a new connection named @CNC_NAME@, which binds data from each of the named object
+      (@OBJ NAME@). If a named object is a connection, then all the tables in the named connection
+      are bound (in a schema named after the connection name) and if a named object is a dataset,
+      the dataset is bound as a table (named after the dataset's name).</comment>
     </usage>
     <example>
-      <synopsis>.bind attached c0 c1</synopsis>
-      <comment>creates the "attached" connection where all the tables from connection "c1" are mapped to the "c1" schema and all the tables from connection "c2" are mapped to the "c2" schema.</comment>
+      <synopsis>.bind attached c0 c1 ds1</synopsis>
+      <comment>creates the "attached" connection where all the tables from connection "c1" are mapped to the "c1" schema, all the tables from connection "c2" are mapped to the "c2" schema, and the "ds1"
+      dataset is mapped to the "ds1" table.</comment>
     </example>
   </command>
 
