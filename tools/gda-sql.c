@@ -2842,8 +2842,8 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
-	c->name = g_strdup_printf (_("%s <DATASET NAME>"), "ds_show");
-	c->description = _("Show a dataset's contents");
+	c->name = g_strdup_printf (_("%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"), "ds_show");
+	c->description = _("Show a dataset's contents, showing only the specified columns if any specified");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_show;
 	c->user_data = NULL;
@@ -4763,9 +4763,46 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 		return NULL;
 	}
 
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
-	res->u.model = g_object_ref (src);
+	if (args[1] && *args[1]) {
+		GArray *cols;
+		gint i;
+		cols = g_array_new (FALSE, FALSE, sizeof (gint));
+		for (i = 1; args[i] && *args[i]; i++) {
+			gchar *cname = args[i];
+			gint pos;
+			pos = gda_data_model_get_column_index (src, cname);
+			if (pos < 0) {
+				long int li;
+				char *end;
+				li = strtol (cname, &end, 10);
+				if (!*end && (li >= 0) && (li < G_MAXINT))
+					pos = (gint) li;
+			}
+			if (pos < 0) {
+				g_set_error (error, 0, 0,
+					     _("Could not identify column '%s'"), cname);
+				g_array_free (cols, TRUE);
+				return NULL;
+			}
+			g_array_append_val (cols, pos);
+		}
+
+		GdaDataModel *model;
+		model = gda_data_model_array_copy_model_ext (src, cols->len, (gint*) cols->data, error);
+		g_array_free (cols, TRUE);
+		if (model) {
+			res = g_new0 (GdaInternalCommandResult, 1);
+			res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			res->u.model = model;
+		}
+		else
+			return NULL;
+	}
+	else {
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = g_object_ref (src);
+	}
 
 	return res;
 }
