@@ -15,6 +15,7 @@
 		<member name="append" c:identifier="GDA_DATA_DB_OBJECT_ERROR_APPEND" value="0"/>
 		<member name="update" c:identifier="GDA_DATA_DB_OBJECT_ERROR_UPDATE" value="1"/>
 		<member name="save" c:identifier="GDA_DATA_DB_OBJECT_ERROR_SAVE" value="2"/>
+		<member name="drop" c:identifier="GDA_DATA_DB_OBJECT_ERROR_DROP" value="3"/>
 	</enumeration>
 	<class name="DataBase" c:type="GdaDataDataBase" glib:type-name="GdaDataDataBase" glib:get-type="gda_data_data_base_get_type" glib:type-struct="DataBaseClass" parent="GObject.Object">
 		<implements name="GdaData.DbObject"/>

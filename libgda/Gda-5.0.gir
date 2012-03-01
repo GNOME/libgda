@@ -7666,9 +7666,6 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 transfer-ownership="none">
         <type name="gint"/>
       </property>
-      <property name="use-rdn" writable="1" transfer-ownership="none">
-        <type name="gboolean"/>
-      </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
       </field>

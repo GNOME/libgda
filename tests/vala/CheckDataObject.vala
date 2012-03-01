@@ -200,7 +200,7 @@ namespace Check {
 		public int t2()
 			throws Error
 		{
-			stdout.printf(">>> NEW TEST: Gda.DbRecord - Adding new objects to DB...\n");
+			stdout.printf(">>> NEW TEST: Gda.DbRecord - Adding/Deleting objects to DB...\n");
 			int fails = 0;
 			try {
 				var n = new Check.Record ();
@@ -220,9 +220,28 @@ namespace Check {
 				stdout.printf("%s\n", n.to_string());
 				n.append ();
 				var m = n.connection.execute_select_command ("SELECT * FROM user");
-				if (m.get_n_rows () != 3) fails++;
 				stdout.printf ("All records:\n" + m.dump_as_string () + "\n");
-				stdout.printf("PASS\n");
+				if (m.get_n_rows () != 3) {
+					fails++;
+					stdout.printf("FAIL\n");
+				}
+				else
+					stdout.printf("PASS\n");
+				// Delete an object from database
+				var r = new Check.Record ();
+				r.connection = this.connection;
+				r.table = t;
+				r.set_key_value ("id", 3);
+				r.drop (false);
+				var m2 = n.connection.execute_select_command ("SELECT * FROM user");
+				stdout.printf ("All records:\n" + m2.dump_as_string () + "\n");
+				if (m2.get_n_rows () != 2) {
+					fails++;
+					stdout.printf("FAIL\n");
+				}
+				else
+					stdout.printf("PASS\n");
+				
 			}
 			catch (Error e) {
 				fails++;

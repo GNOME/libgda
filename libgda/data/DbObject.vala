@@ -38,7 +38,8 @@ namespace GdaData {
 	public errordomain DbObjectError {
     	APPEND,
     	UPDATE,
-    	SAVE
+    	SAVE,
+    	DROP
     }
 
 }

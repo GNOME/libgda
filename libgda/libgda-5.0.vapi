@@ -149,7 +149,7 @@ namespace Gda {
 		public unowned Gda.ServerProvider get_provider ();
 		public unowned string get_provider_name ();
 		public unowned Gda.TransactionStatus get_transaction_status ();
-		public bool insert_row_into_table_v (string table, GLib.SList<string> col_names, GLib.SList<GLib.Value> values) throws GLib.Error;
+		public bool insert_row_into_table_v (string table, GLib.SList<string> col_names, GLib.SList<GLib.Value?> values) throws GLib.Error;
 		public bool is_opened ();
 		public bool open () throws GLib.Error;
 		public static Gda.Connection open_from_dsn (string dsn, string? auth_string, Gda.ConnectionOptions options) throws GLib.Error;
@@ -171,7 +171,7 @@ namespace Gda {
 		public static void string_split (string string, string out_cnc_params, string out_provider, string out_username, string out_password);
 		public bool supports_feature (Gda.ConnectionFeature feature);
 		public bool update_meta_store (Gda.MetaContext? context) throws GLib.Error;
-		public bool update_row_in_table_v (string table, string condition_column_name, GLib.Value condition_value, GLib.SList<string> col_names, GLib.SList<GLib.Value> values) throws GLib.Error;
+		public bool update_row_in_table_v (string table, string condition_column_name, GLib.Value condition_value, GLib.SList<string> col_names, GLib.SList<GLib.Value?> values) throws GLib.Error;
 		public string value_to_sql_string (GLib.Value from);
 		[NoAccessorMethod]
 		public string auth_string { owned get; set; }
@@ -335,8 +335,6 @@ namespace Gda {
 		public string filter { owned get; construct; }
 		[NoAccessorMethod]
 		public int scope { get; construct; }
-		[NoAccessorMethod]
-		public bool use_rdn { get; set; }
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_pivot_get_type ()")]
 	public class DataPivot : GLib.Object, Gda.DataModel {
@@ -373,7 +371,7 @@ namespace Gda {
 		public int get_sample_size ();
 		public int get_sample_start ();
 		public Gda.ValueAttribute get_value_attributes (int proxy_row, int col);
-		public GLib.SList<weak GLib.Value> get_values (int proxy_row, [CCode (array_length = false)] int[] cols_index, int n_cols);
+		public GLib.SList<weak GLib.Value?> get_values (int proxy_row, [CCode (array_length = false)] int[] cols_index, int n_cols);
 		public bool has_changed ();
 		public bool is_read_only ();
 		public bool row_has_changed (int proxy_row);
@@ -609,7 +607,7 @@ namespace Gda {
 		public bool declare_foreign_key (Gda.MetaStruct? mstruct, string fk_name, string? catalog, string? schema, string table, string? ref_catalog, string? ref_schema, string ref_table, [CCode (array_length_cname = "nb_cols", array_length_pos = 8.5, array_length_type = "guint")] string[] colnames, [CCode (array_length_cname = "nb_cols", array_length_pos = 8.5, array_length_type = "guint")] string[] ref_colnames) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		[CCode (cname = "gda_meta_store_extract_v")]
-		public Gda.DataModel extract (string select_sql, GLib.HashTable<string,GLib.Value>? vars) throws GLib.Error;
+		public Gda.DataModel extract (string select_sql, GLib.HashTable<string,GLib.Value?>? vars) throws GLib.Error;
 		public bool get_attribute_value (string att_name, out string att_value) throws GLib.Error;
 		public unowned Gda.Connection get_internal_connection ();
 		public int get_version ();
@@ -1286,22 +1284,22 @@ namespace Gda {
 		public bool trylock ();
 		public void unlock ();
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct DataMetaWrapper {
 		public weak GLib.Object object;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct DataMetaWrapperClass {
 		public weak GLib.ObjectClass parent_class;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct Diff {
 		public Gda.DiffType type;
 		public int old_row;
 		public int new_row;
 		public weak GLib.HashTable<void*,void*> values;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct DsnInfo {
 		public weak string name;
 		public weak string provider;
@@ -1310,7 +1308,7 @@ namespace Gda {
 		public weak string auth_string;
 		public bool is_system;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaDbObject {
 		public Gda.MetaDbObjectType obj_type;
 		public bool outdated;
@@ -1326,12 +1324,12 @@ namespace Gda {
 		[CCode (cname = "extra.meta_view")]
 		public Gda.MetaView extra_meta_view;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaStoreChange {
 		public Gda.MetaStoreChangeType c_type;
 		public weak string table_name;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTable {
 		public GLib.List<Gda.MetaTableColumn> columns;
 		public int pk_cols_array;
@@ -1339,7 +1337,7 @@ namespace Gda {
 		public GLib.List<Gda.MetaTableForeignKey> reverse_fk_list;
 		public GLib.List<Gda.MetaTableForeignKey> fk_list;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTableColumn {
 		public weak string column_name;
 		public weak string column_type;
@@ -1351,7 +1349,7 @@ namespace Gda {
 		public GLib.Value get_attribute (string attribute);
 		public void set_attribute (string attribute, GLib.Value? value, GLib.DestroyNotify? destroy);
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTableForeignKey {
 		public Gda.MetaDbObject meta_table;
 		public Gda.MetaDbObject depend_on;
@@ -1362,13 +1360,13 @@ namespace Gda {
 		public weak string ref_pk_names_array;
 		public weak string fk_name;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaView {
 		public Gda.MetaTable table;
 		public weak string view_def;
 		public bool is_updatable;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct ProviderInfo {
 		public weak string id;
 		public weak string location;
@@ -1376,24 +1374,24 @@ namespace Gda {
 		public weak Gda.Set dsn_params;
 		public weak Gda.Set auth_params;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct ServerProviderHandlerInfo {
 		public weak Gda.Connection cnc;
 		public GLib.Type g_type;
 		public weak string dbms_type;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct SetGroup {
 		public GLib.List<Gda.SetNode> nodes;
 		public Gda.SetSource nodes_source;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct SetNode {
 		public weak Gda.Holder holder;
 		public weak Gda.DataModel source_model;
 		public int source_column;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct SetSource {
 		public weak Gda.DataModel data_model;
 		public GLib.List<Gda.SetNode> nodes;
@@ -1402,7 +1400,7 @@ namespace Gda {
 	[SimpleType]
 	public struct SqlBuilderId : uint {
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct SqlRenderingContext {
 		public Gda.StatementSqlFlag flags;
 		public weak Gda.Set @params;
@@ -1411,12 +1409,12 @@ namespace Gda {
 		public weak Gda.Connection cnc;
 		public weak Gda.SqlRenderingValue render_value;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct ThreadNotification {
 		public Gda.ThreadNotificationType type;
 		public uint job_id;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct TransactionStatusEvent {
 		public weak Gda.TransactionStatus trans;
 		public Gda.TransactionStatusEventType type;
@@ -1428,7 +1426,7 @@ namespace Gda {
 		[CCode (cname = "pl.sub_trans")]
 		public weak Gda.TransactionStatus pl_sub_trans;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h")]
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct XaTransactionId {
 		public uint32 format;
 		public ushort gtrid_length;
@@ -1437,7 +1435,7 @@ namespace Gda {
 		public weak char[] data;
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", cname = "_GdaServerOperationNode")]
+	[CCode (cheader_filename = "libgda/libgda.h", cname = "_GdaServerOperationNode", has_type_id = false)]
 	public struct _ServerOperationNode {
 		public Gda.ServerOperationNodeType type;
 		public Gda.ServerOperationNodeStatus status;
@@ -1446,7 +1444,7 @@ namespace Gda {
 		public weak Gda.Column column;
 		public weak Gda.Holder param;
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", cname = "_GdaSqlParserIface")]
+	[CCode (cheader_filename = "libgda/libgda.h", cname = "_GdaSqlParserIface", has_type_id = false)]
 	public struct _SqlParserIface {
 		public weak Gda.SqlParser parser;
 		public weak Gda.SqlStatement parsed_statement;

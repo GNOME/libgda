@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * libgdavala
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * Copyright (C) Daniel Espinosa Ortiz 2012 <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -30,15 +30,19 @@ namespace GdaData {
          * Derived classes must implement this property to set the table used to get data from.
          */
         public DbTable table { get; set construct; }
+        
         /**
          * Returns a Gee.Collection with the data stored by this object.
          */
         public Collection<DbField> fields { owned get { return _fields.values; } }
+        
         public Collection<DbField> keys { owned get { return _keys.values; } }
+        
         /**
          * Set the connection to be used to get/set data.
          */
         public Connection connection { get; set; }
+        
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
@@ -48,6 +52,7 @@ namespace GdaData {
         	var f = this._fields.get (field);
         	return f.value;
         }
+        
 		/**
          * Set the value to a field with the given @name.
          */
@@ -66,16 +71,19 @@ namespace GdaData {
         	}
         	
         }
+        
         public void set_field_value (string field, Value? val) throws Error
         {
         	var n = new Field (field, DbField.Attribute.NONE); 
     		n.value = val;
     		this.set_field (n);
         }
+        
         public DbField get_field (string name) throws Error
         {
         	return _fields.get (name);
         }
+        
         public void set_key (DbField field)
         {
         	if (_keys.has_key (field.name)) {
@@ -90,16 +98,19 @@ namespace GdaData {
         		_keys.set (field.name, n);
         	}
         }
+        
         public void set_key_value (string key, Value? val) throws Error
         {
         	var n = new Field (key, DbField.Attribute.NONE); 
     		n.value = val;
     		this.set_key (n);
         }
+        
         public DbField get_key (string name) throws Error
         {
         	return _keys.get (name);
         }
+        
         /**
          * Saves any modficiation made to in memory representation of the data directly to
          * the database.
@@ -135,6 +146,7 @@ namespace GdaData {
 				throw new DbObjectError.SAVE ("Have been saved more or less rows than expected");
 			}
         }
+        
         /**
          * Updates values stored in database.
          */
@@ -174,6 +186,7 @@ namespace GdaData {
 				this.set_field (f);
 			}
         }
+        
         /**
          * Append a new row to the defined table and returns its ID. If defaults is set to true,
          * default value for each field is set.
@@ -197,7 +210,36 @@ namespace GdaData {
 				throw new DbObjectError.UPDATE ("Have been updated more or less rows than expected");
 			}
 		}
-		public void drop (bool cascade) throws Error {}
+		
+		public void drop (bool cascade) throws Error 
+		{
+			if (keys.size <= 0)
+        		throw new DbObjectError.DROP ("No keys has been set");
+			var sql = new SqlBuilder (SqlStatementType.DELETE);
+			sql.set_table (table.name);
+			SqlBuilderId cond = -1;
+			int pn = 0;
+        	foreach (DbField f in keys) {
+				var fid = sql.add_id (f.column_name);
+				var vid = sql.add_expr_value (null, f.value);
+				var c_id = sql.add_cond (SqlOperatorType.EQ, fid, vid, 0);
+				if (cond == -1) {
+					cond = c_id;
+				}
+				else {
+					cond = sql.add_cond (SqlOperatorType.AND, cond, c_id, 0);
+				}
+			}
+			sql.set_where (cond);
+			stdout.printf ("DEBUG: DELETE statement to execute: \n"+ 
+				(sql.get_statement()).to_sql_extended (this.connection, null, 
+														StatementSqlFlag.PRETTY, null)
+				+ "\n");
+			var i = this.connection.statement_execute_non_select (sql.get_statement (), null, null);
+			if (i != 1) {
+				throw new DbObjectError.DROP ("Have been dropped more or less rows than expected");
+			}
+		}
         // 
         public string to_string ()
         {

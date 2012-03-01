@@ -67,7 +67,6 @@ namespace GdaData
 	
 	errordomain DbTableError {
 		READ_ONLY,
-		FIELD,
-		UPDATE
+		FIELD
 	}
 }
