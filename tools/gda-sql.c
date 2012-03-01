@@ -124,7 +124,8 @@ typedef struct {
 
 	GString *partial_command;
 
-	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaParameter */
+	GdaSet *options;
+	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaHolder */
 	gchar *ldap_attributes; /* default LDAP attributes */
 #define LAST_DATA_MODEL_NAME "_"
 	GHashTable *mem_data_models; /* key = name, value = the named GdaDataModel, ref# kept in hash table */
@@ -154,6 +155,7 @@ static void connection_settings_free (ConnectionSetting *cs);
 static gboolean treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok);
 static const char *prompt_func (void);
 
+static GdaSet *make_options_set_from_gdasql_options (const gchar *context);
 
 /* commands manipulation */
 static GdaInternalCommandsList  *build_internal_commands_list (void);
@@ -173,6 +175,8 @@ main (int argc, char *argv[])
 	MainData *data;
 	int exit_status = EXIT_SUCCESS;
 	gboolean show_welcome = TRUE;
+	GValue *value;
+	GdaHolder *opt;
 	prompt = g_string_new ("");
 
 	context = g_option_context_new (_("[DSN|connection string]..."));        
@@ -195,6 +199,35 @@ main (int argc, char *argv[])
 
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
+	data->options = gda_set_new_inline (4,
+					    "csv_names_on_first_line", G_TYPE_BOOLEAN, FALSE,
+					    "csv_quote", G_TYPE_STRING, "\"",
+					    "csv_separator", G_TYPE_STRING, ",",
+					    "ldap_dn", G_TYPE_STRING, "dn");
+	value = gda_value_new (G_TYPE_STRING);
+	g_value_set_string (value, _("Set to TRUE when the 1st line of a CSV file holds column names"));
+	opt = gda_set_get_holder (data->options, "csv_names_on_first_line");
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	g_value_set_string (value, "NAMES_ON_FIRST_LINE");
+	gda_holder_set_attribute (opt, "csv", value, NULL);
+
+	g_value_set_string (value, _("Quote character for CSV format"));
+	opt = gda_set_get_holder (data->options, "csv_quote");
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	g_value_set_string (value, "QUOTE");
+	gda_holder_set_attribute (opt, "csv", value, NULL);
+
+	g_value_set_string (value, _("Separator character for CSV format"));
+	opt = gda_set_get_holder (data->options, "csv_separator");
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	g_value_set_string (value, "SEPARATOR");
+	gda_holder_set_attribute (opt, "csv", value, NULL);
+
+	g_value_set_string (value, _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"));
+	opt = gda_set_get_holder (data->options, "ldap_dn");
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	gda_value_free (value);
+
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	data->mem_data_models = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	data->ldap_attributes = g_strdup ("cn");
@@ -1866,6 +1899,33 @@ output_data_model (GdaDataModel *model)
 	g_free (str);
 }
 
+static GdaSet *
+make_options_set_from_gdasql_options (const gchar *context)
+{
+	GdaSet *expopt = NULL;
+	GSList *list, *nlist = NULL;
+	for (list = main_data->options->holders; list; list = list->next) {
+		GdaHolder *param = GDA_HOLDER (list->data);
+		const GValue *cvalue;
+		cvalue = gda_holder_get_attribute (param, context);
+		if (!cvalue)
+			continue;
+
+		GdaHolder *nparam;
+		const GValue *cvalue2;
+		cvalue2 = gda_holder_get_value (param);
+		nparam = gda_holder_new (G_VALUE_TYPE (cvalue2));
+		g_object_set ((GObject*) nparam, "id", g_value_get_string (cvalue), NULL);
+		g_assert (gda_holder_set_value (nparam, cvalue2, NULL));
+		nlist = g_slist_append (nlist, nparam);
+	}
+	if (nlist) {
+		expopt = gda_set_new (nlist);
+		g_slist_free (nlist);
+	}
+	return expopt;
+}
+
 static gchar *
 data_model_to_string (SqlConsole *console, GdaDataModel *model)
 {
@@ -1917,11 +1977,17 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 							NULL, 0,
 							NULL, 0, NULL);
 		break;
-	case OUTPUT_FORMAT_CSV:
-		return gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
-							NULL, 0,
-							NULL, 0, NULL);
-		break;
+	case OUTPUT_FORMAT_CSV: {
+		gchar *retval;
+		GdaSet *optexp;
+		optexp = make_options_set_from_gdasql_options ("csv");
+		retval = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+							  NULL, 0,
+							  NULL, 0, optexp);
+		if (optexp)
+			g_object_unref (optexp);
+		return retval;
+	}
 	case OUTPUT_FORMAT_HTML: {
 		xmlBufferPtr buffer;
 		xmlNodePtr top, div, table, node, row_node, col_node, header, meta;
@@ -2054,6 +2120,9 @@ static gchar **args_as_string_set (const gchar *str);
 static GdaInternalCommandResult *extra_command_copyright (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
 							  GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_option (SqlConsole *console, GdaConnection *cnc,
+						       const gchar **args,
+						       GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_quit (SqlConsole *console, GdaConnection *cnc,
 						     const gchar **args,
 						     GError **error, gpointer data);
@@ -2517,6 +2586,19 @@ build_internal_commands_list (void)
 	c->command_func = (GdaInternalCommandFunc) extra_command_copyright;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("General");
+	c->group_id = NULL;
+	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>]"), "option");
+	c->description = _("Set or show an option, or list all options ");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_option;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = args_as_string_set;
 	c->unquote_args = TRUE;
 	c->limit_to_main = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
@@ -3636,6 +3718,80 @@ extra_command_copyright (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCon
 }
 
 static GdaInternalCommandResult *
+extra_command_option (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+		      GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *oname = NULL;
+	const gchar *value = NULL;
+
+	if (args[0] && *args[0]) {
+		oname = args[0];
+		if (args[1] && *args[1])
+			value = args[1];
+	}
+
+	if (oname) {
+		GdaHolder *opt = gda_set_get_holder (main_data->options, oname);
+		if (opt) {
+			if (value) {
+				if (! gda_holder_set_value_str (opt, NULL, value, error))
+					return NULL;
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+			}
+			else {
+				res = g_new0 (GdaInternalCommandResult, 1);
+				res->type = GDA_INTERNAL_COMMAND_RESULT_SET;
+				res->u.set = gda_set_new (NULL);
+				gda_set_add_holder (res->u.set, gda_holder_copy (opt));
+			}
+		}
+		else {
+			g_set_error (error, 0, 0,
+				     _("No option named '%s'"), oname);
+			return NULL;
+		}
+	}
+	else {
+		/* list parameter's values */
+		GdaDataModel *model;
+		GSList *list;
+		model = gda_data_model_array_new_with_g_types (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("Name"));
+		gda_data_model_set_column_title (model, 1, _("Value"));
+		gda_data_model_set_column_title (model, 2, _("Description"));
+		g_object_set_data (G_OBJECT (model), "name", _("List of options"));
+		for (list = main_data->options->holders; list; list = list->next) {
+			gint row;
+			gchar *str;
+			GValue *value;
+			GdaHolder *opt;
+			opt = GDA_HOLDER (list->data);
+			row = gda_data_model_append_row (model, NULL);
+
+			value = gda_value_new_from_string (gda_holder_get_id (opt), G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 0, row, value, NULL);
+			gda_value_free (value);
+
+			str = gda_holder_get_value_str (opt, NULL);
+			value = gda_value_new_from_string (str ? str : "(NULL)", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 1, row, value, NULL);
+			gda_value_free (value);
+
+			value = (GValue*) gda_holder_get_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION);
+			gda_data_model_set_value_at (model, 2, row, value, NULL);
+		}
+
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+	}
+
+	return res;
+}
+
+static GdaInternalCommandResult *
 extra_command_quit (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, G_GNUC_UNUSED const gchar **args,
 		    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
 {
@@ -4670,7 +4826,11 @@ extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection 
 	}
 
 	GdaDataModel *model;
-	model = gda_data_model_import_new_file (file_name, TRUE, NULL);
+	GdaSet *impopt;
+	impopt = make_options_set_from_gdasql_options ("csv");
+	model = gda_data_model_import_new_file (file_name, TRUE, impopt);
+	if (impopt)
+		g_object_unref (impopt);
 	if (!model) {
 		g_set_error (error, 0, 0,
 			     _("Could not import file '%s'"), file_name);
@@ -5437,7 +5597,7 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 		lfilter = g_strdup_printf ("(%s)", filter);
 
 	GdaHolder *param;
-	param = g_hash_table_lookup (main_data->parameters, "ldap_show_dn");
+	param = gda_set_get_holder (main_data->options, "ldap_dn");
 	model = gda_data_model_ldap_new (cs->cnc, base_dn, lfilter ? lfilter : filter, main_data->ldap_attributes, lscope);
 	g_free (lfilter);
 	wrapper = gda_data_access_wrapper_new (model);
