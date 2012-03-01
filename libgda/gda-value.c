@@ -2192,6 +2192,11 @@ gda_value_stringify (const GValue *value)
 			else
 				return g_strdup ("0000-00-00");
 		}
+		else if (G_TYPE_IS_OBJECT (type)) {
+			GObject *obj;
+			obj = g_value_get_object (value);
+			return g_strdup_printf ("%p (%s)", obj, G_OBJECT_TYPE_NAME (obj));
+		}
 		else
 			return g_strdup ("");
 	}
