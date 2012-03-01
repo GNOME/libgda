@@ -69,7 +69,6 @@ typedef struct {
 struct _GdauiRtEditorPriv
 {
 	GtkTextView    *textview;
-	GtkAdjustment  *vadj;
 	gdouble         vadj_value;
 	GtkTextBuffer  *textbuffer;
 	GtkWidget      *toolbar;
@@ -301,14 +300,12 @@ static void
 gdaui_rt_editor_init (GdauiRtEditor *rte)
 {
 	GtkWidget *sw, *textview, *toolbar;
-	GtkAdjustment *adj;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (rte), GTK_ORIENTATION_VERTICAL);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (sw));
 	gtk_box_pack_end (GTK_BOX (rte), sw, TRUE, TRUE, 0);
 
 	textview = gtk_text_view_new ();
@@ -321,7 +318,6 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 
 	rte->priv = g_new0 (GdauiRtEditorPriv, 1);
 	rte->priv->sw = sw;
-	rte->priv->vadj = adj;
 	rte->priv->vadj_value = 0.;
 	rte->priv->saved_for_help = NULL;
 	rte->priv->enable_changed_signal = TRUE;
@@ -1991,14 +1987,20 @@ show_hide_toolbar (GdauiRtEditor *editor)
 
 	if (doshow) {
 		gtk_widget_show (editor->priv->toolbar);
-		if (editor->priv->vadj_value != 0.) {
+		if (editor->priv->sw && (editor->priv->vadj_value != 0.)) {
+			GtkAdjustment *adj;	
+			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (editor->priv->sw));
 			while (gtk_events_pending ())
 				gtk_main_iteration ();
-			gtk_adjustment_set_value (editor->priv->vadj, editor->priv->vadj_value);
+			gtk_adjustment_set_value (adj, editor->priv->vadj_value);
 		}
 	}
 	else {
-		editor->priv->vadj_value = gtk_adjustment_get_value (editor->priv->vadj);
+		if (editor->priv->sw) {
+			GtkAdjustment *adj;
+			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (editor->priv->sw));
+			editor->priv->vadj_value = gtk_adjustment_get_value (adj);
+		}
 		gtk_widget_hide (editor->priv->toolbar);
 	}
 
