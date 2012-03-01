@@ -1488,9 +1488,15 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
 			else if (null_as_empty && gda_value_is_null (value))
 				txt = g_strdup ("");
 			else {
+				gboolean alloc = FALSE;
 				gchar *tmp;
-				
-				tmp = gda_value_stringify (value);
+
+				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING))
+					tmp = (gchar*) g_value_get_string (value);
+				else {
+					tmp = gda_value_stringify (value);
+					alloc = TRUE;
+				}
 				if (tmp) {
 					gsize len, size;
 					len = strlen (tmp);
@@ -1503,6 +1509,8 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
 						txt [len - 1] = 0;
 						memmove (txt, txt+1, len);
 					}
+					if (alloc)
+						g_free (tmp);
 				}
 				else {
 					if (field_quotes) {
@@ -2426,18 +2434,30 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 					cols_size [i + col_offset] = MAX ((guint)cols_size [i + col_offset], strlen (ERROR_STRING));
 				}
 				else {
+					gboolean alloc = FALSE;
 					str = NULL;
 					if (null_as_empty) {
 						if (!value || gda_value_is_null (value))
-							str = g_strdup ("");
+							str = "";
 					}
-					if (!str)
-						str = value ? gda_value_stringify ((GValue*)value) : g_strdup ("_null_");
+					if (!str) {
+						if (value) {
+							if (G_VALUE_TYPE (value) == G_TYPE_STRING)
+								str = (gchar*) g_value_get_string (value);
+							else {
+								str = gda_value_stringify ((GValue*)value);
+								alloc = TRUE;
+							}
+						}
+						else
+							str = "_null_";
+					}
 					if (str) {
 						gint w;
 						string_get_dimensions (str, &w, NULL);
 						cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
-						g_free (str);
+						if (alloc)
+							g_free (str);
 					}
 				}
 			}
@@ -2532,28 +2552,41 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		}
 		
 		for (i = 0; i < n_cols; i++) {
+			gboolean alloc = FALSE;
+			str = NULL;
 			if (!dump_attributes) {
 				value = gda_data_model_get_value_at (ramodel, i, j, NULL);
 				if (!value)
-					str = g_strdup (ERROR_STRING);
+					str = ERROR_STRING;
 				else {
-					str = NULL;
 					if (null_as_empty) {
 						if (!value || gda_value_is_null (value))
-							str = g_strdup ("");
+							str = "";
 					}
-					if (!str)
-						str = value ? gda_value_stringify ((GValue *)value) : g_strdup ("_null_");
+					if (!str) {
+						if (value) {
+							if (G_VALUE_TYPE (value) == G_TYPE_STRING)
+								str = (gchar*) g_value_get_string (value);
+							else {
+								str = gda_value_stringify ((GValue*)value);
+								alloc = TRUE;
+							}
+						}
+						else
+							str = "_null_";
+					}
 				}
 			}
 			else {
 				GdaValueAttribute attrs;
 				attrs = gda_data_model_get_attributes_at (ramodel, i, j);
 				str = g_strdup_printf ("%u", attrs);
+				alloc = TRUE;
 			}
 			if (str) {
 				cols_str [i + col_offset] = g_strsplit (str, "\n", -1);
-				g_free (str);
+				if (alloc)
+					g_free (str);
 				cols_height [i + col_offset] = g_strv_length (cols_str [i + col_offset]);
 				kmax = MAX (kmax, cols_height [i + col_offset]);
 			}

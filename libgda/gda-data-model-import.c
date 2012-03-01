@@ -329,7 +329,6 @@ gda_data_model_import_data_model_init (GdaDataModelIface *iface)
 static void
 gda_data_model_import_init (GdaDataModelImport *model, G_GNUC_UNUSED GdaDataModelImportClass *klass)
 {
-	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
 	model->priv = g_new0 (GdaDataModelImportPrivate, 1);
 	model->priv->random_access = FALSE; /* cursor mode is the default */
 	model->priv->columns = NULL;
@@ -1971,9 +1970,10 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
-			if (! gda_holder_set_value (GDA_HOLDER (plist->data),
-						    (GValue *) vlist->data, &lerror))
+			if (! gda_holder_take_value ((GdaHolder*) plist->data,
+						     (GValue *) vlist->data, &lerror))
 				gda_holder_force_invalid_e (GDA_HOLDER (plist->data), lerror);
+			vlist->data = NULL;
 		}
 		if (plist || vlist) {
 			if (plist) {
@@ -2041,7 +2041,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
-			if (! gda_holder_set_value (GDA_HOLDER (plist->data),
+			if (! gda_holder_set_value ((GdaHolder*) plist->data,
 						    (GValue *) vlist->data, &lerror))
 				gda_holder_force_invalid_e (GDA_HOLDER (plist->data), lerror);
 		}
