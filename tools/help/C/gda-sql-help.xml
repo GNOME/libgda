@@ -298,6 +298,37 @@ uspan        |              |               |               |               |   
     </example>
   </command>
 
+  <section name="LDAP">
+    <usage>
+      <comment>
+	The following commands allow you to manipulate LDAP entries directly, and are thus only available for LDAP
+	connections. Once you have a search result you are interested into keeping, you can create a table out of it
+	using the syntax below, and then access to the data like any normal other table using SQL commands on that table.
+      </comment>
+      <synopsis>CREATE LDAP TABLE @table name@ [BASE=@base DN@] [FILTER=@LDAP filter@] [ATTRIBUTES=@LDAP attributes@] [SCOPE=@search scope@]</synopsis>
+    </usage>
+    <example>
+      <synopsis>CREATE LDAP TABLE someusers FILTER='(cn=*le*)' ATTRIBUTES='cn,mail' SCOPE='SUBTREE';</synopsis>
+      <comment>This example defines a table named "someusers" for the "(cn=*le*)" search filter, using a subtree scope;
+      the table will have 3 columns: the DN, cn and mail</comment>
+    </example>
+    <usage>
+      <comment>Other commands to manipulate LDAP tables are DROP and DESCRIBE commands:</comment>
+      <synopsis>DROP [LDAP] TABLE @table name@;</synopsis>
+      <synopsis>DESCRIBE LDAP TABLE @table name@;</synopsis>
+    </usage>
+    <example>
+      <synopsis>DESCRIBE LDAP TABLE someusers;</synopsis>
+      <raw>Paramètre  │ Valeur   
+───────────┼──────────
+BASE       │          
+FILTER     │ (cn=*le*)
+ATTRIBUTES │ cn,mail  
+SCOPE      │ SUBTREE  
+(4 rows)</raw>
+    </example>
+  </section>
+
   <!-- ".set" command -->
   <command name="set">
     <shortdescription>Set or show internal parameter, or list all if no parameter specified
@@ -358,6 +389,9 @@ uspan        |              |               |               |               |   
       "(&amp;(objectClass=inetOrgPerson)(!cn=tom))" to fetch all persons except "tom". Operators are: "=" for equal,
       "~=" for approximately equal "&lt;=" "&gt;=" for lexicographically less than or equal and greater than or equal
       respectively, "&amp;", "|" and "!" for the AND, OR and NOT logical operators respectively.</comment>
+      <comment>Note that the "ldap_show_dn" variable can be set to define the behaviour of the "Distinguished name" column
+      (use the ".set" command to define the variable). The possible understood values for this variable are: "rdn" (the DN is
+      replaced by the RND) and "none" (the DN column is not shown).</comment>
     </usage>
     <example>
       <synopsis>.ldap_attributes cn,uid,mail</synopsis>

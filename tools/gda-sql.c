@@ -2178,6 +2178,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "s");
 	c->description = _("Show commands history, or save it to file");
 	c->args = NULL;
@@ -2190,6 +2191,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<META DATA TYPE>]"), "meta");
 	c->description = _("Force reading the database meta data (or part of the meta data, ex:\"tables\")");
 	c->args = NULL;
@@ -2202,6 +2204,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"), "fkdeclare");
 	c->description = _("Declare a new foreign key (not actually in database): tableA references tableB");
 	c->args = NULL;
@@ -2214,6 +2217,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <fkname> <tableA> <tableB>"), "fkundeclare");
 	c->description = _("Un-declare a foreign key (not actually in database)");
 	c->args = NULL;
@@ -2226,6 +2230,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TABLE>]"), "dt");
 	c->description = _("List all tables (or named table)");
 	c->args = NULL;
@@ -2238,6 +2243,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<VIEW>]"), "dv");
 	c->description = _("List all views (or named view)");
 	c->args = NULL;
@@ -2250,6 +2256,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<SCHEMA>]"), "dn");
 	c->description = _("List all schemas (or named schema)");
 	c->args = NULL;
@@ -2262,6 +2269,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<OBJ_NAME>|<SCHEMA>.*]"), "d");
 	c->description = _("Describe object or full list of objects");
 	c->args = NULL;
@@ -2274,6 +2282,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TABLE1> [<TABLE2>...]]"), "graph");
 	c->description = _("Create a graph of all or the listed tables");
 	c->args = NULL;
@@ -2287,6 +2296,7 @@ build_internal_commands_list (void)
 #ifdef HAVE_LIBSOUP
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Information");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<port> [<authentication token>]]"), "http");
 	c->description = _("Start/stop embedded HTTP server (on given port or on 12345 by default)");
 	c->args = NULL;
@@ -2301,6 +2311,7 @@ build_internal_commands_list (void)
 	/* specific commands */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<CNC_NAME> [<DSN>|<CONNECTION STRING>]]"), "c");
 	c->description = _("Opens a new connection or lists opened connections");
 	c->args = NULL;
@@ -2313,6 +2324,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<CNC_NAME>]"), "close");
 	c->description = _("Close a connection");
 	c->args = NULL;
@@ -2325,6 +2337,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <CNC_NAME> <CNC_NAME1> <CNC_NAME2> [<CNC_NAME> ...]"), "bind");
 	c->description = _("Bind two or more connections into a single new one (allowing SQL commands to be executed across multiple connections)");
 	c->args = NULL;
@@ -2337,6 +2350,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<DSN>]"), "l");
 	c->description = _("List all DSN (or named DSN's attributes)");
 	c->args = NULL;
@@ -2349,6 +2363,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"), "lc");
 	c->description = _("Create (or modify) a DSN");
 	c->args = NULL;
@@ -2361,6 +2376,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <DSN_NAME> [<DSN_NAME>...]"), "lr");
 	c->description = _("Remove a DSN");
 	c->args = NULL;
@@ -2373,6 +2389,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("DSN (data sources) management");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<PROVIDER>]"), "lp");
 	c->description = _("List all installed database providers (or named one's attributes)");
 	c->args = NULL;
@@ -2385,6 +2402,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FILE>"), "i");
 	c->description = _("Execute commands from file");
 	c->args = NULL;
@@ -2397,6 +2415,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "o");
 	c->description = _("Send output to a file or |pipe");
 	c->args = NULL;
@@ -2409,6 +2428,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TEXT>]"), "echo");
 	c->description = _("Print TEXT or an empty line to standard output");
 	c->args = NULL;
@@ -2421,6 +2441,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Input/Output");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TEXT>]"), "qecho");
 	c->description = _("Send TEXT or an empty line to current output stream");
 	c->args = NULL;
@@ -2433,6 +2454,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = "q";
 	c->description = _("Quit");
 	c->args = NULL;
@@ -2445,6 +2467,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<DIR>]"), "cd");
 	c->description = _("Change the current working directory");
 	c->args = NULL;
@@ -2457,6 +2480,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = "copyright";
 	c->description = _("Show usage and distribution terms");
 	c->args = NULL;
@@ -2469,6 +2493,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "e");
 	c->description = _("Edit the query buffer (or file) with external editor");
 	c->args = NULL;
@@ -2481,6 +2506,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "qr");
 	c->description = _("Reset the query buffer (or load file into query buffer)");
 	c->args = NULL;
@@ -2493,6 +2519,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = "qp";
 	c->description = _("Show the contents of the query buffer");
 	c->args = NULL;
@@ -2505,6 +2532,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FAVORITE_NAME>]"), "g");
 	c->description = _("Execute contents of query buffer, or execute specified query favorite");
 	c->args = NULL;
@@ -2517,6 +2545,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FILE>"), "qw");
 	c->description = _("Write query buffer to file");
 	c->args = NULL;
@@ -2529,6 +2558,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qs");
 	c->description = _("Save query buffer as favorite");
 	c->args = NULL;
@@ -2541,6 +2571,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "ql");
 	c->description = _("Load a query favorite into query buffer");
 	c->args = NULL;
@@ -2553,6 +2584,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qd");
 	c->description = _("Delete a query favorite");
 	c->args = NULL;
@@ -2565,6 +2597,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s"), "qa");
 	c->description = _("List all query favorites");
 	c->args = NULL;
@@ -2577,6 +2610,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Formatting");
+	c->group_id = NULL;
 	c->name = "H [HTML|XML|CSV|DEFAULT]";
 	c->description = _("Set output format");
 	c->args = NULL;
@@ -2590,6 +2624,7 @@ build_internal_commands_list (void)
 	/*
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FILE> <TABLE> <BLOB_COLUMN> <ROW_CONDITION>"), "lo_update");
 	c->description = _("Import a blob into the database");
 	c->args = NULL;
@@ -2602,6 +2637,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Query buffer & query favorites");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"), "export");
 	c->description = _("Export internal parameter or table's value to the FILE file");
 	c->args = NULL;
@@ -2614,6 +2650,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>|_null_]]"), "set");
 	c->description = _("Set or show internal parameter, or list all if no parameter specified ");
 	c->args = NULL;
@@ -2626,6 +2663,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME>]"), "unset");
 	c->description = _("Unset (delete) internal named parameter (or all parameters)");
 	c->args = NULL;
@@ -2638,6 +2676,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"), "setex");
 	c->description = _("Set internal parameter as the contents of the FILE file or from an existing table's value");
 	c->args = NULL;
@@ -2650,6 +2689,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Execution context");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"), "pivot");
 	c->description = _("Performs a statistical analysis on the data from SELECT, "
 			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");
@@ -2663,6 +2703,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
+	c->group_id = "LDAP";
 	c->name = g_strdup_printf (_("%s <filter> [<base|onelevel|subtree> [<base DN>]]"), "ldap_search");
 	c->description = _("Search LDAP entries");
 	c->args = NULL;
@@ -2675,6 +2716,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
+	c->group_id = "LDAP";
 	c->name = g_strdup_printf (_("%s [attribute,[attribute],...]"), "ldap_attributes");
 	c->description = _("Set or get the default attributes manipulated by LDAP commands");
 	c->args = NULL;
@@ -2687,6 +2729,7 @@ build_internal_commands_list (void)
 
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
+	c->group_id = "LDAP";
 	c->name = g_strdup_printf (_("%s <DN> [\"all\"|\"set\"|\"unset\"]"), "ldap_descr");
 	c->description = _("Shows all the attributes for the entry identified by its DN. If the "
 			   "\"set\" 2nd parameter is passed, then all set attributes are show, if "
@@ -2704,6 +2747,7 @@ build_internal_commands_list (void)
 	/* comes last */
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
+	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [command]"), "?");
 	c->description = _("List all available commands or give help for the specified command");
 	c->args = NULL;

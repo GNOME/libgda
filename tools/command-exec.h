@@ -62,7 +62,8 @@ typedef struct {
 
 typedef struct {
 	gchar                     *group;
-	gchar                     *name; /* without the '\' */
+	gchar                     *group_id; /* to be found in the help file */
+	gchar                     *name; /* without the '\' or '.' */
 	gchar                     *description;
 	GSList                    *args; /* list of GdaInternalCommandArgument structures */
 	GdaInternalCommandFunc     command_func;
