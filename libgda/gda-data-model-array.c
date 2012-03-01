@@ -407,6 +407,87 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
 }
 
 /**
+ * gda_data_model_array_copy_model_ext:
+ * @src: a #GdaDataModel to copy data from
+ * @ncols: size of @cols
+ * @cols: (array length=ncols): array of @src's columns to copy into the new array, not %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Like gda_data_model_array_copy_model(), makes a copy of @src, but copies only some
+ * columns.
+ *
+ * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
+ *
+ * Since: 5.2.0
+ */
+GdaDataModelArray *
+gda_data_model_array_copy_model_ext (GdaDataModel *src, gint ncols, gint *cols, GError **error)
+{
+	GdaDataModel *model;
+	gint nbfields, i;
+
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (src), NULL);
+	g_return_val_if_fail (cols, NULL);
+	g_return_val_if_fail (ncols > 0, NULL);
+
+	/* check columns' validity */
+	nbfields = gda_data_model_get_n_columns (src);
+	for (i = 0; i < ncols; i++) {
+		if ((cols[i] < 0) || (cols[i] >= nbfields)) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR,
+				     GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
+                                     _("Column %d out of range (0-%d)"), cols[i], nbfields - 1);
+			return NULL;
+		}
+	}
+
+	/* initialize new model */
+	model = gda_data_model_array_new (ncols);
+	if (g_object_get_data (G_OBJECT (src), "name"))
+		g_object_set_data_full (G_OBJECT (model), "name", g_strdup (g_object_get_data (G_OBJECT (src), "name")), g_free);
+	if (g_object_get_data (G_OBJECT (src), "descr"))
+		g_object_set_data_full (G_OBJECT (model), "descr", g_strdup (g_object_get_data (G_OBJECT (src), "descr")), g_free);
+
+
+	/* map new columns */
+	GHashTable *hash;
+	hash = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
+	for (i = 0; i < ncols; i++) {
+		gint *ptr;
+		ptr = g_new (gint, 1);
+		*ptr = i;
+		g_hash_table_insert (hash, ptr, GINT_TO_POINTER (cols[i]));
+
+		GdaColumn *copycol, *srccol;
+		gchar *colid;
+
+		srccol = gda_data_model_describe_column (src, cols[i]);
+		copycol = gda_data_model_describe_column (model, i);
+
+		g_object_get (G_OBJECT (srccol), "id", &colid, NULL);
+		g_object_set (G_OBJECT (copycol), "id", colid, NULL);
+		g_free (colid);
+		gda_column_set_description (copycol, gda_column_get_description (srccol));
+		gda_column_set_name (copycol, gda_column_get_name (srccol));
+		gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
+		gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));
+		gda_column_set_position (copycol, gda_column_get_position (srccol));
+		gda_column_set_allow_null (copycol, gda_column_get_allow_null (srccol));
+	}
+
+	if (! gda_data_model_import_from_model (model, src, FALSE, hash, error)) {
+		g_hash_table_destroy (hash);
+		g_object_unref (model);
+		model = NULL;
+	}
+	/*else
+	  gda_data_model_dump (model, stdout);*/
+
+	g_hash_table_destroy (hash);
+	return (GdaDataModelArray*) model;
+}
+
+/**
  * gda_data_model_array_get_row:
  * @model: a #GdaDataModelArray object
  * @row: row number (starting from 0)
