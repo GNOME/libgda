@@ -2150,6 +2150,14 @@ static GdaInternalCommandResult *extra_command_data_set_show (SqlConsole *consol
 							      const gchar **args,
 							      GError **error, gpointer data);
 
+static GdaInternalCommandResult *extra_command_data_set_rm (SqlConsole *console, GdaConnection *cnc,
+							    const gchar **args,
+							    GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_data_set_import (SqlConsole *console, GdaConnection *cnc,
+								const gchar **args,
+								GError **error, gpointer data);
+
 static GdaInternalCommandResult *extra_command_graph (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
 						      GError **error, gpointer data);
@@ -2631,7 +2639,7 @@ build_internal_commands_list (void)
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("Formatting");
+	c->group = _("Input/Output");
 	c->group_id = NULL;
 	c->name = "H [HTML|XML|CSV|DEFAULT]";
 	c->description = _("Set output format");
@@ -2740,7 +2748,7 @@ build_internal_commands_list (void)
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
 	c->name = g_strdup_printf (_("%s <DATASET NAME> <PATTERN>"), "ds_grep");
-	c->description = _("Show a dataset'contents where lines match a regular expression");
+	c->description = _("Show a dataset's contents where lines match a regular expression");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_grep;
 	c->user_data = NULL;
@@ -2753,9 +2761,22 @@ build_internal_commands_list (void)
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
 	c->name = g_strdup_printf (_("%s <DATASET NAME>"), "ds_show");
-	c->description = _("Show a dataset'contents");
+	c->description = _("Show a dataset's contents");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_show;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s <DATASET NAME> [<DATASET NAME> ...]"), "ds_rm");
+	c->description = _("Remove one or more datasets");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_rm;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -2769,6 +2790,19 @@ build_internal_commands_list (void)
 	c->description = _("Rename a dataset, usefull to rename the '_' dataset to keep it");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_move;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s CSV <FILE NAME>"), "ds_import");
+	c->description = _("Import a dataset from a file");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_import;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -4576,6 +4610,82 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = g_object_ref (src);
+
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_data_set_rm (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			   GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	guint i;
+
+	if (!args[0] ||  !(*args[0])) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing argument"));
+		return NULL;
+	}
+	for (i = 0; args[i]; i++) {
+		GdaDataModel *src;
+		src = g_hash_table_lookup (main_data->mem_data_models, args[i]);
+		if (!src) {
+			g_set_error (error, 0, 0,
+				     _("Could not find dataset named '%s'"), args[i]);
+			return NULL;
+		}
+	}
+
+	for (i = 0; args[i]; i++)
+		g_hash_table_remove (main_data->mem_data_models, args[i]);
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			       GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *type = NULL, *file_name = NULL;
+
+	if (args[0] && *args[0]) {
+		type = args[0];
+		if (g_ascii_strcasecmp (type, "csv")) {
+			g_set_error (error, 0, 0,
+				     _("Unknown import format '%s'"), args[0]);
+			return NULL;
+		}
+		if (args[1] && *args[1])
+			file_name = args[1];
+	}
+
+	if (!type || !file_name) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing argument"));
+		return NULL;
+	}
+
+	GdaDataModel *model;
+	model = gda_data_model_import_new_file (file_name, TRUE, NULL);
+	if (!model) {
+		g_set_error (error, 0, 0,
+			     _("Could not import file '%s'"), file_name);
+		return NULL;
+	}
+	GSList *list;
+	list = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (model));
+	if (list) {
+		g_propagate_error (error, g_error_copy ((GError*) list->data));
+		return NULL;
+	}
+
+	g_hash_table_insert (main_data->mem_data_models, g_strdup (LAST_DATA_MODEL_NAME), model);
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 
 	return res;
 }
