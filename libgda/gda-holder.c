@@ -1097,10 +1097,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
 			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
 	}
-	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
-	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
-	gda_value_free (att_value);
+	GValue att_value = {0};
+	g_value_init (&att_value, G_TYPE_BOOLEAN);
+	g_value_set_boolean (&att_value, holder->priv->default_forced);
+	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, &att_value);
 
 	/* real setting of the value */
 	if (holder->priv->full_bind) {

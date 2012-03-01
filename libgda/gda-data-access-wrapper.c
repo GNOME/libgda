@@ -42,6 +42,7 @@ struct _GdaDataAccessWrapperPrivate {
 	gint              iter_row;/* current row of @iter, starting at 0 when created */
 
 	GHashTable       *rows;    /* NULL if @model already is random access */
+	gint              nb_rows; /* number of rows of @wrapper */
 	gint              nb_cols; /* number of columns of @wrapper */
 	gint              last_row;/* row number of the last row which has been read */
 	gboolean          end_of_data; /* TRUE if the end of the data model has been reached by the iterator */
@@ -190,6 +191,7 @@ gda_data_access_wrapper_init (GdaDataAccessWrapper *model, G_GNUC_UNUSED GdaData
 	model->priv = g_new0 (GdaDataAccessWrapperPrivate, 1);
 	model->priv->iter_row = -1; /* because model->priv->iter does not yet exist */
 	model->priv->rows = NULL;
+	model->priv->nb_rows = -1;
 	model->priv->end_of_data = FALSE;
 	model->priv->last_row = -1;
 	
@@ -352,6 +354,8 @@ gda_data_access_wrapper_set_property (GObject *object,
 				if (! (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 					model->priv->iter = gda_data_model_create_iter (mod);
 					g_return_if_fail (model->priv->iter);
+					g_object_set (model->priv->iter, "validate-changes", FALSE,
+						      NULL);
 					g_signal_connect (G_OBJECT (model->priv->iter), "row-changed",
 							  G_CALLBACK (iter_row_changed_cb), model);
 					g_signal_connect (G_OBJECT (model->priv->iter), "end-of-data",
@@ -498,12 +502,15 @@ gda_data_access_wrapper_get_n_rows (GdaDataModel *model)
 {
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
-	imodel = GDA_DATA_ACCESS_WRAPPER (model);
+	imodel = (GdaDataAccessWrapper*) model;
 	g_return_val_if_fail (imodel->priv, 0);
+
+	if (imodel->priv->nb_rows >= 0)
+		return imodel->priv->nb_rows;
 
 	if (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		/* imodel->priv->mode is a random access model, use it */
-		return gda_data_model_get_n_rows (imodel->priv->model);
+		imodel->priv->nb_rows = gda_data_model_get_n_rows (imodel->priv->model);
 	else {
 		/* go at the end */
 		while (!imodel->priv->end_of_data) {
@@ -511,10 +518,12 @@ gda_data_access_wrapper_get_n_rows (GdaDataModel *model)
 				break;
 		}
 		if (imodel->priv->end_of_data)
-			return imodel->priv->last_row +1;
+			imodel->priv->nb_rows = imodel->priv->last_row +1;
 		else
-			return -1;
+			imodel->priv->nb_rows = -1;
 	}
+
+	return imodel->priv->nb_rows;
 }
 
 static gint
@@ -522,7 +531,7 @@ gda_data_access_wrapper_get_n_columns (GdaDataModel *model)
 {
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
-	imodel = GDA_DATA_ACCESS_WRAPPER (model);
+	imodel = (GdaDataAccessWrapper*) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
 	if (imodel->priv->model)
@@ -536,7 +545,7 @@ gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col)
 {
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
-	imodel = GDA_DATA_ACCESS_WRAPPER (model);
+	imodel = (GdaDataAccessWrapper*) model;
 	g_return_val_if_fail (imodel->priv, NULL);
 
 	if (imodel->priv->model) {
@@ -555,7 +564,7 @@ gda_data_access_wrapper_get_access_flags (GdaDataModel *model)
 	GdaDataAccessWrapper *imodel;
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
-	imodel = GDA_DATA_ACCESS_WRAPPER (model);
+	imodel = (GdaDataAccessWrapper*) model;
 	g_return_val_if_fail (imodel->priv, 0);
 	
 	return GDA_DATA_MODEL_ACCESS_RANDOM;
@@ -573,14 +582,14 @@ create_new_row (GdaDataAccessWrapper *model)
 		GValue *dest;
 		dest = gda_row_get_value (row, i);
 		if (model->priv->rows_mapping)
-			holder = gda_data_model_iter_get_holder_for_field (model->priv->iter, model->priv->rows_mapping [i]);
+			holder = gda_set_get_nth_holder ((GdaSet *) model->priv->iter, model->priv->rows_mapping [i]);
 		else
-			holder = gda_data_model_iter_get_holder_for_field (model->priv->iter, i);
+			holder = gda_set_get_nth_holder ((GdaSet *) model->priv->iter, i);
 		if (holder) {
 			const GValue *cvalue = gda_holder_get_value (holder);
 			if (cvalue) {
 				gda_value_reset_with_type (dest, G_VALUE_TYPE ((GValue *) cvalue));
-				gda_value_set_from_value (dest, cvalue);
+				g_value_copy (cvalue, dest);
 			}
 			else
 				gda_value_set_null (dest);
@@ -604,7 +613,7 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 	GdaDataAccessWrapper *imodel;
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
-	imodel = GDA_DATA_ACCESS_WRAPPER (model);
+	imodel = (GdaDataAccessWrapper*) model;
 	g_return_val_if_fail (imodel->priv, NULL);
 	g_return_val_if_fail (imodel->priv->model, NULL);
 	g_return_val_if_fail (row >= 0, NULL);
