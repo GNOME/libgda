@@ -1259,7 +1259,9 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "INVALID_AS_NULL");
 			}
 
-			holder = gda_set_get_holder (options, "FIELDS_NAME");
+			holder = gda_set_get_holder (options, "NAMES_ON_FIRST_LINE");
+			if (!holder)
+				holder = gda_set_get_holder (options, "FIELDS_NAME");
 			if (holder) {
 				const GValue *value;
 				value = gda_holder_get_value (holder);
@@ -1348,12 +1350,12 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  * <itemizedlist>
  *   <listitem><para>"SEPARATOR": a string value of which the first character is used as a separator in case of CSV export
  *             </para></listitem>
- *   <listitem><para>"QUOTE": a string value of which the first character is used as a quote character in case of CSV export
- *             </para></listitem>
+ *   <listitem><para>"QUOTE": a string value of which the first character is used as a quote character in case of CSV export. The
+ *             default if not specified is the double quote character</para></listitem>
  *   <listitem><para>"FIELD_QUOTE": a boolean value which can be set to FALSE if no quote around the individual fields 
  *             is requeted, in case of CSV export</para></listitem>
+ *   <listitem><para>"NAMES_ON_FIRST_LINE": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field (note that "FIELDS_NAME" is also accepted as a synonym)</para></listitem>
  *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
- *   <listitem><para>"FIELDS_NAME": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field</para></listitem>
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.</para></listitem>
  *   <listitem><para>"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV export, will render and NULL value as the empty string (instead of the 'NULL' string)</para></listitem>
  *   <listitem><para>"INVALID_AS_NULL": a boolean value which, if set to %TRUE, considers any invalid data (for example for the date related values) as NULL</para></listitem>

@@ -779,8 +779,8 @@ gda_data_model_import_get_property (GObject *object,
  *      <itemizedlist>
  *         <listitem><para>ENCODING (string): specifies the encoding of the data in the file</para></listitem>
  *         <listitem><para>SEPARATOR (string): specifies the CSV separator (comma as default)</para></listitem>
- *         <listitem><para>QUOTE (string): specifies the character used to as quote park (double quote as default)</para></listitem>
- *         <listitem><para>TITLE_AS_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles</para></listitem>
+ *         <listitem><para>QUOTE (string): specifies the character used as quote (double quote as default)</para></listitem>
+ *         <listitem><para>NAMES_ON_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles (note that the TITLE_AS_FIRST_LINE option is also accepted as a synonym)</para></listitem>
  *         <listitem><para>G_TYPE_&lt;column number&gt; (GType): specifies the type of value expected in column &lt;column number&gt;</para></listitem>
  *      </itemizedlist>
  *   </para></listitem>
@@ -869,7 +869,8 @@ init_csv_import (GdaDataModelImport *model)
 	gint nbcols;
 
 	if (model->priv->options)
-		title_first_line = find_option_as_boolean (model, "TITLE_AS_FIRST_LINE", FALSE);
+		title_first_line = find_option_as_boolean (model, "NAMES_ON_FIRST_LINE", FALSE) ||
+			find_option_as_boolean (model, "TITLE_AS_FIRST_LINE", FALSE);
 
 	g_assert (model->priv->format == FORMAT_CSV);
 
