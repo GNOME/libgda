@@ -93,7 +93,8 @@ enum
 	PROP_SOURCE_MODEL,
 	PROP_SOURCE_COLUMN,
 	PROP_GDA_TYPE,
-	PROP_NOT_NULL
+	PROP_NOT_NULL,
+	PROP_VALIDATE_CHANGES
 };
 
 
@@ -120,6 +121,8 @@ struct _GdaHolderPrivate
 	gint             source_col;
 
 	GdaMutex        *mutex;
+
+	gboolean         validate_changes;
 };
 
 /* module error */
@@ -312,6 +315,18 @@ gda_holder_class_init (GdaHolderClass *class)
 							   "with the source-model property",
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+
+	/**
+	 * GdaHolder:validate-changes:
+	 *
+	 * Defines if the "validate-change" signal gets emitted when
+	 * the holder's value changes.
+	 *
+	 * Since: 5.2.0
+	 */
+	g_object_class_install_property (object_class, PROP_VALIDATE_CHANGES,
+					 g_param_spec_boolean ("validate-changes", NULL, "Defines if the validate-change signal is emitted on value change", TRUE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
 	/* extra */
 	gda_holder_attributes_manager = gda_attributes_manager_new (TRUE, holder_attribute_set_cb, NULL);
@@ -350,6 +365,8 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->source_col = 0;
 
 	holder->priv->mutex = gda_mutex_new ();
+
+	holder->priv->validate_changes = TRUE;
 }
 
 /**
@@ -664,6 +681,9 @@ gda_holder_set_property (GObject *object,
 		case PROP_SOURCE_COLUMN:
 			holder->priv->source_col = g_value_get_int (value);
 			break;
+		case PROP_VALIDATE_CHANGES:
+			holder->priv->validate_changes = g_value_get_boolean (value);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -717,7 +737,10 @@ gda_holder_get_property (GObject *object,
 			break;
 		case PROP_SOURCE_COLUMN:
 			g_value_set_int (value, holder->priv->source_col);
-			break;	
+			break;
+		case PROP_VALIDATE_CHANGES:
+			g_value_set_boolean (value, holder->priv->validate_changes);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -1038,19 +1061,21 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	}
 
 	/* check if we are allowed to change value */
-	GError *lerror = NULL;
-	g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
-	if (lerror) {
-		/* change refused by signal callback */
+	if (holder->priv->validate_changes) {
+		GError *lerror = NULL;
+		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
+		if (lerror) {
+			/* change refused by signal callback */
 #ifdef DEBUG_HOLDER
-		g_print ("Holder change refused %p (ERROR %s)\n", holder,
-			 lerror->message);
+			g_print ("Holder change refused %p (ERROR %s)\n", holder,
+				 lerror->message);
 #endif
-		g_propagate_error (error, lerror);
-		if (!do_copy) 
-			gda_value_free (value);
-		gda_holder_unlock ((GdaLockable*) holder);
-		return FALSE;
+			g_propagate_error (error, lerror);
+			if (!do_copy) 
+				gda_value_free (value);
+			gda_holder_unlock ((GdaLockable*) holder);
+			return FALSE;
+		}
 	}
 
 	/* new valid status */
@@ -1186,12 +1211,14 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	}
 
 	/* check if we are allowed to change value */
-	GError *lerror = NULL;
-	g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
-	if (lerror) {
-		/* change refused by signal callback */
-		g_propagate_error (error, lerror);
-		return NULL;
+	if (holder->priv->validate_changes) {
+		GError *lerror = NULL;
+		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
+		if (lerror) {
+			/* change refused by signal callback */
+			g_propagate_error (error, lerror);
+			return NULL;
+		}
 	}
 
 	/* new valid status */
