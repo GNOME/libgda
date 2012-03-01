@@ -75,7 +75,8 @@ enum
 	PROP_ID,
 	PROP_NAME,
 	PROP_DESCR,
-	PROP_HOLDERS
+	PROP_HOLDERS,
+	PROP_VALIDATE_CHANGES
 };
 
 /* signals */
@@ -103,6 +104,7 @@ struct _GdaSetPrivate
 	GHashTable      *holders_hash; /* key = GdaHoler ID, value = GdaHolder */
 	GArray          *holders_array;
 	gboolean         read_only;
+	gboolean         validate_changes;
 };
 
 static void 
@@ -130,11 +132,29 @@ gda_set_set_property (GObject *object,
 	case PROP_HOLDERS: {
 		/* add the holders */
 		GSList* holders;
-		for (holders = (GSList*) g_value_get_pointer(value); holders; holders = holders->next) 
+		for (holders = (GSList*) g_value_get_pointer (value); holders; holders = holders->next) 
 			gda_set_real_add_holder (set, GDA_HOLDER (holders->data));
 		compute_public_data (set);	
 		break;
 	}
+	case PROP_VALIDATE_CHANGES:
+		if (set->priv->validate_changes != g_value_get_boolean (value)) {
+			GSList *list;
+			set->priv->validate_changes = g_value_get_boolean (value);
+			for (list = set->holders; list; list = list->next) {
+				GdaHolder *holder = (GdaHolder*) list->data;
+				g_object_set ((GObject*) holder, "validate-changes",
+					      set->priv->validate_changes, NULL);
+				if (set->priv->validate_changes)
+					g_signal_connect ((GObject*) holder, "validate-change",
+							  G_CALLBACK (validate_change_holder_cb), set);
+				else
+					g_signal_handlers_disconnect_by_func ((GObject*) holder,
+									      G_CALLBACK (validate_change_holder_cb),
+									      set);
+			}
+		}
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
@@ -162,6 +182,9 @@ gda_set_get_property (GObject *object,
 		break;
 	case PROP_DESCR:
 		g_value_set_string (value, set->priv->descr);
+		break;
+	case PROP_VALIDATE_CHANGES:
+		g_value_set_boolean (value, set->priv->validate_changes);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -381,7 +404,18 @@ gda_set_class_init (GdaSetClass *class)
 					 g_param_spec_pointer ("holders", "GSList of GdaHolders", 
 							       "GdaHolder objects the set should contain", (
 								G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
-  
+	/**
+	 * GdaSet:validate-changes:
+	 *
+	 * Defines if the "validate-set" signal gets emitted when
+	 * any holder in the data set changes. This property also affects the
+	 * GdaHolder:validate-changes property.
+	 *
+	 * Since: 5.2.0
+	 */
+	g_object_class_install_property (object_class, PROP_VALIDATE_CHANGES,
+					 g_param_spec_boolean ("validate-changes", NULL, "Defines if the validate-set signal is emitted", TRUE,
+							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	object_class->dispose = gda_set_dispose;
 	object_class->finalize = gda_set_finalize;
 }
@@ -397,6 +431,7 @@ gda_set_init (GdaSet *set)
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	set->priv->holders_array = NULL;
 	set->priv->read_only = FALSE;
+	set->priv->validate_changes = TRUE;
 }
 
 
@@ -982,8 +1017,9 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	g_return_if_fail (set->priv);
 	g_return_if_fail (g_slist_find (set->holders, holder));
 
-	g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-					      G_CALLBACK (validate_change_holder_cb), set);
+	if (set->priv->validate_changes)
+		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
+						      G_CALLBACK (validate_change_holder_cb), set);
 	if (! set->priv->read_only) {
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 						      G_CALLBACK (changed_holder_cb), set);
@@ -1088,8 +1124,9 @@ gda_set_dispose (GObject *object)
 	/* free the holders list */
 	if (set->holders) {
 		for (list = set->holders; list; list = list->next) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-							      G_CALLBACK (validate_change_holder_cb), set);
+			if (set->priv->validate_changes)
+				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
+								      G_CALLBACK (validate_change_holder_cb), set);
 			if (! set->priv->read_only) {
 				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 								      G_CALLBACK (changed_holder_cb), set);
@@ -1321,8 +1358,9 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 			set->priv->holders_array = NULL;
 		}
 		g_object_ref (holder);
-		g_signal_connect (G_OBJECT (holder), "validate-change",
-				  G_CALLBACK (validate_change_holder_cb), set);
+		if (set->priv->validate_changes)
+			g_signal_connect (G_OBJECT (holder), "validate-change",
+					  G_CALLBACK (validate_change_holder_cb), set);
 		if (! set->priv->read_only) {
 			g_signal_connect (G_OBJECT (holder), "changed",
 					  G_CALLBACK (changed_holder_cb), set);
