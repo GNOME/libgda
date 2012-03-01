@@ -394,9 +394,9 @@ SCOPE      │ SUBTREE
       "(&amp;(objectClass=inetOrgPerson)(!cn=tom))" to fetch all persons except "tom". Operators are: "=" for equal,
       "~=" for approximately equal "&lt;=" "&gt;=" for lexicographically less than or equal and greater than or equal
       respectively, "&amp;", "|" and "!" for the AND, OR and NOT logical operators respectively.</comment>
-      <comment>Note that the "ldap_show_dn" variable can be set to define the behaviour of the "Distinguished name" column
-      (use the ".set" command to define the variable). The possible understood values for this variable are: "rdn" (the DN is
-      replaced by the RND) and "none" (the DN column is not shown).</comment>
+      <comment>Note that the "ldap_dn" option defines the behaviour of the "Distinguished name" column
+      (use the ".option" command to change the option value). The possible values for this option are: "dn" (default
+      behaviour), "rdn" (the DN is replaced by the RND) and "none" (the DN column is not shown).</comment>
     </usage>
     <example>
       <synopsis>.ldap_attributes cn,uid,mail</synopsis>
