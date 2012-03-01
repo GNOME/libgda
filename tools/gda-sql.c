@@ -126,7 +126,6 @@ typedef struct {
 
 	GdaSet *options;
 	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaHolder */
-	gchar *ldap_attributes; /* default LDAP attributes */
 #define LAST_DATA_MODEL_NAME "_"
 	GHashTable *mem_data_models; /* key = name, value = the named GdaDataModel, ref# kept in hash table */
 
@@ -197,13 +196,15 @@ main (int argc, char *argv[])
 	setlocale (LC_ALL, "");
         gda_init ();
 
+#define DEFAULT_LDAP_ATTRIBUTES "cn"
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
-	data->options = gda_set_new_inline (4,
+	data->options = gda_set_new_inline (5,
 					    "csv_names_on_first_line", G_TYPE_BOOLEAN, FALSE,
 					    "csv_quote", G_TYPE_STRING, "\"",
 					    "csv_separator", G_TYPE_STRING, ",",
-					    "ldap_dn", G_TYPE_STRING, "dn");
+					    "ldap_dn", G_TYPE_STRING, "dn",
+					    "ldap_attributes", G_TYPE_STRING, DEFAULT_LDAP_ATTRIBUTES);
 	value = gda_value_new (G_TYPE_STRING);
 	g_value_set_string (value, _("Set to TRUE when the 1st line of a CSV file holds column names"));
 	opt = gda_set_get_holder (data->options, "csv_names_on_first_line");
@@ -226,11 +227,14 @@ main (int argc, char *argv[])
 	g_value_set_string (value, _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"));
 	opt = gda_set_get_holder (data->options, "ldap_dn");
 	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+
+	g_value_set_string (value, _("Defines the LDAP attributes which are fetched by default by LDAP commands"));
+	opt = gda_set_get_holder (data->options, "ldap_attributes");
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
 	gda_value_free (value);
 
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	data->mem_data_models = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
-	data->ldap_attributes = g_strdup ("cn");
 	main_data = data;
 
 	/* output file */
@@ -2262,9 +2266,6 @@ static GdaInternalCommandResult *extra_command_undeclare_fk (SqlConsole *console
 static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
 							    GError **error, gpointer data);
-static GdaInternalCommandResult *extra_command_ldap_attributes (SqlConsole *console, GdaConnection *cnc,
-								const gchar **args,
-								GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_ldap_descr (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
 							   GError **error, gpointer data);
@@ -2907,21 +2908,8 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
 	c->group_id = "LDAP";
-	c->name = g_strdup_printf (_("%s [attribute,[attribute],...]"), "ldap_attributes");
-	c->description = _("Set or get the default attributes manipulated by LDAP commands");
-	c->args = NULL;
-	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_attributes;
-	c->user_data = NULL;
-	c->arguments_delimiter_func = NULL;
-	c->unquote_args = TRUE;
-	c->limit_to_main = TRUE;
-	commands->commands = g_slist_prepend (commands->commands, c);
-
-	c = g_new0 (GdaInternalCommand, 1);
-	c->group = _("LDAP");
-	c->group_id = "LDAP";
 	c->name = g_strdup_printf (_("%s <DN> [\"all\"|\"set\"|\"unset\"]"), "ldap_descr");
-	c->description = _("Shows all the attributes for the entry identified by its DN. If the "
+	c->description = _("Shows attributes for the entry identified by its DN. If the "
 			   "\"set\" 2nd parameter is passed, then all set attributes are show, if "
 			   "the \"all\" 2nd parameter is passed, then the unset attributes are "
 			   "also shown, and if the \"unset\" 2nd parameter "
@@ -4794,7 +4782,8 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 		}
 
 		GdaDataModel *model;
-		model = gda_data_model_array_copy_model_ext (src, cols->len, (gint*) cols->data, error);
+		model = (GdaDataModel*) gda_data_model_array_copy_model_ext (src, cols->len, (gint*) cols->data,
+									     error);
 		g_array_free (cols, TRUE);
 		if (model) {
 			res = g_new0 (GdaInternalCommandResult, 1);
@@ -5640,9 +5629,13 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 		lfilter = g_strdup_printf ("(%s)", filter);
 
 	GdaHolder *param;
-	param = gda_set_get_holder (main_data->options, "ldap_dn");
-	model = gda_data_model_ldap_new (cs->cnc, base_dn, lfilter ? lfilter : filter, main_data->ldap_attributes, lscope);
+	const gchar *ldap_attributes;
+	ldap_attributes = g_value_get_string (gda_set_get_holder_value (main_data->options, "ldap_attributes"));
+	model = gda_data_model_ldap_new (cs->cnc, base_dn, lfilter ? lfilter : filter,
+					 ldap_attributes ? ldap_attributes : DEFAULT_LDAP_ATTRIBUTES,
+					 lscope);
 	g_free (lfilter);
+	param = gda_set_get_holder (main_data->options, "ldap_dn");
 	wrapper = gda_data_access_wrapper_new (model);
 	g_object_unref (model);
 
@@ -5675,26 +5668,6 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 	res = g_new0 (GdaInternalCommandResult, 1);
 	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = wrapper;
-	return res;
-}
-
-static GdaInternalCommandResult *
-extra_command_ldap_attributes (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			       GError **error, gpointer data)
-{
-	GdaInternalCommandResult *res = NULL;
-
-        if (args[0] && *args[0]) {
-		g_free (main_data->ldap_attributes);
-		main_data->ldap_attributes = g_strdup (args[0]);
-		res = g_new0 (GdaInternalCommandResult, 1);
-		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
-        }
-	else {
-		res = g_new0 (GdaInternalCommandResult, 1);
-		res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
-		res->u.txt = g_string_new (main_data->ldap_attributes);
-	}
 	return res;
 }
 
@@ -5732,7 +5705,7 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 
 	const gchar *dn = NULL;
 	GHashTable *attrs_hash = NULL;
-	gint options = 0; /* 0 => show attributes specified with .ldap_attributes
+	gint options = 0; /* 0 => show attributes specified with ".option ldap_attributes"
 			   * 1 => show all attributes
 			   * 2 => show non set attributes only
 			   * 3 => show all set attributes only
@@ -5778,10 +5751,12 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	g_object_set_data (G_OBJECT (model), "name", _("LDAP entry's Attributes"));
 
 	/* parse attributes to use */
-	if ((options == 0) && main_data->ldap_attributes) {
+	const gchar *ldap_attributes;
+	ldap_attributes = g_value_get_string (gda_set_get_holder_value (main_data->options, "ldap_attributes"));
+	if ((options == 0) && ldap_attributes) {
 		gchar **array;
 		guint i;
-		array = g_strsplit (main_data->ldap_attributes, ",", 0);
+		array = g_strsplit (ldap_attributes, ",", 0);
 		for (i = 0; array [i]; i++) {
 			gchar *tmp;
 			for (tmp = array [i]; *tmp && (*tmp != ':'); tmp++);
