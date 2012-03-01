@@ -73,6 +73,8 @@ GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);
 GdaDataModel      *gda_data_model_array_new_with_g_types_v (gint cols, GType *types);
 GdaDataModel      *gda_data_model_array_new               (gint cols);
 GdaDataModelArray *gda_data_model_array_copy_model        (GdaDataModel *src, GError **error);
+GdaDataModelArray *gda_data_model_array_copy_model_ext    (GdaDataModel *src,
+							   gint ncols, gint *cols, GError **error);
 
 GdaRow            *gda_data_model_array_get_row           (GdaDataModelArray *model, gint row, GError **error);
 void               gda_data_model_array_set_n_columns     (GdaDataModelArray *model, gint cols);

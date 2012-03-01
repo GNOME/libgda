@@ -205,6 +205,7 @@
 	gda_data_model_append_values
 	gda_data_model_array_clear
 	gda_data_model_array_copy_model
+	gda_data_model_array_copy_model_ext
 	gda_data_model_array_get_row
 	gda_data_model_array_get_type
 	gda_data_model_array_new
