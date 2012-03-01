@@ -2437,10 +2437,10 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
 	c->group_id = NULL;
-	c->name = g_strdup_printf (_("%s <CNC NAME> <OBJ NAME1> <OBJ NAME2> [<OBJ NAME> ...]"), "bind");
-	c->description = _("Bind two or more connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands to be executed across multiple connections and datasets)");
+	c->name = g_strdup_printf (_("%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"), "bind");
+	c->description = _("Bind connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands to be executed across multiple connections and/or datasets)");
 	c->args = NULL;
-	c->command_func = (GdaInternalCommandFunc)extra_command_bind_cnc;
+	c->command_func = (GdaInternalCommandFunc) extra_command_bind_cnc;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -3603,7 +3603,7 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 	GdaConnection *virtual;
 	GString *string;
 
-	if (nargs < 3) {
+	if (nargs < 2) {
 		g_set_error (error, 0, 0, "%s", 
 				     _("Missing required connection names"));
 		return NULL;
@@ -4768,7 +4768,7 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 		gint i;
 		cols = g_array_new (FALSE, FALSE, sizeof (gint));
 		for (i = 1; args[i] && *args[i]; i++) {
-			gchar *cname = args[i];
+			const gchar *cname = args[i];
 			gint pos;
 			pos = gda_data_model_get_column_index (src, cname);
 			if (pos < 0) {

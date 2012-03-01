@@ -16,10 +16,10 @@
 
   <!-- ".bind" command -->
   <command name="bind">
-    <shortdescription>Bind two or more connections or datasets into a single new one (allowing SQL commands to be executed across multiple connections and datasets).
+    <shortdescription>Bind connections or datasets into a single new one (allowing SQL commands to be executed across multiple connections and/or datasets).
     </shortdescription>
     <usage>
-      <synopsis>.bind @CNC NAME@ @OBJ NAME1@ @OBJ NAME2@ [@OBJ NAME@ ...]</synopsis>
+      <synopsis>.bind @CNC NAME@ @OBJ NAME@ [@OBJ NAME@ ...]</synopsis>
       <comment>creates a new connection named @CNC_NAME@, which binds data from each of the named object
       (@OBJ NAME@). If a named object is a connection, then all the tables in the named connection
       are bound (in a schema named after the connection name) and if a named object is a dataset,
