@@ -19,6 +19,7 @@
  */
 
 #include <libgda/libgda.h>
+#include <glib/gi18n-lib.h>
 #include "gdaui-entry-combo.h"
 #include "gdaui-combo.h"
 #include "gdaui-data-store.h"
@@ -70,10 +71,10 @@ enum {
  * used.
  */
 typedef struct {
-	GdaSetNode *node;
-	const GValue       *value;    /* we don't own the value, since it belongs to a GdaDataModel => don't free it */
-	GValue             *value_orig;
-	GValue             *value_default;
+	GdaSetNode   *node;
+	GValue       *value;
+	GValue       *value_orig;
+	GValue       *value_default;
 } ComboNode;
 #define COMBO_NODE(x) ((ComboNode*)(x))
 
@@ -297,10 +298,10 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 		ComboNode *cnode = g_new0 (ComboNode, 1);
 		
 		cnode->node = GDA_SET_NODE (list->data);
-		cnode->value = gda_holder_get_value (cnode->node->holder);
+		cnode->value = NULL;
 		combo->priv->combo_nodes = g_slist_append (combo->priv->combo_nodes, cnode);
 
-		values = g_slist_append (values, (GValue *) cnode->value);
+		values = g_slist_append (values, (GValue *) gda_holder_get_value (cnode->node->holder));
 		if (gda_holder_get_not_null (cnode->node->holder))
 			null_possible = FALSE;
 	}
@@ -311,18 +312,25 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 					    combo->priv->source->shown_n_cols, 
 					    combo->priv->source->shown_cols_index);
 	g_object_set (G_OBJECT (entry), "as-list", TRUE, NULL);
-	g_signal_connect (G_OBJECT (entry), "changed",
-			  G_CALLBACK (combo_contents_changed_cb), combo);
 
 	gdaui_entry_shell_pack_entry (GDAUI_ENTRY_SHELL (combo), entry);
 	gtk_widget_show (entry);
 	combo->priv->combo_entry = entry;
 
-	_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
-	g_slist_free (values);
+	if (values) {
+		if (! _gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL))
+			g_warning (_("Could find row in data model with provided values"));
+		gdaui_entry_combo_set_reference_values (combo, values);
+		g_slist_free (values);
+	}
+
 	gdaui_combo_add_null (GDAUI_COMBO (entry), combo->priv->null_possible);
 
 	combo->priv->data_valid = combo->priv->null_possible ? TRUE : FALSE;
+
+	combo_contents_changed_cb ((GdauiCombo*) entry, combo);
+	g_signal_connect (G_OBJECT (entry), "changed",
+			  G_CALLBACK (combo_contents_changed_cb), combo);
 }
 
 static void
@@ -358,12 +366,9 @@ gdaui_entry_combo_dispose (GObject *object)
 			for (list = combo->priv->combo_nodes; list; list = list->next) {
 				ComboNode *node = COMBO_NODE (list->data);
 
-				if (node->value)
-					node->value = NULL; /* don't free that value since we have not copied it */
-				if (node->value_orig)
-					gda_value_free (node->value_orig);
-				if (node->value_default)
-					gda_value_free (node->value_default);
+				gda_value_free (node->value);
+				gda_value_free (node->value_orig);
+				gda_value_free (node->value_default);
 				g_free (node);
 			}
 			g_slist_free (combo->priv->combo_nodes);
@@ -447,9 +452,12 @@ combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *com
 		for (list = combo->priv->combo_nodes; list; list = list->next) {
 			ComboNode *node = COMBO_NODE (list->data);
 
+			gda_value_free (node->value);
 			gtk_tree_model_get (model, &iter, node->node->source_column, &(node->value), -1);
-			/*g_print ("%s(): Set Combo Node value to %s\n", __FUNCTION__,
-			  node->value ? gda_value_stringify (node->value) : "Null");*/
+			if (node->value)
+				node->value = gda_value_copy (node->value);
+			/*g_print ("%s (%p): Set Combo Node value to %s (%p)\n", __FUNCTION__, combo, 
+			  node->value ? gda_value_stringify (node->value) : "Null", node->value);*/
 		}
 		
 		g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
@@ -513,8 +521,11 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 			/* adjusting the values */
 			for (list = combo->priv->combo_nodes; list; list = list->next) {
 				node = COMBO_NODE (list->data);
+				gda_value_free (node->value);
 				gtk_tree_model_get (model, &iter, node->node->source_column,
 						    &(node->value), -1);
+				if (node->value)
+					node->value = gda_value_copy (node->value);
 			}
 			
 			combo->priv->null_forced = FALSE;
@@ -526,8 +537,10 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	}
 	else  { /* set to NULL */
 		GSList *list;
-		for (list = combo->priv->combo_nodes; list; list = list->next)
+		for (list = combo->priv->combo_nodes; list; list = list->next) {
+			gda_value_free (COMBO_NODE (list->data)->value);
 			COMBO_NODE (list->data)->value = NULL;
+		}
 
 		if (combo->priv->null_possible) {
 			real_combo_block_signals (combo);
