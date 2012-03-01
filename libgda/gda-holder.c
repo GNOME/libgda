@@ -1998,14 +1998,12 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
  * then the string will not be freed at all).
  *
  * Attributes can have any name, but Libgda proposes some default names, 
- * see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
+ * see <link linkend="libgda-5.0-Attributes-manager.synopsis">this section</link>.
  *
  * For example one would use it as:
  *
- * <code>
- * gda_holder_set_attribute (holder, g_strdup (my_attribute), g_free, my_value);
- * gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, NULL, my_value);
- * </code>
+ * <code>gda_holder_set_attribute (holder, g_strdup (my_attribute), my_value, g_free);</code>
+ * <code>gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, my_value, NULL);</code>
  *
  * If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is
  * copied), except if @value is %NULL, in which case the attribute is removed.
