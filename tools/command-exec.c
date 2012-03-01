@@ -356,6 +356,16 @@ append_to_string (GString *string, gchar *str, gint width, gint offset)
 		for (ptr = string->str + (string->len -1); (ptr >= string->str) && (*ptr != '\n'); ptr --)
 			clen++;
 	}
+	if (!strcmp (str, "> ")) {
+		if (offset > 0) {
+			gint i;
+			for (i = 0; i < offset; i++)
+				g_string_append_c (string, ' ');
+		}
+		g_string_append (string, str);
+		return;
+	}
+
 	for (ptr = str; *ptr; ) {
 		/* skip spaces */
 		if ((*ptr == ' ') || (*ptr == '\t') || (*ptr == '\n') || (*ptr == '\r')) {
@@ -414,11 +424,11 @@ append_to_string (GString *string, gchar *str, gint width, gint offset)
 }
 
 static gchar *
-help_xml_doc_to_string (xmlDocPtr helpdoc, const gchar *command_name, gint width)
+help_xml_doc_to_string_command (xmlDocPtr helpdoc, const gchar *command_name, gint width)
 {
 	xmlNodePtr node;
 	node = xmlDocGetRootElement (helpdoc);
-	if (!node)
+	if (!node || !command_name || !*command_name)
 		return NULL;
 	for (node = node->children; node; node = node->next) {
 		if (strcmp ((gchar*) node->name, "command"))
@@ -485,6 +495,106 @@ help_xml_doc_to_string (xmlDocPtr helpdoc, const gchar *command_name, gint width
 	return g_string_free (string, FALSE);
 }
 
+static gchar *
+help_xml_doc_to_string_section (xmlDocPtr helpdoc, const gchar *section_name, gint width)
+{
+	xmlNodePtr node;
+	node = xmlDocGetRootElement (helpdoc);
+	if (!node || !section_name || !*section_name)
+		return NULL;
+	for (node = node->children; node; node = node->next) {
+		if (strcmp ((gchar*) node->name, "section"))
+			continue;
+		xmlChar *prop;
+		prop = xmlGetProp (node, BAD_CAST "name");
+		if (prop && strstr ((gchar*) prop, section_name))
+			break;
+	}
+	if (!node)
+		return NULL;
+
+	/* create output string */
+	GString *string;
+	string = g_string_new ("");
+	for (node = node->children; node; node = node->next) {
+		xmlChar *data = NULL;
+		if (!strcmp ((gchar*) node->name, "shortdescription")) {
+			data = xmlNodeGetContent (node);
+			if (data) {
+				append_to_string (string, (gchar*) data, width, 0);
+				g_string_append (string, "\n\n");
+			}
+		}
+		else if (!strcmp ((gchar*) node->name, "usage") || !strcmp ((gchar*) node->name, "example")) {
+			if (!strcmp ((gchar*) node->name, "example")) {
+				append_to_string (string, _("Example"), width, 0);
+				g_string_append (string, ":\n");
+			}
+			xmlNodePtr snode;
+			for (snode = node->children; snode; snode = snode->next) {
+				if (!strcmp ((gchar*) snode->name, "synopsis")) {
+					data = xmlNodeGetContent (snode);
+					if (data) {
+						append_to_string (string, "> ", width, 3);
+						append_to_string (string, (gchar*) data, width, 3);
+						g_string_append_c (string, '\n');
+					}
+				}
+				else if (!strcmp ((gchar*) snode->name, "comment")) {
+					data = xmlNodeGetContent (snode);
+					if (data) {
+						append_to_string (string, (gchar*) data, width, 3);
+						g_string_append_c (string, '\n');
+					}
+				}
+				else if (!strcmp ((gchar*) snode->name, "raw")) {
+					data = xmlNodeGetContent (snode);
+					if (data) {
+						append_raw_to_string (string, (gchar*) data, width, 3);
+						g_string_append (string, "\n\n");
+					}
+				}
+				if (data)
+					xmlFree (data);
+				data = NULL;
+			}
+		}
+		if (data)
+			xmlFree (data);
+	}
+
+	return g_string_free (string, FALSE);
+}
+
+xmlDocPtr
+load_help_doc (void)
+{
+	xmlDocPtr helpdoc = NULL;
+	const gchar * const *langs = g_get_language_names ();
+	gchar *dirname, *helpfile;
+	gint i;
+	dirname = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help",
+					 "gda-sql", NULL);
+	for (i = 0; langs[i]; i++) {
+		helpfile = g_build_filename (dirname, langs[i], "gda-sql-help.xml", NULL);
+		if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
+			helpdoc = xmlParseFile (helpfile);
+		g_free (helpfile);
+		if (helpdoc)
+			break;
+	}
+
+	if (!helpdoc) {
+		/* default to the "C" one */
+		helpfile = g_build_filename (dirname, "C", "gda-sql-help.xml", NULL);
+		if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
+			helpdoc = xmlParseFile (helpfile);
+		g_free (helpfile);
+	}
+	g_free (dirname);
+	return helpdoc;
+}
+
 GdaInternalCommandResult *
 gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 			   const gchar **args, G_GNUC_UNUSED GError **error,
@@ -508,6 +618,8 @@ gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 		const gchar *command_name = NULL;
 		GdaInternalCommand *command = NULL;
 		command_name = args[0];
+		if ((*command_name == '.') || (*command_name == '\\'))
+			command_name++;
 		for (list = clist->group_ordered; list; list = list->next) {
 			command = (GdaInternalCommand*) list->data;
 			gint clength;
@@ -520,34 +632,13 @@ gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 		if (!command)
 			g_string_append_printf (string, _("Command '%s' not found\n"), command_name);
 		else {
-			if (!helpdoc) {
-				const gchar * const *langs = g_get_language_names ();
-				gchar *dirname, *helpfile;
-				gint i;
-				dirname = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help",
-								 "gda-sql", NULL);
-				for (i = 0; langs[i]; i++) {
-					helpfile = g_build_filename (dirname, langs[i], "gda-sql-help.xml", NULL);
-					if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
-						helpdoc = xmlParseFile (helpfile);
-					g_free (helpfile);
-					if (helpdoc)
-						break;
-				}
+			if (!helpdoc)
+				helpdoc = load_help_doc ();
 
-				if (!helpdoc) {
-					/* default to the "C" one */
-					helpfile = g_build_filename (dirname, "C", "gda-sql-help.xml", NULL);
-					if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
-						helpdoc = xmlParseFile (helpfile);
-					g_free (helpfile);
-				}
-				g_free (dirname);
-			}
 			gboolean done = FALSE;
 			if (helpdoc) {
 				gchar *tmp;
-				tmp = help_xml_doc_to_string (helpdoc, command_name, width);
+				tmp = help_xml_doc_to_string_command (helpdoc, command_name, width);
 				if (tmp) {
 					g_string_append (string, tmp);
 					g_free (tmp);
@@ -592,6 +683,19 @@ gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 					g_string_append (string, "=== ");
 					append_to_string (string, current_group, width, 0);
 					g_string_append (string, " ===\n");
+				}
+
+				if (!helpdoc)
+					helpdoc = load_help_doc ();
+
+				if (helpdoc && command->group_id) {
+					gchar *tmp;
+					tmp = help_xml_doc_to_string_section (helpdoc, command->group_id, width);
+					if (tmp) {
+						g_string_append (string, tmp);
+						g_free (tmp);
+						g_string_append_c (string, '\n');
+					}
 				}
 			}
 
