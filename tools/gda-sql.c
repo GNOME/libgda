@@ -2360,8 +2360,8 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
 	c->group_id = NULL;
-	c->name = g_strdup_printf (_("%s <CNC_NAME> <CNC_NAME1> <CNC_NAME2> [<CNC_NAME> ...]"), "bind");
-	c->description = _("Bind two or more connections into a single new one (allowing SQL commands to be executed across multiple connections)");
+	c->name = g_strdup_printf (_("%s <CNC NAME> <OBJ NAME1> <OBJ NAME2> [<OBJ NAME> ...]"), "bind");
+	c->description = _("Bind two or more connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands to be executed across multiple connections and datasets)");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc)extra_command_bind_cnc;
 	c->user_data = NULL;
@@ -2739,7 +2739,7 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
-	c->name = g_strdup_printf (_("%s <dataset name> <pattern>"), "ds_grep");
+	c->name = g_strdup_printf (_("%s <DATASET NAME> <PATTERN>"), "ds_grep");
 	c->description = _("Show a dataset'contents where lines match a regular expression");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_grep;
@@ -2752,7 +2752,7 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
-	c->name = g_strdup_printf (_("%s <dataset name>"), "ds_show");
+	c->name = g_strdup_printf (_("%s <DATASET NAME>"), "ds_show");
 	c->description = _("Show a dataset'contents");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_show;
@@ -2765,7 +2765,7 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
-	c->name = g_strdup_printf (_("%s <dataset name> <dataset name>"), "ds_mv");
+	c->name = g_strdup_printf (_("%s <DATASET NAME> <DATASET NAME>"), "ds_mv");
 	c->description = _("Rename a dataset, usefull to rename the '_' dataset to keep it");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_move;
@@ -3508,9 +3508,13 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 	for (i = 1; i < nargs; i++) {
 		cs = find_connection_from_name (args[i]);
 		if (!cs) {
-			g_set_error (error, 0, 0,
-				     _("No connection named '%s' found"), args[i]);
-			return NULL;
+			GdaDataModel *src;
+			src = g_hash_table_lookup (main_data->mem_data_models, args[i]);
+			if (!src) {
+				g_set_error (error, 0, 0,
+					     _("No connection or dataset named '%s' found"), args[i]);
+				return NULL;
+			}
 		}
 	}
 
@@ -3532,12 +3536,27 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 	string = g_string_new (_("Bound connections are as:"));
 	for (i = 1; i < nargs; i++) {
 		cs = find_connection_from_name (args[i]);
-		if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), cs->cnc, args[i], error)) {
-			g_object_unref (virtual);
-			g_string_free (string, TRUE);
-			return NULL;
+		if (cs) {
+			if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual),
+						      cs->cnc, args[i], error)) {
+				g_object_unref (virtual);
+				g_string_free (string, TRUE);
+				return NULL;
+			}
+			g_string_append_printf (string, "\n   %s in the '%s' namespace", args[i], args[i]);
 		}
-		g_string_append_printf (string, "\n   %s in the '%s' namespace", args[i], args[i]);
+		else {
+			GdaDataModel *src;
+			src = g_hash_table_lookup (main_data->mem_data_models, args[i]);
+			if (! gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
+								    src, args[i], error)) {
+				g_object_unref (virtual);
+				g_string_free (string, TRUE);
+				return NULL;
+			}
+			g_string_append_printf (string, "\n   %s mapped to the %s table", args[i],
+						gda_vconnection_data_model_get_table_name (GDA_VCONNECTION_DATA_MODEL (virtual), src));
+		}
         }
 
 	cs = g_new0 (ConnectionSetting, 1);
