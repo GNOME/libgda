@@ -10523,7 +10523,7 @@ msgstr "Razpredelnica za brisanje"
 #: ../tools/gda-sql.c:3746
 #, c-format
 msgid "No option named '%s'"
-msgstr "Ni možnosti z imenom %s\n"
+msgstr "Ni možnosti z imenom '%s'"
 
 #: ../tools/gda-sql.c:3758
 msgid "List of options"
