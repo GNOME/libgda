@@ -3659,7 +3659,10 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 				g_string_free (string, TRUE);
 				return NULL;
 			}
-			g_string_append_printf (string, "\n   %s in the '%s' namespace", args[i], args[i]);
+			g_string_append (string, "\n   ");
+			/* Translators: this string indicates that all the tables in connection named in the
+			 * 1st "%s" will appear in the SQL namespace named as the 2nd "%s" */
+			g_string_append_printf (string, _("%s in the '%s' namespace"), args[i], args[i]);
 		}
 		else {
 			GdaDataModel *src;
@@ -3670,7 +3673,10 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 				g_string_free (string, TRUE);
 				return NULL;
 			}
-			g_string_append_printf (string, "\n   %s mapped to the %s table", args[i],
+			g_string_append (string, "\n   ");
+			/* Translators: this string indicates that the dataset named in the 1st "%s"
+			 * will appear as the table named as the 2nd "%s" */
+			g_string_append_printf (string, _("%s mapped to the %s table"), args[i],
 						gda_vconnection_data_model_get_table_name (GDA_VCONNECTION_DATA_MODEL (virtual), src));
 		}
         }
