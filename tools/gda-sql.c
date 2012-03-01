@@ -126,12 +126,15 @@ typedef struct {
 
 	GHashTable *parameters; /* key = name, value = G_TYPE_STRING GdaParameter */
 	gchar *ldap_attributes; /* default LDAP attributes */
+#define LAST_DATA_MODEL_NAME "_"
+	GHashTable *mem_data_models; /* key = name, value = the named GdaDataModel, ref# kept in hash table */
 
 #ifdef HAVE_LIBSOUP
 	WebServer *server;
 #endif
 } MainData;
-	MainData *main_data;
+
+MainData *main_data;
 GString *prompt = NULL;
 GMainLoop *main_loop = NULL;
 gboolean exit_requested = FALSE;
@@ -193,6 +196,7 @@ main (int argc, char *argv[])
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+	data->mem_data_models = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	data->ldap_attributes = g_strdup ("cn");
 	main_data = data;
 
@@ -1871,6 +1875,8 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 	if (!GDA_IS_DATA_MODEL (model))
 		return NULL;
 
+	g_hash_table_insert (main_data->mem_data_models, g_strdup (LAST_DATA_MODEL_NAME), g_object_ref (model));
+
 	if (!env_set) {
 		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
 			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
@@ -2127,6 +2133,22 @@ static GdaInternalCommandResult *extra_command_set (SqlConsole *console, GdaConn
 static GdaInternalCommandResult *extra_command_unset (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
 						      GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_data_sets_list (SqlConsole *console, GdaConnection *cnc,
+							       const gchar **args,
+							       GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_data_set_move (SqlConsole *console, GdaConnection *cnc,
+							      const gchar **args,
+							      GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_data_set_grep (SqlConsole *console, GdaConnection *cnc,
+							      const gchar **args,
+							      GError **error, gpointer data);
+
+static GdaInternalCommandResult *extra_command_data_set_show (SqlConsole *console, GdaConnection *cnc,
+							      const gchar **args,
+							      GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_graph (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
@@ -2699,6 +2721,58 @@ build_internal_commands_list (void)
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
 	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s"), "ds_list");
+	c->description = _("Lists all the datasets kept in memory for reference");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_sets_list;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s <dataset name> <pattern>"), "ds_grep");
+	c->description = _("Show a dataset'contents where lines match a regular expression");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_grep;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s <dataset name>"), "ds_show");
+	c->description = _("Show a dataset'contents");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_show;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("Datasets' manipulations");
+	c->group_id = "DATA";
+	c->name = g_strdup_printf (_("%s <dataset name> <dataset name>"), "ds_mv");
+	c->description = _("Rename a dataset, usefull to rename the '_' dataset to keep it");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_move;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
 	c = g_new0 (GdaInternalCommand, 1);
@@ -4269,11 +4343,11 @@ extra_command_set (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const 
 		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;
 	}
-		
+
 	return res;
 }
 
-static void 
+static void
 foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model)
 {
 	gint row;
@@ -4289,6 +4363,240 @@ foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model)
 	value = gda_value_new_from_string (str ? str : "(NULL)", G_TYPE_STRING);
 	gda_data_model_set_value_at (model, 1, row, value, NULL);
 	gda_value_free (value);
+}
+
+static void foreach_data_model (const gchar *name, GdaDataModel *keptmodel, GdaDataModel *model);
+static GdaInternalCommandResult *
+extra_command_data_sets_list (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			      GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	GdaDataModel *model;
+	model = gda_data_model_array_new_with_g_types (2,
+						       G_TYPE_STRING,
+						       G_TYPE_STRING);
+	gda_data_model_set_column_title (model, 0, _("Name"));
+	gda_data_model_set_column_title (model, 1, _("dimensions (columns x rows)"));
+	g_object_set_data (G_OBJECT (model), "name", _("List of kept data"));
+	g_hash_table_foreach (main_data->mem_data_models, (GHFunc) foreach_data_model, model);
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = model;
+
+	return res;
+}
+
+static void
+foreach_data_model (const gchar *name, GdaDataModel *keptmodel, GdaDataModel *model)
+{
+	gint row;
+	gchar *str;
+	GValue *value;
+	row = gda_data_model_append_row (model, NULL);
+
+	value = gda_value_new_from_string (name, G_TYPE_STRING);
+	gda_data_model_set_value_at (model, 0, row, value, NULL);
+	gda_value_free (value);
+
+	str = g_strdup_printf ("%d x %d",
+			       gda_data_model_get_n_columns (keptmodel),
+			       gda_data_model_get_n_rows (keptmodel));
+	value = gda_value_new_from_string (str, G_TYPE_STRING);
+	g_free (str);
+	gda_data_model_set_value_at (model, 1, row, value, NULL);
+	gda_value_free (value);
+}
+
+static GdaInternalCommandResult *
+extra_command_data_set_grep (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			     GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *model_name = NULL;
+	const gchar *pattern = NULL;
+
+	if (args[0] && *args[0]) {
+		model_name = args[0];
+		if (args[1] && *args[1])
+			pattern = args[1];
+	}
+	if (!model_name) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing argument"));
+		return NULL;
+	}
+
+	GdaDataModel *src, *model;
+	gint nbfields, nbrows, i;
+
+	src = g_hash_table_lookup (main_data->mem_data_models, model_name);
+	if (!src) {
+		g_set_error (error, 0, 0,
+			     _("Could not find dataset named '%s'"), model_name);
+		return NULL;
+	}
+	nbfields = gda_data_model_get_n_columns (src);
+	nbrows = gda_data_model_get_n_rows (src);
+        model = gda_data_model_array_new (nbfields);
+	if (g_object_get_data (G_OBJECT (src), "name"))
+                g_object_set_data_full (G_OBJECT (model), "name", g_strdup (g_object_get_data (G_OBJECT (src), "name")), g_free);
+        if (g_object_get_data (G_OBJECT (src), "descr"))
+                g_object_set_data_full (G_OBJECT (model), "descr", g_strdup (g_object_get_data (G_OBJECT (src), "descr")), g_free);
+        for (i = 0; i < nbfields; i++) {
+		GdaColumn *copycol, *srccol;
+                gchar *colid;
+
+                srccol = gda_data_model_describe_column (src, i);
+                copycol = gda_data_model_describe_column (model, i);
+
+                g_object_get (G_OBJECT (srccol), "id", &colid, NULL);
+                g_object_set (G_OBJECT (copycol), "id", colid, NULL);
+                g_free (colid);
+                gda_column_set_description (copycol, gda_column_get_description (srccol));
+                gda_column_set_name (copycol, gda_column_get_name (srccol));
+                gda_column_set_dbms_type (copycol, gda_column_get_dbms_type (srccol));
+                gda_column_set_g_type (copycol, gda_column_get_g_type (srccol));
+                gda_column_set_position (copycol, gda_column_get_position (srccol));
+                gda_column_set_allow_null (copycol, gda_column_get_allow_null (srccol));
+	}
+
+	for (i = 0; i < nbrows; i++) {
+		gint nrid, j;
+		gboolean add_row = TRUE;
+		const GValue *cvalue;
+		GRegex *regex = NULL;
+
+		if (pattern && *pattern) {
+			if (!regex) {
+				GRegexCompileFlags flags = G_REGEX_OPTIMIZE | G_REGEX_CASELESS;
+				regex = g_regex_new ((const gchar*) pattern, flags, 0, error);
+				if (!regex) {
+					g_object_unref (model);
+					return NULL;
+				}
+			}
+
+			add_row = FALSE;
+			for (j = 0; j < nbfields; j++) {
+				cvalue = gda_data_model_get_value_at (src, j, i, error);
+				if (!cvalue) {
+					if (regex)
+						g_regex_unref (regex);
+					g_object_unref (model);
+					return NULL;
+				}
+				gchar *str;
+				str = gda_value_stringify (cvalue);
+				if (g_regex_match (regex, str, 0, NULL)) {
+					add_row = TRUE;
+					g_free (str);
+					break;
+				}
+				g_free (str);
+			}
+		}
+		if (!add_row)
+			continue;
+
+		nrid = gda_data_model_append_row (model, error);
+		if (nrid < 0) {
+			if (regex)
+				g_regex_unref (regex);
+			g_object_unref (model);
+			return NULL;
+		}
+
+		for (j = 0; j < nbfields; j++) {
+			cvalue = gda_data_model_get_value_at (src, j, i, error);
+			if (!cvalue) {
+				if (regex)
+					g_regex_unref (regex);
+				g_object_unref (model);
+				return NULL;
+			}
+			if (! gda_data_model_set_value_at (model, j, nrid, cvalue, error)) {
+				if (regex)
+					g_regex_unref (regex);
+				g_object_unref (model);
+				return NULL;
+			}
+		}
+	}
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = model;
+
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			     GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *model_name = NULL;
+
+	if (args[0] && *args[0])
+		model_name = args[0];
+
+	if (!model_name) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing argument"));
+		return NULL;
+	}
+
+	GdaDataModel *src;
+	src = g_hash_table_lookup (main_data->mem_data_models, model_name);
+	if (!src) {
+		g_set_error (error, 0, 0,
+			     _("Could not find dataset named '%s'"), model_name);
+		return NULL;
+	}
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res->u.model = g_object_ref (src);
+
+	return res;
+}
+
+static GdaInternalCommandResult *
+extra_command_data_set_move (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			     GError **error, G_GNUC_UNUSED gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	const gchar *old_name = NULL;
+	const gchar *new_name = NULL;
+
+	if (args[0] && *args[0]) {
+		old_name = args[0];
+		if (args[1] && *args[1])
+			new_name = args[1];
+	}
+	if (!old_name || !*old_name || !new_name || !*new_name) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing argument"));
+		return NULL;
+	}
+
+	GdaDataModel *src;
+
+	src = g_hash_table_lookup (main_data->mem_data_models, old_name);
+	if (!src) {
+		g_set_error (error, 0, 0,
+			     _("Could not find dataset named '%s'"), old_name);
+		return NULL;
+	}
+
+	g_hash_table_insert (main_data->mem_data_models, g_strdup (new_name), g_object_ref (src));
+	if (strcmp (old_name, LAST_DATA_MODEL_NAME))
+		g_hash_table_remove (main_data->mem_data_models, old_name);
+
+	res = g_new0 (GdaInternalCommandResult, 1);
+	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+
+	return res;
 }
 
 typedef struct {

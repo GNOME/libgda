@@ -298,6 +298,22 @@ uspan        |              |               |               |               |   
     </example>
   </command>
 
+  <!-- ".set" command -->
+  <command name="set">
+    <shortdescription>Set or show internal parameter, or list all if no parameter specified
+    </shortdescription>
+    <usage>
+      <synopsis>.set [@NAME@ [@VALUE@|_null_]]</synopsis>
+      <comment>Use this command to define or re-define variables which can later be used in stataments. Use the ".unset" command to undefine a variable. If you want set a variable to the SQL NULL, then use the "_null_" constant value.</comment>
+    </usage>
+    <example>
+      <synopsis>.set ID 23</synopsis>
+      <synopsis>.set ID</synopsis>
+      <comment>This example defines the ID variabe (beware, case sensitive) ID to 23. Later you can then run a query like "SELECT * FROM customers WHERE id=##ID::int"</comment>
+    </example>
+  </command>
+
+  <!-- LDAP section -->
   <section name="LDAP">
     <usage>
       <comment>
@@ -328,21 +344,6 @@ SCOPE      │ SUBTREE
 (4 rows)</raw>
     </example>
   </section>
-
-  <!-- ".set" command -->
-  <command name="set">
-    <shortdescription>Set or show internal parameter, or list all if no parameter specified
-    </shortdescription>
-    <usage>
-      <synopsis>.set [@NAME@ [@VALUE@|_null_]]</synopsis>
-      <comment>Use this command to define or re-define variables which can later be used in stataments. Use the ".unset" command to undefine a variable. If you want set a variable to the SQL NULL, then use the "_null_" constant value.</comment>
-    </usage>
-    <example>
-      <synopsis>.set ID 23</synopsis>
-      <synopsis>.set ID</synopsis>
-      <comment>This example defines the ID variabe (beware, case sensitive) ID to 23. Later you can then run a query like "SELECT * FROM customers WHERE id=##ID::int"</comment>
-    </example>
-  </command>
 
   <!-- ".ldap_attributes" command -->
   <command name="ldap_attributes">
@@ -406,4 +407,15 @@ uid=achassin,ou=People,dc=example,dc=gnome-db   | Ashley Chassin     | achassin 
 (150 rows)</raw>
     </example>
   </command>
+
+  <!-- DATA section -->
+  <section name="DATA">
+    <usage>
+      <comment>
+	The following commands allow you to keep dataset results you have obtained, and to reuse them at a later time.
+	Everytime a resultset is returned by a command, it can be imediately used as a dataset named "_".
+      </comment>
+    </usage>
+  </section>
+
 </gda-sql-help>
