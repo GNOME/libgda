@@ -9828,7 +9828,7 @@ msgstr "Različica GDASQL konzole"
 
 #: ../tools/gda-sql.c:209
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
-msgstr ""
+msgstr "Izbrana možnost določa, da prva vrstica datoteke CSV vsebuje imena stolpcev"
 
 #: ../tools/gda-sql.c:215
 msgid "Quote character for CSV format"
@@ -9840,7 +9840,7 @@ msgstr "Ločilni znak zapisa CSV"
 
 #: ../tools/gda-sql.c:227
 msgid "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"
-msgstr ""
+msgstr "Določa, kako je obravnavan stolpec razločnega imena (DN) za preiskani LDAP (med \"dn\", \"rdn\" in \"none\")"
 
 #: ../tools/gda-sql.c:231
 msgid "Defines the LDAP attributes which are fetched by default by LDAP commands"
@@ -10132,9 +10132,8 @@ msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
 msgstr "%s <ime CNC> <ime predmeta> [<ime predmeta> ...]"
 
 #: ../tools/gda-sql.c:2442
-#, fuzzy
 msgid "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands to be executed across multiple connections and/or datasets)"
-msgstr "Poveži dva ali več povezav v eno novo povezavo (dovoli ukazom SQL izvajanje preko več povezav)"
+msgstr "Poveži povezave ali podatkovne množice (<ime predmeta>) v eno novo (dovoli ukazom SQL izvajanje preko več povezav in/ali podatkovnih množic)"
 
 #: ../tools/gda-sql.c:2452
 #: ../tools/gda-sql.c:2465
@@ -10380,7 +10379,7 @@ msgstr "%s <ime podatkovne množice> <vzorec>"
 
 #: ../tools/gda-sql.c:2834
 msgid "Show a dataset's contents where lines match a regular expression"
-msgstr ""
+msgstr "Pokaži vsebino podatkovne množice, kjer se vrstice ujemajo z logičnim izrazom"
 
 #: ../tools/gda-sql.c:2846
 #, c-format
@@ -10389,7 +10388,7 @@ msgstr "%s <ime podatkovne množice> [<stolpec> [<stolpec> ...]]"
 
 #: ../tools/gda-sql.c:2847
 msgid "Show a dataset's contents, showing only the specified columns if any specified"
-msgstr ""
+msgstr "Pokaži vsebino podatkovne množice, pri čemer pokaži le stolpce, ki so (če so) navedeni"
 
 #: ../tools/gda-sql.c:2859
 #, c-format
@@ -10407,7 +10406,7 @@ msgstr "%s <ime podatkovne množice> <ime podatkovne množice>"
 
 #: ../tools/gda-sql.c:2873
 msgid "Rename a dataset, usefull to rename the '_' dataset to keep it"
-msgstr ""
+msgstr "Preimenuj podatkovno množico, uporabno za preimenovanje podatkovne množice '_', da je ne izgubite"
 
 #: ../tools/gda-sql.c:2885
 #, c-format
@@ -10433,7 +10432,6 @@ msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <razločno_ime_DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/gda-sql.c:2912
-#, fuzzy
 msgid "Shows attributes for the entry identified by its DN. If the \"set\" 2nd parameter is passed, then all set attributes are show, if the \"all\" 2nd parameter is passed, then the unset attributes are also shown, and if the \"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr "Pokaže vse atribute za vnos, ki ga določa njegovo razločno ime (DN). Če je podan drug parameter \"set\", so prikazani vsi nastavljeni atributi, če je podan drugi parameter \"all\", potem so prikazani tudi nedoločeni parametri, če pa je podan drugi parameter \"unset\", so prikazani zgolj nedoločeni atributi."
 
@@ -10516,9 +10514,9 @@ msgstr "%s v imenskem prostoru '%s'"
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/gda-sql.c:3667
-#, fuzzy, c-format
+#, c-format
 msgid "%s mapped to the %s table"
-msgstr "Razpredelnica za brisanje"
+msgstr "%s, preslikana v razpredelnico %s"
 
 #: ../tools/gda-sql.c:3746
 #, c-format
@@ -10615,9 +10613,8 @@ msgid "List of defined parameters"
 msgstr "Seznam določenih parametrov"
 
 #: ../tools/gda-sql.c:4582
-#, fuzzy
 msgid "dimensions (columns x rows)"
-msgstr "Prelomi vrstice/stolpce"
+msgstr "mere (stolpci x vrstice)"
 
 #: ../tools/gda-sql.c:4583
 msgid "List of kept data"
@@ -10650,9 +10647,9 @@ msgid "Unknown import format '%s'"
 msgstr "Neznan  zapis za uvoz '%s'"
 
 #: ../tools/gda-sql.c:4868
-#, fuzzy, c-format
+#, c-format
 msgid "Could not import file '%s'"
-msgstr "Ni mogoče uvoziti datoteke \"%s\""
+msgstr "Ni mogoče uvoziti datoteke '%s'"
 
 #: ../tools/gda-sql.c:4962
 msgid "Missing foreign key declaration specification"
@@ -10945,15 +10942,3 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Sprožilniki"
-
-#~ msgid "Can't obtain an iterator located on the first row"
-#~ msgstr "Ni mogoče pridobiti ponavljalnika prve vrstice"
-
-#~ msgid "Could not retreive row to delete"
-#~ msgstr "Ni mogoče pridobiti vrstice za brisanje"
-
-#~ msgid "Formatting"
-#~ msgstr "Formatiranje ..."
-
-#~ msgid "%s [attribute,[attribute],...]"
-#~ msgstr "%s [atribut,[atribut], ...]"
