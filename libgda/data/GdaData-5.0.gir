@@ -105,6 +105,9 @@
 		<field name="priv">
 			<type name="TablePrivate" c:type="GdaDataTablePrivate*"/>
 		</field>
+		<field name="_name">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
 		<field name="_type">
 			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
 		</field>

@@ -1998,7 +1998,7 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
  *
  * Get the value for the node at the @path path
  *
- * Returns: (transfer none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
+ * Returns: (transfer none) (allow-none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
  *
  * Since: 4.2.6
  *

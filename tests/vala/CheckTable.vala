@@ -380,6 +380,40 @@ namespace Check {
 			return fails;
 		}
 		
+		public int save ()
+			throws Error
+		{
+			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Rename ...\n");
+			int fails = 0;
+			
+			var t = new Table ();
+			t.name = "customer";
+			t.connection = connection;
+			try {
+				t.save ();
+				stdout.printf ("Table save() method should throws Error: FAIL\n");
+				fails++;
+			}
+			catch {}
+			
+			t.name = "customer2";
+			t.save ();
+			try {
+				var m = connection.execute_select_command ("SELECT * FROM customer2");
+				stdout.printf ("Data from customer2:\n" + m.dump_as_string ());
+			}
+			catch {
+				fails++;
+				stdout.printf ("Table rename: FAIL\n");
+			}
+			
+			if (fails > 0)
+				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
+			else
+				stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
+			return fails;
+		}
+		
 		public static int main (string[] args) {
 			stdout.printf ("\n\n\n>>>>>>>>>>>>>>>> NEW TEST: Checking GdaData.DbTable implementation... <<<<<<<<<< \n");
 			int failures = 0;
@@ -391,7 +425,7 @@ namespace Check {
 				failures += app.records ();
 				//failures += app.expression ();
 				failures += app.append ();
-				//failures += app.save ();
+				failures += app.save ();
 			}
 			catch (Error e) 
 			{ 

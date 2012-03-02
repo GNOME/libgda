@@ -335,6 +335,8 @@ namespace Gda {
 		public string filter { owned get; construct; }
 		[NoAccessorMethod]
 		public int scope { get; construct; }
+		[NoAccessorMethod]
+		public bool use_rdn { get; set; }
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_pivot_get_type ()")]
 	public class DataPivot : GLib.Object, Gda.DataModel {
@@ -746,7 +748,8 @@ namespace Gda {
 		public unowned string get_sequence_name (string path);
 		public uint get_sequence_size (string path);
 		public string get_sql_identifier_at_path (Gda.Connection? cnc, Gda.ServerProvider? prov, string path);
-		public GLib.Value get_value_at_path (string path);
+		[CCode (cname = "gda_server_operation_get_value_at_path")]
+		public unowned GLib.Value? get_value_at (string path);
 		public bool is_valid (string? xml_file) throws GLib.Error;
 		public bool load_data_from_xml ([CCode (type = "xmlNodePtr")] Xml.Node* node) throws GLib.Error;
 		public static unowned string op_type_to_string (Gda.ServerOperationType type);

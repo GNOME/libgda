@@ -27,7 +27,9 @@ namespace GdaData
 		private bool _read_only = false;
 		private int  _n_cols = -1;
 		private bool _updated_meta = false;
+		private string _original_name = "";
 		
+		protected string                      _name;
 		protected DbTable.TableType           _type;
 		protected DbRecordCollection          _records;
 		protected HashMap<string,DbFieldInfo> _fields = new HashMap<string,DbFieldInfo> ();
@@ -305,7 +307,17 @@ namespace GdaData
 		
 		public void save () throws Error 
 		{
-			throw new DbTableError.READ_ONLY ("Table's definition is read only");
+			if (GLib.strcmp (_name,_original_name) != 0) {
+				var op = connection.get_provider ().create_operation (connection,
+																		Gda.ServerOperationType.RENAME_TABLE,
+																		null);
+				op.set_value_at (_original_name, "/TABLE_DEF_P/TABLE_NAME");
+				op.set_value_at (name, "/TABLE_DEF_P/TABLE_NEW_NAME");
+				connection.get_provider ().perform_operation (connection, op);
+			}
+			else {
+				throw new DbTableError.READ_ONLY ("Table definition is read only");
+			}
 		}
 		
 		public void append () throws Error 
@@ -365,7 +377,17 @@ namespace GdaData
 		
 		// DbNamedObject Interface
 		
-		public string name { get; set; }
+		public string name 
+		{ 
+			get { return _name; }
+			set 
+			{
+				if (GLib.strcmp ("",_original_name) == 0) {
+					_original_name = value;
+				}
+				_name = value;
+			}
+		}
 		
 		// DbTable Interface
 		
