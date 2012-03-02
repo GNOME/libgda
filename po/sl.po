@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-01 19:54+0000\n"
-"PO-Revision-Date: 2012-03-01 21:15+0100\n"
+"POT-Creation-Date: 2012-03-02 16:36+0000\n"
+"PO-Revision-Date: 2012-03-02 17:38+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -10405,7 +10405,7 @@ msgid "%s <DATASET NAME> <DATASET NAME>"
 msgstr "%s <ime podatkovne množice> <ime podatkovne množice>"
 
 #: ../tools/gda-sql.c:2873
-msgid "Rename a dataset, usefull to rename the '_' dataset to keep it"
+msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr "Preimenuj podatkovno množico, uporabno za preimenovanje podatkovne množice '_', da je ne izgubite"
 
 #: ../tools/gda-sql.c:2885
@@ -10942,3 +10942,4 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1884
 msgid "Triggers"
 msgstr "Sprožilniki"
+
