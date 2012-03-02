@@ -2870,7 +2870,7 @@ build_internal_commands_list (void)
 	c->group = _("Datasets' manipulations");
 	c->group_id = "DATA";
 	c->name = g_strdup_printf (_("%s <DATASET NAME> <DATASET NAME>"), "ds_mv");
-	c->description = _("Rename a dataset, usefull to rename the '_' dataset to keep it");
+	c->description = _("Rename a dataset, useful to rename the '_' dataset to keep it");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_data_set_move;
 	c->user_data = NULL;
