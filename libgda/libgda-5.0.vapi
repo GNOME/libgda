@@ -580,6 +580,8 @@ namespace Gda {
 		public int source_column { get; set; }
 		[NoAccessorMethod]
 		public Gda.DataModel source_model { owned get; set; }
+		[NoAccessorMethod]
+		public bool validate_changes { get; set; }
 		public signal void attribute_changed (string att_name, GLib.Value att_value);
 		public virtual signal void changed ();
 		public virtual signal void source_changed ();
@@ -871,6 +873,8 @@ namespace Gda {
 		public string id { owned get; set; }
 		[NoAccessorMethod]
 		public string name { owned get; set; }
+		[NoAccessorMethod]
+		public bool validate_changes { get; set; }
 		public virtual signal void holder_attr_changed (Gda.Holder holder, string attr_name, GLib.Value attr_value);
 		public virtual signal void holder_changed (Gda.Holder holder);
 		public virtual signal void holder_type_set (Gda.Holder holder);
@@ -1214,6 +1218,7 @@ namespace Gda {
 		[CCode (vfunc_name = "i_append_row")]
 		public abstract int append_row () throws GLib.Error;
 		public Gda.DataModelArray array_copy_model () throws GLib.Error;
+		public Gda.DataModelArray array_copy_model_ext ([CCode (array_length_cname = "ncols", array_length_pos = 0.5)] int[] cols) throws GLib.Error;
 		[CCode (vfunc_name = "i_create_iter")]
 		public abstract Gda.DataModelIter create_iter ();
 		[CCode (vfunc_name = "i_describe_column")]

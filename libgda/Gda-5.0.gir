@@ -5232,6 +5232,29 @@ Upon errors -1 will be returned and @error will be assigned a
           <type name="DataModelArray" c:type="GdaDataModelArray*"/>
         </return-value>
       </method>
+      <method name="array_copy_model_ext"
+              c:identifier="gda_data_model_array_copy_model_ext"
+              version="5.2.0"
+              throws="1">
+        <doc xml:whitespace="preserve">Like gda_data_model_array_copy_model(), makes a copy of @src, but copies only some
+columns.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:whitespace="preserve">a new data model, or %NULL if an error occurred</doc>
+          <type name="DataModelArray" c:type="GdaDataModelArray*"/>
+        </return-value>
+        <parameters>
+          <parameter name="ncols" transfer-ownership="none">
+            <doc xml:whitespace="preserve">size of @cols</doc>
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="cols" transfer-ownership="none">
+            <doc xml:whitespace="preserve">array of @src's columns to copy into the new array, not %NULL</doc>
+            <array length="0" zero-terminated="0" c:type="gint*">
+              <type name="gint" c:type="gint"/>
+            </array>
+          </parameter>
+        </parameters>
+      </method>
       <method name="create_iter" c:identifier="gda_data_model_create_iter">
         <doc xml:whitespace="preserve">Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
 rows in @model. The new #GdaDataModelIter does not hold any reference to @model (ie. if @model
@@ -5327,12 +5350,12 @@ Specifically, the parameters in the @options list can be:
 &lt;itemizedlist&gt;
 &lt;listitem&gt;&lt;para&gt;"SEPARATOR": a string value of which the first character is used as a separator in case of CSV export
 &lt;/para&gt;&lt;/listitem&gt;
-&lt;listitem&gt;&lt;para&gt;"QUOTE": a string value of which the first character is used as a quote character in case of CSV export
-&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;"QUOTE": a string value of which the first character is used as a quote character in case of CSV export. The
+default if not specified is the double quote character&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;"FIELD_QUOTE": a boolean value which can be set to FALSE if no quote around the individual fields 
 is requeted, in case of CSV export&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;"NAMES_ON_FIRST_LINE": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field (note that "FIELDS_NAME" is also accepted as a synonym)&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;"NAME": a string value used to name the exported data if the export format is XML&lt;/para&gt;&lt;/listitem&gt;
-&lt;listitem&gt;&lt;para&gt;"FIELDS_NAME": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV export, will render and NULL value as the empty string (instead of the 'NULL' string)&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;"INVALID_AS_NULL": a boolean value which, if set to %TRUE, considers any invalid data (for example for the date related values) as NULL&lt;/para&gt;&lt;/listitem&gt;
@@ -7002,8 +7025,8 @@ The options are the following ones:
 &lt;itemizedlist&gt;
 &lt;listitem&gt;&lt;para&gt;ENCODING (string): specifies the encoding of the data in the file&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;SEPARATOR (string): specifies the CSV separator (comma as default)&lt;/para&gt;&lt;/listitem&gt;
-&lt;listitem&gt;&lt;para&gt;QUOTE (string): specifies the character used to as quote park (double quote as default)&lt;/para&gt;&lt;/listitem&gt;
-&lt;listitem&gt;&lt;para&gt;TITLE_AS_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;QUOTE (string): specifies the character used as quote (double quote as default)&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;NAMES_ON_FIRST_LINE (boolean): consider that the first line of the file contains columns' titles (note that the TITLE_AS_FIRST_LINE option is also accepted as a synonym)&lt;/para&gt;&lt;/listitem&gt;
 &lt;listitem&gt;&lt;para&gt;G_TYPE_&amp;lt;column number&amp;gt; (GType): specifies the type of value expected in column &amp;lt;column number&amp;gt;&lt;/para&gt;&lt;/listitem&gt;
 &lt;/itemizedlist&gt;
 &lt;/para&gt;&lt;/listitem&gt;
@@ -9940,14 +9963,12 @@ the memory it uses will be freed using the @destroy function when no longer need
 then the string will not be freed at all).
 
 Attributes can have any name, but Libgda proposes some default names, 
-see &lt;link linkend="libgda-40-Attributes-manager.synopsis"&gt;this section&lt;/link&gt;.
+see &lt;link linkend="libgda-5.0-Attributes-manager.synopsis"&gt;this section&lt;/link&gt;.
 
 For example one would use it as:
 
-&lt;code&gt;
-gda_holder_set_attribute (holder, g_strdup (my_attribute), g_free, my_value);
-gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, NULL, my_value);
-&lt;/code&gt;
+&lt;code&gt;gda_holder_set_attribute (holder, g_strdup (my_attribute), my_value, g_free);&lt;/code&gt;
+&lt;code&gt;gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, my_value, NULL);&lt;/code&gt;
 
 If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is
 copied), except if @value is %NULL, in which case the attribute is removed.</doc>
@@ -10207,6 +10228,14 @@ take care of the 'old' static GValue.</doc>
       </property>
       <property name="source-model" writable="1" transfer-ownership="none">
         <type name="DataModel"/>
+      </property>
+      <property name="validate-changes"
+                version="5.2.0"
+                writable="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Defines if the "validate-change" signal gets emitted when
+the holder's value changes.</doc>
+        <type name="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -17302,6 +17331,15 @@ the source by the new model</doc>
       </property>
       <property name="name" writable="1" transfer-ownership="none">
         <type name="utf8"/>
+      </property>
+      <property name="validate-changes"
+                version="5.2.0"
+                writable="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Defines if the "validate-set" signal gets emitted when
+any holder in the data set changes. This property also affects the
+GdaHolder:validate-changes property.</doc>
+        <type name="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
