@@ -39,7 +39,7 @@ main (int argc, char **argv)
 		g_warning ("Could not find provider information for %s", PROVIDER);
 		return EXIT_SUCCESS;
 	}
-	g_print ("Provider now tested: %s\n", pinfo->id);
+	g_print ("============= Provider now testing: %s =============\n", pinfo->id);
 	
 	number_failed = prov_test_common_setup ();
 
@@ -55,11 +55,8 @@ main (int argc, char **argv)
 		number_failed += prov_test_common_clean ();
 	}
 
-	if (! params_provided)
-		return EXIT_SUCCESS;
-	else {
-		g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
-		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-	}
+	
+	g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
+	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
