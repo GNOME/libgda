@@ -185,7 +185,6 @@ gda_vprovider_data_model_new (void)
 
 typedef struct VirtualTable VirtualTable;
 typedef struct VirtualCursor VirtualCursor;
-typedef struct VirtualFilteredData VirtualFilteredData;
 
 struct VirtualTable {
 	sqlite3_vtab                 base;
@@ -194,39 +193,17 @@ struct VirtualTable {
 	gboolean                     locked;
 
 	guint32                      rows_offset;
-	GSList                      *all_data; /* list of #VirtualFilteredData, refs held here */
 };
+
+#define MAX_VDATA_NUMBER 30
 
 struct VirtualCursor {
 	sqlite3_vtab_cursor      base; /* base.pVtab is a pointer to the sqlite3_vtab virtual table */
-	VirtualFilteredData     *data; /* no ref held, ref is held in table->all_data */
+	VirtualFilteredData     *data; /* a ref is held here */
 	gint                     row; /* starts at 0 */
 };
 
-/*
- * This structure holds data to be used by a virtual cursor, for a specific filter
- */
-struct VirtualFilteredData {
-	/* status */
-	guint8 refcount;
-	gboolean reuseable;
 
-	/* filter */
-	int idxNum;
-	char *idxStr;
-	int argc;
-	GValue **argv;
-
-	/* row numbers offset */
-	guint32 rowid_offset;
-
-	/* data */
-	GdaDataModel *model;
-	GdaDataModelIter *iter; /* not NULL while nrows == -1 */
-	GValueArray  *values;
-	gint          ncols;
-	gint          nrows; /* -1 until known */
-};
 
 static VirtualFilteredData *
 virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
@@ -259,6 +236,12 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 	data->rowid_offset = vtable->rows_offset;
 	vtable->rows_offset ++;
 	
+#ifdef DEBUG_VCONTEXT
+	g_print ("New VData %p for table [%s] idxNum=%d, idxStr=[%s], argc=%d\n", data, vtable->td->table_name,
+		 idxNum, idxStr, argc);
+	for (n= 0; n < data->argc; n++)
+		g_print ("    [%s]\n", gda_value_stringify (data->argv [n]));
+#endif
 	return data;
 }
 
@@ -279,6 +262,10 @@ virtual_filtered_data_free (VirtualFilteredData *data)
 	if (data->values)
 		g_value_array_free (data->values);
 	g_free (data);
+
+#ifdef DEBUG_VCONTEXT
+	g_print ("Freed VData %p\n", data);
+#endif
 }
 
 static VirtualFilteredData *
@@ -288,8 +275,8 @@ virtual_filtered_data_ref (VirtualFilteredData *data)
 	return data;
 }
 
-static void
-virtual_filtered_data_unref (VirtualFilteredData *data)
+void
+_gda_vconnection_virtual_filtered_data_unref (VirtualFilteredData *data)
 {
 	data->refcount --;
 	if (data->refcount == 0)
@@ -302,7 +289,7 @@ virtual_cursor_free (VirtualCursor *cursor)
 	if (!cursor)
 		return;
 
-	virtual_filtered_data_unref (cursor->data);
+	_gda_vconnection_virtual_filtered_data_unref (cursor->data);
 	g_free (cursor);
 }
 
@@ -327,7 +314,7 @@ static int virtualRollback (sqlite3_vtab *tab);
 static int virtualRename (sqlite3_vtab *pVtab, const char *zNew);
 
 static sqlite3_module Module = {
-	0,                         /* iVersion */
+	1,                         /* iVersion */
 	virtualCreate,
 	virtualConnect,
 	virtualBestIndex,
@@ -443,12 +430,17 @@ gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConn
                              "%s", _("Provider does not support asynchronous statement execution"));
                 return NULL;
         }
-        
+
+	_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, (GObject*) stmt);
 	retval = GDA_SERVER_PROVIDER_CLASS (parent_class)->statement_execute (provider, cnc, stmt, params,
 									      model_usage, col_types,
 									      last_inserted_row, task_id,
 									      async_cb, cb_data, error);
+
 	if (retval) {
+		if (! GDA_IS_DATA_MODEL (retval))
+			_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, NULL);
+
 		gchar *sql;
 		sql = gda_statement_to_sql (stmt, params, NULL);
 		if (sql) {
@@ -493,6 +485,8 @@ gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConn
 			g_free (sql);
 		}
 	}
+	else
+		_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, NULL);
 	return retval;
 }
 
@@ -695,13 +689,7 @@ virtualDisconnect (sqlite3_vtab *pVtab)
 	VirtualTable *vtable = (VirtualTable *) pVtab;
 
 	TRACE (pVtab, NULL);
-
-	if (vtable->all_data) {
-		g_slist_foreach (vtable->all_data, (GFunc) virtual_filtered_data_unref, NULL);
-		g_slist_free (vtable->all_data);
-		vtable->all_data = NULL;
-	}
-	g_free (vtable);
+	g_free (pVtab);
 
 	return SQLITE_OK;
 }
@@ -884,9 +872,12 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 		g_assert (row < 0);
 		row = (gint) (rowid & 0xFFFFFFFF);
 
-		GSList *list;
-		for (list = vtable->all_data; list; list = list->next) {
-			VirtualFilteredData *vd = (VirtualFilteredData*) list->data;
+		g_assert (vtable->td->context.current_vcontext);
+		guint i;
+		GArray *values_array = vtable->td->context.current_vcontext->context_data;
+		for (i = 0; i < values_array->len; i++) {
+			VirtualFilteredData *vd;
+			vd = g_array_index (values_array, VirtualFilteredData*, i);
 			if (vd->rowid_offset == (guint32) (rowid >> 32)) {
 				data = vd;
 				break;
@@ -901,6 +892,9 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 		g_set_error (error, 0, 0,
 			     _("Could not find requested value at row %d and col %d"),
 			     row, col);
+#ifdef DEBUG_VCONTEXT
+	g_print ("Read from [%s] [%s] %d x %d x %lld\n", vtable->td->table_name, gda_value_stringify (value), col, row, rowid);
+#endif
 	return value;
 }
 
@@ -1128,15 +1122,18 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 #endif
 
 	/* find a VirtualFilteredData corresponding to this filter */
-	VirtualFilteredData *data;
-	data = NULL;
-	if (vtable->all_data) {
-		GSList *list;
-		for (list = vtable->all_data; list; list = list->next) {
-			VirtualFilteredData *vd = (VirtualFilteredData*) list->data;
+	VirtualFilteredData *data = NULL;
+	g_assert (vtable->td->context.current_vcontext);
+	GArray *values_array = vtable->td->context.current_vcontext->context_data;
+
+	if (values_array->len > 0) {
+		guint i;
+		for (i = 0; i < values_array->len; i++) {
+			VirtualFilteredData *vd;
+			vd = g_array_index (values_array, VirtualFilteredData*, i);
 			if (vd->reuseable &&
 			    (vd->idxNum == idxNum) &&
-			    (argc == argc) &&
+			    (vd->argc == argc) &&
 			    ((!idxStr && !vd->idxStr) || (idxStr && vd->idxStr && !strcmp (idxStr, vd->idxStr)))) {
 				GValue **avalues;
 				gint i;
@@ -1169,18 +1166,36 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 			}
 		}
 	}
+#ifdef DEBUG_VCONTEXT
+	if (data)
+		g_print ("REUSE VData %p\n", data);
+#endif
 
 	if (!data) {
 		virtual_table_manage_real_data_model (vtable, idxNum, idxStr, argc, argv);
 		if (! vtable->td->real_model)
 			return SQLITE_ERROR;
 		data = virtual_filtered_data_new (vtable, vtable->td->real_model, idxNum, idxStr, argc, argv);
-		vtable->all_data = g_slist_prepend (vtable->all_data, data);
+		g_array_prepend_val (values_array, data);
+#ifdef DEBUG_VCONTEXT
+		g_print ("VData %p prepended to array %p wt %d\n", data, values_array,
+			 values_array->len);
+#endif
+		if (values_array->len > MAX_VDATA_NUMBER) {
+			VirtualFilteredData *ldata;
+			gint index;
+			index = values_array->len - 1;
+			ldata = g_array_index (values_array, VirtualFilteredData*, index);
+			_gda_vconnection_virtual_filtered_data_unref (ldata);
+			g_array_remove_index (values_array, index);
+		}
 	}
-
-	if (cursor->data)
-		virtual_filtered_data_unref (cursor->data);
-	cursor->data = virtual_filtered_data_ref (data);
+	
+	if (cursor->data != data) {
+		if (cursor->data)
+			_gda_vconnection_virtual_filtered_data_unref (cursor->data);
+		cursor->data = virtual_filtered_data_ref (data);
+	}
 
 	/* initialize cursor */
 	cursor->row = -1;
@@ -1523,10 +1538,15 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 
 	TRACE (tab, NULL);
 
-	GSList *list;
-	for (list = vtable->all_data; list; list = list->next) {
-		VirtualFilteredData *vd = (VirtualFilteredData*) list->data;
-		vd->reuseable = FALSE;
+	g_assert (vtable->td->context.current_vcontext);
+	GArray *values_array = vtable->td->context.current_vcontext->context_data;
+	if (values_array) {
+		guint i;
+		for (i = 0; i < values_array->len; i++) {
+			VirtualFilteredData *data;
+			data = g_array_index (values_array, VirtualFilteredData*, i);
+			data->reuseable = FALSE;
+		}
 	}
 
 	/* determine operation type */

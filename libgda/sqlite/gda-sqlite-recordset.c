@@ -37,6 +37,9 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-connection-private.h>
 
+#include "virtual/gda-vconnection-data-model.h"
+#include "virtual/gda-vconnection-data-model-private.h"
+
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass);
@@ -52,6 +55,8 @@ static gboolean gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **
 
 
 static GdaRow *fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **error);
+
+static void virt_cnc_set_working_obj (GdaConnection *cnc, GdaSqliteRecordset *model);
 
 struct _GdaSqliteRecordsetPrivate {
 	gboolean      empty_forced;
@@ -105,7 +110,9 @@ gda_sqlite_recordset_dispose (GObject *object)
 		GdaSqlitePStmt *ps;
 		ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (object)->prep_stmt);
 		ps->stmt_used = FALSE;
+		virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
 		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+		virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), NULL);
 
 		if (recset->priv->tmp_row)
 			g_object_unref (recset->priv->tmp_row);
@@ -201,7 +208,7 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
  */
 GdaDataModel *
 _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
-			  GdaDataModelAccessFlags flags, GType *col_types, gboolean force_empty)
+			   GdaDataModelAccessFlags flags, GType *col_types, gboolean force_empty)
 {
 	GdaSqliteRecordset *model;
         SqliteConnectionData *cdata;
@@ -280,6 +287,13 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 			      "prepared-stmt", ps, "model-usage", rflags, 
 			      "exec-params", exec_params, 
 			      "auto-reset", force_empty, NULL);
+	gboolean is_virt;
+	is_virt = GDA_IS_VCONNECTION_DATA_MODEL (cnc) ? TRUE : FALSE;
+	if (is_virt) {
+		/* steal the lock */
+		_gda_vconnection_change_working_obj ((GdaVconnectionDataModel*) cnc, (GObject*) model);
+		_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, NULL);
+	}
 
         /* fill the data model */
         read_rows_to_init_col_types (model);
@@ -315,6 +329,15 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	return gtype;
 }
 
+static void
+virt_cnc_set_working_obj (GdaConnection *cnc, GdaSqliteRecordset *model)
+{
+	gboolean is_virt;
+	is_virt = GDA_IS_VCONNECTION_DATA_MODEL (cnc) ? TRUE : FALSE;
+	if (is_virt)
+		_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, (GObject*) model);
+}
+
 static GdaRow *
 fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **error)
 {
@@ -329,9 +352,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (model)->prep_stmt);
 
+	virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) model), model);
+
 	if (model->priv->empty_forced)
 		rc = SQLITE_DONE;
-	else
+	else		
 		rc = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
 	switch (rc) {
 	case  SQLITE_ROW: {
@@ -641,6 +666,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	}
 	}
+
+	virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) model), NULL);
+
 	return prow;
 }
 

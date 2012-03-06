@@ -57,6 +57,7 @@ test1 (void)
 	gchar *file;
 	gboolean retval = FALSE;
 
+	g_print ("===== %s() =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, NULL);
 	g_assert (cnc);
@@ -121,6 +122,7 @@ test1 (void)
 	g_object_unref (cnc);
 	g_object_unref (provider);
 
+	g_print ("%s() is %s\n", __FUNCTION__, retval ? "Ok" : "NOT Ok");
 	return retval;
 }
 
@@ -133,6 +135,7 @@ test2 (void)
 	gchar *file;
 	gboolean retval = FALSE;
 
+	g_print ("===== %s () =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, NULL);
 	g_assert (cnc);
@@ -168,6 +171,7 @@ test2 (void)
 	g_object_unref (cnc);
 	g_object_unref (provider);
 
+	g_print ("%s() is %s\n", __FUNCTION__, retval ? "Ok" : "NOT Ok");
 	return retval;
 }
 
@@ -183,6 +187,7 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	g_object_unref (parser);
 
+	g_print ("EXECUTING [%s]\n", sql);
         res = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
         g_object_unref (stmt);
 	if (!res) 
@@ -204,6 +209,7 @@ run_sql_non_select (GdaConnection *cnc, const gchar *sql)
         stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
         g_object_unref (parser);
 
+	g_print ("EXECUTING [%s]\n", sql);
         nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
         g_object_unref (stmt);
         if (nrows == -1) {
