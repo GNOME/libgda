@@ -31,6 +31,9 @@
 
 struct _GdaVconnectionDataModelPrivate {
 	GSList *table_data_list; /* list of GdaVConnectionTableData structures */
+
+	GMutex       *lock_context;
+	GdaStatement *executed_stmt;
 };
 
 static void gda_vconnection_data_model_class_init (GdaVconnectionDataModelClass *klass);
@@ -136,6 +139,7 @@ gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, G_GNUC_UNUSED Gda
 {
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
+	cnc->priv->lock_context = g_mutex_new ();
 
 	g_object_set (G_OBJECT (cnc), "cnc-string", "_IS_VIRTUAL=TRUE", NULL);
 }
@@ -156,6 +160,7 @@ gda_vconnection_data_model_dispose (GObject *object)
 		}
 		gda_connection_close_no_warning ((GdaConnection *) cnc);
 
+		g_mutex_free (cnc->priv->lock_context);
 		g_free (cnc->priv);
 		cnc->priv = NULL;
 	}
@@ -586,5 +591,111 @@ gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 		if (td->modif_stmt[i])
 			g_object_unref (td->modif_stmt[i]);
 	}
+
+	if (td->context.hash)
+		g_hash_table_destroy (td->context.hash);
 	g_free (td);
+}
+
+static void
+vcontext_object_weak_notify_cb (VContext *context, GObject *old_context_object)
+{
+	g_assert (context);
+	g_mutex_lock (context->vtable->context.mutex);
+	context->context_object = NULL;
+	g_hash_table_remove (context->vtable->context.hash, old_context_object);
+	g_mutex_unlock (context->vtable->context.mutex);
+}
+
+static void
+vcontext_free (VContext *context)
+{
+	if (context->context_object)
+		g_object_weak_unref (context->context_object,
+				     (GWeakNotify) vcontext_object_weak_notify_cb, context);
+	if (context->context_data) {
+		guint i;
+		for (i = 0; i < context->context_data->len; i++) {
+			VirtualFilteredData *data;
+			data = g_array_index (context->context_data, VirtualFilteredData*, i);
+			_gda_vconnection_virtual_filtered_data_unref (data);
+		}
+		g_array_free (context->context_data, TRUE);
+	}
+	g_free (context);
+#ifdef DEBUG_VCONTEXT
+	g_print ("VCFree %p\n", context);
+#endif
+}
+
+void
+_gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
+{
+	GSList *list;
+	if (obj) {
+		g_mutex_lock (cnc->priv->lock_context);
+		for (list = cnc->priv->table_data_list; list; list = list->next) {
+			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
+			VContext *vc = NULL;
+			
+			g_assert (!td->context.current_vcontext);
+			td->context.mutex = cnc->priv->lock_context;
+			if (! td->context.hash)
+				td->context.hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
+									  NULL, (GDestroyNotify) vcontext_free);
+			else
+				vc = g_hash_table_lookup (td->context.hash, obj);
+
+			if (! vc) {
+				vc = g_new0 (VContext, 1);
+				vc->context_object = obj;
+				vc->context_data = g_array_new (FALSE, FALSE,
+								sizeof (VirtualFilteredData*));
+				vc->vtable = td;
+				g_object_weak_ref (obj, (GWeakNotify) vcontext_object_weak_notify_cb, vc);
+				g_hash_table_insert (td->context.hash, obj, vc);
+#ifdef DEBUG_VCONTEXT
+				g_print ("VCNew %p\n", vc);
+#endif
+			}
+			td->context.current_vcontext = vc;
+		}
+	}
+	else {
+		for (list = cnc->priv->table_data_list; list; list = list->next) {
+			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
+
+			g_assert (td->context.current_vcontext);
+			td->context.current_vcontext = NULL;
+		}
+		g_mutex_unlock (cnc->priv->lock_context);
+	}
+}
+
+void
+_gda_vconnection_change_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
+{
+	GSList *list;
+
+	for (list = cnc->priv->table_data_list; list; list = list->next) {
+		GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
+		if (!td->context.hash)
+			continue;
+
+		g_assert (td->context.current_vcontext);
+
+		VContext *ovc, *nvc;
+		ovc = td->context.current_vcontext;
+		nvc = g_new0 (VContext, 1);
+		nvc->context_object = obj;
+		nvc->vtable = ovc->vtable;
+		nvc->context_data = ovc->context_data;
+		ovc->context_data = NULL;
+		g_object_weak_ref (obj, (GWeakNotify) vcontext_object_weak_notify_cb, nvc);
+		g_hash_table_insert (td->context.hash, obj, nvc);
+#ifdef DEBUG_VCONTEXT
+		g_print ("VCNew %p\n", nvc);
+#endif
+		g_hash_table_remove (td->context.hash, ovc->context_object);
+	}
 }
