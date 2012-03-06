@@ -33,11 +33,54 @@ typedef enum {
 	PARAMS_NB
 } ParamType;
 
-typedef struct {
+typedef struct GdaVConnectionTableData GdaVConnectionTableData;
+typedef struct VContext VContext;
+typedef struct ExecContext ExecContext;
+typedef struct VirtualFilteredData VirtualFilteredData;
+
+struct VContext{
+	GObject                 *context_object;
+	GArray                  *context_data;
+	GdaVConnectionTableData *vtable;
+};
+
+struct ExecContext {
+	VContext   *current_vcontext;
+	GMutex     *mutex;
+	GHashTable *hash; /* key = a GObject, value = a VContext where @context_object == key */
+};
+
+/*
+ * This structure holds data to be used by a virtual cursor, for a specific filter,
+ * it keeps track of data which has been assigned a rowID
+ */
+struct VirtualFilteredData {
+	/* status */
+	guint8 refcount;
+	gboolean reuseable;
+
+	/* filter */
+	int idxNum;
+	char *idxStr;
+	int argc;
+	GValue **argv;
+
+	/* row numbers offset */
+	guint32 rowid_offset;
+
+	/* data */
+	GdaDataModel *model;
+	GdaDataModelIter *iter; /* not NULL while nrows == -1 */
+	GValueArray  *values;
+	gint          ncols;
+	gint          nrows; /* -1 until known */
+};
+
+struct GdaVConnectionTableData {
 	GdaVconnectionDataModelSpec *spec;
 	GDestroyNotify               spec_free_func;
 
-	GdaDataModel                *real_model; /* data model really being used, a reference is kept on it */
+	GdaDataModel                *real_model; /* data model really being used, a reference is kept */
 	GList                       *columns;
 	gchar                       *table_name;
 	gchar                       *unique_name;
@@ -45,13 +88,21 @@ typedef struct {
 
 	GdaStatement                *modif_stmt[PARAMS_NB];
 	GdaSet                      *modif_params[PARAMS_NB];
-} GdaVConnectionTableData;
+
+	ExecContext                  context; /* not a pointer! */
+};
+
+
+void                     _gda_vconnection_virtual_filtered_data_unref (VirtualFilteredData *data);
 
 void                     gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td);
 
 GdaVConnectionTableData *gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name);
 GdaVConnectionTableData *gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model);
 GdaVConnectionTableData *gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, const gchar *unique_name);
+
+void                     _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj);
+void                     _gda_vconnection_change_working_obj (GdaVconnectionDataModel *cnc, GObject *obj);
 
 G_END_DECLS
 
