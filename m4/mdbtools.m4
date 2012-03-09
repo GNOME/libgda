@@ -51,6 +51,7 @@ dnl
 dnl    AM_CONDITIONAL(MDB, true)
 dnl    AC_DEFINE(MDB_WITH_WRITE_SUPPORT,[1],[define if mdb_open accepts MDB_WRITABLE])
 dnl    AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
+dnl    AC_DEFINE(MDB_V07,[1],[define if Mdbtools is in version 0.7])
 dnl
 dnl
 dnl LICENSE
@@ -209,6 +210,22 @@ int main() {
 	    AC_MSG_RESULT($mdb_bind_column_args)
 	    if test "$mdb_bind_column_args" = "four"; then
 		AC_DEFINE(MDB_BIND_COLUMN_FOUR_ARGS,[1],[define if mdb_bind_column accepts four args])
+	    fi
+
+	    AC_MSG_CHECKING([whether Mdbtools is in version 0.7])
+	    AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#include <mdbtools.h>
+int main() {
+	int a;
+	a = MDB_SDATETIME;
+	return 0;
+}
+]])],
+	                      mdb_v7=no, mdb_v7=yes)
+
+	    AC_MSG_RESULT($mdb_v7)
+	    if test "$mdb_v7" = "yes"; then
+		AC_DEFINE(MDB_V07,[1],[define if Mdbtools is in version 0.7])
 	    fi
 	    CFLAGS="$save_CFLAGS"
 	fi
