@@ -383,7 +383,11 @@ gda_mdb_type_to_gda (int col_type)
         case MDB_NUMERIC : return GDA_TYPE_NUMERIC;
         case MDB_OLE : return GDA_TYPE_BINARY;
         case MDB_REPID : return GDA_TYPE_BINARY;
+#ifdef MDB_V07
+        case MDB_DATETIME : return GDA_TYPE_TIMESTAMP;
+#else
         case MDB_SDATETIME : return GDA_TYPE_TIMESTAMP;
+#endif
         case MDB_TEXT : return G_TYPE_STRING;
         }
 
