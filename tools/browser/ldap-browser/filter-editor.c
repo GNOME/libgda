@@ -240,8 +240,8 @@ filter_editor_set_settings (FilterEditor *fedit,
 	g_return_if_fail (IS_FILTER_EDITOR (fedit));
 
 	gtk_entry_set_text (GTK_ENTRY (fedit->priv->base_dn), base_dn ? base_dn : "");
-	gtk_entry_set_text (GTK_ENTRY (fedit->priv->filter), filter ? filter : "");
-	gtk_entry_set_text (GTK_ENTRY (fedit->priv->attributes), attributes ? attributes : "");
+	gtk_entry_set_text (GTK_ENTRY (fedit->priv->filter), filter ? filter : "(cn=*)");
+	gtk_entry_set_text (GTK_ENTRY (fedit->priv->attributes), attributes ? attributes : "cn");
 	gdaui_data_selector_select_row (GDAUI_DATA_SELECTOR (fedit->priv->scope), scope - 1);
 }
 
