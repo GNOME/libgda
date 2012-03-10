@@ -328,7 +328,6 @@ test2 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	dump_data_model (model);
 
 	GdaVirtualProvider *virtual_provider;
 	GError *lerror = NULL;
@@ -370,6 +369,8 @@ test2 (GdaConnection *cnc)
 		g_clear_error (&lerror);
 		goto out;
 	}
+
+	dump_data_model (model);
 
 	/* iterate forward */
 	gint i, row;
@@ -474,8 +475,10 @@ test2 (GdaConnection *cnc)
 	}
 
  out:
-	g_object_unref (iter);
-	g_object_unref (model);
+	if (iter)
+		g_object_unref (iter);
+	if (model)
+		g_object_unref (model);
 	g_object_unref (vcnc);
 	g_object_unref (virtual_provider);
 	
