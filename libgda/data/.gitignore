@@ -1,0 +1,5 @@
+*.c
+*.h
+GdaData-5.0.gir
+GdaData-5.0.typelib
+*.stamp
