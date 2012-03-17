@@ -298,21 +298,21 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 	mitem = gtk_separator_menu_item_new ();
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 
-	mitem = gtk_menu_item_new_with_mnemonic ("Plugins individual data entry widgets");
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins: data entry widgets alone");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_BASIC));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_plugins_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic ("Plugins data entry widgets in a form");
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins: data entry widgets in a form");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_FORM));
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (on_plugins_activate), top_nb);
 
-	mitem = gtk_menu_item_new_with_mnemonic ("Plugins data cell renderers in a grid");
+	mitem = gtk_menu_item_new_with_mnemonic ("Plugins: data cell renderers");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem2_menu), mitem);
 	g_object_set_data (G_OBJECT (mitem), "test_type", GINT_TO_POINTER (TESTED_GRID));

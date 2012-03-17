@@ -162,7 +162,6 @@ struct _GdauiBasicFormPriv
 
 	GtkWidget  *top_container;
 
-	gboolean    headers_sensitive;
 	gboolean    show_actions;
 	gboolean    entries_auto_default;
 
@@ -297,9 +296,14 @@ gdaui_basic_form_class_init (GdauiBasicFormClass *klass)
 					 g_param_spec_pointer ("paramlist",
 							       _("List of parameters to show in the form"), NULL,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
+	/**
+	 * GdauiBasicForm:headers-sensitive:
+	 *
+	 * Deprecated
+	 */
 	g_object_class_install_property (object_class, PROP_HEADERS_SENSITIVE,
 					 g_param_spec_boolean ("headers-sensitive",
-							       _("Entry headers are sensitive"),
+							       "",
 							       NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_SHOW_ACTIONS,
@@ -404,7 +408,6 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	wid->priv->place_holders = NULL;
 	wid->priv->top_container = NULL;
 
-	wid->priv->headers_sensitive = FALSE;
 	wid->priv->show_actions = FALSE;
 	wid->priv->entries_auto_default = FALSE;
 
@@ -690,7 +693,6 @@ gdaui_basic_form_set_property (GObject *object,
 			}
 			break;
 		case PROP_HEADERS_SENSITIVE:
-			form->priv->headers_sensitive = g_value_get_boolean (value);
 			break;
 		case PROP_SHOW_ACTIONS:
 			gdaui_basic_form_show_entry_actions (form, g_value_get_boolean (value));
@@ -720,7 +722,6 @@ gdaui_basic_form_get_property (GObject *object,
 			g_value_set_pointer (value, form->priv->set);
 			break;
 		case PROP_HEADERS_SENSITIVE:
-			g_value_set_boolean (value, form->priv->headers_sensitive);
 			break;
 		case PROP_SHOW_ACTIONS:
 			g_value_set_boolean (value, form->priv->show_actions);
