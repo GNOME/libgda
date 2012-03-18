@@ -1531,7 +1531,6 @@ compute_all_objects_content (HtmlDoc *hdoc, const ConnectionSetting *cs,
 		if (!cv1)
 			goto out;
 		if (!schema || gda_value_differ (schema, cv0)) {
-			xmlNodePtr header;
 			gchar *tmp;
 			if (schema) {
 				xmlNewChild (div, NULL, BAD_CAST "br", NULL);
@@ -1539,7 +1538,7 @@ compute_all_objects_content (HtmlDoc *hdoc, const ConnectionSetting *cs,
 			}
 			schema = gda_value_copy (cv0);
 			tmp = g_strdup_printf (human_obj_type_in_schema, g_value_get_string (schema));
-			header = xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
+			xmlNewChild (hdoc->content, NULL, BAD_CAST "h1", BAD_CAST tmp);
 			g_free (tmp);
 			content_added = TRUE;
 			div = xmlNewChild (hdoc->content, NULL, BAD_CAST "div", NULL);
@@ -1990,7 +1989,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 			xmlDocSetRootElement (doc, topnode);
 			
 			xmlNewChild (topnode, NULL, BAD_CAST "cid", BAD_CAST (console->id));
-			tmp = gda_sql_console_compute_prompt (console);
+			tmp = gda_sql_console_compute_prompt (console, OUTPUT_FORMAT_HTML);
 			xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
 			g_free (tmp);
 			
@@ -2014,7 +2013,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 		topnode = xmlNewDocNode (doc, NULL, BAD_CAST "result", NULL);
 		xmlDocSetRootElement (doc, topnode);
 
-		tmp = gda_sql_console_execute (console, cmd, &lerror);
+		tmp = gda_sql_console_execute (console, cmd, &lerror, OUTPUT_FORMAT_HTML);
 		if (!tmp) 
 			tmp = g_strdup_printf (_("Error: %s"), 
 						    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -2024,7 +2023,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 		xmlNewChild (topnode, NULL, BAD_CAST "cmde", BAD_CAST tmp);
 		g_free (tmp);
 
-		tmp = gda_sql_console_compute_prompt (console);
+		tmp = gda_sql_console_compute_prompt (console, OUTPUT_FORMAT_HTML);
 		xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
 		g_free (tmp);
 

@@ -45,10 +45,12 @@ typedef struct {
 } ConnectionSetting;
 
 typedef enum {
-	OUTPUT_FORMAT_DEFAULT = 0,
-	OUTPUT_FORMAT_HTML,
-	OUTPUT_FORMAT_XML,
-	OUTPUT_FORMAT_CSV
+	OUTPUT_FORMAT_DEFAULT = 1 << 0,
+	OUTPUT_FORMAT_HTML    = 1 << 1,
+	OUTPUT_FORMAT_XML     = 1 << 2,
+	OUTPUT_FORMAT_CSV     = 1 << 3,
+
+	OUTPUT_FORMAT_COLOR_TERM = 1 << 8
 } OutputFormat;
 
 typedef struct {
@@ -64,9 +66,25 @@ const ConnectionSetting *gda_sql_get_current_connection (void);
 
 SqlConsole              *gda_sql_console_new (const gchar *id);
 void                     gda_sql_console_free (SqlConsole *console);
-gchar                   *gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **error);
+gchar                   *gda_sql_console_execute (SqlConsole *console, const gchar *command,
+						  GError **error, OutputFormat format);
 
-gchar                   *gda_sql_console_compute_prompt (SqlConsole *console);
+gchar                   *gda_sql_console_compute_prompt (SqlConsole *console, OutputFormat format);
+
+/*
+ * color output handling
+ */
+typedef enum {
+	GDA_SQL_COLOR_NORMAL,
+	GDA_SQL_COLOR_RESET,
+	GDA_SQL_COLOR_BOLD,
+	GDA_SQL_COLOR_RED
+} GdaSqlColor;
+
+void         color_print (GdaSqlColor color, OutputFormat format, const char *fmt, ...);
+gchar       *color_string (GdaSqlColor color, OutputFormat format, const char *fmt, ...);
+void         color_append_string (GdaSqlColor color, OutputFormat format, GString *string, const char *fmt, ...);
+const gchar *color_s (GdaSqlColor color, OutputFormat format);
 
 G_END_DECLS
 
