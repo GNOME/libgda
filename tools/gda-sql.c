@@ -141,7 +141,7 @@ gboolean exit_requested = FALSE;
 
 static ConnectionSetting *get_current_connection_settings (SqlConsole *console);
 static char   **completion_func (const char *text, int start, int end);
-static void     compute_prompt (SqlConsole *console, GString *string, gboolean in_command);
+static void     compute_prompt (SqlConsole *console, GString *string, gboolean in_command, OutputFormat format);
 static gboolean set_output_file (const gchar *file, GError **error);
 static gboolean set_input_file (const gchar *file, GError **error);
 static gchar   *data_model_to_string (SqlConsole *console, GdaDataModel *model);
@@ -155,6 +155,8 @@ static gboolean treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok);
 static const char *prompt_func (void);
 
 static GdaSet *make_options_set_from_gdasql_options (const gchar *context);
+static void compute_term_color_attribute (void);
+
 
 /* commands manipulation */
 static GdaInternalCommandsList  *build_internal_commands_list (void);
@@ -163,7 +165,7 @@ static GdaInternalCommandResult *command_execute (SqlConsole *console,
 						  const gchar *command,
 						  GdaStatementModelUsage usage, GError **error);
 
-static gchar                    *result_to_string (SqlConsole *console, GdaInternalCommandResult *res);
+static gchar                    *result_to_string (SqlConsole *console, GdaInternalCommandResult *res, OutputFormat format);
 static void                      display_result (GdaInternalCommandResult *res);
 
 int
@@ -199,6 +201,7 @@ main (int argc, char *argv[])
 #define DEFAULT_LDAP_ATTRIBUTES "cn"
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
+	data->output_format = OUTPUT_FORMAT_DEFAULT;
 	data->options = gda_set_new_inline (5,
 					    "csv_names_on_first_line", G_TYPE_BOOLEAN, FALSE,
 					    "csv_quote", G_TYPE_STRING, "\"",
@@ -236,6 +239,8 @@ main (int argc, char *argv[])
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	data->mem_data_models = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 	main_data = data;
+
+	compute_term_color_attribute ();
 
 	/* output file */
 	if (outfile) {
@@ -330,13 +335,23 @@ main (int argc, char *argv[])
 		SetConsoleTitle ("GDA SQL console, version " PACKAGE_VERSION);
 		SetConsoleWindowInfo (wHnd, TRUE, &windowSize);
 #endif
-		g_print (_("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
+		gchar *c1, *c2, *c3, *c4;
+		color_print (GDA_SQL_COLOR_BOLD, main_data->output_format,
+			     _("Welcome to the GDA SQL console, version " PACKAGE_VERSION));
 		g_print ("\n\n");
-		g_print (_("Type: .copyright to show usage and distribution terms\n"
-			   "      .? or .h for help with internal commands\n"
-			   "      .q (or CTRL-D) to quit\n"
+		c1 = color_string (GDA_SQL_COLOR_BOLD, main_data->output_format, ".copyright");
+		c2 = color_string (GDA_SQL_COLOR_BOLD, main_data->output_format, ".?");
+		c3 = color_string (GDA_SQL_COLOR_BOLD, main_data->output_format, ".h");
+		c4 = color_string (GDA_SQL_COLOR_BOLD, main_data->output_format, ".q");
+		g_print (_("Type: %s to show usage and distribution terms\n"
+			   "      %s or %s for help with internal commands\n"
+			   "      %s (or CTRL-D) to quit\n"
 			   "      (the '.' can be replaced by a '\\')\n"
-			   "      or any query terminated by a semicolon\n\n"));
+			   "      or any query terminated by a semicolon\n\n"), c1, c2, c3, c4);
+		g_free (c1);
+		g_free (c2);
+		g_free (c3);
+		g_free (c4);
 	}
 
 	/* open connections if specified */
@@ -485,11 +500,26 @@ main (int argc, char *argv[])
 	return exit_status;
 }
 
+static void
+compute_term_color_attribute (void)
+{
+	g_assert (main_data);
+	main_data->output_format &= ~(OUTPUT_FORMAT_COLOR_TERM);
+	if (!main_data->output_stream || isatty (fileno (main_data->output_stream))) {
+		const gchar *term;
+		main_data->output_format |= OUTPUT_FORMAT_COLOR_TERM;
+		term = g_getenv ("TERM");
+                if (term && !strcmp (term, "dumb"))
+			main_data->output_format ^= OUTPUT_FORMAT_COLOR_TERM;
+	}
+}
+
 static const char *
 prompt_func (void)
 {
 	/* compute a new prompt */
-	compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE);
+	compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE,
+			OUTPUT_FORMAT_DEFAULT | (main_data->output_format & OUTPUT_FORMAT_COLOR_TERM));
 	return (char*) prompt->str;
 }
 
@@ -547,8 +577,11 @@ treat_line_func (const gchar *cmde, gboolean *out_cmde_exec_ok)
 				if (!error ||
 				    (error->domain != GDA_SQL_PARSER_ERROR) ||
 				    (error->code != GDA_SQL_PARSER_EMPTY_SQL_ERROR)) {
+					g_fprintf (to_stream, "%sERROR:%s ",
+						   color_s (GDA_SQL_COLOR_RED, main_data->output_format),
+						   color_s (GDA_SQL_COLOR_RESET, main_data->output_format));
 					g_fprintf (to_stream,
-						   "ERROR: %s\n", 
+						   "%s\n", 
 						   error && error->message ? error->message : _("No detail"));
 					if (out_cmde_exec_ok)
 						*out_cmde_exec_ok = FALSE;
@@ -606,7 +639,7 @@ display_result (GdaInternalCommandResult *res)
 		break;
 	default: {
 		gchar *str;
-		str = result_to_string (NULL, res);
+		str = result_to_string (NULL, res, main_data->output_format);
 		output_string (str);
 		g_free (str);
 	}
@@ -614,7 +647,7 @@ display_result (GdaInternalCommandResult *res)
 }
 
 static gchar *
-result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
+result_to_string (SqlConsole *console, GdaInternalCommandResult *res, OutputFormat format)
 {
 	OutputFormat of;
 	if (console)
@@ -633,8 +666,7 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 		xmlBufferPtr buffer;
 		gchar *str;
 
-		switch (of) {
-		case OUTPUT_FORMAT_DEFAULT:
+		if (of & OUTPUT_FORMAT_DEFAULT) {
 			string = g_string_new ("");
 			for (list = res->u.set->holders; list; list = list->next) {
 				const GValue *value;
@@ -673,8 +705,8 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			str = string->str;
 			g_string_free (string, FALSE);
 			return str;
-
-		case OUTPUT_FORMAT_XML: {
+		}
+		else if (of & OUTPUT_FORMAT_XML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "parameters");
 			for (list = res->u.set->holders; list; list = list->next) {
@@ -695,7 +727,7 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			xmlFreeNode (node);
 			return str;
 		}
-		case OUTPUT_FORMAT_HTML: {
+		else if (of & OUTPUT_FORMAT_HTML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "ul");
 			for (list = res->u.set->holders; list; list = list->next) {
@@ -716,7 +748,7 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			xmlFreeNode (node);
 			return str;
 		}
-		case OUTPUT_FORMAT_CSV: 
+		else if (of & OUTPUT_FORMAT_CSV) {
 			string = g_string_new ("");
 			for (list = res->u.set->holders; list; list = list->next) {
 				const GValue *value;
@@ -755,23 +787,22 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			str = string->str;
 			g_string_free (string, FALSE);
 			return str;
-		default:
+		}
+		else {
 			TO_IMPLEMENT;
 			return NULL;
 		}
-		break;
 	}
+
 	case GDA_INTERNAL_COMMAND_RESULT_TXT: {
 		xmlNodePtr node;
 		xmlBufferPtr buffer;
 		gchar *str;
 
-		switch (of) {
-		case OUTPUT_FORMAT_DEFAULT:
-		case OUTPUT_FORMAT_CSV:
+		if ((of & OUTPUT_FORMAT_DEFAULT) ||
+		    (of & OUTPUT_FORMAT_CSV))
 			return g_strdup (res->u.txt->str);
-
-		case OUTPUT_FORMAT_XML: 
+		else if (of & OUTPUT_FORMAT_XML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "txt");
 			xmlNodeSetContent (node, BAD_CAST res->u.txt->str);
@@ -780,8 +811,8 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			xmlBufferFree (buffer);
 			xmlFreeNode (node);
 			return str;
-
-		case OUTPUT_FORMAT_HTML: 
+		}
+		else if (of & OUTPUT_FORMAT_HTML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "p");
 			xmlNodeSetContent (node, BAD_CAST res->u.txt->str);
@@ -790,11 +821,11 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			xmlBufferFree (buffer);
 			xmlFreeNode (node);
 			return str;
-		default:
+		}
+		else {
 			TO_IMPLEMENT;
 			return NULL;
 		}
-		break;
 	}
 
 	case GDA_INTERNAL_COMMAND_RESULT_EMPTY:
@@ -809,7 +840,7 @@ result_to_string (SqlConsole *console, GdaInternalCommandResult *res)
 			GdaInternalCommandResult *tres = (GdaInternalCommandResult*) list->data;
 			gchar *tmp;
 			
-			tmp = result_to_string (console, tres);
+			tmp = result_to_string (console, tres, main_data->output_format);
 			if (!string)
 				string = g_string_new (tmp);
 			else {
@@ -859,8 +890,9 @@ sigint_handler (int sig_num)
 			main_data->partial_command = NULL;
 		}
 		/* show a new prompt */
-		compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE);
-		g_print ("\n%s", prompt->str);
+		compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE,
+				OUTPUT_FORMAT_DEFAULT | (main_data->output_format & OUTPUT_FORMAT_COLOR_TERM));
+		g_print ("\ng%s", prompt->str);
 		fflush (NULL);
 	}
 	else {
@@ -1101,7 +1133,7 @@ execute_internal_command (SqlConsole *console, GdaConnection *cnc, const gchar *
 			gda_internal_command_arg_remove_quotes (args[i]);
 	}
 	res = command->command_func (console, cnc, (const gchar **) &(args[1]), 
-				     error, command->user_data);
+				     main_data->output_format, error, command->user_data);
 	
  cleanup:
 	if (args)
@@ -1272,7 +1304,7 @@ get_current_connection_settings (SqlConsole *console)
 }
 
 static void
-compute_prompt (SqlConsole *console, GString *string, gboolean in_command)
+compute_prompt (SqlConsole *console, GString *string, gboolean in_command, OutputFormat format)
 {
 	gchar *prefix = NULL;
 	ConnectionSetting *cs;
@@ -1280,6 +1312,19 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command)
 	gchar suffix = '>';
 
 	g_string_set_size (string, 0);
+	if (format & OUTPUT_FORMAT_COLOR_TERM) {
+		const gchar *color;
+		color = color_s (GDA_SQL_COLOR_BOLD, format);
+		if (color && *color) {
+#ifdef HAVE_READLINE
+			g_string_append_c (string, RL_PROMPT_START_IGNORE);
+#endif
+			g_string_append (string, color);
+#ifdef HAVE_READLINE
+			g_string_append_c (string, RL_PROMPT_END_IGNORE);
+#endif
+		}
+	}
 	cs = get_current_connection_settings (console);
 	if (cs) {
 		prefix = cs->name;
@@ -1303,6 +1348,20 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command)
 	}
 	else 
 		g_string_append_printf (string, "%s%c ", prefix, suffix);
+
+	if (format & OUTPUT_FORMAT_COLOR_TERM) {
+		const gchar *color;
+		color = color_s (GDA_SQL_COLOR_RESET, OUTPUT_FORMAT_COLOR_TERM);
+		if (color && *color) {
+#ifdef HAVE_READLINE
+			g_string_append_c (string, RL_PROMPT_START_IGNORE);
+#endif
+			g_string_append (string, color);
+#ifdef HAVE_READLINE
+			g_string_append_c (string, RL_PROMPT_END_IGNORE);
+#endif
+		}
+	}
 }
 
 /*
@@ -1360,6 +1419,7 @@ set_output_file (const gchar *file, GError **error)
 		g_free (copy);
 	}
 
+	compute_term_color_attribute ();
 	return TRUE;
 }
 
@@ -1958,8 +2018,7 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 	else
 		of = main_data->output_format;
 
-	switch (of) {
-	case OUTPUT_FORMAT_DEFAULT: {
+	if (of & OUTPUT_FORMAT_DEFAULT) {
 		gchar *tmp;
 		tmp = gda_data_model_dump_as_string (model);
 		if (GDA_IS_DATA_SELECT (model)) {
@@ -1974,14 +2033,12 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		}
 		else
 			return tmp;
-		break;
 	}
-	case OUTPUT_FORMAT_XML:
+	else if (of & OUTPUT_FORMAT_XML)
 		return gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
 							NULL, 0,
 							NULL, 0, NULL);
-		break;
-	case OUTPUT_FORMAT_CSV: {
+	else if (of & OUTPUT_FORMAT_CSV) {
 		gchar *retval;
 		GdaSet *optexp;
 		optexp = make_options_set_from_gdasql_options ("csv");
@@ -1992,7 +2049,7 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 			g_object_unref (optexp);
 		return retval;
 	}
-	case OUTPUT_FORMAT_HTML: {
+	else if (of & OUTPUT_FORMAT_HTML) {
 		xmlBufferPtr buffer;
 		xmlNodePtr top, div, table, node, row_node, col_node, header, meta;
 		gint ncols, nrows, i, j;
@@ -2052,10 +2109,9 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 		xmlFreeNode (top);
 		return str;
 	}
-	default: 
+	else
 		TO_IMPLEMENT;
-		break;
-	}
+
 	return NULL;
 }
 
@@ -2123,152 +2179,152 @@ static gchar **args_as_string_set (const gchar *str);
 
 static GdaInternalCommandResult *extra_command_copyright (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
-							  GError **error, gpointer data);
+							  OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_option (SqlConsole *console, GdaConnection *cnc,
 						       const gchar **args,
-						       GError **error, gpointer data);
+						       OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_quit (SqlConsole *console, GdaConnection *cnc,
 						     const gchar **args,
-						     GError **error, gpointer data);
+						     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_cd (SqlConsole *console, GdaConnection *cnc,
 						   const gchar **args,
-						   GError **error, gpointer data);
+						   OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_set_output (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_set_output_format (SqlConsole *console, GdaConnection *cnc,
 								  const gchar **args,
-								  GError **error, gpointer data);
+								  OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_set_input (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
-							  GError **error, gpointer data);
+							  OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_echo (SqlConsole *console, GdaConnection *cnc,
 						     const gchar **args,
-						     GError **error, gpointer data);
+						     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_qecho (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
-						      GError **error, gpointer data);
+						      OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_list_dsn (SqlConsole *console, GdaConnection *cnc,
 							 const gchar **args,
-							 GError **error, gpointer data);
+							 OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_create_dsn (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_remove_dsn (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_list_providers (SqlConsole *console, GdaConnection *cnc,
 							       const gchar **args,
-							       GError **error, gpointer data);
+							       OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_manage_cnc (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
-							  GError **error, gpointer data);
+							  OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_bind_cnc (SqlConsole *console, GdaConnection *cnc,
 							 const gchar **args,
-							 GError **error, gpointer data);
+							 OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_edit_buffer (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_reset_buffer (SqlConsole *console, GdaConnection *cnc,
 							     const gchar **args,
-							     GError **error, gpointer data);
+							     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_show_buffer (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_write_buffer (SqlConsole *console, GdaConnection *cnc,
 							     const gchar **args,
-							     GError **error, gpointer data);
+							     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_query_buffer_to_dict (SqlConsole *console, GdaConnection *cnc,
 								     const gchar **args,
-								     GError **error, gpointer data);
+								     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_query_buffer_from_dict (SqlConsole *console, GdaConnection *cnc,
 								       const gchar **args,
-								       GError **error, gpointer data);
+								       OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_query_buffer_list_dict (SqlConsole *console, GdaConnection *cnc,
 								       const gchar **args,
-								       GError **error, gpointer data);
+								       OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_query_buffer_delete_dict (SqlConsole *console, GdaConnection *cnc,
 									 const gchar **args,
-									 GError **error, gpointer data);
+									 OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_set (SqlConsole *console, GdaConnection *cnc,
 						    const gchar **args,
-						    GError **error, gpointer data);
+						    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_unset (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
-						      GError **error, gpointer data);
+						      OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_sets_list (SqlConsole *console, GdaConnection *cnc,
 							       const gchar **args,
-							       GError **error, gpointer data);
+							       OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_set_move (SqlConsole *console, GdaConnection *cnc,
 							      const gchar **args,
-							      GError **error, gpointer data);
+							      OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_set_grep (SqlConsole *console, GdaConnection *cnc,
 							      const gchar **args,
-							      GError **error, gpointer data);
+							      OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_set_show (SqlConsole *console, GdaConnection *cnc,
 							      const gchar **args,
-							      GError **error, gpointer data);
+							      OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_set_rm (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_data_set_import (SqlConsole *console, GdaConnection *cnc,
 								const gchar **args,
-								GError **error, gpointer data);
+								OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_graph (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
-						      GError **error, gpointer data);
+						      OutputFormat format, GError **error, gpointer data);
 #ifdef HAVE_LIBSOUP
 static GdaInternalCommandResult *extra_command_httpd (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
-						      GError **error, gpointer data);
+						      OutputFormat format, GError **error, gpointer data);
 #endif
 
 #ifdef NONE
 static GdaInternalCommandResult *extra_command_lo_update (SqlConsole *console, GdaConnection *cnc,
 							  const gchar **args,
-							  GError **error, gpointer data);
+							  OutputFormat format, GError **error, gpointer data);
 #endif
 static GdaInternalCommandResult *extra_command_export (SqlConsole *console, GdaConnection *cnc,
 						       const gchar **args,
-						       GError **error, gpointer data);
+						       OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_set2 (SqlConsole *console, GdaConnection *cnc,
 						     const gchar **args,
-						     GError **error, gpointer data);
+						     OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_pivot (SqlConsole *console, GdaConnection *cnc,
 						      const gchar **args,
-						      GError **error, gpointer data);
+						      OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 							     const gchar **args,
-							     GError **error, gpointer data);
+							     OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_ldap_descr (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 
 static GdaInternalCommandsList *
 build_internal_commands_list (void)
@@ -2940,7 +2996,7 @@ build_internal_commands_list (void)
 
 static GdaInternalCommandResult *
 extra_command_set_output (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			  GError **error, G_GNUC_UNUSED gpointer data)
+			  OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	if (console) {
 		GdaInternalCommandResult *res;
@@ -2963,14 +3019,13 @@ extra_command_set_output (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 
 static GdaInternalCommandResult *
 extra_command_set_output_format (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-				 GError **error, G_GNUC_UNUSED gpointer data)
+				 G_GNUC_UNUSED OutputFormat format, G_GNUC_UNUSED GError **error,
+				 G_GNUC_UNUSED gpointer data)
 {
-	GdaInternalCommandResult *res;
-	const gchar *format = NULL;
+	GdaInternalCommandResult *res = NULL;
+	const gchar *fmt = NULL;
 
 	if (console) {
-		GdaInternalCommandResult *res;
-		
 		TO_IMPLEMENT;
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
@@ -2978,22 +3033,23 @@ extra_command_set_output_format (SqlConsole *console, G_GNUC_UNUSED GdaConnectio
 	}
 
 	if (args[0] && *args[0])
-		format = args[0];
+		fmt = args[0];
 	
 	main_data->output_format = OUTPUT_FORMAT_DEFAULT;
-	if (format) {
-		if ((*format == 'X') || (*format == 'x'))
+
+	if (fmt) {
+		if ((*fmt == 'X') || (*fmt == 'x'))
 			main_data->output_format = OUTPUT_FORMAT_XML;
-		else if ((*format == 'H') || (*format == 'h'))
+		else if ((*fmt == 'H') || (*fmt == 'h'))
 			main_data->output_format = OUTPUT_FORMAT_HTML;
-		else if ((*format == 'D') || (*format == 'd'))
+		else if ((*fmt == 'D') || (*fmt == 'd'))
 			main_data->output_format = OUTPUT_FORMAT_DEFAULT;
-		else if ((*format == 'C') || (*format == 'c'))
+		else if ((*fmt == 'C') || (*fmt == 'c'))
 			main_data->output_format = OUTPUT_FORMAT_CSV;
 		else {
 			g_set_error (error, 0, 0,
-				     _("Unknown output format: '%s', reset to default"), format);
-			return NULL;
+				     _("Unknown output format: '%s', reset to default"), fmt);
+			goto out;
 		}
 	}
 
@@ -3022,6 +3078,10 @@ extra_command_set_output_format (SqlConsole *console, G_GNUC_UNUSED GdaConnectio
 		res = g_new0 (GdaInternalCommandResult, 1);
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
+
+ out:
+	compute_term_color_attribute ();
+	
 	return res;
 }
 
@@ -3045,7 +3105,8 @@ idle_read_input_stream (G_GNUC_UNUSED gpointer data)
 	}
 
  stop:
-	compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE);
+	compute_prompt (NULL, prompt, main_data->partial_command == NULL ? FALSE : TRUE,
+			OUTPUT_FORMAT_DEFAULT | (main_data->output_format & OUTPUT_FORMAT_COLOR_TERM));
 	g_print ("\n%s", prompt->str);
 	fflush (NULL);
 	set_input_file (NULL, NULL);
@@ -3054,7 +3115,7 @@ idle_read_input_stream (G_GNUC_UNUSED gpointer data)
 
 static GdaInternalCommandResult *
 extra_command_set_input (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			 GError **error, G_GNUC_UNUSED gpointer data)
+			 G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	if (console) {
 		GdaInternalCommandResult *res;
@@ -3080,7 +3141,7 @@ extra_command_set_input (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, 
 
 static GdaInternalCommandResult *
 extra_command_echo (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-		    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
+		    G_GNUC_UNUSED OutputFormat format, G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	
@@ -3094,7 +3155,7 @@ extra_command_echo (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnecti
 
 static GdaInternalCommandResult *
 extra_command_qecho (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-		     G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
+		     G_GNUC_UNUSED OutputFormat format, G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -3115,7 +3176,8 @@ extra_command_qecho (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, cons
 
 static GdaInternalCommandResult *
 extra_command_list_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+			const gchar **args, G_GNUC_UNUSED OutputFormat format, GError **error,
+			G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GList *list = NULL;
@@ -3192,7 +3254,8 @@ extra_command_list_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConn
 
 static GdaInternalCommandResult *
 extra_command_create_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			  const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+			  const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			  GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	GdaDsnInfo newdsn;
@@ -3238,7 +3301,8 @@ extra_command_create_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 
 static GdaInternalCommandResult *
 extra_command_remove_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			  const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+			  const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			  GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	gint i;
@@ -3263,7 +3327,8 @@ extra_command_remove_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
  */
 static GdaInternalCommandResult *
 extra_command_list_providers (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			      const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+			      const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			      GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	GdaDataModel *model;
@@ -3293,7 +3358,7 @@ vconnection_hub_foreach_cb (G_GNUC_UNUSED GdaConnection *cnc, const gchar *ns, G
 static 
 GdaInternalCommandResult *
 extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			  GError **error, G_GNUC_UNUSED gpointer data)
+			  G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	/* arguments:
 	 * 0 = connection name
@@ -3523,13 +3588,13 @@ extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 static void
 conn_closed_cb (GdaConnection *cnc, G_GNUC_UNUSED ConnectionSetting *cs)
 {
-	extra_command_close_cnc (NULL, cnc, NULL, NULL, NULL);
+	extra_command_close_cnc (NULL, cnc, NULL, main_data->output_format, NULL, NULL);
 }
 
 static 
 GdaInternalCommandResult *
-extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **args, GError **error,
-			 G_GNUC_UNUSED gpointer data)
+extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			 GError **error, G_GNUC_UNUSED gpointer data)
 {
 	ConnectionSetting *cs = NULL;
 	if (args && args[0] && *args[0]) {
@@ -3583,7 +3648,7 @@ extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **
 
 static GdaInternalCommandResult *
 extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			GError **error, G_GNUC_UNUSED gpointer data)
+			G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	ConnectionSetting *cs = NULL;
 	gint i, nargs = g_strv_length ((gchar **) args);
@@ -3693,8 +3758,8 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 
 static GdaInternalCommandResult *
 extra_command_copyright (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			 G_GNUC_UNUSED const gchar **args, G_GNUC_UNUSED GError **error,
-			 G_GNUC_UNUSED gpointer data)
+			 G_GNUC_UNUSED const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			 G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 	
@@ -3713,7 +3778,7 @@ extra_command_copyright (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCon
 
 static GdaInternalCommandResult *
 extra_command_option (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		      GError **error, G_GNUC_UNUSED gpointer data)
+		      G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *oname = NULL;
@@ -3787,7 +3852,7 @@ extra_command_option (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, con
 
 static GdaInternalCommandResult *
 extra_command_quit (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, G_GNUC_UNUSED const gchar **args,
-		    G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
+		    G_GNUC_UNUSED OutputFormat format, G_GNUC_UNUSED GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -3807,7 +3872,7 @@ extra_command_quit (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, G_GNU
 
 static GdaInternalCommandResult *
 extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-		  GError **error, G_GNUC_UNUSED gpointer data)
+		  G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	const gchar *dir = NULL;
 #define DIR_LENGTH 256
@@ -3875,7 +3940,7 @@ extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const g
 
 static GdaInternalCommandResult *
 extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			   GError **error, G_GNUC_UNUSED gpointer data)
+			   G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	gchar *filename = NULL;
 	static gchar *editor_name = NULL;
@@ -3982,7 +4047,7 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 
 static GdaInternalCommandResult *
 extra_command_reset_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			    GError **error, G_GNUC_UNUSED gpointer data)
+			    G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4025,7 +4090,8 @@ extra_command_reset_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cn
 
 static GdaInternalCommandResult *
 extra_command_show_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-			   G_GNUC_UNUSED const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+			   G_GNUC_UNUSED const gchar **args, G_GNUC_UNUSED OutputFormat format,
+			   GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4054,7 +4120,7 @@ extra_command_show_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 
 static GdaInternalCommandResult *
 extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			   GError **error, gpointer data)
+			   G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4074,7 +4140,7 @@ extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc, const gchar 
 
 	if (args[0] && *args[0]) {
 		/* load named query buffer first */
-		res = extra_command_query_buffer_from_dict (console, cnc, args, error, data);
+		res = extra_command_query_buffer_from_dict (console, cnc, args, format, error, data);
 		if (!res)
 			return NULL;
 		gda_internal_command_exec_result_free (res);
@@ -4096,7 +4162,7 @@ extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc, const gchar 
 
 static GdaInternalCommandResult *
 extra_command_write_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			    GError **error, G_GNUC_UNUSED gpointer data)
+			    G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4139,7 +4205,7 @@ extra_command_write_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cn
 
 static GdaInternalCommandResult *
 extra_command_query_buffer_list_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, G_GNUC_UNUSED const gchar **args,
-				      GError **error, G_GNUC_UNUSED gpointer data)
+				      G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	GdaDataModel *retmodel;
@@ -4249,7 +4315,7 @@ extra_command_query_buffer_list_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 
 static GdaInternalCommandResult *
 extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-				    GError **error, G_GNUC_UNUSED gpointer data)
+				    G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4313,7 +4379,8 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 
 static GdaInternalCommandResult *
 extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-				      const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+				      const gchar **args, G_GNUC_UNUSED OutputFormat format,
+				      GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4397,7 +4464,8 @@ extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 
 static GdaInternalCommandResult *
 extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
-					const gchar **args, GError **error, G_GNUC_UNUSED gpointer data)
+					const gchar **args, G_GNUC_UNUSED OutputFormat format,
+					GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -4473,7 +4541,7 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaCo
 static void foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model);
 static GdaInternalCommandResult *
 extra_command_set (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		   GError **error, G_GNUC_UNUSED gpointer data)
+		   G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *pname = NULL;
@@ -4571,7 +4639,7 @@ foreach_param_set (const gchar *pname, GdaHolder *param, GdaDataModel *model)
 static void foreach_data_model (const gchar *name, GdaDataModel *keptmodel, GdaDataModel *model);
 static GdaInternalCommandResult *
 extra_command_data_sets_list (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			      GError **error, G_GNUC_UNUSED gpointer data)
+			      G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	GdaDataModel *model;
@@ -4612,7 +4680,7 @@ foreach_data_model (const gchar *name, GdaDataModel *keptmodel, GdaDataModel *mo
 
 static GdaInternalCommandResult *
 extra_command_data_set_grep (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			     GError **error, G_GNUC_UNUSED gpointer data)
+			     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *model_name = NULL;
@@ -4735,7 +4803,7 @@ extra_command_data_set_grep (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 
 static GdaInternalCommandResult *
 extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			     GError **error, G_GNUC_UNUSED gpointer data)
+			     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *model_name = NULL;
@@ -4804,7 +4872,7 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 
 static GdaInternalCommandResult *
 extra_command_data_set_rm (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			   GError **error, G_GNUC_UNUSED gpointer data)
+			   G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	guint i;
@@ -4835,7 +4903,7 @@ extra_command_data_set_rm (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc
 
 static GdaInternalCommandResult *
 extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			       GError **error, G_GNUC_UNUSED gpointer data)
+			       G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *type = NULL, *file_name = NULL;
@@ -4884,7 +4952,7 @@ extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection 
 
 static GdaInternalCommandResult *
 extra_command_data_set_move (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			     GError **error, G_GNUC_UNUSED gpointer data)
+			     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *old_name = NULL;
@@ -5117,7 +5185,7 @@ fk_decl_analyse_table_name (const gchar *table, GdaMetaStore *mstore,
 static GdaInternalCommandResult *
 extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 			  const gchar **args,
-			  GError **error, gpointer data)
+			  G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -5203,7 +5271,7 @@ extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 static GdaInternalCommandResult *
 extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 			    const gchar **args,
-			    GError **error, gpointer data)
+			    G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -5337,7 +5405,7 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, G_GNUC_UNUSED MainD
 
 static GdaInternalCommandResult *
 extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		    GError **error, gpointer data)
+		    G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *pname = NULL;
@@ -5426,7 +5494,7 @@ extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 
 static GdaInternalCommandResult *
 extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		     GError **error, gpointer data)
+		     G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	ConnectionSetting *cs;
@@ -5576,7 +5644,7 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 
 static GdaInternalCommandResult *
 extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			   GError **error, gpointer data)
+			   G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	ConnectionSetting *cs;
@@ -5685,7 +5753,7 @@ att_row_cmp (AttRow *r1, AttRow *r2)
 
 static GdaInternalCommandResult *
 extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			  GError **error, gpointer data)
+			  G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -5891,7 +5959,7 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 
 static GdaInternalCommandResult *
 extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		      GError **error, gpointer data)
+		      G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -6011,7 +6079,7 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 
 static GdaInternalCommandResult *
 extra_command_unset (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-		     GError **error, G_GNUC_UNUSED gpointer data)
+		     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 	const gchar *pname = NULL;
@@ -6122,7 +6190,7 @@ create_graph_from_meta_struct (G_GNUC_UNUSED GdaConnection *cnc, GdaMetaStruct *
 
 static GdaInternalCommandResult *
 extra_command_graph (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-		     GError **error, G_GNUC_UNUSED gpointer data)
+		     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	gchar *result;
 	GdaMetaStruct *mstruct;
@@ -6164,7 +6232,7 @@ extra_command_graph (SqlConsole *console, GdaConnection *cnc, const gchar **args
 #ifdef HAVE_LIBSOUP
 static GdaInternalCommandResult *
 extra_command_httpd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-		     GError **error, G_GNUC_UNUSED gpointer data)
+		     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
 {
 	GdaInternalCommandResult *res = NULL;
 
@@ -6221,7 +6289,7 @@ extra_command_httpd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, cons
 #ifdef NONE
 static GdaInternalCommandResult *
 extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			 GError **error, gpointer data)
+			 G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
 {
 	GdaInternalCommandResult *res;
 
@@ -6399,7 +6467,7 @@ gda_sql_get_current_connection (void)
 }
 
 gchar *
-gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **error)
+gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **error, OutputFormat format)
 {
 	gchar *loc_cmde = NULL;
 	gchar *retstr = NULL;
@@ -6419,7 +6487,7 @@ gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **err
 				if (res->type == GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL)
 					console->output_format = OUTPUT_FORMAT_HTML;
 
-				retstr = result_to_string (console, res);
+				retstr = result_to_string (console, res, format);
 				console->output_format = of;
 				gda_internal_command_exec_result_free (res);
 			}
@@ -6440,6 +6508,7 @@ gda_sql_console_new (const gchar *id)
 	SqlConsole *c;
 
 	c = g_new0 (SqlConsole, 1);
+	c->output_format = OUTPUT_FORMAT_DEFAULT;
 	if (id)
 		c->id = g_strdup (id);
 	c->current = main_data->current;
@@ -6454,16 +6523,71 @@ gda_sql_console_free (SqlConsole *console)
 }
 
 gchar *
-gda_sql_console_compute_prompt (SqlConsole *console)
+gda_sql_console_compute_prompt (SqlConsole *console, OutputFormat format)
 {
 	GString *string;
-	gchar *str;
 
 	string = g_string_new ("");
-	compute_prompt (console, string, FALSE);
+	compute_prompt (console, string, FALSE, format);
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	return g_string_free (string, FALSE);
+}
 
-	return str;
+/*
+ * color output handling
+ */
+gchar *
+color_string (GdaSqlColor color, OutputFormat format, const char *fmt, ...)
+{
+	va_list args;
+	gchar *tmp, *res;
+
+        va_start (args, fmt);
+	tmp = g_strdup_vprintf (fmt, args);
+        va_end (args);
+	res = g_strdup_printf ("%s%s%s", color_s (color, format), tmp, color_s (GDA_SQL_COLOR_RESET, format));
+	g_free (tmp);
+	return res;
+}
+
+void
+color_append_string (GdaSqlColor color, OutputFormat format, GString *string, const char *fmt, ...)
+{
+	va_list args;
+	g_string_append (string, color_s (color, format));
+        va_start (args, fmt);
+	g_string_append_vprintf (string, fmt, args);
+        va_end (args);
+	g_string_append (string, color_s (GDA_SQL_COLOR_RESET, format));
+}
+
+void
+color_print (GdaSqlColor color, OutputFormat format, const char *fmt, ...)
+{
+	va_list args;
+	g_print (color_s (color, format));
+        va_start (args, fmt);
+	g_vprintf (fmt, args);
+        va_end (args);
+	g_print (color_s (GDA_SQL_COLOR_RESET, format));
+}
+
+const gchar *
+color_s (GdaSqlColor color, OutputFormat format)
+{
+	if (format & OUTPUT_FORMAT_COLOR_TERM) {
+		switch (color) {
+		case GDA_SQL_COLOR_NORMAL:
+			return "";
+		case GDA_SQL_COLOR_RESET:
+			return "\033[m";
+		case GDA_SQL_COLOR_BOLD:
+			return "\033[1m";
+		case GDA_SQL_COLOR_RED:
+			return "\033[31m";
+		default:
+			g_assert_not_reached();
+		}
+	}
+	return "";
 }

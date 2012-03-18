@@ -53,7 +53,7 @@ typedef struct {
  * Command definition
  */
 typedef GdaInternalCommandResult *(*GdaInternalCommandFunc) (SqlConsole *, GdaConnection *cnc,
-							     const gchar **, GError **, gpointer);
+							     const gchar **, OutputFormat, GError **, gpointer);
 typedef gchar                   **(*GdaInternalCommandArgsFunc) (const gchar *);
 typedef struct {
 	gchar    *name;
@@ -89,19 +89,19 @@ void                      gda_internal_command_exec_result_free (GdaInternalComm
 
 /* Available commands */
 GdaInternalCommandResult *gda_internal_command_help (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-						     GError **error, GdaInternalCommandsList *clist);
+						     OutputFormat format, GError **error, GdaInternalCommandsList *clist);
 GdaInternalCommandResult *gda_internal_command_history (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-							GError **error, gpointer data);
+							OutputFormat format, GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_dict_sync (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-							  GError **error, gpointer data);
+							  OutputFormat format, GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_tables (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-							    GError **error, gpointer data);
+							    OutputFormat format, GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_views (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-							   GError **error, gpointer data);
+							   OutputFormat format, GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_list_schemas (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-							     GError **error, gpointer data);
+							     OutputFormat format, GError **error, gpointer data);
 GdaInternalCommandResult *gda_internal_command_detail (SqlConsole *console, GdaConnection *cnc, const gchar **args,
-						       GError **error, gpointer data);
+						       OutputFormat format, GError **error, gpointer data);
 
 /* Misc */
 GdaMetaStruct            *gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, GError **error);
