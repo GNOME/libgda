@@ -942,10 +942,9 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				setlocale (LC_NUMERIC, "C");
 				if (length > 0) {
 					GdaNumeric *numeric;
-					numeric = gda_numeric_new ();
-					gda_numeric_set_from_string (numeric, strvalue);
-					gda_numeric_set_precision (numeric, 6);
-					gda_numeric_set_width (numeric, length);
+					numeric = g_new0 (GdaNumeric, 1);
+					numeric->number = g_strdup (strvalue);
+					numeric->width = length;
 					gda_value_set_numeric (value, numeric);
 					gda_numeric_free (numeric);
 				}

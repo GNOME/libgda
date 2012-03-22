@@ -92,6 +92,6 @@ browser_stock_icons_init (void)
 	/* FIXME: multi-head! */
 	gchar *path;
 	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "icons", NULL);
-	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
+	//gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (), path);
 	g_free (path);
 }
