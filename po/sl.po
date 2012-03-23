@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-18 20:21+0000\n"
-"PO-Revision-Date: 2012-03-18 22:23+0100\n"
+"POT-Creation-Date: 2012-03-23 20:03+0000\n"
+"PO-Revision-Date: 2012-03-23 22:32+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -152,10 +152,10 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164
 #: ../providers/jdbc/libmain.c:476
-#: ../providers/ldap/gda-ldap-provider.c:719
-#: ../providers/ldap/gda-ldap-provider.c:729
-#: ../providers/ldap/gda-ldap-provider.c:758
-#: ../providers/ldap/gda-ldap-provider.c:821
+#: ../providers/ldap/gda-ldap-provider.c:766
+#: ../providers/ldap/gda-ldap-provider.c:776
+#: ../providers/ldap/gda-ldap-provider.c:805
+#: ../providers/ldap/gda-ldap-provider.c:868
 #: ../providers/mdb/gda-mdb-provider.c:359
 #: ../providers/mysql/gda-mysql-provider.c:1981
 #: ../providers/mysql/gda-mysql-provider.c:1996
@@ -852,7 +852,7 @@ msgstr "Neveljavni argumenti filtra"
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 
-#: ../libgda/gda-data-access-wrapper.c:623
+#: ../libgda/gda-data-access-wrapper.c:626
 #: ../libgda/gda-data-meta-wrapper.c:578
 #: ../libgda/gda-data-model-array.c:439
 #: ../libgda/gda-data-model-array.c:670
@@ -877,11 +877,11 @@ msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 msgid "Column %d out of range (0-%d)"
 msgstr "Stolpec %d je izven območja (0-%d)"
 
-#: ../libgda/gda-data-access-wrapper.c:663
+#: ../libgda/gda-data-access-wrapper.c:666
 msgid "Can't set iterator's position"
 msgstr "Ni mogoče določiti položaja ponavljalnika"
 
-#: ../libgda/gda-data-access-wrapper.c:741
+#: ../libgda/gda-data-access-wrapper.c:744
 msgid "Can't access data"
 msgstr "Ni mogoč dostop do podatkov"
 
@@ -2826,7 +2826,7 @@ msgstr "Ni mogoče določiti vrednosti ROWID zbirke dvojiških podatkov za izpol
 #: ../libgda/sqlite/gda-sqlite-provider.c:2904
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:434
 #: ../providers/jdbc/gda-jdbc-provider.c:1220
-#: ../providers/ldap/gda-ldap-provider.c:690
+#: ../providers/ldap/gda-ldap-provider.c:737
 #: ../providers/mysql/gda-mysql-provider.c:2101
 #: ../providers/postgres/gda-postgres-provider.c:1810
 #: ../providers/web/gda-web-provider.c:1402
@@ -3382,7 +3382,7 @@ msgid "Data size"
 msgstr "Velikost podatkov"
 
 #: ../libgda-ui/data-entries/common-bin.c:301
-#: ../providers/ldap/gda-ldap-provider.c:870
+#: ../providers/ldap/gda-ldap-provider.c:917
 #: ../providers/mysql/gda-mysql-provider.c:635
 #: ../providers/mysql/gda-mysql-provider.c:669
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3419,7 +3419,7 @@ msgstr "Podatkovna vrsta"
 #: ../libgda-ui/gdaui-basic-form.c:848
 #: ../libgda-ui/gdaui-basic-form.c:883
 #: ../libgda-ui/gdaui-raw-grid.c:807
-#: ../providers/ldap/gda-ldap-provider.c:884
+#: ../providers/ldap/gda-ldap-provider.c:931
 #: ../tools/config-info.c:121
 #: ../tools/config-info.c:290
 #: ../tools/gda-sql.c:3821
@@ -4634,7 +4634,7 @@ msgid "An error occurred while accessing the BDB database"
 msgstr "Prišlo je do napake med dostopom do podatkovne zbirke BDB"
 
 #: ../providers/bdb/gda-bdb-provider.c:201
-#: ../providers/ldap/gda-ldap-provider.c:557
+#: ../providers/ldap/gda-ldap-provider.c:588
 #: ../providers/mdb/gda-mdb-provider.c:321
 msgid "Can't open virtual connection"
 msgstr "Ni mogoče odpreti navidezne povezave"
@@ -5408,23 +5408,23 @@ msgstr "Ni mogoče ustvariti navideznega programnika JAVA: %s"
 msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr "Ni mogoče uporabiti JVM (libjvm.so), Ponudnik JDBC ni na voljo."
 
-#: ../providers/ldap/gda-ldap-provider.c:374
+#: ../providers/ldap/gda-ldap-provider.c:376
 msgid "The connection string must contain the DB_NAME value"
 msgstr "Niz povezave mora vključevati vrednost DB_NAME"
 
-#: ../providers/ldap/gda-ldap-provider.c:415
+#: ../providers/ldap/gda-ldap-provider.c:417
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neveljavna vrednost za 'TLS_REQCERT'"
 
-#: ../providers/ldap/gda-ldap-provider.c:486
+#: ../providers/ldap/gda-ldap-provider.c:490
 msgid "Invalid user name"
 msgstr "Neveljavno uporabniško ime"
 
-#: ../providers/ldap/gda-ldap-provider.c:883
+#: ../providers/ldap/gda-ldap-provider.c:930
 msgid "Parameter"
 msgstr "Parameter"
 
-#: ../providers/ldap/gda-ldap-provider.c:1097
+#: ../providers/ldap/gda-ldap-provider.c:1144
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "blizu \"%s\": napaka skladnje"
@@ -5551,18 +5551,34 @@ msgid "Use a cache to store some static server data (the cached files are in the
 msgstr "Uporabi predpomnilnik za shranjevanje statičnih podatkov strežnika (te datoteke so v uporabnikovi mapi predpomnilnika), privzeto je določena izbrana možnost."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
+msgid "Time limit"
+msgstr "Časovna omejitev"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
+msgid "Time limit after which a search operation should be terminated by the server (leave undefined or 0 for unlimited)"
+msgstr "Časovna omejitev iskanja pred prekinitvijo na strani strežnika (nedoločeno ali vrednost 0, določata neomejen čas)"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
+msgid "Size limit"
+msgstr "Omeji velikosti"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
+msgid "Maximum number of entries that can be returned on a search operation"
+msgstr "Največje število vnosov, ki jih je mogoče izpisati ob iskanju"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:19
 msgid "Never: certificate not requested or checked"
 msgstr "Nikoli: potrdilo ni zahtevano ali preverjeno."
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
 msgstr "Dovoli: potrdilo je zahtevano, vendar ga ni ali pa je sprejeto neustrezno potrdilo."
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:21
 msgid "Try: certificate requested, none accepted, otherwise checked."
 msgstr "Poskusi: potrdilo je zahtevano, ni sprejeto, sicer preverjeno."
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
 msgstr "Zahtevaj: potrdilo je zahtevano in preverjeno."
 
