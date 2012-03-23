@@ -302,7 +302,7 @@ gda_data_model_ldap_dispose (GObject * object)
 		g_free (model->priv->filter);
 
 		if (model->priv->exceptions) {
-			gint i; 
+			gint i;
 			for (i = 0; i < model->priv->exceptions->len; i++) {
 				GError *e;
 				e = g_array_index (model->priv->exceptions, GError*, i);
@@ -987,7 +987,6 @@ execute_ldap_search (GdaDataModelLdap *model)
 			 model->priv->current_exec->nb_entries);
 #endif
 		break;
-
 	case LDAP_ADMINLIMIT_EXCEEDED:
 	case LDAP_SIZELIMIT_EXCEEDED:
 	case LDAP_TIMELIMIT_EXCEEDED: {
@@ -995,7 +994,8 @@ execute_ldap_search (GdaDataModelLdap *model)
 		g_print ("LIMIT_EXCEEDED!\n");
 #endif
 		gboolean handled = FALSE;
-		if (model->priv->scope == GDA_LDAP_SEARCH_SUBTREE) {
+		if ((cdata->time_limit == 0) && (cdata->size_limit == 0) &&
+		    (model->priv->scope == GDA_LDAP_SEARCH_SUBTREE)) {
 			gboolean split_error;
 			if (ldap_part_split (model->priv->current_exec, model, &split_error)) {
 				/* create some children to re-run the search */

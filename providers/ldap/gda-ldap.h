@@ -43,6 +43,9 @@ typedef struct {
 	gchar        *user;
 	gchar        *pass;
 
+	int           time_limit;
+	int           size_limit;
+
 	GHashTable   *attributes_hash; /* key = attribute name, value = a #LdapAttribute */
 	gchar        *attributes_cache_file;
 

@@ -10,6 +10,8 @@
     <parameter id="USE_CACHE" _name="Cache server data" _descr="Use a cache to store some static server data (the cached files are in the user's cache directory), default is TRUE" gdatype="gboolean">
       <gda_value>TRUE</gda_value>
     </parameter>
+    <parameter id="TIME_LIMIT" _name="Time limit" _descr="Time limit after which a search operation should be terminated by the server (leave undefined or 0 for unlimited)" gdatype="gint"/>
+    <parameter id="SIZE_LIMIT" _name="Size limit" _descr="Maximum number of entries that can be returned on a search operation" gdatype="gint"/>
   </parameters>
   <sources>
     <gda_array name="methods">

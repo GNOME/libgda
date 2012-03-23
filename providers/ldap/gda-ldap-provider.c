@@ -362,6 +362,8 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	const gchar *user = NULL;
 	gchar *dnuser = NULL;
         const gchar *pwd = NULL;
+        const gchar *time_limit = NULL;
+        const gchar *size_limit = NULL;
         const gchar *tls_method = NULL;
         const gchar *tls_cacert = NULL;
 	int rtls_method = -1;
@@ -416,6 +418,8 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 			return FALSE;
 		}
 	}
+	time_limit = gda_quark_list_find (params, "TIME_LIMIT");
+	size_limit = gda_quark_list_find (params, "SIZE_LIMIT");
 
 	/* open LDAP connection */
 	LdapConnectionData *cdata;
@@ -456,7 +460,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	else
 		url = g_strdup_printf ("ldap://%s:%d", host, rport);
 
-	if (! gda_ldap_parse_dn (user, NULL) && *user) {
+	if (user && *user && ! gda_ldap_parse_dn (user, NULL)) {
 		/* analysing the @user parameter */
 		/* the user name is not a DN => we need to fetch the DN of the entry
 		 * using filters defined in the "mappings" array @user */
@@ -499,6 +503,8 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	cdata = g_new0 (LdapConnectionData, 1);
 	cdata->handle = ld;
 	cdata->url = url;
+	cdata->time_limit = 0;
+	cdata->size_limit = 0;
 	cdata->base_dn = g_strdup (base_dn);
 	if (use_cache)
 		cdata->attributes_cache_file = compute_data_file_name (params, TRUE, "attrs");
@@ -518,7 +524,32 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 			return FALSE;
 		}
         }
-	res = ldap_set_option (cdata->handle, LDAP_OPT_RESTART, LDAP_OPT_ON);
+
+	/* time limit */
+	if (time_limit && *time_limit) {
+		int limit = atoi (time_limit);
+		res = ldap_set_option (cdata->handle, LDAP_OPT_TIMELIMIT, &limit);
+		if (res != LDAP_SUCCESS) {
+			gda_connection_add_event_string (cnc, ldap_err2string (res));
+			gda_ldap_free_cnc_data (cdata);
+			g_free (dnuser);
+			return FALSE;
+		}
+		cdata->time_limit = limit;
+	}
+
+	/* size limit */
+	if (size_limit && *size_limit) {
+		int limit = atoi (size_limit);
+		res = ldap_set_option (cdata->handle, LDAP_OPT_SIZELIMIT, &limit);
+		if (res != LDAP_SUCCESS) {
+			gda_connection_add_event_string (cnc, ldap_err2string (res));
+			gda_ldap_free_cnc_data (cdata);
+			g_free (dnuser);
+			return FALSE;
+		}
+		cdata->size_limit = limit;
+	}
 
 	/* authentication */
 	struct berval cred;
@@ -602,6 +633,22 @@ gda_ldap_silently_rebind (LdapConnectionData *cdata)
         cred.bv_len = pwd && *pwd ? strlen (pwd) : 0;
         cred.bv_val = pwd && *pwd ? (char *) pwd : NULL;
 	res = ldap_sasl_bind_s (ld, cdata->user, NULL, &cred, NULL, NULL, NULL);
+	if (res != LDAP_SUCCESS) {
+		ldap_unbind_ext (ld, NULL, NULL);
+                return FALSE;
+	}
+
+	/* time limit */
+	int limit = cdata->time_limit;
+	res = ldap_set_option (cdata->handle, LDAP_OPT_TIMELIMIT, &limit);
+	if (res != LDAP_SUCCESS) {
+		ldap_unbind_ext (ld, NULL, NULL);
+                return FALSE;
+	}
+
+	/* size limit */
+	limit = cdata->size_limit;
+	res = ldap_set_option (cdata->handle, LDAP_OPT_SIZELIMIT, &limit);
 	if (res != LDAP_SUCCESS) {
 		ldap_unbind_ext (ld, NULL, NULL);
                 return FALSE;
