@@ -86,6 +86,7 @@ static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataMode
 static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GError             **gda_data_access_wrapper_get_exceptions  (GdaDataModel *model);
 
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model);
 static void iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model);
@@ -182,6 +183,8 @@ gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface)
 	iface->i_set_notify = NULL;
 	iface->i_get_notify = NULL;
 	iface->i_send_hint = NULL;
+
+	iface->i_get_exceptions = gda_data_access_wrapper_get_exceptions;
 }
 
 static void
@@ -794,4 +797,15 @@ gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint r
 	flags |= GDA_VALUE_ATTR_NO_MODIF;
 	
 	return flags;
+}
+
+static GError **
+gda_data_access_wrapper_get_exceptions (GdaDataModel *model)
+{
+	GdaDataAccessWrapper *imodel;
+
+	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
+	imodel = (GdaDataAccessWrapper *) model;
+	g_return_val_if_fail (imodel->priv, NULL);
+	return gda_data_model_get_exceptions (imodel->priv->model);
 }
