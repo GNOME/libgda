@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-18 20:21+0000\n"
-"PO-Revision-Date: 2012-03-19 13:10+0100\n"
+"POT-Creation-Date: 2012-03-23 20:03+0000\n"
+"PO-Revision-Date: 2012-03-24 12:55+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -151,10 +151,10 @@ msgstr "No se pudo ejecutar el visor"
 #: ../providers/jdbc/gda-jdbc-provider.c:1490
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164 ../providers/jdbc/libmain.c:476
-#: ../providers/ldap/gda-ldap-provider.c:719
-#: ../providers/ldap/gda-ldap-provider.c:729
-#: ../providers/ldap/gda-ldap-provider.c:758
-#: ../providers/ldap/gda-ldap-provider.c:821
+#: ../providers/ldap/gda-ldap-provider.c:766
+#: ../providers/ldap/gda-ldap-provider.c:776
+#: ../providers/ldap/gda-ldap-provider.c:805
+#: ../providers/ldap/gda-ldap-provider.c:868
 #: ../providers/mdb/gda-mdb-provider.c:359
 #: ../providers/mysql/gda-mysql-provider.c:1981
 #: ../providers/mysql/gda-mysql-provider.c:1996
@@ -845,7 +845,7 @@ msgstr ""
 "Siguiendo el estado de la transacción de la conexión: no existe ninguna "
 "transacción para %s"
 
-#: ../libgda/gda-data-access-wrapper.c:623
+#: ../libgda/gda-data-access-wrapper.c:626
 #: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:439
 #: ../libgda/gda-data-model-array.c:670 ../libgda/gda-data-model-bdb.c:656
 #: ../libgda/gda-data-model-bdb.c:760 ../libgda/gda-data-model-bdb.c:789
@@ -861,11 +861,11 @@ msgstr ""
 msgid "Column %d out of range (0-%d)"
 msgstr "Columna %d fuera de rango (0 - %d)"
 
-#: ../libgda/gda-data-access-wrapper.c:663
+#: ../libgda/gda-data-access-wrapper.c:666
 msgid "Can't set iterator's position"
 msgstr "No se puede establecer la posición del iterador"
 
-#: ../libgda/gda-data-access-wrapper.c:741
+#: ../libgda/gda-data-access-wrapper.c:744
 msgid "Can't access data"
 msgstr "No se puede acceder a los datos"
 
@@ -2865,7 +2865,7 @@ msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2904
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:434
 #: ../providers/jdbc/gda-jdbc-provider.c:1220
-#: ../providers/ldap/gda-ldap-provider.c:690
+#: ../providers/ldap/gda-ldap-provider.c:737
 #: ../providers/mysql/gda-mysql-provider.c:2101
 #: ../providers/postgres/gda-postgres-provider.c:1810
 #: ../providers/web/gda-web-provider.c:1402
@@ -3453,7 +3453,7 @@ msgid "Data size"
 msgstr "Tamaño de datos"
 
 #: ../libgda-ui/data-entries/common-bin.c:301
-#: ../providers/ldap/gda-ldap-provider.c:870
+#: ../providers/ldap/gda-ldap-provider.c:917
 #: ../providers/mysql/gda-mysql-provider.c:635
 #: ../providers/mysql/gda-mysql-provider.c:669
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3487,7 +3487,7 @@ msgstr "Tipo de dato"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:167
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
 #: ../libgda-ui/gdaui-basic-form.c:848 ../libgda-ui/gdaui-basic-form.c:883
-#: ../libgda-ui/gdaui-raw-grid.c:807 ../providers/ldap/gda-ldap-provider.c:884
+#: ../libgda-ui/gdaui-raw-grid.c:807 ../providers/ldap/gda-ldap-provider.c:931
 #: ../tools/config-info.c:121 ../tools/config-info.c:290
 #: ../tools/gda-sql.c:3821 ../tools/gda-sql.c:4610 ../tools/gda-sql.c:5818
 msgid "Value"
@@ -4748,7 +4748,7 @@ msgid "An error occurred while accessing the BDB database"
 msgstr "Ocurrió un error al acceder a la base de datos BDB"
 
 #: ../providers/bdb/gda-bdb-provider.c:201
-#: ../providers/ldap/gda-ldap-provider.c:557
+#: ../providers/ldap/gda-ldap-provider.c:588
 #: ../providers/mdb/gda-mdb-provider.c:321
 msgid "Can't open virtual connection"
 msgstr "No se puede abrir la conexión virtual"
@@ -5515,23 +5515,23 @@ msgstr ""
 "No se pudo ejecutar el tiempo de ejecución de la JVM (libjvm.so), el "
 "proveedor JDBC no está disponible."
 
-#: ../providers/ldap/gda-ldap-provider.c:374
+#: ../providers/ldap/gda-ldap-provider.c:376
 msgid "The connection string must contain the DB_NAME value"
 msgstr "La cadena de conexión debe contener el valor DB_NAME"
 
-#: ../providers/ldap/gda-ldap-provider.c:415
+#: ../providers/ldap/gda-ldap-provider.c:417
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Valor no válido para «TLS_REQCERT»"
 
-#: ../providers/ldap/gda-ldap-provider.c:486
+#: ../providers/ldap/gda-ldap-provider.c:490
 msgid "Invalid user name"
 msgstr "Nombre de usuario no válido"
 
-#: ../providers/ldap/gda-ldap-provider.c:883
+#: ../providers/ldap/gda-ldap-provider.c:930
 msgid "Parameter"
 msgstr "Parámetro"
 
-#: ../providers/ldap/gda-ldap-provider.c:1097
+#: ../providers/ldap/gda-ldap-provider.c:1144
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "cerca de «%s»: error de sintaxis"
@@ -5672,18 +5672,42 @@ msgstr ""
 "usuario), de manera predeterminada es cierto"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
+#| msgid "Login limit"
+msgid "Time limit"
+msgstr "Límite de tiempo"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
+msgid ""
+"Time limit after which a search operation should be terminated by the server "
+"(leave undefined or 0 for unlimited)"
+msgstr ""
+"Límite de tiempo después del cual el servidor debe termina una operación de "
+"búsqueda (dejar sin definir o a 0 para que sea ilimitado)"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
+#| msgid "Login limit"
+msgid "Size limit"
+msgstr "Límite de tamaño"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
+msgid "Maximum number of entries that can be returned on a search operation"
+msgstr ""
+"El número máximo de entradas que se pueden devolver en una operación de "
+"búsqueda"
+
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:19
 msgid "Never: certificate not requested or checked"
 msgstr "Nuca: certificado no solicitado o comprobado"
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
 msgstr "Permitir: certificado solicitado, aceptado ninguno o uno erróneo."
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:21
 msgid "Try: certificate requested, none accepted, otherwise checked."
 msgstr "Intentar: certificado solicitado, ninguno aceptado, si no, comprobado."
 
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
 msgstr "Demanda: certificado solicitado y comprobado"
 
@@ -10094,13 +10118,6 @@ msgstr "Bienvenido a la consola GDA SQL, versión "
 
 #: ../tools/gda-sql.c:346
 #, c-format
-#| msgid ""
-#| "Type: .copyright to show usage and distribution terms\n"
-#| "      .? or .h for help with internal commands\n"
-#| "      .q (or CTRL-D) to quit\n"
-#| "      (the '.' can be replaced by a '\\')\n"
-#| "      or any query terminated by a semicolon\n"
-#| "\n"
 msgid ""
 "Type: %s to show usage and distribution terms\n"
 "      %s or %s for help with internal commands\n"
