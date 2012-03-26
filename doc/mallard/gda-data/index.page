@@ -1,0 +1,27 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	type="guide" id="index">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-03-26" status="incomplete"/>
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+  </info>
+
+  <title>
+    GDA Vala Extensions Documentation
+  </title>
+  <p>
+  This guide will shows you features and how to use Vala Extensions.
+  </p>
+  <p>
+  Is a set of Vala interfaces and classes to allow access to a database components like: records, tables, schemas, and others. Interfaces defines the required properties and methods, allowing any one to implement them using any database engine. Classes are implementations of these interfaces using GDA's Vala bindings; allowing to instance them directly or create derived classes.
+  </p>
+  <p>
+  Interfaces and classes uses Gee's classes to store data from database or to be saved to. Some properties provides Gee.Collection implementations to allow iterate through its data using standard Vala's foreach statement.
+  </p>
+</page>
