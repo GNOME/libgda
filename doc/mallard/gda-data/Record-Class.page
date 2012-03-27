@@ -109,4 +109,18 @@
   The above code declares a <code>MyRecord.name</code> property witch uses <code>Record.get_value()</code> and <code>Record.set_field_value()</code> from its base class, to get and set its value.
   </p>
   </section>
+  <section id="record-fields">
+  <title>Iterating through Fields</title>
+  <p>
+  You can iterate over <code>Record</code>'s fields using Vala <code>foreach</code> statement, by using <code>Record.fields</code> property; it's a <code>Gee.Collection</code> of <code>DbField</code> objects, then you can use:
+  </p>
+    <code mime="text/x-c++src">
+  foreach (DbField f in record.fields) {
+    /* work with DbField object */
+  }
+  </code>
+  <p>
+  The same apply for all keys you set by using <code>Record.keys</code> property.
+  </p>
+  </section>
 </page>
