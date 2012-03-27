@@ -17,8 +17,14 @@
     Interfaces
   </title>
   <p>
-  
+  Vala Extensions defines a set of interfaces to define a generic behaviour. They expect to be the base for future implementations for Vala objects accessing a database.
   </p>
   <p>
+  The interfaces defined are the following:
   </p>
+  <figure>
+  <title>UML diagram for Interfaces</title>
+  <desc>This diagram describes the available interfaces and its relations.</desc>
+  <media type="image" mime="image/png" src="interfaces-uml.png"/>
+</figure>
 </page>
