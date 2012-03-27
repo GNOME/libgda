@@ -22,6 +22,14 @@
   <p>
   In order to load data, you need to set a table and a key. Then <code>update()</code> method execute a SELECT command using the key to find the required row in the table.
   </p>
+  <section id="record-uml">
+  <title>Record class UML definition</title>
+  <figure>
+  <title>UML definition</title>
+  <desc>This diagram describes Record class and its implementations.</desc>
+  <media type="image" mime="image/png" src="record-class-uml.png"/>
+</figure>
+  </section>
   <section id="record-update">
   <title>Using a Record class to access a row in a table</title>
   <listing>
