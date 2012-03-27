@@ -2650,7 +2650,7 @@ build_internal_commands_list (void)
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("General");
 	c->group_id = NULL;
-	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>]"), "option");
+	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>]]"), "option");
 	c->description = _("Set or show an option, or list all options ");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_option;
