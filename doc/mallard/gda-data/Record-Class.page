@@ -88,6 +88,25 @@
   </code>
   </listing>
   </section>
+  <section>
+  <title>Deleting rows</title>
+  <p>
+  If you want to delete a row in a database's table, just create a new <code>Record</code> object, set a key, a table and a connection, then call <code>Record.drop()</code>.
+  </p>
+  <listing>
+  <title>How to delete a row in a table</title>
+  <desc>This code shows how to setup and delete a row to be deleted in a database's table.</desc>
+  <code>
+  var r = new Record ();
+  r.connection = connection;
+  var t = new Table ();
+  t.name = "table_name";
+  r.table = t;
+  r.set_key_value ("id", 1);
+  r.drop ();
+  </code>
+  </listing>
+  </section>
   <section id="record-subclass">
   <title>Subclassing Record class</title>
   <p>
