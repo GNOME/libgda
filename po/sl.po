@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-03-23 20:03+0000\n"
-"PO-Revision-Date: 2012-03-23 22:32+0100\n"
+"POT-Creation-Date: 2012-03-28 09:51+0000\n"
+"PO-Revision-Date: 2012-03-28 15:14+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -10244,8 +10244,8 @@ msgstr "Pokaži pogoje uporabo in razširjanja"
 
 #: ../tools/gda-sql.c:2653
 #, c-format
-msgid "%s [<NAME> [<VALUE>]"
-msgstr "%s [<ime> [<vrednost>]"
+msgid "%s [<NAME> [<VALUE>]]"
+msgstr "%s [<IME> [<VREDNOST>]]"
 
 #: ../tools/gda-sql.c:2654
 msgid "Set or show an option, or list all options "
