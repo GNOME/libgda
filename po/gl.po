@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-23 23:35+0100\n"
-"PO-Revision-Date: 2012-03-23 23:36+0100\n"
+"POT-Creation-Date: 2012-03-28 11:50+0200\n"
+"PO-Revision-Date: 2012-03-28 11:51+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
 "Language: gl\n"
@@ -10446,8 +10446,8 @@ msgstr "Mostrar o modo de uso e os termos da distribución"
 
 #: ../tools/gda-sql.c:2653
 #, c-format
-msgid "%s [<NAME> [<VALUE>]"
-msgstr "%s [<NOME> [<VALOR>]"
+msgid "%s [<NAME> [<VALUE>]]"
+msgstr "%s [<NOME> [<VALOR>]]"
 
 #: ../tools/gda-sql.c:2654
 msgid "Set or show an option, or list all options "
