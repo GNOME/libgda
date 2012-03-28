@@ -20,7 +20,7 @@
   <code>Record</code> class is an implementation of <code>DbRecord</code> interface. It uses GDA to get access to a database's row in a table.
   </p>
   <p>
-  In order to load data, you need to set a table and a key. Then <code>update()</code> method execute a SELECT command using the key to find the required row in the table.
+  In order to load data, you need to set a <code>Gda.Connection</code>, a table and a key. Then <code>update()</code> method execute a SELECT command using the key to find the required row in the table.
   </p>
   <section id="record-uml">
   <title>Record class UML definition</title>
@@ -49,10 +49,10 @@
   <p>In the above code, connection is opened before to be set to <code>Record.connection</code> property. You need to setup a <code>Table</code> class to set to <code>Record.table</code> property, but just set <code>Table.name</code> property to the table's name is required. Use <code>Record.set_key_value()</code> method to set the value to the column used in the table as the primary key and to allow <code>update()</code> method to find the correct row (the WHERE clause in SELECT statement), if more than one key exists you must set it; you must know the column and type of value to set.
   </p>
   </section>
-  <section id="record-save">
+  <section id="record-append">
   <title>Using a Record class to add a new row in a table</title>
   <listing>
-  <desc>This record setup a row to be added to a database's table</desc>
+  <desc>This code set up a row to be added to a database's table</desc>
   <code mime="text/x-c++src">
   var r = new Record ();
   var t = new Table ();
@@ -61,7 +61,7 @@
   r.connection = connection;
   r.set_field_value ("name", "Clausse Rayman");
   r.set_field_value ("company", "Packing Sources, Ltd.");
-  r.save ();
+  r.append ();
   </code>
   </listing>
   <p>
@@ -70,6 +70,23 @@
   <p>
   <code>Record.set_field_value()</code> doesn't know if the columns and type is correct, just store the value to used in an INSERT statement; if key is set by database engine it will be added automatically, if not you must set it in order to execute <code>save()</code> with no errors.
   </p>
+  </section>
+  <section>
+  <title>Update data in a row</title>
+  <p>
+  Once you have set a key and a table to a <code>Record</code> object, you can call <code>Record.set_field_value()</code> to change row's column's values, once done, you can call <code>Record.save()</code> to call an UPDATE command and update database's row/column values.
+  </p>
+  <listing>
+  <title>Updating columns' values</title>
+  <desc>This code sets a key and a table to find a row and set a column's value, then call save() to update data in the database</desc>
+  <code>
+  var r = new Record ();
+  r.connection = connection;
+  r.set_key_value ("id", 1);
+  r.set_field_value ("name", "Jack Swan");
+  r.save ();
+  </code>
+  </listing>
   </section>
   <section id="record-subclass">
   <title>Subclassing Record class</title>

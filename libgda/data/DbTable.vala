@@ -33,6 +33,9 @@ namespace GdaData
 		public abstract Collection<DbFieldInfo>     fields        { owned get; }
 		public abstract Collection<DbFieldInfo>     primary_keys  { owned get; }
 		
+		public abstract void         set_field (DbFieldInfo field) throws Error;
+		public abstract DbFieldInfo  get_field (string name) throws Error;
+		
 		public enum TableType {
 			NONE,
 			BASE_TABLE,
