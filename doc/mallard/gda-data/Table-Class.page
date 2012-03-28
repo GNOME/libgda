@@ -97,6 +97,22 @@
   If the column will refer to a column in other table as a foreign key you must set <code>DbFieldInfo.fkey</code>. ForeignKey object is used for column's foreign keys.
   </p>
   </section>
+  <section>
+  <title>Deleting tables</title>
+  <p>
+  If you want to delete a table you must create a new <code>Table</code> object, set a name and a <code>Gda.Connection</code>; finally you just call <code>Table.drop()</code> method.
+  </p>
+  <listing>
+  <title>Dropping a table. Example </title>
+  <desc>This code describes how to delete a table in a database</desc>
+  <code>
+    var t = new Table ();
+    t.name = "table_name";
+    t.connection = connection;
+    t.drop ();
+    </code>
+  </listing>
+  </section>
   <section id="table-fields">
   <title>Iterating through Fields definitions</title>
   <p>
@@ -129,10 +145,13 @@
   </section>
   <section id="table-dependencies">
   <title>Table's dependencies</title>
+  <p>
+  In order to introspect a database table, you must create a new <code>Table</code> object, set a name and a <code>Gda.Connection</code>, then call  <code>Table.update()</code>. After this you are able to know its dependencies.
+  </p>
   <section id="table-dependencies-depends">
   <title>ForeignKeys</title>
   <p>
-  When you call <code>Table.update()</code>, you can access to all <code>DbTable</code> objects referenced in foreign keys for each column in the table definition, using <code>Table.depends</code>, through a <code>Gee.Collection</code> of <code>DbTable</code> objects.
+You can access to all <code>DbTable</code> objects referenced in foreign keys for each column in the table definition, using <code>Table.depends</code>, through a <code>Gee.Collection</code> of <code>DbTable</code> objects.
   </p>
   </section>
   <section id="table-dependencies-referenced">

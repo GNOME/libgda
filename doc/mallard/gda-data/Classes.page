@@ -2,7 +2,7 @@
 	 type="topic" id="classes">
 
   <info>
-    <revision pkgversion="5.2" version="0.1" date="2012-01-18" status="incomplete" />
+    <revision pkgversion="5.2" version="0.1" date="2012-03-28" status="incomplete" />
     <credit type="author">
       <name>Daniel Espinosa</name>
       <email>despinosa@src.gnome.org</email>
@@ -20,11 +20,14 @@
   GDA's Vala Extensions classes are instantiable. They implement generic interfaces. Use GDA's Vala bindings to get access to database's data. 
   </p>
   <p>
-  They load in memory all required data from database when <code>update()</code> method is called; but you are able to set data without call it and then use <code>save()</code> method to set it to the database. Methods <code>update()</code> and <code>save()</code> execute SQL commands directly using GDA's database providers.
+  They load in memory all required data from database when <code>update()</code> method is called; but you are able to set data without call it and then use <code>save()</code> method to update the database. Methods <code>update()</code> and <code>save()</code> execute SQL commands directly using GDA's database providers.
   </p>
+  <p>
+  To create new database objects just setup them and then call <code>append()</code>. To delete it use <code>drop()</code>.
+  </p>.
   <figure>
   <title>UML diagram for Classes</title>
   <desc>This diagram describes the available classes, its relations and interface implementations.</desc>
   <media type="image" mime="image/png" src="classes-uml.png"/>
-</figure>
+  </figure>
 </page>
