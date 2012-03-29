@@ -68,12 +68,12 @@ do_linked_model_param (GtkWidget *do_widget)
 						"SELECT c.id, c.name, s.name AS \"SalesRep\""
 						"FROM customers c "
 						"LEFT JOIN salesrep s ON (s.id=c.default_served_by) "
-						"WHERE s.id = ##SalesRep::gint::null "
-						    "OR s.id IS NULL", NULL, NULL);
+						"WHERE s.id = ##SalesRep::gint::null", NULL, NULL);
 		gda_statement_get_parameters (stmt, &params, NULL);
 		cust_model = gda_connection_statement_execute_select_full (demo_cnc, stmt, params,
 									   GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
 									   NULL, NULL);
+		g_object_set (cust_model, "auto-reset", TRUE, NULL);
 		g_object_unref (stmt);
 
 		/* restrict the c.default_served_by field in the grid to be within the sr_model */
