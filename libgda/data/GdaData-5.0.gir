@@ -145,26 +145,6 @@
 				<type name="GdaData.Table" c:type="GdaDataTable*"/>
 			</return-value>
 		</constructor>
-		<method name="set_field" c:identifier="gda_data_table_set_field" throws="1">
-			<parameters>
-				<parameter name="field" transfer-ownership="none">
-					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
-				</parameter>
-			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
-		</method>
-		<method name="get_field" c:identifier="gda_data_table_get_field" throws="1">
-			<parameters>
-				<parameter name="name" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
-				</parameter>
-			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
-			</return-value>
-		</method>
 		<constructor name="new" c:identifier="gda_data_table_new">
 			<return-value transfer-ownership="full">
 				<type name="GdaData.Table" c:type="GdaDataTable*"/>
@@ -482,6 +462,46 @@
 		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
+		<method name="set_field" c:identifier="gda_data_db_table_set_field" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</method>
+		<virtual-method name="set_field" invoker="set_field" throws="1">
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+		</virtual-method>
+		<method name="get_field" c:identifier="gda_data_db_table_get_field" throws="1">
+			<parameters>
+				<parameter name="name" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</return-value>
+		</method>
+		<virtual-method name="get_field" invoker="get_field" throws="1">
+			<parameters>
+				<parameter name="name" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</return-value>
+		</virtual-method>
 		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
@@ -530,6 +550,36 @@
 	<record name="DbTableIface" c:type="GdaDataDbTableIface" glib:is-gtype-struct-for="DbTable">
 		<field name="parent_iface">
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+		<field name="set_field">
+			<callback name="set_field" c:type="set_field" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+			</callback>
+		</field>
+		<field name="get_field">
+			<callback name="get_field" c:type="get_field" throws="1">
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="name" transfer-ownership="none">
+						<type name="utf8" c:type="const gchar*"/>
+					</parameter>
+				</parameters>
+				<return-value transfer-ownership="full">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</return-value>
+			</callback>
 		</field>
 	</record>
 	<enumeration name="DbTableTableType" c:type="GdaDataDbTableTableType" glib:type-name="GdaDataDbTableTableType" glib:get-type="gda_data_db_table_table_type_get_type">
