@@ -16,6 +16,8 @@
 <!ENTITY gda-list-config "<command>gda-list-config-5.0</command>">
 <!ENTITY gda-sql         "<command>gda-sql</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-5.0</command>">
+<!ENTITY GdaData         '<emphasis><ulink url="gda-data/index.html">Gda Vala Extensions</ulink></emphasis>'>
+<!ENTITY GI              '<emphasis><ulink url="http://live.gnome.org/GObjectIntrospection">GObject Introspection</ulink></emphasis>'>
 ]>
 <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
   <bookinfo>
@@ -82,7 +84,7 @@
           <orgname></orgname>
           <address><email>esodan@gmail.com</email></address>
         </affiliation>
-	<contrib>libgda, gda-postgres, gda-mysql
+	<contrib>libgda, Vala, GObject Introspection
         </contrib>
       </author>
       <author>
@@ -1117,7 +1119,23 @@ g_object_unref (store);
       <xi:include href="xml/gda-attributes-manager.xml"/>
     </chapter>
   </part>
-
+  
+  <part id="other-languages">
+    <title>Using Other Programing Languages</title>
+    <chapter id="other-languages-introduction">
+      <title>Introduction</title>
+      <para>
+      &GDA; has support for &GI;, allowing to use GDA's C API in other languages that support it, like Python or Vala.
+      </para>
+    </chapter>
+    <chapter id="other-languages-vala">
+    <title>Vala Extensions</title>
+    <para>
+    Vala is a GObject oriented programing language very similar to C#. &GDA; have added support for through &GI;. Aditionaly some extensions are availabe for better experience using GDA in Vala. You can browse through &GdaData; documentation.
+    </para>
+    </chapter>
+  </part>
+  
   <part id="part_tools">
     <title>&GDA; Tools</title>
     <chapter id="libgda-tools-introduction">

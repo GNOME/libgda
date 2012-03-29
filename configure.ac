@@ -945,6 +945,8 @@ doc/C/Makefile
 doc/C/libgda.types
 doc/C/version.xml
 doc/C/builddate.xml
+doc/mallard/Makefile
+doc/mallard/gda-data/Makefile
 data/Makefile
 stamp.h
 ])
