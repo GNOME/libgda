@@ -312,8 +312,7 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	combo->priv->combo_entry = entry;
 
 	if (values) {
-		if (! _gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL))
-			g_warning (_("Could find row in data model with provided values"));
+		_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
 		gdaui_entry_combo_set_reference_values (combo, values);
 		g_slist_free (values);
 	}
