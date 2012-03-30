@@ -1,0 +1,170 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="record-class">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2012-01-18" status="incomplete" />
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <link type="topic" xref="classes" />
+  </info>
+
+  <title>
+    Record class
+  </title>
+  <p>
+  <code>Record</code> class is an implementation of <code>DbRecord</code> interface. It uses GDA to get access to a database's row in a table.
+  </p>
+  <p>
+  In order to load data, you need to set a <code>Gda.Connection</code>, a table and a key. Then <code>update()</code> method execute a SELECT command using the key to find the required row in the table.
+  </p>
+  <section id="record-uml">
+  <title>Record class UML definition</title>
+  <figure>
+  <title>UML definition</title>
+  <desc>This diagram describes Record class and its implementations.</desc>
+  <media type="image" mime="image/png" src="figures/record-class-uml.png"/>
+</figure>
+  </section>
+  <section id="record-update">
+  <title>Using a Record class to access a row in a table</title>
+  <listing>
+  <desc>
+  This codes initiate a Record class, set a table to use, a key and a connection in order to call update()
+  </desc>
+  <code mime="text/x-c++src">
+  var r = new Record ();
+  var t = new Table ();
+  t.name = "customer";
+  r.table = t;
+  r.connection = connection;
+  r.set_key_value ("id", 1);
+  r.update ();
+  </code>
+  </listing>
+  <p>In the above code, connection is opened before to be set to <code>Record.connection</code> property. You need to setup a <code>Table</code> class to set to <code>Record.table</code> property, but just set <code>Table.name</code> property to the table's name is required. Use <code>Record.set_key_value()</code> method to set the value to the column used in the table as the primary key and to allow <code>update()</code> method to find the correct row (the WHERE clause in SELECT statement), if more than one key exists you must set it; you must know the column and type of value to set.
+  </p>
+  </section>
+  <section id="record-append">
+  <title>Using a Record class to add a new row in a table</title>
+  <listing>
+  <desc>This code set up a row to be added to a database's table</desc>
+  <code mime="text/x-c++src">
+  var r = new Record ();
+  var t = new Table ();
+  t.name = "customer";
+  r.table = t;
+  r.connection = connection;
+  r.set_field_value ("name", "Clausse Rayman");
+  r.set_field_value ("company", "Packing Sources, Ltd.");
+  r.append ();
+  </code>
+  </listing>
+  <p>
+  In the above code a new row will be added. Create a new <code>Record</code> object, set a table to add a new row to; use <code>Record.set_field_value()</code> to set values to columns in the table, you must know columns and data type to set. At the end call <code>Record.save()</code> to add the new row.
+  </p>
+  <p>
+  <code>Record.set_field_value()</code> doesn't know if the columns and type is correct, just store the value to used in an INSERT statement; if key is set by database engine it will be added automatically, if not you must set it in order to execute <code>save()</code> with no errors.
+  </p>
+  </section>
+  <section>
+  <title>Update data in a row</title>
+  <p>
+  Once you have set a key and a table to a <code>Record</code> object, you can call <code>Record.set_field_value()</code> to change row's column's values, once done, you can call <code>Record.save()</code> to call an UPDATE command and update database's row/column values.
+  </p>
+  <listing>
+  <title>Updating columns' values</title>
+  <desc>This code sets a key and a table to find a row and set a column's value, then call save() to update data in the database</desc>
+  <code>
+  var r = new Record ();
+  r.connection = connection;
+  r.set_key_value ("id", 1);
+  r.set_field_value ("name", "Jack Swan");
+  r.save ();
+  </code>
+  </listing>
+  </section>
+  <section>
+  <title>Deleting rows</title>
+  <p>
+  If you want to delete a row in a database's table, just create a new <code>Record</code> object, set a key, a table and a connection, then call <code>Record.drop()</code>.
+  </p>
+  <listing>
+  <title>How to delete a row in a table</title>
+  <desc>This code shows how to setup and delete a row to be deleted in a database's table.</desc>
+  <code>
+  var r = new Record ();
+  r.connection = connection;
+  var t = new Table ();
+  t.name = "table_name";
+  r.table = t;
+  r.set_key_value ("id", 1);
+  r.drop ();
+  </code>
+  </listing>
+  </section>
+  <section id="record-subclass">
+  <title>Subclassing Record class</title>
+  <p>
+  <code>Record</code> class could be used as base for others. Is useful to wrap <code>Record.set_field_value()</code> into your class property to hide database access.
+  </p>
+  <note style="tip">
+  <p>Use <code>try{}</code><code> catch{}</code> to avoid warnings for unhandled error</p>
+  </note>
+  <listing>
+  <desc>
+  This code declares a new class MyRecord derived from Record.
+  </desc>
+  <code mime="text/x-c++src">
+  class MyRecord : Record
+  {
+    public MyRecord () { /* Your init code */ }
+    
+    public string name
+    {
+      get 
+      { 
+        try {
+          return this.get_value ("name");
+        }
+        catch (Error e) {
+          GLib.warning ("ERROR on getting value from name property: " + e.message)
+        } 
+      }
+      
+      set 
+      { 
+        try {
+          return this.set_field_value ("name", value);
+        }
+        catch (Error e) {
+          GLib.warning ("ERROR on setting value to name property: " + e.message)
+        } 
+      }
+    }
+  }
+  </code>
+  </listing>
+  <p>
+  The above code declares a <code>MyRecord.name</code> property witch uses <code>Record.get_value()</code> and <code>Record.set_field_value()</code> from its base class, to get and set its value.
+  </p>
+  </section>
+  <section id="record-fields">
+  <title>Iterating through Fields</title>
+  <p>
+  You can iterate over <code>Record</code>'s fields using Vala <code>foreach</code> statement, by using <code>Record.fields</code> property; it's a <code>Gee.Collection</code> of <code>DbField</code> objects, then you can use:
+  </p>
+    <code mime="text/x-c++src">
+  foreach (DbField f in record.fields) {
+    /* work with DbField object */
+  }
+  </code>
+  <p>
+  The same apply for all keys you set by using <code>Record.keys</code> property.
+  </p>
+  </section>
+</page>

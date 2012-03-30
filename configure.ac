@@ -601,6 +601,29 @@ dnl ******************************
 GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 
 dnl ******************************
+dnl Vala documentation
+dnl ******************************
+enable_vala_doc="no"
+if test "x$enable_gtk_doc" = "xyes"
+then
+dnl Find yelp-build program
+	AC_PATH_PROG(YELP_BUILD, [yelp-build], [no])
+    if test "x$YELP_BUILD" = "xno";
+    then
+        AC_MSG_ERROR([Vala documentation requested but yelp-build not found])
+    fi
+	AC_SUBST(YELP_BUILD)
+    enable_vala_doc="yes"
+fi
+AM_CONDITIONAL(ENABLE_VALA_DOC, [test "$enable_vala_doc" = "yes"])
+
+dnl ******************************
+dnl Yelp init documentation
+dnl ******************************
+
+YELP_HELP_INIT
+
+dnl ******************************
 dnl Checks for providers
 dnl ******************************
 
@@ -946,7 +969,7 @@ doc/C/libgda.types
 doc/C/version.xml
 doc/C/builddate.xml
 doc/mallard/Makefile
-doc/mallard/gda-data/Makefile
+doc/mallard/gda-vala/Makefile
 data/Makefile
 stamp.h
 ])
@@ -982,8 +1005,10 @@ echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; e
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
+echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
+echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"
