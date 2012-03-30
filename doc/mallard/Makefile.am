@@ -1,1 +1,1 @@
-SUBDIRS = gda-data
+SUBDIRS = gda-vala
