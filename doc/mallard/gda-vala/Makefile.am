@@ -1,3 +1,5 @@
+SUBDIRS = C
+
 include $(top_srcdir)/gnome-doc-utils.make
 
 DOC_ID = gda-vala
@@ -21,4 +23,6 @@ DOC_FIGURES = \
 DOC_LINGUAS = 
 
 dist-hook: doc-dist-hook
+
+PAGES_DIR = C
 

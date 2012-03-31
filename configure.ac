@@ -618,12 +618,6 @@ fi
 AM_CONDITIONAL(ENABLE_VALA_DOC, [test "$enable_vala_doc" = "yes"])
 
 dnl ******************************
-dnl Yelp init documentation
-dnl ******************************
-
-YELP_HELP_INIT
-
-dnl ******************************
 dnl Checks for providers
 dnl ******************************
 
@@ -970,6 +964,7 @@ doc/C/version.xml
 doc/C/builddate.xml
 doc/mallard/Makefile
 doc/mallard/gda-vala/Makefile
+doc/mallard/gda-vala/C/Makefile
 data/Makefile
 stamp.h
 ])

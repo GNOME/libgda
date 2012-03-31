@@ -16,7 +16,7 @@
 <!ENTITY gda-list-config "<command>gda-list-config-5.0</command>">
 <!ENTITY gda-sql         "<command>gda-sql</command>">
 <!ENTITY gda-test-connection "<command>gda-test-connection-5.0</command>">
-<!ENTITY GdaData         '<emphasis><ulink url="gda-data/index.html">Gda Vala Extensions</ulink></emphasis>'>
+<!ENTITY GdaVala         '<emphasis><ulink url="gda-vala/index.html">Gda Vala Extensions</ulink></emphasis>'>
 <!ENTITY GI              '<emphasis><ulink url="http://live.gnome.org/GObjectIntrospection">GObject Introspection</ulink></emphasis>'>
 ]>
 <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
@@ -1131,7 +1131,7 @@ g_object_unref (store);
     <chapter id="other-languages-vala">
     <title>Vala Extensions</title>
     <para>
-    Vala is a GObject oriented programing language very similar to C#. &GDA; have added support for through &GI;. Aditionaly some extensions are availabe for better experience using GDA in Vala. You can browse through &GdaData; documentation.
+    Vala is a GObject oriented programing language very similar to C#. &GDA; have added support for through &GI;. Aditionaly some extensions are availabe for better experience using GDA in Vala. You can browse through &GdaVala; documentation.
     </para>
     </chapter>
   </part>
