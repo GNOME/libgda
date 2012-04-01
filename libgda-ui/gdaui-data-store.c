@@ -543,7 +543,7 @@ gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
  * gdaui_data_store_get_iter_from_values:
  * @store: a #GdauiDataStore object
  * @iter: (out): an unset #GtkTreeIter to set to the requested row
- * @values: a list of #GValue values
+ * @values: (element-type GValue): a list of #GValue values
  * @cols_index: an array of #gint containing the column number to match each value of @values
  *
  * Sets @iter to the first row where all the values in @values at the columns identified at

@@ -51,23 +51,23 @@ struct _GdauiEntryWrapperClass
 	GdauiEntryShellClass   parent_class;
 
 	/* pure virtual functions */
-	GtkWidget        *(*create_entry)     (GdauiEntryWrapper *mgwrp);
-	void              (*real_set_value)   (GdauiEntryWrapper *mgwrp, const GValue *value);
-	GValue           *(*real_get_value)   (GdauiEntryWrapper *mgwrp);
-	void              (*connect_signals)  (GdauiEntryWrapper *mgwrp, GCallback modify_cb, GCallback activate_cb);
-	gboolean          (*can_expand)       (GdauiEntryWrapper *mgwrp, gboolean horiz);
-	void              (*set_editable)     (GdauiEntryWrapper *mgwrp, gboolean editable);
+	GtkWidget        *(*create_entry)     (GdauiEntryWrapper *wrapper);
+	void              (*real_set_value)   (GdauiEntryWrapper *wrapper, const GValue *value);
+	GValue           *(*real_get_value)   (GdauiEntryWrapper *wrapper);
+	void              (*connect_signals)  (GdauiEntryWrapper *wrapper, GCallback modify_cb, GCallback activate_cb);
+	gboolean          (*can_expand)       (GdauiEntryWrapper *wrapper, gboolean horiz);
+	void              (*set_editable)     (GdauiEntryWrapper *wrapper, gboolean editable);
 
-	gboolean          (*value_is_equal_to)(GdauiEntryWrapper *mgwrp, const GValue *value);
-	gboolean          (*value_is_null)    (GdauiEntryWrapper *mgwrp);
-	gboolean          (*is_valid)         (GdauiEntryWrapper *mgwrp); /* not used yet */
-	void              (*grab_focus)       (GdauiEntryWrapper *mgwrp);
+	gboolean          (*value_is_equal_to)(GdauiEntryWrapper *wrapper, const GValue *value);
+	gboolean          (*value_is_null)    (GdauiEntryWrapper *wrapper);
+	gboolean          (*is_valid)         (GdauiEntryWrapper *wrapper); /* not used yet */
+	void              (*grab_focus)       (GdauiEntryWrapper *wrapper);
 };
 
 
 GType           gdaui_entry_wrapper_get_type           (void) G_GNUC_CONST;
-void            gdaui_entry_wrapper_contents_changed   (GdauiEntryWrapper *mgwrp);
-void            gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *mgwrp);
+void            gdaui_entry_wrapper_contents_changed   (GdauiEntryWrapper *wrapper);
+void            gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *wrapper);
 
 G_END_DECLS
 

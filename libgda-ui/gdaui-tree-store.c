@@ -452,7 +452,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
  * Creates a #GtkTreeModel interface with a #GdaTree, mapping columns to attributes' values.
  * For more information and limitations, see gdaui_tree_store_new().
  *
- * Returns: the new object, or %NULL if an inconsistency exists in the parameters
+ * Returns: (transfer full): the new object, or %NULL if an inconsistency exists in the parameters
  *
  * Since: 4.2
  */

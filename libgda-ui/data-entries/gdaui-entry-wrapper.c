@@ -35,8 +35,8 @@ static void gdaui_entry_wrapper_get_property (GObject *object,
 					      GValue *value,
 					      GParamSpec *pspec);
 
-static void contents_changed_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap);
-static void contents_activated_cb (GtkWidget *entry, GdauiEntryWrapper *mgwrap);
+static void contents_changed_cb (GtkWidget *entry, GdauiEntryWrapper *wrapper);
+static void contents_activated_cb (GtkWidget *entry, GdauiEntryWrapper *wrapper);
 static void check_correct_init (GdauiEntryWrapper *wid);
 static void block_signals (GdauiEntryWrapper *wid);
 static void unblock_signals (GdauiEntryWrapper *wid);
@@ -167,50 +167,50 @@ gdaui_entry_wrapper_class_init (GdauiEntryWrapperClass *klass)
 }
 
 static void
-check_correct_init (GdauiEntryWrapper *mgwrap)
+check_correct_init (GdauiEntryWrapper *wrapper)
 {
-	if (!mgwrap->priv->impl_is_correct) {
+	if (!wrapper->priv->impl_is_correct) {
 		GtkWidget *entry = NULL;
 		GdauiEntryWrapperClass *klass;
 		gboolean class_impl_error = FALSE;;
 
-		klass = GDAUI_ENTRY_WRAPPER_CLASS (G_OBJECT_GET_CLASS (mgwrap));
+		klass = GDAUI_ENTRY_WRAPPER_CLASS (G_OBJECT_GET_CLASS (wrapper));
 		if (! klass->create_entry) {
 			g_warning ("create_entry () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (mgwrap));
+				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
 		if (! klass->real_set_value) {
 			g_warning ("real_set_value () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (mgwrap));
+				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
 		if (! klass->real_get_value) {
 			g_warning ("real_get_value () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (mgwrap));
+				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
 		if (! klass->connect_signals) {
 			g_warning ("connect_signals () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (mgwrap));
+				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
 		if (! klass->can_expand) {
 			g_warning ("can_expand () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (mgwrap));
+				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
 
 		if (!class_impl_error) {
-			mgwrap->priv->real_class = klass;
-			mgwrap->priv->impl_is_correct = TRUE;
-			entry = (*mgwrap->priv->real_class->create_entry) (mgwrap);
+			wrapper->priv->real_class = klass;
+			wrapper->priv->impl_is_correct = TRUE;
+			entry = (*wrapper->priv->real_class->create_entry) (wrapper);
 
-			gdaui_entry_shell_pack_entry (GDAUI_ENTRY_SHELL (mgwrap), entry);
+			gdaui_entry_shell_pack_entry (GDAUI_ENTRY_SHELL (wrapper), entry);
 			gtk_widget_show (entry);
-			mgwrap->priv->entry = entry;
+			wrapper->priv->entry = entry;
 
-			(*mgwrap->priv->real_class->connect_signals) (mgwrap, G_CALLBACK (contents_changed_cb),
+			(*wrapper->priv->real_class->connect_signals) (wrapper, G_CALLBACK (contents_changed_cb),
 								      G_CALLBACK (contents_activated_cb));
 		}
 		else {
@@ -221,62 +221,62 @@ check_correct_init (GdauiEntryWrapper *mgwrap)
 }
 
 static void
-block_signals (GdauiEntryWrapper *mgwrap)
+block_signals (GdauiEntryWrapper *wrapper)
 {
-	mgwrap->priv->signals_blocked ++;
+	wrapper->priv->signals_blocked ++;
 }
 
 static void
-unblock_signals (GdauiEntryWrapper *mgwrap)
+unblock_signals (GdauiEntryWrapper *wrapper)
 {
-	mgwrap->priv->signals_blocked --;
+	wrapper->priv->signals_blocked --;
 }
 
 
 static void
-gdaui_entry_wrapper_init (GdauiEntryWrapper *mgwrap)
+gdaui_entry_wrapper_init (GdauiEntryWrapper *wrapper)
 {
 	/* Private structure */
-	mgwrap->priv = g_new0 (GdauiEntryWrapperPriv, 1);
-	mgwrap->priv->impl_is_correct = FALSE;
-	mgwrap->priv->entry = NULL;
-	mgwrap->priv->real_class = NULL;
-	mgwrap->priv->signals_blocked = 0;
+	wrapper->priv = g_new0 (GdauiEntryWrapperPriv, 1);
+	wrapper->priv->impl_is_correct = FALSE;
+	wrapper->priv->entry = NULL;
+	wrapper->priv->real_class = NULL;
+	wrapper->priv->signals_blocked = 0;
 
-	mgwrap->priv->type = GDA_TYPE_NULL;
-	mgwrap->priv->value_ref = NULL;
-	mgwrap->priv->value_default = NULL;
+	wrapper->priv->type = GDA_TYPE_NULL;
+	wrapper->priv->value_ref = NULL;
+	wrapper->priv->value_default = NULL;
 
-	mgwrap->priv->null_forced = FALSE;
-	mgwrap->priv->default_forced = FALSE;
+	wrapper->priv->null_forced = FALSE;
+	wrapper->priv->default_forced = FALSE;
 
-	mgwrap->priv->null_possible = TRUE;
-	mgwrap->priv->default_possible = FALSE;
-	mgwrap->priv->show_actions = TRUE;
-	mgwrap->priv->editable = TRUE;
-	mgwrap->priv->contents_has_changed = FALSE;
+	wrapper->priv->null_possible = TRUE;
+	wrapper->priv->default_possible = FALSE;
+	wrapper->priv->show_actions = TRUE;
+	wrapper->priv->editable = TRUE;
+	wrapper->priv->contents_has_changed = FALSE;
 
-	mgwrap->priv->set_default_if_invalid = FALSE;
+	wrapper->priv->set_default_if_invalid = FALSE;
 }
 
 static void
 gdaui_entry_wrapper_dispose (GObject *object)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (object));
 
-	mgwrap = GDAUI_ENTRY_WRAPPER (object);
+	wrapper = GDAUI_ENTRY_WRAPPER (object);
 
-	if (mgwrap->priv) {
-		if (mgwrap->priv->value_ref)
-			gda_value_free (mgwrap->priv->value_ref);
-		if (mgwrap->priv->value_default)
-			gda_value_free (mgwrap->priv->value_default);
+	if (wrapper->priv) {
+		if (wrapper->priv->value_ref)
+			gda_value_free (wrapper->priv->value_ref);
+		if (wrapper->priv->value_default)
+			gda_value_free (wrapper->priv->value_default);
 
-		g_free (mgwrap->priv);
-		mgwrap->priv = NULL;
+		g_free (wrapper->priv);
+		wrapper->priv = NULL;
 	}
 
 	/* for the parent class */
@@ -290,25 +290,25 @@ gdaui_entry_wrapper_set_property (GObject *object,
 				  const GValue *value,
 				  GParamSpec *pspec)
 {
-	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
-	if (mgwrap->priv) {
+	GdauiEntryWrapper *wrapper = GDAUI_ENTRY_WRAPPER (object);
+	if (wrapper->priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID: {
 			guint attrs;
 
-			mgwrap->priv->set_default_if_invalid = g_value_get_boolean (value);
-			attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (mgwrap));
+			wrapper->priv->set_default_if_invalid = g_value_get_boolean (value);
+			attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wrapper));
 
-			if (mgwrap->priv->set_default_if_invalid && (attrs & GDA_VALUE_ATTR_DATA_NON_VALID)) {
+			if (wrapper->priv->set_default_if_invalid && (attrs & GDA_VALUE_ATTR_DATA_NON_VALID)) {
 				GValue *sane_value;
 				GdaDataHandler *dh;
 				GType type;
 
-				check_correct_init (mgwrap);
-				dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
-				type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap));
+				check_correct_init (wrapper);
+				dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (wrapper));
+				type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (wrapper));
 				sane_value = gda_data_handler_get_sane_init_value (dh, type);
-				(*mgwrap->priv->real_class->real_set_value) (mgwrap, sane_value);
+				(*wrapper->priv->real_class->real_set_value) (wrapper, sane_value);
 				if (sane_value)
 					gda_value_free (sane_value);
 			}
@@ -327,11 +327,11 @@ gdaui_entry_wrapper_get_property (GObject *object,
 				  GValue *value,
 				  GParamSpec *pspec)
 {
-	GdauiEntryWrapper *mgwrap = GDAUI_ENTRY_WRAPPER (object);
-	if (mgwrap->priv) {
+	GdauiEntryWrapper *wrapper = GDAUI_ENTRY_WRAPPER (object);
+	if (wrapper->priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID:
-			g_value_set_boolean (value, mgwrap->priv->set_default_if_invalid);
+			g_value_set_boolean (value, wrapper->priv->set_default_if_invalid);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -342,58 +342,58 @@ gdaui_entry_wrapper_get_property (GObject *object,
 
 /**
  * gdaui_entry_wrapper_contents_changed:
- * @mgwrap: a #GdauiEntryWrapper widget
+ * @wrapper: a #GdauiEntryWrapper widget
  *
  * Signals to @gwrap that the entry has changed
  */
 void
-gdaui_entry_wrapper_contents_changed (GdauiEntryWrapper *mgwrap)
+gdaui_entry_wrapper_contents_changed (GdauiEntryWrapper *wrapper)
 {
-	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (wrapper));
 
-	contents_changed_cb (NULL, mgwrap);
+	contents_changed_cb (NULL, wrapper);
 }
 
 /**
  * gdaui_entry_wrapper_contents_activated:
- * @mgwrap: a #GdauiEntryWrapper widget
+ * @wrapper: a #GdauiEntryWrapper widget
  *
  * Signals to @gwrap that the entry has been activated (that is the user
  * pressed ENTER for example to signify he has finished entering data)
  */
 void
-gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *mgwrap)
+gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *wrapper)
 {
-	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (wrapper));
 
-	contents_activated_cb (NULL, mgwrap);
+	contents_activated_cb (NULL, wrapper);
 }
 
 
-static void gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *mgwrap);
+static void gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *wrapper);
 static void
-contents_changed_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *mgwrap)
+contents_changed_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *wrapper)
 {
 	/* @entry is not used */
-	if (! mgwrap->priv->signals_blocked) {
-		mgwrap->priv->null_forced = FALSE;
-		mgwrap->priv->default_forced = FALSE;
-		mgwrap->priv->contents_has_changed = TRUE;
-		gdaui_entry_wrapper_emit_signal (mgwrap);
+	if (! wrapper->priv->signals_blocked) {
+		wrapper->priv->null_forced = FALSE;
+		wrapper->priv->default_forced = FALSE;
+		wrapper->priv->contents_has_changed = TRUE;
+		gdaui_entry_wrapper_emit_signal (wrapper);
 	}
 }
 
 static void
-contents_activated_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *mgwrap)
+contents_activated_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *wrapper)
 {
 	/* @entry is not used */
-	if (! mgwrap->priv->signals_blocked) {
-		mgwrap->priv->null_forced = FALSE;
-		mgwrap->priv->default_forced = FALSE;
+	if (! wrapper->priv->signals_blocked) {
+		wrapper->priv->null_forced = FALSE;
+		wrapper->priv->default_forced = FALSE;
 #ifdef debug_signal
 		g_print (">> 'CONTENTS_ACTIVATED' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit_by_name (G_OBJECT (mgwrap), "contents-activated");
+		g_signal_emit_by_name (G_OBJECT (wrapper), "contents-activated");
 #ifdef debug_signal
 		g_print ("<< 'CONTENTS_ACTIVATED' from %s\n", __FUNCTION__);
 #endif
@@ -401,13 +401,13 @@ contents_activated_cb (G_GNUC_UNUSED GtkWidget *entry, GdauiEntryWrapper *mgwrap
 }
 
 static void
-gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *mgwrap)
+gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *wrapper)
 {
-	if (! mgwrap->priv->signals_blocked) {
+	if (! wrapper->priv->signals_blocked) {
 #ifdef debug_signal
 		g_print (">> 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
 #endif
-		g_signal_emit_by_name (G_OBJECT (mgwrap), "contents-modified");
+		g_signal_emit_by_name (G_OBJECT (wrapper), "contents-modified");
 #ifdef debug_signal
 		g_print ("<< 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
 #endif
@@ -420,29 +420,29 @@ gdaui_entry_wrapper_emit_signal (GdauiEntryWrapper *mgwrap)
 static void
 gdaui_entry_wrapper_set_value_type (GdauiDataEntry *iface, GType type)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	if (mgwrap->priv->type != type) {
+	if (wrapper->priv->type != type) {
 		GValue *value;
 
-		if (mgwrap->priv->value_ref) {
-			gda_value_free (mgwrap->priv->value_ref);
-			mgwrap->priv->value_ref = NULL;
+		if (wrapper->priv->value_ref) {
+			gda_value_free (wrapper->priv->value_ref);
+			wrapper->priv->value_ref = NULL;
 		}
-		if (mgwrap->priv->value_default) {
-			gda_value_free (mgwrap->priv->value_default);
-			mgwrap->priv->value_default = NULL;
+		if (wrapper->priv->value_default) {
+			gda_value_free (wrapper->priv->value_default);
+			wrapper->priv->value_default = NULL;
 		}
 
-		mgwrap->priv->type = type;
-		mgwrap->priv->value_default = gda_value_new_null ();
+		wrapper->priv->type = type;
+		wrapper->priv->value_default = gda_value_new_null ();
 
 		/* Set original value */
 		value = gda_value_new_null ();
-		gdaui_entry_wrapper_set_ref_value (GDAUI_DATA_ENTRY (mgwrap), value);
+		gdaui_entry_wrapper_set_ref_value (GDAUI_DATA_ENTRY (wrapper), value);
  		gda_value_free (value);
 	}
 }
@@ -450,66 +450,66 @@ gdaui_entry_wrapper_set_value_type (GdauiDataEntry *iface, GType type)
 static GType
 gdaui_entry_wrapper_get_value_type (GdauiDataEntry *iface)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), G_TYPE_INVALID);
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	return mgwrap->priv->type;
+	return wrapper->priv->type;
 }
 
 
 static void
 gdaui_entry_wrapper_set_value (GdauiDataEntry *iface, const GValue *value)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
-	block_signals (mgwrap);
+	block_signals (wrapper);
 	if (value) {
-		g_return_if_fail ((G_VALUE_TYPE ((GValue *) value) == mgwrap->priv->type) ||
+		g_return_if_fail ((G_VALUE_TYPE ((GValue *) value) == wrapper->priv->type) ||
 				  (G_VALUE_TYPE ((GValue *) value) == GDA_TYPE_NULL));
-		(*mgwrap->priv->real_class->real_set_value) (mgwrap, value);
+		(*wrapper->priv->real_class->real_set_value) (wrapper, value);
 		if (G_VALUE_TYPE ((GValue *) value) == GDA_TYPE_NULL)
-			mgwrap->priv->null_forced = TRUE;
+			wrapper->priv->null_forced = TRUE;
 		else
-			mgwrap->priv->null_forced = FALSE;
+			wrapper->priv->null_forced = FALSE;
 	}
 	else {
-		(*mgwrap->priv->real_class->real_set_value) (mgwrap, NULL);
-		mgwrap->priv->null_forced = TRUE;
+		(*wrapper->priv->real_class->real_set_value) (wrapper, NULL);
+		wrapper->priv->null_forced = TRUE;
 	}
-	unblock_signals (mgwrap);
-	mgwrap->priv->default_forced = FALSE;
-	mgwrap->priv->contents_has_changed = FALSE;
+	unblock_signals (wrapper);
+	wrapper->priv->default_forced = FALSE;
+	wrapper->priv->contents_has_changed = FALSE;
 
-	gdaui_entry_wrapper_emit_signal (mgwrap);
+	gdaui_entry_wrapper_emit_signal (wrapper);
 }
 
 static GValue *
 gdaui_entry_wrapper_get_value (GdauiDataEntry *iface)
 {
 	GValue *value = NULL;
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), NULL);
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	if (mgwrap->priv->null_forced)
+	if (wrapper->priv->null_forced)
 		value = gda_value_new_null ();
 	else {
-		if (mgwrap->priv->default_forced) {
-			if (G_VALUE_TYPE (mgwrap->priv->value_default) == mgwrap->priv->type)
-				value = gda_value_copy (mgwrap->priv->value_default);
+		if (wrapper->priv->default_forced) {
+			if (G_VALUE_TYPE (wrapper->priv->value_default) == wrapper->priv->type)
+				value = gda_value_copy (wrapper->priv->value_default);
 			else
 				value = gda_value_new_null ();
 		}
 		else {
-			check_correct_init (mgwrap);
-			value = (mgwrap->priv->real_class->real_get_value) (mgwrap);
+			check_correct_init (wrapper);
+			value = (wrapper->priv->real_class->real_get_value) (wrapper);
 		}
 	}
 
@@ -519,17 +519,17 @@ gdaui_entry_wrapper_get_value (GdauiDataEntry *iface)
 static void
 gdaui_entry_wrapper_set_ref_value (GdauiDataEntry *iface, const GValue *value)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 	gboolean changed = TRUE;
 	GValue *evalue;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
 	/* compare existing value and the one provided as argument */
-	if (mgwrap->priv->real_class->value_is_equal_to)
-		changed = ! mgwrap->priv->real_class->value_is_equal_to (mgwrap, value);
+	if (wrapper->priv->real_class->value_is_equal_to)
+		changed = ! wrapper->priv->real_class->value_is_equal_to (wrapper, value);
 	else {
 		evalue = gdaui_entry_wrapper_get_value (iface);
 		if ((!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL)) &&
@@ -542,29 +542,29 @@ gdaui_entry_wrapper_set_ref_value (GdauiDataEntry *iface, const GValue *value)
 	}
 
 	/* get rid on any existing orig value */
-	if (mgwrap->priv->value_ref) {
-		gda_value_free (mgwrap->priv->value_ref);
-		mgwrap->priv->value_ref = NULL;
+	if (wrapper->priv->value_ref) {
+		gda_value_free (wrapper->priv->value_ref);
+		wrapper->priv->value_ref = NULL;
 	}
 
 	/* apply changes, if any */
 	if (changed) {
-		block_signals (mgwrap);
+		block_signals (wrapper);
 		gdaui_entry_wrapper_set_value (iface, value);
-		unblock_signals (mgwrap);
+		unblock_signals (wrapper);
 	}
 
 	if (value) {
-		g_return_if_fail ((G_VALUE_TYPE ((GValue *) value) == mgwrap->priv->type) ||
+		g_return_if_fail ((G_VALUE_TYPE ((GValue *) value) == wrapper->priv->type) ||
 				  (G_VALUE_TYPE ((GValue *) value) == GDA_TYPE_NULL));
-		mgwrap->priv->value_ref = gda_value_copy ((GValue *) value);
+		wrapper->priv->value_ref = gda_value_copy ((GValue *) value);
 	}
 	else
-		mgwrap->priv->value_ref = gda_value_new_null ();
+		wrapper->priv->value_ref = gda_value_new_null ();
 
 	/* signal changes if any */
 	if (changed)
-		gdaui_entry_wrapper_emit_signal (mgwrap);
+		gdaui_entry_wrapper_emit_signal (wrapper);
 }
 
 static const GValue *
@@ -579,32 +579,32 @@ gdaui_entry_wrapper_get_ref_value (GdauiDataEntry *iface)
 static void
 gdaui_entry_wrapper_set_value_default (GdauiDataEntry *iface, const GValue *value)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	if (mgwrap->priv->value_default)
-		gda_value_free (mgwrap->priv->value_default);
+	if (wrapper->priv->value_default)
+		gda_value_free (wrapper->priv->value_default);
 
 	if (value)
-		mgwrap->priv->value_default = gda_value_copy ((GValue *) value);
+		wrapper->priv->value_default = gda_value_copy ((GValue *) value);
 	else
-		mgwrap->priv->value_default = gda_value_new_null ();
+		wrapper->priv->value_default = gda_value_new_null ();
 
-	if (mgwrap->priv->default_forced) {
-		if (G_VALUE_TYPE (mgwrap->priv->value_default) == mgwrap->priv->type) {
-			check_correct_init (mgwrap);
-			block_signals (mgwrap);
-			gdaui_entry_wrapper_set_value (iface, mgwrap->priv->value_default);
-			unblock_signals (mgwrap);
-			mgwrap->priv->default_forced = TRUE;
-			gdaui_entry_wrapper_emit_signal (mgwrap);
+	if (wrapper->priv->default_forced) {
+		if (G_VALUE_TYPE (wrapper->priv->value_default) == wrapper->priv->type) {
+			check_correct_init (wrapper);
+			block_signals (wrapper);
+			gdaui_entry_wrapper_set_value (iface, wrapper->priv->value_default);
+			unblock_signals (wrapper);
+			wrapper->priv->default_forced = TRUE;
+			gdaui_entry_wrapper_emit_signal (wrapper);
 		}
 		else {
-			check_correct_init (mgwrap);
-			(*mgwrap->priv->real_class->real_set_value) (mgwrap, NULL);
-			gdaui_entry_wrapper_emit_signal (mgwrap);
+			check_correct_init (wrapper);
+			(*wrapper->priv->real_class->real_set_value) (wrapper, NULL);
+			gdaui_entry_wrapper_emit_signal (wrapper);
 		}
 	}
 }
@@ -612,12 +612,12 @@ gdaui_entry_wrapper_set_value_default (GdauiDataEntry *iface, const GValue *valu
 static void
 gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute attrs, guint mask)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 	gboolean signal_contents_changed = FALSE;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
 	/* Setting to NULL */
 	if (mask & GDA_VALUE_ATTR_IS_NULL) {
@@ -625,27 +625,27 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 		    !(attrs & GDA_VALUE_ATTR_CAN_BE_NULL))
 			g_return_if_reached ();
 		if (attrs & GDA_VALUE_ATTR_IS_NULL) {
-			block_signals (mgwrap);
+			block_signals (wrapper);
 			gdaui_entry_wrapper_set_value (iface, NULL);
-			unblock_signals (mgwrap);
-			mgwrap->priv->null_forced = TRUE;
+			unblock_signals (wrapper);
+			wrapper->priv->null_forced = TRUE;
 
 			/* if default is set, see if we can keep it that way */
-			if (mgwrap->priv->default_forced) {
-				if (G_VALUE_TYPE (mgwrap->priv->value_default) !=
+			if (wrapper->priv->default_forced) {
+				if (G_VALUE_TYPE (wrapper->priv->value_default) !=
 				    GDA_TYPE_NULL) {
-					mgwrap->priv->default_forced = FALSE;
+					wrapper->priv->default_forced = FALSE;
 				}
 			}
 		}
 		else
-			mgwrap->priv->null_forced = FALSE;
+			wrapper->priv->null_forced = FALSE;
 		signal_contents_changed = TRUE;
 	}
 
 	/* Can be NULL ? */
 	if (mask & GDA_VALUE_ATTR_CAN_BE_NULL)
-		mgwrap->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
+		wrapper->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
 
 	/* Setting to DEFAULT */
 	guint current = gdaui_data_entry_get_attributes (iface);
@@ -653,43 +653,43 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 		if (! (current & GDA_VALUE_ATTR_CAN_BE_DEFAULT))
 			g_warning ("Data entry does not have a default value");
 		if (attrs & GDA_VALUE_ATTR_IS_DEFAULT) {
-			block_signals (mgwrap);
-			if (mgwrap->priv->value_default) {
-				if (G_VALUE_TYPE (mgwrap->priv->value_default) == mgwrap->priv->type)
-					gdaui_entry_wrapper_set_value (iface, mgwrap->priv->value_default);
+			block_signals (wrapper);
+			if (wrapper->priv->value_default) {
+				if (G_VALUE_TYPE (wrapper->priv->value_default) == wrapper->priv->type)
+					gdaui_entry_wrapper_set_value (iface, wrapper->priv->value_default);
 				else
-					(*mgwrap->priv->real_class->real_set_value) (mgwrap, NULL);
+					(*wrapper->priv->real_class->real_set_value) (wrapper, NULL);
 			}
 			else
 				gdaui_entry_wrapper_set_value (iface, NULL);
-			unblock_signals (mgwrap);
+			unblock_signals (wrapper);
 
 			/* if NULL is set, see if we can keep it that way */
-			if (mgwrap->priv->null_forced) {
-				if (G_VALUE_TYPE (mgwrap->priv->value_default) !=
+			if (wrapper->priv->null_forced) {
+				if (G_VALUE_TYPE (wrapper->priv->value_default) !=
 				    GDA_TYPE_NULL)
-					mgwrap->priv->null_forced = FALSE;
+					wrapper->priv->null_forced = FALSE;
 			}
 
-			mgwrap->priv->default_forced = TRUE;
+			wrapper->priv->default_forced = TRUE;
 		}
 		else
-			mgwrap->priv->default_forced = FALSE;
+			wrapper->priv->default_forced = FALSE;
 
 		signal_contents_changed = TRUE;
 	}
 
 	/* Can be DEFAULT ? */
 	if (mask & GDA_VALUE_ATTR_CAN_BE_DEFAULT)
-		mgwrap->priv->default_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT) ? TRUE : FALSE;
+		wrapper->priv->default_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT) ? TRUE : FALSE;
 
 	/* Modified ? */
 	if (mask & GDA_VALUE_ATTR_IS_UNCHANGED) {
 		if (attrs & GDA_VALUE_ATTR_IS_UNCHANGED) {
-			mgwrap->priv->default_forced = FALSE;
-			block_signals (mgwrap);
-			gdaui_entry_wrapper_set_value (iface, mgwrap->priv->value_ref);
-			unblock_signals (mgwrap);
+			wrapper->priv->default_forced = FALSE;
+			block_signals (wrapper);
+			gdaui_entry_wrapper_set_value (iface, wrapper->priv->value_ref);
+			unblock_signals (wrapper);
 			signal_contents_changed = TRUE;
 		}
 	}
@@ -697,12 +697,12 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 	/* Actions buttons ? */
 	if (mask & GDA_VALUE_ATTR_ACTIONS_SHOWN) {
 		GValue *gval;
-		mgwrap->priv->show_actions = (attrs & GDA_VALUE_ATTR_ACTIONS_SHOWN) ? TRUE : FALSE;
+		wrapper->priv->show_actions = (attrs & GDA_VALUE_ATTR_ACTIONS_SHOWN) ? TRUE : FALSE;
 
 		gval = g_new0 (GValue, 1);
 		g_value_init (gval, G_TYPE_BOOLEAN);
-		g_value_set_boolean (gval, mgwrap->priv->show_actions);
-		g_object_set_property (G_OBJECT (mgwrap), "actions", gval);
+		g_value_set_boolean (gval, wrapper->priv->show_actions);
+		g_object_set_property (G_OBJECT (wrapper), "actions", gval);
 		g_free (gval);
 	}
 
@@ -716,27 +716,27 @@ gdaui_entry_wrapper_set_attributes (GdauiDataEntry *iface, GdaValueAttribute att
 	current = gdaui_data_entry_get_attributes (iface);
 
 	if (signal_contents_changed) {
-		mgwrap->priv->contents_has_changed = FALSE;
-		gdaui_entry_wrapper_emit_signal (mgwrap);
+		wrapper->priv->contents_has_changed = FALSE;
+		gdaui_entry_wrapper_emit_signal (wrapper);
 	}
-	g_signal_emit_by_name (G_OBJECT (mgwrap), "status-changed");
+	g_signal_emit_by_name (G_OBJECT (wrapper), "status-changed");
 }
 
 static GdaValueAttribute
 gdaui_entry_wrapper_get_attributes (GdauiDataEntry *iface)
 {
 	GdaValueAttribute retval = 0;
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 	GValue *value = NULL;
 	gboolean has_current_value;
 	gboolean value_is_null = FALSE;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), 0);
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	check_correct_init (mgwrap);
-	if (!mgwrap->priv->real_class->value_is_equal_to ||
-	    !mgwrap->priv->real_class->value_is_null) {
+	check_correct_init (wrapper);
+	if (!wrapper->priv->real_class->value_is_equal_to ||
+	    !wrapper->priv->real_class->value_is_null) {
 		value = gdaui_entry_wrapper_get_value (iface);
 		has_current_value = TRUE;
 	}
@@ -746,8 +746,8 @@ gdaui_entry_wrapper_get_attributes (GdauiDataEntry *iface)
 	/* NULL? */
 	if (has_current_value) {
 		if ((value && (G_VALUE_TYPE (value) == GDA_TYPE_NULL)) || !value) {
-			if (mgwrap->priv->default_forced) {
-				if (mgwrap->priv->null_forced)
+			if (wrapper->priv->default_forced) {
+				if (wrapper->priv->null_forced)
 					value_is_null = TRUE;
 			}
 			else
@@ -755,58 +755,58 @@ gdaui_entry_wrapper_get_attributes (GdauiDataEntry *iface)
 		}
 	}
 	else {
-		if ((mgwrap->priv->real_class->value_is_null) (mgwrap))
+		if ((wrapper->priv->real_class->value_is_null) (wrapper))
 			value_is_null = TRUE;
 	}
 	if (value_is_null)
 		retval = retval | GDA_VALUE_ATTR_IS_NULL;
 
 	/* can be NULL? */
-	if (mgwrap->priv->null_possible)
+	if (wrapper->priv->null_possible)
 		retval = retval | GDA_VALUE_ATTR_CAN_BE_NULL;
 
 	/* is default */
-	if (mgwrap->priv->default_forced)
+	if (wrapper->priv->default_forced)
 		retval = retval | GDA_VALUE_ATTR_IS_DEFAULT;
 
 	/* can be default? */
-	if (mgwrap->priv->default_possible)
+	if (wrapper->priv->default_possible)
 		retval = retval | GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 
 	/* is unchanged */
 	if (has_current_value) {
-		if (mgwrap->priv->value_ref &&
-		    (G_VALUE_TYPE (value) == G_VALUE_TYPE (mgwrap->priv->value_ref))) {
+		if (wrapper->priv->value_ref &&
+		    (G_VALUE_TYPE (value) == G_VALUE_TYPE (wrapper->priv->value_ref))) {
 			if (gda_value_is_null (value))
 				retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
 			else {
-				if (! gda_value_differ (value, mgwrap->priv->value_ref))
+				if (! gda_value_differ (value, wrapper->priv->value_ref))
 					retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
 			}
 		}
 	}
-	else if ((mgwrap->priv->real_class->value_is_equal_to) (mgwrap, mgwrap->priv->value_ref))
+	else if ((wrapper->priv->real_class->value_is_equal_to) (wrapper, wrapper->priv->value_ref))
 		retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
 
 	/* actions shown */
-	if (mgwrap->priv->show_actions)
+	if (wrapper->priv->show_actions)
 		retval = retval | GDA_VALUE_ATTR_ACTIONS_SHOWN;
 
 	/* data valid? */
-	if (! (mgwrap->priv->default_forced && mgwrap->priv->default_possible)) {
-		if (/*(value_is_null && !mgwrap->priv->null_forced) ||*/
-		    (value_is_null && !mgwrap->priv->null_possible))
+	if (! (wrapper->priv->default_forced && wrapper->priv->default_possible)) {
+		if (/*(value_is_null && !wrapper->priv->null_forced) ||*/
+		    (value_is_null && !wrapper->priv->null_possible))
 			retval = retval | GDA_VALUE_ATTR_DATA_NON_VALID;
 	}
 
 	/* has original value? */
-	if (mgwrap->priv->value_ref)
+	if (wrapper->priv->value_ref)
 		retval = retval | GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 
 	if (has_current_value)
 		gda_value_free (value);
 
-	if (!mgwrap->priv->editable)
+	if (!wrapper->priv->editable)
 		retval = retval | GDA_VALUE_ATTR_NO_MODIF;
 
 	return retval;
@@ -830,27 +830,27 @@ gdaui_entry_wrapper_get_handler (GdauiDataEntry *iface)
 static gboolean
 gdaui_entry_wrapper_can_expand (GdauiDataEntry *iface, gboolean horiz)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), FALSE);
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
-	return (mgwrap->priv->real_class->can_expand) (mgwrap, horiz);
+	return (wrapper->priv->real_class->can_expand) (wrapper, horiz);
 }
 
 static void
 gdaui_entry_wrapper_set_editable (GdauiDataEntry *iface, gboolean editable)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
-	mgwrap->priv->editable = editable;
-	if (mgwrap->priv->real_class->set_editable)
-		(mgwrap->priv->real_class->set_editable) (mgwrap, editable);
+	wrapper->priv->editable = editable;
+	if (wrapper->priv->real_class->set_editable)
+		(wrapper->priv->real_class->set_editable) (wrapper, editable);
 	else
 		gtk_widget_set_sensitive (GTK_WIDGET (iface), editable);
 }
@@ -858,30 +858,30 @@ gdaui_entry_wrapper_set_editable (GdauiDataEntry *iface, gboolean editable)
 static gboolean
 gdaui_entry_wrapper_get_editable (GdauiDataEntry *iface)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), FALSE);
-	mgwrap = (GdauiEntryWrapper*) iface;
+	wrapper = (GdauiEntryWrapper*) iface;
 
-	return mgwrap->priv->editable;
+	return wrapper->priv->editable;
 }
 
 static void
 gdaui_entry_wrapper_grab_focus (GdauiDataEntry *iface)
 {
-	GdauiEntryWrapper *mgwrap;
+	GdauiEntryWrapper *wrapper;
 
 	g_return_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface));
-	mgwrap = (GdauiEntryWrapper*) iface;
-	check_correct_init (mgwrap);
+	wrapper = (GdauiEntryWrapper*) iface;
+	check_correct_init (wrapper);
 
-	if (mgwrap->priv->real_class->grab_focus)
-		(mgwrap->priv->real_class->grab_focus) (mgwrap);
-	else if (mgwrap->priv->entry) {
+	if (wrapper->priv->real_class->grab_focus)
+		(wrapper->priv->real_class->grab_focus) (wrapper);
+	else if (wrapper->priv->entry) {
 		gboolean canfocus;
-		g_object_get ((GObject*) mgwrap->priv->entry, "can-focus", &canfocus, NULL);
+		g_object_get ((GObject*) wrapper->priv->entry, "can-focus", &canfocus, NULL);
 		if (canfocus)
-			gtk_widget_grab_focus (mgwrap->priv->entry);
+			gtk_widget_grab_focus (wrapper->priv->entry);
 	}
 }
 
