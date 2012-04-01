@@ -1060,7 +1060,7 @@ gdaui_raw_grid_add_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFu
 /**
  * gdaui_raw_grid_remove_formatting_function:
  * @grid: a #GdauiRawGrid widget
- * @func: a #GdauiRawGridFormatFunc function pointer
+ * @func: (scope notified): a #GdauiRawGridFormatFunc function pointer
  *
  * This function undoes what has been specified before by gdaui_raw_grid_add_formatting_function()
  *

@@ -1081,7 +1081,7 @@ gdaui_cloud_create_filter_widget (GdauiCloud *cloud)
 /**
  * gdaui_cloud_set_weight_func:
  * @cloud: a #GdauiCloud widget
- * @func: (allow-none): a #GdauiCloudWeightFunc function which computes weights, or %NULL to unset
+ * @func: (allow-none) (scope notified): a #GdauiCloudWeightFunc function which computes weights, or %NULL to unset
  * @data: (allow-none): a pointer to pass as last argument of @func each time it is called, or %NULL
  *
  * Specifies a function called by @cloud to compute each row's respective weight.

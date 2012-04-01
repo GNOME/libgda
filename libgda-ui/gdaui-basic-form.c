@@ -1905,23 +1905,23 @@ real_gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, SingleEntry *sent
 /**
  * gdaui_basic_form_entry_set_visible:
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object
+ * @holder: a #GdaHolder object
  * @show: set to %TRUE to show the data entry, and to %FALSE to hide it
  *
  * Shows or hides the #GdauiDataEntry in @form which corresponds to the
- * @param parameter
+ * @holder data holder
  *
  * Since: 4.2
  */
 void
-gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *param, gboolean show)
+gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, GdaHolder *holder, gboolean show)
 {
 	SingleEntry *sentry;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
-	g_return_if_fail (GDA_IS_HOLDER (param));
+	g_return_if_fail (GDA_IS_HOLDER (holder));
 
-	sentry = get_single_entry_for_holder (form, param);
+	sentry = get_single_entry_for_holder (form, holder);
 	if (!sentry) {
 		g_warning (_("Can't find data entry for GdaHolder"));
 		return;
@@ -1940,23 +1940,23 @@ gdaui_basic_form_widget_grab_focus (GtkWidget *widget)
 /**
  * gdaui_basic_form_entry_grab_focus:
  * @form: a #GdauiBasicForm widget
- * @param: (allow-none): a #GdaHolder object, or %NULL
+ * @holder: (allow-none): a #GdaHolder object, or %NULL
  *
- * Makes the data entry corresponding to @param grab the focus for the window it's in. If @param is %NULL,
+ * Makes the data entry corresponding to @holder grab the focus for the window it's in. If @holder is %NULL,
  * then the focus is on the first entry which needs attention.
  *
  * Since: 4.2
  */
 void
-gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *param)
+gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *holder)
 {
 	GtkWidget *entry = NULL;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 
-	if (param) {
-		g_return_if_fail (GDA_IS_HOLDER (param));
-		entry = gdaui_basic_form_get_entry_widget (form, param);
+	if (holder) {
+		g_return_if_fail (GDA_IS_HOLDER (holder));
+		entry = gdaui_basic_form_get_entry_widget (form, holder);
 	}
 
 	if (!entry && form->priv->set) {
@@ -2106,22 +2106,22 @@ get_single_entry_for_id (GdauiBasicForm *form, const gchar *id)
 /**
  * gdaui_basic_form_get_entry_widget:
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object
+ * @holder: a #GdaHolder object
  *
- * Get the #GdauiDataEntry in @form which corresponds to the param parameter.
+ * Get the #GdauiDataEntry in @form which corresponds to the @holder place.
  *
  * Returns: (transfer none): the requested widget, or %NULL if not found
  *
  * Since: 4.2
  */
 GtkWidget *
-gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *param)
+gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *holder)
 {
 	SingleEntry *sentry;
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
-	g_return_val_if_fail (GDA_IS_HOLDER (param), NULL);
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 
-	sentry = get_single_entry_for_holder (form, param);
+	sentry = get_single_entry_for_holder (form, holder);
 	if (sentry)
 		return GTK_WIDGET (sentry->entry);
 	else
@@ -2131,22 +2131,22 @@ gdaui_basic_form_get_entry_widget (GdauiBasicForm *form, GdaHolder *param)
 /**
  * gdaui_basic_form_get_label_widget:
  * @form: a #GdauiBasicForm widget
- * @param: a #GdaHolder object
+ * @holder: a #GdaHolder object
  *
- * Get the label in @form which corresponds to the param parameter.
+ * Get the label in @form which corresponds to the @holder holder.
  *
  * Returns: (transfer none): the requested widget, or %NULL if not found
  *
  * Since: 4.2
  */
 GtkWidget *
-gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *param)
+gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *holder)
 {
 	SingleEntry *sentry;
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
-	g_return_val_if_fail (GDA_IS_HOLDER (param), NULL);
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 
-	sentry = get_single_entry_for_holder (form, param);
+	sentry = get_single_entry_for_holder (form, holder);
 	if (sentry)
 		return sentry->label;
 	else

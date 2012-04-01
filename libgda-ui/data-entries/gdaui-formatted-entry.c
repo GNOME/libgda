@@ -518,7 +518,7 @@ gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
 /**
  * gdaui_formatted_entry_set_insert_func:
  * @entry: a #GdauiFormattedEntry widget
- * @insert_func: (allow-none): a #GdauiFormattedEntryInsertFunc, or %NULL
+ * @insert_func: (allow-none) (scope notified): a #GdauiFormattedEntryInsertFunc, or %NULL
  * @data: (allow-none): a pointer which will be passed to @insert_func
  *
  * Specifies that @entry should call @insert_func when the user wants to insert a char

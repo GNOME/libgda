@@ -27,9 +27,9 @@
 
 /**
  * GdauiEntryCreateFunc:
- * @Param1: a #GdaDataHandler
- * @Param2: a #GType
- * @Param3: (allow-none): options, or %NULL
+ * @None: a #GdaDataHandler
+ * @None: a #GType
+ * @None: (allow-none): options, or %NULL
  * @Returns: a new #GdauiDataEntry
  *
  * Defines a function which creates a #GdauiDataEntry widget
@@ -38,9 +38,9 @@ typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *, GType, const
 
 /**
  * GdauiCellCreateFunc:
- * @Param1: a #GdaDataHandler
- * @Param2: a #GType
- * @Param3: (allow-none): options, or %NULL
+ * @None: a #GdaDataHandler
+ * @None: a #GType
+ * @None: (allow-none): options, or %NULL
  * @Returns:a new #GtkCellRenderer
  *
  * Defines a function which creates a #GtkCellRenderer object

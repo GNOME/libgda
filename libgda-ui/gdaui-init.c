@@ -97,7 +97,7 @@ gdaui_init (void)
  * if @plugin_name is not %NULL (if no entry of that name is found, then the default data
  * entry widget will be created).
  *
- * @plugin_name format is interpreted as two parts: &lt;plugin name&gt;:&lt;plugin options&gt;, and
+ * The @plugin_name format is interpreted as two parts: &lt;plugin name&gt;:&lt;plugin options&gt;, and
  * if the plugins has no option, then the ":&lt;plugin options&gt;" part may be omitted.
  * 
  * Returns: (transfer full): a new #GdauiDataEntry widget, _NEVER_ %NULL

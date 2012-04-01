@@ -295,7 +295,7 @@ gdaui_data_cell_renderer_info_set_property (GObject *object,
  * gdaui_data_cell_renderer_info_new:
  * @store: a #GdauiDataStore
  * @iter: a #GdaDataModelIter
- * @node: a #GdauiSetGroup pointer
+ * @group: a #GdauiSetGroup pointer
  * 
  * Creates a new #GdauiDataCellRendererInfo. Adjust rendering
  * parameters using object properties. Object properties can be set
