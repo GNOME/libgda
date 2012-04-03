@@ -53,3 +53,4 @@ mkkeywordhash
 gtk-doc.make
 xmldocs.make
 omf.make
+gnome-doc-utils.make
