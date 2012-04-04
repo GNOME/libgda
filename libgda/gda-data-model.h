@@ -165,6 +165,8 @@ struct _GdaDataModelIface {
  *     <listitem><para>The #GdaDataAccessWrapper data model which offers a memory efficient random access on top of a
  * 	wrapped cursor based access data model</para></listitem>
  * </itemizedlist>
+ *
+ * Also see the section about <link linkend="gda-data-model-writing">writing your own GdaDataModel</link>
  */
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;

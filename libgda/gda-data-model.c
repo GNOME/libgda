@@ -377,8 +377,6 @@ gda_data_model_freeze (GdaDataModel *model)
 	
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, FALSE);
-	else
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -394,8 +392,6 @@ gda_data_model_thaw (GdaDataModel *model)
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, TRUE);
-	else
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -405,8 +401,7 @@ gda_data_model_thaw (GdaDataModel *model)
  *
  * Enable or disable notifications changes on the given data model.
  * 
- * Note: This function must be implemented but is recommended to use #gda_data_model_thaw
- * and #gda_data_model_freeze functions instead.
+ * Deprecated: 5.2: use gda_data_model_freeze() and gda_data_model_thaw() instead
  *
  * Virtual: i_set_notify
  */
@@ -416,10 +411,6 @@ gda_data_model_set_notify (GdaDataModel *model, gboolean do_notify_changes)
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, do_notify_changes);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-	}
 }
 
 /**
@@ -428,9 +419,6 @@ gda_data_model_set_notify (GdaDataModel *model, gboolean do_notify_changes)
  *
  * Returns the status of notifications changes on the given data model.
  * 
- * Note: This function must be implemented but is recommended to use #gda_data_model_thaw
- * and #gda_data_model_freeze functions instead.
- *
  * Virtual: i_get_notify
  */
 gboolean
@@ -439,11 +427,8 @@ gda_data_model_get_notify (GdaDataModel *model)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify) (model);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
+	else
+		return TRUE;
 }
 
 
@@ -494,7 +479,7 @@ gda_data_model_get_n_rows (GdaDataModel *model)
  * gda_data_model_get_n_columns:
  * @model: a #GdaDataModel object.
  *
- * Returns: the number of columns in the given data model.
+ * Returns: the number of columns in the given data model, or -1 if unknown.
  *
  * Virtual: i_get_n_columns
  */
@@ -507,7 +492,6 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
 	else {
 		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return -1;
 	}
 }
@@ -525,7 +509,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * WARNING: the returned #GdaColumn object belongs to the @model model and
  * and should not be destroyed; any modification will affect the whole data model.
  *
- * Returns: (transfer none): the description of the column.
+ * Returns: (transfer none) (allow-none): the description of the column.
  *
  * Virtual: i_describe_column
  */
@@ -538,7 +522,6 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
 	else {
 		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
 	}
 }
@@ -950,8 +933,7 @@ gda_data_model_create_iter (GdaDataModel *model)
  *
  * Moves @iter to the row number given by @row.
  * 
- * Note: This function must be implemented but is recommended to use #GdaDataModelIter 
- * object directly.
+ * Deprecated: 5.2: use gda_data_model_iter_move_to_row() instead
  *
  * Virtual: i_iter_at_row
  */
@@ -960,13 +942,8 @@ gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint ro
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter, row);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
+
+	return gda_data_model_iter_move_to_row (iter, row);
 }
 
 /**
@@ -976,8 +953,7 @@ gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint ro
  *
  * Moves @iter to the next row in @model.
  * 
- * Note: This function must be implemented but is recommended to use #GdaDataModelIter 
- * object directly.
+ * Deprecated: 5.2: use gda_data_model_iter_move_next() instead
  *
  * Virtual: i_iter_next
  */
@@ -986,14 +962,30 @@ gda_data_model_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) (model, iter);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
+
+	return gda_data_model_iter_move_next (iter);
 }
+
+/**
+ * gda_data_model_iter_prev:
+ * @model: a #GdaDataModel object.
+ * @iter: a #GdaDataModelIter object.
+ *
+ * Moves @iter to the next row in @model.
+ *
+ * Deprecated: 5.2: use gda_data_model_iter_move_prev() instead
+ * 
+ * Virtual: i_iter_prev
+ */
+gboolean 
+gda_data_model_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
+
+	return gda_data_model_iter_move_prev (iter);
+}
+
 
 /**
  * gda_data_model_iter_set_value:
@@ -1005,52 +997,20 @@ gda_data_model_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
  *
  * Set @value to the given @column and row pointed by @iter in the given @model.
  * 
- * Note: This function must be implemented but is recommended to use #GdaDataModelIter 
- * object directly.
+ * Deprecated: 5.2: use gda_data_model_iter_set_value_at() instead
  *
  * Virtual: i_iter_set_value
  */
 gboolean 
 gda_data_model_iter_set_value (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-						       const GValue *value, GError **error)
+			       const GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_set_value)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_set_value) (model, iter, col, value, error);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
+	
+	return gda_data_model_iter_set_value_at (iter, col, value, error);
 }
 
-
-/**
- * gda_data_model_iter_prev:
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- *
- * Moves @iter to the next row in @model.
- * 
- * Note: This function must be implemented but is recommended to use #GdaDataModelIter 
- * object directly.
- *
- * Virtual: i_iter_prev
- */
-gboolean 
-gda_data_model_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) (model, iter);
-	else {
-		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
-		return FALSE;
-	}
-}
 
 /**
  * gda_data_model_append_values:

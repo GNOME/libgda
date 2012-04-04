@@ -540,6 +540,7 @@
       <xi:include href="xml/gda-data-model-dir.xml"/>
       <xi:include href="xml/gda-data-proxy.xml"/>
       <xi:include href="xml/gda-data-comparator.xml"/>
+      <xi:include href="data-model-writing.xml"/>
     </chapter>
 
     <chapter id="trees">
