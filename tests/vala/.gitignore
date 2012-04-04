@@ -1,3 +1,9 @@
 *.c
 *.h
 *.stamp
+check_datamodeliterator
+check_dataobject
+check_table
+datamodeliterator.db
+dataobject.db
+table.db
