@@ -607,13 +607,14 @@ enable_vala_doc="no"
 if test "x$enable_gtk_doc" = "xyes"
 then
 dnl Find yelp-build program
-	AC_PATH_PROG(YELP_BUILD, [yelp-build], [no])
+    AC_PATH_PROG(YELP_BUILD, [yelp-build], [no])
     if test "x$YELP_BUILD" = "xno";
     then
-        AC_MSG_ERROR([Vala documentation requested but yelp-build not found])
+        AC_MSG_RESULT([Vala documentation not build because yelp-build has not been found])
+    else
+        AC_SUBST(YELP_BUILD)
+        enable_vala_doc="yes"
     fi
-	AC_SUBST(YELP_BUILD)
-    enable_vala_doc="yes"
 fi
 AM_CONDITIONAL(ENABLE_VALA_DOC, [test "$enable_vala_doc" = "yes"])
 
