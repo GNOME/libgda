@@ -245,6 +245,79 @@ model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataModelI
 }
 
 static void
+define_holder_for_data_model_column (GdaDataModel *model, gint col, GdaDataModelIter *iter)
+{
+	gchar *str;
+	GdaHolder *param;
+	GdaColumn *column;
+
+	column = gda_data_model_describe_column (model, col);
+	param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
+					    "g-type", 
+					    gda_column_get_g_type (column), NULL);
+
+	/*g_print ("COL %d allow null=%d\n", col, gda_column_get_allow_null (column));*/
+	gda_holder_set_not_null (param, !gda_column_get_allow_null (column));
+	g_object_get (G_OBJECT (column), "id", &str, NULL);
+	if (str) {
+		g_object_set (G_OBJECT (param), "id", str, NULL);
+		g_free (str);
+	}
+	else {
+		const gchar *cstr;
+		gchar *tmp;
+
+		/* ID attribute */
+		cstr = gda_column_get_description (column);
+		if (!cstr)
+			cstr = gda_column_get_name (column);
+		if (cstr)
+			tmp = (gchar *) cstr;
+		else
+			tmp = g_strdup_printf ("col%d", col);
+
+		if (gda_set_get_holder ((GdaSet *) iter, tmp)) {
+			gint e;
+			for (e = 1; ; e++) {
+				gchar *tmp2 = g_strdup_printf ("%s_%d", tmp, e);
+				if (! gda_set_get_holder ((GdaSet *) iter, tmp2)) {
+					g_object_set (G_OBJECT (param), "id", tmp2, NULL);
+					g_free (tmp2);
+					break;
+				}
+				g_free (tmp2);
+			}
+		}
+		else
+			g_object_set (G_OBJECT (param), "id", tmp, NULL);
+
+		if (!cstr)
+			g_free (tmp);
+
+		/* other attributes */
+		cstr = gda_column_get_description (column);
+		if (cstr)
+			g_object_set (G_OBJECT (param), "description", cstr, NULL);
+		cstr = gda_column_get_name (column);
+		if (cstr)
+			g_object_set (G_OBJECT (param), "name", cstr, NULL);
+	}
+	if (gda_column_get_default_value (column))
+		gda_holder_set_default_value (param, gda_column_get_default_value (column));
+	else if (gda_column_get_auto_increment (column)) {
+		GValue *v = gda_value_new_null ();
+		gda_holder_set_default_value (param, v);
+		gda_value_free (v);
+	}
+	/* copy extra attributes */
+	gda_attributes_manager_copy (gda_column_attributes_manager, (gpointer) column,
+				     gda_holder_attributes_manager, (gpointer) param);
+	gda_set_add_holder ((GdaSet *) iter, param);
+	g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
+	g_object_unref (param);
+}
+
+static void
 model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 {
 	gint row;
@@ -253,18 +326,37 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 	
 	/* adjust GdaHolder's type if a column's type has changed from GDA_TYPE_NULL
 	 * to something else */
-	gint i;
+	gint i, nbcols;
 	GSList *list;
+	nbcols = gda_data_model_get_n_columns (model);
 	for (i = 0, list = ((GdaSet*) iter)->holders;
-	     list;
+	     (i < nbcols) && list;
 	     i++, list = list->next) {
+		GdaColumn *col;
+		col = gda_data_model_describe_column (model, i);
+
 		if (gda_holder_get_g_type ((GdaHolder *) list->data) == GDA_TYPE_NULL) {
-			GdaColumn *col;
-			col = gda_data_model_describe_column (model, i);
 			if (gda_column_get_g_type (col) != GDA_TYPE_NULL)
 				g_object_set (G_OBJECT (list->data), "g-type",
 					      gda_column_get_g_type (col), NULL);
 		}
+		else if (gda_holder_get_g_type ((GdaHolder *) list->data) !=
+			 gda_column_get_g_type (col))
+			break;
+	}
+
+	if (list) {
+		/* remove remaining GdaHolder objects */
+		GSList *l2;
+		l2 = g_slist_copy (list);
+		for (list = l2; list; list = list->next)
+			gda_set_remove_holder ((GdaSet*) iter, (GdaHolder *) list->data);
+		g_slist_free (l2);		
+	}
+
+	if (i < nbcols) {
+		for (; i < nbcols; i++)
+			define_holder_for_data_model_column (model, i, iter);
 	}
 
 	gda_data_model_iter_invalidate_contents (iter);
@@ -428,8 +520,6 @@ gda_data_model_iter_set_property (GObject *object,
 		case PROP_DATA_MODEL: {
 			GdaDataModel *model;
 			gint col, ncols;
-			GdaHolder *param;
-			GdaColumn *column;
 
 			GObject* ptr = g_value_get_object (value);
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
@@ -440,71 +530,7 @@ gda_data_model_iter_set_property (GObject *object,
 			/* compute parameters */
 			ncols = gda_data_model_get_n_columns (model);
 			for (col = 0; col < ncols; col++) {
-				gchar *str;
-				column = gda_data_model_describe_column (model, col);
-				param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
-								    "g-type", 
-								    gda_column_get_g_type (column), NULL);
-
-				/*g_print ("COL %d allow null=%d\n", col, gda_column_get_allow_null (column));*/
-				gda_holder_set_not_null (param, !gda_column_get_allow_null (column));
-				g_object_get (G_OBJECT (column), "id", &str, NULL);
-				if (str) {
-					g_object_set (G_OBJECT (param), "id", str, NULL);
-					g_free (str);
-				}
-				else {
-					const gchar *cstr;
-					gchar *tmp;
-
-					/* ID attribute */
-					cstr = gda_column_get_description (column);
-					if (!cstr)
-						cstr = gda_column_get_name (column);
-					if (cstr)
-						tmp = (gchar *) cstr;
-					else
-						tmp = g_strdup_printf ("col%d", col);
-
-					if (gda_set_get_holder ((GdaSet *) iter, tmp)) {
-						gint e;
-						for (e = 1; ; e++) {
-							gchar *tmp2 = g_strdup_printf ("%s_%d", tmp, e);
-							if (! gda_set_get_holder ((GdaSet *) iter, tmp2)) {
-								g_object_set (G_OBJECT (param), "id", tmp2, NULL);
-								g_free (tmp2);
-								break;
-							}
-							g_free (tmp2);
-						}
-					}
-					else
-						g_object_set (G_OBJECT (param), "id", tmp, NULL);
-
-					if (!cstr)
-						g_free (tmp);
-
-					/* other attributes */
-					cstr = gda_column_get_description (column);
-					if (cstr)
-						g_object_set (G_OBJECT (param), "description", cstr, NULL);
-					cstr = gda_column_get_name (column);
-					if (cstr)
-						g_object_set (G_OBJECT (param), "name", cstr, NULL);
-				}
-				if (gda_column_get_default_value (column))
-					gda_holder_set_default_value (param, gda_column_get_default_value (column));
-				else if (gda_column_get_auto_increment (column)) {
-					GValue *v = gda_value_new_null ();
-					gda_holder_set_default_value (param, v);
-					gda_value_free (v);
-				}
-				/* copy extra attributes */
-				gda_attributes_manager_copy (gda_column_attributes_manager, (gpointer) column,
-							     gda_holder_attributes_manager, (gpointer) param);
-				gda_set_add_holder ((GdaSet *) iter, param);
-				g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
-				g_object_unref (param);
+				define_holder_for_data_model_column (model, col, iter);
 			}
 		}
 		case PROP_FORCED_MODEL: {
