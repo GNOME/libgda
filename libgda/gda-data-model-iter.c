@@ -183,7 +183,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 					 g_param_spec_object ("data-model", NULL, "Data model for which the iter is for", 
                                                                GDA_TYPE_DATA_MODEL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
-								G_PARAM_CONSTRUCT_ONLY)));
+								G_PARAM_CONSTRUCT)));
 	g_object_class_install_property (object_class, PROP_FORCED_MODEL,
 					 g_param_spec_object ("forced-model", NULL, "Overrides the data model the iter "
 							      "is attached to (reserved for internal usage)", 
@@ -351,12 +351,14 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 		l2 = g_slist_copy (list);
 		for (list = l2; list; list = list->next)
 			gda_set_remove_holder ((GdaSet*) iter, (GdaHolder *) list->data);
-		g_slist_free (l2);		
+		g_slist_free (l2);
+		row = -1; /* force actual reset of iterator's position */
 	}
 
 	if (i < nbcols) {
 		for (; i < nbcols; i++)
 			define_holder_for_data_model_column (model, i, iter);
+		row = -1; /* force actual reset of iterator's position */
 	}
 
 	gda_data_model_iter_invalidate_contents (iter);
@@ -525,13 +527,13 @@ gda_data_model_iter_set_property (GObject *object,
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
 			model = GDA_DATA_MODEL (ptr);
 			
-			/* REM: model is actually set in the next property's code (there is no break statement) */
-
-			/* compute parameters */
+			/* REM: model is actually set in the next property's code
+			 * (there is no break statement) */
+			/*
 			ncols = gda_data_model_get_n_columns (model);
-			for (col = 0; col < ncols; col++) {
+			for (col = 0; col < ncols; col++)
 				define_holder_for_data_model_column (model, col, iter);
-			}
+			*/
 		}
 		case PROP_FORCED_MODEL: {
 			GdaDataModel* ptr = g_value_get_object (value);
@@ -556,6 +558,7 @@ gda_data_model_iter_set_property (GObject *object,
 										  G_CALLBACK (model_row_removed_cb), iter);
 			iter->priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (ptr), "reset",
 										  G_CALLBACK (model_reset_cb), iter);
+			model_reset_cb (iter->priv->data_model, iter);
 			break;
                 }
 		case PROP_CURRENT_ROW:

@@ -957,6 +957,7 @@ tests/providers/Makefile
 tests/value-holders/Makefile
 tests/meta-store/Makefile
 tests/multi-threading/Makefile
+tests/ui/Makefile
 tests/vala/Makefile
 doc/Makefile
 doc/C/Makefile

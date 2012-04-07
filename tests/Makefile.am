@@ -8,7 +8,11 @@ if ENABLE_VALA_EXTENSIONS
     VALA_EXTENSIONS= vala
 endif
 
-SUBDIRS = providers parser value-holders meta-store data-models multi-threading $(VALA_EXTENSIONS)
+if HAVE_UI
+UI_EXTENSION = ui
+endif
+
+SUBDIRS = providers parser value-holders meta-store data-models multi-threading $(UI_EXTENSION) $(VALA_EXTENSIONS)
 
 AM_CPPFLAGS = \
         -I$(top_builddir) \

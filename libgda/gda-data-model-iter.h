@@ -112,6 +112,17 @@ struct _GdaDataModelIterClass
  * Note: the new #GdaDataModelIter does not hold any reference to the data model it iterates through (ie.
  * if this data model is destroyed at some point, the new iterator will become useless but in
  * any case it will not prevent the data model from being destroyed).
+ *
+ * Note: when the data model emits the "reset" signal, then:
+ * <itemizedlist>
+ *  <listitem><para>the number of columns of the iterator can change to reflect the new data model
+ *    being itered on. In this case the iterator's position is reset as if it was
+ *    just created</para></listitem>
+ *  <listitem><para>some column types which were unknown (i.e. GDA_TYPE_NULL type), can change
+ *    to their correct type. In this case there is no other iterator change</para></listitem>
+ *  <listitem><para>some column types which were not GDA_TYPE_NULL can change, and in this case
+ *    the iterator's position is reset as if it was just created</para></listitem>
+ * </itemizedlist>
  */
 
 GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
