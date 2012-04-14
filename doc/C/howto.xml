@@ -335,6 +335,35 @@ g_object_unref (b);
 	</programlisting>
     </para>
     </sect2>
+
+    <sect2>
+      <title>SELECT id, name, adress, cntry_id, countries.name FROM customers INNER JOIN countries ON (countries.id = cntry_id)</title>
+      <para>
+	<programlisting>
+GdaSqlBuilder *b;
+b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+GdaSqlBuilderId t1, t2;
+GdaSqlBuilderId id1, id2;
+GdaSqlBuilderId jid;
+t1 = gda_sql_builder_select_add_target_id (b,
+                                           gda_sql_builder_add_id (b, "customers"),
+                                           NULL);
+t2 = gda_sql_builder_select_add_target_id (b,
+                                           gda_sql_builder_add_id (b, "countries"),
+                                           NULL);
+gda_sql_builder_select_add_field (b, "id", NULL, NULL);
+gda_sql_builder_select_add_field (b, "name", NULL, NULL);
+gda_sql_builder_select_add_field (b, "adress", NULL, NULL);
+id1 = gda_sql_builder_select_add_field (b, "cntry_id", NULL, NULL);
+gda_sql_builder_select_add_field (b, "name", "countries", NULL);
+id2 = gda_sql_builder_add_field_id (b, "id", "countries");
+jid = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ, id2, id1, 0);
+gda_sql_builder_select_join_targets (b, t1, t2, GDA_SQL_SELECT_JOIN_INNER, jid);
+[...]
+g_object_unref (b);	  
+	</programlisting>
+    </para>
+    </sect2>
   </sect1>
 
   <sect1 id="howto-exec-select">
