@@ -71,7 +71,6 @@ static gint                 gda_data_proxy_get_n_columns   (GdaDataModel *model)
 static GdaColumn           *gda_data_proxy_describe_column (GdaDataModel *model, gint col);
 static const GValue        *gda_data_proxy_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row);
-static GdaDataModelIter    *gda_data_proxy_create_iter     (GdaDataModel *model);
 
 
 static GdaDataModelAccessFlags gda_data_proxy_get_access_flags(GdaDataModel *model);
@@ -704,7 +703,7 @@ gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 	iface->i_get_value_at = gda_data_proxy_get_value_at;
 	iface->i_get_attributes_at = gda_data_proxy_get_attributes_at;
 
-	iface->i_create_iter = gda_data_proxy_create_iter;
+	iface->i_create_iter = NULL;
 	iface->i_iter_at_row = NULL;
 	iface->i_iter_next = NULL;
 	iface->i_iter_prev = NULL;
@@ -3690,42 +3689,6 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 
 	gda_mutex_unlock (proxy->priv->mutex);
 	return found ? proxy_row : -1;
-}
-
-
-static GdaDataModelIter *
-gda_data_proxy_create_iter (GdaDataModel *model)
-{
-	GdaDataProxy *proxy;
-	GdaDataModelIter *iter, *iter2;
-
-	g_return_val_if_fail (GDA_IS_DATA_PROXY (model), FALSE);
-	proxy = GDA_DATA_PROXY (model);
-	g_return_val_if_fail (proxy->priv, FALSE);
-
-	gda_mutex_lock (proxy->priv->mutex);
-
-	iter = gda_data_model_create_iter (proxy->priv->model);
-	g_object_set (G_OBJECT (iter), "forced-model", proxy, NULL);
-
-	iter2 = gda_data_model_create_iter (proxy->priv->model);
-	if (iter2) {
-		GSList *plist1, *plist2;
-
-		plist1 = GDA_SET (iter)->holders;
-		plist2 = GDA_SET (iter2)->holders;
-		for (; plist1 && plist2; plist1 = plist1->next, plist2 = plist2->next)
-			gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) plist2->data,
-						     gda_holder_attributes_manager, (gpointer) plist1->data);
-		if (plist1 || plist2)
-			g_warning ("Proxy iterator does not have the same length as proxied model's iterator: %d/%d",
-				   g_slist_length (GDA_SET (iter)->holders),
-				   g_slist_length (GDA_SET (iter2)->holders));
-		g_object_unref (iter2);
-	}
-	gda_mutex_unlock (proxy->priv->mutex);
-
-	return iter;
 }
 
 static GdaDataModelAccessFlags

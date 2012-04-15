@@ -329,6 +329,9 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 	gint i, nbcols;
 	GSList *list;
 	nbcols = gda_data_model_get_n_columns (model);
+	if (GDA_IS_DATA_PROXY (model))
+		nbcols = nbcols / 2;
+
 	for (i = 0, list = ((GdaSet*) iter)->holders;
 	     (i < nbcols) && list;
 	     i++, list = list->next) {
@@ -520,45 +523,42 @@ gda_data_model_iter_set_property (GObject *object,
 	if (iter->priv) {
 		switch (param_id) {
 		case PROP_DATA_MODEL: {
-			GdaDataModel *model;
 			gint col, ncols;
+			GdaDataModel *model;
 
 			GObject* ptr = g_value_get_object (value);
 			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
 			model = GDA_DATA_MODEL (ptr);
-			
-			/* REM: model is actually set in the next property's code
-			 * (there is no break statement) */
-			/*
-			ncols = gda_data_model_get_n_columns (model);
-			for (col = 0; col < ncols; col++)
-				define_holder_for_data_model_column (model, col, iter);
-			*/
-		}
-		case PROP_FORCED_MODEL: {
-			GdaDataModel* ptr = g_value_get_object (value);
-			g_return_if_fail (GDA_IS_DATA_MODEL (ptr));
-
 			if (iter->priv->data_model) {
-				if (iter->priv->data_model == GDA_DATA_MODEL (ptr))
+				if (iter->priv->data_model == model)
 					return;
-				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [0]);
-				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [1]);
-				g_signal_handler_disconnect (iter->priv->data_model, iter->priv->model_changes_signals [2]);
+				g_signal_handler_disconnect (iter->priv->data_model,
+							     iter->priv->model_changes_signals [0]);
+				g_signal_handler_disconnect (iter->priv->data_model,
+							     iter->priv->model_changes_signals [1]);
+				g_signal_handler_disconnect (iter->priv->data_model,
+							     iter->priv->model_changes_signals [2]);
 				g_object_remove_weak_pointer (G_OBJECT (iter->priv->data_model), 
 							      (gpointer*) &(iter->priv->data_model)); 	
 			}
 
-			iter->priv->data_model = GDA_DATA_MODEL (ptr);
+			iter->priv->data_model = model;
 			g_object_add_weak_pointer (G_OBJECT (iter->priv->data_model),
 						   (gpointer*) &(iter->priv->data_model));
-			iter->priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (ptr), "row-updated",
-										  G_CALLBACK (model_row_updated_cb), iter);
-			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (ptr), "row-removed",
-										  G_CALLBACK (model_row_removed_cb), iter);
-			iter->priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (ptr), "reset",
+
+			iter->priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (model), "row-updated",
+										  G_CALLBACK (model_row_updated_cb),
+										  iter);
+			iter->priv->model_changes_signals [1] = g_signal_connect (G_OBJECT (model), "row-removed",
+										  G_CALLBACK (model_row_removed_cb),
+										  iter);
+			iter->priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (model), "reset",
 										  G_CALLBACK (model_reset_cb), iter);
-			model_reset_cb (iter->priv->data_model, iter);
+			model_reset_cb (GDA_DATA_MODEL (ptr), iter);
+			break;
+		}
+		case PROP_FORCED_MODEL: {
+			g_warning ("Deprecated property, not to be used");
 			break;
                 }
 		case PROP_CURRENT_ROW:
@@ -590,7 +590,10 @@ gda_data_model_iter_get_property (GObject *object,
 	if (iter->priv) {
 		switch (param_id) {
 		case PROP_DATA_MODEL:
+			g_value_set_object (value, G_OBJECT (iter->priv->data_model));
+			break;
 		case PROP_FORCED_MODEL:
+			g_warning ("Deprecated property, not to be used");
 			g_value_set_object (value, G_OBJECT (iter->priv->data_model));
 			break;
 		case PROP_CURRENT_ROW:

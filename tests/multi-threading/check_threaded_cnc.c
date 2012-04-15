@@ -174,18 +174,13 @@ test_select (GdaConnection *cnc, GdaConnection *tcnc)
 		failures ++;
 	}
 	else {
-		GdaDataModel *m1, *m2;
-		g_object_get (G_OBJECT (titer), "data-model", &m1, "forced-model", &m2, NULL);
+		GdaDataModel *m1;
+		g_object_get (G_OBJECT (titer), "data-model", &m1, NULL);
 		if (m1 != tmodel) {
 			g_print ("ERROR: \"data-model\" property of created iterator is wrong\n");
 			failures ++;
 		}
-		if (m2 != tmodel) {
-			g_print ("ERROR: \"forced-model\" property of created iterator is wrong\n");
-			failures ++;
-		}
 		g_object_unref (m1);
-		g_object_unref (m2);
 
 		/* check iter's contents */
 		guint ncols;
@@ -340,18 +335,13 @@ test_select_cursor (GdaConnection *cnc, GdaConnection *tcnc)
 	}
 	else {
 		/* iter's properties */
-		GdaDataModel *m1, *m2;
-		g_object_get (G_OBJECT (titer), "data-model", &m1, "forced-model", &m2, NULL);
+		GdaDataModel *m1;
+		g_object_get (G_OBJECT (titer), "data-model", &m1, NULL);
 		if (m1 != tmodel) {
 			g_print ("ERROR: \"data-model\" property of created iterator is wrong\n");
 			failures ++;
 		}
-		if (m2 != tmodel) {
-			g_print ("ERROR: \"forced-model\" property of created iterator is wrong\n");
-			failures ++;
-		}
 		g_object_unref (m1);
-		g_object_unref (m2);
 
 		/* check iter's contents */
 		guint ncols;
