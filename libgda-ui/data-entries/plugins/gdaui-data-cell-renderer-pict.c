@@ -412,8 +412,7 @@ gdaui_data_cell_renderer_pict_render (GtkCellRenderer      *cell,
 		gdouble y = cell_area->y + cell_area->height / 2.;
 		gtk_render_line (style_context,
 				 cr,
-				 cell_area->x + xpad, cell_area->x + cell_area->width - xpad,
-				 y, y);
+				 cell_area->x + xpad, y, cell_area->x + cell_area->width - xpad, y);
 	}
 	if (datacell->priv->invalid)
 		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);

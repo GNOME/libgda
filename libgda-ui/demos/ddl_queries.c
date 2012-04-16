@@ -477,7 +477,7 @@ show_sql (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 
 		dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (data->top_window),
 							  GTK_DIALOG_MODAL,
-							  msg_type, GTK_BUTTONS_CLOSE, "%s", msg);
+							  msg_type, GTK_BUTTONS_CLOSE, msg);
 		g_free (sql);
 		g_free (msg);
 
