@@ -171,7 +171,16 @@
   <sect2 id="gda-data-model-writing-signalling">
     <title>Signalling changes</title>
     <para>
-      When the data model changes, it must signal those changes using one of the following methods:
+      When the data model changes, it needs to signal its changes. However, only the changes from
+      the initial state need to be notified, in situations such as:
+      <itemizedlist>
+        <listitem><para>a row which has already been accessed is modified or removed</para></listitem>
+        <listitem><para>the total number of rows changes, and that number has already been obtained and
+	was known (i.e. different than -1)</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      To signal changes, one of the following methods has to be used:
       <itemizedlist>
         <listitem><para><link linkend="gda-data-model-row-inserted">gda_data_model_row_inserted()</link>: to be called after a row has been inserted</para></listitem>
         <listitem><para><link linkend="gda-data-model-row-updated">gda_data_model_row_updated()</link>: to be called after a row has been updated</para></listitem>

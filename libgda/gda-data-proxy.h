@@ -110,6 +110,8 @@ struct _GdaDataProxyClass
  *	  <listitem><para>if new rows have been added to the proxy</para></listitem>
  *	</itemizedlist>
  *    </para></listitem>
+ *    <listitem><para>Any #GdaDataModelIter iterator created will only make appear the colmuns as present in the proxied
+ *        data model, not any of the other columns</para></listitem>
  *  </itemizedlist>
  *  This situation is illustrated in the following schema, where there is a direct mapping between the proxy's
  *  rows and the proxied data model's rows:
