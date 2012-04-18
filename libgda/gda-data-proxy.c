@@ -920,7 +920,6 @@ gda_data_proxy_finalize (GObject *object)
 	parent_class->finalize (object);
 }
 
-
 static void
 gda_data_proxy_set_property (GObject *object,
 			     guint param_id,
@@ -937,7 +936,11 @@ gda_data_proxy_set_property (GObject *object,
 		gda_mutex_lock (proxy->priv->mutex);
 		switch (param_id) {
 		case PROP_MODEL:
-			g_assert (!proxy->priv->model);
+			if (proxy->priv->model) {
+				clean_proxy (proxy);
+				gda_data_proxy_init (proxy);
+			}
+
 			model = (GdaDataModel*) g_value_get_object (value);
 			g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
@@ -946,8 +949,7 @@ gda_data_proxy_set_property (GObject *object,
 				gda_mutex_unlock (proxy->priv->mutex);
 				return;
 			}
-			proxy->priv->model = model;
-			g_object_ref (model);
+			proxy->priv->model = g_object_ref (model);
 
 			proxy->priv->model_nb_cols = gda_data_model_get_n_columns (model);
 			proxy->priv->model_nb_rows = gda_data_model_get_n_rows (model);
