@@ -4244,7 +4244,7 @@ msgstr "n'importe quelle expression SQL valide"
 
 #: ../libgda-ui/gdaui-data-filter.c:226
 msgid "Set filter"
-msgstr "Définir le filtre"
+msgstr "Définir un filtre"
 
 #: ../libgda-ui/gdaui-data-filter.c:231
 msgid "Clear filter"
@@ -4401,7 +4401,7 @@ msgstr "Afficher les _titres des colonnes"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1845
 msgid "_Set filter"
-msgstr "_Définir le filtre"
+msgstr "_Définir un filtre"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1848
 msgid "_Unset filter"
