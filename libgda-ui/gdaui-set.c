@@ -41,6 +41,7 @@ static void wrapped_set_public_data_changed_cb (GdaSet *wset, GdauiSet *set);
 static void wrapped_set_source_model_changed_cb (GdaSet *wset, GdaSetSource *source, GdauiSet *set);
 static void clean_public_data (GdauiSet *set);
 static void compute_public_data (GdauiSet *set);
+static void update_public_data (GdauiSet *set);
 static void compute_shown_columns_index (GdauiSetSource *dsource);
 static void compute_ref_columns_index (GdauiSetSource *dsource);
 
@@ -229,8 +230,7 @@ gdaui_set_set_property (GObject *object,
 static void
 wrapped_set_public_data_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdauiSet *set)
 {
-	clean_public_data (set);
-	compute_public_data (set);
+	update_public_data (set);
 	g_signal_emit (set, gdaui_set_signals[PUBLIC_DATA_CHANGED], 0);
 }
 
@@ -301,6 +301,87 @@ compute_public_data (GdauiSet *set)
 		dgroup->source = g_hash_table_lookup (hash, GDA_SET_GROUP (list->data)->nodes_source);
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
+
+	g_hash_table_destroy (hash);
+}
+
+static void
+update_public_data (GdauiSet *set)
+{
+	GSList *list, *elist = NULL;
+	GdaSet *aset = GDA_SET (set->priv->set);
+	GHashTable *hash;
+
+	/* build hash with existing sources */
+	hash = g_hash_table_new (NULL, NULL);
+	for (list = set->sources_list; list; list = list->next) {
+		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
+		g_hash_table_insert (hash, dsource->source, list->data);
+	}
+
+	/* scan GdaSetSource list */
+	elist = set->sources_list;
+	set->sources_list = NULL;
+	for (list = aset->sources_list; list; list = list->next) {
+		GdauiSetSource *dsource;
+		dsource = g_hash_table_lookup (hash, list->data);
+		if (dsource) {
+			set->sources_list = g_slist_prepend (set->sources_list, dsource);
+			continue;
+		}
+
+		dsource = g_new0 (GdauiSetSource, 1);
+		set->sources_list = g_slist_prepend (set->sources_list, dsource);
+		g_hash_table_insert (hash, list->data, dsource);
+
+		dsource->source = GDA_SET_SOURCE (list->data);
+		compute_shown_columns_index (dsource);
+		compute_ref_columns_index (dsource);
+	}
+	set->sources_list = g_slist_reverse (set->sources_list);
+	if (elist) {
+		for (list = elist; list; list = list->next) {
+			if (!g_slist_find (set->sources_list, elist->data)) {
+				GdauiSetSource *dsource = (GdauiSetSource*) list->data;
+				g_free (dsource->shown_cols_index);
+				g_free (dsource->ref_cols_index);
+				g_free (dsource);
+			}
+		}
+		g_slist_free (elist);
+	}
+
+	/* build hash with existing groups */
+	for (list = set->groups_list; list; list = list->next) {
+		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
+		g_hash_table_insert (hash, dgroup->group, list->data);
+	}
+
+	/* scan GdaSetGroup list */
+	elist = set->groups_list;
+	set->groups_list = NULL;
+	for (list = aset->groups_list; list; list = list->next) {
+		GdauiSetGroup *dgroup;
+		dgroup = g_hash_table_lookup (hash, list->data);
+		if (dgroup) {
+			set->groups_list = g_slist_prepend (set->groups_list, dgroup);
+			continue;
+		}
+		dgroup = g_new0 (GdauiSetGroup, 1);
+		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
+		dgroup->group = GDA_SET_GROUP (list->data);
+		dgroup->source = g_hash_table_lookup (hash, GDA_SET_GROUP (list->data)->nodes_source);
+	}
+	set->groups_list = g_slist_reverse (set->groups_list);
+	if (elist) {
+		for (list = elist; list; list = list->next) {
+			if (!g_slist_find (set->sources_list, elist->data)) {
+				GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
+				g_free (dgroup);
+			}
+		}
+		g_slist_free (elist);
+	}
 
 	g_hash_table_destroy (hash);
 }
