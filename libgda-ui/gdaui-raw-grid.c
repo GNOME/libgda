@@ -488,7 +488,11 @@ proxy_reset_was_soft (GdauiRawGrid *grid, GdaDataModel *new_model)
 	GdaDataModelIter *iter;
 	gboolean retval = FALSE;
 
-	if (!new_model || (new_model != (GdaDataModel*) grid->priv->proxy))
+	if (!new_model)
+		return FALSE;
+	else if (new_model == (GdaDataModel*) grid->priv->proxy)
+		return TRUE;
+	else if (!grid->priv->iter)
 		return FALSE;
 
 	iter = gda_data_model_create_iter (new_model);
