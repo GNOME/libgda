@@ -17,10 +17,12 @@ demos =					\
 	form_rw.c \
 	form_pict.c \
 	form_data_layout.c \
+	form_model_change.c \
 	grid.c \
 	grid_rw.c \
 	grid_pict.c \
 	grid_data_layout.c \
+	grid_model_change.c \
 	linked_grid_form.c \
 	linked_model_param.c \
 	ddl_queries.c \

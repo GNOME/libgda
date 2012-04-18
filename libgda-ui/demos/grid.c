@@ -46,6 +46,7 @@ do_grid (GtkWidget *do_widget)
 		model = gda_connection_statement_execute_select (demo_cnc, stmt, NULL, NULL);
 		g_object_unref (stmt);
 		grid = gdaui_grid_new (model);
+		gtk_widget_set_size_request (grid, -1, 350);
 		g_object_unref (model);
 		gdaui_grid_set_sample_size (GDAUI_GRID (grid), 100);
 		g_object_set (G_OBJECT (grid), "info-flags",

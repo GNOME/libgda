@@ -1,6 +1,6 @@
 /* Grids/Read-write grid
  *
- * The GdauiGrid widget displays data stored in a GdaDataModel.
+ * The GdauiGrid widget displays data stored in a GdaDataModel; this example shows how to make the data writable.
  */
 
 #include <libgda-ui/libgda-ui.h>
@@ -38,8 +38,7 @@ do_grid_rw (GtkWidget *do_widget)
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		
 		label = gtk_label_new ("The following GdauiGrid widget displays data from the 'products' table.\n\n"
-				       "As modification queries are provided, the data is read-write\n(except for the 'price' "
-				       "field as these queries voluntarily omit that field).");
+				       "As modification queries are provided, the data is read-write.");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
 		/* Create the demo widget */
@@ -48,6 +47,7 @@ do_grid_rw (GtkWidget *do_widget)
 		g_object_unref (stmt);
 		gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), NULL);
 		grid = gdaui_grid_new (model);
+		gtk_widget_set_size_request (grid, -1, 350);
 		g_object_unref (model);
 		g_object_set (G_OBJECT (grid), "info-flags",
 			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS, NULL);
