@@ -483,7 +483,7 @@ gdaui_raw_grid_dispose (GObject *object)
 }
 
 static gboolean
-proxy_reset_was_soft (GdauiRawGrid *grid, GdaDataModel *new_model)
+model_reset_was_soft (GdauiRawGrid *grid, GdaDataModel *new_model)
 {
 	GdaDataModelIter *iter;
 	gboolean retval = FALSE;
@@ -520,7 +520,7 @@ gdaui_raw_grid_set_property (GObject *object,
 			if (model)
 				g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-			reset = !proxy_reset_was_soft (grid, model);
+			reset = !model_reset_was_soft (grid, model);
 
 			if (gtk_widget_get_realized ((GtkWidget*) grid))
 				gtk_tree_view_get_visible_rect ((GtkTreeView*) grid, &vis);
@@ -576,6 +576,7 @@ gdaui_raw_grid_set_property (GObject *object,
 				g_signal_emit_by_name (object, "proxy-changed", grid->priv->proxy);
 			}
 			else {
+				g_object_set (G_OBJECT (grid->priv->proxy), "model", model, NULL);
 				grid->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (model));
 				grid->priv->data_model = gda_data_proxy_get_proxied_model (grid->priv->proxy);
 				gda_data_model_iter_invalidate_contents (grid->priv->iter);
