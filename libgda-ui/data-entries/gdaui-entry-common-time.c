@@ -800,7 +800,7 @@ date_day_selected_double_click (G_GNUC_UNUSED GtkCalendar *calendar, GdauiEntryC
 }
 
 
-static gboolean popup_grab_on_window (GdkWindow *window, guint32 activate_time);
+static gboolean popup_grab_on_window (GtkWidget *widget, guint32 activate_time);
 static void position_popup (GdauiEntryCommonTime *mgtim);
 static void
 date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
@@ -870,7 +870,7 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 
         /* popup window */
         /* Temporarily grab pointer and keyboard, copied from GnomeDateEdit */
-        if (!popup_grab_on_window (gtk_widget_get_window (button), gtk_get_current_event_time ()))
+        if (!popup_grab_on_window (button, gtk_get_current_event_time ()))
                 return;
 
         position_popup (mgtim);
@@ -913,22 +913,31 @@ date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
 		gtk_window_move (GTK_WINDOW (mgtim->priv->window), root_x, root_y);
 
         gtk_widget_grab_focus (mgtim->priv->date);
-        popup_grab_on_window (gtk_widget_get_window (mgtim->priv->window),
+        popup_grab_on_window (mgtim->priv->window,
                               gtk_get_current_event_time ());
 }
 
 static gboolean
-popup_grab_on_window (GdkWindow *window, guint32 activate_time)
+popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
 {
-        if ((gdk_pointer_grab (window, TRUE,
-                               GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-                               GDK_POINTER_MOTION_MASK,
-                               NULL, NULL, activate_time) == 0)) {
-                if (gdk_keyboard_grab (window, TRUE,
-                                       activate_time) == 0)
+	GdkDeviceManager *manager;
+	GdkDevice *pointer;
+	GdkWindow *window;
+	window = gtk_widget_get_window (widget);
+	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
+	pointer = gdk_device_manager_get_client_pointer (manager);
+        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
+			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+			     GDK_POINTER_MOTION_MASK,
+			     NULL, activate_time) == GDK_GRAB_SUCCESS) {
+		GdkDevice *keyb;
+		keyb = gdk_device_get_associated_device (pointer);
+                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
+				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) ==
+		    GDK_GRAB_SUCCESS)
                         return TRUE;
                 else {
-                        gdk_pointer_ungrab (activate_time);
+                        gdk_device_ungrab (pointer, activate_time);
                         return FALSE;
                 }
         }
@@ -943,7 +952,7 @@ position_popup (GdauiEntryCommonTime *mgtim)
         GtkRequisition req_minimum, req_natural;
 
         gtk_widget_get_preferred_size (mgtim->priv->window, &req_minimum,
-                &req_natural);
+				       &req_natural);
 
         gdk_window_get_origin (gtk_widget_get_window (mgtim->priv->date_button), &x, &y);
 	GtkAllocation alloc;

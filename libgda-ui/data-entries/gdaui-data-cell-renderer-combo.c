@@ -495,7 +495,6 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 				       GtkCellRendererState  flags)
 	
 {
-	GtkStateType state = 0;	
 	GdauiDataCellRendererCombo *combocell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
 
 	/* render the text as for the GtkCellRendererText */
@@ -503,23 +502,6 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 	(text_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
 	/* render the popdown menu symbol */
-	if ((flags & GTK_CELL_RENDERER_SELECTED) == GTK_CELL_RENDERER_SELECTED)	{
-		gboolean hasfocus;
-		g_object_get ((GObject*) widget, "has-focus", &hasfocus, NULL);
-		if (hasfocus)
-			state = GTK_STATE_SELECTED;
-		else
-			state = GTK_STATE_ACTIVE;
-	}
-	else {
-		gboolean editable;
-		g_object_get ((GObject*) cell, "editable", &editable, NULL);
-		if (editable)
-			state = GTK_STATE_NORMAL;
-		else
-			state = GTK_STATE_INSENSITIVE;
-	}
-
 	if (combocell->priv->show_expander) {
 		gint expander_size;
 		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);

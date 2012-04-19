@@ -1274,7 +1274,7 @@ _gda_firebird_meta__check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 {
 	//WHERE_AM_I;
 
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1285,7 +1285,7 @@ _gda_firebird_meta_check_columns (GdaServerProvider *prov, GdaConnection *cnc,
 			      const GValue *table_name, const GValue *constraint_name)
 {
 	//WHERE_AM_I;
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1294,7 +1294,7 @@ _gda_firebird_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 			  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 //WHERE_AM_I;
-	return TRUE;
+
 /*	GdaDataModel *model;
 	gboolean retval;
 
@@ -1312,6 +1312,8 @@ _gda_firebird_meta__triggers (GdaServerProvider *prov, GdaConnection *cnc,
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
@@ -1344,6 +1346,8 @@ _gda_firebird_meta_triggers (GdaServerProvider *prov, GdaConnection *cnc,
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
@@ -1369,6 +1373,8 @@ _gda_firebird_meta__routines (GdaServerProvider *prov, GdaConnection *cnc,
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
@@ -1409,6 +1415,8 @@ _gda_firebird_meta_routines (GdaServerProvider *prov, GdaConnection *cnc,
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
@@ -1416,7 +1424,7 @@ _gda_firebird_meta__routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	//WHERE_AM_I;
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1427,7 +1435,7 @@ _gda_firebird_meta_routine_col (GdaServerProvider *prov, GdaConnection *cnc,
 			    const GValue *rout_name)
 {
 	//WHERE_AM_I;
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1436,7 +1444,7 @@ _gda_firebird_meta__routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			     GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	//WHERE_AM_I;
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1447,7 +1455,7 @@ _gda_firebird_meta_routine_par (GdaServerProvider *prov, GdaConnection *cnc,
 			    const GValue *rout_name)
 {
 	//WHERE_AM_I;
-	//TO_IMPLEMENT;
+	TO_IMPLEMENT;
 	return TRUE;
 }
 
@@ -1456,6 +1464,7 @@ _gda_firebird_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 			      GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 //WHERE_AM_I;
+	TO_IMPLEMENT;
 	return TRUE;
 /*
 	GdaDataModel *model;
@@ -1484,6 +1493,7 @@ _gda_firebird_meta_indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 			     const GValue *table_name, const GValue *index_name_n)
 {
 //WHERE_AM_I;
+	TO_IMPLEMENT;
 	return TRUE;
 /*
 	GdaDataModel *model;
@@ -1546,6 +1556,8 @@ _gda_firebird_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
 gboolean
@@ -1579,5 +1591,7 @@ _gda_firebird_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 
 	return retval;
 */
+	TO_IMPLEMENT;
+	return TRUE;
 }
 
