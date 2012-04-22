@@ -955,10 +955,11 @@ execute_ldap_search (GdaDataModelLdap *model)
 		ldap_part_dump (model->priv->top_exec);
 	}
 #endif
-	retry:
+
 #ifdef GDA_DEBUG_SUBSEARCHES_FORCE
 	/* force sub searches for 2 levels */
 	static gint sims = 10;
+ retry:
 	if ((sims > 0) &&
 	    (model->priv->scope == GDA_LDAP_SEARCH_SUBTREE) &&
 	    (! model->priv->current_exec->parent || ! model->priv->current_exec->parent->parent)) {
@@ -967,8 +968,9 @@ execute_ldap_search (GdaDataModelLdap *model)
 		sims --;
 	}
 	if (res == 0)
+#else
+	retry:
 #endif
-
 	res = ldap_search_ext_s (cdata->handle, model->priv->current_exec->base_dn, lscope,
 				 model->priv->filter,
 				 (char**) model->priv->attributes->data, 0,
@@ -976,6 +978,19 @@ execute_ldap_search (GdaDataModelLdap *model)
 				 &msg);
 	model->priv->current_exec->executed = TRUE;
 
+#define GDA_DEBUG_FORCE_ERROR
+#undef GDA_DEBUG_FORCE_ERROR
+#ifdef GDA_DEBUG_FORCE_ERROR
+	/* error */
+	GError *e = NULL;
+	int ldap_errno;
+	g_print ("SIMULATING error\n");
+	ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
+	g_set_error (&e, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
+		     "%s", "Simulated error");
+	add_exception (model, e);
+	return;
+#else
 	switch (res) {
 	case LDAP_SUCCESS:
 	case LDAP_NO_SUCH_OBJECT:
@@ -1045,6 +1060,7 @@ execute_ldap_search (GdaDataModelLdap *model)
 		return;
 	}
 	}
+#endif /*GDA_DEBUG_FORCE_ERROR*/
 
 	if (model->priv->truncated) {
 		/* compute totel number of rows now that we know it */
