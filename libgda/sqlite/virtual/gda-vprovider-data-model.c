@@ -839,10 +839,16 @@ virtualNext (sqlite3_vtab_cursor *cur)
 			g_assert (count == data->ncols);
 		}
 		else {
-			/* end of data */
-			g_object_unref (data->iter);
-			data->iter = NULL;
-			data->nrows = cursor->row;
+			int exc_res;
+			exc_res = handle_data_model_exception (cur->pVtab, data->model);
+			if (exc_res != SQLITE_OK)
+				goto onerror;
+			else {
+				/* end of data */
+				g_object_unref (data->iter);
+				data->iter = NULL;
+				data->nrows = cursor->row;
+			}
 		}
 	}
 	return SQLITE_OK;
