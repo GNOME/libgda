@@ -664,8 +664,8 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 	else {
 		for (list = cnc->priv->table_data_list; list; list = list->next) {
 			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
-
-			g_assert (td->context.current_vcontext);
+			/* REM: td->context.current_vcontext may already be NULL in case
+			 * an exception already occurred */
 			td->context.current_vcontext = NULL;
 		}
 		g_mutex_unlock (cnc->priv->lock_context);
