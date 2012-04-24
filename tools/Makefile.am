@@ -2,6 +2,10 @@ if HAVE_UI
 BROWSER_DIR=browser
 endif
 
+if LDAP
+ldap_flags=-DHAVE_LDAP
+endif
+
 SUBDIRS = $(BROWSER_DIR) help
 
 bin_PROGRAMS = \
@@ -18,6 +22,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I. \
+	$(ldap_flags) \
 	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 

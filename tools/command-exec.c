@@ -30,7 +30,9 @@
 #endif
 #include <sql-parser/gda-statement-struct-util.h>
 #include "tools-utils.h"
+#ifdef HAVE_LDAP
 #include <virtual/gda-ldap-connection.h>
+#endif
 
 /*
  *  gda_internal_command_arg_remove_quotes
@@ -661,8 +663,10 @@ gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
 			if (console && command->limit_to_main)
 				continue;
 
+#ifdef HAVE_LDAP
 			if (g_str_has_prefix (command->name, "ldap") && cnc && !GDA_IS_LDAP_CONNECTION (cnc))
 				continue;
+#endif
 
 			if (!current_group || strcmp (current_group, command->group)) {
 				current_group = command->group;
