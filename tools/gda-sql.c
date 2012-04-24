@@ -198,16 +198,30 @@ main (int argc, char *argv[])
 	setlocale (LC_ALL, "");
         gda_init ();
 
-#define DEFAULT_LDAP_ATTRIBUTES "cn"
 	has_threads = g_thread_supported ();
 	data = g_new0 (MainData, 1);
 	data->output_format = OUTPUT_FORMAT_DEFAULT;
-	data->options = gda_set_new_inline (5,
+	data->options = gda_set_new_inline (3,
 					    "csv_names_on_first_line", G_TYPE_BOOLEAN, FALSE,
 					    "csv_quote", G_TYPE_STRING, "\"",
-					    "csv_separator", G_TYPE_STRING, ",",
-					    "ldap_dn", G_TYPE_STRING, "dn",
-					    "ldap_attributes", G_TYPE_STRING, DEFAULT_LDAP_ATTRIBUTES);
+					    "csv_separator", G_TYPE_STRING, ",");
+#ifdef HAVE_LDAP
+#define DEFAULT_LDAP_ATTRIBUTES "cn"
+	opt = gda_holder_new_string ("ldap_dn", "dn");
+	value = gda_value_new (G_TYPE_STRING);
+	g_value_set_string (value, _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"));
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	gda_set_add_holder (data->options, opt);
+	g_object_unref (opt);
+
+	opt = gda_holder_new_string ("ldap_attributes", DEFAULT_LDAP_ATTRIBUTES);
+	g_value_set_string (value, _("Defines the LDAP attributes which are fetched by default by LDAP commands"));
+	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+	gda_value_free (value);
+	gda_set_add_holder (data->options, opt);
+	g_object_unref (opt);
+#endif
+
 	value = gda_value_new (G_TYPE_STRING);
 	g_value_set_string (value, _("Set to TRUE when the 1st line of a CSV file holds column names"));
 	opt = gda_set_get_holder (data->options, "csv_names_on_first_line");
@@ -226,14 +240,6 @@ main (int argc, char *argv[])
 	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
 	g_value_set_string (value, "SEPARATOR");
 	gda_holder_set_attribute (opt, "csv", value, NULL);
-
-	g_value_set_string (value, _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"));
-	opt = gda_set_get_holder (data->options, "ldap_dn");
-	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
-
-	g_value_set_string (value, _("Defines the LDAP attributes which are fetched by default by LDAP commands"));
-	opt = gda_set_get_holder (data->options, "ldap_attributes");
-	gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
 	gda_value_free (value);
 
 	data->parameters = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
@@ -2319,12 +2325,14 @@ static GdaInternalCommandResult *extra_command_undeclare_fk (SqlConsole *console
 							     const gchar **args,
 							     OutputFormat format, GError **error, gpointer data);
 
+#ifdef HAVE_LDAP
 static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc,
 							    const gchar **args,
 							    OutputFormat format, GError **error, gpointer data);
 static GdaInternalCommandResult *extra_command_ldap_descr (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
 							   OutputFormat format, GError **error, gpointer data);
+#endif
 
 static GdaInternalCommandsList *
 build_internal_commands_list (void)
@@ -2948,6 +2956,7 @@ build_internal_commands_list (void)
 	c->limit_to_main = FALSE;
 	commands->commands = g_slist_prepend (commands->commands, c);
 
+#ifdef HAVE_LDAP
 	c = g_new0 (GdaInternalCommand, 1);
 	c->group = _("LDAP");
 	c->group_id = "LDAP";
@@ -2977,6 +2986,7 @@ build_internal_commands_list (void)
 	c->unquote_args = TRUE;
 	c->limit_to_main = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);
+#endif
 
 	/* comes last */
 	c = g_new0 (GdaInternalCommand, 1);
@@ -5642,6 +5652,7 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 	return res;
 }
 
+#ifdef HAVE_LDAP
 static GdaInternalCommandResult *
 extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 			   G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
@@ -5955,7 +5966,7 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	return res;
 }
 
-
+#endif /* HAVE_LDAP */
 
 static GdaInternalCommandResult *
 extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **args,
