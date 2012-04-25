@@ -87,7 +87,7 @@ gdaui_data_selector_iface_init (G_GNUC_UNUSED gpointer g_class)
  *
  * Queries the #GdaDataModel from which the data displayed by the widget implementing @iface
  * are. Beware that the returned data model may be different than the one used when the
- * widget was created in case it uses a #GdaDataProxy.
+ * widget was created in case it internally uses a #GdaDataProxy.
  *
  * Returns: (transfer none): the #GdaDataModel
  *

@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<sect1 id="gda-data-model-writing">
+  <title>Implementing your own data model</title>
+  <para>
+    You may need at some point to implement your own data model because the implementations in
+    &LIBGDA; don't suit your needs. This section is dedicated to explaining to you how this can be done.
+  </para>
+  <para>
+    Implementing a new <link linkend="GdaDataModel">GdaDataModel</link> is simply a matter of
+    creating a new GObject which implements the <link linkend="GdaDataModel">GdaDataModel</link>
+    interface, which is described below. Thos new class needs to inherit GObject, but needs not
+    be direct descendant of it. The way to subclass an object using GLib
+    is not covered in this documentation, for this matter reref to
+    <link linkend="howto-gobject-code">GObject's documentation</link>, or
+    <ulink url="http://developer.gnome.org/gobject/stable/howto-gobject.html">online</ulink>.
+  </para>
+  <para>
+    The interface's methods which can and/or need to be implemented are defined below.
+  </para>
+
+  <sect2 id="i_get_n_rows">
+    <title>i_get_n_rows() - optional</title>
+    <para>This method, if implemented, returns the total number of rows in the data model, or -1 if
+    unknown. If it's not implemented, then it is assumed that -1 is returned in all cases.</para>
+  </sect2>
+
+  <sect2 id="i_get_n_columns">
+    <title>i_get_n_columns() - required</title>
+    <para>This method, returns the total number of columns in the data model, or -1 if unknown.</para>
+  </sect2>
+
+  <sect2 id="i_describe_column">
+    <title>i_describe_column() - required</title>
+    <para>This method describes a column; it returns (without any ownership to the caller) a
+    <link linkend="GdaColumn">GdaColumn</link> for each existing column, or NULL otherwise.</para>
+  </sect2>
+
+  <sect2 id="i_get_access_flags">
+    <title>i_get_access_flags() - required</title>
+    <para>This method defines how the data model may be accessed (randomly, only using a cursor, ...)</para>
+  </sect2>
+
+  <sect2 id="i_get_value_at">
+    <title>i_get_value_at() - required for random access</title>
+    <para>This method is used to access the contents of a data model, specifically
+    a <link linkend="GValue">GValue</link> is returned for each (column,row) position.
+    It must return NULL if the data model experienced an error for the specific (column,row)
+    position. See <link linkend="gda_data_model_get_value_at">gda_data_model_get_value_at()</link>
+    for more information about the lifetime of the returned GValue.</para>
+  </sect2>
+
+  <sect2 id="i_get_attributes_at">
+    <title>i_get_attributes_at() - optional</title>
+    <para>This method returns, for a (column,row) position in the data model, the attributes
+    of the adressed "cell".</para>
+  </sect2>
+
+  <sect2 id="i_create_iter">
+    <title>i_create_iter() - optional</title>
+    <para>This method can be implemented to create specific
+    <link linkend="GdaDataModelIter">GdaDataModelIter</link> or to customize them.</para>
+  </sect2>
+
+  <sect2 id="i_iter_at_row">
+    <title>i_iter_at_row() - optional</title>
+    <para>This method can be implemented if a specific implementation allows an iterator
+    to be moved quickly to a specific row (faster than iterating from row to row to the
+    requested row).</para>
+  </sect2>
+
+  <sect2 id="i_iter_next">
+    <title>i_iter_next() - required for cursor based access</title>
+    <para>This method is called to move an iterator to the next row; it's not necessary to
+    implement it if the data models supports random access.</para>
+  </sect2>
+
+  <sect2 id="i_iter_prev">
+    <title>i_iter_prev() - optional for cursor based access</title>
+    <para>This method is called to move an iterator to the previous row. It is only necessary to
+    implement it if the data model does not support random access and supports moving the
+    cursor backward.</para>
+  </sect2>
+
+  <sect2 id="i_set_value_at">
+    <title>i_set_value_at() - optional</title>
+    <para>This method needs to be defined if the data model allows each value in a (column,row) position
+    to be modified individually.
+    </para>
+  </sect2>
+
+  <sect2 id="i_iter_set_value">
+    <title>i_iter_set_value() - optional</title>
+    <para>This method can be defined if a specific treatment is required when a modification made
+    to a <link linkend="GdaDataModelIter">GdaDataModelIter</link> is propagated to the data model.
+    It should seldom, if ever, be necessary to implement it.</para>
+  </sect2>
+
+  <sect2 id="i_set_values">
+    <title>i_set_values() - optional</title>
+    <para>This method needs to be defined if the data model allows modifications to be made for
+    one complete row at a time. See the
+    <link linkend="gda_data_model_set_values">gda_data_model_set_values()</link> method for
+    more information about the arguments</para>
+  </sect2>
+
+  <sect2 id="i_append_values">
+    <title>i_append_values() - optional</title>
+    <para>This method can be implemented if the data model needs to support adding a row and defining the
+    values to be added in the same operation.
+    See <link linkend="gda_data_model_append_values">gda_data_model_append_values()</link> for
+    more information.</para>
+  </sect2>
+
+  <sect2 id="i_append_row">
+    <title>i_append_row() - optional</title>
+    <para>This method needs to be defined if the data model needs to support adding an empty row (i.e.
+    without any value specified in the new row).</para>
+  </sect2>
+
+  <sect2 id="i_remove_row">
+    <title>i_remove_row() - optional</title>
+    <para>This method should be implemented if the data model needs to support row removal.</para>
+  </sect2>
+
+  <sect2 id="i_find_row">
+    <title>i_find_row() - optional</title>
+    <para>This method can be implemented if the data model implements an indexing scheme which
+    allows it to find rows from values quickly than by analysing each row after another to
+    find the requested values.</para>
+  </sect2>
+
+  <sect2 id="i_set_notify">
+    <title>i_set_notify() - optional</title>
+    <para>This method should be implemented if the data model needs to honor the
+    <link linkend="gda_data_model_freeze">gda_data_model_freeze()</link> and
+    <link linkend="gda_data_model_thaw">gda_data_model_thaw()</link> methods. If
+    this method is not implemented, then these two methods will have no effect.
+    </para>
+  </sect2>
+
+  <sect2 id="i_get_notify">
+    <title>i_get_notify() - optional</title>
+    <para>This method should be implemented if the data model needs to honor the
+    <link linkend="gda_data_model_freeze">gda_data_model_freeze()</link> and
+    <link linkend="gda_data_model_thaw">gda_data_model_thaw()</link> methods. If
+    this method is not implemented, then these two methods will have no effect.</para>
+  </sect2>
+
+  <sect2 id="i_send_hint">
+    <title>i_send_hint() - optional</title>
+    <para>This method should be implemented if the data model needs to be able to treat
+    hints, see <link linkend="gda_data_model_send_hint">gda_data_model_send_hint()</link> for
+    more information</para>
+  </sect2>
+
+  <sect2 id="i_get_exceptions">
+    <title>i_get_exceptions() - optional</title>
+    <para>This method needs to be implemented if the data model keeps exceptions about the errors
+    it has encountered and may "export" these exceptions using the
+    <link linkend="gda_data_model_get_exceptions">gda_data_model_get_exceptions()</link> method.</para>
+  </sect2>
+</sect1>

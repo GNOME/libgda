@@ -378,8 +378,6 @@ gda_data_model_freeze (GdaDataModel *model)
 	
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, FALSE);
-	else
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -395,8 +393,6 @@ gda_data_model_thaw (GdaDataModel *model)
 
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
 		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, TRUE);
-	else
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 }
 
 /**
@@ -446,7 +442,7 @@ gda_data_model_get_n_rows (GdaDataModel *model)
  * gda_data_model_get_n_columns:
  * @model: a #GdaDataModel object.
  *
- * Returns: the number of columns in the given data model.
+ * Returns: the number of columns in the given data model, or -1 if unknown.
  *
  * Virtual: i_get_n_columns
  */
@@ -459,7 +455,6 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
 	else {
 		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return -1;
 	}
 }
@@ -477,7 +472,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * WARNING: the returned #GdaColumn object belongs to the @model model and
  * and should not be destroyed; any modification will affect the whole data model.
  *
- * Returns: (transfer none): the description of the column.
+ * Returns: (transfer none) (allow-none): the description of the column.
  *
  * Virtual: i_describe_column
  */
@@ -490,7 +485,6 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
 	else {
 		/* method not supported */
-		g_warning ("%s() method not supported\n", __FUNCTION__);
 		return NULL;
 	}
 }
