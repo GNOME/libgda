@@ -436,19 +436,19 @@ cmd(C) ::= ROLLBACK trans_opt_kw TO SAVEPOINT nm(R). {C = gda_sql_statement_new 
 //
 // INSERT
 //
-cmd(C) ::= INSERT opt_on_conflict(O) INTO fullname(X) inscollist_opt(F) VALUES LP exprlist(Y) RP. {
+cmd(C) ::= INSERT opt_on_conflict(O) INTO fullname(X) inscollist_opt(F) VALUES LP rexprlist(Y) RP. {
 	C = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 	gda_sql_statement_insert_take_table_name (C, X);
 	gda_sql_statement_insert_take_fields_list (C, F);
-	gda_sql_statement_insert_take_1_values_list (C, Y);
+	gda_sql_statement_insert_take_1_values_list (C, g_slist_reverse (Y));
 	gda_sql_statement_insert_take_on_conflict (C, O);
 }
 
-cmd(C) ::= INSERT opt_on_conflict(O) INTO fullname(X) inscollist_opt(F) VALUES LP exprlist(Y) RP ins_extra_values(E). {
+cmd(C) ::= INSERT opt_on_conflict(O) INTO fullname(X) inscollist_opt(F) VALUES LP rexprlist(Y) RP ins_extra_values(E). {
 	C = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
 	gda_sql_statement_insert_take_table_name (C, X);
 	gda_sql_statement_insert_take_fields_list (C, F);
-	gda_sql_statement_insert_take_1_values_list (C, Y);
+	gda_sql_statement_insert_take_1_values_list (C, g_slist_reverse (Y));
 	gda_sql_statement_insert_take_extra_values_list (C, E);
 	gda_sql_statement_insert_take_on_conflict (C, O);
 }
@@ -473,8 +473,8 @@ opt_on_conflict(O) ::= OR ID(V). {O = V;}
 		}
 		g_slist_free ($$);
 }
-ins_extra_values(E) ::= ins_extra_values(A) COMMA LP exprlist(L) RP. {E = g_slist_append (A, L);}
-ins_extra_values(E) ::= COMMA LP exprlist(L) RP. {E = g_slist_append (NULL, L);}
+ins_extra_values(E) ::= ins_extra_values(A) COMMA LP rexprlist(L) RP. {E = g_slist_append (A, g_slist_reverse (L));}
+ins_extra_values(E) ::= COMMA LP rexprlist(L) RP. {E = g_slist_append (NULL, g_slist_reverse (L));}
 
 %type inscollist_opt {GSList*}
 %destructor inscollist_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_field_free, NULL); g_slist_free ($$);}}
@@ -629,7 +629,7 @@ having_opt(A) ::= HAVING expr(X).       {A = X;}
 %type groupby_opt {GSList*}
 %destructor groupby_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
 groupby_opt(A) ::= .                      {A = 0;}
-groupby_opt(A) ::= GROUP BY nexprlist(X). {A = X;}
+groupby_opt(A) ::= GROUP BY rnexprlist(X). {A = g_slist_reverse (X);}
 
 %type from {GdaSqlSelectFrom *}
 %destructor from {gda_sql_select_from_free ($$);}
@@ -756,17 +756,17 @@ distinct(E) ::= DISTINCT. {E = g_new0 (Distinct, 1); E->distinct = TRUE;}
 distinct(E) ::= DISTINCT ON expr(X). [OR] {E = g_new0 (Distinct, 1); E->distinct = TRUE; E->expr = X;}
 
 // Non empty list of expressions
-%type nexprlist {GSList *}
-%destructor nexprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
-nexprlist(L) ::= nexprlist(E) COMMA expr(X). {L = g_slist_append (E, X);}
-nexprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
+%type rnexprlist {GSList *}
+%destructor rnexprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+rnexprlist(L) ::= rnexprlist(E) COMMA expr(X). {L = g_slist_prepend (E, X);}
+rnexprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
 
 // List of expressions
-%type exprlist {GSList *}
-%destructor exprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
-exprlist(L) ::= . {L = NULL;}
-exprlist(L) ::= exprlist(E) COMMA expr(X). {L = g_slist_append (E, X);}
-exprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
+%type rexprlist {GSList *}
+%destructor rexprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+rexprlist(L) ::= . {L = NULL;}
+rexprlist(L) ::= rexprlist(E) COMMA expr(X). {L = g_slist_prepend (E, X);}
+rexprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
 
 // A single expression
 %type expr {GdaSqlExpr *}
@@ -775,11 +775,11 @@ expr(E) ::= pvalue(V). {E = V;}
 expr(E) ::= value(V). {E = gda_sql_expr_new (NULL); E->value = V;}
 expr(E) ::= LP expr(X) RP. {E = X;}
 expr(E) ::= fullname(V). {E = gda_sql_expr_new (NULL); E->value = V;}
-expr(E) ::= fullname(V) LP exprlist(A) RP. {GdaSqlFunction *func;
+expr(E) ::= fullname(V) LP rexprlist(A) RP. {GdaSqlFunction *func;
 					    E = gda_sql_expr_new (NULL); 
 					    func = gda_sql_function_new (GDA_SQL_ANY_PART (E)); 
 					    gda_sql_function_take_name (func, V);
-					    gda_sql_function_take_args_list (func, A);
+					    gda_sql_function_take_args_list (func, g_slist_reverse (A));
 					    E->func = func;}
 expr(E) ::= fullname(V) LP compound(S) RP. {GdaSqlFunction *func;
 					     GdaSqlExpr *expr;
@@ -865,13 +865,13 @@ expr(C) ::= expr(R) uni_op(O) . {C = create_uni_expr (O, R);}
 
 expr(C) ::= expr(L) IS expr(R). {C = create_two_expr (GDA_SQL_OPERATOR_TYPE_IS, L, R);}
 expr(E) ::= LP compound(S) RP. {E = gda_sql_expr_new (NULL); gda_sql_expr_take_select (E, S);}
-expr(E) ::= expr(R) IN LP exprlist(L) RP. {GdaSqlOperation *cond;
+expr(E) ::= expr(R) IN LP rexprlist(L) RP. {GdaSqlOperation *cond;
 					   GSList *list;
 					   E = gda_sql_expr_new (NULL);
 					   cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					   E->cond = cond;
 					   cond->operator_type = GDA_SQL_OPERATOR_TYPE_IN;
-					   cond->operands = g_slist_prepend (L, R);
+					   cond->operands = g_slist_prepend (g_slist_reverse (L), R);
 					   for (list = cond->operands; list; list = list->next)
 						   GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
 }
@@ -888,13 +888,13 @@ expr(E) ::= expr(R) IN LP compound(S) RP. {GdaSqlOperation *cond;
 					    cond->operands = g_slist_prepend (cond->operands, R);
 					    GDA_SQL_ANY_PART (R)->parent = GDA_SQL_ANY_PART (cond);
 }
-expr(E) ::= expr(R) NOT IN LP exprlist(L) RP. {GdaSqlOperation *cond;
+expr(E) ::= expr(R) NOT IN LP rexprlist(L) RP. {GdaSqlOperation *cond;
 					       GSList *list;
 					       E = gda_sql_expr_new (NULL);
 					       cond = gda_sql_operation_new (GDA_SQL_ANY_PART (E));
 					       E->cond = cond;
 					       cond->operator_type = GDA_SQL_OPERATOR_TYPE_NOTIN;
-					       cond->operands = g_slist_prepend (L, R);
+					       cond->operands = g_slist_prepend (g_slist_reverse (L), R);
 					       for (list = cond->operands; list; list = list->next)
 						       GDA_SQL_ANY_PART (list->data)->parent = GDA_SQL_ANY_PART (cond);
 }
