@@ -3083,9 +3083,6 @@ proxy_reset_pre_cb (GdaDataProxy *proxy, GdauiRawGrid *grid)
 static void
 proxy_reset_cb (GdaDataProxy *proxy, GdauiRawGrid *grid)
 {
-	g_object_ref (G_OBJECT (proxy));
-	g_object_set (G_OBJECT (grid), "model", proxy, NULL);
-	g_object_unref (G_OBJECT (proxy));
 	if (grid->priv->iter_row >= 0)
 		gda_data_model_iter_move_to_row (grid->priv->iter, grid->priv->iter_row);
 	grid->priv->iter_row = -1;
