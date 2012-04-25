@@ -61,17 +61,17 @@
 %destructor stmt {g_print ("Statement destroyed by parser: %p\n", $$); gda_sql_statement_free ($$);}
 stmt ::= exprlist(L) SEMI. {pdata->parsed_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_UNKNOWN); 
 			    /* FIXME: set SQL */
-			    gda_sql_statement_unknown_take_expressions (pdata->parsed_statement, L);
+			    gda_sql_statement_unknown_take_expressions (pdata->parsed_statement, g_slist_reverse (L));
 }
 stmt ::= exprlist(L) END_OF_FILE. {pdata->parsed_statement = gda_sql_statement_new (GDA_SQL_STATEMENT_UNKNOWN); 
 				   /* FIXME: set SQL */
-				   gda_sql_statement_unknown_take_expressions (pdata->parsed_statement, L);
+				   gda_sql_statement_unknown_take_expressions (pdata->parsed_statement, g_slist_reverse (L));
 }
 
 // List of expressions
 %type exprlist {GSList *}
 %destructor exprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
-exprlist(L) ::= exprlist(E) expr(X). {L = g_slist_append (E, X);}
+exprlist(L) ::= exprlist(E) expr(X). {L = g_slist_prepend (E, X);}
 exprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
 
 // A single expression
