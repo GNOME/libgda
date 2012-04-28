@@ -29,6 +29,8 @@ An opened connection
 </para>
 
 @wrapper: 
+@ioc: 
+@ioc_watch_id: 
 @wrapper_jobs: 
 @wrapper_results_timer: 
 @long_timer: 
@@ -116,6 +118,15 @@ An opened connection
 
 
 <!-- ##### FUNCTION browser_connection_get_name ##### -->
+<para>
+
+</para>
+
+@bcnc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION browser_connection_get_long_name ##### -->
 <para>
 
 </para>

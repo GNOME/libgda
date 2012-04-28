@@ -101,7 +101,7 @@ Top level browser window
 @type: 
 @context: 
 @format: 
-@Varargs: 
+@...: 
 
 
 <!-- ##### FUNCTION browser_window_customize_perspective_ui ##### -->

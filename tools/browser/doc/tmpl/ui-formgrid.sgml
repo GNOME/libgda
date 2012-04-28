@@ -26,6 +26,18 @@ Widget embedding both a form and a grid to display a #GdaDataModel's contents
 </para>
 
 
+<!-- ##### SIGNAL UiFormGrid::data-set-changed ##### -->
+<para>
+
+</para>
+
+@uiformgrid: the object which received the signal.
+
+<!-- ##### ARG UiFormGrid:compute-mod-statements ##### -->
+<para>
+
+</para>
+
 <!-- ##### ARG UiFormGrid:raw-form ##### -->
 <para>
 

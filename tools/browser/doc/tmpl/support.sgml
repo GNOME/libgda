@@ -46,7 +46,7 @@ Misc. functions for various situations
 
 @parent: 
 @format: 
-@Varargs: 
+@...: 
 
 
 <!-- ##### FUNCTION browser_show_message ##### -->
@@ -56,7 +56,7 @@ Misc. functions for various situations
 
 @parent: 
 @format: 
-@Varargs: 
+@...: 
 
 
 <!-- ##### FUNCTION browser_show_help ##### -->
@@ -141,8 +141,6 @@ Misc. functions for various situations
 @BROWSER_ICON_DIAGRAM: 
 @BROWSER_ICON_QUERY: 
 @BROWSER_ICON_ACTION: 
-@BROWSER_ICON_GRID: 
-@BROWSER_ICON_FORM: 
 @BROWSER_ICON_MENU_INDICATOR: 
 @BROWSER_ICON_LDAP_ENTRY: 
 @BROWSER_ICON_LDAP_GROUP: 
