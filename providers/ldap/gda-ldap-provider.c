@@ -680,6 +680,8 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 	int limit = cdata->time_limit;
 	res = ldap_set_option (cdata->handle, LDAP_OPT_TIMELIMIT, &limit);
 	if (res != LDAP_SUCCESS) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
                 return FALSE;
 	}
@@ -688,6 +690,8 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 	limit = cdata->size_limit;
 	res = ldap_set_option (cdata->handle, LDAP_OPT_SIZELIMIT, &limit);
 	if (res != LDAP_SUCCESS) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
                 return FALSE;
 	}
