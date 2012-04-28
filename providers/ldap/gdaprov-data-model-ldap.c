@@ -1055,7 +1055,7 @@ execute_ldap_search (GdaDataModelLdap *model)
 		int ldap_errno;
 		ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (&e, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
-			     "%s", ldap_err2string(ldap_errno));
+			     "%s", ldap_err2string (ldap_errno));
 		add_exception (model, e);
 		return;
 	}
@@ -1500,4 +1500,239 @@ row_multiplier_index_next (RowMultiplier *rm)
 			}
 		}
 	}
+}
+
+/*
+ * Writing support
+ */
+
+typedef struct {
+	LdapConnectionData *cdata;
+	GArray *mods_array;
+} FHData;
+static void removed_attrs_func (const gchar *attr_name, GdaLdapAttribute *attr, FHData *data);
+
+gboolean
+gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
+		     GdaLdapEntry *entry, GdaLdapEntry *ref_entry, GError **error)
+{
+	LdapConnectionData *cdata;
+	int res;
+
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (entry, FALSE);
+	if (entry)
+		g_return_val_if_fail (gdaprov_ldap_is_dn (entry->dn), FALSE);
+	if (ref_entry)
+		g_return_val_if_fail (gdaprov_ldap_is_dn (ref_entry->dn), FALSE);
+
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	g_return_val_if_fail (cdata, FALSE);
+
+	/* checks */
+	if ((modtype != GDA_LDAP_MODIFICATION_INSERT) &&
+	    (modtype != GDA_LDAP_MODIFICATION_ATTR_ADD) &&
+	    (modtype != GDA_LDAP_MODIFICATION_ATTR_DEL) &&
+	    (modtype != GDA_LDAP_MODIFICATION_ATTR_REPL) &&
+	    (modtype != GDA_LDAP_MODIFICATION_ATTR_DIFF)) {
+		g_warning (_("Unknown GdaLdapModificationType %d"), modtype);
+		return FALSE;
+	}
+
+	if (((modtype == GDA_LDAP_MODIFICATION_DELETE) || (modtype == GDA_LDAP_MODIFICATION_INSERT)) &&
+	    !entry) {
+		g_warning ("%s", _("No GdaLdapEntry specified"));
+		return FALSE;
+	}
+
+	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_ADD) && !entry) {
+		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to add"));
+		return FALSE;
+	}
+
+	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DEL) && !entry) {
+		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to remove"));
+		return FALSE;
+	}
+
+	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_REPL) && !entry) {
+		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to replace"));
+		return FALSE;
+	}
+
+	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DIFF) && (!entry || !ref_entry)) {
+		g_warning ("%s", _("No GdaLdapEntry specified to compare attributes"));
+		return FALSE;
+	}
+	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DIFF) && strcmp (entry->dn, ref_entry->dn)) {
+		g_warning ("%s", _("GdaLdapEntry specified to compare have different DN"));
+		return FALSE;
+	}
+
+	/* handle DELETE operation */
+	if (modtype == GDA_LDAP_MODIFICATION_DELETE) {
+		res = ldap_delete_ext_s (cdata->handle, entry->dn, NULL, NULL);
+		if (res != LDAP_SUCCESS) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
+				     "%s", ldap_err2string (res));
+			return FALSE;
+		}
+		else
+			return TRUE;
+	}
+
+	/* build array of modifications to perform */
+	GArray *mods_array;
+	mods_array = g_array_new (TRUE, FALSE, sizeof (LDAPMod*));
+	if (modtype == GDA_LDAP_MODIFICATION_ATTR_DIFF) {
+		/* index ref_entry's attributes */
+		GHashTable *hash;
+		guint i;
+		hash = g_hash_table_new (g_str_hash, g_str_equal);
+		for (i = 0; i < ref_entry->nb_attributes; i++) {
+			GdaLdapAttribute *attr;
+			attr = ref_entry->attributes [i];
+			g_hash_table_insert (hash, attr->attr_name, attr);
+		}
+		
+		for (i = 0; i < entry->nb_attributes; i++) {
+			LDAPMod *mod;
+			GdaLdapAttribute *attr, *ref_attr;
+			guint j;
+
+			attr = entry->attributes [i];
+			ref_attr = g_hash_table_lookup (hash, attr->attr_name);
+
+			mod = g_new0 (LDAPMod, 1);
+			mod->mod_type = attr->attr_name; /* no duplication */
+			if (ref_attr) {
+				mod->mod_op = LDAP_MOD_BVALUES | LDAP_MOD_REPLACE;
+				g_hash_table_remove (hash, attr->attr_name);
+			}
+			else
+				mod->mod_op = LDAP_MOD_BVALUES | LDAP_MOD_ADD;
+
+			mod->mod_bvalues = g_new0 (struct berval *, attr->nb_values + 1); /* last is NULL */
+			for (j = 0; j < attr->nb_values; j++)
+				mod->mod_bvalues[j] = gda_ldap_attr_g_value_to_value (cdata, attr->values [j]);
+			g_array_append_val (mods_array, mod);
+		}
+
+		FHData fhdata;
+		fhdata.cdata = cdata;
+		fhdata.mods_array = mods_array;
+		g_hash_table_foreach (hash, (GHFunc) removed_attrs_func, &fhdata);
+		g_hash_table_destroy (hash);
+	}
+	else {
+		guint i;
+		for (i = 0; i < entry->nb_attributes; i++) {
+			LDAPMod *mod;
+			GdaLdapAttribute *attr;
+			guint j;
+
+			attr = entry->attributes [i];
+			mod = g_new0 (LDAPMod, 1);
+			mod->mod_op = LDAP_MOD_BVALUES;
+			if ((modtype == GDA_LDAP_MODIFICATION_INSERT) ||
+			    (modtype == GDA_LDAP_MODIFICATION_ATTR_ADD))
+				mod->mod_op |= LDAP_MOD_ADD;
+			else if (modtype == GDA_LDAP_MODIFICATION_ATTR_DEL)
+				mod->mod_op |= LDAP_MOD_DELETE;
+			else
+				mod->mod_op |= LDAP_MOD_REPLACE;
+			mod->mod_type = attr->attr_name; /* no duplication */
+			mod->mod_bvalues = g_new0 (struct berval *, attr->nb_values + 1); /* last is NULL */
+			for (j = 0; j < attr->nb_values; j++)
+				mod->mod_bvalues[j] = gda_ldap_attr_g_value_to_value (cdata, attr->values [j]);
+			g_array_append_val (mods_array, mod);
+		}
+	}
+	
+	gboolean retval = TRUE;
+	if (mods_array->len > 0) {
+		/* apply modifications */
+		if (modtype == GDA_LDAP_MODIFICATION_INSERT)
+			res = ldap_add_ext_s (cdata->handle, entry->dn, (LDAPMod **) mods_array->data, NULL, NULL);
+		else
+			res = ldap_modify_ext_s (cdata->handle, entry->dn, (LDAPMod **) mods_array->data, NULL, NULL);
+
+		if (res != LDAP_SUCCESS) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
+				     "%s", ldap_err2string (res));
+			retval = FALSE;
+		}
+	}
+
+	/* clear tmp data */
+	guint i;
+	for (i = 0; i < mods_array->len; i++) {
+		LDAPMod *mod;
+		mod = g_array_index (mods_array, LDAPMod*, i);
+		if (mod->mod_values) {
+			guint j;
+			for (j = 0; mod->mod_values [j]; j++)
+				gda_ldap_attr_value_free (cdata, mod->mod_bvalues [j]);
+			g_free (mod->mod_values);
+		}
+		g_free (mod);
+	}
+	g_array_free (mods_array, TRUE);
+
+	return retval;
+}
+
+static void
+removed_attrs_func (const gchar *attr_name, GdaLdapAttribute *attr, FHData *data)
+{
+	LDAPMod *mod;
+	guint j;
+
+	mod = g_new0 (LDAPMod, 1);
+	mod->mod_op = LDAP_MOD_BVALUES | LDAP_MOD_DELETE;
+	mod->mod_type = attr->attr_name; /* no duplication */
+	mod->mod_bvalues = g_new0 (struct berval *, attr->nb_values + 1); /* last is NULL */
+	for (j = 0; j < attr->nb_values; j++)
+		mod->mod_bvalues[j] = gda_ldap_attr_g_value_to_value (data->cdata, attr->values [j]);
+	g_array_append_val (data->mods_array, mod);
+}
+
+gboolean
+gdaprov_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gchar *new_dn,
+			   GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (current_dn && *current_dn, FALSE);
+	g_return_val_if_fail (gdaprov_ldap_is_dn (current_dn), FALSE);
+	g_return_val_if_fail (new_dn && *new_dn, FALSE);
+	g_return_val_if_fail (gdaprov_ldap_is_dn (new_dn), FALSE);
+
+	LdapConnectionData *cdata;
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	g_return_val_if_fail (cdata, FALSE);
+
+	gchar **carray, **narray;
+	int res;
+	gboolean retval = TRUE;
+	gchar *parent = NULL;
+
+	carray = gda_ldap_dn_split (current_dn, FALSE);
+	narray = gda_ldap_dn_split (new_dn, FALSE);
+
+	if (carray[1] && narray[1] && strcmp (carray[1], narray[1]))
+		parent = narray [1];
+	else if (! carray[1] && narray[1])
+		parent = narray [1];
+
+	res = ldap_rename_s (cdata->handle, current_dn, narray[0], parent, 1, NULL, NULL);
+	g_strfreev (carray);
+	g_strfreev (narray);
+
+	if (res != LDAP_SUCCESS) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
+			     "%s", ldap_err2string (res));
+		retval = FALSE;
+	}
+
+	return retval;
 }

@@ -50,6 +50,11 @@ GType          gda_ldap_get_g_type    (LdapConnectionData *cdata, const gchar *a
  * Misc.
  */
 GValue        *gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue *bv);
+BerValue      *gda_ldap_attr_g_value_to_value (LdapConnectionData *cdata, const GValue *cvalue);
+void           gda_ldap_attr_value_free (LdapConnectionData *cdata, BerValue *bvalue);
+
 gboolean       gda_ldap_parse_dn (const char *attr, gchar **out_userdn);
+
+gboolean       gdaprov_ldap_is_dn (const gchar *dn);
 
 #endif

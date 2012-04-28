@@ -162,7 +162,11 @@ typedef struct {
 	GHashTable        *attributes_hash;
 } GdaLdapEntry;
 
+GdaLdapEntry  *gda_ldap_entry_new                  (const gchar *dn);
+void           gda_ldap_entry_add_attribute        (GdaLdapEntry *entry, gboolean merge, const gchar *attr_name,
+						    guint nb_values, GValue **values);
 void           gda_ldap_entry_free                 (GdaLdapEntry *entry);
+
 GdaLdapEntry  *gda_ldap_describe_entry             (GdaLdapConnection *cnc, const gchar *dn, GError **error);
 GdaLdapEntry **gda_ldap_get_entry_children         (GdaLdapConnection *cnc, const gchar *dn,
 						    gchar **attributes, GError **error);
@@ -225,12 +229,39 @@ typedef struct {
 	guint             nb_opt_attributes;
 	gchar           **opt_attributes;
 
-	GSList           *parents; /* list of #LdapClass */
-	GSList           *children; /* list of #LdapClass */
+	GSList           *parents; /* list of #GdaLdapClass */
+	GSList           *children; /* list of #GdaLdapClass */
 } GdaLdapClass;
 
 GdaLdapClass   *gda_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname);
 const GSList   *gda_ldap_get_top_classes (GdaLdapConnection *cnc);
+
+
+/**
+ * GdaLdapModificationType:
+ * @GDA_LDAP_MODIFICATION_INSERT: modification corresponds to a new LDAP entry
+ * @GDA_LDAP_MODIFICATION_DELETE: modification corresponds to removing an LDAP entry
+ * @GDA_LDAP_MODIFICATION_ATTR_ADD: modification correspond to adding attributes to an existing LDAP entry
+ * @GDA_LDAP_MODIFICATION_ATTR_DEL: modification correspond to removing attributes from an existing LDAP entry
+ * @GDA_LDAP_MODIFICATION_ATTR_REPL: modification correspond to replacing attributes of an existing LDAP entry
+ * @GDA_LDAP_MODIFICATION_ATTR_DIFF: modification correspond to modifying attributes to an existing LDAP entry
+ *
+ * Speficies the type of operation requested when writing to an LDAP directory.
+ */
+typedef enum {
+	GDA_LDAP_MODIFICATION_INSERT,
+	GDA_LDAP_MODIFICATION_DELETE,
+	GDA_LDAP_MODIFICATION_ATTR_ADD,
+	GDA_LDAP_MODIFICATION_ATTR_DEL,
+	GDA_LDAP_MODIFICATION_ATTR_REPL,
+	GDA_LDAP_MODIFICATION_ATTR_DIFF
+} GdaLdapModificationType;
+
+gboolean        gda_ldap_add_entry    (GdaLdapConnection *cnc, GdaLdapEntry *entry, GError **error);
+gboolean        gda_ldap_remove_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error);
+gboolean        gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gchar *new_dn, GError **error);
+gboolean        gda_ldap_modify_entry (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
+				       GdaLdapEntry *entry, GdaLdapEntry *ref_entry, GError **error);
 
 G_END_DECLS
 

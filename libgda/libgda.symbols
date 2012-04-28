@@ -417,6 +417,7 @@
 	gda_init
 	gda_lang_locale
 #ifdef HAVE_LDAP
+	gda_ldap_add_entry
 	gda_ldap_attributes_list_free
 	gda_ldap_connection_get_type
 	gda_ldap_get_class_info
@@ -427,10 +428,15 @@
 	gda_ldap_connection_undeclare_table
 	gda_ldap_describe_entry
 	gda_ldap_dn_split
+	gda_ldap_entry_add_attribute
+	gda_ldap_entry_new
 	gda_ldap_entry_free
 	gda_ldap_entry_get_attributes_list
 	gda_ldap_get_entry_children
 	gda_ldap_is_dn
+	gda_ldap_modify_entry
+	gda_ldap_remove_entry
+	gda_ldap_rename_entry
 #endif
 	gda_locale_changed
 	gda_lockable_get_type

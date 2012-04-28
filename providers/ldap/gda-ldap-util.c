@@ -918,6 +918,90 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 	return value;
 }
 
+BerValue *
+gda_ldap_attr_g_value_to_value (LdapConnectionData *cdata, const GValue *cvalue)
+{
+	BerValue *bv;
+
+	if (!cvalue)
+		return NULL;
+
+	bv = g_new (struct berval, 1);
+
+	if (G_VALUE_TYPE (cvalue) == G_TYPE_STRING) {
+		const gchar *cstr;
+		cstr = g_value_get_string (cvalue);
+		bv->bv_val = g_strdup (cstr);
+		bv->bv_len = strlen (cstr);
+	}
+	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_TIMESTAMP) {
+		const GdaTimestamp *ts;
+		gchar *str;
+		ts = gda_value_get_timestamp (cvalue);
+		if (ts->fraction == 0) {
+			if (ts->timezone == GDA_TIMEZONE_INVALID)
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d", ts->year, ts->month,
+						       ts->day, ts->hour, ts->minute, ts->second);
+			else {
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d", ts->year, ts->month,
+						       ts->day, ts->hour, ts->minute, ts->second);
+				TO_IMPLEMENT;
+			}
+		}
+		else {
+			if (ts->timezone == GDA_TIMEZONE_INVALID)
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu", ts->year, ts->month,
+						       ts->day, ts->hour, ts->minute, ts->second,
+						       ts->fraction);
+			else {
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu", ts->year, ts->month,
+						       ts->day, ts->hour, ts->minute, ts->second,
+						       ts->fraction);
+				TO_IMPLEMENT;
+			}
+		}
+		bv->bv_val = str;
+		bv->bv_len = strlen (str);
+	}
+	else if (G_VALUE_TYPE (cvalue) == G_TYPE_DATE) {
+		GDate *date;
+		gchar *str;
+		date = (GDate*) g_value_get_boxed (cvalue);
+		str = g_strdup_printf ("%04d-%02d-%02d", g_date_get_year (date), g_date_get_month (date),
+				       g_date_get_day (date));
+		bv->bv_val = str;
+		bv->bv_len = strlen (str);
+	}
+	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL) {
+		bv->bv_val = NULL;
+		bv->bv_len = 0;
+	}
+	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) {
+		TO_IMPLEMENT;
+	}
+	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BLOB) {
+		TO_IMPLEMENT;
+	}
+	else {
+		gchar *str;
+		str = gda_value_stringify (cvalue);
+		bv->bv_val = str;
+		bv->bv_len = strlen (str);
+	}
+	return bv;
+}
+
+/*
+ * Frees @bvalue, which MUST have been created using gda_ldap_attr_g_value_to_value()
+ */
+void
+gda_ldap_attr_value_free (LdapConnectionData *cdata, BerValue *bvalue)
+{
+	g_free (bvalue->bv_val);
+	g_free (bvalue);
+}
+
+
 /*
  * make sure we respect http://www.faqs.org/rfcs/rfc2253.html
  */
@@ -1526,7 +1610,7 @@ gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *obje
 		GdaLdapClass *kl;
 		kl = gdaprov_ldap_get_class_info (cnc, tmp);
 		if (!kl) {
-			g_warning (_("Can't get information about '%s' class"), tmp);
+			/*g_warning (_("Can't get information about '%s' class"), tmp);*/
 			continue;
 		}
 		retlist = handle_ldap_class (cdata, kl, retlist, hash);

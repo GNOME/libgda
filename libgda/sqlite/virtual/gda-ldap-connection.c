@@ -878,6 +878,104 @@ gda_ldap_entry_free (GdaLdapEntry *entry)
 	}
 }
 
+/**
+ * gda_ldap_entry_new:
+ * @dn: (allow-none): a Distinguished name, or %NULL
+ *
+ * Creates a new #GdaLdapEntry. This function is useful when using gda_ldap_modify_entry()
+ *
+ * Returns: a new #GdaLdapEntry
+ *
+ * Since: 5.2.0
+ */
+GdaLdapEntry *
+gda_ldap_entry_new (const gchar *dn)
+{
+	GdaLdapEntry *entry;
+	entry = g_new0 (GdaLdapEntry, 1);
+	if (dn)
+		entry->dn = g_strdup (dn);
+	entry->attributes_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	entry->nb_attributes = 0;
+	entry->attributes = g_new0 (GdaLdapAttribute, 1);
+	return entry;
+}
+
+/**
+ * gda_ldap_entry_add_attribute:
+ * @entry: a #GdaLdapEntry pointer
+ * @merge: set to %TRUE to merge the values in case of an existing attribute in @entry, and %FALSE to replace any existing attribute's values in @entry
+ * @attr_name: the name of the attribute to add
+ * @nb_values: number of values in @values
+ * @values: (array length=nb_values): an array of #GValue (as much values as specified by @nb_values)
+ *
+ * Add an attribute (ans its values) to @entry. If the attribute is already present in @entry,
+ * then the attribute's values are merged or replaced depending on the @merge argument.
+ *
+ * Since: 5.2.0
+ */
+void
+gda_ldap_entry_add_attribute (GdaLdapEntry *entry, gboolean merge, const gchar *attr_name,
+			      guint nb_values, GValue **values)
+{
+	guint i;
+	g_return_if_fail (entry);
+	g_return_if_fail (nb_values > 0);
+	g_return_if_fail (values);
+	g_return_if_fail (attr_name && *attr_name);
+
+	GdaLdapAttribute *att = NULL;
+	GdaLdapAttribute *natt = NULL;
+	guint replace_pos = G_MAXUINT;
+
+	if (entry->attributes_hash)
+		att = g_hash_table_lookup (entry->attributes_hash, attr_name);
+	else
+		entry->attributes_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+	if (att) {
+		if (merge) {
+			TO_IMPLEMENT;
+			return;
+		}
+		else {
+			/* get rid of @attr */
+			g_hash_table_remove (entry->attributes_hash, att->attr_name);
+			for (i = 0; i < entry->nb_attributes; i++) {
+				if (entry->attributes [i] == att) {
+					replace_pos = i;
+					entry->attributes [i] = NULL;
+					break;
+				}
+			}
+			gda_ldap_attribute_free (att);
+		}
+	}
+
+	natt = g_new0 (GdaLdapAttribute, 1);
+	natt->attr_name = g_strdup (attr_name);
+	natt->nb_values = nb_values;
+	if (natt->nb_values > 0) {
+		natt->values = g_new0 (GValue *, natt->nb_values + 1);
+		for (i = 0; i < natt->nb_values; i++) {
+			if (values [i])
+				natt->values [i] = gda_value_copy (values [i]);
+			else
+				natt->values [i] = NULL;
+		}
+	}
+	g_hash_table_insert (entry->attributes_hash, natt->attr_name, natt);
+	if (replace_pos != G_MAXUINT)
+		entry->attributes [replace_pos] = natt;
+	else {
+		entry->nb_attributes++;
+		entry->attributes = g_renew (GdaLdapAttribute*, entry->attributes, entry->nb_attributes + 1);
+		entry->attributes [entry->nb_attributes - 1] = natt;
+		entry->attributes [entry->nb_attributes] = NULL;
+	}
+}
+
+
 /* proxy declaration */
 GdaLdapEntry *_gda_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error);
 GdaLdapEntry **_gda_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar **attributes, GError **error);
@@ -1027,6 +1125,7 @@ gda_ldap_get_top_classes (GdaLdapConnection *cnc)
 GSList *_gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry, GdaLdapAttribute *object_class_attr);
 /**
  * gda_ldap_entry_get_attributes_list:
+ * @cnc: a #GdaLdapConnection
  * @entry: a #GdaLdapEntry
  *
  * Get a list of all the possible attributes which @entry can have. Each possible attribute is represented
@@ -1067,4 +1166,107 @@ gda_ldap_attributes_list_free (GSList *list)
 		}
 	}
 	g_slist_free (list);
+}
+
+
+gboolean
+_gda_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
+		  GdaLdapEntry *entry, GdaLdapEntry *ref_entry, GError **error);
+
+/**
+ * gda_ldap_add_entry:
+ * @cnc: a #GdaLdapConnection
+ * @entry: a #GdaLDapEntry describing the LDAP entry to add
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Creates a new LDAP entry.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2.0
+ */
+gboolean
+gda_ldap_add_entry (GdaLdapConnection *cnc, GdaLdapEntry *entry, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (entry, FALSE);
+	g_return_val_if_fail (entry->dn && *(entry->dn), FALSE);
+
+	return _gda_ldap_modify (cnc, GDA_LDAP_MODIFICATION_INSERT, entry, NULL, error);
+}
+
+/**
+ * gda_ldap_remove_entry:
+ * @cnc: a #GdaLdapConnection
+ * @entry: a #GdaLDapEntry describing the LDAP entry to remove
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Delete an LDAP entry.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2.0
+ */
+gboolean
+gda_ldap_remove_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (dn && *dn, FALSE);
+
+	GdaLdapEntry entry;
+	memset (&entry, 0, sizeof (GdaLdapEntry));
+	entry.dn = (gchar*) dn;
+
+	return _gda_ldap_modify (cnc, GDA_LDAP_MODIFICATION_DELETE, &entry, NULL, error);
+}
+
+gboolean
+_gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gchar *new_dn, GError **error);
+
+/**
+ * gda_ldap_rename_entry:
+ * @cnc: a #GdaLdapConnection
+ * @current_dn: the current DN of the entry
+ * @new_dn: the new DN of the entry
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Renames an LDAP entry.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2.0
+ */
+gboolean
+gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gchar *new_dn, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (current_dn && *current_dn, FALSE);
+	g_return_val_if_fail (new_dn && *new_dn, FALSE);
+
+	return _gda_ldap_rename_entry (cnc, current_dn, new_dn, error);
+}
+
+/**
+ * gda_ldap_modify_entry:
+ * @cnc: a #GdaLdapConnection
+ * @modtype: the type of modification to perform
+ * @entry: a #GdaLDapEntry describing the LDAP entry to apply modifications, along with the attributes which will be modified
+ * @ref_entry: (allow-none): a #GdaLDapEntry describing the reference LDAP entry, if @modtype is %GDA_LDAP_MODIFICATION_ATTR_DIFF
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Modifies an LDAP entry.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2.0
+ */
+gboolean
+gda_ldap_modify_entry (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
+		       GdaLdapEntry *entry, GdaLdapEntry *ref_entry, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (entry, FALSE);
+	g_return_val_if_fail (entry->dn && *(entry->dn), FALSE);
+
+	return _gda_ldap_modify (cnc, modtype, entry, ref_entry, error);
 }

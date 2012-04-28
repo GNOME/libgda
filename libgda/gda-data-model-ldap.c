@@ -486,3 +486,53 @@ _gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry
 
 	return func (cnc, object_class_attr);
 }
+
+/*
+ * _gda_ldap_modify:
+ * proxy to gda_ldap_add_entry() and others
+ */
+gboolean
+_gda_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
+		  GdaLdapEntry *entry, GdaLdapEntry *ref_entry, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+
+	typedef gboolean (*Func) (GdaLdapConnection *,  GdaLdapModificationType, GdaLdapEntry*, GdaLdapEntry*,
+				  GError **);
+	static Func func = NULL;
+
+	if (!func) {
+		load_ldap_module ();
+		if (!ldap_prov_module)
+			return FALSE;
+
+		if (!g_module_symbol (ldap_prov_module, "gdaprov_ldap_modify", (void **) &func))
+			return FALSE;
+	}
+
+	return func (cnc, modtype, entry, ref_entry, error);
+}
+
+/*
+ * _gda_ldap_rename_entry:
+ * proxy to gda_ldap_rename_entry()
+ */
+gboolean
+_gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gchar *new_dn, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+
+	typedef gboolean (*Func) (GdaLdapConnection *,  const gchar*, const gchar*, GError **);
+	static Func func = NULL;
+
+	if (!func) {
+		load_ldap_module ();
+		if (!ldap_prov_module)
+			return FALSE;
+
+		if (!g_module_symbol (ldap_prov_module, "gdaprov_ldap_rename_entry", (void **) &func))
+			return FALSE;
+	}
+
+	return func (cnc, current_dn, new_dn, error);
+}

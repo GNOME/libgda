@@ -85,7 +85,7 @@ GdaDataModelLdap *gda_data_model_ldap_new_with_config  (GdaConnection *cnc,
 							const gchar *base_dn, const gchar *filter,
 							const gchar *attributes, GdaLdapSearchScope scope);
 
-GList        *gda_data_model_ldap_compute_columns (GdaConnection *cnc, const gchar *attributes);
+GList            *gda_data_model_ldap_compute_columns  (GdaConnection *cnc, const gchar *attributes);
 
 G_END_DECLS
 
