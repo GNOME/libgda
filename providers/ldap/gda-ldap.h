@@ -36,7 +36,9 @@
  * Provider's specific connection data
  */
 typedef struct {
+	guint         keep_bound_count; /* set to >0 if connection must remain opened */
 	LDAP         *handle;
+
 	gchar        *base_dn;
 	gchar        *server_version;
 	gchar        *url;
@@ -53,6 +55,8 @@ typedef struct {
 	GHashTable   *classes_hash; /* key = class name, value = a #LdapClass */
 } LdapConnectionData;
 
-gboolean gda_ldap_silently_rebind (LdapConnectionData *cdata);
+void     gda_ldap_may_unbind (LdapConnectionData *cdata);
+gboolean gda_ldap_ensure_bound (LdapConnectionData *cdata, GError **error);
+gboolean gda_ldap_rebind (LdapConnectionData *cdata, GError **error);
 
 #endif

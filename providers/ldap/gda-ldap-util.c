@@ -556,13 +556,17 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	char *schema_attrs[] = {"objectClasses", NULL};
 	
 	/* look for subschema */
+	if (! gda_ldap_ensure_bound (cdata, NULL))
+		return NULL;
 	res = ldap_search_ext_s (cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
-	if (res != LDAP_SUCCESS)
+	if (res != LDAP_SUCCESS) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	if ((entry = ldap_first_entry (cdata->handle, msg))) {
 		char *attr;
@@ -580,8 +584,10 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	}
 	ldap_msgfree (msg);
 
-	if (! subschema)
+	if (! subschema) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	/* look for attributeTypes */
 	res = ldap_search_ext_s (cdata->handle, subschema, LDAP_SCOPE_BASE,
@@ -590,8 +596,10 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	g_free (subschema);
-	if (res != LDAP_SUCCESS)
+	if (res != LDAP_SUCCESS) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	GHashTable *h_refs;
 	h_refs = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify) g_strfreev);
@@ -716,6 +724,7 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	g_hash_table_destroy (h_refs);
 
 	retval = g_hash_table_lookup (cdata->classes_hash, classname);
+	gda_ldap_may_unbind (cdata);
 	return retval;
 }
 
@@ -1199,6 +1208,10 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
         if (!cdata)
                 return NULL;
 
+
+	if (! gda_ldap_ensure_bound (cdata, error))
+		return NULL;
+
 	int res;
 	LDAPMessage *msg = NULL;
 	const gchar *real_dn;
@@ -1221,6 +1234,7 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 		nb_entries = ldap_count_entries (cdata->handle, msg);
 		if (nb_entries == 0) {
 			ldap_msgfree (msg);
+			gda_ldap_may_unbind (cdata);
 			return NULL;
 		}
 		else if (nb_entries > 1) {
@@ -1228,6 +1242,7 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 				     _("LDAP server returned more than one entry with DN '%s'"),
 				     real_dn);
+			gda_ldap_may_unbind (cdata);
 			return NULL;
 		}
 
@@ -1278,12 +1293,13 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 			lentry->nb_attributes = array->len;
 			g_array_free (array, FALSE);
 		}
+		gda_ldap_may_unbind (cdata);
 		return lentry;
 	}
 	case LDAP_SERVER_DOWN: {
 		gint i;
 		for (i = 0; i < 5; i++) {
-			if (gda_ldap_silently_rebind (cdata))
+			if (gda_ldap_rebind (cdata, NULL))
 				goto retry;
 			g_usleep (G_USEC_PER_SEC * 2);
 		}
@@ -1294,6 +1310,7 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 		ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string(ldap_errno));
+		gda_ldap_may_unbind (cdata);
 		return NULL;
 	}
 	}
@@ -1309,7 +1326,8 @@ entry_array_sort_func (gconstpointer a, gconstpointer b)
 }
 
 GdaLdapEntry **
-gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar **attributes, GError **error)
+gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar **attributes,
+				 GError **error)
 {
 	LdapConnectionData *cdata;
 	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
@@ -1318,6 +1336,9 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
         cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
         if (!cdata)
                 return NULL;
+
+	if (! gda_ldap_ensure_bound (cdata, error))
+		return NULL;
 
 	int res;
 	LDAPMessage *msg = NULL;
@@ -1414,6 +1435,7 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 			g_array_append_val (children, lentry);
 		}
 		ldap_msgfree (msg);
+		gda_ldap_may_unbind (cdata);
 		if (children) {
 			g_array_sort (children, (GCompareFunc) entry_array_sort_func);
 			return (GdaLdapEntry**) g_array_free (children, FALSE);
@@ -1424,7 +1446,7 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 	case LDAP_SERVER_DOWN: {
 		gint i;
 		for (i = 0; i < 5; i++) {
-			if (gda_ldap_silently_rebind (cdata))
+			if (gda_ldap_rebind (cdata, NULL))
 				goto retry;
 			g_usleep (G_USEC_PER_SEC * 2);
 		}
@@ -1435,6 +1457,7 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 		ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string(ldap_errno));
+		gda_ldap_may_unbind (cdata);
 		return NULL;
 	}
 	}

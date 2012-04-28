@@ -501,6 +501,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
         }
 
 	cdata = g_new0 (LdapConnectionData, 1);
+	cdata->keep_bound_count = 0;
 	cdata->handle = ld;
 	cdata->url = url;
 	cdata->time_limit = 0;
@@ -590,7 +591,37 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
                 return FALSE;
         }
 
+	gda_ldap_may_unbind (cdata);
 	return TRUE;
+}
+
+/*
+ * Unbinds the connection if possible (i.e. if cdata->keep_bound_count is 0)
+ * This allows to avoid keeping the connection to the LDAP server if unused
+ */
+void
+gda_ldap_may_unbind (LdapConnectionData *cdata)
+{
+	if (!cdata || (cdata->keep_bound_count > 0))
+		return;
+	if (cdata->handle) {
+                ldap_unbind_ext (cdata->handle, NULL, NULL);
+		cdata->handle = NULL;
+	}
+}
+
+/*
+ * Makes sure the connection is opened
+ */
+gboolean
+gda_ldap_ensure_bound (LdapConnectionData *cdata, GError **error)
+{
+	if (!cdata)
+		return FALSE;
+	else if (cdata->handle)
+		return TRUE;
+
+	return gda_ldap_rebind (cdata, error);
 }
 
 /*
@@ -599,7 +630,7 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
  * If it fails, then @cdata is left unchanged, otherwise it is modified to be useable again.
  */
 gboolean
-gda_ldap_silently_rebind (LdapConnectionData *cdata)
+gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 {
 	if (!cdata)
 		return FALSE;
@@ -608,8 +639,11 @@ gda_ldap_silently_rebind (LdapConnectionData *cdata)
 	LDAP *ld;
 	int res;
 	res = ldap_initialize (&ld, cdata->url);
-	if (res != LDAP_SUCCESS)
+	if (res != LDAP_SUCCESS) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", ldap_err2string (res));
 		return FALSE;
+	}
 
 	/* set protocol version to 3 by default */
 	int version = LDAP_VERSION3;
@@ -620,6 +654,8 @@ gda_ldap_silently_rebind (LdapConnectionData *cdata)
 			res = ldap_set_option (ld, LDAP_OPT_PROTOCOL_VERSION, &version);
 		}
 		if (res != LDAP_SUCCESS) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+				     "%s", ldap_err2string (res));
 			ldap_unbind_ext (ld, NULL, NULL);
 			return FALSE;
 		}
@@ -634,6 +670,8 @@ gda_ldap_silently_rebind (LdapConnectionData *cdata)
         cred.bv_val = pwd && *pwd ? (char *) pwd : NULL;
 	res = ldap_sasl_bind_s (ld, cdata->user, NULL, &cred, NULL, NULL, NULL);
 	if (res != LDAP_SUCCESS) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
                 return FALSE;
 	}
@@ -700,8 +738,7 @@ gda_ldap_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
         cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
         if (!cdata)
                 return NULL;
-        TO_IMPLEMENT;
-        return NULL;
+        return cdata->base_dn;
 }
 
 /*

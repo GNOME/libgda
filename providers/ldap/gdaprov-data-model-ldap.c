@@ -64,7 +64,7 @@ struct _LdapPart {
 #define LDAP_PART(x) ((LdapPart*)(x))
 
 static LdapPart *ldap_part_new (LdapPart *parent, const gchar *base_dn, GdaLdapSearchScope scope);
-static void ldap_part_free (LdapPart *part);
+static void ldap_part_free (LdapPart *part, LdapConnectionData *cdata);
 static gboolean ldap_part_split (LdapPart *part, GdaDataModelLdap *model, gboolean *out_error);
 static LdapPart *ldap_part_next (LdapPart *part, gboolean executed);
 #ifdef GDA_DEBUG_SUBSEARCHES
@@ -267,7 +267,7 @@ gda_data_model_ldap_class_init (GdaDataModelLdapClass *klass)
 }
 
 static void
-gda_data_model_ldap_dispose (GObject * object)
+gda_data_model_ldap_dispose (GObject *object)
 {
 	GdaDataModelLdap *model = (GdaDataModelLdap *) object;
 
@@ -295,8 +295,11 @@ gda_data_model_ldap_dispose (GObject * object)
 		if (model->priv->column_mv_actions)
 			g_array_free (model->priv->column_mv_actions, TRUE);
 
-		if (model->priv->top_exec)
-			ldap_part_free (model->priv->top_exec);
+		if (model->priv->top_exec) {
+			LdapConnectionData *cdata;
+			cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (model->priv->cnc));
+			ldap_part_free (model->priv->top_exec, cdata);
+		}
 
 		g_free (model->priv->base_dn);
 		g_free (model->priv->filter);
@@ -701,6 +704,9 @@ update_iter_from_ldap_row (GdaDataModelLdap *imodel, GdaDataModelIter *iter)
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (imodel->priv->cnc));
 	g_return_if_fail (cdata);
 
+	/* LDAP connection must have been kept opened */
+	g_assert (cdata->handle);
+
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 		
@@ -933,6 +939,12 @@ execute_ldap_search (GdaDataModelLdap *model)
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (model->priv->cnc));
 	g_return_if_fail (cdata);
 
+	GError *e = NULL;
+	if (! gda_ldap_ensure_bound (cdata, &e)) {
+		add_exception (model, e);
+		return;
+	}
+
 	g_assert (model->priv->current_exec);
 	g_assert (! model->priv->current_exec->executed);
 
@@ -997,6 +1009,10 @@ execute_ldap_search (GdaDataModelLdap *model)
 		/* all Ok */
 		model->priv->current_exec->ldap_msg = msg;
 		model->priv->current_exec->nb_entries = ldap_count_entries (cdata->handle, msg);
+
+		/* keep the connection opened for this LdapPart */
+		cdata->keep_bound_count ++;
+
 #ifdef GDA_DEBUG_SUBSEARCHES
 		g_print ("model->priv->current_exec->nb_entries = %d\n",
 			 model->priv->current_exec->nb_entries);
@@ -1038,13 +1054,16 @@ execute_ldap_search (GdaDataModelLdap *model)
 			model->priv->truncated = TRUE;
 			model->priv->current_exec->ldap_msg = msg;
 			model->priv->current_exec->nb_entries = ldap_count_entries (cdata->handle, msg);
+
+			/* keep the connection opened for this LdapPart */
+			cdata->keep_bound_count ++;
 		}
 		break;
 	}
 	case LDAP_SERVER_DOWN: {
 		gint i;
 		for (i = 0; i < 5; i++) {
-			if (gda_ldap_silently_rebind (cdata))
+			if (gda_ldap_rebind (cdata, NULL))
 				goto retry;
 			g_usleep (G_USEC_PER_SEC * 2);
 		}
@@ -1057,6 +1076,7 @@ execute_ldap_search (GdaDataModelLdap *model)
 		g_set_error (&e, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string (ldap_errno));
 		add_exception (model, e);
+		gda_ldap_may_unbind (cdata);
 		return;
 	}
 	}
@@ -1073,6 +1093,7 @@ execute_ldap_search (GdaDataModelLdap *model)
 				model->priv->n_rows += iter->nb_entries;
 		}
 	}
+
 #ifdef GDA_DEBUG_NO
 	gint tmpnb = 0;
 	if (model->priv->top_exec->ldap_msg)
@@ -1105,7 +1126,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	}
 
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (imodel->priv->cnc));
-	if (!cdata) {
+	if (!cdata || ! gda_ldap_ensure_bound (cdata, NULL)) {
 		/* error */
 		gda_data_model_iter_invalidate_contents (iter);
 		return FALSE;
@@ -1129,6 +1150,7 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		if (! cpart->ldap_msg) {
 			/* error somewhere */
 			gda_data_model_iter_invalidate_contents (iter);
+			gda_ldap_may_unbind (cdata);
 			return FALSE;
 		}
 
@@ -1152,9 +1174,17 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			update_iter_from_ldap_row (imodel, iter);
 			break;
 		}
-		else
+		else {
 			/* nothing more for this part, switch to the next one */
+			ldap_msgfree (imodel->priv->current_exec->ldap_msg);
+			imodel->priv->current_exec->ldap_msg = NULL;
+
+			g_assert (cdata->keep_bound_count > 0);
+			cdata->keep_bound_count --;
+			gda_ldap_may_unbind (cdata);
+
 			imodel->priv->current_exec = ldap_part_next (cpart, FALSE);
+		}
 	}
 
 	if (!imodel->priv->current_exec) {
@@ -1169,9 +1199,11 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			add_exception (imodel, e);
 		}
 		g_signal_emit_by_name (iter, "end-of-data");
+		gda_ldap_may_unbind (cdata);
                 return FALSE;
 	}
 
+	gda_ldap_may_unbind (cdata);
 	return TRUE;
 }
 
@@ -1235,16 +1267,23 @@ ldap_part_new (LdapPart *parent, const gchar *base_dn, GdaLdapSearchScope scope)
 }
 
 static void
-ldap_part_free (LdapPart *part)
+ldap_part_free (LdapPart *part, LdapConnectionData *cdata)
 {
 	g_assert (part);
 	g_free (part->base_dn);
 	if (part->children) {
-		g_slist_foreach (part->children, (GFunc) ldap_part_free, NULL);
+		g_slist_foreach (part->children, (GFunc) ldap_part_free, cdata);
 		g_slist_free (part->children);
 	}
-	if (part->ldap_msg)
+	if (part->ldap_msg) {
 		ldap_msgfree (part->ldap_msg);
+
+		/* Release the connection being opened for this LdapPart */
+		g_assert (cdata);
+		g_assert (cdata->keep_bound_count > 0);
+		cdata->keep_bound_count --;
+		gda_ldap_may_unbind (cdata);
+	}
 	g_free (part);
 }
 
@@ -1334,7 +1373,9 @@ ldap_part_split (LdapPart *part, GdaDataModelLdap *model, gboolean *out_error)
 		}
 		if (!sub) {
 			/* error */
-			g_slist_foreach (part->children, (GFunc) ldap_part_free, NULL);
+			LdapConnectionData *cdata;
+			cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (model->priv->cnc));
+			g_slist_foreach (part->children, (GFunc) ldap_part_free, cdata);
 			g_slist_free (part->children);
 			part->children = NULL;
 			break;
@@ -1529,6 +1570,9 @@ gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
 	g_return_val_if_fail (cdata, FALSE);
 
+	if (! gda_ldap_ensure_bound (cdata, error))
+		return FALSE;
+
 	/* checks */
 	if ((modtype != GDA_LDAP_MODIFICATION_INSERT) &&
 	    (modtype != GDA_LDAP_MODIFICATION_ATTR_ADD) &&
@@ -1536,36 +1580,43 @@ gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
 	    (modtype != GDA_LDAP_MODIFICATION_ATTR_REPL) &&
 	    (modtype != GDA_LDAP_MODIFICATION_ATTR_DIFF)) {
 		g_warning (_("Unknown GdaLdapModificationType %d"), modtype);
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
 	if (((modtype == GDA_LDAP_MODIFICATION_DELETE) || (modtype == GDA_LDAP_MODIFICATION_INSERT)) &&
 	    !entry) {
 		g_warning ("%s", _("No GdaLdapEntry specified"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
 	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_ADD) && !entry) {
 		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to add"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
 	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DEL) && !entry) {
 		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to remove"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
 	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_REPL) && !entry) {
 		g_warning ("%s", _("No GdaLdapEntry specified to define attributes to replace"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
 	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DIFF) && (!entry || !ref_entry)) {
 		g_warning ("%s", _("No GdaLdapEntry specified to compare attributes"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 	if ((modtype == GDA_LDAP_MODIFICATION_ATTR_DIFF) && strcmp (entry->dn, ref_entry->dn)) {
 		g_warning ("%s", _("GdaLdapEntry specified to compare have different DN"));
+		gda_ldap_may_unbind (cdata);
 		return FALSE;
 	}
 
@@ -1575,10 +1626,13 @@ gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
 		if (res != LDAP_SUCCESS) {
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 				     "%s", ldap_err2string (res));
+			gda_ldap_may_unbind (cdata);
 			return FALSE;
 		}
-		else
+		else {
+			gda_ldap_may_unbind (cdata);
 			return TRUE;
+		}
 	}
 
 	/* build array of modifications to perform */
@@ -1679,6 +1733,7 @@ gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
 	}
 	g_array_free (mods_array, TRUE);
 
+	gda_ldap_may_unbind (cdata);
 	return retval;
 }
 
@@ -1711,6 +1766,9 @@ gdaprov_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, cons
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
 	g_return_val_if_fail (cdata, FALSE);
 
+	if (! gda_ldap_ensure_bound (cdata, error))
+		return FALSE;
+
 	gchar **carray, **narray;
 	int res;
 	gboolean retval = TRUE;
@@ -1734,5 +1792,6 @@ gdaprov_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, cons
 		retval = FALSE;
 	}
 
+	gda_ldap_may_unbind (cdata);
 	return retval;
 }
