@@ -1,3 +1,12 @@
+libgda 4.2.13, 2012-04-28
+
+ - Vala bindings corrections
+ - MySQL and MSAccess providers corrections
+ - Several other small corrections and improvements
+ - Bugs corrected: #674618
+ - Translations:
+	- de (Mario Blättermann)
+
 libgda 4.2.12, 2011-12-14
 
  - Vala bindings corrections
