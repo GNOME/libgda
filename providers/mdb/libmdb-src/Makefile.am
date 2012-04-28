@@ -25,7 +25,6 @@ libmdb_la_SOURCES = \
 	worktable.c \
 	options.c \
 	iconv.c \
-	include/config.h \
 	include/mdbodbc.h \
 	include/mdbprivate.h \
 	include/mdbsql.h \
