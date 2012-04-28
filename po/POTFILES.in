@@ -91,6 +91,7 @@ libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-info.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c
 libgda-ui/data-entries/gdaui-entry.c
+libgda-ui/data-entries/gdaui-entry-combo.c
 libgda-ui/data-entries/gdaui-entry-common-time.c
 libgda-ui/data-entries/gdaui-entry-none.c
 libgda-ui/data-entries/gdaui-entry-shell.c
