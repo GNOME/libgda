@@ -263,9 +263,9 @@ non alphanumeric characters, they should be represented as specified by the RFC 
 If a DSN with a similar name already exists, it is first removed.
 
 For example: ".lc mydsn PostgreSQL://HOST=moon;DB_NAME=mydb".
-.IP \fB.ldap_attributes\fP
-Defines or list the attributes handled by LDAP commands; this command only works if the
-current connection is an LDAP connection. Full syntax is: \fB.ldap_attributes [<attribute>[,<attribute>...]]\fP.
+.IP \fBldap_attributes\fP
+This option (see the \fB.option\fP command) defines or list the attributes handled by LDAP commands; it
+is only useful if the current connection is an LDAP connection. Its values must have the following format: \fB<attribute>[,<attribute>...]\fP.
 
 For multi valued attributes (such as "objectClass"), it is possible to specify how multiple
 values are handled by appending \fB::csv\fP (values are listed in a CVS syntax), \fB::*\fP
@@ -279,7 +279,11 @@ Full syntax is: \fB.ldap_descr <DN> ["all"|"set"|"unset"]\fP.
 If the \fBset\fP option is passed, then all the set attributes are shown, if the \fBall\fP option
 is passed, then all attributes are shown,
 and if the \fBunset\fP option is passed, then only attributes which don't have a value are
-shown. The default is to show only the set attributes specified by the \fB.ldap_attributes\fP command.
+shown. The default is to show only the set attributes specified by the \fBldap_attributes\fP option.
+.IP \fBldap_dn\fP
+This option (see the \fB.option\fP command) defines how the DN column is handled for LDAP searched entries; it
+is useful only if the current connection is an LDAP connection. Its values must
+be among: \fBdn\fP (use the full DN), \fBrdn\fP (use only the RDN), or \fBnone\fP (don't use the DN at all).
 .IP \fB.ldap_search\fP
 Searches the LDAP directory for entries; this command only works if the current connection is
 an LDAP connection. Full syntax is: \fB.ldap_search <filter> ["base"|"onelevel"|"subtree" [<base DN>]]\fP.
@@ -295,6 +299,12 @@ Updates the current connection's meta data (use this command after having modifi
 database's schema).
 .IP \fB.o\fP
 Sends output to a file or |pipe. Full syntax is: \fB.o <FILE_NAME>\fP or \fB.o |<COMMAND>\fP.
+.IP \fB.option\fP
+Defines options shared among all the connections. Full syntax is: \fB.option [<OPTION NAME> [<VALUE>]]\fP.
+
+If no option name is given, then all the available options and their current values are shown. If an option
+name is given without any value, its current value is shown, and to define the value of an option, give its
+name and new value.
 .IP \fB.pivot\fP
 Performs data summarization on a data set. Full syntax is: \fB.pivot <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> [...]]]\fP.
 
