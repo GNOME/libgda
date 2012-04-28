@@ -281,9 +281,13 @@ is passed, then all attributes are shown,
 and if the \fBunset\fP option is passed, then only attributes which don't have a value are
 shown. The default is to show only the set attributes specified by the \fBldap_attributes\fP option.
 .IP \fBldap_dn\fP
-This option (see the \fB.option\fP command) defines how the DN column is handled for LDAP searched entries; it
-is useful only if the current connection is an LDAP connection. Its values must
-be among: \fBdn\fP (use the full DN), \fBrdn\fP (use only the RDN), or \fBnone\fP (don't use the DN at all).
+This option (see the \fB.option\fP command) defines how the DN column is handled for LDAP searched entries; it is useful only if the current connection is an LDAP connection. Its values must be among: \fBdn\fP (use the full DN), \fBrdn\fP (use only the RDN), or \fBnone\fP (don't use the DN at all).
+.IP \fB.ldap_mod\fP
+Modifies an LDAP entry's attributes; this command only works if the current connection is an LDAP connection. Full syntax is: \fB.ldap_mod <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]\fP.
+
+The \fB.<OPERATION>\fP argument specifies which operation must be performed, among \fBDELETE\fP, \fBREPLACE\fP and \fBADD\fP.
+.IP \fB.ldap_mv\fP
+Renames an LDAP entry; this command only works if the current connection is an LDAP connection. Full syntax is: \fB.ldap_mv <DN> <NEW DN>\fP.
 .IP \fB.ldap_search\fP
 Searches the LDAP directory for entries; this command only works if the current connection is
 an LDAP connection. Full syntax is: \fB.ldap_search <filter> ["base"|"onelevel"|"subtree" [<base DN>]]\fP.

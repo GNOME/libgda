@@ -2332,6 +2332,12 @@ static GdaInternalCommandResult *extra_command_ldap_search (SqlConsole *console,
 static GdaInternalCommandResult *extra_command_ldap_descr (SqlConsole *console, GdaConnection *cnc,
 							   const gchar **args,
 							   OutputFormat format, GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_ldap_mv (SqlConsole *console, GdaConnection *cnc,
+							const gchar **args,
+							OutputFormat format, GError **error, gpointer data);
+static GdaInternalCommandResult *extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc,
+							 const gchar **args,
+							 OutputFormat format, GError **error, gpointer data);
 #endif
 
 static GdaInternalCommandsList *
@@ -2981,6 +2987,32 @@ build_internal_commands_list (void)
 			   "is passed, then only non set attributes are shown.");
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_descr;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("LDAP");
+	c->group_id = "LDAP";
+	c->name = g_strdup_printf (_("%s <DN> <new DN>"), "ldap_mv");
+	c->description = _("Renames an LDAP entry");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_mv;
+	c->user_data = NULL;
+	c->arguments_delimiter_func = NULL;
+	c->unquote_args = TRUE;
+	c->limit_to_main = TRUE;
+	commands->commands = g_slist_prepend (commands->commands, c);
+
+	c = g_new0 (GdaInternalCommand, 1);
+	c->group = _("LDAP");
+	c->group_id = "LDAP";
+	c->name = g_strdup_printf (_("%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"), "ldap_mod");
+	c->description = _("Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or ADD");
+	c->args = NULL;
+	c->command_func = (GdaInternalCommandFunc) extra_command_ldap_mod;
 	c->user_data = NULL;
 	c->arguments_delimiter_func = NULL;
 	c->unquote_args = TRUE;
@@ -5749,6 +5781,183 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 	res->u.model = wrapper;
 	return res;
 }
+
+static GdaInternalCommandResult *
+extra_command_ldap_mv (SqlConsole *console, GdaConnection *cnc, const gchar **args,
+		       G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	ConnectionSetting *cs;
+	GdaDataModel *model, *wrapper;
+	cs = get_current_connection_settings (console);
+	if (!cs) {
+		g_set_error (error, 0, 0, "%s",
+			     _("No connection specified"));
+		return NULL;
+	}
+
+	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Connection is not an LDAP connection"));
+		return NULL;
+	}
+
+	const gchar *current_dn = NULL;
+	const gchar *new_dn = NULL;
+
+        if (args[0] && *args[0]) {
+                current_dn = args[0];
+                if (args[1])
+			new_dn = args [1];
+        }
+
+	if (!current_dn || !new_dn) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing current DN or new DN specification"));
+		return NULL;
+	}
+
+	if (gda_ldap_rename_entry (GDA_LDAP_CONNECTION (cs->cnc), current_dn, new_dn, error)) {
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+		return res;
+	}
+	else
+		return NULL;
+}
+
+/*
+ * parses text as <att_name>[=<att_value>]:
+ *  - if value_req is %TRUE then the format has to be <att_name>=<att_value>
+ *  - if value_req is %TRUE then the format has to be <att_name>=<att_value> or <att_name>
+ *
+ * if returned value is %TRUE, then @out_attr_name and @out_value are allocated
+ */
+static gboolean
+parse_ldap_attr (const gchar *spec, gboolean value_req,
+		 gchar **out_attr_name, GValue **out_value)
+{
+	const gchar *ptr;
+	g_return_val_if_fail (spec && *spec, FALSE);
+	*out_attr_name = NULL;
+	*out_value = NULL;
+
+	for (ptr = spec; *ptr && (*ptr != '='); ptr++);
+	if (!*ptr) {
+		if (value_req)
+			return FALSE;
+		else {
+			*out_attr_name = g_strstrip (g_strdup (spec));
+			return TRUE;
+		}
+	}
+	else {
+		/* copy attr name part */
+		*out_attr_name = g_new (gchar, ptr - spec + 1);
+		memcpy (*out_attr_name, spec, ptr - spec);
+		(*out_attr_name) [ptr - spec] = 0;
+		g_strstrip (*out_attr_name);
+
+		/* move on to the attr value */
+		ptr++;
+		if (!*ptr) {
+			/* no value ! */
+			g_free (*out_attr_name);
+			*out_attr_name = NULL;
+			return FALSE;
+		}
+		else {
+			gchar *tmp;
+			*out_value = gda_value_new (G_TYPE_STRING);
+			tmp = g_strdup (ptr);
+			g_value_take_string (*out_value, tmp);
+			return TRUE;
+		}
+	}
+}
+
+static GdaInternalCommandResult *
+extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc, const gchar **args,
+			G_GNUC_UNUSED OutputFormat format, GError **error, gpointer data)
+{
+	GdaInternalCommandResult *res = NULL;
+	ConnectionSetting *cs;
+	GdaDataModel *model, *wrapper;
+	cs = get_current_connection_settings (console);
+	if (!cs) {
+		g_set_error (error, 0, 0, "%s",
+			     _("No connection specified"));
+		return NULL;
+	}
+
+	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Connection is not an LDAP connection"));
+		return NULL;
+	}
+
+	const gchar *dn = NULL;
+	const gchar *op = NULL;
+	GdaLdapModificationType optype;
+        if (args[0] && *args[0]) {
+                dn = args[0];
+                if (args[1])
+			op = args [1];
+        }
+
+	if (!dn) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing DN of LDAP entry"));
+		return NULL;
+	}
+	if (!op) {
+		g_set_error (error, 0, 0, "%s",
+			     _("Missing operation to perform on LDAP entry's attributes"));
+		return NULL;
+	}
+
+	if (! g_ascii_strncasecmp (op, "DEL", 3))
+		optype = GDA_LDAP_MODIFICATION_ATTR_DEL;
+	else if (! g_ascii_strncasecmp (op, "REPL", 4))
+		optype = GDA_LDAP_MODIFICATION_ATTR_REPL;
+	else if (! g_ascii_strncasecmp (op, "ADD", 3))
+		optype = GDA_LDAP_MODIFICATION_ATTR_ADD;
+	else {
+		g_set_error (error, 0, 0,
+			     _("Unknown operation '%s' to perform on LDAP entry's attributes"), op);
+		return NULL;
+	}
+
+	GdaLdapEntry *entry;
+	guint i;
+
+	entry = gda_ldap_entry_new (dn);
+	for (i = 2; args[i]; i++) {
+		gchar *att_name;
+		GValue *att_value;
+		gboolean vreq = TRUE;
+		if (optype == GDA_LDAP_MODIFICATION_ATTR_DEL)
+			vreq = FALSE;
+		if (parse_ldap_attr (args[i], vreq, &att_name, &att_value)) {
+			gda_ldap_entry_add_attribute (entry, TRUE, att_name, 1, &att_value);
+			g_free (att_name);
+			gda_value_free (att_value);
+		}
+		else {
+			g_set_error (error, 0, 0,
+				     _("Wrong attribute value specification"), args[i]);
+			return NULL;
+		}
+	}
+
+	if (gda_ldap_modify_entry (GDA_LDAP_CONNECTION (cs->cnc), optype, entry, NULL, error)) {
+		res = g_new0 (GdaInternalCommandResult, 1);
+		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	}
+	gda_ldap_entry_free (entry);
+	return res;
+}
+
 
 typedef struct {
 	GValue *attr_name;
