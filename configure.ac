@@ -495,7 +495,7 @@ then
 
     if test "x$have_vala" = "xyes"
     then
-	    AC_PATH_PROG(VAPIGEN, [vapigen], [no])
+	    AC_PATH_PROG(VAPIGEN, [vapigen-0.16], [no])
         if test "x$VAPIGEN" = "xno"
         then
             AC_MSG_ERROR([Vala found but vapigen not found])
@@ -506,7 +506,7 @@ then
         AC_SUBST(VAPIDIR)
 	    VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
 	    AC_SUBST(VALA_BINDIR)
-	    VALA_COMPILER="$VALA_BINDIR/valac"
+	    VALA_COMPILER="$VALA_BINDIR/valac-0.16"
 	    AC_SUBST(VALA_COMPILER)
 	    
 	    if test "x$enable_vala_ext" = "xyes"
