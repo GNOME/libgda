@@ -15,6 +15,9 @@ and/or use gtk-doc annotations.  -->
              shared-library="libgda-5.0.so.4"
              c:identifier-prefixes="Gda"
              c:symbol-prefixes="gda">
+    <alias name="Mutex" c:type="GdaMutex">
+      <type name="GLib.RecMutex" c:type="GRecMutex"/>
+    </alias>
     <alias name="SqlBuilderId" c:type="GdaSqlBuilderId">
       <type name="guint" c:type="guint"/>
     </alias>
@@ -4882,7 +4885,7 @@ imposed by the LDAP server.</doc>
       </virtual-method>
       <virtual-method name="i_get_n_columns" invoker="get_n_columns">
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the number of columns in the given data model.</doc>
+          <doc xml:whitespace="preserve">the number of columns in the given data model, or -1 if unknown.</doc>
           <type name="gint" c:type="gint"/>
         </return-value>
       </virtual-method>
@@ -4893,10 +4896,7 @@ imposed by the LDAP server.</doc>
         </return-value>
       </virtual-method>
       <virtual-method name="i_get_notify" invoker="get_notify">
-        <doc xml:whitespace="preserve">Returns the status of notifications changes on the given data model.
-
-Note: This function must be implemented but is recommended to use #gda_data_model_thaw
-and #gda_data_model_freeze functions instead.</doc>
+        <doc xml:whitespace="preserve">Returns the status of notifications changes on the given data model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4942,11 +4942,11 @@ position, or %NULL on error (out-of-bound position, etc).</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_iter_at_row" invoker="iter_at_row">
-        <doc xml:whitespace="preserve">Moves @iter to the row number given by @row.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <virtual-method name="i_iter_at_row"
+                      invoker="iter_at_row"
+                      deprecated="use gda_data_model_iter_move_to_row() instead"
+                      deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the row number given by @row.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4961,11 +4961,11 @@ object directly.</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_iter_next" invoker="iter_next">
-        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <virtual-method name="i_iter_next"
+                      invoker="iter_next"
+                      deprecated="use gda_data_model_iter_move_next() instead"
+                      deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4976,11 +4976,11 @@ object directly.</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_iter_prev" invoker="iter_prev">
-        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <virtual-method name="i_iter_prev"
+                      invoker="iter_prev"
+                      deprecated="use gda_data_model_iter_move_prev() instead"
+                      deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -4993,11 +4993,10 @@ object directly.</doc>
       </virtual-method>
       <virtual-method name="i_iter_set_value"
                       invoker="iter_set_value"
+                      deprecated="use gda_data_model_iter_set_value_at() instead"
+                      deprecated-version="5.2"
                       throws="1">
-        <doc xml:whitespace="preserve">Set @value to the given @column and row pointed by @iter in the given @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+        <doc xml:whitespace="preserve">Set @value to the given @column and row pointed by @iter in the given @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5051,11 +5050,11 @@ model, depending on its implementation</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_set_notify" invoker="set_notify">
-        <doc xml:whitespace="preserve">Enable or disable notifications changes on the given data model.
-
-Note: This function must be implemented but is recommended to use #gda_data_model_thaw
-and #gda_data_model_freeze functions instead.</doc>
+      <virtual-method name="i_set_notify"
+                      invoker="set_notify"
+                      deprecated="use gda_data_model_freeze() and gda_data_model_thaw() instead"
+                      deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Enable or disable notifications changes on the given data model.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -5546,7 +5545,7 @@ imposed by the LDAP server.</doc>
       </method>
       <method name="get_n_columns" c:identifier="gda_data_model_get_n_columns">
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the number of columns in the given data model.</doc>
+          <doc xml:whitespace="preserve">the number of columns in the given data model, or -1 if unknown.</doc>
           <type name="gint" c:type="gint"/>
         </return-value>
       </method>
@@ -5557,10 +5556,7 @@ imposed by the LDAP server.</doc>
         </return-value>
       </method>
       <method name="get_notify" c:identifier="gda_data_model_get_notify">
-        <doc xml:whitespace="preserve">Returns the status of notifications changes on the given data model.
-
-Note: This function must be implemented but is recommended to use #gda_data_model_thaw
-and #gda_data_model_freeze functions instead.</doc>
+        <doc xml:whitespace="preserve">Returns the status of notifications changes on the given data model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5780,11 +5776,11 @@ Upon errors FALSE will be returned and @error will be assigned a
           </parameter>
         </parameters>
       </method>
-      <method name="iter_at_row" c:identifier="gda_data_model_iter_at_row">
-        <doc xml:whitespace="preserve">Moves @iter to the row number given by @row.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <method name="iter_at_row"
+              c:identifier="gda_data_model_iter_at_row"
+              deprecated="use gda_data_model_iter_move_to_row() instead"
+              deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the row number given by @row.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5848,11 +5844,11 @@ object directly.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="iter_next" c:identifier="gda_data_model_iter_next">
-        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <method name="iter_next"
+              c:identifier="gda_data_model_iter_next"
+              deprecated="use gda_data_model_iter_move_next() instead"
+              deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5863,11 +5859,11 @@ object directly.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="iter_prev" c:identifier="gda_data_model_iter_prev">
-        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+      <method name="iter_prev"
+              c:identifier="gda_data_model_iter_prev"
+              deprecated="use gda_data_model_iter_move_prev() instead"
+              deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Moves @iter to the next row in @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -5880,11 +5876,10 @@ object directly.</doc>
       </method>
       <method name="iter_set_value"
               c:identifier="gda_data_model_iter_set_value"
+              deprecated="use gda_data_model_iter_set_value_at() instead"
+              deprecated-version="5.2"
               throws="1">
-        <doc xml:whitespace="preserve">Set @value to the given @column and row pointed by @iter in the given @model.
-
-Note: This function must be implemented but is recommended to use #GdaDataModelIter 
-object directly.</doc>
+        <doc xml:whitespace="preserve">Set @value to the given @column and row pointed by @iter in the given @model.</doc>
         <return-value transfer-ownership="none">
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
@@ -6027,11 +6022,11 @@ title to @name.</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="set_notify" c:identifier="gda_data_model_set_notify">
-        <doc xml:whitespace="preserve">Enable or disable notifications changes on the given data model.
-
-Note: This function must be implemented but is recommended to use #gda_data_model_thaw
-and #gda_data_model_freeze functions instead.</doc>
+      <method name="set_notify"
+              c:identifier="gda_data_model_set_notify"
+              deprecated="use gda_data_model_freeze() and gda_data_model_thaw() instead"
+              deprecated-version="5.2">
+        <doc xml:whitespace="preserve">Enable or disable notifications changes on the given data model.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -6564,7 +6559,7 @@ Also clears @model's contents.</doc>
       <field name="i_get_n_columns">
         <callback name="i_get_n_columns">
           <return-value transfer-ownership="none">
-            <doc xml:whitespace="preserve">the number of columns in the given data model.</doc>
+            <doc xml:whitespace="preserve">the number of columns in the given data model, or -1 if unknown.</doc>
             <type name="gint" c:type="gint"/>
           </return-value>
           <parameters>
@@ -7402,7 +7397,7 @@ correcsponding #GdaHolder will be left invalid.</doc>
       </property>
       <property name="data-model"
                 writable="1"
-                construct-only="1"
+                construct="1"
                 transfer-ownership="none">
         <type name="DataModel"/>
       </property>
@@ -7671,11 +7666,10 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
         <type name="utf8"/>
       </property>
       <property name="cnc"
-                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
-        <type/>
+        <type name="Connection"/>
       </property>
       <property name="filter"
                 writable="1"
@@ -7688,9 +7682,6 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 construct-only="1"
                 transfer-ownership="none">
         <type name="gint"/>
-      </property>
-      <property name="use-rdn" writable="1" transfer-ownership="none">
-        <type name="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -23912,6 +23903,51 @@ can also be used in hash tables as a #GEqualFunc.</doc>
         <parameter transfer-ownership="none">
           <varargs>
           </varargs>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_free" c:identifier="gda_mutex_free">
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_lock" c:identifier="gda_mutex_lock">
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_new" c:identifier="gda_mutex_new" introspectable="0">
+      <return-value>
+        <type name="Mutex" c:type="GdaMutex*"/>
+      </return-value>
+    </function>
+    <function name="mutex_trylock" c:identifier="gda_mutex_trylock">
+      <return-value transfer-ownership="none">
+        <type name="gboolean" c:type="gboolean"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <type name="Mutex" c:type="GdaMutex*"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="mutex_unlock" c:identifier="gda_mutex_unlock">
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="mutex" transfer-ownership="none">
+          <type name="Mutex" c:type="GdaMutex*"/>
         </parameter>
       </parameters>
     </function>
