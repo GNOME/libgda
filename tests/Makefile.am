@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES = libgda-test-5.0.la
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list
 
 if ENABLE_VALA_EXTENSIONS
     VALA_EXTENSIONS= vala
@@ -89,6 +89,10 @@ test_input_parsers_SOURCES = \
         test-input-parsers.c
 
 test_input_parsers_LDADD = \
+        $(top_builddir)/libgda/libgda-5.0.la \
+        $(COREDEPS_LIBS)
+
+test_quark_list_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(COREDEPS_LIBS)
 

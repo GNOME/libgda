@@ -540,6 +540,7 @@
 	gda_quark_list_get_type
 	gda_quark_list_new
 	gda_quark_list_new_from_string
+	gda_quark_list_protect_values
 	gda_quark_list_remove
 	gda_repetitive_statement_append_set
 	gda_repetitive_statement_get_all_sets

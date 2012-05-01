@@ -64,6 +64,8 @@ AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
 AC_CHECK_TYPE(uint8_t, unsigned char)
 AC_CHECK_FUNCS(localtime_r localtime_s)
+AC_CHECK_HEADER(sys/mman.h,
+    AC_CHECK_FUNC(mlock, [AC_DEFINE(USE_MLOCK, 1, [Use POSIX memory locking])]))
 
 GDA_BUILDDATE=`date '+%F'`
 AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)

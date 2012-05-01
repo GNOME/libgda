@@ -40,8 +40,12 @@ typedef struct _GdaQuarkList GdaQuarkList;
  * @stability: Stable
  * @see_also:
  *
- * This object is used mainly by database providers' implementations to parse connection
- * strings into lists of KEY=VALUE pairs.
+ * This object is used to store KEY=VALUE pairs. It is mainly used internally by Libgda to store connection
+ * parameters.
+ *
+ * Authentification values are kept in a mangled form in memory, and unmangled when
+ * they are requested using gda_quark_list_find(), and when you don't need them anymore,
+ * call gda_quark_list_protect_values() to remove the unmangled version.
  */
 
 GType         gda_quark_list_get_type        (void) G_GNUC_CONST;
@@ -54,6 +58,8 @@ void          gda_quark_list_add_from_string (GdaQuarkList *qlist,
 					      const gchar *string,
 					      gboolean cleanup);
 const gchar  *gda_quark_list_find            (GdaQuarkList *qlist, const gchar *name);
+void          gda_quark_list_protect_values  (GdaQuarkList *qlist);
+
 void          gda_quark_list_remove          (GdaQuarkList *qlist, const gchar *name);
 void          gda_quark_list_clear           (GdaQuarkList *qlist);
 void          gda_quark_list_foreach         (GdaQuarkList *qlist, GHFunc func, gpointer user_data);

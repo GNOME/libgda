@@ -526,6 +526,7 @@ gda_quark_list_free
 gda_quark_list_clear
 gda_quark_list_add_from_string
 gda_quark_list_find
+gda_quark_list_protect_values
 gda_quark_list_remove
 gda_quark_list_foreach
 <SUBSECTION Standard>
