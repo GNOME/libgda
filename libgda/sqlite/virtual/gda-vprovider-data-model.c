@@ -374,9 +374,13 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 
 	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params,
 									 auth, NULL, NULL, NULL)) {
+		if (auth)
+			gda_quark_list_protect_values (auth);
 		gda_quark_list_free (m_params);
 		return FALSE;
 	}
+	if (auth)
+		gda_quark_list_protect_values (auth);
 	gda_quark_list_free (m_params);
 
 	SqliteConnectionData *scnc;

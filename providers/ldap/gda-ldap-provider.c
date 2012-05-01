@@ -564,14 +564,31 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 		g_free (dnuser);
                 return FALSE;
 	}
-	if (pwd)
-		cdata->pass = g_strdup (pwd);
+	if (pwd) {
+		gchar *tmp;
+		tmp = g_strdup_printf ("PASSWORD=%s", pwd);
+		cdata->auth = gda_quark_list_new_from_string (tmp);
+		g_free (tmp);
+	}
 	if (dnuser) {
-		cdata->user = dnuser;
+		gchar *tmp;
+		tmp = g_strdup_printf ("USERNAME=%s", dnuser);
+		if (cdata->auth)
+			gda_quark_list_add_from_string (cdata->auth, tmp, FALSE);
+		else
+			cdata->auth = gda_quark_list_new_from_string (tmp);
+		g_free (tmp);
 		dnuser = NULL;
 	}
-	else if (user)
-		cdata->user = g_strdup (user);
+	else if (user) {
+		gchar *tmp;
+		tmp = g_strdup_printf ("USERNAME=%s", user);
+		if (cdata->auth)
+			gda_quark_list_add_from_string (cdata->auth, tmp, FALSE);
+		else
+			cdata->auth = gda_quark_list_new_from_string (tmp);
+		g_free (tmp);
+	}
 
 	/* set startup file name */
 	gchar *fname;
@@ -663,12 +680,20 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 
 	/* authentication */
 	struct berval cred;
-	const gchar *pwd;
-	pwd = cdata->pass;
+	const gchar *pwd = "";
+	const gchar *user = "";
+	if (cdata->auth)
+		pwd = gda_quark_list_find (cdata->auth, "PASSWORD");
         memset (&cred, 0, sizeof (cred));
         cred.bv_len = pwd && *pwd ? strlen (pwd) : 0;
         cred.bv_val = pwd && *pwd ? (char *) pwd : NULL;
-	res = ldap_sasl_bind_s (ld, cdata->user, NULL, &cred, NULL, NULL, NULL);
+
+	if (cdata->auth)
+		user = gda_quark_list_find (cdata->auth, "USERNAME");
+	res = ldap_sasl_bind_s (ld, user, NULL, &cred, NULL, NULL, NULL);
+	if (cdata->auth)
+		gda_quark_list_protect_values (cdata->auth);
+
 	if (res != LDAP_SUCCESS) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", ldap_err2string (res));
@@ -939,8 +964,8 @@ gda_ldap_free_cnc_data (LdapConnectionData *cdata)
 	g_free (cdata->base_dn);
 	g_free (cdata->server_version);
 	g_free (cdata->url);
-	g_free (cdata->user);
-	g_free (cdata->pass);
+	if (cdata->auth)
+		gda_quark_list_free (cdata->auth);
 	g_free (cdata);
 }
 

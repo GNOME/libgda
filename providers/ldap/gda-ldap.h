@@ -31,6 +31,7 @@
 #include <ldap.h>
 #include <ldap_schema.h>
 #include <glib.h>
+#include <libgda.h>
 
 /*
  * Provider's specific connection data
@@ -42,8 +43,7 @@ typedef struct {
 	gchar        *base_dn;
 	gchar        *server_version;
 	gchar        *url;
-	gchar        *user;
-	gchar        *pass;
+	GdaQuarkList *auth;
 
 	int           time_limit;
 	int           size_limit;

@@ -1704,6 +1704,9 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	opened = PROV_CLASS (cnc->priv->provider_obj)->open_connection (cnc->priv->provider_obj, cnc, params, auth,
 									NULL, NULL, NULL);
+	gda_quark_list_protect_values (params);
+	gda_quark_list_protect_values (auth);
+
 	if (opened && !cnc->priv->provider_data) {
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
 		opened = FALSE;
