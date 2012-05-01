@@ -332,11 +332,11 @@ namespace Gda {
 		[NoAccessorMethod]
 		public string @base { owned get; construct; }
 		[NoAccessorMethod]
-		public Gda.Connection cnc { owned get; construct; }
-		[NoAccessorMethod]
 		public string filter { owned get; construct; }
 		[NoAccessorMethod]
 		public int scope { get; construct; }
+		[NoAccessorMethod]
+		public bool use_rdn { get; set; }
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_pivot_get_type ()")]
 	public class DataPivot : GLib.Object, Gda.DataModel {
@@ -792,7 +792,7 @@ namespace Gda {
 		public virtual bool close_connection (Gda.Connection cnc);
 		[NoWrapper]
 		public virtual bool commit_transaction (Gda.Connection cnc, string name) throws GLib.Error;
-		public virtual Gda.ServerOperation create_operation (Gda.Connection? cnc, Gda.ServerOperationType type, Gda.Set options) throws GLib.Error;
+		public virtual Gda.ServerOperation create_operation (Gda.Connection? cnc, Gda.ServerOperationType type, Gda.Set? options) throws GLib.Error;
 		public virtual Gda.SqlParser create_parser (Gda.Connection? cnc);
 		[NoWrapper]
 		public virtual bool delete_savepoint (Gda.Connection cnc, string name) throws GLib.Error;
@@ -1206,11 +1206,11 @@ namespace Gda {
 		public abstract bool accepts_g_type (GLib.Type type);
 		public static unowned Gda.DataHandler get_default (GLib.Type for_type);
 		public abstract unowned string get_descr ();
-		public abstract GLib.Value get_sane_init_value (GLib.Type type);
+		public abstract GLib.Value? get_sane_init_value (GLib.Type type);
 		public abstract string get_sql_from_value (GLib.Value? value);
 		public abstract string get_str_from_value (GLib.Value? value);
-		public abstract GLib.Value get_value_from_sql (string? sql, GLib.Type type);
-		public abstract GLib.Value get_value_from_str (string? str, GLib.Type type);
+		public abstract GLib.Value? get_value_from_sql (string? sql, GLib.Type type);
+		public abstract GLib.Value? get_value_from_str (string? str, GLib.Type type);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_model_get_type ()")]
 	public interface DataModel : GLib.Object {

@@ -46,3 +46,7 @@ MetaStore.extract_v name="extract"
 ServerOperation.set_value_at_path name="set_value_at"
 ServerOperation.get_value_at_path name="get_value_at"
 ServerOperation.get_value_at_path nullable=true
+DataHandler.get_value_from_sql nullable=true
+DataHandler.get_value_from_sql type="GLib.Value?"
+DataHandler.get_value_from_str nullable=true
+DataHandler.get_sane_init_value nullable=true

@@ -453,7 +453,7 @@ static OpReq op_req_CREATE_USER [] = {
  * @provider: a #GdaServerProvider object
  * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
  * @type: the type of operation requested
- * @options: an optional list of parameters
+ * @options: (allow-none): a list of parameters or %NULL
  * @error: (allow-none): a place to store an error, or %NULL
  *
  * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of

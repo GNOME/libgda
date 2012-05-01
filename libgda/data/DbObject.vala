@@ -24,6 +24,14 @@ namespace GdaData {
 	public interface DbObject : Object 
 	{
 		public abstract Connection   connection { get; set; }
+		/**
+		 * update_meta:
+		 *
+		 * Set to true if you want to update Gda.MetaStore information.
+		 *
+		 * Implementation: Set to false as default and reset it to false when update() is finished.
+		 */
+		public abstract bool         update_meta { get; set; }
 		public abstract void         append () throws Error;
 		public abstract void         update () throws Error;
 		public abstract void         save () throws Error;

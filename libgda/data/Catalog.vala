@@ -26,6 +26,7 @@ namespace GdaData {
 		// DbObject interface
 		// DbObject Interface
 		public Connection connection { get; set; }
+		public bool update_meta { get; set; }
 		public void update () throws Error {}
 		public void save () throws Error {}
 		public void append () throws Error {}

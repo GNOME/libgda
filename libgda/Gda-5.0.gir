@@ -7666,10 +7666,11 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
         <type name="utf8"/>
       </property>
       <property name="cnc"
+                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
-        <type name="Connection"/>
+        <type/>
       </property>
       <property name="filter"
                 writable="1"
@@ -7682,6 +7683,9 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 construct-only="1"
                 transfer-ownership="none">
         <type name="gint"/>
+      </property>
+      <property name="use-rdn" writable="1" transfer-ownership="none">
+        <type name="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -13860,8 +13864,8 @@ action. The @options can contain:
             <doc xml:whitespace="preserve">the type of operation requested</doc>
             <type name="ServerOperationType" c:type="GdaServerOperationType"/>
           </parameter>
-          <parameter name="options" transfer-ownership="none">
-            <doc xml:whitespace="preserve">an optional list of parameters</doc>
+          <parameter name="options" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">a list of parameters or %NULL</doc>
             <type name="Set" c:type="GdaSet*"/>
           </parameter>
         </parameters>
@@ -14283,8 +14287,8 @@ action. The @options can contain:
             <doc xml:whitespace="preserve">the type of operation requested</doc>
             <type name="ServerOperationType" c:type="GdaServerOperationType"/>
           </parameter>
-          <parameter name="options" transfer-ownership="none">
-            <doc xml:whitespace="preserve">an optional list of parameters</doc>
+          <parameter name="options" transfer-ownership="none" allow-none="1">
+            <doc xml:whitespace="preserve">a list of parameters or %NULL</doc>
             <type name="Set" c:type="GdaSet*"/>
           </parameter>
         </parameters>
@@ -14972,8 +14976,8 @@ otherwise.</doc>
               <type name="ServerOperationType"
                     c:type="GdaServerOperationType"/>
             </parameter>
-            <parameter name="options" transfer-ownership="none">
-              <doc xml:whitespace="preserve">an optional list of parameters</doc>
+            <parameter name="options" transfer-ownership="none" allow-none="1">
+              <doc xml:whitespace="preserve">a list of parameters or %NULL</doc>
               <type name="Set" c:type="GdaSet*"/>
             </parameter>
           </parameters>

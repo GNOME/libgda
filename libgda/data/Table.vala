@@ -26,7 +26,7 @@ namespace GdaData
 	{
 		private bool _read_only = false;
 		private int  _n_cols = -1;
-		private bool _updated_meta = false;
+		private bool _update_meta = false;
 		private string _original_name = "";
 		
 		protected string                      _name;
@@ -47,21 +47,23 @@ namespace GdaData
 		
 		public Connection connection { get; set; }
 		
+		public bool update_meta { get { return _update_meta; } set {_update_meta = value;} }
+		
 		public void update () throws Error 
 		{
 			_fields.clear ();
-			_updated_meta = false;
 			string cond = "";
 			
-			var ctx = new Gda.MetaContext ();
-			ctx.set_table ("_columns");
-			ctx.set_column ("table_name", name, connection);
-			try { connection.update_meta_store (ctx); }
-			catch (Error e) {
-				GLib.message ("Updating meta store for _columns fails with error: " + e.message+"\n");
-				GLib.message ("Trying to update all...");
-				_updated_meta = connection.update_meta_store (null);
-				_updated_meta = true;
+			if (update_meta) {
+				var ctx = new Gda.MetaContext ();
+				ctx.set_table ("_columns");
+				ctx.set_column ("table_name", name, connection);
+				try { connection.update_meta_store (ctx); }
+				catch (Error e) {
+					GLib.message ("Updating meta store for _columns fails with error: " + e.message+"\n");
+					GLib.message ("Trying to update all...");
+					update_meta = !connection.update_meta_store (null);
+				}
 			}
 			
 			var store = connection.get_meta_store ();
@@ -70,7 +72,7 @@ namespace GdaData
 			vals.set ("name", name);
 			if (schema == null)
 			{
-				if (!_updated_meta) {
+				if (update_meta) {
 					try { 
 						var cxc = new Gda.MetaContext ();
 						cxc.set_table ("_information_schema_catalog_name");
@@ -80,8 +82,8 @@ namespace GdaData
 						GLib.message ("Updating meta store for _information_schema_catalog_name fails with error: "
 										 + e.message+"\n");
 						GLib.message ("Trying to update all...");
-						_updated_meta = connection.update_meta_store (null);
-						if (_updated_meta)
+						update_meta = !connection.update_meta_store (null);
+						if (!update_meta)
 							GLib.message ("Meta store update ... Ok");
 					}
 				}
@@ -89,7 +91,7 @@ namespace GdaData
 				catalog = new Catalog ();
 				catalog.connection = connection;
 				catalog.name = (string) catm.get_value_at (catm.get_column_index ("catalog_name"), 0);
-				if (!_updated_meta) {
+				if (!update_meta) {
 					try { 
 						var cxs = new Gda.MetaContext ();
 						cxs.set_table ("_schemata");
@@ -98,8 +100,8 @@ namespace GdaData
 					catch (Error e) {
 						GLib.message ("Updating meta store for _schemata fails with error: " + e.message+"\n");
 						GLib.message ("Trying to update all...");
-						_updated_meta = connection.update_meta_store (null);
-						if (_updated_meta)
+						update_meta = connection.update_meta_store (null);
+						if (update_meta)
 							GLib.message ("Meta store update ... Ok");
 					}
 				}
@@ -160,6 +162,12 @@ namespace GdaData
 					fi.default_value = DbField.value_from_string (fdv, ft);
 				}
 				
+				if (ft == typeof (string)) {
+					var hld = connection.get_provider ().get_data_handler_g_type (connection, typeof (string));
+					Value strv = (string) hld.get_value_from_sql ((string) fi.default_value, typeof (string));
+					fi.default_value = (string) strv;
+				}
+				
 				if (ft == typeof (Gda.Numeric)) {
 					int fp = (int) mt.get_value_at (mt.get_column_index ("numeric_precision"), r);
 					int fs = (int) mt.get_value_at (mt.get_column_index ("numeric_scale"), r);
@@ -173,7 +181,7 @@ namespace GdaData
 				_fields.set (fi.name, fi);
 			}
 			// Constraints
-			if (!_updated_meta) {
+			if (!update_meta) {
 				try { 
 					var cxcr = new Gda.MetaContext ();
 					cxcr.set_table ("_table_constraints");
@@ -183,12 +191,12 @@ namespace GdaData
 					GLib.message ("Updating meta store for _table_constraints usage fails with error: " 
 									+ e.message+"\n");
 					GLib.message ("Trying to update all...");
-					_updated_meta = connection.update_meta_store (null);
-					if (_updated_meta)
+					update_meta = connection.update_meta_store (null);
+					if (update_meta)
 							GLib.message ("Meta store update ... Ok");
 				}
 			}
-			if (!_updated_meta) {
+			if (!update_meta) {
 				try { 
 					var cxcr2 = new Gda.MetaContext ();
 					cxcr2.set_table ("_key_column_usage");
@@ -198,8 +206,8 @@ namespace GdaData
 					GLib.message ("Updating meta store for _key_column_usage usage fails with error: "
 									 + e.message+"\n");
 					GLib.message ("Trying to update all...");
-					_updated_meta = connection.update_meta_store (null);
-					if (_updated_meta)
+					update_meta = connection.update_meta_store (null);
+					if (update_meta)
 							GLib.message ("Meta store update ... Ok");
 				}
 			}
@@ -224,7 +232,7 @@ namespace GdaData
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
-					if (!_updated_meta) {
+					if (!update_meta) {
 						try { 
 							var cxcr3 = new Gda.MetaContext ();
 							cxcr3.set_table ("_referential_constraints");
@@ -234,8 +242,8 @@ namespace GdaData
 							GLib.message ("Updating for _referential_constraints usage fails with error: " 
 											+ e.message+"\n");
 							GLib.message ("Trying to update all...");
-							_updated_meta = connection.update_meta_store (null);
-							if (_updated_meta)
+							update_meta = connection.update_meta_store (null);
+							if (update_meta)
 									GLib.message ("Meta store update ... Ok");
 						}
 					}
@@ -307,13 +315,28 @@ namespace GdaData
 		
 		public void save () throws Error 
 		{
+			GLib.warning ("Not Implemented!");
+			return;
+			// FIXME: ServerOperation Bug or biding Bug
 			if (GLib.strcmp (_name,_original_name) != 0) {
-				var op = connection.get_provider ().create_operation (connection,
-																		Gda.ServerOperationType.RENAME_TABLE,
-																		null);
-				op.set_value_at (_original_name, "/TABLE_DEF_P/TABLE_NAME");
-				op.set_value_at (name, "/TABLE_DEF_P/TABLE_NEW_NAME");
-				connection.get_provider ().perform_operation (connection, op);
+				if (connection.get_provider ()
+					.supports_operation (connection, 
+						Gda.ServerOperationType.RENAME_TABLE, null)) {
+					var op = connection.get_provider ().create_operation (connection,
+								Gda.ServerOperationType.RENAME_TABLE,
+								null);
+					op.set_value_at (_original_name, "/TABLE_DEF_P/TABLE_NAME");
+					op.set_value_at (name, "/TABLE_DEF_P/TABLE_NEW_NAME");
+					/*DEBUG
+					*/
+					stdout.printf ("Operation to perform: "+ 
+						connection.get_provider ()
+							.render_operation (connection,op));
+					connection.get_provider ().perform_operation (connection, op);
+				}
+				else {
+					GLib.warning ("Provider doesn't support table rename\n");
+				}
 			}
 			else {
 				throw new DbTableError.READ_ONLY ("Table definition is read only");

@@ -359,6 +359,9 @@
 		<property name="connection" writable="1">
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
 		</property>
+		<property name="update-meta" writable="1">
+			<type name="gboolean" c:type="gboolean"/>
+		</property>
 	</interface>
 	<record name="DbObjectIface" c:type="GdaDataDbObjectIface" glib:is-gtype-struct-for="DbObject">
 		<field name="parent_iface">

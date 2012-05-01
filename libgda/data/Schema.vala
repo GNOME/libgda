@@ -24,10 +24,13 @@ namespace GdaData
 {
 	public class Schema : Object, DbObject, DbNamedObject, DbSchema
 	{
+		private bool _update_meta = false;
+		
 		public HashMap<string,DbTable> _tables = new HashMap<string,DbTable> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
-		public void update () throws Error
+		public bool update_meta { get { return _update_meta; } set { _update_meta = value; } }
+        public void update () throws Error
 		{
 			connection.update_meta_store (null); // FIXME: just update schemas
 			var store = connection.get_meta_store ();

@@ -32,3 +32,4 @@ providers/skel-implementation/models/models_specs_dsn.xml.in
 providers/sqlcipher/sqlite3.c
 testing/html.c
 tests/gda-ddl-creator.c
+libgda/data/Table.c

@@ -31,28 +31,35 @@ namespace Check {
 			try {
 				GLib.FileUtils.unlink("table.db");
 				bool usepg = false;
-				stdout.printf ("Trying to use PostgreSQL provider\n");
 				try {
 					this.connection = Connection.open_from_string ("PostgreSQL", 
 										"DB_NAME=test", null,
 										Gda.ConnectionOptions.NONE);
 					if (this.connection.is_opened ()) {
 						usepg = true;
+						stdout.printf ("Using PostgreSQL provider. Creating Database...\n");
 						init_pg ();
 					}
 				}
 			 	catch (Error e) { 
-					stdout.printf ("ERROR: Not using PostgreSQL provider. Message: " + e.message); 
+					GLib.message ("Not using PostgreSQL provider. Message: " + e.message+"\n"); 
 				}
-				stdout.printf("Creating Database...\n");
 				if (!usepg) {
-					this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, 
-									Gda.ConnectionOptions.NONE);
-					Init_sqlite ();
+					try {
+						this.connection = Connection.open_from_string("SQLite", "DB_DIR=.;DB_NAME=table", null, 
+										Gda.ConnectionOptions.NONE);
+						if (this.connection.is_opened ()) {
+							stdout.printf("Using SQLite provider. Creating Database...\n");
+							Init_sqlite ();
+						}
+					}
+					catch (Error e) {
+						
+					}
 				}
 			}
 			catch (Error e) {
-				stdout.printf ("Couln't initalize database...\nERROR: %s\n", e.message);
+				GLib.warning ("Couln't initalize database...\nERROR: "+e.message+"\n");
 			}
 		}
 		
@@ -141,7 +148,10 @@ namespace Check {
 			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: GdaData.DbTable -- Update\n");
 			int fails = 0;
 			stdout.printf(">>>>>> Updating meta information\n");
-			try { table.update (); }
+			try { 
+				table.update_meta = true;
+				table.update (); 
+			}
 			catch (Error e) { 
 				fails++; 
 				stdout.printf ("Error on Updating: "+e.message+"\n");
@@ -215,12 +225,17 @@ namespace Check {
 				if (DbFieldInfo.Attribute.HAVE_DEFAULT in fi3.attributes
 						&& fi3.name == "city") {
 					found++;
-					var dh = table.connection.get_provider ().get_data_handler_g_type (table.connection, 
-								typeof (string));
-					if (GLib.strcmp ((string)fi3.default_value,dh.get_sql_from_value("New Yield")) != 0) {
+					var dh = table.connection
+								.get_provider ()
+									.get_data_handler_g_type (table.connection, typeof (string));
+					if (GLib.strcmp (
+							(string) fi3.default_value,
+							"New Yield") != 0) 
+					{
 						fails++;
 						stdout.printf (">>>>>>>> Default Value No Match. Holded \'"+
-						               (string) fi3.default_value + "\' But Expected \"New Yield\" : FAIL\n");
+						               (string)fi3.default_value
+						               + "\' but Expected \'New Yield\' : FAIL\n");
 					}
 					break;
 				}
@@ -279,9 +294,13 @@ namespace Check {
 			t.connection = connection;
 			
 			try {
+				stdout.printf ("If the table doesn't exists this will warn...\n");
 				if (t.records.size > 0) {
 					stdout.printf ("Table exists and is not empty. Deleting it!!\n");
 					t.drop (false);
+				}
+				else {
+					stdout.printf ("Table doesn't exist continue...\n");
 				}
 			}
 			catch (Error e) {
@@ -316,28 +335,34 @@ namespace Check {
 			fk.delete_rule = DbFieldInfo.ForeignKey.Rule.SET_DEFAULT;
 			field2.fkey = fk;
 			t.set_field (field2);
-			
+			stdout.printf ("Table definition:\n");
 			foreach (DbFieldInfo f in t.fields) {
 				stdout.printf ("Field: " + f.name + 
 								"\nType: " + Gda.g_type_to_string (f.value_type) +
 								"\nAttr: " + ((int)f.attributes).to_string () + "\n");
 			}
-			
-			t.append ();
-			
-			var m = connection.execute_select_command ("SELECT * FROM created_table");
-			
 			bool f = false;
-			if (m.get_column_index ("id") != 0)
-				f = true;
-			if (m.get_column_index ("name") != 1)
-				f = true;
-			if (m.get_column_index ("company") != 2)
-				f = true;
-			if (f) {
-				fails++;
-				stdout.printf ("Check Ordinal position: FAILED\n");
+			try {
+				t.append ();
+			
+				var m = connection.execute_select_command ("SELECT * FROM created_table");
+				stdout.printf ("Table was append succeeded\n");
+				if (m.get_column_index ("id") != 0)
+					f = true;
+				if (m.get_column_index ("name") != 1)
+					f = true;
+				if (m.get_column_index ("company") != 2)
+					f = true;
+				if (f) {
+					fails++;
+					stdout.printf ("Check Ordinal position: FAILED\n");
+				}
 			}
+			catch (Error e) {
+				stdout.printf ("Error on calling SELECT query for new table. Message: "+e.message+"\n");
+				fails++;
+			}
+			
 			
 			var r = new Record ();
 			r.connection = connection;
@@ -396,8 +421,15 @@ namespace Check {
 			}
 			catch {}
 			
-			t.name = "customer2";
-			t.save ();
+			try {
+				t.name = "customer2";
+				t.save ();
+			}
+			catch (Error e) {
+				stdout.printf ("Table rename fails. Message: "+e.message+"\n");
+				fails++;
+			}
+			
 			try {
 				var m = connection.execute_select_command ("SELECT * FROM customer2");
 				stdout.printf ("Data from customer2:\n" + m.dump_as_string ());
@@ -425,11 +457,11 @@ namespace Check {
 				failures += app.records ();
 				//failures += app.expression ();
 				failures += app.append ();
-				failures += app.save ();
+				//failures += app.save ();
 			}
 			catch (Error e) 
 			{ 
-				stdout.printf ("ERROR: " + e.message); 
+				stdout.printf ("ERROR: " + e.message + "\n"); 
 				return 1;
 			}
 			return failures != 0 ? 1 : 0;

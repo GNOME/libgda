@@ -24,12 +24,18 @@ namespace GdaData
 {
 	public class DataBase : Object, DbObject, DbNamedObject, DbCollection
 	{
+		private bool _update_meta = false;
+		
 		public HashMap<string,DbSchema> _schemas = new HashMap<string,DbSchema> ();
 		// DbObject Interface
 		public Connection connection { get; set; }
+		
+		public bool update_meta { get { return _update_meta; } set { _update_meta = value; } }
+		
 		public void update () throws Error
 		{
-			connection.update_meta_store (null);
+			if (update_meta)
+				connection.update_meta_store (null);
 			var store = connection.get_meta_store ();
 			var msch =  store.extract ("SELECT * FROM _schemata", null);
 			int r;
@@ -39,6 +45,7 @@ namespace GdaData
 				schema.name = (string) msch.get_value_at (msch.get_column_index ("schema_name"),r);
 				_schemas.set (schema.name, (DbSchema) schema);
 			}
+			update_meta = false;
 		}
 		public void save () throws Error {}
 		public void append () throws Error {}

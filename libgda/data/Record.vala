@@ -24,6 +24,8 @@ namespace GdaData {
 
     public class Record : Object, DbObject, Comparable<DbRecord>, DbRecord
     {
+        private bool _update_meta = false;
+        
         protected HashMap<string,DbField> _fields = new HashMap<string,DbField> ();
         protected HashMap<string,DbField> _keys = new HashMap<string,DbField> ();
         /**
@@ -111,6 +113,9 @@ namespace GdaData {
         	return _keys.get (name);
         }
         
+        // DbObject interface
+        
+        public bool update_meta { get { return _update_meta; } set { _update_meta = value; } }
         /**
          * Saves any modficiation made to in memory representation of the data directly to
          * the database.
@@ -152,6 +157,10 @@ namespace GdaData {
          */
         public void update ()  throws Error
         {
+        	if (update_meta) {
+        		connection.update_meta_store (null);
+        		update_meta = false;
+        	}
         	if (keys.size <= 0)
         		throw new DbObjectError.UPDATE ("No Keys has been set");
 			var q = new SqlBuilder (SqlStatementType.SELECT);
