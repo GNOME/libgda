@@ -117,7 +117,7 @@ namespace Check {
 				
 				stdout.printf("Creating table 'customer'...\n");
 				this.connection.execute_non_select_command("CREATE TABLE customer (id integer PRIMARY KEY AUTOINCREMENT, name string UNIQUE,"+
-				                                           " city string DEFAULT \"New Yield\","+
+				                                           " city string DEFAULT \'New Yield\',"+
 				                                           " company integer REFERENCES company (id) ON DELETE SET NULL ON UPDATE CASCADE)");
 				this.connection.execute_non_select_command("INSERT INTO customer (id, name, city, company) VALUES (1, \"Daniel\", \"Mexico\", 1)");
 				this.connection.execute_non_select_command("INSERT INTO customer (id, name, city) VALUES (2, \"Jhon\", \"Springfield\")");
