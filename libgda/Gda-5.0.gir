@@ -12448,11 +12448,11 @@ the new pairs.</doc>
         </return-value>
       </method>
       <method name="find" c:identifier="gda_quark_list_find">
-        <doc xml:whitespace="preserve">Searches for the value identified by @name in the given #GdaQuarkList.
-
-if not found.</doc>
+        <doc xml:whitespace="preserve">Searches for the value identified by @name in the given #GdaQuarkList. For protected values
+(authentification data), don't forget to call gda_quark_list_protect_values() when you
+don't need them anymore (when needed again, they will be unmangled again).</doc>
         <return-value transfer-ownership="none">
-          <doc xml:whitespace="preserve">the value associated with the given key if found, or %NULL</doc>
+          <doc xml:whitespace="preserve">the value associated with the given key if found, or %NULL if not found.</doc>
           <type name="utf8" c:type="gchar*"/>
         </return-value>
         <parameters>
@@ -12484,6 +12484,15 @@ of each pair, and the given user_data parameter. @qlist may not be modified whil
       </method>
       <method name="free" c:identifier="gda_quark_list_free">
         <doc xml:whitespace="preserve">Releases all memory occupied by the given #GdaQuarkList.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+      </method>
+      <method name="protect_values"
+              c:identifier="gda_quark_list_protect_values"
+              version="5.2.0">
+        <doc xml:whitespace="preserve">Call this function to get rid of the clear version of the value associated to
+@name.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>

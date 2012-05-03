@@ -705,6 +705,7 @@ namespace Gda {
 		public void free ();
 		[CCode (has_construct_function = false)]
 		public QuarkList.from_string (string string);
+		public void protect_values ();
 		public void remove (string name);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_repetitive_statement_get_type ()")]
