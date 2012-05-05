@@ -5,8 +5,10 @@ AM_CPPFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
-	-DROOT_DIR=\""$(top_srcdir)"\"
+	-DROOT_DIR=\""$(top_srcdir)"\" \
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_sets check_raw_grid_model
 check_PROGRAMS = check_sets check_raw_grid_model
 

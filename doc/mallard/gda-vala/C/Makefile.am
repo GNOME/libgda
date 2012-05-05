@@ -15,7 +15,7 @@ DOC_FIGURES = \
 	figures/table-class-uml.png
 
 htmldoc_SOURCES = \
-	gda.vala.stamp
+	gda.vala.stamp \
 	$(DOC_PAGES:.page=.html)
 
 gda.vala.stamp: $(DOC_PAGES)
@@ -40,5 +40,10 @@ figuresdir = \
 figures_DATA = \
 	$(DOC_FIGURES)
 
+EXTRA_DIST = \
+	$(DOC_FIGURES)
+
 CLEANFILES = \
-	(DOC_PAGES:.page=.html)
+	$(DOC_PAGES:.page=.html) \
+	$(JS_FILES) \
+	$(DOC_FIGURES)

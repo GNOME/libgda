@@ -23,13 +23,15 @@ ui_tests_common_open_connection (void)
 {
 	GdaConnection *cnc;
 	gchar *cnc_string, *fname;
+	GError *error = NULL;
 	fname = g_build_filename (ROOT_DIR, "data", NULL);
 	cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=sales_test", fname);
 	g_free (fname);
 	cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL,
-					       GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
+					       GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
 	if (!cnc) {
-		g_print ("Failed to open connection, cnc_string = %s\n", cnc_string);
+		g_print ("Failed to open connection, cnc_string = [%s]: %s\n", cnc_string,
+			 error && error->message ? error->message : "No detail");
 		exit (1);
 	}
 	g_free (cnc_string);

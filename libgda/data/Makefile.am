@@ -137,7 +137,7 @@ CLEANFILES += \
 
 EXTRA_DIST = \
 	libgdadata-5.0.pc \
-	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
+	$(libgdadata_5_0_la_VALASOURCES) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA) \
