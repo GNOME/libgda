@@ -726,11 +726,10 @@ gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_proxy_init (GdaDataProxy *proxy)
+do_init (GdaDataProxy *proxy)
 {
-	proxy->priv = g_new0 (GdaDataProxyPrivate, 1);
-
-	proxy->priv->mutex = gda_mutex_new ();
+	if (!proxy->priv->mutex)
+		proxy->priv->mutex = gda_mutex_new ();
 
 	proxy->priv->modify_rows = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	proxy->priv->notify_changes = TRUE;
@@ -747,6 +746,13 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 
 	proxy->priv->defer_proxied_model_insert = FALSE;
 	proxy->priv->catched_inserted_row = -1;
+}
+
+static void
+gda_data_proxy_init (GdaDataProxy *proxy)
+{
+	proxy->priv = g_new0 (GdaDataProxyPrivate, 1);
+	do_init (proxy);
 }
 
 static DisplayChunk *compute_display_chunk (GdaDataProxy *proxy);
@@ -938,7 +944,7 @@ gda_data_proxy_set_property (GObject *object,
 		case PROP_MODEL:
 			if (proxy->priv->model) {
 				clean_proxy (proxy);
-				gda_data_proxy_init (proxy);
+				do_init (proxy);
 			}
 
 			model = (GdaDataModel*) g_value_get_object (value);
@@ -1226,7 +1232,7 @@ proxied_model_reset_cb (GdaDataModel *model, GdaDataProxy *proxy)
 
 	g_object_ref (G_OBJECT (model));
 	clean_proxy (proxy);
-	gda_data_proxy_init (proxy);
+	do_init (proxy);
 	g_object_set (G_OBJECT (proxy), "model", model, "prepend-null-entry", add_null_entry, NULL);
 	g_object_unref (G_OBJECT (model));
 
