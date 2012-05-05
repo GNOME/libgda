@@ -1,3 +1,29 @@
+libgda 5.1.0, 2012-05-05
+
+ - Many Vala bindings improvements, thanks to Daniel Espinosa
+ - Improved Windows packaging scripts
+ - GdaBrowser: many small improvements
+ - GdaSql: new LDAP commands, better inline help, better visual rendering, datasets manipulation
+ - Many small corrections, optimizations and bug fixes (Libgda core, UI extension,
+   Reports extension, MySQL, virtual connections, documentation)
+ - Firebird support improvements, thanks to Faghmie Davids
+ - LDAP: added write support, added connection parameters to handle SSL certification chain and
+   size and time limits, improved authentification with Active Directory
+ - Set SQLite version to 3.7.9 and SqlCipher to 2.0.3
+ - MDB tools: handle version 0.7
+ - Removed usage of symbols marked as deprecated for Glib 2.32, and other code cleanups
+ - Bugs corrected: #666356, #668411, #667837, #672874, #674715, #674618, #674976
+ - Translations:
+	- cz (Marek Černocký)
+	- de (Mario Blättermann)
+	- es (Daniel Mustieles)
+	- fs (Vivien Malerba)
+	- gl (Fran Diéguez)
+	- it (Marco Ciampa)
+	- ja (Jiro Matsuzawa)
+	- nb (Kjartan Maraas)
+	- sl (Matej Urbančič, Martin Srebotnjak)
+
 libgda 5.0.2, 2011-11-20
 
  - Gobject introspection improvements
