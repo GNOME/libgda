@@ -30,6 +30,10 @@
 #ifdef USE_MLOCK
 #include <sys/mman.h>
 #endif
+#ifdef G_OS_WIN32
+#include <windows.h>
+#include <winbase.h>
+#endif
 
 #define RANDOM_BLOB_SIZE 1024
 static gchar random_blob [RANDOM_BLOB_SIZE] = {0};
@@ -142,7 +146,7 @@ protected_value_xor (ProtectedValue *pvalue, gboolean to_clear)
 					break;
 			}
 #ifdef G_OS_WIN32
-			VirtualUnLock (pvalue->cvalue, sizeof (gchar*) * (i + 1));
+			VirtualUnlock (pvalue->cvalue, sizeof (gchar*) * (i + 1));
 #else
 #ifdef USE_MLOCK
 			munlock (pvalue->cvalue, sizeof (gchar*) * (i + 1));
