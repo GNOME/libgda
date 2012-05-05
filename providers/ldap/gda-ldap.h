@@ -31,7 +31,7 @@
 #include <ldap.h>
 #include <ldap_schema.h>
 #include <glib.h>
-#include <libgda.h>
+#include <libgda/libgda.h>
 
 /*
  * Provider's specific connection data
