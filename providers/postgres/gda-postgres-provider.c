@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>

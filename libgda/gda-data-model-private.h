@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc-desktop>
  *
  * This library is free software; you can redistribute it and/or

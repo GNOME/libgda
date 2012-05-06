@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
- * Copyright (C) 2007 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
  * This library is free software; you can redistribute it and/or

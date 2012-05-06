@@ -12,10 +12,10 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
- * Copyright (C) 2007 - 2008 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2007 - 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

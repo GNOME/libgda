@@ -4,7 +4,8 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
- * Copyright (C) 2005 - 2008 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

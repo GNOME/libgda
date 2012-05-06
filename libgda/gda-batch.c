@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 - 2001 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>

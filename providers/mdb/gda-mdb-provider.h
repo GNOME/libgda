@@ -2,7 +2,7 @@
  * Copyright (C) 2000 Reinhard MÃ¼ller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
- * Copyright (C) 2001 - 2008 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  *
  * This library is free software; you can redistribute it and/or

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
  * This library is free software; you can redistribute it and/or

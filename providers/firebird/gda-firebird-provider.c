@@ -3,7 +3,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *

@@ -7,11 +7,12 @@
  * Copyright (C) 2003 Chris Silles <csilles@src.gnome.org>
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
- * Copyright (C) 2004 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alan Knowles <alan@akbkhome.com>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Mike Fisk <mfisk@woozle.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
+ * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

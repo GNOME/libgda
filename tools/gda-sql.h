@@ -3,7 +3,7 @@
  * Copyright (C) 2001 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2007 Baris Cicek <bcicek@src.gnome.org>
- * Copyright (C) 2007 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2012 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

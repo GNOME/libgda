@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
- * Copyright (C) 2005 - 2008 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  *

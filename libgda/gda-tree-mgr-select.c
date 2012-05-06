@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2010 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or

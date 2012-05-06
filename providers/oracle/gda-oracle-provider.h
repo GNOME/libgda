@@ -3,7 +3,7 @@
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2002 Tim Coleman <tim@timcoleman.com>
  * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
- * Copyright (C) 2007 - 2009 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
