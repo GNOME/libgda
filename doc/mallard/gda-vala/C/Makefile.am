@@ -45,5 +45,7 @@ EXTRA_DIST = \
 
 CLEANFILES = \
 	$(DOC_PAGES:.page=.html) \
-	$(JS_FILES) \
-	$(DOC_FIGURES)
+	$(JS_FILES)
+
+clean-local:
+	if test x${srcdir} != x$(builddir); then rm -rf $(builddir)/figures; fi
