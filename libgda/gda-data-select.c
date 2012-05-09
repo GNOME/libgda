@@ -2066,7 +2066,7 @@ gda_data_select_get_attributes_at (GdaDataModel *model, gint col, gint row)
 					gchar *tmp;
 					gint i;
 					for (i = 0; i < ncols; i++) {
-						tmp = g_strdup_printf ("+%d", col);
+						tmp = g_strdup_printf ("+%d", i);
 						if (gda_set_get_holder (set, tmp))
 							imodel->priv->sh->modif_internals->cols_mod[m][i] = TRUE;
 						g_free (tmp);
