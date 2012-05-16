@@ -48,6 +48,7 @@ struct _GdauiDataStorePriv {
 	GdaDataProxy *proxy;
 	gint          nrows;
 	gint          stamp; /* Random integer to check whether an iter belongs to our model */
+	gboolean      resetting; /* TRUE when GdauiDataStore is handling proxy reset callback */
 };
 
 /*
@@ -152,6 +153,7 @@ gdaui_data_store_init (GdauiDataStore *store)
 	store->priv->proxy = NULL;
 	store->priv->nrows = 0;
 	store->priv->stamp = g_random_int ();
+	store->priv->resetting = FALSE;
 }
 
 static void
@@ -200,12 +202,16 @@ static void
 proxy_reset_cb (GdaDataProxy *proxy, GtkTreeModel *store)
 {
 	gint i, nrows;
+	GdauiDataStore *dstore = (GdauiDataStore*) store;
 
-	while (((GdauiDataStore*) store)->priv->nrows > 0)
-		row_removed_cb (proxy, ((GdauiDataStore*) store)->priv->nrows - 1, store);
+	/* invalidate any existing iterator */
+	dstore->priv->resetting = TRUE;
+	while (dstore->priv->nrows > 0)
+		row_removed_cb (proxy, dstore->priv->nrows - 1, store);
+	dstore->priv->resetting = FALSE;
 
 	nrows = gda_data_model_get_n_rows ((GdaDataModel *) proxy);;
-	((GdauiDataStore*) store)->priv->nrows = 0;
+	dstore->priv->nrows = 0;
 	for (i = 0; i < nrows; i++)
 		row_inserted_cb (proxy, i, store);
 }
@@ -376,6 +382,11 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
 
+	if (store->priv->resetting) {
+		g_warning (_("Can't modify row while data model is being reset"));
+		return FALSE;
+	}
+
 	model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
         row = GPOINTER_TO_INT (iter->user_data);
 
@@ -438,6 +449,11 @@ gdaui_data_store_delete (GdauiDataStore *store, GtkTreeIter *iter)
         g_return_if_fail (iter);
         g_return_if_fail (iter->stamp == store->priv->stamp);
 
+	if (store->priv->resetting) {
+		g_warning (_("Can't modify row while data model is being reset"));
+		return;
+	}
+
         row = GPOINTER_TO_INT (iter->user_data);
 	gda_data_proxy_delete (store->priv->proxy, row);
 }
@@ -463,6 +479,11 @@ gdaui_data_store_undelete (GdauiDataStore *store, GtkTreeIter *iter)
         g_return_if_fail (iter);
         g_return_if_fail (iter->stamp == store->priv->stamp);
 
+	if (store->priv->resetting) {
+		g_warning (_("Can't modify row while data model is being reset"));
+		return;
+	}
+
         row = GPOINTER_TO_INT (iter->user_data);
 	gda_data_proxy_undelete (store->priv->proxy, row);
 }
@@ -487,6 +508,11 @@ gdaui_data_store_append (GdauiDataStore *store, GtkTreeIter *iter)
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), FALSE);
         g_return_val_if_fail (store->priv, FALSE);
         g_return_val_if_fail (store->priv->proxy, FALSE);
+
+	if (store->priv->resetting) {
+		g_warning (_("Can't modify row while data model is being reset"));
+		return FALSE;
+	}
 
         row = gda_data_model_append_row (GDA_DATA_MODEL (store->priv->proxy), NULL);
 	if (row >= 0) {
@@ -565,6 +591,11 @@ gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
         g_return_val_if_fail (store->priv, FALSE);
         g_return_val_if_fail (store->priv->proxy, FALSE);
 	g_return_val_if_fail (values, FALSE);
+
+	if (store->priv->resetting) {
+		g_warning (_("Can't access row while data model is being reset"));
+		return FALSE;
+	}
 
 	row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (store->priv->proxy), values, cols_index);
 	if (row >= 0) {
@@ -716,6 +747,9 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 
 	rettype = data_store_get_column_type (tree_model, column);
 	g_value_init (value, rettype);
+
+	if (store->priv->resetting)
+		return;
 
 	/* Global attributes */
 	if (column < 0) {
