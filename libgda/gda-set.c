@@ -1730,3 +1730,60 @@ gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *m
 	g_print ("<< 'SOURCE_MODEL_CHANGED' from %s\n", __FUNCTION__);
 #endif
 }
+
+#ifdef GDA_DEBUG_NO
+static void holder_dump (GdaHolder *holder);
+static void set_node_dump (GdaSetNode *node);
+static void set_source_dump (GdaSetSource *source);
+static void set_group_dump (GdaSetGroup *group);
+
+static void
+holder_dump (GdaHolder *holder)
+{
+	g_print ("  GdaHolder %p (%s)\n", holder, holder ? gda_holder_get_id (holder) : "---");
+}
+
+static void
+set_source_dump (GdaSetSource *source)
+{
+	g_print ("  GdaSetSource %p\n", source);
+	if (source) {
+		g_print ("    - data_model: %p\n", source->data_model);
+		GSList *list;
+		for (list = source->nodes; list; list = list->next)
+			g_print ("    - node: %p\n", list->data);
+	}
+}
+
+static void
+set_group_dump (GdaSetGroup *group)
+{
+	g_print ("  GdaSetGroup %p\n", group);
+	if (group) {
+		GSList *list;
+		for (list = group->nodes; list; list = list->next)
+			g_print ("    - node: %p\n", list->data);
+		g_print ("    - GdaSetSource: %p\n", group->nodes_source);
+	}
+}
+
+static void
+set_node_dump (GdaSetNode *node)
+{
+	g_print ("  GdaSetNode: %p\n", node);
+	g_print ("   - holder: %p (%s)\n", node->holder, node->holder ? gda_holder_get_id (node->holder) : "ERROR : no GdaHolder!");
+	g_print ("   - source_model: %p\n", node->source_model);
+	g_print ("   - source_column: %d\n", node->source_column);
+}
+
+void
+gda_set_dump (GdaSet *set)
+{
+	g_print ("=== GdaSet %p ===\n", set);
+	g_slist_foreach (set->holders, (GFunc) holder_dump, NULL);
+	g_slist_foreach (set->nodes_list, (GFunc) set_node_dump, NULL);
+	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
+	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
+	g_print ("=== GdaSet %p END ===\n", set);
+}
+#endif

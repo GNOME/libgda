@@ -45,7 +45,6 @@ static void update_public_data (GdauiSet *set);
 static void compute_shown_columns_index (GdauiSetSource *dsource);
 static void compute_ref_columns_index (GdauiSetSource *dsource);
 
-
 struct _GdauiSetPriv
 {
 	GdaSet *set;
@@ -310,13 +309,14 @@ update_public_data (GdauiSet *set)
 {
 	GSList *list, *elist = NULL;
 	GdaSet *aset = GDA_SET (set->priv->set);
-	GHashTable *hash;
+	GHashTable *shash; /* key = GdaSetSource, value = GdauiSetSource */
+	GHashTable *ghash; /* key = GdaSetGroup, value = GdauiSetGroup */
 
-	/* build hash with existing sources */
-	hash = g_hash_table_new (NULL, NULL);
+	/* build hash with existing sources in GdauiSet */
+	shash = g_hash_table_new (NULL, NULL);
 	for (list = set->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
-		g_hash_table_insert (hash, dsource->source, list->data);
+		g_hash_table_insert (shash, dsource->source, dsource);
 	}
 
 	/* scan GdaSetSource list */
@@ -324,7 +324,7 @@ update_public_data (GdauiSet *set)
 	set->sources_list = NULL;
 	for (list = aset->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource;
-		dsource = g_hash_table_lookup (hash, list->data);
+		dsource = g_hash_table_lookup (shash, list->data);
 		if (dsource) {
 			set->sources_list = g_slist_prepend (set->sources_list, dsource);
 			continue;
@@ -332,16 +332,17 @@ update_public_data (GdauiSet *set)
 
 		dsource = g_new0 (GdauiSetSource, 1);
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
-		g_hash_table_insert (hash, list->data, dsource);
+		g_hash_table_insert (shash, list->data, dsource);
 
 		dsource->source = GDA_SET_SOURCE (list->data);
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
 	set->sources_list = g_slist_reverse (set->sources_list);
+
 	if (elist) {
 		for (list = elist; list; list = list->next) {
-			if (!g_slist_find (set->sources_list, elist->data)) {
+			if (!g_slist_find (set->sources_list, list->data)) {
 				GdauiSetSource *dsource = (GdauiSetSource*) list->data;
 				g_free (dsource->shown_cols_index);
 				g_free (dsource->ref_cols_index);
@@ -352,9 +353,10 @@ update_public_data (GdauiSet *set)
 	}
 
 	/* build hash with existing groups */
+	ghash = g_hash_table_new (NULL, NULL);
 	for (list = set->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
-		g_hash_table_insert (hash, dgroup->group, list->data);
+		g_hash_table_insert (ghash, dgroup->group, dgroup);
 	}
 
 	/* scan GdaSetGroup list */
@@ -362,7 +364,7 @@ update_public_data (GdauiSet *set)
 	set->groups_list = NULL;
 	for (list = aset->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup;
-		dgroup = g_hash_table_lookup (hash, list->data);
+		dgroup = g_hash_table_lookup (ghash, list->data);
 		if (dgroup) {
 			set->groups_list = g_slist_prepend (set->groups_list, dgroup);
 			continue;
@@ -370,12 +372,13 @@ update_public_data (GdauiSet *set)
 		dgroup = g_new0 (GdauiSetGroup, 1);
 		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
 		dgroup->group = GDA_SET_GROUP (list->data);
-		dgroup->source = g_hash_table_lookup (hash, GDA_SET_GROUP (list->data)->nodes_source);
+		dgroup->source = g_hash_table_lookup (shash, dgroup->group->nodes_source);
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
+
 	if (elist) {
 		for (list = elist; list; list = list->next) {
-			if (!g_slist_find (set->sources_list, elist->data)) {
+			if (!g_slist_find (set->groups_list, list->data)) {
 				GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
 				g_free (dgroup);
 			}
@@ -383,7 +386,8 @@ update_public_data (GdauiSet *set)
 		g_slist_free (elist);
 	}
 
-	g_hash_table_destroy (hash);
+	g_hash_table_destroy (shash);
+	g_hash_table_destroy (ghash);
 }
 
 static void
@@ -524,3 +528,56 @@ _gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder)
 	}
 	return NULL;
 }
+
+#ifdef GDA_DEBUG_NO
+static void _gda_set_node_dump (GdaSetNode *node);
+static void set_source_dump (GdauiSetSource *source);
+static void set_group_dump (GdauiSetGroup *group);
+
+static void
+set_source_dump (GdauiSetSource *source)
+{
+	g_print ("  GdauiSetSource %p\n", source);
+	if (source) {
+		gint i;
+		g_print ("    - GdaSetSource: %p\n", source->source);
+		for (i = 0; i < source->shown_n_cols; i++)
+			g_print ("    - shown_cols_index [%d]: %d\n", i, source->shown_cols_index[i]);
+		for (i = 0; i < source->ref_n_cols; i++)
+			g_print ("    - ref_cols_index [%d]: %d\n", i, source->ref_cols_index[i]);
+	}
+}
+
+static void
+set_group_dump (GdauiSetGroup *group)
+{
+	g_print ("  GdauiSetGroup %p\n", group);
+	if (group) {
+		g_print ("    - GdaSetGroup: %p\n", group->group);
+		if (group->group->nodes)
+			g_slist_foreach (group->group->nodes, (GFunc) _gda_set_node_dump, NULL);
+		else
+			g_print ("                 ERROR: group has no node!\n");
+		g_print ("    - GdauiSetSource: %p\n", group->source);
+	}
+}
+
+static void
+_gda_set_node_dump (GdaSetNode *node)
+{
+	g_print ("      - GdaSetNode: %p\n", node);
+	g_print ("        - holder: %p (%s)\n", node->holder, node->holder ? gda_holder_get_id (node->holder) : "ERROR : no GdaHolder!");
+	g_print ("        - source_model: %p\n", node->source_model);
+	g_print ("        - source_column: %d\n", node->source_column);
+}
+
+static void
+_gdaui_set_dump (GdauiSet *set)
+{
+	g_print ("=== GdauiSet %p ===\n", set);
+	gda_set_dump (set->priv->set);
+	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
+	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
+	g_print ("=== GdauiSet %p END ===\n", set);
+}
+#endif
