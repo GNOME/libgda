@@ -814,7 +814,7 @@ filter_position_func (GtkWidget *widget,
 	gdk_window_get_origin (window, &tree_x, &tree_y);
 	tree_width = gdk_window_get_width (window);
 	tree_height = gdk_window_get_height (window);
-	gtk_widget_size_request (search_dialog, &requisition);
+	gtk_widget_get_preferred_size (search_dialog, NULL, &requisition);
 
 	if (tree_x + tree_width > gdk_screen_get_width (screen))
 		x = gdk_screen_get_width (screen) - requisition.width;
@@ -834,22 +834,27 @@ filter_position_func (GtkWidget *widget,
 }
 
 static gboolean
-popup_grab_on_window (GdkWindow  *window,
-                      guint32     activate_time)
+popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
 {
-        if (gdk_pointer_grab (window, TRUE,
+	GdkDeviceManager *manager;
+	GdkDevice *pointer;
+	GdkWindow *window;
+	window = gtk_widget_get_window (widget);
+	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
+	pointer = gdk_device_manager_get_client_pointer (manager);
+        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
                               GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-                              NULL, NULL,
-                              activate_time) == 0) {
-
-                if (gdk_keyboard_grab (window, TRUE, activate_time) == 0)
+                              NULL, activate_time) == GDK_GRAB_SUCCESS) {
+		GdkDevice *keyb;
+		keyb = gdk_device_get_associated_device (pointer);
+                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
+				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) == 0)
                         return TRUE;
 		else {
-                        gdk_pointer_ungrab (activate_time);
+                        gdk_device_ungrab (pointer, activate_time);
                         return FALSE;
                 }
         }
-
         return FALSE;
 }
 
@@ -910,7 +915,7 @@ action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
 	gtk_grab_add (form->priv->filter_window);
 	filter_position_func (GTK_WIDGET (form), form->priv->filter_window, NULL);
 	gtk_widget_show (form->priv->filter_window);
-	popup_grab_on_window (gtk_widget_get_window (form->priv->filter_window),
+	popup_grab_on_window (form->priv->filter_window,
 			      gtk_get_current_event_time ());
 }
 
