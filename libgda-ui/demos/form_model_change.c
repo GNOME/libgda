@@ -1,6 +1,12 @@
 /* Forms/Changing data model
  *
  * This example shows how to set and change the data model displayed by a GdauiForm widget.
+ *
+ * You can choose between 3 data models, the first two share some rows, and the 3rd one is completely
+ * different.
+ *
+ * Because the "cache-changes" property for the GdaDataProxy internally used is set to TRUE, modifications
+ * are kept and shared between the two first data models.
  */
 
 #include <libgda-ui/libgda-ui.h>
@@ -100,6 +106,10 @@ do_form_model_change (GtkWidget *do_widget)
                               GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
                               GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS, NULL);
 		gtk_box_pack_start (GTK_BOX (vbox), form, TRUE, TRUE, 0);
+
+		GdaDataProxy *proxy;
+		proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (form));
+		g_object_set (proxy, "cache-changes", TRUE, NULL);
 	}
 
 	gboolean visible;

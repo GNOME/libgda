@@ -1,6 +1,12 @@
 /* Grids/Changing data model
  *
  * This example shows how to set and change the data model displayed by a GdauiRawGrid widget.
+ *
+ * You can choose between 3 data models, the first two share some rows, and the 3rd one is completely
+ * different.
+ *
+ * Because the "cache-changes" property for the GdaDataProxy internally used is set to TRUE, modifications
+ * are kept and shared between the two first data models.
  */
 
 #include <libgda-ui/libgda-ui.h>
@@ -95,13 +101,13 @@ do_grid_model_change (GtkWidget *do_widget)
                 gtk_label_set_markup (GTK_LABEL (label), "<b>GdauiRawGrid in a scrolled window:</b>");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-		grid = gdaui_raw_grid_new (models[0]);
+		grid = gdaui_grid_new (models[0]);
+		gtk_widget_set_size_request (grid, 600, 350);
+		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
-		sw = gtk_scrolled_window_new (NULL, NULL);
-		gtk_container_add (GTK_CONTAINER (sw), grid);
-		gtk_widget_set_size_request (sw, 600, 350);
-
-		gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+		GdaDataProxy *proxy;
+		proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (grid));
+		g_object_set (proxy, "cache-changes", TRUE, NULL);
 	}
 
 	gboolean visible;
