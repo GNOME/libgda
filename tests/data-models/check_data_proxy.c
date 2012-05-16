@@ -41,6 +41,8 @@ static gboolean do_test_proxied_model_modif (void);
 
 static gboolean do_test_delete_rows (void);
 
+static gboolean do_test_modifs_persistance (void);
+
 /* 
  * the tests are all run with all the possible combinations of defer_sync (TRUE/FALSE) and 
  * prepend_null_row (TRUE/FALSE), so the ADJUST_ROW() macro allows for row adjustment
@@ -76,7 +78,24 @@ main (int argc, char **argv)
 	gda_init ();
 
 	prepend_null_row = FALSE;
+	defer_sync = FALSE;
+	if (!do_test_modifs_persistance ())
+		number_failed ++;
+
+	defer_sync = TRUE;
+	if (!do_test_modifs_persistance ())
+		number_failed ++;
+
+	prepend_null_row = TRUE;
  	defer_sync = FALSE;
+	if (!do_test_modifs_persistance ())
+		number_failed ++;
+	defer_sync = TRUE;
+	if (!do_test_modifs_persistance ())
+		number_failed ++;
+
+	prepend_null_row = FALSE;
+	defer_sync = FALSE;
 	if (!do_test_delete_rows ())
 		number_failed ++;
 	defer_sync = TRUE;
@@ -811,9 +830,6 @@ do_test_common_write (GdaDataModel *proxy)
 	GValue *value;
 	GList *values;
 	gboolean retval = FALSE;
-	GdaDataModel *pmodel;
-
-	pmodel = gda_data_proxy_get_proxied_model (GDA_DATA_PROXY (proxy));
 
 	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 10);
 	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
@@ -1282,7 +1298,7 @@ static void
 declare_expected_signals (const gchar *expected, const gchar *name)
 {
 #ifdef CHECK_EXTRA_INFO
-	g_print ("\n\n\n>>> NEW_TEST: %s (defer_sync=%s, prepend_null_row=%s)\n\n", name,
+	g_print (">>> NEW_TEST: %s (defer_sync=%s, prepend_null_row=%s)\n", name,
 		 defer_sync ? "TRUE" : "FALSE", prepend_null_row ? "TRUE" : "FALSE");
 #endif
 	expected_signals_name = name;
@@ -1598,6 +1614,9 @@ check_data_model_append_row (GdaDataModel *model)
 			g_error_free (error);
 		return FALSE;
 	}
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Added row %d\n", row);
+#endif
 	return TRUE;
 }
 
@@ -1780,6 +1799,216 @@ static gboolean do_test_delete_rows (void)
 	retval = TRUE;
  out:
 	g_object_unref (model);
+	g_object_unref (proxy);
+	return retval;
+}
+
+/* remove several rows */
+static gboolean do_test_modifs_persistance (void)
+{
+#define FILE "city.csv"
+	GError *error = NULL;
+	gchar *file;
+	GdaDataModel *import, *model_1, *model_2, *proxy;
+	GSList *errors;
+	GdaSet *options;
+	gint nrows, i;
+	gboolean retval = FALSE;
+	GValue *value;
+
+	/* load complete city.csv file */
+	file = g_build_filename (CHECK_FILES, "tests", "data-models", FILE, NULL);
+	options = gda_set_new_inline (1, "TITLE_AS_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+	import = gda_data_model_import_new_file (file, TRUE, options);
+	g_free (file);
+	g_object_unref (options);
+
+	if ((errors = gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import)))) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not load file '%s'\n", FILE);
+#endif
+		g_object_unref (import);
+		return FALSE;
+	}
+	nrows = gda_data_model_get_n_rows (import);
+
+	/* define model_1 and model_2: take one part of the file only:
+	 * model_1 has a bit more than the 1st half of import, and model_2 has
+	 * a bit more than the 2nd half of import */
+	model_1 = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
+	if (!model_1) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
+			 error && error->message ? error->message : "No detail");
+#endif
+		g_error_free (error);
+		return FALSE;
+	}
+	for (i = 74 + 10; i < nrows; i++) {
+		if (! gda_data_model_remove_row (model_1, 74 + 10, &error)) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("ERROR: Could not trim end of GdaDataModelArray: %s\n", 
+				 error && error->message ? error->message : "No detail");
+#endif
+			g_error_free (error);
+			return FALSE;
+		}
+	}
+
+	model_2 = (GdaDataModel*) gda_data_model_array_copy_model (import, &error);
+	if (!model_2) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not copy GdaDataModelImport into a GdaDataModelArray: %s\n", 
+			 error && error->message ? error->message : "No detail");
+#endif
+		g_error_free (error);
+		return FALSE;
+	}
+	for (i = 0; i < 74 - 10; i++) {
+		if (! gda_data_model_remove_row (model_2, 0, &error)) {
+#ifdef CHECK_EXTRA_INFO
+			g_print ("ERROR: Could not trim start of GdaDataModelArray: %s\n", 
+				 error && error->message ? error->message : "No detail");
+#endif
+			g_error_free (error);
+			return FALSE;
+		}
+	}
+	g_object_unref (import);
+
+	proxy = (GdaDataModel *) gda_data_proxy_new (model_1);
+	if (!proxy) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Could not create GdaDataProxy\n");
+#endif
+		return FALSE;
+	}
+	g_object_set (G_OBJECT (proxy), "cache-changes", TRUE, NULL);
+	g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, NULL);
+	gda_data_proxy_set_sample_size (GDA_DATA_PROXY (proxy), 0);
+	g_object_set (G_OBJECT (proxy), "defer-sync", defer_sync, 
+		      "prepend-null-entry", prepend_null_row, NULL);
+
+	g_signal_connect (G_OBJECT (proxy), "reset", G_CALLBACK (proxy_reset_cb), NULL);
+	g_signal_connect (G_OBJECT (proxy), "row-inserted", G_CALLBACK (proxy_row_cb), "I");
+	g_signal_connect (G_OBJECT (proxy), "row-updated", G_CALLBACK (proxy_row_cb), "U");
+	g_signal_connect (G_OBJECT (proxy), "row-removed", G_CALLBACK (proxy_row_cb), "R");
+
+	/* 
+	 * update a row
+	 */
+	declare_expected_signals ("U74", "update a row in proxied model_1 (1st half)");
+	g_value_set_string (value = gda_value_new (G_TYPE_STRING), "BigCity");
+	if (!gda_data_model_set_value_at (proxy, 0, ADJUST_ROW (74), value, &error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Failed to set value: %s\n", error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	clean_expected_signals (proxy);
+	if (!check_data_model_value (proxy, 74, 0, G_TYPE_STRING, "BigCity")) goto out;
+	if (!check_data_model_value (proxy, 74, 2, G_TYPE_STRING, "296226")) goto out;
+	if (!check_data_model_value (proxy, 74, 3, G_TYPE_STRING, "Tigre")) goto out;
+	if (!check_data_model_value (proxy, 74, 5, G_TYPE_STRING, "296226")) goto out;
+
+	/*
+	 * insert a row
+	 */
+	GList *values;
+	declare_expected_signals ("I84", "insert a row in proxied model_1");
+	if (! check_data_model_append_row (proxy)) goto out;
+	clean_expected_signals (proxy);
+	if (!check_data_model_n_rows (proxy, 85)) goto out;
+
+	values = make_values_list (0, G_TYPE_STRING, "BigCity3", G_TYPE_STRING, NULL, G_TYPE_STRING, "123456", (GType) 0);
+	declare_expected_signals ("U84", "Set values of new proxied row");
+	if (!check_data_model_set_values (proxy, 84, values)) goto out;
+	free_values_list (values);
+	clean_expected_signals (proxy);
+	if (!check_data_model_value (proxy, 84, 0, G_TYPE_STRING, "BigCity3")) goto out;
+	if (!check_data_model_value (proxy, 84, 1, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 84, 2, G_TYPE_STRING, "123456")) goto out;
+	if (!check_data_model_value (proxy, 84, 3, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 84, 4, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 84, 5, G_TYPE_STRING, NULL)) goto out;
+
+	/*
+	 * change to proxied model_2 & update a row
+	 */
+	g_print ("Setting proxied data model to model_2\n");
+	g_object_set (G_OBJECT (proxy), "model", model_2, NULL);
+
+	check_data_model_n_rows (proxy, 95);
+
+	declare_expected_signals ("U21", "update a row in proxied model_2 (2nd half)");
+	g_value_set_string (value = gda_value_new (G_TYPE_STRING), "BigCity2");
+	if (!gda_data_model_set_value_at (proxy, 0, ADJUST_ROW (21), value, &error)) {
+#ifdef CHECK_EXTRA_INFO
+		g_print ("ERROR: Failed to set value: %s\n", error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	clean_expected_signals (proxy);
+	if (!check_data_model_value (proxy, 21, 0, G_TYPE_STRING, "BigCity2")) goto out;
+	if (!check_data_model_value (proxy, 21, 2, G_TYPE_STRING, "92273")) goto out;
+	if (!check_data_model_value (proxy, 21, 3, G_TYPE_STRING, "Cairns")) goto out;
+	if (!check_data_model_value (proxy, 21, 5, G_TYPE_STRING, "92273")) goto out;
+
+	if (!check_data_model_value (proxy, 94, 0, G_TYPE_STRING, "BigCity3")) goto out;
+	if (!check_data_model_value (proxy, 94, 1, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 94, 2, G_TYPE_STRING, "123456")) goto out;
+	if (!check_data_model_value (proxy, 94, 3, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 94, 4, G_TYPE_STRING, NULL)) goto out;
+	if (!check_data_model_value (proxy, 94, 5, G_TYPE_STRING, NULL)) goto out;
+
+	/*
+	 * change proxied model and make sure the changes are cached
+	 */
+	g_print ("Seting proxied data model to model_1\n");
+	g_object_set (G_OBJECT (proxy), "model", model_1, NULL);
+	if (!check_data_model_value (proxy, 74, 0, G_TYPE_STRING, "BigCity")) goto out;
+	if (!check_data_model_value (proxy, 74, 2, G_TYPE_STRING, "296226")) goto out;
+	if (!check_data_model_value (proxy, 74, 3, G_TYPE_STRING, "Tigre")) goto out;
+	if (!check_data_model_value (proxy, 74, 5, G_TYPE_STRING, "296226")) goto out;
+
+	g_print ("Setting proxied data model to model_2\n");
+	g_object_set (G_OBJECT (proxy), "model", model_2, NULL);
+	if (!check_data_model_value (proxy, 21, 0, G_TYPE_STRING, "BigCity2")) goto out;
+	if (!check_data_model_value (proxy, 21, 2, G_TYPE_STRING, "92273")) goto out;
+	if (!check_data_model_value (proxy, 21, 3, G_TYPE_STRING, "Cairns")) goto out;
+	if (!check_data_model_value (proxy, 21, 5, G_TYPE_STRING, "92273")) goto out;
+
+	if (!check_data_model_value (proxy, 10, 0, G_TYPE_STRING, "BigCity")) goto out;
+	if (!check_data_model_value (proxy, 10, 2, G_TYPE_STRING, "296226")) goto out;
+	if (!check_data_model_value (proxy, 10, 3, G_TYPE_STRING, "Tigre")) goto out;
+	if (!check_data_model_value (proxy, 10, 5, G_TYPE_STRING, "296226")) goto out;
+
+	//gda_data_model_dump (proxy, NULL);
+
+	g_print ("Seting proxied data model to model_1\n");
+	g_object_set (G_OBJECT (proxy), "model", model_1, NULL);
+	if (!check_data_model_value (proxy, 74, 0, G_TYPE_STRING, "BigCity")) goto out;
+	if (!check_data_model_value (proxy, 74, 2, G_TYPE_STRING, "296226")) goto out;
+	if (!check_data_model_value (proxy, 74, 3, G_TYPE_STRING, "Tigre")) goto out;
+	if (!check_data_model_value (proxy, 74, 5, G_TYPE_STRING, "296226")) goto out;
+
+	//gda_data_model_dump (proxy, NULL);
+
+	g_print ("Setting proxied data model to model_2\n");
+	g_object_set (G_OBJECT (proxy), "model", model_2, NULL);
+	declare_expected_signals ("R94/U21/U10", "Resetting all the changes");
+	gda_data_proxy_cancel_all_changes (GDA_DATA_PROXY (proxy));
+	clean_expected_signals (proxy);
+
+	retval = TRUE;
+ out:
+	g_signal_handlers_disconnect_by_func (G_OBJECT (proxy), G_CALLBACK (proxy_reset_cb), NULL);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (proxy), G_CALLBACK (proxy_row_cb), "I");
+	g_signal_handlers_disconnect_by_func (G_OBJECT (proxy), G_CALLBACK (proxy_row_cb), "U");
+	g_signal_handlers_disconnect_by_func (G_OBJECT (proxy), G_CALLBACK (proxy_row_cb), "R");
+
+	g_object_unref (model_1);
+	g_object_unref (model_2);
 	g_object_unref (proxy);
 	return retval;
 }
