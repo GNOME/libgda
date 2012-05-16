@@ -937,15 +937,21 @@ gda_data_proxy_set_property (GObject *object,
 
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
-		GdaDataModel *model;
-		gint col;
-
 		gda_mutex_lock (proxy->priv->mutex);
 		switch (param_id) {
-		case PROP_MODEL:
+		case PROP_MODEL: {
+			GdaDataModel *model;
+			gint col;
+			gboolean already_set = FALSE;
+
 			if (proxy->priv->model) {
+				gboolean notify_changes;
+				notify_changes = proxy->priv->notify_changes;
+				proxy->priv->notify_changes = FALSE;
 				clean_proxy (proxy);
+				proxy->priv->notify_changes = notify_changes;
 				do_init (proxy);
+				already_set = TRUE;
 			}
 
 			model = (GdaDataModel*) g_value_get_object (value);
@@ -992,7 +998,10 @@ gda_data_proxy_set_property (GObject *object,
 				display_chunk_free (proxy->priv->chunk);
 				proxy->priv->chunk = NULL;
 			}
+			if (already_set)
+				gda_data_model_reset (GDA_DATA_MODEL (proxy));
 			break;
+		}
 		case PROP_ADD_NULL_ENTRY:
 			if (proxy->priv->add_null_entry != g_value_get_boolean (value)) {
 				proxy->priv->add_null_entry = g_value_get_boolean (value);
