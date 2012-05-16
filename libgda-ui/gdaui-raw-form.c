@@ -74,7 +74,7 @@ static void              gdaui_raw_form_selector_set_column_visible (GdauiDataSe
 
 struct _GdauiRawFormPriv
 {
-	GdaDataModel               *model;
+	GdaDataModel               *data_model;
 	GdaDataProxy               *proxy; /* proxy for @model */
 	GdaDataModelIter           *iter;  /* proxy's iter */
 
@@ -271,7 +271,7 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 	GtkAction *action;
 	wid->priv = g_new0 (GdauiRawFormPriv, 1);
 
-	wid->priv->model = NULL;
+	wid->priv->data_model = NULL;
 	wid->priv->proxy = NULL;
 	wid->priv->iter = NULL;
 	wid->priv->write_mode = GDAUI_DATA_PROXY_WRITE_ON_DEMAND;
@@ -318,6 +318,7 @@ gdaui_raw_form_new (GdaDataModel *model)
 	return GTK_WIDGET (obj);
 }
 
+static void gdaui_raw_form_clean (GdauiRawForm *form);
 static void
 gdaui_raw_form_dispose (GObject *object)
 {
@@ -328,34 +329,12 @@ gdaui_raw_form_dispose (GObject *object)
 	form = GDAUI_RAW_FORM (object);
 
 	if (form->priv) {
+		gdaui_raw_form_clean (form);
+
 		if (form->priv->filter)
 			gtk_widget_destroy (form->priv->filter);
 		if (form->priv->filter_window)
 			gtk_widget_destroy (form->priv->filter_window);
-
-		/* proxy's iterator */
-		if (form->priv->iter) {
-			g_signal_handlers_disconnect_by_func (form->priv->iter,
-							      G_CALLBACK (iter_row_changed_cb), form);
-			g_signal_handlers_disconnect_by_func (form->priv->iter,
-							      G_CALLBACK (iter_validate_set_cb), form);
-			g_object_unref (form->priv->iter);
-			form->priv->iter = NULL;
-		}
-
-		/* proxy */
-		if (form->priv->proxy) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-							      G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-							      G_CALLBACK (proxy_changed_cb), form);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-							      G_CALLBACK (proxy_reset_cb), form);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-							      G_CALLBACK (proxy_access_changed_cb), form);
-			g_object_unref (form->priv->proxy);
-			form->priv->proxy = NULL;
-		}
 
 		/* UI */
 		if (form->priv->actions_group)
@@ -370,21 +349,6 @@ gdaui_raw_form_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
-static gboolean
-proxy_reset_was_soft (GdauiRawForm *form, GdaDataModel *new_model)
-{
-	GdaDataModelIter *iter;
-	gboolean retval = FALSE;
-
-	if (!new_model || (new_model != (GdaDataModel*) form->priv->proxy))
-		return FALSE;
-
-	iter = gda_data_model_create_iter (new_model);
-	retval = ! _gdaui_utility_iter_differ (form->priv->iter, iter);
-	g_object_unref (iter);
-	return retval;
-}
-
 static void
 gdaui_raw_form_set_property (GObject *object,
 			     guint param_id,
@@ -392,104 +356,86 @@ gdaui_raw_form_set_property (GObject *object,
 			     GParamSpec *pspec)
 {
 	GdauiRawForm *form;
-	gpointer ptr;
 
         form = GDAUI_RAW_FORM (object);
         if (form->priv) {
                 switch (param_id) {
 		case PROP_MODEL: {
-			gboolean reset;
+			GdaDataModel *model = (GdaDataModel*) g_value_get_object (value);
 
-			ptr = GDA_DATA_MODEL (g_value_get_object (value));
-			if (ptr)
-				g_return_if_fail (GDA_IS_DATA_MODEL (ptr));
-			reset = !proxy_reset_was_soft (form, (GdaDataModel*) ptr);
+			if (model)
+				g_return_if_fail (GDA_IS_DATA_MODEL (model));
+			else
+				return;
 
-			if (reset) {
-				if (form->priv->proxy) {
-					/* remove old data model settings */
-					g_signal_handlers_disconnect_by_func (form->priv->iter,
-									      G_CALLBACK (iter_row_changed_cb),
-									      form);
-					g_signal_handlers_disconnect_by_func (form->priv->iter,
-									      G_CALLBACK (iter_validate_set_cb),
-									      form);
-					g_object_unref (G_OBJECT (form->priv->iter));
-					form->priv->iter = NULL;
-
-					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-									      G_CALLBACK (proxy_row_inserted_or_removed_cb),
-									      form);
-					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-									      G_CALLBACK (proxy_changed_cb), form);
-					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-									      G_CALLBACK (proxy_reset_cb), form);
-					g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
-									      G_CALLBACK (proxy_access_changed_cb), form);
-					g_object_unref (G_OBJECT (form->priv->proxy));
-					form->priv->proxy = NULL;
-					form->priv->model = NULL;
+			if (form->priv->proxy) {
+				/* data model has been changed */
+				if (GDA_IS_DATA_PROXY (model)) {
+					/* clean all */
+					gdaui_raw_form_clean (form);
+					g_assert (!form->priv->proxy);
 				}
-				if (ptr) {
-					/* handle the data model */
-					if (GDA_IS_DATA_PROXY (ptr)) {
-						form->priv->proxy = (GdaDataProxy *) ptr;
-						g_object_ref (ptr);
-					}
-					else
-						form->priv->proxy = (GdaDataProxy *) gda_data_proxy_new ((GdaDataModel*) ptr);
+				else
+					g_object_set (G_OBJECT (form->priv->proxy), "model", model, NULL);
+			}
 
-					form->priv->model = gda_data_proxy_get_proxied_model (form->priv->proxy);
-					form->priv->iter = gda_data_model_create_iter ((GdaDataModel *) form->priv->proxy);
-					gda_data_model_iter_move_to_row (form->priv->iter, 0);
-					
-					g_signal_connect (form->priv->iter, "validate-set",
-							  G_CALLBACK (iter_validate_set_cb), form);
-					g_signal_connect (form->priv->iter, "row-changed",
-							  G_CALLBACK (iter_row_changed_cb), form);
-					
-					g_signal_connect (G_OBJECT (form->priv->proxy), "row_inserted",
-							  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
-					g_signal_connect (G_OBJECT (form->priv->proxy), "row_removed",
-							  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
-					g_signal_connect (G_OBJECT (form->priv->proxy), "changed",
-							  G_CALLBACK (proxy_changed_cb), form);
-					g_signal_connect (G_OBJECT (form->priv->proxy), "reset",
-							  G_CALLBACK (proxy_reset_cb), form);
-					g_signal_connect (G_OBJECT (form->priv->proxy), "access-changed",
-							  G_CALLBACK (proxy_access_changed_cb), form);
+			if (!form->priv->proxy) {
+				/* first time setting */
+				if (GDA_IS_DATA_PROXY (model))
+					form->priv->proxy = g_object_ref (G_OBJECT (model));
+				else
+					form->priv->proxy = GDA_DATA_PROXY (gda_data_proxy_new (model));
+				form->priv->data_model = gda_data_proxy_get_proxied_model (form->priv->proxy);
+				form->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (form->priv->proxy));
+				gda_data_model_iter_move_to_row (form->priv->iter, 0);
 
-					/* we don't want chuncking */
-					g_object_set (object, "paramlist", form->priv->iter, NULL);
-					gda_data_proxy_set_sample_size (form->priv->proxy, 0);
+				g_signal_connect (form->priv->iter, "validate-set",
+						  G_CALLBACK (iter_validate_set_cb), form);
+				g_signal_connect (form->priv->iter, "row-changed",
+						  G_CALLBACK (iter_row_changed_cb), form);
 
-					/* handle invalid iterators' GdaHolder */
-					GSList *list;
-					for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
-						GtkWidget *entry;
-						entry = gdaui_basic_form_get_entry_widget (GDAUI_BASIC_FORM (form),
-											   (GdaHolder*) list->data);
-						if (entry)
-							gdaui_entry_shell_set_unknown ((GdauiEntryShell*) entry,
-										       !gda_holder_is_valid ((GdaHolder*) list->data));
-					}
+				g_signal_connect (G_OBJECT (form->priv->proxy), "row_inserted",
+						  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
+				g_signal_connect (G_OBJECT (form->priv->proxy), "row_removed",
+						  G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
+				g_signal_connect (G_OBJECT (form->priv->proxy), "changed",
+						  G_CALLBACK (proxy_changed_cb), form);
+				g_signal_connect (G_OBJECT (form->priv->proxy), "reset",
+						  G_CALLBACK (proxy_reset_cb), form);
+				g_signal_connect (G_OBJECT (form->priv->proxy), "access-changed",
+						  G_CALLBACK (proxy_access_changed_cb), form);
 
-					/* actions */
-					if (gda_data_proxy_is_read_only (form->priv->proxy))
-						g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
-					
-					/* data display update */
-					proxy_changed_cb (form->priv->proxy, form);					
+				g_object_set (object, "paramlist", form->priv->iter, NULL);
+
+				/* we don't want chuncking */
+				gda_data_proxy_set_sample_size (form->priv->proxy, 0);
+
+				/* handle invalid iterators' GdaHolder */
+				GSList *list;
+				for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
+					GtkWidget *entry;
+					entry = gdaui_basic_form_get_entry_widget (GDAUI_BASIC_FORM (form),
+										   (GdaHolder*) list->data);
+					if (entry)
+						gdaui_entry_shell_set_unknown ((GdauiEntryShell*) entry,
+									       !gda_holder_is_valid ((GdaHolder*) list->data));
 				}
-				if (form->priv->iter)
-					iter_row_changed_cb (form->priv->iter,
-							     gda_data_model_iter_get_row (form->priv->iter), form);
+
+				iter_row_changed_cb (form->priv->iter,
+						     gda_data_model_iter_get_row (form->priv->iter), form);
+
+				/* actions */
+				if (gda_data_proxy_is_read_only (form->priv->proxy))
+					g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
+
+				/* data display update */
+				proxy_changed_cb (form->priv->proxy, form);
+
 				gdaui_raw_form_widget_set_write_mode ((GdauiDataProxy *) form,
 								      form->priv->write_mode);
+
+				g_signal_emit_by_name (object, "proxy-changed", form->priv->proxy);
 			}
-			else
-				gda_data_model_iter_move_to_row (form->priv->iter, 0);
-			g_signal_emit_by_name (object, "proxy-changed", form->priv->proxy);
 			break;
 		}
 		default:
@@ -511,7 +457,7 @@ gdaui_raw_form_get_property (GObject *object,
         if (form->priv) {
                 switch (param_id) {
 		case PROP_MODEL:
-			g_value_set_object(value, form->priv->model);
+			g_value_set_object(value, form->priv->data_model);
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -575,17 +521,72 @@ proxy_changed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, GdauiRawForm *form)
 				  gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) == 0 ? FALSE : TRUE);
 }
 
+static gboolean
+model_reset_was_soft (GdauiRawForm *form, GdaDataModel *new_model)
+{
+	GdaDataModelIter *iter;
+	gboolean retval = FALSE;
+
+	if (!new_model)
+		return FALSE;
+	else if (new_model == (GdaDataModel*) form->priv->proxy)
+		return TRUE;
+	else if (!form->priv->iter)
+		return FALSE;
+
+	iter = gda_data_model_create_iter (new_model);
+	retval = ! _gdaui_utility_iter_differ (form->priv->iter, iter);
+	g_object_unref (iter);
+	return retval;
+}
+
+static void
+gdaui_raw_form_clean (GdauiRawForm *form)
+{
+	/* proxy's iterator */
+	if (form->priv->iter) {
+		g_signal_handlers_disconnect_by_func (form->priv->iter,
+						      G_CALLBACK (iter_row_changed_cb), form);
+		g_signal_handlers_disconnect_by_func (form->priv->iter,
+						      G_CALLBACK (iter_validate_set_cb), form);
+		g_object_unref (form->priv->iter);
+		form->priv->iter = NULL;
+	}
+
+	/* proxy */
+	if (form->priv->proxy) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+						      G_CALLBACK (proxy_row_inserted_or_removed_cb), form);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+						      G_CALLBACK (proxy_changed_cb), form);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+						      G_CALLBACK (proxy_reset_cb), form);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->proxy),
+						      G_CALLBACK (proxy_access_changed_cb), form);
+		g_object_unref (form->priv->proxy);
+		form->priv->proxy = NULL;
+	}
+}
+
 static void
 proxy_reset_cb (GdaDataProxy *proxy, GdauiRawForm *form)
 {
-	gint row;
-	row = gda_data_model_iter_get_row (form->priv->iter);
-	g_object_ref (G_OBJECT (proxy));
-	g_object_set (G_OBJECT (form), "model", proxy, NULL);
-	g_object_unref (G_OBJECT (proxy));
-	if (row >= 0)
-		gda_data_model_iter_move_to_row (form->priv->iter, row);
+	gint iter_row;
+	gboolean reset_soft;
+
+	iter_row = gda_data_model_iter_get_row (form->priv->iter);
+	reset_soft = model_reset_was_soft (form, gda_data_proxy_get_proxied_model (form->priv->proxy));
+
+	if (iter_row >= 0)
+		gda_data_model_iter_move_to_row (form->priv->iter, iter_row);
+	else
+		gda_data_model_iter_move_to_row (form->priv->iter, 0);
+
+	form->priv->data_model = gda_data_proxy_get_proxied_model (form->priv->proxy);
 	iter_row_changed_cb (form->priv->iter, gda_data_model_iter_get_row (form->priv->iter), form);
+
+	if (! reset_soft)
+		g_signal_emit_by_name (form, "proxy-changed", form->priv->proxy);
 }
 
 static void
