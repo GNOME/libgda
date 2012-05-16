@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-09 13:58+0000\n"
-"PO-Revision-Date: 2012-05-13 21:33+0100\n"
+"POT-Creation-Date: 2012-05-16 13:25+0000\n"
+"PO-Revision-Date: 2012-05-16 20:07+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -87,7 +87,7 @@ msgstr "Ni mogoče odpreti povezave"
 
 #: ../control-center/dsn-properties-dialog.c:232
 #: ../control-center/gdaui-dsn-assistant.c:138
-#: ../libgda-ui/gdaui-raw-form.c:629
+#: ../libgda-ui/gdaui-raw-form.c:630
 msgid "Unknown error"
 msgstr "Neznana napaka"
 
@@ -865,8 +865,8 @@ msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 #: ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402
 #: ../libgda/gda-data-model-iter.c:1122
-#: ../libgda/gda-data-proxy.c:3489
-#: ../libgda/gda-data-proxy.c:3613
+#: ../libgda/gda-data-proxy.c:3556
+#: ../libgda/gda-data-proxy.c:3680
 #: ../libgda/gda-data-select.c:1320
 #: ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860
@@ -938,8 +938,8 @@ msgstr "Ali je mogoče podatkovni model spremeniti"
 #: ../libgda/gda-data-model-dir.c:971
 #: ../libgda/gda-data-model-dir.c:1337
 #: ../libgda/gda-data-model-dsn-list.c:319
-#: ../libgda/gda-data-proxy.c:3562
-#: ../libgda/gda-data-proxy.c:3600
+#: ../libgda/gda-data-proxy.c:3629
+#: ../libgda/gda-data-proxy.c:3667
 #: ../libgda/gda-data-select.c:1853
 #: ../libgda/gda-data-select.c:1914
 #, c-format
@@ -953,8 +953,8 @@ msgstr "Vrstica %d je izven območja (0-%d)"
 #: ../libgda/gda-data-model-dir.c:974
 #: ../libgda/gda-data-model-dir.c:1340
 #: ../libgda/gda-data-model-dsn-list.c:322
-#: ../libgda/gda-data-proxy.c:3565
-#: ../libgda/gda-data-proxy.c:3603
+#: ../libgda/gda-data-proxy.c:3632
+#: ../libgda/gda-data-proxy.c:3670
 #: ../libgda/gda-data-select.c:1856
 #: ../libgda/gda-data-select.c:1917
 #, c-format
@@ -1432,7 +1432,7 @@ msgid "Could not get information from source data model"
 msgstr "Ni mogoče pridobiti podatkov podatkovnega modela vira"
 
 #: ../libgda/gda-data-pivot.c:2148
-#: ../libgda/gda-data-proxy.c:3014
+#: ../libgda/gda-data-proxy.c:3081
 #: ../tools/gda-sql.c:3741
 msgid "Could not create virtual connection"
 msgstr "Ni mogoče ustvariti navidezne povezave"
@@ -1445,51 +1445,51 @@ msgstr "Ni določenega vira"
 msgid "Invalid source data model (may have incompatible column names)"
 msgstr "Neveljaven model podatkov vira (morda so nepopolno določena imena stolpcev)."
 
-#: ../libgda/gda-data-proxy.c:955
+#: ../libgda/gda-data-proxy.c:1006
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "Predmet GdaDataProxy ne podpira naključnih modelov dostopa do podatkov"
 
-#: ../libgda/gda-data-proxy.c:1612
-#: ../libgda/gda-data-proxy.c:4002
+#: ../libgda/gda-data-proxy.c:1677
+#: ../libgda/gda-data-proxy.c:4069
 msgid "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je vedno prazna"
 
-#: ../libgda/gda-data-proxy.c:2122
+#: ../libgda/gda-data-proxy.c:2187
 #, c-format
 msgid "Proxied data model reports the modifications as accepted, yet did not emit the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa ni objavljenih ustreznih objav \"row-inserted\", \"row-updated\" ali \"row-removed\". To je najverjetneje hrošč %s (pošljite poročilo o napaki)."
 
-#: ../libgda/gda-data-proxy.c:2161
+#: ../libgda/gda-data-proxy.c:2226
 #, c-format
 msgid "Proxied data model reports the modifications as accepted, yet did not emit the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa ni objavljenih ustreznih objav \"row-inserted\" (vstavljena vrstica), \"row-updated\" (posodobljena vrstica) ali \"row-removed\" (odstranjena vrstica). To je najverjetneje hrošč %s (pošljite poročilo o napaki)."
 
-#: ../libgda/gda-data-proxy.c:3055
-#: ../libgda/gda-data-proxy.c:3068
+#: ../libgda/gda-data-proxy.c:3122
+#: ../libgda/gda-data-proxy.c:3135
 msgid "Error in filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3183
+#: ../libgda/gda-data-proxy.c:3250
 #: ../libgda/gda-data-select.c:1648
 msgid "Incorrect filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3737
+#: ../libgda/gda-data-proxy.c:3804
 msgid "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "Prva vrstica, ki je ni mogoče spreminjati, je dodana programsko in je vedno prazna"
 
-#: ../libgda/gda-data-proxy.c:3766
-#: ../libgda/gda-data-proxy.c:3777
+#: ../libgda/gda-data-proxy.c:3833
+#: ../libgda/gda-data-proxy.c:3844
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Napačna vrsta vrednosti: pričakovano je '%s', pridobljeno pa '%s'"
 
-#: ../libgda/gda-data-proxy.c:3865
+#: ../libgda/gda-data-proxy.c:3932
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Poskus spreminjanja stolpca le za branje: %d"
 
-#: ../libgda/gda-data-proxy.c:3902
+#: ../libgda/gda-data-proxy.c:3969
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Neskladnost vrste vrednosti %s namesto %s"
@@ -3420,7 +3420,7 @@ msgstr "Podatkovna vrsta"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:848
 #: ../libgda-ui/gdaui-basic-form.c:883
-#: ../libgda-ui/gdaui-raw-grid.c:813
+#: ../libgda-ui/gdaui-raw-grid.c:783
 #: ../providers/ldap/gda-ldap-provider.c:997
 #: ../tools/config-info.c:121
 #: ../tools/config-info.c:290
@@ -3934,9 +3934,9 @@ msgid "Shown data entries"
 msgstr "Prikazani vnosi podatkov"
 
 #: ../libgda-ui/gdaui-basic-form.c:969
-#: ../libgda-ui/gdaui-raw-grid.c:854
-#: ../libgda-ui/gdaui-raw-grid.c:2915
-#: ../libgda-ui/gdaui-raw-grid.c:2970
+#: ../libgda-ui/gdaui-raw-grid.c:824
+#: ../libgda-ui/gdaui-raw-grid.c:2885
+#: ../libgda-ui/gdaui-raw-grid.c:2940
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut '%s' mora biti vrednost G_TYPE_STRING"
@@ -3950,13 +3950,13 @@ msgid "Values to be defined"
 msgstr "Vrednosti, ki bodo določene"
 
 #: ../libgda-ui/gdaui-basic-form.c:2259
-#: ../libgda-ui/gdaui-raw-grid.c:2742
+#: ../libgda-ui/gdaui-raw-grid.c:2712
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "'%s' dokument ni uspešno razčlenjen"
 
 #: ../libgda-ui/gdaui-basic-form.c:2269
-#: ../libgda-ui/gdaui-raw-grid.c:2752
+#: ../libgda-ui/gdaui-raw-grid.c:2722
 #, c-format
 msgid "'%s' DTD not parsed successfully. XML data layout validation will not be performed (some errors may occur)"
 msgstr "'%s' DTD ni razčlenjen uspešno. Preverjanje veljavnosti razporeda podatkov XML ne bo izvedeno (lahko se pojavijo napake)"
@@ -4021,17 +4021,28 @@ msgstr "Izbriši izbranega vnosa"
 msgid "Invalid column number %d"
 msgstr "Neveljavna številka stolpca %d"
 
-#: ../libgda-ui/gdaui-data-store.c:136
+#: ../libgda-ui/gdaui-data-store.c:137
 msgid "Data model"
 msgstr "Podatkovni model"
 
-#: ../libgda-ui/gdaui-data-store.c:140
+#: ../libgda-ui/gdaui-data-store.c:141
 msgid "Internal GdaDataProxy data model"
 msgstr "Notranji GdaDataProxy podatkovni model"
 
-#: ../libgda-ui/gdaui-data-store.c:389
+#: ../libgda-ui/gdaui-data-store.c:386
+#: ../libgda-ui/gdaui-data-store.c:453
+#: ../libgda-ui/gdaui-data-store.c:483
+#: ../libgda-ui/gdaui-data-store.c:513
+msgid "Can't modify row while data model is being reset"
+msgstr "Ni mogoče spreminjanje vrstice med ponastavljanjem podatkovnega modela."
+
+#: ../libgda-ui/gdaui-data-store.c:400
 msgid "Trying to modify a read-only row"
 msgstr "Poskus spreminjanja stolpca le za branje"
+
+#: ../libgda-ui/gdaui-data-store.c:596
+msgid "Can't access row while data model is being reset"
+msgstr "Ni mogoč dostop do vrstice med ponastavljanjem podatkovnega modela."
 
 #: ../libgda-ui/gdaui-init.c:71
 msgid "Attempt to initialize an already initialized library"
@@ -4126,7 +4137,7 @@ msgstr "Skoči na naslednji zapis"
 msgid "Filter records"
 msgstr "Filtriranje zapisov"
 
-#: ../libgda-ui/gdaui-raw-form.c:628
+#: ../libgda-ui/gdaui-raw-form.c:629
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Ni mogoče pripeti vrstice podatkovnem modelu: %s"
@@ -4160,116 +4171,116 @@ msgid "Global Actions visible"
 msgstr "Splošna dejanja so vidna"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:816
-#: ../libgda-ui/gdaui-raw-grid.c:839
+#: ../libgda-ui/gdaui-raw-grid.c:786
+#: ../libgda-ui/gdaui-raw-grid.c:809
 msgid "Can't be NULL"
 msgstr "Vrednost NULL ni mogoča"
 
-#: ../libgda-ui/gdaui-raw-grid.c:847
+#: ../libgda-ui/gdaui-raw-grid.c:817
 msgid "No title"
 msgstr "Brez naslova"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1932
+#: ../libgda-ui/gdaui-raw-grid.c:1902
 msgid "Shown columns"
 msgstr "Prikazani stolpci"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1964
+#: ../libgda-ui/gdaui-raw-grid.c:1934
 msgid "Select _All"
 msgstr "Izberi _vse"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1969
+#: ../libgda-ui/gdaui-raw-grid.c:1939
 msgid "_Clear Selection"
 msgstr "_Počisti izbrano"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1972
+#: ../libgda-ui/gdaui-raw-grid.c:1942
 msgid "Show Column _Titles"
 msgstr "Pokaži _naslove stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1977
+#: ../libgda-ui/gdaui-raw-grid.c:1947
 msgid "_Set filter"
 msgstr "_Nastavi filter"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1980
+#: ../libgda-ui/gdaui-raw-grid.c:1950
 msgid "_Unset filter"
 msgstr "_Počisti filter"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2166
+#: ../libgda-ui/gdaui-raw-grid.c:2136
 msgid "Saving Data"
 msgstr "Shranjevanje podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2174
+#: ../libgda-ui/gdaui-raw-grid.c:2144
 msgid "Saving data to a file"
 msgstr "Shranjevanje podatkov v datoteko"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2175
+#: ../libgda-ui/gdaui-raw-grid.c:2145
 msgid "The data will be exported to the selected file."
 msgstr "Podatki bodo izvoženi v izbrano datoteko."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2185
+#: ../libgda-ui/gdaui-raw-grid.c:2155
 #: ../tools/config-info.c:425
 msgid "File name"
 msgstr "Ime datoteke"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:2206
+#: ../libgda-ui/gdaui-raw-grid.c:2176
 #: ../tools/browser/schema-browser/table-columns.c:665
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:2227
+#: ../libgda-ui/gdaui-raw-grid.c:2197
 msgid "File type:"
 msgstr "Vrsta datoteke:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2237
+#: ../libgda-ui/gdaui-raw-grid.c:2207
 msgid "Tab-delimited"
 msgstr "Podatki ločeni s tabulatorji"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2238
+#: ../libgda-ui/gdaui-raw-grid.c:2208
 msgid "Comma-delimited"
 msgstr "Podatki ločeni z vejicami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2239
+#: ../libgda-ui/gdaui-raw-grid.c:2209
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:2246
+#: ../libgda-ui/gdaui-raw-grid.c:2216
 msgid "Data to save:"
 msgstr "Shranjevanje podatkov:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2261
+#: ../libgda-ui/gdaui-raw-grid.c:2231
 msgid "All data (without any local modification)"
 msgstr "vsi podatki (brez krajevnih sprememb)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2262
+#: ../libgda-ui/gdaui-raw-grid.c:2232
 msgid "Only displayed data"
 msgstr "le prikazani podatki"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2264
+#: ../libgda-ui/gdaui-raw-grid.c:2234
 msgid "Only selected data"
 msgstr "le izbrani podatki"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2269
+#: ../libgda-ui/gdaui-raw-grid.c:2239
 msgid "Other options"
 msgstr "Druge možnosti"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2276
+#: ../libgda-ui/gdaui-raw-grid.c:2246
 msgid "Empty string when NULL?"
 msgstr "Ali naj se izpraznijo niti, kadar so te vrednosti NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2279
-#: ../libgda-ui/gdaui-raw-grid.c:2284
+#: ../libgda-ui/gdaui-raw-grid.c:2249
+#: ../libgda-ui/gdaui-raw-grid.c:2254
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Izvozi vrednosti NULL kot prazen \"\" niz"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2286
+#: ../libgda-ui/gdaui-raw-grid.c:2256
 msgid "Invalid data as NULL?"
 msgstr "Ali so podatki vrednosti NULL neveljavni?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2289
-#: ../libgda-ui/gdaui-raw-grid.c:2294
+#: ../libgda-ui/gdaui-raw-grid.c:2259
+#: ../libgda-ui/gdaui-raw-grid.c:2264
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4277,29 +4288,29 @@ msgstr ""
 "Namesto neveljavnih podatkov,\n"
 "izvozi podatke z vrednostmi NULL."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2296
+#: ../libgda-ui/gdaui-raw-grid.c:2266
 msgid "Field names on first row?"
 msgstr "Ali so v prvi vrstici imena polj?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2299
-#: ../libgda-ui/gdaui-raw-grid.c:2304
+#: ../libgda-ui/gdaui-raw-grid.c:2269
+#: ../libgda-ui/gdaui-raw-grid.c:2274
 msgid "Add a row at beginning with columns names"
 msgstr "Dodaj vrstico na začetku z imeni stolpcev"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2480
+#: ../libgda-ui/gdaui-raw-grid.c:2450
 #, c-format
 msgid "Could not save file %s"
 msgstr "Ni mogoče shraniti datoteke %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2488
+#: ../libgda-ui/gdaui-raw-grid.c:2458
 msgid "You must specify a file name"
 msgstr "Navesti je treba ime datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2494
+#: ../libgda-ui/gdaui-raw-grid.c:2464
 msgid "Got empty file while converting the data"
 msgstr "Dobljena prazna datoteka med pretvarjanjem podatkov"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2507
+#: ../libgda-ui/gdaui-raw-grid.c:2477
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4308,7 +4319,7 @@ msgstr ""
 "Datoteka '%s' že obstaja.\n"
 "Ali jo želite prepisati?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2517
+#: ../libgda-ui/gdaui-raw-grid.c:2487
 msgid "If you choose yes, the contents will be lost."
 msgstr "V koliko odgovorite z da, bo vsebina izgubljena."
 
@@ -11023,3 +11034,4 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1883
 msgid "Triggers"
 msgstr "Sprožilniki"
+
