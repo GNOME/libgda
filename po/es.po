@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-16 13:25+0000\n"
+"POT-Creation-Date: 2012-05-17 10:17+0000\n"
 "PO-Revision-Date: 2012-05-17 12:00+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
@@ -821,7 +821,7 @@ msgstr "La declaración no es una declaración de selección"
 
 #: ../libgda/gda-connection.c:4411
 msgid "Invalid argument"
-msgstr "Argumento inválido"
+msgstr "Argumento no válido"
 
 #: ../libgda/gda-connection.c:4421
 #, c-format
@@ -4133,7 +4133,6 @@ msgstr "Modelo de datos GdaDataProxy interno"
 
 #: ../libgda-ui/gdaui-data-store.c:386 ../libgda-ui/gdaui-data-store.c:453
 #: ../libgda-ui/gdaui-data-store.c:483 ../libgda-ui/gdaui-data-store.c:513
-#| msgid "Can't append row to data model: %s"
 msgid "Can't modify row while data model is being reset"
 msgstr ""
 "No se puedo modificar una fila mientras se restablece el modelo de datos"
@@ -4143,7 +4142,6 @@ msgid "Trying to modify a read-only row"
 msgstr "Intentando modificar una fila de sólo lectura"
 
 #: ../libgda-ui/gdaui-data-store.c:596
-#| msgid "Can't append row to data model: %s"
 msgid "Can't access row while data model is being reset"
 msgstr ""
 "No se puedo acceder a una fila mientras se restablece el modelo de datos"
