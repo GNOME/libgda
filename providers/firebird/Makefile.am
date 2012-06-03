@@ -13,7 +13,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
-	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(FIREBIRD_CFLAGS)
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS)
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
@@ -50,13 +50,14 @@ firebird_sources = \
 	firebird_token_types.h
 
 libgda_firebird_client_la_SOURCES = $(firebird_sources) libmain-client.c
+libgda_firebird_client_la_CFLAGS = $(FIREBIRD_CLIENT_CFLAGS)
 libgda_firebird_client_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_firebird_client_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(COREDEPS_LIBS) $(FIREBIRD_CLIENT_LIBS)
 
 libgda_firebird_embed_la_SOURCES = $(firebird_sources) libmain-embed.c
-libgda_firebird_embed_la_CFLAGS = -DFIREBIRD_EMBED
+libgda_firebird_embed_la_CFLAGS = -DFIREBIRD_EMBED $(FIREBIRD_EMBED_CFLAGS)
 libgda_firebird_embed_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_firebird_embed_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \

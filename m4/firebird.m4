@@ -76,10 +76,12 @@ m4_define([_FIREBIRD_CHECK_INTERNAL],
 	fi
     fi
 
+    firebird_client_found=no
+    firebird_embed_found=no
+
     # determine if Firebird should be searched for
     firebird_found=no
     try_firebird=true
-    FIREBIRD_LIBS=""
     firebird_test_dir="$FIREBIRD_HOME /usr /opt/firebird /local"
     AC_ARG_WITH(firebird,
               AS_HELP_STRING([--with-firebird[=@<:@yes/no/<directory>@:>@]],

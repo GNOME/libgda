@@ -783,13 +783,6 @@ dnl
 LIBGDA_DTDDIR=${datadir}/libgda-$LIBGDA_ABI_VERSION/dtd
 AC_SUBST(LIBGDA_DTDDIR)
 
-
-dnl ******************************
-dnl Variables
-dnl ******************************
-AC_SUBST(FIREBIRD_LIBS)
-AC_SUBST(FIREBIRD_CFLAGS)
-
 dnl
 dnl Check if lib should be build with the debug mode
 dnl
