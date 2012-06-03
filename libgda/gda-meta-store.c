@@ -3032,6 +3032,8 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 
 	if (store->priv->init_error) {
 		g_propagate_error (error, g_error_copy (store->priv->init_error));
+		if (cond)
+			g_string_free (cond, TRUE);
 		return FALSE;
 	}
 
