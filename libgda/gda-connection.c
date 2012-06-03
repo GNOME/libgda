@@ -4522,7 +4522,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			WARN_META_UPDATE_FAILURE (retval, "collations");
 			return retval;
 		}
-		else if ((tname[1] == 'h') && (tname[1] == 'a')) {
+		else if ((tname[1] == 'h') && (tname[2] == 'a')) {
 			/* _character_sets, params: 
 			 *  -0- @character_set_catalog, @character_set_schema, @character_set_name
 			 *  -1- @character_set_catalog, @character_set_schema
@@ -4546,7 +4546,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			WARN_META_UPDATE_FAILURE (retval, "character_sets");
 			return retval;
 		}
-		else if ((tname[1] == 'h') && (tname[1] == 'e')) {
+		else if ((tname[1] == 'h') && (tname[2] == 'e')) {
 			/* _check_column_usage, params: 
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -1- @table_catalog, @table_schema, @table_name, @column_name
