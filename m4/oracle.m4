@@ -127,7 +127,7 @@ m4_define([_ORACLE_CHECK_INTERNAL],
 	            LIBS="$LIBS -L$d/$oracle_loclibdir -lm -loci"
 		else
 	            CFLAGS="$CFLAGS -I$d/include -I$d/include/oracle/client -I$d/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I$d/network/public"
-	            LIBS="$LIBS -L$d/$oracle_loclibdir -lm -ldl -lclntsh"
+		    LIBS="$LIBS -L$d/$oracle_loclibdir -lm -ldl -lnnz11 -lclntsh"
 		fi
    	        AC_LINK_IFELSE([AC_LANG_SOURCE([
 #include <oci.h>
@@ -150,7 +150,7 @@ int main() {
 	    	    ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -loci"
 		else
 		    ORACLE_CFLAGS="-I${oracledir}/include -I${oracledir}/include/oracle/client -I${oracledir}/rdbms/demo -I${ORACLE_HOME}/rdbms/public -I${ORACLE_HOME}/plsql/public -I${oracledir}/network/public"
-	    	    ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -ldl -lclntsh"
+		    ORACLE_LIBS="-L${oracledir}/$oracle_loclibdir -lm -ldl -lnnz11 -lclntsh"
 		fi
 		break
   	    else
