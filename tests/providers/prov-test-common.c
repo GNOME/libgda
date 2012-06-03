@@ -201,15 +201,15 @@ prov_test_common_check_meta ()
 						"_key_column_usage", "__declared_fk", "_check_column_usage",
 						"_view_column_usage", "_domain_constraints", "_parameters",
 						"_routine_columns", "_table_indexes", "_index_column_usage",
-						""};
-	for (i = 0; g_strcmp0 (meta_tables[i],"") != 0; i++) {
+						NULL};
+	for (i = 0; meta_tables[i]; i++) {
 		gda_meta_context_set_table (ctx, meta_tables[i]);
 #ifdef CHECK_EXTRA_INFO
 		g_print ("Updating the meta store for table '%s'\n", meta_tables[i]);
 #endif
 		if (! gda_connection_update_meta_store (cnc, ctx, &gerror)) {
 #ifdef CHECK_EXTRA_INFO
-			g_warning ("Can't update meta store ( on table %s): %s\n",
+			g_warning ("Can't update meta store (on table %s): %s\n",
 				   meta_tables[i], gerror && gerror->message ? gerror->message : "???");
 #endif
 			g_error_free (gerror);
@@ -427,8 +427,8 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 							  GDA_SERVER_OPERATION_ADD_COLUMN, NULL, &error);
         g_assert (operation);
         gda_server_operation_set_value_at_path (operation, table_name, "/COLUMN_DEF_P/TABLE_NAME", NULL);
-        gda_server_operation_set_value_at (operation, field_name, "/COLUMN_DEF_P/COLUMN_NAME", NULL);
-        gda_server_operation_set_value_at (operation, "int", "/COLUMN_DEF_P/COLUMN_TYPE", NULL);
+        gda_server_operation_set_value_at (operation, field_name, NULL, "/COLUMN_DEF_P/COLUMN_NAME", NULL);
+        gda_server_operation_set_value_at (operation, "int", NULL, "/COLUMN_DEF_P/COLUMN_TYPE", NULL);
         if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
 #ifdef CHECK_EXTRA_INFO
                 g_warning ("perform_operation(ADD_COLUMN) failed: %s\n", error && error->message ? 

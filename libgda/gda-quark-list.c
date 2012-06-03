@@ -526,8 +526,12 @@ gda_quark_list_foreach (GdaQuarkList *qlist, GHFunc func, gpointer user_data)
 
 	if (qlist->hash_table)
 		g_hash_table_foreach (qlist->hash_table, func, user_data);
-	if (qlist->hash_protected)
-		g_hash_table_foreach (qlist->hash_protected, (GHFunc) p_foreach, user_data);
+	if (qlist->hash_protected) {
+		PFuncData pdata;
+		pdata.user_data = user_data;
+		pdata.func = func;
+		g_hash_table_foreach (qlist->hash_protected, (GHFunc) p_foreach, &pdata);
+	}
 }
 
 static void

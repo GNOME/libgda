@@ -4330,7 +4330,7 @@ meta_context_stringify (GdaMetaContext *context)
 		g_free (str);
 	}
 	if (i == 0)
-		g_string_append (string, "---");
+		g_string_append (string, "no constraint in context");
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
@@ -4658,22 +4658,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			return retval;
 		}
 		else {
-			/* _element_types, params: 
+			/* _element_types, params:
+			 *  - none
 			 *  -0- @specific_name
 			 */
 			i = check_parameters (context, error, 1,
 					      &name, G_TYPE_STRING, NULL,
 					      "specific_name", &name, NULL);
-			if (i < 0)
-				return FALSE;
-
 			ASSERT_TABLE_NAME (tname, "element_types");
-			if (!PROV_CLASS (provider)->meta_funcs.el_types) {
-				WARN_METHOD_NOT_IMPLEMENTED (provider, "el_types");
-				break;
+			if (i < 0) {
+				if (!PROV_CLASS (provider)->meta_funcs._el_types) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "_el_types");
+					break;
+				}
+				retval = PROV_CLASS (provider)->meta_funcs._el_types (provider, cnc, store, context, error);
+				WARN_META_UPDATE_FAILURE (retval, "_el_types");
 			}
-			retval = PROV_CLASS (provider)->meta_funcs.el_types (provider, cnc, store, context, error, name);
-			WARN_META_UPDATE_FAILURE (retval, "el_types");
+			else {
+				if (!PROV_CLASS (provider)->meta_funcs.el_types) {
+					WARN_METHOD_NOT_IMPLEMENTED (provider, "el_types");
+					break;
+				}
+				retval = PROV_CLASS (provider)->meta_funcs.el_types (provider, cnc, store, context, error, name);
+				WARN_META_UPDATE_FAILURE (retval, "el_types");
+			}
 			return retval;
 		}
 		break;

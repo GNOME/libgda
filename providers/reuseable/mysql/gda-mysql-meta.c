@@ -105,10 +105,10 @@ static gchar *internal_sql[] = {
         /* I_STMT_BTYPES */
 
         /* I_STMT_SCHEMAS */
-	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
+	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal, NULL FROM INFORMATION_SCHEMA.schemata",
 
         /* I_STMT_SCHEMAS_ALL */
-	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata",
+	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal, NULL FROM INFORMATION_SCHEMA.schemata",
 
         /* I_STMT_SCHEMA_NAMED */
 	"SELECT " CATALOG_NAME " AS catalog_name, schema_name, NULL, CASE WHEN schema_name = 'information_schema' OR schema_name = 'mysql' THEN TRUE ELSE FALSE END AS schema_internal FROM INFORMATION_SCHEMA.schemata WHERE schema_name = ##name::string",
@@ -132,7 +132,7 @@ static gchar *internal_sql[] = {
 	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, view_definition, check_option, is_updatable FROM INFORMATION_SCHEMA.views WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string UNION SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, NULL, NULL, FALSE FROM INFORMATION_SCHEMA.tables WHERE table_schema='information_schema' AND table_type LIKE '%VIEW%' AND table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_OF_TABLE */
-	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, 1, column_comment FROM INFORMATION_SCHEMA.columns WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
+	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length,character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string",
 
         /* I_STMT_COLUMNS_ALL */
 	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, column_name, ordinal_position, column_default, CASE is_nullable WHEN 'YES' THEN TRUE ELSE FALSE END AS is_nullable, data_type, NULL, 'gchararray', character_maximum_length, character_octet_length, numeric_precision, numeric_scale, 0, character_set_name, character_set_name, character_set_name, collation_name, collation_name, collation_name, CASE WHEN extra = 'auto_increment' then '" GDA_EXTRA_AUTO_INCREMENT "' ELSE extra END, IF(FIND_IN_SET('insert', privileges) != 0 OR FIND_IN_SET('update', privileges) != 0, TRUE, FALSE) AS is_updatable, column_comment FROM INFORMATION_SCHEMA.columns",
@@ -1385,7 +1385,7 @@ _gda_mysql_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider  *prov,
 		return retval;
 	}
 	else {
-		TO_IMPLEMENT;
+		// TO_IMPLEMENT;
 		return TRUE;
 	}
 }
@@ -1441,7 +1441,7 @@ _gda_mysql_meta_constraints_ref (G_GNUC_UNUSED GdaServerProvider  *prov,
 		return retval;
 	}
 	else {
-		TO_IMPLEMENT;
+		// TO_IMPLEMENT;
 		return TRUE;
 	}
 }
