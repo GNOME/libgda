@@ -3116,10 +3116,12 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	gda_sql_statement_free (sqlst);
 
 	/* execute statement */
-	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, NULL);
+	GError *lerror = NULL;
+	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, &lerror);
      	if (!filtered_rows) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
-			      "%s", _("Error in filter expression"));
+			     _("Error in filter expression: %s"), lerror && lerror->message ? lerror->message : _("No detail"));
+		g_clear_error (&lerror);
 		proxy->priv->force_direct_mapping = FALSE;
 		gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
 		goto clean_previous_filter;
