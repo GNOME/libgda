@@ -215,7 +215,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	                *)
 	                    RUN_JAVA(JAVA_LIBS, [-classpath ${srcdir} getsp -libs])
 	                    JAVA_LIBS="${JAVA_LIBS} -ljvm"
-	           	    RUN_JAVA(JAVA_LD_PATH, [-classpath ${srcdir} getsp java.library.path])
+			    RUN_JAVA(JAVA_LD_PATH, [-classpath ${srcdir} getsp -ldpath])
 	           	    ;;
 	            esac
 	            # note that we actually don't test JAVA_LIBS - we hope that the detection
