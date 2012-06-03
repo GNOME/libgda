@@ -131,7 +131,7 @@ gda_statement_class_init (GdaStatementClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaStatement::reset
+	 * GdaStatement::reset:
 	 * @stmt: the #GdaStatement object
 	 *
 	 * Gets emitted whenever the @stmt has changed
@@ -145,7 +145,7 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
 			      0);
 	/**
-	 * GdaStatement::checked
+	 * GdaStatement::checked:
 	 * @stmt: the #GdaStatement object
 	 *
 	 * Gets emitted whenever the structure and contents

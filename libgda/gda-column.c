@@ -89,7 +89,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	
 	/* signals */
 	/**
-	 * GdaColumn::name-changed
+	 * GdaColumn::name-changed:
 	 * @column: the #GdaColumn object
 	 * @old_name: the column's previous name
 	 *
@@ -105,7 +105,7 @@ gda_column_class_init (GdaColumnClass *klass)
 			      G_TYPE_NONE,
 			      1, G_TYPE_STRING);
 	/**
-	 * GdaColumn::g-type-changed
+	 * GdaColumn::g-type-changed:
 	 * @column: the #GdaColumn object
 	 * @old_type: the column's previous type
 	 * @new_type: the column's new type

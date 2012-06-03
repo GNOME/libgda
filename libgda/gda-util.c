@@ -1517,7 +1517,7 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **e
 }
 
 /**
- * gda_rewrite_sql_statement_for_null_parameters: (skip):
+ * gda_rewrite_sql_statement_for_null_parameters: (skip)
  * @sqlst: (transfer full): a #GdaSqlStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
  * @out_modified: (allow-none): a place to store the boolean which tells if @stmt has been modified or not, or %NULL

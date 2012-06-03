@@ -27,16 +27,6 @@ G_BEGIN_DECLS
 /* private information to implement custom 
  * SQL renderers for GdaStatement objects
  */
-/**
- * GdaSqlRenderingContext:
- * @flags:
- * @params:
- * @params_used: (element-type Gda.Holder):
- * @provider: (allow-none):
- * @cnc: (allow-none):
- *
- * Specifies the context in which a #GdaSqlStatement is being converted to SQL.
- */
 typedef struct _GdaSqlRenderingContext GdaSqlRenderingContext;
 
 /**
@@ -125,6 +115,8 @@ typedef gchar *(*GdaSqlRenderingValue)     (const GValue *value, GdaSqlRendering
  * @render_select_from: function to render a #GdaSqlSelectFrom
  * @render_select_order: function to render a #GdaSqlSelectOrder
  * @render_distinct: function to render the DISTINCT clause in a SELECT
+ *
+ * Specifies the context in which a #GdaSqlStatement is being converted to SQL.
  */
 struct _GdaSqlRenderingContext {
 	GdaStatementSqlFlag      flags;

@@ -207,7 +207,7 @@ gda_holder_class_init (GdaHolderClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	/**
-	 * GdaHolder::source-changed
+	 * GdaHolder::source-changed:
 	 * @holder: the #GdaHolder
 	 * 
 	 * Gets emitted when the data model in which @holder's values should be has changed
@@ -220,7 +220,7 @@ gda_holder_class_init (GdaHolderClass *class)
                               NULL, NULL,
                               _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	/**
-	 * GdaHolder::changed
+	 * GdaHolder::changed:
 	 * @holder: the #GdaHolder
 	 * 
 	 * Gets emitted when @holder's value has changed
@@ -233,7 +233,7 @@ gda_holder_class_init (GdaHolderClass *class)
                               NULL, NULL,
                               _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	/**
-	 * GdaHolder::attribute-changed
+	 * GdaHolder::attribute-changed:
 	 * @holder: the #GdaHolder
 	 * @att_name: attribute's name
 	 * @att_value: attribute's value
@@ -250,7 +250,7 @@ gda_holder_class_init (GdaHolderClass *class)
 			      G_TYPE_STRING, G_TYPE_VALUE);
 
 	/**
-	 * GdaHolder::validate-change
+	 * GdaHolder::validate-change:
 	 * @holder: the object which received the signal
 	 * @new_value: the proposed new value for @holder
 	 * 

@@ -133,7 +133,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 	MUTEX_LOCK();
 	if (! initialized) {
 		/**
-		 * GdaDataModel::changed
+		 * GdaDataModel::changed:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when any value in @model has been changed
@@ -147,7 +147,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		/**
-		 * GdaDataModel::row-inserted
+		 * GdaDataModel::row-inserted:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -162,7 +162,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::row-updated
+		 * GdaDataModel::row-updated:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -177,7 +177,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::row-removed
+		 * GdaDataModel::row-removed:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -192,7 +192,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::reset
+		 * GdaDataModel::reset:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when @model's contents has been completely reset (the number and
@@ -208,7 +208,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      G_TYPE_NONE, 0);
 
 		/**
-		 * GdaDataModel::access-changed
+		 * GdaDataModel::access-changed:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when @model's access flags have changed. Use

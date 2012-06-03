@@ -155,7 +155,7 @@ gda_tree_mgr_tables_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_select_get_type:
+ * gda_tree_mgr_tables_get_type:
  *
  * Returns: the GType
  *

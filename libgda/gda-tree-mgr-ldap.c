@@ -120,7 +120,7 @@ gda_tree_mgr_ldap_dispose (GObject *object)
 }
 
 /**
- * gda_tree_mgr_select_get_type:
+ * gda_tree_mgr_ldap_get_type:
  *
  * Returns: the GType
  *

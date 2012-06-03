@@ -255,7 +255,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaConnection::error
+	 * GdaConnection::error:
 	 * @cnc: the #GdaConnection
 	 * @event: a #GdaConnectionEvent object
 	 *
@@ -271,7 +271,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_EVENT);
 	/**
-	 * GdaConnection::conn-opened
+	 * GdaConnection::conn-opened:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the connection has been opened to the database
@@ -285,7 +285,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	/**
-	 * GdaConnection::conn-to-close
+	 * GdaConnection::conn-to-close:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the connection to the database is about to be closed
@@ -299,7 +299,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	/**
-	 * GdaConnection::conn-closed
+	 * GdaConnection::conn-closed:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the connection to the database has been closed
@@ -313,7 +313,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	/**
-	 * GdaConnection::dsn-changed
+	 * GdaConnection::dsn-changed:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the DSN used by @cnc has been changed
@@ -327,7 +327,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 	/**
-	 * GdaConnection::transaction-status-changed
+	 * GdaConnection::transaction-status-changed:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the transaction status of @cnc has changed (a transaction has been 
@@ -1106,7 +1106,7 @@ cnc_task_free (CncTask *task)
 }
 
 /**
- * _gda_connection_get_internal_thread_provider
+ * _gda_connection_get_internal_thread_provider:
  */ 
 GdaServerProvider *
 _gda_connection_get_internal_thread_provider (void)
@@ -5822,7 +5822,7 @@ gda_connection_get_events (GdaConnection *cnc)
 }
 
 /**
- * gda_connection_value_to_sql_string
+ * gda_connection_value_to_sql_string:
  * @cnc: a #GdaConnection object.
  * @from: #GValue to convert from
  *

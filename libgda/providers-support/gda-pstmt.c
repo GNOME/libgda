@@ -36,7 +36,7 @@ struct _GdaPStmtPrivate {
 };
 
 /**
- * gda_pstmt_get_type
+ * gda_pstmt_get_type:
  *
  * Returns: the #GType of GdaPStmt.
  */
@@ -144,7 +144,7 @@ gda_pstmt_finalize (GObject *object)
 }
 
 /**
- * gda_pstmt_set_gda_statement
+ * gda_pstmt_set_gda_statement:
  * @pstmt: a #GdaPStmt object
  * @stmt: a #GdaStatement object
  *
@@ -169,7 +169,7 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 }
 
 /**
- * gda_pstmt_copy_contents
+ * gda_pstmt_copy_contents:
  * @src: a #GdaPStmt object
  * @dest: a #GdaPStmt object
  *

@@ -125,7 +125,7 @@ static GStaticMutex provider_mutex = G_STATIC_MUTEX_INIT;
 static GdaVirtualProvider *virtual_provider = NULL;
 
 /**
- * gda_data_pivot_get_type
+ * gda_data_pivot_get_type:
  *
  * Returns: the #GType of GdaDataPivot.
  */

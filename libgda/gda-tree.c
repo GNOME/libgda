@@ -86,7 +86,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 
 	/* signals */
 	/**
-	 * GdaTree::node-changed
+	 * GdaTree::node-changed:
 	 * @tree: the #GdaTree
 	 * @node: the #GdaTreeNode which has changed
 	 *
@@ -103,7 +103,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTree::node-inserted
+	 * GdaTree::node-inserted:
 	 * @tree: the #GdaTree
 	 * @node: the #GdaTreeNode which has inserted
 	 *
@@ -120,7 +120,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTree::node-has-child-toggled
+	 * GdaTree::node-has-child-toggled:
 	 * @tree: the #GdaTree
 	 * @node: the #GdaTreeNode which changed from having children to being a
 	 *        leaf or the other way around
@@ -139,7 +139,7 @@ gda_tree_class_init (GdaTreeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTree::node-deleted
+	 * GdaTree::node-deleted:
 	 * @tree: the #GdaTree
 	 * @node_path: the position the node held in @tree as a tree path
 	 *
@@ -749,7 +749,7 @@ static GSList *split_absolute_path (const gchar *path, gboolean *out_error);
 static GSList *split_indexed_path (const gchar *path, gboolean *out_error);
 
 /**
- * decompose_path_as_segments
+ * decompose_path_as_segments:
  * @path: a path using '/'
  * @use_names: 
  *
