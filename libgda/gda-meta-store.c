@@ -311,7 +311,7 @@ enum {
  * contains predefined statements for data selection and modifications
  */
 typedef struct {
-	GSList       *columns;
+	GSList       *columns; /* list of TableColumn */
 
 	/* data access statements */
 	GdaStatement *current_all;
@@ -1297,6 +1297,20 @@ create_server_operation_for_view (G_GNUC_UNUSED GHashTable *specific_hash,
 	return NULL;
 }
 
+/*
+ * Returns: -1 if column not found
+ */
+static gint
+column_name_to_index (TableInfo *tinfo, const gchar *column_name)
+{
+	GSList *list;
+	gint i;
+	for (i = 0, list = tinfo->columns; list; list = list->next, i++)
+		if (!strcmp (TABLE_COLUMN (list->data)->column_name, column_name))
+			return i;
+	return -1;
+}
+
 static DbObject *create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr node, GError **error);
 static DbObject *create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr node, GError **error);
 static GSList *reorder_db_objects (GSList *objects, GHashTable *hash);
@@ -1418,20 +1432,69 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 			g_error ("Information schema structure error: %s",
 				 lerror && lerror->message ? lerror->message : "No detail");
 	}
-}
 
-/*
- * Returns: -1 if column not found
- */
-static gint
-column_name_to_index (TableInfo *tinfo, const gchar *column_name)
-{
+	/* make sure that for each Table DbObject, every TableFKey in @fk_list references a primary key of the referenced table */
 	GSList *list;
-	gint i;
-	for (i = 0, list = tinfo->columns; list; list = list->next, i++)
-		if (!strcmp (TABLE_COLUMN (list->data)->column_name, column_name))
-			return i;
-	return -1;
+	for (list = klass->cpriv->db_objects; list; list = list->next) {
+		DbObject *dbo;
+		dbo = DB_OBJECT (list->data);
+
+		if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE)
+			continue;
+
+		TableInfo *tinfo;
+		GSList *fklist;
+		tinfo = TABLE_INFO (dbo);
+		for (fklist = tinfo->fk_list; fklist; fklist = fklist->next) {
+			TableFKey *tfk;
+			TableInfo *reftinfo;
+			gint i;
+			tfk = (TableFKey*) fklist->data;
+			if (tfk->table_info != dbo)
+				g_error ("Information schema structure error for table '%s': "
+					 "Foreign key structure attached to wrong table", dbo->obj_name);
+			if (!tfk->depend_on || (tfk->depend_on->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE))
+				g_error ("Information schema structure error for table '%s': "
+					 "Foreign key references an object '%s' which is not a table",
+					 dbo->obj_name, tfk->depend_on ? tfk->depend_on->obj_name : "nothing referenced");
+			reftinfo = TABLE_INFO (tfk->depend_on);
+			if (tfk->cols_nb <= 0)
+				g_error ("Information schema structure error for table '%s': "
+					 "Foreign key is not composed of at least one column", dbo->obj_name);
+			if (!tfk->fk_cols_array || !tfk->fk_names_array ||
+			    !tfk->ref_pk_cols_array || !tfk->ref_pk_names_array)
+				g_error ("Information schema structure error for table '%s': "
+					 "Foreign key is not completely defined", dbo->obj_name);
+			for (i = 0; i < tfk->cols_nb; i++) {
+				gint j;
+				for (j = 0; j < tfk->cols_nb; j++) {
+					if ((i != j) && (tfk->ref_pk_cols_array [i] == tfk->ref_pk_cols_array [j]))
+						g_error ("Information schema structure error for table '%s': "
+							 "column is referenced twice, at position %d and %d", dbo->obj_name,
+							 tfk->ref_pk_cols_array [i], tfk->ref_pk_cols_array [j]);
+				}
+			}
+			for (i = 0; i < tfk->cols_nb; i++) {
+				TableColumn *tcol;
+				tcol = g_slist_nth_data (reftinfo->columns, tfk->ref_pk_cols_array [i]);
+				if (!tcol)
+					g_error ("Information schema structure error for table '%s': "
+						 "cannot identify column at position %d", dbo->obj_name, tfk->ref_pk_cols_array [i]);
+				if (!tcol->pkey)
+					g_error ("Information schema structure error for table '%s': "
+						 "referenced column at position %d is not part of a primary key",
+						 dbo->obj_name, tfk->ref_pk_cols_array [i]);
+				if (column_name_to_index (reftinfo, tfk->ref_pk_names_array [i]) != tfk->ref_pk_cols_array [i])
+					g_error ("Information schema structure error for table '%s': "
+						 "referenced column at position %d has wrong associated name '%s'",
+						 dbo->obj_name, tfk->ref_pk_cols_array [i], tfk->ref_pk_names_array [i]);
+			}
+			if (tfk->cols_nb != reftinfo->pk_cols_nb)
+				g_error ("Information schema structure error for table '%s': "
+					 "Foreign key does only reference part of reterenced table's primary key",
+					 dbo->obj_name);
+		}
+	}
 }
 
 static void compute_view_dependencies (GdaMetaStoreClass *klass, GdaMetaStore *store,
