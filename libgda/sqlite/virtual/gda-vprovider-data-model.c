@@ -585,8 +585,28 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		name = gda_column_get_name (column);
 		if (!name || !(*name))
 			newcolname = g_strdup_printf ("_%d", i + 1);
-		else
+		else {
+			GString *string;
+			gchar *ptr;
+			string = g_string_new ("");
 			newcolname = gda_sql_identifier_quote (name, GDA_CONNECTION (cnc), NULL, FALSE, FALSE);
+			for (ptr = newcolname; *ptr; ptr++) {
+				if ((*ptr == '_') ||
+				    ((*ptr >= 'a') && (*ptr <= 'z')) ||
+				    ((*ptr >= 'A') && (*ptr <= 'Z')))
+					g_string_append_c (string, *ptr);
+				else if ((*ptr >= '0') && (*ptr <= '9')) {
+					if (ptr == name)
+						g_string_append_c (string, '_');
+					else
+						g_string_append_c (string, *ptr);
+				}
+				else
+					g_string_append_c (string, '_');
+			}
+			g_free (newcolname);
+			newcolname = g_string_free (string, FALSE);
+		}
 
 		tmp = g_ascii_strdown (newcolname, -1);
 		if (g_hash_table_lookup (hash, tmp)) {
