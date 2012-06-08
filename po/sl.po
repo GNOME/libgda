@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-05-16 13:25+0000\n"
-"PO-Revision-Date: 2012-05-16 20:07+0100\n"
+"POT-Creation-Date: 2012-06-08 17:56+0000\n"
+"PO-Revision-Date: 2012-06-08 20:39+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -106,6 +106,7 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/gda-data-pivot.c:1345
 #: ../libgda/gda-data-pivot.c:1443
 #: ../libgda/gda-data-pivot.c:1556
+#: ../libgda/gda-data-proxy.c:3123
 #: ../libgda/gda-data-select.c:400
 #: ../libgda/gda-data-select.c:2308
 #: ../libgda/gda-data-select.c:2318
@@ -127,8 +128,8 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:410
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:789
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1507
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:809
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1527
 #: ../libgda/thread-wrapper/gda-thread-provider.c:451
 #: ../libgda/thread-wrapper/gda-thread-provider.c:531
 #: ../libgda-ui/data-entries/common-bin.c:81
@@ -791,7 +792,7 @@ msgstr "Ni mogoče pridobiti zaklepa povezave"
 #: ../libgda/gda-connection.c:3805
 #: ../libgda/gda-connection.c:3895
 #: ../libgda/gda-connection.c:3981
-#: ../libgda/gda-connection.c:6448
+#: ../libgda/gda-connection.c:6456
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:169
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:391
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1709
@@ -835,19 +836,19 @@ msgstr "Neveljaven argument"
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Manjkajo ali pa so napačno navedeni argumenti razpredelnice '%s': %s"
 
-#: ../libgda/gda-connection.c:5177
+#: ../libgda/gda-connection.c:5185
 msgid "Meta update error"
 msgstr "Napaka med posodabljanjem metapodatkov"
 
-#: ../libgda/gda-connection.c:5741
+#: ../libgda/gda-connection.c:5749
 msgid "Wrong filter arguments"
 msgstr "Neveljavni argumenti filtra"
 
-#: ../libgda/gda-connection.c:5929
-#: ../libgda/gda-connection.c:5982
-#: ../libgda/gda-connection.c:6026
-#: ../libgda/gda-connection.c:6070
-#: ../libgda/gda-connection.c:6114
+#: ../libgda/gda-connection.c:5937
+#: ../libgda/gda-connection.c:5990
+#: ../libgda/gda-connection.c:6034
+#: ../libgda/gda-connection.c:6078
+#: ../libgda/gda-connection.c:6122
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
@@ -865,13 +866,13 @@ msgstr "Sledenje stanja povezave prenosa: ni prenosa za %s"
 #: ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402
 #: ../libgda/gda-data-model-iter.c:1122
-#: ../libgda/gda-data-proxy.c:3556
-#: ../libgda/gda-data-proxy.c:3680
+#: ../libgda/gda-data-proxy.c:3558
+#: ../libgda/gda-data-proxy.c:3682
 #: ../libgda/gda-data-select.c:1320
 #: ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860
 #: ../libgda/gda-data-select.c:2927
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:878
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:898
 #: ../libgda-ui/gdaui-combo.c:789
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -938,8 +939,8 @@ msgstr "Ali je mogoče podatkovni model spremeniti"
 #: ../libgda/gda-data-model-dir.c:971
 #: ../libgda/gda-data-model-dir.c:1337
 #: ../libgda/gda-data-model-dsn-list.c:319
-#: ../libgda/gda-data-proxy.c:3629
-#: ../libgda/gda-data-proxy.c:3667
+#: ../libgda/gda-data-proxy.c:3631
+#: ../libgda/gda-data-proxy.c:3669
 #: ../libgda/gda-data-select.c:1853
 #: ../libgda/gda-data-select.c:1914
 #, c-format
@@ -953,8 +954,8 @@ msgstr "Vrstica %d je izven območja (0-%d)"
 #: ../libgda/gda-data-model-dir.c:974
 #: ../libgda/gda-data-model-dir.c:1340
 #: ../libgda/gda-data-model-dsn-list.c:322
-#: ../libgda/gda-data-proxy.c:3632
-#: ../libgda/gda-data-proxy.c:3670
+#: ../libgda/gda-data-proxy.c:3634
+#: ../libgda/gda-data-proxy.c:3672
 #: ../libgda/gda-data-select.c:1856
 #: ../libgda/gda-data-select.c:1917
 #, c-format
@@ -1450,7 +1451,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr "Predmet GdaDataProxy ne podpira naključnih modelov dostopa do podatkov"
 
 #: ../libgda/gda-data-proxy.c:1677
-#: ../libgda/gda-data-proxy.c:4069
+#: ../libgda/gda-data-proxy.c:4071
 msgid "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "Prva vrstica, ki je ni mogoče odstraniti, je dodana programsko in je vedno prazna"
 
@@ -1464,32 +1465,36 @@ msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa n
 msgid "Proxied data model reports the modifications as accepted, yet did not emit the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr "Posredniški podatkovni model potrjuje sprejemanje sprememb, vendar pa ni objavljenih ustreznih objav \"row-inserted\" (vstavljena vrstica), \"row-updated\" (posodobljena vrstica) ali \"row-removed\" (odstranjena vrstica). To je najverjetneje hrošč %s (pošljite poročilo o napaki)."
 
-#: ../libgda/gda-data-proxy.c:3122
-#: ../libgda/gda-data-proxy.c:3135
+#: ../libgda/gda-data-proxy.c:3123
+#, c-format
+msgid "Error in filter expression: %s"
+msgstr "Napaka v izrazu filtra: %s"
+
+#: ../libgda/gda-data-proxy.c:3137
 msgid "Error in filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3250
+#: ../libgda/gda-data-proxy.c:3252
 #: ../libgda/gda-data-select.c:1648
 msgid "Incorrect filter expression"
 msgstr "Napaka v izrazu filtra"
 
-#: ../libgda/gda-data-proxy.c:3804
+#: ../libgda/gda-data-proxy.c:3806
 msgid "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "Prva vrstica, ki je ni mogoče spreminjati, je dodana programsko in je vedno prazna"
 
-#: ../libgda/gda-data-proxy.c:3833
-#: ../libgda/gda-data-proxy.c:3844
+#: ../libgda/gda-data-proxy.c:3835
+#: ../libgda/gda-data-proxy.c:3846
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Napačna vrsta vrednosti: pričakovano je '%s', pridobljeno pa '%s'"
 
-#: ../libgda/gda-data-proxy.c:3932
+#: ../libgda/gda-data-proxy.c:3934
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Poskus spreminjanja stolpca le za branje: %d"
 
-#: ../libgda/gda-data-proxy.c:3969
+#: ../libgda/gda-data-proxy.c:3971
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Neskladnost vrste vrednosti %s namesto %s"
@@ -1765,129 +1770,129 @@ msgstr "Katalog je določen, shema pa ne; shranjevanje ne bo na voljo"
 
 #: ../libgda/gda-meta-store.c:1134
 #: ../libgda/gda-meta-store.c:1143
-#: ../libgda/gda-meta-store.c:2272
-#: ../libgda/gda-meta-store.c:2281
+#: ../libgda/gda-meta-store.c:2335
+#: ../libgda/gda-meta-store.c:2344
 msgid "Could not set the internal schema's version"
 msgstr "Ni mogoče določiti različice sheme"
 
-#: ../libgda/gda-meta-store.c:1449
+#: ../libgda/gda-meta-store.c:1512
 msgid "Missing view name from <view> node"
 msgstr "Manjka ime pogleda iz vozlišča <pogled>"
 
-#: ../libgda/gda-meta-store.c:1489
+#: ../libgda/gda-meta-store.c:1552
 msgid "Missing view definition from <view> node"
 msgstr "Manjka določilo pogleda iz vozlišča <pogled>"
 
-#: ../libgda/gda-meta-store.c:1503
+#: ../libgda/gda-meta-store.c:1566
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr "Določilo pogleda mora vsebovati več kot eno izjavo (za pogled '%s')"
 
-#: ../libgda/gda-meta-store.c:1530
+#: ../libgda/gda-meta-store.c:1593
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Določilo pogleda ni izjava izbire (za pogled '%s')"
 
-#: ../libgda/gda-meta-store.c:1557
+#: ../libgda/gda-meta-store.c:1620
 #: ../libgda/gda-meta-struct-io.c:176
 msgid "Missing table name from <table> node"
 msgstr "Manjka ime razpredelnice iz vozlišča <pogled>"
 
-#: ../libgda/gda-meta-store.c:1793
+#: ../libgda/gda-meta-store.c:1856
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "Stolpec '%s' že obstaja in ima drugačne značilnosti"
 
-#: ../libgda/gda-meta-store.c:1828
+#: ../libgda/gda-meta-store.c:1891
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr "Manjka ime sklicne razpredelnice tujega ključa (za razpredelnico '%s')"
 
-#: ../libgda/gda-meta-store.c:1882
+#: ../libgda/gda-meta-store.c:1945
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Manjka ime stolpca tujega ključa (za razpredelnico '%s')"
 
-#: ../libgda/gda-meta-store.c:1894
+#: ../libgda/gda-meta-store.c:1957
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "Stolpca '%s' v razpredelnici '%s' ni mogoče najti"
 
-#: ../libgda/gda-meta-store.c:2149
+#: ../libgda/gda-meta-store.c:2212
 #: ../libgda/gda-meta-struct.c:1333
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Tujega ključa stolpca '%s' v razpredelnici '%s' ni mogoče najti"
 
-#: ../libgda/gda-meta-store.c:2329
-#: ../libgda/gda-meta-store.c:2361
+#: ../libgda/gda-meta-store.c:2392
+#: ../libgda/gda-meta-store.c:2424
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr "Opis sheme ne vsebuje predmeta '%s', preverite namestitev"
 
-#: ../libgda/gda-meta-store.c:2400
+#: ../libgda/gda-meta-store.c:2463
 #, c-format
 msgid "Could not find description for column named '%s'"
 msgstr "Ni mogoče najti opisa za stolpec z imenom '%s'"
 
-#: ../libgda/gda-meta-store.c:2515
-#: ../libgda/gda-meta-store.c:2526
-#: ../libgda/gda-meta-store.c:2560
+#: ../libgda/gda-meta-store.c:2578
+#: ../libgda/gda-meta-store.c:2589
+#: ../libgda/gda-meta-store.c:2623
 msgid "Could not get the internal schema's version"
 msgstr "Ni mogoče pridobiti različice sheme"
 
-#: ../libgda/gda-meta-store.c:2684
-#: ../libgda/gda-meta-store.c:2806
+#: ../libgda/gda-meta-store.c:2747
+#: ../libgda/gda-meta-store.c:2869
 #: ../tools/gda-sql.c:1194
 msgid "More than one SQL statement"
 msgstr "Več kot ena SQL izjava"
 
-#: ../libgda/gda-meta-store.c:2713
-#: ../libgda/gda-meta-store.c:2834
+#: ../libgda/gda-meta-store.c:2776
+#: ../libgda/gda-meta-store.c:2897
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parametra '%s' v izjavi ni mogoče najti"
 
-#: ../libgda/gda-meta-store.c:2730
-#: ../libgda/gda-meta-store.c:2848
+#: ../libgda/gda-meta-store.c:2793
+#: ../libgda/gda-meta-store.c:2911
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Ni vrednosti za parameter '%s'"
 
-#: ../libgda/gda-meta-store.c:3435
+#: ../libgda/gda-meta-store.c:3500
 msgid "Data models should have the same number of columns"
 msgstr "Podatkovni modeli morajo imeti enako število stolpcev"
 
-#: ../libgda/gda-meta-store.c:3496
-#: ../libgda/gda-meta-store.c:4543
-#: ../libgda/gda-meta-store.c:4646
+#: ../libgda/gda-meta-store.c:3561
+#: ../libgda/gda-meta-store.c:4608
+#: ../libgda/gda-meta-store.c:4711
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Neznan predmet podatkovne zbirke '%s'"
 
-#: ../libgda/gda-meta-store.c:3512
+#: ../libgda/gda-meta-store.c:3577
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Ni mogoče določiti vrednosti parametru '%s'"
 
-#: ../libgda/gda-meta-store.c:3541
+#: ../libgda/gda-meta-store.c:3606
 msgid "Could not create SELECT statement"
 msgstr "Ni mogoče ustvariti izjave SELECT"
 
-#: ../libgda/gda-meta-store.c:3556
+#: ../libgda/gda-meta-store.c:3621
 msgid "Could not create DELETE statement"
 msgstr "Ni mogoče ustvariti izjave DELETE"
 
-#: ../libgda/gda-meta-store.c:3606
+#: ../libgda/gda-meta-store.c:3671
 msgid "A transaction has already been started"
 msgstr "Prenos je že začet"
 
-#: ../libgda/gda-meta-store.c:3993
+#: ../libgda/gda-meta-store.c:4058
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Atributa '%s' ni mogoče najti"
 
-#: ../libgda/gda-meta-store.c:3996
+#: ../libgda/gda-meta-store.c:4061
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
@@ -1896,61 +1901,61 @@ msgstr[1] "Atribut '%s' ima %d vrednost"
 msgstr[2] "Atribut '%s' ima %d vrednosti"
 msgstr[3] "Atribut '%s' ima %d vrednosti"
 
-#: ../libgda/gda-meta-store.c:4043
+#: ../libgda/gda-meta-store.c:4108
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Imena atributov, ki se začnejo z '_' so izvzeta za notranje ukaze"
 
-#: ../libgda/gda-meta-store.c:4071
+#: ../libgda/gda-meta-store.c:4136
 msgid "Could not start a transaction because one already started, this could lead to GdaMetaStore attributes problems"
 msgstr "Prenosa ni mogoče začeti, saj je ta že začet, napaka pa bi lahko vodila do težav atributov"
 
-#: ../libgda/gda-meta-store.c:4186
+#: ../libgda/gda-meta-store.c:4251
 msgid "Could not parse XML description of custom database object to add"
 msgstr "Ni mogoče razčleniti opisa XML podatkovne zbirke po meri za dodajanje"
 
-#: ../libgda/gda-meta-store.c:4200
+#: ../libgda/gda-meta-store.c:4265
 msgid "Missing custom database object name"
 msgstr "Manjka ime predmeta podatkovne zbirke po meri"
 
-#: ../libgda/gda-meta-store.c:4205
+#: ../libgda/gda-meta-store.c:4270
 msgid "Custom database object names starting with a '_' are reserved for internal usage"
 msgstr "Imena predmetov podatkovnih zbirk po meri, ki se začnejo s podčrtajem '_' so zadržana za notranjo uporabo"
 
-#: ../libgda/gda-meta-store.c:4303
+#: ../libgda/gda-meta-store.c:4368
 msgid "Another object with the same name already exists"
 msgstr "Drug predmet z istim imenom že obstaja"
 
-#: ../libgda/gda-meta-store.c:4405
+#: ../libgda/gda-meta-store.c:4470
 msgid "Missing table name in meta data context"
 msgstr "Manjka ime razpredelnice v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4432
+#: ../libgda/gda-meta-store.c:4497
 msgid "Missing column name in meta data context"
 msgstr "Manjka ime stolpca v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4448
+#: ../libgda/gda-meta-store.c:4513
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Manjka pogoj v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4473
+#: ../libgda/gda-meta-store.c:4538
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Nepravilno oblikovan pogoj v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4490
+#: ../libgda/gda-meta-store.c:4555
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Neznano ime stolpca '%s' v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4512
+#: ../libgda/gda-meta-store.c:4577
 msgid "Unknown table in meta data context"
 msgstr "Neznana razpredelnica v vsebini metapodatkov"
 
-#: ../libgda/gda-meta-store.c:4785
-#: ../libgda/gda-meta-store.c:4815
-#: ../libgda/gda-meta-store.c:5004
-#: ../libgda/gda-meta-store.c:5033
+#: ../libgda/gda-meta-store.c:4850
+#: ../libgda/gda-meta-store.c:4880
+#: ../libgda/gda-meta-store.c:5069
+#: ../libgda/gda-meta-store.c:5098
 #: ../libgda/gda-meta-struct.c:505
 #: ../libgda/gda-meta-struct.c:520
 #: ../libgda/gda-meta-struct.c:537
@@ -1958,8 +1963,8 @@ msgstr "Neznana razpredelnica v vsebini metapodatkov"
 msgid "Could not find object named '%s'"
 msgstr "Ni mogoče najti predmeta z imenom '%s'"
 
-#: ../libgda/gda-meta-store.c:4883
-#: ../libgda/gda-meta-store.c:4902
+#: ../libgda/gda-meta-store.c:4948
+#: ../libgda/gda-meta-store.c:4967
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Ni mogoče najti stolpca '%s' v razpredelnici '%s'"
@@ -3053,49 +3058,49 @@ msgstr "Ni mogoče izračunati stolpcev navidezne razpredelnice"
 msgid "Can't get data model description for column %d"
 msgstr "Ni mogoče dobiti opisa podatkovnega modela za stolpec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:612
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:632
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Ni mogoče pridobiti vrste podatkovnega modela za stolpec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:673
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:693
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "Ni mogoče napovedati navidezne razpredelnice (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:810
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:830
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Notranja napaka SQLite: ni podatkov za uporabo"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:907
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:927
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "Zahtevane vrednosti ni mogoče najti v vrstici %d in v stolpcu %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:929
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:949
 msgid "Column not found"
 msgstr "Stolpca ni mogoče najti"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1402
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1422
 msgid "No statement specified to modify the data"
 msgstr "Ni določene izjave za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1409
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1429
 msgid "Invalid statement specified to modify the data"
 msgstr "Določena je neveljavna izjava za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1429
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1466
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1474
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1449
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1486
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1494
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Neveljavno določilo v izjavi za spreminjanje podatkov"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1506
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1526
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Spreminjanje podatkov je spodletelo: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1588
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1608
 msgid "Data model representing the table is read only"
 msgstr "Podatkovni model razpredelnice je le za branje"
 
