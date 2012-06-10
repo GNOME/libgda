@@ -1260,10 +1260,8 @@ getToken (GdaSqlParser *parser)
 				else
 					break;
 			}
-			else if (c == '\\') {
-				if (z[i+1] == delim)
-					i++;
-			}
+			else if (c == '\\')
+				i++;
 		}
 		if (c) {
 			if (delim == '"')
