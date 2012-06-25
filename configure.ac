@@ -506,22 +506,21 @@ then
         VAPIDIR="$VALA_DATADIR/vala/vapi"
         AC_SUBST(VAPIGEN)
         AC_SUBST(VAPIDIR)
-	    VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
-	    AC_SUBST(VALA_BINDIR)
-	    VALA_COMPILER="$VALA_BINDIR/valac-0.16"
-	    AC_SUBST(VALA_COMPILER)
+	VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
+	AC_SUBST(VALA_BINDIR)
+	VALA_COMPILER="$VALA_BINDIR/valac-0.16"
+	AC_SUBST(VALA_COMPILER)
 	    
-	    if test "x$enable_vala_ext" = "xyes"
-	    then
+	if test "x$enable_vala_ext" = "xyes"
+	then
 dnl Check for libgee
-        GEE_REQUIRED="0.7.0"
-
-        PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-        AC_SUBST(GEE_CFLAGS)
-        AC_SUBST(GEE_LIBS)
-	    fi
+          GEE_REQUIRED="0.7.0"
+          PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
+          AC_SUBST(GEE_CFLAGS)
+          AC_SUBST(GEE_LIBS)
+      fi
     else
-        if test "x$enable_vala_ext" = "xyes"
+      if test "x$enable_vala_ext" = "xyes"
         then
             AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala is not available or enable])
             $enable_vala_ext = "no"
