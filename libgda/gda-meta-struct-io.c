@@ -212,7 +212,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	dbobj->obj_name = g_strdup ((gchar *) table_name);
 	dbobj->obj_full_name = full_table_name->str;
 	g_string_free (full_table_name, FALSE);
-	dbobj = gda_meta_struct_add_db_object (mstruct, dbobj, error);
+	dbobj = _gda_meta_struct_add_db_object (mstruct, dbobj, error);
 	if (!dbobj)
 		goto onerror;
 	
@@ -334,7 +334,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 				ref_obj->obj_name = name_part;
 				ref_obj->obj_schema = schema_part;
 				xmlFree (ref_table);
-				ref_obj = gda_meta_struct_add_db_object (mstruct, ref_obj, error);
+				ref_obj = _gda_meta_struct_add_db_object (mstruct, ref_obj, error);
 				if (! ref_obj) 
 					goto onerror;
 			}

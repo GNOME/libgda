@@ -3,8 +3,6 @@
 	gda_report_document_get_type
 	gda_report_document_run_as_html
 	gda_report_document_run_as_pdf
-	gda_report_document_run_converter_argv
-	gda_report_document_run_converter_path
 	gda_report_document_set_template
 	gda_report_engine_declare_object
 	gda_report_engine_find_declared_object

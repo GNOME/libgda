@@ -44,12 +44,12 @@ static void gda_xslt_section_element (xsltTransformContextPtr tctxt,
 				      xsltStylePreCompPtr comp);
 
 void *
-gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
+_gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 {
 	int res;
 	GdaXsltIntCont *data;
 #ifdef GDA_DEBUG_NO
-	g_print ("gda_xslt_extension_init");
+	g_print ("_gda_xslt_extension_init");
 #endif
 	if (!URI || strcmp ((gchar*) URI, GDA_XSLT_EXTENSION_URI)) {
 #ifdef GDA_DEBUG_NO
@@ -105,7 +105,7 @@ gda_xslt_extension_init (xsltTransformContextPtr ctxt, const xmlChar * URI)
 }
 
 void
-gda_xslt_extension_shutdown (G_GNUC_UNUSED xsltTransformContextPtr ctxt,
+_gda_xslt_extension_shutdown (G_GNUC_UNUSED xsltTransformContextPtr ctxt,
 			     G_GNUC_UNUSED const xmlChar * URI, void *data)
 {
 	GdaXsltIntCont *p_data = (GdaXsltIntCont *) data;
@@ -158,7 +158,7 @@ gda_xslt_getnodeset_function (xmlXPathParserContextPtr ctxt, int nargs)
 		}
 	}
 	nodeset =
-		gda_xslt_bk_fun_getnodeset (setname->stringval, execc, data);
+		_gda_xslt_bk_fun_getnodeset (setname->stringval, execc, data);
 	if (nodeset == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "exsltDynMapFunctoin: ret == NULL\n");
@@ -221,7 +221,7 @@ gda_xslt_checkif_function (xmlXPathParserContextPtr ctxt, int nargs)
 			return;
 		}
 	}
-	value = gda_xslt_bk_fun_checkif (setname->stringval, sql->stringval,
+	value = _gda_xslt_bk_fun_checkif (setname->stringval, sql->stringval,
 					 execc, data);
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
@@ -288,7 +288,7 @@ gda_xslt_getvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
 		}
 	}
 
-	value = gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
+	value = _gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
 					  execc, data,0);
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
@@ -355,7 +355,7 @@ gda_xslt_getxmlvalue_function (xmlXPathParserContextPtr ctxt, int nargs)
 		}
 	}
 
-	value = gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
+	value = _gda_xslt_bk_fun_getvalue (set->stringval, name->stringval,
 					  execc, data,1);
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
@@ -392,7 +392,7 @@ gda_xslt_section_element (xsltTransformContextPtr tctxt,
 		tctxt->state = XSLT_STATE_STOPPED;
 		return;
 	}
-	res = gda_xslt_bk_section (execc, data, tctxt, node, inst, comp);
+	res = _gda_xslt_bk_section (execc, data, tctxt, node, inst, comp);
 	if (res < 0) {
 		xsltGenericError (xsltGenericErrorContext,
 				  "gda_xslt_section_element: execute query backend\n");

@@ -217,7 +217,7 @@ typedef struct _SpawnedData {
 } SpawnedData;
 
 gboolean 
-gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *filename, 
+_gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *filename, 
 					const gchar *full_converter_path, const gchar *converter_name, 
 					GError **error)
 {
@@ -229,7 +229,7 @@ gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *fil
 	argv[1] = NULL;
 	argv[2] = NULL;
 
-	retval = gda_report_document_run_converter_argv (doc, filename, argv, 1, 
+	retval = _gda_report_document_run_converter_argv (doc, filename, argv, 1, 
 							 converter_name, error);
 	g_strfreev (argv);
 	return retval;
@@ -237,7 +237,7 @@ gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *fil
 
 
 gboolean
-gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *filename, 
+_gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *filename, 
 					gchar **argv, gint argv_index_fname, 
 					const gchar *converter_name, GError **error)
 {

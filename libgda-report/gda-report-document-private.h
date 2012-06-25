@@ -26,10 +26,10 @@
 
 G_BEGIN_DECLS
 
-gboolean gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *filename, 
+gboolean _gda_report_document_run_converter_path (GdaReportDocument *doc, const gchar *filename, 
 						 const gchar *full_converter_path, const gchar *converter_name, 
 						 GError **error);
-gboolean gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *filename, 
+gboolean _gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *filename, 
 						 gchar **argv, gint argv_index_fname, 
 						 const gchar *converter_name, GError **error);
 

@@ -46,7 +46,7 @@ static GObjectClass *parent_class = NULL;
  * Object init and finalize
  */
 GType
-gda_dir_blob_op_get_type (void)
+_gda_dir_blob_op_get_type (void)
 {
 	static GType type = 0;
 
@@ -112,10 +112,10 @@ gda_dir_blob_op_finalize (GObject * object)
 }
 
 /**
- * gda_dir_blob_op_new
+ * _gda_dir_blob_op_new
  */
 GdaBlobOp *
-gda_dir_blob_op_new (const gchar *complete_filename)
+_gda_dir_blob_op_new (const gchar *complete_filename)
 {
 	GdaDirBlobOp *pgop;
 
@@ -128,10 +128,10 @@ gda_dir_blob_op_new (const gchar *complete_filename)
 }
 
 /**
- * gda_dir_blob_set_filename
+ * _gda_dir_blob_set_filename
  */
 void
-gda_dir_blob_set_filename (GdaDirBlobOp *blob, const gchar *complete_filename)
+_gda_dir_blob_set_filename (GdaDirBlobOp *blob, const gchar *complete_filename)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (blob));
 	g_return_if_fail (blob->priv);
@@ -142,10 +142,10 @@ gda_dir_blob_set_filename (GdaDirBlobOp *blob, const gchar *complete_filename)
 }
 
 /**
- * gda_dir_blob_get_filename
+ * _gda_dir_blob_get_filename
  */
 const gchar *
-gda_dir_blob_get_filename (GdaDirBlobOp *blob)
+_gda_dir_blob_get_filename (GdaDirBlobOp *blob)
 {
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (blob), NULL);
 	g_return_val_if_fail (blob->priv, NULL);

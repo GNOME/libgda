@@ -1513,7 +1513,7 @@ gda_value_new_blob_from_file (const gchar *filename)
 	GdaBlob *blob;
 
 	blob = g_new0 (GdaBlob, 1);
-	blob->op = gda_dir_blob_op_new (filename);
+	blob->op = _gda_dir_blob_op_new (filename);
 
         value = g_new0 (GValue, 1);
 	g_value_init (value, GDA_TYPE_BLOB);

@@ -78,7 +78,7 @@ static void
 vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 {
 	GdaVConnectionTableData *td;
-	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	td = _gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (td)
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
 	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
@@ -335,7 +335,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     "%s", zErrMsg);
 		SQLITE3_CALL (sqlite3_free) (zErrMsg);
-		gda_vconnection_data_model_table_data_free (td);
+		_gda_vconnection_data_model_table_data_free (td);
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
 		retval = FALSE;
 	}
@@ -382,7 +382,7 @@ get_rid_of_vtable (GdaVconnectionDataModel *cnc, GdaVConnectionTableData *td, gb
 	g_signal_emit (G_OBJECT (cnc), gda_vconnection_data_model_signals[VTABLE_DROPPED], 0,
 		       td->table_name);
 	/*g_print ("Virtual connection: removed table %s (%p)\n", td->table_name, td->spec->data_model);*/
-	gda_vconnection_data_model_table_data_free (td);
+	_gda_vconnection_data_model_table_data_free (td);
 
 	return allok;
 }
@@ -406,7 +406,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 
-	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	td = _gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (!td) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
@@ -436,7 +436,7 @@ gda_vconnection_data_model_get (GdaVconnectionDataModel *cnc, const gchar *table
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), NULL);
 	if (!table_name || !(*table_name))
 		return NULL;
-	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	td = _gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (td)
 		return td->spec;
 	else
@@ -463,7 +463,7 @@ gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar 
 	if (!table_name || !(*table_name))
 		return NULL;
 
-	td = gda_vconnection_get_table_data_by_name (cnc, table_name);
+	td = _gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (td)
 		return td->spec->data_model;
 	else
@@ -489,7 +489,7 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
 		return NULL;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	td = gda_vconnection_get_table_data_by_model (cnc, model);
+	td = _gda_vconnection_get_table_data_by_model (cnc, model);
 	if (td)
 		return td->table_name;
 	else
@@ -531,7 +531,7 @@ gda_vconnection_data_model_foreach (GdaVconnectionDataModel *cnc,
  * private 
  */
 GdaVConnectionTableData *
-gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name)
+_gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name)
 {
 	GSList *list;
 	gchar *quoted;
@@ -549,7 +549,7 @@ gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gcha
 }
 
 GdaVConnectionTableData *
-gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, const gchar *unique_name)
+_gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, const gchar *unique_name)
 {
 	GSList *list;
 	for (list = cnc->priv->table_data_list; list; list = list->next) {
@@ -560,7 +560,7 @@ gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, con
 }
 
 GdaVConnectionTableData *
-gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model)
+_gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model)
 {
 	GSList *list;
 	for (list = cnc->priv->table_data_list; list; list = list->next) {
@@ -571,7 +571,7 @@ gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataMo
 }
 
 void
-gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
+_gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 {
 	ParamType i;
 

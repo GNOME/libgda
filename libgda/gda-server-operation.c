@@ -83,7 +83,7 @@ enum
 	PROP_SPEC_FILE
 };
 
-extern xmlDtdPtr gda_server_op_dtd;
+extern xmlDtdPtr _gda_server_op_dtd;
 static GObjectClass *parent_class = NULL;
 
 typedef struct _Node {
@@ -684,15 +684,15 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	xmlDoValidityCheckingDefaultValue = 1;
 	
 	/* replace the DTD with ours */
-	if (gda_server_op_dtd) {
+	if (_gda_server_op_dtd) {
 		old_dtd = doc->intSubset;
-		doc->intSubset = gda_server_op_dtd;
+		doc->intSubset = _gda_server_op_dtd;
 	}
 #ifndef G_OS_WIN32
 	if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
 		gchar *str;
 		
-		if (gda_server_op_dtd)
+		if (_gda_server_op_dtd)
 			doc->intSubset = old_dtd;
 		xmlFreeDoc (doc);
 		g_free (validc);
@@ -723,7 +723,7 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	
 	xmlDoValidityCheckingDefaultValue = xmlcheck;
 	g_free (validc);
-	if (gda_server_op_dtd)
+	if (_gda_server_op_dtd)
 		doc->intSubset = old_dtd;
 	op->priv->xml_spec_doc = doc;
 

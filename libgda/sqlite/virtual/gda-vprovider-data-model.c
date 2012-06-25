@@ -525,7 +525,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	if (*spec_name == '\'')
 		memmove (spec_name, spec_name+1, i);
 
-	td = gda_vconnection_get_table_data_by_unique_name (cnc, spec_name);
+	td = _gda_vconnection_get_table_data_by_unique_name (cnc, spec_name);
 	g_free (spec_name);
 	if (!td) {
 		/* wrong usage! */

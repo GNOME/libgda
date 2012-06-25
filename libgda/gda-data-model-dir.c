@@ -851,7 +851,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 
 				/* file mapping in mem */
 				filename = compute_filename (imodel, frow);
-				op = gda_dir_blob_op_new (filename);
+				op = _gda_dir_blob_op_new (filename);
 				g_free (filename);
 				gda_blob_set_op (blob, op);
 				g_object_unref (op);
@@ -1045,7 +1045,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 							GdaBlob *blob;
 							blob = (GdaBlob *) gda_value_get_blob (frow->data_value);
 							if (blob && blob->op)
-								gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
+								_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
 											   new_filename);
 						}
 					}
@@ -1121,7 +1121,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 					GdaBlob *blob;
 					blob = (GdaBlob *) gda_value_get_blob (frow->data_value);
 					if (blob && blob->op)
-						gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
+						_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
 									   new_filename);
 				}
 			}
@@ -1147,7 +1147,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				GdaBlobOp *op;
 				gchar *filename;
 				filename = compute_filename (imodel, frow);
-				op = gda_dir_blob_op_new (filename);
+				op = _gda_dir_blob_op_new (filename);
 				if (gda_blob_op_write_all (op, blob) < 0) {
 					gchar *str;
 					str = g_strdup_printf (_("Could not overwrite contents of file '%s'"), filename);

@@ -95,11 +95,11 @@ struct GdaVConnectionTableData {
 
 void                     _gda_vconnection_virtual_filtered_data_unref (VirtualFilteredData *data);
 
-void                     gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td);
+void                     _gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td);
 
-GdaVConnectionTableData *gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name);
-GdaVConnectionTableData *gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model);
-GdaVConnectionTableData *gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, const gchar *unique_name);
+GdaVConnectionTableData *_gda_vconnection_get_table_data_by_name (GdaVconnectionDataModel *cnc, const gchar *table_name);
+GdaVConnectionTableData *_gda_vconnection_get_table_data_by_model (GdaVconnectionDataModel *cnc, GdaDataModel *model);
+GdaVConnectionTableData *_gda_vconnection_get_table_data_by_unique_name (GdaVconnectionDataModel *cnc, const gchar *unique_name);
 
 void                     _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj);
 void                     _gda_vconnection_change_working_obj (GdaVconnectionDataModel *cnc, GObject *obj);

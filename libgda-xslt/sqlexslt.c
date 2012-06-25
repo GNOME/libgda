@@ -47,8 +47,8 @@ gda_xslt_register (void)
 		init = 1;
 		init_res =
 			xsltRegisterExtModule (BAD_CAST GDA_XSLT_EXTENSION_URI,
-					       gda_xslt_extension_init,
-					       gda_xslt_extension_shutdown);
+					       _gda_xslt_extension_init,
+					       _gda_xslt_extension_shutdown);
 		if (init_res != 0) {
 			g_error ("error, xsltRegisterExtModule = [%d]\n",
 				 init_res);

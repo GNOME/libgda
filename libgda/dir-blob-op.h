@@ -29,7 +29,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DIR_BLOB_OP            (gda_dir_blob_op_get_type())
+#define GDA_TYPE_DIR_BLOB_OP            (_gda_dir_blob_op_get_type())
 #define GDA_DIR_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DIR_BLOB_OP, GdaDirBlobOp))
 #define GDA_DIR_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DIR_BLOB_OP, GdaDirBlobOpClass))
 #define GDA_IS_DIR_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DIR_BLOB_OP))
@@ -48,10 +48,10 @@ struct _GdaDirBlobOpClass {
 	GdaBlobOpClass            parent_class;
 };
 
-GType         gda_dir_blob_op_get_type     (void) G_GNUC_CONST;
-GdaBlobOp    *gda_dir_blob_op_new          (const gchar *complete_filename);
-void          gda_dir_blob_set_filename    (GdaDirBlobOp *blob, const gchar *complete_filename);
-const gchar  *gda_dir_blob_get_filename    (GdaDirBlobOp *blob);
+GType         _gda_dir_blob_op_get_type     (void) G_GNUC_CONST;
+GdaBlobOp    *_gda_dir_blob_op_new          (const gchar *complete_filename);
+void          _gda_dir_blob_set_filename    (GdaDirBlobOp *blob, const gchar *complete_filename);
+const gchar  *_gda_dir_blob_get_filename    (GdaDirBlobOp *blob);
 
 G_END_DECLS
 

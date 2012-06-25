@@ -50,25 +50,25 @@ struct _GdaXsltIntCont
 
 typedef struct _GdaXsltIntCont GdaXsltIntCont;
 
-void *gda_xslt_extension_init (xsltTransformContextPtr ctxt,
+void *_gda_xslt_extension_init (xsltTransformContextPtr ctxt,
 			       const xmlChar * URI);
-void gda_xslt_extension_shutdown (xsltTransformContextPtr ctxt,
+void _gda_xslt_extension_shutdown (xsltTransformContextPtr ctxt,
 				  const xmlChar * URI, void *data);
 
 /* elements backend */
-int gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
+int _gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 			 xsltTransformContextPtr ctxt, xmlNodePtr node,
 			 xmlNodePtr inst, xsltStylePreCompPtr comp);
 
 /* functions backend */
-xmlXPathObjectPtr gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name,
+xmlXPathObjectPtr _gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name,
 					    GdaXsltExCont * exec,
 					    GdaXsltIntCont * pdata,
 					    int getXml);
-xmlXPathObjectPtr gda_xslt_bk_fun_getnodeset (xmlChar * set,
+xmlXPathObjectPtr _gda_xslt_bk_fun_getnodeset (xmlChar * set,
 					      GdaXsltExCont * exec,
 					      GdaXsltIntCont * pdata);
-xmlXPathObjectPtr gda_xslt_bk_fun_checkif (xmlChar * setname,
+xmlXPathObjectPtr _gda_xslt_bk_fun_checkif (xmlChar * setname,
 					   xmlChar * sql_condition,
 					   GdaXsltExCont * exec,
 					   GdaXsltIntCont * pdata);

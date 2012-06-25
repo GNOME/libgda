@@ -28,7 +28,7 @@
 
 G_BEGIN_DECLS
 
-GdaMetaDbObject    *gda_meta_struct_add_db_object      (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error);
+GdaMetaDbObject    *_gda_meta_struct_add_db_object      (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error);
 gboolean            gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog, const gchar *schema, 
 							const gchar *xml_spec_file, GError **error);
 

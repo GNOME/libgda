@@ -214,7 +214,7 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 	}
 	g_static_mutex_unlock (&init_mutex);
 
-	return gda_report_document_run_converter_path (doc, filename, converter, "trml2html", error);
+	return _gda_report_document_run_converter_path (doc, filename, converter, "trml2html", error);
 }
 
 static gboolean
@@ -245,5 +245,5 @@ gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filenam
 	}
 	g_static_mutex_unlock (&init_mutex);
 
-	return gda_report_document_run_converter_path (doc, filename, converter, "trml2pdf", error);
+	return _gda_report_document_run_converter_path (doc, filename, converter, "trml2pdf", error);
 }

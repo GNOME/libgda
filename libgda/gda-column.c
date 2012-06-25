@@ -78,7 +78,7 @@ enum
 };
 
 static GObjectClass *parent_class = NULL;
-GdaAttributesManager *gda_column_attributes_manager;
+GdaAttributesManager *_gda_column_attributes_manager;
 
 static void
 gda_column_class_init (GdaColumnClass *klass)
@@ -135,7 +135,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	object_class->finalize = gda_column_finalize;
 
 	/* extra */
-	gda_column_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
+	_gda_column_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
 }
 
 static void
@@ -292,7 +292,7 @@ gda_column_copy (GdaColumn *column)
 	column_copy->priv->position = column->priv->position;
 	if (column->priv->default_value)
 		column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
-	gda_attributes_manager_copy (gda_column_attributes_manager, (gpointer) column, gda_column_attributes_manager, (gpointer) column_copy);
+	gda_attributes_manager_copy (_gda_column_attributes_manager, (gpointer) column, _gda_column_attributes_manager, (gpointer) column_copy);
 
 	return column_copy; 	 
 }
@@ -589,7 +589,7 @@ const GValue *
 gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return gda_attributes_manager_get (gda_column_attributes_manager, column, attribute);
+	return gda_attributes_manager_get (_gda_column_attributes_manager, column, attribute);
 }
 
 /**
@@ -626,10 +626,10 @@ gda_column_set_attribute (GdaColumn *column, const gchar *attribute, const GValu
 	const GValue *cvalue;
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	cvalue = gda_attributes_manager_get (gda_column_attributes_manager, column, attribute);
+	cvalue = gda_attributes_manager_get (_gda_column_attributes_manager, column, attribute);
 	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
 	    (!value && !cvalue))
 		return;
 
-	gda_attributes_manager_set_full (gda_column_attributes_manager, column, attribute, value, destroy);
+	gda_attributes_manager_set_full (_gda_column_attributes_manager, column, attribute, value, destroy);
 }

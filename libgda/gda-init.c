@@ -55,9 +55,9 @@
  *     #endif
  *     IMPORT extern gchar *gda_numeric_locale;
  */
-xmlDtdPtr       gda_array_dtd = NULL;
+xmlDtdPtr       _gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
-xmlDtdPtr       gda_server_op_dtd = NULL;
+xmlDtdPtr       _gda_server_op_dtd = NULL;
 
 static gboolean numeric_locale_dyn = FALSE;
 gchar          *gda_numeric_locale = "";
@@ -197,24 +197,24 @@ gda_init (void)
 	gda_gbr_init ();
 
 	/* array DTD */
-	gda_array_dtd = NULL;
+	_gda_array_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+		_gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 	
-	if (!gda_array_dtd) {
+	if (!_gda_array_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);
 			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-array.dtd", NULL);
-			gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+			_gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 		}
-		if (!gda_array_dtd)
+		if (!_gda_array_dtd)
 			g_message (_("Could not parse '%s': "
 				     "XML data import validation will not be performed (some weird errors may occur)"),
 				   file);
 	}
-	if (gda_array_dtd)
-		gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
+	if (_gda_array_dtd)
+		_gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
 	g_free (file);
 
 	/* paramlist DTD */
@@ -239,25 +239,25 @@ gda_init (void)
 	g_free (file);
 
 	/* server operation DTD */
-	gda_server_op_dtd = NULL;
+	_gda_server_op_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-server-operation.dtd", NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+		_gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 
-	if (!gda_server_op_dtd) {
+	if (!_gda_server_op_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);
 			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-server-operation.dtd", NULL);
-			gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+			_gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 		}
-		if (!gda_server_op_dtd)
+		if (!_gda_server_op_dtd)
 			g_message (_("Could not parse '%s': "
 				     "Validation for XML files for server operations will not be performed (some weird errors may occur)"),
 				   file);
 	}
 
-	if (gda_server_op_dtd)
-		gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
+	if (_gda_server_op_dtd)
+		_gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	g_free (file);
 
 	initialized = TRUE;

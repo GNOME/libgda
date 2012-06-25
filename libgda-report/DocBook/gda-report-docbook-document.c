@@ -316,7 +316,7 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 	argv[7] = NULL;
 	argv[8] = NULL;
 
-	retval = gda_report_document_run_converter_argv (doc, NULL, argv, 7, 
+	retval = _gda_report_document_run_converter_argv (doc, NULL, argv, 7, 
 							 "xsltproc", error);
 	g_strfreev (argv);
 	return retval;
@@ -385,7 +385,7 @@ gda_report_docbook_document_run_as_pdf (GdaReportDocument *doc, const gchar *fil
 	for (i= 0; i< 7; i++)
 		g_print ("==%d %s\n", i, argv[i]);
 
-	retval = gda_report_document_run_converter_argv (doc, NULL, argv, 2, 
+	retval = _gda_report_document_run_converter_argv (doc, NULL, argv, 2, 
 							 "fop", error);
 	g_strfreev (argv);
 	return retval;

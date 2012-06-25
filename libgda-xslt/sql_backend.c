@@ -66,7 +66,7 @@ static int gda_xslt_bk_internal_query (GdaXsltExCont * exec,
 				       xmlNodePtr query_node);
 
 int
-gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
+_gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
 {
 	GType gdatype;
 	gchar *name;
@@ -100,7 +100,7 @@ gda_xslt_holder_set_value (GdaHolder *param, xsltTransformContextPtr ctxt)
 }
 
 int
-gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
+_gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		     xsltTransformContextPtr ctxt, xmlNodePtr node,
 		     xmlNodePtr inst, G_GNUC_UNUSED xsltStylePreCompPtr comp)
 {
@@ -181,25 +181,25 @@ gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 }
 
 xmlXPathObjectPtr
-gda_xslt_bk_fun_getnodeset (xmlChar * set, GdaXsltExCont * exec,
+_gda_xslt_bk_fun_getnodeset (xmlChar * set, GdaXsltExCont * exec,
 			    GdaXsltIntCont * pdata)
 {
 	xmlXPathObjectPtr nodeset;
 	int res;
 #ifdef GDA_DEBUG_NO
-	printf ("running function:gda_xslt_bk_fun_getnodeset\n");
+	printf ("running function:_gda_xslt_bk_fun_getnodeset\n");
 #endif
 	res = get_resultset_nodeset (pdata, (gchar*) set, &nodeset, &(exec->error));
 	if (res < 0 || nodeset == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "gda_xslt_bk_fun_getnodeset error\n");
+				  "_gda_xslt_bk_fun_getnodeset error\n");
 		return NULL;
 	}
 	return nodeset;
 }
 
 xmlXPathObjectPtr
-gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
+_gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 			  GdaXsltIntCont * pdata,int getXml)
 {
 	xmlXPathObjectPtr value;
@@ -208,7 +208,7 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 	xmlNodePtr rootnode;
 	xmlNodePtr copyrootnode;
 #ifdef GDA_DEBUG_NO
-	g_print ("running function:gda_xslt_bk_fun_getvalue (getxml [%d])", getXml);
+	g_print ("running function:_gda_xslt_bk_fun_getvalue (getxml [%d])", getXml);
 #endif
 	char *strvalue;
 	res = get_resultset_col_value (pdata, (const char *) set,
@@ -216,7 +216,7 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 				       &(exec->error));
 	if (res < 0) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "gda_xslt_bk_fun_getvalue: internal error on get_resultset_col_value\n");
+				  "_gda_xslt_bk_fun_getvalue: internal error on get_resultset_col_value\n");
 		return NULL;
 	}
 
@@ -224,14 +224,14 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 		sqlxmldoc = xmlParseDoc((const xmlChar *)strvalue);
 		if (sqlxmldoc == NULL) {
 			xsltGenericError (xsltGenericErrorContext,
-					"gda_xslt_bk_fun_getvalue: xmlParseDoc fauld\n");
+					"_gda_xslt_bk_fun_getvalue: xmlParseDoc fauld\n");
 			return NULL;
 		}
 		rootnode = xmlDocGetRootElement(sqlxmldoc);
 		copyrootnode = xmlCopyNode(rootnode,1);
 		if (copyrootnode == NULL) {
 			xsltGenericError (xsltGenericErrorContext,
-					"gda_xslt_bk_fun_getvalue: get or copy of root node fauld\n");
+					"_gda_xslt_bk_fun_getvalue: get or copy of root node fauld\n");
 			return NULL;
 		}
 		value = (xmlXPathObjectPtr) xmlXPathNewNodeSet (copyrootnode);
@@ -243,14 +243,14 @@ gda_xslt_bk_fun_getvalue (xmlChar * set, xmlChar * name, GdaXsltExCont * exec,
 
 	if (value == NULL) {
 		xsltGenericError (xsltGenericErrorContext,
-				  "gda_xslt_bk_fun_getvalue: internal error\n");
+				  "_gda_xslt_bk_fun_getvalue: internal error\n");
 		return NULL;
 	}
 	return value;
 }
 
 xmlXPathObjectPtr
-gda_xslt_bk_fun_checkif (G_GNUC_UNUSED xmlChar * setname, G_GNUC_UNUSED xmlChar * sql_condition,
+_gda_xslt_bk_fun_checkif (G_GNUC_UNUSED xmlChar * setname, G_GNUC_UNUSED xmlChar * sql_condition,
 			 G_GNUC_UNUSED GdaXsltExCont * exec, G_GNUC_UNUSED GdaXsltIntCont * pdata)
 {
 	return xmlXPathNewBoolean (1);
@@ -547,7 +547,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 	if (params != NULL) {
 		plist = params->holders;
 		while (plist && ret == 0) {
-			ret = gda_xslt_holder_set_value (GDA_HOLDER (plist->data), ctxt);
+			ret = _gda_xslt_holder_set_value (GDA_HOLDER (plist->data), ctxt);
 			plist = g_slist_next (plist);
 		}
 	}

@@ -63,7 +63,7 @@ enum {
 };
 
 static gint gda_tree_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
-extern GdaAttributesManager *gda_tree_node_attributes_manager;
+extern GdaAttributesManager *_gda_tree_node_attributes_manager;
 
 /* properties */
 enum {
@@ -350,7 +350,7 @@ static void
 dump_root_attributes (GdaTreeNode *root)
 {
 	g_print ("DUMPING attributes for %p\n", root);
-	gda_attributes_manager_foreach (gda_tree_node_attributes_manager, root,
+	gda_attributes_manager_foreach (_gda_tree_node_attributes_manager, root,
 					(GdaAttributesManagerFunc) dump_attr_foreach_func, NULL);
 }
 #endif
@@ -373,8 +373,8 @@ gda_tree_clean (GdaTree *tree)
 
 	new_root = gda_tree_node_new (NULL);
 
-	gda_attributes_manager_copy (gda_tree_node_attributes_manager, (gpointer) tree->priv->root,
-				     gda_tree_node_attributes_manager, (gpointer) new_root);
+	gda_attributes_manager_copy (_gda_tree_node_attributes_manager, (gpointer) tree->priv->root,
+				     _gda_tree_node_attributes_manager, (gpointer) new_root);
 
 	take_root_node (tree, new_root);
 }

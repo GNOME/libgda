@@ -2546,7 +2546,7 @@ copyerror:
 }
 
 /**
- * gda_meta_struct_add_db_object:
+ * _gda_meta_struct_add_db_object:
  * @mstruct: a #GdaMetaStruct object
  * @dbo: a #GdaMetaDbObject structure
  * @error: (allow-none): a place to store errors, or %NULL
@@ -2559,7 +2559,7 @@ copyerror:
  * Returns: (transfer none): a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
  */
 GdaMetaDbObject *
-gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error)
+_gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error)
 {
 	GdaMetaDbObject *edbo;
 	GValue *v1 = NULL, *v2 = NULL, *v3 = NULL;
