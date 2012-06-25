@@ -416,8 +416,12 @@ table_create_columns_func (LocalSpec *spec)
 		gda_column_set_name (gda_col, tmp);
 		g_free (tmp);
 		gda_column_set_g_type (gda_col, gda_mdb_type_to_gda (mdb_col->col_type));
+#ifdef MDB_V07
+		tmp = sanitize_name (g_strdup (mdb_get_colbacktype_string (mdb_col)));
+#else
 		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, 
 								       mdb_col->col_type)));
+#endif
 		gda_column_set_dbms_type (gda_col, tmp);
 		g_free (tmp);
 		columns = g_list_prepend (columns, gda_col);
@@ -474,7 +478,13 @@ table_create_model_func (LocalSpec *spec)
 		gda_column_set_name (gda_col, tmp);
 		gda_column_set_description (gda_col, tmp);
 		g_free (tmp);
-		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend, mdb_col->col_type)));
+#ifdef MDB_V07
+		tmp = sanitize_name (g_strdup (mdb_get_colbacktype_string (mdb_col)));
+
+#else
+		tmp = sanitize_name (g_strdup (mdb_get_coltype_string (spec->cdata->mdb->default_backend,
+								       mdb_col->col_type)));
+#endif
 		gda_column_set_dbms_type (gda_col, tmp);
 		g_free (tmp);
                 gda_column_set_g_type (gda_col, coltypes [c]);
