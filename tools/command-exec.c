@@ -778,7 +778,8 @@ gda_internal_command_dict_sync (G_GNUC_UNUSED SqlConsole *console, GdaConnection
 	GdaInternalCommandResult *res;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -815,7 +816,8 @@ gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnecti
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -859,7 +861,8 @@ gda_internal_command_list_views (G_GNUC_UNUSED SqlConsole *console, GdaConnectio
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -902,7 +905,8 @@ gda_internal_command_list_schemas (G_GNUC_UNUSED SqlConsole *console, GdaConnect
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -999,8 +1003,8 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 
 	objlist = gda_meta_struct_get_all_db_objects (mstruct);
 	if (!objlist) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("No object found"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_OBJECT_NOT_FOUND_ERROR,
+			     "%s", _("No object found"));
 		goto onerror;
 	}
 	g_slist_free (objlist);
@@ -1035,7 +1039,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 	GdaDataModel *model;
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -1131,7 +1136,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 		return res;
 	}
 	else if (nb_objects == 0) {
-		g_set_error (error, 0, 0, "%s", _("No object found"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_OBJECT_NOT_FOUND_ERROR,
+			     "%s", _("No object found"));
 		g_slist_free (tmplist);
 		return NULL;
 	}

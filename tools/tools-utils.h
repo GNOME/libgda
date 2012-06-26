@@ -23,4 +23,22 @@
 
 const gchar *tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
 
+/*
+ * error reporting
+ */
+extern GQuark tools_error_quark (void);
+#define TOOLS_ERROR tools_error_quark ()
+
+typedef enum {
+	TOOLS_NO_CONNECTION_ERROR,
+	TOOLS_CONNECTION_CLOSED_ERROR,
+	TOOLS_INTERNAL_COMMAND_ERROR,
+	TOOLS_COMMAND_ARGUMENTS_ERROR,
+	TOOLS_OBJECT_NOT_FOUND_ERROR,
+	TOOLS_PROVIDER_NOT_FOUND_ERROR,
+	TOOLS_DSN_NOT_FOUND_ERROR,
+	TOOLS_STORED_DATA_ERROR,
+	TOOLS_PURGE_ERROR
+} ToolsError;
+
 #endif

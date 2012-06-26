@@ -30,6 +30,7 @@
 #include "../browser-perspective.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
+#include "../../tools-utils.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
@@ -371,7 +372,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 
 	doc = xmlParseDoc (BAD_CAST fav.contents);
 	if (!doc) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Error parsing favorite's contents"));
 		goto out;
 	}
@@ -430,7 +431,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 					xmlFree (schema);
 				if (name)
 					xmlFree (name);
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
 					     "%s", _("Missing table attribute in favorite's contents"));
 				gtk_widget_destroy ((GtkWidget*) diagram);
 				diagram = NULL;

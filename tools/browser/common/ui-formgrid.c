@@ -34,6 +34,7 @@
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
 #endif
+#include "../../tools-utils.h"
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
@@ -650,7 +651,7 @@ exec_end_timeout_cb (ActionExecutedData *aed)
                 }
                 else {
 			g_object_unref (obj);
-                        g_set_error (&error, 0, 0,
+                        g_set_error (&error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
                                      "%s", _("Statement to execute is not a selection statement"));
                 }
         }

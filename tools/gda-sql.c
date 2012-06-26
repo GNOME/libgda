@@ -22,6 +22,7 @@
  */
 
 #include "gda-sql.h"
+#include "tools-utils.h"
 #include <virtual/libgda-virtual.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gprintf.h>
@@ -979,13 +980,13 @@ command_execute (SqlConsole *console, const gchar *command, GdaStatementModelUsa
 	}
         else {
                 if (!cs) {
-                        g_set_error (error, 0, 0, "%s", 
-                                     _("No connection specified"));
+                        g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+				     "%s", _("No connection specified"));
                         return NULL;
                 }
                 if (!gda_connection_is_opened (cs->cnc)) {
-                        g_set_error (error, 0, 0, "%s", 
-                                     _("Connection closed"));
+                        g_set_error (error, TOOLS_ERROR, TOOLS_CONNECTION_CLOSED_ERROR,
+				     "%s", _("Connection closed"));
                         return NULL;
                 }
 
@@ -1113,20 +1114,20 @@ execute_internal_command (SqlConsole *console, GdaConnection *cnc, const gchar *
 	g_strfreev (args);
 	args = NULL;
 	if (!command) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Unknown internal command"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Unknown internal command"));
 		goto cleanup;
 	}
 
 	if (!command->command_func) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Internal command not correctly defined"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Internal command not correctly defined"));
 		goto cleanup;
 	}
 
 	if (!command_complete) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Incomplete internal command"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Incomplete internal command"));
 		goto cleanup;
 	}
 
@@ -1170,8 +1171,8 @@ execute_external_command (SqlConsole *console, const gchar *command,
 
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
@@ -1190,8 +1191,8 @@ execute_external_command (SqlConsole *console, const gchar *command,
 	}
 
 	if (stmt_list->next) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("More than one SQL statement"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("More than one SQL statement"));
 		g_object_unref (batch);
 		return NULL;
 	}
@@ -1236,7 +1237,7 @@ execute_external_command (SqlConsole *console, const gchar *command,
 					value = gda_value_new_from_string (str, gda_holder_get_g_type (h));
 					g_free (str);
 					if (! value) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 							     _("Could not interpret the '%s' parameter's value"), 
 							     gda_holder_get_id (h));
 						g_free (res);
@@ -1253,7 +1254,7 @@ execute_external_command (SqlConsole *console, const gchar *command,
 			}
 			else {
 				if (! gda_holder_is_valid (h)) {
-					g_set_error (error, 0, 0,
+					g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 						     _("No internal parameter named '%s' required by query"), 
 						     gda_holder_get_id (h));
 					g_free (res);
@@ -1398,7 +1399,7 @@ set_output_file (const gchar *file, GError **error)
 			/* output to a file */
 			main_data->output_stream = g_fopen (copy, "w");
 			if (!main_data->output_stream) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 					     _("Can't open file '%s' for writing: %s\n"), 
 					     copy,
 					     strerror (errno));
@@ -1411,7 +1412,7 @@ set_output_file (const gchar *file, GError **error)
 			/* output to a pipe */
 			main_data->output_stream = popen (copy+1, "w");
 			if (!main_data->output_stream) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 					     _("Can't open pipe '%s': %s\n"), 
 					     copy,
 					     strerror (errno));
@@ -1451,7 +1452,7 @@ set_input_file (const gchar *file, GError **error)
 		else
 			main_data->input_stream = g_fopen (file, "r");
 		if (!main_data->input_stream) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 				     _("Can't open file '%s' for reading: %s\n"), 
 				     file,
 				     strerror (errno));
@@ -1518,7 +1519,7 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	gchar *real_cnc_string;
 
 	if (cnc_name && ! connection_name_is_valid (cnc_name)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Connection name '%s' is invalid"), cnc_name);
 		return NULL;
 	}
@@ -3090,7 +3091,7 @@ extra_command_set_output_format (SqlConsole *console, G_GNUC_UNUSED GdaConnectio
 		else if ((*fmt == 'C') || (*fmt == 'c'))
 			main_data->output_format = OUTPUT_FORMAT_CSV;
 		else {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("Unknown output format: '%s', reset to default"), fmt);
 			goto out;
 		}
@@ -3305,8 +3306,8 @@ extra_command_create_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	gchar *real_cnc, *real_provider, *user, *pass;
 
 	if (!args[0] || !args[1]) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing arguments"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing arguments"));
 		return NULL;
 	}
 
@@ -3326,8 +3327,8 @@ extra_command_create_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	newdsn.is_system = FALSE;
 
 	if (!newdsn.provider) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing provider name"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing provider name"));
 	}
 	else if (gda_config_define_dsn (&newdsn, error)) {
 		res = g_new0 (GdaInternalCommandResult, 1);
@@ -3351,8 +3352,8 @@ extra_command_remove_dsn (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	gint i;
 
 	if (!args[0]) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing DSN name"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing DSN name"));
 		return NULL;
 	}
 	for (i = 0; args [i]; i++) {
@@ -3417,7 +3418,7 @@ extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 			
 			cs = find_connection_from_name (args[0]);
 			if (cs) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 					     _("A connection named '%s' already exists"), args[0]);
 				return NULL;
 			}
@@ -3460,7 +3461,8 @@ extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 					if (*(args[0] + 1)) {
 						cs = find_connection_from_name (args[0] + 1);
 						if (!cs) {
-							g_set_error (error, 0, 0,
+							g_set_error (error, TOOLS_ERROR,
+								     TOOLS_NO_CONNECTION_ERROR,
 								     _("No connection named '%s' found"), args[0] + 1);
 							return NULL;
 						}
@@ -3471,8 +3473,8 @@ extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 						cs = main_data->current;
 
 					if (!cs) {
-						g_set_error (error, 0, 0, "%s", 
-							     _("No current connection"));
+						g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+							     "%s", _("No current connection"));
 						return NULL;
 					}
 
@@ -3542,7 +3544,7 @@ extra_command_manage_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc,
 					return res;
 				}
 
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
 					     _("No connection named '%s' found"), args[0]);
 				return NULL;
 			}
@@ -3643,7 +3645,7 @@ extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **
 	if (args && args[0] && *args[0]) {
 		cs = find_connection_from_name (args[0]);
 		if (!cs) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
 				     _("No connection named '%s' found"), args[0]);
 			return NULL;
 		}
@@ -3659,8 +3661,8 @@ extra_command_close_cnc (SqlConsole *console, GdaConnection *cnc, const gchar **
 		}
 
 		if (! cs) {
-			g_set_error (error, 0, 0, "%s", 
-				     _("No connection currently opened"));
+			g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+				     "%s", _("No connection currently opened"));
 			return NULL;
 		}
 	}
@@ -3700,20 +3702,20 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 	GString *string;
 
 	if (nargs < 2) {
-		g_set_error (error, 0, 0, "%s", 
-				     _("Missing required connection names"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing required connection names"));
 		return NULL;
 	}
 
 	/* check for connections existance */
 	cs = find_connection_from_name (args[0]);
 	if (cs) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("A connection named '%s' already exists"), args[0]);
 		return NULL;
 	}
 	if (! connection_name_is_valid (args[0])) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Connection name '%s' is invalid"), args[0]);
 		return NULL;
 	}
@@ -3723,7 +3725,7 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 			GdaDataModel *src;
 			src = g_hash_table_lookup (main_data->mem_data_models, args[i]);
 			if (!src) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 					     _("No connection or dataset named '%s' found"), args[i]);
 				return NULL;
 			}
@@ -3738,7 +3740,8 @@ extra_command_bind_cnc (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, c
 	virtual = gda_virtual_connection_open_extended (vprovider, GDA_CONNECTION_OPTIONS_THREAD_SAFE |
 							GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
 	if (!virtual) {
-		g_set_error (error, 0, 0, "%s", _("Could not create virtual connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Could not create virtual connection"));
 		return NULL;
 	}
 	g_object_set (G_OBJECT (virtual), "execution-timer", TRUE, NULL);
@@ -3850,7 +3853,7 @@ extra_command_option (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, con
 			}
 		}
 		else {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("No option named '%s'"), oname);
 			return NULL;
 		}
@@ -3944,7 +3947,8 @@ extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const g
 			
 			pw = getpwuid (geteuid ());
 			if (!pw) {
-				g_set_error (error, 0, 0, _("Could not get home directory: %s"), strerror (errno));
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+					     _("Could not get home directory: %s"), strerror (errno));
 				return NULL;
 			}
 			else {
@@ -3974,7 +3978,8 @@ extra_command_cd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const g
 			return res;
 		}
 		else
-			g_set_error (error, 0, 0, _("Could not change working directory to '%s': %s"),
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+				     _("Could not change working directory to '%s': %s"),
 				     dir, strerror (errno));
 	}
 
@@ -4001,7 +4006,8 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		goto end_of_command;
 	}
 
@@ -4018,7 +4024,7 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 			goto end_of_command;
 		if (write (fd, main_data->current->query_buffer->str, 
 			   main_data->current->query_buffer->len) != (gint)main_data->current->query_buffer->len) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 				     _("Could not write to temporary file '%s': %s"),
 				     filename, strerror (errno));
 			close (fd);
@@ -4054,12 +4060,12 @@ extra_command_edit_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 
 	systemres = system (command);
 	if (systemres == -1) {
-                g_set_error (error, 0, 0,
+                g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("could not start editor '%s'"), editor_name);
 		goto end_of_command;
 	}
         else if (systemres == 127) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not start /bin/sh"));
 		goto end_of_command;
 	}
@@ -4104,7 +4110,8 @@ extra_command_reset_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cn
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4148,7 +4155,8 @@ extra_command_show_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4177,7 +4185,8 @@ extra_command_exec_buffer (SqlConsole *console, GdaConnection *cnc, const gchar 
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4219,15 +4228,16 @@ extra_command_write_buffer (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cn
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
 	if (!main_data->current->query_buffer) 
 		main_data->current->query_buffer = g_string_new ("");
 	if (!args[0]) 
-		g_set_error (error, 0, 0, "%s",  
-			     _("Missing FILE to write to"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing FILE to write to"));
 	else {
 		if (g_file_set_contents (args[0], main_data->current->query_buffer->str, -1, error)) {
 			res = g_new0 (GdaInternalCommandResult, 1);
@@ -4263,7 +4273,8 @@ extra_command_query_buffer_list_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4372,7 +4383,8 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4385,8 +4397,8 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 		if (args[0] && *args[0]) 
 			qname = g_strdup ((gchar *) args[0]);
 		else {
-			g_set_error (error, 0, 0, "%s", 
-				     _("Missing query buffer name"));
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+				     "%s", _("Missing query buffer name"));
 			return NULL;
 		}
 
@@ -4414,8 +4426,8 @@ extra_command_query_buffer_to_dict (SqlConsole *console, G_GNUC_UNUSED GdaConnec
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else
-		g_set_error (error, 0, 0, "%s", 
-			     _("Query buffer is empty"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Query buffer is empty"));
 
 	return res;
 }
@@ -4437,7 +4449,8 @@ extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4468,7 +4481,8 @@ extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 			const GValue *cvalue;
 			GError *lerror = NULL;
 
-			g_set_error (&lerror, 0, 0, "%s", _("Could not find favorite"));
+			g_set_error (&lerror, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+				     "%s", _("Could not find favorite"));
 			if (!sel_stmt) {
 				sel_stmt = gda_sql_parser_parse_string (main_data->current->parser, 
 									QUERY_BUFFERS_TABLE_SELECT_ONE, NULL, NULL);
@@ -4499,8 +4513,8 @@ extra_command_query_buffer_from_dict (SqlConsole *console, G_GNUC_UNUSED GdaConn
 		}
 	}
 	else
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing query buffer name"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing query buffer name"));
 		
 	return res;
 }
@@ -4522,7 +4536,8 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaCo
 	}
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -4575,8 +4590,8 @@ extra_command_query_buffer_delete_dict (SqlConsole *console, G_GNUC_UNUSED GdaCo
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing query buffer name"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing query buffer name"));
 		
 	return res;
 }
@@ -4639,7 +4654,7 @@ extra_command_set (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const 
 				res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 			}
 			else 
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 					     _("No parameter named '%s' defined"), pname);
 		}
 	}
@@ -4735,8 +4750,8 @@ extra_command_data_set_grep (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			pattern = args[1];
 	}
 	if (!model_name) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing argument"));
 		return NULL;
 	}
 
@@ -4745,7 +4760,7 @@ extra_command_data_set_grep (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 
 	src = g_hash_table_lookup (main_data->mem_data_models, model_name);
 	if (!src) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Could not find dataset named '%s'"), model_name);
 		return NULL;
 	}
@@ -4855,15 +4870,15 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 		model_name = args[0];
 
 	if (!model_name) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing argument"));
 		return NULL;
 	}
 
 	GdaDataModel *src;
 	src = g_hash_table_lookup (main_data->mem_data_models, model_name);
 	if (!src) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Could not find dataset named '%s'"), model_name);
 		return NULL;
 	}
@@ -4884,7 +4899,7 @@ extra_command_data_set_show (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 					pos = (gint) li;
 			}
 			if (pos < 0) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 					     _("Could not identify column '%s'"), cname);
 				g_array_free (cols, TRUE);
 				return NULL;
@@ -4921,15 +4936,15 @@ extra_command_data_set_rm (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc
 	guint i;
 
 	if (!args[0] ||  !(*args[0])) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing argument"));
 		return NULL;
 	}
 	for (i = 0; args[i]; i++) {
 		GdaDataModel *src;
 		src = g_hash_table_lookup (main_data->mem_data_models, args[i]);
 		if (!src) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("Could not find dataset named '%s'"), args[i]);
 			return NULL;
 		}
@@ -4954,7 +4969,7 @@ extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection 
 	if (args[0] && *args[0]) {
 		type = args[0];
 		if (g_ascii_strcasecmp (type, "csv")) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("Unknown import format '%s'"), args[0]);
 			return NULL;
 		}
@@ -4963,8 +4978,8 @@ extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection 
 	}
 
 	if (!type || !file_name) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing argument"));
 		return NULL;
 	}
 
@@ -4975,7 +4990,7 @@ extra_command_data_set_import (G_GNUC_UNUSED SqlConsole *console, GdaConnection 
 	if (impopt)
 		g_object_unref (impopt);
 	if (!model) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("Could not import file '%s'"), file_name);
 		return NULL;
 	}
@@ -5007,8 +5022,8 @@ extra_command_data_set_move (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			new_name = args[1];
 	}
 	if (!old_name || !*old_name || !new_name || !*new_name) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing argument"));
 		return NULL;
 	}
 
@@ -5016,7 +5031,7 @@ extra_command_data_set_move (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 
 	src = g_hash_table_lookup (main_data->mem_data_models, old_name);
 	if (!src) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Could not find dataset named '%s'"), old_name);
 		return NULL;
 	}
@@ -5069,7 +5084,7 @@ parse_fk_decl_spec (const gchar *spec, gboolean columns_required, GError **error
 	gchar *ptr, *dspec, *start, *subptr, *substart;
 
 	if (!spec || !*spec) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Missing foreign key declaration specification"));
 		return NULL;
 	}
@@ -5186,7 +5201,7 @@ parse_fk_decl_spec (const gchar *spec, gboolean columns_required, GError **error
 
  onerror:
 	fk_decl_data_free (decldata);
-	g_set_error (error, 0, 0,
+	g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 		     "%s", _("Malformed foreign key declaration specification"));
 	return NULL;
 }
@@ -5218,7 +5233,7 @@ fk_decl_analyse_table_name (const gchar *table, GdaMetaStore *mstore,
 		g_strfreev (id_array);
 	}
 	else {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Malformed table name specification '%s'"), table);
 		return FALSE;
 	}
@@ -5233,7 +5248,8 @@ extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -5306,7 +5322,7 @@ extra_command_declare_fk (SqlConsole *console, GdaConnection *cnc,
 		}
 	}
 	else
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Missing foreign key name argument"));
 	return res;
 }
@@ -5319,7 +5335,8 @@ extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 	GdaInternalCommandResult *res = NULL;
 
 	if (!main_data->current) {
-		g_set_error (error, 0, 0, "%s", _("No connection opened"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection opened"));
 		return NULL;
 	}
 
@@ -5380,7 +5397,7 @@ extra_command_undeclare_fk (SqlConsole *console, GdaConnection *cnc,
 		}
 	}
 	else
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Missing foreign key name argument"));
 	return res;
 }
@@ -5412,8 +5429,8 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, G_GNUC_UNUSED MainD
 		return NULL;
 	}
 	if (remain) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Wrong row condition"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Wrong row condition"));
 		g_free (sql);
 		return NULL;
 	}
@@ -5440,8 +5457,8 @@ get_table_value_at_cell (GdaConnection *cnc, GError **error, G_GNUC_UNUSED MainD
 	gda_internal_command_exec_result_free (tmpres);
 
 	if (!retval && !errorset)
-		g_set_error (error, 0, 0, "%s", 
-			     _("No unique row identified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("No unique row identified"));
 
 	return retval;
 }
@@ -5468,7 +5485,8 @@ extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 	}
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, "%s", _("No current connection"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -5481,8 +5499,8 @@ extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 				if (args[3] && *args[3]) {
 					row_cond = args[3];
 					if (args [4]) {
-						g_set_error (error, 0, 0, "%s", 
-							     _("Too many arguments"));
+						g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+							     "%s", _("Too many arguments"));
 						return NULL;
 					}
 					whichargs = 1;
@@ -5529,8 +5547,8 @@ extra_command_set2 (SqlConsole *console, GdaConnection *cnc, const gchar **args,
 		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 	}
 	else 
-		g_set_error (error, 0, 0, "%s", 
-                             _("Wrong number of arguments"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Wrong number of arguments"));
 
 	return res;
 }
@@ -5543,8 +5561,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 	ConnectionSetting *cs;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
@@ -5562,13 +5580,13 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
         }
 
 	if (!select) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing data on which to operate"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing data on which to operate"));
 		return NULL;
 	}
 	if (!row_fields) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing row fields specifications"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing row fields specifications"));
 		return NULL;
 	}
 	if (column_fields && !strcmp (column_fields, "-"))
@@ -5585,8 +5603,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 		return NULL;
 	if (tmpres->type != GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL) {
 		gda_internal_command_exec_result_free (tmpres);
-		g_set_error (error, 0, 0, "%s", 
-			     _("Wrong SELECT argument"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Wrong SELECT argument"));
 		return NULL;
 	}
 
@@ -5623,8 +5641,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 			if (!*tmp) {
 				g_timer_destroy (timer);
 				g_object_unref (pivot);
-				g_set_error (error, 0, 0, "%s", 
-					     _("Wrong data field argument"));
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+					     "%s", _("Wrong data field argument"));
 				return NULL;
 			}
 			df++;
@@ -5651,8 +5669,8 @@ extra_command_pivot (SqlConsole *console, GdaConnection *cnc, const gchar **args
 			else {
 				g_timer_destroy (timer);
 				g_object_unref (pivot);
-				g_set_error (error, 0, 0, "%s", 
-					     _("Wrong data field argument"));
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+					     "%s", _("Wrong data field argument"));
 				return NULL;
 			}
 			df = tmp+1;
@@ -5695,14 +5713,14 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 	GdaDataModel *model, *wrapper;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
 	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Connection is not an LDAP connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Connection is not an LDAP connection"));
 		return NULL;
 	}
 
@@ -5723,7 +5741,8 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
 			else if (!g_ascii_strcasecmp (scope, "subtree"))
 				lscope = GDA_LDAP_SEARCH_SUBTREE;
 			else {
-				g_set_error (error, 0, 0, _("Unknown search scope '%s'"), scope);
+				g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+					     _("Unknown search scope '%s'"), scope);
 				return NULL;
 			}
 			if (args[2])
@@ -5732,8 +5751,8 @@ extra_command_ldap_search (SqlConsole *console, GdaConnection *cnc, const gchar 
         }
 
 	if (!filter) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing filter which to operate"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing filter which to operate"));
 		return NULL;
 	}
 
@@ -5792,14 +5811,14 @@ extra_command_ldap_mv (SqlConsole *console, GdaConnection *cnc, const gchar **ar
 	GdaDataModel *model, *wrapper;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s",
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
 	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Connection is not an LDAP connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Connection is not an LDAP connection"));
 		return NULL;
 	}
 
@@ -5813,8 +5832,8 @@ extra_command_ldap_mv (SqlConsole *console, GdaConnection *cnc, const gchar **ar
         }
 
 	if (!current_dn || !new_dn) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing current DN or new DN specification"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing current DN or new DN specification"));
 		return NULL;
 	}
 
@@ -5886,14 +5905,14 @@ extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc, const gchar **a
 	GdaDataModel *model, *wrapper;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s",
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
 	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Connection is not an LDAP connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Connection is not an LDAP connection"));
 		return NULL;
 	}
 
@@ -5907,13 +5926,13 @@ extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc, const gchar **a
         }
 
 	if (!dn) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing DN of LDAP entry"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing DN of LDAP entry"));
 		return NULL;
 	}
 	if (!op) {
-		g_set_error (error, 0, 0, "%s",
-			     _("Missing operation to perform on LDAP entry's attributes"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing operation to perform on LDAP entry's attributes"));
 		return NULL;
 	}
 
@@ -5924,7 +5943,7 @@ extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc, const gchar **a
 	else if (! g_ascii_strncasecmp (op, "ADD", 3))
 		optype = GDA_LDAP_MODIFICATION_ATTR_ADD;
 	else {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Unknown operation '%s' to perform on LDAP entry's attributes"), op);
 		return NULL;
 	}
@@ -5945,7 +5964,7 @@ extra_command_ldap_mod (SqlConsole *console, GdaConnection *cnc, const gchar **a
 			gda_value_free (att_value);
 		}
 		else {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("Wrong attribute value specification"), args[i]);
 			return NULL;
 		}
@@ -5981,14 +6000,14 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	ConnectionSetting *cs;
 	cs = get_current_connection_settings (console);
 	if (!cs) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("No connection specified"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No connection specified"));
 		return NULL;
 	}
 
 	if (! GDA_IS_LDAP_CONNECTION (cs->cnc)) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Connection is not an LDAP connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+			     "%s", _("Connection is not an LDAP connection"));
 		return NULL;
 	}
 
@@ -6001,8 +6020,8 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 			   */
 
         if (!args[0] || !*args[0]) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Missing DN (Distinguished name) argument"));		
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing DN (Distinguished name) argument"));		
 		return NULL;
         }
 	dn = args[0];
@@ -6014,7 +6033,7 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 		else if (!g_ascii_strcasecmp (args [1], "set"))
 			options = 3;
 		else {
-			g_set_error (error, 0, 0, 
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     _("Unknown '%s' argument"), args[1]);
 			return NULL;
 		}
@@ -6025,7 +6044,7 @@ extra_command_ldap_descr (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaCo
 	entry = gda_ldap_describe_entry (GDA_LDAP_CONNECTION (cs->cnc), dn, error);
 	if (!entry) {
 		if (error && !*error)
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 				     _("Could not find entry with DN '%s'"), dn);
 		return NULL;
 	}
@@ -6201,7 +6220,8 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 	}
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, "%s", _("No current connection"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -6216,8 +6236,8 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 				if (args[3] && *args[3]) {
 					filename = args[3];
 					if (args [4]) {
-						g_set_error (error, 0, 0, "%s", 
-							     _("Too many arguments"));
+						g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+							     "%s", _("Too many arguments"));
 						return NULL;
 					}
 					else
@@ -6238,14 +6258,14 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 	else if (whichargs == 2) {
 		GdaHolder *param = g_hash_table_lookup (main_data->parameters, pname);
 		if (!pname) 
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 				     _("No parameter named '%s' defined"), pname);
 		else
 			value = gda_holder_get_value (param);
 	}
 	else 
-		g_set_error (error, 0, 0, "%s", 
-                             _("Wrong number of arguments"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Wrong number of arguments"));
 
 	if (value) {
 		/* to file through this blob */
@@ -6256,8 +6276,8 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
 			const GdaBlob *fblob = gda_value_get_blob (value);
 			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
-				g_set_error (error, 0, 0, "%s", 
-					     _("Could not write file"));
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+					     "%s", _("Could not write file"));
 			else
 				done = TRUE;
 			gda_value_free (vblob);
@@ -6270,8 +6290,8 @@ extra_command_export (SqlConsole *console, GdaConnection *cnc, const gchar **arg
 			((GdaBinary *) fblob)->data = fbin->data;
 			((GdaBinary *) fblob)->binary_length = fbin->binary_length;
 			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
-				g_set_error (error, 0, 0, "%s", 
-					     _("Could not write file"));
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+					     "%s", _("Could not write file"));
 			else
 				done = TRUE;
 			g_free (fblob);
@@ -6316,7 +6336,7 @@ extra_command_unset (G_GNUC_UNUSED SqlConsole *console, G_GNUC_UNUSED GdaConnect
 			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
 		}
 		else 
-			g_set_error (error, 0, 0,
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 				     _("No parameter named '%s' defined"), pname);
 	}
 	else {
@@ -6426,7 +6446,8 @@ extra_command_graph (SqlConsole *console, GdaConnection *cnc, const gchar **args
 	}
 
 	if (!cnc) {
-		g_set_error (error, 0, 0, "%s", _("No current connection"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
 		return NULL;
 	}
 
@@ -6490,8 +6511,8 @@ extra_command_httpd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, cons
 		if (port > 0) {
 			main_data->server = web_server_new (port, auth_token);
 			if (!main_data->server) 
-				g_set_error (error, 0, 0, "%s", 
-					     _("Could not start HTTPD server"));
+				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+					     "%s", _("Could not start HTTPD server"));
 			else {
 				res = g_new0 (GdaInternalCommandResult, 1);
 				res->type = GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT;
@@ -6499,8 +6520,8 @@ extra_command_httpd (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, cons
 			}
 		}
 		else
-			g_set_error (error, 0, 0, "%s", 
-				     _("Invalid port specification"));
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+				     "%s", _("Invalid port specification"));
 	}
 
 	return res;
@@ -6529,7 +6550,8 @@ extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **
 	}
 
 	if (!cnc) {
-                g_set_error (error, 0, 0, "%s", _("No current connection"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+			     "%s", _("No current connection"));
                 return NULL;
         }
 
@@ -6542,8 +6564,8 @@ extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **
 				if (args[3] && *args[3]) {
 					row_cond = args[3];
 					if (args [4]) {
-						g_set_error (error, 0, 0,
-							     _("Too many arguments"));
+						g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+							     "%s", _("Too many arguments"));
 						return NULL;
 					}
 				}
@@ -6551,8 +6573,8 @@ extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **
 		}
         }
 	if (!row_cond) {
-		g_set_error (error, 0, 0, "%s", 
-                             _("Missing arguments"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Missing arguments"));
 		return NULL;
 	}
 
@@ -6579,8 +6601,8 @@ extra_command_lo_update (SqlConsole *console, GdaConnection *cnc, const gchar **
 	if (!stmt)
 		return NULL;
 	if (remain) {
-		g_set_error (error, 0, 0, "%s", 
-			     _("Wrong row condition"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			     "%s", _("Wrong row condition"));
 		return NULL;
 	}
 
@@ -6714,8 +6736,8 @@ gda_sql_console_execute (SqlConsole *console, const gchar *command, GError **err
 			}
 		}
 		else {
-			g_set_error (error, 0, 0,
-				     _("Command is incomplete"));
+			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+				     "%s", _("Command is incomplete"));
 		}
 	}
 	g_free (loc_cmde);

@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include "../tools-utils.h"
 #include "browser-connection.h"
 #include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include "support.h"
@@ -1365,7 +1366,8 @@ wrapper_statement_execute (StmtExecData *data, GError **error)
 		else {
 			g_warning (_("Execution reported an undefined error, please report error to "
 				     "http://bugzilla.gnome.org/ for the \"libgda\" product"));
-			g_set_error (error, 0, 0, "%s", _("No detail"));
+			g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+				     "%s", _("No detail"));
 		}
 	}
 	return obj ? obj : (gpointer) 0x01;
@@ -1759,14 +1761,14 @@ meta_store_addons_init (BrowserConnection *bcnc, GError **error)
 	GdaMetaStore *store;
 
 	if (!bcnc->priv->cnc) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Connection not yet opened"));
 		return FALSE;
 	}
 	store = gda_connection_get_meta_store (bcnc->priv->cnc);
 	if (!gda_meta_store_schema_add_custom_object (store, DBTABLE_PREFERENCES_TABLE_DESC, &lerror)) {
-                g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize dictionary to store table preferences"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize dictionary to store table preferences"));
 		g_warning ("Can't initialize dictionary to store dbtable_preferences :%s",
 			   lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)
@@ -1811,14 +1813,14 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 
 	store_cnc = bcnc->priv->store_cnc;
 	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 	/* begin a transaction */
 	if (! gda_connection_begin_transaction (store_cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
                 return FALSE;
 	}
@@ -1898,8 +1900,8 @@ browser_connection_set_table_column_attribute (BrowserConnection *bcnc,
 	}
 
 	if (! gda_connection_commit_transaction (store_cnc, NULL, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't commit transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't commit transaction to access favorites"));
 		goto err;
 	}
 
@@ -1953,8 +1955,8 @@ browser_connection_get_table_column_attribute  (BrowserConnection *bcnc,
 
 	store_cnc = bcnc->priv->store_cnc;
 	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 
@@ -2461,7 +2463,7 @@ wrapper_ldap_search (LdapSearchData *data, GError **error)
 	model = gda_data_model_ldap_new (GDA_CONNECTION (data->cnc), data->base_dn,
 					 data->filter, data->attributes, data->scope);
 	if (!model) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not execute LDAP search"));
 		return (gpointer) 0x01;
 	}

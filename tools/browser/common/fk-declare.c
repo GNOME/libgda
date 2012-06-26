@@ -21,6 +21,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include "fk-declare.h"
 #include "../support.h"
+#include "../../tools-utils.h"
 
 /* 
  * Main static functions 
@@ -556,7 +557,7 @@ fk_declare_write (FkDeclare *decl, BrowserWindow *bwin, GError **error)
 	g_return_val_if_fail (!bwin || BROWSER_IS_WINDOW (bwin), FALSE);
 
 	if (! decl->priv->dialog_sensitive) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Missing information to declare foreign key"));
 		return FALSE;
 	}
@@ -638,7 +639,7 @@ fk_declare_undeclare (GdaMetaStruct *mstruct, BrowserWindow *bwin, GdaMetaTableF
 	    !decl_fk->depend_on->obj_catalog ||
 	    !decl_fk->depend_on->obj_schema ||
 	    !decl_fk->depend_on->obj_name) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Missing information to undeclare foreign key"));
 		return FALSE;
 	}

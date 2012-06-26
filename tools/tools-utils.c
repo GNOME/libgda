@@ -47,3 +47,13 @@ tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
 		return _("set to default value");
 	}
 }
+
+/* module error */
+GQuark
+tools_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("tools_error");
+        return quark;
+}

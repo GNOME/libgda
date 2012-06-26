@@ -26,6 +26,7 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda-ui/gdaui-plugin.h>
 #include "common/gdaui-entry-import.h"
+#include "../tools-utils.h"
 
 /* 
  * Main static functions 
@@ -472,7 +473,7 @@ part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *ho
 			if (((ptr == str) && ! g_ascii_isalpha (*ptr)) ||
 			    ((ptr != str) && (*ptr != '_') && !g_ascii_isalnum (*ptr))) {
 				GError *error = NULL;
-				g_set_error (&error, 0, 0,
+				g_set_error (&error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
 					     "%s", _("Invalid schema name"));
 				return error;
 			}

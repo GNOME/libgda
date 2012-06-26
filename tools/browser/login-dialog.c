@@ -288,9 +288,9 @@ sub_thread_open_cnc (GdaDsnInfo *info, GError **error)
 						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
 						       error);
 	return cnc;
-#else
+#else /* DUMMY defined */
 	sleep (5);
-	g_set_error (error, 0, 0, "%s", "Oooo");
+	g_set_error (error, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
 	return NULL;
 #endif
 }

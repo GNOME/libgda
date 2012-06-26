@@ -21,6 +21,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "tools-favorites.h"
+#include "tools-utils.h"
 #include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include <libgda/gda-sql-builder.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -180,8 +181,8 @@ meta_store_addons_init (ToolsFavorites *bfav, GError **error)
 		return TRUE;
 
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORITES_TABLE_DESC, &lerror)) {
-                g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize dictionary to store favorites"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize dictionary to store favorites"));
 		g_warning ("Can't initialize dictionary to store favorites :%s",
 			   lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)
@@ -189,8 +190,8 @@ meta_store_addons_init (ToolsFavorites *bfav, GError **error)
                 return FALSE;
         }
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORDER_TABLE_DESC, &lerror)) {
-                g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize dictionary to store favorites"));
+                g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize dictionary to store favorites"));
 		g_warning ("Can't initialize dictionary to store favorites :%s",
 			   lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)
@@ -624,14 +625,14 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 
 	store_cnc = bfav->priv->store_cnc;
 	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 	/* begin a transaction */
 	if (! gda_connection_begin_transaction (store_cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
                 return FALSE;
 	}
@@ -803,8 +804,8 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 	}
 
 	if (! gda_connection_commit_transaction (store_cnc, NULL, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't commit transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't commit transaction to access favorites"));
 		goto err;
 	}
 
@@ -1057,15 +1058,15 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 		return FALSE;
 
 	if (! gda_lockable_trylock (GDA_LOCKABLE (bfav->priv->store_cnc))) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 	/* begin a transaction */
 	if (! gda_connection_begin_transaction (bfav->priv->store_cnc, NULL,
 						GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't initialize transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't initialize transaction to access favorites"));
 		gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
                 return FALSE;
 	}
@@ -1087,7 +1088,7 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 		}
 	}
 	if (favid < 0) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not find favorite"));
 		goto out;
 	}
@@ -1132,8 +1133,8 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 	g_object_unref (stmt);
 
 	if (! gda_connection_commit_transaction (bfav->priv->store_cnc, NULL, NULL)) {
-		g_set_error (error, 0, 0, "%s",
-                             _("Can't commit transaction to access favorites"));
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+			     "%s", _("Can't commit transaction to access favorites"));
 		goto out;
 	}
 	retval = TRUE;

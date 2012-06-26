@@ -18,6 +18,7 @@
  */
 
 #include "tools-input.h"
+#include "tools-utils.h"
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 #include <string.h>
@@ -317,7 +318,7 @@ save_history (const gchar *file, GError **error)
 	if (res == ENOENT)
 		res = write_history (file ? file : history_file);
 	if (res != 0) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
 			     _("Could not save history file to '%s': %s"), 
 			     file ? file : history_file, strerror (errno));
 		return FALSE;
