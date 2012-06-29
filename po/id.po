@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2012-06-03 16:03+0000\n"
-"PO-Revision-Date: 2012-06-19 17:17+0700\n"
+"PO-Revision-Date: 2012-06-30 01:09+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -831,7 +831,7 @@ msgstr "Argumen tidak valid"
 #: ../libgda/gda-connection.c:4421
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
-msgstr "Argumen bagi tabel '%s' hilang atau salah: %s"
+msgstr "Argumen bagi tabel '%s' kurang atau salah: %s"
 
 #: ../libgda/gda-connection.c:5185
 msgid "Meta update error"
@@ -893,11 +893,11 @@ msgstr "Model data baru"
 
 #: ../libgda/gda-data-comparator.c:450
 msgid "Missing original data model"
-msgstr "Model data asli hilang"
+msgstr "Kunrang model data asli"
 
 #: ../libgda/gda-data-comparator.c:455
 msgid "Missing new data model"
-msgstr "Model data baru hilang"
+msgstr "Kurang model data baru"
 
 #: ../libgda/gda-data-comparator.c:461
 msgid "Data models must support random access model"
@@ -1006,7 +1006,7 @@ msgstr "Pustaka Berkeley DB tak dimuat"
 #: ../libgda/gda-data-model-bdb.c:924
 #, c-format
 msgid "Custom BDB model implementation is not complete: the '%s' method is missing"
-msgstr "Implementasi model BDB gubahan tak lengkap: metoda '%s' hilang"
+msgstr "Implementasi model BDB gubahan tak lengkap: kurang metoda '%s'"
 
 #: ../libgda/gda-data-model-bdb.c:861
 #: ../libgda/gda-data-model-bdb.c:951
@@ -1202,7 +1202,7 @@ msgstr "Tak bisa membuat direktori: '%s'"
 #: ../libgda/gda-data-model-dir.c:1313
 #: ../libgda/gda-data-model-dir.c:1315
 msgid "Cannot add row: filename missing"
-msgstr "Tak bisa menambah baris: nama berkas hilang"
+msgstr "Tak bisa menambah baris: kurang nama berkas"
 
 #: ../libgda/gda-data-model-dir.c:1357
 #, c-format
@@ -1658,7 +1658,7 @@ msgstr "Tak bisa menambah baris karena cacah baris tak diketahui"
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:403
 msgid "Missing values to insert in INSERT statement"
-msgstr "Kehilangan nilai untuk disisipkan dalam statement INSERT"
+msgstr "Kurang nilai untuk disisipkan dalam statement INSERT"
 
 #: ../libgda/gda-data-select.c:3289
 msgid "No DELETE statement provided"
@@ -1722,11 +1722,11 @@ msgstr "Tak bisa mengikat holder bila tipe mereka tak sama"
 #: ../libgda/gda-holder.c:1954
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
-msgstr ""
+msgstr "Tak bisa mengubah GdaHolder agar cocok dengan perubahan nilai dalam ikatan GdaHolder: %s"
 
 #: ../libgda/gda-init.c:135
 msgid "Ignoring attempt to re-initialize GDA library."
-msgstr ""
+msgstr "Mengabaikan usaha menginisialisasi ulang pustaka GDA."
 
 #: ../libgda/gda-init.c:161
 msgid "libgda needs GModule. Finishing..."
@@ -1753,15 +1753,15 @@ msgstr "Objek koneksi yang dipakai secara internal"
 
 #: ../libgda/gda-meta-store.c:648
 msgid "Catalog in which the database objects will be created"
-msgstr ""
+msgstr "Katalog tempat objek basis data akan dibuat"
 
 #: ../libgda/gda-meta-store.c:651
 msgid "Schema in which the database objects will be created"
-msgstr ""
+msgstr "Skema tempat objek basis data akan dibuat"
 
 #: ../libgda/gda-meta-store.c:800
 msgid "Catalog specified but no schema specified, store will not be usable"
-msgstr ""
+msgstr "Katalog dinyatakan tapi skema tidak, penyimpanan tak akan dapat dipakai"
 
 #: ../libgda/gda-meta-store.c:1134
 #: ../libgda/gda-meta-store.c:1143
@@ -1772,41 +1772,41 @@ msgstr "Tak bisa menata versi skema internal"
 
 #: ../libgda/gda-meta-store.c:1512
 msgid "Missing view name from <view> node"
-msgstr ""
+msgstr "Kurang nama view dari node <view>"
 
 #: ../libgda/gda-meta-store.c:1552
 msgid "Missing view definition from <view> node"
-msgstr ""
+msgstr "Kurang definisi view dari node <view>"
 
 #: ../libgda/gda-meta-store.c:1566
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
-msgstr ""
+msgstr "Definisi view memuat lebih dari satu pernyataan (bagi view '%s')"
 
 #: ../libgda/gda-meta-store.c:1593
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
-msgstr ""
+msgstr "Definisi view bukan pernyataan pemilihan (bagi view '%s')"
 
 #: ../libgda/gda-meta-store.c:1620
 #: ../libgda/gda-meta-struct-io.c:176
 msgid "Missing table name from <table> node"
-msgstr ""
+msgstr "Kurang nama tabel dari node <table>"
 
 #: ../libgda/gda-meta-store.c:1856
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
-msgstr ""
+msgstr "Kolom '%s' telah ada dan punya karakteristik yang berbeda"
 
 #: ../libgda/gda-meta-store.c:1891
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
-msgstr ""
+msgstr "Kurang foreign key yang diacu oleh nama tabel (bagi tabel '%s')"
 
 #: ../libgda/gda-meta-store.c:1945
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
-msgstr ""
+msgstr "Kurang nama kolom foreign key (bagi tabel '%s')"
 
 #: ../libgda/gda-meta-store.c:1957
 #, c-format
@@ -1856,7 +1856,7 @@ msgstr "Nilai bagi parameter '%s' tak ditata"
 
 #: ../libgda/gda-meta-store.c:3500
 msgid "Data models should have the same number of columns"
-msgstr ""
+msgstr "Model data mesti memiliki cacah kolom yang sama"
 
 #: ../libgda/gda-meta-store.c:3561
 #: ../libgda/gda-meta-store.c:4608
@@ -1907,7 +1907,7 @@ msgstr "Tak bisa mengurai deskripsi XML dari objek basis data ubahan untuk ditam
 
 #: ../libgda/gda-meta-store.c:4265
 msgid "Missing custom database object name"
-msgstr "Kehilangan nama objek basis data ubahan"
+msgstr "Kurang nama objek basis data ubahan"
 
 #: ../libgda/gda-meta-store.c:4270
 msgid "Custom database object names starting with a '_' are reserved for internal usage"
@@ -1919,16 +1919,16 @@ msgstr "Sudah ada objek lain dengan nama yang sama"
 
 #: ../libgda/gda-meta-store.c:4470
 msgid "Missing table name in meta data context"
-msgstr "Kehilangan nama tabel dalam konteks data meta"
+msgstr "Kurang nama tabel dalam konteks data meta"
 
 #: ../libgda/gda-meta-store.c:4497
 msgid "Missing column name in meta data context"
-msgstr "Kehilangan nama kolom dalam konteks data meta"
+msgstr "Kurang nama kolom dalam konteks data meta"
 
 #: ../libgda/gda-meta-store.c:4513
 #, c-format
 msgid "Missing condition in meta data context"
-msgstr "Kehilangan kondisi dalam konteks data meta"
+msgstr "Kurang kondisi dalam konteks data meta"
 
 #: ../libgda/gda-meta-store.c:4538
 #, c-format
@@ -1963,14 +1963,14 @@ msgstr "Tak bisa temukan kolom '%s' dalam tabel '%s'"
 
 #: ../libgda/gda-meta-struct.c:133
 msgid "GdaMetaStore object to fetch information from"
-msgstr ""
+msgstr "Objek GdaMetaStore tempat mengambil informasi"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
 #: ../libgda/gda-meta-struct.c:141
 msgid "Features to compute"
-msgstr ""
+msgstr "Fitur yang dikomputasi"
 
 #: ../libgda/gda-meta-struct.c:843
 #, c-format
@@ -1985,7 +1985,7 @@ msgstr "View %s.%s.%s tak ditemukan di objek penyimpanan meta"
 #: ../libgda/gda-meta-struct.c:951
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
-msgstr "Tabel %s.%s.%s tak ditemukan (atau kehilangan informasi kolom)"
+msgstr "Tabel %s.%s.%s tak ditemukan (atau kurang informasi kolom)"
 
 #: ../libgda/gda-meta-struct.c:1098
 #, c-format
@@ -1995,11 +1995,11 @@ msgstr "Galat internal GdaMetaStore: kolom %s tak ditemukan"
 #: ../libgda/gda-meta-struct.c:1248
 #, c-format
 msgid "Meta data incoherence in foreign key constraint for table %s.%s.%s referencing table %s.%s.%s"
-msgstr ""
+msgstr "Ketidakkoherenan meta data dalam konstrain foreign key bagi tabel %s.%s.%s yang mengacu tabel %s.%s.%s"
 
 #: ../libgda/gda-meta-struct.c:2571
 msgid "Missing object name in GdaMetaDbObject structure"
-msgstr ""
+msgstr "Kurang nama objek dalam struktur GdaMetaDbObject"
 
 #: ../libgda/gda-meta-struct.c:2596
 #, c-format
@@ -2014,29 +2014,29 @@ msgstr "Tak bisa memuat berkas '%s'"
 #: ../libgda/gda-meta-struct-io.c:89
 #, c-format
 msgid "Root node of file '%s' should be <schema>."
-msgstr ""
+msgstr "Node akar dari berkas '%s' mesti berupa <schema>."
 
 #: ../libgda/gda-meta-struct-io.c:236
 #, c-format
 msgid "Missing column name for table '%s'"
-msgstr ""
+msgstr "Kurang nama kolom bagi tabel '%s'"
 
 #: ../libgda/gda-meta-struct-io.c:292
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
-msgstr ""
+msgstr "Kurang nama tabel yang diacu oleh foreign key bagi tabel '%s'"
 
 #: ../libgda/gda-meta-struct-io.c:304
 #: ../libgda/gda-meta-struct-io.c:311
 #: ../libgda/gda-meta-struct-io.c:318
 #, c-format
 msgid "Invalid referenced table name '%s'"
-msgstr ""
+msgstr "Nama tabel '%s' yang diacu tak valid"
 
 #: ../libgda/gda-meta-struct-io.c:358
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
-msgstr ""
+msgstr "Kurang nama kolom foreign key bagi tabel '%s'"
 
 #: ../libgda/gda-row.c:295
 #: ../libgda/gda-row.c:310
@@ -2058,7 +2058,7 @@ msgstr "GdaServerOperation: tak bisa memuat berkas '%s'"
 #: ../libgda/gda-server-operation.c:1036
 #, c-format
 msgid "Could not load XML specifications: %s"
-msgstr ""
+msgstr "Tak bisa memuat spesifikasi XML: %s"
 
 #: ../libgda/gda-server-operation.c:702
 #, c-format
@@ -2066,6 +2066,8 @@ msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
 msgstr ""
+"GdaServerOperation: berkas '%s' tak mematuhi DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:705
 #, c-format
@@ -2073,19 +2075,21 @@ msgid ""
 "GdaServerOperation specification does not conform to DTD:\n"
 "%s"
 msgstr ""
+"Spesifikasi GdaServerOperation tak mematuhi DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:712
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
-msgstr ""
+msgstr "GdaServerOperation: berkas '%s' tak mematuhi DTD"
 
 #: ../libgda/gda-server-operation.c:715
 msgid "GdaServerOperation specification does not conform to DTD\n"
-msgstr ""
+msgstr "Spesifikasi GdaServerOperation tak mematuhi DTD\n"
 
 #: ../libgda/gda-server-operation.c:1265
 msgid "Non handled GdaServerOperationType, please report error to http://bugzilla.gnome.org/ for the \"libgda\" product"
-msgstr ""
+msgstr "GdaServerOperationType tak tertangani, mohon laporkan galat ke http://bugzilla.gnome.org/ bagi produk \"libgda\""
 
 #: ../libgda/gda-server-operation.c:1500
 #: ../libgda/gda-server-operation.c:1515
@@ -2096,16 +2100,16 @@ msgstr "Mengharapkan tag <%s>, memperoleh <%s>"
 #: ../libgda/gda-server-operation.c:1549
 #: ../libgda/gda-server-operation.c:2268
 msgid "Parameterlist values can only be set for individual parameters within it"
-msgstr ""
+msgstr "Nilai parameterlist hanya dapat ditata bagi parameter individu didalamnya"
 
 #: ../libgda/gda-server-operation.c:1607
 msgid "Missing attribute named 'path'"
-msgstr ""
+msgstr "Kurang atribut bernama 'path'"
 
 #: ../libgda/gda-server-operation.c:2460
 #, c-format
 msgid "Missing required value for '%s'"
-msgstr "Kehilangan nilai yang diperlukan '%s'"
+msgstr "Kurang nilai yang diperlukan bagi '%s'"
 
 #: ../libgda/gda-server-operation.c:2689
 msgid "Unspecified table name"
@@ -2117,61 +2121,61 @@ msgstr "Jenis tak valid"
 
 #: ../libgda/gda-server-operation.c:2822
 msgid "CREATE TABLE operation is not supported by the database server"
-msgstr ""
+msgstr "Operasi CREATE TABLE tak didukung oleh server basis data"
 
 #: ../libgda/gda-server-provider.c:520
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr ""
+msgstr "Penyedia %s membuat suatu GdaServerOperation tanpa node bagi '%s'"
 
 #: ../libgda/gda-server-provider.c:524
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
-msgstr ""
+msgstr "Penyedia %s membuat suatu GdaServerOperation dengan tipe node salah bagi '%s'"
 
 #: ../libgda/gda-server-provider.c:948
 #: ../libgda/gda-server-provider.c:982
 #, c-format
 msgid "GdaServerProvider object implements the %s virtual method but does not implement the %s one, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
-msgstr ""
+msgstr "Objek GdaServerProvider mengimplementasi metoda virtual %s tapi tidak mengimplementasi %s, mohon laporkan kutu ini ke http://bugzilla.gnome.org/ untuk produk \"libgda\"."
 
 #: ../libgda/gda-set.c:597
 #: ../libgda/gda-set.c:702
 #, c-format
 msgid "%s() does not handle values of type '%s'."
-msgstr ""
+msgstr "%s() tak menangani nilai bertipe '%s'."
 
 #: ../libgda/gda-set.c:652
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
-msgstr ""
+msgstr "GdaHolder dengan ID '%s' tak ditemukan dalam set"
 
 #: ../libgda/gda-set.c:836
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
-msgstr ""
+msgstr "Node akar spec != 'data-set-spec': '%s'"
 
 #: ../libgda/gda-set.c:875
 #, c-format
 msgid "Missing node <parameters>: '%s'"
-msgstr ""
+msgstr "Kurang <parameter> node: '%s'"
 
 #: ../libgda/gda-set.c:1092
 msgid "Data set does not allow modifications"
-msgstr ""
+msgstr "Data set tak mengijinkan modifikasi"
 
 #: ../libgda/gda-set.c:1358
 msgid "GdaHolder needs to have an ID"
-msgstr ""
+msgstr "GdaHolder perlu memiliki ID"
 
 #: ../libgda/gda-set.c:1472
 msgid "One or more values are invalid"
-msgstr ""
+msgstr "Satu nilai atau lebih tak valid"
 
 #: ../libgda/gda-set.c:1691
 #: ../libgda/gda-set.c:1704
 msgid "Replacing data model must have the same characteristics as the data model it replaces"
-msgstr ""
+msgstr "Mengganti model data mesti memiliki karakteristik yang sama dengan model data yang digantikan"
 
 #: ../libgda/gda-sql-builder.c:296
 #: ../libgda/gda-sql-builder.c:1401
@@ -2212,22 +2216,22 @@ msgstr "Jenis statement salah"
 #: ../libgda/gda-sql-builder.c:604
 #, c-format
 msgid "Could not convert value to type '%s', value not defined"
-msgstr ""
+msgstr "Tak bisa mengonversi nilai ke tipe '%s', nilai tak didefinisikan"
 
 #: ../libgda/gda-sql-builder.c:1314
 #, c-format
 msgid "Unknown left part target ID %u"
-msgstr ""
+msgstr "ID %u target bagian kiri tak diketahui"
 
 #: ../libgda/gda-sql-builder.c:1319
 #, c-format
 msgid "Unknown right part target ID %u"
-msgstr ""
+msgstr "ID %u target bagian kanan tak diketahui"
 
 #: ../libgda/gda-statement.c:497
 #, c-format
 msgid "Could not determine GType for parameter '%s'"
-msgstr ""
+msgstr "Tak bisa menentukan GType bagi parameter '%s'"
 
 #: ../libgda/gda-statement.c:498
 msgid "Unnamed"
@@ -2240,22 +2244,22 @@ msgstr "Tak bisa menangani nilai baku bertipe '%s'"
 
 #: ../libgda/gda-statement.c:774
 msgid "Missing SQL code"
-msgstr "Kehilangan kode SQL"
+msgstr "Kurang kode SQL"
 
 #: ../libgda/gda-statement.c:794
 #, c-format
 msgid "No data handler for type '%s'"
-msgstr ""
+msgstr "Tak ada penangan data bagi tipe '%s'"
 
 #: ../libgda/gda-statement.c:1341
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
-msgstr ""
+msgstr "Tipe parameter salah bagi '%s': tipe diharapkan '%s' dan mendapat '%s'"
 
 #: ../libgda/gda-statement.c:1353
 #, c-format
 msgid "Missing parameter '%s'"
-msgstr "Kehilangan parameter '%s'"
+msgstr "Kurang parameter '%s'"
 
 #: ../libgda/gda-statement.c:1365
 #: ../libgda/sqlite/gda-sqlite-provider.c:3059
@@ -2277,28 +2281,27 @@ msgstr "Nama tabel salah bentuk"
 
 #: ../libgda/gda-statement.c:2179
 msgid "Join is not in a FROM statement"
-msgstr ""
+msgstr "Join bukan dalam pernyataan FROM"
 
 #: ../libgda/gda-statement.c:2186
 msgid "Could not find target the join is for"
-msgstr ""
+msgstr "Tak bisa temukan target tujuan join"
 
 #: ../libgda/gda-tree.c:174
 msgid "Tells if the GdaTree is a list or a tree"
-msgstr ""
+msgstr "Memberitahu bila GdaTree suatu daftar atau pohon"
 
 #: ../libgda/gda-tree.c:768
 #: ../libgda/gda-tree.c:776
 #, c-format
 msgid "Path format error: %s"
-msgstr ""
+msgstr "Galat format path: %s"
 
 #: ../libgda/gda-tree-mgr-columns.c:302
 #: ../libgda/gda-tree-mgr-schemas.c:255
 #: ../libgda/gda-tree-mgr-tables.c:287
-#, fuzzy
 msgid "No connection and no GdaMetaStore specified"
-msgstr "Sambungan tak dinyatakan"
+msgstr "Tak ada sambungan dan tak ada GdaMetaStore yang dinyatakan"
 
 #: ../libgda/gda-tree-mgr-columns.c:388
 msgid "No schema specified"
@@ -2310,7 +2313,7 @@ msgstr "Tabel tak dinyatakan"
 
 #: ../libgda/gda-tree-mgr-columns.c:425
 msgid "Unable to get column name"
-msgstr ""
+msgstr "Tak bisa mendapat nama kolom"
 
 #: ../libgda/gda-tree-mgr-label.c:212
 #: ../tools/browser/canvas/browser-canvas-table.c:315
@@ -2320,23 +2323,23 @@ msgstr "Tanpa nama"
 #: ../libgda/gda-tree-mgr-ldap.c:242
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:186
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:274
-#, fuzzy, c-format
+#, c-format
 msgid "No LDAP connection specified"
-msgstr "Sambungan tak dinyatakan"
+msgstr "Tak ada sambungan LDAP yang dinyatakan"
 
 #: ../libgda/gda-tree-mgr-schemas.c:310
 msgid "Unable to get schema name"
-msgstr ""
+msgstr "Tak bisa mendapat nama skema"
 
 #: ../libgda/gda-tree-mgr-select.c:186
 #, c-format
 msgid "Could not get SELECT statement's parameters: %s"
-msgstr ""
+msgstr "Tak bisa mendapat parameter pernyataan GET: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:219
 #, c-format
 msgid "Could not bind SELECT statement's parameter '%s' to provided parameters: %s"
-msgstr ""
+msgstr "Tak bisa mengikat parameter pernyataan SELECT '%s' ke parameter yang diberikan: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:612
@@ -2353,7 +2356,7 @@ msgstr "Sambungan tak dinyatakan"
 
 #: ../libgda/gda-tree-mgr-select.c:308
 msgid "No SELECT statement specified"
-msgstr ""
+msgstr "Tak ada pernyataan SELECT yang dinyatakan"
 
 #: ../libgda/gda-tree-mgr-select.c:330
 #, c-format
@@ -2362,63 +2365,62 @@ msgstr "Nilai bagi parameter '%s' tak dinyatakan"
 
 #: ../libgda/gda-tree-mgr-select.c:364
 msgid "Unable to get iterator's value"
-msgstr ""
+msgstr "Tak bisa mendapat nilai iterator"
 
 #: ../libgda/gda-tree-mgr-tables.c:391
 msgid "Unable to get table name"
-msgstr ""
+msgstr "Tak bisa mendapat nama tabel"
 
 #: ../libgda/gda-util.c:702
 #, c-format
 msgid "Field number %d not found in source named '%s'"
-msgstr ""
+msgstr "Nomor ruas %d tak ditemukan dalam sumber bernama '%s'"
 
 #: ../libgda/gda-util.c:887
 msgid "SELECT statement has no FROM part"
-msgstr ""
+msgstr "Pernyataan SELECT tak memiliki bagian FROM"
 
 #: ../libgda/gda-util.c:892
 #: ../libgda/gda-util.c:899
 msgid "SELECT statement involves more than one table or expression"
-msgstr ""
+msgstr "Pernyataan SELECT melibatkan lebih dari satu tabel atau ekspresi"
 
 #: ../libgda/gda-util.c:909
 msgid "Can only build modification statement for tables"
-msgstr ""
+msgstr "Hanya bisa membangun pernyataan modifikasi bagi tabel"
 
 #: ../libgda/gda-util.c:949
 msgid "Table does not have any primary key"
-msgstr ""
+msgstr "Tabel tak memiliki kunci primer"
 
 #: ../libgda/gda-util.c:978
 msgid "Table's primary key is not part of SELECT"
-msgstr ""
+msgstr "Kunci primer tabel bukan bagian dari SELECT"
 
 #: ../libgda/gda-util.c:1029
-#, fuzzy
 msgid "Table does not have any column"
-msgstr "Tabel '%s' tak ditemukan"
+msgstr "Tabel tak memiliki kolom apapun"
 
 #: ../libgda/gda-util.c:1055
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
-msgstr ""
+msgstr "Kolom '%s' tabel bukan bagian dari SELECT"
 
 #: ../libgda/gda-util.c:1311
 msgid "Could not compute any field to insert into"
-msgstr ""
+msgstr "Tak bisa mengkomputasi ruas manapun sebagai tujuan penyisipan"
 
 #: ../libgda/gda-util.c:1374
 msgid "Missing table name in UPDATE statement"
-msgstr ""
+msgstr "Kurang nama tabel dalam pernyataan UPDATE"
 
 #: ../libgda/gda-util.c:1729
 msgid "Can't rewrite UPDATE statement to handle default values"
-msgstr ""
+msgstr "Tak bisa menulis ulang pernyataan UPDATE untuk menangani nilai baku"
 
 #: ../libgda/gda-util.c:1737
 msgid "Can't rewrite statement which is not INSERT or UPDATE"
-msgstr ""
+msgstr "Tak bisa menulis ulang pernyataan yang bukan INSERT atau UPDATE"
 
 #: ../libgda/gda-util.c:1781
 #: ../libgda/gda-util.c:1838
@@ -2430,27 +2432,27 @@ msgstr ""
 #: ../providers/web/gda-web-provider.c:1507
 #, c-format
 msgid "Missing parameter '%s' to execute query"
-msgstr ""
+msgstr "Kurang parameter '%s' untuk mengeksekusi query"
 
 #: ../libgda/gda-xa-transaction.c:162
 msgid "Global transaction ID can not have more than 64 bytes"
-msgstr ""
+msgstr "ID transaksi global tak boleh lebih dari 64 byte"
 
 #: ../libgda/gda-xa-transaction.c:289
 msgid "Connection branch cannot exceed 63 bytes"
-msgstr ""
+msgstr "Cabang sambungan tak boleh melebihi 63 byte"
 
 #: ../libgda/gda-xa-transaction.c:306
 msgid "Connection already registered with another GdaXaTransaction object"
-msgstr ""
+msgstr "Koneksi telah terdaftar dengan objek GdaXaTransaction lain"
 
 #: ../libgda/gda-xa-transaction.c:319
 msgid "Connection does not support distributed transaction"
-msgstr ""
+msgstr "Koneksi tak mendukung transaksi terdistribusi"
 
 #: ../libgda/gda-xa-transaction.c:353
 msgid "Cannot unregister connection not registered with GdaXaTransaction object"
-msgstr ""
+msgstr "Tak bisa mencabut daftar koneksi yang tak terdaftar dengan objek GdaXaTransaction"
 
 #: ../libgda/gda-xa-transaction.c:388
 #: ../libgda/gda-xa-transaction.c:419
@@ -2463,12 +2465,11 @@ msgstr ""
 #: ../libgda/gda-xa-transaction.c:689
 #, c-format
 msgid "Provider error: %s method not implemented for provider %s"
-msgstr ""
+msgstr "Galat penyedia: metoda %s tak diimplementasikan bagi penyedia %s"
 
 #: ../libgda/handlers/gda-handler-bin.c:122
-#, fuzzy
 msgid "Binary handler"
-msgstr "Handler Modul"
+msgstr "Penangan biner"
 
 #: ../libgda/handlers/gda-handler-bin.c:129
 msgid "Binary representation"
@@ -2478,7 +2479,7 @@ msgstr "Representasi biner"
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:118
 #: ../providers/mysql/gda-mysql-handler-boolean.c:118
 msgid "Boolean values handler"
-msgstr ""
+msgstr "Penangan nilai boolean"
 
 #: ../libgda/handlers/gda-handler-boolean.c:128
 msgid "Boolean representation"
@@ -2489,34 +2490,32 @@ msgid "Numerical representation"
 msgstr "Representasi numerik"
 
 #: ../libgda/handlers/gda-handler-string.c:126
-#, fuzzy
 msgid "Strings handler"
-msgstr "Handler Modul"
+msgstr "Penangan string"
 
 #: ../libgda/handlers/gda-handler-string.c:131
 msgid "InternalString"
-msgstr ""
+msgstr "InternalString"
 
 #: ../libgda/handlers/gda-handler-string.c:132
 msgid "Strings representation"
 msgstr "Representasi string"
 
 #: ../libgda/handlers/gda-handler-time.c:149
-#, fuzzy
 msgid "Time and Date handler"
-msgstr "Tanggal dan waktu perubahan"
+msgstr "Penangan Waktu dan Tanggal"
 
 #: ../libgda/handlers/gda-handler-time.c:174
 msgid "Time, Date and TimeStamp representation"
-msgstr ""
+msgstr "Representasi Time, Date, dan TimeStamp"
 
 #: ../libgda/handlers/gda-handler-type.c:119
 msgid "Gda type handler"
-msgstr ""
+msgstr "Penangan tipe Gda"
 
 #: ../libgda/handlers/gda-handler-type.c:125
 msgid "Gda type representation"
-msgstr ""
+msgstr "Representasi tipe Gda"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:286
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:355
@@ -2528,26 +2527,26 @@ msgstr "Tak bisa menemukan program '%s'"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:301
 msgid "Could not find the DocBook XSL stylesheet for HTML"
-msgstr ""
+msgstr "Tak bisa temukan lembar gaya XSL DocBook bagi HTML"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:369
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr ""
+msgstr "Tak bisa temukan lembar gaya XSL DocBook bagi Objek Pemformatan"
 
 #: ../libgda-report/engine/gda-report-engine.c:334
 #, c-format
 msgid "Object type '%s' cannot be declared in this context"
-msgstr ""
+msgstr "Tipe objek '%s' tak bisa dideklarasikan dalam konteks ini"
 
 #: ../libgda-report/engine/gda-report-engine.c:342
 #, c-format
 msgid "An object with the '%s' name has already been declared"
-msgstr ""
+msgstr "Objek dengan nama '%s' telah dideklarasikan"
 
 #: ../libgda-report/engine/gda-report-engine.c:377
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
-msgstr ""
+msgstr "Tipe objek '%s' tak bisa diminta dalam konteks ini"
 
 #: ../libgda-report/engine/gda-report-engine.c:596
 #, c-format
@@ -2565,7 +2564,7 @@ msgstr "Koneksi bernama '%s' tak ditemukan"
 
 #: ../libgda-report/engine/gda-report-engine.c:679
 msgid "Query is not specified (not named and not defined)"
-msgstr ""
+msgstr "Query tak dinyatakan (tak dinamai dan tak didefinisikan)"
 
 #: ../libgda-report/engine/gda-report-engine.c:844
 #: ../libgda-report/engine/gda-report-engine.c:995
@@ -2576,7 +2575,7 @@ msgstr "Parameter tak dikenal '%s'"
 
 #: ../libgda-report/engine/gda-report-engine.c:870
 msgid "Parameter name not specified"
-msgstr ""
+msgstr "Nama parameter tak dinyatakan"
 
 #: ../libgda-report/engine/gda-report-engine.c:920
 msgid "No expression specified"
@@ -2585,17 +2584,17 @@ msgstr "Ekspresi tak dinyatakan"
 #: ../libgda-report/engine/gda-report-engine.c:943
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
+msgstr "Tak bisa mengubah paksa nilai dari tipe '%s' ke tipe '%s'"
 
 #: ../libgda-report/engine/gda-report-engine.c:1081
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
-msgstr ""
+msgstr "Tak bisa mengubah paksa parameter dari tipe '%s' ke tipe '%s'"
 
 #: ../libgda-report/engine/gda-report-engine.c:1174
 #, c-format
 msgid "Expression '%s' should return exactly one value"
-msgstr ""
+msgstr "Ekspresi '%s' mesti mengembalikan tepat satu nilai"
 
 #: ../libgda-report/engine/gda-report-engine.c:1214
 msgid "Binary data"
@@ -2604,7 +2603,7 @@ msgstr "Data biner"
 #: ../libgda-report/engine/rt-parser.c:1220
 #: ../libgda-report/engine/rt-parser.c:1426
 msgid "link"
-msgstr ""
+msgstr "taut"
 
 #: ../libgda-report/gda-report-document.c:255
 msgid "Document not specified"
@@ -2623,7 +2622,7 @@ msgstr "Eksekusi program %s gagal: %s"
 #: ../libgda-report/gda-report-document.c:372
 #, c-format
 msgid "This report document does not handle %s output"
-msgstr ""
+msgstr "Dokumen laporan ini tak menangani keluaran %s"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:222
 #: ../providers/jdbc/gda-jdbc-ddl.c:142
@@ -2632,19 +2631,19 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-ddl.c:377
 #: ../providers/web/gda-web-ddl.c:141
 msgid "Table to create must have at least one row"
-msgstr ""
+msgstr "Tabel yang akan dibuat mesti memiliki paling tidak satu baris"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:120
 msgid "SQlite binary handler"
-msgstr ""
+msgstr "Penangan biner SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:126
 msgid "SQlite binary representation"
-msgstr ""
+msgstr "Representasi biner SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:124
 msgid "Sqlite boolean representation"
-msgstr ""
+msgstr "Representasi boolean SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:121
 #: ../libgda/sqlite/gda-sqlite-provider.c:179
@@ -2656,9 +2655,9 @@ msgstr "Parameter '%s' tak ditemukan dalam statement"
 #: ../libgda/sqlite/gda-sqlite-provider.c:151
 #: ../libgda/sqlite/gda-sqlite-provider.c:193
 #: ../libgda/sqlite/gda-sqlite-provider.c:209
-#, fuzzy, c-format
+#, c-format
 msgid "No column name to associate to parameter '%s'"
-msgstr "Nilai bagi parameter '%s' tak ditata"
+msgstr "Tak ada nama kolom untuk diasosiasikan ke parameter '%s'"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:219
 msgid "Binding a BLOB for this type of statement is not supported"
@@ -2702,9 +2701,8 @@ msgid "Wrong encryption passphrase"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:896
-#, fuzzy
 msgid "Extension loading is not supported"
-msgstr "Aras transaksi tak didukung"
+msgstr "Pemuatan ekstensi tak didukung"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:915
 #, c-format
@@ -2713,14 +2711,14 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1006
 #: ../libgda/sqlite/gda-sqlite-provider.c:1026
-#, fuzzy, c-format
+#, c-format
 msgid "Could not register function '%s'"
-msgstr "Tidak dapat membuat direktori '%s'"
+msgstr "Tak dapat mendaftarkan fungsi '%s'"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1045
-#, fuzzy, c-format
+#, c-format
 msgid "Could not define the %s collation"
-msgstr "Tak bisa menemukan program '%s'"
+msgstr "Tak bisa mendefinisikan kolasi %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1203
 #: ../libgda/sqlite/gda-sqlite-provider.c:1245
@@ -2908,9 +2906,8 @@ msgid "SQLite regexp '%s' error:"
 msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3800
-#, fuzzy
 msgid "Invalid regular expression"
-msgstr "Argumen tidak valid"
+msgstr "Ekspresi reguler tak valid"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:256
 #: ../providers/jdbc/gda-jdbc-recordset.c:282
@@ -2966,15 +2963,13 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:717
 #: ../providers/jdbc/gda-jdbc-recordset.c:493
-#, fuzzy
 msgid "Requested row could not be found"
-msgstr "Baris %d tak ditemukan"
+msgstr "Baris yang diminta tak dapat ditemukan"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:748
 #: ../providers/jdbc/gda-jdbc-recordset.c:531
-#, fuzzy
 msgid "Can't set iterator on requested row"
-msgstr "Tak bisa menata posisi iterator"
+msgstr "Tak bisa menata iterator pada baris yang diminta"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:126
 #, c-format
@@ -2986,9 +2981,9 @@ msgid "File used to store startup data"
 msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:248
-#, fuzzy, c-format
+#, c-format
 msgid "Error recreating LDAP tables: %s"
-msgstr "Galat saat membuat basis data: %s"
+msgstr "Galat saat membuat tabel LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:773
 msgid "Can't remove non LDAP virtual table"
@@ -2999,9 +2994,8 @@ msgid "Can't describe non LDAP virtual table"
 msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:828
-#, fuzzy
 msgid "Unknown LDAP virtual table"
-msgstr "Jenis part tak dikenal"
+msgstr "Jenis tabel virtual LDAP tak dikenal"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:413
 msgid "Table to remove not found"
@@ -3016,9 +3010,9 @@ msgid "Connection was not represented in hub"
 msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:373
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to get information about table '%s'"
-msgstr "Informasi basis data bagi '%s'"
+msgstr "Tak bisa mendapat informasi tentang tabel '%s'"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:599
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:615
@@ -3067,9 +3061,8 @@ msgid "Can't declare virtual table (%s)"
 msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:830
-#, fuzzy
 msgid "Internal SQLite error: no data to iterate on"
-msgstr "Galat internal GdaMetaStore: kolom %s tak ditemukan"
+msgstr "Galat internal SQLite: kolom %s tak ditemukan"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:927
 #, fuzzy, c-format
@@ -5607,18 +5600,16 @@ msgid "Use a cache to store some static server data (the cached files are in the
 msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
-#, fuzzy
 msgid "Time limit"
-msgstr "Batasan _Download:"
+msgstr "Batas waktu"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid "Time limit after which a search operation should be terminated by the server (leave undefined or 0 for unlimited)"
 msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
-#, fuzzy
 msgid "Size limit"
-msgstr "Batasan _Download:"
+msgstr "Batas ukuran"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
 msgid "Maximum number of entries that can be returned on a search operation"
@@ -5782,9 +5773,8 @@ msgid "Provider for MySQL databases"
 msgstr "Penyedia bagi basis data SQLite"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
-#, fuzzy
 msgid "As first column"
-msgstr "Baris pertama sebagai judul:"
+msgstr "Sebagai kolom pertama"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:6
 msgid "Add the column as the first column of the table"
@@ -5922,23 +5912,20 @@ msgstr "Cina Tradisional Big5"
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
-#, fuzzy
 msgid "DEC West European"
-msgstr "ISO 8859-1 Eropa Barat"
+msgstr "DEC Eropa Barat"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
-#, fuzzy
 msgid "DOS West European"
-msgstr "DOS Eropa Tengah"
+msgstr "DOS Eropa Barat"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
-#, fuzzy
 msgid "HP West European"
-msgstr "ISO 8859-1 Eropa Barat"
+msgstr "HP Eropa Barat"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
@@ -5949,9 +5936,8 @@ msgstr ""
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
-#, fuzzy
 msgid "7bit Swedish"
-msgstr "Susunan Swedia"
+msgstr "Swedia 7bit"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
@@ -6052,9 +6038,8 @@ msgstr "Mac Eropa Tengah"
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:183
-#, fuzzy
 msgid "Mac West European"
-msgstr "Mac Eropa Tengah"
+msgstr "Mac Eropa Barat"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
@@ -6071,9 +6056,8 @@ msgstr "Baltik ISO-8859-13"
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
-#, fuzzy
 msgid "Windows Cyrillic"
-msgstr "Cyrillic (_Windows-1251)"
+msgstr "Cyrillic Windows"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
@@ -6200,9 +6184,8 @@ msgstr "Opsi tabel"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:61
-#, fuzzy
 msgid "Engine"
-msgstr "Merah"
+msgstr "Mesin"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:63
@@ -6231,9 +6214,8 @@ msgstr ""
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
-#, fuzzy
 msgid "Checksum"
-msgstr "Membuat checksum"
+msgstr "Checksum"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
@@ -9142,26 +9124,23 @@ msgid "Execution Results:"
 msgstr "Hasil Eksekusi:"
 
 #: ../tools/browser/query-exec/query-console-page.c:708
-#, fuzzy
 msgid "New favorite"
-msgstr "_Tampilkan favorit"
+msgstr "Favorit baru"
 
 #: ../tools/browser/query-exec/query-console-page.c:719
 #: ../tools/browser/query-exec/query-console-page.c:752
-#, fuzzy, c-format
+#, c-format
 msgid "Modify favorite '%s'"
-msgstr "_Tampilkan favorit"
+msgstr "Ubah favorit '%s'"
 
 #: ../tools/browser/query-exec/query-console-page.c:740
-#, fuzzy
 msgid "Modify a favorite"
-msgstr "_Tampilkan favorit"
+msgstr "Ubah suatu favorit"
 
 #: ../tools/browser/query-exec/query-console-page.c:789
 #: ../tools/browser/query-exec/query-console-page.c:809
-#, fuzzy
 msgid "Favorite's name"
-msgstr "Favorit"
+msgstr "Nama dari favorit"
 
 #: ../tools/browser/query-exec/query-console-page.c:790
 #: ../tools/browser/query-exec/query-favorite-selector.c:696
@@ -9169,14 +9148,12 @@ msgid "Unnamed query"
 msgstr "Query tak bernama"
 
 #: ../tools/browser/query-exec/query-console-page.c:793
-#, fuzzy
 msgid "Name of the favorite to create"
-msgstr "Nama basis data untuk dipakai"
+msgstr "Nama dari favorit yang akan dibuat"
 
 #: ../tools/browser/query-exec/query-console-page.c:794
-#, fuzzy
 msgid "Enter the name of the favorite to create"
-msgstr "Nama basis data untuk dipakai"
+msgstr "Masukkan nama dari favorit yang akan dibuat"
 
 #: ../tools/browser/query-exec/query-console-page.c:924
 msgid "Invalid variable's contents"
@@ -9227,9 +9204,8 @@ msgid "_Undo"
 msgstr "_Batalkan"
 
 #: ../tools/browser/query-exec/query-console-page.c:1222
-#, fuzzy
 msgid "Undo last change"
-msgstr "Batalkan perubahan teks terakhir"
+msgstr "Batalkan perubahan terakhir"
 
 #: ../tools/browser/query-exec/query-editor.c:697
 msgid "Copy all in a single line"
@@ -9420,14 +9396,14 @@ msgid "Could not load diagram"
 msgstr "Tak bisa memuat diagram"
 
 #: ../tools/browser/schema-browser/table-columns.c:268
-#, fuzzy, c-format
+#, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Operasi key pada direktori"
+msgstr "Foreign key yang dideklarasikan '%s' pada"
 
 #: ../tools/browser/schema-browser/table-columns.c:271
-#, fuzzy, c-format
+#, c-format
 msgid "Foreign key '%s' on "
-msgstr "Operasi key pada direktori"
+msgstr "Foreign key '%s' pada"
 
 #: ../tools/browser/schema-browser/table-columns.c:337
 #, c-format
@@ -9457,23 +9433,22 @@ msgid "Not NULL?"
 msgstr "Bukan NULL?"
 
 #: ../tools/browser/schema-browser/table-columns.c:689
-#, fuzzy
 msgid "LDAP virtual table definition"
-msgstr "Definisi basis data baru"
+msgstr "Definisi tabel virtual LDAP"
 
 #: ../tools/browser/schema-browser/table-columns.c:736
 msgid "Constraints and integrity rules"
 msgstr ""
 
 #: ../tools/browser/schema-browser/table-columns.c:927
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find table '%s.%s'"
-msgstr "Tak bisa temukan tabel \"%s\""
+msgstr "Tak bisa temukan tabel '%s.%s'"
 
 #: ../tools/browser/schema-browser/table-columns.c:962
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "Tak bisa temukan objek bernama '%s'"
+msgstr "Tak bisa temukan foreign key yang dideklarasikan '%s'"
 
 #: ../tools/browser/schema-browser/table-info.c:357
 msgid ""
@@ -9524,9 +9499,9 @@ msgid "Values to insert into table"
 msgstr ""
 
 #: ../tools/browser/schema-browser/table-info.c:959
-#, fuzzy, c-format
+#, c-format
 msgid "Can't find information about table '%s'"
-msgstr "Informasi basis data bagi '%s'"
+msgstr "Tak bisa temukan informasi tentang tabel '%s'"
 
 #: ../tools/browser/schema-browser/table-info.c:988
 msgid "_Table"
@@ -9741,14 +9716,14 @@ msgid "no"
 msgstr "tidak"
 
 #: ../tools/command-exec.c:1218
-#, fuzzy, c-format
+#, c-format
 msgid "Could not determine columns of view '%s'"
-msgstr "Tak bisa temukan DSN bernama '%s'"
+msgstr "Tak bisa menentukan kolom dari view '%s'"
 
 #: ../tools/command-exec.c:1222
-#, fuzzy, c-format
+#, c-format
 msgid "Could not determine columns of table '%s'"
-msgstr "Tak bisa temukan DSN bernama '%s'"
+msgstr "Tak bisa menentukan kolom dari tabel '%s'"
 
 #: ../tools/command-exec.c:1235
 #, c-format
@@ -9759,26 +9734,26 @@ msgstr "Definisi view: %s"
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:1392
-#, fuzzy, c-format
+#, c-format
 msgid "references %s"
-msgstr "Preferensi"
+msgstr "referensi %s"
 
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
 #: ../tools/command-exec.c:1398
-#, fuzzy, c-format
+#, c-format
 msgid "references %s.%s"
-msgstr "Preferensi"
+msgstr "referensi %s.%s"
 
 #: ../tools/config-info.c:70
 msgid "Installed providers list"
 msgstr "Daftar penyedia terpasang"
 
 #: ../tools/config-info.c:108
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find provider '%s'"
-msgstr "Tak bisa temukan penyedia bernama '%s'"
+msgstr "Tak bisa temukan penyedia '%s'"
 
 #: ../tools/config-info.c:120
 #: ../tools/config-info.c:289
@@ -9792,9 +9767,9 @@ msgid "Provider '%s' description"
 msgstr "Keterangan penyedia '%s'"
 
 #: ../tools/config-info.c:277
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find data source '%s'"
-msgstr "Tak bisa temukan tabel \"%s\""
+msgstr "Tak bisa temukan sumber data '%s'"
 
 #: ../tools/config-info.c:292
 #, c-format
@@ -10559,9 +10534,9 @@ msgid "Missing required connection names"
 msgstr "Kehilangan nama koneksi yang diperlukan"
 
 #: ../tools/gda-sql.c:3727
-#, fuzzy, c-format
+#, c-format
 msgid "No connection or dataset named '%s' found"
-msgstr "Koneksi bernama '%s' tak ditemukan"
+msgstr "Tak ditemukan koneksi atau dataset bernama '%s'"
 
 #. force create of meta store
 #. add existing connections to virtual connection
@@ -10572,26 +10547,25 @@ msgstr ""
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
 #: ../tools/gda-sql.c:3761
-#, fuzzy, c-format
+#, c-format
 msgid "%s in the '%s' namespace"
-msgstr "View dalam skema '%s'"
+msgstr "%s dalam namespace '%s'"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/gda-sql.c:3775
-#, fuzzy, c-format
+#, c-format
 msgid "%s mapped to the %s table"
-msgstr "Kolom bagi tabel '%s':"
+msgstr "%s dipetakan ke tabel %s"
 
 #: ../tools/gda-sql.c:3854
-#, fuzzy, c-format
+#, c-format
 msgid "No option named '%s'"
-msgstr "Koneksi bernama '%s' tak ditemukan"
+msgstr "Tak ada opsi bernama '%s'"
 
 #: ../tools/gda-sql.c:3866
-#, fuzzy
 msgid "List of options"
-msgstr "Daftar view"
+msgstr "Daftar opsi"
 
 #: ../tools/gda-sql.c:3947
 #, c-format
@@ -10641,9 +10615,8 @@ msgid "Missing FILE to write to"
 msgstr "Kehilangan BERKAS untuk ditulisi"
 
 #: ../tools/gda-sql.c:4272
-#, fuzzy
 msgid "Favorite name"
-msgstr "Favorit"
+msgstr "Nama favorit"
 
 #: ../tools/gda-sql.c:4273
 msgid "Comments"
@@ -10665,9 +10638,8 @@ msgstr "Singgahan query kosong"
 
 #: ../tools/gda-sql.c:4471
 #: ../tools/tools-favorites.c:1091
-#, fuzzy
 msgid "Could not find favorite"
-msgstr "Tak dapat menambah favorit: %s"
+msgstr "Tak bisa temukan favorit"
 
 #: ../tools/gda-sql.c:4643
 #: ../tools/gda-sql.c:6242
@@ -10685,61 +10657,57 @@ msgid "dimensions (columns x rows)"
 msgstr ""
 
 #: ../tools/gda-sql.c:4694
-#, fuzzy
 msgid "List of kept data"
-msgstr "Daftar tabel"
+msgstr "Daftar data yang disimpan"
 
 #: ../tools/gda-sql.c:4739
 #: ../tools/gda-sql.c:4859
 #: ../tools/gda-sql.c:4925
 #: ../tools/gda-sql.c:4967
 #: ../tools/gda-sql.c:5011
-#, fuzzy
 msgid "Missing argument"
-msgstr "Argumen hilang"
+msgstr "Kurang argumen"
 
 #: ../tools/gda-sql.c:4749
 #: ../tools/gda-sql.c:4867
 #: ../tools/gda-sql.c:4933
 #: ../tools/gda-sql.c:5020
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find dataset named '%s'"
-msgstr "Tak bisa temukan objek bernama '%s'"
+msgstr "Tak bisa temukan dataset bernama '%s'"
 
 #: ../tools/gda-sql.c:4888
-#, fuzzy, c-format
+#, c-format
 msgid "Could not identify column '%s'"
-msgstr "Tak bisa temukan DSN bernama '%s'"
+msgstr "Tak bisa mengidentifikasi kolom '%s'"
 
 #: ../tools/gda-sql.c:4958
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown import format '%s'"
-msgstr "Operator Anda:"
+msgstr "Format impor '%s' tak dikenal"
 
 #: ../tools/gda-sql.c:4979
-#, fuzzy, c-format
+#, c-format
 msgid "Could not import file '%s'"
-msgstr "Tak bisa memuat berkas '%s'"
+msgstr "Tak bisa mengimpor berkas '%s'"
 
 #: ../tools/gda-sql.c:5073
 msgid "Missing foreign key declaration specification"
 msgstr ""
 
 #: ../tools/gda-sql.c:5190
-#, fuzzy
 msgid "Malformed foreign key declaration specification"
-msgstr "Spesifikasi sumber data '%s' salah bentuk"
+msgstr "Spesifikasi deklarasi foreign key rusak"
 
 #: ../tools/gda-sql.c:5222
-#, fuzzy, c-format
+#, c-format
 msgid "Malformed table name specification '%s'"
-msgstr "Spesifikasi sumber data '%s' salah bentuk"
+msgstr "Spesifikasi nama tabel '%s' rusak"
 
 #: ../tools/gda-sql.c:5310
 #: ../tools/gda-sql.c:5384
-#, fuzzy
 msgid "Missing foreign key name argument"
-msgstr "Argumen hilang"
+msgstr "Kurang argumen nama foreign key"
 
 #: ../tools/gda-sql.c:5416
 #: ../tools/gda-sql.c:6583
@@ -10767,47 +10735,41 @@ msgid "Missing data on which to operate"
 msgstr ""
 
 #: ../tools/gda-sql.c:5571
-#, fuzzy
 msgid "Missing row fields specifications"
-msgstr "Kesalahan saat mengurai XML introspeksi: %s\n"
+msgstr "Kurang spesifikasi ruas baris"
 
 #: ../tools/gda-sql.c:5589
-#, fuzzy
 msgid "Wrong SELECT argument"
-msgstr "Argumen penyaring salah"
+msgstr "Argumen SELECT salah"
 
 #: ../tools/gda-sql.c:5627
 #: ../tools/gda-sql.c:5655
-#, fuzzy
 msgid "Wrong data field argument"
-msgstr "Argumen penyaring salah"
+msgstr "Argumen ruas data salah"
 
 #: ../tools/gda-sql.c:5705
 #: ../tools/gda-sql.c:5802
 #: ../tools/gda-sql.c:5896
 #: ../tools/gda-sql.c:5991
-#, fuzzy
 msgid "Connection is not an LDAP connection"
-msgstr "String koneksi untuk dipakai bagi koneksi internal"
+msgstr "Koneksi bukan suatu koneksi LDAP"
 
 #: ../tools/gda-sql.c:5726
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown search scope '%s'"
-msgstr "Query '%s' tak dikenal"
+msgstr "Skup pencarian '%s' tak dikenal"
 
 #: ../tools/gda-sql.c:5736
 msgid "Missing filter which to operate"
 msgstr ""
 
 #: ../tools/gda-sql.c:5817
-#, fuzzy
 msgid "Missing current DN or new DN specification"
-msgstr "Kesalahan saat mengurai XML introspeksi: %s\n"
+msgstr "Kurang DN kini atau spesifikasi DN baru"
 
 #: ../tools/gda-sql.c:5911
-#, fuzzy
 msgid "Missing DN of LDAP entry"
-msgstr "Nama DSN hilang"
+msgstr "Kurang DN dari entri LDAP"
 
 #: ../tools/gda-sql.c:5916
 msgid "Missing operation to perform on LDAP entry's attributes"
@@ -10819,34 +10781,31 @@ msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr ""
 
 #: ../tools/gda-sql.c:5949
-#, fuzzy, c-format
+#, c-format
 msgid "Wrong attribute value specification"
-msgstr "Kesalahan saat mengurai XML introspeksi: %s\n"
+msgstr "Galat spesifikasi nilai atribut"
 
 #: ../tools/gda-sql.c:6005
-#, fuzzy
 msgid "Missing DN (Distinguished name) argument"
-msgstr "Argumen hilang"
+msgstr "Kurang argumen DN (distinguished name)"
 
 #: ../tools/gda-sql.c:6018
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown '%s' argument"
-msgstr "Statement tak dikenal"
+msgstr "Argumen '%s' tak dikenal"
 
 #: ../tools/gda-sql.c:6029
-#, fuzzy, c-format
+#, c-format
 msgid "Could not find entry with DN '%s'"
-msgstr "Tak bisa temukan DSN bernama '%s'"
+msgstr "Tak bisa temukan dengan DN '%s'"
 
 #: ../tools/gda-sql.c:6038
-#, fuzzy
 msgid "Required?"
-msgstr "Memerlukan:"
+msgstr "Diperlukan?"
 
 #: ../tools/gda-sql.c:6040
-#, fuzzy
 msgid "LDAP entry's Attributes"
-msgstr "Tambahkan tabel ke favorit"
+msgstr "Atribut entri LDAP"
 
 #: ../tools/gda-sql.c:6260
 #: ../tools/gda-sql.c:6274
@@ -10923,14 +10882,12 @@ msgid "cascade changes"
 msgstr ""
 
 #: ../tools/tools-utils.c:45
-#, fuzzy
 msgid "set to NULL"
-msgstr "Menata ke NULL"
+msgstr "atur ke NULL"
 
 #: ../tools/tools-utils.c:47
-#, fuzzy
 msgid "set to default value"
-msgstr "Tetapkan daftar default untuk %s\n"
+msgstr "atur ke nilai baku"
 
 #: ../tools/web-server.c:563
 #: ../tools/web-server.c:564
@@ -11001,9 +10958,9 @@ msgid "Trigger '%s' for the '%s.%s' table:"
 msgstr "Trigger '%s' bagi tabel '%s.%s':"
 
 #: ../tools/web-server.c:1368
-#, fuzzy, c-format
+#, c-format
 msgid "Trigger fired for: %s"
-msgstr "Trigger '%s' bagi tabel '%s.%s':"
+msgstr "Trigger dijalankan bagi: %s"
 
 #: ../tools/web-server.c:1372
 #, c-format
