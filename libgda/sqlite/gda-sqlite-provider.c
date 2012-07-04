@@ -2646,7 +2646,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 		gda_sql_statement_select_take_where_cond (sql_statement, where);
 
 		if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
-			g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+			g_warning (_("Can't build SELECT statement to get last inserted row: %s"),
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 			if (lerror)
 				g_error_free (lerror);
@@ -2658,7 +2658,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 
 		GdaSet *params;
 		if (! gda_statement_get_parameters (statement, &params, &lerror)) {
-			g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+			g_warning (_("Can't build SELECT statement to get last inserted row: %s"),
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 			if (lerror)
 				g_error_free (lerror);

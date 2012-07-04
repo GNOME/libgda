@@ -1977,7 +1977,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong las
 	gda_sql_statement_select_take_where_cond (sql_statement, where);
 
 	if (gda_sql_statement_check_structure (sql_statement, &lerror) == FALSE) {
-                g_warning (_("Can't build SELECT statement to get last inserted row: %s)"),
+                g_warning (_("Can't build SELECT statement to get last inserted row: %s"),
 			     lerror && lerror->message ? lerror->message : _("No detail"));
 		if (lerror)
 			g_error_free (lerror);
