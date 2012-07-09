@@ -25,7 +25,7 @@ DOC_FIGURES = \
 	figures/schema-browser-persp.png \
 	figures/virtual-cnc.png \
 	figures/virtual-cnc-2.png \
-	figures/virtual-cnc-3.png \
+	figures/virtual-cnc-2.png \
 	figures/virtual-cnc-4.png \
 	figures/virtual-cnc-5.png \
 	figures/ldap-browser-persp.png \
@@ -53,6 +53,6 @@ DOC_PAGES = \
 	ldap-browser-perspective.page \
 	ldap-connections.page
 
-DOC_LINGUAS = de el es gl sl zh_CN
+DOC_LINGUAS = de el es gl id sl zh_CN
 
 dist-hook: doc-dist-hook
