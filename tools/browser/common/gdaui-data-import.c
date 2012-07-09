@@ -212,7 +212,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
-	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Semi column"));
+	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Semi colon"));
 	import->priv->sep_array [SEP_SEMICOL] = entry;
 	gtk_table_attach (GTK_TABLE (table), entry, 2, 3, 3, 4, GTK_FILL, 0, 0, 0);
 	g_object_set_data (G_OBJECT (entry), "_sep", ";");

@@ -565,7 +565,7 @@ go_to_row (HierarchyView *eview, GtkTreePath *path)
 		else {
 			/* DN not found! */
 			browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eview)),
-					      _("Could not find LDAP entry whith DN '%s'"), tofind);
+					      _("Could not find LDAP entry with DN '%s'"), tofind);
 			goto out;
 		}
 	}

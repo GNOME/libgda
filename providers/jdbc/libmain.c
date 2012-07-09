@@ -480,7 +480,7 @@ load_jvm ()
 	else {
 		__CreateJavaVM = NULL;
 		if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
-			g_warning (_("Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."));
+			g_warning (_("Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."));
 	}
 
 	g_static_mutex_unlock (&vm_create);
