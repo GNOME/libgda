@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-06-27 09:17+0000\n"
-"PO-Revision-Date: 2012-06-27 19:29+0100\n"
+"POT-Creation-Date: 2012-07-10 06:02+0000\n"
+"PO-Revision-Date: 2012-07-10 08:31+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: \n"
@@ -2784,8 +2784,8 @@ msgstr "Neimenovan parameter izjave ni dovoljen v pripravljeni izjavi."
 #: ../providers/mysql/gda-mysql-provider.c:1980
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
-msgid "Can't build SELECT statement to get last inserted row: %s)"
-msgstr "Ni mogoče izgraditi izjave SELECT za pridobitev zadnje vstavljene vrstice: %s)"
+msgid "Can't build SELECT statement to get last inserted row: %s"
+msgstr "Ni mogoče izgraditi izjave SELECT za pridobitev zadnje vstavljene vrstice: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2683
 #: ../providers/mysql/gda-mysql-provider.c:1995
@@ -5125,8 +5125,8 @@ msgstr "Spor"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
-msgstr "Način razreševanja sporov (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
+msgstr "Način razreševanja sporov (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
 #. other table constraints
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
@@ -5419,8 +5419,8 @@ msgid "Can't create JAVA virtual machine: %s"
 msgstr "Ni mogoče ustvariti navideznega programnika JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:483
-msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
-msgstr "Ni mogoče uporabiti JVM (libjvm.so), Ponudnik JDBC ni na voljo."
+msgid "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
+msgstr "Ni mogoče najti zagonske knjižnice JVM (libjvm.so), Ponudnik JDBC ni na voljo."
 
 #: ../providers/ldap/gda-ldap-provider.c:376
 msgid "The connection string must contain the DB_NAME value"
@@ -6370,9 +6370,8 @@ msgid "Compact"
 msgstr "Stisni"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
-msgid "Replace it already exists"
-msgstr "Zamenjaj v kolikor že obstaja."
+msgid "Replace if it already exists"
+msgstr "Zamenjaj določilo, v kolikor to že obstaja"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
@@ -7098,6 +7097,10 @@ msgstr "Uporabnik"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:19
 msgid "Existing user"
 msgstr "Obstoječi uporabnik"
+
+#: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
+msgid "Replace it already exists"
+msgstr "Zamenjaj v kolikor že obstaja."
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 msgid "What to do with references on the column to delete"
@@ -8006,8 +8009,8 @@ msgid "Comma"
 msgstr "Vejica"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-msgid "Semi column"
-msgstr "Polovični stolpec"
+msgid "Semi colon"
+msgstr "Podpičje"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
 msgid "Tab"
@@ -8719,8 +8722,8 @@ msgstr "Območje iskanja:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:568
 #, c-format
-msgid "Could not find LDAP entry whith DN '%s'"
-msgstr "Ni mogoče najti vnosa LDAP z razločnim imenom '%s'"
+msgid "Could not find LDAP entry with DN '%s'"
+msgstr "Ni mogoče najti vnosa LDAP z razločnim imenom DN '%s'"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:553
@@ -9628,7 +9631,7 @@ msgid ""
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
 "      defines <b>id</b> as a non NULL integer\n"
 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-"      defines <b>age</b> as a a string\n"
+"      defines <b>age</b> as a string\n"
 "\n"
 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> and\n"
@@ -9640,9 +9643,9 @@ msgstr ""
 "<b><tt>##&lt;ime spremenljivke&gt;::&lt;vrsta&gt;[::null]</tt></b>\n"
 "Na primer:\n"
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-"      določa <b>id</b> kot število NULL\n"
+"      določa <b>id</b> kot prazna vrednost.\n"
 "<span foreground=\"#4e9a06\"><b><tt>##starost::string::null</tt></b></span>\n"
-"      določa <b>starost</b> kot niz string\n"
+"      določa <b>starost</b> kot niz.\n"
 "\n"
 "Veljavne vrste so: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> in\n"
