@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2012-06-14 20:39+0000\n"
-"PO-Revision-Date: 2012-07-09 20:09+0700\n"
+"PO-Revision-Date: 2012-07-15 19:34+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -356,16 +356,16 @@ msgstr "Use case bagi koneksi virtual"
 
 #: C/virtual-connections.page:41(p)
 msgid "To illustrate virtual connection usage, let's define a simple use case and see how it's useful. Suppose you have a database which contains the list of servers which you are responsible for. For simplicity, let's assume that the database contains a table named \"server\" with the following definition:"
-msgstr ""
+msgstr "Untuk mengilustrasikan penggunaan koneksi virtual, mari kita definisika suatu use case sederhana dan melihat bagaimana itu berguna. Misalnya Anda memiliki basis data yang memuat daftar server yang menjadi tanggung jawab Anda. Untuk kesederhanaan, kita asumsikan bahwa basis data memuat suatu tabel bernama \"server\" dengan definisi berikut:"
 
 #: C/virtual-connections.page:46(code)
 #, no-wrap
 msgid "CREATE TABLE servers (name string, location string);"
-msgstr ""
+msgstr "CREATE TABLE servers (name string, location string);"
 
 #: C/virtual-connections.page:47(p)
 msgid "Let's suppose this table contains the following information:"
-msgstr ""
+msgstr "Misalnya tabel ini memuat informasi berikut:"
 
 #: C/virtual-connections.page:50(code)
 #, no-wrap
@@ -383,10 +383,22 @@ msgid ""
 "&gt;\n"
 "    "
 msgstr ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
 
 #: C/virtual-connections.page:62(p)
 msgid "Now let's assume you have a third party program which gives you a list of servers for which there might be a problem, the output of this program is a CSV file with a column for the server name, a column for the error code, and a column describing the problem. Let's assume the CSV file has the following contents:"
-msgstr ""
+msgstr "Kini asumsikan bahwa Anda memiliki program dari pihak ketiga yang memberikan daftar server yang mungkin punya masalah, keluaran program ini adakah berkas CSV dengan satu kolom untuk nama server, satu kolom untuk kode galat, dan satu kolom menjelaskan masalahnya. Asumsikan berkas CSV memiliki isi berikut:"
 
 #: C/virtual-connections.page:67(code)
 #, no-wrap
@@ -401,10 +413,19 @@ msgid ""
 "$\n"
 "    "
 msgstr ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,file system full\n"
+"vador,1,outdated AV signature\n"
+"darkstar,2,overloaded\n"
+"flag,0,file system full\n"
+"$\n"
+"    "
 
 #: C/virtual-connections.page:76(p)
 msgid "Let's suppose now you want to know all the servers, where they are located where there is a problem with error code 0. The solution is to bind the connection to the database (for example in the \"c1\" schema), import the problems CSV file (for example in the \"tab\" table), and execute the following SQL command:"
-msgstr ""
+msgstr "Misalkan Anda ingin tahu semua server, dimana lokasi ada masalah dengan kode galat 0. Solusinya adalah dengan mengikat koneksi ke basis data (sebagai contoh dalam skema \"c1\"), mengimpor berkas masalah CSV (sebagai contoh dalam tabel \"tab\"), dan mengeksekusi perintah SQL berikut:"
 
 #: C/virtual-connections.page:81(code)
 #, no-wrap
@@ -418,62 +439,70 @@ msgid ""
 "WHERE \"Error code\"=0\n"
 "    "
 msgstr ""
+"\n"
+"SELECT \n"
+"  \"server name\", \n"
+"  location\n"
+"FROM tab\n"
+"  INNER JOIN c1.servers AS s ON (tab.\"server name\" = s.name)\n"
+"WHERE \"Error code\"=0\n"
+"    "
 
 #: C/virtual-connections.page:89(p)
 msgid "Which returns the expected results as shown in the following figure:"
-msgstr ""
+msgstr "Yang mengembalikan hasil yang diharapkan yang ditunjukkan dalam gambar berikut:"
 
 #: C/virtual-connections.page:93(title)
 msgid "Expected results from virtual connection"
-msgstr ""
+msgstr "Hasil yang diharapkan dari koneksi virtual"
 
 #: C/virtual-connections.page:100(title)
 msgid "Importing a data set into a virtual connection"
-msgstr ""
+msgstr "Mengimpor set data ke dalam koneksi virtual"
 
 #: C/virtual-connections.page:101(p)
 msgid "To import a data set into a table in the virtual connection (for example to import the \"problems.csv\" file from the use case), use the <guiseq><gui>Bind a data set</gui></guiseq> option from the virtual connection creation dialog:"
-msgstr ""
+msgstr "Untuk mengimpor set data ke dalam tabel di koneksi virtual (sebagai contoh untuk mengimpor berkas \"problems.csv\" dari use case), gunakan opsi <guiseq><gui>Ikatkan set data</gui></guiseq> dari dialog pembuatan koneksi virtual:"
 
 #: C/virtual-connections.page:107(title)
 msgid "Import a data set into a virtual connection - 1"
-msgstr ""
+msgstr "Mengimpor set data ke dalam koneksi virtual - 1"
 
 #: C/virtual-connections.page:110(p)
 msgid "From there use the <guiseq><gui>Import</gui></guiseq> button which allows you to select a file to import and also define some import options (file encoding, file type, ...) After this step, the virtual connection is ready to be used:"
-msgstr ""
+msgstr "Dari sana gunakan tombol <guiseq><gui>Impro</gui></guiseq> yang mengijinkan Anda memilih berkas untuk diimpor dan juga mendefinisikan beberapa opsi impor (pengkodean berkas, tipe berkas, ...). Setelah langkah ini, koneksi virtual siap untuk dipakai:"
 
 #: C/virtual-connections.page:116(title)
 msgid "Import a data set into a virtual connection - 2"
-msgstr ""
+msgstr "Mengimpor set data ke dalam koneksi virtual - 2"
 
 #: C/virtual-connections.page:119(p)
 msgid "The resulting virtual connection, identified as \"c2\" here is opened in its own new window:"
-msgstr ""
+msgstr "Koneksi virtual hasil, diidentifikasi sebagai \"c2\" disini dibuka dalam jendelanya sendiri:"
 
 #: C/virtual-connections.page:123(title)
 msgid "New opened virtual connection"
-msgstr ""
+msgstr "Koneksi virtual baru yang dibuka"
 
 #: C/virtual-connections.page:129(title)
 msgid "SQL usable with virtual connections"
-msgstr ""
+msgstr "SQL yang dapat dipakai dengan koneksi virtual"
 
 #: C/virtual-connections.page:130(p)
 msgid "You can use the SQL understood by <link href=\"http://sqlite.org/lang.html\">SQLite</link> in any virtual connection. Be aware however that if you define database objects (outside of the extended SQL presented next section), they will be lost the next time the virtual connection is opened."
-msgstr ""
+msgstr "Anda dapat memakai SQL yang dipahami oleh <link href=\"http://sqlite.org/lang.html\">SQLite</link> dalam sebarang koneksi virtual. Namun sadarilah bahwa jika Anda menentukan objek basis data (di luar SQL yang diperluas yang disajikan di seksi berikutnya), mereka akan hilang saat berikutnya koneksi virtual dibuka."
 
 #: C/variables.page:9(title)
 msgid "Variables in SQL code"
-msgstr ""
+msgstr "Variabel dalam kode SQL"
 
 #: C/variables.page:10(p)
 msgid "Variables (sometimes refered to as <em>placeholders</em>) are places in SQL code which are replaced by actual values when the SQL code is executed. The benefits are faster execution times (as the SQL code is parsed only once) and a protection against SQL injection vulnerabilities."
-msgstr ""
+msgstr "Variabel (terkadang diacu sebagai <em>placeholder</em> adalah tempat-tempat dalam kode SQL yang digantikan oleh nilai sebenarnya ketika kode SQL dieksekusi. Keuntungannya adalah waktu eksekusi lebih cepat (karena kode SQL hanya diurai sekali) dan proteksi atas vulnerability injeksi SQL"
 
 #: C/variables.page:16(p)
 msgid "Variables can be used in any SQL code, and are defined using the following syntax:"
-msgstr ""
+msgstr "Variabel dapat dipakai dalam sebarang kode SQL, dan didefisikan memakai sintaks berikut:"
 
 #: C/variables.page:21(p)
 #: C/declaredfk.page:27(p)
@@ -482,15 +511,15 @@ msgstr "Catatan:"
 
 #: C/variables.page:25(p)
 msgid "the <em>variable name</em> can contain any SQL identifier character or among the <code>+-.|@?</code>characters (no space allowed)"
-msgstr ""
+msgstr "<em>nama variabel</em> dapat memuat sebarang karakter identifier SQL atau dari karakter <code>+-.|@?</code> (spasi tak diijinkan)"
 
 #: C/variables.page:27(p)
 msgid "the <em>variable type</em> can be among: <code>string</code>, <code>boolean</code>, <code>int</code>, <code>date</code>, <code>time</code>, <code>timestamp</code>, <code>guint</code>, <code>blob</code> and <code>binary</code>"
-msgstr ""
+msgstr "<em>tipe variabel</em> bisa berupa: <code>string</code>, <code>boolean</code>, <code>int</code>, <code>date</code>, <code>time</code>, <code>timestamp</code>, <code>guint</code>, <code>blob</code>, dan <code>binary</code>"
 
 #: C/variables.page:30(p)
 msgid "the <code>::NULL</code> can be appended to specify that the variable may take the special <code>NULL</code> value."
-msgstr ""
+msgstr "<code>::NULL</code> dapat diimbuhkan untuk menyatakan bahwa variabel boleh menerima nilai khusus <code>NULL</code>."
 
 #: C/variables.page:33(p)
 msgid "Examples:"
@@ -505,6 +534,11 @@ msgid ""
 "##sales@3::date::NULL\n"
 "##customers@id::int"
 msgstr ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -514,51 +548,51 @@ msgstr "."
 
 #: C/table-insert-data.page:8(title)
 msgid "Inserting data in a table"
-msgstr ""
+msgstr "Menyisipkan data dalam suatu tabel"
 
 #: C/table-insert-data.page:9(p)
 msgid "From the <link xref=\"schema-browser-perspective\">schema browser perspective</link>, when a table's properties is displayed in a tab, use the <guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup appear containing a data entry for each column of the table to insert data into."
-msgstr ""
+msgstr "Dari <link xref=\"schema-browser-perspective\">perspektif peramban skema</link>, ketika suatu properti tabel ditampilkan dalam tab, gunakan menu <guiseq><gui>Tabel</gui><gui>Sisip data</gui></guiseq> untuk memunculkan popup yang memuat entri data bagi setiap kolom tabel tempat menyisipkan data."
 
 #: C/table-insert-data.page:14(p)
 msgid "A popup similar to the following will appear:"
-msgstr ""
+msgstr "Popup yang serupa dengan yang berikut akan muncul:"
 
 #: C/table-insert-data.page:18(title)
 msgid "Popup to insert data into table"
-msgstr ""
+msgstr "Popup untuk menyisipkan data ke dalam tabel"
 
 #: C/table-insert-data.page:19(desc)
 msgid "A popup to insert data in a table"
-msgstr ""
+msgstr "Suatu popup untuk menyisipkan data dalam suatu tabel"
 
 #: C/table-insert-data.page:22(p)
 msgid "The noticeable points here are:"
-msgstr ""
+msgstr "Poin penting disini adalah:"
 
 #: C/table-insert-data.page:26(p)
 msgid "There is one data entry per column in the table, with the exception (not shown in this figure) of multiple foreign key fields for which a single drop down choice widget is shown;"
-msgstr ""
+msgstr "Ada satu entri data per kolom dalam tabel, dengan perkecualian (tak ditampilkan dalam gambar ini) ruas foreign key berganda yang untuknya ditampilkan widget pilihan drop down tunggal;"
 
 #: C/table-insert-data.page:28(p)
 msgid "Each data entry has a small button on the right giving information about the corresponding data entry, and allowing you to reset the data entry's value to the value it had before any modification done, to set it to NULL or to set it to a default value. The button's color has the following signification:"
-msgstr ""
+msgstr "Setiap entri data memiliki tombol kecil di kanan yang memberi informasi tentang entri data yang berkaitan, dan mengijinkan Anda mereset nilai entri data ke nilai yang dipunyainya sebelum modifikasi dilakukan, menatanya ke NULL, atau ke nilai baku. Warna tombol memiliki arti berikut:"
 
 #: C/table-insert-data.page:33(p)
 msgid "Red: means the current value in the data entry is invalid"
-msgstr ""
+msgstr "Merah: berarti nilai kini dalam entri data tak valid"
 
 #: C/table-insert-data.page:34(p)
 msgid "Blue: means the current value in the data entry is unused and the column's default value will be used instead (useful for example for auto incremented columns)"
-msgstr ""
+msgstr "Biru: berarti nilai kini dalam entri data tak dipakai dan nilai baku kolom akan dipakai sebagai gantinya (berguna misalnya untuk kolom yang dinaikkan otomatis)"
 
 #: C/table-insert-data.page:36(p)
 msgid "Green: means the current value in the data entry is NULL"
-msgstr ""
+msgstr "Hijau: berarti nilai kini dalam entri data adalah NULL"
 
 #: C/table-insert-data.page:37(p)
 msgid "Same color as the rest of the UI: means none of the above situations apply"
-msgstr ""
+msgstr "Warna yang sama dengan sisa UI: berarti situasi di atas tak ada yang berlaku"
 
 #: C/table-insert-data.page:40(p)
 msgid "Columns which are foreign keys to other tables are presented as a drop down combo box where you can only choose among the values in the referenced table (hint: to have that values list refreshed you should close the popup dialog and reopen it);"
@@ -588,19 +622,19 @@ msgstr "Transaksi"
 
 #: C/transactions.page:10(p)
 msgid "Transactions can be started, committed or rolled back on a per connection basis:"
-msgstr ""
+msgstr "Transaksi dapat dimulai, dikomit, atau di-rollback berdasarkan koneksi:"
 
 #: C/transactions.page:14(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin.png\"/> toolbar button to start a transaction"
-msgstr ""
+msgstr "gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin.png\"/> untuk memulai transaksi"
 
 #: C/transactions.page:16(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit.png\"/> toolbar button to commit the current transaction (apply all the changes)"
-msgstr ""
+msgstr "gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit.png\"/> untuk komit transaksi kini (menerapkan semua perubahan)"
 
 #: C/transactions.page:18(p)
 msgid "use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-rollback.png\"/> toolbar button to abort the current transaction (forget all the changes)"
-msgstr ""
+msgstr "gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src=\"figures/trans-rollback.png\"/> untuk menggugurkan transaksi kini (lupakan semua perubahan)"
 
 #: C/transactions.page:22(p)
 msgid "A transaction may be started automatically when executing a SELECT statement which involves binary objects (BLOBs), and the transaction may be locked while the resulting data set is kept in memory (to get rid of a data set in a <link xref=\"query-execution-perspective\">query execution perspective</link>, clear the history item relating to the data set)."
@@ -621,7 +655,7 @@ msgstr "."
 
 #: C/schema-browser-perspective.page:8(title)
 msgid "The schema browser perspective"
-msgstr ""
+msgstr "Perspektif peramban skema"
 
 #: C/schema-browser-perspective.page:9(p)
 msgid "Use the schema browser perspective to understand the database's organisation (schema). To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>B</key></keyseq> shortcut."
@@ -633,11 +667,11 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:19(title)
 msgid "Schema browser perspective's default view"
-msgstr ""
+msgstr "Tilikan baku perspektif peramban skema"
 
 #: C/schema-browser-perspective.page:20(desc)
 msgid "The default Schema browser perspective"
-msgstr ""
+msgstr "Perspektif peramban skema baku"
 
 #: C/schema-browser-perspective.page:24(p)
 msgid "The left part of the perspective lists the favorite database objects or diagrams. Double clicking on a favorite opens its properties in the right pane."
@@ -657,7 +691,7 @@ msgstr ""
 
 #: C/schema-browser-perspective.page:44(title)
 msgid "Tab showing information about a table"
-msgstr ""
+msgstr "Tab menunjukkan informasi tentang suatu tabel"
 
 #: C/schema-browser-perspective.page:45(desc)
 msgid "Example of information displayed for each table, note the difference between foreign keys implemented in the database and <link xref=\"declared-fk\">declared foreign keys</link>"
@@ -671,7 +705,7 @@ msgstr "."
 
 #: C/query-execution-perspective.page:8(title)
 msgid "The query execution perspective"
-msgstr ""
+msgstr "Perspektif eksekusi query"
 
 #: C/query-execution-perspective.page:9(p)
 msgid "Use the query perspective to execute SQL statements. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut."
@@ -679,11 +713,11 @@ msgstr ""
 
 #: C/query-execution-perspective.page:15(title)
 msgid "Query exec perspective"
-msgstr ""
+msgstr "Perspektif query exec"
 
 #: C/query-execution-perspective.page:16(desc)
 msgid "The query exec perspective with one SELECT statement executed"
-msgstr ""
+msgstr "Perspektif query exec dengan satu pernyataan SELECT dieksekusi"
 
 #: C/query-execution-perspective.page:20(p)
 msgid "The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements, and the right pane being the action area."
@@ -707,19 +741,19 @@ msgstr ""
 
 #: C/query-execution-perspective.page:45(p)
 msgid "an SQL area in the top left part"
-msgstr ""
+msgstr "suatu area SQL di bagian kiri atas"
 
 #: C/query-execution-perspective.page:46(p)
 msgid "command buttons in the top right part"
-msgstr ""
+msgstr "tombol perintah di bagian kanan atas"
 
 #: C/query-execution-perspective.page:47(p)
 msgid "execution history in the lower left part"
-msgstr ""
+msgstr "riwayat eksekusi di bagian kiri bawah"
 
 #: C/query-execution-perspective.page:48(p)
 msgid "execution results in the lower right part"
-msgstr ""
+msgstr "hasil eksekusi di bagian kanan bawah"
 
 #: C/query-execution-perspective.page:52(title)
 msgid "SQL area"
@@ -735,15 +769,15 @@ msgstr ""
 
 #: C/query-execution-perspective.page:61(p)
 msgid "<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>SPASI</key></keyseq> untuk memperoleh daftar pelengkapan"
 
 #: C/query-execution-perspective.page:62(p)
 msgid "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> untuk mengeksekusi kode SQL"
 
 #: C/query-execution-perspective.page:63(p)
 msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> untuk membersihkan penyunting"
 
 #: C/query-execution-perspective.page:64(p)
 msgid "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</key><key>Down</key></keyseq> to navigate through the editor's history"
@@ -820,7 +854,7 @@ msgstr "malerba@gnome-db.org"
 
 #: C/index.page:11(title)
 msgid "Gda Browser Help"
-msgstr ""
+msgstr "Bantuan Peramban Gda"
 
 #: C/index.page:12(p)
 msgid "<app>gda-browser</app> is a tool for database administrators: they can analyse database's schemas to understand how data is organized, run SQL commands interactively, and in a broader way manage the data contained in the databases."
@@ -848,7 +882,7 @@ msgstr "Manajemen koneksi"
 
 #: C/general-ui.page:8(title)
 msgid "General interface organization"
-msgstr ""
+msgstr "Organisasi antar muka umum"
 
 #: C/general-ui.page:9(p)
 msgid "The <app>gda-browser</app> is composed of one or more top level windows, each window relating to a single connection (which name is in its title). For any given connection, several windows can be opened (use the <guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the <keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
@@ -856,7 +890,7 @@ msgstr ""
 
 #: C/general-ui.page:16(title)
 msgid "A connection window"
-msgstr ""
+msgstr "Suatu jendela koneksi"
 
 #: C/general-ui.page:17(desc)
 msgid "Window opened for the 'c1' connection (and the Schema browser perspective)"
@@ -892,7 +926,7 @@ msgstr ""
 
 #: C/features.page:13(title)
 msgid "General user interface"
-msgstr ""
+msgstr "Antar muka pengguna umum"
 
 #: C/features.page:15(p)
 #: C/features.page:26(p)
@@ -909,7 +943,7 @@ msgstr ""
 
 #: C/features.page:22(title)
 msgid "Connection management"
-msgstr ""
+msgstr "Manajemen koneksi"
 
 #: C/features.page:24(p)
 msgid "multiple simultaneous connections can be opened at once"
@@ -961,7 +995,7 @@ msgstr ""
 
 #: C/features.page:51(list)
 msgid "<placeholder-1/> x <placeholder-2/>"
-msgstr ""
+msgstr "<placeholder-1/> x <placeholder-2/>"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1153,7 +1187,7 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:37(title)
 msgid "The <code>&lt;query&gt;</code> tag"
-msgstr ""
+msgstr "Tag <code>&lt;query&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:38(p)
 msgid "Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, as the contents of the tag. Linkage to other data sources can be achieved using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
@@ -1162,7 +1196,7 @@ msgstr ""
 #: C/data-manager-xml-syntax.page:54(p)
 #: C/data-manager-xml-syntax.page:130(p)
 msgid "For example the previous XML specification defines two data sources:"
-msgstr ""
+msgstr "Sebagai contoh spesifikasi XML sebelumnya mendefinisikan dua sumber data:"
 
 #: C/data-manager-xml-syntax.page:58(p)
 msgid "the <code>customers</code> data source which selects some fields from the <em>customers</em> table, and which depends on a string variable named <code>name</code>. This variable has to be set when the data sources are executed because it won't be exported by any data source in this specification."
@@ -1183,12 +1217,12 @@ msgstr ""
 #: C/data-manager-xml-syntax.page:79(p)
 #: C/data-manager-xml-syntax.page:161(p)
 msgid "<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the column's position starts at 1"
-msgstr ""
+msgstr "<code>&lt;ID sumber data&gt;@&lt;posisi kolom&gt;</code> dimana posis kolom dimulai dari 1"
 
 #: C/data-manager-xml-syntax.page:81(code)
 #, no-wrap
 msgid "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a table column"
-msgstr ""
+msgstr "&lt;ID sumber data&gt;@&lt;nama kolom&gt; bila kolom set data adalah kolom tabel"
 
 #: C/data-manager-xml-syntax.page:88(title)
 msgid "The <code>&lt;table&gt;</code> tag"
@@ -1196,7 +1230,7 @@ msgstr "Tag <code>&lt;table&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:89(p)
 msgid "Use the <code>&lt;table&gt;</code> tag to define a data source which will display the contents of a table. This tag:"
-msgstr ""
+msgstr "Pakai tag <code>&lt;table&gt; untuk mendefinisikan sumber data yang akan menampilkan isi dari suatu tabel. Tag ini:"
 
 #: C/data-manager-xml-syntax.page:94(p)
 msgid "requires the \"name\" attribute which represents the table name."
@@ -1431,7 +1465,7 @@ msgstr "Aksi - mendefinisikan aksi"
 
 #: C/actions.page:32(desc)
 msgid "Define the action to list the comments for a product, from the query execution perspective"
-msgstr ""
+msgstr "Definisikan aksi untuk melihat daftar komentar bagi produk, dari perspektif eksekusi query"
 
 #: C/actions.page:36(title)
 msgid "Action - display a list of products"
@@ -1439,7 +1473,7 @@ msgstr "Aksi - tampilkan daftar produk"
 
 #: C/actions.page:37(desc)
 msgid "In the query execution perspective, let's select all the products. Notice that there are here two defined actions: \"Add comment on product\" and \"List comments for product\""
-msgstr ""
+msgstr "Dalam perspektif eksekusi query, kita pilih semua produk. Perhatikan bahwa ada dua aksi yang terdefinisi: \"Tambah komentar pada produk\" dan \"Daftar komentar bagi produk\""
 
 #: C/actions.page:42(p)
 msgid "Now let's pop up the contextual menu:"
@@ -1451,11 +1485,11 @@ msgstr "Aksi - menu kontekstual"
 
 #: C/actions.page:47(desc)
 msgid "Pop up the contextual menu and select <guiseq><gui>Execute action</gui><gui>List comments for product</gui></guiseq>"
-msgstr ""
+msgstr "Munculkan menu kontekstual dan pilih <guiseq><gui>Eksekusi aksi</gui><gui>Daftar komentar bagi produk</gui></guiseq>"
 
 #: C/actions.page:50(p)
 msgid "After a confirmation of the parameters to execute the action, the result is there:"
-msgstr ""
+msgstr "Setelah konfirmasi parameter untuk mengeksekusi aksi, hasilnya disana:"
 
 #: C/actions.page:54(title)
 msgid "Action - executed"
