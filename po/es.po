@@ -15,15 +15,15 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-07-06 13:10+0000\n"
-"PO-Revision-Date: 2012-07-07 12:54+0200\n"
+"POT-Creation-Date: 2012-07-09 19:53+0000\n"
+"PO-Revision-Date: 2012-07-16 17:31+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
 #. title
@@ -543,8 +543,8 @@ msgstr "Error al crear la carpeta de configuración específica del usuario «%s
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
-"La carpeta de configuración específica del usuario «%s» ya existe y no es "
-"una carpeta"
+"La carpeta de configuración específica del usuario «%s» ya existe y no es una "
+"carpeta"
 
 #: ../libgda/gda-config.c:899
 #, c-format
@@ -1429,9 +1429,9 @@ msgid ""
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto es un error de la implementación de %s "
-"(informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto es un error de la implementación de %s (informe del "
+"error)."
 
 #: ../libgda/gda-data-proxy.c:2226
 #, c-format
@@ -1441,9 +1441,9 @@ msgid ""
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
 "El modelo de datos representado informa de las modificaciones como aceptadas "
-"aunque no emitió la correspondiente señal «fila insertada», «fila "
-"actualizada» o «fila eliminada». Esto puede ser un error de la "
-"implementación de %s (informe del error)."
+"aunque no emitió la correspondiente señal «fila insertada», «fila actualizada» "
+"o «fila eliminada». Esto puede ser un error de la implementación de %s "
+"(informe del error)."
 
 #: ../libgda/gda-data-proxy.c:3123
 #, c-format
@@ -1524,8 +1524,8 @@ msgstr "La modificación de la declaración usa un parámetro «%s» desconocido
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificación del parámetro «%s» de la declaración es %s cuando debería "
-"ser %s"
+"La modificación del parámetro «%s» de la declaración es %s cuando debería ser "
+"%s"
 
 #: ../libgda/gda-data-select.c:1398
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1791,15 +1791,14 @@ msgstr "Falta la definición de la vista en el nodo <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definición de la vista contiene más de una declaración (para la vista "
-"«%s»)"
+"La definición de la vista contiene más de una declaración (para la vista «%s»)"
 
 #: ../libgda/gda-meta-store.c:1593
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
-"La definición de la vista no es una declaración de selección (para la vista "
-"«%s»)"
+"La definición de la vista no es una declaración de selección (para la vista «%"
+"s»)"
 
 #: ../libgda/gda-meta-store.c:1620 ../libgda/gda-meta-struct-io.c:176
 msgid "Missing table name from <table> node"
@@ -2161,8 +2160,8 @@ msgstr "El proveedor %s creó un GdaServerOperation sin un nodo para «%s»"
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
-"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para "
-"«%s»"
+"El proveedor %s creó un GdaServerOperation con un tipo de nodo erróneo para «%"
+"s»"
 
 #: ../libgda/gda-server-provider.c:948 ../libgda/gda-server-provider.c:982
 #, c-format
@@ -2283,8 +2282,7 @@ msgstr "No existe un manejador de datos para el tipo «%s»"
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
-"«%s»"
+"Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo «%s»"
 
 #: ../libgda/gda-statement.c:1353
 #, c-format
@@ -2607,8 +2605,7 @@ msgstr "No se especificó una expresión"
 #: ../libgda-report/engine/gda-report-engine.c:943
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
-msgstr ""
-"No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
+msgstr "No se puede ejecutar un «cast» sobre el valor del tipo «%s» al tipo «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1081
 #, c-format
@@ -2810,7 +2807,6 @@ msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 #: ../providers/mysql/gda-mysql-provider.c:1980
 #: ../providers/postgres/gda-postgres-provider.c:1683
 #, c-format
-#| msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "No se puede construir una declaración SELECT para obtener la última fila "
@@ -3261,8 +3257,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1161
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de "
-"campos que unir"
+"El «JOIN» cruzado no puede tener una condición de «JOIN» o una lista de campos "
+"que unir"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1170
 msgid "Empty FROM clause"
@@ -3612,9 +3608,8 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a "
-"establecer usando la propiedad «manejador») espere algún comportamiento no "
-"deseado"
+"El widget de la clase «%s» no tiene asociado un GdaDataHandler, (a establecer "
+"usando la propiedad «manejador») espere algún comportamiento no deseado"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:429
 msgid "Value is NULL"
@@ -3850,9 +3845,9 @@ msgid ""
 "alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
 "character will be left unmodified)"
 msgstr ""
-"Caracteres permitidos en cada posición («0»:dígito, «9»: dígito, excepto 0, "
-"«@»:alfabético, «^»:mayúscula, «#»:alfanumérico, «*»:cualquier carácter, "
-"cualquier otro carácter se dejará sin modificar)"
+"Caracteres permitidos en cada posición («0»:dígito, «9»: dígito, excepto 0, «@»:"
+"alfabético, «^»:mayúscula, «#»:alfanumérico, «*»:cualquier carácter, cualquier "
+"otro carácter se dejará sin modificar)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:3
 msgid "Mask"
@@ -5230,7 +5225,8 @@ msgstr "Conflicto"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+#| msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 msgstr ""
 "Método de resolución de conflictos (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
@@ -5522,9 +5518,11 @@ msgid "Can't create JAVA virtual machine: %s"
 msgstr "No se puede crear la máquina virtual de JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:483
-msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
+#| msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
+msgid ""
+"Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
-"No se pudo ejecutar el tiempo de ejecución de la JVM (libjvm.so), el "
+"No se pudo encontrar la JVM de tiempo de ejecucicón (libjvm.so), el "
 "proveedor JDBC no está disponible."
 
 #: ../providers/ldap/gda-ldap-provider.c:376
@@ -5831,8 +5829,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando "
-"%s. Habrá problemas con los caracteres que no sean UTF-8."
+"No se pudo establecer el conjunto de caracteres del cliente a UTF-8. Usando %"
+"s. Habrá problemas con los caracteres que no sean UTF-8."
 
 #: ../providers/mysql/gda-mysql-provider.c:600
 msgid "The connection string must contain the DB_NAME values"
@@ -6534,8 +6532,8 @@ msgid "Compact"
 msgstr "Compactar"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
-msgid "Replace it already exists"
+#| msgid "Replace it already exists"
+msgid "Replace if it already exists"
 msgstr "Reemplazar si ya existe"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:5
@@ -7329,6 +7327,10 @@ msgstr "Usuario"
 msgid "Existing user"
 msgstr "Usuario existente"
 
+#: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
+msgid "Replace it already exists"
+msgstr "Reemplazar si ya existe"
+
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 msgid "What to do with references on the column to delete"
 msgstr "Qué hacer con las referencias en la columna a eliminar"
@@ -7994,8 +7996,7 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha cambiado a la perspectiva «%s», puede volver a la "
-"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
-"«%s»"
+"perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo «%s»"
 
 #: ../tools/browser/canvas/browser-canvas.c:371
 msgid "Linear layout"
@@ -8242,7 +8243,8 @@ msgid "Comma"
 msgstr "Coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-msgid "Semi column"
+#| msgid "Semi column"
+msgid "Semi colon"
 msgstr "Punto y coma"
 
 #: ../tools/browser/common/gdaui-data-import.c:222
@@ -8825,8 +8827,7 @@ msgstr "No se definió un origen de datos"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo "
-"«%s»"
+"No se puede vincular el parámetro «%s» del tipo «%s» a un parámetro de tipo «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:164
 #: ../tools/browser/schema-browser/table-columns.c:304
@@ -8955,7 +8956,8 @@ msgstr "Ámbito de búsqueda:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:568
 #, c-format
-msgid "Could not find LDAP entry whith DN '%s'"
+#| msgid "Could not find LDAP entry whith DN '%s'"
+msgid "Could not find LDAP entry with DN '%s'"
 msgstr "No se pudo encontrar la entrada LDAP con DN «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
@@ -9198,8 +9200,8 @@ msgstr ""
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:315
 #, c-format
 msgid ""
-"Error while purging files used to store information about each connection: "
-"%s\n"
+"Error while purging files used to store information about each connection: %"
+"s\n"
 msgstr ""
 "Error al limpiar los archivos usados para almacenar la información de cada "
 "conexión: %s\n"
@@ -9656,8 +9658,8 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipos incompatibles: «%s» para la clave externa y «%s» para la clave "
-"primaria referenciada"
+"tipos incompatibles: «%s» para la clave externa y «%s» para la clave primaria "
+"referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:386
 #, c-format
@@ -9871,6 +9873,21 @@ msgid "Auxilliary"
 msgstr "Auxiliar"
 
 #: ../tools/browser/support.h:117
+#| msgid ""
+#| "<small>This area allows to give values to\n"
+#| "variables defined in the SQL code\n"
+#| "using the following syntax:\n"
+#| "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
+#| "For example:\n"
+#| "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+#| "      defines <b>id</b> as a non NULL integer\n"
+#| "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
+#| "      defines <b>age</b> as a a string\n"
+#| "\n"
+#| "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+#| "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
+#| "<tt>blob</tt> and\n"
+#| "<tt>binary</tt></small>"
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -9880,7 +9897,7 @@ msgid ""
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
 "      defines <b>id</b> as a non NULL integer\n"
 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-"      defines <b>age</b> as a a string\n"
+"      defines <b>age</b> as a string\n"
 "\n"
 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
@@ -10133,8 +10150,8 @@ msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
 "\" and \"none\")"
 msgstr ""
-"Define cómo se maneja la columna DN para las búsquedas LDAP (entre «dn», "
-"«rdn» y «none»)"
+"Define cómo se maneja la columna DN para las búsquedas LDAP (entre «dn», «rdn» "
+"y «none»)"
 
 #: ../tools/gda-sql.c:220
 msgid ""
@@ -10276,11 +10293,11 @@ msgstr "Sin contraseña para «%s»"
 #: ../tools/gda-sql.c:1717
 #, c-format
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
+"All the information related to the '%s' connection will be stored in the '%"
+"s' file\n"
 msgstr ""
-"Toda la información relativa a la conexión «%s» se almacenará en el archivo "
-"«%s»\n"
+"Toda la información relativa a la conexión «%s» se almacenará en el archivo «%"
+"s»\n"
 
 #: ../tools/gda-sql.c:1747
 #, c-format
@@ -10293,8 +10310,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
-"Obteniendo la información de esquema para la conexión «%s», esto puede "
-"llevar algún tiempo… "
+"Obteniendo la información de esquema para la conexión «%s», esto puede llevar "
+"algún tiempo… "
 
 #: ../tools/gda-sql.c:1762 ../tools/gda-sql.c:1915 ../tools/gda-sql.c:3533
 #, c-format
@@ -11066,8 +11083,7 @@ msgstr "Falta la operación que realizar sobre los atributos de la entrada LDAP"
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr ""
-"Operación «%s» que realizar sobre los atributos de la entrada LDAP "
-"desconocida"
+"Operación «%s» que realizar sobre los atributos de la entrada LDAP desconocida"
 
 #: ../tools/gda-sql.c:5968
 #, c-format
@@ -11435,8 +11451,8 @@ msgstr "Disparadores"
 
 #~ msgid "%s(%p) [%d] Could not change iter's value for column %d: %s"
 #~ msgstr ""
-#~ "%s(%p) [%d] No se pudo cambiar el valor de iteración para la columna %d: "
-#~ "%s"
+#~ "%s(%p) [%d] No se pudo cambiar el valor de iteración para la columna %d: %"
+#~ "s"
 
 #~ msgid "Execution delay: %.03f"
 #~ msgstr "Retardo de la ejecución: %.03f"
@@ -11657,9 +11673,9 @@ msgstr "Disparadores"
 #~ msgstr "Conectar con otra fuente de datos definidos (DSN, vea \\l)"
 
 #~ msgid ""
-#~ "<small>The XML tree's root node must be a <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one "
-#~ "or more data source definitions.\n"
+#~ "<small>The XML tree's root node must be a <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, which is allowed to contain one or more "
+#~ "data source definitions.\n"
 #~ "Each data source is defined by <span foreground=\"#4e9a06\"><tt>&lt;"
 #~ "query&gt;</tt></span> or <span foreground=\"#4e9a06\"><tt>&lt;table&gt;</"
 #~ "tt></span> nodes, both accepting the following optional attributes:\n"
@@ -11686,15 +11702,15 @@ msgstr "Disparadores"
 #~ "   the aforementioned table.\n"
 #~ "</small>"
 #~ msgstr ""
-#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
+#~ "<small>Los nodos raíces del árbol XML deben ser <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;data&gt;</tt></span>, que permite contener una o más "
 #~ "definiciones de fuentes de datos.\n"
-#~ "Cada fuente de datos está definida por nodos <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;query&gt;</tt></span> o <span foreground="
-#~ "\"#4e9a06\"><tt>&lt;table&gt;</tt></span>, ambos aceptan los siguientes "
-#~ "atributos opcionales:\n"
-#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena "
-#~ "de ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
+#~ "Cada fuente de datos está definida por nodos <span foreground=\"#4e9a06"
+#~ "\"><tt>&lt;query&gt;</tt></span> o <span foreground=\"#4e9a06\"><tt>&lt;"
+#~ "table&gt;</tt></span>, ambos aceptan los siguientes atributos "
+#~ "opcionales:\n"
+#~ " - <span foreground=\"#4e9a06\">«id»</span> para especificar una cadena de "
+#~ "ID de fuente de datos, usado al enlazar fuentes de datos entre ellas;\n"
 #~ " - <span foreground=\"#4e9a06\">«title»</span> para especificar un "
 #~ "título.\n"
 #~ "\n"
