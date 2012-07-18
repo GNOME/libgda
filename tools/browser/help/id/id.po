@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2012-06-14 20:39+0000\n"
-"PO-Revision-Date: 2012-07-15 19:34+0700\n"
+"POT-Creation-Date: 2012-07-16 15:32+0000\n"
+"PO-Revision-Date: 2012-07-18 18:50+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -596,7 +596,7 @@ msgstr "Warna yang sama dengan sisa UI: berarti situasi di atas tak ada yang ber
 
 #: C/table-insert-data.page:40(p)
 msgid "Columns which are foreign keys to other tables are presented as a drop down combo box where you can only choose among the values in the referenced table (hint: to have that values list refreshed you should close the popup dialog and reopen it);"
-msgstr ""
+msgstr "Kolom yang menjadi foreign key bagi tabel lain ditampilkan sebagai kotak kombo drop down dimana Anda hanya dapat memilih diantara nilai-nilai dalam tabel yang diacu (petunjuk: untuk menyegarkan daftar nilai Anda mesti menutup dialog pop up dan membuka ulang);"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -638,7 +638,7 @@ msgstr "gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" s
 
 #: C/transactions.page:22(p)
 msgid "A transaction may be started automatically when executing a SELECT statement which involves binary objects (BLOBs), and the transaction may be locked while the resulting data set is kept in memory (to get rid of a data set in a <link xref=\"query-execution-perspective\">query execution perspective</link>, clear the history item relating to the data set)."
-msgstr ""
+msgstr "Suatu transaksi mungkin otomatis dimulai ketika mengeksekusi suatu pernyataan SELECT yang melibatkan objek biner (BLOB), dan transaksi mungkin dikunci ketika set data hasilnya disimpan di memori (untuk menyingkirkan set data dalam <link xref=\"query-execution-perspective\">perspektif eksekusi query</link>, bersihkan butir riwayat yang terkait dengan set data tersebut)."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -659,11 +659,11 @@ msgstr "Perspektif peramban skema"
 
 #: C/schema-browser-perspective.page:9(p)
 msgid "Use the schema browser perspective to understand the database's organisation (schema). To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>B</key></keyseq> shortcut."
-msgstr ""
+msgstr "Gunakan perspektif peramban skema untuk memahami organisasi basis data (skema). Untuk berpindah ke perspektif ini, gunakan menu <guiseq><gui>Perspektif</gui><gui>Peramban skema</gui></guiseq>, atau pintasan <keyseq><key>Ctrl</key><key>B</key></keyseq>."
 
 #: C/schema-browser-perspective.page:14(p)
 msgid "The perspective is divided in two horizontal panes: the left pane for the user defined favorites, and the right pane being the action area."
-msgstr ""
+msgstr "Perspektif dibagi menjadi dua bidang horisontal: panel kiri bagi favorit yang didefinisikan pengguna, dan panel kanan adalah area aksi."
 
 #: C/schema-browser-perspective.page:19(title)
 msgid "Schema browser perspective's default view"
@@ -675,19 +675,19 @@ msgstr "Perspektif peramban skema baku"
 
 #: C/schema-browser-perspective.page:24(p)
 msgid "The left part of the perspective lists the favorite database objects or diagrams. Double clicking on a favorite opens its properties in the right pane."
-msgstr ""
+msgstr "Perspektif bagian kiri mendaftar diagram atau objek basis data favorit. Klik ganda pada suatu favorit membuka propertinya pada panel kanan."
 
 #: C/schema-browser-perspective.page:33(p)
 msgid "a tab listing all the database's tables and views, in a <em>cloud</em> view where the tables with the more relations to other tables being displayed in a larger font; this tab is always present"
-msgstr ""
+msgstr "suatu tab yang mendaftar semua view dan tabel basis data, dalam suatu tilikan <em>awan</em> dimana tabel dengan relasi ke tabel lain lebih banyak ditampilkan dalam fonta yang lebih besar; tab ini selalu ada"
 
 #: C/schema-browser-perspective.page:36(p)
 msgid "zero or more tabs representing a table or views' properties: the list of columns, the list of constraints (primary or foreign keys, and unique constraints), a <link xref=\"diagram\">diagram</link> showing the related tables, and an area to define display preferences for each column's data"
-msgstr ""
+msgstr "nol atau lebih tab mewakili properti tabel atau view: daftar kolom, daftar konstrain (kunci primer atau foreign key, dan konstrain unik), <link xref=\"diagram\">bagan</link> yang menunjukkan tabel yang terhubung, dan suatu area untuk menentukan preferensi tampilan bagi data untuk setiap kolom"
 
 #: C/schema-browser-perspective.page:39(p)
 msgid "zero or more <link xref=\"diagram\">diagrams</link> in which any number of tables can be represented, where they are linked using their relations (as foreign key constraints)"
-msgstr ""
+msgstr "nol atau lebih <link xref=\"diagram\">bagan</link> dimana berapa banyakpun tabel dapat diwakili, dimana mereka ditautkan memakai relasi mereka (sebagai konstrain foreign key)"
 
 #: C/schema-browser-perspective.page:44(title)
 msgid "Tab showing information about a table"
@@ -695,7 +695,7 @@ msgstr "Tab menunjukkan informasi tentang suatu tabel"
 
 #: C/schema-browser-perspective.page:45(desc)
 msgid "Example of information displayed for each table, note the difference between foreign keys implemented in the database and <link xref=\"declared-fk\">declared foreign keys</link>"
-msgstr ""
+msgstr "Contoh dari informasi yang ditampilkan bagi setiap tabel, perhatikan perbedaan antara foreign key yang diimplementasikan dalam basis data dan <link xref=\"declared-fk\">foreign key yang dideklarasikan</link>"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -709,7 +709,7 @@ msgstr "Perspektif eksekusi query"
 
 #: C/query-execution-perspective.page:9(p)
 msgid "Use the query perspective to execute SQL statements. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut."
-msgstr ""
+msgstr "Pakai perspektif query untuk mengeksekusi pernyataan SQL. Untuk bertukar ke perspektif ini, gunakan menu <guiseq><gui>Perspektif</gui><gui>Eksekusi query (SQL)</gui></guiseq>, atau pintasan <keyseq><key>Ctrl</key><key>S</key></keyseq>."
 
 #: C/query-execution-perspective.page:15(title)
 msgid "Query exec perspective"
@@ -721,23 +721,23 @@ msgstr "Perspektif query exec dengan satu pernyataan SELECT dieksekusi"
 
 #: C/query-execution-perspective.page:20(p)
 msgid "The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements, and the right pane being the action area."
-msgstr ""
+msgstr "Perspektif dibagi menjadi dua panel horisontal: panel kiri bagi pernyataan favorit yang didefinisikan pengguna, dan panel kanan adalah area aksi."
 
 #: C/query-execution-perspective.page:24(p)
 msgid "In the figure above, there are two favorites: a SELECT statement (named \"List customers\") and an INSERT statement (named \"New customer ...\"). The INSERT statement needs one \"name\" parameter, whereas the SELECT statement does not require any parameter to be executed."
-msgstr ""
+msgstr "Pada gambar di atas, ada dua favorit: suatu pernyataan SELECT (dinamai \"List customers\") dan suatu pernyataan INSERT (dinamai \"New customer ...\"). Pernyataan INSERT memerlukan satu parameter \"name\", sedangkan pernyataan SELECT tak memerlukan parameter untuk dieksekusi."
 
 #: C/query-execution-perspective.page:30(p)
 msgid "The icon difference between the two illustrates the fact that the INSERT favorite is also marked to be an <link xref=\"actions\">action</link>: it will be proposed as an action to be executed when the contextual menu is brought up in any grid representation of a resultset."
-msgstr ""
+msgstr "Perbedaan ikon antara keduanya mengilustrasikan fakta bahwa favorit INSERT juga ditandai sebagai <link xref=\"action\">aksi</link>: ini akan diusulkan sebagai aksi untuk dieksekusi ketika menu kontekstual dimunculkan dalam representasi kisi manapun dari set hasil. "
 
 #: C/query-execution-perspective.page:35(p)
 msgid "The left part of the perspective lists the favorite statements which have been user defined. Activating a favorite (double clicking) resets the SQL text area's contents to the selected statement's SQL."
-msgstr ""
+msgstr "Panel kiri dari perspektif mendaftar pernyataan favorit yang telah didefinisikan oleh pengguna. Mengaktifkan suatu favorit (klik ganda) mereset isi area teks SQL ke SQL pernyataan yang dipilih."
 
 #: C/query-execution-perspective.page:40(p)
 msgid "The right pane is composed of zero or more tabs where the SQL is entered and executed. In each tab there is:"
-msgstr ""
+msgstr "Panel kanan tersusun dari nol atau lebih tab dimana SQL dimasukkan dan dieksekusi. Dalam setiap tab ada:"
 
 #: C/query-execution-perspective.page:45(p)
 msgid "an SQL area in the top left part"
@@ -761,11 +761,11 @@ msgstr "Area SQL"
 
 #: C/query-execution-perspective.page:53(p)
 msgid "The SQL area is an SQL editor. The SQL can be any SQL understood by the database, with the exception of <link xref=\"variables-syntax\">variables</link> (which must have a specific syntax)."
-msgstr ""
+msgstr "Area SQL adalan suatu penyunting SQL. SQL bisa berupa sebarang SQL yang dimengerti oleh basis data tersebut, dengan pengecualian <link xref=\"variables-syntax\">variabel</link> (yang mesti memiliki sintaks tertentu)."
 
 #: C/query-execution-perspective.page:57(p)
 msgid "The keyboard shortcuts in the SQL editor are:"
-msgstr ""
+msgstr "Pintasan papan tik dalam penyunting SQL adalah:"
 
 #: C/query-execution-perspective.page:61(p)
 msgid "<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
@@ -781,7 +781,7 @@ msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> untuk membersihkan penyunti
 
 #: C/query-execution-perspective.page:64(p)
 msgid "<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</key><key>Down</key></keyseq> to navigate through the editor's history"
-msgstr ""
+msgstr "<keyseq><key>Ctrl</key><key>Up</key></keyseq> dan <keyseq><key>Ctrl</key><key>Down</key></keyseq> untuk navitasi dalam riwayat penyunting"
 
 #: C/query-execution-perspective.page:70(title)
 msgid "Command buttons"
@@ -790,27 +790,27 @@ msgstr "Tombol perintah"
 #: C/query-execution-perspective.page:71(p)
 #: C/data-manager-perspective.page:72(p)
 msgid "The commands available through the command buttons are:"
-msgstr ""
+msgstr "Perintah yang tersedia melalui tombol perintah adalah:"
 
 #: C/query-execution-perspective.page:75(p)
 msgid "<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</key><key>l</key></keyseq> shortcut)"
-msgstr ""
+msgstr "<giu>Bersihkan</gui>: bersihkan penyunting (serupa dengan pintasan <keyseq><key>Ctrl</key><key>l</key></keyseq>)"
 
 #: C/query-execution-perspective.page:76(p)
 msgid "<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax\">variables</link> panel where you can give values to the variables present in the SQL code. The panel is automatically shown when a variable is detected in the SQL code"
-msgstr ""
+msgstr "<gui>Variabel</gui>: menampilkan atau menyembunyikan panel <link xref=\"variables-syntax\">variabel</link> dimana Anda dapat memberikan nilai-nilai ke variabel yang ada dalam kode SQL. Panel otomatis ditampilkan ketika suatu variabel terdeteksi dalam kode SQL"
 
 #: C/query-execution-perspective.page:79(p)
 msgid "<gui>Execute</gui>: executes the SQL code. If the SQL code contains some variables which have not been set, then a popup first appears requesting the variables to be given values. This is similar to the <keyseq><key>Ctrl</key><key>ENTER</key></keyseq> shortcut"
-msgstr ""
+msgstr "<gui>Eksekusi</gui>: eksekusi kode SQL. Bila kode SQL memuat beberapa variabel yang belum ditata, maka akan muncul popup yang meminta agar variabel diisi nilainya. Ini serupa dengan pintasan <keyseq><key>Ctrl</key><key>ENTER</key></keyseq>"
 
 #: C/query-execution-perspective.page:82(p)
 msgid "<gui>Indent</gui>: re-indents the SQL code (warning: this removes any comments)"
-msgstr ""
+msgstr "<gui>Indentasi</gui>: indentasi ulang kode SQL (peringatan: ini menghapus semua komentar)"
 
 #: C/query-execution-perspective.page:83(p)
 msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
-msgstr ""
+msgstr "<gui>Favorit</gui>: menambahkan kode SQL kini ke favorit"
 
 #: C/query-execution-perspective.page:88(title)
 msgid "Execution history"
@@ -818,15 +818,15 @@ msgstr "Riwayat eksekusi"
 
 #: C/query-execution-perspective.page:89(p)
 msgid "The execution history part contains a list of the past executed statements, ordered by execution date along with an indication when the statement was executed (11 minutes in the figure above). Selecting an history item displays the corresponding result in the execution results part."
-msgstr ""
+msgstr "Bagian riwayat eksekusi memuat daftar dari pernyataan yang pernah dieksekusi, diurutkan menurut tanggal eksekusi ditambah dengan indikasi kapan pernyataan dieksekusi (11 menit pada gambar di atas). Memilih butir riwayat akan menampilkan hasil yang bersangkutan pada bagian hasil eksekusi."
 
 #: C/query-execution-perspective.page:94(p)
 msgid "The <gui>Copy</gui> button copies the currently selected history item's SQL code to the SQL editor, and the <gui>Clear</gui> button removes all the history items."
-msgstr ""
+msgstr "Tombol <gui>Salin</gui> menyalin kode SQL butir riwayat yang kini dipilih ke penyunting SQL, dan tombol <gui>Bersihkan</gui> menghapus semua butir riwayat."
 
 #: C/query-execution-perspective.page:98(p)
 msgid "Note that any given history item can also be removed individually using the <key>Suppr</key> key."
-msgstr ""
+msgstr "Perhatikan bahwa sebarang butir riwayat yang diberikan juga dapat dihapus secara individu memakai tombol <key>Suppr</key>."
 
 #: C/query-execution-perspective.page:104(title)
 msgid "Execution results"
@@ -834,15 +834,15 @@ msgstr "Hasil eksekusi"
 
 #: C/query-execution-perspective.page:105(p)
 msgid "The Execution results part displays the execution result of the currently selected execution history item, as a table for SELECT statement, giving information for other types of statement, or giving the execution error notice if the execution failed."
-msgstr ""
+msgstr "Bagian hasil eksekusi menampilkan hasil eksekusi dari butir riwayat eksekusi yang kini dipilih, sebagai suatu tabel bagi pernyataan SELECT, memberikan informasi bagi pernyataan tipe lain, atau memberi pemberitahuan galat eksekusi bila eksekusi gagal."
 
 #: C/legal.xml:3(p)
 msgid "This work is licensed under a <link href=\"http://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported License</link>."
-msgstr ""
+msgstr "Karya ini di bawah lisensi <link href=\"http://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported License</link>."
 
 #: C/legal.xml:6(p)
 msgid "As a special exception, the copyright holders give you permission to copy, modify, and distribute the example code contained in this document under the terms of your choosing, without restriction."
-msgstr ""
+msgstr "Sebagai pengecualian khusus, para pemegang hak cipta memberi Anda ijin untuk menyalin, mengubah, dan mendistribusikan kode contoh yang dimuat dalam dokumen ini di bawah syarat yang Anda pilih, tanpa pembatasan."
 
 #: C/index.page:6(name)
 msgid "Vivien Malerba"
@@ -858,15 +858,15 @@ msgstr "Bantuan Peramban Gda"
 
 #: C/index.page:12(p)
 msgid "<app>gda-browser</app> is a tool for database administrators: they can analyse database's schemas to understand how data is organized, run SQL commands interactively, and in a broader way manage the data contained in the databases."
-msgstr ""
+msgstr "<app>gda-browser</app> adalah perkakas untuk para administrator basis data: mereka dapat menganalisa skema basis data untuk memahami bagaimana data diorganisasi, menjalankan perintah SQL secara interaktif, dan secara luas mengelola data yang dimuat dalam basis data."
 
 #: C/index.page:16(p)
 msgid "Several connections to databases can be opened at once, allowing the user to work on multiple databases at once (it is also possible to execute commands on several connections at the same time)."
-msgstr ""
+msgstr "Beberapa koneksi ke basis data dapat dibuka sekaligus, mengijinkan pengguna untuk bekerja pada beberapa basis data sekaligus (juga mungkin untuk mengeksekusi perintah pada beberapa koneksi pada saat yang sama)."
 
 #: C/index.page:19(p)
 msgid "As <app>gda-browser</app> uses the <app>libgda</app> library, it can open connections to databases for which a database driver (provider) exists in <app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the moment)."
-msgstr ""
+msgstr "Karena <app>gda-browser</app> memakai pustaka <app>libgda</app>, ini dapat membuka koneksi ke basis data yang driver basis datanya (penyedia) ada dalam <app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</link> dan <link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> didukung pada saat ini)."
 
 #: C/index.page:29(title)
 msgid "Presentation"
@@ -886,7 +886,7 @@ msgstr "Organisasi antar muka umum"
 
 #: C/general-ui.page:9(p)
 msgid "The <app>gda-browser</app> is composed of one or more top level windows, each window relating to a single connection (which name is in its title). For any given connection, several windows can be opened (use the <guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the <keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
-msgstr ""
+msgstr "<app>gda-browser</app> disusun dari satu atau lebih jendela aras puncak, setiap jendela berkaitan dengan suatu koneks tunggal (yang namanya menjadi judul). Bagi setiap koneksi, beberapa jendela dapat dibuka (gunakan menu <guiseq><gui>Jendela</gui><gui>Jendela baru</gui></guiseq> atau pintasan <keyseq><key>Ctrl</key><key>N</key></keyseq>)."
 
 #: C/general-ui.page:16(title)
 msgid "A connection window"
@@ -894,27 +894,27 @@ msgstr "Suatu jendela koneksi"
 
 #: C/general-ui.page:17(desc)
 msgid "Window opened for the 'c1' connection (and the Schema browser perspective)"
-msgstr ""
+msgstr "Jendela yang dibuka bagi koneksi 'c1' (dan perspektif peramban Skema)"
 
 #: C/general-ui.page:21(p)
 msgid "Within each window, several <em>perspectives</em> are available which are adapted to different activities:"
-msgstr ""
+msgstr "Dalam setiap jendela, tersedia beberapa <em>perspektif</em> yang disesuaikan ke aktivitas berbeda:"
 
 #: C/general-ui.page:26(p)
 msgid "the <link xref=\"schema-browser-perspective\">Schema browser perspective</link> to help understand the database's layout"
-msgstr ""
+msgstr "<link xref=\"schema-browser-perspective\">Perspektif peramban skema</link> untuk membantu memahami tata letak basis data"
 
 #: C/general-ui.page:27(p)
 msgid "the <link xref=\"query-execution-perspective\">Query execution perspective</link> to execute any SQL command"
-msgstr ""
+msgstr "<link xref=\"query-execution-perspective\">Perspektif eksekusi query</link> untuk mengeksekusi sebarang perintah SQL"
 
 #: C/general-ui.page:28(p)
 msgid "the <link xref=\"data-manager-perspective\">Data manager perspective</link> to navigate through the database's contents"
-msgstr ""
+msgstr "<link xref=\"data-manager-perspective\">Perspektif manajer data</link> untuk menavigasi melalui isi basis data"
 
 #: C/general-ui.page:30(p)
 msgid "The currently displayed perspective can be changed individually for each window, and, as all perspectives have an action area composed of tabs, tabs can be moved from one window to the other if the source and destination window are for the same connection, and display the same perspective (simply drag and drop a tab from one window to the other using the tab's label as a handle)."
-msgstr ""
+msgstr "Perspektif yang kini ditampilkan dapat diubah secara individu bagi setiap jendela, dan seperti semua perspektif, memiliki area aksi yang tersusun atas tab; tab dapat dipindahkan dari satu jendela ke lainnya bisa jendela sumber dan tujuan memakai koneksi yang sama, dan menampilkan perspektif yang sama (cukup seret dan jatuhkan suatu tab dari satu jendela ke lainnya memakai label tab sebagai pegangan)."
 
 #: C/features.page:8(title)
 msgid "Features"
@@ -922,7 +922,7 @@ msgstr "Fitur"
 
 #: C/features.page:9(p)
 msgid "<app>gda-browser</app>'s current features are:"
-msgstr ""
+msgstr "Fitur-fitur <app>gda-browser</app> kini adalah:"
 
 #: C/features.page:13(title)
 msgid "General user interface"
@@ -931,15 +931,15 @@ msgstr "Antar muka pengguna umum"
 #: C/features.page:15(p)
 #: C/features.page:26(p)
 msgid "multi threaded: each connection is handled in it own thread, meaning that no single connection can lock the application"
-msgstr ""
+msgstr "multi threaded: setiap koneksi ditangani dalam threadnya sendiri, yang berarti bahwa tak ada koneksi tunggal yang dapat mengunci aplikasi"
 
 #: C/features.page:17(p)
 msgid "several windows can be opened for a single connection"
-msgstr ""
+msgstr "beberapa jendela dapat dibuka bagi koneksi tunggal"
 
 #: C/features.page:18(p)
 msgid "full screen mode accessible to maximize the screen space usage"
-msgstr ""
+msgstr "mode layar penuh dapat dipakai untuk memaksimalkan pemakaian ruang layar"
 
 #: C/features.page:22(title)
 msgid "Connection management"
@@ -947,11 +947,11 @@ msgstr "Manajemen koneksi"
 
 #: C/features.page:24(p)
 msgid "multiple simultaneous connections can be opened at once"
-msgstr ""
+msgstr "beberapa koneksi simultan dapat dibuka sekaligus"
 
 #: C/features.page:25(p)
 msgid "connections binding: it is possible to <link type=\"topic\" xref=\"virtual-connections\">\"bind\"</link> several connections into one to execute SQL commands on several connections at once"
-msgstr ""
+msgstr "pengikatan koneksi: dimungkinkan untuk <link type=\"topic\" xref=\"virtual-connections\">\"mengikat\"</link> beberapa koneksi menjadi satu untuk mengeksekusi perintah SQL pada beberapa koneksi sekaligus"
 
 #: C/features.page:31(title)
 msgid "Activities"
@@ -959,27 +959,27 @@ msgstr "Aktivitas"
 
 #: C/features.page:32(p)
 msgid "The activities are grouped by theme around the notion of <link type=\"topic\" xref=\"general-ui\">perspectives</link>, the following are currently implemented:"
-msgstr ""
+msgstr "Aktivitas dikelompokkan menurut tema di sekitar gagasan <link type=\"topic\" xref=\"general-ui\">perspektif</link>, yang berikut ini kini diimplementasikan:"
 
 #: C/features.page:36(p)
 msgid "analyse the database schema (tables, relations, ...), see the <link xref=\"schema-browser-perspective\">Schema browser perspective</link>"
-msgstr ""
+msgstr "menganalisa skema basis data (tabel, relasi, ...), lihat <link xref=\"schema-browser-perspective\">Perspektif peramban skema</link>"
 
 #: C/features.page:38(p)
 msgid "execute SQL commands, see the <link xref=\"query-execution-perspective\">Query execution perspective</link>"
-msgstr ""
+msgstr "mengeksekusi perintah SQL, lihat link xref=\"query-execution-perspective\">Perspektif eksekusi query</link>"
 
 #: C/features.page:40(p)
 msgid "analyse the table's contents, see the <link xref=\"data-manager-perspective\">Data manager perspective</link>"
-msgstr ""
+msgstr "menganalisa isi tabel, lihat <link xref=\"data-manager-perspective\"> Perspektif manajer data</link>"
 
 #: C/features.page:42(p)
 msgid "for <link xref=\"ldap-connection\">LDAP connections</link>, manage the hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-perspective\">LDAP browser perspective</link>"
-msgstr ""
+msgstr "untuk <link xref=\"ldap-connection\">koneksi LDAP</link>, kelola data hirarkis dalam pohon LDAP, lihat <link xref=\"ldap-browser-perspective\">perspektif peramban LDAP</link>"
 
 #: C/features.page:45(p)
 msgid "See also the section about <link xref=\"actions\">actions</link>"
-msgstr ""
+msgstr "Lihat juga seksi tentang <link xref=\"actions\">aksi</link>"
 
 #: C/features.page:50(title)
 msgid "Openness"
@@ -987,11 +987,11 @@ msgstr "Keterbukaan"
 
 #: C/features.page:52(p)
 msgid "CSV and other text files can be imported and used in conjunction with <link type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
-msgstr ""
+msgstr "CSV dan berkas teks lain dapat diimpor dan dipakai bersama-sama<link type=\"topic\" xref=\"virtual-connections\">pengikatan koneksi</link>"
 
 #: C/features.page:53(p)
 msgid "the general framework is opened enough to add new integrated features; specifically anyone can develop new <link type=\"topic\" xref=\"general-ui\">perspectives</link>"
-msgstr ""
+msgstr "kerangka kerja umum telah cukup dibuka untuk menambah fitur-fitur integrasi baru: secara khusus, siapapun dapat mengembangkan link type=\"topic\" xref=\"general-ui\">perspektif</link> baru"
 
 #: C/features.page:51(list)
 msgid "<placeholder-1/> x <placeholder-2/>"
@@ -1009,7 +1009,7 @@ msgstr "Diagram"
 
 #: C/diagram.page:8(p)
 msgid "Diagrams are present throughout the <app>gda-browser</app>, and are made of a canvas on which graphical items are displayed (like tables for example)."
-msgstr ""
+msgstr "Bagan ada di seluruh <app>gda-browser</app>, dan dibuat dari kanvas tempat butir-butir grafis ditampilkan (sebagai contoh adalah tabel)."
 
 #: C/diagram.page:13(title)
 msgid "Diagram"
@@ -1017,39 +1017,39 @@ msgstr "Diagram"
 
 #: C/diagram.page:14(desc)
 msgid "Diagram showing some tables and their relations represented by foreign key constraints (also see <link xref=\"declared-fk\">the declared foreign keys</link>)"
-msgstr ""
+msgstr "Bagan yang menampilkan beberapa tabel dan relasi mereka diwakili oleh konstrain foreign key (lihat juga <link xref=\"declared-fk\">foreign key yang dideklarasikan</link>)"
 
 #: C/diagram.page:18(p)
 msgid "The items can be moved around on the canvas (note that as long as the whole diagram fits in the canvas, it remains centered on it). Other manipulations are possible:"
-msgstr ""
+msgstr "Butir-butir dapat dipindah-pinda pada kanvas (perhatikan bahwa selama seluruh bagan pas dalam kanvas, itu akan tetap di tengahnya). Manipulasi lain yang mungkin:"
 
 #: C/diagram.page:23(p)
 msgid "zooming in and out using the mouse's wheel, or through the contextual menu (right click on the canvas); a zoom to fit the canvas is also available in the contextual menu"
-msgstr ""
+msgstr "zum perbesar dan perkecil memakai roda tetikus, atau melalui menu konteks (klik kanan pada kanvas); zum untuk pas ukuran kanvas juga tersedia dalam menu konteks"
 
 #: C/diagram.page:25(p)
 msgid "bring closer or moving away items from one another using the mouse's wheel while holding the <key>Shift</key> key"
-msgstr ""
+msgstr "mendekatkan atau menjauhkan butir-butir satu sama lain memakai roda tetikus ketika menahan tombol <key>Shift</key>"
 
 #: C/diagram.page:27(p)
 msgid "arranging items linearly or radially, through the contextual menu"
-msgstr ""
+msgstr "manata butir-butir secara linier atau radial, melalui menu konteks"
 
 #: C/diagram.page:28(p)
 msgid "printing, through the contextual menu"
-msgstr ""
+msgstr "mencetak, melalui menu kontekstual"
 
 #: C/diagram.page:29(p)
 msgid "exporting as PNG or SVG images, through the contextual menu"
-msgstr ""
+msgstr "mengekspor sebagai gambar PNG atau SVG, melalui menu kontekstual"
 
 #: C/diagram.page:30(p)
 msgid "adding items, through the contextual menu"
-msgstr ""
+msgstr "menambah butir, melalui menu kontekstual"
 
 #: C/diagram.page:31(p)
 msgid "removing items, through the items's contextual menu"
-msgstr ""
+msgstr "menghapus butir, melalui menu kontekstual butir"
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1065,83 +1065,83 @@ msgstr "."
 
 #: C/declaredfk.page:8(title)
 msgid "Declared foreign keys"
-msgstr ""
+msgstr "Mendeklarasikan foreign key"
 
 #: C/declaredfk.page:9(p)
 msgid "All the foreign key constraints (where the contents of one or more columns in a table is constrained to be among the values of one or more columns of another table) are analysed and reported in the <link xref=\"schema-browser-perspective\">Schema Browser perspective</link>. Foreign key constraints help understand the database schema and is automatically used where appropriate by the application."
-msgstr ""
+msgstr "Semua konstrain foreign key (dimana isi dari satu atau lebih kolom dalam sebuah tabel dibatasi di antara salah satu nilai dari satu atau lebih kolom dari tabel lain) dianalisis dan dilaporkan dalam <link xref=\"schema-browser-perspective\">Perspektif Peramban Skema</link>. Konstrain foreign key membantu memahami skema database dan secara otomatis digunakan jika sesuai dengan aplikasi."
 
 #: C/declaredfk.page:16(p)
 msgid "However sometimes the designer of a database has forgotten or did not whish to use foreign key constraints, and so it is possible to \"declare foreign keys\" which are only declaration to the tool and not actually defined in the database."
-msgstr ""
+msgstr "Namun kadang-kadang perancang database telah melupakan atau tidak berharap untuk menggunakan konstrain foreign key, sehingga mungkin untuk \"mendeklarasikan foreign key\" yang hanya merupakan deklarasi untuk alat dan tidak benar-benar didefinisikan dalam database."
 
 #: C/declaredfk.page:22(title)
 msgid "Declared foreign keys in diagrams"
-msgstr ""
+msgstr "Foreign key yang dideklarasikan dalam bagan"
 
 #: C/declaredfk.page:23(desc)
 msgid "When displayed in diagrams, declared foreign keys are represented using a dashed line instead of a solid line for actual foreign keys"
-msgstr ""
+msgstr "Ketika ditampilkan dalam bagan, foreign key yang dideklarasikan diwakili oleh garis putus-putus sebagai pengganti garis utuh bagi foreign key"
 
 #: C/declaredfk.page:31(p)
 msgid "the (foreign key name, table, referenced table) triplet uniquely identifies a declared foreign key and thus declaring a new foreign key with the same triplet will remove any previously declared one."
-msgstr ""
+msgstr "triplet (nama foreign key, tabel, tabel yang diacu) secara unik mengidentifikasi suatu foreign key yang dideklarasikan sehingga mendeklarasikan foreign key baru dengan triplet yang sama akan menghapus deklarasi sebelumnya"
 
 #: C/declaredfk.page:34(p)
 msgid "If the same constraint is actually represented by a real foreign key and also by a declared foreign key, then the real foreign key definition will mask the declared one"
-msgstr ""
+msgstr "Bila konstrain yang sama benar-benar diwakili oleh foreign key nyata dan juga oleh suatu foreign key yang dideklarasikan, makan definisi foreign key nyata akan menutupi yang dideklarasikan"
 
 #: C/declaredfk.page:37(p)
 msgid "Declared foreign key don't have any policy to determine what action to perform on UPDATE or DELETE situations, so the reported policy will always be \"not enforced\""
-msgstr ""
+msgstr "Foreign key yang dideklarasikan tak punya kebijakan untuk menentukan aksi apa yang dilakukan pada situasi UPDATE atau DELETE, sehingga kebijakan yang dilaporkan selalu \"tak ditegakkan\""
 
 #: C/declaredfk.page:42(title)
 msgid "Declaring a new foreign key"
-msgstr ""
+msgstr "Mendeklarasikan suatu foreign key baru"
 
 #: C/declaredfk.page:43(p)
 msgid "A new foreign key can be declared from the <link xref=\"schema-browser-perspective\">Schema Browser perspective</link> using the <guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which is present when a table's properties are shown in the current tab."
-msgstr ""
+msgstr "Foreign key baru dapat dideklarasikan dari <link xref=\"schema-browser-perspective\">Perspektif Peramban Skema</link> memakai menu <guiseq><gui>Tabel</gui><gui>Deklarasikan foreign key</gui></guiseq> uang ada ketika properti tabel ditunjukkan pada tab kini."
 
 #: C/declaredfk.page:49(p)
 msgid "Another way of declaring a foreign key is using the contextual menu on a table in a diagram, and selecting the <guiseq><gui>Declare foreign key for this table</gui></guiseq> option."
-msgstr ""
+msgstr "Cara lain mendeklarasikan foreign key adalah memakai menu konteks pada suatu tabel dalam bagan, dan memilih opsi <guiseq><gui>Deklarasikan foreign key bagi tabel ini</gui></guiseq>."
 
 #: C/declaredfk.page:53(p)
 msgid "In any way, to declare a new foreign key, the following information must be provided:"
-msgstr ""
+msgstr "Dengan cara apapun, untuk mendeklarasikan foreign key baru, informasi berikut mesti diberikan:"
 
 #: C/declaredfk.page:57(p)
 msgid "A foreign key name"
-msgstr ""
+msgstr "Nama foreign key"
 
 #: C/declaredfk.page:58(p)
 msgid "The referenced table"
-msgstr ""
+msgstr "Tabel yang diacu"
 
 #: C/declaredfk.page:59(p)
 msgid "Columns and referenced columns for each column involved in the foreign key"
-msgstr ""
+msgstr "Kolom dan kolom yang diacu bagi setiap kolom yang dilibatkan dalam foreign key"
 
 #: C/declaredfk.page:62(title)
 msgid "Information to declare a new foreign key"
-msgstr ""
+msgstr "Informasi untuk mendeklarasikan foreign key baru"
 
 #: C/declaredfk.page:63(desc)
 msgid "UI dialog poping up to declare a new foreign key. Here the referenced table is 'warehouses', and the involved columns are 'country' and 'city'."
-msgstr ""
+msgstr "Dialog UI yang muncul untuk mendeklarasikan foreign key baru. Disini tabel yang diacu adalah 'warehouses', dan kolom yang terlibat adalah 'county' dan 'city'."
 
 #: C/declaredfk.page:70(title)
 msgid "Remove a declared foreign key"
-msgstr ""
+msgstr "Hapus suatu foreign key yang dideklarasikan"
 
 #: C/declaredfk.page:71(p)
 msgid "A declared foreign key can be removed by clicking on the <guiseq><gui>(Remove)</gui></guiseq> link displayed below each declared foreign key properties in the table's properties (in the <link xref=\"schema-browser-perspective\">Schema Browser perspective</link>)."
-msgstr ""
+msgstr "Foreign key yang dideklarasikan dapat dihapus dengan mengklik tautan <guiseq><gui>(Hapus)</gui></guiseq> yang ditampilkan di bawah setiap properti foreign key yang dideklarasikan dalam properti tabel (pada <link xref=\"schema-browser-perspective\">Perspektif Peramban Skema</link>)."
 
 #: C/declaredfk.page:76(p)
 msgid "Another way to remove a declared foreign key is in a <link xref=\"diagram\">diagram</link> page through the contextual menu associated with the dashed line representing the declared foreign key, selecting the <guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
-msgstr ""
+msgstr "Cara lain untuk menghapus foreign key yang dideklarasikan adalah dalam halaman <link xref=\"diagram\">bagan</link> melalui menu konteks yang berasosiasi dengan garis putus-putus yang mewakili foreign key yang dideklarasikan, memilih opsi <guiseq><gui>Hapus foreign key yang dideklarasikan ini</gui></guiseq>."
 
 #: C/data-manager-source-editor.page:7(title)
 msgid "The data manager's data sources editor"
@@ -1161,11 +1161,11 @@ msgstr ""
 
 #: C/data-manager-xml-syntax.page:15(p)
 msgid "\"id\" to specify a data source string ID, used when linking data sources one to another;"
-msgstr ""
+msgstr "\"id\" untuk menyatakan suatu ID string sumber data, dipakai ketika mengaitkan sumber data satu sama lain;"
 
 #: C/data-manager-xml-syntax.page:16(p)
 msgid "\"title\" to specify a title."
-msgstr ""
+msgstr "\"title\" untuk menyatakan judul."
 
 #: C/data-manager-xml-syntax.page:18(p)
 msgid "It is of course possible to use both the <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> tags in the same data sources specifications."
@@ -1336,7 +1336,7 @@ msgstr "Perspektif manajer data"
 
 #: C/data-manager-perspective.page:26(desc)
 msgid "The data manager perspective, with two data sources"
-msgstr ""
+msgstr "Perspektif manajer data, dengan dua sumber data"
 
 #: C/data-manager-perspective.page:29(p)
 msgid "In the figure above, there are two data sources: one for the 'customers' table and one for the 'orders' table (which here lists the orders from a customer), the later data source depending on the former one as there is a foreign key from the 'orders' table which references the 'customers' table. The two data sources have been executed and the result is composed of two tabular views side by side."
@@ -1369,7 +1369,7 @@ msgstr "Penyuntingan sumber data"
 
 #: C/data-manager-perspective.page:61(desc)
 msgid "Editing data sources in the data manager perspective, from the XML syntax"
-msgstr ""
+msgstr "Menyunting sumber data dalam perspektif manajer data, dari sintaks XML"
 
 #: C/data-manager-perspective.page:66(desc)
 msgid "Editing data sources in the data manager perspective, using the default interface: two data sources are defined, which list the contents of the \"customers\" and \"orders\" tables. The setup is the same as the figure above showing the XML syntax"
@@ -1393,7 +1393,7 @@ msgstr "<gui>Eksekusi</gui>: eksekusi sumber data yang didefinisikan"
 
 #: C/data-manager-perspective.page:85(p)
 msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
-msgstr ""
+msgstr "<gui>Tilik XML</gui>: menjungkit antara penyunting XML dan penyunting UI"
 
 #: C/data-manager-perspective.page:86(p)
 msgid "<gui>Help</gui>: shows some help"
