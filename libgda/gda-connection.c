@@ -3179,6 +3179,11 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
  * the connection has a transaction started and the failure invalidates the transaction (as decided by the database
  * server).
  *
+ * Note that for asynchronous calls to succeed, it is gererally necessary to specify the
+ * %GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flag when opening the connection to be sure it is opened in a separate thread
+ * in which asynchronous calls are made (failing to use this flag make the asynchronous call dependant on the database
+ * provider implementation and at the moment none support this feature).
+ *
  * Returns: a task ID, or 0 if an error occurred (not an error regarding @stmt itself as its execution has not yet started
  * but any other error)
  *

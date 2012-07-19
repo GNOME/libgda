@@ -34,7 +34,12 @@ main (int argc, char** argv)
 
 	gda_init ();
 
-	cnc = gda_connection_open_from_dsn ("SalesTest", NULL, GDA_CONNECTION_OPTIONS_THREAD_SAFE, NULL);
+	/* REM: the GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flag is necessary
+	 * to make sure the connection is opened in a separate thread from the main thread in order
+	 * for the asynchronous method to work. Failing to do so will generally (depending on the
+	 * database provider's implementation) lead to asynchronous execution failure.
+	 */
+	cnc = gda_connection_open_from_dsn ("SalesTest", NULL, GDA_CONNECTION_OPTIONS_THREAD_ISOLATED, NULL);
 	if (!cnc) {
 		g_print ("Can't open connection: %s\n", error && error->message ? error->message : "No detail");
 		return 1;
