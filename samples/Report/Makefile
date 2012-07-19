@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g `pkg-config --cflags libgda-report-4.0` 
-LDFLAGS = `pkg-config --libs libgda-report-4.0`
+CFLAGS = -Wall -g `pkg-config --cflags libgda-report-5.0` 
+LDFLAGS = `pkg-config --libs libgda-report-5.0`
 
 HTML_STYLESHEET = /usr/share/xml/docbook/stylesheet/nwalsh/html/docbook.xsl
 FO_STYLESHEET = /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl
