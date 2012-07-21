@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2012-07-16 15:32+0000\n"
-"PO-Revision-Date: 2012-07-18 18:50+0700\n"
+"PO-Revision-Date: 2012-07-21 20:55+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "Koneksi LDAP berbeda dengan koneksi lain dalam hal bahwa basis data LDAP
 
 #: C/ldap-connections.page:15(p)
 msgid "As a consequence, LDAP connections are treaded specially: as normal connections with tables (see the table mapping explained next), and through the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser perspective</link>"
-msgstr "Akibatnya, koneksi LDAP diperlakukan secara khusus: sebagai koneksi normal dengan tabel (lihat pemetaan tabel yang dijelaskan selanjutnya), dan melalui kehadiran <link xref=\"ldap-browser-perspective\">Perspektif peramban LDAP</link>."
+msgstr "Akibatnya, koneksi LDAP diperlakukan secara khusus: sebagai koneksi normal dengan tabel (lihat pemetaan tabel yang dijelaskan selanjutnya), dan melalui kehadiran <link xref=\"ldap-browser-perspective\">Perspektif peramban LDAP</link>"
 
 #: C/ldap-connections.page:20(p)
 msgid "Note that LDAP connections may not be available is either the LDAP database provider is not installed or if the LDAP support was disabled during the compilation."
@@ -498,7 +498,7 @@ msgstr "Variabel dalam kode SQL"
 
 #: C/variables.page:10(p)
 msgid "Variables (sometimes refered to as <em>placeholders</em>) are places in SQL code which are replaced by actual values when the SQL code is executed. The benefits are faster execution times (as the SQL code is parsed only once) and a protection against SQL injection vulnerabilities."
-msgstr "Variabel (terkadang diacu sebagai <em>placeholder</em> adalah tempat-tempat dalam kode SQL yang digantikan oleh nilai sebenarnya ketika kode SQL dieksekusi. Keuntungannya adalah waktu eksekusi lebih cepat (karena kode SQL hanya diurai sekali) dan proteksi atas vulnerability injeksi SQL"
+msgstr "Variabel (terkadang diacu sebagai <em>placeholder</em> adalah tempat-tempat dalam kode SQL yang digantikan oleh nilai sebenarnya ketika kode SQL dieksekusi. Keuntungannya adalah waktu eksekusi lebih cepat (karena kode SQL hanya diurai sekali) dan proteksi atas vulnerability injeksi SQL."
 
 #: C/variables.page:16(p)
 msgid "Variables can be used in any SQL code, and are defined using the following syntax:"
@@ -729,7 +729,7 @@ msgstr "Pada gambar di atas, ada dua favorit: suatu pernyataan SELECT (dinamai \
 
 #: C/query-execution-perspective.page:30(p)
 msgid "The icon difference between the two illustrates the fact that the INSERT favorite is also marked to be an <link xref=\"actions\">action</link>: it will be proposed as an action to be executed when the contextual menu is brought up in any grid representation of a resultset."
-msgstr "Perbedaan ikon antara keduanya mengilustrasikan fakta bahwa favorit INSERT juga ditandai sebagai <link xref=\"action\">aksi</link>: ini akan diusulkan sebagai aksi untuk dieksekusi ketika menu kontekstual dimunculkan dalam representasi kisi manapun dari set hasil. "
+msgstr "Perbedaan ikon antara keduanya mengilustrasikan fakta bahwa favorit INSERT juga ditandai sebagai <link xref=\"action\">aksi</link>: ini akan diusulkan sebagai aksi untuk dieksekusi ketika menu kontekstual dimunculkan dalam representasi kisi manapun dari set hasil."
 
 #: C/query-execution-perspective.page:35(p)
 msgid "The left part of the perspective lists the favorite statements which have been user defined. Activating a favorite (double clicking) resets the SQL text area's contents to the selected statement's SQL."
@@ -1085,7 +1085,7 @@ msgstr "Ketika ditampilkan dalam bagan, foreign key yang dideklarasikan diwakili
 
 #: C/declaredfk.page:31(p)
 msgid "the (foreign key name, table, referenced table) triplet uniquely identifies a declared foreign key and thus declaring a new foreign key with the same triplet will remove any previously declared one."
-msgstr "triplet (nama foreign key, tabel, tabel yang diacu) secara unik mengidentifikasi suatu foreign key yang dideklarasikan sehingga mendeklarasikan foreign key baru dengan triplet yang sama akan menghapus deklarasi sebelumnya"
+msgstr "triplet (nama foreign key, tabel, tabel yang diacu) secara unik mengidentifikasi suatu foreign key yang dideklarasikan sehingga mendeklarasikan foreign key baru dengan triplet yang sama akan menghapus deklarasi sebelumnya."
 
 #: C/declaredfk.page:34(p)
 msgid "If the same constraint is actually represented by a real foreign key and also by a declared foreign key, then the real foreign key definition will mask the declared one"
@@ -1157,7 +1157,7 @@ msgstr "Sintaks XML manajer data"
 
 #: C/data-manager-xml-syntax.page:8(p)
 msgid "The XML tree's root node must be a <code>&lt;data&gt;</code>, which is allowed to contain one or more data source definitions. Each data source is defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, both accepting the following optional attributes:"
-msgstr ""
+msgstr "Node akar pohon XML mesti berupa <code>&lt;data&gt;</code>, yang diperbolehkan memuat satu atau lebih definisi sumber data. Setiap sumber data didefinisikan oleh node <code>&lt;query&gt;</code> atau <code>&lt;table&gt;</code>, keduanya menerima atribut opsional berikut:"
 
 #: C/data-manager-xml-syntax.page:15(p)
 msgid "\"id\" to specify a data source string ID, used when linking data sources one to another;"
@@ -1169,7 +1169,7 @@ msgstr "\"title\" untuk menyatakan judul."
 
 #: C/data-manager-xml-syntax.page:18(p)
 msgid "It is of course possible to use both the <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> tags in the same data sources specifications."
-msgstr ""
+msgstr "Tentu saja mungkin memakai kedua tag <code>&lt;query&gt;</code> atau <code>&lt;table&gt;</code> dalam spesifikasi sumber data yang sama."
 
 #: C/data-manager-xml-syntax.page:24(title)
 #: C/data-manager-xml-syntax.page:73(title)
@@ -1179,11 +1179,11 @@ msgstr "Variabel yang diekspor"
 
 #: C/data-manager-xml-syntax.page:25(p)
 msgid "Each data source exports some variables which can be reused by other data sources to introduce a dependency. When the data sources are executed, the contents of these exported variables are reset depending on the row actually selected in the resulting tabular view. If no row is selected then the variable is unset."
-msgstr ""
+msgstr "Setiap sumber data mengekspor beberapa variabel yang dapat dipakai ulang oleh sumber data lain untuk memperkenalkan kebergantungan. Ketika sumber data dieksekusi, isi dari variabel yang diekspor direset bergantung pada baris yang benar-benar dipilih dalam tilikan tabulasi hasilnya. Bila tak ada baris yang dipilih maka variabel dikosongkan."
 
 #: C/data-manager-xml-syntax.page:31(p)
 msgid "Any data source depending on a variable is executed again when the variable changes, and in case the variable is unset, the data source's execution result is an empty data set."
-msgstr ""
+msgstr "Sebarang sumber data yang bergantung pada suatu variabel dieksekusi lagi ketika variabel berubah, dan bila variabelnya kosong, hasil eksekusi sumber data adalam set data kosong."
 
 #: C/data-manager-xml-syntax.page:37(title)
 msgid "The <code>&lt;query&gt;</code> tag"
@@ -1191,7 +1191,7 @@ msgstr "Tag <code>&lt;query&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:38(p)
 msgid "Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, as the contents of the tag. Linkage to other data sources can be achieved using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
-msgstr ""
+msgstr "Pakai tag <code>&lt;query&gt;</code> untuk menyatakan pernyataan SQL SELECT, sebagai isi tab. Tautan ke sumber data lain dapat dicapai memakai <link xref=\"variables-syntax\">variabel</link> dalam SQL milik SELECT."
 
 #: C/data-manager-xml-syntax.page:54(p)
 #: C/data-manager-xml-syntax.page:130(p)
@@ -1200,19 +1200,19 @@ msgstr "Sebagai contoh spesifikasi XML sebelumnya mendefinisikan dua sumber data
 
 #: C/data-manager-xml-syntax.page:58(p)
 msgid "the <code>customers</code> data source which selects some fields from the <em>customers</em> table, and which depends on a string variable named <code>name</code>. This variable has to be set when the data sources are executed because it won't be exported by any data source in this specification."
-msgstr ""
+msgstr "sumber data <code>customers</code> yang memilih beberapa ruas dari tabel <em>customers</em>, dan yang bergantung kepada suatu variabel string bernama <code>name</code>. Variabel ini mesti sudah diisi ketika sumber data dieksekusi karena itu tak akan diekspor oleh sebarang sumber data dalam spesifikasi ini."
 
 #: C/data-manager-xml-syntax.page:62(p)
 msgid "the <code>cust_details</code> data source which selects all the details of a customer specified using its ID. This second data source depends on the previous one because the <code>customers@id</code> variable is exported from the <code>customers</code> data source."
-msgstr ""
+msgstr "sumber data <code>cust_details</code> yang memilih semua rincian dari suatu pelanggan dinyatakan memakai IDnya. Sumber data kedua ini bergantung kepada yang sebelumnya karena variabel <code>customers@id</code> diekspor dari sumber data <code>customers</code>."
 
 #: C/data-manager-xml-syntax.page:67(p)
 msgid "Executing this data sources specification will create two tabular views: one where you can select a customer, and one which displays all the attributes for the selected customer."
-msgstr ""
+msgstr "Mengeksekusi spesifikasi sumber data ini akan membuat dua tilikan tabulasi: satu dimana Anda dapat memilih suatu pelanggan, dan satu yang menampilkan semua atribut bagi pelanggan yang dipilih."
 
 #: C/data-manager-xml-syntax.page:74(p)
 msgid "Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for each column of the resulting data set (the variable's type is the same as the column's type):"
-msgstr ""
+msgstr "Setiap sumber data yang didefinisikan oleh suatu tag <code>&lt;query&gt;</code> mengekspor variabel berikut bagi setiap kolom dari set data hasilnya (tipe variabel sama dengan tipe kolom):"
 
 #: C/data-manager-xml-syntax.page:79(p)
 #: C/data-manager-xml-syntax.page:161(p)
@@ -1230,43 +1230,44 @@ msgstr "Tag <code>&lt;table&gt;</code>"
 
 #: C/data-manager-xml-syntax.page:89(p)
 msgid "Use the <code>&lt;table&gt;</code> tag to define a data source which will display the contents of a table. This tag:"
-msgstr "Pakai tag <code>&lt;table&gt; untuk mendefinisikan sumber data yang akan menampilkan isi dari suatu tabel. Tag ini:"
+msgstr "Pakai tag <code>&lt;table&gt;</code> untuk mendefinisikan sumber data yang akan menampilkan isi dari suatu tabel. Tag ini:"
 
 #: C/data-manager-xml-syntax.page:94(p)
 msgid "requires the \"name\" attribute which represents the table name."
-msgstr ""
+msgstr "memerlukan atribut \"name\" yang mewakili nama tabel."
 
+# typo 'and ID' -> 'an ID'?
 #: C/data-manager-xml-syntax.page:95(p)
 msgid "can have a \"id\" attribute corresponding to the data source's ID. If not present, and ID will be assigned automatically."
-msgstr ""
+msgstr "bisa punya atribut \"id\" yang terkait dengan ID sumber data. Bila tak ada, ID akan diberikan secara otomatis."
 
 #: C/data-manager-xml-syntax.page:97(p)
 msgid "can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on another data source with the \"foreign_key_table\" attribute defining the name of the table to which there are foreign keys used to determine the dependency, and the \"id\" attribute can specify a data source ID if different than the aforementioned table"
-msgstr ""
+msgstr "bisa memuat tag <code>&lt;depend&gt;</code> yang menentukan dependensi pada sumber data lain dengan atribut \"foreign_key_table\" yang menentukan nama tabel yang mana ada foreign key yang dipakai untuk menentukan kebergantungan, dan atribut \"id\" dapat menyatakan ID sumber data bila berbeda dengan tabel yang disebut sebelumnya"
 
 #: C/data-manager-xml-syntax.page:103(p)
 msgid "The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, defines a dependency to another data source from a table:"
-msgstr ""
+msgstr "Tag <code>&lt;depend&gt;</code>, yang bagi sumber data dari suatu tabel, mendefinisikan dependensi ke sumber data lain dari suatu tabel:"
 
 #: C/data-manager-xml-syntax.page:108(p)
 msgid "requires the \"foreign_key_table\" attribute defining the name of the table to which there are foreign keys used to determine the dependency"
-msgstr ""
+msgstr "memerlukan atribut \"foreign_key_table yang menentukan nama tabel yang mana ada foreign key yang dipakai untuk menentukan kebergantungan"
 
 #: C/data-manager-xml-syntax.page:110(p)
 msgid "can have a \"id\" attribute corresponding to the ID of the referenced data source. If not provided, then the dependency may fail if there is no data source which ID is the\"foreign_key_table\" attribute."
-msgstr ""
+msgstr "bisa memiliki atribut \"id\" yang berkaitan dengan ID dari sumber data yang diacu. Bila tak diberikan, maka kebergantungan bisa gagal bila tak ada sumber data yang IDnya adalah atribut \"foreign_key_table\"."
 
 #: C/data-manager-xml-syntax.page:113(p)
 msgid "can contain one or more <code>&lt;column&gt;</code> tag which contents define the columns to identify the foreign key to use; this is necessary if there are multiple foreign keys, and can be omitted if there is only one possible foreign key. The listed columns are the one from the table where the foreign key exists."
-msgstr ""
+msgstr "dapat memuat satu atau lebih tag <code>&lt;column&gt;</code> yang isinya menentukan kolom yang mengidentifikasikan foreign key yang akan dipakai; ini diperlukan bila ada beberapa foreign key, dan dapat diabaikan bila hanya ada satu foreign key yang mungkin. Kolom yang didaftar adalah yang dari tabel dimana foreign key berada."
 
 #: C/data-manager-xml-syntax.page:134(p)
 msgid "the <code>customers</code> data source which selects all the contents of the <em>customers</em> table."
-msgstr ""
+msgstr "Sumber data <code>customers</code> yang memilih semua isi dari tabel <em>customers</em>."
 
 #: C/data-manager-xml-syntax.page:136(p)
 msgid "the <code>orders</code> data source which selects among contents of the <code>orders</code> table, the rows which correspond to a row in the <code>customers</code> table using the foreign key on table orders which involves the \"orders.customer_id\" column and the primary key of the customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag is necessary here to identify referenced the data source."
-msgstr ""
+msgstr "Sumber data <code>orders</code> yang memilih dari dalam isi tabel <code>orders</code>, baris-baris yang berkaitan dengan suatu baris dalam tabel <code>customers</code> memakai foreign key pada tabel orders yang melibatkan kolom \"orders.customer_id\" dan kunci primer dari tabel customers. Atribut \"id\" dari tag <code>&lt;depend&gt;</code> perlu disini untuk mengidentifikasi sumber data yang diacu."
 
 #: C/data-manager-xml-syntax.page:143(p)
 msgid "Note in this example that:"
@@ -1274,15 +1275,15 @@ msgstr "Perhatikan dalam contoh ini bahwa:"
 
 #: C/data-manager-xml-syntax.page:147(p)
 msgid "you don't have to specify the fields involved in the foreign key linking the <code>orders</code> and <code>customers</code> tables"
-msgstr ""
+msgstr "Anda tak perlu menyatakan ruas yang terlibat dalam foreign key yang menaut tabel <code>orders</code> dan <code>customers</code>"
 
 #: C/data-manager-xml-syntax.page:149(p)
 msgid "the data sources IDs have been assigned the names of the selected tables as no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> tags."
-msgstr ""
+msgstr "ID sumber data telah diberi nama dari tabel yang dipilih karena tidak ada atribut \"id\" yang telah dinyatakan bagi tag <code>&lt;table&gt;</code>."
 
 #: C/data-manager-xml-syntax.page:155(p)
 msgid "Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for each table's column (the variable's type is the same as the column's type):"
-msgstr ""
+msgstr "Setiap sumber data yang didefinisikan oleh tag <code>&lt;query&gt;</code> mengekspor variabel berikut bagi kolom setiap tabel (tipe variabel sama dengan tipe kolom):"
 
 #: C/data-manager-xml-syntax.page:160(code)
 #, no-wrap
@@ -1320,15 +1321,15 @@ msgstr "Perspektif manajer data"
 
 #: C/data-manager-perspective.page:9(p)
 msgid "Use the data manager perspective to navigate through the database's data. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></keyseq> shortcut."
-msgstr ""
+msgstr "Gunakan perspektif manajer data untuk menavigasi data dalam basis data. Untuk bertukar ke perspektif ini, gunakan menu guiseq><gui>Perspektif</gui><gui>Manajer Data</gui></guiseq> atau pintasan <keyseq><key>Ctrl</key><key>D</key></keyseq>."
 
 #: C/data-manager-perspective.page:14(p)
 msgid "The workflow in this perspective is organized around the definition of one or more <em>data sources</em> (which selects data in the database) which, when executed, result in a data set displayed in a tabular view."
-msgstr ""
+msgstr "Alur kerja dalam perspektif ini diorganisasikan di sekitar definisi dari satu atau lebih <em>sumber data</em> (yang memilih data dalam basis data) yang ketika dieksekusi, menghasilkan suatu set data yang ditampilkan dalam tilikan berbentuk tabel."
 
 #: C/data-manager-perspective.page:19(p)
 msgid "The perspective is divided in two horizontal panes: the left pane to keep favorite data sources set's definitions, and the right pane being the action area, where each data source is executed and the results presented in a tabular view."
-msgstr ""
+msgstr "Perspektif dibagi menjadi dua panel horisontal: panel kiri untuk menyimpan definisi set sumber data favorit, dan panel kanan adalah area aksi, dimana setiap sumber data dieksekusi dan hasilnya ditampilkan dalam tilikan bentuk tabel."
 
 #: C/data-manager-perspective.page:25(title)
 msgid "Data manager perspective"
@@ -1340,11 +1341,11 @@ msgstr "Perspektif manajer data, dengan dua sumber data"
 
 #: C/data-manager-perspective.page:29(p)
 msgid "In the figure above, there are two data sources: one for the 'customers' table and one for the 'orders' table (which here lists the orders from a customer), the later data source depending on the former one as there is a foreign key from the 'orders' table which references the 'customers' table. The two data sources have been executed and the result is composed of two tabular views side by side."
-msgstr ""
+msgstr "Dalam gambar di atas, ada dua sumber data: satu bagi tabel 'customers' dan satu bagi tabel 'orders' (yang disini mendaftar pesan dari seorang pelanggan), sumber data kedua bergantung kepada yang pertama karena ada foreign key dari tabel 'orders' yang mengacu ke tabel 'customers'. Dua sumber data telah dieksekusi dan hasilnya tersusun dari dua tilikan bentuk tabel berdampingan."
 
 #: C/data-manager-perspective.page:36(p)
 msgid "Because the 'orders' data source depends on the 'customers' data source, its corresponding view is on the right of the one corresponding to the 'customers' data source. Also when the row selection of the 'customers' view changes, the whole contents of the 'orders' view is refreshed."
-msgstr ""
+msgstr "Karena sumber data 'orders' bergantung kepada sumber data 'customers', viewnya ada di sebelah kanan dari view yang berkaitan dengan sumber data 'customers'. Ketika pilihan baris dari view 'customers' berubah, seluruh isi view 'orders' disegarkan."
 
 #: C/data-manager-perspective.page:44(title)
 msgid "Defining data sources"
@@ -1352,15 +1353,16 @@ msgstr "Mendefinisikan sumber data"
 
 #: C/data-manager-perspective.page:45(p)
 msgid "The simplest data source is a data source which represents all the data from a table, displayed when executed as a single tabular view, as if one executed the <code>SELECT * FROM mytable</code> statement in the <link xref=\"query-execution-perspective\"/>."
-msgstr ""
+msgstr "Sumber data paling sederhana adalah sumber data yang mewakili semua data dari suatu tabel, ditampilkan ketika dieksekusi sebagai tilikan bentuk tabel tunggal, seolah seperti ketika seseorang mengeksekusi pernyataan <code>SELECT * FROM mytable</code> dalam <link xref=\"query-execution-perspective\">perspektif eksekusi query</link>."
 
+# unmatched tag?
 #: C/data-manager-perspective.page:51(p)
 msgid "The following figure shows the data sources editing mode (switch to editing mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/> toolbar button)."
-msgstr ""
+msgstr "Gambar berikut menunjukkan mode penyuntingan sumber data (bertukar ke mode penyuntingan memakai tombol bilah alat <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/>)."
 
 #: C/data-manager-perspective.page:55(p)
 msgid "Data sources can be defined using an <link xref=\"data-manager-xml-syntax\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor\">default interface</link>."
-msgstr ""
+msgstr "Sumber data dapat didefinisikan memakai <link xref=\"data-manager-xml-syntax\">XML sintaks</link>, atau memakai <link xref=\"data-manager-source-editor\">antar muka baku</link>."
 
 #: C/data-manager-perspective.page:60(title)
 #: C/data-manager-perspective.page:65(title)
@@ -1373,19 +1375,19 @@ msgstr "Menyunting sumber data dalam perspektif manajer data, dari sintaks XML"
 
 #: C/data-manager-perspective.page:66(desc)
 msgid "Editing data sources in the data manager perspective, using the default interface: two data sources are defined, which list the contents of the \"customers\" and \"orders\" tables. The setup is the same as the figure above showing the XML syntax"
-msgstr ""
+msgstr "Menyunting sumber data dalam perspektif manajer data, memakai antar muka baku: dua sumber data didefinisikan, yang menampilkan isi tabel \"customers\" dan \"orders\". Penyiapan sama dengan gambar di atas yang menampilkan sintaks XML"
 
 #: C/data-manager-perspective.page:76(p)
 msgid "<gui>Reset</gui>: resets the XML editor to a default XML template, only available when the XML view is currently displayed"
-msgstr ""
+msgstr "<gui>Reset</gui>: mereset penyunting XML ke templat baku XML, hanya tersedia ketika tilikan XML sedang ditampilkan"
 
 #: C/data-manager-perspective.page:78(p)
 msgid "<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new data sources as whole table contents (also analyses the database schema to propose relevant choices), only available when the XML edition mode is not selected"
-msgstr ""
+msgstr "<gui>Tambah</gui>: menampilkan menu popup dengan pintasan untuk mendefinisikan secara cepat sumber data baru sebagai isi seluruh tabel (juga menganalisa skema basis data untuk mengusulkan pilihan-pilihan yang relevan), hanya tersedia ketika mode edisi XML tak dipilih"
 
 #: C/data-manager-perspective.page:81(p)
 msgid "<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax\">variables</link> panel where you can give values to the variables present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in the SQL code."
-msgstr ""
+msgstr "<gui>Variabel</gui>: menampilkan/menyembunyikan panel <link xref=\"variables-syntax\">variabel</link> dimana Anda dapat mengisikan nilai ke variabel yang ada dalam kode SQL dari sebarang definisi sumber data. Panel secara otomatis ditunjukkan ketika suatu variabel terdeteksi dalam kode SQL."
 
 #: C/data-manager-perspective.page:84(p)
 msgid "<gui>Execute</gui>: executes the defined data sources"
@@ -1405,15 +1407,15 @@ msgstr "Menjalankan sumber data yang terdefinisi"
 
 #: C/data-manager-perspective.page:91(p)
 msgid "To execute a defined set of data sources, simply switch to execute mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/> toolbar button or the <gui>Execute</gui> button."
-msgstr ""
+msgstr "Untuk mengeksekusi sumber data dari set yang didefinisikan, tukar saja ke mode eksekusi memakai tombol bilah alat <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-mode.png\"/> atau tombol <gui>Execute</gui>."
 
 #: C/data-manager-perspective.page:96(p)
 msgid "The layout of tabular views for each data source is automatically generated in columns using the following rule: if a data source B depends on a data source A, then its tabular view is displayed on the right of the one for A."
-msgstr ""
+msgstr "Tata letak dari tilikan bentuk tabel bagi setiap sumber data dibuat secara otomatis dalam kolom memakai aturan berikut: bila suatu sumber data B bergantung kepada sumber data A, maka tilikan bentuk tabelnya ditampilkan di sebelah kanan A."
 
 #: C/data-manager-perspective.page:101(p)
 msgid "Also if you change the selected row of tabular view of a data source A, then the tabular views of all the data sources depending on A will also have their tabular view refreshed."
-msgstr ""
+msgstr "Juga bila Anda mengubah baris yang dipilih dari tilikan bentuk tabel dari sumber data A, maka tilikan bentuk tabel dari semua sumber data yang bergantung pada A juga akan disegarkan tilikan bentuk tabelnya."
 
 #. When image changes, this message will be marked fuzzy or untranslated for you.
 #. It doesn't matter what you translate it to: it's not used at all.
@@ -1445,19 +1447,19 @@ msgstr "Aksi"
 
 #: C/actions.page:10(p)
 msgid "Actions are bits of SQL code which depends on variables and can be executed from the contextual menu of any data set presented in a grid."
-msgstr ""
+msgstr "Aksi adalah bit-bit dari kode SQL yang bergantung kepada variabel dan dapat dieksekusi dari menu konteks dari sebarang set data yang disajikan dalam suatu kisi."
 
 #: C/actions.page:14(p)
 msgid "For example if there is a table \"products\" which lists some kind of products and a table \"comments\" which lists all the comments left by users on a product (presumably the \"comments\" table will have a foreign key on the \"products\" table to reference it)."
-msgstr ""
+msgstr "Sebagai contoh bila ada tabel \"products\" yang mendaftar beberapa jenis produk dan suatu tabel \"comments\" yang mendaftar semua komentar yang ditinggalkan oleh pengguna pada suatu produk (dengan anggapan bahwa tabel \"comments\" akan memiliki foreign key pada tabel \"products\" untuk mengacunya)."
 
 #: C/actions.page:19(p)
 msgid "An action can be defined to show all the entries in the \"comments\" table provided the key is defining a product. Then anytime a product is listed in a result set, the contextual menu will allow the user to execute this action and thus display all the comments on the selected product. This situation is illustrated in the following figures."
-msgstr ""
+msgstr "Suatu aksi dapat didefinisikan untuk menampilkan semua entri dalam tabel \"comments\" bila disediakan kunci yang mendefinisikan suatu produk. Maka kapanpun suatu produk didaftar dalam suatu set hasil, menu konteks akan mengijinkan pengguna mengeksekusi aksi ini dan sehingga menampilkan semua komentar dari produk yang dipilih. Situasi ini diilustrasikan dalam gambar-gambar berikut."
 
 #: C/actions.page:25(p)
 msgid "The first step is to define an action, which is just a favorite in the <link xref=\"query-execution-perspective\">query execution</link> perspective which is defined as an action: bring up the properties for the favorite, and make sure the \"Is action\" toggle is checked:"
-msgstr ""
+msgstr "Langkah pertama adalah mendefinisikan aksi, yang merupakan sebuah favorit dalam perspektif <link xref=\"query-execution-perspective\">eksekusi query</link> yang didefinisikan sebagai suatu aksi: munculkan properti bagi favorit, dan pastikan jungkit \"Adalah aksi\" dicontreng:"
 
 #: C/actions.page:31(title)
 msgid "Action - define an action"
