@@ -53,6 +53,6 @@ DOC_PAGES = \
 	ldap-browser-perspective.page \
 	ldap-connections.page
 
-DOC_LINGUAS = de el es gl sl zh_CN
+DOC_LINGUAS = de el es gl id sl zh_CN
 
 dist-hook: doc-dist-hook
