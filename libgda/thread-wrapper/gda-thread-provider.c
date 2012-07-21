@@ -1639,6 +1639,7 @@ gda_thread_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
 typedef struct {
 	GdaServerProvider *prov;
 	GdaConnection *cnc;
+	guint exec_slowdown;
 	GdaStatement *stmt;
 	GdaSet *params;
 	GdaStatementModelUsage model_usage;
@@ -1656,12 +1657,11 @@ sub_thread_execute_statement (ExecuteStatementData *data, GError **error)
 	/* WARNING: function executed in sub thread! */
 	GObject *retval;
 	
-#ifdef GDA_DEBUG_NO
-	g_print ("%p Starting sleep in %s()...\n", g_thread_self (), __FUNCTION__);
-	sleep (10);
-	g_print ("%p finished sleeping in %s().\n", g_thread_self (), __FUNCTION__);
-#endif
-
+	if (data->exec_slowdown) {
+		g_print ("Starting sleeping in thread %p...\n", g_thread_self ());
+		g_usleep (data->exec_slowdown);
+		g_print ("End sleeping in thread %p\n", g_thread_self ());
+	}
 	retval = PROV_CLASS (data->prov)->statement_execute (data->prov,
 							     data->cnc,
 							     data->stmt,
@@ -1709,12 +1709,13 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			     "%s", _("Connection is closed"));
 		return NULL;
 	}
-	
+
 	if (async_cb) {
 		ExecuteStatementData *wdata;
 		wdata = g_new0 (ExecuteStatementData, 1);
 		wdata->prov = cdata->cnc_provider;
 		wdata->cnc = cdata->sub_connection;
+		g_object_get (cnc, "execution-slowdown", &(wdata->exec_slowdown), NULL);
 		wdata->stmt = stmt;
 		wdata->params = params;
 		wdata->model_usage = model_usage;
@@ -1744,6 +1745,7 @@ gda_thread_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 		wdata.prov = cdata->cnc_provider;
 		wdata.cnc = cdata->sub_connection;
+		g_object_get (cnc, "execution-slowdown", &(wdata.exec_slowdown), NULL);
 		wdata.stmt = stmt;
 		wdata.params = params;
 		wdata.model_usage = model_usage;

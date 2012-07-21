@@ -122,6 +122,7 @@ struct _GdaConnectionPrivate {
 	GArray               *trans_meta_context; /* Array of GdaMetaContext pointers */
 
 	gboolean              exec_times;
+	guint                 exec_slowdown;
 
 	ThreadConnectionData *th_data; /* used if connection is used by the GdaThreadProvider, NULL otherwise */
 };
@@ -209,7 +210,8 @@ enum
 	PROP_IS_THREAD_WRAPPER,
 	PROP_MONITOR_WRAPPED_IN_MAINLOOP,
 	PROP_EVENTS_HISTORY_SIZE,
-	PROP_EXEC_TIMES
+	PROP_EXEC_TIMES,
+	PROP_EXEC_SLOWDOWN
 };
 
 static GObjectClass *parent_class = NULL;
@@ -429,6 +431,20 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							       _("Computes execution delay for each executed statement"),
 							       FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	/**
+	 * GdaConnection:execution-slowdown:
+	 *
+	 * Artificially slows down the execution of queries. This property can be used to
+	 * debug some problems. If non zero, this value is the number of microseconds waited before actually
+	 * executing each query.
+	 *
+	 * Since: 5.2.0
+	 **/
+	g_object_class_install_property (object_class, PROP_EXEC_SLOWDOWN,
+					 g_param_spec_uint ("execution-slowdown", NULL,
+							    _("Artificially slows down the execution of queries"),
+							    0, G_MAXUINT, 0,
+							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	object_class->dispose = gda_connection_dispose;
 	object_class->finalize = gda_connection_finalize;
@@ -504,6 +520,9 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 
 	cnc->priv->trans_meta_context = NULL;
 	cnc->priv->provider_data = NULL;
+
+	cnc->priv->exec_times = FALSE;
+	cnc->priv->exec_slowdown = 0;
 }
 
 static void auto_update_meta_context_free (GdaMetaContext *context);
@@ -907,6 +926,16 @@ gda_connection_set_property (GObject *object,
 		case PROP_EXEC_TIMES:
 			cnc->priv->exec_times = g_value_get_boolean (value);
 			break;
+		case PROP_EXEC_SLOWDOWN:
+			cnc->priv->exec_slowdown = g_value_get_uint (value);
+			if (cnc->priv->is_thread_wrapper) {
+				ThreadConnectionData *cdata;
+				cdata = (ThreadConnectionData*) gda_connection_internal_get_provider_data (cnc);
+				if (cdata)
+					g_object_set (G_OBJECT (cdata->sub_connection), "execution-slowdown",
+						      cnc->priv->exec_slowdown, NULL);
+			}
+			break;
                 }
         }	
 }
@@ -952,6 +981,9 @@ gda_connection_get_property (GObject *object,
 			break;
 		case PROP_EXEC_TIMES:
 			g_value_set_boolean (value, cnc->priv->exec_times);
+			break;
+		case PROP_EXEC_SLOWDOWN:
+			g_value_set_uint (value, cnc->priv->exec_slowdown);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -3121,6 +3153,8 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 			dump_exec_params (cnc, task->stmt, task->params);
 			if (cnc->priv->exec_times)
 				g_timer_start (task->exec_timer);
+			if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+				g_usleep (cnc->priv->exec_slowdown);
 
 			PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 										 task->stmt, 
@@ -3236,6 +3270,8 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 		dump_exec_params (cnc, task->stmt, task->params);
 		if (cnc->priv->exec_times)
 			g_timer_start (task->exec_timer);
+		if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+			g_usleep (cnc->priv->exec_slowdown);
 
 		PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, 
 									 task->stmt,
@@ -3464,6 +3500,9 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	dump_exec_params (cnc, stmt, params);
 	if (cnc->priv->exec_times)
 		timer = g_timer_new ();
+	if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+		g_usleep (cnc->priv->exec_slowdown);
+
 	obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, params, 
 								       model_usage,
 								       req_types ? req_types : types,
@@ -3830,6 +3869,9 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	dump_exec_params (cnc, stmt, params);
 	if (cnc->priv->exec_times)
 		timer = g_timer_new ();
+	if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+		g_usleep (cnc->priv->exec_slowdown);
+
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, model_usage, 
 											  req_types ? req_types : types,
@@ -3915,6 +3957,9 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	dump_exec_params (cnc, stmt, params);
 	if (cnc->priv->exec_times)
 		timer = g_timer_new ();
+	if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+		g_usleep (cnc->priv->exec_slowdown);
+
 	model = (GdaDataModel *) PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, 
 											  cnc, stmt, params, 
 											  model_usage,
@@ -4007,6 +4052,9 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 		dump_exec_params (cnc, stmt, (GdaSet*) list->data);
 		if (cnc->priv->exec_times)
 			timer = g_timer_new ();
+		if (cnc->priv->exec_slowdown && !cnc->priv->is_thread_wrapper)
+			g_usleep (cnc->priv->exec_slowdown);
+
 		obj = PROV_CLASS (cnc->priv->provider_obj)->statement_execute (cnc->priv->provider_obj, cnc, stmt, 
 									       GDA_SET (list->data), 
 									       model_usage,
