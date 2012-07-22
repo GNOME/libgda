@@ -703,15 +703,8 @@ gda_data_select_set_property (GObject *object,
 			break;
 		}
 		case PROP_ALL_STORED:
-			if (g_value_get_boolean (value)) {
-				if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
-					CLASS (model)->fetch_nb_rows (model);
-
-				if (model->nb_stored_rows != model->advertized_nrows) {
-					if (CLASS (model)->store_all)
-						CLASS (model)->store_all (model, NULL);
-				}
-			}
+			if (g_value_get_boolean (value))
+				gda_data_select_prepare_for_offline (model, NULL);
 			break;
 		case PROP_PARAMS: {
 			GdaSet *set;
@@ -828,17 +821,24 @@ gda_data_select_get_property (GObject *object,
  *
  * Stores @row into @model, externally advertized at row number @rownum (if no row has been removed).
  * The reference to @row is stolen.
+ *
+ * This function is used by database provider's implementations
  */
 void
 gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 {
 	gint tmp, *ptr;
+	GdaRow *erow;
 	g_return_if_fail (GDA_IS_DATA_SELECT (model));
 	g_return_if_fail (GDA_IS_ROW (row));
 
 	tmp = rownum;
-	if (g_hash_table_lookup (model->priv->sh->index, &tmp))
-		g_error ("INTERNAL error: row %d already exists, aborting", rownum);
+	erow = g_hash_table_lookup (model->priv->sh->index, &tmp);
+	if (erow) {
+		if (row != erow)
+			g_object_unref (row);
+		return;
+	}
 
 	ptr = g_new (gint, 2);
 	ptr [0] = rownum;
@@ -1019,7 +1019,7 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
  * gda_data_select_set_modification_statement_sql:
  * @model: a #GdaDataSelect data model
  * @sql: an SQL text
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement.
  *
@@ -1101,7 +1101,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
  * gda_data_select_set_modification_statement:
  * @model: a #GdaDataSelect data model
  * @mod_stmt: a #GdaStatement (INSERT, UPDATE or DELETE)
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Informs @model that it should allow modifications to the data in some columns and some rows
  * using @mod_stmt to propagate those modifications into the database.
@@ -1432,7 +1432,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 /**
  * gda_data_select_compute_modification_statements:
  * @model: a #GdaDataSelect data model
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
@@ -1453,7 +1453,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
  * gda_data_select_compute_modification_statements_ext:
  * @model: a #GdaDataSelect data model
  * @cond_type: the type of condition for the modifications where one row only should be identified
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
@@ -1551,7 +1551,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointe
  * gda_data_select_set_row_selection_condition: (skip)
  * @model: a #GdaDataSelect data model
  * @expr: (transfer none): a #GdaSqlExpr expression
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Offers the same features as gda_data_select_set_row_selection_condition_sql() but using a #GdaSqlExpr
  * structure instead of an SQL syntax.
@@ -1590,7 +1590,7 @@ gda_data_select_set_row_selection_condition  (GdaDataSelect *model, GdaSqlExpr *
  * gda_data_select_set_row_selection_condition_sql:
  * @model: a #GdaDataSelect data model
  * @sql_where: an SQL condition (without the WHERE keyword)
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Specifies the SQL condition corresponding to the WHERE part of a SELECT statement which would
  * return only 1 row (the expression of the primary key).
@@ -1665,7 +1665,7 @@ gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gch
 /**
  * gda_data_select_compute_row_selection_condition:
  * @model: a #GdaDataSelect object
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Offers the same features as gda_data_select_set_row_selection_condition() but the expression
  * is computed from the meta data associated to the connection being used when @model was created.
@@ -3606,7 +3606,7 @@ set_column_properties_from_select_stmt (GdaDataSelect *model, GdaConnection *cnc
 /**
  * gda_data_select_compute_columns_attributes:
  * @model: a #GdaDataSelect data model
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Computes correct attributes for each of @model's columns, which includes the "NOT NULL" attribute, the
  * default value, the precision and scale for numeric values.
@@ -3639,7 +3639,7 @@ gda_data_select_compute_columns_attributes (GdaDataSelect *model, GError **error
 /**
  * gda_data_select_rerun:
  * @model: a #GdaDataSelect data model
- * @error: a place to store errors, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * Requests that @model be re-run to have an updated result. If an error occurs,
  * then @model will not be changed.
@@ -3673,6 +3673,14 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 										   types,
 										   error);
 	g_free (types);
+
+	/* post treatment */
+	if (new_model && (model->priv->sh->usage_flags & GDA_STATEMENT_MODEL_OFFLINE) &&
+	    ! gda_data_select_prepare_for_offline (new_model, error)) {
+		g_object_unref (new_model);
+		return FALSE;
+	}
+
 	if (!new_model) {
 		/* FIXME: clear all the rows in @model, and emit the "reset" signal */
 		return FALSE;
@@ -3764,5 +3772,90 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	/* signal a reset */
 	gda_data_model_reset ((GdaDataModel*) model);
 
+	return TRUE;
+}
+
+/**
+ * gda_data_select_prepare_for_offline:
+ * @model: a #GdaDataSelect object
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Use this method to make sure all the data contained in the data model are stored on the client
+ * side (and that no subsquent call to the server will be necessary to access that data), at the cost of
+ * a higher memory consumption.
+ *
+ * This method is useful in the following situations:
+ * <itemizedlist>
+ *   <listitem><para>You need to disconnect from the server and continue to use the data in the data model</para></listitem>
+ *   <listitem><para>You need to make sure the data in the data model can be used even though the connection to the server may be used for other purposes (for example executing other queries)</para></listitem>
+ * </itemizedlist>
+ *
+ * Note that this method will fail if:
+ * <itemizedlist>
+ *   <listitem><para>the data model contains any blobs (because blobs reading requires acces to the server);
+ *     binary values are Ok, though.</para></listitem>
+ *   <listitem><para>the data model has been modified since it was created</para></listitem>
+ * </itemizedlist>
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2.0
+ */
+gboolean
+gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
+
+	/* checks */
+	gint i, ncols;
+	if (! (model->priv->sh->usage_flags & GDA_STATEMENT_MODEL_RANDOM_ACCESS)) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
+			     "%s", _("Data model does not support random access"));
+		return FALSE;
+	}
+	if (model->priv->sh->upd_rows || model->priv->sh->del_rows) {
+		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
+			     "%s", _("Data model has been modified"));
+		return FALSE;
+	}
+	ncols = gda_data_model_get_n_columns ((GdaDataModel*) model);
+	for (i = 0; i < ncols; i++) {
+		GdaColumn *gdacol;
+		gdacol = gda_data_model_describe_column ((GdaDataModel*) model, i);
+		if (gda_column_get_g_type (gdacol) == GDA_TYPE_BLOB) {
+			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
+			     "%s", _("Data model contains BLOBs"));
+			return FALSE;
+		}
+	}
+
+	/* fetching data */
+	if (model->advertized_nrows < 0) {
+		if (CLASS (model)->fetch_nb_rows)
+			CLASS (model)->fetch_nb_rows (model);
+		if (model->advertized_nrows < 0) {
+			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
+				     "%s", _("Can't get the number of rows of data model"));
+			return FALSE;
+		}
+	}
+
+	if (model->nb_stored_rows != model->advertized_nrows) {
+		if (CLASS (model)->store_all) {
+			if (! CLASS (model)->store_all (model, error))
+				return FALSE;
+		}
+	}
+
+	/* final check/complement */
+	for (i = 0; i < model->advertized_nrows; i++) {
+		if (!g_hash_table_lookup (model->priv->sh->index, &i)) {
+			GdaRow *prow;
+			if (! CLASS (model)->fetch_at (model, &prow, i, error))
+				return FALSE;
+			g_assert (prow);
+			gda_data_select_take_row (model, prow, i);
+		}
+	}
 	return TRUE;
 }

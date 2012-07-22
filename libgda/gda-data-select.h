@@ -70,7 +70,7 @@ struct _GdaDataSelect {
 	/* read only information */
 	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
 	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
-	gint              advertized_nrows; /* set when the number of rows becomes known, -1 untill then */
+	gint              advertized_nrows; /* set when the number of rows becomes known, -1 until then */
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -125,13 +125,26 @@ struct _GdaDataSelectClass {
  *  As the <link linkend="GdaDataModel">GdaDataModel</link> interface is implemented, consult the API
  *  to access and modify the data held in a <link linkend="GdaDataSelect">GdaDataSelect</link> object.
  *
- *  The default behaviour however is to disallow modifications, and this section documents how to characterize
+ * Depending on the requested data model usage (as specified by the "model_usage" parameter of the
+ * <link linkend="gda-connection-statement-execute">gda_connection_statement_execute()</link> and similar
+ * methods, the #GdaDataSelect will allow random access, cursor based access or both.
+ *
+ * Also, when later you'll be reading the data contained in a #GdaDataSelect object, depending on the actual
+ * implementation (which adapts to the API providede by the database server), some calls to the database server
+ * may be necessary to actually obtain the data. If this behaviour is not the one intended and if you need to
+ * access the data without having to contact the database server (for example for performances reasons), then
+ * you can use the <link linkend="gda_data_select_prepare_for_offline">gda_data_select_prepare_for_offline()</link>
+ * method or specify the <link linkend="GDA-STATEMENT-MODEL-OFFLINE:CAPS">GDA_STATEMENT_MODEL_OFFLINE</link>
+ * flag when executing the SELECT statement.
+ *
+ *  The default behaviour however is to disallow modifications, and this section documents how to parametrize
  *  a <link linkend="GdaDataSelect">GdaDataSelect</link> to allow modifications. Once this is done, any modification
  *  done to the data model will be propagated to the modified table in the database using INSERT, UPDATE or DELETE
  *  statements.
  *
  *  After any modification, it is still possible to read values from the data model (even values for rows which have
  *  been modified or inserted). The data model might then execute some SELECT statement to fetch some actualized values.
+ *
  *  Note: there is a corner case where a modification made to a row would make the row not selected at first in the data model
  *  (for example is the original SELECT statement included a clause <![CDATA["WHERE id < 100"]]> and the modification sets the 
  *  <![CDATA["id"]]> value to 110), then the row will still be in the data model even though it would not be if the SELECT statement
@@ -163,6 +176,7 @@ gboolean       gda_data_select_compute_columns_attributes      (GdaDataSelect *m
 GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *model);
 
 gboolean       gda_data_select_rerun                           (GdaDataSelect *model, GError **error);
+gboolean       gda_data_select_prepare_for_offline             (GdaDataSelect *model, GError **error);
 
 G_END_DECLS
 

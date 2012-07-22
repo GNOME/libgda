@@ -3516,6 +3516,11 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 		if (timer)
 			add_exec_time_to_object (obj, timer);
 		update_meta_store_after_statement_exec (cnc, stmt, params);
+		if (GDA_IS_DATA_SELECT (obj) && (model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+		    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) obj, error)) {
+			g_object_unref (obj);
+			obj = NULL;
+		}
 	}
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref ((GObject*) cnc);
@@ -3886,12 +3891,19 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 		add_exec_time_to_object ((GObject*) model, timer);
 	if (timer)
 		g_timer_destroy (timer);
-	if (model && !GDA_IS_DATA_MODEL (model)) {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			      "%s", _("Statement is not a selection statement"));
-		g_object_unref (model);
-		model = NULL;
-		update_meta_store_after_statement_exec (cnc, stmt, params);
+	if (model) {
+		if (GDA_IS_DATA_SELECT (model) && (model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+		    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) model, error)) {
+			g_object_unref (model);
+			model = NULL;
+		}
+		else if (!GDA_IS_DATA_MODEL (model)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+				     "%s", _("Statement is not a selection statement"));
+			g_object_unref (model);
+			model = NULL;
+			update_meta_store_after_statement_exec (cnc, stmt, params);
+		}
 	}
 	return model;
 }
@@ -3974,12 +3986,19 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 
 	if (model && timer)
 		add_exec_time_to_object ((GObject*) model, timer);
-	if (model && !GDA_IS_DATA_MODEL (model)) {
-		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-			      "%s", _("Statement is not a selection statement"));
-		g_object_unref (model);
-		model = NULL;
-		update_meta_store_after_statement_exec (cnc, stmt, params);
+	if (model) {
+		if (GDA_IS_DATA_SELECT (model) && (model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+		    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) model, error)) {
+			g_object_unref (model);
+			model = NULL;
+		}
+		else if (!GDA_IS_DATA_MODEL (model)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_STATEMENT_TYPE_ERROR,
+				     "%s", _("Statement is not a selection statement"));
+			g_object_unref (model);
+			model = NULL;
+			update_meta_store_after_statement_exec (cnc, stmt, params);
+		}
 	}
 	if (timer)
 		g_timer_destroy (timer);
@@ -4081,7 +4100,15 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 			if (timer)
 				add_exec_time_to_object (obj, timer);
 			update_meta_store_after_statement_exec (cnc, stmt, (GdaSet*) list->data);
-			retlist = g_slist_prepend (retlist, obj);
+
+			if (GDA_IS_DATA_SELECT (obj) && (model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+			    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) obj, error)) {
+				g_object_unref (obj);
+				obj = NULL;
+			}
+
+			if (obj)
+				retlist = g_slist_prepend (retlist, obj);
 		}
 		if (timer)
 			g_timer_destroy (timer);

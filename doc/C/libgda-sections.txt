@@ -1539,6 +1539,7 @@ gda_data_select_compute_modification_statements_ext
 gda_data_select_compute_columns_attributes
 gda_data_select_rerun
 gda_data_select_add_exception
+gda_data_select_prepare_for_offline
 <SUBSECTION Standard>
 GDA_IS_DATA_SELECT
 GDA_DATA_SELECT

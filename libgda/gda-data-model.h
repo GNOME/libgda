@@ -140,6 +140,10 @@ struct _GdaDataModelIface {
  * column have the same type, and all the data in each row have the same semantic meaning. The #GdaDataModel is
  * actually an interface implemented by other objects to support various kinds of data storage and operations.
  *
+ * When a SELECT statement is executed using an opened #GdaConnection, the returned value (if no error occurred)
+ * is a #GdaDataSelect object which implements the #GdaDataModel interface. Please see the #GdaDataSelect's
+ * documentation for more information.
+ *
  * Depending on the real implementation, the contents of data models may be modified by the user using functions
  * provided by the model. The actual operations a data model permits can be known using the 
  * gda_data_model_get_access_flags() method.
@@ -150,8 +154,9 @@ struct _GdaDataModelIface {
  * <itemizedlist>
  *   <listitem><para>Random access to a data model's contents is done using gda_data_model_get_value_at(), or using
  *       one or more #GdaDataModelIter object(s);</para></listitem>
- *   <listitem><para>Cursor access to a data model's contents is done using a #GdaDataModelIter object (only one can be created),
- *       it is <emphasis>not possible</emphasis> to use gda_data_model_get_value_at() in this mode.</para></listitem>
+ *   <listitem><para>Cursor access to a data model's contents is done using a #GdaDataModelIter object. If this mode is
+ *       the only supported, then only one #GdaDataModelIter object can be created and
+ *       it is <emphasis>not possible</emphasis> to use gda_data_model_get_value_at() in this case.</para></listitem>
  * </itemizedlist>
  *
  * Random access data models are easier to use since picking a value is very simple using the gda_data_model_get_value_at(),

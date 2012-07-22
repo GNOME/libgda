@@ -63,6 +63,7 @@ typedef enum
  * @GDA_STATEMENT_MODEL_CURSOR_BACKWARD: access to the data model will be done using a cursor moving backward
  * @GDA_STATEMENT_MODEL_CURSOR: access to the data model will be done using a cursor (moving both forward and backward)
  * @GDA_STATEMENT_MODEL_ALLOW_NOPARAM: specifies that the data model should be executed even if some parameters required to execute it are invalid (in this case the data model will have no row, and will automatically be re-run when the missing parameters are once again valid)
+ * @GDA_STATEMENT_MODEL_OFFLINE: specifies that the data model's contents will be fully loaded into the client side (the memory of the process using &libgda;), not requiring the server any more to access the data (the default behaviour is to access the server any time data is to be read, and data is cached in memory). This flag is useful only if used in conjunction with the GDA_STATEMENT_MODEL_RANDOM_ACCESS flag (otherwise an error will be returned).
  *
  * These flags specify how the #GdaDataModel returned when executing a #GdaStatement will be used
  */
@@ -71,7 +72,8 @@ typedef enum {
 	GDA_STATEMENT_MODEL_CURSOR_FORWARD  = 1 << 1,
 	GDA_STATEMENT_MODEL_CURSOR_BACKWARD = 1 << 2,
 	GDA_STATEMENT_MODEL_CURSOR          = GDA_STATEMENT_MODEL_CURSOR_FORWARD | GDA_STATEMENT_MODEL_CURSOR_BACKWARD,
-	GDA_STATEMENT_MODEL_ALLOW_NOPARAM   = 1 << 3
+	GDA_STATEMENT_MODEL_ALLOW_NOPARAM   = 1 << 3,
+	GDA_STATEMENT_MODEL_OFFLINE         = 1 << 4
 } GdaStatementModelUsage;
 
 /**

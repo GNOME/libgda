@@ -1676,11 +1676,19 @@ sub_thread_execute_statement (ExecuteStatementData *data, GError **error)
 #endif
 
 	if (GDA_IS_DATA_MODEL (retval)) {
-		/* substitute the GdaDataSelect with a GdaThreadRecordset */
-		GdaDataModel *model;
-		model = _gda_thread_recordset_new (data->real_cnc, data->wrapper, GDA_DATA_MODEL (retval));
-		g_object_unref (retval);
-		retval = (GObject*) model;
+		if (GDA_IS_DATA_SELECT (retval) && (data->model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+		    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) retval, error)) {
+			g_object_unref (retval);
+			retval = NULL;
+		}
+
+		if (retval) {
+			/* substitute the GdaDataSelect with a GdaThreadRecordset */
+			GdaDataModel *model;
+			model = _gda_thread_recordset_new (data->real_cnc, data->wrapper, GDA_DATA_MODEL (retval));
+			g_object_unref (retval);
+			retval = (GObject*) model;
+		}
 	}
 
 	return retval;
