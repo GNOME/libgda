@@ -265,7 +265,8 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		if (node) {
 			nrows = gda_server_operation_get_sequence_size (op, "/FKEY_S");
 			for (i = 0; i < nrows; i++) {
-				gint nbfields, j;
+				gint nbfields = 0;
+				gint j;
 
 				g_string_append (string, ", FOREIGN KEY (");
 				node = gda_server_operation_get_node_info (op, "/FKEY_S/%d/FKEY_FIELDS_A", i);
