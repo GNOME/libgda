@@ -3144,7 +3144,7 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 		cnc_task_unlock (task);
 
 		/* execute next waiting task if there is one */
-		if (cnc->priv->waiting_tasks->len >= 1) {
+		while (cnc->priv->waiting_tasks->len >= 1) {
 			/* execute statement now as there are no other ones to be executed */
 			GError *lerror = NULL;
 			task = CNC_TASK (g_array_index (cnc->priv->waiting_tasks, gpointer, 0));
@@ -3173,10 +3173,13 @@ async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cn
 					g_timer_stop (task->exec_timer);
 				g_array_remove_index (cnc->priv->waiting_tasks, 0);
 				g_array_append_val (cnc->priv->completed_tasks, task);
+				cnc_task_unlock (task);
 			}
-			else
+			else {
 				update_meta_store_after_statement_exec (cnc, task->stmt, task->params);
-			cnc_task_unlock (task);
+				cnc_task_unlock (task);
+				break;
+			}
 		}
 	}
 	else
