@@ -77,10 +77,16 @@ gda_sql_statement_update_free (gpointer stmt)
 		if (list->data)
 			gda_sql_field_free ((GdaSqlField *) list->data);
 	}
+	if (update->fields_list)
+		g_slist_free (update->fields_list);
+
 	for (list = update->expr_list; list; list = list->next) {
 		if (list->data)
 			gda_sql_expr_free ((GdaSqlExpr *) list->data);
 	}
+	if (update->expr_list)
+		g_slist_free (update->expr_list);
+
 	if (update->cond)
 		gda_sql_expr_free (update->cond);
 	g_free (update);
