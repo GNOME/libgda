@@ -1033,7 +1033,7 @@ token_as_string (gchar *ptr, gint len)
 	return retval;
 }
 
-static void
+static gboolean
 handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, gint replacer);
 
 /*
@@ -1514,8 +1514,11 @@ getToken (GdaSqlParser *parser)
 		handle_composed_2_keywords (parser, retval, L_LOOP, L_ENDLOOP);
 	else if (parser->priv->context->token_type == L_IS)
 		handle_composed_2_keywords (parser, retval, L_NULL, L_ISNULL);
-	else if (parser->priv->context->token_type == L_NOT)
-		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL);
+	else if (parser->priv->context->token_type == L_NOT) {
+		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL) ||
+			handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE) ||
+			handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
+	}
 	else if (parser->priv->context->token_type == L_SIMILAR)
 		handle_composed_2_keywords (parser, retval, L_TO, L_SIMILAR);
 
@@ -1533,7 +1536,7 @@ getToken (GdaSqlParser *parser)
 	return retval;
 }
 
-static void
+static gboolean
 handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, gint replacer)
 {
 	gint npushed, nmatched;
@@ -1547,11 +1550,13 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
 		newstr = g_strdup_printf ("%s %s", g_value_get_string (retval), g_value_get_string (v));
 		g_value_reset (retval);
 		g_value_take_string (retval, newstr);
+		return TRUE;
 	}
 	if (v) {
 		g_value_reset (v);
 		g_free (v);
 	}
+	return FALSE;
 }
 
 static GValue *

@@ -1803,8 +1803,14 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 	case GDA_SQL_OPERATOR_TYPE_LIKE:
 		str = g_strdup_printf ("%s LIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
+	case GDA_SQL_OPERATOR_TYPE_NOTLIKE:
+		str = g_strdup_printf ("%s NOT LIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
 	case GDA_SQL_OPERATOR_TYPE_ILIKE:
 		str = g_strdup_printf ("%s ILIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
+	case GDA_SQL_OPERATOR_TYPE_NOTILIKE:
+		str = g_strdup_printf ("%s NOT ILIKE %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
 		break;
 	case GDA_SQL_OPERATOR_TYPE_GT:
 		str = g_strdup_printf ("%s > %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);

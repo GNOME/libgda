@@ -251,7 +251,7 @@ compose_multiple_compounds (GdaSqlStatementCompoundType ctype, GdaSqlStatement *
 %left OR.
 %left AND.
 %right NOT.
-%left IS MATCH LIKE IN ISNULL NOTNULL DIFF EQ.
+%left IS MATCH NOTLIKE LIKE IN ISNULL NOTNULL DIFF EQ.
 %left BETWEEN.
 %left GT LEQ LT GEQ.
 %left REGEXP REGEXP_CI NOT_REGEXP NOT_REGEXP_CI.
@@ -821,6 +821,7 @@ expr(C) ::= expr(L) CONCAT expr(R). {C = compose_multiple_expr (GDA_SQL_OPERATOR
 expr(C) ::= expr(L) GT|LEQ|GEQ|LT(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) DIFF|EQ(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) LIKE expr(R). {C = create_two_expr (GDA_SQL_OPERATOR_TYPE_LIKE, L, R);}
+expr(C) ::= expr(L) NOTLIKE expr(R). {C = create_two_expr (GDA_SQL_OPERATOR_TYPE_NOTLIKE, L, R);}
 expr(C) ::= expr(L) REGEXP|REGEXP_CI|NOT_REGEXP|NOT_REGEXP_CI|SIMILAR(O) expr(R). {C = create_two_expr (string_to_op_type (O), L, R);}
 expr(C) ::= expr(L) BETWEEN expr(R) AND expr(E). {GdaSqlOperation *cond;
 						  C = gda_sql_expr_new (NULL);

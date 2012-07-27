@@ -773,6 +773,10 @@ gda_sql_operation_operator_to_string (GdaSqlOperatorType op)
 		return "|";
 	case GDA_SQL_OPERATOR_TYPE_BITNOT:
 		return "~";
+	case GDA_SQL_OPERATOR_TYPE_NOTLIKE:
+		return "NOT LIKE";
+	case GDA_SQL_OPERATOR_TYPE_NOTILIKE:
+		return "NOT ILIKE";
 	default:
 		g_error ("Unhandled operator constant %d\n", op);
 		return NULL;
