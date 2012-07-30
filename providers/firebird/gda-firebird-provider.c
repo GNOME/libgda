@@ -1454,11 +1454,11 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 		
 		fbvar = &(ps->input_sqlda->sqlvar[i-1]);
 		if (!value || gda_value_is_null (value)) {
-			gint *flag0 = g_new0 (gint, 1);
+			short *flag0 = g_new0 (short, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
 			fbvar->sqlind = flag0; //TELLS FIREBIRD THAT THE COLUMN IS NULL
-			flag0 = -1; //TELLS FIREBIRD THAT THE COLUMN IS NULL
+			*flag0 = -1; //TELLS FIREBIRD THAT THE COLUMN IS NULL
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
 			/*
@@ -1536,14 +1536,14 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
 			
-			gchar 		*str;// = "CLIENTS";
-			gshort 		*flag0 = g_new0(gshort, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			const gchar *str;// = "CLIENTS";
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			str		= (g_value_get_string (value));
-			//mem_to_free	= g_slist_prepend (mem_to_free, str);
+			str = g_value_get_string (value);
+
 			if (!str) {
-				fbvar->sqlind	= flag0;
+				fbvar->sqlind = flag0;
 				*flag0 = -1;
 			}
 			else {
@@ -1557,80 +1557,80 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE) {
 			gdouble *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv		= g_new (gdouble, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, pv);
-			*pv		= g_value_get_double (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (gdouble);
-			fbvar->sqlind	= flag0;
+			pv = g_new (gdouble, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_double (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (gdouble);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_FLOAT) {
 			gfloat *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv			= g_new (gfloat, 1);
-			mem_to_free		= g_slist_prepend (mem_to_free, pv);
-			*pv			= g_value_get_float (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (gfloat);
-			fbvar->sqlind		= flag0;
+			pv = g_new (gfloat, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_float (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (gfloat);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR) {
 			gchar *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv			= g_new (gchar, 1);
-			mem_to_free		= g_slist_prepend (mem_to_free, pv);
-			*pv			= g_value_get_char (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (gchar);
-			fbvar->sqlind		= flag0;
+			pv = g_new (gchar, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_char (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (gchar);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_SHORT) {
 			gshort *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv				= g_new (gshort, 1);
-			mem_to_free		= g_slist_prepend (mem_to_free, pv);
-			*pv				= gda_value_get_short (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (gshort);
-			fbvar->sqlind		= flag0;
+			pv = g_new (gshort, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = gda_value_get_short (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (gshort);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_LONG) {
 			glong *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv				= g_new (glong, 1);
-			mem_to_free		= g_slist_prepend (mem_to_free, pv);
-			*pv				= g_value_get_long (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (glong);
-			fbvar->sqlind		= flag0;
+			pv = g_new (glong, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_long (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (glong);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT64) {
 			gint64 *pv;
-			gint *flag0 = g_new0(gint, 1);
-			mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+			short *flag0 = g_new0 (short, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, flag0);
 			
-			pv				= g_new (gint64, 1);
-			mem_to_free		= g_slist_prepend (mem_to_free, pv);
-			*pv				= g_value_get_long (value);
-			fbvar->sqldata	= pv;
-			fbvar->sqllen	= sizeof (gint64);
-			fbvar->sqlind		= flag0;
+			pv = g_new (gint64, 1);
+			mem_to_free = g_slist_prepend (mem_to_free, pv);
+			*pv = g_value_get_long (value);
+			fbvar->sqldata = pv;
+			fbvar->sqllen = sizeof (gint64);
+			fbvar->sqlind = flag0;
 			*flag0 = 0;
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
@@ -1708,19 +1708,19 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 				break;
 			}
 			else {
-				gint *flag0 = g_new0(gint, 1);
-				mem_to_free	= g_slist_prepend (mem_to_free, flag0);
+				short *flag0 = g_new0 (short, 1);
+				mem_to_free = g_slist_prepend (mem_to_free, flag0);
 				
-				str		= gda_data_handler_get_str_from_value (data_handler, value);
-				mem_to_free	= g_slist_prepend (mem_to_free, str);
-				fbvar->sqldata	= str;
-				fbvar->sqllen	= strlen (str);
-				fbvar->sqlind		= flag0;
+				str = gda_data_handler_get_str_from_value (data_handler, value);
+				mem_to_free = g_slist_prepend (mem_to_free, str);
+				fbvar->sqldata = str;
+				fbvar->sqllen = strlen (str);
+				fbvar->sqlind = flag0;
 				*flag0 = 0;
 			}
 		}
 	}
-		
+
 	if (event) {
 		gda_connection_add_event (cnc, event);
 		return NULL;
