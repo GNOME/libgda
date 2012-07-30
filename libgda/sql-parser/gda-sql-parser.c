@@ -1541,8 +1541,10 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
 {
 	gint npushed, nmatched;
 	GValue *v = NULL;
+	gboolean match;
 	nmatched = fetch_forward (parser, &npushed, second, &v, 0);
-	if (nmatched == 1) {
+	match = (nmatched == 1);
+	if (match) {
 		gchar *newstr;
 		merge_tokenizer_contexts (parser, npushed);
 		parser->priv->context->token_type = replacer;
@@ -1550,13 +1552,12 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
 		newstr = g_strdup_printf ("%s %s", g_value_get_string (retval), g_value_get_string (v));
 		g_value_reset (retval);
 		g_value_take_string (retval, newstr);
-		return TRUE;
 	}
 	if (v) {
 		g_value_reset (v);
 		g_free (v);
 	}
-	return FALSE;
+	return match;
 }
 
 static GValue *
