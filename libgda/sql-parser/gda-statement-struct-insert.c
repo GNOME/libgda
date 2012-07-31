@@ -326,7 +326,7 @@ gda_sql_statement_insert_take_extra_values_list (GdaSqlStatement *stmt, GSList *
 /**
  * gda_sql_statement_insert_take_select
  * @stmt: a #GdaSqlStatement pointer
- * @select: a SELECT #GdaSqlStatement pointer
+ * @select: a SELECT or COMPOUND #GdaSqlStatement pointer
  *
  * Specifies a SELECT statement, the values inserted will be the result set of @select. @select's 
  * ownership is transferred to
