@@ -193,7 +193,13 @@ _gda_sql_statement_compound_reduce (GdaSqlAnyPart *compound_or_select)
 		GdaSqlStatementCompound *compound = (GdaSqlStatementCompound*) part;
 		if (compound->stmt_list && !compound->stmt_list->next) {
 			GdaSqlAnyPart *rpart;
-			rpart = GDA_SQL_ANY_PART (((GdaSqlStatement *) compound->stmt_list->data)->contents);
+			GdaSqlStatement *substmt;
+			substmt = (GdaSqlStatement *) compound->stmt_list->data;
+
+			rpart = GDA_SQL_ANY_PART (substmt->contents);
+			substmt->contents = NULL;
+			gda_sql_statement_free (substmt);
+
 			g_slist_free (compound->stmt_list);
 			compound->stmt_list = NULL;
 			_gda_sql_statement_compound_free (compound);
