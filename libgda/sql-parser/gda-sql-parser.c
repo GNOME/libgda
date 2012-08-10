@@ -490,12 +490,14 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		switch (parser->priv->context->token_type) {
 		case L_SQLCOMMENT:
 			gda_value_free (value);
+			value = NULL;
 			break;
 		case L_SPACE:
 			if (parser->priv->context->in_param_spec ||
 			    (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
 				/* ignore space */
 				gda_value_free (value);
+				value = NULL;
 				break;
 			}
 		default:
@@ -575,10 +577,12 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 				  parser_trans [parser->priv->context->token_type]);*/
 				_parse (parser->priv->lemon_parser,
 					parser_trans [parser->priv->context->token_type], value, &piface);
+				value = NULL;
 				break;
 			case GDA_SQL_PARSER_MODE_DELIMIT:
 				_delimit (parser->priv->lemon_delimiter,
 					  delim_trans [parser->priv->context->token_type], value, &piface);
+				value = NULL;
 				break;
 			default:
 				TO_IMPLEMENT;
@@ -594,8 +598,11 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		if (parser->priv->error_pos != 0)
 			break;
 	}
-	if (parser->priv->context->token_type == L_ILLEGAL)
+	if (parser->priv->context->token_type == L_ILLEGAL) {
+		if (value)
+			gda_value_free (value);
 		gda_sql_parser_set_syntax_error (parser);
+	}
 
 	/* send the EOF token to the LEMON parser */
 	switch (parser->priv->mode) {
