@@ -1296,17 +1296,24 @@ getToken (GdaSqlParser *parser)
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9': {
 		parser->priv->context->token_type = L_INTEGER;
-		for (i=0; isdigit (z[i]); i++){}
-		if (z[i] == '.') {
-			i++;
-			while (isdigit (z[i])) {i++;}
-			parser->priv->context->token_type = L_FLOAT;
+		if ((z[0] == '0') && ((z[1] == 'x') || (z[1] == 'X')) && (z[2] != 0)) {
+			/* hexadecimal */
+			for (i=2; isxdigit (z[i]); i++){}
 		}
-		if ((z[i]=='e' || z[i]=='E') &&
-		    (isdigit (z[i+1]) || ((z[i+1]=='+' || z[i+1]=='-') && isdigit (z[i+2])))) {
-			i += 2;
-			while (isdigit (z[i])) {i++;}
-			parser->priv->context->token_type = L_FLOAT;
+		else {
+			for (i=0; isdigit (z[i]); i++){}
+			if (z[i] == '.') {
+				i++;
+				while (isdigit (z[i])) {i++;}
+				parser->priv->context->token_type = L_FLOAT;
+			}
+			if ((z[i]=='e' || z[i]=='E') &&
+			    (isdigit (z[i+1]) ||
+			     ((z[i+1]=='+' || z[i+1]=='-') && isdigit (z[i+2])))) {
+				i += 2;
+				while (isdigit (z[i])) {i++;}
+				parser->priv->context->token_type = L_FLOAT;
+			}
 		}
 		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			while (IdChar (z[i])) {

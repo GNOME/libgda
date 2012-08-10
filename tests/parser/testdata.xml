@@ -74,6 +74,11 @@
     <expected>{"statements":[{"statement":{"sql":"123","stmt_type":"UNKNOWN","contents":[{"value":"123"}]}}]}</expected>
   </test>
 
+  <test id="11.1">
+    <sql>0xF0FB</sql>
+    <expected>{"statements":[{"statement":{"sql":"0xF0FB","stmt_type":"UNKNOWN","contents":[{"value":"0xF0FB"}]}}]}</expected>
+  </test>
+
   <test id="12">
     <sql>1.23</sql>
     <expected>{"statements":[{"statement":{"sql":"1.23","stmt_type":"UNKNOWN","contents":[{"value":"1.23"}]}}]}</expected>
@@ -962,6 +967,11 @@
   <test id="2248">
     <sql>select a not between 3 and 5</sql>
     <expected>{"statements":[{"statement":{"sql":"select a not between 3 and 5","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"BETWEEN","operand0":{"value":"a"},"operand1":{"value":"3"},"operand2":{"value":"5"}}}}}}]}}}]}</expected>
+  </test>
+
+  <test id="2248.1">
+    <sql>select a not between 0x056 and 0XFFA</sql>
+    <expected>{"statements":[{"statement":{"sql":"select a not between 0x056 and 0XFFA","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"operation":{"operator":"NOT","operand0":{"operation":{"operator":"BETWEEN","operand0":{"value":"a"},"operand1":{"value":"0x056"},"operand2":{"value":"0XFFA"}}}}}}]}}}]}</expected>
   </test>
 
   <test id="2249">
