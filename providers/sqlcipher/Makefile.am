@@ -30,9 +30,10 @@ libgda_sqlcipher_la_SOURCES = \
 	$(sqlite_sources) \
 	libmain.c
 
-libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(LIBTOOL_PROV_EXPORT_OPTIONS)
+libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_sqlcipher_la_LIBADD = \
-	$(top_builddir)/libgda/sqlite/libgda-sqlcipher.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(COREDEPS_LIBS) \
 	$(LIBCRYPTO_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
