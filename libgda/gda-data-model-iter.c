@@ -523,7 +523,6 @@ gda_data_model_iter_set_property (GObject *object,
 	if (iter->priv) {
 		switch (param_id) {
 		case PROP_DATA_MODEL: {
-			gint col, ncols;
 			GdaDataModel *model;
 
 			GObject* ptr = g_value_get_object (value);

@@ -2916,7 +2916,7 @@ gda_string_to_binary (const gchar *str)
 	}
 
 	total = strlen (str);
-	retval = g_new0 (gchar, total + 1);
+	retval = g_new0 (guchar, total + 1);
 	sptr = (guchar*) str;
 	rptr = retval;
 

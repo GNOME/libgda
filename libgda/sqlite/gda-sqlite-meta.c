@@ -1610,7 +1610,7 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 		}
 		if ((fkid  == -1) || (fkid != g_value_get_int (cvalue))) {
 			gchar *constname;
-			GValue *v2, *v3, *v4, *v5;
+			GValue *v2, *v3, *v4, *v5 = NULL;
 
 			fkid = g_value_get_int (cvalue);
 
@@ -1896,7 +1896,7 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 		 */
 		GType fk_col_types[] = {G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
 		gint fkid = -1;
-		gint ord_pos;
+		gint ord_pos = 1;
 		stmt = get_statement (I_PRAGMA_FK_LIST, schema_name, g_value_get_string (p_table_name), error);
 		tmpmodel = gda_connection_statement_execute_select_full (cnc, stmt, pragma_set, 
 									 GDA_STATEMENT_MODEL_RANDOM_ACCESS, 
@@ -2381,7 +2381,8 @@ _gda_sqlite_meta_index_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSE
 }
 
 /*
- * @...: a list of TRUE/FALSE, GValue*  -- if TRUE then the following GValue must be freed
+ * @...: a list of TRUE/FALSE, GValue*  -- if TRUE then the following GValue will be freed by
+ * this function
  */
 static gboolean 
 append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...)

@@ -463,8 +463,8 @@ gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
 					 gint            *width,
 					 gint            *height)
 {
-	gint calc_width;
-	gint calc_height;
+	gint calc_width = 0;
+	gint calc_height = 0;
 
 	/* get the size as calculated by the GtkCellRendererText */
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);

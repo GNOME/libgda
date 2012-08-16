@@ -675,7 +675,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 
 	/* set restricting source if specified */
 	if (str && sources) {
-		gchar *ptr1, *ptr2 = NULL, *tok;
+		gchar *ptr1, *ptr2 = NULL, *tok = NULL;
 		gchar *source;
 			
 		source = g_strdup ((gchar*)str);

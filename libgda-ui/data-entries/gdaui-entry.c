@@ -520,7 +520,7 @@ static void
 delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUSED gpointer data)
 {
 	const gchar *otext = NULL;
-	gint len;
+	gint len = 0;
 	gint nstart = start_pos, nend = end_pos;
 	GdauiEntry *entry = GDAUI_ENTRY (editable);
 

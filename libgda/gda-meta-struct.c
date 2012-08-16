@@ -1121,7 +1121,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			
 			nrows = gda_data_model_get_n_rows (model);
 			for (i = 0; i < nrows; i++) {
-				GdaMetaTableForeignKey *tfk;
+				GdaMetaTableForeignKey *tfk = NULL;
 				const GValue *fk_catalog, *fk_schema, *fk_tname, *fk_name;
 				const GValue *upd_policy, *del_policy;
 
@@ -1176,7 +1176,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 				/* FIXME: compute @cols_nb, and all the @*_array members (ref_pk_cols_array must be
 				 * initialized with -1 values everywhere */
 				sql = "SELECT k.column_name, c.ordinal_position FROM _key_column_usage k INNER JOIN _columns c ON (c.table_catalog = k.table_catalog AND c.table_schema = k.table_schema AND c.table_name=k.table_name AND c.column_name=k.column_name) WHERE k.table_catalog = ##tc::string AND k.table_schema = ##ts::string AND k.table_name = ##tname::string AND k.constraint_name = ##cname::string ORDER BY k.ordinal_position";
-				GdaDataModel *fk_cols, *ref_pk_cols;
+				GdaDataModel *fk_cols = NULL;
+				GdaDataModel *ref_pk_cols = NULL;
 				gboolean fkerror = FALSE;
 				cvalue = gda_data_model_get_value_at (model, 3, i, error);
 				if (!cvalue) goto onfkerror;
@@ -1268,8 +1269,8 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 					g_object_unref (fk_cols);
 				if (ref_pk_cols)
 					g_object_unref (ref_pk_cols);
-				
-				mt->fk_list = g_slist_prepend (mt->fk_list, tfk);
+				if (tfk)
+					mt->fk_list = g_slist_prepend (mt->fk_list, tfk);
 				goto onerror;
 			}
 			mt->fk_list = g_slist_reverse (mt->fk_list);

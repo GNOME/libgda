@@ -897,7 +897,7 @@ gda_ldap_entry_new (const gchar *dn)
 		entry->dn = g_strdup (dn);
 	entry->attributes_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	entry->nb_attributes = 0;
-	entry->attributes = g_new0 (GdaLdapAttribute, 1);
+	entry->attributes = g_new0 (GdaLdapAttribute*, 1);
 	return entry;
 }
 

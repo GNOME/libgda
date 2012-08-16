@@ -143,7 +143,6 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 {
 	GdaWebRecordset *model;
         gint i;
-	static guint counter = 0;
 	WebConnectionData *cdata;
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

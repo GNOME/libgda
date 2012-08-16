@@ -1502,7 +1502,7 @@ static void compute_view_dependencies (GdaMetaStoreClass *klass, GdaMetaStore *s
 static DbObject *
 create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr node, GError **error)
 {
-	DbObject *dbobj;
+	DbObject *dbobj = NULL;
 	xmlChar *view_name;
 	gchar *complete_obj_name = NULL;
 

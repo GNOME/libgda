@@ -468,7 +468,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 	 * PREPARE phase 
 	 */
 	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
-		GdaConnection *cnc;
+		GdaConnection *cnc = NULL;
 		GdaServerProvider *prov;
 		const GdaBinary *branch;
 		
@@ -503,7 +503,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 	if (list) {
 		/* something went wrong during the PREPARE phase => rollback everything */
 		for (; list; list = list->prev) {
-			GdaConnection *cnc;
+			GdaConnection *cnc = NULL;
 			GdaServerProvider *prov;
 			
 			if (cnc == xa_trans->priv->non_xa_cnc) 
@@ -533,7 +533,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 	    ! gda_connection_commit_transaction (xa_trans->priv->non_xa_cnc, NULL, error)) {
 		/* something went wrong => rollback everything */
 		for (list = xa_trans->priv->cnc_list; list; list = list->next) {
-			GdaConnection *cnc;
+			GdaConnection *cnc = NULL;
 			GdaServerProvider *prov;
 			
 			if (cnc == xa_trans->priv->non_xa_cnc)
@@ -557,7 +557,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 	}
 
 	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
-		GdaConnection *cnc;
+		GdaConnection *cnc = NULL;
 		GdaServerProvider *prov;
 		const GdaBinary *branch;
 		

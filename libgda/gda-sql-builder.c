@@ -823,7 +823,6 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHan
 	g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
 	g_return_val_if_fail (builder->priv->main_stmt, 0);
 
-	gchar *str;
 	GdaSqlExpr *expr;
 	expr = gda_sql_expr_new (NULL);
 	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
