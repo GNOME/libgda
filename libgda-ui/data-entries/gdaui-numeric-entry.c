@@ -276,20 +276,38 @@ gdaui_numeric_entry_set_property (GObject *object,
                         entry->priv->nb_decimals = g_value_get_uint (value);
                         break;
                 case PROP_DECIMAL_SEP: {
-                        gchar sep = g_value_get_char (value);
+			gchar sep;
+#if GLIB_CHECK_VERSION(2,32,0)
+                        sep = (gchar) g_value_get_schar (value);
+#else
+                        sep = g_value_get_char (value);
+#endif
                         if ((sep == 0) || (sep == '+') || (sep == '-'))
                                 g_warning (_("Decimal separator cannot be the '%c' character"), sep ? sep : '0');
                         else {
-                                entry->priv->decimal_sep = g_value_get_char (value);
+#if GLIB_CHECK_VERSION(2,32,0)
+                                entry->priv->decimal_sep = (gchar) g_value_get_schar (value);
+#else
+				entry->priv->decimal_sep = g_value_get_char (value);
+#endif
                         }
                         break;
                 }
                 case PROP_THOUSANDS_SEP: {
-                        gchar sep = g_value_get_char (value);
+			gchar sep;
+#if GLIB_CHECK_VERSION(2,32,0)
+                        sep = (gchar) g_value_get_schar (value);
+#else
+                        sep = g_value_get_char (value);
+#endif
                         if ((sep == '+') || (sep == '-') || (sep == '_'))
                                 g_warning (_("Decimal thousands cannot be the '%c' character"), sep);
                         else {
-                                entry->priv->thousands_sep = g_value_get_char (value);
+#if GLIB_CHECK_VERSION(2,32,0)
+                                entry->priv->thousands_sep = (gchar) g_value_get_schar (value);
+#else
+				entry->priv->thousands_sep = g_value_get_char (value);
+#endif
                         }
                         break;
                 }
@@ -320,10 +338,18 @@ gdaui_numeric_entry_get_property (GObject *object,
                         g_value_set_uint (value, entry->priv->nb_decimals);
                         break;
                 case PROP_DECIMAL_SEP:
+#if GLIB_CHECK_VERSION(2,32,0)
+                        g_value_set_schar (value, (gint8) entry->priv->decimal_sep);
+#else
                         g_value_set_char (value, entry->priv->decimal_sep);
+#endif
                         break;
                 case PROP_THOUSANDS_SEP:
+#if GLIB_CHECK_VERSION(2,32,0)
+                        g_value_set_schar (value, (gint8) entry->priv->thousands_sep);
+#else
                         g_value_set_char (value, entry->priv->thousands_sep);
+#endif
                         break;
                 default:
                         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
