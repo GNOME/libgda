@@ -225,7 +225,7 @@ gda_connection_event_get_description (GdaConnectionEvent *event)
 /**
  * gda_connection_event_set_description:
  * @event: a #GdaConnectionEvent.
- * @description: a description.
+ * @description: (allow-none): a description, or %NULL (to unset current description if any)
  *
  * Sets @event's @description. This function should not be called directly.
  */
@@ -236,7 +236,10 @@ gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *de
 
 	if (event->priv->description)
 		g_free (event->priv->description);
-	event->priv->description = g_strdup (description);
+	if (description)
+		event->priv->description = g_strdup (description);
+	else
+		event->priv->description = NULL;
 }
 
 /**
