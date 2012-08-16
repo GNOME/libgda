@@ -334,9 +334,11 @@ static sqlite3_module Module = {
 	virtualRollback,              /* xRollback - rollback transaction */
 	NULL,                         /* xFindFunction - function overloading */
 	virtualRename,                /* Rename - Notification that the table will be given a new name */
+#if SQLITE_VERSION_NUMBER >= 3007007
 	NULL,                         /* xSavepoint */  
 	NULL,                         /* xRelease */
 	NULL                          /* xRollbackTo */
+#endif
 };
 
 static GdaConnection *
