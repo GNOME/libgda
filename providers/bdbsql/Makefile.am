@@ -15,9 +15,11 @@ AM_CPPFLAGS = \
 libgda_bdbsql_la_SOURCES = \
 	libmain.c
 
-libgda_bdbsql_la_LDFLAGS = -export-dynamic -module -avoid-version $(LIBTOOL_PROV_EXPORT_OPTIONS)
+libgda_bdbsql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_bdbsql_la_LIBADD = \
-	$(top_builddir)/libgda/sqlite/libgda-bdbsqlite.la
+	$(top_builddir)/libgda/sqlite/libgda-bdbsqlite.la \
+	$(top_builddir)/libgda/libgda-5.0.la \
+	$(COREDEPS_LIBS)
 
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
