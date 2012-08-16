@@ -35,7 +35,6 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 
 static void signal_handlers_block (GdauiEntryPassword *mgstr);
 static void signal_handlers_unblock (GdauiEntryPassword *mgstr);
@@ -95,7 +94,6 @@ gdaui_entry_password_class_init (GdauiEntryPasswordClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->can_expand = can_expand;
 }
 
 static void
@@ -295,12 +293,6 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
                           modify_cb, mgwrap);
         g_signal_connect (G_OBJECT (mgstr->priv->entry), "activate",
                           activate_cb, mgwrap);
-}
-
-static gboolean
-can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
-{
-	return FALSE;
 }
 
 static void 

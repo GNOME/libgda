@@ -55,7 +55,7 @@ struct _GdauiEntryWrapperClass
 	void              (*real_set_value)   (GdauiEntryWrapper *wrapper, const GValue *value);
 	GValue           *(*real_get_value)   (GdauiEntryWrapper *wrapper);
 	void              (*connect_signals)  (GdauiEntryWrapper *wrapper, GCallback modify_cb, GCallback activate_cb);
-	gboolean          (*can_expand)       (GdauiEntryWrapper *wrapper, gboolean horiz);
+	gboolean          (*can_expand)       (GdauiEntryWrapper *wrapper, gboolean horiz); /* not used anymore */
 	void              (*set_editable)     (GdauiEntryWrapper *wrapper, gboolean editable);
 
 	gboolean          (*value_is_equal_to)(GdauiEntryWrapper *wrapper, const GValue *value);

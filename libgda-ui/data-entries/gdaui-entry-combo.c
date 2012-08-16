@@ -54,7 +54,6 @@ static const GValue   *gdaui_entry_combo_get_ref_value     (GdauiDataEntry *de);
 static void            gdaui_entry_combo_set_value_default (GdauiDataEntry *de, const GValue * value);
 static void            gdaui_entry_combo_set_attributes    (GdauiDataEntry *de, guint attrs, guint mask);
 static GdaValueAttribute gdaui_entry_combo_get_attributes    (GdauiDataEntry *de);
-static gboolean        gdaui_entry_combo_can_expand  (GdauiDataEntry *de, gboolean horiz);
 static void            gdaui_entry_combo_grab_focus        (GdauiDataEntry *de);
 static void            gdaui_entry_combo_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
 							    gdouble blue, gdouble alpha);
@@ -144,7 +143,6 @@ gdaui_entry_combo_data_entry_init (GdauiDataEntryIface *iface)
         iface->set_attributes = gdaui_entry_combo_set_attributes;
         iface->get_attributes = gdaui_entry_combo_get_attributes;
         iface->get_handler = NULL;
-        iface->can_expand = gdaui_entry_combo_can_expand;
 	iface->grab_focus = gdaui_entry_combo_grab_focus;
 	iface->set_unknown_color = gdaui_entry_combo_set_unknown_color;
 }
@@ -1029,19 +1027,6 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	}
 
 	return retval;
-}
-
-
-static gboolean
-gdaui_entry_combo_can_expand (GdauiDataEntry *iface, G_GNUC_UNUSED gboolean horiz)
-{
-	GdauiEntryCombo *combo;
-
-	g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), FALSE);
-	combo = GDAUI_ENTRY_COMBO (iface);
-	g_return_val_if_fail (combo->priv, FALSE);
-
-	return FALSE;
 }
 
 static void

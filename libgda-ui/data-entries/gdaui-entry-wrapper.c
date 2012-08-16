@@ -54,7 +54,6 @@ static void            gdaui_entry_wrapper_set_value_default (GdauiDataEntry *de
 static void            gdaui_entry_wrapper_set_attributes    (GdauiDataEntry *de, GdaValueAttribute attrs, guint mask);
 static GdaValueAttribute gdaui_entry_wrapper_get_attributes  (GdauiDataEntry *de);
 static GdaDataHandler *gdaui_entry_wrapper_get_handler       (GdauiDataEntry *de);
-static gboolean        gdaui_entry_wrapper_can_expand        (GdauiDataEntry *de, gboolean horiz);
 static void            gdaui_entry_wrapper_set_editable      (GdauiDataEntry *de, gboolean editable);
 static gboolean        gdaui_entry_wrapper_get_editable      (GdauiDataEntry *de);
 static void            gdaui_entry_wrapper_grab_focus        (GdauiDataEntry *de);
@@ -137,7 +136,6 @@ gdaui_entry_wrapper_data_entry_init (GdauiDataEntryIface *iface)
 	iface->set_attributes = gdaui_entry_wrapper_set_attributes;
 	iface->get_attributes = gdaui_entry_wrapper_get_attributes;
 	iface->get_handler = gdaui_entry_wrapper_get_handler;
-	iface->can_expand = gdaui_entry_wrapper_can_expand;
 	iface->set_editable = gdaui_entry_wrapper_set_editable;
 	iface->get_editable = gdaui_entry_wrapper_get_editable;
 	iface->grab_focus = gdaui_entry_wrapper_grab_focus;
@@ -193,11 +191,6 @@ check_correct_init (GdauiEntryWrapper *wrapper)
 		}
 		if (! klass->connect_signals) {
 			g_warning ("connect_signals () virtual function not implemented for object class %s\n",
-				   G_OBJECT_TYPE_NAME (wrapper));
-			class_impl_error = TRUE;
-		}
-		if (! klass->can_expand) {
-			g_warning ("can_expand () virtual function not implemented for object class %s\n",
 				   G_OBJECT_TYPE_NAME (wrapper));
 			class_impl_error = TRUE;
 		}
@@ -258,6 +251,8 @@ gdaui_entry_wrapper_init (GdauiEntryWrapper *wrapper)
 	wrapper->priv->contents_has_changed = FALSE;
 
 	wrapper->priv->set_default_if_invalid = FALSE;
+
+	gtk_widget_set_hexpand (GTK_WIDGET (wrapper), TRUE);
 }
 
 static void
@@ -826,18 +821,6 @@ gdaui_entry_wrapper_get_handler (GdauiDataEntry *iface)
 		g_object_unref (dh);
 
 	return dh;
-}
-
-static gboolean
-gdaui_entry_wrapper_can_expand (GdauiDataEntry *iface, gboolean horiz)
-{
-	GdauiEntryWrapper *wrapper;
-
-	g_return_val_if_fail (GDAUI_IS_ENTRY_WRAPPER (iface), FALSE);
-	wrapper = (GdauiEntryWrapper*) iface;
-	check_correct_init (wrapper);
-
-	return (wrapper->priv->real_class->can_expand) (wrapper, horiz);
 }
 
 static void

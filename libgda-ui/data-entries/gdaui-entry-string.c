@@ -62,7 +62,6 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
@@ -142,7 +141,6 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (klass)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->grab_focus = grab_focus;
 
@@ -273,10 +271,12 @@ gdaui_entry_string_set_property (GObject *object,
 				if (mgstr->priv->multiline) {
 					gtk_widget_hide (mgstr->priv->entry);
 					gtk_widget_show (mgstr->priv->sw);
+					gtk_widget_set_vexpand (GTK_WIDGET (mgstr), TRUE);
 				}
 				else {
 					gtk_widget_show (mgstr->priv->entry);
 					gtk_widget_hide (mgstr->priv->sw);
+					gtk_widget_set_vexpand (GTK_WIDGET (mgstr), FALSE);
 				}
 				g_signal_emit_by_name (object, "expand-changed");
 			}
@@ -472,21 +472,6 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	g_signal_connect (G_OBJECT (mgstr->priv->buffer), "changed",
 			  modify_cb, mgwrap);
 	/* FIXME: how does the user "activates" the GtkTextView widget ? */
-}
-
-static gboolean
-can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz)
-{
-	GdauiEntryString *mgstr;
-
-	g_return_val_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap), FALSE);
-	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_val_if_fail (mgstr->priv, FALSE);
-
-	if (horiz)
-		return FALSE;
-	else
-		return mgstr->priv->multiline;
 }
 
 static void

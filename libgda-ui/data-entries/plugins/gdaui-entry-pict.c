@@ -46,7 +46,6 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static gboolean   value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value);
 static gboolean   value_is_null (GdauiEntryWrapper *mgwrap);
@@ -107,14 +106,13 @@ gdaui_entry_pict_class_init (GdauiEntryPictClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->value_is_equal_to = value_is_equal_to;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->value_is_null = value_is_null;
 }
 
 static void
-gdaui_entry_pict_init (GdauiEntryPict * gdaui_entry_pict)
+gdaui_entry_pict_init (GdauiEntryPict *gdaui_entry_pict)
 {
 	gdaui_entry_pict->priv = g_new0 (GdauiEntryPictPrivate, 1);
 	gdaui_entry_pict->priv->pict = NULL;
@@ -126,6 +124,7 @@ gdaui_entry_pict_init (GdauiEntryPict * gdaui_entry_pict)
 	gdaui_entry_pict->priv->editable = TRUE;
 	gdaui_entry_pict->priv->size.width = 0;
 	gdaui_entry_pict->priv->size.height = 0;
+	gtk_widget_set_vexpand (GTK_WIDGET (gdaui_entry_pict), TRUE);
 }
 
 /**
@@ -446,12 +445,6 @@ connect_signals(G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED GCallback
 		G_GNUC_UNUSED GCallback activate_cb)
 {
 	/* do nothing because we manually call gdaui_entry_wrapper_contents_changed() */
-}
-
-static gboolean
-can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED gboolean horiz)
-{
-	return TRUE;
 }
 
 static void

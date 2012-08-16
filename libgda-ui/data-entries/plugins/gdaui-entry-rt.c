@@ -37,7 +37,6 @@ static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
 static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
-static gboolean   can_expand (GdauiEntryWrapper *mgwrap, gboolean horiz);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -88,15 +87,15 @@ gdaui_entry_rt_class_init (GdauiEntryRtClass * class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->can_expand = can_expand;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 }
 
 static void
-gdaui_entry_rt_init (GdauiEntryRt * gdaui_entry_rt)
+gdaui_entry_rt_init (GdauiEntryRt *gdaui_entry_rt)
 {
 	gdaui_entry_rt->priv = g_new0 (GdauiEntryRtPrivate, 1);
 	gdaui_entry_rt->priv->view = NULL;
+	gtk_widget_set_vexpand (GTK_WIDGET (gdaui_entry_rt), TRUE);
 }
 
 /**
@@ -280,15 +279,6 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	g_signal_connect (G_OBJECT (mgtxt->priv->view), "focus-out-event",
 			  G_CALLBACK (focus_out_cb), mgtxt);
 	/* FIXME: how does the user "activates" the GtkRtView widget ? */
-}
-
-static gboolean
-can_expand (G_GNUC_UNUSED GdauiEntryWrapper *mgwrap, gboolean horiz)
-{
-	if (horiz)
-		return FALSE;
-	else
-		return TRUE;
 }
 
 static void

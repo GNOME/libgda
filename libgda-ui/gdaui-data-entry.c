@@ -64,6 +64,7 @@ gdaui_data_entry_get_type (void)
 		};
 
 		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataEntry", &info, 0);
+		g_type_interface_add_prerequisite (type, GTK_TYPE_WIDGET);
 	}
 	return type;
 }
@@ -415,6 +416,8 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
  * Returns: %TRUE if the widget requires expansion
  *
  * Since: 4.2
+ *
+ * Deprecated: 5.2: use the GtkWidget "hexpand", "wexpand" or "expand" properties
  */
 gboolean
 gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
@@ -422,9 +425,12 @@ gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
 
 	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand)
-		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand) (de, horiz);
+		g_warning ("The GdauiDataEntry::can_expand virtual method is not used anymore, "
+			   "please clean your code");
+	if (horiz)
+		return gtk_widget_get_hexpand ((GtkWidget*) de);
 	else
-		return FALSE;
+		return gtk_widget_get_vexpand ((GtkWidget*) de);
 }
 
 /**

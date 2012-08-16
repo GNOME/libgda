@@ -67,7 +67,7 @@ struct _GdauiDataEntryIface
 	void            (*set_attributes)        (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
 	GdaValueAttribute (*get_attributes)      (GdauiDataEntry *de);
 	GdaDataHandler *(*get_handler)           (GdauiDataEntry *de);
-	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz);
+	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz); /* not used anymore */
 	void            (*set_editable)          (GdauiDataEntry *de, gboolean editable);
 	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
