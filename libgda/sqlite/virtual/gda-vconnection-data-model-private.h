@@ -71,7 +71,7 @@ struct VirtualFilteredData {
 	/* data */
 	GdaDataModel *model;
 	GdaDataModelIter *iter; /* not NULL while nrows == -1 */
-	GValueArray  *values;
+	GArray       *values_array;
 	gint          ncols;
 	gint          nrows; /* -1 until known */
 };

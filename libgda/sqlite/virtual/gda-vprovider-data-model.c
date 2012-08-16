@@ -230,7 +230,7 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 	gint n;
 	n = gda_data_model_get_n_columns (model);
 	n = (n >= 0) ? n : 1;
-	data->values = g_value_array_new (n);
+	data->values_array = g_array_new (FALSE, FALSE, sizeof (GValue));
 	data->ncols = gda_data_model_get_n_columns (model);
 	data->nrows = -1;
 	data->rowid_offset = vtable->rows_offset;
@@ -259,8 +259,15 @@ virtual_filtered_data_free (VirtualFilteredData *data)
 	if (data->iter)
 		g_object_unref (data->iter);
 
-	if (data->values)
-		g_value_array_free (data->values);
+	if (data->values_array) {
+		guint i;
+		for (i = 0; i < data->values_array->len; i++) {
+			GValue *value;
+			value = & g_array_index (data->values_array, GValue, i);
+			g_value_reset (value);
+		}
+		g_array_free (data->values_array, TRUE);
+	}
 	g_free (data);
 
 #ifdef DEBUG_VCONTEXT
@@ -716,7 +723,7 @@ virtualConnect (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqli
 static int
 virtualDisconnect (sqlite3_vtab *pVtab)
 {
-	VirtualTable *vtable = (VirtualTable *) pVtab;
+	/*VirtualTable *vtable = (VirtualTable *) pVtab;*/
 
 	TRACE (pVtab, NULL);
 	g_free (pVtab);
@@ -749,7 +756,7 @@ static int
 virtualClose (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
-	VirtualTable *vtable = (VirtualTable*) cur->pVtab;
+	/*VirtualTable *vtable = (VirtualTable*) cur->pVtab;*/
 
 	TRACE (cur->pVtab, cur);
 
@@ -853,13 +860,23 @@ virtualNext (sqlite3_vtab_cursor *cur)
 					GValue value = {0};
 					g_value_init (&value, G_TYPE_ERROR);
 					g_value_take_boxed (&value, lerror);
-					g_value_array_append (data->values, &value);
-					g_value_unset (&value);
+					g_array_append_val (data->values_array, value);
 				}
 				else {
 					const GValue *cvalue;
 					cvalue = gda_holder_get_value (h);
-					g_value_array_append (data->values, cvalue);
+					if (cvalue && (G_VALUE_TYPE (cvalue) != 0)) {
+						GValue copy = {0};
+						g_value_init (&copy, G_VALUE_TYPE (cvalue));
+						g_value_copy (cvalue, &copy);
+						g_array_append_val (data->values_array, copy);
+					}
+					else {
+						GValue value = {0};
+						g_value_init (&value, G_TYPE_ERROR);
+						g_value_take_boxed (&value, lerror);
+						g_array_append_val (data->values_array, value);
+					}
 				}
 			}
 			g_assert (count == data->ncols);
@@ -922,7 +939,7 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 	}
 
 	if (data)
-		value = g_value_array_get_nth (data->values, row * data->ncols + col);
+		value = & g_array_index (data->values_array, GValue, row * data->ncols + col);
 
 	if (!value)
 		g_set_error (error, 0, 0,
