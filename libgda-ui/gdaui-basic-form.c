@@ -59,7 +59,7 @@ typedef enum {
 } PackingType;
 
 typedef struct {
-	GtkWidget *table;
+	GtkWidget *grid_table;
 	gint top;
 } PackingTable;
 
@@ -459,17 +459,8 @@ static void
 widget_shown_cb (GtkWidget *wid, SingleEntry *sentry)
 {
 	g_assert ((wid == (GtkWidget*) sentry->entry) || (wid == sentry->label));
-	if (sentry->hidden) {
-		GtkWidget *parent;
-		parent = gtk_widget_get_parent (wid);
-		if (parent && GTK_IS_TABLE (parent)) {
-			gint row;
-			gtk_container_child_get (GTK_CONTAINER (parent), wid, "top-attach", &row, NULL);
-			gtk_table_set_row_spacing (GTK_TABLE (parent), row, 0);
-		}
-
+	if (sentry->hidden)
 		gtk_widget_hide (wid);
-	}
 }
 
 static void
@@ -1143,31 +1134,28 @@ static void
 pack_entry_widget (SingleEntry *sentry)
 {
 	gboolean expand;
-	expand = gdaui_data_entry_can_expand (GDAUI_DATA_ENTRY (sentry->entry), FALSE);
+	expand = gtk_widget_get_vexpand (GTK_WIDGET (sentry->entry));
 	sentry->can_expand = expand;
 
 	switch (sentry->packing_type) {
 	case PACKING_TABLE: {
 		/* label for the entry */
 		gint i = sentry->pack.table.top;
-		GtkTable *table = GTK_TABLE (sentry->pack.table.table);
+		GtkGrid *grid = GTK_GRID (sentry->pack.table.grid_table);
 		GtkWidget *parent;
 
 		if (sentry->label) {
 			parent = gtk_widget_get_parent (sentry->label);
 			if (parent)
 				gtk_container_remove (GTK_CONTAINER (parent), sentry->label);
-			gtk_table_attach (table, sentry->label, 0, 1, i, i+1,
-					  GTK_FILL | GTK_SHRINK, GTK_SHRINK, 0, 0);
+			gtk_grid_attach (grid, sentry->label, 0, i, 1, 1);
 		}
 		
 		/* add the entry itself to the table */
 		parent = gtk_widget_get_parent ((GtkWidget*) sentry->entry);
 		if (parent)
 			gtk_container_remove (GTK_CONTAINER (parent), (GtkWidget*) sentry->entry);
-		gtk_table_attach (table, (GtkWidget*) sentry->entry, 1, 2, i, i+1,
-				  GTK_FILL | GTK_EXPAND,
-				  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
+		gtk_grid_attach (grid, (GtkWidget*) sentry->entry, 1, i, 1, 1);
 
 		gtk_widget_show ((GtkWidget*) sentry->entry);
 		if (sentry->label)
@@ -1185,7 +1173,7 @@ pack_entry_widget (SingleEntry *sentry)
 static void
 pack_entries_in_table (GdauiBasicForm *form)
 {
-	GtkWidget *table;
+	GtkWidget *grid;
 	gint i;
 	GSList *list;
 
@@ -1200,24 +1188,24 @@ pack_entries_in_table (GdauiBasicForm *form)
 	}
 
 	/* creating a table for all the entries */
-	table = gtk_table_new (g_slist_length (form->priv->s_entries), 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), SPACING);
-	gtk_table_set_col_spacings (GTK_TABLE (table), SPACING);
-	form->priv->top_container = table;
-	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), SPACING);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), SPACING);
+	form->priv->top_container = grid;
+	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), grid, TRUE, TRUE, 0);
 	for (list = form->priv->s_entries, i = 0;
 	     list;
 	     list = list->next, i++) {
 		SingleEntry *sentry = (SingleEntry *) list->data;
 
 		sentry->packing_type = PACKING_TABLE;
-		sentry->pack.table.table = table;
+		sentry->pack.table.grid_table = grid;
 		sentry->pack.table.top = i;
 
 		pack_entry_widget (sentry);
 	}
 	mark_not_null_entry_labels (form, TRUE);
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 }
 
 static GtkWidget *load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node);
@@ -1327,8 +1315,8 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 static GtkWidget *
 load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 {
-	GtkWidget *table;
-	table = gtk_table_new (1, 2, FALSE);
+	GtkWidget *grid;
+	grid = gtk_grid_new ();
 	
 	xmlNodePtr child;
 	gint i;
@@ -1344,7 +1332,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 				sentry = get_single_entry_for_id (form, (gchar*) name);
 				if (sentry) {
 					sentry->packing_type = PACKING_TABLE;
-					sentry->pack.table.table = table;
+					sentry->pack.table.grid_table = grid;
 					sentry->pack.table.top = i;
 
 					xmlChar *plugin;
@@ -1394,7 +1382,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 				if (label) {
 					GtkWidget *wid;
 					wid = gtk_label_new ((gchar*) label);
-					gtk_table_attach (GTK_TABLE (table), wid, 0, 1, i, i+1, GTK_SHRINK, 0, 0, 0);
+					gtk_grid_attach (GTK_GRID (grid), wid, 0, i, 1, 1);
 					xmlFree (label);
 				}
 
@@ -1404,7 +1392,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 				ph = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 				g_hash_table_insert (form->priv->place_holders, g_strdup ((gchar*) id),
 						     g_object_ref_sink ((GObject*)ph));
-				gtk_table_attach_defaults (GTK_TABLE (table), ph, 1, 2, i, i+1);
+				gtk_grid_attach (GTK_GRID (grid), ph, 1, i, 1, 1);
 				xmlFree (id);
 			}
 		}
@@ -1412,9 +1400,9 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 			g_warning ("Unknown node type '%s', ignoring", (gchar*) child->name);	
 	}
 
-	gtk_table_set_row_spacings (GTK_TABLE (table), SPACING);
-	gtk_table_set_col_spacings (GTK_TABLE (table), SPACING);
-	return table;
+	gtk_grid_set_row_spacing (GTK_GRID (grid), SPACING);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), SPACING);
+	return grid;
 }
 
 static GtkWidget *
@@ -1890,15 +1878,6 @@ real_gdaui_basic_form_entry_set_visible (GdauiBasicForm *form, SingleEntry *sent
 				gtk_widget_hide (sentry->label);
 		}
 		sentry->hidden = !show;
-
-		GtkWidget *parent;
-		parent = gtk_widget_get_parent ((GtkWidget *) sentry->entry);
-		if (parent && GTK_IS_TABLE (parent)) {
-			gint row;
-			gtk_container_child_get (GTK_CONTAINER (parent), (GtkWidget *) sentry->entry, "top-attach",
-						 &row, NULL);
-			gtk_table_set_row_spacing (GTK_TABLE (parent), row, show ? SPACING : 0);
-		}
 	}
 }
 
@@ -2206,7 +2185,6 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 				    label, FALSE, FALSE, SPACING);
 		gtk_widget_show (label);
 	}
-
 
 	gboolean can_expand;
 	g_object_get ((GObject*) form, "can-expand-v", &can_expand, NULL);
