@@ -32,7 +32,11 @@
 struct _GdaVconnectionDataModelPrivate {
 	GSList *table_data_list; /* list of GdaVConnectionTableData structures */
 
+#if GLIB_CHECK_VERSION(2,32,0)
+	GMutex        lock_context;
+#else
 	GMutex       *lock_context;
+#endif
 	GdaStatement *executed_stmt;
 };
 
@@ -139,7 +143,11 @@ gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, G_GNUC_UNUSED Gda
 {
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
+#if GLIB_CHECK_VERSION(2,32,0)
+	g_mutex_init (& (cnc->priv->lock_context));
+#else
 	cnc->priv->lock_context = g_mutex_new ();
+#endif
 
 	g_object_set (G_OBJECT (cnc), "cnc-string", "_IS_VIRTUAL=TRUE", NULL);
 }
@@ -160,7 +168,11 @@ gda_vconnection_data_model_dispose (GObject *object)
 		}
 		gda_connection_close_no_warning ((GdaConnection *) cnc);
 
+#if GLIB_CHECK_VERSION(2,32,0)
+		g_mutex_clear (& (cnc->priv->lock_context));
+#else
 		g_mutex_free (cnc->priv->lock_context);
+#endif
 		g_free (cnc->priv);
 		cnc->priv = NULL;
 	}
@@ -633,13 +645,21 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 {
 	GSList *list;
 	if (obj) {
+#if GLIB_CHECK_VERSION(2,32,0)
+		g_mutex_lock (& (cnc->priv->lock_context));
+#else
 		g_mutex_lock (cnc->priv->lock_context);
+#endif
 		for (list = cnc->priv->table_data_list; list; list = list->next) {
 			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
 			VContext *vc = NULL;
 			
 			g_assert (!td->context.current_vcontext);
+#if GLIB_CHECK_VERSION(2,32,0)
+			td->context.mutex = &(cnc->priv->lock_context);
+#else
 			td->context.mutex = cnc->priv->lock_context;
+#endif
 			if (! td->context.hash)
 				td->context.hash = g_hash_table_new_full (g_direct_hash, g_direct_equal,
 									  NULL, (GDestroyNotify) vcontext_free);
@@ -668,7 +688,11 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 			 * an exception already occurred */
 			td->context.current_vcontext = NULL;
 		}
+#if GLIB_CHECK_VERSION(2,32,0)
+		g_mutex_unlock (& (cnc->priv->lock_context));
+#else
 		g_mutex_unlock (cnc->priv->lock_context);
+#endif
 	}
 }
 
