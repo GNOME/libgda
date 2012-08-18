@@ -16,9 +16,9 @@ m4_include(m4/java.m4)
 m4_include(m4/ldap.m4)
 
 AC_INIT([GNU Data Access],[major.minor.micro],[https://bugzilla.gnome.org/enter_bug.cgi?product=libgda],[libgda],[http://www.gnome-db.org])
-AC_PREREQ([2.67])
+AC_PREREQ([2.68])
 AC_CONFIG_SRCDIR(libgda/libgda.h.in)
-AM_INIT_AUTOMAKE([1.8 -Wall no-define dist-bzip2 no-dist-gzip dist-xz])
+AM_INIT_AUTOMAKE([1.11.1 -Wall no-define no-dist-gzip dist-xz])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
@@ -58,7 +58,7 @@ AC_SUBST(GDA_CURRENT)
 AC_SUBST(GDA_REVISION)
 AC_SUBST(GDA_AGE)
 
-IT_PROG_INTLTOOL([0.35.5])
+IT_PROG_INTLTOOL([0.40.6])
 AC_SUBST(INTLTOOL_XML_RULE)
 AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
@@ -119,6 +119,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_CC_C_O
 AC_HEADER_STDC
+LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 AC_PROG_MAKE_SET
 
