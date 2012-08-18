@@ -7,5 +7,6 @@
     <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)" gdatype="gint"/>
     <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
+    <parameter id="CONNECT_TIMEOUT" _name="Connection timeout" _descr="Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely. It is not recommended to use a timeout of less than 2 seconds" gdatype="gint"/>
   </parameters>
 </data-set-spec>

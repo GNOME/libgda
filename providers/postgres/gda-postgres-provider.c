@@ -420,6 +420,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
         const gchar *pq_pwd = NULL;
         const gchar *pq_hostaddr;
         const gchar *pq_requiressl;
+	const gchar *pq_connect_timeout;
         gchar *conn_string;
 	pq_host = gda_quark_list_find (params, "HOST");
         pq_hostaddr = gda_quark_list_find (params, "HOSTADDR");
@@ -454,7 +455,7 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
         pq_requiressl = gda_quark_list_find (params, "USE_SSL");
 	if (pq_requiressl && (*pq_requiressl != 'T') && (*pq_requiressl != 't'))
 		pq_requiressl = NULL;
-
+	pq_connect_timeout = gda_quark_list_find (params, "CONNECT_TIMEOUT");
 
 	/* TODO: Escape single quotes and backslashes in the user name and password: */
         conn_string = g_strconcat ("",
@@ -489,6 +490,8 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
                                    (pq_pwd && *pq_pwd) ? "'" : "",
                                    pq_requiressl ? " requiressl=" : "",
                                    pq_requiressl ? pq_requiressl : "",
+				   pq_connect_timeout ? " connect_timeout=" : "",
+				   pq_connect_timeout ? pq_connect_timeout : "",
                                    NULL);
 
 	/* open the real connection to the database */
