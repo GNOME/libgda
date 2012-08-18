@@ -31,7 +31,7 @@ GLOBAL_CFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(BDB_CFLAGS) \
 	-DBDB_LIB=\""$(BDB_LIB)"\" \
-	$(GIO_CFLAGS) $(GNOME_KEYRING_CFLAGS)
+	$(GIO_CFLAGS) $(LIBSECRET_CFLAGS) $(GNOME_KEYRING_CFLAGS)
 
 AM_CPPFLAGS = \
 	$(GLOBAL_CFLAGS) \
@@ -246,7 +246,7 @@ libgda_5_0_la_LIBADD = \
 	sqlite/libgda-sqlite.la \
 	thread-wrapper/libgda_threadwrapper-5.0.la \
 	$(COREDEPS_LIBS) \
-	$(GIO_LIBS) $(GNOME_KEYRING_LIBS)
+	$(GIO_LIBS) $(LIBSECRET_LIBS) $(GNOME_KEYRING_LIBS)
 
 if PLATFORM_WIN32
 libgda_5_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def

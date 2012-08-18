@@ -715,16 +715,37 @@ AC_SUBST(LIBSOUP_CFLAGS)
 AC_SUBST(LIBSOUP_LIBS)
 
 
-dnl ************************
-dnl Check for gnome-keyring
-dnl ************************
+dnl ************************************
+dnl Check for libsecret or gnome-keyring
+dnl ************************************
+
+AC_ARG_WITH(libsecret,
+	AS_HELP_STRING([--with-libsecret], [Enable libsecret support]),
+	,with_libsecret=auto)
 
 AC_ARG_WITH(gnome-keyring,
 	AS_HELP_STRING([--with-gnome-keyring], [Enable gnome-keyring support]),
 	,with_gnome_keyring=auto)
 
-if test "$with_gnome_keyring" = "auto" -o "$with_gnome_keyring" = "yes"
+if test "$with_libsecret" = "auto" -o "$with_libsecret" = "yes"
 then
+	PKG_CHECK_MODULES(LIBSECRET, libsecret-1, [
+		AC_DEFINE(HAVE_LIBSECRET, [1], [libsecret support enabled])
+		have_libsecret=yes], [
+		if test "$with_libsecret" = "yes"
+		then
+			AC_MSG_ERROR([libsecret support requested but not found.])
+		fi
+		have_libsecret=no])
+fi
+AM_CONDITIONAL(LIBSECRET, test "$have_libsecret" = "yes")
+AC_SUBST(LIBSECRET_CFLAGS)
+AC_SUBST(LIBSECRET_LIBS)
+
+if test "$have_libsecret" = "no"
+then
+    if test "$with_gnome_keyring" = "auto" -o "$with_gnome_keyring" = "yes"
+    then
 	PKG_CHECK_MODULES(GNOME_KEYRING, gnome-keyring-1, [
 		AC_DEFINE(HAVE_GNOME_KEYRING, [1], [gnome-keyring support enabled])
 		have_gnome_keyring=yes], [
@@ -733,6 +754,7 @@ then
 			AC_MSG_ERROR([gnome-keyring support requested but not found.])
 		fi
 		have_gnome_keyring=no])
+    fi
 fi
 AM_CONDITIONAL(GNOME_KEYRING, test "$have_gnome_keyring" = "yes")
 AC_SUBST(GNOME_KEYRING_CFLAGS)

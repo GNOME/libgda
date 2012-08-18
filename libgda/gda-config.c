@@ -57,8 +57,12 @@
 #include <io.h>
 #endif
 
-#ifdef HAVE_GNOME_KEYRING
-#include <gnome-keyring.h>
+#ifdef HAVE_LIBSECRET
+  #include <libsecret/secret.h>
+#else
+  #ifdef HAVE_GNOME_KEYRING
+  #include <gnome-keyring.h>
+  #endif
 #endif
 
 typedef struct {
@@ -93,8 +97,12 @@ static void gda_config_get_property (GObject *object,
 				     GValue *value,
 				     GParamSpec *pspec);
 static GdaConfig *unique_instance = NULL;
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
 static gboolean sync_keyring = FALSE;
+#else
+  #ifdef HAVE_GNOME_KEYRING
+static gboolean sync_keyring = FALSE;
+  #endif
 #endif
 
 static gint data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob);
@@ -273,7 +281,37 @@ gda_config_init (GdaConfig *conf, G_GNUC_UNUSED GdaConfigClass *klass)
 	conf->priv->emit_signals = TRUE;
 }
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
+static void
+secret_password_found_cb (GObject *source_object, GAsyncResult *res, gchar *dsnname)
+{
+	gchar *auth;
+	GError *error = NULL;
+	auth = secret_password_lookup_finish (res, &error);
+        if (auth) {
+		GdaDsnInfo *dsn;
+		dsn = gda_config_get_dsn_info (dsnname);
+		if (dsn) {
+			if (dsn->auth_string && auth && !strcmp (dsn->auth_string, auth))
+				return;
+
+			g_free (dsn->auth_string);
+			dsn->auth_string = g_strdup (auth);
+		}
+		/*g_print ("Loaded auth info for '%s'\n", dsnname);*/
+		if (unique_instance->priv->emit_signals)
+			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
+		g_free (auth);
+	}
+	else if (error) {
+		gda_log_message (_("Error loading authentication information for '%s' DSN: %s"),
+				 dsnname, error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
+	g_free (dsnname);
+}
+#else
+  #ifdef HAVE_GNOME_KEYRING
 static void
 password_found_cb (GnomeKeyringResult res, const gchar *password, const gchar *dsnname)
 {
@@ -292,9 +330,10 @@ password_found_cb (GnomeKeyringResult res, const gchar *password, const gchar *d
 			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
 	}
 	else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
-		gda_log_message (_("Error loading authentification information for '%s' DSN: %s"),
+		gda_log_message (_("Error loading authentication information for '%s' DSN: %s"),
 				 dsnname, gnome_keyring_result_to_message (res));
 }
+  #endif
 #endif
 
 static void
@@ -401,7 +440,34 @@ load_config_file (const gchar *file, gboolean is_system)
 			g_free (username);
 			g_free (password);
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
+			if (! is_system) {
+				if (sync_keyring) {
+					GError *error = NULL;
+					gchar *auth = NULL;
+					auth = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+									    NULL, &error,
+									    "server", info->name, NULL);
+					if (auth) {
+						/*g_print ("Loaded sync. auth info for '%s': %s\n", info->name, auth);*/
+						info->auth_string = g_strdup (auth);
+						g_free (auth);
+					}
+					else if (error) {
+						gda_log_message (_("Error loading authentication information for '%s' DSN: %s"),
+								 info->name, error->message ? error->message : _("No detail"));
+						g_clear_error (&error);
+					}
+				}
+				else {
+					secret_password_lookup (SECRET_SCHEMA_COMPAT_NETWORK,
+								NULL, (GAsyncReadyCallback) secret_password_found_cb,
+								g_strdup (info->name),
+								"server", info->name, NULL);
+				}
+			}
+#else
+  #ifdef HAVE_GNOME_KEYRING
 			if (! is_system) {
 				if (sync_keyring) {
 					GnomeKeyringResult res;
@@ -413,7 +479,7 @@ load_config_file (const gchar *file, gboolean is_system)
 						info->auth_string = g_strdup (auth);
 					}
 					else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
-						gda_log_message (_("Error loading authentification information for '%s' DSN: %s"),
+						gda_log_message (_("Error loading authentication information for '%s' DSN: %s"),
 								 info->name, gnome_keyring_result_to_message (res));
 					if (auth)
 						gnome_keyring_free_password (auth);
@@ -426,6 +492,7 @@ load_config_file (const gchar *file, gboolean is_system)
 								     "server", tmp, NULL);
 				}
 			}
+  #endif
 #endif
 			/* signals */
 			if (is_new) {
@@ -483,7 +550,7 @@ save_config_file (gboolean is_system)
 		xmlSetProp (entry, BAD_CAST "type", BAD_CAST "string");
 		xmlSetProp (entry, BAD_CAST "value", BAD_CAST (info->cnc_string));
 
-#ifndef HAVE_GNOME_KEYRING
+#if !defined (HAVE_GNOME_KEYRING) && !defined (HAVE_LIBSECRET)
 		if (! is_system) {
 			/* auth */
 			entry = xmlNewChild (section, NULL, BAD_CAST "entry", NULL);
@@ -526,7 +593,7 @@ gda_config_constructor (GType type,
 	GObject *object;
   
 	if (!unique_instance) {
-#ifdef HAVE_GNOME_KEYRING
+#if defined(HAVE_LIBSECRET) || defined(HAVE_GNOME_KEYRING)
 		if (g_getenv ("GDA_CONFIG_SYNCHRONOUS"))
 			sync_keyring = TRUE;
 #endif
@@ -915,14 +982,28 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 	return NULL;
 }
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
+static void
+secret_password_stored_cb (GObject *source_object, GAsyncResult *res, gchar *dsnname)
+{
+	GError *error = NULL;
+	if (! secret_password_store_finish (res, &error)) {
+		gda_log_error (_("Couldn't save authentication information for DSN '%s': %s"),
+			       dsnname, error && error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
+	g_free (dsnname);
+}
+#else
+  #ifdef HAVE_GNOME_KEYRING
 static void
 password_stored_cb (GnomeKeyringResult res, const gchar *dsnname)
 {
         if (res != GNOME_KEYRING_RESULT_OK)
-                gda_log_error (_("Couldn't save authentification information for DSN '%s': %s"), dsnname,
+                gda_log_error (_("Couldn't save authentication information for DSN '%s': %s"), dsnname,
 			       gnome_keyring_result_to_message (res));
 }
+  #endif
 #endif
 
 /**
@@ -1003,11 +1084,43 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
 	}
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
 	if (! info->is_system) {
 		/* save to keyring */
 		gchar *tmp;
-		tmp = g_strdup_printf (_("Authentification for the '%s' DSN"), info->name);
+		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
+		if (sync_keyring) {
+			gboolean res;
+			GError *error = NULL;
+			res = secret_password_store_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+							  SECRET_COLLECTION_DEFAULT,
+							  tmp, info->auth_string,
+							  NULL, &error,
+							  "server", info->name, NULL);
+			if (!res) {
+				gda_log_error (_("Couldn't save authentication information for DSN '%s': %s"),
+					       info->name,
+					       error && error->message ? error->message : _("No detail"));
+				g_clear_error (&error);
+			}
+		}
+		else {
+			secret_password_store (SECRET_SCHEMA_COMPAT_NETWORK,
+					       SECRET_COLLECTION_DEFAULT,
+					       tmp, info->auth_string,
+					       NULL,
+					       (GAsyncReadyCallback) secret_password_stored_cb,
+					       g_strdup (info->name),
+					       "server", info->name, NULL);
+		}
+		g_free (tmp);
+	}
+#else
+  #ifdef HAVE_GNOME_KEYRING
+	if (! info->is_system) {
+		/* save to keyring */
+		gchar *tmp;
+		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
 		if (sync_keyring) {
 			GnomeKeyringResult res;
 			res = gnome_keyring_store_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, GNOME_KEYRING_DEFAULT,
@@ -1026,6 +1139,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 		}
 		g_free (tmp);
 	}
+  #endif
 #endif
 	
 	if (save_system)
@@ -1037,7 +1151,20 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	return TRUE;
 }
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
+static void
+secret_password_deleted_cb (GObject *source_object, GAsyncResult *res, gchar *dsnname)
+{
+	GError *error = NULL;
+	if (! secret_password_clear_finish (res, &error)) {
+                gda_log_error (_("Couldn't delete authentication information for DSN '%s': %s"), dsnname,
+			       error && error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
+	g_free (dsnname);
+}
+#else
+  #ifdef HAVE_GNOME_KEYRING
 static void
 password_deleted_cb (GnomeKeyringResult res, const gchar *dsnname)
 {
@@ -1045,6 +1172,7 @@ password_deleted_cb (GnomeKeyringResult res, const gchar *dsnname)
                 gda_log_error (_("Couldn't delete authentication information for DSN '%s': %s"), dsnname,
 			       gnome_keyring_result_to_message (res));
 }
+  #endif
 #endif
 
 /**
@@ -1097,7 +1225,29 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 	data_source_info_free (info);
 
-#ifdef HAVE_GNOME_KEYRING
+#ifdef HAVE_LIBSECRET
+	if (! info->is_system) {
+		/* remove from keyring */
+		if (sync_keyring) {
+			GError *error = NULL;
+			if (! secret_password_clear_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+							  NULL, &error,
+							  "server", info->name, NULL)) {
+				gda_log_error (_("Couldn't delete authentication information for DSN '%s': %s"),
+					       info->name,
+					       error && error->message ? error->message : _("No detail"));
+				g_clear_error (&error);
+			}
+		}
+		else {
+			secret_password_clear (SECRET_SCHEMA_COMPAT_NETWORK,
+					       NULL, (GAsyncReadyCallback) secret_password_deleted_cb,
+					       g_strdup (info->name),
+					       "server", info->name, NULL);
+		}
+	}
+#else
+  #ifdef HAVE_GNOME_KEYRING
 	if (! info->is_system) {
 		/* remove from keyring */
 		if (sync_keyring) {
@@ -1110,10 +1260,12 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 			gchar *tmp;
 			tmp = g_strdup (dsn_name);
 			gnome_keyring_delete_password (GNOME_KEYRING_NETWORK_PASSWORD,
-						       (GnomeKeyringOperationDoneCallback) password_deleted_cb, tmp, g_free,
-						       "server", tmp, NULL);
+						       (GnomeKeyringOperationDoneCallback) password_deleted_cb,
+						       tmp, g_free,
+						       "server", info->name, NULL);
 		}
 	}
+  #endif
 #endif
 
 	if (save_system)
@@ -1861,7 +2013,7 @@ reload_dsn_configuration (void)
 			if (str_equal (oinfo->provider, ninfo->provider) && 
 			    str_equal (oinfo->description, ninfo->description) && 
 			    str_equal (oinfo->cnc_string, ninfo->cnc_string) && 
-#ifndef HAVE_GNOME_KEYRING
+#if !defined (HAVE_GNOME_KEYRING) && !defined (HAVE_LIBSECRET)
 			    str_equal (oinfo->auth_string, ninfo->auth_string) && 
 #endif
 			    (oinfo->is_system == ninfo->is_system)) {
