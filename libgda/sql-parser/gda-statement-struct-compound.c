@@ -84,9 +84,10 @@ _gda_sql_statement_compound_copy (gpointer src)
 	dest = gda_sql_statement_compound_new ();
 	dest->compound_type = compound->compound_type;
 	for (list = compound->stmt_list; list; list = list->next) {
-		dest->stmt_list = g_slist_prepend (dest->stmt_list,
-						   gda_sql_statement_copy ((GdaSqlStatement*) list->data));
-		gda_sql_any_part_set_parent (((GdaSqlStatement*) dest->stmt_list->data)->contents, dest);
+		GdaSqlStatement *sqlst;
+		sqlst = gda_sql_statement_copy ((GdaSqlStatement*) list->data);
+		gda_sql_any_part_set_parent (sqlst->contents, dest);
+		dest->stmt_list = g_slist_prepend (dest->stmt_list, sqlst);
 	}
 	dest->stmt_list = g_slist_reverse (dest->stmt_list);
 
