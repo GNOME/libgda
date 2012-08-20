@@ -772,7 +772,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 static void
 fav_form_name_activated_cb (G_GNUC_UNUSED GtkWidget *form, GtkWidget *dlg)
 {
-	gtk_dialog_response (dlg, GTK_RESPONSE_ACCEPT);
+	gtk_dialog_response (GTK_DIALOG (dlg), GTK_RESPONSE_ACCEPT);
 }
 
 static void
@@ -860,7 +860,8 @@ popup_container_position_func (PopupContainer *cont, gint *out_x, gint *out_y)
 
 	console = g_object_get_data (G_OBJECT (cont), "console");
 	top = gtk_widget_get_toplevel (console);	
-        gtk_widget_size_request ((GtkWidget*) cont, &req);
+	gtk_widget_get_preferred_size ((GtkWidget*) cont, NULL, &req);
+
 	GtkAllocation alloc;
         gdk_window_get_origin (gtk_widget_get_window (top), &x, &y);
 	gtk_widget_get_allocation (top, &alloc);

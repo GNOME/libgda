@@ -51,7 +51,7 @@ GtkWidget *
 do_ddl_queries (GtkWidget *do_widget)
 {  
 	if (!window) {
-		GtkWidget *table;
+		GtkWidget *grid;
 		GtkWidget *label;
 		GtkWidget *wid;
 		DemoData *data;
@@ -73,25 +73,25 @@ do_ddl_queries (GtkWidget *do_widget)
 		g_signal_connect (window, "destroy",
 				  G_CALLBACK (gtk_widget_destroyed), &window);
 		
-		table = gtk_table_new (3, 2, FALSE);
+		grid = gtk_grid_new ();
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
-				    table, TRUE, TRUE, 0);
-		gtk_container_set_border_width (GTK_CONTAINER (table), 5);
+				    grid, TRUE, TRUE, 0);
+		gtk_container_set_border_width (GTK_CONTAINER (grid), 5);
 		
 		label = gtk_label_new ("<b>Tested provider and operation:</b>");
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 		
 		/* provider selection */
 		label = gtk_label_new ("Tested provider:");
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		wid = gdaui_provider_selector_new ();
 		gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (wid),
 								  "SQLite");
-		gtk_table_attach (GTK_TABLE (table), wid, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), wid, 1, 1, 1, 1);
 		data->prov_sel = GDAUI_PROVIDER_SELECTOR (wid);
 		g_signal_connect (G_OBJECT (data->prov_sel), "changed", 
 				  G_CALLBACK (tested_provider_changed_cb), data);
@@ -99,10 +99,10 @@ do_ddl_queries (GtkWidget *do_widget)
 		/* operation selection */
 		label = gtk_label_new ("Tested operation:");
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		
 		wid = gdaui_combo_new ();
-		gtk_table_attach (GTK_TABLE (table), wid, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), wid, 1, 2, 1, 1);
 		g_signal_connect (G_OBJECT (wid), "changed",
 				  G_CALLBACK (tested_operation_changed_cb), data);
 		data->op_combo = wid;
@@ -111,13 +111,13 @@ do_ddl_queries (GtkWidget *do_widget)
 		label = gtk_label_new ("<b>GdauiServerOperation widget:</b>");
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 2, 3, 4, GTK_FILL, 0, 0, 5);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 2, 1);
 
 		sw = gtk_scrolled_window_new (FALSE, 0);
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		gtk_widget_set_size_request (sw, 600, 450);
-		gtk_table_attach_defaults (GTK_TABLE (table), sw, 0, 2, 4, 5);
+		gtk_grid_attach (GTK_GRID (grid), sw, 0, 4, 2, 1);
 		vp = gtk_viewport_new (NULL, NULL);
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 		gtk_container_add (GTK_CONTAINER (sw), vp);
@@ -125,7 +125,7 @@ do_ddl_queries (GtkWidget *do_widget)
 		
 		/* bottom buttons */
 		bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-		gtk_table_attach (GTK_TABLE (table), bbox, 0, 2, 5, 6, 0, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), bbox, 0, 5, 2, 1);
 
 		wid = gtk_button_new_with_label ("Show named parameters");
 		data->show_button = wid;

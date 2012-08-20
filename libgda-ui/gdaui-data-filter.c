@@ -52,7 +52,7 @@ static void apply_filter_cb (GtkButton *button, GdauiDataFilter *filter);
 
 struct _GdauiDataFilterPriv
 {
-	GdauiDataProxy   *data_widget;
+	GdauiDataProxy    *data_widget;
 	GdaDataProxy      *proxy;
 
 	GtkWidget         *filter_entry;
@@ -194,7 +194,7 @@ clear_filter_cb (GtkButton *button, GdauiDataFilter *filter)
 static void
 gdaui_data_filter_init (GdauiDataFilter * wid)
 {
-	GtkWidget *table, *label, *entry, *button, *bbox;
+	GtkWidget *grid, *label, *entry, *button, *bbox;
 	gchar *str;
 
 	wid->priv = g_new0 (GdauiDataFilterPriv, 1);
@@ -203,10 +203,8 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_row_spacing (GTK_TABLE (table), 1, 10);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, 5);
-	gtk_box_pack_start (GTK_BOX (wid), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (wid), grid, TRUE, TRUE, 0);
 
 	label = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>\n(<small>%s</small>):", _("Filter"), _("any valid SQL expression"));
@@ -218,18 +216,18 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 						"expression can be: <b><tt>_2 like 'doe%'</tt></b> "
 						"to filter rows where the 2nd column starts with <tt>doe</tt>."));
 
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_SHRINK, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	entry = gtk_entry_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	g_signal_connect (G_OBJECT (entry), "activate",
 			  G_CALLBACK (apply_filter_cb), wid);
 
 	label = gtk_label_new ("");
 	wid->priv->notice = label;
-	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 1, 2, GTK_FILL, 0, GTK_SHRINK, 5);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 2, 1);
 
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_table_attach (GTK_TABLE (table), bbox, 0, 2, 2, 3, GTK_FILL | GTK_EXPAND, 0, GTK_SHRINK, 5);
+	gtk_grid_attach (GTK_GRID (grid), bbox, 0, 2, 2, 1);
 	button = gtk_button_new_with_label (_("Set filter"));
 	gtk_container_add (GTK_CONTAINER (bbox), button);
 	g_signal_connect (G_OBJECT (button), "clicked",
@@ -240,7 +238,7 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK (clear_filter_cb), wid);
 
-	gtk_widget_show_all (table);
+	gtk_widget_show_all (grid);
 	gtk_widget_hide (wid->priv->notice);
 
 	wid->priv->filter_entry = entry;

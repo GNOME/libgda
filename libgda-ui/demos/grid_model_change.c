@@ -32,7 +32,6 @@ do_grid_model_change (GtkWidget *do_widget)
 		GtkWidget *vbox;
 		GtkWidget *label;
 		GdaDataModel *models [3];
-		GtkWidget *sw;
 		
 		window = gtk_dialog_new_with_buttons ("Changing data in a GdauiRawGrid",
 						      GTK_WINDOW (do_widget),

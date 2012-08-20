@@ -2127,7 +2127,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	GtkWidget *label;
 	GtkWidget *filename;
 	GtkWidget *types, *scope;
-	GtkWidget *hbox, *table, *check, *dbox;
+	GtkWidget *hbox, *grid1, *check, *dbox;
 	char *str;
 	GtkTreeSelection *sel;
 	gint selrows;
@@ -2187,20 +2187,20 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 	gtk_widget_show (label);
 
-	table = gtk_table_new (3, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
-	gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
-	gtk_widget_show (table);
+	grid1 = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid1), 5);
+	gtk_grid_set_column_spacing (GTK_GRID (grid1), 5);
+	gtk_box_pack_start (GTK_BOX (hbox), grid1, TRUE, TRUE, 0);
+	gtk_widget_show (grid1);
 
 	/* file type */
 	label = gtk_label_new (_("File type:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid1), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	types = gtk_combo_box_text_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), types, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid1), types, 1, 0, 1, 1);
 	gtk_widget_show (types);
 	g_object_set_data (G_OBJECT (dialog), "types", types);
 
@@ -2215,7 +2215,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	/* data scope */
 	label = gtk_label_new (_("Data to save:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid1), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
@@ -2224,7 +2224,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 		gtk_widget_set_sensitive (label, FALSE);
 
 	scope = gtk_combo_box_text_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), scope, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid1), scope, 1, 1, 1, 1);
 	gtk_widget_show (scope);
 	g_object_set_data (G_OBJECT (dialog), "scope", scope);
 
@@ -2237,39 +2237,39 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	/* other options */
 	GtkWidget *exp;
 	exp = gtk_expander_new (_("Other options"));
-	gtk_table_attach_defaults (GTK_TABLE (table), exp, 0, 2, 2, 3);
+	gtk_grid_attach (GTK_GRID (grid1), exp, 0, 2, 2, 1);
 
-	GtkWidget *table2;
-	table2 = gtk_table_new (2, 4, FALSE);
-	gtk_container_add (GTK_CONTAINER (exp), table2);
+	GtkWidget *grid2;
+	grid2 = gtk_grid_new ();
+	gtk_container_add (GTK_CONTAINER (exp), grid2);
 	
 	label = gtk_label_new (_("Empty string when NULL?"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table2), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid2), label, 0, 0, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Export NULL values as an empty \"\" string"));
 
 	check = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table2), check, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid2), check, 1, 0, 1, 1);
 	g_object_set_data (G_OBJECT (dialog), "null_as_empty", check);
 	gtk_widget_set_tooltip_text (check, _("Export NULL values as an empty \"\" string"));
 
 	label = gtk_label_new (_("Invalid data as NULL?"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table2), label, 2, 3, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid2), label, 2, 0, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Don't export invalid data,\nbut export a NULL value instead"));
 
 	check = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table2), check, 3, 4, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid2), check, 3, 0, 1, 1);
 	g_object_set_data (G_OBJECT (dialog), "invalid_as_null", check);
 	gtk_widget_set_tooltip_text (check, _("Don't export invalid data,\nbut export a NULL value instead"));
 
 	label = gtk_label_new (_("Field names on first row?"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table2), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid2), label, 0, 1, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Add a row at beginning with columns names"));
 
 	check = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table2), check, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid2), check, 1, 1, 1, 1);
 	g_object_set_data (G_OBJECT (dialog), "first_row", check);
 	gtk_widget_set_tooltip_text (check, _("Add a row at beginning with columns names"));
 

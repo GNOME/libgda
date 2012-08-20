@@ -142,10 +142,8 @@ default_position_func (G_GNUC_UNUSED PopupContainer *container, gint *out_x, gin
 {
 	GdkDeviceManager *manager;
 	GdkDevice *pointer;
-	GdkWindow *window;
 	GtkWidget *widget;
 	widget = GTK_WIDGET (container);
-	window = gtk_widget_get_window (widget);
 	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
 	pointer = gdk_device_manager_get_client_pointer (manager);
 	gdk_device_get_position (pointer, NULL, out_x, out_y);

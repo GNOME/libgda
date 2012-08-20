@@ -365,8 +365,8 @@ static void seq_del_item (GtkButton *button, GdauiServerOperation *form);
  * @path is like "/SEQ", DOES NOT contain the index of the item to add, which is also in @index
  */
 static void
-sequence_table_attach_widget (GdauiServerOperation *form, GtkWidget *table, GtkWidget *wid,
-			      const gchar *path, gint index)
+sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWidget *wid,
+			     const gchar *path, gint index)
 {
 	GtkWidget *image;
 	gboolean expand;
@@ -377,17 +377,14 @@ sequence_table_attach_widget (GdauiServerOperation *form, GtkWidget *table, GtkW
 
 	/* new widget */
 	expand = g_object_get_data (G_OBJECT (wid), "expand") ?  TRUE : FALSE;
-	gtk_table_attach (GTK_TABLE (table), wid, 0, 1, index, index + 1,
-			  GTK_FILL | GTK_EXPAND,
-			  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 0, index, 1, 1);
 	gtk_widget_show (wid);
 
 	/* "-" button */
 	image = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU);
 	wid = gtk_button_new ();
 	gtk_button_set_image (GTK_BUTTON (wid), image);
-	gtk_table_attach (GTK_TABLE (table), wid, 1, 2, index, index + 1,
-			  GTK_SHRINK, GTK_SHRINK | GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 1, index, 1, 1);
 	gtk_widget_show (wid);
 	g_object_set_data_full (G_OBJECT (wid), "_seq_path", g_strdup (path), g_free);
 	g_object_set_data (G_OBJECT (wid), "_index", GINT_TO_POINTER (index+1));
@@ -545,7 +542,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
 		guint n, size;
-		GtkWidget *table, *wid, *image;
+		GtkWidget *grid, *wid, *image;
 		WidgetData *wdp, *wd;
 		gchar *parent_path = NULL, *path_name = NULL;
 		guint max;
@@ -565,18 +562,18 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 						     GTK_SHADOW_NONE);
 
 		size = gda_server_operation_get_sequence_size (form->priv->op, path);
-		table = gtk_table_new (size + 1, 2, FALSE);
-		gtk_table_set_row_spacings (GTK_TABLE (table), 10);
-		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), table);
+		grid = gtk_grid_new ();
+		gtk_grid_set_row_spacing (GTK_GRID (grid), 10);
+		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), grid);
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
 					      GTK_SHADOW_NONE);
-		gtk_widget_show (table);
+		gtk_widget_show (grid);
 
 		parent_path = gda_server_operation_get_node_parent (form->priv->op, path);
 		path_name = gda_server_operation_get_node_path_portion (form->priv->op, path);
 		wdp = widget_data_find (form, parent_path);
 		wd = widget_data_new (wdp, path_name);
-		wd->widget = table;
+		wd->widget = grid;
 		if (! wdp)
 			form->priv->widget_data = g_slist_append (form->priv->widget_data, wd);
 		g_free (parent_path);
@@ -589,7 +586,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 			str = g_strdup_printf ("%s/%d", path, n);
 			wid = fill_create_widget (form, str, NULL, NULL);
-			sequence_table_attach_widget (form, table, wid, path, n);
+			sequence_grid_attach_widget (form, grid, wid, path, n);
 			g_free (str);
 		}
 
@@ -597,15 +594,13 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			/* last row is for new entries */
 			wid = gtk_label_new (_("Add"));
 			gtk_misc_set_alignment (GTK_MISC (wid), .0, -1);
-			gtk_table_attach (GTK_TABLE (table), wid, 0, 1, size, size + 1,
-					  GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
+			gtk_grid_attach (GTK_GRID (grid), wid, 0, size, 1, 1);
 			gtk_widget_show (wid);
 
 			image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
 			wid = gtk_button_new ();
 			gtk_button_set_image (GTK_BUTTON (wid), image);
-			gtk_table_attach (GTK_TABLE (table), wid, 1, 2, size, size + 1,
-					  GTK_SHRINK, GTK_SHRINK, 0, 0);
+			gtk_grid_attach (GTK_GRID (grid), wid, 1, size, 1, 1);
 			gtk_widget_show (wid);
 
 			g_signal_connect (G_OBJECT (wid), "clicked",
@@ -626,10 +621,10 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		node_names = gda_server_operation_get_sequence_item_names (form->priv->op, path);
 		size = g_strv_length (node_names);
 		if (size > 1) {
-			GtkWidget *table;
+			GtkWidget *grid;
 			gint i, tab_index;
 
-			table = gtk_table_new (size, 2, FALSE);
+			grid = gtk_grid_new ();
 			for (i = 0, tab_index = 0; i < size; i++) {
 				GtkWidget *wid;
 				GSList *lab_list, *list;
@@ -648,9 +643,8 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 							g_object_ref (label_entry);
 							gtk_container_remove (GTK_CONTAINER (parent), label_entry);
 						}
-						gtk_table_attach (GTK_TABLE (table), label_entry,
-								  0, 1, tab_index, tab_index+1,
-								  GTK_FILL | GTK_SHRINK, GTK_SHRINK, 0, 0);
+						gtk_grid_attach (GTK_GRID (grid), label_entry,
+								 0, tab_index, 1, 1);
 						if (parent)
 							g_object_unref (label_entry);
 					}
@@ -663,19 +657,15 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 				expand = g_object_get_data (G_OBJECT (wid), "expand") ? TRUE : FALSE;
 				seq_expand = seq_expand || expand;
 				if (nb_labels > 0)
-					gtk_table_attach (GTK_TABLE (table), wid, 1, 2,
-							  tab_index - nb_labels, tab_index,
-							  GTK_FILL | GTK_EXPAND,
-							  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
+					gtk_grid_attach (GTK_GRID (grid), wid, 1,
+							 tab_index - nb_labels, 1, nb_labels);
 				else {
-					gtk_table_attach (GTK_TABLE (table), wid, 1, 2, tab_index, tab_index +1,
-							  GTK_FILL | GTK_EXPAND,
-							  expand ? (GTK_FILL | GTK_EXPAND) : GTK_SHRINK, 0, 0);
+					gtk_grid_attach (GTK_GRID (grid), wid, 1, tab_index, 1, 1);
 					tab_index += 1;
 				}
 				gtk_widget_show (wid);
 			}
-			plwid = table;
+			plwid = grid;
 		}
 		else
 			plwid = fill_create_widget (form, node_names[0], NULL, NULL);
@@ -903,7 +893,7 @@ struct MoveChild {
 static void
 sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
 {
-	GtkWidget *table;
+	GtkWidget *grid;
 	GList *children, *list, *to_move = NULL;
 	GtkWidget *wid;
 	gchar *str;
@@ -916,20 +906,17 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 
 	wd = widget_data_find (form, seq_path);
 	g_assert (wd);
-	table = wd->widget;
-	g_assert (table);
-
-	/* resize table */
-	gtk_table_resize (GTK_TABLE (table), size+1, 2);
+	grid = wd->widget;
+	g_assert (grid);
 
 	/* move children DOWN if necessary */
-	children = gtk_container_get_children (GTK_CONTAINER (table));
+	children = gtk_container_get_children (GTK_CONTAINER (grid));
 	for (list = children; list; list = list->next) {
 		GtkWidget *child = GTK_WIDGET (list->data);
 
 		if (child) {
 			guint top_attach, left_attach;
-			gtk_container_child_get (GTK_CONTAINER (table), child,
+			gtk_container_child_get (GTK_CONTAINER (grid), child,
 						 "top-attach", &top_attach,
 						 "left-attach", &left_attach, NULL);
 			/* ADD/REMOVE button sensitivity */
@@ -964,9 +951,9 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
-		gtk_container_child_set (GTK_CONTAINER (table), mc->widget,
+		gtk_container_child_set (GTK_CONTAINER (grid), mc->widget,
 					 "top-attach", mc->top_attach,
-					 "bottom-attach", mc->top_attach + 1, NULL);
+					 "height", 1, NULL);
 		g_free (list->data);
 	}
 	g_list_free (to_move);
@@ -974,7 +961,7 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 	/* add widget corresponding to the new sequence item */
 	str = g_strdup_printf ("%s/%d", seq_path, item_index);
 	wid = fill_create_widget (form, str, NULL, NULL);
-	sequence_table_attach_widget (form, table, wid, seq_path, item_index);
+	sequence_grid_attach_widget (form, grid, wid, seq_path, item_index);
 	g_free (str);
 }
 
@@ -984,7 +971,7 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 static void
 sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint item_index, GdauiServerOperation *form)
 {
-	GtkWidget *table;
+	GtkWidget *grid;
 	GList *children, *list, *to_move = NULL;
 	gchar *str;
 	WidgetData *wds, *wdi;
@@ -996,8 +983,8 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 
 	wds = widget_data_find (form, seq_path);
 	g_assert (wds);
-	table = wds->widget;
-	g_assert (table);
+	grid = wds->widget;
+	g_assert (grid);
 
 	/* remove widget */
 	str = g_strdup_printf ("%s/%d", seq_path, item_index);
@@ -1010,17 +997,17 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 	widget_data_free (wdi);
 
 	/* remove the widget associated to the sequence item */
-	children = gtk_container_get_children (GTK_CONTAINER (table));
+	children = gtk_container_get_children (GTK_CONTAINER (grid));
 	for (list = children; list; ) {
 		GtkWidget *child = GTK_WIDGET (list->data);
 		if (child) {
 			guint top_attach;
-			gtk_container_child_get (GTK_CONTAINER (table), child,
+			gtk_container_child_get (GTK_CONTAINER (grid), child,
 						 "top-attach", &top_attach, NULL);
 			if (top_attach == (guint)item_index) {
 				gtk_widget_destroy (child);
 				g_list_free (children);
-				children = gtk_container_get_children (GTK_CONTAINER (table));
+				children = gtk_container_get_children (GTK_CONTAINER (grid));
 				list = children;
 				continue;
 			}
@@ -1030,12 +1017,12 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 	g_list_free (children);
 
 	/* move children UP if necessary */
-	children = gtk_container_get_children (GTK_CONTAINER (table));
+	children = gtk_container_get_children (GTK_CONTAINER (grid));
 	for (list = children; list; list = list->next) {
 		GtkWidget *child = GTK_WIDGET (list->data);
 		if (child) {
 			guint top_attach, left_attach;
-			gtk_container_child_get (GTK_CONTAINER (table), child,
+			gtk_container_child_get (GTK_CONTAINER (grid), child,
 						 "top-attach", &top_attach,
 						 "left-attach", &left_attach, NULL);
 			/* ADD/REMOVE button sensitivity */
@@ -1069,15 +1056,12 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 		struct MoveChild *mc;
 
 		mc = (struct MoveChild *) (list->data);
-		gtk_container_child_set (GTK_CONTAINER (table), mc->widget,
+		gtk_container_child_set (GTK_CONTAINER (grid), mc->widget,
 					 "top-attach", mc->top_attach,
-					 "bottom-attach", mc->top_attach + 1, NULL);
+					 "height", 1, NULL);
 		g_free (list->data);
 	}
 	g_list_free (to_move);
-
-	/* resize table */
-	gtk_table_resize (GTK_TABLE (table), size, 2);
 }
 
 

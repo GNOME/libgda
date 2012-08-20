@@ -172,12 +172,12 @@ relations_diagram_set_property (GObject *object,
 				G_GNUC_UNUSED const GValue *value,
 				GParamSpec *pspec)
 {
-	RelationsDiagram *diagram;
-	diagram = RELATIONS_DIAGRAM (object);
+	/*RelationsDiagram *diagram;
+	  diagram = RELATIONS_DIAGRAM (object);*/
 	switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -187,12 +187,12 @@ relations_diagram_get_property (GObject *object,
 				G_GNUC_UNUSED GValue *value,
 				GParamSpec *pspec)
 {
-	RelationsDiagram *diagram;
-	diagram = RELATIONS_DIAGRAM (object);
+	/*RelationsDiagram *diagram;
+	  diagram = RELATIONS_DIAGRAM (object);*/
 	switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 

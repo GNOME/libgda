@@ -281,12 +281,13 @@ gdaui_rt_editor_class_init (GdauiRtEditorClass *klass)
 static void
 text_view_realized_cb (GtkWidget *tv, GdauiRtEditor *rte)
 {
-	GdkWindow *win;
-	GtkStyle *style;
 	if (rte->priv->no_background && ! gtk_text_view_get_editable (GTK_TEXT_VIEW (tv))) {
+		GdkWindow *win;
+		GtkStyleContext* style_context = gtk_widget_get_style_context (tv);
+                GdkRGBA color;
 		win = gtk_text_view_get_window (GTK_TEXT_VIEW (tv), GTK_TEXT_WINDOW_TEXT);
-		style = gtk_widget_get_style (tv);
-		gdk_window_set_background (win, &(style->bg [GTK_STATE_NORMAL]));
+                gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_NORMAL, &color);
+		gdk_window_set_background_rgba (win, &color);
 	}
 }
 

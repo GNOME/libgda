@@ -486,8 +486,6 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		gtk_widget_unparent (info->priv->tool_item);
 	}
 
-	gboolean ensure_update = FALSE;
-
 	if (info->priv->uimanager) {
 		if (info->priv->merge_id_row_modif) {
 			gtk_ui_manager_remove_ui (info->priv->uimanager, info->priv->merge_id_row_modif);
@@ -629,13 +627,16 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 static void
 row_spin_changed_cb (GtkSpinButton *spin, GdauiDataProxyInfo *info)
 {
-	gint row;
+	gint row, nrows;
 	gint value = gtk_spin_button_get_value (spin);
+	nrows = gda_data_model_get_n_rows (GDA_DATA_MODEL (info->priv->proxy));
 
-	if ((value >= 1) &&
-	    (value <= gda_data_model_get_n_rows (GDA_DATA_MODEL (info->priv->proxy))))
+	if ((value >= 1) && (value <= nrows))
 		row = value - 1;
-
+	else if (value > nrows)
+		row = nrows - 1;
+	else
+		row = 0;
 	gda_data_model_iter_move_to_row (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (info->priv->data_proxy)),
 					 row);
 }
@@ -660,7 +661,6 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 {
 	GdaDataModelIter *model_iter;
 	gboolean wrows, filtered_proxy = FALSE;
-	gint has_selection;
 	gint row;
 
 	gint proxy_rows = 0;
@@ -763,11 +763,12 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 		gboolean is_inserted = FALSE;
 		gboolean force_del_btn = FALSE;
 		gboolean force_undel_btn = FALSE;
+		gboolean has_selection;
 
+		has_selection = (row >= 0) ? TRUE : FALSE;
 		if (info->priv->proxy) {
 			changed = gda_data_proxy_has_changed (info->priv->proxy);
 
-			has_selection = (row >= 0) ? TRUE : FALSE;
 			if (has_selection) {
 				to_be_deleted = gda_data_proxy_row_is_deleted (info->priv->proxy, row);
 				is_inserted = gda_data_proxy_row_is_inserted (info->priv->proxy, row);

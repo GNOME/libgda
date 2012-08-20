@@ -148,7 +148,7 @@ auth_data_changed_cb (GdauiProviderAuthEditor *auth, GdauiLogin *login)
 static void
 gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 {
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *wid;
 	
 	/* allocate the internal structure */
@@ -167,31 +167,30 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	g_object_unref (conf);
 
 	/* table layout */
-	table = gtk_table_new (3, 3, FALSE);
-	gtk_widget_show (table);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-	gtk_box_pack_start (GTK_BOX (login), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_widget_show (grid);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 5);
+	gtk_box_pack_start (GTK_BOX (login), grid, TRUE, TRUE, 0);
 	
 	/* radio buttons */
 	wid = gtk_radio_button_new_with_label (NULL, _("Use data source:"));
 	g_signal_connect (wid, "toggled",
 			  G_CALLBACK (radio_button_use_dsn_toggled_cb), login);
-	gtk_table_attach (GTK_TABLE (table), wid, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 0, 0, 1, 1);
 	gtk_widget_show (wid);
 	login->priv->rb_dsn = wid;
 
 	wid = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (wid),
 							   _("Specify connection:"));
-	gtk_table_attach (GTK_TABLE (table), wid, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 0, 1, 1, 1);
 	gtk_widget_show (wid);
 	login->priv->rb_prov = wid;
 
 	/* widget to specify a DSN to use */
 	login->priv->dsn_selector = _gdaui_dsn_selector_new ();
 	gtk_widget_show (login->priv->dsn_selector); /* Show the DSN selector */
-	gtk_table_attach (GTK_TABLE (table), login->priv->dsn_selector, 1, 2, 0, 1,
-			  GTK_FILL | GTK_EXPAND | GTK_SHRINK, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), login->priv->dsn_selector, 1, 0, 1, 1);
 	g_signal_connect (G_OBJECT (login->priv->dsn_selector), "changed",
 			  G_CALLBACK (dsn_entry_changed_cb), login);
 			  
@@ -202,19 +201,18 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	g_signal_connect (G_OBJECT (login->priv->cc_button), "clicked",
 			  G_CALLBACK (run_cc_cb), login);
 	gtk_widget_show (login->priv->cc_button);
-	gtk_table_attach (GTK_TABLE (table), login->priv->cc_button, 2, 3, 0, 1,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), login->priv->cc_button, 2, 0, 1, 1);
 		
 	/* widget to specify a direct connection */
 	login->priv->prov_selector = gdaui_provider_selector_new ();
-	gtk_table_attach (GTK_TABLE (table),login->priv->prov_selector, 1, 3, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid),login->priv->prov_selector, 1, 1, 2, 1);
 	gtk_widget_show (login->priv->prov_selector);
 	gtk_widget_set_sensitive (login->priv->prov_selector, FALSE);
 	g_signal_connect (login->priv->prov_selector, "changed",
 			  G_CALLBACK (prov_entry_changed_cb), login);
 
 	login->priv->cnc_params_editor = _gdaui_provider_spec_editor_new (NULL);
-	gtk_table_attach (GTK_TABLE (table),login->priv->cnc_params_editor, 1, 3, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), login->priv->cnc_params_editor, 1, 2, 2, 1);
 	gtk_widget_show (login->priv->cnc_params_editor);
 	gtk_widget_set_sensitive (login->priv->cnc_params_editor, FALSE);
 	g_signal_connect (login->priv->cnc_params_editor, "changed",
@@ -222,7 +220,7 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	  
 	/* Create the authentication part */
 	login->priv->auth_widget = _gdaui_provider_auth_editor_new (NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), login->priv->auth_widget, 1, 3, 3, 4);
+	gtk_grid_attach (GTK_GRID (grid), login->priv->auth_widget, 1, 3, 2, 1);
 	gtk_widget_show (login->priv->auth_widget);
 	g_signal_connect (login->priv->auth_widget, "changed",
 			  G_CALLBACK (auth_data_changed_cb), login);

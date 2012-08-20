@@ -244,7 +244,8 @@ widget_overlay_set_property (GObject *object,
 			else if (need_scale) {
 				GtkWidget *box, *wid, *button, *image;
 				box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-				wid = gtk_vscale_new_with_range (SCALE_MIN, SCALE_MAX, SCALE_STEP);
+				wid = gtk_scale_new_with_range (GTK_ORIENTATION_VERTICAL,
+								SCALE_MIN, SCALE_MAX, SCALE_STEP);
 				ovl->priv->scale_range = GTK_RANGE (wid);
 				g_object_set (G_OBJECT (wid), "draw-value", FALSE, NULL);
 				gtk_box_pack_start (GTK_BOX (box), wid, TRUE, TRUE, 0);
@@ -615,10 +616,9 @@ widget_overlay_realize (GtkWidget *widget)
 	g_signal_connect (win, "pick-embedded-child",
 			  G_CALLBACK (pick_offscreen_child), ovl);
 
-	GtkStyle *style;
-	style = gtk_widget_get_style (widget);
-	style = gtk_style_attach (style, win);
-	gtk_widget_set_style (widget, style);
+	GtkStyleContext *style;
+	style = gtk_widget_get_style_context (widget);
+	gtk_style_context_set_background (style, win);
 	
 	/* offscreen windows */
 	attributes.window_type = GDK_WINDOW_OFFSCREEN;
@@ -644,8 +644,7 @@ widget_overlay_realize (GtkWidget *widget)
 		g_signal_connect (cd->offscreen_window, "from-embedder",
 				  G_CALLBACK (offscreen_window_from_parent), ovl);
 
-		//gtk_style_set_background (style, win, GTK_STATE_NORMAL);
-		gtk_style_set_background (style, cd->offscreen_window, GTK_STATE_NORMAL);
+		gtk_style_context_set_background (style, cd->offscreen_window);
 		gdk_window_show (cd->offscreen_window);
 	}
 }

@@ -136,8 +136,8 @@ static gint query_editor_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 static void
 create_tags_for_sql (QueryEditor *editor, const gchar *language)
 {
-	GtkTextBuffer *buffer;
 #ifdef HAVE_GTKSOURCEVIEW
+	GtkTextBuffer *buffer;
 	GtkSourceLanguageManager *mgr;
 	GtkSourceLanguage *lang;
 	gchar ** current_search_path;
@@ -151,8 +151,8 @@ create_tags_for_sql (QueryEditor *editor, const gchar *language)
 	g_return_if_fail (language != NULL);
 	g_return_if_fail (!strcmp (language, QUERY_EDITOR_LANGUAGE_SQL));
 
-	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
 #ifdef HAVE_GTKSOURCEVIEW
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text));
 	mgr = gtk_source_language_manager_new ();
 
 	/* alter search path */
@@ -430,12 +430,13 @@ display_completions (QueryEditor *editor)
 				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (editor->priv->completion_treeview),
 								&iter);
 
+			GtkRequisition nat_req;
 			g_object_set ((GObject*) editor->priv->completion_renderer, "text", compl[i], NULL);
-			gtk_cell_renderer_get_size (editor->priv->completion_renderer,
-						    (GtkWidget*) editor->priv->completion_treeview,
-						    NULL, NULL, NULL, &w, &h);
-			width = MAX (width, w);
-			height += h + 2;
+			gtk_cell_renderer_get_preferred_size (editor->priv->completion_renderer,
+							      (GtkWidget*) editor->priv->completion_treeview,
+							      NULL, &nat_req);
+			width = MAX (width, nat_req.width);
+			height += nat_req.height + 2;
 		}
 		g_strfreev (compl);
 		

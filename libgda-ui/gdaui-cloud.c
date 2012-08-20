@@ -879,6 +879,7 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;
 					mvt_amount = -1;
 					break;
+				default:
 				case GDK_KEY_Right:
 					done = ! gtk_text_iter_forward_char (&iter);
 					mvt_type = GTK_MOVEMENT_VISUAL_POSITIONS;

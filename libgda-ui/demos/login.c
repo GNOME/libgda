@@ -61,7 +61,7 @@ GtkWidget *
 do_login (GtkWidget *do_widget)
 {  
 	if (!window) {
-		GtkWidget *table, *cb, *button;
+		GtkWidget *grid, *cb, *button;
 		GtkWidget *login, *frame;
 
 		window = gtk_dialog_new_with_buttons ("GdauiLogin widget",
@@ -77,14 +77,14 @@ do_login (GtkWidget *do_widget)
 				  G_CALLBACK (gtk_widget_destroyed), &window);
 		
 
-		table = gtk_table_new (3, 2, FALSE);
+		grid = gtk_grid_new ();
 		gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (window))),
-				    table, TRUE, TRUE, 0);
-		gtk_container_set_border_width (GTK_CONTAINER (table), 5);
+				    grid, TRUE, TRUE, 0);
+		gtk_container_set_border_width (GTK_CONTAINER (grid), 5);
 
 		/* Create the login widget */
 		frame = gtk_frame_new ("Login widget:");
-		gtk_table_attach_defaults (GTK_TABLE (table), frame, 0, 2, 3, 4);
+		gtk_grid_attach (GTK_GRID (grid), frame, 0, 3, 2, 1);
 
 		login = gdaui_login_new (NULL);
 		gtk_container_add (GTK_CONTAINER (frame), login);
@@ -92,31 +92,31 @@ do_login (GtkWidget *do_widget)
 		/* Create the options */
 		cb = gtk_check_button_new_with_label ("Enable control center");
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cb), TRUE);
-		gtk_table_attach (GTK_TABLE (table), cb, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), cb, 0, 0, 1, 1);
 		g_signal_connect (cb, "toggled",
 				  G_CALLBACK (cb1_toggled_cb), login);
 		
 		cb = gtk_check_button_new_with_label ("Hide DSN selection");
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cb), FALSE);
-		gtk_table_attach (GTK_TABLE (table), cb, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), cb, 0, 1, 1, 1);
 		g_signal_connect (cb, "toggled",
 				  G_CALLBACK (cb2_toggled_cb), login);
 
 		cb = gtk_check_button_new_with_label ("Hide direct connection");
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cb), FALSE);
-		gtk_table_attach (GTK_TABLE (table), cb, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), cb, 0, 2, 1, 1);
 		g_signal_connect (cb, "toggled",
 				  G_CALLBACK (cb3_toggled_cb), login);
 		
 		button = gtk_button_new_with_label ("Show connection's parameters");
-		gtk_table_attach (GTK_TABLE (table), button, 1, 2, 0, 1, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), button, 1, 0, 1, 1);
 		g_signal_connect (button, "clicked",
 				  G_CALLBACK (button_clicked_cb), login);
 
 		GtkWidget *status;
 		gboolean valid;
 		status = gtk_label_new ("...");
-		gtk_table_attach (GTK_TABLE (table), status, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), status, 1, 2, 1, 1);
 		g_object_get (G_OBJECT (login), "valid", &valid, NULL);
 		login_changed_cb (GDAUI_LOGIN (login), valid, GTK_LABEL (status));
 		g_signal_connect (login, "changed",

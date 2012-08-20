@@ -236,7 +236,7 @@ wrapped_set_public_data_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdauiSet *set)
 static void
 wrapped_set_source_model_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdaSetSource *source, GdauiSet *set)
 {
-	GdauiSetSource *uisource;
+	GdauiSetSource *uisource = NULL;
 	GSList *list;
 	for (list = set->sources_list; list; list = list->next) {
 		if (((GdauiSetSource*) list->data)->source == source) {
