@@ -369,14 +369,12 @@ sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWid
 			     const gchar *path, gint index)
 {
 	GtkWidget *image;
-	gboolean expand;
 	guint min, size;
 
 	min = gda_server_operation_get_sequence_min_size (form->priv->op, path);
 	size = gda_server_operation_get_sequence_size (form->priv->op, path);
 
 	/* new widget */
-	expand = g_object_get_data (G_OBJECT (wid), "expand") ?  TRUE : FALSE;
 	gtk_grid_attach (GTK_GRID (grid), wid, 0, index, 1, 1);
 	gtk_widget_show (wid);
 
@@ -512,7 +510,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			*label_widgets = g_slist_prepend (*label_widgets, label_entry);
 		}
 
-		g_object_set_data (G_OBJECT (plwid), "expand", GINT_TO_POINTER (TRUE));
+		gtk_widget_set_vexpand (plwid, TRUE);
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_PARAM: {
@@ -608,7 +606,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			g_object_set_data_full (G_OBJECT (wid), "_seq_path", g_strdup (path), g_free);
 		}
 
-		g_object_set_data (G_OBJECT (plwid), "expand", GINT_TO_POINTER (TRUE));
+		gtk_widget_set_vexpand (plwid, TRUE);
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: {
@@ -616,7 +614,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		gint size;
 		gchar *parent_path;
 		WidgetData *wdp, *wdi;
-		gboolean seq_expand = FALSE;
 
 		node_names = gda_server_operation_get_sequence_item_names (form->priv->op, path);
 		size = g_strv_length (node_names);
@@ -629,11 +626,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 				GtkWidget *wid;
 				GSList *lab_list, *list;
 				gint nb_labels = 0;
-				gboolean expand;
 
 				wid = fill_create_widget (form, node_names[i], NULL, &lab_list);
-				list = lab_list;
-				while (list) {
+				for (list = lab_list; list; list = list->next) {
 					GtkWidget *label_entry = (GtkWidget *) list->data;
 					GtkWidget *parent;
 
@@ -650,12 +645,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 					}
 					nb_labels++;
 					tab_index++;
-					list = list->next;
 				}
 				g_slist_free (lab_list);
 
-				expand = g_object_get_data (G_OBJECT (wid), "expand") ? TRUE : FALSE;
-				seq_expand = seq_expand || expand;
 				if (nb_labels > 0)
 					gtk_grid_attach (GTK_GRID (grid), wid, 1,
 							 tab_index - nb_labels, 1, nb_labels);
@@ -670,7 +662,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		else
 			plwid = fill_create_widget (form, node_names[0], NULL, NULL);
 
-		g_object_set_data (G_OBJECT (plwid), "expand", GINT_TO_POINTER (seq_expand));
 		parent_path = gda_server_operation_get_node_parent (form->priv->op, path);
 		wdp = widget_data_find (form, parent_path);
 		g_assert (wdp);
@@ -797,8 +788,8 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 			}
 			case GDA_SERVER_OPERATION_STATUS_REQUIRED: {
 				gboolean expand;
+				expand = gtk_widget_get_vexpand (plwid);
 
-				expand = g_object_get_data (G_OBJECT (plwid), "expand") ? TRUE : FALSE;
 				if (label)
 					gtk_box_pack_start (GTK_BOX (container), label, FALSE, TRUE, 5);
 				if (hbox)
@@ -1214,7 +1205,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	g_signal_connect (form_iter, "row-changed",
 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), grid_iter);
 
-	g_object_set_data (G_OBJECT (hlayout), "expand", GINT_TO_POINTER (TRUE));
+	gtk_widget_set_vexpand (hlayout, TRUE);
 
 	{
 		GtkActionGroup *group;

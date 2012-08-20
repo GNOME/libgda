@@ -71,14 +71,12 @@ typedef struct {
 	gboolean        prog_hidden; /* status as requested by the programmer */
 	gboolean        hidden; /* real status of the data entry */
 	gboolean        not_null; /* TRUE if @entry's contents can't be NULL */
-	gboolean        can_expand; /* tells if @entry can expand */
 	gboolean        forward_param_updates; /* forward them to the GdauiDataEntry widgets ? */
 
 	gulong          entry_shown_id; /* signal ID */
 	gulong          label_shown_id; /* signal ID */
 
 	gulong          entry_contents_modified_id; /* signal ID */
-	gulong          entry_expand_changed_id; /* signal ID */
 	gulong          entry_contents_activated_id; /* signal ID */
 
 	GdaHolder      *single_param;
@@ -118,7 +116,6 @@ static void paramlist_holder_type_set_cb (GdaSet *paramlist, GdaHolder *param,
 					  GdauiBasicForm *form);
 
 static void entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry);
-static void entry_expand_changed_cb (GdauiDataEntry *entry, SingleEntry *sentry);
 static void entry_contents_activated (GdauiDataEntry *entry, GdauiBasicForm *form);
 static void parameter_changed_cb (GdaHolder *param, SingleEntry *sentry);
 
@@ -417,6 +414,7 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	gtk_widget_show (evbox);
 	gtk_box_pack_start (GTK_BOX (wid), evbox, TRUE, TRUE, 0);
 	wid->priv->mainbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	
 	gtk_widget_show (wid->priv->mainbox);
 	gtk_container_add (GTK_CONTAINER (evbox), wid->priv->mainbox);
 	g_object_set (evbox, "visible-window", FALSE, NULL);
@@ -722,13 +720,8 @@ gdaui_basic_form_get_property (GObject *object,
 			break;
 		case PROP_CAN_VEXPAND: {
 			gboolean can_expand = FALSE;
-			GSList *list;
-			for (list = form->priv->s_entries; list; list = list->next) {
-				if (((SingleEntry*) list->data)->can_expand) {
-					can_expand = TRUE;
-					break;
-				}
-			}
+			can_expand = gtk_widget_compute_expand (GTK_WIDGET (form),
+								GTK_ORIENTATION_VERTICAL);
 			g_value_set_boolean (value, can_expand);
 			break;
 		}
@@ -742,12 +735,10 @@ gdaui_basic_form_get_property (GObject *object,
 static void
 disconnect_single_entry_signals (SingleEntry *sentry)
 {
-	if (sentry->entry) {
+	if (sentry->entry)
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_modified_id);
-		g_signal_handler_disconnect (sentry->entry, sentry->entry_expand_changed_id);
-	}
+
 	sentry->entry_contents_modified_id = 0;
-	sentry->entry_expand_changed_id = 0;
 	if (sentry->entry)
 		g_signal_handler_disconnect (sentry->entry, sentry->entry_contents_activated_id);
 	sentry->entry_contents_activated_id = 0;
@@ -1088,8 +1079,6 @@ create_entry_widget (SingleEntry *sentry)
 	sentry->entry_contents_modified_id = g_signal_connect (G_OBJECT (entry), "contents-modified",
 							       G_CALLBACK (entry_contents_modified),
 							       sentry);
-	sentry->entry_expand_changed_id = g_signal_connect (sentry->entry, "expand-changed",
-							    G_CALLBACK (entry_expand_changed_cb), sentry);
 
 	sentry->entry_contents_activated_id = g_signal_connect (G_OBJECT (entry), "contents-activated",
 								G_CALLBACK (entry_contents_activated),
@@ -1133,10 +1122,6 @@ create_entries (GdauiBasicForm *form)
 static void
 pack_entry_widget (SingleEntry *sentry)
 {
-	gboolean expand;
-	expand = gtk_widget_get_vexpand (GTK_WIDGET (sentry->entry));
-	sentry->can_expand = expand;
-
 	switch (sentry->packing_type) {
 	case PACKING_TABLE: {
 		/* label for the entry */
@@ -1567,12 +1552,6 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 		}
 #endif
 	}
-}
-
-static void
-entry_expand_changed_cb (G_GNUC_UNUSED GdauiDataEntry *entry, SingleEntry *sentry)
-{
-	pack_entry_widget (sentry);
 }
 
 
@@ -2187,7 +2166,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 	}
 
 	gboolean can_expand;
-	g_object_get ((GObject*) form, "can-expand-v", &can_expand, NULL);
+	can_expand = gtk_widget_compute_expand (GTK_WIDGET (form), GTK_ORIENTATION_VERTICAL);
 	gtk_container_set_border_width (GTK_CONTAINER (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg)))), 4);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))), form,
 			    can_expand, can_expand, 10);
