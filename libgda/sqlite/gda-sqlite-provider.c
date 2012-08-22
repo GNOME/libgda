@@ -2024,7 +2024,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	case GDA_SQL_OPERATOR_TYPE_ILIKE:
 	case GDA_SQL_OPERATOR_TYPE_NOTILIKE:
 		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
-			     "%s", _("ILIKE operation sot supported"));
+			     "%s", _("ILIKE operation not supported"));
 		goto out;
 		break;
 	case GDA_SQL_OPERATOR_TYPE_GT:
