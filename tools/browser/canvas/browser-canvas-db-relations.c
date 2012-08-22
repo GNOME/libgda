@@ -825,12 +825,11 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 {
 	if (! dbrels->priv->add_dialog) {
 		GtkWidget *vbox, *cloud, *find, *dcontents;
-		dbrels->priv->add_dialog = gtk_dialog_new_with_buttons (_("Select tables to add to diagram"),
-									(GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dbrels),
-									0,
-									NULL);
-		g_signal_connect (dbrels->priv->add_dialog, "close",
-				  G_CALLBACK (gtk_widget_hide), NULL);
+		dbrels->priv->add_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+		gtk_window_set_title (GTK_WINDOW (dbrels->priv->add_dialog),
+				      _("Select tables to add to diagram"));
+		gtk_window_set_transient_for (GTK_WINDOW (dbrels->priv->add_dialog),
+					      (GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dbrels));
 		g_signal_connect (dbrels->priv->add_dialog, "delete-event",
 				  G_CALLBACK (add_dialog_delete_event), NULL);
 		gtk_window_set_default_size (GTK_WINDOW (dbrels->priv->add_dialog), 430, 400);
@@ -838,8 +837,7 @@ popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *
 		g_object_set_data (G_OBJECT (dbrels->priv->add_dialog), "__canvas", dbrels);
 
 		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dbrels->priv->add_dialog));
-		gtk_container_add (GTK_CONTAINER (dcontents), vbox);
+		gtk_container_add (GTK_CONTAINER (dbrels->priv->add_dialog), vbox);
 		
 		cloud = objects_cloud_new (dbrels->priv->mstruct, OBJECTS_CLOUD_TYPE_TABLE);
 		dbrels->priv->cloud = OBJECTS_CLOUD (cloud);

@@ -63,25 +63,12 @@ struct _LdapEntriesPagePrivate {
 static void ldap_entries_page_class_init (LdapEntriesPageClass *klass);
 static void ldap_entries_page_init       (LdapEntriesPage *ebrowser, LdapEntriesPageClass *klass);
 static void ldap_entries_page_dispose   (GObject *object);
-static void ldap_entries_page_set_property (GObject *object,
-					  guint param_id,
-					  const GValue *value,
-					  GParamSpec *pspec);
-static void ldap_entries_page_get_property (GObject *object,
-					  guint param_id,
-					  GValue *value,
-					  GParamSpec *pspec);
+
 /* BrowserPage interface */
 static void                 ldap_entries_page_page_init (BrowserPageIface *iface);
 static GtkActionGroup      *ldap_entries_page_page_get_actions_group (BrowserPage *page);
 static const gchar         *ldap_entries_page_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *ldap_entries_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
-
-
-/* properties */
-enum {
-        PROP_0,
-};
 
 static GObjectClass *parent_class = NULL;
 
@@ -96,10 +83,6 @@ ldap_entries_page_class_init (LdapEntriesPageClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
-
-	/* Properties */
-        object_class->set_property = ldap_entries_page_set_property;
-        object_class->get_property = ldap_entries_page_get_property;
 
 	object_class->dispose = ldap_entries_page_dispose;
 }
@@ -179,36 +162,6 @@ ldap_entries_page_get_type (void)
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;
-}
-
-static void
-ldap_entries_page_set_property (GObject *object,
-			      guint param_id,
-			      G_GNUC_UNUSED const GValue *value,
-			      GParamSpec *pspec)
-{
-	LdapEntriesPage *ebrowser;
-	ebrowser = LDAP_ENTRIES_PAGE (object);
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
-}
-
-static void
-ldap_entries_page_get_property (GObject *object,
-			      guint param_id,
-			      G_GNUC_UNUSED GValue *value,
-			      GParamSpec *pspec)
-{
-	LdapEntriesPage *ebrowser;
-	ebrowser = LDAP_ENTRIES_PAGE (object);
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
 }
 
 static gchar *

@@ -45,15 +45,6 @@ static void browser_canvas_init       (BrowserCanvas *canvas);
 static void browser_canvas_dispose    (GObject *object);
 static void browser_canvas_finalize   (GObject *object);
 
-static void browser_canvas_set_property (GObject *object,
-					 guint param_id,
-					 const GValue *value,
-					 GParamSpec *pspec);
-static void browser_canvas_get_property (GObject *object,
-					 guint param_id,
-					 GValue *value,
-					 GParamSpec *pspec);
-
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
 
@@ -61,11 +52,6 @@ enum
 {
 	ITEM_SELECTED,
 	LAST_SIGNAL
-};
-
-enum
-{
-	PROP_0,
 };
 
 static gint canvas_signals[LAST_SIGNAL] = { 0 };
@@ -109,10 +95,6 @@ browser_canvas_class_init (BrowserCanvasClass *klass)
 			      NULL, NULL,
 			      g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE, 1,
 			      TYPE_BROWSER_CANVAS_ITEM);
-
-	/* properties */
-	object_class->set_property = browser_canvas_set_property;
-	object_class->get_property = browser_canvas_get_property;
 
 	/* virtual functions */
 	klass->clean_canvas_items = NULL;
@@ -669,40 +651,6 @@ browser_canvas_finalize (GObject *object)
 
 	/* for the parent class */
 	parent_class->finalize (object);
-}
-
-
-static void 
-browser_canvas_set_property (GObject *object,
-			   guint param_id,
-			   G_GNUC_UNUSED const GValue *value,
-			   GParamSpec *pspec)
-{
-	BrowserCanvas *canvas;	
-	canvas = BROWSER_CANVAS (object);
-
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
-}
-
-static void
-browser_canvas_get_property (GObject *object,
-			   guint param_id,
-			   G_GNUC_UNUSED GValue *value,
-			   GParamSpec *pspec)
-{
-	BrowserCanvas *canvas;
-	
-	canvas = BROWSER_CANVAS (object);
-
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
 }
 
 /**

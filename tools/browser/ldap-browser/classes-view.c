@@ -40,19 +40,6 @@ struct _ClassesViewPrivate {
 static void classes_view_class_init (ClassesViewClass *klass);
 static void classes_view_init       (ClassesView *eview, ClassesViewClass *klass);
 static void classes_view_dispose   (GObject *object);
-static void classes_view_set_property (GObject *object,
-				       guint param_id,
-				       const GValue *value,
-				       GParamSpec *pspec);
-static void classes_view_get_property (GObject *object,
-				       guint param_id,
-				       GValue *value,
-				       GParamSpec *pspec);
-
-/* properties */
-enum {
-        PROP_0,
-};
 
 static GObjectClass *parent_class = NULL;
 
@@ -67,10 +54,6 @@ classes_view_class_init (ClassesViewClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
-
-	/* Properties */
-        object_class->set_property = classes_view_set_property;
-        object_class->get_property = classes_view_get_property;
 
 	object_class->dispose = classes_view_dispose;
 }
@@ -123,36 +106,6 @@ classes_view_get_type (void)
 		type = g_type_register_static (GTK_TYPE_TREE_VIEW, "ClassesView", &info, 0);
 	}
 	return type;
-}
-
-static void
-classes_view_set_property (GObject *object,
-			   guint param_id,
-			   G_GNUC_UNUSED const GValue *value,
-			   GParamSpec *pspec)
-{
-	ClassesView *eview;
-	eview = CLASSES_VIEW (object);
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
-}
-
-static void
-classes_view_get_property (GObject *object,
-			   guint param_id,
-			   G_GNUC_UNUSED GValue *value,
-			   GParamSpec *pspec)
-{
-	ClassesView *eview;
-	eview = CLASSES_VIEW (object);
-	switch (param_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-		break;
-	}
 }
 
 static gchar *
