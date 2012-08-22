@@ -194,12 +194,10 @@ gdaui_entry_shell_init (GdauiEntryShell *shell)
 					GTK_STYLE_PROVIDER (css_provider),
 					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_box_pack_start (GTK_BOX (hbox), shell->priv->embedder, TRUE, TRUE, 0);
-	gtk_widget_show (shell->priv->embedder);	
-
-
+	gtk_widget_show (shell->priv->embedder);
 
 	/* button to change the entry's state and to display that state */
-	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+	arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
 	gtk_style_context_add_provider (gtk_widget_get_style_context (arrow),
 					GTK_STYLE_PROVIDER (css_provider),
 					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);

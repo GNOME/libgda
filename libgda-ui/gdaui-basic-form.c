@@ -1051,6 +1051,7 @@ create_entry_widget (SingleEntry *sentry)
 			gtk_widget_set_tooltip_text (sentry->label, title);
 
 	}
+	gtk_widget_set_hexpand (sentry->label, FALSE);
 	sentry->entry = GDAUI_DATA_ENTRY (entry);
 	g_object_ref_sink (sentry->entry);
 	gdaui_data_entry_set_editable (sentry->entry, editable);
