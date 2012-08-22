@@ -488,3 +488,61 @@ gdaui_bar_add_button_from_stock (GdauiBar *bar, const gchar *stock_id)
 	gtk_widget_show_all (vb);
 	return button;
 }
+
+static void
+find_icon_pressed_cb (GtkEntry *entry, G_GNUC_UNUSED GtkEntryIconPosition icon_pos,
+		      G_GNUC_UNUSED GdkEvent *event, G_GNUC_UNUSED gpointer data)
+{
+	if (icon_pos == GTK_ENTRY_ICON_SECONDARY)
+		gtk_entry_set_text (entry, "");
+}
+
+/**
+ * gdaui_bar_add_search_entry:
+ * @bar: a #GdauiBar
+ *
+ * Returns: (transfer none): the created #GtkEntry
+ */
+GtkWidget *
+gdaui_bar_add_search_entry (GdauiBar *bar)
+{
+	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
+
+	GtkWidget *vb, *entry;
+
+	vb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (vb), GTK_BUTTONBOX_CENTER);
+	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), vb, FALSE, FALSE, 0);
+
+	entry = gtk_entry_new ();
+	gtk_box_pack_start (GTK_BOX (vb), entry, FALSE, FALSE, 0);
+
+	/* CSS theming */
+	GtkStyleContext *context;
+	GtkStyleProvider *provider;
+#define ENTRY_CSS "* {\n" \
+                "-GtkWidget-focus-line-width : 0px;\n"		\
+                "-GtkWidget-focus-padding : 0px;\n"		\
+                "padding: 1px;\n"				\
+                "-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
+                "-GtkButtonBox-child-min-width : 0px;\n"	\
+		"border-style: solid;\n"				\
+		"border-radius: 5px;\n"				\
+                "}"
+	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), ENTRY_CSS, -1, NULL);
+	context = gtk_widget_get_style_context (vb);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	context = gtk_widget_get_style_context (entry);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	g_object_unref (provider);
+
+	gtk_entry_set_icon_from_stock (GTK_ENTRY (entry),
+				       GTK_ENTRY_ICON_SECONDARY,
+				       GTK_STOCK_CLEAR);
+	g_signal_connect (entry, "icon-press",
+			  G_CALLBACK (find_icon_pressed_cb), NULL);
+
+	gtk_widget_show_all (vb);
+	return entry;
+}

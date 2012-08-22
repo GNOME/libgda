@@ -35,7 +35,6 @@
 struct _ObjectsIndexPrivate {
 	BrowserConnection *bcnc;
 	ObjectsCloud      *cloud;
-	GtkWidget         *popup_container;
 };
 
 static void objects_index_class_init (ObjectsIndexClass *klass);
@@ -95,7 +94,6 @@ objects_index_dispose (GObject *object)
 
 	/* free memory */
 	if (index->priv) {
-		gtk_widget_destroy (index->priv->popup_container);
 		if (index->priv->bcnc) {
 			g_signal_handlers_disconnect_by_func (index->priv->bcnc,
 							      G_CALLBACK (meta_changed_cb), index);
@@ -141,8 +139,14 @@ cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *sel, G_GNUC_UNUSED Objects
 		       TOOLS_FAVORITES_TABLES, sel_contents);
 }
 
+static void
+find_changed_cb (GtkEntry *entry, ObjectsIndex *index)
+{
+	objects_cloud_filter (index->priv->cloud, gtk_entry_get_text (entry));
+}
+
 /**
- * objects_index_new
+ * objects_index_new:
  *
  *
  *
@@ -185,19 +189,11 @@ objects_index_new (BrowserConnection *bcnc)
 	g_signal_connect (cloud, "selected",
 			  G_CALLBACK (cloud_object_selected_cb), index);
 
-	/* find button */
-	wid = gdaui_bar_add_button_from_stock (GDAUI_BAR (label), GTK_STOCK_FIND);
+	/* search entry */
+	wid = gdaui_bar_add_search_entry (GDAUI_BAR (label));
 	
-	GtkWidget *popup;
-	popup = popup_container_new (wid);
-	index->priv->popup_container = popup;
-	g_signal_connect_swapped (wid, "clicked",
-				  G_CALLBACK (gtk_widget_show), popup);
-	g_object_set_data (G_OBJECT (popup), "button", wid);
-
-	wid = objects_cloud_create_filter (OBJECTS_CLOUD (cloud));
-	gtk_container_add (GTK_CONTAINER (popup), wid);
-	gtk_widget_show (wid);
+	g_signal_connect (wid, "changed",
+			  G_CALLBACK (find_changed_cb), index);
 
 	return (GtkWidget*) index;
 }
