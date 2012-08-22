@@ -21,7 +21,7 @@
 #include <string.h>
 #include "ldap-search-page.h"
 #include "filter-editor.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "../browser-page.h"
 #include "../browser-window.h"
 #include "../browser-connection.h"
@@ -285,7 +285,7 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 	gchar *str;
 
 	str = g_strdup_printf ("<b>%s</b>", _("LDAP search page"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (epage), label, FALSE, FALSE, 0);
         gtk_widget_show (label);

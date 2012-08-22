@@ -3,7 +3,7 @@
 #include <common/favorites-actions.h>
 #include <browser-window.h>
 #include <browser-page.h>
-#include <cc-gray-bar.h>
+#include <gdaui-bar.h>
 #include <libgda-ui/internal/popup-container.h>
 #include <data-manager/data-manager-perspective.h>
 #include <schema-browser/schema-browser-perspective.h>
@@ -16,7 +16,7 @@ tools_favorites_get_type
 browser_window_get_type
 browser_perspective_get_type
 browser_page_get_type
-cc_gray_bar_get_type
+gdaui_bar_get_type
 popup_container_get_type
 data_manager_perspective_get_type
 schema_browser_perspective_get_type

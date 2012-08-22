@@ -26,7 +26,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
@@ -169,7 +169,7 @@ objects_index_new (BrowserConnection *bcnc)
 	gchar *str;
 
 	str = g_strdup_printf ("<b>%s</b>", _("Tables' index"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);

@@ -24,7 +24,7 @@
 #include <gtk/gtk.h>
 #include <libgda-ui/libgda-ui.h>
 #include "provider-config.h"
-#include "cc-gray-bar.h"
+#include "gdaui-bar.h"
 
 #define PROVIDER_CONFIG_DATA "Provider_ConfigData"
 
@@ -59,12 +59,12 @@ provider_config_new (void)
 	/* title */
 	title = g_strdup_printf ("<b>%s</b>\n%s", _("Providers"),
 				 _("Installed providers"));
-	priv->title = cc_gray_bar_new (title);
+	priv->title = gdaui_bar_new (title);
 	g_free (title);
 
 	gchar *path;
 	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);
-	cc_gray_bar_set_icon_from_file (CC_GRAY_BAR (priv->title), path);
+	gdaui_bar_set_icon_from_file (GDAUI_BAR (priv->title), path);
 	g_free (path);
 
 	gtk_box_pack_start (GTK_BOX (provider), priv->title, FALSE, FALSE, 0);

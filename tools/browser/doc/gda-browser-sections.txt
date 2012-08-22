@@ -50,24 +50,24 @@ BROWSER_CORE_CLASS
 </SECTION>
 
 <SECTION>
-<FILE>cc-gray-bar</FILE>
-CcGrayBarPrivate
-<TITLE>CcGrayBar</TITLE>
-CcGrayBar
-cc_gray_bar_new
-cc_gray_bar_get_text
-cc_gray_bar_set_text
-cc_gray_bar_set_icon_from_pixbuf
-cc_gray_bar_set_icon_from_file
-cc_gray_bar_set_icon_from_stock
-cc_gray_bar_set_show_icon
-cc_gray_bar_get_show_icon
+<FILE>gdaui-bar</FILE>
+GdauiBarPrivate
+<TITLE>GdauiBar</TITLE>
+GdauiBar
+gdaui_bar_new
+gdaui_bar_get_text
+gdaui_bar_set_text
+gdaui_bar_set_icon_from_pixbuf
+gdaui_bar_set_icon_from_file
+gdaui_bar_set_icon_from_stock
+gdaui_bar_set_show_icon
+gdaui_bar_get_show_icon
 <SUBSECTION Standard>
-CC_GRAY_BAR
+GDAUI_BAR
 CC_IS_GRAY_BAR
 CC_TYPE_GRAY_BAR
-cc_gray_bar_get_type
-CC_GRAY_BAR_CLASS
+gdaui_bar_get_type
+GDAUI_BAR_CLASS
 CC_IS_GRAY_BAR_CLASS
 </SECTION>
 

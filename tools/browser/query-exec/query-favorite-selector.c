@@ -28,7 +28,7 @@
 #include "../dnd.h"
 #include "../support.h"
 #include "marshal.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
 #include "query-editor.h"
@@ -561,9 +561,9 @@ query_favorite_selector_new (BrowserConnection *bcnc)
 	GtkWidget *label;
 	gchar *str;
 	str = g_strdup_printf ("<b>%s</b>", _("Favorites"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
-	cc_gray_bar_set_icon_from_pixbuf (CC_GRAY_BAR (label), browser_get_pixbuf_icon (BROWSER_ICON_BOOKMARK));
+	gdaui_bar_set_icon_from_pixbuf (GDAUI_BAR (label), browser_get_pixbuf_icon (BROWSER_ICON_BOOKMARK));
         gtk_box_pack_start (GTK_BOX (tsel), label, FALSE, FALSE, 0);
         gtk_widget_show (label);
 

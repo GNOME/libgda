@@ -22,7 +22,7 @@
 #include <string.h>
 #include "relations-diagram.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
@@ -36,7 +36,7 @@ struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
 	gint fav_id; /* diagram's ID as a favorite, -1=>not a favorite */
 
-	CcGrayBar *header;
+	GdauiBar *header;
 	GtkWidget *canvas;
 	GtkWidget *save_button;
 
@@ -327,10 +327,10 @@ relations_diagram_new (BrowserConnection *bcnc)
         GtkWidget *label;
 	gchar *str;
 	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-	diagram->priv->header = CC_GRAY_BAR (label);
+	diagram->priv->header = GDAUI_BAR (label);
 
 	wid = gtk_button_new ();
 	label = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
@@ -385,7 +385,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
 	str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
 	g_free (tmp);
-	cc_gray_bar_set_text (diagram->priv->header, str);
+	gdaui_bar_set_text (diagram->priv->header, str);
 	g_free (str);
 	diagram->priv->fav_id = fav_id;
 	relations_diagram_set_fav_id (diagram, fav_id, NULL);
@@ -465,7 +465,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 		tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
 		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), tmp);
 		g_free (tmp);
-		cc_gray_bar_set_text (diagram->priv->header, str);
+		gdaui_bar_set_text (diagram->priv->header, str);
 		g_free (str);
 		
 		diagram->priv->fav_id = fav.id;
@@ -475,7 +475,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 	else {
 		gchar *str;
 		str = g_strdup_printf ("<b>%s</b>\n%s", _("Relations diagram"), _("Unsaved"));
-		cc_gray_bar_set_text (diagram->priv->header, str);
+		gdaui_bar_set_text (diagram->priv->header, str);
 		g_free (str);
 		diagram->priv->fav_id = -1;
 	}

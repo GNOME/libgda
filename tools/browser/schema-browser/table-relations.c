@@ -27,7 +27,7 @@
 #include "table-relations.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "schema-browser-perspective.h"
 #include "../canvas/browser-canvas-db-relations.h"
 

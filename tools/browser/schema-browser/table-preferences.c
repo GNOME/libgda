@@ -27,7 +27,7 @@
 #include "table-preferences.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "schema-browser-perspective.h"
 #include "../query-exec/query-editor.h"
 #include <libgda-ui/gdaui-plugin.h>

@@ -26,7 +26,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>

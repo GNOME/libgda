@@ -22,7 +22,7 @@
 #include "classes-view.h"
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "../browser-stock-icons.h"
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-classes.h"

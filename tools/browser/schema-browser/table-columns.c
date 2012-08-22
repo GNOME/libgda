@@ -29,7 +29,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../tools-utils.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "mgr-columns.h"
 #include "schema-browser-perspective.h"
 #include "../browser-window.h"
@@ -687,7 +687,7 @@ table_columns_new (TableInfo *tinfo)
 		gchar *str;
 		
 		str = g_strdup_printf ("<b>%s</b>", _("LDAP virtual table definition"));
-		label = cc_gray_bar_new (str);
+		label = gdaui_bar_new (str);
 		g_free (str);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		tcolumns->priv->ldap_header = label;
@@ -734,7 +734,7 @@ table_columns_new (TableInfo *tinfo)
 	gchar *str;
 
 	str = g_strdup_printf ("<b>%s</b>", _("Constraints and integrity rules"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 

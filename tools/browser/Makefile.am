@@ -45,8 +45,8 @@ libbrowser_la_SOURCES=\
 	../config-info.c \
 	../tools-utils.h \
 	../tools-utils.c \
-	cc-gray-bar.c \
-	cc-gray-bar.h \
+	gdaui-bar.c \
+	gdaui-bar.h \
 	marshal.c \
 	marshal.h \
 	decl.h \

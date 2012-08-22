@@ -23,7 +23,7 @@
 #include "table-info.h"
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "table-columns.h"
 #include "table-preferences.h"
 #ifdef HAVE_GOOCANVAS
@@ -47,7 +47,7 @@ struct _TableInfoPrivate {
 	gchar *table_name;
 	gchar *table_short_name;
 
-	CcGrayBar *header;
+	GdauiBar *header;
 	GtkWidget *contents; /* notebook with pageO <=> @unknown_table_notice, page1 <=> @pages */
 	GtkWidget *unknown_table_notice;
 	GtkWidget *pages; /* notebook to store individual pages */
@@ -332,11 +332,11 @@ table_info_new (BrowserConnection *bcnc,
 	tmp = g_strdup_printf (_("In schema '%s'"), schema);
 	str = g_strdup_printf ("<b>%s</b>\n%s", table, tmp);
 	g_free (tmp);
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (tinfo), label, FALSE, FALSE, 0);
         gtk_widget_show (label);
-	tinfo->priv->header = CC_GRAY_BAR (label);
+	tinfo->priv->header = GDAUI_BAR (label);
 
 	/* main contents */
 	GtkWidget *top_nb;

@@ -1,1 +1,0 @@
-../../control-center/cc-gray-bar.h

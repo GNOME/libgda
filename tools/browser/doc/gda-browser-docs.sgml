@@ -142,7 +142,7 @@
 	which can be used in any extension.
       </para>
       <xi:include href="xml/ui-formgrid.xml"/>
-      <xi:include href="xml/cc-gray-bar.xml"/>
+      <xi:include href="xml/gdaui-bar.xml"/>
       <xi:include href="xml/popup-container.xml"/>
     </chapter>
 

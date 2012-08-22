@@ -27,6 +27,7 @@
 #include "provider-config.h"
 #include "gdaui-dsn-assistant.h"
 
+GtkApplication *app;
 GtkWindow *main_window;
 GtkActionGroup *actions;
 
@@ -142,7 +143,7 @@ file_delete_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
 static void
 window_closed_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 {
-	gtk_main_quit ();
+	g_application_quit (G_APPLICATION (app));
 }
 
 static void
@@ -261,7 +262,7 @@ create_main_window (void)
 	GdkPixbuf *icon;
 
 	/* create the main window */
-	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	window = gtk_application_window_new (app);
 	main_window = GTK_WINDOW (window);
 	gtk_window_set_title (GTK_WINDOW (window), _("Database access control center"));
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
@@ -311,7 +312,6 @@ activate (GtkApplication *app)
 int
 main (int argc, char *argv[])
 {
-	GtkApplication *app;
 	gint status;
 	
 	app = gtk_application_new ("org.GnomeDb.GdaBrowser", G_APPLICATION_FLAGS_NONE);

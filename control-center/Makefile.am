@@ -19,8 +19,8 @@ AM_CPPFLAGS = \
 gda_control_center_5_0_SOURCES=\
 	gdaui-login-dialog.c \
 	gdaui-login-dialog.h \
-	cc-gray-bar.c \
-	cc-gray-bar.h \
+	gdaui-bar.c \
+	gdaui-bar.h \
 	cc-utility.c \
 	cc-utility.h \
 	dsn-config.c \

@@ -24,7 +24,7 @@
 #include "entry-properties.h"
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "../browser-page.h"
 #include "../browser-stock-icons.h"
 #include "../browser-window.h"
@@ -367,7 +367,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
 	gchar *str;
 
 	str = g_strdup_printf ("<b>%s</b>", _("LDAP entries browser"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (ebrowser), label, FALSE, FALSE, 0);
         gtk_widget_show (label);

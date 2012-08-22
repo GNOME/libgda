@@ -26,7 +26,7 @@
 #include "ui-spec-editor.h"
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
 #include "../browser-perspective.h"
@@ -52,7 +52,7 @@ typedef enum {
 struct _DataConsolePrivate {
 	DataSourceManager *mgr;
 
-	CcGrayBar *header;
+	GdauiBar *header;
 	LayoutType layout_type;
 	BrowserConnection *bcnc;
 
@@ -299,11 +299,11 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (dconsole), hbox, FALSE, FALSE, 0);
 
 	str = g_strdup_printf ("<b>%s</b>\n%s", _("Data Manager"), _("Unsaved"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);
-	dconsole->priv->header = CC_GRAY_BAR (label);
+	dconsole->priv->header = GDAUI_BAR (label);
 
 	wid = gtk_button_new ();
 	label = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
@@ -508,7 +508,7 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 		tmp = g_markup_printf_escaped (_("'%s' data manager"), fav.name);
 		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), tmp);
 		g_free (tmp);
-		cc_gray_bar_set_text (dconsole->priv->header, str);
+		gdaui_bar_set_text (dconsole->priv->header, str);
 		g_free (str);
 		
 		dconsole->priv->fav_id = fav.id;
@@ -518,7 +518,7 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 	else {
 		gchar *str;
 		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), _("Unsaved"));
-		cc_gray_bar_set_text (dconsole->priv->header, str);
+		gdaui_bar_set_text (dconsole->priv->header, str);
 		g_free (str);
 		dconsole->priv->fav_id = -1;
 	}

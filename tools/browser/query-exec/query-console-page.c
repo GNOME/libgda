@@ -23,7 +23,7 @@
 #include "query-console-page.h"
 #include "../dnd.h"
 #include "../support.h"
-#include "../cc-gray-bar.h"
+#include "../gdaui-bar.h"
 #include "query-exec-perspective.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
@@ -97,7 +97,7 @@ struct _QueryConsolePagePrivate {
 
 	GtkActionGroup *agroup;
 
-	CcGrayBar *header;
+	GdauiBar *header;
 	GtkWidget *vpaned; /* top=>query editor, bottom=>results */
 
 	QueryEditor *editor;
@@ -289,11 +289,11 @@ query_console_page_new (BrowserConnection *bcnc)
         GtkWidget *label;
 	gchar *str;
 	str = g_strdup_printf ("<b>%s</b>", _("Query editor"));
-	label = cc_gray_bar_new (str);
+	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (tconsole), label, FALSE, FALSE, 0);
         gtk_widget_show (label);
-	tconsole->priv->header = CC_GRAY_BAR (label);
+	tconsole->priv->header = GDAUI_BAR (label);
 
 	/* main contents */
 	GtkWidget *vpaned;
