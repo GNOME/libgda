@@ -125,9 +125,8 @@ gdaui_bar_init (GdauiBar *bar)
 	gtk_widget_show (content_area);
 	gtk_box_pack_start (GTK_BOX (bar), content_area, TRUE, TRUE, 0);
 
-	action_area = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
+	action_area = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_widget_show (action_area);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (bar), action_area, FALSE, TRUE, 0);
 
 	gtk_widget_set_app_paintable (widget, TRUE);
@@ -160,7 +159,7 @@ gdaui_bar_init (GdauiBar *bar)
 	GtkStyleContext *context;
 	GtkStyleProvider *provider;
 #define CSS ".gdauibar {\n" \
-		"background-color: #b3b3b3;\n"		\
+		"background-color: #b3b3b3;\n"	\
 		"padding: 5px;\n"			\
 		"}"
 	context = gtk_widget_get_style_context (GTK_WIDGET (bar));
@@ -436,4 +435,56 @@ gdaui_bar_get_show_icon (GdauiBar *bar)
         g_return_val_if_fail (GDAUI_IS_BAR (bar), FALSE);
 
         return bar->priv->show_icon;
+}
+
+/**
+ * gdaui_bar_add_button_from_stock:
+ * @bar: a #GdauiBar
+ * @stock_id: the stock name of the button to add
+ *
+ * Returns: (transfer none): the created #GtkButton
+ */
+GtkWidget *
+gdaui_bar_add_button_from_stock (GdauiBar *bar, const gchar *stock_id)
+{
+	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
+	g_return_val_if_fail (stock_id && *stock_id, NULL);
+
+	GtkWidget *vb, *button, *img;
+
+	vb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (vb), GTK_BUTTONBOX_CENTER);
+	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), vb, FALSE, FALSE, 0);
+
+	button = gtk_button_new ();
+	img = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON);
+	gtk_container_add (GTK_CONTAINER (button), img);
+	gtk_box_pack_start (GTK_BOX (vb), button, FALSE, FALSE, 0);
+	g_object_set (G_OBJECT (button), "label", NULL, NULL);
+
+	/* CSS theming */
+	GtkStyleContext *context;
+	GtkStyleProvider *provider;
+#define BUTTON_CSS "* {\n" \
+                "-GtkButton-default-border : 0px;\n"		\
+                "-GtkButton-default-outside-border : 0px;\n"	\
+                "-GtkWidget-focus-line-width : 0px;\n"		\
+                "-GtkWidget-focus-padding : 0px;\n"		\
+                "padding: 0px;\n"				\
+                "-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
+                "-GtkButtonBox-child-min-width : 0px;\n"	\
+		"border-style: none;\n"				\
+                "}"
+	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), BUTTON_CSS, -1, NULL);
+	context = gtk_widget_get_style_context (vb);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	context = gtk_widget_get_style_context (button);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	context = gtk_widget_get_style_context (img);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	g_object_unref (provider);
+
+	gtk_widget_show_all (vb);
+	return button;
 }

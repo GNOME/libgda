@@ -332,11 +332,7 @@ relations_diagram_new (BrowserConnection *bcnc)
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	diagram->priv->header = GDAUI_BAR (label);
 
-	wid = gtk_button_new ();
-	label = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_BUTTON);
-	gtk_container_add (GTK_CONTAINER (wid), label);
-	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
-	g_object_set (G_OBJECT (wid), "label", NULL, NULL);
+	wid = gdaui_bar_add_button_from_stock (GDAUI_BAR (label), GTK_STOCK_SAVE);
 	diagram->priv->save_button = wid;
 
 	g_signal_connect (wid, "clicked",
