@@ -36,6 +36,7 @@ enum {
 };
 
 static GObjectClass *parent_class = NULL;
+static GtkStyleProvider *css_provider = NULL;
 
 #define ACTION_AREA_DEFAULT_BORDER 2
 #define ACTION_AREA_DEFAULT_SPACING 2
@@ -157,16 +158,35 @@ gdaui_bar_init (GdauiBar *bar)
 
 	/* CSS theming */
 	GtkStyleContext *context;
-	GtkStyleProvider *provider;
-#define CSS ".gdauibar {\n" \
-		"background-color: #b3b3b3;\n"	\
-		"padding: 5px;\n"			\
-		"}"
+	if (!css_provider) {
+#define CSS ".gdauibar {\n"				\
+			"background-color: #b3b3b3;\n"	\
+			"padding: 5px;\n"		\
+			"}"				\
+			".gdauibar_button {\n"			\
+			"-GtkButton-default-border : 0px;\n"	\
+			"-GtkButton-default-outside-border : 0px;\n"	\
+			"-GtkWidget-focus-line-width : 0px;\n"		\
+			"-GtkWidget-focus-padding : 0px;\n"		\
+			"padding: 0px;\n"				\
+			"-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
+			"-GtkButtonBox-child-min-width : 0px;\n"	\
+			"border-style: none;\n"				\
+			"}"						\
+			".gdauibar_entry {\n"				\
+			"-GtkWidget-focus-line-width : 0px;\n"		\
+			"-GtkWidget-focus-padding : 0px;\n"		\
+			"padding: 1px;\n"				\
+			"-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
+			"-GtkButtonBox-child-min-width : 0px;\n"	\
+			"border-style: solid;\n"			\
+			"border-radius: 5px;\n"				\
+			"}"
+		css_provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+		gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (css_provider), CSS, -1, NULL);
+	}
 	context = gtk_widget_get_style_context (GTK_WIDGET (bar));
-	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
-	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), CSS, -1, NULL);
-	g_object_unref (provider);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar");
 }
 
@@ -464,26 +484,17 @@ gdaui_bar_add_button_from_stock (GdauiBar *bar, const gchar *stock_id)
 
 	/* CSS theming */
 	GtkStyleContext *context;
-	GtkStyleProvider *provider;
-#define BUTTON_CSS "* {\n" \
-                "-GtkButton-default-border : 0px;\n"		\
-                "-GtkButton-default-outside-border : 0px;\n"	\
-                "-GtkWidget-focus-line-width : 0px;\n"		\
-                "-GtkWidget-focus-padding : 0px;\n"		\
-                "padding: 0px;\n"				\
-                "-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
-                "-GtkButtonBox-child-min-width : 0px;\n"	\
-		"border-style: none;\n"				\
-                "}"
-	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), BUTTON_CSS, -1, NULL);
 	context = gtk_widget_get_style_context (vb);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_button");
+
 	context = gtk_widget_get_style_context (button);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_button");
+
 	context = gtk_widget_get_style_context (img);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
-	g_object_unref (provider);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_button");
 
 	gtk_widget_show_all (vb);
 	return button;
@@ -519,23 +530,13 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 
 	/* CSS theming */
 	GtkStyleContext *context;
-	GtkStyleProvider *provider;
-#define ENTRY_CSS "* {\n" \
-                "-GtkWidget-focus-line-width : 0px;\n"		\
-                "-GtkWidget-focus-padding : 0px;\n"		\
-                "padding: 1px;\n"				\
-                "-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
-                "-GtkButtonBox-child-min-width : 0px;\n"	\
-		"border-style: solid;\n"				\
-		"border-radius: 5px;\n"				\
-                "}"
-	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), ENTRY_CSS, -1, NULL);
 	context = gtk_widget_get_style_context (vb);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_entry");
+
 	context = gtk_widget_get_style_context (entry);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
-	g_object_unref (provider);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_entry");
 
 	gtk_entry_set_icon_from_stock (GTK_ENTRY (entry),
 				       GTK_ENTRY_ICON_SECONDARY,
