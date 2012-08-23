@@ -205,7 +205,7 @@ gdaui_entry_shell_init (GdauiEntryShell *shell)
 	button = gtk_button_new ();
 	gtk_style_context_add_provider (gtk_widget_get_style_context (button),
 					GTK_STYLE_PROVIDER (css_provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+					G_MAXUINT);
 
 	gtk_container_add (GTK_CONTAINER (button), arrow);
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
