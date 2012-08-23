@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-18 22:02+0000\n"
-"PO-Revision-Date: 2012-08-20 13:40+0200\n"
+"POT-Creation-Date: 2012-08-22 08:22+0000\n"
+"PO-Revision-Date: 2012-08-23 17:15+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -145,8 +145,8 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:424
 #: ../libgda-ui/data-entries/plugins/common-pict.c:536
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:161
-#: ../libgda-ui/gdaui-init.c:508 ../libgda-ui/gdaui-login.c:439
-#: ../libgda-ui/gdaui-rt-editor.c:744
+#: ../libgda-ui/gdaui-init.c:508 ../libgda-ui/gdaui-login.c:437
+#: ../libgda-ui/gdaui-rt-editor.c:745
 #: ../providers/jdbc/gda-jdbc-provider.c:390
 #: ../providers/jdbc/gda-jdbc-provider.c:1331
 #: ../providers/jdbc/gda-jdbc-provider.c:1360
@@ -203,10 +203,10 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/main.c:220 ../tools/browser/main.c:247
 #: ../tools/browser/query-exec/query-console-page.c:817
 #: ../tools/browser/query-exec/query-console-page.c:847
-#: ../tools/browser/query-exec/query-console-page.c:1047
-#: ../tools/browser/query-exec/query-console-page.c:1077
-#: ../tools/browser/query-exec/query-console-page.c:1108
-#: ../tools/browser/query-exec/query-console-page.c:1161
+#: ../tools/browser/query-exec/query-console-page.c:1048
+#: ../tools/browser/query-exec/query-console-page.c:1078
+#: ../tools/browser/query-exec/query-console-page.c:1109
+#: ../tools/browser/query-exec/query-console-page.c:1162
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:266
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
@@ -216,7 +216,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:352
 #: ../tools/browser/schema-browser/relations-diagram.c:243
-#: ../tools/browser/schema-browser/table-columns.c:949
+#: ../tools/browser/schema-browser/table-columns.c:951
 #: ../tools/browser/schema-browser/table-info.c:469
 #: ../tools/browser/schema-browser/table-info.c:522
 #: ../tools/browser/schema-browser/table-info.c:549
@@ -533,7 +533,6 @@ msgstr "Parámetro «%s» en conflicto"
 #: ../libgda/gda-config.c:307 ../libgda/gda-config.c:333
 #: ../libgda/gda-config.c:457 ../libgda/gda-config.c:482
 #, c-format
-#| msgid "Error loading authentification information for '%s' DSN: %s"
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "Error al cargar la información de autenticación para la DSN «%s»: %s"
 
@@ -558,7 +557,6 @@ msgstr "El nombre de la fuente de datos está mal formado «%s»"
 #: ../libgda/gda-config.c:991 ../libgda/gda-config.c:1003
 #: ../libgda/gda-config.c:1101
 #, c-format
-#| msgid "Couldn't save authentification information for DSN '%s': %s"
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr ""
 "No se pudo guardar la información de autenticación para la DSN «%s»: %s"
@@ -569,7 +567,6 @@ msgstr "No se puede gestionar la configuración amplia del sistema"
 
 #: ../libgda/gda-config.c:1091 ../libgda/gda-config.c:1123
 #, c-format
-#| msgid "Authentification for the '%s' DSN"
 msgid "Authentication for the '%s' DSN"
 msgstr "Autenticación para la DSN «%s»"
 
@@ -580,7 +577,7 @@ msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr ""
 "No se pudo eliminar la información de autenticación para la DSN «%s»: %s"
 
-#: ../libgda/gda-config.c:1205 ../libgda-ui/gdaui-login.c:656
+#: ../libgda/gda-config.c:1205 ../libgda-ui/gdaui-login.c:654
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "DSN «%s» desconocido"
@@ -675,7 +672,7 @@ msgid "Authentication string to use"
 msgstr "Cadena de autenticación que usar"
 
 #: ../libgda/gda-connection.c:367 ../libgda-ui/data/server_operation.glade.h:6
-#: ../libgda-ui/gdaui-server-operation.c:794
+#: ../libgda-ui/gdaui-server-operation.c:775
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
@@ -2823,7 +2820,8 @@ msgid "'%s' compound not supported by SQLite"
 msgstr "SQLite no soporta la composición «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2027
-msgid "ILIKE operation sot supported"
+#| msgid "ILIKE operation sot supported"
+msgid "ILIKE operation not supported"
 msgstr "Operación ILIKE no soportada"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2545
@@ -3439,7 +3437,7 @@ msgstr "Seleccionar archivo para cargar"
 
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/plugins/common-pict.c:422
-#: ../libgda-ui/gdaui-rt-editor.c:742
+#: ../libgda-ui/gdaui-rt-editor.c:743
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3520,7 +3518,7 @@ msgstr "Tipo de dato"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
-#: ../libgda-ui/gdaui-basic-form.c:839 ../libgda-ui/gdaui-basic-form.c:874
+#: ../libgda-ui/gdaui-basic-form.c:830 ../libgda-ui/gdaui-basic-form.c:865
 #: ../libgda-ui/gdaui-raw-grid.c:783 ../providers/ldap/gda-ldap-provider.c:997
 #: ../tools/config-info.c:122 ../tools/config-info.c:291
 #: ../tools/gda-sql.c:3867 ../tools/gda-sql.c:4668 ../tools/gda-sql.c:6058
@@ -3743,7 +3741,7 @@ msgid "_Save image"
 msgstr "_Guardar imagen"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:360
-#: ../libgda-ui/gdaui-rt-editor.c:701
+#: ../libgda-ui/gdaui-rt-editor.c:702
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
@@ -4033,7 +4031,7 @@ msgstr ""
 "<i>demo_dict</i> los crea el «framework» y están disponibles\n"
 "para todos los elementos demostrados."
 
-#: ../libgda-ui/gdaui-basic-form.c:293
+#: ../libgda-ui/gdaui-basic-form.c:290
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -4041,46 +4039,46 @@ msgstr ""
 "Puntero a una especificación de distribución de datos XML (como un "
 "xmlNodePtr hacia un nodo <gdaui_form>)"
 
-#: ../libgda-ui/gdaui-basic-form.c:297
+#: ../libgda-ui/gdaui-basic-form.c:294
 msgid "List of parameters to show in the form"
 msgstr "Lista de parámetros para mostrar en el formulario"
 
-#: ../libgda-ui/gdaui-basic-form.c:311
+#: ../libgda-ui/gdaui-basic-form.c:308
 msgid "Show Entry actions"
 msgstr "Mostrar acciones de las entradas"
 
-#: ../libgda-ui/gdaui-basic-form.c:316
+#: ../libgda-ui/gdaui-basic-form.c:313
 msgid "Entries Auto-default"
 msgstr "Entradas autopredeterminadas"
 
-#: ../libgda-ui/gdaui-basic-form.c:321
+#: ../libgda-ui/gdaui-basic-form.c:318
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Cierto si tiene sentido expandir el formulario verticalmente"
 
-#: ../libgda-ui/gdaui-basic-form.c:345
+#: ../libgda-ui/gdaui-basic-form.c:342
 msgid "Shown data entries"
 msgstr "Entradas de datos mostradas"
 
-#: ../libgda-ui/gdaui-basic-form.c:960 ../libgda-ui/gdaui-raw-grid.c:824
+#: ../libgda-ui/gdaui-basic-form.c:951 ../libgda-ui/gdaui-raw-grid.c:824
 #: ../libgda-ui/gdaui-raw-grid.c:2885 ../libgda-ui/gdaui-raw-grid.c:2940
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1905
+#: ../libgda-ui/gdaui-basic-form.c:1884
 msgid "Can't find data entry for GdaHolder"
 msgstr "No se puede encontrar la entrada para el GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2165
+#: ../libgda-ui/gdaui-basic-form.c:2144
 msgid "Values to be defined"
 msgstr "Valores que definir"
 
-#: ../libgda-ui/gdaui-basic-form.c:2237 ../libgda-ui/gdaui-raw-grid.c:2712
+#: ../libgda-ui/gdaui-basic-form.c:2216 ../libgda-ui/gdaui-raw-grid.c:2712
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:2247 ../libgda-ui/gdaui-raw-grid.c:2722
+#: ../libgda-ui/gdaui-basic-form.c:2226 ../libgda-ui/gdaui-raw-grid.c:2722
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4089,7 +4087,7 @@ msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2379
+#: ../libgda-ui/gdaui-basic-form.c:2358
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4097,14 +4095,14 @@ msgstr ""
 "el tamaño del grupo no se tuvo en cuenta, usando "
 "gdaui_basic_form_add_to_size_group()"
 
-#: ../libgda-ui/gdaui-cloud.c:246 ../libgda-ui/gdaui-cloud.c:979
+#: ../libgda-ui/gdaui-cloud.c:246 ../libgda-ui/gdaui-cloud.c:980
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
 "Tipo de columna incorrecto para la etiqueta: se esperaba una cadena y se "
 "obtuvo %s"
 
-#: ../libgda-ui/gdaui-cloud.c:1072 ../tools/browser/common/objects-cloud.c:459
+#: ../libgda-ui/gdaui-cloud.c:1073 ../tools/browser/common/objects-cloud.c:459
 msgid "Find:"
 msgstr "Buscar:"
 
@@ -4120,15 +4118,15 @@ msgstr "Mostrar las ventanas emergentes como una lista"
 msgid "Filter failed:"
 msgstr "Falló el filtro:"
 
-#: ../libgda-ui/gdaui-data-filter.c:212
+#: ../libgda-ui/gdaui-data-filter.c:210
 msgid "Filter"
 msgstr "Filtro"
 
-#: ../libgda-ui/gdaui-data-filter.c:212
+#: ../libgda-ui/gdaui-data-filter.c:210
 msgid "any valid SQL expression"
 msgstr "cualquier expresión SQL válida"
 
-#: ../libgda-ui/gdaui-data-filter.c:216
+#: ../libgda-ui/gdaui-data-filter.c:214
 msgid ""
 "Columns can be referenced by their name or more easily using <b><tt>_&lt;"
 "column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 "
@@ -4140,19 +4138,19 @@ msgstr ""
 "puede se <b><tt>_2 like «doe%»</tt></b> para filtrar filas en las que la 2ª "
 "columna empieza por <tt>doe</tt>."
 
-#: ../libgda-ui/gdaui-data-filter.c:233
+#: ../libgda-ui/gdaui-data-filter.c:231
 msgid "Set filter"
 msgstr "Activar filtro"
 
-#: ../libgda-ui/gdaui-data-filter.c:238
+#: ../libgda-ui/gdaui-data-filter.c:236
 msgid "Clear filter"
 msgstr "Limpiar filtro"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:836
+#: ../libgda-ui/gdaui-data-proxy-info.c:837
 msgid "Undelete the selected entry"
 msgstr "Recuperar la entrada seleccionada"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:843
+#: ../libgda-ui/gdaui-data-proxy-info.c:844
 msgid "Delete the selected entry"
 msgstr "Eliminar la entrada seleccionada"
 
@@ -4224,11 +4222,11 @@ msgid "Specify connection:"
 msgstr "Especificar conexión:"
 
 #. Create the DSN add button
-#: ../libgda-ui/gdaui-login.c:199
+#: ../libgda-ui/gdaui-login.c:198
 msgid "Data sources..."
 msgstr "Fuentes de datos…"
 
-#: ../libgda-ui/gdaui-login.c:438
+#: ../libgda-ui/gdaui-login.c:436
 msgid "Could not execute the Database access control center"
 msgstr "No se pudo ejecutar el centro de control de acceso a la base de datos"
 
@@ -4583,19 +4581,19 @@ msgstr ""
 "Determina si los contenidos aparecen en una ventana con barras de "
 "desplazamiento"
 
-#: ../libgda-ui/gdaui-rt-editor.c:908
+#: ../libgda-ui/gdaui-rt-editor.c:909
 msgid "Reset font size"
 msgstr "Restablecer el tamaño de la tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:914
+#: ../libgda-ui/gdaui-rt-editor.c:915
 msgid "Decrease font size (zoom out)"
 msgstr "Reducir tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:920
+#: ../libgda-ui/gdaui-rt-editor.c:921
 msgid "Increase font size (zoom in)"
 msgstr "Aumentar tamaño de tipografía"
 
-#: ../libgda-ui/gdaui-rt-editor.c:926
+#: ../libgda-ui/gdaui-rt-editor.c:927
 msgid "Show source markup"
 msgstr "Mostrar el origen del marcado"
 
@@ -4609,28 +4607,28 @@ msgstr ""
 "Solicitar que la cabecera de la sección se oculte si sólo hay una sección"
 
 #. last row is for new entries
-#: ../libgda-ui/gdaui-server-operation.c:598
+#: ../libgda-ui/gdaui-server-operation.c:593
 #: ../tools/browser/data-manager/data-console.c:396
 msgid "Add"
 msgstr "Añadir"
 
-#: ../libgda-ui/gdaui-server-operation.c:1115
+#: ../libgda-ui/gdaui-server-operation.c:1090
 msgid "Server operation specification"
 msgstr "Especificación de operaciones del servidor"
 
-#: ../libgda-ui/gdaui-server-operation.c:1172
+#: ../libgda-ui/gdaui-server-operation.c:1147
 msgid "<b>Field properties:</b>"
 msgstr "<b>Propiedades del campo:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1191
+#: ../libgda-ui/gdaui-server-operation.c:1166
 msgid "<b>Fields:</b>"
 msgstr "<b>Campos:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1240
+#: ../libgda-ui/gdaui-server-operation.c:1215
 msgid "Add a new field"
 msgstr "Añadir un campo nuevo"
 
-#: ../libgda-ui/gdaui-server-operation.c:1242
+#: ../libgda-ui/gdaui-server-operation.c:1217
 msgid "Remove selected field"
 msgstr "Quitar campo seleccionado"
 
@@ -5884,9 +5882,6 @@ msgstr "No se puede leer el BLOB completo en la memoria"
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2580
 #, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
@@ -7425,7 +7420,6 @@ msgstr ""
 "«search_path»)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
-#| msgid "Connections list"
 msgid "Connection timeout"
 msgstr "Tiempo de espera de la conexión"
 
@@ -7985,7 +7979,7 @@ msgstr "Deshacer la transacción actual"
 #: ../tools/browser/browser-window.c:516 ../tools/browser/browser-window.c:571
 #: ../tools/browser/common/ui-formgrid.c:850
 #: ../tools/browser/ldap-browser/perspective-main.c:33
-#: ../tools/browser/schema-browser/table-columns.c:972
+#: ../tools/browser/schema-browser/table-columns.c:974
 msgid "LDAP browser"
 msgstr "Visor LDAP"
 
@@ -8163,15 +8157,15 @@ msgid "Policy on DELETE"
 msgstr "Política para DELETE"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
-#: ../tools/browser/schema-browser/table-columns.c:948
+#: ../tools/browser/schema-browser/table-columns.c:950
 #, c-format
 msgid "Failed to undeclare foreign key: %s"
 msgstr "Falló al declarar la clave externa: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
-#: ../tools/browser/schema-browser/table-columns.c:955
-#: ../tools/browser/schema-browser/table-columns.c:958
+#: ../tools/browser/schema-browser/table-columns.c:957
+#: ../tools/browser/schema-browser/table-columns.c:960
 msgid "Successfully undeclared foreign key"
 msgstr "Clave externa anulada con éxito"
 
@@ -8412,8 +8406,8 @@ msgstr "La declaración que ejecutar no es una declaración de selección"
 #: ../tools/browser/common/ui-formgrid.c:663
 #: ../tools/browser/common/ui-formgrid.c:691
 #: ../tools/browser/common/ui-formgrid.c:722
-#: ../tools/browser/query-exec/query-console-page.c:1045
-#: ../tools/browser/query-exec/query-console-page.c:1075
+#: ../tools/browser/query-exec/query-console-page.c:1046
+#: ../tools/browser/query-exec/query-console-page.c:1076
 #: ../tools/browser/schema-browser/table-info.c:520
 #, c-format
 msgid ""
@@ -8442,7 +8436,7 @@ msgid "Execution of action"
 msgstr "Ejecución de la acción"
 
 #: ../tools/browser/common/ui-formgrid.c:833
-#: ../tools/browser/query-exec/query-console-page.c:1160
+#: ../tools/browser/query-exec/query-console-page.c:1161
 #: ../tools/browser/schema-browser/table-info.c:548
 #, c-format
 msgid "Error executing query: %s"
@@ -9337,7 +9331,7 @@ msgid "Query execution (SQL)"
 msgstr "Ejecución de la consulta (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:291
-#: ../tools/browser/query-exec/query-console-page.c:1268
+#: ../tools/browser/query-exec/query-console-page.c:1269
 msgid "Query editor"
 msgstr "Editor de consultas"
 
@@ -9440,16 +9434,16 @@ msgstr "Nombre del favorito que crear"
 msgid "Enter the name of the favorite to create"
 msgstr "Introduzca el nombre del favorito que crear"
 
-#: ../tools/browser/query-exec/query-console-page.c:924
+#: ../tools/browser/query-exec/query-console-page.c:925
 msgid "Invalid variable's contents"
 msgstr "Contenido de la variable no válido"
 
-#: ../tools/browser/query-exec/query-console-page.c:925
+#: ../tools/browser/query-exec/query-console-page.c:926
 #: ../tools/browser/schema-browser/table-info.c:923
 msgid "assign values to the following variables"
 msgstr "asignar valores a las siguientes variables"
 
-#: ../tools/browser/query-exec/query-console-page.c:1032
+#: ../tools/browser/query-exec/query-console-page.c:1033
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -9465,16 +9459,16 @@ msgstr ""
 "estén accesibles, limpie el elemento correspondiente\n"
 "del histórico antes de cerrar la transacción)."
 
-#: ../tools/browser/query-exec/query-console-page.c:1050
+#: ../tools/browser/query-exec/query-console-page.c:1051
 msgid "Statement executed"
 msgstr "Declaración ejecutada"
 
-#: ../tools/browser/query-exec/query-console-page.c:1107
+#: ../tools/browser/query-exec/query-console-page.c:1108
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Error al analizar el código: %s"
 
-#: ../tools/browser/query-exec/query-console-page.c:1117
+#: ../tools/browser/query-exec/query-console-page.c:1118
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -9482,7 +9476,7 @@ msgstr ""
 "Ya se está ejecutando una consulta, para ejecutar otra consulta abra una "
 "conexión nueva."
 
-#: ../tools/browser/query-exec/query-console-page.c:1176
+#: ../tools/browser/query-exec/query-console-page.c:1177
 msgid ""
 "Internal error, please report error to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product"
@@ -9490,49 +9484,49 @@ msgstr ""
 "Error interno, por favor informe del error en http://bugzilla.gnome.org/ "
 "para el producto «libgda»"
 
-#: ../tools/browser/query-exec/query-console-page.c:1219
+#: ../tools/browser/query-exec/query-console-page.c:1220
 msgid "_Execute"
 msgstr "_Ejecutar"
 
-#: ../tools/browser/query-exec/query-console-page.c:1219
+#: ../tools/browser/query-exec/query-console-page.c:1220
 msgid "Execute query"
 msgstr "Ejecutar consulta"
 
-#: ../tools/browser/query-exec/query-console-page.c:1222
+#: ../tools/browser/query-exec/query-console-page.c:1223
 msgid "_Undo"
 msgstr "_Deshacer"
 
-#: ../tools/browser/query-exec/query-console-page.c:1222
+#: ../tools/browser/query-exec/query-console-page.c:1223
 msgid "Undo last change"
 msgstr "Deshacer el último cambio"
 
-#: ../tools/browser/query-exec/query-editor.c:697
+#: ../tools/browser/query-exec/query-editor.c:698
 msgid "Copy all in a single line"
 msgstr "Copiar todo en una sola línea"
 
-#: ../tools/browser/query-exec/query-editor.c:1244
+#: ../tools/browser/query-exec/query-editor.c:1245
 msgid "In the future:\n"
 msgstr "En el futuro:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1248
+#: ../tools/browser/query-exec/query-editor.c:1249
 msgid "Less than a minute ago:\n"
 msgstr "Hace menos de un minuto:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1253
+#: ../tools/browser/query-exec/query-editor.c:1254
 #, c-format
 msgid "%lu minute ago:\n"
 msgid_plural "%lu minutes ago:\n"
 msgstr[0] "hace %lu minuto:\n"
 msgstr[1] "hace %lu minutos:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1260
+#: ../tools/browser/query-exec/query-editor.c:1261
 #, c-format
 msgid "%lu hour ago\n"
 msgid_plural "%lu hours ago\n"
 msgstr[0] "hace %lu hora\n"
 msgstr[1] "hace %lu horas\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1266
+#: ../tools/browser/query-exec/query-editor.c:1267
 #, c-format
 msgid "%lu day ago\n"
 msgid_plural "%lu days ago\n"
@@ -9748,12 +9742,12 @@ msgstr "Definición de la tabla virtual LDAP"
 msgid "Constraints and integrity rules"
 msgstr "Reglas de restricciones e integridad"
 
-#: ../tools/browser/schema-browser/table-columns.c:927
+#: ../tools/browser/schema-browser/table-columns.c:929
 #, c-format
 msgid "Could not find table '%s.%s'"
 msgstr "No se pudo encontrar la tabla «%s.%s»"
 
-#: ../tools/browser/schema-browser/table-columns.c:962
+#: ../tools/browser/schema-browser/table-columns.c:964
 #, c-format
 msgid "Could not find declared foreign key '%s'"
 msgstr "No se pudo encontrar ninguna la clave externa declarada «%s»"
