@@ -46,8 +46,6 @@ struct _GdauiDsnAssistantPrivate {
 	GdaDsnInfo  *dsn_info;
 	GdaServerOperation *create_db_op;
 
-	GdkPixbuf *logo;
-
 	/* widgets */
 	GtkWidget *general_page;
 	GtkWidget *general_name;
@@ -67,6 +65,8 @@ struct _GdauiDsnAssistantPrivate {
 	GtkWidget *cnc_auth_page;
 	GtkWidget *auth_container;
 	GtkWidget *auth_detail;
+
+	GtkSizeGroup *size_group;
 };
 
 static void gdaui_dsn_assistant_class_init (GdauiDsnAssistantClass *klass);
@@ -250,11 +250,15 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
 		assistant->priv->create_db_op = NULL;
 	}
 
+	if (!assistant->priv->size_group)
+		assistant->priv->size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+
 	/* is the database creation supported by the chosen provider? */
 	op = get_specs_database_creation (assistant);
 	if (op) {
 		assistant->priv->newdb_params = g_object_new (GDAUI_TYPE_SERVER_OPERATION, 
-							      "hide-single-header", TRUE, "server-operation", op, NULL);
+							      "hide-single-header", TRUE,
+							      "server-operation", op, NULL);
 		gtk_widget_show (assistant->priv->newdb_params);
 		gtk_container_add (GTK_CONTAINER (assistant->priv->newdb_box), 
 				   assistant->priv->newdb_params);
@@ -274,6 +278,9 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
 		gtk_widget_show (assistant->priv->provider_detail);
 		g_signal_connect (assistant->priv->provider_detail, "changed",
 				  G_CALLBACK (dsn_spec_changed_cb), assistant);
+		_gdaui_provider_spec_editor_add_to_size_group (GDAUI_PROVIDER_SPEC_EDITOR (assistant->priv->provider_detail),
+							       assistant->priv->size_group,
+							       GDAUI_BASIC_FORM_LABELS);
 	}
 	else
 		_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (assistant->priv->provider_detail), provider);
@@ -286,6 +293,9 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
 		gtk_widget_show (assistant->priv->auth_detail);
 		g_signal_connect (assistant->priv->auth_detail, "changed",
 				  G_CALLBACK (dsn_auth_changed_cb), assistant);
+		_gdaui_provider_auth_editor_add_to_size_group (GDAUI_PROVIDER_AUTH_EDITOR (assistant->priv->auth_detail),
+							       assistant->priv->size_group,
+							       GDAUI_BASIC_FORM_LABELS);
 	}
 	else
 		_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (assistant->priv->auth_detail), provider);
@@ -394,7 +404,7 @@ static void
 gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 			     G_GNUC_UNUSED GdauiDsnAssistantClass *klass)
 {
-	GtkWidget *label, *vbox, *table;
+	GtkWidget *label, *vbox, *grid;
 	GtkAssistant *assist;
 	gchar *str;
 
@@ -415,18 +425,13 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	assistant->priv->provider_detail = NULL;
 	assistant->priv->create_db_op = NULL;
 
-	/* load icons */
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center-newcnc.png", NULL);
-	assistant->priv->logo = gdk_pixbuf_new_from_file (str, NULL);
-	g_free (str);
-
 	/* 
 	 * start page
 	 */
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label),
-			      _("This assistant will guide you through the process of\n"
-				"creating a new data source, and optionally will allow you to\n"
+			      _("This assistant will guide you through the process of "
+				"creating a new data source, and optionally will allow you to "
 				"create a new database.\n\nJust follow the steps!"));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_widget_show (label);
@@ -434,8 +439,6 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_assistant_set_page_title (assist, label, _("Add a new data source..."));
 	
 	/* TODO: This is deprecated. Add it to the main content instead: */
-	gtk_assistant_set_page_header_image (assist, label, assistant->priv->logo);
-	
 	gtk_assistant_set_page_type (assist, label, GTK_ASSISTANT_PAGE_INTRO);
 	gtk_assistant_set_page_complete (assist, label, TRUE);
 
@@ -444,43 +447,43 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
-	table = gtk_table_new (5, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 10);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 3);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 10);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 3);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
 			      _("The following fields represent the basic information "
 				"items for your new data source. Mandatory fields are marked "
-				"with a star.\n"
+				"with a star. "
 				"To create a local database in a file, select the 'SQLite' type "
-				"of database.\n"));
+				"of database."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 
 	str = _gdaui_utility_markup_title (_("Data source name"), FALSE);
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	assistant->priv->general_name = gtk_entry_new ();
 	gtk_editable_set_editable (GTK_EDITABLE (assistant->priv->general_name), TRUE);
         gtk_widget_show (assistant->priv->general_name);
-	gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->general_name, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), assistant->priv->general_name, 1, 1, 1, 1);
 	g_signal_connect (assistant->priv->general_name, "changed",
 			  G_CALLBACK (dsn_name_changed_cb), assistant);
 
 	if (gda_config_can_modify_system_config ()) {
 		label = gtk_label_new (_("System wide data source:"));
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 		assistant->priv->general_is_system = gtk_check_button_new ();
-		gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->general_is_system, 1, 2, 2, 3);
+		gtk_grid_attach (GTK_GRID (grid), assistant->priv->general_is_system, 1, 2, 1, 1);
 	}
 	else
 		assistant->priv->general_is_system = NULL;
@@ -490,25 +493,24 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
 	assistant->priv->general_provider = gdaui_provider_selector_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->general_provider, 1, 2, 3, 4);
+	gtk_grid_attach (GTK_GRID (grid), assistant->priv->general_provider, 1, 3, 1, 1);
 
 	label = gtk_label_new (_("Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
 	
 	assistant->priv->general_description = gtk_entry_new ();
 	gtk_editable_set_editable (GTK_EDITABLE (assistant->priv->general_description), TRUE);
         gtk_widget_show (assistant->priv->general_description);
-	gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->general_description, 1, 2, 4, 5);
+	gtk_grid_attach (GTK_GRID (grid), assistant->priv->general_description, 1, 4, 1, 1);
 	
 	gtk_widget_show_all (vbox);
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("General Information"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONTENT);
 	assistant->priv->general_page = vbox;
 
@@ -517,30 +519,29 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 10);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 3);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 10);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 3);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
 			      _("This page lets you choose between using an existing database "
-				"or to create a new database to use with this new data source\n"));
+				"or to create a new database to use with this new data source"));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 
 	label = gtk_label_new (_("Create a new database:"));
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	
 	assistant->priv->choose_toggle = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), assistant->priv->choose_toggle, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), assistant->priv->choose_toggle, 1, 1, 1, 1);
 
 	gtk_widget_show_all (vbox);
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("Create a new database?"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONTENT);
 	gtk_assistant_set_page_complete (assist, vbox, TRUE);
 
@@ -556,7 +557,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 				"to create a new database "
 				"(mandatory fields are marked with a star)."
 				"This information is database-specific, so check "
-				"the manual for more information.\n"));
+				"the manual for more information."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 	
@@ -569,15 +570,26 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), vp);
 	assistant->priv->newdb_box = vp;
-
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
 	assistant->priv->newdb_params = NULL;
+
+	/* CSS theming */
+	GtkStyleContext *context;
+	GtkStyleProvider *provider;
+#define CSS "* {\n" \
+                "background-color : transparent;\n"	\
+                "}"
+	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
+	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), CSS, -1, NULL);
+	context = gtk_widget_get_style_context (vp);
+	gtk_style_context_add_provider (context, provider, G_MAXUINT);
+	g_object_unref (provider);
+
 
 	gtk_widget_show_all (vbox);
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("New database definition"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONTENT);
 	gtk_assistant_set_page_complete (assist, vbox, TRUE);
 
@@ -592,7 +604,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 			      _("The following fields represent the information needed "
 				"to open a connection (mandatory fields are marked with a star). "
 				"This information is database-specific, so check "
-				"the manual for more information.\n"));
+				"the manual for more information."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
@@ -603,7 +615,6 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("Connection's parameters"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONTENT);
 	assistant->priv->cnc_params_page = vbox;
 
@@ -627,7 +638,6 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("Authentication parameters"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONTENT);
 	assistant->priv->cnc_auth_page = vbox;
 
@@ -639,8 +649,8 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
-			      _("All information needed to create a new data source\n"
-				"has been retrieved. Now, press 'Apply' to close\n"
+			      _("All information needed to create a new data source "
+				"has been retrieved. Now, press 'Apply' to close "
 				"this dialog."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
@@ -649,13 +659,11 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	gtk_assistant_append_page (assist, vbox);
 	gtk_assistant_set_page_title (assist, vbox, _("Ready to add a new data source"));
-	gtk_assistant_set_page_header_image (assist, vbox, assistant->priv->logo);
 	gtk_assistant_set_page_type (assist, vbox, GTK_ASSISTANT_PAGE_CONFIRM);
 	gtk_assistant_set_page_complete (assist, vbox, TRUE);
 
 	/* force correct init */
 	provider_changed_cb (assistant->priv->general_provider, assistant);
-
 
 	g_signal_connect (G_OBJECT (assistant->priv->general_provider), "changed",
 			  G_CALLBACK (provider_changed_cb), assistant);
@@ -669,13 +677,14 @@ gdaui_dsn_assistant_finalize (GObject *object)
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 
 	/* free memory */
-	if (assistant->priv->logo)
-		g_object_unref (assistant->priv->logo);
 	if (assistant->priv->dsn_info)
 		data_source_info_free (assistant->priv->dsn_info);
 
 	if (assistant->priv->create_db_op)
 		g_object_unref (assistant->priv->create_db_op);
+
+	if (assistant->priv->size_group)
+		g_object_unref (assistant->priv->size_group);
 
 	g_free (assistant->priv);
 	assistant->priv = NULL;
