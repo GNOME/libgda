@@ -1085,7 +1085,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	}
 
 #ifdef HAVE_LIBSECRET
-	if (! info->is_system) {
+	if (! info->is_system && info->auth_string) {
 		/* save to keyring */
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
@@ -1117,7 +1117,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	}
 #else
   #ifdef HAVE_GNOME_KEYRING
-	if (! info->is_system) {
+	if (! info->is_system && info->auth_string) {
 		/* save to keyring */
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
