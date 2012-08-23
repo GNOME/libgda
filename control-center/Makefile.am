@@ -21,8 +21,6 @@ gda_control_center_5_0_SOURCES=\
 	gdaui-login-dialog.h \
 	gdaui-bar.c \
 	gdaui-bar.h \
-	cc-utility.c \
-	cc-utility.h \
 	dsn-config.c \
 	dsn-config.h \
 	gdaui-dsn-assistant.c \

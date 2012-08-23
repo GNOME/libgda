@@ -25,7 +25,6 @@
 #include <libgda-ui/libgda-ui.h>
 #include "dsn-config.h"
 #include "dsn-properties-dialog.h"
-#include "cc-utility.h"
 #include "gdaui-bar.h"
 
 #define DSN_CONFIG_DATA "DSN_ConfigData"
@@ -62,6 +61,25 @@ list_popup_delete_cb (G_GNUC_UNUSED GtkWidget *menu, gpointer user_data)
 	dsn_config_delete (GTK_WIDGET (user_data));
 }
 
+static GtkWidget *
+new_menu_item (const gchar *label,
+		 	gboolean pixmap,
+		        GCallback cb_func,
+			gpointer user_data)
+{
+	GtkWidget *item;
+
+	if (pixmap)
+		item = gtk_image_menu_item_new_from_stock (label, NULL);
+	else
+		item = gtk_menu_item_new_with_mnemonic (label);
+	
+	g_signal_connect (G_OBJECT (item), "activate",
+			  G_CALLBACK (cb_func), user_data);
+
+	return item;
+}
+
 static void
 list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 {
@@ -69,14 +87,14 @@ list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 	gboolean ok;
 	GArray *selection;
 
-	item_delete = cc_new_menu_item (GTK_STOCK_DELETE,
-					      TRUE,
-					      G_CALLBACK (list_popup_delete_cb),
-					      user_data);
-	item_properties = cc_new_menu_item (GTK_STOCK_PROPERTIES,
-						  TRUE,
-						  G_CALLBACK (list_popup_properties_cb),
-						  user_data);
+	item_delete = new_menu_item (GTK_STOCK_DELETE,
+				     TRUE,
+				     G_CALLBACK (list_popup_delete_cb),
+				     user_data);
+	item_properties = new_menu_item (GTK_STOCK_PROPERTIES,
+					 TRUE,
+					 G_CALLBACK (list_popup_properties_cb),
+					 user_data);
 
 	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (grid));
 	ok = (selection != NULL);
@@ -108,7 +126,8 @@ dsn_config_new (void)
 	GdaDataModel *model;
 
 	priv = g_new0 (DsnConfigPrivate, 1);
-	dsn = cc_new_vbox_widget (6);
+	dsn = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
+	gtk_widget_show (dsn);
         gtk_container_set_border_width (GTK_CONTAINER (dsn), 6);
 	g_object_set_data_full (G_OBJECT (dsn), DSN_CONFIG_DATA, priv,
 				(GDestroyNotify) free_private_data);
