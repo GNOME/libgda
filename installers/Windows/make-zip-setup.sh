@@ -54,7 +54,7 @@ fi
 archive=${current_dir}/libgda-${version}.zip
 archive_dev=${current_dir}/libgda-dev-${version}.zip
 archive_ext=${current_dir}/libgda-dep-${version}.zip
-nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_web.nsh prov_ldap.nsh)
+nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_sqlcipher.nsh prov_web.nsh prov_ldap.nsh)
 tmpfile=`mktemp`
 
 # remove current archive if it exists
@@ -293,6 +293,12 @@ Section "Ldap" SEC09
   SetOverwrite try
 EOF
 
+cat > prov_sqlcipher.nsh <<EOF
+Section "SQLCipher" SEC10
+  SetOutPath "\$INSTDIR\bin"
+  SetOverwrite try
+EOF
+
 cat > config.nsh <<EOF
 !define PRODUCT_VERSION "$version"
 EOF
@@ -336,6 +342,10 @@ files=(libeay32.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_postgresql bin
 
+files=(libcrypto-10.dll)
+add_files_to_zip $archive_ext "${depend_path}" bin $files
+add_found_files_to_nsh prov_sqlcipher bin
+
 files=(liblber.dll libldap.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_ldap bin
@@ -377,6 +387,10 @@ add_found_files_to_nsh prov_postgresql share/libgda-5.0
 files=(sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
 add_found_files_to_nsh prov_sqlite share/libgda-5.0
+
+files=(sqlcipher_specs_auth.xml sqlcipher_specs_add_column.xml sqlcipher_specs_create_db.xml sqlcipher_specs_create_index.xml sqlcipher_specs_create_table.xml sqlcipher_specs_create_view.xml sqlcipher_specs_drop_db.xml sqlcipher_specs_drop_index.xml sqlcipher_specs_drop_table.xml sqlcipher_specs_drop_view.xml sqlcipher_specs_dsn.xml sqlcipher_specs_rename_table.xml)
+add_files_to_zip $archive $prefix share/libgda-5.0 $files
+add_found_files_to_nsh prov_sqlcipher share/libgda-5.0
 
 files=(web_specs_auth.xml web_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
@@ -515,6 +529,10 @@ add_found_files_to_nsh prov_postgresql lib/libgda-5.0/providers
 files=(libgda-sqlite.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
 add_found_files_to_nsh prov_sqlite lib/libgda-5.0/providers
+
+files=(libgda-sqlcipher.dll)
+add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
+add_found_files_to_nsh prov_sqlcipher lib/libgda-5.0/providers
 
 files=(libgda-web.dll)
 add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files

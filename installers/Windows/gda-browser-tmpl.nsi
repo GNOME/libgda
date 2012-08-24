@@ -4,7 +4,7 @@
 !define PRODUCT_NAME "GdaBrowser"
 !define PRODUCT_PUBLISHER "Gnome-Db"
 !define PRODUCT_WEB_SITE "http://www.gnome-db.org"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\gda-browser-4.0.exe"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\gda-browser-5.0.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -22,6 +22,7 @@ SetCompressor lzma
 !include "prov_mdb.nsh"
 !include "prov_oracle.nsh"
 !include "prov_sqlite.nsh"
+!include "prov_sqlcipher.nsh"
 !include "uninst.nsh"
 
 
@@ -116,6 +117,8 @@ LangString DESC_prov_oracle ${LANG_ENGLISH} "Oracle database provider (needs run
 LangString DESC_prov_oracle ${LANG_FRENCH} "Fournisseur pour les bases de données Oracle (nécessite un composant fourni par Oracle)"
 LangString DESC_prov_sqlite ${LANG_ENGLISH} "Sqlite database provider"
 LangString DESC_prov_sqlite ${LANG_FRENCH} "Fournisseur pour les bases de données Sqlite"
+LangString DESC_prov_sqlcipher ${LANG_ENGLISH} "SQLCipher database provider"
+LangString DESC_prov_sqlcipher ${LANG_FRENCH} "Fournisseur pour les bases de données SQLCipher"
 LangString DESC_prov_web ${LANG_ENGLISH} "Provider for database accessed through a web server"
 LangString DESC_prov_web ${LANG_FRENCH} "Fournisseur pour les bases de données via un serveur web"
 LangString DESC_prov_ldap ${LANG_ENGLISH} "Provider for LDAP directory"
@@ -131,6 +134,7 @@ LangString DESC_prov_ldap ${LANG_FRENCH} "Fournisseur pour les répertoires LDAP"
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC05} $(DESC_prov_postgresql)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC06} $(DESC_prov_oracle)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC07} $(DESC_prov_sqlite)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC10} $(DESC_prov_sqlcipher)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC08} $(DESC_prov_web)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC09} $(DESC_prov_ldap)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
