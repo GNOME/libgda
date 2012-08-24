@@ -8,6 +8,10 @@
 	fnYM49765777344607__gda_gbr_find_locale_dir
 	fnYM49765777344607__gda_gbr_find_prefix
 	fnYM49765777344607__gda_gbr_find_sbin_dir
+	_gda_server_operation_new_from_string
+	_split_identifier_string
+	_gda_vconnection_change_working_obj
+	_gda_vconnection_set_working_obj
 	gda_alphanum_to_text
 	gda_attributes_manager_clear
 	gda_attributes_manager_copy

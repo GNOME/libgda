@@ -13,7 +13,7 @@ AM_CPPFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(LIBCRYPTO_CFLAGS) \
 	$(sqliteinc) \
-	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
+	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1
 
 
 sqlite_sources = sqlite3.c sqlite3.h
@@ -32,6 +32,7 @@ libgda_sqlcipher_la_SOURCES = \
 
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_sqlcipher_la_LIBADD = \
+	$(top_builddir)/libgda/sqlite/libgda-sqlcipher.la \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(COREDEPS_LIBS) \
 	$(LIBCRYPTO_LIBS)
