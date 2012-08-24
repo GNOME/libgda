@@ -326,7 +326,7 @@ EOF
 #
 # dependencies DLLs
 #
-files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libtiff*.dll libffi*.dll readline.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll)
+files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libtiff*.dll libffi*.dll readline.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll zlib1.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh core bin
 
