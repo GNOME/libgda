@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-22 08:22+0000\n"
-"PO-Revision-Date: 2012-08-23 17:15+0200\n"
+"POT-Creation-Date: 2012-08-23 19:20+0000\n"
+"PO-Revision-Date: 2012-08-25 12:04+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -27,15 +27,15 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.5\n"
 
 #. title
-#: ../control-center/dsn-config.c:117 ../control-center/main.c:380
+#: ../control-center/dsn-config.c:136 ../control-center/main.c:380
 msgid "Data Sources"
 msgstr "Fuentes de datos"
 
-#: ../control-center/dsn-config.c:118
+#: ../control-center/dsn-config.c:137
 msgid "Configured data sources in the system"
 msgstr "Fuentes de datos configuradas en el sistema"
 
-#: ../control-center/dsn-config.c:167
+#: ../control-center/dsn-config.c:186
 msgid ""
 "Data sources are the means by which database connections are identified: all "
 "the information needed to open a connection to a specific database using a "
@@ -46,12 +46,12 @@ msgstr ""
 "una conexión contra una base de datos específica usando un «proveedor» se "
 "referencia usando un nombre único."
 
-#: ../control-center/dsn-config.c:249
+#: ../control-center/dsn-config.c:268
 #, c-format
 msgid "Are you sure you want to remove the data source '%s'?"
 msgstr "¿Seguro que quiere eliminar el origen de datos «%s»?"
 
-#: ../control-center/dsn-config.c:253
+#: ../control-center/dsn-config.c:272
 msgid "Data source removal confirmation"
 msgstr "Confirmación del borrado de la fuente de datos"
 
@@ -186,14 +186,14 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/common/ui-formgrid.c:724
 #: ../tools/browser/common/ui-formgrid.c:834
 #: ../tools/browser/data-manager/analyser.c:278
-#: ../tools/browser/data-manager/data-console.c:564
+#: ../tools/browser/data-manager/data-console.c:560
 #: ../tools/browser/data-manager/data-favorite-selector.c:201
 #: ../tools/browser/data-manager/data-favorite-selector.c:259
 #: ../tools/browser/data-manager/data-favorite-selector.c:619
 #: ../tools/browser/data-manager/data-widget.c:388
 #: ../tools/browser/ldap-browser/entry-properties.c:244
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:478
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:484
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:431
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:437
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:190
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:600
@@ -233,7 +233,7 @@ msgid "No detail"
 msgstr "Sin detalles"
 
 #: ../control-center/gda-control-center-5.0.desktop.in.h:1
-#: ../control-center/main.c:176 ../control-center/main.c:266
+#: ../control-center/main.c:177 ../control-center/main.c:267
 msgid "Database access control center"
 msgstr "Centro de control de acceso de la base de datos"
 
@@ -250,111 +250,130 @@ msgstr "Falta información obligatoria para crear la base de datos"
 msgid "Error creating database: %s"
 msgstr "Error al crear la base de datos: %s"
 
-#: ../control-center/gdaui-dsn-assistant.c:405
+#: ../control-center/gdaui-dsn-assistant.c:415
 msgid "New data source definition"
 msgstr "Definición de la nueva fuente de datos"
 
-#: ../control-center/gdaui-dsn-assistant.c:428
+#: ../control-center/gdaui-dsn-assistant.c:433
+#| msgid ""
+#| "This assistant will guide you through the process of\n"
+#| "creating a new data source, and optionally will allow you to\n"
+#| "create a new database.\n"
+#| "\n"
+#| "Just follow the steps!"
 msgid ""
-"This assistant will guide you through the process of\n"
-"creating a new data source, and optionally will allow you to\n"
-"create a new database.\n"
+"This assistant will guide you through the process of creating a new data "
+"source, and optionally will allow you to create a new database.\n"
 "\n"
 "Just follow the steps!"
 msgstr ""
-"Este asistente le guiará a través del proceso de\n"
-"creación de una nueva fuente de datos, y \n"
-"opcionalmente, le permitirá crear una nueva base\n"
-"de datos\n"
+"Este asistente le guiará a través del proceso de creación de una nueva "
+"fuente de datos, y opcionalmente, le permitirá crear una nueva base de "
+"datos\n"
 "\n"
 "Simplemente siga los pasos."
 
-#: ../control-center/gdaui-dsn-assistant.c:434
+#: ../control-center/gdaui-dsn-assistant.c:439
 msgid "Add a new data source..."
 msgstr "Añadir una fuente de datos nueva…"
 
-#: ../control-center/gdaui-dsn-assistant.c:455
+#: ../control-center/gdaui-dsn-assistant.c:458
+#| msgid ""
+#| "The following fields represent the basic information items for your new "
+#| "data source. Mandatory fields are marked with a star.\n"
+#| "To create a local database in a file, select the 'SQLite' type of "
+#| "database.\n"
 msgid ""
 "The following fields represent the basic information items for your new data "
-"source. Mandatory fields are marked with a star.\n"
-"To create a local database in a file, select the 'SQLite' type of database.\n"
+"source. Mandatory fields are marked with a star. To create a local database "
+"in a file, select the 'SQLite' type of database."
 msgstr ""
 "Los siguientes campos representan los elementos básicos de información para "
 "su fuente de datos nueva. Los campos obligatorios se marcan con una "
-"estrella.\n"
-"Para crear una base de datos local en un archivo, seleccione el tipo de base "
-"de datos «SQLite».\n"
+"estrella. Para crear una base de datos local en un archivo, seleccione el "
+"tipo de base de datos «SQLite»."
 
-#: ../control-center/gdaui-dsn-assistant.c:463
+#: ../control-center/gdaui-dsn-assistant.c:466
 msgid "Data source name"
 msgstr "Nombre de la fuente de datos"
 
-#: ../control-center/gdaui-dsn-assistant.c:478
+#: ../control-center/gdaui-dsn-assistant.c:481
 msgid "System wide data source:"
 msgstr "Fuente de datos para todo el sistema:"
 
-#: ../control-center/gdaui-dsn-assistant.c:488
+#: ../control-center/gdaui-dsn-assistant.c:491
 msgid "Database type"
 msgstr "Tipo de la base de datos"
 
-#: ../control-center/gdaui-dsn-assistant.c:498
-#: ../tools/browser/ldap-browser/class-properties.c:414
+#: ../control-center/gdaui-dsn-assistant.c:501
+#: ../tools/browser/ldap-browser/class-properties.c:416
 msgid "Description:"
 msgstr "Descripción:"
 
-#: ../control-center/gdaui-dsn-assistant.c:510
+#: ../control-center/gdaui-dsn-assistant.c:513
 msgid "General Information"
 msgstr "Información general"
 
-#: ../control-center/gdaui-dsn-assistant.c:528
+#: ../control-center/gdaui-dsn-assistant.c:530
+#| msgid ""
+#| "This page lets you choose between using an existing database or to create "
+#| "a new database to use with this new data source\n"
 msgid ""
 "This page lets you choose between using an existing database or to create a "
-"new database to use with this new data source\n"
+"new database to use with this new data source"
 msgstr ""
 "Esta página le permite elegir entre usar una base de datos existente o crear "
-"una base de datos nueva para usarla con esta fuente de datos nuevo\n"
+"una base de datos nueva para usarla con esta fuente de datos nuevo"
 
-#: ../control-center/gdaui-dsn-assistant.c:533
+#: ../control-center/gdaui-dsn-assistant.c:535
 msgid "Create a new database:"
 msgstr "Crear una base de datos nueva:"
 
-#: ../control-center/gdaui-dsn-assistant.c:542
+#: ../control-center/gdaui-dsn-assistant.c:544
 msgid "Create a new database?"
 msgstr "¿Crear una base de datos nueva?"
 
-#: ../control-center/gdaui-dsn-assistant.c:555
+#: ../control-center/gdaui-dsn-assistant.c:556
+#| msgid ""
+#| "The following fields represent the information needed to create a new "
+#| "database (mandatory fields are marked with a star).This information is "
+#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to create a new "
 "database (mandatory fields are marked with a star).This information is "
-"database-specific, so check the manual for more information.\n"
+"database-specific, so check the manual for more information."
 msgstr ""
 "Los siguientes campos representan la información que necesaria para crear "
 "una base de datos nueva (los campos obligatorios se marcan con una "
 "estrella). Esta información es específica de la base de datos, así que "
-"consulte el manual si necesita más información.\n"
+"consulte el manual si necesita más información."
 
-#: ../control-center/gdaui-dsn-assistant.c:579
+#: ../control-center/gdaui-dsn-assistant.c:592
 msgid "New database definition"
 msgstr "Definición de la nueva base de datos"
 
-#: ../control-center/gdaui-dsn-assistant.c:592
+#: ../control-center/gdaui-dsn-assistant.c:604
+#| msgid ""
+#| "The following fields represent the information needed to open a "
+#| "connection (mandatory fields are marked with a star). This information is "
+#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to open a connection "
 "(mandatory fields are marked with a star). This information is database-"
-"specific, so check the manual for more information.\n"
+"specific, so check the manual for more information."
 msgstr ""
 "Los siguientes campos representan la información que necesaria para abrir "
 "una conexión  (los campos obligatorios se marcan con una estrella). Esta "
 "información es específica de la base de datos, así que consulte el manual si "
-"necesita más información.\n"
+"necesita más información."
 
 #. connection's spec
-#: ../control-center/gdaui-dsn-assistant.c:605
+#: ../control-center/gdaui-dsn-assistant.c:617
 #: ../control-center/gdaui-dsn-editor.c:207
 msgid "Connection's parameters"
 msgstr "Parámetros de la conexión"
 
-#: ../control-center/gdaui-dsn-assistant.c:618
+#: ../control-center/gdaui-dsn-assistant.c:629
 msgid ""
 "The following fields represent the authentication information needed to open "
 "a connection."
@@ -362,21 +381,23 @@ msgstr ""
 "El siguiente campo representa la información de autenticación necesaria para "
 "abrir una conexión."
 
-#: ../control-center/gdaui-dsn-assistant.c:629
+#: ../control-center/gdaui-dsn-assistant.c:640
 msgid "Authentication parameters"
 msgstr "Parámetros de autenticación"
 
-#: ../control-center/gdaui-dsn-assistant.c:642
+#: ../control-center/gdaui-dsn-assistant.c:652
+#| msgid ""
+#| "All information needed to create a new data source\n"
+#| "has been retrieved. Now, press 'Apply' to close\n"
+#| "this dialog."
 msgid ""
-"All information needed to create a new data source\n"
-"has been retrieved. Now, press 'Apply' to close\n"
-"this dialog."
+"All information needed to create a new data source has been retrieved. Now, "
+"press 'Apply' to close this dialog."
 msgstr ""
-"Se ha obtenido toda la información necesaria para\n"
-"crear un origen de datos nuevo. Ahora pulse «Aplicar»\n"
-"para cerrar esta diálogo."
+"Se ha obtenido toda la información necesaria para crear un origen de datos "
+"nuevo. Ahora pulse «Aplicar» para cerrar esta diálogo."
 
-#: ../control-center/gdaui-dsn-assistant.c:651
+#: ../control-center/gdaui-dsn-assistant.c:661
 msgid "Ready to add a new data source"
 msgstr "Preparado para añadir una nueva fuente de datos"
 
@@ -434,73 +455,73 @@ msgstr ""
 "No se requiere autenticación,\n"
 "confirme la apertura de la conexión"
 
-#: ../control-center/main.c:52 ../libgda-ui/internal/utility.c:482
+#: ../control-center/main.c:53 ../libgda-ui/internal/utility.c:482
 #: ../tools/browser/support.c:152
 msgid "Error:"
 msgstr "Error:"
 
-#: ../control-center/main.c:78
+#: ../control-center/main.c:79
 msgid "Could not declare new data source"
 msgstr "No se pudo declarar el nuevo origen de datos"
 
-#: ../control-center/main.c:81
+#: ../control-center/main.c:82
 msgid "No valid data source info was created"
 msgstr "No se creó una información válida para la fuente de datos"
 
-#: ../control-center/main.c:179 ../tools/browser/browser-window.c:1256
+#: ../control-center/main.c:180 ../tools/browser/browser-window.c:1256
 msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
-#: ../control-center/main.c:195
+#: ../control-center/main.c:196
 msgid "_Data source"
 msgstr "Fuente de _datos"
 
-#: ../control-center/main.c:195
+#: ../control-center/main.c:196
 msgid "Database"
 msgstr "Base de datos"
 
-#: ../control-center/main.c:196 ../tools/browser/browser-window.c:296
+#: ../control-center/main.c:197 ../tools/browser/browser-window.c:296
 msgid "_Close"
 msgstr "_Cerrar"
 
-#: ../control-center/main.c:196 ../tools/browser/browser-window.c:296
+#: ../control-center/main.c:197 ../tools/browser/browser-window.c:296
 msgid "Close this window"
 msgstr "Cerrar esta ventana"
 
-#: ../control-center/main.c:197
+#: ../control-center/main.c:198
 msgid "_New datasource"
 msgstr "Fuente de datos _nueva"
 
-#: ../control-center/main.c:197
+#: ../control-center/main.c:198
 msgid "Create new data source"
 msgstr "Crear una fuente de datos nueva"
 
-#: ../control-center/main.c:198
+#: ../control-center/main.c:199
 msgid "_Delete datasource"
 msgstr "Eliminar fuente de _datos"
 
-#: ../control-center/main.c:198
+#: ../control-center/main.c:199
 msgid "Delete selected data source"
 msgstr "Eliminar la fuente de datos seleccionada"
 
-#: ../control-center/main.c:199 ../tools/browser/browser-window.c:285
+#: ../control-center/main.c:200 ../tools/browser/browser-window.c:285
 msgid "_Properties"
 msgstr "_Propiedades"
 
-#: ../control-center/main.c:199
+#: ../control-center/main.c:200
 msgid "Edit properties for selected data source"
 msgstr "Editar las propiedades de las fuentes de datos seleccionadas"
 
-#: ../control-center/main.c:200 ../control-center/main.c:201
+#: ../control-center/main.c:201 ../control-center/main.c:202
 #: ../tools/browser/browser-window.c:298
 msgid "_About"
 msgstr "Acerca _de"
 
-#: ../control-center/main.c:200 ../tools/browser/browser-window.c:298
+#: ../control-center/main.c:201 ../tools/browser/browser-window.c:298
 msgid "About"
 msgstr "Acerca de"
 
-#: ../control-center/main.c:201
+#: ../control-center/main.c:202
 msgid "About GNOME-DB"
 msgstr "Acerca de GNOME-DB"
 
@@ -672,7 +693,7 @@ msgid "Authentication string to use"
 msgstr "Cadena de autenticación que usar"
 
 #: ../libgda/gda-connection.c:367 ../libgda-ui/data/server_operation.glade.h:6
-#: ../libgda-ui/gdaui-server-operation.c:775
+#: ../libgda-ui/gdaui-server-operation.c:777
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
@@ -2820,7 +2841,6 @@ msgid "'%s' compound not supported by SQLite"
 msgstr "SQLite no soporta la composición «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2027
-#| msgid "ILIKE operation sot supported"
 msgid "ILIKE operation not supported"
 msgstr "Operación ILIKE no soportada"
 
@@ -3631,7 +3651,7 @@ msgstr "Símbolo de divisa"
 msgid "A currency symbol"
 msgstr "Un símbolo de divisa"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:273
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:271
 #, c-format
 msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
@@ -3641,15 +3661,15 @@ msgstr ""
 "establecer usando la propiedad «manejador») espere algún comportamiento no "
 "deseado"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:429
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:427
 msgid "Value is NULL"
 msgstr "El valor es NULL"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:435
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:433
 msgid "Value will be determined by default"
 msgstr "El valor se determinará de forma predeterminada"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:441
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:439
 msgid "Value is invalid"
 msgstr "El valor no es válido"
 
@@ -4065,20 +4085,20 @@ msgstr "Entradas de datos mostradas"
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1884
+#: ../libgda-ui/gdaui-basic-form.c:1885
 msgid "Can't find data entry for GdaHolder"
 msgstr "No se puede encontrar la entrada para el GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2144
+#: ../libgda-ui/gdaui-basic-form.c:2145
 msgid "Values to be defined"
 msgstr "Valores que definir"
 
-#: ../libgda-ui/gdaui-basic-form.c:2216 ../libgda-ui/gdaui-raw-grid.c:2712
+#: ../libgda-ui/gdaui-basic-form.c:2217 ../libgda-ui/gdaui-raw-grid.c:2712
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:2226 ../libgda-ui/gdaui-raw-grid.c:2722
+#: ../libgda-ui/gdaui-basic-form.c:2227 ../libgda-ui/gdaui-raw-grid.c:2722
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4087,7 +4107,7 @@ msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2358
+#: ../libgda-ui/gdaui-basic-form.c:2359
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4607,28 +4627,28 @@ msgstr ""
 "Solicitar que la cabecera de la sección se oculte si sólo hay una sección"
 
 #. last row is for new entries
-#: ../libgda-ui/gdaui-server-operation.c:593
-#: ../tools/browser/data-manager/data-console.c:396
+#: ../libgda-ui/gdaui-server-operation.c:595
+#: ../tools/browser/data-manager/data-console.c:392
 msgid "Add"
 msgstr "Añadir"
 
-#: ../libgda-ui/gdaui-server-operation.c:1090
+#: ../libgda-ui/gdaui-server-operation.c:1092
 msgid "Server operation specification"
 msgstr "Especificación de operaciones del servidor"
 
-#: ../libgda-ui/gdaui-server-operation.c:1147
+#: ../libgda-ui/gdaui-server-operation.c:1149
 msgid "<b>Field properties:</b>"
 msgstr "<b>Propiedades del campo:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1166
+#: ../libgda-ui/gdaui-server-operation.c:1168
 msgid "<b>Fields:</b>"
 msgstr "<b>Campos:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1215
+#: ../libgda-ui/gdaui-server-operation.c:1217
 msgid "Add a new field"
 msgstr "Añadir un campo nuevo"
 
-#: ../libgda-ui/gdaui-server-operation.c:1217
+#: ../libgda-ui/gdaui-server-operation.c:1219
 msgid "Remove selected field"
 msgstr "Quitar campo seleccionado"
 
@@ -7952,7 +7972,7 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #: ../tools/browser/browser-window.c:297
-#: ../tools/browser/data-manager/data-console.c:423
+#: ../tools/browser/data-manager/data-console.c:419
 msgid "Help"
 msgstr "Ayuda"
 
@@ -8049,35 +8069,35 @@ msgstr ""
 "perspectiva anterior a través del menú «Perspectiva/%s» o usando el atajo "
 "«%s»"
 
-#: ../tools/browser/canvas/browser-canvas.c:371
+#: ../tools/browser/canvas/browser-canvas.c:353
 msgid "Linear layout"
 msgstr "Distribución lineal"
 
-#: ../tools/browser/canvas/browser-canvas.c:376
+#: ../tools/browser/canvas/browser-canvas.c:358
 msgid "Radial layout"
 msgstr "Distribución radial"
 
-#: ../tools/browser/canvas/browser-canvas.c:483
+#: ../tools/browser/canvas/browser-canvas.c:465
 msgid "Save diagram as"
 msgstr "Guardar diagrama como"
 
-#: ../tools/browser/canvas/browser-canvas.c:491
+#: ../tools/browser/canvas/browser-canvas.c:473
 msgid "PNG Image"
 msgstr "Imagen PNG"
 
-#: ../tools/browser/canvas/browser-canvas.c:496
+#: ../tools/browser/canvas/browser-canvas.c:478
 msgid "SVG file"
 msgstr "Archivo SVG"
 
-#: ../tools/browser/canvas/browser-canvas.c:534
+#: ../tools/browser/canvas/browser-canvas.c:516
 msgid "Failed to create SVG file"
 msgstr "Falló al crear el archivo SVG"
 
-#: ../tools/browser/canvas/browser-canvas.c:542
+#: ../tools/browser/canvas/browser-canvas.c:524
 msgid "File format to save to is not recognized."
 msgstr "No se reconoce el formato de archivo en el que guardar."
 
-#: ../tools/browser/canvas/browser-canvas.c:562
+#: ../tools/browser/canvas/browser-canvas.c:544
 msgid "Failed to create PNG file"
 msgstr "Falló al crear el archivo PNG"
 
@@ -8133,7 +8153,7 @@ msgstr "Añadir todas las tablas"
 msgid "Add all tables in schema"
 msgstr "Añadir todas las tablas del esquema"
 
-#: ../tools/browser/canvas/browser-canvas-db-relations.c:828
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:830
 msgid "Select tables to add to diagram"
 msgstr "Seleccionar tablas para añadir a la imagen"
 
@@ -8534,22 +8554,22 @@ msgid "Data Manager"
 msgstr "Gestor de datos"
 
 #: ../tools/browser/data-manager/data-console.c:301
-#: ../tools/browser/data-manager/data-console.c:520
+#: ../tools/browser/data-manager/data-console.c:516
 #: ../tools/browser/schema-browser/relations-diagram.c:329
-#: ../tools/browser/schema-browser/relations-diagram.c:477
+#: ../tools/browser/schema-browser/relations-diagram.c:473
 msgid "Unsaved"
 msgstr "Sin guardar"
 
-#: ../tools/browser/data-manager/data-console.c:332
+#: ../tools/browser/data-manager/data-console.c:328
 #: ../tools/browser/query-exec/query-console-page.c:337
 msgid "Variables' values:"
 msgstr "Valores de las variables:"
 
-#: ../tools/browser/data-manager/data-console.c:389
+#: ../tools/browser/data-manager/data-console.c:385
 msgid "Reset"
 msgstr "Reiniciar"
 
-#: ../tools/browser/data-manager/data-console.c:390
+#: ../tools/browser/data-manager/data-console.c:386
 msgid ""
 "Reset the editor's\n"
 "contents"
@@ -8557,26 +8577,26 @@ msgstr ""
 "Restablecer el contenido\n"
 "del editor"
 
-#: ../tools/browser/data-manager/data-console.c:397
+#: ../tools/browser/data-manager/data-console.c:393
 msgid "Add a new data source"
 msgstr "Añadir una fuente de datos nueva"
 
-#: ../tools/browser/data-manager/data-console.c:403
+#: ../tools/browser/data-manager/data-console.c:399
 #: ../tools/browser/query-exec/query-console-page.c:370
 msgid "Variables"
 msgstr "Variables"
 
-#: ../tools/browser/data-manager/data-console.c:403
+#: ../tools/browser/data-manager/data-console.c:399
 msgid "Show variables needed"
 msgstr "Mostrar las variables necesarias"
 
-#: ../tools/browser/data-manager/data-console.c:409
+#: ../tools/browser/data-manager/data-console.c:405
 #: ../tools/browser/ldap-browser/ldap-search-page.c:328
 #: ../tools/browser/query-exec/query-console-page.c:377
 msgid "Execute"
 msgstr "Ejecutar"
 
-#: ../tools/browser/data-manager/data-console.c:409
+#: ../tools/browser/data-manager/data-console.c:405
 msgid ""
 "Execute specified\n"
 "data manager"
@@ -8584,11 +8604,11 @@ msgstr ""
 "Ejecutar el gestor\n"
 "de datos especificado"
 
-#: ../tools/browser/data-manager/data-console.c:415
+#: ../tools/browser/data-manager/data-console.c:411
 msgid "View XML"
 msgstr "Ver XML"
 
-#: ../tools/browser/data-manager/data-console.c:415
+#: ../tools/browser/data-manager/data-console.c:411
 msgid ""
 "View specifications\n"
 "as XML (advanced)"
@@ -8596,72 +8616,72 @@ msgstr ""
 "Ver las especificaciones\n"
 "como XML (avanzado)"
 
-#: ../tools/browser/data-manager/data-console.c:436
+#: ../tools/browser/data-manager/data-console.c:432
 msgid "BBB:"
 msgstr "BBB:"
 
-#: ../tools/browser/data-manager/data-console.c:508
+#: ../tools/browser/data-manager/data-console.c:504
 #, c-format
 msgid "'%s' data manager"
 msgstr "Gestor de datos de «%s»"
 
-#: ../tools/browser/data-manager/data-console.c:509
-#: ../tools/browser/data-manager/data-console.c:520
-#: ../tools/browser/data-manager/data-console.c:553
-#: ../tools/browser/data-manager/data-console.c:968
+#: ../tools/browser/data-manager/data-console.c:505
+#: ../tools/browser/data-manager/data-console.c:516
+#: ../tools/browser/data-manager/data-console.c:549
+#: ../tools/browser/data-manager/data-console.c:964
 #: ../tools/browser/data-manager/perspective-main.c:33
-#: ../tools/browser/schema-browser/relations-diagram.c:512
+#: ../tools/browser/schema-browser/relations-diagram.c:508
 #: ../tools/browser/schema-browser/table-info.c:485
 msgid "Data manager"
 msgstr "Gestor de datos"
 
-#: ../tools/browser/data-manager/data-console.c:563
+#: ../tools/browser/data-manager/data-console.c:559
 msgid "Could not save data manager"
 msgstr "No se pudo guardar el gestor de datos"
 
-#: ../tools/browser/data-manager/data-console.c:589
+#: ../tools/browser/data-manager/data-console.c:585
 msgid "Data manager's name"
 msgstr "Nombre del gestor de datos"
 
-#: ../tools/browser/data-manager/data-console.c:609
+#: ../tools/browser/data-manager/data-console.c:605
 #: ../tools/browser/ldap-browser/entry-properties.c:275
 #: ../tools/browser/schema-browser/relations-diagram.c:288
 msgid "Save"
 msgstr "Guardar"
 
-#: ../tools/browser/data-manager/data-console.c:728
+#: ../tools/browser/data-manager/data-console.c:724
 #, c-format
 msgid "source%d"
 msgstr "fuentes %d"
 
-#: ../tools/browser/data-manager/data-console.c:787
+#: ../tools/browser/data-manager/data-console.c:783
 msgid "Data source from SQL"
 msgstr "Fuente de datos desde SLQ"
 
 #. To translators: "In schema" refers to the database schema an object is in
-#: ../tools/browser/data-manager/data-console.c:825
+#: ../tools/browser/data-manager/data-console.c:821
 #: ../tools/browser/schema-browser/table-info.c:332
 #, c-format
 msgid "In schema '%s'"
 msgstr "En el esquema «%s»"
 
-#: ../tools/browser/data-manager/data-console.c:835
+#: ../tools/browser/data-manager/data-console.c:831
 #, c-format
 msgid "For table: %s"
 msgstr "Para la tabla: %s"
 
-#: ../tools/browser/data-manager/data-console.c:919
+#: ../tools/browser/data-manager/data-console.c:915
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
 "Cambiando al modo de ejecución. Pulsar la tecla Escape para volver al modo "
 "de edición."
 
-#: ../tools/browser/data-manager/data-console.c:925
+#: ../tools/browser/data-manager/data-console.c:921
 msgid "_Toggle mode"
 msgstr "C_onmutar modo"
 
-#: ../tools/browser/data-manager/data-console.c:925
+#: ../tools/browser/data-manager/data-console.c:921
 msgid "Switch between compose and execute modes"
 msgstr "Cambiar entre los modos de composición y ejecución"
 
@@ -8675,8 +8695,8 @@ msgstr "No se pudo quitar el favorito: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:258
 #: ../tools/browser/data-manager/data-favorite-selector.c:618
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:477
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:483
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:430
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:436
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
 #: ../tools/browser/query-exec/query-console-page.c:816
@@ -8911,47 +8931,47 @@ msgstr "Código SQL que ejecutar:"
 msgid "Browse your database's contents"
 msgstr "Examinar el contenido de su base de datos"
 
-#: ../tools/browser/ldap-browser/class-properties.c:405
+#: ../tools/browser/ldap-browser/class-properties.c:407
 msgid "Could not get information about LDAP class"
 msgstr "No se pudo obtener la información sobre la clase LDAP"
 
-#: ../tools/browser/ldap-browser/class-properties.c:425
+#: ../tools/browser/ldap-browser/class-properties.c:427
 msgid "Class OID:"
 msgstr "Clase OID:"
 
-#: ../tools/browser/ldap-browser/class-properties.c:436
+#: ../tools/browser/ldap-browser/class-properties.c:438
 msgid "Class kind:"
 msgstr "Tipo de clase:"
 
-#: ../tools/browser/ldap-browser/class-properties.c:450
+#: ../tools/browser/ldap-browser/class-properties.c:452
 msgid "Class name:"
 msgid_plural "Class names:"
 msgstr[0] "Nombre de la clase:"
 msgstr[1] "Nombres de la clase"
 
-#: ../tools/browser/ldap-browser/class-properties.c:463
+#: ../tools/browser/ldap-browser/class-properties.c:465
 msgid "This LDAP class is obsolete"
 msgstr "Esta clase LDAP está obsoleta"
 
-#: ../tools/browser/ldap-browser/class-properties.c:471
+#: ../tools/browser/ldap-browser/class-properties.c:473
 msgid "Required attribute:"
 msgid_plural "Required attributes:"
 msgstr[0] "Atributo requerido:"
 msgstr[1] "Atributos requeridos:"
 
-#: ../tools/browser/ldap-browser/class-properties.c:487
+#: ../tools/browser/ldap-browser/class-properties.c:489
 msgid "Optional attribute:"
 msgid_plural "Optional attributes:"
 msgstr[0] "Atributo opcional:"
 msgstr[1] "Atributos opcionales:"
 
-#: ../tools/browser/ldap-browser/class-properties.c:506
+#: ../tools/browser/ldap-browser/class-properties.c:508
 msgid "Children class:"
 msgid_plural "Children classes:"
 msgstr[0] "Clase de hijos:"
 msgstr[1] "Clases de hijos:"
 
-#: ../tools/browser/ldap-browser/class-properties.c:551
+#: ../tools/browser/ldap-browser/class-properties.c:553
 msgid "Inherited class:"
 msgid_plural "Inherited classes:"
 msgstr[0] "Clase heredada:"
@@ -9005,21 +9025,21 @@ msgstr "Atributos que obtener:"
 msgid "Search scope:"
 msgstr "Ámbito de búsqueda:"
 
-#: ../tools/browser/ldap-browser/hierarchy-view.c:568
+#: ../tools/browser/ldap-browser/hierarchy-view.c:521
 #, c-format
 msgid "Could not find LDAP entry with DN '%s'"
 msgstr "No se pudo encontrar la entrada LDAP con DN «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:553
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:559
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:506
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:512
 #: ../tools/browser/ldap-browser/ldap-search-page.c:464
 msgid "_LDAP"
 msgstr "_LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:553
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:559
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:506
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:512
 #: ../tools/browser/ldap-browser/ldap-search-page.c:464
 #: ../tools/gda-sql.c:2969 ../tools/gda-sql.c:2982 ../tools/gda-sql.c:2999
 #: ../tools/gda-sql.c:3012
@@ -9050,78 +9070,78 @@ msgstr "_Búsqueda LDAP nueva"
 msgid "Open a new LDAP search form"
 msgstr "Abrir un formulario de búsqueda LDAP nuevo"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:363
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:316
 msgid "LDAP classes browser"
 msgstr "Visor de clases LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:383
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:619
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:336
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:572
 msgid "LDAP classes"
 msgstr "Clases LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:410
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:363
 msgid "LDAP class's properties"
 msgstr "Propiedades de la clase LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:554
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:560
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:507
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:513
 #: ../tools/browser/schema-browser/table-info.c:989
 msgid "Add to _Favorites"
 msgstr "Añadir a _favoritos"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:554
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:507
 msgid "Add class to favorites"
 msgstr "Añadir clase a los favoritos"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:556
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:509
 msgid "Previous class"
 msgstr "Clase anterior"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:556
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:509
 msgid "Move back to previous LDAP class"
 msgstr "Regresar a la clase LDAP anterior"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:558
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:511
 msgid "Next class"
 msgstr "Siguiente clase"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:558
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:511
 msgid "Move to next LDAP class"
 msgstr "Moverse a la siguiente clase LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:369
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:322
 msgid "LDAP entries browser"
 msgstr "Examinador de entradas LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:389
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:342
 msgid "LDAP hierarchy"
 msgstr "Jerarquía LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:416
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:369
 msgid "LDAP entry's details"
 msgstr "Detalles de la entrada LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:560
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:513
 msgid "Add entry to favorites"
 msgstr "Añadir entradas a los marcadores"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:562
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:515
 msgid "Previous entry"
 msgstr "Entrada anterior"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:562
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:515
 msgid "Move back to previous LDAP entry"
 msgstr "Volver a la anterior entrada LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:564
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:517
 msgid "Next entry"
 msgstr "Siguiente entrada"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:564
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:517
 msgid "Move to next LDAP entry"
 msgstr "Moverse a la siguiente entrada LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:625
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:578
 msgid "LDAP entries"
 msgstr "Entradas LDAP"
 
@@ -9620,7 +9640,7 @@ msgstr "El objeto solicitado no es una tabla o una vista"
 msgid "Auto incremented"
 msgstr "Autoincrementar"
 
-#: ../tools/browser/schema-browser/objects-index.c:171
+#: ../tools/browser/schema-browser/objects-index.c:175
 msgid "Tables' index"
 msgstr "Índice de la tabla"
 
@@ -9629,7 +9649,7 @@ msgid "Schema browser"
 msgstr "Visor de esquemas"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:232
-#: ../tools/browser/schema-browser/relations-diagram.c:570
+#: ../tools/browser/schema-browser/relations-diagram.c:566
 msgid "Diagram"
 msgstr "Diagrama"
 
@@ -9642,32 +9662,32 @@ msgid "Canvas's name"
 msgstr "Nombre del marco"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:329
-#: ../tools/browser/schema-browser/relations-diagram.c:386
-#: ../tools/browser/schema-browser/relations-diagram.c:466
-#: ../tools/browser/schema-browser/relations-diagram.c:477
+#: ../tools/browser/schema-browser/relations-diagram.c:382
+#: ../tools/browser/schema-browser/relations-diagram.c:462
+#: ../tools/browser/schema-browser/relations-diagram.c:473
 msgid "Relations diagram"
 msgstr "Diagrama de relaciones"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:376
+#: ../tools/browser/schema-browser/relations-diagram.c:372
 msgid "Error parsing favorite's contents"
 msgstr "Error al analizar el contenido de los favoritos"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:385
-#: ../tools/browser/schema-browser/relations-diagram.c:465
+#: ../tools/browser/schema-browser/relations-diagram.c:381
+#: ../tools/browser/schema-browser/relations-diagram.c:461
 #, c-format
 msgid "'%s' diagram"
 msgstr "diagrama «%s»"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:435
+#: ../tools/browser/schema-browser/relations-diagram.c:431
 msgid "Missing table attribute in favorite's contents"
 msgstr "Falta un atributo de la tabla en el contenido de los favoritos"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:521
+#: ../tools/browser/schema-browser/relations-diagram.c:517
 #: ../tools/browser/schema-browser/table-info.c:991
 msgid "_Contents"
 msgstr "Índ_ice"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:521
+#: ../tools/browser/schema-browser/relations-diagram.c:517
 msgid "View contents"
 msgstr "Ver contenido"
 
