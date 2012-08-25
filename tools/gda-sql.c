@@ -6818,6 +6818,7 @@ color_print (GdaSqlColor color, OutputFormat format, const char *fmt, ...)
 const gchar *
 color_s (GdaSqlColor color, OutputFormat format)
 {
+#ifndef G_OS_WIN32
 	if (format & OUTPUT_FORMAT_COLOR_TERM) {
 		switch (color) {
 		case GDA_SQL_COLOR_NORMAL:
@@ -6832,5 +6833,6 @@ color_s (GdaSqlColor color, OutputFormat format)
 			g_assert_not_reached();
 		}
 	}
+#endif
 	return "";
 }
