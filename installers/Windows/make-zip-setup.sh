@@ -486,9 +486,16 @@ files=(gtk.immodules)
 add_files_to_zip $archive_ext "${depend_path}" etc/gtk-3.0 $files
 add_found_files_to_nsh core etc/gtk-3.0
 
-files=(gtkrc)
+files=(settings.ini)
 add_files_to_zip $archive_ext . etc/gtk-3.0 $files
 add_found_files_to_nsh core etc/gtk-3.0
+
+files=(index.theme)
+add_files_to_zip $archive_ext . share/themes/Adwaita $files
+add_found_files_to_nsh core share/themes/Adwaita
+
+add_all_files_to_zip $archive . share/themes/Adwaita/gtk-3.0
+add_found_files_to_nsh core share/themes/Adwaita/gtk-3.0
 
 files=(pango.modules)
 add_files_to_zip $archive_ext "${depend_path}" etc/pango $files

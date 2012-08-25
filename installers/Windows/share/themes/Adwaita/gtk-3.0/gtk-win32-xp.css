@@ -1,0 +1,72 @@
+@import url("gtk-win32-base.css");
+
+.menubar {
+    background-color: #f7f7f7;
+    /*background-color: -gtk-win32-color(button, 30);*/
+
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #ded3bd;
+}
+
+.menu > .menuitem:prelight {
+    background-color: -gtk-win32-color(button, 29);
+}
+
+.menubar > .menuitem:prelight,
+.menubar > .menuitem:prelight:focused {
+    background-image: -gtk-win32-theme-part(toolbar, 1 2);
+}
+
+.notebook {
+    background-image: -gtk-win32-theme-part(tab, 9 1, margins(-1 -3 -3 -1));
+    border-image: -gtk-win32-theme-part(tab, 9 1, margins(0 -2 -2 0)) 1 1 1 1 repeat;
+}
+
+.menuitem.check,
+.menuitem.check:prelight,
+.menuitem.check:insensitive,
+.menuitem.check:active,
+.menuitem.check:active:prelight,
+.menuitem.check:inconsistent,
+.menuitem.check:inconsistent:insensitive,
+.menuitem.check:inconsistent:prelight,
+.menuitem.check:inconsistent:active,
+.menuitem.check:inconsistent:active:prelight,
+.menuitem.check:insensitive:active,
+.menuitem.check:insensitive:active:prelight {
+    background-image: none;
+    border-width: 0;
+}
+
+.menuitem.radio,
+.menuitem.radio:prelight,
+.menuitem.radio:insensitive,
+.menuitem.radio:active,
+.menuitem.radio:active:prelight,
+.menuitem.radio:inconsistent,
+.menuitem.radio:inconsistent:insensitive,
+.menuitem.radio:inconsistent:prelight,
+.menuitem.radio:inconsistent:active,
+.menuitem.radio:inconsistent:active:prelight,
+.menuitem.radio:insensitive:active,
+.menuitem.radio:insensitive:active:prelight {
+    background-image: none;
+    border-width: 0;
+}
+
+.spinbutton .button {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7b9ebd;
+}
+
+.spinbutton .button:last-child {
+    border-width: 1px 1px 1px 0px;
+}
+
+GtkProgressBar.progressbar {
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+}
