@@ -54,6 +54,10 @@ static void gdaui_combo_get_property (GObject *object,
 static void gdaui_combo_dispose      (GObject *object);
 static void gdaui_combo_finalize     (GObject *object);
 
+static void gdaui_combo_get_preferred_width (GtkWidget *widget,
+					     gint *minimum_size,
+					     gint *natural_size);
+
 /* GdauiDataSelector interface */
 static void              gdaui_combo_selector_init (GdauiDataSelectorIface *iface);
 static GdaDataModel     *combo_selector_get_model (GdauiDataSelector *iface);
@@ -120,6 +124,8 @@ gdaui_combo_class_init (GdauiComboClass *klass)
 	object_class->get_property = gdaui_combo_get_property;
 	object_class->dispose = gdaui_combo_dispose;
 	object_class->finalize = gdaui_combo_finalize;
+
+	GTK_WIDGET_CLASS (klass)->get_preferred_width = gdaui_combo_get_preferred_width;
 
 	/* add class properties */
 	g_object_class_install_property (object_class, PROP_MODEL,
@@ -254,6 +260,19 @@ gdaui_combo_get_property (GObject *object,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
+}
+
+static void
+gdaui_combo_get_preferred_width (GtkWidget *widget,
+				 gint *minimum_size,
+				 gint *natural_size)
+{
+#define MINSIZE 50
+	GTK_WIDGET_CLASS (parent_class)->get_preferred_width (widget, minimum_size, natural_size);
+	if (minimum_size && (*minimum_size > MINSIZE))
+		*minimum_size = MINSIZE;
+	if (natural_size && (*natural_size > MINSIZE))
+		*natural_size = MINSIZE;
 }
 
 static void
