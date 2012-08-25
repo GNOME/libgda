@@ -346,6 +346,7 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	tconsole->priv->params_form_box = gtk_viewport_new (NULL, NULL);
+	gtk_widget_set_name (tconsole->priv->params_form_box, "gdaui-transparent-background");
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (tconsole->priv->params_form_box), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), tconsole->priv->params_form_box);
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);

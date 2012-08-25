@@ -19,7 +19,7 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <string.h>
-#include <libgda-ui/gdaui-rt-editor.h>
+#include <libgda-ui/libgda-ui.h>
 
 #ifdef GDA_DEBUG
 static gboolean
@@ -187,6 +187,7 @@ create_window (void)
 int main (int argc, char ** argv)
 {
 	gtk_init (& argc, & argv);
+	gdaui_init ();
 
 	/*
 	 * Creation et mise en place de la fenetre:

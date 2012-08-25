@@ -89,7 +89,6 @@ struct _GdauiRtEditorPriv
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
-static GtkCssProvider *css_provider = NULL;
 static gchar *help_str=N_("\"\"\"= Title level 1 =\n"
 			  "== Title level 2 ==\n"
 			  "\"\"\"= Title level 1 =\n"
@@ -404,18 +403,6 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 
 	/* toolbar */
 	toolbar = gtk_ui_manager_get_widget (rte->priv->uimanager, "/ToolBar");
-
-	if (!css_provider) {
-		css_provider = gtk_css_provider_new ();
-		gtk_css_provider_load_from_data (css_provider,
-						 "* {\n"
-						 "-GtkToolbar-shadow-type : none}",
-						 -1, NULL);
-	}
-	gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) toolbar),
-					GTK_STYLE_PROVIDER (css_provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_MENU);
 	rte->priv->toolbar = toolbar;
 	gtk_box_pack_end (GTK_BOX (rte), toolbar, FALSE, FALSE, 0);

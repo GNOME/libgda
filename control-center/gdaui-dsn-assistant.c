@@ -570,24 +570,12 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 					GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 	vp = gtk_viewport_new (NULL, NULL);
+	gtk_widget_set_name (vp, "gdaui-transparent-background");
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), vp);
 	assistant->priv->newdb_box = vp;
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
 	assistant->priv->newdb_params = NULL;
-
-	/* CSS theming */
-	GtkStyleContext *context;
-	GtkStyleProvider *provider;
-#define CSS "* {\n" \
-                "background-color : transparent;\n"	\
-                "}"
-	provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-	gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (provider), CSS, -1, NULL);
-	context = gtk_widget_get_style_context (vp);
-	gtk_style_context_add_provider (context, provider, G_MAXUINT);
-	g_object_unref (provider);
-
 
 	gtk_widget_show_all (vbox);
 

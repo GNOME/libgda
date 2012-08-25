@@ -37,6 +37,7 @@
 #include "data-entries/gdaui-data-cell-renderer-textual.h"
 #include "data-entries/gdaui-data-cell-renderer-boolean.h"
 #include "data-entries/gdaui-data-cell-renderer-bin.h"
+#include "gdaui-resources.h"
 
 /* plugins list */
 
@@ -85,6 +86,34 @@ gdaui_init (void)
 	gda_init ();
 	if (! gdaui_plugins_hash)
 		gdaui_plugins_hash = init_plugins_hash ();
+
+	/* initialize CSS */
+	GBytes *css_data;
+	GError *error = NULL;
+	_gdaui_register_resource ();
+	css_data = g_resources_lookup_data ("/gdaui/gdaui.css", G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+	if (css_data) {
+		GtkCssProvider *css_provider;
+		css_provider = gtk_css_provider_new ();
+		if (gtk_css_provider_load_from_data (css_provider,
+						       (gchar*) g_bytes_get_data (css_data, NULL), -1,
+						       &error))
+			gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+								   GTK_STYLE_PROVIDER (css_provider),
+								   G_MAXUINT);
+		else {
+			g_warning ("Could not parse resource CSS data: %s",
+				   error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+		g_object_unref (css_provider);
+	}
+	else {
+		g_warning ("Could not load resource CSS data: %s",
+			   error && error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
+	_gdaui_unregister_resource ();
 
 	initialized = TRUE;
 }

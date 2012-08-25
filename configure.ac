@@ -42,7 +42,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],[2.28.0])
+m4_define([req_ver_glib],[2.32.0])
 
 #
 # Making releases:
@@ -131,9 +131,10 @@ fi
 AM_CONDITIONAL(HAVE_GDU, test x$have_gdu != xno)
 
 dnl ******************************
-dnl glib-genmarshal
+dnl glib utilities
 dnl ******************************
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
 
 dnl ******************************
 dnl Translations

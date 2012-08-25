@@ -76,7 +76,6 @@ enum {
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
-static GtkCssProvider *css_provider = NULL;
 
 /*
  * GdauiCombo class implementation
@@ -166,18 +165,6 @@ gdaui_combo_init (GdauiCombo *combo, G_GNUC_UNUSED GdauiComboClass *klass)
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 0);
 	combo->priv->changed_id = g_signal_connect (combo, "changed",
 						    G_CALLBACK (selection_changed_cb), NULL);
-
-	if (!css_provider) {
-		css_provider = gtk_css_provider_new ();
-		gtk_css_provider_load_from_data (css_provider,
-						 "#gdaui-combo-as-list {\n"
-						 "-GtkComboBox-appears-as-list : 1;\n"
-						 "-GtkComboBox-arrow-size : 5}",
-						 -1, NULL);
-	}
-	gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) combo),
-					GTK_STYLE_PROVIDER (css_provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
 static void
@@ -224,10 +211,16 @@ gdaui_combo_set_property (GObject *object,
 				       0, NULL);
 		break;
 	case PROP_AS_LIST: {
-		if (g_value_get_boolean (value))
-			gtk_widget_set_name ((GtkWidget*) combo, "gdaui-combo-as-list");
-		else
-			gtk_widget_set_name ((GtkWidget*) combo, NULL);
+		GtkStyleContext *style;
+		style = gtk_widget_get_style_context (GTK_WIDGET (combo));
+		if (g_value_get_boolean (value)) {
+			gtk_style_context_remove_class (style, "gdaui-combo-normal");
+			gtk_style_context_add_class (style, "gdaui-combo-as-list");
+		}
+		else {
+			gtk_style_context_remove_class (style, "gdaui-combo-as-list");
+			gtk_style_context_add_class (style, "gdaui-combo-normal");
+		}
 		break;
 	}
 	default :

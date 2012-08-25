@@ -119,6 +119,7 @@ do_ddl_queries (GtkWidget *do_widget)
 		gtk_widget_set_size_request (sw, 600, 450);
 		gtk_grid_attach (GTK_GRID (grid), sw, 0, 4, 2, 1);
 		vp = gtk_viewport_new (NULL, NULL);
+		gtk_widget_set_name (vp, "gdaui-transparent-background");
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 		gtk_container_add (GTK_CONTAINER (sw), vp);
 		data->op_container = vp;

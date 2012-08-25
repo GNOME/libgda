@@ -7,3 +7,5 @@ gdaui-enum-types.h
 libgdaui.def
 Gdaui-5.0.gir
 Gdaui-5.0.typelib
+gdaui-resources.h
+gdaui-resources.c

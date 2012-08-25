@@ -250,6 +250,7 @@ ui_formgrid_show (GtkWidget *widget)
 			gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw),
 							     GTK_SHADOW_NONE);
 			vp = gtk_viewport_new (NULL, NULL);
+			gtk_widget_set_name (vp, "gdaui-transparent-background");
 			gtk_container_add (GTK_CONTAINER (sw), vp);
 			gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 			gtk_container_add (GTK_CONTAINER (vp), formgrid->priv->raw_form);

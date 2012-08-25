@@ -336,6 +336,7 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	dconsole->priv->params_form_box = gtk_viewport_new (NULL, NULL);
+	gtk_widget_set_name (dconsole->priv->params_form_box, "gdaui-transparent-background");
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (dconsole->priv->params_form_box), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), dconsole->priv->params_form_box);
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
@@ -890,6 +891,7 @@ compose_mode_toggled_cb (G_GNUC_UNUSED GtkToggleAction *action, DataConsole *dco
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 		
 		vp = gtk_viewport_new (NULL, NULL);
+		gtk_widget_set_name (vp, "gdaui-transparent-background");
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 		gtk_container_add (GTK_CONTAINER (sw), vp);
 		

@@ -68,6 +68,8 @@ ui_sources = \
 	gdaui-set.h \
 	gdaui-set.c \
 	gdaui-tree-store.c \
+	gdaui-resources.h \
+	gdaui-resources.c \
 	gdaui-init.c
 
 libgda_ui_5_0_la_SOURCES = \
@@ -108,7 +110,7 @@ s-enum-types-c: @REBUILD@ $(ui_headers) Makefile
 libgda_ui_built_headers = gdaui-enum-types.h
 libgda_ui_built_cfiles = gdaui-enum-types.c
 
-$(OBJECTS) $(libgda_ui_5_0_la_OBJECTS): $(libgda_ui_built_headers) $(libgda_ui_built_cfiles)
+$(OBJECTS) $(libgda_ui_5_0_la_OBJECTS): gdaui-resources.h gdaui-resources.c $(libgda_ui_built_headers) $(libgda_ui_built_cfiles)
 
 libgda_ui_5_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
 	$(NO_UNDEFINED) $(LIBTOOL_UI_EXPORT_OPTIONS)
@@ -152,13 +154,21 @@ CLEANFILES = $(libgda_ui_built_headers) $(libgda_ui_built_cfiles) \
 	gdaui-enum-types.c \
 	s-enum-types-c \
 	libgda-ui.def \
-	libgda-ui-$(GDA_ABI_VERSION).lib
+	libgda-ui-$(GDA_ABI_VERSION).lib \
+	gdaui-resources.h \
+	gdaui-resources.c
 
 DTD_FILES = gdaui-layout.dtd
 dtddir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/dtd
 dtd_DATA=$(DTD_FILES)
 
-EXTRA_DIST = $(DTD_FILES) libgda-ui.symbols
+gdaui-resources.h gdaui-resources.c: $(srcdir)/gdaui.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gdaui.gresource.xml)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name _gdaui --manual-register $<
+
+EXTRA_DIST = $(DTD_FILES) \
+	libgda-ui.symbols \
+	gdaui.css \
+	gdaui.gresource.xml
 
 if ENABLE_GDAUI_GI
 -include $(INTROSPECTION_MAKEFILE)

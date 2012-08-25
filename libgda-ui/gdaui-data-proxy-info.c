@@ -77,7 +77,6 @@ struct _GdauiDataProxyInfoPriv
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
-static GtkCssProvider *css_provider = NULL;
 
 /* properties */
 enum {
@@ -467,15 +466,6 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 	GtkWidget *wid;
 	GdauiDataProxyInfoFlag flags = info->priv->flags;
 
-	if (!css_provider) {
-		css_provider = gtk_css_provider_new ();
-		gtk_css_provider_load_from_data (css_provider,
-						 "* {\n"
-						 "-GtkToolbar-shadow-type : none;\n"
-						 "-GtkSpinButton-shadow-type : none}",
-						 -1, NULL);
-        }
-
 	if (! info->priv->data_proxy)
 		return;
 
@@ -552,9 +542,6 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 	g_object_ref_sink (info->priv->buttons_bar);
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_MENU);
 	g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
-	gtk_style_context_add_provider (gtk_widget_get_style_context (info->priv->buttons_bar),
-					GTK_STYLE_PROVIDER (css_provider),
-					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 	gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
 	gtk_widget_show (info->priv->buttons_bar);
 
@@ -590,9 +577,6 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 			wid = gtk_spin_button_new_with_range (0, 1, 1);
 
 			gtk_widget_override_font (wid, fdc);
-			gtk_style_context_add_provider (gtk_widget_get_style_context (wid),
-							GTK_STYLE_PROVIDER (css_provider),
-							GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 			gtk_spin_button_set_digits (GTK_SPIN_BUTTON (wid), 0);
 			gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (wid), TRUE);
 			gtk_box_pack_start (GTK_BOX (toolwid), wid, FALSE, TRUE, 2);
