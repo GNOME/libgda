@@ -368,6 +368,10 @@ add_found_files_to_nsh core share/libgda-5.0/language-specs
 add_all_files_to_zip $archive_ext "${depend_path}" share/gtksourceview-3.0/language-specs
 add_found_files_to_nsh core share/gtksourceview-3.0/language-specs
 
+files=(gschemas.compiled)
+add_files_to_zip $archive_ext "${depend_path}" share/glib-2.0/schemas $files
+add_found_files_to_nsh core share/glib-2.0/schemas
+
 files=(bdb_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-5.0 $files
 add_found_files_to_nsh prov_bdb share/libgda-5.0
