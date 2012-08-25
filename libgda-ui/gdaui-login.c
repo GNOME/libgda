@@ -390,25 +390,30 @@ radio_button_use_dsn_toggled_cb (GtkToggleButton *button, GdauiLogin *login)
 static void
 run_cc_cb (G_GNUC_UNUSED GtkButton *button, GdauiLogin *login)
 {
+	gboolean sresult = FALSE;
+	GError *lerror = NULL;
+	gchar *cmd;
+
+	/* run gda-control-center tool */
+#ifdef G_OS_WIN32
+#define EXENAME "gda-control-center-" GDA_ABI_VERSION ".exe"
+	gchar *argv[] = {EXENAME, NULL};
+	cmd = gda_gbr_get_file_path (GDA_BIN_DIR, NULL);
+	sresult = g_spawn_async (cmd, argv, NULL, 0, NULL, NULL, NULL, &lerror);
+	g_free (cmd);
+#else
+#define EXENAME "gda-control-center-" GDA_ABI_VERSION
 	GAppInfo *appinfo;
 	GdkAppLaunchContext *context;
 	GdkScreen *screen;
-	gboolean sresult;
-	GError *lerror = NULL;
-	gchar *cmd;
-	
-#ifdef G_OS_WIN32
-#define EXENAME "gda-control-center-" GDA_ABI_VERSION ".exe"
-#else
-#define EXENAME "gda-control-center-" GDA_ABI_VERSION
-#endif
-	/* run gnome-database-properties tool */
 	cmd = gda_gbr_get_file_path (GDA_BIN_DIR, (char *) EXENAME, NULL);
 	appinfo = g_app_info_create_from_commandline (cmd,
-						      "Gda Control center",
+						      NULL,
 						      G_APP_INFO_CREATE_NONE,
-						      NULL);
+						      &lerror);
 	g_free (cmd);
+	if (!appinfo)
+		goto checkerror;
 
 	screen = gtk_widget_get_screen (GTK_WIDGET (login));
 	context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
@@ -417,14 +422,20 @@ run_cc_cb (G_GNUC_UNUSED GtkButton *button, GdauiLogin *login)
 	if (! sresult) {
 		g_object_unref (appinfo);
 		appinfo = g_app_info_create_from_commandline (EXENAME,
-							      "Gda Control center",
+							      NULL,
 							      G_APP_INFO_CREATE_NONE,
 							      NULL);
+		if (!appinfo) {
+			g_object_unref (context);
+			goto checkerror;
+		}
 		sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), &lerror);
 	}
 	g_object_unref (context);
 	g_object_unref (appinfo);
+#endif /* G_OS_WIN32 */
 
+ checkerror:
 	if (!sresult) {
 		GtkWidget *msgdialog;
 		GtkWidget *toplevel = gtk_widget_get_toplevel (GTK_WIDGET (login));
