@@ -243,39 +243,22 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 		break;
 		case BROWSE_BUTTON:
 		{
-			GAppInfo *appinfo;
-			GdkAppLaunchContext *context;
-			GdkScreen *screen;
-			gboolean sresult;
+			gboolean sresult = FALSE;
 			GError *lerror = NULL;
 			gchar *cmd;
+
+			/* run the gda-browser tool */
 #ifdef G_OS_WIN32
 #define EXENAME "gda-browser-" GDA_ABI_VERSION ".exe"
 #else
 #define EXENAME "gda-browser-" GDA_ABI_VERSION
 #endif
-			/* run the gda-browser tool */
-			cmd = gda_gbr_get_file_path (GDA_BIN_DIR, (char *) EXENAME, NULL);
-			appinfo = g_app_info_create_from_commandline (cmd,
-								      "Gda browser",
-								      G_APP_INFO_CREATE_NONE,
-								      NULL);
+			gchar *argv[] = {EXENAME, NULL, NULL};
+			argv[1] = g_strdup (dsn);
+			cmd = gda_gbr_get_file_path (GDA_BIN_DIR, NULL);
+			sresult = g_spawn_async (cmd, argv, NULL, 0, NULL, NULL, NULL, &lerror);
+			g_free (argv[1]);
 			g_free (cmd);
-			
-			screen = gtk_widget_get_screen (GTK_WIDGET (parent));
-			context = gdk_display_get_app_launch_context (gdk_screen_get_display (screen));
-			gdk_app_launch_context_set_screen (context, screen);
-			sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), NULL);
-			if (! sresult) {
-				g_object_unref (appinfo);
-				appinfo = g_app_info_create_from_commandline (EXENAME,
-									      "Gda Control center",
-									      G_APP_INFO_CREATE_NONE,
-									      NULL);
-				sresult = g_app_info_launch (appinfo, NULL, G_APP_LAUNCH_CONTEXT (context), &lerror);
-			}
-			g_object_unref (context);
-			g_object_unref (appinfo);
 
 			if (!sresult) {
 				GtkWidget *msgdialog;
