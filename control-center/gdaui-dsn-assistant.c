@@ -265,8 +265,11 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
 		assistant->priv->create_db_op = op;
 		gtk_widget_set_sensitive (assistant->priv->choose_toggle, TRUE);
 	}
-	else
+	else {
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (assistant->priv->choose_toggle),
+					      FALSE);
 		gtk_widget_set_sensitive (assistant->priv->choose_toggle, FALSE);
+	}
 
 	/* dsn spec for the selected provider */
 	provider = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider));
@@ -413,7 +416,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	/* global assistant settings */
 	assist = GTK_ASSISTANT (assistant);
 	gtk_window_set_title (GTK_WINDOW (assist), _("New data source definition"));
-	gtk_container_set_border_width (GTK_CONTAINER (assist), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (assist), 0);
 	g_signal_connect (assist, "cancel", G_CALLBACK (assistant_cancelled_cb), NULL);
 	g_signal_connect (assist, "apply", G_CALLBACK (assistant_applied_cb), NULL);
 	gtk_assistant_set_forward_page_func (assist, (GtkAssistantPageFunc) forward_page_function, 
@@ -449,7 +452,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	grid = gtk_grid_new ();
 	gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 0);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 3);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
@@ -521,7 +524,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	grid = gtk_grid_new ();
 	gtk_box_pack_start (GTK_BOX (vbox), grid, FALSE, FALSE, 0);
-	gtk_container_set_border_width (GTK_CONTAINER (grid), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 0);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 3);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
@@ -549,7 +552,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 * New database information page
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
@@ -597,7 +600,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 * provider parameters to open connection page 
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
@@ -622,7 +625,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 * authentication page 
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
@@ -645,7 +648,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	 * end page 
 	 */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
-	gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
+	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label),
