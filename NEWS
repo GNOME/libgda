@@ -1,3 +1,27 @@
+libgda 5.1.1, 2012-08-26
+
+ - Asynchronous statement execution improvements
+ - Added the GDA_STATEMENT_MODEL_OFFLINE flag to specify that resulting data model
+   must be readable without requiring a server connection
+ - Correctly parse "NOT LIKE" and "NOT ILIKE" expressions, and hexadecimal notations
+ - PostgreSQL: added the "CONNECT_TIMEOUT" option
+ - Use Libsecret instead of Libgnome-keyring if available
+ - Many other small corrections, code cleanups and deprecated functions removal
+ - Windows: many code & packaging corrections
+ - Many code cleanups to switch to GTK3's features
+ - Bugs corrected: #676239, #669801, #680311, #680820, #680639
+ - Translations:
+        - de (Christian Kirbach)
+        - el (Dimitris Spingos, Tom Tryfonidis)
+        - es (Daniel Mustieles)
+        - gl (Fran Diéguez)
+        - id (Andika Triwidada)
+        - it (Marco Ciampa)
+        - nb (Kjartan Maraas)
+        - ru (Yuri Myasoedov)
+        - sl (Martin Srebotnjak, Matej Urbančič)
+        - zh_CN (Wylmer Wang)
+
 libgda 5.1.0, 2012-05-05
 
  - Many Vala bindings improvements, thanks to Daniel Espinosa
