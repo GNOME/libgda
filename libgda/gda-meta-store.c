@@ -2250,23 +2250,25 @@ complement_db_objects (GSList *objects, G_GNUC_UNUSED GHashTable *hash, GError *
 static void
 db_object_free (DbObject *dbobj)
 {
-	g_free (dbobj->obj_name);
-	if (dbobj->create_op)
-		g_object_unref (dbobj->create_op);
-	if (dbobj->depend_list)
-		g_slist_free (dbobj->depend_list);
-	switch (dbobj->obj_type) {
-	case GDA_SERVER_OPERATION_CREATE_TABLE:
-		table_info_free_contents (TABLE_INFO (dbobj));
-		break;
-	case GDA_SERVER_OPERATION_CREATE_VIEW:
-		view_info_free_contents (VIEW_INFO (dbobj));
-		break;
-	default:
-		TO_IMPLEMENT;
-		break;
+	if (dbobj) {
+		g_free (dbobj->obj_name);
+		if (dbobj->create_op)
+			g_object_unref (dbobj->create_op);
+		if (dbobj->depend_list)
+			g_slist_free (dbobj->depend_list);
+		switch (dbobj->obj_type) {
+		case GDA_SERVER_OPERATION_CREATE_TABLE:
+			table_info_free_contents (TABLE_INFO (dbobj));
+			break;
+		case GDA_SERVER_OPERATION_CREATE_VIEW:
+			view_info_free_contents (VIEW_INFO (dbobj));
+			break;
+		default:
+			TO_IMPLEMENT;
+			break;
+		}
+		g_free (dbobj);
 	}
-	g_free (dbobj);
 }
 
 static void

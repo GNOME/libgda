@@ -1695,19 +1695,23 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			*/
 		}
 		else {
-			gchar *str;
 			GdaDataHandler *data_handler =
 				gda_server_provider_get_data_handler_g_type (provider, cnc, 
 									     G_VALUE_TYPE (value));
 			if (data_handler == NULL) {
 				/* there is an error here */
+				gchar *str;
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
+				str = g_strdup_printf (_("Unhandled data type '%s'"),
+						       gda_g_type_to_string (G_VALUE_TYPE (value)));
 				gda_connection_event_set_description (event, str);
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR, "%s", str);
+				g_free (str);
 				break;
 			}
 			else {
+				gchar *str;
 				short *flag0 = g_new0 (short, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, flag0);
 				

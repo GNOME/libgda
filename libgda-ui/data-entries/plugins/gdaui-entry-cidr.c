@@ -332,7 +332,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 			gdaui_entry_set_text (GDAUI_ENTRY (mgcidr->priv->entry), NULL);
 		else {
 			SplitValues *svalues;
-			gchar *str, *ptr, *tok;
+			gchar *str, *ptr, *tok = NULL;
 			gint i=1;
 			str = g_strdup (g_value_get_string ((GValue *) value));
 

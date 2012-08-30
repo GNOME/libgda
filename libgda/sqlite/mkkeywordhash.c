@@ -155,7 +155,7 @@ parse_input (const char *filename)
 {
 #define BUFSIZE 500
 	FILE *stream;
-        char buffer[BUFSIZE];
+        char buffer[BUFSIZE+1];
         int read;
         char *end;
 
@@ -169,6 +169,7 @@ parse_input (const char *filename)
 	memset (aKeywordTable, 0, sizeof (Keyword) * MAXKEYWORDS);
         read = fread (buffer, 1, BUFSIZE, stream);
         end = buffer + read;
+	*end = 0;
         while (read > 0) {
 		char *ptr;
 

@@ -1083,7 +1083,7 @@ gda_jdbc_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 	/* prepare @stmt using the C API, creates @ps */
 	GValue *pstmt_obj;
 	JNIEnv *jenv = NULL;
-	gboolean jni_detach;
+	gboolean jni_detach = FALSE;
 	jstring jsql;
 	
 	jenv = _gda_jdbc_get_jenv (&jni_detach, error);

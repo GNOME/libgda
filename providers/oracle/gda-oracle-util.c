@@ -44,7 +44,7 @@ _gda_oracle_make_error (GdaConnection *cnc, dvoid *hndlp, ub4 type, const gchar 
 {
 	GdaConnectionEvent *error = NULL;
 	gchar errbuf[512];
-	ub4 errcode;
+	ub4 errcode = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 	gchar *source;
 
 	if (hndlp != NULL) {

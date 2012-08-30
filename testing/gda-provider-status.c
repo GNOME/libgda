@@ -106,7 +106,7 @@ main (int argc, char *argv[])
 
 				cvalue = gda_data_model_get_value_at (providers, 0, i, &error);
 				if (!cvalue) 
-					g_error ("Can't load the '%s' provider: %s\n", pname,
+					g_error ("Can't load next provider: %s\n",
 						 error && error->message ? error->message : "No detail");
 				pname = g_value_get_string (cvalue);
 				prov = gda_config_get_provider (pname, &error);

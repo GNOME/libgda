@@ -728,7 +728,7 @@ _gda_postgres_meta_el_types (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 			     const GValue *specific_name)
 {
 	const gchar *cstr;
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	gboolean retval;
 	GdaPostgresReuseable *rdata;
 

@@ -202,9 +202,9 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 
 	/* create new widget */	
 	GdaSet *dset;
-	GtkWidget *wid;	
 	dset = gda_set_copy (pinfo->dsn_params);
 	if (dset) {
+		GtkWidget *wid;	
 		spec->priv->type = PROVIDER_FORM;
 		
 		wid = gdaui_basic_form_new (dset);
@@ -221,10 +221,10 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 		update_form_contents (spec);
 		g_signal_connect (G_OBJECT (wid), "holder-changed",
 				  G_CALLBACK (dsn_form_changed), spec);
-	}
 	
-	gtk_widget_show (wid);
-	gtk_container_add (GTK_CONTAINER (spec), wid);
+		gtk_widget_show (wid);
+		gtk_container_add (GTK_CONTAINER (spec), wid);
+	}
 }
 
 

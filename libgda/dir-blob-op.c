@@ -256,6 +256,7 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 			tmp_written = fwrite ((char *) (bin->data), sizeof (guchar), bin->binary_length, file);
 			if (tmp_written < bin->binary_length) {
 				/* error writing stream */
+				fclose (file);
 				gda_blob_free ((gpointer) tmpblob);
 				return -1;
 			}
