@@ -475,7 +475,7 @@ gda_jdbc_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 		return FALSE;
 
 	if (! cdata->server_version && cdata->jcnc_obj) {
-		JNIEnv *jenv;
+		JNIEnv *jenv = NULL;
 		gboolean jni_detach;
 		GError *error = NULL;
 
@@ -1077,12 +1077,13 @@ gda_jdbc_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
                 return FALSE;
         sql = gda_jdbc_provider_statement_to_sql (provider, cnc, stmt, params, GDA_STATEMENT_SQL_PARAMS_AS_UQMARK,
 						  &used_params, error);
+
+	JNIEnv *jenv = NULL;
         if (!sql)
 		goto out;
 
 	/* prepare @stmt using the C API, creates @ps */
 	GValue *pstmt_obj;
-	JNIEnv *jenv = NULL;
 	gboolean jni_detach = FALSE;
 	jstring jsql;
 	
@@ -1783,7 +1784,7 @@ gda_jdbc_free_cnc_data (JdbcConnectionData *cdata)
 
 	if (cdata->jcnc_obj) {
 		/* force the connection to be closed */
-		JNIEnv *jenv;
+		JNIEnv *jenv = NULL;
 		gboolean jni_detach;
 		GError *error = NULL;
 
