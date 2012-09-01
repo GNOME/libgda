@@ -657,7 +657,6 @@ browser_connection_set_property (GObject *object,
 
 
 			/* meta store, open it in a sub thread to avoid locking the GTK thread */
-			gpointer retval;
 			GError *lerror = NULL;
 			guint jid;
 			jid = gda_thread_wrapper_execute (bcnc->priv->wrapper,

@@ -302,10 +302,6 @@ browser_canvas_text_get_property    (GObject *object,
 				    G_GNUC_UNUSED GValue *value,
 				    GParamSpec *pspec)
 {
-	BrowserCanvasText *ct;
-
-	ct = BROWSER_CANVAS_TEXT (object);
-
 	switch (param_id) {
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
