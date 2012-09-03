@@ -276,35 +276,41 @@ server_callback (G_GNUC_UNUSED SoupServer *server, SoupMessage *msg,
 		gchar **array = NULL;
 		array = g_strsplit (path, "/", 0);
 		
-		const ConnectionSetting *cs;
-		cs = gda_sql_get_connection (array[0]);
+		if (array) {
+			const ConnectionSetting *cs;
+			cs = gda_sql_get_connection (array[0]);
 		
-		if (cs) {
-			if (msg->method == SOUP_METHOD_GET) {
-				ok = get_for_cnc (webserver, msg, cs, array[1] ? &(array[1]) : NULL, &error);
+			if (cs) {
+				if (msg->method == SOUP_METHOD_GET) {
+					ok = get_for_cnc (webserver, msg, cs, array[1] ? &(array[1]) : NULL, &error);
+					done = TRUE;
+				}
+			}
+			else if (!strcmp (path, "~console")) {
+				get_for_console (webserver, msg);
 				done = TRUE;
 			}
-		}
-		else if (!strcmp (path, "~console")) {
-			get_for_console (webserver, msg);
-			done = TRUE;
-		}
-		else if (!strcmp (path, "~irb")) {
-			ok = get_post_for_irb (webserver, msg, cs, query, &error);
-			done = TRUE;
-		}
-		else if (!strcmp (path, "~cnclist")) {
-			get_for_cnclist (webserver, msg, !auth_needed);
-			done = TRUE;
+			else if (!strcmp (path, "~irb")) {
+				ok = get_post_for_irb (webserver, msg, cs, query, &error);
+				done = TRUE;
+			}
+			else if (!strcmp (path, "~cnclist")) {
+				get_for_cnclist (webserver, msg, !auth_needed);
+				done = TRUE;
+			}
+			else {
+				if (msg->method == SOUP_METHOD_GET) {
+					ok = get_file (webserver, msg, path, &error);
+					done = TRUE;
+				}
+			}
+
+			g_strfreev (array);
 		}
 		else {
-			if (msg->method == SOUP_METHOD_GET) {
-				ok = get_file (webserver, msg, path, &error);
-				done = TRUE;
-			}
+			ok= FALSE;
+			done = TRUE;
 		}
-		if (array)
-			g_strfreev (array);
 	}
 	
 	if (!ok) {

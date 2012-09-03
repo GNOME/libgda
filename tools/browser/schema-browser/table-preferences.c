@@ -785,7 +785,7 @@ options_form_param_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED
 static void
 set_preview_widget (TablePreferences *tpref)
 {
-	GtkWidget *preview;
+	GtkWidget *preview = NULL;
 	GtkTreeIter iter;
 
 	if (!tpref->priv->current_column)

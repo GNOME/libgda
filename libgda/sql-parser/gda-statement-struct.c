@@ -198,10 +198,8 @@ gda_sql_statement_type_to_string (GdaSqlStatementType type)
 {
 	GdaSqlStatementContentsInfo *infos;
 	infos = gda_sql_statement_get_contents_infos (type);
-	if (!infos) {
+	if (!infos)
 		return "NONE";
-		TO_IMPLEMENT;
-	}
 	else
 		return infos->name;
 }

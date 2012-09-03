@@ -27,9 +27,6 @@ static gboolean compute_intersect_rect_line (gdouble rectx1, gdouble recty1, gdo
 static void     compute_text_marks_offsets (gdouble x1, gdouble y1, gdouble x2, gdouble y2,
 					    gdouble *xoff, gdouble *yoff, GooCanvasAnchorType *anchor_type);
 
-static GSList *browser_canvas_util_compute_handle_shapes  (GooCanvasItem *parent, GSList *shapes, gint index,
-							 gdouble x1, gdouble y1, gdouble x2, gdouble y2);
-
 static GSList *browser_canvas_canvas_shape_add_to_list (GSList *list, gchar *swallow_id, GooCanvasItem *item);
 static BrowserCanvasCanvasShape *browser_canvas_canvas_shape_find (GSList *list, const gchar *id);
 
@@ -194,13 +191,6 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 				}
 			}
 			
-			/* handle in the middle */
-			if (with_handle)
-				retval = browser_canvas_util_compute_handle_shapes (parent, retval, i, 
-										  points->coords[2], 
-										  points->coords[3], 
-										  points->coords[4], 
-										  points->coords[5]);
 			goo_canvas_points_unref (points);
 		}
 		else {
@@ -344,13 +334,6 @@ browser_canvas_util_compute_anchor_shapes (GooCanvasItem *parent, GSList *shapes
 				}
 			}
 
-			/* handle in the middle */
-			if (with_handle)
-				retval = browser_canvas_util_compute_handle_shapes (parent, retval, i,
-										  points->coords[0], 
-										  points->coords[1], 
-										  points->coords[2], 
-										  points->coords[3]);
 			goo_canvas_points_unref (points);
 		}
 	}
@@ -670,56 +653,9 @@ browser_canvas_util_compute_connect_shapes (GooCanvasItem *parent, GSList *shape
 			retval = browser_canvas_canvas_shape_add_to_list (retval, id, item);
 		}
 	}
-	
-	
-	/* handle in the middle */
-	/*retval = browser_canvas_util_compute_handle_shapes (parent, retval, nb_connect,
-							  points->coords[2], points->coords[3], 
-							  points->coords[4], points->coords[5]);*/
+
 	goo_canvas_points_unref (points);
 
-	return retval;
-}
-
-/*
- * computes a "handle" in the middle of the 2 points passed as argument*
- * 
- * Warning: the obsolete shapes in @shapes are _not_ removed.
- */
-GSList *
-browser_canvas_util_compute_handle_shapes (GooCanvasItem *parent, GSList *shapes, gint index,
-					 gdouble x1, gdouble y1, gdouble x2, gdouble y2)
-{
-	/* don't add anything... */
-	return shapes;
-
-	GSList *retval = shapes;
-	gdouble x, y, sq = 5.;
-	GooCanvasItem *item;
-	BrowserCanvasCanvasShape *shape;
-	gchar *id;
-
-	/* circle in the middle */
-	x = (x1 + x2) / 2.;
-	y = (y1 + y2) / 2.;
-
-	id = g_strdup_printf ("h%d", index);
-	shape = browser_canvas_canvas_shape_find (retval, id);
-	if (shape) {
-		g_object_set (shape->item, 
-			      "center-x", x, "center-y", y, 
-			      NULL);
-		shape->_used = TRUE;
-		g_free (id);
-	}
-	else {
-		item = goo_canvas_ellipse_new (parent, x, y, sq, sq, 
-					       "fill-color", "black",
-					       "visibility", GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD,
-					       "visibility-threshold", .9, NULL);
-		retval = browser_canvas_canvas_shape_add_to_list (retval, id, item);
-	}
-	
 	return retval;
 }
 

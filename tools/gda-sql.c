@@ -1373,6 +1373,30 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command, Outpu
 }
 
 /*
+ * Check that the @arg string can safely be passed to a shell
+ * to be executed, i.e. it does not contain dangerous things like "rm -rf *"
+ */
+static gboolean
+check_shell_argument (const gchar *arg)
+{
+	const gchar *ptr;
+	g_assert (arg);
+	g_print ("[%s]\n", arg);
+
+	/* check for starting spaces */
+	for (ptr = arg; * ptr && (*ptr == ' '); ptr++);
+	if (!*ptr)
+		return FALSE; /* only spaces is not allowed */
+
+	/* check for the rest */
+	for (; * ptr; ptr++) {
+		if (! isalnum (*ptr) && (*ptr != G_DIR_SEPARATOR))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+/*
  * Change the output file, set to %NULL to be back on stdout
  */
 static gboolean
@@ -1410,12 +1434,22 @@ set_output_file (const gchar *file, GError **error)
 		}
 		else {
 			/* output to a pipe */
-			main_data->output_stream = popen (copy+1, "w");
-			if (!main_data->output_stream) {
+			if (check_shell_argument (copy+1)) {
+				main_data->output_stream = popen (copy+1, "w");
+				if (!main_data->output_stream) {
+					g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+						     _("Can't open pipe '%s': %s"), 
+						     copy,
+						     strerror (errno));
+					g_free (copy);
+					return FALSE;
+				}
+			}
+			else {
 				g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
-					     _("Can't open pipe '%s': %s\n"), 
-					     copy,
-					     strerror (errno));
+					     _("Can't open pipe '%s': %s"),
+					     copy + 1,
+					     "program name must only contain alphanumeric characters");
 				g_free (copy);
 				return FALSE;
 			}
@@ -2161,7 +2195,12 @@ output_string (const gchar *str)
 		pager = getenv ("PAGER");
 		if (!pager)
 			pager = "more";
-		pipe = popen (pager, "w");
+		if (!check_shell_argument (pager)) {
+			g_warning ("Invalid PAGER value: must only contain alphanumeric characters");
+			return;
+		}
+		else
+			pipe = popen (pager, "w");
 #ifndef G_OS_WIN32
 		phandler = signal (SIGPIPE, SIG_IGN);
 #endif
@@ -2593,7 +2632,7 @@ build_internal_commands_list (void)
 	c->args = NULL;
 	c->command_func = (GdaInternalCommandFunc) extra_command_set_output;
 	c->user_data = NULL;
-	c->arguments_delimiter_func = NULL;
+	c->arguments_delimiter_func = args_as_string_func;
 	c->unquote_args = TRUE;
 	c->limit_to_main = TRUE;
 	commands->commands = g_slist_prepend (commands->commands, c);

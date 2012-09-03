@@ -539,8 +539,10 @@ _gda_postgres_meta__enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
+	/*
 	if (rdata->version_float >= 8.3)
-		/*TO_IMPLEMENT*/;
+	        TO_IMPLEMENT;
+	*/
 
 	return TRUE;
 }
@@ -556,8 +558,10 @@ _gda_postgres_meta_enums (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *
 	rdata = GDA_POSTGRES_GET_REUSEABLE_DATA (gda_connection_internal_get_provider_data_error (cnc, error));
 	if (!rdata)
 		return FALSE;
+	/*
 	if (rdata->version_float >= 8.3)
 		TO_IMPLEMENT;
+	*/
 
 	return TRUE;
 }

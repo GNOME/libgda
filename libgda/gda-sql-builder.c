@@ -1662,6 +1662,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 		if (!part) {
 			expr->func->args_list = list;
 			gda_sql_expr_free (expr);
+			va_end (ap);
 			return 0;
 		}
 		list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
@@ -1907,6 +1908,7 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
 	return add_part (builder, (GdaSqlAnyPart *) expr);
 
  cleanups:
+	va_end (ap);
 	gda_sql_expr_free (expr);
 	return 0;
 }

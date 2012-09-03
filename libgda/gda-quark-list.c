@@ -146,10 +146,10 @@ protected_value_xor (ProtectedValue *pvalue, gboolean to_clear)
 					break;
 			}
 #ifdef G_OS_WIN32
-			VirtualUnlock (pvalue->cvalue, sizeof (gchar*) * (i + 1));
+			VirtualUnlock (pvalue->cvalue, sizeof (gchar) * (i + 1));
 #else
 #ifdef USE_MLOCK
-			munlock (pvalue->cvalue, sizeof (gchar*) * (i + 1));
+			munlock (pvalue->cvalue, sizeof (gchar) * (i + 1));
 #endif
 #endif
 			free (pvalue->cvalue);
