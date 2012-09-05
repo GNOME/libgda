@@ -236,8 +236,8 @@ update_display (ObjectsCloud *cloud)
 	g_slist_free (dbo_list);
 
  out:
-	if (default_sd)
-		schemas = g_slist_prepend (schemas, default_sd);
+	/* default_sd can't be NULL here */
+	schemas = g_slist_prepend (schemas, default_sd);
 
 	/* get rid of the SchemaData structures */
 	for (list = schemas; list; list = list->next) {

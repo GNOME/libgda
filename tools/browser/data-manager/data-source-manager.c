@@ -518,7 +518,7 @@ data_source_manager_get_sources_array (DataSourceManager *mgr, G_GNUC_UNUSED GEr
 		import = data_source_get_import (source);
 		if (!import) {
 			if (! array) {
-				array = g_array_new (FALSE, FALSE, sizeof (GArray*));
+				array = g_array_new (FALSE, FALSE, sizeof (gpointer));
 				GArray *subarray = g_array_new (FALSE, FALSE, sizeof (DataSource*));
 				g_array_append_val (array, subarray);
 				g_array_append_val (subarray, source);

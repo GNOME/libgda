@@ -858,21 +858,43 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			GError *lerror = NULL;
 			GObject *retval = NULL;
 			cmde = parse_extra_sql_command (ssql, "DROP", &lerror);
-			if ((cmde != NOT_AN_EXTRA_SQL_COMMAND) && !cmde->other_args) {
+			if (cmde != NOT_AN_EXTRA_SQL_COMMAND) {
 				GdaConnectionEvent *event = NULL;
 				if (cmde) {
-					if (gda_ldap_connection_undeclare_table (GDA_LDAP_CONNECTION (cnc),
-										 cmde->table_name, &lerror))
-						retval = (GObject*) gda_set_new (NULL);
-					else {
+					if (cmde->other_args) {
+						g_set_error (&error, GDA_SQL_PARSER_ERROR,
+							     GDA_SQL_PARSER_SYNTAX_ERROR,
+							     "%s",
+							     _("Too many arguments"));
 						event = gda_connection_point_available_event (cnc,
 											      GDA_CONNECTION_EVENT_ERROR);
-						gda_connection_event_set_description (event, lerror && lerror->message ? 
-										      lerror->message : _("No detail"));
+						gda_connection_event_set_description (event,
+										      lerror->message);
 						gda_connection_add_event (cnc, event);
 						g_propagate_error (error, lerror);
 					}
+					else {
+						if (gda_ldap_connection_undeclare_table (GDA_LDAP_CONNECTION (cnc),
+											 cmde->table_name, &lerror))
+							retval = (GObject*) gda_set_new (NULL);
+						else {
+							event = gda_connection_point_available_event (cnc,
+												      GDA_CONNECTION_EVENT_ERROR);
+							gda_connection_event_set_description (event, lerror && lerror->message ? 
+											      lerror->message : _("No detail"));
+							gda_connection_add_event (cnc, event);
+							g_propagate_error (error, lerror);
+						}
+					}
 					extra_sql_command_free (cmde);
+				}
+				else {
+					event = gda_connection_point_available_event (cnc,
+										      GDA_CONNECTION_EVENT_ERROR);
+					gda_connection_event_set_description (event, lerror && lerror->message ? 
+									      lerror->message : _("No detail"));
+					gda_connection_add_event (cnc, event);
+					g_propagate_error (error, lerror);
 				}
 				gda_connection_internal_statement_executed (cnc, stmt, params, event);
 				g_free (sql);

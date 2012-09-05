@@ -1376,21 +1376,21 @@ compute_prompt (SqlConsole *console, GString *string, gboolean in_command, Outpu
  * Check that the @arg string can safely be passed to a shell
  * to be executed, i.e. it does not contain dangerous things like "rm -rf *"
  */
+// coverity[ +tainted_string_sanitize_content : arg-0 ]
 static gboolean
 check_shell_argument (const gchar *arg)
 {
 	const gchar *ptr;
 	g_assert (arg);
-	g_print ("[%s]\n", arg);
 
 	/* check for starting spaces */
-	for (ptr = arg; * ptr && (*ptr == ' '); ptr++);
+	for (ptr = arg; *ptr == ' '; ptr++);
 	if (!*ptr)
 		return FALSE; /* only spaces is not allowed */
 
 	/* check for the rest */
-	for (; * ptr; ptr++) {
-		if (! isalnum (*ptr) && (*ptr != G_DIR_SEPARATOR))
+	for (; *ptr; ptr++) {
+		if (! g_ascii_isalnum (*ptr) && (*ptr != G_DIR_SEPARATOR))
 			return FALSE;
 	}
 	return TRUE;
