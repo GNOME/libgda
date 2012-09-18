@@ -100,81 +100,94 @@ namespace Check {
 			var iter = itermodel.chop (1);
 			if (!iter.valid)
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			stdout.printf (iter.get ().to_string () + "\n");
-			var name = (string) iter.get().get_value ("name");
-			if (name == "Jhon")
-				stdout.printf ("+++++ PASS\n");
 			else {
-				fails++;
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				stdout.printf (iter.get ().to_string () + "\n");
+				var name = (string) iter.get().get_value ("name");
+				if (name == "Jhon")
+					stdout.printf ("+++++ PASS\n");
+				else {
+					fails++;
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				}
 			}
 			
 			stdout.printf ("Choping to get the 4th to 5th DbRecords...\n");
 			var iter2 = itermodel.chop (3,2);
 			if (!iter2.valid)
-				stdout.printf ("----- FAIL: " + (fails++).to_string () + "\n");
-			
-			stdout.printf ("Iterating over chopped records...\n");
-			int i = 0;
-			while (iter2.valid) {
-				i++;
-				stdout.printf (iter2.get ().to_string () + "\n");
-				var name2 = (string) iter2.get().get_value ("name");
-				if (i==1) {
-					if (name2 != "Jack") {
-						fails++;
-						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-						break;
-					}
-				}
-				if (i==2) {
-					if (name2 != "Elsy") {
-						fails++;
-						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-						break;
-					}
-				}
-				iter2.next ();
-			}
-			if (i!=2) {
-				fails++;
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			else {
+				stdout.printf ("Iterating over chopped records...\n");
+				int i = 0;
+				while (iter2.valid) {
+					i++;
+					stdout.printf (iter2.get ().to_string () + "\n");
+					var name2 = (string) iter2.get().get_value ("name");
+					if (i==1) {
+						if (name2 != "Jack") {
+							fails++;
+							stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+							break;
+						}
+					}
+					if (i==2) {
+						if (name2 != "Elsy") {
+							fails++;
+							stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+							break;
+						}
+					}
+					iter2.next ();
+				}
+				if (i!=2) {
+					fails++;
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				}
+				stdout.printf ("+++++ PASS\n");
 			}
-			stdout.printf ("+++++ PASS\n");
 			
 			stdout.printf ("Choping offset = 7 must fail...\n");
 			var iter3 = itermodel.chop (7);
 			if (iter3.valid)
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (!iter3.next ())
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (fails == 0)
-				stdout.printf ("+++++ PASS\n");
+			else {
+				if (!iter3.next ())
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				if (fails == 0)
+					stdout.printf ("+++++ PASS\n");
+			}
+			
 			stdout.printf ("Choping offset = 6 length = 0 must fail...\n");
 			var iter4 = itermodel.chop (6,0);
 			if (iter4.valid)
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (!iter4.next ())
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (fails == 0)
-				stdout.printf ("+++++ PASS\n");
+			else {
+				if (!iter4.next ())
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				if (fails == 0)
+					stdout.printf ("+++++ PASS\n");
+			}
 			
 			stdout.printf ("Choping offset = 5 length = 1...\n");
 			var iter5 = itermodel.chop (5,1);
 			if (!iter5.valid)
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (iter5.next ())
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			if (fails == 0)
-				stdout.printf ("+++++ PASS\n");
+			else {
+				if (iter5.next ())
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				if (fails == 0)
+					stdout.printf ("+++++ PASS\n");
+			}
+			
 			stdout.printf ("Choping offset = 3 length = 1...\n");
 			var iter6 = itermodel.chop (3,2);
 			if (!iter6.valid)
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			var tr = iter6.get().get_value ("name");
-			if (tr==null)
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-
+			else {
+				var tr = iter6.get().get_value ("name");
+				if (tr==null)
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			}
+			
 			if (fails == 0)
 				stdout.printf ("+++++ PASS: " + "\n");
 			return fails;

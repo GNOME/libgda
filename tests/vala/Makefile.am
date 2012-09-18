@@ -15,17 +15,7 @@ TESTS_ENVIRONMENT =
 TESTS = check_dataobject check_datamodeliterator check_table
 check_PROGRAMS = check_dataobject check_datamodeliterator check_table
 
-BUILT_SOURCES = \
-    check_dataobject.vala.stamp \
-    check_datamodeliterator.vala.stamp \
-    check_table.vala.stamp \
-    $(NULL)
-
-CLEANFILES = \
-    check_dataobject.vala.stamp \
-    check_datamodeliterator.vala.stamp \
-    check_table.vala.stamp \
-    $(NULL)
+CLEANFILES =
 
 VALAFLAGS = \
     --pkg gee-0.8 \

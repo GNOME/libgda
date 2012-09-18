@@ -23,7 +23,7 @@ dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  US
 # See http://live.gnome.org/Vala/UpstreamGuide for detailed documentation
 AC_DEFUN([VAPIGEN_CHECK],
 [
-  AC_BEFORE([GOBJECT_INTROSPECTION_CHECK],[$0])
+  AC_REQUIRE([GOBJECT_INTROSPECTION_CHECK])
   AC_REQUIRE([PKG_PROG_PKG_CONFIG])
   AC_REQUIRE([AM_PROG_VALAC])
   

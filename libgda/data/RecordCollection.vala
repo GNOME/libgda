@@ -131,6 +131,11 @@ namespace GdaData {
 				return _model.get_n_rows ();
 			} 
 		}
+		// Traversable interface
+		public Gee.Iterator<DbRecord> chop (int offset, int length = -1) 
+		{
+			return this.iterator ().chop (offset, length);
+		}
 		// 
 		public string to_string ()
 		{
