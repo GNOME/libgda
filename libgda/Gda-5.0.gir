@@ -1997,6 +1997,11 @@ The execution failure of any statement has no impact on the execution of other s
 the connection has a transaction started and the failure invalidates the transaction (as decided by the database
 server).
 
+Note that for asynchronous calls to succeed, it is gererally necessary to specify the
+%GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flag when opening the connection to be sure it is opened in a separate thread
+in which asynchronous calls are made (failing to use this flag make the asynchronous call dependant on the database
+provider implementation and at the moment none support this feature).
+
 but any other error)</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">a task ID, or 0 if an error occurred (not an error regarding @stmt itself as its execution has not yet started</doc>
@@ -3333,6 +3338,15 @@ The equivalent SQL command is: UPDATE &amp;lt;table&amp;gt; SET &amp;lt;column_n
 be fetched using gda_connection_get_events().</doc>
         <type name="gint"/>
       </property>
+      <property name="execution-slowdown"
+                version="5.2.0"
+                writable="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Artificially slows down the execution of queries. This property can be used to
+debug some problems. If non zero, this value is the number of microseconds waited before actually
+executing each query.</doc>
+        <type name="guint"/>
+      </property>
       <property name="execution-timer"
                 version="4.2.9"
                 writable="1"
@@ -3648,8 +3662,10 @@ This function should not be called directly</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="description" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a description.</doc>
+          <parameter name="description"
+                     transfer-ownership="none"
+                     allow-none="1">
+            <doc xml:whitespace="preserve">a description, or %NULL (to unset current description if any)</doc>
             <type name="utf8" c:type="gchar*"/>
           </parameter>
         </parameters>
@@ -7504,235 +7520,6 @@ row it was on was the last one).</doc>
             c:type="GdaDataModelIterPrivate"
             disguised="1">
     </record>
-    <class name="DataModelLdap"
-           c:symbol-prefix="data_model_ldap"
-           c:type="GdaDataModelLdap"
-           parent="GObject.Object"
-           glib:type-name="GdaDataModelLdap"
-           glib:get-type="gda_data_model_ldap_get_type"
-           glib:type-struct="DataModelLdapClass">
-      <implements name="DataModel"/>
-      <constructor name="new_with_config"
-                   c:identifier="gda_data_model_ldap_new_with_config"
-                   version="5.2">
-        <doc xml:whitespace="preserve">Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
-contain one row for each LDAP entry returned by the search, and will
-always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
-may be mapped to other columns, see the @attributes argument.
-
-Note that the actual LDAP search command is not executed until necessary (when using the returned
-data model).
-
-The @base_dn is the point in the LDAP's DIT (Directory Information Tree) from where the search will
-occur, for example "dc=gda,dc=org". A %NULL value indicates that the starting point for the
-search will be the one specified when opening the LDAP connection.
-
-The @filter argument is a valid LDAP filter string, for example "(uidNumber=1001)". If %NULL, then
-a default search filter of "(objectClass=*)" will be used.
-
-@attributes specifies which LDAP attributes the search must return. It is a comma separated list
-of attribute names, for example "uidNumber, mail, uid, jpegPhoto" (spaces between attribute names
-are ignored). If %NULL, then no attribute will be fetched. See gda_ldap_connection_declare_table()
-for more information about this argument.
-
-@scope is the scope of search specified when the LDAP search is actually executed.
-
-In case of multi valued attributes, an error will be returned when trying to read the attribute:
-gda_data_model_iter_get_value_at() will return %NULL when using an iterator.
-
-This is a convenience function intended to be used by bindings.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaDataModelLdap object</doc>
-          <type name="DataModelLdap" c:type="GdaDataModelLdap*"/>
-        </return-value>
-        <parameters>
-          <parameter name="cnc" transfer-ownership="none">
-            <doc xml:whitespace="preserve">an LDAP opened connection (must be a balid #GdaLdapConnection)</doc>
-            <type name="Connection" c:type="GdaConnection*"/>
-          </parameter>
-          <parameter name="base_dn" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">the base DN to search on, or %NULL</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="filter" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">an LDAP filter, for example "(objectClass=*)"</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="attributes"
-                     transfer-ownership="none"
-                     allow-none="1">
-            <doc xml:whitespace="preserve">the list (CSV format) of attributes to fetch, each in the format &amp;lt;attname&amp;gt;[::&amp;lt;GType&amp;gt;]</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="scope" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the search scope</doc>
-            <type name="LdapSearchScope" c:type="GdaLdapSearchScope"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <function name="compute_columns"
-                c:identifier="gda_data_model_ldap_compute_columns"
-                version="4.2.8">
-        <doc xml:whitespace="preserve">Computes the #GdaColumn of the data model which would be created using @attributes when calling
-gda_data_model_ldap_new().</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a list of #GdaColumn objects</doc>
-          <type name="GLib.List" c:type="GList*">
-            <type name="Column"/>
-          </type>
-        </return-value>
-        <parameters>
-          <parameter name="cnc" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a #GdaConnection</doc>
-            <type name="Connection" c:type="GdaConnection*"/>
-          </parameter>
-          <parameter name="attributes"
-                     transfer-ownership="none"
-                     allow-none="1">
-            <doc xml:whitespace="preserve">a string describing which LDAP attributes to retreive, or %NULL</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-        </parameters>
-      </function>
-      <function name="new"
-                c:identifier="gda_data_model_ldap_new"
-                version="4.2.8"
-                deprecated="use #gda_data_model_ldap_new_with_config"
-                deprecated-version="5.2">
-        <doc xml:whitespace="preserve">Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
-contain one row for each LDAP entry returned by the search, and will
-always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
-may be mapped to other columns, see the @attributes argument.
-
-Note that the actual LDAP search command is not executed until necessary (when using the returned
-data model).
-
-The @base_dn is the point in the LDAP's DIT (Directory Information Tree) from where the search will
-occur, for example "dc=gda,dc=org". A %NULL value indicates that the starting point for the
-search will be the one specified when opening the LDAP connection.
-
-The @filter argument is a valid LDAP filter string, for example "(uidNumber=1001)". If %NULL, then
-a default search filter of "(objectClass=*)" will be used.
-
-@attributes specifies which LDAP attributes the search must return. It is a comma separated list
-of attribute names, for example "uidNumber, mail, uid, jpegPhoto" (spaces between attribute names
-are ignored). If %NULL, then no attribute will be fetched. See gda_ldap_connection_declare_table()
-for more information about this argument.
-
-@scope is the scope of search specified when the LDAP search is actually executed.
-
-In case of multi valued attributes, an error will be returned when trying to read the attribute:
-gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaDataModel</doc>
-          <type name="DataModel" c:type="GdaDataModel*"/>
-        </return-value>
-        <parameters>
-          <parameter name="cnc" transfer-ownership="none">
-            <doc xml:whitespace="preserve">an LDAP opened connection (must be a balid #GdaLdapConnection)</doc>
-            <type name="Connection" c:type="GdaConnection*"/>
-          </parameter>
-          <parameter name="base_dn" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">the base DN to search on, or %NULL</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="filter" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">an LDAP filter, for example "(objectClass=*)"</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="attributes"
-                     transfer-ownership="none"
-                     allow-none="1">
-            <doc xml:whitespace="preserve">the list (CSV format) of attributes to fetch, each in the format &amp;lt;attname&amp;gt;[::&amp;lt;GType&amp;gt;]</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-          <parameter name="scope" transfer-ownership="none">
-            <doc xml:whitespace="preserve">the search scope</doc>
-            <type name="LdapSearchScope" c:type="GdaLdapSearchScope"/>
-          </parameter>
-        </parameters>
-      </function>
-      <property name="attributes"
-                readable="0"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="utf8"/>
-      </property>
-      <property name="base"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="utf8"/>
-      </property>
-      <property name="cnc"
-                introspectable="0"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type/>
-      </property>
-      <property name="filter"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="utf8"/>
-      </property>
-      <property name="scope"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="gint"/>
-      </property>
-      <property name="use-rdn" writable="1" transfer-ownership="none">
-        <type name="gboolean"/>
-      </property>
-      <field name="object">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv">
-        <type name="DataModelLdapPrivate" c:type="GdaDataModelLdapPrivate*"/>
-      </field>
-    </class>
-    <record name="DataModelLdapClass"
-            c:type="GdaDataModelLdapClass"
-            glib:is-gtype-struct-for="DataModelLdap">
-      <field name="parent_class">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <record name="DataModelLdapPrivate"
-            c:type="GdaDataModelLdapPrivate"
-            disguised="1">
-    </record>
     <class name="DataPivot"
            c:symbol-prefix="data_pivot"
            c:type="GdaDataPivot"
@@ -8084,7 +7871,9 @@ occurs, then it is possible that not all the changes to all the rows have been a
       <method name="cancel_all_changes"
               c:identifier="gda_data_proxy_cancel_all_changes">
         <doc xml:whitespace="preserve">Cancel all the changes stored in the proxy (the @proxy will be reset to its state
-as it was just after creation).</doc>
+as it was just after creation). Note that if there are some cached changes (i.e. not applied
+to the current proxied data model), then these cached changes are not cleared (set the "cache-changes"
+property to %FALSE for this).</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">TRUE if no error occurred</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -8413,6 +8202,22 @@ To remove the chunking of the data to display, simply pass @sample_size the %0 v
           </parameter>
         </parameters>
       </method>
+      <property name="cache-changes"
+                version="5.2"
+                writable="1"
+                transfer-ownership="none">
+        <doc xml:whitespace="preserve">Defines how changes kept in the data proxy are handled when the proxied data model
+is changed (using the "model" property). The default is to silently discard all the
+changes, but if this property is set to %TRUE, then the changes are cached.
+
+If set to %TRUE, each cached change will be re-applied to a newly set proxied data model if
+the change's number of columns match the proxied data model's number of columns and based on:
+&lt;itemizedlist&gt;
+&lt;listitem&gt;&lt;para&gt;the contents of the proxied data model's modified row for updates and deletes&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;the inserts are always kept&lt;/para&gt;&lt;/listitem&gt;
+&lt;/itemizedlist&gt;</doc>
+        <type name="gboolean"/>
+      </property>
       <property name="defer-sync" writable="1" transfer-ownership="none">
         <type name="gboolean"/>
       </property>
@@ -8818,6 +8623,31 @@ if the table used does not have any primary key, then this method will fail</doc
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">a pointer to the #GdaConnection, or %NULL</doc>
           <type name="Connection" c:type="GdaConnection*"/>
+        </return-value>
+      </method>
+      <method name="prepare_for_offline"
+              c:identifier="gda_data_select_prepare_for_offline"
+              version="5.2.0"
+              throws="1">
+        <doc xml:whitespace="preserve">Use this method to make sure all the data contained in the data model are stored on the client
+side (and that no subsquent call to the server will be necessary to access that data), at the cost of
+a higher memory consumption.
+
+This method is useful in the following situations:
+&lt;itemizedlist&gt;
+&lt;listitem&gt;&lt;para&gt;You need to disconnect from the server and continue to use the data in the data model&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;You need to make sure the data in the data model can be used even though the connection to the server may be used for other purposes (for example executing other queries)&lt;/para&gt;&lt;/listitem&gt;
+&lt;/itemizedlist&gt;
+
+Note that this method will fail if:
+&lt;itemizedlist&gt;
+&lt;listitem&gt;&lt;para&gt;the data model contains any blobs (because blobs reading requires acces to the server);
+binary values are Ok, though.&lt;/para&gt;&lt;/listitem&gt;
+&lt;listitem&gt;&lt;para&gt;the data model has been modified since it was created&lt;/para&gt;&lt;/listitem&gt;
+&lt;/itemizedlist&gt;</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:whitespace="preserve">%TRUE if no error occurred</doc>
+          <type name="gboolean" c:type="gboolean"/>
         </return-value>
       </method>
       <method name="rerun"
@@ -10388,14 +10218,6 @@ otherwise.</doc>
     </enumeration>
     <record name="HolderPrivate" c:type="GdaHolderPrivate" disguised="1">
     </record>
-    <enumeration name="LdapSearchScope" c:type="GdaLdapSearchScope">
-      <doc xml:whitespace="preserve">Defines the search scope of an LDAP search command, relative to the base object.</doc>
-      <member name="base" value="1" c:identifier="GDA_LDAP_SEARCH_BASE"/>
-      <member name="onelevel"
-              value="2"
-              c:identifier="GDA_LDAP_SEARCH_ONELEVEL"/>
-      <member name="subtree" value="3" c:identifier="GDA_LDAP_SEARCH_SUBTREE"/>
-    </enumeration>
     <interface name="Lockable"
                c:symbol-prefix="lockable"
                c:type="GdaLockable"
@@ -19150,6 +18972,12 @@ This structure represents the name of a table's field.</doc>
       <member name="ilike"
               value="30"
               c:identifier="GDA_SQL_OPERATOR_TYPE_ILIKE"/>
+      <member name="notlike"
+              value="31"
+              c:identifier="GDA_SQL_OPERATOR_TYPE_NOTLIKE"/>
+      <member name="notilike"
+              value="32"
+              c:identifier="GDA_SQL_OPERATOR_TYPE_NOTILIKE"/>
     </enumeration>
     <class name="SqlParser"
            c:symbol-prefix="sql_parser"
@@ -19490,6 +19318,7 @@ To include variables in the @sql string, see the
     <record name="SqlParserPrivate" c:type="GdaSqlParserPrivate" disguised="1">
     </record>
     <record name="SqlRenderingContext" c:type="GdaSqlRenderingContext">
+      <doc xml:whitespace="preserve">Specifies the context in which a #GdaSqlStatement is being converted to SQL.</doc>
       <field name="flags" writable="1">
         <type name="StatementSqlFlag" c:type="GdaStatementSqlFlag"/>
       </field>
@@ -20792,6 +20621,9 @@ of @stmt have been verified (emitted after gda_statement_check_validity()).</doc
       <member name="allow_noparam"
               value="8"
               c:identifier="GDA_STATEMENT_MODEL_ALLOW_NOPARAM"/>
+      <member name="offline"
+              value="16"
+              c:identifier="GDA_STATEMENT_MODEL_OFFLINE"/>
     </bitfield>
     <record name="StatementPrivate" c:type="GdaStatementPrivate" disguised="1">
     </record>
@@ -22462,65 +22294,6 @@ priority over the GdaTreeMgrColumns:connection property.</doc>
       </field>
     </record>
     <record name="TreeMgrLabelPriv" c:type="GdaTreeMgrLabelPriv" disguised="1">
-    </record>
-    <class name="TreeMgrLdap"
-           c:symbol-prefix="tree_mgr_ldap"
-           c:type="GdaTreeMgrLdap"
-           parent="TreeManager"
-           glib:type-name="GdaTreeMgrLdap"
-           glib:get-type="gda_tree_mgr_ldap_get_type"
-           glib:type-struct="TreeMgrLdapClass">
-      <constructor name="new"
-                   c:identifier="gda_tree_mgr_ldap_new"
-                   version="4.2.8">
-        <doc xml:whitespace="preserve">Creates a new #GdaTreeManager object which will list the children of the LDAP entry which Distinguished name
-is @dn. If @dn is %NULL, then the tree manager will look in the tree itself for an attribute named "dn" and
-use it.</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:whitespace="preserve">a new #GdaTreeManager object</doc>
-          <type name="TreeManager" c:type="GdaTreeManager*"/>
-        </return-value>
-        <parameters>
-          <parameter name="cnc" transfer-ownership="none">
-            <doc xml:whitespace="preserve">a #GdaConnection object</doc>
-            <type name="Connection" c:type="GdaConnection*"/>
-          </parameter>
-          <parameter name="dn" transfer-ownership="none" allow-none="1">
-            <doc xml:whitespace="preserve">an LDAP Distinguished Name or %NULL</doc>
-            <type name="utf8" c:type="gchar*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <property name="connection"
-                introspectable="0"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <doc xml:whitespace="preserve">Defines the #GdaLdapConnection to get information from.</doc>
-        <type/>
-      </property>
-      <property name="dn"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <doc xml:whitespace="preserve">Defines the Distinguised Name of the LDAP entry to list children from</doc>
-        <type name="utf8"/>
-      </property>
-      <field name="object">
-        <type name="TreeManager" c:type="GdaTreeManager"/>
-      </field>
-      <field name="priv">
-        <type name="TreeMgrLdapPriv" c:type="GdaTreeMgrLdapPriv*"/>
-      </field>
-    </class>
-    <record name="TreeMgrLdapClass"
-            c:type="GdaTreeMgrLdapClass"
-            glib:is-gtype-struct-for="TreeMgrLdap">
-      <field name="object_class">
-        <type name="TreeManagerClass" c:type="GdaTreeManagerClass"/>
-      </field>
-    </record>
-    <record name="TreeMgrLdapPriv" c:type="GdaTreeMgrLdapPriv" disguised="1">
     </record>
     <class name="TreeMgrSchemas"
            c:symbol-prefix="tree_mgr_schemas"

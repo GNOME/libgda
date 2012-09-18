@@ -1,19 +1,17 @@
 NULL =
+CLEANFILES = 
 
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" 
 
-BUILT_SOURCES = gdadata.vala.stamp
-CLEANFILES = gdadata.vala.stamp
-
 AM_CFLAGS =\
 	 -Wall\
 	 -g \
 	 -I$(top_srcdir) -I$(srcdir)/.. \
-        -I$(top_builddir) \
-    -I$(top_builddir)/libgda/data \
+     -I$(top_builddir) \
+     -I$(top_builddir)/libgda/data \
     $(COREDEPS_CFLAGS) \
     $(LIBGDA_WFLAGDS) \
     $(LIBGDA_CFLAGS) \
@@ -30,6 +28,9 @@ VALAFLAGS = \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \
     --pkg libgda-5.0 \
+    -C -H libgdadata.h \
+    --gir=GdaData-5.0.gir \
+    --library gdadata-5.0 \
     $(NULL)
 
 object_persistance_sources = \
@@ -68,8 +69,7 @@ libgdadata_5_0_la_VALASOURCES = \
 	$(NULL)
 
 libgdadata_5_0_la_SOURCES = \
-	gdadata.vala.stamp \
-	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
+	$(libgdadata_5_0_la_VALASOURCES) \
 	$(NULL)	
 
 vapi: gdadata-5.0.vapi
@@ -77,9 +77,7 @@ vapi: gdadata-5.0.vapi
 vapidir = $(VAPIDIR)
 vapi_DATA = gdadata-5.0.vapi
 
-gdadata-5.0.vapi gdadata.vala.stamp GdaData-5.0.gir: $(libgdadata_5_0_la_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -C -H libgdadata.h --gir=GdaData-5.0.gir --library gdadata-5.0 $^
-	@touch $@
+gdadata-5.0.vapi GdaData-5.0.gir: libgdadata-5.0.la
 
 CLEANFILES+= gdadata-5.0.vapi
 
@@ -137,9 +135,9 @@ CLEANFILES += \
 
 EXTRA_DIST = \
 	libgdadata-5.0.pc \
-	$(libgdadata_5_0_la_VALASOURCES) \
+	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA) \
-	gdadata.vala.stamp
+	$(NULL)
 

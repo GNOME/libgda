@@ -5,6 +5,7 @@ m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
 m4_include(m4/introspection.m4)
+m4_include(m4/vapigen.m4)
 m4_include(m4/dk-warn.m4)
 m4_include(m4/mdbtools.m4)
 m4_include(m4/bdb.m4)
@@ -473,71 +474,27 @@ AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "x
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
-
-AC_ARG_ENABLE([vala],
-    AS_HELP_STRING([--enable-vala], [Enable support for Vala bindings generation [default=auto]]),
-    [enable_vala=$enableval],[enable_vala=no])
-
 AC_ARG_ENABLE([vala-extensions],
     AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
-have_vala=no
-if test "x$found_introspection" = "xyes"
-then
-    VALA_MODULES="libvala-0.16 >= 0.15.0"
-    PKG_CHECK_MODULES(VALA, $VALA_MODULES,
-    if test "$enable_vala" = "yes" -o "$enable_vala" = "auto"
-	then
-        have_vala=yes
-	    AC_DEFINE(HAVE_VALA, [], [Defined if Vala support is enabled])
-	fi,
-	if test "$enable_vala" = "yes"
-	then
-	    AC_MSG_ERROR([Vala support requested but not found])
-	fi)
-
-    if test "x$have_vala" = "xyes"
-    then
-	    AC_PATH_PROG(VAPIGEN, [vapigen-0.16], [no])
-        if test "x$VAPIGEN" = "xno"
-        then
-            AC_MSG_ERROR([Vala found but vapigen not found])
-        fi
-        VALA_DATADIR=`pkg-config $VALA_MODULES --variable=datadir`
-        VAPIDIR="$VALA_DATADIR/vala/vapi"
-        AC_SUBST(VAPIGEN)
-        AC_SUBST(VAPIDIR)
-	VALA_BINDIR=`pkg-config $VALA_MODULES --variable=bindir`
-	AC_SUBST(VALA_BINDIR)
-	VALA_COMPILER="$VALA_BINDIR/valac-0.16"
-	AC_SUBST(VALA_COMPILER)
-	    
-	if test "x$enable_vala_ext" = "xyes"
-	then
-dnl Check for libgee
-          GEE_REQUIRED="0.7.0"
-          PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-          AC_SUBST(GEE_CFLAGS)
-          AC_SUBST(GEE_LIBS)
-      fi
-    else
-      if test "x$enable_vala_ext" = "xyes"
-        then
-            AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala is not available or enable])
-            $enable_vala_ext = "no"
-        fi
-    fi
-else
-    if test "x$enable_vala" = xyes
-    then
-	AC_MSG_ERROR([Vala bindings for Libgda are requested but not available])
-    fi
-fi
-enable_vala=$have_vala
-AM_CONDITIONAL(ENABLE_VALA, [test "$enable_vala" = "yes"])
-
-AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, [test "$enable_vala_ext" = "yes"])
+AS_CASE([$enable_vala_ext],[yes],[
+    VAPIGEN_CHECK([0.17.5],[0.18])
+    AS_CASE([$enable_vala],[yes],[
+      dnl Check for libgee
+      enable_vala_ext=yes
+      GEE_REQUIRED="0.7.90"
+      PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
+      AC_SUBST(GEE_CFLAGS)
+      AC_SUBST(GEE_LIBS)
+    ],[no],[
+      AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enable])
+      enable_vala_ext=no
+    ])],
+  [no],[
+    VAPIGEN_CHECK([0.16],[0.16])
+  ])
+AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 
 dnl ******************************
 dnl Checks for libcrypto

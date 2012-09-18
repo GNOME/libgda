@@ -133,6 +133,9 @@
 			</type>
 		</field>
 		<constructor name="with_fields_info" c:identifier="gda_data_table_new_with_fields_info">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.Table" c:type="GdaDataTable*"/>
+			</return-value>
 			<parameters>
 				<parameter name="fields" transfer-ownership="none">
 					<type name="Gee.HashMap" c:type="GeeHashMap*">
@@ -141,9 +144,6 @@
 					</type>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.Table" c:type="GdaDataTable*"/>
-			</return-value>
 		</constructor>
 		<constructor name="new" c:identifier="gda_data_table_new">
 			<return-value transfer-ownership="full">
@@ -200,6 +200,9 @@
 			<type name="RecordCollectionPrivate" c:type="GdaDataRecordCollectionPrivate*"/>
 		</field>
 		<constructor name="new" c:identifier="gda_data_record_collection_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.RecordCollection" c:type="GdaDataRecordCollection*"/>
+			</return-value>
 			<parameters>
 				<parameter name="m" transfer-ownership="none">
 					<type name="Gda.DataModel" c:type="GdaDataModel*"/>
@@ -208,9 +211,6 @@
 					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.RecordCollection" c:type="GdaDataRecordCollection*"/>
-			</return-value>
 		</constructor>
 		<method name="to_string" c:identifier="gda_data_record_collection_to_string">
 			<return-value transfer-ownership="full">
@@ -237,6 +237,9 @@
 			<type name="RecordCollectionIteratorPrivate" c:type="GdaDataRecordCollectionIteratorPrivate*"/>
 		</field>
 		<constructor name="new" c:identifier="gda_data_record_collection_iterator_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.RecordCollectionIterator" c:type="GdaDataRecordCollectionIterator*"/>
+			</return-value>
 			<parameters>
 				<parameter name="iter" transfer-ownership="none">
 					<type name="Gda.DataModelIter" c:type="GdaDataModelIter*"/>
@@ -245,9 +248,6 @@
 					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.RecordCollectionIterator" c:type="GdaDataRecordCollectionIterator*"/>
-			</return-value>
 		</constructor>
 	</class>
 	<record name="RecordCollectionIteratorClass" c:type="GdaDataRecordCollectionIteratorClass" glib:is-gtype-struct-for="RecordCollectionIterator">
@@ -265,6 +265,9 @@
 			<type name="FieldPrivate" c:type="GdaDataFieldPrivate*"/>
 		</field>
 		<constructor name="new" c:identifier="gda_data_field_new">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.Field" c:type="GdaDataField*"/>
+			</return-value>
 			<parameters>
 				<parameter name="col_name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -273,9 +276,6 @@
 					<type name="GdaData.DbFieldAttribute" c:type="GdaDataDbFieldAttribute"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.Field" c:type="GdaDataField*"/>
-			</return-value>
 		</constructor>
 	</class>
 	<record name="FieldClass" c:type="GdaDataFieldClass" glib:is-gtype-struct-for="Field">
@@ -337,24 +337,24 @@
 			</return-value>
 		</virtual-method>
 		<method name="drop" c:identifier="gda_data_db_object_drop" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="cascade" transfer-ownership="none">
 					<type name="gboolean" c:type="gboolean"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="drop" invoker="drop" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="cascade" transfer-ownership="none">
 					<type name="gboolean" c:type="gboolean"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<property name="connection" writable="1">
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
@@ -369,42 +369,45 @@
 		</field>
 		<field name="append">
 			<callback name="append" c:type="append" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="update">
 			<callback name="update" c:type="update" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="save">
 			<callback name="save" c:type="save" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="drop">
 			<callback name="drop" c:type="drop" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbObject" c:type="GdaDataDbObject*"/>
@@ -413,9 +416,6 @@
 						<type name="gboolean" c:type="gboolean"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 	</record>
@@ -466,54 +466,54 @@
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="GdaData.DbNamedObject"/>
 		<method name="set_field" c:identifier="gda_data_db_table_set_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="set_field" invoker="set_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<method name="get_field" c:identifier="gda_data_db_table_get_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
-			</return-value>
 		</method>
 		<virtual-method name="get_field" invoker="get_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
-			</return-value>
 		</virtual-method>
 		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+			</return-value>
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
-			</return-value>
 		</function>
 		<property name="catalog" writable="1">
 			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
@@ -556,6 +556,9 @@
 		</field>
 		<field name="set_field">
 			<callback name="set_field" c:type="set_field" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
@@ -564,13 +567,13 @@
 						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="get_field">
 			<callback name="get_field" c:type="get_field" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
@@ -579,9 +582,6 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
-				</return-value>
 			</callback>
 		</field>
 	</record>
@@ -600,46 +600,49 @@
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="Gee.Comparable"/>
 		<method name="get_value" c:identifier="gda_data_db_record_get_value" throws="1">
+			<return-value transfer-ownership="full" allow-none="1">
+				<type name="GObject.Value" c:type="GValue*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full" allow-none="1">
-				<type name="GObject.Value" c:type="GValue*"/>
-			</return-value>
 		</method>
 		<virtual-method name="get_value" invoker="get_value" throws="1">
-			<parameters>
-				<parameter name="name" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
-				</parameter>
-			</parameters>
 			<return-value transfer-ownership="full" allow-none="1">
 				<type name="GObject.Value" c:type="GValue*"/>
 			</return-value>
+			<parameters>
+				<parameter name="name" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
 		</virtual-method>
 		<method name="set_field" c:identifier="gda_data_db_record_set_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="set_field" invoker="set_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<method name="set_field_value" c:identifier="gda_data_db_record_set_field_value" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -648,11 +651,11 @@
 					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="set_field_value" invoker="set_field_value" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -661,51 +664,51 @@
 					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<method name="get_field" c:identifier="gda_data_db_record_get_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-			</return-value>
 		</method>
 		<virtual-method name="get_field" invoker="get_field" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-			</return-value>
 		</virtual-method>
 		<method name="set_key" c:identifier="gda_data_db_record_set_key" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="set_key" invoker="set_key" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<method name="set_key_value" c:identifier="gda_data_db_record_set_key_value" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -714,11 +717,11 @@
 					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</method>
 		<virtual-method name="set_key_value" invoker="set_key_value" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
 			<parameters>
 				<parameter name="field" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -727,29 +730,26 @@
 					<type name="GObject.Value" c:type="GValue*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="none"/>
-			</return-value>
 		</virtual-method>
 		<method name="get_key" c:identifier="gda_data_db_record_get_key" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-			</return-value>
 		</method>
 		<virtual-method name="get_key" invoker="get_key" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+			</return-value>
 			<parameters>
 				<parameter name="name" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-			</return-value>
 		</virtual-method>
 		<method name="to_string" c:identifier="gda_data_db_record_to_string">
 			<return-value transfer-ownership="full">
@@ -781,6 +781,9 @@
 		</field>
 		<field name="get_value">
 			<callback name="get_value" c:type="get_value" throws="1">
+				<return-value transfer-ownership="full" allow-none="1">
+					<type name="GObject.Value" c:type="GValue*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -789,13 +792,13 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full" allow-none="1">
-					<type name="GObject.Value" c:type="GValue*"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="set_field">
 			<callback name="set_field" c:type="set_field" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -804,13 +807,13 @@
 						<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="set_field_value">
 			<callback name="set_field_value" c:type="set_field_value" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -822,13 +825,13 @@
 						<type name="GObject.Value" c:type="GValue*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="get_field">
 			<callback name="get_field" c:type="get_field" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -837,13 +840,13 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="set_key">
 			<callback name="set_key" c:type="set_key" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -852,13 +855,13 @@
 						<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="set_key_value">
 			<callback name="set_key_value" c:type="set_key_value" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -870,13 +873,13 @@
 						<type name="GObject.Value" c:type="GValue*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="none"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="get_key">
 			<callback name="get_key" c:type="get_key" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
@@ -885,21 +888,18 @@
 						<type name="utf8" c:type="const gchar*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
-				</return-value>
 			</callback>
 		</field>
 		<field name="to_string">
 			<callback name="to_string" c:type="to_string">
+				<return-value transfer-ownership="full">
+					<type name="utf8" c:type="gchar*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="utf8" c:type="gchar*"/>
-				</return-value>
 			</callback>
 		</field>
 	</record>
@@ -916,6 +916,9 @@
 			</return-value>
 		</virtual-method>
 		<function name="value_from_string" c:identifier="gda_data_db_field_value_from_string">
+			<return-value transfer-ownership="full" allow-none="1">
+				<type name="GObject.Value" c:type="GValue*"/>
+			</return-value>
 			<parameters>
 				<parameter name="as_string" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
@@ -924,9 +927,6 @@
 					<type name="GObject.Type" c:type="GType"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full" allow-none="1">
-				<type name="GObject.Value" c:type="GValue*"/>
-			</return-value>
 		</function>
 		<property name="value" writable="1">
 			<type name="GObject.Value" c:type="GValue*"/>
@@ -947,14 +947,14 @@
 		</field>
 		<field name="to_string">
 			<callback name="to_string" c:type="to_string">
+				<return-value transfer-ownership="full">
+					<type name="utf8" c:type="gchar*"/>
+				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GdaData.DbField" c:type="GdaDataDbField*"/>
 					</parameter>
 				</parameters>
-				<return-value transfer-ownership="full">
-					<type name="utf8" c:type="gchar*"/>
-				</return-value>
 			</callback>
 		</field>
 	</record>
@@ -974,14 +974,14 @@
 	<interface name="DbFieldInfo" c:type="GdaDataDbFieldInfo" glib:type-name="GdaDataDbFieldInfo" glib:get-type="gda_data_db_field_info_get_type" glib:type-struct="DbFieldInfoIface">
 		<prerequisite name="GObject.Object"/>
 		<function name="attribute_from_string" c:identifier="gda_data_db_field_info_attribute_from_string">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
+			</return-value>
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
-			</return-value>
 		</function>
 		<property name="ordinal" writable="1">
 			<type name="gint" c:type="gint"/>
@@ -1033,34 +1033,34 @@
 			</return-value>
 		</constructor>
 		<function name="match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+			</return-value>
 			<parameters>
 				<parameter name="str" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
-			</return-value>
 		</function>
 		<function name="rule_from_string" c:identifier="gda_data_db_field_info_foreign_key_rule_from_string">
+			<return-value transfer-ownership="full">
+				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+			</return-value>
 			<parameters>
 				<parameter name="str" transfer-ownership="none" allow-none="1">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
-			</return-value>
 		</function>
 		<function name="rule_to_string" c:identifier="gda_data_db_field_info_foreign_key_rule_to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
 			<parameters>
 				<parameter name="r" transfer-ownership="none">
 					<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
 				</parameter>
 			</parameters>
-			<return-value transfer-ownership="full">
-				<type name="utf8" c:type="gchar*"/>
-			</return-value>
 		</function>
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>

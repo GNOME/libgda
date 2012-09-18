@@ -227,7 +227,6 @@ namespace GdaData {
 			var sql = new SqlBuilder (SqlStatementType.DELETE);
 			sql.set_table (table.name);
 			SqlBuilderId cond = -1;
-			int pn = 0;
         	foreach (DbField f in keys) {
 				var fid = sql.add_id (f.column_name);
 				var vid = sql.add_expr_value (null, f.value);

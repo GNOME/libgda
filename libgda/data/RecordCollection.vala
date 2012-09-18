@@ -64,55 +64,55 @@ namespace GdaData {
 		public override bool contains (DbRecord item)
 		{
 			bool found = true;
-			try {
-				var iter = _model.create_iter ();
-				while (iter.move_next ()) {
-					foreach (DbField k in item.keys) {
+			var iter = _model.create_iter ();
+			while (iter.move_next ()) {
+				foreach (DbField k in item.keys) {
+					try {
 						Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
 						Value v = k.value;
 						if (Gda.value_compare (id,v) != 0)
 							found = false;
 					}
-					if (found) break;
+					catch (Error e) { 
+						GLib.warning (e.message); 
+						found = false;
+					}
 				}
-			}
-			catch (Error e) { 
-				GLib.warning (e.message); 
-				found = false;
+				if (found) break;
 			}
 			return found;
 		}
 		public override Gee.Iterator<DbRecord> iterator () 
 		{ 
 			Gda.DataModelIter iter;
-			try {
-				iter = _model.create_iter ();
-			}
-			catch (Error e) { GLib.warning (e.message); }
+			iter = _model.create_iter ();
 			return new RecordCollectionIterator (iter, _table); 
 		}
 		public override bool remove (DbRecord item)
 		{
-			try {
-				var iter = _model.create_iter ();
-				while (iter.move_next ()) {
-					bool found = true;
-					foreach (DbField k in item.keys) {
+			var iter = _model.create_iter ();
+			while (iter.move_next ()) {
+				bool found = true;
+				foreach (DbField k in item.keys) {
+					try {
 						Value id = iter.get_value_at (iter.data_model.get_column_index (k.name));
 						Value v = k.value;
 						if (Gda.value_compare (id,v) != 0)
 							found = false;
 					}
-					if (found) {
-						try {
-							_model.remove_row (iter.get_row ());
-							((DataProxy)_model).apply_all_changes ();
-							return true;
-						} catch {}
+					catch (Error e) { 
+						GLib.warning (e.message);
+						found = false;
 					}
 				}
+				if (found) {
+					try {
+						_model.remove_row (iter.get_row ());
+						((DataProxy)_model).apply_all_changes ();
+						return true;
+					} catch {}
+				}
 			}
-			catch (Error e) { GLib.warning (e.message); }
 			return false;
 		}
 		public override bool read_only { 
@@ -130,19 +130,6 @@ namespace GdaData {
 			get {
 				return _model.get_n_rows ();
 			} 
-		}
-		// Traversable Interface
-		public override Iterator<DbRecord> chop (int offset, int length = -1)
-		{
-			return this.iterator().chop (offset, length);
-		}
-		public override Gee.Iterator<DbRecord> filter (owned Gee.Predicate<DbRecord<Value?>> f)
-		{
-			return this.iterator().filter (f);			
-		}
-		public override Iterator<A> stream<A> (owned StreamFunc<DbRecord, A> f)
-		{
-			return this.iterator().stream<A> (f);
 		}
 		// 
 		public string to_string ()
@@ -213,16 +200,14 @@ namespace GdaData {
 			var iter = _iter.data_model.create_iter ();
 			return new RecordCollectionIterator.filtered (iter, _table, -1, 0, -1, elements, -1);
 		}
-		public new void @foreach (Gee.ForallFunc<DbRecord> f) 
+		public new bool @foreach (Gee.ForallFunc<DbRecord> f) 
 		{
-			while (this.next ()) {
-				var r = this.get ();
-				f(r);
-			}
-		}
-		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<DbRecord,A> f) 
-		{
-			return stream_impl<DbRecord, A> (this, f);
+			var r = this.get ();
+			bool ret = f(r);
+			if (ret && this.next ())
+				return true;
+			else
+				return false; 
 		}
 		
 		// Iterator Interface
@@ -251,17 +236,14 @@ namespace GdaData {
 		}
 		public bool next () 
 		{ 
-			try {
-				if (this.has_next ()) {
-					if (_elements.size > 0) {
-						_iter.move_to_row (_elements.get (++filter_pos));
-						return true;
-					}
-					else
-						return _iter.move_next ();
+			if (this.has_next ()) {
+				if (_elements.size > 0) {
+					_iter.move_to_row (_elements.get (++filter_pos));
+					return true;
 				}
+				else
+					return _iter.move_next ();
 			}
-			catch (Error e) { GLib.message (e.message); }
 			return false;
 		}
 		public void remove () 

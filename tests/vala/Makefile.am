@@ -39,58 +39,30 @@ VALAFLAGS = \
     --vapidir=$(VAPIDIR) \
     $(NULL)
 
-check_dataobject_VALASOURCES = \
+check_dataobject_SOURCES = \
 	CheckDataObject.vala \
 	$(NULL)
 
-check_datamodeliterator_VALASOURCES = \
+check_datamodeliterator_SOURCES = \
 	CheckDataModelIterator.vala \
 	$(NULL)
 
-check_table_VALASOURCES = \
+check_table_SOURCES = \
 	CheckTable.vala \
 	$(NULL)
 
-check_dataobject.vala.stamp: $(check_dataobject_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_dataobject.h $^
-	@touch $@
-
-check_datamodeliterator.vala.stamp: $(check_datamodeliterator_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_datamodeliterator.h $^
-	@touch $@
-
-check_table.vala.stamp: $(check_table_VALASOURCES)
-	$(VALA_COMPILER) $(VALAFLAGS) -C -H check_table.h $^
-	@touch $@
-
-check_dataobject_SOURCES = $(check_dataobject_VALASOURCES:.vala=.c) check_dataobject.h
-check_dataobject_CFLAGS= \
-    -I$(top_builddir) \
-    -I$(top_builddir)/libgda/data \
-    $(NULL)
 check_dataobject_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda/data/libgdadata-5.0.la \
 	$(COREDEPS_LIBS) \
 	$(GEE_LIBS)
 
-check_datamodeliterator_SOURCES = $(check_datamodeliterator_VALASOURCES:.vala=.c) check_datamodeliterator.h
-check_datamodeliterator_CFLAGS= \
-	-I$(top_builddir) \
-	-I$(top_builddir)/libgda/data \
-	$(NULL)
 check_datamodeliterator_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda/data/libgdadata-5.0.la \
 	$(COREDEPS_LIBS) \
 	$(GEE_LIBS)
 
-
-check_table_SOURCES = $(check_table_VALASOURCES:.vala=.c) check_table.h
-check_table_CFLAGS= \
-    -I$(top_builddir) \
-    -I$(top_builddir)/libgda/data \
-    $(NULL)
 check_table_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
 	$(top_builddir)/libgda/data/libgdadata-5.0.la \
@@ -98,12 +70,6 @@ check_table_LDADD = \
 	$(GEE_LIBS)
 
 CLEANFILES += \
-    $(check_dataobject_VALASOURCES:.vala=.c) \
-    check_dataobject.h \
-    $(check_datamodeliterator_VALASOURCES:.vala=.c) \
-    check_datamodeliterator.h \
-    $(check_table_VALASOURCES:.vala=.c) \
-    check_table.h \
     dataobject.db \
     datamodeliterator.db \
     table.db \
