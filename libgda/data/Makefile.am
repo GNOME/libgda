@@ -53,6 +53,7 @@ db_collection_sources = \
 	DbSchema.vala \
 	DbRecordCollection.vala \
 	RecordCollection.vala \
+	RecordCollectionIterator.vala \
 	Field.vala \
 	FieldInfo.vala \
 	$(NULL)

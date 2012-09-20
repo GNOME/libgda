@@ -212,21 +212,6 @@
 				</parameter>
 			</parameters>
 		</constructor>
-		<method name="chop" c:identifier="gda_data_record_collection_chop">
-			<return-value transfer-ownership="full">
-				<type name="Gee.Iterator" c:type="GeeIterator*">
-					<type name="GdaData.DbRecord" c:type="GdaDataDbRecord*"/>
-				</type>
-			</return-value>
-			<parameters>
-				<parameter name="offset" transfer-ownership="none">
-					<type name="gint" c:type="gint"/>
-				</parameter>
-				<parameter name="length" transfer-ownership="none">
-					<type name="gint" c:type="gint"/>
-				</parameter>
-			</parameters>
-		</method>
 		<method name="to_string" c:identifier="gda_data_record_collection_to_string">
 			<return-value transfer-ownership="full">
 				<type name="utf8" c:type="gchar*"/>

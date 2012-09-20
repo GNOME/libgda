@@ -23,7 +23,7 @@ namespace GdaData {
     
     private class SelectQuery : GLib.Object {
         
-        private Gee.ArrayList<string> _fields;
+        //private Gee.ArrayList<string> _fields;
         private SqlBuilder _sql;
         private string _table;
         

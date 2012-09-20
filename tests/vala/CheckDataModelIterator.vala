@@ -19,6 +19,7 @@
 
 using Gda;
 using GdaData;
+using Gee;
 
 namespace Check {
 	
@@ -233,36 +234,59 @@ namespace Check {
 		public int streaming ()
 		{
 			int fails = 0;
-			/* FIXME: This code doesn't return YIELDED strings maybe becasue Lazy is not correctly built. 
-				In theory stream() function is working correctly*/
-			stdout.printf (">>> TESTING: Streaming Values: Fist field type STRING will be YIELDED...\n");
+			stdout.printf (">>> TESTING: Streaming Values: First DbRecord's field type STRING will be YIELDED...\n");
 			var iter = itermodel.stream<string> (
 				(state, g, out lazy) =>	{
-					if (state == Gee.Traversable.Stream.CONTINUE) {
+					switch(state) {
+					case Gee.Traversable.Stream.YIELD:
+						lazy = null;
+						return Gee.Traversable.Stream.CONTINUE;
+						break;
+					case Gee.Traversable.Stream.CONTINUE:
 						var r = g.value;
 						foreach (DbField f in r.fields) {
 							if (f.value.type () == typeof (string)) {
-								stdout.printf ("Value to YIELD: %s\n", Gda.value_stringify (f.value));
-								string ts = "YIELDED Value = " + Gda.value_stringify (f.value) + "\n";
-								lazy = new Gee.Lazy<string>.from_value (ts.dup ());
+								stdout.printf ("Field (%s) =  %s\n", f.name, Gda.value_stringify (f.value));
+								string ts = Gda.value_stringify (f.value);
+								lazy = new Gee.Lazy<string> (() => {return ts.dup ();});
 							}
 						}
 						return Gee.Traversable.Stream.YIELD;
+						break;
 					}
 					return Gee.Traversable.Stream.END;
 				}
 			);
 			stdout.printf ("Printing Streamed Values...\n");
+			var l = new Gee.ArrayList<string> ();
 			while (iter.next ()) {
-				stdout.printf (iter.get());
+				string v = iter.get ();
+				l.add (v);
+				stdout.printf (v + "\n");
 			}
-			stdout.printf ("\n");
+			
+			if (!l.contains ("Daniel"))
+				++fails;
+			if (!l.contains ("Jhon"))
+				++fails;
+			if (!l.contains ("Jack"))
+				++fails;
+			if (!l.contains ("Elsy"))
+				++fails;
+			if (!l.contains ("Mayo"))
+				++fails;
+			
+			if (fails > 0) {
+				stdout.printf ("----- FAIL" + (++fails).to_string () + "\n");
+			}
+			else
+				stdout.printf ("+++++ PASS\n");
 			return fails;
 		}
 		public int InitIter()
 			throws Error
 		{
-			stdout.printf (">>> TESTING: Initializing DbRecordCollection/RecordCollection\n");
+			stdout.printf (">>> INITIALIZING: DbRecordCollection/RecordCollection\n");
 			int fails = 0;
 			var model = this.connection.execute_select_command ("SELECT * FROM user");
 			stdout.printf ("Setting up Table...");

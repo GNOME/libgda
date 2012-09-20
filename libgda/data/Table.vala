@@ -318,7 +318,7 @@ namespace GdaData
 			GLib.warning ("Not Implemented!");
 			return;
 			// FIXME: ServerOperation Bug or biding Bug
-			if (GLib.strcmp (_name,_original_name) != 0) {
+			/*if (GLib.strcmp (_name,_original_name) != 0) {
 				if (connection.get_provider ()
 					.supports_operation (connection, 
 						Gda.ServerOperationType.RENAME_TABLE, null)) {
@@ -327,8 +327,6 @@ namespace GdaData
 								null);
 					op.set_value_at (_original_name, "/TABLE_DEF_P/TABLE_NAME");
 					op.set_value_at (name, "/TABLE_DEF_P/TABLE_NEW_NAME");
-					/*DEBUG
-					*/
 					stdout.printf ("Operation to perform: "+ 
 						connection.get_provider ()
 							.render_operation (connection,op));
@@ -340,7 +338,7 @@ namespace GdaData
 			}
 			else {
 				throw new DbTableError.READ_ONLY ("Table definition is read only");
-			}
+			}*/
 		}
 		
 		public void append () throws Error 
