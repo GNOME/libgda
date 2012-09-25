@@ -97,61 +97,76 @@ namespace Check {
 		{
 			int fails = 0;
 			stdout.printf (">>> TESTING: Chopping...\n");
-			stdout.printf (" to get the 2nd DbRecord...\n");
+			stdout.printf (" to get from the 2nd DbRecord to the 6th...\n");
 			var iter = itermodel.chop (1);
-			if (!iter.valid)
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			else {
-				stdout.printf (iter.get ().to_string () + "\n");
+			int i = 0;
+			while(iter.next()) {
+				stdout.printf (iter.get().to_string () + "\n");
+				i++;
 				var name = (string) iter.get().get_value ("name");
-				if (name == "Jhon")
-					stdout.printf ("+++++ PASS\n");
-				else {
-					fails++;
-					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				switch (i) {
+				case 1:
+					if (name != "Jhon")
+						fails++;
+					break;
+				case 2:
+					if (name != "James")
+						fails++;
+					break;
+				case 3:
+					if (name != "Jack")
+						fails++;
+					break;
+				case 4:
+					if (name != "Elsy")
+						fails++;
+					break;
+				case 5:
+					if (name != "Mayo")
+						fails++;
+					break;
 				}
 			}
-			
+			if (fails != 0 || i != 5)
+					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+				else
+					stdout.printf ("+++++ PASS\n");
+
 			stdout.printf ("Choping to get the 4th to 5th DbRecords...\n");
 			var iter2 = itermodel.chop (3,2);
-			if (!iter2.valid)
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			else {
-				stdout.printf ("Iterating over chopped records...\n");
-				int i = 0;
-				while (iter2.valid) {
-					i++;
-					stdout.printf (iter2.get ().to_string () + "\n");
-					var name2 = (string) iter2.get().get_value ("name");
-					if (i==1) {
-						if (name2 != "Jack") {
-							fails++;
-							stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-							break;
-						}
+			i = 0;
+			while (iter2.next ()) {
+				i++;
+				stdout.printf (iter2.get ().to_string () + "\n");
+				var name2 = (string) iter2.get().get_value ("name");
+				if (i==1) {
+					if (name2 != "Jack") {
+						fails++;
+						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+						break;
 					}
-					if (i==2) {
-						if (name2 != "Elsy") {
-							fails++;
-							stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-							break;
-						}
+				}
+				if (i==2) {
+					if (name2 != "Elsy") {
+						fails++;
+						stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+						break;
 					}
-					iter2.next ();
 				}
-				if (i!=2) {
-					fails++;
-					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-				}
-				stdout.printf ("+++++ PASS\n");
 			}
+			if (i!=2) {
+				fails++;
+				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
+			}
+			else
+			stdout.printf ("+++++ PASS\n");
 			
 			stdout.printf ("Choping offset = 7 must fail...\n");
 			var iter3 = itermodel.chop (7);
-			if (iter3.valid)
+			if (iter3.has_next ())
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 			else {
-				if (!iter3.next ())
+				if (iter3.next ())
 					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 				if (fails == 0)
 					stdout.printf ("+++++ PASS\n");
@@ -159,10 +174,10 @@ namespace Check {
 			
 			stdout.printf ("Choping offset = 6 length = 0 must fail...\n");
 			var iter4 = itermodel.chop (6,0);
-			if (iter4.valid)
+			if (iter4.has_next ())
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 			else {
-				if (!iter4.next ())
+				if (iter4.next ())
 					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 				if (fails == 0)
 					stdout.printf ("+++++ PASS\n");
@@ -170,7 +185,7 @@ namespace Check {
 			
 			stdout.printf ("Choping offset = 5 length = 1...\n");
 			var iter5 = itermodel.chop (5,1);
-			if (!iter5.valid)
+			if (!iter5.next ())
 				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
 			else {
 				if (iter5.next ())
@@ -178,17 +193,6 @@ namespace Check {
 				if (fails == 0)
 					stdout.printf ("+++++ PASS\n");
 			}
-			
-			stdout.printf ("Choping offset = 3 length = 1...\n");
-			var iter6 = itermodel.chop (3,2);
-			if (!iter6.valid)
-				stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			else {
-				var tr = iter6.get().get_value ("name");
-				if (tr==null)
-					stdout.printf ("----- FAIL: " + (++fails).to_string () + "\n");
-			}
-			
 			if (fails == 0)
 				stdout.printf ("+++++ PASS: " + "\n");
 			return fails;
@@ -288,7 +292,7 @@ namespace Check {
 		{
 			stdout.printf (">>> INITIALIZING: DbRecordCollection/RecordCollection\n");
 			int fails = 0;
-			var model = this.connection.execute_select_command ("SELECT * FROM user");
+			var model = this.connection.execute_select_command ("SELECT * FROM user ORDER BY id");
 			stdout.printf ("Setting up Table...");
 			var t = new Table ();
 			t.connection = this.connection;
@@ -301,38 +305,6 @@ namespace Check {
 			return fails;
 		}
 		
-		public int t2 ()
-		{
-			stdout.printf (">>> NEW TEST: GdaData.RecordCollection & RecordCollectionIterator API tests\n"
-							+ ">>> Testing Collection, Iterator, Traversable Interfaces implementation\n");
-			int fails = 0;
-			var model = this.connection.execute_select_command ("SELECT * FROM user");
-			((DataSelect) model).compute_modification_statements ();
-			var pxy = new Gda.DataProxy.with_data_model (model);
-			var t = new Table ();
-			t.connection = this.connection;
-			t.name = "user";
-			var itermodel = new RecordCollection (pxy,t);
-			var row = new Record ();
-			row.table = t;
-			var f = new Field ("id", DbField.Attribute.NONE);
-			f.value = 10;
-			row.set_field (f);
-			f.name = "name";
-			f.value = "Samanta";
-			row.set_field (f);
-			f.name = "city";
-			f.value = "San Francisco";
-			row.set_field (f);
-			if ( itermodel.add (row)) {
-				stdout.printf("New contents in DataModel:\n" + itermodel.to_string ());
-			}
-			else
-				fails++;
-			
-			return fails;
-		}
-				
 		public static int main (string[] args) {
 			stdout.printf ("Checking Gda.DataModelIterator implementation...\n");
 			int failures = 0;
