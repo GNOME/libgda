@@ -82,6 +82,7 @@ m4_define([_FIREBIRD_CHECK_INTERNAL],
     # determine if Firebird should be searched for
     firebird_found=no
     try_firebird=true
+    pkgfirebird=no
     firebird_test_dir="$FIREBIRD_HOME /usr /opt/firebird /local"
     AC_ARG_WITH(firebird,
               AS_HELP_STRING([--with-firebird[=@<:@yes/no/<directory>@:>@]],
@@ -98,8 +99,27 @@ m4_define([_FIREBIRD_CHECK_INTERNAL],
                              [Locate FIREBIRD library file, related to the prefix specified from --with-firebird]),
 			     [firebird_loclibdir=$withval])
 
-    # try to locate files
+    # try with pkgconfig
     if test $try_firebird = true
+    then
+        PKG_CHECK_MODULES(FIREBIRD_CLIENT, "fbclient",[pkgfbclient=yes],[pkgfbclient=no])
+        PKG_CHECK_MODULES(FIREBIRD_EMBED, "fbembed",[pkgfbembed=yes],[pkgfbembed=no])
+        if test $pkgfbclient = yes -o $pkgfbembed = yes
+        then
+	    pkgfirebird=yes
+        fi
+	if test $pkgfbclient = yes
+	then
+	    firebird_client_found=yes
+	fi
+	if test $pkgfbembed = yes
+	then
+	    firebird_embed_found=yes
+	fi
+    fi
+
+    # try to locate files
+    if test $try_firebird = true -a $pkgfirebird = no
     then
 	if test "x$linklibext" = x
 	then
