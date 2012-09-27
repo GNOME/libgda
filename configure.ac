@@ -366,6 +366,16 @@ AC_SUBST(LIBTOOL_PROV_EXPORT_OPTIONS)
 AC_SUBST(LIBTOOL_UI_EXPORT_OPTIONS)
 AC_SUBST(NO_UNDEFINED)
 
+dnl ******************************
+dnl Option to avoid building tools
+dnl See bug #684895
+dnl ******************************
+AC_ARG_ENABLE([tools],
+	AS_HELP_STRING([--disable-tools], [Disable building and installing Libgda's associated tools (gda-sql, control-center, browser, ...)]),
+	[enable_tools=$enableval],[enable_tools=yes])
+
+AM_CONDITIONAL(ENABLE_TOOLS, [test "$enable_tools" = "yes"])
+
 dnl *******************************************************
 dnl Checks for GIO
 dnl *******************************************************
@@ -981,6 +991,7 @@ echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else
 echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
+echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
 echo "      Berkeley DB SQL = $bdbsql_found"

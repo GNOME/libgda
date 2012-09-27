@@ -6,9 +6,15 @@ XSLT_PC=libgda-xslt-$(GDA_ABI_VERSION).pc
 endif
 
 if HAVE_UI
-UI_DIRS=libgda-ui \
-	control-center
+UI_DIR=libgda-ui
 UI_PC=libgda-ui-$(GDA_ABI_VERSION).pc
+endif
+
+if ENABLE_TOOLS
+TOOLS_DIR=tools
+if HAVE_UI
+UI_TOOLS_DIR=control-center
+endif
 endif
 
 SUBDIRS = \
@@ -17,8 +23,9 @@ SUBDIRS = \
 	providers \
 	libgda-report \
 	$(XSLT_DIR) \
-	$(UI_DIRS) \
-	tools \
+	$(UI_DIR) \
+	$(TOOLS_DIR) \
+	$(UI_TOOLS_DIR) \
 	tests \
 	testing \
 	data \
