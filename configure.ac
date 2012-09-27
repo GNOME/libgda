@@ -23,6 +23,9 @@ AM_INIT_AUTOMAKE([1.11.1 -Wall no-define no-dist-gzip dist-xz])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
+dnl http://people.gnome.org/~walters/docs/build-api.txt
+echo \#buildapi-variable-no-builddir >/dev/null
+
 AC_SUBST(GDA_VERSION, major.minor.micro)
 
 # ABI version:
