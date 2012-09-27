@@ -1,23 +1,19 @@
-NULL =
-CLEANFILES = 
-
 AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" 
 
 AM_CFLAGS =\
-	 -Wall\
-	 -g \
-	 -I$(top_srcdir) -I$(srcdir)/.. \
-     -I$(top_builddir) \
-     -I$(top_builddir)/libgda/data \
-    $(COREDEPS_CFLAGS) \
-    $(LIBGDA_WFLAGDS) \
-    $(LIBGDA_CFLAGS) \
-    $(GEE_CFLAGS) \
-    $(VALA_CFLAGS) \
-    $(NULL)
+	-Wall \
+	-g \
+	-I$(top_srcdir) -I$(srcdir)/.. \
+        -I$(top_builddir) \
+        -I$(top_builddir)/libgda/data \
+        $(COREDEPS_CFLAGS) \
+        $(LIBGDA_WFLAGDS) \
+        $(LIBGDA_CFLAGS) \
+        $(GEE_CFLAGS) \
+        $(VALA_CFLAGS)
 
 lib_LTLIBRARIES = libgdadata-5.0.la
 
@@ -28,10 +24,9 @@ VALAFLAGS = \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \
     --pkg libgda-5.0 \
-    -C -H libgdadata.h \
+    -C -H $(include_headers) \
     --gir=GdaData-5.0.gir \
-    --library gdadata-5.0 \
-    $(NULL)
+    --library gdadata-5.0
 
 object_persistance_sources = \
 	DataBase.vala \
@@ -39,8 +34,7 @@ object_persistance_sources = \
 	Schema.vala \
 	Table.vala \
 	Record.vala \
-	SelectQuery.vala \
-	$(NULL)
+	SelectQuery.vala
 
 db_collection_sources = \
 	DbObject.vala \
@@ -55,24 +49,16 @@ db_collection_sources = \
 	RecordCollection.vala \
 	RecordCollectionIterator.vala \
 	Field.vala \
-	FieldInfo.vala \
-	$(NULL)
+	FieldInfo.vala
 
-selectable_sources = \
-	SqlWhere.vala \
-	SqlExpression.vala \
-	$(NULL)
-
-libgdadata_5_0_la_VALASOURCES = \
-	NamespaceInfo.vala \
-	$(object_persistance_sources) \
-	$(db_collection_sources) \
-	$(NULL)
+include_headers = libgdadata.h
 
 libgdadata_5_0_la_SOURCES = \
-	$(libgdadata_5_0_la_VALASOURCES) \
-	$(NULL)	
+	NamespaceInfo.vala \
+	$(object_persistance_sources) \
+	$(db_collection_sources)
 
+$(include_headers): DataBase.c
 vapi: gdadata-5.0.vapi
 
 vapidir = $(VAPIDIR)
@@ -80,7 +66,7 @@ vapi_DATA = gdadata-5.0.vapi
 
 gdadata-5.0.vapi GdaData-5.0.gir: libgdadata-5.0.la
 
-CLEANFILES+= gdadata-5.0.vapi
+CLEANFILES= gdadata-5.0.vapi
 
 libgdadata_5_0_la_LDFLAGS = 
 
@@ -88,15 +74,10 @@ libgdadata_5_0_la_LIBADD = \
     $(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GEE_LIBS) \
-	$(VALA_LIBS) \
-	$(NULL)
-
-include_HEADERS = \
-	libgdadata.h \
-	$(NULL)
+	$(VALA_LIBS)
 
 gdadataincludedir = $(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/data
-gdadatainclude_HEADERS = libgdadata.h
+gdadatainclude_HEADERS = $(include_headers)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgdadata-5.0.pc
@@ -117,8 +98,7 @@ INTROSPECTION_GIRS += GdaData-5.0.gir
 INTROSPECTION_COMPILER_ARGS = \
     --includedir=. \
     --includedir=$(top_srcdir)/libgda \
-    --includedir=$(top_srcdir)/libgda/data \
-    $(NULL)
+    --includedir=$(top_srcdir)/libgda/data
 
 GdaData-5.0.typelib: $(INTROSPECTION_GIRS)
 	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS)  $< -o $@
@@ -130,15 +110,13 @@ CLEANFILES += \
     $(typelibs_DATA) \
     gdadata-5.0.vapi \
     libgdadata-5.0.pc \
-    libgdadata.h \
-    $(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
-    $(NULL)
+    $(include_headers) \
+    $(libgdadata_5_0_la_VALASOURCES:.vala=.c)
 
 EXTRA_DIST = \
 	libgdadata-5.0.pc \
 	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
-	$(typelibs_DATA) \
-	$(NULL)
+	$(typelibs_DATA)
 
