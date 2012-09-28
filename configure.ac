@@ -491,22 +491,18 @@ AC_ARG_ENABLE([vala-extensions],
     AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
-AS_CASE([$enable_vala_ext],[yes],[
-    VAPIGEN_CHECK([0.17.7],[0.18])
-    AS_CASE([$enable_vala],[yes],[
-      dnl Check for libgee
-      enable_vala_ext=yes
-      GEE_REQUIRED="0.8.0"
-      PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-      AC_SUBST(GEE_CFLAGS)
-      AC_SUBST(GEE_LIBS)
-    ],[no],[
-      AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enable])
-      enable_vala_ext=no
-    ])],
-  [no],[
-    VAPIGEN_CHECK([0.16],[0.16])
-  ])
+VAPIGEN_CHECK([0.17.7],[0.18])
+AS_CASE([$enable_vala],[yes],[
+  dnl Check for libgee
+  enable_vala_ext=yes
+  GEE_REQUIRED="0.8.0"
+  PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
+  AC_SUBST(GEE_CFLAGS)
+  AC_SUBST(GEE_LIBS)
+],[no],[
+  AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enable])
+  enable_vala_ext=no])
+
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 
 dnl ******************************
