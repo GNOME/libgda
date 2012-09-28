@@ -5,8 +5,7 @@ lib_LTLIBRARIES = libgda-ui-5.0.la
 SUBDIRS = marshallers data-entries internal data . data-entries/plugins demos
 
 GLOBAL_CFLAGS = \
-	-I$(top_builddir)/ui \
-	-I$(top_srcdir)/ui \
+	-I$(top_builddir)/libgda-ui \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
@@ -68,13 +67,13 @@ ui_sources = \
 	gdaui-set.h \
 	gdaui-set.c \
 	gdaui-tree-store.c \
-	gdaui-resources.h \
-	gdaui-resources.c \
 	gdaui-init.c
 
 libgda_ui_5_0_la_SOURCES = \
 	$(libgda_ui_built_cfiles) \
-	$(ui_sources)
+	$(ui_sources) \
+	gdaui-resources.h \
+	gdaui-resources.c
 
 gdaui-enum-types.h: s-enum-types-h
 	@true
@@ -175,6 +174,7 @@ if ENABLE_GDAUI_GI
 INTROSPECTION_GIRS =
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
                              --add-include-path=$(top_builddir)/libgda \
+                             --add-include-path=$(top_builddir)/libgda-ui \
                              --namespace Gdaui \
 			     --warn-all
 ui_data_entries_sources = \
