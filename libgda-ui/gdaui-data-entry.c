@@ -417,7 +417,7 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
  *
  * Since: 4.2
  *
- * Deprecated: 5.2: use the GtkWidget "hexpand", "wexpand" or "expand" properties
+ * Deprecated: 5.2: use the GtkWidget::hexpand, GtkWidget::wexpand or GtkWidget::expand properties
  */
 gboolean
 gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)

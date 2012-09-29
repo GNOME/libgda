@@ -1,4 +1,4 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-gda-gi=yes --enable-introspection=yes --enable-gdaui-gi=yes --enable-gi-system-install=no --enable-vala=yes --enable-vala-extensions=yes
 
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt

@@ -71,7 +71,7 @@ CLEANFILES= gdadata-5.0.vapi
 libgdadata_5_0_la_LDFLAGS = 
 
 libgdadata_5_0_la_LIBADD = \
-    $(top_builddir)/libgda/libgda-5.0.la \
+        $(top_builddir)/libgda/libgda-5.0.la \
 	$(LIBGDA_LIBS) \
 	$(GEE_LIBS) \
 	$(VALA_LIBS)
@@ -93,8 +93,7 @@ typelibsdir = $(libdir)/girepository-1.0
 endif
 
 # GIR files are generated automatically by Valac then is not necessary to scan source code to generate it
-INTROSPECTION_GIRS =
-INTROSPECTION_GIRS += GdaData-5.0.gir
+INTROSPECTION_GIRS = GdaData-5.0.gir
 INTROSPECTION_COMPILER_ARGS = \
     --includedir=. \
     --includedir=$(top_srcdir)/libgda \
@@ -107,15 +106,15 @@ gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = GdaData-5.0.typelib
 
 CLEANFILES += \
-    $(typelibs_DATA) \
-    gdadata-5.0.vapi \
-    libgdadata-5.0.pc \
-    $(include_headers) \
-    $(libgdadata_5_0_la_VALASOURCES:.vala=.c)
+        $(typelibs_DATA) \
+        gdadata-5.0.vapi \
+        libgdadata-5.0.pc \
+        $(include_headers) \
+        $(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
+        $(srcdir)/libgdadata_5_0_la_vala.stamp
 
 EXTRA_DIST = \
 	libgdadata-5.0.pc \
-	$(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
 	$(vapi_DATA) \
 	$(INTROSPECTION_GIRS) \
 	$(typelibs_DATA)

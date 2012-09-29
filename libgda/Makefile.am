@@ -363,7 +363,7 @@ endif
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(typelibs_DATA)
+CLEANFILES += $(typelibs_DATA) $(gir_DATA)
 endif
 
 if ENABLE_VAPIGEN

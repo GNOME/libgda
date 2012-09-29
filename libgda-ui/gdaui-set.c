@@ -102,7 +102,7 @@ gdaui_set_class_init (GdauiSetClass *class)
 	object_class->dispose = gdaui_set_dispose;
 
 	/**
-         * GdauiSet::public-data-changed
+         * GdauiSet::public-data-changed:
          * @set: the #GdauiSet
          * 
          * Gets emitted when @set's public data (#GdauiSetGroup or #GdauiSetSource values) have changed
@@ -117,7 +117,7 @@ gdaui_set_class_init (GdauiSetClass *class)
                               NULL, NULL,
                               _gdaui_marshal_VOID__VOID, G_TYPE_NONE, 0);
 	/**
-         * GdauiSet::source-model-changed
+         * GdauiSet::source-model-changed:
          * @set: the #GdauiSet
          * 
          * Gets emitted when the data model used in @set's #GdauiSetSource has changed

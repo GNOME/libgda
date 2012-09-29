@@ -222,7 +222,7 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 
 
 /**
- * gdaui_server_operation_new
+ * gdaui_server_operation_new:
  * @op: a #GdaServerOperation structure
  *
  * Creates a new #GdauiServerOperation widget using all the parameters provided in @paramlist.
@@ -1059,7 +1059,7 @@ sequence_item_remove_cb (GdaServerOperation *op, const gchar *seq_path, gint ite
 
 
 /**
- * gdaui_server_operation_new_in_dialog
+ * gdaui_server_operation_new_in_dialog:
  * @op: a #GdaServerOperation object
  * @parent: (allow-none): the parent window for the new dialog, or %NULL
  * @title: (allow-none): the title of the dialog window, or %NULL

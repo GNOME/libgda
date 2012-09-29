@@ -2689,7 +2689,7 @@ gdaui_raw_grid_set_sample_start (GdauiRawGrid *grid, gint sample_start)
 }
 
 /**
- * gdaui_raw_grid_set_layout_from_file
+ * gdaui_raw_grid_set_layout_from_file:
  * @grid: a #GdauiRawGrid
  * @file_name: XML file name to use
  * @grid_name: the name of the grid to use, in @file_name

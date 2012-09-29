@@ -1260,7 +1260,7 @@ spaces_since_start_of_line (GtkTextIter *iter)
 }
 
 /**
- * get_markup_token
+ * get_markup_token:
  * @iter: starting position
  * @out_nb_spaces_before: a place to set the value returned by spaces_since_start_of_line() if called
  * @out_end: (allow-none): place to put the last used position, or %NULL
@@ -1468,7 +1468,7 @@ get_markup_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *ou
 }
 
 /**
- * get_char_at_iter
+ * get_char_at_iter:
  * @iter: an iter
  * @move_forward_first: %TRUE if @iter should be moved forward first
  *
@@ -1537,7 +1537,7 @@ static guint8 *serialize_as_txt2tag (GtkTextBuffer     *register_buffer,
 				     GdauiRtEditor     *editor);
 
 /**
- * gdaui_rt_editor_get_contents
+ * gdaui_rt_editor_get_contents:
  * @editor: a #GdauiRtEditor
  *
  * Get the contents of @editor, using the markup syntax
@@ -1893,7 +1893,7 @@ serialize_as_txt2tag (G_GNUC_UNUSED  GtkTextBuffer *register_buffer,
 
 
 /**
- * gdaui_rt_editor_set_contents
+ * gdaui_rt_editor_set_contents:
  * @editor: a #GdauiRtEditor
  * @markup: the text to set in @editor, using the markup syntax (must be valid UTF-8)
  * @length: length of text in bytes.
@@ -1913,7 +1913,7 @@ gdaui_rt_editor_set_contents (GdauiRtEditor *editor, const gchar *markup, gint l
 }
 
 /**
- * gdaui_rt_editor_set_editable
+ * gdaui_rt_editor_set_editable:
  * @editor: a #GdauiRtEditor
  * @editable: whether it's editable
  *

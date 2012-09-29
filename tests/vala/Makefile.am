@@ -1,5 +1,3 @@
-NULL = 
-
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
@@ -11,7 +9,7 @@ AM_CPPFLAGS = \
 	$(GEE_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
-TESTS_ENVIRONMENT = 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = check_dataobject check_datamodeliterator check_table
 check_PROGRAMS = check_dataobject check_datamodeliterator check_table
 
@@ -26,20 +24,16 @@ VALAFLAGS = \
     --includedir=$(top_builddir) \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(top_builddir)/libgda/data \
-    --vapidir=$(VAPIDIR) \
-    $(NULL)
+    --vapidir=$(VAPIDIR)
 
 check_dataobject_SOURCES = \
-	CheckDataObject.vala \
-	$(NULL)
+	CheckDataObject.vala
 
 check_datamodeliterator_SOURCES = \
-	CheckDataModelIterator.vala \
-	$(NULL)
+	CheckDataModelIterator.vala
 
 check_table_SOURCES = \
-	CheckTable.vala \
-	$(NULL)
+	CheckTable.vala
 
 check_dataobject_LDADD = \
 	$(top_builddir)/libgda/libgda-5.0.la \
@@ -62,7 +56,5 @@ check_table_LDADD = \
 CLEANFILES += \
     dataobject.db \
     datamodeliterator.db \
-    table.db \
-    $(NULL)
+    table.db
 
-EXTRA_DIST = 

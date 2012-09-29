@@ -454,6 +454,7 @@ else
 	enable_gda_gi=no
     fi
 fi
+
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],
@@ -482,26 +483,35 @@ AC_ARG_ENABLE([gi-system-install],
     AS_HELP_STRING([--enable-gi-system-install], [Install GObject Introspection files along with system installed files [default=yes]]),
     [enable_gi_system_install=$enableval],[enable_gi_system_install=yes])
 AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "xyes"])
-
+found_introspection=$enable_gda_gi
 
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
+enable_vala=no
+enable_vala_ext=no
 AC_ARG_ENABLE([vala-extensions],
     AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
-VAPIGEN_CHECK([0.17.7],[0.18])
-AS_CASE([$enable_vala],[yes],[
-  dnl Check for libgee
-  enable_vala_ext=yes
-  GEE_REQUIRED="0.8.0"
-  PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-  AC_SUBST(GEE_CFLAGS)
-  AC_SUBST(GEE_LIBS)
-],[no],[
-  AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enable])
-  enable_vala_ext=no])
+if test "x$enable_gda_gi" = "xyes"
+then
+    VAPIGEN_CHECK([0.17.7],[0.18])
+    if test "x$enable_vala_ext" = "xyes"
+    then
+	if test "x$enable_vala" != "xyes"
+	then
+            AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enabled])
+	fi
+        dnl Check for libgee
+        GEE_REQUIRED="0.8.0"
+        PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
+        AC_SUBST(GEE_CFLAGS)
+        AC_SUBST(GEE_LIBS)
+    fi
+else
+    AM_CONDITIONAL(ENABLE_VAPIGEN, false)
+fi
 
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 

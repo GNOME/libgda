@@ -26,16 +26,16 @@ AC_DEFUN([VAPIGEN_CHECK],
   AC_REQUIRE([GOBJECT_INTROSPECTION_CHECK])
   AC_REQUIRE([PKG_PROG_PKG_CONFIG])
   AC_REQUIRE([AM_PROG_VALAC])
-  
+
   AC_ARG_ENABLE([vala],
-    [AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]],[build Vala bindings @<:@default=]ifelse($4,,auto,$4)[@:>@])],,[
+    [AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]],[build Vala bindings @<:@default=]ifelse($4,,auto,$4)[@:>@])],
+    [enable_vala=$withval],[
       AS_IF([test "x$4" = "x"], [
           enable_vala=auto
         ], [
           enable_vala=$4
         ])
     ])
-
   AS_CASE([$enable_vala], [no], [enable_vala=no],
       [yes], [
         AS_IF([test "x$3" != "xyes" -a "x$found_introspection" != "xyes"], [
