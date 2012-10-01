@@ -102,7 +102,7 @@ field_toggled_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiDsnEditor *config)
 static void
 gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass *klass)
 {
-	GtkWidget *table;
+	GtkWidget *grid;
 	GtkWidget *label;
 	GtkWidget *exp;
 	gchar *str;
@@ -120,11 +120,11 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	labels_size_group = gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
 	/* set up widgets */
-	table = gtk_table_new (8, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-	gtk_widget_show (table);
-	gtk_box_pack_start (GTK_BOX (config), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+	gtk_widget_show (grid);
+	gtk_box_pack_start (GTK_BOX (config), grid, TRUE, TRUE, 0);
 
 	str = g_strdup_printf ("%s <span foreground='red' weight='bold'>*</span>", _("Data source _name:"));
 	label = gtk_label_new ("");
@@ -135,7 +135,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	config->priv->wname = gtk_entry_new ();
         gtk_editable_set_editable (GTK_EDITABLE (config->priv->wname), FALSE);
 	g_object_set (G_OBJECT (config->priv->wname), "can-focus", FALSE, NULL);
@@ -146,20 +146,18 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_editable_set_editable (GTK_EDITABLE (config->priv->wname), FALSE);
 	g_signal_connect (G_OBJECT (config->priv->wname), "changed",
 			  G_CALLBACK (field_changed_cb), config);
-	gtk_table_attach (GTK_TABLE (table), config->priv->wname, 1, 2, 0, 1,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->wname, 1, 0, 1, 1);
 
 	label = gtk_label_new_with_mnemonic (_("_System wide data source:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	config->priv->is_system = gtk_check_button_new ();
 	gtk_widget_show (config->priv->is_system);
 	g_signal_connect (G_OBJECT (config->priv->is_system), "toggled",
 			  G_CALLBACK (field_toggled_cb), config);
-	gtk_table_attach (GTK_TABLE (table), config->priv->is_system, 1, 2, 1, 2,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->is_system, 1, 1, 1, 1);
 
 	str = g_strdup_printf ("%s <span foreground='red' weight='bold'>*</span>", _("_Provider:"));
 	label = gtk_label_new ("");
@@ -169,20 +167,19 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
         gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	config->priv->wprovider = gdaui_provider_selector_new ();
 	gtk_label_set_mnemonic_widget (GTK_LABEL (label), config->priv->wprovider);
 	gtk_widget_show (config->priv->wprovider);
 	g_signal_connect (G_OBJECT (config->priv->wprovider), "changed",
 			  G_CALLBACK (field_changed_cb), config);
-	gtk_table_attach (GTK_TABLE (table), config->priv->wprovider, 1, 2, 2, 3,
-			  GTK_FILL|GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->wprovider, 1, 2, 1, 1);
 
 	label = gtk_label_new_with_mnemonic (_("_Description:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	config->priv->wdesc = gtk_entry_new ();
         gtk_editable_set_editable (GTK_EDITABLE (config->priv->wdesc), TRUE);
         gtk_widget_show (config->priv->wdesc);
@@ -190,8 +187,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_widget_show (config->priv->wdesc);
 	g_signal_connect (G_OBJECT (config->priv->wdesc), "changed",
 			  G_CALLBACK (field_changed_cb), config);
-	gtk_table_attach (GTK_TABLE (table), config->priv->wdesc, 1, 2, 3, 4,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->wdesc, 1, 3, 1, 1);
 
 	config->priv->warning = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (config->priv->warning),
@@ -200,15 +196,13 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_misc_set_alignment (GTK_MISC (config->priv->warning), 0.5, -1);
 	gtk_label_set_justify (GTK_LABEL (config->priv->warning), GTK_JUSTIFY_CENTER);
 	gtk_label_set_line_wrap (GTK_LABEL (config->priv->warning), TRUE);
-	gtk_table_attach (GTK_TABLE (table), config->priv->warning, 0, 2, 8, 9,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->warning, 0, 8, 2, 1);
 
 	/* connection's spec */
 	exp = gtk_expander_new (_("Connection's parameters"));
 	config->priv->dsn_spec_expander = exp;
 	gtk_widget_show (exp);
-	gtk_table_attach (GTK_TABLE (table), config->priv->dsn_spec_expander, 0, 2, 6, 7,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->dsn_spec_expander, 0, 6, 2, 1);
 	config->priv->dsn_spec = _gdaui_provider_spec_editor_new (gdaui_provider_selector_get_provider 
 								 (GDAUI_PROVIDER_SELECTOR (config->priv->wprovider)));
 	g_signal_connect (G_OBJECT (config->priv->dsn_spec), "changed",
@@ -222,8 +216,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	exp = gtk_expander_new (_("Authentication"));
 	config->priv->dsn_auth_expander = exp;
 	gtk_widget_show (exp);
-	gtk_table_attach (GTK_TABLE (table), config->priv->dsn_auth_expander, 0, 2, 7, 8,
-			  GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), config->priv->dsn_auth_expander, 0, 7, 2, 1);
 	config->priv->dsn_auth = _gdaui_provider_auth_editor_new (gdaui_provider_selector_get_provider 
 								 (GDAUI_PROVIDER_SELECTOR (config->priv->wprovider)));
 	g_signal_connect (G_OBJECT (config->priv->dsn_auth), "changed",

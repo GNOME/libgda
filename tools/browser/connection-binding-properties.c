@@ -42,7 +42,7 @@ static void update_display (ConnectionBindingProperties *cprop);
 struct _ConnectionBindingPropertiesPrivate
 {
 	BrowserVirtualConnectionSpecs *specs;
-	GtkTable    *layout_table;
+	GtkGrid     *layout_grid;
 	GtkWidget   *menu;
 };
 
@@ -228,8 +228,8 @@ create_layout (ConnectionBindingProperties *cprop)
 	label = gtk_label_new ("      ");
 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
-	cprop->priv->layout_table = GTK_TABLE (gtk_table_new (2, 2, FALSE));
-	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (cprop->priv->layout_table), TRUE, TRUE, 0);
+	cprop->priv->layout_grid = GTK_GRID (gtk_grid_new ());
+	gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (cprop->priv->layout_grid), TRUE, TRUE, 0);
 
 	gtk_widget_show_all (dcontents);
 
@@ -247,7 +247,7 @@ static void
 update_display (ConnectionBindingProperties *cprop)
 {
 	/* clear any previous setting */
-	gtk_container_foreach (GTK_CONTAINER (cprop->priv->layout_table), (GtkCallback) gtk_widget_destroy, NULL);
+	gtk_container_foreach (GTK_CONTAINER (cprop->priv->layout_grid), (GtkCallback) gtk_widget_destroy, NULL);
 
 	/* new contents */
 	gint top = 0;
@@ -270,8 +270,7 @@ update_display (ConnectionBindingProperties *cprop)
 				g_assert_not_reached ();
 			}
 
-			gtk_table_attach (cprop->priv->layout_table, display, 0, 1, top, top + 1,
-					  GTK_EXPAND | GTK_FILL, 0, 0, 10);
+			gtk_grid_attach (cprop->priv->layout_grid, display, 0, top, 1, 1);
 		}
 	}
 
@@ -283,11 +282,11 @@ update_display (ConnectionBindingProperties *cprop)
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
 	gtk_box_pack_start (GTK_BOX (label), arrow, FALSE, FALSE, 0);
 	g_object_set (G_OBJECT (button), "relief", GTK_RELIEF_NONE, NULL);
-	gtk_table_attach (cprop->priv->layout_table, button, 0, 2, top, top + 1, GTK_EXPAND | GTK_FILL, 0, 0, 10);
+	gtk_grid_attach (cprop->priv->layout_grid, button, 0, top, 2, 1);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (add_part_clicked_cb), cprop);
 	
-	gtk_widget_show_all ((GtkWidget*) cprop->priv->layout_table);
+	gtk_widget_show_all ((GtkWidget*) cprop->priv->layout_grid);
 
 	update_buttons_sensitiveness (cprop);
 }

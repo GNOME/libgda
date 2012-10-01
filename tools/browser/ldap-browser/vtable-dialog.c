@@ -116,7 +116,7 @@ vtable_dialog_new (GtkWindow *parent, BrowserConnection *bcnc)
 	gtk_window_set_title (GTK_WINDOW (dlg), _("Define LDAP search as a virtual table"));
 
 	GtkWidget *dcontents;
-	GtkWidget *label, *entry, *table, *button;
+	GtkWidget *label, *entry, *grid, *button;
 	gchar *str;
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
 	label = gtk_label_new (NULL);
@@ -131,25 +131,25 @@ vtable_dialog_new (GtkWindow *parent, BrowserConnection *bcnc)
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, SPACING);
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, SPACING);
-	gtk_table_set_row_spacing (GTK_TABLE (table), 0, SPACING);
-	gtk_box_pack_start (GTK_BOX (dcontents), table, FALSE, FALSE, SPACING);
+	grid = gtk_grid_new ();
+	gtk_grid_set_column_spacing (GTK_GRID (grid), SPACING);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), SPACING);
+	gtk_box_pack_start (GTK_BOX (dcontents), grid, FALSE, FALSE, SPACING);
 
 	label = gtk_label_new (_("Table name:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_entry_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	dlg->priv->tname_entry = entry;
 
 	label = gtk_label_new (_("Replace if exists:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	button = gtk_check_button_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), button, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), button, 1, 1, 1, 1);
 	dlg->priv->tname_replace = button;
 
 	gtk_widget_show_all (dcontents);

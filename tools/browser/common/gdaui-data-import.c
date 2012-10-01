@@ -102,7 +102,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 {
 	GtkWidget *label, *vbox, *hbox;
 	gchar *str;
-	GtkWidget *table, *entry;
+	GtkWidget *grid, *entry;
 	GtkFileFilter *filter;
 	GdaDataModel *encs;
 	GSList *encs_errors;
@@ -131,15 +131,15 @@ gdaui_data_import_init (GdauiDataImport * import)
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
-	table = gtk_table_new (7, 4, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 5);
 
 	/* file to import from */
 	label = gtk_label_new (_("File to import from:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_file_chooser_button_new (_("File to import data from"), GTK_FILE_CHOOSER_ACTION_OPEN);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (entry), gdaui_get_default_path ());
@@ -157,14 +157,14 @@ gdaui_data_import_init (GdauiDataImport * import)
 	gtk_file_filter_set_name (filter, _("All files"));
 	gtk_file_filter_add_pattern (filter, "*");
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (entry), filter);
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 4, 0, 1, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 3, 1);
 	g_signal_connect (G_OBJECT (entry), "selection-changed",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	/* Encoding */ 
 	label = gtk_label_new (_("Encoding:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	gchar *fname = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "import_encodings.xml", NULL);
 	encs = gda_data_model_import_new_file (fname, TRUE, NULL);
@@ -184,64 +184,64 @@ gdaui_data_import_init (GdauiDataImport * import)
 		import->priv->encoding_combo = entry;
 	}
 	g_object_unref (encs);
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 4, 1, 2, GTK_EXPAND | GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 3, 1);
 	g_signal_connect (G_OBJECT (entry), "changed",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	/* first line as title */
 	label = gtk_label_new (_("First line as title:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	
 	entry = gtk_check_button_new ();
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (entry), TRUE);
-	import->priv->first_line_check = entry,
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 3, 2, 3, GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	import->priv->first_line_check = entry;
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 2, 1);
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	/* separator */
 	label = gtk_label_new (_("Separator:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_SHRINK | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 
 	entry = gtk_radio_button_new_with_label (NULL, _("Comma"));
 	import->priv->sep_array [SEP_COMMA] = entry;
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 3, 4, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 3, 1, 1);
 	g_object_set_data (G_OBJECT (entry), "_sep", ",");
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Semi colon"));
 	import->priv->sep_array [SEP_SEMICOL] = entry;
-	gtk_table_attach (GTK_TABLE (table), entry, 2, 3, 3, 4, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 2, 3, 1, 1);
 	g_object_set_data (G_OBJECT (entry), "_sep", ";");
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Tab"));
 	import->priv->sep_array [SEP_TAB] = entry;
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 4, 5, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 4, 1, 1);
 	g_object_set_data (G_OBJECT (entry), "_sep", "\t");
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Space"));
 	import->priv->sep_array [SEP_SPACE] = entry;
-	gtk_table_attach (GTK_TABLE (table), entry, 2, 3, 4, 5, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 2, 4, 1, 1);
 	g_object_set_data (G_OBJECT (entry), "_sep", " ");
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Pipe"));
 	import->priv->sep_array [SEP_PIPE] = entry;
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 5, 6, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 5, 1, 1);
 	g_object_set_data (G_OBJECT (entry), "_sep", "|");
 	g_signal_connect (G_OBJECT (entry), "toggled",
 			  G_CALLBACK (spec_changed_cb), import);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_table_attach (GTK_TABLE (table), hbox, 2, 3, 5, 6, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), hbox, 2, 5, 1, 1);
 	entry = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (entry), _("Other:"));
 	import->priv->sep_array [SEP_OTHER] = entry;
 	gtk_box_pack_start (GTK_BOX (hbox), entry, FALSE, FALSE, 0);

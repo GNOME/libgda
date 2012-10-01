@@ -393,17 +393,17 @@ plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plugin, GtkWidg
 
 static void create_plugin_nb (GtkWidget *vbox, GdauiPlugin *plugin);
 static void options_form_holder_changed_cb (GdauiBasicForm *form, GdaHolder *param, gboolean user_modif,
-					   GtkWidget *table);
+					   GtkWidget *grid);
 static GtkWidget *
 build_test_for_plugin_struct (GdauiPlugin *plugin)
 {
-	GtkWidget *label, *table;
+	GtkWidget *label, *grid;
 	GString *string;
 	gchar *str, *txt = "";
 
 	g_assert (plugin);
 
-	table = gtk_table_new (4, 2, FALSE);	
+	grid = gtk_grid_new ();
 
 	/* explain top label */
 	if (plugin->plugin_file)
@@ -413,12 +413,12 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (plugin->plugin_name);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 2, 0, 1, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 0, 1, 1);
 	gtk_widget_show (label);
 
 	str = g_strdup_printf ("<b>%sDescription:</b>", txt);
@@ -426,12 +426,12 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (plugin->plugin_descr);
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
 	gtk_widget_show (label);
 
 	/* options */
@@ -441,7 +441,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	g_string_free (string, TRUE);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
 	if (plugin->options_xml_spec) {
@@ -454,7 +454,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 			str = g_strdup_printf ("Cannot parse XML spec for %soptions: %s", txt,
 					       error && error->message ? error->message : "No detail");
 			label = gtk_label_new (str);
-			gtk_table_attach (GTK_TABLE (table), label, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
+			gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 1, 1);
 			g_warning ("%s", str);
 			g_error_free (error);
 		}
@@ -463,31 +463,31 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 
 			form = gdaui_basic_form_new (plist);
 			g_object_unref (plist);
-			gtk_table_attach (GTK_TABLE (table), form, 1, 2, 2, 3, GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+			gtk_grid_attach (GTK_GRID (grid), form, 1, 2, 1, 1);
 			gtk_widget_show (form);
-			g_object_set_data (G_OBJECT (table), "options", form);
+			g_object_set_data (G_OBJECT (grid), "options", form);
 			g_signal_connect (G_OBJECT (form), "holder-changed",
-					  G_CALLBACK (options_form_holder_changed_cb), table);
+					  G_CALLBACK (options_form_holder_changed_cb), grid);
 		}
 	}
 	else {
 		label = gtk_label_new ("None");
 		gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-		gtk_table_attach (GTK_TABLE (table), label, 1, 2, 2, 3, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 1, 1);
 		gtk_widget_show (label);
 	}
 
 	/* notebook */
-	create_plugin_nb (table, plugin);
+	create_plugin_nb (grid, plugin);
 
-	gtk_widget_show (table);
+	gtk_widget_show (grid);
 
-	return table;
+	return grid;
 }
-static void plugin_nb_page_changed_cb (GtkNotebook *nb, GtkWidget *page, gint pageno, GtkWidget *table);
+static void plugin_nb_page_changed_cb (GtkNotebook *nb, GtkWidget *page, gint pageno, GtkWidget *grid);
 static void vbox_destroyed_cb (GtkWidget *widget, gpointer data);
 static void
-create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
+create_plugin_nb (GtkWidget *grid, GdauiPlugin *plugin)
 {
 	GtkWidget *wid, *nb, *label;
 	gsize i;
@@ -496,13 +496,13 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (nb), GTK_POS_LEFT);
-	gtk_table_attach_defaults (GTK_TABLE (table), nb, 0, 2, 3, 4);
+	gtk_grid_attach (GTK_GRID (grid), nb, 0, 1, 2, 1);
 	gtk_widget_show (nb);
 	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (plugin_nb_page_changed_cb), table);
+			  G_CALLBACK (plugin_nb_page_changed_cb), grid);
 
-	g_object_set_data (G_OBJECT (table), "nb", nb);
-	g_object_set_data (G_OBJECT (table), "plugin", plugin);
+	g_object_set_data (G_OBJECT (grid), "nb", nb);
+	g_object_set_data (G_OBJECT (grid), "plugin", plugin);
 
 	if (plugin->nb_g_types > 0) {
 		for (i = 0; i < plugin->nb_g_types; i++) {
@@ -517,7 +517,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 				tdata->type = type;
 				tdata->dh = dh;
 				tdata->plugin = plugin;
-				tdata->options = g_object_get_data (G_OBJECT (table), "options");
+				tdata->options = g_object_get_data (G_OBJECT (grid), "options");
 				g_hash_table_insert (mainconf.tests_hash, wid, tdata);
 
 				gtk_widget_show (wid);
@@ -542,7 +542,7 @@ create_plugin_nb (GtkWidget *table, GdauiPlugin *plugin)
 				tdata->type = type;
 				tdata->dh = dh;
 				tdata->plugin = plugin;
-				tdata->options = g_object_get_data (G_OBJECT (table), "options");
+				tdata->options = g_object_get_data (G_OBJECT (grid), "options");
 				g_hash_table_insert (mainconf.tests_hash, wid, tdata);
 
 				gtk_widget_show (wid);
@@ -567,7 +567,7 @@ static GtkWidget *build_grid_test_for_gtype (GdaDataHandler *dh, GType type, con
 
 static void
 plugin_nb_page_changed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint pageno,
-			   G_GNUC_UNUSED GtkWidget *table)
+			   G_GNUC_UNUSED GtkWidget *grid)
 {
 	GtkWidget *vbox;
 	TestWidgetData *tdata;
@@ -648,19 +648,19 @@ build_test_widget (TestWidgetData *tdata)
 
 static void
 options_form_holder_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
-				G_GNUC_UNUSED gboolean user_modif, GtkWidget *table)
+				G_GNUC_UNUSED gboolean user_modif, GtkWidget *grid)
 {
 	GtkWidget *nb;
 	GdauiPlugin *plugin;
 	
-	nb = g_object_get_data (G_OBJECT (table), "nb");
-	plugin = g_object_get_data (G_OBJECT (table), "plugin");
+	nb = g_object_get_data (G_OBJECT (grid), "nb");
+	plugin = g_object_get_data (G_OBJECT (grid), "plugin");
 	g_assert (plugin);
 	
 	if (nb)
 		gtk_widget_destroy (nb);
-	g_object_set_data (G_OBJECT (table), "nb", NULL);
-	create_plugin_nb (table, plugin);
+	g_object_set_data (G_OBJECT (grid), "nb", NULL);
+	create_plugin_nb (grid, plugin);
 }
 
 
@@ -677,16 +677,15 @@ void default_clicked_cb (GtkButton *button, GtkWidget *entry);
 static GtkWidget *
 build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_name)
 {
-	GtkWidget *wid, *label, *table, *button, *bbox, *entry, *vbox;
+	GtkWidget *wid, *label, *grid, *button, *bbox, *entry, *vbox;
 	GString *string;
-	gboolean expand;
 	
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 
-	table = gtk_table_new (7, 3, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 5);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-	gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 5);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 5);
+	gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
 	/* explain top label */
 	string = g_string_new ("");
@@ -700,40 +699,36 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	g_string_free (string, TRUE);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 	gtk_widget_show (label);
 
 	/* widget being tested */
 	wid = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (wid), "handler", dh, NULL);
 
-	expand = gdaui_data_entry_can_expand (GDAUI_DATA_ENTRY (wid), FALSE);
-	if (expand)
-		gtk_table_attach_defaults (GTK_TABLE (table), wid, 0, 3, 1, 2);
-	else
-		gtk_table_attach (GTK_TABLE (table), wid, 0, 3, 1, 2, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 0, 1, 3, 1);
 	gtk_widget_show (wid);
 
 	/* Other widgets */
 	label = gtk_label_new ("Current flags: ");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new ("--");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 3, 2, 3, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 2, 1);
 	g_object_set_data (G_OBJECT (wid), "flags", label);
 	gtk_widget_show (label);
 
 	label = gtk_label_new ("Current value: ");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	gtk_widget_show (label);
 	
 	label = gtk_label_new ("");
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 3, 3, 4, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 3, 1, 1);
 	g_object_set_data (G_OBJECT (wid), "value", label);
 	g_signal_connect (G_OBJECT (wid), "contents-modified",
 			  G_CALLBACK (entry_contents_modified), NULL);
@@ -742,7 +737,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry_contents_modified (wid, GTK_LABEL (label));
 
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_table_attach (GTK_TABLE (table), bbox, 0, 3, 4, 5, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), bbox, 0, 4, 3, 1);
 		
 	button = gtk_toggle_button_new_with_label ("NULL ok");
 	g_signal_connect (G_OBJECT (button), "toggled",
@@ -780,14 +775,11 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	if (expand)
-		gtk_table_attach_defaults (GTK_TABLE (table), entry, 0, 2, 5, 6);
-	else
-		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 5, 6, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 0, 5, 2, 1);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label ("Set as original");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
-	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 5, 6, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 5, 1, 1);
 	gtk_widget_show (button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK (orig_clicked_cb), wid);
@@ -796,26 +788,16 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	if (expand)
-		gtk_table_attach_defaults (GTK_TABLE (table), entry, 0, 2, 6, 7);
-	else
-		gtk_table_attach (GTK_TABLE (table), entry, 0, 2, 6, 7, GTK_FILL | GTK_EXPAND, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 0, 6, 2, 1);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label ("Set as default");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
-	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 6, 7, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 6, 1, 1);
 	gtk_widget_show (button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK (default_clicked_cb), wid);
 
-	gtk_widget_show (table);
-
-	if (!expand) {
-		label = gtk_label_new ("");
-		gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
-		gtk_widget_show (label);
-	}
-
+	gtk_widget_show (grid);
 	gtk_widget_show (vbox);
 
 	return vbox;
@@ -1198,13 +1180,13 @@ fill_tested_models (void)
 	gda_data_model_set_column_title (model, 0, "CHAR value");
 
 	row = gda_data_model_append_row (model, NULL);
-        g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), -128);
+        g_value_set_schar ((value = gda_value_new (G_TYPE_CHAR)), (gint8) -128);
         gda_data_model_set_value_at (model, 0, row, value, NULL); gda_value_free (value);
 	row = gda_data_model_append_row (model, NULL);
-        g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), 0);
+        g_value_set_schar ((value = gda_value_new (G_TYPE_CHAR)), (gint8) 0);
         gda_data_model_set_value_at (model, 0, row, value, NULL); gda_value_free (value);
 	row = gda_data_model_append_row (model, NULL);
-        g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), 127);
+        g_value_set_schar ((value = gda_value_new (G_TYPE_CHAR)), (gint8) 127);
         gda_data_model_set_value_at (model, 0, row, value, NULL); gda_value_free (value);
 
 	/* G_TYPE_UCHAR */

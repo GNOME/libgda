@@ -171,10 +171,10 @@ static void column_selection_changed_cb (GtkComboBox *cbox, FkDeclare *decl);
 static void
 create_internal_layout (FkDeclare *decl)
 {
-	GtkWidget *label, *table, *cbox, *entry;
+	GtkWidget *label, *grid, *cbox, *entry;
 	char *markup, *str;
 	GtkWidget *dcontents;
-	gint i, nrows;
+	gint i;
 	GSList *list;
 
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (decl));
@@ -198,21 +198,20 @@ create_internal_layout (FkDeclare *decl)
 	gtk_widget_show_all (label);
 
 	/* GtkTable to hold contents */
-	nrows = g_slist_length (decl->priv->mtable->columns);
-	table = gtk_table_new (nrows + 3, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (dcontents), table, TRUE, TRUE, 0);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, 5);
-	gtk_table_set_row_spacing (GTK_TABLE (table), 1, 5);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (dcontents), grid, TRUE, TRUE, 0);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 5);
 
 	/* FK name */
 	gfloat yalign;
 	label = gtk_label_new (_("Foreign key name:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &yalign);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., yalign);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	entry = gtk_entry_new ();
 	decl->priv->fk_name = entry;
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	g_signal_connect (entry, "changed",
 			  G_CALLBACK (fk_name_changed_cb), decl);
 
@@ -220,7 +219,7 @@ create_internal_layout (FkDeclare *decl)
 	label = gtk_label_new (_("Referenced table:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &yalign);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., yalign);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	GtkTreeModel *model;
 	GtkCellRenderer *renderer;
@@ -249,7 +248,7 @@ create_internal_layout (FkDeclare *decl)
 					    renderer,
 					    is_node_sensitive,
 					    NULL, NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), cbox, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), cbox, 1, 1, 1, 1);
 
 	/* more labels */
 	label = gtk_label_new ("");
@@ -257,14 +256,14 @@ create_internal_layout (FkDeclare *decl)
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 	label = gtk_label_new ("");
 	markup = g_strdup_printf ("<b>%s:</b>", _("Referenced column"));
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 1, 1);
 
 	/* columns */
 	decl->priv->n_cols = g_slist_length (decl->priv->mtable->columns);
@@ -276,7 +275,7 @@ create_internal_layout (FkDeclare *decl)
 		assoc->column = column;
 
 		label = gtk_check_button_new_with_label (column->column_name);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i+1, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, i, 1, 1);
 		assoc->checkbox = label;
 		g_signal_connect (label, "toggled",
 				  G_CALLBACK (column_toggled_cb), decl);
@@ -293,13 +292,13 @@ create_internal_layout (FkDeclare *decl)
 		gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (cbox), renderer,
 						"text", MODEL_COLUMNS_COLUMN_STRING,
 						NULL);
-		gtk_table_attach_defaults (GTK_TABLE (table), cbox, 1, 2, i, i+1);
+		gtk_grid_attach (GTK_GRID (grid), cbox, 1, i, 1, 1);
 		assoc->cbox = GTK_COMBO_BOX (cbox);
 		g_signal_connect (cbox, "changed",
 				  G_CALLBACK (column_selection_changed_cb), decl);
 		gtk_widget_set_sensitive (cbox, FALSE);
 	}
-	gtk_widget_show_all (table);
+	gtk_widget_show_all (grid);
 }
 
 static void

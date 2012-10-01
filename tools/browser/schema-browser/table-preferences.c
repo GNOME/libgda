@@ -324,13 +324,13 @@ table_preferences_new (TableInfo *tinfo)
 	gtk_box_pack_start (GTK_BOX (tpref), top_vbox, TRUE, TRUE, 0);
 
 	/* Field's display properties */
-	GtkWidget *table;
+	GtkWidget *grid;
 
-	table = gtk_table_new (2, 2, FALSE);
-	gtk_box_pack_start (GTK_BOX (top_vbox), table, TRUE, TRUE, 0);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (top_vbox), grid, TRUE, TRUE, 0);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
 
 	/* left column */
 	GtkWidget *label;
@@ -340,7 +340,7 @@ table_preferences_new (TableInfo *tinfo)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	GtkWidget *sw, *treeview;
 	sw = gtk_scrolled_window_new (NULL, NULL);
@@ -349,7 +349,7 @@ table_preferences_new (TableInfo *tinfo)
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
-	gtk_table_attach (GTK_TABLE (table), sw, 0, 1, 1, 2, GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), sw, 0, 1, 1, 1);
 
 	tpref->priv->columns_store = gtk_list_store_new (NUM_COLUMNS,
 							 G_TYPE_POINTER, G_TYPE_GTYPE,
@@ -384,10 +384,10 @@ table_preferences_new (TableInfo *tinfo)
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 1, 2, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 1, 0, 1, 1);
 
 	tpref->priv->field_props = create_column_properties (tpref);
-	gtk_table_attach_defaults (GTK_TABLE (table), tpref->priv->field_props, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), tpref->priv->field_props, 1, 1, 1, 1);
 
 	/* show all */
 	gtk_widget_show_all (top_vbox);
@@ -428,12 +428,12 @@ static void plugin_hash_foreach_func (const gchar *plugin_name, GdauiPlugin *plu
 static GtkWidget *
 create_column_properties (TablePreferences *tpref)
 {
-	GtkWidget *combo, *label, *table;
+	GtkWidget *combo, *label, *grid;
 	GtkCellRenderer *renderer;
 
-	table = gtk_table_new (3, 2, FALSE);
-	gtk_table_set_row_spacings (GTK_TABLE (table), 5);
-	gtk_table_set_col_spacings (GTK_TABLE (table), 5);
+	grid = gtk_grid_new ();
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 5);
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
 	/* plugins combo */
 	tpref->priv->plugins_model = GTK_TREE_MODEL (gtk_list_store_new (PL_NUM_COLUMNS,
@@ -454,30 +454,29 @@ create_column_properties (TablePreferences *tpref)
 	g_signal_connect (G_OBJECT (combo), "changed",
 			  G_CALLBACK (plugins_combo_changed_cb), tpref);
 
-	gtk_table_attach (GTK_TABLE (table), combo, 
-			  1, 2, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), combo, 1, 0, 1, 1);
 	
 	label = gtk_label_new (_("Data entry type:"));
 	gtk_widget_set_tooltip_text (label, _("Defines how data for the selected column\n"
 					      "will be displayed in forms. Leave 'Default' to have\n"
 					      "the default display"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	
 	/* plugin options */
 	tpref->priv->options_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_table_attach (GTK_TABLE (table), tpref->priv->options_vbox, 1, 2, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), tpref->priv->options_vbox, 1, 1, 1, 1);
 	tpref->priv->options_none = gtk_label_new (_("none"));
 	gtk_misc_set_alignment (GTK_MISC (tpref->priv->options_none), 0., -1);
 	gtk_box_pack_start (GTK_BOX (tpref->priv->options_vbox), tpref->priv->options_none, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("Options:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	/* plugin preview */
 	tpref->priv->preview_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_table_attach (GTK_TABLE (table), tpref->priv->preview_vbox, 1, 2, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), tpref->priv->preview_vbox, 1, 2, 1, 1);
 	tpref->priv->preview_none = gtk_label_new (_("none"));
 	gtk_misc_set_alignment (GTK_MISC (tpref->priv->preview_none), 0., -1);
 	gtk_box_pack_start (GTK_BOX (tpref->priv->preview_vbox), tpref->priv->preview_none, FALSE, FALSE, 0);
@@ -486,11 +485,11 @@ create_column_properties (TablePreferences *tpref)
 	gtk_widget_set_tooltip_text (label, _("Free form to test the configured\n"
 					      "data entry"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
-	gtk_widget_show_all (table);
+	gtk_widget_show_all (grid);
 
-	return table;
+	return grid;
 }
 
 static void

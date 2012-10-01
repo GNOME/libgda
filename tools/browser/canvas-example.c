@@ -77,25 +77,24 @@ main (int argc, char *argv[])
 				       GDA_META_STRUCT_FEATURE_ALL);
 
 	/* UI Part */
-	GtkWidget *window, *table, *canvas;
+	GtkWidget *window, *grid, *canvas;
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size (GTK_WINDOW (window), 640, 600);
 	g_signal_connect (window, "delete-event", G_CALLBACK (on_delete_event),
 			  NULL);
 
-	table = gtk_table_new (3, 1, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table), 15);
-	gtk_container_add (GTK_CONTAINER (window), table);
+	grid = gtk_grid_new ();
+	gtk_container_set_border_width (GTK_CONTAINER (grid), 15);
+	gtk_container_add (GTK_CONTAINER (window), grid);
 
 	canvas = browser_canvas_db_relations_new (mstruct);
 	g_object_unref (mstruct);
 
-	gtk_table_attach_defaults (GTK_TABLE (table), canvas,
-				   0, 1, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), canvas, 0, 0, 1, 1);
 
 	GtkWidget *bbox, *button;
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_table_attach (GTK_TABLE (table), bbox, 0, 1, 1, 2, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), bbox, 0, 1, 1, 1);
 	button = gtk_button_new_with_label ("Auto layout");
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (auto_layout_cb), canvas);
@@ -110,7 +109,7 @@ main (int argc, char *argv[])
 		{ "application/x-rootwindow-drop", 0, 2 }
 	};
 	wid = gtk_label_new ("\nDROP ZONE\n(hold SHIFT to drag and drop)\n");
-	gtk_table_attach (GTK_TABLE (table), wid, 0, 1, 2, 3, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), wid, 0, 2, 1, 1);
 	gtk_drag_dest_set (wid,
 			   GTK_DEST_DEFAULT_ALL,
 			   dbo_table, G_N_ELEMENTS (dbo_table),

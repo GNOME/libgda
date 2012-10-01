@@ -134,7 +134,7 @@ GtkWidget *
 filter_editor_new (BrowserConnection *bcnc)
 {
 	FilterEditor *feditor;
-	GtkWidget *table, *label, *entry;
+	GtkWidget *grid, *label, *entry;
 	GdaDataModel *model;
 	GList *values;
 	GValue *v1, *v2;
@@ -145,41 +145,41 @@ filter_editor_new (BrowserConnection *bcnc)
 	feditor = FILTER_EDITOR (g_object_new (FILTER_EDITOR_TYPE, NULL));
 	feditor->priv->bcnc = g_object_ref ((GObject*) bcnc);
 
-	table = gtk_table_new (4, 2, FALSE);
-	gtk_table_set_col_spacing (GTK_TABLE (table), 0, 5);
-	gtk_box_pack_start (GTK_BOX (feditor), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
+	gtk_box_pack_start (GTK_BOX (feditor), grid, TRUE, TRUE, 0);
 	
 	label = gtk_label_new (_("Base DN:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	label = gtk_label_new (_("Filter expression:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	label = gtk_label_new (_("Attributes to fetch:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	label = gtk_label_new (_("Search scope:"));
 	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
 	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4, GTK_FILL, GTK_SHRINK, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
 	entry = gtk_entry_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	feditor->priv->base_dn = entry;
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 1, 1);
 	feditor->priv->filter = entry;
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 2, 3);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 1, 1);
 	feditor->priv->attributes = entry;
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activated_cb), feditor);
@@ -212,11 +212,11 @@ filter_editor_new (BrowserConnection *bcnc)
 	gint cols[] = {1};
 	entry = gdaui_combo_new_with_model (model, 1, cols);
 	g_object_unref (model);
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 3, 4);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 3, 1, 1);
 	feditor->priv->scope = entry;
 	filter_editor_clear (feditor);
 
-	gtk_widget_show_all (table);
+	gtk_widget_show_all (grid);
 	return (GtkWidget*) feditor;
 }
 

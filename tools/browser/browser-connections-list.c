@@ -41,7 +41,7 @@ static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, 
 
 struct _BrowserConnectionsListPrivate
 {
-	GtkTable    *layout_table;
+	GtkGrid     *layout_grid;
 	GtkTreeView *treeview;
 	gulong       cnc_added_sigid;
 	gulong       cnc_removed_sigid;
@@ -230,7 +230,7 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 		wid = gdaui_basic_form_new (dset);
 		g_object_set ((GObject*) wid, "show-actions", FALSE, NULL);
 		gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (wid), NULL, FALSE);
-		gtk_table_attach_defaults (clist->priv->layout_table, wid, 1, 2, 2, 3);
+		gtk_grid_attach (clist->priv->layout_grid, wid, 1, 2, 1, 1);
 		gtk_widget_show (wid);
 		clist->priv->cnc_params_editor = wid;
 
@@ -319,7 +319,7 @@ void
 browser_connections_list_show (BrowserConnection *current)
 {
 	if (!_clist) {
-		GtkWidget *clist, *sw, *table, *treeview, *label, *wid;
+		GtkWidget *clist, *sw, *grid, *treeview, *label, *wid;
 		gchar *str;
 		clist = GTK_WIDGET (g_object_new (BROWSER_TYPE_CONNECTIONS_LIST, 
 						  NULL));
@@ -335,16 +335,16 @@ browser_connections_list_show (BrowserConnection *current)
 		g_free (str);
 
 		/* table layout */
-		table = gtk_table_new (4, 2, FALSE);
-		gtk_table_set_col_spacings (GTK_TABLE (table), 10);
-		gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-		gtk_container_add (GTK_CONTAINER (clist), table);
-		_clist->priv->layout_table = GTK_TABLE (table);
+		grid = gtk_grid_new ();
+		gtk_grid_set_column_spacing (GTK_GRID (grid), 10);
+		gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+		gtk_container_add (GTK_CONTAINER (clist), grid);
+		_clist->priv->layout_grid = GTK_GRID (grid);
 
 		/* image and explaining label */
 		GtkWidget *hbox;
 		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 0, 1, GTK_EXPAND | GTK_FILL, 0, 0, 6);
+		gtk_grid_attach (GTK_GRID (grid), hbox, 0, 0, 3, 1);
 
 		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected-big.png", NULL);
 		wid = gtk_image_new_from_file (str);
@@ -366,7 +366,7 @@ browser_connections_list_show (BrowserConnection *current)
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		sw = gtk_scrolled_window_new (NULL, NULL);
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw),
@@ -374,7 +374,7 @@ browser_connections_list_show (BrowserConnection *current)
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 						GTK_POLICY_NEVER,
 						GTK_POLICY_AUTOMATIC);
-		gtk_table_attach (GTK_TABLE (table), sw, 0, 1, 2, 4, 0, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), sw, 0, 2, 1, 2);
 		
 		/* connection's properties */
 		label = gtk_label_new ("");
@@ -382,12 +382,12 @@ browser_connections_list_show (BrowserConnection *current)
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2, GTK_FILL, 0, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
 
 		/* buttons at the bottom*/
 		GtkWidget *bbox, *button;
 		bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-		gtk_table_attach (GTK_TABLE (table), bbox, 1, 2, 3, 4, GTK_EXPAND | GTK_FILL, 0, 0, 6);
+		gtk_grid_attach (GTK_GRID (grid), bbox, 1, 3, 1, 1);
 		gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 		button = gtk_button_new_with_label (_("Close connection"));
 		gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);

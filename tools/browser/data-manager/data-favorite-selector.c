@@ -278,7 +278,7 @@ static void
 properties_activated_cb (GtkMenuItem *mitem, DataFavoriteSelector *tsel)
 {
 	if (! tsel->priv->popup_properties) {
-		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *table;
+		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *grid;
 		gchar *str;
 		
 		pcont = popup_container_new (GTK_WIDGET (mitem));
@@ -297,25 +297,25 @@ properties_activated_cb (GtkMenuItem *mitem, DataFavoriteSelector *tsel)
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		
-		table = gtk_table_new (2, 2, FALSE);
-		gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+		grid = gtk_grid_new ();
+		gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("Name"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("Specifications"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 		
 		entry = gtk_entry_new ();
-		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 		tsel->priv->properties_name = entry;
 		g_signal_connect (entry, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
@@ -336,7 +336,7 @@ properties_activated_cb (GtkMenuItem *mitem, DataFavoriteSelector *tsel)
 		sw = gtk_scrolled_window_new (NULL, NULL);
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 						GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-		gtk_table_attach_defaults (GTK_TABLE (table), sw, 1, 2, 1, 2);
+		gtk_grid_attach (GTK_GRID (grid), sw, 1, 1, 1, 1);
 		gtk_container_add (GTK_CONTAINER (sw), text);
 		tsel->priv->properties_text = text;
 		g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), "changed",

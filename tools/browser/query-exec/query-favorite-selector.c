@@ -324,7 +324,7 @@ static void
 properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 {
 	if (! tsel->priv->popup_properties) {
-		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *table;
+		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *grid;
 		gchar *str;
 		gfloat align;
 		
@@ -345,8 +345,8 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		label = gtk_label_new ("      ");
 		gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 		
-		table = gtk_table_new (3, 2, FALSE);
-		gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+		grid = gtk_grid_new ();
+		gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("Name"));
@@ -354,14 +354,14 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		g_free (str);
 		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("SQL Code"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("Is action"));
@@ -373,10 +373,10 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 						      "the query will be defined from the row selected in the grid"));
 		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
 		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
-		gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		
 		entry = gtk_entry_new ();
-		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 		tsel->priv->properties_name = entry;
 		g_signal_connect (entry, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
@@ -384,13 +384,13 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		text = query_editor_new ();
 		query_editor_show_tooltip (QUERY_EDITOR (text), FALSE);
 		gtk_widget_set_size_request (GTK_WIDGET (text), 400, 300);
-		gtk_table_attach_defaults (GTK_TABLE (table), text, 1, 2, 1, 2);
+		gtk_grid_attach (GTK_GRID (grid), text, 1, 1, 1, 1);
 		tsel->priv->properties_text = text;
 		g_signal_connect (text, "changed",
 				  G_CALLBACK (property_changed_cb), tsel);
 
 		entry = gtk_check_button_new ();
-		gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0);
+		gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 1, 1);
 		tsel->priv->properties_action = entry;
 		g_signal_connect (entry, "toggled",
 				  G_CALLBACK (property_changed_cb), tsel);

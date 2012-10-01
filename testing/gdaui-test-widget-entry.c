@@ -107,7 +107,7 @@ int
 main (int argc, char* argv[])
 {
 	GtkWidget *entry, *label, *button;
-	GtkWidget *window, *hbox, *vbox, *table, *top_vbox;
+	GtkWidget *window, *hbox, *vbox, *grid, *top_vbox;
 	gint index = 0;
 	gchar *tmp;
 
@@ -393,31 +393,31 @@ main (int argc, char* argv[])
 	gtk_label_set_markup (GTK_LABEL (label), "<b>Common properties:</b>");
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_box_pack_start (GTK_BOX (top_vbox), label, FALSE, FALSE, 10);
-	table = gtk_table_new (2, 3, FALSE);
-	gtk_box_pack_start (GTK_BOX (top_vbox), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (top_vbox), grid, TRUE, TRUE, 0);
 
 	label = gtk_label_new ("MaxLen:");
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	entry = gdaui_entry_new (NULL, NULL); /* FIXME: use a gint data entry */
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 0, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	button = gtk_button_new_with_label ("Set");
-	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 0, 1, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 0, 1, 1);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (prop_length_set_cb), entry);
 
 	label = gtk_label_new ("Force text:");
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	entry = gdaui_entry_new (NULL, NULL);
-	gtk_table_attach_defaults (GTK_TABLE (table), entry, 1, 2, 1, 2);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 1, 1);
 	button = gtk_button_new_with_label ("Set");
-	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 1, 2, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 1, 1, 1);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (prop_text_set_cb), entry);
 
 	label = gtk_label_new ("Force text to NULL:");
-	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 2, 1);
 	button = gtk_button_new_with_label ("Set");
-	gtk_table_attach (GTK_TABLE (table), button, 2, 3, 2, 3, 0, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), button, 2, 2, 1, 1);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (prop_text_null_cb), entry);
 

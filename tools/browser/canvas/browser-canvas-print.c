@@ -221,7 +221,7 @@ static void print_page_numbers_toggled_cb (GtkToggleButton *toggle, PrintCustomD
 static GObject *
 print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, PrintPageData *pdata)
 {
-	GtkWidget *vbox, *bbox, *button, *label, *hbox, *table, *entry;
+	GtkWidget *vbox, *bbox, *button, *label, *hbox, *grid, *entry;
 	PrintCustomData *cdata;
 
 	cdata = g_new0 (PrintCustomData, 1);
@@ -250,42 +250,42 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
         label = gtk_label_new ("    ");
         gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
-	table = gtk_table_new (3, 3, FALSE);
-	gtk_box_pack_start (GTK_BOX (hbox), table, TRUE, TRUE, 0);
+	grid = gtk_grid_new ();
+	gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
 
 	label = gtk_label_new (_("Number of pages used:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 2, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (1., 100., 1.);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (entry), 0);
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 0, 1, GTK_FILL, 0, 5, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	cdata->h_npages = (GtkSpinButton*) entry;
 	g_signal_connect (entry, "value-changed",
 			  G_CALLBACK (print_h_npages_value_changed_cb), cdata);
 
 	label = gtk_label_new (_("horizontally"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 2, 3, 0, 1, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 2, 0, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (1., 100., 1.);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (entry), 0);
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 1, 2, GTK_FILL, 0, 5, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 1, 1);
 	cdata->v_npages = (GtkSpinButton*) entry;
 	g_signal_connect (entry, "value-changed",
 			  G_CALLBACK (print_v_npages_value_changed_cb), cdata);
 
 	label = gtk_label_new (_("vertically"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 2, 3, 1, 2, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 2, 1, 1, 1);
 
 	label = gtk_label_new (_("Zoom factor:"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
-	gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3, GTK_FILL, 0, 0, 0);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (.1, 10., .05);
 	gtk_spin_button_set_digits (GTK_SPIN_BUTTON (entry), 2);
-	gtk_table_attach (GTK_TABLE (table), entry, 1, 2, 2, 3, GTK_FILL, 0, 5, 0);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 1, 1);
 	cdata->zoom = (GtkSpinButton*) entry;
 	g_signal_connect (entry, "value-changed",
 			  G_CALLBACK (print_zoom_value_changed_cb), cdata);
