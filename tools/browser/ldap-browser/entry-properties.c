@@ -346,9 +346,12 @@ visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility 
 			 EntryProperties *eprop)
 {
 	gint wx, wy, bx, by;
+	GdkDeviceManager *manager;
+        GdkDevice *pointer;
 	
-	gdk_window_get_pointer (gtk_widget_get_window (text_view), &wx, &wy, NULL);
-	
+	manager = gdk_display_get_device_manager (gtk_widget_get_display (text_view));
+	pointer = gdk_device_manager_get_client_pointer (manager);
+	gdk_window_get_device_position (gtk_widget_get_window (text_view), pointer, &wx, &wy, NULL);
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
 					       wx, wy, &bx, &by);
@@ -365,14 +368,12 @@ static gboolean
 motion_notify_event (GtkWidget *text_view, GdkEventMotion *event, EntryProperties *eprop)
 {
 	gint x, y;
-	
+
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
 					       GTK_TEXT_WINDOW_WIDGET,
 					       event->x, event->y, &x, &y);
 	
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y, eprop);
-
-	gdk_window_get_pointer (gtk_widget_get_window (text_view), NULL, NULL, NULL);
 
 	/* store coordinates */
 	eprop->priv->bx = x;
