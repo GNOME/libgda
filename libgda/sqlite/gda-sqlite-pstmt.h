@@ -21,10 +21,14 @@
 #define __GDA_SQLITE_PSTMT_H__
 
 #include <libgda/providers-support/gda-pstmt.h>
-#ifdef HAVE_SQLITE
-#include <sqlite3.h>
-#else
+#ifdef STATIC_SQLITE
 #include "sqlite-src/sqlite3.h"
+#else
+#  ifdef HAVE_SQLITE
+#    include <sqlite3.h>
+#  else
+#    include "sqlite-src/sqlite3.h"
+#endif
 #endif
 
 G_BEGIN_DECLS
