@@ -94,10 +94,16 @@ endif
 
 # GIR files are generated automatically by Valac then is not necessary to scan source code to generate it
 INTROSPECTION_GIRS = GdaData-5.0.gir
+
+# Extract dlname from libfolks.la; see bug #658002.
+# This is what g-ir-scanner does.
+libgdadata_dlname = \
+	`$(SED) -n "s/^dlname='\([A-Za-z0-9.+-]\+\)'/\1/p" libgdadata-5.0.la`
 INTROSPECTION_COMPILER_ARGS = \
     --includedir=. \
     --includedir=$(top_srcdir)/libgda \
-    --includedir=$(top_srcdir)/libgda/data
+    --includedir=$(top_srcdir)/libgda/data \
+    -l $(libgdadata_dlname)
 
 GdaData-5.0.typelib: $(INTROSPECTION_GIRS)
 	$(INTROSPECTION_COMPILER) $(INTROSPECTION_COMPILER_ARGS)  $< -o $@

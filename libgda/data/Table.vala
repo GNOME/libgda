@@ -91,7 +91,7 @@ namespace GdaData
 				catalog = new Catalog ();
 				catalog.connection = connection;
 				catalog.name = (string) catm.get_value_at (catm.get_column_index ("catalog_name"), 0);
-				if (!update_meta) {
+				if (update_meta) {
 					try { 
 						var cxs = new Gda.MetaContext ();
 						cxs.set_table ("_schemata");
@@ -181,7 +181,7 @@ namespace GdaData
 				_fields.set (fi.name, fi);
 			}
 			// Constraints
-			if (!update_meta) {
+			if (update_meta) {
 				try { 
 					var cxcr = new Gda.MetaContext ();
 					cxcr.set_table ("_table_constraints");
@@ -196,7 +196,7 @@ namespace GdaData
 							GLib.message ("Meta store update ... Ok");
 				}
 			}
-			if (!update_meta) {
+			if (update_meta) {
 				try { 
 					var cxcr2 = new Gda.MetaContext ();
 					cxcr2.set_table ("_key_column_usage");
@@ -232,7 +232,7 @@ namespace GdaData
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
-					if (!update_meta) {
+					if (update_meta) {
 						try { 
 							var cxcr3 = new Gda.MetaContext ();
 							cxcr3.set_table ("_referential_constraints");
