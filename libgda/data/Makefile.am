@@ -103,6 +103,8 @@ INTROSPECTION_COMPILER_ARGS = \
     --includedir=. \
     --includedir=$(top_srcdir)/libgda \
     --includedir=$(top_srcdir)/libgda/data \
+    --includedir=$(top_builddir)/libgda \
+    --includedir=$(top_builddir)/libgda/data \
     -l $(libgdadata_dlname)
 
 GdaData-5.0.typelib: $(INTROSPECTION_GIRS)
