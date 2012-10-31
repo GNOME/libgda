@@ -104,7 +104,7 @@ compare_iter (GdaDataModelIter *iter, gint exp_row, const gchar **col_ids, const
 		str = gda_value_stringify (cvalue);
 		if (strcmp (col_values[i], str)) {
 			g_print ("Wrong column %d value: got [%s] and expected [%s]\n", i,
-				 str, col_types[i]);
+				 str, col_values[i]);
 			g_free (str);
 			return FALSE;
 		}
