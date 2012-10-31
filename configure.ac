@@ -496,9 +496,9 @@ AC_ARG_ENABLE([vala-extensions],
 
 if test "x$enable_gda_gi" = "xyes"
 then
-    VAPIGEN_CHECK([0.17.7],[0.18])
     if test "x$enable_vala_ext" = "xyes"
     then
+        VAPIGEN_CHECK([0.17.7],[0.18])
 	if test "x$enable_vala" != "xyes"
 	then
             AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enabled])
@@ -508,6 +508,8 @@ then
         PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
         AC_SUBST(GEE_CFLAGS)
         AC_SUBST(GEE_LIBS)
+    else
+        AM_CONDITIONAL(ENABLE_VAPIGEN, false)
     fi
 else
     AM_CONDITIONAL(ENABLE_VAPIGEN, false)
