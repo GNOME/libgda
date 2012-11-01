@@ -434,7 +434,7 @@ dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 AC_ARG_ENABLE([gda-gi],
-    AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
+    AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=no])
 
 if test "x$found_introspection" = "xyes"
@@ -457,7 +457,7 @@ fi
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],
-    AS_HELP_STRING([--enable-gdaui-gi], [Enable GObject Introspection for libgda-ui [default=auto]]),
+    AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=no]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=no])
 
 if test "x$found_introspection" = "xyes"
@@ -479,39 +479,49 @@ fi
 AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
 
 AC_ARG_ENABLE([gi-system-install],
-    AS_HELP_STRING([--enable-gi-system-install], [Install GObject Introspection files along with system installed files [default=yes]]),
+    AS_HELP_STRING([--enable-gi-system-install[=@<:@no/auto/yes@:>@]], [Install GObject Introspection files along with system installed files [default=yes]]),
     [enable_gi_system_install=$enableval],[enable_gi_system_install=yes])
 AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "xyes"])
-found_introspection=$enable_gda_gi
 
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
-enable_vala=no
-enable_vala_ext=no
+AM_PROG_VALAC([0.17.7])
+VAPIGEN_CHECK([0.17.7],[0.18],,no)
+
+if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
+then
+	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
+fi
+
+if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
+then
+	AC_MSG_ERROR([Vala bindings is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
+fi
+
 AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions], [Enable support for Vala extensions [default=no]]),
+    AS_HELP_STRING([--enable-vala-extensions[=@<:@no/auto/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
-if test "x$enable_gda_gi" = "xyes"
+if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes"
 then
-    if test "x$enable_vala_ext" = "xyes"
-    then
-        VAPIGEN_CHECK([0.17.7],[0.18])
-	if test "x$enable_vala" != "xyes"
-	then
-            AC_MSG_ERROR([Vala extensions for Libgda are requested but Vala/vapigen is not available or enabled])
-	fi
-        dnl Check for libgee
-        GEE_REQUIRED="0.8.0"
-        PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-        AC_SUBST(GEE_CFLAGS)
-        AC_SUBST(GEE_LIBS)
-    else
-        AM_CONDITIONAL(ENABLE_VAPIGEN, false)
-    fi
-else
-    AM_CONDITIONAL(ENABLE_VAPIGEN, false)
+	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
+fi
+
+if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
+then
+  AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
+  enable_vala_ext=no
+fi
+
+if test "x$enable_vala_ext" = "xyes"
+then
+  dnl Check for libgee
+  GEE_REQUIRED="0.8.0"
+  PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
+  AC_SUBST(GEE_CFLAGS)
+  AC_SUBST(GEE_LIBS)
+  enable_vala_ext=yes
 fi
 
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
@@ -998,7 +1008,7 @@ echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes;
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
-echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; else echo no; fi`"
+echo "   Building Vala Bindings: `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
