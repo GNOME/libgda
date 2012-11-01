@@ -46,7 +46,8 @@ static GdaMetaDbObject *create_view_object (GdaMetaStruct *mstruct, const GValue
  * @xml_spec_file: the specifications as the name of an XML file
  * @error: (allow-none): a place to store errors, or %NULL
  *
- * Loads an XML description into @mstruct
+ * Loads an XML description into @mstruct. This method is still experimental and no description
+ * the XML file structure is given, and no guarantee that it will remain as it is given.
  *
  * returns: TRUE if no error has occurred
  */

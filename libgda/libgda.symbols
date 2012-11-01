@@ -689,10 +689,6 @@
 	gda_sql_case_free
 	gda_sql_case_new
 	gda_sql_case_serialize
-	gda_sql_delimiter
-	gda_sql_delimiterAlloc
-	gda_sql_delimiterFree
-	gda_sql_delimiterTrace
 	gda_sql_error_get_type
 	gda_sql_error_quark
 	gda_sql_expr_copy
@@ -733,12 +729,9 @@
 	gda_sql_param_spec_take_name
 	gda_sql_param_spec_take_nullok
 	gda_sql_param_spec_take_type
-	gda_sql_parser
-	gda_sql_parserAlloc
 	gda_sql_parser_error_get_type
 	gda_sql_parser_error_quark
 	gda_sql_parser_flavour_get_type
-	gda_sql_parserFree
 	gda_sql_parser_get_type
 	gda_sql_parser_mode_get_type
 	gda_sql_parser_new
@@ -747,7 +740,6 @@
 	gda_sql_parser_parse_string_as_batch
 	gda_sql_parser_set_overflow_error
 	gda_sql_parser_set_syntax_error
-	gda_sql_parserTrace
 	gda_sql_select_field_copy
 	gda_sql_select_field_free
 	gda_sql_select_field_new

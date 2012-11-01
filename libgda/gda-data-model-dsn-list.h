@@ -25,7 +25,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DATA_MODEL_DSN_LIST            (gda_data_model_dsn_list_get_type())
+#define GDA_TYPE_DATA_MODEL_DSN_LIST            (_gda_data_model_dsn_list_get_type())
 #define GDA_DATA_MODEL_DSN_LIST(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL_DSN_LIST, GdaDataModelDsnList))
 #define GDA_DATA_MODEL_DSN_LIST_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL_DSN_LIST, GdaDataModelDsnListClass))
 #define GDA_IS_DATA_MODEL_DSN_LIST(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_MODEL_DSN_LIST))
@@ -50,7 +50,7 @@ struct _GdaDataModelDsnListClass {
 	void (*_gda_reserved4) (void);
 };
 
-GType gda_data_model_dsn_list_get_type (void) G_GNUC_CONST;
+GType _gda_data_model_dsn_list_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

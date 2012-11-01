@@ -70,15 +70,15 @@ static void merge_tokenizer_contexts (GdaSqlParser *parser, gint n_contexts);
 /*
  * The interface to the LEMON-generated parser
  */
-void *gda_sql_delimiterAlloc (void*(*)(size_t));
-void gda_sql_delimiterFree (void*, void(*)(void*));
-void gda_sql_delimiterTrace (void*, char *);
-void gda_sql_delimiter (void*, int, GValue *, GdaSqlParserIface *);
+void *priv_gda_sql_delimiterAlloc (void*(*)(size_t));
+void priv_gda_sql_delimiterFree (void*, void(*)(void*));
+void priv_gda_sql_delimiterTrace (void*, char *);
+void priv_gda_sql_delimiter (void*, int, GValue *, GdaSqlParserIface *);
 
-void *gda_sql_parserAlloc (void*(*)(size_t));
-void gda_sql_parserFree (void*, void(*)(void*));
-void gda_sql_parserTrace (void*, char *);
-void gda_sql_parser (void*, int, GValue *, GdaSqlParserIface *);
+void *priv_gda_sql_parserAlloc (void*(*)(size_t));
+void priv_gda_sql_parserFree (void*, void(*)(void*));
+void priv_gda_sql_parserTrace (void*, char *);
+void priv_gda_sql_parser (void*, int, GValue *, GdaSqlParserIface *);
 
 
 /* signals */
@@ -240,11 +240,11 @@ gda_sql_parser_init (GdaSqlParser *parser)
 	if (klass->delim_alloc)
 		parser->priv->lemon_delimiter = klass->delim_alloc ((void*(*)(size_t)) g_malloc);
 	else
-		parser->priv->lemon_delimiter = gda_sql_delimiterAlloc ((void*(*)(size_t)) g_malloc);
+		parser->priv->lemon_delimiter = priv_gda_sql_delimiterAlloc ((void*(*)(size_t)) g_malloc);
 	if (klass->parser_alloc)
 		parser->priv->lemon_parser = klass->parser_alloc ((void*(*)(size_t)) g_malloc);
 	else
-		parser->priv->lemon_parser = gda_sql_parserAlloc ((void*(*)(size_t)) g_malloc);
+		parser->priv->lemon_parser = priv_gda_sql_parserAlloc ((void*(*)(size_t)) g_malloc);
 	parser->priv->mode = GDA_SQL_PARSER_MODE_PARSE;
 	parser->priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
 
@@ -317,13 +317,13 @@ gda_sql_parser_finalize (GObject *object)
 			klass->delim_free (parser->priv->lemon_delimiter, g_free);
 		}
 		else
-			gda_sql_delimiterFree (parser->priv->lemon_delimiter, g_free);
+			priv_gda_sql_delimiterFree (parser->priv->lemon_delimiter, g_free);
 		if (klass->parser_alloc) {
 			g_assert (klass->parser_free);
 			klass->parser_free (parser->priv->lemon_parser, g_free);
 		}
 		else
-			gda_sql_parserFree (parser->priv->lemon_parser, g_free);
+			priv_gda_sql_parserFree (parser->priv->lemon_parser, g_free);
 
 		g_array_free (parser->priv->passed_tokens, TRUE);
 
@@ -367,7 +367,7 @@ gda_sql_parser_set_property (GObject *object,
 						    stdout : NULL, ".......DELIMITER DEBUG:");
 			}
 			else
-				gda_sql_delimiterTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
+				priv_gda_sql_delimiterTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
 							stdout : NULL, ".......DELIMITER DEBUG:");
 			if (klass->parser_alloc) {
 				g_assert (klass->parser_trace);
@@ -375,7 +375,7 @@ gda_sql_parser_set_property (GObject *object,
 						     stdout : NULL, ".......PARSE DEBUG:");
 			}
 			else
-				gda_sql_parserTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
+				priv_gda_sql_parserTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
 						     stdout : NULL, ".......PARSE DEBUG:");
 			break;
 		}
@@ -443,8 +443,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	gint ntokens = 0;
 	GdaSqlParserMode parse_mode;
 	GdaSqlParserClass *klass;
-	void (*_delimit) (void*, int, GValue *, GdaSqlParserIface *) = gda_sql_delimiter;
-	void (*_parse) (void*, int, GValue *, GdaSqlParserIface *) = gda_sql_parser;
+	void (*_delimit) (void*, int, GValue *, GdaSqlParserIface *) = priv_gda_sql_delimiter;
+	void (*_parse) (void*, int, GValue *, GdaSqlParserIface *) = priv_gda_sql_parser;
 	gint *delim_trans = delim_tokens;
 	gint *parser_trans= parser_tokens;
 

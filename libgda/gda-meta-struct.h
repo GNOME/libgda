@@ -492,6 +492,9 @@ typedef struct {
 
 GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
 GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);
+gboolean            gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog,
+							const gchar *schema, 
+							const gchar *xml_spec_file, GError **error);
 GdaMetaDbObject    *gda_meta_struct_complement         (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 							const GValue *catalog, const GValue *schema, const GValue *name,
 							GError **error);

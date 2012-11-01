@@ -28,7 +28,7 @@
 
 // The name of the generated procedure that implements the parser
 // is as follows:
-%name gda_sql_delimiter
+%name priv_gda_sql_delimiter
 
 // The following text is included near the beginning of the C source
 // code file that implements the parser.

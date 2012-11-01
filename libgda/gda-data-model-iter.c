@@ -1010,6 +1010,8 @@ gda_data_model_iter_is_valid (GdaDataModelIter *iter)
  * represented by the @param parameter
  *
  * Returns: the column number, or @param is not valid
+ *
+ * Deprecated: 5.2: not very useful
  */
 gint
 gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *param)

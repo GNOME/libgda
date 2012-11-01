@@ -226,7 +226,7 @@ dsn_changed_cb (G_GNUC_UNUSED GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsn
  */
 
 GType
-gda_data_model_dsn_list_get_type (void)
+_gda_data_model_dsn_list_get_type (void)
 {
 	static GType type = 0;
 

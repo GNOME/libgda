@@ -1986,7 +1986,7 @@ gda_holder_get_bind (GdaHolder *holder)
  *
  * This method is just a wrapper around the gda_text_to_alphanum() function.
  *
- * Returns: a new string
+ * Returns: (transfer full): a new string
  */
 gchar *
 gda_holder_get_alphanum_id (GdaHolder *holder)

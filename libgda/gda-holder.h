@@ -90,6 +90,8 @@ GdaHolder          *gda_holder_copy                    (GdaHolder *orig);
 
 GType               gda_holder_get_g_type              (GdaHolder *holder);
 const gchar        *gda_holder_get_id                  (GdaHolder *holder);
+gchar *             gda_holder_get_alphanum_id         (GdaHolder *holder);
+
 
 /**
  * gda_holder_new_string:
