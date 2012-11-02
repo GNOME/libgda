@@ -29,6 +29,7 @@ enum {
 	STATUS_CHANGED,
 	CONTENTS_VALID,
 	EXPAND_CHANGED,
+	VALIDATE,
 	LAST_SIGNAL
 };
 
@@ -119,6 +120,19 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
+		/**
+		 * GdauiDataEntry::contents-valid: (skip)
+		 * @model: the #GdauiDataEntry
+		 * @error: a #GError to set erros to or NULL
+		 *
+		 * Gets emitted when data entered to the #GdaDataEntry widget must be validated.
+		 *
+		 * For bindings use #gdaui_data_entry_validate function.
+		 *
+		 * Returns: TRUE when the data was successfull validated, FALSE otherwise.
+		 *
+		 * Deprecated: 5.2.0
+		 */
 		gdaui_data_entry_signals[CONTENTS_VALID] =
 			g_signal_new ("contents-valid",
 				      GDAUI_TYPE_DATA_ENTRY,
@@ -230,7 +244,7 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_content_is_valid:
+ * gdaui_data_entry_content_is_valid: (skip)
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @error: (allow-none): a place to store an error, or %NULL
  *
@@ -243,6 +257,8 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
  * Returns: TRUE if @de's contents is valid
  *
  * Since: 4.2
+ *
+ * Deprecated: 5.2
  */
 gboolean
 gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
@@ -254,6 +270,29 @@ gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
 	return is_valid;
 }
 
+/**
+ * gdaui_data_entry_validate:
+ * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
+ * @error: (allow-none): a place to store an erro, or %NULL
+ *
+ * Tests the validity of @de's contents. This function must be overrided by implementators.
+ *
+ * Default implementation returns TRUE.
+ *
+ * Returns: TRUE if @de's contents is valid
+ *
+ * Since: 5.2
+ */
+gboolean
+gdaui_data_entry_validate (GdauiDataEntry *de, GError **error)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
+
+	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->validate)
+		(GDAUI_DATA_ENTRY_GET_IFACE (de)->validate) (de, error);
+	else
+		return TRUE;
+}
 
 /**
  * gdaui_data_entry_set_reference_value:

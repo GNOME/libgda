@@ -496,11 +496,20 @@ fi
 
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
 then
-	AC_MSG_ERROR([Vala bindings is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
+	AC_MSG_ERROR([GDA Vala bindings is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
 fi
 
+AC_ARG_ENABLE([gdaui-vala],
+    AS_HELP_STRING([--enable-gdaui-vala[=@<:@no/yes@:>@]], [Enable Vala bindings for GDA-UI [default=no]]),
+    [enable_gdaui_vala=$enableval],[enable_gdaui_vala=no])
+if test "x$enable_vala" != "xyes" -a "x$enable_gdaui_vala" = "xyes"
+then
+	AC_MSG_ERROR([Vala bindings for GDA-UI is requested but GDA Vala bindings is disable. Use --enable-vala])
+fi
+AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
+
 AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions[=@<:@no/auto/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
+    AS_HELP_STRING([--enable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
 if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes"
@@ -666,7 +675,7 @@ else
 				AC_MSG_RESULT([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
                 		have_sqlite=no
         		else
-                		AC_MSG_RESULT(Note: using system installed version of SQLite, meta data for functions will not be available)
+                		AC_MSG_RESULT([Note: using system installed version of SQLite, meta data for functions will not be available])
 				have_sqlite=yes
                 		SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
 				SQLITE_PATH=`pkg-config --variable=libdir sqlite3`
@@ -1008,7 +1017,8 @@ echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes;
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
-echo "   Building Vala Bindings: `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
+echo "   Building GDA Vala Bindings (--enable-vala): `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
+echo "   Building GDA-UI Vala Bindings: `if test x$enable_gdaui_vala != xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"

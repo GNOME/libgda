@@ -258,11 +258,6 @@ namespace Gda {
 		[NoAccessorMethod]
 		public string basedir { owned get; construct; }
 	}
-	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_model_dsn_list_get_type ()")]
-	public class DataModelDsnList : GLib.Object, Gda.DataModel {
-		[CCode (has_construct_function = false)]
-		protected DataModelDsnList ();
-	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_model_import_get_type ()")]
 	public class DataModelImport : GLib.Object, Gda.DataModel {
 		[CCode (has_construct_function = false)]
@@ -289,6 +284,8 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		protected DataModelIter ();
 		public static GLib.Quark error_quark ();
+		[Deprecated (since = "5.2")]
+		public int get_column_for_param (Gda.Holder param);
 		public unowned Gda.Holder get_holder_for_field (int col);
 		public int get_row ();
 		public unowned GLib.Value? get_value_at (int col);
@@ -517,6 +514,7 @@ namespace Gda {
 		public static GLib.Quark error_quark ();
 		public void force_invalid ();
 		public void force_invalid_e (owned GLib.Error? error);
+		public string get_alphanum_id ();
 		public GLib.Value get_attribute (string attribute);
 		public unowned Gda.Holder get_bind ();
 		public GLib.Value get_default_value ();
@@ -627,6 +625,7 @@ namespace Gda {
 		public static GLib.Quark error_quark ();
 		public GLib.SList<weak Gda.MetaDbObject> get_all_db_objects ();
 		public Gda.MetaDbObject get_db_object (GLib.Value? catalog, GLib.Value? schema, GLib.Value name);
+		public bool load_from_xml_file (string? catalog, string? schema, string xml_spec_file) throws GLib.Error;
 		public bool sort_db_objects (Gda.MetaSortType sort_type) throws GLib.Error;
 		[NoAccessorMethod]
 		public uint features { get; construct; }
@@ -1270,6 +1269,14 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct DataMetaWrapperClass {
 		public weak GLib.ObjectClass parent_class;
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
+	public struct DataModelDsnList {
+		public weak GLib.Object object;
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
+	public struct DataModelDsnListClass {
+		public weak GLib.ObjectClass object_class;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct Diff {

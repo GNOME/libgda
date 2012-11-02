@@ -77,12 +77,12 @@ struct _GdauiDataEntryIface
 
 	void            (*set_unknown_color)     (GdauiDataEntry *de, gdouble red, gdouble green,
 						  gdouble blue, gdouble alpha);
-
+	/* New Validating mecanism */
+	gboolean				(*validate)						 	 (GdauiDataEntry* de, GError **error);
 	/*< private >*/
 	/* Padding for future expansion */
         void (*_gdaui_reserved2) (void);
         void (*_gdaui_reserved3) (void);
-        void (*_gdaui_reserved4) (void);
 };
 
 /**
@@ -122,6 +122,7 @@ GType           gdaui_data_entry_get_value_type         (GdauiDataEntry *de);
 void            gdaui_data_entry_set_value              (GdauiDataEntry *de, const GValue *value);
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
 gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
+gboolean        gdaui_data_entry_validate				        (GdauiDataEntry *de, GError **error);
 void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
 const GValue   *gdaui_data_entry_get_reference_value    (GdauiDataEntry *de);
 void            gdaui_data_entry_set_reference_current  (GdauiDataEntry *de);
