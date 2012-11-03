@@ -519,9 +519,8 @@ gdaui_tree_store_get_node (GdauiTreeStore *store, GtkTreeIter *iter)
 	return node;
 }
 
-
 /**
- * gdaui_tree_store_get_iter:
+ * gdaui_tree_store_get_iter: (skip)
  * @store: a #GdauiTreeStore object
  * @iter: a pointer to a #GtkTreeIter
  * @node: a #GdaTreeNode in @store
@@ -531,9 +530,30 @@ gdaui_tree_store_get_node (GdauiTreeStore *store, GtkTreeIter *iter)
  * Returns: %TRUE if no error occurred and @iter is valid
  *
  * Since: 4.2.8
+ *
+ * Deprecated: 5.2
  */
 gboolean
 gdaui_tree_store_get_iter (GdauiTreeStore *store, GtkTreeIter *iter, GdaTreeNode *node)
+{
+	gdaui_tree_store_get_iter_from_node (store, iter, node);
+}
+
+
+/**
+ * gdaui_tree_store_get_iter_from_node:
+ * @store: a #GdauiTreeStore object
+ * @iter: a #GtkTreeIter
+ * @node: a #GdaTreeNode in @store
+ *
+ * Sets @iter to represent @node in the tree.
+ *
+ * Returns: %TRUE if no error occurred and @iter is valid
+ *
+ * Since: 5.2
+ */
+gboolean
+gdaui_tree_store_get_iter_from_node (GdauiTreeStore *store, GtkTreeIter *iter, GdaTreeNode *node)
 {
 	g_return_val_if_fail (GDAUI_IS_TREE_STORE (store), FALSE);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), FALSE);

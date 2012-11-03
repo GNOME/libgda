@@ -1,1 +1,2 @@
-# Gda-ui metadata
+// Gda UI metadata
+Combo.set_model name="set_data"

@@ -250,9 +250,9 @@ if ENABLE_GDAUI_VALA
 vapi: libgdaui-5.0.vapi
 
 libgdaui-5.0.vapi: Gdaui-5.0.gir
-	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda-ui --vapidir=$(top_srcdir)/libgda --girdir=$(top_srcdir)/libgda --library=libgda-ui-5.0 --pkg=libxml-2.0 --pkg=libgda-5.0 Gdaui-5.0.gir
+	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda-ui --vapidir=$(top_srcdir)/libgda --girdir=$(top_srcdir)/libgda --library=libgdaui-5.0 --pkg=libxml-2.0 --pkg=libgda-5.0 --pkg=gio-2.0 --pkg=atk --pkg=gtk+-3.0 Gdaui-5.0.gir
 
-vapidir = $(VAPIGEN_VAPIDIR)
+vapidir = $(VAPIDIR)
 vapi_DATA=libgdaui-5.0.vapi
 
 EXTRA_DIST += \

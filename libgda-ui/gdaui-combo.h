@@ -59,6 +59,7 @@ GtkWidget    *gdaui_combo_new              (void);
 GtkWidget    *gdaui_combo_new_with_model   (GdaDataModel *model, gint n_cols, gint *cols_index);
 
 void          gdaui_combo_set_model        (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint *cols_index);
+void					gdaui_combo_set_data				 (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint *cols_index);
 void          gdaui_combo_add_null         (GdauiCombo *combo, gboolean add_null);
 gboolean      gdaui_combo_is_null_selected (GdauiCombo *combo);
 

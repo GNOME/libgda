@@ -79,6 +79,7 @@ m4_define([_VAPIGEN_CHECK_INTERNAL],
 		  [yes], [
 		      VAPIGEN=`$PKG_CONFIG --variable=vapigen vapigen`
 		      VAPIGEN_MAKEFILE=`$PKG_CONFIG --variable=datadir vapigen`/vala/Makefile.vapigen
+		      VAPIDIR=`$PKG_CONFIG --variable=vapidir vapigen`
 		      AS_IF([ test "x$2" = "x"], [
 		          VAPIGEN_VAPIDIR=`$PKG_CONFIG --variable=vapidir vapigen`
 		        ], [
@@ -102,8 +103,13 @@ m4_define([_VAPIGEN_CHECK_INTERNAL],
 						AC_MSG_CHECKING([for $vala_pkg])
 		        PKG_CHECK_EXISTS([$vala_pkg], [
 		            VALA_DATADIR=`pkg-config $vala_pkg --variable=datadir`
-                VAPIGEN_VAPIDIR="$VALA_DATADIR/vala/vapi"
+                VAPIDIR="$VALA_DATADIR/vala/vapi"
                 VAPIGEN_MAKEFILE="$VALA_DATADIR/vala/Makefile.vapigen"
+                AS_IF([ test "x$2" = "x"], [
+						      VAPIGEN_VAPIDIR=`$PKG_CONFIG --variable=vapidir vapigen`
+						    ], [
+						      VAPIGEN_VAPIDIR=`$PKG_CONFIG --variable=vapidir_versioned vapigen`
+						    ])
                 vapigen_pkg_found=yes
 		          ], [
 		            AS_CASE([$enable_vala], [yes], [
@@ -121,6 +127,7 @@ m4_define([_VAPIGEN_CHECK_INTERNAL],
 	])
 	AC_SUBST([VAPIGEN])
 	AC_SUBST([VAPIGEN_VAPIDIR])
+	AC_SUBST([VAPIDIR])
 	AC_SUBST([VAPIGEN_MAKEFILE])
 
 	AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$vapigen_pkg_found" = "xyes")
