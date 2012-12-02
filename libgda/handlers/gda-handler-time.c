@@ -147,11 +147,12 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
 	hdl->priv->detailed_descr = _("Time and Date handler");
-	hdl->priv->nb_g_types = 3;
+	hdl->priv->nb_g_types = 4;
 	hdl->priv->valid_g_types = g_new0 (GType, 7);
 	hdl->priv->valid_g_types[0] = G_TYPE_DATE;
 	hdl->priv->valid_g_types[1] = GDA_TYPE_TIME;
 	hdl->priv->valid_g_types[2] = GDA_TYPE_TIMESTAMP;
+	hdl->priv->valid_g_types[3] = G_TYPE_DATE_TIME;
 
 	/* taking into accout the locale */
 	hdl->priv->sql_locale = g_new0 (LocaleSetting, 1);
@@ -491,6 +492,47 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 		else
 			retval = g_strdup ("NULL");	
 	}
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
+		GDate *vdate;
+
+		ts = g_value_get_boxed ((GValue *) value);
+		if (ts) {
+			gint y, m, d;
+			g_date_time_get_ymd (ts, &y, &m, &d);
+			vdate = g_date_new_dmy (d, m, y);
+			str = render_date_locale (vdate, dh->priv->sql_locale);
+			g_date_free (vdate);
+
+			if (str) {
+				GString *string;
+				string = g_string_new ("");
+				g_string_append_printf (string, "%02u:%02u:%02u",
+							g_date_time_get_hour (ts),
+							g_date_time_get_minute (ts),
+							g_date_time_get_second (ts));
+				if (g_date_time_get_microsecond (ts) != 0)
+					g_string_append_printf (string, ".%d", g_date_time_get_microsecond (ts));
+
+				GTimeSpan span;
+				span = g_date_time_get_utc_offset (ts);
+				if (span > 0)
+					g_string_append_printf (string, "+%02d",
+								(int) (span / G_TIME_SPAN_HOUR));
+				else
+					g_string_append_printf (string, "-%02d",
+								(int) (-span / G_TIME_SPAN_HOUR));
+
+				retval = g_strdup_printf ("%s %s", str, string->str);
+				g_free (str);
+				g_string_free (string, TRUE);
+			}
+			else
+				retval = g_strdup ("NULL");
+		}
+		else
+			retval = g_strdup ("NULL");
+	}
 	else
 		g_assert_not_reached ();
 
@@ -503,7 +545,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
  * @type: the type of data being handled
  *
  * Get a string representing the locale-dependent way to enter a date/time/datetime, using
- * a syntax suitable for the #GnomeDbFormatEntry widget
+ * a syntax suitable for the #GdauiFormatEntry widget
  *
  * Returns: a new string
  */
@@ -518,7 +560,7 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 	g_return_val_if_fail (dh->priv, NULL);
 
 	string = g_string_new ("");
-	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP)) {
+	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME)) {
 		for (i=0; i<3; i++) {
 			if (i > 0)
 				g_string_append_c (string, dh->priv->str_locale->separator);
@@ -542,7 +584,7 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 	if (type == GDA_TYPE_TIMESTAMP)
 		g_string_append_c (string, ' ');
 
-	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP)) 
+	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME))
 		g_string_append (string, "00:00:00");
 
 	str = string->str;
@@ -618,6 +660,47 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		else
 			retval = g_strdup ("NULL");	
 	}
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
+		GDate *vdate;
+
+		ts = g_value_get_boxed ((GValue *) value);
+		if (ts) {
+			gint y, m, d;
+			g_date_time_get_ymd (ts, &y, &m, &d);
+			vdate = g_date_new_dmy (d, m, y);
+			str = render_date_locale (vdate, hdl->priv->sql_locale);
+			g_date_free (vdate);
+
+			if (str) {
+				GString *string;
+				string = g_string_new ("");
+				g_string_append_printf (string, "%02u:%02u:%02u",
+							g_date_time_get_hour (ts),
+							g_date_time_get_minute (ts),
+							g_date_time_get_second (ts));
+				if (g_date_time_get_microsecond (ts) != 0)
+					g_string_append_printf (string, ".%d", g_date_time_get_microsecond (ts));
+
+				GTimeSpan span;
+				span = g_date_time_get_utc_offset (ts);
+				if (span > 0)
+					g_string_append_printf (string, "+%02d",
+								(int) (span / G_TIME_SPAN_HOUR));
+				else
+					g_string_append_printf (string, "-%02d",
+								(int) (-span / G_TIME_SPAN_HOUR));
+
+				retval = g_strdup_printf ("'%s %s'", str, string->str);
+				g_free (str);
+				g_string_free (string, TRUE);
+			}
+			else
+				retval = g_strdup ("NULL");
+		}
+		else
+			retval = g_strdup ("NULL");
+	}
 	else
 		g_assert_not_reached ();
 
@@ -679,6 +762,47 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 		}
 		else
 			retval = g_strdup ("");	
+	}
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
+		GDate *vdate;
+
+		ts = g_value_get_boxed ((GValue *) value);
+		if (ts) {
+			gint y, m, d;
+			g_date_time_get_ymd (ts, &y, &m, &d);
+			vdate = g_date_new_dmy (d, m, y);
+			str = render_date_locale (vdate, hdl->priv->str_locale);
+			g_date_free (vdate);
+
+			if (str) {
+				GString *string;
+				string = g_string_new ("");
+				g_string_append_printf (string, "%02u:%02u:%02u",
+							g_date_time_get_hour (ts),
+							g_date_time_get_minute (ts),
+							g_date_time_get_second (ts));
+				if (g_date_time_get_microsecond (ts) != 0)
+					g_string_append_printf (string, ".%d", g_date_time_get_microsecond (ts));
+
+				GTimeSpan span;
+				span = g_date_time_get_utc_offset (ts);
+				if (span > 0)
+					g_string_append_printf (string, "+%02d",
+								(int) (span / G_TIME_SPAN_HOUR));
+				else
+					g_string_append_printf (string, "-%02d",
+								(int) (-span / G_TIME_SPAN_HOUR));
+
+				retval = g_strdup_printf ("%s %s", str, string->str);
+				g_free (str);
+				g_string_free (string, TRUE);
+			}
+			else
+				retval = g_strdup ("NULL");
+		}
+		else
+			retval = g_strdup ("NULL");
 	}
 	else
 		g_assert_not_reached ();
@@ -796,6 +920,7 @@ static gboolean make_timestamp (GdaHandlerTime *hdl, GdaTimestamp *timestamp,
 static gboolean make_date (GdaHandlerTime *hdl, GDate *date, const gchar *value,
 			   LocaleSetting *locale, const gchar **out_endptr);
 static gboolean make_time (GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value);
+static GDateTime *make_ts (GdaHandlerTime *hdl, const gchar *value, LocaleSetting *locale);
 static GValue *
 gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql, 
 					GType type, LocaleSetting *locale)
@@ -803,36 +928,83 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 	GdaHandlerTime *hdl;
 	GValue *value = NULL;
 
-	GDate date;
-        GdaTime timegda;
-        GdaTimestamp timestamp;
-
 	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
 	hdl = GDA_HANDLER_TIME (iface);
 	g_return_val_if_fail (hdl->priv, NULL);
 
 	if (type == G_TYPE_DATE) {
+		GDate date;
 		if (make_date (hdl, &date, sql, locale, NULL)) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE);
 			g_value_set_boxed (value, (gconstpointer) &date);
 		}
 	}
 	else if (type == GDA_TYPE_TIME) {
+		GdaTime timegda;
 		if (make_time (hdl, &timegda, sql)) {
 			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIME);
 			gda_value_set_time (value, &timegda);
 		}
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
+		GdaTimestamp timestamp;
 		if (make_timestamp (hdl, &timestamp, sql, locale)) {
 			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIMESTAMP);
 			gda_value_set_timestamp (value, &timestamp);
+		}
+	}
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
+		ts = make_ts (hdl, sql, locale);
+		if (ts) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
+			g_value_take_boxed (value, ts);
 		}
 	}
 	else
 		g_assert_not_reached ();
 
 	return value;
+}
+
+static GDateTime *
+make_ts (GdaHandlerTime *hdl, const gchar *value, LocaleSetting *locale)
+{
+	GDateTime *ts;
+	const gchar *end_ptr;
+	GDate vdate;
+	GdaTime vtime;
+	memset (&vtime, 0, sizeof (GdaTime));
+	vtime.timezone = GDA_TIMEZONE_INVALID;
+
+	gboolean retval;
+	retval = make_date (hdl, &vdate, value, locale, &end_ptr);
+	if (retval) {
+		if (*end_ptr != ' ')
+			retval = FALSE;
+		else
+			retval = make_time (hdl, &vtime, end_ptr + 1);
+	}
+	if (!retval)
+		return NULL;
+
+	GTimeZone *tz;
+	if (vtime.timezone != GDA_TIMEZONE_INVALID) {
+		gchar *tzdef;
+		if (vtime.timezone >= 0)
+			tzdef = g_strdup_printf ("+%02d", (gint) (vtime.timezone / 3600));
+		else
+			tzdef = g_strdup_printf ("-%02d", (gint) (- vtime.timezone / 3600));
+		tz = g_time_zone_new (tzdef);
+		g_free (tzdef);
+	}
+	else
+		tz = g_time_zone_new_local ();
+	ts = g_date_time_new (tz, vdate.year, vdate.month, vdate.day,
+			      vtime.hour, vtime.minute, (gdouble) vtime.second + vtime.fraction);
+	g_time_zone_unref (tz);
+
+	return ts;
 }
 
 /* Makes a GdaTimestamp from a string like "24-12-2003 13:12:01.12+01",
@@ -1172,6 +1344,15 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 		gts.timezone = GDA_TIMEZONE_INVALID;
 		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIMESTAMP);
 		gda_value_set_timestamp (value, &gts);
+	}
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
+		GTimeZone *tz;
+		tz = g_time_zone_new_local ();
+		ts = g_date_time_new_now (tz);
+		g_time_zone_unref (tz);
+		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
+		g_value_take_boxed (value, ts);
 	}
 	else
 		g_assert_not_reached ();

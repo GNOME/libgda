@@ -322,6 +322,7 @@ gda_data_handler_get_default (GType for_type)
                 g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
+                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE_TIME, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());
