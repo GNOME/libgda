@@ -402,13 +402,18 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 	char *schema_attrs[] = {"attributeTypes", NULL};
 	
 	/* look for subschema */
+	if (! gda_ldap_ensure_bound (cdata, NULL))
+		return NULL;
+
 	res = ldap_search_ext_s (cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
-	if (res != LDAP_SUCCESS)
+	if (res != LDAP_SUCCESS) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	if ((entry = ldap_first_entry (cdata->handle, msg))) {
 		char *attr;
@@ -426,8 +431,10 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 	}
 	ldap_msgfree (msg);
 
-	if (! subschema)
+	if (! subschema) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	/* look for attributeTypes */
 	res = ldap_search_ext_s (cdata->handle, subschema, LDAP_SCOPE_BASE,
@@ -436,8 +443,10 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	g_free (subschema);
-	if (res != LDAP_SUCCESS)
+	if (res != LDAP_SUCCESS) {
+		gda_ldap_may_unbind (cdata);
 		return NULL;
+	}
 
 	if (cdata->attributes_cache_file)
 		string = g_string_new ("# Cache file. This file can safely be removed, in this case\n"
@@ -510,6 +519,7 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 		g_string_free (string, TRUE);
 	}
 
+	gda_ldap_may_unbind (cdata);
 	retval = g_hash_table_lookup (cdata->attributes_hash, attribute);
 	return retval;
 }
@@ -558,6 +568,7 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	/* look for subschema */
 	if (! gda_ldap_ensure_bound (cdata, NULL))
 		return NULL;
+
 	res = ldap_search_ext_s (cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,

@@ -279,6 +279,33 @@ DETACH DATABASE plaintext; </programlisting>
   </sect1>
 
   <sect1 id="provider_notes_ldap"><title>For LDAP</title>
+  <sect2>
+    <title>Authentication</title>
+    <para>
+      For the LDAP authentification, one can provide the user name as a valid Distinguished Name (DN), or one
+      can provide a user name which correponds to an entry in the LDAP tree; however the LDAP server usually
+      requires a DN to authenticate. Providing a DN is usually
+      inconvenient and people prefer to remember their user name rather than the associated DN. For this
+      reason, if a user name is not provided, the LDAP provider tries the following:
+      <itemizedlist>
+	<listitem><para>do an anonymous bind</para></listitem>
+	<listitem><para>search a DN from the specified user name</para></listitem>
+	<listitem><para>fetch the DN is it exists and is the only result</para></listitem>
+	<listitem><para>close the anonymous connection</para></listitem>
+	<listitem><para>bind using the found DN</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      However for an Active Directory server, this may fail if the server does not allow anonymous binding or
+      searches, and one can use one of the following username syntaxes instead:
+      <itemizedlist>
+	<listitem><para>username@DOMAIN</para></listitem>
+	<listitem><para>DOMAIN\username</para></listitem>
+      </itemizedlist>
+    </para>
+  </sect2>
+  <sect2>
+    <title>Mapping to GdaDataModel</title>
     <para>
       The LDAP provider maps LDAP searches to &LIBGDA;'s data models, with the following design choices:
       <itemizedlist>
@@ -299,6 +326,7 @@ DETACH DATABASE plaintext; </programlisting>
       For more information, see the <link linkend="GdaDataModelLdap">GdaDataModelLdap</link> and
       the <link linkend="GdaLdapConnection">GdaLdapConnection</link> objects.
     </para>
+  </sect2>
   </sect1>
 
   

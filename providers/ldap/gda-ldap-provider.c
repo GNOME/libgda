@@ -486,10 +486,8 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 		}
 		g_string_free (rname, TRUE);
 
-		if (!dnuser) {
-			gda_connection_add_event_string (cnc, _("Invalid user name"));
-			return FALSE;
-		}
+		/* if no DN user has been found, then still use the provided name AS IS
+		 * => dnuser can be %NULL here */
 	}
 
 	res = ldap_initialize (&ld, url);
@@ -862,7 +860,7 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				GdaConnectionEvent *event = NULL;
 				if (cmde) {
 					if (cmde->other_args) {
-						g_set_error (&error, GDA_SQL_PARSER_ERROR,
+						g_set_error (&lerror, GDA_SQL_PARSER_ERROR,
 							     GDA_SQL_PARSER_SYNTAX_ERROR,
 							     "%s",
 							     _("Too many arguments"));
