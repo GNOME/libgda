@@ -1356,7 +1356,7 @@ gda_connection_new_from_string (const gchar *provider_name, const gchar *cnc_str
 
 	if (!provider_name && !real_provider) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR, 
-			      "%s", _("No provider specified"));
+			      "%s", _("No database driver specified"));
 		g_free (user);
 		g_free (pass);
 		g_free (real_cnc);
