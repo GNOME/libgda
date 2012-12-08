@@ -205,7 +205,7 @@ static void
 fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
 			  const gchar *selection, SchemaBrowserPerspective *bpers)
 {
-	if (fav_type == TOOLS_FAVORITES_TABLES) {
+	if (fav_type == GDA_TOOLS_FAVORITES_TABLES) {
 		GdaQuarkList *ql;
 		const gchar *type;
 		const gchar *schema = NULL, *table = NULL, *short_name = NULL;
@@ -249,7 +249,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFav
 		if (ql)
 			gda_quark_list_free (ql);
 	}
-	else if (fav_type == TOOLS_FAVORITES_DIAGRAMS) {
+	else if (fav_type == GDA_TOOLS_FAVORITES_DIAGRAMS) {
 #ifdef HAVE_GOOCANVAS
 		schema_browser_perspective_display_diagram (bpers, fav_id);
 #else

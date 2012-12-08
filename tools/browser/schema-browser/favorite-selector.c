@@ -164,7 +164,7 @@ key_press_event_cb (GtkTreeView *treeview, GdkEventKey *event, FavoriteSelector 
 			gtk_tree_model_get (model, &iter,
 					    COLUMN_ID, &(fav.id), -1);
 			bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-			if (!tools_favorites_delete (bfav, 0, &fav, NULL)) {
+			if (!gda_tools_favorites_delete (bfav, 0, &fav, NULL)) {
 				browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)tsel),
 						    _("Could not remove favorite: %s"),
 						    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -229,7 +229,7 @@ favorite_selector_new (BrowserConnection *bcnc)
 	
 	/* create tree managers */
 	tsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, TOOLS_FAVORITES_TABLES | TOOLS_FAVORITES_DIAGRAMS,
+	manager = mgr_favorites_new (bcnc, GDA_TOOLS_FAVORITES_TABLES | GDA_TOOLS_FAVORITES_DIAGRAMS,
 				     ORDER_KEY_SCHEMA);
         gda_tree_add_manager (tsel->priv->tree, manager);
 	g_object_unref (manager);
@@ -337,7 +337,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 
 	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = -1;
-	fav.type = TOOLS_FAVORITES_TABLES;
+	fav.type = GDA_TOOLS_FAVORITES_TABLES;
 	fav.name = NULL;
 	fav.descr = NULL;
 	fav.contents = (gchar*) gtk_selection_data_get_data (selection_data);
@@ -346,7 +346,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
 	bfav = browser_connection_get_favorites (tsel->priv->bcnc);
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));

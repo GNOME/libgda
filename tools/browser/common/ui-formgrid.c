@@ -34,7 +34,7 @@
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
 #endif
-#include "../../tools-utils.h"
+#include "../../tool-utils.h"
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
@@ -498,7 +498,7 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 
 	/* actions */
 	GSList *actions_list, *list;
-	actions_list = tools_favorites_get_actions (browser_connection_get_favorites (bcnc),
+	actions_list = gda_tools_favorites_get_actions (browser_connection_get_favorites (bcnc),
 						      bcnc, GDA_SET (iter));
 	if (actions_list) {
 		GtkWidget *mitem, *submenu;
@@ -514,7 +514,7 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 			g_object_set_data_full (G_OBJECT (mitem), "action", act,
-						(GDestroyNotify) tools_favorites_free_action);
+						(GDestroyNotify) gda_tools_favorites_free_action);
 			g_signal_connect (mitem, "activate",
 					  G_CALLBACK (execute_action_mitem_cb), formgrid);
 		}
@@ -652,7 +652,7 @@ exec_end_timeout_cb (ActionExecutedData *aed)
                 }
                 else {
 			g_object_unref (obj);
-                        g_set_error (&error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+                        g_set_error (&error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
                                      "%s", _("Statement to execute is not a selection statement"));
                 }
         }

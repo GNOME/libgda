@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2012 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,29 +16,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef __GDA_TOOLS_UTILS__
-#define __GDA_TOOLS_UTILS__
+#ifndef __TOOL_ERRORS__
+#define __TOOL_ERRORS__
 
-#include <libgda/libgda.h>
-
-const gchar *tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
+#include <glib.h>
 
 /*
  * error reporting
  */
-extern GQuark tools_error_quark (void);
-#define TOOLS_ERROR tools_error_quark ()
+extern GQuark tool_errors_quark (void);
+#define TOOL_ERRORS tool_errors_quark ()
 
 typedef enum {
-	TOOLS_NO_CONNECTION_ERROR,
-	TOOLS_CONNECTION_CLOSED_ERROR,
-	TOOLS_INTERNAL_COMMAND_ERROR,
-	TOOLS_COMMAND_ARGUMENTS_ERROR,
-	TOOLS_OBJECT_NOT_FOUND_ERROR,
-	TOOLS_PROVIDER_NOT_FOUND_ERROR,
-	TOOLS_DSN_NOT_FOUND_ERROR,
-	TOOLS_STORED_DATA_ERROR,
-	TOOLS_PURGE_ERROR
-} ToolsError;
+	TOOL_STORED_DATA_ERROR
+} ToolErrors;
 
 #endif

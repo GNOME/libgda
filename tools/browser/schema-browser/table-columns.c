@@ -27,7 +27,7 @@
 #include "table-info.h"
 #include "table-columns.h"
 #include <libgda-ui/gdaui-tree-store.h>
-#include "../tools-utils.h"
+#include "../tool-utils.h"
 #include "../support.h"
 #include "../gdaui-bar.h"
 #include "mgr-columns.h"
@@ -356,7 +356,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on UPDATE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								tools_utils_fk_policy_to_string (policy),
+								gda_tools_utils_fk_policy_to_string (policy),
 								-1);
 				}
 				policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk);
@@ -366,7 +366,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on DELETE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								tools_utils_fk_policy_to_string (policy),
+								gda_tools_utils_fk_policy_to_string (policy),
 								-1);
 				}
 				

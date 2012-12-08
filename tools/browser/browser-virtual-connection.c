@@ -22,7 +22,7 @@
 #include "browser-virtual-connection.h"
 #include "browser-connection-priv.h"
 #include <virtual/libgda-virtual.h>
-#include "../tools-utils.h"
+#include "../tool-utils.h"
 
 /* 
  * Main static functions 
@@ -316,7 +316,7 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 	return virtual;
 #else /* DUMMY defined */
         sleep (5);
-        g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+        g_set_error (error, GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
 		     "%s", "Timeout!!!");
         return NULL;
 #endif

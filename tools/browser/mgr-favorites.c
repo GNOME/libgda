@@ -211,7 +211,7 @@ mgr_favorites_get_property (GObject *object,
  * mgr_favorites_new
  * @bcnc: a #BrowserConnection object
  * @type: the type of favorites to handle
- * @order_key: ordering key, see tools_favorites_add()
+ * @order_key: ordering key, see gda_tools_favorites_add()
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each favorite of the @type type
  *
@@ -372,7 +372,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 		ehash = hash_for_existing_nodes (children_nodes);
 
 	bcnc = mgr->priv->bcnc;
-	fav_list = tools_favorites_list (browser_connection_get_favorites (bcnc),
+	fav_list = gda_tools_favorites_list (browser_connection_get_favorites (bcnc),
 					   0, mgr->priv->fav_type,
 					   mgr->priv->order_key, &lerror);
 	if (fav_list) {
@@ -392,7 +392,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				g_object_ref (G_OBJECT (snode));
 			}
 
-			if (fav->type == TOOLS_FAVORITES_TABLES) {
+			if (fav->type == GDA_TOOLS_FAVORITES_TABLES) {
 				if (!snode) {
 					GdaQuarkList *ql;
 					const gchar *fname = NULL;
@@ -439,7 +439,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 						gda_quark_list_free (ql);
 				}
 			}
-			else if (fav->type == TOOLS_FAVORITES_DIAGRAMS) {
+			else if (fav->type == GDA_TOOLS_FAVORITES_DIAGRAMS) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 									
@@ -475,7 +475,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == TOOLS_FAVORITES_QUERIES) {
+			else if (fav->type == GDA_TOOLS_FAVORITES_QUERIES) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 					
@@ -496,8 +496,8 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gboolean is_action = FALSE;
 				GSList *favlist;
 				GdkPixbuf *pixbuf;
-				favlist = tools_favorites_list (browser_connection_get_favorites (bcnc),
-								  0, TOOLS_FAVORITES_ACTIONS,
+				favlist = gda_tools_favorites_list (browser_connection_get_favorites (bcnc),
+								  0, GDA_TOOLS_FAVORITES_ACTIONS,
 								  -1, NULL);
 				if (favlist) {
 					gchar *tmp;
@@ -512,7 +512,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 						}
 					}
 					g_free (tmp);
-					tools_favorites_free_list (favlist);
+					gda_tools_favorites_free_list (favlist);
 				}
 				if (is_action)
 					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_ACTION);
@@ -541,7 +541,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == TOOLS_FAVORITES_DATA_MANAGERS) {
+			else if (fav->type == GDA_TOOLS_FAVORITES_DATA_MANAGERS) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 					
@@ -585,7 +585,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gda_value_free (av);
 			}
 #ifdef HAVE_LDAP
-			else if (fav->type == TOOLS_FAVORITES_LDAP_DN) {
+			else if (fav->type == GDA_TOOLS_FAVORITES_LDAP_DN) {
 				if (!snode) {
 					/* favorite ID */
 					snode = gda_tree_manager_create_node (manager, node, NULL);
@@ -675,7 +675,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == TOOLS_FAVORITES_LDAP_CLASS) {
+			else if (fav->type == GDA_TOOLS_FAVORITES_LDAP_CLASS) {
 				if (!snode) {
 					/* favorite ID */
 					snode = gda_tree_manager_create_node (manager, node, NULL);
@@ -743,7 +743,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 			if (snode)
 				nodes_list = g_slist_prepend (nodes_list, snode);
 		}
-		tools_favorites_free_list (fav_list);
+		gda_tools_favorites_free_list (fav_list);
 	}
 	else if (lerror) {
 		if (out_error)
@@ -765,7 +765,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 		gchar *str;
 		GValue *value;
 
-		if (mgr->priv->fav_type & TOOLS_FAVORITES_TABLES) {
+		if (mgr->priv->fav_type & GDA_TOOLS_FAVORITES_TABLES) {
 			str = g_strdup_printf ("<i>%s</i>", _("No favorite:\ndrag item to\ndefine one"));
 			snode = gda_tree_manager_create_node (manager, node, str);
 			g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);

@@ -16,17 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "tools-utils.h"
+#include "tool-utils.h"
 #include <glib/gi18n-lib.h>
 
 /**
- * tools_utils_fk_policy_to_string
+ * gda_tools_utils_fk_policy_to_string
  * @policy: a #GdaMetaForeignKeyPolicy
  *
  * Returns: the human readable version of @policy
  */
 const gchar *
-tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
+gda_tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
 {
 	switch (policy) {
 	default:
@@ -50,10 +50,10 @@ tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy)
 
 /* module error */
 GQuark
-tools_error_quark (void)
+gda_tools_error_quark (void)
 {
         static GQuark quark;
         if (!quark)
-                quark = g_quark_from_static_string ("tools_error");
+                quark = g_quark_from_static_string ("gda_tools_error");
         return quark;
 }

@@ -1995,7 +1995,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 			xmlDocSetRootElement (doc, topnode);
 			
 			xmlNewChild (topnode, NULL, BAD_CAST "cid", BAD_CAST (console->id));
-			tmp = gda_sql_console_compute_prompt (console, OUTPUT_FORMAT_HTML);
+			tmp = gda_sql_console_compute_prompt (console, TOOL_OUTPUT_FORMAT_HTML);
 			xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
 			g_free (tmp);
 			
@@ -2019,7 +2019,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 		topnode = xmlNewDocNode (doc, NULL, BAD_CAST "result", NULL);
 		xmlDocSetRootElement (doc, topnode);
 
-		tmp = gda_sql_console_execute (console, cmd, &lerror, OUTPUT_FORMAT_HTML);
+		tmp = gda_sql_console_execute (console, cmd, &lerror, TOOL_OUTPUT_FORMAT_HTML);
 		if (!tmp) 
 			tmp = g_strdup_printf (_("Error: %s"), 
 						    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -2029,7 +2029,7 @@ get_post_for_irb (WebServer *webserver, SoupMessage *msg, G_GNUC_UNUSED const Co
 		xmlNewChild (topnode, NULL, BAD_CAST "cmde", BAD_CAST tmp);
 		g_free (tmp);
 
-		tmp = gda_sql_console_compute_prompt (console, OUTPUT_FORMAT_HTML);
+		tmp = gda_sql_console_compute_prompt (console, TOOL_OUTPUT_FORMAT_HTML);
 		xmlNewChild (topnode, NULL, BAD_CAST "prompt", BAD_CAST tmp);
 		g_free (tmp);
 

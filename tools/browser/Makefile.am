@@ -43,8 +43,8 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 libbrowser_la_SOURCES=\
 	../config-info.h \
 	../config-info.c \
-	../tools-utils.h \
-	../tools-utils.c \
+	../tool-utils.h \
+	../tool-utils.c \
 	gdaui-bar.c \
 	gdaui-bar.h \
 	marshal.c \
@@ -136,8 +136,8 @@ canvas_example_DEPENDENCIES = \
 	common/libcommon.la
 
 canvas_example_SOURCES = \
-	../tools-utils.h \
-	../tools-utils.c \
+	../tool-utils.h \
+	../tool-utils.c \
 	canvas-example.c \
 	dnd.c \
 	dnd.h

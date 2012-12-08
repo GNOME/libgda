@@ -457,13 +457,13 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 
         memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
         fav.id = -1;
-        fav.type = TOOLS_FAVORITES_TABLES;
+        fav.type = GDA_TOOLS_FAVORITES_TABLES;
         fav.name = NULL;
         fav.descr = NULL;
         fav.contents = table_info_to_selection (tinfo);
 
         bfav = browser_connection_get_favorites (tinfo->priv->bcnc);
-        if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &error)) {
+        if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &error)) {
                 browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));

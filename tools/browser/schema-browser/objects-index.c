@@ -136,7 +136,7 @@ cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *sel, G_GNUC_UNUSED Objects
 {
 	/* FIXME: adjust with sel->priv->type */
 	g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0,
-		       TOOLS_FAVORITES_TABLES, sel_contents);
+		       GDA_TOOLS_FAVORITES_TABLES, sel_contents);
 }
 
 static void

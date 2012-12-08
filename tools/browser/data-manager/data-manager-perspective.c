@@ -239,7 +239,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFav
 	gint current_page, npages, i;
 	DataConsole *page_to_reuse = NULL;
 
-	if (fav_type != TOOLS_FAVORITES_DATA_MANAGERS)
+	if (fav_type != GDA_TOOLS_FAVORITES_DATA_MANAGERS)
 		return;
 
 	/* change current page if possible */

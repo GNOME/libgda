@@ -28,7 +28,7 @@
 #include "browser-canvas-text.h"
 #include "browser-canvas-utility.h"
 #include "browser-canvas-db-relations.h"
-#include "../../tools-utils.h"
+#include "../../tool-utils.h"
 #include "../support.h"
 #include "../browser-window.h"
 #include "../common/fk-declare.h"
@@ -422,9 +422,9 @@ single_item_enter_notify_event_cb (GooCanvasItem *ci, G_GNUC_UNUSED GooCanvasIte
 				       _("Declared foreign key") : _("Foreign key"),
 				       cc->priv->fk->fk_name,
 				       _("Policy on UPDATE"),
-				       tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (cc->priv->fk)),
+				       gda_tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (cc->priv->fk)),
 				       _("Policy on DELETE"),
-				       tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (cc->priv->fk)));
+				       gda_tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (cc->priv->fk)));
 		gtk_widget_set_tooltip_text (GTK_WIDGET (goo_canvas_item_get_canvas (GOO_CANVAS_ITEM (ci))),
 					     str);
 		g_free (str);

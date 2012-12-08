@@ -21,7 +21,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "tools-favorites.h"
-#include "tools-utils.h"
+#include "tool-utils.h"
 #include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include <libgda/gda-sql-builder.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -35,9 +35,9 @@ struct _ToolsFavoritesPrivate {
 /*
  * Main static functions
  */
-static void tools_favorites_class_init (ToolsFavoritesClass *klass);
-static void tools_favorites_init (ToolsFavorites *bfav);
-static void tools_favorites_dispose (GObject *object);
+static void gda_tools_favorites_class_init (ToolsFavoritesClass *klass);
+static void gda_tools_favorites_init (ToolsFavorites *bfav);
+static void gda_tools_favorites_dispose (GObject *object);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -48,10 +48,10 @@ enum {
 	LAST_SIGNAL
 };
 
-gint tools_favorites_signals [LAST_SIGNAL] = { 0 };
+gint gda_tools_favorites_signals [LAST_SIGNAL] = { 0 };
 
 GType
-tools_favorites_get_type (void)
+gda_tools_favorites_get_type (void)
 {
 	static GType type = 0;
 
@@ -61,12 +61,12 @@ tools_favorites_get_type (void)
 			sizeof (ToolsFavoritesClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) tools_favorites_class_init,
+			(GClassInitFunc) gda_tools_favorites_class_init,
 			NULL,
 			NULL,
 			sizeof (ToolsFavorites),
 			0,
-			(GInstanceInitFunc) tools_favorites_init,
+			(GInstanceInitFunc) gda_tools_favorites_init,
 			0
 		};
 
@@ -80,12 +80,12 @@ tools_favorites_get_type (void)
 }
 
 static void
-tools_favorites_class_init (ToolsFavoritesClass *klass)
+gda_tools_favorites_class_init (ToolsFavoritesClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
-	tools_favorites_signals [FAV_CHANGED] =
+	gda_tools_favorites_signals [FAV_CHANGED] =
 		g_signal_new ("favorites-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST | G_SIGNAL_DETAILED,
@@ -96,11 +96,11 @@ tools_favorites_class_init (ToolsFavoritesClass *klass)
 
 	klass->favorites_changed = NULL;
 
-	object_class->dispose = tools_favorites_dispose;
+	object_class->dispose = gda_tools_favorites_dispose;
 }
 
 static void
-tools_favorites_init (ToolsFavorites *bfav)
+gda_tools_favorites_init (ToolsFavorites *bfav)
 {
 	bfav->priv = g_new0 (ToolsFavoritesPrivate, 1);
 	bfav->priv->store = NULL;
@@ -108,14 +108,14 @@ tools_favorites_init (ToolsFavorites *bfav)
 }
 
 static void
-tools_favorites_dispose (GObject *object)
+gda_tools_favorites_dispose (GObject *object)
 {
 	ToolsFavorites *bfav;
 
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (TOOLS_IS_FAVORITES (object));
+	g_return_if_fail (GDA_TOOLS_IS_FAVORITES (object));
 
-	bfav = TOOLS_FAVORITES (object);
+	bfav = GDA_TOOLS_FAVORITES (object);
 	if (bfav->priv) {
 		if (bfav->priv->store)
 			g_object_unref (bfav->priv->store);
@@ -131,20 +131,20 @@ tools_favorites_dispose (GObject *object)
 }
 
 /**
- * tools_favorites_new
+ * gda_tools_favorites_new
  *
  * Creates a new #ToolsFavorites object
  *
  * Returns: the new object
  */
 ToolsFavorites*
-tools_favorites_new (GdaMetaStore *store)
+gda_tools_favorites_new (GdaMetaStore *store)
 {
 	ToolsFavorites *bfav;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 
-	bfav = TOOLS_FAVORITES (g_object_new (TOOLS_TYPE_FAVORITES, NULL));
+	bfav = GDA_TOOLS_FAVORITES (g_object_new (GDA_TOOLS_TYPE_FAVORITES, NULL));
 	bfav->priv->store = g_object_ref (store);
 
 	return bfav;
@@ -181,7 +181,7 @@ meta_store_addons_init (ToolsFavorites *bfav, GError **error)
 		return TRUE;
 
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORITES_TABLE_DESC, &lerror)) {
-                g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+                g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize dictionary to store favorites"));
 		g_warning ("Can't initialize dictionary to store favorites :%s",
 			   lerror && lerror->message ? lerror->message : "No detail");
@@ -190,7 +190,7 @@ meta_store_addons_init (ToolsFavorites *bfav, GError **error)
                 return FALSE;
         }
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORDER_TABLE_DESC, &lerror)) {
-                g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+                g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize dictionary to store favorites"));
 		g_warning ("Can't initialize dictionary to store favorites :%s",
 			   lerror && lerror->message ? lerror->message : "No detail");
@@ -204,28 +204,28 @@ meta_store_addons_init (ToolsFavorites *bfav, GError **error)
 }
 
 /**
- * tools_favorites_type_to_string:
+ * gda_tools_favorites_type_to_string:
  * @type: a #ToolsFavoritesType
  *
  * Returns: a string representing @type
  */
 const gchar *
-tools_favorites_type_to_string (ToolsFavoritesType type)
+gda_tools_favorites_type_to_string (ToolsFavoritesType type)
 {
 	switch (type) {
-	case TOOLS_FAVORITES_TABLES:
+	case GDA_TOOLS_FAVORITES_TABLES:
 		return "TABLE";
-	case TOOLS_FAVORITES_DIAGRAMS:
+	case GDA_TOOLS_FAVORITES_DIAGRAMS:
 		return "DIAGRAM";
-	case TOOLS_FAVORITES_QUERIES:
+	case GDA_TOOLS_FAVORITES_QUERIES:
 		return "QUERY";
-	case TOOLS_FAVORITES_DATA_MANAGERS:
+	case GDA_TOOLS_FAVORITES_DATA_MANAGERS:
 		return "DATAMAN";
-	case TOOLS_FAVORITES_ACTIONS:
+	case GDA_TOOLS_FAVORITES_ACTIONS:
 		return "ACTION";
-	case TOOLS_FAVORITES_LDAP_DN:
+	case GDA_TOOLS_FAVORITES_LDAP_DN:
 		return "LDAP_DN";
-	case TOOLS_FAVORITES_LDAP_CLASS:
+	case GDA_TOOLS_FAVORITES_LDAP_CLASS:
 		return "LDAP_CLASS";
 	default:
 		g_warning ("Unknown type of favorite");
@@ -238,22 +238,22 @@ static ToolsFavoritesType
 favorite_string_to_type (const gchar *str)
 {
 	if (*str == 'T')
-		return TOOLS_FAVORITES_TABLES;
+		return GDA_TOOLS_FAVORITES_TABLES;
 	else if (*str == 'D') {
 		if (str[1] == 'I')
-			return TOOLS_FAVORITES_DIAGRAMS;
+			return GDA_TOOLS_FAVORITES_DIAGRAMS;
 		else
-			return TOOLS_FAVORITES_DATA_MANAGERS;
+			return GDA_TOOLS_FAVORITES_DATA_MANAGERS;
 	}
 	else if (*str == 'Q')
-		return TOOLS_FAVORITES_QUERIES;
+		return GDA_TOOLS_FAVORITES_QUERIES;
 	else if (*str == 'A')
-		return TOOLS_FAVORITES_ACTIONS;
+		return GDA_TOOLS_FAVORITES_ACTIONS;
 	else if (*str == 'L') {
 		if (strlen (str) == 7)
-			return TOOLS_FAVORITES_LDAP_DN;
+			return GDA_TOOLS_FAVORITES_LDAP_DN;
 		else
-			return TOOLS_FAVORITES_LDAP_CLASS;
+			return GDA_TOOLS_FAVORITES_LDAP_CLASS;
 	}
 	else
 		g_warning ("Unknown type '%s' of favorite", str);
@@ -356,7 +356,7 @@ find_favorite_by_name (ToolsFavorites *bfav, guint session_id, const gchar *name
 		return -1;
 	params = gda_set_new_inline (3,
 				     "session", G_TYPE_INT, session_id,
-				     "type", G_TYPE_STRING, tools_favorites_type_to_string (type),
+				     "type", G_TYPE_STRING, gda_tools_favorites_type_to_string (type),
 				     "name", G_TYPE_STRING, name);
 	model = gda_connection_statement_execute_select (bfav->priv->store_cnc, stmt, params, error);
 	g_object_unref (stmt);
@@ -394,7 +394,7 @@ find_favorite_by_name (ToolsFavorites *bfav, guint session_id, const gchar *name
  *
  * Returns: the ID or -1 if not found (and sets ERROR).
  *
- * if @out_existing_fav is not %NULL, then its attributes are set, use tools_favorites_reset_attributes()
+ * if @out_existing_fav is not %NULL, then its attributes are set, use gda_tools_favorites_reset_attributes()
  * to free.
  */
 static gint
@@ -584,7 +584,7 @@ favorites_reorder (ToolsFavorites *bfav, gint order_key, gint id, gint new_pos, 
 }
 
 /**
- * tools_favorites_add
+ * gda_tools_favorites_add
  * @bfav: a #ToolsFavorites object
  * @session_id: session ID (0)
  * @fav: a pointer to a #ToolsFavoritesAttributes structure
@@ -606,7 +606,7 @@ favorites_reorder (ToolsFavorites *bfav, gint order_key, gint id, gint new_pos, 
  * if @order_key is negative, then no ordering is done and @pos is ignored.
  */
 gboolean
-tools_favorites_add (ToolsFavorites *bfav, guint session_id,
+gda_tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 		     ToolsFavoritesAttributes *fav,
 		     gint order_key, gint pos,
 		     GError **error)
@@ -616,7 +616,7 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 	gint favid = -1;
 	ToolsFavoritesAttributes efav; /* existing favorite */
 
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (fav, FALSE);
 	g_return_val_if_fail (fav->contents, FALSE);
 
@@ -625,13 +625,13 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 
 	store_cnc = bfav->priv->store_cnc;
 	if (! gda_lockable_trylock (GDA_LOCKABLE (store_cnc))) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 	/* begin a transaction */
 	if (! gda_connection_begin_transaction (store_cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize transaction to access favorites"));
 		gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
                 return FALSE;
@@ -649,7 +649,7 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 	params = gda_set_new_inline (8,
 				     "session", G_TYPE_INT, session_id,
 				     "id", G_TYPE_INT, fav->id,
-				     "type", G_TYPE_STRING, tools_favorites_type_to_string (rtype),
+				     "type", G_TYPE_STRING, gda_tools_favorites_type_to_string (rtype),
 				     "name", G_TYPE_STRING, fav->name ? fav->name : efav.name,
 				     "contents", G_TYPE_STRING, fav->contents,
 				     "rank", G_TYPE_INT, pos,
@@ -740,7 +740,7 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 		g_object_unref (stmt);
 		fav->id = favid;
 	}
-	tools_favorites_reset_attributes (&efav);
+	gda_tools_favorites_reset_attributes (&efav);
 
 	if (order_key >= 0) {
 		GdaSqlBuilder *builder;
@@ -804,7 +804,7 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 	}
 
 	if (! gda_connection_commit_transaction (store_cnc, NULL, NULL)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't commit transaction to access favorites"));
 		goto err;
 	}
@@ -812,8 +812,8 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 	if (params)
 		g_object_unref (params);
 	gda_lockable_unlock (GDA_LOCKABLE (store_cnc));
-	g_signal_emit (bfav, tools_favorites_signals [FAV_CHANGED],
-		       g_quark_from_string (tools_favorites_type_to_string (rtype)));
+	g_signal_emit (bfav, gda_tools_favorites_signals [FAV_CHANGED],
+		       g_quark_from_string (gda_tools_favorites_type_to_string (rtype)));
 	return TRUE;
 
  err:
@@ -825,34 +825,34 @@ tools_favorites_add (ToolsFavorites *bfav, guint session_id,
 }
 
 /**
- * tools_favorites_free_list
+ * gda_tools_favorites_free_list
  * @fav_list: a list of #ToolsFavoritesAttributes
  *
  * Frees all the #ToolsFavoritesAttributes of the @fav_list list, and frees the list
  * itself.
  */
 void
-tools_favorites_free_list (GSList *fav_list)
+gda_tools_favorites_free_list (GSList *fav_list)
 {
 	GSList *list;
 	if (!fav_list)
 		return;
 	for (list = fav_list; list; list = list->next) {
 		ToolsFavoritesAttributes *fav = (ToolsFavoritesAttributes*) list->data;
-		tools_favorites_reset_attributes (fav);
+		gda_tools_favorites_reset_attributes (fav);
 		g_free (fav);
 	}
 	g_slist_free (fav_list);
 }
 
 /**
- * tools_favorites_reset_attributes
+ * gda_tools_favorites_reset_attributes
  * @fav: a pointer to a #ToolsFavoritesAttributes
  *
  * Resets @fav with empty attributes; it does not free @fav.
  */
 void
-tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav)
+gda_tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav)
 {
 	g_free (fav->name);
 	g_free (fav->descr);
@@ -861,7 +861,7 @@ tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav)
 }
 
 /**
- * tools_favorites_list
+ * gda_tools_favorites_list
  * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @type: filter the type of attributes to be listed
@@ -871,10 +871,10 @@ tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav)
  * Extract some favorites.
  *
  * Returns: a new list of #ToolsFavoritesAttributes pointers. The list has to
- *          be freed using tools_favorites_free_list()
+ *          be freed using gda_tools_favorites_free_list()
  */
 GSList *
-tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type,
+gda_tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type,
 		      gint order_key, GError **error)
 {
 	GdaSqlBuilder *b;
@@ -886,10 +886,10 @@ tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType
 
 	guint and_cond_ids [3];
 	int and_cond_size = 0;
-	guint or_cond_ids [TOOLS_FAVORITES_NB_TYPES];
+	guint or_cond_ids [GDA_TOOLS_FAVORITES_NB_TYPES];
 	int or_cond_size = 0;
 
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), NULL);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), NULL);
 	g_return_val_if_fail ((type != 0) || (order_key >= 0), NULL);
 
 	if (! meta_store_addons_init (bfav, error))
@@ -932,10 +932,10 @@ tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType
 
 	gint i;
 	gint flag;
-	for (i = 0, flag = 1; i < TOOLS_FAVORITES_NB_TYPES; i++, flag <<= 1) {
+	for (i = 0, flag = 1; i < GDA_TOOLS_FAVORITES_NB_TYPES; i++, flag <<= 1) {
 		if (type & flag) {
 			gchar *str;
-			str = g_strdup_printf ("'%s'", tools_favorites_type_to_string (flag));
+			str = g_strdup_printf ("'%s'", gda_tools_favorites_type_to_string (flag));
 			or_cond_ids [or_cond_size] = gda_sql_builder_add_cond (b, GDA_SQL_OPERATOR_TYPE_EQ,
 									       gda_sql_builder_add_id (b, "fav.type"),
 									       gda_sql_builder_add_id (b, str),
@@ -1011,7 +1011,7 @@ tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType
 			fav_list = g_slist_prepend (fav_list, fav);
 		}
 		else {
-			tools_favorites_free_list (fav_list);
+			gda_tools_favorites_free_list (fav_list);
 			fav_list = NULL;
 			goto out;
 		}
@@ -1028,7 +1028,7 @@ tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType
 
 
 /**
- * tools_favorites_delete
+ * gda_tools_favorites_delete
  * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @fav: a pointer to a #ToolsFavoritesAttributes definning which favorite to delete
@@ -1039,7 +1039,7 @@ tools_favorites_list (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType
  * Returns: %TRUE if no error occurred.
  */
 gboolean
-tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
+gda_tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 			ToolsFavoritesAttributes *fav, GError **error)
 {
 	GdaSqlBuilder *b;
@@ -1049,7 +1049,7 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 	gint favid = -1;
 	ToolsFavoritesAttributes efav;
 
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (fav, FALSE);
 	g_return_val_if_fail ((fav->id >= 0) || fav->contents || fav->name , FALSE);
 	
@@ -1058,14 +1058,14 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 		return FALSE;
 
 	if (! gda_lockable_trylock (GDA_LOCKABLE (bfav->priv->store_cnc))) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize transaction to access favorites"));
 		return FALSE;
 	}
 	/* begin a transaction */
 	if (! gda_connection_begin_transaction (bfav->priv->store_cnc, NULL,
 						GDA_TRANSACTION_ISOLATION_UNKNOWN, NULL)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize transaction to access favorites"));
 		gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
                 return FALSE;
@@ -1088,7 +1088,7 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 		}
 	}
 	if (favid < 0) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not find favorite"));
 		goto out;
 	}
@@ -1133,7 +1133,7 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 	g_object_unref (stmt);
 
 	if (! gda_connection_commit_transaction (bfav->priv->store_cnc, NULL, NULL)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Can't commit transaction to access favorites"));
 		goto out;
 	}
@@ -1145,9 +1145,9 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 
 	gda_lockable_unlock (GDA_LOCKABLE (bfav->priv->store_cnc));
 	if (retval)
-		g_signal_emit (bfav, tools_favorites_signals [FAV_CHANGED],
-			       g_quark_from_string (tools_favorites_type_to_string (efav.type)));
-	tools_favorites_reset_attributes (&efav);
+		g_signal_emit (bfav, gda_tools_favorites_signals [FAV_CHANGED],
+			       g_quark_from_string (gda_tools_favorites_type_to_string (efav.type)));
+	gda_tools_favorites_reset_attributes (&efav);
 	if (params)
 		g_object_unref (G_OBJECT (params));
 
@@ -1155,7 +1155,7 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
 }
 
 /**
- * tools_favorites_find
+ * gda_tools_favorites_find
  * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @contents: the favorite's contents
@@ -1163,15 +1163,15 @@ tools_favorites_delete (ToolsFavorites *bfav, guint session_id,
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
+ * pointed structure. Use gda_tools_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: the requested's favorite ID, or -1 if not found
  */
 gint
-tools_favorites_find (ToolsFavorites *bfav, guint session_id, const gchar *contents,
+gda_tools_favorites_find (ToolsFavorites *bfav, guint session_id, const gchar *contents,
 		      ToolsFavoritesAttributes *out_fav, GError **error)
 {
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), -1);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), -1);
 	g_return_val_if_fail (contents, -1);
 
 	if (! meta_store_addons_init (bfav, error))
@@ -1180,7 +1180,7 @@ tools_favorites_find (ToolsFavorites *bfav, guint session_id, const gchar *conte
 }
 
 /**
- * tools_favorites_find_by_name:
+ * gda_tools_favorites_find_by_name:
  * @bfav: a #ToolsFavorites
  * @session_id: 0 for now
  * @type: the favorite's type
@@ -1189,15 +1189,15 @@ tools_favorites_find (ToolsFavorites *bfav, guint session_id, const gchar *conte
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
+ * pointed structure. Use gda_tools_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: the requested's favorite ID, or -1 if not found
  */
 gint
-tools_favorites_find_by_name (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type, const gchar *name,
+gda_tools_favorites_find_by_name (ToolsFavorites *bfav, guint session_id, ToolsFavoritesType type, const gchar *name,
 			      ToolsFavoritesAttributes *out_fav, GError **error)
 {
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), -1);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), -1);
 	g_return_val_if_fail (name, -1);
 
 	if (! meta_store_addons_init (bfav, error))
@@ -1208,19 +1208,19 @@ tools_favorites_find_by_name (ToolsFavorites *bfav, guint session_id, ToolsFavor
 
 
 /**
- * tools_favorites_get
+ * gda_tools_favorites_get
  * @bfav: a #ToolsFavorites
  * @fav_id: the favorite's ID
  * @out_fav: a #ToolsFavoritesAttributes to be filled with the favorite's attributes
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
- * pointed structure. Use tools_favorites_reset_attributes() to reset @out_fav's contents.
+ * pointed structure. Use gda_tools_favorites_reset_attributes() to reset @out_fav's contents.
  *
  * Retuns: %TRUE if no error occurred.
  */
 gboolean
-tools_favorites_get (ToolsFavorites *bfav, gint fav_id,
+gda_tools_favorites_get (ToolsFavorites *bfav, gint fav_id,
 		     ToolsFavoritesAttributes *out_fav, GError **error)
 {
 	GdaSqlBuilder *b;
@@ -1229,7 +1229,7 @@ tools_favorites_get (ToolsFavorites *bfav, gint fav_id,
 	GdaDataModel *model;
 	gboolean retval = FALSE;
 
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), FALSE);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), FALSE);
 	g_return_val_if_fail (out_fav, FALSE);
 	g_return_val_if_fail (fav_id >= 0, FALSE);
 

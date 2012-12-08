@@ -24,12 +24,12 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include "tools-input.h"
+#include "tool-input.h"
 #ifdef HAVE_HISTORY
 #include <readline/history.h>
 #endif
 #include <sql-parser/gda-statement-struct-util.h>
-#include "tools-utils.h"
+#include "tool-utils.h"
 #ifdef HAVE_LDAP
 #include <virtual/gda-ldap-connection.h>
 #endif
@@ -106,51 +106,6 @@ gda_internal_command_arg_remove_quotes (gchar *str)
         }
 
         return str;
-}
-
-/*
- * gda_internal_command_exec_result_free
- *
- * Clears the memory associated with @res
- */
-void
-gda_internal_command_exec_result_free (GdaInternalCommandResult *res)
-{
-	if (!res)
-		return;
-	switch (res->type) {
-	case GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL:
-		if (res->u.model)
-			g_object_unref (res->u.model);
-		if (! res->was_in_transaction_before_exec &&
-		    res->cnc &&
-		    gda_connection_get_transaction_status (res->cnc))
-			gda_connection_rollback_transaction (res->cnc, NULL, NULL);
-		    
-		break;
-	case GDA_INTERNAL_COMMAND_RESULT_SET:
-		if (res->u.set)
-			g_object_unref (res->u.set);
-		break;
-	case GDA_INTERNAL_COMMAND_RESULT_TXT:
-	case GDA_INTERNAL_COMMAND_RESULT_TXT_STDOUT:
-		if (res->u.txt)
-			g_string_free (res->u.txt, TRUE);
-		break;
-	case GDA_INTERNAL_COMMAND_RESULT_MULTIPLE: {
-		GSList *list;
-
-		for (list = res->u.multiple_results; list; list = list->next)
-			gda_internal_command_exec_result_free ((GdaInternalCommandResult *) list->data);
-		g_slist_free (res->u.multiple_results);
-		break;
-	}
-	default:
-		break;
-	}
-	if (res->cnc)
-		g_object_unref (res->cnc);
-	g_free (res);
 }
 
 /*
@@ -255,500 +210,24 @@ default_gda_internal_commandargs_func (const gchar *string)
 	return array;
 }
 
-/*
- * Same as append_to_string but cuts strings which are too long
- */
-static void
-append_raw_to_string (GString *string, gchar *str, gint width, gint offset)
+ToolCommandResult *
+gda_internal_command_history (ToolCommand *command, guint argc, const gchar **argv,
+			      SqlConsole *console, GError **error)
 {
-	g_assert (string);
-	if (!str)
-		return;
-	if ((width <= 0) && (offset <= 0)) {
-		g_string_append (string, str);
-		return;
-	}
-	if (offset < 0)
-		offset = 0;
+	ToolCommandResult *res;
 
-	/* start on a fresh line */
-	if ((string->str) && (string->len > 0) &&
-	    (string->str[string->len - 1] != '\n'))
-		g_string_append_c (string, '\n');
-
-	gchar *ptr;
-	gboolean startofline = TRUE;
-	for (ptr = str; *ptr; ) {
-		gchar *next, *pnext;
-		if (*ptr == '\n') {
-			g_string_append_c (string, '\n');
-			ptr++;
-			startofline = TRUE;
-			continue;
-		}
-		guint clen = 0;
-		for (next = ptr, pnext = ptr;
-		     *next && (*next != '\n');
-		     pnext = next + 1, next = g_utf8_next_char (next), clen++) {
-			if (startofline) {
-				if (offset > 0) {
-					gint i;
-					for (i = 0; i < offset; i++)
-						g_string_append_c (string, ' ');
-				}
-				startofline = FALSE;
-			}
-
-			if ((width > 0) && (clen >= width - offset)) {
-				g_string_append_c (string, '\n');
-				startofline = TRUE;
-				for (; *next && (*next != '\n'); next++);
-				if (*next == '\n')
-					next++;
-				break;
-			}
-			else {
-				for (; pnext <= next; pnext++)
-					g_string_append_c (string, *pnext);
-			}
-		}
-		ptr = next;
-	}
-}
-
-/*
- * parses @str, and appends to @string lines which are @width large, if @offset is >0, then
- * leave that amount of spaces. If @width <= 0, then only adds @offset spaces at the beginning of each
- * new line.
- */
-static void
-append_to_string (GString *string, gchar *str, gint width, gint offset)
-{
-	g_assert (string);
-	if (!str)
-		return;
-	if ((width <= 0) && (offset <= 0)) {
-		g_string_append (string, str);
-		return;
-	}
-	if (offset < 0)
-		offset = 0;
-
-	/* replace @WORD@ by <WORD> */
-	gchar *ptr;
-	gboolean in = FALSE;
-	for (ptr = str; *ptr; ptr++) {
-		if (*ptr == '@') {
-			if (in) {
-				*ptr = '>';
-				in = FALSE;
-			}
-			else {
-				*ptr = '<';
-				in = TRUE;
-			}
-		}
-	}
-
-	/* actual work */
-	gboolean firstword = TRUE;
-	gint clen = 0;
-	if ((string->str) && (string->len > 0) &&
-	    (string->str[string->len - 1] != '\n')) {
-		for (ptr = string->str + (string->len -1); (ptr >= string->str) && (*ptr != '\n'); ptr --)
-			clen++;
-	}
-	if (!strcmp (str, "> ")) {
-		if (offset > 0) {
-			gint i;
-			for (i = 0; i < offset; i++)
-				g_string_append_c (string, ' ');
-		}
-		g_string_append (string, str);
-		return;
-	}
-
-	for (ptr = str; *ptr; ) {
-		/* skip spaces */
-		if ((*ptr == ' ') || (*ptr == '\t') || (*ptr == '\n') || (*ptr == '\r')) {
-			ptr++;
-			continue;
-		}
-
-		/* find end of next word */
-		gchar *next;
-		gint wlen;
-		for (wlen = 0, next = ptr;
-		     *next && (*next != ' ') && (*next != '\t') && (*next != '\n') && (*next != '\r');
-		     wlen ++, next = g_utf8_next_char (next));
-
-		if (wlen >= width - offset) {
-			const gchar *n2;
-			for (n2 = ptr; n2 < next; n2++) {
-				g_string_append_c (string, *n2);
-			}
-			ptr = next;
-			firstword = FALSE;
-			g_string_append_c (string, '\n');
-			clen = 0;
-			continue;
-		}
-		else if ((width > 0) && ((wlen + clen) >= width)) {
-			/* cut here */
-			g_string_append_c (string, '\n');
-			clen = 0;
-			continue;
-		}
-		else {
-			/* copy word */
-			if (clen == 0) {
-				if (offset > 0) {
-					gint i;
-					for (i = 0; i < offset; i++) {
-						g_string_append_c (string, ' ');
-						clen++;
-					}
-				}
-			}
-			else if (!firstword) {
-				g_string_append_c (string, ' ');
-				clen++;
-			}
-			const gchar *n2;
-			for (n2 = ptr; n2 < next; n2++) {
-				g_string_append_c (string, *n2);
-				clen++;
-			}
-			ptr = next;
-			firstword = FALSE;
-		}
-	}
-}
-
-static gchar *
-help_xml_doc_to_string_command (xmlDocPtr helpdoc, const gchar *command_name, gint width)
-{
-	xmlNodePtr node;
-	node = xmlDocGetRootElement (helpdoc);
-	if (!node || !command_name || !*command_name)
-		return NULL;
-	for (node = node->children; node; node = node->next) {
-		if (strcmp ((gchar*) node->name, "command"))
-			continue;
-		xmlChar *prop;
-		prop = xmlGetProp (node, BAD_CAST "name");
-		if (prop && !strcmp ((gchar*) prop, command_name))
-			break;
-	}
-	if (!node)
-		return NULL;
-
-	/* create output string */
-	GString *string;
-	string = g_string_new ("");
-	for (node = node->children; node; node = node->next) {
-		xmlChar *data = NULL;
-		if (!strcmp ((gchar*) node->name, "shortdescription")) {
-			data = xmlNodeGetContent (node);
-			if (data) {
-				append_to_string (string, (gchar*) data, width, 0);
-				g_string_append (string, "\n\n");
-			}
-		}
-		else if (!strcmp ((gchar*) node->name, "usage") || !strcmp ((gchar*) node->name, "example")) {
-			if (!strcmp ((gchar*) node->name, "usage"))
-				append_to_string (string, _("Usage"), width, 0);
-			else
-				append_to_string (string, _("Example"), width, 0);
-			g_string_append (string, ":\n");
-			xmlNodePtr snode;
-			for (snode = node->children; snode; snode = snode->next) {
-				if (!strcmp ((gchar*) snode->name, "synopsis")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_to_string (string, "> ", width, 3);
-						append_to_string (string, (gchar*) data, width, 3);
-						g_string_append_c (string, '\n');
-					}
-				}
-				else if (!strcmp ((gchar*) snode->name, "comment")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_to_string (string, (gchar*) data, width, 6);
-						g_string_append_c (string, '\n');
-					}
-				}
-				else if (!strcmp ((gchar*) snode->name, "raw")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_raw_to_string (string, (gchar*) data, width, 6);
-						g_string_append (string, "\n\n");
-					}
-				}
-				if (data)
-					xmlFree (data);
-				data = NULL;
-			}
-		}
-		if (data)
-			xmlFree (data);
-	}
-
-	return g_string_free (string, FALSE);
-}
-
-static gchar *
-help_xml_doc_to_string_section (xmlDocPtr helpdoc, const gchar *section_name, gint width)
-{
-	xmlNodePtr node;
-	node = xmlDocGetRootElement (helpdoc);
-	if (!node || !section_name || !*section_name)
-		return NULL;
-	for (node = node->children; node; node = node->next) {
-		if (strcmp ((gchar*) node->name, "section"))
-			continue;
-		xmlChar *prop;
-		prop = xmlGetProp (node, BAD_CAST "name");
-		if (prop && strstr ((gchar*) prop, section_name))
-			break;
-	}
-	if (!node)
-		return NULL;
-
-	/* create output string */
-	GString *string;
-	string = g_string_new ("");
-	for (node = node->children; node; node = node->next) {
-		xmlChar *data = NULL;
-		if (!strcmp ((gchar*) node->name, "shortdescription")) {
-			data = xmlNodeGetContent (node);
-			if (data) {
-				append_to_string (string, (gchar*) data, width, 0);
-				g_string_append (string, "\n\n");
-			}
-		}
-		else if (!strcmp ((gchar*) node->name, "usage") || !strcmp ((gchar*) node->name, "example")) {
-			if (!strcmp ((gchar*) node->name, "example")) {
-				append_to_string (string, _("Example"), width, 0);
-				g_string_append (string, ":\n");
-			}
-			xmlNodePtr snode;
-			for (snode = node->children; snode; snode = snode->next) {
-				if (!strcmp ((gchar*) snode->name, "synopsis")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_to_string (string, "> ", width, 3);
-						append_to_string (string, (gchar*) data, width, 3);
-						g_string_append_c (string, '\n');
-					}
-				}
-				else if (!strcmp ((gchar*) snode->name, "comment")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_to_string (string, (gchar*) data, width, 3);
-						g_string_append_c (string, '\n');
-					}
-				}
-				else if (!strcmp ((gchar*) snode->name, "raw")) {
-					data = xmlNodeGetContent (snode);
-					if (data) {
-						append_raw_to_string (string, (gchar*) data, width, 3);
-						g_string_append (string, "\n\n");
-					}
-				}
-				if (data)
-					xmlFree (data);
-				data = NULL;
-			}
-		}
-		if (data)
-			xmlFree (data);
-	}
-
-	return g_string_free (string, FALSE);
-}
-
-xmlDocPtr
-load_help_doc (void)
-{
-	xmlDocPtr helpdoc = NULL;
-	const gchar * const *langs = g_get_language_names ();
-	gchar *dirname, *helpfile;
-	gint i;
-	dirname = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help",
-					 "gda-sql", NULL);
-	for (i = 0; langs[i]; i++) {
-		helpfile = g_build_filename (dirname, langs[i], "gda-sql-help.xml", NULL);
-		if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
-			helpdoc = xmlParseFile (helpfile);
-		g_free (helpfile);
-		if (helpdoc)
-			break;
-	}
-
-	if (!helpdoc) {
-		/* default to the "C" one */
-		helpfile = g_build_filename (dirname, "C", "gda-sql-help.xml", NULL);
-		if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
-			helpdoc = xmlParseFile (helpfile);
-		g_free (helpfile);
-	}
-	g_free (dirname);
-	return helpdoc;
-}
-
-GdaInternalCommandResult *
-gda_internal_command_help (SqlConsole *console, GdaConnection *cnc,
-			   const gchar **args, OutputFormat format, G_GNUC_UNUSED GError **error,
-			   GdaInternalCommandsList *clist)
-{
-	GdaInternalCommandResult *res;
-	GSList *list;
-	gchar *current_group = NULL;
-	GString *string = g_string_new ("");
-	xmlDocPtr helpdoc = NULL;
-#define NAMESIZE 18
-
-	/* get term size */
-	gint width = -1;
-	if (format | OUTPUT_FORMAT_DEFAULT)
-		input_get_size (&width, NULL);
-
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
-
-	if (args[0] && *args[0]) {
-		const gchar *command_name = NULL;
-		GdaInternalCommand *command = NULL;
-		command_name = args[0];
-		if ((*command_name == '.') || (*command_name == '\\'))
-			command_name++;
-		for (list = clist->group_ordered; list; list = list->next) {
-			command = (GdaInternalCommand*) list->data;
-			gint clength;
-			clength = strlen (command_name);
-			if (!g_ascii_strncasecmp (command->name, command_name, clength) &&
-			    (command->name[clength] == ' '))
-				break;
-			command = NULL;
-		}
-		if (!command)
-			g_string_append_printf (string, _("Command '%s' not found\n"), command_name);
-		else {
-			if (!helpdoc)
-				helpdoc = load_help_doc ();
-
-			gboolean done = FALSE;
-			if (helpdoc) {
-				gchar *tmp;
-				tmp = help_xml_doc_to_string_command (helpdoc, command_name, width);
-				if (tmp) {
-					g_string_append (string, tmp);
-					g_free (tmp);
-					done = TRUE;
-				}
-			}
-			if (!done) {
-				append_to_string (string, command->description, width, 0);
-				g_string_append_printf (string, "\n\n%s:\n   ", _("Usage"));
-				color_append_string (GDA_SQL_COLOR_BOLD, format, string, ".");
-				color_append_string (GDA_SQL_COLOR_BOLD, format, string, command->name);
-			}
-		}
-	}
-	else {
-		for (list = clist->group_ordered; list; list = list->next) {
-			GdaInternalCommand *command = (GdaInternalCommand*) list->data;
-			gint clen;
-			if (console && command->limit_to_main)
-				continue;
-
-#ifdef HAVE_LDAP
-			if (g_str_has_prefix (command->name, "ldap") && cnc && !GDA_IS_LDAP_CONNECTION (cnc))
-				continue;
-#endif
-
-			if (!current_group || strcmp (current_group, command->group)) {
-				current_group = command->group;
-				if (list != clist->group_ordered)
-					g_string_append_c (string, '\n');
-				if (width > 0) {
-					gint i, nb, remain;
-					nb = (width - g_utf8_strlen (current_group, -1) - 2) / 2;
-					remain = width - (2 * nb + 2 + g_utf8_strlen (current_group, -1));
-					for (i = 0; i < nb; i++)
-						g_string_append_c (string, '=');
-					g_string_append_c (string, ' ');
-					append_to_string (string, current_group, width, 0);
-					g_string_append_c (string, ' ');
-					for (i = 0; i < nb + remain; i++)
-						g_string_append_c (string, '=');
-					g_string_append_c (string, '\n');
-				}
-				else {
-					g_string_append (string, "=== ");
-					append_to_string (string, current_group, width, 0);
-					g_string_append (string, " ===\n");
-				}
-
-				if (!helpdoc)
-					helpdoc = load_help_doc ();
-
-				if (helpdoc && command->group_id) {
-					gchar *tmp;
-					tmp = help_xml_doc_to_string_section (helpdoc, command->group_id, width);
-					if (tmp) {
-						g_string_append (string, tmp);
-						g_free (tmp);
-						g_string_append_c (string, '\n');
-					}
-				}
-			}
-
-			g_string_append (string, "   ");
-			color_append_string (GDA_SQL_COLOR_BOLD, format, string, ".");
-			color_append_string (GDA_SQL_COLOR_BOLD, format, string, command->name);
-			clen = g_utf8_strlen (command->name, -1);
-			if (clen >= NAMESIZE)
-				g_string_append_c (string, '\n');
-			else {
-				gint i, size;
-				size = NAMESIZE - clen - 1;
-				for (i = 0; i < size; i++)
-					g_string_append_c (string, ' ');
-			}
-			append_to_string (string, command->description, width, NAMESIZE + 3);
-			g_string_append_c (string, '\n');
-		}
-	}
-	res->u.txt = string;
-	return res;
-}
-
-GdaInternalCommandResult *
-gda_internal_command_history (SqlConsole *console, G_GNUC_UNUSED GdaConnection *cnc, const gchar **args,
-			      G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
-{
-	GdaInternalCommandResult *res;
-
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
-
-	if (console) {
-		res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
-		TO_IMPLEMENT;
-		return res;
-	}
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_TXT;
 
 	GString *string;
 #ifdef HAVE_HISTORY
-	if (args[0]) {
-		if (!save_history (args[0], error)) {
+	if (argv[0]) {
+		if (!save_history (argv[0], error)) {
 			g_free (res);
 			res = NULL;
 		}
 		else
-			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+			res->type = TOOL_COMMAND_RESULT_EMPTY;
 	}
 	else {
 		HIST_ENTRY **hist_array = history_list ();
@@ -771,36 +250,37 @@ gda_internal_command_history (SqlConsole *console, G_GNUC_UNUSED GdaConnection *
 	return res;
 }
 
-GdaInternalCommandResult *
-gda_internal_command_dict_sync (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-				G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
+ToolCommandResult *
+gda_internal_command_dict_sync (ToolCommand *command, guint argc, const gchar **argv,
+				SqlConsole *console, GError **error)
 {
-	GdaInternalCommandResult *res;
+	ToolCommandResult *res;
 
-	if (!cnc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+	g_assert (console);
+	if (!console->current) {
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_NO_CONNECTION_ERROR,
 			     "%s", _("No current connection"));
 		return NULL;
 	}
 
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_EMPTY;
 
-	if (args[0] && *args[0]) {
+	if (argv[0] && *argv[0]) {
 		GdaMetaContext context;
 		memset (&context, 0, sizeof (context));
-		if (*args[0] == '_')
-			context.table_name = (gchar*) args[0];
+		if (*argv[0] == '_')
+			context.table_name = (gchar*) argv[0];
 		else
-			context.table_name = g_strdup_printf ("_%s", args[0]);
-		if (!gda_connection_update_meta_store (cnc, &context, error)) {
+			context.table_name = g_strdup_printf ("_%s", argv[0]);
+		if (!gda_connection_update_meta_store (console->current->cnc, &context, error)) {
 			g_free (res);
 			res = NULL;
 		}
-		if (*args[0] != '_')
+		if (*argv[0] != '_')
 			g_free (context.table_name);
 	}
-	else if (!gda_connection_update_meta_store (cnc, NULL, error)) {
+	else if (!gda_connection_update_meta_store (console->current->cnc, NULL, error)) {
 		g_free (res);
 		res = NULL;
 	}
@@ -808,20 +288,21 @@ gda_internal_command_dict_sync (G_GNUC_UNUSED SqlConsole *console, GdaConnection
 	return res;
 }
 
-GdaInternalCommandResult *
-gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-				  G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
+ToolCommandResult *
+gda_internal_command_list_tables (ToolCommand *command, guint argc, const gchar **argv,
+				  SqlConsole *console, GError **error)
 {
-	GdaInternalCommandResult *res;
+	ToolCommandResult *res;
 	GdaDataModel *model;
 
-	if (!cnc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+	g_assert (console);
+	if (!console->current) {
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_NO_CONNECTION_ERROR,
 			     "%s", _("No current connection"));
 		return NULL;
 	}
 
-	if (args[0] && *args[0]) {
+	if (argv[0] && *argv[0]) {
 		GValue *v;
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
@@ -829,9 +310,10 @@ gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnecti
 			"table_type LIKE '%TABLE%' "
 			"ORDER BY table_schema, table_name";
 
-		gchar *tmp = gda_sql_identifier_prepare_for_compare (g_strdup (args[0]));
+		gchar *tmp = gda_sql_identifier_prepare_for_compare (g_strdup (argv[0]));
 		g_value_take_string (v = gda_value_new (G_TYPE_STRING), tmp);
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error, "tname", v, NULL);
 		gda_value_free (v);
 	}
 	else {
@@ -839,34 +321,36 @@ gda_internal_command_list_tables (G_GNUC_UNUSED SqlConsole *console, GdaConnecti
 			"table_owner as Owner, table_comments as Description "
 			"FROM _tables WHERE table_type LIKE '%TABLE%' "
 			"ORDER BY table_schema, table_name";
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error);
 	}
 	if (!model)
 		return NULL;
 
 	g_object_set_data (G_OBJECT (model), "name", _("List of tables"));
 	
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = model;
 
 	return res;
 }
 
-GdaInternalCommandResult *
-gda_internal_command_list_views (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-				 G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
+ToolCommandResult *
+gda_internal_command_list_views (ToolCommand *command, guint argc, const gchar **argv,
+				 SqlConsole *console, GError **error)
 {
-	GdaInternalCommandResult *res;
+	ToolCommandResult *res;
 	GdaDataModel *model;
 
-	if (!cnc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+	g_assert (console);
+	if (!console->current) {
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_NO_CONNECTION_ERROR,
 			     "%s", _("No current connection"));
 		return NULL;
 	}
 
-	if (args[0] && *args[0]) {
+	if (argv[0] && *argv[0]) {
 		GValue *v;
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner, table_comments as Description "
@@ -874,8 +358,9 @@ gda_internal_command_list_views (G_GNUC_UNUSED SqlConsole *console, GdaConnectio
 			"table_type = 'VIEW' "
 			"ORDER BY table_schema, table_name";
 
-		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "tname", v, NULL);
+		g_value_set_string (v = gda_value_new (G_TYPE_STRING), argv[0]);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error, "tname", v, NULL);
 		gda_value_free (v);
 	}
 	else {
@@ -883,64 +368,68 @@ gda_internal_command_list_views (G_GNUC_UNUSED SqlConsole *console, GdaConnectio
 			"table_owner as Owner, table_comments as Description "
 			"FROM _tables WHERE table_type='VIEW' "
 			"ORDER BY table_schema, table_name";
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error);
 	}
 	if (!model)
 		return NULL;
 
 	g_object_set_data (G_OBJECT (model), "name", _("List of views"));
 	
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = model;
 
 	return res;
 }
 
-GdaInternalCommandResult *
-gda_internal_command_list_schemas (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-				   G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
+ToolCommandResult *
+gda_internal_command_list_schemas (ToolCommand *command, guint argc, const gchar **argv,
+				   SqlConsole *console, GError **error)
 {
-	GdaInternalCommandResult *res;
+	ToolCommandResult *res;
 	GdaDataModel *model;
 
-	if (!cnc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+	g_assert (console);
+	if (!console->current) {
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_NO_CONNECTION_ERROR,
 			     "%s", _("No current connection"));
 		return NULL;
 	}
 
-	if (args[0] && *args[0]) {
+	if (argv[0] && *argv[0]) {
 		GValue *v;
 		const gchar *sql = "SELECT schema_name AS Schema, schema_owner AS Owner, "
 			"CASE WHEN schema_internal THEN 'yes' ELSE 'no' END AS Internal "
 			"FROM _schemata WHERE schema_name=##sname::string "
 			"ORDER BY schema_name";
 
-		g_value_set_string (v = gda_value_new (G_TYPE_STRING), args[0]);
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, "sname", v, NULL);
+		g_value_set_string (v = gda_value_new (G_TYPE_STRING), argv[0]);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error, "sname", v, NULL);
 		gda_value_free (v);
 	}
 	else {
 		const gchar *sql = "SELECT schema_name AS Schema, schema_owner AS Owner, "
 			"CASE WHEN schema_internal THEN 'yes' ELSE 'no' END AS Internal "
 			"FROM _schemata ORDER BY schema_name";
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error);
 	}
 	if (!model)
 		return NULL;
 
 	g_object_set_data (G_OBJECT (model), "name", _("List of schemas"));
 	
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 	res->u.model = model;
 
 	return res;
 }
 
 GdaMetaStruct *
-gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, GError **error)
+gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **argv, GError **error)
 {
 	GdaMetaStruct *mstruct;
 	gint index;
@@ -951,7 +440,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 	store = gda_connection_get_meta_store (cnc);
 	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
 
-	if (!args[0]) {
+	if (!argv[0]) {
 		GSList *list;
 		/* use all tables or views visible by default */
 		if (!gda_meta_struct_complement_default (mstruct, error))
@@ -966,7 +455,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 			g_slist_free (list);
 	}
 
-	for (index = 0, arg = args[0]; arg; index++, arg = args[index]) {
+	for (index = 0, arg = argv[0]; arg; index++, arg = argv[index]) {
 		GValue *v;
 		g_value_set_string (v = gda_value_new (G_TYPE_STRING), arg);
 
@@ -1003,7 +492,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **args, 
 
 	objlist = gda_meta_struct_get_all_db_objects (mstruct);
 	if (!objlist) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_OBJECT_NOT_FOUND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_OBJECT_NOT_FOUND_ERROR,
 			     "%s", _("No object found"));
 		goto onerror;
 	}
@@ -1031,26 +520,28 @@ meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *v
 	}
 }
 
-GdaInternalCommandResult *
-gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *cnc, const gchar **args,
-			     G_GNUC_UNUSED OutputFormat format, GError **error, G_GNUC_UNUSED gpointer data)
+ToolCommandResult *
+gda_internal_command_detail (ToolCommand *command, guint argc, const gchar **argv,
+			     SqlConsole *console, GError **error)
 {
-	GdaInternalCommandResult *res;
+	ToolCommandResult *res;
 	GdaDataModel *model;
 
-	if (!cnc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_NO_CONNECTION_ERROR,
+	g_assert (console);
+	if (!console->current) {
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_NO_CONNECTION_ERROR,
 			     "%s", _("No current connection"));
 		return NULL;
 	}
 
-	if (!args[0] || !*args[0]) {
+	if (!argv[0] || !*argv[0]) {
 		/* FIXME: include indexes and sequences when they are present in the information schema */
 		/* displays all tables, views, indexes and sequences which are "directly visible" */
 		const gchar *sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 			"table_owner as Owner FROM _tables WHERE table_short_name = table_name "
 			"ORDER BY table_schema, table_name";
-		model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+		model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+						sql, error, NULL);
 
 		if (model) {
 			/* if no row, then return all the objects from all the schemas */
@@ -1059,22 +550,23 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 				sql = "SELECT table_schema AS Schema, table_name AS Name, table_type as Type, "
 					"table_owner as Owner FROM _tables "
 					"ORDER BY table_schema, table_name";
-				model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, NULL);
+				model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+								sql, error, NULL);
 			}
-			res = g_new0 (GdaInternalCommandResult, 1);
-			res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			res = g_new0 (ToolCommandResult, 1);
+			res->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 			res->u.model = model;
 		}
 		else {
-			res = g_new0 (GdaInternalCommandResult, 1);
-			res->type = GDA_INTERNAL_COMMAND_RESULT_EMPTY;
+			res = g_new0 (ToolCommandResult, 1);
+			res->type = TOOL_COMMAND_RESULT_EMPTY;
 		}
 		return res;
 	}
 
 	GdaMetaStruct *mstruct;
 	GSList *dbo_list, *tmplist;
-	mstruct = gda_internal_command_build_meta_struct (cnc, args, error);
+	mstruct = gda_internal_command_build_meta_struct (console->current->cnc, argv, error);
 	if (!mstruct)
 		return NULL;
 	
@@ -1129,14 +621,14 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			g_list_foreach (values, (GFunc) gda_value_free, NULL);
 			g_list_free (values);
 		}
-		res = g_new0 (GdaInternalCommandResult, 1);
-		res->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+		res = g_new0 (ToolCommandResult, 1);
+		res->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 		res->u.model = model;
 		g_slist_free (tmplist);
 		return res;
 	}
 	else if (nb_objects == 0) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_OBJECT_NOT_FOUND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_OBJECT_NOT_FOUND_ERROR,
 			     "%s", _("No object found"));
 		g_slist_free (tmplist);
 		return NULL;
@@ -1145,8 +637,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 	/* 
 	 * Information about a single object
 	 */
-	res = g_new0 (GdaInternalCommandResult, 1);
-	res->type = GDA_INTERNAL_COMMAND_RESULT_MULTIPLE;
+	res = g_new0 (ToolCommandResult, 1);
+	res->type = TOOL_COMMAND_RESULT_MULTIPLE;
 	res->u.multiple_results = NULL;
 	GdaMetaDbObject *dbo;
 
@@ -1161,7 +653,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 	g_slist_free (tmplist);
 
 	if ((dbo->obj_type == GDA_META_DB_VIEW) || (dbo->obj_type == GDA_META_DB_TABLE)) {
-		GdaInternalCommandResult *subres;
+		ToolCommandResult *subres;
 		GdaMetaTable *mt = GDA_META_TABLE (dbo);
 
 		if (mt->columns) {
@@ -1210,14 +702,14 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 				g_list_free (values);
 			}
 		
-			subres = g_new0 (GdaInternalCommandResult, 1);
-			subres->type = GDA_INTERNAL_COMMAND_RESULT_DATA_MODEL;
+			subres = g_new0 (ToolCommandResult, 1);
+			subres->type = TOOL_COMMAND_RESULT_DATA_MODEL;
 			subres->u.model = model;
 			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
 		}
 		else {
-			subres = g_new0 (GdaInternalCommandResult, 1);
-			subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+			subres = g_new0 (ToolCommandResult, 1);
+			subres->type = TOOL_COMMAND_RESULT_TXT;
 			subres->u.txt = g_string_new ("");
 			if (dbo->obj_type == GDA_META_DB_VIEW)
 				g_string_append_printf (subres->u.txt,
@@ -1235,8 +727,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			/* VIEW specific */
 			GdaMetaView *mv = GDA_META_VIEW (dbo);
 			
-			subres = g_new0 (GdaInternalCommandResult, 1);
-			subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+			subres = g_new0 (ToolCommandResult, 1);
+			subres->type = TOOL_COMMAND_RESULT_TXT;
 			subres->u.txt = g_string_new ("");
 			g_string_append_printf (subres->u.txt, _("View definition: %s"), mv->view_def);
 			res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
@@ -1254,7 +746,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 			g_value_set_string ((catalog = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
 			g_value_set_string ((schema = gda_value_new (G_TYPE_STRING)), dbo->obj_schema);
 			g_value_set_string ((name = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
-			model = gda_meta_store_extract (gda_connection_get_meta_store (cnc), sql, error, 
+			model = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+							sql, error, 
 							"tc", catalog, "ts", schema, "tname", name, NULL);
 			nrows = gda_data_model_get_n_rows (model);
 			for (i = 0; i < nrows; i++) {
@@ -1264,7 +757,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 
 				cvalue = gda_data_model_get_value_at (model, 0, i, error);
 				if (!cvalue) {
-					gda_internal_command_exec_result_free (res);
+					tool_command_result_free (res);
 					res = NULL;
 					goto out;
 				}
@@ -1274,7 +767,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 					GdaDataModel *cols;
 					cvalue = gda_data_model_get_value_at (model, 1, i, error);
 					if (!cvalue) {
-						gda_internal_command_exec_result_free (res);
+						tool_command_result_free (res);
 						res = NULL;
 						goto out;
 					}
@@ -1286,7 +779,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 						"constraint_name = ##cname::string "
 						"ORDER BY ordinal_position";
 					
-					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+								       str, error, 
 								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
 								       NULL);
 					if (cols) {
@@ -1299,7 +793,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 									g_string_append (string, ", ");
 								cvalue = gda_data_model_get_value_at (cols, 0, j, error);
 								if (!cvalue) {
-									gda_internal_command_exec_result_free (res);
+									tool_command_result_free (res);
 									res = NULL;
 									g_object_unref (cols);
 									g_string_free (string, TRUE);
@@ -1320,7 +814,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 					GdaDataModel *cols;
 					cvalue = gda_data_model_get_value_at (model, 1, i, error);
 					if (!cvalue) {
-						gda_internal_command_exec_result_free (res);
+						tool_command_result_free (res);
 						res = NULL;
 						goto out;
 					}
@@ -1332,7 +826,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 						"constraint_name = ##cname::string "
 						"ORDER BY ordinal_position";
 					
-					cols = gda_meta_store_extract (gda_connection_get_meta_store (cnc), str, error, 
+					cols = gda_meta_store_extract (gda_connection_get_meta_store (console->current->cnc),
+								       str, error, 
 								       "tc", catalog, "ts", schema, "tname", name, "cname", cvalue, 
 								       NULL);
 					if (cols) {
@@ -1345,7 +840,7 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 									g_string_append (string, ", ");
 								cvalue = gda_data_model_get_value_at (cols, 0, j, error);
 								if (!cvalue) {
-									gda_internal_command_exec_result_free (res);
+									tool_command_result_free (res);
 									res = NULL;
 									g_object_unref (cols);
 									g_string_free (string, TRUE);
@@ -1360,8 +855,8 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 				}
 
 				if (string) {
-					subres = g_new0 (GdaInternalCommandResult, 1);
-					subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+					subres = g_new0 (ToolCommandResult, 1);
+					subres->type = TOOL_COMMAND_RESULT_TXT;
 					subres->u.txt = string;
 					res->u.multiple_results = g_slist_append (res->u.multiple_results, subres);
 				}
@@ -1415,14 +910,14 @@ gda_internal_command_detail (G_GNUC_UNUSED SqlConsole *console, GdaConnection *c
 				g_string_append (string, "\n  ");
 				g_string_append (string, _("Policy on UPDATE"));
 				g_string_append (string, ": ");
-				g_string_append (string, tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (fk)));
+				g_string_append (string, gda_tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY (fk)));
 				g_string_append (string, "\n  ");
 				g_string_append (string, _("Policy on DELETE"));
 				g_string_append (string, ": ");
-				g_string_append (string, tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk)));
+				g_string_append (string, gda_tools_utils_fk_policy_to_string (GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk)));
 
-				subres = g_new0 (GdaInternalCommandResult, 1);
-				subres->type = GDA_INTERNAL_COMMAND_RESULT_TXT;
+				subres = g_new0 (ToolCommandResult, 1);
+				subres->type = TOOL_COMMAND_RESULT_TXT;
 				subres->u.txt = string;
 				res->u.multiple_results = g_slist_append (res->u.multiple_results,
 									  subres);

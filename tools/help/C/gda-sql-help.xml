@@ -36,20 +36,20 @@
   <command name="c">
     <shortdescription>Opens a new connection or lists opened connections</shortdescription>
     <usage>
-      <synopsis>.c [@CNC_NAME@ [@DSN@|@CONNECTION STRING@]]</synopsis>
+      <synopsis>.c [[@CNC_NAME@] [@DSN@|@CONNECTION STRING@]]</synopsis>
       <comment>Opens a new connection, named @CNC_NAME@ using either a DSN name (use the ".l" command to list all declared DSN), or a connection string (use the ".lp" command to list database providers and see which argument their connection string accepts).</comment>
       <comment>If only a connection name is passed as argument, then the named connection becomes the current active connection. As a side note, using "~" as a connection name will switch to a (new or already opened) connection which contains the meta data for the active connection.</comment>
       <comment>If no connection name is specified, then this command lists all the opened connections</comment>
     </usage>
     <example>
-      <synopsis>.c st SalesTest</synopsis>
+      <synopsis>.c SalesTest</synopsis>
       <synopsis>.c ht htsql_demo.db</synopsis>
       <synopsis>.c</synopsis>
       <raw>                      List of opened connections
-Name | Provider | DSN or connection string                         | Username
------+----------+--------------------------------------------------+---------
-ht   | SQLite   | DB_DIR=.;EXTRA_FUNCTIONS=TRUE;DB_NAME=htsql_demo |         
-st   | SQLite   | SalesTest                                        |         
+Name      | Provider | DSN or connection string                         | Username
+----------+----------+--------------------------------------------------+---------
+ht        | SQLite   | DB_DIR=.;EXTRA_FUNCTIONS=TRUE;DB_NAME=htsql_demo |         
+SalesTest | SQLite   | SalesTest                                        |         
 (2 rows)</raw>
       <comment>This example opens two SQLite connections, named "ht" and "st"</comment>
     </example>

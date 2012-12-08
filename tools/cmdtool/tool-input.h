@@ -20,26 +20,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef __GDA_TOOLS_INPUT__
-#define __GDA_TOOLS_INPUT__
+#ifndef __TOOLS_INPUT__
+#define __TOOLS_INPUT__
 
 #include <stdio.h>
 #include <glib.h>
+#ifdef HAVE_READLINE
+#include <readline/readline.h>
+#endif
+#include "tool-decl.h"
 
-typedef char       **(*CompletionFunc) (const char *, int, int);
+typedef char       **(*CompletionFunc) (const char *match, const char *line, int start, int end);
 typedef gboolean     (*TreatLineFunc) (const gchar *, gpointer);
 typedef const  char *(*ComputePromptFunc) (void);
 
-gchar   *input_from_console (const gchar *prompt);
 gchar   *input_from_stream  (FILE *stream);
 
 void     init_input (TreatLineFunc treat_line_func, ComputePromptFunc prompt_func, gpointer data);
 void     input_get_size (gint *width, gint *height);
 void     end_input (void);
 
-void     init_history ();
 void     add_to_history (const gchar *txt);
 gboolean save_history (const gchar *file, GError **error);
-void     set_completion_func (CompletionFunc func);
+void     tool_input_set_completion_func (ToolCommandGroup *group, CompletionFunc func, gchar *start_chars_to_ignore);
 
 #endif

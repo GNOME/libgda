@@ -17,17 +17,17 @@
  */
 
 
-#ifndef __TOOLS_FAVORITES_H_
-#define __TOOLS_FAVORITES_H_
+#ifndef __GDA_TOOLS_FAVORITES_H_
+#define __GDA_TOOLS_FAVORITES_H_
 
 #include <libgda/libgda.h>
 
 G_BEGIN_DECLS
 
-#define TOOLS_TYPE_FAVORITES          (tools_favorites_get_type())
-#define TOOLS_FAVORITES(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, tools_favorites_get_type(), ToolsFavorites)
-#define TOOLS_FAVORITES_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, tools_favorites_get_type (), ToolsFavoritesClass)
-#define TOOLS_IS_FAVORITES(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, tools_favorites_get_type ())
+#define GDA_TOOLS_TYPE_FAVORITES          (gda_tools_favorites_get_type())
+#define GDA_TOOLS_FAVORITES(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_tools_favorites_get_type(), ToolsFavorites)
+#define GDA_TOOLS_FAVORITES_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_tools_favorites_get_type (), ToolsFavoritesClass)
+#define GDA_TOOLS_IS_FAVORITES(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_tools_favorites_get_type ())
 
 typedef struct _ToolsFavorites ToolsFavorites;
 typedef struct _ToolsFavoritesClass ToolsFavoritesClass;
@@ -35,24 +35,24 @@ typedef struct _ToolsFavoritesPrivate ToolsFavoritesPrivate;
 
 /**
  * ToolsFavoritesType:
- * @TOOLS_FAVORITES_TABLES: a database's table favorite
- * @TOOLS_FAVORITES_DIAGRAMS: a diagram favorite
- * @TOOLS_FAVORITES_QUERIES:
- * @TOOLS_FAVORITES_DATA_MANAGERS:
- * @TOOLS_FAVORITES_ACTIONS:
+ * @GDA_TOOLS_FAVORITES_TABLES: a database's table favorite
+ * @GDA_TOOLS_FAVORITES_DIAGRAMS: a diagram favorite
+ * @GDA_TOOLS_FAVORITES_QUERIES:
+ * @GDA_TOOLS_FAVORITES_DATA_MANAGERS:
+ * @GDA_TOOLS_FAVORITES_ACTIONS:
  *
  * Enum to identify favorite's types.
  */
 typedef enum {
-        TOOLS_FAVORITES_TABLES   = 1 << 0,
-	TOOLS_FAVORITES_DIAGRAMS = 1 << 1,
-	TOOLS_FAVORITES_QUERIES  = 1 << 2,
-	TOOLS_FAVORITES_DATA_MANAGERS  = 1 << 3,
-	TOOLS_FAVORITES_ACTIONS  = 1 << 4,
-	TOOLS_FAVORITES_LDAP_DN  = 1 << 5,
-	TOOLS_FAVORITES_LDAP_CLASS = 1 << 6
+        GDA_TOOLS_FAVORITES_TABLES   = 1 << 0,
+	GDA_TOOLS_FAVORITES_DIAGRAMS = 1 << 1,
+	GDA_TOOLS_FAVORITES_QUERIES  = 1 << 2,
+	GDA_TOOLS_FAVORITES_DATA_MANAGERS  = 1 << 3,
+	GDA_TOOLS_FAVORITES_ACTIONS  = 1 << 4,
+	GDA_TOOLS_FAVORITES_LDAP_DN  = 1 << 5,
+	GDA_TOOLS_FAVORITES_LDAP_CLASS = 1 << 6
 } ToolsFavoritesType;
-#define TOOLS_FAVORITES_NB_TYPES 7
+#define GDA_TOOLS_FAVORITES_NB_TYPES 7
 
 #define ORDER_KEY_SCHEMA 1
 #define ORDER_KEY_QUERIES 2
@@ -98,31 +98,31 @@ struct _ToolsFavoritesClass
  * @see_also:
  *
  * Each connection uses a single #ToolsFavorites object to manage its favorites,
- * see tools_connection_get_favorites().
+ * see gda_tools_connection_get_favorites().
  */
 
-GType               tools_favorites_get_type               (void) G_GNUC_CONST;
+GType               gda_tools_favorites_get_type               (void) G_GNUC_CONST;
 
-ToolsFavorites     *tools_favorites_new                    (GdaMetaStore *store);
-const gchar        *tools_favorites_type_to_string (ToolsFavoritesType type);
-gboolean            tools_favorites_add          (ToolsFavorites *bfav, guint session_id,
+ToolsFavorites     *gda_tools_favorites_new                    (GdaMetaStore *store);
+const gchar        *gda_tools_favorites_type_to_string (ToolsFavoritesType type);
+gboolean            gda_tools_favorites_add          (ToolsFavorites *bfav, guint session_id,
 						  ToolsFavoritesAttributes *fav,
 						  gint order_key, gint pos,
 						  GError **error);
-GSList             *tools_favorites_list             (ToolsFavorites *bfav, guint session_id, 
+GSList             *gda_tools_favorites_list             (ToolsFavorites *bfav, guint session_id, 
 						      ToolsFavoritesType type, gint order_key, GError **error);
 
-gboolean            tools_favorites_delete           (ToolsFavorites *bfav, guint session_id,
+gboolean            gda_tools_favorites_delete           (ToolsFavorites *bfav, guint session_id,
 						      ToolsFavoritesAttributes *fav, GError **error);
-void                tools_favorites_free_list        (GSList *fav_list);
-void                tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav);
+void                gda_tools_favorites_free_list        (GSList *fav_list);
+void                gda_tools_favorites_reset_attributes (ToolsFavoritesAttributes *fav);
 
-gint                tools_favorites_find             (ToolsFavorites *bfav, guint session_id, const gchar *contents,
+gint                gda_tools_favorites_find             (ToolsFavorites *bfav, guint session_id, const gchar *contents,
 						      ToolsFavoritesAttributes *out_fav, GError **error);
-gint                tools_favorites_find_by_name     (ToolsFavorites *bfav, guint session_id,
+gint                gda_tools_favorites_find_by_name     (ToolsFavorites *bfav, guint session_id,
 						      ToolsFavoritesType type, const gchar *name,
 						      ToolsFavoritesAttributes *out_fav, GError **error);
-gboolean            tools_favorites_get              (ToolsFavorites *bfav, gint fav_id,
+gboolean            gda_tools_favorites_get              (ToolsFavorites *bfav, gint fav_id,
 						      ToolsFavoritesAttributes *out_fav, GError **error);
 
 G_END_DECLS

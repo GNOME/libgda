@@ -24,7 +24,7 @@
 #include "data-source.h"
 #include <libgda/libgda.h>
 #include "../support.h"
-#include "../../tools-utils.h"
+#include "../../tool-utils.h"
 
 #ifdef HAVE_GTKSOURCEVIEW
 #ifdef GTK_DISABLE_SINGLE_INCLUDES
@@ -169,7 +169,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 
 	if (!doc) {
 		TO_IMPLEMENT;
-		g_set_error (&lerror, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Error parsing XML specifications"));
 		goto out;
 	}
@@ -183,7 +183,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 	}
 
 	if (strcmp ((gchar*) node->name, "data")) {
-		g_set_error (&lerror, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("Expecting <%s> root node"), "data");
 		xmlFreeDoc (doc);
 		goto out;

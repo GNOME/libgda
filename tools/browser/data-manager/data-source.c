@@ -29,7 +29,7 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>
 #include "../common/ui-formgrid.h"
-#include "../../tools-utils.h"
+#include "../../tool-utils.h"
 
 #include "data-source.h"
 #define DEFAULT_DATA_SOURCE_NAME "DataSource"
@@ -400,7 +400,7 @@ data_source_new_from_xml_node (BrowserConnection *bcnc, xmlNodePtr node, GError 
 		init_from_query (source, node);
 	}
 	else {
-		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     /* Translators: Do not translate "table" nor "query" */
 			     _("Node must be \"table\" or \"query\", and is \"%s\""), (gchar*)node->name);
 		g_object_unref (source);
@@ -434,14 +434,14 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 
 	mstruct = browser_connection_get_meta_struct (source->priv->bcnc);
 	if (! mstruct) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 			     "%s", _("Not ready"));
 		return NULL;
 	}
 
 	split = gda_sql_identifier_split (table_name);
 	if (! split) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     _("Malformed table name \"%s\""), table_name);
 		return NULL;
 	}
@@ -458,12 +458,12 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 	if (vname[2]) gda_value_free (vname[2]);
 
 	if (! dbo) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("Could not find the \"%s\" table"), table_name);
 		return NULL;
 	}
 	if ((dbo->obj_type != GDA_META_DB_TABLE) && (dbo->obj_type != GDA_META_DB_VIEW)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("The \"%s\" object is not a table"), table_name);
 		return NULL;
 	}
@@ -481,7 +481,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 #endif
 	tname = xmlGetProp (node, BAD_CAST "name");
 	if (!tname) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     /* Translators: Do not translate "name" */
 			     "%s", _("Missing attribute \"name\" for table"));
 		return FALSE;
@@ -622,12 +622,12 @@ data_source_add_dependency (DataSource *source, const gchar *table,
 		}
 	}
 	if (!fk) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("Could not find any foreign key to \"%s\""), table);
 		return FALSE;
 	}
 	else if (fk->cols_nb <= 0) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     _("The fields involved in the foreign key to \"%s\" are not known"),
 			     table);
 		return FALSE;
@@ -808,7 +808,7 @@ exec_end_timeout_cb (DataSource *source)
 		}
 		else {
 			g_object_unref (obj);
-			g_set_error (&source->priv->exec_error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			g_set_error (&source->priv->exec_error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     "%s", _("Statement to execute is not a selection statement"));
 		}
 
@@ -948,7 +948,7 @@ data_source_execute (DataSource *source, GError **error)
 		if (source->priv->init_error)
 			g_propagate_error (error, source->priv->init_error);
 		else
-			g_set_error (error, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+			g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 				     "%s", _("No SELECT statement to execute"));
 	}
 
@@ -1218,7 +1218,7 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	source->priv->builder = b;
 	if (! gda_sql_builder_select_add_target (b, table, NULL)) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not build SELECT statement"));
 		return FALSE;
 	}
@@ -1285,7 +1285,7 @@ data_source_set_query (DataSource *source, const gchar *sql, GError **warning)
 	}
 
 	if (remain)
-		g_set_error (warning, TOOLS_ERROR, TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (warning, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Multiple statements detected, only the first will be used"));
 
 	/* try to normalize the statement */

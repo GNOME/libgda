@@ -419,13 +419,13 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser
 	classes_view_get_current_class (CLASSES_VIEW (ebrowser->priv->classes_view));
         memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
         fav.id = -1;
-        fav.type = TOOLS_FAVORITES_LDAP_CLASS;
+        fav.type = GDA_TOOLS_FAVORITES_LDAP_CLASS;
         fav.name = ldap_classes_page_to_selection (ebrowser);
         fav.descr = NULL;
         fav.contents = ldap_classes_page_to_selection (ebrowser);
 
         bfav = browser_connection_get_favorites (ebrowser->priv->bcnc);
-        if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
+        if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
                 browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) ebrowser),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));

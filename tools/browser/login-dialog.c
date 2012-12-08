@@ -290,7 +290,7 @@ sub_thread_open_cnc (GdaDsnInfo *info, GError **error)
 	return cnc;
 #else /* DUMMY defined */
 	sleep (5);
-	g_set_error (error, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
+	g_set_error (error, GDA_TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
 	return NULL;
 #endif
 }

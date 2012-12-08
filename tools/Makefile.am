@@ -6,7 +6,7 @@ if LDAP
 ldap_flags=-DHAVE_LDAP
 endif
 
-SUBDIRS = $(BROWSER_DIR) help
+SUBDIRS = cmdtool $(BROWSER_DIR) help
 
 bin_PROGRAMS = \
 	gda-list-config-5.0 \
@@ -22,6 +22,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I. \
+	-Icmdtool \
 	$(ldap_flags) \
 	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
@@ -34,18 +35,16 @@ gda_list_config_5_0_LDADD = \
         $(COREDEPS_LIBS)
 
 gda_sql_5_0_SOURCES = \
+	tool-utils.h \
+	tool-utils.c \
 	config-info.h \
 	config-info.c \
 	tools-favorites.h \
 	tools-favorites.c \
-	tools-utils.h \
-	tools-utils.c \
         gda-sql.c \
 	gda-sql.h \
 	gda-threader.h \
 	gda-threader.c \
-	tools-input.h \
-	tools-input.c \
 	command-exec.h \
 	command-exec.c \
 	$(top_srcdir)/libgda/global.h \
@@ -53,6 +52,7 @@ gda_sql_5_0_SOURCES = \
 	$(top_srcdir)/libgda/md5c.c
 
 gda_sql_5_0_LDADD = \
+	cmdtool/libcmdtool.la \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(COREDEPS_LIBS) \
 	$(READLINE_LIB) \

@@ -79,7 +79,7 @@ main (int argc, char *argv[])
                          error && error->message ? error->message : "No detail");
                 exit (1);
         }
-	bfav = tools_favorites_new (gda_connection_get_meta_store (cnc));
+	bfav = gda_tools_favorites_new (gda_connection_get_meta_store (cnc));
 	test1 (cnc, bfav);
 	test2 (cnc, bfav);
 	test3 (cnc, bfav);
@@ -96,12 +96,12 @@ test1 (GdaConnection *cnc, ToolsFavorites *bfav)
 	gint favid, i;
 	GError *error = NULL;
 	ToolsFavoritesAttributes fav_array[]= {
-		{-1, TOOLS_FAVORITES_TABLES, "table1", "fav1-descr", "fav1 contents"},
-		{-1, TOOLS_FAVORITES_DIAGRAMS, "diagram1", "fav2-descr", "fav2 contents"}
+		{-1, GDA_TOOLS_FAVORITES_TABLES, "table1", "fav1-descr", "fav1 contents"},
+		{-1, GDA_TOOLS_FAVORITES_DIAGRAMS, "diagram1", "fav2-descr", "fav2 contents"}
 	};
 	for (i = 0; i < G_N_ELEMENTS (fav_array); i++) {
 		ToolsFavoritesAttributes *f = (ToolsFavoritesAttributes*) &(fav_array[i]);
-		favid = tools_favorites_add (bfav, 0, f, -1, 0, &error);
+		favid = gda_tools_favorites_add (bfav, 0, f, -1, 0, &error);
 		if (!favid < 0) {
 			g_print ("Could not create favorite: %s\n",
 				 error && error->message ? error->message : "No detail");
@@ -111,7 +111,7 @@ test1 (GdaConnection *cnc, ToolsFavorites *bfav)
 	//dump_favorites_in_db (cnc);
 
 	GSList *favlist, *list;
-	favlist = tools_favorites_list (bfav, 0, TOOLS_FAVORITES_TABLES, -1, &error);
+	favlist = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_TABLES, -1, &error);
 	if (!favlist && error) {
 		g_print ("Could not list favorites: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -140,7 +140,7 @@ test1 (GdaConnection *cnc, ToolsFavorites *bfav)
 		g_print ("Wrong number of favorites reported\n");
 		exit (1);
 	}
-	tools_favorites_free_list (favlist);	
+	gda_tools_favorites_free_list (favlist);	
 }
 
 static void
@@ -149,17 +149,17 @@ test2 (GdaConnection *cnc, ToolsFavorites *bfav)
 	gint favid, i;
 	GError *error = NULL;
 	ToolsFavoritesAttributes fav_array[]= {
-		{-1, TOOLS_FAVORITES_TABLES, "table2", "fav1-descr", "fav1 contents SEPARATE"},
-		{-1, TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
-		{-1, TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_TABLES, "table2", "fav1-descr", "fav1 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
 	};
 	ToolsFavoritesAttributes res_fav_array[]= {
-		{-1, TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
-		{-1, TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
 	};
 	for (i = 0; i < G_N_ELEMENTS (fav_array); i++) {
 		ToolsFavoritesAttributes *f = (ToolsFavoritesAttributes*) &(fav_array[i]);
-		favid = tools_favorites_add (bfav, 0, f, 1, 0, &error);
+		favid = gda_tools_favorites_add (bfav, 0, f, 1, 0, &error);
 		if (!favid < 0) {
 			g_print ("Could not create favorite: %s\n",
 				 error && error->message ? error->message : "No detail");
@@ -169,7 +169,7 @@ test2 (GdaConnection *cnc, ToolsFavorites *bfav)
 	dump_favorites_in_db (cnc);
 
 	GSList *favlist, *list;
-	favlist = tools_favorites_list (bfav, 0, TOOLS_FAVORITES_TABLES, 1, &error);
+	favlist = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_TABLES, 1, &error);
 	if (!favlist && error) {
 		g_print ("Could not list favorites: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -198,7 +198,7 @@ test2 (GdaConnection *cnc, ToolsFavorites *bfav)
 		g_print ("Wrong number of favorites reported\n");
 		exit (1);
 	}
-	tools_favorites_free_list (favlist);	
+	gda_tools_favorites_free_list (favlist);	
 }
 
 static void
@@ -207,14 +207,14 @@ test3 (GdaConnection *cnc, ToolsFavorites *bfav)
 	gint favid, i;
 	GError *error = NULL;
 	ToolsFavoritesAttributes fav_array[]= {
-		{-1, TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_DIAGRAMS, "diagram2", "fav2-descr", "fav2 contents SEPARATE"},
 	};
 	ToolsFavoritesAttributes res_fav_array[]= {
-		{-1, TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
+		{-1, GDA_TOOLS_FAVORITES_TABLES, "table2", "Another description for table2", "fav1 contents SEPARATE"},
 	};
 	for (i = 0; i < G_N_ELEMENTS (fav_array); i++) {
 		ToolsFavoritesAttributes *f = (ToolsFavoritesAttributes*) &(fav_array[i]);
-		favid = tools_favorites_delete (bfav, 0, f, &error);
+		favid = gda_tools_favorites_delete (bfav, 0, f, &error);
 		if (!favid < 0) {
 			g_print ("Could not delete favorite: %s\n",
 				 error && error->message ? error->message : "No detail");
@@ -224,7 +224,7 @@ test3 (GdaConnection *cnc, ToolsFavorites *bfav)
 	dump_favorites_in_db (cnc);
 
 	GSList *favlist, *list;
-	favlist = tools_favorites_list (bfav, 0, TOOLS_FAVORITES_TABLES, 1, &error);
+	favlist = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_TABLES, 1, &error);
 	if (!favlist && error) {
 		g_print ("Could not list favorites: %s\n",
                          error && error->message ? error->message : "No detail");
@@ -253,5 +253,5 @@ test3 (GdaConnection *cnc, ToolsFavorites *bfav)
 		g_print ("Wrong number of favorites reported\n");
 		exit (1);
 	}
-	tools_favorites_free_list (favlist);	
+	gda_tools_favorites_free_list (favlist);	
 }

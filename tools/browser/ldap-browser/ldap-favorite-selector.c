@@ -184,7 +184,7 @@ favorite_delete_selected (LdapFavoriteSelector *fsel)
 		gtk_tree_model_get (model, &iter,
 				    COLUMN_ID, &(fav.id), -1);
 		bfav = browser_connection_get_favorites (fsel->priv->bcnc);
-		if (!tools_favorites_delete (bfav, 0, &fav, NULL)) {
+		if (!gda_tools_favorites_delete (bfav, 0, &fav, NULL)) {
 			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*)fsel),
 					    _("Could not remove favorite: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -240,12 +240,12 @@ prop_save_timeout (LdapFavoriteSelector *fsel)
 
 	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = fsel->priv->properties_id;
-	fav.type = TOOLS_FAVORITES_LDAP_DN;
+	fav.type = GDA_TOOLS_FAVORITES_LDAP_DN;
 	fav.name = (gchar*) gtk_entry_get_text (GTK_ENTRY (fsel->priv->properties_name));
 	fav.descr = (gchar*) gtk_entry_get_text (GTK_ENTRY (fsel->priv->properties_descr));
 	fav.contents = (gchar*) gtk_entry_get_text (GTK_ENTRY (fsel->priv->properties_name));
 
-	allok = tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP,
+	allok = gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP,
 				       fsel->priv->properties_position, &error);
 	if (! allok) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) fsel),
@@ -446,22 +446,22 @@ ldap_favorite_selector_new (BrowserConnection *bcnc)
 
 	fsel->priv->bcnc = g_object_ref (bcnc);
 	signame = g_strdup_printf ("favorites-changed::%s",
-				   tools_favorites_type_to_string (TOOLS_FAVORITES_LDAP_DN));
+				   gda_tools_favorites_type_to_string (GDA_TOOLS_FAVORITES_LDAP_DN));
 	g_signal_connect (browser_connection_get_favorites (fsel->priv->bcnc), signame,
 			  G_CALLBACK (favorites_changed_cb), fsel);
 	g_free (signame);
 	signame = g_strdup_printf ("favorites-changed::%s",
-				   tools_favorites_type_to_string (TOOLS_FAVORITES_LDAP_CLASS));
+				   gda_tools_favorites_type_to_string (GDA_TOOLS_FAVORITES_LDAP_CLASS));
 	g_signal_connect (browser_connection_get_favorites (fsel->priv->bcnc), signame,
 			  G_CALLBACK (favorites_changed_cb), fsel);
 	g_free (signame);
 	
 	/* create tree managers */
 	fsel->priv->tree = gda_tree_new ();
-	manager = mgr_favorites_new (bcnc, TOOLS_FAVORITES_LDAP_DN, ORDER_KEY_LDAP);
+	manager = mgr_favorites_new (bcnc, GDA_TOOLS_FAVORITES_LDAP_DN, ORDER_KEY_LDAP);
         gda_tree_add_manager (fsel->priv->tree, manager);
 	g_object_unref (manager);
-	manager = mgr_favorites_new (bcnc, TOOLS_FAVORITES_LDAP_CLASS, ORDER_KEY_LDAP);
+	manager = mgr_favorites_new (bcnc, GDA_TOOLS_FAVORITES_LDAP_CLASS, ORDER_KEY_LDAP);
         gda_tree_add_manager (fsel->priv->tree, manager);
 	g_object_unref (manager);
 
@@ -580,12 +580,12 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	gint id;
 	bfav = browser_connection_get_favorites (fsel->priv->bcnc);
 
-	id = tools_favorites_find (bfav, 0, (gchar*) gtk_selection_data_get_data (selection_ldap),
+	id = gda_tools_favorites_find (bfav, 0, (gchar*) gtk_selection_data_get_data (selection_ldap),
 				     &fav, NULL);
 	if (id < 0) {
 		memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 		fav.id = -1;
-		fav.type = TOOLS_FAVORITES_LDAP_DN;
+		fav.type = GDA_TOOLS_FAVORITES_LDAP_DN;
 		fav.name = (gchar*) gtk_selection_data_get_data (selection_ldap);
 		fav.descr = NULL;
 		fav.contents = (gchar*) gtk_selection_data_get_data (selection_ldap);
@@ -594,7 +594,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	pos = atoi (path);
 	/*g_print ("%s() path => %s, pos: %d\n", __FUNCTION__, path, pos);*/
 	
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, pos, &error)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, pos, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) fsel),
 				    _("Could not add favorite: %s"),
 				    error && error->message ? error->message : _("No detail"));
@@ -604,7 +604,7 @@ tree_store_drag_drop_cb (G_GNUC_UNUSED GdauiTreeStore *store, const gchar *path,
 	}
 	
 	if (id >= 0)
-		tools_favorites_reset_attributes (&fav);
+		gda_tools_favorites_reset_attributes (&fav);
 
 	return retval;
 }

@@ -188,10 +188,10 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gint fa
 			  ToolsFavoritesType fav_type,
 			  const gchar *selection, LdapBrowserPerspective *bpers)
 {
-	if (fav_type == TOOLS_FAVORITES_LDAP_DN) {
+	if (fav_type == GDA_TOOLS_FAVORITES_LDAP_DN) {
 		ldap_browser_perspective_display_ldap_entry (bpers, selection);
 	}
-	if (fav_type == TOOLS_FAVORITES_LDAP_CLASS) {
+	if (fav_type == GDA_TOOLS_FAVORITES_LDAP_CLASS) {
 		ldap_browser_perspective_display_ldap_class (bpers, selection);
 	}
 #ifdef GDA_DEBUG_NO

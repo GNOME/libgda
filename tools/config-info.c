@@ -17,7 +17,7 @@
  */
 
 #include "config-info.h"
-#include "tools-utils.h"
+#include "tool-utils.h"
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 
@@ -105,7 +105,7 @@ config_info_detail_provider (const gchar *provider, GError **error)
 	GdaProviderInfo *pinfo;
 	pinfo = gda_config_get_provider_info (provider);
 	if (! pinfo) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_PROVIDER_NOT_FOUND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_PROVIDER_NOT_FOUND_ERROR,
 			     _("Could not find provider '%s'"), provider);
 		return NULL;
 	}
@@ -274,7 +274,7 @@ config_info_detail_dsn (const gchar *dsn, GError **error)
 	if (dsn && *dsn)
 		info = gda_config_get_dsn_info (dsn);
 	if (!info) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_DSN_NOT_FOUND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_DSN_NOT_FOUND_ERROR,
 			     _("Could not find data source '%s'"), dsn);
 		return NULL;
 	}
@@ -551,7 +551,7 @@ config_info_purge_data_files (const gchar *criteria, GError **error)
 	}
 	g_strfreev (array);
 	if (cri == PURGE_UNKNOWN) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_PURGE_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_PURGE_ERROR,
 			     _("Unknown criteria '%s'"), criteria);
 		return NULL;
 	}
@@ -631,7 +631,7 @@ config_info_purge_data_files (const gchar *criteria, GError **error)
 	g_dir_close (dir);
 
 	if (errstring) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_PURGE_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_PURGE_ERROR,
 			     "%s", errstring->str);
 		g_string_free (errstring, TRUE);
 	}

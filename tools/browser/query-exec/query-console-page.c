@@ -715,7 +715,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
 	if (tconsole->priv->fav_id >= 0) {
 		ToolsFavoritesAttributes fav;
-		if (tools_favorites_get (bfav, tconsole->priv->fav_id, &fav, NULL)) {
+		if (gda_tools_favorites_get (bfav, tconsole->priv->fav_id, &fav, NULL)) {
 			gchar *str;
 			str = g_strdup_printf (_("Modify favorite '%s'"), fav.name);
 			mitem = gtk_menu_item_new_with_label (str);
@@ -728,12 +728,12 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 					   GINT_TO_POINTER (tconsole->priv->fav_id));
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-			tools_favorites_reset_attributes (&fav);
+			gda_tools_favorites_reset_attributes (&fav);
 		}
 	}
 
 	GSList *allfav;
-	allfav = tools_favorites_list (bfav, 0, TOOLS_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
+	allfav = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
 	if (allfav) {
 		GtkWidget *submenu;
 		GSList *list;
@@ -762,7 +762,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 		}
-		tools_favorites_free_list (allfav);
+		gda_tools_favorites_free_list (allfav);
 	}
 
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
@@ -805,14 +805,14 @@ sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *t
 
 	memset (&fav, 0, sizeof (fav));
 	fav.id = -1;
-	fav.type = TOOLS_FAVORITES_QUERIES;
+	fav.type = GDA_TOOLS_FAVORITES_QUERIES;
 	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
 	cvalue = gda_set_get_holder_value (set, _("Favorite's name"));
 	fav.name = (gchar*) g_value_get_string (cvalue);
 
 	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
 
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));
@@ -836,13 +836,13 @@ sql_favorite_modify_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage
 
 	memset (&fav, 0, sizeof (fav));
 	fav.id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mitem), "favid"));
-	fav.type = TOOLS_FAVORITES_QUERIES;
+	fav.type = GDA_TOOLS_FAVORITES_QUERIES;
 	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
 	fav.name = g_object_get_data (G_OBJECT (mitem), "favname");
 
 	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
 
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));

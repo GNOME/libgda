@@ -499,7 +499,7 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 	ToolsFavoritesAttributes fav;
 
 	if ((fav_id >=0) &&
-	    tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+	    gda_tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
 				   fav_id, &fav, error)) {
 		gchar *str, *tmp;
 		tmp = g_markup_printf_escaped (_("'%s' data manager"), fav.name);
@@ -510,7 +510,7 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 		
 		dconsole->priv->fav_id = fav.id;
 		
-		tools_favorites_reset_attributes (&fav);
+		gda_tools_favorites_reset_attributes (&fav);
 	}
 	else {
 		gchar *str;
@@ -543,7 +543,7 @@ real_save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 
 	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = dconsole->priv->fav_id;
-	fav.type = TOOLS_FAVORITES_DATA_MANAGERS;
+	fav.type = GDA_TOOLS_FAVORITES_DATA_MANAGERS;
 	fav.name = gtk_editable_get_chars (GTK_EDITABLE (dconsole->priv->name_entry), 0, -1);
 	if (!*fav.name) {
 		g_free (fav.name);
@@ -554,7 +554,7 @@ real_save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 	gtk_widget_hide (dconsole->priv->popup_container);
 	
 	bfav = browser_connection_get_favorites (dconsole->priv->bcnc);
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
 				    "<b>%s:</b>\n%s",
 				    _("Could not save data manager"),
@@ -593,10 +593,10 @@ save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 		dconsole->priv->name_entry = wid;
 		if (dconsole->priv->fav_id > 0) {
 			ToolsFavoritesAttributes fav;
-			if (tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
+			if (gda_tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
 						   dconsole->priv->fav_id, &fav, NULL)) {
 				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
-				tools_favorites_reset_attributes (&fav);
+				gda_tools_favorites_reset_attributes (&fav);
 			}
 		}
 

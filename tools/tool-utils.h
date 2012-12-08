@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,29 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-#ifndef __FAVORITES_H_
-#define __FAVORITES_H_
+#ifndef __GDA_TOOLS_UTILS__
+#define __GDA_TOOLS_UTILS__
 
 #include <libgda/libgda.h>
-#include "../decl.h"
-#include "../../tools-favorites.h"
 
-G_BEGIN_DECLS
+const gchar *gda_tools_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
 
-typedef struct {
-	gint                  id;
-	gchar                *name;
-	GdaStatement         *stmt;
-	GdaSet               *params;
-	gint                  nb_bound; /* number of GdaHolders in @params which are bound 
-					 * to another GdaHolder */
-} ToolsFavoriteAction;
+/*
+ * error reporting
+ */
+extern GQuark gda_tools_error_quark (void);
+#define GDA_TOOLS_ERROR gda_tools_error_quark ()
 
-GSList             *gda_tools_favorites_get_actions  (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaSet *set);
-void                gda_tools_favorites_free_action  (ToolsFavoriteAction *action);
-void                gda_tools_favorites_free_actions_list (GSList *actions_list);
-
-G_END_DECLS
+typedef enum {
+	GDA_TOOLS_NO_CONNECTION_ERROR,
+	GDA_TOOLS_CONNECTION_CLOSED_ERROR,
+	GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+	GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+	GDA_TOOLS_OBJECT_NOT_FOUND_ERROR,
+	GDA_TOOLS_PROVIDER_NOT_FOUND_ERROR,
+	GDA_TOOLS_DSN_NOT_FOUND_ERROR,
+	GDA_TOOLS_STORED_DATA_ERROR,
+	GDA_TOOLS_PURGE_ERROR
+} ToolsError;
 
 #endif

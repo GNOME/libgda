@@ -27,6 +27,7 @@
 #include <tools/gda-threader.h>
 #include <sql-parser/gda-sql-parser.h>
 #include "tools-favorites.h"
+#include <cmdtool/tool.h>
 
 G_BEGIN_DECLS
 
@@ -44,20 +45,19 @@ typedef struct {
 	guint           meta_job_id;
 } ConnectionSetting;
 
-typedef enum {
-	OUTPUT_FORMAT_DEFAULT = 1 << 0,
-	OUTPUT_FORMAT_HTML    = 1 << 1,
-	OUTPUT_FORMAT_XML     = 1 << 2,
-	OUTPUT_FORMAT_CSV     = 1 << 3,
-
-	OUTPUT_FORMAT_COLOR_TERM = 1 << 8
-} OutputFormat;
-
+/*
+ * Structure representing a context using a connection
+ */
 typedef struct {
 	gchar *id;
 	ConnectionSetting *current;
-	OutputFormat output_format;
-	GTimeVal  last_time_used;
+
+	ToolOutputFormat output_format;
+	FILE *output_stream;
+	gboolean output_is_pipe;
+
+	GTimeVal last_time_used;
+	ToolCommandGroup *command_group;
 } SqlConsole;
 
 const GSList            *gda_sql_get_all_connections (void);
@@ -67,24 +67,9 @@ const ConnectionSetting *gda_sql_get_current_connection (void);
 SqlConsole              *gda_sql_console_new (const gchar *id);
 void                     gda_sql_console_free (SqlConsole *console);
 gchar                   *gda_sql_console_execute (SqlConsole *console, const gchar *command,
-						  GError **error, OutputFormat format);
+						  GError **error, ToolOutputFormat format);
 
-gchar                   *gda_sql_console_compute_prompt (SqlConsole *console, OutputFormat format);
-
-/*
- * color output handling
- */
-typedef enum {
-	GDA_SQL_COLOR_NORMAL,
-	GDA_SQL_COLOR_RESET,
-	GDA_SQL_COLOR_BOLD,
-	GDA_SQL_COLOR_RED
-} GdaSqlColor;
-
-void         color_print (GdaSqlColor color, OutputFormat format, const char *fmt, ...);
-gchar       *color_string (GdaSqlColor color, OutputFormat format, const char *fmt, ...);
-void         color_append_string (GdaSqlColor color, OutputFormat format, GString *string, const char *fmt, ...);
-const gchar *color_s (GdaSqlColor color, OutputFormat format);
+gchar                   *gda_sql_console_compute_prompt (SqlConsole *console, ToolOutputFormat format);
 
 G_END_DECLS
 

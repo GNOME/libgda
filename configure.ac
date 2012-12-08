@@ -950,6 +950,7 @@ control-center/Makefile
 control-center/data/Makefile
 tools/Makefile
 tools/gda-sql-5.0.1:tools/gda-sql.1.in
+tools/cmdtool/Makefile
 tools/help/Makefile
 tools/browser/Makefile
 tools/browser/data/Makefile

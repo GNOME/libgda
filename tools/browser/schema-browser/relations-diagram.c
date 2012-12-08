@@ -30,7 +30,7 @@
 #include "../browser-perspective.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
-#include "../../tools-utils.h"
+#include "../../tool-utils.h"
 
 struct _RelationsDiagramPrivate {
 	BrowserConnection *bcnc;
@@ -225,7 +225,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 
 	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
 	fav.id = diagram->priv->fav_id;
-	fav.type = TOOLS_FAVORITES_DIAGRAMS;
+	fav.type = GDA_TOOLS_FAVORITES_DIAGRAMS;
 	fav.name = gtk_editable_get_chars (GTK_EDITABLE (diagram->priv->name_entry), 0, -1);
 	if (!*fav.name) {
 		g_free (fav.name);
@@ -236,7 +236,7 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	gtk_widget_hide (diagram->priv->popup_container);
 	
 	bfav = browser_connection_get_favorites (diagram->priv->bcnc);
-	if (! tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &lerror)) {
+	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &lerror)) {
 		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
 				    "<b>%s:</b>\n%s",
 				    _("Could not save diagram"),
@@ -275,10 +275,10 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		diagram->priv->name_entry = wid;
 		if (diagram->priv->fav_id > 0) {
 			ToolsFavoritesAttributes fav;
-			if (tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+			if (gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
 						   diagram->priv->fav_id, &fav, NULL)) {
 				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
-				tools_favorites_reset_attributes (&fav);
+				gda_tools_favorites_reset_attributes (&fav);
 			}
 		}
 
@@ -361,14 +361,14 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	ToolsFavoritesAttributes fav;
 	xmlDocPtr doc = NULL;
 
-	if (! tools_favorites_get (browser_connection_get_favorites (bcnc),
+	if (! gda_tools_favorites_get (browser_connection_get_favorites (bcnc),
 				     fav_id, &fav, error))
 		return FALSE;
 
 
 	doc = xmlParseDoc (BAD_CAST fav.contents);
 	if (!doc) {
-		g_set_error (error, TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Error parsing favorite's contents"));
 		goto out;
 	}
@@ -427,7 +427,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 					xmlFree (schema);
 				if (name)
 					xmlFree (name);
-				g_set_error (error, TOOLS_ERROR, TOOLS_STORED_DATA_ERROR,
+				g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
 					     "%s", _("Missing table attribute in favorite's contents"));
 				gtk_widget_destroy ((GtkWidget*) diagram);
 				diagram = NULL;
@@ -437,7 +437,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	}
 
  out:
-	tools_favorites_reset_attributes (&fav);
+	gda_tools_favorites_reset_attributes (&fav);
 	if (doc)
 		xmlFreeDoc (doc);
 	return (GtkWidget*) diagram;
@@ -455,7 +455,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 	ToolsFavoritesAttributes fav;
 
 	if ((fav_id >=0) &&
-	    tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+	    gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
 				   fav_id, &fav, error)) {
 		gchar *str, *tmp;
 		tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
@@ -466,7 +466,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 		
 		diagram->priv->fav_id = fav.id;
 		
-		tools_favorites_reset_attributes (&fav);
+		gda_tools_favorites_reset_attributes (&fav);
 	}
 	else {
 		gchar *str;
@@ -556,10 +556,10 @@ relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_b
 	diagram = RELATIONS_DIAGRAM (page);
 	if (diagram->priv->fav_id > 0) {
 		ToolsFavoritesAttributes fav;
-		if (tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+		if (gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
 					   diagram->priv->fav_id, &fav, NULL)) {
 			tab_name = g_strdup (fav.name);
-			tools_favorites_reset_attributes (&fav);
+			gda_tools_favorites_reset_attributes (&fav);
 		}
 	}
 	if (!tab_name)

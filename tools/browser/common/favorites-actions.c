@@ -30,24 +30,24 @@ actions_sort_func (ToolsFavoriteAction *act1, ToolsFavoriteAction *act2)
 }
 
 /**
- * tools_favorites_get_actions
+ * gda_tools_favorites_get_actions
  * @bfav: a #ToolsFavorites
  * @bcnc: a #BrowserConnection
  * @set: a #GdaSet
  *
  * Get a list of #ToolsFavoriteAction which can be executed with the data in @set.
  *
- * Returns: a new list of #ToolsFavoriteAction, free list with tools_favorites_free_actions()
+ * Returns: a new list of #ToolsFavoriteAction, free list with gda_tools_favorites_free_actions()
  */
 GSList *
-tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaSet *set)
+gda_tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaSet *set)
 {
 	GSList *fav_list, *list, *retlist = NULL;
-	g_return_val_if_fail (TOOLS_IS_FAVORITES (bfav), NULL);
+	g_return_val_if_fail (GDA_TOOLS_IS_FAVORITES (bfav), NULL);
 	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
 	g_return_val_if_fail (!set || GDA_IS_SET (set), NULL);
 
-	fav_list = tools_favorites_list (bfav, 0, TOOLS_FAVORITES_ACTIONS, -1, NULL);
+	fav_list = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_ACTIONS, -1, NULL);
 	if (! fav_list)
 		return NULL;
 
@@ -60,7 +60,7 @@ tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaS
 				   fa->contents);
 			continue;
 		}
-		if (tools_favorites_get (bfav, atoi (fa->contents + 5), &qfa, NULL)) {
+		if (gda_tools_favorites_get (bfav, atoi (fa->contents + 5), &qfa, NULL)) {
 			GdaSet *params;
 			GSList *plist;
 			GdaBatch *batch;
@@ -74,7 +74,7 @@ tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaS
 			batch = gda_sql_parser_parse_string_as_batch (parser, qfa.contents, &remain, NULL);
 			g_object_unref (parser);
 			if (!batch) {
-				tools_favorites_reset_attributes (&qfa);
+				gda_tools_favorites_reset_attributes (&qfa);
 				continue;
 			}
 			stmt_list = gda_batch_get_statements (batch);
@@ -88,13 +88,13 @@ tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaS
 			}
 			g_object_unref (batch);
 			if (!stmt || plist) {
-				tools_favorites_reset_attributes (&qfa);
+				gda_tools_favorites_reset_attributes (&qfa);
 				continue;
 			}
 			
 			if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
 				g_object_unref (stmt);
-				tools_favorites_reset_attributes (&qfa);
+				gda_tools_favorites_reset_attributes (&qfa);
 				continue;
 			}
 			browser_connection_define_ui_plugins_for_stmt (bcnc, stmt, params);
@@ -129,22 +129,22 @@ tools_favorites_get_actions (ToolsFavorites *bfav, BrowserConnection *bcnc, GdaS
 
 			g_object_unref (stmt);
 			g_object_unref (params);
-			tools_favorites_reset_attributes (&qfa);
+			gda_tools_favorites_reset_attributes (&qfa);
 		}
 	}
-	tools_favorites_free_list (fav_list);
+	gda_tools_favorites_free_list (fav_list);
 
 	return retlist;
 }
 
 /**
- * tools_favorites_free_action
+ * gda_tools_favorites_free_action
  * @action: (allow-none): a #ToolsFavoriteAction, or %NULL
  *
  * Frees @action
  */
 void
-tools_favorites_free_action (ToolsFavoriteAction *action)
+gda_tools_favorites_free_action (ToolsFavoriteAction *action)
 {
 	if (! action)
 		return;
@@ -157,19 +157,19 @@ tools_favorites_free_action (ToolsFavoriteAction *action)
 }
 
 /**
- * tools_favorites_free_actions_list
+ * gda_tools_favorites_free_actions_list
  * @actions_list: (allow-none): a list of #ToolsFavoriteAction, or %NULL
  *
  * Free a list of #ToolsFavoriteAction (frees the list and each #ToolsFavoriteAction)
  */
 void
-tools_favorites_free_actions_list (GSList *actions_list)
+gda_tools_favorites_free_actions_list (GSList *actions_list)
 {
 	GSList *list;
 	if (!actions_list)
 		return;
 
 	for (list = actions_list; list; list = list->next)
-		tools_favorites_free_action ((ToolsFavoriteAction*) list->data);
+		gda_tools_favorites_free_action ((ToolsFavoriteAction*) list->data);
 	g_slist_free (actions_list);
 }
