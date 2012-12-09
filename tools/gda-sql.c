@@ -1636,7 +1636,7 @@ static void
 output_data_model (GdaDataModel *model)
 {
 	gchar *str;
-	str = data_model_to_string (NULL, model);
+	str = data_model_to_string (main_data->term_console, model);
 	output_string (str);
 	g_free (str);
 }
