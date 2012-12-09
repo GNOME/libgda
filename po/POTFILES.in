@@ -322,6 +322,10 @@ tools/browser/schema-browser/table-preferences.c
 tools/browser/support.c
 tools/browser/support.h
 tools/browser/text-search.c
+tools/cmdtool/tool-command.c
+tools/cmdtool/tool-help.c
+tools/cmdtool/tool-input.c
+tools/cmdtool/tool-output.c
 tools/command-exec.c
 tools/config-info.c
 tools/gda-list-config.c
@@ -329,6 +333,5 @@ tools/gda-list-server-op.c
 tools/gda-sql.c
 tools/html-doc.c
 tools/tools-favorites.c
-tools/tools-input.c
-tools/tools-utils.c
+tools/tool-utils.c
 tools/web-server.c
