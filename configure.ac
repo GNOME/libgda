@@ -486,17 +486,14 @@ AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "x
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
-AM_PROG_VALAC([0.17.7])
-VAPIGEN_CHECK([0.17.7],[0.18],,no)
-
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
 then
-	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
+	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
 fi
 
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
 then
-	AC_MSG_ERROR([GDA Vala bindings is requested but GObject Introspection for GDA is disable. Use --enable-gda-gi])
+	AC_MSG_ERROR([GDA Vala bindings is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
 fi
 
 AC_ARG_ENABLE([gdaui-vala],
@@ -519,8 +516,16 @@ fi
 
 if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
 then
-  AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
-  enable_vala_ext=no
+	AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
+  	enable_vala_ext=no
+fi
+
+if test "x$enable_vala" = "xyes"
+then
+	AM_PROG_VALAC([0.17.7])
+	VAPIGEN_CHECK([0.17.7],[0.18],,no)
+else
+	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
 fi
 
 if test "x$enable_vala_ext" = "xyes"
