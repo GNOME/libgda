@@ -65,7 +65,7 @@ struct _GdaDataAccessWrapperClass {
 GType         gda_data_access_wrapper_get_type    (void) G_GNUC_CONST;
 GdaDataModel *gda_data_access_wrapper_new         (GdaDataModel *model);
 gboolean      gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper,
-						   gint *mapping, gint mapping_size);
+						   const gint *mapping, gint mapping_size);
 
 G_END_DECLS
 

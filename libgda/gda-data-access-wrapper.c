@@ -476,7 +476,7 @@ gda_data_access_wrapper_new (GdaDataModel *model)
  * Since: 5.2
  */
 gboolean
-gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper, gint *mapping, gint mapping_size)
+gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper, const gint *mapping, gint mapping_size)
 {
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (wrapper), FALSE);
 
