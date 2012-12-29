@@ -930,10 +930,12 @@ _gda_oracle_meta__columns (GdaServerProvider *prov, GdaConnection *cnc,
 
 	/* modify meta store with @model */
 	if (retval) {
+		/*
 		FILE *out;
 		out = fopen ("_columns", "w");
 		gda_data_model_dump (model, out);
 		fclose (out);
+		*/
 
 		gda_meta_store_set_identifiers_style (store, GDA_SQL_IDENTIFIERS_UPPER_CASE);
 		retval = gda_meta_store_modify_with_context (store, context, model, error);

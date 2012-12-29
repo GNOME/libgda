@@ -60,10 +60,6 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <stdio.h>
 #include "xml_embedded.h" /* this one is dynamically generated */
-#ifndef G_OS_WIN32
-#define __USE_GNU
-#include <dlfcn.h>
-#endif
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 #define FILE_EXTENSION ".db"
