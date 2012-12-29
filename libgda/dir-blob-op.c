@@ -188,7 +188,7 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	g_return_val_if_fail (blob, -1);
 
 	/* open file */
-	file = fopen (dirop->priv->complete_filename, "r"); /* Flawfinder: ignore */
+	file = fopen (dirop->priv->complete_filename, "rb"); /* Flawfinder: ignore */
 	if (!file)
 		return -1;
 	
@@ -227,7 +227,7 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	g_return_val_if_fail (blob, -1);
 
 	/* open file */
-	file = fopen (dirop->priv->complete_filename, "w+"); /* Flawfinder: ignore */
+	file = fopen (dirop->priv->complete_filename, "w+b"); /* Flawfinder: ignore */
 	if (!file)
 		return -1;
 	
