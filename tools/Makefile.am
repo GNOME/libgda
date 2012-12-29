@@ -21,8 +21,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
-	-I. \
-	-Icmdtool \
+	-I$(top_builddir)/libgda \
+	-I$(top_srcdir)/tools \
+	-I$(top_srcdir)/tools/cmdtool \
 	$(ldap_flags) \
 	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"

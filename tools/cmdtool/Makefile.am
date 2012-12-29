@@ -3,6 +3,8 @@ noinst_LTLIBRARIES = libcmdtool.la
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_builddir) \
+	-I$(top_builddir)/libgda \
         $(COREDEPS_CFLAGS) \
         $(COREDEPS_WFLAGS)
 
