@@ -64,9 +64,18 @@ typedef enum {
 	GDA_DATA_MODEL_HINT_REFRESH
 } GdaDataModelHint;
 
+/**
+ * GdaDataModelIOFormat:
+ * @GDA_DATA_MODEL_IO_DATA_ARRAY_XML: data is exported as an XML structure
+ * @GDA_DATA_MODEL_IO_TEXT_SEPARATED: data is exported as CSV
+ * @GDA_DATA_MODEL_IO_TEXT_TABLE: data is exported as a human readable table
+ *
+ * Format to use when exporting a data model, see gda_data_model_export_to_string() and gda_data_model_export_to_file()
+ */
 typedef enum {
 	GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
-	GDA_DATA_MODEL_IO_TEXT_SEPARATED
+	GDA_DATA_MODEL_IO_TEXT_SEPARATED,
+	GDA_DATA_MODEL_IO_TEXT_TABLE
 } GdaDataModelIOFormat;
 
 typedef enum {

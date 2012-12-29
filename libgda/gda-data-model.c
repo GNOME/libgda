@@ -48,6 +48,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-row.h>
 #include <libgda/gda-enums.h>
+#include <libgda/gda-data-handler.h>
 #include <string.h>
 #ifdef HAVE_LOCALE_H
 #ifndef G_OS_WIN32
@@ -72,6 +73,12 @@ static void gda_data_model_class_init (gpointer g_class);
 
 static xmlNodePtr gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
 					      const gint *rows, gint nb_rows, const gchar *name);
+
+static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
+						  gboolean dump_rows, gboolean dump_title, gboolean null_as_empty,
+						  gint max_width, gboolean dump_separators, gboolean dump_sep_line,
+						  gboolean use_data_handlers, gboolean dump_column_titles,
+						  const gint *rows, gint nb_rows, GError **error);
 
 
 /* signals */
@@ -1264,7 +1271,9 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  * to access data in @model previously to calling this method, and this iterator will be moved (point to
  * another row).
  *
- * Returns: a new string.
+ * See also gda_data_model_dump_as_string();
+ *
+ * Returns: (transfer full): a new string, use g_free() when no longer needed
  */
 gchar *
 gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat format, 
@@ -1447,6 +1456,105 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		return g_string_free (retstring, FALSE);
 	}
 
+	case GDA_DATA_MODEL_IO_TEXT_TABLE: {
+		gboolean dump_rows = FALSE;
+		gboolean dump_title = FALSE;
+		gboolean dump_column_titles = TRUE;
+		gboolean null_as_empty = TRUE;
+		gboolean dump_separators = TRUE;
+		gboolean dump_title_line = TRUE;
+		gint max_width = -1;
+
+		/* analyse options */
+		GdaHolder *holder;
+		holder = gda_set_get_holder (options, "ROW_NUMBERS");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				dump_rows = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "ROW_NUMBERS");
+		}
+
+		holder = gda_set_get_holder (options, "NAME");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				dump_title = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NAME");
+		}
+
+		holder = gda_set_get_holder (options, "NAMES_ON_FIRST_LINE");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				dump_column_titles = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NAMES_ON_FIRST_LINE");
+		}
+
+		holder = gda_set_get_holder (options, "NULL_AS_EMPTY");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				null_as_empty = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
+		}
+		
+		holder = gda_set_get_holder (options, "MAX_WIDTH");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_INT))
+				max_width = g_value_get_int ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold an integer value, ignored."), "MAX_WIDHT");
+		}
+
+		holder = gda_set_get_holder (options, "COLUMN_SEPARATORS");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				dump_separators = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "SEPARATORS");
+		}
+
+		holder = gda_set_get_holder (options, "SEPARATOR_LINE");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				dump_title_line = g_value_get_boolean ((GValue *) value);
+			else 
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "SEPARATOR_LINE");
+		}
+
+		/* FIXME: handle @rows argument */
+		if (cols) {
+			GdaDataModel *wrapper;
+			wrapper = gda_data_access_wrapper_new (model);
+			gda_data_access_wrapper_set_mapping (GDA_DATA_ACCESS_WRAPPER (wrapper), cols, nb_cols);
+			gchar *tmp;
+			tmp = real_gda_data_model_dump_as_string (wrapper, FALSE, dump_rows,
+								  dump_title, null_as_empty, max_width, dump_separators,
+								  dump_title_line, TRUE, dump_column_titles, rows, nb_rows, NULL);
+			g_object_unref (wrapper);
+			return tmp;
+		}
+		else
+			return real_gda_data_model_dump_as_string (model, FALSE, dump_rows,
+								   dump_title, null_as_empty, max_width, dump_separators,
+								   dump_title_line, TRUE, dump_column_titles, rows, nb_rows, NULL);
+	}
+
 	default:
 		g_assert_not_reached ();
 	}
@@ -1475,11 +1583,19 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  *             default if not specified is the double quote character</para></listitem>
  *   <listitem><para>"FIELD_QUOTE": a boolean value which can be set to FALSE if no quote around the individual fields 
  *             is requeted, in case of CSV export</para></listitem>
- *   <listitem><para>"NAMES_ON_FIRST_LINE": a boolean value which, if set to %TRUE and in case of a CSV export, will add a first line with the name each exported field (note that "FIELDS_NAME" is also accepted as a synonym)</para></listitem>
- *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML</para></listitem>
+ *   <listitem><para>"NAMES_ON_FIRST_LINE": a boolean value which, if set to %TRUE and in case of a CSV or %GDA_DATA_MODEL_IO_TEXT_TABLE export, will add a first line with the name each exported field (note that "FIELDS_NAME" is also accepted as a synonym)</para></listitem>
+ *   <listitem><para>"NAME": a string value used to name the exported data if the export format is XML or %GDA_DATA_MODEL_IO_TEXT_TABLE</para></listitem>
  *   <listitem><para>"OVERWRITE": a boolean value which tells if the file must be over-written if it already exists.</para></listitem>
- *   <listitem><para>"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV export, will render and NULL value as the empty string (instead of the 'NULL' string)</para></listitem>
+ *   <listitem><para>"NULL_AS_EMPTY": a boolean value which, if set to %TRUE and in case of a CSV or %GDA_DATA_MODEL_IO_TEXT_TABLE export, will render and NULL value as the empty string (instead of the 'NULL' string)</para></listitem>
  *   <listitem><para>"INVALID_AS_NULL": a boolean value which, if set to %TRUE, considers any invalid data (for example for the date related values) as NULL</para></listitem>
+ *   <listitem><para>"COLUMN_SEPARATORS": a boolean value which, if set to %TRUE, adds a separators lines between each column, if the export format is %GDA_DATA_MODEL_IO_TEXT_TABLE
+ *             </para></listitem>
+*   <listitem><para>"SEPARATOR_LINE": a boolean value which, if set to %TRUE, adds an horizontal line between column titles and values, if the export format is %GDA_DATA_MODEL_IO_TEXT_TABLE
+ *             </para></listitem>
+ *   <listitem><para>"ROW_NUMBERS": a boolean value which, if set to %TRUE, prepends a column with row numbers, if the export format is %GDA_DATA_MODEL_IO_TEXT_TABLE
+ *             </para></listitem>
+ *   <listitem><para>"MAX_WIDTH": an integer value which, if greater than 0, makes all the lines truncated to have at most that number of characters, if the export format is %GDA_DATA_MODEL_IO_TEXT_TABLE
+ *             </para></listitem>
  * </itemizedlist>
  *
  * Warning: this function uses a #GdaDataModelIter iterator, and if @model does not offer a random access
@@ -2286,10 +2402,6 @@ gda_data_model_import_from_file (GdaDataModel *model,
 	return retval;
 }
 
-static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
-						  gboolean dump_rows, gboolean dump_title, gboolean null_as_empty,
-						  gint max_width, GError **error);
-
 /**
  * gda_data_model_dump:
  * @model: a #GdaDataModel.
@@ -2344,12 +2456,14 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
 			max_width = 0;
 	}
 
-	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, &error);
+	str = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width,
+						  TRUE, TRUE, FALSE, TRUE, NULL, 0, &error);
 	if (str) {
 		g_fprintf (to_stream, "%s", str);
 		g_free (str);
 		if (dump_attrs) {
-			str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width, &error);
+			str = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width,
+								  TRUE, TRUE, FALSE, TRUE, NULL, 0, &error);
 			if (str) {
 				g_fprintf (to_stream, "%s", str);
 				g_free (str);
@@ -2374,16 +2488,19 @@ gda_data_model_dump (GdaDataModel *model, FILE *to_stream)
  * gda_data_model_dump_as_string:
  * @model: a #GdaDataModel.
  *
- * Dumps a textual representation of the @model into a new string
+ * Dumps a textual representation of the @model into a new string. The main differences with gda_data_model_export_to_string() are that
+ * the formatting options are passed using environment variables, and that the data is dumped regardless of the user locale (e.g. dates
+ * are not formatted according to the locale).
  *
  * The following environment variables can affect the resulting output:
  * <itemizedlist>
  *   <listitem><para>GDA_DATA_MODEL_DUMP_ROW_NUMBERS: if set, the first column of the output will contain row numbers</para></listitem>
-*   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
-*   <listitem><para>GDA_DATA_MODEL_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
-*   <listitem><para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_TITLE: if set, also dump the data model's title</para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_NULL_AS_EMPTY: if set, replace the 'NULL' string with an empty string for NULL values </para></listitem>
+ *   <listitem><para>GDA_DATA_MODEL_DUMP_TRUNCATE: if set to a numeric value, truncates the output to the width specified by the value. If the value is -1 then the actual terminal size (if it can be determined) is used</para></listitem>
  * </itemizedlist>
- * Returns: a new string.
+ *
+ * Returns: (transfer full): a new string.
  */
 gchar *
 gda_data_model_dump_as_string (GdaDataModel *model)
@@ -2421,17 +2538,20 @@ gda_data_model_dump_as_string (GdaDataModel *model)
 	if (dump_attrs) {
 		GString *string;
 		gchar *tmp;
-		tmp = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+		tmp = real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width,
+							  TRUE, TRUE, FALSE, TRUE, NULL, 0, NULL);
 		string = g_string_new (tmp);
 		g_free (tmp);
-		tmp = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+		tmp = real_gda_data_model_dump_as_string (model, TRUE, dump_rows, dump_title, null_as_empty, max_width,
+							  TRUE, TRUE, FALSE, TRUE, NULL, 0, NULL);
 		g_string_append_c (string, '\n');
 		g_string_append (string, tmp);
 		g_free (tmp);
 		return g_string_free (string, FALSE);
 	}
 	else
-		return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width, NULL);
+		return real_gda_data_model_dump_as_string (model, FALSE, dump_rows, dump_title, null_as_empty, max_width,
+							   TRUE, TRUE, FALSE, TRUE, NULL, 0, NULL);
 }
 
 static void
@@ -2456,18 +2576,24 @@ string_get_dimensions (const gchar *string, gint *width, gint *rows)
 		*rows = h;
 }
 
+/*
+ * Returns: a new string, or %NULL if @model does not support random access
+ */
 static gchar *
 real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attributes, 
 				    gboolean dump_rows, gboolean dump_title, gboolean null_as_empty,
-				    gint max_width, GError **error)
+				    gint max_width, gboolean dump_separators, gboolean dump_sep_line,
+				    gboolean use_data_handlers, gboolean dump_column_titles,
+				    const gint *rows, gint nb_rows,
+				    GError **error)
 {
 #define ERROR_STRING "####"
 #define MULTI_LINE_NO_SEPARATOR
 
 	gboolean allok = TRUE;
-	GString *string;
+	GString *string = NULL;
 	gchar *str;
-	gint n_cols, n_rows;
+	gint n_cols, n_rows, real_n_rows;
 	gint *cols_size;
 	gboolean *cols_is_num;
 	gchar *sep_col  = " | ";
@@ -2482,24 +2608,41 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	gint col_offset = dump_rows ? 1 : 0;
 	GdaDataModel *ramodel = NULL;
 
+	if (!dump_separators) {
+		sep_col = " ";
+		sep_row = "-";
+#ifdef MULTI_LINE_NO_SEPARATOR
+		sep_col_e  = " ";
+#endif
+	}
+
 #ifdef HAVE_LOCALE_H
 #ifndef G_OS_WIN32
-	int utf8_mode;
-	setlocale (LC_ALL, NULL);
-	utf8_mode = (strcmp (nl_langinfo (CODESET), "UTF-8") == 0);
-	if (utf8_mode) {
-		sep_col = " │ ";
-		sep_fill = "─";
-		sep_row = "─┼─";
+	if (dump_separators || dump_sep_line) {
+		int utf8_mode;
+		setlocale (LC_ALL, NULL);
+		utf8_mode = (strcmp (nl_langinfo (CODESET), "UTF-8") == 0);
+		if (utf8_mode) {
+			if (dump_separators) {
+				sep_col = " │ ";
+				sep_row = "─┼─";
+			}
+			else
+				sep_row = "─";
+			sep_fill = "─";
+		}
 	}
 #endif
 #endif
 
-	string = g_string_new ("");
-
 	/* compute the columns widths: using column titles... */
 	n_cols = gda_data_model_get_n_columns (model);
 	n_rows = gda_data_model_get_n_rows (model);
+	real_n_rows = n_rows;
+	if (rows) {
+		/* no error checking is done here, row'existence is checked when used */
+		n_rows = nb_rows;
+	}
 	cols_size = g_new0 (gint, n_cols + col_offset);
 	cols_is_num = g_new0 (gboolean, n_cols + col_offset);
 	
@@ -2520,11 +2663,13 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				 gda_g_type_to_string (gda_column_get_g_type (col)));
 		}
 
-		str = (gchar *) gda_data_model_get_column_title (model, i);
-		if (str)
-			cols_size [i + col_offset] = g_utf8_strlen (str, -1);
-		else
-			cols_size [i + col_offset] = 6; /* for "<none>" */
+		if (dump_column_titles) {
+			str = (gchar *) gda_data_model_get_column_title (model, i);
+			if (str)
+				cols_size [i + col_offset] = g_utf8_strlen (str, -1);
+			else
+				cols_size [i + col_offset] = 6; /* for "<none>" */
+		}
 
 		if (! dump_attributes) {
 			gdacol = gda_data_model_describe_column (model, i);
@@ -2549,10 +2694,27 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	}
 
 	/* ... and using column data */
+	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)
+		ramodel = g_object_ref (model);
+	else {
+		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) {
+			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+				      "%s", _("Data model does not support backward cursor move"));
+			allok = FALSE;
+			goto out;
+		}
+		ramodel = gda_data_access_wrapper_new (model);
+	}
+
 	for (j = 0; j < n_rows; j++) {
+		if (rows && (rows [j] >= real_n_rows))
+			continue; /* ignore that row */
 		for (i = 0; i < n_cols; i++) {
 			if (! dump_attributes) {
-				value = gda_data_model_get_value_at (model, i, j, NULL);
+				if (rows)
+					value = gda_data_model_get_value_at (ramodel, i, rows[j], NULL);
+				else
+					value = gda_data_model_get_value_at (ramodel, i, j, NULL);
 				if (!value) {
 					cols_size [i + col_offset] = MAX ((guint)cols_size [i + col_offset], strlen (ERROR_STRING));
 				}
@@ -2568,12 +2730,21 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 							if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 								str = (gchar*) g_value_get_string (value);
 							else {
-								str = gda_value_stringify ((GValue*)value);
+								if (use_data_handlers) {
+									GdaDataHandler *dh;
+									dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
+									if (dh)
+										str = gda_data_handler_get_str_from_value (dh, value);
+									else
+										str = gda_value_stringify ((GValue*)value);
+								}
+								else
+									str = gda_value_stringify ((GValue*)value);
 								alloc = TRUE;
 							}
 						}
 						else
-							str = "_null_";
+							str = "NULL";
 					}
 					if (str) {
 						gint w;
@@ -2587,7 +2758,10 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			else {
 				GdaValueAttribute attrs;
 				gint w;
-				attrs = gda_data_model_get_attributes_at (model, i, j);
+				if (rows)
+					attrs = gda_data_model_get_attributes_at (ramodel, i, rows[j]);
+				else
+					attrs = gda_data_model_get_attributes_at (ramodel, i, j);
 				str = g_strdup_printf ("%u", attrs);
 				string_get_dimensions (str, &w, NULL);
 				cols_size [i + col_offset] = MAX (cols_size [i + col_offset], w);
@@ -2596,7 +2770,9 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 		}
 	}
 	
-	/* actual dumping of the contents: title */
+	string = g_string_new ("");
+
+	/* actual dumping of the contents: data model's title */
 	if (dump_title) {
 		const gchar *title;
 		title = g_object_get_data (G_OBJECT (model), "name");
@@ -2620,48 +2796,43 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	if (dump_rows) 
 		g_string_append_printf (string, "%*s", cols_size [0], "#row");
 
-	for (i = 0; i < n_cols; i++) {
-		gint j, max;
-		str = (gchar *) gda_data_model_get_column_title (model, i);
-		if (dump_rows || (i != 0))
-			g_string_append_printf (string, "%s", sep_col);
+	if (dump_column_titles) {
+		for (i = 0; i < n_cols; i++) {
+			gint j, max;
+			str = (gchar *) gda_data_model_get_column_title (model, i);
+			if (dump_rows || (i != 0))
+				g_string_append_printf (string, "%s", sep_col);
 
-		if (str) {
-			g_string_append_printf (string, "%s", str);
-			max = cols_size [i + col_offset] - g_utf8_strlen (str, -1);
+			if (str) {
+				g_string_append_printf (string, "%s", str);
+				max = cols_size [i + col_offset] - g_utf8_strlen (str, -1);
+			}
+			else {
+				g_string_append (string, "<none>");
+				max = cols_size [i + col_offset] - 6;
+			}
+			for (j = 0; j < max; j++)
+				g_string_append_c (string, ' ');
 		}
-		else {
-			g_string_append (string, "<none>");
-			max = cols_size [i + col_offset] - 6;
-		}
-		for (j = 0; j < max; j++)
-			g_string_append_c (string, ' ');
-	}
-	g_string_append_c (string, '\n');
+		g_string_append_c (string, '\n');
 		
-	/* ... separation line ... */
-	for (i = 0; i < n_cols + col_offset; i++) {
-		if (i != 0)
-			g_string_append_printf (string, "%s", sep_row);
-		for (j = 0; j < cols_size [i]; j++)
-			g_string_append (string, sep_fill);
+		/* ... separation line ... */
+		if (dump_sep_line) {
+			for (i = 0; i < n_cols + col_offset; i++) {
+				if (i != 0)
+					g_string_append_printf (string, "%s", sep_row);
+				for (j = 0; j < cols_size [i]; j++)
+					g_string_append (string, sep_fill);
+			}
+			g_string_append_c (string, '\n');
+		}
 	}
-	g_string_append_c (string, '\n');
 
 	/* ... and data */
-	if (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)
-		ramodel = g_object_ref (model);
-	else {
-		if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) {
-			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-				      "%s", _("Data model does not support backward cursor move, not displaying data"));
-			allok = FALSE;
-			goto out;
-		}
-		ramodel = gda_data_access_wrapper_new (model);
-	}
-
 	for (j = 0; j < n_rows; j++) {
+		if (rows && (rows [j] >= real_n_rows))
+			continue; /* ignore that row */
+
 		/* determine height for each column in that row */
 		gint *cols_height = g_new (gint, n_cols + col_offset);
 		gchar ***cols_str = g_new (gchar **, n_cols + col_offset);
@@ -2678,7 +2849,10 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 			gboolean alloc = FALSE;
 			str = NULL;
 			if (!dump_attributes) {
-				value = gda_data_model_get_value_at (ramodel, i, j, NULL);
+				if (rows)
+					value = gda_data_model_get_value_at (ramodel, i, rows[j], NULL);
+				else
+					value = gda_data_model_get_value_at (ramodel, i, j, NULL);
 				if (!value)
 					str = ERROR_STRING;
 				else {
@@ -2691,18 +2865,30 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 							if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 								str = (gchar*) g_value_get_string (value);
 							else {
-								str = gda_value_stringify ((GValue*)value);
+								if (use_data_handlers) {
+									GdaDataHandler *dh;
+									dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
+									if (dh)
+										str = gda_data_handler_get_str_from_value (dh, value);
+									else
+										str = gda_value_stringify ((GValue*)value);
+								}
+								else
+									str = gda_value_stringify ((GValue*)value);
 								alloc = TRUE;
 							}
 						}
 						else
-							str = "_null_";
+							str = "NULL";
 					}
 				}
 			}
 			else {
 				GdaValueAttribute attrs;
-				attrs = gda_data_model_get_attributes_at (ramodel, i, j);
+				if (rows)
+					attrs = gda_data_model_get_attributes_at (ramodel, i, rows[j]);
+				else
+					attrs = gda_data_model_get_attributes_at (ramodel, i, j);
 				str = g_strdup_printf ("%u", attrs);
 				alloc = TRUE;
 			}

@@ -63,26 +63,23 @@ make_options_set_from_string (const gchar *context, GdaSet *options)
 static gchar *
 data_model_to_string (GdaDataModel *model, ToolOutputFormat format, FILE *stream, GdaSet *options)
 {
-	static gboolean env_set = FALSE;
-
 	if (!GDA_IS_DATA_MODEL (model))
 		return NULL;
 
-	if (!env_set) {
-		if (! getenv ("GDA_DATA_MODEL_DUMP_TITLE"))
-			g_setenv ("GDA_DATA_MODEL_DUMP_TITLE", "Yes", TRUE);
-		if (! getenv ("GDA_DATA_MODEL_NULL_AS_EMPTY"))
-			g_setenv ("GDA_DATA_MODEL_NULL_AS_EMPTY", "Yes", TRUE);
-		if (! stream || isatty (fileno (stream))) {
-			if (! getenv ("GDA_DATA_MODEL_DUMP_TRUNCATE"))
-				g_setenv ("GDA_DATA_MODEL_DUMP_TRUNCATE", "-1", TRUE);
-		}
-		env_set = TRUE;
-	}
-
 	if (format & TOOL_OUTPUT_FORMAT_DEFAULT) {
 		gchar *tmp;
-		tmp = gda_data_model_dump_as_string (model);
+		GdaSet *options;
+		gint width;
+		input_get_size (&width, NULL);
+		options = gda_set_new_inline (6, "NAME", G_TYPE_BOOLEAN, TRUE,
+					      "NULL_AS_EMPTY", G_TYPE_BOOLEAN, TRUE,
+					      "MAX_WIDTH", G_TYPE_INT, width,
+					      "COLUMN_SEPARATORS", G_TYPE_BOOLEAN, TRUE,
+					      "SEPARATOR_LINE", G_TYPE_BOOLEAN, TRUE,
+					      "NAMES_ON_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+		tmp = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_TEXT_TABLE, NULL, 0, NULL, 0,
+						       options);
+		g_object_unref (options);
 		if (GDA_IS_DATA_SELECT (model)) {
 			gchar *tmp2, *tmp3;
 			gdouble etime;
