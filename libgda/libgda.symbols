@@ -226,7 +226,6 @@
 	gda_data_model_dir_get_errors
 	gda_data_model_dir_get_type
 	gda_data_model_dir_new
-	gda_data_model_dsn_list_get_type
 	gda_data_model_dump
 	gda_data_model_dump_as_string
 	gda_data_model_error_get_type
