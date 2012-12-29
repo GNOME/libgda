@@ -15,9 +15,10 @@ The PostgreSQL SQL to create the test table is (the "WITH OIDS" clause is option
 but it's required to get the inserted row):
 CREATE TABLE blobstable (id serial PRIMARY KEY, data oid) WITH OIDS;
 
-This test program offers 2 operations which are to store the contents of a file to the
-database (which returns the ID of the stored data), and to fetch a stored data from
-the database from its ID (which creates a fetched_<ID> file).
+This test program offers 3 operations which are:
+* to store the contents of a file to the database (which returns the ID of the stored data)
+* to list stored blobs
+* to fetch a stored data from the database from its ID (which creates a fetched_<ID> file).
 
 This program also shows that transactions are created when reading BLOBs, and that these
 transactions need to be rolled back after the BLOB "handle" (data model and/or GValue) has been released.
@@ -27,6 +28,8 @@ Compiling and running:
 
 To compile (make sure Libgda is installed prior to this):
 > make
+or, if cross compiling for Windows from a Linux box (the Makefile.cross.win32 needs to be adapted to specify the path where the Windows binaries are):
+> make -f Makefile.cross.win32
 
 and to run (stores the blobtest executable file):
 > ./blobtest store blobtest
@@ -38,6 +41,15 @@ Inserted row is (for each numbered column in the table):
   [+1] = [\177ELF\001\001\001\000\000\000\000\000\000\000\000\000\002\000\003\000\001\000\000\000\020\216\004\0104\000\000\000\2542\000\000\000\000\000\000]
 After rolling back blob READ transaction: No transaction started
 Ok.
+
+> ./blobtest list
+id | data                                                                                                                                          
+---+-----------------------------------------------------------------------------------------------------------------------------------------------
+ 1 | \177ELF\001\001\001\000\000\000\000\000\000\000\000\000\002\000\003\000\001\000\000\000\320\216\004\0104\000\000\000<9\000\000\000\000\000\000
+(1 row)
+Ok.
+Still in a transaction, all modifications will be lost when connection is closed
+
 > ./blobtest fetch 1
 Before reading BLOB: No transaction started
 FETCHING BLOB with ID 1 to file 'fetched_1'

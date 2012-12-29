@@ -22,6 +22,7 @@
 GdaConnection *open_connection (void);
 static gboolean do_store (GdaConnection *cnc, const gchar *filename, GError **error);
 static gboolean do_fetch (GdaConnection *cnc, gint id, GError **error);
+static gboolean do_list (GdaConnection *cnc, GError **error);
 
 int
 main (int argc, char *argv[])
@@ -29,35 +30,32 @@ main (int argc, char *argv[])
         GdaConnection *cnc;
 	const gchar *filename = NULL;
 	gint id = 0;
-	gboolean store;
 	GError *error = NULL;
 	gboolean result;
 
 	/* parse arguments */
-	if (argc != 3)
-		goto help;
-	if (! g_ascii_strcasecmp (argv[1], "store")) {
-		filename = argv[2];
-		store = TRUE;
-	}
-	else if (! g_ascii_strcasecmp (argv[1], "fetch")) {
-		id = atoi (argv[2]);
-		store = FALSE;
-	}
-	else
-		goto help;
-
-	/* do the job */
         gda_init ();
 	cnc = open_connection ();
-	if (store)
-		result = do_store (cnc, filename, &error);
-	else
-		result = do_fetch (cnc, id, &error);
 
-	if (gda_connection_get_transaction_status (cnc))
-		g_print ("Still in a transaction, all modifications will be lost when connection is closed\n");
-        gda_connection_close (cnc);
+	if (! g_ascii_strcasecmp (argv[1], "store")) {
+		if (argc != 3)
+			goto help;
+		filename = argv[2];
+		result = do_store (cnc, filename, &error);
+	}
+	else if (! g_ascii_strcasecmp (argv[1], "fetch")) {
+		if (argc != 3)
+			goto help;
+		id = atoi (argv[2]);
+		result = do_fetch (cnc, id, &error);
+	}
+	else if (! g_ascii_strcasecmp (argv[1], "list")) {
+		if (argc != 2)
+			goto help;
+		result = do_list (cnc, &error);
+	}
+	else
+		goto help;
 
 	if (!result) {
 		g_print ("ERROR: %s\n", error && error->message ? error->message : "No detail");
@@ -66,10 +64,15 @@ main (int argc, char *argv[])
 	else
 		g_print ("Ok.\n");
 
+	if (gda_connection_get_transaction_status (cnc))
+		g_print ("Still in a transaction, all modifications will be lost when connection is closed\n");
+        gda_connection_close (cnc);
+
         return result ? 0 : 1;
 
  help:
-	g_print ("%s [store <filename> | fetch <ID>]\n", argv[0]);
+	gda_connection_close (cnc);
+	g_print ("%s [store <filename> | fetch <ID> | list]\n", argv[0]);
 	return 0;
 }
 
@@ -107,7 +110,6 @@ do_store (GdaConnection *cnc, const gchar *filename, GError **error)
 	GdaSet *params, *newrow;
 	GdaHolder *holder;
 	GValue *value;
-	GdaBlob *blob;
 	gint res;
 
 	parser = gda_sql_parser_new ();
@@ -125,7 +127,6 @@ do_store (GdaConnection *cnc, const gchar *filename, GError **error)
 
 	holder = gda_set_get_holder (params, "blob");
 	value = gda_value_new_blob_from_file (filename);
-	blob = (GdaBlob*) gda_value_get_blob (value);
 	g_assert (gda_holder_take_value (holder, value, NULL));
 
 	g_print ("Before writing BLOB: %s\n", gda_connection_get_transaction_status (cnc) ?
@@ -230,4 +231,18 @@ do_fetch (GdaConnection *cnc, gint id, GError **error)
 		 "Transaction started" : "No transaction started");
 
 	return result;
+}
+
+static gboolean
+do_list (GdaConnection *cnc, GError **error)
+{
+	GdaDataModel *model;
+
+	model = gda_connection_execute_select_command (cnc, "SELECT * FROM blobstable", error);
+	if (model) {
+		gda_data_model_dump (model, stdout);
+		return TRUE;
+	}
+	else
+		return FALSE;
 }

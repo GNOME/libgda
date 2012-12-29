@@ -1,0 +1,18 @@
+CC = /usr/bin/i686-w64-mingw32-gcc
+PKG_CONFIG = /usr/bin/mingw32-pkg-config
+PKG_CONFIG_PATH = /local/Win32/Libgda/lib/pkgconfig
+export PKG_CONFIG_PATH
+
+CFLAGS = -Wall -g -DGDA_DISABLE_DEPRECATED `${PKG_CONFIG} --cflags libgda-5.0`
+LDFLAGS = `${PKG_CONFIG} --libs libgda-5.0`
+
+all: blobtest.exe
+
+blobtest.exe: blobtest.c
+	$(CC) -o blobtest.exe blobtest.c $(CFLAGS) $(LDFLAGS)
+
+clean:
+	rm -f *~
+	rm -f *.o
+	rm -f blobtest.exe
+	rm -f fetched_*
