@@ -169,7 +169,7 @@ gdaui_grid_class_init (GdauiGridClass *class)
 	g_object_class_install_property (object_class, PROP_MODEL,
 	                                 g_param_spec_object ("model", NULL, NULL,
 	                                                      GDA_TYPE_DATA_MODEL,
-	                                                      G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+	                                                      G_PARAM_READWRITE));
 }
 
 static void
@@ -230,7 +230,7 @@ gdaui_grid_dispose (GObject *object)
 
 /**
  * gdaui_grid_new:
- * @model: a #GdaDataModel
+ * @model: (allow-none): a #GdaDataModel, or %NULL
  *
  * Creates a new #GdauiGrid widget suitable to display the data in @model
  *
