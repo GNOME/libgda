@@ -473,6 +473,7 @@ gda_mysql_provider_get_version (G_GNUC_UNUSED GdaServerProvider  *provider)
 
 /*
  * Open a MYSQL connection.
+ * If @port <= 0 then @port is not used.
  */
 static MYSQL *
 real_open_connection (const gchar  *host,
@@ -483,6 +484,7 @@ real_open_connection (const gchar  *host,
 		      const gchar  *password,
 		      gboolean      use_ssl,
 		      gboolean      compress,
+		      const gchar  *proto,
 		      GError      **error)
 {
 	unsigned int flags = CLIENT_FOUND_ROWS;
@@ -495,6 +497,13 @@ real_open_connection (const gchar  *host,
 			       "either a HOST or a PORT"));
 		return NULL;
 	}
+
+	if (port > 65535) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", 
+			     _("Invalid port number"));
+		return NULL;
+	} 
 
 	/* Defaults. */
 	if (!socket) {
@@ -511,6 +520,37 @@ real_open_connection (const gchar  *host,
 	
 	MYSQL *mysql = g_new0 (MYSQL, 1);
 	mysql_init (mysql);
+
+	if ((port > 0) || proto) {
+		gint p = MYSQL_PROTOCOL_DEFAULT;
+		if (proto) {
+			if (! g_ascii_strcasecmp (proto, "DEFAULT"))
+				p = MYSQL_PROTOCOL_DEFAULT;
+			else if (! g_ascii_strcasecmp (proto, "TCP"))
+				p = MYSQL_PROTOCOL_TCP;
+			else if (! g_ascii_strcasecmp (proto, "SOCKET"))
+				p = MYSQL_PROTOCOL_SOCKET;
+			else if (! g_ascii_strcasecmp (proto, "PIPE"))
+				p = MYSQL_PROTOCOL_PIPE;
+			else if (! g_ascii_strcasecmp (proto, "MEMORY"))
+				p = MYSQL_PROTOCOL_MEMORY;
+			else {
+				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+					     _("Unknown MySQL protocol '%s'"), proto);
+				g_free (mysql);
+				return NULL;
+			}
+		}
+		else
+			p = MYSQL_PROTOCOL_TCP;
+
+		if (mysql_options (mysql, MYSQL_OPT_PROTOCOL, (const char *) &p)) {
+			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+				     "%s", mysql_error (mysql));
+			g_free (mysql);
+			return NULL;
+		}
+	}
 
 	MYSQL *return_mysql = mysql_real_connect (mysql, host,
 						  username, password,
@@ -612,11 +652,12 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	if (!password)
 		password = gda_quark_list_find (params, "PASSWORD");
 
-	const gchar *port, *unix_socket, *use_ssl, *compress;
+	const gchar *port, *unix_socket, *use_ssl, *compress, *proto;
 	port = gda_quark_list_find (params, "PORT");
 	unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
 	use_ssl = gda_quark_list_find (params, "USE_SSL");
 	compress = gda_quark_list_find (params, "COMPRESS");
+	proto = gda_quark_list_find (params, "PROTOCOL");
 	
 	/* open the real connection to the database */
 	/* TO_ADD: C API specific function calls;
@@ -624,11 +665,12 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	// TO_IMPLEMENT;
 	
 	GError *error = NULL;
-	MYSQL *mysql = real_open_connection (host, (port != NULL) ? atoi (port) : 0,
+	MYSQL *mysql = real_open_connection (host, (port != NULL) ? atoi (port) : -1,
 					     unix_socket, db_name,
 					     user, password,
 					     (use_ssl && ((*use_ssl == 't') || (*use_ssl == 'T'))) ? TRUE : FALSE,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
+					     proto,
 					     &error);
 	if (!mysql) {
 		GdaConnectionEvent *event_error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -969,6 +1011,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 		gint         port = -1;
 		const gchar *socket = NULL;
 		gboolean     usessl = FALSE;
+		const gchar *proto = NULL;
 
 		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
@@ -994,8 +1037,12 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 			password = g_value_get_string (value);
 
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/PROTO");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+			proto = g_value_get_string (value);
+
 		mysql = real_open_connection (host, port, socket,
-                                              "mysql", login, password, usessl, FALSE, error);
+                                              "mysql", login, password, usessl, FALSE, proto, error);
                 if (!mysql)
                         return FALSE;
 		else {

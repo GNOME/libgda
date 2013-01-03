@@ -8,6 +8,7 @@
     <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
     <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
+    <parameter id="PROTOCOL" _name="Connection protocol" _descr="Explicitly specifies a connection protocol to use. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want" gdatype="string" source="proto:0"/>
   </parameters>
 
     <!-- DSN parameters -->
@@ -161,6 +162,32 @@
         <gda_array_row>
           <gda_value>cp932</gda_value>
           <!-- To translators: Charset name --><_gda_value>SJIS for Windows Japanese</_gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+    <gda_array name="proto">
+      <gda_array_field name="id" gdatype="gchararray"/>
+      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>DEFAULT</gda_value>
+          <_gda_value>Automatic</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>TCP</gda_value>
+          <_gda_value>TCP: TCP/IP connection to local or remote server.</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>SOCKET</gda_value>
+          <_gda_value>Socket: Unix socket file connection to local server (Local Unix server only).</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>PIPE</gda_value>
+          <_gda_value>Pipe: Named-pipe connection to local or remote server (Windows server only)</_gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>MEMORY</gda_value>
+          <_gda_value>Memory: Shared-memory connection to local server (Local Windows server only)</_gda_value>
         </gda_array_row>
       </gda_array_data>
     </gda_array>
