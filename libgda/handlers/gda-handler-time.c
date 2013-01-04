@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -70,7 +70,6 @@ typedef struct _LocaleSetting {
 static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
 
 struct  _GdaHandlerTimePriv {
-	gchar          *detailed_descr;
 	guint           nb_g_types;
 	GType          *valid_g_types;
 
@@ -99,7 +98,7 @@ gda_handler_time_get_type (void)
 			sizeof (GdaHandlerTime),
 			0,
 			(GInstanceInitFunc) gda_handler_time_init,
-			0
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -146,7 +145,6 @@ gda_handler_time_init (GdaHandlerTime *hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
-	hdl->priv->detailed_descr = _("Time and Date handler");
 	hdl->priv->nb_g_types = 4;
 	hdl->priv->valid_g_types = g_new0 (GType, 7);
 	hdl->priv->valid_g_types[0] = G_TYPE_DATE;
@@ -440,7 +438,6 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 	GType type;
 
 	g_return_val_if_fail (GDA_IS_HANDLER_TIME (dh), NULL);
-	g_return_val_if_fail (dh->priv, NULL);
 	type = G_VALUE_TYPE (value);
 
 	if (type == G_TYPE_DATE) {
@@ -557,7 +554,6 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 	gint i;
 
 	g_return_val_if_fail (GDA_IS_HANDLER_TIME (dh), NULL);
-	g_return_val_if_fail (dh->priv, NULL);
 
 	string = g_string_new ("");
 	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME)) {
@@ -600,13 +596,14 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 static gchar *
 gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval = NULL, *str;
 	GdaHandlerTime *hdl;
 	GType type;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 	type = G_VALUE_TYPE (value);
 
 	if (type == G_TYPE_DATE) {
@@ -711,13 +708,14 @@ static gchar *strip_quotes (const gchar *str);
 static gchar *
 gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	GdaHandlerTime *hdl;
 	gchar *retval = NULL, *str;
 	GType type;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 	type = G_VALUE_TYPE (value);
 
 	if (type == G_TYPE_DATE) {
@@ -876,14 +874,15 @@ static GValue *gda_handler_time_get_value_from_locale (GdaDataHandler *iface, co
 static GValue *
 gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
 {
+	g_assert (sql);
+
 	GdaHandlerTime *hdl;
 	GValue *value = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 
-	if (sql && *sql) {
+	if (*sql) {
 		gint i = strlen (sql);
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
@@ -899,18 +898,18 @@ gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GT
 }
 
 static GValue *
-gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
 {
+	g_assert (str);
 	GdaHandlerTime *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 
-	if (sql && (*sql == '\''))
+	if (*str == '\'')
 		return NULL;
 	else
-		return gda_handler_time_get_value_from_locale (iface, sql, type, hdl->priv->str_locale);
+		return gda_handler_time_get_value_from_locale (iface, str, type, hdl->priv->str_locale);
 }
 
 
@@ -928,9 +927,8 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 	GdaHandlerTime *hdl;
 	GValue *value = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 
 	if (type == G_TYPE_DATE) {
 		GDate date;
@@ -1298,9 +1296,8 @@ gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
 	time_t now;
 	struct tm *stm;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	hdl = (GdaHandlerTime*) (iface);
 
 	now = time (NULL);
 #ifdef HAVE_LOCALTIME_R
@@ -1364,30 +1361,22 @@ static gboolean
 gda_handler_time_accepts_g_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerTime *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
+	guint i;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), FALSE);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, 0);
+	g_assert (iface);
+	hdl = (GdaHandlerTime*) (iface);
 
-	while (!found && (i < hdl->priv->nb_g_types)) {
+	for (i = 0; i < hdl->priv->nb_g_types; i++) {
 		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
+			return TRUE;
 	}
 
-	return found;
+	return FALSE;
 }
 
 static const gchar *
 gda_handler_time_get_descr (GdaDataHandler *iface)
 {
-	GdaHandlerTime *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = GDA_HANDLER_TIME (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

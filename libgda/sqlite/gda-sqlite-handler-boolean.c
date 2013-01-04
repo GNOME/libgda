@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,9 +43,7 @@ static gboolean     gda_sqlite_handler_boolean_accepts_g_type         (GdaDataHa
 static const gchar *gda_sqlite_handler_boolean_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaSqliteHandlerBooleanPriv {
-	gchar          *detailed_descr;
-	guint           nb_g_types;
-	GType          *valid_g_types;
+	gchar dummy;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -68,7 +66,7 @@ _gda_sqlite_handler_boolean_get_type (void)
 			sizeof (GdaSqliteHandlerBoolean),
 			0,
 			(GInstanceInitFunc) gda_sqlite_handler_boolean_init,
-			0
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -115,11 +113,6 @@ gda_sqlite_handler_boolean_init (GdaSqliteHandlerBoolean *hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaSqliteHandlerBooleanPriv, 1);
-	hdl->priv->detailed_descr = _("Boolean values handler");
-	hdl->priv->nb_g_types = 1;
-	hdl->priv->valid_g_types = g_new0 (GType, 1);
-	hdl->priv->valid_g_types[0] = G_TYPE_BOOLEAN;
-
 	g_object_set_data (G_OBJECT (hdl), "name", "SqliteBoolean");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Sqlite boolean representation"));
 }
@@ -134,9 +127,6 @@ gda_sqlite_handler_boolean_dispose (GObject *object)
 	hdl = GDA_SQLITE_HANDLER_BOOLEAN (object);
 
 	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
 		g_free (hdl->priv);
 		hdl->priv = NULL;
 	}
@@ -163,45 +153,25 @@ _gda_sqlite_handler_boolean_new (void)
 }
 
 static gchar *
-gda_sqlite_handler_boolean_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
+gda_sqlite_handler_boolean_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
-	gchar *retval;
-	GdaSqliteHandlerBoolean *hdl;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (g_value_get_boolean (value)) 
-		retval = g_strdup ("1");
-	else
-		retval = g_strdup ("0");
-
-	return retval;
+	g_assert (value);
+	return g_strdup (g_value_get_boolean (value) ? "1" : "0");
 }
 
 static gchar *
-gda_sqlite_handler_boolean_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_sqlite_handler_boolean_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
-	GdaSqliteHandlerBoolean *hdl;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
+	g_assert (value);
 	return g_strdup (g_value_get_boolean (value) ? "1" : "0");
 }
 
 static GValue *
-gda_sqlite_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
+gda_sqlite_handler_boolean_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
-	GdaSqliteHandlerBoolean *hdl;
+	g_assert (sql);
+
 	GValue *value;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
 	if (*sql == '0')
 		g_value_set_boolean (value, FALSE);
@@ -211,15 +181,11 @@ gda_sqlite_handler_boolean_get_value_from_sql (GdaDataHandler *iface, const gcha
 }
 
 static GValue *
-gda_sqlite_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
+gda_sqlite_handler_boolean_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
-	GdaSqliteHandlerBoolean *hdl;
-	GValue *value = NULL;
+	g_assert (str);
 
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
+	GValue *value;
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
 	if (*str == '0')
 		g_value_set_boolean (value, FALSE);
@@ -231,15 +197,9 @@ gda_sqlite_handler_boolean_get_value_from_str (GdaDataHandler *iface, const gcha
 
 
 static GValue *
-gda_sqlite_handler_boolean_get_sane_init_value (GdaDataHandler *iface, G_GNUC_UNUSED GType type)
+gda_sqlite_handler_boolean_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, G_GNUC_UNUSED GType type)
 {
-	GdaSqliteHandlerBoolean *hdl;
 	GValue *value;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_BOOLEAN);
 	g_value_set_boolean (value, FALSE);
 
@@ -247,33 +207,15 @@ gda_sqlite_handler_boolean_get_sane_init_value (GdaDataHandler *iface, G_GNUC_UN
 }
 
 static gboolean
-gda_sqlite_handler_boolean_accepts_g_type (GdaDataHandler *iface, GType type)
+gda_sqlite_handler_boolean_accepts_g_type (G_GNUC_UNUSED GdaDataHandler *iface, GType type)
 {
-	GdaSqliteHandlerBoolean *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), FALSE);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
-		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
-	}
-
-	return found;
+	g_assert (iface);
+	return type == G_TYPE_BOOLEAN ? TRUE : FALSE;
 }
 
 static const gchar *
 gda_sqlite_handler_boolean_get_descr (GdaDataHandler *iface)
 {
-	GdaSqliteHandlerBoolean *hdl;
-
 	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

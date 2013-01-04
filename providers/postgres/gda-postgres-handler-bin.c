@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -46,9 +46,6 @@ static gboolean     gda_postgres_handler_bin_accepts_g_type         (GdaDataHand
 static const gchar *gda_postgres_handler_bin_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaPostgresHandlerBinPriv {
-	gchar             *detailed_descr;
-	guint              nb_g_types;
-	GType             *valid_g_types;
 	GdaConnection     *cnc;
 };
 
@@ -72,8 +69,8 @@ gda_postgres_handler_bin_get_type (void)
 			sizeof (GdaPostgresHandlerBin),
 			0,
 			(GInstanceInitFunc) gda_postgres_handler_bin_init,
-			0
-		};		
+			NULL
+		};	
 
 		static const GInterfaceInfo data_entry_info = {
 			(GInterfaceInitFunc) gda_postgres_handler_bin_data_handler_init,
@@ -119,12 +116,6 @@ gda_postgres_handler_bin_init (GdaPostgresHandlerBin * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaPostgresHandlerBinPriv, 1);
-	hdl->priv->detailed_descr = _("Postgresql binary handler");
-	hdl->priv->nb_g_types = 2;
-	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
-	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
-	hdl->priv->valid_g_types[1] = GDA_TYPE_BLOB;
-
 	g_object_set_data (G_OBJECT (hdl), "name", _("PostgresqlBin"));
 	g_object_set_data (G_OBJECT (hdl), "descr", _("PostgreSQL binary representation"));
 }
@@ -140,9 +131,6 @@ gda_postgres_handler_bin_dispose (GObject   * object)
 	hdl = GDA_POSTGRES_HANDLER_BIN (object);
 
 	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
 		if (hdl->priv->cnc)
 			g_object_remove_weak_pointer (G_OBJECT (hdl->priv->cnc), (gpointer) &(hdl->priv->cnc));
 
@@ -182,106 +170,80 @@ gda_postgres_handler_bin_new (GdaConnection *cnc)
 static gchar *
 gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
 	GdaPostgresHandlerBin *hdl;
 	PostgresConnectionData *cdata = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
+	g_return_val_if_fail (GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
 	
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	hdl = (GdaPostgresHandlerBin*) (iface);
 
 	if (hdl->priv->cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (hdl->priv->cnc), NULL);
 		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (hdl->priv->cnc);
 	}
 
-	if (value) {
-		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) {
-			GdaBinary *data = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-			if (data) {
-				gchar *tmp;
-				size_t retlength;
-				if (0 && cdata) {
-					/* FIXME: use this call but it's only defined for Postgres >= 8.1 */
-					/*tmp = PQescapeByteaConn (cdata->pconn, data, length, &retlength);*/
-				}
-				else
-					tmp = (gchar *)PQescapeBytea (data->data, 
-								      data->binary_length, &retlength);
-			
-				if (tmp) {
-					retval = g_strdup_printf ("'%s'", tmp);
-					PQfreemem (tmp);
-				}
-				else {
-					g_warning (_("Insufficient memory to convert binary buffer to string"));
-					return NULL;
-				}
-			}
-			else
-				retval = g_strdup ("NULL");
+	GdaBinary *data = (GdaBinary *) gda_value_get_binary ((GValue *) value);
+	if (data) {
+		gchar *tmp;
+		size_t retlength;
+		if (0 && cdata) {
+			/* FIXME: use this call but it's only defined for Postgres >= 8.1 */
+			/*tmp = PQescapeByteaConn (cdata->pconn, data, length, &retlength);*/
 		}
 		else
-			retval = g_strdup ("**BLOB**");	
+			tmp = (gchar *) PQescapeBytea (data->data, 
+						       data->binary_length, &retlength);
+		if (tmp) {
+			retval = g_strdup_printf ("'%s'", tmp);
+			PQfreemem (tmp);
+		}
+		else {
+			g_warning (_("Insufficient memory to convert binary buffer to string"));
+			return NULL;
+		}
 	}
 	else
 		retval = g_strdup ("NULL");
-
+	
 	return retval;
 }
 
 static gchar *
-gda_postgres_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_postgres_handler_bin_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
-	GdaPostgresHandlerBin *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (value) {
-		if (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY)) 
-			retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
-		else
-			retval = g_strdup ("**BLOB**");	
-	}
-	else
-		retval = g_strdup (NULL);
-
+	retval = gda_binary_to_string (gda_value_get_binary ((GValue *) value), 0);
 	return retval;
 }
 
 static GValue *
-gda_postgres_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_postgres_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
 {
-	GdaPostgresHandlerBin *hdl;
+	g_assert (sql);
+
 	GValue *value = NULL;
+	if (*sql) {
+		gint i = strlen (sql);
+		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
+			gchar *str = g_strdup (sql);
+			guchar *unstr;
+			size_t retlength;
 
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (type == GDA_TYPE_BINARY) {
-		if (sql && *sql) {
-			gint i = strlen (sql);
-			if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
-				gchar *str = g_strdup (sql);
-				guchar *unstr;
-				size_t retlength;
-				
-				str[i-1] = 0;
-				unstr = PQunescapeBytea ((guchar*) (str+1), &retlength);
-				if (unstr) {
-					value = gda_value_new_binary (unstr, retlength);
-					PQfreemem (unstr);
-				}
-				else
-					g_warning (_("Insufficient memory to convert string to binary buffer"));
-
-				g_free (str);
+			str[i-1] = 0;
+			unstr = PQunescapeBytea ((guchar*) (str+1), &retlength);
+			if (unstr) {
+				value = gda_value_new_binary (unstr, retlength);
+				PQfreemem (unstr);
 			}
+			else
+				g_warning (_("Insufficient memory to convert string to binary buffer"));
+
+			g_free (str);
 		}
 	}
 
@@ -289,22 +251,16 @@ gda_postgres_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar 
 }
 
 static GValue *
-gda_postgres_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_postgres_handler_bin_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
 {
-	GdaPostgresHandlerBin *hdl;
+	g_assert (str);
+
 	GValue *value = NULL;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (type == GDA_TYPE_BINARY) {
-		GdaBinary *bin;
-		bin = gda_string_to_binary (str);
-		if (bin) {
-			value = gda_value_new (GDA_TYPE_BINARY);
-			gda_value_take_binary (value, bin);
-		}
+	GdaBinary *bin;
+	bin = gda_string_to_binary (str);
+	if (bin) {
+		value = gda_value_new (GDA_TYPE_BINARY);
+		gda_value_take_binary (value, bin);
 	}
 
 	return value;
@@ -313,31 +269,13 @@ gda_postgres_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar 
 static gboolean
 gda_postgres_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
 {
-	GdaPostgresHandlerBin *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), FALSE);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
-		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
-	}
-
-	return found;
+	g_assert (iface);
+	return type == GDA_TYPE_BINARY ? TRUE : FALSE;
 }
 
 static const gchar *
 gda_postgres_handler_bin_get_descr (GdaDataHandler *iface)
 {
-	GdaPostgresHandlerBin *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
-	hdl = GDA_POSTGRES_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	g_return_val_if_fail (GDA_IS_POSTGRES_HANDLER_BIN (iface), NULL);
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

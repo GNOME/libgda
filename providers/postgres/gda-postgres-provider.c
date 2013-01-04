@@ -1335,16 +1335,12 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider, GdaConnecti
 		TO_IMPLEMENT; /* use @dbms_type */
 		dh = NULL;
 	}
-	else if ((type == GDA_TYPE_BINARY) ||
-		 (type == GDA_TYPE_BLOB)) {
+	else if (type == GDA_TYPE_BINARY) {
 		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
                 if (!dh) {
                         dh = gda_postgres_handler_bin_new (cnc);
-                        if (dh) {
-                                gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
-                                gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BLOB, NULL);
-                                g_object_unref (dh);
-                        }
+			gda_server_provider_handler_declare (provider, dh, cnc, GDA_TYPE_BINARY, NULL);
+			g_object_unref (dh);
                 }
 	}
 	else if ((type == GDA_TYPE_TIME) ||

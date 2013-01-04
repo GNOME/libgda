@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
@@ -44,9 +44,7 @@ static gboolean     gda_handler_type_accepts_g_type       (GdaDataHandler * dh, 
 static const gchar *gda_handler_type_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerTypePriv {
-	gchar          *detailed_descr;
-	guint           nb_g_types;
-	GType          *valid_g_types;
+	gchar dummy;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -69,7 +67,7 @@ gda_handler_type_get_type (void)
 			sizeof (GdaHandlerType),
 			0,
 			(GInstanceInitFunc) gda_handler_type_init,
-			0
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -104,7 +102,7 @@ gda_handler_type_data_handler_init (GdaDataHandlerIface *iface)
 static void
 gda_handler_type_class_init (GdaHandlerTypeClass * class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	
 	parent_class = g_type_class_peek_parent (class);
 
@@ -116,10 +114,6 @@ gda_handler_type_init (GdaHandlerType * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerTypePriv, 1);
-	hdl->priv->detailed_descr = _("Gda type handler");
-	hdl->priv->nb_g_types = 1;
-	hdl->priv->valid_g_types = g_new0 (GType, 1);
-	hdl->priv->valid_g_types[0] = G_TYPE_GTYPE;
 
 	g_object_set_data (G_OBJECT (hdl), "descr", "InternalType");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
@@ -136,9 +130,6 @@ gda_handler_type_dispose (GObject   * object)
 	hdl = GDA_HANDLER_TYPE (object);
 
 	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
 		g_free (hdl->priv);
 		hdl->priv = NULL;
 	}
@@ -165,68 +156,48 @@ gda_handler_type_new (void)
 }
 
 static gchar *
-gda_handler_type_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
+gda_handler_type_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
-	GdaHandlerType *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (value) {
-		GTypeQuery tq;
-		g_type_query (g_value_get_gtype (value), &tq);
-		if (tq.type != 0) {
-			const gchar *str;
-			str = gda_g_type_to_string (g_value_get_gtype (value));
-			retval = g_strdup_printf ("'%s'", str);
-		}
-		else
-			retval = g_strdup ("NULL");	
+	GTypeQuery tq;
+	g_type_query (g_value_get_gtype (value), &tq);
+	if (tq.type != 0) {
+		const gchar *str;
+		str = gda_g_type_to_string (g_value_get_gtype (value));
+		retval = g_strdup_printf ("'%s'", str);
 	}
 	else
-		retval = g_strdup ("NULL");
+		retval = g_strdup ("NULL");	
 
 	return retval;
 }
 
 static gchar *
-gda_handler_type_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_handler_type_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
-	GdaHandlerType *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (value) {
-		GTypeQuery tq;
+	GTypeQuery tq;
        
-		g_type_query (g_value_get_gtype (value), &tq);
-		if (tq.type != 0)
-			retval = g_strdup (gda_g_type_to_string (g_value_get_gtype (value)));
-		else
-			retval = g_strdup (NULL); /* FIXME: return NULL instead because of the error? */
-	}
+	g_type_query (g_value_get_gtype (value), &tq);
+	if (tq.type != 0)
+		retval = g_strdup (gda_g_type_to_string (g_value_get_gtype (value)));
 	else
-		retval = g_strdup (NULL);
+		retval = NULL;
 
 	return retval;
 }
 
 static GValue *
-gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
+gda_handler_type_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
-	GdaHandlerType *hdl;
+	g_assert (sql);
+
 	GValue *value = NULL;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if (sql && *sql) {
+	if (*sql) {
 		gint i = strlen (sql);
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
@@ -246,15 +217,12 @@ gda_handler_type_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_
 }
 
 static GValue *
-gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
+gda_handler_type_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
-	GdaHandlerType *hdl;
+	g_assert (str);
+
 	GValue *value = NULL;
 	GType vtype;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
 
 	vtype = gda_g_type_from_string (str);
 	if (vtype != G_TYPE_INVALID) {
@@ -268,31 +236,13 @@ gda_handler_type_get_value_from_str (GdaDataHandler *iface, const gchar *str, G_
 static gboolean
 gda_handler_type_accepts_g_type (GdaDataHandler *iface, GType type)
 {
-	GdaHandlerType *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), FALSE);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
-		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
-	}
-
-	return found;
+	g_assert (iface);
+	return type == G_TYPE_GTYPE ? TRUE : FALSE;
 }
 
 static const gchar *
 gda_handler_type_get_descr (GdaDataHandler *iface)
 {
-	GdaHandlerType *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_TYPE (iface), NULL);
-	hdl = GDA_HANDLER_TYPE (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	g_return_val_if_fail (GDA_IS_HANDLER_TYPE (iface), NULL);
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

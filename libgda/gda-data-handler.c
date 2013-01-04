@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -101,9 +101,11 @@ gchar *
 gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	
+
 	if (! value || gda_value_is_null (value))
 		return g_strdup ("NULL");
+
+	g_return_val_if_fail (_accepts_g_type (dh, G_VALUE_TYPE (value)), NULL);
 
 	/* Calling the real function with value != NULL and not of type GDA_TYPE_NULL */
 	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sql_from_value)
@@ -130,6 +132,8 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 
 	if (! value || gda_value_is_null (value))
 		return g_strdup ("");
+
+	g_return_val_if_fail (_accepts_g_type (dh, G_VALUE_TYPE (value)), NULL);
 
 	/* Calling the real function with value != NULL and not of type GDA_TYPE_NULL */
 	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_str_from_value)
@@ -158,7 +162,7 @@ GValue *
 gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (_accepts_g_type (dh, type), NULL);
 
 	if (!sql)
 		return gda_value_new_null ();
@@ -190,7 +194,7 @@ GValue *
 gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (_accepts_g_type (dh, type), NULL);
 
 	if (!str)
 		return gda_value_new_null ();
@@ -222,12 +226,21 @@ GValue *
 gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 {
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_g_type (GDA_DATA_HANDLER (dh), type), NULL);
+	g_return_val_if_fail (_accepts_g_type (dh, type), NULL);
 
 	if (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sane_init_value)
 		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sane_init_value) (dh, type);
 	
 	return NULL;
+}
+
+static gboolean
+_accepts_g_type (GdaDataHandler *dh, GType type)
+{
+	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type)
+		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
+	else
+		return FALSE;
 }
 
 /**
@@ -242,12 +255,8 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 gboolean
 gda_data_handler_accepts_g_type (GdaDataHandler *dh, GType type)
 {
-	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), FALSE);
-
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
-	
-	return FALSE;
+	g_return_val_if_fail (GDA_IS_DATA_HANDLER (dh), FALSE);
+	return _accepts_g_type (dh, type);
 }
 
 /**

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -48,7 +48,6 @@ static gboolean     gda_handler_numerical_accepts_g_type       (GdaDataHandler *
 static const gchar *gda_handler_numerical_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerNumericalPriv {
-	gchar          *detailed_descr;
 	guint           nb_g_types;
 	GType          *valid_g_types;
 };
@@ -73,7 +72,7 @@ gda_handler_numerical_get_type (void)
 			sizeof (GdaHandlerNumerical),
 			0,
 			(GInstanceInitFunc) gda_handler_numerical_init,
-			0
+			NULL
 		};
 
 		static const GInterfaceInfo data_entry_info = {
@@ -120,7 +119,6 @@ gda_handler_numerical_init (GdaHandlerNumerical * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerNumericalPriv, 1);
-	hdl->priv->detailed_descr = "";
 	hdl->priv->nb_g_types = 13;
 	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
 	hdl->priv->valid_g_types[0] = G_TYPE_INT64;
@@ -183,43 +181,34 @@ gda_handler_numerical_new (void)
 
 /* Interface implementation */
 static gchar *
-gda_handler_numerical_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
+gda_handler_numerical_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
-	gchar *str, *retval;
-	GdaHandlerNumerical *hdl;
+	g_assert (value);
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
+	gchar *retval;
 	setlocale (LC_NUMERIC, "C");
-	str = gda_value_stringify ((GValue *) value);
+	retval = gda_value_stringify ((GValue *) value);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
-	if (str)
-		retval = str;
-	else
+
+	if (!retval)
 		retval = g_strdup ("0");
 
 	return retval;
 }
 
 static gchar *
-gda_handler_numerical_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_handler_numerical_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
-	GdaHandlerNumerical *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
+	g_assert (value);
 	return gda_value_stringify ((GValue *) value);
 }
 
 static GValue *
-gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_handler_numerical_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
 {
-	GValue *value;
+	g_assert (sql);
 
+	GValue *value;
 	setlocale (LC_NUMERIC, "C");
 	value = gda_handler_numerical_get_value_from_str (iface, sql, type);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
@@ -228,16 +217,12 @@ gda_handler_numerical_get_value_from_sql (GdaDataHandler *iface, const gchar *sq
 }
 
 static GValue *
-gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
 {
-	GdaHandlerNumerical *hdl;
+	g_assert (str);
 	GValue *value = NULL;
 	long long int llint;
 	char *endptr = NULL;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
 
 	llint = strtoll (str, &endptr, 10);
 
@@ -381,16 +366,11 @@ gda_handler_numerical_get_value_from_str (GdaDataHandler *iface, const gchar *st
 
 
 static GValue *
-gda_handler_numerical_get_sane_init_value (GdaDataHandler *iface, GType type)
+gda_handler_numerical_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, GType type)
 {
-	GdaHandlerNumerical *hdl;
 	GValue *value;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
 	value = gda_handler_numerical_get_value_from_sql (iface, "", type);
+
 	return value;
 }
 
@@ -399,29 +379,20 @@ gda_handler_numerical_accepts_g_type (GdaDataHandler *iface, GType type)
 {
 	GdaHandlerNumerical *hdl;
 	guint i = 0;
-	gboolean found = FALSE;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), FALSE);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
+	g_assert (iface);
+	hdl = (GdaHandlerNumerical*) (iface);
+	for (i = 0; i < hdl->priv->nb_g_types; i++) {
 		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
+			return TRUE;
 	}
 
-	return found;
+	return FALSE;
 }
 
 static const gchar *
 gda_handler_numerical_get_descr (GdaDataHandler *iface)
 {
-	GdaHandlerNumerical *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_NUMERICAL (iface), NULL);
-	hdl = GDA_HANDLER_NUMERICAL (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	g_return_val_if_fail (GDA_IS_HANDLER_NUMERICAL (iface), NULL);
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

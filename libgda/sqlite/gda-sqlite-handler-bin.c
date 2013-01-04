@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
@@ -37,17 +37,15 @@ static void         gda_sqlite_handler_bin_data_handler_init      (GdaDataHandle
 static gchar       *gda_sqlite_handler_bin_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
 static gchar       *gda_sqlite_handler_bin_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
 static GValue      *gda_sqlite_handler_bin_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql, 
-							    GType type);
+								   GType type);
 static GValue      *gda_sqlite_handler_bin_get_value_from_str     (GdaDataHandler *dh, const gchar *sql, 
-							    GType type);
+								   GType type);
 static gboolean     gda_sqlite_handler_bin_accepts_g_type       (GdaDataHandler * dh, GType type);
 
 static const gchar *gda_sqlite_handler_bin_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaSqliteHandlerBinPriv {
-	gchar             *detailed_descr;
-	guint              nb_g_types;
-	GType             *valid_g_types;
+	gchar dummy;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -70,7 +68,7 @@ _gda_sqlite_handler_bin_get_type (void)
 			sizeof (GdaSqliteHandlerBin),
 			0,
 			(GInstanceInitFunc) gda_sqlite_handler_bin_init,
-			0
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -117,13 +115,8 @@ gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaSqliteHandlerBinPriv, 1);
-	hdl->priv->detailed_descr = _("SQlite binary handler");
-	hdl->priv->nb_g_types = 1;
-	hdl->priv->valid_g_types = g_new0 (GType, hdl->priv->nb_g_types);
-	hdl->priv->valid_g_types[0] = GDA_TYPE_BINARY;
-
 	g_object_set_data (G_OBJECT (hdl), "name", "SqliteBin");
-	g_object_set_data (G_OBJECT (hdl), "descr", _("SQlite binary representation"));
+	g_object_set_data (G_OBJECT (hdl), "descr", _("SQLite binary representation"));
 }
 
 static void
@@ -137,9 +130,6 @@ gda_sqlite_handler_bin_dispose (GObject   * object)
 	hdl = GDA_SQLITE_HANDLER_BIN (object);
 
 	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
 		g_free (hdl->priv);
 		hdl->priv = NULL;
 	}
@@ -166,78 +156,60 @@ _gda_sqlite_handler_bin_new (void)
 }
 
 static gchar *
-gda_sqlite_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
+gda_sqlite_handler_bin_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
-	GdaSqliteHandlerBin *hdl;
+	GdaBinary *bin;
+	gint i;
 
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
+	retval = g_new0 (gchar, bin->binary_length * 2 + 4);
+	retval [0] = 'x';
+	retval [1] = '\'';
+	for (i = 0; i < bin->binary_length; i++) {
+		guchar *ptr;
 
-	if (value) {
-		GdaBinary *bin;
-		gint i;
-		g_return_val_if_fail (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY), NULL);
-
-		bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-		retval = g_new0 (gchar, bin->binary_length * 2 + 4);
-		retval [0] = 'x';
-		retval [1] = '\'';
-		for (i = 0; i < bin->binary_length; i++) {
-			guchar *ptr;
-
-			ptr = bin->data + i;
-			if ((*ptr >> 4) <= 9)
-				retval [2*i + 2] = (*ptr >> 4) + '0';
-			else
-				retval [2*i + 2] = (*ptr >> 4) + 'A' - 10;
-			if ((*ptr & 0xF) <= 9)
-				retval [2*i + 3] = (*ptr & 0xF) + '0';
-			else
-				retval [2*i + 3] = (*ptr & 0xF) + 'A' - 10;
-		}
-		retval [bin->binary_length * 2 + 2] = '\'';
+		ptr = bin->data + i;
+		if ((*ptr >> 4) <= 9)
+			retval [2*i + 2] = (*ptr >> 4) + '0';
+		else
+			retval [2*i + 2] = (*ptr >> 4) + 'A' - 10;
+		if ((*ptr & 0xF) <= 9)
+			retval [2*i + 3] = (*ptr & 0xF) + '0';
+		else
+			retval [2*i + 3] = (*ptr & 0xF) + 'A' - 10;
 	}
-	else
-		retval = g_strdup ("NULL");
+	retval [bin->binary_length * 2 + 2] = '\'';
 
 	return retval;
 }
 
 static gchar *
-gda_sqlite_handler_bin_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_sqlite_handler_bin_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
+	g_assert (value);
+
 	gchar *retval;
-	GdaSqliteHandlerBin *hdl;
+	GdaBinary *bin;
+	gint i;
 
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
+	retval = g_new0 (gchar, bin->binary_length * 2 + 1);
+	for (i = 0; i < bin->binary_length; i++) {
+		guchar *ptr;
 
-	if (value) {
-		GdaBinary *bin;
-		gint i;
-		g_return_val_if_fail (gda_value_isa ((GValue *) value, GDA_TYPE_BINARY), NULL);
-
-		bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-		retval = g_new0 (gchar, bin->binary_length * 2 + 1);
-		for (i = 0; i < bin->binary_length; i++) {
-			guchar *ptr;
-
-			ptr = bin->data + i;
-			if ((*ptr >> 4) <= 9)
-				retval [2*i] = (*ptr >> 4) + '0';
-			else
-				retval [2*i] = (*ptr >> 4) + 'A' - 10;
-			if ((*ptr & 0xF) <= 9)
-				retval [2*i + 1] = (*ptr & 0xF) + '0';
-			else
-				retval [2*i + 1] = (*ptr & 0xF) + 'A' - 10;
-		}
+		ptr = bin->data + i;
+		if ((*ptr >> 4) <= 9)
+			retval [2*i] = (*ptr >> 4) + '0';
+		else
+			retval [2*i] = (*ptr >> 4) + 'A' - 10;
+		if ((*ptr & 0xF) <= 9)
+			retval [2*i + 1] = (*ptr & 0xF) + '0';
+		else
+			retval [2*i + 1] = (*ptr & 0xF) + 'A' - 10;
 	}
-	else
-		retval = g_strdup ("");
 
 	return retval;
 }
@@ -256,16 +228,12 @@ static int hex_to_int (int h) {
 }
 
 static GValue *
-gda_sqlite_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GType type)
+gda_sqlite_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
 {
-	GdaSqliteHandlerBin *hdl;
+	g_assert (sql);
 	GValue *value = NULL;
 
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	if ((type == GDA_TYPE_BINARY) && sql && *sql) {
+	if (*sql) {
 		gint n = strlen (sql);
 		if ((n >= 3) && 
 		    ! ((n-3) % 2) && 
@@ -287,87 +255,55 @@ gda_sqlite_handler_bin_get_value_from_sql (GdaDataHandler *iface, const gchar *s
 			gda_value_take_binary (value, bin);
 		}
 	}
-	else
-		g_assert_not_reached ();
 
 	return value;
 }
 
 static GValue *
-gda_sqlite_handler_bin_get_value_from_str (GdaDataHandler *iface, const gchar *str, GType type)
+gda_sqlite_handler_bin_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
 {
-	GdaSqliteHandlerBin *hdl;
+	g_assert (str);
+
 	GValue *value = NULL;
 
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	if (*str) {
+		gint n = strlen (str);
+		if (! (n % 2)) {
+			GdaBinary *bin;
 
-	if (type == GDA_TYPE_BINARY) {
-		if (str && *str) {
-			gint n = strlen (str);
-			if (! (n % 2)) {
-				GdaBinary *bin;
-				
-				bin = g_new0 (GdaBinary, 1);
-				if (n > 0) {
-					gint i;
-					bin->data = g_new0 (guchar, n/2);
-					for (i = 0; i < n; i += 2)
-						bin->data [i/2] = (hex_to_int (str[i]) << 4) | hex_to_int (str [i+1]);
-					bin->binary_length = n;
-				}
-				
-				value = gda_value_new (GDA_TYPE_BINARY);
-				gda_value_take_binary (value, bin);
+			bin = g_new0 (GdaBinary, 1);
+			if (n > 0) {
+				gint i;
+				bin->data = g_new0 (guchar, n/2);
+				for (i = 0; i < n; i += 2)
+					bin->data [i/2] = (hex_to_int (str[i]) << 4) | hex_to_int (str [i+1]);
+				bin->binary_length = n;
 			}
-		}
-		else {
-			if (str) {
-				GdaBinary *bin;
-				
-				bin = g_new0 (GdaBinary, 1);
-				value = gda_value_new (GDA_TYPE_BINARY);
-				gda_value_take_binary (value, bin);
-			}
-			else 
-				value = gda_value_new_null ();
+
+			value = gda_value_new (GDA_TYPE_BINARY);
+			gda_value_take_binary (value, bin);
 		}
 	}
-	else
-		g_assert_not_reached ();
+	else {
+		GdaBinary *bin;
+		bin = gda_string_to_binary (str);
+		value = gda_value_new (GDA_TYPE_BINARY);
+		gda_value_take_binary (value, bin);
+	}
 
 	return value;
 }
 
 static gboolean
-gda_sqlite_handler_bin_accepts_g_type (GdaDataHandler *iface, GType type)
+gda_sqlite_handler_bin_accepts_g_type (G_GNUC_UNUSED GdaDataHandler *iface, GType type)
 {
-	GdaSqliteHandlerBin *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
-
-	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), FALSE);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
-		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
-	}
-
-	return found;
+	g_assert (iface);
+	return type == GDA_TYPE_BINARY ? TRUE : FALSE;
 }
 
 static const gchar *
 gda_sqlite_handler_bin_get_descr (GdaDataHandler *iface)
 {
-	GdaSqliteHandlerBin *hdl;
-
 	g_return_val_if_fail (GDA_IS_SQLITE_HANDLER_BIN (iface), NULL);
-	hdl = GDA_SQLITE_HANDLER_BIN (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }

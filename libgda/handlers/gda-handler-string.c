@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
@@ -48,10 +48,6 @@ static gboolean     gda_handler_string_accepts_g_type       (GdaDataHandler * dh
 static const gchar *gda_handler_string_get_descr              (GdaDataHandler *dh);
 
 struct  _GdaHandlerStringPriv {
-	gchar             *detailed_descr;
-	guint              nb_g_types;
-	GType             *valid_g_types;
-
 	GdaServerProvider *prov;
 	GdaConnection     *cnc;
 };
@@ -76,7 +72,7 @@ gda_handler_string_get_type (void)
 			sizeof (GdaHandlerString),
 			0,
 			(GInstanceInitFunc) gda_handler_string_init,
-			0
+			NULL
 		};		
 
 		static const GInterfaceInfo data_entry_info = {
@@ -123,11 +119,6 @@ gda_handler_string_init (GdaHandlerString * hdl)
 {
 	/* Private structure */
 	hdl->priv = g_new0 (GdaHandlerStringPriv, 1);
-	hdl->priv->detailed_descr = _("Strings handler");
-	hdl->priv->nb_g_types = 1;
-	hdl->priv->valid_g_types = g_new0 (GType, 1);
-	hdl->priv->valid_g_types[0] = G_TYPE_STRING;
-
 	g_object_set_data (G_OBJECT (hdl), "name", _("InternalString"));
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Strings representation"));
 }
@@ -143,9 +134,6 @@ gda_handler_string_dispose (GObject   * object)
 	hdl = GDA_HANDLER_STRING (object);
 
 	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
 		if (hdl->priv->prov)
 			g_object_remove_weak_pointer (G_OBJECT (hdl->priv->prov), (gpointer) &(hdl->priv->prov));
 		if (hdl->priv->cnc)
@@ -212,15 +200,17 @@ gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cn
 static gchar *
 gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {
-	gchar *str, *str2, *retval;
+	g_assert (value);
+
+	gchar *str, *retval;
 	GdaHandlerString *hdl;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_STRING (iface), NULL);
+	hdl = (GdaHandlerString*) (iface);
 
 	str = gda_value_stringify ((GValue *) value);
 	if (str) {
+		gchar *str2;
 		if (hdl->priv->prov) 
 			str2 = gda_server_provider_escape_string (hdl->priv->prov, hdl->priv->cnc, str);
 		else 
@@ -236,28 +226,24 @@ gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GValue *valu
 }
 
 static gchar *
-gda_handler_string_get_str_from_value (GdaDataHandler *iface, const GValue *value)
+gda_handler_string_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, const GValue *value)
 {
-	GdaHandlerString *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
+	g_assert (value);
 	return gda_value_stringify ((GValue *) value);
 }
 
 static GValue *
 gda_handler_string_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
+	g_assert (sql);
+
 	GdaHandlerString *hdl;
 	GValue *value = NULL;
 
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
+	g_return_val_if_fail (GDA_IS_HANDLER_STRING (iface), NULL);
+	hdl = (GdaHandlerString*) (iface);
 
-	if (sql && *sql) {
+	if (*sql) {
 		gint i = strlen (sql);
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
@@ -277,68 +263,41 @@ gda_handler_string_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, 
 	}
 	else
 		value = gda_value_new_null ();
+
 	return value;
 }
 
 static GValue *
-gda_handler_string_get_value_from_str (GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
+gda_handler_string_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
-	GdaHandlerString *hdl;
+	g_assert (str);
+
 	GValue *value;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
-	g_value_set_string (value, sql);
+	g_value_set_string (value, str);
 	return value;
 }
 
 static GValue *
-gda_handler_string_get_sane_init_value (GdaDataHandler *iface, G_GNUC_UNUSED GType type)
+gda_handler_string_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, G_GNUC_UNUSED GType type)
 {
-	GdaHandlerString *hdl;
 	GValue *value;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
 
 	value = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
 	g_value_set_string (value, "");
-
 	return value;
 }
 
 static gboolean
 gda_handler_string_accepts_g_type (GdaDataHandler *iface, GType type)
 {
-	GdaHandlerString *hdl;
-	guint i = 0;
-	gboolean found = FALSE;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), FALSE);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, 0);
-
-	while (!found && (i < hdl->priv->nb_g_types)) {
-		if (hdl->priv->valid_g_types [i] == type)
-			found = TRUE;
-		i++;
-	}
-
-	return found;
+	g_assert (iface);
+	return type == G_TYPE_STRING ? TRUE : FALSE;
 }
 
 static const gchar *
 gda_handler_string_get_descr (GdaDataHandler *iface)
 {
-	GdaHandlerString *hdl;
-
-	g_return_val_if_fail (iface && GDA_IS_HANDLER_STRING (iface), NULL);
-	hdl = GDA_HANDLER_STRING (iface);
-	g_return_val_if_fail (hdl->priv, NULL);
-
-	return g_object_get_data (G_OBJECT (hdl), "descr");
+	g_return_val_if_fail (GDA_IS_HANDLER_STRING (iface), NULL);
+	return g_object_get_data (G_OBJECT (iface), "descr");
 }
