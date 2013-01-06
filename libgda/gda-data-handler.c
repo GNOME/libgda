@@ -81,6 +81,15 @@ gda_data_handler_iface_init (G_GNUC_UNUSED gpointer g_class)
 	MUTEX_UNLOCK();
 }
 
+static gboolean
+_accepts_g_type (GdaDataHandler *dh, GType type)
+{
+	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type)
+		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
+	else
+		return FALSE;
+}
+
 /**
  * gda_data_handler_get_sql_from_value:
  * @dh: an object which implements the #GdaDataHandler interface
@@ -232,15 +241,6 @@ gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)
 		return (GDA_DATA_HANDLER_GET_IFACE (dh)->get_sane_init_value) (dh, type);
 	
 	return NULL;
-}
-
-static gboolean
-_accepts_g_type (GdaDataHandler *dh, GType type)
-{
-	if (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type)
-		return (GDA_DATA_HANDLER_GET_IFACE (dh)->accepts_g_type) (dh, type);
-	else
-		return FALSE;
 }
 
 /**

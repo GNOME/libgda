@@ -12,7 +12,7 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 - 2011 Murray Cumming <murrayc@murrayc.com>
@@ -56,6 +56,7 @@
 #include "gda-mysql-util.h"
 #include "gda-mysql-parser.h"
 #include "gda-mysql-handler-boolean.h"
+#include "gda-mysql-handler-bin.h"
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -1314,10 +1315,13 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
 		TO_IMPLEMENT; /* use @dbms_type */
 		dh = NULL;
 	}
-	else if ((type == GDA_TYPE_BINARY) ||
-		 (type == GDA_TYPE_BLOB)) {
-		TO_IMPLEMENT; /* define data handlers for these types */
-		dh = NULL;
+	else if (type == GDA_TYPE_BINARY) {
+		dh = gda_server_provider_handler_find (provider, cnc, type, NULL);
+                if (!dh) {
+			dh = _gda_mysql_handler_bin_new ();
+                        gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_BINARY, NULL);
+                        g_object_unref (dh);
+                }
 	}
 	else if ((type == GDA_TYPE_TIME) ||
 		 (type == GDA_TYPE_TIMESTAMP) ||

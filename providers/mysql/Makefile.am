@@ -9,7 +9,17 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/providers/reuseable/mysql \
-	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(MYSQL_CFLAGS) 
+	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(MYSQL_CFLAGS) -DCLASS_PREFIX=\""GdaMySQL"\"
+
+gda-mysql-handler-bin.c: $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.c
+	cat $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.c | sed -e 's/SQLITE/MYSQL/g' -e 's/sqlite/mysql/g' -e 's/Sqlite/Mysql/g' -e 's/SQLite/MySQL/g' > gda-mysql-handler-bin.c
+
+gda-mysql-handler-bin.h: $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.h
+	cat $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.h | sed -e 's/SQLITE/MYSQL/g' -e 's/sqlite/mysql/g' -e 's/Sqlite/Mysql/g' -e 's/SQLite/MySQL/g' > gda-mysql-handler-bin.h
+
+genfiles = gda-mysql-handler-bin.c gda-mysql-handler-bin.h
+
+$(libgda_mysql_la_OBJECTS): $(genfiles)
 
 libgda_mysql_la_SOURCES = \
 	gda-mysql-blob-op.c \
@@ -18,6 +28,7 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-ddl.h \
 	gda-mysql-handler-boolean.c \
 	gda-mysql-handler-boolean.h \
+	$(genfiles) \
 	gda-mysql-provider.c \
 	gda-mysql-provider.h \
 	gda-mysql-recordset.c \
@@ -55,9 +66,10 @@ xml_in_files = \
 @INTLTOOL_XML_RULE@
 
 xml_DATA = $(xml_in_files:.xml.in=.xml) 
+CLEANFILES = $(genfiles)
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-5.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-mysql-5.0.pc.in
-DISTCLEANFILES = $(xml_DATA)
+DISTCLEANFILES = $(xml_DATA) $(genfiles)
