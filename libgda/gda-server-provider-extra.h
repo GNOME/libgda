@@ -52,6 +52,7 @@ gboolean gda_server_provider_perform_operation_default (GdaServerProvider *provi
 							GdaServerOperation *op, GError **error);
 
 /* default data handler method */
+GdaDataHandler *gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type);
 GdaDataHandler *gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
 							      GType type, const gchar *dbms_type);
 

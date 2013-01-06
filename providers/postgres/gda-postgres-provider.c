@@ -1358,7 +1358,7 @@ gda_postgres_provider_get_data_handler (GdaServerProvider *provider, GdaConnecti
                 }
 	}
 	else
-		dh = gda_server_provider_get_data_handler_default (provider, cnc, type, dbms_type);
+		dh = gda_server_provider_handler_use_default (provider, type);
 
 	return dh;
 }

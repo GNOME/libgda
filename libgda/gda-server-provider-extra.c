@@ -97,25 +97,26 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
 	}
 	g_object_unref (batch);
 
-	return retval;;
+	return retval;
 }
 
 /**
- * gda_server_provider_get_data_handler_default:
- * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * gda_server_provider_handler_use_default: (skip)
+ * @provider: a server provider
  * @type: a #GType
- * @dbms_type: a DBMS type definition
  *
- * Provides the implementation when the default Libgda's data handlers must be used
- * 
+ * Reserved to database provider's implementations. This method defines a default data handler for
+ * @provider, and returns that #GdaDataHandler.
+ *
  * Returns: (transfer none): a #GdaDataHandler, or %NULL
+ *
+ * Since: 5.2
  */
 GdaDataHandler *
-gda_server_provider_get_data_handler_default (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
-					      GType type, G_GNUC_UNUSED const gchar *dbms_type)
+gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type)
 {
 	GdaDataHandler *dh = NULL;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	if ((type == G_TYPE_INT64) ||
 	    (type == G_TYPE_UINT64) ||
 	    (type == G_TYPE_DOUBLE) ||
@@ -187,6 +188,26 @@ gda_server_provider_get_data_handler_default (GdaServerProvider *provider, G_GNU
 	return dh;
 }
 
+/**
+ * gda_server_provider_get_data_handler_default: (skip)
+ * @provider: a server provider.
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @type: a #GType
+ * @dbms_type: a DBMS type definition
+ *
+ * Provides the implementation when the default Libgda's data handlers must be used
+ * 
+ * Returns: (transfer none): a #GdaDataHandler, or %NULL
+ *
+ * Deprecated: 5.2: use gda_server_provider_handler_use_default() instead
+ */
+GdaDataHandler *
+gda_server_provider_get_data_handler_default (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
+					      GType type, G_GNUC_UNUSED const gchar *dbms_type)
+{
+	return gda_server_provider_handler_use_default (provider, type);
+}
+
 static gboolean
 param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
@@ -209,7 +230,7 @@ param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_
 }
 
 /**
- * gda_select_alter_select_for_empty:
+ * gda_select_alter_select_for_empty: (skip)
  * @stmt: a SELECT #GdaStatement
  * @error: (allow-none): a place to store errors, or %NULL
  *
@@ -263,15 +284,23 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **er
 }
 
 /**
- * gda_server_provider_handler_find:
+ * gda_server_provider_handler_find: (skip)
+ * @prov: a #GdaServerProvider
+ * @cnc: (allow-none): a #GdaConnection
+ * @g_type: a #GType
+ * @dbms_type: (allow-none): a database type
  *
- * Returns: (transfer none):
+ * reserved to database provider's implementations: get the #GdaDataHandler associated to @prov
+ * for connection @cnc.
  *
+ * Returns: (transfer none): the requested #GdaDataHandler, or %NULL if none found
  */
 GdaDataHandler *
 gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc, 
 				  GType g_type, const gchar *dbms_type)
 {
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+
 	GdaDataHandler *dh;
 	GdaServerProviderHandlerInfo info;
 
@@ -289,6 +318,7 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
 				     GType g_type, const gchar *dbms_type)
 {
 	GdaServerProviderHandlerInfo *info;
+	g_return_if_fail (GDA_IS_SERVER_PROVIDER (prov));
 	g_return_if_fail (GDA_IS_DATA_HANDLER (dh));
 	
 	info = g_new (GdaServerProviderHandlerInfo, 1);
@@ -317,6 +347,7 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
 	gchar *file = NULL;
 	const gchar *dirname;
 
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
 	dirname = g_object_get_data (G_OBJECT (prov), "GDA_PROVIDER_DIR");
 	if (dirname)
 		file = g_build_filename (dirname, filename, NULL);

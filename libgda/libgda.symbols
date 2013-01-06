@@ -611,6 +611,7 @@
 	gda_server_provider_get_version
 	gda_server_provider_handler_declare
 	gda_server_provider_handler_find
+	gda_server_provider_handler_use_default
 	gda_server_provider_internal_get_parser
 	gda_server_provider_load_file_contents
 	gda_server_provider_perform_operation

@@ -1176,7 +1176,7 @@ gda_oracle_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 		dh = NULL;
 	}
 	else
-		dh = gda_server_provider_get_data_handler_default (provider, cnc, type, dbms_type);
+		dh = gda_server_provider_handler_use_default (provider, type);
 
 	return dh;
 }

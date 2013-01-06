@@ -709,7 +709,7 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 	if (CLASS (provider)->get_data_handler)
 		retval = CLASS (provider)->get_data_handler (provider, cnc, for_type, NULL);
 	else
-		retval = gda_server_provider_get_data_handler_default (provider, cnc, for_type, NULL);
+		retval = gda_server_provider_handler_use_default (provider, for_type);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc);
 	return retval;
@@ -722,6 +722,8 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
  * @for_type: a DBMS type definition
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type.
+ *
+ * Note: this function is currently very poorly implemented by database providers.
  * 
  * Returns: (transfer none): a #GdaDataHandler, or %NULL if the provider does not know about the @for_type type
  */
@@ -737,8 +739,6 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->get_data_handler)
 		retval = CLASS (provider)->get_data_handler (provider, cnc, G_TYPE_INVALID, for_type);
-	else
-		retval = gda_server_provider_get_data_handler_default (provider, cnc, G_TYPE_INVALID, for_type);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc);
 	return retval;
