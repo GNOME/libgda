@@ -72,7 +72,7 @@ libgda_sqlite_la_LIBADD = \
 	$(COREDEPS_LIBS)
 
 libgda_bdbsqlite_la_SOURCES = $(sqlitesources)
-libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DPNAME=\""BDBSql"\" -DCLASS_PREFIX=\""GdaDBDSql"\" -DWITH_BDBSQLITE -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"
+libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DPNAME=\""BDBSql"\" -DCLASS_PREFIX=\""GdaDBDSql"\" $(BDBSQL_CFLAGS) -DWITH_BDBSQLITE -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"
 libgda_bdbsqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdbsqlite_la_LIBADD = 
 

@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
-	$(BDBSQL_CFLAGS) \
+	$(BDBSQL_CFLAGS) -DWITH_BDBSQLITE \
 	$(sqliteinc) 
 
 
