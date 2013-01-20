@@ -514,18 +514,18 @@ then
 	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
 fi
 
-if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
-then
-	AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
-  	enable_vala_ext=no
-fi
-
 if test "x$enable_vala" = "xyes"
 then
 	AM_PROG_VALAC([0.17.7])
 	VAPIGEN_CHECK([0.17.7],[0.18],,no)
 else
 	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
+fi
+
+if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
+then
+	AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
+	enable_vala_ext=no
 fi
 
 if test "x$enable_vala_ext" = "xyes"

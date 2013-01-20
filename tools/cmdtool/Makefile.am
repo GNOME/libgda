@@ -12,6 +12,7 @@ AM_CPPFLAGS = \
 libcmdtool_la_SOURCES = \
 	tool.h \
 	tool-decl.h \
+	tool-defines.h \
         tool-errors.h \
         tool-errors.c \
         tool-input.h \
