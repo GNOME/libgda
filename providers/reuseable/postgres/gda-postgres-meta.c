@@ -271,8 +271,9 @@ static gchar *internal_sql[] = {
  * global static values, and
  * predefined statements' GdaStatement, all initialized in _gda_postgres_provider_meta_init()
  */
-static GdaStatement **internal_stmt;
-static GdaSet       *i_set;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
+static GdaSet       *i_set = NULL;
 
 /*
  * Meta initialization
@@ -280,30 +281,31 @@ static GdaSet       *i_set;
 void
 _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
-	InternalStatementItem i;
-	GdaSqlParser *parser;
-
 	g_static_mutex_lock (&init_mutex);
 
-	if (provider)
-		parser = gda_server_provider_internal_get_parser (provider);
-	else
-		parser = GDA_SQL_PARSER (g_object_new (GDA_TYPE_POSTGRES_PARSER, NULL));
-        internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-        for (i = I_STMT_CATALOG; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-                internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-                if (!internal_stmt[i])
-                        g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
-        }
-	if (!provider)
-		g_object_unref (parser);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		GdaSqlParser *parser;
 
-	i_set = gda_set_new_inline (5, "cat", G_TYPE_STRING, "", 
-				    "name", G_TYPE_STRING, "",
-				    "schema", G_TYPE_STRING, "",
-				    "name2", G_TYPE_STRING, "",
-				    "oid", G_TYPE_UINT, 0);
+		if (provider)
+			parser = gda_server_provider_internal_get_parser (provider);
+		else
+			parser = GDA_SQL_PARSER (g_object_new (GDA_TYPE_POSTGRES_PARSER, NULL));
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = I_STMT_CATALOG; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		}
+		if (!provider)
+			g_object_unref (parser);
+
+		i_set = gda_set_new_inline (5, "cat", G_TYPE_STRING, "",
+					    "name", G_TYPE_STRING, "",
+					    "schema", G_TYPE_STRING, "",
+					    "name2", G_TYPE_STRING, "",
+					    "oid", G_TYPE_UINT, 0);
+	}
 
 	g_static_mutex_unlock (&init_mutex);
 

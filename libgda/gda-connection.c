@@ -630,6 +630,7 @@ gda_connection_finalize (GObject *object)
 #if GLIB_CHECK_VERSION(2,31,7)
 	g_cond_clear (& cnc->priv->unique_possible_cond);
 	g_mutex_clear (& cnc->priv->object_mutex);
+	g_rec_mutex_clear (&cnc->priv->rmutex);
 #else
 	if (cnc->priv->unique_possible_cond)
 		g_cond_free (cnc->priv->unique_possible_cond);
