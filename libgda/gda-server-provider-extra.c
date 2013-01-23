@@ -189,7 +189,7 @@ gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type
 }
 
 /**
- * gda_server_provider_get_data_handler_default: (skip)
+ * gda_server_provider_get_data_handler_default:
  * @provider: a server provider.
  * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @type: a #GType
@@ -230,7 +230,7 @@ param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_
 }
 
 /**
- * gda_select_alter_select_for_empty: (skip)
+ * gda_select_alter_select_for_empty:
  * @stmt: a SELECT #GdaStatement
  * @error: (allow-none): a place to store errors, or %NULL
  *
@@ -284,7 +284,7 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **er
 }
 
 /**
- * gda_server_provider_handler_find: (skip)
+ * gda_server_provider_handler_find:
  * @prov: a #GdaServerProvider
  * @cnc: (allow-none): a #GdaConnection
  * @g_type: a #GType
