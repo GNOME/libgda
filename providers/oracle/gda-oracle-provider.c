@@ -1713,7 +1713,7 @@ gda_oracle_provider_statement_prepare (GdaServerProvider *provider, GdaConnectio
                 return FALSE;
 	}
 	
-	g_print ("Really PREPARED: %s\n", sql);
+	/*g_print ("Really PREPARED: %s\n", sql);*/
 	result = OCIStmtPrepare2 (cdata->hservice,
 				  &hstmt,
 				  (dvoid *) cdata->herr,
