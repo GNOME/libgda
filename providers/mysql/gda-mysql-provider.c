@@ -1614,9 +1614,8 @@ mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GE
  * The difference with the default implementation is to render TRUE and FALSE as 0 and 1
  */
 static gchar *
-mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, 
-		   gboolean *is_default, gboolean *is_null,
-		   GError **error)
+mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *is_default,
+		   gboolean *is_null, GError **error)
 {
 	GString *string;
 	gchar *str = NULL;
@@ -1629,8 +1628,8 @@ mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 	if (is_null)
 		*is_null = FALSE;
 
-	/* can't have: 
-	 *  - expr->cast_as && expr->param_spec 
+	/* can't have:
+	 *  - expr->cast_as && expr->param_spec
 	 */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
 
@@ -1723,20 +1722,50 @@ mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 		if (!str) goto err;
 	}
 	else if (expr->cond) {
-		str = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
-		if (!str) goto err;
+		gchar *tmp;
+		tmp = context->render_operation (GDA_SQL_ANY_PART (expr->cond), context, error);
+		if (!tmp) goto err;
+		str = NULL;
+		if (GDA_SQL_ANY_PART (expr)->parent) {
+			if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_SELECT) {
+				GdaSqlStatementSelect *selst;
+				selst = (GdaSqlStatementSelect*) (GDA_SQL_ANY_PART (expr)->parent);
+				if ((expr == selst->where_cond) ||
+				    (expr == selst->having_cond))
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_DELETE) {
+				GdaSqlStatementDelete *delst;
+				delst = (GdaSqlStatementDelete*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == delst->cond)
+					str = tmp;
+			}
+			else if (GDA_SQL_ANY_PART (expr)->parent->type == GDA_SQL_ANY_STMT_UPDATE) {
+				GdaSqlStatementUpdate *updst;
+				updst = (GdaSqlStatementUpdate*) (GDA_SQL_ANY_PART (expr)->parent);
+				if (expr == updst->cond)
+					str = tmp;
+			}
+		}
+
+		if (!str) {
+			str = g_strconcat ("(", tmp, ")", NULL);
+			g_free (tmp);
+		}
 	}
 	else if (expr->select) {
 		gchar *str1;
 		if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_SELECT)
 			str1 = context->render_select (GDA_SQL_ANY_PART (expr->select), context, error);
-		else
+		else if (GDA_SQL_ANY_PART (expr->select)->type == GDA_SQL_ANY_STMT_COMPOUND)
 			str1 = context->render_compound (GDA_SQL_ANY_PART (expr->select), context, error);
+		else
+			g_assert_not_reached ();
 		if (!str1) goto err;
 
 		if (! GDA_SQL_ANY_PART (expr)->parent ||
 		    (GDA_SQL_ANY_PART (expr)->parent->type != GDA_SQL_ANY_SQL_FUNCTION)) {
-			str = g_strdup_printf ("(%s)", str1);
+			str = g_strconcat ("(", str1, ")", NULL);
 			g_free (str1);
 		}
 		else
@@ -1754,7 +1783,7 @@ mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 
 	if (!str) goto err;
 
-	if (expr->cast_as) 
+	if (expr->cast_as)
 		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
 	else
 		g_string_append (string, str);
@@ -1768,7 +1797,6 @@ mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context,
 	g_string_free (string, TRUE);
 	return NULL;
 }
-
 
 static GdaMysqlPStmt *
 real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stmt, GError **error)
