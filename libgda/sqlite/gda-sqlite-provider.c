@@ -568,16 +568,15 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 static void
 gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
 {
-	InternalStatementItem i;
-	GdaSqlParser *parser;
-
 	g_static_mutex_lock (&init_mutex);
-
-	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) sqlite_prv);
 
 	if (!internal_stmt) {
 		/* configure multi threading environment */
 		SQLITE3_CALL (sqlite3_config) (SQLITE_CONFIG_SERIALIZED);
+
+		InternalStatementItem i;
+		GdaSqlParser *parser;
+		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) sqlite_prv);
 
 		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
 		for (i = INTERNAL_PRAGMA_INDEX_LIST; i < sizeof (internal_sql) / sizeof (gchar*); i++) {

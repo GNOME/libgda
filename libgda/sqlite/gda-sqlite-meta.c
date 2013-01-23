@@ -83,23 +83,24 @@ static gchar *internal_sql[] = {
 /*
  * predefined statements' GdaStatement
  */
-static GdaStatement **internal_stmt;
-static GdaSet        *internal_params;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
+static GdaSet        *internal_params = NULL;
 
 /* 
  * global static values
  */
 static GdaSqlParser *internal_parser = NULL;
-static GValue       *catalog_value;
-static GValue       *table_type_value;
-static GValue       *view_type_value;
-static GValue       *view_check_option;
-static GValue       *false_value;
-static GValue       *true_value;
-static GValue       *zero_value;
-static GValue       *rule_value_none;
-static GValue       *rule_value_action;
-static GdaSet       *pragma_set;
+static GValue       *catalog_value = NULL;
+static GValue       *table_type_value = NULL;
+static GValue       *view_type_value = NULL;
+static GValue       *view_check_option = NULL;
+static GValue       *false_value = NULL;
+static GValue       *true_value = NULL;
+static GValue       *zero_value = NULL;
+static GValue       *rule_value_none = NULL;
+static GValue       *rule_value_action = NULL;
+static GdaSet       *pragma_set = NULL;
 
 static GValue *
 new_caseless_value (const GValue *cvalue)
@@ -152,39 +153,39 @@ to_caseless_string (gchar *string)
 void
 _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
-	InternalStatementItem i;
-
 	g_static_mutex_lock (&init_mutex);
 
-        internal_parser = gda_server_provider_internal_get_parser (provider);
-	internal_params = gda_set_new (NULL);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		internal_parser = gda_server_provider_internal_get_parser (provider);
+		internal_params = gda_set_new (NULL);
 
-        internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-        for (i = I_PRAGMA_DATABASE_LIST; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		GdaSet *set;
-                internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
-                if (!internal_stmt[i])
-                        g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
-		g_assert (gda_statement_get_parameters (internal_stmt[i], &set, NULL));
-		if (set) {
-			gda_set_merge_with_set (internal_params, set);
-			g_object_unref (set);
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = I_PRAGMA_DATABASE_LIST; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			GdaSet *set;
+			internal_stmt[i] = gda_sql_parser_parse_string (internal_parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+			g_assert (gda_statement_get_parameters (internal_stmt[i], &set, NULL));
+			if (set) {
+				gda_set_merge_with_set (internal_params, set);
+				g_object_unref (set);
+			}
 		}
-        }
 
-	g_value_set_string ((catalog_value = gda_value_new (G_TYPE_STRING)), "main");
-	g_value_set_string ((table_type_value = gda_value_new (G_TYPE_STRING)), "BASE TABLE");
-	g_value_set_string ((view_type_value = gda_value_new (G_TYPE_STRING)), "VIEW");
-	g_value_set_string ((view_check_option = gda_value_new (G_TYPE_STRING)), "NONE");
-	g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
-	g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-	g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
-	rule_value_none = view_check_option;
-	g_value_set_string ((rule_value_action = gda_value_new (G_TYPE_STRING)), "NO ACTION");
+		g_value_set_string ((catalog_value = gda_value_new (G_TYPE_STRING)), "main");
+		g_value_set_string ((table_type_value = gda_value_new (G_TYPE_STRING)), "BASE TABLE");
+		g_value_set_string ((view_type_value = gda_value_new (G_TYPE_STRING)), "VIEW");
+		g_value_set_string ((view_check_option = gda_value_new (G_TYPE_STRING)), "NONE");
+		g_value_set_boolean ((false_value = gda_value_new (G_TYPE_BOOLEAN)), FALSE);
+		g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
+		g_value_set_int ((zero_value = gda_value_new (G_TYPE_INT)), 0);
+		rule_value_none = view_check_option;
+		g_value_set_string ((rule_value_action = gda_value_new (G_TYPE_STRING)), "NO ACTION");
 
-	pragma_set = gda_set_new_inline (2, "tblname", G_TYPE_STRING, "",
-					 "idxname", G_TYPE_STRING, "");
+		pragma_set = gda_set_new_inline (2, "tblname", G_TYPE_STRING, "",
+						 "idxname", G_TYPE_STRING, "");
+	}
 
 	g_static_mutex_unlock (&init_mutex);
 }

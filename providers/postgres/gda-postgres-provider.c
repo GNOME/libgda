@@ -165,7 +165,8 @@ static void gda_postgres_free_cnc_data (PostgresConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GdaStatement **internal_stmt;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
 	I_STMT_BEGIN,
@@ -301,19 +302,25 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 static void
 gda_postgres_provider_init (GdaPostgresProvider *postgres_prv, G_GNUC_UNUSED GdaPostgresProviderClass *klass)
 {
-	InternalStatementItem i;
-	GdaSqlParser *parser;
+	g_static_mutex_lock (&init_mutex);
 
-	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) postgres_prv);
-	internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-	for (i = I_STMT_BEGIN; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-		if (!internal_stmt[i])
-			g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		GdaSqlParser *parser;
+
+		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) postgres_prv);
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = I_STMT_BEGIN; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		}
 	}
 
 	/* meta data init */
 	_gda_postgres_provider_meta_init ((GdaServerProvider*) postgres_prv);
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 GType

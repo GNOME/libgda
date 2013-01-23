@@ -179,7 +179,8 @@ static gchar * firebird_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *c
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-GdaStatement **internal_stmt;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
 	INTERNAL_STMT1
@@ -296,19 +297,24 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 static void
 gda_firebird_provider_init (GdaFirebirdProvider *firebird_prv, GdaFirebirdProviderClass *klass)
 {
-	InternalStatementItem i;
-	GdaSqlParser *parser;
+	g_static_mutex_lock (&init_mutex);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		GdaSqlParser *parser;
 
-	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) firebird_prv);
-	internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-	for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-		if (!internal_stmt[i]) 
-			g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) firebird_prv);
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		}
 	}
 
 	/* meta data init */
 	_gda_firebird_provider_meta_init ((GdaServerProvider*) firebird_prv);
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 GType

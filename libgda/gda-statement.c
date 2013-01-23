@@ -1492,8 +1492,8 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 	if (is_null)
 		*is_null = FALSE;
 
-	/* can't have: 
-	 *  - expr->cast_as && expr->param_spec 
+	/* can't have:
+	 *  - expr->cast_as && expr->param_spec
 	 */
 	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (expr), error)) return NULL;
 
@@ -1639,7 +1639,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 
 	if (!str) goto err;
 
-	if (expr->cast_as) 
+	if (expr->cast_as)
 		g_string_append_printf (string, "CAST (%s AS %s)", str, expr->cast_as);
 	else
 		g_string_append (string, str);

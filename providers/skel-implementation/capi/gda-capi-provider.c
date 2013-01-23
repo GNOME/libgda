@@ -144,7 +144,8 @@ static void gda_capi_free_cnc_data (CapiConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GdaStatement **internal_stmt;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
 	INTERNAL_STMT1
@@ -262,21 +263,27 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 static void
 gda_capi_provider_init (GdaCapiProvider *capi_prv, G_GNUC_UNUSED GdaCapiProviderClass *klass)
 {
-	InternalStatementItem i;
-	GdaSqlParser *parser;
+	g_static_mutex_lock (&init_mutex);
 
-	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) capi_prv);
-	internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-	for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-		if (!internal_stmt[i]) 
-			g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		GdaSqlParser *parser;
+
+		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) capi_prv);
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		}
 	}
 
 	/* meta data init */
 	_gda_capi_provider_meta_init ((GdaServerProvider*) capi_prv);
 
 	/* TO_ADD: any other provider's init should be added here */
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 GType

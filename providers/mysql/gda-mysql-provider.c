@@ -239,7 +239,8 @@ static void gda_mysql_free_cnc_data (MysqlConnectionData  *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-GdaStatement **internal_stmt;
+static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
 	INTERNAL_STMT1
@@ -376,15 +377,19 @@ static void
 gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
 			 G_GNUC_UNUSED GdaMysqlProviderClass  *klass)
 {
-	InternalStatementItem i;
-	GdaSqlParser *parser;
+	g_static_mutex_lock (&init_mutex);
 
-	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) mysql_prv);
-	internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-	for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-		internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-		if (!internal_stmt[i]) 
-			g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+	if (!internal_stmt) {
+		InternalStatementItem i;
+		GdaSqlParser *parser;
+
+		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) mysql_prv);
+		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+		for (i = INTERNAL_STMT1; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+			if (!internal_stmt[i])
+				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
+		}
 	}
 
 	/* meta data init */
@@ -393,6 +398,8 @@ gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
 	/* for tests */
 	mysql_prv->test_mode = FALSE;
 	mysql_prv->test_identifiers_case_sensitive = TRUE;
+
+	g_static_mutex_unlock (&init_mutex);
 }
 
 GType
@@ -519,8 +526,8 @@ real_open_connection (const gchar  *host,
 	if (compress)
 		flags |= CLIENT_COMPRESS;
 	
-	MYSQL *mysql = g_new0 (MYSQL, 1);
-	mysql_init (mysql);
+	MYSQL *mysql = NULL;
+	mysql = mysql_init (NULL);
 
 	if ((port > 0) || proto) {
 		gint p = MYSQL_PROTOCOL_DEFAULT;
@@ -538,7 +545,7 @@ real_open_connection (const gchar  *host,
 			else {
 				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 					     _("Unknown MySQL protocol '%s'"), proto);
-				g_free (mysql);
+				mysql_close (mysql);
 				return NULL;
 			}
 		}
@@ -548,7 +555,7 @@ real_open_connection (const gchar  *host,
 		if (mysql_options (mysql, MYSQL_OPT_PROTOCOL, (const char *) &p)) {
 			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 				     "%s", mysql_error (mysql));
-			g_free (mysql);
+			mysql_close (mysql);
 			return NULL;
 		}
 	}
@@ -563,7 +570,7 @@ real_open_connection (const gchar  *host,
 	if (!return_mysql || mysql != return_mysql) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", mysql_error (mysql));
-		g_free (mysql);
+		mysql_close (mysql);
 		mysql = NULL;
 	}
 
@@ -574,7 +581,7 @@ real_open_connection (const gchar  *host,
 	    mysql_select_db (mysql, db) != 0) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", mysql_error (mysql));
-		g_free (mysql);
+		mysql_close (mysql);
 		mysql = NULL;
 	}
 #endif
@@ -692,6 +699,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	res = mysql_query (mysql, "SET NAMES 'utf8'");
 	if (res != 0) {
 		_gda_mysql_make_error (cnc, mysql, NULL, NULL);
+		mysql_close (mysql);
 		return FALSE;
 	}
 
