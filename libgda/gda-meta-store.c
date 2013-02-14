@@ -68,7 +68,8 @@
 static GdaMetaContext* 
 gda_meta_context_copy (GdaMetaContext *ctx)
 {
-	GdaMetaContext *n = gda_meta_context_new (gda_meta_context_get_table (ctx));
+	GdaMetaContext *n = gda_meta_context_new ();
+	gda_meta_context_set_table (n, ctx->table_name);
 	gda_meta_context_set_columns (n, ctx->columns, NULL);
 	return n;
 }
@@ -119,7 +120,7 @@ gda_meta_context_get_type (void)
  * Since: 5.2
  */
 GdaMetaContext*
-gda_meta_context_new ()
+gda_meta_context_new (void)
 {
 	GdaMetaContext *ctx = g_new0 (GdaMetaContext, 1);
 	ctx->table_name = g_strdup ("");
