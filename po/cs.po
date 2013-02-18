@@ -4,7 +4,7 @@
 #
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
 # Miloslav Trmac <mitr@volny.cz>, 2003, 2004, 2005.
-# Marek Černocký <marek@manet.cz>, 2010, 2011, 2012.
+# Marek Černocký <marek@manet.cz>, 2010, 2011, 2012, 2013.
 #
 #: ../libgda/gda-connection.c:418
 msgid ""
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-09-03 20:02+0000\n"
-"PO-Revision-Date: 2012-09-06 21:40+0200\n"
+"POT-Creation-Date: 2013-01-10 19:40+0000\n"
+"PO-Revision-Date: 2013-02-18 20:25+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -105,7 +106,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda/gda-config.c:458 ../libgda/gda-config.c:992
 #: ../libgda/gda-config.c:1103 ../libgda/gda-config.c:1161
 #: ../libgda/gda-config.c:1238 ../libgda/gda-connection.c:1829
-#: ../libgda/gda-data-model.c:2359 ../libgda/gda-data-model.c:2367
+#: ../libgda/gda-data-model.c:2473 ../libgda/gda-data-model.c:2481
 #: ../libgda/gda-data-model-dir.c:388 ../libgda/gda-data-model-import.c:1679
 #: ../libgda/gda-data-pivot.c:1315 ../libgda/gda-data-pivot.c:1345
 #: ../libgda/gda-data-pivot.c:1443 ../libgda/gda-data-pivot.c:1556
@@ -115,13 +116,13 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda/gda-holder.c:1955 ../libgda/gda-server-operation.c:633
 #: ../libgda/gda-server-operation.c:1037 ../libgda/gda-set.c:606
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2659
-#: ../libgda/sqlite/gda-sqlite-provider.c:2671
-#: ../libgda/sqlite/gda-sqlite-provider.c:2693
-#: ../libgda/sqlite/gda-sqlite-provider.c:2883
-#: ../libgda/sqlite/gda-sqlite-provider.c:3229
-#: ../libgda/sqlite/gda-sqlite-provider.c:3241
-#: ../libgda/sqlite/gda-sqlite-provider.c:3340
+#: ../libgda/sqlite/gda-sqlite-provider.c:2655
+#: ../libgda/sqlite/gda-sqlite-provider.c:2667
+#: ../libgda/sqlite/gda-sqlite-provider.c:2689
+#: ../libgda/sqlite/gda-sqlite-provider.c:2879
+#: ../libgda/sqlite/gda-sqlite-provider.c:3225
+#: ../libgda/sqlite/gda-sqlite-provider.c:3237
+#: ../libgda/sqlite/gda-sqlite-provider.c:3336
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:419
@@ -147,16 +148,17 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/jdbc/gda-jdbc-provider.c:1491
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164 ../providers/jdbc/libmain.c:476
-#: ../providers/ldap/gda-ldap-provider.c:832
-#: ../providers/ldap/gda-ldap-provider.c:842
-#: ../providers/ldap/gda-ldap-provider.c:871
-#: ../providers/ldap/gda-ldap-provider.c:934
+#: ../providers/ldap/gda-ldap-provider.c:830
+#: ../providers/ldap/gda-ldap-provider.c:840
+#: ../providers/ldap/gda-ldap-provider.c:882
+#: ../providers/ldap/gda-ldap-provider.c:893
+#: ../providers/ldap/gda-ldap-provider.c:954
 #: ../providers/mdb/gda-mdb-provider.c:359
-#: ../providers/mysql/gda-mysql-provider.c:1981
-#: ../providers/mysql/gda-mysql-provider.c:1996
+#: ../providers/mysql/gda-mysql-provider.c:2032
+#: ../providers/mysql/gda-mysql-provider.c:2047
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1687
-#: ../providers/postgres/gda-postgres-provider.c:1702
+#: ../providers/postgres/gda-postgres-provider.c:1683
+#: ../providers/postgres/gda-postgres-provider.c:1698
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/browser/auth-dialog.c:707 ../tools/browser/auth-dialog.c:710
@@ -215,12 +217,12 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/schema-browser/table-info.c:549
 #: ../tools/browser/schema-browser/table-info.c:852
 #: ../tools/browser/schema-browser/table-info.c:972
-#: ../tools/browser/schema-browser/table-preferences.c:700
-#: ../tools/browser/schema-browser/table-preferences.c:773
-#: ../tools/gda-list-server-op.c:68 ../tools/gda-list-server-op.c:126
-#: ../tools/gda-sql.c:414 ../tools/gda-sql.c:432 ../tools/gda-sql.c:593
-#: ../tools/gda-sql.c:1782 ../tools/gda-sql.c:1797 ../tools/gda-sql.c:1950
-#: ../tools/gda-sql.c:3573 ../tools/tools-input.c:129
+#: ../tools/browser/schema-browser/table-preferences.c:699
+#: ../tools/browser/schema-browser/table-preferences.c:772
+#: ../tools/cmdtool/tool-input.c:102 ../tools/gda-list-server-op.c:68
+#: ../tools/gda-list-server-op.c:126 ../tools/gda-sql.c:417
+#: ../tools/gda-sql.c:435 ../tools/gda-sql.c:594 ../tools/gda-sql.c:1418
+#: ../tools/gda-sql.c:1433 ../tools/gda-sql.c:1586 ../tools/gda-sql.c:2879
 #: ../tools/web-server.c:2025
 msgid "No detail"
 msgstr "Bez podrobností"
@@ -336,7 +338,7 @@ msgstr ""
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:608
-#: ../control-center/gdaui-dsn-editor.c:207
+#: ../control-center/gdaui-dsn-editor.c:202
 msgid "Connection's parameters"
 msgstr "Parametry připojení"
 
@@ -368,19 +370,19 @@ msgstr "Připraveno na přidání nového zdroje dat"
 msgid "Data source _name:"
 msgstr "_Název zdroje dat:"
 
-#: ../control-center/gdaui-dsn-editor.c:152
+#: ../control-center/gdaui-dsn-editor.c:151
 msgid "_System wide data source:"
 msgstr "Celo_systémový zdroj dat:"
 
-#: ../control-center/gdaui-dsn-editor.c:164
+#: ../control-center/gdaui-dsn-editor.c:162
 msgid "_Provider:"
 msgstr "_Poskytovatel:"
 
-#: ../control-center/gdaui-dsn-editor.c:181
+#: ../control-center/gdaui-dsn-editor.c:178
 msgid "_Description:"
 msgstr "Pop_is:"
 
-#: ../control-center/gdaui-dsn-editor.c:198
+#: ../control-center/gdaui-dsn-editor.c:194
 msgid ""
 "<span foreground='red'>The database provider used by this data source is not "
 "available,\n"
@@ -391,7 +393,7 @@ msgstr ""
 "úprava atributů zdroje dat je zakázána.</span>"
 
 #. connection's authentication
-#: ../control-center/gdaui-dsn-editor.c:222 ../libgda/gda-config.c:1570
+#: ../control-center/gdaui-dsn-editor.c:216 ../libgda/gda-config.c:1570
 #: ../tools/browser/auth-dialog.c:286 ../tools/config-info.c:205
 #: ../tools/config-info.c:365
 msgid "Authentication"
@@ -587,7 +589,7 @@ msgstr "Nelze vytvořit instanci poskytovatele „%s“"
 #: ../libgda/gda-config.c:1567 ../libgda/gda-data-model-dsn-list.c:109
 #: ../libgda/gda-data-model-dsn-list.c:110 ../tools/config-info.c:69
 #: ../tools/config-info.c:130 ../tools/config-info.c:313
-#: ../tools/config-info.c:429 ../tools/gda-sql.c:3294 ../tools/gda-sql.c:3611
+#: ../tools/config-info.c:429 ../tools/gda-sql.c:2597 ../tools/gda-sql.c:2941
 msgid "Provider"
 msgstr "Poskytovatel"
 
@@ -596,7 +598,7 @@ msgstr "Poskytovatel"
 #: ../tools/browser/data-manager/data-source-editor.c:166
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307
 #: ../tools/config-info.c:70 ../tools/config-info.c:144
-#: ../tools/config-info.c:327 ../tools/gda-sql.c:3293 ../tools/gda-sql.c:3907
+#: ../tools/config-info.c:327 ../tools/gda-sql.c:2596 ../tools/gda-sql.c:3240
 msgid "Description"
 msgstr "Popis"
 
@@ -614,7 +616,7 @@ msgstr "Seznam nainstalovaných poskytovatelů"
 
 #: ../libgda/gda-config.c:1746 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
-#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/gda-sql.c:3613
+#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/gda-sql.c:2943
 msgid "Username"
 msgstr "Uživatelské jméno"
 
@@ -735,18 +737,22 @@ msgid "Datasource configuration error: no provider specified"
 msgstr "Chyba nastavení zdroje dat: není určen žádný poskytovatel"
 
 #: ../libgda/gda-connection.c:1353 ../tools/browser/auth-dialog.c:448
-#: ../tools/browser/auth-dialog.c:485 ../tools/gda-sql.c:1600
+#: ../tools/browser/auth-dialog.c:485 ../tools/gda-sql.c:1239
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Chybný připojovací řetězec „%s“"
 
-#: ../libgda/gda-connection.c:1359 ../libgda/gda-connection.c:1674
-msgid "No provider specified"
-msgstr "Není zadán žádný poskytovatel"
+#: ../libgda/gda-connection.c:1359
+msgid "No database driver specified"
+msgstr "Nezadán žádný databázový ovladač"
 
 #: ../libgda/gda-connection.c:1662 ../libgda/gda-connection.c:1664
 msgid "No DSN or connection string specified"
 msgstr "Není zadán žádný DSN nebo připojovací řetězec"
+
+#: ../libgda/gda-connection.c:1674
+msgid "No provider specified"
+msgstr "Není zadán žádný poskytovatel"
 
 #: ../libgda/gda-connection.c:1689 ../libgda/gda-connection.c:1700
 msgid "Provider does not allow usage from this thread"
@@ -789,10 +795,10 @@ msgstr "Připojení je uzavřeno"
 msgid "Can't find task %u"
 msgstr "Nelze najít úlohu %u"
 
-#: ../libgda/gda-connection.c:3435 ../libgda/sqlite/gda-sqlite-provider.c:1309
+#: ../libgda/gda-connection.c:3435 ../libgda/sqlite/gda-sqlite-provider.c:1305
 #: ../libgda/thread-wrapper/gda-thread-provider.c:987
 #: ../providers/jdbc/gda-jdbc-provider.c:580
-#: ../providers/mysql/gda-mysql-provider.c:952
+#: ../providers/mysql/gda-mysql-provider.c:995
 #: ../providers/postgres/gda-postgres-provider.c:878
 #: ../providers/web/gda-web-provider.c:685
 msgid "Provider does not support asynchronous server operation"
@@ -837,12 +843,12 @@ msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná tra
 #: ../libgda/gda-data-model-bdb.c:760 ../libgda/gda-data-model-bdb.c:789
 #: ../libgda/gda-data-model-dir.c:786 ../libgda/gda-data-model-dir.c:885
 #: ../libgda/gda-data-model-dir.c:927 ../libgda/gda-data-model-dsn-list.c:311
-#: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1121
+#: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1123
 #: ../libgda/gda-data-proxy.c:3558 ../libgda/gda-data-proxy.c:3682
 #: ../libgda/gda-data-select.c:1320 ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860 ../libgda/gda-data-select.c:2927
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:917
-#: ../libgda-ui/gdaui-combo.c:801
+#: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
 msgstr "Sloupec %d je mimo rozsah (0 - %d)"
@@ -935,7 +941,7 @@ msgid "Attempting to modify a read-only data model"
 msgstr "Pokus o úpravu datového module pouze ke čtení"
 
 #: ../libgda/gda-data-model-array.c:791 ../libgda/gda-data-model-array.c:830
-#: ../libgda/gda-data-model.c:861
+#: ../libgda/gda-data-model.c:868
 msgid "Too many values in list"
 msgstr "Příliš mnoho hodnot v seznamu"
 
@@ -973,92 +979,100 @@ msgstr "Očekávána hodnota GdaBinary, obdržena %s"
 msgid "Key modification is not supported"
 msgstr "Úprava klíčů není podporována"
 
-#: ../libgda/gda-data-model.c:702
+#: ../libgda/gda-data-model.c:709
 msgid "Data model does not support getting individual value"
 msgstr "Datový model nepodporuje získávání samostatných hodnot"
 
-#: ../libgda/gda-data-model.c:745 ../libgda/gda-data-model.c:755
+#: ../libgda/gda-data-model.c:752 ../libgda/gda-data-model.c:762
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Hodnota vrácená datovým modelem je neplatného typu „%s“"
 
-#: ../libgda/gda-data-model.c:752
+#: ../libgda/gda-data-model.c:759
 msgid "Data model returned invalid NULL value"
 msgstr "Datový model vrátil neplatnou prázdnou (NULL) hodnotu"
 
-#: ../libgda/gda-data-model.c:822
+#: ../libgda/gda-data-model.c:829
 msgid "Data model does not support setting individual value"
 msgstr "Datový model nepodporuje nastavování samostatných hodnot"
 
-#: ../libgda/gda-data-model.c:880
+#: ../libgda/gda-data-model.c:887
 msgid "Data model does not support setting values"
 msgstr "Datový model nepodporuje nastavování hodnot"
 
-#: ../libgda/gda-data-model.c:1044 ../libgda/gda-data-model.c:1080
+#: ../libgda/gda-data-model.c:1051 ../libgda/gda-data-model.c:1087
 msgid "Data model does not support row append"
 msgstr "Datový model nepodporuje přidávání řádků"
 
-#: ../libgda/gda-data-model.c:1071
+#: ../libgda/gda-data-model.c:1078
 msgid "Model does not allow row insertion"
 msgstr "Model neumožňuje vkládání řádků"
 
-#: ../libgda/gda-data-model.c:1108
+#: ../libgda/gda-data-model.c:1115
 msgid "Model does not allow row deletion"
 msgstr "Model neumožňuje mazání řádků"
 
-#: ../libgda/gda-data-model.c:1117
+#: ../libgda/gda-data-model.c:1124
 msgid "Data model does not support row removal"
 msgstr "Datový model nepodporuje odstraňování řádků"
 
-#: ../libgda/gda-data-model.c:1296 ../libgda/gda-data-model.c:1337
-#: ../libgda/gda-data-model.c:1351
+#: ../libgda/gda-data-model.c:1305 ../libgda/gda-data-model.c:1346
+#: ../libgda/gda-data-model.c:1360
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Parametr „%s“ musí obsahovat řetězcovou hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model.c:1360 ../libgda/gda-data-model.c:1370
-#: ../libgda/gda-data-model.c:1380 ../libgda/gda-data-model.c:1422
-#: ../libgda/gda-data-model.c:1520
+#: ../libgda/gda-data-model.c:1369 ../libgda/gda-data-model.c:1379
+#: ../libgda/gda-data-model.c:1389 ../libgda/gda-data-model.c:1431
+#: ../libgda/gda-data-model.c:1477 ../libgda/gda-data-model.c:1487
+#: ../libgda/gda-data-model.c:1497 ../libgda/gda-data-model.c:1507
+#: ../libgda/gda-data-model.c:1527 ../libgda/gda-data-model.c:1537
+#: ../libgda/gda-data-model.c:1636
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Parametr „%s“ musí obsahovat pravdivostní hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model.c:1528
+#: ../libgda/gda-data-model.c:1517
+#, c-format
+msgid "The '%s' parameter must hold an integer value, ignored."
+msgstr "Parametr „%s“ musí obsahovat celočíselnou hodnotu, ignorováno."
+
+#: ../libgda/gda-data-model.c:1644
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Soubor „%s“ již existuje"
 
-#: ../libgda/gda-data-model.c:1705
+#: ../libgda/gda-data-model.c:1821
 msgid "Exported Data"
 msgstr "Exportovaná data"
 
-#: ../libgda/gda-data-model.c:1826
+#: ../libgda/gda-data-model.c:1942
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "Očekávána značka <gda_value> nebo <gda_array_value>, obdržena <%s>, ignoruje "
 "se"
 
-#: ../libgda/gda-data-model.c:1856
+#: ../libgda/gda-data-model.c:1972
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Nelze získat datový typ sloupce (typ je UNKNOWN - neznámý nebo není určen)"
 
-#: ../libgda/gda-data-model.c:1940
+#: ../libgda/gda-data-model.c:2056
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Očekávána značka <gda_array_data>, obdržena <%s>"
 
-#: ../libgda/gda-data-model.c:2012
+#: ../libgda/gda-data-model.c:2128
 msgid "Could not get an iterator for source data model"
 msgstr "Nelze získat iterátor pro model zdrojových dat"
 
-#: ../libgda/gda-data-model.c:2029
+#: ../libgda/gda-data-model.c:2145
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Neexistující sloupec v modelu zdrojových dat: %d"
 
-#: ../libgda/gda-data-model.c:2043
+#: ../libgda/gda-data-model.c:2159
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -1067,7 +1081,7 @@ msgstr ""
 "Cílový sloupec %d nemůže být prázdný (NULL), což ale neodpovídá modelu "
 "zdrojových dat"
 
-#: ../libgda/gda-data-model.c:2053
+#: ../libgda/gda-data-model.c:2169
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -1076,26 +1090,26 @@ msgstr ""
 "Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
 "%d (%s)"
 
-#: ../libgda/gda-data-model.c:2149
+#: ../libgda/gda-data-model.c:2265
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Nelze převést „%s“ z typu GDA %s na typ GDA %s"
 
-#: ../libgda/gda-data-model.c:2358
+#: ../libgda/gda-data-model.c:2472
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Nelze vypsat atributy datového modelu: %s"
 
-#: ../libgda/gda-data-model.c:2366
+#: ../libgda/gda-data-model.c:2480
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Nelze vypsat obsah datového modelu: %s"
 
-#: ../libgda/gda-data-model.c:2657
-msgid "Data model does not support backward cursor move, not displaying data"
-msgstr "Datový model nepodporuje zpětný posun kurzoru, data se nezobrazí"
+#: ../libgda/gda-data-model.c:2702
+msgid "Data model does not support backward cursor move"
+msgstr "Datový model nepodporuje zpětný posun kurzoru"
 
-#: ../libgda/gda-data-model.c:2793
+#: ../libgda/gda-data-model.c:2979
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
@@ -1105,7 +1119,7 @@ msgstr[0] "%d řádek"
 msgstr[1] "%d řádky"
 msgstr[2] "%d řádků"
 
-#: ../libgda/gda-data-model.c:2795
+#: ../libgda/gda-data-model.c:2981
 #, c-format
 msgid "0 row"
 msgstr "0 řádků"
@@ -1167,7 +1181,7 @@ msgstr "Nelze odstranit soubor „%s“"
 
 #: ../libgda/gda-data-model-dsn-list.c:103
 #: ../libgda/gda-data-model-dsn-list.c:104 ../tools/config-info.c:427
-#: ../tools/gda-sql.c:3292
+#: ../tools/gda-sql.c:2595
 msgid "DSN"
 msgstr "DSN"
 
@@ -1212,7 +1226,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Převod znaků na řádku %d, chyba: %s"
 
 #: ../libgda/gda-data-model-import.c:1006
-#: ../libgda/sqlite/gda-sqlite-provider.c:916
+#: ../libgda/sqlite/gda-sqlite-provider.c:912
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:177
 #: ../tools/browser/data-manager/data-widget.c:611
@@ -1373,7 +1387,7 @@ msgid "Could not get information from source data model"
 msgstr "Nelze získat informace z modelu zdrojových dat"
 
 #: ../libgda/gda-data-pivot.c:2148 ../libgda/gda-data-proxy.c:3081
-#: ../tools/gda-sql.c:3783
+#: ../tools/gda-sql.c:3120
 msgid "Could not create virtual connection"
 msgstr "Nelze vytvořit virtuální připojení"
 
@@ -1769,7 +1783,7 @@ msgstr "Definice pohledu obsahuje více než jeden příkaz (pro pohled „%s“
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Definicí pohledu není příkaz pro výběr (pro pohled „%s“)"
 
-#: ../libgda/gda-meta-store.c:1620 ../libgda/gda-meta-struct-io.c:176
+#: ../libgda/gda-meta-store.c:1620 ../libgda/gda-meta-struct-io.c:177
 msgid "Missing table name from <table> node"
 msgstr "Schází název tabulky z uzlu <table>"
 
@@ -1793,7 +1807,7 @@ msgstr "Schází název sloupce cizího klíče (pro tabulku „%s“)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Sloupec „%s“ nebyl v tabulce „%s“ nelezen"
 
-#: ../libgda/gda-meta-store.c:2212 ../libgda/gda-meta-struct.c:1334
+#: ../libgda/gda-meta-store.c:2212 ../libgda/gda-meta-struct.c:1335
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Sloupec cizího klíče „%s“ nebyl nalezen v tabulce „%s“"
@@ -1814,7 +1828,7 @@ msgid "Could not get the internal schema's version"
 msgstr "Nelze získat verzi interního schématu"
 
 #: ../libgda/gda-meta-store.c:2749 ../libgda/gda-meta-store.c:2871
-#: ../tools/gda-sql.c:1195
+#: ../tools/gda-sql.c:825
 msgid "More than one SQL statement"
 msgstr "Více než jeden příkaz SQL"
 
@@ -1975,7 +1989,7 @@ msgstr "Tabulka %s.%s.%s nebyla nalezena (nebo schází informace o sloupcích)"
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Interní chyba GdaMetaStore: sloupec %s nebyl nalezen"
 
-#: ../libgda/gda-meta-struct.c:1249
+#: ../libgda/gda-meta-struct.c:1250
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1984,42 +1998,42 @@ msgstr ""
 "Nesouvislost metadat v omezení cizím klíčem pro tabulku %s.%s.%s odkazující "
 "na tabulku %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2572
+#: ../libgda/gda-meta-struct.c:2573
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Schází název objektu ve struktuře GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2597
+#: ../libgda/gda-meta-struct.c:2598
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Databázový objekt „%s“ již existuje"
 
-#: ../libgda/gda-meta-struct-io.c:82
+#: ../libgda/gda-meta-struct-io.c:83
 #, c-format
 msgid "Could not load file '%s'"
 msgstr "Nelze načíst soubor „%s“"
 
-#: ../libgda/gda-meta-struct-io.c:89
+#: ../libgda/gda-meta-struct-io.c:90
 #, c-format
 msgid "Root node of file '%s' should be <schema>."
 msgstr "Kořenovým uzlem souboru „%s“ by měl být <schema>."
 
-#: ../libgda/gda-meta-struct-io.c:236
+#: ../libgda/gda-meta-struct-io.c:237
 #, c-format
 msgid "Missing column name for table '%s'"
 msgstr "Schází název sloupce pro tabulku „%s“"
 
-#: ../libgda/gda-meta-struct-io.c:292
+#: ../libgda/gda-meta-struct-io.c:293
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
 msgstr "Schází název odkazované tabulky cizího klíče pro tabulku „%s“"
 
-#: ../libgda/gda-meta-struct-io.c:304 ../libgda/gda-meta-struct-io.c:311
-#: ../libgda/gda-meta-struct-io.c:318
+#: ../libgda/gda-meta-struct-io.c:305 ../libgda/gda-meta-struct-io.c:312
+#: ../libgda/gda-meta-struct-io.c:319
 #, c-format
 msgid "Invalid referenced table name '%s'"
 msgstr "Neplatný název odkazované tabulky „%s“"
 
-#: ../libgda/gda-meta-struct-io.c:358
+#: ../libgda/gda-meta-struct-io.c:359
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
 msgstr "Schází název sloupce cizího klíče pro tabulku „%s“"
@@ -2247,10 +2261,10 @@ msgstr "Nesprávný typ parametru pro „%s“: očekáván typ „%s“ a obdr�
 msgid "Missing parameter '%s'"
 msgstr "Schází parametr „%s“"
 
-#: ../libgda/gda-statement.c:1365 ../libgda/sqlite/gda-sqlite-provider.c:3068
+#: ../libgda/gda-statement.c:1365 ../libgda/sqlite/gda-sqlite-provider.c:3064
 #: ../providers/jdbc/gda-jdbc-provider.c:1371
-#: ../providers/mysql/gda-mysql-provider.c:2268
-#: ../providers/postgres/gda-postgres-provider.c:1969
+#: ../providers/mysql/gda-mysql-provider.c:2319
+#: ../providers/postgres/gda-postgres-provider.c:1965
 #: ../providers/web/gda-web-provider.c:1525
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2328,9 +2342,11 @@ msgstr ""
 
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:612
-#: ../libgda-report/engine/gda-report-engine.c:639 ../tools/gda-sql.c:984
-#: ../tools/gda-sql.c:1175 ../tools/gda-sql.c:5604 ../tools/gda-sql.c:5756
-#: ../tools/gda-sql.c:5854 ../tools/gda-sql.c:5948 ../tools/gda-sql.c:6043
+#: ../libgda-report/engine/gda-report-engine.c:639 ../tools/gda-sql.c:771
+#: ../tools/gda-sql.c:805 ../tools/gda-sql.c:3044 ../tools/gda-sql.c:4845
+#: ../tools/gda-sql.c:4997 ../tools/gda-sql.c:5094 ../tools/gda-sql.c:5187
+#: ../tools/gda-sql.c:5282
+#, c-format
 msgid "No connection specified"
 msgstr "Nezadáno žádné připojení"
 
@@ -2402,10 +2418,10 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Nelze přepsat příkaz, pokud se nejedná o INSERT nebo UPDATE"
 
 #: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
-#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3049
+#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3045
 #: ../providers/jdbc/gda-jdbc-provider.c:1342
-#: ../providers/mysql/gda-mysql-provider.c:2248
-#: ../providers/postgres/gda-postgres-provider.c:1951
+#: ../providers/mysql/gda-mysql-provider.c:2299
+#: ../providers/postgres/gda-postgres-provider.c:1947
 #: ../providers/web/gda-web-provider.c:1507
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -2444,53 +2460,31 @@ msgid "Provider error: %s method not implemented for provider %s"
 msgstr ""
 "Chyba poskytovatele: metoda %s není implementována pro poskytovatele %s"
 
-#: ../libgda/handlers/gda-handler-bin.c:122
-msgid "Binary handler"
-msgstr "Obsluha binárních dat"
-
-#: ../libgda/handlers/gda-handler-bin.c:129
+#: ../libgda/handlers/gda-handler-bin.c:127
 msgid "Binary representation"
 msgstr "Podoba binárních dat"
 
 #: ../libgda/handlers/gda-handler-boolean.c:122
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:118
-#: ../providers/mysql/gda-mysql-handler-boolean.c:118
-msgid "Boolean values handler"
-msgstr "Obsluha pravdivostních hodnot"
-
-#: ../libgda/handlers/gda-handler-boolean.c:128
 msgid "Boolean representation"
 msgstr "Podoba pravdivostní hodnoty"
 
-#: ../libgda/handlers/gda-handler-numerical.c:141
+#: ../libgda/handlers/gda-handler-numerical.c:139
 msgid "Numerical representation"
 msgstr "Podoba čísla"
 
-#: ../libgda/handlers/gda-handler-string.c:126
-msgid "Strings handler"
-msgstr "Obsluha řetězců"
-
-#: ../libgda/handlers/gda-handler-string.c:131
+#: ../libgda/handlers/gda-handler-string.c:122
 msgid "InternalString"
 msgstr "Interní řetězec"
 
-#: ../libgda/handlers/gda-handler-string.c:132
+#: ../libgda/handlers/gda-handler-string.c:123
 msgid "Strings representation"
 msgstr "Podoba řetězců"
 
-#: ../libgda/handlers/gda-handler-time.c:149
-msgid "Time and Date handler"
-msgstr "Obsluha času a data"
-
-#: ../libgda/handlers/gda-handler-time.c:174
+#: ../libgda/handlers/gda-handler-time.c:173
 msgid "Time, Date and TimeStamp representation"
 msgstr "Podoba času, data a časového razítka"
 
 #: ../libgda/handlers/gda-handler-type.c:119
-msgid "Gda type handler"
-msgstr "Obsluha typu Gda"
-
-#: ../libgda/handlers/gda-handler-type.c:125
 msgid "Gda type representation"
 msgstr "Podoba typu Gda"
 
@@ -2531,8 +2525,8 @@ msgid "Unknown query '%s'"
 msgstr "Neznámý dotaz „%s“"
 
 #: ../libgda-report/engine/gda-report-engine.c:607
-#: ../libgda-report/engine/gda-report-engine.c:634 ../tools/gda-sql.c:3505
-#: ../tools/gda-sql.c:3587 ../tools/gda-sql.c:3688
+#: ../libgda-report/engine/gda-report-engine.c:634 ../tools/gda-sql.c:2819
+#: ../tools/gda-sql.c:3055
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Nenalezeno žádné připojení pojmenované „%s“"
@@ -2607,62 +2601,58 @@ msgstr "Tento dokument výstupní sestavy neobsluhuje výstup %s"
 msgid "Table to create must have at least one row"
 msgstr "Tabulka, která se má vytvořit, musí mít alespoň jeden řádek"
 
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:120
-msgid "SQlite binary handler"
-msgstr "Obsluha binárních dat SQLite"
-
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:126
-msgid "SQlite binary representation"
+#: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
+msgid "SQLite binary representation"
 msgstr "Podoba binárních dat SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:124
+#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 msgid "Sqlite boolean representation"
 msgstr "Podoba pravdivostní hodnoty SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:121
-#: ../libgda/sqlite/gda-sqlite-provider.c:179
+#: ../libgda/sqlite/gda-sqlite-provider.c:117
+#: ../libgda/sqlite/gda-sqlite-provider.c:175
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "Parametr „%s“ nebyl v příkazu nalezen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:135
-#: ../libgda/sqlite/gda-sqlite-provider.c:151
-#: ../libgda/sqlite/gda-sqlite-provider.c:193
-#: ../libgda/sqlite/gda-sqlite-provider.c:209
+#: ../libgda/sqlite/gda-sqlite-provider.c:131
+#: ../libgda/sqlite/gda-sqlite-provider.c:147
+#: ../libgda/sqlite/gda-sqlite-provider.c:189
+#: ../libgda/sqlite/gda-sqlite-provider.c:205
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "Sloupec nemá žádný název pro přiřazení k parametru „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:219
+#: ../libgda/sqlite/gda-sqlite-provider.c:215
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr ""
 "Navázání rozsáhlého binárního objektu (BLOB) není pro tento typ příkazu "
 "podporováno"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:635
+#: ../libgda/sqlite/gda-sqlite-provider.c:631
 msgid "Can't find libsqlite3."
 msgstr "Nelze najít libsqlite3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:739
+#: ../libgda/sqlite/gda-sqlite-provider.c:735
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:373
 #: ../libgda/thread-wrapper/gda-thread-provider.c:512
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:356
 #: ../providers/ldap/gda-ldap-provider.c:353
 #: ../providers/mdb/gda-mdb-provider.c:236
-#: ../providers/mysql/gda-mysql-provider.c:590
+#: ../providers/mysql/gda-mysql-provider.c:631
 #: ../providers/postgres/gda-postgres-provider.c:408
 #: ../providers/web/gda-web-provider.c:342
 msgid "Provider does not support asynchronous connection open"
 msgstr "Poskytovatel nepodporuje otevření asynchronního připojení"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:767
+#: ../libgda/sqlite/gda-sqlite-provider.c:763
 #: ../providers/mdb/gda-mdb-provider.c:252
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "Připojovací řetězec musí obsahovat hodnoty DB_DIR a DB_NAME"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:794
-#: ../libgda/sqlite/gda-sqlite-provider.c:802
+#: ../libgda/sqlite/gda-sqlite-provider.c:790
+#: ../libgda/sqlite/gda-sqlite-provider.c:798
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -2672,38 +2662,38 @@ msgstr ""
 "Připojovací řetězec byl změněn: nahraďte adresu URI za DB_DIR (cestu k "
 "souboru s databází) a DB_NAME (soubor s databází bez „%s“ na konci)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:817
+#: ../libgda/sqlite/gda-sqlite-provider.c:813
 #: ../providers/mdb/gda-mdb-provider.c:294
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Část DB_DIR připojovací řetězce musí ukazovat na platnou složku"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:875
+#: ../libgda/sqlite/gda-sqlite-provider.c:871
 msgid "Wrong encryption passphrase"
 msgstr "Nesprávná heslová fráze"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:896
+#: ../libgda/sqlite/gda-sqlite-provider.c:892
 msgid "Extension loading is not supported"
 msgstr "Načítání rozšíření není podporováno"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:915
+#: ../libgda/sqlite/gda-sqlite-provider.c:911
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Nelze nastavit volbu SQLite empty_result_callbacks: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1006
-#: ../libgda/sqlite/gda-sqlite-provider.c:1026
+#: ../libgda/sqlite/gda-sqlite-provider.c:1002
+#: ../libgda/sqlite/gda-sqlite-provider.c:1022
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "Nelze registrovat funkci „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1045
+#: ../libgda/sqlite/gda-sqlite-provider.c:1041
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "Nelze definovat porovnávání %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1203
-#: ../libgda/sqlite/gda-sqlite-provider.c:1245
+#: ../libgda/sqlite/gda-sqlite-provider.c:1199
+#: ../libgda/sqlite/gda-sqlite-provider.c:1241
 #: ../libgda-ui/data-entries/plugins/libmain.c:89
 #: ../libgda-ui/data-entries/plugins/libmain.c:126
 #: ../libgda-ui/data-entries/plugins/libmain.c:152
@@ -2711,99 +2701,99 @@ msgstr "Nelze definovat porovnávání %s"
 #: ../libgda-ui/data-entries/plugins/libmain.c:189
 #: ../libgda-ui/data-entries/plugins/libmain.c:282
 #: ../libgda-ui/data-entries/plugins/libmain.c:307
-#: ../providers/mysql/gda-mysql-provider.c:835
-#: ../providers/mysql/gda-mysql-provider.c:877
+#: ../providers/mysql/gda-mysql-provider.c:878
+#: ../providers/mysql/gda-mysql-provider.c:920
 #: ../providers/postgres/gda-postgres-provider.c:750
 #: ../providers/postgres/gda-postgres-provider.c:806
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Schází soubor spec. „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1373
-#: ../libgda/sqlite/gda-sqlite-provider.c:1384
-#: ../libgda/sqlite/gda-sqlite-provider.c:1398
-#: ../libgda/sqlite/gda-sqlite-provider.c:1409
+#: ../libgda/sqlite/gda-sqlite-provider.c:1369
+#: ../libgda/sqlite/gda-sqlite-provider.c:1380
+#: ../libgda/sqlite/gda-sqlite-provider.c:1394
+#: ../libgda/sqlite/gda-sqlite-provider.c:1405
 msgid "Error initializing database with passphrase"
 msgstr "Chyba při inicializaci databáze heslovou frází"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1451
+#: ../libgda/sqlite/gda-sqlite-provider.c:1447
 msgid "Missing database name or directory"
 msgstr "Schází název databáze nebo složka"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1477
+#: ../libgda/sqlite/gda-sqlite-provider.c:1473
 #: ../providers/postgres/gda-postgres-provider.c:1007
 #: ../providers/postgres/gda-postgres-provider.c:1008
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakce nejsou podporovány v režimu pouze pro čtení"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1872
+#: ../libgda/sqlite/gda-sqlite-provider.c:1868
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr "SQLite nepodporuje zadávání polí pro použití v klauzuli DISTINCT"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1919
-#: ../libgda/sqlite/gda-sqlite-provider.c:1929
+#: ../libgda/sqlite/gda-sqlite-provider.c:1915
+#: ../libgda/sqlite/gda-sqlite-provider.c:1925
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Složený výraz „%s“ není databází SQLite podporován"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2027
+#: ../libgda/sqlite/gda-sqlite-provider.c:2023
 msgid "ILIKE operation not supported"
 msgstr "Operace ILIKE není podporována"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2545
+#: ../libgda/sqlite/gda-sqlite-provider.c:2541
 #: ../providers/jdbc/gda-jdbc-provider.c:1123
-#: ../providers/postgres/gda-postgres-provider.c:1543
+#: ../providers/postgres/gda-postgres-provider.c:1539
 #: ../providers/web/gda-web-provider.c:1270
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Nepojmenovaný parametr není v předpřipraveném příkazu dovolen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2658
-#: ../libgda/sqlite/gda-sqlite-provider.c:2670
-#: ../providers/mysql/gda-mysql-provider.c:1980
-#: ../providers/postgres/gda-postgres-provider.c:1686
+#: ../libgda/sqlite/gda-sqlite-provider.c:2654
+#: ../libgda/sqlite/gda-sqlite-provider.c:2666
+#: ../providers/mysql/gda-mysql-provider.c:2031
+#: ../providers/postgres/gda-postgres-provider.c:1682
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "Nelze sestavit příkaz SELECT pro získání posledního vloženého řádku: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2692
-#: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1701
+#: ../libgda/sqlite/gda-sqlite-provider.c:2688
+#: ../providers/mysql/gda-mysql-provider.c:2046
+#: ../providers/postgres/gda-postgres-provider.c:1697
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Nelze provést příkaz SELECT pro získání posledního vloženého řádku: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2705
-#: ../providers/mysql/gda-mysql-provider.c:2008
-#: ../providers/postgres/gda-postgres-provider.c:1714
+#: ../libgda/sqlite/gda-sqlite-provider.c:2701
+#: ../providers/mysql/gda-mysql-provider.c:2059
+#: ../providers/postgres/gda-postgres-provider.c:1710
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Příkaz SELECT pro získání posledního vloženého řádku nevrátil žádný řádek"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2709
-#: ../providers/mysql/gda-mysql-provider.c:2012
-#: ../providers/postgres/gda-postgres-provider.c:1718
+#: ../libgda/sqlite/gda-sqlite-provider.c:2705
+#: ../providers/mysql/gda-mysql-provider.c:2063
+#: ../providers/postgres/gda-postgres-provider.c:1714
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 "Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
 "(%d) řádků"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2774
+#: ../libgda/sqlite/gda-sqlite-provider.c:2770
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Předpřipravený příkaz nemá odpovídající GdaStatment"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2814
-#: ../libgda/sqlite/gda-sqlite-provider.c:2851
+#: ../libgda/sqlite/gda-sqlite-provider.c:2810
+#: ../libgda/sqlite/gda-sqlite-provider.c:2847
 msgid "Can't create SQLite BLOB handle"
 msgstr "Nelze vytvořit obsluhu rozsáhlého binárního objektu (BLOB) z SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2818
-#: ../libgda/sqlite/gda-sqlite-provider.c:2856
+#: ../libgda/sqlite/gda-sqlite-provider.c:2814
+#: ../libgda/sqlite/gda-sqlite-provider.c:2852
 msgid "Can't write to SQLite's BLOB"
 msgstr "Nelze zapisovat do rozsáhlého binárního objektu (BLOB) databáze SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2841
+#: ../libgda/sqlite/gda-sqlite-provider.c:2837
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2813,96 +2803,96 @@ msgstr ""
 "je „%s“), nahlaste to prosím jako chybu na http://bugzilla.gnome.org/ pro "
 "produkt „libgda“."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2866
+#: ../libgda/sqlite/gda-sqlite-provider.c:2862
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr ""
 "Nelze zjistit ROWID rozsáhlého binárního objektu (BLOB), který se má vyplnit"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2914
+#: ../libgda/sqlite/gda-sqlite-provider.c:2910
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:447
 #: ../providers/jdbc/gda-jdbc-provider.c:1221
-#: ../providers/ldap/gda-ldap-provider.c:803
-#: ../providers/mysql/gda-mysql-provider.c:2101
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../providers/ldap/gda-ldap-provider.c:801
+#: ../providers/mysql/gda-mysql-provider.c:2152
+#: ../providers/postgres/gda-postgres-provider.c:1809
 #: ../providers/web/gda-web-provider.c:1403
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Poskytovatel nepodporuje asynchronní provádění příkazů"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2982
+#: ../libgda/sqlite/gda-sqlite-provider.c:2978
 #: ../tools/browser/mgr-favorites.c:248 ../tools/browser/mgr-favorites.c:290
 msgid "Empty statement"
 msgstr "Prázdný příkaz"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3024
-#: ../libgda/sqlite/gda-sqlite-provider.c:3027
+#: ../libgda/sqlite/gda-sqlite-provider.c:3020
+#: ../libgda/sqlite/gda-sqlite-provider.c:3023
 #: ../providers/jdbc/gda-jdbc-provider.c:1308
 #: ../providers/jdbc/gda-jdbc-provider.c:1311
-#: ../providers/mysql/gda-mysql-provider.c:2223
-#: ../providers/mysql/gda-mysql-provider.c:2226
-#: ../providers/postgres/gda-postgres-provider.c:1927
-#: ../providers/postgres/gda-postgres-provider.c:1930
+#: ../providers/mysql/gda-mysql-provider.c:2274
+#: ../providers/mysql/gda-mysql-provider.c:2277
+#: ../providers/postgres/gda-postgres-provider.c:1923
+#: ../providers/postgres/gda-postgres-provider.c:1926
 #: ../providers/web/gda-web-provider.c:1481
 #: ../providers/web/gda-web-provider.c:1484
 msgid "Missing parameter(s) to execute query"
 msgstr "K provedení dotazu schází parametr(y)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3087
+#: ../libgda/sqlite/gda-sqlite-provider.c:3083
 #: ../providers/jdbc/gda-jdbc-provider.c:1390
-#: ../providers/mysql/gda-mysql-provider.c:2287
-#: ../providers/postgres/gda-postgres-provider.c:1988
+#: ../providers/mysql/gda-mysql-provider.c:2338
+#: ../providers/postgres/gda-postgres-provider.c:1984
 #: ../providers/web/gda-web-provider.c:1548
 msgid "Can't rewrite statement handle default values"
 msgstr "Nelze přepsat příkaz, aby obsluhoval výchozí hodnoty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3211
-#: ../providers/mysql/gda-mysql-provider.c:2539
+#: ../libgda/sqlite/gda-sqlite-provider.c:3207
+#: ../providers/mysql/gda-mysql-provider.c:2590
 msgid "Can't get BLOB's length"
 msgstr "Nelze zjistit délku rozsáhlého binárního objektu (BLOB)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3213
-#: ../providers/mysql/gda-mysql-provider.c:2541
+#: ../libgda/sqlite/gda-sqlite-provider.c:3209
+#: ../providers/mysql/gda-mysql-provider.c:2592
 msgid "BLOB is too big"
 msgstr "Rozsáhlý binární objekt (BLOB) je příliš velký"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3295
+#: ../libgda/sqlite/gda-sqlite-provider.c:3291
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Neobsluhovaný datový typ „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3362
+#: ../libgda/sqlite/gda-sqlite-provider.c:3358
 msgid "Could not start transaction to create BLOB"
 msgstr ""
 "Nelze začít transakci potřebnou k vytvoření rozsáhlého binárního objektu "
 "(BLOB)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3527
-#: ../libgda/sqlite/gda-sqlite-provider.c:3548
-#: ../libgda/sqlite/gda-sqlite-provider.c:3639
-#: ../libgda/sqlite/gda-sqlite-provider.c:3659
-#: ../libgda/sqlite/gda-sqlite-provider.c:3682
+#: ../libgda/sqlite/gda-sqlite-provider.c:3523
+#: ../libgda/sqlite/gda-sqlite-provider.c:3544
+#: ../libgda/sqlite/gda-sqlite-provider.c:3635
+#: ../libgda/sqlite/gda-sqlite-provider.c:3655
+#: ../libgda/sqlite/gda-sqlite-provider.c:3678
 msgid "Function requires one argument"
 msgstr "Funkce vyžaduje jeden argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3580
-#: ../libgda/sqlite/gda-sqlite-provider.c:3714
+#: ../libgda/sqlite/gda-sqlite-provider.c:3576
+#: ../libgda/sqlite/gda-sqlite-provider.c:3710
 msgid "Function requires two arguments"
 msgstr "Funkce vyžaduje dva argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3619
+#: ../libgda/sqlite/gda-sqlite-provider.c:3615
 msgid "Function requires one or two arguments"
 msgstr "Funkce vyžaduje jeden nebo dva argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3754
-#: ../libgda/sqlite/gda-sqlite-provider.c:3861
+#: ../libgda/sqlite/gda-sqlite-provider.c:3750
+#: ../libgda/sqlite/gda-sqlite-provider.c:3857
 msgid "Function requires two or three arguments"
 msgstr "Funkce vyžaduje dva nebo tři argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3808
+#: ../libgda/sqlite/gda-sqlite-provider.c:3804
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Chyba regulárního výrazu SQLite „%s“:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3809
+#: ../libgda/sqlite/gda-sqlite-provider.c:3805
 msgid "Invalid regular expression"
 msgstr "Neplatný regulární výraz"
 
@@ -3394,13 +3384,13 @@ msgid "Data size"
 msgstr "Velikost dat"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
-#: ../providers/ldap/gda-ldap-provider.c:983
-#: ../providers/mysql/gda-mysql-provider.c:635
-#: ../providers/mysql/gda-mysql-provider.c:669
+#: ../providers/ldap/gda-ldap-provider.c:1003
+#: ../providers/mysql/gda-mysql-provider.c:678
+#: ../providers/mysql/gda-mysql-provider.c:712
 #: ../providers/mysql/gda-mysql-util.c:63
-#: ../tools/browser/ldap-browser/entry-properties.c:585
+#: ../tools/browser/ldap-browser/entry-properties.c:586
 #: ../tools/browser/schema-browser/table-columns.c:516
-#: ../tools/browser/support.c:446 ../tools/tools-utils.c:35
+#: ../tools/browser/support.c:446 ../tools/tool-utils.c:35
 msgid "Unknown"
 msgstr "Neznámo"
 
@@ -3428,9 +3418,10 @@ msgstr "Datový typ"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:830 ../libgda-ui/gdaui-basic-form.c:865
-#: ../libgda-ui/gdaui-raw-grid.c:783 ../providers/ldap/gda-ldap-provider.c:997
-#: ../tools/config-info.c:122 ../tools/config-info.c:291
-#: ../tools/gda-sql.c:3906 ../tools/gda-sql.c:4707 ../tools/gda-sql.c:6097
+#: ../libgda-ui/gdaui-raw-grid.c:783
+#: ../providers/ldap/gda-ldap-provider.c:1017 ../tools/config-info.c:122
+#: ../tools/config-info.c:291 ../tools/gda-sql.c:3239 ../tools/gda-sql.c:3956
+#: ../tools/gda-sql.c:5336
 msgid "Value"
 msgstr "Hodnota"
 
@@ -3875,10 +3866,10 @@ msgstr "Zalamovat řádky mezi slovy"
 msgid "Break lines in between words or graphemes"
 msgstr "Zalamovat řádky mezi slovy nebo grafémy"
 
-#: ../libgda-ui/data/server_operation.glade.h:1 ../tools/gda-sql.c:2391
-#: ../tools/gda-sql.c:2524 ../tools/gda-sql.c:2537 ../tools/gda-sql.c:2550
-#: ../tools/gda-sql.c:2667 ../tools/gda-sql.c:2680 ../tools/gda-sql.c:2693
-#: ../tools/gda-sql.c:2706 ../tools/gda-sql.c:3066
+#: ../libgda-ui/data/server_operation.glade.h:1 ../tools/gda-sql.c:1968
+#: ../tools/gda-sql.c:2058 ../tools/gda-sql.c:2068 ../tools/gda-sql.c:2077
+#: ../tools/gda-sql.c:2154 ../tools/gda-sql.c:2162 ../tools/gda-sql.c:2170
+#: ../tools/gda-sql.c:2179
 msgid "General"
 msgstr "Obecné"
 
@@ -3887,7 +3878,7 @@ msgid "hello"
 msgstr "ahoj"
 
 #: ../libgda-ui/data/server_operation.glade.h:3
-#: ../tools/browser/common/fk-declare.c:256
+#: ../tools/browser/common/fk-declare.c:255
 #: ../tools/browser/schema-browser/table-info.c:378
 msgid "Columns"
 msgstr "Sloupce"
@@ -4535,12 +4526,12 @@ msgstr "Odstranit vybraná pole"
 msgid "GdaTree to use"
 msgstr "GdaTree, který se má použít"
 
-#: ../libgda-ui/gdaui-tree-store.c:719
+#: ../libgda-ui/gdaui-tree-store.c:739
 #, c-format
 msgid "Unknown column number %d"
 msgstr "Neznámé číslo sloupce %d"
 
-#: ../libgda-ui/gdaui-tree-store.c:739
+#: ../libgda-ui/gdaui-tree-store.c:759
 #, c-format
 msgid "Type mismatch: expected a value of type %s and got of type %s"
 msgstr "Typy nesouhlasí: očekávána hodnota typu %s a obdržena typu %s"
@@ -4652,8 +4643,8 @@ msgstr "Složka, ve které je soubor s databází uchován"
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:1
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:1
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:17
@@ -4681,7 +4672,7 @@ msgid "An error occurred while accessing the BDB database"
 msgstr "Vyskytla se chyba při přístupu k databázi BDB"
 
 #: ../providers/bdb/gda-bdb-provider.c:201
-#: ../providers/ldap/gda-ldap-provider.c:606
+#: ../providers/ldap/gda-ldap-provider.c:604
 #: ../providers/mdb/gda-mdb-provider.c:321
 msgid "Can't open virtual connection"
 msgstr "Nelze otevřít virtuální připojení"
@@ -4829,7 +4820,7 @@ msgstr "Neprázdné"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
-#: ../tools/command-exec.c:1173 ../tools/web-server.c:935
+#: ../tools/command-exec.c:665 ../tools/web-server.c:935
 msgid "Default"
 msgstr "Výchozí"
 
@@ -4874,8 +4865,8 @@ msgstr "Omezení kontrolou"
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:2
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:2
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:2
@@ -4888,8 +4879,8 @@ msgstr "Popis databáze"
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:6
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:6
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:6
@@ -4922,7 +4913,7 @@ msgstr "Popis indexu"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../tools/browser/schema-browser/table-columns.c:644
-#: ../tools/command-exec.c:1095 ../tools/command-exec.c:1171
+#: ../tools/command-exec.c:587 ../tools/command-exec.c:663
 #: ../tools/web-server.c:933
 msgid "Type"
 msgstr "Typ"
@@ -4955,8 +4946,8 @@ msgstr "Typ"
 #: ../tools/browser/data-manager/data-favorite-selector.c:304
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
 #: ../tools/browser/query-exec/query-favorite-selector.c:352
-#: ../tools/command-exec.c:1094 ../tools/gda-sql.c:3610
-#: ../tools/gda-sql.c:3905 ../tools/gda-sql.c:4706 ../tools/gda-sql.c:4746
+#: ../tools/command-exec.c:586 ../tools/gda-sql.c:2940 ../tools/gda-sql.c:3238
+#: ../tools/gda-sql.c:3955 ../tools/gda-sql.c:3995
 msgid "Name"
 msgstr "Název"
 
@@ -4981,7 +4972,7 @@ msgstr "Pro tabulku"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:6
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:5
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:5
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
@@ -5089,7 +5080,7 @@ msgstr "Sloupce tabulky"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
-#: ../tools/command-exec.c:1027 ../tools/command-exec.c:1030
+#: ../tools/command-exec.c:516 ../tools/command-exec.c:519
 #: ../tools/web-server.c:905 ../tools/web-server.c:908
 msgid "Auto increment"
 msgstr "Automatické zvyšování"
@@ -5105,7 +5096,7 @@ msgstr "Automatické zvyšování"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
-#: ../tools/command-exec.c:1327
+#: ../tools/command-exec.c:821
 msgid "Unique"
 msgstr "Jedinečný"
 
@@ -5121,7 +5112,7 @@ msgstr "Jedinečný"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
 #: ../tools/browser/schema-browser/table-columns.c:230
-#: ../tools/command-exec.c:1281
+#: ../tools/command-exec.c:774
 msgid "Primary key"
 msgstr "Primární klíč"
 
@@ -5458,29 +5449,31 @@ msgstr "Připojovací řetězec musí obsahovat hodnotu DB_NAME (název databáz
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neplatná hodnota pro „TLS_REQCERT“"
 
-#: ../providers/ldap/gda-ldap-provider.c:490
-msgid "Invalid user name"
-msgstr "Neplatné jméno uživatele"
+#: ../providers/ldap/gda-ldap-provider.c:866 ../tools/gda-sql.c:2788
+#: ../tools/gda-sql.c:4782 ../tools/gda-sql.c:5509 ../tools/gda-sql.c:5812
+#, c-format
+msgid "Too many arguments"
+msgstr "Příliš mnoho parametrů"
 
-#: ../providers/ldap/gda-ldap-provider.c:996
+#: ../providers/ldap/gda-ldap-provider.c:1016
 msgid "Parameter"
 msgstr "Parametr"
 
-#: ../providers/ldap/gda-ldap-provider.c:1210
+#: ../providers/ldap/gda-ldap-provider.c:1230
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "poblíž „%s“: syntaktická chyba"
 
-#: ../providers/ldap/gda-ldap-util.c:1243
+#: ../providers/ldap/gda-ldap-util.c:1254
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "Server LDAP vrátil více než jeden záznam s DN „%s“"
 
-#: ../providers/ldap/gda-ldap-util.c:1385
+#: ../providers/ldap/gda-ldap-util.c:1396
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr "Nelze analyzovat rozlišovací název DN vrácený serverem LDAP"
 
-#: ../providers/ldap/gda-ldap-util.c:1627
+#: ../providers/ldap/gda-ldap-util.c:1638
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Neočekávaný datový typ „%s“ pro atribut objectClass!"
@@ -5531,8 +5524,12 @@ msgid "GdaLdapEntry specified to compare have different DN"
 msgstr "GdaLdapEntry určený k porovnání má různé DN"
 
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:2
-msgid "User name"
-msgstr "Uživatelské jméno"
+msgid ""
+"User name, as a DN or simple user name, for Active Directory may be "
+"username@DOMAIN or DOMAIN\\username"
+msgstr ""
+"Jméno uživatele, buď jako DN nebo jednoduché jméno, pro Active Directory "
+"může být jmenouzivatele@DOMENA nebo DOMENA\\jmenouzivatele"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -5728,16 +5725,25 @@ msgstr "V omezení cizím klíčem zadáno prázdné odkazované pole"
 msgid "Incorrect specified column name"
 msgstr "Nesprávně zadaný název sloupce"
 
-#: ../providers/mysql/gda-mysql-handler-boolean.c:124
+#: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "MySQL boolean representation"
 msgstr "Podoba pravdivostní hodnoty MySQL"
 
-#: ../providers/mysql/gda-mysql-provider.c:494
+#: ../providers/mysql/gda-mysql-provider.c:497
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr ""
 "Nelze zadat UNIXový SOKET pokud jste zároveň zadali HOSTITELE nebo PORT"
 
-#: ../providers/mysql/gda-mysql-provider.c:544
+#: ../providers/mysql/gda-mysql-provider.c:505
+msgid "Invalid port number"
+msgstr "Neplatné číslo portu"
+
+#: ../providers/mysql/gda-mysql-provider.c:540
+#, c-format
+msgid "Unknown MySQL protocol '%s'"
+msgstr "Neznámý protokol MySQL „%s“"
+
+#: ../providers/mysql/gda-mysql-provider.c:585
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
@@ -5746,27 +5752,27 @@ msgstr ""
 "Nelze nastavit znakovou sadu klienta na UTF8. Použije se %s, což bude "
 "působit problémy se znaky nepatřícími do UTF-8"
 
-#: ../providers/mysql/gda-mysql-provider.c:600
+#: ../providers/mysql/gda-mysql-provider.c:641
 msgid "The connection string must contain the DB_NAME values"
 msgstr "Připojovací řetězec musí obsahovat hodnoty DB_NAME (název databáze)"
 
-#: ../providers/mysql/gda-mysql-provider.c:638
-#: ../providers/mysql/gda-mysql-provider.c:672
+#: ../providers/mysql/gda-mysql-provider.c:681
+#: ../providers/mysql/gda-mysql-provider.c:715
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Bez popisu"
 
-#: ../providers/mysql/gda-mysql-provider.c:1773
+#: ../providers/mysql/gda-mysql-provider.c:1824
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "V předpřipraveném příkazu není dovolen nepojmenovaný parametr příkazu."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2533
+#: ../providers/mysql/gda-mysql-provider.c:2584
 msgid "Can't read whole BLOB into memory"
 msgstr "Nelze načíst celý rozsáhlý binární objekt (BLOB) do paměti"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2580
+#: ../providers/mysql/gda-mysql-provider.c:2631
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
@@ -5775,7 +5781,7 @@ msgstr ""
 "Neobsluhovaný datový typ „%s“, nahlaste to prosím jako chybu na http://"
 "bugzilla.gnome.org/ pro produkt „libgda“."
 
-#: ../providers/mysql/gda-mysql-provider.c:2627
+#: ../providers/mysql/gda-mysql-provider.c:2678
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -5916,245 +5922,302 @@ msgstr "Přihlašovací jméno (které má oprávnění vytvářet databáze)"
 msgid "Administrator password"
 msgstr "Heslo správce"
 
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+msgid "Connection protocol"
+msgstr "Připojovací protokol"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+"Explicitly specifies a connection protocol to use. It is useful when the "
+"other connection parameters normally would cause a protocol to be used other "
+"than the one you want"
+msgstr ""
+"Vysloveně určený připojovací protokol, který se má použít. To je užitečné, "
+"když by ostatní parametry připojení normálně způsobily použití jiného "
+"protokolu, než který chcete"
+
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
 msgid "Create database only if it does not yet exist"
 msgstr "Vytvořit databázi, jen pokud zatím neexistuje"
 
 #. DSN parameters
 #. other table options
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
 msgid "Character set"
 msgstr "Znaková sada"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "Character set encoding to use in the new database"
 msgstr "Kódování znakové sady, které se má použít pro novou databázi"
 
 #. DSN parameters
 #. other table options
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 msgid "Collation"
 msgstr "Porovnávání"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "Collation method to use in the new database"
 msgstr "Metoda porovnávání, která se má použít v nové databázi"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 msgid "UTF-8 Unicode"
 msgstr "UTF-8 / unikód"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:133
 msgid "ISO 8859-1 West European"
 msgstr "ISO 8859-1 / západní Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 msgid "ISO 8859-2 Central European"
 msgstr "ISO 8859-2 / střední Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:137
 msgid "US ASCII"
 msgstr "US ASCII"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 msgid "Big5 Traditional Chinese"
 msgstr "Big5 / tradiční čínština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
 msgid "DEC West European"
 msgstr "DEC / západní Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "DOS West European"
 msgstr "DOS / západní Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "HP West European"
 msgstr "HP / západní Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "KOI8-R Relcom Russian"
 msgstr "KOI8-R Relcom / ruština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 msgid "7bit Swedish"
 msgstr "7bitová švédština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:151
 msgid "EUC-JP Japanese"
 msgstr "EUC-JP / japonština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:153
 msgid "Shift-JIS Japanese"
 msgstr "Shift-JIS / japonština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:155
 msgid "ISO 8859-8 Hebrew"
 msgstr "ISO 8859-8 / hebrejština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 msgid "TIS620 Thai"
 msgstr "TIS620 / thajština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 msgid "EUC-KR Korean"
 msgstr "EUC-KR / korejština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:161
 msgid "KOI8-U Ukrainian"
 msgstr "KOI8-U / ukrajinština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:163
 msgid "GB2312 Simplified Chinese"
 msgstr "GB2312 / zjednodušená čínština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:165
 msgid "ISO 8859-7 Greek"
 msgstr "ISO 8859-7 / řečtina"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 msgid "Windows Central European"
 msgstr "Windows / střední Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:169
 msgid "GBK Simplified Chinese"
 msgstr "GBK / zjednodušená čínština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
 msgid "ISO 8859-9 Turkish"
 msgstr "ISO 8859-9 / turečtina"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:78
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
 msgid "ARMSCII-8 Armenian"
 msgstr "ARMSCII-8 / arménština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:78
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
 msgid "UCS-2 Unicode"
 msgstr "UCS-2 / unikód"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:177
 msgid "DOS Russian"
 msgstr "DOS / ruština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:179
 msgid "DOS Kamenicky Czech-Slovak"
 msgstr "DOS bratří Kamenických / čeština, slovenština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:181
 msgid "Mac Central European"
 msgstr "MAC / střední Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:183
 msgid "Mac West European"
 msgstr "MAC / západní Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:185
 msgid "DOS Central European"
 msgstr "DOS / střední Evropa"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:187
 msgid "ISO 8859-13 Baltic"
 msgstr "ISO 8859-13 / baltické"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
 msgid "Windows Cyrillic"
 msgstr "Windows / cyrilice"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:191
 msgid "Windows Arabic"
 msgstr "Windows / arabština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:193
 msgid "Windows Baltic"
 msgstr "Windows / baltické"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:195
 msgid "Binary pseudo charset"
 msgstr "Binární pseudoznaková sada"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:197
 msgid "GEOSTD8 Georgian"
 msgstr "GEOSTD8 / gruzínština"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:104
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "SJIS for Windows Japanese"
 msgstr "SJIS pro japonštinu ve Windows"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+msgid "Automatic"
+msgstr "Automaticky"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+msgid "TCP: TCP/IP connection to local or remote server."
+msgstr "TCP: Spojení TCP/IP k místnímu nebo vzdálenému serveru."
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+msgid ""
+"Socket: Unix socket file connection to local server (Local Unix server only)."
+msgstr ""
+"Socket: Připojení přes soubor s unixovým soketem k místnímu serveru (jen "
+"místní unixový server)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+msgid ""
+"Pipe: Named-pipe connection to local or remote server (Windows server only)"
+msgstr ""
+"Pipe: Připojení přes pojmenovanou rouru k místnímu nebo vzdálenému serveru "
+"(jen servery Windows)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+msgid ""
+"Memory: Shared-memory connection to local server (Local Windows server only)"
+msgstr ""
+"Memory: Připojení přes sdílenou paměť k místnímu serveru (jen místní servery "
+"Windows)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6186,7 +6249,7 @@ msgstr "Komentář tabulky"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/browser/schema-browser/mgr-columns.c:385
-#: ../tools/command-exec.c:1386
+#: ../tools/command-exec.c:881
 msgid "Foreign key"
 msgstr "Cizí klíč"
 
@@ -6410,7 +6473,7 @@ msgid "Comma Separated Value (CSV)"
 msgstr "Čárkou oddělené hodnoty (CSV)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:118
-#: ../tools/command-exec.c:462 ../tools/command-exec.c:532
+#: ../tools/cmdtool/tool-help.c:251 ../tools/cmdtool/tool-help.c:327
 msgid "Example"
 msgstr "Příklad"
 
@@ -6475,12 +6538,12 @@ msgid "column name"
 msgstr "název sloupce"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 msgid "Only if existing"
 msgstr "Jen když existuje"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
 msgid "Drop database only if it exists"
 msgstr "Odstranit databázi jen pokud existuje"
 
@@ -6570,23 +6633,19 @@ msgstr "Nelze alokovat vyhledávač rozsáhlých objektů LOB"
 msgid "Could not copy Lob locator"
 msgstr "Nelze kopírovat vyhledávač rozsáhlých objektů LOB"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:122
-msgid "Postgresql binary handler"
-msgstr "Obsluha binárních dat PostgreSQL"
-
-#: ../providers/postgres/gda-postgres-handler-bin.c:128
+#: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "PostgresqlBin"
 msgstr "PostgresqlBin"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:129
+#: ../providers/postgres/gda-postgres-handler-bin.c:120
 msgid "PostgreSQL binary representation"
 msgstr "Podoba binárních dat PostgreSQL"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:218
+#: ../providers/postgres/gda-postgres-handler-bin.c:204
 msgid "Insufficient memory to convert binary buffer to string"
 msgstr "Nedostatek paměti pro převod binární vyrovnávací paměti na řetězec"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:281
+#: ../providers/postgres/gda-postgres-handler-bin.c:244
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Nedostatek paměti pro převod řetězce na binární vyrovnávací paměť"
 
@@ -6638,14 +6697,14 @@ msgstr "Interní chyba"
 msgid "Wrong savepoint name '%s'"
 msgstr "Nesprávný název „%s“ bodu uložení"
 
-#: ../providers/postgres/gda-postgres-provider.c:2082
-#: ../providers/postgres/gda-postgres-provider.c:2084
+#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/postgres/gda-postgres-provider.c:2080
 msgid "Cannot start transaction"
 msgstr "Nelze zahájit transakci"
 
-#: ../providers/postgres/gda-postgres-provider.c:2291
-#: ../providers/postgres/gda-postgres-provider.c:2327
-#: ../providers/postgres/gda-postgres-provider.c:2362
+#: ../providers/postgres/gda-postgres-provider.c:2287
+#: ../providers/postgres/gda-postgres-provider.c:2323
+#: ../providers/postgres/gda-postgres-provider.c:2358
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Nelze nastavit parametr ID transakce XA"
 
@@ -6705,7 +6764,7 @@ msgid "Whether to require SSL or not when connecting"
 msgstr "Zda vyžadovat, nebo ne, SSL při připojování"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
-#: ../tools/command-exec.c:1096
+#: ../tools/command-exec.c:588
 msgid "Owner"
 msgstr "Vlastník"
 
@@ -7616,7 +7675,7 @@ msgstr ""
 msgid "Opened connections"
 msgstr "Otevřená připojení"
 
-#: ../tools/browser/browser-connections-list.c:356 ../tools/gda-sql.c:3614
+#: ../tools/browser/browser-connections-list.c:356 ../tools/gda-sql.c:2944
 msgid "List of opened connections"
 msgstr "Seznam otevřených připojení"
 
@@ -7761,7 +7820,7 @@ msgstr "Uzavřít toto připojení"
 msgid "_Quit"
 msgstr "U_končit"
 
-#: ../tools/browser/browser-window.c:289 ../tools/gda-sql.c:2670
+#: ../tools/browser/browser-window.c:289 ../tools/gda-sql.c:2157
 msgid "Quit"
 msgstr "Ukončit"
 
@@ -8004,21 +8063,21 @@ msgid "Select tables to add to diagram"
 msgstr "Vybrat tabulky pro přidání do diagramu"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
-#: ../tools/command-exec.c:1384
+#: ../tools/command-exec.c:879
 msgid "Declared foreign key"
 msgstr "Deklarovaný cizí klíč"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
 #: ../tools/browser/schema-browser/table-columns.c:356
-#: ../tools/command-exec.c:1416
+#: ../tools/command-exec.c:911
 msgid "Policy on UPDATE"
 msgstr "Strategie při AKTUALIZACI"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
 #: ../tools/browser/schema-browser/table-columns.c:366
-#: ../tools/command-exec.c:1420
+#: ../tools/command-exec.c:915
 msgid "Policy on DELETE"
 msgstr "Strategie při MAZÁNÍ"
 
@@ -8081,7 +8140,7 @@ msgid "Print page numbers"
 msgstr "Tisknout čísla stránek"
 
 #: ../tools/browser/common/fk-declare.c:186
-#: ../tools/browser/common/fk-declare.c:399
+#: ../tools/browser/common/fk-declare.c:398
 #, c-format
 msgid "Declare a foreign key for table '%s'"
 msgstr "Deklarace cizího klíče pro tabulku „%s“"
@@ -8094,24 +8153,24 @@ msgstr ""
 "definuje, na kterou tabulku je odkazováno, které sloupce jsou součástí "
 "cizího klíče a který ze sloupců je ten odkazující"
 
-#: ../tools/browser/common/fk-declare.c:209
+#: ../tools/browser/common/fk-declare.c:208
 msgid "Foreign key name:"
 msgstr "Název cizího klíče:"
 
 #. table to reference
-#: ../tools/browser/common/fk-declare.c:220
+#: ../tools/browser/common/fk-declare.c:219
 msgid "Referenced table:"
 msgstr "Odkazovaná tabulka:"
 
-#: ../tools/browser/common/fk-declare.c:263
+#: ../tools/browser/common/fk-declare.c:262
 msgid "Referenced column"
 msgstr "Odkazovaný sloupec"
 
-#: ../tools/browser/common/fk-declare.c:561
+#: ../tools/browser/common/fk-declare.c:560
 msgid "Missing information to declare foreign key"
 msgstr "Schází informace pro deklaraci cizího klíče"
 
-#: ../tools/browser/common/fk-declare.c:643
+#: ../tools/browser/common/fk-declare.c:642
 msgid "Missing information to undeclare foreign key"
 msgstr "Schází informace pro zrušení deklarace cizího klíče"
 
@@ -8335,40 +8394,40 @@ msgstr ""
 "jako tabulky (např. importovaná data CSV). Můžete vytvořit tolik vazeb, "
 "kolik jen potřebujete"
 
-#: ../tools/browser/connection-binding-properties.c:281
+#: ../tools/browser/connection-binding-properties.c:280
 msgid "Add binding"
 msgstr "Přidat do svazku"
 
-#: ../tools/browser/connection-binding-properties.c:331
+#: ../tools/browser/connection-binding-properties.c:330
 msgid "Bind a connection"
 msgstr "Navázat připojení"
 
-#: ../tools/browser/connection-binding-properties.c:337
+#: ../tools/browser/connection-binding-properties.c:336
 msgid "Bind a data set"
 msgstr "Navázat datovou sadu"
 
-#: ../tools/browser/connection-binding-properties.c:420
+#: ../tools/browser/connection-binding-properties.c:419
 msgid "Bind a data set as a table:"
 msgstr "Navázat datovou sadu jako tabulku:"
 
-#: ../tools/browser/connection-binding-properties.c:424
+#: ../tools/browser/connection-binding-properties.c:423
 msgid "Import a data set and make it appear as a table"
 msgstr "Importovat datovou sadu a zviditelnit ji jako tabulku"
 
-#: ../tools/browser/connection-binding-properties.c:427
-#: ../tools/browser/connection-binding-properties.c:537
+#: ../tools/browser/connection-binding-properties.c:426
+#: ../tools/browser/connection-binding-properties.c:536
 msgid "Remove this bind"
 msgstr "Odstranit tuto vazbu"
 
-#: ../tools/browser/connection-binding-properties.c:477
+#: ../tools/browser/connection-binding-properties.c:476
 msgid "Invalid schema name"
 msgstr "Neplatný název schématu"
 
-#: ../tools/browser/connection-binding-properties.c:527
+#: ../tools/browser/connection-binding-properties.c:526
 msgid "Bind all tables of a connection using a schema prefix:"
 msgstr "Navázat všechny tabulky připojení pomocí předpony schématu:"
 
-#: ../tools/browser/connection-binding-properties.c:531
+#: ../tools/browser/connection-binding-properties.c:530
 msgid ""
 "Each table in the selected connection will appear as a table in the virtual "
 "connection using the specified schema as a prefix"
@@ -8376,7 +8435,7 @@ msgstr ""
 "Každá tabulka ve vybraném připojení se objeví jako tabulka ve virtuálním "
 "připojení za použití zadaného schématu jako předpony"
 
-#: ../tools/browser/connection-binding-properties.c:564
+#: ../tools/browser/connection-binding-properties.c:563
 msgid ""
 "Name of the schema the\n"
 "tables will be in"
@@ -8837,26 +8896,26 @@ msgstr "Výběr souboru pro uložení dat"
 msgid "Could not save data: %s"
 msgstr "Nelze uložit data: %s"
 
-#: ../tools/browser/ldap-browser/entry-properties.c:531
+#: ../tools/browser/ldap-browser/entry-properties.c:532
 msgid "Non activated"
 msgstr "Neaktivováno"
 
-#: ../tools/browser/ldap-browser/entry-properties.c:579
-#: ../tools/browser/ldap-browser/entry-properties.c:583
+#: ../tools/browser/ldap-browser/entry-properties.c:580
+#: ../tools/browser/ldap-browser/entry-properties.c:584
 msgid "Never"
 msgstr "Nikdy"
 
 #. DN
-#: ../tools/browser/ldap-browser/entry-properties.c:763
+#: ../tools/browser/ldap-browser/entry-properties.c:764
 msgid "Distinguished Name:"
 msgstr "Rozlišovací název:"
 
-#: ../tools/browser/ldap-browser/entry-properties.c:910
+#: ../tools/browser/ldap-browser/entry-properties.c:911
 msgid "Can't display attribute value"
 msgstr "Nelze zobrazit hodnotu atributu"
 
-#: ../tools/browser/ldap-browser/entry-properties.c:925
-#: ../tools/browser/ldap-browser/entry-properties.c:960
+#: ../tools/browser/ldap-browser/entry-properties.c:926
+#: ../tools/browser/ldap-browser/entry-properties.c:961
 msgid "Could not get information about LDAP entry"
 msgstr "Nelze získat informaci o záznamu LDAP"
 
@@ -8892,8 +8951,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:506
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:512
 #: ../tools/browser/ldap-browser/ldap-search-page.c:464
-#: ../tools/gda-sql.c:3008 ../tools/gda-sql.c:3021 ../tools/gda-sql.c:3038
-#: ../tools/gda-sql.c:3051
+#: ../tools/gda-sql.c:2376 ../tools/gda-sql.c:2384 ../tools/gda-sql.c:2396
+#: ../tools/gda-sql.c:2404
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -9094,7 +9153,7 @@ msgstr ""
 msgid "Cancelled by the user"
 msgstr "Zrušeno uživatelem"
 
-#: ../tools/browser/main.c:105 ../tools/gda-sql.c:185
+#: ../tools/browser/main.c:105 ../tools/gda-sql.c:186
 msgid "[DSN|connection string]..."
 msgstr "[DSN|připojovací řetězec]…"
 
@@ -9104,12 +9163,12 @@ msgstr "[DSN|připojovací řetězec]…"
 msgid "Error: %s\n"
 msgstr "Chyba: %s\n"
 
-#: ../tools/browser/main.c:162 ../tools/gda-sql.c:295
+#: ../tools/browser/main.c:162 ../tools/gda-sql.c:299
 #, c-format
 msgid "All files are in the directory: %s\n"
 msgstr "Všechny soubory jsou ve složce: %s\n"
 
-#: ../tools/browser/main.c:170 ../tools/gda-sql.c:303
+#: ../tools/browser/main.c:170 ../tools/gda-sql.c:307
 #, c-format
 msgid ""
 "Can't get the list of files used to store information about each connection: "
@@ -9118,7 +9177,7 @@ msgstr ""
 "Nelze získat seznam souborů použitých k uchování informací o každém "
 "připojení: %s\n"
 
-#: ../tools/browser/main.c:185 ../tools/gda-sql.c:315
+#: ../tools/browser/main.c:185 ../tools/gda-sql.c:319
 #, c-format
 msgid ""
 "Error while purging files used to store information about each connection: "
@@ -9452,15 +9511,16 @@ msgstr "Příkaz:"
 
 #: ../tools/browser/query-exec/query-result.c:240
 #: ../tools/browser/query-exec/query-result.c:268
-#: ../tools/browser/query-exec/query-result.c:454 ../tools/gda-sql.c:697
-#: ../tools/gda-sql.c:779 ../tools/gda-sql.c:2070
+#: ../tools/browser/query-exec/query-result.c:454
+#: ../tools/cmdtool/tool-output.c:87 ../tools/cmdtool/tool-output.c:493
+#: ../tools/cmdtool/tool-output.c:575 ../tools/gda-sql.c:1703
 #, c-format
 msgid "Execution delay"
 msgstr "Odložení zpracování"
 
 #: ../tools/browser/query-exec/query-result.c:260
-#: ../tools/browser/query-exec/query-result.c:447 ../tools/gda-sql.c:690
-#: ../tools/gda-sql.c:772
+#: ../tools/browser/query-exec/query-result.c:447
+#: ../tools/cmdtool/tool-output.c:486 ../tools/cmdtool/tool-output.c:568
 msgid "Number of rows impacted"
 msgstr "Počet řádku vložených mezi"
 
@@ -9548,7 +9608,7 @@ msgid "_Schema"
 msgstr "_Schéma"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:313
-#: ../tools/command-exec.c:1093
+#: ../tools/command-exec.c:585
 msgid "Schema"
 msgstr "Schéma"
 
@@ -9720,11 +9780,11 @@ msgstr "Pole tabulky"
 msgid "Field's display preferences"
 msgstr "Předvolby zobrazení pole"
 
-#: ../tools/browser/schema-browser/table-preferences.c:460
+#: ../tools/browser/schema-browser/table-preferences.c:459
 msgid "Data entry type:"
 msgstr "Typ datového záznamu:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:461
+#: ../tools/browser/schema-browser/table-preferences.c:460
 msgid ""
 "Defines how data for the selected column\n"
 "will be displayed in forms. Leave 'Default' to have\n"
@@ -9734,20 +9794,20 @@ msgstr ""
 "zobrazovat ve formuláři. Pokud chcete výchozí\n"
 "zobrazení, ponechejte „Výchozí“."
 
-#: ../tools/browser/schema-browser/table-preferences.c:470
-#: ../tools/browser/schema-browser/table-preferences.c:481
+#: ../tools/browser/schema-browser/table-preferences.c:469
+#: ../tools/browser/schema-browser/table-preferences.c:480
 msgid "none"
 msgstr "žádná"
 
-#: ../tools/browser/schema-browser/table-preferences.c:474
+#: ../tools/browser/schema-browser/table-preferences.c:473
 msgid "Options:"
 msgstr "Možnosti:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:485
+#: ../tools/browser/schema-browser/table-preferences.c:484
 msgid "Preview:"
 msgstr "Náhled:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:486
+#: ../tools/browser/schema-browser/table-preferences.c:485
 msgid ""
 "Free form to test the configured\n"
 "data entry"
@@ -9838,84 +9898,111 @@ msgstr "Hledat:"
 msgid "Case sensitive"
 msgstr "Rozlišovat velikost písmen"
 
-#: ../tools/command-exec.c:460 ../tools/command-exec.c:653
+#: ../tools/cmdtool/tool-command.c:142 ../tools/cmdtool/tool-command.c:160
+msgid "Invalid unnamed command"
+msgstr "Neplatný nepojmenovaný příkaz"
+
+#: ../tools/cmdtool/tool-command.c:282
+#, c-format
+msgid "Command '%s' not found"
+msgstr "Příkaz „%s“ nebyl nalezen"
+
+#: ../tools/cmdtool/tool-command.c:313
+#, c-format
+msgid "Syntax error after '\\'"
+msgstr "Syntaktická chyba po „\\“"
+
+#: ../tools/cmdtool/tool-command.c:343
+#, c-format
+msgid "Unbalanced usage of quotes"
+msgstr "Nevyrovnané použití uvozovek"
+
+#: ../tools/cmdtool/tool-help.c:249 ../tools/cmdtool/tool-help.c:440
 msgid "Usage"
 msgstr "Použití"
 
-#: ../tools/command-exec.c:636
+#: ../tools/cmdtool/tool-input.c:478
 #, c-format
-msgid "Command '%s' not found\n"
-msgstr "Příkaz „%s“ nebyl nalezen\n"
+msgid "Could not save history file to '%s': %s"
+msgstr "Nelze uložit soubor s historií do „%s“: %s"
 
-#: ../tools/command-exec.c:767
+#: ../tools/cmdtool/tool-output.c:160 ../tools/gda-sql.c:1776
+#, c-format
+msgid "(%d row)"
+msgid_plural "(%d rows)"
+msgstr[0] "(%d řádek)"
+msgstr[1] "(%d řádky)"
+msgstr[2] "(%d řádků)"
+
+#: ../tools/command-exec.c:246
 msgid "History is not supported"
 msgstr "Historie není podporována"
 
-#: ../tools/command-exec.c:782 ../tools/command-exec.c:820
-#: ../tools/command-exec.c:865 ../tools/command-exec.c:909
-#: ../tools/command-exec.c:1043 ../tools/gda-sql.c:3516
-#: ../tools/gda-sql.c:5528 ../tools/gda-sql.c:6263 ../tools/gda-sql.c:6489
-#: ../tools/gda-sql.c:6593
+#: ../tools/command-exec.c:262 ../tools/command-exec.c:301
+#: ../tools/command-exec.c:349 ../tools/command-exec.c:396
+#: ../tools/command-exec.c:533 ../tools/gda-sql.c:2828 ../tools/gda-sql.c:3891
+#: ../tools/gda-sql.c:4768 ../tools/gda-sql.c:5493 ../tools/gda-sql.c:5712
+#: ../tools/gda-sql.c:5798
 msgid "No current connection"
 msgstr "Žádné aktuální připojení"
 
-#: ../tools/command-exec.c:847
+#: ../tools/command-exec.c:330
 msgid "List of tables"
 msgstr "Seznam tabulek"
 
-#: ../tools/command-exec.c:891
+#: ../tools/command-exec.c:377
 msgid "List of views"
 msgstr "Seznam pohledů"
 
-#: ../tools/command-exec.c:933
+#: ../tools/command-exec.c:422
 msgid "List of schemas"
 msgstr "Seznam schémat"
 
-#: ../tools/command-exec.c:1007 ../tools/command-exec.c:1140
+#: ../tools/command-exec.c:496 ../tools/command-exec.c:632
 msgid "No object found"
 msgstr "Nebyl nalezen žádný objekt"
 
-#: ../tools/command-exec.c:1170 ../tools/web-server.c:932
+#: ../tools/command-exec.c:662 ../tools/web-server.c:932
 msgid "Column"
 msgstr "Sloupec"
 
-#: ../tools/command-exec.c:1172 ../tools/web-server.c:934
+#: ../tools/command-exec.c:664 ../tools/web-server.c:934
 msgid "Nullable"
 msgstr "Možno prázdný"
 
-#: ../tools/command-exec.c:1174 ../tools/web-server.c:936
+#: ../tools/command-exec.c:666 ../tools/web-server.c:936
 msgid "Extra"
 msgstr "Doplňující"
 
-#: ../tools/command-exec.c:1177
+#: ../tools/command-exec.c:669
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr "Seznam sloupců pro pohled „%s“"
 
-#: ../tools/command-exec.c:1181
+#: ../tools/command-exec.c:673
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr "Seznam sloupců pro tabulku „%s“"
 
-#: ../tools/command-exec.c:1193 ../tools/web-server.c:947
+#: ../tools/command-exec.c:685 ../tools/web-server.c:947
 msgid "yes"
 msgstr "ano"
 
-#: ../tools/command-exec.c:1193 ../tools/web-server.c:947
+#: ../tools/command-exec.c:685 ../tools/web-server.c:947
 msgid "no"
 msgstr "ne"
 
-#: ../tools/command-exec.c:1224
+#: ../tools/command-exec.c:716
 #, c-format
 msgid "Could not determine columns of view '%s'"
 msgstr "Nelze určit sloupce pohledu „%s“"
 
-#: ../tools/command-exec.c:1228
+#: ../tools/command-exec.c:720
 #, c-format
 msgid "Could not determine columns of table '%s'"
 msgstr "Nelze určit sloupce tabulky „%s“"
 
-#: ../tools/command-exec.c:1241
+#: ../tools/command-exec.c:733
 #, c-format
 msgid "View definition: %s"
 msgstr "Definice pohledu: %s"
@@ -9923,7 +10010,7 @@ msgstr "Definice pohledu: %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/command-exec.c:1398
+#: ../tools/command-exec.c:893
 #, c-format
 msgid "references %s"
 msgstr "odkazuje na %s"
@@ -9931,7 +10018,7 @@ msgstr "odkazuje na %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/command-exec.c:1404
+#: ../tools/command-exec.c:899
 #, c-format
 msgid "references %s.%s"
 msgstr "odkazuje na %s.%s"
@@ -9946,7 +10033,7 @@ msgid "Could not find provider '%s'"
 msgstr "Nelze najít poskytovatele „%s“"
 
 #: ../tools/config-info.c:121 ../tools/config-info.c:290
-#: ../tools/gda-sql.c:6095
+#: ../tools/gda-sql.c:5334
 msgid "Attribute"
 msgstr "Atribut"
 
@@ -10047,7 +10134,7 @@ msgstr "Operace není podporována\n"
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Nelze zpracovat soubor „%s“, ignoruje se"
 
-#: ../tools/gda-sql.c:195
+#: ../tools/gda-sql.c:196
 #, c-format
 msgid "GDA SQL console version "
 msgstr "Konzola SQL GDA verze "
@@ -10077,43 +10164,41 @@ msgstr "Znak uvozovek pro formát CSV"
 msgid "Separator character for CSV format"
 msgstr "Znak oddělovače pro formát CSV"
 
-#: ../tools/gda-sql.c:348
+#: ../tools/gda-sql.c:352
 msgid "Welcome to the GDA SQL console, version "
 msgstr "Vítejte v konzoli SQL GDA, verze "
 
-#: ../tools/gda-sql.c:354
+#: ../tools/gda-sql.c:358
 #, c-format
 msgid ""
 "Type: %s to show usage and distribution terms\n"
 "      %s or %s for help with internal commands\n"
-"      %s (or CTRL-D) to quit\n"
-"      (the '.' can be replaced by a '\\')\n"
-"      or any query terminated by a semicolon\n"
+"      %s (or CTRL-D) to quit (the '.' can be replaced by a '\\')\n"
+"      or any SQL query terminated by a semicolon\n"
 "\n"
 msgstr ""
 "Zadejte: %s pro zobrazení podmínek použití a šíření\n"
 "         %s nebo %s pro nápovědu k interním příkazům\n"
-"         %s (nebo CTRL-D) pro ukončení\n"
-"         („.“ může být nahrazena za „\\“)\n"
-"         nebo libovolný dotaz zakončený středníkem\n"
+"         %s (nebo CTRL-D) pro ukončení („.“ může být nahrazena za „\\“)\n"
+"         nebo libovolný dotaz SQL zakončený středníkem\n"
 "\n"
 
-#: ../tools/gda-sql.c:408
+#: ../tools/gda-sql.c:411
 #, c-format
 msgid "Opening connection '%s' for: %s\n"
 msgstr "Otevírá se připojení „%s“ pro: %s\n"
 
-#: ../tools/gda-sql.c:413
+#: ../tools/gda-sql.c:416
 #, c-format
 msgid "Can't open connection %d: %s\n"
 msgstr "Nelze otevřít připojení %d: %s\n"
 
-#: ../tools/gda-sql.c:426
+#: ../tools/gda-sql.c:429
 #, c-format
 msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
 msgstr "Otevírá se připojení „%s“ pro: %s (proměnná prostředí GDA_SQL_CNC)\n"
 
-#: ../tools/gda-sql.c:431
+#: ../tools/gda-sql.c:434
 #, c-format
 msgid "Can't open connection defined by GDA_SQL_CNC: %s\n"
 msgstr "Nelze otevřít připojení definované pomocí GDA_SQL_CNC: %s\n"
@@ -10123,77 +10208,61 @@ msgstr "Nelze otevřít připojení definované pomocí GDA_SQL_CNC: %s\n"
 msgid "Can't run HTTP server on port %d\n"
 msgstr "Nelze spustit server HTTP na portu %d\n"
 
-#: ../tools/gda-sql.c:989
+#: ../tools/gda-sql.c:776
 msgid "Connection closed"
 msgstr "Připojení uzavřeno"
 
-#: ../tools/gda-sql.c:1002
-msgid "Invalid unnamed command"
-msgstr "Neplatný nepojmenovaný příkaz"
-
-#: ../tools/gda-sql.c:1118
-msgid "Unknown internal command"
-msgstr "Neznámý interní příkaz"
-
-#: ../tools/gda-sql.c:1124
-msgid "Internal command not correctly defined"
-msgstr "Interní příkaz není správně definován"
-
-#: ../tools/gda-sql.c:1130
-msgid "Incomplete internal command"
-msgstr "Neúplní interní příkaz"
-
-#: ../tools/gda-sql.c:1241
+#: ../tools/gda-sql.c:871
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "Nelze interpretovat hodnotu parametru „%s“"
 
-#: ../tools/gda-sql.c:1258
+#: ../tools/gda-sql.c:888
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr "Žádný interní parametr s názvem „%s“ požadovaný dotazem"
 
-#: ../tools/gda-sql.c:1427
+#: ../tools/gda-sql.c:1064
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Nelze otevřít soubor „%s“ pro zápis: %s\n"
 
-#: ../tools/gda-sql.c:1441 ../tools/gda-sql.c:1450
+#: ../tools/gda-sql.c:1078 ../tools/gda-sql.c:1087
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Nelze otevřít rouru „%s“: %s"
 
-#: ../tools/gda-sql.c:1490
+#: ../tools/gda-sql.c:1127
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "Nelze otevřít soubor „%s“ pro čtení: %s\n"
 
-#: ../tools/gda-sql.c:1557 ../tools/gda-sql.c:3758
+#: ../tools/gda-sql.c:1196 ../tools/gda-sql.c:3095
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Název připojení „%s“ je neplatný"
 
-#: ../tools/gda-sql.c:1623
+#: ../tools/gda-sql.c:1262
 #, c-format
 msgid "\tUsername for '%s': "
 msgstr "\tUživatelské jméno pro „%s“:"
 
-#: ../tools/gda-sql.c:1630
+#: ../tools/gda-sql.c:1269
 #, c-format
 msgid "No username for '%s'"
 msgstr "Žádné jméno uživatele pro „%s“"
 
-#: ../tools/gda-sql.c:1647
+#: ../tools/gda-sql.c:1286
 #, c-format
 msgid "\tPassword for '%s': "
 msgstr "\tHeslo pro „%s“:"
 
-#: ../tools/gda-sql.c:1656
+#: ../tools/gda-sql.c:1295
 #, c-format
 msgid "No password for '%s'"
 msgstr "Pro „%s“ není žádné heslo"
 
-#: ../tools/gda-sql.c:1751
+#: ../tools/gda-sql.c:1387
 #, c-format
 msgid ""
 "All the information related to the '%s' connection will be stored in the "
@@ -10202,12 +10271,12 @@ msgstr ""
 "Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru "
 "„%s“\n"
 
-#: ../tools/gda-sql.c:1781
+#: ../tools/gda-sql.c:1417
 #, c-format
 msgid "Error getting meta data in background: %s\n"
 msgstr "Chyba získávání metadat na pozadí: %s\n"
 
-#: ../tools/gda-sql.c:1789 ../tools/gda-sql.c:1942
+#: ../tools/gda-sql.c:1425 ../tools/gda-sql.c:1578
 #, c-format
 msgid ""
 "Getting database schema information for connection '%s', this may take some "
@@ -10216,57 +10285,49 @@ msgstr ""
 "Získávají se informace o databázovém schématu pro připojení „%s“, to může "
 "nějakou chvíli trvat…"
 
-#: ../tools/gda-sql.c:1796 ../tools/gda-sql.c:1949 ../tools/gda-sql.c:3572
+#: ../tools/gda-sql.c:1432 ../tools/gda-sql.c:1585 ../tools/gda-sql.c:2878
 #, c-format
 msgid "error: %s\n"
 msgstr "chyba: %s\n"
 
-#: ../tools/gda-sql.c:1803 ../tools/gda-sql.c:1956 ../tools/gda-sql.c:3579
+#: ../tools/gda-sql.c:1439 ../tools/gda-sql.c:1592 ../tools/gda-sql.c:2885
 #, c-format
 msgid "Done.\n"
 msgstr "Hotovo.\n"
 
-#: ../tools/gda-sql.c:2143
-#, c-format
-msgid "(%d row)"
-msgid_plural "(%d rows)"
-msgstr[0] "(%d řádek)"
-msgstr[1] "(%d řádky)"
-msgstr[2] "(%d řádků)"
-
-#: ../tools/gda-sql.c:2393 ../tools/gda-sql.c:2630 ../tools/gda-sql.c:2721
-#: ../tools/gda-sql.c:2734
+#: ../tools/gda-sql.c:1970 ../tools/gda-sql.c:2132 ../tools/gda-sql.c:2190
+#: ../tools/gda-sql.c:2198
 #, c-format
 msgid "%s [<FILE>]"
 msgstr "%s [<SOUBOR>]"
 
-#: ../tools/gda-sql.c:2394
+#: ../tools/gda-sql.c:1971
 msgid "Show commands history, or save it to file"
 msgstr "Zobrazit historii příkazů nebo ji uložit do souboru"
 
-#: ../tools/gda-sql.c:2404 ../tools/gda-sql.c:2417 ../tools/gda-sql.c:2430
-#: ../tools/gda-sql.c:2443 ../tools/gda-sql.c:2456 ../tools/gda-sql.c:2469
-#: ../tools/gda-sql.c:2482 ../tools/gda-sql.c:2495 ../tools/gda-sql.c:2509
+#: ../tools/gda-sql.c:1976 ../tools/gda-sql.c:1985 ../tools/gda-sql.c:1994
+#: ../tools/gda-sql.c:2003 ../tools/gda-sql.c:2012 ../tools/gda-sql.c:2021
+#: ../tools/gda-sql.c:2030 ../tools/gda-sql.c:2039 ../tools/gda-sql.c:2048
 msgid "Information"
 msgstr "Informace"
 
-#: ../tools/gda-sql.c:2406
+#: ../tools/gda-sql.c:1978
 #, c-format
 msgid "%s [<META DATA TYPE>]"
 msgstr "%s [<TYP METADAT>]"
 
-#: ../tools/gda-sql.c:2407
+#: ../tools/gda-sql.c:1979
 msgid ""
 "Force reading the database meta data (or part of the meta data, ex:\"tables"
 "\")"
 msgstr "Vynucené čtení metadat databáze (nebo části metadat, např. \"tables\")"
 
-#: ../tools/gda-sql.c:2419
+#: ../tools/gda-sql.c:1987
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
 msgstr "%s <název_ck> <tabulkaA>(<sloupecA>,…) <tabulkaB>(<sloupecB>,…)"
 
-#: ../tools/gda-sql.c:2420
+#: ../tools/gda-sql.c:1988
 msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
@@ -10274,95 +10335,95 @@ msgstr ""
 "Deklarovat nový cizí klíč (ne skutečně v databázi): tabulkaA odkazuje na "
 "tabulkaB"
 
-#: ../tools/gda-sql.c:2432
+#: ../tools/gda-sql.c:1996
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
 msgstr "%s <název_ck> <tabulkaA> <tabulkaB>"
 
-#: ../tools/gda-sql.c:2433
+#: ../tools/gda-sql.c:1997
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Zrušit deklaraci cizího klíče (ne skutečně v databázi)"
 
-#: ../tools/gda-sql.c:2445
+#: ../tools/gda-sql.c:2005
 #, c-format
 msgid "%s [<TABLE>]"
 msgstr "%s [<TABULKA>]"
 
-#: ../tools/gda-sql.c:2446
+#: ../tools/gda-sql.c:2006
 msgid "List all tables (or named table)"
 msgstr "Vypsat všechny tabulky (nebo tabulku zadanou názvem)"
 
-#: ../tools/gda-sql.c:2458
+#: ../tools/gda-sql.c:2014
 #, c-format
 msgid "%s [<VIEW>]"
 msgstr "%s [<POHLED>]"
 
-#: ../tools/gda-sql.c:2459
+#: ../tools/gda-sql.c:2015
 msgid "List all views (or named view)"
 msgstr "Vypsat všechny pohledy (nebo pohled zadaný názvem)"
 
-#: ../tools/gda-sql.c:2471
+#: ../tools/gda-sql.c:2023
 #, c-format
 msgid "%s [<SCHEMA>]"
 msgstr "%s [<SCHÉMA>]"
 
-#: ../tools/gda-sql.c:2472
+#: ../tools/gda-sql.c:2024
 msgid "List all schemas (or named schema)"
 msgstr "Vypsat všechna schémata (nebo schéma zadané názvem)"
 
-#: ../tools/gda-sql.c:2484
+#: ../tools/gda-sql.c:2032
 #, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
 msgstr "%s [<NÁZEV OBJ>|<SCHÉMA>.*]"
 
-#: ../tools/gda-sql.c:2485
+#: ../tools/gda-sql.c:2033
 msgid "Describe object or full list of objects"
 msgstr "Popsat objekt nebo vypsat úplný seznam objektů"
 
-#: ../tools/gda-sql.c:2497
+#: ../tools/gda-sql.c:2041
 #, c-format
 msgid "%s [<TABLE1> [<TABLE2>...]]"
 msgstr "%s [<TABULKA1> [<TABULKA2>…]]"
 
-#: ../tools/gda-sql.c:2498
+#: ../tools/gda-sql.c:2042
 msgid "Create a graph of all or the listed tables"
 msgstr "Vytvořit graf všech nebo uvedených tabulek"
 
-#: ../tools/gda-sql.c:2511
+#: ../tools/gda-sql.c:2050
 #, c-format
 msgid "%s [<port> [<authentication token>]]"
 msgstr "%s [<port> [<ověřovací pešek>]]"
 
-#: ../tools/gda-sql.c:2512
+#: ../tools/gda-sql.c:2051
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
 "Spustit/zastavit zabudovaný server HTTP (na zadaném portu nebo výchozím "
 "portu 12345)"
 
-#: ../tools/gda-sql.c:2526
+#: ../tools/gda-sql.c:2060
 #, c-format
-msgid "%s [<CNC_NAME> [<DSN>|<CONNECTION STRING>]]"
-msgstr "%s [<NÁZEV PŘIPJ> [<DSN>|<PŘIPOJOVACÍ ŘETĚZEC>]]"
+msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
+msgstr "%s [[<NÁZEV PŘIPJ>] [<DSN>|<PŘIPOJOVACÍ ŘETĚZEC>]]"
 
-#: ../tools/gda-sql.c:2527
+#: ../tools/gda-sql.c:2061
 msgid "Opens a new connection or lists opened connections"
 msgstr "Otevře nové připojení nebo vypíše otevřená připojení"
 
-#: ../tools/gda-sql.c:2539
+#: ../tools/gda-sql.c:2070
 #, c-format
 msgid "%s [<CNC_NAME>]"
 msgstr "%s [<NÁZEV PŘIPJ>]"
 
-#: ../tools/gda-sql.c:2540
+#: ../tools/gda-sql.c:2071
 msgid "Close a connection"
 msgstr "Zavřít připojení"
 
-#: ../tools/gda-sql.c:2552
+#: ../tools/gda-sql.c:2079
 #, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
 msgstr "%s <NÁZEV PŘIPJ> <NÁZEV OBJ> [<NÁZEV OBJ> …]"
 
-#: ../tools/gda-sql.c:2553
+#: ../tools/gda-sql.c:2080
 msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing "
 "SQL commands to be executed across multiple connections and/or datasets)"
@@ -10371,206 +10432,206 @@ msgstr ""
 "umožňuje provádět příkazy SQL napříč různými připojeními a/nebo datovými "
 "sadami)"
 
-#: ../tools/gda-sql.c:2563 ../tools/gda-sql.c:2576 ../tools/gda-sql.c:2589
-#: ../tools/gda-sql.c:2602
+#: ../tools/gda-sql.c:2086 ../tools/gda-sql.c:2095 ../tools/gda-sql.c:2104
+#: ../tools/gda-sql.c:2113
 msgid "DSN (data sources) management"
 msgstr "Správa DSN (zdrojů dat)"
 
-#: ../tools/gda-sql.c:2565
+#: ../tools/gda-sql.c:2088
 #, c-format
 msgid "%s [<DSN>]"
 msgstr "%s [<DSN>]"
 
-#: ../tools/gda-sql.c:2566
+#: ../tools/gda-sql.c:2089
 msgid "List all DSN (or named DSN's attributes)"
 msgstr "Vypsat všechny DSN (nebo atributy DSN zadaného názvem)"
 
-#: ../tools/gda-sql.c:2578
+#: ../tools/gda-sql.c:2097
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
 msgstr "%s <NÁZEV_DSN> <DEFINICE_DSN> [<POPIS>]"
 
-#: ../tools/gda-sql.c:2579
+#: ../tools/gda-sql.c:2098
 msgid "Create (or modify) a DSN"
 msgstr "Vytvořit (nebo změnit) DSN"
 
-#: ../tools/gda-sql.c:2591
+#: ../tools/gda-sql.c:2106
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
 msgstr "%s <NÁZEV_DSN> [<NÁZEV_DSN>…]"
 
-#: ../tools/gda-sql.c:2592
+#: ../tools/gda-sql.c:2107
 msgid "Remove a DSN"
 msgstr "Odstranit DSN"
 
-#: ../tools/gda-sql.c:2604
+#: ../tools/gda-sql.c:2115
 #, c-format
 msgid "%s [<PROVIDER>]"
 msgstr "%s [<POSKYTOVATEL>]"
 
-#: ../tools/gda-sql.c:2605
+#: ../tools/gda-sql.c:2116
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
 "Vypsat všechny instalované databázové poskytovatele (nebo atributy zadaného "
 "názvem)"
 
-#: ../tools/gda-sql.c:2615 ../tools/gda-sql.c:2628 ../tools/gda-sql.c:2641
-#: ../tools/gda-sql.c:2654 ../tools/gda-sql.c:2836
+#: ../tools/gda-sql.c:2122 ../tools/gda-sql.c:2130 ../tools/gda-sql.c:2138
+#: ../tools/gda-sql.c:2146 ../tools/gda-sql.c:2260
 msgid "Input/Output"
 msgstr "Vstup/výstup"
 
-#: ../tools/gda-sql.c:2617 ../tools/gda-sql.c:2773
+#: ../tools/gda-sql.c:2124 ../tools/gda-sql.c:2222
 #, c-format
 msgid "%s <FILE>"
 msgstr "%s <SOUBOR>"
 
-#: ../tools/gda-sql.c:2618
+#: ../tools/gda-sql.c:2125
 msgid "Execute commands from file"
 msgstr "Provést příkazy ze souboru"
 
-#: ../tools/gda-sql.c:2631
+#: ../tools/gda-sql.c:2133
 msgid "Send output to a file or |pipe"
 msgstr "Poslat výstup do souboru nebo |roury"
 
-#: ../tools/gda-sql.c:2643 ../tools/gda-sql.c:2656
+#: ../tools/gda-sql.c:2140 ../tools/gda-sql.c:2148
 #, c-format
 msgid "%s [<TEXT>]"
 msgstr "%s [<TEXT>]"
 
-#: ../tools/gda-sql.c:2644
+#: ../tools/gda-sql.c:2141
 msgid "Print TEXT or an empty line to standard output"
 msgstr "Vypsat TEXT nebo prázdný řádek na standardní výstup"
 
-#: ../tools/gda-sql.c:2657
+#: ../tools/gda-sql.c:2149
 msgid "Send TEXT or an empty line to current output stream"
 msgstr "Poslat TEXT nebo prázdný řádek do aktuálního výstupního proudu"
 
-#: ../tools/gda-sql.c:2682
+#: ../tools/gda-sql.c:2164
 #, c-format
 msgid "%s [<DIR>]"
 msgstr "%s [<SLOŽKA>]"
 
-#: ../tools/gda-sql.c:2683
+#: ../tools/gda-sql.c:2165
 msgid "Change the current working directory"
 msgstr "Změnit současnou pracovní složku"
 
-#: ../tools/gda-sql.c:2696
+#: ../tools/gda-sql.c:2173
 msgid "Show usage and distribution terms"
 msgstr "Zobrazit podmínky používání a šíření"
 
-#: ../tools/gda-sql.c:2708
+#: ../tools/gda-sql.c:2181
 #, c-format
 msgid "%s [<NAME> [<VALUE>]]"
 msgstr "%s [<NÁZEV> [<HODNOTA>]]"
 
-#: ../tools/gda-sql.c:2709
+#: ../tools/gda-sql.c:2182
 msgid "Set or show an option, or list all options "
 msgstr "Nastavit nebo zobrazit přepínač nebo vypsat všechny přepínače"
 
-#: ../tools/gda-sql.c:2719 ../tools/gda-sql.c:2732 ../tools/gda-sql.c:2745
-#: ../tools/gda-sql.c:2758 ../tools/gda-sql.c:2771 ../tools/gda-sql.c:2784
-#: ../tools/gda-sql.c:2797 ../tools/gda-sql.c:2810 ../tools/gda-sql.c:2823
-#: ../tools/gda-sql.c:2863
+#: ../tools/gda-sql.c:2188 ../tools/gda-sql.c:2196 ../tools/gda-sql.c:2204
+#: ../tools/gda-sql.c:2212 ../tools/gda-sql.c:2220 ../tools/gda-sql.c:2228
+#: ../tools/gda-sql.c:2236 ../tools/gda-sql.c:2244 ../tools/gda-sql.c:2252
+#: ../tools/gda-sql.c:2278
 msgid "Query buffer & query favorites"
 msgstr "Paměť dotazů a oblíbené dotazy"
 
-#: ../tools/gda-sql.c:2722
+#: ../tools/gda-sql.c:2191
 msgid "Edit the query buffer (or file) with external editor"
 msgstr "Upravit paměť dotazů (nebo soubor) v externím editoru"
 
-#: ../tools/gda-sql.c:2735
+#: ../tools/gda-sql.c:2199
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr "Vynulovat paměť dotazů (nebo načíst soubor do paměti dotazů)"
 
-#: ../tools/gda-sql.c:2748
+#: ../tools/gda-sql.c:2207
 msgid "Show the contents of the query buffer"
 msgstr "Zobrazit obsah paměti dotazů"
 
-#: ../tools/gda-sql.c:2760
+#: ../tools/gda-sql.c:2214
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
 msgstr "%s [<NÁZEV_OBLÍBENÉHO>]"
 
-#: ../tools/gda-sql.c:2761
+#: ../tools/gda-sql.c:2215
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr "Provést obsah paměti dotazů nebo provést určený oblíbený dotaz"
 
-#: ../tools/gda-sql.c:2774
+#: ../tools/gda-sql.c:2223
 msgid "Write query buffer to file"
 msgstr "Zapsat paměť dotazů do souboru"
 
-#: ../tools/gda-sql.c:2786 ../tools/gda-sql.c:2799 ../tools/gda-sql.c:2812
+#: ../tools/gda-sql.c:2230 ../tools/gda-sql.c:2238 ../tools/gda-sql.c:2246
 #, c-format
 msgid "%s <FAVORITE_NAME>"
 msgstr "%s [<NÁZEV_OBLÍBENÉHO>]"
 
-#: ../tools/gda-sql.c:2787
+#: ../tools/gda-sql.c:2231
 msgid "Save query buffer as favorite"
 msgstr "Uložit paměť dotazů jako oblíbené"
 
-#: ../tools/gda-sql.c:2800
+#: ../tools/gda-sql.c:2239
 msgid "Load a query favorite into query buffer"
 msgstr "Načíst oblíbené dotazy do paměti dotazů"
 
-#: ../tools/gda-sql.c:2813
+#: ../tools/gda-sql.c:2247
 msgid "Delete a query favorite"
 msgstr "Smazat oblíbený dotaz"
 
-#: ../tools/gda-sql.c:2825 ../tools/gda-sql.c:2931
+#: ../tools/gda-sql.c:2254 ../tools/gda-sql.c:2323
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: ../tools/gda-sql.c:2826
+#: ../tools/gda-sql.c:2255
 msgid "List all query favorites"
 msgstr "Vypsat všechny oblíbené dotazy"
 
-#: ../tools/gda-sql.c:2839
+#: ../tools/gda-sql.c:2263
 msgid "Set output format"
 msgstr "Nastavit výstupní formát"
 
-#: ../tools/gda-sql.c:2865
+#: ../tools/gda-sql.c:2280
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
 msgstr "%s [<NÁZEV>|<TABULKA> <SLOUPEC> <PODMÍNKA_ŘÁDKU>] <SOUBOR>"
 
-#: ../tools/gda-sql.c:2866
+#: ../tools/gda-sql.c:2281
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr "Exportovat interní parametr nebo hodnotu tabulky do souboru SOUBOR"
 
-#: ../tools/gda-sql.c:2876 ../tools/gda-sql.c:2889 ../tools/gda-sql.c:2902
-#: ../tools/gda-sql.c:2915
+#: ../tools/gda-sql.c:2286 ../tools/gda-sql.c:2295 ../tools/gda-sql.c:2304
+#: ../tools/gda-sql.c:2312
 msgid "Execution context"
 msgstr "Kontext provádění"
 
-#: ../tools/gda-sql.c:2878
+#: ../tools/gda-sql.c:2288
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
 msgstr "%s [<NÁZEV> [<HODNOTA>|_null_]]"
 
-#: ../tools/gda-sql.c:2879
+#: ../tools/gda-sql.c:2289
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Nastavit nebo zobrazit interní parametr a nebo je všechny vypsat, pokud není "
 "žádný určen"
 
-#: ../tools/gda-sql.c:2891
+#: ../tools/gda-sql.c:2297
 #, c-format
 msgid "%s [<NAME>]"
 msgstr "%s [<NÁZEV>]"
 
-#: ../tools/gda-sql.c:2892
+#: ../tools/gda-sql.c:2298
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr ""
 "Zrušit nastavení (smazat) interní pojmenovaný parametr (nebo všechny "
 "parametry)"
 
-#: ../tools/gda-sql.c:2904
+#: ../tools/gda-sql.c:2306
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
 msgstr "%s <NÁZEV> [<SOUBOR>|<TABULKA> <SLOUPEC> <PODMÍNKA_ŘÁDKU>]"
 
-#: ../tools/gda-sql.c:2905
+#: ../tools/gda-sql.c:2307
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
@@ -10578,12 +10639,12 @@ msgstr ""
 "Nastavit interní parametr na obsah souboru SOUBOR nebo existující hodnotu "
 "tabulky"
 
-#: ../tools/gda-sql.c:2917
+#: ../tools/gda-sql.c:2314
 #, c-format
 msgid "%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"
 msgstr "%s <SELECT> <ŘÁDKOVÁ_POLE> [<SLOUPCOVÁ_POLE> [<DATOVÁ_POLE>…]]"
 
-#: ../tools/gda-sql.c:2918
+#: ../tools/gda-sql.c:2315
 msgid ""
 "Performs a statistical analysis on the data from SELECT, using ROW_FIELDS "
 "and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
@@ -10591,30 +10652,30 @@ msgstr ""
 "Provést statistickou analýzu na datech z příkazu SELECT za použití kritérií "
 "ŘÁDKOVÁ_POLE a SLOUPCOVÁ_POLE a volitelně pro data DATOVÁ_POLE"
 
-#: ../tools/gda-sql.c:2929 ../tools/gda-sql.c:2942 ../tools/gda-sql.c:2955
-#: ../tools/gda-sql.c:2968 ../tools/gda-sql.c:2981 ../tools/gda-sql.c:2994
+#: ../tools/gda-sql.c:2321 ../tools/gda-sql.c:2330 ../tools/gda-sql.c:2339
+#: ../tools/gda-sql.c:2348 ../tools/gda-sql.c:2357 ../tools/gda-sql.c:2366
 msgid "Datasets' manipulations"
 msgstr "Práce s datovými sadami"
 
-#: ../tools/gda-sql.c:2932
+#: ../tools/gda-sql.c:2324
 msgid "Lists all the datasets kept in memory for reference"
 msgstr "Vypsat všechny datové sady přechovávané v paměti k nahlédnutí"
 
-#: ../tools/gda-sql.c:2944
+#: ../tools/gda-sql.c:2332
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
 msgstr "%s <NÁZEV DATOVÉ SADY> <VZOR>"
 
-#: ../tools/gda-sql.c:2945
+#: ../tools/gda-sql.c:2333
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr "Zobrazit obsah datové sady, kde řádky odpovídají regulárnímu výrazu"
 
-#: ../tools/gda-sql.c:2957
+#: ../tools/gda-sql.c:2341
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgstr "%s <NÁZEV DATOVÉ SADY> [<SLOUPEC> [<SLOUPEC> …]]"
 
-#: ../tools/gda-sql.c:2958
+#: ../tools/gda-sql.c:2342
 msgid ""
 "Show a dataset's contents, showing only the specified columns if any "
 "specified"
@@ -10622,50 +10683,50 @@ msgstr ""
 "Zobrazit obsah datové sady, zobrazují se jen určené sloupce, pokud nějaké "
 "určené jsou"
 
-#: ../tools/gda-sql.c:2970
+#: ../tools/gda-sql.c:2350
 #, c-format
 msgid "%s <DATASET NAME> [<DATASET NAME> ...]"
 msgstr "%s <NÁZEV DATOVÉ SADY> [<NÁZEV DATOVÉ SADY>…]"
 
-#: ../tools/gda-sql.c:2971
+#: ../tools/gda-sql.c:2351
 msgid "Remove one or more datasets"
 msgstr "Odebrat jednu nebo více datových sad"
 
-#: ../tools/gda-sql.c:2983
+#: ../tools/gda-sql.c:2359
 #, c-format
 msgid "%s <DATASET NAME> <DATASET NAME>"
 msgstr "%s <NÁZEV DATOVÉ SADY> <NÁZEV DATOVÉ SADY>"
 
-#: ../tools/gda-sql.c:2984
+#: ../tools/gda-sql.c:2360
 msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr ""
 "Přejmenovat datovou sadu, užitečné je přejmenovat datovou sadu „_“, aby "
 "zůstala zachována"
 
-#: ../tools/gda-sql.c:2996
+#: ../tools/gda-sql.c:2368
 #, c-format
 msgid "%s CSV <FILE NAME>"
 msgstr "%s CSV <NÁZEV SOUBORU>"
 
-#: ../tools/gda-sql.c:2997
+#: ../tools/gda-sql.c:2369
 msgid "Import a dataset from a file"
 msgstr "Importovat datovou sadu ze souboru"
 
-#: ../tools/gda-sql.c:3010
+#: ../tools/gda-sql.c:2378
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
 msgstr "%s <filtr> [<base|onelevel|subtree> [<základní DN>]]"
 
-#: ../tools/gda-sql.c:3011
+#: ../tools/gda-sql.c:2379
 msgid "Search LDAP entries"
 msgstr "Hledat záznamy LDAP"
 
-#: ../tools/gda-sql.c:3023
+#: ../tools/gda-sql.c:2386
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [„all“|„set“|„unset“]"
 
-#: ../tools/gda-sql.c:3024
+#: ../tools/gda-sql.c:2387
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
 "parameter is passed, then all set attributes are show, if the \"all\" 2nd "
@@ -10677,21 +10738,21 @@ msgstr ""
 "„all“, jsou zobrazeny i nenastavené, a pokud je jím „unset“, jsou zobrazeny "
 "jen nenastavené atributy."
 
-#: ../tools/gda-sql.c:3040
+#: ../tools/gda-sql.c:2398
 #, c-format
 msgid "%s <DN> <new DN>"
 msgstr "%s <DN> <nové DN>"
 
-#: ../tools/gda-sql.c:3041
+#: ../tools/gda-sql.c:2399
 msgid "Renames an LDAP entry"
 msgstr "Přejmenovat záznam LDAP"
 
-#: ../tools/gda-sql.c:3053
+#: ../tools/gda-sql.c:2406
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
 msgstr "%s <DN> <OPERACE> [<ATRIB>[=<HODNOTA>]] [<ATRIB>=<HODNOTA>…]"
 
-#: ../tools/gda-sql.c:3054
+#: ../tools/gda-sql.c:2407
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
@@ -10699,321 +10760,304 @@ msgstr ""
 "Změnit atributy záznamu LDAP; <OPERACE> může být DELETE (smazat), REPLACE "
 "(nahradit) nebo ADD (přidat)"
 
-#: ../tools/gda-sql.c:3068
-#, c-format
-msgid "%s [command]"
-msgstr "%s [příkaz]"
-
-#: ../tools/gda-sql.c:3069
-msgid "List all available commands or give help for the specified command"
-msgstr "Vypsat všechny dostupné příkazy nebo nápovědu ke konkrétnímu příkazu"
-
-#: ../tools/gda-sql.c:3134
+#: ../tools/gda-sql.c:2453
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr "Neznámý výstupní formát: „%s“, nastavuje se na výchozí"
 
-#: ../tools/gda-sql.c:3295
+#: ../tools/gda-sql.c:2598
 msgid "DSN list"
 msgstr "Seznam DSN"
 
-#: ../tools/gda-sql.c:3349 ../tools/gda-sql.c:6616
+#: ../tools/gda-sql.c:2651 ../tools/gda-sql.c:5821
 msgid "Missing arguments"
 msgstr "Schází parametry"
 
-#: ../tools/gda-sql.c:3370
+#: ../tools/gda-sql.c:2672
 msgid "Missing provider name"
 msgstr "Schází název poskytovatele"
 
-#: ../tools/gda-sql.c:3395
+#: ../tools/gda-sql.c:2696
 msgid "Missing DSN name"
 msgstr "Schází název DSN"
 
-#: ../tools/gda-sql.c:3461 ../tools/gda-sql.c:3753
-#, c-format
-msgid "A connection named '%s' already exists"
-msgstr "Připojení s názvem „%s“ již existuje"
-
-#: ../tools/gda-sql.c:3566
+#: ../tools/gda-sql.c:2872
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
 "Získávají se informace o databázovém schématu, to může nějakou chvíli trvat…"
 
-#: ../tools/gda-sql.c:3601
+#: ../tools/gda-sql.c:2905 ../tools/gda-sql.c:3090
+#, c-format
+msgid "A connection named '%s' already exists"
+msgstr "Připojení s názvem „%s“ již existuje"
+
+#: ../tools/gda-sql.c:2931
 msgid "No opened connection"
 msgstr "Žádné otevřené připojení"
 
-#: ../tools/gda-sql.c:3612
+#: ../tools/gda-sql.c:2942
 msgid "DSN or connection string"
 msgstr "DSN nebo připojovací řetězec"
 
-#: ../tools/gda-sql.c:3704
-msgid "No connection currently opened"
-msgstr "V současnosti není otevřeno žádné připojení"
-
-#: ../tools/gda-sql.c:3745
+#: ../tools/gda-sql.c:3082
 msgid "Missing required connection names"
 msgstr "Schází názvy požadovaného připojení"
 
-#: ../tools/gda-sql.c:3768
+#: ../tools/gda-sql.c:3105
 #, c-format
 msgid "No connection or dataset named '%s' found"
 msgstr "Nenalezeno žádné připojení nebo datová sada pojmenované „%s“"
 
 #. force create of meta store
 #. add existing connections to virtual connection
-#: ../tools/gda-sql.c:3790
+#: ../tools/gda-sql.c:3127
 msgid "Bound connections are as:"
 msgstr "Návazná připojení jsou:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
-#: ../tools/gda-sql.c:3803
+#: ../tools/gda-sql.c:3140
 #, c-format
 msgid "%s in the '%s' namespace"
 msgstr "%s ve jmenném prostoru „%s“"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
-#: ../tools/gda-sql.c:3817
+#: ../tools/gda-sql.c:3154
 #, c-format
 msgid "%s mapped to the %s table"
 msgstr "%s mapovaná do tabulky %s"
 
-#: ../tools/gda-sql.c:3896
+#: ../tools/gda-sql.c:3229
 #, c-format
 msgid "No option named '%s'"
 msgstr "Nenalezen žádný přepínač s názvem „%s“"
 
-#: ../tools/gda-sql.c:3908
+#: ../tools/gda-sql.c:3241
 msgid "List of options"
 msgstr "Vypsat přepínače"
 
-#: ../tools/gda-sql.c:3990
+#: ../tools/gda-sql.c:3307
 #, c-format
 msgid "Could not get home directory: %s"
 msgstr "Nelze získat domovskou složku: %s"
 
-#: ../tools/gda-sql.c:4016
+#: ../tools/gda-sql.c:3333
 #, c-format
 msgid "Working directory is now: %s"
 msgstr "Pracovní složka je nyní: %s"
 
-#: ../tools/gda-sql.c:4021
+#: ../tools/gda-sql.c:3338
 #, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr "Nelze změnit pracovní složku na „%s“: %s"
 
-#: ../tools/gda-sql.c:4049 ../tools/gda-sql.c:4153 ../tools/gda-sql.c:4198
-#: ../tools/gda-sql.c:4228 ../tools/gda-sql.c:4271 ../tools/gda-sql.c:4316
-#: ../tools/gda-sql.c:4426 ../tools/gda-sql.c:4492 ../tools/gda-sql.c:4579
-#: ../tools/gda-sql.c:5291 ../tools/gda-sql.c:5378
+#: ../tools/gda-sql.c:3357 ../tools/gda-sql.c:3452 ../tools/gda-sql.c:3488
+#: ../tools/gda-sql.c:3510 ../tools/gda-sql.c:3545 ../tools/gda-sql.c:3582
+#: ../tools/gda-sql.c:3684 ../tools/gda-sql.c:3741 ../tools/gda-sql.c:3820
+#: ../tools/gda-sql.c:4540 ../tools/gda-sql.c:4627
 msgid "No connection opened"
 msgstr "Není otevřeno žádné připojení"
 
-#: ../tools/gda-sql.c:4067
+#: ../tools/gda-sql.c:3375
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Nelze zapsat do dočasného souboru „%s“: %s"
 
-#: ../tools/gda-sql.c:4103
+#: ../tools/gda-sql.c:3411
 #, c-format
 msgid "could not start editor '%s'"
 msgstr "nelze spustit editor „%s“"
 
-#: ../tools/gda-sql.c:4108
+#: ../tools/gda-sql.c:3416
 msgid "Could not start /bin/sh"
 msgstr "Nelze spustit /bin/sh"
 
-#: ../tools/gda-sql.c:4279
+#: ../tools/gda-sql.c:3553
 msgid "Missing FILE to write to"
 msgstr "Schází SOUBOR, do kterého se má zapisovat"
 
-#: ../tools/gda-sql.c:4322
+#: ../tools/gda-sql.c:3588
 msgid "Favorite name"
 msgstr "Název oblíbeného"
 
-#: ../tools/gda-sql.c:4323
+#: ../tools/gda-sql.c:3589
 msgid "Comments"
 msgstr "Komentáře"
 
-#: ../tools/gda-sql.c:4324
+#: ../tools/gda-sql.c:3590
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/gda-sql.c:4440 ../tools/gda-sql.c:4556 ../tools/gda-sql.c:4633
+#: ../tools/gda-sql.c:3698 ../tools/gda-sql.c:3806 ../tools/gda-sql.c:3874
 msgid "Missing query buffer name"
 msgstr "Schází název paměti dotazů"
 
-#: ../tools/gda-sql.c:4469
+#: ../tools/gda-sql.c:3727
 msgid "Query buffer is empty"
 msgstr "Paměť dotazů je prázdná"
 
-#: ../tools/gda-sql.c:4524 ../tools/tools-favorites.c:1092
+#: ../tools/gda-sql.c:3774 ../tools/tools-favorites.c:1092
 msgid "Could not find favorite"
 msgstr "Nelze přidat oblíbenou"
 
-#: ../tools/gda-sql.c:4697 ../tools/gda-sql.c:6301 ../tools/gda-sql.c:6379
+#: ../tools/gda-sql.c:3946 ../tools/gda-sql.c:5532 ../tools/gda-sql.c:5610
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr "Není definován žádný parametr s názvem „%s“"
 
-#: ../tools/gda-sql.c:4708
+#: ../tools/gda-sql.c:3957
 msgid "List of defined parameters"
 msgstr "Seznam definovaných parametrů"
 
-#: ../tools/gda-sql.c:4747
+#: ../tools/gda-sql.c:3996
 msgid "dimensions (columns x rows)"
 msgstr "rozměry (sloupců × řádků)"
 
-#: ../tools/gda-sql.c:4748
+#: ../tools/gda-sql.c:3997
 msgid "List of kept data"
 msgstr "Vypsat přechovávaná data"
 
-#: ../tools/gda-sql.c:4793 ../tools/gda-sql.c:4913 ../tools/gda-sql.c:4979
-#: ../tools/gda-sql.c:5021 ../tools/gda-sql.c:5065
+#: ../tools/gda-sql.c:4042 ../tools/gda-sql.c:4162 ../tools/gda-sql.c:4228
+#: ../tools/gda-sql.c:4270 ../tools/gda-sql.c:4314
 msgid "Missing argument"
 msgstr "Schází argument"
 
-#: ../tools/gda-sql.c:4803 ../tools/gda-sql.c:4921 ../tools/gda-sql.c:4987
-#: ../tools/gda-sql.c:5074
+#: ../tools/gda-sql.c:4052 ../tools/gda-sql.c:4170 ../tools/gda-sql.c:4236
+#: ../tools/gda-sql.c:4323
 #, c-format
 msgid "Could not find dataset named '%s'"
 msgstr "Nelze najít datovou sadu pojmenovanou „%s“"
 
-#: ../tools/gda-sql.c:4942
+#: ../tools/gda-sql.c:4191
 #, c-format
 msgid "Could not identify column '%s'"
 msgstr "Nelze zjistit sloupec „%s“"
 
-#: ../tools/gda-sql.c:5012
+#: ../tools/gda-sql.c:4261
 #, c-format
 msgid "Unknown import format '%s'"
 msgstr "Neznámý importní formát „%s“"
 
-#: ../tools/gda-sql.c:5033
+#: ../tools/gda-sql.c:4282
 #, c-format
 msgid "Could not import file '%s'"
 msgstr "Nelze importovat soubor „%s“"
 
-#: ../tools/gda-sql.c:5127
+#: ../tools/gda-sql.c:4376
 msgid "Missing foreign key declaration specification"
 msgstr "Schází specifikace deklarace cizího klíče"
 
-#: ../tools/gda-sql.c:5244
+#: ../tools/gda-sql.c:4493
 msgid "Malformed foreign key declaration specification"
 msgstr "Chybná specifikace deklarace cizího klíče"
 
-#: ../tools/gda-sql.c:5276
+#: ../tools/gda-sql.c:4525
 #, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Chybná specifikace názvu tabulky „%s“"
 
-#: ../tools/gda-sql.c:5365 ../tools/gda-sql.c:5440
+#: ../tools/gda-sql.c:4614 ../tools/gda-sql.c:4689
 msgid "Missing foreign key name argument"
 msgstr "Schází argument s názvem cizího klíče"
 
-#: ../tools/gda-sql.c:5472 ../tools/gda-sql.c:6644
+#: ../tools/gda-sql.c:4721 ../tools/gda-sql.c:5849
 msgid "Wrong row condition"
 msgstr "Nesprávná podmínka řádku"
 
-#: ../tools/gda-sql.c:5500
+#: ../tools/gda-sql.c:4749
 msgid "No unique row identified"
 msgstr "Nebyl zjištěn žádný jedinečný řádek"
 
-#: ../tools/gda-sql.c:5542 ../tools/gda-sql.c:6279 ../tools/gda-sql.c:6607
-msgid "Too many arguments"
-msgstr "Příliš mnoho parametrů"
-
-#: ../tools/gda-sql.c:5590 ../tools/gda-sql.c:6307
+#: ../tools/gda-sql.c:4831 ../tools/gda-sql.c:5538
 msgid "Wrong number of arguments"
 msgstr "Nesprávný počet parametrů"
 
-#: ../tools/gda-sql.c:5623
+#: ../tools/gda-sql.c:4864
 msgid "Missing data on which to operate"
 msgstr "Schází data, se kterými se má operovat"
 
-#: ../tools/gda-sql.c:5628
+#: ../tools/gda-sql.c:4869
 msgid "Missing row fields specifications"
 msgstr "Schází specifikace řádkových polí"
 
-#: ../tools/gda-sql.c:5646
+#: ../tools/gda-sql.c:4887
 msgid "Wrong SELECT argument"
 msgstr "Nesprávné argument příkazu SELECT"
 
-#: ../tools/gda-sql.c:5684 ../tools/gda-sql.c:5712
+#: ../tools/gda-sql.c:4925 ../tools/gda-sql.c:4953
 msgid "Wrong data field argument"
 msgstr "Nesprávný argument datového pole"
 
-#: ../tools/gda-sql.c:5762 ../tools/gda-sql.c:5860 ../tools/gda-sql.c:5954
-#: ../tools/gda-sql.c:6049
+#: ../tools/gda-sql.c:5003 ../tools/gda-sql.c:5100 ../tools/gda-sql.c:5193
+#: ../tools/gda-sql.c:5288
 msgid "Connection is not an LDAP connection"
 msgstr "Připojení není připojení LDAP"
 
-#: ../tools/gda-sql.c:5784
+#: ../tools/gda-sql.c:5025
 #, c-format
 msgid "Unknown search scope '%s'"
 msgstr "Neznámý rozsah hledání „%s“"
 
-#: ../tools/gda-sql.c:5794
+#: ../tools/gda-sql.c:5035
 msgid "Missing filter which to operate"
 msgstr "Schází filtr, se kterými se má operovat"
 
-#: ../tools/gda-sql.c:5875
+#: ../tools/gda-sql.c:5115
 msgid "Missing current DN or new DN specification"
 msgstr "Schází určení současného DN nebo nového DN"
 
-#: ../tools/gda-sql.c:5969
+#: ../tools/gda-sql.c:5208
 msgid "Missing DN of LDAP entry"
 msgstr "Schází DN záznamu LDAP"
 
-#: ../tools/gda-sql.c:5974
+#: ../tools/gda-sql.c:5213
 msgid "Missing operation to perform on LDAP entry's attributes"
 msgstr "Schází operace, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/gda-sql.c:5986
+#: ../tools/gda-sql.c:5225
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "Neznámá operace „%s“, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/gda-sql.c:6007
+#: ../tools/gda-sql.c:5246
 #, c-format
-msgid "Wrong attribute value specification"
-msgstr "Zadána nesprávná hodnota atributu"
+msgid "Wrong attribute value specification '%s'"
+msgstr "Zadána nesprávná hodnota atributu „%s“"
 
-#: ../tools/gda-sql.c:6063
+#: ../tools/gda-sql.c:5302
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Schází argument s DN (rozlišovacím názvem)"
 
-#: ../tools/gda-sql.c:6076
+#: ../tools/gda-sql.c:5315
 #, c-format
 msgid "Unknown '%s' argument"
 msgstr "Neznámý argument „%s“"
 
-#: ../tools/gda-sql.c:6087
+#: ../tools/gda-sql.c:5326
 #, c-format
 msgid "Could not find entry with DN '%s'"
 msgstr "Nelze najít záznam s DN „%s“"
 
-#: ../tools/gda-sql.c:6096
+#: ../tools/gda-sql.c:5335
 msgid "Required?"
 msgstr "Vyžadováno?"
 
-#: ../tools/gda-sql.c:6098
+#: ../tools/gda-sql.c:5337
 msgid "LDAP entry's Attributes"
 msgstr "Atributy záznamu LDAP"
 
-#: ../tools/gda-sql.c:6319 ../tools/gda-sql.c:6333
+#: ../tools/gda-sql.c:5550 ../tools/gda-sql.c:5564
 msgid "Could not write file"
 msgstr "Nelze zapsat soubor"
 
-#: ../tools/gda-sql.c:6458
+#: ../tools/gda-sql.c:5689
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Graf zapsán do „%s“\n"
 
-#: ../tools/gda-sql.c:6461
+#: ../tools/gda-sql.c:5692
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -11028,23 +11072,23 @@ msgstr ""
 "Poznámka: pro zobrazení grafu nastavte proměnnou prostředí "
 "GDA_SQL_VIEWER_PNG nebo GDA_SQL_VIEWER_PDF\n"
 
-#: ../tools/gda-sql.c:6535
+#: ../tools/gda-sql.c:5749
 msgid "HTTPD server stopped"
 msgstr "Server HTTPD zastaven"
 
-#: ../tools/gda-sql.c:6554
+#: ../tools/gda-sql.c:5768
 msgid "Could not start HTTPD server"
 msgstr "Nelze spustit server HTTPD"
 
-#: ../tools/gda-sql.c:6558
+#: ../tools/gda-sql.c:5772
 msgid "HTTPD server started"
 msgstr "Server HTTPD spuštěn"
 
-#: ../tools/gda-sql.c:6563
+#: ../tools/gda-sql.c:5777
 msgid "Invalid port specification"
 msgstr "Neplatné zadání portu"
 
-#: ../tools/gda-sql.c:6779
+#: ../tools/gda-sql.c:5970
 msgid "Command is incomplete"
 msgstr "Příkaz je neúplný"
 
@@ -11060,32 +11104,27 @@ msgstr "Konzola"
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Nelze inicializovat slovník pro uložení oblíbených"
 
-#: ../tools/tools-input.c:322
-#, c-format
-msgid "Could not save history file to '%s': %s"
-msgstr "Nelze uložit soubor s historií do „%s“: %s"
-
-#: ../tools/tools-utils.c:37
+#: ../tools/tool-utils.c:37
 msgid "not enforced"
 msgstr "nevnucovat"
 
-#: ../tools/tools-utils.c:39
+#: ../tools/tool-utils.c:39
 msgid "stop with error"
 msgstr "zastavit s chybou"
 
-#: ../tools/tools-utils.c:41
+#: ../tools/tool-utils.c:41
 msgid "stop with error, not deferrable"
 msgstr "zastavit s chybou, neodkladnou"
 
-#: ../tools/tools-utils.c:43
+#: ../tools/tool-utils.c:43
 msgid "cascade changes"
 msgstr "kaskádovitě provést změny"
 
-#: ../tools/tools-utils.c:45
+#: ../tools/tool-utils.c:45
 msgid "set to NULL"
 msgstr "nastavit na prázdné (NULL)"
 
-#: ../tools/tools-utils.c:47
+#: ../tools/tool-utils.c:47
 msgid "set to default value"
 msgstr "nastavit na výchozí hodnotu"
 
