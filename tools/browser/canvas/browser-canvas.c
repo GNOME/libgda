@@ -851,13 +851,13 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 	if (!gvc)
 		gvc = gvContext ();
 
-	graph = agopen ("BrowserCanvasLayout", AGRAPH);
-        agnodeattr (graph, "shape", "box");
-        agnodeattr (graph, "height", ".1");
-        agnodeattr (graph, "width", ".1");
-        agnodeattr (graph, "fixedsize", "true");
-        agnodeattr (graph, "pack", "true");
-	agnodeattr (graph, "packmode", "node");
+	graph = agopen ("BrowserCanvasLayout", Agdirected, NULL);
+        agnode (graph, "shape", "box");
+        agset (graph, "height", ".1");
+        agset (graph, "width", ".1");
+        agset (graph, "fixedsize", "true");
+        agset (graph, "pack", "true");
+	agset (graph, "packmode", "node");
 
 
 	if (class->get_layout_items)
@@ -885,7 +885,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 		nodes_list = g_slist_prepend (nodes_list, nl);
 		
 		tmp = g_strdup_printf ("%p", item);
-		node = agnode (graph, tmp);
+		node = agnode (graph, tmp, 0);
 		nl->node = node;
 		g_hash_table_insert (nodes_hash, item, node);
 		
@@ -929,7 +929,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 			from_node = (Agnode_t*) g_hash_table_lookup (nodes_hash, from);
 			to_node = (Agnode_t*) g_hash_table_lookup (nodes_hash, to);
 			if (from_node && to_node)
-				agedge (graph, from_node, to_node);
+			  agedge (graph, from_node, to_node, "", 0);
 		}
 	}
 
