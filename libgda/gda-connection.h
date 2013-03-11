@@ -63,7 +63,8 @@ typedef enum {
 	GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
 	GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 	GDA_CONNECTION_CLOSED_ERROR,
-	GDA_CONNECTION_META_DATA_CONTEXT_ERROR
+	GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
+	GDA_CONNECTION_UNSUPPORTED_ASYNC_EXEC_ERROR
 } GdaConnectionError;
 
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
@@ -218,6 +219,7 @@ typedef enum {
  * @GDA_CONNECTION_FEATURE_VIEWS: test for views support
  * @GDA_CONNECTION_FEATURE_XA_TRANSACTIONS: test for distributed transactions support
  * @GDA_CONNECTION_FEATURE_MULTI_THREADING: test for native multi-threading support
+ * @GDA_CONNECTION_FEATURE_ASYNC_EXEC: test if connection supports asynchronous execution
  * @GDA_CONNECTION_FEATURE_LAST: not used
  *
  * Used in gda_connection_supports_feature() and gda_server_provider_supports_feature() to test if a connection
@@ -242,6 +244,7 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_XA_TRANSACTIONS,
 	
 	GDA_CONNECTION_FEATURE_MULTI_THREADING,
+	GDA_CONNECTION_FEATURE_ASYNC_EXEC,
 
 	GDA_CONNECTION_FEATURE_LAST
 } GdaConnectionFeature;
@@ -337,7 +340,7 @@ gchar               *gda_connection_quote_sql_identifier (GdaConnection *cnc, co
 gchar               *gda_connection_statement_to_sql     (GdaConnection *cnc,
 							  GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 							  GSList **params_used, GError **error);
-/* synchronous exec */
+/* synchronous execution */
 gboolean             gda_connection_statement_prepare    (GdaConnection *cnc,
 							  GdaStatement *stmt, GError **error);
 GObject             *gda_connection_statement_execute    (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
@@ -354,7 +357,7 @@ GdaDataModel        *gda_connection_statement_execute_select_full (GdaConnection
 gint                 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
 								  GdaSet *params, GdaSet **last_insert_row, GError **error);
 
-/* Async. execution */
+/* asynchronous execution */
 guint                gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
 							     GdaStatementModelUsage model_usage, GType *col_types,
 							     gboolean need_last_insert_row, 

@@ -3092,7 +3092,7 @@ get_task_index (GdaConnection *cnc, guint task_id, gboolean *out_completed, gboo
 }
 
 /*
- * This callback is called from the GdaServerProvider object
+ * This callback is called from the GdaServerProvider object, from the handle_async() method
  */
 static void
 async_stmt_exec_cb (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, guint task_id,
@@ -3257,6 +3257,14 @@ gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, 
 		return 0;
 	}
 
+	if (!PROV_CLASS (cnc->priv->provider_obj)->handle_async) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_UNSUPPORTED_ASYNC_EXEC_ERROR,
+			     _("Asynchronous execution is not supported"));
+		gda_connection_unlock (GDA_LOCKABLE (cnc));
+		g_object_unref ((GObject*) cnc);
+		return 0;
+	}
+
 	id = cnc->priv->next_task_id ++;
 	task = cnc_task_new (id, stmt, model_usage, col_types, params, need_last_insert_row);
 	g_array_append_val (cnc->priv->waiting_tasks, task);
@@ -3337,6 +3345,7 @@ gda_connection_async_fetch_result (GdaConnection *cnc, guint task_id, GdaSet **l
 	gboolean is_completed;
 	GObject *obj = NULL;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 
 	if (! gda_connection_trylock ((GdaLockable*) cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CANT_LOCK_ERROR,
@@ -4337,6 +4346,8 @@ gda_connection_supports_feature (GdaConnection *cnc, GdaConnectionFeature featur
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
+	if (feature == GDA_CONNECTION_FEATURE_ASYNC_EXEC)
+		return PROV_CLASS (cnc->priv->provider_obj)->handle_async ? TRUE : FALSE;
 	return gda_server_provider_supports_feature (cnc->priv->provider_obj, cnc, feature);
 }
 

@@ -656,6 +656,9 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
+	if (feature == GDA_CONNECTION_FEATURE_ASYNC_EXEC)
+		return CLASS(provider)->handle_async ? TRUE : FALSE;;
+
 	if (cnc)
 		gda_lockable_lock ((GdaLockable*) cnc);
 	if (CLASS (provider)->supports_feature)
