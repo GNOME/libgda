@@ -65,15 +65,6 @@
 #include "gda-types.h"
 #include "gda-data-meta-wrapper.h"
 
-static GdaMetaContext* 
-gda_meta_context_copy (GdaMetaContext *ctx)
-{
-	GdaMetaContext *n = gda_meta_context_new ();
-	gda_meta_context_set_table (n, ctx->table_name);
-	gda_meta_context_set_columns (n, ctx->columns, NULL);
-	return n;
-}
-
 /*
    Register GdaMetaContext type
 */
@@ -127,6 +118,29 @@ gda_meta_context_new (void)
 	ctx->columns = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free, 
 							(GDestroyNotify) gda_value_free);
 	return ctx;
+}
+
+/**
+ * gda_meta_context_copy:
+ * @ctx: a #GdaMetaContext
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdaMetaContext
+ *
+ * Since: 5.2
+ */
+GdaMetaContext *
+gda_meta_context_copy (GdaMetaContext *ctx)
+{
+	g_return_val_if_fail (ctx, NULL);
+
+	GdaMetaContext *n;
+	n = gda_meta_context_new ();
+	gda_meta_context_set_table (n, gda_meta_context_get_table (ctx));
+	gda_meta_context_set_columns (n, ctx->columns, NULL);
+
+	return n;
 }
 
 /**
@@ -246,16 +260,18 @@ gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConne
 
 /**
  * gda_meta_context_free:
- * @ctx: a #GdaMetaContext struct to free
+ * @ctx: (allow-none): a #GdaMetaContext struct to free
  * 
- * Frees any resources taken by @ctx struct.
+ * Frees any resources taken by @ctx struct. If @ctx is %NULL, then nothing happens.
  *
  * Since: 5.2
  */
 void
 gda_meta_context_free (GdaMetaContext *ctx)
 {
-	g_return_if_fail (ctx);
+	if (!ctx)
+		return;
+
 	g_free (ctx->table_name);
 	g_hash_table_unref (ctx->columns);
 	g_free (ctx);

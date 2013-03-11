@@ -1468,6 +1468,7 @@ gda_meta_store_undeclare_foreign_key
 <SUBSECTION>
 gda_meta_context_get_type
 gda_meta_context_new
+gda_meta_context_copy
 gda_meta_context_set_table
 gda_meta_context_get_table
 gda_meta_context_set_column
