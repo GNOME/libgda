@@ -186,7 +186,7 @@ typedef void (*GdaThreadWrapperCallback) (GdaThreadWrapper *wrapper, gpointer in
  * simply dispatch all the execution requests to its private <emphasis>worker</emphasis> thread and report the
  * execution's status only to the thread which made the request.
  *
- * The user can also specify a callback function to be called when an object exmits a signal while being
+ * The user can also specify a callback function to be called when an object emits a signal while being
  * used by the worker thread, see the gda_thread_wrapper_connect_raw() method.
  *
  * The following diagram illustrates the conceptual working of the #GdaThreadWrapper object: here two user threads

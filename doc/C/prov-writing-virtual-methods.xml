@@ -291,10 +291,16 @@
     <sect2>
       <title>handle_async()</title>
       <para>
+        This method is called by <link linkend="gda-connection-async-fetch-result">gda_connection_async_fetch_result().</link>
+      </para>
+      <para>
 	This method, if implemented, is called to give the database provider a chance to execute some code in case an
 	asynchronous statement's execution has been requested. Often providers will send some data over the network to the
 	database server when the statement_execute() is called, and implement this virtual function as a way to get
 	some data from the database server to see if the execution is terminated.
+      </para>
+      <para>
+        This function must return FALSE in case an error occurs, and TRUE if no error occurred (even if nothing was to be done).
       </para>
     </sect2>
   </sect1>
