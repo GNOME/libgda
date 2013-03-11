@@ -84,7 +84,9 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
 	if (!sql)
 		return FALSE;
 
-	batch = gda_sql_parser_parse_string_as_batch (provider->priv->parser, sql, NULL, error);
+	GdaSqlParser *parser;
+	parser = gda_server_provider_internal_get_parser (provider); /* no ref held! */
+	batch = gda_sql_parser_parse_string_as_batch (parser, sql, NULL, error);
 	g_free (sql);
 	if (!batch)
 		return FALSE;
