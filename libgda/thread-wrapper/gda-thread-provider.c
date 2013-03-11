@@ -327,7 +327,8 @@ gda_thread_provider_create_connection (GdaServerProvider *provider)
 	GdaConnection *cnc;
         g_return_val_if_fail (GDA_IS_THREAD_PROVIDER (provider), NULL);
 
-        cnc = g_object_new (GDA_TYPE_CONNECTION, "provider", provider, "is-wrapper", TRUE, NULL);
+        cnc = g_object_new (GDA_TYPE_CONNECTION, "provider", provider, NULL);
+	_gda_connection_define_as_thread_wrapper (cnc);
 
         return cnc;
 }

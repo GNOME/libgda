@@ -382,13 +382,21 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	/**
 	 * GdaConnection:is-wrapper:
 	 *
+	 * This property, if set to %TRUE, specifies that the connection is not a real connection, but rather
+	 * a #GdaConnection object which "proxies" all the calls to another connection which executes in a sub
+	 * thread.
+	 *
+	 * Note: this property is used internally by Libgda and should not be directly used by any programs. Setting
+	 * this property has no effect, reading it is supported, though.
+	 *
 	 * Since: 4.2
 	 **/
 	g_object_class_install_property (object_class, PROP_IS_THREAD_WRAPPER,
 					 g_param_spec_boolean ("is-wrapper", NULL,
-							       _("Tells if the connection acts as a thread wrapper around another connection, making it completely thread safe"),
+							       _("Determines if the connection acts as a thread wrapper around another connection, making it completely thread safe"),
 							       FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+
 	/**
 	 * GdaConnection:monitor-wrapped-in-mainloop:
 	 *
@@ -705,6 +713,12 @@ monitor_wrapped_cnc (GdaThreadWrapper *wrapper)
 	return TRUE; /* don't remove the monitoring */
 }
 
+void
+_gda_connection_define_as_thread_wrapper (GdaConnection *cnc)
+{
+	cnc->priv->is_thread_wrapper = TRUE;
+}
+
 static void
 gda_connection_set_property (GObject *object,
 			     guint param_id,
@@ -891,7 +905,7 @@ gda_connection_set_property (GObject *object,
 #endif
 			break;
 		case PROP_IS_THREAD_WRAPPER:
-			cnc->priv->is_thread_wrapper = g_value_get_boolean (value);
+			g_warning ("This property should not be modified!");
 			break;
 		case PROP_MONITOR_WRAPPED_IN_MAINLOOP:
 			if (cnc->priv->is_thread_wrapper) {

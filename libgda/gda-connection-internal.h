@@ -77,6 +77,8 @@ void                  _gda_thread_connection_data_free (ThreadConnectionData *cd
 void                  _gda_connection_force_transaction_status (GdaConnection *cnc, GdaConnection *wrapped_cnc);
 GdaServerProvider    *_gda_connection_get_internal_thread_provider (void);
 
+void                  _gda_connection_define_as_thread_wrapper (GdaConnection *cnc);
+
 /*
  * Used by virtual connections to keep meta data up to date when a table
  * is added or removed, without using the update_meta_store_after_statement_exec()
