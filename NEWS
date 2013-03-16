@@ -1,3 +1,25 @@
+libgda 5.1.2, 2013-03-16
+
+ - Many small corrections, some uncovered by CoverityScan
+ - Misc code cleanups, avoid using deprecated functions
+ - MySQL improvements
+ - Vala bindings improvements and corrections
+ - Data export improvements
+ - Upgraded SQLite to 3.7.14.1 and SqlCipher to 2.1.1
+ - Have blobs work on Windows
+ - Bugs corrected: #691099, #691069, #669801, #687235, #684895, #684583, #684141, #683162
+ - Translations:
+	- ca (Pau Iranzo)
+	- ru (Yuri Myasoedov)
+	- it (Marco Ciampa)
+	- id (Andika Triwidada)
+	- de (Christian Kirbach)
+	- gl (Fran Diéguez)
+	- es (Daniel Mustieles)
+	- sl (Matej Urbančič, Martin Srebotnjak)
+	- cs (Marek Černocký)
+	- el (Dimitris Spingos, Tom Tryfonidis)
+
 libgda 5.1.1, 2012-08-26
 
  - Asynchronous statement execution improvements
