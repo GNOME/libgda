@@ -423,7 +423,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 */
 	g_object_class_install_property (object_class, PROP_EVENTS_HISTORY_SIZE,
 					 g_param_spec_int ("events-history-size", NULL,
-							   _(""), EVENTS_ARRAY_SIZE, G_MAXINT,
+							   _("Number of history events to keep in memory"), EVENTS_ARRAY_SIZE, G_MAXINT,
 							   EVENTS_ARRAY_SIZE,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	
