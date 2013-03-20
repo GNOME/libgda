@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -56,10 +57,16 @@ struct _GdaSetNode {
 	gpointer      _gda_reserved2;
 };
 
+#define GDA_SET_NODE(x) ((GdaSetNode *)(x))
+
+
 /**
  * GdaSetGroup:
  * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
  * @nodes_source: (allow-none):  if NULL, then @nodes contains exactly one entry 
+ *
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_meta_context_free on a struct that was created manually.
  */
 struct _GdaSetGroup {
 	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
@@ -71,11 +78,23 @@ struct _GdaSetGroup {
 	gpointer      _gda_reserved2;
 };
 
+#define GDA_TYPE_SET_GROUP (gda_set_group_get_type ())
+#define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
+GType         gda_set_group_get_type        (void) G_GNUC_CONST;
+GdaSetGroup  *gda_set_group_new             (void);
+void          gda_set_group_free            (GdaSetGroup *sg);
+GdaSetGroup  *gda_set_group_copy            (GdaSetGroup *sg);
+void          gda_set_group_add_node        (GdaSetGroup *sg, GdaSetNode *node);
+void          gda_set_group_set_source      (GdaSetGroup *sg, GdaSetSource *source);
+
+
 /**
  * GdaSetSource:
  * @data_model: Can't be NULL
  * @nodes: (element-type Gda.SetNode): list of #GdaSetNode for which source_model == @data_model
- *
+ * 
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_meta_context_free on a struct that was created manually.
  **/
 struct _GdaSetSource {
 	GdaDataModel   *data_model;   /* Can't be NULL */
@@ -89,9 +108,14 @@ struct _GdaSetSource {
 	gpointer        _gda_reserved4;
 };
 
-#define GDA_SET_NODE(x) ((GdaSetNode *)(x))
+#define GDA_TYPE_SET_SOURCE (gda_set_source_get_type ())
 #define GDA_SET_SOURCE(x) ((GdaSetSource *)(x))
-#define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
+GType         gda_set_source_get_type       (void) G_GNUC_CONST;
+GdaSetSource *gda_set_source_new            (void);
+void          gda_set_source_free           (GdaSetSource *s);
+GdaSetSource *gda_set_source_copy           (GdaSetSource *s);
+void          gda_set_source_add_node       (GdaSetSource *s, GdaSetNode *node);
+void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model);
 
 /* struct for the object's data */
 
@@ -182,6 +206,8 @@ GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 /* private */
 gboolean      _gda_set_validate                (GdaSet *set, GError **error);
 GdaSet *      gda_set_new_read_only            (GSList *holders);
+
+
 
 
 G_END_DECLS

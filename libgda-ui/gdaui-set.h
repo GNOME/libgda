@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,10 +26,10 @@
 
 G_BEGIN_DECLS
 
-#define GDAUI_TYPE_SET          (_gdaui_set_get_type())
-#define GDAUI_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, _gdaui_set_get_type(), GdauiSet)
-#define GDAUI_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, _gdaui_set_get_type (), GdauiSetClass)
-#define GDAUI_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, _gdaui_set_get_type ())
+#define GDAUI_TYPE_SET          (gdaui_set_get_type())
+#define GDAUI_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_set_get_type(), GdauiSet)
+#define GDAUI_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_set_get_type (), GdauiSetClass)
+#define GDAUI_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_set_get_type ())
 
 
 typedef struct _GdauiSet      GdauiSet;
@@ -38,6 +39,20 @@ typedef struct _GdauiSetPriv  GdauiSetPriv;
 typedef struct _GdauiSetGroup GdauiSetGroup;
 typedef struct _GdauiSetSource GdauiSetSource;
 
+/**
+ * GdauiSetGroup:
+ * @group: 
+ * @source: 
+ *
+ * The <structname>GdauiSetGroup</structname>.
+ *
+ * To create a new #GdauiSetGroup use #gdaiu_set_group_new. 
+ * 
+ * To free a #GdauiSetGroup, created by #gdaui_set_group_new, use #gda_set_group_free.
+ *
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gdaui_set_group_free on a struct that was created manually.
+ */
 struct _GdauiSetGroup {
         GdaSetGroup      *group;
         GdauiSetSource   *source; /* if NULL, then @group->nodes contains exactly one entry */
@@ -48,8 +63,23 @@ struct _GdauiSetGroup {
         gpointer      _gda_reserved2;
 };
 
-#define GDAUI_SET_GROUP(x) ((GdauiSetGroup*)(x))
-
+/**
+ * GdauiSetSource:
+ * @source: a #GdaSetSource
+ * @shown_cols_index: (array length=shown_n_cols): Array with the column number to be shown from #GdaSetSource
+ * @shown_n_cols: number of elements of @shown_cols_index
+ * @ref_cols_index: (array length=ref_n_cols): Array with the number of columns as PRIMARY KEY in #GdaSetSource
+ * @ref_n_cols: number of elements of @ref_cols_index
+ *
+ * The <structname>GdauiSetSource</structname> is a ...
+ *
+ * To create a new #GdauiSetSource use #gdaui_set_source_new.
+ * 
+ * To free a #GdauiSetSource, created by #gdaui_set_source_new, use #gdaui_set_source_free.
+ *
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gdaui_set_source_free on a struct that was created manually.
+ */
 struct _GdauiSetSource {
         GdaSetSource   *source;
 
@@ -69,9 +99,14 @@ struct _GdauiSetSource {
         gpointer        _gda_reserved4;
 };
 
-#define GDAUI_SET_SOURCE(x) ((GdauiSetSource*)(x))
+
 
 /* struct for the object's data */
+/**
+ * GdauiSet:
+ * @sources_list: (element-type Gdaui.SetSource): list of #GdauiSetSource
+ * @groups_list: (element-type Gdaui.SetGroup): list of #GdauiSetGroup
+ */
 struct _GdauiSet
 {
 	GObject         object;
@@ -93,11 +128,36 @@ struct _GdauiSetClass
 /* 
  * Generic widget's methods 
  */
-GType             _gdaui_set_get_type            (void) G_GNUC_CONST;
+GType             gdaui_set_get_type            (void) G_GNUC_CONST;
+GdauiSet         *gdaui_set_new                 (GdaSet *set);
+GdauiSetGroup    *gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 
+#define GDAUI_TYPE_SET_GROUP (gdaui_set_group_get_type ())
+#define GDAUI_SET_GROUP(x) ((GdauiSetGroup*)(x))
+GType             gdaui_set_group_get_type           (void) G_GNUC_CONST;
+GdauiSetGroup    *gdaui_set_group_new                (void);
+void              gdaui_set_group_free               (GdauiSetGroup *sg);
+GdauiSetGroup    *gdaui_set_group_copy               (GdauiSetGroup *sg);
+void              gdaui_set_group_set_source         (GdauiSetGroup *sg, GdauiSetSource *source);
+GdauiSetSource   *gdaui_set_group_get_source         (GdauiSetGroup *sg);
+void              gdaui_set_group_set_group          (GdauiSetGroup *sg, GdaSetGroup *group);
+GdaSetGroup      *gdaui_set_group_get_group          (GdauiSetGroup *sg);
+
+#define GDAUI_TYPE_SET_SOURCE (gdaui_set_source_get_type ())
+#define GDAUI_SET_SOURCE(x) ((GdauiSetSource*)(x))
+GType             gdaui_set_source_get_type           (void) G_GNUC_CONST;
+GdauiSetSource   *gdaui_set_source_new                (void);
+void              gdaui_set_source_free               (GdauiSetSource *s);
+GdauiSetSource   *gdaui_set_source_copy               (GdauiSetSource *s);
+void              gdaui_set_source_set_source         (GdauiSetSource *s, GdaSetSource *source);
+GdaSetSource     *gdaui_set_source_get_source         (GdauiSetSource*s);
+void              gdaui_set_source_set_shown_columns  (GdauiSetSource *s, gint *columns, gint n_columns);
+void              gdaui_set_source_set_ref_columns    (GdauiSetSource *s, gint *columns, gint n_columns);
+
+/* Deprecated functions */
+GType             _gdaui_set_get_type            (void);
 GdauiSet         *_gdaui_set_new                 (GdaSet *set);
 GdauiSetGroup    *_gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
-
 G_END_DECLS
 
 #endif

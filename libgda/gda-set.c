@@ -3,6 +3,7 @@
  * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +43,216 @@
 
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
+
+/*
+   Register GdaSetGroup type
+*/
+GType
+gda_set_group_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdaSetGroup",
+							     (GBoxedCopyFunc) gda_set_group_copy,
+							     (GBoxedFreeFunc) gda_set_group_free);
+	}
+
+	return type;
+}
+
+/**
+ * gda_set_group_new:
+ * 
+ * Creates a new #GdaSetGroup struct.
+ *
+ * Return: (transfer full): a new #GdaSetGroup struct.
+ *
+ * Since: 5.2
+ */
+GdaSetGroup*
+gda_set_group_new (void)
+{
+	GdaSetGroup *sg = g_new0 (GdaSetGroup, 1);
+	sg->nodes_source = NULL;
+	sg->nodes = NULL;
+	return sg;
+}
+
+/**
+ * gda_set_group_copy:
+ * @sg: a #GdaSetGroup
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdaSetGroup
+ *
+ * Since: 5.2
+ */
+GdaSetGroup *
+gda_set_group_copy (GdaSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+
+	GdaSetGroup *n;
+	n = gda_set_group_new ();
+	n->nodes_source = g_object_ref (sg->nodes_source);
+	n->nodes = g_slist_copy (sg->nodes);
+	return n;
+}
+
+/**
+ * gda_set_group_free:
+ * @sg: (allow-none): a #GdaSetGroup struct to free
+ * 
+ * Frees any resources taken by @sg struct. If @sg is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gda_set_group_free (GdaSetGroup *sg)
+{
+	g_return_if_fail(sg);
+	g_slist_free (sg->nodes);
+	g_free (sg);
+}
+
+/**
+ * gda_set_group_set_source:
+ * @sg: a #GdaSetGroup
+ * @source: a #GdaSetSource to set
+ * 
+ * Since: 5.2
+ */
+void gda_set_group_set_source (GdaSetGroup *sg, GdaSetSource *source)
+{
+	g_return_if_fail (sg);
+	sg->nodes_source = source;
+}
+
+/**
+ * gda_set_group_add_node:
+ * @sg: a #GdaSetGroup
+ * @source: a #GdaSetNode to set
+ * 
+ * Since: 5.2
+ */
+void gda_set_group_add_node (GdaSetGroup *sg, GdaSetNode *node)
+{
+	g_return_if_fail (sg);
+	g_return_if_fail (node);
+	sg->nodes = g_slist_append (sg->nodes, node);
+}
+
+/*
+   Register GdaSetSource type
+*/
+GType
+gda_set_source_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdaSetSource",
+							     (GBoxedCopyFunc) gda_set_source_copy,
+							     (GBoxedFreeFunc) gda_set_source_free);
+	}
+
+	return type;
+}
+
+/**
+ * gda_set_source_new:
+ * 
+ * Creates a new #GdaSetSource struct.
+ *
+ * Return: (transfer full): a new #GdaSetSource struct.
+ *
+ * Since: 5.2
+ */
+GdaSetSource*
+gda_set_source_new (void)
+{
+	GdaSetSource *s = g_new0 (GdaSetSource, 1);
+	s->nodes = NULL;
+	s->data_model = NULL;
+	
+	return s;
+}
+
+/**
+ * gda_set_source_copy:
+ * @s: a #GdaSetGroup
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdaSetSource
+ *
+ * Since: 5.2
+ */
+GdaSetSource *
+gda_set_source_copy (GdaSetSource *s)
+{
+	GdaSetSource *n;
+	g_return_val_if_fail (s, NULL);	
+	n = gda_set_source_new ();
+	n->nodes = g_slist_copy (s->nodes);
+	n->data_model = g_object_ref (s->data_model);
+	return n;
+}
+	
+/**
+ * gda_set_source_free:
+ * @s: (allow-none): a #GdaSetSource struct to free
+ * 
+ * Frees any resources taken by @s struct. If @s is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gda_set_source_free (GdaSetSource *s)
+{
+	g_return_if_fail(s);
+	g_object_unref (s->data_model);
+	g_slist_free (s->nodes);
+	g_free (s);
+}
+
+/**
+ * gda_set_source_set_data_model:
+ * @s: (allow-none): a #GdaSetSource struct to free
+ * @model: a #GdaDataModel
+ * 
+ * Set a #GdaDataModel
+ *
+ * Since: 5.2
+ */
+void
+gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model)
+{
+	g_return_if_fail (s);
+	g_return_if_fail (G_IS_OBJECT (model));
+	s->data_model = g_object_ref (model);
+}
+
+/**
+ * gda_set_source_add_node:
+ * @s: (allow-none): a #GdaSetSource struct to free
+ * @model: a #GdaDataModel
+ * 
+ * Set a #GdaDataModel
+ *
+ * Since: 5.2
+ */
+void
+gda_set_source_add_node (GdaSetSource *s, GdaSetNode *node)
+{
+	g_return_if_fail (s);
+	g_return_if_fail (node);
+	s->nodes = g_slist_append (s->nodes, node);
+}
 
 /* 
  * Main static functions 
@@ -1118,8 +1329,7 @@ changed_holder_cb (GdaHolder *holder, GdaSet *set)
 static void
 group_free (GdaSetGroup *group, G_GNUC_UNUSED gpointer data)
 {
-	g_slist_free (group->nodes);
-	g_free (group);
+	gda_set_group_free (group);
 }
 
 static void
@@ -1243,12 +1453,12 @@ compute_public_data (GdaSet *set)
 		source = NULL;
 		if (node->source_model) {
 			source = gda_set_get_source_for_model (set, node->source_model);
-			if (source) 
-				source->nodes = g_slist_append (source->nodes, node);
+			if (source)
+				gda_set_source_add_node (source, node);
 			else {
-				source = g_new0 (GdaSetSource, 1);
-				source->data_model = node->source_model;
-				source->nodes = g_slist_append (NULL, node);
+				source = gda_set_source_new ();
+				gda_set_source_set_data_model (source, node->source_model);
+				gda_set_source_add_node (source, node);
 				set->sources_list = g_slist_prepend (set->sources_list, source);
 			}
 		}
@@ -1258,11 +1468,11 @@ compute_public_data (GdaSet *set)
 		if (node->source_model && groups)
 			group = g_hash_table_lookup (groups, node->source_model);
 		if (group) 
-			group->nodes = g_slist_append (group->nodes, node);
+			gda_set_group_add_node (group, node);
 		else {
-			group = g_new0 (GdaSetGroup, 1);
-			group->nodes = g_slist_append (NULL, node);
-			group->nodes_source = source;
+			group = gda_set_group_new ();
+			gda_set_group_add_node (group, node);
+			gda_set_group_set_source (group, source);
 			set->groups_list = g_slist_prepend (set->groups_list, group);
 			if (node->source_model) {
 				if (!groups)

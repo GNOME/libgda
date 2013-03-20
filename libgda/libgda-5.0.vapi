@@ -572,6 +572,7 @@ namespace Gda {
 		public weak string table_name;
 		[CCode (has_construct_function = false)]
 		public MetaContext ();
+		public Gda.MetaContext copy ();
 		public void free ();
 		public unowned string get_table ();
 		public void set_column (string column, GLib.Value value, Gda.Connection? cnc);
@@ -776,6 +777,7 @@ namespace Gda {
 		public virtual string escape_string (Gda.Connection? cnc, string str);
 		public string find_file (string inst_dir, string filename);
 		public unowned Gda.DataHandler get_data_handler_dbms (Gda.Connection? cnc, string for_type);
+		[Deprecated (since = "5.2")]
 		public unowned Gda.DataHandler get_data_handler_default (Gda.Connection? cnc, GLib.Type type, string dbms_type);
 		public unowned Gda.DataHandler get_data_handler_g_type (Gda.Connection? cnc, GLib.Type for_type);
 		[NoWrapper]
@@ -789,7 +791,7 @@ namespace Gda {
 		[NoWrapper]
 		public virtual bool handle_async (Gda.Connection cnc) throws GLib.Error;
 		public void handler_declare (Gda.DataHandler dh, Gda.Connection cnc, GLib.Type g_type, string dbms_type);
-		public unowned Gda.DataHandler handler_find (Gda.Connection cnc, GLib.Type g_type, string dbms_type);
+		public unowned Gda.DataHandler handler_find (Gda.Connection? cnc, GLib.Type g_type, string? dbms_type);
 		[NoWrapper]
 		public virtual string identifier_quote (Gda.Connection cnc, string id, bool for_meta_store, bool force_quotes);
 		public unowned Gda.SqlParser internal_get_parser ();
@@ -829,13 +831,13 @@ namespace Gda {
 		public Set.from_spec_node ([CCode (type = "xmlNodePtr")] Xml.Node* xml_spec) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Set.from_spec_string (string xml_spec) throws GLib.Error;
-		public Gda.SetGroup get_group (Gda.Holder holder);
+		public unowned Gda.SetGroup get_group (Gda.Holder holder);
 		public unowned Gda.Holder get_holder (string holder_id);
 		public unowned GLib.Value? get_holder_value (string holder_id);
 		public Gda.SetNode get_node (Gda.Holder holder);
 		public unowned Gda.Holder get_nth_holder (int pos);
-		public Gda.SetSource get_source (Gda.Holder holder);
-		public Gda.SetSource get_source_for_model (Gda.DataModel model);
+		public unowned Gda.SetSource get_source (Gda.Holder holder);
+		public unowned Gda.SetSource get_source_for_model (Gda.DataModel model);
 		public bool is_valid () throws GLib.Error;
 		public void merge_with_set (Gda.Set set_to_merge);
 		[CCode (has_construct_function = false)]
@@ -858,6 +860,30 @@ namespace Gda {
 		public virtual signal void source_model_changed (void* source);
 		public virtual signal GLib.Error validate_holder_change (Gda.Holder holder, GLib.Value new_value);
 		public virtual signal GLib.Error validate_set ();
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_set_group_get_type ()")]
+	[Compact]
+	public class SetGroup {
+		public GLib.List<Gda.SetNode> nodes;
+		public weak Gda.SetSource nodes_source;
+		[CCode (has_construct_function = false)]
+		public SetGroup ();
+		public void add_node (Gda.SetNode node);
+		public Gda.SetGroup copy ();
+		public void free ();
+		public void set_source (Gda.SetSource source);
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_set_source_get_type ()")]
+	[Compact]
+	public class SetSource {
+		public weak Gda.DataModel data_model;
+		public GLib.List<Gda.SetNode> nodes;
+		[CCode (has_construct_function = false)]
+		public SetSource ();
+		public void add_node (Gda.SetNode node);
+		public Gda.SetSource copy ();
+		public void free ();
+		public void set_data_model (Gda.DataModel model);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_short_get_type ()")]
 	public class Short {
@@ -1374,20 +1400,10 @@ namespace Gda {
 		public weak string dbms_type;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct SetGroup {
-		public GLib.List<Gda.SetNode> nodes;
-		public Gda.SetSource nodes_source;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct SetNode {
 		public weak Gda.Holder holder;
 		public weak Gda.DataModel source_model;
 		public int source_column;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct SetSource {
-		public weak Gda.DataModel data_model;
-		public GLib.List<Gda.SetNode> nodes;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	[SimpleType]
@@ -1467,7 +1483,8 @@ namespace Gda {
 		TASK_NOT_FOUND_ERROR,
 		UNSUPPORTED_THREADS_ERROR,
 		CLOSED_ERROR,
-		META_DATA_CONTEXT_ERROR
+		META_DATA_CONTEXT_ERROR,
+		UNSUPPORTED_ASYNC_EXEC_ERROR
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_EVENT_CODE_", has_type_id = false)]
 	public enum ConnectionEventCode {
@@ -1517,6 +1534,7 @@ namespace Gda {
 		VIEWS,
 		XA_TRANSACTIONS,
 		MULTI_THREADING,
+		ASYNC_EXEC,
 		LAST
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_CONNECTION_META_", has_type_id = false)]
@@ -1571,7 +1589,8 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_IO_", has_type_id = false)]
 	public enum DataModelIOFormat {
 		DATA_ARRAY_XML,
-		TEXT_SEPARATED
+		TEXT_SEPARATED,
+		TEXT_TABLE
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_", has_type_id = false)]
 	public enum DataModelIterError {

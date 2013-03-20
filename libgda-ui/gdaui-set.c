@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +24,317 @@
 #include <libgda/libgda.h>
 #include "gdaui-set.h"
 #include "marshallers/gdaui-marshal.h"
+
+/*
+   Register GdauiSetGroup type
+*/
+GType
+gdaui_set_group_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdauiSetGroup",
+							     (GBoxedCopyFunc) gdaui_set_group_copy,
+							     (GBoxedFreeFunc) gdaui_set_group_free);
+	}
+
+	return type;
+}
+
+/**
+ * gdaui_set_group_new:
+ * 
+ * Creates a new #GdauiSetGroup struct.
+ *
+ * Return: (transfer full): a new #GdauiSetGroup struct.
+ *
+ * Since: 5.2
+ */
+GdauiSetGroup*
+gdaui_set_group_new (void)
+{
+	GdauiSetGroup *sg = g_new0 (GdauiSetGroup, 1);
+	sg->source = NULL;
+	sg->group = NULL;
+	return sg;
+}
+
+/**
+ * gdaui_set_group_copy:
+ * @sg: a #GdauiSetGroup
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdauiSetGroup
+ *
+ * Since: 5.2
+ */
+GdauiSetGroup *
+gdaui_set_group_copy (GdauiSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+
+	GdauiSetGroup *n;
+	n = gdaui_set_group_new ();
+	n->source = sg->source;
+	n->group = sg->group;
+	return n;
+}
+
+/**
+ * gdaui_set_group_free:
+ * @sg: (allow-none): a #GdauiSetGroup struct to free
+ * 
+ * Frees any resources taken by @sg struct. If @sg is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_group_free (GdauiSetGroup *sg)
+{
+	g_return_if_fail(sg);
+	g_free (sg);
+}
+
+/**
+ * gdaui_set_group_set_source:
+ * @sg: a #GdauiSetGroup struct to free
+ * @source: a #GdauiSetSource struct
+ * 
+ * Set source to @source.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_group_set_source (GdauiSetGroup *sg, GdauiSetSource *source)
+{
+	g_return_if_fail (sg);
+	sg->source = sg->source;
+}
+
+/**
+ * gdaui_set_group_get_source:
+ * @sg: a #GdauiSetGroup struct
+ * 
+ * Get source used by @sg.
+ * 
+ * Returns: used #GdaSetGroup
+ *
+ * Since: 5.2
+ */
+GdauiSetSource*
+gdaui_set_group_get_source (GdauiSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+	return sg->source;
+}
+
+/**
+ * gdaui_set_group_set_group:
+ * @sg: a #GdauiSetGroup struct to free
+ * @group: a #GdaSetGroup struct
+ * 
+ * Set source to @source.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_group_set_group (GdauiSetGroup *sg, GdaSetGroup *group)
+{
+	g_return_if_fail (sg);
+	g_return_if_fail (group);
+	sg->group = sg->group;
+}
+
+/**
+ * gdaui_set_group_get_group:
+ * @sg: a #GdauiSetGroup struct to free
+ * 
+ * Get group used by @sg.
+ * 
+ * Returns: used #GdaSetGroup
+ *
+ * Since: 5.2
+ */
+GdaSetGroup*
+gdaui_set_group_get_group (GdauiSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+	return sg->group;
+}
+
+/*
+   Register GdauiSetSource type
+*/
+GType
+gdaui_set_source_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdauiSetSource",
+							     (GBoxedCopyFunc) gdaui_set_source_copy,
+							     (GBoxedFreeFunc) gdaui_set_source_free);
+	}
+
+	return type;
+}
+
+/**
+ * gdaui_set_source_new:
+ * 
+ * Creates a new #GdauiSetSource struct.
+ *
+ * Return: (transfer full): a new #GdauiSetSource struct.
+ *
+ * Since: 5.2
+ */
+GdauiSetSource*
+gdaui_set_source_new (void)
+{
+	GdauiSetSource *s = g_new0 (GdauiSetSource, 1);
+	s->source = NULL;
+	s->shown_n_cols = 0;
+	s->shown_cols_index = NULL;
+	s->ref_n_cols = 0;
+	s->ref_cols_index = NULL;
+	
+	return s;
+}
+
+/**
+ * gdaui_set_source_copy:
+ * @s: a #GdauiSetGroup
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdauiSetSource
+ *
+ * Since: 5.2
+ */
+GdauiSetSource *
+gdaui_set_source_copy (GdauiSetSource *s)
+{
+	GdauiSetSource *n;
+	gint i,j;
+	g_return_val_if_fail (s, NULL);	
+	n = gdaui_set_source_new ();
+	n->source = s->source;
+	n->ref_n_cols = s->ref_n_cols;
+	n->ref_cols_index = g_new0 (gint,n->ref_n_cols);
+	for (i = 0; i < n->ref_n_cols; i++) {
+		n->ref_cols_index[i] = s->ref_cols_index[i];
+	}
+	n->shown_n_cols = s->shown_n_cols;
+	n->shown_cols_index = g_new0 (gint, n->shown_n_cols);
+	for (j = 0; j < n->shown_n_cols; j++) {
+		n->shown_cols_index[j] = s->shown_cols_index[j];
+	}
+	return n;
+}
+
+/**
+ * gdaui_set_source_free:
+ * @s: (allow-none): a #GdauiSetSource struct to free
+ * 
+ * Frees any resources taken by @s struct. If @s is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_source_free (GdauiSetSource *s)
+{
+	g_return_if_fail(s);
+	if(s->shown_cols_index)
+		g_free(s->shown_cols_index);
+	if (s->ref_cols_index)
+		g_free(s->ref_cols_index);
+	g_free (s);
+}
+
+/**
+ * gdaui_set_source_set_source:
+ * @s: a #GdauiSetSource struct to free
+ * @source: a #GdaSetSource struct
+ * 
+ * Set source to @source.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_source_set_source (GdauiSetSource *s, GdaSetSource *source)
+{
+	g_return_if_fail (s);
+	s->source = s->source;
+}
+
+/**
+ * gdaui_set_source_get_source:
+ * @s: a #GdauiSetGroup struct
+ * 
+ * Get source used by @sg.
+ * 
+ * Returns: used #GdaSetSource
+ *
+ * Since: 5.2
+ */
+GdaSetSource*
+gdaui_set_source_get_source (GdauiSetSource *s)
+{
+	g_return_val_if_fail (s, NULL);
+	return s->source;
+}
+
+/**
+ * gdaui_set_source_set_shown_columns:
+ * @s: a #GdauiSetSource struct to free
+ * @columns: (array length=n_columns): an array of with columns numbers to be shown from a #GdaSetSource
+ * @n_columns: number of columns of the array
+ * 
+ * Set the columns to be shown.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_source_set_shown_columns (GdauiSetSource *s, gint *columns, gint n_columns)
+{
+	gint i;
+	g_return_if_fail (s);
+	g_return_if_fail (columns);
+	if (s->shown_cols_index)
+		g_free (s->shown_cols_index);
+	s->shown_n_cols = n_columns;
+	for (i = 0; i < n_columns; i++) {
+		s->shown_cols_index[i] = columns[i];
+	}
+}
+
+/**
+ * gdaui_set_source_set_ref_columns:
+ * @s: a #GdauiSetSource struct to free
+ * @columns: (array length=n_columns): an array of with columns numbers of referen (Primary Key) at #GdaSetSource
+ * @n_columns: number of columns of the array
+ * 
+ * Set the columns to be shown.
+ *
+ * Since: 5.2
+ */
+void
+gdaui_set_source_set_ref_columns (GdauiSetSource *s, gint *columns, gint n_columns)
+{
+	gint i;
+	g_return_if_fail (s);
+	g_return_if_fail (columns);
+	if (s->ref_cols_index)
+		g_free (s->ref_cols_index);
+	s->ref_n_cols = n_columns;
+	for (i = 0; i < n_columns; i++) {
+		s->ref_cols_index[i] = columns[i];
+	}
+}
 
 static void gdaui_set_class_init (GdauiSetClass * class);
 static void gdaui_set_init (GdauiSet *wid);
@@ -69,7 +381,12 @@ enum {
 static gint gdaui_set_signals[LAST_SIGNAL] = { 0, 0 };
 
 GType
-_gdaui_set_get_type (void)
+_gdaui_set_get_type (void) {
+	return gdaui_set_get_type ();
+}
+
+GType
+gdaui_set_get_type (void)
 {
 	static GType type = 0;
 
@@ -158,10 +475,27 @@ gdaui_set_init (GdauiSet *set)
  *
  * Creates a new #GdauiSet which wraps @set's properties
  *
- *  Returns: the new widget
+ * Returns: the new widget
+ * 
+ * Deprecated: Since 5.2
  */
 GdauiSet *
 _gdaui_set_new (GdaSet *set)
+{
+	return gdaui_set_new (set);
+}
+
+/**
+ * gdaui_set_new:
+ * @set: a #GdaSet
+ *
+ * Creates a new #GdauiSet which wraps @set's properties
+ *
+ * Returns: the new widget
+ * Since: 5.2
+ **/
+GdauiSet *
+gdaui_set_new (GdaSet *set)
 {
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 
@@ -255,16 +589,14 @@ clean_public_data (GdauiSet *set)
 	
 	for (list = set->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
-		g_free (dsource->shown_cols_index);
-		g_free (dsource->ref_cols_index);
-		g_free (dsource);
+		gdaui_set_source_free (dsource);
 	}
 	g_slist_free (set->sources_list);
 	set->sources_list = NULL;
 
 	for (list = set->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
-		g_free (dgroup);
+		gdaui_set_group_free (dgroup);
 	}
 	g_slist_free (set->groups_list);
 	set->groups_list = NULL;
@@ -281,11 +613,11 @@ compute_public_data (GdauiSet *set)
 	hash = g_hash_table_new (NULL, NULL);
 	for (list = aset->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource;
-		dsource = g_new0 (GdauiSetSource, 1);
+		dsource = gdaui_set_source_new ();
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
 		g_hash_table_insert (hash, list->data, dsource);
 
-		dsource->source = GDA_SET_SOURCE (list->data);
+		gdaui_set_source_set_source (dsource, GDA_SET_SOURCE (list->data));
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
@@ -294,10 +626,12 @@ compute_public_data (GdauiSet *set)
 	/* scan GdaSetGroup list */
 	for (list = aset->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup;
-		dgroup = g_new0 (GdauiSetGroup, 1);
+		dgroup = gdaui_set_group_new ();
 		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
-		dgroup->group = GDA_SET_GROUP (list->data);
-		dgroup->source = g_hash_table_lookup (hash, GDA_SET_GROUP (list->data)->nodes_source);
+		gdaui_set_group_set_group (dgroup, GDA_SET_GROUP (list->data));
+		gdaui_set_group_set_source (dgroup, 
+		                            g_hash_table_lookup (hash, 
+		                                                 GDA_SET_GROUP (list->data)->nodes_source));
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
 
@@ -329,12 +663,11 @@ update_public_data (GdauiSet *set)
 			set->sources_list = g_slist_prepend (set->sources_list, dsource);
 			continue;
 		}
-
-		dsource = g_new0 (GdauiSetSource, 1);
+		dsource = gdaui_set_source_new ();
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
 		g_hash_table_insert (shash, list->data, dsource);
 
-		dsource->source = GDA_SET_SOURCE (list->data);
+		gdaui_set_source_set_source (dsource, GDA_SET_SOURCE (list->data));
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
@@ -344,9 +677,7 @@ update_public_data (GdauiSet *set)
 		for (list = elist; list; list = list->next) {
 			if (!g_slist_find (set->sources_list, list->data)) {
 				GdauiSetSource *dsource = (GdauiSetSource*) list->data;
-				g_free (dsource->shown_cols_index);
-				g_free (dsource->ref_cols_index);
-				g_free (dsource);
+				gdaui_set_source_free (dsource);
 			}
 		}
 		g_slist_free (elist);
@@ -369,10 +700,10 @@ update_public_data (GdauiSet *set)
 			set->groups_list = g_slist_prepend (set->groups_list, dgroup);
 			continue;
 		}
-		dgroup = g_new0 (GdauiSetGroup, 1);
+		dgroup = gdaui_set_group_new ();
 		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
-		dgroup->group = GDA_SET_GROUP (list->data);
-		dgroup->source = g_hash_table_lookup (shash, dgroup->group->nodes_source);
+		gdaui_set_group_set_group (dgroup, GDA_SET_GROUP (list->data));
+		gdaui_set_group_set_source (dgroup, g_hash_table_lookup (shash, dgroup->group->nodes_source));
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
 
@@ -380,7 +711,7 @@ update_public_data (GdauiSet *set)
 		for (list = elist; list; list = list->next) {
 			if (!g_slist_find (set->groups_list, list->data)) {
 				GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
-				g_free (dgroup);
+				gdaui_set_group_free (dgroup);
 			}
 		}
 		g_slist_free (elist);
@@ -433,9 +764,7 @@ compute_shown_columns_index (GdauiSetSource *dsource)
 			mask[i] = i;
 		}
 	}
-
-	dsource->shown_n_cols = masksize;
-	dsource->shown_cols_index = mask;
+	gdaui_set_source_set_shown_columns (dsource, mask, masksize);
 }
 
 void
@@ -481,9 +810,7 @@ compute_ref_columns_index (GdauiSetSource *dsource)
 			mask[i] = i;
 		}
 	}
-
-	dsource->ref_n_cols = masksize;
-	dsource->ref_cols_index = mask;
+	gdaui_set_source_set_ref_columns (dsource, mask, masksize);
 }
 
 
@@ -507,11 +834,30 @@ gdaui_set_get_property (GObject *object,
 	}	
 }
 
-/*
- * _gdaui_set_get_group
- */
+/**
+ * _gdaui_set_get_group:
+ * @dbset:
+ * @holder:
+ * 
+ * Returns: A new #GdauiSetGroup struct
+ * Deprecated: Since 5.2
+ **/
 GdauiSetGroup  *
-_gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder)
+_gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder) 
+{
+	return gdaui_set_get_group (dbset, holder);
+}
+
+/**
+ * gdaui_set_get_group:
+ * @dbset:
+ * @holder:
+ * 
+ * Returns: A new #GdauiSetGroup struct
+ * Since: 5.2
+ **/
+GdauiSetGroup  *
+gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder)
 {
 	GdaSetGroup *agroup;
 	GSList *list;
