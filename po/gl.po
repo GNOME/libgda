@@ -9,14 +9,15 @@
 # Fran Diéguez <frandieguez@ubuntu.com>, 2010.
 # Miguel Anxo Bouzada <mbouzada@gmail.com>, 2011.
 # Óscar M. Lage <r0sk10@gmail.com>, 2012.
-# Fran Dieguez <frandieguez@gnome.org>, 2012.
+# Fran Dieguez <frandieguez@gnome.org>, 2012, 2013.
 #: ../libgda/gda-connection.c:418
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-30 21:06+0100\n"
-"PO-Revision-Date: 2012-12-30 22:30+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
+"&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-01-10 19:40+0000\n"
+"PO-Revision-Date: 2013-03-25 00:12+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -26,6 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Virtaal 0.7.1\n"
 "X-Poedit-Language: Galician\n"
+"X-Project-Style: gnome\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -159,11 +161,11 @@ msgstr "Non foi posíbel executar o programa do examinador"
 #: ../providers/ldap/gda-ldap-provider.c:893
 #: ../providers/ldap/gda-ldap-provider.c:954
 #: ../providers/mdb/gda-mdb-provider.c:359
-#: ../providers/mysql/gda-mysql-provider.c:1981
-#: ../providers/mysql/gda-mysql-provider.c:1996
+#: ../providers/mysql/gda-mysql-provider.c:2032
+#: ../providers/mysql/gda-mysql-provider.c:2047
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1687
-#: ../providers/postgres/gda-postgres-provider.c:1702
+#: ../providers/postgres/gda-postgres-provider.c:1683
+#: ../providers/postgres/gda-postgres-provider.c:1698
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/browser/auth-dialog.c:707 ../tools/browser/auth-dialog.c:710
@@ -818,7 +820,7 @@ msgstr "Non foi posíbel atopar a tarefa %u"
 #: ../libgda/gda-connection.c:3435 ../libgda/sqlite/gda-sqlite-provider.c:1305
 #: ../libgda/thread-wrapper/gda-thread-provider.c:987
 #: ../providers/jdbc/gda-jdbc-provider.c:580
-#: ../providers/mysql/gda-mysql-provider.c:952
+#: ../providers/mysql/gda-mysql-provider.c:995
 #: ../providers/postgres/gda-postgres-provider.c:878
 #: ../providers/web/gda-web-provider.c:685
 msgid "Provider does not support asynchronous server operation"
@@ -2312,8 +2314,8 @@ msgstr "Falta o parámetro «%s»"
 
 #: ../libgda/gda-statement.c:1365 ../libgda/sqlite/gda-sqlite-provider.c:3064
 #: ../providers/jdbc/gda-jdbc-provider.c:1371
-#: ../providers/mysql/gda-mysql-provider.c:2268
-#: ../providers/postgres/gda-postgres-provider.c:1969
+#: ../providers/mysql/gda-mysql-provider.c:2319
+#: ../providers/postgres/gda-postgres-provider.c:1965
 #: ../providers/web/gda-web-provider.c:1525
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2472,8 +2474,8 @@ msgstr "Non é posíbel rescribir unha sentenza que non sexa INSERT ou UPDATE"
 #: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
 #: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3045
 #: ../providers/jdbc/gda-jdbc-provider.c:1342
-#: ../providers/mysql/gda-mysql-provider.c:2248
-#: ../providers/postgres/gda-postgres-provider.c:1951
+#: ../providers/mysql/gda-mysql-provider.c:2299
+#: ../providers/postgres/gda-postgres-provider.c:1947
 #: ../providers/web/gda-web-provider.c:1507
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -2512,53 +2514,31 @@ msgid "Provider error: %s method not implemented for provider %s"
 msgstr ""
 "Hai un erro de provedor: o método %s non está implementado polo provedor %s"
 
-#: ../libgda/handlers/gda-handler-bin.c:122
-msgid "Binary handler"
-msgstr "Manexador binario"
-
-#: ../libgda/handlers/gda-handler-bin.c:129
+#: ../libgda/handlers/gda-handler-bin.c:127
 msgid "Binary representation"
 msgstr "Representación binaria"
 
 #: ../libgda/handlers/gda-handler-boolean.c:122
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:118
-#: ../providers/mysql/gda-mysql-handler-boolean.c:118
-msgid "Boolean values handler"
-msgstr "Manexador de valores booleanos"
-
-#: ../libgda/handlers/gda-handler-boolean.c:128
 msgid "Boolean representation"
 msgstr "Representación de booleanos"
 
-#: ../libgda/handlers/gda-handler-numerical.c:141
+#: ../libgda/handlers/gda-handler-numerical.c:139
 msgid "Numerical representation"
 msgstr "Representación de números"
 
-#: ../libgda/handlers/gda-handler-string.c:126
-msgid "Strings handler"
-msgstr "Manexador de cadeas"
-
-#: ../libgda/handlers/gda-handler-string.c:131
+#: ../libgda/handlers/gda-handler-string.c:122
 msgid "InternalString"
 msgstr "CadeaInterna"
 
-#: ../libgda/handlers/gda-handler-string.c:132
+#: ../libgda/handlers/gda-handler-string.c:123
 msgid "Strings representation"
 msgstr "Representación de cadeas"
 
-#: ../libgda/handlers/gda-handler-time.c:149
-msgid "Time and Date handler"
-msgstr "Manexador de hora e data"
-
-#: ../libgda/handlers/gda-handler-time.c:175
+#: ../libgda/handlers/gda-handler-time.c:173
 msgid "Time, Date and TimeStamp representation"
 msgstr "Representación de hora, data e marca de tempo"
 
 #: ../libgda/handlers/gda-handler-type.c:119
-msgid "Gda type handler"
-msgstr "Manexador de tipo Gda"
-
-#: ../libgda/handlers/gda-handler-type.c:125
 msgid "Gda type representation"
 msgstr "Representación de tipo Gda"
 
@@ -2676,15 +2656,12 @@ msgstr "Este documento de informe non permite a saída %s"
 msgid "Table to create must have at least one row"
 msgstr "A táboa a crear debe ter polo menos unha fila"
 
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:120
-msgid "SQlite binary handler"
-msgstr "Manexador binario SQLite"
-
-#: ../libgda/sqlite/gda-sqlite-handler-bin.c:126
-msgid "SQlite binary representation"
+#: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
+#| msgid "SQlite binary representation"
+msgid "SQLite binary representation"
 msgstr "Representación binaria SQlite"
 
-#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:124
+#: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 msgid "Sqlite boolean representation"
 msgstr "Representación lóxica de Sqlite"
 
@@ -2717,7 +2694,7 @@ msgstr "Non é posíbel atopar libsqlite3."
 #: ../providers/jdbc/gda-jdbc-provider.c:356
 #: ../providers/ldap/gda-ldap-provider.c:353
 #: ../providers/mdb/gda-mdb-provider.c:236
-#: ../providers/mysql/gda-mysql-provider.c:590
+#: ../providers/mysql/gda-mysql-provider.c:631
 #: ../providers/postgres/gda-postgres-provider.c:408
 #: ../providers/web/gda-web-provider.c:342
 msgid "Provider does not support asynchronous connection open"
@@ -2780,8 +2757,8 @@ msgstr "Non foi posíbel definir o cotexamento «%s»"
 #: ../libgda-ui/data-entries/plugins/libmain.c:189
 #: ../libgda-ui/data-entries/plugins/libmain.c:282
 #: ../libgda-ui/data-entries/plugins/libmain.c:307
-#: ../providers/mysql/gda-mysql-provider.c:835
-#: ../providers/mysql/gda-mysql-provider.c:877
+#: ../providers/mysql/gda-mysql-provider.c:878
+#: ../providers/mysql/gda-mysql-provider.c:920
 #: ../providers/postgres/gda-postgres-provider.c:750
 #: ../providers/postgres/gda-postgres-provider.c:806
 #, c-format
@@ -2822,15 +2799,15 @@ msgstr "Operación ILIKE non compatíbel"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2541
 #: ../providers/jdbc/gda-jdbc-provider.c:1123
-#: ../providers/postgres/gda-postgres-provider.c:1543
+#: ../providers/postgres/gda-postgres-provider.c:1539
 #: ../providers/web/gda-web-provider.c:1270
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Non se permiten parámetros anónimos en sentencias preparadas"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2654
 #: ../libgda/sqlite/gda-sqlite-provider.c:2666
-#: ../providers/mysql/gda-mysql-provider.c:1980
-#: ../providers/postgres/gda-postgres-provider.c:1686
+#: ../providers/mysql/gda-mysql-provider.c:2031
+#: ../providers/postgres/gda-postgres-provider.c:1682
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -2838,8 +2815,8 @@ msgstr ""
 "inserida: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2688
-#: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1701
+#: ../providers/mysql/gda-mysql-provider.c:2046
+#: ../providers/postgres/gda-postgres-provider.c:1697
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -2847,16 +2824,16 @@ msgstr ""
 "inserida: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2701
-#: ../providers/mysql/gda-mysql-provider.c:2008
-#: ../providers/postgres/gda-postgres-provider.c:1714
+#: ../providers/mysql/gda-mysql-provider.c:2059
+#: ../providers/postgres/gda-postgres-provider.c:1710
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "A sentencia SELECT para obter a última fila inserida non devolveu ningunha "
 "fila"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2705
-#: ../providers/mysql/gda-mysql-provider.c:2012
-#: ../providers/postgres/gda-postgres-provider.c:1718
+#: ../providers/mysql/gda-mysql-provider.c:2063
+#: ../providers/postgres/gda-postgres-provider.c:1714
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
@@ -2894,8 +2871,8 @@ msgstr "Non foi posíbel identificar o ROWID do BLOB a encher"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:447
 #: ../providers/jdbc/gda-jdbc-provider.c:1221
 #: ../providers/ldap/gda-ldap-provider.c:801
-#: ../providers/mysql/gda-mysql-provider.c:2101
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../providers/mysql/gda-mysql-provider.c:2152
+#: ../providers/postgres/gda-postgres-provider.c:1809
 #: ../providers/web/gda-web-provider.c:1403
 msgid "Provider does not support asynchronous statement execution"
 msgstr "O provedor no permite a execución asíncrona de sentencias"
@@ -2909,10 +2886,10 @@ msgstr "Sentencia baleira"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3023
 #: ../providers/jdbc/gda-jdbc-provider.c:1308
 #: ../providers/jdbc/gda-jdbc-provider.c:1311
-#: ../providers/mysql/gda-mysql-provider.c:2223
-#: ../providers/mysql/gda-mysql-provider.c:2226
-#: ../providers/postgres/gda-postgres-provider.c:1927
-#: ../providers/postgres/gda-postgres-provider.c:1930
+#: ../providers/mysql/gda-mysql-provider.c:2274
+#: ../providers/mysql/gda-mysql-provider.c:2277
+#: ../providers/postgres/gda-postgres-provider.c:1923
+#: ../providers/postgres/gda-postgres-provider.c:1926
 #: ../providers/web/gda-web-provider.c:1481
 #: ../providers/web/gda-web-provider.c:1484
 msgid "Missing parameter(s) to execute query"
@@ -2920,20 +2897,20 @@ msgstr "Falta un ou máis parámetros para poder executar a consulta"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3083
 #: ../providers/jdbc/gda-jdbc-provider.c:1390
-#: ../providers/mysql/gda-mysql-provider.c:2287
-#: ../providers/postgres/gda-postgres-provider.c:1988
+#: ../providers/mysql/gda-mysql-provider.c:2338
+#: ../providers/postgres/gda-postgres-provider.c:1984
 #: ../providers/web/gda-web-provider.c:1548
 msgid "Can't rewrite statement handle default values"
 msgstr ""
 "Non é posíbel reescribir a sentencia para manexar os valores predeterminados"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3207
-#: ../providers/mysql/gda-mysql-provider.c:2539
+#: ../providers/mysql/gda-mysql-provider.c:2590
 msgid "Can't get BLOB's length"
 msgstr "Non foi posíbel conseguir a lonxitude de BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3209
-#: ../providers/mysql/gda-mysql-provider.c:2541
+#: ../providers/mysql/gda-mysql-provider.c:2592
 msgid "BLOB is too big"
 msgstr "BLOB é demasiado grande"
 
@@ -3477,8 +3454,8 @@ msgstr "Tamaño de datos"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
 #: ../providers/ldap/gda-ldap-provider.c:1003
-#: ../providers/mysql/gda-mysql-provider.c:635
-#: ../providers/mysql/gda-mysql-provider.c:669
+#: ../providers/mysql/gda-mysql-provider.c:678
+#: ../providers/mysql/gda-mysql-provider.c:712
 #: ../providers/mysql/gda-mysql-util.c:63
 #: ../tools/browser/ldap-browser/entry-properties.c:586
 #: ../tools/browser/schema-browser/table-columns.c:516
@@ -4744,8 +4721,8 @@ msgstr "Directorio onde está o ficheiro de base de datos"
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:1
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:1
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:1
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:17
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:17
@@ -4966,8 +4943,8 @@ msgstr "Comprobar a restrición"
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:2
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:2
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:18
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:18
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:15
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:2
@@ -4980,8 +4957,8 @@ msgstr "Descrición da base de datos"
 #. DSN parameters
 #: ../providers/bdbsql/bdbsql_specs_create_db.xml.in.h:6
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:6
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:19
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_drop_db.xml.in.h:6
@@ -5073,7 +5050,7 @@ msgstr "Na táboa"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:6
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:5
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:5
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
@@ -5827,17 +5804,28 @@ msgstr ""
 msgid "Incorrect specified column name"
 msgstr "O nome de columna especificado non é correcto"
 
-#: ../providers/mysql/gda-mysql-handler-boolean.c:124
+#: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "MySQL boolean representation"
 msgstr "Representación booleana MySQL"
 
-#: ../providers/mysql/gda-mysql-provider.c:494
+#: ../providers/mysql/gda-mysql-provider.c:497
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr ""
 "Non é posíbel fornecer un CONECTADOR UNIX se tamén vai fornecer un ANFITRIÓN "
 "ou un PORTO"
 
-#: ../providers/mysql/gda-mysql-provider.c:544
+#: ../providers/mysql/gda-mysql-provider.c:505
+#| msgid "Invalid column number %d"
+msgid "Invalid port number"
+msgstr "Número de porto non válido"
+
+#: ../providers/mysql/gda-mysql-provider.c:540
+#, c-format
+#| msgid "Unknown provider '%s'"
+msgid "Unknown MySQL protocol '%s'"
+msgstr "Protocolo MySQL «%s» descoñecido"
+
+#: ../providers/mysql/gda-mysql-provider.c:585
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
@@ -5846,27 +5834,27 @@ msgstr ""
 "Non é posíbel estabelecer o conxunto de caracteres UTF8 no cliente. Usando "
 "%s. Haberá problemas cos caracteres que non sexan UTF-8"
 
-#: ../providers/mysql/gda-mysql-provider.c:600
+#: ../providers/mysql/gda-mysql-provider.c:641
 msgid "The connection string must contain the DB_NAME values"
 msgstr "A cadea de conexión debe incluir o valor DB_NAME"
 
-#: ../providers/mysql/gda-mysql-provider.c:638
-#: ../providers/mysql/gda-mysql-provider.c:672
+#: ../providers/mysql/gda-mysql-provider.c:681
+#: ../providers/mysql/gda-mysql-provider.c:715
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Sen descrición"
 
-#: ../providers/mysql/gda-mysql-provider.c:1773
+#: ../providers/mysql/gda-mysql-provider.c:1824
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "Non se permiten parámetros sen nome nas sentencias preparadas."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2533
+#: ../providers/mysql/gda-mysql-provider.c:2584
 msgid "Can't read whole BLOB into memory"
 msgstr "Non foi posíbel ler todo o BLOB na memoria"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2580
+#: ../providers/mysql/gda-mysql-provider.c:2631
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
@@ -5875,7 +5863,7 @@ msgstr ""
 "Tipo de datos «%s» non manexado. Informe deste erro en http://bugzilla.gnome."
 "org/ para o produto «libgda»."
 
-#: ../providers/mysql/gda-mysql-provider.c:2627
+#: ../providers/mysql/gda-mysql-provider.c:2678
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -6017,245 +6005,303 @@ msgstr "Nome de usuario (que teña dereitos para crear bases de datos)"
 msgid "Administrator password"
 msgstr "Contrasinal do administrador"
 
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#| msgid "Connection properties"
+msgid "Connection protocol"
+msgstr "Protocolo de conexión"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+"Explicitly specifies a connection protocol to use. It is useful when the "
+"other connection parameters normally would cause a protocol to be used other "
+"than the one you want"
+msgstr ""
+"Especifica explícitamente un protocolo de conexión a usar. É útil cando os "
+"parámetros da outra conexión normalmente causarían que se use protocolo "
+"distinto do que quere "
+
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
 msgid "Create database only if it does not yet exist"
 msgstr "Crear a base de datos só se aínda non existe"
 
 #. DSN parameters
 #. other table options
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:73
 msgid "Character set"
 msgstr "Conxunto de caracteres"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "Character set encoding to use in the new database"
 msgstr "Codificación do conxunto de caracteres a usar na nova base de datos"
 
 #. DSN parameters
 #. other table options
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 msgid "Collation"
 msgstr "Cotexo"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "Collation method to use in the new database"
 msgstr "Método de cotexo a usar na base de datos nova"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:131
 msgid "UTF-8 Unicode"
 msgstr "Unicode UTF-8"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:133
 msgid "ISO 8859-1 West European"
 msgstr "ISO 8859-1 europeo occidental"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:38
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:135
 msgid "ISO 8859-2 Central European"
 msgstr "ISO 8859-2 centroeuropeo"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:40
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:137
 msgid "US ASCII"
 msgstr "ASCII EE.UU."
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:42
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 msgid "Big5 Traditional Chinese"
 msgstr "Big5 chinés tradicional"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
 msgid "DEC West European"
 msgstr "DEC europeo occidental"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "DOS West European"
 msgstr "DOS europeo occidental"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "HP West European"
 msgstr "HP europeo occidental"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "KOI8-R Relcom Russian"
 msgstr "KOI8-R relcom ruso"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 msgid "7bit Swedish"
 msgstr "7bit  sueco"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:151
 msgid "EUC-JP Japanese"
 msgstr "EUC xaponés"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:153
 msgid "Shift-JIS Japanese"
 msgstr "Xaponés Shift-JIS"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:58
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:155
 msgid "ISO 8859-8 Hebrew"
 msgstr "ISO 8859-8 hebreo"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:60
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 msgid "TIS620 Thai"
 msgstr "Tailandés TIS620"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 msgid "EUC-KR Korean"
 msgstr "EUC coreano"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:161
 msgid "KOI8-U Ukrainian"
 msgstr "KOI8-U ucraíno"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:163
 msgid "GB2312 Simplified Chinese"
 msgstr "GB2312 chinés simplificado"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:165
 msgid "ISO 8859-7 Greek"
 msgstr "ISO 8859-7 grego"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 msgid "Windows Central European"
 msgstr "Windows centroeuropeo"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:169
 msgid "GBK Simplified Chinese"
 msgstr "GBK chinés simplificado"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:171
 msgid "ISO 8859-9 Turkish"
 msgstr "ISO 8859-9 turco"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:78
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
 msgid "ARMSCII-8 Armenian"
 msgstr "ARMSCII-8 armenio"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:78
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
 msgid "UCS-2 Unicode"
 msgstr "Unicode UCS-2"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:177
 msgid "DOS Russian"
 msgstr "DOS ruso"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:179
 msgid "DOS Kamenicky Czech-Slovak"
 msgstr "DOS Kamenicky checo-slovaco"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:181
 msgid "Mac Central European"
 msgstr "Mac centroeuropeo"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:183
 msgid "Mac West European"
 msgstr "Mac europeo occidental"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:185
 msgid "DOS Central European"
 msgstr "DOS centroeuropeo"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:187
 msgid "ISO 8859-13 Baltic"
 msgstr "ISO 8859-13 báltico"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
 msgid "Windows Cyrillic"
 msgstr "Windows cirílico"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:191
 msgid "Windows Arabic"
 msgstr "Windows árabe"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:193
 msgid "Windows Baltic"
 msgstr "Windows báltico"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:195
 msgid "Binary pseudo charset"
 msgstr "Xogo de caracteres pseudo binario"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:197
 msgid "GEOSTD8 Georgian"
 msgstr "GEOSTD8 xeorxiano"
 
 #. To translators: Charset name
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:104
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "SJIS for Windows Japanese"
 msgstr "SJIS para windows xaponés"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+msgid "Automatic"
+msgstr "Automático"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+msgid "TCP: TCP/IP connection to local or remote server."
+msgstr "TCP: conexión TCP/IP a un servidor local ou remoto."
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+msgid ""
+"Socket: Unix socket file connection to local server (Local Unix server only)."
+msgstr ""
+"Socket: Conexión de ficheiro de socket Unix a un servidor local (só servidor "
+"Unix local)."
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+msgid ""
+"Pipe: Named-pipe connection to local or remote server (Windows server only)"
+msgstr ""
+"Pipe: conexión named-pipe a un servidor local ou remoto (só servidor "
+"Windows)"
+
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+msgid ""
+"Memory: Shared-memory connection to local server (Local Windows server only)"
+msgstr ""
+"Memoria: conexión de memoria compartica a un servidor local (só servidor "
+"Windows local)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6575,12 +6621,12 @@ msgid "column name"
 msgstr "nome da columna"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:22
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 msgid "Only if existing"
 msgstr "Só se existe"
 
 #. DSN parameters
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
 msgid "Drop database only if it exists"
 msgstr "Eliminar a base de datos só se existe"
 
@@ -6669,23 +6715,19 @@ msgstr "Non é posíbel asignar o localizador LOB"
 msgid "Could not copy Lob locator"
 msgstr "Non é posíbel copiar o localizador LOB"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:122
-msgid "Postgresql binary handler"
-msgstr "Manexador binario PostgreSQL"
-
-#: ../providers/postgres/gda-postgres-handler-bin.c:128
+#: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "PostgresqlBin"
 msgstr "PostgresqlBin"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:129
+#: ../providers/postgres/gda-postgres-handler-bin.c:120
 msgid "PostgreSQL binary representation"
 msgstr "Representación binaria PostgreSQL"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:218
+#: ../providers/postgres/gda-postgres-handler-bin.c:204
 msgid "Insufficient memory to convert binary buffer to string"
 msgstr "Memoria insuficiente para convertir o búfer binario a unha cadea"
 
-#: ../providers/postgres/gda-postgres-handler-bin.c:281
+#: ../providers/postgres/gda-postgres-handler-bin.c:244
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Memoria insuficiente para convertir a cadea un búfer binario"
 
@@ -6741,14 +6783,14 @@ msgstr "Erro interno"
 msgid "Wrong savepoint name '%s'"
 msgstr "Nome incorrecto do punto de almacenamento «%s»"
 
-#: ../providers/postgres/gda-postgres-provider.c:2082
-#: ../providers/postgres/gda-postgres-provider.c:2084
+#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/postgres/gda-postgres-provider.c:2080
 msgid "Cannot start transaction"
 msgstr "Non foi posíbel iniciar a transacción"
 
-#: ../providers/postgres/gda-postgres-provider.c:2291
-#: ../providers/postgres/gda-postgres-provider.c:2327
-#: ../providers/postgres/gda-postgres-provider.c:2362
+#: ../providers/postgres/gda-postgres-provider.c:2287
+#: ../providers/postgres/gda-postgres-provider.c:2323
+#: ../providers/postgres/gda-postgres-provider.c:2358
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Non é posíbel estabelecer o parámetro ID da transacción XA"
 
@@ -11293,6 +11335,27 @@ msgstr "Obxectos"
 #: ../tools/web-server.c:1889
 msgid "Triggers"
 msgstr "Activadores"
+
+#~ msgid "Binary handler"
+#~ msgstr "Manexador binario"
+
+#~ msgid "Boolean values handler"
+#~ msgstr "Manexador de valores booleanos"
+
+#~ msgid "Strings handler"
+#~ msgstr "Manexador de cadeas"
+
+#~ msgid "Time and Date handler"
+#~ msgstr "Manexador de hora e data"
+
+#~ msgid "Gda type handler"
+#~ msgstr "Manexador de tipo Gda"
+
+#~ msgid "SQlite binary handler"
+#~ msgstr "Manexador binario SQLite"
+
+#~ msgid "Postgresql binary handler"
+#~ msgstr "Manexador binario PostgreSQL"
 
 #~ msgid "Invalid user name"
 #~ msgstr "Nome de usuario non válido"
