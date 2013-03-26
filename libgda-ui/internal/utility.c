@@ -213,12 +213,12 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
 
         /* list the values in proxy_model for each param in GDA_SET_NODE (group->group->nodes->data)->params */
 	attributes = 0;
-        for (list = group->group->nodes; list; list = list->next) {
-		col = g_slist_index (((GdaSet*)model_iter)->holders, GDA_SET_NODE (list->data)->holder);
+        for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)); list; list = list->next) {
+		col = g_slist_index (((GdaSet*)model_iter)->holders, gda_set_node_get_holder (GDA_SET_NODE (list->data)));
                 gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter,
                                     GDAUI_DATA_STORE_COL_TO_DELETE, &local_to_del,
                                     offset + col, &localattr, -1);
-		if (list == group->group->nodes)
+		if (list == gda_set_group_get_nodes (gdaui_set_group_get_group (group)))
 			attributes = localattr;
 		else
 			attributes &= localattr;
@@ -260,10 +260,10 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 		GSList *list;
 		GValue *value;
 
-		for (list = group->group->nodes; list; list = list->next) {
+		for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)); list; list = list->next) {
 			gint col;
 
-			col = g_slist_index (((GdaSet*)model_iter)->holders, GDA_SET_NODE (list->data)->holder);
+			col = g_slist_index (((GdaSet*)model_iter)->holders, gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter, col, &value, -1);
 			retval = g_list_append (retval, value);
 		}
@@ -280,9 +280,9 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 #ifdef PROXY_STORE_EXTRA_VALUES
 		proxy_row = gdaui_data_store_get_row_from_iter (store, tree_iter);
 #endif
-		source = group->source;
-		for (i = 0 ; (i < source->shown_n_cols)  && !ret_null; i++) {
-			col = source->shown_cols_index[i];
+		source = gdaui_set_group_get_source (group);
+		for (i = 0 ; (i < gdaui_set_source_get_shown_n_cols (source))  && !ret_null; i++) {
+			col = (gdaui_set_source_get_shown_columns (source))[i];
 #ifdef PROXY_STORE_EXTRA_VALUES
 			if (!slow_way) {
 				value = gda_data_proxy_get_model_row_value (proxy, source->data_model, proxy_row, col);
@@ -306,21 +306,21 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 				GSList *list;
 				gint j;
 				
-				cols_index = g_new0 (gint, g_slist_length (group->group->nodes));
-				for (list = group->group->nodes, j = 0; list; list = list->next, j++) {
+				cols_index = g_new0 (gint, gda_set_group_get_n_nodes (gdaui_set_group_get_group (group)));
+				for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)), j = 0; list; list = list->next, j++) {
 					gint colno;
 					colno = g_slist_index (((GdaSet*)model_iter)->holders, 
-							       GDA_SET_NODE (list->data)->holder);
-					cols_index [j] = GDA_SET_NODE (list->data)->source_column;
+							       gda_set_node_get_holder (GDA_SET_NODE (list->data)));
+					cols_index [j] = gda_set_node_get_source_column (GDA_SET_NODE (list->data));
 					gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter,
 							    colno, &value, -1);
 					key_values = g_slist_append (key_values, (GValue *) value);
 				}
 				
-				row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (source->source->data_model), 
+				row = gda_data_model_get_row_from_values (gda_set_source_get_data_model (gdaui_set_source_get_source (source)), 
 									  key_values, cols_index);
 				if (row >= 0) {
-					value = gda_data_model_get_value_at (GDA_DATA_MODEL (source->source->data_model),
+					value = gda_data_model_get_value_at (gda_set_source_get_data_model (gdaui_set_source_get_source (source)),
 									     col, row, NULL);
 					retval = g_list_append (retval, (GValue *) value);
 				}

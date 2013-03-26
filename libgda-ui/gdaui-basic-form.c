@@ -575,20 +575,21 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 		 !strcmp (att_name, GDA_ATTRIBUTE_DESCRIPTION)) {
 		if (sentry) {
 			gchar *str, *title;
+			GdaSetSource *ss;
 			str = create_text_label_for_sentry (sentry, &title);
 			gtk_label_set_text (GTK_LABEL (sentry->label), str);
 			g_free (str);
 			g_free (sentry->label_title);
 			sentry->label_title = title;
-			
-			if (! sentry->group->group->nodes_source) {
+			ss =  gda_set_group_get_source (gdaui_set_group_get_group (sentry->group));
+			if (!ss) {
 				g_object_get (G_OBJECT (param), "description", &title, NULL);
 				if (title && *title)
 					gtk_widget_set_tooltip_text (sentry->label, title);
 				g_free (title);
 			}
 			else {
-				title = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model),
+				title = g_object_get_data (G_OBJECT (gda_set_source_get_data_model (ss)),
 							   "descr");
 				if (title && *title)
 					gtk_widget_set_tooltip_text (sentry->label, title);
@@ -823,8 +824,10 @@ static gchar *
 create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title)
 {
 	gchar *label = NULL;
+	GdaSetSource *ss;
 	g_assert (out_title);
-	if (! sentry->group->group->nodes_source) {
+	ss = gda_set_group_get_source (gdaui_set_group_get_group (sentry->group));
+	if (!ss) {
 		g_object_get (G_OBJECT (sentry->single_param), "name", out_title, NULL);
 		if (!*out_title)
 			*out_title = g_strdup (_("Value"));
@@ -841,13 +844,14 @@ create_text_label_for_sentry (SingleEntry *sentry, gchar **out_title)
 		GSList *params;
 		gchar *title = NULL;
 
-		label = g_object_get_data (G_OBJECT (sentry->group->group->nodes_source->data_model), "name");
+		label = g_object_get_data (G_OBJECT (gda_set_source_get_data_model (ss)), "name");
 		if (label)
 			title = g_strdup (label);
 		else {
 			GString *tstring = NULL;
-			for (params = sentry->group->group->nodes; params; params = params->next) {
-				g_object_get (G_OBJECT (GDA_SET_NODE (params->data)->holder),
+			for (params = gda_set_group_get_nodes (gdaui_set_group_get_group (sentry->group));
+			                 params; params = params->next) {
+				g_object_get (gda_set_node_get_holder (GDA_SET_NODE (params->data)),
 					      "name", &title, NULL);
 				if (title) {
 					if (tstring) 
@@ -875,6 +879,7 @@ static void
 create_entry_widget (SingleEntry *sentry)
 {
 	GdauiSetGroup *group;
+	GdaSetGroup *sg;
 	GtkWidget *entry;
 	gboolean editable = TRUE;
 	GValue *ref_value = NULL;
@@ -916,7 +921,8 @@ create_entry_widget (SingleEntry *sentry)
 	}
 
 	group = sentry->group;
-	if (! group->group->nodes_source) {
+	sg = gdaui_set_group_get_group (group);
+	if (! gda_set_group_get_source (sg)) {
 		/* there is only one non-constrained parameter */
 		GdaHolder *param;
 		GType type;
@@ -925,9 +931,9 @@ create_entry_widget (SingleEntry *sentry)
 		const gchar *plugin = NULL;
 		const GValue *plugin_val;
 
-		g_assert (! group->group->nodes->next); /* only 1 item in the list */
+		g_assert (gda_set_group_get_n_nodes (sg) == 1); /* only 1 item in the list */
 
-		param = GDA_HOLDER (GDA_SET_NODE (group->group->nodes->data)->holder);
+		param = GDA_HOLDER (gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		sentry->single_param = param;
 		
 		val = gda_holder_get_value (param);
@@ -1010,14 +1016,14 @@ create_entry_widget (SingleEntry *sentry)
 		GSList *plist;
 		gboolean nullok = TRUE;
 			
-		entry = gdaui_entry_combo_new (sentry->form->priv->set_info, group->source);
+		entry = gdaui_entry_combo_new (sentry->form->priv->set_info, gdaui_set_group_get_source (group));
 
 		/* connect to the parameter's changes */
 		sentry->group_signals = g_array_new (FALSE, FALSE, sizeof (SignalData));
-		for (plist = group->group->nodes; plist; plist = plist->next) {
+		for (plist = gda_set_group_get_nodes (gdaui_set_group_get_group (group)); plist; plist = plist->next) {
 			GdaHolder *param;
 
-			param = GDA_SET_NODE (plist->data)->holder;
+			param = gda_set_node_get_holder (GDA_SET_NODE (plist->data));
 			if (gda_holder_get_not_null (param))
 				nullok = FALSE;
 
@@ -1036,6 +1042,7 @@ create_entry_widget (SingleEntry *sentry)
 		/* label */
 		gchar *title = NULL;
 		gchar *str;
+		GdaSetSource *ss;
 
 		str = create_text_label_for_sentry (sentry, &title);
 		sentry->label = gtk_label_new (str);
@@ -1044,9 +1051,8 @@ create_entry_widget (SingleEntry *sentry)
 		sentry->label_title = title;
 		gtk_misc_set_alignment (GTK_MISC (sentry->label), 0., 0.);
 		gtk_widget_show (sentry->label);
-			
-		title = g_object_get_data (G_OBJECT (group->group->nodes_source->data_model),
-					   "descr");
+		ss = gda_set_group_get_source (gdaui_set_group_get_group (group));
+		title = g_object_get_data (G_OBJECT (gda_set_source_get_data_model (ss)), "descr");
 		if (title && *title)
 			gtk_widget_set_tooltip_text (sentry->label, title);
 
@@ -1498,7 +1504,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 		GdauiSetGroup *group;
 
 		group = sentry->group;
-		params = group->group->nodes;
+		params = gda_set_group_get_nodes (gdaui_set_group_get_group (group));
 		values = gdaui_entry_combo_get_values (GDAUI_ENTRY_COMBO (entry));
 		g_assert (g_slist_length (params) == g_slist_length (values));
 
@@ -1516,7 +1522,7 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 			sentry->forward_param_updates = FALSE;
 
 			/* parameter's value */
-			param = GDA_SET_NODE (params->data)->holder;
+			param = gda_set_node_get_holder (GDA_SET_NODE (params->data));
 			gda_holder_set_value (param, (GValue *)(list->data), NULL);
 			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
 				       0, param, TRUE);
@@ -1596,9 +1602,10 @@ parameter_changed_cb (GdaHolder *param, SingleEntry *sentry)
 			GSList *list;
 			gboolean allnull = TRUE;
 
-			for (list = sentry->group->group->nodes; list; list = list->next) {
+			for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (sentry->group));
+			     list; list = list->next) {
 				const GValue *pvalue;
-				pvalue = gda_holder_get_value (GDA_SET_NODE (list->data)->holder);
+				pvalue = gda_holder_get_value (gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 				values = g_slist_append (values, (GValue *) pvalue);
 				if (allnull && pvalue &&
 				    (G_VALUE_TYPE ((GValue *) pvalue) != GDA_TYPE_NULL))
@@ -1679,9 +1686,10 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 			GSList *params;
 			gboolean allnull = TRUE;
 
-			for (params = sentry->group->group->nodes; params; params = params->next) {
+			for (params = gda_set_group_get_nodes (gdaui_set_group_get_group (sentry->group));
+			     params; params = params->next) {
 				const GValue *pvalue;
-				pvalue = gda_holder_get_value (GDA_SET_NODE (params->data)->holder);
+				pvalue = gda_holder_get_value (gda_set_node_get_holder (GDA_SET_NODE (params->data)));
 				values = g_slist_append (values, (GValue *) pvalue);
 				if (allnull && pvalue &&
 				    (G_VALUE_TYPE ((GValue *) pvalue) != GDA_TYPE_NULL))
@@ -2033,8 +2041,9 @@ get_single_entry_for_holder (GdauiBasicForm *form, GdaHolder *param)
 			/* multiple parameters */
 			GSList *params;
 
-			for (params = sentry->group->group->nodes; params; params = params->next) {
-				if (GDA_SET_NODE (params->data)->holder == (gpointer) param)
+			for (params = gda_set_group_get_nodes (gdaui_set_group_get_group (sentry->group)); params;
+			     params = params->next) {
+				if (gda_set_node_get_holder (GDA_SET_NODE (params->data)) == (gpointer) param)
 					return sentry;
 			}
 		}

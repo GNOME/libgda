@@ -834,7 +834,7 @@ namespace Gda {
 		public unowned Gda.SetGroup get_group (Gda.Holder holder);
 		public unowned Gda.Holder get_holder (string holder_id);
 		public unowned GLib.Value? get_holder_value (string holder_id);
-		public Gda.SetNode get_node (Gda.Holder holder);
+		public unowned Gda.SetNode get_node (Gda.Holder holder);
 		public unowned Gda.Holder get_nth_holder (int pos);
 		public unowned Gda.SetSource get_source (Gda.Holder holder);
 		public unowned Gda.SetSource get_source_for_model (Gda.DataModel model);
@@ -871,7 +871,28 @@ namespace Gda {
 		public void add_node (Gda.SetNode node);
 		public Gda.SetGroup copy ();
 		public void free ();
+		public int get_n_nodes ();
+		public Gda.SetNode get_node ();
+		public unowned GLib.SList<Gda.SetNode> get_nodes ();
+		public Gda.SetSource get_source ();
 		public void set_source (Gda.SetSource source);
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_set_node_get_type ()")]
+	[Compact]
+	public class SetNode {
+		public weak Gda.Holder holder;
+		public int source_column;
+		public weak Gda.DataModel source_model;
+		[CCode (has_construct_function = false)]
+		public SetNode (Gda.Holder holder, Gda.DataModel model);
+		public Gda.SetNode copy ();
+		public void free ();
+		public unowned Gda.DataModel get_data_model ();
+		public unowned Gda.Holder get_holder ();
+		public int get_source_column ();
+		public void set_data_model (Gda.DataModel model);
+		public void set_holder (Gda.Holder holder);
+		public void set_source_column (int column);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_set_source_get_type ()")]
 	[Compact]
@@ -879,10 +900,12 @@ namespace Gda {
 		public weak Gda.DataModel data_model;
 		public GLib.List<Gda.SetNode> nodes;
 		[CCode (has_construct_function = false)]
-		public SetSource ();
+		public SetSource (Gda.DataModel model);
 		public void add_node (Gda.SetNode node);
 		public Gda.SetSource copy ();
 		public void free ();
+		public unowned Gda.DataModel get_data_model ();
+		public unowned GLib.SList<Gda.SetNode> get_nodes ();
 		public void set_data_model (Gda.DataModel model);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_short_get_type ()")]
@@ -1398,12 +1421,6 @@ namespace Gda {
 		public weak Gda.Connection cnc;
 		public GLib.Type g_type;
 		public weak string dbms_type;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct SetNode {
-		public weak Gda.Holder holder;
-		public weak Gda.DataModel source_model;
-		public int source_column;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h")]
 	[SimpleType]

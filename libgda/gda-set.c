@@ -44,6 +44,26 @@
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
 
+#ifdef GSEAL_ENABLE
+/**
+ * GdaSetGroup:
+ * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
+ * @nodes_source: (allow-none):  if NULL, then @nodes contains exactly one entry 
+ *
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_set_group_free on a struct that was created manually.
+ */
+struct _GdaSetGroup {
+	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
+	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
+
+	/*< private >*/
+	/* Padding for future expansion */
+	gpointer      _gda_reserved1;
+	gpointer      _gda_reserved2;
+};
+#else
+#endif
 /*
    Register GdaSetGroup type
 */
@@ -132,18 +152,109 @@ void gda_set_group_set_source (GdaSetGroup *sg, GdaSetSource *source)
 }
 
 /**
- * gda_set_group_add_node:
+ * gda_set_group_get_source:
  * @sg: a #GdaSetGroup
- * @source: a #GdaSetNode to set
+ * 
+ * Returns: a #GdaSetSource. If %NULL then @sg contains just one element.
  * 
  * Since: 5.2
  */
-void gda_set_group_add_node (GdaSetGroup *sg, GdaSetNode *node)
+GdaSetSource*
+gda_set_group_get_source      (GdaSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+	return sg->nodes_source;
+}
+
+/**
+ * gda_set_group_add_node:
+ * @sg: a #GdaSetGroup
+ * @node: a #GdaSetNode to set
+ * 
+ * Since: 5.2
+ */
+void 
+gda_set_group_add_node (GdaSetGroup *sg, GdaSetNode *node)
 {
 	g_return_if_fail (sg);
 	g_return_if_fail (node);
 	sg->nodes = g_slist_append (sg->nodes, node);
 }
+
+/**
+ * gda_set_group_get_node:
+ * @sg: a #GdaSetGroup
+ * 
+ * This method always return first #GdaSetNode in @sg.
+ * 
+ * Returns: first #GdaSetNode in @sg.
+ * 
+ * Since: 5.2
+ */
+GdaSetNode* 
+gda_set_group_get_node (GdaSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+	g_return_val_if_fail (sg->nodes, NULL);
+	return (GdaSetNode*) sg->nodes->data;
+}
+
+/**
+ * gda_set_group_get_nodes:
+ * @sg: a #GdaSetGroup
+ * 
+ * Returns a #GSList with the #GdaSetNode grouped by @sg. You must use
+ * #g_slist_free on returned list.
+ * 
+ * Returns: (transfer none) (element-type Gda.SetNode): a #GSList with all nodes in @sg. 
+ * 
+ * Since: 5.2
+ */
+GSList* 
+gda_set_group_get_nodes (GdaSetGroup *sg)
+{
+	g_return_val_if_fail (sg, NULL);
+	g_return_val_if_fail (sg->nodes, NULL);
+	return sg->nodes;
+}
+
+/**
+ * gda_set_group_get_n_nodes:
+ * @sg: a #GdaSetGroup
+ * 
+ * Returns: number of nodes in @sg. 
+ * 
+ * Since: 5.2
+ */
+gint
+gda_set_group_get_n_nodes (GdaSetGroup *sg)
+{
+	g_return_val_if_fail (sg, -1);
+	return g_slist_length (sg->nodes);
+}
+
+#ifdef GSEAL_ENABLE
+/**
+ * GdaSetSource:
+ * @data_model: Can't be NULL
+ * @nodes: (element-type Gda.SetNode): list of #GdaSetNode for which source_model == @data_model
+ * 
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_set_source_free on a struct that was created manually.
+ **/
+struct _GdaSetSource {
+	GdaDataModel   *data_model;   /* Can't be NULL */
+	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
+
+	/*< private >*/
+	/* Padding for future expansion */
+	gpointer        _gda_reserved1;
+	gpointer        _gda_reserved2;
+	gpointer        _gda_reserved3;
+	gpointer        _gda_reserved4;
+};
+#else
+#endif
 
 /*
    Register GdaSetSource type
@@ -165,6 +276,7 @@ gda_set_source_get_type (void)
 
 /**
  * gda_set_source_new:
+ * @model: a #GdaDataModel
  * 
  * Creates a new #GdaSetSource struct.
  *
@@ -173,12 +285,12 @@ gda_set_source_get_type (void)
  * Since: 5.2
  */
 GdaSetSource*
-gda_set_source_new (void)
+gda_set_source_new (GdaDataModel *model)
 {
 	GdaSetSource *s = g_new0 (GdaSetSource, 1);
 	s->nodes = NULL;
-	s->data_model = NULL;
-	
+	s->data_model = g_object_ref (model);
+
 	return s;
 }
 
@@ -197,9 +309,8 @@ gda_set_source_copy (GdaSetSource *s)
 {
 	GdaSetSource *n;
 	g_return_val_if_fail (s, NULL);	
-	n = gda_set_source_new ();
+	n = gda_set_source_new (gda_set_source_get_data_model (s));
 	n->nodes = g_slist_copy (s->nodes);
-	n->data_model = g_object_ref (s->data_model);
 	return n;
 }
 	
@@ -216,13 +327,30 @@ gda_set_source_free (GdaSetSource *s)
 {
 	g_return_if_fail(s);
 	g_object_unref (s->data_model);
-	g_slist_free (s->nodes);
+	g_slist_free (s->nodes); /* FIXME: A source must own its nodes, then they must be freed here
+										this leaves to others responsability free nodes BEFORE
+										to free this source */
 	g_free (s);
 }
 
 /**
+ * gda_set_source_get_data_model:
+ * @s: a #GdaSetSource
+ * 
+ * Returns: (transfer none): a #GdaDataModel used by @s
+ * 
+ * Since: 5.2
+ */
+GdaDataModel*
+gda_set_source_get_data_model (GdaSetSource *s)
+{
+	g_return_val_if_fail (s, NULL);
+	return s->data_model;
+}
+
+/**
  * gda_set_source_set_data_model:
- * @s: (allow-none): a #GdaSetSource struct to free
+ * @s: a #GdaSetSource struct to free
  * @model: a #GdaDataModel
  * 
  * Set a #GdaDataModel
@@ -239,8 +367,8 @@ gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model)
 
 /**
  * gda_set_source_add_node:
- * @s: (allow-none): a #GdaSetSource struct to free
- * @model: a #GdaDataModel
+ * @s: a #GdaSetSource
+ * @node: a #GdaSetNode to add
  * 
  * Set a #GdaDataModel
  *
@@ -252,6 +380,234 @@ gda_set_source_add_node (GdaSetSource *s, GdaSetNode *node)
 	g_return_if_fail (s);
 	g_return_if_fail (node);
 	s->nodes = g_slist_append (s->nodes, node);
+}
+
+/**
+ * gda_set_source_get_nodes:
+ * @s: a #GdaSetSource
+ * 
+ * Returns: (transfer none) (element-type Gda.SetNode): a list of #GdaSetNode structs
+ *
+ * Since: 5.2
+ */
+GSList*
+gda_set_source_get_nodes (GdaSetSource *s)
+{
+	g_return_val_if_fail (s, NULL);
+	g_return_val_if_fail (s->nodes, NULL);
+	return s->nodes;
+}
+
+#ifdef GSEAL_ENABLE
+/**
+ * GdaSetNode:
+ * @holder: a #GdaHolder. It can't be NULL
+ * @source_model: a #GdaDataModel. It could be NULL
+ * @source_column: a #gint with the number of column in @source_model
+ * 
+ * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
+ * Don't try to use #gda_set_node_free on a struct that was created manually.
+ */
+struct _GdaSetNode {
+	GdaHolder    *holder;        /* Can't be NULL */
+	GdaDataModel *source_model;  /* may be NULL */
+	gint          source_column; /* unused if @source_model is NULL */
+
+	/*< private >*/
+	/* Padding for future expansion */
+	gpointer      _gda_reserved1;
+	gpointer      _gda_reserved2;
+};
+#endif
+/*
+   Register GdaSetNode type
+*/
+GType
+gda_set_node_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdaSetNode",
+							     (GBoxedCopyFunc) gda_set_node_copy,
+							     (GBoxedFreeFunc) gda_set_node_free);
+	}
+
+	return type;
+}
+
+/**
+ * gda_set_node_new:
+ * @holder: a #GdaHolder to used by new #GdaSetNode
+ * @model: a #GdaDataModel used to get values from
+ * 
+ * Creates a new #GdaSetNode struct.
+ *
+ * Return: (transfer full): a new #GdaSetNode struct.
+ *
+ * Since: 5.2
+ */
+GdaSetNode*
+gda_set_node_new (GdaHolder *holder, GdaDataModel *model)
+{
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	GdaSetNode *n = g_new0 (GdaSetNode, 1);
+	n->holder = holder;
+	if (GDA_IS_DATA_MODEL (model)) {
+		n->source_model = model;
+		n->source_column = 0;
+	}
+	else {
+		n->source_model = NULL;
+		n->source_column = -1;
+	}
+	return n;
+}
+
+/**
+ * gda_set_node_copy:
+ * @node: a #GdaSetNode to copy from
+ *
+ * Copy constructor.
+ *
+ * Returns: a new #GdaSetNode
+ *
+ * Since: 5.2
+ */
+GdaSetNode *
+gda_set_node_copy (GdaSetNode *node)
+{
+	g_return_val_if_fail (node, NULL);
+
+	GdaSetNode *n;
+	n = gda_set_node_new (gda_set_node_get_holder (node), gda_set_node_get_data_model (node));
+	gda_set_node_set_source_column (n, gda_set_node_get_source_column (node));
+	return n;
+}
+
+/**
+ * gda_set_node_free:
+ * @node: (allow-none): a #GdaSetNode struct to free
+ * 
+ * Frees any resources taken by @node struct. If @node is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gda_set_node_free (GdaSetNode *node)
+{
+	if (node == NULL)
+		return;
+	if (GDA_IS_HOLDER (node->holder))
+		g_object_unref (node->holder);
+	if (GDA_IS_DATA_MODEL (node->source_model))
+		g_object_unref (node->source_model);
+	g_free (node);
+}
+
+/**
+ * gda_set_node_get_holder:
+ * @node: a #GdaSetNode struct to get holder from
+ * 
+ * Returns: (transfer none): the #GdaHolder used by @node
+ *
+ * Since: 5.2
+ */
+GdaHolder*
+gda_set_node_get_holder (GdaSetNode *node)
+{
+	g_return_val_if_fail (node, NULL);
+	return node->holder;
+}
+
+/**
+ * gda_set_node_set_holder:
+ * @node: a #GdaSetNode struct to set holder to
+ * 
+ * Set a #GdaHolder to @node. @holder increment its referen counting when assigned.
+ *
+ * Since: 5.2
+ */
+void
+gda_set_node_set_holder (GdaSetNode *node, GdaHolder *holder)
+{
+	g_return_if_fail (GDA_IS_HOLDER (holder));
+	if (GDA_IS_HOLDER (node->holder))
+		g_object_unref (node->holder);
+	node->holder = g_object_ref (holder);
+}
+
+/**
+ * gda_set_node_get_data_model:
+ * @node: a #GdaSetNode struct to get holder from
+ * 
+ * Returns: (transfer none): the #GdaDataModel used by @node
+ *
+ * Since: 5.2
+ */
+GdaDataModel*
+gda_set_node_get_data_model (GdaSetNode *node)
+{
+	g_return_val_if_fail (node, NULL);
+	return node->source_model;
+}
+
+/**
+ * gda_set_node_set_data_model:
+ * @node: a #GdaSetNode struct to set data model to
+ * @model: a #GdaDataModel to be used by @node
+ * 
+ * Set a #GdaDataModel to be used by @node. @model increment its reference
+ * counting when set. Internally referenced column number is set to first column
+ * in @model.
+ *
+ * Since: 5.2
+ */
+void
+gda_set_node_set_data_model (GdaSetNode *node, GdaDataModel *model)
+{
+	g_return_if_fail (node);
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	if (GDA_IS_DATA_MODEL (node->source_model))
+		g_object_unref (node->source_model);
+	node->source_model = g_object_ref (model);
+	node->source_column = 0;
+}
+
+/**
+ * gda_set_node_get_source_column:
+ * @node: a #GdaSetNode struct to get column source from 
+ * 
+ * Returns: the number of column referenced in a given #GdaDataModel. If negative
+ * no column is referenced or no #GdaDataModel is used by @node.
+ *
+ * Since: 5.2
+ */
+gint
+gda_set_node_get_source_column (GdaSetNode *node)
+{
+	g_return_val_if_fail (node, -1);
+	return node->source_column;
+}
+
+/**
+ * gda_set_node_set_source_column:
+ * @node: a #GdaSetNode struct to set column source to, from an used data model 
+ * 
+ * Set column number in the #GdaDataModel used @node. If no #GdaDataModel is set
+ * then column is set to invalid (-1);
+ *
+ * Since: 5.2
+ */
+void
+gda_set_node_set_source_column (GdaSetNode *node, gint column)
+{
+	g_return_if_fail (column >= 0);
+	if (GDA_IS_DATA_MODEL (node->source_model)) {
+		if (column < gda_data_model_get_n_columns (node->source_model))
+			node->source_column = column;
+	}
 }
 
 /* 
@@ -1234,6 +1590,7 @@ void
 gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 {
 	GdaSetNode *node;
+	GdaDataModel *model;
 
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (set->priv);
@@ -1256,13 +1613,16 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
 	g_assert (node);
-	if (node->source_model) {
+	model = gda_set_node_get_data_model (node);
+	if (GDA_IS_DATA_MODEL (model)) {
 		GdaSetSource *source;
+		GSList *nodes;
 
-		source = gda_set_get_source_for_model (set, node->source_model);
+		source = gda_set_get_source_for_model (set, model);
 		g_assert (source);
-		g_assert (source->nodes);
-		if (! source->nodes->next)
+		nodes = gda_set_source_get_nodes (source);
+		g_assert (nodes);
+		if (! nodes->next)
 			set_remove_source (set, source);
 	}
 	set_remove_node (set, node);
@@ -1415,6 +1775,8 @@ compute_public_data (GdaSet *set)
 	GdaSetSource *source;
 	GdaSetGroup *group;
 	GHashTable *groups = NULL;
+	GdaHolder *holder;
+	GdaDataModel *node_model;
 
 	/*
 	 * Get rid of all the previous structures
@@ -1432,14 +1794,14 @@ compute_public_data (GdaSet *set)
 	 * Creation of the GdaSetNode structures
 	 */
 	for (list = set->holders; list; list = list->next) {
-		node = g_new0 (GdaSetNode, 1);
-		node->holder = GDA_HOLDER (list->data);
-		node->source_model = gda_holder_get_source_model (node->holder,
-								  &(node->source_column));
-		if (node->source_model)
-			g_object_ref (node->source_model);
-		
-		set->nodes_list = g_slist_prepend (set->nodes_list, node);
+		holder = GDA_HOLDER (list->data);
+		if (GDA_IS_HOLDER (holder)) {
+			gint col;
+			node = gda_set_node_new (holder, gda_holder_get_source_model (holder, &col));
+			gda_set_node_set_source_column (node, col);
+			if (node)
+				set->nodes_list = g_slist_prepend (set->nodes_list, node);
+		}
 	}
 	set->nodes_list = g_slist_reverse (set->nodes_list);
 
@@ -1451,13 +1813,13 @@ compute_public_data (GdaSet *set)
 		
 		/* source */
 		source = NULL;
-		if (node->source_model) {
-			source = gda_set_get_source_for_model (set, node->source_model);
+		node_model = gda_set_node_get_data_model (node);
+		if (GDA_IS_DATA_MODEL (node_model)) {
+			source = gda_set_get_source_for_model (set, node_model);
 			if (source)
 				gda_set_source_add_node (source, node);
 			else {
-				source = gda_set_source_new ();
-				gda_set_source_set_data_model (source, node->source_model);
+				source = gda_set_source_new (node_model);
 				gda_set_source_add_node (source, node);
 				set->sources_list = g_slist_prepend (set->sources_list, source);
 			}
@@ -1465,8 +1827,8 @@ compute_public_data (GdaSet *set)
 
 		/* group */
 		group = NULL;
-		if (node->source_model && groups)
-			group = g_hash_table_lookup (groups, node->source_model);
+		if (GDA_IS_DATA_MODEL (node_model) && groups)
+			group = g_hash_table_lookup (groups, node_model);
 		if (group) 
 			gda_set_group_add_node (group, node);
 		else {
@@ -1474,11 +1836,11 @@ compute_public_data (GdaSet *set)
 			gda_set_group_add_node (group, node);
 			gda_set_group_set_source (group, source);
 			set->groups_list = g_slist_prepend (set->groups_list, group);
-			if (node->source_model) {
+			if (GDA_IS_DATA_MODEL (node_model)) {
 				if (!groups)
 					groups = g_hash_table_new (NULL, NULL); /* key = source model, 
 										   value = GdaSetGroup */
-				g_hash_table_insert (groups, node->source_model, group);
+				g_hash_table_insert (groups, node_model, group);
 			}
 		}		
 	}
@@ -1570,7 +1932,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	}
 
 	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, hid);
-	if (!similar) {
+	if (GDA_IS_HOLDER (similar)) {
 		/* really add @holder to the set */
 		set->holders = g_slist_append (set->holders, holder);
 		g_hash_table_insert (set->priv->holders_hash, (gchar*) hid, holder);
@@ -1635,24 +1997,16 @@ static void
 set_remove_node (GdaSet *set, GdaSetNode *node)
 {
 	g_return_if_fail (g_slist_find (set->nodes_list, node));
-
-	if (node->source_model)
-		g_object_unref (G_OBJECT (node->source_model));
-
+	gda_set_node_free (node);
 	set->nodes_list = g_slist_remove (set->nodes_list, node);
-	g_free (node);
 }
 
 static void
 set_remove_source (GdaSet *set, GdaSetSource *source)
 {
 	g_return_if_fail (g_slist_find (set->sources_list, source));
-
-	if (source->nodes)
-		g_slist_free (source->nodes);
-
+	gda_set_source_free (source);
 	set->sources_list = g_slist_remove (set->sources_list, source);
-	g_free (source);
 }
 
 /**
@@ -1773,13 +2127,18 @@ gda_set_get_node (GdaSet *set, GdaHolder *holder)
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	/* FIXME: May is better to use holder's hash for better performance */
 	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
 
 	for (list = set->nodes_list; list && !retval; list = list->next) {
-		if (GDA_SET_NODE (list->data)->holder == holder)
-			retval = GDA_SET_NODE (list->data);
+		GdaHolder *node_holder;
+		retval = GDA_SET_NODE (list->data);
+		node_holder = gda_set_node_get_holder (retval);
+		if (node_holder == holder) /* FIXME: May is better to compare holders ID */
+			break;
+		else
+			retval = NULL;
 	}
-
 	return retval;
 }
 
@@ -1797,10 +2156,12 @@ GdaSetSource *
 gda_set_get_source (GdaSet *set, GdaHolder *holder)
 {
 	GdaSetNode *node;
-	
+	GdaDataModel *node_model;
+
 	node = gda_set_get_node (set, holder);
-	if (node && node->source_model)
-		return gda_set_get_source_for_model (set, node->source_model);
+	node_model = gda_set_node_get_data_model (node);
+	if (node && GDA_IS_DATA_MODEL (node_model))
+		return gda_set_get_source_for_model (set, node_model);
 	else
 		return NULL;
 }
@@ -1818,24 +2179,34 @@ gda_set_get_source (GdaSet *set, GdaHolder *holder)
 GdaSetGroup *
 gda_set_get_group (GdaSet *set, GdaHolder *holder)
 {
+	GdaSetNode *node;
 	GdaSetGroup *retval = NULL;
 	GSList *list, *sublist;
+	GdaHolder *node_holder;
 
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+	/* FIXME: May is better to use holder's hash for better performance */
 	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
 
 	for (list = set->groups_list; list && !retval; list = list->next) {
-		sublist = GDA_SET_GROUP (list->data)->nodes;
+		GSList *l;
+		retval = GDA_SET_GROUP (list->data);
+		sublist = gda_set_group_get_nodes (retval);
 		while (sublist && !retval) {
-			if (GDA_SET_NODE (sublist->data)->holder == holder)
-				retval = GDA_SET_GROUP (list->data);
-			else
-				sublist = g_slist_next (sublist);	
+			node = GDA_SET_NODE (sublist->data);
+			if (node) {
+				node_holder = gda_set_node_get_holder (node);
+				if (node_holder == holder) /* FIXME: May is better to compare holders ID */
+					break;
+				else {
+					sublist = g_slist_next (sublist);
+					retval = NULL;
+				}
+			}
 		}
 	}
-
 	return retval;
 }
 
@@ -1854,6 +2225,7 @@ GdaSetSource *
 gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 {
 	GdaSetSource *retval = NULL;
+	GdaDataModel *source_model;
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
@@ -1862,9 +2234,14 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 
 	list = set->sources_list;
 	while (list && !retval) {
-		if (GDA_SET_SOURCE (list->data)->data_model == model)
-			retval = GDA_SET_SOURCE (list->data);
-
+		retval = GDA_SET_SOURCE (list->data);
+		source_model = gda_set_source_get_data_model (retval);
+		if (GDA_IS_DATA_MODEL (source_model)) {
+			if (source_model == model)
+				break;
+			else 
+				retval = NULL;
+		}
 		list = g_slist_next (list);
 	}
 
@@ -1889,6 +2266,8 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 void
 gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *model)
 {
+	GdaDataModel *source_model;
+	
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (source);
 	g_return_if_fail (g_slist_find (set->sources_list, source));
@@ -1896,34 +2275,40 @@ gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *m
 	
 	/* compare models */
 	gint ncols, i;
-	ncols = gda_data_model_get_n_columns (source->data_model);
-	if (ncols != gda_data_model_get_n_columns (model)) {
-		g_warning (_("Replacing data model must have the same characteristics as the "
-			     "data model it replaces"));
-		return;
-	}
-	for (i = 0; i < ncols; i++) {
-		GdaColumn *c1, *c2;
-		GType t1, t2;
-		c1 = gda_data_model_describe_column (source->data_model, i);
-		c2 = gda_data_model_describe_column (model, i);
-		t1 = gda_column_get_g_type (c1);
-		t2 = gda_column_get_g_type (c2);
 
-		if ((t1 != GDA_TYPE_NULL) && (t2 != GDA_TYPE_NULL) && (t1 != t2)) {
+	source_model = gda_set_source_get_data_model (source);
+	if (GDA_IS_DATA_MODEL (source_model)) {
+		ncols = gda_data_model_get_n_columns (source_model);
+		/* FIXME: This way to compare two Data Models could be useful as a function
+		 * gda_data_model_compare (GdaDataModel)
+		 **/
+		if (ncols != gda_data_model_get_n_columns (model)) {
 			g_warning (_("Replacing data model must have the same characteristics as the "
-				     "data model it replaces"));
+					 "data model it replaces"));
 			return;
+		}
+		for (i = 0; i < ncols; i++) {
+			GdaColumn *c1, *c2;
+			GType t1, t2;
+			c1 = gda_data_model_describe_column (source->data_model, i);
+			c2 = gda_data_model_describe_column (model, i);
+			t1 = gda_column_get_g_type (c1);
+			t2 = gda_column_get_g_type (c2);
+
+			if ((t1 != GDA_TYPE_NULL) && (t2 != GDA_TYPE_NULL) && (t1 != t2)) {
+				g_warning (_("Replacing data model must have the same characteristics as the "
+						 "data model it replaces"));
+				return;
+			}
 		}
 	}
 
 	/* actually swap the models */
 	GSList *list;
-	source->data_model = model;
-	for (list = source->nodes; list; list = list->next) {
-		GdaSetNode *node = (GdaSetNode*) list->data;
-		g_object_unref (node->source_model);
-		node->source_model = g_object_ref (model);
+	gda_set_source_set_data_model (source, model);
+	for (list = gda_set_source_get_nodes (source); list; list = list->next) {
+		GdaSetNode *node = GDA_SET_NODE (list->data);
+		gda_set_node_set_data_model (node, model);
 		g_signal_handlers_block_by_func (G_OBJECT (node->holder),
 						 G_CALLBACK (source_changed_holder_cb), set);
 		gda_holder_set_source_model (GDA_HOLDER (node->holder), model, node->source_column,
@@ -1971,7 +2356,7 @@ set_group_dump (GdaSetGroup *group)
 	g_print ("  GdaSetGroup %p\n", group);
 	if (group) {
 		GSList *list;
-		for (list = group->nodes; list; list = list->next)
+		for (list = gda_set_group_get_nodes (group); list; list = list->next)
 			g_print ("    - node: %p\n", list->data);
 		g_print ("    - GdaSetSource: %p\n", group->nodes_source);
 	}

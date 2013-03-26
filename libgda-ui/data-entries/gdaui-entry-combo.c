@@ -241,15 +241,17 @@ uiset_source_model_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiSetSource
 {
 	if (source == combo->priv->source) {
 		GSList *list, *values = NULL;
-		for (list = source->source->nodes; list; list = list->next) {
+		GdaSetSource *s;
+		s = gdaui_set_source_get_source (source);
+		for (list = gda_set_source_get_nodes (s); list; list = list->next) {
 			const GValue *cvalue;
-			cvalue = gda_holder_get_value (GDA_SET_NODE (list->data)->holder);
+			cvalue = gda_holder_get_value (gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			values = g_slist_append (values, (GValue *) cvalue);
 		}
 		gdaui_combo_set_model (GDAUI_COMBO (combo->priv->combo_entry),
-				       source->source->data_model,
-				       combo->priv->source->shown_n_cols, 
-				       combo->priv->source->shown_cols_index);
+				       gda_set_source_get_data_model (s),
+				       gdaui_set_source_get_shown_n_cols (combo->priv->source), 
+				       gdaui_set_source_get_shown_columns (combo->priv->source));
 		_gdaui_combo_set_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), values, NULL);
 		g_slist_free (values);
 		gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry), combo->priv->null_possible);
@@ -287,23 +289,23 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	 * and use the values provided by the parameters to display the correct row */
 	null_possible = TRUE;
 	values = NULL;
-	for (list = source->source->nodes; list; list = list->next) {
+	for (list = gda_set_source_get_nodes (gdaui_set_source_get_source (source)); list; list = list->next) {
 		ComboNode *cnode = g_new0 (ComboNode, 1);
 		
 		cnode->node = GDA_SET_NODE (list->data);
 		cnode->value = NULL;
 		combo->priv->combo_nodes = g_slist_append (combo->priv->combo_nodes, cnode);
 
-		values = g_slist_append (values, (GValue *) gda_holder_get_value (cnode->node->holder));
-		if (gda_holder_get_not_null (cnode->node->holder))
+		values = g_slist_append (values, (GValue *) gda_holder_get_value (gda_set_node_get_holder (cnode->node)));
+		if (gda_holder_get_not_null (gda_set_node_get_holder (cnode->node)))
 			null_possible = FALSE;
 	}
 	combo->priv->null_possible = null_possible;
 
 	/* create the combo box itself */
-	entry = gdaui_combo_new_with_model (GDA_DATA_MODEL (source->source->data_model), 
-					    combo->priv->source->shown_n_cols, 
-					    combo->priv->source->shown_cols_index);
+	entry = gdaui_combo_new_with_model (gda_set_source_get_data_model (gdaui_set_source_get_source (source)), 
+					    gdaui_set_source_get_shown_n_cols (combo->priv->source), 
+					    gdaui_set_source_get_shown_columns (combo->priv->source));
 	g_object_set (G_OBJECT (entry), "as-list", TRUE, NULL);
 
 	gdaui_entry_shell_pack_entry (GDAUI_ENTRY_SHELL (combo), entry);
@@ -445,7 +447,7 @@ combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *com
 			ComboNode *node = COMBO_NODE (list->data);
 
 			gda_value_free (node->value);
-			gtk_tree_model_get (model, &iter, node->node->source_column, &(node->value), -1);
+			gtk_tree_model_get (model, &iter, gda_set_node_get_source_column (node->node), &(node->value), -1);
 			if (node->value)
 				node->value = gda_value_copy (node->value);
 			/*g_print ("%s (%p): Set Combo Node value to %s (%p)\n", __FUNCTION__, combo, 
@@ -503,7 +505,7 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 		
 		model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo->priv->combo_entry));
 		if (gdaui_data_store_get_iter_from_values (GDAUI_DATA_STORE (model), &iter, 
-							   values, combo->priv->source->ref_cols_index)) {
+							   values, gdaui_set_source_get_ref_columns (combo->priv->source))) {
 			ComboNode *node;
 
 			real_combo_block_signals (combo);
@@ -514,7 +516,7 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 			for (list = combo->priv->combo_nodes; list; list = list->next) {
 				node = COMBO_NODE (list->data);
 				gda_value_free (node->value);
-				gtk_tree_model_get (model, &iter, node->node->source_column,
+				gtk_tree_model_get (model, &iter, gda_set_node_get_source_column (node->node),
 						    &(node->value), -1);
 				if (node->value)
 					node->value = gda_value_copy (node->value);
@@ -644,8 +646,9 @@ gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 			GdaColumn *attrs;
 			GType type = GDA_TYPE_NULL;
 			
-			attrs = gda_data_model_describe_column (combo->priv->source->source->data_model, 
-								COMBO_NODE (nodes->data)->node->source_column);
+			attrs = gda_data_model_describe_column (
+			                    gda_set_source_get_data_model (gdaui_set_source_get_source (combo->priv->source)),
+								gda_set_node_get_source_column (COMBO_NODE (nodes->data)->node));
 			arg_value = (GValue*) (argptr->data);
 			
 			if (arg_value)

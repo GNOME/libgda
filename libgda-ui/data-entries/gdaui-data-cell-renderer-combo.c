@@ -292,7 +292,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 					gvalues = g_list_next (gvalues);
 				}
 
-				g_return_if_fail (length == datacell->priv->source->ref_n_cols);
+				g_return_if_fail (length == gdaui_set_source_get_ref_n_cols (datacell->priv->source));
 				
 				if (allnull) 
 					g_object_set (G_OBJECT (object), "text", "", NULL);
@@ -301,20 +301,21 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 					/* if (gdaui_data_model_get_status (datacell->priv->data_model) &  */
 					/* 					    GDAUI_DATA_MODEL_NEEDS_INIT_REFRESH) */
 					/* 						gdaui_data_model_refresh (datacell->priv->data_model, NULL); */
-					row = gda_data_model_get_row_from_values (datacell->priv->source->source->data_model,
+					GdaDataModel *source_model;
+					source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (datacell->priv->source));
+					row = gda_data_model_get_row_from_values (source_model,
 										  values,
-										  datacell->priv->source->ref_cols_index);
+										  gdaui_set_source_get_ref_columns (datacell->priv->source));
 					if (row >= 0) {
 						GList *dsplay_values = NULL;
 						gint i;
 						gchar *str;
 						
-						for (i = 0; i < datacell->priv->source->shown_n_cols; i++) {
+						for (i = 0; i < gdaui_set_source_get_shown_n_cols (datacell->priv->source); i++) {
 							const GValue *value;
-							
-							value = gda_data_model_get_value_at (datacell->priv->source->source->data_model,
-											     datacell->priv->source->shown_cols_index [i],
-											     row, NULL);
+							gint* cols;
+							cols = gdaui_set_source_get_shown_columns (datacell->priv->source);
+							value = gda_data_model_get_value_at (source_model, cols [i], row, NULL);
 							dsplay_values = g_list_append (dsplay_values, (GValue *) value);
 						}
 						str = render_text_to_display_from_values (dsplay_values);
@@ -349,7 +350,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 			GList *gvalues = g_value_get_pointer (value);
 			gchar *str;
 
-			g_assert (g_list_length (gvalues) == (guint)datacell->priv->source->shown_n_cols);
+			g_assert (g_list_length (gvalues) == (guint) gdaui_set_source_get_shown_n_cols (datacell->priv->source));
 			str = render_text_to_display_from_values (gvalues);
 			g_object_set (G_OBJECT (object), "text", str, NULL);
 			g_free (str);
@@ -551,15 +552,17 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 	GdauiDataCellRendererCombo *datacell;
 	GtkWidget *combo;
 	gboolean editable;
+	GdaDataModel *source_model;
 
 	g_object_get ((GObject*) cell, "editable", &editable, NULL);
 	if (editable == FALSE)
 		return NULL;
 
 	datacell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
-	combo = gdaui_combo_new_with_model (GDA_DATA_MODEL (datacell->priv->source->source->data_model),
-					    datacell->priv->source->shown_n_cols, 
-					    datacell->priv->source->shown_cols_index);
+	source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (datacell->priv->source));
+	combo = gdaui_combo_new_with_model (source_model,
+					    gdaui_set_source_get_shown_n_cols (datacell->priv->source), 
+					    gdaui_set_source_get_shown_columns (datacell->priv->source));
 	
 	g_object_set (combo, "has-frame", FALSE, NULL);
 	g_object_set_data_full (G_OBJECT (combo),
@@ -598,8 +601,8 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 		return;
 	
 	list = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 
-					      datacell->priv->source->ref_n_cols, 
-					      datacell->priv->source->ref_cols_index);
+					      gdaui_set_source_get_ref_n_cols (datacell->priv->source), 
+					      gdaui_set_source_get_ref_columns (datacell->priv->source));
 	list_all = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 0, NULL);
 
 	path = g_object_get_data (G_OBJECT (combo), GDAUI_DATA_CELL_RENDERER_COMBO_PATH);

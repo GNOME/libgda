@@ -177,7 +177,30 @@
 	gdaui_server_operation_get_type
 	gdaui_server_operation_new
 	gdaui_server_operation_new_in_dialog
+	gdaui_set_get_type
+	gdaui_set_new
+	gdaui_set_get_group
 	gdaui_set_default_path
+	gdaui_set_group_get_type
+	gdaui_set_group_new
+	gdaui_set_group_free
+	gdaui_set_group_copy
+	gdaui_set_group_set_source
+	gdaui_set_group_get_source
+	gdaui_set_group_set_group
+	gdaui_set_group_get_group
+	gdaui_set_source_get_type
+	gdaui_set_source_new
+	gdaui_set_source_free
+	gdaui_set_source_copy
+	gdaui_set_source_set_source
+	gdaui_set_source_get_source
+	gdaui_set_source_get_shown_n_cols
+	gdaui_set_source_get_shown_columns
+	gdaui_set_source_set_shown_columns
+	gdaui_set_source_get_ref_n_cols
+	gdaui_set_source_get_ref_columns
+	gdaui_set_source_set_ref_columns
 	gdaui_tree_store_get_iter
 	gdaui_tree_store_get_node
 	gdaui_tree_store_get_type

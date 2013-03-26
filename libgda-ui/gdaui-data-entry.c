@@ -289,7 +289,7 @@ gdaui_data_entry_validate (GdauiDataEntry *de, GError **error)
 	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
 
 	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->validate)
-		(GDAUI_DATA_ENTRY_GET_IFACE (de)->validate) (de, error);
+		return (GDAUI_DATA_ENTRY_GET_IFACE (de)->validate) (de, error);
 	else
 		return TRUE;
 }

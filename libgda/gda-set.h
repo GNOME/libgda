@@ -27,12 +27,6 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SET          (gda_set_get_type())
-#define GDA_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_set_get_type(), GdaSet)
-#define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
-#define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
-
-
 /* error reporting */
 extern GQuark gda_set_error_quark (void);
 #define GDA_SET_ERROR gda_set_error_quark ()
@@ -46,37 +40,45 @@ typedef enum
 	GDA_SET_IMPLEMENTATION_ERROR
 } GdaSetError;
 
+#ifdef GSEAL_ENABLE
+#else
 struct _GdaSetNode {
-	GdaHolder    *holder;        /* Can't be NULL */
-	GdaDataModel *source_model;  /* may be NULL */
-	gint          source_column; /* unused if @source_model is NULL */
+	GdaHolder*    GSEAL(holder);
+	GdaDataModel* GSEAL(source_model);
+	gint          GSEAL(source_column);
 
 	/*< private >*/
 	/* Padding for future expansion */
-	gpointer      _gda_reserved1;
-	gpointer      _gda_reserved2;
+	gpointer      GSEAL(_gda_reserved1);
+	gpointer      GSEAL(_gda_reserved2);
 };
+#endif
 
+#define GDA_TYPE_SET_NODE (gda_set_node_get_type ())
 #define GDA_SET_NODE(x) ((GdaSetNode *)(x))
+GType         gda_set_node_get_type          (void) G_GNUC_CONST;
+GdaSetNode   *gda_set_node_new               (GdaHolder *holder, GdaDataModel *model);
+void          gda_set_node_free              (GdaSetNode *node);
+GdaSetNode   *gda_set_node_copy              (GdaSetNode *node);
+GdaHolder    *gda_set_node_get_holder        (GdaSetNode *node);
+void          gda_set_node_set_holder        (GdaSetNode *node, GdaHolder *holder);
+GdaDataModel *gda_set_node_get_data_model    (GdaSetNode *node);
+void          gda_set_node_set_data_model    (GdaSetNode *node, GdaDataModel *model);
+gint          gda_set_node_get_source_column (GdaSetNode *node);
+void          gda_set_node_set_source_column (GdaSetNode *node, gint column);
 
-
-/**
- * GdaSetGroup:
- * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
- * @nodes_source: (allow-none):  if NULL, then @nodes contains exactly one entry 
- *
- * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
- * Don't try to use #gda_meta_context_free on a struct that was created manually.
- */
+#ifdef GSEAL_ENABLE
+#else
 struct _GdaSetGroup {
-	GSList       *nodes;       /* list of GdaSetNode, at least one entry */
-	GdaSetSource *nodes_source; /* if NULL, then @nodes contains exactly one entry */
+	GSList*       GSEAL(nodes);       /* list of GdaSetNode, at least one entry */
+	GdaSetSource* GSEAL(nodes_source); /* if NULL, then @nodes contains exactly one entry */
 
 	/*< private >*/
 	/* Padding for future expansion */
-	gpointer      _gda_reserved1;
-	gpointer      _gda_reserved2;
+	gpointer      GSEAL(_gda_reserved1);
+	gpointer      GSEAL(_gda_reserved2);
 };
+#endif
 
 #define GDA_TYPE_SET_GROUP (gda_set_group_get_type ())
 #define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
@@ -85,40 +87,46 @@ GdaSetGroup  *gda_set_group_new             (void);
 void          gda_set_group_free            (GdaSetGroup *sg);
 GdaSetGroup  *gda_set_group_copy            (GdaSetGroup *sg);
 void          gda_set_group_add_node        (GdaSetGroup *sg, GdaSetNode *node);
+GdaSetNode   *gda_set_group_get_node        (GdaSetGroup *sg);
+GSList       *gda_set_group_get_nodes       (GdaSetGroup *sg);
+gint          gda_set_group_get_n_nodes     (GdaSetGroup *sg);
 void          gda_set_group_set_source      (GdaSetGroup *sg, GdaSetSource *source);
+GdaSetSource *gda_set_group_get_source      (GdaSetGroup *sg);
 
-
-/**
- * GdaSetSource:
- * @data_model: Can't be NULL
- * @nodes: (element-type Gda.SetNode): list of #GdaSetNode for which source_model == @data_model
- * 
- * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
- * Don't try to use #gda_meta_context_free on a struct that was created manually.
- **/
+#ifdef GSEAL_ENABLE
+#else
 struct _GdaSetSource {
-	GdaDataModel   *data_model;   /* Can't be NULL */
-	GSList         *nodes;        /* list of #GdaSetNode for which source_model == @data_model */
+	GdaDataModel*   GSEAL(data_model);   /* Can't be NULL */
+	GSList*         GSEAL(nodes);        /* list of #GdaSetNode for which source_model == @data_model */
 
 	/*< private >*/
 	/* Padding for future expansion */
-	gpointer        _gda_reserved1;
-	gpointer        _gda_reserved2;
-	gpointer        _gda_reserved3;
-	gpointer        _gda_reserved4;
+	gpointer        GSEAL(_gda_reserved1);
+	gpointer        GSEAL(_gda_reserved2);
+	gpointer        GSEAL(_gda_reserved3);
+	gpointer        GSEAL(_gda_reserved4);
 };
+#endif
 
 #define GDA_TYPE_SET_SOURCE (gda_set_source_get_type ())
 #define GDA_SET_SOURCE(x) ((GdaSetSource *)(x))
 GType         gda_set_source_get_type       (void) G_GNUC_CONST;
-GdaSetSource *gda_set_source_new            (void);
+GdaSetSource *gda_set_source_new            (GdaDataModel *model);
 void          gda_set_source_free           (GdaSetSource *s);
 GdaSetSource *gda_set_source_copy           (GdaSetSource *s);
 void          gda_set_source_add_node       (GdaSetSource *s, GdaSetNode *node);
+GSList       *gda_set_source_get_nodes      (GdaSetSource *s);
+GdaDataModel *gda_set_source_get_data_model (GdaSetSource *s);
 void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model);
 
 /* struct for the object's data */
 
+#define GDA_TYPE_SET          (gda_set_get_type())
+#define GDA_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_set_get_type(), GdaSet)
+#define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
+#define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
+
+/* FIXME: public members of GdaSet must be SEALED! */
 /**
  * GdaSet:
  * @holders: (element-type Gda.Holder): list of GdaHolder objects

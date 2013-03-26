@@ -79,20 +79,6 @@ typedef struct {
 typedef struct _GdaNumeric GdaNumeric;
 # ifdef GSEAL_ENABLE
 # else
-/**
- * GdaNumeric:
- * @number: a string representing a number
- * @precision: precision to use when @number is converted (not implemented jet)
- * @width: not implemented jet
- *
- * Holds numbers represented as strings.
- *
- * This struct must be considered as opaque. Any access to its members must use its
- * accessors added since version 5.0.2.
- *
- * Set value func: gda_value_set_numeric
- * Get value func: gda_value_get_numeric
- */
 struct _GdaNumeric {
 	gchar*   GSEAL(number);
 	glong    GSEAL(precision);

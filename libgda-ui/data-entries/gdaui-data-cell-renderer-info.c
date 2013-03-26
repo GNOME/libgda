@@ -456,17 +456,18 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 		gtk_tree_path_free (treepath);
 
 		/* we want the attributes */
-		if (! cellinfo->priv->group->group->nodes_source) {
+		if (! gda_set_group_get_source (gdaui_set_group_get_group (cellinfo->priv->group))) {
 			gint col;
 			GdaDataModel *proxied_model;
 			GdaDataProxy *proxy;
-
+			GdaSetGroup *sg;
+			
 			proxy = gdaui_data_store_get_proxy (cellinfo->priv->store);
 			proxied_model = gda_data_proxy_get_proxied_model (proxy);
-
-			g_assert (g_slist_length (cellinfo->priv->group->group->nodes) == 1);
+			sg = gdaui_set_group_get_group (cellinfo->priv->group);
+			g_assert (gda_set_group_get_n_nodes (sg) == 1);
 			col = g_slist_index (GDA_SET (cellinfo->priv->iter)->holders,
-					     GDA_SET_NODE (cellinfo->priv->group->group->nodes->data)->holder);
+					     gda_set_node_get_holder (  gda_set_group_get_node (sg)));
 
 			gtk_tree_model_get (GTK_TREE_MODEL (cellinfo->priv->store), &iter, 
 					    gda_data_model_get_n_columns (proxied_model) + col, 

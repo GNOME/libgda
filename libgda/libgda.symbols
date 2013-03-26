@@ -635,6 +635,16 @@
 	gda_set_get_source
 	gda_set_get_source_for_model
 	gda_set_get_type
+	gda_set_group_get_type
+	gda_set_group_new
+	gda_set_group_free
+	gda_set_group_copy
+	gda_set_group_add_node
+	gda_set_group_get_node
+	gda_set_group_get_nodes
+	gda_set_group_get_n_nodes
+	gda_set_group_set_source
+	gda_set_group_get_source
 	gda_set_is_valid
 	gda_set_merge_with_set
 	gda_set_new
@@ -642,9 +652,27 @@
 	gda_set_new_from_spec_node
 	gda_set_new_from_spec_string
 	gda_set_new_inline
+	gda_set_node_get_type
+	gda_set_node_new
+	gda_set_node_free
+	gda_set_node_copy
+	gda_set_node_get_holder
+	gda_set_node_set_holder
+	gda_set_node_get_data_model
+	gda_set_node_set_data_model
+	gda_set_node_get_source_column
+	gda_set_node_set_source_column
 	gda_set_remove_holder
 	gda_set_replace_source_model
 	gda_set_set_holder_value
+	gda_set_source_get_type
+	gda_set_source_new
+	gda_set_source_free
+	gda_set_source_copy
+	gda_set_source_add_node
+	gda_set_source_get_nodes
+	gda_set_source_get_data_model
+	gda_set_source_set_data_model
 	gda_short_get_type
 	gda_sql_any_part_check_structure
 	gda_sql_any_part_foreach
