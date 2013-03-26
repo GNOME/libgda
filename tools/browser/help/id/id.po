@@ -1,13 +1,13 @@
 # Indonesian translation for libgda.
 # Copyright (C) 2012 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
-# Andika Triwidada <andika@gmail.com>, 2012.
+# Andika Triwidada <andika@gmail.com>, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2012-07-16 15:32+0000\n"
-"PO-Revision-Date: 2012-07-21 20:55+0700\n"
+"PO-Revision-Date: 2013-03-26 16:08+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -794,7 +794,7 @@ msgstr "Perintah yang tersedia melalui tombol perintah adalah:"
 
 #: C/query-execution-perspective.page:75(p)
 msgid "<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</key><key>l</key></keyseq> shortcut)"
-msgstr "<giu>Bersihkan</gui>: bersihkan penyunting (serupa dengan pintasan <keyseq><key>Ctrl</key><key>l</key></keyseq>)"
+msgstr "<gui>Bersihkan</gui>: bersihkan penyunting (serupa dengan pintasan <keyseq><key>Ctrl</key><key>l</key></keyseq>)"
 
 #: C/query-execution-perspective.page:76(p)
 msgid "<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax\">variables</link> panel where you can give values to the variables present in the SQL code. The panel is automatically shown when a variable is detected in the SQL code"
@@ -967,7 +967,7 @@ msgstr "menganalisa skema basis data (tabel, relasi, ...), lihat <link xref=\"sc
 
 #: C/features.page:38(p)
 msgid "execute SQL commands, see the <link xref=\"query-execution-perspective\">Query execution perspective</link>"
-msgstr "mengeksekusi perintah SQL, lihat link xref=\"query-execution-perspective\">Perspektif eksekusi query</link>"
+msgstr "mengeksekusi perintah SQL, lihat <link xref=\"query-execution-perspective\">Perspektif eksekusi query</link>"
 
 #: C/features.page:40(p)
 msgid "analyse the table's contents, see the <link xref=\"data-manager-perspective\">Data manager perspective</link>"
@@ -991,7 +991,7 @@ msgstr "CSV dan berkas teks lain dapat diimpor dan dipakai bersama-sama<link typ
 
 #: C/features.page:53(p)
 msgid "the general framework is opened enough to add new integrated features; specifically anyone can develop new <link type=\"topic\" xref=\"general-ui\">perspectives</link>"
-msgstr "kerangka kerja umum telah cukup dibuka untuk menambah fitur-fitur integrasi baru: secara khusus, siapapun dapat mengembangkan link type=\"topic\" xref=\"general-ui\">perspektif</link> baru"
+msgstr "kerangka kerja umum telah cukup dibuka untuk menambah fitur-fitur integrasi baru: secara khusus, siapapun dapat mengembangkan <link type=\"topic\" xref=\"general-ui\">perspektif</link> baru"
 
 #: C/features.page:51(list)
 msgid "<placeholder-1/> x <placeholder-2/>"
@@ -1321,7 +1321,7 @@ msgstr "Perspektif manajer data"
 
 #: C/data-manager-perspective.page:9(p)
 msgid "Use the data manager perspective to navigate through the database's data. To switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></keyseq> shortcut."
-msgstr "Gunakan perspektif manajer data untuk menavigasi data dalam basis data. Untuk bertukar ke perspektif ini, gunakan menu guiseq><gui>Perspektif</gui><gui>Manajer Data</gui></guiseq> atau pintasan <keyseq><key>Ctrl</key><key>D</key></keyseq>."
+msgstr "Gunakan perspektif manajer data untuk menavigasi data dalam basis data. Untuk bertukar ke perspektif ini, gunakan menu <guiseq><gui>Perspektif</gui><gui>Manajer Data</gui></guiseq> atau pintasan <keyseq><key>Ctrl</key><key>D</key></keyseq>."
 
 #: C/data-manager-perspective.page:14(p)
 msgid "The workflow in this perspective is organized around the definition of one or more <em>data sources</em> (which selects data in the database) which, when executed, result in a data set displayed in a tabular view."
@@ -1504,5 +1504,5 @@ msgstr "Aksi kini dieksekusi"
 #. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
 #: C/index.page:0(None)
 msgid "translator-credits"
-msgstr "Andika Triwidada <andika@gmail.com>, 2012"
+msgstr "Andika Triwidada <andika@gmail.com>, 2012, 2013"
 
