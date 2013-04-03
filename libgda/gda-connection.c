@@ -395,7 +395,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 					 g_param_spec_boolean ("is-wrapper", NULL,
 							       _("Determines if the connection acts as a thread wrapper around another connection, making it completely thread safe"),
 							       FALSE,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/**
 	 * GdaConnection:monitor-wrapped-in-mainloop:
