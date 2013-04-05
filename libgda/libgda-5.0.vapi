@@ -176,7 +176,7 @@ namespace Gda {
 		[NoAccessorMethod]
 		public bool execution_timer { get; set; }
 		[NoAccessorMethod]
-		public bool is_wrapper { get; construct; }
+		public bool is_wrapper { get; set; }
 		[NoAccessorMethod]
 		public Gda.MetaStore meta_store { owned get; set; }
 		[NoAccessorMethod]
