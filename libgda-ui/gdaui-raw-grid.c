@@ -533,7 +533,7 @@ gdaui_raw_grid_set_property (GObject *object,
 
 				grid->priv->iter = gda_data_model_create_iter (GDA_DATA_MODEL (grid->priv->proxy));
 				grid->priv->iter_row = -1;
-				grid->priv->iter_info = _gdaui_set_new (GDA_SET (grid->priv->iter));
+				grid->priv->iter_info = gdaui_set_new (GDA_SET (grid->priv->iter));
 
 				g_signal_connect (grid->priv->iter_info, "public-data-changed",
 						  G_CALLBACK (paramlist_public_data_changed_cb), grid);

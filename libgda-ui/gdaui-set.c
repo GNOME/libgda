@@ -72,6 +72,7 @@ gdaui_set_group_get_type (void)
 
 /**
  * gdaui_set_group_new:
+ * @group: a #GdaSetGroup
  * 
  * Creates a new #GdauiSetGroup struct.
  *
@@ -80,11 +81,12 @@ gdaui_set_group_get_type (void)
  * Since: 5.2
  */
 GdauiSetGroup*
-gdaui_set_group_new (void)
+gdaui_set_group_new (GdaSetGroup *group)
 {
+	g_return_val_if_fail (group, NULL);
 	GdauiSetGroup *sg = g_new0 (GdauiSetGroup, 1);
 	sg->source = NULL;
-	sg->group = NULL;
+	sg->group = group;
 	return sg;
 }
 
@@ -104,9 +106,8 @@ gdaui_set_group_copy (GdauiSetGroup *sg)
 	g_return_val_if_fail (sg, NULL);
 
 	GdauiSetGroup *n;
-	n = gdaui_set_group_new ();
-	n->source = sg->source;
-	n->group = sg->group;
+	n = gdaui_set_group_new (gdaui_set_group_get_group (sg));
+	gdaui_set_group_set_source (n, gdaui_set_group_get_source (sg));
 	return n;
 }
 
@@ -128,9 +129,9 @@ gdaui_set_group_free (GdauiSetGroup *sg)
 /**
  * gdaui_set_group_set_source:
  * @sg: a #GdauiSetGroup struct to free
- * @source: a #GdauiSetSource struct
+ * @source (allow-none): a #GdauiSetSource struct or NULL
  * 
- * Set source to @source.
+ * Set source to @source. if @source is #NULL, then @group nodes contains exactly one entry.
  *
  * Since: 5.2
  */
@@ -138,7 +139,7 @@ void
 gdaui_set_group_set_source (GdauiSetGroup *sg, GdauiSetSource *source)
 {
 	g_return_if_fail (sg);
-	sg->source = sg->source;
+	sg->source = source;
 }
 
 /**
@@ -171,7 +172,7 @@ void
 gdaui_set_group_set_group (GdauiSetGroup *sg, GdaSetGroup *group)
 {
 	g_return_if_fail (sg);
-	g_return_if_fail (group);
+	g_warn_if_fail (group);
 	sg->group = sg->group;
 }
 
@@ -259,10 +260,11 @@ gdaui_set_source_get_type (void)
  * Since: 5.2
  */
 GdauiSetSource*
-gdaui_set_source_new (void)
+gdaui_set_source_new (GdaSetSource *source)
 {
+	g_return_val_if_fail (source, NULL);
 	GdauiSetSource *s = g_new0 (GdauiSetSource, 1);
-	s->source = NULL;
+	s->source = source;
 	s->shown_n_cols = 0;
 	s->shown_cols_index = NULL;
 	s->ref_n_cols = 0;
@@ -285,20 +287,14 @@ GdauiSetSource *
 gdaui_set_source_copy (GdauiSetSource *s)
 {
 	GdauiSetSource *n;
-	gint i,j;
 	g_return_val_if_fail (s, NULL);	
-	n = gdaui_set_source_new ();
-	n->source = s->source;
-	n->ref_n_cols = s->ref_n_cols;
-	n->ref_cols_index = g_new0 (gint,n->ref_n_cols);
-	for (i = 0; i < n->ref_n_cols; i++) {
-		n->ref_cols_index[i] = s->ref_cols_index[i];
-	}
-	n->shown_n_cols = s->shown_n_cols;
-	n->shown_cols_index = g_new0 (gint, n->shown_n_cols);
-	for (j = 0; j < n->shown_n_cols; j++) {
-		n->shown_cols_index[j] = s->shown_cols_index[j];
-	}
+	n = gdaui_set_source_new (gdaui_set_source_get_source (s));
+	gdaui_set_source_set_ref_columns (n, 
+	                                  gdaui_set_source_get_ref_columns (s),
+	                                  gdaui_set_source_get_ref_n_cols (s));
+	gdaui_set_source_set_shown_columns (n,
+	                                    gdaui_set_source_get_shown_columns (s),
+	                                    gdaui_set_source_get_shown_n_cols (s));
 	return n;
 }
 
@@ -334,6 +330,7 @@ void
 gdaui_set_source_set_source (GdauiSetSource *s, GdaSetSource *source)
 {
 	g_return_if_fail (s);
+	g_return_if_fail (source);
 	s->source = s->source;
 }
 
@@ -741,11 +738,10 @@ compute_public_data (GdauiSet *set)
 	hash = g_hash_table_new (NULL, NULL);
 	for (list = aset->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource;
-		dsource = gdaui_set_source_new ();
+		dsource = gdaui_set_source_new (GDA_SET_SOURCE (list->data));
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
 		g_hash_table_insert (hash, list->data, dsource);
 
-		gdaui_set_source_set_source (dsource, GDA_SET_SOURCE (list->data));
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
@@ -754,12 +750,12 @@ compute_public_data (GdauiSet *set)
 	/* scan GdaSetGroup list */
 	for (list = aset->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup;
-		dgroup = gdaui_set_group_new ();
-		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
-		gdaui_set_group_set_group (dgroup, GDA_SET_GROUP (list->data));
+		g_assert (list->data);
+		dgroup = gdaui_set_group_new (GDA_SET_GROUP (list->data));
 		gdaui_set_group_set_source (dgroup, 
 		                            g_hash_table_lookup (hash, 
-		                                                 GDA_SET_GROUP (list->data)->nodes_source));
+		                                                 gda_set_group_get_source (GDA_SET_GROUP (list->data))));
+		set->groups_list = g_slist_prepend (set->groups_list, dgroup);		
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
 
@@ -778,7 +774,7 @@ update_public_data (GdauiSet *set)
 	shash = g_hash_table_new (NULL, NULL);
 	for (list = set->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
-		g_hash_table_insert (shash, dsource->source, dsource);
+		g_hash_table_insert (shash, gdaui_set_source_get_source (dsource), dsource);
 	}
 
 	/* scan GdaSetSource list */
@@ -791,11 +787,10 @@ update_public_data (GdauiSet *set)
 			set->sources_list = g_slist_prepend (set->sources_list, dsource);
 			continue;
 		}
-		dsource = gdaui_set_source_new ();
+		dsource = gdaui_set_source_new (GDA_SET_SOURCE (list->data));
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
 		g_hash_table_insert (shash, list->data, dsource);
 
-		gdaui_set_source_set_source (dsource, GDA_SET_SOURCE (list->data));
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
@@ -815,7 +810,7 @@ update_public_data (GdauiSet *set)
 	ghash = g_hash_table_new (NULL, NULL);
 	for (list = set->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
-		g_hash_table_insert (ghash, dgroup->group, dgroup);
+		g_hash_table_insert (ghash, gdaui_set_group_get_group (dgroup), dgroup);
 	}
 
 	/* scan GdaSetGroup list */
@@ -828,10 +823,10 @@ update_public_data (GdauiSet *set)
 			set->groups_list = g_slist_prepend (set->groups_list, dgroup);
 			continue;
 		}
-		dgroup = gdaui_set_group_new ();
+		dgroup = gdaui_set_group_new (GDA_SET_GROUP (list->data));
+		gdaui_set_group_set_source (dgroup, g_hash_table_lookup (shash, 
+		                                           gda_set_group_get_source (gdaui_set_group_get_group (dgroup))));
 		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
-		gdaui_set_group_set_group (dgroup, GDA_SET_GROUP (list->data));
-		gdaui_set_group_set_source (dgroup, g_hash_table_lookup (shash, dgroup->group->nodes_source));
 	}
 	set->groups_list = g_slist_reverse (set->groups_list);
 
@@ -855,9 +850,9 @@ compute_shown_columns_index (GdauiSetSource *dsource)
 	gint ncols, nholders;
 	gint *mask = NULL, masksize = 0;
 
-	nholders = g_slist_length (dsource->source->nodes);
+	nholders = gda_set_source_get_n_nodes (gdaui_set_source_get_source (dsource));
 	g_return_if_fail (nholders > 0);
-	ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (dsource->source->data_model));
+	ncols = gda_data_model_get_n_columns (gda_set_source_get_data_model (gdaui_set_source_get_source (dsource)));
 	g_return_if_fail (ncols > 0);
 
 	if (ncols > nholders) {
@@ -867,10 +862,10 @@ compute_shown_columns_index (GdauiSetSource *dsource)
 		masksize = ncols - nholders;
 		mask = g_new0 (gint, masksize);
 		for (i = 0; i < ncols ; i++) {
-			GSList *list = dsource->source->nodes;
+			GSList *list = gda_set_source_get_nodes (gdaui_set_source_get_source (dsource));
 			gboolean found = FALSE;
 			while (list && !found) {
-				if (GDA_SET_NODE (list->data)->source_column == i)
+				if (gda_set_node_get_source_column (GDA_SET_NODE (list->data)) == i)
 					found = TRUE;
 				else
 					list = g_slist_next (list);
@@ -901,9 +896,9 @@ compute_ref_columns_index (GdauiSetSource *dsource)
 	gint ncols, nholders;
 	gint *mask = NULL, masksize = 0;
 
-	nholders = g_slist_length (dsource->source->nodes);
+	nholders = gda_set_source_get_n_nodes (gdaui_set_source_get_source (dsource));
 	g_return_if_fail (nholders > 0);
-	ncols = gda_data_model_get_n_columns (GDA_DATA_MODEL (dsource->source->data_model));
+	ncols = gda_data_model_get_n_columns (gda_set_source_get_data_model (gdaui_set_source_get_source (dsource)));
 	g_return_if_fail (ncols > 0);
 
 	if (ncols > nholders) {
@@ -913,10 +908,10 @@ compute_ref_columns_index (GdauiSetSource *dsource)
 		masksize = ncols - nholders;
 		mask = g_new0 (gint, masksize);
 		for (i=0; i<ncols ; i++) {
-			GSList *list = dsource->source->nodes;
+			GSList *list = gda_set_source_get_nodes (gdaui_set_source_get_source (dsource));
 			gboolean found = FALSE;
 			while (list && !found) {
-				if (GDA_SET_NODE (list->data)->source_column == i)
+				if (gda_set_node_get_source_column (GDA_SET_NODE (list->data)) == i)
 					found = TRUE;
 				else
 					list = g_slist_next (list);

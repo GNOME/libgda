@@ -867,7 +867,7 @@ namespace Gda {
 		public GLib.List<Gda.SetNode> nodes;
 		public weak Gda.SetSource nodes_source;
 		[CCode (has_construct_function = false)]
-		public SetGroup ();
+		public SetGroup (Gda.SetNode node);
 		public void add_node (Gda.SetNode node);
 		public Gda.SetGroup copy ();
 		public void free ();
@@ -884,13 +884,13 @@ namespace Gda {
 		public int source_column;
 		public weak Gda.DataModel source_model;
 		[CCode (has_construct_function = false)]
-		public SetNode (Gda.Holder holder, Gda.DataModel model);
+		public SetNode (Gda.Holder holder);
 		public Gda.SetNode copy ();
 		public void free ();
 		public unowned Gda.DataModel get_data_model ();
 		public unowned Gda.Holder get_holder ();
 		public int get_source_column ();
-		public void set_data_model (Gda.DataModel model);
+		public void set_data_model (Gda.DataModel? model);
 		public void set_holder (Gda.Holder holder);
 		public void set_source_column (int column);
 	}
@@ -905,6 +905,7 @@ namespace Gda {
 		public Gda.SetSource copy ();
 		public void free ();
 		public unowned Gda.DataModel get_data_model ();
+		public int get_n_nodes ();
 		public unowned GLib.SList<Gda.SetNode> get_nodes ();
 		public void set_data_model (Gda.DataModel model);
 	}

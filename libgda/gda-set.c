@@ -84,19 +84,26 @@ gda_set_group_get_type (void)
 
 /**
  * gda_set_group_new:
+ * @node: a #GdaSetNode struct
  * 
- * Creates a new #GdaSetGroup struct.
+ * Creates a new #GdaSetGroup struct. If @source is %NULL then new group contains 
+ * just one #GdaSetNode.
  *
  * Return: (transfer full): a new #GdaSetGroup struct.
  *
  * Since: 5.2
  */
 GdaSetGroup*
-gda_set_group_new (void)
+gda_set_group_new (GdaSetNode *node)
 {
-	GdaSetGroup *sg = g_new0 (GdaSetGroup, 1);
+	GdaSetGroup *sg;
+	
+	g_return_val_if_fail (node, NULL);
+
+	sg = g_new0 (GdaSetGroup, 1);
 	sg->nodes_source = NULL;
 	sg->nodes = NULL;
+	sg->nodes = g_slist_append (sg->nodes, node);
 	return sg;
 }
 
@@ -116,8 +123,8 @@ gda_set_group_copy (GdaSetGroup *sg)
 	g_return_val_if_fail (sg, NULL);
 
 	GdaSetGroup *n;
-	n = gda_set_group_new ();
-	n->nodes_source = g_object_ref (sg->nodes_source);
+	n = g_new0 (GdaSetGroup, 1);
+	n->nodes_source = sg->nodes_source;
 	n->nodes = g_slist_copy (sg->nodes);
 	return n;
 }
@@ -145,7 +152,8 @@ gda_set_group_free (GdaSetGroup *sg)
  * 
  * Since: 5.2
  */
-void gda_set_group_set_source (GdaSetGroup *sg, GdaSetSource *source)
+void 
+gda_set_group_set_source (GdaSetGroup *sg, GdaSetSource *source)
 {
 	g_return_if_fail (sg);
 	sg->nodes_source = source;
@@ -196,7 +204,7 @@ gda_set_group_get_node (GdaSetGroup *sg)
 {
 	g_return_val_if_fail (sg, NULL);
 	g_return_val_if_fail (sg->nodes, NULL);
-	return (GdaSetNode*) sg->nodes->data;
+	return GDA_SET_NODE (sg->nodes->data);
 }
 
 /**
@@ -287,6 +295,7 @@ gda_set_source_get_type (void)
 GdaSetSource*
 gda_set_source_new (GdaDataModel *model)
 {
+	g_return_val_if_fail (model != NULL && GDA_IS_DATA_MODEL (model), NULL);
 	GdaSetSource *s = g_new0 (GdaSetSource, 1);
 	s->nodes = NULL;
 	s->data_model = g_object_ref (model);
@@ -361,7 +370,7 @@ void
 gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model)
 {
 	g_return_if_fail (s);
-	g_return_if_fail (G_IS_OBJECT (model));
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	s->data_model = g_object_ref (model);
 }
 
@@ -398,6 +407,20 @@ gda_set_source_get_nodes (GdaSetSource *s)
 	return s->nodes;
 }
 
+/**
+ * gda_set_source_get_n_nodes:
+ * @s: a #GdaSetSource
+ * 
+ * Returns: number of nodes in @sg. 
+ * 
+ * Since: 5.2
+ */
+gint
+gda_set_source_get_n_nodes (GdaSetSource *s)
+{
+	g_return_val_if_fail (s, -1);
+	return g_slist_length (s->nodes);
+}
 #ifdef GSEAL_ENABLE
 /**
  * GdaSetNode:
@@ -440,7 +463,6 @@ gda_set_node_get_type (void)
 /**
  * gda_set_node_new:
  * @holder: a #GdaHolder to used by new #GdaSetNode
- * @model: a #GdaDataModel used to get values from
  * 
  * Creates a new #GdaSetNode struct.
  *
@@ -449,19 +471,12 @@ gda_set_node_get_type (void)
  * Since: 5.2
  */
 GdaSetNode*
-gda_set_node_new (GdaHolder *holder, GdaDataModel *model)
+gda_set_node_new (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	GdaSetNode *n = g_new0 (GdaSetNode, 1);
 	n->holder = holder;
-	if (GDA_IS_DATA_MODEL (model)) {
-		n->source_model = model;
-		n->source_column = 0;
-	}
-	else {
-		n->source_model = NULL;
-		n->source_column = -1;
-	}
+	n->source_model = NULL;
 	return n;
 }
 
@@ -481,8 +496,10 @@ gda_set_node_copy (GdaSetNode *node)
 	g_return_val_if_fail (node, NULL);
 
 	GdaSetNode *n;
-	n = gda_set_node_new (gda_set_node_get_holder (node), gda_set_node_get_data_model (node));
+	n = gda_set_node_new (gda_set_node_get_holder (node));
 	gda_set_node_set_source_column (n, gda_set_node_get_source_column (node));
+	gda_set_node_set_holder (n, gda_set_node_get_holder (node));
+	gda_set_node_set_data_model (n, gda_set_node_get_data_model (node));
 	return n;
 }
 
@@ -499,10 +516,6 @@ gda_set_node_free (GdaSetNode *node)
 {
 	if (node == NULL)
 		return;
-	if (GDA_IS_HOLDER (node->holder))
-		g_object_unref (node->holder);
-	if (GDA_IS_DATA_MODEL (node->source_model))
-		g_object_unref (node->source_model);
 	g_free (node);
 }
 
@@ -525,17 +538,16 @@ gda_set_node_get_holder (GdaSetNode *node)
  * gda_set_node_set_holder:
  * @node: a #GdaSetNode struct to set holder to
  * 
- * Set a #GdaHolder to @node. @holder increment its referen counting when assigned.
+ * Set a #GdaHolder to @node.
  *
  * Since: 5.2
  */
 void
 gda_set_node_set_holder (GdaSetNode *node, GdaHolder *holder)
 {
+	g_return_if_fail (node);
 	g_return_if_fail (GDA_IS_HOLDER (holder));
-	if (GDA_IS_HOLDER (node->holder))
-		g_object_unref (node->holder);
-	node->holder = g_object_ref (holder);
+	node->holder = holder;
 }
 
 /**
@@ -556,7 +568,7 @@ gda_set_node_get_data_model (GdaSetNode *node)
 /**
  * gda_set_node_set_data_model:
  * @node: a #GdaSetNode struct to set data model to
- * @model: a #GdaDataModel to be used by @node
+ * @model: (allow-none): a #GdaDataModel to be used by @node
  * 
  * Set a #GdaDataModel to be used by @node. @model increment its reference
  * counting when set. Internally referenced column number is set to first column
@@ -568,11 +580,14 @@ void
 gda_set_node_set_data_model (GdaSetNode *node, GdaDataModel *model)
 {
 	g_return_if_fail (node);
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	if (GDA_IS_DATA_MODEL (node->source_model))
-		g_object_unref (node->source_model);
-	node->source_model = g_object_ref (model);
-	node->source_column = 0;
+	if (GDA_IS_DATA_MODEL (model)) {
+		node->source_model = model;
+		node->source_column = 0;
+	}
+	else {
+		node->source_model = NULL;
+		node->source_column = -1;
+	}
 }
 
 /**
@@ -1775,8 +1790,6 @@ compute_public_data (GdaSet *set)
 	GdaSetSource *source;
 	GdaSetGroup *group;
 	GHashTable *groups = NULL;
-	GdaHolder *holder;
-	GdaDataModel *node_model;
 
 	/*
 	 * Get rid of all the previous structures
@@ -1794,14 +1807,12 @@ compute_public_data (GdaSet *set)
 	 * Creation of the GdaSetNode structures
 	 */
 	for (list = set->holders; list; list = list->next) {
-		holder = GDA_HOLDER (list->data);
-		if (GDA_IS_HOLDER (holder)) {
-			gint col;
-			node = gda_set_node_new (holder, gda_holder_get_source_model (holder, &col));
-			gda_set_node_set_source_column (node, col);
-			if (node)
-				set->nodes_list = g_slist_prepend (set->nodes_list, node);
-		}
+		GdaHolder *holder = GDA_HOLDER (list->data);
+		gint col;
+		node = gda_set_node_new (holder);
+		gda_set_node_set_data_model (node, gda_holder_get_source_model (holder, &col));
+		gda_set_node_set_source_column (node, col);
+		set->nodes_list = g_slist_prepend (set->nodes_list, node);
 	}
 	set->nodes_list = g_slist_reverse (set->nodes_list);
 
@@ -1813,13 +1824,12 @@ compute_public_data (GdaSet *set)
 		
 		/* source */
 		source = NULL;
-		node_model = gda_set_node_get_data_model (node);
-		if (GDA_IS_DATA_MODEL (node_model)) {
-			source = gda_set_get_source_for_model (set, node_model);
+		if (gda_set_node_get_data_model (node)) {
+			source = gda_set_get_source_for_model (set, gda_set_node_get_data_model (node));
 			if (source)
 				gda_set_source_add_node (source, node);
 			else {
-				source = gda_set_source_new (node_model);
+				source = gda_set_source_new (gda_set_node_get_data_model (node));
 				gda_set_source_add_node (source, node);
 				set->sources_list = g_slist_prepend (set->sources_list, source);
 			}
@@ -1827,20 +1837,19 @@ compute_public_data (GdaSet *set)
 
 		/* group */
 		group = NULL;
-		if (GDA_IS_DATA_MODEL (node_model) && groups)
-			group = g_hash_table_lookup (groups, node_model);
+		if (gda_set_node_get_data_model (node) && groups)
+			group = g_hash_table_lookup (groups, gda_set_node_get_data_model (node));
 		if (group) 
 			gda_set_group_add_node (group, node);
 		else {
-			group = gda_set_group_new ();
-			gda_set_group_add_node (group, node);
+			group = gda_set_group_new (node);
 			gda_set_group_set_source (group, source);
 			set->groups_list = g_slist_prepend (set->groups_list, group);
-			if (GDA_IS_DATA_MODEL (node_model)) {
+			if (gda_set_node_get_data_model (node)) {
 				if (!groups)
 					groups = g_hash_table_new (NULL, NULL); /* key = source model, 
-										   value = GdaSetGroup */
-				g_hash_table_insert (groups, node_model, group);
+                                                               value = GdaSetGroup */
+				g_hash_table_insert (groups, gda_set_node_get_data_model (node), group);
 			}
 		}		
 	}
@@ -1932,7 +1941,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	}
 
 	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, hid);
-	if (GDA_IS_HOLDER (similar)) {
+	if (!similar) {
 		/* really add @holder to the set */
 		set->holders = g_slist_append (set->holders, holder);
 		g_hash_table_insert (set->priv->holders_hash, (gchar*) hid, holder);
@@ -2031,7 +2040,7 @@ gda_set_is_valid (GdaSet *set, GError **error)
 	g_return_val_if_fail (set->priv, FALSE);
 
 	for (holders = set->holders; holders; holders = holders->next) {
-		if (!gda_holder_is_valid ((GdaHolder*) holders->data)) {
+		if (!gda_holder_is_valid (GDA_HOLDER (holders->data))) {
 			g_set_error (error, GDA_SET_ERROR, GDA_SET_INVALID_ERROR,
 				     "%s", _("One or more values are invalid"));
 			return FALSE;
@@ -2191,7 +2200,6 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
 	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
 
 	for (list = set->groups_list; list && !retval; list = list->next) {
-		GSList *l;
 		retval = GDA_SET_GROUP (list->data);
 		sublist = gda_set_group_get_nodes (retval);
 		while (sublist && !retval) {

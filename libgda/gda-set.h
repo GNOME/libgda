@@ -57,7 +57,7 @@ struct _GdaSetNode {
 #define GDA_TYPE_SET_NODE (gda_set_node_get_type ())
 #define GDA_SET_NODE(x) ((GdaSetNode *)(x))
 GType         gda_set_node_get_type          (void) G_GNUC_CONST;
-GdaSetNode   *gda_set_node_new               (GdaHolder *holder, GdaDataModel *model);
+GdaSetNode   *gda_set_node_new               (GdaHolder *holder);
 void          gda_set_node_free              (GdaSetNode *node);
 GdaSetNode   *gda_set_node_copy              (GdaSetNode *node);
 GdaHolder    *gda_set_node_get_holder        (GdaSetNode *node);
@@ -83,7 +83,7 @@ struct _GdaSetGroup {
 #define GDA_TYPE_SET_GROUP (gda_set_group_get_type ())
 #define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
 GType         gda_set_group_get_type        (void) G_GNUC_CONST;
-GdaSetGroup  *gda_set_group_new             (void);
+GdaSetGroup  *gda_set_group_new             (GdaSetNode *node);
 void          gda_set_group_free            (GdaSetGroup *sg);
 GdaSetGroup  *gda_set_group_copy            (GdaSetGroup *sg);
 void          gda_set_group_add_node        (GdaSetGroup *sg, GdaSetNode *node);
@@ -116,6 +116,7 @@ void          gda_set_source_free           (GdaSetSource *s);
 GdaSetSource *gda_set_source_copy           (GdaSetSource *s);
 void          gda_set_source_add_node       (GdaSetSource *s, GdaSetNode *node);
 GSList       *gda_set_source_get_nodes      (GdaSetSource *s);
+gint          gda_set_source_get_n_nodes    (GdaSetSource *s);
 GdaDataModel *gda_set_source_get_data_model (GdaSetSource *s);
 void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *model);
 

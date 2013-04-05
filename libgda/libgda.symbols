@@ -670,8 +670,9 @@
 	gda_set_source_free
 	gda_set_source_copy
 	gda_set_source_add_node
-	gda_set_source_get_nodes
 	gda_set_source_get_data_model
+	gda_set_source_get_n_nodes
+	gda_set_source_get_nodes
 	gda_set_source_set_data_model
 	gda_short_get_type
 	gda_sql_any_part_check_structure

@@ -56,7 +56,7 @@ struct _GdauiSetGroup {
 #define GDAUI_SET_GROUP(x) ((GdauiSetGroup*)(x))
 
 GType             gdaui_set_group_get_type           (void) G_GNUC_CONST;
-GdauiSetGroup    *gdaui_set_group_new                (void);
+GdauiSetGroup    *gdaui_set_group_new                (GdaSetGroup *group);
 void              gdaui_set_group_free               (GdauiSetGroup *sg);
 GdauiSetGroup    *gdaui_set_group_copy               (GdauiSetGroup *sg);
 void              gdaui_set_group_set_source         (GdauiSetGroup *sg, GdauiSetSource *source);
@@ -89,7 +89,7 @@ struct _GdauiSetSource {
 #define GDAUI_TYPE_SET_SOURCE (gdaui_set_source_get_type ())
 #define GDAUI_SET_SOURCE(x) ((GdauiSetSource*)(x))
 GType             gdaui_set_source_get_type           (void) G_GNUC_CONST;
-GdauiSetSource   *gdaui_set_source_new                (void);
+GdauiSetSource   *gdaui_set_source_new                (GdaSetSource *source);
 void              gdaui_set_source_free               (GdauiSetSource *s);
 GdauiSetSource   *gdaui_set_source_copy               (GdauiSetSource *s);
 void              gdaui_set_source_set_source         (GdauiSetSource *s, GdaSetSource *source);
