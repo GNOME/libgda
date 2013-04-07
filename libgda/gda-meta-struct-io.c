@@ -169,7 +169,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	xmlChar *table_name, *table_schema;
 	GString *full_table_name;
 	GValue *v1 = NULL, *v2 = NULL, *v3 = NULL;
-  GArray *pk_cols_array = NULL;
+	GArray *pk_cols_array = NULL;
 	gchar *tmp;
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
@@ -408,7 +408,8 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	if (v2) gda_value_free (v2);
 	gda_value_free (v3);
 
-  if (pk_cols_array) g_array_unref (pk_cols_array);
+	if (pk_cols_array)
+		g_array_free (pk_cols_array, TRUE);
 
 	return NULL;
 }

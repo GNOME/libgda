@@ -3336,9 +3336,9 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 			order_by->asc = TRUE;
 			expr->value = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (expr->value, colname);
-		} else {
-      g_free (colname);
-    }
+		}
+		else
+			g_free (colname);
 
 		g_object_set (G_OBJECT (proxy->priv->filter_stmt), "structure", sqlst, NULL);
 #ifdef GDA_DEBUG_NO
@@ -3354,7 +3354,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 		gchar *str;
 		str = g_strdup_printf ("ORDER BY _%d", col + 1);
 		retval = gda_data_proxy_set_filter_expr (proxy, str, error);
-    g_free (str);
+		g_free (str);
 	}
 
 	gda_mutex_unlock (proxy->priv->mutex);

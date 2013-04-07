@@ -867,15 +867,15 @@ GdaNumeric*
 gda_numeric_copy (GdaNumeric *src)
 {
 	GdaNumeric *copy;
-  gchar *str;
+	gchar *str;
 
 	g_return_val_if_fail (src, NULL);
 
 	copy = gda_numeric_new ();
 
-  str = gda_numeric_get_string (src);
-	gda_numeric_set_from_string (copy, gda_numeric_get_string (src));
-  g_free (str);
+	str = gda_numeric_get_string (src);
+	gda_numeric_set_from_string (copy, str);
+	g_free (str);
 
 	gda_numeric_set_width (copy, gda_numeric_get_width (src));
 	gda_numeric_set_precision (copy, gda_numeric_get_precision (src));

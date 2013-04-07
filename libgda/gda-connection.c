@@ -1613,9 +1613,9 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 		g_object_set_data_full (G_OBJECT (cnc), "__gda_fname", fname, g_free);
 		g_signal_connect (cnc, "conn-closed",
 				  G_CALLBACK (sqlite_connection_closed_cb), NULL);
-	} else {
-    g_free (fname);
-  }
+	}
+	else
+		g_free (fname);
 	return cnc;
 }
 
