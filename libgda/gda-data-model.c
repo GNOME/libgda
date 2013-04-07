@@ -2023,6 +2023,8 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 		if (g_ptr_array_index (values, i))
 			gda_value_free ((GValue *) g_ptr_array_index (values, i));
 
+  g_ptr_array_unref (values);
+
 	return retval;
 }
 

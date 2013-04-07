@@ -1019,6 +1019,7 @@ csv_parser_field_read_cb (char *s, size_t len, void *data)
 	if (! model->priv->extract.csv.initializing) {
 		if (pdata->field_next_col >= pdata->nb_cols)
 			/* ignore extra fields */
+			g_free (copy);
 			return;
 		column = gda_data_model_describe_column ((GdaDataModel *) model,
 							 pdata->field_next_col);

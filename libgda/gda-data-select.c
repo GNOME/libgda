@@ -3711,6 +3711,7 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	memcpy (copy, (gint8*) new_model + offset, size); /* Flawfinder: ignore */
 	memcpy ((gint8*) new_model + offset, (gint8*) model + offset, size); /* Flawfinder: ignore */
 	memcpy ((gint8*) model + offset, copy, size); /* Flawfinder: ignore */
+  g_free (copy);
 
 	/* we need to keep some data from the old model */
 	GdaDataSelectInternals *mi;

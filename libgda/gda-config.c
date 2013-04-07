@@ -705,6 +705,7 @@ gda_config_constructor (GType type,
 					gda_log_message (_("User specific "
 							   "configuration directory '%s' exists and is not a directory"), 
 							 confdir);
+          g_free (conffile);
 				}
 				else
 					unique_instance->priv->user_file = conffile;
@@ -1653,6 +1654,7 @@ load_all_providers (void)
 		gchar *pdir;
 		pdir = g_build_path (G_DIR_SEPARATOR_S, dirname, "providers", NULL);
 		load_providers_from_dir (pdir, TRUE);
+    g_free (pdir);
 	}
 	else {
 		gchar *str;
@@ -1825,6 +1827,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		}
 		else {
 			g_module_close (handle);
+      g_free (path);
 			continue;
 		}
 		g_module_symbol (handle, "plugin_get_name",

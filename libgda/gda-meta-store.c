@@ -3565,8 +3565,10 @@ prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, TableCon
 		*out_cond_infos = g_hash_table_lookup (klass->cpriv->table_cond_info_hash, key);
 		if (! *out_cond_infos) {
 			*out_cond_infos = create_custom_set (store, table_name, condition, error);
-			if (! *out_cond_infos)
+			if (! *out_cond_infos) {
+        g_free (key);
 				return FALSE;
+      }
 			g_hash_table_insert (klass->cpriv->table_cond_info_hash, key, *out_cond_infos);
 		}
 		else
