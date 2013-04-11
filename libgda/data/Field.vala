@@ -43,7 +43,6 @@ namespace GdaData
 		public DbField.Attribute attributes { 
 			get { return _attributes; }
 		}
-		public string to_string () { return Gda.value_stringify (val); }
 		public Field (string col_name, DbField.Attribute attr) 
 		{
 			_column_name = col_name;

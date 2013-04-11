@@ -28,9 +28,7 @@ namespace GdaData
 		public abstract string             name        { get; set; }
 		public abstract string             column_name { get; }
 		public abstract DbField.Attribute  attributes  { get; }
-		
-		public abstract string to_string ();
-	
+
 		[Flags]
 		public enum Attribute {
 			NONE,
@@ -43,9 +41,67 @@ namespace GdaData
 			DATA_NON_VALID,
 			HAS_VALUE_ORIG,
 			NO_MODIF,
-			UNUSED
+			UNUSED;
+
+			public static Attribute[] items () {
+				return {
+						NONE,
+						IS_NULL,
+						CAN_BE_NULL,
+						IS_DEFAULT,
+						CAN_BE_DEFAULT,
+						IS_UNCHANGED,
+						ACTIONS_SHOWN,
+						DATA_NON_VALID,
+						HAS_VALUE_ORIG,
+						NO_MODIF,
+						UNUSED
+						};
+			}
+
+			public string to_string () {
+				switch (this) {
+					case NONE:
+						return "None";
+					case IS_NULL:
+						return "IsNull";
+					case CAN_BE_NULL:
+						return "CanBeNull";
+					case IS_DEFAULT:
+						return "IsDefault";
+					case CAN_BE_DEFAULT:
+						return "CanBeDefault";
+					case IS_UNCHANGED:
+						return "IsUnchanged";
+					case ACTIONS_SHOWN:
+						return "ActionsShown";
+					case DATA_NON_VALID:
+						return "DataNonValid";
+					case HAS_VALUE_ORIG:
+						return "HasValueOrig";
+					case NO_MODIF:
+						return "NoModif";
+					case UNUSED:
+						return "CanBeNull";
+					default:
+						assert_not_reached();
+				}
+			}
 		}
-		
+
+		public virtual bool equal (DbField field) {
+			if (field.name != name)
+				return false;
+			if (field.column_name != column_name)
+				return false;
+			var attributes = Attribute.items ();
+			foreach (Attribute att in attributes) {
+				if (att in field.attributes && !(att in attributes))
+					return false;
+			}
+			return true;
+		}
+
 		public static Value? value_from_string (string as_string, Type type)
 		{
 			// FIXME: No all basic types have support to parse from string se bug 669278 
@@ -82,6 +138,10 @@ namespace GdaData
 			}
 			
 			return as_string;
+		}
+
+		public virtual string to_string () {
+			return @"([$name],[$column_name],[%s],[$(attributes)])".printf (Gda.value_stringify (value));
 		}
 	}
 }

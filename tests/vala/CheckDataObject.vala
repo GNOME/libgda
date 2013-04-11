@@ -30,7 +30,7 @@ namespace Check {
 	class Tests :  GLib.Object {
 		public Gda.Connection connection { get; set; }
 		
-		Tests()
+		Tests ()
 		{
 			try {
 				GLib.FileUtils.unlink("dataobject.db");
@@ -52,7 +52,7 @@ namespace Check {
 			}
 		}
 		
-		public int t1()
+		public int t1( )
 			throws Error
 		{
 			stdout.printf(">>> NEW TEST: GdaData.DbRecord API tests\n");
@@ -193,11 +193,29 @@ namespace Check {
 				fails++;
 				stdout.printf ("FAIL: %i\nCouln't set ID...ERROR: %s\n", fails, e.message);
 			}
-			r.t = "user"; // Reset to default
+
+			stdout.printf ("Coping Record ...");
+			var nr = new Check.Record ();
+			nr.copy (r);
+			if (!nr.equal (r)) {
+				fails++;
+				stdout.printf ("FAIL: %i\n No copy or equal works correctly\n", fails);
+				stdout.printf ("DUMP (from):\n");
+				foreach (DbField f in r.fields) {
+					stdout.printf ("%s\n", f.to_string ());
+				}
+				stdout.printf ("DUMP (to):\n");
+				foreach (DbField f2 in nr.fields) {
+					stdout.printf ("%s\n", f2.to_string ());
+				}
+			}
+			else
+				stdout.printf ("PASS\n");
+			
 			return fails;
 		}
 		
-		public int t2()
+		public int t2 ()
 			throws Error
 		{
 			stdout.printf(">>> NEW TEST: Gda.DbRecord - Adding/Deleting objects to DB...\n");

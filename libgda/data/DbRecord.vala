@@ -38,5 +38,40 @@ namespace GdaData
         public abstract void                      set_key_value    (string field, Value? val) throws Error;
         public abstract DbField                   get_key          (string name) throws Error;
         public abstract string                    to_string        ();
+
+		public virtual  void copy (DbRecord record) throws Error {
+			foreach (DbField f in record.fields) {
+				this.set_field (f);
+			}
+			foreach (DbField k in record.keys) {
+				this.set_key (k);
+			}
+			this.connection = record.connection;
+			this.table = record.table;
+		}
+
+		public virtual bool equal (DbRecord record) throws Error {
+			if (record.table != null && this.table != null)
+				if (this.table.name != record.table.name)
+					return false;
+			
+			foreach (DbField f in record.fields) {
+				try {
+					var tmp = this.get_field (f.name);
+					if (!f.equal (tmp))
+						return false;
+				}
+				catch { return false; }
+			}
+			foreach (DbField k in record.keys) {
+				try {
+					var ktmp = this.get_key (k.name);
+					if (!k.equal (ktmp))
+						return false;
+				}
+				catch { return false; }
+			}
+			return true;
+		}
 	}
 }
