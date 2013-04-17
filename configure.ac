@@ -175,6 +175,7 @@ have_ui=no
 have_goocanvas=no
 have_graphviz=no
 have_sourceview=no
+have_glade=no
 AC_ARG_WITH(ui,
 	AS_HELP_STRING([--with-ui], [Enable GTK+ extension and tools]),
 	,with_ui=auto)
@@ -251,6 +252,12 @@ then
 			fi
 			have_graphviz=no])
 	fi
+
+	PKG_CHECK_MODULES(GLADE, "gladeui-2.0", [
+			AC_DEFINE(HAVE_GLADE, [1], [Install Glade Catalog])
+			have_glade=yes
+			GLADE_CATALOG=`$PKG_CONFIG --variable=catalogdir`
+			GLADE_PIXMAP=`$PKG_CONFIG --variable=pixmapdir`], [have_glade=no])
 fi
 
 AM_CONDITIONAL(HAVE_GDKPIXBUF, test x"$have_gdkpixbuf" = "xyes")
@@ -269,6 +276,12 @@ AC_SUBST(GOOCANVAS_LIBS)
 AM_CONDITIONAL(HAVE_GRAPHVIZ, test x"$have_graphviz" = "xyes")
 AC_SUBST(GRAPHVIZ_CFLAGS)
 AC_SUBST(GRAPHVIZ_LIBS)
+
+AM_CONDITIONAL(HAVE_GLADE, test x"$have_glade" = "xyes")
+AC_SUBST(GLADE_CFLAGS)
+AC_SUBST(GLADE_LIBS)
+AC_SUBST(GLADE_CATALOG)
+AC_SUBST(GLADE_PIXMAP)
 
 
 dnl ******************************
@@ -951,6 +964,7 @@ libgda-ui/data-entries/plugins/Makefile
 libgda-ui/data/Makefile
 libgda-ui/demos/Makefile
 libgda-ui/demos/geninclude.pl
+libgda-ui/glade/Makefile
 control-center/Makefile
 control-center/data/Makefile
 tools/Makefile
@@ -1019,6 +1033,7 @@ echo ""
 echo " Configuration summary for version $GDA_VERSION"
 echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
+echo "   Installing Glade GTK+ UI extension catalog: `if test x$have_glade != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
