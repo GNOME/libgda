@@ -48,7 +48,7 @@ namespace GdaData {
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
-        public Value? get_value (string field)
+        public unowned Value? get_value (string field)
         	throws Error
         {
         	var f = this._fields.get (field);

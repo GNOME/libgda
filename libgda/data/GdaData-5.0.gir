@@ -600,7 +600,7 @@
 		<prerequisite name="GdaData.DbObject"/>
 		<prerequisite name="Gee.Comparable"/>
 		<method name="get_value" c:identifier="gda_data_db_record_get_value" throws="1">
-			<return-value transfer-ownership="full" allow-none="1">
+			<return-value transfer-ownership="none" allow-none="1">
 				<type name="GObject.Value" c:type="GValue*"/>
 			</return-value>
 			<parameters>
@@ -610,7 +610,7 @@
 			</parameters>
 		</method>
 		<virtual-method name="get_value" invoker="get_value" throws="1">
-			<return-value transfer-ownership="full" allow-none="1">
+			<return-value transfer-ownership="none" allow-none="1">
 				<type name="GObject.Value" c:type="GValue*"/>
 			</return-value>
 			<parameters>
@@ -821,7 +821,7 @@
 		</field>
 		<field name="get_value">
 			<callback name="get_value" c:type="get_value" throws="1">
-				<return-value transfer-ownership="full" allow-none="1">
+				<return-value transfer-ownership="none" allow-none="1">
 					<type name="GObject.Value" c:type="GValue*"/>
 				</return-value>
 				<parameters>

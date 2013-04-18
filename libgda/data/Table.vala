@@ -35,7 +35,7 @@ namespace GdaData
 		protected HashMap<string,DbFieldInfo> _fields = new HashMap<string,DbFieldInfo> ();
 		protected HashMap<string,DbTable>     _depends = new HashMap<string,DbTable> ();
 		protected HashMap<string,DbTable>     _referenced = new HashMap<string,DbTable> ();
-		
+
 		public Table.with_fields_info (HashMap<string,DbFieldInfo> fields)
 		{
 			foreach (DbFieldInfo f in fields.values) {
@@ -395,7 +395,7 @@ namespace GdaData
 			var op = Gda.ServerOperation.prepare_drop_table (connection, name);
 			op.perform_drop_table ();
 		}
-		
+
 		// DbNamedObject Interface
 		
 		public string name 

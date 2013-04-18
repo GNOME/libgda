@@ -30,7 +30,7 @@ namespace GdaData
         /**
          * Returns a GLib.Value containing the value stored in the given field.
          */
-        public abstract Value?                    get_value        (string name) throws Error;
+        public abstract unowned Value?            get_value        (string name) throws Error;
         public abstract void                      set_field        (DbField field) throws Error;
         public abstract void                      set_field_value  (string field, Value? val) throws Error;
         public abstract DbField                   get_field        (string name) throws Error;

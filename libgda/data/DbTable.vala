@@ -35,6 +35,7 @@ namespace GdaData
 		
 		public abstract void         set_field (DbFieldInfo field) throws Error;
 		public abstract DbFieldInfo  get_field (string name) throws Error;
+
 		
 		public enum TableType {
 			NONE,
