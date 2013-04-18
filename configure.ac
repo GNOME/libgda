@@ -256,8 +256,8 @@ then
 	PKG_CHECK_MODULES(GLADE, "gladeui-2.0", [
 			AC_DEFINE(HAVE_GLADE, [1], [Install Glade Catalog])
 			have_glade=yes
-			GLADE_CATALOG=`$PKG_CONFIG --variable=catalogdir`
-			GLADE_PIXMAP=`$PKG_CONFIG --variable=pixmapdir`], [have_glade=no])
+			GLADE_CATALOG=`$PKG_CONFIG --variable=catalogdir gladeui-2.0`
+			GLADE_PIXMAP=`$PKG_CONFIG --variable=pixmapdir gladeui-2.0`], [have_glade=no])
 fi
 
 AM_CONDITIONAL(HAVE_GDKPIXBUF, test x"$have_gdkpixbuf" = "xyes")

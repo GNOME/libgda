@@ -2,7 +2,11 @@ QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
 lib_LTLIBRARIES = libgda-ui-5.0.la
 
-SUBDIRS = marshallers data-entries internal data . data-entries/plugins demos
+if HAVE_GLADE
+    GLADECATALOG = . glade
+endif
+
+SUBDIRS = marshallers data-entries internal data . data-entries/plugins demos $(GLADECATALOG)
 
 GLOBAL_CFLAGS = \
 	-I$(top_builddir)/libgda-ui \
@@ -176,7 +180,8 @@ INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir) \
                              --add-include-path=$(top_builddir)/libgda \
                              --add-include-path=$(top_builddir)/libgda-ui \
                              --namespace Gdaui \
-			     --warn-all
+                             --warn-all \
+                             --c-include=libgda-ui/libgda-ui.h
 ui_data_entries_sources = \
 	data-entries/gdaui-data-cell-renderer-bin.h \
 	data-entries/gdaui-data-cell-renderer-boolean.h \

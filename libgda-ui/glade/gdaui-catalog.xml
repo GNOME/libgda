@@ -1,7 +1,7 @@
-<glade-catalog name="Gdaui" library="libgdaui-5.0" depends="gtk+">
+<glade-catalog name="gdaui" library="libgda-ui-5.0.so" depends="gtk+">
   <init-function>gdaui_init</init-function>
   <glade-widget-classes>
-    <glade-widget-class name="GdauiGrid" generic-name="grid" title="Grid"/>
+    <glade-widget-class name="GdauiGrid" generic-name="gdauigrid" title="Grid"/>
   </glade-widget-classes>
   <glade-widget-group name="Gdaui" title="GNOME Data Access Widgets">
     <glade-widget-class-ref name="GdauiGrid"/>
