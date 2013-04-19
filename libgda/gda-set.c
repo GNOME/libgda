@@ -1432,7 +1432,7 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 
 /**
  * gda_set_new_from_spec_node:
- * @xml_spec: a #xmlNodePtr for a &lt;holders&gt; tag
+ * @xml_spec: a #xmlNodePtr for a &lt;parameters&gt; tag
  * @error: (allow-none): a place to store the error, or %NULL
  *
  * Creates a new #GdaSet object from the @xml_spec
