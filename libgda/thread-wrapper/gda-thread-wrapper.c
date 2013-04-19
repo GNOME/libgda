@@ -1055,6 +1055,8 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
  * Once @func's execution is finished, if @arg is not %NULL, the @arg_destroy_func destruction function is called
  * on @arg. This call occurs in the thread calling gda_thread_wrapper_fetch_result().
  *
+ * If an error occurred in this function, then the @arg_destroy_func function is not called to free @arg.
+ *
  * Returns: the job ID, or 0 if an error occurred
  *
  * Since: 4.2
