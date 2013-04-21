@@ -25,6 +25,7 @@ namespace GdaData {
 				Iterable<DbRecord>, Collection<DbRecord>
 	{
 		public abstract Connection   connection { get; set; }
+		public abstract DataModel    model      { get; }
 		public abstract DbTable      table      { get; }
 	}
 }

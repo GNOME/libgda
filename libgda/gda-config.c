@@ -65,6 +65,87 @@
   #endif
 #endif
 
+/*
+   Register GdaDsnInfo type
+*/
+GType
+gda_dsn_info_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+        if (type == 0)
+			type = g_boxed_type_register_static ("GdaDsnInfo",
+							     (GBoxedCopyFunc) gda_dsn_info_copy,
+							     (GBoxedFreeFunc) gda_dsn_info_free);
+	}
+
+	return type;
+}
+
+/**
+ * gda_dsn_info_new:
+ *
+ * Creates a new #GdaDsnInfo struct.
+ *
+ * Returns: (transfer full): a new #GdaDsnInfo struct.
+ *
+ * Since: 5.2
+ */
+GdaDsnInfo*
+gda_dsn_info_new (void)
+{
+	GdaDsnInfo *dsn = g_new0 (GdaDsnInfo, 1);
+	dsn->name = NULL;
+	dsn->provider = NULL;
+	dsn->description = NULL;
+	dsn->cnc_string = NULL;
+	dsn->auth_string = NULL;
+	dsn->is_system = FALSE;
+	return dsn;
+}
+
+/**
+ * gda_dsn_info_copy:
+ * @source: a #GdaDsnInfo to copy from
+ *
+ * Copy constructor.
+ *
+ * Returns: (transfer full): a new #GdaDsnInfo
+ *
+ * Since: 5.2
+ */
+GdaDsnInfo *
+gda_dsn_info_copy (GdaDsnInfo *source)
+{
+	GdaDsnInfo *n;
+	g_return_val_if_fail (source, NULL);
+	n = gda_dsn_info_new ();
+	n->name = source->name;
+	n->provider = source->provider;
+	n->description = source->description;
+	n->cnc_string = source->cnc_string;
+	n->auth_string = source->auth_string;
+	n->is_system = source->is_system;;
+	return n;
+}
+
+/**
+ * gda_dsn_info_free:
+ * @dsn: (allow-none): a #GdaDsnInfo struct to free
+ *
+ * Frees any resources taken by @dsn struct. If @dsn is %NULL, then nothing happens.
+ *
+ * Since: 5.2
+ */
+void
+gda_dsn_info_free (GdaDsnInfo *dsn)
+{
+	g_return_if_fail(dsn);
+	g_free (dsn);
+}
+
+
 typedef struct {
 	GdaProviderInfo    pinfo;
 	GModule           *handle;

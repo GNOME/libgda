@@ -82,8 +82,8 @@ namespace Gda {
 		public static bool dsn_needs_authentication (string dsn_name);
 		public static GLib.Quark error_quark ();
 		public static Gda.Config @get ();
-		public static Gda.DsnInfo get_dsn_info (string dsn_name);
-		public static Gda.DsnInfo get_dsn_info_at_index (int index);
+		public static unowned Gda.DsnInfo get_dsn_info (string dsn_name);
+		public static unowned Gda.DsnInfo get_dsn_info_at_index (int index);
 		public static int get_dsn_info_index (string dsn_name);
 		public static int get_nb_dsn ();
 		public static unowned Gda.ServerProvider get_provider (string provider_name) throws GLib.Error;
@@ -429,6 +429,20 @@ namespace Gda {
 	public class Default {
 		public static string escape_string (string string);
 		public static string unescape_string (string string);
+	}
+	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_dsn_info_get_type ()")]
+	[Compact]
+	public class DsnInfo {
+		public weak string auth_string;
+		public weak string cnc_string;
+		public weak string description;
+		public bool is_system;
+		public weak string name;
+		public weak string provider;
+		[CCode (has_construct_function = false)]
+		public DsnInfo ();
+		public Gda.DsnInfo copy ();
+		public void free ();
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_csuffix = "geometricpoint", type_id = "gda_geometricpoint_get_type ()")]
 	[Compact]
@@ -1334,15 +1348,6 @@ namespace Gda {
 		public int old_row;
 		public int new_row;
 		public weak GLib.HashTable<void*,void*> values;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct DsnInfo {
-		public weak string name;
-		public weak string provider;
-		public weak string description;
-		public weak string cnc_string;
-		public weak string auth_string;
-		public bool is_system;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaDbObject {

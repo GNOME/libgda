@@ -6,6 +6,7 @@
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
  * Copyright (C) 2003 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2005 Andrew Hill <andru@src.gnome.org>
+ * Copyright (C) 2013 Daniel Espinosa <despinosa@src.gnome.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -78,6 +79,13 @@ struct _GdaDsnInfo {
 	gpointer _gda_reserved3;
 	gpointer _gda_reserved4;
 };
+
+#define GDA_TYPE_DSN_INFO (gda_dsn_info_get_type ())
+
+GType            gda_dsn_info_get_type  (void) G_GNUC_CONST;
+GdaDsnInfo*      gda_dsn_info_new       (void);
+GdaDsnInfo*      gda_dsn_info_copy      (GdaDsnInfo *source);
+void             gda_dsn_info_free      (GdaDsnInfo *dsn);
 
 /**
  * GdaProviderInfo:

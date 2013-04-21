@@ -351,6 +351,10 @@
 	gda_default_get_type
 	gda_default_unescape_string
 	gda_diff_type_get_type
+	gda_dsn_info_copy
+	gda_dsn_info_free
+	gda_dsn_info_get_type
+	gda_dsn_info_new
 	gda_dsn_split
 	gda_gbr_get_file_path
 	gda_gbr_init

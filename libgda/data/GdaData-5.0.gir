@@ -217,9 +217,6 @@
 				<type name="utf8" c:type="gchar*"/>
 			</return-value>
 		</method>
-		<property name="model">
-			<type name="Gda.DataModel" c:type="GdaDataModel*"/>
-		</property>
 	</class>
 	<record name="RecordCollectionClass" c:type="GdaDataRecordCollectionClass" glib:is-gtype-struct-for="RecordCollection">
 		<field name="parent_class">
@@ -1246,6 +1243,9 @@
 		<prerequisite name="Gee.Collection"/>
 		<property name="connection" writable="1">
 			<type name="Gda.Connection" c:type="GdaConnection*"/>
+		</property>
+		<property name="model">
+			<type name="Gda.DataModel" c:type="GdaDataModel*"/>
 		</property>
 		<property name="table">
 			<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>

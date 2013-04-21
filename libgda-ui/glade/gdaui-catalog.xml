@@ -1,9 +1,23 @@
 <glade-catalog name="gdaui" library="libgda-ui-5.0.so" depends="gtk+">
   <init-function>gdaui_init</init-function>
   <glade-widget-classes>
-    <glade-widget-class name="GdauiGrid" generic-name="gdauigrid" title="Grid"/>
+    <glade-widget-class name="GdauiGrid" generic-name="gdauigrid" title="Database Grid"/>
+    <glade-widget-class name="GdauiLogin" generic-name="gdauilogin" title="Database Login"/>
+    <glade-widget-class name="GdauiBasicForm" generic-name="gdauibasicform" title="Database Basic Form"/>
+    <glade-widget-class name="GdauiCloud" generic-name="gdauicloud" title="Database Cloud"/>
+    <glade-widget-class name="GdauiCombo" generic-name="gdauicombo" title="Database Combo"/>
+    <glade-widget-class name="GdauiEntry" generic-name="gdauientry" title="Database Entry"/>
+    <glade-widget-class name="GdauiRawGrid" generic-name="gdauirawgrid" title="Database Raw Grid"/>
+    <glade-widget-class name="GdauiRtEditor" generic-name="gdauirteditor" title="Database Rich Text Editor"/>
   </glade-widget-classes>
   <glade-widget-group name="Gdaui" title="GNOME Data Access Widgets">
     <glade-widget-class-ref name="GdauiGrid"/>
+    <glade-widget-class-ref name="GdauiLogin"/>
+    <glade-widget-class-ref name="GdauiBasicForm"/>
+    <glade-widget-class-ref name="GdauiCloud"/>
+    <glade-widget-class-ref name="GdauiCombo"/>
+    <glade-widget-class-ref name="GdauiEntry"/>
+    <glade-widget-class-ref name="GdauiRawGrid"/>
+    <glade-widget-class-ref name="GdauiRtEditor"/>
   </glade-widget-group>
 </glade-catalog>

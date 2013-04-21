@@ -398,7 +398,7 @@ namespace Gdaui {
 	public class Login : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Login (string? dsn);
-		public Gda.DsnInfo get_connection_information ();
+		public unowned Gda.DsnInfo get_connection_information ();
 		public void set_connection_information (Gda.DsnInfo cinfo);
 		public void set_dsn (string? dsn);
 		public void set_mode (Gdaui.LoginMode mode);

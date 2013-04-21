@@ -599,7 +599,7 @@ gdaui_login_set_mode (GdauiLogin *login, GdauiLoginMode mode)
  * If the connection is not specified by a DSN, then the 'name' attribute of the returned
  * #GdaDsnInfo will be %NULL, and otherwise it will contain the name of the selected DSN.
  *
- * Retuns: (transfer none): a pointer to a (read-only) #GdaDsnInfo.
+ * Returns: (transfer none): a pointer to a (read-only) #GdaDsnInfo.
  *
  * Since: 4.2
  */

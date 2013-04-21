@@ -248,7 +248,7 @@ endif
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(INTROSPECTION_GIRS) $(typelibs_DATA)
+CLEANFILES += $(typelibs_DATA)
 
 if ENABLE_GDAUI_VALA
 
@@ -263,8 +263,6 @@ vapi_DATA=libgdaui-5.0.vapi
 EXTRA_DIST += \
 	Gdaui-5.0.metadata \
         $(vapi_DATA)
-
-CLEANFILES += libgdaui-5.0.vapi
 
 endif
 
