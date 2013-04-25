@@ -46,6 +46,8 @@ class GdaJProvider {
 				res = driver.getClass().getName();
 			else
 				res = res + ":" + driver.getClass().getName();
+			if (false)
+				System.out.println ("FOUND DRIVER " + driver.getClass().getName());
 
 			// Properties list, for DSN spec creation.
 			if (false) {
@@ -608,7 +610,7 @@ abstract class GdaJValue {
 		case java.sql.Types.ARRAY:
 			return "GdaBinary";
 		case java.sql.Types.BIGINT:
-			return "int64";
+			return "gint64";
 		case java.sql.Types.BINARY:
 			return "GdaBinary";
 		case java.sql.Types.BIT:
@@ -629,11 +631,12 @@ abstract class GdaJValue {
 		case java.sql.Types.DISTINCT:
 			return "GdaBinary";
 		case java.sql.Types.DOUBLE:
-			return "double";
+			return "gdouble";
 		case java.sql.Types.FLOAT:
-			return "float";
+		case java.sql.Types.REAL:
+			return "gfloat";
 		case java.sql.Types.INTEGER:
-			return "int";
+			return "gint";
 		case java.sql.Types.JAVA_OBJECT:
 		case java.sql.Types.LONGVARBINARY:
 			return "GdaBinary";
@@ -645,12 +648,10 @@ abstract class GdaJValue {
 			return "GdaNumeric";
 		case java.sql.Types.OTHER:
 			return "GdaBinary";
-		case java.sql.Types.REAL:
-			return "float";
 		case java.sql.Types.REF:
 			return "GdaBinary";
 		case java.sql.Types.SMALLINT:
-			return "GdaStort";
+			return "GdaShort";
 		case java.sql.Types.STRUCT:
 			return "GdaBinary";
 		case java.sql.Types.TIME:

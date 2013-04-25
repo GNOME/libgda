@@ -370,7 +370,7 @@ gda_jdbc_recordset_new (GdaConnection *cnc, GdaJdbcPStmt *ps, GdaSet *exec_param
 	}
 	
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__declareColumnTypes,
-					     rs_value, &error_code, &sql_state, &error, (jlong)GPOINTER_TO_INT(cnc), jtypes);
+					     rs_value, &error_code, &sql_state, &error, (jlong) cnc, jtypes);
 	(*jenv)->DeleteLocalRef (jenv, jtypes);
 	g_free (ctypes);
 	
@@ -415,7 +415,7 @@ fetch_next_jdbc_row (GdaJdbcRecordset *model, JNIEnv *jenv, gboolean do_store, G
 
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__fillNextRow,
 					     model->priv->rs_value, &error_code, &sql_state, &lerror,
-					     (jlong)GPOINTER_TO_INT(prow));
+					     (jlong) prow);
 	if (!jexec_res) {
 		if (error && lerror)
 			*error = g_error_copy (lerror);

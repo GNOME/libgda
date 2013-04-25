@@ -29,8 +29,10 @@ jni_sources = \
 jni_headers = $(jni_sources:.c=.h) 
 jni_classes = $(jni_sources:.c=.class) 
 
-$(jni_sources): $(jni_headers)
-path_jni_sources = $(addprefix $(srcdir)/,$(jni_sources))
+$(libgda_jdbc_la_OBJECTS): $(jni_headers)
+
+aaa:
+	echo $(path_jni_sources)
 
 libgda_jdbc_la_SOURCES = \
 	gda-jdbc-blob-op.c \
@@ -52,7 +54,7 @@ libgda_jdbc_la_SOURCES = \
 	jni-globals.h \
 	jni-wrapper.h \
 	jni-wrapper.c \
-	$(path_jni_sources) \
+	$(jni_sources) \
 	$(jni_headers)
 
 
@@ -71,7 +73,7 @@ endif
 
 
 $(jni_headers): $(jdbcprov_classes)
-	$(JAVAH) -classpath . -force `basename $@ | sed -e 's/\.h$$//'`
+	$(JAVAH) -classpath . -d $(builddir) -force `basename $@ | sed -e 's/\.h$$//'`
 
 jdbcprov_jar = gdaprovider-5.0.jar
 jdbcprov_sources = \

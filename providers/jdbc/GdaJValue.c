@@ -110,13 +110,13 @@ JNICALL Java_GdaJValue_setCChar (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobje
 {
 	GValue *value = gda_row_get_value (GDA_ROW ((gpointer) c_pointer), col);
 	gda_value_reset_with_type (value, G_TYPE_CHAR);
-	g_value_set_char (value, b);
+	g_value_set_schar (value, b);
 }
 
 JNIEXPORT jbyte
 JNICALL Java_GdaJValue_getCChar (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
-	return (jbyte) g_value_get_char ((GValue *) c_pointer);
+	return (jbyte) g_value_get_schar ((GValue *) c_pointer);
 }
 
 JNIEXPORT void
@@ -492,10 +492,10 @@ JNICALL Java_GdaJValue_setCNumeric (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlo
 		g_free (tmp);
 		return;
 	}
-	num = g_new0 (GdaNumeric, 1);
-	num->number = tmp;
-	num->precision = precision;
-	num->width = scale;
+	num = gda_numeric_new ();
+	gda_numeric_set_from_string (num, tmp);
+	gda_numeric_set_precision (num, precision);
+	gda_numeric_set_width (num, scale);
 	gda_value_reset_with_type (value, GDA_TYPE_NUMERIC);
 	g_value_take_boxed (value, num);
 }
@@ -531,7 +531,7 @@ JNICALL Java_GdaJValue_getCNumeric (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlo
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 
-	string = (*jenv)->NewStringUTF (jenv, num->number);
+	string = (*jenv)->NewStringUTF (jenv, gda_numeric_get_string ((GdaNumeric*) num));
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 

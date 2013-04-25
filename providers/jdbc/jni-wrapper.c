@@ -529,6 +529,8 @@ jni_wrapper_method_call (JNIEnv *jenv, JniWrapperMethod *method, GValue *object,
 
 				(*jenv)-> DeleteLocalRef (jenv, string);
 			}
+			else
+				gda_value_set_null (retval);
 		}
 		else {
 			JavaVM *jvm;
@@ -752,6 +754,8 @@ jni_wrapper_field_get (JNIEnv *jenv, JniWrapperField *field, GValue *object, GEr
 
 				(*jenv)-> DeleteLocalRef (jenv, string);
 			}
+			else
+				gda_value_set_null (retval);
 		}
 		else {
 			JavaVM *jvm;
@@ -902,7 +906,7 @@ jni_wrapper_field_set (JNIEnv *jenv, JniWrapperField *field,
 					(*jenv)->SetObjectField (jenv, jobj, field->fid, string);
 				(*jenv)-> DeleteLocalRef (jenv, string);
 			}
-			else if (G_VALUE_TYPE (value) == 0) {
+			else if (G_VALUE_TYPE (value) == GDA_TYPE_NULL) {
 				if (field->is_static)
 					(*jenv)->SetStaticObjectField (jenv, field->klass, field->fid, NULL);
 				else

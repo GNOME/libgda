@@ -1156,7 +1156,7 @@ gda_jdbc_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 		
 		GValue *jexec_res;
 		jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__declareParamTypes,
-						     pstmt_obj, NULL, NULL, error, (jlong)GPOINTER_TO_INT(cnc), jtypes);
+						     pstmt_obj, NULL, NULL, error, (jlong) cnc, jtypes);
 		(*jenv)->DeleteLocalRef (jenv, jtypes);
 		g_free (ctypes);
 		

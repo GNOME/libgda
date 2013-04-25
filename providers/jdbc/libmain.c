@@ -555,8 +555,29 @@ get_database_name_from_driver_name (const gchar *driver_name)
 	} Corresp;
 	
 	static Corresp carray[] = {
+		{"COM.cloudscape.core.JDBCDriver", "Cloudscape"},
+		{"RmiJdbc.RJDriver", "Cloudscape"},
+		{"COM.ibm.db2.jdbc.app.DB2Driver", "DB2"},
+		{"org.firebirdsql.jdbc.FBDriver", "Firebird"},
+		{"hSql.hDriver", "Hypersonic SQL"},
+		{"org.hsql.jdbcDriver", "Hypersonic SQL"},
+		{"com.informix.jdbc.IfxDriver", "Informix"},
+		{"jdbc.idbDriver", "InstantDB"},
+		{"org.enhydra.instantdb.jdbc.idbDriver", "InstantDB"},
+		{"interbase.interclient.Driver", "Interbase"},
+		{"ids.sql.IDSDriver", "IDS Server"},
+		{"com.mysql.jdbc.Driver", "MySQL"},
+		{"org.gjt.mm.mysql.Driver", "MySQL"},
+		{"oracle.jdbc.driver.OracleDriver", "Oracle"},
+		{"com.pointbase.jdbc.jdbcUniversalDriver", "PointBase"},
 		{"org.postgresql.Driver", "PostgreSQL"},
-		{"com.mysql.jdbc.Driver", "MySQL"}
+		{"postgresql.Driver", "v6.5 and earlier"},
+		{"com.microsoft.sqlserver.jdbc.SQLServerDriver", "SqlServer"},
+		{"weblogic.jdbc.mssqlserver4.Driver", "SqlServer"},
+		{"com.ashna.jturbo.driver.Driver", "SqlServer"},
+		{"com.inet.tds.TdsDriver", "SqlServer"},
+		{"com.sybase.jdbc.SybDriver", "Sybase"},
+		{"com.sybase.jdbc2.jdbc.SybDriver", "Sybase"}
 	};
 
 	gsize i;
