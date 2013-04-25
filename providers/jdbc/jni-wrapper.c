@@ -22,7 +22,7 @@
 #include <gda-value.h>
 #include <gda-server-provider.h>
 
-gboolean jni_wrapper_describe_exceptions = TRUE;
+gboolean jni_wrapper_describe_exceptions = FALSE;
 
 static jclass            SQLException__class = NULL;
 static JniWrapperMethod *get_message_method = NULL;
