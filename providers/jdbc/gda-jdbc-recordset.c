@@ -140,7 +140,9 @@ gda_jdbc_recordset_get_type (void)
 	return type;
 }
 
-/* Same as GdaJValue::jdbc_type_to_g_type */
+/* Same as GdaJValue::jdbc_type_to_g_type
+ * See http://docs.oracle.com/javase/6/docs/api/constant-values.html#java.sql.Types.ARRAY for reference
+ */
 static GType
 jdbc_type_to_g_type (gint jdbc_type)
 {
@@ -177,22 +179,35 @@ jdbc_type_to_g_type (gint jdbc_type)
  	case 4: /* INTEGER */
 		return G_TYPE_INT;
  	case 2000: /* JAVA_OBJECT */
+		return GDA_TYPE_BINARY;
+	case -16: /* LONGNVARCHAR */
+		return G_TYPE_STRING;
  	case -4: /* LONGVARBINARY */
 		return GDA_TYPE_BINARY;
  	case -1: /* LONGVARCHAR */
 		return G_TYPE_STRING;
+	case -15: /* NCHAR */
+		return G_TYPE_STRING;
+	case 2011: /* NCLOB */
+		return GDA_TYPE_BINARY;
  	case 0: /* NULL */
 		return GDA_TYPE_NULL;
 	case 2: /* NUMERIC */
 		return GDA_TYPE_NUMERIC;
+	case -9: /* NVARCHAR */
+		return G_TYPE_STRING;
 	case 1111: /* OTHER */
 		return GDA_TYPE_BINARY;
  	case 7: /* REAL */
 		return G_TYPE_FLOAT;
  	case 2006: /* REF */
 		return GDA_TYPE_BINARY;
+	case -8: /* ROWID */
+		return G_TYPE_STRING;
  	case 5: /* SMALLINT */
 		return GDA_TYPE_SHORT;
+	case 2009: /* SQLXML */
+		return G_TYPE_STRING;
  	case 2002: /* STRUCT */
 		return GDA_TYPE_BINARY;
  	case 92: /* TIME */

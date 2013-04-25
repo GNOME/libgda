@@ -569,6 +569,7 @@ get_database_name_from_driver_name (const gchar *driver_name)
 		{"com.mysql.jdbc.Driver", "MySQL"},
 		{"org.gjt.mm.mysql.Driver", "MySQL"},
 		{"oracle.jdbc.driver.OracleDriver", "Oracle"},
+		{"oracle.jdbc.OracleDriver", "Oracle"},
 		{"com.pointbase.jdbc.jdbcUniversalDriver", "PointBase"},
 		{"org.postgresql.Driver", "PostgreSQL"},
 		{"postgresql.Driver", "v6.5 and earlier"},

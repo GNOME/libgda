@@ -603,6 +603,7 @@ abstract class GdaJValue {
 	}
 
 	// Same as gda-jdbc-recordset.c::jdbc_type_to_g_type
+	// see http://docs.oracle.com/javase/6/docs/api/constant-values.html#java.sql.Types.ARRAY for reference
 	public static String jdbc_type_to_g_type (int type) {
 		switch (type) {
 		case java.sql.Types.VARCHAR:
@@ -633,25 +634,39 @@ abstract class GdaJValue {
 		case java.sql.Types.DOUBLE:
 			return "gdouble";
 		case java.sql.Types.FLOAT:
-		case java.sql.Types.REAL:
 			return "gfloat";
 		case java.sql.Types.INTEGER:
 			return "gint";
 		case java.sql.Types.JAVA_OBJECT:
+			return "GdaBinary";
+		case java.sql.Types.LONGNVARCHAR:
+			return "gchararray";
 		case java.sql.Types.LONGVARBINARY:
 			return "GdaBinary";
 		case java.sql.Types.LONGVARCHAR:
 			return "gchararray";
+		case java.sql.Types.NCHAR:
+			return "gchararray";
+		case java.sql.Types.NCLOB:
+			return "GdaBinary";
 		case java.sql.Types.NULL:
-			return null;
+			return "GdaNull";
 		case java.sql.Types.NUMERIC:
 			return "GdaNumeric";
+		case java.sql.Types.NVARCHAR:
+			return "gchararray";
 		case java.sql.Types.OTHER:
 			return "GdaBinary";
+		case java.sql.Types.REAL:
+			return "gfloat";
 		case java.sql.Types.REF:
-			return "GdaBinary";
+			return "GdaBinary";	
+		case java.sql.Types.ROWID:
+			return "gchararray";
 		case java.sql.Types.SMALLINT:
 			return "GdaShort";
+		case java.sql.Types.SQLXML:
+			return "gchararray";
 		case java.sql.Types.STRUCT:
 			return "GdaBinary";
 		case java.sql.Types.TIME:
