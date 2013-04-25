@@ -9,6 +9,7 @@ providers/firebird/gda-firebird-ddl.c
 providers/firebird/gda-firebird-provider.c
 providers/firebird/gda-firebird-recordset.c
 providers/firebird/libmain.c
+providers/mysql/gda-mysql-handler-bin.c
 providers/oracle/gda-oracle-blob-op.c
 providers/oracle/gda-oracle-provider.c
 providers/oracle/gda-oracle-recordset.c

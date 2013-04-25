@@ -375,7 +375,7 @@ libgda-5.0.vapi: Gda-5.0.gir
 
 vapidir = $(VAPIDIR)
 vapi_DATA=libgda-5.0.vapi
-
+CLEANFILES += $(vapi_DATA)
 
 EXTRA_DIST += \
 	Gda-5.0.metadata \
