@@ -80,7 +80,8 @@ jdbcprov_sources = \
 	provider.java \
 	meta.java \
 	derby.java \
-	h2.java
+	h2.java \
+	sqlserver.java
 jdbcprov_classes = GdaJConnection.class
 
 jdbcprovdir = $(providerdir)

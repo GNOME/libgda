@@ -246,7 +246,21 @@ class GdaJConnection {
 					catch (Exception e1) {
 						// nothing
 					}
-				}			       
+				}
+				else if (driver.contains ("sqlserver") ||
+					 driver.contains ("com.ashna.jturbo.driver.Driver") ||
+					 driver.contains ("com.inet.tds.TdsDriver")) {
+					try {
+						name = "sqlserverMeta";
+						Class<?> r = Class.forName (name);
+						java.lang.reflect.Constructor c =
+							r.getConstructor (new Class [] {Class.forName ("java.sql.Connection")});
+						jmeta = (GdaJMeta) c.newInstance (new Object [] {cnc});
+					}
+					catch (Exception e1) {
+						// nothing
+					}
+				}
 			}
 			if (jmeta == null)
 				jmeta = new GdaJMeta (cnc);
