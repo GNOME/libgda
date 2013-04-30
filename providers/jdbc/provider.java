@@ -3,6 +3,16 @@ import java.util.*;
 import java.io.*;
 
 /*
+ * Note:
+ * This provider invokes JNI in the following way: a C API calls some Java code through JNI, which in turn calls
+ * some C code as native method. To exchange pointers, the C pointers are converted to the "long" java type, which is mapped
+ * to the "jlong" C type which is always 64 bits long, refer to http://docs.oracle.com/javase/1.5.0/docs/guide/jni/spec/types.html
+ *
+ * In C code, when passing a C pointer to a method, it needs to be converted to a jlong, and the jni_cpointer_to_jlong()
+ * function must be used.
+ */
+
+/*
  * This class will be instantiated once for each GdaJdbcProvider created.
  */
 class GdaJProvider {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -1135,4 +1135,33 @@ gda_jni_object_free (gpointer boxed)
 			(*jnio->jvm)->DetachCurrentThread (jnio->jvm);
 	}
 	g_free (jnio);
+}
+
+jlong
+jni_cpointer_to_jlong (gconstpointer c_pointer)
+{
+	jlong retval;
+
+#if SIZEOF_INT_P == 4
+	gint32 i32;
+	i32 = (gint32) c_pointer;
+	retval = i32;
+#else
+	retval = (jlong) c_pointer;
+#endif
+	return retval;
+}
+
+gconstpointer
+jni_jlong_to_cpointer (jlong value)
+{
+	gconstpointer retval;
+#if SIZEOF_INT_P == 4
+	gint32 i32;
+	i32 = (gint32) value;
+	retval = (gconstpointer) i32;
+#else
+	retval = (gconstpointer) value;
+#endif
+	return retval;
 }

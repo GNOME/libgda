@@ -65,6 +65,7 @@ IT_PROG_INTLTOOL([0.40.6])
 AC_SUBST(INTLTOOL_XML_RULE)
 AC_CHECK_SIZEOF(unsigned int,0)
 AC_CHECK_SIZEOF(unsigned long int,0)
+AC_CHECK_SIZEOF([int *],0)
 AC_CHECK_TYPE(uint8_t, unsigned char)
 AC_CHECK_FUNCS(localtime_r localtime_s)
 AC_CHECK_HEADER(sys/mman.h,

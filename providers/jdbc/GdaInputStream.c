@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ JNIEXPORT jintArray
 JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 				      jlong gda_blob_pointer, jlong offset, jlong size)
 {
-	GdaBlob *blob = (GdaBlob*) gda_blob_pointer;
+	GdaBlob *blob = (GdaBlob*) jni_jlong_to_cpointer (gda_blob_pointer);
 	jintArray jdata;
 	if (!blob) {
 		jclass cls;
@@ -110,7 +110,7 @@ JNIEXPORT jbyteArray JNICALL
 Java_GdaInputStream_readByteData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 				      jlong gda_blob_pointer, jlong offset, jlong size)
 {
-	GdaBlob *blob = (GdaBlob*) gda_blob_pointer;
+	GdaBlob *blob = (GdaBlob*) jni_jlong_to_cpointer (gda_blob_pointer);
 	jbyteArray jdata;
 	if (!blob) {
 		jclass cls;
@@ -159,7 +159,7 @@ Java_GdaInputStream_readByteData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 		goto out;
 	}
 	
-	(*jenv)->SetByteArrayRegion (jenv, jdata, 0, real_size, raw_data);
+	(*jenv)->SetByteArrayRegion (jenv, jdata, 0, real_size, (const jbyte *) raw_data);
 	if ((*jenv)->ExceptionCheck (jenv)) {
 		jdata = NULL;
 		(*jenv)->DeleteLocalRef (jenv, jdata);

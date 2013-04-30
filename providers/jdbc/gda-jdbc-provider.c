@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -1153,10 +1153,10 @@ gda_jdbc_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 			g_slist_free (param_ids);
 			goto out;
 		}
-		
+
 		GValue *jexec_res;
 		jexec_res = jni_wrapper_method_call (jenv, GdaJPStmt__declareParamTypes,
-						     pstmt_obj, NULL, NULL, error, (jlong) cnc, jtypes);
+						     pstmt_obj, NULL, NULL, error, jni_cpointer_to_jlong (cnc), jtypes);
 		(*jenv)->DeleteLocalRef (jenv, jtypes);
 		g_free (ctypes);
 		

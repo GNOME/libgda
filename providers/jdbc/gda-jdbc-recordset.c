@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
@@ -383,9 +383,9 @@ gda_jdbc_recordset_new (GdaConnection *cnc, GdaJdbcPStmt *ps, GdaSet *exec_param
 		gda_value_free (rs_value);
 		return NULL;
 	}
-	
+
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__declareColumnTypes,
-					     rs_value, &error_code, &sql_state, &error, (jlong) cnc, jtypes);
+					     rs_value, &error_code, &sql_state, &error, jni_cpointer_to_jlong (cnc), jtypes);
 	(*jenv)->DeleteLocalRef (jenv, jtypes);
 	g_free (ctypes);
 	
@@ -430,7 +430,7 @@ fetch_next_jdbc_row (GdaJdbcRecordset *model, JNIEnv *jenv, gboolean do_store, G
 
 	jexec_res = jni_wrapper_method_call (jenv, GdaJResultSet__fillNextRow,
 					     model->priv->rs_value, &error_code, &sql_state, &lerror,
-					     (jlong) prow);
+					     jni_cpointer_to_jlong (prow));
 	if (!jexec_res) {
 		if (error && lerror)
 			*error = g_error_copy (lerror);
