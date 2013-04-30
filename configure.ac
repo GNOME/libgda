@@ -251,6 +251,25 @@ then
 				AC_MSG_ERROR([Graphviz support requested but not found.])
 			fi
 			have_graphviz=no])
+		if test "x$have_graphviz" = "xyes"
+		then
+			dnl test if new API is supported
+			AC_MSG_CHECKING([whether Graphviz's new API is supported])
+			AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include <gvc.h>
+int main() {
+    Agraph_t *graph;
+    graph = agopen ("BrowserCanvasLayout", Agdirected, NULL);
+    return 0;
+}
+])],
+                        graphviz_new_api=yes, graphviz_new_api=no)
+
+			AC_MSG_RESULT($graphviz_new_api)
+			if test "$graphviz_new_api" = "yes"; then
+			   	AC_DEFINE(GRAPHVIZ_NEW_API,[1],[define if Graphviz's new API is available])
+			fi
+		fi
 	fi
 
 	PKG_CHECK_MODULES(GLADE, "gladeui-2.0", [

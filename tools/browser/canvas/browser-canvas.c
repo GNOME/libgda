@@ -851,6 +851,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 	if (!gvc)
 		gvc = gvContext ();
 
+#ifdef GRAPHVIZ_NEW_API
 	graph = agopen ("BrowserCanvasLayout", Agdirected, NULL);
         agnode (graph, "shape", "box");
         agset (graph, "height", ".1");
@@ -858,6 +859,15 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
         agset (graph, "fixedsize", "true");
         agset (graph, "pack", "true");
 	agset (graph, "packmode", "node");
+#else
+	graph = agopen ("BrowserCanvasLayout", AGRAPH);
+        agnodeattr (graph, "shape", "box");
+        agnodeattr (graph, "height", ".1");
+        agnodeattr (graph, "width", ".1");
+        agnodeattr (graph, "fixedsize", "true");
+        agnodeattr (graph, "pack", "true");
+	agnodeattr (graph, "packmode", "node");
+#endif
 
 
 	if (class->get_layout_items)
@@ -885,7 +895,11 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 		nodes_list = g_slist_prepend (nodes_list, nl);
 		
 		tmp = g_strdup_printf ("%p", item);
+#ifdef GRAPHVIZ_NEW_API
 		node = agnode (graph, tmp, 0);
+#else
+		node = agnode (graph, tmp);
+#endif
 		nl->node = node;
 		g_hash_table_insert (nodes_hash, item, node);
 		
@@ -928,8 +942,13 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 			Agnode_t *from_node, *to_node;
 			from_node = (Agnode_t*) g_hash_table_lookup (nodes_hash, from);
 			to_node = (Agnode_t*) g_hash_table_lookup (nodes_hash, to);
-			if (from_node && to_node)
-			  agedge (graph, from_node, to_node, "", 0);
+			if (from_node && to_node) {
+#ifdef GRAPHVIZ_NEW_API
+				agedge (graph, from_node, to_node, "", 0);
+#else
+				agedge (graph, from_node, to_node);
+#endif
+			}
 		}
 	}
 
