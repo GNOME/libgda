@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,12 @@
 
 #ifndef __JNI_WRAPPER__
 #define __JNI_WRAPPER__
+
+/*
+ * Conversion method
+ */
+jlong             jni_cpointer_to_jlong (gconstpointer c_pointer);
+gconstpointer     jni_jlong_to_cpointer (jlong value);
 
 /*
  * general functions
