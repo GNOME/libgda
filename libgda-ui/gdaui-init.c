@@ -107,6 +107,7 @@ gdaui_init (void)
 			g_clear_error (&error);
 		}
 		g_object_unref (css_provider);
+		g_bytes_unref (css_data);
 	}
 	else {
 		g_warning ("Could not load resource CSS data: %s",
