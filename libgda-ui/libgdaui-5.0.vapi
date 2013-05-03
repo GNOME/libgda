@@ -626,7 +626,7 @@ namespace Gdaui {
 	public interface DataSelector : GLib.Object {
 		public abstract unowned Gda.DataModelIter get_data_set ();
 		public abstract unowned Gda.DataModel get_model ();
-		public abstract GLib.Array<void*> get_selected_rows ();
+		public abstract GLib.Array<int> get_selected_rows ();
 		public abstract bool select_row (int row);
 		public abstract void set_column_visible (int column, bool visible);
 		public abstract void set_model (Gda.DataModel model);
