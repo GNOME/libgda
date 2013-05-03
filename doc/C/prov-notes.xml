@@ -346,5 +346,53 @@ DETACH DATABASE plaintext; </programlisting>
   </sect2>
   </sect1>
 
+  <sect1 id="provider_notes_jdbc">
+    <title>For JDBC</title>
+    <sect2>
+      <title>How it works</title>
+      <para>
+	JDBC (Java Database Connectivity) is a Java-based technology to access databases, not unlike ODBC.
+	The JDBC provider runs a Java Virtual Machine in which the installed JDBC drivers are loaded. Connections
+	are established and used through the JDBC driver, making an extensive use of the JNI (Java Native Interface)
+	technology.
+      </para>
+      <para>
+	Any JDBC driver can be used, though only some of them have actually been tested. Some specializations
+	have been made to adapt to some corner cases in the way some JDBC drivers are written or some specificities
+	of some database engines.
+      </para>
+      <para>
+	Note that the JDBC drivers are not provided by Libgda and must be obtained and installed separately.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>JDBC drivers' location</title>
+      <para>
+	JDBC drivers (".jar" files) are searched for in the following locations:
+	<orderedlist>
+	  <listitem><para>in each directory or JAR file in the <envar>CLASSPATH</envar> environment variable
+	      (if set)</para></listitem>
+	  <listitem><para>in the <filename>$HOME/.local/share/libgda/config</filename> directory (or 
+	      <filename class="directory">$HOME/.libgda</filename> if if exists and
+	      <filename>$HOME/.local/share/libgda/config</filename> does not)</para></listitem>
+	</orderedlist>
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Connection parameters</title>
+      <para>
+	To connect to a database, the expected connection parameters are the ones required by the JDBC driver being
+	used, which varies from driver to driver (for more information, refer to each driver's documentation). Thus
+	&Libgda; expects only one argument named "URL" which it passes (without any modification) to the JDBC driver.
+      </para>
+      <para>
+	However, for some widely used servers (such as SqlServer), Libgda also accepts some parameters like
+	for other database providers (like DB_NAME, HOST, ...). In this case one can either provide these parameters
+	or provide the URL parameter (like for any JDBC provider) to specify a connection to open.
+      </para>
+    </sect2>
+  </sect1>
   
 </chapter>

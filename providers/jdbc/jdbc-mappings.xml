@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<jdbc-mappings>
+  <driver name="com.microsoft.sqlserver.jdbc.SQLServerDriver">
+    <prefix>jdbc:sqlserver://</prefix>
+    <part variable="HOST" optional="true"/>
+    <part variable="INSTANCE" optional="true" prefix="/"/>
+    <part variable="PORT" optional="true" prefix=":"/>
+    <!-- properties, see http://msdn.microsoft.com/en-us/library/ms378988.aspx -->
+    <part variable="DB_NAME" optional="true" prefix=";database="/>
+    <part variable="applicationIntent" optional="true" prefix=";applicationIntent=" value="ReadOnly" if="CncReadOnly"/>
+  </driver>
+</jdbc-mappings>

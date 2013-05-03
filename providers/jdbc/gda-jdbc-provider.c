@@ -40,6 +40,7 @@
 #include "gda-jdbc-util.h"
 #include "jni-wrapper.h"
 #include "jni-globals.h"
+#include "jdbc-resources.h"
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
@@ -336,6 +337,121 @@ gda_jdbc_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 	return PACKAGE_VERSION;
 }
 
+/*
+ * make_url_from_params:
+ *
+ * Creates the URL to pass to the JDBC driver to open a connection. It uses the
+ * jdbc_mappings.xml file
+ *
+ * Returns: a new string, or %NULL if not enough information found to create the connection URL
+ */
+static gchar *
+make_url_from_params (GdaServerProvider *provider, GdaConnection *cnc,
+		      GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth)
+{
+	GBytes *data;
+	const gchar *xmlstr;
+	gsize data_size = 0;
+	_jdbc_register_resource ();
+	data = g_resources_lookup_data ("/jdbc/jdbc-mappings.xml", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	g_assert (data);
+	xmlstr = g_bytes_get_data (data, &data_size);
+
+	xmlDocPtr doc;
+	doc = xmlParseMemory (xmlstr, data_size);
+	g_bytes_unref (data);
+	_jdbc_unregister_resource ();
+
+        if (!doc)
+		return NULL;
+
+	xmlNodePtr root, node;
+	GString *url = NULL;
+	root = xmlDocGetRootElement (doc);
+	if (strcmp ((gchar*) root->name, "jdbc-mappings"))
+		goto out;
+
+	for (node = root->children; node; node = node->next) {
+                if (strcmp ((gchar *) node->name, "driver"))
+                        continue;
+		xmlChar *prop;
+		prop = xmlGetProp (node, BAD_CAST "name");
+		if (!prop)
+			continue;
+		if (!strcmp ((gchar*) prop, gda_server_provider_get_name (provider))) {
+			xmlFree (prop);
+			break;
+		}
+		xmlFree (prop);
+        }
+	if (!node)
+		goto out;
+
+	url = g_string_new ("");
+	for (node = node->children; node; node = node->next) {
+                if (!strcmp ((gchar *) node->name, "prefix")) {
+			xmlChar *contents;
+			contents = xmlNodeGetContent (node);
+			if (contents && *contents)
+				g_string_append (url, (gchar*) contents);
+		}
+		else if (!strcmp ((gchar *) node->name, "part")) {
+			xmlChar *prop;
+			const gchar *cvarvalue = NULL;
+			gchar *varvalue = NULL;
+			gboolean opt = FALSE;
+			prop = xmlGetProp (node, BAD_CAST "variable");
+			if (prop) {
+				cvarvalue = gda_quark_list_find (params, (gchar*) prop);
+				xmlFree (prop);
+			}
+			prop = xmlGetProp (node, BAD_CAST "optional");
+			if (prop) {
+				if ((*prop == 't') || (*prop == 'T'))
+					opt = TRUE;
+				xmlFree (prop);
+			}
+
+			prop = xmlGetProp (node, BAD_CAST "if");
+			if (prop) {
+				if (!strcmp ((gchar*) prop, "CncReadOnly")) {
+					if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
+						xmlFree (prop);
+						prop = xmlGetProp (node, BAD_CAST "value");
+						if (prop)
+							varvalue = g_strdup ((gchar*) prop);
+					}
+				}
+				if (prop)
+					xmlFree (prop);
+			}
+
+			if (cvarvalue || varvalue) {
+				prop = xmlGetProp (node, BAD_CAST "prefix");
+				if (prop) {
+					g_string_append (url, (gchar*) prop);
+					xmlFree (prop);
+				}
+				g_string_append (url, varvalue ? varvalue : cvarvalue);
+				g_free (varvalue);
+			}
+			else if (!varvalue && !cvarvalue && !opt) {
+				/* missing parameter */
+				g_string_free (url, TRUE);
+				url = NULL;
+				goto out;
+			}
+		}
+        }
+
+ out:
+	xmlFreeDoc (doc);
+	if (url)
+		return g_string_free (url, FALSE);
+	else
+		return NULL;
+}
+
 /* 
  * Open connection request
  *
@@ -365,12 +481,17 @@ gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	}
 
 	/* Check for connection parameters */
-	const gchar *url;
-	url = gda_quark_list_find (params, "URL");
+	gchar *url;
+	url = make_url_from_params (provider, cnc, params, auth);
 	if (!url) {
-		gda_connection_add_event_string (cnc,
-						 _("The connection string must contain the URL value"));
-		return FALSE;
+		const gchar *cstr;
+		cstr = gda_quark_list_find (params, "URL");
+		if (!cstr) {
+			gda_connection_add_event_string (cnc,
+							 _("The connection string must contain the URL value"));
+			return FALSE;
+		}
+		url = g_strdup (cstr);
 	}
 
 	/* Check for username / password */
@@ -397,10 +518,14 @@ gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 						 error && error->message ? error->message : _("No detail"));
 		if (error)
 			g_error_free (error);
+		g_free (url);
 		return FALSE;
 	}
 
 	jstr = (*env)->NewStringUTF (env, url);
+	/*g_print ("URL = [%s] USERNAME = [%s] PASSWORD = [%s]\n", url, username, password);*/
+	g_free (url);
+	url = NULL;
 	if (username)
 		jstr1 = (*env)->NewStringUTF (env, username);
 	else
@@ -409,6 +534,7 @@ gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 		jstr2 = (*env)->NewStringUTF (env, password);
 	else
 		jstr2 = NULL;
+
 	obj_value = jni_wrapper_method_call (env, GdaJProvider__openConnection, 
 					     jprov->jprov_obj, &error_code, &sql_state, &error,
 					     jstr, jstr1, jstr2);

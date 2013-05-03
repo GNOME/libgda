@@ -29,10 +29,9 @@ jni_sources = \
 jni_headers = $(jni_sources:.c=.h) 
 jni_classes = $(jni_sources:.c=.class) 
 
-$(libgda_jdbc_la_OBJECTS): $(jni_headers)
+resources = jdbc-resources.h jdbc-resources.c
 
-aaa:
-	echo $(path_jni_sources)
+$(libgda_jdbc_la_OBJECTS): $(jni_headers) $(resources)
 
 libgda_jdbc_la_SOURCES = \
 	gda-jdbc-blob-op.c \
@@ -55,8 +54,8 @@ libgda_jdbc_la_SOURCES = \
 	jni-wrapper.h \
 	jni-wrapper.c \
 	$(jni_sources) \
-	$(jni_headers)
-
+	$(jni_headers) \
+	$(resources)
 
 libgda_jdbc_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_jdbc_la_LIBADD = \
@@ -71,6 +70,10 @@ if PLATFORM_WIN32
 libgda_jdbc_la_LDFLAGS += -Wl,--kill-at
 endif
 
+jdbc-resources.h jdbc-resources.c: $(srcdir)/jdbc.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/jdbc.gresource.xml)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name _jdbc --manual-register $<
+
+CLEANFILES = $(resources)
 
 $(jni_headers): $(jdbcprov_classes)
 	$(JAVAH) -classpath . -d $(builddir) -force `basename $@ | sed -e 's/\.h$$//'`
@@ -101,7 +104,8 @@ clean-local:
 xmldir   = $(datadir)/libgda-5.0
 xml_in_files = \
 	jdbc_specs_dsn.xml.in \
-	jdbc_specs_create_table.xml.in 
+	jdbc_specs_create_table.xml.in \
+	jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in
 
 @INTLTOOL_XML_RULE@
 

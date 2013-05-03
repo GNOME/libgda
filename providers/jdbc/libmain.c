@@ -295,12 +295,16 @@ plugin_get_sub_description (const gchar *name)
 }
 
 EXPORT gchar *
-plugin_get_sub_dsn_spec (G_GNUC_UNUSED const gchar *name)
+plugin_get_sub_dsn_spec (const gchar *name)
 {
-	gchar *ret, *dir;
+	gchar *ret, *dir, *tmp;
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-	ret = gda_server_provider_load_file_contents (module_path, dir, "jdbc_specs_dsn.xml");
+	tmp = g_strdup_printf ("jdbc_specs_%s_dsn.xml", name);
+	ret = gda_server_provider_load_file_contents (module_path, dir, tmp);
+	g_free (tmp);
+	if (!ret)
+		ret = gda_server_provider_load_file_contents (module_path, dir, "jdbc_specs_dsn.xml");
 	g_free (dir);
 	return ret;
 }
