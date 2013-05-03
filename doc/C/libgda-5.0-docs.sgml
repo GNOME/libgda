@@ -9,6 +9,7 @@
 <!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
 <!ENTITY API             "<acronym>API</acronym>">
 <!ENTITY ODBC            "<acronym>ODBC</acronym>">
+<!ENTITY JDBC            "<acronym>JDBC</acronym>">
 <!ENTITY GDA             "<acronym>GDA</acronym>">
 <!ENTITY LDAP            "<acronym>LDAP</acronym>">
 <!ENTITY SQL             "<acronym>SQL</acronym>">
@@ -140,33 +141,36 @@
     <chapter id="introduction">
       <title>Introduction</title>
       <para>
-	&ODBC; and &SQL; are established standards. The problem is, that &ODBC;
-	doesn't specify the wire protocol and for some databases no &ODBC; driver
-	exists. You might use <acronym>RPC</acronym>, <acronym>TCP/IP</acronym>,
-	or shared memory and signals to pass the request from the client to the
-	server. So you have to use the database specific &ODBC; library. This 
-	library might not be available for the <acronym>CPU</acronym> or 
-	operating system on which the client is running. 
+	&ODBC; and &SQL; are established standards. However &ODBC; is mostly limited to
+	the Microsoft Windows environment (even though the UnixODBC project exists and links
+	to some drivers), and the API is quite old and not well integrated into the GNOME ecosystem.
       </para>
       <para>
-	&SQL; itself is also not standardized enough, so that source
+	&SQL; itself is standardized but up to some point only, so that &SQL; source
 	compatibility can not be assured for all database servers. And for some
 	sort of servers, &SQL; is not even feasible (think about &LDAP;).
       </para>
       <para>
-	&GDA; (GNOME Data Access) tries to tackle the &ODBC; problem and help you with the &SQL;
-	problem. It's a sort of middleware (or can be blown up to be a middleware
-	layer) to access different data sources. It offers a high level view of
+	&JDBC; is a more recent standard which replaces &ODBC; in the Java world, but it's limited
+	to the Java programming world, and is difficult to integrate in C (or other languages
+	different from Java). There are however a lot of JDBC drivers out there for many database
+	engines.
+      </para>
+      <para>
+	&GDA; (GNOME Data Access) tries to tackle the &ODBC; and &JDBC; "limitations" and help you with the &SQL;
+	problem. It's a sort of middleware to access different data sources. It offers a high level view of
 	data sources and has some places where you can plug in low level access
 	to the database for special tasks.
       </para>
       <para>
 	It offers a wrapper around the database internals, thus making it easier
 	for programmers to make use of all the power provided by many RDBMS without
-	even knowing about it. It comes along with a library, for both
-	clients and servers, as a C implementation of this architecture. This level of
-	abstraction would make possible to, at a later time, change all the
-	internals without having to modify applications using the libraries.
+	knowing much about it. It comes as a set of libraries, a core one and some extensions (the GTK+ UI
+	extension for example) and some drivers for the most common OpenSource or proprietary database engines.
+      </para>
+      <para>
+	Some of these drivers are a bit special: the LDAP provider allows one to adress an LDAP directory as
+	if it were composed of tables (provided some configuration), and the &JDBC; provider "wraps" any &JDBC; driver.
       </para>
       <para>
 	Along with these libraries (and associated header files and language 
@@ -175,20 +179,15 @@
 	as well as for automating some database-related tasks.
       </para>
       <para>
-	&LIBGDA; is implemented for <systemitem class="osname">UNIX
-	</systemitem>-like operating systems (including <systemitem 
-							   class="osname">Linux</systemitem>), and does not depend on other 
-	libraries apart from  <systemitem class="resource">libxml2</systemitem> and 
-	<systemitem class="resource">Glib</systemitem>, which makes it a very
-	lightweight system also ideal for applications to be run on 
-	hardware-limited systems.
+	&LIBGDA; is implemented for <systemitem class="osname">UNIX</systemitem>-like operating systems
+	(including <systemitem class="osname">Linux</systemitem>), and <systemitem class="osname">Windows</systemitem>.
       </para>
     </chapter>
 
     <chapter id="features">
       <title>Features</title>
       <para>
-	This section presents the main features of the 5.0 version of Libgda.
+	This section presents the main features of the 5.2 version of Libgda.
       </para>
       <para>
 	Libgda is a low-level database abstraction layer built on top of each database C API. In terms of abstraction, 
@@ -1160,22 +1159,24 @@ g_object_unref (store);
       <para>
 	For example to list the installed providers, do:
 	<programlisting>
-[prompt]> gda-sql-5.0 -L
-Provider    | Description                       | DSN parameters     | File                                          
-------------+-----------------------------------+--------------------+-----------------------------------------------
-SQLite      | Provider for SQLite databases     | DB_NAME,           | /usr/lib/libgda-5.0/providers/libgda-sqlite.so  
-                                                  DB_DIR,                                                            
-                                                  EXTRA_FUNCTIONS                                                       
-Berkeley-DB | Provider for Berkeley databases   | FILE,              | /usr/lib/libgda-5.0/providers/libgda-bdb.so 
-                                                  DATABASE                                                                
+[prompt]> gda-sql -L
+                                     Installed providers list
+Provider       | Description                                                                        
+---------------+------------------------------------------------------------------------------------
+Berkeley-DB    | Provider for Berkeley databases                                                    
+Firebird       | Provider for Firebird databases                                                    
+FirebirdEmbed  | Provider for embedded Firebird databases                                           
+Ldap           | Provider for database where tables are based on data contained in an LDAP directory
+MSAccess       | Provider for Microsoft Access files
 [...]
 	</programlisting>
 	To list the configured data sources (DSN):
 	<programlisting>
-[prompt]> gda-sql-5.0 -l
-DSN      | Provider   | Description  | Connection string      | Username
----------+------------+--------------+------------------------+---------
-Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
+[prompt]> gda-sql -l
+                                                    List of defined data sources
+DSN       | Provider | Description                          | Connection string            | Username | Global
+----------+----------+--------------------------------------+------------------------------+----------+-------
+SalesTest | SQLite   | Test database for a sales department | DB_DIR=/adir;DB_NAME=data.db |          | FALSE
 [...]
 	</programlisting>
 	To run an interactive session, just specify a DSN or a connection string using
@@ -1184,7 +1185,7 @@ Sales    | PostgreSQL | Sales        | DB_NAME=sales          |
 	the GDA_SQL_CNC environment variable to contain that string, and run the command without any argument, 
 	for example:
 	<programlisting>
-[prompt]> gda-sql-5.0 PostgreSQL://DB_NAME=sales
+[prompt]> gda-sql PostgreSQL://DB_NAME=sales
 Welcome to the GDA SQL console, version 3.99.3
 
 Type: .copyright to show usage and distribution terms

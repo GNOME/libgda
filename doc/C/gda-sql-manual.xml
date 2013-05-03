@@ -73,28 +73,42 @@
 	(database providers):
 	    <programlisting>
 [prompt]> gda-sql -l
-List of defined data sources
-DSN       | Provider | Description                          | Connection string     | Username | Global
-----------+----------+--------------------------------------+-----------------------+----------+-------
-SalesTest | SQLite   | Test database for a sales department | DB_NAME=sales_test.db |          | FALSE 
-(1 row)
+                                                    List of defined data sources
+DSN       | Provider | Description                          | Connection string            | Username | Global
+----------+----------+--------------------------------------+------------------------------+----------+-------
+SalesTest | SQLite   | Test database for a sales department | DB_DIR=/adir;DB_NAME=data.db |          | FALSE
+[...]
 	    </programlisting>
 	    <programlisting>
 [prompt]> gda-sql -L
-                                                        List of installed providers
-Provider    | Description                         | DSN parameters     | Authentication | File 
-                                     
-------------+-------------------------------------+--------------------+----------------+----------------------
--------------------------------------
-PostgreSQL  | Provider for PostgreSQL databases   | DB_NAME,           | USERNAME,      | [...]libgda-postgres.so
-                                                    SEARCHPATH,          PASSWORD               
-                                                    HOST,                
-                                                    PORT,                    
-                                                    OPTIONS,                             
-                                                    USE_SSL          
-MSAccess    | Provider for Microsoft Access files | DB_NAME,           |                | [...]libgda-mdb.so     
-                                                    DB_DIR 
+                                     Installed providers list
+Provider       | Description                                                                        
+---------------+------------------------------------------------------------------------------------
+Berkeley-DB    | Provider for Berkeley databases                                                    
+Firebird       | Provider for Firebird databases                                                    
+FirebirdEmbed  | Provider for embedded Firebird databases                                           
+Ldap           | Provider for database where tables are based on data contained in an LDAP directory
+MSAccess       | Provider for Microsoft Access files
 [...]            
+	    </programlisting>
+	    <programlisting>
+[prompt]> ./gda-sql -L PostgreSQL                                  
+                                                                                       Provider 'PostgreSQL' description
+Attribute      | Value                                                                                                                                 
+---------------+---------------------------------------------------------------------------------------------------------------------------------------
+Provider       | PostgreSQL                                                                                                                            
+Description    | Provider for PostgreSQL databases                                                                                                     
+DSN parameters | DB_NAME: Database name. The name of a database to connect to (string),                                                                
+                 SEARCHPATH: Search Path. Search path among database's schemas ('search_path' variable) (string),                                      
+                 HOST: Database server. Host on which the database server is running (for servers running on unix domain sockets, enter the socket's pa
+                 PORT: Port. Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), o
+                 OPTIONS: Options. Extra connection options (string),                                                                                  
+                 USE_SSL: Require SSL. Whether or not to use SSL to establish the connection (boolean),                                                
+                 CONNECT_TIMEOUT: Connection timeout. Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely. It is not
+Authentication | USERNAME (string),                                                                                                                    
+                 PASSWORD (string)                                                                                                                     
+File           | /local/extra/lib/libgda-5.0/providers/libgda-postgres.so                                                                              
+(5 rows)
 	    </programlisting>
 	</para></listitem>
 	<listitem><para>the <option>-C</option> and <option>-f</option> options repectively allow

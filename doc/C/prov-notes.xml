@@ -5,6 +5,15 @@
 ]>
 <chapter id="provider-notes">
   <title>Provider's notes</title>
+  <para>
+    This section lists some notes and recommendations on how to use each database provider.
+  </para>
+  <para>
+    Before opening a connection with a database provider, one needs to specify the connection parameters. These
+    parameters, even though some are shared by many database providers, are specific to each provider and
+    the <link linkend="libgda-sql">gda-sql</link> or the
+    <link linkend="libgda-tools-list-config">gda-list-config</link> tools can be used to obtain a complete list.
+  </para>
 
   <sect1 id="provider_notes_oracle"><title>For Oracle</title>
     <para>
