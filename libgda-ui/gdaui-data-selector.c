@@ -133,7 +133,7 @@ gdaui_data_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
  * uses a #GdaDataProxy (as is the case for example for the #GdauiRawForm, #GdauiForm, #GdauiRawGrid
  * and #GdauiGrid).
  *
- * Returns: (transfer full): an array of #gint values, one for each selected row. Use g_array_free() when finished (passing %TRUE as the last argument)
+ * Returns: (transfer full) (element-type gint): an array of #gint values, one for each selected row. Use g_array_free() when finished (passing %TRUE as the last argument)
  *
  * Since: 4.2
  */
