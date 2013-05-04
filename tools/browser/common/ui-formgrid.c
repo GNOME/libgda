@@ -1188,7 +1188,6 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 	if (! formgrid->priv->compute_mod_stmt)
 		return;
 
-	g_print ("Computing MOD STMTs\n");
 	gda_data_select_compute_modification_statements_ext (GDA_DATA_SELECT (model),
 							     GDA_DATA_SELECT_COND_ALL_COLUMNS, NULL);
 
@@ -1198,6 +1197,7 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 		      "update-stmt", &formgrid->priv->mod_stmt[MOD_UPDATE],
 		      "delete-stmt", &formgrid->priv->mod_stmt[MOD_DELETE], NULL);
 
+	/*
 	for (mod = MOD_INSERT; mod < MOD_LAST; mod++) {
 		if (formgrid->priv->mod_stmt[mod]) {
 			gchar *sql;
@@ -1214,4 +1214,5 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 		else
 			g_print ("STMT[%d] = ---\n", mod);
 	}
+	*/
 }
