@@ -158,6 +158,7 @@ providers/jdbc/gda-jdbc-provider.c
 providers/jdbc/gda-jdbc-recordset.c
 providers/jdbc/gda-jdbc-util.c
 providers/jdbc/GdaJValue.c
+providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in
 providers/jdbc/jdbc_specs_create_table.xml.in
 providers/jdbc/jdbc_specs_dsn.xml.in
 providers/jdbc/libmain.c
