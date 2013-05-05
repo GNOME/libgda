@@ -279,20 +279,20 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 static const GtkActionEntry ui_actions[] = {
         { "Connection", NULL, N_("_Connection"), NULL, N_("Connection"), NULL },
         { "ConnectionOpen", GTK_STOCK_CONNECT, N_("_Connect"), NULL, N_("Open a connection"), G_CALLBACK (connection_open_cb)},
-        { "ConnectionBind", NULL, N_("_Bind connection"), "<control>I", N_("Use connection to create\n"
+        { "ConnectionBind", NULL, N_("_Bind Connection"), "<control>I", N_("Use connection to create\n"
 						    "a new binding connection to access data\n"
 						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
         { "ConnectionProps", GTK_STOCK_PROPERTIES, N_("_Properties"), NULL, N_("Connection properties"), G_CALLBACK (connection_properties_cb)},
-        { "ConnectionList", NULL, N_("_Connections list"), NULL, N_("Connections list"), G_CALLBACK (connection_list_cb)},
-        { "ConnectionMetaSync", GTK_STOCK_REFRESH, N_("_Fetch meta data"), NULL, N_("Fetch meta data"), G_CALLBACK (connection_meta_update_cb)},
-        { "ConnectionClose", GTK_STOCK_CLOSE, N_("_Close connection"), NULL, N_("Close this connection"), G_CALLBACK (connection_close_cb)},
+        { "ConnectionList", NULL, N_("_Connections List"), NULL, N_("Connections list"), G_CALLBACK (connection_list_cb)},
+        { "ConnectionMetaSync", GTK_STOCK_REFRESH, N_("_Fetch Meta Data"), NULL, N_("Fetch meta data"), G_CALLBACK (connection_meta_update_cb)},
+        { "ConnectionClose", GTK_STOCK_CLOSE, N_("_Close Connection"), NULL, N_("Close this connection"), G_CALLBACK (connection_close_cb)},
         { "Quit", GTK_STOCK_QUIT, N_("_Quit"), NULL, N_("Quit"), G_CALLBACK (quit_cb)},
         { "Edit", NULL, N_("_Edit"), NULL, N_("Edit"), NULL },
         { "Display", NULL, N_("_Display"), NULL, N_("Display"), NULL },
         { "Perspective", NULL, N_("_Perspective"), NULL, N_("Perspective"), NULL },
         { "Window", NULL, N_("_Window"), NULL, N_("Window"), NULL },
-        { "WindowNew", STOCK_NEW_WINDOW, N_("_New window"), "<control>N", N_("Open a new window for current connection"), G_CALLBACK (window_new_cb)},
-        { "WindowNewOthers", NULL, N_("New window for _connection"), NULL, N_("Open a new window for a connection"), NULL},
+        { "WindowNew", STOCK_NEW_WINDOW, N_("_New Window"), "<control>N", N_("Open a new window for current connection"), G_CALLBACK (window_new_cb)},
+        { "WindowNewOthers", NULL, N_("New Window for _Connection"), NULL, N_("Open a new window for a connection"), NULL},
         { "WindowClose", GTK_STOCK_CLOSE, N_("_Close"), NULL, N_("Close this window"), G_CALLBACK (window_close_cb)},
         { "Help", NULL, N_("_Help"), NULL, N_("Help"), NULL },
         { "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, N_("About"), G_CALLBACK (about_cb) },

@@ -462,7 +462,7 @@ action_class_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epage)
 */
 static GtkActionEntry ui_actions[] = {
 	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-	{ "DefineAsTable", BROWSER_STOCK_TABLE_ADD, N_("Define as table"), NULL, N_("Define search as a virtual table"),
+	{ "DefineAsTable", BROWSER_STOCK_TABLE_ADD, N_("Define as Table"), NULL, N_("Define search as a virtual table"),
 	  G_CALLBACK (action_define_as_table_cb)},
 	/*
 	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous class"), NULL, N_("Move back to previous LDAP class"),

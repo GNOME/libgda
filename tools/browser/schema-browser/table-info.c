@@ -990,9 +990,9 @@ static GtkActionEntry ui_actions[] = {
 	  G_CALLBACK (action_add_to_fav_cb)},
 	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View table's contents"),
 	  G_CALLBACK (action_view_contents_cb)},
-	{ "InsertData", GTK_STOCK_ADD, N_("_Insert data"), NULL, N_("Insert data into table"),
+	{ "InsertData", GTK_STOCK_ADD, N_("_Insert Data"), NULL, N_("Insert data into table"),
 	  G_CALLBACK (action_insert_cb)},
-	{ "KfDeclare", NULL, N_("_Declare foreign key"), NULL, N_("Declare a foreign key for table"),
+	{ "KfDeclare", NULL, N_("_Declare Foreign Key"), NULL, N_("Declare a foreign key for table"),
 	  G_CALLBACK (action_declarefk_cb)},
 };
 static const gchar *ui_actions_info =

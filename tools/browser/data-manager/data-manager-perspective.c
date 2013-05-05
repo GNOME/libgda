@@ -329,12 +329,12 @@ favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
 
 static const GtkToggleActionEntry ui_toggle_actions [] =
 {
-        { "DataManagerFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE}
+        { "DataManagerFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE}
 };
 
 static GtkActionEntry ui_actions[] = {
         { "DataManagerMenu", NULL, N_("_Manager"), NULL, N_("Manager"), NULL },
-        { "NewDataManager", GTK_STOCK_NEW, N_("_New data manager"), "<control>T", N_("New data manager"),
+        { "NewDataManager", GTK_STOCK_NEW, N_("_New Data Manager"), "<control>T", N_("New data manager"),
           G_CALLBACK (manager_new_cb)},
 };
 

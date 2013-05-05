@@ -329,16 +329,16 @@ ldab_search_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 
 static const GtkToggleActionEntry ui_toggle_actions [] =
 	{
-		{ "LdapToolsFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+		{ "LdapToolsFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
 	};
 
 static GtkActionEntry ui_actions[] = {
 	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-        { "LdapLdapEntriesPageNew", BROWSER_STOCK_LDAP_ENTRIES, N_("_New LDAP entries browser"), "<control>T", N_("Open a new LDAP entries browser"),
+        { "LdapLdapEntriesPageNew", BROWSER_STOCK_LDAP_ENTRIES, N_("_New LDAP Entries Browser"), "<control>T", N_("Open a new LDAP entries browser"),
           G_CALLBACK (ldab_ldap_entries_page_add_cb)},
-        { "LdapLdapClassesPageNew", NULL, N_("_New LDAP classes browser"), "<control>C", N_("Open a new LDAP classes browser"),
+        { "LdapLdapClassesPageNew", NULL, N_("_New LDAP Classes Browser"), "<control>C", N_("Open a new LDAP classes browser"),
 	  G_CALLBACK (ldab_ldap_classes_page_add_cb)},
-        { "LdapSearchNew", GTK_STOCK_FIND, N_("_New LDAP search"), "<control>G", N_("Open a new LDAP search form"),
+        { "LdapSearchNew", GTK_STOCK_FIND, N_("_New LDAP Search"), "<control>G", N_("Open a new LDAP search form"),
 	  G_CALLBACK (ldab_search_add_cb)},
 };
 

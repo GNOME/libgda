@@ -506,9 +506,9 @@ static GtkActionEntry ui_actions[] = {
 	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
 	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add class to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
-	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous class"), NULL, N_("Move back to previous LDAP class"),
+	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous Class"), NULL, N_("Move back to previous LDAP class"),
 	  G_CALLBACK (action_class_back_cb)},
-	{ "DnForward", GTK_STOCK_GO_FORWARD, N_("Next class"), NULL, N_("Move to next LDAP class"),
+	{ "DnForward", GTK_STOCK_GO_FORWARD, N_("Next Class"), NULL, N_("Move to next LDAP class"),
 	  G_CALLBACK (action_class_forward_cb)},
 };
 static const gchar *ui_actions_browser =

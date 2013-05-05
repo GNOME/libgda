@@ -155,9 +155,9 @@ dummy_list_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserPerspective
 
 static GtkActionEntry ui_actions[] = {
         { "DummyMenu", NULL, "_Dummy", NULL, "DummyMenu", NULL },
-        { "DummyItem1", GTK_STOCK_ADD, "_Dummy add", NULL, "Add something",
+        { "DummyItem1", GTK_STOCK_ADD, "_Dummy Add", NULL, "Add something",
           G_CALLBACK (dummy_add_cb)},
-        { "DummyItem2", GTK_STOCK_REMOVE, "_Dummy list", NULL, "List something",
+        { "DummyItem2", GTK_STOCK_REMOVE, "_Dummy List", NULL, "List something",
           G_CALLBACK (dummy_list_cb)},
 };
 

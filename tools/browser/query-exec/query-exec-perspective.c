@@ -310,12 +310,12 @@ favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
 
 static const GtkToggleActionEntry ui_toggle_actions [] =
 {
-        { "QueryExecFavoritesShow", NULL, N_("_Show favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+        { "QueryExecFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
 };
 
 static GtkActionEntry ui_actions[] = {
         { "QueryExecMenu", NULL, N_("_Query"), NULL, N_("Query"), NULL },
-        { "QueryExecItem1", STOCK_CONSOLE, N_("_New editor"), "<control>T", N_("Open a new query editor"),
+        { "QueryExecItem1", STOCK_CONSOLE, N_("_New Editor"), "<control>T", N_("Open a new query editor"),
           G_CALLBACK (query_exec_add_cb)},
 };
 
