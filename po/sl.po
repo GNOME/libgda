@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-05-04 12:58+0000\n"
-"PO-Revision-Date: 2013-05-04 20:16+0100\n"
+"POT-Creation-Date: 2013-05-05 14:31+0000\n"
+"PO-Revision-Date: 2013-05-05 19:26+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -162,13 +162,13 @@ msgstr "Ni mogoče izvesti programa za brskanje"
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/browser/auth-dialog.c:707 ../tools/browser/auth-dialog.c:710
-#: ../tools/browser/browser-connection.c:509
+#: ../tools/browser/browser-connection.c:511
 #: ../tools/browser/browser-connection.c:668
 #: ../tools/browser/browser-connection.c:685
-#: ../tools/browser/browser-connection.c:864
-#: ../tools/browser/browser-connection.c:884
-#: ../tools/browser/browser-connection.c:1153
-#: ../tools/browser/browser-connection.c:1369
+#: ../tools/browser/browser-connection.c:875
+#: ../tools/browser/browser-connection.c:895
+#: ../tools/browser/browser-connection.c:1164
+#: ../tools/browser/browser-connection.c:1380
 #: ../tools/browser/browser-window.c:920 ../tools/browser/browser-window.c:934
 #: ../tools/browser/browser-window.c:948
 #: ../tools/browser/browser-window.c:1173
@@ -3156,8 +3156,8 @@ msgstr "Razpredelnice '%s' ni mogoče najti"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:796
 #: ../libgda/sql-parser/gda-statement-struct.c:811
-#: ../tools/browser/browser-connection.c:2115
-#: ../tools/browser/browser-connection.c:2169
+#: ../tools/browser/browser-connection.c:2126
+#: ../tools/browser/browser-connection.c:2180
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Ni mogoče določiti razpredelnice za polje '%s'"
@@ -4666,6 +4666,7 @@ msgstr "Mapa v kateri je shranjena datoteka podatkovne zbirke"
 #: ../providers/bdbsql/bdbsql_specs_drop_db.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:1
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:1
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:1
 #: ../providers/mdb/mdb_specs_dsn.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:20
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:20
@@ -5441,6 +5442,56 @@ msgstr "Neveljaven datum: leto %d, mesec %d in dan %d"
 msgid "Can't get BLOB's size"
 msgstr "Ni mogoče pridobiti velikosti predmeta BLOB"
 
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:2
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
+msgid "The name of a database to connect to"
+msgstr "Ime podatkovne zbirke za povezovanje"
+
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:3
+msgid "Instance"
+msgstr "Primerek"
+
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:4
+msgid ""
+"The instance to connect to, if not specified, a connection to the default "
+"instance is made"
+msgstr ""
+"Primerek, s katerima naj bo vzpostavljena povezava. Če ta ni določen, je "
+"vzpostavljena privzeta povezava."
+
+#. Connection parameters
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:5
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:3
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:3
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:3
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:3
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
+msgid "Database server"
+msgstr "Strežnik podatkovnih zbirk"
+
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:6
+msgid "Host on which the database server is running or leave this field empty"
+msgstr "Gostitelj na katerem teče strežnik podatkovne zbirke ali prazno polje"
+
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:7
+#: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
+#: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
+#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:6
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:6
+#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
+#: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
+#: ../providers/web/web_specs_dsn.xml.in.h:3
+msgid "Port"
+msgstr "Vrata"
+
+#: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:8
+msgid "Database server port, 1433 by default"
+msgstr "Vrata strežnika podatkovnih zbirk, privzeto 1433"
+
 #: ../providers/jdbc/jdbc_specs_dsn.xml.in.h:1
 msgid "Connection URL"
 msgstr "Naslov URL povezave"
@@ -5570,31 +5621,9 @@ msgstr "Osnovno ime"
 msgid "Base distinguished name, starting point for the searches"
 msgstr "Osnovno razločno ime, začetna točka iskanja"
 
-#. Connection parameters
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:3
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:3
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:3
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:3
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:3
-#: ../providers/postgres/postgres_specs_dsn.xml.in.h:5
-msgid "Database server"
-msgstr "Strežnik podatkovnih zbirk"
-
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 msgid "Host on which the LDAP server is running"
 msgstr "Gostitelj na katerem teče strežnik LDAP"
-
-#: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
-#: ../providers/mysql/mysql_specs_create_db.xml.in.h:6
-#: ../providers/mysql/mysql_specs_drop_db.xml.in.h:6
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:6
-#: ../providers/postgres/postgres_specs_drop_db.xml.in.h:6
-#: ../providers/postgres/postgres_specs_dsn.xml.in.h:7
-#: ../providers/web/web_specs_dsn.xml.in.h:3
-msgid "Port"
-msgstr "Vrata"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
@@ -6605,11 +6634,6 @@ msgstr ""
 "Zavrni spuščanje razpredelnice, če je katerikoli predmet od nje odvisen "
 "(RESTRICT)"
 
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:2
-#: ../providers/postgres/postgres_specs_dsn.xml.in.h:2
-msgid "The name of a database to connect to"
-msgstr "Ime podatkovne zbirke za povezovanje"
-
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:11
 msgid "Compress"
 msgstr "Skrči"
@@ -7582,42 +7606,42 @@ msgstr ""
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/browser/browser-connection.c:506
+#: ../tools/browser/browser-connection.c:508
 msgid "Analysing database schema"
 msgstr "Poteka analiza podatkovne sheme"
 
-#: ../tools/browser/browser-connection.c:508
+#: ../tools/browser/browser-connection.c:510
 #: ../tools/browser/browser-connection.c:667
 #: ../tools/browser/browser-connection.c:684
-#: ../tools/browser/browser-connection.c:1152
+#: ../tools/browser/browser-connection.c:1163
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
 
-#: ../tools/browser/browser-connection.c:863
-#: ../tools/browser/browser-connection.c:883
+#: ../tools/browser/browser-connection.c:874
+#: ../tools/browser/browser-connection.c:894
 #, c-format
 msgid "Error while analysing database schema: %s"
 msgstr "Napaka ob proučevanju sheme podatkovne zbirke: %s"
 
-#: ../tools/browser/browser-connection.c:1016
+#: ../tools/browser/browser-connection.c:1027
 #: ../tools/browser/browser-window.c:280
 msgid "Connection"
 msgstr "Povezava"
 
-#: ../tools/browser/browser-connection.c:1018
+#: ../tools/browser/browser-connection.c:1029
 msgid "unnamed"
 msgstr "neimenovano"
 
-#: ../tools/browser/browser-connection.c:1021
+#: ../tools/browser/browser-connection.c:1032
 msgid "data source"
 msgstr "podatkovni vir"
 
-#: ../tools/browser/browser-connection.c:1150
+#: ../tools/browser/browser-connection.c:1161
 msgid "Getting database schema information"
 msgstr "Pridobivanje podrobnosti sheme podatkovne zbirke"
 
-#: ../tools/browser/browser-connection.c:1366
+#: ../tools/browser/browser-connection.c:1377
 msgid ""
 "Execution reported an undefined error, please report error to http://"
 "bugzilla.gnome.org/ for the \"libgda\" product"
@@ -7625,45 +7649,45 @@ msgstr ""
 "Pri izvedbi je prišlo do nedoločene napake; pošljite poročilo o napaki na "
 "http://bugzilla.gnome.org/ za knjižnico \"libgda\"."
 
-#: ../tools/browser/browser-connection.c:1417
-#: ../tools/browser/browser-connection.c:1467
+#: ../tools/browser/browser-connection.c:1428
+#: ../tools/browser/browser-connection.c:1478
 msgid "Executing a query"
 msgstr "Izvajanje poizvedbe"
 
-#: ../tools/browser/browser-connection.c:1764
+#: ../tools/browser/browser-connection.c:1775
 msgid "Connection not yet opened"
 msgstr "Povezava še ni odprta"
 
-#: ../tools/browser/browser-connection.c:1770
+#: ../tools/browser/browser-connection.c:1781
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Ni mogoče začeti slovarja za shranjevanje možnosti razpredelnice"
 
-#: ../tools/browser/browser-connection.c:1816
-#: ../tools/browser/browser-connection.c:1822
-#: ../tools/browser/browser-connection.c:1958 ../tools/tools-favorites.c:629
+#: ../tools/browser/browser-connection.c:1827
+#: ../tools/browser/browser-connection.c:1833
+#: ../tools/browser/browser-connection.c:1969 ../tools/tools-favorites.c:629
 #: ../tools/tools-favorites.c:635 ../tools/tools-favorites.c:1062
 #: ../tools/tools-favorites.c:1069
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ni mogoče začeti prenosa za dostop do priljubljenih"
 
-#: ../tools/browser/browser-connection.c:1903 ../tools/tools-favorites.c:808
+#: ../tools/browser/browser-connection.c:1914 ../tools/tools-favorites.c:808
 #: ../tools/tools-favorites.c:1137
 msgid "Can't commit transaction to access favorites"
 msgstr "Ni mogoče uveljaviti prenosa za dostop do priljubljenih"
 
-#: ../tools/browser/browser-connection.c:2466
+#: ../tools/browser/browser-connection.c:2477
 msgid "Could not execute LDAP search"
 msgstr "Ni mogoče izvesti iskanja LDAP."
 
-#: ../tools/browser/browser-connection.c:2511
+#: ../tools/browser/browser-connection.c:2522
 msgid "Executing LDAP search"
 msgstr "Izvajanje iskanja LDAP"
 
-#: ../tools/browser/browser-connection.c:2571
+#: ../tools/browser/browser-connection.c:2582
 msgid "Fetching LDAP entry's attributes"
 msgstr "Pridobivanje atributov vnosa LDAP"
 
-#: ../tools/browser/browser-connection.c:2631
+#: ../tools/browser/browser-connection.c:2642
 msgid "Fetching LDAP entry's children"
 msgstr "Pridobivanje podrejenih predmetov vnosa LDAP"
 
@@ -7801,8 +7825,8 @@ msgid "Open a connection"
 msgstr "Odpri povezavo"
 
 #: ../tools/browser/browser-window.c:282
-msgid "_Bind connection"
-msgstr "_Zveži povezave"
+msgid "_Bind Connection"
+msgstr "_Veži povezave"
 
 #: ../tools/browser/browser-window.c:282
 msgid ""
@@ -7819,7 +7843,7 @@ msgid "Connection properties"
 msgstr "Lastnosti povezave"
 
 #: ../tools/browser/browser-window.c:286
-msgid "_Connections list"
+msgid "_Connections List"
 msgstr "_Seznam povezav"
 
 #: ../tools/browser/browser-window.c:286
@@ -7827,7 +7851,7 @@ msgid "Connections list"
 msgstr "Seznam povezav"
 
 #: ../tools/browser/browser-window.c:287
-msgid "_Fetch meta data"
+msgid "_Fetch Meta Data"
 msgstr "_Pridobi metapodatke"
 
 #: ../tools/browser/browser-window.c:287
@@ -7835,7 +7859,7 @@ msgid "Fetch meta data"
 msgstr "Pridobi metapodatke"
 
 #: ../tools/browser/browser-window.c:288
-msgid "_Close connection"
+msgid "_Close Connection"
 msgstr "_Zapri povezavo"
 
 #: ../tools/browser/browser-window.c:288
@@ -7883,7 +7907,7 @@ msgid "Window"
 msgstr "Okno"
 
 #: ../tools/browser/browser-window.c:294
-msgid "_New window"
+msgid "_New Window"
 msgstr "_Novo okno"
 
 #: ../tools/browser/browser-window.c:294
@@ -7891,8 +7915,8 @@ msgid "Open a new window for current connection"
 msgstr "Ustvari novo okno za trenutno povezavo"
 
 #: ../tools/browser/browser-window.c:295
-msgid "New window for _connection"
-msgstr "Novo okno _za povezavo"
+msgid "New Window for _Connection"
+msgstr "Novo okno za _povezavo"
 
 #: ../tools/browser/browser-window.c:295
 msgid "Open a new window for a connection"
@@ -8667,8 +8691,8 @@ msgstr "Neimenovan upravljalnik podatkov"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:313
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:308
-msgid "_Show favorites"
-msgstr "_Pokaži priljubljene"
+msgid "_Show Favorites"
+msgstr "_Pokaži priljubljeno"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:332
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
@@ -8686,7 +8710,7 @@ msgid "Manager"
 msgstr "Upravljalnik"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
-msgid "_New data manager"
+msgid "_New Data Manager"
 msgstr "Nov _upravljalnik podatkov"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
@@ -8991,23 +9015,23 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-msgid "_New LDAP entries browser"
-msgstr "Brskalnik novih _vnosov LDAP"
+msgid "_New LDAP Entries Browser"
+msgstr "_Nov brskalnik vnosov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "Open a new LDAP entries browser"
 msgstr "Odpri nov brskalnik vnosov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
-msgid "_New LDAP classes browser"
-msgstr "Brskalnik novih _razredov LDAP"
+msgid "_New LDAP Classes Browser"
+msgstr "_Nov brskalnik razredov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "Open a new LDAP classes browser"
 msgstr "Odpri nov brskalnik razredov LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
-msgid "_New LDAP search"
+msgid "_New LDAP Search"
 msgstr "Novo _iskanje LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
@@ -9038,7 +9062,7 @@ msgid "Add class to favorites"
 msgstr "Dodaj razred med priljubljene"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:509
-msgid "Previous class"
+msgid "Previous Class"
 msgstr "Predhodni razred"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:509
@@ -9046,7 +9070,7 @@ msgid "Move back to previous LDAP class"
 msgstr "Premakni nazaj na predhodni razred LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:511
-msgid "Next class"
+msgid "Next Class"
 msgstr "Naslednji razred"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:511
@@ -9070,7 +9094,7 @@ msgid "Add entry to favorites"
 msgstr "Dodaj vnos med priljubljene"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:515
-msgid "Previous entry"
+msgid "Previous Entry"
 msgstr "Predhodni vnos"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:515
@@ -9078,7 +9102,7 @@ msgid "Move back to previous LDAP entry"
 msgstr "Premakni nazaj na predhodni vnos LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:517
-msgid "Next entry"
+msgid "Next Entry"
 msgstr "Naslednji vnos"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:517
@@ -9133,7 +9157,7 @@ msgid "Virtual table '%s' for this LDAP search has been defined"
 msgstr "Navidezna razpredelnica '%s' za iskanje LDAP je določena"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:465
-msgid "Define as table"
+msgid "Define as Table"
 msgstr "Določi kot razpredelnico"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:465
@@ -9508,7 +9532,7 @@ msgid "Query"
 msgstr "Poizvedba"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:318
-msgid "_New editor"
+msgid "_New Editor"
 msgstr "_Nov urejevalnik"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:318
@@ -9787,7 +9811,7 @@ msgid "View table's contents"
 msgstr "Pregled vsebine razpredelnice"
 
 #: ../tools/browser/schema-browser/table-info.c:993
-msgid "_Insert data"
+msgid "_Insert Data"
 msgstr "_Vstavi podatke"
 
 #: ../tools/browser/schema-browser/table-info.c:993
@@ -9795,8 +9819,8 @@ msgid "Insert data into table"
 msgstr "Vstavi podatke v razpredelnico"
 
 #: ../tools/browser/schema-browser/table-info.c:995
-msgid "_Declare foreign key"
-msgstr "_Napovej tuj ključ"
+msgid "_Declare Foreign Key"
+msgstr "_Določi tuj ključ"
 
 #: ../tools/browser/schema-browser/table-info.c:995
 msgid "Declare a foreign key for table"
