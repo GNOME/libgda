@@ -478,7 +478,9 @@ wrapper_meta_struct_sync (BrowserConnection *bcnc, GError **error)
 	return GINT_TO_POINTER (retval ? 2 : 1);
 }
 
-
+/*
+ * executed in main thread
+ */
 static void
 meta_changed_cb (G_GNUC_UNUSED GdaThreadWrapper *wrapper,
 		 G_GNUC_UNUSED GdaMetaStore *store,
@@ -525,6 +527,9 @@ browser_connection_meta_data_changed (BrowserConnection *bcnc)
 	meta_changed_cb (NULL, NULL, NULL, 0, NULL, NULL, bcnc);
 }
 
+/*
+ * executed in bcnc->priv->wrapper's thread
+ */
 static gpointer
 wrapper_have_meta_store_ready (BrowserConnection *bcnc, GError **error)
 {
@@ -589,11 +594,6 @@ wrapper_have_meta_store_ready (BrowserConnection *bcnc, GError **error)
 	}
 	g_slist_free (all);
 #endif
-	bcnc->priv->meta_store_signal =
-		gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
-						FALSE, FALSE,
-						(GdaThreadWrapperCallback) meta_changed_cb,
-						bcnc);
 	g_object_unref (store);
 	return retval ? (void*) 0x01 : NULL;
 }
@@ -685,6 +685,17 @@ browser_connection_set_property (GObject *object,
 							    lerror->message ? lerror->message : _("No detail"));
 					g_clear_error (&lerror);
 				}
+				else {
+					GdaMetaStore *store;
+					g_object_get (G_OBJECT (bcnc->priv->cnc), "meta-store", &store, NULL);
+					bcnc->priv->meta_store_signal =
+						gda_thread_wrapper_connect_raw (bcnc->priv->wrapper, store, "meta-changed",
+										FALSE, FALSE,
+										(GdaThreadWrapperCallback) meta_changed_cb,
+										bcnc);
+					g_object_unref (store);
+				}
+
 			}
                         break;
 		default:
