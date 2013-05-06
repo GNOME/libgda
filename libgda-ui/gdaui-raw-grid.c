@@ -1316,7 +1316,7 @@ data_cell_values_changed (GtkCellRenderer *renderer, const gchar *path,
 	g_assert (gda_set_group_get_source (sg));
 
 	if (new_values)
-		g_return_if_fail (gda_set_group_get_n_nodes (sg) == g_slist_length (new_values));
+		g_return_if_fail (gda_set_group_get_n_nodes (sg) == (gint) g_slist_length (new_values));
 	else
 		/* the reason for not having any value is that the GdauiDataCellRendererCombo had no selected item */
 		return;

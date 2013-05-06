@@ -1288,16 +1288,14 @@ make_time (G_GNUC_UNUSED GdaHandlerTime *hdl, GdaTime *timegda, const gchar *val
 
 
 static GValue *
-gda_handler_time_get_sane_init_value (GdaDataHandler *iface, GType type)
+gda_handler_time_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, GType type)
 {
-	GdaHandlerTime *hdl;
 	GValue *value = NULL;
 	
 	time_t now;
 	struct tm *stm;
 
 	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
-	hdl = (GdaHandlerTime*) (iface);
 
 	now = time (NULL);
 #ifdef HAVE_LOCALTIME_R

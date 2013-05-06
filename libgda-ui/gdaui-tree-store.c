@@ -536,7 +536,7 @@ gdaui_tree_store_get_node (GdauiTreeStore *store, GtkTreeIter *iter)
 gboolean
 gdaui_tree_store_get_iter (GdauiTreeStore *store, GtkTreeIter *iter, GdaTreeNode *node)
 {
-	gdaui_tree_store_get_iter_from_node (store, iter, node);
+	return gdaui_tree_store_get_iter_from_node (store, iter, node);
 }
 
 

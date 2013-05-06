@@ -155,7 +155,10 @@ gda_init (void)
 	}
 #endif
 
+#if GLIB_CHECK_VERSION(2,36,0)
+#else
 	g_type_init ();
+#endif
 
 	if (!g_module_supported ())
 		g_error (_("libgda needs GModule. Finishing..."));
