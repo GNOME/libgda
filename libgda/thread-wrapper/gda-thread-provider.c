@@ -267,7 +267,7 @@ _gda_thread_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaThreadProviderClass),
 			(GBaseInitFunc) NULL,
@@ -279,10 +279,10 @@ _gda_thread_provider_get_type (void)
 			(GInstanceInitFunc) gda_thread_provider_init,
 			0
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaThreadProvider", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -376,8 +376,8 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 	GdaThreadWrapper *wr = NULL;
 	gboolean wr_created = FALSE;
 
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
-	g_static_mutex_lock (&mutex);
+	static GMutex mutex;
+	g_mutex_lock (&mutex);
 
 	/* test if connection has to be opened using a DSN or a connection string */
 	gchar *dsn, *auth_string, *cnc_string;
@@ -425,14 +425,14 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 			gda_connection_add_event_string (cnc, "%s", _("Multi threading is not supported or enabled"));
 			g_free (data->prov_name);
 			g_free (data);
-			g_static_mutex_unlock (&mutex);
+			g_mutex_unlock (&mutex);
 			return NULL;
 		}
 	}
 	else {
 		/* here wr_created == FALSE */
 		g_object_ref (wr);
-		g_static_mutex_unlock (&mutex);
+		g_mutex_unlock (&mutex);
 	}
 	
 	/* open sub connection */
@@ -456,7 +456,7 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 		g_free (data->prov_name);
 		g_free (data);
 		if (wr_created)
-			g_static_mutex_unlock (&mutex);
+			g_mutex_unlock (&mutex);
 		return NULL;
 	}
 	
@@ -479,7 +479,7 @@ create_connection_data (GdaServerProvider *provider, GdaConnection *cnc, GdaQuar
 					     g_strdup (gda_server_provider_get_name (cdata->cnc_provider)),
 					     g_object_ref (wr));
 		}
-		g_static_mutex_unlock (&mutex);
+		g_mutex_unlock (&mutex);
 	}
 
 	return cdata;

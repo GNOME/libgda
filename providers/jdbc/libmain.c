@@ -43,7 +43,7 @@
 static GModule *jvm_handle = NULL;
 
 /* JVM's symbols */
-static GStaticMutex vm_create = G_STATIC_MUTEX_INIT;
+static GMutex vm_create;
 static jint (*__CreateJavaVM) (JavaVM **pvm, void **penv, void *args) = NULL;
 JavaVM *_jdbc_provider_java_vm = NULL;
 
@@ -388,9 +388,9 @@ load_jvm ()
 	gboolean jvm_found = FALSE;
 	const gchar *env;
 
-	g_static_mutex_lock (&vm_create);
+	g_mutex_lock (&vm_create);
 	if (_jdbc_provider_java_vm) {
-		g_static_mutex_unlock (&vm_create);
+		g_mutex_unlock (&vm_create);
 		return TRUE;
 	}
 
@@ -487,7 +487,7 @@ load_jvm ()
 			g_warning (_("Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."));
 	}
 
-	g_static_mutex_unlock (&vm_create);
+	g_mutex_unlock (&vm_create);
 	return jvm_found;
 }
 

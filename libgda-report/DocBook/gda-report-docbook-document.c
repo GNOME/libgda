@@ -136,7 +136,7 @@ gda_report_docbook_document_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaReportDocbookDocumentClass),
 			(GBaseInitFunc) NULL,
@@ -149,10 +149,10 @@ gda_report_docbook_document_get_type (void)
 			0
 		};
 		
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_REPORT_DOCUMENT, "GdaReportDocbookDocument", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -260,7 +260,7 @@ gda_report_docbook_document_new (GdaReportEngine *engine)
 static gboolean
 gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *filename, GError **error)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	static gchar *xsltproc = NULL;
 	GdaReportDocbookDocument *fdoc;
 	gchar **argv;
@@ -271,7 +271,7 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 	fdoc = GDA_REPORT_DOCBOOK_DOCUMENT (doc);
 	g_return_val_if_fail (fdoc->priv, FALSE);
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (!xsltproc) {
 		xsltproc = g_find_program_in_path ("xsltproc");
 		if (!xsltproc) {
@@ -284,7 +284,7 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 		if (!xsltproc) {
 			g_set_error (error, 0, 0,
 				     _("Could not find the '%s' program"), "xsltproc");
-			g_static_mutex_unlock (&init_mutex);
+			g_mutex_unlock (&init_mutex);
 			return FALSE;
 		}
 	}
@@ -299,11 +299,11 @@ gda_report_docbook_document_run_as_html (GdaReportDocument *doc, const gchar *fi
 		if (!fdoc->priv->html_stylesheet) {
 			g_set_error (error, 0, 0, "%s", 
 				     _("Could not find the DocBook XSL stylesheet for HTML"));
-			g_static_mutex_unlock (&init_mutex);
+			g_mutex_unlock (&init_mutex);
 			return FALSE;
 		}
 	}
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 	argv = g_new (gchar *, 9);
 	argv[0] = g_strdup (xsltproc);

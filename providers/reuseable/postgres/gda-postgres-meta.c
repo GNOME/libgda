@@ -271,7 +271,7 @@ static gchar *internal_sql[] = {
  * global static values, and
  * predefined statements' GdaStatement, all initialized in _gda_postgres_provider_meta_init()
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 static GdaSet       *i_set = NULL;
 
@@ -281,7 +281,7 @@ static GdaSet       *i_set = NULL;
 void
 _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		InternalStatementItem i;
@@ -307,7 +307,7 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 					    "oid", G_TYPE_UINT, 0);
 	}
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 #ifdef GDA_DEBUG
 	_gda_postgres_test_keywords ();

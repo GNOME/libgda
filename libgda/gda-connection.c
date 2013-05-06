@@ -69,7 +69,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
+static GMutex parser_mutex;
 static GdaSqlParser *internal_parser = NULL;
 
 #define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
@@ -676,7 +676,7 @@ gda_connection_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaConnectionClass),
 			(GBaseInitFunc) NULL,
@@ -695,12 +695,12 @@ gda_connection_get_type (void)
                         NULL
                 };
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -1158,12 +1158,12 @@ cnc_task_free (CncTask *task)
 GdaServerProvider *
 _gda_connection_get_internal_thread_provider (void)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!_gda_thread_wrapper_provider)
 		_gda_thread_wrapper_provider = GDA_SERVER_PROVIDER (g_object_new (GDA_TYPE_THREAD_PROVIDER, NULL));
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 	return _gda_thread_wrapper_provider;
 }
 
@@ -3584,10 +3584,10 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
 			      || g_str_has_prefix (sql, "SELECT"),
 			      NULL);
 
-	g_static_mutex_lock (&parser_mutex);
+	g_mutex_lock (&parser_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
-	g_static_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&parser_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt)
@@ -3621,10 +3621,10 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
 			      || GDA_IS_CONNECTION (cnc)
 			      || !gda_connection_is_opened (cnc), -1);
 
-	g_static_mutex_lock (&parser_mutex);
+	g_mutex_lock (&parser_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
-	g_static_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&parser_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt)

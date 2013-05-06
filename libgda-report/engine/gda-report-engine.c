@@ -155,7 +155,7 @@ gda_report_engine_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaReportEngineClass),
 			(GBaseInitFunc) NULL,
@@ -168,10 +168,10 @@ gda_report_engine_get_type (void)
 			0
 		};
 		
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaReportEngine", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -1107,12 +1107,12 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 	GdaDataModel *model;
 	GValue *retval;
 	gchar *sql;
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	GdaConnection *vcnc = NULL;
 	GdaSqlParser *parser;
 
 	/* create a virtual connection to execute the expression, if it's the first time */
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (!vcnc) {
 		static GdaVirtualProvider *provider = NULL;
 
@@ -1120,11 +1120,11 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 			provider = gda_vprovider_data_model_new ();
 		vcnc = gda_virtual_connection_open (provider, error);
 		if (! vcnc) {
-			g_static_mutex_unlock (&init_mutex);
+			g_mutex_unlock (&init_mutex);
 			return NULL;
 		}
 	}
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 	/* parser */
 	parser = g_object_get_data (G_OBJECT (context->cnc), "__gda_parser");

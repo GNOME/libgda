@@ -121,7 +121,7 @@ static GdaDataModelAccessFlags gda_data_pivot_get_access_flags(GdaDataModel *mod
 static const GValue        *gda_data_pivot_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 
 static GObjectClass *parent_class = NULL;
-static GStaticMutex provider_mutex = G_STATIC_MUTEX_INIT;
+static GMutex provider_mutex;
 static GdaVirtualProvider *virtual_provider = NULL;
 
 /**
@@ -135,7 +135,7 @@ gda_data_pivot_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaDataPivotClass),
 			(GBaseInitFunc) NULL,
@@ -155,12 +155,12 @@ gda_data_pivot_get_type (void)
 			NULL
 		};
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataPivot", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -2134,10 +2134,10 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 	if (pivot->priv->vcnc)
 		return TRUE;
 
-	g_static_mutex_lock (&provider_mutex);
+	g_mutex_lock (&provider_mutex);
 	if (!virtual_provider)
 		virtual_provider = gda_vprovider_data_model_new ();
-	g_static_mutex_unlock (&provider_mutex);
+	g_mutex_unlock (&provider_mutex);
 
 	vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
 	if (! vcnc) {

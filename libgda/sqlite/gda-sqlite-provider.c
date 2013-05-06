@@ -389,7 +389,7 @@ static CollationFunction collation_functions[] = {
 /*
  * Prepared internal statements
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -568,7 +568,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 static void
 gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		/* configure multi threading environment */
@@ -589,7 +589,7 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqlite
 	/* meta data init */
 	_gda_sqlite_provider_meta_init ((GdaServerProvider*) sqlite_prv);
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 GType
@@ -598,7 +598,7 @@ gda_sqlite_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaSqliteProviderClass),
 			(GBaseInitFunc) NULL,
@@ -610,7 +610,7 @@ gda_sqlite_provider_get_type (void)
 			(GInstanceInitFunc) gda_sqlite_provider_init,
 			0
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef WITH_BDBSQLITE
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
@@ -634,7 +634,7 @@ gda_sqlite_provider_get_type (void)
   #endif
 #endif
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -722,7 +722,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
-	static GStaticMutex cnc_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex cnc_mutex;
 #ifdef SQLITE_HAS_CODEC
 	const gchar *passphrase = NULL;
 #endif
@@ -735,7 +735,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
                 return FALSE;
 	}
 
-	g_static_mutex_lock (&cnc_mutex);
+	g_mutex_lock (&cnc_mutex);
 
 	/* get all parameters received */
 	dirname = gda_quark_list_find (params, "DB_DIR");
@@ -760,7 +760,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			if (!str) {
 				gda_connection_add_event_string (cnc,
 								 _("The connection string must contain DB_DIR and DB_NAME values"));
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 			else {
@@ -790,7 +790,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 									   "DB_DIR (the path to the database file) and DB_NAME "
 									   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
 					g_free (dup);
-					g_static_mutex_unlock (&cnc_mutex);
+					g_mutex_unlock (&cnc_mutex);
 					return FALSE;
 				}
 				else
@@ -812,7 +812,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 _("The DB_DIR part of the connection string must point "
 								   "to a valid directory"));
 				g_free (dup);
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 
@@ -853,7 +853,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		gda_connection_add_event_string (cnc, SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 		gda_sqlite_free_cnc_data (cdata);
 
-		g_static_mutex_unlock (&cnc_mutex);
+		g_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
 
@@ -869,7 +869,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		if (errmsg != SQLITE_OK) {
 			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_static_mutex_unlock (&cnc_mutex);
+			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -890,7 +890,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		else {
 			gda_connection_add_event_string (cnc, _("Extension loading is not supported"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_static_mutex_unlock (&cnc_mutex);
+			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -936,7 +936,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			SQLITE3_CALL (sqlite3_free) (errmsg);
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_static_mutex_unlock (&cnc_mutex);
+			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -961,7 +961,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_static_mutex_unlock (&cnc_mutex);
+			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -974,7 +974,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1002,7 +1002,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1022,7 +1022,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1041,7 +1041,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_static_mutex_unlock (&cnc_mutex);
+				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1052,7 +1052,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	else
 		g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
 
-	g_static_mutex_unlock (&cnc_mutex);
+	g_mutex_unlock (&cnc_mutex);
 	return TRUE;
 }
 
@@ -1105,16 +1105,16 @@ gda_sqlite_provider_close_connection (GdaServerProvider *provider, GdaConnection
 static const gchar *
 gda_sqlite_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static gchar *version_string = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!version_string)
 		version_string = g_strdup_printf ("SQLite version %s", SQLITE_VERSION);
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	return (const gchar *) version_string;
 }
@@ -1474,9 +1474,9 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 	}
 
 	if (name) {
-		static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+		static GMutex mutex;
 		static GdaSet *params_set = NULL;
-		g_static_mutex_lock (&mutex);
+		g_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 		else if (! gda_set_set_holder_value (params_set, error, "name", name))
@@ -1484,7 +1484,7 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN_NAMED],
 									   params_set, NULL, error) == -1)
 			status = FALSE;
-		g_static_mutex_unlock (&mutex);
+		g_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_BEGIN],
@@ -1509,9 +1509,9 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	if (name) {
-		static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+		static GMutex mutex;
 		static GdaSet *params_set = NULL;
-		g_static_mutex_lock (&mutex);
+		g_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 		else if (!gda_set_set_holder_value (params_set, error, "name", name))
@@ -1519,7 +1519,7 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT_NAMED],
 									   params_set, NULL, error) == -1)
 			status = FALSE;
-		g_static_mutex_unlock (&mutex);
+		g_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_COMMIT],
@@ -1545,9 +1545,9 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	if (name) {
-		static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+		static GMutex mutex;
 		static GdaSet *params_set = NULL;
-		g_static_mutex_lock (&mutex);
+		g_mutex_lock (&mutex);
 		if (!params_set)
 			params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 		else if (! gda_set_set_holder_value (params_set, error, "name", name))
@@ -1555,7 +1555,7 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 		if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_NAMED],
 									   params_set, NULL, error) == -1)
 			status = FALSE;
-		g_static_mutex_unlock (&mutex);
+		g_mutex_unlock (&mutex);
 	}
 	else {
 		if (gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK],
@@ -1577,9 +1577,9 @@ gda_sqlite_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GdaSet *params_set = NULL;
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!params_set)
 		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 	else if (! gda_set_set_holder_value (params_set, error, "name", name))
@@ -1587,7 +1587,7 @@ gda_sqlite_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ADD_SAVEPOINT],
 								   params_set, NULL, error) == -1)
 		status = FALSE;
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
@@ -1603,9 +1603,9 @@ gda_sqlite_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GdaSet *params_set = NULL;
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!params_set)
 		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 	else if (! gda_set_set_holder_value (params_set, error, "name", name))
@@ -1613,7 +1613,7 @@ gda_sqlite_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_ROLLBACK_SAVEPOINT],
 								   params_set, NULL, error) == -1)
 		status = FALSE;
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;
@@ -1629,9 +1629,9 @@ gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
 
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GdaSet *params_set = NULL;
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!params_set)
 		params_set = gda_set_new_inline (1, "name", G_TYPE_STRING, name);
 	else if (! gda_set_set_holder_value (params_set, error, "name", name))
@@ -1639,7 +1639,7 @@ gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	if (status && gda_connection_statement_execute_non_select (cnc, internal_stmt[INTERNAL_RELEASE_SAVEPOINT],
 								   params_set, NULL, error) == -1)
 		status = FALSE;
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	/*g_print ("%s(%p) => %s\n", __FUNCTION__, cnc, status ? "TRUE" : "FALSE");*/
 	return status;

@@ -44,7 +44,7 @@ dummy_perspective_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (DummyPerspectiveClass),
 			(GBaseInitFunc) NULL,
@@ -64,12 +64,12 @@ dummy_perspective_get_type (void)
                         NULL
                 };
 		
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (GTK_TYPE_BOX, "DummyPerspective", &info, 0);
 			g_type_add_interface_static (type, BROWSER_PERSPECTIVE_TYPE, &perspective_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }

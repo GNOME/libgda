@@ -146,7 +146,7 @@ static void gda_jdbc_free_cnc_data (JdbcConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -268,7 +268,7 @@ extern JavaVM *_jdbc_provider_java_vm;
 static void
 gda_jdbc_provider_init (GdaJdbcProvider *jdbc_prv, G_GNUC_UNUSED GdaJdbcProviderClass *klass)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		InternalStatementItem i;
@@ -288,7 +288,7 @@ gda_jdbc_provider_init (GdaJdbcProvider *jdbc_prv, G_GNUC_UNUSED GdaJdbcProvider
 
 	/* TO_ADD: any other provider's init should be added here */
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 GType
@@ -297,7 +297,7 @@ gda_jdbc_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaJdbcProviderClass),
 			(GBaseInitFunc) NULL,
@@ -309,10 +309,10 @@ gda_jdbc_provider_get_type (void)
 			(GInstanceInitFunc) gda_jdbc_provider_init,
 			0
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaJdbcProvider", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;

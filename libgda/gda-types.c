@@ -30,11 +30,11 @@ _gda_slist_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
-		g_static_mutex_lock (&registering);
+		static GMutex registering;
+		g_mutex_lock (&registering);
                 if (type == 0)
 			type = g_pointer_type_register_static ("GdaSList");
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;

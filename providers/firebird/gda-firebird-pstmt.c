@@ -38,7 +38,7 @@ gda_firebird_pstmt_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaFirebirdPStmtClass),
 			(GBaseInitFunc) NULL,
@@ -52,7 +52,7 @@ gda_firebird_pstmt_get_type (void)
 			0
 		};
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef FIREBIRD_EMBED
 			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaFirebirdPStmtEmbed", &info, 0);
@@ -60,7 +60,7 @@ gda_firebird_pstmt_get_type (void)
 			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaFirebirdPStmt", &info, 0);
 #endif
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }

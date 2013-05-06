@@ -33,7 +33,7 @@ gda_firebird_parser_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaFirebirdParserClass),
 			(GBaseInitFunc) NULL,
@@ -46,7 +46,7 @@ gda_firebird_parser_get_type (void)
 			(GInstanceInitFunc) gda_firebird_parser_init
 		};
 		
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef FIREBIRD_EMBED
 			type = g_type_register_static (GDA_TYPE_SQL_PARSER, "GdaFirebirdParserEmbed", &info, 0);
@@ -54,7 +54,7 @@ gda_firebird_parser_get_type (void)
 			type = g_type_register_static (GDA_TYPE_SQL_PARSER, "GdaFirebirdParser", &info, 0);
 #endif
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }

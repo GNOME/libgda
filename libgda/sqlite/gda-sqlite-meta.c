@@ -83,7 +83,7 @@ static gchar *internal_sql[] = {
 /*
  * predefined statements' GdaStatement
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 static GdaSet        *internal_params = NULL;
 
@@ -153,7 +153,7 @@ to_caseless_string (gchar *string)
 void
 _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		InternalStatementItem i;
@@ -187,7 +187,7 @@ _gda_sqlite_provider_meta_init (GdaServerProvider *provider)
 						 "idxname", G_TYPE_STRING, "");
 	}
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 static GdaStatement *

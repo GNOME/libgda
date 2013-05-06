@@ -46,15 +46,15 @@ static gboolean
 init_meta_obj (GdaConnection *cnc, JNIEnv *jenv, JdbcConnectionData *cdata, GError **error)
 {
 	GError *lerror = NULL;
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (cdata->jmeta_obj)
 		return TRUE;
 	cdata->jmeta_obj = jni_wrapper_method_call (jenv, GdaJConnection__getJMeta,
 						    cdata->jcnc_obj, NULL, NULL, &lerror);
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 	if (!cdata->jmeta_obj) {
 		if (error && lerror)
 			*error = g_error_copy (lerror);

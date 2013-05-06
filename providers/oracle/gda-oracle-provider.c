@@ -156,7 +156,7 @@ static void gda_oracle_free_cnc_data (OracleConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -300,7 +300,7 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 static void
 gda_oracle_provider_init (GdaOracleProvider *oracle_prv, G_GNUC_UNUSED GdaOracleProviderClass *klass)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		InternalStatementItem i;
@@ -318,7 +318,7 @@ gda_oracle_provider_init (GdaOracleProvider *oracle_prv, G_GNUC_UNUSED GdaOracle
 	/* meta data init */
 	_gda_oracle_provider_meta_init ((GdaServerProvider*) oracle_prv);
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 GType
@@ -327,7 +327,7 @@ gda_oracle_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaOracleProviderClass),
 			(GBaseInitFunc) NULL,
@@ -339,10 +339,10 @@ gda_oracle_provider_get_type (void)
 			(GInstanceInitFunc) gda_oracle_provider_init,
 			NULL
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaOracleProvider", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;

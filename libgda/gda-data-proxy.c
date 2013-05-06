@@ -104,9 +104,9 @@ static void fetch_current_cached_changes (GdaDataProxy *proxy);
 static GObjectClass  *parent_class = NULL;
 extern GdaAttributesManager *gda_holder_attributes_manager;
 
-static GStaticMutex parser_mutex = G_STATIC_MUTEX_INIT;
+static GMutex parser_mutex;
 static GdaSqlParser *internal_parser;
-static GStaticMutex provider_mutex = G_STATIC_MUTEX_INIT;
+static GMutex provider_mutex;
 static GdaVirtualProvider *virtual_provider = NULL;
 
 /* signals */
@@ -513,7 +513,7 @@ gda_data_proxy_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaDataProxyClass),
 			(GBaseInitFunc) NULL,
@@ -533,12 +533,12 @@ gda_data_proxy_get_type (void)
 			NULL
 		};
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataProxy", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -722,9 +722,9 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 							       "set to TRUE to keep track of changes even when the proxied data model is changed", FALSE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
-	g_static_mutex_lock (&parser_mutex);
+	g_mutex_lock (&parser_mutex);
 	internal_parser = gda_sql_parser_new ();
-	g_static_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&parser_mutex);
 }
 
 static void
@@ -3061,10 +3061,10 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	if (!stmt)
 		goto clean_previous_filter;
 
-	g_static_mutex_lock (&provider_mutex);
+	g_mutex_lock (&provider_mutex);
 	if (!virtual_provider)
 		virtual_provider = gda_vprovider_data_model_new ();
-	g_static_mutex_unlock (&provider_mutex);
+	g_mutex_unlock (&provider_mutex);
 
 	/* Force direct data access where proxy_row <=> absolute_row */
 	proxy->priv->force_direct_mapping = TRUE;
@@ -3242,9 +3242,9 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		sql = g_strdup_printf (FILTER_SELECT_WHERE "%s", filter_expr);
 	g_free (tmp);
 
-	g_static_mutex_lock (&parser_mutex);
+	g_mutex_lock (&parser_mutex);
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, &ptr, NULL);
-	g_static_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&parser_mutex);
 	g_free (sql);
 	if (ptr || !stmt || (gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_SELECT)) {
 		/* also catches problems with multiple statements in @filter_expr, such as SQL code injection */

@@ -148,7 +148,7 @@ enum MutexRecStatus {
 static enum MutexRecStatus impl_status = UNKNOWN;
 
 #ifdef GDA_DEBUG_MUTEX
-static GStaticMutex debug_mutex = G_STATIC_MUTEX_INIT;
+static GMutex debug_mutex;
 
 typedef enum {
 	USAGE_LOCK,
@@ -178,9 +178,9 @@ struct _GdaMutex {
 void
 gda_mutex_debug (GdaMutex *mutex, gboolean debug)
 {
-	g_static_mutex_lock (&debug_mutex);
+	g_mutex_lock (&debug_mutex);
 	mutex->debug = debug;
-	g_static_mutex_unlock (&debug_mutex);
+	g_mutex_unlock (&debug_mutex);
 }
 
 void
@@ -193,7 +193,7 @@ gda_mutex_dump_usage (GdaMutex *mutex, FILE *stream)
 	else
 		st = stdout;
 
-	g_static_mutex_lock (&debug_mutex);
+	g_mutex_lock (&debug_mutex);
 	if (mutex->debug) {
 		g_fprintf (st, "%s (mutex=>%p): locked&unlocked %d times\n", __FUNCTION__, mutex,
 			   mutex->nb_locked_unlocked);
@@ -210,13 +210,13 @@ gda_mutex_dump_usage (GdaMutex *mutex, FILE *stream)
 			g_fprintf (st, "\t------ END GdaMutex %p usage\n", mutex);
 		}
 	}
-	g_static_mutex_unlock (&debug_mutex);
+	g_mutex_unlock (&debug_mutex);
 }
 
 static void
 gda_mutex_usage_locked (GdaMutex *mutex)
 {
-	g_static_mutex_lock (&debug_mutex);
+	g_mutex_lock (&debug_mutex);
 
 	if (mutex->debug) {
 		GdaMutexUsage usage;
@@ -238,14 +238,14 @@ gda_mutex_usage_locked (GdaMutex *mutex)
 
 		g_array_prepend_val (mutex->usages, usage);
 	}
-	g_static_mutex_unlock (&debug_mutex);
+	g_mutex_unlock (&debug_mutex);
 	gda_mutex_dump_usage (mutex, NULL);
 }
 
 static void
 gda_mutex_usage_unlocked (GdaMutex *mutex)
 {
-	g_static_mutex_lock (&debug_mutex);
+	g_mutex_lock (&debug_mutex);
 	if (mutex->debug) {
 		void *array[FRAMES_SIZE];
 		size_t size;
@@ -291,7 +291,7 @@ gda_mutex_usage_unlocked (GdaMutex *mutex)
 		}
 		free (strings);
 	}
-	g_static_mutex_unlock (&debug_mutex);
+	g_mutex_unlock (&debug_mutex);
 	gda_mutex_dump_usage (mutex, NULL);
 }
 
@@ -310,9 +310,9 @@ GdaMutex*
 gda_mutex_new ()
 {
 	if (G_UNLIKELY (impl_status == UNKNOWN)) {
-		static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+		static GMutex init_mutex;
 
-		g_static_mutex_lock (&init_mutex);
+		g_mutex_lock (&init_mutex);
 		if (impl_status == UNKNOWN) {
 			if (!g_thread_supported ()) 
 				impl_status = NON_SUPPORTED;
@@ -333,7 +333,7 @@ gda_mutex_new ()
 #endif
 			}
 		}
-                g_static_mutex_unlock (&init_mutex);
+                g_mutex_unlock (&init_mutex);
 	}
 
 	if (impl_status == NON_SUPPORTED) {

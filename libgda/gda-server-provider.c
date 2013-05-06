@@ -206,7 +206,7 @@ gda_server_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaServerProviderClass),
 			(GBaseInitFunc) NULL,
@@ -219,10 +219,10 @@ gda_server_provider_get_type (void)
 			(GInstanceInitFunc) gda_server_provider_init,
 			0
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -471,10 +471,10 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 				      GdaServerOperationType type, 
 				      GdaSet *options, GError **error)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	static OpReq **op_req_table = NULL;
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (! op_req_table) {
 		op_req_table = g_new0 (OpReq *, GDA_SERVER_OPERATION_LAST);
 
@@ -499,7 +499,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 
 		op_req_table [GDA_SERVER_OPERATION_CREATE_USER] = op_req_CREATE_USER;
 	}
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);

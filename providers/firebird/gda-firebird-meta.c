@@ -214,7 +214,7 @@ static gchar *internal_sql[] = {
  * global static values, and
  * predefined statements' GdaStatement, all initialized in _gda_postgres_provider_meta_init()
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 static GdaSqlParser *internal_parser = NULL;
 static GdaSet       *i_set = NULL;
@@ -228,7 +228,7 @@ static GdaSet       *i_set = NULL;
 void
 _gda_firebird_provider_meta_init (GdaServerProvider *provider)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 
 	if (!internal_stmt) {
 		InternalStatementItem i;
@@ -246,7 +246,7 @@ _gda_firebird_provider_meta_init (GdaServerProvider *provider)
 					    "constraint_name", G_TYPE_STRING, "",
 					    "field_name", G_TYPE_STRING, ""
 					    , "char_set_name", G_TYPE_STRING, "");
-		g_static_mutex_unlock (&init_mutex);
+		g_mutex_unlock (&init_mutex);
 	
 		/* initialize static values here */
 		/*
@@ -256,7 +256,7 @@ _gda_firebird_provider_meta_init (GdaServerProvider *provider)
 	
 	}
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 gboolean

@@ -109,7 +109,7 @@ gda_report_rml_document_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaReportRmlDocumentClass),
 			(GBaseInitFunc) NULL,
@@ -122,10 +122,10 @@ gda_report_rml_document_get_type (void)
 			0
 		};
 		
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_REPORT_DOCUMENT, "GdaReportRmlDocument", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -189,13 +189,13 @@ gda_report_rml_document_new (GdaReportEngine *engine)
 static gboolean
 gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filename, GError **error)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	static gchar *converter = NULL;
 
 	g_return_val_if_fail (GDA_IS_REPORT_RML_DOCUMENT (doc), FALSE);
 	g_return_val_if_fail (filename && *filename, FALSE);
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (!converter) {
 		converter = g_find_program_in_path ("trml2html.py");
 		if (!converter) {
@@ -208,11 +208,11 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 		if (!converter) {
 			g_set_error (error, 0, 0,
 				     _("Could not find the '%s' program"), "trml2html.py");
-			g_static_mutex_unlock (&init_mutex);
+			g_mutex_unlock (&init_mutex);
 			return FALSE;
 		}
 	}
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 	return _gda_report_document_run_converter_path (doc, filename, converter, "trml2html", error);
 }
@@ -220,13 +220,13 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 static gboolean
 gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filename, GError **error)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	static gchar *converter = NULL;
 
 	g_return_val_if_fail (GDA_IS_REPORT_RML_DOCUMENT (doc), FALSE);
 	g_return_val_if_fail (filename && *filename, FALSE);
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (!converter) {
 		converter = g_find_program_in_path ("trml2pdf.py");
 		if (!converter) {
@@ -239,11 +239,11 @@ gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filenam
 		if (!converter) {
 			g_set_error (error, 0, 0,
 				     _("Could not find the '%s' program"), "trml2pdf.py");
-			g_static_mutex_unlock (&init_mutex);
+			g_mutex_unlock (&init_mutex);
 			return FALSE;
 		}
 	}
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 
 	return _gda_report_document_run_converter_path (doc, filename, converter, "trml2pdf", error);
 }

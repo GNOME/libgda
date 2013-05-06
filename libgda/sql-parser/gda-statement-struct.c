@@ -55,10 +55,10 @@ gda_sql_error_quark (void)
 GdaSqlStatementContentsInfo *
 gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GdaSqlStatementContentsInfo **contents = NULL;
 
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!contents) {
 		contents = g_new0 (GdaSqlStatementContentsInfo *, GDA_SQL_STATEMENT_NONE);
 
@@ -75,7 +75,7 @@ gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 		contents [GDA_SQL_STATEMENT_ROLLBACK_SAVEPOINT] = _gda_sql_statement_rollback_savepoint_get_infos ();
 		contents [GDA_SQL_STATEMENT_DELETE_SAVEPOINT] = _gda_sql_statement_delete_savepoint_get_infos ();
 	}
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	return contents[type];
 }

@@ -179,7 +179,7 @@ static gchar * firebird_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *c
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -297,7 +297,7 @@ gda_firebird_provider_class_init (GdaFirebirdProviderClass *klass)
 static void
 gda_firebird_provider_init (GdaFirebirdProvider *firebird_prv, GdaFirebirdProviderClass *klass)
 {
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (!internal_stmt) {
 		InternalStatementItem i;
 		GdaSqlParser *parser;
@@ -314,7 +314,7 @@ gda_firebird_provider_init (GdaFirebirdProvider *firebird_prv, GdaFirebirdProvid
 	/* meta data init */
 	_gda_firebird_provider_meta_init ((GdaServerProvider*) firebird_prv);
 
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 GType
@@ -323,7 +323,7 @@ gda_firebird_provider_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static GTypeInfo info = {
 			sizeof (GdaFirebirdProviderClass),
 			(GBaseInitFunc) NULL,
@@ -334,7 +334,7 @@ gda_firebird_provider_get_type (void)
 			0,
 			(GInstanceInitFunc) gda_firebird_provider_init
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 #ifdef FIREBIRD_EMBED
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaFirebirdProviderEmbed", &info, 0);
@@ -342,7 +342,7 @@ gda_firebird_provider_get_type (void)
 			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaFirebirdProvider", &info, 0);
 #endif
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;

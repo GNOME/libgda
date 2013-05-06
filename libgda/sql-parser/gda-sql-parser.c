@@ -117,7 +117,7 @@ gda_sql_parser_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaSqlParserClass),
 			(GBaseInitFunc) NULL,
@@ -137,12 +137,12 @@ gda_sql_parser_get_type (void)
                         NULL
                 };
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlParser", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }
@@ -907,12 +907,12 @@ str_casehash (gconstpointer v)
 static gint
 keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GHashTable *keywords = NULL;
 	gint type;
 	gchar oldc;
 
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!keywords) {
 		/* if keyword begins with a number, it is the GdaSqlParserFlavour to which it only applies:
 		* for example "4start" would refer to the START keyword for PostgreSQL only */
@@ -997,7 +997,7 @@ keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 		g_hash_table_insert (keywords, "work", GINT_TO_POINTER (L_TRANSACTION));
 		g_hash_table_insert (keywords, "write", GINT_TO_POINTER (L_WRITE));
 	}
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	oldc = str[len];
 	str[len] = 0;

@@ -106,7 +106,7 @@ gda_data_access_wrapper_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaDataAccessWrapperClass),
 			(GBaseInitFunc) NULL,
@@ -126,12 +126,12 @@ gda_data_access_wrapper_get_type (void)
 			NULL
 		};
 
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0) {
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataAccessWrapper", &info, 0);
 			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
 		}
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }

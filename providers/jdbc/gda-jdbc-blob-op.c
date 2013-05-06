@@ -51,7 +51,7 @@ gda_jdbc_blob_op_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
+		static GMutex registering;
 		static const GTypeInfo info = {
 			sizeof (GdaJdbcBlobOpClass),
 			(GBaseInitFunc) NULL,
@@ -64,10 +64,10 @@ gda_jdbc_blob_op_get_type (void)
 			(GInstanceInitFunc) gda_jdbc_blob_op_init,
 			0
 		};
-		g_static_mutex_lock (&registering);
+		g_mutex_lock (&registering);
 		if (type == 0)
 			type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaJdbcBlobOp", &info, 0);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 	return type;
 }

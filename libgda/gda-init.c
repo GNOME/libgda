@@ -123,15 +123,15 @@ gda_locale_changed (void)
 void
 gda_init (void)
 {
-	static GStaticMutex init_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex init_mutex;
 	static gboolean initialized = FALSE;
 
 	GType type;
 	gchar *file;
 
-	g_static_mutex_lock (&init_mutex);
+	g_mutex_lock (&init_mutex);
 	if (initialized) {
-		g_static_mutex_unlock (&init_mutex);
+		g_mutex_unlock (&init_mutex);
 		gda_log_error (_("Ignoring attempt to re-initialize GDA library."));
 		return;
 	}
@@ -261,7 +261,7 @@ gda_init (void)
 	g_free (file);
 
 	initialized = TRUE;
-	g_static_mutex_unlock (&init_mutex);
+	g_mutex_unlock (&init_mutex);
 }
 
 /**

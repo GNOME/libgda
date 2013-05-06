@@ -74,13 +74,13 @@ gda_meta_context_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-		static GStaticMutex registering = G_STATIC_MUTEX_INIT;
-		g_static_mutex_lock (&registering);
+		static GMutex registering;
+		g_mutex_lock (&registering);
                 if (type == 0)
 			type = g_boxed_type_register_static ("GdaMetaContext",
 							     (GBoxedCopyFunc) gda_meta_context_copy,
 							     (GBoxedFreeFunc) gda_meta_context_free);
-		g_static_mutex_unlock (&registering);
+		g_mutex_unlock (&registering);
 	}
 
 	return type;
@@ -4117,7 +4117,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 				    const gchar *att_value, GError **error)
 {
 	GdaMetaStoreClass *klass;
-	static GStaticMutex set_mutex = G_STATIC_MUTEX_INIT;
+	static GMutex set_mutex;
 	static GdaSet *set = NULL;
 	gboolean started_transaction = FALSE;
 
@@ -4133,15 +4133,15 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 	gda_mutex_lock (store->priv->mutex);
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
-	g_static_mutex_lock (&set_mutex);
+	g_mutex_lock (&set_mutex);
 	if (!set) {
 		if (!gda_statement_get_parameters (klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], &set, error)) {
-			g_static_mutex_unlock (&set_mutex);
+			g_mutex_unlock (&set_mutex);
 			gda_mutex_unlock (store->priv->mutex);
 			return FALSE;
 		}
 	}
-	g_static_mutex_unlock (&set_mutex);
+	g_mutex_unlock (&set_mutex);
 
 	if (!gda_set_set_holder_value (set, error, "name", att_name)) {
 		gda_mutex_unlock (store->priv->mutex);

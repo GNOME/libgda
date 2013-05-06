@@ -307,11 +307,11 @@ gtype_equal (gconstpointer a, gconstpointer b)
 GdaDataHandler *
 gda_data_handler_get_default (GType for_type)
 {
-	static GStaticMutex mutex = G_STATIC_MUTEX_INIT;
+	static GMutex mutex;
 	static GHashTable *hash = NULL;
 	GdaDataHandler *dh;
 
-	g_static_mutex_lock (&mutex);
+	g_mutex_lock (&mutex);
 	if (!hash) {
 		hash = g_hash_table_new_full (gtype_hash, gtype_equal,
 					      NULL, (GDestroyNotify) g_object_unref);
@@ -339,7 +339,7 @@ gda_data_handler_get_default (GType for_type)
                 g_hash_table_insert (hash, (gpointer) G_TYPE_GTYPE, gda_handler_type_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
 	}
-	g_static_mutex_unlock (&mutex);
+	g_mutex_unlock (&mutex);
 
 	dh = g_hash_table_lookup (hash, (gpointer) for_type);
 	return dh;
