@@ -492,18 +492,23 @@ init_plugins_hash (void)
 	GDir *dir;
 	GError *err = NULL;
 	gchar *plugins_dir;
+	gboolean show_status = FALSE;
 	
 	/* read the plugin directory */
 	plugins_dir = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "plugins", NULL);
-	g_print ("Trying to load plugins in %s...\n", plugins_dir);
+	if (g_getenv ("GDAUI_SHOW_PLUGINS_LOADING"))
+		show_status = TRUE;
+	if (show_status)
+		g_print ("Trying to load plugins in %s...\n", plugins_dir);
 	dir = g_dir_open (plugins_dir, 0, NULL);
 	if (!dir) {
 		g_free (plugins_dir);
 		plugins_dir = g_strdup (PLUGINSDIR);
-		g_print ("Trying to load plugins in %s...\n", plugins_dir);
+		if (show_status)
+			g_print ("Trying to load plugins in %s...\n", plugins_dir);
 		dir = g_dir_open (plugins_dir, 0, NULL);
 	}
-	if (!dir)
+	if (!dir && show_status)
 		g_warning (_("Could not open plugins directory, no plugin loaded."));
 	else {
 		const gchar *name;
@@ -531,11 +536,13 @@ init_plugins_hash (void)
 
 			g_module_symbol (handle, "plugin_init", (gpointer*) &plugin_init);
 			if (plugin_init) {
-				g_print (_("Loading file %s...\n"), path);
+				if (show_status)
+					g_print (_("Loading file %s...\n"), path);
 				plugins = plugin_init (&err);
 				if (err) {
-					g_message (_("Plugins load warning: %s"),
-						   err->message ? err->message : _("No detail"));
+					if (show_status)
+						g_message (_("Plugins load warning: %s"),
+							   err->message ? err->message : _("No detail"));
 					if (err)
 						g_error_free (err);
 					err = NULL;
@@ -547,13 +554,15 @@ init_plugins_hash (void)
 					
 					plugin = (GdauiPlugin *)(list->data);
 					g_hash_table_insert (hash, plugin->plugin_name, plugin);
-					g_print ("  - loaded %s (%s):", plugin->plugin_name,
-						 plugin->plugin_descr);
-					if (plugin->entry_create_func)
-						g_print (" Entry");
-					if (plugin->cell_create_func)
-						g_print (" Cell");
-					g_print ("\n");
+					if (show_status) {
+						g_print ("  - loaded %s (%s):", plugin->plugin_name,
+							 plugin->plugin_descr);
+						if (plugin->entry_create_func)
+							g_print (" Entry");
+						if (plugin->cell_create_func)
+							g_print (" Cell");
+						g_print ("\n");
+					}
 					plugin->plugin_file = g_strdup (path);
 				}
 				g_slist_free (plugins);

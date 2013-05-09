@@ -390,6 +390,11 @@
 		<link linkend="gda-tree-dump">gda_tree_dump()</link> will dump all the attributes of each
 		node in the tree</para>
 	    </listitem>
+	    <listitem>
+              <para>GDAUI_SHOW_PLUGINS_LOADING: if set, then a trace of Gda UI's plugins loading will be
+		output the first time they are loaded.
+		</para>
+	    </listitem>
 	  </itemizedlist>
 	</para>
       </sect1>
