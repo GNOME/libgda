@@ -3,7 +3,7 @@
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2002 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>
@@ -579,11 +579,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
-#if GLIB_CHECK_VERSION(2,31,7)
 						g_value_set_schar (value, (gchar) i);
-#else
-						g_value_set_char (value, (gchar) i);
-#endif
 				}
 				else if (type == G_TYPE_UCHAR) {
 					gint64 i;

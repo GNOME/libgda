@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
@@ -1150,11 +1150,7 @@ gda_set_new_inline (gint nb, ...)
 		else if (type == GDA_TYPE_USHORT)
 			gda_value_set_ushort (value, va_arg (ap, guint));
 		else if (type == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_value_set_schar (value, va_arg (ap, gint));
-#else
-			g_value_set_char (value, va_arg (ap, int));
-#endif
 		else if (type == G_TYPE_UCHAR)
 			g_value_set_uchar (value, va_arg (ap, guint));
 		else if (type == G_TYPE_FLOAT)
@@ -1258,11 +1254,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 	else if (type == GDA_TYPE_USHORT)
 		gda_value_set_ushort (value, va_arg (ap, guint));
 	else if (type == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_value_set_schar (value, va_arg (ap, gint));
-#else
-		g_value_set_char (value, va_arg (ap, int));
-#endif
 	else if (type == G_TYPE_UCHAR)
 		g_value_set_uchar (value, va_arg (ap, guint));
 	else if (type == G_TYPE_FLOAT)

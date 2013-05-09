@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -862,41 +862,21 @@ aggregate_handle_double (CellData *cdata, gdouble val)
 
 static gboolean
 aggregate_handle_char (CellData *cdata,
-#if GLIB_CHECK_VERSION(2,31,7)
 		       gint8 val
-#else
-		       gchar val
-#endif
 		       )
 {
 	if (cdata->data_value) {
-#if GLIB_CHECK_VERSION(2,31,7)
 		gint8 eval = 0;
-#else
-		gchar eval = 0;
-#endif
 		if (G_VALUE_TYPE (cdata->data_value) == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 			eval = g_value_get_schar (cdata->data_value);
-#else
-			eval = g_value_get_char (cdata->data_value);
-#endif
 		switch (cdata->aggregate) {
 		case GDA_DATA_PIVOT_MIN:
 			if (eval > val)
-#if GLIB_CHECK_VERSION(2,31,7)
 				g_value_set_schar (cdata->data_value, val);
-#else
-				g_value_set_char (cdata->data_value, val);
-#endif
 			break;
 		case GDA_DATA_PIVOT_MAX:
 			if (eval < val)
-#if GLIB_CHECK_VERSION(2,31,7)
 				g_value_set_schar (cdata->data_value, val);
-#else
-				g_value_set_char (cdata->data_value, val);
-#endif
 			break;
 		case GDA_DATA_PIVOT_SUM: {
 			gint tmp;
@@ -906,11 +886,7 @@ aggregate_handle_char (CellData *cdata,
 					     GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_OVERFLOW_ERROR,
 					     "%s", _("Integer overflow"));
 			else
-#if GLIB_CHECK_VERSION(2,31,7)
 				g_value_set_schar (cdata->data_value, (gint8) tmp);
-#else
-				g_value_set_char (cdata->data_value, (gchar) tmp);
-#endif
 			break;
 		}
 		case GDA_DATA_PIVOT_AVG: {
@@ -936,11 +912,7 @@ aggregate_handle_char (CellData *cdata,
 		case GDA_DATA_PIVOT_MAX:
 		case GDA_DATA_PIVOT_SUM:
 			cdata->data_value = gda_value_new (G_TYPE_CHAR);
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_value_set_schar (cdata->data_value, val);
-#else
-			g_value_set_char (cdata->data_value, val);
-#endif
 			break;
 		case GDA_DATA_PIVOT_AVG:
 			cdata->data_value = gda_value_new (G_TYPE_INT64);
@@ -1197,11 +1169,7 @@ aggregate_handle_new_value (CellData *cdata, const GValue *new_value)
 	else if (cdata->gtype == G_TYPE_DOUBLE)
 		return aggregate_handle_double (cdata, g_value_get_double (new_value));
 	else if (cdata->gtype == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 		return aggregate_handle_char (cdata, g_value_get_schar (new_value));
-#else
-		return aggregate_handle_char (cdata, g_value_get_char (new_value));
-#endif
 	else if (cdata->gtype == G_TYPE_UCHAR)
 		return aggregate_handle_uchar (cdata, g_value_get_uchar (new_value));
 	else if (cdata->gtype == GDA_TYPE_SHORT)

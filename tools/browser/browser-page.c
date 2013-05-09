@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -19,15 +19,9 @@
 
 #include "browser-page.h"
 #include "browser-perspective.h"
-#if GLIB_CHECK_VERSION(2,31,7)
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
-#else
-static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
-#define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
-#define MUTEX_UNLOCK() g_static_rec_mutex_unlock(&init_mutex)
-#endif
 static void browser_page_class_init (gpointer g_class);
 
 GType

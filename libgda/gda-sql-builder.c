@@ -2,7 +2,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2009 Johannes Schmid <jhs@gnome.org>
  * Copyright (C) 2009 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
@@ -551,11 +551,7 @@ create_typed_value (GType type, va_list *ap)
 	else if (type == GDA_TYPE_USHORT)
 		gda_value_set_ushort ((v = gda_value_new (GDA_TYPE_USHORT)), va_arg (*ap, guint));
 	else if (type == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_value_set_schar ((v = gda_value_new (G_TYPE_CHAR)), va_arg (*ap, gint));
-#else
-		g_value_set_char ((v = gda_value_new (G_TYPE_CHAR)), va_arg (*ap, gint));
-#endif
 	else if (type == G_TYPE_UCHAR)
 		g_value_set_uchar ((v = gda_value_new (G_TYPE_UCHAR)), va_arg (*ap, guint));
 	else if (type == G_TYPE_FLOAT)

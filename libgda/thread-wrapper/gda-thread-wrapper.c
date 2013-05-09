@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  *
@@ -40,11 +40,7 @@
  * by the worker thread. It is used to avoid creating signal data for threads for which
  * no job is being performed 
  */
-#if GLIB_CHECK_VERSION(2,31,7)
 GPrivate worker_thread_current_queue;
-#else
-GStaticPrivate worker_thread_current_queue = G_STATIC_PRIVATE_INIT;
-#endif
 
 typedef struct _ThreadData ThreadData;
 typedef struct _Job Job;
@@ -52,11 +48,7 @@ typedef struct _SignalSpec SignalSpec;
 typedef struct _Pipe Pipe;
 
 struct _GdaThreadWrapperPrivate {
-#if GLIB_CHECK_VERSION(2,31,7)
 	GRecMutex    rmutex;
-#else
-	GdaMutex    *mutex;
-#endif
 	guint        next_job_id;
 	GThread     *worker_thread;
 	GAsyncQueue *to_worker_thread;
@@ -76,21 +68,12 @@ struct _Pipe {
 	int          fds[2]; /* [0] for reading and [1] for writing */
 	GIOChannel  *ioc;
 
-#if GLIB_CHECK_VERSION(2,31,7)
-	GMutex       mutex;
-#else
-	GMutex      *mutex; /* locks @ref_count */
-#endif
+	GMutex       mutex; /* locks @ref_count */
 	guint        ref_count;
 };
 
-#if GLIB_CHECK_VERSION(2,31,7)
 #define pipe_lock(x) g_mutex_lock(& (((Pipe*)x)->mutex))
 #define pipe_unlock(x) g_mutex_unlock(& (((Pipe*)x)->mutex))
-#else
-#define pipe_lock(x) g_mutex_lock(((Pipe*)x)->mutex);
-#define pipe_unlock(x) g_mutex_unlock(((Pipe*)x)->mutex);
-#endif
 
 static Pipe *
 pipe_ref (Pipe *p)
@@ -117,11 +100,7 @@ pipe_unref (Pipe *p)
 #endif
 		if (p->ref_count == 0) {
 			/* destroy @p */
-#if GLIB_CHECK_VERSION(2,31,7)
 			GMutex *m = &(p->mutex);
-#else
-			GMutex *m = p->mutex;
-#endif
 
 			if (p->ioc)
 				g_io_channel_unref (p->ioc);
@@ -143,12 +122,7 @@ pipe_unref (Pipe *p)
 			g_free (p);
 
 			g_mutex_unlock (m);
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_mutex_clear (m);
-#else
-			g_mutex_free (m);
-#endif
-
 		}
 		else
 			pipe_unlock (p);
@@ -164,11 +138,7 @@ pipe_new (void)
 	Pipe *p;
 
 	p = g_new0 (Pipe, 1);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_init (&(p->mutex));
-#else
-	p->mutex = g_mutex_new ();
-#endif
 	p->ref_count = 1;
 	p->thread = g_thread_self ();
 #ifdef G_OS_WIN32
@@ -204,18 +174,10 @@ static Pipe *
 get_pipe (GdaThreadWrapper *wrapper, GThread *thread)
 {
 	Pipe *p = NULL;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	if (wrapper->priv->pipes_hash)
 		p = g_hash_table_lookup (wrapper->priv->pipes_hash, thread);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	return p;
 }
 
@@ -312,21 +274,12 @@ struct _SignalSpec {
         GdaThreadWrapperCallback callback;
         gpointer                 data;
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	GMutex        mutex;
-#else
-	GMutex       *mutex;
-#endif
 	guint         ref_count;
 };
 
-#if GLIB_CHECK_VERSION(2,31,7)
 #define signal_spec_lock(x) g_mutex_lock(& (((SignalSpec*)x)->mutex))
 #define signal_spec_unlock(x) g_mutex_unlock(& (((SignalSpec*)x)->mutex))
-#else
-#define signal_spec_lock(x) g_mutex_lock(((SignalSpec*)x)->mutex);
-#define signal_spec_unlock(x) g_mutex_unlock(((SignalSpec*)x)->mutex);
-#endif
 
 /*
  * call signal_spec_lock() before calling this function
@@ -337,11 +290,7 @@ signal_spec_unref (SignalSpec *sigspec)
 	sigspec->ref_count --;
 	if (sigspec->ref_count == 0) {
 		signal_spec_unlock (sigspec);
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_mutex_clear (&(sigspec->mutex));
-#else
-		g_mutex_free (sigspec->mutex);
-#endif
 		if (sigspec->instance && (sigspec->signal_id > 0))
 			g_signal_handler_disconnect (sigspec->instance, sigspec->signal_id);
 		if (sigspec->reply_queue)
@@ -384,11 +333,7 @@ static ThreadData *
 get_thread_data (GdaThreadWrapper *wrapper, GThread *thread)
 {
 	ThreadData *td;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, thread);
 	if (!td) {
 		Pipe *p;
@@ -402,11 +347,7 @@ get_thread_data (GdaThreadWrapper *wrapper, GThread *thread)
 		td->notif = pipe_ref (p);
 		g_hash_table_insert (wrapper->priv->threads_hash, thread, td);
 	}
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	return td;
 }
 
@@ -582,19 +523,11 @@ worker_thread_entry_point (GAsyncQueue *to_worker_thread)
 		Job *job;
 		
 		/* pop next job and mark it as being processed */
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_private_set (&worker_thread_current_queue, NULL);
-#else
-		g_static_private_set (&worker_thread_current_queue, NULL, NULL);
-#endif
 		g_async_queue_lock (in);
 		job = g_async_queue_pop_unlocked (in);
 		job->processed = TRUE;
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_private_set (&worker_thread_current_queue, job->reply_queue);
-#else
-		g_static_private_set (&worker_thread_current_queue, job->reply_queue, NULL);
-#endif
 		g_async_queue_unlock (in);
 
 		if (job->cancelled) {
@@ -644,25 +577,15 @@ gda_thread_wrapper_init (GdaThreadWrapper *wrapper, G_GNUC_UNUSED GdaThreadWrapp
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 
 	wrapper->priv = g_new0 (GdaThreadWrapperPrivate, 1);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_init (&(wrapper->priv->rmutex));
-#else
-	wrapper->priv->mutex = gda_mutex_new ();
-#endif
 	wrapper->priv->next_job_id = 1;
 
 	wrapper->priv->threads_hash = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify) thread_data_free);
 
 	wrapper->priv->to_worker_thread = g_async_queue_new ();
-#if GLIB_CHECK_VERSION(2,31,7)
 	wrapper->priv->worker_thread = g_thread_new ("worker",
 						     (GThreadFunc) worker_thread_entry_point,
 						     g_async_queue_ref (wrapper->priv->to_worker_thread)); /* inc. ref for sub thread usage */
-#else
-	wrapper->priv->worker_thread = g_thread_create ((GThreadFunc) worker_thread_entry_point,
-							g_async_queue_ref (wrapper->priv->to_worker_thread), /* inc. ref for sub thread usage */
-							FALSE, NULL);
-#endif
 	
 	wrapper->priv->pipes_hash = NULL;
 
@@ -728,11 +651,7 @@ gda_thread_wrapper_dispose (GObject *object)
 		g_async_queue_unref (wrapper->priv->to_worker_thread);
 		wrapper->priv->worker_thread = NULL; /* side note: don't wait for sub thread to terminate */
 
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_clear (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_free (wrapper->priv->mutex);
-#endif
 
 		if (wrapper->priv->pipes_hash)
 			g_hash_table_destroy (wrapper->priv->pipes_hash);
@@ -879,11 +798,7 @@ gda_thread_wrapper_get_io_channel (GdaThreadWrapper *wrapper)
 	g_return_val_if_fail (wrapper->priv, NULL);
 
 	th = g_thread_self ();
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	p = get_pipe (wrapper, th);
 	if (!p) {
 		p = pipe_new ();
@@ -896,11 +811,7 @@ gda_thread_wrapper_get_io_channel (GdaThreadWrapper *wrapper)
 			g_hash_table_insert (wrapper->priv->pipes_hash, th, p);
 		}
 	}
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	if (p)
 		return p->ioc;
 	else
@@ -924,11 +835,7 @@ gda_thread_wrapper_unset_io_channel (GdaThreadWrapper *wrapper)
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 	g_return_if_fail (wrapper->priv);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	th = g_thread_self ();
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, th);
 	if (td) {
@@ -937,11 +844,7 @@ gda_thread_wrapper_unset_io_channel (GdaThreadWrapper *wrapper)
 		if (p)
 			clean_notifications (wrapper, td);
 	}
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 }
 
 /**
@@ -987,17 +890,9 @@ gda_thread_wrapper_execute (GdaThreadWrapper *wrapper, GdaThreadWrapperFunc func
 	job->type = JOB_TYPE_EXECUTE;
 	job->processed = FALSE;
 	job->cancelled = FALSE;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	job->job_id = wrapper->priv->next_job_id++;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	job->func = func;
 	job->void_func = NULL;
 	job->arg = arg;
@@ -1079,17 +974,9 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 	job->type = JOB_TYPE_EXECUTE;
 	job->processed = FALSE;
 	job->cancelled = FALSE;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	job->job_id = wrapper->priv->next_job_id++;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	job->func = NULL;
 	job->void_func = func;
 	job->arg = arg;
@@ -1151,20 +1038,12 @@ gda_thread_wrapper_cancel (GdaThreadWrapper *wrapper, guint id)
 
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), FALSE);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
 	if (!td) {
 		/* nothing to be done for this thread */
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return FALSE;
 	}
 
@@ -1188,11 +1067,7 @@ gda_thread_wrapper_cancel (GdaThreadWrapper *wrapper, guint id)
 		}
 	}
 	g_async_queue_unlock (wrapper->priv->to_worker_thread);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 
 	return retval;
 }
@@ -1224,17 +1099,9 @@ gda_thread_wrapper_iterate (GdaThreadWrapper *wrapper, gboolean may_block)
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 	g_return_if_fail (wrapper->priv);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	if (!td) {
 		/* nothing to be done for this thread */
 		return;
@@ -1316,17 +1183,9 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 	g_return_val_if_fail (wrapper->priv, NULL);
 	g_return_val_if_fail (exp_id > 0, NULL);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	if (!td) {
 		/* nothing to be done for this thread */
 		return NULL;
@@ -1346,17 +1205,9 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 					    (g_async_queue_length (td->from_worker_thread) == 0) &&
 					    !td->signals_list) {
 						/* remove this ThreadData */
-#if GLIB_CHECK_VERSION(2,31,7)
 						g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-						gda_mutex_lock (wrapper->priv->mutex);
-#endif
 						g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
-#if GLIB_CHECK_VERSION(2,31,7)
 						g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-						gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 					}
 					goto out;
 				}
@@ -1412,19 +1263,11 @@ gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), 0);
 	g_return_val_if_fail (wrapper->priv, 0);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
 	if (!td) {
 		/* nothing to be done for this thread */
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return 0;
 	}
 	
@@ -1435,11 +1278,7 @@ gda_thread_wrapper_get_waiting_size (GdaThreadWrapper *wrapper)
 			size++;
 	}
 	g_async_queue_unlock (wrapper->priv->to_worker_thread);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 	return size;
 }
 
@@ -1462,15 +1301,9 @@ worker_thread_closure_marshal (GClosure *closure,
 		return;
 
 	/* check that the worker thread is working on a job for which job->reply_queue == sigspec->reply_queue */
-#if GLIB_CHECK_VERSION(2,31,7)
 	if (sigspec->private &&
 	    g_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
 		return;
-#else
-	if (sigspec->private &&
-	    g_static_private_get (&worker_thread_current_queue) != sigspec->reply_queue)
-		return;
-#endif
 
 	gsize i;
 	/*
@@ -1606,11 +1439,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 	g_return_val_if_fail (GDA_IS_THREAD_WRAPPER (wrapper), 0);
 	g_return_val_if_fail (wrapper->priv, 0);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 	
 	td = get_thread_data (wrapper, g_thread_self());
 
@@ -1636,11 +1465,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
         sigspec->instance = instance;
         sigspec->callback = callback;
         sigspec->data = data;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_init (&(sigspec->mutex));
-#else
-	sigspec->mutex = g_mutex_new ();
-#endif
 	sigspec->ref_count = 1;
 
 	GClosure *cl;
@@ -1653,11 +1478,7 @@ gda_thread_wrapper_connect_raw (GdaThreadWrapper *wrapper,
 
 	td->signals_list = g_slist_append (td->signals_list, sigspec);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 
 	return sigspec->signal_id;
 }
@@ -1698,11 +1519,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	g_return_if_fail (GDA_IS_THREAD_WRAPPER (wrapper));
 	g_return_if_fail (wrapper->priv);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 
 	td = g_hash_table_lookup (wrapper->priv->threads_hash, g_thread_self());
 	if (!td) {
@@ -1712,11 +1529,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	}
 	if (!td) {
 		g_warning (_("Signal %lu does not exist"), id);
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return;
 	}
 
@@ -1729,11 +1542,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 
 	if (!sigspec) {
 		g_warning (_("Signal does not exist\n"));
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return;
 	}
 
@@ -1758,11 +1567,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 		/* remove this ThreadData */
 		g_hash_table_remove (wrapper->priv->threads_hash, g_thread_self());
 	}
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 }
 
 /**
@@ -1785,31 +1590,19 @@ gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
         g_return_if_fail (wrapper->priv);
 	g_return_if_fail (id > 0);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_lock (wrapper->priv->mutex);
-#endif
 
 	gulong theid = id;
 	old_td = g_hash_table_find (wrapper->priv->threads_hash,
 				    (GHRFunc) find_signal_r_func, &theid);
 	if (!old_td) {
 		g_warning (_("Signal %lu does not exist"), id);
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return;
 	}
 
 	if (old_td->owner == g_thread_self ()) {
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-		gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 		return;
 	}
 
@@ -1829,9 +1622,5 @@ gda_thread_wrapper_steal_signal (GdaThreadWrapper *wrapper, gulong id)
                 }
         }
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(wrapper->priv->rmutex));
-#else
-	gda_mutex_unlock (wrapper->priv->mutex);
-#endif
 }

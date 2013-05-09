@@ -347,9 +347,10 @@
 	      files are shared libraries)</para>
 	    </listitem>
 	    <listitem>
-              <para>LIBGDA_NO_THREADS: if set, then multi threading will be disabled (see the 
+              <para>LIBGDA_NO_THREADS (useless since version 5.2.0): if set, then multi threading will be disabled (see the
 		<link linkend="threads">section about multi threading</link> for more information about
-		&LIBGDA; threads' support).</para>
+		&LIBGDA; threads' support). Please note that this environment variables is not used anymore
+		since version 5.2.0, as threading is always enabled by Glib.</para>
 	    </listitem>
 	    <listitem>
               <para>GDA_SHOW_PROVIDER_LOADING_ERROR: if set, then in case a provider fails to be loaded (usually because

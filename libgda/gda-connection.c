@@ -2,7 +2,7 @@
  * Copyright (C) 2000 - 2001 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Andrew Hill <andru@src.gnome.org>
  * Copyright (C) 2002 Cleber Rodrigues <cleberrrjr@bol.com.br>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
@@ -104,15 +104,9 @@ struct _GdaConnectionPrivate {
 
 	/* multi threading locking */
 	GThread              *unique_possible_thread; /* non NULL => only that thread can use this connection */
-#if GLIB_CHECK_VERSION(2,31,7)
 	GCond                 unique_possible_cond;
 	GMutex                object_mutex;
 	GRecMutex             rmutex;
-#else
-	GCond                *unique_possible_cond;
-	GMutex               *object_mutex;
-	GdaMutex             *mutex;
-#endif
 	/* Asynchronous statement execution */
 	guint                 next_task_id; /* starts at 1 as 0 is an error */
 	GArray               *waiting_tasks; /* array of CncTask pointers to tasks to be executed */
@@ -132,11 +126,7 @@ typedef struct {
 	guint task_id; /* ID assigned by GdaConnection object */
 	guint prov_task_id; /* ID assigned by GdaServerProvider */
 	gboolean being_processed; /* TRUE if currently being processed */
-#if GLIB_CHECK_VERSION(2,31,7)
 	GRecMutex rmutex;
-#else
-	GMutex *mutex;
-#endif
 	GdaStatement *stmt; /* statement to execute */
 	GdaStatementModelUsage model_usage;
 	GType *col_types;
@@ -152,13 +142,8 @@ typedef struct {
 static CncTask *cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 			      GType *col_types, GdaSet *params, gboolean need_last_insert_row);
 static void     cnc_task_free (CncTask *task);
-#if GLIB_CHECK_VERSION(2,31,7)
 #define         cnc_task_lock(task) g_rec_mutex_lock (&((task)->rmutex))
 #define         cnc_task_unlock(task) g_rec_mutex_unlock (&((task)->rmutex))
-#else
-#define         cnc_task_lock(task) g_mutex_lock ((task)->mutex)
-#define         cnc_task_unlock(task) g_mutex_unlock ((task)->mutex)
-#endif
 
 static void add_exec_time_to_object (GObject *obj, GTimer *timer);
 
@@ -498,15 +483,9 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
 	cnc->priv->unique_possible_thread = NULL;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_init (&cnc->priv->object_mutex);
 	g_rec_mutex_init (&cnc->priv->rmutex);
 	g_cond_init (& cnc->priv->unique_possible_cond);
-#else
-	cnc->priv->object_mutex = g_mutex_new ();
-	cnc->priv->mutex = gda_mutex_new ();
-	cnc->priv->unique_possible_cond = NULL;
-#endif
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
@@ -635,17 +614,9 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->cnc_string);
 	g_free (cnc->priv->auth_string);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_cond_clear (& cnc->priv->unique_possible_cond);
 	g_mutex_clear (& cnc->priv->object_mutex);
 	g_rec_mutex_clear (&cnc->priv->rmutex);
-#else
-	if (cnc->priv->unique_possible_cond)
-		g_cond_free (cnc->priv->unique_possible_cond);
-	if (cnc->priv->object_mutex)
-		g_mutex_free (cnc->priv->object_mutex);
-	gda_mutex_free (cnc->priv->mutex);
-#endif
 
 	g_free (cnc->priv);
 	cnc->priv = NULL;
@@ -736,37 +707,17 @@ gda_connection_set_property (GObject *object,
 
                 switch (param_id) {
 		case PROP_THREAD_OWNER:
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_mutex_lock (&cnc->priv->object_mutex);
 			g_rec_mutex_lock (&cnc->priv->rmutex);
-#else
-			g_mutex_lock (cnc->priv->object_mutex);
-			gda_mutex_lock (cnc->priv->mutex);
-#endif
 			cnc->priv->unique_possible_thread = g_value_get_pointer (value);
 #ifdef GDA_DEBUG_CNC_LOCK
 			g_print ("Unique set to %p\n", cnc->priv->unique_possible_thread);
-#endif
-#if GLIB_CHECK_VERSION(2,31,7)
-#ifdef GDA_DEBUG_CNC_LOCK
 			g_print ("Signalling on %p\n", cnc->priv->unique_possible_cond);
 #endif
 			g_cond_broadcast (& cnc->priv->unique_possible_cond);
-#else
-			if (cnc->priv->unique_possible_cond) {
-#ifdef GDA_DEBUG_CNC_LOCK
-				g_print ("Signalling on %p\n", cnc->priv->unique_possible_cond);
-#endif
-				g_cond_broadcast (cnc->priv->unique_possible_cond);
-			}
-#endif
-#if GLIB_CHECK_VERSION(2,31,7)
+
 			g_rec_mutex_unlock (&cnc->priv->rmutex);
 			g_mutex_unlock (&cnc->priv->object_mutex);
-#else
-			gda_mutex_unlock (cnc->priv->mutex);
-			g_mutex_unlock (cnc->priv->object_mutex);
-#endif
 			break;
                 case PROP_DSN: {
 			const gchar *datasource = g_value_get_string (value);
@@ -852,38 +803,22 @@ gda_connection_set_property (GObject *object,
                 case PROP_OPTIONS: {
 			GdaConnectionOptions flags;
 			flags = g_value_get_flags (value);
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_rec_mutex_lock (&cnc->priv->rmutex);
-#else
-			gda_mutex_lock (cnc->priv->mutex);
-#endif
 			_gda_thread_connection_set_data (cnc, NULL);
 			if (cnc->priv->provider_data &&
 			    ((flags & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)) !=
 			     (cnc->priv->options & (~GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE)))) {
 				g_warning (_("Can't set the '%s' property once the connection is opened"),
 					   pspec->name);
-#if GLIB_CHECK_VERSION(2,31,7)
 				g_rec_mutex_unlock (&cnc->priv->rmutex);
-#else
-				gda_mutex_unlock (cnc->priv->mutex);
-#endif
 				return;
 			}
 			cnc->priv->options = flags;
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_rec_mutex_unlock (&cnc->priv->rmutex);
-#else
-			gda_mutex_unlock (cnc->priv->mutex);
-#endif
 			break;
 		}
 		case PROP_META_STORE:
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_rec_mutex_lock (&cnc->priv->rmutex);
-#else
-			gda_mutex_lock (cnc->priv->mutex);
-#endif
 			if (cnc->priv->meta_store) {
 				g_object_unref (cnc->priv->meta_store);
 				cnc->priv->meta_store = NULL;
@@ -898,11 +833,7 @@ gda_connection_set_property (GObject *object,
 					g_object_set (G_OBJECT (cdata->sub_connection), "meta-store",
 						      cnc->priv->meta_store, NULL);
 			}
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_rec_mutex_unlock (&cnc->priv->rmutex);
-#else
-			gda_mutex_unlock (cnc->priv->mutex);
-#endif
 			break;
 		case PROP_IS_THREAD_WRAPPER:
 			g_warning ("This property should not be modified!");
@@ -1088,11 +1019,7 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 		task->params = gda_set_copy (params);
 	task->need_last_insert_row = need_last_insert_row;
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_init (&(task->rmutex));
-#else
-	task->mutex = g_mutex_new ();
-#endif
 
 	return task;
 }
@@ -1100,30 +1027,18 @@ cnc_task_new (guint id, GdaStatement *stmt, GdaStatementModelUsage model_usage, 
 static void
 task_stmt_reset_cb (G_GNUC_UNUSED GdaStatement *stmt, CncTask *task)
 {
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(task->rmutex));
-#else
-	g_mutex_lock (task->mutex);
-#endif
 	g_signal_handlers_disconnect_by_func (task->stmt,
 					      G_CALLBACK (task_stmt_reset_cb), task);
 	g_object_unref (task->stmt);
 	task->stmt = NULL;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(task->rmutex));
-#else
-	g_mutex_unlock (task->mutex);
-#endif
 }
 
 static void
 cnc_task_free (CncTask *task)
 {
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (&(task->rmutex));
-#else
-	g_mutex_lock (task->mutex);
-#endif
 	if (task->stmt) {
 		g_signal_handlers_disconnect_by_func (task->stmt,
 						      G_CALLBACK (task_stmt_reset_cb), task);
@@ -1142,13 +1057,8 @@ cnc_task_free (CncTask *task)
 	if (task->exec_timer)
 		g_timer_destroy (task->exec_timer);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (&(task->rmutex));
 	g_rec_mutex_clear (&(task->rmutex));
-#else
-	g_mutex_unlock (task->mutex);
-	g_mutex_free (task->mutex);
-#endif
 	g_free (task);
 }
 
@@ -1619,22 +1529,6 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 	return cnc;
 }
 
-#if GLIB_CHECK_VERSION(2,31,7)
-/* this is not necessary anymore */
-#else
-typedef struct {
-	gboolean thread_exists;
-	GThread *looked_up_thread;
-} ThreadLookupData;
-
-static void
-all_threads_func (GThread *thread, ThreadLookupData *data)
-{
-	if (thread == data->looked_up_thread)
-		data->thread_exists = TRUE;
-}
-#endif
-
 /**
  * gda_connection_open:
  * @cnc: a #GdaConnection object
@@ -1701,30 +1595,20 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 
 	if (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread &&
 	    (PROV_CLASS (cnc->priv->provider_obj)->limiting_thread != g_thread_self ())) {
-#if GLIB_CHECK_VERSION(2,31,7)
+		/* WARNING:
+		 * Prior to GLib 2.32, this code used to check if the
+		 * PROV_CLASS (cnc->priv->provider_obj)->limiting_thread
+		 * was still active (i.e. not finished) and if so, the
+		 * PROV_CLASS (cnc->priv->provider_obj)->limiting_thread would
+		 * become g_thread_self().
+		 *
+		 * Now, if PROV_CLASS (cnc->priv->provider_obj)->limiting_thread is set and
+		 * if it's not equal to g_thread_self() then an error is returned.
+		 */
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
 			     "%s", _("Provider does not allow usage from this thread"));
 		gda_connection_unlock ((GdaLockable*) cnc);
 		return FALSE;
-#else
-		ThreadLookupData data;
-		data.thread_exists = FALSE;
-		data.looked_up_thread = PROV_CLASS (cnc->priv->provider_obj)->limiting_thread;
-
-		g_thread_foreach ((GFunc) all_threads_func, &data);
-		if (data.thread_exists) {
-			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR,
-				     "%s", _("Provider does not allow usage from this thread"));
-			gda_connection_unlock ((GdaLockable*) cnc);
-			return FALSE;
-		}
-		else {
-			/* the thread which initialized cnc->priv->provider_obj does not exist
-			 * anymore, so we steal ownership of the provider from the current
-			 * thread */
-			PROV_CLASS (cnc->priv->provider_obj)->limiting_thread = g_thread_self ();
-		}
-#endif
 	}
 
 	if (!PROV_CLASS (cnc->priv->provider_obj)->open_connection) {
@@ -2636,11 +2520,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (& cnc->priv->rmutex);
-#else
-	gda_mutex_lock (cnc->priv->mutex);
-#endif
 
 	/* clear external list of events */
 	if (cnc->priv->events_list) {
@@ -2695,11 +2575,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 #ifdef GDA_DEBUG_NO
 	dump_events_array (cnc);
 #endif
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
-#else
-	gda_mutex_unlock (cnc->priv->mutex);
-#endif
 }
 
 /**
@@ -6406,20 +6282,12 @@ prepared_stms_foreach_func (GdaStatement *gda_stmt, G_GNUC_UNUSED GdaPStmt *prep
 static void
 statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
 {
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (& cnc->priv->rmutex);
-#else
-	gda_mutex_lock (cnc->priv->mutex);
-#endif
 
 	g_assert (cnc->priv->prepared_stmts);
 	g_hash_table_remove (cnc->priv->prepared_stmts, stmt);
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
-#else
-	gda_mutex_unlock (cnc->priv->mutex);
-#endif
 }
 
 
@@ -6582,11 +6450,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 	GdaMetaStore *store = NULL;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_lock (& cnc->priv->object_mutex);
-#else
-	g_mutex_lock (cnc->priv->object_mutex);
-#endif
 	if (!cnc->priv->meta_store) {
 		ThreadConnectionData *cdata = NULL;
 		if (cnc->priv->is_thread_wrapper) {
@@ -6604,11 +6468,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 		}
 	}
 	store = cnc->priv->meta_store;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_unlock (& cnc->priv->object_mutex);
-#else
-	g_mutex_unlock (cnc->priv->object_mutex);
-#endif	
 	return store;
 }
 
@@ -6633,56 +6493,29 @@ gda_connection_lock (GdaLockable *lockable)
 {
 	GdaConnection *cnc = (GdaConnection *) lockable;
 	
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (& cnc->priv->rmutex);
-#else
-	gda_mutex_lock (cnc->priv->mutex);
-#endif
 	if (cnc->priv->unique_possible_thread && 
 	    (cnc->priv->unique_possible_thread != g_thread_self ())) {
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (& cnc->priv->rmutex);
 		g_mutex_lock (& cnc->priv->object_mutex);
-#else
-		gda_mutex_unlock (cnc->priv->mutex);
-		g_mutex_lock (cnc->priv->object_mutex);
-#endif
-
-#if GLIB_CHECK_VERSION(2,31,7)
-#else
-		if (!cnc->priv->unique_possible_cond)
-			cnc->priv->unique_possible_cond = g_cond_new ();
-#endif
 
 		while (1) {
 			if (cnc->priv->unique_possible_thread &&
 			    (cnc->priv->unique_possible_thread != g_thread_self ())) {
 #ifdef GDA_DEBUG_CNC_LOCK
 				g_print ("Wainting th %p, now %p (cond %p, mutex%p)\n", g_thread_self(),
-					 cnc->priv->unique_possible_thread, cnc->priv->unique_possible_cond,
+					 cnc->priv->unique_possible_thread, &cnc->priv->unique_possible_cond,
 					 cnc->priv->object_mutex);
 #endif
-#if GLIB_CHECK_VERSION(2,31,7)
 				gint64 end_time;
 				end_time = g_get_monotonic_time () + 5 * G_TIME_SPAN_SECOND;
 				while (! g_cond_wait_until (& cnc->priv->unique_possible_cond,
 							    & cnc->priv->object_mutex, end_time));
-#else
-				g_cond_wait (cnc->priv->unique_possible_cond,
-					     cnc->priv->object_mutex);
-#endif
 			}
-#if GLIB_CHECK_VERSION(2,31,7)
 			else if (g_rec_mutex_trylock (& cnc->priv->rmutex)) {
 				g_mutex_unlock (& cnc->priv->object_mutex);
 				break;
 			}
-#else
-			else if (gda_mutex_trylock (cnc->priv->mutex)) {
-				g_mutex_unlock (cnc->priv->object_mutex);
-				break;
-			}
-#endif
 		}
 	}
 }
@@ -6699,19 +6532,11 @@ gda_connection_trylock (GdaLockable *lockable)
 	gboolean retval;
 	GdaConnection *cnc = (GdaConnection *) lockable;
 
-#if GLIB_CHECK_VERSION(2,31,7)
 	retval = g_rec_mutex_trylock (& cnc->priv->rmutex);
-#else
-	retval = gda_mutex_trylock (cnc->priv->mutex);
-#endif
 	if (retval && cnc->priv->unique_possible_thread &&
 	    (cnc->priv->unique_possible_thread != g_thread_self ())) {
 		retval = FALSE;
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_rec_mutex_unlock (& cnc->priv->rmutex);
-#else
-		gda_mutex_unlock (cnc->priv->mutex);
-#endif
 	}
 	return retval;
 }
@@ -6724,11 +6549,7 @@ static void
 gda_connection_unlock  (GdaLockable *lockable)
 {
 	GdaConnection *cnc = (GdaConnection *) lockable;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
-#else
-	gda_mutex_unlock (cnc->priv->mutex);
-#endif
 }
 
 static gchar *
@@ -7175,19 +6996,11 @@ _gda_thread_connection_data_free (ThreadConnectionData *cdata)
 void
 _gda_thread_connection_set_data (GdaConnection *cnc, ThreadConnectionData *cdata)
 {
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_lock (& cnc->priv->rmutex);
-#else
-	gda_mutex_lock (cnc->priv->mutex);
-#endif
 	if (cnc->priv->th_data)
 		_gda_thread_connection_data_free (cnc->priv->th_data);
 	cnc->priv->th_data = cdata;
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
-#else
-	gda_mutex_unlock (cnc->priv->mutex);
-#endif
 }
 
 ThreadConnectionData *

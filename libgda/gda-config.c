@@ -2,7 +2,7 @@
  * Copyright (C) 2000 Akira Tagoh <tagoh@src.gnome.org>
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
@@ -229,15 +229,9 @@ static void lock_notify_changes (void);
 static void unlock_notify_changes (void);
 #endif
 
-#if GLIB_CHECK_VERSION(2,31,7)
 static GRecMutex gda_rmutex;
 #define GDA_CONFIG_LOCK() g_rec_mutex_lock(&gda_rmutex)
 #define GDA_CONFIG_UNLOCK() g_rec_mutex_unlock(&gda_rmutex)
-#else
-static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
-#define GDA_CONFIG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
-#define GDA_CONFIG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
-#endif
 
 /* GdaServerProvider for SQLite as a shortcut, available
  * even if the SQLite provider is not installed

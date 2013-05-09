@@ -113,9 +113,7 @@ gda_locale_changed (void)
 /**
  * gda_init:
  * 
- * Initializes the GDA library, must be called prior to any Libgda usage. Note that unless the
- * LIBGDA_NO_THREADS environment variable is set (to any value), the GLib thread system will
- * be initialized as well if not yet initialized.
+ * Initializes the GDA library, must be called prior to any Libgda usage.
  *
  * Please note that if you call setlocale() to modify the current locale, you should also
  * call gda_locale_changed() before using Libgda again.
@@ -140,20 +138,6 @@ gda_init (void)
 	bindtextdomain (GETTEXT_PACKAGE, file);
 	g_free (file);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-
-#if GLIB_CHECK_VERSION(2,31,7)
-	/* threading cannot ne disabled */
-#else
-	/* Threading support if possible */
-	if (!getenv ("LIBGDA_NO_THREADS")) { /* Flawfinder: ignore */
-#ifdef G_THREADS_ENABLED
-#ifndef G_THREADS_IMPL_NONE
-		if (! g_thread_supported ())
-			g_thread_init (NULL);
-#endif
-#endif
-	}
-#endif
 
 #if GLIB_CHECK_VERSION(2,36,0)
 #else

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -652,11 +652,7 @@ _gda_oracle_set_value (GValue *value,
 	}
 	case GDA_STYPE_CHAR: {
 		TO_IMPLEMENT; /* test that value fits in */
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_value_set_schar (value, *((gint8*) ora_value->value));
-#else
-		g_value_set_char (value, *((gchar*) ora_value->value));
-#endif
 		break;
 	}
 	case GDA_STYPE_SHORT: {

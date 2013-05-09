@@ -8,7 +8,7 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
@@ -3214,11 +3214,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_USHORT)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, gda_value_get_ushort (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_schar (value));
-#else
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_char (value));
-#endif
 		else if (G_VALUE_TYPE (value) == G_TYPE_UCHAR)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_uchar (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {

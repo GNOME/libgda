@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 Massimo Cora <maxcvs@email.it>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
@@ -515,11 +515,7 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 		else if (type == GDA_TYPE_USHORT)
 			gda_value_set_ushort (value, va_arg (ap, guint));
 		else if (type == G_TYPE_CHAR)
-#if GLIB_CHECK_VERSION(2,31,7)
 			g_value_set_schar (value, va_arg (ap, int));
-#else
-			g_value_set_char (value, va_arg (ap, int));
-#endif
 		else if (type == G_TYPE_UCHAR)
 			g_value_set_uchar (value, va_arg (ap, guint));
 		else if (type == G_TYPE_FLOAT)

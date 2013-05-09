@@ -11,7 +11,7 @@
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
@@ -60,15 +60,9 @@
 #include "csv.h"
 
 extern gchar *gda_lang_locale;
-#if GLIB_CHECK_VERSION(2,31,7)
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
-#else
-static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
-#define MUTEX_LOCK() g_static_rec_mutex_lock(&init_mutex)
-#define MUTEX_UNLOCK() g_static_rec_mutex_unlock(&init_mutex)
-#endif
 static void gda_data_model_class_init (gpointer g_class);
 
 static xmlNodePtr gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 

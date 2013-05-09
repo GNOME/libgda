@@ -130,8 +130,6 @@ gda_threader_init (GdaThreader * thread)
 
 	if (! g_thread_supported()) 
 		g_warning ("You must initialize the multi threads environment using g_thread_init()");
-	if (getenv ("LIBGDA_NO_THREADS"))
-		g_warning ("The LIBGDA_NO_THREADS environment variable has been set, threading not supported");
 
 	thread->priv->next_job = 1;
 	thread->priv->nb_jobs = 0;

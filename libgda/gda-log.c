@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
@@ -36,15 +36,9 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 
-#if GLIB_CHECK_VERSION(2,31,7)
 static GRecMutex gda_rmutex;
 #define GDA_LOG_LOCK() g_rec_mutex_lock(&gda_rmutex)
 #define GDA_LOG_UNLOCK() g_rec_mutex_unlock(&gda_rmutex)
-#else
-static GStaticRecMutex gda_mutex = G_STATIC_REC_MUTEX_INIT;
-#define GDA_LOG_LOCK() g_static_rec_mutex_lock(&gda_mutex)
-#define GDA_LOG_UNLOCK() g_static_rec_mutex_unlock(&gda_mutex)
-#endif
 static gboolean log_enabled = TRUE;
 static gboolean log_opened = FALSE;
 

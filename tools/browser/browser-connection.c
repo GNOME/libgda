@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Murray Cumming <murrayc@murrayc.com>
  *
@@ -117,21 +117,11 @@ my_unlock (GMutex *mutex, gint where)
 	g_print ("tmp UNL %p (th %p)@line %d\n", mutex, g_thread_self(), where);
 }
 
-#if GLIB_CHECK_VERSION(2,31,7)
-#define MUTEX_LOCK(bcnc) g_mutex_lock (&((bcnc)->priv->mstruct_mutex))
-#define MUTEX_UNLOCK(bcnc) g_mutex_unlock (&((bcnc)->priv->mstruct_mutex))
-#else
-#define MUTEX_LOCK(bcnc) my_lock ((bcnc)->priv->p_mstruct_mutex,__LINE__)
-#define MUTEX_UNLOCK(bcnc) my_unlock ((bcnc)->priv->p_mstruct_mutex,__LINE__)
-#endif
+  #define MUTEX_LOCK(bcnc) g_mutex_lock (&((bcnc)->priv->mstruct_mutex))
+  #define MUTEX_UNLOCK(bcnc) g_mutex_unlock (&((bcnc)->priv->mstruct_mutex))
 #else /* GDA_DEBUG_MUTEX */
-#if GLIB_CHECK_VERSION(2,31,7)
-#define MUTEX_LOCK(bcnc) g_mutex_lock (&((bcnc)->priv->mstruct_mutex))
-#define MUTEX_UNLOCK(bcnc) g_mutex_unlock (&((bcnc)->priv->mstruct_mutex))
-#else
-#define MUTEX_LOCK(bcnc) g_mutex_lock ((bcnc)->priv->p_mstruct_mutex)
-#define MUTEX_UNLOCK(bcnc) g_mutex_unlock ((bcnc)->priv->p_mstruct_mutex)
-#endif
+  #define MUTEX_LOCK(bcnc) g_mutex_lock (&((bcnc)->priv->mstruct_mutex))
+  #define MUTEX_UNLOCK(bcnc) g_mutex_unlock (&((bcnc)->priv->mstruct_mutex))
 #endif /* GDA_DEBUG_MUTEX */
 
 /*
@@ -395,11 +385,7 @@ browser_connection_init (BrowserConnection *bcnc)
 	bcnc->priv->parser = NULL;
 	bcnc->priv->variables = NULL;
 	memset (&(bcnc->priv->dsn_info), 0, sizeof (GdaDsnInfo));
-#if GLIB_CHECK_VERSION(2,31,7)
 	g_mutex_init (&bcnc->priv->mstruct_mutex);
-#else
-	bcnc->priv->p_mstruct_mutex = g_mutex_new ();
-#endif
 	bcnc->priv->p_mstruct_list = NULL;
 	bcnc->priv->c_mstruct = NULL;
 	bcnc->priv->mstruct = NULL;
@@ -811,12 +797,7 @@ browser_connection_dispose (GObject *object)
 			g_slist_foreach (bcnc->priv->p_mstruct_list, (GFunc) g_object_unref, NULL);
 			g_slist_free (bcnc->priv->p_mstruct_list);
 		}
-#if GLIB_CHECK_VERSION(2,31,7)
 		g_mutex_clear (&bcnc->priv->mstruct_mutex);
-#else
-		if (bcnc->priv->p_mstruct_mutex)
-			g_mutex_free (bcnc->priv->p_mstruct_mutex);
-#endif
 
 		if (bcnc->priv->cnc)
 			g_object_unref (bcnc->priv->cnc);
