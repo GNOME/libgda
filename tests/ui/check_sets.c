@@ -157,7 +157,7 @@ test_iter (GdaConnection *cnc)
 
 	const gchar *col_ids3[] = {"ref", "category", "name", "price", "wh_stored", NULL};
 	const gchar *col_types3[] = {"string", "int", "string", "gdouble", "int", NULL};
-	const gchar *col_values3[] = {"1", "14", "ACADEMY ACADEMY", "25,990000", "0", NULL};
+	const gchar *col_values3[] = {"1", "14", "ACADEMY ACADEMY", "25.990000", "0", NULL};
 
 	g_assert (gda_data_model_iter_move_next (iter));
 	dump_iter (iter);

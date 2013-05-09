@@ -117,10 +117,14 @@ pkgconfig_DATA = libgda-jdbc-5.0.pc
 doc_files = \
 	doc/structure.dia
 
-EXTRA_DIST = $(xml_in_files) libgda-jdbc-5.0.pc.in \
+EXTRA_DIST = $(xml_in_files) \
+	libgda-jdbc-5.0.pc.in \
+	jdbc-mappings.xml \
+	jdbc.gresource.xml \
 	$(jdbcprov_sources) \
 	$(doc_files) \
 	MANIFEST.MF
+
 DISTCLEANFILES = $(xml_DATA)
 
 
