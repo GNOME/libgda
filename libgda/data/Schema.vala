@@ -44,7 +44,7 @@ namespace GdaData
 				t.connection = connection;
 				t.name = (string) mt.get_value_at (mt.get_column_index ("table_name"), r);
 				t.table_type = 
-						DbTable.type_from_string((string) mt.get_value_at (mt.get_column_index ("table_type"), r));
+						DbTable.TableType.from_string((string) mt.get_value_at (mt.get_column_index ("table_type"), r));
 				t.schema = this;
 				tables.set (t.name, t);
 			}

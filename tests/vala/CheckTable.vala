@@ -414,8 +414,9 @@ namespace Check {
 			}
 			stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
 			return 0;
-*/
+
 		}
+*/
 		public int append () throws Error
 		{
 			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Append...\n");

@@ -502,16 +502,6 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
-		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
-			</return-value>
-			<parameters>
-				<parameter name="str" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
-				</parameter>
-			</parameters>
-		</function>
 		<property name="catalog" writable="1">
 			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
 		</property>
@@ -592,6 +582,16 @@
 		<member name="alias" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_ALIAS" value="6"/>
 		<member name="synonym" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_SYNONYM" value="7"/>
 	</enumeration>
+	<function name="db_table_table_type_from_string" c:identifier="gda_data_db_table_table_type_from_string">
+		<return-value transfer-ownership="full">
+			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+		</return-value>
+		<parameters>
+			<parameter name="str" transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</parameter>
+		</parameters>
+	</function>
 	<interface name="DbRecord" c:type="GdaDataDbRecord" glib:type-name="GdaDataDbRecord" glib:get-type="gda_data_db_record_get_type" glib:type-struct="DbRecordIface">
 		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
