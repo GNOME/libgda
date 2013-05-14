@@ -17,17 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* inclusion guard */
-#ifndef __GDA_SQL_EXPRESSION_PRIVATE_H__
-#define __GDA_SQL_EXPRESSION_PRIVATE_H__
+#include <gda-sql-select.h>
+#include <sql-parser/gda-statement-struct-parts.h>
 
+G_DEFINE_TYPE (GdaSqlSelect, gda_sql_select, G_TYPE_OBJECT);
 
-void               _gda_sql_expression_set_expr       (GdaSqlExpression *expr,
-                                                    const GdaSqlExpr *e);
-const GdaSqlExpr  *_gda_sql_expression_get_expr       (GdaSqlExpression *expr);
+#define GDA_SQL_SELECT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GDA_TYPE_SQL_SELECT, GdaSqlSelectPrivate))
 
-/*
- * Method definitions.
- */
+struct _GdaSqlSelectPrivate
+{
+  GdaSqlStatementSelect  *sel;
+};
 
-#endif /* __GDA_SQL_EXPRESSION_PRIVATE_H__ */
+/* properties */
+enum
+{
+        PROP_0
+};
+
+static void
+gda_sql_select_class_init (GdaSqlSelectClass *klass)
+{
+  g_type_class_add_private (klass, sizeof (GdaSqlSelectPrivate));
+}
+
+static void
+gda_sql_select_init (GdaSqlSelect *self)
+{
+  GdaSqlSelectPrivate *priv;
+
+  self->priv = priv = GDA_SQL_SELECT_GET_PRIVATE (self);
+
+  priv->sel = g_new0 (GdaSqlStatementSelect, 1);
+}
