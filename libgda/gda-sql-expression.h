@@ -74,8 +74,6 @@ GdaSqlExpression  *gda_sql_expression_new             (GdaSqlExpressionType type
 GdaSqlExpression  *gda_sql_expression_new_from_string (const gchar* str);
 gchar             *gda_sql_expression_to_string       (GdaSqlExpression *expr);
 void               gda_sql_expression_check_clean     (GdaSqlExpression *expr);
-void               gda_sql_expression_take_select     (GdaSqlExpression *expr, 
-                                                    GdaStatement *stm);
 
 void               gda_sql_expression_set_value       (GdaSqlExpression *expr,
                                                     const GValue *val);
@@ -104,20 +102,20 @@ GdaSqlSelect      *gda_sql_expression_get_select      (GdaSqlExpression *expr);
 
 void               gda_sql_expression_set_compound    (GdaSqlExpression *expr,
                                                     GdaStatement *compound);
-GdaSqlCompound    *gda_sql_expression_set_compound    (GdaSqlExpression *expr);
+GdaStatement      *gda_sql_expression_get_compound    (GdaSqlExpression *expr);
 
 
 void               gda_sql_expression_set_case_expr   (GdaSqlExpression *expr,
-                                                    GdaSqlExpression *e);
+                                                    GdaSqlExpression *case_expr);
 void               gda_sql_expression_set_case_when   (GdaSqlExpression *expr,
-                                                    const GSList *when);
+                                                    const GSList *when_exprs);
 void               gda_sql_expression_set_case_then   (GdaSqlExpression *expr,
-                                                    const GSList *then);
+                                                    const GSList *then_exprs);
 void               gda_sql_expression_set_case_else   (GdaSqlExpression *expr,
-                                                    const GSList *_else);
+                                                    const GSList *else_exprs);
 
 
 void               gda_sql_expression_set_cast_as     (GdaSqlExpression *expr,
-                                                    const gchar *cast_as);
+                                                    GType cast_as);
 
 #endif /* __GDA_SQL_EXPRESSION_H__ */
