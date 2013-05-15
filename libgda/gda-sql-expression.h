@@ -42,7 +42,7 @@ typedef struct _GdaSqlExpressionPrivate GdaSqlExpressionPrivate;
 
 typedef enum   _GdaSqlExpressionType    GdaSqlExpressionType;
 
-enum {
+typedef enum {
 	GDA_SQL_EXPRESSION_TYPE_VALUE,
 	GDA_SQL_EXPRESSION_TYPE_VARIABLE,
 	GDA_SQL_EXPRESSION_TYPE_FUNCTION,
@@ -51,7 +51,7 @@ enum {
 	GDA_SQL_EXPRESSION_TYPE_COMPOUND,
 	GDA_SQL_EXPRESSION_TYPE_CASE,
 	GDA_SQL_EXPRESSION_TYPE_CAST_AS
-}
+} _GdaSqlExpressionType;
 
 struct _GdaSqlExpression
 {
@@ -70,12 +70,12 @@ struct _GdaSqlExpressionClass
 
 /* used by GDA_TYPE_SQL_EXPRESSION */
 GType              gda_sql_expression_get_type        (void);
-GdaSqlExpression * gda_sql_expression_new             (GdaSqlExpressionType type);
-GdaSqlExpression * gda_sql_expression_new_from_string (const gchar* str);
-gchar*             gda_sql_expression_to_string       (GdaSqlExpression *expr);
+GdaSqlExpression  *gda_sql_expression_new             (GdaSqlExpressionType type);
+GdaSqlExpression  *gda_sql_expression_new_from_string (const gchar* str);
+gchar             *gda_sql_expression_to_string       (GdaSqlExpression *expr);
 void               gda_sql_expression_check_clean     (GdaSqlExpression *expr);
 void               gda_sql_expression_take_select     (GdaSqlExpression *expr, 
-                                                    GdaSqlStatement *stm);
+                                                    GdaStatement *stm);
 
 void               gda_sql_expression_set_value       (GdaSqlExpression *expr,
                                                     const GValue *val);
@@ -98,12 +98,12 @@ void               gda_sql_expression_set_operator_operands (GdaSqlExpression *e
                                                     const GSList *operands);
 
 void               gda_sql_expression_set_select      (GdaSqlExpression *expr,
-                                                    GdaSqlSelect *select);
+                                                    GdaStatement *select);
 GdaSqlSelect      *gda_sql_expression_get_select      (GdaSqlExpression *expr);
 
 
 void               gda_sql_expression_set_compound    (GdaSqlExpression *expr,
-                                                    GdaSqlCompound *compound);
+                                                    GdaStatement *compound);
 GdaSqlCompound    *gda_sql_expression_set_compound    (GdaSqlExpression *expr);
 
 
@@ -119,8 +119,5 @@ void               gda_sql_expression_set_case_else   (GdaSqlExpression *expr,
 
 void               gda_sql_expression_set_cast_as     (GdaSqlExpression *expr,
                                                     const gchar *cast_as);
-/*
- * Method definitions.
- */
 
 #endif /* __GDA_SQL_EXPRESSION_H__ */

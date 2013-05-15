@@ -94,6 +94,7 @@ gda_headers = \
 	gda-statement.h \
 	gda-statement-extra.h \
 	gda-sql-builder.h \
+	gda-sql-expression.h \
 	gda-transaction-status.h \
 	gda-transaction-status-private.h \
 	gda-tree.h \
@@ -153,6 +154,7 @@ gda_sources= \
 	gda-server-provider-extra.c \
 	gda-statement.c \
 	gda-sql-builder.c \
+	gda-sql-expression.c \
 	gda-transaction-status.c \
 	gda-tree.c \
 	gda-tree-mgr-columns.c \

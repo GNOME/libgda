@@ -26,7 +26,8 @@ G_DEFINE_TYPE (GdaSqlExpression, gda_sql_expression, G_TYPE_OBJECT);
 
 struct _GdaSqlExpressionPrivate
 {
-  GdaSqlExpr          *exp;
+  GdaSqlBuilder        *builder;
+  GdaSqlBuilderId      id;
   GdaSqlExpressionType type;
 };
 
@@ -36,8 +37,7 @@ enum
         PROP_0,
         PROP_VALUE,
         PROP_IS_IDENT,
-        PROP_EXPR_TYPE,
-        PROP_FUNCTION,
+        PROP_EXPR_TYPE
 };
 
 static void
@@ -53,5 +53,110 @@ gda_sql_expression_init (GdaSqlExpression *self)
 
   self->priv = priv = GDA_SQL_EXPRESSION_GET_PRIVATE (self);
 
-  priv->exp = gda_sql_expr_new (NULL);
+  priv->builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
+  priv->type = GDA_SQL_EXPRESSION_TYPE_VALUE;
 }
+
+GdaSqlExpression *
+gda_sql_expression_new (GdaSqlExpressionType type)
+{}
+
+GdaSqlExpression*
+gda_sql_expression_new_from_string (const gchar* str)
+{}
+
+gchar*
+gda_sql_expression_to_string (GdaSqlExpression *expr)
+{}
+
+void
+gda_sql_expression_check_clean (GdaSqlExpression *expr)
+{}
+
+void
+gda_sql_expression_take_select (GdaSqlExpression *expr, 
+                                GdaStatement *stm)
+{}
+
+void
+gda_sql_expression_set_value (GdaSqlExpression *expr,
+                              const GValue *val)
+{}
+
+const GValue*
+gda_sql_expression_get_value (GdaSqlExpression *expr)
+{}
+
+
+void
+gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
+                                       const GdaSqlParamSpec *spec)
+{}
+
+GdaSqlParamSpec*
+gda_sql_expression_get_variable_pspec (GdaSqlExpression *expr)
+{}
+
+
+void
+gda_sql_expression_set_function_name (GdaSqlExpression *expr,
+                                      const gchar *name)
+{}
+
+void
+gda_sql_expression_set_function_args (GdaSqlExpression *expr,
+                                      const GSList *args)
+{}
+
+void
+gda_sql_expression_set_operator_type  (GdaSqlExpression *expr,
+                                       GdaSqlOperatorType optype)
+{}
+
+void
+gda_sql_expression_set_operator_operands (GdaSqlExpression *expr,
+                                          const GSList *operands)
+{}
+
+void
+gda_sql_expression_set_select (GdaSqlExpression *expr,
+                               GdaStatement *select)
+{}
+
+GdaSqlSelect*
+gda_sql_expression_get_select (GdaSqlExpression *expr)
+{}
+
+void
+gda_sql_expression_set_compound (GdaSqlExpression *expr,
+                                 GdaStatement *compound)
+{}
+
+GdaSqlCompound*
+gda_sql_expression_set_compound (GdaSqlExpression *expr)
+{}
+
+void
+gda_sql_expression_set_case_expr (GdaSqlExpression *expr,
+                                  GdaSqlExpression *e)
+{}
+
+void
+gda_sql_expression_set_case_when (GdaSqlExpression *expr,
+                                  const GSList *when)
+{}
+
+void
+gda_sql_expression_set_case_then (GdaSqlExpression *expr,
+                                  const GSList *then)
+{}
+
+void
+gda_sql_expression_set_case_else (GdaSqlExpression *expr,
+                                  const GSList *_else)
+{}
+
+void
+gda_sql_expression_set_cast_as (GdaSqlExpression *expr,
+                                const gchar *cast_as)
+{}

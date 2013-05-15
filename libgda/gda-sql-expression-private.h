@@ -22,9 +22,9 @@
 #define __GDA_SQL_EXPRESSION_PRIVATE_H__
 
 
-void               _gda_sql_expression_set_expr       (GdaSqlExpression *expr,
-                                                    const GdaSqlExpr *e);
-const GdaSqlExpr  *_gda_sql_expression_get_expr       (GdaSqlExpression *expr);
+void            _gda_sql_expression_set_builder       (GdaSqlExpression *expr,
+                                                 const GdaSqlBuilder *builder);
+GdaSqlBuilder  *_gda_sql_expression_get_builder       (GdaSqlExpression *expr);
 
 /*
  * Method definitions.

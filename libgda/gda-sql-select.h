@@ -59,8 +59,16 @@ struct _GdaSqlSelectClass
 GType              gda_sql_select_get_type        (void);
 GdaSqlSelect      *gda_sql_select_new             (void);
 
+void               gda_sql_select_set_distinct_expr  (GdaSqlSelect *select,
+                                                    GdaSqlExpression distinct);
+GdaSqlExpression  *gda_sql_select_get_distinct_expr  (GdaSqlSelect *select);
 void               gda_sql_select_set_distinct       (GdaSqlSelect *select,
-                                                    gboolean distinct);
-const GValue      *gda_sql_select_get_distinct       (GdaSqlSelect *select);
+                                                    gboolean is_distinct);
+gboolean           gda_sql_select_get_distinct       (GdaSqlSelect *select);
+
+
+void               gda_sql_select_set_fields       (GdaSqlSelect *select,
+                                                    GSList *fields);
+const GSList      *gda_sql_select_get_fields       (GdaSqlSelect *select);
 
 #endif /* __GDA_SQL_EXPRESSION_H__ */
