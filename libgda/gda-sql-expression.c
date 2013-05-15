@@ -34,10 +34,7 @@ struct _GdaSqlExpressionPrivate
 /* properties */
 enum
 {
-        PROP_0,
-        PROP_VALUE,
-        PROP_IS_IDENT,
-        PROP_EXPR_TYPE
+        PROP_0
 };
 
 static void
@@ -57,10 +54,11 @@ gda_sql_expression_init (GdaSqlExpression *self)
   priv->type = GDA_SQL_EXPRESSION_TYPE_VALUE;
 }
 
-
 /**
  * gda_sql_expression_new:
  * @type: a #GdaSqlExpressionType
+ *
+ * Since: 5.2
  *
  * Returns: (transfer-full): a new #GdaSqlExpression object
  */
@@ -72,6 +70,8 @@ gda_sql_expression_new (GdaSqlExpressionType type)
  * gda_sql_expression_new_from_string:
  * @str: a string describing an expression
  *
+ * Since: 5.2
+ *
  * Returns: (transfer-full): a new #GdaSqlExpression object
  */
 GdaSqlExpression*
@@ -82,6 +82,8 @@ gda_sql_expression_new_from_string (const gchar* str)
  * gda_sql_expression_to_string:
  * @expr: a #GdaSqlExpression
  *
+ * Since: 5.2
+ *
  * Returns: (transfer-full): a new string representing a #GdaSqlExpression
  */
 gchar*
@@ -91,6 +93,8 @@ gda_sql_expression_to_string (GdaSqlExpression *expr)
 /**
  * gda_sql_expression_check_clean:
  * @expr: a #GdaSqlExpression
+ *
+ * Since: 5.2
  *
  */
 void
@@ -104,6 +108,9 @@ gda_sql_expression_check_clean (GdaSqlExpression *expr)
  *
  * Sets @val to be used by a #GdaSqlExpression of type
  * #GDA_SQL_EXPRESSION_TYPE_VALUE
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_value (GdaSqlExpression *expr,
@@ -113,6 +120,8 @@ gda_sql_expression_set_value (GdaSqlExpression *expr,
 /**
  * gda_sql_expression_get_value:
  * @expr: a #GdaSqlExpression
+ *
+ * Since: 5.2
  *
  * Returns: (transfer-none): the #GValue used as an expresion
  */
@@ -126,6 +135,9 @@ gda_sql_expression_get_value (GdaSqlExpression *expr)
  * @spec: a #GdaSqlParamSpec
  *
  * To be used by a #GdaSqlExpression of type #GDA_SQL_EXPRESSION_TYPE_VALUE.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
@@ -138,6 +150,9 @@ gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
  *
  * Returns: (transfer-full): a #GdaSqlParamSpec used by @expr of type
  * #GDA_SQL_EXPRESSION_TYPE_VALUE
+ *
+ * Since: 5.2
+ *
  */
 GdaSqlParamSpec*
 gda_sql_expression_get_variable_pspec (GdaSqlExpression *expr)
@@ -175,7 +190,10 @@ gda_sql_expression_set_function_args (GdaSqlExpression *expr,
  * @optype: a #GdaSqlExpressionType
  *
  * Sets operator's type of a #GdaSqlExpression of type
- * #GDA_SQL_EXPRESSION_TYPE_CONDITION
+ * #GDA_SQL_EXPRESSION_TYPE_CONDITION.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_operator_type  (GdaSqlExpression *expr,
@@ -188,6 +206,8 @@ gda_sql_expression_set_operator_type  (GdaSqlExpression *expr,
  * @operands: (element-type Gda.SqlExpression): a lists of #GdaSqlExpression
  * expresions
  *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_operator_operands (GdaSqlExpression *expr,
@@ -199,6 +219,8 @@ gda_sql_expression_set_operator_operands (GdaSqlExpression *expr,
  * @expr: a #GdaSqlExpression
  * @select: a #GdaStatement to be used as a sub-select expression
  *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_select (GdaSqlExpression *expr,
@@ -208,6 +230,8 @@ gda_sql_expression_set_select (GdaSqlExpression *expr,
 /**
  * gda_sql_expression_get_select:
  * @expr: a #GdaSqlExpression
+ *
+ * Since: 5.2
  *
  * Returns: a #GdaStatement of type #GDA_SQL_STATEMENT_SELECT
  */
@@ -222,6 +246,9 @@ gda_sql_expression_get_select (GdaSqlExpression *expr)
  *
  * Uses a #GdaStatement of type #GDA_SQL_STATEMENT_COMPOUND as an expression
  * when @expr is of type #GDA_SQL_EXPRESSION_TYPE_COMPOUND.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_compound (GdaSqlExpression *expr,
@@ -234,6 +261,8 @@ gda_sql_expression_set_compound (GdaSqlExpression *expr,
  *
  * Used to get a #GdaStatement of type #GDA_SQL_STATEMENT_COMPOUND used as an
  * expression when @expr is of type #GDA_SQL_EXPRESSION_TYPE_COMPOUND.
+ *
+ * Since: 5.2
  *
  * Returns: (transfer-none): a #GdaStatement of type #GDA_SQL_STATEMENT_COMPOUND
  */
@@ -248,6 +277,9 @@ gda_sql_expression_get_compound (GdaSqlExpression *expr)
  *
  * Sets a #GdaSqlExpression to be used as the expression by an CASE clausure,
  * when @expr is of type #GDA_SQL_EXPRESSION_TYPE_CASE.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_case_expr (GdaSqlExpression *expr,
@@ -261,6 +293,9 @@ gda_sql_expression_set_case_expr (GdaSqlExpression *expr,
  *
  * Sets the expressions in the WHEN clause of a CASE, when @expr is of type
  * #GDA_SQL_EXPRESSION_TYPE_CASE.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_case_when (GdaSqlExpression *expr,
@@ -274,6 +309,9 @@ gda_sql_expression_set_case_when (GdaSqlExpression *expr,
  *
  * Sets the expressions in the THEN clause of a CASE, when @expr is of type
  * #GDA_SQL_EXPRESSION_TYPE_CASE.
+ *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_case_then (GdaSqlExpression *expr,
@@ -288,6 +326,8 @@ gda_sql_expression_set_case_then (GdaSqlExpression *expr,
  * Sets the expressions in the ELSE clause of a CASE, when @expr is of type
  * #GDA_SQL_EXPRESSION_TYPE_CASE.
  *
+ * Since: 5.2
+ *
  */
 void
 gda_sql_expression_set_case_else (GdaSqlExpression *expr,
@@ -298,6 +338,8 @@ gda_sql_expression_set_case_else (GdaSqlExpression *expr,
  * gda_sql_expression_set_cast_as:
  * @expr: a #GdaSqlExpression
  * @cast_as: a #GType representing a data type to cast to
+ *
+ * Since: 5.2
  *
  */
 void
