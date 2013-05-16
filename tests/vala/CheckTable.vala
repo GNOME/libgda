@@ -378,10 +378,10 @@ namespace Check {
 			field2.fkey = fk;
 			t.set_field (field2);
 		}
-/*
-		public int equal () throws Error
+
+		public int equivalent () throws Error
 		{
-			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Equal...\n");
+			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - equivalent...\n");
 			var t = new Table ();
 			t.name = "created_table";
 			create_table_definition (t);
@@ -402,7 +402,8 @@ namespace Check {
 				stdout.printf (@"Can't access to database "+
 						"table: $(a.name) : ERROR: $(e.message)\n");
 			}
-			if (t != a)	{
+			// FIXME: This must fail- see equivalent implementation
+			if (!t.equivalent (a))	{
 				stdout.printf (@"Fields in PRE-DEFINED table: $(t.name)\n");
 				foreach (DbFieldInfo f in t.fields)
 					stdout.printf (f.to_string () + "\n");
@@ -414,9 +415,45 @@ namespace Check {
 			}
 			stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
 			return 0;
-
 		}
-*/
+
+		public int compatible () throws Error
+		{
+			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - compatible...\n");
+			var t = new Table ();
+			t.name = "created_table";
+			create_table_definition (t);
+			var a = new Table ();
+			a.name = "created_table";
+			a.connection = connection;
+			a.update_meta = true;
+			a.update ();
+			try {
+				var rs = a.records;
+				stdout.printf (@"Records in DATABASE table: $(a.name)\n");
+				foreach (DbRecord r in rs) { stdout.printf (@"$(r)\n"); }
+				stdout.printf (@"Fields in DATABASE table: $(a.name)\n");
+				foreach (DbFieldInfo f2 in a.fields)
+					stdout.printf (f2.to_string () + "\n");
+			}
+			catch (Error e) {
+				stdout.printf (@"Can't access to database "+
+						"table: $(a.name) : ERROR: $(e.message)\n");
+			}
+			if (!t.compatible (a))	{
+				stdout.printf (@"Fields in PRE-DEFINED table: $(t.name)\n");
+				foreach (DbFieldInfo f in t.fields)
+					stdout.printf (f.to_string () + "\n");
+				stdout.printf (@"\nFields in DATABASE table: $(a.name)\n");
+				foreach (DbFieldInfo f2 in a.fields)
+					stdout.printf (f2.to_string () + "\n");
+				stdout.printf (">>>>>>>> FAIL <<<<<<<<<<<\n");
+				return 1;
+			}
+			stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
+			return 0;
+		}
+
 		public int append () throws Error
 		{
 			stdout.printf("\n\n\n>>>>>>>>>>>>>>> NEW TEST: Gda.DbTable - Append...\n");
@@ -588,7 +625,8 @@ namespace Check {
 				failures += app.records ();
 				//failures += app.expression ();
 				failures += app.append ();
-				//failures += app.equal ();
+				failures += app.equivalent ();
+				failures += app.compatible ();
 				failures += app.drop ();
 				//failures += app.save ();
 			}

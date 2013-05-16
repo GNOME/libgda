@@ -36,6 +36,39 @@ namespace GdaData
 		public abstract void         set_field (DbFieldInfo field) throws Error;
 		public abstract DbFieldInfo  get_field (string name) throws Error;
 
+		public virtual  bool compatible (DbTable table)
+		{
+			foreach (DbFieldInfo f in fields) {
+				foreach (DbFieldInfo ft in table.fields) {
+					if (ft.name == f.name) {
+						if (!f.compatible (ft)) {
+							return false;
+							break;
+						}
+					}
+				}
+			}
+			return true;
+		}
+
+		public virtual  bool equivalent (DbTable table)
+		{
+			// At least all fields are located in table and are equivalent
+			foreach (DbFieldInfo f in fields) {
+				bool found = false;
+				foreach (DbFieldInfo ft in table.fields) {
+					if (f.name == ft.name) {
+						found = true;
+						if (!f.equivalent (ft))
+							return false;
+						break;
+					}
+				}
+				if (!found)
+					return false;
+			}
+			return true;
+		}
 
 		public enum TableType {
 			NONE,

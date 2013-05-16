@@ -2,17 +2,17 @@
 /*
  * libgdavala
  * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
- * 
+ *
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * libgda is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -37,6 +37,36 @@ namespace GdaData {
 		// Check clause expression
 //		public abstract DbSqlExpression        check_expression  { get; set; }
 
+		public virtual  bool compatible (DbFieldInfo field)
+		{
+			if (value_type != field.value_type)
+				return false;
+			if (Attribute.CAN_BE_NULL in attributes)
+				if (!(Attribute.CAN_BE_NULL in field.attributes))
+				     return false;
+			return true;
+		}
+
+		public virtual  bool equivalent (DbFieldInfo field)
+		{
+			if (name != field.name)
+				return false;
+			if (value_type != field.value_type)
+				return false;
+			if (Attribute.PRIMARY_KEY in attributes)
+				if (!(Attribute.PRIMARY_KEY in field.attributes))
+					return false;
+			if (Attribute.UNIQUE in attributes)
+				if (!(Attribute.UNIQUE in field.attributes))
+					return false;
+			if (Attribute.CHECK in attributes)
+				if (!(Attribute.CHECK in field.attributes))
+					return false;
+			if (Attribute.CAN_BE_NULL in attributes)
+				if (!(Attribute.CAN_BE_NULL in field.attributes))
+					return false;
+			return true;
+		}
 		// Constrains
 		public abstract ForeignKey  fkey   { get; set; }
 
@@ -259,7 +289,7 @@ namespace GdaData {
 
 					return Rule.NONE;
 				}
-			} 
+			}
 		}
 	}
 }

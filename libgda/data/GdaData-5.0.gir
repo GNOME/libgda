@@ -502,6 +502,46 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="compatible" c:identifier="gda_data_db_table_compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="compatible" invoker="compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="equivalent" c:identifier="gda_data_db_table_equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="equivalent" invoker="equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<property name="catalog" writable="1">
 			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
 		</property>
@@ -567,6 +607,36 @@
 					</parameter>
 					<parameter name="name" transfer-ownership="none">
 						<type name="utf8" c:type="const gchar*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="compatible">
+			<callback name="compatible" c:type="compatible">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="table" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="equivalent">
+			<callback name="equivalent" c:type="equivalent">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="table" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 					</parameter>
 				</parameters>
 			</callback>
@@ -1092,6 +1162,46 @@
 	</function>
 	<interface name="DbFieldInfo" c:type="GdaDataDbFieldInfo" glib:type-name="GdaDataDbFieldInfo" glib:get-type="gda_data_db_field_info_get_type" glib:type-struct="DbFieldInfoIface">
 		<prerequisite name="GObject.Object"/>
+		<method name="compatible" c:identifier="gda_data_db_field_info_compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="compatible" invoker="compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="equivalent" c:identifier="gda_data_db_field_info_equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="equivalent" invoker="equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<method name="to_string" c:identifier="gda_data_db_field_info_to_string">
 			<return-value transfer-ownership="full">
 				<type name="utf8" c:type="gchar*"/>
@@ -1133,6 +1243,36 @@
 	<record name="DbFieldInfoIface" c:type="GdaDataDbFieldInfoIface" glib:is-gtype-struct-for="DbFieldInfo">
 		<field name="parent_iface">
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+		<field name="compatible">
+			<callback name="compatible" c:type="compatible">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="equivalent">
+			<callback name="equivalent" c:type="equivalent">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+			</callback>
 		</field>
 		<field name="to_string">
 			<callback name="to_string" c:type="to_string">
