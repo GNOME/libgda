@@ -28,7 +28,7 @@ struct _GdaSqlExpressionPrivate
 {
   GdaSqlBuilder        *builder;
   GdaSqlBuilderId      id;
-  GdaSqlExpressionType type;
+  GdaSqlExpressionType expr_type;
 };
 
 /* properties */
@@ -51,7 +51,7 @@ gda_sql_expression_init (GdaSqlExpression *self)
   self->priv = priv = GDA_SQL_EXPRESSION_GET_PRIVATE (self);
 
   priv->builder = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
-  priv->type = GDA_SQL_EXPRESSION_TYPE_VALUE;
+  priv->expr_type = GDA_SQL_EXPRESSION_TYPE_VALUE;
 }
 
 /**
@@ -64,19 +64,32 @@ gda_sql_expression_init (GdaSqlExpression *self)
  */
 GdaSqlExpression *
 gda_sql_expression_new (GdaSqlExpressionType type)
-{}
+{
+	GdaSqlExpression *obj;
+	GdaSqlExpressionPrivate *priv;
+	obj = GDA_SQL_EXPRESSION (g_object_new (GDA_TYPE_SQL_EXPRESSION, NULL));
+	priv = GDA_SQL_EXPRESSION_GET_PRIVATE (obj);
+	priv->expr_type = type;
+	return obj;
+}
 
 /**
  * gda_sql_expression_new_from_string:
+ * @etype: a #GdaSqlExpressionType
  * @str: a string describing an expression
+ * @cnc: a #GdaConnection
  *
  * Since: 5.2
  *
  * Returns: (transfer-full): a new #GdaSqlExpression object
  */
 GdaSqlExpression*
-gda_sql_expression_new_from_string (const gchar* str)
-{}
+gda_sql_expression_new_from_string (GdaSqlExpressionType etype,
+                                    const gchar *str,
+                                    GdaConnection *cnc)
+{
+	return NULL;
+}
 
 /**
  * gda_sql_expression_to_string:
@@ -88,7 +101,9 @@ gda_sql_expression_new_from_string (const gchar* str)
  */
 gchar*
 gda_sql_expression_to_string (GdaSqlExpression *expr)
-{}
+{
+	return g_strdup ("GdaSqlExpression");
+}
 
 /**
  * gda_sql_expression_check_clean:
@@ -115,7 +130,14 @@ gda_sql_expression_check_clean (GdaSqlExpression *expr)
 void
 gda_sql_expression_set_value (GdaSqlExpression *expr,
                               const GValue *val)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_VALUE);
+
+	GdaDataHandler *dh = gda_data_handler_get_default (G_VALUE_TYPE (val));
+	priv->expr_id = gda_sql_builder_add_expr_value (priv->builder, dh, val);
+}
 
 /**
  * gda_sql_expression_get_value:
@@ -123,18 +145,30 @@ gda_sql_expression_set_value (GdaSqlExpression *expr,
  *
  * Since: 5.2
  *
- * Returns: (transfer-none): the #GValue used as an expresion
+ * Returns: (transfer-full): the #GValue used as an expresion
  */
-const GValue*
+GValue*
 gda_sql_expression_get_value (GdaSqlExpression *expr)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_VALUE);
+
+	GdaSqlExpr *e = gda_sql_builder_export_expression (priv->builder, priv->expr_id);
+	if (e) {
+		GValue *v = gda_value_copy (e->value_expr);
+		gda_sql_expr_free (e);
+		return v;
+	}
+	return NULL;
+}
 
 /**
  * gda_sql_expression_set_variable_pspec:
  * @expr: a #GdaSqlExpression
  * @spec: a #GdaSqlParamSpec
  *
- * To be used by a #GdaSqlExpression of type #GDA_SQL_EXPRESSION_TYPE_VALUE.
+ * To be used by a #GdaSqlExpression of type #GDA_SQL_EXPRESSION_TYPE_VARIABLE.
  *
  * Since: 5.2
  *
@@ -142,7 +176,12 @@ gda_sql_expression_get_value (GdaSqlExpression *expr)
 void
 gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
                                        const GdaSqlParamSpec *spec)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_VARIABLE);
+	
+}
 
 /**
  * gda_sql_expression_get_variable_pspec:
@@ -156,7 +195,11 @@ gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
  */
 GdaSqlParamSpec*
 gda_sql_expression_get_variable_pspec (GdaSqlExpression *expr)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_VARIABLE);
+}
 
 /**
  * gda_sql_expression_set_function_name:
@@ -169,7 +212,11 @@ gda_sql_expression_get_variable_pspec (GdaSqlExpression *expr)
 void
 gda_sql_expression_set_function_name (GdaSqlExpression *expr,
                                       const gchar *name)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_FUNCTION);
+}
 
 /**
  * gda_sql_expression_set_function_args:
@@ -182,7 +229,11 @@ gda_sql_expression_set_function_name (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_function_args (GdaSqlExpression *expr,
                                       const GSList *args)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_FUNCTION);
+}
 
 /**
  * gda_sql_expression_set_operator_type:
@@ -198,7 +249,11 @@ gda_sql_expression_set_function_args (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_operator_type  (GdaSqlExpression *expr,
                                        GdaSqlOperatorType optype)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CONDITION);
+}
 
 /**
  * gda_sql_expression_set_operator_operands:
@@ -206,13 +261,20 @@ gda_sql_expression_set_operator_type  (GdaSqlExpression *expr,
  * @operands: (element-type Gda.SqlExpression): a lists of #GdaSqlExpression
  * expresions
  *
+ * Sets operator's operands of a #GdaSqlExpression of type
+ * #GDA_SQL_EXPRESSION_TYPE_CONDITION.
+ *
  * Since: 5.2
  *
  */
 void
 gda_sql_expression_set_operator_operands (GdaSqlExpression *expr,
                                           const GSList *operands)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CONDITION);
+}
 
 /**
  * gda_sql_expression_set_select:
@@ -225,7 +287,11 @@ gda_sql_expression_set_operator_operands (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_select (GdaSqlExpression *expr,
                                GdaStatement *select)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_SELECT);
+}
 
 /**
  * gda_sql_expression_get_select:
@@ -237,7 +303,11 @@ gda_sql_expression_set_select (GdaSqlExpression *expr,
  */
 GdaStatement*
 gda_sql_expression_get_select (GdaSqlExpression *expr)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_SELECT);
+}
 
 /**
  * gda_sql_expression_set_compound:
@@ -253,7 +323,11 @@ gda_sql_expression_get_select (GdaSqlExpression *expr)
 void
 gda_sql_expression_set_compound (GdaSqlExpression *expr,
                                  GdaStatement *compound)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_COMPOUND);
+}
 
 /**
  * gda_sql_expression_get_compound:
@@ -268,7 +342,11 @@ gda_sql_expression_set_compound (GdaSqlExpression *expr,
  */
 GdaStatement*
 gda_sql_expression_get_compound (GdaSqlExpression *expr)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_COMPOUND);
+}
 
 /**
  * gda_sql_expression_set_case_expr:
@@ -284,7 +362,11 @@ gda_sql_expression_get_compound (GdaSqlExpression *expr)
 void
 gda_sql_expression_set_case_expr (GdaSqlExpression *expr,
                                   GdaSqlExpression *case_expr)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CASE);
+}
 
 /**
  * gda_sql_expression_set_case_when:
@@ -300,7 +382,11 @@ gda_sql_expression_set_case_expr (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_case_when (GdaSqlExpression *expr,
                                   const GSList *when_exprs)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CASE);
+}
 
 /**
  * gda_sql_expression_set_case_then:
@@ -316,7 +402,11 @@ gda_sql_expression_set_case_when (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_case_then (GdaSqlExpression *expr,
                                   const GSList *then_exprs)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CASE);
+}
 
 /**
  * gda_sql_expression_set_case_else:
@@ -332,7 +422,11 @@ gda_sql_expression_set_case_then (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_case_else (GdaSqlExpression *expr,
                                   const GSList *else_exprs)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CASE);
+}
 
 /**
  * gda_sql_expression_set_cast_as:
@@ -345,4 +439,8 @@ gda_sql_expression_set_case_else (GdaSqlExpression *expr,
 void
 gda_sql_expression_set_cast_as (GdaSqlExpression *expr,
                                 GType cast_as)
-{}
+{
+	g_return_if_fail (GDA_IS_SQL_EXPRESSION (expr));
+	GdaSqlExpressionPrivate *priv = GDA_SQL_EXPRESSION_GET_PRIVATE (expr);
+	g_return_if_fail (priv->expr_type == GDA_SQL_EXPRESSION_TYPE_CAST_AS);
+}

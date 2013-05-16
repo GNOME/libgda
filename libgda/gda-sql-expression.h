@@ -70,14 +70,16 @@ struct _GdaSqlExpressionClass
 
 /* used by GDA_TYPE_SQL_EXPRESSION */
 GType              gda_sql_expression_get_type        (void);
-GdaSqlExpression  *gda_sql_expression_new             (GdaSqlExpressionType type);
-GdaSqlExpression  *gda_sql_expression_new_from_string (const gchar* str);
+GdaSqlExpression  *gda_sql_expression_new             (GdaSqlExpressionType etype);
+GdaSqlExpression  *gda_sql_expression_new_from_string (GdaSqlExpressionType etype,
+                                                    const gchar* str,
+                                                    GdaConnection *cnc);
 gchar             *gda_sql_expression_to_string       (GdaSqlExpression *expr);
 void               gda_sql_expression_check_clean     (GdaSqlExpression *expr);
 
 void               gda_sql_expression_set_value       (GdaSqlExpression *expr,
                                                     const GValue *val);
-const GValue      *gda_sql_expression_get_value       (GdaSqlExpression *expr);
+GValue      *gda_sql_expression_get_value       (GdaSqlExpression *expr);
 
 
 void               gda_sql_expression_set_variable_pspec (GdaSqlExpression *expr,
