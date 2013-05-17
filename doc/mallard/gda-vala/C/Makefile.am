@@ -6,6 +6,7 @@ DOC_PAGES = \
 	index.page \
 	interfaces.page \
 	db-table-interface.page \
+	db-field-info-interface.page \
 	record-class.page \
 	table-class.page
 

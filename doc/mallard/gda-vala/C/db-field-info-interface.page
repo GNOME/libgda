@@ -36,18 +36,18 @@
 			This codes checks for compatibility between two table's fields definition.
 			</desc>
 			<code mime="text/x-c++src">
-			Table a = new Table ();
-			a.name = "user2"; // set to a database's table name
-			a.connection = connection;
-			a.update (); // Get definition from database metadata
-			Table b = new Table ();
-			b.name = "users"; // set to a database's table name
-			b.connection = connection;
-			b.update (); // Get definition from database metadata
-			var aid = a.get_field ("id");
-			var bid = b.get_field ("id");
-			if (aid.compatible (bid))
-				stdout.printf (@"You can copy data from field  $(aid.name) to table $(bid.name)");
+Table a = new Table ();
+a.name = "user2"; // set to a database's table name
+a.connection = connection;
+a.update (); // Get definition from database metadata
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+var aid = a.get_field ("id");
+var bid = b.get_field ("id");
+if (aid.compatible (bid))
+	stdout.printf (@"You can copy data from field  $(aid.name) to table $(bid.name)");
 			</code>
 		</listing>
   </section>
@@ -71,20 +71,20 @@
 		defined in DbFieldInfo interface.</p>
 		<listing>
 			<desc>
-			This codes checks for equivalency between two tables.
+			This codes checks for equivalency between a template and a database field.
 			</desc>
 			<code mime="text/x-c++src">
-			Table a = new Table ();
-			a.name = "pre-defined";
-			create_definition (a); // See at Table class to see how define a table
-			Table b = new Table ();
-			b.name = "users"; // set to a database's table name
-			b.connection = connection;
-			b.update (); // Get definition from database metadata
-			aid = a.get_field ("id");
-			bid = b.get_field ("id");
-			if (aid.equivalent (bid))
-				stdout.printf (@"Database field $(bid.name) is based on template field $(aid.name)");
+Table a = new Table ();
+a.name = "pre-defined";
+create_definition (a); // See at Table class to see how define a table
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+aid = a.get_field ("id");
+bid = b.get_field ("id");
+if (aid.equivalent (bid))
+	stdout.printf (@"Database field $(bid.name) is based on template field $(aid.name)");
 			</code>
 		</listing>
   </section>

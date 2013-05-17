@@ -35,20 +35,20 @@
 		<listing>
 			<desc>
 			This codes checks for compatibility between two tables.
-			<code>create_definition()</code> is user defined method to initiate table
-			a to add fiedls that will be used to check compatibility.
+			<code>create_definition()</code> is a user defined method to initiate a
+			table by adding fields definitions that will be used template.
 			</desc>
 			<code mime="text/x-c++src">
-			Table a = new Table ();
-			a.name = "user2"; // set to a database's table name
-			a.connection = connection;
-			a.update (); // Get definition from database metadata
-			Table b = new Table ();
-			b.name = "users"; // set to a database's table name
-			b.connection = connection;
-			b.update (); // Get definition from database metadata
-			if (a.compatible (b))
-				stdout.printf (@"You can copy data from table $(a.name) to table $(b.name)");
+Table a = new Table ();
+a.name = "user2"; // set to a database's table name
+a.connection = connection;
+a.update (); // Get definition from database metadata
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+if (a.compatible (b))
+	stdout.printf (@"You can copy data from table $(a.name) to table $(b.name)");
 			</code>
 		</listing>
   </section>
@@ -72,15 +72,15 @@
 			This codes checks for equivalency between two tables.
 			</desc>
 			<code mime="text/x-c++src">
-			Table a = new Table ();
-			a.name = "pre-defined";
-			create_definition (a); // See at Table class to see how define a table
-			Table b = new Table ();
-			b.name = "users"; // set to a database's table name
-			b.connection = connection;
-			b.update (); // Get definition from database metadata
-			if (a.equivalent (b))
-				stdout.printf (@"Database table $(b.name) is based on template table $(a.name)");
+Table a = new Table ();
+a.name = "pre-defined";
+create_definition (a); // See at Table class to see how define a table
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+if (a.equivalent (b))
+	stdout.printf (@"Database table $(b.name) is based on template table $(a.name)");
 			</code>
 		</listing>
   </section>
