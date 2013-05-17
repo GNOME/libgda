@@ -5,6 +5,7 @@ DOC_PAGES = \
 	enable-vala-extensions.page \
 	index.page \
 	interfaces.page \
+	db-table-interface.page \
 	record-class.page \
 	table-class.page
 

@@ -1,0 +1,87 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="dbtable-interface">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2013-05-16" status="incomplete" />
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <link type="topic" xref="index" />
+  </info>
+
+  <title>
+    DbTable Interface
+  </title>
+  <p>
+  This interface is used to describe and provide common implementations to any 
+  table in a database.
+  </p>
+  <section id="dbtable-compatible">
+		<title>Check for tables compatibility</title>
+		<p>Table compatibility, as defined in Gda Vala Extensions, is a set of tests
+		to garanty one table is able to copy data to another.</p>
+		<p>The following tests are performed when <code>A.compatible(B)</code>
+		is called:</p>
+		<list type="lower-alpha">
+			<item><p>Fields in table A are located in table B</p></item>
+			<item><p>Fields in table A are compatible with the one in table B</p></item>
+		</list>
+		<p>Field compatibility are performed by <code>compatible()</code> method 
+		defined in DbFieldInfo interface.</p>
+		<listing>
+			<desc>
+			This codes checks for compatibility between two tables.
+			<code>create_definition()</code> is user defined method to initiate table
+			a to add fiedls that will be used to check compatibility.
+			</desc>
+			<code mime="text/x-c++src">
+			Table a = new Table ();
+			a.name = "user2"; // set to a database's table name
+			a.connection = connection;
+			a.update (); // Get definition from database metadata
+			Table b = new Table ();
+			b.name = "users"; // set to a database's table name
+			b.connection = connection;
+			b.update (); // Get definition from database metadata
+			if (a.compatible (b))
+				stdout.printf (@"You can copy data from table $(a.name) to table $(b.name)");
+			</code>
+		</listing>
+  </section>
+  <section id="dbtable-equivalent">
+		<title>Check for tables equivalent</title>
+		<p>Table equivalency, as defined in Gda Vala Extensions, is a set of tests
+		to verify that most important parts of a hard coded table (template) 
+		definition are present in other table. Then is recomended to check
+		equivalency of a hard coded definition, agains a database table that
+		had been updated using <code>update()</code> method.</p>
+		<p>The following tests are performed when <code>A.equivalent(B)</code>
+		is called:</p>
+		<list type="lower-alpha">
+			<item><p>Fields in table A are located in table B</p></item>
+			<item><p>Fields in table A are equivalent with the one in table B</p></item>
+		</list>
+		<p>Field equivalency are performed by <code>equivalent()</code> method 
+		defined in DbFieldInfo interface.</p>
+		<listing>
+			<desc>
+			This codes checks for equivalency between two tables.
+			</desc>
+			<code mime="text/x-c++src">
+			Table a = new Table ();
+			a.name = "pre-defined";
+			create_definition (a); // See at Table class to see how define a table
+			Table b = new Table ();
+			b.name = "users"; // set to a database's table name
+			b.connection = connection;
+			b.update (); // Get definition from database metadata
+			if (a.equivalent (b))
+				stdout.printf (@"Database table $(b.name) is based on template table $(a.name)");
+			</code>
+		</listing>
+  </section>
+</page>
