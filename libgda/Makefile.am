@@ -363,7 +363,7 @@ endif
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(typelibs_DATA) $(gir_DATA)
+CLEANFILES += $(typelibs_DATA)
 endif
 
 if ENABLE_VAPIGEN
@@ -375,7 +375,6 @@ libgda-5.0.vapi: Gda-5.0.gir
 
 vapidir = $(VAPIDIR)
 vapi_DATA=libgda-5.0.vapi
-CLEANFILES += $(vapi_DATA)
 
 EXTRA_DIST += \
 	Gda-5.0.metadata \
