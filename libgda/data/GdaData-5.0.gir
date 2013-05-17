@@ -502,16 +502,46 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
-		<function name="type_from_string" c:identifier="gda_data_db_table_type_from_string">
+		<method name="compatible" c:identifier="gda_data_db_table_compatible">
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
-				<parameter name="str" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
 				</parameter>
 			</parameters>
-		</function>
+		</method>
+		<virtual-method name="compatible" invoker="compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="equivalent" c:identifier="gda_data_db_table_equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="equivalent" invoker="equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="table" transfer-ownership="none">
+					<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<property name="catalog" writable="1">
 			<type name="GdaData.DbCatalog" c:type="GdaDataDbCatalog*"/>
 		</property>
@@ -581,6 +611,36 @@
 				</parameters>
 			</callback>
 		</field>
+		<field name="compatible">
+			<callback name="compatible" c:type="compatible">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="table" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="equivalent">
+			<callback name="equivalent" c:type="equivalent">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+					<parameter name="table" transfer-ownership="none">
+						<type name="GdaData.DbTable" c:type="GdaDataDbTable*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 	</record>
 	<enumeration name="DbTableTableType" c:type="GdaDataDbTableTableType" glib:type-name="GdaDataDbTableTableType" glib:get-type="gda_data_db_table_table_type_get_type">
 		<member name="none" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_NONE" value="0"/>
@@ -592,6 +652,16 @@
 		<member name="alias" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_ALIAS" value="6"/>
 		<member name="synonym" c:identifier="GDA_DATA_DB_TABLE_TABLE_TYPE_SYNONYM" value="7"/>
 	</enumeration>
+	<function name="db_table_table_type_from_string" c:identifier="gda_data_db_table_table_type_from_string">
+		<return-value transfer-ownership="full">
+			<type name="GdaData.DbTableTableType" c:type="GdaDataDbTableTableType"/>
+		</return-value>
+		<parameters>
+			<parameter name="str" transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</parameter>
+		</parameters>
+	</function>
 	<interface name="DbRecord" c:type="GdaDataDbRecord" glib:type-name="GdaDataDbRecord" glib:get-type="gda_data_db_record_get_type" glib:type-struct="DbRecordIface">
 		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>
@@ -1092,16 +1162,56 @@
 	</function>
 	<interface name="DbFieldInfo" c:type="GdaDataDbFieldInfo" glib:type-name="GdaDataDbFieldInfo" glib:get-type="gda_data_db_field_info_get_type" glib:type-struct="DbFieldInfoIface">
 		<prerequisite name="GObject.Object"/>
-		<function name="attribute_from_string" c:identifier="gda_data_db_field_info_attribute_from_string">
+		<method name="compatible" c:identifier="gda_data_db_field_info_compatible">
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
-				<parameter name="str" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
 				</parameter>
 			</parameters>
-		</function>
+		</method>
+		<virtual-method name="compatible" invoker="compatible">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="equivalent" c:identifier="gda_data_db_field_info_equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="equivalent" invoker="equivalent">
+			<return-value transfer-ownership="full">
+				<type name="gboolean" c:type="gboolean"/>
+			</return-value>
+			<parameters>
+				<parameter name="field" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="to_string" c:identifier="gda_data_db_field_info_to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</method>
+		<virtual-method name="to_string" invoker="to_string">
+			<return-value transfer-ownership="full">
+				<type name="utf8" c:type="gchar*"/>
+			</return-value>
+		</virtual-method>
 		<property name="ordinal" writable="1">
 			<type name="gint" c:type="gint"/>
 		</property>
@@ -1134,6 +1244,48 @@
 		<field name="parent_iface">
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
+		<field name="compatible">
+			<callback name="compatible" c:type="compatible">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="equivalent">
+			<callback name="equivalent" c:type="equivalent">
+				<return-value transfer-ownership="full">
+					<type name="gboolean" c:type="gboolean"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+					<parameter name="field" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="to_string">
+			<callback name="to_string" c:type="to_string">
+				<return-value transfer-ownership="full">
+					<type name="utf8" c:type="gchar*"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GdaData.DbFieldInfo" c:type="GdaDataDbFieldInfo*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 	</record>
 	<bitfield name="DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute" glib:type-name="GdaDataDbFieldInfoAttribute" glib:get-type="gda_data_db_field_info_attribute_get_type">
 		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_NONE" value="1"/>
@@ -1145,42 +1297,54 @@
 		<member name="can_be_null" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_CAN_BE_NULL" value="64"/>
 		<member name="auto_increment" c:identifier="GDA_DATA_DB_FIELD_INFO_ATTRIBUTE_AUTO_INCREMENT" value="128"/>
 	</bitfield>
+	<function name="db_field_info_attribute_items" c:identifier="gda_data_db_field_info_attribute_items">
+		<return-value transfer-ownership="full">
+			<array length="0">
+				<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
+			</array>
+		</return-value>
+		<parameters>
+			<parameter name="result_length1" direction="out" transfer-ownership="none">
+				<type name="gint" c:type="gint"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="db_field_info_attribute_to_string" c:identifier="gda_data_db_field_info_attribute_to_string">
+		<return-value transfer-ownership="full">
+			<type name="utf8" c:type="gchar*"/>
+		</return-value>
+	</function>
+	<function name="db_field_info_attribute_from_string" c:identifier="gda_data_db_field_info_attribute_from_string">
+		<return-value transfer-ownership="full">
+			<type name="GdaData.DbFieldInfoAttribute" c:type="GdaDataDbFieldInfoAttribute"/>
+		</return-value>
+		<parameters>
+			<parameter name="str" transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</parameter>
+		</parameters>
+	</function>
 	<record name="DbFieldInfoForeignKey">
 		<constructor name="new" c:identifier="gda_data_db_field_info_foreign_key_new">
 			<return-value transfer-ownership="full">
 				<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
 			</return-value>
 		</constructor>
-		<function name="match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
+		<method name="equal" c:identifier="gda_data_db_field_info_foreign_key_equal">
 			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
-				<parameter name="str" transfer-ownership="none">
-					<type name="utf8" c:type="const gchar*"/>
+				<parameter name="fkey" transfer-ownership="none">
+					<type name="GdaData.DbFieldInfoForeignKey" c:type="GdaDataDbFieldInfoForeignKey*"/>
 				</parameter>
 			</parameters>
-		</function>
-		<function name="rule_from_string" c:identifier="gda_data_db_field_info_foreign_key_rule_from_string">
-			<return-value transfer-ownership="full">
-				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
-			</return-value>
-			<parameters>
-				<parameter name="str" transfer-ownership="none" allow-none="1">
-					<type name="utf8" c:type="const gchar*"/>
-				</parameter>
-			</parameters>
-		</function>
-		<function name="rule_to_string" c:identifier="gda_data_db_field_info_foreign_key_rule_to_string">
+		</method>
+		<method name="to_string" c:identifier="gda_data_db_field_info_foreign_key_to_string">
 			<return-value transfer-ownership="full">
 				<type name="utf8" c:type="gchar*"/>
 			</return-value>
-			<parameters>
-				<parameter name="r" transfer-ownership="none">
-					<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
-				</parameter>
-			</parameters>
-		</function>
+		</method>
 		<property name="name" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
@@ -1206,10 +1370,37 @@
 		</property>
 	</record>
 	<enumeration name="DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch" glib:type-name="GdaDataDbFieldInfoForeignKeyMatch" glib:get-type="gda_data_db_field_info_foreign_key_match_get_type">
-		<member name="full" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_FULL" value="0"/>
-		<member name="partial" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_PARTIAL" value="1"/>
-		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_NONE" value="2"/>
+		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_NONE" value="0"/>
+		<member name="full" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_FULL" value="1"/>
+		<member name="partial" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_MATCH_PARTIAL" value="2"/>
 	</enumeration>
+	<function name="db_field_info_foreign_key_match_items" c:identifier="gda_data_db_field_info_foreign_key_match_items">
+		<return-value transfer-ownership="full">
+			<array length="0">
+				<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+			</array>
+		</return-value>
+		<parameters>
+			<parameter name="result_length1" direction="out" transfer-ownership="none">
+				<type name="gint" c:type="gint"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="db_field_info_foreign_key_match_to_string" c:identifier="gda_data_db_field_info_foreign_key_match_to_string">
+		<return-value transfer-ownership="full">
+			<type name="utf8" c:type="gchar*"/>
+		</return-value>
+	</function>
+	<function name="db_field_info_foreign_key_match_from_string" c:identifier="gda_data_db_field_info_foreign_key_match_from_string">
+		<return-value transfer-ownership="full">
+			<type name="GdaData.DbFieldInfoForeignKeyMatch" c:type="GdaDataDbFieldInfoForeignKeyMatch"/>
+		</return-value>
+		<parameters>
+			<parameter name="str" transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</parameter>
+		</parameters>
+	</function>
 	<enumeration name="DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule" glib:type-name="GdaDataDbFieldInfoForeignKeyRule" glib:get-type="gda_data_db_field_info_foreign_key_rule_get_type">
 		<member name="none" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NONE" value="0"/>
 		<member name="cascade" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_CASCADE" value="1"/>
@@ -1218,6 +1409,33 @@
 		<member name="restrict" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_RESTRICT" value="4"/>
 		<member name="no_action" c:identifier="GDA_DATA_DB_FIELD_INFO_FOREIGN_KEY_RULE_NO_ACTION" value="5"/>
 	</enumeration>
+	<function name="db_field_info_foreign_key_rule_items" c:identifier="gda_data_db_field_info_foreign_key_rule_items">
+		<return-value transfer-ownership="full">
+			<array length="0">
+				<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+			</array>
+		</return-value>
+		<parameters>
+			<parameter name="result_length1" direction="out" transfer-ownership="none">
+				<type name="gint" c:type="gint"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="db_field_info_foreign_key_rule_to_string" c:identifier="gda_data_db_field_info_foreign_key_rule_to_string">
+		<return-value transfer-ownership="full">
+			<type name="utf8" c:type="gchar*"/>
+		</return-value>
+	</function>
+	<function name="db_field_info_foreign_key_rule_from_string" c:identifier="gda_data_db_field_info_foreign_key_rule_from_string">
+		<return-value transfer-ownership="full">
+			<type name="GdaData.DbFieldInfoForeignKeyRule" c:type="GdaDataDbFieldInfoForeignKeyRule"/>
+		</return-value>
+		<parameters>
+			<parameter name="str" transfer-ownership="none" allow-none="1">
+				<type name="utf8" c:type="const gchar*"/>
+			</parameter>
+		</parameters>
+	</function>
 	<interface name="DbSchema" c:type="GdaDataDbSchema" glib:type-name="GdaDataDbSchema" glib:get-type="gda_data_db_schema_get_type" glib:type-struct="DbSchemaIface">
 		<prerequisite name="GObject.Object"/>
 		<prerequisite name="GdaData.DbObject"/>

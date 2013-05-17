@@ -1,0 +1,91 @@
+<page xmlns="http://projectmallard.org/1.0/"
+	 type="topic" id="dbfieldinfo-interface">
+
+  <info>
+    <revision pkgversion="5.2" version="0.1" date="2013-05-16" status="incomplete" />
+    <credit type="author">
+      <name>Daniel Espinosa</name>
+      <email>despinosa@src.gnome.org</email>
+    </credit>
+    <license>
+      <p>Creative Commons Share Alike 3.0</p>
+    </license>
+    <link type="topic" xref="index" />
+  </info>
+
+  <title>
+    DbFieldInfo Interface
+  </title>
+  <p>
+  This interface is used to describe and provide common implementations to any 
+  field in a table. To access values and update values in a database, you must
+  use <code>DbField</code> interface.
+  </p>
+  <section id="dbfieldinfo-compatible">
+		<title>Check for table's field compatibility</title>
+		<p>Table compatibility, as defined in Gda Vala Extensions, is a set of tests
+		to garanty one field is able to copy data to another.</p>
+		<p>The following tests are performed when <code>F.compatible(F2)</code>
+		is called:</p>
+		<list type="lower-alpha">
+			<item><p>Values' type are equal</p></item>
+			<item><p>If F can be null, then F2 must allow null values too</p></item>
+		</list>
+		<listing>
+			<desc>
+			This codes checks for compatibility between two table's fields definition.
+			</desc>
+			<code mime="text/x-c++src">
+Table a = new Table ();
+a.name = "user2"; // set to a database's table name
+a.connection = connection;
+a.update (); // Get definition from database metadata
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+var aid = a.get_field ("id");
+var bid = b.get_field ("id");
+if (aid.compatible (bid))
+	stdout.printf (@"You can copy data from field  $(aid.name) to table $(bid.name)");
+			</code>
+		</listing>
+  </section>
+  <section id="dbfieldinfo-equivalent">
+		<title>Check for table's field definition equivalent</title>
+		<p>Field equivalency, as defined in Gda Vala Extensions, is a set of tests
+		to verify that most important properties and attributes are present in other
+		field. Then is recomended to check
+		equivalency of a hard coded definition, agains a database table's field that
+		had been getted from a table using <code>update()</code> method.</p>
+		<p>The following tests are performed when <code>F.equivalent(F2)</code>
+		is called:</p>
+		<list type="lower-alpha">
+			<item><p>Name are equal</p></item>
+			<item><p>Type are equal</p></item>
+			<item><p>If one of the following attributes of type DbFieldInfo.Attribute
+			are pressent, they must be pressent in the other field: <code>PRIMARY_KEY,
+			UNIQUE, CHECK, CAN_BE_NULL</code></p></item>
+		</list>
+		<p>Field equivalency are performed by <code>equivalent()</code> method 
+		defined in DbFieldInfo interface.</p>
+		<listing>
+			<desc>
+			This codes checks for equivalency between a template and a database field.
+			</desc>
+			<code mime="text/x-c++src">
+Table a = new Table ();
+a.name = "pre-defined";
+create_definition (a); // See at Table class to see how define a table
+Table b = new Table ();
+b.name = "users"; // set to a database's table name
+b.connection = connection;
+b.update (); // Get definition from database metadata
+aid = a.get_field ("id");
+bid = b.get_field ("id");
+if (aid.equivalent (bid))
+	stdout.printf (@"Database field $(bid.name) is based on template field $(aid.name)");
+			</code>
+		</listing>
+  </section>
+</page>

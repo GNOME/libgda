@@ -228,7 +228,7 @@ namespace GdaData
 				}
 				var colname = (string) mpk.get_value_at (mpk.get_column_index ("column_name"), 0);
 				var f = _fields.get (colname);
-				f.attributes = f.attributes | DbFieldInfo.attribute_from_string (ct);
+				f.attributes = f.attributes | DbFieldInfo.Attribute.from_string (ct);
 				
 				if (DbFieldInfo.Attribute.FOREIGN_KEY in f.attributes) 
 				{
@@ -268,14 +268,14 @@ namespace GdaData
 					_depends.set (f.fkey.reftable.name, f.fkey.reftable);
 					var match = (string) mfk.get_value_at (
 														mfk.get_column_index ("match_option"), 0);
-					f.fkey.match = DbFieldInfo.ForeignKey.match_from_string (match);
+					f.fkey.match = DbFieldInfo.ForeignKey.Match.from_string (match);
 					
 					var update_rule = (string) mfk.get_value_at (
 														mfk.get_column_index ("update_rule"), 0);
-					f.fkey.update_rule = DbFieldInfo.ForeignKey.rule_from_string (update_rule);
+					f.fkey.update_rule = DbFieldInfo.ForeignKey.Rule.from_string (update_rule);
 					var delete_rule = (string) mfk.get_value_at (
 														mfk.get_column_index ("delete_rule"), 0);
-					f.fkey.delete_rule = DbFieldInfo.ForeignKey.rule_from_string (delete_rule);
+					f.fkey.delete_rule = DbFieldInfo.ForeignKey.Rule.from_string (delete_rule);
 					
 					var mfkr = store.extract ("SELECT * FROM _detailed_fk " + 
 											" WHERE fk_table_name  = ##name::string"+
@@ -380,9 +380,9 @@ namespace GdaData
 						rc++;
 					}
 
-					op.set_value_at (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.update_rule),
+					op.set_value_at (f.fkey.update_rule.to_string (),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONUPDATE");
-					op.set_value_at (DbFieldInfo.ForeignKey.rule_to_string (f.fkey.delete_rule),
+					op.set_value_at (f.fkey.delete_rule.to_string (),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONDELETE");
 					refs++;
 				}
