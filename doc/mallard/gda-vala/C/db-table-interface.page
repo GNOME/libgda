@@ -1,5 +1,5 @@
 <page xmlns="http://projectmallard.org/1.0/"
-	 type="topic" id="dbtable-interface">
+	 type="topic" id="db-table-interface">
 
   <info>
     <revision pkgversion="5.2" version="0.1" date="2013-05-16" status="incomplete" />
