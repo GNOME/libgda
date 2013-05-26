@@ -186,9 +186,7 @@ gda_handler_numerical_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, c
 	g_assert (value);
 
 	gchar *retval;
-	setlocale (LC_NUMERIC, "C");
 	retval = gda_value_stringify ((GValue *) value);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
 
 	if (!retval)
 		retval = g_strdup ("0");

@@ -2171,8 +2171,10 @@ gda_value_stringify (const GValue *value)
 		GValue *string;
 		gchar *str;
 
+		setlocale (LC_NUMERIC, "C");
 		string = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
 		g_value_transform (value, string);
+		setlocale (LC_NUMERIC, gda_numeric_locale);
 		str = g_value_dup_string (string);
 		gda_value_free (string);
 		return str;
