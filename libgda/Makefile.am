@@ -380,3 +380,9 @@ EXTRA_DIST += \
 	Gda-5.0.metadata \
         $(vapi_DATA)
 endif
+
+clean-local:
+	@if ! test -d "$(top_srcdir)/.git"; \
+	then \
+		rm -f $(gir_DATA) $(vapi_DATA); \
+	fi
