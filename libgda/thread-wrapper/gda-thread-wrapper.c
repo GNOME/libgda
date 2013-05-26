@@ -1541,7 +1541,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 	}
 
 	if (!sigspec) {
-		g_warning (_("Signal does not exist\n"));
+		g_warning (_("Signal %lu does not exist"), id);
 		g_rec_mutex_unlock (&(wrapper->priv->rmutex));
 		return;
 	}
