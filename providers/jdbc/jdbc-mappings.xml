@@ -2,7 +2,7 @@
 <jdbc-mappings>
   <driver name="com.microsoft.sqlserver.jdbc.SQLServerDriver">
     <prefix>jdbc:sqlserver://</prefix>
-    <part variable="HOST" optional="true"/>
+    <part variable="HOST" optional="false"/>
     <part variable="INSTANCE" optional="true" prefix="/"/>
     <part variable="PORT" optional="true" prefix=":"/>
     <!-- properties, see http://msdn.microsoft.com/en-us/library/ms378988.aspx -->
