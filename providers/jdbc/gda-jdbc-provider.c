@@ -482,16 +482,17 @@ gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 
 	/* Check for connection parameters */
 	gchar *url;
-	url = make_url_from_params (provider, cnc, params, auth);
-	if (!url) {
-		const gchar *cstr;
-		cstr = gda_quark_list_find (params, "URL");
-		if (!cstr) {
+	const gchar *cstr;
+	cstr = gda_quark_list_find (params, "URL");
+	if (cstr)
+		url = g_strdup (cstr);
+	else {
+		url = make_url_from_params (provider, cnc, params, auth);
+		if (!url) {
 			gda_connection_add_event_string (cnc,
-							 _("The connection string must contain the URL value"));
+							 _("Missing parameters to open database connection"));
 			return FALSE;
 		}
-		url = g_strdup (cstr);
 	}
 
 	/* Check for username / password */
