@@ -419,9 +419,14 @@ AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])
 
+if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
+then
+	enable_gda_gi=yes
+fi
+
 if test "x$found_introspection" = "xyes"
 then
-    if test "x$enable_gda_gi" = xauto
+		if test "x$enable_gda_gi" = xauto
     then
         enable_gda_gi=yes
     fi
@@ -441,7 +446,12 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi], [Enable GObject Introspection for libgda-ui [default=auto]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
 
-if test "x$found_introspection" = "xyes"
+if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes" -a "x$have_ui" = "xyes"
+then
+	enable_gdaui_gi=yes
+fi
+
+if test "x$found_introspection" = "xyes" -a "x$have_ui" = "xyes"
 then
     if test "x$enable_gdaui_gi" = xauto
     then
@@ -993,7 +1003,7 @@ echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
-echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
+echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi = xyes; then echo yes; else echo no; fi`"
 echo "   Building Vala Bindings: `if test x$enable_vala != xno; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
