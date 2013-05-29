@@ -60,7 +60,7 @@ extern gchar *gda_numeric_locale;
  * GdaNumeric:
  * @number: a string representing a number
  * @precision: precision to use when @number is converted (not implemented jet)
- * @width: (not implemented jet)
+ * @width: No implemented jet
  *
  * Holds numbers represented as strings.
  *
@@ -1893,7 +1893,7 @@ gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val)
 }
 
 /**
- * gda_value_set_null
+ * gda_value_set_null:
  * @value: a #GValue that will store a value of type #GDA_TYPE_NULL.
  *
  * Sets the type of @value to #GDA_TYPE_NULL.
@@ -1906,7 +1906,7 @@ gda_value_set_null (GValue *value)
 }
 
 /**
- * gda_value_get_numeric
+ * gda_value_get_numeric:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: (transfer none): the value stored in @value.

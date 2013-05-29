@@ -137,7 +137,7 @@ gda_quark_list_free (GdaQuarkList *qlist)
 
 
 /**
- * gda_quark_list_copy
+ * gda_quark_list_copy:
  * @qlist: quark_list to get a copy from.
  *
  * Creates a new #GdaQuarkList from an existing one.
@@ -159,7 +159,7 @@ gda_quark_list_copy (GdaQuarkList *qlist)
 }
 
 /**
- * gda_quark_list_add_from_string
+ * gda_quark_list_add_from_string:
  * @qlist: a #GdaQuarkList.
  * @string: a string.
  * @cleanup: whether to cleanup the previous content or not.
@@ -228,7 +228,7 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 }
 
 /**
- * gda_quark_list_find
+ * gda_quark_list_find:
  * @qlist: a #GdaQuarkList.
  * @name: the name of the value to search for.
  *
@@ -250,7 +250,7 @@ gda_quark_list_find (GdaQuarkList *qlist, const gchar *name)
 }
 
 /**
- * gda_quark_list_remove
+ * gda_quark_list_remove:
  * @qlist: a #GdaQuarkList structure.
  * @name: an entry name.
  *

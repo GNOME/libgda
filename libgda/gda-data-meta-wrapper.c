@@ -110,7 +110,7 @@ static const GValue        *gda_data_meta_wrapper_get_value_at    (GdaDataModel 
 static GObjectClass *parent_class = NULL;
 
 /**
- * gda_data_meta_wrapper_get_type
+ * gda_data_meta_wrapper_get_type:
  *
  * Returns: the #GType of GdaDataMetaWrapper.
  */
@@ -328,7 +328,7 @@ gda_data_meta_wrapper_get_property (GObject *object,
 }
 
 /**
- * gda_data_meta_wrapper_new
+ * gda_data_meta_wrapper_new:
  * @model: a #GdaDataModel
  *
  * Creates a new #GdaDataModel object which buffers the rows of @model. This object is useful
@@ -468,7 +468,7 @@ to_lower (gchar *str)
 }
 
 /**
- * _gda_data_meta_wrapper_compute_value
+ * _gda_data_meta_wrapper_compute_value:
  *
  * Returns:
  *  - NULL if no changes are necessary from the current value

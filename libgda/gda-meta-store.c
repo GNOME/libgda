@@ -385,7 +385,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaMetaStore::suggest-update
+	 * GdaMetaStore::suggest-update: (skip)
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 * @suggest: the suggested update, as a #GdaMetaContext structure
 	 *
@@ -405,9 +405,9 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		_gda_marshal_ERROR__METACONTEXT, G_TYPE_ERROR,
 		1, GDA_TYPE_META_CONTEXT);
 	/**
-	 * GdaMetaStore::meta-changed
+	 * GdaMetaStore::meta-changed:
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @changes: (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
+	 * @changes: a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
 	 * This signal is emitted when the @store's contents have changed (the changes are in the @changes list)
 	 */
@@ -418,9 +418,9 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_STRUCT_OFFSET (GdaMetaStoreClass, meta_changed),
 		NULL, NULL,
 		_gda_marshal_VOID__SLIST, G_TYPE_NONE,
-		1, GDA_TYPE_SLIST);
+		1, G_TYPE_POINTER);
 	/**
-	 * GdaMetaStore::meta-reset
+	 * GdaMetaStore::meta-reset:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 *
 	 * This signal is emitted when the @store's contents have been reset completely and when
@@ -2642,7 +2642,7 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 }
 
 /**
- * gda_meta_store_modify_with_context:
+ * gda_meta_store_modify_with_context: (skip)
  * @store: a #GdaMetaStore object
  * @context: (transfer none): a #GdaMetaContext context describing what to modify in @store
  * @new_data: (transfer none) (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model

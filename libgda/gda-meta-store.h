@@ -70,7 +70,7 @@ typedef struct {
 } GdaMetaStoreChange;
 
 /**
- * GdaMetaContext:
+ * GdaMetaContext: (skip)
  * @table_name: the name of the table <emphasis>in the GdaMetaStore's internal database</emphasis>
  * @size: the size of the @column_names and @column_values arrays
  * @column_names: an array of column names (columns of the @table_name table)

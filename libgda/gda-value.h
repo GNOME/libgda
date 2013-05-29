@@ -82,7 +82,7 @@ typedef struct _GdaNumeric GdaNumeric;
  * GdaNumeric:
  * @number: a string representing a number
  * @precision: precision to use when @number is converted (not implemented jet)
- * @width: (not implemented jet)
+ * @width: Not implemented jet
  *
  * Holds numbers represented as strings.
  *
@@ -151,7 +151,7 @@ typedef struct {
 } GdaBinary;
 
 /**
- * GdaBlob
+ * GdaBlob:
  * @data: data buffer, as a #GdaBinary
  * @op: (allow-none): a pointer to a #GdaBlopOp, or %NULL
  *

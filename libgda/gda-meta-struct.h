@@ -291,7 +291,7 @@ const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, con
 void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
 						   GDestroyNotify destroy);
 /**
- * gda_meta_table_column_set_attribute_static
+ * gda_meta_table_column_set_attribute_static:
  * @column: a #GdaMetaTableColumn
  * @attribute: attribute's name
  * @value: (allow-none): a #GValue, or %NULL
@@ -371,7 +371,7 @@ typedef struct {
 	gpointer _gda_reserved4;
 } GdaMetaTableForeignKey;
 /**
- * GDA_META_TABLE_FOREIGN_KEY
+ * GDA_META_TABLE_FOREIGN_KEY:
  * @fk: a pointer
  *
  * Casts @fk to a #GdaMetaTableForeignKey (no check is actuelly being done on @fk's validity)
@@ -401,7 +401,7 @@ typedef struct {
 #define GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(fk) (((GdaMetaTableForeignKey*)(fk))->on_delete_policy)
 
 /**
- * GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED
+ * GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED:
  * @fk: a pointer to a #GdaMetaTableForeignKey
  *
  * Tells if @fk is an actual foreign key defined in the database's schema, or if it is an indication which

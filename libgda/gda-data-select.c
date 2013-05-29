@@ -890,7 +890,7 @@ gda_data_select_get_connection (GdaDataSelect *model)
 }
 
 /**
- * gda_data_select_set_columns
+ * gda_data_select_set_columns:
  * @model: a #GdaDataSelect data model
  * @columns: (transfer full): a lis of #GdaColumn objects
  *

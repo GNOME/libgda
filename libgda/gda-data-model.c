@@ -132,7 +132,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 	MUTEX_LOCK();
 	if (! initialized) {
 		/**
-		 * GdaDataModel::changed
+		 * GdaDataModel::changed:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when any value in @model has been changed
@@ -146,7 +146,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		/**
-		 * GdaDataModel::row-inserted
+		 * GdaDataModel::row-inserted:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -161,7 +161,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::row-updated
+		 * GdaDataModel::row-updated:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -176,7 +176,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::row-removed
+		 * GdaDataModel::row-removed:
 		 * @model: the #GdaDataModel
 		 * @row: the row number
 		 *
@@ -191,7 +191,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      g_cclosure_marshal_VOID__INT,
 				      G_TYPE_NONE, 1, G_TYPE_INT);
 		/**
-		 * GdaDataModel::reset
+		 * GdaDataModel::reset:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when @model's contents has been completely reset (the number and
@@ -207,7 +207,7 @@ gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
 				      G_TYPE_NONE, 0);
 
 		/**
-		 * GdaDataModel::access-changed
+		 * GdaDataModel::access-changed:
 		 * @model: the #GdaDataModel
 		 *
 		 * Gets emitted when @model's access flags have changed. Use
@@ -790,7 +790,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * gda_data_model_set_values:
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: (element-type GLib.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
+ * @values: (element-type GObject.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
  * @error: a place to store errors, or %NULL
  *
  * In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
@@ -891,7 +891,7 @@ gda_data_model_create_iter (GdaDataModel *model)
 /**
  * gda_data_model_append_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type GLib.Value) (allow-none): #GList of #GValue* representing the row to add.  The
+ * @values: (element-type GObject.Value) (allow-none): #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
  *	    are value-copied (the user is still responsible for freeing them).
  * @error: a place to store errors, or %NULL
@@ -997,7 +997,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 /**
  * gda_data_model_get_row_from_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type GLib.Value): a list of #GValue values (no %NULL is allowed)
+ * @values: (element-type GObject.Value): a list of #GValue values (no %NULL is allowed)
  * @cols_index: (array): an array of #gint containing the column number to match each value of @values
  *
  * Returns the first row where all the values in @values at the columns identified at

@@ -415,6 +415,7 @@ dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
+enable_gda_gi=no
 AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])
@@ -424,22 +425,16 @@ then
 	enable_gda_gi=yes
 fi
 
-if test "x$found_introspection" = "xyes"
+if test "x$found_introspection" = "xyes" -a "x$enable_gda_gi" = "xauto"
 then
-		if test "x$enable_gda_gi" = xauto
-    then
-        enable_gda_gi=yes
-    fi
-else
-    if test "x$enable_gda_gi" = xyes
-    then
-	AC_MSG_ERROR([Introspection for Libgda is requested but not available])
-    fi
-    if test "x$enable_gda_gi" = xauto
-    then
-	enable_gda_gi=no
-    fi
+  enable_gda_gi=yes
 fi
+
+if test "x$enable_gda_gi" = "xyes" -a "x$found_introspection" != "xyes"
+then
+	AC_MSG_ERROR([Introspection for Libgda is requested but not available])
+fi
+
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],

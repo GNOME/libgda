@@ -56,7 +56,7 @@ struct _GdaTreeManagerClass {
 
 	/* virtual methods */
 	/**
-	 * update_children
+	 * update_children:
 	 *
 	 * Returns: NULL if an error occurred, and @out_error is set to TRUE
 	 */

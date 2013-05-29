@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 /**
  * gda_attributes_manager_new: (skip)
  * @for_objects: set to TRUE if attributes will be set on objects.
- * @signal_func: (allow-none): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
+ * @signal_func: (allow-none) (scope call): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
@@ -141,7 +141,7 @@ foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, GdaAttributesManager *mgr)
 }
 
 /**
- * gda_attributes_manager_free:
+ * gda_attributes_manager_free: (skip)
  * @mgr: a #GdaAttributesManager
  *
  * Frees all the resssources managed by @mgr
@@ -245,7 +245,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 }
 
 /**
- * gda_attributes_manager_set:
+ * gda_attributes_manager_set: (skip)
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
@@ -267,7 +267,7 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
 }
 
 /**
- * gda_attributes_manager_set_full:
+ * gda_attributes_manager_set_full: (skip)
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
@@ -286,7 +286,7 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
 
 
 /**
- * gda_attributes_manager_get:
+ * gda_attributes_manager_get: (skip)
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
@@ -315,7 +315,7 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 }
 
 /**
- * gda_attributes_manager_copy:
+ * gda_attributes_manager_copy: (skip)
  * @from_mgr: a #GdaAttributesManager
  * @from: a pointer from which attributes are copied
  * @to_mgr: a #GdaAttributesManager
@@ -374,7 +374,7 @@ foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)
 }
 
 /**
- * gda_attributes_manager_clear:
+ * gda_attributes_manager_clear: (skip)
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources for which all the attributes will be removed
  *
@@ -403,7 +403,7 @@ typedef struct {
 static void foreach_foreach_func (AttName *attname, const GValue *value, FData *fdata);
 
 /**
- * gda_attributes_manager_foreach:
+ * gda_attributes_manager_foreach: (skip)
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources for which all the attributes used
  * @func: (scope call): a #GdaAttributesManagerFunc function
