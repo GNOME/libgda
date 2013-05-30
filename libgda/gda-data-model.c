@@ -829,7 +829,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * gda_data_model_set_values:
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: (element-type GLib.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
+ * @values: (element-type GObject.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
  * @error: a place to store errors, or %NULL
  *
  * In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
@@ -1017,7 +1017,7 @@ gda_data_model_iter_set_value (GdaDataModel *model, GdaDataModelIter *iter, gint
 /**
  * gda_data_model_append_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type GLib.Value) (allow-none): #GList of #GValue* representing the row to add.  The
+ * @values: (element-type GObject.Value) (allow-none): #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
  *	    are value-copied (the user is still responsible for freeing them).
  * @error: a place to store errors, or %NULL
@@ -1123,7 +1123,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 /**
  * gda_data_model_get_row_from_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type GLib.Value): a list of #GValue values (no %NULL is allowed)
+ * @values: (element-type GObject.Value): a list of #GValue values (no %NULL is allowed)
  * @cols_index: (array): an array of #gint containing the column number to match each value of @values
  *
  * Returns the first row where all the values in @values at the columns identified at

@@ -1699,7 +1699,7 @@ add_error (GdaDataModelImport *model, const gchar *err)
  * Get the list of errors which @model has to report. The returned list is a list of
  * #GError structures, and must not be modified
  *
- * Returns: (transfer none) (element-type GObject.Error): the list of errors (which must not be modified), or %NULL
+ * Returns: (transfer none) (element-type GLib.Error): the list of errors (which must not be modified), or %NULL
  */
 GSList *
 gda_data_model_import_get_errors (GdaDataModelImport *model)

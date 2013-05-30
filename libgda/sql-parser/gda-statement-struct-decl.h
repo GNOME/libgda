@@ -249,9 +249,9 @@ typedef struct {
 	GdaSqlStatementType  type;
 	gchar               *name;
 	gpointer            (*construct) (void);
-	void                (*free) (gpointer);
-	gpointer            (*copy) (gpointer);
-	gchar              *(*serialize) (gpointer);
+	void                (*free) (gpointer stm);
+	gpointer            (*copy) (gpointer stm);
+	gchar              *(*serialize) (gpointer stm);
 
 	/* augmenting information precision using a dictionary */
 	GdaSqlForeachFunc     check_structure_func;

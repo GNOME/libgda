@@ -5562,7 +5562,6 @@ Upon errors -1 will be returned and @error will be assigned a
       </virtual-method>
       <virtual-method name="i_append_values"
                       invoker="append_values"
-                      introspectable="0"
                       throws="1">
         <doc xml:whitespace="preserve">Appends a row to the given data model. If any value in @values is actually %NULL, then 
 it is considered as a default value. If @values is %NULL then all values are set to their default value.
@@ -5580,7 +5579,7 @@ Upon errors -1 will be returned and @error will be assigned a
           <parameter name="values" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">#GList of #GValue* representing the row to add.  The length must match model's column count.  These #GValue are value-copied (the user is still responsible for freeing them).</doc>
             <type name="GLib.List" c:type="const GList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
         </parameters>
@@ -5641,9 +5640,7 @@ and should not be destroyed; any modification will affect the whole data model.<
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_find_row"
-                      invoker="get_row_from_values"
-                      introspectable="0">
+      <virtual-method name="i_find_row" invoker="get_row_from_values">
         <doc xml:whitespace="preserve">Returns the first row where all the values in @values at the columns identified at
 @cols_index match. If the row can't be identified, then returns -1;
 
@@ -5659,7 +5656,7 @@ NOTE: the @cols_index array MUST contain a column index for each value in @value
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">a list of #GValue values (no %NULL is allowed)</doc>
             <type name="GLib.SList" c:type="GSList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
           <parameter name="cols_index" transfer-ownership="none">
@@ -5970,10 +5967,7 @@ Upon errors FALSE will be returned and @error will be assigned a
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="i_set_values"
-                      invoker="set_values"
-                      introspectable="0"
-                      throws="1">
+      <virtual-method name="i_set_values" invoker="set_values" throws="1">
         <doc xml:whitespace="preserve">In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
 by setting several values at once.
 
@@ -5997,7 +5991,7 @@ Upon errors FALSE will be returned and @error will be assigned a
           <parameter name="values" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a list of #GValue (or %NULL), one for at most the number of columns of @model</doc>
             <type name="GLib.List" c:type="GList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
         </parameters>
@@ -6111,7 +6105,6 @@ Upon errors -1 will be returned and @error will be assigned a
       </method>
       <method name="append_values"
               c:identifier="gda_data_model_append_values"
-              introspectable="0"
               throws="1">
         <doc xml:whitespace="preserve">Appends a row to the given data model. If any value in @values is actually %NULL, then 
 it is considered as a default value. If @values is %NULL then all values are set to their default value.
@@ -6130,7 +6123,7 @@ Upon errors -1 will be returned and @error will be assigned a
           <parameter name="values" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">#GList of #GValue* representing the row to add.  The length must match model's column count.  These #GValue are value-copied (the user is still responsible for freeing them).</doc>
             <type name="GLib.List" c:type="const GList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
         </parameters>
@@ -6577,8 +6570,7 @@ imposed by the LDAP server.</doc>
         </parameters>
       </method>
       <method name="get_row_from_values"
-              c:identifier="gda_data_model_get_row_from_values"
-              introspectable="0">
+              c:identifier="gda_data_model_get_row_from_values">
         <doc xml:whitespace="preserve">Returns the first row where all the values in @values at the columns identified at
 @cols_index match. If the row can't be identified, then returns -1;
 
@@ -6595,7 +6587,7 @@ NOTE: the @cols_index array MUST contain a column index for each value in @value
           <parameter name="values" transfer-ownership="none">
             <doc xml:whitespace="preserve">a list of #GValue values (no %NULL is allowed)</doc>
             <type name="GLib.SList" c:type="GSList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
           <parameter name="cols_index" transfer-ownership="none">
@@ -7170,7 +7162,6 @@ Upon errors FALSE will be returned and @error will be assigned a
       </method>
       <method name="set_values"
               c:identifier="gda_data_model_set_values"
-              introspectable="0"
               throws="1">
         <doc xml:whitespace="preserve">In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
 by setting several values at once.
@@ -7196,7 +7187,7 @@ Upon errors FALSE will be returned and @error will be assigned a
           <parameter name="values" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a list of #GValue (or %NULL), one for at most the number of columns of @model</doc>
             <type name="GLib.List" c:type="GList*">
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
         </parameters>
@@ -7507,14 +7498,12 @@ Also clears @model's contents.</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="get_errors"
-              c:identifier="gda_data_model_dir_get_errors"
-              introspectable="0">
+      <method name="get_errors" c:identifier="gda_data_model_dir_get_errors">
         <doc xml:whitespace="preserve">Get the list of errors which have occurred while using @model</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">a read-only list of #GError pointers, or %NULL if no error has occurred</doc>
           <type name="GLib.SList" c:type="const GSList*">
-            <type/>
+            <type name="GLib.Error"/>
           </type>
         </return-value>
         <parameters>
@@ -7921,8 +7910,8 @@ Also clears @model's contents.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="i_set_values" introspectable="0">
-        <callback name="i_set_values" introspectable="0" throws="1">
+      <field name="i_set_values">
+        <callback name="i_set_values" throws="1">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">%TRUE if the value in the data model has been updated and no error occurred</doc>
             <type name="gboolean" c:type="gboolean"/>
@@ -7938,14 +7927,14 @@ Also clears @model's contents.</doc>
             <parameter name="values" transfer-ownership="none" allow-none="1">
               <doc xml:whitespace="preserve">a list of #GValue (or %NULL), one for at most the number of columns of @model</doc>
               <type name="GLib.List" c:type="GList*">
-                <type/>
+                <type name="GObject.Value"/>
               </type>
             </parameter>
           </parameters>
         </callback>
       </field>
-      <field name="i_append_values" introspectable="0">
-        <callback name="i_append_values" introspectable="0" throws="1">
+      <field name="i_append_values">
+        <callback name="i_append_values" throws="1">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">the number of the added row, or -1 if an error occurred</doc>
             <type name="gint" c:type="gint"/>
@@ -7957,7 +7946,7 @@ Also clears @model's contents.</doc>
             <parameter name="values" transfer-ownership="none" allow-none="1">
               <doc xml:whitespace="preserve">#GList of #GValue* representing the row to add.  The length must match model's column count.  These #GValue are value-copied (the user is still responsible for freeing them).</doc>
               <type name="GLib.List" c:type="const GList*">
-                <type/>
+                <type name="GObject.Value"/>
               </type>
             </parameter>
           </parameters>
@@ -7993,8 +7982,8 @@ Also clears @model's contents.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="i_find_row" introspectable="0">
-        <callback name="i_find_row" introspectable="0">
+      <field name="i_find_row">
+        <callback name="i_find_row">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">the requested row number, of -1 if not found</doc>
             <type name="gint" c:type="gint"/>
@@ -8006,7 +7995,7 @@ Also clears @model's contents.</doc>
             <parameter name="values" transfer-ownership="none">
               <doc xml:whitespace="preserve">a list of #GValue values (no %NULL is allowed)</doc>
               <type name="GLib.SList" c:type="GSList*">
-                <type/>
+                <type name="GObject.Value"/>
               </type>
             </parameter>
             <parameter name="cols_index" transfer-ownership="none">
@@ -8266,14 +8255,13 @@ can be accessed in a random way.</doc>
         </parameters>
       </method>
       <method name="get_errors"
-              c:identifier="gda_data_model_import_get_errors"
-              introspectable="0">
+              c:identifier="gda_data_model_import_get_errors">
         <doc xml:whitespace="preserve">Get the list of errors which @model has to report. The returned list is a list of
 #GError structures, and must not be modified</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the list of errors (which must not be modified), or %NULL</doc>
           <type name="GLib.SList" c:type="GSList*">
-            <type/>
+            <type name="GLib.Error"/>
           </type>
         </return-value>
         <parameters>
@@ -12117,10 +12105,10 @@ Don't try to use #gda_meta_context_free on a struct that was created manually.</
       <field name="column_values" writable="1">
         <type name="GObject.Value" c:type="GValue**"/>
       </field>
-      <field name="columns" introspectable="0" writable="1">
+      <field name="columns" writable="1">
         <type name="GLib.HashTable" c:type="GHashTable*">
           <type name="utf8"/>
-          <type/>
+          <type name="GObject.Value"/>
         </type>
       </field>
       <constructor name="new"
@@ -12209,8 +12197,7 @@ Column's name and value is copied and destroyed when #gda_meta_context_free is c
       </method>
       <method name="set_columns"
               c:identifier="gda_meta_context_set_columns"
-              version="5.2"
-              introspectable="0">
+              version="5.2">
         <doc xml:whitespace="preserve">Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
 to represent its value.
 
@@ -12227,7 +12214,7 @@ to represent its value.
             <doc xml:whitespace="preserve">a #GHashTable with the table's columns' name and their values to use in context.</doc>
             <type name="GLib.HashTable" c:type="GHashTable*">
               <type name="utf8"/>
-              <type/>
+              <type name="GObject.Value"/>
             </type>
           </parameter>
           <parameter name="cnc" transfer-ownership="none" allow-none="1">
@@ -13192,10 +13179,10 @@ object.</doc>
       <field name="table_name" writable="1">
         <type name="utf8" c:type="gchar*"/>
       </field>
-      <field name="keys" introspectable="0" writable="1">
+      <field name="keys" writable="1">
         <type name="GLib.HashTable" c:type="GHashTable*">
           <type name="utf8"/>
-          <type/>
+          <type name="GObject.Value"/>
         </type>
       </field>
     </record>
@@ -14243,9 +14230,9 @@ will return %NULL</doc>
       <field name="types">
         <type name="GType" c:type="GType*"/>
       </field>
-      <field name="tmpl_columns" introspectable="0">
+      <field name="tmpl_columns">
         <type name="GLib.SList" c:type="GSList*">
-          <type/>
+          <type name="Column"/>
         </type>
       </field>
       <field name="_gda_reserved1" readable="0" private="1">
@@ -17926,16 +17913,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -17947,16 +17934,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -17968,16 +17955,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -17989,19 +17976,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -18019,16 +18006,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18040,19 +18027,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -18073,16 +18060,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18094,19 +18081,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -18127,16 +18114,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18148,19 +18135,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="domain_catalog" transfer-ownership="none">
@@ -18178,16 +18165,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18199,19 +18186,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="domain_catalog" transfer-ownership="none">
@@ -18232,16 +18219,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18253,19 +18240,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="specific_name" transfer-ownership="none">
@@ -18280,16 +18267,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18301,19 +18288,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="collation_catalog" transfer-ownership="none">
@@ -18334,16 +18321,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18355,19 +18342,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="chset_catalog" transfer-ownership="none">
@@ -18388,16 +18375,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18409,19 +18396,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="catalog_name" transfer-ownership="none">
@@ -18439,16 +18426,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18460,19 +18447,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18493,16 +18480,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18514,19 +18501,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18547,16 +18534,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18568,19 +18555,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="view_catalog" transfer-ownership="none">
@@ -18601,16 +18588,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18622,19 +18609,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18658,16 +18645,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18679,19 +18666,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18715,16 +18702,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18736,19 +18723,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18772,16 +18759,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18793,19 +18780,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18829,16 +18816,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18850,19 +18837,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18883,16 +18870,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18904,19 +18891,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="routine_catalog" transfer-ownership="none">
@@ -18937,16 +18924,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -18958,19 +18945,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="rout_catalog" transfer-ownership="none">
@@ -18991,16 +18978,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -19012,19 +18999,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="rout_catalog" transfer-ownership="none">
@@ -19045,16 +19032,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -19066,19 +19053,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -19102,16 +19089,16 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
           </parameters>
@@ -19123,19 +19110,19 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="meta" transfer-ownership="none">
               <type name="MetaStore" c:type="GdaMetaStore*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="ctx" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="arg4" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -19256,13 +19243,13 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="trx" transfer-ownership="none">
               <type name="XaTransactionId" c:type="const GdaXaTransactionId*"/>
             </parameter>
           </parameters>
@@ -19274,13 +19261,13 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="trx" transfer-ownership="none">
               <type name="XaTransactionId" c:type="const GdaXaTransactionId*"/>
             </parameter>
           </parameters>
@@ -19292,13 +19279,13 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="trx" transfer-ownership="none">
               <type name="XaTransactionId" c:type="const GdaXaTransactionId*"/>
             </parameter>
           </parameters>
@@ -19310,13 +19297,13 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="trx" transfer-ownership="none">
               <type name="XaTransactionId" c:type="const GdaXaTransactionId*"/>
             </parameter>
           </parameters>
@@ -19328,13 +19315,13 @@ for more information.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="trx" transfer-ownership="none">
               <type name="XaTransactionId" c:type="const GdaXaTransactionId*"/>
             </parameter>
           </parameters>
@@ -19348,10 +19335,10 @@ for more information.</doc>
             </type>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="prov" transfer-ownership="none">
               <type name="ServerProvider" c:type="GdaServerProvider*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="cnc" transfer-ownership="none">
               <type name="Connection" c:type="GdaConnection*"/>
             </parameter>
           </parameters>
@@ -22571,7 +22558,7 @@ To include variables in the @sql string, see the
             <type name="gpointer" c:type="void*"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="f" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer*"/>
             </parameter>
           </parameters>
@@ -22583,10 +22570,10 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="d" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="f" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer*"/>
             </parameter>
           </parameters>
@@ -22598,10 +22585,10 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="d" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="s" transfer-ownership="none">
               <type name="utf8" c:type="char*"/>
             </parameter>
           </parameters>
@@ -22613,16 +22600,16 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="d" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="i" transfer-ownership="none">
               <type name="gint" c:type="int"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="v" transfer-ownership="none">
               <type name="GObject.Value" c:type="GValue*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="iface" transfer-ownership="none">
               <type c:type="GdaSqlParserIface*"/>
             </parameter>
           </parameters>
@@ -22637,7 +22624,7 @@ To include variables in the @sql string, see the
             <type name="gpointer" c:type="void*"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="f" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer*"/>
             </parameter>
           </parameters>
@@ -22649,10 +22636,10 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="p" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="f" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer*"/>
             </parameter>
           </parameters>
@@ -22664,10 +22651,10 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="p" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="s" transfer-ownership="none">
               <type name="utf8" c:type="char*"/>
             </parameter>
           </parameters>
@@ -22679,16 +22666,16 @@ To include variables in the @sql string, see the
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="p" transfer-ownership="none">
               <type name="gpointer" c:type="void*"/>
             </parameter>
-            <parameter name="arg1" transfer-ownership="none">
+            <parameter name="i" transfer-ownership="none">
               <type name="gint" c:type="int"/>
             </parameter>
-            <parameter name="arg2" transfer-ownership="none">
+            <parameter name="v" transfer-ownership="none">
               <type name="GObject.Value" c:type="GValue*"/>
             </parameter>
-            <parameter name="arg3" transfer-ownership="none">
+            <parameter name="iface" transfer-ownership="none">
               <type c:type="GdaSqlParserIface*"/>
             </parameter>
           </parameters>
@@ -23654,7 +23641,7 @@ set the value of @expr-&gt;value instead.</doc>
             <type name="none" c:type="void"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="stm" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>
@@ -23666,7 +23653,7 @@ set the value of @expr-&gt;value instead.</doc>
             <type name="gpointer" c:type="gpointer"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="stm" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>
@@ -23678,7 +23665,7 @@ set the value of @expr-&gt;value instead.</doc>
             <type name="utf8" c:type="gchar*"/>
           </return-value>
           <parameters>
-            <parameter name="arg0" transfer-ownership="none">
+            <parameter name="stm" transfer-ownership="none">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>

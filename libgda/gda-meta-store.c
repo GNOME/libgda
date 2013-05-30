@@ -211,7 +211,7 @@ gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GVa
 /**
  * gda_meta_context_set_columns:
  * @ctx: a #GdaMetaContext struct to set colums to
- * @columns: (element-type utf8 GLib.Value): a #GHashTable with the table's columns' name and their values
+ * @columns: (element-type utf8 GObject.Value): a #GHashTable with the table's columns' name and their values
  * to use in context.
  * @cnc: (allow-none): a #GdaConnection to used to normalize identifiers quoting, or NULL
  * 
