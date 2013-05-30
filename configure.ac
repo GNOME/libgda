@@ -415,7 +415,6 @@ dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
-enable_gda_gi=no
 AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi], [Enable GObject Introspection for libgda [default=auto]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])
@@ -426,6 +425,11 @@ then
 fi
 
 if test "x$found_introspection" = "xyes" -a "x$enable_gda_gi" = "xauto"
+then
+  enable_gda_gi=yes
+fi
+
+if test "x$found_introspection" = "xyes" -a "x$enable_gda_gi" = "xyes"
 then
   enable_gda_gi=yes
 fi

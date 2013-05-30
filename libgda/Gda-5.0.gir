@@ -21760,6 +21760,7 @@ To include variables in the @sql string, see the
     <record name="SqlParserPrivate" c:type="GdaSqlParserPrivate" disguised="1">
     </record>
     <record name="SqlRenderingContext" c:type="GdaSqlRenderingContext">
+      <doc xml:whitespace="preserve">Specifies the context in which a #GdaSqlStatement is being converted to SQL.</doc>
       <field name="flags" writable="1">
         <type name="StatementSqlFlag" c:type="GdaStatementSqlFlag"/>
       </field>
@@ -21768,7 +21769,7 @@ To include variables in the @sql string, see the
       </field>
       <field name="params_used" writable="1">
         <type name="GLib.SList" c:type="GSList*">
-          <type name="gpointer" c:type="gpointer"/>
+          <type name="Holder"/>
         </type>
       </field>
       <field name="provider" introspectable="0" writable="1">
