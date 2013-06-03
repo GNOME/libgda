@@ -3696,7 +3696,6 @@ table name).</doc>
       </method>
       <method name="update_meta_store"
               c:identifier="gda_connection_update_meta_store"
-              introspectable="0"
               throws="1">
         <doc xml:whitespace="preserve">Updates @cnc's associated #GdaMetaStore. If @context is not %NULL, then only the parts described by
 @context will be updated, and if it is %NULL, then the complete meta store will be updated. Detailed
@@ -11602,7 +11601,7 @@ This function can be used even if g_thread_init() has not yet been called, and, 
         </callback>
       </field>
     </record>
-    <record name="MetaContext" c:type="GdaMetaContext" introspectable="0">
+    <record name="MetaContext" c:type="GdaMetaContext">
       <doc xml:whitespace="preserve">The &lt;structname&gt;GdaMetaContext&lt;/structname&gt; represents a meta data modification
 context: the &lt;emphasis&gt;how&lt;/emphasis&gt; when used with gda_meta_store_modify_with_context(),
 and the &lt;emphasis&gt;what&lt;/emphasis&gt; when used with gda_connection_update_meta_store().</doc>
@@ -11837,7 +11836,7 @@ gda_meta_store_extract().</doc>
           </instance-parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="suggest_update" introspectable="0">
+      <virtual-method name="suggest_update">
         <return-value transfer-ownership="full">
           <type name="GLib.Error" c:type="GError*"/>
         </return-value>
@@ -12532,7 +12531,7 @@ no detailed changes are available</doc>
           <type name="none" c:type="void"/>
         </return-value>
       </glib:signal>
-      <glib:signal name="suggest-update" when="last" introspectable="0">
+      <glib:signal name="suggest-update" when="last">
         <doc xml:whitespace="preserve">This signal is emitted when the contents of a table should be updated (data to update or insert only;
 deleting data is done automatically). This signal is used for internal purposes by the #GdaConnection
 object.</doc>
@@ -12543,7 +12542,7 @@ object.</doc>
         <parameters>
           <parameter name="suggest" transfer-ownership="none">
             <doc xml:whitespace="preserve">the suggested update, as a #GdaMetaContext structure</doc>
-            <type/>
+            <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
       </glib:signal>
@@ -12592,7 +12591,7 @@ object.</doc>
         </callback>
       </field>
       <field name="suggest_update">
-        <callback name="suggest_update" introspectable="0">
+        <callback name="suggest_update">
           <return-value transfer-ownership="full">
             <type name="GLib.Error" c:type="GError*"/>
           </return-value>
@@ -16993,10 +16992,10 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="meta_funcs">
+      <field name="meta_funcs" introspectable="0">
         <type name="ServerProviderMeta" c:type="GdaServerProviderMeta"/>
       </field>
-      <field name="xa_funcs">
+      <field name="xa_funcs" introspectable="0">
         <type name="ServerProviderXa" c:type="GdaServerProviderXa*"/>
       </field>
       <field name="identifier_quote">
@@ -17102,9 +17101,7 @@ otherwise.</doc>
         </callback>
       </field>
     </record>
-    <enumeration name="ServerProviderError"
-                 introspectable="0"
-                 c:type="GdaServerProviderError">
+    <enumeration name="ServerProviderError" c:type="GdaServerProviderError">
       <member name="method_non_implemented_error"
               value="0"
               c:identifier="GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR">
@@ -17205,12 +17202,14 @@ otherwise.</doc>
             c:type="GdaServerProviderInfo"
             disguised="1">
     </record>
-    <record name="ServerProviderMeta" c:type="GdaServerProviderMeta">
+    <record name="ServerProviderMeta"
+            c:type="GdaServerProviderMeta"
+            introspectable="0">
       <doc xml:whitespace="preserve">These methods must be implemented by providers to update a connection's associated metadata (in a 
 #GdaMetaStore object), see the &lt;link linkend="prov-metadata"&gt;Virtual methods for providers/Methods - metadata&lt;/link&gt;
 for more information.</doc>
       <field name="_info" introspectable="0">
-        <callback name="_info" introspectable="0" throws="1">
+        <callback name="_info" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17231,7 +17230,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_btypes" introspectable="0">
-        <callback name="_btypes" introspectable="0" throws="1">
+        <callback name="_btypes" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17252,7 +17251,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_udt" introspectable="0">
-        <callback name="_udt" introspectable="0" throws="1">
+        <callback name="_udt" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17273,7 +17272,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="udt">
-        <callback name="udt" introspectable="0">
+        <callback name="udt">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17290,7 +17289,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -17303,7 +17302,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_udt_cols" introspectable="0">
-        <callback name="_udt_cols" introspectable="0" throws="1">
+        <callback name="_udt_cols" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17324,7 +17323,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="udt_cols">
-        <callback name="udt_cols" introspectable="0">
+        <callback name="udt_cols">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17341,7 +17340,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -17357,7 +17356,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_enums" introspectable="0">
-        <callback name="_enums" introspectable="0" throws="1">
+        <callback name="_enums" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17378,7 +17377,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="enums">
-        <callback name="enums" introspectable="0">
+        <callback name="enums">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17395,7 +17394,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="udt_catalog" transfer-ownership="none">
@@ -17411,7 +17410,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_domains" introspectable="0">
-        <callback name="_domains" introspectable="0" throws="1">
+        <callback name="_domains" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17432,7 +17431,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="domains">
-        <callback name="domains" introspectable="0">
+        <callback name="domains">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17449,7 +17448,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="domain_catalog" transfer-ownership="none">
@@ -17462,7 +17461,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_constraints_dom" introspectable="0">
-        <callback name="_constraints_dom" introspectable="0" throws="1">
+        <callback name="_constraints_dom" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17483,7 +17482,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="constraints_dom">
-        <callback name="constraints_dom" introspectable="0">
+        <callback name="constraints_dom">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17500,7 +17499,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="domain_catalog" transfer-ownership="none">
@@ -17516,7 +17515,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_el_types" introspectable="0">
-        <callback name="_el_types" introspectable="0" throws="1">
+        <callback name="_el_types" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17537,7 +17536,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="el_types">
-        <callback name="el_types" introspectable="0">
+        <callback name="el_types">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17554,7 +17553,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="specific_name" transfer-ownership="none">
@@ -17564,7 +17563,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_collations" introspectable="0">
-        <callback name="_collations" introspectable="0" throws="1">
+        <callback name="_collations" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17585,7 +17584,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="collations">
-        <callback name="collations" introspectable="0">
+        <callback name="collations">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17602,7 +17601,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="collation_catalog" transfer-ownership="none">
@@ -17618,7 +17617,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_character_sets" introspectable="0">
-        <callback name="_character_sets" introspectable="0" throws="1">
+        <callback name="_character_sets" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17639,7 +17638,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="character_sets">
-        <callback name="character_sets" introspectable="0">
+        <callback name="character_sets">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17656,7 +17655,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="chset_catalog" transfer-ownership="none">
@@ -17672,7 +17671,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_schemata" introspectable="0">
-        <callback name="_schemata" introspectable="0" throws="1">
+        <callback name="_schemata" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17693,7 +17692,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="schemata">
-        <callback name="schemata" introspectable="0">
+        <callback name="schemata">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17710,7 +17709,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="catalog_name" transfer-ownership="none">
@@ -17723,7 +17722,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_tables_views" introspectable="0">
-        <callback name="_tables_views" introspectable="0" throws="1">
+        <callback name="_tables_views" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17744,7 +17743,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="tables_views">
-        <callback name="tables_views" introspectable="0">
+        <callback name="tables_views">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17761,7 +17760,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -17777,7 +17776,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_columns" introspectable="0">
-        <callback name="_columns" introspectable="0" throws="1">
+        <callback name="_columns" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17798,7 +17797,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="columns">
-        <callback name="columns" introspectable="0">
+        <callback name="columns">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17815,7 +17814,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -17831,7 +17830,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_view_cols" introspectable="0">
-        <callback name="_view_cols" introspectable="0" throws="1">
+        <callback name="_view_cols" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17852,7 +17851,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="view_cols">
-        <callback name="view_cols" introspectable="0">
+        <callback name="view_cols">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17869,7 +17868,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="view_catalog" transfer-ownership="none">
@@ -17885,7 +17884,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_constraints_tab" introspectable="0">
-        <callback name="_constraints_tab" introspectable="0" throws="1">
+        <callback name="_constraints_tab" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17906,7 +17905,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="constraints_tab">
-        <callback name="constraints_tab" introspectable="0">
+        <callback name="constraints_tab">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17923,7 +17922,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -17942,7 +17941,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_constraints_ref" introspectable="0">
-        <callback name="_constraints_ref" introspectable="0" throws="1">
+        <callback name="_constraints_ref" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17963,7 +17962,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="constraints_ref">
-        <callback name="constraints_ref" introspectable="0">
+        <callback name="constraints_ref">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17980,7 +17979,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -17999,7 +17998,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_key_columns" introspectable="0">
-        <callback name="_key_columns" introspectable="0" throws="1">
+        <callback name="_key_columns" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18020,7 +18019,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="key_columns">
-        <callback name="key_columns" introspectable="0">
+        <callback name="key_columns">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18037,7 +18036,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18056,7 +18055,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_check_columns" introspectable="0">
-        <callback name="_check_columns" introspectable="0" throws="1">
+        <callback name="_check_columns" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18077,7 +18076,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="check_columns">
-        <callback name="check_columns" introspectable="0">
+        <callback name="check_columns">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18094,7 +18093,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18113,7 +18112,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_triggers" introspectable="0">
-        <callback name="_triggers" introspectable="0" throws="1">
+        <callback name="_triggers" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18134,7 +18133,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="triggers">
-        <callback name="triggers" introspectable="0">
+        <callback name="triggers">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18151,7 +18150,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18167,7 +18166,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_routines" introspectable="0">
-        <callback name="_routines" introspectable="0" throws="1">
+        <callback name="_routines" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18188,7 +18187,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="routines">
-        <callback name="routines" introspectable="0">
+        <callback name="routines">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18205,7 +18204,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="routine_catalog" transfer-ownership="none">
@@ -18221,7 +18220,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_routine_col" introspectable="0">
-        <callback name="_routine_col" introspectable="0" throws="1">
+        <callback name="_routine_col" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18242,7 +18241,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="routine_col">
-        <callback name="routine_col" introspectable="0">
+        <callback name="routine_col">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18259,7 +18258,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="rout_catalog" transfer-ownership="none">
@@ -18275,7 +18274,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_routine_par" introspectable="0">
-        <callback name="_routine_par" introspectable="0" throws="1">
+        <callback name="_routine_par" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18296,7 +18295,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="routine_par">
-        <callback name="routine_par" introspectable="0">
+        <callback name="routine_par">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18313,7 +18312,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="rout_catalog" transfer-ownership="none">
@@ -18329,7 +18328,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_indexes_tab" introspectable="0">
-        <callback name="_indexes_tab" introspectable="0" throws="1">
+        <callback name="_indexes_tab" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18350,7 +18349,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="indexes_tab">
-        <callback name="indexes_tab" introspectable="0">
+        <callback name="indexes_tab">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18367,7 +18366,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18386,7 +18385,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="_index_cols" introspectable="0">
-        <callback name="_index_cols" introspectable="0" throws="1">
+        <callback name="_index_cols" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18407,7 +18406,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="index_cols">
-        <callback name="index_cols" introspectable="0">
+        <callback name="index_cols">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18424,7 +18423,7 @@ for more information.</doc>
             <parameter name="cxt" transfer-ownership="none">
               <type name="MetaContext" c:type="GdaMetaContext*"/>
             </parameter>
-            <parameter name="e" transfer-ownership="none">
+            <parameter name="error" transfer-ownership="none">
               <type name="GLib.Error" c:type="GError**"/>
             </parameter>
             <parameter name="table_catalog" transfer-ownership="none">
@@ -18538,7 +18537,9 @@ for more information.</doc>
         <type name="SqlParser" c:type="GdaSqlParser*"/>
       </field>
     </record>
-    <record name="ServerProviderXa" c:type="GdaServerProviderXa">
+    <record name="ServerProviderXa"
+            c:type="GdaServerProviderXa"
+            introspectable="0">
       <field name="xa_start">
         <callback name="xa_start" throws="1">
           <return-value transfer-ownership="none">
@@ -18629,8 +18630,8 @@ for more information.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="xa_recover" introspectable="0">
-        <callback name="xa_recover" introspectable="0" throws="1">
+      <field name="xa_recover">
+        <callback name="xa_recover" throws="1">
           <return-value>
             <type name="GLib.List" c:type="GList*">
               <type name="gpointer" c:type="gpointer"/>
