@@ -5461,58 +5461,6 @@ if the @str string does not correspond to a valid string for the requested type,
         </callback>
       </field>
     </record>
-    <record name="DataMetaWrapper" c:type="GdaDataMetaWrapper">
-      <field name="object" writable="1">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv" writable="1">
-        <type name="DataMetaWrapperPrivate"
-              c:type="GdaDataMetaWrapperPrivate*"/>
-      </field>
-    </record>
-    <record name="DataMetaWrapperClass" c:type="GdaDataMetaWrapperClass">
-      <field name="parent_class" writable="1">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <enumeration name="DataMetaWrapperMode" c:type="GdaDataMetaWrapperMode">
-      <member name="lc" value="0" c:identifier="GDA_DATA_META_WRAPPER_MODE_LC">
-      </member>
-      <member name="uc" value="1" c:identifier="GDA_DATA_META_WRAPPER_MODE_UC">
-      </member>
-    </enumeration>
-    <record name="DataMetaWrapperPrivate"
-            c:type="GdaDataMetaWrapperPrivate"
-            disguised="1">
-    </record>
     <interface name="DataModel"
                c:symbol-prefix="data_model"
                c:type="GdaDataModel"
@@ -7563,52 +7511,6 @@ Also clears @model's contents.</doc>
     </record>
     <record name="DataModelDirPrivate"
             c:type="GdaDataModelDirPrivate"
-            disguised="1">
-    </record>
-    <record name="DataModelDsnList" c:type="GdaDataModelDsnList">
-      <field name="object" writable="1">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv" writable="1">
-        <type name="DataModelDsnListPrivate"
-              c:type="GdaDataModelDsnListPrivate*"/>
-      </field>
-    </record>
-    <record name="DataModelDsnListClass" c:type="GdaDataModelDsnListClass">
-      <field name="object_class" writable="1">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <record name="DataModelDsnListPrivate"
-            c:type="GdaDataModelDsnListPrivate"
             disguised="1">
     </record>
     <enumeration name="DataModelError"

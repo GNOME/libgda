@@ -84,8 +84,8 @@ typedef struct {
  * GdaMetaContext:
  * @table_name: the name of the table <emphasis>in the GdaMetaStore's internal database</emphasis>
  * @size: the size of the @column_names and @column_values arrays
- * @column_names: (array length=size): an array of column names (columns of the @table_name table)
- * @column_values: (array length=size): an array of values, one for each column named in @column_names
+ * @column_names: (array length=size) (transfer container): an array of column names (columns of the @table_name table)
+ * @column_values: (array length=size)  (transfer container): an array of values, one for each column named in @column_names
  * @columns: (element-type utf8 GObject.Value): A #GHashTable storing columns' name as key and #GValue as column's
  * value.
  *

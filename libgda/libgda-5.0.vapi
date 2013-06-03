@@ -254,6 +254,7 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		protected DataModelDir ();
 		public void clean_errors ();
+		public unowned GLib.SList<GLib.Error> get_errors ();
 		public static Gda.DataModel @new (string basedir);
 		[NoAccessorMethod]
 		public string basedir { owned get; construct; }
@@ -263,6 +264,7 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		protected DataModelImport ();
 		public void clean_errors ();
+		public unowned GLib.SList<GLib.Error> get_errors ();
 		public static Gda.DataModel new_file (string filename, bool random_access, Gda.Set? options);
 		public static Gda.DataModel new_mem (string data, bool random_access, Gda.Set? options);
 		public static Gda.DataModel new_xml_node ([CCode (type = "xmlNodePtr")] Xml.Node* node);
@@ -582,6 +584,7 @@ namespace Gda {
 		public weak string[] column_names;
 		[CCode (array_length_cname = "size")]
 		public weak GLib.Value[] column_values;
+		public weak GLib.HashTable<string,GLib.Value?> columns;
 		public int size;
 		public weak string table_name;
 		[CCode (has_construct_function = false)]
@@ -590,6 +593,7 @@ namespace Gda {
 		public void free ();
 		public unowned string get_table ();
 		public void set_column (string column, GLib.Value value, Gda.Connection? cnc);
+		public void set_columns (GLib.HashTable<string,GLib.Value?> columns, Gda.Connection? cnc);
 		public void set_table (string table);
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_meta_store_get_type ()")]
@@ -675,6 +679,7 @@ namespace Gda {
 		public int ncols;
 		public weak GLib.SList<string> param_ids;
 		public weak string sql;
+		public weak GLib.SList<Gda.Column> tmpl_columns;
 		public GLib.Type types;
 		[CCode (has_construct_function = false)]
 		protected PStmt ();
@@ -1246,6 +1251,8 @@ namespace Gda {
 		public bool add_data_from_xml_node ([CCode (type = "xmlNodePtr")] Xml.Node* node) throws GLib.Error;
 		[CCode (vfunc_name = "i_append_row")]
 		public abstract int append_row () throws GLib.Error;
+		[CCode (vfunc_name = "i_append_values")]
+		public abstract int append_values (GLib.List<GLib.Value?>? values) throws GLib.Error;
 		public Gda.DataModelArray array_copy_model () throws GLib.Error;
 		public Gda.DataModelArray array_copy_model_ext ([CCode (array_length_cname = "ncols", array_length_pos = 0.5)] int[] cols) throws GLib.Error;
 		[CCode (vfunc_name = "i_create_iter")]
@@ -1273,6 +1280,8 @@ namespace Gda {
 		public abstract int get_n_rows ();
 		[CCode (vfunc_name = "i_get_notify")]
 		public abstract bool get_notify ();
+		[CCode (vfunc_name = "i_find_row")]
+		public abstract int get_row_from_values (GLib.SList<GLib.Value?> values, [CCode (array_length = false)] int[] cols_index);
 		public unowned GLib.Value? get_typed_value_at (int col, int row, GLib.Type expected_type, bool nullok) throws GLib.Error;
 		[CCode (vfunc_name = "i_get_value_at")]
 		public abstract unowned GLib.Value? get_value_at (int col, int row) throws GLib.Error;
@@ -1302,6 +1311,8 @@ namespace Gda {
 		public abstract void set_notify (bool do_notify_changes);
 		[CCode (vfunc_name = "i_set_value_at")]
 		public abstract bool set_value_at (int col, int row, GLib.Value value) throws GLib.Error;
+		[CCode (vfunc_name = "i_set_values")]
+		public abstract bool set_values (int row, GLib.List<GLib.Value?>? values) throws GLib.Error;
 		public void thaw ();
 		public virtual signal void access_changed ();
 		public virtual signal void changed ();
@@ -1325,22 +1336,6 @@ namespace Gda {
 		public void @lock ();
 		public bool trylock ();
 		public void unlock ();
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct DataMetaWrapper {
-		public weak GLib.Object object;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct DataMetaWrapperClass {
-		public weak GLib.ObjectClass parent_class;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct DataModelDsnList {
-		public weak GLib.Object object;
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
-	public struct DataModelDsnListClass {
-		public weak GLib.ObjectClass object_class;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct Diff {
@@ -1369,6 +1364,7 @@ namespace Gda {
 	public struct MetaStoreChange {
 		public Gda.MetaStoreChangeType c_type;
 		public weak string table_name;
+		public weak GLib.HashTable<string,GLib.Value?> keys;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTable {
@@ -1585,11 +1581,6 @@ namespace Gda {
 		COLUMN_TYPES_MISMATCH_ERROR,
 		MODEL_ACCESS_ERROR,
 		USER_CANCELLED_ERROR
-	}
-	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_META_WRAPPER_MODE_", has_type_id = false)]
-	public enum DataMetaWrapperMode {
-		LC,
-		UC
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", cprefix = "GDA_DATA_MODEL_ACCESS_", has_type_id = false)]
 	[Flags]

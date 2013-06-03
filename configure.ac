@@ -470,21 +470,14 @@ AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=no])
 
-if test "x$found_introspection" = "xyes"
+if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
 then
-    if test "x$enable_gda_gi" = xauto
-    then
-        enable_gda_gi=yes
-    fi
-else
-    if test "x$enable_gda_gi" = xyes
-    then
+  enable_gda_gi=yes
+fi
+
+if test "x$enable_gda_gi" = "xyes" -a "x$found_introspection" != "xyes"
+then
 	AC_MSG_ERROR([Introspection for Libgda is requested but not available])
-    fi
-    if test "x$enable_gda_gi" = xauto
-    then
-	enable_gda_gi=no
-    fi
 fi
 
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
@@ -493,22 +486,16 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=no]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=no])
 
-if test "x$found_introspection" = "xyes"
+if test "x$enable_gda_gi" != "xyes" -a "$enable_gdaui_gi" = "xyes"
 then
-    if test "x$enable_gdaui_gi" = xauto
-    then
-        enable_gdaui_gi=yes
-    fi
-else
-    if test "x$enable_gdaui_gi" = xyes
-    then
 	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
-    fi
-    if test "x$enable_gdaui_gi" = xauto
-    then
-	enable_gdaui_gi=no
-    fi
 fi
+
+if test "x$enable_gdaui_gi" = "xyes" -a "x$have_ui" != "xyes"
+then
+	AC_MSG_ERROR([Introspection for Libgda UI is requested but no GTK+ is available])
+fi
+
 AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
 
 AC_ARG_ENABLE([gi-system-install],
@@ -1055,7 +1042,7 @@ echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Installing Glade GTK+ UI extension catalog: `if test x$have_glade != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
-echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi != xno; then echo yes; else echo no; fi`"
+echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings (--enable-vala): `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
