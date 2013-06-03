@@ -61,6 +61,12 @@ typedef enum {
 	GDA_META_STORE_MODIFY
 } GdaMetaStoreChangeType;
 
+/**
+ * GdaMetaStoreChange:
+ * @c_type:
+ * @table_name:
+ * @keys: (element-type utf8 GObject.Value):
+ */
 typedef struct {
 	/* change general information */
 	GdaMetaStoreChangeType  c_type;

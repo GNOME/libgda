@@ -1097,7 +1097,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
  * data models where some rows may be missing because the LDAP search has reached a limit
  * imposed by the LDAP server.
  *
- * Returns: (transfer none) (element-type GError) (array zero-terminated=1): a pointer to a %NULL terminated array of #GError, or %NULL.
+ * Returns: (transfer none) (element-type GLib.Error) (array zero-terminated=1): a pointer to a %NULL terminated array of #GError, or %NULL.
  *
  * Since: 4.2.6
  */

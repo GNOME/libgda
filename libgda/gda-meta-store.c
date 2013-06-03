@@ -407,7 +407,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	/**
 	 * GdaMetaStore::meta-changed:
 	 * @store: the #GdaMetaStore instance that emitted the signal
-	 * @changes: a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
+	 * @changes: (type GLib.SList) (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
 	 * This signal is emitted when the @store's contents have changed (the changes are in the @changes list)
 	 */
@@ -2454,7 +2454,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
  * gda_meta_store_extract_v:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @vars: (element-type gchar GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as
+ * @vars: (element-type utf8 GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as
  * value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be
  * omitted.
  * @error: a place to store errors, or %NULL

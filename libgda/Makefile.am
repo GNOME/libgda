@@ -123,13 +123,9 @@ gda_sources= \
 	$(GDA_LDAP_S) \
 	gda-data-model.c \
 	gda-data-model-dir.c \
-	gda-data-model-dsn-list.c \
-	gda-data-model-dsn-list.h \
 	gda-data-model-import.c \
 	gda-data-model-iter.c \
 	gda-data-access-wrapper.c \
-	gda-data-meta-wrapper.c \
-	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
 	gda-holder.c \
@@ -145,7 +141,6 @@ gda_sources= \
 	gda-row.c \
 	gda-set.c \
 	gda-server-operation.c \
-	gda-server-operation-private.h \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-statement.c \
@@ -175,12 +170,17 @@ libgda_sources =  \
 	gda-connection-sqlite.h \
 	gda-custom-marshal.c \
 	gda-custom-marshal.h \
+	gda-data-meta-wrapper.c \
+	gda-data-meta-wrapper.h \
+	gda-data-model-dsn-list.c \
+	gda-data-model-dsn-list.h \
 	gda-data-select-extra.h \
-	gda-types.c \
-	gda-types.h \
 	gda-marshal.c \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
+	gda-types.c \
+	gda-types.h \
+	gda-server-operation-private.h \
 	gda-statement-priv.h \
 	global.h \
 	md5.h \

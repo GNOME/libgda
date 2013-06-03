@@ -68,7 +68,7 @@ typedef enum
 } GdaServerProviderError;
 
 /**
- * GdaServerProvider: (skip)
+ * GdaServerProvider:
  */
 struct _GdaServerProvider {
 	GObject                   object;
@@ -77,7 +77,53 @@ struct _GdaServerProvider {
 
 
 /**
- * GdaServerProviderMeta: (skip)
+ * GdaServerProviderMeta:
+ * @_info:
+ * @_btypes:
+ * @_udt:
+ * @udt:
+ * @_udt_cols:
+ * @udt_cols:
+ * @_enums:
+ * @enums:
+ * @_domains:
+ * @domains:
+ * @_constraints_dom:
+ * @constraints_dom:
+ * @_el_types:
+ * @el_types:
+ * @_collations:
+ * @collations:
+ * @_character_sets:
+ * @character_sets:
+ * @_schemata:
+ * @schemata:
+ * @_tables_views:
+ * @tables_views:
+ * @_columns:
+ * @columns:
+ * @_view_cols:
+ * @view_cols:
+ * @_constraints_tab:
+ * @constraints_tab:
+ * @_constraints_ref:
+ * @constraints_ref:
+ * @_key_columns:
+ * @key_columns:
+ * @_check_columns:
+ * @check_columns:
+ * @_triggers:
+ * @triggers:
+ * @_routines:
+ * @routines:
+ * @_routine_col:
+ * @routine_col:
+ * @_routine_par:
+ * @routine_par:
+ * @_indexes_tab:
+ * @indexes_tab:
+ * @_index_cols:
+ * @index_cols:
  *
  * These methods must be implemented by providers to update a connection's associated metadata (in a 
  * #GdaMetaStore object), see the <link linkend="prov-metadata">Virtual methods for providers/Methods - metadata</link>
@@ -223,9 +269,6 @@ typedef struct {
 } GdaServerProviderMeta;
 
 /* distributed transaction support */
-/**
- * GdaServerProviderXa: (skip)
- */
 typedef struct {
 	gboolean (*xa_start)    (GdaServerProvider *prov, GdaConnection *cnc, const GdaXaTransactionId *trid, GError **error);
 
@@ -239,7 +282,7 @@ typedef struct {
 } GdaServerProviderXa;
 
 /**
- * GdaServerProviderAsyncCallback: (skip)
+ * GdaServerProviderAsyncCallback:
  * @provider: 
  * @cnc: 
  * @task_id: 
@@ -252,7 +295,7 @@ typedef struct {
 typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 						gboolean result_status, const GError *error, gpointer data);
 /**
- * GdaServerProviderExecCallback: (skip)
+ * GdaServerProviderExecCallback:
  * @provider: 
  * @cnc: 
  * @task_id: 
@@ -265,6 +308,9 @@ typedef void (*GdaServerProviderAsyncCallback) (GdaServerProvider *provider, Gda
 typedef void (*GdaServerProviderExecCallback) (GdaServerProvider *provider, GdaConnection *cnc, guint task_id, 
 					       GObject *result_obj, const GError *error, gpointer data);
 
+/**
+ * GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD: (skip)
+ */
 #define GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD ((gpointer)0x1)
 struct _GdaServerProviderClass {
 	GObjectClass parent_class;
@@ -321,13 +367,14 @@ struct _GdaServerProviderClass {
 	/* GdaStatement */
 	GdaSqlParser           *(* create_parser)        (GdaServerProvider *provider, GdaConnection *cnc);
 	
-	/**
-	 * statement_to_sql:
-	 * @cnc: a #GdaConnection object
-	 * @stmt: a #GdaStatement object
-	 * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
-	 * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
-	 * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
+/**
+ * statement_to_sql:
+ * @provider: a #GdaServerProvider object
+ * @cnc: a #GdaConnection object
+ * @stmt: a #GdaStatement object
+ * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+ * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
+ * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
 	 * @error: a place to store errors, or %NULL
 	 *
 	 * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc

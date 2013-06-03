@@ -1473,7 +1473,6 @@ function.</doc>
       </function>
       <function name="get_provider"
                 c:identifier="gda_config_get_provider"
-                introspectable="0"
                 throws="1">
         <doc xml:whitespace="preserve">Get a pointer to the session-wide #GdaServerProvider for the
 provider named @provider_name. The caller must not call g_object_unref() on the
@@ -2764,9 +2763,7 @@ association must have been done using gda_connection_add_prepared_statement().</
           </parameter>
         </parameters>
       </method>
-      <method name="get_provider"
-              c:identifier="gda_connection_get_provider"
-              introspectable="0">
+      <method name="get_provider" c:identifier="gda_connection_get_provider">
         <doc xml:whitespace="preserve">Gets a pointer to the #GdaServerProvider object used to access the database</doc>
         <return-value transfer-ownership="none">
           <doc xml:whitespace="preserve">the #GdaServerProvider (NEVER NULL)</doc>
@@ -3907,10 +3904,7 @@ If the connection is not a thread wrapper, then this property has no effect.</do
                 transfer-ownership="none">
         <type/>
       </property>
-      <property name="provider"
-                introspectable="0"
-                writable="1"
-                transfer-ownership="none">
+      <property name="provider" writable="1" transfer-ownership="none">
         <type name="ServerProvider"/>
       </property>
       <property name="thread-owner" writable="1" transfer-ownership="none">
@@ -5439,58 +5433,6 @@ if the @str string does not correspond to a valid string for the requested type,
           </parameters>
         </callback>
       </field>
-    </record>
-    <record name="DataMetaWrapper" c:type="GdaDataMetaWrapper">
-      <field name="object" writable="1">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv" writable="1">
-        <type name="DataMetaWrapperPrivate"
-              c:type="GdaDataMetaWrapperPrivate*"/>
-      </field>
-    </record>
-    <record name="DataMetaWrapperClass" c:type="GdaDataMetaWrapperClass">
-      <field name="parent_class" writable="1">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <enumeration name="DataMetaWrapperMode" c:type="GdaDataMetaWrapperMode">
-      <member name="lc" value="0" c:identifier="GDA_DATA_META_WRAPPER_MODE_LC">
-      </member>
-      <member name="uc" value="1" c:identifier="GDA_DATA_META_WRAPPER_MODE_UC">
-      </member>
-    </enumeration>
-    <record name="DataMetaWrapperPrivate"
-            c:type="GdaDataMetaWrapperPrivate"
-            disguised="1">
     </record>
     <interface name="DataModel"
                c:symbol-prefix="data_model"
@@ -7374,61 +7316,6 @@ Also clears @model's contents.</doc>
     </record>
     <record name="DataModelDirPrivate"
             c:type="GdaDataModelDirPrivate"
-            disguised="1">
-    </record>
-    <class name="DataModelDsnList"
-           c:symbol-prefix="data_model_dsn_list"
-           c:type="GdaDataModelDsnList"
-           parent="GObject.Object"
-           glib:type-name="GdaDataModelDsnList"
-           glib:get-type="gda_data_model_dsn_list_get_type"
-           glib:type-struct="DataModelDsnListClass">
-      <implements name="DataModel"/>
-      <field name="object">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv">
-        <type name="DataModelDsnListPrivate"
-              c:type="GdaDataModelDsnListPrivate*"/>
-      </field>
-    </class>
-    <record name="DataModelDsnListClass"
-            c:type="GdaDataModelDsnListClass"
-            glib:is-gtype-struct-for="DataModelDsnList">
-      <field name="object_class">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <record name="DataModelDsnListPrivate"
-            c:type="GdaDataModelDsnListPrivate"
             disguised="1">
     </record>
     <enumeration name="DataModelError"
@@ -10510,8 +10397,7 @@ occurrence of "'" with "''" and "\" with "\\"</doc>
         </return-value>
       </function>
       <function name="new_with_provider"
-                c:identifier="gda_handler_string_new_with_provider"
-                introspectable="0">
+                c:identifier="gda_handler_string_new_with_provider">
         <doc xml:whitespace="preserve">Creates a data handler for strings, which will use some specific methods implemented
 by the @prov object (possibly also @cnc).</doc>
         <return-value transfer-ownership="full">
@@ -12131,7 +12017,7 @@ SQL identifiers are represented in @store, see the
           <parameter name="vars" transfer-ownership="none" allow-none="1">
             <doc xml:whitespace="preserve">a hash table with all variables names as keys and GValue* as value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be omitted.</doc>
             <type name="GLib.HashTable" c:type="GHashTable*">
-              <type name="gchar"/>
+              <type name="utf8"/>
               <type name="GObject.Value"/>
             </type>
           </parameter>
@@ -12633,7 +12519,9 @@ See gda_meta_store_declare_foreign_key() for more information anout the @catalog
         <parameters>
           <parameter name="changes" transfer-ownership="none">
             <doc xml:whitespace="preserve">a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)</doc>
-            <type name="gpointer" c:type="gpointer"/>
+            <type name="GLib.SList" c:type="gpointer">
+              <type name="MetaStoreChange"/>
+            </type>
           </parameter>
         </parameters>
       </glib:signal>
@@ -12669,8 +12557,8 @@ object.</doc>
       </field>
       <field name="keys" writable="1">
         <type name="GLib.HashTable" c:type="GHashTable*">
-          <type name="gpointer" c:type="gpointer"/>
-          <type name="gpointer" c:type="gpointer"/>
+          <type name="utf8"/>
+          <type name="GObject.Value"/>
         </type>
       </field>
     </record>
@@ -14225,7 +14113,8 @@ providers' implementations to report any error while reading a value from the da
     </record>
     <constant name="SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD"
               value="1"
-              c:type="GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD">
+              c:type="GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD"
+              introspectable="0">
       <type name="gpointer" c:type="gpointer"/>
     </constant>
     <constant name="SQLSTATE_GENERAL_ERROR"
@@ -14731,8 +14620,7 @@ will be applied if both are %NULL).</doc>
       <method name="get_sql_identifier_at_path"
               c:identifier="gda_server_operation_get_sql_identifier_at_path"
               shadows="get_sql_identifier_at"
-              version="4.2.6"
-              introspectable="0">
+              version="4.2.6">
         <doc xml:whitespace="preserve">This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
 is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
 and will correctly be quoted to be used with @cnc, or @prov if @cnc is %NULL (a generic quoting rule
@@ -15067,7 +14955,6 @@ Here are the possible formats of @path_format:
         <type name="gint" c:type="gint"/>
       </property>
       <property name="provider"
-                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
@@ -15357,7 +15244,6 @@ Here are the possible formats of @path_format:
     <class name="ServerProvider"
            c:symbol-prefix="server_provider"
            c:type="GdaServerProvider"
-           introspectable="0"
            parent="GObject.Object"
            abstract="1"
            glib:type-name="GdaServerProvider"
@@ -15474,7 +15360,7 @@ implementations</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="create_connection">
+      <virtual-method name="create_connection" introspectable="0">
         <return-value>
           <type name="Connection" c:type="GdaConnection*"/>
         </return-value>
@@ -15572,7 +15458,7 @@ to be enclosed in single quotes before being used in an SQL statement.</doc>
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="get_data_handler">
+      <virtual-method name="get_data_handler" introspectable="0">
         <return-value>
           <type name="DataHandler" c:type="GdaDataHandler*"/>
         </return-value>
@@ -15875,7 +15761,7 @@ the operation; to actually perform the operation, use gda_server_provider_perfor
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="statement_rewrite" throws="1">
+      <virtual-method name="statement_rewrite" introspectable="0" throws="1">
         <return-value>
           <type name="SqlStatement" c:type="GdaSqlStatement*"/>
         </return-value>
@@ -15894,7 +15780,7 @@ the operation; to actually perform the operation, use gda_server_provider_perfor
           </parameter>
         </parameters>
       </virtual-method>
-      <virtual-method name="statement_to_sql" throws="1">
+      <virtual-method name="statement_to_sql" introspectable="0" throws="1">
         <return-value transfer-ownership="full">
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -16503,8 +16389,7 @@ otherwise.</doc>
       </field>
     </class>
     <callback name="ServerProviderAsyncCallback"
-              c:type="GdaServerProviderAsyncCallback"
-              introspectable="0">
+              c:type="GdaServerProviderAsyncCallback">
       <doc xml:whitespace="preserve">Function to be called by Libgda when the associated asynchronous method invoked finishes.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -16540,7 +16425,7 @@ otherwise.</doc>
         <type name="GLib.Thread" c:type="GThread*"/>
       </field>
       <field name="get_name">
-        <callback name="get_name" introspectable="0">
+        <callback name="get_name">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">a string containing the provider's name</doc>
             <type name="utf8" c:type="const gchar*"/>
@@ -16553,7 +16438,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="get_version">
-        <callback name="get_version" introspectable="0">
+        <callback name="get_version">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">a string containing the version identification.</doc>
             <type name="utf8" c:type="const gchar*"/>
@@ -16566,7 +16451,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="get_server_version">
-        <callback name="get_server_version" introspectable="0">
+        <callback name="get_server_version">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">a (read only) string, or %NULL if an error occurred</doc>
             <type name="utf8" c:type="const gchar*"/>
@@ -16583,7 +16468,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="supports_feature">
-        <callback name="supports_feature" introspectable="0">
+        <callback name="supports_feature">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">%TRUE if @feature is supported</doc>
             <type name="gboolean" c:type="gboolean"/>
@@ -16603,7 +16488,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="get_data_handler">
+      <field name="get_data_handler" introspectable="0">
         <callback name="get_data_handler" introspectable="0">
           <return-value>
             <type name="DataHandler" c:type="GdaDataHandler*"/>
@@ -16625,7 +16510,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="get_def_dbms_type">
-        <callback name="get_def_dbms_type" introspectable="0">
+        <callback name="get_def_dbms_type">
           <return-value transfer-ownership="none">
             <type name="utf8" c:type="const gchar*"/>
           </return-value>
@@ -16643,7 +16528,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="escape_string">
-        <callback name="escape_string" introspectable="0">
+        <callback name="escape_string">
           <return-value transfer-ownership="full">
             <doc xml:whitespace="preserve">a new string suitable to use in SQL statements</doc>
             <type name="utf8" c:type="gchar*"/>
@@ -16664,7 +16549,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="unescape_string">
-        <callback name="unescape_string" introspectable="0">
+        <callback name="unescape_string">
           <return-value transfer-ownership="full">
             <doc xml:whitespace="preserve">a new string</doc>
             <type name="utf8" c:type="gchar*"/>
@@ -16684,7 +16569,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="open_connection">
+      <field name="open_connection" introspectable="0">
         <callback name="open_connection" introspectable="0">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -16716,7 +16601,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="close_connection">
-        <callback name="close_connection" introspectable="0">
+        <callback name="close_connection">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16731,7 +16616,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="get_database">
-        <callback name="get_database" introspectable="0">
+        <callback name="get_database">
           <return-value transfer-ownership="none">
             <type name="utf8" c:type="const gchar*"/>
           </return-value>
@@ -16746,7 +16631,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="supports_operation">
-        <callback name="supports_operation" introspectable="0">
+        <callback name="supports_operation">
           <return-value transfer-ownership="none">
             <doc xml:whitespace="preserve">%TRUE if the operation is supported</doc>
             <type name="gboolean" c:type="gboolean"/>
@@ -16772,7 +16657,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="create_operation">
-        <callback name="create_operation" introspectable="0" throws="1">
+        <callback name="create_operation" throws="1">
           <return-value transfer-ownership="full">
             <doc xml:whitespace="preserve">a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred</doc>
             <type name="ServerOperation" c:type="GdaServerOperation*"/>
@@ -16798,7 +16683,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="render_operation">
-        <callback name="render_operation" introspectable="0" throws="1">
+        <callback name="render_operation" throws="1">
           <return-value transfer-ownership="full">
             <doc xml:whitespace="preserve">a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.</doc>
             <type name="utf8" c:type="gchar*"/>
@@ -16818,7 +16703,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="perform_operation">
+      <field name="perform_operation" introspectable="0">
         <callback name="perform_operation" introspectable="0" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
@@ -16847,7 +16732,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="begin_transaction">
-        <callback name="begin_transaction" introspectable="0" throws="1">
+        <callback name="begin_transaction" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16869,7 +16754,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="commit_transaction">
-        <callback name="commit_transaction" introspectable="0" throws="1">
+        <callback name="commit_transaction" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16887,7 +16772,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="rollback_transaction">
-        <callback name="rollback_transaction" introspectable="0" throws="1">
+        <callback name="rollback_transaction" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16905,7 +16790,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="add_savepoint">
-        <callback name="add_savepoint" introspectable="0" throws="1">
+        <callback name="add_savepoint" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16923,7 +16808,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="rollback_savepoint">
-        <callback name="rollback_savepoint" introspectable="0" throws="1">
+        <callback name="rollback_savepoint" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16941,7 +16826,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="delete_savepoint">
-        <callback name="delete_savepoint" introspectable="0" throws="1">
+        <callback name="delete_savepoint" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -16959,7 +16844,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="create_parser">
-        <callback name="create_parser" introspectable="0">
+        <callback name="create_parser">
           <return-value transfer-ownership="full">
             <doc xml:whitespace="preserve">a new #GdaSqlParser object, or %NULL.</doc>
             <type name="SqlParser" c:type="GdaSqlParser*"/>
@@ -16975,7 +16860,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="statement_to_sql">
+      <field name="statement_to_sql" introspectable="0">
         <callback name="statement_to_sql" introspectable="0" throws="1">
           <return-value transfer-ownership="full">
             <type name="utf8" c:type="gchar*"/>
@@ -17005,7 +16890,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="statement_prepare">
-        <callback name="statement_prepare" introspectable="0" throws="1">
+        <callback name="statement_prepare" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17022,7 +16907,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="statement_execute">
+      <field name="statement_execute" introspectable="0">
         <callback name="statement_execute" introspectable="0" throws="1">
           <return-value>
             <type name="GObject.Object" c:type="GObject*"/>
@@ -17064,7 +16949,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="is_busy">
-        <callback name="is_busy" introspectable="0" throws="1">
+        <callback name="is_busy" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17079,7 +16964,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="cancel">
-        <callback name="cancel" introspectable="0" throws="1">
+        <callback name="cancel" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17096,7 +16981,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="create_connection">
+      <field name="create_connection" introspectable="0">
         <callback name="create_connection" introspectable="0">
           <return-value>
             <type name="Connection" c:type="GdaConnection*"/>
@@ -17108,14 +16993,14 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="meta_funcs" introspectable="0">
+      <field name="meta_funcs">
         <type name="ServerProviderMeta" c:type="GdaServerProviderMeta"/>
       </field>
-      <field name="xa_funcs" introspectable="0">
+      <field name="xa_funcs">
         <type name="ServerProviderXa" c:type="GdaServerProviderXa*"/>
       </field>
       <field name="identifier_quote">
-        <callback name="identifier_quote" introspectable="0">
+        <callback name="identifier_quote">
           <return-value transfer-ownership="full">
             <type name="utf8" c:type="gchar*"/>
           </return-value>
@@ -17139,7 +17024,7 @@ otherwise.</doc>
         </callback>
       </field>
       <field name="handle_async">
-        <callback name="handle_async" introspectable="0" throws="1">
+        <callback name="handle_async" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -17153,7 +17038,7 @@ otherwise.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="statement_rewrite">
+      <field name="statement_rewrite" introspectable="0">
         <callback name="statement_rewrite" introspectable="0" throws="1">
           <return-value>
             <type name="SqlStatement" c:type="GdaSqlStatement*"/>
@@ -17278,8 +17163,7 @@ otherwise.</doc>
       </member>
     </enumeration>
     <callback name="ServerProviderExecCallback"
-              c:type="GdaServerProviderExecCallback"
-              introspectable="0">
+              c:type="GdaServerProviderExecCallback">
       <doc xml:whitespace="preserve">Function to be called by Libgda when the associated asynchronous method invoked finishes</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -17321,9 +17205,7 @@ otherwise.</doc>
             c:type="GdaServerProviderInfo"
             disguised="1">
     </record>
-    <record name="ServerProviderMeta"
-            c:type="GdaServerProviderMeta"
-            introspectable="0">
+    <record name="ServerProviderMeta" c:type="GdaServerProviderMeta">
       <doc xml:whitespace="preserve">These methods must be implemented by providers to update a connection's associated metadata (in a 
 #GdaMetaStore object), see the &lt;link linkend="prov-metadata"&gt;Virtual methods for providers/Methods - metadata&lt;/link&gt;
 for more information.</doc>
@@ -18656,11 +18538,9 @@ for more information.</doc>
         <type name="SqlParser" c:type="GdaSqlParser*"/>
       </field>
     </record>
-    <record name="ServerProviderXa"
-            c:type="GdaServerProviderXa"
-            introspectable="0">
+    <record name="ServerProviderXa" c:type="GdaServerProviderXa">
       <field name="xa_start">
-        <callback name="xa_start" introspectable="0" throws="1">
+        <callback name="xa_start" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18678,7 +18558,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="xa_end">
-        <callback name="xa_end" introspectable="0" throws="1">
+        <callback name="xa_end" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18696,7 +18576,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="xa_prepare">
-        <callback name="xa_prepare" introspectable="0" throws="1">
+        <callback name="xa_prepare" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18714,7 +18594,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="xa_commit">
-        <callback name="xa_commit" introspectable="0" throws="1">
+        <callback name="xa_commit" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18732,7 +18612,7 @@ for more information.</doc>
         </callback>
       </field>
       <field name="xa_rollback">
-        <callback name="xa_rollback" introspectable="0" throws="1">
+        <callback name="xa_rollback" throws="1">
           <return-value transfer-ownership="none">
             <type name="gboolean" c:type="gboolean"/>
           </return-value>
@@ -18749,7 +18629,7 @@ for more information.</doc>
           </parameters>
         </callback>
       </field>
-      <field name="xa_recover">
+      <field name="xa_recover" introspectable="0">
         <callback name="xa_recover" introspectable="0" throws="1">
           <return-value>
             <type name="GLib.List" c:type="GList*">
@@ -21772,7 +21652,7 @@ To include variables in the @sql string, see the
           <type name="Holder"/>
         </type>
       </field>
-      <field name="provider" introspectable="0" writable="1">
+      <field name="provider" writable="1">
         <type name="ServerProvider" c:type="GdaServerProvider*"/>
       </field>
       <field name="cnc" writable="1">
@@ -26972,8 +26852,7 @@ empty (no row) data model. This is use dy database providers' implementations.</
     </function>
     <function name="sql_identifier_quote"
               c:identifier="gda_sql_identifier_quote"
-              version="4.0.3"
-              introspectable="0">
+              version="4.0.3">
       <doc xml:whitespace="preserve">Use this function for any SQL identifier to make sure that:
 &lt;itemizedlist&gt;
   &lt;listitem&gt;
