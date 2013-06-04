@@ -1,3 +1,12 @@
+libgda 5.0.4, 2013-06-04
+
+ - Many GObject introspection improvements
+ - Some LDAP related work (provider and command line tool)
+ - GdaSql: many small improvements
+ - MDB provider: handle Mdbtools V0.7
+ - Many small misc. corrections and improvements
+ - Bugs corrected: #672874, #674715, #674618, Debian Bug #708806
+
 libgda 5.0.3, 2012-01-24
 
  - Fixed BDBSql building and running
