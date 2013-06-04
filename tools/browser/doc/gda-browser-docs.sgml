@@ -161,7 +161,7 @@
 
   <part id="part_index">
     <title>Appendix</title>
-      <xi:include href="fdl-appendix.xml"/>
+      <xi:include href="fdl-appendix.sgml"/>
   </part>
 </book>
 
