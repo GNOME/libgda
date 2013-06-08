@@ -719,6 +719,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
+	const gchar *append_extension = NULL;
 	const gchar *use_extra_functions = NULL, *with_fk = NULL, *regexp, *locale_collate, *extensions;
 	gint errmsg;
 	SqliteConnectionData *cdata;
@@ -743,6 +744,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	if (!dirname)
 		dirname="."; /* default to current directory */
 	dbname = gda_quark_list_find (params, "DB_NAME");
+	append_extension = gda_quark_list_find (params, "APPEND_DB_EXTENSION");
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
 	with_fk = gda_quark_list_find (params, "FK");
 	use_extra_functions = gda_quark_list_find (params, "EXTRA_FUNCTIONS");
@@ -819,7 +821,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 
 			/* try first with the file extension */
 			gchar *tmp, *f1, *f2;
-			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+			if (!append_extension ||
+			    (append_extension && ((*append_extension == 't') || (*append_extension == 'T'))))
+				tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+			else
+				tmp = g_strdup (dbname);
 			f1 = g_build_filename (dirname, tmp, NULL);
 			g_free (tmp);
 			f2 = g_build_filename (dirname, dbname, NULL);
@@ -1310,7 +1316,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 	switch (optype) {
 	case GDA_SERVER_OPERATION_CREATE_DB: {
 		const GValue *value;
-		const gchar *dbname = NULL;
+		const gchar *dbname = NULL, *append_extension = NULL;
 		const gchar *dir = NULL;
 		SqliteConnectionData *cdata;
 		gint errmsg;
@@ -1320,11 +1326,18 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
                 if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
                         dbname = g_value_get_string (value);
+		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/APPEND_DB_EXTENSION");
+                if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+                        append_extension = g_value_get_string (value);
 		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_DIR");
                 if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
                         dir = g_value_get_string (value);
 
-		tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+		if (!append_extension ||
+		    (append_extension && ((*append_extension == 't') || (*append_extension == 'T'))))
+			tmp = g_strdup_printf ("%s%s", dbname, FILE_EXTENSION);
+		else
+			tmp = g_strdup (dbname);
 		filename = g_build_filename (dir, tmp, NULL);
 		g_free (tmp);
 

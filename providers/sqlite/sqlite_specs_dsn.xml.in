@@ -2,6 +2,7 @@
 <data-set-spec>
   <parameters>
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to use (without the .db)" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="APPEND_DB_EXTENSION" _name="Append '.db'" _descr="Defines if the '.db' extension need to be appended to the DB_NAME argument" gdatype="gchararray" nullok="TRUE"/>
     <parameter id="DB_DIR" _name="Directory" _descr="Directory where the database file is stored" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
     <parameter id="EXTRA_FUNCTIONS" _name="Extra functions" _descr="Enable usage of extra functions (gda_upper, ...)" gdatype="gboolean" nullok="TRUE">
       <gda_value>TRUE</gda_value>

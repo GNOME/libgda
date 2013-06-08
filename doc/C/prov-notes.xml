@@ -88,6 +88,12 @@
               <entry>Yes</entry>
 	    </row>
 	    <row>
+              <entry>APPEND_DB_EXTENSION</entry>
+              <entry>Defines if the '.db' extension need to be appended to the name of the database. Defaults to TRUE if not
+	      specified.</entry>
+              <entry>No</entry>
+	    </row>
+	    <row>
               <entry>DB_DIR</entry>
               <entry>The directory where the database file is; if not specified, the current working
 	      directory is used.</entry>
