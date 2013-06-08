@@ -157,14 +157,16 @@ tests_common_set_serialize (GdaSet *set)
 				g_string_append_c (string, ',');
 
 			g_string_append_c (string, '{');
-			g_string_append_printf (string, "\"holder\":%d", g_slist_index (set->holders, node->holder));
+			g_string_append_printf (string, "\"holder\":%d", g_slist_index (set->holders, gda_set_node_get_holder (node)));
 
-			if (node->source_model) {
+			GdaDataModel *source_model;
+			source_model = gda_set_node_get_data_model (node);
+			if (source_model) {
 				g_string_append (string, ",\"source_model\":");
-				if (g_object_get_data (G_OBJECT (node->source_model), "name"))
-					json = _json_quote_string (g_object_get_data (G_OBJECT (node->source_model), "name"));
+				if (g_object_get_data (G_OBJECT (source_model), "name"))
+					json = _json_quote_string (g_object_get_data (G_OBJECT (source_model), "name"));
 				else {
-					str = gda_data_model_export_to_string (node->source_model, 
+					str = gda_data_model_export_to_string (source_model,
 									       GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 									       NULL, 0, NULL, 0, NULL);
 					json = _json_quote_string (str);
@@ -174,7 +176,7 @@ tests_common_set_serialize (GdaSet *set)
 				g_free (json);
 
 				g_string_append (string, ",\"source_column\":");
-				g_string_append_printf (string, "\"%d\"", node->source_column);
+				g_string_append_printf (string, "\"%d\"", gda_set_node_get_source_column (node));
 				/* FIXME: node->hint */
 			}
 			g_string_append_c (string, '}');
@@ -190,10 +192,12 @@ tests_common_set_serialize (GdaSet *set)
 				g_string_append_c (string, ',');
 			g_string_append_c (string, '{');
 			g_string_append (string, "\"model\":");
-			if (g_object_get_data (G_OBJECT (source->data_model), "name"))
-				json = _json_quote_string (g_object_get_data (G_OBJECT (source->data_model), "name"));
+			GdaDataModel *data_model;
+			data_model = gda_set_source_get_data_model (source);
+			if (g_object_get_data (G_OBJECT (data_model), "name"))
+				json = _json_quote_string (g_object_get_data (G_OBJECT (data_model), "name"));
 			else {
-				str = gda_data_model_export_to_string (source->data_model, 
+				str = gda_data_model_export_to_string (data_model,
 								       GDA_DATA_MODEL_IO_TEXT_SEPARATED,
 								       NULL, 0, NULL, 0, NULL);
 				json = _json_quote_string (str);
@@ -204,8 +208,8 @@ tests_common_set_serialize (GdaSet *set)
 
 			g_string_append (string, ",\"nodes\":[");
 			GSList *nodes;
-			for (nodes = source->nodes; nodes; nodes = nodes->next) {
-				if (nodes != source->nodes)
+			for (nodes = gda_set_source_get_nodes (source); nodes; nodes = nodes->next) {
+				if (nodes != gda_set_source_get_nodes (source))
 					g_string_append_c (string, ',');
 				g_string_append_printf (string, "%d", g_slist_index (set->nodes_list, nodes->data));
 			}
