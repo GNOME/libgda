@@ -33,6 +33,7 @@
 #include "mgr-ldap-entries.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "ldap-browser-perspective.h"
+#include <libgda/gda-debug-macros.h>
 
 typedef struct {
 	gchar *dn;

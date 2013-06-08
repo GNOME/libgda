@@ -28,6 +28,7 @@
 #include "../support.h"
 #include "query-favorite-selector.h"
 #include "query-editor.h"
+#include <libgda/gda-debug-macros.h>
 
 /* 
  * Main static functions 

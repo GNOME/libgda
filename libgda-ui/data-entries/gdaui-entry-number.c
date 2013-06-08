@@ -23,6 +23,7 @@
 #include "gdaui-numeric-entry.h"
 #include <libgda/gda-data-handler.h>
 #include "gdk/gdkkeysyms.h"
+#include <libgda/gda-debug-macros.h>
 
 /* 
  * Main static functions 

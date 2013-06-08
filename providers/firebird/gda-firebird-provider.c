@@ -42,6 +42,8 @@
 #include "gda-firebird-meta.h"
 #include "gda-firebird-parser.h"
 #include "gda-firebird-util.h"
+#include <libgda/gda-debug-macros.h>
+
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 #define FILE_EXTENSION ".fdb"

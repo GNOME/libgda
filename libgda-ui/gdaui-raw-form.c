@@ -32,6 +32,7 @@
 #include "gdaui-data-filter.h"
 #include "internal/utility.h"
 #include "data-entries/gdaui-entry-shell.h"
+#include <libgda/gda-debug-macros.h>
 
 static void gdaui_raw_form_class_init (GdauiRawFormClass * class);
 static void gdaui_raw_form_init (GdauiRawForm *wid);

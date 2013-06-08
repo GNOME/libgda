@@ -31,6 +31,7 @@
 #include <libgda/gda-blob-op.h>
 #include "../gda-sqlite.h"
 #include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/gda-debug-macros.h>
 
 #define GDA_DEBUG_VIRTUAL
 #undef GDA_DEBUG_VIRTUAL

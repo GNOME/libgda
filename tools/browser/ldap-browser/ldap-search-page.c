@@ -29,6 +29,7 @@
 #include <common/ui-formgrid.h>
 #include "../browser-stock-icons.h"
 #include "vtable-dialog.h"
+#include <libgda/gda-debug-macros.h>
 
 typedef struct {
 	gchar              *base_dn;

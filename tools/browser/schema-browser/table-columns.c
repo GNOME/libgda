@@ -37,6 +37,7 @@
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
 #endif
+#include <libgda/gda-debug-macros.h>
 
 struct _TableColumnsPrivate {
 	BrowserConnection *bcnc;

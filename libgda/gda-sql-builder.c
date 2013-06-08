@@ -30,6 +30,7 @@
 #include <libgda/gda-statement.h>
 #include <libgda/gda-data-handler.h>
 #include <sql-parser/gda-sql-parser-enum-types.h>
+#include <libgda/gda-debug-macros.h>
 
 /*
  * Main static functions

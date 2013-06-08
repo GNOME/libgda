@@ -33,6 +33,7 @@
 #include <libgda-ui/gdaui-raw-form.h>
 #include <libgda-ui/gdaui-easy.h>
 #include <libgda/binreloc/gda-binreloc.h>
+#include <libgda/gda-debug-macros.h>
 
 #define SPACING 3
 static void gdaui_basic_form_class_init (GdauiBasicFormClass * class);

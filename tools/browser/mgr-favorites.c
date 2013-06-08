@@ -23,6 +23,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include "mgr-favorites.h"
 #include "support.h"
+#include <libgda/gda-debug-macros.h>
 
 /* asynchronous (in idle loop) icon resolution */
 typedef struct {

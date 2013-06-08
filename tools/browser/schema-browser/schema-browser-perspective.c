@@ -30,6 +30,7 @@
 #ifdef HAVE_GOOCANVAS
 #include "relations-diagram.h"
 #endif
+#include <libgda/gda-debug-macros.h>
 
 /* 
  * Main static functions 

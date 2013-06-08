@@ -30,7 +30,7 @@
 #include <libgda/gda-meta-struct.h>
 #include <libgda/gda-meta-struct-private.h>
 #include <libgda/gda-config.h>
-
+#include <libgda/gda-debug-macros.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 
 /*

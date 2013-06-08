@@ -64,6 +64,7 @@
 #include <libgda/gda-repetitive-statement.h>
 #include <gda-statement-priv.h>
 #include <sqlite/virtual/gda-vconnection-data-model.h>
+#include <libgda/gda-debug-macros.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>

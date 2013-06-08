@@ -27,6 +27,7 @@
 #include <libgda/gda-connection-private.h>
 #include "gda-models.h"
 #include "gda-models-provider.h"
+#include <libgda/gda-debug-macros.h>
 
 static void gda_models_provider_class_init (GdaModelsProviderClass *klass);
 static void gda_models_provider_init       (GdaModelsProvider *provider,

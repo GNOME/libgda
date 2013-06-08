@@ -26,6 +26,8 @@
 #include <gdk-pixbuf/gdk-pixdata.h>
 #endif
 
+#include <libgda/gda-debug-macros.h>
+
 /* RTE markup analysis */
 typedef enum {
 	MARKUP_NONE,      /* 0 */

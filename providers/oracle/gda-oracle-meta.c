@@ -31,6 +31,7 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
 #include "gda-oracle-util.h"
+#include <libgda/gda-debug-macros.h>
 
 /*
  * predefined statements' IDs

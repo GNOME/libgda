@@ -24,6 +24,7 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-row.h>
 #include <data-model-errors.h>
+#include <libgda/gda-debug-macros.h>
 
 #define NCOLS 4
 typedef struct {

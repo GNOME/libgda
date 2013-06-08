@@ -52,7 +52,7 @@
 #include <libgda/gda-set.h>
 #include <libgda/gda-blob-op.h>
 #include <libgda/gda-statement-priv.h>
-
+#include <libgda/gda-debug-macros.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
 #define KEYWORDS_HASH_NO_STATIC

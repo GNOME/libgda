@@ -29,6 +29,7 @@
 #include "gda-ldap.h"
 #include "gda-ldap-util.h"
 #include "gdaprov-data-model-ldap.h"
+#include <libgda/gda-debug-macros.h>
 
 #define GDA_DEBUG_SUBSEARCHES
 #undef GDA_DEBUG_SUBSEARCHES

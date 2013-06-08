@@ -26,6 +26,7 @@
 #include <db.h>
 #include <gmodule.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-debug-macros.h>
 
 #define BDB_VERSION  (10000*DB_VERSION_MAJOR+100*DB_VERSION_MINOR+DB_VERSION_PATCH)
 

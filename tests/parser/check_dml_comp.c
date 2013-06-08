@@ -25,7 +25,7 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-util.h>
 #include <sql-parser/gda-sql-parser.h>
-
+#include <libgda/gda-debug-macros.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 

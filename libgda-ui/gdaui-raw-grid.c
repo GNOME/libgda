@@ -32,6 +32,7 @@
 #include "data-entries/gdaui-data-cell-renderer-info.h"
 #include <libgda/binreloc/gda-binreloc.h>
 #include <gtk/gtk.h>
+#include <libgda/gda-debug-macros.h>
 
 static void gdaui_raw_grid_class_init (GdauiRawGridClass *klass);
 static void gdaui_raw_grid_init (GdauiRawGrid *wid);

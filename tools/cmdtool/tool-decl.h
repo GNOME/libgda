@@ -32,4 +32,6 @@ typedef struct _ToolCommand ToolCommand;
 typedef struct _ToolCommandResult ToolCommandResult;
 typedef struct _ToolCommandGroup ToolCommandGroup;
 
+#define TO_IMPLEMENT g_print ("Implementation missing: %s() in %s line %d\n", __FUNCTION__, __FILE__,__LINE__)
+
 #endif

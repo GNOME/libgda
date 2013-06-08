@@ -24,6 +24,7 @@
 #include "gdaui-entry-combo.h"
 #include "gdaui-combo.h"
 #include "gdaui-data-store.h"
+#include <libgda/gda-debug-macros.h>
 
 static void gdaui_entry_combo_class_init (GdauiEntryComboClass *class);
 static void gdaui_entry_combo_init (GdauiEntryCombo *wid);

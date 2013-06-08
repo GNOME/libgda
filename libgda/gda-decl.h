@@ -23,8 +23,6 @@
 #define __GLOBAL_DECL_H_
 
 #include <glib.h>
-#include <libgda/gda-debug-macros.h>
-
 
 typedef struct _GdaConfig GdaConfig;
 typedef struct _GdaConfigClass GdaConfigClass;

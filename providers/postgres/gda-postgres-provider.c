@@ -52,6 +52,7 @@
 #include "gda-postgres-util.h"
 #include "gda-postgres-blob-op.h"
 #include "gda-postgres-parser.h"
+#include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

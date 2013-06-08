@@ -29,6 +29,7 @@
 #include "gda-capi.h"
 #include "gda-capi-recordset.h"
 #include "gda-capi-provider.h"
+#include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

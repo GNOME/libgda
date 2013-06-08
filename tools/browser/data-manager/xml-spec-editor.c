@@ -25,6 +25,7 @@
 #include <libgda/libgda.h>
 #include "../support.h"
 #include "../../tool-utils.h"
+#include <libgda/gda-debug-macros.h>
 
 #ifdef HAVE_GTKSOURCEVIEW
 #ifdef GTK_DISABLE_SINGLE_INCLUDES

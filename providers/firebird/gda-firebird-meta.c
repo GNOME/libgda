@@ -30,6 +30,7 @@
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
+#include <libgda/gda-debug-macros.h>
 
 //static gboolean append_a_row (GdaDataModel *to_model, GError **error, gint nb, ...);
 

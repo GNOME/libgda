@@ -39,6 +39,8 @@
 
 #include "rt-parser.h"
 
+#include <libgda/gda-debug-macros.h>
+
 struct _GdaReportEnginePrivate {
 	xmlDocPtr     doc; /* may be %NULL */
 	xmlNodePtr    spec;

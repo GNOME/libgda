@@ -57,6 +57,7 @@
 #include "gda-mysql-parser.h"
 #include "gda-mysql-handler-boolean.h"
 #include "gda-mysql-handler-bin.h"
+#include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

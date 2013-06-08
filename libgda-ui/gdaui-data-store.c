@@ -22,6 +22,7 @@
 #include <string.h>
 #include <libgda/gda-data-proxy.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-debug-macros.h>
 
 static void gdaui_data_store_class_init (GdauiDataStoreClass *class);
 static void gdaui_data_store_init (GdauiDataStore *store);

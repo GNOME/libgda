@@ -31,7 +31,7 @@
 #include "../config-info.h"
 #include "browser-virtual-connection.h"
 #include <sqlite/virtual/gda-virtual-connection.h>
-
+#include <libgda/gda-debug-macros.h>
 #include "browser-connection-priv.h"
 
 #define CHECK_RESULTS_SHORT_TIMER 200

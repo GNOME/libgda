@@ -24,6 +24,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "gda-capi-pstmt.h"
+#include <libgda/gda-debug-macros.h>
 
 static void gda_capi_pstmt_class_init (GdaCapiPStmtClass *klass);
 static void gda_capi_pstmt_init       (GdaCapiPStmt *pstmt, GdaCapiPStmtClass *klass);

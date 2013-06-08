@@ -27,7 +27,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>
-
+#include <libgda/gda-debug-macros.h>
 #include "data-source-manager.h"
 
 /*#define DEBUG_SOURCES_SORT*/

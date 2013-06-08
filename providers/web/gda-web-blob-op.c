@@ -24,6 +24,7 @@
 #include <libgda/libgda.h>
 #include "gda-web.h"
 #include "gda-web-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaWebBlobOpPrivate {
 	GdaConnection *cnc;

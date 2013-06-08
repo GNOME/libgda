@@ -25,7 +25,7 @@
 #include <libxml/tree.h>
 #include <libgda/gda-meta-struct-private.h>
 #include <libgda/gda-attributes-manager.h>
-
+#include <libgda/gda-debug-macros.h>
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 
 

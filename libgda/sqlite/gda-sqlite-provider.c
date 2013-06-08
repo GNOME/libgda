@@ -61,6 +61,7 @@
 #include <stdio.h>
 #include "xml_embedded.h" /* this one is dynamically generated */
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
+#include <libgda/gda-debug-macros.h>
 
 #define FILE_EXTENSION ".db"
 static gchar *get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos);

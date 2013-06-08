@@ -33,6 +33,7 @@
 #include <libgda-ui/internal/popup-container.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
+#include <libgda/gda-debug-macros.h>
 
 /*
  * Statement execution structures

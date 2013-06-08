@@ -74,7 +74,6 @@ gda_headers = \
 	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
 	gda-data-select.h \
-	gda-debug-macros.h \
 	gda-decl.h \
 	gda-enums.h \
 	gda-holder.h \
@@ -169,6 +168,7 @@ libgda_sources =  \
 	dir-blob-op.c \
 	gda-attributes-manager.c \
 	$(gda_headers) \
+	gda-debug-macros.h \
 	gda-connection-internal.h \
 	gda-connection-sqlite.h \
 	gda-custom-marshal.c \

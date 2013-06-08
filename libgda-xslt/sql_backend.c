@@ -27,7 +27,7 @@
 #include "libgda-xslt.h"
 #include "sql_backend.h"
 #include <libxml/xpathInternals.h>
-
+#include <libgda/gda-debug-macros.h>
 
 #include <libgda/handlers/gda-handler-boolean.h>
 #include <libgda/handlers/gda-handler-numerical.h>

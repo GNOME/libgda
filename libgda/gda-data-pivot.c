@@ -35,6 +35,7 @@
 #include <virtual/libgda-virtual.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/sql-parser/gda-sql-statement.h>
+#include <libgda/gda-debug-macros.h>
 
 typedef struct {
 	GValue *value;

@@ -27,6 +27,7 @@
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-classes.h"
 #include <libgda-ui/gdaui-tree-store.h>
+#include <libgda/gda-debug-macros.h>
 
 struct _ClassesViewPrivate {
 	BrowserConnection *bcnc;

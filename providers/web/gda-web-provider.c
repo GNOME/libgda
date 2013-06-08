@@ -37,6 +37,7 @@
 #include "gda-web-ddl.h"
 #include "gda-web-meta.h"
 #include "gda-web-util.h"
+#include <libgda/gda-debug-macros.h>
 
 /* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
 #include "global.h"

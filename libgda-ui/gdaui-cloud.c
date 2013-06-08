@@ -26,6 +26,7 @@
 #include <gdk/gdkkeysyms.h>
 #include "internal/popup-container.h"
 #include "gdaui-data-selector.h"
+#include <libgda/gda-debug-macros.h>
 
 static void gdaui_cloud_class_init (GdauiCloudClass * class);
 static void gdaui_cloud_init (GdauiCloud *wid);

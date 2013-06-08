@@ -26,6 +26,7 @@
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/sql-parser/gda-sql-statement.h>
 #include <unistd.h>
+#include <libgda/gda-debug-macros.h>
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/

@@ -27,6 +27,7 @@
 #include "gda-tree.h"
 #include "gda-tree-manager.h"
 #include "gda-tree-node.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaTreePrivate {
 	GSList      *managers; /* list of GdaTreeManager */

@@ -33,6 +33,7 @@
 #include <libgda-ui/gdaui-plugin.h>
 #include <libgda-ui/gdaui-basic-form.h>
 #include <libgda-ui/gdaui-easy.h>
+#include <libgda/gda-debug-macros.h>
 
 struct _TablePreferencesPrivate {
 	BrowserConnection *bcnc;

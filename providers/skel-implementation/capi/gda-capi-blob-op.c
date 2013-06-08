@@ -26,6 +26,7 @@
 #include <libgda/libgda.h>
 #include "gda-capi.h"
 #include "gda-capi-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaCapiBlobOpPrivate {
 	GdaConnection *cnc;

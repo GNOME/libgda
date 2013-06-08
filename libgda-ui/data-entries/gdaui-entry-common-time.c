@@ -25,6 +25,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include "gdaui-formatted-entry.h"
+#include <libgda/gda-debug-macros.h>
 
 /* 
  * Main static functions 

@@ -23,6 +23,7 @@
 #include "gda-ldap-connection.h"
 #include <libgda/gda-connection-private.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <libgda/gda-debug-macros.h>
 
 /* "inherits" GdaVconnectionDataModelSpec */
 typedef struct {

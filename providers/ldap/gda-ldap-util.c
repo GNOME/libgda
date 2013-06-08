@@ -24,6 +24,7 @@
 #include "gda-ldap-util.h"
 #include <sqlite/virtual/gda-ldap-connection.h>
 #include <gda-util.h>
+#include <libgda/gda-debug-macros.h>
 
 static void
 ldap_attribute_free (LdapAttribute *lat)

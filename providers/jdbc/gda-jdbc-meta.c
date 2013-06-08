@@ -33,6 +33,7 @@
 #include "jni-globals.h"
 #include "gda-jdbc-util.h"
 #include "gda-jdbc-recordset.h"
+#include <libgda/gda-debug-macros.h>
 
 /*
  * Meta initialization

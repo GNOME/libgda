@@ -26,6 +26,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/gda-debug-macros.h>
 
 static void gda_handler_time_class_init (GdaHandlerTimeClass *class);
 static void gda_handler_time_init (GdaHandlerTime *hdl);

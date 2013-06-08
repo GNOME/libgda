@@ -32,6 +32,7 @@
 #include "gda-firebird-recordset.h"
 #include "gda-firebird-provider.h"
 #include <libgda/libgda-global-variables.h>
+#include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

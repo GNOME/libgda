@@ -23,6 +23,7 @@
 #include "gda-oracle.h"
 #include "gda-oracle-util.h"
 #include "gda-oracle-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 #include <libgda/sqlite/keywords_hash.h>
 #include "keywords_hash.c" /* this one is dynamically generated */

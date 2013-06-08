@@ -39,6 +39,7 @@
 #include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
 #include "../common/fk-declare.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _TableInfoPrivate {
 	BrowserConnection *bcnc;

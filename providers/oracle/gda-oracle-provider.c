@@ -46,6 +46,8 @@
 #include "gda-oracle-meta.h"
 #include "gda-oracle-util.h"
 #include "gda-oracle-parser.h"
+#include <libgda/gda-debug-macros.h>
+
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*

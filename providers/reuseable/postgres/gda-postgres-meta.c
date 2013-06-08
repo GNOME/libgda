@@ -31,6 +31,7 @@
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/providers-support/gda-meta-column-types.h>
+#include <libgda/gda-debug-macros.h>
 
 #include "gda-postgres-reuseable.h"
 #include "gda-postgres-parser.h"

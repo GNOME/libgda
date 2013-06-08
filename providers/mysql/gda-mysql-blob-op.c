@@ -23,6 +23,7 @@
 #include <libgda/libgda.h>
 #include "gda-mysql.h"
 #include "gda-mysql-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaMysqlBlobOpPrivate {
 	GdaConnection  *cnc;

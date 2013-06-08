@@ -41,6 +41,7 @@
 #include "jni-wrapper.h"
 #include "jni-globals.h"
 #include "jdbc-resources.h"
+#include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 

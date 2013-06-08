@@ -30,6 +30,7 @@
 #include <sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-attributes-manager.h>
+#include <libgda/gda-debug-macros.h>
 
 /*
  * Main static functions

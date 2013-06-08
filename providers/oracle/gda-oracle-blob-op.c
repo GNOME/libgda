@@ -22,6 +22,7 @@
 #include <libgda/libgda.h>
 #include "gda-oracle.h"
 #include "gda-oracle-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaOracleBlobOpPrivate {
 	GdaConnection *cnc;

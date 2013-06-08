@@ -22,6 +22,7 @@
 #include <libgda/libgda.h>
 #include "gda-firebird.h"
 #include "gda-firebird-blob-op.h"
+#include <libgda/gda-debug-macros.h>
 
 struct _GdaFirebirdBlobOpPrivate {
 	GdaConnection *cnc;

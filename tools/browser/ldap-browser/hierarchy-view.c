@@ -27,6 +27,7 @@
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-entries.h"
 #include <libgda-ui/gdaui-tree-store.h>
+#include <libgda/gda-debug-macros.h>
 
 struct _HierarchyViewPrivate {
 	BrowserConnection *bcnc;
