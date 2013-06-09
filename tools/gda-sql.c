@@ -407,8 +407,21 @@ main (int argc, char *argv[])
 			str = g_strdup (info->name);
 		else
 			str = g_strdup_printf ("c%d", i-1);
-		if (!data->term_console->output_stream) 
-			g_print (_("Opening connection '%s' for: %s\n"), str, argv[i]);
+		if (!data->term_console->output_stream) {
+			gchar *params, *prov, *user;
+			gda_connection_string_split (argv[i], &params, &prov, &user, NULL);
+			g_print (_("Opening connection '%s' for: "), str);
+			if (prov)
+				g_print ("%s://", prov);
+			if (user)
+				g_print ("%s@", user);
+			if (params)
+				g_print ("%s", params);
+			g_print ("\n");
+			g_free (params);
+			g_free (prov);
+			g_free (user);
+		}
 		cs = open_connection (data->term_console, str, argv[i], &error);
 		config_info_modify_argv (argv[i]);
 		g_free (str);
@@ -425,9 +438,21 @@ main (int argc, char *argv[])
 		gchar *str;
 		const gchar *envstr = getenv ("GDA_SQL_CNC");
 		str = g_strdup_printf ("c%d", i-1);
-		if (!data->term_console->output_stream) 
-			g_print (_("Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"), 
-				 str, envstr);
+		if (!data->term_console->output_stream) {
+			gchar *params, *prov, *user;
+			gda_connection_string_split (envstr, &params, &prov, &user, NULL);
+			g_print (_("Opening connection '%s' (GDA_SQL_CNC environment variable): "), str);
+			if (prov)
+				g_print ("%s://", prov);
+			if (user)
+				g_print ("%s@", user);
+			if (params)
+				g_print ("%s", params);
+			g_print ("\n");
+			g_free (params);
+			g_free (prov);
+			g_free (user);
+		}
 		cs = open_connection (data->term_console, str, envstr, &error);
 		g_free (str);
 		if (!cs) {
