@@ -2906,7 +2906,7 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
  * @out_cnc_params: a place to store the new string containing the &lt;connection_params&gt; part
  * @out_provider: a place to store the new string containing the &lt;provider&gt; part
  * @out_username: a place to store the new string containing the &lt;username&gt; part
- * @out_password: a place to store the new string containing the &lt;password&gt; part
+ * @out_password: (allow-none): a place to store the new string containing the &lt;password&gt; part, or %NULL
  *
  * Extract the provider, connection parameters, username and password from @string. 
  * in @string, the various parts are strings
@@ -2943,19 +2943,22 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	g_return_if_fail (out_cnc_params);
 	g_return_if_fail (out_provider);
 	g_return_if_fail (out_username);
-	g_return_if_fail (out_password);
 
 	*out_cnc_params = NULL;
 	*out_provider = NULL;
 	*out_username = NULL;
-	*out_password = NULL;
+	if (out_password)
+		*out_password = NULL;
 	for (ap = ptr = string; *ptr; ptr++) {
 		if ((ap == string) && (*ptr == '/') && (ptr[1] == '/')) {
 			if ((ptr == string) || (ptr[-1] != ':')) {
 				g_free (*out_cnc_params); *out_cnc_params = NULL;
 				g_free (*out_provider); *out_provider = NULL;
 				g_free (*out_username); *out_username = NULL;
-				g_free (*out_password); *out_password = NULL;
+				if (out_password) {
+					g_free (*out_password);
+					*out_password = NULL;
+				}
 				return;
 			}
 			*out_provider = g_strndup (string, ptr - string - 1);
@@ -2969,7 +2972,8 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 			for (ptr = ap; ptr < tmp; ptr++) {
 				if (*ptr == ':') {
 					*out_username = g_strndup (ap, ptr - ap);
-					*out_password = g_strndup (ptr+1, tmp - ptr - 1);
+					if (out_password)
+						*out_password = g_strndup (ptr+1, tmp - ptr - 1);
 				}
 			}
 			if (!*out_username) 
@@ -3011,8 +3015,10 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 			if (((pos > *out_cnc_params) && (*(pos-1) == ';')) ||
 			    (pos  == *out_cnc_params)) {
 				for (ptr = pos + 9; ptr && *ptr != '\0' && *ptr != ';'; ptr++);
-				if (ptr != pos + 9)
-					*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+				if (ptr != pos + 9) {
+					if (out_password)
+						*out_password = g_strndup (pos + 9, ptr - (pos + 9));
+				}
 				
 				if (*ptr)
 					g_memmove (pos, ptr + 1, strlen (ptr));
@@ -3033,7 +3039,8 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 	/* RFC 1738 decode provider, username and password strings */
 	gda_rfc1738_decode (*out_provider);
 	gda_rfc1738_decode (*out_username);
-	gda_rfc1738_decode (*out_password);
+	if (out_password)
+		gda_rfc1738_decode (*out_password);
 }
 
 static gboolean
