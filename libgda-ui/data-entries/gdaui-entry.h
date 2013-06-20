@@ -47,7 +47,7 @@ struct _GdauiEntryClass
 
 	/* virtual methods */
 	/**
-	 * GdauiEntryClass::get_empty_text
+	 * GdauiEntryClass::get_empty_text:
 	 *
 	 * If defined, sould return a text suitable to display EMPTY value, it will be called when
 	 * entry was set to NULL and is becomming not NULL
@@ -57,7 +57,7 @@ struct _GdauiEntryClass
 	gchar                  *(*get_empty_text) (GdauiEntry *entry);
 
 	/**
-	 * GdauiEntryClass::assume_insert
+	 * GdauiEntryClass::assume_insert:
 	 * @entry: a #GdauiEntry
 	 * @text: the text to be inserted
 	 * @text_length: @text's length in bytes (not characters)
@@ -69,7 +69,7 @@ struct _GdauiEntryClass
 	void                    (*assume_insert) (GdauiEntry *entry, const gchar *text, gint text_length,
 						  gint *virt_pos, gint offset);
 	/**
-	 * GdauiEntryClass::assume_delete
+	 * GdauiEntryClass::assume_delete:
 	 * @entry: a #GdauiEntry
 	 * @virt_start_pos: the starting position.
 	 * @virt_end_pos: the end position (not included in deletion), always > @start_pos

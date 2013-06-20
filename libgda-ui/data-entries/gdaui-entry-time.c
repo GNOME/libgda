@@ -66,9 +66,9 @@ static void
 gdaui_entry_time_init (G_GNUC_UNUSED GdauiEntryTime * gdaui_entry_time)
 {
 }
-
+			
 /**
- * gdaui_entry_time_new
+ * gdaui_entry_time_new:
  * @dh: the data handler to be used by the new widget
  *
  * Creates a new widget which is mainly a GtkEntry

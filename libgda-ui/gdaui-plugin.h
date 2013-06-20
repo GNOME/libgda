@@ -27,25 +27,25 @@
 
 /**
  * GdauiEntryCreateFunc:
- * @None: a #GdaDataHandler
- * @None: a #GType
- * @None: (allow-none): options, or %NULL
+ * @dh: a #GdaDataHandler
+ * @type: a #GType
+ * @options: (allow-none): options, or %NULL
  * @Returns: a new #GdauiDataEntry
  *
  * Defines a function which creates a #GdauiDataEntry widget
  */
-typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *, GType, const gchar *);
+typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *dh, GType type, const gchar *options);
 
 /**
  * GdauiCellCreateFunc:
- * @None: a #GdaDataHandler
- * @None: a #GType
- * @None: (allow-none): options, or %NULL
+ * @dh: a #GdaDataHandler
+ * @type: a #GType
+ * @options: (allow-none): options, or %NULL
  * @Returns:a new #GtkCellRenderer
  *
  * Defines a function which creates a #GtkCellRenderer object
  */
-typedef GtkCellRenderer  *(*GdauiCellCreateFunc) (GdaDataHandler *, GType, const gchar *);
+typedef GtkCellRenderer  *(*GdauiCellCreateFunc) (GdaDataHandler *dh, GType type, const gchar *options);
 
 
 /**
