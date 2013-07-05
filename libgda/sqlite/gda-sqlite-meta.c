@@ -1612,11 +1612,14 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 		if ((fkid  == -1) || (fkid != g_value_get_int (cvalue))) {
 			gchar *constname;
 			GValue *v2, *v3, *v4, *v5 = NULL;
+			const GValue *cv6, *cv7;
 
 			fkid = g_value_get_int (cvalue);
 
 			cvalue = gda_data_model_get_value_at (tmpmodel, 2, i, error);
-			if (!cvalue) {
+			cv6 = gda_data_model_get_value_at (tmpmodel, 5, i, error);
+			cv7 = gda_data_model_get_value_at (tmpmodel, 6, i, error);
+			if (!cvalue || !cv6 || !cv7) {
 				retval = FALSE;
 				break;
 			}
@@ -1633,19 +1636,34 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 			if (!constraint_name_n)
 				g_value_take_string ((v5 = gda_value_new (G_TYPE_STRING)), constname);
 
-			if (! append_a_row (mod_model, error, 11, 
-					    FALSE, catalog_value, /* table_catalog */
-					    TRUE, new_caseless_value (p_table_schema), /* table_schema */
-					    TRUE, new_caseless_value (p_table_name), /* table_name */
-					    constraint_name_n ? FALSE: TRUE, 
-					    constraint_name_n ? constraint_name_n : v5, /* constraint_name */
-					    FALSE, catalog_value, /* ref_table_catalog */
-					    TRUE, new_caseless_value (p_table_schema), /* ref_table_schema */
-					    TRUE, v3, /* ref_table_name */
-					    TRUE, v4, /* ref_constraint_name */
-					    FALSE, NULL, /* match_option */
-					    FALSE, fk_enforced ? rule_value_action : rule_value_none, /* update_rule */
-					    FALSE, fk_enforced ? rule_value_action : rule_value_none /* delete_rule */))
+			if ((fk_enforced &&
+			     ! append_a_row (mod_model, error, 11, 
+					     FALSE, catalog_value, /* table_catalog */
+					     TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					     TRUE, new_caseless_value (p_table_name), /* table_name */
+					     constraint_name_n ? FALSE: TRUE, 
+					     constraint_name_n ? constraint_name_n : v5, /* constraint_name */
+					     FALSE, catalog_value, /* ref_table_catalog */
+					     TRUE, new_caseless_value (p_table_schema), /* ref_table_schema */
+					     TRUE, v3, /* ref_table_name */
+					     TRUE, v4, /* ref_constraint_name */
+					     FALSE, NULL, /* match_option */
+					     FALSE, cv6, /* update_rule */
+					     FALSE, cv7 /* delete_rule */)) ||
+			    (! fk_enforced &&
+			     ! append_a_row (mod_model, error, 11, 
+					     FALSE, catalog_value, /* table_catalog */
+					     TRUE, new_caseless_value (p_table_schema), /* table_schema */
+					     TRUE, new_caseless_value (p_table_name), /* table_name */
+					     constraint_name_n ? FALSE: TRUE, 
+					     constraint_name_n ? constraint_name_n : v5, /* constraint_name */
+					     FALSE, catalog_value, /* ref_table_catalog */
+					     TRUE, new_caseless_value (p_table_schema), /* ref_table_schema */
+					     TRUE, v3, /* ref_table_name */
+					     TRUE, v4, /* ref_constraint_name */
+					     FALSE, NULL, /* match_option */
+					     FALSE, rule_value_none, /* update_rule */
+					     FALSE, rule_value_none /* delete_rule */)))
 				retval = FALSE;
 			if (constraint_name_n)
 				g_free (constname);
