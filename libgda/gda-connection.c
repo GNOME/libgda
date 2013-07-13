@@ -6553,6 +6553,9 @@ gda_connection_unlock  (GdaLockable *lockable)
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
 }
 
+/*
+ * REM: if @for_ident is %FALSE, then the keywords are converted to upper case
+ */
 static gchar *
 get_next_word (gchar *str, gboolean for_ident, gchar **out_next)
 {
@@ -6648,9 +6651,35 @@ meta_data_context_from_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet
 	if (!strcmp (current, "ALTER") ||
 	    (!ignore_create_drop && (!strcmp (current, "CREATE") || !strcmp (current, "DROP")))) {
 		const gchar *tname = NULL;
+		const gchar *opname;
+		opname = current;
 		current = get_next_word (next, FALSE, &next);
-		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW")))
+		if (current && (!strcmp (current, "TABLE") || !strcmp (current, "VIEW"))) {
 			tname = get_next_word (next, TRUE, &next);
+			if ((! strcmp (opname, "CREATE") || !strcmp (opname, "DROP"))
+			    && !g_ascii_strcasecmp (tname, "IF")) {
+				gchar *tmpnext;
+				tmpnext = next;
+				if (! strcmp (opname, "CREATE")) {
+					const gchar *s1, *s2;
+					s1 = get_next_word (tmpnext, FALSE, &tmpnext);
+					s2 = get_next_word (tmpnext, FALSE, &tmpnext);
+					if (! strcmp (s1, "NOT") &&
+					    ! strcmp (s2, "EXISTS")) {
+						next = tmpnext;
+						tname = get_next_word (next, TRUE, &next);
+					}
+				}
+				else {
+					const gchar *s1;
+					s1 = get_next_word (tmpnext, FALSE, &tmpnext);
+					if (! strcmp (s1, "EXISTS")) {
+						next = tmpnext;
+						tname = get_next_word (next, TRUE, &next);
+					}
+				}
+			}
+		}
 		if (tname) {
 			gchar *tmp;
 			/*g_print ("CONTEXT: update for table [%s]\n", tname);*/
