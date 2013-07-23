@@ -1360,18 +1360,10 @@ gda_timestamp_valid (const GdaTimestamp *timestamp)
 {
 	g_return_val_if_fail (timestamp, FALSE);
 
-	GDate *gdate;
-
 	/* check the date part */
-	gdate = g_date_new_dmy ((GDateDay) timestamp->day, (GDateMonth) timestamp->month,
-				(GDateYear) timestamp->year);
-	if (!gdate)
+	if (! g_date_valid_dmy ((GDateDay) timestamp->day, (GDateMonth) timestamp->month,
+				(GDateYear) timestamp->year))
 		return FALSE;
-	if (! g_date_valid (gdate)) {
-		g_date_free (gdate);
-		return FALSE;
-	}
-	g_date_free (gdate);
 
 	/* check the time part */
 	if (timestamp->hour > 24 ||
