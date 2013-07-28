@@ -403,12 +403,14 @@ typedef enum {
 	INTERNAL_SELECT_A_TABLE,
 	INTERNAL_PRAGMA_PROC_LIST,
 	INTERNAL_PRAGMA_EMPTY_RESULT,
+
 	INTERNAL_BEGIN,
 	INTERNAL_BEGIN_NAMED,
 	INTERNAL_COMMIT,
 	INTERNAL_COMMIT_NAMED,
 	INTERNAL_ROLLBACK,
 	INTERNAL_ROLLBACK_NAMED,
+
 	INTERNAL_ADD_SAVEPOINT,
 	INTERNAL_ROLLBACK_SAVEPOINT,
 	INTERNAL_RELEASE_SAVEPOINT
@@ -424,12 +426,14 @@ static gchar *internal_sql[] = {
 	"SELECT name as 'Table', 'system' as 'Owner', ' ' as 'Description', sql as 'Definition' FROM (SELECT * FROM sqlite_master UNION ALL SELECT * FROM sqlite_temp_master) WHERE type = ##type::string AND name = ##tblname::string AND name not like 'sqlite_%%' ORDER BY name",
 	"PRAGMA proc_list",
 	"PRAGMA empty_result_callbacks = ON",
+
 	"BEGIN TRANSACTION",
 	"BEGIN TRANSACTION ##name::string",
 	"COMMIT TRANSACTION",
 	"COMMIT TRANSACTION ##name::string",
 	"ROLLBACK TRANSACTION",
-	"ROLLBACK TRANSACTION ##name::string"
+	"ROLLBACK TRANSACTION ##name::string",
+
 	"SAVEPOINT ##name::string",
 	"ROLLBACK TO ##name::string",
 	"RELEASE ##name::string"
