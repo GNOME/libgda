@@ -9288,7 +9288,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/perspective-main.c:33
 msgid "Query execution (SQL)"
-msgstr "Exécution de la requête (SQL)"
+msgstr "Exécution de requête (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:290
 #: ../tools/browser/query-exec/query-console-page.c:1267
