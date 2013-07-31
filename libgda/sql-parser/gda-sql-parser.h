@@ -82,16 +82,16 @@ struct _GdaSqlParserClass
 	GObjectClass         parent_class;
 
 	/* virtual methods and data for sub classed parsers */
-	void *(*delim_alloc) (void*(*)(size_t));
-	void (*delim_free) (void*, void(*)(void*));
-	void (*delim_trace) (void*, char *);
-	void (*delim_parse) (void*, int, GValue *, GdaSqlParserIface *);
+	void *(*delim_alloc) (void *(*f)(size_t s));
+	void (*delim_free) (void *d, void (*f) (void*param));
+	void (*delim_trace) (void *d, char *s);
+	void (*delim_parse) (void *d, int i, GValue *v, GdaSqlParserIface *iface);
 	gint *delim_tokens_trans;
 	
-	void *(*parser_alloc) (void*(*)(size_t));
-	void (*parser_free) (void*, void(*)(void*));
-	void (*parser_trace) (void*, char *);
-	void (*parser_parse) (void*, int, GValue *, GdaSqlParserIface *);	
+	void *(*parser_alloc) (void *(*f)(size_t s));
+	void (*parser_free) (void *p, void (*f) (void *param));
+	void (*parser_trace) (void *p, char *s);
+	void (*parser_parse) (void *p, int i, GValue *v, GdaSqlParserIface *iface);
 	gint *parser_tokens_trans;
 
 	/* Padding for future expansion */

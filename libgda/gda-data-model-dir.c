@@ -688,7 +688,7 @@ gda_data_model_dir_new (const gchar *basedir)
  *
  * Get the list of errors which have occurred while using @model
  *
- * Returns: (transfer none) (element-type GObject.Error) : a read-only list of #GError pointers, or %NULL if no error has occurred
+ * Returns: (transfer none) (element-type GLib.Error) : a read-only list of #GError pointers, or %NULL if no error has occurred
  */
 const GSList *
 gda_data_model_dir_get_errors (GdaDataModelDir *model)

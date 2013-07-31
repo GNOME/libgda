@@ -395,7 +395,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		G_STRUCT_OFFSET (GdaMetaStoreClass, suggest_update),
 		suggest_update_accumulator, NULL,
 		_gda_marshal_ERROR__METACONTEXT, GDA_TYPE_ERROR,
-		1, GDA_TYPE_META_CONTEXT);
+		1, G_TYPE_POINTER);
 	/**
 	 * GdaMetaStore::meta-changed
 	 * @store: the #GdaMetaStore instance that emitted the signal

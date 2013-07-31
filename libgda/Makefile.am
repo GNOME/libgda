@@ -123,13 +123,9 @@ gda_sources= \
 	$(GDA_LDAP_S) \
 	gda-data-model.c \
 	gda-data-model-dir.c \
-	gda-data-model-dsn-list.c \
-	gda-data-model-dsn-list.h \
 	gda-data-model-import.c \
 	gda-data-model-iter.c \
 	gda-data-access-wrapper.c \
-	gda-data-meta-wrapper.c \
-	gda-data-meta-wrapper.h \
 	gda-data-proxy.c \
 	gda-data-select.c \
 	gda-easy.c \
@@ -146,7 +142,6 @@ gda_sources= \
 	gda-row.c \
 	gda-set.c \
 	gda-server-operation.c \
-	gda-server-operation-private.h \
 	gda-server-provider.c \
 	gda-server-provider-extra.c \
 	gda-statement.c \
@@ -179,8 +174,13 @@ libgda_sources =  \
 	gda-types.c \
 	gda-types.h \
 	gda-marshal.c \
+	gda-data-meta-wrapper.c \
+	gda-data-meta-wrapper.h \
+	gda-data-model-dsn-list.c \
+	gda-data-model-dsn-list.h \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
+	gda-server-operation-private.h \
 	gda-statement-priv.h \
 	global.h \
 	md5.h \
@@ -334,9 +334,8 @@ handlers = \
 	handlers/gda-handler-time.c \
 	handlers/gda-handler-type.c
 
-introspection_sources = $(gda_sources) \
-	gda-types.c \
-	gda-types.h \
+introspection_sources = \
+	$(gda_sources) \
 	$(gda_headers) \
 	$(psupport) \
 	$(threadwrapper) \
