@@ -159,7 +159,7 @@ typedef enum {
 
 
 /**
- * GdaConnectionFeature
+ * GdaConnectionFeature:
  * @GDA_CONNECTION_FEATURE_AGGREGATES: test for aggregates support
  * @GDA_CONNECTION_FEATURE_BLOBS: test for BLOBS (binary large objects) support
  * @GDA_CONNECTION_FEATURE_INDEXES: test for indexes support
@@ -207,7 +207,7 @@ typedef enum {
 
 
 /**
- * GdaConnectionSchema
+ * GdaConnectionSchema:
  *
  * Deprecated: 4.2: This was a leftover from the pre 4.0 area
  */

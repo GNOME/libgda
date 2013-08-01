@@ -676,7 +676,7 @@ GQuark gda_thread_wrapper_error_quark (void)
 }
 
 /**
- * gda_thread_wrapper_get_type
+ * gda_thread_wrapper_get_type:
  * 
  * Registers the #GdaThreadWrapper class on the GLib type system.
  * 
@@ -747,7 +747,7 @@ gda_thread_wrapper_get_property (GObject *object,
 }
 
 /**
- * gda_thread_wrapper_new
+ * gda_thread_wrapper_new:
  *
  * Creates a new #GdaThreadWrapper object
  *
@@ -1012,7 +1012,7 @@ gda_thread_wrapper_execute_void (GdaThreadWrapper *wrapper, GdaThreadWrapperVoid
 }
 
 /**
- * gda_thread_wrapper_cancel
+ * gda_thread_wrapper_cancel:
  * @wrapper: a #GdaThreadWrapper object
  * @id: the ID of a job as returned by gda_thread_wrapper_execute() or gda_thread_wrapper_execute_void()
  * 
@@ -1071,7 +1071,7 @@ gda_thread_wrapper_cancel (GdaThreadWrapper *wrapper, guint id)
 }
 
 /**
- * gda_thread_wrapper_iterate
+ * gda_thread_wrapper_iterate:
  * @wrapper: a #GdaThreadWrapper object
  * @may_block: whether the call may block
  *
@@ -1241,7 +1241,7 @@ gda_thread_wrapper_fetch_result (GdaThreadWrapper *wrapper, gboolean may_lock, g
 }
 
 /**
- * gda_thread_wrapper_get_waiting_size
+ * gda_thread_wrapper_get_waiting_size:
  * @wrapper: a #GdaThreadWrapper object
  *
  * Use this method to query the number of functions which have been queued to be executed
@@ -1499,7 +1499,7 @@ find_signal_r_func (G_GNUC_UNUSED GThread *thread, ThreadData *td, gulong *id)
 }
 
 /**
- * gda_thread_wrapper_disconnect
+ * gda_thread_wrapper_disconnect:
  * @wrapper: a #GdaThreadWrapper object
  * @id: a handler ID, as returned by gda_thread_wrapper_connect_raw()
  *
@@ -1574,7 +1574,7 @@ gda_thread_wrapper_disconnect (GdaThreadWrapper *wrapper, gulong id)
 }
 
 /**
- * gda_thread_wrapper_steal_signal
+ * gda_thread_wrapper_steal_signal:
  * @wrapper: a #GdaThreadWrapper object
  * @id: a signal ID
  *

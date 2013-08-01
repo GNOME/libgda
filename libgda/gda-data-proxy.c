@@ -560,7 +560,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 
 	/* signals */
 	/**
-	 * GdaDataProxy::row-delete-changed
+	 * GdaDataProxy::row-delete-changed:
 	 * @proxy: the #GdaDataProxy
 	 * @row: the concerned @proxy's row
 	 * @to_be_deleted: tells if the @row is marked to be deleted
@@ -575,7 +575,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_BOOLEAN, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_BOOLEAN);
 	/**
-	 * GdaDataProxy::sample-size-changed
+	 * GdaDataProxy::sample-size-changed:
 	 * @proxy: the #GdaDataProxy
 	 * @sample_size: the new sample size
 	 *
@@ -589,7 +589,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               NULL, NULL,
 			      g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 	/**
-	 * GdaDataProxy::sample-changed
+	 * GdaDataProxy::sample-changed:
 	 * @proxy: the #GdaDataProxy
 	 * @sample_start: the first row of the sample
 	 * @sample_end: the last row of the sample
@@ -605,7 +605,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	/**
-	 * GdaDataProxy::validate-row-changes
+	 * GdaDataProxy::validate-row-changes:
 	 * @proxy: the #GdaDataProxy
 	 * @row: the proxy's row
 	 * @proxied_row: the proxied data model's row
@@ -623,7 +623,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               validate_row_changes_accumulator, NULL,
                               _gda_marshal_ERROR__INT_INT, GDA_TYPE_ERROR, 2, G_TYPE_INT, G_TYPE_INT);
 	/**
-	 * GdaDataProxy::row-changes-applied
+	 * GdaDataProxy::row-changes-applied:
 	 * @proxy: the #GdaDataProxy
 	 * @row: the proxy's row
 	 * @proxied_row: the proxied data model's row
@@ -638,7 +638,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
                               NULL, NULL,
 			      _gda_marshal_VOID__INT_INT, G_TYPE_NONE, 2, G_TYPE_INT, G_TYPE_INT);
 	/**
-	 * GdaDataProxy::filter-changed
+	 * GdaDataProxy::filter-changed:
 	 * @proxy: the #GdaDataProxy
 	 *
 	 * Gets emitted when @proxy's filter has been changed

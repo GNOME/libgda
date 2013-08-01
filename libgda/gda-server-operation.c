@@ -146,7 +146,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 
 	/* signals */
 	/**
-	 * GdaServerOperation::sequence-item-added
+	 * GdaServerOperation::sequence-item-added:
 	 * @op: the #GdaServerOperation
 	 * @seq_path: the path to the new sequence item
 	 * @item_index: the index (starting from 0) of the new sequence item in the sequence
@@ -162,7 +162,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 			      _gda_marshal_VOID__STRING_INT, G_TYPE_NONE,
 			      2, G_TYPE_STRING, G_TYPE_INT);
 	/**
-	 * GdaServerOperation::sequence-item-remove
+	 * GdaServerOperation::sequence-item-remove:
 	 * @op: the #GdaServerOperation
 	 * @seq_path: the path to the sequence item to be removed
 	 * @item_index: the index (starting from 0) of the sequence item in the sequence

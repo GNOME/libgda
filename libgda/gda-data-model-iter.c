@@ -140,7 +140,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 	parent_class = g_type_class_peek_parent (class);
 
 	/**
-	 * GdaDataModelIter::row-changed
+	 * GdaDataModelIter::row-changed:
 	 * @iter: the #GdaDataModelIter
 	 * @row: the new iter's row
 	 *
@@ -154,7 +154,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 	/**
-	 * GdaDataModelIter::end-of-data
+	 * GdaDataModelIter::end-of-data:
 	 * @iter: the #GdaDataModelIter
 	 *
 	 * Gets emitted when @iter has reached the end of available data (which means the previous

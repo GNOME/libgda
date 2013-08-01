@@ -275,7 +275,7 @@ gda_set_class_init (GdaSetClass *class)
 			      GDA_TYPE_HOLDER);
 
 	/**
-	 * GdaSet::validate-holder-change
+	 * GdaSet::validate-holder-change:
 	 * @set: the #GdaSet
 	 * @holder: the #GdaHolder which is going to change
 	 * @new_value: the proposed new value for @holder
@@ -295,7 +295,7 @@ gda_set_class_init (GdaSetClass *class)
 			      _gda_marshal_ERROR__OBJECT_VALUE, GDA_TYPE_ERROR, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_VALUE);
 	/**
-	 * GdaSet::validate-set
+	 * GdaSet::validate-set:
 	 * @set: the #GdaSet
 	 * 
 	 * Gets emitted when gda_set_is_valid() is called, use
@@ -312,7 +312,7 @@ gda_set_class_init (GdaSetClass *class)
 			      validate_accumulator, NULL,
 			      _gda_marshal_ERROR__VOID, GDA_TYPE_ERROR, 0);
 	/**
-	 * GdaSet::holder-attr-changed
+	 * GdaSet::holder-attr-changed:
 	 * @set: the #GdaSet
 	 * @holder: the GdaHolder for which an attribute changed
 	 * @attr_name: attribute's name
@@ -329,7 +329,7 @@ gda_set_class_init (GdaSetClass *class)
 			      _gda_marshal_VOID__OBJECT_STRING_VALUE, G_TYPE_NONE, 3,
 			      GDA_TYPE_HOLDER, G_TYPE_STRING, G_TYPE_VALUE);
 	/**
-	 * GdaSet::public-data-changed
+	 * GdaSet::public-data-changed:
 	 * @set: the #GdaSet
 	 * 
 	 * Gets emitted when @set's public data (#GdaSetNode, #GdaSetGroup or #GdaSetSource values) have changed
@@ -343,7 +343,7 @@ gda_set_class_init (GdaSetClass *class)
 			      _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	/**
-	 * GdaSet::holder-type-set
+	 * GdaSet::holder-type-set:
 	 * @set: the #GdaSet
 	 * @holder: the #GdaHolder for which the #GType has been set
 	 *
@@ -362,7 +362,7 @@ gda_set_class_init (GdaSetClass *class)
 			      GDA_TYPE_HOLDER);
 
 	/**
-	 * GdaSet::source-model-changed
+	 * GdaSet::source-model-changed:
 	 * @set: the #GdaSet
 	 * @source: the #GdaSetSource for which the @data_model attribute has changed
 	 *
@@ -1651,7 +1651,7 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 }
 
 /**
- * gda_set_replace_source_model
+ * gda_set_replace_source_model:
  * @set: a #GdaSet object
  * @source: a pointer to a #GdaSetSource in @set
  * @model: a #GdaDataModel

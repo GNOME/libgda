@@ -377,7 +377,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 	
 	/**
-	 * GdaMetaStore::suggest-update
+	 * GdaMetaStore::suggest-update:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 * @suggest: the suggested update, as a #GdaMetaContext structure
 	 *
@@ -397,7 +397,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		_gda_marshal_ERROR__METACONTEXT, GDA_TYPE_ERROR,
 		1, G_TYPE_POINTER);
 	/**
-	 * GdaMetaStore::meta-changed
+	 * GdaMetaStore::meta-changed:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 * @changes: (element-type Gda.MetaStoreChange): a list of changes made, as a #GSList of pointers to #GdaMetaStoreChange (which must not be modified)
 	 *
@@ -412,7 +412,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 		_gda_marshal_VOID__SLIST, G_TYPE_NONE,
 		1, GDA_TYPE_SLIST);
 	/**
-	 * GdaMetaStore::meta-reset
+	 * GdaMetaStore::meta-reset:
 	 * @store: the #GdaMetaStore instance that emitted the signal
 	 *
 	 * This signal is emitted when the @store's contents have been reset completely and when

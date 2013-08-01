@@ -111,7 +111,7 @@ gda_batch_class_init (GdaBatchClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
-	 * GdaBatch::changed
+	 * GdaBatch::changed:
 	 * @batch: the #GdaBatch object
 	 * @changed_stmt: the statement which has been changed
 	 *

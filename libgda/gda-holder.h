@@ -76,7 +76,7 @@ GType               gda_holder_get_g_type              (GdaHolder *holder);
 const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 
 /**
- * gda_holder_new_string
+ * gda_holder_new_string:
  * @id: a string
  * @str: a string
  * 
@@ -88,7 +88,7 @@ const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 #define gda_holder_new_string(id,str) gda_holder_new_inline (G_TYPE_STRING, (id), (str))
 
 /**
- * gda_holder_new_boolean
+ * gda_holder_new_boolean:
  * @id: a string
  * @abool: a boolean value
  * 
@@ -100,7 +100,7 @@ const gchar        *gda_holder_get_id                  (GdaHolder *holder);
 #define gda_holder_new_boolean(id,abool) gda_holder_new_inline (G_TYPE_BOOLEAN, (id), (abool))
 
 /**
- * gda_holder_new_int
+ * gda_holder_new_int:
  * @id: a string
  * @anint: an int value
  * 
@@ -144,7 +144,7 @@ void                gda_holder_set_attribute            (GdaHolder *holder, cons
 							 GDestroyNotify destroy);
 
 /**
- * gda_holder_set_attribute_static
+ * gda_holder_set_attribute_static:
  * @holder: a #GdaHolder
  * @attribute: attribute's name
  * @value: (allow-none): a #GValue, or %NULL

@@ -102,7 +102,7 @@ typedef struct {
 } GdaBinary;
 
 /**
- * GdaBlob
+ * GdaBlob:
  * @data: data buffer, as a #GdaBinary
  * @op: (allow-none): a pointer to a #GdaBlopOp, or %NULL
  *

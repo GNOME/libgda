@@ -1745,7 +1745,7 @@ gda_value_set_null (GValue *value)
 }
 
 /**
- * gda_value_get_numeric
+ * gda_value_get_numeric:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: (transfer none): the value stored in @value.

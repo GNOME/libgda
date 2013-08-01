@@ -87,7 +87,7 @@ void            gda_column_set_attribute      (GdaColumn *column, const gchar *a
 					       GDestroyNotify destroy);
 
 /**
- * gda_column_set_attribute_static
+ * gda_column_set_attribute_static:
  * @holder: a #GdaHolder
  * @attribute: attribute's name
  * @value: (allow-none): the value to set the attribute to, or %NULL

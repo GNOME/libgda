@@ -97,7 +97,7 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 
 	/* signals */
 	/**
-	 * GdaTreeNode::node-changed
+	 * GdaTreeNode::node-changed:
 	 * @reporting: the #GdaTreeNode which emits the signal (may be a parent of @node, or @node itself)
 	 * @node: the #GdaTreeNode which has changed
 	 *
@@ -114,7 +114,7 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTreeNode::node-inserted
+	 * GdaTreeNode::node-inserted:
 	 * @reporting: the #GdaTreeNode which emits the signal (may be a parent of @node, or @node itself)
 	 * @node: the #GdaTreeNode which has been inserted
 	 *
@@ -131,7 +131,7 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTreeNode::node-has-child-toggled
+	 * GdaTreeNode::node-has-child-toggled:
 	 * @reporting: the #GdaTreeNode which emits the signal (may be a parent of @node, or @node itself)
 	 * @node: the #GdaTreeNode which changed from having children to being a
 	 *        leaf or the other way around
@@ -150,7 +150,7 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_TREE_NODE);
 	/**
-	 * GdaTreeNode::node-deleted
+	 * GdaTreeNode::node-deleted:
 	 * @reporting: the #GdaTreeNode which emits the signal (a parent of the removed node)
 	 * @relative_path: the path the node held, relative to @reporting
 	 *
