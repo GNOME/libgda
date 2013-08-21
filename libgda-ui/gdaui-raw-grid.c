@@ -1960,9 +1960,11 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
 			       new_menu_item (_("_Set filter"), FALSE,
 					      G_CALLBACK (menu_set_filter_cb), grid));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-			       new_menu_item (_("_Unset filter"), FALSE,
-					      G_CALLBACK (menu_unset_filter_cb), grid));
+
+	mitem = new_menu_item (_("_Unset filter"), FALSE, G_CALLBACK (menu_unset_filter_cb), grid);
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+	if (!gda_data_proxy_get_filter_expr (grid->priv->proxy))
+		gtk_widget_set_sensitive (mitem, FALSE);
 	
 	if (sel_mode != GTK_SELECTION_NONE) {
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
