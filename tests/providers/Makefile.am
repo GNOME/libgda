@@ -41,6 +41,8 @@ TESTS += check_postgres
 endif
 
 common_sources = \
+	../test-errors.h \
+	../test-errors.c \
 	prov-test-common.h \
 	prov-test-common.c \
 	prov-test-util.h \

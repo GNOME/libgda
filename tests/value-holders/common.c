@@ -355,7 +355,7 @@ tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GErr
 		JsonParser *jparser;
 		jparser = json_parser_new ();
 		if (!json_parser_load_from_data (jparser, s, -1, NULL)) 
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Unknown ID '%s', GdaHolder is: %s (JSON INVALID)\n", id, s);
 		else {
 			JsonGenerator *jgen;
@@ -364,7 +364,7 @@ tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GErr
 			g_object_set (G_OBJECT (jgen), "pretty", TRUE, "indent", 5, NULL);
 			json_generator_set_root (jgen, json_parser_get_root (jparser));
 			out = json_generator_to_data (jgen, NULL);
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Unknown ID '%s', GdaHolder is: %s\nJSON: %s\n", id, s, out);
 			g_print ("%s\n", out);
 			g_free (out);
@@ -372,7 +372,7 @@ tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GErr
 		}
 		g_object_unref (jparser);
 #else
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Unknown ID '%s', GdaHolder is: %s\n", id, s);
 #endif
 
@@ -382,7 +382,7 @@ tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GErr
 	}
 
 	if (strcmp (got, s)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "GdaHolder error:\nexp: %s\ngot: %s\n", got, s);
 		g_free (s);
 		g_object_unref (h);
@@ -407,7 +407,7 @@ tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError *
 		JsonParser *jparser;
 		jparser = json_parser_new ();
 		if (!json_parser_load_from_data (jparser, s, -1, NULL)) 
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Unknown ID '%s', GdaSet is: %s (JSON INVALID)\n", id, s);
 		else {
 			JsonGenerator *jgen;
@@ -416,14 +416,14 @@ tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError *
 			g_object_set (G_OBJECT (jgen), "pretty", TRUE, "indent", 5, NULL);
 			json_generator_set_root (jgen, json_parser_get_root (jparser));
 			out = json_generator_to_data (jgen, NULL);
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Unknown ID '%s', GdaSet is: %s\nJSON: %s\n", id, s, out);
 			g_free (out);
 			g_object_unref (jgen);
 		}
 		g_object_unref (jparser);
 #else
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Unknown ID '%s', GdaSet is: %s\n", id, s);
 #endif
 
@@ -433,7 +433,7 @@ tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError *
 	}
 
 	if (strcmp (got, s)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "GdaSet error:\nexp: %s\ngot: %s\n", got, s);
 		g_free (s);
 		g_object_unref (set);

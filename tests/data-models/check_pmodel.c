@@ -26,6 +26,7 @@
 #include <tests/gda-ddl-creator.h>
 #include <glib/gstdio.h>
 #include "../test-cnc-utils.h"
+#include "../test-errors.h"
 
 #define fail(x) g_warning (x)
 #define fail_if(x,y) if (x) g_warning (y)
@@ -1017,7 +1018,7 @@ test9 (GdaConnection *cnc)
 	monitor_model_signals (model);
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "UK");
 	if (! check_set_value_at_ext (model, 4, 1, value, cnc, stmt, params, &error)) {
-		if (error && (error->domain == 0) && (error->code == -1)) {
+		if (error && (error->domain == TEST_ERROR) && (error->code == TEST_ERROR_DIFFERENCES)) {
 #ifdef CHECK_EXTRA_INFO
 			g_print ("This error was expected (modified row would not have been in the SELECT)\n");
 #endif	
@@ -1984,7 +1985,7 @@ check_set_value_at_ext (GdaDataModel *model, gint col, gint row,
 			gda_data_model_dump (model, stdout);
 			gda_data_model_dump (rerun, stdout);
 			if (error) {
-				g_set_error (error, 0, -1,
+				g_set_error (error, TEST_ERROR, TEST_ERROR_DIFFERENCES,
 					     "%s", "There are some differences when re-running the SELECT statement...");
 			}
 		}
@@ -2340,7 +2341,7 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
                 g_print ("Model2 is:\n");
                 gda_data_model_dump (model2, stdout);
 #endif
-		g_set_error (&lerror, 0, 0,
+		g_set_error (&lerror, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "%s", "There are some differences when comparing data models...");
                 goto onerror;
         }

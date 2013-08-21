@@ -21,6 +21,7 @@
 #include <libgda/gda-server-provider-extra.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../test-errors.h"
 
 static gboolean run_test (const gchar *sql, const gchar *empty_rs_serial, GError **error);
 
@@ -92,7 +93,7 @@ run_test (const gchar *sql, const gchar *empty_rs_serial, GError **error)
 		g_print ("Missing test data!\n  SQL: %s\n  SER: %s\n", sql, tsql);
 	else if (strcmp (tsql, empty_rs_serial)) {
 		g_print ("Test failed!\n  SQL: %s\n  EXP: %s\n  GOT: %s\n", sql, empty_rs_serial, tsql);
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Failed serialized comparison");
 		g_free (tsql);
 		goto out;

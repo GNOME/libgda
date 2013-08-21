@@ -295,7 +295,7 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
                 g_print ("Model2 is:\n");
                 gda_data_model_dump (model2, stdout);
 #endif
-		g_set_error (&lerror, 0, 0,
+		g_set_error (&lerror, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "%s", "There are some differences when comparing data models...");
                 goto onerror;
         }

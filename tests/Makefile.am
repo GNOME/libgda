@@ -28,6 +28,8 @@ test_headers = \
 
 libgda_test_5_0_la_SOURCES = \
         $(test_headers) \
+	test-errors.h \
+	test-errors.c \
         gda-ddl-creator.c \
 	test-cnc-utils.h \
 	test-cnc-utils.c \

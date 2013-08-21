@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,19 +15,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-#include <libgda/libgda.h>
-#include <string.h>
-#include "../test-errors.h"
+#ifndef __TEST_ERRORS_H__
+#define __TEST_ERRORS_H__
 
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#include <glib.h>
 
-void   tests_common_display_value (const gchar *prefix, const GValue *value);
-gchar *tests_common_holder_serialize (GdaHolder *h);
-gchar *tests_common_set_serialize (GdaSet *set);
+extern GQuark test_error_quark (void);
+#define TEST_ERROR test_error_quark ()
 
-GHashTable *tests_common_load_data (const gchar *filename);
-gboolean tests_common_check_holder (GHashTable *data, const gchar *id, GdaHolder *h, GError **error);
-gboolean tests_common_check_set (GHashTable *data, const gchar *id, GdaSet *set, GError **error);
+enum {
+	TEST_ERROR_PARSING,
+	TEST_ERROR_GENERIC,
+	TEST_ERROR_DIFFERENCES
+};
 
 #endif

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "test-cnc-utils.h"
+#include "test-errors.h"
 #include "gda-ddl-creator.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
@@ -121,7 +122,7 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 
 	prov_info = gda_config_get_provider_info (provider);
 	if (!prov_info) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Provider '%s' not found", provider);
 		return NULL;
 	}
@@ -215,7 +216,7 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 
  out:
 	if (!db_params && !cnc_params) 
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Connection parameters not specified, test not executed (define %s_CNC_PARAMS or %s_DBCREATE_PARAMS to create a test DB)\n", upname, upname);
 	g_free (upname);
 
@@ -361,7 +362,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 	/* loading XML file */
 	import = gda_data_model_import_new_file (full_file, TRUE, NULL);
 	if (gda_data_model_import_get_errors (GDA_DATA_MODEL_IMPORT (import))) {
-		g_set_error (error, 0, 0, "Error loading '%s' file", full_file);
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "Error loading '%s' file", full_file);
 		return FALSE;
 	}
 
@@ -446,7 +447,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 		}
 
 		if (list || (j < ncols)) {
-			g_set_error (error, 0, 0, "%s", 
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 				     "Incoherent number of columns in table and imported data");
 			gda_connection_rollback_transaction (cnc, NULL, NULL);
 			retval = FALSE;

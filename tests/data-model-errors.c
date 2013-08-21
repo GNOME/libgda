@@ -25,6 +25,7 @@
 #include <libgda/gda-row.h>
 #include <data-model-errors.h>
 #include <libgda/gda-debug-macros.h>
+#include "test-errors.h"
 
 #define NCOLS 4
 typedef struct {
@@ -394,7 +395,7 @@ data_model_errors_set_value_at (GdaDataModel *model, gint col, gint row, const G
 	if ((col < 0) || (col > NCOLS)) {
 		gchar *tmp;
 		tmp = g_strdup_printf ("Column %d out of range (0-%d)", col, NCOLS-1);
-		g_set_error (error, 0, 0, "%s", tmp);
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", tmp);
 		g_free (tmp);
 		return FALSE;
 	}
@@ -450,7 +451,7 @@ data_model_errors_remove_row (GdaDataModel *model, gint row, GError **error)
 					       imodel->priv->rows->len - 1);
 		else
 			str = g_strdup_printf ("Row %d not found (empty data model)", row);
-		g_set_error (error, 0, 0, "%s", str);
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", str);
 		g_free (str);
                 return FALSE;
         }

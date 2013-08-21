@@ -11,7 +11,9 @@ TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs
 check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
 TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
 
-common_sources = 
+common_sources = \
+	../test-errors.h \
+	../test-errors.c
 
 check_model_import_SOURCES = $(common_sources) check_model_import.c
 check_model_import_LDADD = \

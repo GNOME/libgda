@@ -163,7 +163,7 @@ test2 (GError **error)
 	
 	fname = g_build_filename (ROOT_DIR, "tests", "parser", "testdata.xml", NULL);
 	if (! g_file_test (fname, G_FILE_TEST_EXISTS)) {
-                g_set_error (error, 0, 0, "File '%s' does not exist\n", fname);
+                g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "File '%s' does not exist\n", fname);
 		return FALSE;
         }
 	doc = xmlParseFile (fname);
@@ -242,7 +242,7 @@ test2 (GError **error)
 			gda_sql_statement_free (sqlst);
 			
 			if (strcmp (ser1, ser2)) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 					     "Statement failed, ID: %s\nSQL: %s\nSER1: %s\nSER2 :%s", 
 					     id, rsql, ser1, ser2);
 				g_free (ser1);

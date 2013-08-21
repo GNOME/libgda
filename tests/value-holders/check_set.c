@@ -133,7 +133,7 @@ test2 (GError **error)
 
 	h = gda_set_get_holder (set, "H1");
 	if (!h) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Could not find GdaHolder H1");
 		return FALSE;
 	}
@@ -191,7 +191,7 @@ t3_validate_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar
 		else {
 			GError *error = NULL;
 			g_print ("GdaHolder change refused\n");
-			g_set_error (&error, 0, 0,
+			g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "%s", "GdaHolder change refused!");
 			return error;
 		}
@@ -221,18 +221,18 @@ test3 (GError **error)
 	h = gda_set_get_holder (set, "H2");
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 333);
 	if (gda_holder_set_value (h, value, &lerror)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "gda_holder_set_value() should have been refused and failed");
 		return FALSE;
 	}
 	gda_value_free (value);
 	if (!lerror) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Returned GError should not be NULL");
 		return FALSE;
 	}
 	if (strcmp (lerror->message, "GdaHolder change refused!")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Returned GError's message is wrong, should be 'GdaHolder change refused!' and is '%s'",
 			     lerror->message);
 		return FALSE;
@@ -244,7 +244,7 @@ test3 (GError **error)
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 1234);
 	cvalue = gda_set_get_holder_value (set, "H2");
 	if (!cvalue || gda_value_differ (value, cvalue)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -257,7 +257,7 @@ test3 (GError **error)
 	
 	/***/cvalue = gda_set_get_holder_value (set, "H2");
 	if (!cvalue || gda_value_differ (value, cvalue)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "GdaHolder's value is incorrect");
 		return FALSE;
 	}
@@ -288,7 +288,7 @@ test4 (GError **error)
 
 	h = gda_set_get_holder (set, "H1");
 	if (!h) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Could not find GdaHolder H1");
 		return FALSE;
 	}
@@ -330,7 +330,7 @@ t5_validate_change (GdaSet *set, gchar *token)
 	else {
 		GError *error = NULL;
 		g_print ("GdaSet change refused\n");
-		g_set_error (&error, 0, 0,
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "%s", "GdaSet change refused!");
 		return error;
 	}
@@ -353,18 +353,18 @@ test5 (GError **error)
 			  G_CALLBACK (t5_validate_change), "MyToken2");
 
 	if (gda_set_is_valid (set, &lerror)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "gda_set_is_valid() should have returned FALSE");
 		return FALSE;
 	}
 
 	if (!lerror) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Returned GError should not be NULL");
 		return FALSE;
 	}
 	if (strcmp (lerror->message, "GdaSet change refused!")) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Returned GError's message is wrong, should be 'GdaHolder change refused!' and is '%s'",
 			     lerror->message);
 		return FALSE;
@@ -376,7 +376,7 @@ test5 (GError **error)
 	h = gda_set_get_holder (set, "H2");
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 125);
 	if (!gda_holder_set_value (h, value, NULL)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "gda_holder_set_value() should not have failed");
 		return FALSE;
 	}
@@ -385,7 +385,7 @@ test5 (GError **error)
 	h = gda_set_get_holder (set, "H3");
 	g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), 'd');
 	if (!gda_holder_set_value (h, value, NULL)) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "gda_holder_set_value() should not have failed");
 		return FALSE;
 	}
@@ -428,7 +428,7 @@ emitted_signals_find (gpointer obj, const gchar *signal_name, GError **error)
 			return TRUE;
 		}
 	}
-	g_set_error (error, 0, 0,
+	g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 		     "Signal \"%s\" has not been emitted", signal_name);
 	g_object_unref (obj);
 	return FALSE;
@@ -443,7 +443,7 @@ emitted_signals_notfind (gpointer obj, const gchar *signal_name, GError **error)
 		EmittedSignal *es = (EmittedSignal *) list->data;
 		if ((es->obj == obj) && (!strcmp (es->signal_name, signal_name))) {
 			signals_list = g_slist_delete_link (signals_list, list);
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Signal \"%s\" has been emitted", signal_name);
 			g_object_unref (obj);
 
@@ -462,7 +462,7 @@ emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **er
 		EmittedSignal *es = (EmittedSignal *) list->data;
 		if ((!obj || (es->obj == obj)) && 
 		    (!signal_name || (!strcmp (es->signal_name, signal_name)))) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "Signal \"%s\" has been emitted", es->signal_name);
 			emitted_signals_reset ();
 			return FALSE;

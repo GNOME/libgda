@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include "common.h"
+#include "../test-errors.h"
 #include <string.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <glib/gstdio.h>
@@ -35,7 +36,7 @@ create_sqlite_db (const gchar *dir, const gchar *dbname, const gchar *sqlfile, G
 	/* create batch */
 	prov = gda_config_get_provider ("SQLite", NULL);
 	if (!prov) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Cannot find the SQLite provider");
 		return FALSE;
 	}

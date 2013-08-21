@@ -6,3 +6,5 @@ test-sql-builder
 test-connection-string-split
 test-input-parsers
 test-quark-list
+*.log
+*.trs

@@ -24,6 +24,8 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
 #include "../test-cnc-utils.h"
+#include "../test-errors.h"
+
 
 #define CHECK_EXTRA_INFO
 /*#undef CHECK_EXTRA_INFO*/
@@ -52,7 +54,7 @@ prov_test_common_setup ()
 	cnc = test_cnc_setup_connection (pinfo->id, "testcheckdb", &error);
 	if (!cnc) {
 		if (error) {
-			if (error->domain != 0) {
+			if (error->domain != TEST_ERROR) {
 				gchar *str = g_strdup_printf ("Could not setup connection: %s", 
 							      error->message ? error->message : "No detail");
 				g_warning ("%s", str);
@@ -610,7 +612,7 @@ prov_test_common_check_data_select ()
 		goto out;
 	}
 	if (remain) {
-		g_set_error (&error, 0, 0,
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_PARSING,
 			     "Parsing error, remains: %s", remain);
 		number_failed ++;
 		goto out;
@@ -630,7 +632,7 @@ prov_test_common_check_data_select ()
 	}
 
 	if (gda_data_model_get_n_rows (model) != 0) {
-		g_set_error (&error, 0, 0,
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Data model reports %d rows when 0 expected", gda_data_model_get_n_rows (model));
 		number_failed ++;
 		goto out;
@@ -649,7 +651,7 @@ prov_test_common_check_data_select ()
         }
 
 	if (gda_data_model_get_n_rows (model) != 9) {
-		g_set_error (&error, 0, 0,
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Data model reports %d rows when 9 expected", gda_data_model_get_n_rows (model));
 		number_failed ++;
 		goto out;
@@ -658,7 +660,7 @@ prov_test_common_check_data_select ()
 	/* check the columns haven't changed */
 	ncols = gda_data_model_get_n_columns (model);
 	if (i != ncols) {
-		g_set_error (&error, 0, 0,
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Number of columns has changed from %d to %d\n", i, ncols);
 		number_failed ++;
 		goto out;
@@ -666,7 +668,7 @@ prov_test_common_check_data_select ()
 
 	for (i = 0; i < ncols; i++) {
 		if (gda_data_model_describe_column (model, i) != g_slist_nth_data (columns, i)) {
-			g_set_error (&error, 0, 0,
+			g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 				     "GdaColumn %d has changed from %p to %p\n", i, 
 				     g_slist_nth_data (columns, i),
 				     gda_data_model_describe_column (model, i));

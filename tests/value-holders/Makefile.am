@@ -11,7 +11,11 @@ TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs
 TESTS = check_holder check_set check_statement
 check_PROGRAMS = check_holder check_set check_statement
 
-common_sources = common.c common.h
+common_sources = \
+	../test-errors.h \
+	../test-errors.c \
+	common.c \
+	common.h
 
 check_holder_SOURCES = check_holder.c $(common_sources)
 check_holder_LDADD = $(JSON_GLIB_LIBS) \
