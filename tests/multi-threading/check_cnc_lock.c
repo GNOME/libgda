@@ -44,7 +44,10 @@ main (int argc, char** argv)
 	gchar *fname;
 	GError *error = NULL;
 
+#if GLIB_CHECK_VERSION(2,36,0)
+#else
 	g_type_init ();
+#endif
 	gda_init ();
 
 	/* set up the test database */
