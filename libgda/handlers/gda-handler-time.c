@@ -453,12 +453,19 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 	}
 	else if (type == GDA_TYPE_TIME) {
 		const GdaTime *tim;
-		
+		GString *string;
+		string = g_string_new ("");
+		g_string_append_c (string, '\'');
 		tim = gda_value_get_time ((GValue *) value);
-		retval = g_strdup_printf ("'%02d:%02d:%02d'",
-					  tim->hour,
-					  tim->minute,
-					  tim->second);
+		g_string_append_printf (string, "%02d:%02d:%02d",
+					tim->hour,
+					tim->minute,
+					tim->second);
+		if (tim->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d",
+						(int) tim->timezone / 3600);
+		g_string_append_c (string, '\'');
+		retval = g_string_free (string, FALSE);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		const GdaTimestamp *gdats;
@@ -480,7 +487,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 				g_string_append_printf (string, ".%lu", gdats->fraction);
 			
 			if (gdats->timezone != GDA_TIMEZONE_INVALID)
-				g_string_append_printf (string, "%+02d", 
+				g_string_append_printf (string, "%+02d",
 							(int) gdats->timezone / 3600);
 			
 			retval = g_strdup_printf ("%s %s", str, string->str);
@@ -621,12 +628,19 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 	}
 	else if (type == GDA_TYPE_TIME) {
 		const GdaTime *tim;
-
+		GString *string;
+		string = g_string_new ("");
 		tim = gda_value_get_time ((GValue *) value);
-		retval = g_strdup_printf ("'%02d:%02d:%02d'",
-					  tim->hour,
-					  tim->minute,
-					  tim->second);
+		g_string_append_c (string, '\'');
+		g_string_append_printf (string, "%02d:%02d:%02d",
+					tim->hour,
+					tim->minute,
+					tim->second);
+		if (tim->timezone != GDA_TIMEZONE_INVALID)
+			g_string_append_printf (string, "%+02d",
+						(int) tim->timezone / 3600);
+		g_string_append_c (string, '\'');
+		retval = g_string_free (string, FALSE);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		const GdaTimestamp *gdats;
@@ -648,7 +662,7 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 				g_string_append_printf (string, ".%lu", gdats->fraction);
 			
 			if (gdats->timezone != GDA_TIMEZONE_INVALID)
-				g_string_append_printf (string, "%+02d", 
+				g_string_append_printf (string, "%+02d",
 							(int) gdats->timezone / 3600);
 			
 			retval = g_strdup_printf ("'%s %s'", str, string->str);
@@ -752,7 +766,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 				g_string_append_printf (string, ".%lu", gdats->fraction);
 			
 			if (gdats->timezone != GDA_TIMEZONE_INVALID)
-				g_string_append_printf (string, "%+02d", 
+				g_string_append_printf (string, "%+02d",
 							(int) gdats->timezone / 3600);
 			
 			retval = g_strdup_printf ("%s %s", str, string->str);

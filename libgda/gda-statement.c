@@ -796,6 +796,43 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 				return NULL;
 			}
 		}
+		if (context->flags & GDA_STATEMENT_SQL_TIMEZONE_TO_GMT) {
+			if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
+				GdaTime *nts;
+				nts = (GdaTime*) gda_value_get_time (value);
+				if (nts && (nts->timezone != GDA_TIMEZONE_INVALID)) {
+					nts = gda_time_copy (nts);
+					gda_time_change_timezone (nts, 0);
+					nts->timezone = GDA_TIMEZONE_INVALID;
+					GValue v = {0};
+					g_value_init (&v, GDA_TYPE_TIME);
+					gda_value_set_time (&v, nts);
+					gda_time_free (nts);
+					gchar *tmp;
+					tmp = gda_data_handler_get_sql_from_value (dh, &v);
+					g_value_reset (&v);
+					return tmp;
+				}
+			}
+			else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
+				GdaTimestamp *nts;
+				nts = (GdaTimestamp*) gda_value_get_timestamp (value);
+				if (nts && (nts->timezone != GDA_TIMEZONE_INVALID)) {
+					nts = gda_timestamp_copy (nts);
+					gda_timestamp_change_timezone (nts, 0);
+					nts->timezone = GDA_TIMEZONE_INVALID;
+					GValue v = {0};
+					g_value_init (&v, GDA_TYPE_TIMESTAMP);
+					gda_value_set_timestamp (&v, nts);
+					gda_timestamp_free (nts);
+					gchar *tmp;
+					tmp = gda_data_handler_get_sql_from_value (dh, &v);
+					g_value_reset (&v);
+					return tmp;
+				}
+			}
+		}
+
 		return gda_data_handler_get_sql_from_value (dh, value);
 	}
 	else

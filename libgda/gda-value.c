@@ -1240,14 +1240,65 @@ gda_time_valid (const GdaTime *time)
 {
 	g_return_val_if_fail (time, FALSE);
 
-	if (time->hour > 24 ||
-	    time->minute > 59 ||
-	    time->second > 59)
+	if ((time->hour > 23) ||
+	    (time->minute > 59) ||
+	    (time->second > 59))
 		return FALSE;
-	else
-		return TRUE;
+	if ((time->fraction >= 1000000) ||
+	    (time->timezone <= -12 * 3600) ||
+	    (time->timezone >= 12 * 3600))
+		return FALSE;
+	return TRUE;
 }
 
+/**
+ * gda_time_change_timezone:
+ * @time: a valid #GdaTime
+ * @ntz: a new timezone to use, in seconds added to GMT
+ *
+ * Changes @time's timezone (for example to convert from GMT to another time zone).
+ * If @time's current timezone is unset (i.e. equal to %GDA_TIMEZONE_INVALID), then this function simply sets
+ * @time's timezone attribute; Otherwise, it adds or removes hours, minutes or seconds to reflect the time in the new timezone.
+ *
+ * Note: the resulting will always be a valid time.
+ *
+ * Since: 5.2
+ */
+void
+gda_time_change_timezone (GdaTime *time, glong ntz)
+{
+	g_return_if_fail (time);
+	g_return_if_fail (gda_time_valid (time));
+	g_return_if_fail ((ntz > - 12 * 3600) && (ntz < 12 * 3600));
+
+	if (time->timezone == ntz)
+		return;
+
+	if (time->timezone != GDA_TIMEZONE_INVALID) {
+		glong nsec;
+		nsec = time->hour * 3600 + time->minute * 60 + time->second - time->timezone + ntz;
+		if (nsec < 0)
+			nsec += 86400;
+		else if (nsec >= 86400)
+			nsec -= 86400;
+
+		/* hours */
+		gint n;
+		n = nsec / 3600;
+		time->hour = (gushort) n;
+
+		/* minutes */
+		nsec -= n * 3600;
+		n = nsec / 60;
+		time->minute = (gushort) n;
+
+		/* seconds */
+		nsec -= n * 60;
+		time->second = (gushort) nsec;
+	}
+
+	time->timezone = ntz;
+}
 
 /*
  * Register the GdaTimestamp type in the GType system
@@ -1366,12 +1417,79 @@ gda_timestamp_valid (const GdaTimestamp *timestamp)
 		return FALSE;
 
 	/* check the time part */
-	if (timestamp->hour > 24 ||
-	    timestamp->minute > 59 ||
-	    timestamp->second > 59)
+	if ((timestamp->hour > 23) ||
+	    (timestamp->minute > 59) ||
+	    (timestamp->second > 59))
 		return FALSE;
-	else
-		return TRUE;
+	if ((timestamp->fraction >= 1000000) ||
+	    (timestamp->timezone <= -12 * 3600) ||
+	    (timestamp->timezone >= 12 * 3600))
+		return FALSE;
+
+	return TRUE;
+}
+
+/**
+ * gda_timestamp_change_timezone:
+ * @time: a valid #GdaTimestamp
+ * @ntz: a new timezone to use, in seconds added to GMT
+ *
+ * This function is similar to gda_time_change_timezone() but operates on time stamps.
+ *
+ * Note: the resulting will always be a valid time.
+ *
+ * Since: 5.2
+ */
+void
+gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz)
+{
+	g_return_if_fail (ts);
+	g_return_if_fail (gda_timestamp_valid (ts));
+	g_return_if_fail ((ntz > - 12 * 3600) && (ntz < 12 * 3600));
+
+	if (ts->timezone == ntz)
+		return;
+
+	if (ts->timezone != GDA_TIMEZONE_INVALID) {
+		glong nsec;
+		nsec = ts->hour * 3600 + ts->minute * 60 + ts->second - ts->timezone + ntz;
+		if (nsec < 0) {
+			GDate *date;
+			date = g_date_new_dmy ((GDateDay) ts->day, (GDateMonth) ts->month, (GDateYear) ts->year);
+			g_date_subtract_days (date, 1);
+			ts->year = g_date_get_year (date);
+			ts->month = g_date_get_month (date);
+			ts->day = g_date_get_day (date);
+			g_date_free (date);
+			nsec += 86400;
+		}
+		else if (nsec >= 86400) {
+			GDate *date;
+			date = g_date_new_dmy ((GDateDay) ts->day, (GDateMonth) ts->month, (GDateYear) ts->year);
+			g_date_add_days (date, 1);
+			ts->year = g_date_get_year (date);
+			ts->month = g_date_get_month (date);
+			ts->day = g_date_get_day (date);
+			g_date_free (date);
+			nsec -= 86400;
+		}
+
+		/* hours */
+		gint n;
+		n = nsec / 3600;
+		ts->hour = (gushort) n;
+
+		/* minutes */
+		nsec -= n * 3600;
+		n = nsec / 60;
+		ts->minute = (gushort) n;
+
+		/* seconds */
+		nsec -= n * 60;
+		ts->second = (gushort) nsec;
+	}
+
+	ts->timezone = ntz;
 }
 
 /**
@@ -1521,7 +1639,14 @@ gda_value_new_blob_from_file (const gchar *filename)
  * @val: value to set for the new #GValue.
  *
  * Makes a new #GValue of type #GDA_TYPE_TIMESTAMP with value @val
- * (of type time_t).
+ * (of type time_t). The returned timestamp has a timezone initialized with the
+ * current timezone, taking into account the daylight savings.
+ *
+ * For example, to get a time stamp representing the current date and time, use:
+ *
+ * <code>
+ * ts = gda_value_new_timestamp_from_timet (time (NULL));
+ * </code>
  *
  * Returns: (transfer full): the newly created #GValue.
  *
@@ -1537,6 +1662,7 @@ gda_value_new_timestamp_from_timet (time_t val)
         value = g_new0 (GValue, 1);
 #ifdef HAVE_LOCALTIME_R
 	struct tm tmpstm;
+	tzset ();
 	ltm = localtime_r ((const time_t *) &val, &tmpstm);
 #elif HAVE_LOCALTIME_S
 	struct tm tmpstm;
@@ -1557,7 +1683,7 @@ gda_value_new_timestamp_from_timet (time_t val)
                 tstamp.minute = ltm->tm_min;
                 tstamp.second = ltm->tm_sec;
                 tstamp.fraction = 0;
-                tstamp.timezone = GDA_TIMEZONE_INVALID;
+                tstamp.timezone = - timezone + daylight * 3600;
                 gda_value_set_timestamp (value, (const GdaTimestamp *) &tstamp);
         }
 

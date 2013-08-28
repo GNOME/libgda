@@ -86,6 +86,7 @@ typedef enum {
  * @GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR: parameters will be rendered using the "$&lt;param_number&gt;" syntax where parameters are numbered starting from 1
  * @GDA_STATEMENT_SQL_PARAMS_AS_QMARK: parameters will be rendered using the "?&lt;param_number&gt;" syntax where parameters are numbered starting from 1
  * @GDA_STATEMENT_SQL_PARAMS_AS_UQMARK: parameters will be rendered using the "?" syntax
+ * @GDA_STATEMENT_SQL_TIMEZONE_TO_GMT: time and timestamp with a timezone information are converted to GMT before rendering, and rendering does not show the timezone information
  *
  * Specifies rendering options
  */
@@ -97,7 +98,8 @@ typedef enum {
         GDA_STATEMENT_SQL_PARAMS_AS_COLON    = 1 << 3,
         GDA_STATEMENT_SQL_PARAMS_AS_DOLLAR   = 1 << 4,
         GDA_STATEMENT_SQL_PARAMS_AS_QMARK    = 1 << 5,
-        GDA_STATEMENT_SQL_PARAMS_AS_UQMARK   = 1 << 6
+        GDA_STATEMENT_SQL_PARAMS_AS_UQMARK   = 1 << 6,
+        GDA_STATEMENT_SQL_TIMEZONE_TO_GMT    = 1 << 7
 } GdaStatementSqlFlag;
 
 /* struct for the object's data */

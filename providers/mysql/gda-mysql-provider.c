@@ -2210,7 +2210,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			 * and use that SQL instead of @stmt to create another GdaMysqlPStmt object.
 			 */
 			gchar *sql = gda_mysql_provider_statement_to_sql (provider, cnc, stmt, 
-									  params, 0, NULL, error);
+									  params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, error);
 			gboolean proto_error;
 			if (!sql)
 				return NULL;
@@ -2454,14 +2454,23 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
-			const GdaTimestamp *ts;
+			GdaTimestamp *ts;
 
-			ts = gda_value_get_timestamp (value);
+			ts = (GdaTimestamp*) gda_value_get_timestamp (value);
 			if (!ts) {
 				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 				mysql_bind_param[i].is_null = (my_bool*)1;
 			}
 			else {
+				gboolean tofree = FALSE;
+				if (ts->timezone != GDA_TIMEZONE_INVALID) {
+					/* MySQL does not store timezone information, so if timezone information is
+					 * provided, we do our best and convert it to GMT */
+					ts = gda_timestamp_copy (ts);
+					tofree = TRUE;
+					gda_timestamp_change_timezone (ts, 0);
+				}
+
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
@@ -2472,6 +2481,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mtime->minute = ts->minute;
 				mtime->second = ts->second;
 				mtime->second_part = ts->fraction;
+				if (tofree)
+					gda_timestamp_free (ts);
 
 				mysql_bind_param[i].buffer_type= MYSQL_TYPE_TIMESTAMP;
 				mysql_bind_param[i].buffer= (char *)mtime;
@@ -2479,14 +2490,23 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
-			const GdaTime *ts;
+			GdaTime *ts;
 
-			ts = gda_value_get_time (value);
+			ts = (GdaTime*) gda_value_get_time (value);
 			if (!ts) {
 				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 				mysql_bind_param[i].is_null = (my_bool*)1;
 			}
 			else {
+				gboolean tofree = FALSE;
+				if (ts->timezone != GDA_TIMEZONE_INVALID) {
+					/* MySQL does not store timezone information, so if timezone information is
+					 * provided, we do our best and convert it to GMT */
+					ts = gda_time_copy (ts);
+					tofree = TRUE;
+					gda_time_change_timezone (ts, 0);
+				}
+
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
@@ -2494,6 +2514,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mtime->minute = ts->minute;
 				mtime->second = ts->second;
 				mtime->second_part = ts->fraction;
+				if (tofree)
+					gda_time_free (ts);
 
 				mysql_bind_param[i].buffer_type= MYSQL_TYPE_TIME;
 				mysql_bind_param[i].buffer= (char *)mtime;

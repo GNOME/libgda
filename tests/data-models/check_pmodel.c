@@ -451,7 +451,7 @@ test3 (GdaConnection *cnc)
 
 	/****/
 	gda_value_set_from_string ((value = gda_value_new (GDA_TYPE_TIMESTAMP)), 
-				   "2009-11-30 11:22:33", GDA_TYPE_TIMESTAMP);
+				   "2009-11-30 11:22:33+0", GDA_TYPE_TIMESTAMP);
 	if (! check_set_value_at (model, 2, 1, value, cnc, stmt, NULL)) {
 		nfailed ++;
 		goto out;
@@ -879,7 +879,7 @@ test7 (GdaConnection *cnc)
 	}
 
 	gda_value_set_from_string ((value = gda_value_new (GDA_TYPE_TIMESTAMP)), 
-				   "2004-03-22 11:22:44", GDA_TYPE_TIMESTAMP);
+				   "2004-03-22 11:22:44+0", GDA_TYPE_TIMESTAMP);
 	if (! check_set_value_at (model, 2, 1, value, cnc, stmt, params)) {
 		nfailed ++;
 		goto out;
@@ -1453,7 +1453,7 @@ test13 (GdaConnection *cnc)
 
 	/****/
 	gda_value_set_from_string ((value = gda_value_new (GDA_TYPE_TIMESTAMP)), 
-				   "2009-11-30 11:22:33", GDA_TYPE_TIMESTAMP);
+				   "2009-11-30 11:22:33+0", GDA_TYPE_TIMESTAMP);
 	if (! check_set_value_at (model, 1, 1, value, cnc, stmt, NULL)) {
 		nfailed ++;
 		goto out;
@@ -1548,7 +1548,7 @@ test14 (GdaConnection *cnc)
 
 	/****/
 	gda_value_set_from_string ((value = gda_value_new (GDA_TYPE_TIMESTAMP)), 
-				   "2019-11-30 11:22:33", GDA_TYPE_TIMESTAMP);
+				   "2019-11-30 11:22:33+0", GDA_TYPE_TIMESTAMP);
 	if (! check_set_value_at (model, 1, 1, value, cnc, stmt, NULL)) {
 		nfailed ++;
 		goto out;

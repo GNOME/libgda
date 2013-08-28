@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- * Copyright (C) 2002 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dschoene@src.gnome.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
@@ -91,30 +91,34 @@ struct _GdaNumeric {
 
 /**
  * GdaTime:
- * @hour: 
- * @minute: 
- * @second: 
- * @fraction: 
- * @timezone: 
+ * @hour: hour representation of the time, as a number between 0 and 23
+ * @minute: minute representation of the time, as a number between 0 and 59
+ * @second: second representation of the time, as a number between 0 and 59
+ * @fraction: fractionnal part of the seconds, in millionth' of second
+ * @timezone: number of seconds added to the GMT timezone
+ *
+ * Represents a time information.
  */
 typedef struct {
 	gushort hour;
 	gushort minute;
 	gushort second;
 	gulong  fraction;
-	glong   timezone;	/* # of seconds to the east UTC */
+	glong   timezone;
 } GdaTime;
 
 /**
  * GdaTimestamp:
- * @year: representation of the date
- * @month: month representation of the date, as a number between 1 and 12
- * @day: day representation of the date, as a number between 1 and 31
- * @hour: 
- * @minute: 
- * @second: 
- * @fraction: 
- * @timezone:
+ * @year: year representation of the time stamp
+ * @month: month representation of the time stamp, as a number between 1 and 12
+ * @day: day representation of the time stamp, as a number between 1 and 31
+ * @hour: hour representation of the time stamp, as a number between 0 and 23
+ * @minute: minute representation of the time stamp, as a number between 0 and 59
+ * @second: second representation of the time stamp, as a number between 0 and 59
+ * @fraction: fractionnal part of the seconds, in millionth' of second
+ * @timezone: number of seconds added to the GMT timezone
+ *
+ * Represents an instant (a time stamp)
  */
 typedef struct {
 	gshort  year;
@@ -124,7 +128,7 @@ typedef struct {
 	gushort minute;
 	gushort second;
 	gulong  fraction;
-	glong   timezone;	/* # of seconds to the east UTC */
+	glong   timezone;
 } GdaTimestamp;
 
 /**
@@ -271,12 +275,13 @@ GType                             gda_time_get_type (void) G_GNUC_CONST;
 gpointer                          gda_time_copy (gpointer boxed);
 void                              gda_time_free (gpointer boxed);
 gboolean                          gda_time_valid (const GdaTime *time);
-
+void                              gda_time_change_timezone (GdaTime *time, glong ntz);
 
 GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
 gpointer                          gda_timestamp_copy (gpointer boxed);
 void                              gda_timestamp_free (gpointer boxed);
 gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
+void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
 
 
 GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;

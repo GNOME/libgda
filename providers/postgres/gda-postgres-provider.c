@@ -1844,8 +1844,9 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		GdaDataModel *recset;
 		GdaConnectionEvent *event;
 
-		/* convert to SQL to remove any reference to a variable */
-		sql = gda_postgres_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
+		/* convert to SQL to remove any reference to a variable, using GMT for timezones */
+		sql = gda_postgres_provider_statement_to_sql (provider, cnc, stmt, params,
+							      GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, error);
 		if (!sql)
 			return NULL;
 
@@ -1891,7 +1892,8 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			 */
 			gchar *sql;
 
-			sql = gda_postgres_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
+			sql = gda_postgres_provider_statement_to_sql (provider, cnc, stmt, params,
+								      GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, error);
 			if (!sql)
 				return NULL;
 			ps = prepare_stmt_simple (cdata, sql, error); // FIXME: this @ps is leaked!
@@ -2108,15 +2110,58 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			param_formats [i] = 1; /* binary format */
 			param_mem [i] = TRUE; /* don't free later */
 		}
-		else if ((G_VALUE_TYPE (value) == G_TYPE_DATE) ||
-			 (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) ||
-			 (G_VALUE_TYPE (value) == GDA_TYPE_TIME)) {
+		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
 			GdaHandlerTime *timdh;
-
 			timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_g_type (provider, cnc,
-											      G_VALUE_TYPE (value)));
+											       G_VALUE_TYPE (value)));
 			g_assert (timdh);
 			param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, value);
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
+			GdaHandlerTime *timdh;
+			timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_g_type (provider, cnc,
+											       G_VALUE_TYPE (value)));
+			g_assert (timdh);
+
+			GdaTimestamp *timestamp;
+			timestamp = (GdaTimestamp *) gda_value_get_timestamp (value);
+			if (timestamp->timezone != GDA_TIMEZONE_INVALID) {
+				/* PostgreSQL does not store timezone information, so if timezone information is
+				 * provided, we do our best and convert it to GMT */
+				timestamp = gda_timestamp_copy (timestamp);
+				gda_timestamp_change_timezone (timestamp, 0);
+				GValue *rv;
+				rv = gda_value_new (GDA_TYPE_TIMESTAMP);
+				gda_value_set_timestamp (rv, timestamp);
+				gda_timestamp_free (timestamp);
+				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, rv);
+				gda_value_free (rv);
+			}
+			else
+				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, value);
+		}
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
+			GdaHandlerTime *timdh;
+			timdh = GDA_HANDLER_TIME (gda_server_provider_get_data_handler_g_type (provider, cnc,
+											       G_VALUE_TYPE (value)));
+			g_assert (timdh);
+
+			GdaTime *gdatime;
+			gdatime = (GdaTime*) gda_value_get_time (value);
+			if (gdatime->timezone != GDA_TIMEZONE_INVALID) {
+				/* PostgreSQL does not store timezone information, so if timezone information is
+				 * provided, we do our best and convert it to GMT */
+				gdatime = gda_time_copy (gdatime);
+				gda_time_change_timezone (gdatime, 0);
+				GValue *rv;
+				rv = gda_value_new (GDA_TYPE_TIME);
+				gda_value_set_time (rv, gdatime);
+				gda_time_free (gdatime);
+				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, rv);
+				gda_value_free (rv);
+			}
+			else
+				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, value);
 		}
 		else {
 			GdaDataHandler *dh;

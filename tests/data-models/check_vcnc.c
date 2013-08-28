@@ -568,8 +568,8 @@ check_date (GdaConnection *virtual)
 {
 	g_print ("*** insert dates into 'misc' table...\n");
 	GdaSet *set;
-	GdaTimestamp ts = {2011, 01, 31, 12, 34, 56, 0, GDA_TIMEZONE_INVALID};
-	GdaTime atime = {13, 45, 59, 0, GDA_TIMEZONE_INVALID};
+	GdaTimestamp ts = {2011, 01, 31, 12, 34, 56, 0, 0};
+	GdaTime atime = {13, 45, 59, 0, 0};
 	GDate *adate;
 	GdaDataModel *model;
 	GError *error = NULL;

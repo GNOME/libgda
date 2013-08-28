@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -24,12 +24,13 @@
 #include <libgda/libgda.h>
 #include "prov-test-util.h"
 
-int prov_test_common_setup ();
-int prov_test_common_load_data ();
-int prov_test_common_check_meta ();
+int prov_test_common_setup (void);
+int prov_test_common_load_data (void);
+int prov_test_common_check_meta (void);
 int prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean update_all);
-int prov_test_common_check_cursor_models ();
-int prov_test_common_check_data_select ();
-int prov_test_common_clean ();
+int prov_test_common_check_cursor_models (void);
+int prov_test_common_check_data_select (void);
+int prov_test_common_check_timestamp (void);
+int prov_test_common_clean (void);
 
 #endif

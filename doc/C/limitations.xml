@@ -54,6 +54,17 @@
       </para>
     </sect2>
 
+    <sect2>
+      <title>Timezone information</title>
+      <para>
+	Timezone information associated with time and timestamp data types is not stored by MySQL, so when executing
+	statements all the variables containing a time or timestamp information are converted to GMT (timezone 0) before
+	the execution happens. The consequence is that for example if a variable holds the "11:23:55+2" time (11 hours,
+	23 minutes and 55 seconds, at GMT + 2), then the actual time stored in the database will be "09:23:55", the same
+	time but GMT.
+      </para>
+    </sect2>
+
   </sect1>
 
   <sect1 id="limitations_oracle"><title>For Oracle</title>
@@ -113,6 +124,18 @@
 	</itemizedlist>
       </para>
     </sect2>
+
+    <sect2>
+      <title>Timezone information</title>
+      <para>
+	Timezone information associated with time and timestamp data types is not stored by PostgreSQL, so when executing
+	statements all the variables containing a time or timestamp information are converted to GMT (timezone 0) before
+	the execution happens. The consequence is that for example if a variable holds the "11:23:55+2" time (11 hours,
+	23 minutes and 55 seconds, at GMT + 2), then the actual time stored in the database will be "09:23:55", the same
+	time but GMT.
+      </para>
+    </sect2>
+
   </sect1>
 
   <sect1 id="limitations_sqlite"><title>For SQLite</title>
@@ -130,6 +153,17 @@
 	As SQLite stores dates and times as strings, &LIBGDA; only handles dates in the format recommended by SQLite,
 	which is "YYYY-MM-DD" for dates, "HH:MM:SS" for times and "YYYY-MM-DD HH:MM:SS" for timestamps (see 
 	<ulink url="http://www.sqlite.org/cvstrac/wiki?p=DateAndTimeFunctions">SQLite's documentation</ulink>).
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Timezone information</title>
+      <para>
+	Timezone information associated with time and timestamp data types is not stored by PostgreSQL, so when executing
+	statements all the variables containing a time or timestamp information are converted to GMT (timezone 0) before
+	the execution happens. The consequence is that for example if a variable holds the "11:23:55+2" time (11 hours,
+	23 minutes and 55 seconds, at GMT + 2), then the actual time stored in the database will be "09:23:55", the same
+	time but GMT.
       </para>
     </sect2>
 

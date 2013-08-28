@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES = libgda-test-5.0.la
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
 
 if ENABLE_VALA_EXTENSIONS
     VALA_EXTENSIONS= vala
@@ -97,5 +97,14 @@ test_input_parsers_LDADD = \
 test_quark_list_LDADD = \
         $(top_builddir)/libgda/libgda-5.0.la \
         $(COREDEPS_LIBS)
+
+test_sql_renderer_SOURCES = \
+        test-sql-renderer.c
+
+test_sql_renderer_LDADD = \
+        $(top_builddir)/libgda/libgda-5.0.la \
+	libgda-test-5.0.la \
+        $(COREDEPS_LIBS)
+
 
 EXTRA_DIST = dbstruct.xml

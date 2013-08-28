@@ -1239,6 +1239,11 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			}
 		}
 		else {
+			/* usually the way to bind parameters is different depending on the type of @value.
+			 * Also, if the database engine does not support storing timezone information for time and
+			 * timestamp values, then before binding, the value must be converted to GMT using
+			 * gda_time_change_timezone (xxx, 0) or gda_timestamp_change_timezone (xxx, 0)
+			 */
 			TO_IMPLEMENT;
 		}
 	}

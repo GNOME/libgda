@@ -2972,13 +2972,14 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	if (!ps) {
 		if (!gda_sqlite_provider_statement_prepare (provider, cnc, stmt, NULL)) {
-			/* try to use the SQL when parameters are rendered with their values */
+			/* try to use the SQL when parameters are rendered with their values, using GMT for timezones  */
 			gchar *sql;
 			int status;
 			sqlite3_stmt *sqlite_stmt;
 			char *left;
 
-			sql = gda_sqlite_provider_statement_to_sql (provider, cnc, stmt, params, 0, NULL, error);
+			sql = gda_sqlite_provider_statement_to_sql (provider, cnc, stmt, params,
+								    GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, error);
 			if (!sql)
 				return NULL;
 
@@ -3288,17 +3289,31 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 							  bin->data, bin->binary_length, SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
-			gchar *str;
-			const GdaTime *ts;
+			GString *string;
+			GdaTime *gtime;
+			gboolean tofree = FALSE;
 
-			ts = gda_value_get_time (value);
-			if (ts->fraction != 0)
-				str = g_strdup_printf ("%02d:%02d:%02d.%ld",
-						       ts->hour, ts->minute, ts->second, ts->fraction);
-			else
-				str = g_strdup_printf ("%02d:%02d:%02d",
-						       ts->hour, ts->minute, ts->second);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, str, -1, g_free);
+			gtime = (GdaTime *) gda_value_get_time (value);
+
+			string = g_string_new ("");
+			if (gtime->timezone != GDA_TIMEZONE_INVALID) {
+				/* SQLite cant' store timezone information, so if timezone information is
+				 * provided, we do our best and convert it to GMT */
+				gtime = gda_time_copy (gtime);
+				tofree = TRUE;
+				gda_time_change_timezone (gtime, 0);
+			}
+
+			g_string_append_printf (string, "%02u:%02u:%02u",
+						gtime->hour,
+						gtime->minute,
+						gtime->second);
+			if (gtime->fraction > 0)
+				g_string_append_printf (string, ".%lu", gtime->fraction);
+
+			if (tofree)
+				gda_time_free (gtime);
+			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, g_string_free (string, FALSE), -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
 			gchar *str;
@@ -3310,17 +3325,35 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, str, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
-			gchar *str;
-			const GdaTimestamp *ts;
+			GString *string;
+			GdaTimestamp *timestamp;
+			gboolean tofree = FALSE;
 
-			ts = gda_value_get_timestamp (value);
-			if (ts->fraction != 0)
-				str = g_strdup_printf ("%4d-%02d-%02d %02d:%02d:%02d.%ld", ts->year, ts->month, ts->day,
-						       ts->hour, ts->minute, ts->second, ts->fraction);
-			else
-				str = g_strdup_printf ("%4d-%02d-%02d %02d:%02d:%02d", ts->year, ts->month, ts->day,
-						       ts->hour, ts->minute, ts->second);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, str, -1, g_free);
+			timestamp = (GdaTimestamp *) gda_value_get_timestamp (value);
+
+			string = g_string_new ("");
+			if (timestamp->timezone != GDA_TIMEZONE_INVALID) {
+				/* SQLite cant' store timezone information, so if timezone information is
+				 * provided, we do our best and convert it to GMT */
+				timestamp = gda_timestamp_copy (timestamp);
+				tofree = TRUE;
+				gda_timestamp_change_timezone (timestamp, 0);
+			}
+
+			g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
+						timestamp->year,
+						timestamp->month,
+						timestamp->day,
+						timestamp->hour,
+						timestamp->minute,
+						timestamp->second);
+			if (timestamp->fraction > 0)
+				g_string_append_printf (string, ".%lu", timestamp->fraction);
+
+			if (tofree)
+				gda_timestamp_free (timestamp);
+
+			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, g_string_free (string, FALSE), -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_NUMERIC) {
 			const GdaNumeric *gdan;

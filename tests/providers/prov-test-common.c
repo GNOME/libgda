@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
  *
@@ -42,7 +42,7 @@ gboolean         fork_tests = TRUE;
  */
 
 int
-prov_test_common_setup ()
+prov_test_common_setup (void)
 {
 	int number_failed = 0;
 	GError *error = NULL;
@@ -90,7 +90,7 @@ prov_test_common_setup ()
  *
  */
 int
-prov_test_common_clean ()
+prov_test_common_clean (void)
 {
 	int number_failed = 0;
 
@@ -111,7 +111,7 @@ prov_test_common_clean ()
  */
 
 int
-prov_test_common_check_meta ()
+prov_test_common_check_meta (void)
 {
 	int number_failed = 0;
 	GSList *tables = NULL, *list;
@@ -529,7 +529,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
  *
  */
 int
-prov_test_common_load_data ()
+prov_test_common_load_data (void)
 {
 	int number_failed = 0;
 
@@ -555,7 +555,7 @@ prov_test_common_load_data ()
  *
  */
 int
-prov_test_common_check_cursor_models ()
+prov_test_common_check_cursor_models (void)
 {
 	int number_failed = 0;
 
@@ -584,7 +584,7 @@ prov_test_common_check_cursor_models ()
  *
  */
 int 
-prov_test_common_check_data_select ()
+prov_test_common_check_data_select (void)
 {
 	GdaSqlParser *parser = NULL;
 	GdaStatement *stmt = NULL;
@@ -688,6 +688,123 @@ prov_test_common_check_data_select ()
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("GdaDataSelect test resulted in %d error(s)\n", number_failed);
+	if (number_failed != 0) 
+		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
+	if (error)
+		g_error_free (error);
+#endif
+
+	return number_failed;
+}
+
+
+/*
+ * Check that timezones are handled correctly when storing and retreiving timestamps
+ */
+static gboolean
+gda_timestamp_equal (const GValue *cv1, const GValue *cv2)
+{
+	g_assert (G_VALUE_TYPE (cv1) == GDA_TYPE_TIMESTAMP);
+	g_assert (G_VALUE_TYPE (cv2) == GDA_TYPE_TIMESTAMP);
+	const GdaTimestamp *ts1, *ts2;
+	ts1 = gda_value_get_timestamp (cv1);
+	ts2 = gda_value_get_timestamp (cv2);
+	if (ts1->timezone == ts2->timezone)
+		return gda_value_differ (cv1, cv2) ? FALSE : TRUE;
+
+	GdaTimestamp *ts;
+	ts = gda_timestamp_copy ((GdaTimestamp*) ts1);
+	gda_timestamp_change_timezone (ts, ts2->timezone);
+	gboolean res;
+	res = memcmp (ts2, ts, sizeof (GdaTimestamp)) ? FALSE : TRUE;
+	gda_timestamp_free (ts);
+	return res;
+}
+
+int
+prov_test_common_check_timestamp (void)
+{
+	GdaSqlParser *parser = NULL;
+	GdaStatement *stmt = NULL;
+	GdaSet *params = NULL;
+	GError *error = NULL;
+	int number_failed = 0;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
+	parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
+	GValue *tso;
+	tso = gda_value_new_timestamp_from_timet (time (NULL));
+
+	/* insert timestamp */
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO tstest (ts) VALUES (##ts::timestamp)", 
+					    NULL, &error);
+	if (!stmt ||
+	    ! gda_statement_get_parameters (stmt, &params, &error) ||
+	    ! gda_set_set_holder_value (params, &error, "ts", gda_value_get_timestamp (tso)) ||
+	    (gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, &error) == -1)) {
+		number_failed ++;
+		goto out;
+	}
+
+	g_print ("Inserted TS %s\n", gda_value_stringify (tso));
+
+	/* retreive timestamp */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT ts FROM tstest", 
+					    NULL, &error);
+	if (!stmt) {
+		number_failed ++;
+		goto out;
+	}
+
+	GdaDataModel *model;
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		number_failed ++;
+		goto out;
+	}
+	gda_data_model_dump (model, NULL);
+	if (gda_data_model_get_n_rows (model) != 1) {
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Data model should have exactly 1 row");
+		number_failed ++;
+		goto out;
+	}
+
+	const GValue *cvalue;
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, GDA_TYPE_TIMESTAMP, FALSE, &error);
+	if (!cvalue) {
+		number_failed ++;
+		goto out;
+	}
+	if (! gda_timestamp_equal (tso, cvalue)) {
+		gchar *tmpg, *tmpe;
+		tmpg = gda_value_stringify (cvalue);
+		tmpe = gda_value_stringify (tso);
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Retreived time stamp differs from expected: got '%s' and expected '%s'", tmpg, tmpe);
+		g_free (tmpg);
+		g_free (tmpe);
+		number_failed ++;
+		goto out;
+	}
+
+out:
+	if (stmt)
+		g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+	if (model)
+		g_object_unref (model);
+	g_object_unref (parser);
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Timestamp test resulted in %d error(s)\n", number_failed);
 	if (number_failed != 0) 
 		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
 	if (error)

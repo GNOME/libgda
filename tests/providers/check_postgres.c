@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -45,6 +45,7 @@ main (int argc, char **argv)
 	number_failed = prov_test_common_setup ();
 
 	if (cnc) {
+		number_failed += prov_test_common_check_timestamp ();
 		number_failed += prov_test_common_check_meta ();
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, TRUE);
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, FALSE);

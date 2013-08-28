@@ -550,8 +550,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
-					else
+					else {
+						if (timegda.timezone == GDA_TIMEZONE_INVALID)
+							timegda.timezone = 0; /* set to GMT */
 						gda_value_set_time (value, &timegda);
+					}
 				}
 				else if (type == GDA_TYPE_TIMESTAMP) {
 					GdaTimestamp timestamp;
@@ -565,8 +568,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
-					else
+					else {
+						if (timestamp.timezone == GDA_TIMEZONE_INVALID)
+							timestamp.timezone = 0; /* set to GMT */
 						gda_value_set_timestamp (value, &timestamp);
+					}
 				}
 				else if (type == G_TYPE_CHAR) {
 					gint64 i;

@@ -886,10 +886,12 @@
 	gda_thread_wrapper_steal_signal
 	gda_thread_wrapper_unset_io_channel
 	gda_time_copy
+	gda_time_change_timezone
 	gda_time_free
 	gda_time_get_type
 	gda_time_valid
 	gda_timestamp_copy
+	gda_timestamp_change_timezone
 	gda_timestamp_free
 	gda_timestamp_get_type
 	gda_timestamp_valid

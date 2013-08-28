@@ -628,8 +628,11 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 				     GDA_SERVER_PROVIDER_DATA_ERROR,
 				     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
 		}
-		else
+		else {
+			if (timegda.timezone == GDA_TIMEZONE_INVALID)
+				timegda.timezone = 0; /* set to GMT */
 			gda_value_set_time (value, &timegda);
+		}
 	}
 	else if (type == G_TYPE_INT64)
 		g_value_set_int64 (value, atoll (thevalue));
@@ -671,8 +674,11 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 				     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
 				     thevalue);
 		}
-		else
+		else {
+			if (timestamp.timezone == GDA_TIMEZONE_INVALID)
+				timestamp.timezone = 0; /* set to GMT */
 			gda_value_set_timestamp (value, &timestamp);
+		}
 	}
 	else if (type == GDA_TYPE_BINARY) {
 		/*

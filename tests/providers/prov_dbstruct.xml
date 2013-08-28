@@ -117,4 +117,9 @@
     <definition>SELECT * FROM films ORDER BY last_update</definition>
   </view>
 
+  <!-- testing timestamps -->
+  <table name="tstest">
+    <column name="ts" type="timestamp"/>
+  </table>
+
 </schema>

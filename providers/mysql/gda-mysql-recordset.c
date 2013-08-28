@@ -7,7 +7,7 @@
  * Copyright (C) 2003 Chris Silles <csilles@src.gnome.org>
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
- * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alan Knowles <alan@akbkhome.com>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Mike Fisk <mfisk@woozle.org>
@@ -864,6 +864,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 					.minute = bvalue.minute,
 					.second = bvalue.second,
 					.fraction = bvalue.second_part,
+					.timezone = 0 /* GMT */
 				};
 				gda_value_set_time (value, &time);
 			}
@@ -883,6 +884,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 					.minute = bvalue.minute,
 					.second = bvalue.second,
 					.fraction = bvalue.second_part,
+					.timezone = 0 /* GMT */
 				};
 				gda_value_set_timestamp (value, &timestamp);
 			}
