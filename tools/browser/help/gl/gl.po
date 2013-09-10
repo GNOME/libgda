@@ -1,20 +1,21 @@
 # Galician translation for libgda.
 # Copyright (C) 2010 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Fran Diéguez <frandieguez@ubuntu.com>, 2010.
-#
+# Fran Dieguez <frandieguez@gnome.org>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "POT-Creation-Date: 2010-09-18 19:46+0000\n"
-"PO-Revision-Date: 2010-09-21 10:13+0200\n"
-"Last-Translator: Fran Diéguez <frandieguez@ubuntu.com>\n"
-"Language-Team: Galician <gnome-gl-list@gnome.org>\n"
+"PO-Revision-Date: 2013-09-10 23:36+0200\n"
+"Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
+"Language-Team: gnome-l10n-gl@gnome.org\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #: C/legal.xml:3(p)
 msgid ""
@@ -22,8 +23,8 @@ msgid ""
 "licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
 "License</link>."
 msgstr ""
-"Este traballo ten a licenza <link href=\"http://creativecommons.org/licenses/"
-"by-sa/3.0/\">Creative Commons Atribución Compartir igual 3.0 de Estado "
+"Este traballo ten a licenza <link href=\"http://creativecommons.org/licenses"
+"/by-sa/3.0/\">Creative Commons Atribución Compartir igual 3.0 de Estado "
 "Unidos</link>."
 
 #: C/legal.xml:6(p)
@@ -56,7 +57,7 @@ msgid ""
 "benefits are faster execution times (as the SQL code is parsed only once) "
 "and a protection against SQL injection vulnerabilities."
 msgstr ""
-"As variábeis (a veces denominadas como <em>marcadores de posición<em>) son "
+"As variábeis (a veces denominadas como <em>marcadores de posición</em>) son "
 "lugares no código SQL que son substituídos polos valores reais cando se "
 "executa o código SQL. Os beneficios do uso dos mesmos é a execución máis "
 "rápida (xa que o código SQL só se analiza unha vez) e a protección fronte a "
