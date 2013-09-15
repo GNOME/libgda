@@ -277,9 +277,7 @@ set_from_string (GValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 	}
-
-
-	if (!retval && g_value_type_transformable (G_TYPE_STRING, type)) {
+	else if (g_value_type_transformable (G_TYPE_STRING, type)) {
 		/* use the GLib type transformation function */
 		GValue *string;
 
@@ -411,7 +409,6 @@ gda_default_get_type (void)
 static void
 string_to_binary (const GValue *src, GValue *dest)
 {
-	/* FIXME: add more checks*/
 	GdaBinary *bin;
 	const gchar *as_string;
 
@@ -509,7 +506,6 @@ gda_binary_free (gpointer boxed)
 static void
 string_to_blob (const GValue *src, GValue *dest)
 {
-	/* FIXME: add more checks*/
 	GdaBlob *blob;
 	const gchar *as_string;
 
@@ -652,7 +648,6 @@ geometric_point_to_string (const GValue *src, GValue *dest)
 static void
 string_to_geometricpoint (const GValue *src, GValue *dest)
 {
-	/* FIXME: add more checks*/
 	GdaGeometricPoint *point;
 	const gchar *as_string;
 
@@ -1307,14 +1302,12 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 static void
 string_to_timestamp (const GValue *src, GValue *dest)
 {
-	/* FIXME: add more checks*/
 	GdaTimestamp timestamp;
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
 
-	if (! gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (src)))
-		g_warning ("Can't convert '%s' to a timestamp", g_value_get_string (src));
+	gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (src));
 	gda_value_set_timestamp (dest, &timestamp);
 }
 
