@@ -993,7 +993,6 @@ tools/browser/dummy-perspective/Makefile
 tools/browser/canvas/Makefile
 tools/browser/doc/Makefile
 tools/browser/help/Makefile
-tools/browser/help/gda-browser.omf
 testing/Makefile
 tests/Makefile
 tests/parser/Makefile
