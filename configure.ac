@@ -127,12 +127,16 @@ LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 AC_PROG_MAKE_SET
 
-dnl -- Initialize docs
-GNOME_DOC_INIT([0.9.0],[have_gdu=yes],[have_gdu=no])
-if test x$have_gdu != xno; then
-   AC_DEFINE(HAVE_GDU, [1], [GdaBrowser documentation is built])
+dnl -- Initialize help system
+AC_ARG_WITH(help,
+AS_HELP_STRING([--with-help], [Enable building help (GdaBrowser)]),
+	[with_gdu=$withval]
+	,with_gdu=yes)
+if test x$with_gdu != xno; then
+   YELP_HELP_INIT
+   AC_DEFINE(HAVE_GDU, [1], [Help (GdaBrowser documentation) is built])
 fi
-AM_CONDITIONAL(HAVE_GDU, test x$have_gdu != xno)
+AM_CONDITIONAL(HAVE_GDU, test x$with_gdu != xno)
 
 dnl ******************************
 dnl glib utilities
@@ -1045,6 +1049,7 @@ echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes;
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
+echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings (--enable-vala): `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
 echo "   Building GDA-UI Vala Bindings: `if test x$enable_gdaui_vala != xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"

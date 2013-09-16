@@ -1,9 +1,9 @@
-include $(top_srcdir)/gnome-doc-utils.make
+@YELP_HELP_RULES@
 
-DOC_ID = gda-browser
+HELP_ID = gda-browser
 
-DOC_INCLUDES = legal.xml
-DOC_FIGURES = \
+HELP_EXTRA = legal.xml
+HELP_MEDIA = \
 	figures/action-1.png \
 	figures/action-2.png \
 	figures/action-3.png \
@@ -33,7 +33,7 @@ DOC_FIGURES = \
 	figures/ldap-search.png \
 	figures/ldap-table-mapping.png
 
-DOC_PAGES = \
+HELP_FILES = \
 	actions.page \
 	data-manager-perspective.page \
 	data-manager-xml-syntax.page \
@@ -53,6 +53,6 @@ DOC_PAGES = \
 	ldap-browser-perspective.page \
 	ldap-connections.page
 
-DOC_LINGUAS = cs de el es gl id pt_BR sl zh_CN
+HELP_LINGUAS = cs de el es gl id pt_BR sl zh_CN
 
 dist-hook: doc-dist-hook

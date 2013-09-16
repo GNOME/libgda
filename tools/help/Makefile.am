@@ -1,4 +1,4 @@
-include $(top_srcdir)/gnome-doc-utils.make
+@YELP_HELP_RULES@
 
 DOC_ID = gda-sql
 DOC_NOCHECK = yes
