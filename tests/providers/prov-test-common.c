@@ -729,6 +729,7 @@ prov_test_common_check_timestamp (void)
 	GdaSet *params = NULL;
 	GError *error = NULL;
 	int number_failed = 0;
+	GdaDataModel *model = NULL;
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
@@ -762,7 +763,6 @@ prov_test_common_check_timestamp (void)
 		goto out;
 	}
 
-	GdaDataModel *model;
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
 		number_failed ++;

@@ -54,5 +54,3 @@ HELP_FILES = \
 	ldap-connections.page
 
 HELP_LINGUAS = cs de el es gl id pt_BR sl zh_CN
-
-dist-hook: doc-dist-hook

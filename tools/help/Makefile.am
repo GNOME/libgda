@@ -7,5 +7,3 @@ DOC_PAGES = \
 	gda-sql-help.xml
 
 DOC_LINGUAS = 
-
-dist-hook: doc-dist-hook

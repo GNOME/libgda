@@ -24,7 +24,5 @@ DOC_FIGURES = \
 
 DOC_LINGUAS = 
 
-dist-hook: doc-dist-hook
-
 PAGES_DIR = C
 

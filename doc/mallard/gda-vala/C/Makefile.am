@@ -1,6 +1,6 @@
 BUILT_SOURCES = gda.vala.stamp
 
-DOC_PAGES = \
+HELP_FILES = \
 	classes.page \
 	enable-vala-extensions.page \
 	index.page \
@@ -10,7 +10,7 @@ DOC_PAGES = \
 	record-class.page \
 	table-class.page
 
-DOC_FIGURES = \
+HELP_MEDIA = \
 	figures/classes-uml.png \
 	figures/record-class-uml.png \
 	figures/interfaces-uml.png \
@@ -20,7 +20,7 @@ htmldoc_SOURCES = \
 	gda.vala.stamp \
 	$(DOC_PAGES:.page=.html)
 
-gda.vala.stamp: $(DOC_PAGES)
+gda.vala.stamp: $(HELP_FILES)
 	$(YELP_BUILD) html $^
 
 JS_FILES = C.css jquery.js jquery.syntax.js jquery.syntax.brush.clang.js jquery.syntax.layout.yelp.js jquery.syntax.core.js yelp.js yelp-note-tip.png
@@ -31,7 +31,7 @@ htmldocdir = \
 	$(HTML_DIR)/libgda-5.0/gda-vala
 
 htmldoc_DATA = \
-	$(DOC_PAGES:.page=.html) \
+	$(HELP_FILES:.page=.html) \
 	$(JS_FILES)
 
 figures: htmldoc
@@ -40,13 +40,15 @@ figuresdir = \
 	$(HTML_DIR)/libgda-5.0/gda-vala/figures
 
 figures_DATA = \
-	$(DOC_FIGURES)
+	$(HELP_MEDIA)
 
 EXTRA_DIST = \
-	$(DOC_FIGURES)
+	$(HELP_MEDIA) \
+	$(HELP_FILES) \
+	$(JS_FILES)
 
 CLEANFILES = \
-	$(DOC_PAGES:.page=.html) \
+	$(HELP_FILES:.page=.html) \
 	$(JS_FILES)
 
 clean-local:
