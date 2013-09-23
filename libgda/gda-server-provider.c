@@ -703,7 +703,7 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 GdaDataHandler *
 gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaConnection *cnc, GType for_type)
 {
-	GdaDataHandler *retval;
+	GdaDataHandler *retval = NULL;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
 
@@ -733,7 +733,7 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 GdaDataHandler *
 gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConnection *cnc, const gchar *for_type)
 {
-	GdaDataHandler *retval;
+	GdaDataHandler *retval = NULL;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 	g_return_val_if_fail (for_type && *for_type, NULL);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);

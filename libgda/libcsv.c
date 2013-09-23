@@ -143,7 +143,7 @@ csv_fini(struct csv_parser *p, void (*cb1)(char *, size_t, void *), void (*cb2)(
 {
   /* Finalize parsing.  Needed, for example, when file does not end in a newline */
   int quoted = p->quoted;
-  int pstate = p->pstate;
+  int pstate = p->pstate; /* TODO: This is used by the macros, but the compiler thinks it is not used. */
   size_t spaces = p->spaces;
   size_t entry_pos = p->entry_pos;
 
