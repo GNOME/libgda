@@ -148,6 +148,8 @@ ora_def_callback (GdaOracleValue *ora_value,
 		  dvoid **indpp,
 		  ub2 **rcodep)
 {
+	*piecep = OCI_ONE_PIECE;
+
 	if (!ora_value->value) {
 		/* 1st chunk */
 		ora_value->defined_size = 0;
@@ -393,6 +395,9 @@ gda_oracle_recordset_new (GdaConnection *cnc, GdaOraclePStmt *ps, GdaSet *exec_p
 			case SQLT_LNG:
 			case SQLT_VBI:
 			case SQLT_BIN:
+				use_callback = TRUE;
+				break;
+			default:
 				use_callback = TRUE;
 				break;
 			}

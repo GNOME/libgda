@@ -6,7 +6,7 @@
  * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 Magnus Bergman <magnus.bergman@observer.net>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  *
@@ -280,8 +280,8 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	static_types[GDA_STYPE_STRING] = G_TYPE_STRING;
 	static_types[GDA_STYPE_BOOLEAN] = G_TYPE_BOOLEAN;
 	static_types[GDA_STYPE_DATE] = G_TYPE_DATE;
-	static_types[GDA_STYPE_TIME] = GDA_STYPE_TIME;
-	static_types[GDA_STYPE_TIMESTAMP] = GDA_STYPE_TIMESTAMP;
+	static_types[GDA_STYPE_TIME] = GDA_TYPE_TIME;
+	static_types[GDA_STYPE_TIMESTAMP] = GDA_TYPE_TIMESTAMP;
 	static_types[GDA_STYPE_INT64] = G_TYPE_INT64;
 	static_types[GDA_STYPE_UINT64] = G_TYPE_UINT64;
 	static_types[GDA_STYPE_UINT] = G_TYPE_UINT;
@@ -289,13 +289,13 @@ gda_oracle_provider_class_init (GdaOracleProviderClass *klass)
 	static_types[GDA_STYPE_DOUBLE] = G_TYPE_DOUBLE;
 	static_types[GDA_STYPE_LONG] = G_TYPE_LONG;
 	static_types[GDA_STYPE_ULONG] = G_TYPE_ULONG;
-	static_types[GDA_STYPE_NUMERIC] = GDA_STYPE_NUMERIC;
-	static_types[GDA_STYPE_BINARY] = GDA_STYPE_BINARY;
-	static_types[GDA_STYPE_BLOB] = GDA_STYPE_BLOB;
+	static_types[GDA_STYPE_NUMERIC] = GDA_TYPE_NUMERIC;
+	static_types[GDA_STYPE_BINARY] = GDA_TYPE_BINARY;
+	static_types[GDA_STYPE_BLOB] = GDA_TYPE_BLOB;
 	static_types[GDA_STYPE_CHAR] = G_TYPE_CHAR;
-	static_types[GDA_STYPE_SHORT] = GDA_STYPE_SHORT;
+	static_types[GDA_STYPE_SHORT] = GDA_TYPE_SHORT;
 	static_types[GDA_STYPE_GTYPE] = G_TYPE_GTYPE;
-	static_types[GDA_STYPE_GEOMETRIC_POINT] = GDA_STYPE_GEOMETRIC_POINT;
+	static_types[GDA_STYPE_GEOMETRIC_POINT] = GDA_TYPE_GEOMETRIC_POINT;
 	static_types[GDA_STYPE_NULL] = GDA_TYPE_NULL;
 }
 
