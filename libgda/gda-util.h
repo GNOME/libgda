@@ -2,7 +2,7 @@
  * Copyright (C) 2000 Reinhard MÃ¼ller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2002 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
- * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
@@ -120,6 +120,11 @@ void         gda_connection_string_split (const gchar *string, gchar **out_cnc_p
 gboolean     gda_parse_iso8601_date (GDate *gdate, const gchar *value);
 gboolean     gda_parse_iso8601_time (GdaTime *timegda, const gchar *value);
 gboolean     gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value);
+gboolean     gda_parse_formatted_date (GDate *gdate, const gchar *value,
+				       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
+gboolean     gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep);
+gboolean     gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
+					    GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
 
 G_END_DECLS
 

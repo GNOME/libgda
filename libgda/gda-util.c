@@ -6,7 +6,7 @@
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2009 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
@@ -625,7 +625,7 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
  *
  * Note: this method may set the "source" custom string property
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error)
@@ -1993,7 +1993,7 @@ gda_identifier_hash (const gchar *id)
  * Does the same as strcmp(@id1, @id2), but handles the case where id1 and/or id2 are enclosed in double quotes.
  * can also be used in hash tables as a #GEqualFunc.
  *
- * Returns: TRUE if @id1 and @id2 are equal.
+ * Returns: %TRUE if @id1 and @id2 are equal.
  */
 gboolean
 gda_identifier_equal (const gchar *id1, const gchar *id2)
@@ -2800,7 +2800,7 @@ gda_rfc1738_encode (const gchar *string)
  *
  * @string is decoded in place, no new string gets created.
  *
- * Returns: TRUE if no error occurred.
+ * Returns: %TRUE if no error occurred.
  */
 gboolean
 gda_rfc1738_decode (gchar *string)
@@ -3043,54 +3043,126 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 		gda_rfc1738_decode (*out_password);
 }
 
+/*
+ * NB: @sep must not be zero
+ */
 static gboolean
-_parse_iso8601_date (GDate *gdate, const gchar *value, char **out_endptr)
+_parse_formatted_date (GDate *gdate, const gchar *value, GDateDMY first, GDateDMY second, GDateDMY third, gchar sep,
+		       const char **out_endptr)
 {
 	GDateYear year;
 	GDateMonth month;
 	GDateDay day;
 	unsigned long int tmp;
-	char *endptr;
+	const char *endptr;
+	guint8 iter;
+	guint16 parsed_values [3] = {0, 0, 0};
 
 	g_date_clear (gdate, 1);
 
-	if (! isdigit (*value))
+	/* checks */
+	if ((first == second) || (first == third) || (second == third)) {
+		g_warning (_("The 'first', 'second' and 'third' arguments must be different"));
 		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	if (tmp <= G_MAXUINT16)
-		year = tmp;
-	else
+	}
+	if ((sep >= '0') && (sep <= '9')) {
+		if (sep)
+			g_warning (_("Invalid separator '%c'"), sep);
+		else
+			g_warning (_("Invalid null separator"));
 		return FALSE;
-	if (*endptr != '-')
+	}
+
+	/* 1st number */
+	for (endptr = value, tmp = 0, iter = 0; (*endptr >= '0') && (*endptr <= '9') && (iter < 4); endptr++)
+		tmp = tmp * 10 + *endptr - '0';
+	parsed_values[0] = tmp;
+	if (*endptr != sep)
 		return FALSE;
 
-	value = endptr + 1;
-	if (! isdigit (*value))
+	/* 2nd number */
+	endptr++;
+	for (tmp = 0, iter = 0; (*endptr >= '0') && (*endptr <= '9') && (iter < 4); endptr++)
+		tmp = tmp * 10 + *endptr - '0';
+	parsed_values[1] = tmp;
+	if (*endptr != sep)
 		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	month = tmp > 0 ? (tmp <= G_DATE_DECEMBER ? tmp : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
+
+	/* 3rd number */
+	endptr++;
+	for (tmp = 0, iter = 0; (*endptr >= '0') && (*endptr <= '9') && (iter < 4); endptr++)
+		tmp = tmp * 10 + *endptr - '0';
+	parsed_values[2] = tmp;
+
+	/* reordering */
+	guint16 rmonth = 0, rday = 0;
+	switch (first) {
+	case G_DATE_YEAR:
+		year = parsed_values[0];
+		break;
+	case G_DATE_MONTH:
+		rmonth = parsed_values[0];
+		break;
+	case G_DATE_DAY:
+		rday = parsed_values[0];
+		break;
+	default:
+		g_warning (_("Unknown GDateDMY value %u"), first);
+		return FALSE;
+	}
+
+	switch (second) {
+	case G_DATE_YEAR:
+		year = parsed_values[1];
+		break;
+	case G_DATE_MONTH:
+		rmonth = parsed_values[1];
+		break;
+	case G_DATE_DAY:
+		rday = parsed_values[1];
+		break;
+	default:
+		g_warning (_("Unknown GDateDMY value %u"), second);
+		return FALSE;
+	}
+
+	switch (third) {
+	case G_DATE_YEAR:
+		year = parsed_values[2];
+		break;
+	case G_DATE_MONTH:
+		rmonth = parsed_values[2];
+		break;
+	case G_DATE_DAY:
+		rday = parsed_values[2];
+		break;
+	default:
+		g_warning (_("Unknown GDateDMY value %u"), third);
+		return FALSE;
+	}
+
+	/* checks */
+	month = rmonth > 0 ? (rmonth <= G_DATE_DECEMBER ? rmonth : G_DATE_BAD_MONTH) : G_DATE_BAD_MONTH;
 	if (month == G_DATE_BAD_MONTH)
 		return FALSE;
-	if (*endptr != '-')
-		return FALSE;
-
-	value = endptr + 1;
-	if (! isdigit (*value))
-		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	day = tmp > 0 ? (tmp <= G_MAXUINT8 ? tmp : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
+	day = rday > 0 ? (rday <= G_MAXUINT8 ? rday : G_DATE_BAD_DAY) : G_DATE_BAD_DAY;
 	if (day == G_DATE_BAD_DAY)
 		return FALSE;
 
 	if (g_date_valid_dmy (day, month, year)) {
 		g_date_set_dmy (gdate, day, month, year);
-		*out_endptr = endptr;
+		if (out_endptr)
+			*out_endptr = endptr;
 		return TRUE;
 	}
-	else {
-		memset (gdate, 0, sizeof (GDate));
+	else
 		return FALSE;
-	}
+}
+
+static gboolean
+_parse_iso8601_date (GDate *gdate, const gchar *value, const char **out_endptr)
+{
+	return _parse_formatted_date (gdate, value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-', out_endptr);
 }
 
 /**
@@ -3104,86 +3176,168 @@ _parse_iso8601_date (GDate *gdate, const gchar *value, char **out_endptr)
  * less than 2 digits for month and day are accepted). Years must be in the 1-65535 range,
  * a limitation imposed by #GDate.
  *
- * Returns: %TRUE if no error occurred
+ * Returns: %TRUE if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
  */
 gboolean
 gda_parse_iso8601_date (GDate *gdate, const gchar *value)
 {
 	g_return_val_if_fail (gdate, FALSE);
 
-	char *endptr;
+	const char *endptr;
 	if (!value)
 		return FALSE;
 
-	if (! _parse_iso8601_date (gdate, value, &endptr))
+	if (! _parse_iso8601_date (gdate, value, &endptr) || *endptr)
+		return FALSE;
+	else
+		return TRUE;
+}
+
+/**
+ * gda_parse_formatted_date:
+ * @gdate: a pointer to a #GDate structure which will be filled
+ * @value: a string to be parsed
+ * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
+ * @second: a #GDateDMY specifying which of year, month or day appears second (in the first bytes) in @value
+ * @third: a #GDateDMY specifying which of year, month or day appears third (in the first bytes) in @value
+ * @sep: spcifies the expected separator character bewteen year, month and day (for example '-')
+ *
+ * This function is similar to gda_parse_iso8601_date() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
+ * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
+ *
+ * Returns: %TRUE if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ *
+ * Since: 5.2
+ */
+gboolean
+gda_parse_formatted_date (GDate *gdate, const gchar *value, GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
+{
+	g_return_val_if_fail (gdate, FALSE);
+
+	const char *endptr;
+	if (!value)
+		return FALSE;
+
+	if (! _parse_formatted_date (gdate, value, first, second, third, sep, &endptr))
 		return FALSE;
 	if (*endptr)
 		return FALSE;
 	return TRUE;
 }
 
+
 static gboolean
-_parse_iso8601_time (GdaTime *timegda, const gchar *value, char **out_endptr)
+_parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong timezone, const char **out_endptr)
 {
 	unsigned long int tmp;
-	char *endptr;
+	const char *endptr;
 
 	memset (timegda, 0, sizeof (GdaTime));
-	timegda->timezone = GDA_TIMEZONE_INVALID;
+	timegda->timezone = timezone;
 
-	if (! isdigit (*value))
-		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	if (tmp <= 23)
-		timegda->hour = tmp;
-	else
-		return FALSE;
-	if (*endptr != ':')
-		return FALSE;
-	
-	value = endptr + 1;
-	if (! isdigit (*value))
-		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	if (tmp < 60)
-		timegda->minute = tmp;
-	else
-		return FALSE;
-	if (*endptr != ':')
+	if ((*value < '0') || (*value > '9'))
 		return FALSE;
 
-	value = endptr + 1;
-	if (! isdigit (*value))
-		return FALSE;
-	tmp = strtoul (value, &endptr, 10);
-	if (tmp < 60)
-		timegda->second = tmp;
-	else
+	/* hour */
+	guint8 iter;
+	for (iter = 0, tmp = 0, endptr = value; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter++, endptr++) {
+		tmp = tmp * 10 + *endptr - '0';
+		if (tmp > 23)
+			return FALSE;
+	}
+	timegda->hour = tmp;
+	if ((sep && *endptr != sep) || !*endptr)
 		return FALSE;
 
+	/* minutes */
+	if (sep)
+		endptr++;
+	for (tmp = 0, iter = 0 ; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter ++, endptr++) {
+		tmp = tmp * 10 + *endptr - '0';
+		if (tmp > 59)
+			return FALSE;
+	}
+	timegda->minute = tmp;
+	if ((sep && *endptr != sep) || !*endptr)
+		return FALSE;
+
+	/* seconds */
+	if (sep)
+		endptr++;
+	for (tmp = 0, iter = 0 ; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter++, endptr++) {
+		tmp = tmp * 10 + *endptr - '0';
+		if (tmp > 59)
+			return FALSE;
+	}
+	timegda->second = tmp;
 	if (*endptr && (*endptr != '.') && (*endptr != '+') && (*endptr != '-')) {
 		*out_endptr = endptr;
 		return TRUE; /* end of the parsing */
 	}
 
 	if (*endptr == '.') {
-		value = endptr + 1;
-		if (! isdigit (*value))
+		endptr++;
+		if (!*endptr)
 			return FALSE;
-		tmp = strtoul (value, &endptr, 10);
-		if (tmp < G_MAXULONG)
-			timegda->fraction = tmp;
-		else
-			return FALSE;
+		for (tmp = 0 ; (*endptr >= '0') && (*endptr <= '9'); endptr++) {
+			if (tmp > G_MAXULONG / 10)
+				return FALSE;
+			tmp = tmp * 10 + *endptr - '0';
+		}
+		timegda->fraction = tmp;
 	}
 	if ((*endptr == '+') || (*endptr == '-')) {
-		long int stmp;
-		value = endptr;
-		stmp = strtol (value, &endptr, 10);
-		if ((stmp >= -24) && (stmp <= 24))
-			timegda->timezone = stmp * 60 * 60;
-		else
-			return FALSE;
+		gint8 mult = 1;
+		if (*endptr == '-')
+			mult = -1;
+		for (tmp = 0,endptr++ ; (*endptr >= '0') && (*endptr <= '9'); endptr++) {
+			tmp = tmp * 10 + *endptr - '0';
+			if (tmp >= 24)
+				return FALSE;
+		}
+		timegda->timezone = tmp * 60 * 60 * mult;
+	}
+	else if (*endptr) {
+		for (; g_ascii_isspace (*endptr); endptr++);
+		if (((*endptr == 'G') || (*endptr == 'g')) &&
+		    ((endptr[1] == 'M') || (endptr[1] == 'm')) &&
+		    ((endptr[2] == 'T') || (endptr[2] == 't')) && !endptr[3]) {
+			timegda->timezone = 0;
+			endptr += 3;
+		}
+		else if (((*endptr == 'U') || (*endptr == 'u')) &&
+			 ((endptr[1] == 'T') || (endptr[1] == 't')) &&
+			 ((endptr[2] == 'C') || (endptr[2] == 'c')) && !endptr[3]) {
+			timegda->timezone = 0;
+			endptr += 3;
+		}
+		else if (((*endptr == 'T') || (*endptr == 'u')) &&
+			 ((endptr[1] == 'U') || (endptr[1] == 'u')) && !endptr[2]) {
+			timegda->timezone = 0;
+			endptr += 2;
+		}
+		else if (((*endptr == 'Z') || (*endptr == 'z')) && !endptr[1]) {
+			timegda->timezone = 0;
+			endptr += 1;
+		}
+		else {
+			/* http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations */
+			GTimeZone *tz;
+			tz = g_time_zone_new (endptr);
+			if (tz) {
+				if (g_time_zone_get_offset (tz, 0) == 0) {
+					g_time_zone_unref (tz);
+					return FALSE;
+				}
+				else {
+					timegda->timezone = g_time_zone_get_offset (tz, 0);
+					g_time_zone_unref (tz);
+					for (; *endptr; endptr++);
+				}
+			}
+			else
+				return FALSE;
+		}
 	}
 
 	*out_endptr = endptr;
@@ -3199,22 +3353,45 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, char **out_endptr)
  *
  * Accepted date format is "HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if no error occurred
  */
 gboolean
 gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 {
 	g_return_val_if_fail (timegda, FALSE);
 
-	char *endptr;
 	if (!value)
 		return FALSE;
 
-	if (! _parse_iso8601_time (timegda, value, &endptr))
+	const char *endptr;
+	if (! _parse_iso8601_time (timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) || *endptr)
 		return FALSE;
-	if (*endptr)
+	else
+		return TRUE;
+}
+
+/**
+ * gda_parse_formatted_time:
+ * @timegda: a pointer to a #GdaTime structure which will be filled
+ * @value: a string
+ * @sep: the time separator, usually ':'. If equal to @0, then the expexted format will be HHMMSS...
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2
+ */
+gboolean
+gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
+{
+	g_return_val_if_fail (timegda, FALSE);
+
+	if (!value)
 		return FALSE;
-	return TRUE;
+	const char *endptr;
+	if (! _parse_iso8601_time (timegda, value, sep, GDA_TIMEZONE_INVALID, &endptr) || *endptr)
+		return FALSE;
+	else
+		return TRUE;
 }
 
 /**
@@ -3226,15 +3403,38 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
  *
  * Accepted date format is "YYYY-MM-DD HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: TRUE if no error occurred
+ * Returns: %TRUE if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
  */
 gboolean
 gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 {
+	return gda_parse_formatted_timestamp (timestamp, value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
+}
+
+/**
+ * gda_parse_formatted_timestamp:
+ * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
+ * @value: a string to be parsed
+ * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
+ * @second: a #GDateDMY specifying which of year, month or day appears second (in the first bytes) in @value
+ * @third: a #GDateDMY specifying which of year, month or day appears third (in the first bytes) in @value
+ * @sep: spcifies the expected separator character bewteen year, month and day (for example '-')
+ *
+ * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
+ * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
+ *
+ * Returns: %TRUE if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ * 
+ * Since: 5.2
+ */
+gboolean
+gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
+			       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
+{
 	g_return_val_if_fail (timestamp, FALSE);
 
 	gboolean retval = TRUE;
-	char *endptr;
+	const char *endptr;
 	GDate gdate;
 	GdaTime timegda;
 
@@ -3246,7 +3446,7 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 		return FALSE;
 
 	/* date part */
-	if (! _parse_iso8601_date (&gdate, value, &endptr)) {
+	if (! _parse_formatted_date (&gdate, value, first, second, third, sep, &endptr)) {
 		retval = FALSE;
 		goto out;
 	}
@@ -3267,7 +3467,7 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 		goto out;
 
 	/* time part */
-	if (! _parse_iso8601_time (&timegda, value, &endptr) ||
+	if (! _parse_iso8601_time (&timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) ||
 	    *endptr) 
 		retval = FALSE;
  out:
@@ -3277,5 +3477,5 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
 	timestamp->fraction = timegda.fraction;
 	timestamp->timezone = timegda.timezone;
 
-	return retval;
+	return retval;	
 }

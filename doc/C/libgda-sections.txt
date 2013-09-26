@@ -825,6 +825,9 @@ gda_connection_string_split
 gda_parse_iso8601_date
 gda_parse_iso8601_time
 gda_parse_iso8601_timestamp
+gda_parse_formatted_date
+gda_parse_formatted_time
+gda_parse_formatted_timestamp
 </SECTION>
 
 <SECTION>
