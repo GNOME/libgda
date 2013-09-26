@@ -492,7 +492,7 @@ gda_data_model_bdb_new (const gchar *filename, const gchar *db_name)
  *
  * Get the list of errors which have occurred while using @model
  *
- * Returns: (element-type GObject.Error) (transfer none): a read-only list of #GError pointers, or %NULL if no error has occurred
+ * Returns: (element-type GError) (transfer none): a read-only list of #GError pointers, or %NULL if no error has occurred
  */
 const GSList *
 gda_data_model_bdb_get_errors (GdaDataModelBdb *model)

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2006 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -292,8 +292,8 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **er
  * @g_type: a #GType
  * @dbms_type: (allow-none): a database type
  *
- * reserved to database provider's implementations: get the #GdaDataHandler associated to @prov
- * for connection @cnc.
+ * Reserved to database provider's implementations: get the #GdaDataHandler associated to @prov
+ * for connection @cnc. You probably want to use gda_server_provider_get_data_handler_g_type().
  *
  * Returns: (transfer none): the requested #GdaDataHandler, or %NULL if none found
  */
@@ -302,6 +302,8 @@ gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
 				  GType g_type, const gchar *dbms_type)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	GdaDataHandler *dh;
 	GdaServerProviderHandlerInfo info;
@@ -309,8 +311,13 @@ gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
 	info.cnc = cnc;
 	info.g_type = g_type;
 	info.dbms_type = (gchar *) dbms_type;
-
 	dh = g_hash_table_lookup (prov->priv->data_handlers, &info);
+	if (!dh) {
+		/* try without the connection specification */
+		info.cnc = NULL;
+		dh = g_hash_table_lookup (prov->priv->data_handlers, &info);
+	}
+
 	return dh;
 }
 

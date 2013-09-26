@@ -1424,7 +1424,7 @@ gda_timestamp_valid (const GdaTimestamp *timestamp)
 
 /**
  * gda_timestamp_change_timezone:
- * @time: a valid #GdaTimestamp
+ * @ts: a valid #GdaTimestamp
  * @ntz: a new timezone to use, in seconds added to GMT
  *
  * This function is similar to gda_time_change_timezone() but operates on time stamps.

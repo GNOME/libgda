@@ -482,7 +482,6 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		GSList *list;
 		td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 		for (list = pinfo->dsn_params->holders; list; list = list->next) {
-			xmlNodePtr div;
 			gchar *str, *descr;
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			g_object_get (G_OBJECT (holder), "description", &descr, NULL);
@@ -491,7 +490,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 			else
 				str = g_strdup (gda_holder_get_id (holder));
 			g_free (descr);
-			div = xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
+			xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
 			g_free (str);
 		}
 	}
@@ -505,7 +504,6 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		if (pinfo->auth_params->holders) {
 			td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
 			for (list = pinfo->auth_params->holders; list; list = list->next) {
-				xmlNodePtr div;
 				gchar *str, *descr;
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				g_object_get (G_OBJECT (holder), "description", &descr, NULL);
@@ -514,7 +512,7 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 				else
 					str = g_strdup (gda_holder_get_id (holder));
 				g_free (descr);
-				div = xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
+				xmlNewTextChild (td, NULL, BAD_CAST "div", BAD_CAST str);
 				g_free (str);
 			}
 		}

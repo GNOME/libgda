@@ -1681,9 +1681,9 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
  *
  * Returns: the ID of the new expression, or %0 if there was an error
  *
- * Since: 4.2
- *
  * Rename to: gda_sql_builder_add_function
+ *
+ * Since: 4.2
  */
 GdaSqlBuilderId
 gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
