@@ -127,6 +127,7 @@
 	gda_connection_feature_get_type
 	gda_connection_get_authentication
 	gda_connection_get_cnc_string
+	gda_connection_get_date_format
 	gda_connection_get_dsn
 	gda_connection_get_events
 	gda_connection_get_meta_store

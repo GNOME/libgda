@@ -147,6 +147,7 @@ gda_connection_get_provider_name
 gda_connection_get_dsn
 gda_connection_get_cnc_string
 gda_connection_get_authentication
+gda_connection_get_date_format
 <SUBSECTION>
 gda_connection_get_events
 <SUBSECTION>

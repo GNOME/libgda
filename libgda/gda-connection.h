@@ -299,6 +299,9 @@ gboolean             gda_connection_perform_operation    (GdaConnection *cnc, Gd
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
+gboolean             gda_connection_get_date_format      (GdaConnection *cnc, GDateDMY *out_first,
+							  GDateDMY *out_second, GDateDMY *out_third, gchar *out_sep,
+							  GError **error);
 
 GdaStatement        *gda_connection_parse_sql_string     (GdaConnection *cnc, const gchar *sql, GdaSet **params,
                     GError **error);

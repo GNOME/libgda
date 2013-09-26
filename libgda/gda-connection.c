@@ -65,6 +65,7 @@
 #include <gda-statement-priv.h>
 #include <sqlite/virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-debug-macros.h>
+#include <libgda/gda-data-handler.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>
@@ -1933,6 +1934,135 @@ gda_connection_get_authentication (GdaConnection *cnc)
 	if (!str) 
 		str = "";
 	return str;
+}
+
+/**
+ * gda_connection_get_date_format:
+ * @cnc: a #GdaConnection object
+ * @out_first: (out) (allow-none): the place to store the first part of the date, or %NULL
+ * @out_second: (out) (allow-none): the place to store the second part of the date, or %NULL
+ * @out_third: (out) (allow-none): the place to store the third part of the date, or %NULL
+ * @out_sep: (out) (allow-none): the place to store the separator (used between year, month and day parts) part of the date, or %NULL
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * This function allows you to determine the actual format for the date values.
+ *
+ * Returns: %TRUE if no error occurred
+ *
+ * Since: 5.2
+ */
+gboolean
+gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
+				GDateDMY *out_second, GDateDMY *out_third, gchar *out_sep,
+				GError **error)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	GdaDataHandler *dh;
+	dh = gda_server_provider_get_data_handler_g_type (cnc->priv->provider_obj, cnc, G_TYPE_DATE);
+	if (!dh) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+			     "%s", _("Provider does not provide a GdaDataHandler for dates"));
+		return FALSE;
+	}
+
+	GDate *tdate;
+	tdate = g_date_new_dmy (15, 12, 2003);
+	g_assert (tdate && g_date_valid (tdate));
+
+	GValue *value;
+	value = gda_value_new (G_TYPE_DATE);
+	g_value_set_boxed (value, tdate);
+	g_date_free (tdate);
+
+	gchar *str;
+	str = gda_data_handler_get_str_from_value (dh, value);
+	gda_value_free (value);
+
+	/* parsing */
+	guint nb;
+	gchar *ptr;
+	GDateDMY order[3];
+	gchar sep;
+
+	/* 1st part */
+	for (nb = 0, ptr = str; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == 2003)
+		order[0] = G_DATE_YEAR;
+	else if (nb == 12)
+		order[0] = G_DATE_MONTH;
+	else if (nb == 15)
+		order[0] = G_DATE_DAY;
+	else {
+		g_free (str);
+		return FALSE;
+	}
+
+	/* separator */
+	sep = *ptr;
+	if (!sep) {
+		g_free (str);
+		return FALSE;
+	}
+
+	/* 2nd part */
+	for (nb = 0, ptr++; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == 2003)
+		order[1] = G_DATE_YEAR;
+	else if (nb == 12)
+		order[1] = G_DATE_MONTH;
+	else if (nb == 15)
+		order[1] = G_DATE_DAY;
+	else {
+		g_free (str);
+		return FALSE;
+	}
+
+	if (sep != *ptr) {
+		g_free (str);
+		return FALSE;
+	}
+
+	/* 3rd part */
+	for (nb = 0, ptr++; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == 2003)
+		order[2] = G_DATE_YEAR;
+	else if (nb == 12)
+		order[2] = G_DATE_MONTH;
+	else if (nb == 15)
+		order[2] = G_DATE_DAY;
+	else {
+		g_free (str);
+		return FALSE;
+	}
+	g_free (str);
+
+	/* result */
+	if (out_first)
+		*out_first = order [0];
+	if (out_second)
+		*out_second = order [1];
+	if (out_third)
+		*out_third = order [2];
+	if (out_sep)
+		*out_sep = sep;
+
+	return TRUE;
 }
 
 /**
