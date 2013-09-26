@@ -23,6 +23,7 @@
  */
 
 #include "gda-handler-time.h"
+#include <gda-util.h>
 #include <string.h>
 #include <ctype.h>
 #include <glib/gi18n-lib.h>
@@ -1208,97 +1209,10 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value,
 static gboolean
 make_time (G_GNUC_UNUSED GdaHandlerTime *hdl, GdaTime *timegda, const gchar *value)
 {
-	const gchar *ptr;
-
-	memset (timegda, 0, sizeof (GdaTime));
-	timegda->timezone = GDA_TIMEZONE_INVALID;
-
-	if (!value)
-		return FALSE;
-
-	/* hour */
-	ptr = value;
-	if (!isdigit (*ptr))
-		return FALSE;
-
-	timegda->hour = *ptr - '0';
-	ptr++;
-	if (isdigit (*ptr)) {
-		timegda->hour = timegda->hour * 10 + (*ptr - '0');
-		ptr++;
-	}
-	if (timegda->hour >= 24)
-		return FALSE;
-
-	if (*ptr == ':')
-		ptr++;
-	else if (!isdigit (*ptr))
-		return FALSE;
-
-	/* minute */
-	timegda->minute = *ptr - '0';
-	ptr++;
-	if (isdigit (*ptr)) {
-		timegda->minute = timegda->minute * 10 + (*ptr - '0');
-		ptr++;
-	}
-	if (timegda->minute >= 60)
-		return FALSE;
-	if (*ptr == ':')
-		ptr++;
-	else if (!isdigit (*ptr))
-		return FALSE;
-
-	/* second */
-	timegda->second = *ptr - '0';
-	ptr++;
-	if (isdigit (*ptr)) {
-		timegda->second = timegda->second * 10 + (*ptr - '0');
-		ptr++;
-	}
-	if (timegda->second >= 60)
-		return FALSE;
-
-	/* fraction */
-	if (*ptr && (*ptr != '.') && (*ptr != '+') && (*ptr != '-'))
-		return FALSE;
-	if (*ptr == '.') {
-		ptr++;
-		if (!isdigit (*ptr))
-			return FALSE;
-		while (isdigit (*ptr)) {
-			unsigned long long lu;
-			lu = timegda->fraction * 10 + (*ptr - '0');
-			if (lu < G_MAXULONG)
-				timegda->fraction = lu;
-			else
-				return FALSE;
-			ptr++;
-		}
-	}
-	
-	/* timezone */
-	if ((*ptr == '-') || (*ptr == '+')) {
-		gint sign = (*ptr == '+') ? 1 : -1;
-		ptr++;
-		if (!isdigit (*ptr))
-			return FALSE;
-		timegda->timezone = sign * (*ptr - '0');
-		ptr++;
-		if (isdigit (*ptr)) {
-			timegda->timezone = timegda->minute * 10 + sign * (*ptr - '0');
-			ptr++;
-		}
-		if (*ptr)
-			return FALSE;
-		if ((timegda->timezone >= -24) && (timegda->timezone <= 24))
-			timegda->timezone *= 60*60;
-		else {
-			timegda->timezone = 0;
-			return FALSE;
-		}
-	}
-	return TRUE;
+	if (gda_parse_iso8601_time (timegda, value))
+		return TRUE;
+	else
+		return gda_parse_formatted_time (timegda, value, 0);
 }
 
 

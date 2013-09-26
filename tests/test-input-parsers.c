@@ -146,6 +146,9 @@ TestTime timedata[] = {
 	{"12:1:2+11", TRUE, {12, 1, 2, 0, 11*60*60}},
 	{"12:1:2.1234+11", TRUE, {12, 1, 2, 1234, 11*60*60}},
 	{"12:1:2.12345678-3", TRUE, {12, 1, 2, 12345678, -3*60*60}},
+	{"12:1:2.12345678 UTC", TRUE, {12, 1, 2, 12345678, 0}},
+	{"12:1:2.12345678 CET", TRUE, {12, 1, 2, 12345678, 60*60}},
+	{"12:1:2.12345678 INVALID", FALSE, {12, 1, 2, 12345678, GDA_TIMEZONE_INVALID}},
 };
 
 static gboolean
@@ -340,7 +343,7 @@ test_time_handler (void)
 		    (time.second != td.exp_time.second) ||
 		    (time.fraction != td.exp_time.fraction) ||
 		    (time.timezone != td.exp_time.timezone)) {
-			g_print ("Wrong result forgda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME):\n"
+			g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME):\n"
 				 "   exp: HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 				 "   got: HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 				 td.in_string, 
