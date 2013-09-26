@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2002 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
@@ -136,7 +136,6 @@ static gchar               *gda_postgresql_identifier_quote    (GdaServerProvide
 
 static GdaSqlStatement     *gda_postgresql_statement_rewrite   (GdaServerProvider *provider, GdaConnection *cnc,
 								GdaStatement *stmt, GdaSet *params, GError **error);
-
 
 /* distributed transactions */
 static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc,
@@ -391,6 +390,145 @@ pq_notice_processor (GdaConnection *cnc, const char *message)
         gda_connection_add_event (cnc, error);
 }
 
+gboolean
+determine_date_style (const gchar *str, guint year, guint month, guint day, GDateDMY *out_first,
+		      GDateDMY *out_second, GDateDMY *out_third, gchar *out_sep)
+{
+	if (!str)
+		return FALSE;
+
+	guint nb;
+	const gchar *ptr;
+	GDateDMY order[3];
+	gchar sep;
+
+	/* 1st part */
+	for (nb = 0, ptr = str; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == year)
+		order[0] = G_DATE_YEAR;
+	else if (nb == month)
+		order[0] = G_DATE_MONTH;
+	else if (nb == day)
+		order[0] = G_DATE_DAY;
+	else if (nb == year % 100)
+		order[0] = G_DATE_YEAR;
+	else
+		return FALSE;
+
+	/* separator */
+	sep = *ptr;
+	if (!sep)
+		return FALSE;
+
+	/* 2nd part */
+	for (nb = 0, ptr++; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == year)
+		order[1] = G_DATE_YEAR;
+	else if (nb == month)
+		order[1] = G_DATE_MONTH;
+	else if (nb == day)
+		order[1] = G_DATE_DAY;
+	else if (nb == year % 100)
+		order[1] = G_DATE_YEAR;
+	else
+		return FALSE;
+
+	if (sep != *ptr)
+		return FALSE;
+
+	/* 3rd part */
+	for (nb = 0, ptr++; *ptr; ptr++) {
+		if ((*ptr <= '9') && (*ptr >= '0'))
+			nb = nb * 10 + (*ptr - '0');
+		else
+			break;
+	}
+	if (nb == year)
+		order[2] = G_DATE_YEAR;
+	else if (nb == month)
+		order[2] = G_DATE_MONTH;
+	else if (nb == day)
+		order[2] = G_DATE_DAY;
+	else if (nb == year % 100)
+		order[2] = G_DATE_YEAR;
+	else
+		return FALSE;
+
+	/* result */
+	if (out_first)
+		*out_first = order [0];
+	if (out_second)
+		*out_second = order [1];
+	if (out_third)
+		*out_third = order [2];
+	if (out_sep)
+		*out_sep = sep;
+
+	/*g_print ("POSTGRESQL date format recognized for [%s] is: %s%c%s%c%s\n", str,
+		 (order [0] == G_DATE_DAY) ? "D" : ((order [0] == G_DATE_MONTH) ? "M" : "Y"), sep,
+		 (order [1] == G_DATE_DAY) ? "D" : ((order [1] == G_DATE_MONTH) ? "M" : "Y"), sep,
+		 (order [2] == G_DATE_DAY) ? "D" : ((order [2] == G_DATE_MONTH) ? "M" : "Y"));
+	*/
+
+	return TRUE;
+}
+
+static gboolean
+adapt_to_date_format (GdaServerProvider *provider, GdaConnection *cnc, GError **error)
+{
+	PostgresConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_POSTGRES_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	if (!cdata)
+		return FALSE;
+
+	PGresult *pg_res;
+	gboolean retval = FALSE;
+        pg_res = _gda_postgres_PQexec_wrap (cnc, cdata->pconn, "SELECT DATE 'epoch' + 966334000 * INTERVAL '1 second'");
+	if (pg_res && (PQresultStatus (pg_res) == PGRES_TUPLES_OK) &&
+	    (PQntuples (pg_res) == 1) && (PQnfields (pg_res) == 1)) {
+		gchar *str;
+		GDateDMY parts[3];
+		gchar sep;
+		str = PQgetvalue (pg_res, 0, 0);
+		retval = determine_date_style (str, 2000, 8, 15, &parts[0], &parts[1], &parts[2], &sep);
+		if (retval) {
+			cdata->date_first = parts[0];
+			cdata->date_second = parts[1];
+			cdata->date_third = parts[2];
+			cdata->date_sep = sep;
+
+			GdaDataHandler *dh;
+			dh = gda_postgres_provider_get_data_handler (provider, cnc, GDA_TYPE_TIMESTAMP, NULL);
+                        gda_handler_time_set_sql_spec ((GdaHandlerTime *) dh, parts[0],
+                                                       parts[1], parts[2], sep, FALSE);
+                        gda_handler_time_set_str_spec ((GdaHandlerTime *) dh, parts[0],
+                                                       parts[1], parts[2], sep, FALSE);
+		}
+		else
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     "%s", _("Could not determine the default date format"));
+	}
+	if (pg_res)
+		PQclear (pg_res);
+
+	return retval;
+}
+
 /*
  * Open connection request
  *
@@ -520,29 +658,39 @@ gda_postgres_provider_open_connection (GdaServerProvider *provider, GdaConnectio
 	cdata->cnc = cnc;
         cdata->pconn = pconn;
 
+	/* attach connection data */
+	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
+
 	/*
-         * Sets the DATE format for all the current session to YYYY-MM-DD
+         * Determine the date format
          */
-	PGresult *pg_res;
-        pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, "SET DATESTYLE TO 'ISO'");
-	if (!pg_res) {
+	GError *lerror = NULL;
+	if (!adapt_to_date_format (provider, cnc, &lerror)) {
+		if (lerror) {
+			if (lerror->message)
+				gda_connection_add_event_string (cnc, "%s", lerror->message);
+			g_clear_error (&lerror);
+		}
 		gda_postgres_free_cnc_data (cdata);
+		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 		return FALSE;
 	}
-        PQclear (pg_res);
 
         /*
          * Unicode is the default character set now
          */
+	PGresult *pg_res;
         pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, "SET CLIENT_ENCODING TO 'UNICODE'");
 	if (!pg_res) {
 		gda_postgres_free_cnc_data (cdata);
+		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 		return FALSE;
 	}
         PQclear (pg_res);
 
-	/* attach connection data */
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_postgres_free_cnc_data);
+	/*pg_res = _gda_postgres_PQexec_wrap (cnc, pconn, "SET DATESTYLE TO 'ISO'");
+	g_assert (pg_res);
+	PQclear (pg_res);*/
 
 	/* handle LibPQ's notices */
         PQsetNoticeProcessor (pconn, (PQnoticeProcessor) pq_notice_processor, cnc);
@@ -1476,6 +1624,28 @@ gda_postgres_provider_statement_to_sql (GdaServerProvider *provider, GdaConnecti
 	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
 }
 
+static gboolean
+sql_can_cause_date_format_change (const gchar *sql)
+{
+	if (!sql)
+		return FALSE;
+	const gchar *ptr;
+	for (ptr = sql; *ptr && g_ascii_isspace (*ptr); ptr++);
+	if (((ptr[0] == 's') || (ptr[0] == 'S')) &&
+	    ((ptr[1] == 'e') || (ptr[1] == 'E')) &&
+	    ((ptr[2] == 't') || (ptr[2] == 'T'))) {
+		gchar *tmp;
+		tmp = g_ascii_strdown (ptr, -1);
+		if (g_strrstr (tmp, "datestyle")) {
+			g_free (tmp);
+			return TRUE;
+		}
+		g_free (tmp);
+	}
+
+	return FALSE;
+}
+
 /*
  * Statement prepare request
  *
@@ -1559,6 +1729,8 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
         _GDA_PSTMT (ps)->param_ids = param_ids;
         _GDA_PSTMT (ps)->sql = sql;
+	if (sql_can_cause_date_format_change (sql))
+		ps->date_format_change = TRUE;
 
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	g_object_unref (ps);
@@ -1616,6 +1788,9 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 		ps = gda_postgres_pstmt_new (cdata->cnc, cdata->pconn, prep_stm_name);
 		_GDA_PSTMT (ps)->param_ids = NULL;
 		_GDA_PSTMT (ps)->sql = g_strdup (sql);
+		if (sql_can_cause_date_format_change (sql))
+			ps->date_format_change = TRUE;
+
 		return ps;
 	}
 }
@@ -2192,6 +2367,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	/* execute prepared statement using C API: random access based */
 	PGresult *pg_res;
 	GObject *retval = NULL;
+	gboolean date_format_change = FALSE;
 
 	if (empty_rs) {
 		GdaStatement *estmt;
@@ -2212,10 +2388,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 		pg_res = PQexec (cdata->pconn, esql);
 		g_free (esql);
+		date_format_change = sql_can_cause_date_format_change (esql);
 	}
-	else
+	else {
 		pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
 					 param_lengths, param_formats, 0);
+		date_format_change = ps->date_format_change;
+	}
 
 	params_freev (param_values, param_mem, nb_params);
 	g_free (param_lengths);
@@ -2229,7 +2408,12 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		if (status == PGRES_EMPTY_QUERY ||
                     status == PGRES_TUPLES_OK ||
                     status == PGRES_COMMAND_OK) {
-                        if (status == PGRES_COMMAND_OK) {
+			if (date_format_change &&
+			    !adapt_to_date_format (provider, cnc, error)) {
+				event = _gda_postgres_make_error (cnc, cdata->pconn, NULL, error);
+                                PQclear (pg_res);
+			}
+                        else if (status == PGRES_COMMAND_OK) {
                                 gchar *str;
                                 GdaConnectionEvent *event;
 

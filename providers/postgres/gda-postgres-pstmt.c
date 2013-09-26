@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -78,6 +78,7 @@ gda_postgres_pstmt_init (GdaPostgresPStmt *pstmt, G_GNUC_UNUSED GdaPostgresPStmt
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
 	pstmt->prep_name = NULL;
+	pstmt->date_format_change = FALSE;
 }
 
 static void

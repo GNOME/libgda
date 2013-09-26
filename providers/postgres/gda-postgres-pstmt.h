@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,6 +44,7 @@ struct _GdaPostgresPStmt {
 	GdaConnection  *cnc;
 	PGconn         *pconn;
 	gchar          *prep_name;
+	gboolean        date_format_change; /* TRUE if this statement may incur a date format change */
 };
 
 struct _GdaPostgresPStmtClass {

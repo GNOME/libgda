@@ -53,6 +53,11 @@ typedef struct {
 	GdaConnection        *cnc;
         PGconn               *pconn;
 	gboolean              pconn_is_busy;
+
+	GDateDMY              date_first;
+	GDateDMY              date_second;
+	GDateDMY              date_third;
+	gchar                 date_sep;
 } PostgresConnectionData;
 
 #endif

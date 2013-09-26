@@ -7,7 +7,7 @@
  * Copyright (C) 2004 Andrew Hill <andru@src.gnome.org>
  * Copyright (C) 2004 - 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2004 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alex <alex@igalia.com>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
@@ -610,15 +610,24 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 	else if (type == G_TYPE_UINT)
 		g_value_set_uint (value, (guint) g_ascii_strtoull (thevalue, NULL, 10));
 	else if (type == G_TYPE_DATE) {
-		GDate date;
-		if (!gda_parse_iso8601_date (&date, thevalue)) {
-			gda_row_invalidate_value (row, value);
-			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_DATA_ERROR,
-				     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), thevalue);
+		PostgresConnectionData *cdata;
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+		if (cdata) {
+			GDate date;
+			if (gda_parse_formatted_date (&date, thevalue, cdata->date_first, cdata->date_second,
+						      cdata->date_third, cdata->date_sep))
+				g_value_set_boxed (value, &date);
+			else {
+				gda_row_invalidate_value (row, value);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Invalid date format '%s'"), thevalue);
+			}
 		}
 		else
-			g_value_set_boxed (value, &date);
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     "%s", _("Internal error"));
 	}
 	else if (type == GDA_TYPE_TIME) {
 		GdaTime timegda;
@@ -666,19 +675,27 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		gda_value_set_geometric_point (value, &point);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
-		GdaTimestamp timestamp;
-		if (! gda_parse_iso8601_timestamp (&timestamp, thevalue)) {
-			gda_row_invalidate_value (row, value);
+		PostgresConnectionData *cdata;
+		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+		if (cdata) {
+			GdaTimestamp timestamp;
+			if (gda_parse_formatted_timestamp (&timestamp, thevalue, cdata->date_first, cdata->date_second,
+							   cdata->date_third, cdata->date_sep)) {
+				if (timestamp.timezone == GDA_TIMEZONE_INVALID)
+					timestamp.timezone = 0; /* set to GMT */
+				gda_value_set_timestamp (value, &timestamp);
+			}
+			else {
+				gda_row_invalidate_value (row, value);
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_DATA_ERROR,
+					     _("Invalid timestamp value '%s'"), thevalue);
+			}
+		}
+		else
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				     GDA_SERVER_PROVIDER_DATA_ERROR,
-				     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
-				     thevalue);
-		}
-		else {
-			if (timestamp.timezone == GDA_TIMEZONE_INVALID)
-				timestamp.timezone = 0; /* set to GMT */
-			gda_value_set_timestamp (value, &timestamp);
-		}
+				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     "%s", _("Internal error"));
 	}
 	else if (type == GDA_TYPE_BINARY) {
 		/*
