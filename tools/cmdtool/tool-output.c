@@ -68,18 +68,20 @@ data_model_to_string (GdaDataModel *model, ToolOutputFormat format, FILE *stream
 
 	if (format & TOOL_OUTPUT_FORMAT_DEFAULT) {
 		gchar *tmp;
-		GdaSet *options;
+		GdaSet *local_options;
 		gint width;
 		input_get_size (&width, NULL);
-		options = gda_set_new_inline (6, "NAME", G_TYPE_BOOLEAN, TRUE,
-					      "NULL_AS_EMPTY", G_TYPE_BOOLEAN, TRUE,
-					      "MAX_WIDTH", G_TYPE_INT, width,
-					      "COLUMN_SEPARATORS", G_TYPE_BOOLEAN, TRUE,
-					      "SEPARATOR_LINE", G_TYPE_BOOLEAN, TRUE,
-					      "NAMES_ON_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+		local_options = gda_set_new_inline (6, "NAME", G_TYPE_BOOLEAN, TRUE,
+						    "NULL_AS_EMPTY", G_TYPE_BOOLEAN, TRUE,
+						    "MAX_WIDTH", G_TYPE_INT, width,
+						    "COLUMN_SEPARATORS", G_TYPE_BOOLEAN, TRUE,
+						    "SEPARATOR_LINE", G_TYPE_BOOLEAN, TRUE,
+						    "NAMES_ON_FIRST_LINE", G_TYPE_BOOLEAN, TRUE);
+		if (options)
+			gda_set_merge_with_set (local_options, options);
 		tmp = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_TEXT_TABLE, NULL, 0, NULL, 0,
-						       options);
-		g_object_unref (options);
+						       local_options);
+		g_object_unref (local_options);
 		if (GDA_IS_DATA_SELECT (model)) {
 			gchar *tmp2, *tmp3;
 			gdouble etime;

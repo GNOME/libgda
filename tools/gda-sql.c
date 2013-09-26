@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2008 Nathan <nbinont@yahoo.ca>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
@@ -1401,7 +1401,18 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 
 		main_data->settings = g_slist_append (main_data->settings, cs);
 		console->current = cs;
-		
+
+		/* show date format */
+		GDateDMY order[3];
+		gchar sep;
+		if (gda_connection_get_date_format (cs->cnc, &order[0], &order[1], &order[2], &sep, NULL)) {
+			g_print (_("Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, MM the month and DD the day\n"),
+				 (order [0] == G_DATE_DAY) ? "DD" : ((order [0] == G_DATE_MONTH) ? "MM" : "YYYY"), sep,
+				 (order [1] == G_DATE_DAY) ? "DD" : ((order [1] == G_DATE_MONTH) ? "MM" : "YYYY"), sep,
+				 (order [2] == G_DATE_DAY) ? "DD" : ((order [2] == G_DATE_MONTH) ? "MM" : "YYYY"));
+		}
+
+		/* dictionay related work */
 		GdaMetaStore *store;
 		gboolean update_store = FALSE;
 
@@ -1720,7 +1731,10 @@ data_model_to_string (SqlConsole *console, GdaDataModel *model)
 	of = console->output_format;
 	if (of & TOOL_OUTPUT_FORMAT_DEFAULT) {
 		gchar *tmp;
-		tmp = gda_data_model_dump_as_string (model);
+		GdaSet *options;
+		options = gda_set_new_inline (1, "MAX_WIDTH", G_TYPE_INT, -1);
+		tmp = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_TEXT_TABLE, NULL, 0, NULL, 0, options);
+		g_object_unref (options);
 		if (GDA_IS_DATA_SELECT (model)) {
 			gchar *tmp2, *tmp3;
 			gdouble etime;
