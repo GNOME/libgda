@@ -49,6 +49,8 @@
 #include <libgda/gda-row.h>
 #include <libgda/gda-enums.h>
 #include <libgda/gda-data-handler.h>
+#include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-extra.h>
 #include <string.h>
 #ifdef HAVE_LOCALE_H
 #ifndef G_OS_WIN32
@@ -1286,18 +1288,15 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		gint size;
 		xmlDocPtr xml_doc;
 
-		if (options) {
-			GdaHolder *holder;
-
-			holder = gda_set_get_holder (options, "NAME");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING))
-					name = g_value_get_string ((GValue *) value);
-				else
-					g_warning (_("The '%s' parameter must hold a string value, ignored."), "NAME");
-			}
+		GdaHolder *holder;
+		holder = options ? gda_set_get_holder (options, "NAME") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING))
+				name = g_value_get_string ((GValue *) value);
+			else
+				g_warning (_("The '%s' parameter must hold a string value, ignored."), "NAME");
 		}
 		
 		xml_node = gda_data_model_to_xml_node (model, cols, nb_cols, rows, nb_rows, name);
@@ -1322,109 +1321,107 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 		gboolean invalid_as_null = FALSE;
 
 		retstring = g_string_new ("");
-		if (options) {
-			GdaHolder *holder;
+		GdaHolder *holder;
 
-			holder = gda_set_get_holder (options, "SEPARATOR");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
-					const gchar *str;
+		holder = options ? gda_set_get_holder (options, "SEPARATOR") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
+				const gchar *str;
 
-					str = g_value_get_string ((GValue *) value);
-					if (str && *str)
-						sep = *str;
-				}
-				else
-					g_warning (_("The '%s' parameter must hold a string value, ignored."), "SEPARATOR");
+				str = g_value_get_string ((GValue *) value);
+				if (str && *str)
+					sep = *str;
 			}
-			holder = gda_set_get_holder (options, "QUOTE");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
-					const gchar *str;
+			else
+				g_warning (_("The '%s' parameter must hold a string value, ignored."), "SEPARATOR");
+		}
+		holder = options ? gda_set_get_holder (options, "QUOTE") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_STRING)) {
+				const gchar *str;
 
-					str = g_value_get_string ((GValue *) value);
-					if (str && *str)
-						quote = *str;
-				}
-				else 
-					g_warning (_("The '%s' parameter must hold a string value, ignored."), "QUOTE");
+				str = g_value_get_string ((GValue *) value);
+				if (str && *str)
+					quote = *str;
 			}
-			holder = gda_set_get_holder (options, "FIELD_QUOTE");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
-					field_quote = g_value_get_boolean ((GValue *) value);
-				else 
-					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "FIELD_QUOTE");
-			}
+			else
+				g_warning (_("The '%s' parameter must hold a string value, ignored."), "QUOTE");
+		}
+		holder = options ? gda_set_get_holder (options, "FIELD_QUOTE") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				field_quote = g_value_get_boolean ((GValue *) value);
+			else
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "FIELD_QUOTE");
+		}
 
-			holder = gda_set_get_holder (options, "NULL_AS_EMPTY");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
-					null_as_empty = g_value_get_boolean ((GValue *) value);
-				else 
-					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
-			}
+		holder = options ? gda_set_get_holder (options, "NULL_AS_EMPTY") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				null_as_empty = g_value_get_boolean ((GValue *) value);
+			else
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
+		}
 
-			holder = gda_set_get_holder (options, "INVALID_AS_NULL");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
-					invalid_as_null = g_value_get_boolean ((GValue *) value);
-				else 
-					g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "INVALID_AS_NULL");
-			}
+		holder = options ? gda_set_get_holder (options, "INVALID_AS_NULL") : NULL;
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+				invalid_as_null = g_value_get_boolean ((GValue *) value);
+			else
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "INVALID_AS_NULL");
+		}
 
-			holder = gda_set_get_holder (options, "NAMES_ON_FIRST_LINE");
-			if (!holder)
-				holder = gda_set_get_holder (options, "FIELDS_NAME");
-			if (holder) {
-				const GValue *value;
-				value = gda_holder_get_value (holder);
-				if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)) {
-					if (g_value_get_boolean (value)) {
-						gint col;
-						gint *rcols;
-						gint rnb_cols;
+		holder = options ? gda_set_get_holder (options, "NAMES_ON_FIRST_LINE") : NULL;
+		if (!holder && options)
+			holder = gda_set_get_holder (options, "FIELDS_NAME");
+		if (holder) {
+			const GValue *value;
+			value = gda_holder_get_value (holder);
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)) {
+				if (g_value_get_boolean (value)) {
+					gint col;
+					gint *rcols;
+					gint rnb_cols;
 						
-						if (cols) {
-							rcols = (gint *)cols;
-							rnb_cols = nb_cols;
-						}
-						else {
-							gint i;
-							
-							rnb_cols = gda_data_model_get_n_columns (model);
-							rcols = g_new (gint, rnb_cols);
-							for (i = 0; i < rnb_cols; i++)
-								rcols[i] = i;
-						}
-						
-						for (col = 0; col < rnb_cols; col++) {
-							if (col)
-								g_string_append_c (retstring, sep);
-							g_string_append_c (retstring, quote);
-							g_string_append (retstring,
-									 gda_data_model_get_column_name (model, rcols[col]));
-							g_string_append_c (retstring, quote);
-						}
-						g_string_append_c (retstring, '\n');
-						if (!cols)
-							g_free (rcols);
+					if (cols) {
+						rcols = (gint *)cols;
+						rnb_cols = nb_cols;
 					}
+					else {
+						gint i;
+							
+						rnb_cols = gda_data_model_get_n_columns (model);
+						rcols = g_new (gint, rnb_cols);
+						for (i = 0; i < rnb_cols; i++)
+							rcols[i] = i;
+					}
+						
+					for (col = 0; col < rnb_cols; col++) {
+						if (col)
+							g_string_append_c (retstring, sep);
+						g_string_append_c (retstring, quote);
+						g_string_append (retstring,
+								 gda_data_model_get_column_name (model, rcols[col]));
+						g_string_append_c (retstring, quote);
+					}
+					g_string_append_c (retstring, '\n');
+					if (!cols)
+						g_free (rcols);
 				}
-				else
-					g_warning (_("The '%s' parameter must hold a boolean value, ignored."),
-						   "FIELDS_NAME");
 			}
+			else
+				g_warning (_("The '%s' parameter must hold a boolean value, ignored."),
+					   "FIELDS_NAME");
 		}
 		
 		if (cols) {
@@ -1461,73 +1458,81 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 
 		/* analyse options */
 		GdaHolder *holder;
-		holder = gda_set_get_holder (options, "ROW_NUMBERS");
+		holder = options ? gda_set_get_holder (options, "ROW_NUMBERS") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				dump_rows = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "ROW_NUMBERS");
 		}
 
-		holder = gda_set_get_holder (options, "NAME");
+		holder = options ? gda_set_get_holder (options, "NAME") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				dump_title = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NAME");
 		}
 
-		holder = gda_set_get_holder (options, "NAMES_ON_FIRST_LINE");
+		holder = options ? gda_set_get_holder (options, "NAMES_ON_FIRST_LINE") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				dump_column_titles = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NAMES_ON_FIRST_LINE");
 		}
 
-		holder = gda_set_get_holder (options, "NULL_AS_EMPTY");
+		holder = options ? gda_set_get_holder (options, "NULL_AS_EMPTY") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				null_as_empty = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "NULL_AS_EMPTY");
 		}
 		
-		holder = gda_set_get_holder (options, "MAX_WIDTH");
+		holder = options ? gda_set_get_holder (options, "MAX_WIDTH") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
-			if (value && (G_VALUE_TYPE (value) == G_TYPE_INT))
+			if (value && (G_VALUE_TYPE (value) == G_TYPE_INT)) {
 				max_width = g_value_get_int ((GValue *) value);
-			else 
+#ifdef TIOCGWINSZ
+				if (max_width < 0) {
+					struct winsize window_size;
+					if (ioctl (0,TIOCGWINSZ, &window_size) == 0)
+						max_width = (int) window_size.ws_col;
+				}
+#endif
+			}
+			else
 				g_warning (_("The '%s' parameter must hold an integer value, ignored."), "MAX_WIDHT");
 		}
 
-		holder = gda_set_get_holder (options, "COLUMN_SEPARATORS");
+		holder = options ? gda_set_get_holder (options, "COLUMN_SEPARATORS") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				dump_separators = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "SEPARATORS");
 		}
 
-		holder = gda_set_get_holder (options, "SEPARATOR_LINE");
+		holder = options ? gda_set_get_holder (options, "SEPARATOR_LINE") : NULL;
 		if (holder) {
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
 				dump_title_line = g_value_get_boolean ((GValue *) value);
-			else 
+			else
 				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "SEPARATOR_LINE");
 		}
 
@@ -1550,7 +1555,7 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
 	}
 
 	default:
-		g_assert_not_reached ();
+		g_warning (_("Unknown GdaDataModelIOFormat %d value"), format);
 	}
 	return NULL;
 }
@@ -1567,7 +1572,10 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
- * Exports data contained in @model to the @file file; the format is specified using the @format argument.
+ * Exports data contained in @model to the @file file; the format is specified using the @format argument. Note that
+ * the date format used is the one used by the connection from which the data model has been made (as the result of a
+ * SELECT statement), or, for other kinds of data models, the default format (refer to gda_data_handler_get_default()) unless
+ * the "cnc" property has been set and points to a #GdaConnection to use that connection's date format.
  *
  * Specifically, the parameters in the @options list can be:
  * <itemizedlist>
@@ -1617,18 +1625,16 @@ gda_data_model_export_to_file (GdaDataModel *model, GdaDataModelIOFormat format,
 	g_return_val_if_fail (file, FALSE);
 
 	body = gda_data_model_export_to_string (model, format, cols, nb_cols, rows, nb_rows, options);
-	if (options) {
-		GdaHolder *holder;
+	GdaHolder *holder;
 		
-		holder = gda_set_get_holder (options, "OVERWRITE");
-		if (holder) {
-			const GValue *value;
-			value = gda_holder_get_value (holder);
-			if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
-				overwrite = g_value_get_boolean ((GValue *) value);
-			else
-				g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "OVERWRITE");
-		}
+	holder = options ? gda_set_get_holder (options, "OVERWRITE") : NULL;
+	if (holder) {
+		const GValue *value;
+		value = gda_holder_get_value (holder);
+		if (value && (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))
+			overwrite = g_value_get_boolean ((GValue *) value);
+		else
+			g_warning (_("The '%s' parameter must hold a boolean value, ignored."), "OVERWRITE");
 	}
 
 	if (g_file_test (file, G_FILE_TEST_EXISTS)) {
@@ -2727,8 +2733,19 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 								str = (gchar*) g_value_get_string (value);
 							else {
 								if (use_data_handlers) {
-									GdaDataHandler *dh;
-									dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
+									GdaDataHandler *dh = NULL;
+									GdaConnection *cnc;
+									GdaServerProvider *prov;
+									cnc = g_object_get_data (G_OBJECT (model), "cnc");
+									if (!cnc && GDA_IS_DATA_SELECT (model))
+										cnc = gda_data_select_get_connection (GDA_DATA_SELECT (model));
+									if (cnc) {
+										prov = gda_connection_get_provider (cnc);
+										dh = gda_server_provider_get_data_handler_g_type (prov, cnc,
+																  G_VALUE_TYPE (value));
+									}
+									if (!dh)
+										dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 									if (dh)
 										str = gda_data_handler_get_str_from_value (dh, value);
 									else
@@ -2862,8 +2879,19 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 								str = (gchar*) g_value_get_string (value);
 							else {
 								if (use_data_handlers) {
-									GdaDataHandler *dh;
-									dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
+									GdaDataHandler *dh = NULL;
+									GdaConnection *cnc;
+									GdaServerProvider *prov;
+									cnc = g_object_get_data (G_OBJECT (model), "cnc");
+									if (!cnc && GDA_IS_DATA_SELECT (model))
+										cnc = gda_data_select_get_connection (GDA_DATA_SELECT (model));
+									if (cnc) {
+										prov = gda_connection_get_provider (cnc);
+										dh = gda_server_provider_get_data_handler_g_type (prov, cnc,
+																  G_VALUE_TYPE (value));
+									}
+									if (!dh)
+										dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 									if (dh)
 										str = gda_data_handler_get_str_from_value (dh, value);
 									else
