@@ -2461,7 +2461,7 @@ msgstr "Prázdný oddělovač je neplatný"
 #: ../libgda/gda-util.c:3140
 #, c-format
 msgid "Unknown GDateDMY value %u"
-msgstr "Neznámá hodnota %d pro GDateDMY"
+msgstr "Neznámá hodnota %u pro GDateDMY"
 
 #: ../libgda/gda-xa-transaction.c:162
 msgid "Global transaction ID can not have more than 64 bytes"
