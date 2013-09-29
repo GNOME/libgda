@@ -87,33 +87,12 @@ prov_name_upcase (const gchar *prov_name)
 	return str;
 }
 
-/*
- * Set up a connection.
- *
- * Optionnally the database can be created if the <upper_case_provider_name>_DBCREATE_PARAMS 
- * environment variable exists. Examples are:
- *     MYSQL_DBCREATE_PARAMS "HOST=localhost"
- *     POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
- *     SQLITE_DBCREATE_PARAMS "DB_DIR=."
- *     BERKELEY_DB_CNC_PARAMS "DB_NAME=gda_check_bdb.db"
- *
- * The connection is opened if the <upper_case_provider_name>_CNC_PARAMS environment variable exists.
- * For example:
- *     MSACCESS_CNC_PARAMS "DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"
- *     ORACLE_CNC_PARAMS TNSNAME=//127.0.0.1
- *
- *
- * If the <upper_case_provider_name>_DBCREATE_PARAMS is supplied, then its contents can be used
- * to complement the <upper_case_provider_name>_CNC_PARAMS.
- *
- * Returns: a GdaConnection if no error occurred
- */
 GdaConnection *
-test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **error)
+test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **error)
 {
 	GdaConnection *cnc = NULL;
 	gchar *str, *upname;
-	const gchar *db_params, *cnc_params;
+	const gchar *cnc_params;
 	GdaProviderInfo *prov_info;
 	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
 	gboolean db_created = FALSE;
@@ -127,28 +106,8 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 		return NULL;
 	}
 
-	/* create database if requested */
-	upname = prov_name_upcase (prov_info->id);
-	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
-	db_params = getenv (str);
-	g_free (str);
-	if (db_params) {
-		GdaServerOperation *op;
-
-		db_quark_list = gda_quark_list_new_from_string (db_params);
-		op = gda_server_operation_prepare_drop_database (prov_info->id, dbname, NULL);
-		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		gda_server_operation_perform_drop_database (op, NULL, NULL);
-		g_object_unref (op);
-
-		op = gda_server_operation_prepare_create_database (prov_info->id, dbname, NULL);
-		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
-		if (!gda_server_operation_perform_create_database (op, NULL, error)) 
-			goto out;
-		db_created = TRUE;
-	}
-
 	/* open connection to database */
+	upname = prov_name_upcase (prov_info->id);
 	str = g_strdup_printf ("%s_CNC_PARAMS", upname);
 	cnc_params = getenv (str);
 	g_free (str);
@@ -214,12 +173,79 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 	if (cnc_quark_list)
 		gda_quark_list_free (cnc_quark_list);
 
- out:
-	if (!db_params && !cnc_params) 
+	if (!cnc_params) 
 		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Connection parameters not specified, test not executed (define %s_CNC_PARAMS or %s_DBCREATE_PARAMS to create a test DB)\n", upname, upname);
 	g_free (upname);
 
+	return cnc;
+}
+
+/*
+ * Set up a connection.
+ *
+ * Optionnally the database can be created if the <upper_case_provider_name>_DBCREATE_PARAMS 
+ * environment variable exists. Examples are:
+ *     MYSQL_DBCREATE_PARAMS "HOST=localhost"
+ *     POSTGRESQL_DBCREATE_PARAMS "HOST=localhost;PORT=5432"
+ *     SQLITE_DBCREATE_PARAMS "DB_DIR=."
+ *     BERKELEY_DB_CNC_PARAMS "DB_NAME=gda_check_bdb.db"
+ *
+ * The connection is opened if the <upper_case_provider_name>_CNC_PARAMS environment variable exists.
+ * For example:
+ *     MSACCESS_CNC_PARAMS "DB_DIR=/home/me/libgda/tests/providers;DB_NAME=gda_check_db"
+ *     ORACLE_CNC_PARAMS TNSNAME=//127.0.0.1
+ *
+ *
+ * If the <upper_case_provider_name>_DBCREATE_PARAMS is supplied, then its contents can be used
+ * to complement the <upper_case_provider_name>_CNC_PARAMS.
+ *
+ * Returns: a GdaConnection if no error occurred
+ */
+GdaConnection *
+test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **error)
+{
+	GdaConnection *cnc = NULL;
+	gchar *str, *upname;
+	const gchar *db_params, *cnc_params;
+	GdaProviderInfo *prov_info;
+	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
+	gboolean db_created = FALSE;
+
+	g_return_val_if_fail (dbname && *dbname, NULL);
+
+	prov_info = gda_config_get_provider_info (provider);
+	if (!prov_info) {
+		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Provider '%s' not found", provider);
+		return NULL;
+	}
+
+	/* create database if requested */
+	upname = prov_name_upcase (prov_info->id);
+	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
+	db_params = getenv (str);
+	g_free (str);
+	if (db_params) {
+		GdaServerOperation *op;
+
+		db_quark_list = gda_quark_list_new_from_string (db_params);
+		op = gda_server_operation_prepare_drop_database (prov_info->id, dbname, NULL);
+		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
+		gda_server_operation_perform_drop_database (op, NULL, NULL);
+		g_object_unref (op);
+
+		op = gda_server_operation_prepare_create_database (prov_info->id, dbname, NULL);
+		gda_quark_list_foreach (db_quark_list, (GHFunc) db_create_quark_foreach_func, op);
+		if (!gda_server_operation_perform_create_database (op, NULL, error)) 
+			goto out;
+		db_created = TRUE;
+	}
+
+	/* open connection to database */
+	cnc = test_cnc_open_connection (provider, dbname, error);
+
+ out:
 	if (cnc) {
 		g_object_set_data_full (G_OBJECT (cnc), "dbname", g_strdup (dbname), g_free);
 		g_object_set_data (G_OBJECT (cnc), "db_created", GINT_TO_POINTER (db_created));

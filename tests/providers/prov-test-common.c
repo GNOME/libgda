@@ -83,6 +83,19 @@ prov_test_common_setup (void)
 	return number_failed;
 }
 
+GdaConnection *
+prov_test_common_create_extra_connection (void)
+{
+	GdaConnection *cnc;
+	GError *lerror = NULL;
+	cnc = test_cnc_open_connection (pinfo->id, "testcheckdb", &lerror);
+	if (!cnc) {
+		g_print ("Error setting up connection: %s\n", lerror && lerror->message ? lerror->message : "No detail");
+		g_clear_error (&lerror);
+	}
+	return cnc;
+}
+
 
 /*
  *
@@ -702,7 +715,7 @@ prov_test_common_check_data_select (void)
  * Check that timezones are handled correctly when storing and retreiving timestamps
  */
 static gboolean
-gda_timestamp_equal (const GValue *cv1, const GValue *cv2)
+timestamp_equal (const GValue *cv1, const GValue *cv2)
 {
 	g_assert (G_VALUE_TYPE (cv1) == GDA_TYPE_TIMESTAMP);
 	g_assert (G_VALUE_TYPE (cv2) == GDA_TYPE_TIMESTAMP);
@@ -743,8 +756,7 @@ prov_test_common_check_timestamp (void)
 	tso = gda_value_new_timestamp_from_timet (time (NULL));
 
 	/* insert timestamp */
-	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO tstest (ts) VALUES (##ts::timestamp)", 
-					    NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO tstest (ts) VALUES (##ts::timestamp)", NULL, &error);
 	if (!stmt ||
 	    ! gda_statement_get_parameters (stmt, &params, &error) ||
 	    ! gda_set_set_holder_value (params, &error, "ts", gda_value_get_timestamp (tso)) ||
@@ -756,8 +768,7 @@ prov_test_common_check_timestamp (void)
 	g_print ("Inserted TS %s\n", gda_value_stringify (tso));
 
 	/* retreive timestamp */
-	stmt = gda_sql_parser_parse_string (parser, "SELECT ts FROM tstest", 
-					    NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "SELECT ts FROM tstest", NULL, &error);
 	if (!stmt) {
 		number_failed ++;
 		goto out;
@@ -782,7 +793,7 @@ prov_test_common_check_timestamp (void)
 		number_failed ++;
 		goto out;
 	}
-	if (! gda_timestamp_equal (tso, cvalue)) {
+	if (! timestamp_equal (tso, cvalue)) {
 		gchar *tmpg, *tmpe;
 		tmpg = gda_value_stringify (cvalue);
 		tmpe = gda_value_stringify (tso);
@@ -790,6 +801,49 @@ prov_test_common_check_timestamp (void)
 			     "Retreived time stamp differs from expected: got '%s' and expected '%s'", tmpg, tmpe);
 		g_free (tmpg);
 		g_free (tmpe);
+		number_failed ++;
+		goto out;
+	}
+
+	/* check that data handler is correctly configured: compare the same timestamp rendered by a data handler for
+	 * timestamps with the date rendered as a string by the server (by appending a string to the timestamp field) */
+	GdaDataHandler *dh;
+	dh = gda_server_provider_get_data_handler_g_type (gda_connection_get_provider (cnc), cnc, GDA_TYPE_TIMESTAMP);
+	gchar *str;
+	str = gda_data_handler_get_str_from_value (dh, cvalue);
+	g_object_unref (model);
+
+	stmt = gda_sql_parser_parse_string (parser, "SELECT ts || 'asstring' FROM tstest", NULL, &error); /* retreive timestamp as string */
+	if (!stmt) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+	gda_data_model_dump (model, NULL);
+	if (gda_data_model_get_n_rows (model) != 1) {
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Data model should have exactly 1 row");
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_STRING, FALSE, &error);
+	if (!cvalue) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}	
+	if (strncmp (str, g_value_get_string (cvalue), 10)) { /* only compare date parts */
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Returned GdaDataHandler returned wrong result: '%s' and expected '%s'", str, g_value_get_string (cvalue));
+		g_free (str);
 		number_failed ++;
 		goto out;
 	}
@@ -805,6 +859,166 @@ out:
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("Timestamp test resulted in %d error(s)\n", number_failed);
+	if (number_failed != 0) 
+		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
+	if (error)
+		g_error_free (error);
+#endif
+
+	return number_failed;
+}
+
+static GValue *
+value_new_date_from_timet (time_t val)
+{
+	GValue *value;
+	GDate *date;
+	date = g_date_new ();
+	g_date_set_time_t (date, val);
+
+	value = gda_value_new (G_TYPE_DATE);
+	g_value_set_boxed (value, date);
+	g_date_free (date);
+
+        return value;
+}
+
+static gboolean
+date_equal (const GValue *cv1, const GValue *cv2)
+{
+	g_assert (G_VALUE_TYPE (cv1) == G_TYPE_DATE);
+	g_assert (G_VALUE_TYPE (cv2) == G_TYPE_DATE);
+	const GDate *ts1, *ts2;
+	ts1 = (GDate*) g_value_get_boxed (cv1);
+	ts2 = (GDate*) g_value_get_boxed (cv2);
+	return g_date_compare (ts1, ts2) ? FALSE : TRUE;
+}
+
+int
+prov_test_common_check_date (void)
+{
+	GdaSqlParser *parser = NULL;
+	GdaStatement *stmt = NULL;
+	GdaSet *params = NULL;
+	GError *error = NULL;
+	int number_failed = 0;
+	GdaDataModel *model = NULL;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
+	parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
+	GValue *tso;
+	tso = value_new_date_from_timet (time (NULL));
+
+	/* insert date */
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO datetest (thedate) VALUES (##thedate::date)", NULL, &error);
+	if (!stmt ||
+	    ! gda_statement_get_parameters (stmt, &params, &error) ||
+	    ! gda_set_set_holder_value (params, &error, "thedate", (GDate*) g_value_get_boxed (tso)) ||
+	    (gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, &error) == -1)) {
+		number_failed ++;
+		goto out;
+	}
+
+	g_print ("Inserted date %s\n", gda_value_stringify (tso));
+
+	/* retreive date */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT thedate FROM datetest", NULL, &error);
+	if (!stmt) {
+		number_failed ++;
+		goto out;
+	}
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		number_failed ++;
+		goto out;
+	}
+	gda_data_model_dump (model, NULL);
+	if (gda_data_model_get_n_rows (model) != 1) {
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Data model should have exactly 1 row");
+		number_failed ++;
+		goto out;
+	}
+
+	const GValue *cvalue;
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_DATE, FALSE, &error);
+	if (!cvalue) {
+		number_failed ++;
+		goto out;
+	}
+	if (! date_equal (tso, cvalue)) {
+		gchar *tmpg, *tmpe;
+		tmpg = gda_value_stringify (cvalue);
+		tmpe = gda_value_stringify (tso);
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Retreived date differs from expected: got '%s' and expected '%s'", tmpg, tmpe);
+		g_free (tmpg);
+		g_free (tmpe);
+		number_failed ++;
+		goto out;
+	}
+
+	/* check that data handler is correctly configured: compare the same timestamp rendered by a data handler for
+	 * timestamps with the date rendered as a string by the server (by appending a string to the timestamp field) */
+	GdaDataHandler *dh;
+	dh = gda_server_provider_get_data_handler_g_type (gda_connection_get_provider (cnc), cnc, G_TYPE_DATE);
+	gchar *str;
+	str = gda_data_handler_get_str_from_value (dh, cvalue);
+	g_object_unref (model);
+
+	stmt = gda_sql_parser_parse_string (parser, "SELECT thedate || 'asstring' FROM datetest", NULL, &error); /* retreive date as string */
+	if (!stmt) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+	gda_data_model_dump (model, NULL);
+	if (gda_data_model_get_n_rows (model) != 1) {
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Data model should have exactly 1 row");
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_STRING, FALSE, &error);
+	if (!cvalue) {
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}	
+	if (strncmp (str, g_value_get_string (cvalue), 10)) { /* only compare date parts */
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Returned GdaDataHandler returned wrong result: '%s' and expected '%s'", str, g_value_get_string (cvalue));
+		g_free (str);
+		number_failed ++;
+		goto out;
+	}
+
+out:
+	if (stmt)
+		g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+	if (model)
+		g_object_unref (model);
+	g_object_unref (parser);
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Date test resulted in %d error(s)\n", number_failed);
 	if (number_failed != 0) 
 		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
 	if (error)

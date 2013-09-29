@@ -122,4 +122,9 @@
     <column name="ts" type="timestamp"/>
   </table>
 
+  <!-- testing dates -->
+  <table name="datetest">
+    <column name="thedate" type="date"/>
+  </table>
+
 </schema>

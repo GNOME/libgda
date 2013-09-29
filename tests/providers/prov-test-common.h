@@ -25,12 +25,14 @@
 #include "prov-test-util.h"
 
 int prov_test_common_setup (void);
+GdaConnection *prov_test_common_create_extra_connection (void);
 int prov_test_common_load_data (void);
 int prov_test_common_check_meta (void);
 int prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean update_all);
 int prov_test_common_check_cursor_models (void);
 int prov_test_common_check_data_select (void);
 int prov_test_common_check_timestamp (void);
+int prov_test_common_check_date (void);
 int prov_test_common_clean (void);
 
 #endif
