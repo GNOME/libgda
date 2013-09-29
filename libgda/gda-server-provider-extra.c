@@ -334,9 +334,25 @@ gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh
 	info->cnc = cnc;
 	info->g_type = g_type;
 	info->dbms_type = dbms_type ? g_strdup (dbms_type) : NULL;
-	
+
 	g_hash_table_insert (prov->priv->data_handlers, info, dh);
 	g_object_ref (dh);
+}
+
+static gboolean
+handlers_clear_for_cnc_fh (GdaServerProviderHandlerInfo *key, GdaDataHandler *value, GdaConnection *cnc)
+{
+	return (key->cnc == cnc) ? TRUE : FALSE;
+}
+
+/*
+ * Removes any #GdaServerProviderHandlerInfo associated to @cnc */
+void
+_gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *prov, GdaConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_SERVER_PROVIDER (prov));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_hash_table_foreach_remove (prov->priv->data_handlers, (GHRFunc) handlers_clear_for_cnc_fh, cnc);
 }
 
 /**

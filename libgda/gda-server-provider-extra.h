@@ -76,6 +76,7 @@ GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *
 void            gda_server_provider_handler_declare         (GdaServerProvider *prov, GdaDataHandler *dh,
 							     GdaConnection *cnc, 
 							     GType g_type, const gchar *dbms_type);
+void            _gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *prov, GdaConnection *cnc);
 
 /*
  * misc

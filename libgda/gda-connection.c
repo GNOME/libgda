@@ -48,6 +48,7 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-log.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-extra.h>
 #include "gda-marshal.h"
 #include <libgda/gda-transaction-status-private.h>
 #include <string.h>
@@ -541,6 +542,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	if (cnc->priv->provider_obj) {
+		_gda_server_provider_handlers_clear_for_cnc (cnc->priv->provider_obj, cnc);
 		g_object_unref (G_OBJECT (cnc->priv->provider_obj));
 		cnc->priv->provider_obj = NULL;
 	}
