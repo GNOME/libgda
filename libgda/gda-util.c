@@ -3050,9 +3050,9 @@ static gboolean
 _parse_formatted_date (GDate *gdate, const gchar *value, GDateDMY first, GDateDMY second, GDateDMY third, gchar sep,
 		       const char **out_endptr)
 {
-	GDateYear year;
-	GDateMonth month;
-	GDateDay day;
+	GDateYear year = G_DATE_BAD_YEAR;
+	GDateMonth month = G_DATE_BAD_MONTH;
+	GDateDay day = G_DATE_BAD_DAY;
 	unsigned long int tmp;
 	const char *endptr;
 	guint8 iter;
