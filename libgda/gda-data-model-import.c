@@ -146,6 +146,9 @@ enum
 #define CSV_DATA_BUFFER_SIZE 2048
 
 static void gda_data_model_import_class_init (GdaDataModelImportClass *klass);
+static GObject *gda_data_model_import_constructor (GType type,
+						   guint n_construct_properties,
+						   GObjectConstructParam *construct_properties);
 static void gda_data_model_import_init       (GdaDataModelImport *model,
 					      GdaDataModelImportClass *klass);
 static void gda_data_model_import_dispose    (GObject *object);
@@ -294,6 +297,7 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 							       G_PARAM_CONSTRUCT));
 
 	/* virtual functions */
+	object_class->constructor = gda_data_model_import_constructor;
 	object_class->dispose = gda_data_model_import_dispose;
 	object_class->finalize = gda_data_model_import_finalize;
 }
@@ -349,6 +353,226 @@ gda_data_model_import_init (GdaDataModelImport *model, G_GNUC_UNUSED GdaDataMode
 	model->priv->init_done = FALSE;
 	model->priv->strict = FALSE;
 }
+
+static void init_csv_import  (GdaDataModelImport *model);
+static void init_xml_import  (GdaDataModelImport *model);
+static void init_node_import (GdaDataModelImport *model);
+
+static GObject *
+gda_data_model_import_constructor (GType type,
+				   guint n_construct_properties,
+				   GObjectConstructParam *construct_properties)
+{
+	GObject *object;
+
+	/* construct parent */
+	object = G_OBJECT_CLASS (parent_class)->constructor (type,
+							     n_construct_properties,
+							     construct_properties);
+
+	/* parse construct properties */
+	GdaDataModelImport *model;
+	guint i;
+	model = GDA_DATA_MODEL_IMPORT (object);
+	for (i = 0; i< n_construct_properties; i++) {
+		GObjectConstructParam *prop = &(construct_properties[i]);
+		if (!strcmp (g_param_spec_get_name (prop->pspec), "random-access")) {
+			model->priv->random_access = g_value_get_boolean (prop->value);
+			if (model->priv->format == FORMAT_XML_NODE)
+				model->priv->random_access = TRUE;
+		}
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "filename")) {
+			const gchar *string;
+			string = g_value_get_string (prop->value);
+			if (!string)
+				continue;
+
+			model->priv->is_mapped = TRUE;
+			model->priv->src.mapped.filename = g_strdup (g_value_get_string (prop->value));
+
+			/* file opening */
+			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
+			if (model->priv->src.mapped.fd < 0) {
+				/* error */
+				add_error (model, strerror(errno));
+				continue;
+			}
+
+			/* file mmaping */
+			struct stat _stat;
+
+			if (fstat (model->priv->src.mapped.fd, &_stat) < 0) {
+				/* error */
+				add_error (model, strerror(errno));
+				continue;
+			}
+			model->priv->src.mapped.length = _stat.st_size;
+#ifndef G_OS_WIN32
+			model->priv->src.mapped.start = mmap (NULL, model->priv->src.mapped.length,
+							      PROT_READ, MAP_PRIVATE,
+							      model->priv->src.mapped.fd, 0);
+			if (model->priv->src.mapped.start == MAP_FAILED) {
+				/* error */
+				add_error (model, strerror(errno));
+				model->priv->src.mapped.start = NULL;
+				continue;
+			}
+#else
+			HANDLE hFile = CreateFile (model->priv->src.mapped.filename,
+						   GENERIC_READ,
+						   FILE_SHARE_READ,
+						   NULL,
+						   OPEN_EXISTING,
+						   FILE_ATTRIBUTE_NORMAL,
+						   NULL);
+			if (!hFile) {
+				LPVOID lpMsgBuf;
+				DWORD dw = GetLastError();
+				FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+					       FORMAT_MESSAGE_FROM_SYSTEM |
+					       FORMAT_MESSAGE_IGNORE_INSERTS,
+					       NULL,
+					       dw,
+					       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					       (LPTSTR) &lpMsgBuf,
+					       0, NULL);
+				add_error (model, (gchar *)lpMsgBuf);
+				continue;
+			}
+			HANDLE view = CreateFileMapping(hFile,
+							NULL, PAGE_READONLY|SEC_COMMIT, 0,0 , NULL);
+			if (!view) {
+				/* error */
+				LPVOID lpMsgBuf;
+				DWORD dw = GetLastError();
+				FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+					       FORMAT_MESSAGE_FROM_SYSTEM |
+					       FORMAT_MESSAGE_IGNORE_INSERTS,
+					       NULL,
+					       dw,
+					       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					       (LPTSTR) &lpMsgBuf,
+					       0, NULL);
+				add_error (model, (gchar *)lpMsgBuf);
+				continue;
+			}
+			model->priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0,
+								      model->priv->src.mapped.length);
+			if (!model->priv->src.mapped.start) {
+				/* error */
+				LPVOID lpMsgBuf;
+				DWORD dw = GetLastError();
+				FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
+					       FORMAT_MESSAGE_FROM_SYSTEM |
+					       FORMAT_MESSAGE_IGNORE_INSERTS,
+					       NULL,
+					       dw,
+					       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+					       (LPTSTR) &lpMsgBuf,
+					       0, NULL);
+				add_error (model, (gchar *)lpMsgBuf);
+				continue;
+			}
+#endif
+			model->priv->data_start = model->priv->src.mapped.start;
+			model->priv->data_length = model->priv->src.mapped.length;
+		}
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "data-string")) {
+			const gchar *string;
+			string = g_value_get_string (prop->value);
+			if (!string)
+				continue;
+			model->priv->is_mapped = FALSE;
+			model->priv->src.string = g_strdup (g_value_get_string (prop->value));
+			model->priv->data_start = model->priv->src.string;
+			model->priv->data_length = strlen (model->priv->src.string);
+		}
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "xml-node")) {
+			gpointer data = g_value_get_pointer (prop->value);
+			if (!data)
+				continue;
+			model->priv->format = FORMAT_XML_NODE;
+			model->priv->extract.node.node = data;
+		}
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "options")) {
+			if (model->priv->options)
+				g_object_unref(model->priv->options);
+
+			model->priv->options = g_value_get_object (prop->value);
+			if (model->priv->options) {
+				if (!GDA_IS_SET (model->priv->options)) {
+					g_warning (_("\"options\" property is not a GdaSet object"));
+					model->priv->options = NULL;
+				}
+				else
+					g_object_ref (model->priv->options);
+			}
+		}
+		else if (!strcmp (g_param_spec_get_name (prop->pspec), "strict")) {
+			model->priv->strict = g_value_get_boolean (prop->value);
+		}
+	}
+
+	if (model->priv->errors)
+		return object;
+
+	/* finish construction */
+	/* determine the real kind of data (CVS text of XML) */
+	if (model->priv->format != FORMAT_XML_NODE
+	    && model->priv->data_start) {
+		if (!strncmp (model->priv->data_start, "<?xml", 5))
+			model->priv->format = FORMAT_XML_DATA;
+		else
+			model->priv->format = FORMAT_CSV;
+	}
+
+	/* analyze common options and init */
+	if (! model->priv->init_done) {
+		model->priv->init_done = TRUE;
+		switch (model->priv->format) {
+		case FORMAT_XML_DATA:
+			init_xml_import (model);
+			break;
+
+		case FORMAT_CSV:
+			model->priv->extract.csv.quote = '"';
+			if (model->priv->options) {
+				const gchar *option;
+				option = find_option_as_string (model, "ENCODING");
+				if (option)
+					model->priv->extract.csv.encoding = g_strdup (option);
+				option = find_option_as_string (model, "SEPARATOR");
+				if (option)
+					model->priv->extract.csv.delimiter = *option;
+				model->priv->extract.csv.quote = '"';
+				option = find_option_as_string (model, "QUOTE");
+				if (option)
+					model->priv->extract.csv.quote = *option;
+			}
+			init_csv_import (model);
+			break;
+
+		case FORMAT_XML_NODE:
+			model->priv->random_access = TRUE;
+			init_node_import (model);
+			break;
+		default:
+			g_assert_not_reached ();
+		}
+
+		/* for random access, create a new GdaDataModelArray model and copy the contents
+		   from this model */
+		if (model->priv->random_access && model->priv->columns && !model->priv->random_access_model) {
+			GdaDataModel *ramodel;
+
+			ramodel = gda_data_access_wrapper_new ((GdaDataModel *) model);
+			model->priv->random_access_model = ramodel;
+		}
+	}
+
+	return object;
+}
+
 
 static void
 csv_free_stored_rows (GdaDataModelImport *model)
@@ -516,10 +740,6 @@ find_option_as_boolean (GdaDataModelImport *model, const gchar *pname, gboolean 
 	return defaults;
 }
 
-static void init_csv_import  (GdaDataModelImport *model);
-static void init_xml_import  (GdaDataModelImport *model);
-static void init_node_import (GdaDataModelImport *model);
-
 static void
 gda_data_model_import_set_property (GObject *object,
 				    guint param_id,
@@ -532,199 +752,19 @@ gda_data_model_import_set_property (GObject *object,
 	model = GDA_DATA_MODEL_IMPORT (object);
 	if (model->priv) {
 		switch (param_id) {
-		case PROP_RANDOM_ACCESS:
-			model->priv->random_access = g_value_get_boolean (value);
-			if (model->priv->format == FORMAT_XML_NODE)
-				model->priv->random_access = TRUE;
-			return;
-			break;
-		case PROP_FILENAME:
-			string = g_value_get_string (value);
-			if (!string)
-				return;
-			model->priv->is_mapped = TRUE;
-			model->priv->src.mapped.filename = g_strdup (g_value_get_string (value));
-
-			/* file opening */
-			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
-			if (model->priv->src.mapped.fd < 0) {
-				/* error */
-				add_error (model, strerror(errno));
-				return;
-			}
-			else {
-				/* file mmaping */
-				struct stat _stat;
-
-				if (fstat (model->priv->src.mapped.fd, &_stat) < 0) {
-					/* error */
-					add_error (model, strerror(errno));
-					return;
-				}
-				model->priv->src.mapped.length = _stat.st_size;
-#ifndef G_OS_WIN32
-				model->priv->src.mapped.start = mmap (NULL, model->priv->src.mapped.length,
-								      PROT_READ, MAP_PRIVATE,
-								      model->priv->src.mapped.fd, 0);
-				if (model->priv->src.mapped.start == MAP_FAILED) {
-					/* error */
-					add_error (model, strerror(errno));
-					model->priv->src.mapped.start = NULL;
-					return;
-				}
-#else
-				HANDLE hFile = CreateFile (model->priv->src.mapped.filename,
-				                           GENERIC_READ,
-										   FILE_SHARE_READ,
-										   NULL,
-										   OPEN_EXISTING,
-										   FILE_ATTRIBUTE_NORMAL,
-										   NULL);
-				if (!hFile) {
-						LPVOID lpMsgBuf;
-						DWORD dw = GetLastError();
-						FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
-									   FORMAT_MESSAGE_FROM_SYSTEM |
-									   FORMAT_MESSAGE_IGNORE_INSERTS,
-									   NULL,
-									   dw,
-									   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-									   (LPTSTR) &lpMsgBuf,
-									   0, NULL);
-						add_error (model, (gchar *)lpMsgBuf);
-						return;
-				}
-				HANDLE view = CreateFileMapping(hFile,
-								NULL, PAGE_READONLY|SEC_COMMIT, 0,0 , NULL);
-				if (!view) {
-					/* error */
-					LPVOID lpMsgBuf;
-					DWORD dw = GetLastError();
-					FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
-					               FORMAT_MESSAGE_FROM_SYSTEM |
-								   FORMAT_MESSAGE_IGNORE_INSERTS,
-								   NULL,
-								   dw,
-								   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								   (LPTSTR) &lpMsgBuf,
-								   0, NULL);
-					add_error (model, (gchar *)lpMsgBuf);
-					return;
-				}
-				model->priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0,
-									      model->priv->src.mapped.length);
-				if (!model->priv->src.mapped.start) {
-					/* error */
-					LPVOID lpMsgBuf;
-					DWORD dw = GetLastError();
-					FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER |
-					               FORMAT_MESSAGE_FROM_SYSTEM |
-								   FORMAT_MESSAGE_IGNORE_INSERTS,
-								   NULL,
-								   dw,
-								   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								   (LPTSTR) &lpMsgBuf,
-								   0, NULL);
-					add_error (model, (gchar *)lpMsgBuf);
-					return;
-				}
-#endif
-				model->priv->data_start = model->priv->src.mapped.start;
-				model->priv->data_length = model->priv->src.mapped.length;
-			}
-			break;
-		case PROP_DATA_STRING:
-			string = g_value_get_string (value);
-			if (!string)
-				return;
-			model->priv->is_mapped = FALSE;
-			model->priv->src.string = g_strdup (g_value_get_string (value));
-			model->priv->data_start = model->priv->src.string;
-			model->priv->data_length = strlen (model->priv->src.string);
-			break;
-		case PROP_XML_NODE: {
-			gpointer data = g_value_get_pointer (value);
-			if (!data)
-				return;
-			model->priv->format = FORMAT_XML_NODE;
-			model->priv->extract.node.node = data;
-			break;
-                }
 		case PROP_OPTIONS:
-                        if (model->priv->options)
-                          g_object_unref(model->priv->options);
-
-			model->priv->options = g_value_get_object (value);
-			if (model->priv->options) {
-				if (!GDA_IS_SET (model->priv->options)) {
-					g_warning (_("\"options\" property is not a GdaSet object"));
-					model->priv->options = NULL;
-				}
-				else
-					g_object_ref (model->priv->options);
-			}
-			return;
+		case PROP_XML_NODE:
+		case PROP_DATA_STRING:
+		case PROP_FILENAME:
+		case PROP_RANDOM_ACCESS:
+			/* handled in the constructor */
+			break;
 		case PROP_STRICT:
 			model->priv->strict = g_value_get_boolean (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
-	}
-
-	/* here we now have a valid data to analyze, try to determine the real kind of data
-	 * (CVS text of XML) */
-	if (model->priv->format != FORMAT_XML_NODE
-	    && model->priv->data_start) {
-		if (!strncmp (model->priv->data_start, "<?xml", 5))
-			model->priv->format = FORMAT_XML_DATA;
-		else
-			model->priv->format = FORMAT_CSV;
-	}
-
-	/* analyze common options and init.
-	 * WARNING when adding properties: we need to avoid double initialization here... */
-	if (! model->priv->init_done) {
-		model->priv->init_done = TRUE;
-		switch (model->priv->format) {
-		case FORMAT_XML_DATA:
-			init_xml_import (model);
-			break;
-
-		case FORMAT_CSV:
-			model->priv->extract.csv.quote = '"';
-			if (model->priv->options) {
-				const gchar *option;
-				option = find_option_as_string (model, "ENCODING");
-				if (option)
-					model->priv->extract.csv.encoding = g_strdup (option);
-				option = find_option_as_string (model, "SEPARATOR");
-				if (option)
-					model->priv->extract.csv.delimiter = *option;
-				model->priv->extract.csv.quote = '"';
-				option = find_option_as_string (model, "QUOTE");
-				if (option)
-					model->priv->extract.csv.quote = *option;
-			}
-			init_csv_import (model);
-			break;
-
-		case FORMAT_XML_NODE:
-			model->priv->random_access = TRUE;
-			init_node_import (model);
-			break;
-		default:
-			g_assert_not_reached ();
-		}
-
-		/* for random access, create a new GdaDataModelArray model and copy the contents
-		   from this model */
-		if (model->priv->random_access && model->priv->columns && !model->priv->random_access_model) {
-			GdaDataModel *ramodel;
-
-			ramodel = gda_data_access_wrapper_new ((GdaDataModel *) model);
-			model->priv->random_access_model = ramodel;
 		}
 	}
 }
