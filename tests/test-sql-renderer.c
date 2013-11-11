@@ -263,6 +263,8 @@ main (int argc, char** argv)
 			const GValue *cvalue;
 			cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
 			g_assert (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING));
+			if (!g_ascii_strcasecmp (g_value_get_string (cvalue), "Oracle"))
+				continue; /* ignore Oracle for now */
 			g_print ("Testing database provider '%s'\n", g_value_get_string (cvalue));
 
 			GdaServerProvider *prov;
