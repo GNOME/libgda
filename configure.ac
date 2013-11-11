@@ -81,6 +81,7 @@ AM_CONDITIONAL(CROSS_COMPILING, test $cross_compiling = yes)
 AC_MSG_CHECKING([for a C compiler for build tools])
 if test $cross_compiling = yes; then
   AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+  CC_FOR_BUILD="CPATH=\"\" $CC_FOR_BUILD"
 else
   CC_FOR_BUILD=$CC
 fi
