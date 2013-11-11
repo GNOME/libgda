@@ -114,7 +114,7 @@ m4_define([_BDB_CHECK_INTERNAL],
 	do
 	    bdbdir=""
 	    AC_MSG_CHECKING([for Berkeley DB files in $d])
-	    for version in "" 5.1 5.0 4.9 4.8 4.7
+	    for version in "" 6.0 5.3 5.1 5.0 4.9 4.8 4.7
 	    do
 	        if test $platform_win32 = yes
 		then
