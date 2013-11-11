@@ -1776,10 +1776,8 @@ create_internal_provider (const gchar *path,
 			gda_log_message ("Invalid format for provider '%s' DSN spec : %s",
 					 info->id,
 					 error ? error->message : "Unknown error");
-			if (error)
-				g_error_free (error);
-		}
-		if (!info->dsn_params) {
+			g_clear_error (&error);
+
 			/* there may be traces of the provider installed but some parts are missing,
 			   forget about that provider... */
 			internal_provider_free (ip);

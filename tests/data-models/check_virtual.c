@@ -164,7 +164,6 @@ test2 (void)
 	g_object_unref (model);
 
 	retval = TRUE;
- out:
 
 	g_object_unref (city_model);
 	g_object_unref (country_model);
