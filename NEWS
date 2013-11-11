@@ -1,3 +1,13 @@
+libgda 5.2.0, 2013-11-11
+
+ - Vala bindings improvements, thanks to Daniel Espinosa
+ - Improvements to most database providers (MySQL, PostgreSQL, SQLite, SqlCipher, JDBC, ...)
+ - Use SqlCipher 3.0.0 and Sqlite 3.8.0.2
+ - Switched to GTK+3
+ - Lots of work on the Windows platform
+ - Many bugs fixed
+ - Translations updated for many languages, thanks to all the translators!
+
 libgda 5.1.2, 2013-03-16
 
  - Many small corrections, some uncovered by CoverityScan
