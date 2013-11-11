@@ -75,7 +75,7 @@ test1 (void)
 	/* use GdaThreadWrapper from several threads */
 	for (i = 0; i < NTHREADS; i++) {
 		GThread *th;
-		th = g_thread_create (main_thread_func, GINT_TO_POINTER (i), TRUE, NULL);
+		th = g_thread_new ("th", main_thread_func, GINT_TO_POINTER (i));
 		if (!th) {
 			g_print ("Can't create thread %d (not part of the test)\n", i);
 			exit (1);
@@ -238,7 +238,7 @@ main_thread_func (gpointer int_id)
 typedef struct {
 	DummyObject *dummy;
 	GSList      *signals_sent; /* list of TestSignal structures */
-	GMutex      *mutex;
+	GMutex       mutex;
 } t2ExecData;
 static void add_to_signals_sent (t2ExecData *data, gpointer what_to_add);
 static gpointer t2_main_thread_func (DummyObject *dummy);
@@ -249,9 +249,9 @@ static void t2_exec_in_wrapped_thread_v (t2ExecData *data, GError **error);
 static void
 add_to_signals_sent (t2ExecData *data, gpointer what_to_add)
 {
-	g_mutex_lock (data->mutex);
+	g_mutex_lock (&data->mutex);
 	data->signals_sent = g_slist_append (data->signals_sent, what_to_add);
-	g_mutex_unlock (data->mutex);
+	g_mutex_unlock (&data->mutex);
 }
 
 static gint
@@ -268,7 +268,7 @@ test2 (void)
 	/* use GdaThreadWrapper from several threads */
 	for (i = 0; i < NTHREADS; i++) {
 		GThread *th;
-		th = g_thread_create ((GThreadFunc) t2_main_thread_func, dummy, TRUE, NULL);
+		th = g_thread_new ("th", (GThreadFunc) t2_main_thread_func, dummy);
 		if (!th) {
 			g_print ("Can't create thread %d (not part of the test)\n", i);
 			exit (1);
@@ -554,7 +554,7 @@ t2_main_thread_func (DummyObject *dummy)
 
 	edata.dummy = dummy;
 	edata.signals_sent = NULL;
-	edata.mutex = g_mutex_new ();
+	g_mutex_init (&edata.mutex);
 
 	ids = g_new0 (guint, NCALLS);
 	for (i = 0; i < NCALLS; i++) {
@@ -625,10 +625,10 @@ t2_main_thread_func (DummyObject *dummy)
 		g_usleep (10000);
 	}
 
-	g_mutex_lock (edata.mutex);
+	g_mutex_lock (&edata.mutex);
 	if (! compare_signals_lists (edata.signals_sent, received_list))
 		nfailed++;
-	g_mutex_unlock (edata.mutex);
+	g_mutex_unlock (&edata.mutex);
 
 
 #ifdef PRINT_CALLS
@@ -661,7 +661,7 @@ t2_main_thread_func (DummyObject *dummy)
 		gda_thread_wrapper_iterate (wrapper, FALSE);
 		g_usleep (10000);
 	}
-	g_mutex_free (edata.mutex);
+	g_mutex_clear (&edata.mutex);
 
 	if (received_list) {
 		g_print ("Error: signals should not be received anymore...\n");
