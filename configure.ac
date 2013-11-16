@@ -569,7 +569,7 @@ dnl ******************************
 dnl Checks for libcrypto
 dnl ******************************
 AC_ARG_ENABLE([crypto],
-	AS_HELP_STRING([--disable-crypto], [Disable SQLCipher database provider (using the libcrypto library)]),
+	AS_HELP_STRING([--disable-crypto], [Disable SQLCipher database provider (using the libcrypto library, part of OpenSSL)]),
 	[enable_crypto=$enableval],[enable_crypto=yes])
 
 if test "x$enable_crypto" = xyes
