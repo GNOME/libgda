@@ -1,3 +1,9 @@
+libgda 5.2.1, 2013-11-17
+ - Fixed a Unix compilation issue, bug #712143
+ - Improved configure script output
+ - Translations:
+	- de (Benjamin Steinwender)
+
 libgda 5.2.0, 2013-11-11
 
  - Vala bindings improvements, thanks to Daniel Espinosa
