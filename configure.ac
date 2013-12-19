@@ -261,6 +261,8 @@ then
 		then
 			dnl test if new API is supported
 			AC_MSG_CHECKING([whether Graphviz's new API is supported])
+			graphviz_save_CFLAGS=$CFLAGS
+			CFLAGS="$CFLAGS $GRAPHVIZ_CFLAGS"
 			AC_COMPILE_IFELSE([AC_LANG_SOURCE([
 #include <gvc.h>
 int main() {
@@ -270,6 +272,7 @@ int main() {
 }
 ])],
                         graphviz_new_api=yes, graphviz_new_api=no)
+			CLFAGS=$graphviz_save_CFLAGS
 
 			AC_MSG_RESULT($graphviz_new_api)
 			if test "$graphviz_new_api" = "yes"; then
