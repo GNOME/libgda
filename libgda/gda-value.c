@@ -68,11 +68,11 @@ extern gchar *gda_numeric_locale;
  * This struct must be considered as opaque. Any access to its members must use its
  * accessors added since version 5.0.2.
  *
- * Set value func: gda_value_set_numeric
- * Get value func: gda_value_get_numeric
+ * Set value func: gda_value_set_numeric()
+ * Get value func: gda_value_get_numeric()
  */
 struct _GdaNumeric {
-	gchar*   number;
+	gchar*   number; /* stored in the "C" locale, never NULL */
 	glong    precision;
 	glong    width;
 	
@@ -991,10 +991,11 @@ gda_numeric_set_width (GdaNumeric *numeric, glong width)
  * Gets the width of a #GdaNumeric. (Not yet implemented).
  *
  * Returns: an integer with the width of a #GdaNumeric. (Not jet implemented).
+ *
  * Since: 5.0.2
  */
 glong
-gda_numeric_get_width (GdaNumeric *numeric)
+gda_numeric_get_width (const GdaNumeric *numeric)
 {
 	g_return_val_if_fail (numeric, 0.0);
 	return numeric->width;
@@ -1023,10 +1024,11 @@ gda_numeric_set_precision (GdaNumeric *numeric, glong precision)
  * Gets the precision of a #GdaNumeric.
  *
  * Returns: an integer with the precision of a #GdaNumeric.
+ *
  * Since: 5.0.2
  */
 glong
-gda_numeric_get_precision (GdaNumeric *numeric)
+gda_numeric_get_precision (const GdaNumeric *numeric)
 {
 	g_return_val_if_fail (numeric, -1);
 	return numeric->precision;
@@ -1035,16 +1037,19 @@ gda_numeric_get_precision (GdaNumeric *numeric)
  * gda_numeric_get_string:
  * @numeric: a #GdaNumeric
  *
- * Get the string representation of @numeric.
+ * Get the string representation of @numeric, in the C locale format (dot as a fraction separator).
  *
  * Returns: (transfer full) (allow-none): a new string representing the stored valued in @numeric
+ *
  * Since: 5.0.2
  */
 gchar*
-gda_numeric_get_string (GdaNumeric *numeric)
+gda_numeric_get_string (const GdaNumeric *numeric)
 {
-	g_return_val_if_fail (numeric, NULL);
-	return g_strdup (numeric->number);
+	if (numeric)
+		return g_strdup (numeric->number);
+	else
+		return NULL;
 }
 
 /*
@@ -2671,12 +2676,8 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			else
 				retval = 1;
 		}
-		else {
-			if (num2->number)
-				retval = -1;
-			else
-				retval = 0;
-		}
+		else
+			retval = -1;
 		return retval;
 	}
 

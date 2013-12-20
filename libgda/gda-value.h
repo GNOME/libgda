@@ -263,12 +263,12 @@ GdaNumeric*                       gda_numeric_new (void);
 GdaNumeric*                       gda_numeric_copy (GdaNumeric *src);
 void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
 void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
-gdouble                           gda_numeric_get_double (GdaNumeric *numeric);
+gdouble                           gda_numeric_get_double (const GdaNumeric *numeric);
 void                              gda_numeric_set_precision (GdaNumeric *numeric, glong precision);
-glong                             gda_numeric_get_precision (GdaNumeric *numeric);
+glong                             gda_numeric_get_precision (const GdaNumeric *numeric);
 void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
-glong                             gda_numeric_get_width (GdaNumeric *numeric);
-gchar*                            gda_numeric_get_string (GdaNumeric *numeric);
+glong                             gda_numeric_get_width (const GdaNumeric *numeric);
+gchar*                            gda_numeric_get_string (const GdaNumeric *numeric);
 void                              gda_numeric_free (GdaNumeric *numeric);
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
