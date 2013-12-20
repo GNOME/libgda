@@ -799,7 +799,7 @@ numeric_to_double (const GValue *src, GValue *dest)
 
 	numeric = gda_value_get_numeric (src);
 	if (numeric)
-		g_value_set_double (dest, g_strtod (numeric->number, NULL));
+		g_value_set_double (dest, gda_numeric_get_double (numeric));
 	else
 		g_value_set_double (dest, 0.0);
 }
@@ -814,7 +814,7 @@ numeric_to_float (const GValue *src, GValue *dest)
 
 	numeric = gda_value_get_numeric (src);
 	if (numeric)
-		g_value_set_float (dest, (float) g_strtod (numeric->number, NULL));
+		g_value_set_float (dest, (float) gda_numeric_get_double (numeric));
 	else
 		g_value_set_float (dest, 0.0);
 }
@@ -912,10 +912,10 @@ gda_numeric_new (void)
  * @numeric: a #GdaNumeric
  * @str: a string representing a number
  *
- * Sets @numeric with a number represented by @str. By default converts @str to
- * #gdouble.
+ * Sets @numeric with a number represented by @str, in the C locale format (dot as a fraction separator).
+ * By default converts @str to #gdouble.
  *
- * * Since: 5.0.2
+ * Since: 5.0.2
  */
 void
 gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
@@ -924,8 +924,8 @@ gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
 	g_return_if_fail (str);
 	g_free (numeric->number);
 	// FIXME: By default convert string to gdouble, for other number types we need to check string format
-	gdouble n = g_strtod (str, NULL);
 	setlocale (LC_NUMERIC, "C");
+	gdouble n = g_strtod (str, NULL);
 	numeric->number = g_strdup_printf ("%lf", n);
 	setlocale (LC_NUMERIC, gda_numeric_locale);
 }
@@ -958,13 +958,14 @@ gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
  * Since: 5.0.2
  */
 gdouble
-gda_numeric_get_double (GdaNumeric *numeric)
+gda_numeric_get_double (const GdaNumeric *numeric)
 {
 	g_return_val_if_fail (numeric, 0.0);
-	if (numeric->number)
-		return atof (numeric->number);
-	else
-		return 0.0;
+	gdouble res;
+	setlocale (LC_NUMERIC, "C");
+	res = atof (numeric->number);
+	setlocale (LC_NUMERIC, gda_numeric_locale);
+	return res;
 }
 
 /**
