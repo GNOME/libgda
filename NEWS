@@ -1,4 +1,13 @@
+libgda 5.2.2, 2013-12-23
+
+ - Avoid using setlocale() in libraries
+ - Bugs corrected: GraphViz detection, #720594
+ - Translations:
+	- it (Marco Ciampa, Milo Casagrande)
+
+
 libgda 5.2.1, 2013-11-17
+
  - Fixed a Unix compilation issue, bug #712143
  - Improved configure script output
  - Translations:
