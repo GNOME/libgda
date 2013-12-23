@@ -414,8 +414,8 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 					y = xmlGetProp (node, BAD_CAST "y");
 					browser_canvas_translate_item (BROWSER_CANVAS (diagram->priv->canvas),
 								       (BrowserCanvasItem*) table,
-								       x ? atof ((gchar*) x) : 0.,
-								       y ? atof ((gchar*) y) : 0.);
+								       x ? g_ascii_strtod ((gchar*) x, NULL) : 0.,
+								       y ? g_ascii_strtod ((gchar*) y, NULL) : 0.);
 					if (x)
 						xmlFree (x);
 					if (y)

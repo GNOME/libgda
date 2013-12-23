@@ -963,7 +963,6 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				gda_value_set_blob (value, &blob);
 			}
 			else if (type == GDA_TYPE_NUMERIC) {
-				setlocale (LC_NUMERIC, "C");
 				if (length > 0) {
 					GdaNumeric *numeric;
 					numeric = gda_numeric_new ();
@@ -973,14 +972,10 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 					gda_value_set_numeric (value, numeric);
 					gda_numeric_free (numeric);
 				}
-				setlocale (LC_NUMERIC, gda_numeric_locale);
 			}
 			else if (type == G_TYPE_DOUBLE) {
-				if (length > 0) {
-					setlocale (LC_NUMERIC, "C");
-					g_value_set_double (value, atof (bvalue));
-					setlocale (LC_NUMERIC, gda_numeric_locale);
-				}
+				if (length > 0)
+					g_value_set_double (value, g_ascii_strtod (bvalue, NULL));
 				else {
 					/* error: wrong column type */
 					gda_row_invalidate_value (row, value);

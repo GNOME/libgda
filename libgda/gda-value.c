@@ -54,8 +54,6 @@
 #define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
 #endif
 
-extern gchar *gda_numeric_locale;
-
 #  ifdef GSEAL_ENABLE
 /**
  * GdaNumeric:
@@ -889,6 +887,14 @@ gda_numeric_free (GdaNumeric *numeric)
 	g_free (numeric);
 }
 
+static gchar*
+gda_dtostr_dup (const double value)
+{
+	char buffer[G_ASCII_DTOSTR_BUF_SIZE];
+	g_ascii_dtostr (buffer, sizeof (buffer), value);
+	return g_strdup (buffer);
+}
+
 /**
  * gda_numeric_new:
  *
@@ -901,19 +907,16 @@ GdaNumeric*
 gda_numeric_new (void)
 {
 	GdaNumeric *n = g_new0 (GdaNumeric, 1);
-	setlocale (LC_NUMERIC, "C");
-	n->number = g_strdup_printf ("%lf", 0.0);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
+	n->number = gda_dtostr_dup (0.0);
 	return n;
 }
 
 /**
  * gda_numeric_set_from_string:
  * @numeric: a #GdaNumeric
- * @str: a string representing a number
+ * @str: a string representing a number, in the C locale format
  *
  * Sets @numeric with a number represented by @str, in the C locale format (dot as a fraction separator).
- * By default converts @str to #gdouble.
  *
  * Since: 5.0.2
  */
@@ -923,13 +926,15 @@ gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str)
 	g_return_if_fail (numeric);
 	g_return_if_fail (str);
 	g_free (numeric->number);
-	// FIXME: By default convert string to gdouble, for other number types we need to check string format
-	setlocale (LC_NUMERIC, "C");
-	gdouble n = g_strtod (str, NULL);
-	numeric->number = g_strdup_printf ("%lf", n);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
-}
 
+	gdouble number;
+	gchar *endptr = NULL;
+	number = g_ascii_strtod (str, &endptr);
+	if (*endptr)
+		numeric->number = gda_dtostr_dup (number);
+	else
+		numeric->number = g_strdup (str);
+}
 
 /**
  * gda_numeric_set_double:
@@ -945,9 +950,7 @@ gda_numeric_set_double (GdaNumeric *numeric, gdouble number)
 {
 	g_return_if_fail (numeric);
 	g_free (numeric->number);
-	setlocale (LC_NUMERIC, "C");
-	numeric->number = g_strdup_printf ("%lf", number);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
+	numeric->number = gda_dtostr_dup (number);
 }
 
 /**
@@ -961,11 +964,7 @@ gdouble
 gda_numeric_get_double (const GdaNumeric *numeric)
 {
 	g_return_val_if_fail (numeric, 0.0);
-	gdouble res;
-	setlocale (LC_NUMERIC, "C");
-	res = atof (numeric->number);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
-	return res;
+	return g_ascii_strtod (numeric->number, NULL);
 }
 
 /**
@@ -2323,7 +2322,7 @@ gda_value_set_from_value (GValue *value, const GValue *from)
  * #GdaDataHandler objects). Using this function should be limited to debugging and values serialization
  * purposes.
  *
- * Dates are converted in a YYYY-MM-DD format.
+ * Output is in the "C" locale for numbers, and dates are converted in a YYYY-MM-DD format.
  *
  * Returns: (transfer full): a new string, or %NULL if the conversion cannot be done. Free the value with a g_free() when you've finished using it.
  */
@@ -2332,44 +2331,53 @@ gda_value_stringify (const GValue *value)
 {
 	if (!value)
 		return g_strdup ("NULL");
-	if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
+
+	GType type = G_VALUE_TYPE (value);
+	if (type == G_TYPE_FLOAT) {
+		char buffer[G_ASCII_DTOSTR_BUF_SIZE];
+		g_ascii_formatd (buffer, sizeof (buffer), "%f", g_value_get_float (value));
+		return g_strdup (buffer);
+	}
+	else if (type == G_TYPE_DOUBLE) {
+		char buffer[G_ASCII_DTOSTR_BUF_SIZE];
+		g_ascii_formatd (buffer, sizeof (buffer), "%f", g_value_get_double (value));
+		return g_strdup (buffer);
+	}
+	else if (type == GDA_TYPE_NUMERIC)
+		return gda_numeric_get_string (gda_value_get_numeric (value));
+	else if (type == G_TYPE_DATE) {
+		GDate *date;
+		date = (GDate *) g_value_get_boxed (value);
+		if (date) {
+			if (g_date_valid (date))
+				return g_strdup_printf ("%04u-%02u-%02u",
+							g_date_get_year (date),
+							g_date_get_month (date),
+							g_date_get_day (date));
+			else
+				return g_strdup_printf ("%04u-%02u-%02u",
+							date->year, date->month, date->day);
+		}
+		else
+			return g_strdup ("0000-00-00");
+	}
+	else if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
 		GValue *string;
 		gchar *str;
 
-		setlocale (LC_NUMERIC, "C");
 		string = g_value_init (g_new0 (GValue, 1), G_TYPE_STRING);
 		g_value_transform (value, string);
-		setlocale (LC_NUMERIC, gda_numeric_locale);
 		str = g_value_dup_string (string);
 		gda_value_free (string);
 		return str;
 	}
-	else {
-		GType type = G_VALUE_TYPE (value);
-		if (type == G_TYPE_DATE) {
-			GDate *date;
-			date = (GDate *) g_value_get_boxed (value);
-			if (date) {
-				if (g_date_valid (date))
-					return g_strdup_printf ("%04u-%02u-%02u",
-								g_date_get_year (date),
-								g_date_get_month (date),
-								g_date_get_day (date));
-				else
-					return g_strdup_printf ("%04u-%02u-%02u",
-								date->year, date->month, date->day);
-			}
-			else
-				return g_strdup ("0000-00-00");
-		}
-		else if (G_TYPE_IS_OBJECT (type)) {
-			GObject *obj;
-			obj = g_value_get_object (value);
-			return g_strdup_printf ("%p (%s)", obj, G_OBJECT_TYPE_NAME (obj));
-		}
-		else
-			return g_strdup ("");
+	else if (G_TYPE_IS_OBJECT (type)) {
+		GObject *obj;
+		obj = g_value_get_object (value);
+		return g_strdup_printf ("%p (%s)", obj, G_OBJECT_TYPE_NAME (obj));
 	}
+	else
+		return g_strdup ("");
 }
 
 /**

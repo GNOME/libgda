@@ -431,7 +431,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
  * @value: a #GValue value
  *
  * Returns: a new string representing @value without taking the current
- * locale into account
+ * locale into account (i.e. in the "C" locale)
  */
 gchar *
 gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue *value)

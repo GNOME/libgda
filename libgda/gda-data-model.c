@@ -2622,7 +2622,6 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 #ifndef G_OS_WIN32
 	if (dump_separators || dump_sep_line) {
 		int utf8_mode;
-		setlocale (LC_ALL, NULL);
 		utf8_mode = (strcmp (nl_langinfo (CODESET), "UTF-8") == 0);
 		if (utf8_mode) {
 			if (dump_separators) {

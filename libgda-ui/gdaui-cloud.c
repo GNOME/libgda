@@ -268,7 +268,7 @@ update_display (GdauiCloud *cloud)
 				cvalue = gda_data_model_get_value_at (cloud->priv->model,
 								      cloud->priv->weight_column, i, NULL);
 				if (cvalue) {
-					weight = atof (gda_value_stringify (cvalue));
+					weight = g_ascii_strtod (gda_value_stringify (cvalue), NULL);
 					min_weight = MIN (min_weight, weight);
 					max_weight = MAX (max_weight, weight);
 				}
@@ -316,7 +316,7 @@ update_display (GdauiCloud *cloud)
 				cvalue = gda_data_model_get_value_at (cloud->priv->model,
 								      cloud->priv->weight_column, i, NULL);
 				if (cvalue) {
-					weight = atof (gda_value_stringify (cvalue));
+					weight = g_ascii_strtod (gda_value_stringify (cvalue), NULL);
 					weight = cloud->priv->min_scale + wrange * (weight - min_weight);
 				}
 			}

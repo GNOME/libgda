@@ -410,17 +410,11 @@ _fb_set_row_data (XSQLVAR *var, GValue *value, GdaRow *row, GType req_col_type){
 				break;
 
 			case SQL_FLOAT:
-				sprintf(p, "%15g ", *(float *) (var->sqldata));
-				//setlocale (LC_NUMERIC, "C");
-				g_value_set_float (value, atof (p));
-				//setlocale (LC_NUMERIC, gda_numeric_locale);
+				g_value_set_float (value, *(float *) (var->sqldata));
 				break;
 
 			case SQL_DOUBLE:
-				sprintf(p, "%24f ", *(double *) (var->sqldata));
-				//setlocale (LC_NUMERIC, "C");
-				g_value_set_double (value, atof (p));
-				//setlocale (LC_NUMERIC, gda_numeric_locale);
+				g_value_set_double (value, *(double *) (var->sqldata));
 				break;
 
 			case SQL_TIMESTAMP:

@@ -63,7 +63,7 @@ struct _GdaDataHandlerIface
  * managing data in its various representations, and converting from one to another:
  * <itemizedlist>
  *   <listitem><para>as a #GValue which is a generic value container for the C language</para></listitem>
- *   <listitem><para>as a human readable string</para></listitem>
+ *   <listitem><para>as a human readable string (in the user defined locale)</para></listitem>
  *   <listitem><para>as an SQL string (a string which can be used in SQL statements)</para></listitem>
  * </itemizedlist>
  *

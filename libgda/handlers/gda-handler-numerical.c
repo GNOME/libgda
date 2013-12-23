@@ -26,8 +26,6 @@
 #include <locale.h>
 #include <glib/gi18n-lib.h>
 
-extern gchar *gda_numeric_locale;
-
 static void gda_handler_numerical_class_init (GdaHandlerNumericalClass * class);
 static void gda_handler_numerical_init (GdaHandlerNumerical * wid);
 static void gda_handler_numerical_dispose (GObject   * object);
@@ -201,28 +199,22 @@ gda_handler_numerical_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, c
 	return gda_value_stringify ((GValue *) value);
 }
 
+/*
+ * if @c_locale is %TRUE, then @str is expected to be in the "C" locale, and if it is %FALSE,
+ * then @str is expected to be in the current (user defined) locale
+ */
 static GValue *
-gda_handler_numerical_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
-{
-	g_assert (sql);
-
-	GValue *value;
-	setlocale (LC_NUMERIC, "C");
-	value = gda_handler_numerical_get_value_from_str (iface, sql, type);
-	setlocale (LC_NUMERIC, gda_numeric_locale);
-
-	return value;
-}
-
-static GValue *
-gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
+_gda_handler_numerical_get_value_from_str_locale (const gchar *str, GType type, gboolean c_locale)
 {
 	g_assert (str);
 	GValue *value = NULL;
 	long long int llint;
 	char *endptr = NULL;
 
-	llint = strtoll (str, &endptr, 10);
+	if (c_locale)
+		llint = g_ascii_strtoull (str, &endptr, 10);
+	else
+		llint = strtoll (str, &endptr, 10);
 
 	if (type == G_TYPE_INT64) {
 		if (!*endptr && (llint >= G_MININT64) && (llint <= G_MAXINT64)) {
@@ -232,10 +224,24 @@ gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, c
 	}
 	else if (type == G_TYPE_DOUBLE) {
 		gdouble dble;
-		dble = g_strtod (str, &endptr);
+		if (c_locale)
+			dble = g_ascii_strtod (str, &endptr);
+		else
+			dble = g_strtod (str, &endptr);
 		if (!*endptr) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DOUBLE);
 			g_value_set_double (value, dble);
+		}
+	}
+	else if (type == G_TYPE_FLOAT) {
+		gfloat flt;
+		if (c_locale)
+			flt = g_ascii_strtod (str, &endptr);
+		else
+			flt = strtof (str, &endptr);
+		if (!*endptr) {
+			value = g_value_init (g_new0 (GValue, 1), G_TYPE_FLOAT);
+			g_value_set_float (value, flt);
 		}
 	}
 	else if (type == G_TYPE_INT) {
@@ -274,19 +280,19 @@ gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, c
 			p++;
 		}
 		if (ok) {
-			gda_numeric_set_from_string (numeric, (gchar*) str);
-			value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_NUMERIC);
-			gda_value_set_numeric (value, numeric);
+			gdouble d;
+			char *end = NULL;
+			if (c_locale)
+				d = g_ascii_strtod (str, &end);
+			else
+				d = strtod (str, &end);
+			if (! *end) {
+				value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_NUMERIC);
+				gda_numeric_set_double (numeric, d);
+				gda_value_set_numeric (value, numeric);
+			}
 		}
 		gda_numeric_free (numeric);
-	}
-	else if (type == G_TYPE_FLOAT) {
-		gfloat flt;
-		flt = strtof (str, &endptr);
-		if (!*endptr) {
-			value = g_value_init (g_new0 (GValue, 1), G_TYPE_FLOAT);
-			g_value_set_float (value, flt);
-		}
 	}
 	else if (type == GDA_TYPE_SHORT) {
 		if (!*endptr && (llint >= G_MINSHORT) && (llint <= G_MAXSHORT)) {
@@ -358,6 +364,17 @@ gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, c
 	return value;
 }
 
+static GValue *
+gda_handler_numerical_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
+{
+	return _gda_handler_numerical_get_value_from_str_locale (sql, type, TRUE);
+}
+
+static GValue *
+gda_handler_numerical_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
+{
+	return _gda_handler_numerical_get_value_from_str_locale (str, type, FALSE);
+}
 
 static GValue *
 gda_handler_numerical_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, GType type)

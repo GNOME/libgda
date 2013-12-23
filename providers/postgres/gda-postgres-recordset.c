@@ -589,10 +589,10 @@ static void
 make_point (GdaGeometricPoint *point, const gchar *value)
 {
 	value++;
-	point->x = atof (value);
+	point->x = g_ascii_strtod (value, NULL);
 	value = strchr (value, ',');
 	value++;
-	point->y = atof (value);
+	point->y = g_ascii_strtod (value, NULL);
 }
 
 static void
@@ -652,14 +652,10 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 	else if (type == GDA_TYPE_SHORT)
 		gda_value_set_short (value, atoi (thevalue));
 	else if (type == G_TYPE_FLOAT) {
-		setlocale (LC_NUMERIC, "C");
-		g_value_set_float (value, atof (thevalue));
-		setlocale (LC_NUMERIC, gda_numeric_locale);
+		g_value_set_float (value, g_ascii_strtod (thevalue, NULL));
 	}
 	else if (type == G_TYPE_DOUBLE) {
-		setlocale (LC_NUMERIC, "C");
-		g_value_set_double (value, atof (thevalue));
-		setlocale (LC_NUMERIC, gda_numeric_locale);
+		g_value_set_double (value, g_ascii_strtod (thevalue, NULL));
 	}
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric* numeric = gda_numeric_new ();

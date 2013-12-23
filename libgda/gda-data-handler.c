@@ -126,6 +126,8 @@ gda_data_handler_get_sql_from_value (GdaDataHandler *dh, const GValue *value)
  * (in the user's locale, specially for the dates). If the value is 
  * NULL or is of type GDA_TYPE_NULL, the returned string is a copy of "" (empty string).
  *
+ * Note: the returned value will be in the current locale representation.
+ *
  * Returns: (transfer full): the new string, or %NULL if an error occurred
  */
 gchar *
@@ -190,6 +192,8 @@ gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType
  * If the @str string is %NULL, then the returned GValue is of type GDA_TYPE_NULL;
  * if the @str string does not correspond to a valid string for the requested type, then
  * %NULL is returned.
+ *
+ * Note: the @str string must be in the current locale representation
  *
  * Returns: (transfer full): the new #GValue or %NULL on error
  */
