@@ -326,7 +326,7 @@ t5_validate_change (GdaSet *set, gchar *token)
 	if (v2 && (G_VALUE_TYPE (v2) == G_TYPE_INT) &&
 	    v3 && (G_VALUE_TYPE (v3) == G_TYPE_CHAR) &&
 	    (g_value_get_int (v2) == 125) &&
-	    (g_value_get_char (v3) == 'd')) {
+	    (g_value_get_schar (v3) == 'd')) {
 		g_print ("GdaSet change accepted\n");
 		return NULL;
 	}
@@ -386,7 +386,7 @@ test5 (GError **error)
 	gda_value_free (value);
 
 	h = gda_set_get_holder (set, "H3");
-	g_value_set_char ((value = gda_value_new (G_TYPE_CHAR)), 'd');
+	g_value_set_schar ((value = gda_value_new (G_TYPE_CHAR)), 'd');
 	if (!gda_holder_set_value (h, value, NULL)) {
 		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "gda_holder_set_value() should not have failed");

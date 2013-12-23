@@ -1596,7 +1596,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			
 			pv = g_new (gchar, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
-			*pv = g_value_get_char (value);
+			*pv = g_value_get_schar (value);
 			fbvar->sqldata = pv;
 			fbvar->sqllen = sizeof (gchar);
 			fbvar->sqlind = flag0;
