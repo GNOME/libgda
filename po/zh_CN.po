@@ -1,5 +1,5 @@
 # Simplified Chinese translation for libgda.
-# Copyright (C) 2002, 2010, 2011 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2010, 2011, 2014 Free Software Foundation, Inc.
 #
 # He Qiangqiang <carton@linux.net.cn>, 2002.
 # YunQiang Su <wzssyqa@gmail.com>, 2010.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-12-19 14:34+0000\n"
+"POT-Creation-Date: 2014-01-19 16:53+0000\n"
 "PO-Revision-Date: 2014-01-05 15:51+0800\n"
 "Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
 "Language-Team: Chinese Simplified <kde-i18n-doc@kde.org>\n"
@@ -245,42 +245,28 @@ msgid "New data source definition"
 msgstr "新数据源定义"
 
 #: ../control-center/gdaui-dsn-assistant.c:436
-#, fuzzy
-#| msgid ""
-#| "This assistant will guide you through the process of\n"
-#| "creating a new data source, and optionally will allow you to\n"
-#| "create a new database.\n"
-#| "\n"
-#| "Just follow the steps!"
 msgid ""
 "This assistant will guide you through the process of creating a new data "
 "source, and optionally will allow you to create a new database.\n"
 "\n"
 "Just follow the steps!"
 msgstr ""
-"此助手将在整个创建新数据源的过程中指导您，并且也允许您\n"
-"创建新数据库。\n"
+"此助手将引导您完成创建新数据源的过程，以及让您创建新数据库。\n"
 "\n"
-"只需要跟随这些步骤！"
+"按步骤操作即可！"
 
 #: ../control-center/gdaui-dsn-assistant.c:442
 msgid "Add a new data source..."
 msgstr "添加一个新数据源..."
 
 #: ../control-center/gdaui-dsn-assistant.c:461
-#, fuzzy
-#| msgid ""
-#| "The following fields represent the basic information items for your new "
-#| "data source. Mandatory fields are marked with a star.\n"
-#| "To create a local database in a file, select the 'SQLite' type of "
-#| "database.\n"
 msgid ""
 "The following fields represent the basic information items for your new data "
 "source. Mandatory fields are marked with a star. To create a local database "
 "in a file, select the 'SQLite' type of database."
 msgstr ""
-"以下字段描述了您的新数据源的基本信息项。必填字段标有星号。\n"
-"要在文件中创建一个本地数据库，请选择“SQLite”类型的数据库。\n"
+"以下字段描述了您的新数据源的基本信息项。必填字段标有星号。要在文件中创建一个"
+"本地数据库，请选择“SQLite”类型的数据库。"
 
 #: ../control-center/gdaui-dsn-assistant.c:469
 msgid "Data source name"
@@ -304,14 +290,10 @@ msgid "General Information"
 msgstr "一般信息"
 
 #: ../control-center/gdaui-dsn-assistant.c:533
-#, fuzzy
-#| msgid ""
-#| "This page lets you choose between using an existing database or to create "
-#| "a new database to use with this new data source\n"
 msgid ""
 "This page lets you choose between using an existing database or to create a "
 "new database to use with this new data source"
-msgstr "此页中您可以选择使用现有数据库或，创建一个带有新数据源的新数据库\n"
+msgstr "此页中您可以选择使用现有数据库或，创建一个带有新数据源的新数据库"
 
 #: ../control-center/gdaui-dsn-assistant.c:538
 msgid "Create a new database:"
@@ -322,36 +304,26 @@ msgid "Create a new database?"
 msgstr "创建一个新数据库？"
 
 #: ../control-center/gdaui-dsn-assistant.c:559
-#, fuzzy
-#| msgid ""
-#| "The following fields represent the information needed to create a new "
-#| "database (mandatory fields are marked with a star).This information is "
-#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to create a new "
 "database (mandatory fields are marked with a star).This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
 "以下字段描述了创建一个新数据库所需的信息(必填字段标有星号)。该信息是针对特定"
-"数据库的，所以请查阅手册了解详细信息。\n"
+"数据库的，所以请查阅手册了解详细信息。"
 
 #: ../control-center/gdaui-dsn-assistant.c:583
 msgid "New database definition"
 msgstr "新数据库定义"
 
 #: ../control-center/gdaui-dsn-assistant.c:595
-#, fuzzy
-#| msgid ""
-#| "The following fields represent the information needed to open a "
-#| "connection (mandatory fields are marked with a star). This information is "
-#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to open a connection "
 "(mandatory fields are marked with a star). This information is database-"
 "specific, so check the manual for more information."
 msgstr ""
 "以下字段描述了打开一个连接时所需的信息(必填字段标有星号)。该信息是针对特定数"
-"据库的，所以请查阅手册了解详细信息。\n"
+"据库的，所以请查阅手册了解详细信息。"
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:608
@@ -370,17 +342,10 @@ msgid "Authentication parameters"
 msgstr "认证参数"
 
 #: ../control-center/gdaui-dsn-assistant.c:643
-#, fuzzy
-#| msgid ""
-#| "All information needed to create a new data source\n"
-#| "has been retrieved. Now, press 'Apply' to close\n"
-#| "this dialog."
 msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
-msgstr ""
-"创建新数据源所需要的所有信息都已经检索。\n"
-"现在“提交”来关闭这个对话框"
+msgstr "创建新数据源所需要的所有信息都已经检索。现在点击“应用”来关闭这个对话框"
 
 #: ../control-center/gdaui-dsn-assistant.c:652
 msgid "Ready to add a new data source"
@@ -534,8 +499,7 @@ msgstr "冲突的参数 '%s'"
 
 #: ../libgda/gda-config.c:382 ../libgda/gda-config.c:408
 #: ../libgda/gda-config.c:532 ../libgda/gda-config.c:557
-#, fuzzy, c-format
-#| msgid "Error loading authentification information for '%s' DSN: %s"
+#, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "载入“%s” DSN 的认证信息出错：%s"
 
@@ -557,8 +521,7 @@ msgstr "格式错误的数据源名称 '%s'"
 
 #: ../libgda/gda-config.c:1067 ../libgda/gda-config.c:1079
 #: ../libgda/gda-config.c:1177
-#, fuzzy, c-format
-#| msgid "Couldn't save authentification information for DSN '%s': %s"
+#, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr "无法保存 DSN %s 的认证信息：%s"
 
@@ -567,8 +530,7 @@ msgid "Can't manage system-wide configuration"
 msgstr "无法管理全系统配置"
 
 #: ../libgda/gda-config.c:1167 ../libgda/gda-config.c:1199
-#, fuzzy, c-format
-#| msgid "Authentification for the '%s' DSN"
+#, c-format
 msgid "Authentication for the '%s' DSN"
 msgstr "“%s” DSN 认证"
 
@@ -692,14 +654,10 @@ msgid ""
 msgstr "提供连接的惟一的 GThread。应该只有数据库提供者的实例才能修改它"
 
 #: ../libgda/gda-connection.c:384
-#, fuzzy
-#| msgid ""
-#| "Tells if the connection acts as a thread wrapper around another "
-#| "connection, making it completely thread safe"
 msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
-msgstr "说明此连接是否作为另一连接的线程封装器，以保证它完全线程安全"
+msgstr "决定此连接是否作为另一连接的线程封装器，以保证它完全线程安全"
 
 #: ../libgda/gda-connection.c:400
 msgid ""
@@ -763,10 +721,8 @@ msgid "Malformed connection string '%s'"
 msgstr "无效的连接字符串 '%s'"
 
 #: ../libgda/gda-connection.c:1288
-#, fuzzy
-#| msgid "No table specified"
 msgid "No database driver specified"
-msgstr "没有指定表"
+msgstr "没有指定数据库驱动"
 
 #: ../libgda/gda-connection.c:1577 ../libgda/gda-connection.c:1579
 msgid "No DSN or connection string specified"
@@ -816,10 +772,9 @@ msgid "Connection is closed"
 msgstr "连接已关闭"
 
 #: ../libgda/gda-connection.c:3287
-#, fuzzy, c-format
-#| msgid "Named transaction is not supported"
+#, c-format
 msgid "Asynchronous execution is not supported"
-msgstr "不支持命名事务"
+msgstr "不支持异步执行"
 
 #: ../libgda/gda-connection.c:3392 ../libgda/gda-connection.c:3485
 #, c-format
@@ -1063,10 +1018,9 @@ msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "'%s' 必须保持为布尔值，已忽略。"
 
 #: ../libgda/gda-data-model.c:1516
-#, fuzzy, c-format
-#| msgid "The '%s' parameter must hold a string value, ignored."
+#, c-format
 msgid "The '%s' parameter must hold an integer value, ignored."
-msgstr "'%s' 必须保持为字符串值，已忽略。"
+msgstr "“%s”参数必须为整数值，已忽略。"
 
 #: ../libgda/gda-data-model.c:1558
 #, c-format
@@ -1134,14 +1088,11 @@ msgstr "无法转储数据模型属性：%s"
 msgid "Could not dump data model's contents: %s"
 msgstr "无法转储数据模型内容：%s"
 
-#: ../libgda/gda-data-model.c:2704
-#, fuzzy
-#| msgid ""
-#| "Data model does not support backward cursor move, not displaying data"
+#: ../libgda/gda-data-model.c:2703
 msgid "Data model does not support backward cursor move"
-msgstr "数据模型不支持后台游标移动，没有正在显示数据"
+msgstr "数据模型不支持后台游标移动"
 
-#: ../libgda/gda-data-model.c:3003
+#: ../libgda/gda-data-model.c:3002
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
@@ -1149,7 +1100,7 @@ msgid "%d row"
 msgid_plural "%d rows"
 msgstr[0] "%d 行"
 
-#: ../libgda/gda-data-model.c:3005
+#: ../libgda/gda-data-model.c:3004
 #, c-format
 msgid "0 row"
 msgstr "0 行"
@@ -1333,15 +1284,14 @@ msgid "Data model does not support random access"
 msgstr "数据模型不支持随机访问"
 
 #: ../libgda/gda-data-model-import.c:1913
-#, fuzzy, c-format
-#| msgid "Row at line %d does not have enough values (which are thus ignored)"
+#, c-format
 msgid "Row at line %d does not have enough values"
 msgstr "第 %d 行(line)的行(row)没有足够的值"
 
 #: ../libgda/gda-data-model-import.c:1918
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
-msgstr "%d 行 (line) 的行 (row) 没有足够的值，使用 NULL 值补全"
+msgstr "%d 行(line)的行(row)没有足够的值，使用 NULL 值补全"
 
 #: ../libgda/gda-data-model-import.c:1943
 #, c-format
@@ -1363,9 +1313,8 @@ msgstr ""
 "安装出了问题。无论如何，GdaDataModelLdap 对象将不可用。"
 
 #: ../libgda/gda-data-pivot.c:494
-#, fuzzy
 msgid "Pivot model not populated"
-msgstr "Pivot 模型未增加"
+msgstr "Pivot 模型未增加(populated)"
 
 #: ../libgda/gda-data-pivot.c:542 ../libgda/gda-data-pivot.c:554
 #: ../libgda/gda-data-pivot.c:606 ../libgda/gda-data-pivot.c:618
@@ -1581,9 +1530,9 @@ msgid ""
 msgstr "修改后无法检索数据，将不允许进一步修改"
 
 #: ../libgda/gda-data-select.c:2307 ../libgda/gda-data-select.c:2317
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change iter's value for column %d: %s"
-msgstr "无法更改对应于列 %d 的迭代器的值：%s"
+msgstr "无法更改第 %d 列的迭代器(iter)的值：%s"
 
 #: ../libgda/gda-data-select.c:2312
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
@@ -1656,7 +1605,6 @@ msgid ""
 msgstr "已经发生了错误，“exec-params”属性返回的值会是错误的：%s"
 
 #: ../libgda/gda-data-select.c:3819
-#| msgid "Whether data model can be modified"
 msgid "Data model has been modified"
 msgstr "数据模型已修改"
 
@@ -1665,7 +1613,6 @@ msgid "Data model contains BLOBs"
 msgstr "数据模型包含 BLOB"
 
 #: ../libgda/gda-data-select.c:3839
-#| msgid "Can't get the number of rows of data model to compare to"
 msgid "Can't get the number of rows of data model"
 msgstr "无法获得数据模型的行数"
 
@@ -1694,15 +1641,15 @@ msgid "(%s): Holder does not allow NULL values"
 msgstr "(%s)：保持器不允许取空(NULL)值"
 
 #: ../libgda/gda-holder.c:1025
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
-msgstr "(%s)：错误的保持器值类型，应为“%s”类型，而值的类型为 '%s'"
+msgstr "(%s)：错误的保持器值(Holder)类型，应为“%s”类型，而值的类型为“%s”"
 
 #: ../libgda/gda-holder.c:1173
-#, fuzzy, c-format
+#, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
-msgstr "(%s)：错误的值类型：应为“%s”类型，而值的类型为 '%s'"
+msgstr "(%s)：错误的值类型：应为“%s”类型，而值的类型为“%s”"
 
 #: ../libgda/gda-holder.c:1649
 #, c-format
@@ -1723,9 +1670,9 @@ msgid "Cannot bind holders if their type is not the same"
 msgstr "保持器类型不同时无法绑定"
 
 #: ../libgda/gda-holder.c:1950
-#, fuzzy, c-format
+#, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
-msgstr "无法创建类型为 %s 的组件"
+msgstr "无法更改 GdaHolder 来匹配绑定的 GdaHolder 的值变化：%s"
 
 #: ../libgda/gda-init.c:133
 msgid "Ignoring attempt to re-initialize GDA library."
@@ -1897,7 +1844,8 @@ msgstr "以一个 '_' 开头的属性名保留做内部使用"
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
-msgstr "无法开始事务，因为已经启动了一个事务；同时进行可能导致 GdaMetaStore 属性问题"
+msgstr ""
+"无法开始事务，因为已经启动了一个事务；同时进行可能导致 GdaMetaStore 属性问题"
 
 #: ../libgda/gda-meta-store.c:4267
 msgid "Could not parse XML description of custom database object to add"
@@ -1965,9 +1913,8 @@ msgstr "GdaMetaStore 对象用以取回信息，从"
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
 #: ../libgda/gda-meta-struct.c:142
-#, fuzzy
 msgid "Features to compute"
-msgstr "要计算的功能"
+msgstr "要计算的功能(Features)"
 
 #: ../libgda/gda-meta-struct.c:844
 #, c-format
@@ -2182,14 +2129,13 @@ msgid ""
 msgstr "用于替换的数据模型必需与它所替换的数据模型具有相同的特征"
 
 #: ../libgda/gda-sql-builder.c:297 ../libgda/gda-sql-builder.c:1397
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown part ID %u"
-msgstr "未知部件 ID %u"
+msgstr "未知部件(part) ID %u"
 
 #: ../libgda/gda-sql-builder.c:301
-#, fuzzy
 msgid "Unknown part type"
-msgstr "未知部件类型"
+msgstr "未知部件(part)类型"
 
 #: ../libgda/gda-sql-builder.c:345
 msgid "SqlBuilder is empty"
@@ -2214,14 +2160,14 @@ msgid "Could not convert value to type '%s', value not defined"
 msgstr "无法将值转换为“%s”类型，值没有定义"
 
 #: ../libgda/gda-sql-builder.c:1310
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown left part target ID %u"
-msgstr "未知的左侧目标部件 ID %u"
+msgstr "未知的左侧部件(part)目标 ID %u"
 
 #: ../libgda/gda-sql-builder.c:1315
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown right part target ID %u"
-msgstr "未知的右侧部件目标 ID %u"
+msgstr "未知的右侧部件(part)目标 ID %u"
 
 #: ../libgda/gda-statement.c:497
 #, c-format
@@ -2278,7 +2224,6 @@ msgid "Join is not in a FROM statement"
 msgstr "Join 不在 FROM 语句中"
 
 #: ../libgda/gda-statement.c:2229
-#, fuzzy
 msgid "Could not find target the join is for"
 msgstr "找不到联合(join)的目标"
 
@@ -2427,22 +2372,19 @@ msgid "The 'first', 'second' and 'third' arguments must be different"
 msgstr "“first”、“second”和“third”参数必须不同"
 
 #: ../libgda/gda-util.c:3070
-#, fuzzy, c-format
-#| msgid "Invalid user name"
+#, c-format
 msgid "Invalid separator '%c'"
-msgstr "无效的用户名"
+msgstr "无效的分隔符“%c”"
 
 #: ../libgda/gda-util.c:3072
-#, fuzzy
-#| msgid "Invalid user name"
 msgid "Invalid null separator"
-msgstr "无效的用户名"
+msgstr "无效的空分隔符"
 
 #: ../libgda/gda-util.c:3110 ../libgda/gda-util.c:3125
 #: ../libgda/gda-util.c:3140
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown GDateDMY value %u"
-msgstr "未知部件 ID %u"
+msgstr "未知 GDateDMY 值 %u"
 
 #: ../libgda/gda-xa-transaction.c:162
 msgid "Global transaction ID can not have more than 64 bytes"
@@ -2482,7 +2424,7 @@ msgstr "二进制表示"
 msgid "Boolean representation"
 msgstr "布尔型表示"
 
-#: ../libgda/handlers/gda-handler-numerical.c:139
+#: ../libgda/handlers/gda-handler-numerical.c:137
 msgid "Numerical representation"
 msgstr "数值表示"
 
@@ -2616,7 +2558,6 @@ msgid "Table to create must have at least one row"
 msgstr "要创建的表必须至少有一行"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
-#| msgid "SQlite binary representation"
 msgid "SQLite binary representation"
 msgstr "SQLite 二进制表示"
 
@@ -2702,10 +2643,9 @@ msgid "Could not register function '%s'"
 msgstr "无法注册函数“%s”"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1051
-#, fuzzy, c-format
-#| msgid "Could not find the '%s' program"
+#, c-format
 msgid "Could not define the %s collation"
-msgstr "无法定义排序规则 %s"
+msgstr "无法定义排序规则(collation) %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1209
 #: ../libgda/sqlite/gda-sqlite-provider.c:1251
@@ -2742,9 +2682,8 @@ msgid "Transactions are not supported in read-only mode"
 msgstr "只读模式中不支持事务"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1887
-#, fuzzy
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
-msgstr "SQLite 不支持指定应用 DISTINCT 条文的字段"
+msgstr "SQLite 不支持指定字段来应用 DISTINCT 条文(clause)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1934
 #: ../libgda/sqlite/gda-sqlite-provider.c:1944
@@ -2753,10 +2692,8 @@ msgid "'%s' compound not supported by SQLite"
 msgstr "SQLite 不支持“%s”复合"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2042
-#, fuzzy
-#| msgid "Operation not supported\n"
 msgid "ILIKE operation not supported"
-msgstr "操作不支持\n"
+msgstr "不支持 ILIKE 操作"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2589
 #: ../providers/jdbc/gda-jdbc-provider.c:1258
@@ -2769,10 +2706,9 @@ msgstr "在准备就绪语句中不允许有未命名的参数"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2714
 #: ../providers/mysql/gda-mysql-provider.c:2068
 #: ../providers/postgres/gda-postgres-provider.c:1865
-#, fuzzy, c-format
-#| msgid "Can't build SELECT statement to get last inserted row: %s)"
+#, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
-msgstr "无法构建 SELECT 语句以获取最后插入的行：%s)"
+msgstr "无法构建 SELECT 语句以获取最后插入的行：%s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2736
 #: ../providers/mysql/gda-mysql-provider.c:2083
@@ -2999,7 +2935,7 @@ msgstr "没有找到要删除的表"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:159
 msgid "Namespace must be specified"
-msgstr "名域必须要指定"
+msgstr "命名空间必须指定"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:211
 msgid "Connection was not represented in hub"
@@ -3526,13 +3462,13 @@ msgid "A currency symbol"
 msgstr "货币符号"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:238
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"类“%s”的控件没有任何关联的 GdaDataHandler(可使用“handler”属性设置)，可能会有"
-"一些异常行为"
+"类“%s”的部件(widget)没有任何关联的 GdaDataHandler，(而使用“handler”属性设置)"
+"可能会有一些异常行为"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:394
 msgid "Value is NULL"
@@ -3761,7 +3697,6 @@ msgid "Format"
 msgstr "格式"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:2
-#, fuzzy
 msgid ""
 "Allowed characters at each position('0':digit, '9': digit except 0, '@':"
 "alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
@@ -3775,11 +3710,11 @@ msgid "Mask"
 msgstr "掩码"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:4
-#, fuzzy
 msgid ""
 "Writing mask for corresponding characters in format ('_': writable, '-':"
 "writable, removed from actual value, ' ': not writable)"
-msgstr "格式中对应字符的写掩码('_'：可写，'-'：可写，从实际值中移除，' '：不可写)"
+msgstr ""
+"格式中对应字符的写掩码('_'：可写，'-'：可写，从实际值中移除，' '：不可写)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -3851,9 +3786,8 @@ msgid "Break lines in between words"
 msgstr "在单词之间断行"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:8
-#, fuzzy
 msgid "Break lines in between words or graphemes"
-msgstr "在单词或字素之间断行"
+msgstr "在单词(words)或字素(graphemes)之间断行"
 
 #: ../libgda-ui/data/server_operation.glade.h:1 ../tools/gda-sql.c:2007
 #: ../tools/gda-sql.c:2097 ../tools/gda-sql.c:2107 ../tools/gda-sql.c:2116
@@ -3934,7 +3868,6 @@ msgid "Show Entry actions"
 msgstr "显示记录操作"
 
 #: ../libgda-ui/gdaui-basic-form.c:314
-#, fuzzy
 msgid "Entries Auto-default"
 msgstr "记录自动默认值"
 
@@ -3970,14 +3903,14 @@ msgstr "“%s”文档解析未成功"
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
 "performed (some errors may occur)"
-msgstr "“%s” DTD 没有解析成功。将不执行 XML 数据布局有效性检查(可能出现某些错误)"
+msgstr ""
+"“%s” DTD 没有解析成功。将不执行 XML 数据布局有效性检查(可能出现某些错误)"
 
 #: ../libgda-ui/gdaui-basic-form.c:2369
-#, fuzzy
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
-msgstr "使用了 gdaui_basic_form_add_to_size_group()，没有计入尺寸组"
+msgstr "尺寸组没有使用 gdaui_basic_form_add_to_size_group() 计入"
 
 #: ../libgda-ui/gdaui-cloud.c:247 ../libgda-ui/gdaui-cloud.c:981
 #, c-format
@@ -5003,7 +4936,6 @@ msgstr "比较方法"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:36
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:15
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:36
-#, fuzzy
 msgid "Collation name (BINARY|NOCASE)"
 msgstr "排序规则名称(BINARY|NOCASE)"
 
@@ -5122,10 +5054,8 @@ msgstr "冲突"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-#, fuzzy
-#| msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
-msgstr "冲突解决方法(ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+msgstr "冲突解决方法(ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
 #. other table constraints
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
@@ -5221,9 +5151,8 @@ msgstr "如果存在"
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
-#, fuzzy
 msgid "Drop index only if it exists"
-msgstr "只有索引存在时才丢弃"
+msgstr "只有索引存在时才丢弃(drop)"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
@@ -5237,9 +5166,8 @@ msgstr "要删除的表"
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
-#, fuzzy
 msgid "Drop table only if it exists"
-msgstr "只有表存在时才丢弃"
+msgstr "只有表存在时才丢弃(drop)"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:1
@@ -5262,9 +5190,8 @@ msgstr "要删除的视图"
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:4
-#, fuzzy
 msgid "Drop view only if it exists"
-msgstr "只有视图存在时才丢弃"
+msgstr "只有视图存在时才丢弃(drop)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:2
@@ -5324,9 +5251,8 @@ msgstr "允许使用额外的排序方法(LOCALE 和 DCASE)"
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:13
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:13
-#, fuzzy
 msgid "With foreign keys"
-msgstr "使用外键"
+msgstr "带外键"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:14
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:14
@@ -5404,10 +5330,8 @@ msgid "Can't read BLOB"
 msgstr "无法读取 BLOB"
 
 #: ../providers/jdbc/gda-jdbc-provider.c:494
-#, fuzzy
-#| msgid "Missing parameter(s) to execute query"
 msgid "Missing parameters to open database connection"
-msgstr "丢失要执行查询的参数"
+msgstr "缺少打开数据库连接的参数"
 
 #: ../providers/jdbc/GdaJValue.c:187
 #, c-format
@@ -5425,10 +5349,8 @@ msgid "The name of a database to connect to"
 msgstr "要连接到的数据库的名称"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:3
-#, fuzzy
-#| msgid "Inheritance"
 msgid "Instance"
-msgstr "继承"
+msgstr "实例"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:4
 msgid ""
@@ -5449,10 +5371,8 @@ msgid "Database server"
 msgstr "数据库服务器"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:6
-#, fuzzy
-#| msgid "Host on which the database server is running"
 msgid "Host on which the database server is running or leave this field empty"
-msgstr "正自 运行数据库服务器的主机"
+msgstr "正在运行数据库服务器的主机或不填"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:7
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
@@ -5467,10 +5387,8 @@ msgid "Port"
 msgstr "端口"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:8
-#, fuzzy
-#| msgid "Database server port"
 msgid "Database server port, 1433 by default"
-msgstr "数据库服务器端口"
+msgstr "数据库服务器端口，默认为 1433"
 
 #: ../providers/jdbc/jdbc_specs_dsn.xml.in.h:1
 msgid "Connection URL"
@@ -5480,7 +5398,7 @@ msgstr "连接 URL"
 msgid ""
 "Connection string required by the JDBC driver, refer to the used JDBC driver "
 "for its contents and format"
-msgstr ""
+msgstr "JDBC 驱动要求的连接字符串，请查阅使用的 JDBC 驱动了解它的内容和格式。"
 
 #: ../providers/jdbc/libmain.c:153 ../providers/jdbc/libmain.c:163
 #, c-format
@@ -5493,8 +5411,6 @@ msgid "Can't create JAVA virtual machine: %s"
 msgstr "无法创建 JAVA 虚拟机：%s"
 
 #: ../providers/jdbc/libmain.c:487
-#, fuzzy
-#| msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr "找不到 JVM 运行时(libjvm.so)，JDBC 提供者无法使用。"
@@ -5578,7 +5494,6 @@ msgid "No GdaLdapEntry specified to compare attributes"
 msgstr "没有为比较属性指定 GdaLdapEntry"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1619
-#, fuzzy
 msgid "GdaLdapEntry specified to compare have different DN"
 msgstr "指定的待比较的 GdaLdapEntry 具有不同的 DN"
 
@@ -5587,6 +5502,8 @@ msgid ""
 "User name, as a DN or simple user name, for Active Directory may be "
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
+"用户名，为 DN 或简单用户名，对活动目录，可能为 username@DOMAIN 或 DOMAIN"
+"\\username"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -5638,7 +5555,6 @@ msgid "Certificates file"
 msgstr "证书文件"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:12
-#, fuzzy
 msgid ""
 "Specifies the file that contains certificates for all of the recognized "
 "Certificate Authorities, in a SSL/TLS session"
@@ -5652,7 +5568,8 @@ msgstr "缓存服务器数据"
 msgid ""
 "Use a cache to store some static server data (the cached files are in the "
 "user's cache directory), default is TRUE"
-msgstr "使用存储来存储一些静态服务器数据(缓存的文件在用户的缓存目录中)，默认为 TRUE"
+msgstr ""
+"使用存储来存储一些静态服务器数据(缓存的文件在用户的缓存目录中)，默认为 TRUE"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Time limit"
@@ -5662,7 +5579,8 @@ msgstr "时间限制"
 msgid ""
 "Time limit after which a search operation should be terminated by the server "
 "(leave undefined or 0 for unlimited)"
-msgstr "搜索操作的时间限制，超时后，搜索操作应被服务器终止(不填或设为 0 则无限制)"
+msgstr ""
+"搜索操作的时间限制，超时后，搜索操作应被服务器终止(不填或设为 0 则无限制)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
@@ -5689,11 +5607,10 @@ msgid "Demand: certificate requested and checked"
 msgstr "要求：要求证书并进行检查"
 
 #: ../providers/ldap/libmain.c:75
-#, fuzzy
 msgid ""
 "Provider for database where tables are based on data contained in an LDAP "
 "directory"
-msgstr "数据库的提供者，数据库中，表基于包含在 LDAP 目录中的数据"
+msgstr "一类数据库的提供者，这类数据库中的表是基于包含在 LDAP 目录中的数据的"
 
 #: ../providers/mdb/gda-mdb-provider.c:279
 #: ../providers/mdb/gda-mdb-provider.c:286
@@ -5757,16 +5674,13 @@ msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr "如果您已经给出了主机或端口，就不能再给定 UNIX 套接字。"
 
 #: ../providers/mysql/gda-mysql-provider.c:513
-#, fuzzy
-#| msgid "Invalid column number %d"
 msgid "Invalid port number"
-msgstr "无效的列号 %d"
+msgstr "无效的端口号"
 
 #: ../providers/mysql/gda-mysql-provider.c:548
-#, fuzzy, c-format
-#| msgid "Unknown provider '%s'"
+#, c-format
 msgid "Unknown MySQL protocol '%s'"
-msgstr "未知的提供者 '%s'"
+msgstr "未知的 MySQL 协议“%s”"
 
 #: ../providers/mysql/gda-mysql-provider.c:593
 #, c-format
@@ -5796,22 +5710,20 @@ msgstr "无法整个读取 BLOB 到内存"
 
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2684
-#, fuzzy, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
+#, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
 msgstr ""
-"无法获取 SQLite BLOB 句柄 (报告的类型是 '%s')，请在 http://bugzilla.gnome."
-"org/ 上为“libgda”产品报告这个 bug。"
+"无法处理的数据类型“%s”，请在 http://bugzilla.gnome.org/ 上为“libgda”产品报告"
+"这个 bug。"
 
 #: ../providers/mysql/gda-mysql-provider.c:2731
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
-msgstr "无法使用 CURSOR。至少需要 Mysql 的 5.0 版本。无论如何都可以使用随机访问。"
+msgstr ""
+"无法使用 CURSOR。至少需要 Mysql 的 5.0 版本。无论如何都可以使用随机访问。"
 
 #: ../providers/mysql/gda-mysql-recordset.c:150
 msgid ""
@@ -5829,10 +5741,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "自从对象创建以来所读取的行块的数目"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:989
-#: ../providers/mysql/gda-mysql-recordset.c:1002
-#: ../providers/mysql/gda-mysql-recordset.c:1015
-#: ../providers/mysql/gda-mysql-recordset.c:1034
+#: ../providers/mysql/gda-mysql-recordset.c:984
+#: ../providers/mysql/gda-mysql-recordset.c:997
+#: ../providers/mysql/gda-mysql-recordset.c:1010
+#: ../providers/mysql/gda-mysql-recordset.c:1029
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "无效的列绑定数据类型。%d\n"
@@ -5858,7 +5770,7 @@ msgstr "类型 %s 没有为值 %d/%d/%d %d:%d:%d.%lu 所映射"
 msgid "Type %s not mapped for value %f"
 msgstr "没有为值 %2$f 映射类型 %1$s"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1024
+#: ../providers/mysql/gda-mysql-recordset.c:1019
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "没有为值 %2$s 映射类型 %1$s"
@@ -5947,10 +5859,8 @@ msgstr "管理员口令"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
-#, fuzzy
-#| msgid "Connection properties"
 msgid "Connection protocol"
-msgstr "连接属性"
+msgstr "连接协议"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
@@ -5960,6 +5870,8 @@ msgid ""
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
+"明确指定要使用的连接协议。在其他参数正常情况下会导致使用不希望的协议时，可使"
+"用它。"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -6211,28 +6123,28 @@ msgstr "自动"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid "TCP: TCP/IP connection to local or remote server."
-msgstr ""
+msgstr "TCP：到本地或远程服务器的 TCP/IP 连接。"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
-msgstr ""
+msgstr "Socket：到本地服务器的 Unix socket 文件连接(仅限本地 Unix 服务器)。"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
-msgstr ""
+msgstr "管道：到本地或远程服务器的命名连接(仅限 Windows 服务器)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
-msgstr ""
+msgstr "内存：到本地服务器的共享内存连接(仅限本地 Windows 服务器)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6488,9 +6400,8 @@ msgid "Example"
 msgstr "例子"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
-#, fuzzy
 msgid "Federated"
-msgstr "联合的"
+msgstr "联合的(Federated)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:120
 msgid "In Memory (MEMORY/HEAP)"
@@ -6530,10 +6441,8 @@ msgid "Compact"
 msgstr "紧凑"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
-#, fuzzy
-#| msgid "Replace it already exists"
 msgid "Replace if it already exists"
-msgstr "替换已经存在的"
+msgstr "若已经存在则替换它"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
@@ -6557,14 +6466,12 @@ msgstr "只有存在时"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
-#, fuzzy
 msgid "Drop database only if it exists"
-msgstr "只在数据库存在的情况下丢弃它"
+msgstr "只在数据库存在时丢弃(drop)它"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
-#, fuzzy
 msgid "Drop table only if it is temporary"
-msgstr "只在表是临时表的情况下丢弃它"
+msgstr "只在表是临时表的情况下丢弃(drop)它"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
@@ -6583,16 +6490,14 @@ msgstr "如何处理引用"
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
-#, fuzzy
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr "自动丢弃依赖该表的对象(CASCADE)"
+msgstr "自动丢弃(drop)依赖该表的对象(CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
-#, fuzzy
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
-msgstr "如果任何对象依赖该表，则拒绝丢弃它(RESTRICT)"
+msgstr "如果任何对象依赖该表，则拒绝丢弃(drop)它(RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:11
 msgid "Compress"
@@ -6661,10 +6566,8 @@ msgid "Insufficient memory to convert string to binary buffer"
 msgstr "没有足够的内存来执行字符串到二进制缓存的转换"
 
 #: ../providers/postgres/gda-postgres-provider.c:524
-#, fuzzy
-#| msgid "could not determine the indexed columns for index"
 msgid "Could not determine the default date format"
-msgstr "无法为索引决定索引列"
+msgstr "无法确定默认日期格式"
 
 #: ../providers/postgres/gda-postgres-provider.c:580
 msgid "The connection string must contain a DB_NAME value"
@@ -6689,12 +6592,12 @@ msgstr "搜索路径 %s 无效"
 #: ../providers/postgres/gda-postgres-provider.c:1174
 #: ../providers/postgres/gda-postgres-provider.c:1176
 msgid "Transactions are not supported in read uncommitted isolation level"
-msgstr ""
+msgstr "在 读未提交隔离(read uncommitted isolation)级别不支持事务"
 
 #: ../providers/postgres/gda-postgres-provider.c:1180
 #: ../providers/postgres/gda-postgres-provider.c:1182
 msgid "Transactions are not supported in repeatable read isolation level"
-msgstr ""
+msgstr "在 可重复读隔离(repeatable read isolation) 级别不支持事务"
 
 #: ../providers/postgres/gda-postgres-provider.c:1199
 #: ../providers/postgres/gda-postgres-provider.c:1297
@@ -6703,7 +6606,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:698
+#: ../providers/postgres/gda-postgres-recordset.c:694
 msgid "Internal error"
 msgstr "内部错误"
 
@@ -6730,18 +6633,16 @@ msgid "Number of rows chunks read since the object creation"
 msgstr "自从对象创建以来所读取的行块的数目"
 
 #: ../providers/postgres/gda-postgres-recordset.c:624
-#, fuzzy, c-format
-#| msgid "Invalid UTF-8 format!"
+#, c-format
 msgid "Invalid date format '%s'"
-msgstr "无效的 UTF-8 格式！"
+msgstr "无效的日期格式“%s”"
 
-#: ../providers/postgres/gda-postgres-recordset.c:692
-#, fuzzy, c-format
-#| msgid "Invalid referenced table name '%s'"
+#: ../providers/postgres/gda-postgres-recordset.c:688
+#, c-format
 msgid "Invalid timestamp value '%s'"
-msgstr "无效的引用表名 '%s'"
+msgstr "无效的时间戳值“%s”"
 
-#: ../providers/postgres/gda-postgres-recordset.c:770
+#: ../providers/postgres/gda-postgres-recordset.c:766
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "无效的二进制字符串表示“%s ...”"
@@ -6751,14 +6652,12 @@ msgid "Provider for PostgreSQL databases"
 msgstr "PostgreSQL 数据库的提供者"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
-#, fuzzy
 msgid "Ignore descendants"
-msgstr "忽略后代"
+msgstr "忽略后代(descendants)"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
-#, fuzzy
 msgid "Don't add the column to descendants of the table"
-msgstr "不要将列添加到表的后代中"
+msgstr "不要将列添加到表的后代(descendants)中"
 
 #. Connection parameters
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
@@ -6854,9 +6753,8 @@ msgstr "朝鲜语 EUC"
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
-#, fuzzy
 msgid "Korean EUC (Hangle base)"
-msgstr "朝鲜语 EUC(基于韩国的)"
+msgstr "韩语 EUC (Hangle base)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
@@ -6991,9 +6889,8 @@ msgid "TCVN-5712/Windows CP1258 (Vietnamese)"
 msgstr "TCVN-5712/Windows CP1258 (越南文)"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
-#, fuzzy
 msgid "Predicate"
-msgstr "谓语"
+msgstr "谓语(Predicate)"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 msgid "Constraint expression for a partial index"
@@ -7231,9 +7128,8 @@ msgid "Parent table"
 msgstr "父表"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
-#, fuzzy
 msgid "Keep coupled"
-msgstr "保持成对"
+msgstr "保持成对(coupled)"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Use INHERIT instead of LIKE"
@@ -7326,44 +7222,37 @@ msgid "What to do with references on the column to delete"
 msgstr "如何处理要删除列的引用"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
-#, fuzzy
 msgid "Automatically drop objects that depend on the column (CASCADE)"
-msgstr "自动丢弃依赖该列的对象(CASCADE)"
+msgstr "自动丢弃(drop)依赖该列的对象(CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
-#, fuzzy
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
-msgstr "如果任何对象依赖该列，则拒绝丢弃该列(RESTRICT)"
+msgstr "如果任何对象依赖该列，则拒绝丢弃(drop)该列(RESTRICT)"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:19
-#, fuzzy
 msgid "The name of a database to drop"
-msgstr "要丢弃的数据库名"
+msgstr "要丢弃(drop)的数据库名"
 
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:5
-#, fuzzy
 msgid "Drop role only if it exists"
-msgstr "只在角色存在的情况下丢弃它"
+msgstr "只在角色存在时丢弃(drop)它"
 
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:5
-#, fuzzy
 msgid "Drop user only if it exists"
-msgstr "只在用户存在情况的情况下丢弃它"
+msgstr "只在用户存在时丢弃(drop)他"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:6
 msgid "What to do with objects referencing the view"
 msgstr "如何处理引用该视图的对象"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:7
-#, fuzzy
 msgid "Automatically drop objects that depend on the view (CASCADE)"
-msgstr "自动丢弃依赖该视图的对象(CASCADE)"
+msgstr "自动丢弃(drop)依赖该视图的对象(CASCADE)"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:8
-#, fuzzy
 msgid "Refuse to drop the view if any objects depend on it (RESTRICT)"
-msgstr "如果任何对象依赖该视图，则拒绝丢弃该视图(RESTRICT)"
+msgstr "如果任何对象依赖该视图，则拒绝丢弃(drop)该视图(RESTRICT)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
 msgid "Search Path"
@@ -7374,16 +7263,15 @@ msgid "Search path among database's schemas ('search_path' variable)"
 msgstr "数据库方案中的搜索路径 ('search_path' 变量)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
-#, fuzzy
-#| msgid "Connections list"
 msgid "Connection timeout"
-msgstr "连接列表"
+msgstr "连接超时"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:14
 msgid ""
 "Maximum wait for connection, in seconds. Zero or not specified means wait "
 "indefinitely. It is not recommended to use a timeout of less than 2 seconds"
 msgstr ""
+"最长的连接等待时间。0 或不指定表示无限期等待。不建议使用短于 2 秒的超时。"
 
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:782
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:845
@@ -7797,8 +7685,6 @@ msgid "Open a connection"
 msgstr "打开连接"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
-#| msgid "_Bind connection"
 msgid "_Bind Connection"
 msgstr "绑定连接(_B)"
 
@@ -7817,8 +7703,6 @@ msgid "Connection properties"
 msgstr "连接属性"
 
 #: ../tools/browser/browser-window.c:286
-#, fuzzy
-#| msgid "_Connections list"
 msgid "_Connections List"
 msgstr "连接列表(_C)"
 
@@ -7827,8 +7711,6 @@ msgid "Connections list"
 msgstr "连接列表"
 
 #: ../tools/browser/browser-window.c:287
-#, fuzzy
-#| msgid "_Fetch meta data"
 msgid "_Fetch Meta Data"
 msgstr "获取元数据(_F)"
 
@@ -7837,8 +7719,6 @@ msgid "Fetch meta data"
 msgstr "获取元数据"
 
 #: ../tools/browser/browser-window.c:288
-#, fuzzy
-#| msgid "_Close connection"
 msgid "_Close Connection"
 msgstr "关闭连接(_C)"
 
@@ -7887,8 +7767,6 @@ msgid "Window"
 msgstr "窗口"
 
 #: ../tools/browser/browser-window.c:294
-#, fuzzy
-#| msgid "_New window"
 msgid "_New Window"
 msgstr "新窗口(_N)"
 
@@ -7897,10 +7775,8 @@ msgid "Open a new window for current connection"
 msgstr "为当前连接打开一个新窗口"
 
 #: ../tools/browser/browser-window.c:295
-#, fuzzy
-#| msgid "New window for _connection"
 msgid "New Window for _Connection"
-msgstr "连接的新窗口(_C)"
+msgstr "为连接新建窗口(_C)"
 
 #: ../tools/browser/browser-window.c:295
 msgid "Open a new window for a connection"
@@ -8179,11 +8055,11 @@ msgid "Declare a foreign key for table '%s'"
 msgstr "为表“%s”声明一个外键"
 
 #: ../tools/browser/common/fk-declare.c:189
-#, fuzzy
 msgid ""
 "define which table is references, which columns are part of the foreign key, "
 "and which column each one references"
-msgstr "定义哪张表是参考的，哪些列是外键的一部分，及各表引用了哪一列"
+msgstr ""
+"定义哪张表是引用(references)，哪些列是外键的一部分，及各(表)分别引用了哪一列"
 
 #: ../tools/browser/common/fk-declare.c:208
 msgid "Foreign key name:"
@@ -8251,7 +8127,6 @@ msgid "Comma"
 msgstr "逗号"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-#, fuzzy
 msgid "Semi colon"
 msgstr "分号"
 
@@ -8411,7 +8286,6 @@ msgid "Virtual connection's properties"
 msgstr "虚拟连接属性"
 
 #: ../tools/browser/connection-binding-properties.c:214
-#, fuzzy
 msgid ""
 "The virtual connection you are about to define can bind tables from an "
 "existing connection as well as bind a data set which will appear as a table "
@@ -8658,8 +8532,6 @@ msgstr "未命名的数据管理器"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:314
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:309
-#, fuzzy
-#| msgid "_Show favorites"
 msgid "_Show Favorites"
 msgstr "显示收藏(_S)"
 
@@ -8679,10 +8551,8 @@ msgid "Manager"
 msgstr "管理器"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
-#, fuzzy
-#| msgid "_New data manager"
 msgid "_New Data Manager"
-msgstr "新管理器(_N)"
+msgstr "新建数据管理器(_N)"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
 msgid "New data manager"
@@ -8755,13 +8625,12 @@ msgid "Id"
 msgstr "Id"
 
 #: ../tools/browser/data-manager/data-source-editor.c:161
-#, fuzzy
 msgid ""
 "Data source's ID\n"
 "(as referenced by other data sources)"
 msgstr ""
 "数据源的 ID\n"
-"(其他数据源所引用的那个)"
+"(由其他数据源所引用的)"
 
 #: ../tools/browser/data-manager/data-source-editor.c:167
 msgid "Data source's description"
@@ -8912,8 +8781,6 @@ msgid "Could not save data: %s"
 msgstr "无法保存数据：%s"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:532
-#, fuzzy
-#| msgid "No title"
 msgid "Non activated"
 msgstr "无一激活"
 
@@ -8953,8 +8820,7 @@ msgid "Search scope:"
 msgstr "搜索范围："
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:522
-#, fuzzy, c-format
-#| msgid "Could not find LDAP entry whith DN '%s'"
+#, c-format
 msgid "Could not find LDAP entry with DN '%s'"
 msgstr "找不到 DN 为“%s”的 LDAP 记录"
 
@@ -8975,30 +8841,24 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#, fuzzy
-#| msgid "_New LDAP entries browser"
 msgid "_New LDAP Entries Browser"
-msgstr "新 LDAP 记录浏览器(_N)"
+msgstr "新建 LDAP 记录浏览器(_N)"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "Open a new LDAP entries browser"
 msgstr "打开一个新 LDAP 记录浏览器"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
-#, fuzzy
-#| msgid "_New LDAP classes browser"
 msgid "_New LDAP Classes Browser"
-msgstr "新 LDAP 类浏览器(_N)"
+msgstr "新建 LDAP 类浏览器(_N)"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "Open a new LDAP classes browser"
 msgstr "打开一个新 LDAP 类浏览器"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
-#, fuzzy
-#| msgid "_New LDAP search"
 msgid "_New LDAP Search"
-msgstr "新 LDAP 搜索(_N)"
+msgstr "新建 LDAP 搜索(_N)"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
 msgid "Open a new LDAP search form"
@@ -9028,8 +8888,6 @@ msgid "Add class to favorites"
 msgstr "添加类到收藏"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:510
-#, fuzzy
-#| msgid "Previous class"
 msgid "Previous Class"
 msgstr "上个类"
 
@@ -9038,8 +8896,6 @@ msgid "Move back to previous LDAP class"
 msgstr "后退到上个 LDAP 类"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:512
-#, fuzzy
-#| msgid "Next class"
 msgid "Next Class"
 msgstr "下个类"
 
@@ -9064,20 +8920,16 @@ msgid "Add entry to favorites"
 msgstr "添加记录到收藏"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:516
-#, fuzzy
-#| msgid "Previous entry"
 msgid "Previous Entry"
-msgstr "上个记录"
+msgstr "上一记录"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:516
 msgid "Move back to previous LDAP entry"
 msgstr "后退到上个 LDAP 记录"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:518
-#, fuzzy
-#| msgid "Next entry"
 msgid "Next Entry"
-msgstr "下个记录"
+msgstr "下一记录"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:518
 msgid "Move to next LDAP entry"
@@ -9131,8 +8983,6 @@ msgid "Virtual table '%s' for this LDAP search has been defined"
 msgstr "此 LDAP 搜索的虚拟表“%s”已经定义"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:466
-#, fuzzy
-#| msgid "Define as table"
 msgid "Define as Table"
 msgstr "定义为表"
 
@@ -9157,6 +9007,7 @@ msgid ""
 "Everytime data is selected from the virtual table which will be created, the "
 "LDAP search will be executed and data returned as the contents of the table."
 msgstr ""
+"每次从待创建的虚拟表中选择数据时，LDAP 搜索将执行，返回的数据将作为表的内容。"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:139
 msgid "Table name:"
@@ -9206,12 +9057,11 @@ msgid ""
 msgstr "无法获取用来保存各连接相关信息的文件的列表：%s\n"
 
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:319
-#, fuzzy, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
+#, c-format
 msgid ""
 "Error while purging files used to store information about each connection: "
 "%s\n"
-msgstr "在冲洗用于保存各个连接信息的文件时出错：%s\n"
+msgstr "在冲洗(purge)用于保存各个连接信息的文件时出错：%s\n"
 
 #: ../tools/browser/mgr-favorites.c:251
 msgid "Multiple statements"
@@ -9407,6 +9257,9 @@ msgid ""
 "accessible, clear the corresponding history item before\n"
 "closing the transaction)."
 msgstr ""
+"在此语句执行期间，一项事务已经自动启动。\n"
+"这通常发生在选择了 blob 时(在 blob 可访问的情况下\n"
+"事务得保持打开，在关闭事务前请清理对应历史)。"
 
 #: ../tools/browser/query-exec/query-console-page.c:1053
 msgid "Statement executed"
@@ -9484,8 +9337,6 @@ msgid "Query"
 msgstr "查询"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:319
-#, fuzzy
-#| msgid "_New editor"
 msgid "_New Editor"
 msgstr "新编辑器(_N)"
 
@@ -9513,6 +9364,8 @@ msgid ""
 "containing data. The parameters required to execute\n"
 "the query will be defined from the row selected in the grid"
 msgstr ""
+"选择此项使该收藏成为一项可从包含数据的网格发起执行的\n"
+"操作。执行该查询的参数将由网格中选择的行定义。"
 
 #: ../tools/browser/query-exec/query-result.c:219
 msgid "Statement:"
@@ -9636,19 +9489,19 @@ msgstr "无法加载图示"
 #: ../tools/browser/schema-browser/table-columns.c:269
 #, c-format
 msgid "Declared foreign key '%s' on "
-msgstr ""
+msgstr "声明的外键“%s”，于"
 
 #: ../tools/browser/schema-browser/table-columns.c:272
 #, c-format
 msgid "Foreign key '%s' on "
-msgstr ""
+msgstr "外键“%s”，于"
 
 #: ../tools/browser/schema-browser/table-columns.c:338
 #, c-format
 msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
-msgstr ""
+msgstr "不兼容的类型：“%s”类型的外键与“%s”类型的主键"
 
 #: ../tools/browser/schema-browser/table-columns.c:387
 #, c-format
@@ -9760,8 +9613,6 @@ msgid "View table's contents"
 msgstr "查看表的内容"
 
 #: ../tools/browser/schema-browser/table-info.c:994
-#, fuzzy
-#| msgid "_Insert data"
 msgid "_Insert Data"
 msgstr "插入数据(_I)"
 
@@ -9770,8 +9621,6 @@ msgid "Insert data into table"
 msgstr "向表中插入数据"
 
 #: ../tools/browser/schema-browser/table-info.c:996
-#, fuzzy
-#| msgid "_Declare foreign key"
 msgid "_Declare Foreign Key"
 msgstr "声明外键(_D)"
 
@@ -9801,6 +9650,8 @@ msgid ""
 "will be displayed in forms. Leave 'Default' to have\n"
 "the default display"
 msgstr ""
+"定义所选列的数据如何在表单中显示。\n"
+"保留“Default”将以默认方式显示"
 
 #: ../tools/browser/schema-browser/table-preferences.c:470
 #: ../tools/browser/schema-browser/table-preferences.c:481
@@ -9819,7 +9670,7 @@ msgstr "预览："
 msgid ""
 "Free form to test the configured\n"
 "data entry"
-msgstr ""
+msgstr "用来测试配置的数据记录的自由表单"
 
 #: ../tools/browser/support.c:194
 msgid "Information:"
@@ -9848,7 +9699,6 @@ msgid "Abstract"
 msgstr "摘要"
 
 #: ../tools/browser/support.c:442
-#, fuzzy
 msgid "Structural"
 msgstr "结构化的"
 
@@ -9857,22 +9707,6 @@ msgid "Auxilliary"
 msgstr "辅助的"
 
 #: ../tools/browser/support.h:117
-#, fuzzy
-#| msgid ""
-#| "<small>This area allows to give values to\n"
-#| "variables defined in the SQL code\n"
-#| "using the following syntax:\n"
-#| "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
-#| "For example:\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-#| "      defines <b>id</b> as a non NULL integer\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-#| "      defines <b>age</b> as a a string\n"
-#| "\n"
-#| "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-#| "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-#| "<tt>blob</tt> and\n"
-#| "<tt>binary</tt></small>"
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -9921,21 +9755,19 @@ msgid "Invalid unnamed command"
 msgstr "无效的未命名命令"
 
 #: ../tools/cmdtool/tool-command.c:282
-#, fuzzy, c-format
-#| msgid "Command '%s' not found\n"
+#, c-format
 msgid "Command '%s' not found"
-msgstr "没有找到命令“%s”\n"
+msgstr "没有找到命令“%s”"
 
 #: ../tools/cmdtool/tool-command.c:313
-#, fuzzy, c-format
-#| msgid "Syntax error at line %d, column %d"
+#, c-format
 msgid "Syntax error after '\\'"
-msgstr "%d 行，%d 列中语法错误"
+msgstr "“\\”之后有语法错误"
 
 #: ../tools/cmdtool/tool-command.c:343
 #, c-format
 msgid "Unbalanced usage of quotes"
-msgstr ""
+msgstr "左右引号不匹配"
 
 #: ../tools/cmdtool/tool-help.c:249 ../tools/cmdtool/tool-help.c:440
 msgid "Usage"
@@ -10013,12 +9845,12 @@ msgstr "非"
 #: ../tools/command-exec.c:716
 #, c-format
 msgid "Could not determine columns of view '%s'"
-msgstr ""
+msgstr "无法确定视图“%s”的列数"
 
 #: ../tools/command-exec.c:720
 #, c-format
 msgid "Could not determine columns of table '%s'"
-msgstr ""
+msgstr "无法确定表格“%s”的列数"
 
 #: ../tools/command-exec.c:733
 #, c-format
@@ -10100,10 +9932,9 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: ../tools/config-info.c:555
-#, fuzzy, c-format
-#| msgid "Unknown provider '%s'"
+#, c-format
 msgid "Unknown criteria '%s'"
-msgstr "未知的提供者 '%s'"
+msgstr "未知的条件“%s”"
 
 #: ../tools/config-info.c:614
 msgid "Failed to remove: "
@@ -10112,7 +9943,7 @@ msgstr "移除失败： "
 #: ../tools/config-info.c:643
 #, c-format
 msgid "No file to purge!"
-msgstr ""
+msgstr "没有要 purge 的文件！"
 
 #: ../tools/gda-list-server-op.c:50
 msgid "Gda server operations list"
@@ -10162,20 +9993,20 @@ msgstr "GDA SQL 控制台版本 "
 msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
 "\" and \"none\")"
-msgstr ""
+msgstr "定义对搜索的 LDAP 如何处理 DN 列(从“dn”、“rdn”和“none”中选择)"
 
 #: ../tools/gda-sql.c:220
 msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
-msgstr ""
+msgstr "定义 LDAP 命令默认获取的 LDAP 属性"
 
 #: ../tools/gda-sql.c:228
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
-msgstr ""
+msgstr "在 CSV 文件的第一行为列名时，设为 TRUE"
 
 #: ../tools/gda-sql.c:234
 msgid "Quote character for CSV format"
-msgstr ""
+msgstr "CSV 格式的引用字符"
 
 #: ../tools/gda-sql.c:240
 msgid "Separator character for CSV format"
@@ -10186,14 +10017,7 @@ msgid "Welcome to the GDA SQL console, version "
 msgstr "欢迎来到 GDA SQL 控制台，版本 "
 
 #: ../tools/gda-sql.c:358
-#, fuzzy, c-format
-#| msgid ""
-#| "Type: %s to show usage and distribution terms\n"
-#| "      %s or %s for help with internal commands\n"
-#| "      %s (or CTRL-D) to quit\n"
-#| "      (the '.' can be replaced by a '\\')\n"
-#| "      or any query terminated by a semicolon\n"
-#| "\n"
+#, c-format
 msgid ""
 "Type: %s to show usage and distribution terms\n"
 "      %s or %s for help with internal commands\n"
@@ -10203,16 +10027,14 @@ msgid ""
 msgstr ""
 "输入：%s 显示用法和颁发条款\n"
 "      %s 或 %s 获取内部命令的帮助\n"
-"      %s (或 CTRL-D) 退出\n"
-"      ('.' 可以用 '\\' 代替)\n"
-"      或任何以 ';' 结尾的查询语句\n"
+"      %s (或 CTRL-D) 退出(“.”可以用“\\”代替)\n"
+"      或任何以“;”结尾的查询语句\n"
 "\n"
 
 #: ../tools/gda-sql.c:413
-#, fuzzy, c-format
-#| msgid "Opening connection '%s' for: %s\n"
+#, c-format
 msgid "Opening connection '%s' for: "
-msgstr "打开连接 '%s'，为：%s\n"
+msgstr "打开连接“%s”，为："
 
 #: ../tools/gda-sql.c:429
 #, c-format
@@ -10220,10 +10042,9 @@ msgid "Can't open connection %d: %s\n"
 msgstr "无法打开连接 %d：%s\n"
 
 #: ../tools/gda-sql.c:444
-#, fuzzy, c-format
-#| msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
+#, c-format
 msgid "Opening connection '%s' (GDA_SQL_CNC environment variable): "
-msgstr "打开连接 '%s'，为：%s (GDA_SQL_CNC environment variable)\n"
+msgstr "正在打开连接“%s”(GDA_SQL_CNC 环境变量)："
 
 #: ../tools/gda-sql.c:459
 #, c-format
@@ -10255,10 +10076,9 @@ msgid "Can't open file '%s' for writing: %s\n"
 msgstr "无法为写入打开文件 '%s'：%s\n"
 
 #: ../tools/gda-sql.c:1103 ../tools/gda-sql.c:1112
-#, fuzzy, c-format
-#| msgid "Can't open pipe '%s': %s\n"
+#, c-format
 msgid "Can't open pipe '%s': %s"
-msgstr "无法打开管道 '%s'：%s\n"
+msgstr "无法打开管道“%s”：%s"
 
 #: ../tools/gda-sql.c:1152
 #, c-format
@@ -10296,6 +10116,7 @@ msgid ""
 "Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
 "MM the month and DD the day\n"
 msgstr ""
+"此连接的数据格式会是：%s%c%s%c%s，其中 YYYY 为年份，MM 为月份，DD 为日\n"
 
 #: ../tools/gda-sql.c:1423
 #, c-format
@@ -10428,10 +10249,9 @@ msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr "启动/停止 嵌入的 HTTP 服务器 (在给定的端口上或默认的 12345 端口)"
 
 #: ../tools/gda-sql.c:2099
-#, fuzzy, c-format
-#| msgid "%s [<CNC_NAME> [<DSN>|<CONNECTION STRING>]]"
+#, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
-msgstr "%s [<CNC_NAME> [<DSN>|<CONNECTION STRING>]]"
+msgstr "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
 
 #: ../tools/gda-sql.c:2100
 msgid "Opens a new connection or lists opened connections"
@@ -10456,6 +10276,8 @@ msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing "
 "SQL commands to be executed across multiple connections and/or datasets)"
 msgstr ""
+"将连接或数据集(<OBJ NAME>)绑定为单个的新连接或数据集(以允许在多个连接和/或数"
+"据集上执行 SQL 命令)"
 
 #: ../tools/gda-sql.c:2125 ../tools/gda-sql.c:2134 ../tools/gda-sql.c:2143
 #: ../tools/gda-sql.c:2152
@@ -10624,10 +10446,8 @@ msgstr "导出内部参数或表的值到 FILE 文件"
 
 #: ../tools/gda-sql.c:2325 ../tools/gda-sql.c:2334 ../tools/gda-sql.c:2343
 #: ../tools/gda-sql.c:2351
-#, fuzzy
-#| msgid "Execution of action"
 msgid "Execution context"
-msgstr "执行上下文"
+msgstr "执行上下文(context)"
 
 #: ../tools/gda-sql.c:2327
 #, c-format
@@ -10687,7 +10507,7 @@ msgstr "%s <DATASET NAME> <PATTERN>"
 
 #: ../tools/gda-sql.c:2372
 msgid "Show a dataset's contents where lines match a regular expression"
-msgstr ""
+msgstr "显示数据集内容中匹配正则表达式的那些行"
 
 #: ../tools/gda-sql.c:2380
 #, c-format
@@ -10698,7 +10518,7 @@ msgstr "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgid ""
 "Show a dataset's contents, showing only the specified columns if any "
 "specified"
-msgstr ""
+msgstr "显示数据集的内容，(若指定列)只显示指定的列"
 
 #: ../tools/gda-sql.c:2389
 #, c-format
@@ -10748,6 +10568,9 @@ msgid ""
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
+"显示以 DN 标识的记录的属性。如果传递了第二个参数“set”，则显示所有已设属性；如"
+"果传递了第二个参数“all”，则未设置属性也将显示；如果传递了第二个参数“unset”，"
+"则只显示未设属性。"
 
 #: ../tools/gda-sql.c:2437
 #, c-format
@@ -10820,23 +10643,22 @@ msgstr "没有找到名为 '%s' 的连接或数据集"
 #. force create of meta store
 #. add existing connections to virtual connection
 #: ../tools/gda-sql.c:3166
-#, fuzzy
 msgid "Bound connections are as:"
-msgstr "绑定连接形如："
+msgstr "绑定连接的形式为："
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
 #: ../tools/gda-sql.c:3179
 #, c-format
 msgid "%s in the '%s' namespace"
-msgstr ""
+msgstr "“%2$s 命名空间中的 %1$s"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/gda-sql.c:3193
 #, c-format
 msgid "%s mapped to the %s table"
-msgstr ""
+msgstr "映射到 %2$s 表的 %1$s"
 
 #: ../tools/gda-sql.c:3268
 #, c-format
@@ -11031,10 +10853,9 @@ msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "未知的对 LDAP 记录属性的操作“%s”"
 
 #: ../tools/gda-sql.c:5285
-#, fuzzy, c-format
-#| msgid "Wrong attribute value specification"
+#, c-format
 msgid "Wrong attribute value specification '%s'"
-msgstr "错误的属性值规定"
+msgstr "错误的属性值规定“%s”"
 
 #: ../tools/gda-sql.c:5341
 msgid "Missing DN (Distinguished name) argument"
