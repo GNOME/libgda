@@ -3,9 +3,11 @@ dnl Copyright 2010 Vivien Malerba
 dnl
 dnl SYNOPSIS
 dnl
-dnl   BDB_CHECK([libdirname])
+dnl   BDB_CHECK([libdirname], [includedirname])
 dnl
 dnl   [libdirname]: defaults to "lib". Can be overridden by the --with-bdb-libdir-name option
+dnl   [includedirname]: defaults to "include". Can be overridden by the
+dnl                     --with-bdb-includedir-name option
 dnl
 dnl DESCRIPTION
 dnl
@@ -15,6 +17,7 @@ dnl
 dnl   It defines two options:
 dnl   --with-bdb=yes/no/<directory>
 dnl   --with-bdb-libdir-name=<dir. name>
+dnl   --with-bdb-includedir-name=<dir. name>
 dnl
 dnl   If the 1st option is "yes" then the macro in several well known directories
 dnl
@@ -27,7 +30,8 @@ dnl
 dnl   If the macro has to try to locate the bdb package in one or more directories, it will
 dnl   try to locate the header files in $dir/include and the library files in $dir/lib, unless
 dnl   the second option is used to specify a directory name to be used instead of "lib" (for
-dnl   example lib64).
+dnl   example lib64), and the third option is used to specify a path name to be used instead
+dnl   of "include" (for example include/db5).
 dnl
 dnl USED VARIABLES
 dnl
@@ -79,6 +83,12 @@ m4_define([_BDB_CHECK_INTERNAL],
 	fi
     fi
 
+    bdb_locincludedir=$2
+    if test "x$bdb_locincludedir" = x
+    then
+        bdb_locincludedir=include
+    fi
+
     # determine if Bdb should be searched for
     # and use pkg-config if the "yes" option is used
     bdb_found=no
@@ -99,6 +109,10 @@ m4_define([_BDB_CHECK_INTERNAL],
               AS_HELP_STRING([--with-bdb-libdir-name[=@<:@<dir. name>@:>@]],
                              [Locate BDB library file, related to the prefix specified from --with-bdb]),
 			     [bdb_loclibdir=$withval])
+    AC_ARG_WITH(bdb-includedir-name,
+              AS_HELP_STRING([--with-bdb-includedir-name[=@<:@<dir. name>@:>@]],
+                             [Locate BDB header file, related to the prefix specified from --with-bdb]),
+			     [bdb_locincludedir=$withval])
 
     # try to locate files
     if test $try_bdb = true
@@ -145,11 +159,11 @@ m4_define([_BDB_CHECK_INTERNAL],
 
 		for db_hdr in $try_headers
 		do
-		    #echo "Checking for files $d/include/$db_hdr and $db_libfile"
-		    if test -f $d/include/$db_hdr -a -f $db_libfile
+		    #echo "Checking for files $d/$bdb_locincludedir/$db_hdr and $db_libfile"
+		    if test -f $d/$bdb_locincludedir/$db_hdr -a -f $db_libfile
 		    then
   	                save_CFLAGS="$CFLAGS"
-	                CFLAGS="$CFLAGS -I$d/include"
+	                CFLAGS="$CFLAGS -I$d/$bdb_locincludedir"
   	                save_LIBS="$LIBS"
 	                LIBS="$LIBS -L$d/$bdb_loclibdir $db_lib"
    	                AC_LINK_IFELSE([AC_LANG_SOURCE([
@@ -181,7 +195,7 @@ int main() {
 		else
 		    AC_MSG_RESULT([found version $version])
 		fi
-		BDB_CFLAGS=-I${bdbdir}/include
+		BDB_CFLAGS=-I${bdbdir}/$bdb_locincludedir
 	    	BDB_LIBS="-L${bdbdir}/$bdb_loclibdir $db_lib"
 		BDB_LIB=$db_libfilename
 		BDB_DIR="$bdbdir"
@@ -232,10 +246,10 @@ m4_define([_BDBSQL_CHECK_INTERNAL],
     if test "x$BDB_DIR" != x
     then
         AC_MSG_CHECKING([for Berkeley DB SQL files along with found BDB installation])
-	#echo "Checking $BDB_DIR/include/dbsql.h and $BDB_DIR/include/libdb/dbsql.h"
-	if test -f $BDB_DIR/include/dbsql.h -o -f $BDB_DIR/include/libdb/dbsql.h
+	#echo "Checking $BDB_DIR/$bdb_locincludedir/dbsql.h and $BDB_DIR/$bdb_locincludedir/libdb/dbsql.h"
+	if test -f $BDB_DIR/$bdb_locincludedir/dbsql.h -o -f $BDB_DIR/$bdb_locincludedir/libdb/dbsql.h
 	then
-	    if test -f $BDB_DIR/include/libdb/dbsql.h
+	    if test -f $BDB_DIR/$bdb_locincludedir/libdb/dbsql.h
 	    then
 	        BDBSQL_CFLAGS="$BDB_CFLAGS/libdb"
 	    else
@@ -266,10 +280,10 @@ m4_define([_BDBSQL_CHECK_INTERNAL],
 
 
 dnl Usage:
-dnl   BDB_CHECK([libdirname])
+dnl   BDB_CHECK([libdirname], [includedirname])
 
 AC_DEFUN([BDB_CHECK],
 [
-    _BDB_CHECK_INTERNAL([$1])
-    _BDBSQL_CHECK_INTERNAL([$1])
+    _BDB_CHECK_INTERNAL([$1], [$2])
+    _BDBSQL_CHECK_INTERNAL([$1], [$2])
 ])
