@@ -44,7 +44,7 @@
 	</para>
       </sect1>
 
-      <sect1 id="gen:sql_identifiers">
+      <sect1 id="gen_sql_identifiers">
 	<title>SQL identifiers</title>
 	<para>
 	  The SQL standard has never defined if SQL identifiers (database object's names) have to be case sensitive

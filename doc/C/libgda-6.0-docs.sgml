@@ -990,7 +990,7 @@ g_object_unref (store);
 	<sect2 id="information_schema:sql_identifiers">
 	  <title>SQL identifiers</title>
 	  <para>
-	    Please refer to the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> section
+	    Please refer to the <link linkend="gen_sql_identifiers">SQL identifiers and abstraction</link> section
 	    for an overview of how SQL identifiers are handled thoughout &LIBGDA;
 	  </para> 
 	  <para>
