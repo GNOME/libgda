@@ -43,6 +43,7 @@
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/gda-server-operation-private.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-provider.h"
@@ -243,8 +244,6 @@ pending_blobs_free_list (GSList *blist)
 	g_slist_free (blist);
 }
 
-/* TMP */
-
 /*
  * GObject methods
  */
@@ -258,9 +257,9 @@ static GObjectClass *parent_class = NULL;
  */
 /* connection management */
 static gboolean            gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-								GdaQuarkList *params, GdaQuarkList *auth,
-								guint *task_id,
-								GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+								GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean            gda_sqlite_provider_prepare_connection (GdaServerProvider *provider,
+								   GdaConnection *cnc, GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean            gda_sqlite_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_sqlite_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_sqlite_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
@@ -275,9 +274,7 @@ static gchar              *gda_sqlite_provider_render_operation (GdaServerProvid
 								 GdaServerOperation *op, GError **error);
 
 static gboolean            gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-								  GdaServerOperation *op, guint *task_id,
-								  GdaServerProviderAsyncCallback async_cb,
-								  gpointer cb_data, GError **error);
+								  GdaServerOperation *op, GError **error);
 /* transactions */
 static gboolean            gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
 								  const gchar *name, GdaTransactionIsolation level,
@@ -295,9 +292,10 @@ static gboolean            gda_sqlite_provider_delete_savepoint (GdaServerProvid
 
 /* information retrieval */
 static const gchar        *gda_sqlite_provider_get_version (GdaServerProvider *provider);
-static gboolean            gda_sqlite_provider_supports (GdaServerProvider *provider, GdaConnection *cnc,
-							 GdaConnectionFeature feature);
+static gboolean            gda_sqlite_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
+								 GdaConnectionFeature feature);
 
+static GdaWorker          *gda_sqlite_provider_create_worker (GdaServerProvider *provider);
 static const gchar        *gda_sqlite_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -316,10 +314,8 @@ static gboolean             gda_sqlite_provider_statement_prepare (GdaServerProv
 static GObject             *gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaStatement *stmt, GdaSet *params,
 								   GdaStatementModelUsage model_usage,
-								   GType *col_types, GdaSet **last_inserted_row,
-								   guint *task_id, GdaServerProviderExecCallback async_cb,
-								   gpointer cb_data, GError **error);
-static GdaSqlStatement     *gda_sqlite_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								   GType *col_types, GdaSet **last_inserted_row, GError **error);
+static GdaSqlStatement     *gda_sqlite_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* string escaping */
@@ -465,6 +461,91 @@ get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos
 /*
  * GdaSqliteProvider class implementation
  */
+GdaServerProviderBase sqlite_base_functions = {
+	gda_sqlite_provider_get_name,
+	gda_sqlite_provider_get_version,
+	gda_sqlite_provider_get_server_version,
+	gda_sqlite_provider_supports_feature,
+	gda_sqlite_provider_create_worker,
+	NULL,
+	gda_sqlite_provider_create_parser,
+	gda_sqlite_provider_get_data_handler,
+	gda_sqlite_provider_get_default_dbms_type,
+	gda_sqlite_provider_supports_operation,
+	gda_sqlite_provider_create_operation,
+	gda_sqlite_provider_render_operation,
+	gda_sqlite_provider_statement_to_sql,
+	NULL,
+	gda_sqlite_provider_statement_rewrite,
+	gda_sqlite_provider_open_connection,
+	gda_sqlite_provider_prepare_connection,
+	gda_sqlite_provider_close_connection,
+	gda_sqlite_provider_escape_string,
+	gda_sqlite_provider_unescape_string,
+	gda_sqlite_provider_get_database,
+	gda_sqlite_provider_perform_operation,
+	gda_sqlite_provider_begin_transaction,
+	gda_sqlite_provider_commit_transaction,
+	gda_sqlite_provider_rollback_transaction,
+	gda_sqlite_provider_add_savepoint,
+	gda_sqlite_provider_rollback_savepoint,
+	gda_sqlite_provider_delete_savepoint,
+	gda_sqlite_provider_statement_prepare,
+	gda_sqlite_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderMeta sqlite_meta_functions = {
+	_gda_sqlite_meta__info,
+	_gda_sqlite_meta__btypes,
+	_gda_sqlite_meta__udt,
+	_gda_sqlite_meta_udt,
+	_gda_sqlite_meta__udt_cols,
+	_gda_sqlite_meta_udt_cols,
+	_gda_sqlite_meta__enums,
+	_gda_sqlite_meta_enums,
+	_gda_sqlite_meta__domains,
+	_gda_sqlite_meta_domains,
+	_gda_sqlite_meta__constraints_dom,
+	_gda_sqlite_meta_constraints_dom,
+	_gda_sqlite_meta__el_types,
+	_gda_sqlite_meta_el_types,
+	_gda_sqlite_meta__collations,
+	_gda_sqlite_meta_collations,
+	_gda_sqlite_meta__character_sets,
+	_gda_sqlite_meta_character_sets,
+	_gda_sqlite_meta__schemata,
+	_gda_sqlite_meta_schemata,
+	_gda_sqlite_meta__tables_views,
+	_gda_sqlite_meta_tables_views,
+	_gda_sqlite_meta__columns,
+	_gda_sqlite_meta_columns,
+	_gda_sqlite_meta__view_cols,
+	_gda_sqlite_meta_view_cols,
+	_gda_sqlite_meta__constraints_tab,
+	_gda_sqlite_meta_constraints_tab,
+	_gda_sqlite_meta__constraints_ref,
+	_gda_sqlite_meta_constraints_ref,
+	_gda_sqlite_meta__key_columns,
+	_gda_sqlite_meta_key_columns,
+	_gda_sqlite_meta__check_columns,
+	_gda_sqlite_meta_check_columns,
+	_gda_sqlite_meta__triggers,
+	_gda_sqlite_meta_triggers,
+	_gda_sqlite_meta__routines,
+	_gda_sqlite_meta_routines,
+	_gda_sqlite_meta__routine_col,
+	_gda_sqlite_meta_routine_col,
+	_gda_sqlite_meta__routine_par,
+	_gda_sqlite_meta_routine_par,
+	_gda_sqlite_meta__indexes_tab,
+        _gda_sqlite_meta_indexes_tab,
+        _gda_sqlite_meta__index_cols,
+        _gda_sqlite_meta_index_cols,
+
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* padding */
+};
 
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
@@ -473,101 +554,16 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	provider_class->get_version = gda_sqlite_provider_get_version;
-	provider_class->get_server_version = gda_sqlite_provider_get_server_version;
-	provider_class->get_name = gda_sqlite_provider_get_name;
-	provider_class->supports_feature = gda_sqlite_provider_supports;
-
-	provider_class->get_data_handler = gda_sqlite_provider_get_data_handler;
-	provider_class->get_def_dbms_type = gda_sqlite_provider_get_default_dbms_type;
-
-	provider_class->create_connection = NULL;
-	provider_class->identifier_quote = _gda_sqlite_identifier_quote;
-	provider_class->open_connection = gda_sqlite_provider_open_connection;
-	provider_class->close_connection = gda_sqlite_provider_close_connection;
-	provider_class->get_database = gda_sqlite_provider_get_database;
-
-	provider_class->supports_operation = gda_sqlite_provider_supports_operation;
-        provider_class->create_operation = gda_sqlite_provider_create_operation;
-        provider_class->render_operation = gda_sqlite_provider_render_operation;
-        provider_class->perform_operation = gda_sqlite_provider_perform_operation;
-
-	provider_class->begin_transaction = gda_sqlite_provider_begin_transaction;
-	provider_class->commit_transaction = gda_sqlite_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_sqlite_provider_rollback_transaction;
-	provider_class->add_savepoint = gda_sqlite_provider_add_savepoint;
-	provider_class->rollback_savepoint = gda_sqlite_provider_rollback_savepoint;
-	provider_class->delete_savepoint = gda_sqlite_provider_delete_savepoint;
-
-	provider_class->create_parser = gda_sqlite_provider_create_parser;
-	provider_class->statement_to_sql = gda_sqlite_provider_statement_to_sql;
-	provider_class->statement_prepare = gda_sqlite_provider_statement_prepare;
-	provider_class->statement_execute = gda_sqlite_provider_statement_execute;
-	provider_class->statement_rewrite = gda_sqlite_statement_rewrite;
-
-	provider_class->escape_string = gda_sqlite_provider_escape_string;
-	provider_class->unescape_string = gda_sqlite_provider_unescape_string;
-
-	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_sqlite_meta__info;
-	provider_class->meta_funcs._btypes = _gda_sqlite_meta__btypes;
-	provider_class->meta_funcs._udt = _gda_sqlite_meta__udt;
-	provider_class->meta_funcs.udt = _gda_sqlite_meta_udt;
-	provider_class->meta_funcs._udt_cols = _gda_sqlite_meta__udt_cols;
-	provider_class->meta_funcs.udt_cols = _gda_sqlite_meta_udt_cols;
-	provider_class->meta_funcs._enums = _gda_sqlite_meta__enums;
-	provider_class->meta_funcs.enums = _gda_sqlite_meta_enums;
-	provider_class->meta_funcs._domains = _gda_sqlite_meta__domains;
-	provider_class->meta_funcs.domains = _gda_sqlite_meta_domains;
-	provider_class->meta_funcs._constraints_dom = _gda_sqlite_meta__constraints_dom;
-	provider_class->meta_funcs.constraints_dom = _gda_sqlite_meta_constraints_dom;
-	provider_class->meta_funcs._el_types = _gda_sqlite_meta__el_types;
-	provider_class->meta_funcs.el_types = _gda_sqlite_meta_el_types;
-	provider_class->meta_funcs._collations = _gda_sqlite_meta__collations;
-	provider_class->meta_funcs.collations = _gda_sqlite_meta_collations;
-	provider_class->meta_funcs._character_sets = _gda_sqlite_meta__character_sets;
-	provider_class->meta_funcs.character_sets = _gda_sqlite_meta_character_sets;
-	provider_class->meta_funcs._schemata = _gda_sqlite_meta__schemata;
-	provider_class->meta_funcs.schemata = _gda_sqlite_meta_schemata;
-	provider_class->meta_funcs._tables_views = _gda_sqlite_meta__tables_views;
-	provider_class->meta_funcs.tables_views = _gda_sqlite_meta_tables_views;
-	provider_class->meta_funcs._columns = _gda_sqlite_meta__columns;
-	provider_class->meta_funcs.columns = _gda_sqlite_meta_columns;
-	provider_class->meta_funcs._view_cols = _gda_sqlite_meta__view_cols;
-	provider_class->meta_funcs.view_cols = _gda_sqlite_meta_view_cols;
-	provider_class->meta_funcs._constraints_tab = _gda_sqlite_meta__constraints_tab;
-	provider_class->meta_funcs.constraints_tab = _gda_sqlite_meta_constraints_tab;
-	provider_class->meta_funcs._constraints_ref = _gda_sqlite_meta__constraints_ref;
-	provider_class->meta_funcs.constraints_ref = _gda_sqlite_meta_constraints_ref;
-	provider_class->meta_funcs._key_columns = _gda_sqlite_meta__key_columns;
-	provider_class->meta_funcs.key_columns = _gda_sqlite_meta_key_columns;
-	provider_class->meta_funcs._check_columns = _gda_sqlite_meta__check_columns;
-	provider_class->meta_funcs.check_columns = _gda_sqlite_meta_check_columns;
-	provider_class->meta_funcs._triggers = _gda_sqlite_meta__triggers;
-	provider_class->meta_funcs.triggers = _gda_sqlite_meta_triggers;
-	provider_class->meta_funcs._routines = _gda_sqlite_meta__routines;
-	provider_class->meta_funcs.routines = _gda_sqlite_meta_routines;
-	provider_class->meta_funcs._routine_col = _gda_sqlite_meta__routine_col;
-	provider_class->meta_funcs.routine_col = _gda_sqlite_meta_routine_col;
-	provider_class->meta_funcs._routine_par = _gda_sqlite_meta__routine_par;
-	provider_class->meta_funcs.routine_par = _gda_sqlite_meta_routine_par;
-	provider_class->meta_funcs._indexes_tab = _gda_sqlite_meta__indexes_tab;
-        provider_class->meta_funcs.indexes_tab = _gda_sqlite_meta_indexes_tab;
-        provider_class->meta_funcs._index_cols = _gda_sqlite_meta__index_cols;
-        provider_class->meta_funcs.index_cols = _gda_sqlite_meta_index_cols;
-
-	/* SQLite doe not support distributed transactions */
-	provider_class->xa_funcs = NULL;
-
-	/* If SQLite was not compiled with the SQLITE_THREADSAFE flag, then it is not
-	 * considered thread safe, and we limit the usage of the provider from the current thread */
-	if (! SQLITE3_CALL (sqlite3_threadsafe) ()) {
-		gda_log_message ("SQLite was not compiled with the SQLITE_THREADSAFE flag, "
-				 "only one thread can access the provider");
-		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
-	}
-	else
-		provider_class->limiting_thread = NULL;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &sqlite_base_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META,
+						(gpointer) &sqlite_meta_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
+						NULL);
 }
 
 static void
@@ -645,6 +641,21 @@ gda_sqlite_provider_get_type (void)
 	return type;
 }
 
+static GdaWorker *
+gda_sqlite_provider_create_worker (GdaServerProvider *provider)
+{
+	static GdaWorker *unique_worker = NULL;
+	if (unique_worker)
+		return gda_worker_ref (unique_worker);
+
+	if (SQLITE3_CALL (sqlite3_threadsafe) ())
+		return gda_worker_new ();
+	else {
+		unique_worker = gda_worker_new ();
+		return gda_worker_ref (unique_worker);
+	}
+}
+
 /*
  * Get provider name request
  */
@@ -717,31 +728,21 @@ remove_diacritics_and_change_case (const gchar *str, gssize len, CaseModif cmod)
  */
 static gboolean
 gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
-				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data)
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth)
 {
 	gchar *filename = NULL;
 	const gchar *dirname = NULL, *dbname = NULL;
 	const gchar *is_virtual = NULL;
 	const gchar *append_extension = NULL;
-	const gchar *use_extra_functions = NULL, *with_fk = NULL, *regexp, *locale_collate, *extensions;
 	gint errmsg;
 	SqliteConnectionData *cdata;
 	gchar *dup = NULL;
-	static GMutex cnc_mutex;
 #ifdef SQLITE_HAS_CODEC
 	const gchar *passphrase = NULL;
 #endif
 
 	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
-
-	g_mutex_lock (&cnc_mutex);
 
 	/* get all parameters received */
 	dirname = gda_quark_list_find (params, "DB_DIR");
@@ -750,14 +751,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	dbname = gda_quark_list_find (params, "DB_NAME");
 	append_extension = gda_quark_list_find (params, "APPEND_DB_EXTENSION");
 	is_virtual = gda_quark_list_find (params, "_IS_VIRTUAL");
-	with_fk = gda_quark_list_find (params, "FK");
-	use_extra_functions = gda_quark_list_find (params, "EXTRA_FUNCTIONS");
-	if (!use_extra_functions)
-		use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
-
-	regexp = gda_quark_list_find (params, "REGEXP");
-	locale_collate = gda_quark_list_find (params, "EXTRA_COLLATIONS");
-	extensions = gda_quark_list_find (params, "EXTENSIONS");
 
 	if (! is_virtual) {
 		if (!dbname) {
@@ -767,7 +760,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			if (!str) {
 				gda_connection_add_event_string (cnc,
 								 _("The connection string must contain DB_DIR and DB_NAME values"));
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 			else {
@@ -797,7 +789,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 									   "DB_DIR (the path to the database file) and DB_NAME "
 									   "(the database file without the '%s' at the end)."), FILE_EXTENSION);
 					g_free (dup);
-					g_mutex_unlock (&cnc_mutex);
 					return FALSE;
 				}
 				else
@@ -819,7 +810,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 _("The DB_DIR part of the connection string must point "
 								   "to a valid directory"));
 				g_free (dup);
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 
@@ -864,7 +854,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		gda_connection_add_event_string (cnc, SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 		gda_sqlite_free_cnc_data (cdata);
 
-		g_mutex_unlock (&cnc_mutex);
 		return FALSE;
 	}
 
@@ -880,13 +869,32 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		if (errmsg != SQLITE_OK) {
 			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
 #endif
 
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_sqlite_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, (GdaServerProviderConnectionData*) cdata,
+						   (GDestroyNotify) gda_sqlite_free_cnc_data);
+	return TRUE;
+}
+
+static gboolean
+gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth)
+{
+	SqliteConnectionData *cdata;
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
+	if (!cdata)
+		return FALSE;
+
+	const gchar *use_extra_functions = NULL, *with_fk = NULL, *regexp, *locale_collate, *extensions;
+	with_fk = gda_quark_list_find (params, "FK");
+	use_extra_functions = gda_quark_list_find (params, "EXTRA_FUNCTIONS");
+	if (!use_extra_functions)
+		use_extra_functions = gda_quark_list_find (params, "LOAD_GDA_FUNCTIONS");
+	regexp = gda_quark_list_find (params, "REGEXP");
+	locale_collate = gda_quark_list_find (params, "EXTRA_COLLATIONS");
+	extensions = gda_quark_list_find (params, "EXTENSIONS");
 
 	/* use extended result codes */
 	SQLITE3_CALL (sqlite3_extended_result_codes) (cdata->connection, 1);
@@ -901,7 +909,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 		else {
 			gda_connection_add_event_string (cnc, _("Extension loading is not supported"));
 			gda_sqlite_free_cnc_data (cdata);
-			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -909,7 +916,8 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	/* try to prepare all the internal statements */
 	InternalStatementItem i;
 	for (i = INTERNAL_PRAGMA_INDEX_LIST; i < sizeof (internal_sql) / sizeof (gchar*); i++)
-		gda_connection_statement_prepare (cnc, internal_stmt[i], NULL);
+		gda_connection_statement_prepare (cnc, internal_stmt[i], NULL); /* Note: some may fail because
+											   * the SQL cannot be "prepared" */
 
 	/* set SQLite library options */
 	GObject *obj;
@@ -947,7 +955,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			SQLITE3_CALL (sqlite3_free) (errmsg);
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -972,7 +979,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 			gda_sqlite_free_cnc_data (cdata);
 			gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-			g_mutex_unlock (&cnc_mutex);
 			return FALSE;
 		}
 	}
@@ -985,7 +991,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL,
 							(GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1013,7 +1018,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1033,7 +1037,6 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
@@ -1052,18 +1055,11 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
 				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
-				g_mutex_unlock (&cnc_mutex);
 				return FALSE;
 			}
 		}
 	}
 
-	if (SQLITE3_CALL (sqlite3_threadsafe) ())
-		g_object_set (G_OBJECT (cnc), "thread-owner", NULL, NULL);
-	else
-		g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
-
-	g_mutex_unlock (&cnc_mutex);
 	return TRUE;
 }
 
@@ -1141,7 +1137,7 @@ gda_sqlite_provider_get_database (GdaServerProvider *provider, GdaConnection *cn
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 	return cdata->file;
@@ -1305,17 +1301,9 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
  */
 static gboolean
 gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-                                      GdaServerOperation *op, G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				       G_GNUC_UNUSED gpointer cb_data, GError **error)
+				       GdaServerOperation *op, GError **error)
 {
         GdaServerOperationType optype;
-
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			      "%s", _("Provider does not support asynchronous server operation"));
-                return FALSE;
-	}
-
         optype = gda_server_operation_get_op_type (op);
 	switch (optype) {
 	case GDA_SERVER_OPERATION_CREATE_DB: {
@@ -1667,9 +1655,9 @@ gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
  * Feature support request
  */
 static gboolean
-gda_sqlite_provider_supports (GdaServerProvider *provider,
-			      GdaConnection *cnc,
-			      GdaConnectionFeature feature)
+gda_sqlite_provider_supports_feature (GdaServerProvider *provider,
+				      GdaConnection *cnc,
+				      GdaConnectionFeature feature)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1685,8 +1673,6 @@ gda_sqlite_provider_supports (GdaServerProvider *provider,
 	case GDA_CONNECTION_FEATURE_VIEWS :
 	case GDA_CONNECTION_FEATURE_PROCEDURES :
 		return TRUE;
-	case GDA_CONNECTION_FEATURE_MULTI_THREADING:
-		return SQLITE3_CALL (sqlite3_threadsafe) () ? TRUE : FALSE;
 	default:
 		return FALSE;
 	}
@@ -2853,7 +2839,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 		if (rowid >= 0) {
 			/*g_print ("Filling BLOB @ %s.%s.%s, rowID %ld\n", pb->db, pb->table, pb->column, rowid);*/
 			GdaSqliteBlobOp *bop;
-			bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
+			bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cnc, pb->db, pb->table, pb->column, rowid);
 			if (!bop) {
 				cstr =  _("Can't create SQLite BLOB handle");
 				goto blobs_out;
@@ -2890,7 +2876,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 					goto blobs_out;
 				}
 				GdaSqliteBlobOp *bop;
-				bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cdata, pb->db, pb->table, pb->column, rowid);
+				bop = (GdaSqliteBlobOp*) _gda_sqlite_blob_op_new (cnc, pb->db, pb->table, pb->column, rowid);
 				if (!bop) {
 					cstr =  _("Can't create SQLite BLOB handle");
 					g_object_unref (model);
@@ -2938,9 +2924,7 @@ static GObject *
 gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				       GdaStatement *stmt, GdaSet *params,
 				       GdaStatementModelUsage model_usage,
-				       GType *col_types, GdaSet **last_inserted_row,
-				       guint *task_id, GdaServerProviderExecCallback async_cb,
-				       gpointer cb_data, GError **error)
+				       GType *col_types, GdaSet **last_inserted_row, GError **error)
 {
 	GdaSqlitePStmt *ps;
 	SqliteConnectionData *cdata;
@@ -2952,12 +2936,6 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			      "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-	}
 
 	allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
 		(gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
@@ -3144,9 +3122,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			res = gda_sqlite_provider_statement_execute (provider, cnc,
 								     rstmt, params,
 								     model_usage,
-								     col_types, last_inserted_row,
-								     task_id,
-								     async_cb, cb_data, error);
+								     col_types, last_inserted_row, error);
 			g_object_unref (rstmt);
 			return res;
 		}
@@ -3191,9 +3167,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 									     rstmt, params,
 									     model_usage,
 									     col_types,
-									     last_inserted_row,
-									     task_id, async_cb,
-									     cb_data, error);
+									     last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
@@ -3578,8 +3552,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
  * Removes any default value inserted or updated
  */
 static GdaSqlStatement *
-gda_sqlite_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
-			      GdaStatement *stmt, GdaSet *params, GError **error)
+gda_sqlite_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				       GdaStatement *stmt, GdaSet *params, GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

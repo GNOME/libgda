@@ -3072,7 +3072,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	vcnc = proxy->priv->filter_vcnc;
 	if (!vcnc) {
 		GError *lerror = NULL;
-		vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
+		vcnc = gda_virtual_connection_open (virtual_provider, GDA_CONNECTION_OPTIONS_NONE, &lerror);
 		if (! vcnc) {
 			g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
 			if (lerror)
@@ -3217,9 +3217,9 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		if (proxy->priv->filter_stmt)
 			g_object_unref (proxy->priv->filter_stmt);
 		proxy->priv->filter_stmt = NULL;
+		gda_mutex_unlock (proxy->priv->mutex);
 
 		gboolean retval = apply_filter_statement (proxy, error);
-		gda_mutex_unlock (proxy->priv->mutex);
 		return retval;
 	}
 
@@ -3262,8 +3262,8 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		g_object_unref (proxy->priv->filter_stmt);
 	proxy->priv->filter_stmt = stmt;
 
-	gboolean retval = apply_filter_statement (proxy, error);
 	gda_mutex_unlock (proxy->priv->mutex);
+	gboolean retval = apply_filter_statement (proxy, error);
 	return retval;
 }
 

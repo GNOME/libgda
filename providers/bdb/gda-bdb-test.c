@@ -91,9 +91,17 @@ gda_stuff (gpointer filename)
 	cncstring = g_strdup_printf ("DB_NAME=%s", (gchar *) filename);
 
 	/* connect to the db */
-	cnc = gda_connection_open_from_string ("Berkeley-DB", cncstring, NULL, 0, &error);
+	cnc = gda_connection_new_from_string ("Berkeley-DB", cncstring, NULL, 0, &error);
 	if (!cnc) {
+		g_print ("Could not create connection; %s\n", error && error->message ? error->message : "no detail");
+		g_clear_error (&error);
+		exit (1);
+	}
+
+	if (! gda_connection_open (cnc, &error)) {
 		g_print ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
+		g_clear_error (&error);
+		g_object_unref (cnc);
 		exit (1);
 	}
 
@@ -143,7 +151,7 @@ gda_stuff (gpointer filename)
 #endif
 
 	/* disconnect, remove dsn & quit */
-	gda_connection_close (cnc);
+	gda_connection_close (cnc, NULL);
 }
 
 int main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)

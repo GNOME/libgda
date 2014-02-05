@@ -97,15 +97,21 @@ test_h2 (void)
 	tmp = gda_rfc1738_encode (H2_USERNAME);
 	real_auth = g_strdup_printf ("USERNAME=%s", tmp);
 	g_free (tmp);
-	cnc = gda_connection_open_from_string (H2_PROVNAME, "URL=" H2_CNCSTRING, real_auth,
-					       GDA_CONNECTION_OPTIONS_NONE, &error);
+	cnc = gda_connection_new_from_string (H2_PROVNAME, "URL=" H2_CNCSTRING, real_auth,
+					      GDA_CONNECTION_OPTIONS_NONE, &error);
 	g_free (real_auth);
 	if (!cnc) {
-		g_print ("Could open connection with the '%s' provider: %s\n", "org.h2.Driver",
+		g_print ("Could create connection with the '%s' provider: %s\n", "org.h2.Driver",
 			 error && error->message ? error->message : "No detail");
 		exit (1);
 	}
 
+	if (!gda_connection_open (cnc, &error)) {
+		g_print ("Could open connection with the '%s' provider: %s\n", "org.h2.Driver",
+			 error && error->message ? error->message : "No detail");
+		g_object_unref (cnc);
+		exit (1);
+	}
 	run_select (cnc, "SELECT * FROM t_string");
 	run_select (cnc, "SELECT * FROM t_numbers");
 	run_select (cnc, "SELECT * FROM t_misc");
@@ -133,14 +139,14 @@ test_generic (const gchar *prov_name, const gchar *cnc_string, const gchar *user
 	}
 
 	/* open connection - failure */
-	g_print ("TEST: Connection opening with failure...\n");
-	cnc = gda_connection_open_from_string (prov_name, "URL=hello", NULL,
-					       GDA_CONNECTION_OPTIONS_NONE, &error);
+	g_print ("TEST: Connection creating with failure...\n");
+	cnc = gda_connection_new_from_string (prov_name, "URL=hello", NULL,
+					      GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (cnc) {
-		g_print ("Connection opening should have failed...\n");
+		g_print ("Connection creating should have failed...\n");
 		exit (1);
 	}
-	g_print ("Connection opening error: %s\n",
+	g_print ("Connection creating error: %s\n",
 		 error && error->message ? error->message : "No detail");
 	if (error) {
 		g_error_free (error);
@@ -160,16 +166,27 @@ test_generic (const gchar *prov_name, const gchar *cnc_string, const gchar *user
 	g_free (tmp);
 
 	g_print ("CNC STRING: %s\n", real_cnc_string);
-	cnc = gda_connection_open_from_string (prov_name, real_cnc_string, real_auth,
-					       GDA_CONNECTION_OPTIONS_NONE, &error);
+	cnc = gda_connection_new_from_string (prov_name, real_cnc_string, real_auth,
+					      GDA_CONNECTION_OPTIONS_NONE, &error);
 	g_free (real_cnc_string);
 	g_free (real_auth);
 	if (!cnc) {
+		g_print ("Could create connection with the '%s' provider: %s\n", prov_name,
+			 error && error->message ? error->message : "No detail");
+		exit (1);
+	}
+	if (! gda_connection_open (cnc, &error)) {
 		g_print ("Could open connection with the '%s' provider: %s\n", prov_name,
 			 error && error->message ? error->message : "No detail");
 		exit (1);
 	}
-	gda_connection_close (cnc);
+
+	if (! gda_connection_close (cnc, &error)) {
+		g_print ("Connection closing error: %s\n",
+			 error && error->message ? error->message : "No detail");
+		exit (1);
+	}
+
 	if (! gda_connection_open (cnc, &error)) {
 		g_print ("Connection re-opening error: %s\n",
 			 error && error->message ? error->message : "No detail");

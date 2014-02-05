@@ -9,3 +9,6 @@ libgda.def
 Gda-5.0.gir
 Gda-5.0.typelib
 *.vapi
+test-cnc-open
+test-cnc-exec
+test-cnc-meta

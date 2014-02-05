@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,14 +21,25 @@
 #ifndef __GDA_ENUMS__
 #define __GDA_ENUMS__
 
-/* Isolation state of a transaction */
+/**
+ * GdaTransactionIsolation:
+ * @GDA_TRANSACTION_ISOLATION_SERVER_DEFAULT: isolation level defined by the server
+ * @GDA_TRANSACTION_ISOLATION_READ_COMMITTED:
+ * @GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED:
+ * @GDA_TRANSACTION_ISOLATION_REPEATABLE_READ:
+ * @GDA_TRANSACTION_ISOLATION_SERIALIZABLE:
+ *
+ * Describes transactions' isolation level
+ */
 typedef enum {
-	GDA_TRANSACTION_ISOLATION_UNKNOWN,
+	GDA_TRANSACTION_ISOLATION_SERVER_DEFAULT,
 	GDA_TRANSACTION_ISOLATION_READ_COMMITTED,
 	GDA_TRANSACTION_ISOLATION_READ_UNCOMMITTED,
 	GDA_TRANSACTION_ISOLATION_REPEATABLE_READ,
 	GDA_TRANSACTION_ISOLATION_SERIALIZABLE
 } GdaTransactionIsolation;
+
+#define GDA_TRANSACTION_ISOLATION_UNKNOWN GDA_TRANSACTION_ISOLATION_SERVER_DEFAULT
 
 /* status of a value */
 typedef enum  {

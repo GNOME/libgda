@@ -219,7 +219,7 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 
@@ -287,7 +287,8 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_SQLITE_RECORDSET, "connection", cnc, 
+        model = g_object_new (GDA_TYPE_SQLITE_RECORDSET,
+			      "connection", cnc,
 			      "prepared-stmt", ps, "model-usage", rflags, 
 			      "exec-params", exec_params, 
 			      "auto-reset", force_empty, NULL);
@@ -349,9 +350,10 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	SqliteConnectionData *cdata;
 	GdaSqlitePStmt *ps;
 	GdaRow *prow = NULL;
+	GdaConnection *cnc;
 
-	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error 
-		(gda_data_select_get_connection ((GdaDataSelect*) model), error);
+	cnc = gda_data_select_get_connection ((GdaDataSelect*) model);
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
 	ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (model)->prep_stmt);
@@ -497,7 +499,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gint64 rowid;
 						rowid = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, oidcol - 1); /* remove 1
 													       because it was added in the first place */
-						bop = _gda_sqlite_blob_op_new (cdata,
+						bop = _gda_sqlite_blob_op_new (cnc,
 									       SQLITE3_CALL (sqlite3_column_database_name) (ps->sqlite_stmt, 
 													    real_col),
 									       SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt,

@@ -116,50 +116,20 @@ void                browser_connection_job_cancel             (BrowserConnection
 GdaSqlParser       *browser_connection_create_parser          (BrowserConnection *bcnc);
 gchar              *browser_connection_render_pretty_sql      (BrowserConnection *bcnc,
 							       GdaStatement *stmt);
-guint               browser_connection_execute_statement      (BrowserConnection *bcnc,
+GObject            *browser_connection_execute_statement      (BrowserConnection *bcnc,
 							       GdaStatement *stmt,
 							       GdaSet *params,
 							       GdaStatementModelUsage model_usage,
-							       gboolean need_last_insert_row,
+							       GdaSet **last_insert_row,
 							       GError **error);
-guint               browser_connection_rerun_select           (BrowserConnection *bcnc,
+gboolean            browser_connection_rerun_select           (BrowserConnection *bcnc,
 							       GdaDataModel *model,
 							       GError **error);
-GObject            *browser_connection_execution_get_result   (BrowserConnection *bcnc,
-							       guint exec_id,
-							       GdaSet **last_insert_row, GError **error);
+
 gboolean            browser_connection_normalize_sql_statement(BrowserConnection *bcnc,
 							       GdaSqlStatement *sqlst, GError **error);
 gboolean            browser_connection_check_sql_statement_validify (BrowserConnection *bcnc,
 								     GdaSqlStatement *sqlst, GError **error);
-/**
- * BrowserConnectionExecuteCallback
- *
- * Callback function called by browser_connection_execute_statement_cb(). If you need to keep
- * some of the arguments for a later usage, you need to ref/copy them.
- *
- * None of the passed arguments must not be modified
- */
-typedef void (*BrowserConnectionExecuteCallback) (BrowserConnection *bcnc,
-						  guint exec_id,
-						  GObject *out_result,
-						  GdaSet *out_last_inserted_row, GError *error,
-						  gpointer data);
-
-guint               browser_connection_execute_statement_cb   (BrowserConnection *bcnc,
-							       GdaStatement *stmt,
-							       GdaSet *params,
-							       GdaStatementModelUsage model_usage,
-							       gboolean need_last_insert_row,
-							       BrowserConnectionExecuteCallback callback,
-							       gpointer data,
-							       GError **error);
-guint               browser_connection_rerun_select_cb        (BrowserConnection *bcnc,
-							       GdaDataModel *model,
-							       BrowserConnectionExecuteCallback callback,
-							       gpointer data,
-							       GError **error);
-
 
 /*
  * transactions
@@ -202,21 +172,14 @@ void                 browser_connection_load_variables (BrowserConnection *bcnc,
 gboolean             browser_connection_is_ldap        (BrowserConnection *bcnc);
 #ifdef HAVE_LDAP
 const         gchar *browser_connection_ldap_get_base_dn (BrowserConnection *bcnc);
-guint                browser_connection_ldap_search (BrowserConnection *bcnc,
+GdaDataModel        *browser_connection_ldap_search (BrowserConnection *bcnc,
 						     const gchar *base_dn, const gchar *filter,
 						     const gchar *attributes, GdaLdapSearchScope scope,
-						     BrowserConnectionJobCallback callback,
-						     gpointer cb_data, GError **error);
-guint                browser_connection_ldap_describe_entry (BrowserConnection *bcnc, const gchar *dn,
-							     BrowserConnectionJobCallback callback,
-							     gpointer cb_data, GError **error);
-guint                browser_connection_ldap_get_entry_children (BrowserConnection *bcnc, const gchar *dn,
-								 gchar **attributes,
-								 BrowserConnectionJobCallback callback,
-								 gpointer cb_data, GError **error);
-guint                browser_connection_ldap_icon_for_dn (BrowserConnection *bcnc, const gchar *dn,
-							  BrowserConnectionJobCallback callback,
-							  gpointer cb_data, GError **error);
+						     GError **error);
+GdaLdapEntry        *browser_connection_ldap_describe_entry (BrowserConnection *bcnc, const gchar *dn, GError **error);
+GdaLdapEntry       **browser_connection_ldap_get_entry_children (BrowserConnection *bcnc, const gchar *dn,
+								 gchar **attributes, GError **error);
+GdkPixbuf           *browser_connection_ldap_icon_for_dn (BrowserConnection *bcnc, const gchar *dn, GError **error);
 GdkPixbuf           *browser_connection_ldap_icon_for_class (GdaLdapAttribute *objectclass);
 gboolean             browser_connection_describe_table  (BrowserConnection *bcnc, const gchar *table_name,
 							 const gchar **out_base_dn, const gchar **out_filter,

@@ -22,7 +22,6 @@
 #include <glib/gi18n-lib.h>
 #include "tools-favorites.h"
 #include "tool-utils.h"
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include <libgda/gda-sql-builder.h>
 #include <sql-parser/gda-sql-parser.h>
 

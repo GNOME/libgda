@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -236,50 +236,32 @@ browser_virtual_connection_get_property (GObject *object,
 	}
 }
 
-
-
-typedef struct {
-        guint cncid;
-        GMainLoop *loop;
-        GError **error;
-	GdaThreadWrapper *wrapper;
-
-        /* out */
-        GdaConnection *cnc;
-} MainloopData;
-
-static gboolean
-check_for_cnc (MainloopData *data)
-{
-        GdaConnection *cnc;
-        GError *lerror = NULL;
-        cnc = gda_thread_wrapper_fetch_result (data->wrapper, FALSE, data->cncid, &lerror);
-        if (cnc || (!cnc && lerror)) {
-                /* waiting is finished! */
-                data->cnc = cnc;
-                if (lerror)
-                        g_propagate_error (data->error, lerror);
-                g_main_loop_quit (data->loop);
-                return FALSE;
-        }
-        return TRUE;
-}
-
-/*
- * executed in a sub thread
+/**
+ * browser_virtual_connection_new
+ * @specs: the specifications of the virtual connection's contents
+ * @error: a place to store errors, or %NULL
+ *
+ * Creates a new #BrowserVirtualConnection connection.
+ *
+ * Returns: the new connection
  */
-static GdaConnection *
-sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
+BrowserConnection *
+browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GError **error)
 {
-#ifndef DUMMY
+#ifdef DUMMY
+        sleep (5);
+        g_set_error (error, GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
+		     "%s", "Timeout!!!");
+        return NULL;
+#endif
+
 	/* create GDA virtual connection */
 	static GdaVirtualProvider *provider = NULL;
 	GdaConnection *virtual;
 	if (!provider)
 		provider = gda_vprovider_hub_new ();
 
-	virtual = gda_virtual_connection_open_extended (provider, GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-							GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
+	virtual = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
 		
 	/* add parts to connection as specified by @specs */
 	GSList *list;
@@ -312,67 +294,13 @@ sub_thread_open_cnc (BrowserVirtualConnectionSpecs *specs, GError **error)
 			g_assert_not_reached ();
 		}
 	}
-	
-	return virtual;
-#else /* DUMMY defined */
-        sleep (5);
-        g_set_error (error, GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR,
-		     "%s", "Timeout!!!");
-        return NULL;
-#endif
-}
-
-/**
- * browser_virtual_connection_new
- * @specs: the specifications of the virtual connection's contents
- * @error: a place to store errors, or %NULL
- *
- * Creates a new #BrowserVirtualConnection connection.
- *
- * Returns: the new connection
- */
-BrowserConnection *
-browser_virtual_connection_new (const BrowserVirtualConnectionSpecs *specs, GError **error)
-{
-	/* open virtual GdaConnection in sub thread */
-	GdaThreadWrapper *wrapper;
-	guint cncid;
-
-	g_return_val_if_fail (specs, NULL);
-
-	wrapper = gda_thread_wrapper_new ();
-	cncid = gda_thread_wrapper_execute (wrapper,
-                                            (GdaThreadWrapperFunc) sub_thread_open_cnc,
-                                            (gpointer) specs,
-                                            (GDestroyNotify) NULL,
-                                            error);
-        if (cncid == 0)
-                return NULL;
-
-	GMainLoop *loop;
-        MainloopData data;
-	
-        loop = g_main_loop_new (NULL, FALSE);
-	data.wrapper = wrapper;
-	data.cncid = cncid;
-        data.error = error;
-        data.loop = loop;
-        data.cnc = NULL;
-
-        g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
-        g_main_loop_run (loop);
-        g_main_loop_unref (loop);
-	g_object_unref (wrapper);
 
 	/* create the BrowserConnection object */
-        if (data.cnc) {
+        if (virtual) {
 		BrowserConnection *nbcnc;
-                g_object_set (data.cnc, "monitor-wrapped-in-mainloop", TRUE, NULL);
 		nbcnc = g_object_new (BROWSER_TYPE_VIRTUAL_CONNECTION, "specs", specs,
-				      "gda-connection", data.cnc, NULL);
-		g_object_unref (data.cnc);
-		/*g_print ("BrowserVirtualConnection %p had TMP wrapper %p\n", nbcnc, wrapper);*/
-
+				      "gda-connection", virtual, NULL);
+		g_object_unref (virtual);
 		return nbcnc;
 	}
 	else

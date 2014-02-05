@@ -37,18 +37,18 @@ typedef struct _GdaVirtualProviderClass GdaVirtualProviderClass;
 
 struct _GdaVirtualProvider {
 	GdaSqliteProvider  provider;
+
 	/*< private >*/
-	void             (*_gda_reserved1) (void);
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
 };
 
 struct _GdaVirtualProviderClass {
 	GdaSqliteProviderClass      parent_class;
 
 	/*< private >*/
-	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+	void (*_gda_reserved2) (void);};
 
 /**
  * SECTION:gda-virtual-provider

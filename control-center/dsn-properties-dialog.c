@@ -222,7 +222,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 											GTK_DIALOG_MODAL,
 											GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 											"<b>%s</b>", _("Connection successfully opened!"));
-					gda_connection_close (cnc);
+					gda_connection_close (cnc, NULL);
 				}
 				else {
 					msgdialog = gtk_message_dialog_new_with_markup (test_dialog ? GTK_WINDOW (test_dialog) : parent, 

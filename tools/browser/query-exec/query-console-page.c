@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -35,63 +35,6 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/gda-debug-macros.h>
 
-/*
- * Statement execution structures
- */
-typedef struct {
-	GTimeVal start_time;
-	GdaBatch *batch; /* ref held here */
-	QueryEditorHistoryBatch *hist_batch; /* ref held here */
-	GSList *statements; /* list of ExecutionStatament */
-} ExecutionBatch;
-static void execution_batch_free (ExecutionBatch *ebatch);
-
-typedef struct {
-	GdaStatement *stmt /* no ref held here */;
-	gboolean within_transaction;
-	GError *exec_error;
-	GObject *result;
-	guint exec_id; /* 0 when execution not requested */
-} ExecutionStatement;
-static void execution_statement_free (ExecutionStatement *estmt);
-
-/*
- * Frees an @ExecutionBatch
- *
- * If necessary, may set up and idle handler to perform some
- * additionnal jobs
- */
-static void
-execution_batch_free (ExecutionBatch *ebatch)
-{
-	GSList *list;
-	for (list = ebatch->statements; list; list = list->next)
-		execution_statement_free ((ExecutionStatement*) list->data);
-	g_slist_free (ebatch->statements);
-
-	g_object_unref (ebatch->batch);
-	if (ebatch->hist_batch)
-		query_editor_history_batch_unref (ebatch->hist_batch);
-
-	g_free (ebatch);
-}
-
-static void
-execution_statement_free (ExecutionStatement *estmt)
-{
-	if (estmt->exec_id > 0) {
-		/* job started! */
-		TO_IMPLEMENT;
-	}
-	else {
-		if (estmt->exec_error)
-			g_error_free (estmt->exec_error);
-		if (estmt->result)
-			g_object_unref (estmt->result);
-		g_free (estmt);
-	}
-}
-
 struct _QueryConsolePagePrivate {
 	BrowserConnection *bcnc;
 	GdaSqlParser *parser;
@@ -119,7 +62,7 @@ struct _QueryConsolePagePrivate {
 
 	GtkWidget *query_result;
 
-	ExecutionBatch *current_exec;
+	gboolean currently_executing;
 
 	gint fav_id;
 	GtkWidget *favorites_menu;
@@ -198,8 +141,6 @@ query_console_page_dispose (GObject *object)
 
 	/* free memory */
 	if (tconsole->priv) {
-		if (tconsole->priv->current_exec)
-			execution_batch_free (tconsole->priv->current_exec);
 		if (tconsole->priv->bcnc) {
 			g_signal_handlers_disconnect_by_func (tconsole->priv->bcnc,
 							      G_CALLBACK (connection_busy_cb), tconsole);
@@ -980,126 +921,21 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 }
 
 static void
-query_exec_done_cb (BrowserConnection *bcnc, guint exec_id,
-		    GObject *out_result, GdaSet *out_last_inserted_row,
-		    GError *error, QueryConsolePage *tconsole)
-{
-	gboolean alldone = TRUE;
-	
-	if (! tconsole->priv->current_exec)
-		return;
-
-	if (! tconsole->priv->current_exec->statements) {
-		execution_batch_free (tconsole->priv->current_exec);
-		tconsole->priv->current_exec = NULL;
-		return;
-	}
-
-	ExecutionStatement *estmt;
-	estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
-	g_assert (estmt->exec_id == exec_id);
-	g_assert (!estmt->result);
-	g_assert (!estmt->exec_error);
-
-	ExecutionBatch *ebatch;
-	ebatch = tconsole->priv->current_exec;
-	query_editor_start_history_batch (tconsole->priv->history, ebatch->hist_batch);
-	if (out_result)
-		estmt->result = g_object_ref (out_result);
-	if (error)
-		estmt->exec_error = g_error_copy (error);
-
-	QueryEditorHistoryItem *history;
-	GdaSqlStatement *sqlst;
-	g_object_get (G_OBJECT (estmt->stmt), "structure", &sqlst, NULL);
-	if (!sqlst->sql) {
-		gchar *sql;
-		sql = gda_statement_to_sql (GDA_STATEMENT (estmt->stmt), NULL, NULL);
-		history = query_editor_history_item_new (sql, estmt->result, estmt->exec_error);
-		g_free (sql);
-	}
-	else
-		history = query_editor_history_item_new (sqlst->sql,
-							 estmt->result, estmt->exec_error);
-	gda_sql_statement_free (sqlst);
-
-	history->within_transaction = estmt->within_transaction;
-
-	/* display a message if a transaction has been started */
-	if (! history->within_transaction &&
-	    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
-	    gda_statement_get_statement_type (estmt->stmt) != GDA_SQL_STATEMENT_BEGIN) {
-		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-						   GTK_MESSAGE_INFO,
-						   "QueryExecTransactionStarted",
-						   "%s", _("A transaction has automatically been started\n"
-							   "during this statement's execution, this usually\n"
-							   "happens when blobs are selected (and the transaction\n"
-							   "will have to remain opened while the blobs are still\n"
-							   "accessible, clear the corresponding history item before\n"
-							   "closing the transaction)."));
-	}
-
-	query_editor_add_history_item (tconsole->priv->history, history);
-	query_editor_history_item_unref (history);
-
-	if (estmt->exec_error)
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-				    _("Error executing query:\n%s"),
-				    estmt->exec_error && estmt->exec_error->message ?
-				    estmt->exec_error->message : _("No detail"));
-	else
-		browser_window_push_status (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-					    "QueryConsolePage", _("Statement executed"), TRUE);
-
-	/* get rid of estmt */
-	estmt->exec_id = 0;
-	execution_statement_free (estmt);
-	tconsole->priv->current_exec->statements =
-		g_slist_delete_link (tconsole->priv->current_exec->statements,
-				     tconsole->priv->current_exec->statements);
-	if (error)
-		goto onerror;
-
-	/* more to do ? */
-	if (tconsole->priv->current_exec->statements) {
-		estmt = (ExecutionStatement*) tconsole->priv->current_exec->statements->data;
-		estmt->within_transaction =
-			browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
-		estmt->exec_id = browser_connection_execute_statement_cb (tconsole->priv->bcnc,
-									  estmt->stmt,
-									  tconsole->priv->params,
-									  GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									  FALSE,
-									  (BrowserConnectionExecuteCallback) query_exec_done_cb,
-									  tconsole, &(estmt->exec_error));
-		if (estmt->exec_id == 0) {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-					    _("Error executing query:\n%s"),
-					    estmt->exec_error && estmt->exec_error->message ?
-					    estmt->exec_error->message : _("No detail"));
-			goto onerror;
-		}
-	}
-	
-	if (! tconsole->priv->current_exec->statements) {
-		execution_batch_free (tconsole->priv->current_exec);
-		tconsole->priv->current_exec = NULL;
-	}
-	return;
-
- onerror:
-	execution_batch_free (tconsole->priv->current_exec);
-	tconsole->priv->current_exec = NULL;
-}
-
-static void
 actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 		  gboolean add_editor_history)
 {
 	GdaBatch *batch;
 	GError *error = NULL;
 	const gchar *remain;
+
+	/* if a query is being executed, then show an error */
+	if (tconsole->priv->currently_executing) {
+		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+				    _("A query is already being executed, "
+				      "to execute another query, open a new connection."));
+		return;
+	}
+	tconsole->priv->currently_executing = TRUE;
 
 	if (!tconsole->priv->parser)
 		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
@@ -1113,15 +949,6 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 		return;
 	}
 
-	/* if a query is being executed, then show an error */
-	if (tconsole->priv->current_exec) {
-		g_object_unref (batch);
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-				    _("A query is already being executed, "
-				      "to execute another query, open a new connection."));
-		return;
-	}
-
 	if (add_editor_history) {
 		/* mark the current SQL to be kept by the editor as an internal history */
 		query_editor_keep_current_state (tconsole->priv->editor);
@@ -1129,45 +956,72 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 
 	/* actual Execution */
 	const GSList *stmt_list, *list;
-	ExecutionBatch *ebatch;
-	ebatch = g_new0 (ExecutionBatch, 1);
-	ebatch->batch = batch;
-	g_get_current_time (&(ebatch->start_time));
-	ebatch->hist_batch = query_editor_history_batch_new (ebatch->start_time, params);
+	GTimeVal start_time;
+	g_get_current_time (&start_time);
 
+	QueryEditorHistoryBatch *hist_batch;
+	hist_batch = query_editor_history_batch_new (start_time, params);
+	query_editor_start_history_batch (tconsole->priv->history, hist_batch);
+	query_editor_history_batch_unref (hist_batch);
+
+	gboolean within_transaction;
 	stmt_list = gda_batch_get_statements (batch);
 	for (list = stmt_list; list; list = list->next) {
-		ExecutionStatement *estmt;
-		estmt = g_new0 (ExecutionStatement, 1);
-		estmt->stmt = GDA_STATEMENT (list->data);
-		ebatch->statements = g_slist_prepend (ebatch->statements, estmt);
+		GdaStatement *stmt;
+		GObject *result;
+		GError *lerror = NULL;
+		within_transaction = browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
+		stmt = GDA_STATEMENT (list->data);
+		result = browser_connection_execute_statement (tconsole->priv->bcnc, stmt, params,
+							       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							       NULL, &lerror);
+		if (result) {
+			QueryEditorHistoryItem *history;
+			GdaSqlStatement *sqlst;
+			g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+			if (!sqlst->sql) {
+				gchar *sql;
+				sql = gda_statement_to_sql (stmt, NULL, NULL);
+				history = query_editor_history_item_new (sql, result, lerror);
+				g_free (sql);
+			}
+			else
+				history = query_editor_history_item_new (sqlst->sql, result, lerror);
+			gda_sql_statement_free (sqlst);
+			
+			history->within_transaction = within_transaction;
 
-		if (list != stmt_list)
-			continue;
+			/* display a message if a transaction has been started */
+			if (! history->within_transaction &&
+			    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
+			    gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_BEGIN) {
+				browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+								   GTK_MESSAGE_INFO,
+								   "QueryExecTransactionStarted",
+								   "%s", _("A transaction has automatically been started\n"
+									   "during this statement's execution, this usually\n"
+									   "happens when blobs are selected (and the transaction\n"
+									   "will have to remain opened while the blobs are still\n"
+									   "accessible, clear the corresponding history item before\n"
+									   "closing the transaction)."));
+			}
 
-		/* only the 1st statement is actually executed, to be able to
-		 * stop others following statements to be executed if there is an
-		 * execution error.
-		 */
-		estmt->within_transaction =
-			browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
-		estmt->exec_id = browser_connection_execute_statement_cb (tconsole->priv->bcnc,
-									  estmt->stmt,
-									  params,
-									  GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									  FALSE,
-									  (BrowserConnectionExecuteCallback) query_exec_done_cb,
-									  tconsole, &(estmt->exec_error));
-		if (estmt->exec_id == 0) {
+			query_editor_add_history_item (tconsole->priv->history, history);
+			query_editor_history_item_unref (history);
+
+			browser_window_push_status (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+						    "QueryConsolePage", _("Statement executed"), TRUE);			
+		}
+		else {
 			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-					    _("Error executing query: %s"),
-					    estmt->exec_error && estmt->exec_error->message ? estmt->exec_error->message : _("No detail"));
-			execution_batch_free (ebatch);
-			return;
+					    _("Error executing query:\n%s"),
+					    lerror && lerror->message ? lerror->message : _("No detail"));
+			g_clear_error (&lerror);
+			break;
 		}
 	}
-	ebatch->statements = g_slist_reverse (ebatch->statements);
-	tconsole->priv->current_exec = ebatch;
+	g_object_unref (batch);
+	tconsole->priv->currently_executing = FALSE;
 }
 
 static void

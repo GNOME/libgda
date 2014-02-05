@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
@@ -987,17 +987,30 @@ gda_meta_store_set_property (GObject *object,
 				cnc_string = g_value_get_string (value);
 				if (cnc_string) {
 					GdaConnection *cnc;
-					cnc = gda_connection_open_from_string (NULL, cnc_string, NULL,
-									       GDA_CONNECTION_OPTIONS_NONE,
-									       NULL);
-					if (!cnc) {
+					GError *error = NULL;
+					cnc = gda_connection_new_from_string (NULL, cnc_string, NULL,
+									      GDA_CONNECTION_OPTIONS_NONE,
+									      &error);
+					if (cnc) {
+						if (!gda_connection_open (cnc, &error)) {
+							g_object_unref (cnc);
+							cnc = NULL;
+						}
+					}
+					else {
 						if (g_ascii_strcasecmp (cnc_string, "sqlite")) {
 							/* use _gda_config_sqlite_provider */
-
+							g_clear_error (&error);
 							cnc = _gda_open_internal_sqlite_connection (cnc_string);
 						}
 					}
 					store->priv->cnc = cnc;
+					if (!cnc) {
+						g_warning ("Could not create internal GdaMetaStore connection:%s\n"
+							   "GdaMetaStore object will not work as expected",
+							   error && error->message ? error->message : _("No detail"));
+						g_clear_error (&error);
+					}
 				}
 			}
 			break;

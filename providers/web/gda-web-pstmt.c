@@ -90,7 +90,7 @@ gda_web_pstmt_finalize (GObject *object)
 
 	if (pstmt->pstmt_hash) {
 		WebConnectionData *cdata;
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (pstmt->cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (pstmt->cnc, NULL);
 		if (!cdata) 
 			goto next;
 

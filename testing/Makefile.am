@@ -11,7 +11,7 @@ bin_PROGRAMS = gda-test-connection-5.0
 if HAVE_UI
 UI_PROGS=gdaui-test-data-entries gdaui-test-widget-entry gdaui-test-errors gdaui-test-rt-editor
 endif
-noinst_PROGRAMS = gda-test-blob gda-provider-status virtual-test virtual-test-2 $(UI_PROGS)
+noinst_PROGRAMS = gda-test-blob virtual-test virtual-test-2 $(UI_PROGS)
 
 gda_test_connection_5_0_SOURCES = \
         gda-test-connection.c

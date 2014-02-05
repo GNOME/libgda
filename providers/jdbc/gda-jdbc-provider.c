@@ -29,6 +29,7 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -58,8 +59,7 @@ static GObjectClass *parent_class = NULL;
  */
 /* connection management */
 static gboolean            gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-							      GdaQuarkList *params, GdaQuarkList *auth,
-							      guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+							      GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean            gda_jdbc_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_jdbc_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 
@@ -73,9 +73,7 @@ static gchar              *gda_jdbc_provider_render_operation (GdaServerProvider
 							       GdaServerOperation *op, GError **error);
 
 static gboolean            gda_jdbc_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-								GdaServerOperation *op, guint *task_id, 
-								GdaServerProviderAsyncCallback async_cb, gpointer cb_data,
-								GError **error);
+								GdaServerOperation *op, GError **error);
 /* transactions */
 static gboolean            gda_jdbc_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
 								const gchar *name, GdaTransactionIsolation level, GError **error);
@@ -112,29 +110,27 @@ static gboolean             gda_jdbc_provider_statement_prepare (GdaServerProvid
 static GObject             *gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaStatement *stmt, GdaSet *params,
 								 GdaStatementModelUsage model_usage, 
-								 GType *col_types, GdaSet **last_inserted_row, 
-								 guint *task_id, GdaServerProviderExecCallback async_cb, 
-								 gpointer cb_data, GError **error);
-static GdaSqlStatement     *gda_jdbc_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								 GType *col_types, GdaSet **last_inserted_row, GError **error);
+static GdaSqlStatement     *gda_jdbc_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaStatement *stmt, GdaSet *params, GError **error);
 
 
 /* distributed transactions */
 static gboolean gda_jdbc_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+					       const GdaXaTransactionId *xid, GError **error);
 
 static gboolean gda_jdbc_provider_xa_end      (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+					       const GdaXaTransactionId *xid, GError **error);
 static gboolean gda_jdbc_provider_xa_prepare  (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+					       const GdaXaTransactionId *xid, GError **error);
 
 static gboolean gda_jdbc_provider_xa_commit   (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+					       const GdaXaTransactionId *xid, GError **error);
 static gboolean gda_jdbc_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *cnc, 
-						   const GdaXaTransactionId *xid, GError **error);
+					       const GdaXaTransactionId *xid, GError **error);
 
 static GList   *gda_jdbc_provider_xa_recover  (GdaServerProvider *provider, GdaConnection *cnc, 
-						   GError **error);
+					       GError **error);
 
 /* 
  * private connection data destroy 
@@ -161,6 +157,103 @@ static gchar *internal_sql[] = {
 /*
  * GdaJdbcProvider class implementation
  */
+GdaServerProviderBase jdbc_base_functions = {
+	gda_jdbc_provider_get_name,
+	gda_jdbc_provider_get_version,
+	gda_jdbc_provider_get_server_version,
+	gda_jdbc_provider_supports_feature,
+	NULL,
+	NULL,
+	NULL,
+	gda_jdbc_provider_get_data_handler,
+	gda_jdbc_provider_get_default_dbms_type,
+	gda_jdbc_provider_supports_operation,
+	gda_jdbc_provider_create_operation,
+	gda_jdbc_provider_render_operation,
+	gda_jdbc_provider_statement_to_sql,
+	NULL,
+	gda_jdbc_provider_statement_rewrite,
+	gda_jdbc_provider_open_connection,
+	NULL,
+	gda_jdbc_provider_close_connection,
+	NULL,
+	NULL,
+	NULL,
+	gda_jdbc_provider_perform_operation,
+	gda_jdbc_provider_begin_transaction,
+	gda_jdbc_provider_commit_transaction,
+	gda_jdbc_provider_rollback_transaction,
+	gda_jdbc_provider_add_savepoint,
+	gda_jdbc_provider_rollback_savepoint,
+	gda_jdbc_provider_delete_savepoint,
+	gda_jdbc_provider_statement_prepare,
+	gda_jdbc_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderMeta jdbc_meta_functions = {
+	_gda_jdbc_meta__info,
+	_gda_jdbc_meta__btypes,
+	_gda_jdbc_meta__udt,
+	_gda_jdbc_meta_udt,
+	_gda_jdbc_meta__udt_cols,
+	_gda_jdbc_meta_udt_cols,
+	_gda_jdbc_meta__enums,
+	_gda_jdbc_meta_enums,
+	_gda_jdbc_meta__domains,
+	_gda_jdbc_meta_domains,
+	_gda_jdbc_meta__constraints_dom,
+	_gda_jdbc_meta_constraints_dom,
+	_gda_jdbc_meta__el_types,
+	_gda_jdbc_meta_el_types,
+	_gda_jdbc_meta__collations,
+	_gda_jdbc_meta_collations,
+	_gda_jdbc_meta__character_sets,
+	_gda_jdbc_meta_character_sets,
+	_gda_jdbc_meta__schemata,
+	_gda_jdbc_meta_schemata,
+	_gda_jdbc_meta__tables_views,
+	_gda_jdbc_meta_tables_views,
+	_gda_jdbc_meta__columns,
+	_gda_jdbc_meta_columns,
+	_gda_jdbc_meta__view_cols,
+	_gda_jdbc_meta_view_cols,
+	_gda_jdbc_meta__constraints_tab,
+	_gda_jdbc_meta_constraints_tab,
+	_gda_jdbc_meta__constraints_ref,
+	_gda_jdbc_meta_constraints_ref,
+	_gda_jdbc_meta__key_columns,
+	_gda_jdbc_meta_key_columns,
+	_gda_jdbc_meta__check_columns,
+	_gda_jdbc_meta_check_columns,
+	_gda_jdbc_meta__triggers,
+	_gda_jdbc_meta_triggers,
+	_gda_jdbc_meta__routines,
+	_gda_jdbc_meta_routines,
+	_gda_jdbc_meta__routine_col,
+	_gda_jdbc_meta_routine_col,
+	_gda_jdbc_meta__routine_par,
+	_gda_jdbc_meta_routine_par,
+	_gda_jdbc_meta__indexes_tab,
+        _gda_jdbc_meta_indexes_tab,
+        _gda_jdbc_meta__index_cols,
+        _gda_jdbc_meta_index_cols,
+
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderXa jdbc_xa_functions = {
+	gda_jdbc_provider_xa_start,
+	gda_jdbc_provider_xa_end,
+	gda_jdbc_provider_xa_prepare,
+	gda_jdbc_provider_xa_commit,
+	gda_jdbc_provider_xa_rollback,
+	gda_jdbc_provider_xa_recover,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 {
@@ -168,100 +261,16 @@ gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	provider_class->get_version = gda_jdbc_provider_get_version;
-	provider_class->get_server_version = gda_jdbc_provider_get_server_version;
-	provider_class->get_name = gda_jdbc_provider_get_name;
-	provider_class->supports_feature = gda_jdbc_provider_supports_feature;
-
-	provider_class->get_data_handler = gda_jdbc_provider_get_data_handler;
-	provider_class->get_def_dbms_type = gda_jdbc_provider_get_default_dbms_type;
-
-	provider_class->open_connection = gda_jdbc_provider_open_connection;
-	provider_class->close_connection = gda_jdbc_provider_close_connection;
-	provider_class->get_database = NULL;
-
-	provider_class->supports_operation = gda_jdbc_provider_supports_operation;
-        provider_class->create_operation = gda_jdbc_provider_create_operation;
-        provider_class->render_operation = gda_jdbc_provider_render_operation;
-        provider_class->perform_operation = gda_jdbc_provider_perform_operation;
-
-	provider_class->begin_transaction = gda_jdbc_provider_begin_transaction;
-	provider_class->commit_transaction = gda_jdbc_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_jdbc_provider_rollback_transaction;
-	provider_class->add_savepoint = gda_jdbc_provider_add_savepoint;
-        provider_class->rollback_savepoint = gda_jdbc_provider_rollback_savepoint;
-        provider_class->delete_savepoint = gda_jdbc_provider_delete_savepoint;
-
-	provider_class->create_parser = NULL;
-	provider_class->statement_to_sql = NULL; /* don't use gda_jdbc_provider_statement_to_sql()
-						  * because it only calls gda_statement_to_sql_extended() */
-	provider_class->statement_prepare = gda_jdbc_provider_statement_prepare;
-	provider_class->statement_execute = gda_jdbc_provider_statement_execute;
-	provider_class->statement_rewrite = gda_jdbc_statement_rewrite;
-
-	provider_class->is_busy = NULL;
-	provider_class->cancel = NULL;
-	provider_class->create_connection = NULL;
-
-	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_jdbc_meta__info;
-	provider_class->meta_funcs._btypes = _gda_jdbc_meta__btypes;
-	provider_class->meta_funcs._udt = _gda_jdbc_meta__udt;
-	provider_class->meta_funcs.udt = _gda_jdbc_meta_udt;
-	provider_class->meta_funcs._udt_cols = _gda_jdbc_meta__udt_cols;
-	provider_class->meta_funcs.udt_cols = _gda_jdbc_meta_udt_cols;
-	provider_class->meta_funcs._enums = _gda_jdbc_meta__enums;
-	provider_class->meta_funcs.enums = _gda_jdbc_meta_enums;
-	provider_class->meta_funcs._domains = _gda_jdbc_meta__domains;
-	provider_class->meta_funcs.domains = _gda_jdbc_meta_domains;
-	provider_class->meta_funcs._constraints_dom = _gda_jdbc_meta__constraints_dom;
-	provider_class->meta_funcs.constraints_dom = _gda_jdbc_meta_constraints_dom;
-	provider_class->meta_funcs._el_types = _gda_jdbc_meta__el_types;
-	provider_class->meta_funcs.el_types = _gda_jdbc_meta_el_types;
-	provider_class->meta_funcs._collations = _gda_jdbc_meta__collations;
-	provider_class->meta_funcs.collations = _gda_jdbc_meta_collations;
-	provider_class->meta_funcs._character_sets = _gda_jdbc_meta__character_sets;
-	provider_class->meta_funcs.character_sets = _gda_jdbc_meta_character_sets;
-	provider_class->meta_funcs._schemata = _gda_jdbc_meta__schemata;
-	provider_class->meta_funcs.schemata = _gda_jdbc_meta_schemata;
-	provider_class->meta_funcs._tables_views = _gda_jdbc_meta__tables_views;
-	provider_class->meta_funcs.tables_views = _gda_jdbc_meta_tables_views;
-	provider_class->meta_funcs._columns = _gda_jdbc_meta__columns;
-	provider_class->meta_funcs.columns = _gda_jdbc_meta_columns;
-	provider_class->meta_funcs._view_cols = _gda_jdbc_meta__view_cols;
-	provider_class->meta_funcs.view_cols = _gda_jdbc_meta_view_cols;
-	provider_class->meta_funcs._constraints_tab = _gda_jdbc_meta__constraints_tab;
-	provider_class->meta_funcs.constraints_tab = _gda_jdbc_meta_constraints_tab;
-	provider_class->meta_funcs._constraints_ref = _gda_jdbc_meta__constraints_ref;
-	provider_class->meta_funcs.constraints_ref = _gda_jdbc_meta_constraints_ref;
-	provider_class->meta_funcs._key_columns = _gda_jdbc_meta__key_columns;
-	provider_class->meta_funcs.key_columns = _gda_jdbc_meta_key_columns;
-	provider_class->meta_funcs._check_columns = _gda_jdbc_meta__check_columns;
-	provider_class->meta_funcs.check_columns = _gda_jdbc_meta_check_columns;
-	provider_class->meta_funcs._triggers = _gda_jdbc_meta__triggers;
-	provider_class->meta_funcs.triggers = _gda_jdbc_meta_triggers;
-	provider_class->meta_funcs._routines = _gda_jdbc_meta__routines;
-	provider_class->meta_funcs.routines = _gda_jdbc_meta_routines;
-	provider_class->meta_funcs._routine_col = _gda_jdbc_meta__routine_col;
-	provider_class->meta_funcs.routine_col = _gda_jdbc_meta_routine_col;
-	provider_class->meta_funcs._routine_par = _gda_jdbc_meta__routine_par;
-	provider_class->meta_funcs.routine_par = _gda_jdbc_meta_routine_par;
-	provider_class->meta_funcs._indexes_tab = _gda_jdbc_meta__indexes_tab;
-        provider_class->meta_funcs.indexes_tab = _gda_jdbc_meta_indexes_tab;
-        provider_class->meta_funcs._index_cols = _gda_jdbc_meta__index_cols;
-        provider_class->meta_funcs.index_cols = _gda_jdbc_meta_index_cols;
-
-	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
-	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
-	provider_class->xa_funcs->xa_start = gda_jdbc_provider_xa_start;
-	provider_class->xa_funcs->xa_end = gda_jdbc_provider_xa_end;
-	provider_class->xa_funcs->xa_prepare = gda_jdbc_provider_xa_prepare;
-	provider_class->xa_funcs->xa_commit = gda_jdbc_provider_xa_commit;
-	provider_class->xa_funcs->xa_rollback = gda_jdbc_provider_xa_rollback;
-	provider_class->xa_funcs->xa_recover = gda_jdbc_provider_xa_recover;
-
-	/* not limiting to current thread */
-	provider_class->limiting_thread = NULL;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &jdbc_base_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META,
+						(gpointer) &jdbc_meta_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
+						(gpointer) &jdbc_xa_functions);
 }
 
 extern JavaVM *_jdbc_provider_java_vm;
@@ -286,8 +295,6 @@ gda_jdbc_provider_init (GdaJdbcProvider *jdbc_prv, G_GNUC_UNUSED GdaJdbcProvider
 
 	/* meta data init */
 	_gda_jdbc_provider_meta_init ((GdaServerProvider*) jdbc_prv);
-
-	/* TO_ADD: any other provider's init should be added here */
 
 	g_mutex_unlock (&init_mutex);
 }
@@ -466,20 +473,12 @@ make_url_from_params (GdaServerProvider *provider, GdaConnection *cnc,
  */
 static gboolean
 gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, GdaQuarkList *auth,
-				   G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				   G_GNUC_UNUSED gpointer cb_data)
+				   GdaQuarkList *params, GdaQuarkList *auth)
 {
 	GdaJdbcProvider *jprov;
 	g_return_val_if_fail (GDA_IS_JDBC_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	jprov = (GdaJdbcProvider*) provider;
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* Check for connection parameters */
 	gchar *url;
@@ -556,7 +555,8 @@ gda_jdbc_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	 * and set its contents */
 	JdbcConnectionData *cdata;
 	cdata = g_new0 (JdbcConnectionData, 1);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_jdbc_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, (GdaServerProviderConnectionData*) cdata,
+						   (GDestroyNotify) gda_jdbc_free_cnc_data);
 	cdata->jcnc_obj = obj_value;
 
 	_gda_jdbc_release_jenv (jni_detach);
@@ -581,7 +581,7 @@ gda_jdbc_provider_close_connection (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 
@@ -605,7 +605,7 @@ gda_jdbc_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 
@@ -705,17 +705,8 @@ gda_jdbc_provider_render_operation (GdaServerProvider *provider, GdaConnection *
  */
 static gboolean
 gda_jdbc_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				     G_GNUC_UNUSED GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
-				     GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
-				     GError **error)
+				     G_GNUC_UNUSED GdaServerOperation *op, GError **error)
 {
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous server operation"));
-                return FALSE;
-	}
-
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1334,9 +1325,7 @@ static GObject *
 gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				     GdaStatement *stmt, GdaSet *params,
 				     GdaStatementModelUsage model_usage, 
-				     GType *col_types, GdaSet **last_inserted_row, 
-				     guint *task_id, 
-				     GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
+				     GType *col_types, GdaSet **last_inserted_row, GError **error)
 {
 	GdaJdbcPStmt *ps;
 	JdbcConnectionData *cdata;
@@ -1349,13 +1338,6 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-	}
 
 	if (! (model_usage & GDA_STATEMENT_MODEL_RANDOM_ACCESS) &&
             ! (model_usage & GDA_STATEMENT_MODEL_CURSOR_FORWARD))
@@ -1536,9 +1518,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 			res = gda_jdbc_provider_statement_execute (provider, cnc,
 								   rstmt, params,
 								   model_usage,
-								   col_types, last_inserted_row,
-								   task_id,
-								   async_cb, cb_data, error);
+								   col_types, last_inserted_row, error);
 			g_object_unref (rstmt);
 			return res;
 		}
@@ -1598,9 +1578,7 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 									   rstmt, params,
 									   model_usage,
 									   col_types,
-									   last_inserted_row,
-									   task_id, async_cb,
-									   cb_data, error);
+									   last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
@@ -1763,8 +1741,8 @@ gda_jdbc_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
  * Safely removes any default value inserted or updated
  */
 static GdaSqlStatement *
-gda_jdbc_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
-			    GdaStatement *stmt, GdaSet *params, GError **error)
+gda_jdbc_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				     GdaStatement *stmt, GdaSet *params, GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);

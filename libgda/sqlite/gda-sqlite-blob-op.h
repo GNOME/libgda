@@ -44,7 +44,7 @@ struct _GdaSqliteBlobOpClass {
 };
 
 GType         _gda_sqlite_blob_op_get_type     (void) G_GNUC_CONST;
-GdaBlobOp    *_gda_sqlite_blob_op_new          (SqliteConnectionData *cdata,
+GdaBlobOp    *_gda_sqlite_blob_op_new          (GdaConnection *cnc,
 						const gchar *db_name, const gchar *table_name,
 						const gchar *column_name, sqlite3_int64 rowid);
 

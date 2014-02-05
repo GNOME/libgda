@@ -52,7 +52,7 @@ main ()
 
 	/* Set up Connection hub */
         provider = gda_vprovider_hub_new ();
-        hub = gda_virtual_connection_open (provider, NULL);
+        hub = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
         g_assert (hub);
 
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (hub), cnc, "sales", &error)) {

@@ -22,7 +22,6 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "browser-connection.h"
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include "support.h"
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
@@ -780,59 +779,6 @@ data_source_to_xml_node (DataSource *source)
 	return node;
 }
 
-static gboolean
-exec_end_timeout_cb (DataSource *source)
-{
-	GObject *obj;
-
-	g_return_val_if_fail (source->priv->exec_id > 0, FALSE);
-
-	g_clear_error (&source->priv->exec_error);
-	obj = browser_connection_execution_get_result (source->priv->bcnc,
-						       source->priv->exec_id,
-						       NULL,
-						       &source->priv->exec_error);
-	if (obj) {
-		if (GDA_IS_DATA_MODEL (obj)) {
-			if (source->priv->model != GDA_DATA_MODEL (obj)) {
-				if (source->priv->model)
-					g_object_unref (source->priv->model);
-				source->priv->model = GDA_DATA_MODEL (obj);
-				g_object_set (source->priv->model, "auto-reset", FALSE, NULL);
-			}
-			else {
-				gda_data_model_thaw (source->priv->model);
-				gda_data_model_reset (source->priv->model);
-			}
-			/*gda_data_model_dump (source->priv->model, NULL);*/
-		}
-		else {
-			g_object_unref (obj);
-			g_set_error (&source->priv->exec_error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
-				     "%s", _("Statement to execute is not a selection statement"));
-		}
-
-		source->priv->exec_id = 0;
-		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, source->priv->exec_error);
-		if (source->priv->exec_again) {
-			source->priv->exec_again = FALSE;
-			data_source_execute (source, NULL);
-		}
-		return FALSE;
-	}
-	else if (source->priv->exec_error) {
-		source->priv->exec_id = 0;
-		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, source->priv->exec_error);
-		if (source->priv->exec_again) {
-			source->priv->exec_again = FALSE;
-			data_source_execute (source, NULL);
-		}
-		return FALSE;
-	}
-	else
-		return TRUE; /* keep timer */
-}
-
 /**
  *data_source_get_statement
  */
@@ -932,13 +878,9 @@ void
 data_source_execute (DataSource *source, GError **error)
 {
 	GError *lerror = NULL;
-	gboolean has_exec = TRUE;
-	guint exec_id = 0;
 	g_return_if_fail (IS_DATA_SOURCE (source));
 
-	if (source->priv->exec_again)
-		return;
-	if (source->priv->executing || (source->priv->exec_id > 0)) {
+	if (source->priv->exec_again || source->priv->executing) {
 		source->priv->exec_again = TRUE;
 		return;
 	}
@@ -954,38 +896,48 @@ data_source_execute (DataSource *source, GError **error)
 
 	if (source->priv->model) {
 		if (source->priv->need_rerun) {
-			/* freeze source->priv->model to avoid that it emits signals while being in the
-			 * wrong thread */
 			source->priv->need_rerun = FALSE;
-			gda_data_model_freeze (source->priv->model);
-			exec_id = browser_connection_rerun_select (source->priv->bcnc,
-								   source->priv->model, &lerror);
+			g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
+			browser_connection_rerun_select (source->priv->bcnc, source->priv->model, &lerror);
+			gda_data_model_dump (source->priv->model, NULL);
+			g_signal_emit (source, data_source_signals [EXEC_FINISHED], lerror);
 		}
-		else
-			has_exec = FALSE;
 	}
-	else
-		exec_id = browser_connection_execute_statement (source->priv->bcnc,
-								source->priv->stmt,
-								source->priv->params,
-								GDA_STATEMENT_MODEL_RANDOM_ACCESS |
-								GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-								FALSE, &lerror);
-
-	if (has_exec) {
+	else {
+		GObject *result;
 		g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
-		if (! exec_id) {
-			gda_data_model_thaw (source->priv->model);
-			gda_data_model_reset (source->priv->model);
-			g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
-			g_propagate_error (error, lerror);
+		result = browser_connection_execute_statement (source->priv->bcnc,
+							       source->priv->stmt,
+							       source->priv->params,
+							       GDA_STATEMENT_MODEL_RANDOM_ACCESS |
+							       GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+							       NULL, &lerror);
+		if (result) {
+			if (GDA_IS_DATA_MODEL (result)) {
+				if (source->priv->model != GDA_DATA_MODEL (result)) {
+					if (source->priv->model)
+						g_object_unref (source->priv->model);
+					source->priv->model = GDA_DATA_MODEL (result);
+					g_object_set (source->priv->model, "auto-reset", FALSE, NULL);
+				}
+				gda_data_model_dump (source->priv->model, NULL);
+			}
+			else {
+				g_object_unref (result);
+				g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+					     "%s", _("Statement to execute is not a selection statement"));
+			}
+			g_signal_emit (source, data_source_signals [EXEC_FINISHED], lerror);
 		}
-		else {
-			/* monitor the end of execution */
-			source->priv->exec_id = exec_id;
-			g_timeout_add (50, (GSourceFunc) exec_end_timeout_cb, source);
-		}
+
+		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
 	}
+
+	if (source->priv->exec_again) {
+		source->priv->exec_again = FALSE;
+		data_source_execute (source, NULL);
+	}
+
 	source->priv->executing = FALSE;
 }
 

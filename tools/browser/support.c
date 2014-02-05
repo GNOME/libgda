@@ -363,7 +363,7 @@ browser_make_tab_label_with_pixbuf (const gchar *label,
  *
  * Get a pointer to an internal #GdkPixbuf for the requested @type. Don't unref it!
  *
- * Returns: an already existing #GdkPixbuf, or %NULL if the icon was not found
+ * Returns: (transfer none): an already existing #GdkPixbuf, or %NULL if the icon was not found
  */
 GdkPixbuf *
 browser_get_pixbuf_icon (BrowserIconType type)

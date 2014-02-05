@@ -279,21 +279,20 @@ gda_quark_list_clear (GdaQuarkList *qlist)
 
 /**
  * gda_quark_list_free:
- * @qlist: a #GdaQuarkList.
+ * @qlist: (allow-none): a #GdaQuarkList, or %NULL
  *
  * Releases all memory occupied by the given #GdaQuarkList.
  */
 void
 gda_quark_list_free (GdaQuarkList *qlist)
 {
-	g_return_if_fail (qlist != NULL);
-
-	if (qlist->hash_table)
-		g_hash_table_destroy (qlist->hash_table);
-	if (qlist->hash_protected)
-		g_hash_table_destroy (qlist->hash_protected);
-
-	g_free (qlist);
+	if (qlist) {
+		if (qlist->hash_table)
+			g_hash_table_destroy (qlist->hash_table);
+		if (qlist->hash_protected)
+			g_hash_table_destroy (qlist->hash_protected);
+		g_free (qlist);
+	}
 }
 
 
@@ -543,17 +542,16 @@ protect_foreach (G_GNUC_UNUSED gchar *key, ProtectedValue *pvalue, G_GNUC_UNUSED
 
 /**
  * gda_quark_list_protect_values:
- * @qlist: a #GdaQuarkList
+ * @qlist: (allow-none): a #GdaQuarkList, or %NULL
  *
- * Call this function to get rid of the clear version of the value associated to
- * @name.
+ * Call this function to get rid of the clear version of all the values stored in @qlist. If @qlist is %NULL,
+ * then this function does nothing.
  *
  * Since: 5.2.0
  */
 void
 gda_quark_list_protect_values (GdaQuarkList *qlist)
 {
-	g_return_if_fail (qlist);
-	if (qlist->hash_protected)
+	if (qlist && qlist->hash_protected)
 		g_hash_table_foreach (qlist->hash_protected, (GHFunc) protect_foreach, NULL);
 }

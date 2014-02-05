@@ -34,8 +34,11 @@ G_BEGIN_DECLS
 #define GDA_IS_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_BLOB_OP))
 #define GDA_IS_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_BLOB_OP))
 
+typedef struct _GdaBlobOpPrivate GdaBlobOpPrivate;
+
 struct _GdaBlobOp {
 	GObject object;
+	GdaBlobOpPrivate *priv;
 
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
@@ -43,12 +46,7 @@ struct _GdaBlobOp {
 
 struct _GdaBlobOpClass {
 	GObjectClass parent_class;
-
-	/* Virtual methods */
-	glong    (* get_length) (GdaBlobOp *op);
-	glong    (* read)       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
-	glong    (* write)      (GdaBlobOp *op, GdaBlob *blob, glong offset);
-	gboolean (* write_all)  (GdaBlobOp *op, GdaBlob *blob);
+	gpointer     functions;
 
 	/*< private >*/
 	/* Padding for future expansion */

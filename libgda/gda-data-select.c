@@ -37,9 +37,12 @@
 #include <libgda/gda-statement.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-internal.h>
 #include <libgda/gda-util.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <gda-statement-priv.h>
+#include <thread-wrapper/gda-worker.h>
+#include <libgda/gda-server-provider-private.h> /* for _gda_server_provider_get_real_main_context () */
 
 #define CLASS(x) (GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (x)))
 
@@ -98,7 +101,8 @@ typedef struct {
  */
 struct _GdaDataSelectPrivate {
 	GdaConnection          *cnc;
-        GdaDataModelIter       *iter;
+	GdaWorker              *worker;
+	GdaDataModelIter       *iter;
 	GArray                 *exceptions; /* array of #GError pointers */
 	PrivateShareable       *sh;
 	gulong                  ext_params_changed_sig_id;
@@ -121,6 +125,14 @@ enum
 	PROP_RESET_WITH_EXT_PARAM,
 	PROP_EXEC_DELAY
 };
+
+/* API to handle using a GdaWorker */
+static gint      _gda_data_select_fetch_nb_rows (GdaDataSelect *model);
+static gboolean  _gda_data_select_fetch_random  (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean  _gda_data_select_store_all     (GdaDataSelect *model, GError **error);
+static gboolean  _gda_data_select_fetch_next    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean  _gda_data_select_fetch_prev    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
+static gboolean  _gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 /* module error */
 GQuark gda_data_select_error_quark (void)
@@ -347,6 +359,7 @@ gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *kl
 
 	model->priv = g_new0 (GdaDataSelectPrivate, 1);
 	model->priv->cnc = NULL;
+	model->priv->worker = NULL;
 	model->priv->exceptions = NULL;
 	model->priv->sh = g_new0 (PrivateShareable, 1);
 	model->priv->sh-> notify_changes = TRUE;
@@ -477,6 +490,10 @@ gda_data_select_dispose (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
+		if (model->priv->worker) {
+			gda_worker_unref (model->priv->worker);
+			model->priv->worker = NULL;
+		}
 		if (model->priv->cnc) {
 			g_object_unref (model->priv->cnc);
 			model->priv->cnc = NULL;
@@ -668,17 +685,21 @@ create_columns (GdaDataSelect *model)
 
 static void
 gda_data_select_set_property (GObject *object,
-			 guint param_id,
-			 const GValue *value,
-			 GParamSpec *pspec)
+			      guint param_id,
+			      const GValue *value,
+			      GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_CNC:
 			model->priv->cnc = g_value_get_object (value);
-			if (model->priv->cnc)
+			if (model->priv->cnc) {
 				g_object_ref (model->priv->cnc);
+				model->priv->worker = _gda_connection_get_worker (model->priv->cnc);
+				g_assert (model->priv->worker);
+				gda_worker_ref (model->priv->worker);
+			}
 			break;
 		case PROP_PREP_STMT:
 			if (model->prep_stmt)
@@ -760,9 +781,9 @@ gda_data_select_set_property (GObject *object,
 
 static void
 gda_data_select_get_property (GObject *object,
-			 guint param_id,
-			 GValue *value,
-			 GParamSpec *pspec)
+			      guint param_id,
+			      GValue *value,
+			      GParamSpec *pspec)
 {
 	GdaDataSelect *model = (GdaDataSelect *) object;
 	if (model->priv) {
@@ -781,7 +802,7 @@ gda_data_select_get_property (GObject *object,
 				g_warning ("Cannot set the 'store-all-rows' property when access mode is cursor based");
 			else {
 				if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
-					CLASS (model)->fetch_nb_rows (model);
+					_gda_data_select_fetch_nb_rows (model);
 				g_value_set_boolean (value, model->nb_stored_rows == model->advertized_nrows);
 			}
 			break;
@@ -1757,7 +1778,7 @@ gda_data_select_get_n_rows (GdaDataModel *model)
 	if ((imodel->advertized_nrows < 0) &&
 	    (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) &&
 	    CLASS (model)->fetch_nb_rows)
-		retval = CLASS (model)->fetch_nb_rows (imodel);
+		retval = _gda_data_select_fetch_nb_rows (imodel);
 
 	if ((retval > 0) && (imodel->priv->sh->del_rows))
 		retval -= imodel->priv->sh->del_rows->len;
@@ -2021,7 +2042,7 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 	else {
 		prow = gda_data_select_get_stored_row (imodel, int_row);
 		if (!prow && CLASS (model)->fetch_random)
-			CLASS (model)->fetch_random (imodel, &prow, int_row, error);
+			_gda_data_select_fetch_random (imodel, &prow, int_row, error);
 	}
 	if (!prow)
 		return NULL;
@@ -2144,7 +2165,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	int_row = external_to_internal_row (imodel, target_iter_row, NULL);
 	prow = gda_data_select_get_stored_row (imodel, int_row);
 	if (!prow)
-		CLASS (model)->fetch_next (imodel, &prow, int_row, NULL);
+		_gda_data_select_fetch_next (imodel, &prow, int_row, NULL);
 
 	if (prow) {
 		imodel->priv->sh->iter_row = target_iter_row;
@@ -2193,7 +2214,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
-		CLASS (model)->fetch_prev (imodel, &prow, int_row, NULL);
+		_gda_data_select_fetch_prev (imodel, &prow, int_row, NULL);
 	}
 
 	if (prow) {
@@ -2238,7 +2259,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	}
 	else {
 		if (CLASS (model)->fetch_at) {
-			CLASS (model)->fetch_at (imodel, &prow, int_row, NULL);
+			_gda_data_select_fetch_at (imodel, &prow, int_row, NULL);
 			if (prow) {
 				imodel->priv->sh->iter_row = row;
 				update_iter (imodel, prow);
@@ -3833,7 +3854,7 @@ gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
 	/* fetching data */
 	if (model->advertized_nrows < 0) {
 		if (CLASS (model)->fetch_nb_rows)
-			CLASS (model)->fetch_nb_rows (model);
+			_gda_data_select_fetch_nb_rows (model);
 		if (model->advertized_nrows < 0) {
 			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
 				     "%s", _("Can't get the number of rows of data model"));
@@ -3843,7 +3864,7 @@ gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
 
 	if (model->nb_stored_rows != model->advertized_nrows) {
 		if (CLASS (model)->store_all) {
-			if (! CLASS (model)->store_all (model, error))
+			if (! _gda_data_select_store_all (model, error))
 				return FALSE;
 		}
 	}
@@ -3852,11 +3873,208 @@ gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
 	for (i = 0; i < model->advertized_nrows; i++) {
 		if (!g_hash_table_lookup (model->priv->sh->index, &i)) {
 			GdaRow *prow;
-			if (! CLASS (model)->fetch_at (model, &prow, i, error))
+			if (! _gda_data_select_fetch_at (model, &prow, i, error))
 				return FALSE;
 			g_assert (prow);
 			gda_data_select_take_row (model, prow, i);
 		}
 	}
 	return TRUE;
+}
+
+
+/*
+ * Implementation using GdaWorker
+ */
+
+static gpointer
+worker_fetch_nb_rows (GdaDataSelect *model, GError **error)
+{
+	gint *nbrows;
+	nbrows = g_slice_new (gint);
+	if (CLASS (model)->fetch_nb_rows)
+		*nbrows = CLASS (model)->fetch_nb_rows (model);
+	else
+		*nbrows = -1;
+
+	return (gpointer) nbrows;
+}
+
+static gint
+_gda_data_select_fetch_nb_rows (GdaDataSelect *model)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	gint nbrows = -1;
+	gint *result;
+	if (gda_worker_do_job (model->priv->worker, context, 0, (gpointer) &result, NULL,
+			       (GdaWorkerFunc) worker_fetch_nb_rows, model, NULL, NULL, NULL)) {
+		nbrows = *result;
+		g_slice_free (gint, result);
+	}
+	g_main_context_unref (context);
+
+	return nbrows;
+}
+
+/***********************************************************************************************************/
+
+typedef struct {
+	GdaDataSelect *model;
+	GdaRow       **prow;
+	gint           rownum;
+} WorkerData;
+
+static gpointer
+worker_fetch_random (WorkerData *data, GError **error)
+{
+	gboolean res;
+	if (CLASS (data->model)->fetch_random)
+		res = CLASS (data->model)->fetch_random (data->model, data->prow, data->rownum, error);
+	else
+		res = FALSE;
+
+	return res ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+_gda_data_select_fetch_random  (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	WorkerData jdata;
+	jdata.model = model;
+	jdata.prow = prow;
+	jdata.rownum = rownum;
+
+	gpointer result;
+	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
+			   (GdaWorkerFunc) worker_fetch_random, &jdata, NULL, NULL, error);
+	g_main_context_unref (context);
+	return result ? TRUE : FALSE;
+}
+
+/***********************************************************************************************************/
+
+static gpointer
+worker_store_all (GdaDataSelect *model, GError **error)
+{
+	gboolean res;
+	if (CLASS (model)->store_all)
+		res = CLASS (model)->store_all (model, error);
+	else
+		res = FALSE;
+
+	return res ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+_gda_data_select_store_all (GdaDataSelect *model, GError **error)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	gpointer result;
+	gda_worker_do_job (model->priv->worker, context, 0, (gpointer) &result, NULL,
+			   (GdaWorkerFunc) worker_store_all, model, NULL, NULL, NULL);
+	g_main_context_unref (context);
+	return result ? TRUE : FALSE;
+}
+
+/***********************************************************************************************************/
+
+static gpointer
+worker_fetch_next (WorkerData *data, GError **error)
+{
+	gboolean res;
+	if (CLASS (data->model)->fetch_next)
+		res = CLASS (data->model)->fetch_next (data->model, data->prow, data->rownum, error);
+	else
+		res = FALSE;
+
+	return res ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+_gda_data_select_fetch_next    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	WorkerData jdata;
+	jdata.model = model;
+	jdata.prow = prow;
+	jdata.rownum = rownum;
+
+	gpointer result;
+	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
+			   (GdaWorkerFunc) worker_fetch_next, &jdata, NULL, NULL, error);
+	g_main_context_unref (context);
+	return result ? TRUE : FALSE;
+}
+
+/***********************************************************************************************************/
+
+static gpointer
+worker_fetch_prev (WorkerData *data, GError **error)
+{
+	gboolean res;
+	if (CLASS (data->model)->fetch_prev)
+		res = CLASS (data->model)->fetch_prev (data->model, data->prow, data->rownum, error);
+	else
+		res = FALSE;
+
+	return res ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+_gda_data_select_fetch_prev    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	WorkerData jdata;
+	jdata.model = model;
+	jdata.prow = prow;
+	jdata.rownum = rownum;
+
+	gpointer result;
+	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
+			   (GdaWorkerFunc) worker_fetch_prev, &jdata, NULL, NULL, error);
+	g_main_context_unref (context);
+	return result ? TRUE : FALSE;
+}
+
+/***********************************************************************************************************/
+
+static gpointer
+worker_fetch_at (WorkerData *data, GError **error)
+{
+	gboolean res;
+	if (CLASS (data->model)->fetch_at)
+		res = CLASS (data->model)->fetch_at (data->model, data->prow, data->rownum, error);
+	else
+		res = FALSE;
+
+	return res ? (gpointer) 0x01 : NULL;
+}
+
+static gboolean
+_gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
+{
+	GMainContext *context;
+	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+
+	WorkerData jdata;
+	jdata.model = model;
+	jdata.prow = prow;
+	jdata.rownum = rownum;
+
+	gpointer result;
+	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
+			   (GdaWorkerFunc) worker_fetch_at, &jdata, NULL, NULL, error);
+	g_main_context_unref (context);
+	return result ? TRUE : FALSE;
 }

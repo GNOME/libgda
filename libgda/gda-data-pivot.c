@@ -2108,7 +2108,7 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 		virtual_provider = gda_vprovider_data_model_new ();
 	g_mutex_unlock (&provider_mutex);
 
-	vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
+	vcnc = gda_virtual_connection_open (virtual_provider, GDA_CONNECTION_OPTIONS_NONE, &lerror);
 	if (! vcnc) {
 		g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)

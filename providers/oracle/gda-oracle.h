@@ -31,12 +31,14 @@
 
 /* headers necessary for the C or C++ API */
 #include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 #include <oci.h>
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	OCIEnv *henv;
         OCIError *herr;
         OCIServer *hserver;

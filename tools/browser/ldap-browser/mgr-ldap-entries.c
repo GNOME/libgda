@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -141,22 +141,6 @@ mgr_ldap_entries_new (BrowserConnection *bcnc, const gchar *dn)
 	return (GdaTreeManager*) mgr;
 }
 
-typedef struct {
-	GMainLoop     *loop;
-	GdaLdapEntry **entries;
-	GError        *error;
-} AsyncExecData;
-
-static void
-update_children_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-		    gpointer out_result, AsyncExecData *data, GError *error)
-{
-	data->entries = (GdaLdapEntry **) out_result;
-	if (! data->entries && error)
-		data->error = g_error_copy (error);
-	g_main_loop_quit (data->loop);
-}
-
 static gint
 lentry_array_sort_func (gconstpointer a, gconstpointer b)
 {
@@ -182,8 +166,8 @@ lentry_array_sort_func (gconstpointer a, gconstpointer b)
 
 static GSList *
 mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
-				       G_GNUC_UNUSED const GSList *children_nodes, gboolean *out_error,
-				       GError **error)
+				  G_GNUC_UNUSED const GSList *children_nodes, gboolean *out_error,
+				  GError **error)
 {
 	MgrLdapEntries *mgr = MGR_LDAP_ENTRIES (manager);
 	gchar *real_dn = NULL;
@@ -200,37 +184,21 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 			real_dn = g_value_dup_string (cvalue);
 	}
 
-	AsyncExecData data;
-	guint id;
-	data.loop = NULL;
-	data.entries = NULL;
-	data.error = NULL;
+	GdaLdapEntry **entries;
 	gchar *attrs[] = {"objectClass", "cn", NULL};
+	entries = browser_connection_ldap_get_entry_children (mgr->priv->bcnc, real_dn, attrs, error);
 	
-	id = browser_connection_ldap_get_entry_children (mgr->priv->bcnc, real_dn, attrs,
-							 BROWSER_CONNECTION_JOB_CALLBACK (update_children_cb),
-							 &data, error);
-	g_free (real_dn);
-	if (id == 0) {
-		if (out_error)
-			*out_error = TRUE;
-		return NULL;
-	}
-	data.loop = g_main_loop_new (NULL, FALSE);
-	g_main_loop_run (data.loop);
-	g_main_loop_unref (data.loop);
-	
-	if (data.entries) {
+	if (entries) {
 		guint i;
 		GSList *list = NULL;
 		GArray *sorted_array;
 		sorted_array = g_array_new (FALSE, FALSE, sizeof (GdaLdapEntry*));
-		for (i = 0; data.entries [i]; i++) {
+		for (i = 0; entries [i]; i++) {
 			GdaLdapEntry *lentry;
-			lentry = data.entries [i];
+			lentry = entries [i];
 			g_array_prepend_val (sorted_array, lentry);
 		}
-		g_free (data.entries);
+		g_free (entries);
 
 		g_array_sort (sorted_array, (GCompareFunc) lentry_array_sort_func);
 
@@ -297,10 +265,6 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 		return list;
 	}
-	else {
-		g_propagate_error (error, data.error);
-		if (out_error)
-			*out_error = TRUE;
+	else
 		return NULL;
-	}
 }

@@ -40,7 +40,7 @@ main ()
 	parser = gda_sql_parser_new ();
 
 	provider = gda_vprovider_data_model_new ();
-	cnc = gda_virtual_connection_open (provider, NULL);
+	cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 	g_assert (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
 
 	g_print ("Connection status for %s: %s\n", G_OBJECT_TYPE_NAME (cnc), 

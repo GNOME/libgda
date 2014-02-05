@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -24,7 +24,6 @@
 #include "auth-dialog.h"
 #include "browser-spinner.h"
 #include "support.h"
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 
 /* 
  * Main static functions 
@@ -42,7 +41,6 @@ typedef struct {
 	GtkWidget  *auth_widget;
 	GString    *auth_string;
 
-	GdaThreadWrapper *wrapper;
 	guint jobid;
 } AuthData;
 
@@ -58,7 +56,6 @@ auth_data_free (AuthData *ad)
 	if (ad->auth_string)
 		g_string_free (ad->auth_string, TRUE);
 
-	g_object_unref (ad->wrapper);
 	if (ad->ext.cnc_open_error)
 		g_error_free (ad->ext.cnc_open_error);
 	if (ad->ext.cnc)
@@ -289,70 +286,59 @@ auth_dialog_new (GtkWindow *parent)
 					   "border-width", 10, NULL);
 }
 
-/*
- * executed in a sub thread
- */
-static GdaConnection *
-sub_thread_open_cnc (AuthData *ad, GError **error)
+static void
+cnc_opened_cb (GdaConnection *cnc, guint job_id, gboolean result, GError *error, AuthDialog *dialog)
 {
-#ifndef DUMMY
-	GdaConnection *cnc;
-	GdaDsnInfo *info = &(ad->cncinfo);
-	if (info->name)
-		cnc = gda_connection_open_from_dsn (info->name, ad->auth_string ? ad->auth_string->str : NULL,
-						    GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						    error);
-	else
-		cnc = gda_connection_open_from_string (info->provider, info->cnc_string,
-						       ad->auth_string ? ad->auth_string->str : NULL,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						       error);
+	if (result) {
 #ifdef HAVE_LDAP
-	if (cnc && GDA_IS_LDAP_CONNECTION (cnc)) {
-		/* force classes init */
-		gda_ldap_get_class_info (GDA_LDAP_CONNECTION (cnc), "top");
+		if (cnc && GDA_IS_LDAP_CONNECTION (cnc)) {
+			/* force classes init */
+			gda_ldap_get_class_info (GDA_LDAP_CONNECTION (cnc), "top");
+		}
+#endif
 	}
-#endif
-	return cnc;
-#else /* DUMMY defined */
-	sleep (5);
-	g_set_error (error, GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
-	return NULL;
-#endif
-}
 
-static gboolean
-check_for_cnc (AuthDialog *dialog)
-{
 	GSList *list;
 	gboolean finished = TRUE;
 	for (list = dialog->priv->auth_list; list; list = list->next) {
 		AuthData *ad = (AuthData*) list->data;
 
-		if (ad->jobid) {
-			GError *lerror = NULL;
-			ad->ext.cnc = gda_thread_wrapper_fetch_result (ad->wrapper, FALSE, ad->jobid, &lerror);
-			if (ad->ext.cnc || (!ad->ext.cnc && lerror)) {
-				/* waiting is finished! */
-				if (ad->ext.cnc)
-					g_object_set (ad->ext.cnc, "monitor-wrapped-in-mainloop", TRUE, NULL);
-				if (lerror)
-					ad->ext.cnc_open_error = lerror;
-				ad->jobid = 0;
+		g_print ("%s (job => %u, result => %d)\n", __FUNCTION__, job_id, result);
+		if (ad->jobid == job_id) {
+			if (!result) {
+				g_object_unref (ad->ext.cnc);
+				ad->ext.cnc = NULL;
+				if (error)
+					ad->ext.cnc_open_error = g_error_copy (error);
 			}
-			else
-				finished = FALSE;
+			ad->jobid = 0;
 		}
+		else if (ad->jobid)
+			finished = FALSE;
 	}
+}
 
-	if (finished) {
-		dialog->priv->source_id = 0;
-		if (dialog->priv->loop)
-			g_main_loop_quit (dialog->priv->loop);
-	}
-	return !finished;
+static void
+real_connection_open (AuthDialog *dialog, AuthData *ad)
+{
+#ifndef DUMMY
+	GdaConnection *cnc;
+	GdaDsnInfo *info = &(ad->cncinfo);
+	if (info->name)
+		ad->ext.cnc = gda_connection_new_from_dsn (info->name, ad->auth_string ? ad->auth_string->str : NULL,
+							   GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
+							   &(ad->ext.cnc_open_error));
+	else
+		ad->ext.cnc = gda_connection_new_from_string (info->provider, info->cnc_string,
+							      ad->auth_string ? ad->auth_string->str : NULL,
+							      GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
+							      &(ad->ext.cnc_open_error));
+	ad->jobid = gda_connection_open_async (ad->ext.cnc, (GdaConnectionOpenFunc*) cnc_opened_cb, dialog,
+					       &(ad->ext.cnc_open_error));
+#else /* DUMMY defined */
+	sleep (5);
+	g_set_error (&(ad->ext.cnc_open_error), GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
+#endif
 }
 
 static void
@@ -452,8 +438,6 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
 	AuthData *ad;
 	ad = g_new0 (AuthData, 1);
-	ad->wrapper = gda_thread_wrapper_new ();
-	/*g_print ("Auth dialog: new thread wrapper %p\n", ad->wrapper);*/
 	ad->ext.cnc_string = g_strdup (cnc_string);
 	ad->auth_string = NULL;
 	info = gda_config_get_dsn_info (real_cnc);
@@ -570,14 +554,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	}
 	else {
 		/* open connection right away */
-		ad->jobid = gda_thread_wrapper_execute (ad->wrapper,
-							(GdaThreadWrapperFunc) sub_thread_open_cnc,
-							(gpointer) ad,
-							(GDestroyNotify) NULL,
-							&(ad->ext.cnc_open_error));
-		if (dialog->priv->source_id == 0) {
-			dialog->priv->source_id = g_timeout_add (200, (GSourceFunc) check_for_cnc, dialog);
-		}
+		real_connection_open (dialog, ad);
 	}
 	
 	g_free (real_cnc_string);
@@ -678,15 +655,7 @@ auth_dialog_run (AuthDialog *dialog)
 						}
 					}
 					gtk_widget_set_sensitive (ad->auth_widget, FALSE);
-					ad->jobid = gda_thread_wrapper_execute (ad->wrapper,
-										(GdaThreadWrapperFunc) sub_thread_open_cnc,
-										(gpointer) ad,
-										(GDestroyNotify) NULL,
-										&(ad->ext.cnc_open_error));
-					if (dialog->priv->source_id == 0) {
-						dialog->priv->source_id = 
-							g_timeout_add (200, (GSourceFunc) check_for_cnc, dialog);
-					}
+					real_connection_open (dialog, ad);
 				}
 			}
 

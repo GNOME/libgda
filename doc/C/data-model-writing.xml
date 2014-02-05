@@ -12,11 +12,15 @@
   <para>
     Implementing a new <link linkend="GdaDataModel">GdaDataModel</link> is simply a matter of
     creating a new GObject which implements the <link linkend="GdaDataModel">GdaDataModel</link>
-    interface, which is described below. Thos new class needs to inherit GObject, but needs not
+    interface, which is described below. This new class needs to inherit GObject, but needs not
     be direct descendant of it. The way to subclass an object using GLib
     is not covered in this documentation, for this matter reref to
     <link linkend="howto-gobject-code">GObject's documentation</link>, or
     <ulink url="http://developer.gnome.org/gobject/stable/howto-gobject.html">online</ulink>.
+  </para>
+  <para>
+    Note that all the data models need to implement their lockung mechanism to be thread safe (i.e.
+    to be useable from several threads simultaneously).
   </para>
 
   <sect2 id="gda-data-model-writing-virtual-methods">

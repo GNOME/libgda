@@ -32,11 +32,13 @@
 /* headers necessary for the C API */
 #include <jni.h>
 #include <glib-object.h>
+#include <libgda/gda-connection-private.h>
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	gchar  *server_version;
 	GValue *jcnc_obj; /* JAVA GdaJConnection object */
 	GValue *jmeta_obj; /* JAVA GdaJMeta object */

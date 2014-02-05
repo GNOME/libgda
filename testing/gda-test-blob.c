@@ -184,7 +184,8 @@ main (int argc, char **argv)
 	*/
 
 	gda_connection_commit_transaction (cnc, NULL, NULL);
-	gda_connection_close (cnc);
+	if (! gda_connection_close (cnc, &error))
+		g_error ("Can't close connection: %s", error && error->message ? error->message : "No detail");
 
 	return 0;
 }

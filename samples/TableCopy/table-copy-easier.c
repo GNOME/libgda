@@ -37,7 +37,7 @@ main (int argc, char *argv[])
 	GdaVirtualProvider *provider;
 	GError *error = NULL;
 	provider = gda_vprovider_hub_new ();
-        virtual = gda_virtual_connection_open (provider, NULL);
+        virtual = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 
 	/* adding connections to the virtual connection */
         if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), s_cnc, "source", &error)) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -743,96 +743,74 @@ ad_sam_account_type_to_string (const gchar *value)
 }
 
 static void
-info_fetch_cb (BrowserConnection *bcnc, gpointer out_result, EntryProperties *eprop, G_GNUC_UNUSED GError *error)
+entry_info_fetched_done (EntryProperties *eprop, GdaLdapEntry *entry)
 {
-	if (out_result) {
-		GtkTextBuffer *tbuffer;
-		GtkTextIter start, end;
-		
-		tbuffer = eprop->priv->text;
-		gtk_text_buffer_get_start_iter (tbuffer, &start);
-		gtk_text_buffer_get_end_iter (tbuffer, &end);
-		gtk_text_buffer_delete (tbuffer, &start, &end);
+	GtkTextBuffer *tbuffer;
+	GtkTextIter start, end;
+	BrowserConnection *bcnc = eprop->priv->bcnc;
+	
+	tbuffer = eprop->priv->text;
+	gtk_text_buffer_get_start_iter (tbuffer, &start);
+	gtk_text_buffer_get_end_iter (tbuffer, &end);
+	gtk_text_buffer_delete (tbuffer, &start, &end);
 
-		GdaLdapEntry *entry = (GdaLdapEntry*) out_result;
-		guint i;
-		GtkTextIter current;
+	guint i;
+	GtkTextIter current;
 
-		gtk_text_buffer_get_start_iter (tbuffer, &current);
+	gtk_text_buffer_get_start_iter (tbuffer, &current);
 
-		/* DN */
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, _("Distinguished Name:"), -1,
-							  "section", NULL);
+	/* DN */
+	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, _("Distinguished Name:"), -1,
+						  "section", NULL);
+	gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1, "starter", NULL);
+	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, entry->dn, -1,
+						  "data", NULL);
+	gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+
+	/* other attributes */
+	const gchar *basedn;
+	GdaDataHandler *ts_dh = NULL;
+	basedn = browser_connection_ldap_get_base_dn (bcnc);
+
+	for (i = 0; i < entry->nb_attributes; i++) {
+		GdaLdapAttribute *attr;
+		gchar *tmp;
+		attr = entry->attributes [i];
+		tmp = g_strdup_printf ("%s:", attr->attr_name);
+		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, tmp, -1, "section", NULL);
+		g_free (tmp);
 		gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1, "starter", NULL);
-		gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, entry->dn, -1,
-							  "data", NULL);
-		gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
 
-		/* other attributes */
-		const gchar *basedn;
-		GdaDataHandler *ts_dh = NULL;
-		basedn = browser_connection_ldap_get_base_dn (bcnc);
+		guint j;
+		for (j = 0; j < attr->nb_values; j++) {
+			const GValue *cvalue;
+			cvalue = attr->values [j];
 
-		for (i = 0; i < entry->nb_attributes; i++) {
-			GdaLdapAttribute *attr;
-			gchar *tmp;
-			attr = entry->attributes [i];
-			tmp = g_strdup_printf ("%s:", attr->attr_name);
-			gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, tmp, -1, "section", NULL);
-			g_free (tmp);
-			gtk_text_buffer_insert (tbuffer, &current, "\n", -1);
+			gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1,
+								  "starter", NULL);
 
-			guint j;
-			for (j = 0; j < attr->nb_values; j++) {
-				const GValue *cvalue;
-				cvalue = attr->values [j];
+			if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) {
+				GValue *copyvalue;
+				GtkTextTagTable *table;
+				GtkTextTag *tag;
+				GtkTextMark *mark;
 
-				gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1,
-									  "starter", NULL);
+				copyvalue = gda_value_copy (cvalue);
+				table = gtk_text_buffer_get_tag_table (tbuffer);
+				tag = gtk_text_tag_new (NULL);
+				gtk_text_tag_table_add (table, tag);
+				g_object_set_data_full ((GObject*) tag, "binvalue",
+							copyvalue, (GDestroyNotify) gda_value_free);
+				g_object_unref ((GObject*) tag);
 
-				if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) {
-					GValue *copyvalue;
-					GtkTextTagTable *table;
-					GtkTextTag *tag;
-					GtkTextMark *mark;
+				mark = gtk_text_buffer_create_mark (tbuffer, NULL, &current, TRUE);
 
-					copyvalue = gda_value_copy (cvalue);
-					table = gtk_text_buffer_get_tag_table (tbuffer);
-					tag = gtk_text_tag_new (NULL);
-					gtk_text_tag_table_add (table, tag);
-					g_object_set_data_full ((GObject*) tag, "binvalue",
-								copyvalue, (GDestroyNotify) gda_value_free);
-					g_object_unref ((GObject*) tag);
-
-					mark = gtk_text_buffer_create_mark (tbuffer, NULL, &current, TRUE);
-
-					GdkPixbuf *pixbuf;
-					pixbuf = data_to_pixbuf (cvalue);
-					if (pixbuf) {
-						gtk_text_buffer_insert_pixbuf (tbuffer, &current, pixbuf); 
-						g_object_unref (pixbuf);
-											}
-					else {
-						GdaDataHandler *dh;
-						dh = gda_data_handler_get_default (G_VALUE_TYPE (cvalue));
-						if (dh)
-							tmp = gda_data_handler_get_str_from_value (dh, cvalue);
-						else
-							tmp = gda_value_stringify (cvalue);
-						gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
-											  tmp, -1,
-											  "data", NULL);
-						g_free (tmp);
-					}
-					GtkTextIter before;
-					gtk_text_buffer_get_iter_at_mark (tbuffer, &before, mark);
-					gtk_text_buffer_apply_tag (tbuffer, tag, &before, &current);
-					gtk_text_buffer_delete_mark (tbuffer, mark);
-					
-					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
-										  "\n", 1,
-										  "data", NULL);
+				GdkPixbuf *pixbuf;
+				pixbuf = data_to_pixbuf (cvalue);
+				if (pixbuf) {
+					gtk_text_buffer_insert_pixbuf (tbuffer, &current, pixbuf); 
+					g_object_unref (pixbuf);
 				}
 				else {
 					GdaDataHandler *dh;
@@ -841,89 +819,107 @@ info_fetch_cb (BrowserConnection *bcnc, gpointer out_result, EntryProperties *ep
 						tmp = gda_data_handler_get_str_from_value (dh, cvalue);
 					else
 						tmp = gda_value_stringify (cvalue);
-					if (tmp) {
-						if (*tmp &&
-						    ((basedn && g_str_has_suffix (tmp, basedn)) || !basedn) &&
-						    gda_ldap_is_dn (tmp)) {
-							/* we have a DN */
-							GtkTextTag *tag;
-							tag = gtk_text_buffer_create_tag (tbuffer, NULL,
-											  "foreground", "blue",
-											  "weight", PANGO_WEIGHT_NORMAL,
-											  "underline", PANGO_UNDERLINE_SINGLE,
-											  NULL);
-							g_object_set_data_full (G_OBJECT (tag), "dn",
-										g_strdup (tmp), g_free);
-							gtk_text_buffer_insert_with_tags (tbuffer, &current,
-											  tmp, -1,
-											  tag, NULL);
-						}
-						else if (attr->attr_name &&
-							 !g_ascii_strcasecmp (attr->attr_name, "objectClass")) {
-							GtkTextTag *tag;
-							tag = gtk_text_buffer_create_tag (tbuffer, NULL,
-											  "foreground", "blue",
-											  "weight", PANGO_WEIGHT_NORMAL,
-											  "underline", PANGO_UNDERLINE_SINGLE,
-											  NULL);
-							g_object_set_data_full (G_OBJECT (tag), "class",
-										g_strdup (tmp), g_free);
-							gtk_text_buffer_insert_with_tags (tbuffer, &current,
-											  tmp, -1,
-											  tag, NULL);
-						}
-						else
-							gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, tmp, -1,
-												  "data", NULL);
-
-						gchar *extrainfo = NULL;
-						if (!strncmp (attr->attr_name, "shadow", 6) &&
-						    (!strcmp (attr->attr_name, "shadowLastChange") ||
-						     !strcmp (attr->attr_name, "shadowMax") ||
-						     !strcmp (attr->attr_name, "shadowMin") ||
-						     !strcmp (attr->attr_name, "shadowInactive") ||
-						     !strcmp (attr->attr_name, "shadowExpire")))
-							extrainfo = unix_shadow_to_string (tmp, attr->attr_name);
-						else if (!strcmp (attr->attr_name, "badPasswordTime") ||
-							 !strcmp (attr->attr_name, "lastLogon") ||
-							 !strcmp (attr->attr_name, "pwdLastSet") ||
-							 !strcmp (attr->attr_name, "accountExpires") ||
-							 !strcmp (attr->attr_name, "lockoutTime") ||
-							 !strcmp (attr->attr_name, "lastLogonTimestamp"))
-							extrainfo = ad_1601_timestamp_to_string (tmp, attr->attr_name);
-						else if (!strcmp (attr->attr_name, "userAccountControl"))
-							extrainfo = ad_1601_uac_to_string (tmp);
-						else if (!strcmp (attr->attr_name, "sAMAccountType"))
-							extrainfo = ad_sam_account_type_to_string (tmp);
-
-						if (extrainfo) {
-							gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
-												  " ", 1,
-												  "data", NULL);
-							gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
-												  extrainfo, -1,
-												  "convdata", NULL);
-							g_free (extrainfo);
-						}
-						g_free (tmp);
-					}
-					else {
-						gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, _("Can't display attribute value"), -1,
-											  "error", NULL);
-					}
 					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
-										  "\n", 1,
+										  tmp, -1,
 										  "data", NULL);
+					g_free (tmp);
 				}
+				GtkTextIter before;
+				gtk_text_buffer_get_iter_at_mark (tbuffer, &before, mark);
+				gtk_text_buffer_apply_tag (tbuffer, tag, &before, &current);
+				gtk_text_buffer_delete_mark (tbuffer, mark);
+					
+				gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+									  "\n", 1,
+									  "data", NULL);
+			}
+			else {
+				GdaDataHandler *dh;
+				dh = gda_data_handler_get_default (G_VALUE_TYPE (cvalue));
+				if (dh)
+					tmp = gda_data_handler_get_str_from_value (dh, cvalue);
+				else
+					tmp = gda_value_stringify (cvalue);
+				if (tmp) {
+					if (*tmp &&
+					    ((basedn && g_str_has_suffix (tmp, basedn)) || !basedn) &&
+					    gda_ldap_is_dn (tmp)) {
+						/* we have a DN */
+						GtkTextTag *tag;
+						tag = gtk_text_buffer_create_tag (tbuffer, NULL,
+										  "foreground", "blue",
+										  "weight", PANGO_WEIGHT_NORMAL,
+										  "underline", PANGO_UNDERLINE_SINGLE,
+										  NULL);
+						g_object_set_data_full (G_OBJECT (tag), "dn",
+									g_strdup (tmp), g_free);
+						gtk_text_buffer_insert_with_tags (tbuffer, &current,
+										  tmp, -1,
+										  tag, NULL);
+					}
+					else if (attr->attr_name &&
+						 !g_ascii_strcasecmp (attr->attr_name, "objectClass")) {
+						GtkTextTag *tag;
+						tag = gtk_text_buffer_create_tag (tbuffer, NULL,
+										  "foreground", "blue",
+										  "weight", PANGO_WEIGHT_NORMAL,
+										  "underline", PANGO_UNDERLINE_SINGLE,
+										  NULL);
+						g_object_set_data_full (G_OBJECT (tag), "class",
+									g_strdup (tmp), g_free);
+						gtk_text_buffer_insert_with_tags (tbuffer, &current,
+										  tmp, -1,
+										  tag, NULL);
+					}
+					else
+						gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, tmp, -1,
+											  "data", NULL);
+
+					gchar *extrainfo = NULL;
+					if (!strncmp (attr->attr_name, "shadow", 6) &&
+					    (!strcmp (attr->attr_name, "shadowLastChange") ||
+					     !strcmp (attr->attr_name, "shadowMax") ||
+					     !strcmp (attr->attr_name, "shadowMin") ||
+					     !strcmp (attr->attr_name, "shadowInactive") ||
+					     !strcmp (attr->attr_name, "shadowExpire")))
+						extrainfo = unix_shadow_to_string (tmp, attr->attr_name);
+					else if (!strcmp (attr->attr_name, "badPasswordTime") ||
+						 !strcmp (attr->attr_name, "lastLogon") ||
+						 !strcmp (attr->attr_name, "pwdLastSet") ||
+						 !strcmp (attr->attr_name, "accountExpires") ||
+						 !strcmp (attr->attr_name, "lockoutTime") ||
+						 !strcmp (attr->attr_name, "lastLogonTimestamp"))
+						extrainfo = ad_1601_timestamp_to_string (tmp, attr->attr_name);
+					else if (!strcmp (attr->attr_name, "userAccountControl"))
+						extrainfo = ad_1601_uac_to_string (tmp);
+					else if (!strcmp (attr->attr_name, "sAMAccountType"))
+						extrainfo = ad_sam_account_type_to_string (tmp);
+
+					if (extrainfo) {
+						gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+											  " ", 1,
+											  "data", NULL);
+						gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+											  extrainfo, -1,
+											  "convdata", NULL);
+						g_free (extrainfo);
+					}
+					g_free (tmp);
+				}
+				else {
+					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, _("Can't display attribute value"), -1,
+										  "error", NULL);
+				}
+				gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
+									  "\n", 1,
+									  "data", NULL);
 			}
 		}
-		if (ts_dh)
-			g_object_unref (ts_dh);
-		gda_ldap_entry_free (entry);
 	}
-	else
-		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
-				      "%s", _("Could not get information about LDAP entry"));
+	if (ts_dh)
+		g_object_unref (ts_dh);
+	gda_ldap_entry_free (entry);
+
 
 	if (eprop->priv->text_search && gtk_widget_get_visible (eprop->priv->text_search))
 		text_search_rerun (TEXT_SEARCH (eprop->priv->text_search));
@@ -952,11 +948,11 @@ entry_properties_set_dn (EntryProperties *eprop, const gchar *dn)
         gtk_text_buffer_delete (tbuffer, &start, &end);
 
 	if (dn && *dn) {
-		guint id;
-		id = browser_connection_ldap_describe_entry (eprop->priv->bcnc, dn,
-							     (BrowserConnectionJobCallback) info_fetch_cb,
-							     g_object_ref (eprop), NULL);
-		if (id == 0)
+		GdaLdapEntry *entry;
+		entry = browser_connection_ldap_describe_entry (eprop->priv->bcnc, dn, NULL);
+		if (entry)
+			entry_info_fetched_done (eprop, entry);
+		else 
 			browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
 					      "%s", _("Could not get information about LDAP entry"));
 	}

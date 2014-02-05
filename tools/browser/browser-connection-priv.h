@@ -19,18 +19,7 @@
 #ifndef __BROWSER_CONNECTION_PRIVATE_H__
 #define __BROWSER_CONNECTION_PRIVATE_H__
 
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
-
 struct _BrowserConnectionPrivate {
-	GdaThreadWrapper *wrapper;
-	GIOChannel       *ioc;
-	guint             ioc_watch_id;
-	GSList           *wrapper_jobs;
-	guint             wrapper_results_timer;
-	gboolean          long_timer;
-	gint              nb_no_job_waits; /* number of times check_for_wrapper_result() has been
-					      called without any job */
-
 	GHashTable       *executed_statements; /* key = guint exec ID, value = a StatementResult pointer */
 
 	gulong            meta_store_signal;
@@ -42,10 +31,7 @@ struct _BrowserConnectionPrivate {
         GdaSqlParser  *parser;
 
 	GdaDsnInfo     dsn_info;
-	GMutex        mstruct_mutex;
-	GSList        *p_mstruct_list; /* private GdaMetaStruct list: while they are being created */
-	GdaMetaStruct *c_mstruct; /* last GdaMetaStruct up to date, ready to be passed as @mstruct */
-	GdaMetaStruct *mstruct; /* public GdaMetaStruct: once it has been created and is no more modified */
+	GdaMetaStruct *mstruct;
 
 	ToolsFavorites *bfav;
 
@@ -55,9 +41,6 @@ struct _BrowserConnectionPrivate {
 	GdaConnection *store_cnc;
 
 	GdaSet        *variables;
-
-	GSList        *results_list; /* list of #ExecCallbackData pointers */
-	gulong         results_timer_id;
 };
 
 void browser_connection_set_busy_state (BrowserConnection *bcnc, gboolean busy, const gchar *busy_reason);

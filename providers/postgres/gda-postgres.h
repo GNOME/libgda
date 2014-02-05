@@ -30,6 +30,7 @@
 #define POSTGRES_PROVIDER_NAME "PostgreSQL"
 
 #include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 #include <libpq-fe.h>
 #include <libpq/libpq-fs.h>
 #include <gda-postgres-reuseable.h>
@@ -49,6 +50,7 @@ typedef struct {
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	GdaPostgresReuseable *reuseable;
 	GdaConnection        *cnc;
         PGconn               *pconn;

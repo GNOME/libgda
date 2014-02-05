@@ -510,24 +510,6 @@ insert_form_params_changed_cb (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *pa
 					   gdaui_basic_form_is_valid (form));
 }
 
-static void statement_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-				   G_GNUC_UNUSED guint exec_id,
-				   G_GNUC_UNUSED GObject *out_result,
-				   G_GNUC_UNUSED GdaSet *out_last_inserted_row, GError *error,
-				   TableInfo *tinfo)
-{
-	if (error)
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
-				    _("Error executing query:\n%s"),
-				    error->message ?
-				    error->message : _("No detail"));
-	else
-		browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
-						   GTK_MESSAGE_INFO,
-						   "DataInsertQuery",
-						   "%s", _("Data successfully inserted"));
-}
-
 static void
 insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 {
@@ -539,12 +521,18 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 		stmt = g_object_get_data (G_OBJECT (dialog), "stmt");
 		params = g_object_get_data (G_OBJECT (dialog), "params");
 
-		if (! browser_connection_execute_statement_cb (tinfo->priv->bcnc,
+		GObject *result;
+		result = browser_connection_execute_statement (tinfo->priv->bcnc,
 							       stmt, params,
-							       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-							       FALSE, 
-							       (BrowserConnectionExecuteCallback) statement_executed_cb,
-							       tinfo, &lerror)) {
+							       GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, &lerror);
+		if (result) {
+			browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+							   GTK_MESSAGE_INFO,
+							   "DataInsertQuery",
+							   "%s", _("Data successfully inserted"));
+			g_object_unref (result);
+		}
+		else {
 			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 					    _("Error executing query: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -572,22 +560,21 @@ typedef struct {
 	gboolean      model_rerunning;
 } FKBindData;
 
+/*
+ * @result: (transfer full)
+ */
 static void
-fk_bind_select_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-			    G_GNUC_UNUSED guint exec_id,
-			    GObject *out_result,
-			    G_GNUC_UNUSED GdaSet *out_last_inserted_row, G_GNUC_UNUSED GError *error,
-			    FKBindData *fkdata)
+fk_bind_select_executed_cb (GObject *result, FKBindData *fkdata)
 {
 	gint i;
 	GdaDataModel *model;
-	if (! out_result)
+	if (! result)
 		return;
 
 	if (fkdata->model)
 		g_object_unref (fkdata->model);
 
-	model = GDA_DATA_MODEL (out_result);
+	model = GDA_DATA_MODEL (result);
 	for (i = 0; i < fkdata->cols_nb; i++) {
 		GdaHolder *h;
 		GdaSetSource *source;
@@ -621,7 +608,7 @@ fk_bind_select_executed_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
 			}
 		}
 	}
-	fkdata->model = g_object_ref (out_result);
+	fkdata->model = GDA_DATA_MODEL (result);
 	fkdata->model_rerunning = FALSE;
 }
 
@@ -656,13 +643,13 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 		     fkdata_list; fkdata_list = fkdata_list->next) {
 			FKBindData *fkdata = (FKBindData *) fkdata_list->data;
 			if (fkdata->model && !fkdata->model_rerunning) {
-				if (browser_connection_execute_statement_cb (tinfo->priv->bcnc,
-									     fkdata->stmt, NULL,
-									     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									     FALSE,
-									     (BrowserConnectionExecuteCallback) fk_bind_select_executed_cb,
-									     fkdata, NULL) != 0)
-					fkdata->model_rerunning = TRUE;
+				GObject *result;
+				fkdata->model_rerunning = TRUE;
+				result = browser_connection_execute_statement (tinfo->priv->bcnc,
+									       fkdata->stmt, NULL,
+									       GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
+									       NULL);
+				fk_bind_select_executed_cb (result, fkdata);
 			}
 		}
 		return;
@@ -873,21 +860,18 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 				memcpy (fkdata->fk_cols_array, fk->fk_cols_array, sizeof (gint) * fk->cols_nb);
 				fkdata->chash = tinfo->priv->insert_columns_hash;
 				fkdata->stmt = stmt;
-				eid = browser_connection_execute_statement_cb (tinfo->priv->bcnc, stmt, NULL,
+
+				GObject *result;
+				result = browser_connection_execute_statement (tinfo->priv->bcnc, stmt, NULL,
 									       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-									       FALSE,
-									       (BrowserConnectionExecuteCallback) fk_bind_select_executed_cb,
-									       fkdata, NULL);
-				if (! eid) {
-					g_free (fkdata->fk_cols_array);
-					g_object_unref (fkdata->stmt);
-					g_free (fkdata);
-				}
+									       NULL, NULL);
 				fkdata->insert_params = g_object_ref (params);
 
 				/* attach the kfdata to @popup to be able to re-run the SELECT
 				 * everytime the window is shown */
 				fkdata_list = g_slist_prepend (fkdata_list, fkdata);
+
+				fk_bind_select_executed_cb (result, fkdata);
 			}
 
 			g_object_unref (b);

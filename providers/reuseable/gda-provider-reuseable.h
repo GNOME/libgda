@@ -23,7 +23,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <libgda/gda-decl.h>
-#include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-impl.h>
 
 G_BEGIN_DECLS
 

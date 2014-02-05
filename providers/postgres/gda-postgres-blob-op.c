@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
@@ -25,6 +25,7 @@
 #include <string.h>
 #include "gda-postgres.h"
 #include "gda-postgres-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include "gda-postgres-util.h"
 
 struct _GdaPostgresBlobOpPrivate {
@@ -94,9 +95,9 @@ gda_postgres_blob_op_class_init (GdaPostgresBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_postgres_blob_op_finalize;
-	blob_class->get_length = gda_postgres_blob_op_get_length;
-	blob_class->read = gda_postgres_blob_op_read;
-	blob_class->write = gda_postgres_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_postgres_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_postgres_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_postgres_blob_op_write;
 }
 
 static PGconn *
@@ -104,7 +105,7 @@ get_pconn (GdaConnection *cnc)
 {
 	PostgresConnectionData *cdata;
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 
@@ -169,7 +170,7 @@ gda_postgres_blob_op_new (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	pgop = g_object_new (GDA_TYPE_POSTGRES_BLOB_OP, NULL);
+	pgop = g_object_new (GDA_TYPE_POSTGRES_BLOB_OP, "connection", cnc, NULL);
 	pgop->priv->cnc = cnc;
 	
 	return GDA_BLOB_OP (pgop);
@@ -182,7 +183,7 @@ gda_postgres_blob_op_new_with_id (GdaConnection *cnc, const gchar *sql_id)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	pgop = g_object_new (GDA_TYPE_POSTGRES_BLOB_OP, NULL);
+	pgop = g_object_new (GDA_TYPE_POSTGRES_BLOB_OP, "connection", cnc, NULL);
 
 	pgop->priv->blobid = atoi (sql_id);
 	pgop->priv->cnc = cnc;

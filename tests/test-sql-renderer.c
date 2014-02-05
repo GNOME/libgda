@@ -20,8 +20,6 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>
 
-#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
-
 static gboolean
 string_equal_to_template (const gchar *str, const gchar *tmpl)
 {
@@ -59,6 +57,9 @@ GdaTime gt = {
 };
 
 
+/*
+ * @prov may be NULL
+ */
 static guint
 do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 {
@@ -105,10 +106,24 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		goto endtest;
 	}
 
+	GdaConnection *cnc = NULL;
+	if (prov) {
+		cnc = gda_connection_new_from_string (gda_server_provider_get_name (prov), "DB_NAME=dummy;HOST=dummy", NULL,
+						      GDA_CONNECTION_OPTIONS_NONE, &error);
+		if (!cnc) {
+			g_print ("Failed to create GdaConnection object: %s\n",
+				 error && error->message ? error->message : "No detail");
+			g_clear_error (&error);
+			g_object_unref (stmt);
+			g_object_unref (params);
+			nfailed ++;
+			goto endtest;
+		}
+	}
 	gchar *expected;
 	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
-	if (prov && PROV_CLASS (prov)->statement_to_sql)
-		sql = PROV_CLASS (prov)->statement_to_sql (prov, NULL, stmt, params, 0, NULL, &error);
+	if (cnc)
+		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
 		sql = gda_statement_to_sql_extended (stmt, NULL, params, 0, NULL, &error);
 	if (!sql) {
@@ -130,8 +145,8 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	g_free (sql);
 
 	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
-	if (prov && PROV_CLASS (prov)->statement_to_sql)
-		sql = PROV_CLASS (prov)->statement_to_sql (prov, NULL, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
+	if (cnc)
+		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
 		sql = gda_statement_to_sql_extended (stmt, NULL, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	if (!sql) {
@@ -190,8 +205,8 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 
 	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
-	if (prov && PROV_CLASS (prov)->statement_to_sql)
-		sql = PROV_CLASS (prov)->statement_to_sql (prov, NULL, stmt, params, 0, NULL, &error);
+	if (cnc)
+		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
 		sql = gda_statement_to_sql_extended (stmt, NULL, params, 0, NULL, &error);
 	if (!sql) {
@@ -213,8 +228,8 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	g_free (sql);
 
 	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
-	if (prov && PROV_CLASS (prov)->statement_to_sql)
-		sql = PROV_CLASS (prov)->statement_to_sql (prov, NULL, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
+	if (cnc)
+		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
 		sql = gda_statement_to_sql_extended (stmt, NULL, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	if (!sql) {

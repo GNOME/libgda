@@ -28,6 +28,7 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -58,8 +59,7 @@ static GObjectClass *parent_class = NULL;
  */
 /* connection management */
 static gboolean            gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-							     GdaQuarkList *params, GdaQuarkList *auth,
-							     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+							     GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean            gda_web_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 
@@ -73,9 +73,7 @@ static gchar              *gda_web_provider_render_operation (GdaServerProvider 
 							      GdaServerOperation *op, GError **error);
 
 static gboolean            gda_web_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-							       GdaServerOperation *op, guint *task_id, 
-							       GdaServerProviderAsyncCallback async_cb, gpointer cb_data,
-							       GError **error);
+							       GdaServerOperation *op, GError **error);
 /* transactions */
 static gboolean            gda_web_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
 							       const gchar *name, GdaTransactionIsolation level, GError **error);
@@ -95,6 +93,8 @@ static const gchar        *gda_web_provider_get_version (GdaServerProvider *prov
 static gboolean            gda_web_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							      GdaConnectionFeature feature);
 
+static GdaWorker          *gda_web_provider_create_worker (GdaServerProvider *provider);
+
 static const gchar        *gda_web_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -113,21 +113,105 @@ static gboolean             gda_web_provider_statement_prepare (GdaServerProvide
 static GObject             *gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 								GdaStatement *stmt, GdaSet *params,
 								GdaStatementModelUsage model_usage, 
-								GType *col_types, GdaSet **last_inserted_row, 
-								guint *task_id, GdaServerProviderExecCallback async_cb, 
-								gpointer cb_data, GError **error);
-static GdaSqlStatement     *gda_web_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+								GType *col_types, GdaSet **last_inserted_row, GError **error);
+static GdaSqlStatement     *gda_web_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 								GdaStatement *stmt, GdaSet *params, GError **error);
 
 /* Quoting */
-static gchar               *gda_web_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
-							 const gchar *id,
-							 gboolean meta_store_convention, gboolean force_quotes);
+static gchar               *gda_web_provider_identifier_quote  (GdaServerProvider *provider, GdaConnection *cnc,
+								const gchar *id,
+								gboolean meta_store_convention, gboolean force_quotes);
 
 
 /*
  * GdaWebProvider class implementation
  */
+GdaServerProviderBase web_base_functions = {
+	gda_web_provider_get_name,
+	gda_web_provider_get_version,
+	gda_web_provider_get_server_version,
+	gda_web_provider_supports_feature,
+	gda_web_provider_create_worker,
+	NULL,
+	gda_web_provider_create_parser,
+	gda_web_provider_get_data_handler,
+	gda_web_provider_get_default_dbms_type,
+	gda_web_provider_supports_operation,
+	gda_web_provider_create_operation,
+	gda_web_provider_render_operation,
+	gda_web_provider_statement_to_sql,
+	gda_web_provider_identifier_quote,
+	gda_web_provider_statement_rewrite,
+	gda_web_provider_open_connection,
+	NULL,
+	gda_web_provider_close_connection,
+	NULL,
+	NULL,
+	NULL,
+	gda_web_provider_perform_operation,
+	gda_web_provider_begin_transaction,
+	gda_web_provider_commit_transaction,
+	gda_web_provider_rollback_transaction,
+	gda_web_provider_add_savepoint,
+	gda_web_provider_rollback_savepoint,
+	gda_web_provider_delete_savepoint,
+	gda_web_provider_statement_prepare,
+	gda_web_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderMeta web_meta_functions = {
+	_gda_web_meta__info,
+	_gda_web_meta__btypes,
+	_gda_web_meta__udt,
+	_gda_web_meta_udt,
+	_gda_web_meta__udt_cols,
+	_gda_web_meta_udt_cols,
+	_gda_web_meta__enums,
+	_gda_web_meta_enums,
+	_gda_web_meta__domains,
+	_gda_web_meta_domains,
+	_gda_web_meta__constraints_dom,
+	_gda_web_meta_constraints_dom,
+	_gda_web_meta__el_types,
+	_gda_web_meta_el_types,
+	_gda_web_meta__collations,
+	_gda_web_meta_collations,
+	_gda_web_meta__character_sets,
+	_gda_web_meta_character_sets,
+	_gda_web_meta__schemata,
+	_gda_web_meta_schemata,
+	_gda_web_meta__tables_views,
+	_gda_web_meta_tables_views,
+	_gda_web_meta__columns,
+	_gda_web_meta_columns,
+	_gda_web_meta__view_cols,
+	_gda_web_meta_view_cols,
+	_gda_web_meta__constraints_tab,
+	_gda_web_meta_constraints_tab,
+	_gda_web_meta__constraints_ref,
+	_gda_web_meta_constraints_ref,
+	_gda_web_meta__key_columns,
+	_gda_web_meta_key_columns,
+	_gda_web_meta__check_columns,
+	_gda_web_meta_check_columns,
+	_gda_web_meta__triggers,
+	_gda_web_meta_triggers,
+	_gda_web_meta__routines,
+	_gda_web_meta_routines,
+	_gda_web_meta__routine_col,
+	_gda_web_meta_routine_col,
+	_gda_web_meta__routine_par,
+	_gda_web_meta_routine_par,
+	_gda_web_meta__indexes_tab,
+        _gda_web_meta_indexes_tab,
+        _gda_web_meta__index_cols,
+        _gda_web_meta_index_cols,
+
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_web_provider_class_init (GdaWebProviderClass *klass)
 {
@@ -135,96 +219,18 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	provider_class->get_version = gda_web_provider_get_version;
-	provider_class->get_server_version = gda_web_provider_get_server_version;
-	provider_class->get_name = gda_web_provider_get_name;
-	provider_class->supports_feature = gda_web_provider_supports_feature;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &web_base_functions);
 
-	provider_class->get_data_handler = gda_web_provider_get_data_handler;
-	provider_class->get_def_dbms_type = gda_web_provider_get_default_dbms_type;
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META,
+						(gpointer) &web_meta_functions);
 
-	provider_class->open_connection = gda_web_provider_open_connection;
-	provider_class->close_connection = gda_web_provider_close_connection;
-	provider_class->get_database = NULL;
-
-	provider_class->supports_operation = gda_web_provider_supports_operation;
-        provider_class->create_operation = gda_web_provider_create_operation;
-        provider_class->render_operation = gda_web_provider_render_operation;
-        provider_class->perform_operation = gda_web_provider_perform_operation;
-
-	provider_class->begin_transaction = gda_web_provider_begin_transaction;
-	provider_class->commit_transaction = gda_web_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_web_provider_rollback_transaction;
-	provider_class->add_savepoint = gda_web_provider_add_savepoint;
-        provider_class->rollback_savepoint = gda_web_provider_rollback_savepoint;
-        provider_class->delete_savepoint = gda_web_provider_delete_savepoint;
-
-	provider_class->create_parser = gda_web_provider_create_parser;
-	provider_class->statement_to_sql =  NULL; /* don't use gda_web_provider_statement_to_sql()
-						   * because it only calls gda_statement_to_sql_extended() */
-	provider_class->statement_prepare = gda_web_provider_statement_prepare;
-	provider_class->statement_execute = gda_web_provider_statement_execute;
-	provider_class->statement_rewrite = gda_web_statement_rewrite;
-
-	provider_class->is_busy = NULL;
-	provider_class->cancel = NULL;
-	provider_class->create_connection = NULL;
-
-	provider_class->identifier_quote = gda_web_identifier_quote;
-
-	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_web_meta__info;
-	provider_class->meta_funcs._btypes = _gda_web_meta__btypes;
-	provider_class->meta_funcs._udt = _gda_web_meta__udt;
-	provider_class->meta_funcs.udt = _gda_web_meta_udt;
-	provider_class->meta_funcs._udt_cols = _gda_web_meta__udt_cols;
-	provider_class->meta_funcs.udt_cols = _gda_web_meta_udt_cols;
-	provider_class->meta_funcs._enums = _gda_web_meta__enums;
-	provider_class->meta_funcs.enums = _gda_web_meta_enums;
-	provider_class->meta_funcs._domains = _gda_web_meta__domains;
-	provider_class->meta_funcs.domains = _gda_web_meta_domains;
-	provider_class->meta_funcs._constraints_dom = _gda_web_meta__constraints_dom;
-	provider_class->meta_funcs.constraints_dom = _gda_web_meta_constraints_dom;
-	provider_class->meta_funcs._el_types = _gda_web_meta__el_types;
-	provider_class->meta_funcs.el_types = _gda_web_meta_el_types;
-	provider_class->meta_funcs._collations = _gda_web_meta__collations;
-	provider_class->meta_funcs.collations = _gda_web_meta_collations;
-	provider_class->meta_funcs._character_sets = _gda_web_meta__character_sets;
-	provider_class->meta_funcs.character_sets = _gda_web_meta_character_sets;
-	provider_class->meta_funcs._schemata = _gda_web_meta__schemata;
-	provider_class->meta_funcs.schemata = _gda_web_meta_schemata;
-	provider_class->meta_funcs._tables_views = _gda_web_meta__tables_views;
-	provider_class->meta_funcs.tables_views = _gda_web_meta_tables_views;
-	provider_class->meta_funcs._columns = _gda_web_meta__columns;
-	provider_class->meta_funcs.columns = _gda_web_meta_columns;
-	provider_class->meta_funcs._view_cols = _gda_web_meta__view_cols;
-	provider_class->meta_funcs.view_cols = _gda_web_meta_view_cols;
-	provider_class->meta_funcs._constraints_tab = _gda_web_meta__constraints_tab;
-	provider_class->meta_funcs.constraints_tab = _gda_web_meta_constraints_tab;
-	provider_class->meta_funcs._constraints_ref = _gda_web_meta__constraints_ref;
-	provider_class->meta_funcs.constraints_ref = _gda_web_meta_constraints_ref;
-	provider_class->meta_funcs._key_columns = _gda_web_meta__key_columns;
-	provider_class->meta_funcs.key_columns = _gda_web_meta_key_columns;
-	provider_class->meta_funcs._check_columns = _gda_web_meta__check_columns;
-	provider_class->meta_funcs.check_columns = _gda_web_meta_check_columns;
-	provider_class->meta_funcs._triggers = _gda_web_meta__triggers;
-	provider_class->meta_funcs.triggers = _gda_web_meta_triggers;
-	provider_class->meta_funcs._routines = _gda_web_meta__routines;
-	provider_class->meta_funcs.routines = _gda_web_meta_routines;
-	provider_class->meta_funcs._routine_col = _gda_web_meta__routine_col;
-	provider_class->meta_funcs.routine_col = _gda_web_meta_routine_col;
-	provider_class->meta_funcs._routine_par = _gda_web_meta__routine_par;
-	provider_class->meta_funcs.routine_par = _gda_web_meta_routine_par;
-	provider_class->meta_funcs._indexes_tab = _gda_web_meta__indexes_tab;
-        provider_class->meta_funcs.indexes_tab = _gda_web_meta_indexes_tab;
-        provider_class->meta_funcs._index_cols = _gda_web_meta__index_cols;
-        provider_class->meta_funcs.index_cols = _gda_web_meta_index_cols;
-
-	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
-	provider_class->xa_funcs = NULL;
-
-	/* provider is thread safe */
-	provider_class->limiting_thread = NULL;
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
+						(gpointer) NULL);
 }
 
 static void
@@ -259,6 +265,18 @@ gda_web_provider_get_type (void)
 	return type;
 }
 
+static GdaWorker *
+gda_web_provider_create_worker (GdaServerProvider *provider)
+{
+	/* Let's assume for now that this provider is not thread safe... */
+	static GdaWorker *unique_worker = NULL;
+	if (unique_worker)
+		return gda_worker_ref (unique_worker);
+	else {
+		unique_worker = gda_worker_new ();
+		return gda_worker_ref (unique_worker);
+	}
+}
 
 /*
  * Get provider name request
@@ -331,18 +349,10 @@ do_server_setup (GdaConnection *cnc, WebConnectionData *cdata)
  */
 static gboolean
 gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				  GdaQuarkList *params, GdaQuarkList *auth,
-				  G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				  G_GNUC_UNUSED gpointer cb_data)
+				  GdaQuarkList *params, GdaQuarkList *auth)
 {
 	g_return_val_if_fail (GDA_IS_WEB_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* Check for connection parameters */
 	const gchar *db_name, *host, *path, *port, *serversecret, *pass = NULL, *use_ssl;
@@ -403,7 +413,7 @@ gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	cdata->server_base_url = g_string_free (server_url, FALSE);
 	if (serversecret)
 		cdata->key = g_strdup (serversecret);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) _gda_web_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, (GdaServerProviderConnectionData*) cdata, (GDestroyNotify) _gda_web_free_cnc_data);
 
 	/*
 	 * perform setup
@@ -505,7 +515,7 @@ gda_web_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 
@@ -561,7 +571,7 @@ gda_web_provider_get_server_version (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	return cdata->server_version;
@@ -674,18 +684,9 @@ gda_web_provider_render_operation (GdaServerProvider *provider, GdaConnection *c
  */
 static gboolean
 gda_web_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				    GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
-				    GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
-				    GError **error)
+				    GdaServerOperation *op, GError **error)
 {
         GdaServerOperationType optype;
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous server operation"));
-                return FALSE;
-	}
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1074,7 +1075,7 @@ gda_web_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *c
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	}
 	if (!cdata)
 		return NULL;
@@ -1097,7 +1098,7 @@ gda_web_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnecti
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	}
 	if (!cdata)
 		return NULL;
@@ -1118,7 +1119,7 @@ gda_web_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, GdaCo
 	WebConnectionData *cdata = NULL;
 
 	if (cnc)
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 	if (cdata->reuseable && cdata->reuseable->operations->re_create_parser)
@@ -1384,9 +1385,7 @@ static GObject *
 gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				    GdaStatement *stmt, GdaSet *params,
 				    GdaStatementModelUsage model_usage, 
-				    GType *col_types, GdaSet **last_inserted_row, 
-				    guint *task_id, 
-				    GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
+				    GType *col_types, GdaSet **last_inserted_row, GError **error)
 {
 	GdaWebPStmt *ps;
 	WebConnectionData *cdata;
@@ -1397,13 +1396,6 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-	}
 
         allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
                 (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
@@ -1560,9 +1552,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 			res = gda_web_provider_statement_execute (provider, cnc,
 								  rstmt, params,
 								  model_usage,
-								  col_types, last_inserted_row,
-								  task_id,
-								  async_cb, cb_data, error);
+								  col_types, last_inserted_row, error);
 			g_object_unref (rstmt);
 			return res;
 		}
@@ -1615,9 +1605,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 									  rstmt, params,
 									  model_usage,
 									  col_types,
-									  last_inserted_row,
-									  task_id, async_cb,
-									  cb_data, error);
+									  last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
@@ -1757,8 +1745,8 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
  * Removes any default value inserted or updated
  */
 static GdaSqlStatement *
-gda_web_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
-			   GdaStatement *stmt, GdaSet *params, GError **error)
+gda_web_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				    GdaStatement *stmt, GdaSet *params, GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -1768,9 +1756,9 @@ gda_web_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 }
 
 static gchar *
-gda_web_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
-			  const gchar *id,
-			  gboolean for_meta_store, gboolean force_quotes)
+gda_web_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+				   const gchar *id,
+				   gboolean for_meta_store, gboolean force_quotes)
 {
 	WebConnectionData *cdata = NULL;
 
@@ -1778,7 +1766,7 @@ gda_web_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
-		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	}
 	if (!cdata)
 		return gda_sql_identifier_quote (id, NULL, NULL, for_meta_store, force_quotes);

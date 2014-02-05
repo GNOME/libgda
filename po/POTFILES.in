@@ -82,8 +82,7 @@ libgda/sql-parser/gda-statement-struct-insert.c
 libgda/sql-parser/gda-statement-struct-parts.c
 libgda/sql-parser/gda-statement-struct-select.c
 libgda/sql-parser/gda-statement-struct-update.c
-libgda/thread-wrapper/gda-thread-provider.c
-libgda/thread-wrapper/gda-thread-wrapper.c
+libgda/thread-wrapper/gda-worker.c
 libgda-ui/data-entries/common-bin.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c

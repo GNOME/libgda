@@ -32,11 +32,13 @@
 #include <ldap_schema.h>
 #include <glib.h>
 #include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	guint         keep_bound_count; /* set to >0 if connection must remain opened */
 	LDAP         *handle;
 

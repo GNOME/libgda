@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Cleber Rodrigues <cleberrrjr@bol.com.br>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2003 Filip Van Raemdonck <mechanix@debian.org>
@@ -58,13 +58,14 @@ typedef enum {
 	GDA_CONNECTION_NO_CNC_SPEC_ERROR,
 	GDA_CONNECTION_NO_PROVIDER_SPEC_ERROR,
 	GDA_CONNECTION_OPEN_ERROR,
+	GDA_CONNECTION_ALREADY_OPENED_ERROR,
 	GDA_CONNECTION_STATEMENT_TYPE_ERROR,
 	GDA_CONNECTION_CANT_LOCK_ERROR,
 	GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
-	GDA_CONNECTION_UNSUPPORTED_THREADS_ERROR,
 	GDA_CONNECTION_CLOSED_ERROR,
 	GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
-	GDA_CONNECTION_UNSUPPORTED_ASYNC_EXEC_ERROR
+	GDA_CONNECTION_UNSUPPORTED_ASYNC_EXEC_ERROR,
+	GDA_CONNECTION_NO_MAIN_CONTEXT_ERROR
 } GdaConnectionError;
 
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
@@ -75,10 +76,14 @@ typedef enum {
  * @title: GdaConnection
  * @stability: Stable
  *
- * Each connection to a database is represented by a #GdaConnection object. A connection is created (and opened)
- * using gda_connection_open_from_dsn() if a data source has been defined, or gda_connection_open_from_string()
+ * Each connection to a database is represented by a #GdaConnection object. A connection is created
+ * using gda_connection_new_from_dsn() if a data source has been defined, or gda_connection_new_from_string()
  * otherwise. It is not recommended to create a #GdaConnection object using g_object_new() as the results are
  * unpredictable (some parts won't correctly be initialized).
+ *
+ * Once the connection has been created, it can be opened using gda_connection_open() or gda_connection_open_async().
+ * By default these functions will block, unless you speficy a #GMainContext from which events will be processed
+ * while opening the connection using gda_connection_set_main_context().
  *
  * Use the connection object to execute statements, use transactions, get meta data information, ...
  *
@@ -98,16 +103,7 @@ typedef enum {
  * the execution of a statement</para></listitem>
  * </itemizedlist>
  *
- * The #GdaConnection object implements its own locking mechanism so it is thread-safe. However ad some database
- * providers rely on an API which does not support threads or supports it only partially, the connections
- * opened using those providers will only be accessible from the thread which created them (any other thread will
- * be blocked trying to access the connection, use the
- * <link linkend="gda-lockable-try-lock">gda_lockable_try_lock()</link> method to check it the connection
- * is usable from a thread).
- *
- * If a connection really needs to be accessed by several threads at once, then it is possible to pass the
- * #GDA_CONNECTION_OPTIONS_THREAD_SAFE flag when opening it. This flag requests that the real connection
- * be created and really accessed in a <emphasis>private</emphasis> sub thread.
+ * The #GdaConnection object implements its own locking mechanism so it is thread-safe.
  */
 
 struct _GdaConnection {
@@ -141,11 +137,6 @@ struct _GdaConnectionClass {
  *                                    (this policy is not correctly enforced at the moment)
  * @GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: this flag specifies that SQL identifiers submitted as input
  *                                    to Libgda have to keep their case sensitivity. 
- * @GDA_CONNECTION_OPTIONS_THREAD_SAFE: this flag specifies that the connection to open will be used 
- *                                     by several threads at once so it has to be thread safe
- * @GDA_CONNECTION_OPTIONS_THREAD_ISOLATED: this flag specifies that the connection to open will be used 
- *                                     by several threads at once and requests that the real connection be used
- *                                     only in a sub thread created specifically for it
  * @GDA_CONNECTION_OPTIONS_AUTO_META_DATA: this flags specifies that if a #GdaMetaStore has been associated
  *                                     to the connection, then it is kept up to date with the evolutions in the
  *                                     database's structure. Be aware however that there are some drawbacks
@@ -166,22 +157,6 @@ struct _GdaConnectionClass {
  *       has to be conform to the database it will be used with</para></listitem>
  * </itemizedlist>
  *
- * Additional information about the GDA_CONNECTION_OPTIONS_THREAD_SAFE and GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flags:
- * The GDA_CONNECTION_OPTIONS_THREAD_SAFE flag specifies that it has to be able to use the returned connection object from
- * several threads at once (locking is ensured by the #GdaConnection itself). Depending on the database provider's
- * implementation and on the native libraries it uses, the "normal" connection object might not respect this requirement,
- * and in this case a specific thread is started and used as the unique thread which will manipulate the actual connection,
- * while a "wrapper connection" is actually returned and used by the caller (that wrapper connection passes method calls
- * from the calling thread to the actual connection's specific thread, and gets the results back).
- *
- * The GDA_CONNECTION_OPTIONS_THREAD_ISOLATED forces using a specific thread and a "wrapper connection" even if the
- * "normal" connection would itself be thread safe; this is useful for example to be sure the asynchronous API can
- * always be used (see gda_connection_async_statement_execute()).
- *
- * Having a specific thread and a "wrapper connection" definitely has an impact on the performances (because it involves
- * messages passing between threads for every method call), so using the
- * GDA_CONNECTION_OPTIONS_THREAD_SAFE or GDA_CONNECTION_OPTIONS_THREAD_ISOLATED flags should be carefully considered.
- *
  * Note about the @GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag:
  * <itemizedlist>
  *  <listitem><para>Every time a DDL statement is successfully executed, the associated mate data, if
@@ -194,8 +169,6 @@ typedef enum {
 	GDA_CONNECTION_OPTIONS_NONE = 0,
 	GDA_CONNECTION_OPTIONS_READ_ONLY = 1 << 0,
 	GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE = 1 << 1,
-	GDA_CONNECTION_OPTIONS_THREAD_SAFE = 1 << 2,
-	GDA_CONNECTION_OPTIONS_THREAD_ISOLATED = 1 << 3,
 	GDA_CONNECTION_OPTIONS_AUTO_META_DATA = 1 << 4
 } GdaConnectionOptions;
 
@@ -217,9 +190,11 @@ typedef enum {
  * @GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR: test for updatable cursors support
  * @GDA_CONNECTION_FEATURE_USERS: test for users support
  * @GDA_CONNECTION_FEATURE_VIEWS: test for views support
+ * @GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_READ_COMMITTED: test for READ COMMITTED transaction isolation level
+ * @GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_READ_UNCOMMITTED: test for READ UNCOMMITTED transaction isolation level
+ * @GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_REPEATABLE_READ: test for REPEATABLE READ transaction isolation level
+ * @GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_SERIALIZABLE: test for SERIALIZABLE transaction isolation level
  * @GDA_CONNECTION_FEATURE_XA_TRANSACTIONS: test for distributed transactions support
- * @GDA_CONNECTION_FEATURE_MULTI_THREADING: test for native multi-threading support
- * @GDA_CONNECTION_FEATURE_ASYNC_EXEC: test if connection supports asynchronous execution
  * @GDA_CONNECTION_FEATURE_LAST: not used
  *
  * Used in gda_connection_supports_feature() and gda_server_provider_supports_feature() to test if a connection
@@ -241,11 +216,12 @@ typedef enum {
 	GDA_CONNECTION_FEATURE_UPDATABLE_CURSOR,
 	GDA_CONNECTION_FEATURE_USERS,
 	GDA_CONNECTION_FEATURE_VIEWS,
+	GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_READ_COMMITTED,
+	GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_READ_UNCOMMITTED,
+	GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_REPEATABLE_READ,
+	GDA_CONNECTION_FEATURE_TRANSACTION_ISOLATION_SERIALIZABLE,
 	GDA_CONNECTION_FEATURE_XA_TRANSACTIONS,
 	
-	GDA_CONNECTION_FEATURE_MULTI_THREADING,
-	GDA_CONNECTION_FEATURE_ASYNC_EXEC,
-
 	GDA_CONNECTION_FEATURE_LAST
 } GdaConnectionFeature;
 
@@ -274,7 +250,7 @@ typedef enum {
 GType                gda_connection_get_type             (void) G_GNUC_CONST;
 GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
-GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name, 
+GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name,
 							  const gchar *cnc_string, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
 GdaConnection       *gda_connection_new_from_dsn         (const gchar *dsn, const gchar *auth_string,
@@ -282,18 +258,25 @@ GdaConnection       *gda_connection_new_from_dsn         (const gchar *dsn, cons
 GdaConnection       *gda_connection_new_from_string      (const gchar *provider_name, 
 							  const gchar *cnc_string, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
+
 gboolean             gda_connection_open                 (GdaConnection *cnc, GError **error);
-void                 gda_connection_close                (GdaConnection *cnc);
-void                 gda_connection_close_no_warning     (GdaConnection *cnc);
+typedef void (*GdaConnectionOpenFunc) (GdaConnection *cnc, guint job_id, gboolean result, GError *error, gpointer data);
+guint                gda_connection_open_async           (GdaConnection *cnc, GdaConnectionOpenFunc callback, gpointer data, GError **error);
+
+gboolean             gda_connection_close                (GdaConnection *cnc, GError **error);
 gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
+
+void                 gda_connection_set_main_context     (GdaConnection *cnc, GMainContext *context);
+GMainContext        *gda_connection_get_main_context     (GdaConnection *cnc);
 
 GdaServerProvider   *gda_connection_get_provider         (GdaConnection *cnc);
 const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 
 GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, GdaServerOperationType type,
                                                           GdaSet *options, GError **error);
+
 gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
                                                           
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
@@ -304,7 +287,7 @@ gboolean             gda_connection_get_date_format      (GdaConnection *cnc, GD
 							  GError **error);
 
 GdaStatement        *gda_connection_parse_sql_string     (GdaConnection *cnc, const gchar *sql, GdaSet **params,
-                    GError **error);
+							  GError **error);
 
 /*
  * Quick commands execution
@@ -317,20 +300,20 @@ gint                gda_connection_execute_non_select_command    (GdaConnection 
  */
 gboolean            gda_connection_insert_row_into_table        (GdaConnection *cnc, const gchar *table, GError **error, ...);
 gboolean            gda_connection_insert_row_into_table_v      (GdaConnection *cnc, const gchar *table,
-						      GSList *col_names, GSList *values,
-						      GError **error);
+								 GSList *col_names, GSList *values,
+								 GError **error);
 
 gboolean            gda_connection_update_row_in_table          (GdaConnection *cnc, const gchar *table,
-						      const gchar *condition_column_name,
-						      GValue *condition_value, GError **error, ...);
+								 const gchar *condition_column_name,
+								 GValue *condition_value, GError **error, ...);
 gboolean            gda_connection_update_row_in_table_v        (GdaConnection *cnc, const gchar *table,
-						      const gchar *condition_column_name,
-						      GValue *condition_value,
-						      GSList *col_names, GSList *values,
-						      GError **error);
+								 const gchar *condition_column_name,
+								 GValue *condition_value,
+								 GSList *col_names, GSList *values,
+								 GError **error);
 gboolean            gda_connection_delete_row_from_table        (GdaConnection *cnc, const gchar *table,
-						      const gchar *condition_column_name,
-						      GValue *condition_value, GError **error);
+								 const gchar *condition_column_name,
+								 GValue *condition_value, GError **error);
 
 const GList         *gda_connection_get_events           (GdaConnection *cnc);
 
@@ -359,15 +342,6 @@ GdaDataModel        *gda_connection_statement_execute_select_full (GdaConnection
 								   GType *col_types, GError **error);
 gint                 gda_connection_statement_execute_non_select (GdaConnection *cnc, GdaStatement *stmt,
 								  GdaSet *params, GdaSet **last_insert_row, GError **error);
-
-/* asynchronous execution */
-guint                gda_connection_async_statement_execute (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params, 
-							     GdaStatementModelUsage model_usage, GType *col_types,
-							     gboolean need_last_insert_row, 
-							     GError **error);
-GObject             *gda_connection_async_fetch_result      (GdaConnection *cnc, guint task_id, GdaSet **last_insert_row, GError **error);
-gboolean             gda_connection_async_cancel            (GdaConnection *cnc, guint task_id, GError **error);
-
 
 /* repetitive statement */
 GSList             *gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveStatement *rstmt,

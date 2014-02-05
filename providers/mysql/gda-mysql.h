@@ -32,6 +32,7 @@
 #define MYSQL_PROVIDER_NAME "MySQL"
 
 #include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 #ifdef G_OS_WIN32
 #include <winsock.h>
 #endif
@@ -43,6 +44,7 @@
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	GdaMysqlReuseable *reuseable;
 	GdaConnection     *cnc;
 	MYSQL             *mysql;	

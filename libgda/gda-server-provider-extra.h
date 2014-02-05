@@ -26,6 +26,7 @@
 #include <libgda/gda-decl.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-connection.h>
+#include <libgda/thread-wrapper/gda-worker.h>
 
 G_BEGIN_DECLS
 

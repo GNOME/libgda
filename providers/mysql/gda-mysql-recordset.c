@@ -408,7 +408,7 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 
@@ -546,7 +546,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 

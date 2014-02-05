@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2009 Og B. Maciel <ogmaciel@gnome.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -26,9 +26,11 @@
 #include <libgda/gda-xa-transaction.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-value.h>
 #include <string.h>
 #include <libgda/gda-decl.h>
+#include <libgda/gda-debug-macros.h>
 
 static void gda_xa_transaction_class_init (GdaXaTransactionClass *klass);
 static void gda_xa_transaction_init       (GdaXaTransaction *xa_trans, GdaXaTransactionClass *klass);
@@ -45,7 +47,6 @@ static void gda_xa_transaction_get_property (GObject *object,
 
 
 static GObjectClass* parent_class = NULL;
-#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 struct _GdaXaTransactionPrivate {
 	GdaXaTransactionId  xid;
@@ -311,7 +312,8 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	 * to not support them */
 	GdaServerProvider *prov;
 	prov = gda_connection_get_provider (cnc);
-	if (! PROV_CLASS (prov)->xa_funcs) {
+
+	if (!gda_server_provider_supports_feature (prov, cnc, GDA_CONNECTION_FEATURE_XA_TRANSACTIONS)) {
 		/* if another connection does not support distributed transaction, then there is an error */
 		if (xa_trans->priv->non_xa_cnc) {
 			g_set_error (error, GDA_XA_TRANSACTION_ERROR,
@@ -322,7 +324,6 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 		else
 			xa_trans->priv->non_xa_cnc = cnc;
 	}
-
 
 	bin = g_new0 (GdaBinary, 1);
 	bin->data = (guchar*) g_strdup (branch);
@@ -384,19 +385,12 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 		if (cnc != xa_trans->priv->non_xa_cnc) {
-			if (!PROV_CLASS (prov)->xa_funcs->xa_start) {
-				g_warning (_("Provider error: %s method not implemented for provider %s"),
-					   "xa_start()", gda_server_provider_get_name (prov));
+			const GdaBinary *branch;
+			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
+			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch->data, branch->binary_length);
+			if (! _gda_server_provider_xa_start (prov, cnc, &(xa_trans->priv->xid), error))
 				break;
-			}
-			else {
-				const GdaBinary *branch;
-				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-					branch->data, branch->binary_length);
-				if (!PROV_CLASS (prov)->xa_funcs->xa_start (prov, cnc, &(xa_trans->priv->xid), error))
-					break;
-			}
 		}
 		else {
 			/* do a simple BEGIN */
@@ -415,16 +409,11 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			cnc = GDA_CONNECTION (list->data);
 			prov = gda_connection_get_provider (cnc);
 			if (cnc != xa_trans->priv->non_xa_cnc) {
-				if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
-					g_warning (_("Provider error: %s method not implemented for provider %s"),
-						   "xa_rollback()", gda_server_provider_get_name (prov));
-				else {
-					const GdaBinary *branch;
-					branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-					memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-						branch->data, branch->binary_length);
-					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
-				}
+				const GdaBinary *branch;
+				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
+				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+					branch->data, branch->binary_length);
+				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 			else {
 				/* do a simple ROLLBACK */
@@ -482,22 +471,10 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 			branch->data, branch->binary_length);
 
-		if (PROV_CLASS (prov)->xa_funcs->xa_end && 
-		    !PROV_CLASS (prov)->xa_funcs->xa_end (prov, cnc, &(xa_trans->priv->xid), error))
+		if (!_gda_server_provider_xa_end (prov, cnc, &(xa_trans->priv->xid), error))
 			break;
 
-		if (!PROV_CLASS (prov)->xa_funcs->xa_prepare) {
-			g_warning (_("Provider error: %s method not implemented for provider %s"),
-				   "xa_prepare()", gda_server_provider_get_name (prov));
-			break;
-		}
-		if (!PROV_CLASS (prov)->xa_funcs->xa_commit) {
-			g_warning (_("Provider error: %s method not implemented for provider %s"),
-				   "xa_commit()", gda_server_provider_get_name (prov));
-			break;
-		}
-
-		if (!PROV_CLASS (prov)->xa_funcs->xa_prepare (prov, cnc, &(xa_trans->priv->xid), error))
+		if (!_gda_server_provider_xa_prepare (prov, cnc, &(xa_trans->priv->xid), error))
 			break;
 	}
 	if (list) {
@@ -515,12 +492,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
-
-				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
-					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
-				else
-					g_warning (_("Provider error: %s method not implemented for provider %s"),
-						   "xa_rollback()", gda_server_provider_get_name (prov));
+				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 		}
 		return FALSE;
@@ -545,12 +517,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 					branch->data, branch->binary_length);
-
-				if (PROV_CLASS (prov)->xa_funcs->xa_rollback)
-					PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
-				else
-					g_warning (_("Provider error: %s method not implemented for provider %s"),
-						   "xa_rollback()", gda_server_provider_get_name (prov));
+				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 		}
 		return FALSE;
@@ -569,7 +536,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 			branch->data, branch->binary_length);
-		if (!PROV_CLASS (prov)->xa_funcs->xa_commit (prov, cnc, &(xa_trans->priv->xid), error) &&
+		if (! _gda_server_provider_xa_commit (prov, cnc, &(xa_trans->priv->xid), error) &&
 		    cnc_to_recover)
 			*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);
 	}
@@ -606,11 +573,12 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
 				branch->data, branch->binary_length);
-			if (!PROV_CLASS (prov)->xa_funcs->xa_rollback) 
-				g_warning (_("Provider error: %s method not implemented for provider %s"),
-					   "xa_prepare()", gda_server_provider_get_name (prov));
+			GError *lerror = NULL;
+			_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), &lerror);
+			if (error && !*error)
+				g_propagate_error (error, lerror);
 			else
-				PROV_CLASS (prov)->xa_funcs->xa_rollback (prov, cnc, &(xa_trans->priv->xid), error);
+				g_clear_error (&lerror);
 		}
 	}
 	return TRUE;
@@ -650,55 +618,40 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 		else {
 			GList *recov_xid_list;
 			
-
-			if (!PROV_CLASS (prov)->xa_funcs->xa_recover) 
-				g_warning (_("Provider error: %s method not implemented for provider %s"),
-					   "xa_recover()", gda_server_provider_get_name (prov));
-			else {
-				const GdaBinary *branch;
-				GList *xlist;
-				gboolean commit_needed = FALSE;
+			const GdaBinary *branch;
+			GList *xlist;
+			gboolean commit_needed = FALSE;
 				
-				recov_xid_list = PROV_CLASS (prov)->xa_funcs->xa_recover (prov, cnc, error);
-				if (!recov_xid_list)
+			recov_xid_list = _gda_server_provider_xa_recover (prov, cnc, error);
+			if (!recov_xid_list)
+				continue;
+
+			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
+			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch->data, branch->binary_length);
+			for (xlist = recov_xid_list; xlist; xlist = xlist->next) {
+				GdaXaTransactionId *xid = (GdaXaTransactionId*) xlist->data;
+				if (!xid)
+					/* ignore unknown XID format */
 					continue;
 
-				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-					branch->data, branch->binary_length);
-				for (xlist = recov_xid_list; xlist; xlist = xlist->next) {
-					GdaXaTransactionId *xid = (GdaXaTransactionId*) xlist->data;
-					if (!xid)
-						/* ignore unknown XID format */
-						continue;
+				if (!commit_needed &&
+				    (xid->format == xa_trans->priv->xid.format) &&
+				    (xid->gtrid_length == xa_trans->priv->xid.gtrid_length) &&
+				    (xid->bqual_length == xa_trans->priv->xid.bqual_length) &&
+				    ! memcmp (xa_trans->priv->xid.data, xid->data, xid->bqual_length + xid->bqual_length)) 
+					/* found a transaction to commit */
+					commit_needed = TRUE;
+				
+				g_free (xid);
+			}
+			g_list_free (recov_xid_list);
 
-					if (!commit_needed &&
-					    (xid->format == xa_trans->priv->xid.format) &&
-					    (xid->gtrid_length == xa_trans->priv->xid.gtrid_length) &&
-					    (xid->bqual_length == xa_trans->priv->xid.bqual_length) &&
-					    ! memcmp (xa_trans->priv->xid.data, xid->data, xid->bqual_length + xid->bqual_length)) 
-						/* found a transaction to commit */
-						commit_needed = TRUE;
-						
-					g_free (xid);
-				}
-				g_list_free (recov_xid_list);
-
-				if (commit_needed) {
-					if (!PROV_CLASS (prov)->xa_funcs->xa_commit) {
-						g_warning (_("Provider error: %s method not implemented for provider %s"),
-							   "xa_commit()", gda_server_provider_get_name (prov));
-						retval = FALSE;
-					}
-					else {
-						retval = PROV_CLASS (prov)->xa_funcs->xa_commit (prov, cnc, 
-												 &(xa_trans->priv->xid), 
-												 error);
-						if (!retval)
-							if (cnc_to_recover)
-								*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);
-					}
-				}
+			if (commit_needed) {
+				retval = _gda_server_provider_xa_commit (prov, cnc, &(xa_trans->priv->xid), error);
+				if (!retval)
+					if (cnc_to_recover)
+						*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);
 			}
 		}
 	}

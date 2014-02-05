@@ -1,7 +1,7 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-blob-op.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
+#include <libgda/thread-wrapper/gda-worker.h>
 #include <virtual/libgda-virtual.h>
 #include <engine/gda-report-engine.h>
 #include <gda-report-document.h>
@@ -67,4 +67,3 @@ gda_tree_mgr_select_get_type
 gda_tree_mgr_tables_get_type
 gda_tree_node_get_type
 gda_sql_builder_get_type
-gda_thread_wrapper_get_type

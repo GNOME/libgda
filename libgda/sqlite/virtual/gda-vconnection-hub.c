@@ -29,6 +29,7 @@
 #include <libgda/gda-data-select.h>
 #include <gda-sql-builder.h>
 #include "../gda-sqlite.h"
+#include <libgda/gda-connection-internal.h>
 
 typedef struct {
 	GdaVconnectionHub *hub;
@@ -86,7 +87,7 @@ gda_vconnection_hub_dispose (GObject *object)
 
 	/* free memory */
 	if (cnc->priv) {
-		gda_connection_close_no_warning ((GdaConnection *) cnc);
+		_gda_connection_close_no_warning ((GdaConnection *) cnc, NULL);
 		g_assert (!cnc->priv->hub_connections);
 
 		g_free (cnc->priv);

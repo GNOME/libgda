@@ -32,6 +32,7 @@
 #include "../gda-sqlite.h"
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-debug-macros.h>
+#include <libgda/gda-server-provider-impl.h>
 
 #define GDA_DEBUG_VIRTUAL
 #undef GDA_DEBUG_VIRTUAL
@@ -47,17 +48,14 @@ static GObjectClass  *parent_class = NULL;
 
 static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
 static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-								GdaQuarkList *params, GdaQuarkList *auth,
-								guint *task_id, GdaServerProviderAsyncCallback async_cb, 
-								gpointer cb_data);
+								GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
 static GObject        *gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaStatement *stmt, GdaSet *params,
 								   GdaStatementModelUsage model_usage,
 								   GType *col_types, GdaSet **last_inserted_row,
-								   guint *task_id, GdaServerProviderExecCallback async_cb,
-								   gpointer cb_data, GError **error);
+								   GError **error);
 static const gchar   *gda_vprovider_data_model_get_name (GdaServerProvider *provider);
 
 static GValue **create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value **argv);
@@ -66,28 +64,56 @@ static GValue **create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value
 /*
  * GdaVproviderDataModel class implementation
  */
+GdaServerProviderBase data_model_base_functions = {
+	gda_vprovider_data_model_get_name,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_vprovider_data_model_create_connection,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_vprovider_data_model_open_connection,
+	NULL,
+	gda_vprovider_data_model_close_connection,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_vprovider_data_model_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaServerProviderClass *server_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &data_model_base_functions);
+
 	object_class->finalize = gda_vprovider_data_model_finalize;
-	server_class->create_connection = gda_vprovider_data_model_create_connection;
-	server_class->open_connection = gda_vprovider_data_model_open_connection;
-	server_class->close_connection = gda_vprovider_data_model_close_connection;
-	server_class->statement_execute = gda_vprovider_data_model_statement_execute;
-
-	server_class->get_name = gda_vprovider_data_model_get_name;
-
-	/* explicitly unimplement the DDL queries */
-	server_class->supports_operation = NULL;
-        server_class->create_operation = NULL;
-        server_class->render_operation = NULL;
-        server_class->perform_operation = NULL;
 }
+
 
 static void
 gda_vprovider_data_model_init (GdaVproviderDataModel *prov, G_GNUC_UNUSED GdaVproviderDataModelClass *klass)
@@ -362,18 +388,12 @@ gda_vprovider_data_model_create_connection (GdaServerProvider *provider)
 
 static gboolean
 gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-					  GdaQuarkList *params, GdaQuarkList *auth,
-					  G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data)
+					  GdaQuarkList *params, GdaQuarkList *auth)
 {
 	GdaQuarkList *m_params;
 
 	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), FALSE);
-
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	if (params) {
 		m_params = gda_quark_list_copy (params);
@@ -382,23 +402,21 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	else
 		m_params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE;EXTRA_FUNCTIONS=TRUE");
 
-	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params,
-									 auth, NULL, NULL, NULL)) {
-		if (auth)
-			gda_quark_list_protect_values (auth);
+	GdaServerProviderBase *parent_functions;
+	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	
+	if (! parent_functions->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params, auth)) {
 		gda_quark_list_free (m_params);
 		return FALSE;
 	}
-	if (auth)
-		gda_quark_list_protect_values (auth);
+
 	gda_quark_list_free (m_params);
 
 	SqliteConnectionData *scnc;
-	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data ((GdaConnection *) cnc);
+	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error ((GdaConnection *) cnc, NULL);
 	if (!scnc) {
-		gda_connection_close_no_warning (cnc);
-		gda_connection_add_event_string (cnc,
-						 _("Connection is closed"));
+		_gda_connection_close_no_warning (cnc, NULL);
+		gda_connection_add_event_string (cnc, _("Connection is closed"));
 		return FALSE;
 	}
 
@@ -431,29 +449,25 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 	gda_vconnection_data_model_foreach (GDA_VCONNECTION_DATA_MODEL (cnc),
 					    (GdaVconnectionDataModelFunc) cnc_close_foreach_func, cnc);
 
-	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
+	GdaServerProviderBase *parent_functions;
+	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	return parent_functions->close_connection (provider, cnc);
 }
 
 static GObject *
 gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 					    GdaStatement *stmt, GdaSet *params,
 					    GdaStatementModelUsage model_usage,
-					    GType *col_types, GdaSet **last_inserted_row,
-					    guint *task_id, GdaServerProviderExecCallback async_cb,
-					    gpointer cb_data, GError **error)
+					    GType *col_types, GdaSet **last_inserted_row,GError **error)
 {
-	GObject *retval;
-	if (async_cb) {
-                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-                             "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-        }
-
+	GObject *retval = NULL;
 	_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, (GObject*) stmt);
-	retval = GDA_SERVER_PROVIDER_CLASS (parent_class)->statement_execute (provider, cnc, stmt, params,
-									      model_usage, col_types,
-									      last_inserted_row, task_id,
-									      async_cb, cb_data, error);
+
+	GdaServerProviderBase *parent_functions;
+	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	retval = parent_functions->statement_execute (provider, cnc, stmt, params,
+						      model_usage, col_types,
+						      last_inserted_row, error);
 
 	if (retval) {
 		if (! GDA_IS_DATA_MODEL (retval))
@@ -511,7 +525,7 @@ gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConn
 static const gchar *
 gda_vprovider_data_model_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
-	return "Virtual";
+	return "Virtual data model";
 }
 
 static int

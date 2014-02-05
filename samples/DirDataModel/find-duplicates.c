@@ -115,7 +115,7 @@ main (int argc, char *argv [])
 
 	/* set up virtual environment */
 	provider = gda_vprovider_data_model_new ();
-        cnc = gda_virtual_connection_open (provider, NULL);
+        cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 
 	model = gda_data_model_dir_new (dirname);
 	g_print ("Finding duplicates among %d files\n", gda_data_model_get_n_rows (model));

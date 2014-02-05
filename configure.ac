@@ -14,6 +14,7 @@ m4_include(m4/firebird.m4)
 m4_include(m4/oracle.m4)
 m4_include(m4/java.m4)
 m4_include(m4/ldap.m4)
+m4_include(m4/misc.m4)
 
 AC_INIT([GNU Data Access],[major.minor.micro],[https://bugzilla.gnome.org/enter_bug.cgi?product=libgda],[libgda],[http://www.gnome-db.org])
 AC_PREREQ([2.68])
@@ -70,6 +71,12 @@ AC_CHECK_TYPE(uint8_t, unsigned char)
 AC_CHECK_FUNCS(localtime_r localtime_s)
 AC_CHECK_HEADER(sys/mman.h,
     AC_CHECK_FUNC(mlock, [AC_DEFINE(USE_MLOCK, 1, [Use POSIX memory locking])]))
+AC_CHECK_FUNC(fork, [AC_DEFINE(HAVE_FORK, 1, [Have the fork() function])])
+CHECK_FD_CLOEXEC([AC_DEFINE(
+                  [HAVE_FD_CLOEXEC],
+                  [1],
+                  [Whether FD_CLOEXEC is defined.])
+                  ])
 
 GDA_BUILDDATE=`date '+%F'`
 AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)
@@ -143,7 +150,17 @@ dnl ******************************
 dnl glib utilities
 dnl ******************************
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
+if test -z "$GLIB_GENMARSHAL"; then
+   AC_MSG_ERROR([glib-genmarshal not found])
+fi
+AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
+if test -z "$GLIB_MKENUMS"; then
+   AC_MSG_ERROR([glib-mkenums not found])
+fi
 AC_PATH_PROG(GLIB_COMPILE_RESOURCES, glib-compile-resources)
+if test -z "$GLIB_COMPILE_RESOURCES"; then
+   AC_MSG_ERROR([glib-compile-resources not found])
+fi
 
 dnl ******************************
 dnl Translations
@@ -368,6 +385,7 @@ case "$host" in
     AC_SUBST(WINDRES)
     AC_CHECK_TOOL(DLLTOOL, dlltool, dlltool)
     AC_SUBST(DLLTOOL)
+    COREDEPS_LIBS="$COREDEPS_LIBS -lwsock32 -lws2_32"
     ;;
 *-*-darwin*)
     dnl Darwin based distributions (including Mac OS X)
@@ -545,7 +563,7 @@ fi
 if test "x$enable_vala" = "xyes"
 then
 	AM_PROG_VALAC([0.17.7])
-	VAPIGEN_CHECK([0.17.7],[0.18],,no)
+	VAPIGEN_CHECK([0.17.7],[0.22],,no)
 else
 	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
 fi
@@ -823,6 +841,16 @@ fi
 AM_CONDITIONAL(HISTORY_LIB, test ! "x$HISTORY_LIB" = "x")
 AC_SUBST(HISTORY_LIB)
 
+dnl *****************
+dnl Check for eventfd
+dnl *****************
+AC_ARG_ENABLE([eventfd], [AS_HELP_STRING([--disable-eventfd], [disable eventfd [default=no]])],
+    [disable_eventfd=yes], [disable_eventfd=no])
+
+if test "x$disable_eventfd" != "xyes"; then
+    AC_CHECK_HEADERS(sys/eventfd.h,
+                     [AC_DEFINE(HAVE_EVENTFD, 1, [Have eventfd extension.])])
+fi
 
 dnl
 dnl TERMIOS.H

@@ -36,7 +36,7 @@
 #include <libgda/sql-parser/gda-statement-struct-select.h>
 #include <libgda/gda-marshal.h>
 #include <libgda/gda-data-handler.h>
-#include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-statement-extra.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
@@ -147,6 +147,8 @@ gda_statement_class_init (GdaStatementClass * klass)
 	/**
 	 * GdaStatement::checked:
 	 * @stmt: the #GdaStatement object
+	 * @cnc: a #GdaConnection
+	 * @checked: whether @stmt have been verified
 	 *
 	 * Gets emitted whenever the structure and contents
 	 * of @stmt have been verified (emitted after gda_statement_check_validity()).
@@ -871,15 +873,12 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 	context.params = params;
 	context.flags = flags;
 	if (cnc) {
-		GdaServerProvider *prov;
-		prov = gda_connection_get_provider (cnc);
-#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
-		if (prov && PROV_CLASS (prov)->statement_to_sql)
-			return (PROV_CLASS (prov)->statement_to_sql) (prov, 
-								      cnc, stmt, params, flags, 
+		if (gda_connection_is_opened (cnc))
+			return _gda_server_provider_statement_to_sql (gda_connection_get_provider (cnc), cnc,
+								      stmt, params, flags,
 								      params_used, error);
-		context.cnc = cnc;
-		context.provider = gda_connection_get_provider (cnc);
+		else
+			context.provider = gda_connection_get_provider (cnc);
 	}
 
 	str = gda_statement_to_sql_real (stmt, &context, error);

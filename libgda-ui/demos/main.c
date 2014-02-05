@@ -719,10 +719,17 @@ create_tree (void)
 					GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), tree_view);
 
+	GtkWidget *hbox, *spin;
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	label = gtk_label_new ("Widget (double click for demo)");
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+	spin = gtk_spinner_new ();
+	gtk_spinner_start (GTK_SPINNER (spin));
+	gtk_box_pack_start (GTK_BOX (hbox), spin, FALSE, FALSE, 10);
+	gtk_widget_show_all (hbox);
 
 	box = gtk_notebook_new ();
-	gtk_notebook_append_page (GTK_NOTEBOOK (box), scrolled_window, label);
+	gtk_notebook_append_page (GTK_NOTEBOOK (box), scrolled_window, hbox);
 
 	gtk_widget_grab_focus (tree_view);
 
@@ -736,11 +743,9 @@ main (int argc, char **argv)
 	GtkWidget *notebook;
 	GtkWidget *hbox;
 	GtkWidget *tree;
-	GtkTextTag *tag;
 	GError *error = NULL;
 	gchar *full_filename, *dirname;
 	gchar *cncstring;
-	GtkWidget *msg;
 	gchar *str;
 	GdaMetaStore *mstore;
 
@@ -791,6 +796,13 @@ main (int argc, char **argv)
 	if (! full_filename)
 		gda_connection_update_meta_store (demo_cnc, NULL, NULL);
 
+	/* set main context for connection */
+	GMainContext *context;
+	context = g_main_context_ref_thread_default ();
+	gda_connection_set_main_context (demo_cnc, context);
+	g_main_context_unref (context);
+	g_object_set (demo_cnc, "execution-slowdown", 1000000, NULL);
+
 	/* Initialize parser object */
 	demo_parser = gda_connection_create_parser (demo_cnc);
 	if (!demo_parser)
@@ -818,50 +830,50 @@ main (int argc, char **argv)
 				  create_text (&source_buffer, TRUE),
 				  gtk_label_new_with_mnemonic ("_Source"));
 
-	tag = gtk_text_buffer_create_tag (info_buffer, "title",
-					  "font", "Sans 18",
-					  NULL);
-
-	tag = gtk_text_buffer_create_tag (source_buffer, "comment",
-					  "foreground", "DodgerBlue",
-					  NULL);
-	tag = gtk_text_buffer_create_tag (source_buffer, "type",
-					  "foreground", "ForestGreen",
-					  NULL);
-	tag = gtk_text_buffer_create_tag (source_buffer, "string",
-					  "foreground", "RosyBrown",
-					  "weight", PANGO_WEIGHT_BOLD,
-					  NULL);
-	tag = gtk_text_buffer_create_tag (source_buffer, "control",
-					  "foreground", "purple",
-					  NULL);
-	tag = gtk_text_buffer_create_tag (source_buffer, "preprocessor",
-					  "style", PANGO_STYLE_OBLIQUE,
-					  "foreground", "burlywood4",
-					  NULL);
-	tag = gtk_text_buffer_create_tag (source_buffer, "function",
-					  "weight", PANGO_WEIGHT_BOLD,
-					  "foreground", "DarkGoldenrod4",
-					  NULL);
+	gtk_text_buffer_create_tag (info_buffer, "title",
+				    "font", "Sans 18",
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "comment",
+				    "foreground", "DodgerBlue",
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "type",
+				    "foreground", "ForestGreen",
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "string",
+				    "foreground", "RosyBrown",
+				    "weight", PANGO_WEIGHT_BOLD,
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "control",
+				    "foreground", "purple",
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "preprocessor",
+				    "style", PANGO_STYLE_OBLIQUE,
+				    "foreground", "burlywood4",
+				    NULL);
+	gtk_text_buffer_create_tag (source_buffer, "function",
+				    "weight", PANGO_WEIGHT_BOLD,
+				    "foreground", "DarkGoldenrod4",
+				    NULL);
   
-	gtk_window_set_default_size (GTK_WINDOW (window), 600, 700);
+	gtk_window_set_default_size (GTK_WINDOW (window), 700, 700);
 	gtk_widget_show_all (window);
   
 	load_file (gdaui_demos[0].filename);
 
-	full_filename = demo_find_file ("demo_db.db", NULL);
-	msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (window), GTK_DIALOG_MODAL,
-						  GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
-						  _("<b><big>Note:\n</big></b>Many of the demonstrated items use an\n"
-						    "opened connection to the SQLite using the\n"
-						    "'%s' file.\n\n"
-						    "In the source code shown here, the <i>demo_cnc</i> and \n"
-						    "<i>demo_parser</i> objects are created by the framework and\n"
-						    "made available to all the demonstrated items."), full_filename);
-	g_free (full_filename);
-	g_signal_connect_swapped (msg, "response",
-				  G_CALLBACK (gtk_widget_destroy), msg);
-	gtk_widget_show (msg);
+
+	if (! g_getenv ("NO_DEMO_NOTICE")) {
+		GtkWidget *msg;
+		full_filename = demo_find_file ("demo_db.db", NULL);
+		msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (window), GTK_DIALOG_MODAL,
+							  GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+							  _("<b><big>Note:\n</big></b>Many of the demonstrated items use an opened connection to the SQLite using the '%s' file.\n\n"
+							    "In the source code shown here, the <i>demo_cnc</i> and <i>demo_parser</i> objects are created by the framework and made available to all the demonstrated items.\n\n"
+							    "To illustrate that calls are non blocking, there is a spinner at the top (which must never stop spinning), and a 1 second delay has been added whenever the connection is used."), full_filename);
+		g_free (full_filename);
+		g_signal_connect_swapped (msg, "response",
+					  G_CALLBACK (gtk_widget_destroy), msg);
+		gtk_widget_show (msg);
+	}
 
 	gtk_main ();
 

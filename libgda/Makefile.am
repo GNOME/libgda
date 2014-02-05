@@ -2,6 +2,9 @@ QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
 lib_LTLIBRARIES = libgda-5.0.la
 
+check_PROGRAMS = test-cnc-open test-cnc-exec test-cnc-meta
+TESTS = test-cnc-open test-cnc-exec test-cnc-meta
+
 if ENABLE_VALA_EXTENSIONS
     VALA_EXTENSIONS= . data
 endif
@@ -90,6 +93,7 @@ gda_headers = \
 	gda-server-provider.h \
 	gda-server-provider-extra.h \
 	gda-server-provider-private.h \
+	gda-server-provider-impl.h \
 	gda-statement.h \
 	gda-statement-extra.h \
 	gda-sql-builder.h \
@@ -115,6 +119,7 @@ gda_built_sources= \
 gda_sources= \
 	gda-batch.c \
 	gda-blob-op.c \
+	gda-blob-op-impl.h \
 	gda-column.c \
 	gda-config.c \
 	gda-connection.c \
@@ -192,15 +197,17 @@ libgda_sources =  \
 	$(gda_built_sources) \
 	$(gda_sources)
 
+gda_enum_header_files = gda-connection.h gda-enums.h
+
 gda-enum-types.h: s-enum-types-h
 	@true
 
-s-enum-types-h: @REBUILD@ $(gda_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
+s-enum-types-h: @REBUILD@ $(gda_enum_header_files) Makefile
+	( cd $(srcdir) && $(GLIB_MKENUMS) \
 	                --fhead "#ifndef __LIBGDA_ENUM_TYPES_H__\n#define __LIBGDA_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 			--vhead "GType @enum_name@_get_type (void);\n#define GDA_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDA_ENUM_TYPES_H__ */" \
-		$(gda_headers)) > tmp-gda-enum-types.h \
+		$(gda_enum_header_files)) > tmp-gda-enum-types.h \
 	&& (cmp -s tmp-gda-enum-types.h gda-enum-types.h || cp tmp-gda-enum-types.h gda-enum-types.h ) \
 	&& rm -f tmp-gda-enum-types.h	\
 	&& echo timestamp > $(@F)
@@ -208,14 +215,14 @@ s-enum-types-h: @REBUILD@ $(gda_headers) Makefile
 gda-enum-types.c: s-enum-types-c
 	@true
 
-s-enum-types-c: @REBUILD@ $(gda_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
+s-enum-types-c: @REBUILD@ $(gda_enum_header_files) Makefile
+	( cd $(srcdir) && $(GLIB_MKENUMS) \
 	                --fhead "#include <libgda/libgda.h>\n" \
 	                --fhead "#include <glib-object.h>" \
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
 			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
 			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n" \
-		$(gda_headers)) > tmp-gda-enum-types.c \
+		$(gda_enum_header_files)) > tmp-gda-enum-types.c \
 	&& (cmp -s tmp-gda-enum-types.c gda-enum-types.c || cp tmp-gda-enum-types.c gda-enum-types.c ) \
 	&& rm -f tmp-gda-enum-types.c \
 	&& echo timestamp > $(@F)
@@ -314,8 +321,8 @@ psupport = \
 	providers-support/gda-pstmt.c
 
 threadwrapper = \
-	thread-wrapper/gda-thread-wrapper.h \
-	thread-wrapper/gda-thread-wrapper.c
+	thread-wrapper/gda-worker.h \
+	thread-wrapper/gda-worker.c
 
 sqlparser = \
 	sql-parser/gda-sql-parser.h \
@@ -386,3 +393,23 @@ clean-local:
 	then \
 		rm -f $(gir_DATA) $(vapi_DATA); \
 	fi
+
+
+test_cnc_open_SOURCES = test-cnc-open.c
+test_cnc_open_LDADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+        $(COREDEPS_LIBS)
+
+test_cnc_exec_SOURCES = test-cnc-exec.c
+test_cnc_exec_CFLAGS = \
+	-DROOT_DIR=\""$(top_srcdir)"\"
+test_cnc_exec_LDADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+        $(COREDEPS_LIBS)
+
+test_cnc_meta_SOURCES = test-cnc-meta.c
+test_cnc_meta_CFLAGS = \
+	-DROOT_DIR=\""$(top_srcdir)"\"
+test_cnc_meta_LDADD = \
+	$(top_builddir)/libgda/libgda-5.0.la \
+        $(COREDEPS_LIBS)

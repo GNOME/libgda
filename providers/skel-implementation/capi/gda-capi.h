@@ -29,12 +29,15 @@
  */
 #define CAPI_PROVIDER_NAME "Capi"
 
+#include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 /* TO_ADD: include headers necessary for the C or C++ API */
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	/* TO_ADD: this structure holds any information necessary to specialize the GdaConnection, usually a connection
 	 * handle from the C or C++ API
 	 */

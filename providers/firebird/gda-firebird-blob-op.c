@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,7 @@
 #include <libgda/libgda.h>
 #include "gda-firebird.h"
 #include "gda-firebird-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include <libgda/gda-debug-macros.h>
 
 struct _GdaFirebirdBlobOpPrivate {
@@ -95,9 +96,9 @@ gda_firebird_blob_op_class_init (GdaFirebirdBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_firebird_blob_op_finalize;
-	blob_class->get_length = gda_firebird_blob_op_get_length;
-	blob_class->read = gda_firebird_blob_op_read;
-	blob_class->write = gda_firebird_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_firebird_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_firebird_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_firebird_blob_op_write;
 }
 
 static void
@@ -123,7 +124,7 @@ gda_firebird_blob_op_new (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	pgop = g_object_new (GDA_TYPE_FIREBIRD_BLOB_OP, NULL);
+	pgop = g_object_new (GDA_TYPE_FIREBIRD_BLOB_OP, "connection", cnc, NULL);
 	pgop->priv->cnc = cnc;
 	
 	return GDA_BLOB_OP (pgop);

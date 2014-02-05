@@ -30,6 +30,7 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
@@ -54,9 +55,13 @@ static GObjectClass *parent_class = NULL;
  */
 /* connection management */
 static gboolean            gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-							      GdaQuarkList *params, GdaQuarkList *auth,
-							      guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+							      GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean            gda_capi_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+								 GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean            gda_capi_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
+static gchar              *gda_capi_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str);
+static gchar              *gda_capi_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str);
+
 static const gchar        *gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
@@ -70,9 +75,7 @@ static gchar              *gda_capi_provider_render_operation (GdaServerProvider
 							       GdaServerOperation *op, GError **error);
 
 static gboolean            gda_capi_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-								GdaServerOperation *op, guint *task_id, 
-								GdaServerProviderAsyncCallback async_cb, gpointer cb_data,
-								GError **error);
+								GdaServerOperation *op, GError **error);
 /* transactions */
 static gboolean            gda_capi_provider_begin_transaction (GdaServerProvider *provider, GdaConnection *cnc,
 								const gchar *name, GdaTransactionIsolation level, GError **error);
@@ -91,7 +94,8 @@ static gboolean            gda_capi_provider_delete_savepoint (GdaServerProvider
 static const gchar        *gda_capi_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_capi_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							       GdaConnectionFeature feature);
-
+static GdaWorker          *gda_capi_provider_create_worker (GdaServerProvider *provider);
+static GdaConnection      *gda_capi_provider_create_connection (GdaServerProvider *provider);
 static const gchar        *gda_capi_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_capi_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -101,18 +105,19 @@ static const gchar*        gda_capi_provider_get_default_dbms_type (GdaServerPro
 								    GType type);
 /* statements */
 static GdaSqlParser        *gda_capi_provider_create_parser (GdaServerProvider *provider, GdaConnection *cnc);
-static gchar               *gda_capi_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnection *cnc,
-								 GdaStatement *stmt, GdaSet *params, 
-								 GdaStatementSqlFlag flags,
-								 GSList **params_used, GError **error);
+static gchar               *gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
+								GdaStatement *stmt, GdaSet *params, 
+								GdaStatementSqlFlag flags,
+								GSList **params_used, GError **error);
+static gchar              *gda_capi_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+							       const gchar *id,
+							       gboolean for_meta_store, gboolean force_quotes);
 static gboolean             gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaStatement *stmt, GError **error);
 static GObject             *gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaStatement *stmt, GdaSet *params,
 								 GdaStatementModelUsage model_usage, 
-								 GType *col_types, GdaSet **last_inserted_row, 
-								 guint *task_id, GdaServerProviderExecCallback async_cb, 
-								 gpointer cb_data, GError **error);
+								 GType *col_types, GdaSet **last_inserted_row, GError **error);
 static GdaSqlStatement     *gda_capi_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaStatement *stmt, GdaSet *params, GError **error);
 
@@ -159,106 +164,118 @@ static gchar *internal_sql[] = {
 /*
  * GdaCapiProvider class implementation
  */
+
+GdaServerProviderBase base_functions = {
+	gda_capi_provider_get_name,
+	gda_capi_provider_get_version,
+	gda_capi_provider_get_server_version,
+	gda_capi_provider_supports_feature,
+	gda_capi_provider_create_worker,
+	gda_capi_provider_create_connection,
+	gda_capi_provider_create_parser,
+	gda_capi_provider_get_data_handler,
+	gda_capi_provider_get_default_dbms_type,
+	gda_capi_provider_supports_operation,
+	gda_capi_provider_create_operation,
+	gda_capi_provider_render_operation,
+	gda_capi_provider_statement_to_sql,
+	gda_capi_provider_identifier_quote,
+	gda_capi_statement_rewrite,
+	gda_capi_provider_open_connection,
+	gda_capi_provider_prepare_connection,
+	gda_capi_provider_close_connection,
+	gda_capi_provider_escape_string,
+	gda_capi_provider_unescape_string,
+	gda_capi_provider_get_database,
+	gda_capi_provider_perform_operation,
+	gda_capi_provider_begin_transaction,
+	gda_capi_provider_commit_transaction,
+	gda_capi_provider_rollback_transaction,
+	gda_capi_provider_add_savepoint,
+	gda_capi_provider_rollback_savepoint,
+	gda_capi_provider_delete_savepoint,
+	gda_capi_provider_statement_prepare,
+	gda_capi_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderMeta meta_functions = {
+	_gda_capi_meta__info,
+	_gda_capi_meta__btypes,
+	_gda_capi_meta__udt,
+	_gda_capi_meta_udt,
+	_gda_capi_meta__udt_cols,
+	_gda_capi_meta_udt_cols,
+	_gda_capi_meta__enums,
+	_gda_capi_meta_enums,
+	_gda_capi_meta__domains,
+	_gda_capi_meta_domains,
+	_gda_capi_meta__constraints_dom,
+	_gda_capi_meta_constraints_dom,
+	_gda_capi_meta__el_types,
+	_gda_capi_meta_el_types,
+	_gda_capi_meta__collations,
+	_gda_capi_meta_collations,
+	_gda_capi_meta__character_sets,
+	_gda_capi_meta_character_sets,
+	_gda_capi_meta__schemata,
+	_gda_capi_meta_schemata,
+	_gda_capi_meta__tables_views,
+	_gda_capi_meta_tables_views,
+	_gda_capi_meta__columns,
+	_gda_capi_meta_columns,
+	_gda_capi_meta__view_cols,
+	_gda_capi_meta_view_cols,
+	_gda_capi_meta__constraints_tab,
+	_gda_capi_meta_constraints_tab,
+	_gda_capi_meta__constraints_ref,
+	_gda_capi_meta_constraints_ref,
+	_gda_capi_meta__key_columns,
+	_gda_capi_meta_key_columns,
+	_gda_capi_meta__check_columns,
+	_gda_capi_meta_check_columns,
+	_gda_capi_meta__triggers,
+	_gda_capi_meta_triggers,
+	_gda_capi_meta__routines,
+	_gda_capi_meta_routines,
+	_gda_capi_meta__routine_col,
+	_gda_capi_meta_routine_col,
+	_gda_capi_meta__routine_par,
+	_gda_capi_meta_routine_par,
+	_gda_capi_meta__indexes_tab,
+        _gda_capi_meta_indexes_tab,
+        _gda_capi_meta__index_cols,
+        _gda_capi_meta_index_cols,
+
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderXa xa_functions = {
+	gda_capi_provider_xa_start,
+	gda_capi_provider_xa_end,
+	gda_capi_provider_xa_prepare,
+	gda_capi_provider_xa_commit,
+	gda_capi_provider_xa_rollback,
+	gda_capi_provider_xa_recover,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 {
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE, (gpointer) &base_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META, (gpointer) &meta_functions);
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA, (gpointer) &xa_functions);
+
 	parent_class = g_type_class_peek_parent (klass);
-
-	provider_class->get_version = gda_capi_provider_get_version;
-	provider_class->get_server_version = gda_capi_provider_get_server_version;
-	provider_class->get_name = gda_capi_provider_get_name;
-	provider_class->supports_feature = gda_capi_provider_supports_feature;
-
-	provider_class->get_data_handler = gda_capi_provider_get_data_handler;
-	provider_class->get_def_dbms_type = gda_capi_provider_get_default_dbms_type;
-
-	provider_class->open_connection = gda_capi_provider_open_connection;
-	provider_class->close_connection = gda_capi_provider_close_connection;
-	provider_class->get_database = gda_capi_provider_get_database;
-
-	provider_class->supports_operation = gda_capi_provider_supports_operation;
-        provider_class->create_operation = gda_capi_provider_create_operation;
-        provider_class->render_operation = gda_capi_provider_render_operation;
-        provider_class->perform_operation = gda_capi_provider_perform_operation;
-
-	provider_class->begin_transaction = gda_capi_provider_begin_transaction;
-	provider_class->commit_transaction = gda_capi_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_capi_provider_rollback_transaction;
-	provider_class->add_savepoint = gda_capi_provider_add_savepoint;
-        provider_class->rollback_savepoint = gda_capi_provider_rollback_savepoint;
-        provider_class->delete_savepoint = gda_capi_provider_delete_savepoint;
-
-	provider_class->create_parser = gda_capi_provider_create_parser;
-	provider_class->statement_to_sql = NULL; /* don't use gda_capi_provider_statement_to_sql()
-						  * because it only calls gda_statement_to_sql_extended().
-						  * Set it to gda_capi_provider_statement_to_sql() if it does
-						  * not call calls gda_statement_to_sql_extended() */
-	provider_class->statement_prepare = gda_capi_provider_statement_prepare;
-	provider_class->statement_execute = gda_capi_provider_statement_execute;
-	provider_class->statement_rewrite = gda_capi_statement_rewrite;
-
-	provider_class->is_busy = NULL;
-	provider_class->cancel = NULL;
-	provider_class->create_connection = NULL;
-
-	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_capi_meta__info;
-	provider_class->meta_funcs._btypes = _gda_capi_meta__btypes;
-	provider_class->meta_funcs._udt = _gda_capi_meta__udt;
-	provider_class->meta_funcs.udt = _gda_capi_meta_udt;
-	provider_class->meta_funcs._udt_cols = _gda_capi_meta__udt_cols;
-	provider_class->meta_funcs.udt_cols = _gda_capi_meta_udt_cols;
-	provider_class->meta_funcs._enums = _gda_capi_meta__enums;
-	provider_class->meta_funcs.enums = _gda_capi_meta_enums;
-	provider_class->meta_funcs._domains = _gda_capi_meta__domains;
-	provider_class->meta_funcs.domains = _gda_capi_meta_domains;
-	provider_class->meta_funcs._constraints_dom = _gda_capi_meta__constraints_dom;
-	provider_class->meta_funcs.constraints_dom = _gda_capi_meta_constraints_dom;
-	provider_class->meta_funcs._el_types = _gda_capi_meta__el_types;
-	provider_class->meta_funcs.el_types = _gda_capi_meta_el_types;
-	provider_class->meta_funcs._collations = _gda_capi_meta__collations;
-	provider_class->meta_funcs.collations = _gda_capi_meta_collations;
-	provider_class->meta_funcs._character_sets = _gda_capi_meta__character_sets;
-	provider_class->meta_funcs.character_sets = _gda_capi_meta_character_sets;
-	provider_class->meta_funcs._schemata = _gda_capi_meta__schemata;
-	provider_class->meta_funcs.schemata = _gda_capi_meta_schemata;
-	provider_class->meta_funcs._tables_views = _gda_capi_meta__tables_views;
-	provider_class->meta_funcs.tables_views = _gda_capi_meta_tables_views;
-	provider_class->meta_funcs._columns = _gda_capi_meta__columns;
-	provider_class->meta_funcs.columns = _gda_capi_meta_columns;
-	provider_class->meta_funcs._view_cols = _gda_capi_meta__view_cols;
-	provider_class->meta_funcs.view_cols = _gda_capi_meta_view_cols;
-	provider_class->meta_funcs._constraints_tab = _gda_capi_meta__constraints_tab;
-	provider_class->meta_funcs.constraints_tab = _gda_capi_meta_constraints_tab;
-	provider_class->meta_funcs._constraints_ref = _gda_capi_meta__constraints_ref;
-	provider_class->meta_funcs.constraints_ref = _gda_capi_meta_constraints_ref;
-	provider_class->meta_funcs._key_columns = _gda_capi_meta__key_columns;
-	provider_class->meta_funcs.key_columns = _gda_capi_meta_key_columns;
-	provider_class->meta_funcs._check_columns = _gda_capi_meta__check_columns;
-	provider_class->meta_funcs.check_columns = _gda_capi_meta_check_columns;
-	provider_class->meta_funcs._triggers = _gda_capi_meta__triggers;
-	provider_class->meta_funcs.triggers = _gda_capi_meta_triggers;
-	provider_class->meta_funcs._routines = _gda_capi_meta__routines;
-	provider_class->meta_funcs.routines = _gda_capi_meta_routines;
-	provider_class->meta_funcs._routine_col = _gda_capi_meta__routine_col;
-	provider_class->meta_funcs.routine_col = _gda_capi_meta_routine_col;
-	provider_class->meta_funcs._routine_par = _gda_capi_meta__routine_par;
-	provider_class->meta_funcs.routine_par = _gda_capi_meta_routine_par;
-	provider_class->meta_funcs._indexes_tab = _gda_capi_meta__indexes_tab;
-        provider_class->meta_funcs.indexes_tab = _gda_capi_meta_indexes_tab;
-        provider_class->meta_funcs._index_cols = _gda_capi_meta__index_cols;
-        provider_class->meta_funcs.index_cols = _gda_capi_meta_index_cols;
-
-	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
-	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
-	provider_class->xa_funcs->xa_start = gda_capi_provider_xa_start;
-	provider_class->xa_funcs->xa_end = gda_capi_provider_xa_end;
-	provider_class->xa_funcs->xa_prepare = gda_capi_provider_xa_prepare;
-	provider_class->xa_funcs->xa_commit = gda_capi_provider_xa_commit;
-	provider_class->xa_funcs->xa_rollback = gda_capi_provider_xa_rollback;
-	provider_class->xa_funcs->xa_recover = gda_capi_provider_xa_recover;
 }
 
 static void
@@ -342,22 +359,14 @@ gda_capi_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
  *   - open the real connection to the database using the parameters previously checked
  *   - create a CapiConnectionData structure and associate it to @cnc
  *
- * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
+ * Returns: TRUE if no error occurred (and the connection is opened), or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
 gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
-				   G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				   G_GNUC_UNUSED gpointer cb_data)
+				   GdaQuarkList *params, GdaQuarkList *auth)
 {
 	g_return_val_if_fail (GDA_IS_CAPI_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* Check for connection parameters */
 	/* TO_ADD: your own connection parameters */
@@ -378,8 +387,32 @@ gda_capi_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	 * and set its contents */
 	CapiConnectionData *cdata;
 	cdata = g_new0 (CapiConnectionData, 1);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_capi_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, (GdaServerProviderConnectionData*) cdata,
+						   (GDestroyNotify) gda_capi_free_cnc_data);
 	TO_IMPLEMENT; /* cdata->... = ... */
+
+	return TRUE;
+}
+
+/*
+ * Prepare connection request
+ *
+ * In this function, the extra preparation steps can be done such as setting some connection parameters, etc.
+ * If the preparation step failed, then the #GdaServerProvider will call the close_connection() method.
+ *
+ * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
+ */
+static gboolean
+gda_capi_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, GdaQuarkList *params, GdaQuarkList *auth)
+{
+	CapiConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CAPI_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
+	if (!cdata)
+		return FALSE;
 
 	/* Optionnally set some attributes for the newly opened connection (encoding to UTF-8 for example )*/
 	TO_IMPLEMENT;
@@ -405,17 +438,35 @@ gda_capi_provider_close_connection (GdaServerProvider *provider, GdaConnection *
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
-	TO_IMPLEMENT;
 
-	/* Free the CapiConnectionData structure and its contents*/
-	gda_capi_free_cnc_data (cdata);
-	gda_connection_internal_set_provider_data (cnc, NULL, NULL);
+	TO_IMPLEMENT;
 
 	return TRUE;
 }
+
+/*
+ * Escape a string so it can be used in SQL statements
+ */
+static gchar *
+gda_capi_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
+/*
+ * Does the reverse of gda_capi_provider_escape_string
+ */
+static gchar *
+gda_capi_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
 
 /*
  * Server version request
@@ -430,7 +481,7 @@ gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	TO_IMPLEMENT;
@@ -450,7 +501,7 @@ gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	TO_IMPLEMENT;
@@ -610,18 +661,9 @@ gda_capi_provider_render_operation (GdaServerProvider *provider, GdaConnection *
  */
 static gboolean
 gda_capi_provider_perform_operation (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaServerOperation *op, G_GNUC_UNUSED guint *task_id,
-				     GdaServerProviderAsyncCallback async_cb, G_GNUC_UNUSED gpointer cb_data,
-				     GError **error)
+				     GdaServerOperation *op, GError **error)
 {
         GdaServerOperationType optype;
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous server operation"));
-                return FALSE;
-	}
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -785,6 +827,28 @@ gda_capi_provider_supports_feature (GdaServerProvider *provider, GdaConnection *
 }
 
 /*
+ * Create a #GdaWorker: all the calls to the C API will be made from within the GdaWorker's worker thread. This ensures that
+ * each connection is manipulated from only one thread. If the C API does not support several threads each manipulating its
+ * own connection, then this function should return a single GdaWorker for any request (using gda_worker_ref()).
+ */
+static GdaWorker *
+gda_capi_provider_create_worker (GdaServerProvider *provider)
+{
+	TO_IMPLEMENT;
+	return gda_worker_new ();
+}
+
+/*
+ * For providers which require a specific GdaConnection object, seldom used.
+ */
+static GdaConnection *
+gda_capi_provider_create_connection (GdaServerProvider *provider)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
+/*
  * Get data handler request
  *
  * This method allows one to obtain a pointer to a #GdaDataHandler object specific to @type or @dbms_type (@dbms_type
@@ -913,8 +977,7 @@ gda_capi_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, G_GN
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
  *
- * NOTE: This implementation MUST NOT call gda_statement_to_sql_extended() if it is
- *       the GdaServerProvider::statement_to_sql() virtual method's implementation
+ * NOTE: The implementation MUST NOT call gda_statement_to_sql_extended() because this will end up in a loop.
  */
 static gchar *
 gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
@@ -927,8 +990,22 @@ gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
-	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
+	TO_IMPLEMENT;
+	return NULL;
 }
+
+/*
+ * Function to quote identifiers to be used safely in SQL statements
+ */
+static gchar *
+gda_capi_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+				    const gchar *id,
+				    gboolean for_meta_store, gboolean force_quotes)
+{
+	TO_IMPLEMENT;
+	return NULL;
+}
+
 
 /*
  * Statement prepare request
@@ -1024,9 +1101,7 @@ static GObject *
 gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				     GdaStatement *stmt, GdaSet *params,
 				     GdaStatementModelUsage model_usage, 
-				     GType *col_types, GdaSet **last_inserted_row, 
-				     guint *task_id, 
-				     GdaServerProviderExecCallback async_cb, gpointer cb_data, GError **error)
+				     GType *col_types, GdaSet **last_inserted_row, GError **error)
 {
 	GdaCapiPStmt *ps;
 	CapiConnectionData *cdata;
@@ -1037,13 +1112,6 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-	}
 
         allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
                 (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
@@ -1174,8 +1242,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 								   rstmt, params,
 								   model_usage,
 								   col_types, last_inserted_row,
-								   task_id,
-								   async_cb, cb_data, error);
+								   error);
 			g_object_unref (rstmt);
 			return res;
 		}
@@ -1223,8 +1290,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 									   model_usage,
 									   col_types,
 									   last_inserted_row,
-									   task_id, async_cb,
-									   cb_data, error);
+									   error);
 				/* clear original @param_ids and restore copied one */
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);

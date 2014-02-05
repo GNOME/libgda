@@ -74,7 +74,6 @@
 	gda_config_can_modify_system_config
 	gda_config_define_dsn
 	gda_config_dsn_needs_authentication
-	gda_config_error_get_type
 	gda_config_error_quark
 	gda_config_get
 	gda_config_get_dsn_info
@@ -91,14 +90,10 @@
 	gda_connection_add_event_string
 	gda_connection_add_prepared_statement
 	gda_connection_add_savepoint
-	gda_connection_async_cancel
-	gda_connection_async_fetch_result
-	gda_connection_async_statement_execute
 	gda_connection_batch_execute
 	gda_connection_begin_transaction
 	gda_connection_clear_events_list
 	gda_connection_close
-	gda_connection_close_no_warning
 	gda_connection_commit_transaction
 	gda_connection_create_operation
 	gda_connection_create_parser
@@ -107,7 +102,6 @@
 	gda_connection_delete_row_from_table
 	gda_connection_error_get_type
 	gda_connection_error_quark
-	gda_connection_event_code_get_type
 	gda_connection_event_get_code
 	gda_connection_event_get_description
 	gda_connection_event_get_event_type
@@ -121,7 +115,6 @@
 	gda_connection_event_set_gda_code
 	gda_connection_event_set_source
 	gda_connection_event_set_sqlstate
-	gda_connection_event_type_get_type
 	gda_connection_execute_non_select_command
 	gda_connection_execute_select_command
 	gda_connection_feature_get_type
@@ -130,6 +123,7 @@
 	gda_connection_get_date_format
 	gda_connection_get_dsn
 	gda_connection_get_events
+	gda_connection_get_main_context
 	gda_connection_get_meta_store
 	gda_connection_get_meta_store_data
 	gda_connection_get_meta_store_data_v
@@ -142,7 +136,6 @@
 	gda_connection_insert_row_into_table
 	gda_connection_insert_row_into_table_v
 	gda_connection_internal_change_transaction_state
-	gda_connection_internal_get_provider_data
 	gda_connection_internal_get_provider_data_error
 	gda_connection_internal_reset_transaction_status
 	gda_connection_internal_savepoint_added
@@ -158,6 +151,7 @@
 	gda_connection_new_from_dsn
 	gda_connection_new_from_string
 	gda_connection_open
+	gda_connection_open_async
 	gda_connection_open_from_dsn
 	gda_connection_open_from_string
 	gda_connection_open_sqlite
@@ -169,6 +163,7 @@
 	gda_connection_repetitive_statement_execute
 	gda_connection_rollback_savepoint
 	gda_connection_rollback_transaction
+	gda_connection_set_main_context
 	gda_connection_statement_execute
 	gda_connection_statement_execute_non_select
 	gda_connection_statement_execute_select
@@ -186,7 +181,6 @@
 	gda_data_access_wrapper_new
 	gda_data_access_wrapper_set_mapping
 	gda_data_comparator_compute_diff
-	gda_data_comparator_error_get_type
 	gda_data_comparator_error_quark
 	gda_data_comparator_get_diff
 	gda_data_comparator_get_n_diffs
@@ -202,7 +196,6 @@
 	gda_data_handler_get_type
 	gda_data_handler_get_value_from_sql
 	gda_data_handler_get_value_from_str
-	gda_data_model_access_flags_get_type
 	gda_data_model_add_data_from_xml_node
 	gda_data_model_append_row
 	gda_data_model_append_values
@@ -229,7 +222,6 @@
 	gda_data_model_dir_new
 	gda_data_model_dump
 	gda_data_model_dump_as_string
-	gda_data_model_error_get_type
 	gda_data_model_error_quark
 	gda_data_model_export_to_file
 	gda_data_model_export_to_string
@@ -246,7 +238,6 @@
 	gda_data_model_get_type
 	gda_data_model_get_typed_value_at
 	gda_data_model_get_value_at
-	gda_data_model_hint_get_type
 	gda_data_model_import_clean_errors
 	gda_data_model_import_from_file
 	gda_data_model_import_from_model
@@ -256,8 +247,6 @@
 	gda_data_model_import_new_file
 	gda_data_model_import_new_mem
 	gda_data_model_import_new_xml_node
-	gda_data_model_io_format_get_type
-	gda_data_model_iter_error_get_type
 	gda_data_model_iter_error_quark
 	gda_data_model_iter_get_column_for_param
 	gda_data_model_iter_get_holder_for_field
@@ -303,7 +292,6 @@
 	gda_data_proxy_cancel_all_changes
 	gda_data_proxy_cancel_row_changes
 	gda_data_proxy_delete
-	gda_data_proxy_error_get_type
 	gda_data_proxy_error_quark
 	gda_data_proxy_get_filtered_n_rows
 	gda_data_proxy_get_filter_expr
@@ -351,7 +339,6 @@
 	gda_default_escape_string
 	gda_default_get_type
 	gda_default_unescape_string
-	gda_diff_type_get_type
 	gda_dsn_info_copy
 	gda_dsn_info_free
 	gda_dsn_info_get_type
@@ -385,7 +372,6 @@
 	gda_handler_type_new
 	gda_holder_attributes_manager
 	gda_holder_copy
-	gda_holder_error_get_type
 	gda_holder_error_quark
 	gda_holder_force_invalid
 	gda_holder_force_invalid_e
@@ -459,13 +445,8 @@
 	gda_meta_context_set_column
 	gda_meta_context_set_columns
 	gda_meta_context_free
-	gda_meta_db_object_type_get_type
-	gda_meta_graph_info_get_type
-	gda_meta_sort_type_get_type
-	gda_meta_store_change_type_get_type
 	gda_meta_store_create_modify_data_model
 	gda_meta_store_declare_foreign_key
-	gda_meta_store_error_get_type
 	gda_meta_store_error_quark
 	gda_meta_store_extract
 	gda_meta_store_extract_v
@@ -494,9 +475,7 @@
 	gda_meta_struct_complement_depend
 	gda_meta_struct_complement_schema
 	gda_meta_struct_dump_as_graph
-	gda_meta_struct_error_get_type
 	gda_meta_struct_error_quark
-	gda_meta_struct_feature_get_type
 	gda_meta_struct_get_all_db_objects
 	gda_meta_struct_get_db_object
 	gda_meta_struct_get_table_column
@@ -588,8 +567,6 @@
 	gda_server_operation_is_valid
 	gda_server_operation_load_data_from_xml
 	gda_server_operation_new
-	gda_server_operation_node_status_get_type
-	gda_server_operation_node_type_get_type
 	gda_server_operation_op_type_to_string
 	gda_server_operation_perform_create_database
 	gda_server_operation_perform_create_table
@@ -603,10 +580,8 @@
 	gda_server_operation_set_value_at
 	gda_server_operation_set_value_at_path
 	gda_server_operation_string_to_op_type
-	gda_server_operation_type_get_type
 	gda_server_provider_create_operation
 	gda_server_provider_create_parser
-	gda_server_provider_error_get_type
 	gda_server_provider_error_quark
 	gda_server_provider_escape_string
 	gda_server_provider_find_file
@@ -614,6 +589,7 @@
 	gda_server_provider_get_data_handler_default
 	gda_server_provider_get_data_handler_g_type
 	gda_server_provider_get_default_dbms_type
+	gda_server_provider_get_impl_functions_for_class
 	gda_server_provider_get_name
 	gda_server_provider_get_server_version
 	gda_server_provider_get_type
@@ -626,6 +602,7 @@
 	gda_server_provider_perform_operation
 	gda_server_provider_perform_operation_default
 	gda_server_provider_render_operation
+	gda_server_provider_set_impl_functions
 	gda_server_provider_string_to_value
 	gda_server_provider_supports_feature
 	gda_server_provider_supports_operation
@@ -633,7 +610,6 @@
 	gda_server_provider_value_to_sql_string
 	gda_set_add_holder
 	gda_set_copy
-	gda_set_error_get_type
 	gda_set_error_quark
 	gda_set_get_group
 	gda_set_get_holder
@@ -703,7 +679,6 @@
 	gda_sql_builder_add_sub_select
 	gda_sql_builder_compound_add_sub_select
 	gda_sql_builder_compound_set_type
-	gda_sql_builder_error_get_type
 	gda_sql_builder_error_quark
 	gda_sql_builder_export_expression
 	gda_sql_builder_get_sql_statement
@@ -858,37 +833,20 @@
 	gda_statement_check_structure
 	gda_statement_check_validity
 	gda_statement_copy
-	gda_statement_error_get_type
 	gda_statement_error_quark
 	gda_statement_get_parameters
 	gda_statement_get_statement_type
 	gda_statement_get_type
 	gda_statement_is_useless
-	gda_statement_model_usage_get_type
 	gda_statement_new
 	gda_statement_normalize
 	gda_statement_rewrite_for_default_values
 	gda_statement_serialize
-	gda_statement_sql_flag_get_type
 	gda_statement_to_sql_extended
 	gda_statement_to_sql_real
 	gda_string_to_binary
 	gda_string_to_blob
 	gda_text_to_alphanum
-	gda_thread_wrapper_cancel
-	gda_thread_wrapper_connect_raw
-	gda_thread_wrapper_disconnect
-	gda_thread_wrapper_error_quark
-	gda_thread_wrapper_execute
-	gda_thread_wrapper_execute_void
-	gda_thread_wrapper_fetch_result
-	gda_thread_wrapper_get_io_channel
-	gda_thread_wrapper_get_type
-	gda_thread_wrapper_get_waiting_size
-	gda_thread_wrapper_iterate
-	gda_thread_wrapper_new
-	gda_thread_wrapper_steal_signal
-	gda_thread_wrapper_unset_io_channel
 	gda_time_copy
 	gda_time_change_timezone
 	gda_time_free
@@ -903,17 +861,14 @@
 	gda_transaction_status_add_event_sql
 	gda_transaction_status_add_event_sub
 	gda_transaction_status_add_event_svp
-	gda_transaction_status_event_type_get_type
 	gda_transaction_status_find
 	gda_transaction_status_find_current
 	gda_transaction_status_free_events
 	gda_transaction_status_get_type
 	gda_transaction_status_new
-	gda_transaction_status_state_get_type
 	gda_tree_add_manager
 	gda_tree_clean
 	gda_tree_dump
-	gda_tree_error_get_type
 	gda_tree_error_quark
 	gda_tree_get_node
 	gda_tree_get_node_manager
@@ -923,7 +878,6 @@
 	gda_tree_manager_add_manager
 	gda_tree_manager_add_new_node_attribute
 	gda_tree_manager_create_node
-	gda_tree_manager_error_get_type
 	gda_tree_manager_error_quark
 	gda_tree_manager_get_managers
 	gda_tree_manager_get_node_create_func
@@ -945,7 +899,6 @@
 	gda_tree_mgr_tables_get_type
 	gda_tree_mgr_tables_new
 	gda_tree_new
-	gda_tree_node_error_get_type
 	gda_tree_node_error_quark
 	gda_tree_node_fetch_attribute
 	gda_tree_node_get_child_index
@@ -1022,16 +975,26 @@
 	gda_virtual_connection_internal_get_provider_data
 	gda_virtual_connection_internal_set_provider_data
 	gda_virtual_connection_open
-	gda_virtual_connection_open_extended
 	gda_virtual_provider_get_type
 	gda_vprovider_data_model_get_type
 	gda_vprovider_data_model_new
 	gda_vprovider_hub_get_type
 	gda_vprovider_hub_new
+	gda_worker_cancel_job
+	gda_worker_do_job
+	gda_worker_fetch_job_result
+	gda_worker_forget_job
+	gda_worker_kill
+	gda_worker_new
+	gda_worker_ref
+	gda_worker_set_callback
+	gda_worker_submit_job
+	gda_worker_thread_is_worker
+	gda_worker_unref
+	gda_worker_wait_job
 	gda_xa_transaction_begin
 	gda_xa_transaction_commit
 	gda_xa_transaction_commit_recovered
-	gda_xa_transaction_error_get_type
 	gda_xa_transaction_error_quark
 	gda_xa_transaction_get_type
 	gda_xa_transaction_id_to_string

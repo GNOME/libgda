@@ -31,6 +31,7 @@
 #include <virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-server-provider-extra.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <glib/gi18n-lib.h>
@@ -53,14 +54,9 @@ static void gda_mdb_provider_finalize   (GObject *object);
 
 static const gchar *gda_mdb_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_mdb_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-						  GdaQuarkList *params, GdaQuarkList *auth,
-						  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static gboolean gda_mdb_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, GdaQuarkList *params, GdaQuarkList *auth);
 static const gchar *gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 							 GdaConnection *cnc);
-static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
-						   GdaConnection *cnc);
-
 
 static GObjectClass *parent_class = NULL;
 static GMutex mdb_init_mutex;
@@ -75,6 +71,41 @@ static void gda_mdb_free_cnc_data (MdbConnectionData *cdata);
 /*
  * GdaMdbProvider class implementation
  */
+GdaServerProviderBase data_model_base_functions = {
+        gda_mdb_provider_get_name,
+        gda_mdb_provider_get_version,
+        gda_mdb_provider_get_server_version,
+        NULL,
+        NULL,
+	NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        gda_mdb_provider_prepare_connection,
+        NULL,
+        NULL,
+        NULL,
+	NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+
+        NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 {
@@ -83,13 +114,12 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_mdb_provider_finalize;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+                                                GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+                                                (gpointer) &data_model_base_functions);
 
-	provider_class->get_name = gda_mdb_provider_get_name;
-	provider_class->get_version = gda_mdb_provider_get_version;
-	provider_class->open_connection = gda_mdb_provider_open_connection;
-	provider_class->get_server_version = gda_mdb_provider_get_server_version;
-	provider_class->get_database = gda_mdb_provider_get_database;
+	object_class->finalize = gda_mdb_provider_finalize;
 }
 
 static void
@@ -215,12 +245,11 @@ static GList *table_create_columns_func (LocalSpec *spec);
 static GdaDataModel *table_create_model_func (LocalSpec *spec);
 
 /* 
- * Open connection request
+ * Prapare connection request
  */
 static gboolean
-gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				  GdaQuarkList *params, GdaQuarkList *auth,
-				  guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
+gda_mdb_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth)
 {
 	gchar *filename = NULL, *tmp;
 	const gchar *dirname = NULL, *dbname = NULL;
@@ -231,11 +260,6 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 
 	g_return_val_if_fail (GDA_IS_MDB_PROVIDER (mdb_prv), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* look for parameters */
 	dirname = gda_quark_list_find (params, "DB_DIR");
@@ -314,14 +338,6 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 		gda_mdb_free_cnc_data (cdata);
 		return FALSE;
 	}
-
-	/* open virtual connection */
-        if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-									 NULL, NULL, NULL, NULL)) {
-		gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
-		gda_mdb_free_cnc_data (cdata);
-                return FALSE;
-        }
 
 	mdb_read_catalog (cdata->mdb, MDB_ANY);
 	gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
@@ -563,29 +579,13 @@ gda_mdb_provider_get_server_version (GdaServerProvider *provider,
 }
 
 /*
- * Get database request
- */
-static const gchar *
-gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	MdbConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-	if (!cdata)
-		return NULL;
-
-	return (const gchar *) cdata->mdb->f->filename;
-}
-
-/*
  * Free connection's specific data
  */
 static void
 gda_mdb_free_cnc_data (MdbConnectionData *cdata)
 {
+	if (cdata->mdb)
+		mdb_close (cdata->mdb);
 	g_free (cdata->server_version);
 	g_free (cdata);
 }

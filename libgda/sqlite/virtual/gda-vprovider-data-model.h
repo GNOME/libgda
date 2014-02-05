@@ -43,7 +43,6 @@ struct _GdaVproviderDataModelClass {
 	GdaVirtualProviderClass       parent_class;
 
 	/*< private >*/
-	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 	void (*_gda_reserved3) (void);

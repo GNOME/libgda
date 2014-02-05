@@ -22,6 +22,8 @@
 #include <string.h>
 #include "gda-vprovider-hub.h"
 #include "gda-vconnection-hub.h"
+#include <libgda/gda-debug-macros.h>
+#include <libgda/gda-server-provider-impl.h>
 
 struct _GdaVproviderHubPrivate {
 	int foo;
@@ -47,33 +49,67 @@ static void gda_vprovider_hub_get_property (GObject *object,
 static GObjectClass  *parent_class = NULL;
 
 static GdaConnection *gda_vprovider_hub_create_connection (GdaServerProvider *provider);
-static gboolean       gda_vprovider_hub_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-							 GdaQuarkList *params, GdaQuarkList *auth,
-							 guint *task_id, GdaServerProviderAsyncCallback async_cb, 
-							 gpointer cb_data);
 static gboolean       gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
+static const gchar   *gda_vprovider_hub_get_name (GdaServerProvider *provider);
 
 
 /*
  * GdaVproviderHub class implementation
  */
+static GdaServerProviderBase hub_base_functions = {
+	gda_vprovider_hub_get_name,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_vprovider_hub_create_connection,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_vprovider_hub_close_connection,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_vprovider_hub_class_init (GdaVproviderHubClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaServerProviderClass *server_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &hub_base_functions);
+
 	object_class->finalize = gda_vprovider_hub_finalize;
-	server_class->create_connection = gda_vprovider_hub_create_connection;
-	server_class->open_connection = gda_vprovider_hub_open_connection;
-	server_class->close_connection = gda_vprovider_hub_close_connection;
 
 	/* Properties */
         object_class->set_property = gda_vprovider_hub_set_property;
         object_class->get_property = gda_vprovider_hub_get_property;
 }
+
 
 static void
 gda_vprovider_hub_init (GdaVproviderHub *prov, G_GNUC_UNUSED GdaVproviderHubClass *klass)
@@ -191,17 +227,6 @@ gda_vprovider_hub_create_connection (GdaServerProvider *provider)
 	return cnc;
 }
 
-static gboolean
-gda_vprovider_hub_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, GdaQuarkList *auth,
-				   guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data)
-{
-	/* nothing to do here */
-	return GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), 
-									  cnc, params, auth, 
-									  task_id, async_cb, cb_data);
-}
-
 static void
 cnc_close_foreach_func (GdaConnection *cnc, G_GNUC_UNUSED const gchar *ns, GdaVconnectionHub *hub)
 {
@@ -219,5 +244,13 @@ gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *
 	gda_vconnection_hub_foreach (GDA_VCONNECTION_HUB (cnc),
 				     (GdaVConnectionHubFunc) cnc_close_foreach_func, cnc);
 
-	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (GDA_SERVER_PROVIDER (provider), cnc);
+	GdaServerProviderBase *parent_functions;
+	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	return parent_functions->close_connection (provider, cnc);
+}
+
+static const gchar *
+gda_vprovider_hub_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
+{
+	return "Virtual hub";
 }

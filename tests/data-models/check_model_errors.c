@@ -336,7 +336,7 @@ test2 (GdaConnection *cnc)
 	GdaDataModelIter *iter = NULL;
 	GdaStatement *stmt;
 	virtual_provider = gda_vprovider_data_model_new ();
-	vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
+	vcnc = gda_virtual_connection_open (virtual_provider, GDA_CONNECTION_OPTIONS_NONE, &lerror);
 	if (!vcnc) {
 #ifdef CHECK_EXTRA_INFO
 		g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");

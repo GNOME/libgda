@@ -23,6 +23,8 @@
 #include <string.h>
 #include <sqlite3.h>
 #include "gda-virtual-provider.h"
+#include <libgda/gda-debug-macros.h>
+#include <libgda/gda-server-provider-impl.h>
 
 #define PARENT_TYPE GDA_TYPE_SQLITE_PROVIDER
 #define CLASS(obj) (GDA_VIRTUAL_PROVIDER_CLASS (G_OBJECT_GET_CLASS (obj)))
@@ -31,9 +33,6 @@ static void gda_virtual_provider_class_init (GdaVirtualProviderClass *klass);
 static void gda_virtual_provider_init       (GdaVirtualProvider *prov, GdaVirtualProviderClass *klass);
 static void gda_virtual_provider_finalize   (GObject *object);
 static GObjectClass *parent_class = NULL;
-
-static gboolean gda_virtual_provider_close_connection (GdaServerProvider *prov,
-						       GdaConnection *cnc);
 
 /*
  * GdaVirtualProvider class implementation
@@ -46,9 +45,12 @@ gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) NULL);
+
 	/* virtual methods */
 	object_class->finalize = gda_virtual_provider_finalize;
-	prov_class->close_connection = gda_virtual_provider_close_connection;
 }
 
 static void
@@ -65,13 +67,6 @@ gda_virtual_provider_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
-}
-
-static gboolean
-gda_virtual_provider_close_connection (GdaServerProvider *prov, GdaConnection *cnc)
-{
-	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (prov), FALSE);
-	return GDA_SERVER_PROVIDER_CLASS (parent_class)->close_connection (prov, cnc);
 }
 
 GType

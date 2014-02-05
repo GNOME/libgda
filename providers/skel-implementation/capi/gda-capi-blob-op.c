@@ -26,6 +26,7 @@
 #include <libgda/libgda.h>
 #include "gda-capi.h"
 #include "gda-capi-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include <libgda/gda-debug-macros.h>
 
 struct _GdaCapiBlobOpPrivate {
@@ -95,9 +96,9 @@ gda_capi_blob_op_class_init (GdaCapiBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_capi_blob_op_finalize;
-	blob_class->get_length = gda_capi_blob_op_get_length;
-	blob_class->read = gda_capi_blob_op_read;
-	blob_class->write = gda_capi_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_capi_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_capi_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_capi_blob_op_write;
 }
 
 static void
@@ -123,7 +124,7 @@ gda_capi_blob_op_new (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	bop = g_object_new (GDA_TYPE_CAPI_BLOB_OP, NULL);
+	bop = g_object_new (GDA_TYPE_CAPI_BLOB_OP, "connection", cnc, NULL);
 	bop->priv->cnc = cnc;
 	
 	return GDA_BLOB_OP (bop);

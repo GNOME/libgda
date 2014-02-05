@@ -105,7 +105,11 @@ main (int argc, char **argv)
 	g_free (auth_string);
 
 	g_print (_("Connection successfully opened!\n"));
-	gda_connection_close (cnc);
+	if (! gda_connection_close (cnc, &error)) {
+		g_warning (_("Can't close connection: %s\n"),
+			   error && error->message ? error->message : "???");
+		exit (1);
+	}
 
 	return 0;
 }

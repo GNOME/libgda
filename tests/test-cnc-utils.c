@@ -330,7 +330,7 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 		g_assert (dbname);
 		dbname = g_strdup (dbname);
 		
-		gda_connection_close (cnc);
+		g_assert (gda_connection_close (cnc, NULL));
 		g_object_unref (cnc);
 
 #ifdef CHECK_EXTRA_INFO
@@ -354,7 +354,7 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 	}
 	else {
 		TO_IMPLEMENT;
-		gda_connection_close (cnc);
+		g_assert (gda_connection_close (cnc, NULL));
 		g_object_unref (cnc);
 	}
 	g_free (upname);

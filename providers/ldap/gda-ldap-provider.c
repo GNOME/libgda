@@ -28,7 +28,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <virtual/gda-ldap-connection.h>
-#include <libgda/gda-connection-private.h>
+#include <libgda/gda-server-provider-impl.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-data-model-array.h>
@@ -46,15 +46,12 @@ static void gda_ldap_provider_finalize   (GObject *object);
 static const gchar *gda_ldap_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_ldap_provider_get_version (GdaServerProvider *provider);
 static GdaConnection *gda_ldap_provider_create_connection (GdaServerProvider *provider);
-static gboolean gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc, 
-						   GdaQuarkList *params, GdaQuarkList *auth,
-						   guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static gboolean gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, 
+						      GdaQuarkList *params, GdaQuarkList *auth);
 static GObject *gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 						     GdaStatement *stmt, GdaSet *params,
 						     GdaStatementModelUsage model_usage,
-						     GType *col_types, GdaSet **last_inserted_row,
-						     guint *task_id, GdaServerProviderExecCallback async_cb,
-						     gpointer cb_data, GError **error);
+						     GType *col_types, GdaSet **last_inserted_row, GError **error);
 static const gchar *gda_ldap_provider_get_server_version (GdaServerProvider *provider,
 							  GdaConnection *cnc);
 static const gchar *gda_ldap_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
@@ -69,23 +66,62 @@ static void gda_ldap_free_cnc_data (LdapConnectionData *cdata);
 /*
  * GdaLdapProvider class implementation
  */
+GdaServerProviderBase ldap_base_functions = {
+	gda_ldap_provider_get_name,
+	gda_ldap_provider_get_version,
+	gda_ldap_provider_get_server_version,
+	NULL,
+	NULL,
+	gda_ldap_provider_create_connection,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_ldap_provider_prepare_connection,
+	NULL,
+	NULL,
+	NULL,
+	gda_ldap_provider_get_database,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	gda_ldap_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_ldap_provider_finalize;
-	provider_class->create_connection = gda_ldap_provider_create_connection;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &ldap_base_functions);
 
-	provider_class->get_name = gda_ldap_provider_get_name;
-	provider_class->get_version = gda_ldap_provider_get_version;
-	provider_class->open_connection = gda_ldap_provider_open_connection;
-	provider_class->get_server_version = gda_ldap_provider_get_server_version;
-	provider_class->get_database = gda_ldap_provider_get_database;
-	provider_class->statement_execute = gda_ldap_provider_statement_execute;
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META,
+						(gpointer) NULL);
+
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
+						(gpointer) NULL);
+
+	object_class->finalize = gda_ldap_provider_finalize;
 }
 
 static void
@@ -327,32 +363,23 @@ fetch_user_dn (const gchar *url, const gchar *base, const gchar *username, LdapA
 }
 
 /* 
- * Open connection request
+ * Prepare connection request
  *
  * In this function, the following _must_ be done:
  *   - check for the presence and validify of the parameters required to actually open a connection,
  *     using @params
  *   - open the real connection to the database using the parameters previously checked, create one or
  *     more GdaDataModel objects and declare them to the virtual connection with table names
- *   - open virtual (SQLite) connection
  *   - create a LdapConnectionData structure and associate it to @cnc
  *
  * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
-gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, GdaQuarkList *auth,
-				   G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				   G_GNUC_UNUSED gpointer cb_data)
+gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+				   GdaQuarkList *params, GdaQuarkList *auth)
 {
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	/* Don't allow asynchronous connection opening for virtual providers */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* Check for connection parameters */
 	const gchar *base_dn;
@@ -598,14 +625,6 @@ gda_ldap_provider_open_connection (GdaServerProvider *provider, GdaConnection *c
 	g_object_set_data ((GObject*) cnc, "__gda_connection_LDAP", (gpointer) 0x01);
 	gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
 							   cdata, (GDestroyNotify) gda_ldap_free_cnc_data);
-	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-                                                                         NULL, NULL, NULL, NULL)) {
-		gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), NULL, NULL);
-                gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
-		gda_ldap_free_cnc_data (cdata);
-                return FALSE;
-        }
-
 	gda_ldap_may_unbind (cdata);
 	return TRUE;
 }
@@ -792,15 +811,8 @@ static GObject *
 gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 				     GdaStatement *stmt, GdaSet *params,
 				     GdaStatementModelUsage model_usage,
-				     GType *col_types, GdaSet **last_inserted_row,
-				     guint *task_id, GdaServerProviderExecCallback async_cb,
-				     gpointer cb_data, GError **error)
+				     GType *col_types, GdaSet **last_inserted_row, GError **error)
 {
-	if (async_cb) {
-                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous statement execution"));
-                return NULL;
-        }
 	gchar *sql;
 	sql = gda_statement_to_sql (stmt, params, NULL);
 	if (sql) {
@@ -964,10 +976,12 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		}
 		g_free (sql);
 	}
-	return GDA_SERVER_PROVIDER_CLASS (parent_class)->statement_execute (provider, cnc, stmt, params,
-									    model_usage, col_types,
-									    last_inserted_row, task_id, 
-									    async_cb, cb_data, error);
+
+	GdaServerProviderBase *fset;
+	fset = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	return fset->statement_execute (provider, cnc, stmt, params,
+					model_usage, col_types,
+					last_inserted_row, error);
 }
 
 /*

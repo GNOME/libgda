@@ -34,7 +34,6 @@
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-connection.h>
-#include <libgda/gda-connection-private.h>
 #include <libgda/gda-data-comparator.h>
 #include <libgda/gda-data-model-array.h>
 @LIBGDA_BDB_INC@

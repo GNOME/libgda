@@ -42,6 +42,7 @@
 #include <libgda/gda-log.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-server-provider.h>
+#include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-column.h>
 #include <libgda/gda-data-model-iter.h>
 #ifdef HAVE_LOCALE_H
@@ -61,8 +62,6 @@
 
 extern gchar *gda_lang_locale;
 extern GdaAttributesManager *gda_holder_attributes_manager;
-
-#define PROV_CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 
 /**
  * gda_g_type_to_string:
@@ -2592,9 +2591,12 @@ gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider
 	if ((*id == '*') && (! id [1]))
 	    return g_strdup (id);
 
-	if (prov && PROV_CLASS (prov)->identifier_quote)
-		return PROV_CLASS (prov)->identifier_quote (prov, cnc, id,
-							    for_meta_store, force_quotes);
+	if (prov) {
+		gchar *quoted;
+		quoted = _gda_server_provider_identifier_quote (prov, cnc, id, for_meta_store, force_quotes);
+		if (quoted)
+			return quoted;
+	}
 
 	if (for_meta_store) {
 		gchar *tmp, *ptr;

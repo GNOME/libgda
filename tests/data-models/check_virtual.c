@@ -59,7 +59,7 @@ test1 (void)
 
 	g_print ("===== %s() =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
-	cnc = gda_virtual_connection_open (provider, NULL);
+	cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 	g_assert (cnc);
 
 	/* create RW data model to store results */
@@ -137,7 +137,7 @@ test2 (void)
 
 	g_print ("===== %s () =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
-	cnc = gda_virtual_connection_open (provider, NULL);
+	cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 	g_assert (cnc);
 
 	/* load CSV data models */

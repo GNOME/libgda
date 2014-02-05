@@ -25,6 +25,7 @@
 #include <glib/gi18n-lib.h>
 #include <virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/gda-server-provider-impl.h>
 #include "gda-models.h"
 #include "gda-models-provider.h"
 #include <libgda/gda-debug-macros.h>
@@ -36,12 +37,12 @@ static void gda_models_provider_finalize   (GObject *object);
 
 static const gchar *gda_models_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_models_provider_get_version (GdaServerProvider *provider);
-static gboolean gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc, 
-						     GdaQuarkList *params, GdaQuarkList *auth,
-						     guint *task_id, GdaServerProviderAsyncCallback async_cb, gpointer cb_data);
+static gboolean gda_models_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, 
+							GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean gda_models_provider_close_connection (GdaServerProvider *provider,
+						      GdaConnection *cnc);
 static const gchar *gda_models_provider_get_server_version (GdaServerProvider *provider,
 							    GdaConnection *cnc);
-static const gchar *gda_models_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
 
@@ -53,21 +54,54 @@ static void gda_models_free_cnc_data (ModelsConnectionData *cdata);
 /*
  * GdaModelsProvider class implementation
  */
+GdaServerProviderBase data_model_base_functions = {
+        gda_models_provider_get_name,
+        gda_models_provider_get_version,
+        gda_models_provider_get_server_version,
+        NULL,
+        NULL,
+	NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        gda_models_provider_prepare_connection,
+        gda_models_provider_close_connection,
+        NULL,
+        NULL,
+	NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+
+        NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_models_provider_class_init (GdaModelsProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_models_provider_finalize;
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+                                                GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+                                                (gpointer) &data_model_base_functions);
 
-	provider_class->get_name = gda_models_provider_get_name;
-	provider_class->get_version = gda_models_provider_get_version;
-	provider_class->open_connection = gda_models_provider_open_connection;
-	provider_class->get_server_version = gda_models_provider_get_server_version;
-	provider_class->get_database = gda_models_provider_get_database;
+	object_class->finalize = gda_models_provider_finalize;
 }
 
 static void
@@ -135,32 +169,24 @@ gda_models_provider_get_version (G_GNUC_UNUSED GdaServerProvider *provider)
 }
 
 /* 
- * Open connection request
+ * Prepare connection request
  *
  * In this function, the following _must_ be done:
  *   - check for the presence and validify of the parameters required to actually open a connection,
  *     using @params
  *   - open the real connection to the database using the parameters previously checked, create one or
  *     more GdaDataModel objects and declare them to the virtual connection with table names
- *   - open virtual (SQLite) connection
- *   - create a ModelsConnectionData structure and associate it to @cnc
+ *   - create a ModelsConnectionData structure and associate it to @cnc using gda_virtual_connection_internal_set_provider_data()
+ *     to get it from other methods
  *
  * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
  */
 static gboolean
-gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				     GdaQuarkList *params, G_GNUC_UNUSED GdaQuarkList *auth,
-				     G_GNUC_UNUSED guint *task_id, GdaServerProviderAsyncCallback async_cb,
-				     G_GNUC_UNUSED gpointer cb_data)
+gda_models_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+					GdaQuarkList *params, GdaQuarkList *auth)
 {
 	g_return_val_if_fail (GDA_IS_MODELS_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-
-	/* Don't allow asynchronous connection opening for virtual providers */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
 
 	/* Check for connection parameters */
         /* TO_ADD: your own connection parameters */
@@ -179,13 +205,6 @@ gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	GdaDataModel *model;
 	model = NULL; TO_IMPLEMENT;
 
-	/* open virtual connection */
-	if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
-                                                                         NULL, NULL, NULL, NULL)) {
-                gda_connection_add_event_string (cnc, _("Can't open virtual connection"));
-                return FALSE;
-        }
-
 	/* add the data model(s) as table(s) */
 	GError *error = NULL;
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), model, "a_table", &error)) {
@@ -193,7 +212,6 @@ gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 						 _("Could not add data model to connection: %s"),
 						 error && error->message ? error->message : _("no detail"));
 		g_error_free (error);
-		gda_connection_close_no_warning (cnc);
 		g_object_unref (model);
 
 		return FALSE;
@@ -211,6 +229,30 @@ gda_models_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 }
 
 /*
+ * Close connection request
+ */
+static gboolean
+gda_models_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	ModelsConnectionData *cdata;
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+	cdata = (ModelsConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata)
+                return FALSE;
+
+	/* liberate the ressources used by the virtual connection */
+	TO_IMPLEMENT;
+
+	/* link to parent implementation */
+	GdaServerProviderBase *parent_functions;
+        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+        return parent_functions->close_connection (provider, cnc);
+}
+
+/*
  * Server version request
  */
 static const gchar *
@@ -224,24 +266,6 @@ gda_models_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
         cdata = (ModelsConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
         if (!cdata)
                 return FALSE;
-        TO_IMPLEMENT;
-        return NULL;
-}
-
-/*
- * Get database request
- */
-static const gchar *
-gda_models_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	ModelsConnectionData *cdata;
-
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-        cdata = (ModelsConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-        if (!cdata)
-                return NULL;
         TO_IMPLEMENT;
         return NULL;
 }

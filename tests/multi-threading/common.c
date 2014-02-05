@@ -86,7 +86,7 @@ create_sqlite_db (const gchar *dir, const gchar *dbname, const gchar *sqlfile, G
 	g_slist_foreach (list, (GFunc) g_object_unref, NULL);
 	g_slist_free (list);
 
-	gda_connection_close (cnc);
+	g_assert (gda_connection_close (cnc, NULL));
 	g_object_unref (cnc);
 	g_object_unref (batch);
 	return retval;

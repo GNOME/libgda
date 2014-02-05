@@ -21,7 +21,6 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "browser-connection.h"
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 #include "support.h"
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>

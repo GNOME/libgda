@@ -32,12 +32,14 @@
 #include <libsoup/soup.h>
 #include <libgda/gda-mutex.h>
 #include <libgda/gda-connection.h>
+#include <libgda/gda-connection-private.h>
 #include "../reuseable/gda-provider-reuseable.h"
 
 /*
  * Provider's specific connection data
  */
 typedef struct {
+	GdaServerProviderConnectionData parent;
 	GdaProviderReuseable *reuseable; /* pointer to GdaProviderReuseable, not inherited! */
 	GdaMutex *mutex; /* protected access */
 

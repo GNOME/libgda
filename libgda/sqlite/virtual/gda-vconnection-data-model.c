@@ -158,7 +158,7 @@ gda_vconnection_data_model_dispose (GObject *object)
 			td = (GdaVConnectionTableData *) cnc->priv->table_data_list->data;
 			get_rid_of_vtable (cnc, td, TRUE, NULL);
 		}
-		gda_connection_close_no_warning ((GdaConnection *) cnc);
+		_gda_connection_close_no_warning ((GdaConnection *) cnc, NULL);
 
 		g_mutex_clear (& (cnc->priv->lock_context));
 		g_free (cnc->priv);

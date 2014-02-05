@@ -119,7 +119,6 @@ test_multiple_threads (GThreadFunc func, GError **error)
 	
 	if (!cnc) 
 		return FALSE;
-	g_object_set (G_OBJECT (cnc), "thread-owner", g_thread_self (), NULL);
 
 	/* prepare threads data */
 	for (i = 0; i < NTHREADS; i++) {
@@ -153,7 +152,6 @@ test_multiple_threads (GThreadFunc func, GError **error)
 	gboolean retval = TRUE;
 	for (i = 0; i < NTHREADS; i++) {
 		ThData *d = &(data[i]);
-		g_object_set (G_OBJECT (cnc), "thread-owner", d->thread, NULL);
 		g_thread_join (d->thread);
 		if (d->error)
 			retval = FALSE;

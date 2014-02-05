@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -24,6 +24,7 @@
 #include <libgda/libgda.h>
 #include "gda-web.h"
 #include "gda-web-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include <libgda/gda-debug-macros.h>
 
 struct _GdaWebBlobOpPrivate {
@@ -93,9 +94,9 @@ gda_web_blob_op_class_init (GdaWebBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_web_blob_op_finalize;
-	blob_class->get_length = gda_web_blob_op_get_length;
-	blob_class->read = gda_web_blob_op_read;
-	blob_class->write = gda_web_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_web_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_web_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_web_blob_op_write;
 }
 
 static void
@@ -121,7 +122,7 @@ gda_web_blob_op_new (GdaConnection *cnc)
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
-	bop = g_object_new (GDA_TYPE_WEB_BLOB_OP, NULL);
+	bop = g_object_new (GDA_TYPE_WEB_BLOB_OP, "connection", cnc, NULL);
 	bop->priv->cnc = cnc;
 	
 	return GDA_BLOB_OP (bop);

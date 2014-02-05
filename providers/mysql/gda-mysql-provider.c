@@ -91,10 +91,11 @@ enum
 static gboolean            gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 							       GdaConnection                   *cnc,
 							       GdaQuarkList                    *params,
-							       GdaQuarkList                    *auth,
-							       guint                           *task_id,
-							       GdaServerProviderAsyncCallback   async_cb,
-							       gpointer                         cb_data);
+							       GdaQuarkList                    *aut);
+static gboolean            gda_mysql_provider_prepare_connection (GdaServerProvider               *provider,
+								  GdaConnection                   *cnc,
+								  GdaQuarkList                    *params,
+								  GdaQuarkList                    *aut);
 static gboolean            gda_mysql_provider_close_connection (GdaServerProvider  *provider,
 								GdaConnection      *cnc);
 static const gchar        *gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
@@ -120,9 +121,6 @@ static gchar              *gda_mysql_provider_render_operation (GdaServerProvide
 static gboolean            gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 								 GdaConnection                   *cnc,
 								 GdaServerOperation              *op,
-								 guint                           *task_id, 
-								 GdaServerProviderAsyncCallback   async_cb,
-								 gpointer                         cb_data,
 								 GError                         **error);
 /* transactions */
 static gboolean            gda_mysql_provider_begin_transaction (GdaServerProvider        *provider,
@@ -156,6 +154,8 @@ static gboolean            gda_mysql_provider_supports_feature (GdaServerProvide
 								GdaConnection         *cnc,
 								GdaConnectionFeature   feature);
 
+static GdaWorker          *gda_mysql_provider_create_worker (GdaServerProvider *provider);
+
 static const gchar        *gda_mysql_provider_get_name (GdaServerProvider  *provider);
 
 static GdaDataHandler     *gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
@@ -186,19 +186,16 @@ static GObject             *gda_mysql_provider_statement_execute (GdaServerProvi
 								  GdaSet                          *params,
 								  GdaStatementModelUsage           model_usage, 
 								  GType                           *col_types,
-								  GdaSet                         **last_inserted_row, 
-								  guint                           *task_id,
-								  GdaServerProviderExecCallback    async_cb, 
-								  gpointer                         cb_data,
+								  GdaSet                         **last_inserted_row,
 								  GError                         **error);
-static GdaSqlStatement     *gda_mysql_statement_rewrite          (GdaServerProvider *provider, GdaConnection *cnc,
+static GdaSqlStatement     *gda_mysql_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
 								  GdaStatement *stmt, GdaSet *params, GError **error);
 
 
 /* Quoting */
-static gchar               *gda_mysql_identifier_quote    (GdaServerProvider *provider, GdaConnection *cnc,
-							   const gchar *id,
-							   gboolean meta_store_convention, gboolean force_quotes);
+static gchar               *gda_mysql_provider_identifier_quote  (GdaServerProvider *provider, GdaConnection *cnc,
+								  const gchar *id,
+								  gboolean meta_store_convention, gboolean force_quotes);
 
 /* distributed transactions */
 static gboolean gda_mysql_provider_xa_start    (GdaServerProvider         *provider,
@@ -254,6 +251,52 @@ gchar *internal_sql[] = {
 /*
  * GdaMysqlProvider class implementation
  */
+GdaServerProviderBase mysql_base_functions = {
+	gda_mysql_provider_get_name,
+	gda_mysql_provider_get_version,
+	gda_mysql_provider_get_server_version,
+	gda_mysql_provider_supports_feature,
+	gda_mysql_provider_create_worker,
+	NULL,
+	gda_mysql_provider_create_parser,
+	gda_mysql_provider_get_data_handler,
+	gda_mysql_provider_get_default_dbms_type,
+	gda_mysql_provider_supports_operation,
+	gda_mysql_provider_create_operation,
+	gda_mysql_provider_render_operation,
+	gda_mysql_provider_statement_to_sql,
+	gda_mysql_provider_identifier_quote,
+	gda_mysql_provider_statement_rewrite,
+	gda_mysql_provider_open_connection,
+	gda_mysql_provider_prepare_connection,
+	gda_mysql_provider_close_connection,
+	NULL,
+	NULL,
+	gda_mysql_provider_get_database,
+	gda_mysql_provider_perform_operation,
+	gda_mysql_provider_begin_transaction,
+	gda_mysql_provider_commit_transaction,
+	gda_mysql_provider_rollback_transaction,
+	gda_mysql_provider_add_savepoint,
+	gda_mysql_provider_rollback_savepoint,
+	gda_mysql_provider_delete_savepoint,
+	gda_mysql_provider_statement_prepare,
+	gda_mysql_provider_statement_execute,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
+GdaServerProviderXa mysql_xa_functions = {
+	gda_mysql_provider_xa_start,
+	gda_mysql_provider_xa_end,
+	gda_mysql_provider_xa_prepare,
+	gda_mysql_provider_xa_commit,
+	gda_mysql_provider_xa_rollback,
+	gda_mysql_provider_xa_recover,
+
+	NULL, NULL, NULL, NULL, /* padding */
+};
+
 static void
 gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 {
@@ -270,108 +313,19 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
                                          g_param_spec_boolean ("identifiers-case-sensitive", NULL, NULL, TRUE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 
+	/* set virtual functions */
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
+						(gpointer) &mysql_base_functions);
+	GdaProviderReuseableOperations *ops;
+	ops = _gda_mysql_reuseable_get_ops ();
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_META,
+						(gpointer) &(ops->re_meta_funcs));
 
-	/* virtual methods */
-	provider_class->get_version = gda_mysql_provider_get_version;
-	provider_class->get_server_version = gda_mysql_provider_get_server_version;
-	provider_class->get_name = gda_mysql_provider_get_name;
-	provider_class->supports_feature = gda_mysql_provider_supports_feature;
-
-	provider_class->get_data_handler = gda_mysql_provider_get_data_handler;
-	provider_class->get_def_dbms_type = gda_mysql_provider_get_default_dbms_type;
-
-	provider_class->open_connection = gda_mysql_provider_open_connection;
-	provider_class->close_connection = gda_mysql_provider_close_connection;
-	provider_class->get_database = gda_mysql_provider_get_database;
-
-	provider_class->supports_operation = gda_mysql_provider_supports_operation;
-        provider_class->create_operation = gda_mysql_provider_create_operation;
-        provider_class->render_operation = gda_mysql_provider_render_operation;
-        provider_class->perform_operation = gda_mysql_provider_perform_operation;
-
-	provider_class->begin_transaction = gda_mysql_provider_begin_transaction;
-	provider_class->commit_transaction = gda_mysql_provider_commit_transaction;
-	provider_class->rollback_transaction = gda_mysql_provider_rollback_transaction;
-	provider_class->add_savepoint = gda_mysql_provider_add_savepoint;
-        provider_class->rollback_savepoint = gda_mysql_provider_rollback_savepoint;
-        provider_class->delete_savepoint = gda_mysql_provider_delete_savepoint;
-
-	provider_class->create_parser = gda_mysql_provider_create_parser;
-	provider_class->statement_to_sql = gda_mysql_provider_statement_to_sql;
-	provider_class->statement_prepare = gda_mysql_provider_statement_prepare;
-	provider_class->statement_execute = gda_mysql_provider_statement_execute;
-	provider_class->statement_rewrite = gda_mysql_statement_rewrite;
-
-	provider_class->is_busy = NULL;
-	provider_class->cancel = NULL;
-	provider_class->create_connection = NULL;
-
-	provider_class->identifier_quote = gda_mysql_identifier_quote;
-
-	memset (&(provider_class->meta_funcs), 0, sizeof (GdaServerProviderMeta));
-	provider_class->meta_funcs._info = _gda_mysql_meta__info;
-        provider_class->meta_funcs._btypes = _gda_mysql_meta__btypes;
-        provider_class->meta_funcs._udt = _gda_mysql_meta__udt;
-        provider_class->meta_funcs.udt = _gda_mysql_meta_udt;
-        provider_class->meta_funcs._udt_cols = _gda_mysql_meta__udt_cols;
-        provider_class->meta_funcs.udt_cols = _gda_mysql_meta_udt_cols;
-        provider_class->meta_funcs._enums = _gda_mysql_meta__enums;
-        provider_class->meta_funcs.enums = _gda_mysql_meta_enums;
-        provider_class->meta_funcs._domains = _gda_mysql_meta__domains;
-        provider_class->meta_funcs.domains = _gda_mysql_meta_domains;
-        provider_class->meta_funcs._constraints_dom = _gda_mysql_meta__constraints_dom;
-        provider_class->meta_funcs.constraints_dom = _gda_mysql_meta_constraints_dom;
-        provider_class->meta_funcs._el_types = _gda_mysql_meta__el_types;
-        provider_class->meta_funcs._collations = _gda_mysql_meta__collations;
-        provider_class->meta_funcs.collations = _gda_mysql_meta_collations;
-        provider_class->meta_funcs._character_sets = _gda_mysql_meta__character_sets;
-        provider_class->meta_funcs.character_sets = _gda_mysql_meta_character_sets;
-        provider_class->meta_funcs._schemata = _gda_mysql_meta__schemata;
-        provider_class->meta_funcs.schemata = _gda_mysql_meta_schemata;
-        provider_class->meta_funcs._tables_views = _gda_mysql_meta__tables_views;
-        provider_class->meta_funcs.tables_views = _gda_mysql_meta_tables_views;
-        provider_class->meta_funcs._columns = _gda_mysql_meta__columns;
-        provider_class->meta_funcs.columns = _gda_mysql_meta_columns;
-        provider_class->meta_funcs._view_cols = _gda_mysql_meta__view_cols;
-        provider_class->meta_funcs.view_cols = _gda_mysql_meta_view_cols;
-        provider_class->meta_funcs._constraints_tab = _gda_mysql_meta__constraints_tab;
-        provider_class->meta_funcs.constraints_tab = _gda_mysql_meta_constraints_tab;
-        provider_class->meta_funcs._constraints_ref = _gda_mysql_meta__constraints_ref;
-        provider_class->meta_funcs.constraints_ref = _gda_mysql_meta_constraints_ref;
-        provider_class->meta_funcs._key_columns = _gda_mysql_meta__key_columns;
-        provider_class->meta_funcs.key_columns = _gda_mysql_meta_key_columns;
-        provider_class->meta_funcs._check_columns = _gda_mysql_meta__check_columns;
-        provider_class->meta_funcs.check_columns = _gda_mysql_meta_check_columns;
-        provider_class->meta_funcs._triggers = _gda_mysql_meta__triggers;
-        provider_class->meta_funcs.triggers = _gda_mysql_meta_triggers;
-        provider_class->meta_funcs._routines = _gda_mysql_meta__routines;
-        provider_class->meta_funcs.routines = _gda_mysql_meta_routines;
-        provider_class->meta_funcs._routine_col = _gda_mysql_meta__routine_col;
-        provider_class->meta_funcs.routine_col = _gda_mysql_meta_routine_col;
-        provider_class->meta_funcs._routine_par = _gda_mysql_meta__routine_par;
-        provider_class->meta_funcs.routine_par = _gda_mysql_meta_routine_par;
-	provider_class->meta_funcs._indexes_tab = _gda_mysql_meta__indexes_tab;
-        provider_class->meta_funcs.indexes_tab = _gda_mysql_meta_indexes_tab;
-        provider_class->meta_funcs._index_cols = _gda_mysql_meta__index_cols;
-        provider_class->meta_funcs.index_cols = _gda_mysql_meta_index_cols;
-
-	/* distributed transactions: if not supported, then provider_class->xa_funcs should be set to NULL */
-	provider_class->xa_funcs = g_new0 (GdaServerProviderXa, 1);
-	provider_class->xa_funcs->xa_start = gda_mysql_provider_xa_start;
-	provider_class->xa_funcs->xa_end = gda_mysql_provider_xa_end;
-	provider_class->xa_funcs->xa_prepare = gda_mysql_provider_xa_prepare;
-	provider_class->xa_funcs->xa_commit = gda_mysql_provider_xa_commit;
-	provider_class->xa_funcs->xa_rollback = gda_mysql_provider_xa_rollback;
-	provider_class->xa_funcs->xa_recover = gda_mysql_provider_xa_recover;
-	
-	if (!mysql_thread_safe ()) {
-		gda_log_message ("MySQL was not compiled with the --enable-thread-safe-client flag, "
-				 "only one thread can access the provider");
-		provider_class->limiting_thread = GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD;
-	}
-	else
-		provider_class->limiting_thread = NULL;
-	
+	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
+						(gpointer) &mysql_xa_functions);
 }
 
 static void
@@ -458,6 +412,24 @@ gda_mysql_provider_get_property (GObject *object,
 	case PROP_IDENT_CASE_SENSITIVE:
 		g_value_set_boolean (value, mysql_prv->test_identifiers_case_sensitive);
 		break;
+	}
+}
+
+static GdaWorker *
+gda_mysql_provider_create_worker (GdaServerProvider *provider)
+{
+	/* If PostgreSQL was not compiled with the --enable-thread-safe-client, then it's
+	 * considered thread safe, and we limit the usage of the provider to one single thread */
+
+	static GdaWorker *unique_worker = NULL;
+	if (unique_worker)
+		return gda_worker_ref (unique_worker);
+
+	if (mysql_thread_safe ())
+		return gda_worker_new ();
+	else {
+		unique_worker = gda_worker_new ();
+		return gda_worker_ref (unique_worker);
 	}
 }
 
@@ -626,22 +598,12 @@ static gboolean
 gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 				    GdaConnection                   *cnc,
 				    GdaQuarkList                    *params,
-				    GdaQuarkList                    *auth,
-				    G_GNUC_UNUSED guint             *task_id,
-				    GdaServerProviderAsyncCallback   async_cb,
-				    gpointer                         cb_data)
+				    GdaQuarkList                    *auth)
 {
 	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		gda_connection_add_event_string (cnc, _("Provider does not support asynchronous connection open"));
-                return FALSE;
-	}
-
 	/* Check for connection parameters */
-	/* TO_ADD: your own connection parameters */
 	const gchar *db_name;
 	db_name = gda_quark_list_find (params, "DB_NAME");
 	if (!db_name) {
@@ -667,12 +629,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	use_ssl = gda_quark_list_find (params, "USE_SSL");
 	compress = gda_quark_list_find (params, "COMPRESS");
 	proto = gda_quark_list_find (params, "PROTOCOL");
-	
-	/* open the real connection to the database */
-	/* TO_ADD: C API specific function calls;
-	 * if it fails, add a connection event and return FALSE */
-	// TO_IMPLEMENT;
-	
+		
 	GError *error = NULL;
 	MYSQL *mysql = real_open_connection (host, (port != NULL) ? atoi (port) : -1,
 					     unix_socket, db_name,
@@ -708,14 +665,33 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	 * and set its contents */
 	MysqlConnectionData *cdata;
 	cdata = g_new0 (MysqlConnectionData, 1);
-	gda_connection_internal_set_provider_data (cnc, cdata, (GDestroyNotify) gda_mysql_free_cnc_data);
+	gda_connection_internal_set_provider_data (cnc, (GdaServerProviderConnectionData*) cdata,
+						   (GDestroyNotify) gda_mysql_free_cnc_data);
 	cdata->cnc = cnc;
 	cdata->mysql = mysql;
+
+	return TRUE;
+}
+
+static gboolean
+gda_mysql_provider_prepare_connection (GdaServerProvider               *provider,
+				       GdaConnection                   *cnc,
+				       GdaQuarkList                    *params,
+				       G_GNUC_UNUSED GdaQuarkList      *aut)
+{
+	g_return_val_if_fail (GDA_IS_MYSQL_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	MysqlConnectionData *cdata;
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
+	if (!cdata)
+		return FALSE;
 
 	/* handle the reuseable part */
 	GdaProviderReuseableOperations *ops;
 	ops = _gda_mysql_reuseable_get_ops ();
 	cdata->reuseable = (GdaMysqlReuseable*) ops->re_new_data ();
+	GError *error = NULL;
 	if (! _gda_mysql_compute_version (cnc, cdata->reuseable, &error)) {
 		GdaConnectionEvent *event_error = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 		gda_connection_event_set_sqlstate (event_error, _("Unknown"));
@@ -727,11 +703,8 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 		gda_connection_add_event (cnc, event_error);
 		g_clear_error (&error);
 
-		gda_mysql_free_cnc_data (cdata);
-		gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 		return FALSE;
 	}
-
 	return TRUE;
 }
 
@@ -754,7 +727,7 @@ gda_mysql_provider_close_connection (GdaServerProvider  *provider,
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
 	/* Close the connection using the C API */
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 	// TO_IMPLEMENT;
@@ -780,7 +753,7 @@ gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return FALSE;
 	if (! ((GdaProviderReuseable*)cdata->reuseable)->server_version)
@@ -802,7 +775,7 @@ gda_mysql_provider_get_database (GdaServerProvider  *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	TO_IMPLEMENT;
@@ -991,19 +964,9 @@ static gboolean
 gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 				      GdaConnection                   *cnc,
 				      GdaServerOperation              *op,
-				      G_GNUC_UNUSED guint                           *task_id, 
-				      GdaServerProviderAsyncCallback   async_cb,
-				      gpointer                         cb_data,
 				      GError                         **error)
 {
         GdaServerOperationType optype;
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous server operation"));
-                return FALSE;
-	}
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -1286,8 +1249,6 @@ gda_mysql_provider_supports_feature (GdaServerProvider     *provider,
 	switch (feature) {
 	case GDA_CONNECTION_FEATURE_SQL :
 		return TRUE;
-	case GDA_CONNECTION_FEATURE_MULTI_THREADING:
-		return mysql_thread_safe () ? TRUE : FALSE;
 	default: 
 		return FALSE;
 	}
@@ -1985,7 +1946,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong las
 	gint rc;
 	gchar *sql;
 	MysqlConnectionData *cdata;
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) 
 		return NULL;
 	sql = g_strdup_printf ("DESCRIBE %s", insert->table->table_name);
@@ -2167,10 +2128,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				      GdaSet                          *params,
 				      GdaStatementModelUsage           model_usage, 
 				      GType                           *col_types,
-				      GdaSet                         **last_inserted_row, 
-				      guint                           *task_id, 
-				      GdaServerProviderExecCallback    async_cb,
-				      gpointer                         cb_data,
+				      GdaSet                         **last_inserted_row,
 				      GError                         **error)
 {
 	GdaMysqlPStmt *ps;
@@ -2182,13 +2140,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-
-	/* If asynchronous connection opening is not supported, then exit now */
-	if (async_cb) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
-			     "%s", _("Provider does not support asynchronous statement execution"));
-                return FALSE;
-	}
 
 	allow_noparam = (model_usage & GDA_STATEMENT_MODEL_ALLOW_NOPARAM) &&
 		(gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
@@ -2385,9 +2336,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			res = gda_mysql_provider_statement_execute (provider, cnc,
 								    rstmt, params,
 								    model_usage,
-								    col_types, last_inserted_row,
-								    task_id,
-								    async_cb, cb_data, error);
+								    col_types, last_inserted_row, error);
 			g_object_unref (rstmt);
 			return res;
 		}
@@ -2437,9 +2386,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									    rstmt, params,
 									    model_usage,
 									    col_types,
-									    last_inserted_row,
-									    task_id, async_cb,
-									    cb_data, error);
+									    last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
@@ -2837,8 +2784,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
  * Rewrites a statement in case some parameters in @params are set to DEFAULT, for INSERT or UPDATE statements
  */
 static GdaSqlStatement *
-gda_mysql_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
-			     GdaStatement *stmt, GdaSet *params, GError **error)
+gda_mysql_provider_statement_rewrite (GdaServerProvider *provider, GdaConnection *cnc,
+				      GdaStatement *stmt, GdaSet *params, GError **error)
 {
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
@@ -3107,16 +3054,16 @@ my_remove_quotes (gchar *str)
 }
 
 static gchar *
-gda_mysql_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
-			    const gchar *id,
-			    gboolean for_meta_store, gboolean force_quotes)
+gda_mysql_provider_identifier_quote (GdaServerProvider *provider, GdaConnection *cnc,
+				     const gchar *id,
+				     gboolean for_meta_store, gboolean force_quotes)
 {
 	GdaSqlReservedKeywordsFunc kwfunc;
 	MysqlConnectionData *cdata = NULL;
 	gboolean case_sensitive = TRUE;
 
 	if (cnc) {
-		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data (cnc);
+		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (cdata) 
 			case_sensitive = cdata->reuseable->identifiers_case_sensitive;
 	}

@@ -54,3 +54,5 @@ gtk-doc.make
 xmldocs.make
 omf.make
 ylwrap
+*.log
+*.trs

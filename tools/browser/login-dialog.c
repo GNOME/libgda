@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -23,7 +23,6 @@
 #include "login-dialog.h"
 #include "browser-spinner.h"
 #include "support.h"
-#include <libgda/thread-wrapper/gda-thread-wrapper.h>
 
 /* 
  * Main static functions 
@@ -32,7 +31,7 @@ static void login_dialog_class_init (LoginDialogClass * class);
 static void login_dialog_init (LoginDialog *dialog);
 static void login_dialog_dispose (GObject *object);
 
-static GdaConnection *real_open_connection (GdaThreadWrapper *wrapper, const GdaDsnInfo *cncinfo, GError **error);
+static GdaConnection *real_open_connection (const GdaDsnInfo *cncinfo, GError **error);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -41,7 +40,6 @@ struct _LoginDialogPrivate
 {
 	GtkWidget *login;
 	GtkWidget *spinner;
-	GdaThreadWrapper *wrapper;
 };
 
 /* module error */
@@ -170,8 +168,6 @@ login_dialog_dispose (GObject *object)
 	LoginDialog *dialog;
 	dialog = LOGIN_DIALOG (object);
 	if (dialog->priv) {
-		if (dialog->priv->wrapper)
-			g_object_unref (dialog->priv->wrapper);
 		g_free (dialog->priv);
 		dialog->priv = NULL;
 	}
@@ -227,12 +223,9 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 		if (result == GTK_RESPONSE_ACCEPT) {
 			const GdaDsnInfo *info;
 			GError *lerror = NULL;
-			
-			if (!dialog->priv->wrapper)
-				dialog->priv->wrapper = gda_thread_wrapper_new ();
 
 			info = gdaui_login_get_connection_information (GDAUI_LOGIN (dialog->priv->login));
-			cnc = real_open_connection (dialog->priv->wrapper, info, &lerror);
+			cnc = real_open_connection (info, &lerror);
 			browser_spinner_stop (BROWSER_SPINNER (dialog->priv->spinner));
 			if (cnc)
 				goto out;
@@ -268,70 +261,6 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 	return cnc;
 }
 
-/*
- * executed in a sub thread
- */
-static GdaConnection *
-sub_thread_open_cnc (GdaDsnInfo *info, GError **error)
-{
-#ifndef DUMMY
-	GdaConnection *cnc;
-	if (info->name)
-		cnc = gda_connection_open_from_dsn (info->name, info->auth_string,
-						    GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						    error);
-	else
-		cnc = gda_connection_open_from_string (info->provider, info->cnc_string,
-						       info->auth_string,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						       error);
-	return cnc;
-#else /* DUMMY defined */
-	sleep (5);
-	g_set_error (error, GDA_TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
-	return NULL;
-#endif
-}
-
-static void
-dsn_info_free (GdaDsnInfo *info)
-{
-	g_free (info->name);
-	g_free (info->provider);
-	g_free (info->cnc_string);
-	g_free (info->auth_string);
-	g_free (info);
-}
-
-typedef struct {
-	guint cncid;
-	GMainLoop *loop;
-	GError **error;
-	GdaThreadWrapper *wrapper;
-
-	/* out */
-	GdaConnection *cnc;
-} MainloopData;
-
-static gboolean
-check_for_cnc (MainloopData *data)
-{
-	GdaConnection *cnc;
-	GError *lerror = NULL;
-	cnc = gda_thread_wrapper_fetch_result (data->wrapper, FALSE, data->cncid, &lerror);
-	if (cnc || (!cnc && lerror)) {
-		/* waiting is finished! */
-		data->cnc = cnc;
-		if (lerror)
-			g_propagate_error (data->error, lerror);
-		g_main_loop_quit (data->loop);
-		return FALSE;
-	}
-	return TRUE;
-}
-
 /**
  * real_open_connection
  * @cncinfo: a pointer to a #GdaDsnInfo, describing the connection to open
@@ -342,46 +271,24 @@ check_for_cnc (MainloopData *data)
  * Returns: a new #GdaConnection, or %NULL if an error occurred
  */
 static GdaConnection *
-real_open_connection (GdaThreadWrapper *wrapper, const GdaDsnInfo *cncinfo, GError **error)
+real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 {
-	
-	GdaDsnInfo *info;
-	guint cncid;
+#ifdef DUMMY
+	sleep (5);
+	g_set_error (error, GDA_TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
+	return NULL;
+#endif
 
-	info = g_new0 (GdaDsnInfo, 1);
+	GdaConnection *cnc;
 	if (cncinfo->name)
-		info->name = g_strdup (cncinfo->name);
-	if (cncinfo->provider)
-		info->provider = g_strdup (cncinfo->provider);
-	if (cncinfo->cnc_string)
-		info->cnc_string = g_strdup (cncinfo->cnc_string);
-	if (cncinfo->auth_string)
-		info->auth_string = g_strdup (cncinfo->auth_string);
+		cnc = gda_connection_open_from_dsn (cncinfo->name, cncinfo->auth_string,
+						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
+						    error);
+	else
+		cnc = gda_connection_open_from_string (cncinfo->provider, cncinfo->cnc_string,
+						       cncinfo->auth_string,
+						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
+						       error);
 	
-	cncid = gda_thread_wrapper_execute (wrapper,
-					    (GdaThreadWrapperFunc) sub_thread_open_cnc,
-					    (gpointer) info,
-					    (GDestroyNotify) dsn_info_free,
-					    error);
-	if (cncid == 0)
-		return NULL;
-
-	GMainLoop *loop;
-	MainloopData data;
-
-	loop = g_main_loop_new (NULL, FALSE);
-	
-	data.cncid = cncid;
-	data.error = error;
-	data.loop = loop;
-	data.cnc = NULL;
-	data.wrapper = wrapper;
-
-	g_timeout_add (200, (GSourceFunc) check_for_cnc, &data);
-	g_main_loop_run (loop);
-	g_main_loop_unref (loop);
-
-	if (data.cnc)
-		g_object_set (data.cnc, "monitor-wrapped-in-mainloop", TRUE, NULL);
-	return data.cnc;
+	return cnc;
 }

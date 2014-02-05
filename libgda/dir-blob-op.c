@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <string.h>
 #define __GDA_INTERNAL__
 #include "dir-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,7 +34,7 @@ struct _GdaDirBlobOpPrivate {
 
 static void gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass);
 static void gda_dir_blob_op_init       (GdaDirBlobOp *blob,
-					  GdaDirBlobOpClass *klass);
+					GdaDirBlobOpClass *klass);
 static void gda_dir_blob_op_finalize   (GObject *object);
 
 static glong gda_dir_blob_op_get_length (GdaBlobOp *op);
@@ -74,7 +75,7 @@ _gda_dir_blob_op_get_type (void)
 
 static void
 gda_dir_blob_op_init (GdaDirBlobOp *op,
-			   G_GNUC_UNUSED GdaDirBlobOpClass *klass)
+		      G_GNUC_UNUSED GdaDirBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (op));
 
@@ -91,9 +92,9 @@ gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_dir_blob_op_finalize;
-	blob_class->get_length = gda_dir_blob_op_get_length;
-	blob_class->read = gda_dir_blob_op_read;
-	blob_class->write = gda_dir_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_dir_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_dir_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_dir_blob_op_write;
 }
 
 
@@ -241,7 +242,7 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	if (blob->op && (blob->op != op)) {
 		/* use data through blob->op */
-                #define buf_size 16384
+#define buf_size 16384
 		gint nread = 0;
 		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
 		gda_blob_set_op (tmpblob, blob->op);

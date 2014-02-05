@@ -1125,10 +1125,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 				gda_value_free (value);
 		}
 
+		gda_holder_unlock ((GdaLockable*) holder);
 		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 	}
 
-	gda_holder_unlock ((GdaLockable*) holder);
 	return newvalid;
 }
 
@@ -1375,11 +1375,14 @@ gda_holder_force_invalid_e (GdaHolder *holder, GError *error)
 	}
 
 	/* if we are an alias, then we forward the value setting to the master */
-	if (holder->priv->full_bind) 
+	if (holder->priv->full_bind) {
 		gda_holder_force_invalid (holder->priv->full_bind);
-	else 
+		gda_holder_unlock ((GdaLockable*) holder);
+	}
+	else {
+		gda_holder_unlock ((GdaLockable*) holder);
 		g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
-	gda_holder_unlock ((GdaLockable*) holder);
+	}
 }
 
 /**

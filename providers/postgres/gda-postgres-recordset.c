@@ -334,7 +334,7 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps, NULL);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 
@@ -365,7 +365,7 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps, NULL);
 
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 

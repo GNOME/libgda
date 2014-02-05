@@ -83,7 +83,7 @@ gdaui-enum-types.h: s-enum-types-h
 	@true
 
 s-enum-types-h: @REBUILD@ $(ui_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
+	( cd $(srcdir) && $(GLIB_MKENUMS) \
 	                --fhead "#ifndef __LIBGDAUI_ENUM_TYPES_H__\n#define __LIBGDAUI_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" \
 			--vhead "GType @enum_name@_get_type (void);\n#define GDAUI_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" 	\
 			--ftail "G_END_DECLS\n\n#endif /* __LIBGDAUI_ENUM_TYPES_H__ */" \
@@ -96,7 +96,7 @@ gdaui-enum-types.c: s-enum-types-c
 	@true
 
 s-enum-types-c: @REBUILD@ $(ui_headers) Makefile
-	( cd $(srcdir) && glib-mkenums \
+	( cd $(srcdir) && $(GLIB_MKENUMS) \
 	                --fhead "#include <libgda-ui/libgda-ui.h>\n" \
 	                --fhead "#include <glib-object.h>" \
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\

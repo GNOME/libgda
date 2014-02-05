@@ -1347,11 +1347,9 @@ open_connection (SqlConsole *console, const gchar *cnc_name, const gchar *cnc_st
 	
 	if (info && !real_provider)
 		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string,
-						       GDA_CONNECTION_OPTIONS_THREAD_SAFE |
 						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 	else 
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
-							  GDA_CONNECTION_OPTIONS_THREAD_SAFE |
 							  GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 
 	g_free (real_cnc_string);
@@ -3152,8 +3150,7 @@ extra_command_bind_cnc (ToolCommand *command, guint argc, const gchar **argv,
 		vprovider = gda_vprovider_hub_new ();
 	g_assert (vprovider);
 
-	virtual = gda_virtual_connection_open_extended (vprovider, GDA_CONNECTION_OPTIONS_THREAD_SAFE |
-							GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
+	virtual = gda_virtual_connection_open (vprovider, GDA_CONNECTION_OPTIONS_AUTO_META_DATA, NULL);
 	if (!virtual) {
 		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not create virtual connection"));

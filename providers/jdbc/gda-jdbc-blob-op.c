@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include "gda-jdbc.h"
 #include "gda-jdbc-util.h"
 #include "gda-jdbc-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include "jni-globals.h"
 
 struct _GdaJdbcBlobOpPrivate {
@@ -91,9 +92,9 @@ gda_jdbc_blob_op_class_init (GdaJdbcBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_jdbc_blob_op_finalize;
-	blob_class->get_length = gda_jdbc_blob_op_get_length;
-	blob_class->read = gda_jdbc_blob_op_read;
-	blob_class->write = gda_jdbc_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_jdbc_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_jdbc_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_jdbc_blob_op_write;
 }
 
 static void
@@ -129,7 +130,7 @@ gda_jdbc_blob_op_new_with_jblob (GdaConnection *cnc, JNIEnv *jenv, jobject blob_
 	if ((*jenv)->GetJavaVM (jenv, &jvm))
 		g_error ("Could not attach JAVA virtual machine's current thread");
 
-	bop = g_object_new (GDA_TYPE_JDBC_BLOB_OP, NULL);
+	bop = g_object_new (GDA_TYPE_JDBC_BLOB_OP, "connection", cnc, NULL);
 	bop->priv->cnc = cnc;
 	bop->priv->blob_obj = gda_value_new_jni_object (jvm, jenv, blob_obj);
 	

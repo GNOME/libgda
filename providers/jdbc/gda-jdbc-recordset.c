@@ -247,7 +247,7 @@ gda_jdbc_recordset_new (GdaConnection *cnc, GdaJdbcPStmt *ps, GdaSet *exec_param
 	else
 		ps = gda_jdbc_pstmt_new (NULL);
 
-	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 

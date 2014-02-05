@@ -152,7 +152,7 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
         g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
         g_return_val_if_fail (ps != NULL, NULL);
 
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data (cnc);
+	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
 		return NULL;
 

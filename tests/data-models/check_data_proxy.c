@@ -1431,7 +1431,7 @@ wait_for_signals (void)
 	if (!defer_sync)
 		return;
 
-	ms = ((expected_signals->len / 5)+1) * 75; /* nice heuristic, heu? */
+	ms = ((expected_signals->len / 5)+1) * 100; /* nice heuristic, heu? */
 	loop = g_main_loop_new (NULL, FALSE);
 #ifdef CHECK_EXTRA_INFO
 	g_print ("Waiting %d ms...\n", ms);

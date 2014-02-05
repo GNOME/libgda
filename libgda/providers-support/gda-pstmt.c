@@ -97,6 +97,7 @@ gda_stmt_reset_cb (GdaStatement *stmt, GdaPStmt *pstmt)
 {
 	g_signal_handlers_disconnect_by_func (G_OBJECT (stmt), 
 					      G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	/*g_print ("g_object_remove_weak_pointer (%p, %p)\n", pstmt->priv->gda_stmt, &(pstmt->priv->gda_stmt));*/
 	g_object_remove_weak_pointer ((GObject*) pstmt->priv->gda_stmt, (gpointer*) &(pstmt->priv->gda_stmt));
 	pstmt->priv->gda_stmt = NULL;
 }
@@ -164,6 +165,7 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 	pstmt->priv->gda_stmt = stmt;
 	if (stmt) {
 		g_object_add_weak_pointer ((GObject*) stmt, (gpointer*) &(pstmt->priv->gda_stmt));
+		/*g_print ("g_object_add_weak_pointer (%p, %p)\n", stmt, &(pstmt->priv->gda_stmt));*/
 		g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
 	}
 }

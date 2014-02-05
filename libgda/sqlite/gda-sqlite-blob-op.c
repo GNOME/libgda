@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 #include <libgda/libgda.h>
 #include "gda-sqlite.h"
 #include "gda-sqlite-blob-op.h"
+#include <libgda/gda-blob-op-impl.h>
 #include "gda-sqlite-util.h"
 #include <sql-parser/gda-sql-parser.h>
 
@@ -89,9 +90,9 @@ gda_sqlite_blob_op_class_init (GdaSqliteBlobOpClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_sqlite_blob_op_finalize;
-	blob_class->get_length = gda_sqlite_blob_op_get_length;
-	blob_class->read = gda_sqlite_blob_op_read;
-	blob_class->write = gda_sqlite_blob_op_write;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_sqlite_blob_op_get_length;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_sqlite_blob_op_read;
+	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_sqlite_blob_op_write;
 }
 
 static void
@@ -115,7 +116,7 @@ gda_sqlite_blob_op_finalize (GObject * object)
 }
 
 GdaBlobOp *
-_gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
+_gda_sqlite_blob_op_new (GdaConnection *cnc,
 			 const gchar *db_name, const gchar *table_name,
 			 const gchar *column_name, sqlite3_int64 rowid)
 {
@@ -126,6 +127,7 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 	gboolean free_strings = TRUE;
 	gboolean transaction_started = FALSE;
 
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (table_name, NULL);
 	g_return_val_if_fail (column_name, NULL);
 
@@ -137,7 +139,10 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 	else if (! _split_identifier_string (g_strdup (table_name), &db, &table))
 		return NULL;
 
-	if (! _gda_sqlite_check_transaction_started (cdata->gdacnc, &transaction_started, NULL))
+	SqliteConnectionData *cdata;
+	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
+	if (!cdata ||
+	    ! _gda_sqlite_check_transaction_started (cdata->gdacnc, &transaction_started, NULL))
 		return NULL;
 
 	rc = SQLITE3_CALL (sqlite3_blob_open) (cdata->connection, db ? db : "main",
@@ -153,7 +158,7 @@ _gda_sqlite_blob_op_new (SqliteConnectionData *cdata,
 		goto out;
 	}
 
-	bop = g_object_new (GDA_TYPE_SQLITE_BLOB_OP, NULL);
+	bop = g_object_new (GDA_TYPE_SQLITE_BLOB_OP, "connection", cnc, NULL);
 	bop->priv->sblob = sblob;
 #ifdef GDA_DEBUG_NO
 	g_print ("OPENED blob %p\n", bop);

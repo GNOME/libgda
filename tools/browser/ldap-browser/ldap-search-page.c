@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -203,30 +203,6 @@ update_history_actions (LdapSearchPage *epage)
 }
 
 static void
-search_done_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-		gpointer out_result, LdapSearchPage *epage, G_GNUC_UNUSED GError *error)
-{
-	if (epage->priv->result_view) {
-		gtk_widget_destroy (epage->priv->result_view);
-		epage->priv->result_view = NULL;
-	}
-	if (out_result == (gpointer) 0x01) {
-		TO_IMPLEMENT;
-	}
-	else {
-		GdaDataModel *model;
-		GtkWidget *wid;
-		model = GDA_DATA_MODEL (out_result);
-		wid = ui_formgrid_new (model, TRUE, GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
-		g_object_unref (model);
-		gtk_box_pack_start (GTK_BOX (epage), wid, TRUE, TRUE, 0);
-		epage->priv->result_view = wid;
-		gtk_widget_show (wid);
-	}
-	g_object_unref (G_OBJECT (epage));
-}
-
-static void
 filter_exec_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 {
 	guint id;
@@ -236,20 +212,30 @@ filter_exec_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 	filter_editor_get_settings (FILTER_EDITOR (epage->priv->search_entry),
 				    &base_dn, &filter, &attributes, &scope);
 
-	id = browser_connection_ldap_search (epage->priv->bcnc,
-					     base_dn, filter,
-					     attributes, scope,
-					     BROWSER_CONNECTION_JOB_CALLBACK (search_done_cb),
-					     g_object_ref (G_OBJECT (epage)), &lerror);
-
-	if (id == 0) {
-		TO_IMPLEMENT;
-		g_clear_error (&lerror);
-	}
-
+	GdaDataModel *model;
+	model = browser_connection_ldap_search (epage->priv->bcnc,
+						base_dn, filter,
+						attributes, scope, &lerror);
 	g_free (base_dn);
 	g_free (filter);
 	g_free (attributes);
+
+	if (epage->priv->result_view) {
+		gtk_widget_destroy (epage->priv->result_view);
+		epage->priv->result_view = NULL;
+	}
+
+	if (model) {
+		GtkWidget *wid;
+		wid = ui_formgrid_new (model, TRUE, GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
+		g_object_unref (model);
+		gtk_box_pack_start (GTK_BOX (epage), wid, TRUE, TRUE, 0);
+		epage->priv->result_view = wid;
+		gtk_widget_show (wid);
+	}
+	else {
+		TO_IMPLEMENT;
+	}
 }
 
 static void

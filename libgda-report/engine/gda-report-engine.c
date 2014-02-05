@@ -1120,7 +1120,7 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 
 		if (!provider)
 			provider = gda_vprovider_data_model_new ();
-		vcnc = gda_virtual_connection_open (provider, error);
+		vcnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, error);
 		if (! vcnc) {
 			g_mutex_unlock (&init_mutex);
 			return NULL;

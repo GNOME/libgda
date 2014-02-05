@@ -625,7 +625,7 @@ void
 _gda_web_change_connection_to_closed (GdaConnection *cnc, WebConnectionData *cdata)
 {
 	cdata->forced_closing = TRUE;
-	gda_connection_close_no_warning (cnc);
+	gda_connection_close (cnc, NULL);
 }
 
 /*

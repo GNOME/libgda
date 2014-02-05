@@ -781,20 +781,6 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	return g_slist_reverse (nodes_list);
 }
 
-static void
-icon_fetched_cb (G_GNUC_UNUSED BrowserConnection *bcnc,
-		 GdkPixbuf *pixbuf, GdaTreeNode *node, G_GNUC_UNUSED GError *error)
-{
-	if (pixbuf) {
-		GValue *av;
-		av = gda_value_new (G_TYPE_OBJECT);
-		g_value_set_object (av, pixbuf);
-		gda_tree_node_set_node_attribute (node, "icon", av, NULL);
-		gda_value_free (av);
-	}
-	g_object_unref (node);
-}
-
 #ifdef HAVE_LDAP
 static gboolean
 icons_resol_cb (MgrFavorites *mgr)
@@ -807,10 +793,15 @@ icons_resol_cb (MgrFavorites *mgr)
                 mgr->priv->icons_resol_list = g_slist_delete_link (mgr->priv->icons_resol_list,
                                                                    mgr->priv->icons_resol_list);
 
-		if (browser_connection_ldap_icon_for_dn (mgr->priv->bcnc, data->dn,
-							 (BrowserConnectionJobCallback) icon_fetched_cb,
-							 g_object_ref (data->node), NULL) == 0)
-			g_object_unref (data->node);
+		GdkPixbuf *pixbuf;
+		pixbuf = browser_connection_ldap_icon_for_dn (mgr->priv->bcnc, data->dn, NULL);
+		if (pixbuf) {
+			GValue *av;
+			av = gda_value_new (G_TYPE_OBJECT);
+			g_value_set_object (av, pixbuf);
+			gda_tree_node_set_node_attribute ((GdaTreeNode*) data->node, "icon", av, NULL);
+			gda_value_free (av);
+		}
                 icon_resolution_data_free (data);
         }
 

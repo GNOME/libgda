@@ -182,6 +182,8 @@ struct _GdaDataModelIface {
  * </itemizedlist>
  *
  * Also see the section about <link linkend="gda-data-model-writing">writing your own GdaDataModel</link>
+ *
+ * Finally, the #GdaDataModel object implements its own locking mechanism and can be used simultaneously from several threads.
  */
 
 GType               gda_data_model_get_type               (void) G_GNUC_CONST;

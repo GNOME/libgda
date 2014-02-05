@@ -55,7 +55,7 @@ main (int argc, char *argv[])
 	gda_init ();
 
 	provider = gda_vprovider_hub_new ();
-	virtual = gda_virtual_connection_open (provider, NULL);
+	virtual = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 	g_assert (virtual);
 
 	/* load CSV data models */
@@ -96,8 +96,16 @@ main (int argc, char *argv[])
 	check_threads_select_random (virtual);
 	check_date (virtual);
 
-        gda_connection_close (virtual);
-        gda_connection_close (out_cnc);
+        if (! gda_connection_close (virtual, &error)) {
+		g_print ("gda_connection_close(virtual) error: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
+        if (! gda_connection_close (out_cnc, &error)) {
+		g_print ("gda_connection_close(out_cnc) error: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
 
 	g_print ("All Ok\n");
         return 0;
@@ -109,15 +117,20 @@ open_destination_connection (void)
         /* create connection */
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=vcnc",
-                                               NULL,
-                                               GDA_CONNECTION_OPTIONS_NONE,
-                                               &error);
+        cnc = gda_connection_new_from_string ("SQLite", "DB_DIR=.;DB_NAME=vcnc",
+					      NULL,
+					      GDA_CONNECTION_OPTIONS_NONE,
+					      &error);
         if (!cnc) {
-                g_print ("Could not open connection to local SQLite database: %s\n",
+                g_print ("Could not create connection to local SQLite database: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
         }
+	if (! gda_connection_open (cnc, &error)) {
+		 g_print ("gda_connection_open() error: %s\n",
+                         error && error->message ? error->message : "No detail");
+                exit (1);
+	}
 
         /* table "cities" */
         assert_run_sql_non_select (cnc, "DROP table IF EXISTS cities", NULL);
@@ -506,7 +519,7 @@ test_multiple_threads (GThreadFunc func, GdaConnection *virtual)
 #ifdef DEBUG_PRINT
 		g_print ("Running thread %d\n", d->th_id);
 #endif
-		d->thread = g_thread_create (func, d, TRUE, NULL);
+		d->thread = g_thread_new ("For_test_multiple_threads", func, d);
 	}
 
 	for (i = 0; i < NTHREADS; i++) {

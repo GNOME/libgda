@@ -12,7 +12,7 @@
   </para>
   <para>
     Virtual providers are database providers when the database engine accessed does not support SQL (or
-    supports it poorly), such as Berkeley databases or MDB (or even LDAP). These provider's implementation's
+    supports it poorly), such as Berkeley databases, MDB, or LDAP. These provider's implementation's
     design is to create <link linkend="GdaDataModel">GdaDataModel</link> data model objects and make
     each of them appear as a named table once the connection is opened. For example the MDB provider creates
     a read-only data model for each table in an MDB file and make it appear using the original table
@@ -32,53 +32,39 @@
   <sect1>
     <title>Synchronous / asynchronous mode</title>
     <para>
-      All the provider's commands are executed in a synchronous mode (the caller is blocked until the provider's
-      method terminates). However some virtual methods have the a <parameter>task_id</parameter> parameter, 
-      an <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback function pointer and 
-      a <parameter>cb_data</parameter> parameter which can be set when an asynchronous mode 
-      is required; asynchronous mode is requested if and only if the <parameter>async_cb</parameter> or
-      <parameter>exec_cb</parameter> parmeter is not NULL.
+      Since version 6, all the provider's code is executed in a <link linkend="GdaWorker">GdaWorker</link>'s worker thread
+      and will not block the user thread (refer to
+      <link linkend="gda-connection-set-main-context">gda_connection_set_main_context()</link>'s documentation). Normally
+      each connection is associated with such a worker thread and any provider code for that connection will be executed in
+      the context of that thread.
     </para>
     <para>
-      When an asynchronous mode is requested, the method should return TRUE if it returns a boolean or NULL if it returns a
-      pointer and set a task identifier
-      into the <parameter>task_id</parameter> parameter if not NULL. The task identifier is passed again when
-      the <parameter>async_cb</parameter> or <parameter>exec_cb</parameter> callback functions are called by the
-      provider when the execution is finished.
-    </para>
-    <para>
-      When the provider's method terminates, it then should call the function passed as <parameter>async_cb</parameter>
-      with the <parameter>cb_data</parameter> as last parameters.
+      The database provider can however decide, by the way the <link linkend="prov-create-worker">create_worker()</link> is
+      implemented, if each connection can have its own <link linkend="GdaWorker">GdaWorker</link> object, or if all the
+      connections share the same object (in which case any provider code will only be called within the context of that
+      <link linkend="GdaWorker">GdaWorker</link>'s working thread).
     </para>
   </sect1>
 
   <sect1>
     <title>Multi threaded environment</title>
     <para>
-      Each database provider should be usable in a multi threaded environment, even if they impose some restrictions
-      as to how they can be used in such an environment. The &LIBGDA;'s framework provides some locking mechanism which
-      is:
-      <itemizedlist>
-	<listitem><para>if multi threading cannot be supported at all (for example if the client library internally
-	    used by the provider does not support it), then  the provider's
-	    class implementation should set the class's <structfield>limiting_thread</structfield> attribute to:
-	    the GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD constant.
-	    This constant will be resolved at run time as the thread which creates the 1st connection using that
-	    provider.</para>
-	</listitem>
-	<listitem><para>if multi threading is supported but any connection (or related object) can only be 
-	    used by the thread in which it was created, then for each opened connection, the 
-	    &quot;<link linkend="GdaConnection--thread-owner">thread-owner</link>&quot; connection's property
-	    must be set to the current thread (and other related objects must be locked in a similar way)</para>
-	</listitem>
-	<listitem><para>if no locking is done, then the provider is assumed to support full multi threading access,
-	  in this case make sure to set class's <structfield>limiting_thread</structfield> attribute to the NULL constant.</para>
-	</listitem>
-      </itemizedlist>
+      Since version 6, the connections are fully thread safe (i.e. can be created and used by any thread) for any
+      kind of connection.
     </para>
     <para>
-      Note that the default provider's class value for the <structfield>limiting_thread</structfield> is safely set to the
-      GDA_SERVER_PROVIDER_UNDEFINED_LIMITING_THREAD constant.
+      FIXME: document object which implement the <link linkend="GdaLockable">GdaLockable</link> and objects which don't (and are not thread safe).
+    </para>
+    <para>
+      Each time a <link linkend="GdaConnection">GdaConnection</link> is passed as an argument of any virtual function
+      implemented by the provider, the connection will have been locked, so no other thread can modify it.
+    </para>
+    <para>
+      Note that any of the provider specific code will only ever be executed within the worker thread of a
+      <link linkend="GdaWorker">GdaWorker</link> object created by <link linkend="prov-create-worker">create_worker()</link>,
+      except, of course, for that method's code which will be executed from within any thread. Also note that
+      no other code than the provider's code will ever be executed from within the worker thread (and some code from
+      the GdaServerProvider object itself to do the binding).
     </para>
   </sect1>
 
@@ -95,11 +81,13 @@
     </sect2>
     <sect2 id="prov-get-server-version">
       <title>get_server_version() - mandatory</title>
-      <para>This method returns the version of the database server to which a connection is opened</para>
+      <para>This method returns the version of the database server to which a connection is opened. The connection argument will always be non NULL
+      and in an opened state.</para>
     </sect2>
     <sect2>
-      <title>supports_feature()</title>
-      <para>This method allows one to ask the provider if some specific features are available</para>
+      <title>supports_feature() - mandatory</title>
+      <para>This method allows one to ask the provider if some specific features are available. The connection argument may be NULL or not
+      NULL but in an opened state.</para>
     </sect2>
   </sect1>
 
@@ -128,7 +116,7 @@
       </para>
       <para>
 	The connection specific data for the database API can be retrieved using the
-	<link linkend="gda-connection-internal-get-provider-data">gda_connection_internal_get_provider_data()</link> method.
+	<link linkend="gda-connection-internal-get-provider-data-error">gda_connection_internal_get_provider_data_error()</link> method.
       </para>
     </sect2>
     <sect2>
@@ -149,24 +137,26 @@
       Implementing these methods is not mandatory, and virtual provider's implementation should not implement them.
     </para>
     <sect2>
-      <title>supports_operation()</title>
+      <title>supports_operation() - optional</title>
       <para>
 	This virtual method tells if a particular DDL query type is supported (DDL query types are identified as 
-      <link linkend="GdaServerOperationType">GdaServerOperationType</link> enums).
+	<link linkend="GdaServerOperationType">GdaServerOperationType</link> enums). The connection argument may be NULL
+	or not NULL but in an opened state.
       </para>
     </sect2>
     <sect2>
-      <title>create_operation()</title>
+      <title>create_operation() - optional</title>
       <para>
 	This virtual method is used to create and initialize a <link linkend="GdaServerOperation">GdaServerOperation</link>
-	object.
+	object. The connection argument may be NULL or not NULL but in an opened state.
       </para>
     </sect2>
     <sect2>
-      <title>render_operation()</title>
+      <title>render_operation() - optional</title>
       <para>
 	This virtual method uses the information stored in a <link linkend="GdaServerOperation">GdaServerOperation</link> object
-	to create the SQL statement(s) which would be executed if the operation was performed.
+	to create the SQL statement(s) which would be executed if the operation was performed. The connection argument may be NULL or not
+	NULL but in an opened state.
       </para>
       <para>
 	Note: more than one SQL statement may be returned by this method
@@ -176,9 +166,12 @@
       </para>
     </sect2>
     <sect2>
-      <title>perform_operation()</title>
+      <title>perform_operation() - optional</title>
       <para>
 	This virtual method "performs" (execute) a <link linkend="GdaServerOperation">GdaServerOperation</link> object.
+	The connection argument may be NULL or not NULL but in an opened state. If this method is not defined, but the create_operation() one
+	is defined, then the default rendering and executing is done (with the information in the
+	<link linkend="GdaServerOperation">GdaServerOperation</link> object)
       </para>
     </sect2>
   </sect1>
@@ -315,11 +308,14 @@
       object is responsible of the conversions.
     </para>
     <sect2>
-      <title>get_data_handler()</title>
+      <title>get_data_handler() - optional</title>
       <para>
 	This method returns a <link linkend="GdaDataHandler">GdaDataHandler</link> for the requested data type. It should
 	only instantiate each <link linkend="GdaDataHandler">GdaDataHandler</link> once and reuse it if the same request happens 
-	(the returned object will not be modified).
+	(the returned object will not be modified). The connection argument may be NULL or not NULL but in an opened state.
+      </para>
+      <para>
+	If the GType is G_TYPE_INVALID, then this method should consider the dbms_type argument; otherwise it should ignore it.
       </para>
       <para>
 	This method is called by both

@@ -51,14 +51,16 @@
 #define FIREBIRD_PROVIDER_NAME "Firebird"
 
 #include <libgda/libgda.h>
+#include <libgda/gda-connection-private.h>
 #include <ibase.h>
-	
+
 /*
  * Provider's specific connection data
  */
 
 typedef struct
 {
+	GdaServerProviderConnectionData parent;
 	gchar           *dpb;
 	isc_db_handle	 handle;
 
