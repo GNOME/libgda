@@ -258,7 +258,7 @@
     <para>
       To create an encrypted database, you can use the <application>gda-sql</application> and when prompted
       enter the requested passphrase, as:
-      <programlisting><![CDATA[prompt> gda-sql-5.0 "SQLCipher://DB_NAME=testcrypt"
+      <programlisting><![CDATA[prompt> gda-sql-6.0 "SQLCipher://DB_NAME=testcrypt"
 Welcome to the GDA SQL console, version 5.1.0
 
 Type: .copyright to show usage and distribution terms

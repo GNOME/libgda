@@ -330,7 +330,7 @@ gda_config_class_init (GdaConfigClass *klass)
 	 *
 	 * File to use for system-wide DSN list. When changed, the whole list of DSN will be reloaded.
 	 */
-	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-5.0/config */
+	/* To translators: DSN stands for Data Source Name, it's a named connection string defined in $PREFIX/etc/libgda-6.0/config */
 	g_object_class_install_property (object_class, PROP_SYSTEM_FILE,
                                          g_param_spec_string ("system-filename", NULL,
 							      "File to use for system-wide DSN list", 

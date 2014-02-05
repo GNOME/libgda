@@ -58,7 +58,7 @@
       <programlisting>
 .
 |-- lib
-|   |-- libgda-5.0
+|   |-- libgda-6.0
 |   |   |-- plugins
 |   |   |   |-- gdaui-entry-filesel-spec.xml
 |   |   |   |-- gdaui-entry-password.xml
@@ -66,11 +66,11 @@
 |   |   |   |-- gdaui-entry-pict-spec_string.xml
 |   |   |   |-- gdaui-entry-text-spec.xml
 |   |   |   `-- libgdaui-plugins.so
-|   |-- libgdaui-5.0.so -> libgdaui-5.0.so.4.1.0
-|   |-- libgdaui-5.0.so.4 -> libgdaui-5.0.so.4.1.0
-|   `-- libgdaui-5.0.so.4.1.0
+|   |-- libgda-ui-6.0.so -> libgda-ui-6.0.so.4.1.0
+|   |-- libgda-ui-6.0.so.4 -> libgda-ui-6.0.so.4.1.0
+|   `-- libgda-ui-6.0.so.4.1.0
 `-- share
-    `-- libgda-5.0
+    `-- libgda-6.0
         |-- language-specs
         |   `-- gda-sql.lang
         |-- server_operation.glade
@@ -91,10 +91,10 @@
       <programlisting>
 |-- share
 |   `-- gir-1.0
-|       `-- Gdaui-5.0.gir
+|       `-- Gdaui-6.0.gir
 `-- lib
     `-- girepository-1.0
-        `-- Gdaui-5.0.typelib
+        `-- Gdaui-6.0.typelib
       </programlisting>
     </para>
   </sect1>
@@ -108,11 +108,11 @@
 	<programlisting>
 .
 |-- bin
-|   `-- gda-control-center-5.0
+|   `-- gda-control-center-6.0
 `-- share
     |-- applications
-    |   `-- gda-control-center-5.0.desktop
-    |-- libgda-5.0
+    |   `-- gda-control-center-6.0.desktop
+    |-- libgda-6.0
     |   `-- pixmaps
     |       `-- gdaui-generic.png
     `-- pixmaps
@@ -130,10 +130,10 @@
 	<programlisting>
 .
 |-- bin
-|   `-- gda-browser-5.0
+|   `-- gda-browser-6.0
 `-- share
     |-- applications
-    |   `-- gda-browser-5.0.desktop
+    |   `-- gda-browser-6.0.desktop
     |-- gnome
     |   `-- help
     |       `-- gda-browser
@@ -156,18 +156,18 @@
       <programlisting>
 .
 |-- bin
-|   `-- gdaui-demo-5.0
+|   `-- gdaui-demo-6.0
 |-- include
-|   `-- libgda-5.0
+|   `-- libgda-6.0
 |       `-- libgdaui
 |           [...]
 `-- lib
-|   |-- libgdaui-5.0.a
-|   |-- libgdaui-5.0.la
+|   |-- libgda-ui-6.0.a
+|   |-- libgda-ui-6.0.la
 |   `-- pkgconfig
-|       `-- libgdaui-5.0.pc
+|       `-- libgdaui-6.0.pc
 `-- share
-    `-- libgda-5.0
+    `-- libgda-6.0
         `-- demo
             [...]
       </programlisting>

@@ -58,7 +58,7 @@ main (int argc, char **argv)
     <para>
       &LIBGDA; allows data sources (DSN) to be defined and referred to by a unique name which contains all the 
       required information to actually open a connection (except the name and password if they are required);
-      see the <link linkend="libgda-5.0-Configuration">Configuration section</link> for more information about
+      see the <link linkend="libgda-6.0-Configuration">Configuration section</link> for more information about
       how to manage data sources. Of
       course it's still possible to open a connection without having defined a DSN, in which case a <emphasis>connection
       string</emphasis> is used to specify all the parameters required to open a connection. For more information

@@ -14,14 +14,14 @@ check_PROGRAMS = check_sets check_raw_grid_model
 
 check_sets_SOURCES = common.c common.h check_sets.c
 check_sets_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
 check_raw_grid_model_SOURCES = common.c common.h check_raw_grid_model.c
 check_raw_grid_model_LDADD = \
-        $(top_builddir)/libgda/libgda-5.0.la \
-        $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
+        $(top_builddir)/libgda/libgda-6.0.la \
+        $(top_builddir)/libgda-ui/libgda-ui-6.0.la \
         $(COREDEPS_LIBS) \
         $(GTK_LIBS)

@@ -28,7 +28,7 @@ JS_FILES = C.css jquery.js jquery.syntax.js jquery.syntax.brush.clang.js jquery.
 C.css jquery.js jquery.syntax.js jquery.syntax.brush.clang.js jquery.syntax.layout.yelp.js jquery.syntax.core.js yelp.js yelp-note-tip.png: gda.vala.stamp
 
 htmldocdir = \
-	$(HTML_DIR)/libgda-5.0/gda-vala
+	$(HTML_DIR)/libgda-6.0/gda-vala
 
 htmldoc_DATA = \
 	$(HELP_FILES:.page=.html) \
@@ -37,7 +37,7 @@ htmldoc_DATA = \
 figures: htmldoc
 
 figuresdir = \
-	$(HTML_DIR)/libgda-5.0/gda-vala/figures
+	$(HTML_DIR)/libgda-6.0/gda-vala/figures
 
 figures_DATA = \
 	$(HELP_MEDIA)

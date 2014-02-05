@@ -431,7 +431,7 @@ gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data
 		goto theend;
 	
 	g_free (file);
-	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-5.0", filename, NULL);
+	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-6.0", filename, NULL);
 	if (g_file_get_contents (file, &contents, NULL, NULL))
 		goto theend;
 	contents = NULL;

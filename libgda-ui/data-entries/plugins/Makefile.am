@@ -54,8 +54,8 @@ libgda_ui_plugins_la_SOURCES = \
 
 libgda_ui_plugins_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_ui_plugins_la_LIBADD = \
-        $(top_builddir)/libgda-ui/libgda-ui-5.0.la \
-	$(top_builddir)/libgda/libgda-5.0.la \
+        $(top_builddir)/libgda-ui/libgda-ui-6.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(LIBGCRYPT_LIBS) \
 	$(COREDEPS_LIBS) \
         $(GTK_LIBS) \

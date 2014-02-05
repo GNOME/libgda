@@ -2,12 +2,12 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
-pluginsdir=@libdir@/libgda-5.0/plugins
+pluginsdir=@libdir@/libgda-6.0/plugins
 
 Name: libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Description: GDA (GNOME Data Access) library, UI extension
 
-Requires: libgda-5.0 gtk+-3.0
+Requires: libgda-6.0 gtk+-3.0
 Version: @VERSION@
 Libs: -L${libdir} -lgda-ui-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@
 Cflags: -I${includedir}/libgda-@GDA_ABI_MAJOR_VERSION@.@GDA_ABI_MINOR_VERSION@ @GDA_DEBUG_FLAGS@

@@ -46,7 +46,7 @@ plugin_init (GError **error)
 	plugin->cell_create_func = plugin_cell_renderer_password_create_func;
 	retlist = g_slist_append (retlist, plugin);
 
-	file = gda_gbr_get_file_path (GDA_LIB_DIR, "libgda-5.0", "plugins", "custom-entry-password.xml", NULL);
+	file = gda_gbr_get_file_path (GDA_LIB_DIR, "libgda-6.0", "plugins", "custom-entry-password.xml", NULL);
 	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
 		if (error && !*error)
 			g_set_error (error, 0, 0, "Missing spec. file '%s'", file);

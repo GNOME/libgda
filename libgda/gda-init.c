@@ -257,7 +257,7 @@ gda_init (void)
  *
  * Find the path to the application identified by @app_name. For example if the application
  * is "gda-sql", then calling this function will return
- * "/your/prefix/bin/gda-sql-5.0" if Libgda is installed in
+ * "/your/prefix/bin/gda-sql-6.0" if Libgda is installed in
  * the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 5.0.
  *
  * Returns: (transfer full): the path as a new string, or %NULL if the application cannot be found

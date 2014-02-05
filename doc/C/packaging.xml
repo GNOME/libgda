@@ -67,21 +67,21 @@
 |       |-- trml2pdf.py
 |       `-- utils.py
 |-- etc
-|   `-- libgda-5.0
+|   `-- libgda-6.0
 |       |-- config
 |       `-- sales_test.db
 |-- lib
-|   |-- libgda-5.0.so -> libgda-5.0.so.4.1.0
-|   |-- libgda-5.0.so.4 -> libgda-5.0.so.4.1.0
-|   |-- libgda-5.0.so.4.1.0
-|   |-- libgda-report-5.0.so -> libgda-report-5.0.so.4.1.0
-|   |-- libgda-report-5.0.so.4 -> libgda-report-5.0.so.4.1.0
-|   |-- libgda-report-5.0.so.4.1.0
-|   |-- libgda-xslt-5.0.so -> libgda-xslt-5.0.so.4.1.0
-|   |-- libgda-xslt-5.0.so.4 -> libgda-xslt-5.0.so.4.1.0
-|   |-- libgda-xslt-5.0.so.4.1.0
+|   |-- libgda-6.0.so -> libgda-6.0.so.4.1.0
+|   |-- libgda-6.0.so.4 -> libgda-6.0.so.4.1.0
+|   |-- libgda-6.0.so.4.1.0
+|   |-- libgda-report-6.0.so -> libgda-report-6.0.so.4.1.0
+|   |-- libgda-report-6.0.so.4 -> libgda-report-6.0.so.4.1.0
+|   |-- libgda-report-6.0.so.4.1.0
+|   |-- libgda-xslt-6.0.so -> libgda-xslt-6.0.so.4.1.0
+|   |-- libgda-xslt-6.0.so.4 -> libgda-xslt-6.0.so.4.1.0
+|   |-- libgda-xslt-6.0.so.4.1.0
 `-- share
-    `-- libgda-5.0
+    `-- libgda-6.0
         |-- dtd
         |   |-- libgda-array.dtd
         |   |-- libgda-paramlist.dtd
@@ -108,10 +108,10 @@
       <programlisting>
 |-- share
 |   `-- gir-1.0
-|       `-- Gda-5.0.gir
+|       `-- Gda-6.0.gir
 `-- lib
     `-- girepository-1.0
-        `-- Gda-5.0.typelib
+        `-- Gda-6.0.typelib
       </programlisting>
     </para>
   </sect1>
@@ -129,12 +129,12 @@
 	<programlisting>
 .
 `-- bin
-    |-- gda-list-config -> gda-list-config-5.0
-    |-- gda-list-config-5.0
-    |-- gda-list-jdbc-providers-5.0
-    |-- gda-list-server-op -> gda-list-server-op-5.0
-    |-- gda-list-server-op-5.0
-    `-- gda-test-connection-5.0
+    |-- gda-list-config -> gda-list-config-6.0
+    |-- gda-list-config-6.0
+    |-- gda-list-jdbc-providers-6.0
+    |-- gda-list-server-op -> gda-list-server-op-6.0
+    |-- gda-list-server-op-6.0
+    `-- gda-test-connection-6.0
       </programlisting>
       </para>
       <para>
@@ -147,14 +147,14 @@
 	<programlisting>
 .
 |-- bin
-|   `-- gda-sql-5.0
+|   `-- gda-sql-6.0
  `-- share
     |-- gnome
     |   `-- help
     |       `-- gda-sql
     |           |-- C
     |           `[···]
-    |-- libgda-5.0
+    |-- libgda-6.0
     |   `-- web
     |       |-- cnc.js
     |       |-- gda-print.css
@@ -167,8 +167,8 @@
     |       `-- mouseirb_2.js
     `-- man
         `-- man1
-            |-- gda-sql-5.0.1
-            `-- gda-sql.1 -> gda-sql-5.0.1
+            |-- gda-sql-6.0.1
+            `-- gda-sql.1 -> gda-sql-6.0.1
 	</programlisting>
       </para>
       <para>
@@ -194,13 +194,13 @@
 	<programlisting>
 .
 |-- lib
-|   |-- libgda-5.0
+|   |-- libgda-6.0
 |   |   `-- providers
 |   |       `-- libgda-postgres.so
 |   `-- pkgconfig
-|       `-- libgda-postgres-5.0.pc
+|       `-- libgda-postgres-6.0.pc
  `-- share
-    `-- libgda-5.0
+    `-- libgda-6.0
         |-- postgres_specs_add_column.xml
         |-- postgres_specs_create_db.xml
         |-- postgres_specs_create_index.xml
@@ -237,14 +237,14 @@
 	<programlisting>
 .
 |-- lib
-|   |-- libgda-5.0
+|   |-- libgda-6.0
 |   |   `-- providers
-|   |       |-- gdaprovider-5.0.jar
+|   |       |-- gdaprovider-6.0.jar
 |   |       `-- libgda-jdbc.so
 |   `-- pkgconfig
-|       `-- libgda-jdbc-5.0.pc
+|       `-- libgda-jdbc-6.0.pc
  `-- share
-    `-- libgda-5.0
+    `-- libgda-6.0
         |-- jdbc_specs_create_table.xml
         `-- jdbc_specs_dsn.xml
 	</programlisting>
@@ -262,20 +262,20 @@
       the static libraries.
       <programlisting>
 |-- include
-|   `-- libgda-5.0
+|   `-- libgda-6.0
 |     [... except the libgdaui/ directory ...]
 `-- lib
-    |-- libgda-5.0
-    |-- libgda-5.0.a
-    |-- libgda-5.0.la
-    |-- libgda-report-5.0.a
-    |-- libgda-report-5.0.la
-    |-- libgda-xslt-5.0.a
-    |-- libgda-xslt-5.0.la
+    |-- libgda-6.0
+    |-- libgda-6.0.a
+    |-- libgda-6.0.la
+    |-- libgda-report-6.0.a
+    |-- libgda-report-6.0.la
+    |-- libgda-xslt-6.0.a
+    |-- libgda-xslt-6.0.la
     `-- pkgconfig
-        |-- libgda-5.0.pc
-        |-- libgda-report-5.0.pc
-        `-- libgda-xslt-5.0.pc
+        |-- libgda-6.0.pc
+        |-- libgda-report-6.0.pc
+        `-- libgda-xslt-6.0.pc
       </programlisting>
     </para>
   </sect1>

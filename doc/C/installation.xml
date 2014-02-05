@@ -120,8 +120,8 @@
       to use the <command>pkg-config</command> command.
     </para>
     <programlisting>
-<systemitem class="prompt">$ </systemitem>gcc -c full_example.c `pkg-config --cflags libgda-5.0`
-<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --libs libgda-5.0` full_example.o
+<systemitem class="prompt">$ </systemitem>gcc -c full_example.c `pkg-config --cflags libgda-6.0`
+<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --libs libgda-6.0` full_example.o
     </programlisting>
     <para>
       or more simply:
@@ -187,8 +187,8 @@
 	To access a database, it must have a database provider (if &LIBGDA; does not
 	support the type of database to access, make a bug report in 
 	<ulink url="http://bugzilla.gnome.org/">bugzilla</ulink>), and that database provider
-	must be compiled an installed: the <command>gda-list-config-5.0</command> or 
-	<command>gda-sql-5.0 -L</command> commands will
+	must be compiled an installed: the <command>gda-list-config-6.0</command> or 
+	<command>gda-sql-6.0 -L</command> commands will
 	show a list of the installed and configured database providers.
       </para>
       <para>
@@ -210,7 +210,7 @@
 	(which
 	is created the first time &LIBGDA; is used within an application. System wide DSN are defined in the
 	<filename>&lt;prefix&gt;/etc/libgda/config</filename>. Rather than editing that
-	file manually, it is possible to use the <command>gda-control-center-5.0</command> tool
+	file manually, it is possible to use the <command>gda-control-center-6.0</command> tool
 	(part of &LIBGDA;).
 	Note: if the <filename>$HOME/.libgda/config</filename> already exists from a previous use
 	of &LIBGDA;, then that file is used instead of

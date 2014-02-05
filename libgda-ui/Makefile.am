@@ -1,6 +1,6 @@
 QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
-lib_LTLIBRARIES = libgda-ui-5.0.la
+lib_LTLIBRARIES = libgda-ui-6.0.la
 
 if HAVE_GLADE
     GLADECATALOG = . glade
@@ -73,7 +73,7 @@ ui_sources = \
 	gdaui-tree-store.c \
 	gdaui-init.c
 
-libgda_ui_5_0_la_SOURCES = \
+libgda_ui_6_0_la_SOURCES = \
 	$(libgda_ui_built_cfiles) \
 	$(ui_sources) \
 	gdaui-resources.h \
@@ -113,22 +113,22 @@ s-enum-types-c: @REBUILD@ $(ui_headers) Makefile
 libgda_ui_built_headers = gdaui-enum-types.h
 libgda_ui_built_cfiles = gdaui-enum-types.c
 
-$(OBJECTS) $(libgda_ui_5_0_la_OBJECTS): gdaui-resources.h gdaui-resources.c $(libgda_ui_built_headers) $(libgda_ui_built_cfiles)
+$(OBJECTS) $(libgda_ui_6_0_la_OBJECTS): gdaui-resources.h gdaui-resources.c $(libgda_ui_built_headers) $(libgda_ui_built_cfiles)
 
-libgda_ui_5_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
+libgda_ui_6_0_la_LDFLAGS = -version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
 	$(NO_UNDEFINED) $(LIBTOOL_UI_EXPORT_OPTIONS)
-libgda_ui_5_0_la_LIBADD = \
+libgda_ui_6_0_la_LIBADD = \
 	marshallers/libgda-ui-marshallers.la \
 	internal/libgda-ui-internal.la \
 	data-entries/libgda-ui-data-entries.la \
-	../libgda/libgda-5.0.la \
+	../libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GTK_LIBS) \
 	$(GIO_LIBS)
 
 if PLATFORM_WIN32
-libgda_ui_5_0_la_LDFLAGS += -export-symbols $(builddir)/libgda-ui.def
-libgda_ui_5_0_la_DEPENDENCIES = libgda-ui.def
+libgda_ui_6_0_la_LDFLAGS += -export-symbols $(builddir)/libgda-ui.def
+libgda_ui_6_0_la_DEPENDENCIES = libgda-ui.def
 
 libgda-ui.def: libgda-ui.symbols
 	(echo -e EXPORTS; $(CPP) -P - <$(srcdir)/libgda-ui.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda-ui.def.tmp && mv libgda-ui.def.tmp libgda-ui.def
@@ -229,13 +229,13 @@ introspection_sources = \
 	$(ui_sources) \
 	$(ui_data_entries_sources)
 
-Gdaui-5.0.gir: $(lib_LTLIBRARIES)
-Gdaui_5_0_gir_INCLUDES = Gtk-3.0 Gda-5.0
-Gdaui_5_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
-Gdaui_5_0_gir_LIBS = $(lib_LTLIBRARIES) ../libgda/libgda-5.0.la
-Gdaui_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+Gdaui-6.0.gir: $(lib_LTLIBRARIES)
+Gdaui_6_0_gir_INCLUDES = Gtk-3.0 Gda-6.0
+Gdaui_6_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
+Gdaui_6_0_gir_LIBS = $(lib_LTLIBRARIES) ../libgda/libgda-6.0.la
+Gdaui_6_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda
-INTROSPECTION_GIRS += Gdaui-5.0.gir
+INTROSPECTION_GIRS += Gdaui-6.0.gir
 
 if ENABLE_GI_SYSTEM_INSTALL
 girdir = $(INTROSPECTION_GIRDIR)
@@ -252,16 +252,16 @@ CLEANFILES += $(typelibs_DATA) $(gir_DATA)
 
 if ENABLE_GDAUI_VALA
 
-vapi: libgdaui-5.0.vapi
+vapi: libgdaui-6.0.vapi
 
-libgdaui-5.0.vapi: Gdaui-5.0.gir
-	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda-ui --vapidir=$(top_srcdir)/libgda --girdir=$(top_srcdir)/libgda --library=libgdaui-5.0 --pkg=libxml-2.0 --pkg=libgda-5.0 --pkg=gio-2.0 --pkg=atk --pkg=gtk+-3.0 Gdaui-5.0.gir
+libgdaui-6.0.vapi: Gdaui-6.0.gir
+	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda-ui --vapidir=$(top_srcdir)/libgda --girdir=$(top_srcdir)/libgda --library=libgdaui-6.0 --pkg=libxml-2.0 --pkg=libgda-6.0 --pkg=gio-2.0 --pkg=atk --pkg=gtk+-3.0 Gdaui-6.0.gir
 
 vapidir = $(VAPIDIR)
-vapi_DATA=libgdaui-5.0.vapi
+vapi_DATA=libgdaui-6.0.vapi
 
 EXTRA_DIST += \
-	Gdaui-5.0.metadata \
+	Gdaui-6.0.metadata \
         $(vapi_DATA)
 
 endif

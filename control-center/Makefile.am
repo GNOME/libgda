@@ -1,4 +1,4 @@
-bin_PROGRAMS=gda-control-center-5.0
+bin_PROGRAMS=gda-control-center-6.0
 
 SUBDIRS = data
 
@@ -16,7 +16,7 @@ AM_CPPFLAGS = \
 	-DGDA_ABI_VERSION=\""$(GDA_ABI_VERSION)"\"
 
 # rename gdaui-dsn-editor as dsn-properties-editor
-gda_control_center_5_0_SOURCES=\
+gda_control_center_6_0_SOURCES=\
 	gdaui-login-dialog.c \
 	gdaui-login-dialog.h \
 	gdaui-bar.c \
@@ -35,7 +35,7 @@ gda_control_center_5_0_SOURCES=\
 
 if PLATFORM_WIN32
 EXTRALDFLAGS=-mwindows
-gda_control_center_5_0_SOURCES += control-center-res.rc
+gda_control_center_6_0_SOURCES += control-center-res.rc
 else
 EXTRALDFLAGS=
 endif
@@ -46,21 +46,21 @@ endif
 control-center-res.o: control-center-res.rc
 	$(WINDRES) $^ -o $@
 
-gda_control_center_5_0_LDFLAGS = $(EXTRALDFLAGS)
-gda_control_center_5_0_LDADD=\
+gda_control_center_6_0_LDFLAGS = $(EXTRALDFLAGS)
+gda_control_center_6_0_LDADD=\
 	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-6.0.la \
 	$(COREDEPS_LIBS) $(GTK_LIBS)
 
 @INTLTOOL_DESKTOP_RULE@
 
 desktopdir=$(datadir)/applications
-Desktop_in_files = gda-control-center-5.0.desktop.in
+Desktop_in_files = gda-control-center-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 # icons
-iconsdir=$(datadir)/libgda-5.0/pixmaps
+iconsdir=$(datadir)/libgda-6.0/pixmaps
 icons_DATA= \
 	gda-control-center.png \
 	gda-control-center-newcnc.png

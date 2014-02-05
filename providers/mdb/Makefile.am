@@ -25,7 +25,7 @@ AM_CPPFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(extra_mdb_cflags) \
-	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-5.0"\"
+	-DLIBGDA_DATA_DIR=\""$(datadir)/libgda-6.0"\"
 
 libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
@@ -35,11 +35,11 @@ libgda_mdb_la_SOURCES = \
 
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_mdb_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(extra_mdb_ldflags)
 
-xmldir   = $(datadir)/libgda-5.0
+xmldir   = $(datadir)/libgda-6.0
 xml_in_files = mdb_specs_dsn.xml.in
 
 @INTLTOOL_XML_RULE@
@@ -47,7 +47,7 @@ xml_in_files = mdb_specs_dsn.xml.in
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-mdb-5.0.pc
+pkgconfig_DATA = libgda-mdb-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mdb-5.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-mdb-6.0.pc.in
 DISTCLEANFILES = $(xml_DATA)

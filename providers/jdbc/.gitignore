@@ -1,6 +1,6 @@
 *.class
 *.jar
-gda-list-jdbc-providers-5.*
+gda-list-jdbc-providers-6.*
 gda-jdbc-test
 Gda*.h
 jdbc-resources.[ch]

@@ -107,7 +107,7 @@ DSN parameters | DB_NAME: Database name. The name of a database to connect to (s
                  CONNECT_TIMEOUT: Connection timeout. Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely. It is not
 Authentication | USERNAME (string),                                                                                                                    
                  PASSWORD (string)                                                                                                                     
-File           | /local/extra/lib/libgda-5.0/providers/libgda-postgres.so                                                                              
+File           | /local/extra/lib/libgda-6.0/providers/libgda-postgres.so                                                                              
 (5 rows)
 	    </programlisting>
 	</para></listitem>

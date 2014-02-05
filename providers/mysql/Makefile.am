@@ -42,11 +42,11 @@ libgda_mysql_la_SOURCES = \
 
 libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_mysql_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(top_builddir)/providers/reuseable/mysql/libgda-mysql.la \
 	$(COREDEPS_LIBS) $(MYSQL_LIBS)
 
-xmldir   = $(datadir)/libgda-5.0
+xmldir   = $(datadir)/libgda-6.0
 xml_in_files = \
 	mysql_specs_create_db.xml.in \
 	mysql_specs_drop_db.xml.in \
@@ -69,7 +69,7 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 CLEANFILES = $(genfiles)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-mysql-5.0.pc
+pkgconfig_DATA = libgda-mysql-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mysql-5.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-mysql-6.0.pc.in
 DISTCLEANFILES = $(xml_DATA) $(genfiles)

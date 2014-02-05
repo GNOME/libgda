@@ -2027,7 +2027,7 @@ gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
  * then the string will not be freed at all).
  *
  * Attributes can have any name, but Libgda proposes some default names, 
- * see <link linkend="libgda-5.0-Attributes-manager.synopsis">this section</link>.
+ * see <link linkend="libgda-6.0-Attributes-manager.synopsis">this section</link>.
  *
  * For example one would use it as:
  *

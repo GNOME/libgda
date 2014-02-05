@@ -1,6 +1,6 @@
 QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
-lib_LTLIBRARIES = libgda-5.0.la
+lib_LTLIBRARIES = libgda-6.0.la
 
 check_PROGRAMS = test-cnc-open test-cnc-exec test-cnc-meta
 TESTS = test-cnc-open test-cnc-exec test-cnc-meta
@@ -234,30 +234,30 @@ libgda_built_headers = gda-marshal.h gda-enum-types.h
 libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_5_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles) keywords_hash.c
+$(OBJECTS) $(libgda_6_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles) keywords_hash.c
 
-libgda_5_0_la_SOURCES = \
+libgda_6_0_la_SOURCES = \
 	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
-libgda_5_0_la_LDFLAGS = \
+libgda_6_0_la_LDFLAGS = \
 	-version-info $(GDA_CURRENT):$(GDA_REVISION):$(GDA_AGE) \
 	-export-dynamic $(NO_UNDEFINED) $(LIBTOOL_EXPORT_OPTIONS) \
 	$(GDA_DEBUG_LDFLAGS)
 
-libgda_5_0_la_LIBADD = \
-	sql-parser/libgda_sql_parser-5.0.la \
+libgda_6_0_la_LIBADD = \
+	sql-parser/libgda_sql_parser-6.0.la \
 	providers-support/libgda-psupport.la \
-	handlers/libgda_handlers-5.0.la \
-	binreloc/libgda_binreloc-5.0.la \
+	handlers/libgda_handlers-6.0.la \
+	binreloc/libgda_binreloc-6.0.la \
 	sqlite/libgda-sqlite.la \
-	thread-wrapper/libgda_threadwrapper-5.0.la \
+	thread-wrapper/libgda_threadwrapper-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GIO_LIBS) $(LIBSECRET_LIBS) $(GNOME_KEYRING_LIBS)
 
 if PLATFORM_WIN32
-libgda_5_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def
-libgda_5_0_la_DEPENDENCIES = libgda.def
+libgda_6_0_la_LDFLAGS += -export-symbols $(builddir)/libgda.def
+libgda_6_0_la_DEPENDENCIES = libgda.def
 
 libgda.def: libgda.symbols
 	(echo -e EXPORTS; $(CPP) -P $(DEF_FLAGS) - <$(srcdir)/libgda.symbols | sed -e '/^$$/d' -e 's/^/ /' -e 's/G_GNUC_[^ ]*//g' | sort) > libgda.def.tmp && mv libgda.def.tmp libgda.def
@@ -293,7 +293,7 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
 
-xmldir   = $(datadir)/libgda-5.0
+xmldir   = $(datadir)/libgda-6.0
 xml_DATA = information_schema.xml
 
 DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
@@ -351,13 +351,13 @@ introspection_sources = $(gda_sources) \
 	$(threadwrapper) \
 	$(sqlparser) \
 	$(handlers)
-Gda-5.0.gir: $(lib_LTLIBRARIES)
-Gda_5_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
-Gda_5_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
+Gda-6.0.gir: $(lib_LTLIBRARIES)
+Gda_6_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
+Gda_6_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 
-Gda_5_0_gir_LIBS = $(lib_LTLIBRARIES)
-Gda_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
-INTROSPECTION_GIRS += Gda-5.0.gir
+Gda_6_0_gir_LIBS = $(lib_LTLIBRARIES)
+Gda_6_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+INTROSPECTION_GIRS += Gda-6.0.gir
 
 if ENABLE_GI_SYSTEM_INSTALL
 girdir = $(INTROSPECTION_GIRDIR)
@@ -375,16 +375,16 @@ endif
 
 if ENABLE_VAPIGEN
 
-vapi: libgda-5.0.vapi
+vapi: libgda-6.0.vapi
 
-libgda-5.0.vapi: Gda-5.0.gir
-	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-5.0 --pkg libxml-2.0 Gda-5.0.gir
+libgda-6.0.vapi: Gda-6.0.gir
+	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-6.0 --pkg libxml-2.0 Gda-6.0.gir
 
 vapidir = $(VAPIDIR)
-vapi_DATA=libgda-5.0.vapi
+vapi_DATA=libgda-6.0.vapi
 
 EXTRA_DIST += \
-	Gda-5.0.metadata \
+	Gda-6.0.metadata \
         $(vapi_DATA)
 endif
 
@@ -397,19 +397,19 @@ clean-local:
 
 test_cnc_open_SOURCES = test-cnc-open.c
 test_cnc_open_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)
 
 test_cnc_exec_SOURCES = test-cnc-exec.c
 test_cnc_exec_CFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 test_cnc_exec_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)
 
 test_cnc_meta_SOURCES = test-cnc-meta.c
 test_cnc_meta_CFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 test_cnc_meta_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)

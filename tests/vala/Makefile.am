@@ -19,8 +19,8 @@ VALAFLAGS = \
     --pkg gee-0.8 \
     --pkg gobject-2.0 \
     --pkg libxml-2.0 \
-    --pkg libgda-5.0 \
-    --pkg gdadata-5.0 \
+    --pkg libgda-6.0 \
+    --pkg gdadata-6.0 \
     --includedir=$(top_builddir) \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(top_builddir)/libgda/data \
@@ -36,20 +36,20 @@ check_table_SOURCES = \
 	CheckTable.vala
 
 check_dataobject_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda/data/libgdadata-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GEE_LIBS)
 
 check_datamodeliterator_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda/data/libgdadata-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GEE_LIBS)
 
 check_table_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda/data/libgdadata-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda/data/libgdadata-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GEE_LIBS)
 

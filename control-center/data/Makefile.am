@@ -33,12 +33,12 @@ update-icon-cache:
 	@-if test -z "$(DESTDIR)"; then \
 		echo "Updating Gtk icon cache."; \
 		for theme in $(public_icons_themes); do \
-			$(gtk_update_icon_cache) $(datadir)/libgda-5.0/icons/$$theme; \
+			$(gtk_update_icon_cache) $(datadir)/libgda-6.0/icons/$$theme; \
 		done; \
 	else \
 		echo "*** Icon cache not updated.  After (un)install, run this:"; \
 		for theme in $(public_icons_themes); do \
-			echo "***   $(gtk_update_icon_cache) $(datadir)/libgda-5.0/icons/$$theme"; \
+			echo "***   $(gtk_update_icon_cache) $(datadir)/libgda-6.0/icons/$$theme"; \
 		done; \
 	fi
 
@@ -56,8 +56,8 @@ install-icons:
 		CONTEXT=`echo $$icon | cut -d_ -f2`; \
 		SIZE=`echo $$icon | cut -d_ -f3`; \
 		ICONFILE=`echo $$icon | cut -d_ -f4`; \
-		mkdir -p $(DESTDIR)$(datadir)/libgda-5.0/icons/$$THEME/$$SIZE/$$CONTEXT; \
-		$(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(datadir)/libgda-5.0/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+		mkdir -p $(DESTDIR)$(datadir)/libgda-6.0/icons/$$THEME/$$SIZE/$$CONTEXT; \
+		$(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(datadir)/libgda-6.0/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
 	done
 
 uninstall-icons:
@@ -73,7 +73,7 @@ uninstall-icons:
 		CONTEXT=`echo $$icon | cut -d_ -f2`; \
 		SIZE=`echo $$icon | cut -d_ -f3`; \
 		ICONFILE=`echo $$icon | cut -d_ -f4`; \
-		rm -f $(DESTDIR)$(datadir)/libgda-5.0/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+		rm -f $(DESTDIR)$(datadir)/libgda-6.0/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
 	done
 
 install-data-local: install-icons update-icon-cache

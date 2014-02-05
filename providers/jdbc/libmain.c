@@ -472,7 +472,7 @@ load_jvm ()
 	if (jvm_found) {
 		gchar *path;
 		GError *error = NULL;
-		path = g_build_filename (module_path, "gdaprovider-5.0.jar", NULL);
+		path = g_build_filename (module_path, "gdaprovider-6.0.jar", NULL);
 		jni_wrapper_create_vm (&_jdbc_provider_java_vm, __CreateJavaVM, module_path, path, &error);
 		if (!_jdbc_provider_java_vm) {
 			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))

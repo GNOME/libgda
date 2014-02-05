@@ -2615,7 +2615,7 @@ _gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GE
  *
  * Get the value associated to a named attribute.
  *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-5.0-Attributes-manager.synopsis">this section</link>.
+ * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-6.0-Attributes-manager.synopsis">this section</link>.
  *
  * Returns: (transfer none): a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
  */

@@ -18,7 +18,7 @@
 
 if [ "$1" = "32" ]
 then
-  depend_path="/usr/i686-w64-mingw32/sys-root/mingw /usr/i686-pc-mingw32/sys-root/mingw /local/Win32.Fedora /local/Win32Compiled /local/Win32/bdb /local/Win32/mysql /local/Win32/pgsql /local/Win32/ldap /local/Win32/mdb /local/Win32/oracle"
+  depend_path="/usr/i686-w64-mingw32/sys-root/mingw /usr/i686-pc-mingw32/sys-root/mingw /local/Win32.Fedora /local/Win32/graphviz /local/Win32/bdb /local/Win32/mysql /local/Win32/pgsql /local/Win32/ldap /local/Win32/mdb /local/Win32/oracle"
   prefix=/local/Win32/Libgda
 else
   if [ "$1" = "64" ]
@@ -124,7 +124,7 @@ function add_files_to_zip
 	then
 	    cat $localtmpfile | sed -e "s,^,${tdir}/," >> $tmpfile
 	else
-	    echo "File not found, searched in $dir"
+	    echo "File(s) not found, searched in $dir"
 	    exit 1
 	fi
     done
@@ -240,8 +240,8 @@ Section "GdaBrowser & Libgda" SEC01
   SetOverwrite try
   SectionIn 1 RO
   CreateDirectory "\$SMPROGRAMS\GdaBrowser"
-  CreateShortCut "\$SMPROGRAMS\GdaBrowser\GdaBrowser.lnk" "\$INSTDIR\bin\gda-browser-5.0.exe"
-  CreateShortCut "\$DESKTOP\GdaBrowser.lnk" "\$INSTDIR\bin\gda-browser-5.0.exe"
+  CreateShortCut "\$SMPROGRAMS\GdaBrowser\GdaBrowser.lnk" "\$INSTDIR\bin\gda-browser-6.0.exe"
+  CreateShortCut "\$DESKTOP\GdaBrowser.lnk" "\$INSTDIR\bin\gda-browser-6.0.exe"
 EOF
 
 cat > prov_mysql.nsh <<EOF
@@ -326,7 +326,7 @@ EOF
 #
 # dependencies DLLs
 #
-files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libtiff*.dll libffi*.dll *readline*.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll zlib1.dll)
+files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libffi*.dll *readline*.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll zlib1.dll libsqlite3-0.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh core bin
 
@@ -358,12 +358,12 @@ add_found_files_to_nsh prov_ldap bin
 # Libgda's files
 #
 files=(information_schema.xml import_encodings.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh core share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh core share/libgda-6.0
 
 files=(gda-sql.lang)
-add_files_to_zip $archive $prefix share/libgda-5.0/language-specs $files
-add_found_files_to_nsh core share/libgda-5.0/language-specs
+add_files_to_zip $archive $prefix share/libgda-6.0/language-specs $files
+add_found_files_to_nsh core share/libgda-6.0/language-specs
 
 add_all_files_to_zip $archive_ext "${depend_path}" share/gtksourceview-3.0/language-specs
 add_found_files_to_nsh core share/gtksourceview-3.0/language-specs
@@ -373,114 +373,114 @@ add_files_to_zip $archive_ext "${depend_path}" share/glib-2.0/schemas $files
 add_found_files_to_nsh core share/glib-2.0/schemas
 
 files=(bdb_specs_dsn.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_bdb share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_bdb share/libgda-6.0
 
 files=(mdb_specs_dsn.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_mdb share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_mdb share/libgda-6.0
 
 files=(mysql_specs_add_column.xml mysql_specs_create_db.xml mysql_specs_create_index.xml mysql_specs_create_table.xml mysql_specs_create_view.xml mysql_specs_drop_column.xml mysql_specs_drop_db.xml mysql_specs_drop_index.xml mysql_specs_drop_table.xml mysql_specs_drop_view.xml mysql_specs_dsn.xml mysql_specs_rename_table.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_mysql share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_mysql share/libgda-6.0
 
 files=(postgres_specs_add_column.xml postgres_specs_create_db.xml postgres_specs_create_index.xml postgres_specs_create_table.xml postgres_specs_create_view.xml postgres_specs_drop_column.xml postgres_specs_drop_db.xml postgres_specs_drop_index.xml postgres_specs_drop_table.xml postgres_specs_drop_view.xml postgres_specs_dsn.xml postgres_specs_rename_table.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_postgresql share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_postgresql share/libgda-6.0
 
 files=(sqlite_specs_add_column.xml sqlite_specs_create_db.xml sqlite_specs_create_index.xml sqlite_specs_create_table.xml sqlite_specs_create_view.xml sqlite_specs_drop_db.xml sqlite_specs_drop_index.xml sqlite_specs_drop_table.xml sqlite_specs_drop_view.xml sqlite_specs_dsn.xml sqlite_specs_rename_table.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_sqlite share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_sqlite share/libgda-6.0
 
 files=(sqlcipher_specs_auth.xml sqlcipher_specs_add_column.xml sqlcipher_specs_create_db.xml sqlcipher_specs_create_index.xml sqlcipher_specs_create_table.xml sqlcipher_specs_create_view.xml sqlcipher_specs_drop_db.xml sqlcipher_specs_drop_index.xml sqlcipher_specs_drop_table.xml sqlcipher_specs_drop_view.xml sqlcipher_specs_dsn.xml sqlcipher_specs_rename_table.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_sqlcipher share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_sqlcipher share/libgda-6.0
 
 files=(web_specs_auth.xml web_specs_dsn.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_web share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_web share/libgda-6.0
 
 files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_oracle share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_oracle share/libgda-6.0
 
 files=(ldap_specs_auth.xml ldap_specs_dsn.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0 $files
-add_found_files_to_nsh prov_ldap share/libgda-5.0
+add_files_to_zip $archive $prefix share/libgda-6.0 $files
+add_found_files_to_nsh prov_ldap share/libgda-6.0
 
 files=(gdaui-generic.png)
-add_files_to_zip $archive $prefix share/libgda-5.0/pixmaps $files
-add_found_files_to_nsh core share/libgda-5.0/pixmaps
+add_files_to_zip $archive $prefix share/libgda-6.0/pixmaps $files
+add_found_files_to_nsh core share/libgda-6.0/pixmaps
 
 
 #
 #copy some Gnome files to be installed on Windows
 #
-cp /usr/share/icons/gnome/16x16/actions/bookmark-new.png $prefix/share/libgda-5.0/icons/hicolor/16x16/actions
-cp /usr/share/icons/gnome/22x22/actions/bookmark-new.png $prefix/share/libgda-5.0/icons/hicolor/22x22/actions
-cp /usr/share/icons/gnome/24x24/actions/bookmark-new.png $prefix/share/libgda-5.0/icons/hicolor/24x24/actions
-cp /usr/share/icons/gnome/32x32/actions/bookmark-new.png $prefix/share/libgda-5.0/icons/hicolor/32x32/actions
-cp /usr/share/icons/gnome/16x16/actions/window-new.png $prefix/share/libgda-5.0/icons/hicolor/16x16/actions
-cp /usr/share/icons/gnome/22x22/actions/window-new.png $prefix/share/libgda-5.0/icons/hicolor/22x22/actions
-cp /usr/share/icons/gnome/24x24/actions/window-new.png $prefix/share/libgda-5.0/icons/hicolor/24x24/actions
-cp /usr/share/icons/gnome/32x32/actions/window-new.png $prefix/share/libgda-5.0/icons/hicolor/32x32/actions
-mkdir -p $prefix/share/libgda-5.0/icons/hicolor/16x16/apps
-mkdir -p $prefix/share/libgda-5.0/icons/hicolor/22x22/apps
-mkdir -p $prefix/share/libgda-5.0/icons/hicolor/24x24/apps
-mkdir -p $prefix/share/libgda-5.0/icons/hicolor/32x32/apps
-cp /usr/share/icons/gnome/16x16/apps/accessories-text-editor.png $prefix/share/libgda-5.0/icons/hicolor/16x16/apps
-cp /usr/share/icons/gnome/22x22/apps/accessories-text-editor.png $prefix/share/libgda-5.0/icons/hicolor/22x22/apps
-cp /usr/share/icons/gnome/24x24/apps/accessories-text-editor.png $prefix/share/libgda-5.0/icons/hicolor/24x24/apps
-cp /usr/share/icons/gnome/32x32/apps/accessories-text-editor.png $prefix/share/libgda-5.0/icons/hicolor/32x32/apps
+cp /usr/share/icons/gnome/16x16/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/16x16/actions
+cp /usr/share/icons/gnome/22x22/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/22x22/actions
+cp /usr/share/icons/gnome/24x24/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/24x24/actions
+cp /usr/share/icons/gnome/32x32/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/32x32/actions
+cp /usr/share/icons/gnome/16x16/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/16x16/actions
+cp /usr/share/icons/gnome/22x22/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/22x22/actions
+cp /usr/share/icons/gnome/24x24/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/24x24/actions
+cp /usr/share/icons/gnome/32x32/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/32x32/actions
+mkdir -p $prefix/share/libgda-6.0/icons/hicolor/16x16/apps
+mkdir -p $prefix/share/libgda-6.0/icons/hicolor/22x22/apps
+mkdir -p $prefix/share/libgda-6.0/icons/hicolor/24x24/apps
+mkdir -p $prefix/share/libgda-6.0/icons/hicolor/32x32/apps
+cp /usr/share/icons/gnome/16x16/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/16x16/apps
+cp /usr/share/icons/gnome/22x22/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/22x22/apps
+cp /usr/share/icons/gnome/24x24/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/24x24/apps
+cp /usr/share/icons/gnome/32x32/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/32x32/apps
 
-add_all_files_to_zip $archive $prefix share/libgda-5.0/pixmaps
-add_found_files_to_nsh core share/libgda-5.0/pixmaps
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/16x16/actions
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/16x16/actions
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/22x22/actions
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/22x22/actions
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/24x24/actions
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/24x24/actions
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/32x32/actions
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/32x32/actions
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/scalable/actions
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/scalable/actions
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/16x16/apps
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/16x16/apps
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/22x22/apps
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/22x22/apps
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/24x24/apps
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/24x24/apps
-add_all_files_to_zip $archive $prefix share/libgda-5.0/icons/hicolor/32x32/apps
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor/32x32/apps
+add_all_files_to_zip $archive $prefix share/libgda-6.0/pixmaps
+add_found_files_to_nsh core share/libgda-6.0/pixmaps
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/16x16/actions
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/16x16/actions
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/22x22/actions
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/22x22/actions
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/24x24/actions
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/24x24/actions
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/32x32/actions
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/32x32/actions
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/scalable/actions
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/scalable/actions
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/16x16/apps
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/16x16/apps
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/22x22/apps
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/22x22/apps
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/24x24/apps
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/24x24/apps
+add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/32x32/apps
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/32x32/apps
 
 files=(index.theme)
-add_files_to_zip $archive . share/libgda-5.0/icons/hicolor $files
-add_found_files_to_nsh core share/libgda-5.0/icons/hicolor
+add_files_to_zip $archive . share/libgda-6.0/icons/hicolor $files
+add_found_files_to_nsh core share/libgda-6.0/icons/hicolor
 
-files=(gda-browser-5.0.png)
+files=(gda-browser-6.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
 add_found_files_to_nsh core share/pixmaps
 
 files=(gda-control-center.png)
-add_files_to_zip $archive $prefix share/libgda-5.0/pixmaps $files
-add_found_files_to_nsh core share/libgda-5.0/pixmaps
+add_files_to_zip $archive $prefix share/libgda-6.0/pixmaps $files
+add_found_files_to_nsh core share/libgda-6.0/pixmaps
 
 files=(gdaui-entry-number.xml gdaui-entry-string.xml)
-add_files_to_zip $archive $prefix share/libgda-5.0/ui $files
-add_found_files_to_nsh core share/libgda-5.0/ui
+add_files_to_zip $archive $prefix share/libgda-6.0/ui $files
+add_found_files_to_nsh core share/libgda-6.0/ui
 
 files=(cnc.js md5.js jquery.js mouseapp_2.js mouseirb_2.js irb.js gda.css gda-print.css irb.css)
-add_files_to_zip $archive $prefix share/libgda-5.0/web $files
-add_found_files_to_nsh core share/libgda-5.0/web
+add_files_to_zip $archive $prefix share/libgda-6.0/web $files
+add_found_files_to_nsh core share/libgda-6.0/web
 
 files=(libgda-paramlist.dtd libgda-array.dtd libgda-server-operation.dtd gdaui-layout.dtd)
-add_files_to_zip $archive $prefix share/libgda-5.0/dtd $files
-add_found_files_to_nsh core share/libgda-5.0/dtd
+add_files_to_zip $archive $prefix share/libgda-6.0/dtd $files
+add_found_files_to_nsh core share/libgda-6.0/dtd
 
 files=(config sales_test.db)
-add_files_to_zip $archive $prefix etc/libgda-5.0 $files
-add_found_files_to_nsh core etc/libgda-5.0
+add_files_to_zip $archive $prefix etc/libgda-6.0 $files
+add_found_files_to_nsh core etc/libgda-6.0
 
 files=(gtk.immodules)
 add_files_to_zip $archive_ext "${depend_path}" etc/gtk-3.0 $files
@@ -505,91 +505,91 @@ files=(pango-*.dll)
 add_files_to_zip $archive_ext "${depend_path}" lib/pango/1.8.0/modules $files
 add_found_files_to_nsh core lib/pango/1.8.0/modules
 
-files=(gda-sql-5.0.exe libgda-5.0-4.dll libgda-report-5.0-4.dll libgda-ui-5.0-4.dll gda-browser-5.0.exe gda-control-center-5.0.exe)
+files=(gda-sql-6.0.exe libgda-6.0-4.dll libgda-report-6.0-4.dll libgda-ui-6.0-4.dll gda-browser-6.0.exe gda-control-center-6.0.exe)
 add_files_to_zip $archive $prefix bin $files
 add_found_files_to_nsh core bin
 
-add_all_files_to_zip $archive $prefix share/gnome/help/gda-sql/C
+add_all_files_to_zip $archive $prefix share/libgda-6.0/gda-sql/help/C
 
-files=(gda-test-connection-5.0.exe)
+files=(gda-test-connection-6.0.exe)
 add_files_to_zip $archive $prefix bin $files
 
 files=(gspawn-win32-helper.exe)
 add_files_to_zip $archive "${depend_path}" bin $files
 add_found_files_to_nsh core bin
 
-files=(gdaui-demo-5.0.exe)
+files=(gdaui-demo-6.0.exe)
 add_files_to_zip $archive_dev $prefix bin $files
 
 files=(libgda-bdb.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_bdb lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_bdb lib/libgda-6.0/providers
 
 files=(libgda-mdb.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_mdb lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_mdb lib/libgda-6.0/providers
 
 files=(libgda-mysql.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_mysql lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_mysql lib/libgda-6.0/providers
 
 files=(libgda-postgres.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_postgresql lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_postgresql lib/libgda-6.0/providers
 
 files=(libgda-sqlite.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_sqlite lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_sqlite lib/libgda-6.0/providers
 
 files=(libgda-sqlcipher.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_sqlcipher lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_sqlcipher lib/libgda-6.0/providers
 
 files=(libgda-web.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_web lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_web lib/libgda-6.0/providers
 
 files=(libgda-ldap.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_ldap lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_ldap lib/libgda-6.0/providers
 
 files=(libgda-oracle.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/providers $files
-add_found_files_to_nsh prov_oracle lib/libgda-5.0/providers
+add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+add_found_files_to_nsh prov_oracle lib/libgda-6.0/providers
 
 files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgda-ui-plugins.dll)
-add_files_to_zip $archive $prefix lib/libgda-5.0/plugins $files
-add_found_files_to_nsh core lib/libgda-5.0/plugins
+add_files_to_zip $archive $prefix lib/libgda-6.0/plugins $files
+add_found_files_to_nsh core lib/libgda-6.0/plugins
 
 #
 # includes
 #
-files=(gda-attributes-manager.h gda-batch.h gda-binreloc.h gda-blob-op.h gda-column.h gda-config.h gda-connection-event.h gda-connection.h gda-connection-private.h gda-data-access-wrapper.h gda-data-comparator.h gda-data-handler.h gda-data-model-array.h gda-data-model-bdb.h gda-data-model-dir.h gda-data-model-extra.h gda-data-model.h gda-data-model-import.h gda-data-model-iter-extra.h gda-data-model-iter.h gda-data-model-private.h gda-data-proxy.h gda-data-select.h gda-debug-macros.h gda-decl.h gda-enums.h gda-enum-types.h gda-holder.h gda-lockable.h gda-log.h gda-marshal.h gda-meta-store.h gda-meta-struct.h gda-mutex.h gda-quark-list.h gda-row.h gda-server-operation.h gda-server-provider-extra.h gda-server-provider.h gda-server-provider-private.h gda-set.h gda-statement-extra.h gda-statement.h gda-transaction-status.h gda-transaction-status-private.h gda-util.h gda-value.h gda-xa-transaction.h libgda.h libgda-global-variables.h gda-repetitive-statement.h gda-sql-builder.h gda-tree.h gda-tree-manager.h gda-tree-mgr-columns.h gda-tree-mgr-label.h gda-tree-mgr-schemas.h gda-tree-mgr-select.h gda-tree-mgr-tables.h gda-tree-node.h gda-tree-mgr-ldap.h gda-data-model-ldap.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda $files
+files=(gda-attributes-manager.h gda-batch.h gda-binreloc.h gda-blob-op.h gda-column.h gda-config.h gda-connection-event.h gda-connection.h gda-connection-private.h gda-data-access-wrapper.h gda-data-comparator.h gda-data-handler.h gda-data-model-array.h gda-data-model-bdb.h gda-data-model-dir.h gda-data-model-extra.h gda-data-model.h gda-data-model-import.h gda-data-model-iter-extra.h gda-data-model-iter.h gda-data-model-private.h gda-data-proxy.h gda-data-select.h gda-decl.h gda-enums.h gda-enum-types.h gda-holder.h gda-lockable.h gda-log.h gda-marshal.h gda-meta-store.h gda-meta-struct.h gda-mutex.h gda-quark-list.h gda-row.h gda-server-operation.h gda-server-provider-extra.h gda-server-provider.h gda-server-provider-private.h gda-set.h gda-statement-extra.h gda-statement.h gda-transaction-status.h gda-transaction-status-private.h gda-util.h gda-value.h gda-xa-transaction.h libgda.h libgda-global-variables.h gda-repetitive-statement.h gda-sql-builder.h gda-tree.h gda-tree-manager.h gda-tree-mgr-columns.h gda-tree-mgr-label.h gda-tree-mgr-schemas.h gda-tree-mgr-select.h gda-tree-mgr-tables.h gda-tree-node.h gda-tree-mgr-ldap.h gda-data-model-ldap.h)
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda $files
 
 files=(gda-sqlite-provider.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/sqlite $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/sqlite $files
 
-files=(gda-thread-wrapper.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/thread-wrapper $files
+files=(gda-worker.h gda-connect.h)
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/thread-wrapper $files
 
 files=(gda-handler-bin.h gda-handler-boolean.h gda-handler-numerical.h gda-handler-string.h gda-handler-time.h gda-handler-type.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/handlers $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/handlers $files
 
 files=(gda-report-docbook-document.h gda-report-document.h gda-report-engine.h gda-report-rml-document.h libgda-report.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda-report $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda-report $files
 
 files=(gda-data-select-priv.h gda-pstmt.h gda-meta-column-types.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/providers-support $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/providers-support $files
 
 files=(gda-sql-parser-enum-types.h gda-sql-parser.h gda-sql-statement.h gda-statement-struct-compound.h gda-statement-struct-decl.h gda-statement-struct-delete.h gda-statement-struct.h gda-statement-struct-insert.h gda-statement-struct-parts.h gda-statement-struct-pspec.h gda-statement-struct-select.h gda-statement-struct-trans.h gda-statement-struct-unknown.h gda-statement-struct-update.h gda-statement-struct-util.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/sql-parser $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/sql-parser $files
 
 files=(gda-vconnection-data-model.h gda-vconnection-hub.h gda-virtual-connection.h gda-virtual-provider.h gda-vprovider-data-model.h gda-vprovider-hub.h libgda-virtual.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda/virtual $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda/virtual $files
 
 files=(gdaui-basic-form.h gdaui-data-entry.h gdaui-data-selector.h gdaui-enums.h gdaui-login.h gdaui-raw-grid.h gdaui-cloud.h gdaui-data-filter.h gdaui-data-store.h gdaui-enum-types.h gdaui-plugin.h gdaui-server-operation.h gdaui-combo.h gdaui-data-proxy.h gdaui-decl.h gdaui-form.h gdaui-provider-selector.h gdaui-tree-store.h gdaui-data-cell-renderer-util.h gdaui-data-proxy-info.h gdaui-easy.h gdaui-grid.h gdaui-raw-form.h gdaui-rt-editor.h libgda-ui.h)
-add_files_to_zip $archive_dev $prefix include/libgda-5.0/libgda-ui $files
+add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda-ui $files
 
 #
 # PC files
@@ -599,19 +599,19 @@ add_all_files_to_zip $archive_dev $prefix lib/pkgconfig
 #
 # static libs
 #
-files=(libgda-5.0.dll.a libgda-5.0.lib libgda-5.0.def libgda-report-5.0.dll.a libgda-report-5.0.lib libgda-report-5.0.def libgda-ui-5.0.dll.a libgda-ui-5.0.lib libgda-ui-5.0.def)
+files=(libgda-6.0.dll.a libgda-6.0.lib libgda-6.0.def libgda-report-6.0.dll.a libgda-report-6.0.lib libgda-report-6.0.def libgda-ui-6.0.dll.a libgda-ui-6.0.lib libgda-ui-6.0.def)
 add_files_to_zip $archive_dev $prefix lib $files
 
 #
 # demo
 #
 files=(basic_form.c cloud.c combo.c custom_layout.xml data_model_dir.c ddl_queries.c demo_db.db form.c form_data_layout.c form_pict.c form_rw.c grid.c grid_data_layout.c grid_pict.c grid_rw.c linked_grid_form.c linked_model_param.c login.c provider_sel.c tree.c)
-add_files_to_zip $archive_dev $prefix share/libgda-5.0/demo $files
+add_files_to_zip $archive_dev $prefix share/libgda-6.0/demo $files
 
 #
 # doc
 #
-#add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-5.0
+#add_all_files_to_zip $archive_dev $prefix share/gtk-doc/html/libgda-6.0
 
 #
 # translations

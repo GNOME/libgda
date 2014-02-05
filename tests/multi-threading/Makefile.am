@@ -18,17 +18,17 @@ common_sources = \
 
 check_mutex_SOURCES = check_mutex.c
 check_mutex_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
 check_cnc_lock_SOURCES = check_cnc_lock.c $(common_sources)
 check_cnc_lock_LDADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
 EXTRA_DIST = testdb.sql

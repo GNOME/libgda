@@ -41,7 +41,7 @@ libgda_postgres_la_SOURCES = \
         postgres_token_types.h
 
 libgda_postgres_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
 EXTRA_DIST = parser.y gen_def.c $(keyword_files)

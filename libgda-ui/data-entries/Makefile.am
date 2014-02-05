@@ -70,7 +70,7 @@ libgda_ui_data_entries_la_SOURCES = \
 	gdaui-formatted-entry.c \
 	gdaui-numeric-entry.c
 
-xmldir   = $(datadir)/libgda-5.0/ui
+xmldir   = $(datadir)/libgda-6.0/ui
 xml_in_files = \
 	gdaui-entry-string.xml.in \
 	gdaui-entry-number.xml.in

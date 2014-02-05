@@ -47,24 +47,24 @@ AM_CPPFLAGS = \
         -DDATADIR=\""$(datadir)"\" \
         -DLIBDIR=\""$(libdir)"\"
 
-bin_PROGRAMS = gdaui-demo-5.0
+bin_PROGRAMS = gdaui-demo-6.0
 
 BUILT_SOURCES = demos.h
 
 demos.h: $(demos) geninclude.pl
 	(here=`pwd` ; cd $(srcdir) && $(PERL) $$here/geninclude.pl $(demos)) > demos.h
 
-gdaui_demo_5_0_SOURCES = 		\
+gdaui_demo_6_0_SOURCES = 		\
 	$(demos)		\
 	demo-common.h		\
 	main.c			\
 	demos.h
 
-gdaui_demo_5_0_DEPENDENCIES = $(DEPS)
-gdaui_demo_5_0_LDFLAGS =  $(EXTRALDFLAGS)
-gdaui_demo_5_0_LDADD =  \
-	$(top_builddir)/libgda/libgda-5.0.la \
-	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
+gdaui_demo_6_0_DEPENDENCIES = $(DEPS)
+gdaui_demo_6_0_LDFLAGS =  $(EXTRALDFLAGS)
+gdaui_demo_6_0_LDADD =  \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/libgda-ui/libgda-ui-6.0.la \
 	$(COREDEPS_LIBS) $(GTK_LIBS)
 
 democode_DATA = $(demos) $(demofiles)

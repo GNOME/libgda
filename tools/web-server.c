@@ -450,7 +450,7 @@ get_file (G_GNUC_UNUSED WebServer *server, SoupMessage *msg, const char *path, G
 	GMappedFile *mfile;
 	gchar *real_path;
 
-	real_path = gda_gbr_get_file_path (GDA_DATA_DIR, "libgda-5.0", "web", path, NULL);
+	real_path = gda_gbr_get_file_path (GDA_DATA_DIR, "libgda-6.0", "web", path, NULL);
 	if (!real_path)
 		return FALSE;
 

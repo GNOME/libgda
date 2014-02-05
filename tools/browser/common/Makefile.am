@@ -43,11 +43,11 @@ libcommon_la_SOURCES = \
 $(OBJECTS): marshal.c marshal.h
 
 libcommon_la_LIBADD = \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(GTK_LIBS)
 
-xmldir=$(datadir)/libgda-5.0
+xmldir=$(datadir)/libgda-6.0
 xml_DATA= \
 	import_encodings.xml
 

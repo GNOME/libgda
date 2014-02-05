@@ -33,7 +33,7 @@
   </p>
   <p>
   The XML  and binary file format are Gda-[MajorVersion]-0.gir and Gda-[MajorVersion]-0.typelib respectively, where 
-  [MajorVersion] is set to current major version in GDA. For example Gda-5.0.gir, for GDA version 5.x series.
+  [MajorVersion] is set to current major version in GDA. For example Gda-6.0.gir, for GDA version 6.x series.
   </p>
   <note style="tip">
   <p>

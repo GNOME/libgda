@@ -1,4 +1,4 @@
-<glade-catalog name="gdaui" library="libgda-ui-5.0.so" depends="gtk+">
+<glade-catalog name="gdaui" library="libgda-ui-6.0.so" depends="gtk+">
   <init-function>gdaui_init</init-function>
   <glade-widget-classes>
     <glade-widget-class name="GdauiGrid" generic-name="gdauigrid" title="Database Grid"/>

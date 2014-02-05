@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES = libgda_threadwrapper-5.0.la
+noinst_LTLIBRARIES = libgda_threadwrapper-6.0.la
 
 TESTS = test-raw-itsignaler test-itsignaler test-blocking-itsignaler test-worker test-connect
 check_PROGRAMS = test-raw-itsignaler test-itsignaler test-blocking-itsignaler test-worker test-connect
@@ -27,7 +27,7 @@ libgda_threadwrapper_headers = \
 libgda_threadwrapperincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/thread-wrapper
 libgda_threadwrapperinclude_HEADERS=$(libgda_threadwrapper_headers)
 
-libgda_threadwrapper_5_0_la_SOURCES = \
+libgda_threadwrapper_6_0_la_SOURCES = \
 	$(libgda_threadwrapper_headers) \
 	itsignaler.h \
 	itsignaler.c \

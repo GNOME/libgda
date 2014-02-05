@@ -33,11 +33,11 @@ libgda_sqlcipher_la_SOURCES = \
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_sqlcipher_la_LIBADD = \
 	$(top_builddir)/libgda/sqlite/libgda-sqlcipher.la \
-	$(top_builddir)/libgda/libgda-5.0.la \
+	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(LIBCRYPTO_LIBS)
 
-xmldir   = $(datadir)/libgda-5.0
+xmldir   = $(datadir)/libgda-6.0
 xml_in_files = \
 	sqlcipher_specs_auth.xml.in \
 	sqlcipher_specs_dsn.xml.in \
@@ -57,10 +57,10 @@ xml_in_files = \
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libgda-sqlcipher-5.0.pc
+pkgconfig_DATA = libgda-sqlcipher-6.0.pc
 
 EXTRA_DIST = $(xml_in_files) \
-	libgda-sqlcipher-5.0.pc.in \
+	libgda-sqlcipher-6.0.pc.in \
 	sqlcipher.patch \
 	COPYING.sqlcipher
 

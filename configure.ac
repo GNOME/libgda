@@ -1,6 +1,6 @@
 m4_define(major, 5)
-m4_define(minor, 2)
-m4_define(micro, 2)
+m4_define(minor, 99)
+m4_define(micro, 0)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
@@ -31,7 +31,7 @@ AC_SUBST(GDA_VERSION, major.minor.micro)
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
-AC_SUBST(GDA_ABI_MAJOR_VERSION, 5)
+AC_SUBST(GDA_ABI_MAJOR_VERSION, 6)
 AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
 #AC_SUBST(GDA_MICRO_VERSION, micro)
 LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
@@ -130,6 +130,7 @@ AC_SEARCH_LIBS([strerror],[cposix])
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_CC_C_O
+AM_PROG_AR
 AC_HEADER_STDC
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
@@ -940,10 +941,10 @@ AC_SUBST(COREDEPS_LIBS)
 AC_CONFIG_FILES([
 Makefile
 libgda.spec
-libgda-5.0.pc
-libgda-ui-5.0.pc
-libgda-report-5.0.pc
-libgda-xslt-5.0.pc
+libgda-6.0.pc
+libgda-ui-6.0.pc
+libgda-report-6.0.pc
+libgda-xslt-6.0.pc
 po/Makefile.in
 libgda/Makefile
 libgda/libgda.h
@@ -957,41 +958,41 @@ libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
 libgda/data/Makefile
-libgda/data/libgdadata-5.0.pc
+libgda/data/libgdadata-6.0.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
 providers/reuseable/mysql/Makefile
 providers/bdb/Makefile
-providers/bdb/libgda-bdb-5.0.pc
+providers/bdb/libgda-bdb-6.0.pc
 providers/bdbsql/Makefile
-providers/bdbsql/libgda-bdbsql-5.0.pc
+providers/bdbsql/libgda-bdbsql-6.0.pc
 providers/mdb/Makefile
 providers/mdb/libmdb-src/Makefile
-providers/mdb/libgda-mdb-5.0.pc
+providers/mdb/libgda-mdb-6.0.pc
 providers/mysql/Makefile
-providers/mysql/libgda-mysql-5.0.pc
+providers/mysql/libgda-mysql-6.0.pc
 providers/oracle/Makefile
-providers/oracle/libgda-oracle-5.0.pc
+providers/oracle/libgda-oracle-6.0.pc
 providers/postgres/Makefile
-providers/postgres/libgda-postgres-5.0.pc
+providers/postgres/libgda-postgres-6.0.pc
 providers/firebird/Makefile
-providers/firebird/libgda-firebird-5.0.pc
+providers/firebird/libgda-firebird-6.0.pc
 providers/sqlite/Makefile
-providers/sqlite/libgda-sqlite-5.0.pc
+providers/sqlite/libgda-sqlite-6.0.pc
 providers/jdbc/Makefile
-providers/jdbc/libgda-jdbc-5.0.pc
+providers/jdbc/libgda-jdbc-6.0.pc
 providers/ldap/Makefile
-providers/ldap/libgda-ldap-5.0.pc
+providers/ldap/libgda-ldap-6.0.pc
 providers/web/Makefile
-providers/web/libgda-web-5.0.pc
+providers/web/libgda-web-6.0.pc
 providers/skel-implementation/Makefile
 providers/skel-implementation/capi/Makefile
-providers/skel-implementation/capi/libgda-capi-5.0.pc
+providers/skel-implementation/capi/libgda-capi-6.0.pc
 providers/skel-implementation/models/Makefile
-providers/skel-implementation/models/libgda-models-5.0.pc
+providers/skel-implementation/models/libgda-models-6.0.pc
 providers/sqlcipher/Makefile
-providers/sqlcipher/libgda-sqlcipher-5.0.pc
+providers/sqlcipher/libgda-sqlcipher-6.0.pc
 libgda-report/Makefile
 libgda-report/engine/Makefile
 libgda-report/DocBook/Makefile
@@ -1011,7 +1012,7 @@ libgda-ui/glade/Makefile
 control-center/Makefile
 control-center/data/Makefile
 tools/Makefile
-tools/gda-sql-5.0.1:tools/gda-sql.1.in
+tools/gda-sql-6.0.1:tools/gda-sql.1.in
 tools/cmdtool/Makefile
 tools/help/Makefile
 tools/help/C/Makefile
@@ -1057,17 +1058,17 @@ mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
 cp doc/C/builddate.xml ${srcdir}/doc/C/builddate.xml.tmp
 mv ${srcdir}/doc/C/builddate.xml.tmp ${srcdir}/doc/C/builddate.xml
 
-cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-5.0-sections.txt
-echo "" >> doc/C/libgda-5.0-sections.txt
-cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-5.0-sections.txt
-cp doc/C/libgda-5.0-sections.txt ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp
-mv ${srcdir}/doc/C/libgda-5.0-sections.txt.tmp ${srcdir}/doc/C/libgda-5.0-sections.txt
+cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-6.0-sections.txt
+echo "" >> doc/C/libgda-6.0-sections.txt
+cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-6.0-sections.txt
+cp doc/C/libgda-6.0-sections.txt ${srcdir}/doc/C/libgda-6.0-sections.txt.tmp
+mv ${srcdir}/doc/C/libgda-6.0-sections.txt.tmp ${srcdir}/doc/C/libgda-6.0-sections.txt
 
-cp doc/C/libgda.types doc/C/libgda-5.0.types
+cp doc/C/libgda.types doc/C/libgda-6.0.types
 if test x$have_ui != xno
 then
-	echo "" >> doc/C/libgda-5.0.types
-	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-5.0.types
+	echo "" >> doc/C/libgda-6.0.types
+	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-6.0.types
 fi
 
 

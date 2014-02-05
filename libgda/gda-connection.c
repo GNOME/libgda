@@ -896,7 +896,7 @@ merge_column_types (const GType *struct_types, const GType *user_types)
  *
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
- * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-5.0 -L" command to 
+ * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-6.0 -L" command to 
  * list the possible named parameters.
  *
  * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
@@ -1021,7 +1021,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * series of &lt;key&gt;=&lt;value&gt; pairs, where each key and value are encoded as per RFC 1738, 
  * see gda_rfc1738_encode() for more information.
  *
- * The possible keys depend on the provider, the "gda-sql-5.0 -L" command
+ * The possible keys depend on the provider, the "gda-sql-6.0 -L" command
  * can be used to list the actual keys for each installed database provider.
  *
  * For example the connection string to open an SQLite connection to a database
@@ -1042,7 +1042,7 @@ gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
  * provider (use gda_config_get_provider_info() to get it). Similarly to the format of the connection
- * string, use the "gda-sql-5.0 -L" command to list the possible named parameters.
+ * string, use the "gda-sql-6.0 -L" command to list the possible named parameters.
  *
  * Additionally, it is possible to have the connection string
  * respect the "&lt;provider_name&gt;://&lt;real cnc string&gt;" format, in which case the provider name

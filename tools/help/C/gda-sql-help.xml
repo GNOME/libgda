@@ -157,7 +157,7 @@ DSN parameters | DB_NAME: Database name. The name of a database to connect to (s
                  COMPRESS: Compress. Use compression protocol (boolean)                                        
 Authentication | USERNAME (string),                                                                            
                  PASSWORD (string)                                                                             
-File           | /usrlib/libgda-5.0/providers/libgda-mysql.so                                         
+File           | /usrlib/libgda-6.0/providers/libgda-mysql.so                                         
 (5 rows)</raw>
       <comment>This output shows all the arguments accepted by the MySQL provider (DB_NAME, HOST, PORT, ...)</comment>
     </example>
