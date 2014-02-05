@@ -373,8 +373,7 @@ load_help_doc (void)
 	const gchar * const *langs = g_get_language_names ();
 	gchar *dirname, *helpfile;
 	gint i;
-	dirname = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help",
-					 "gda-sql", NULL);
+	dirname = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "gda-sql", "help", NULL);
 	for (i = 0; langs[i]; i++) {
 		helpfile = g_build_filename (dirname, langs[i], "gda-sql-help.xml", NULL);
 		if (g_file_test (helpfile, G_FILE_TEST_EXISTS))
