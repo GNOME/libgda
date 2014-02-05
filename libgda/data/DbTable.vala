@@ -43,7 +43,6 @@ namespace GdaData
 					if (ft.name == f.name) {
 						if (!f.compatible (ft)) {
 							return false;
-							break;
 						}
 					}
 				}
