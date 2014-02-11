@@ -437,11 +437,11 @@ gda_server_provider_set_impl_functions (GdaServerProviderClass *klass,
 gpointer
 _gda_server_provider_get_impl_functions (GdaServerProvider *provider, GdaWorker *worker, GdaServerProviderFunctionsType type)
 {
-	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
-	g_return_if_fail ((type >= 0) && (type < GDA_SERVER_PROVIDER_FUNCTIONS_MAX));
-	g_return_if_fail (worker);
-	g_return_if_fail (gda_worker_thread_is_worker (worker));
+	g_return_val_if_fail ((type >= 0) && (type < GDA_SERVER_PROVIDER_FUNCTIONS_MAX), NULL);
+	g_return_val_if_fail (worker, NULL);
+	g_return_val_if_fail (gda_worker_thread_is_worker (worker), NULL);
 
 	return CLASS (provider)->functions_sets [type];
 }
@@ -458,8 +458,8 @@ _gda_server_provider_get_impl_functions (GdaServerProvider *provider, GdaWorker 
 gpointer
 gda_server_provider_get_impl_functions_for_class (GObjectClass *klass, GdaServerProviderFunctionsType type)
 {
-	g_return_if_fail (GDA_IS_SERVER_PROVIDER_CLASS (klass));
-	g_return_if_fail ((type >= 0) && (type < GDA_SERVER_PROVIDER_FUNCTIONS_MAX));
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER_CLASS (klass), NULL);
+	g_return_val_if_fail ((type >= 0) && (type < GDA_SERVER_PROVIDER_FUNCTIONS_MAX), NULL);
 
 #ifdef GDA_DEBUG_VIRTUAL
 	g_print ("[V-klass] %s (klass=>%p, Class=>%s)\n", __FUNCTION__,
