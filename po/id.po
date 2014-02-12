@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-02-05 20:58+0000\n"
-"PO-Revision-Date: 2014-02-06 15:49+0700\n"
+"POT-Creation-Date: 2014-02-06 15:17+0000\n"
+"PO-Revision-Date: 2014-02-12 11:58+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.6.4\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -670,7 +670,6 @@ msgstr "Secara artifisial memperlambat eksekusi query"
 #: ../libgda/gda-connection.c:602 ../libgda/gda-connection.c:630
 #: ../libgda/gda-connection.c:644 ../libgda/gda-connection.c:659
 #, c-format
-#| msgid "Can't set the '%s' property once the connection is opened"
 msgid "Can't set the '%s' property when the connection is opened"
 msgstr "Tak bisa menata properti '%s' ketika koneksi dibuka"
 
@@ -718,7 +717,6 @@ msgid "No DSN or connection string specified"
 msgstr "String koneksi atau DSN tak dinyatakan"
 
 #: ../libgda/gda-connection.c:1391
-#| msgid "Connection not yet opened"
 msgid "Connection is alreay opened"
 msgstr "Koneksi telah terbuka"
 
@@ -2101,20 +2099,17 @@ msgstr "Tak didukung"
 
 #: ../libgda/gda-server-provider.c:3165 ../libgda/gda-server-provider.c:3232
 #: ../libgda/gda-server-provider.c:3298
-#| msgid "Data model does not support random access"
 msgid "Database provider does not support transactions"
 msgstr "Penyedia basis data tak mendukung transaksi"
 
 #: ../libgda/gda-server-provider.c:3357 ../libgda/gda-server-provider.c:3415
 #: ../libgda/gda-server-provider.c:3473
-#| msgid "Data model does not support setting values"
 msgid "Database provider does not support savepoints"
 msgstr "Penyedia basis data tak mendukung savepoint"
 
 #: ../libgda/gda-server-provider.c:3559 ../libgda/gda-server-provider.c:3570
 #: ../libgda/gda-server-provider.c:3581 ../libgda/gda-server-provider.c:3592
 #: ../libgda/gda-server-provider.c:3603 ../libgda/gda-server-provider.c:3614
-#| msgid "Connection does not support distributed transaction"
 msgid "Database provider does not support distributed transactions"
 msgstr "Penyedia basis data tak mendukung transaksi terdistribusi"
 
@@ -3254,6 +3249,18 @@ msgstr ""
 msgid "UPDATE statement does not have any target columns to update"
 msgstr "Pernyataan UPDATE tak memiliki kolom target yang akan diperbarui"
 
+#: ../libgda/thread-wrapper/gda-connect.c:276
+#, c-format
+#| msgid "Could not find dataset named '%s'"
+msgid "Could not find signal named \"%s\""
+msgstr "Tak bisa temukan sinyal bernama \"%s\""
+
+#: ../libgda/thread-wrapper/gda-connect.c:326
+#, c-format
+#| msgid "Could not find table '%s.%s'"
+msgid "Could not find handler %lu"
+msgstr "Tak bisa temukan penangan %lu"
+
 #: ../libgda/thread-wrapper/gda-worker.c:170
 msgid ""
 "Possible memory leak as no destroy function provided to free value returned "
@@ -3265,7 +3272,6 @@ msgstr ""
 #: ../libgda/thread-wrapper/gda-worker.c:508
 #: ../libgda/thread-wrapper/gda-worker.c:573
 #, c-format
-#| msgid "Unknown part ID %u"
 msgid "Unknown requested job %u"
 msgstr "Tugas %u yang diminta tak dikenal"
 
@@ -3287,7 +3293,6 @@ msgstr "Tugas %u belum diproses"
 
 #: ../libgda/thread-wrapper/gda-worker.c:583
 #, c-format
-#| msgid "A transaction has already been started"
 msgid "Job %u has already been processed"
 msgstr "Tugas %u telah sedang diproses"
 
@@ -3298,7 +3303,6 @@ msgstr "Tak bisa membangun perangkat komunikasi antar thread"
 
 #: ../libgda/thread-wrapper/gda-worker.c:732
 #, c-format
-#| msgid "Internal error"
 msgid "GdaWorker internal error"
 msgstr "Galat internal GdaWorker"
 
@@ -3882,15 +3886,6 @@ msgstr "Demo Kode Libgda-ui"
 
 #: ../libgda-ui/demos/main.c:869
 #, c-format
-#| msgid ""
-#| "<b><big>Note:\n"
-#| "</big></b>Many of the demonstrated items use an\n"
-#| "opened connection to the SQLite using the\n"
-#| "'%s' file.\n"
-#| "\n"
-#| "In the source code shown here, the <i>demo_cnc</i> and \n"
-#| "<i>demo_parser</i> objects are created by the framework and\n"
-#| "made available to all the demonstrated items."
 msgid ""
 "<b><big>Note:\n"
 "</big></b>Many of the demonstrated items use an opened connection to the "
@@ -7572,7 +7567,6 @@ msgstr "Koneksi sukses dibuka!\n"
 
 #: ../testing/gda-test-connection.c:109
 #, c-format
-#| msgid "Can't open connection %d: %s\n"
 msgid "Can't close connection: %s\n"
 msgstr "Tak bisa menutup koneksi: %s\n"
 
