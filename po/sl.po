@@ -11,15 +11,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2014-02-26 10:17+0000\n"
-"PO-Revision-Date: 2014-02-26 19:15+0100\n"
+"PO-Revision-Date: 2014-02-28 22:46+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.5.4\n"
 
@@ -2102,6 +2101,8 @@ msgstr ""
 msgid ""
 "You need to define a GMainContext using gda_connection_set_main_context()"
 msgstr ""
+"Določiti je treba predmet GMainContext z uporabo "
+"gda_connection_set_main_context()"
 
 #: ../libgda/gda-server-provider.c:2715 ../libgda/gda-server-provider.c:2727
 #: ../libgda/gda-server-provider.c:2739 ../libgda/gda-server-provider.c:2751
@@ -3275,6 +3276,8 @@ msgid ""
 "Possible memory leak as no destroy function provided to free value returned "
 "by the worker thread"
 msgstr ""
+"Morda je prišlo do napake pomnilnika, ker ni podana funkcija počiščenja "
+"proste vrednosti, ki jo je vrnila delovna nit"
 
 #: ../libgda/thread-wrapper/gda-worker.c:508
 #: ../libgda/thread-wrapper/gda-worker.c:573
@@ -3304,9 +3307,9 @@ msgid "Job %u has already been processed"
 msgstr "Posel %u je že izveden."
 
 #: ../libgda/thread-wrapper/gda-worker.c:723
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot build inter thread communication device"
-msgstr "Ni mogoče izgraditi naprave za "
+msgstr "Ni mogoče izgraditi naprave za upravljanje niti"
 
 #: ../libgda/thread-wrapper/gda-worker.c:732
 #, c-format
@@ -3894,7 +3897,7 @@ msgid "Libgda-ui Code Demos"
 msgstr "Demo libgda-UI kode"
 
 #: ../libgda-ui/demos/main.c:869
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "<b><big>Note:\n"
 "</big></b>Many of the demonstrated items use an opened connection to the "
@@ -3913,7 +3916,10 @@ msgstr ""
 "'%s'.\n"
 "\n"
 "V prikazani predstavitvi <i>demo_cnc</i> in <i>demo_parser</i> predmetov so "
-"na voljo povezave pri vseh teh predmetih."
+"na voljo povezave pri vseh teh predmetih.\n"
+"\n"
+"Za prikaz delovanja klicev je na vrhu vrteča ikona (ki ne sme biti pri "
+"miru), dodan pa je tudi 1 sekundni zami, kadar je povezava v uporabi."
 
 #: ../libgda-ui/gdaui-basic-form.c:291
 msgid ""
