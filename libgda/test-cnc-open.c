@@ -25,7 +25,6 @@ static guint test3 (void);
 static guint test4 (void);
 static guint test5 (void);
 
-
 int main(int argc, const char *argv[])
 {
 	gda_init ();
@@ -267,8 +266,22 @@ test4 (void)
 	return opened ? 1 : 0;
 }
 
+static void
+t5_status_changed_cb (GdaConnection *cnc, GdaConnectionStatus status, guint *nsignals)
+{
+	gchar *status_str[] = {
+		"CLOSED",
+		"OPENING",
+		"IDLE",
+		"BUSY",
+		"CLOSING"
+	};
+	g_print ("Cnc status changed to %s\n", status_str [status]);
+	(*nsignals) ++;
+}
+
 /*
- * Test 5: open, close and open again
+ * Test 5: open, close and open again, also tests signal's emission
  */
 static guint
 test5 (void)
@@ -283,6 +296,10 @@ test5 (void)
 		g_print ("gda_connection_new_from_string() failed: %s\n", error && error->message ? error->message : "No detail");
 		return 1;
 	}
+
+	guint nsignals = 0;
+	g_signal_connect (cnc, "status-changed",
+			  G_CALLBACK (t5_status_changed_cb), &nsignals);
 
 	guint counter = 0;
 	setup_main_context (cnc, &counter);
@@ -326,6 +343,11 @@ test5 (void)
 		g_print ("Counter incremented to %u\n", counter);
 
 	g_object_unref (cnc);
+
+	if (nsignals != 8) {
+		g_print ("Expected %d signals and got %d\n", 8, nsignals);
+		return 1;
+	}
 
 	return 0;
 }

@@ -85,23 +85,10 @@ typedef enum {
  * By default these functions will block, unless you speficy a #GMainContext from which events will be processed
  * while opening the connection using gda_connection_set_main_context().
  *
- * Use the connection object to execute statements, use transactions, get meta data information, ...
- *
- * If supported by the database provider being used, statements can be executed asynchronously instead of
- * blocking the execution thread untill the execution of a statement is finished. Each database provider
- * is free to implement this feature as it wishes (using the API or using threads). The steps involved to
- * execute a statement are then:
- * <itemizedlist>
- *   <listitem><para>Request the statement execution using
- *	<link linkend="gda-connection-async-statement-execute">gda_connection_async_statement_execute() which returns an
- *	  execution ID to be used to identify a specific request</link></para></listitem>
- *   <listitem><para>Do some useful things (that is why async. statements' excution are for)</para></listitem>
- *   <listitem><para>Use one or more times 
- *	<link linkend="gda-connection-async-fetch-result">gda_connection_async_fetch_result()</link> to see
- *	if the execution is finished, using the request ID</para></listitem>
- *   <listitem><para>Use <link linkend="gda-connection-async-cancel">gda_connection_async_cancel()</link> to cancel
- * the execution of a statement</para></listitem>
- * </itemizedlist>
+ * The same gda_connection_set_main_context() allows the program to still handle events while a
+ * potentially blocking operation (such as executing a statement) is being carried out (this is a change compared to the
+ * #GdaConnection object in Libgda versions before 6.x, where asynchronous execution was featured
+ * using a set of specific functions like gda_connection_async_statement_execute()).
  *
  * The #GdaConnection object implements its own locking mechanism so it is thread-safe. If a #GMainContext has been
  * specified using gda_connection_set_main_context(), then the events will continue to be processed while the
@@ -113,16 +100,43 @@ struct _GdaConnection {
 	GdaConnectionPrivate *priv;
 };
 
+/**
+ * GdaConnectionStatus:
+ * @GDA_CONNECTION_STATUS_CLOSED: the connection is closed (default status upon creation)
+ * @GDA_CONNECTION_STATUS_OPENING: the connection is currently being opened
+ * @GDA_CONNECTION_STATUS_IDLE: the connection is opened but not currently used
+ * @GDA_CONNECTION_STATUS_BUSY: the connection is opened and currently being used
+ *
+ * Indicates the current status of a connection. The possible status and the transitions between those status
+ * are indicated in the diagram below:
+ *  <mediaobject>
+ *    <imageobject role="html">
+ *      <imagedata fileref="connection-status.png" format="PNG" contentwidth="50mm"/>
+ *    </imageobject>
+ *    <textobject>
+ *      <phrase>GdaConnection's status and transitions between different status</phrase>
+ *    </textobject>
+ *  </mediaobject>
+ */
+typedef enum {
+	GDA_CONNECTION_STATUS_CLOSED,
+	GDA_CONNECTION_STATUS_OPENING,
+	GDA_CONNECTION_STATUS_IDLE,
+	GDA_CONNECTION_STATUS_BUSY
+} GdaConnectionStatus;
+
 struct _GdaConnectionClass {
 	GObjectClass          object_class;
 
 	/* signals */
+	void   (*status_changed)            (GdaConnection *obj, GdaConnectionStatus status);
 	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
         void   (*conn_opened)               (GdaConnection *obj);
         void   (*conn_to_close)             (GdaConnection *obj);
         void   (*conn_closed)               (GdaConnection *obj);
 	void   (*dsn_changed)               (GdaConnection *obj);
 	void   (*transaction_status_changed)(GdaConnection *obj);
+
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -267,6 +281,7 @@ guint                gda_connection_open_async           (GdaConnection *cnc, Gd
 
 gboolean             gda_connection_close                (GdaConnection *cnc, GError **error);
 gboolean             gda_connection_is_opened            (GdaConnection *cnc);
+GdaConnectionStatus  gda_connection_get_status           (GdaConnection *cnc);
 
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 

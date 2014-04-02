@@ -105,6 +105,7 @@ gda_connection_event_get_type
 <FILE>gda-connection</FILE>
 <TITLE>GdaConnection</TITLE>
 GdaConnection
+GdaConnectionStatus
 GdaConnectionOptions
 GdaConnectionError
 GDA_CONNECTION_ERROR
@@ -116,6 +117,7 @@ gda_connection_open_async
 gda_connection_close
 gda_connection_close_no_warning
 gda_connection_is_opened
+gda_connection_get_status
 <SUBSECTION>
 gda_connection_set_main_context
 gda_connection_get_main_context

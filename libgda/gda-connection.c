@@ -101,6 +101,9 @@ struct _GdaConnectionPrivate {
 	gint                  events_array_next;
 	GList                *events_list; /* for API compat */
 
+	GdaConnectionStatus   status;
+	guint                 batch_status;
+
 	GdaTransactionStatus *trans_status;
 	GHashTable           *prepared_stmts;
 
@@ -149,10 +152,11 @@ enum {
         CONN_CLOSED,
 	DSN_CHANGED,
 	TRANSACTION_STATUS_CHANGED,
+	STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
+static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0, 0 };
 
 /* properties */
 enum
@@ -298,6 +302,25 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
 
+	/**
+	 * GdaConnection::status-changed:
+	 * @cnc: the #GdaConnection
+	 * @status: the new connection status
+	 *
+	 * Gets emitted when the @cnc's status has changed (usually when a the connection is being used to execute
+	 * a statement)
+	 *
+	 * Since: 6.0
+	 */
+	gda_connection_signals[STATUS_CHANGED] =
+		g_signal_new ("status-changed",
+			      G_TYPE_FROM_CLASS (object_class),
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaConnectionClass, status_changed),
+			      NULL, NULL,
+			      _gda_marshal_VOID__ENUM,
+			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_STATUS);
+
 	/* Properties */
         object_class->set_property = gda_connection_set_property;
         object_class->get_property = gda_connection_get_property;
@@ -436,6 +459,8 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	cnc->priv->events_array = g_new0 (GdaConnectionEvent*, EVENTS_ARRAY_SIZE);
 	cnc->priv->events_array_full = FALSE;
 	cnc->priv->events_array_next = 0;
+	cnc->priv->status = GDA_CONNECTION_STATUS_CLOSED;
+	cnc->priv->batch_status = 0;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 	cnc->priv->prepared_stmts = NULL;
 
@@ -777,8 +802,10 @@ gda_connection_get_property (GObject *object,
  * @context: (allow-none): a #GMainContext, or %NULL
  *
  * Defines the #GMainContext which will still process events while a potentially blocking operation is performed.
+ *
  * For exemple if there is a GUI which needs to continue to handle events, then you can use this function to pass
  * the default #GMainContext used for the UI refreshing, for example:
+ *
  * <programlisting><![CDATA[GMainContext *context;
  * cnc = gda_connection_new_...;
  * context = g_main_context_ref_thread_default ();
@@ -789,7 +816,8 @@ gda_connection_get_property (GObject *object,
  *     ...
  * ]]></programlisting>
  *
- * If @context is %NULL, then potentially blocking operation will actually block any event from being processed.
+ * If @context is %NULL, then potentially blocking operation will actually block any event from being processed
+ * while the blocking operation is being performed.
  *
  * Since: 6.0
  */
@@ -1563,6 +1591,117 @@ guint
 _gda_connection_get_exec_slowdown (GdaConnection *cnc)
 {
 	return cnc->priv->exec_slowdown;
+}
+
+static void
+assert_status_transaction (GdaConnectionStatus old, GdaConnectionStatus new)
+{
+	if (old == new)
+		return;
+	switch (old) {
+	case GDA_CONNECTION_STATUS_CLOSED:
+		g_assert (new == GDA_CONNECTION_STATUS_OPENING);
+		break;
+	case GDA_CONNECTION_STATUS_OPENING:
+		g_assert ((new == GDA_CONNECTION_STATUS_IDLE) || (new == GDA_CONNECTION_STATUS_CLOSED));
+		break;
+	case GDA_CONNECTION_STATUS_IDLE:
+		g_assert ((new == GDA_CONNECTION_STATUS_BUSY) || (new == GDA_CONNECTION_STATUS_CLOSED));
+		break;
+	case GDA_CONNECTION_STATUS_BUSY:
+		g_assert ((new == GDA_CONNECTION_STATUS_IDLE) || (new == GDA_CONNECTION_STATUS_CLOSED));
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+}
+
+/*
+ * _gda_connection_set_status:
+ *
+ * Set @cnc's new status, may emit the "status-changed" signal along the way
+ *
+ * WARNING: @cnc _MUST_ be locked before this function is called
+ */
+void
+_gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
+{
+	if (!cnc || (status == cnc->priv->status))
+		return;
+
+	if ((cnc->priv->batch_status > 0) &&
+	    (status != GDA_CONNECTION_STATUS_CLOSED))
+		return;
+
+	assert_status_transaction (cnc->priv->status, status);
+	cnc->priv->batch_status = 0;
+	cnc->priv->status = status;
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
+	if (status == GDA_CONNECTION_STATUS_CLOSED)
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_CLOSED], 0, status);
+}
+
+/*
+ * _gda_connection_status_start_batch:
+ *
+ * This function ensures that the connection's status is set and remains to @status, except for the CLOSED
+ * status.
+ *
+ * To cancel the effect, use _gda_connection_status_stop_batch().
+ */
+void
+_gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus status)
+{
+	cnc->priv->batch_status++;
+	if (cnc->priv->status != status) {
+		assert_status_transaction (cnc->priv->status, status);
+		cnc->priv->status = status;
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
+	}
+}
+
+/*
+ * _gda_connection_status_stop_batch:
+ *
+ * See _gda_connection_status_start_batch().
+ *
+ * This functions ensures that the connections's status is IDLE.
+ */
+void
+_gda_connection_status_stop_batch (GdaConnection *cnc)
+{
+	if (cnc->priv->batch_status == 0)
+		return;
+
+	cnc->priv->batch_status --;
+	if (cnc->priv->status != GDA_CONNECTION_STATUS_IDLE) {
+		assert_status_transaction (cnc->priv->status, GDA_CONNECTION_STATUS_IDLE);
+		cnc->priv->status = GDA_CONNECTION_STATUS_IDLE;
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, GDA_CONNECTION_STATUS_IDLE);
+	}
+}
+
+
+/**
+ * gda_connection_get_status:
+ * @cnc: a #GdaConnection
+ *
+ * Get the current status of @cnc. Note that this function needs to lock the connection (see #GdaLockable)
+ * to obtain the result.
+ *
+ * Returns: the connection's status
+ *
+ * Since: 6.0
+ */
+GdaConnectionStatus
+gda_connection_get_status (GdaConnection *cnc)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), GDA_CONNECTION_STATUS_CLOSED);
+	GdaConnectionStatus status;
+	gda_connection_lock ((GdaLockable*) cnc);
+	status = cnc->priv->status;
+	gda_connection_unlock ((GdaLockable*) cnc);
+	return status;
 }
 
 /**

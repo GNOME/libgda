@@ -131,6 +131,7 @@
 	gda_connection_get_prepared_statement
 	gda_connection_get_provider
 	gda_connection_get_provider_name
+	gda_connection_get_status
 	gda_connection_get_transaction_status
 	gda_connection_get_type
 	gda_connection_insert_row_into_table
