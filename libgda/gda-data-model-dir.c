@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -31,10 +31,6 @@
 #ifdef HAVE_GIO
 #include <gio/gio.h>
 #endif
-
-/* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
-#include "global.h"
-#include "md5.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -529,22 +525,10 @@ update_file_md5sum (FileRow *row, const gchar *complete_filename)
 	}
 #endif /* !G_OS_WIN32 */
 
-	/* MD5 computation */
-	MD5_CTX context;
-	unsigned char digest[16]; /* Flawfinder: ignore */
-	GString *md5str;
-	gint i;
-
-	MD5Init (&context);
-	MD5Update (&context, map, length);
-	MD5Final (digest, &context);
-
-	md5str = g_string_new ("");
-	for (i = 0; i < 16; i++)
-		g_string_append_printf (md5str, "%02x", digest[i]);
+	gchar *md5str;
+	md5str = g_compute_checksum_for_data (G_CHECKSUM_MD5, map, length);
 	value = gda_value_new (G_TYPE_STRING);
-	g_value_take_string (value, md5str->str);
-	g_string_free (md5str, FALSE);
+	g_value_take_string (value, md5str);
 
 #ifndef G_OS_WIN32
 	munmap (map, length);

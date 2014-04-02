@@ -24,98 +24,23 @@
 #include <string.h>
 #include "../reuseable/reuse-all.h"
 
-/* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
-#include "global.h"
-#include "md5.h"
-
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
 #endif
 
-#define PAD_LEN 64  /* PAD length */
-#define SIG_LEN 16  /* MD5 digest length */
-/*
- * From RFC 2104
- */
-static void
-hmac_md5 (uint8_t*  text,            /* pointer to data stream */
-	  int   text_len,            /* length of data stream */
-	  uint8_t*  key,             /* pointer to authentication key */
-	  int   key_len,             /* length of authentication key */
-	  uint8_t  *hmac)            /* returned hmac-md5 */
-{
-	MD5_CTX md5c;
-	uint8_t k_ipad[PAD_LEN];    /* inner padding - key XORd with ipad */
-	uint8_t k_opad[PAD_LEN];    /* outer padding - key XORd with opad */
-	uint8_t keysig[SIG_LEN];
-	int i;
-
-	/* if key is longer than PAD length, reset it to key=MD5(key) */
-	if (key_len > PAD_LEN) {
-		MD5_CTX md5key;
-
-		MD5Init (&md5key);
-		MD5Update (&md5key, key, key_len);
-		MD5Final (keysig, &md5key);
-
-		key = keysig;
-		key_len = SIG_LEN;
-	}
-
-	/*
-	 * the HMAC_MD5 transform looks like:
-	 *
-	 * MD5(Key XOR opad, MD5(Key XOR ipad, text))
-	 *
-	 * where Key is an n byte key
-	 * ipad is the byte 0x36 repeated 64 times
-
-	 * opad is the byte 0x5c repeated 64 times
-	 * and text is the data being protected
-	 */
-
-	/* Zero pads and store key */
-	memset (k_ipad, 0, PAD_LEN);
-	memcpy (k_ipad, key, key_len);
-	memcpy (k_opad, k_ipad, PAD_LEN);
-
-	/* XOR key with ipad and opad values */
-	for (i=0; i<PAD_LEN; i++) {
-		k_ipad[i] ^= 0x36;
-		k_opad[i] ^= 0x5c;
-	}
-
-	/* perform inner MD5 */
-	MD5Init (&md5c);                    /* start inner hash */
-	MD5Update (&md5c, k_ipad, PAD_LEN); /* hash inner pad */
-	MD5Update (&md5c, text, text_len);  /* hash text */
-	MD5Final (hmac, &md5c);             /* store inner hash */
-
-	/* perform outer MD5 */
-	MD5Init (&md5c);                    /* start outer hash */
-	MD5Update (&md5c, k_opad, PAD_LEN); /* hash outer pad */
-	MD5Update (&md5c, hmac, SIG_LEN);   /* hash inner hash */
-	MD5Final (hmac, &md5c);             /* store results */
-}
-
 static gboolean
 check_hash (const gchar *key, const gchar *data, const gchar *expected_hash)
 {
-	uint8_t hmac[16];
-	GString *md5str;
-	gint i;
 	gboolean retval = TRUE;
+	gchar *md5str;
+
+	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, key, strlen (key),
+					    data, -1);
 	
-	hmac_md5 ((uint8_t *) data, strlen (data),
-		  (uint8_t *) key, strlen (key), hmac);
-	md5str = g_string_new ("");
-	for (i = 0; i < 16; i++)
-		g_string_append_printf (md5str, "%02x", hmac[i]);
-	
-	if (strcmp (md5str->str, expected_hash))
+	if (strcmp (md5str, expected_hash))
 		retval = FALSE;	
 	
-	g_string_free (md5str, TRUE);
+	g_free (md5str);
 	return retval;
 }
 
@@ -445,18 +370,16 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 
 	/* finalize and send message */
  	if (hash_key) {
-		uint8_t hmac[16];
-		GString *md5str;
-		gint i;
-		
-		hmac_md5 ((uint8_t *) message, strlen (message),
-			  (uint8_t *) hash_key, strlen (hash_key), hmac);
-		md5str = g_string_new ("");
-		for (i = 0; i < 16; i++)
-			g_string_append_printf (md5str, "%02x", hmac[i]);
-		g_string_append_c (md5str, '\n');
-		g_string_append (md5str, message);
-		h_message = g_string_free (md5str, FALSE);
+		gchar *md5str;
+		md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, hash_key, strlen (hash_key),
+						    message, -1);
+
+		GString *string;
+		string = g_string_new (md5str);
+		g_free (md5str);
+		g_string_append_c (string, '\n');
+		g_string_append (string, message);
+		h_message = g_string_free (string, FALSE);
 	}
 	else
 		h_message = g_strdup_printf ("NOHASH\n%s", message);
@@ -523,19 +446,12 @@ _gda_web_decode_response (GdaConnection *cnc, WebConnectionData *cdata, SoupMess
 gchar *
 _gda_web_compute_token (WebConnectionData *cdata)
 {
-	uint8_t hmac[16];
-	GString *md5str;
-	gint i;
-	
 	g_return_val_if_fail (cdata->next_challenge && cdata->key, NULL);
 
-	hmac_md5 ((uint8_t *) cdata->next_challenge, strlen (cdata->next_challenge),
-		  (uint8_t *) cdata->key, strlen (cdata->key), hmac);
-	md5str = g_string_new ("");
-	for (i = 0; i < 16; i++)
-		g_string_append_printf (md5str, "%02x", hmac[i]);
-	
-	return g_string_free (md5str, FALSE);
+	gchar *md5str;
+	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, cdata->key, strlen (cdata->key),
+					    cdata->next_challenge, -1);	
+	return md5str;
 }
 
 /*

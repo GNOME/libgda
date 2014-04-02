@@ -40,10 +40,6 @@
 #include "gda-web-util.h"
 #include <libgda/gda-debug-macros.h>
 
-/* Use the RSA reference implementation included in the RFC-1321, http://www.freesoft.org/CIE/RFC/1321/ */
-#include "global.h"
-#include "md5.h"
-
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*
@@ -482,18 +478,10 @@ gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	/*
 	 * change key: cdata->key = MD5(cdata->key)
 	 */
-	MD5_CTX md5c;
-	unsigned char digest[16];
-	GString *md5str;
-        gint i;
-	MD5Init (&md5c);
-        MD5Update (&md5c, (unsigned char *) cdata->key, strlen (cdata->key));
-        MD5Final (digest, &md5c);
-	md5str = g_string_new ("");
-        for (i = 0; i < 16; i++)
-                g_string_append_printf (md5str, "%02x", digest[i]);
+	gchar *md5str;
+	md5str = g_compute_checksum_for_data (G_CHECKSUM_MD5, cdata->key, strlen (cdata->key));
 	g_free (cdata->key);
-	cdata->key = g_string_free (md5str, FALSE);
+	cdata->key = md5str;
 
 	return TRUE;
 }

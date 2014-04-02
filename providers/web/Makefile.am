@@ -26,9 +26,6 @@ libgda_web_la_SOURCES = \
 	gda-web-util.h \
 	gda-web-util.c \
 	gda-web.h \
-	$(top_srcdir)/libgda/global.h \
-	$(top_srcdir)/libgda/md5.h \
-	$(top_srcdir)/libgda/md5c.c \
 	libmain.c
 
 libgda_web_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)

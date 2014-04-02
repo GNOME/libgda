@@ -191,9 +191,6 @@ libgda_sources =  \
 	gda-types.c \
 	gda-types.h \
 	gda-statement-priv.h \
-	global.h \
-	md5.h \
-	md5c.c \
 	$(gda_built_sources) \
 	$(gda_sources)
 
