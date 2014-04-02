@@ -2,7 +2,7 @@
  * Copyright (C) 2000 - 2001 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Andrew Hill <andru@src.gnome.org>
  * Copyright (C) 2002 Cleber Rodrigues <cleberrrjr@bol.com.br>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
@@ -74,9 +74,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-static GMutex parser_mutex;
+static GMutex global_mutex;
 static GdaSqlParser *internal_parser = NULL;
-static GMainContext *all_context = NULL;
+static GHashTable *all_context_hash = NULL; /* key = a #GThread, value = a #GMainContext (ref held) */
 
 /* number of GdaConnectionEvent kept by each connection. Should be enough to avoid losing any
  * event, considering that the events are reseted after each statement execution */
@@ -89,7 +89,7 @@ struct _GdaConnectionPrivate {
 	gchar                *cnc_string;
 	gchar                *auth_string;
 
-	GMainContext         *context;
+	GHashTable           *context_hash; /* key = a #GThread, value = a #GMainContext (ref held) */
 
 	GdaMetaStore         *meta_store;
 
@@ -104,6 +104,7 @@ struct _GdaConnectionPrivate {
 	GHashTable           *prepared_stmts;
 
 	GdaServerProviderConnectionData *provider_data;
+	GThread              *worker_thread; /* no ref held, used only for comparisons */
 
 	/* multi threading locking */
 	GMutex                object_mutex;
@@ -404,6 +405,12 @@ gda_connection_lockable_init (GdaLockableIface *iface)
 }
 
 static void
+all_context_hash_func (GThread *key, GMainContext *context, GHashTable *copyto)
+{
+	g_hash_table_insert (copyto, key, g_main_context_ref (context));
+}
+
+static void
 gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass)
 {
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
@@ -415,10 +422,14 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	cnc->priv->dsn = NULL;
 	cnc->priv->cnc_string = NULL;
 	cnc->priv->auth_string = NULL;
-	if (all_context)
-		cnc->priv->context = g_main_context_ref (all_context);
+	if (all_context_hash) {
+		g_mutex_lock (&global_mutex);
+		cnc->priv->context_hash = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify) g_main_context_unref);
+		g_hash_table_foreach (all_context_hash, (GHFunc) all_context_hash_func, cnc->priv->context_hash);
+		g_mutex_unlock (&global_mutex);
+	}
 	else
-		cnc->priv->context = NULL;
+		cnc->priv->context_hash = NULL;
 	cnc->priv->auto_clear_events = TRUE;
 	cnc->priv->events_array_size = EVENTS_ARRAY_SIZE;
 	cnc->priv->events_array = g_new0 (GdaConnectionEvent*, EVENTS_ARRAY_SIZE);
@@ -429,6 +440,7 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 
 	cnc->priv->trans_meta_context = NULL;
 	cnc->priv->provider_data = NULL;
+	cnc->priv->worker_thread = NULL;
 
 	cnc->priv->exec_times = FALSE;
 	cnc->priv->exec_slowdown = 0;
@@ -446,9 +458,9 @@ gda_connection_dispose (GObject *object)
 	/* free memory */
 	_gda_connection_close_no_warning (cnc, NULL);
 
-	if (cnc->priv->context) {
-		g_main_context_unref (cnc->priv->context);
-		cnc->priv->context = NULL;
+	if (cnc->priv->context_hash) {
+		g_hash_table_destroy (cnc->priv->context_hash);
+		cnc->priv->context_hash = NULL;
 	}
 
 	/* get rid of prepared statements to avoid problems */
@@ -760,6 +772,7 @@ gda_connection_get_property (GObject *object,
 /**
  * gda_connection_set_main_context:
  * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @thread: (allow-none): the #GThread in which @context will be used, or %NULL (for the current thread)
  * @context: (allow-none): a #GMainContext, or %NULL
  *
  * Defines the #GMainContext which will still process events while a potentially blocking operation is performed.
@@ -768,7 +781,7 @@ gda_connection_get_property (GObject *object,
  * <programlisting><![CDATA[GMainContext *context;
  * cnc = gda_connection_new_...;
  * context = g_main_context_ref_thread_default ();
- * gda_connection_set_main_context (cnc, context);
+ * gda_connection_set_main_context (cnc, NULL, context);
  * g_main_context_unref (context);
  * GError *error = NULL;
  * if (! gda_connection_open (cnc, &error))
@@ -780,38 +793,46 @@ gda_connection_get_property (GObject *object,
  * Since: 6.0
  */
 void
-gda_connection_set_main_context (GdaConnection *cnc, GMainContext *context)
+gda_connection_set_main_context (GdaConnection *cnc, GThread *thread, GMainContext *context)
 {
+	if (!thread)
+		thread = g_thread_self ();
+
+	g_mutex_lock (&global_mutex);
+
 	if (cnc) {
 		g_return_if_fail (GDA_IS_CONNECTION (cnc));
-		if (cnc->priv->context == context)
-			return;
-
-		gda_connection_lock ((GdaLockable*) cnc);
-		if (cnc->priv->context) {
-			g_main_context_unref (cnc->priv->context);
-			cnc->priv->context = NULL;
+		if (context) {
+			if (! cnc->priv->context_hash)
+				cnc->priv->context_hash = g_hash_table_new_full (NULL, NULL, NULL,
+										 (GDestroyNotify) g_main_context_unref);
+			g_main_context_ref (context);
+			g_hash_table_insert (cnc->priv->context_hash, thread, g_main_context_ref (context));
+			g_main_context_unref (context);
 		}
-		if (context)
-			cnc->priv->context = g_main_context_ref (context);
-		gda_connection_unlock ((GdaLockable*) cnc);
+		else if (cnc->priv->context_hash)
+			g_hash_table_remove (cnc->priv->context_hash, thread);
 	}
 	else {
-		if (all_context == context)
-			return;
-
-		if (all_context) {
-			g_main_context_unref (all_context);
-			all_context = NULL;
+		if (context) {
+			if (! all_context_hash)
+				all_context_hash = g_hash_table_new_full (NULL, NULL, NULL,
+									  (GDestroyNotify) g_main_context_unref);
+			g_main_context_ref (context);
+			g_hash_table_insert (all_context_hash, thread, g_main_context_ref (context));
+			g_main_context_unref (context);
 		}
-		if (context)
-			all_context = g_main_context_ref (context);
+		else if (all_context_hash)
+			g_hash_table_remove (all_context_hash, thread);
 	}
+
+	g_mutex_unlock (&global_mutex);
 }
 
 /**
  * gda_connection_get_main_context:
  * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @thread: (allow-none): the #GThread in which @context will be used, or %NULL (for the current thread)
  *
  * Get the #GMainContext used while a potentially blocking operation is performed, see gda_connection_set_main_context().
  * If no main context has been defined, then some function calls (for example connection opening) may block until the
@@ -822,14 +843,28 @@ gda_connection_set_main_context (GdaConnection *cnc, GMainContext *context)
  * Since: 6.0
  */
 GMainContext *
-gda_connection_get_main_context (GdaConnection *cnc)
+gda_connection_get_main_context (GdaConnection *cnc, GThread *thread)
 {
+	if (!thread)
+		thread = g_thread_self ();
+
+	GMainContext *context = NULL;
+
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		return cnc->priv->context;
+		g_mutex_lock (&global_mutex);
+		if (cnc->priv->context_hash)
+			context = g_hash_table_lookup (cnc->priv->context_hash, thread);
+		g_mutex_unlock (&global_mutex);
 	}
-	else
-		return all_context;
+	else {
+		g_mutex_lock (&global_mutex);
+		if (all_context_hash)
+			context = g_hash_table_lookup (cnc->priv->context_hash, thread);
+		g_mutex_unlock (&global_mutex);
+	}
+
+	return context;
 }
 
 /*
@@ -2893,10 +2928,10 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
 			      || g_str_has_prefix (sql, "SELECT"),
 			      NULL);
 
-	g_mutex_lock (&parser_mutex);
+	g_mutex_lock (&global_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
-	g_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&global_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt)
@@ -2930,10 +2965,10 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
 			      || GDA_IS_CONNECTION (cnc)
 			      || !gda_connection_is_opened (cnc), -1);
 
-	g_mutex_lock (&parser_mutex);
+	g_mutex_lock (&global_mutex);
 	if (!internal_parser)
 		internal_parser = gda_sql_parser_new ();
-	g_mutex_unlock (&parser_mutex);
+	g_mutex_unlock (&global_mutex);
 
 	stmt = gda_sql_parser_parse_string (internal_parser, sql, NULL, error);
 	if (!stmt)
@@ -5636,6 +5671,17 @@ gda_connection_internal_set_provider_data (GdaConnection *cnc, GdaServerProvider
 		gda_connection_unlock ((GdaLockable*) cnc);
 }
 
+void
+_gda_connection_internal_set_worker_thread (GdaConnection *cnc, GThread *thread)
+{
+	g_mutex_lock (&global_mutex);
+	if (cnc->priv->worker_thread && thread)
+		g_warning ("Trying to overwriting connection's associated internal thread");
+	else
+		cnc->priv->worker_thread = thread;
+	g_mutex_unlock (&global_mutex);
+}
+
 /**
  * gda_connection_internal_get_provider_data_error: (skip)
  * @cnc: a #GdaConnection object
@@ -5679,9 +5725,9 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 		GdaConnection *scnc;
 		scnc = gda_meta_store_get_internal_connection (cnc->priv->meta_store);
 		if ((scnc != cnc) &&
-		    gda_connection_get_main_context (cnc) &&
-		    ! gda_connection_get_main_context (scnc))
-			gda_connection_set_main_context (scnc, gda_connection_get_main_context (cnc));
+		    gda_connection_get_main_context (cnc, NULL) &&
+		    ! gda_connection_get_main_context (scnc, NULL))
+			gda_connection_set_main_context (scnc, NULL, gda_connection_get_main_context (cnc, NULL));
 	}
 	g_mutex_unlock (& cnc->priv->object_mutex);
 
@@ -5705,18 +5751,6 @@ idle_trylock (TryLockData *data)
 }
 
 /*
- * This method is useful only in a multi threading environment (it has no effect in a
- * single thread program).
- * Locks @cnc for the current thread. If the lock can't be obtained, then the current thread
- * will be blocked until it can acquire @cnc's lock. 
- *
- * The cases when the connection can't be locked are:
- * <itemizedlist>
- *   <listitem><para>another thread is already using the connection</para></listitem>
- *   <listitem><para>the connection can only be used by a single thread (see the 
- *     <link linkend="GdaConnection--thread-owner">thread-owner</link> property)</para></listitem>
- * </itemizedlist>
- *
  * To avoid the thread being blocked (possibly forever if the single thread which can use the
  * connection is not the current thead), then it is possible to use gda_connection_trylock() instead.
  */
@@ -5725,21 +5759,18 @@ gda_connection_lock (GdaLockable *lockable)
 {
 	GdaConnection *cnc = (GdaConnection *) lockable;
 
-	if (cnc->priv->provider_data) {
-		/* connection is opened */
-		g_assert (cnc->priv->provider_data->worker);
-		if (gda_worker_thread_is_worker (cnc->priv->provider_data->worker))
-			/* the sitation here is that the connection _has been_ locked by the
-			 * calling thread of the GdaWorker, and as we are in the worker thread
-			 * of the GdaWorker, we don't need to lock it again: it would be useless because
-			 * by desing the connection object may be modified but only by the provider code, which
-			 * is Ok, and because it would require a very complex mechanism to "transfer the lock"
-			 * from one thread to the other */
-			return;
+	if (cnc->priv->worker_thread == g_thread_self ()) {
+		/* the sitation here is that the connection _has been_ locked by the
+		 * calling thread of the GdaWorker, and as we are in the worker thread
+		 * of the GdaWorker, we don't need to lock it again: it would be useless because
+		 * by desing the connection object may be modified but only by the provider code, which
+		 * is Ok, and because it would require a very complex mechanism to "transfer the lock"
+		 * from one thread to the other */
+		return;
 	}
 
 	GMainContext *context;
-	context = gda_connection_get_main_context (cnc);
+	context = gda_connection_get_main_context (cnc, NULL);
 	if (context) {
 		if (gda_connection_trylock (lockable))
 			return;
@@ -5754,7 +5785,7 @@ gda_connection_lock (GdaLockable *lockable)
 
 		GSource *idle;
 		idle = g_idle_source_new ();
-		g_source_set_priority (idle, G_PRIORITY_HIGH);
+		g_source_set_priority (idle, G_PRIORITY_DEFAULT);
 		g_source_attach (idle, context);
 		g_source_set_callback (idle, (GSourceFunc) idle_trylock, &lockdata, NULL);
 		g_source_unref (idle);
@@ -5777,12 +5808,9 @@ gda_connection_trylock (GdaLockable *lockable)
 {
 	GdaConnection *cnc = (GdaConnection *) lockable;
 
-	if (cnc->priv->provider_data) {
-		/* connection is opened */
-		g_assert (cnc->priv->provider_data->worker);
-		if (gda_worker_thread_is_worker (cnc->priv->provider_data->worker))
-			/* See gda_connection_lock() for explanations */
-			return TRUE;
+	if (cnc->priv->worker_thread == g_thread_self ()) {
+		/* See gda_connection_lock() for explanations */
+		return TRUE;
 	}
 
 	return g_rec_mutex_trylock (& cnc->priv->rmutex);
@@ -5797,12 +5825,9 @@ gda_connection_unlock  (GdaLockable *lockable)
 {
 	GdaConnection *cnc = (GdaConnection *) lockable;
 
-	if (cnc->priv->provider_data) {
-		/* connection is opened */
-		if (cnc->priv->provider_data->worker &&
-		    gda_worker_thread_is_worker (cnc->priv->provider_data->worker))
-			/* See gda_connection_lock() for explanations */
-			return;
+	if (cnc->priv->worker_thread == g_thread_self ()) {
+		/* See gda_connection_lock() for explanations */
+		return;
 	}
 
 	g_rec_mutex_unlock (& cnc->priv->rmutex);

@@ -799,7 +799,7 @@ main (int argc, char **argv)
 	/* set main context for connection */
 	GMainContext *context;
 	context = g_main_context_ref_thread_default ();
-	gda_connection_set_main_context (demo_cnc, context);
+	gda_connection_set_main_context (demo_cnc, NULL, context);
 	g_main_context_unref (context);
 	g_object_set (demo_cnc, "execution-slowdown", 1000000, NULL);
 

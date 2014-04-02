@@ -20,6 +20,7 @@
 #include <glib/gstdio.h>
 
 static guint test1 (void);
+static guint test2 (void);
 
 
 int main(int argc, const char *argv[])
@@ -28,6 +29,7 @@ int main(int argc, const char *argv[])
 	guint nfailed = 0;
 
 	nfailed += test1 ();
+	nfailed += test2 ();
 
 	if (nfailed > 0)
 		g_print ("Test failed %u times\n", nfailed);
@@ -43,19 +45,25 @@ idle_incr (guint *ptr)
 	return TRUE;
 }
 
+/*
+ * Pass %0 as interval to use an idle function
+ */
 static void
-setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
+setup_main_context (GdaConnection *cnc, guint interval, guint *ptr_to_incr)
 {
 	GMainContext *context;
 	GSource *idle;
 
 	context = g_main_context_new ();
-	idle = g_idle_source_new ();
+	if (interval == 0)
+		idle = g_idle_source_new ();
+	else
+		idle = g_timeout_source_new (interval);
 	g_source_set_priority (idle, G_PRIORITY_DEFAULT);
 	g_source_attach (idle, context);
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
-	gda_connection_set_main_context (cnc, context);
+	gda_connection_set_main_context (cnc, NULL, context);
 	g_main_context_unref (context);	
 }
 
@@ -84,7 +92,7 @@ test1 (void)
 	}
 
 	guint counter = 0;
-	setup_main_context (cnc, &counter);
+	setup_main_context (cnc, 0, &counter);
 
 	/* connection open */
 	if (! gda_connection_open (cnc, &error)) {
@@ -135,6 +143,101 @@ test1 (void)
 	else
 		g_print ("Counter incremented to %u\n", counter);
 
+
+	g_object_unref (cnc);
+
+	return 0;
+}
+
+/*
+ * Test 2:
+ */
+static gpointer
+test2_th (GdaConnection *cnc)
+{
+	/* setup main context */
+	guint counter = 0;
+	setup_main_context (cnc, 100, &counter);
+
+	gda_lockable_lock (GDA_LOCKABLE (cnc));
+	g_usleep (200000);
+	gda_lockable_unlock (GDA_LOCKABLE (cnc));
+	g_thread_yield ();
+
+	gda_lockable_lock (GDA_LOCKABLE (cnc));
+	g_usleep (200000);
+	gda_lockable_unlock (GDA_LOCKABLE (cnc));
+	g_thread_yield ();
+
+	gda_lockable_lock (GDA_LOCKABLE (cnc));
+	g_usleep (200000);
+	gda_lockable_unlock (GDA_LOCKABLE (cnc));
+	g_thread_yield ();
+
+	gda_lockable_lock (GDA_LOCKABLE (cnc));
+	g_usleep (200000);
+	gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+	guint *ret;
+	ret = g_new (guint, 1);
+	*ret = counter;
+	return ret;
+}
+
+static guint
+test2 (void)
+{
+	g_print ("============= %s started =============\n", __FUNCTION__);
+	GdaConnection *cnc;
+	GError *error = NULL;
+
+	gchar *cnc_string, *fname;
+        fname = g_build_filename (ROOT_DIR, "data", NULL);
+        cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=sales_test", fname);
+        g_free (fname);
+        cnc = gda_connection_new_from_string ("SQLite", cnc_string, NULL,
+					      GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
+	if (!cnc) {
+		g_print ("gda_connection_new_from_string([%s]) failed: %s\n", cnc_string,
+			 error && error->message ? error->message : "No detail");
+		g_free (cnc_string);
+		return 1;
+	}
+
+	/* connection open */
+	if (! gda_connection_open (cnc, &error)) {
+		g_print ("gda_connection_open([%s]) failed: %s\n", cnc_string,
+			 error && error->message ? error->message : "No detail");
+		g_free (cnc_string);
+		return 1;
+	}
+	g_free (cnc_string);
+
+	GThread *tha, *thb;
+
+	tha = g_thread_new ("thA", (GThreadFunc) test2_th, cnc);
+	thb = g_thread_new ("thB", (GThreadFunc) test2_th, cnc);
+	g_print ("Thread A is %p\n", tha);
+	g_print ("Thread B is %p\n", thb);
+
+	guint *counter;
+	counter = g_thread_join (tha);
+	if (*counter == 0) {
+		g_print ("Thread A: gda_connection_lock() failed: did not make GMainContext 'run'\n");
+		return 1;
+	}
+	else
+		g_print ("Thread A: Counter incremented to %u\n", *counter);
+	g_free (counter);
+
+	counter = g_thread_join (thb);
+	if (*counter == 0) {
+		g_print ("Thread B: gda_connection_lock() failed: did not make GMainContext 'run'\n");
+		return 1;
+	}
+	else
+		g_print ("Thread B: Counter incremented to %u\n", *counter);
+	g_free (counter);
 
 	g_object_unref (cnc);
 

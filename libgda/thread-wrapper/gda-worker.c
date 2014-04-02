@@ -1014,3 +1014,20 @@ gda_worker_thread_is_worker (GdaWorker *worker)
 	g_return_val_if_fail (worker, NULL);
 	return worker->worker_thread == g_thread_self () ? TRUE : FALSE;
 }
+
+/**
+ * gda_worker_get_worker_thread:
+ * @worker: a #GdaWorker
+ *
+ * Get a pointer to @worker's inner worker thread
+ *
+ * Returns: (transfer none): the #GThread
+ *
+ * Since: 6.0
+ */
+GThread *
+gda_worker_get_worker_thread (GdaWorker *worker)
+{
+	g_return_val_if_fail (worker, NULL);
+	return worker->worker_thread;
+}

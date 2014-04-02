@@ -268,8 +268,8 @@ gboolean             gda_connection_is_opened            (GdaConnection *cnc);
 
 GdaConnectionOptions gda_connection_get_options          (GdaConnection *cnc);
 
-void                 gda_connection_set_main_context     (GdaConnection *cnc, GMainContext *context);
-GMainContext        *gda_connection_get_main_context     (GdaConnection *cnc);
+void                 gda_connection_set_main_context     (GdaConnection *cnc, GThread *thread, GMainContext *context);
+GMainContext        *gda_connection_get_main_context     (GdaConnection *cnc, GThread *thread);
 
 GdaServerProvider   *gda_connection_get_provider         (GdaConnection *cnc);
 const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
@@ -369,6 +369,10 @@ GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, Gd
 							  GError **error, gint nb_filters, ...);
 GdaDataModel        *gda_connection_get_meta_store_data_v(GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GList* filters, GError **error);
+
+//void                 gda_connection_lock_with_context (GdaConnection *cnc, GMainContext *context);
+//void                 gda_connection_unlock (GdaConnection *cnc);
+
 G_END_DECLS
 
 #endif

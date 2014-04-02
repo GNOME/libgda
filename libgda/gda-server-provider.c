@@ -514,7 +514,7 @@ GMainContext *
 _gda_server_provider_get_real_main_context (GdaConnection *cnc)
 {
 	GMainContext *context;
-	context = gda_connection_get_main_context (cnc);
+	context = gda_connection_get_main_context (cnc, NULL);
 	if (context)
 		g_main_context_ref (context);
 	else
@@ -2132,7 +2132,7 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail ((cb_func && out_job_id) || (!cb_func && !out_job_id), FALSE);
 
 	GMainContext *context;
-	context = gda_connection_get_main_context (cnc);
+	context = gda_connection_get_main_context (cnc, NULL);
 	if (cb_func && !context) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_NO_MAIN_CONTEXT_ERROR,
 			     "%s", _("You need to define a GMainContext using gda_connection_set_main_context()"));
@@ -2143,6 +2143,7 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 
 	GdaWorker *worker;
 	worker = _gda_server_provider_create_worker (provider, TRUE);
+	_gda_connection_internal_set_worker_thread (cnc, gda_worker_get_worker_thread (worker));
 
 	/* define callback if not yet done */
 	if (cb_func) {
@@ -2225,6 +2226,7 @@ static void
 WorkerCloseConnectionData_free (WorkerCloseConnectionData *data)
 {
 	//g_print ("%s() th %p %s\n", __FUNCTION__, g_thread_self(), gda_worker_thread_is_worker (data->worker) ? "Thread Worker" : "NOT thread worker");
+	_gda_connection_internal_set_worker_thread (data->cnc, NULL);
 	gda_worker_unref (data->worker);
 	g_object_unref (data->cnc);
 	g_slice_free (WorkerCloseConnectionData, data);

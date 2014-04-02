@@ -23,6 +23,7 @@ static guint test1 (void);
 static guint test2 (void);
 static guint test3 (void);
 static guint test4 (void);
+static guint test5 (void);
 
 
 int main(int argc, const char *argv[])
@@ -34,6 +35,7 @@ int main(int argc, const char *argv[])
 	nfailed += test2 ();
 	nfailed += test3 ();
 	nfailed += test4 ();
+	nfailed += test5 ();
 
 	g_unlink ("test-cnc-opendb.db");
 
@@ -63,7 +65,7 @@ setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 	g_source_attach (idle, context);
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
-	gda_connection_set_main_context (cnc, context);
+	gda_connection_set_main_context (cnc, NULL, context);
 	g_main_context_unref (context);	
 }
 
@@ -136,7 +138,7 @@ test2 (void)
 	setup_main_context (cnc, &counter);
 
 	GMainLoop *loop;
-	loop = g_main_loop_new (gda_connection_get_main_context (cnc), FALSE);
+	loop = g_main_loop_new (gda_connection_get_main_context (cnc, NULL), FALSE);
 
 	guint job_id;
 	job_id = gda_connection_open_async (cnc, (GdaConnectionOpenFunc) test2_open_func, loop, &error);
@@ -236,7 +238,7 @@ test4 (void)
 	setup_main_context (cnc, &counter);
 
 	GMainLoop *loop;
-	loop = g_main_loop_new (gda_connection_get_main_context (cnc), FALSE);
+	loop = g_main_loop_new (gda_connection_get_main_context (cnc, NULL), FALSE);
 
 	guint job_id;
 	job_id = gda_connection_open_async (cnc, (GdaConnectionOpenFunc) test4_open_func, loop, &error);
@@ -263,4 +265,67 @@ test4 (void)
 		g_print ("Counter incremented to %u\n", counter);
 
 	return opened ? 1 : 0;
+}
+
+/*
+ * Test 5: open, close and open again
+ */
+static guint
+test5 (void)
+{
+	g_print ("============= %s started =============\n", __FUNCTION__);
+	GdaConnection *cnc;
+	GError *error = NULL;
+	cnc = gda_connection_new_from_string ("SQLite", "DB_NAME=test-cnc-opendb", NULL,
+					      GDA_CONNECTION_OPTIONS_AUTO_META_DATA, &error);
+
+	if (!cnc) {
+		g_print ("gda_connection_new_from_string() failed: %s\n", error && error->message ? error->message : "No detail");
+		return 1;
+	}
+
+	guint counter = 0;
+	setup_main_context (cnc, &counter);
+
+	/* open */
+	if (! gda_connection_open (cnc, &error)) {
+		g_print ("gda_connection_open() 1 failed: %s\n", error && error->message ? error->message : "No detail");
+		return 1;
+	}
+	if (counter == 0) {
+		g_print ("gda_connection_open() 1 failed: did not make GMainContext 'run'\n");
+		return 1;
+	}
+	else
+		g_print ("Counter incremented to %u\n", counter);
+
+	/* open */
+	counter = 0;
+	if (! gda_connection_close (cnc, &error)) {
+		g_print ("gda_connection_close() failed: %s\n", error && error->message ? error->message : "No detail");
+		return 1;
+	}
+	if (counter == 0) {
+		g_print ("gda_connection_close() failed: did not make GMainContext 'run'\n");
+		return 1;
+	}
+	else
+		g_print ("Counter incremented to %u\n", counter);
+
+	/* open */
+	counter = 0;
+	if (! gda_connection_open (cnc, &error)) {
+		g_print ("gda_connection_open() 2 failed: %s\n", error && error->message ? error->message : "No detail");
+		return 1;
+	}
+	if (counter == 0) {
+		g_print ("gda_connection_open() 2 failed: did not make GMainContext 'run'\n");
+		return 1;
+	}
+	else
+		g_print ("Counter incremented to %u\n", counter);
+
+	g_object_unref (cnc);
+
+	return 0;
 }

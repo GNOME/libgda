@@ -55,7 +55,7 @@ setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 	g_source_attach (idle, context);
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
-	gda_connection_set_main_context (cnc, context);
+	gda_connection_set_main_context (cnc, NULL, context);
 	g_main_context_unref (context);	
 }
 

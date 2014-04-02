@@ -106,6 +106,7 @@ gboolean   gda_worker_set_callback (GdaWorker *worker, GMainContext *context, Gd
 				    gpointer user_data, GError **error);
 
 gboolean   gda_worker_thread_is_worker (GdaWorker *worker);
+GThread   *gda_worker_get_worker_thread (GdaWorker *worker);
 
 G_END_DECLS
 
