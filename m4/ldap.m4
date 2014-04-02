@@ -52,6 +52,7 @@ dnl
 dnl   and if the ldap package is found:
 dnl
 dnl    AM_CONDITIONAL(LDAP, true)
+dnl    AC_DEFINE(HAVE_LDAP)
 dnl
 dnl
 dnl LICENSE
@@ -157,6 +158,7 @@ int main() {
             LIBGDA_LDAP_TYPE2="gda_ldap_connection_get_type"
             LIBGDA_LDAP_TYPE3="gda_tree_mgr_ldap_get_type"
     	    ldap_found=yes
+	    AC_DEFINE(HAVE_LDAP)
 	fi
     fi
 

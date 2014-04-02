@@ -12,7 +12,6 @@ noinst_LTLIBRARIES = libgda-virtual-6.0.la
 if LDAP
 GDA_LDAP_H=gda-ldap-connection.h
 GDA_LDAP_S=gda-ldap-connection.c
-DEF_FLAGS=-DHAVE_LDAP
 endif
 
 
