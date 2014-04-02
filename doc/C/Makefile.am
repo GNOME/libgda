@@ -79,7 +79,7 @@ FIXXREF_OPTIONS=
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
-EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml migration3.xml \
+EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml migration3.xml migration4.xml \
 	server-operation.xml gettingstarted.xml abstraction.xml virtual.xml virtual-notice.xml store-meta-type.xml \
 	prov-writing-virtual-methods.xml prov-writing-recordsets.xml prov-writing-blobs.xml prov-writing-parser.xml prov-writing-assembly.xml \
 	packaging.xml packaging_ui.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \

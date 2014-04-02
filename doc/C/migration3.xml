@@ -4,7 +4,7 @@
 <!ENTITY LIBGDA          "<application>Libgda</application>">
 ]>
 <chapter id="migration-3" xmlns:xi="http://www.w3.org/2003/XInclude">
-  <title>Migration from 4.X versions</title>
+  <title>Migration from 4.x versions to 5.x versions</title>
   <sect1><title>Overview</title>
     <para>Version 5.0 of &LIBGDA; is a small evolution to adapt to the GTK3 environment; as such it is API
     compatible with versions 4.0.x or 4.2.x. However there are some few behavioural changes explicited

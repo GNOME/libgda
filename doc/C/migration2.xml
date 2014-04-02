@@ -4,7 +4,7 @@
 <!ENTITY LIBGDA          "<application>Libgda</application>">
 ]>
 <chapter id="migration-2" xmlns:xi="http://www.w3.org/2003/XInclude">
-  <title>Migration from 3.X versions</title>
+  <title>Migration from 3.x versions to 4.x and 5.x versions</title>
   <sect1><title>Overview</title>
     <para>Version 4.0 of &LIBGDA; is a major rework of the library for the following benefits:
       <itemizedlist>

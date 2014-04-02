@@ -312,6 +312,7 @@
     <xi:include href="migration.xml"/>
     <xi:include href="migration2.xml"/>
     <xi:include href="migration3.xml"/>
+    <xi:include href="migration4.xml"/>
     <xi:include href="prov-notes.xml"/>
     <xi:include href="limitations.xml"/>
   </part>  

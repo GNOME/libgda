@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<chapter id="migration-4" xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Migration from 5.x versions to 6.x versions</title>
+  <sect1><title>Overview</title>
+    <para>Version 6.0 of &LIBGDA; has been driven by the desire to have a more robust and well designed
+    core library, with many small corrections accumulated over the years, and also to have a library
+    which is truely easy to use in a multi threaded environment.
+    </para>
+    <para>
+      As such there are a few API adaptations, a few renamings and quite a big part about multi threading
+      transparency.
+    </para>
+  </sect1>  
+
+  <sect1><title>GdaConnection changes</title>
+    <para>
+      This sections lists all the modifications which need to be done regarding the
+      <link linkend="GdaConnection">GdaConnection</link> object.
+    </para>
+    <sect2><title>Status signals</title>
+    <para>
+      A set of status and their possible transitions has been defined for the GdaConnection, see the
+      <link linkend="GdaConnectionStatus">GdaConnectionStatus</link> documentation.
+      <itemizedlist>
+        <listitem><para>A new <link linkend="GdaConnection-status-changed">"status-changed"</link> has been
+	introduced to signal any change in a connection's status. This signal is of course emitted withing the
+	context of the thread which provokes the status change</para></listitem>
+        <listitem><para>The "conn-opened" signal has been renamed to <link linkend="GdaConnection-opened">"opened"</link></para></listitem>
+        <listitem><para>The "conn-closed" signal has been renamed to <link linkend="GdaConnection-closed">"closed"</link></para></listitem>
+        <listitem><para>The "conn-to-close" signal has been removed because &LIBGDA; could not guarantee that it would
+	be emitted everytime (a connection can be closed without the programmer requesting it and no notification
+	can be done beforehand)</para></listitem>
+      </itemizedlist>
+    </para>
+    </sect2>
+
+    <sect2><title>Changed properties</title>
+    <para>
+      Some properties related to multi threading and which were difficult to understand have been removed:
+      <itemizedlist>
+        <listitem><para>The "thread-owner" property</para></listitem>
+        <listitem><para>The "is-wrapper" property</para></listitem>
+        <listitem><para>The "monitor-wrapped-in-mainloop" property</para></listitem>
+      </itemizedlist>
+    </para>
+    </sect2>
+
+    <sect2><title>Connection opening options</title>
+    <para>
+      Similarly to properties, the following options specified upon connection opening have been removed because
+      they have become useless as all connections are completely thread safe:
+      <itemizedlist>
+        <listitem><para>The GDA_CONNECTION_OPTIONS_THREAD_SAFE option</para></listitem>
+        <listitem><para>The GDA_CONNECTION_OPTIONS_THREAD_ISOLATED option</para></listitem>
+      </itemizedlist>
+    </para>
+    </sect2>
+
+    <sect2><title>Features to query</title>
+    <para>
+      Similarly to properties, the following features which can be queried using
+      <link linkend="gda-connection-supports-feature">gda_connection_supports_feature()</link> have been removed
+      because they have become useless as all connections support these features:
+      <itemizedlist>
+        <listitem><para>The GDA_CONNECTION_FEATURE_MULTI_THREADING feature</para></listitem>
+        <listitem><para>The GDA_CONNECTION_FEATURE_ASYNC_EXEC feature</para></listitem>
+      </itemizedlist>
+    </para>
+    </sect2>
+
+    <sect2><title>API changes</title>
+    <para>
+      This section documents most of the API changes for the <link linkend="GdaConnection">GdaConnection</link> object.
+      <itemizedlist>
+        <listitem><para>The <link linkend="gda-connection-close">gda_connection_close()</link>
+	signature has changed</para></listitem>
+        <listitem><para>The gda_connection_close_no_warning() function has been removed, it is now redundant with
+	<link linkend="gda-connection-close">gda_connection_close()</link></para></listitem>
+        <listitem><para>The gda_connection_async_cancel() function has been removed</para></listitem>
+        <listitem><para>The gda_connection_async_fetch_result() function has been removed</para></listitem>
+        <listitem><para>The gda_connection_async_statement_execute() function has been removed</para></listitem>
+        <listitem><para>The gda_connection_internal_get_provider_data() has been replaced by
+	<link linkend="gda-connection-internal-get-provider-data-error">gda_connection_internal_get_provider_data_error</link>()</para></listitem>
+        <listitem><para>The </para></listitem>
+        <listitem><para>The </para></listitem>
+        <listitem><para>The </para></listitem>
+        <listitem><para>The </para></listitem>
+        <listitem><para>The </para></listitem>
+      </itemizedlist>
+    </para>
+    </sect2>
+  </sect1>
+
+
+  <sect1><title>Multi threading and asynchronicity</title>
+  <para>
+    Until versions 5.x, multi threading handling, along with the way asynchronous operations were carried was
+    a complicated piece of engineering and had a lot of caveats. Form version 6.x on, each connection (or, if
+    not supported by the database's C API, each provider) is internally used from a specific thread, always different
+    than from the "user" threads (the threads the user of &LIBGDA; creates). The consequence is that any
+    connection can now be used by any thread the user creates.
+  </para>
+  <para>
+    Regarding asynchronicity, versions 5.x and earlier had specific APIs to cope with non locking calls. The resulting
+    code was very difficult to manage as operations were splitted into several different functions called in the
+    correct order. Starting with version 6.x, the user can pass a <link linkend="GMainContext">GMainContext</link>
+    to the <link linkend="GdaConnection">GdaConnection</link> object which is used to process pending events, and making
+    the calls non blocking. Refer to the
+    <link linkend="gda-connection-set-main-context">gda_connection_set_main_context()</link> function for more
+    information.
+  </para>
+  <para>
+    Finally the GdaThreadWrapper and the artificial GdaThreadProvider (used internally) have been removed, and
+    replaced by the <link linkend="GdaWorker">GdaWorker</link> object.
+  </para>
+  </sect1>
+
+</chapter>
