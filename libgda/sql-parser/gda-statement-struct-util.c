@@ -327,6 +327,7 @@ _string_is_identifier (const gchar *str)
  * This function is normally used only by database provider's implementation.
  *
  * WARNING: @str must NOT be a composed identifier (&lt;part1&gt;."&lt;part2&gt;" for example)
+ * WARNING: you may have to <code>#include &lt;sql-parser/gda-sql-parser.h&gt;</code>
  * 
  * Returns: @str
  *

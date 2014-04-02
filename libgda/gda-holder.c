@@ -966,6 +966,9 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
  * stored internally will be forgiven and replaced by the @value. User should then
  * take care of the 'old' static GValue.
  *
+ * Note4: in any case, the caller should not use @value anymore after this function returns because it may
+ * have been freed. If necessary, use gda_holder_get_value() to get the real value.
+ *
  * Returns: TRUE if value has been set
  */
 gboolean

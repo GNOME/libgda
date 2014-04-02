@@ -1494,7 +1494,7 @@ gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz)
  * gda_value_new: (skip)
  * @type: the new value type.
  *
- * Makes a new #GValue of type @type.
+ * Creates a new #GValue of type @type, left in the same state as when g_value_init() is called.
  *
  * Returns: (transfer full): the newly created #GValue with the specified @type. You need to set the value in the returned GValue.
  *
