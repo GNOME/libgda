@@ -486,7 +486,7 @@ files=(gtk.immodules)
 add_files_to_zip $archive_ext "${depend_path}" etc/gtk-3.0 $files
 add_found_files_to_nsh core etc/gtk-3.0
 
-files=(settings.ini)
+files=(settings.ini im-multipress.conf)
 add_files_to_zip $archive_ext . etc/gtk-3.0 $files
 add_found_files_to_nsh core etc/gtk-3.0
 
