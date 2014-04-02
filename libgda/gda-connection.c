@@ -69,6 +69,7 @@
 #include <sqlite/virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-data-handler.h>
+#include <thread-wrapper/itsignaler.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>
@@ -5734,20 +5735,35 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 	return cnc->priv->meta_store;
 }
 
+/* Note about the GdaConnection's locking mechanism:
+ * When a thread wants to lock a #GdaConnection:
+ *   - if it's the GdaWorker's thread then nothing needs to be done, and returns immediately
+ *   - otherwise try to lock the GRecMutex, and if Ok, then we are done.
+ *   - if the try_lock() did not work:
+ *     - if there is no GMainContext associated to the current thread, then block on mutex lock
+ *     - otherwise, we create a new main loop for that GMainContext and an ITSignaler source
+ *          which will receive a notification from the thread which currently
+ *          locks the GRecMutex right after it has released it.
+ *
+ *  The ITSignaler is appended to the @lock_its_list list, and removed once the lock has been
+ *  acquired by the thread
+ */
+static GSList *lock_its_list = NULL;
+
 typedef struct {
 	GdaLockable *lockable;
 	GMainLoop   *loop;
 } TryLockData;
 
 static gboolean
-idle_trylock (TryLockData *data)
+itsignaler_trylock (ITSignaler *its, TryLockData *data)
 {
 	if (gda_connection_trylock (data->lockable)) {
 		g_main_loop_quit (data->loop);
-		return FALSE; /* remove idle source */
+		return G_SOURCE_REMOVE;
 	}
 	else
-		return TRUE; /* keep idle source */
+		return G_SOURCE_CONTINUE;
 }
 
 /*
@@ -5772,10 +5788,20 @@ gda_connection_lock (GdaLockable *lockable)
 	GMainContext *context;
 	context = gda_connection_get_main_context (cnc, NULL);
 	if (context) {
-		if (gda_connection_trylock (lockable))
+		g_mutex_lock (&global_mutex);
+		if (gda_connection_trylock (lockable)) {
+			g_mutex_unlock (&global_mutex);
 			return;
+		}
 
-		/* we must process events from @context */
+		/* create ITSignaler and add it to the list */
+		ITSignaler *its;
+		its = itsignaler_new ();
+		lock_its_list = g_slist_append (lock_its_list, its);
+		/*g_print ("++ ITSigaler_len is %u\n", g_slist_length (lock_its_list));*/
+		g_mutex_unlock (&global_mutex);
+
+		/* create main loop to must process events from @context */
 		GMainLoop *loop;
 		loop = g_main_loop_new (context, FALSE);
 
@@ -5783,15 +5809,21 @@ gda_connection_lock (GdaLockable *lockable)
 		lockdata.lockable = lockable;
 		lockdata.loop = loop;
 
-		GSource *idle;
-		idle = g_idle_source_new ();
-		g_source_set_priority (idle, G_PRIORITY_DEFAULT);
-		g_source_attach (idle, context);
-		g_source_set_callback (idle, (GSourceFunc) idle_trylock, &lockdata, NULL);
-		g_source_unref (idle);
+		GSource *itsource;
+		itsource = itsignaler_create_source (its);
+		g_source_attach (itsource, context);
+		g_source_set_callback (itsource, (GSourceFunc) itsignaler_trylock, &lockdata, NULL);
+		g_source_unref (itsource);
 
 		g_main_loop_run (loop);
 		g_main_loop_unref (loop);
+
+		/* get rid of @its */
+		g_mutex_lock (&global_mutex);
+		lock_its_list = g_slist_remove (lock_its_list, its);
+		/*g_print ("-- ITSigaler_len is %u\n", g_slist_length (lock_its_list));*/
+		g_mutex_unlock (&global_mutex);
+		itsignaler_unref (its);
 	}
 	else
 		g_rec_mutex_lock (& cnc->priv->rmutex);
@@ -5830,7 +5862,15 @@ gda_connection_unlock  (GdaLockable *lockable)
 		return;
 	}
 
+	/* help other threads locking the connection */
 	g_rec_mutex_unlock (& cnc->priv->rmutex);
+	g_mutex_lock (&global_mutex);
+	if (lock_its_list) {
+		ITSignaler *its;
+		its = (ITSignaler*) lock_its_list->data;
+		itsignaler_push_notification (its, (gpointer) 0x01, NULL); /* "wake up" the waiting thread */
+	}
+	g_mutex_unlock (&global_mutex);
 }
 
 /*

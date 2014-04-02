@@ -157,25 +157,29 @@ test2_th (GdaConnection *cnc)
 {
 	/* setup main context */
 	guint counter = 0;
-	setup_main_context (cnc, 100, &counter);
-
+	setup_main_context (cnc, 10, &counter);
+#define LOCK_DELAY 50000
 	gda_lockable_lock (GDA_LOCKABLE (cnc));
-	g_usleep (200000);
+	/*g_print ("Locked by %p\n", g_thread_self());*/
+	g_usleep (LOCK_DELAY);
 	gda_lockable_unlock (GDA_LOCKABLE (cnc));
 	g_thread_yield ();
 
 	gda_lockable_lock (GDA_LOCKABLE (cnc));
-	g_usleep (200000);
+	/*g_print ("Locked by %p\n", g_thread_self());*/
+	g_usleep (LOCK_DELAY);
 	gda_lockable_unlock (GDA_LOCKABLE (cnc));
 	g_thread_yield ();
 
 	gda_lockable_lock (GDA_LOCKABLE (cnc));
-	g_usleep (200000);
+	/*g_print ("Locked by %p\n", g_thread_self());*/
+	g_usleep (LOCK_DELAY);
 	gda_lockable_unlock (GDA_LOCKABLE (cnc));
 	g_thread_yield ();
 
 	gda_lockable_lock (GDA_LOCKABLE (cnc));
-	g_usleep (200000);
+	/*g_print ("Locked by %p\n", g_thread_self());*/
+	g_usleep (LOCK_DELAY);
 	gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
 	guint *ret;
@@ -213,31 +217,28 @@ test2 (void)
 	}
 	g_free (cnc_string);
 
-	GThread *tha, *thb;
-
-	tha = g_thread_new ("thA", (GThreadFunc) test2_th, cnc);
-	thb = g_thread_new ("thB", (GThreadFunc) test2_th, cnc);
-	g_print ("Thread A is %p\n", tha);
-	g_print ("Thread B is %p\n", thb);
-
-	guint *counter;
-	counter = g_thread_join (tha);
-	if (*counter == 0) {
-		g_print ("Thread A: gda_connection_lock() failed: did not make GMainContext 'run'\n");
-		return 1;
+#define NB_THREADS 3
+	GThread *ths[NB_THREADS];
+	guint i;
+	for (i = 0; i < NB_THREADS; i++) {
+		gchar *tmp;
+		tmp = g_strdup_printf ("th%u", i);
+		ths[i] = g_thread_new (tmp, (GThreadFunc) test2_th, cnc);
+		g_free (tmp);
+		g_print ("Thread %u is %p\n", i, ths[i]);
 	}
-	else
-		g_print ("Thread A: Counter incremented to %u\n", *counter);
-	g_free (counter);
 
-	counter = g_thread_join (thb);
-	if (*counter == 0) {
-		g_print ("Thread B: gda_connection_lock() failed: did not make GMainContext 'run'\n");
-		return 1;
+	for (i = 0; i < NB_THREADS; i++) {
+		guint *counter;
+		counter = g_thread_join (ths[i]);
+		if (*counter == 0) {
+			g_print ("Thread %u: gda_connection_lock() failed: did not make GMainContext 'run'\n", i);
+			return 1;
+		}
+		else
+			g_print ("Thread %u: Counter incremented to %u\n", i, *counter);
+		g_free (counter);
 	}
-	else
-		g_print ("Thread B: Counter incremented to %u\n", *counter);
-	g_free (counter);
 
 	g_object_unref (cnc);
 

@@ -103,7 +103,9 @@ typedef enum {
  * the execution of a statement</para></listitem>
  * </itemizedlist>
  *
- * The #GdaConnection object implements its own locking mechanism so it is thread-safe.
+ * The #GdaConnection object implements its own locking mechanism so it is thread-safe. If a #GMainContext has been
+ * specified using gda_connection_set_main_context(), then the events will continue to be processed while the
+ * lock on the connection is being acquired.
  */
 
 struct _GdaConnection {
