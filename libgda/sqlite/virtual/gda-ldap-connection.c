@@ -268,7 +268,7 @@ gda_ldap_connection_init (GdaLdapConnection *cnc, G_GNUC_UNUSED GdaLdapConnectio
 
 	g_signal_connect (cnc, "notify::dsn",
 			  G_CALLBACK (dsn_set_cb), NULL);
-	g_signal_connect (cnc, "conn-opened",
+	g_signal_connect (cnc, "opened",
 			  G_CALLBACK (conn_opened_cb), NULL);
 }
 

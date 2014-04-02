@@ -66,7 +66,7 @@ gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass)
 
 	/* virtual methods */
 	object_class->finalize = gda_virtual_connection_finalize;
-	GDA_CONNECTION_CLASS (klass)->conn_closed = (void (*) (GdaConnection*)) conn_closed_cb;
+	GDA_CONNECTION_CLASS (klass)->closed = (void (*) (GdaConnection*)) conn_closed_cb;
 }
 
 static void

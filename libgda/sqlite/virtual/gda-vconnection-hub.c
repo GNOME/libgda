@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -87,7 +87,7 @@ gda_vconnection_hub_dispose (GObject *object)
 
 	/* free memory */
 	if (cnc->priv) {
-		_gda_connection_close_no_warning ((GdaConnection *) cnc, NULL);
+		gda_connection_close ((GdaConnection *) cnc, NULL);
 		g_assert (!cnc->priv->hub_connections);
 
 		g_free (cnc->priv);

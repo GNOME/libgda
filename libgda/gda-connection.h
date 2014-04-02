@@ -131,9 +131,8 @@ struct _GdaConnectionClass {
 	/* signals */
 	void   (*status_changed)            (GdaConnection *obj, GdaConnectionStatus status);
 	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
-        void   (*conn_opened)               (GdaConnection *obj);
-        void   (*conn_to_close)             (GdaConnection *obj);
-        void   (*conn_closed)               (GdaConnection *obj);
+        void   (*opened)                    (GdaConnection *obj);
+        void   (*closed)                    (GdaConnection *obj);
 	void   (*dsn_changed)               (GdaConnection *obj);
 	void   (*transaction_status_changed)(GdaConnection *obj);
 

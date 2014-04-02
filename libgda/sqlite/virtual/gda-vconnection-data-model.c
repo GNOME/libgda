@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -158,7 +158,7 @@ gda_vconnection_data_model_dispose (GObject *object)
 			td = (GdaVConnectionTableData *) cnc->priv->table_data_list->data;
 			get_rid_of_vtable (cnc, td, TRUE, NULL);
 		}
-		_gda_connection_close_no_warning ((GdaConnection *) cnc, NULL);
+		gda_connection_close ((GdaConnection *) cnc, NULL);
 
 		g_mutex_clear (& (cnc->priv->lock_context));
 		g_free (cnc->priv);

@@ -43,7 +43,6 @@ G_BEGIN_DECLS
 /*
  * Misc.
  */
-gboolean           _gda_connection_close_no_warning (GdaConnection *cnc, GError **error);
 GdaWorker         *_gda_connection_get_worker (GdaConnection *cnc);
 guint              _gda_connection_get_exec_slowdown (GdaConnection *cnc);
 

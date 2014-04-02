@@ -147,16 +147,15 @@ static void change_events_array_max_size (GdaConnection *cnc, gint size);
 
 enum {
 	ERROR,
-	CONN_OPENED,
-        CONN_TO_CLOSE,
-        CONN_CLOSED,
+	OPENED,
+        CLOSED,
 	DSN_CHANGED,
 	TRANSACTION_STATUS_CHANGED,
 	STATUS_CHANGED,
 	LAST_SIGNAL
 };
 
-static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0, 0 };
+static gint gda_connection_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0, 0 };
 
 /* properties */
 enum
@@ -231,44 +230,30 @@ gda_connection_class_init (GdaConnectionClass *klass)
 			      g_cclosure_marshal_VOID__OBJECT,
 			      G_TYPE_NONE, 1, GDA_TYPE_CONNECTION_EVENT);
 	/**
-	 * GdaConnection::conn-opened:
+	 * GdaConnection::opened:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the connection has been opened to the database
 	 */
-	gda_connection_signals[CONN_OPENED] =
-                g_signal_new ("conn-opened",
+	gda_connection_signals[OPENED] =
+                g_signal_new ("opened",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaConnectionClass, conn_opened),
+                              G_STRUCT_OFFSET (GdaConnectionClass, opened),
                               NULL, NULL,
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
 	/**
-	 * GdaConnection::conn-to-close:
-	 * @cnc: the #GdaConnection
-	 *
-	 * Gets emitted when the connection to the database is about to be closed
-	 */
-        gda_connection_signals[CONN_TO_CLOSE] =
-                g_signal_new ("conn-to-close",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaConnectionClass, conn_to_close),
-                              NULL, NULL,
-                              _gda_marshal_VOID__VOID,
-                              G_TYPE_NONE, 0);
-	/**
-	 * GdaConnection::conn-closed:
+	 * GdaConnection::closed:
 	 * @cnc: the #GdaConnection
 	 *
 	 * Gets emitted when the connection to the database has been closed
 	 */
-        gda_connection_signals[CONN_CLOSED] =    /* runs after user handlers */
-                g_signal_new ("conn-closed",
+        gda_connection_signals[CLOSED] =    /* runs after user handlers */
+                g_signal_new ("closed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
-                              G_STRUCT_OFFSET (GdaConnectionClass, conn_closed),
+                              G_STRUCT_OFFSET (GdaConnectionClass, closed),
                               NULL, NULL,
                               _gda_marshal_VOID__VOID,
                               G_TYPE_NONE, 0);
@@ -482,7 +467,7 @@ gda_connection_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	/* free memory */
-	_gda_connection_close_no_warning (cnc, NULL);
+	gda_connection_close (cnc, NULL);
 
 	if (cnc->priv->context_hash) {
 		g_hash_table_destroy (cnc->priv->context_hash);
@@ -1308,7 +1293,7 @@ gda_connection_open_sqlite (const gchar *directory, const gchar *filename, gbool
 
 	if (auto_unlink) {
 		g_object_set_data_full (G_OBJECT (cnc), "__gda_fname", fname, g_free);
-		g_signal_connect (cnc, "conn-closed",
+		g_signal_connect (cnc, "closed",
 				  G_CALLBACK (sqlite_connection_closed_cb), NULL);
 	}
 	else
@@ -1487,8 +1472,7 @@ add_connection_event_from_error (GdaConnection *cnc, GError **error)
  * gda_connection_close:
  * @cnc: a #GdaConnection object.
  *
- * Closes the connection to the underlying data source, but first emits the 
- * "conn-to-close" signal.
+ * Closes the connection to the underlying data source.
  */
 gboolean
 gda_connection_close (GdaConnection *cnc, GError **error)
@@ -1497,28 +1481,6 @@ gda_connection_close (GdaConnection *cnc, GError **error)
 
 	if (! cnc->priv->provider_data)
 		return TRUE;
-
-#ifdef GDA_DEBUG_signal
-        g_print (">> 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
-#endif
-        g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_TO_CLOSE], 0);
-#ifdef GDA_DEBUG_signal
-        g_print ("<< 'CONN_TO_CLOSE' from %s\n", __FUNCTION__);
-#endif
-
-        return _gda_connection_close_no_warning (cnc, error);
-}
-
-/*
- * _gda_connection_close_no_warning:
- * @cnc: a #GdaConnection object.
- *
- * Closes the connection to the underlying data source, without emiting any warning signal.
- */
-gboolean
-_gda_connection_close_no_warning (GdaConnection *cnc, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	g_object_ref (cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
@@ -1638,7 +1600,7 @@ _gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
 	cnc->priv->status = status;
 	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
 	if (status == GDA_CONNECTION_STATUS_CLOSED)
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CONN_CLOSED], 0, status);
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CLOSED], 0, status);
 }
 
 /*

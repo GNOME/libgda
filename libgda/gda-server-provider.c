@@ -2078,7 +2078,7 @@ stage2_open_connection (GdaWorker *worker, GdaConnection *cnc, gpointer result)
 			_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 		}
 		else {
-			g_signal_emit_by_name (G_OBJECT (cnc), "conn-opened");
+			g_signal_emit_by_name (G_OBJECT (cnc), "opened");
 			_gda_connection_status_stop_batch (cnc);
 		}
 	}

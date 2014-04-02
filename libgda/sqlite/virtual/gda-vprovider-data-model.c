@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -415,7 +415,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 	SqliteConnectionData *scnc;
 	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error ((GdaConnection *) cnc, NULL);
 	if (!scnc) {
-		_gda_connection_close_no_warning (cnc, NULL);
+		gda_connection_close (cnc, NULL);
 		gda_connection_add_event_string (cnc, _("Connection is closed"));
 		return FALSE;
 	}
