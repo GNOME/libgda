@@ -1610,6 +1610,8 @@ _gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
  * status.
  *
  * To cancel the effect, use _gda_connection_status_stop_batch().
+ *
+ * WARNING: @cnc _MUST_ be locked before this function is called
  */
 void
 _gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus status)
@@ -1628,6 +1630,8 @@ _gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus stat
  * See _gda_connection_status_start_batch().
  *
  * This functions ensures that the connections's status is IDLE.
+ *
+ * WARNING: @cnc _MUST_ be locked before this function is called
  */
 void
 _gda_connection_status_stop_batch (GdaConnection *cnc)
