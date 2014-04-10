@@ -2507,6 +2507,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
 
+	g_object_ref (cnc);
 	gda_connection_lock ((GdaLockable*) cnc);
 
 	/* clear external list of events */
@@ -2562,7 +2563,9 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 #ifdef GDA_DEBUG_NO
 	dump_events_array (cnc);
 #endif
+
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref (cnc);
 }
 
 /**
@@ -5505,7 +5508,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement which has been executed
  * @params: (allow-none): execution's parameters
- * @error: a #GdaConnectionEvent if the execution failed, or %NULL
+ * @error: (transfer none): a #GdaConnectionEvent if the execution failed, or %NULL
  *
  * Internal functions to be called by database providers when a statement has been executed
  * to keep track of the transaction status of the connection

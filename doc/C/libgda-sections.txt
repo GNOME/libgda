@@ -155,6 +155,7 @@ gda_connection_get_authentication
 gda_connection_get_date_format
 <SUBSECTION>
 gda_connection_get_events
+gda_connection_point_available_event
 <SUBSECTION>
 gda_connection_create_operation
 gda_connection_perform_operation

@@ -2206,6 +2206,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 						g_free (str);
 						
 						gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
+						g_object_unref (event);
 						return (GObject *) gda_set_new_inline
 							(1, "IMPACTED_ROWS", G_TYPE_INT, (int) affected_rows);
 					}
@@ -2724,6 +2725,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	GObject *return_value = NULL;
 	if (mysql_stmt_execute (ps->mysql_stmt)) {
 		event = _gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
+		gda_connection_add_event (cnc, event);
 	}
 	else {
 		/* execute prepared statement using C API depending on its kind */
@@ -2765,6 +2767,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				(1, "IMPACTED_ROWS", G_TYPE_INT, (int) affected_rows);
 			
 			gda_connection_internal_statement_executed (cnc, stmt, params, event); /* required: help @cnc keep some stats */
+			g_object_unref (event);
 
 			if (last_inserted_row) {
 				my_ulonglong last_row;
@@ -2772,7 +2775,6 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				if (last_row)
 					*last_inserted_row = make_last_inserted_set (cnc, stmt, last_row);
 			}
-
 		}
 	}
 	g_object_unref (ps);
