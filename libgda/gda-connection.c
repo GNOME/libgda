@@ -4640,7 +4640,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	store = gda_connection_get_meta_store (cnc);
 	g_assert (store);
 
-	gda_connection_unlock ((GdaLockable*) cnc);
+	_gda_connection_status_start_batch (cnc, GDA_CONNECTION_STATUS_BUSY);
 
 	if (context) {
 		GdaMetaContext *lcontext;
@@ -4650,8 +4650,11 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		GError *lerror = NULL;
 
 		lcontext = _gda_meta_store_validate_context (store, context, error);
-		if (!lcontext)
+		if (!lcontext) {
+			_gda_connection_status_stop_batch (cnc);
+			gda_connection_unlock ((GdaLockable*) cnc);
 			return FALSE;
+		}
 		/* alter local context because "_tables" and "_views" always go together so only
 		   "_tables" should be updated and providers should always update "_tables" and "_views"
 		*/
@@ -4662,6 +4665,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		up_templates = build_upstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!up_templates) {
 			if (lerror) {
+				_gda_connection_status_stop_batch (cnc);
+				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
 				return FALSE;
 			}
@@ -4669,6 +4674,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		dn_templates = build_downstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!dn_templates) {
 			if (lerror) {
+				_gda_connection_status_stop_batch (cnc);
+				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
 				return FALSE;
 			}
@@ -4729,6 +4736,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		g_slist_free (cbd.context_templates);
 		g_hash_table_destroy (cbd.context_templates_hash);
 
+		_gda_connection_status_stop_batch (cnc);
+		gda_connection_unlock ((GdaLockable*) cnc);
 		return retval;
 	}
 	else {
@@ -4770,6 +4779,8 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		gboolean retval;
 
 		if (! _gda_meta_store_begin_data_reset (store, error)) {
+			_gda_connection_status_stop_batch (cnc);
+			gda_connection_unlock ((GdaLockable*) cnc);
 			return FALSE;
 		}
 
@@ -4795,9 +4806,13 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			}
 		}
 		retval = _gda_meta_store_finish_data_reset (store, error);
+		_gda_connection_status_stop_batch (cnc);
+		gda_connection_unlock ((GdaLockable*) cnc);
 		return retval;
 
 	onerror:
+		_gda_connection_status_stop_batch (cnc);
+		gda_connection_unlock ((GdaLockable*) cnc);
 		_gda_meta_store_cancel_data_reset (store, NULL);
 		return FALSE;
 	}
