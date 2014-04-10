@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -62,10 +62,7 @@ provider_config_new (void)
 	priv->title = gdaui_bar_new (title);
 	g_free (title);
 
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);
-	gdaui_bar_set_icon_from_file (GDAUI_BAR (priv->title), path);
-	g_free (path);
+	gdaui_bar_set_icon_from_resource (GDAUI_BAR (priv->title), "/images/gdaui-generic.png");
 
 	gtk_box_pack_start (GTK_BOX (provider), priv->title, FALSE, FALSE, 0);
 	gtk_widget_show (priv->title);
@@ -92,7 +89,7 @@ provider_config_new (void)
         gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 	gtk_box_pack_start (GTK_BOX (provider), box, FALSE, FALSE, 0);
 
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG);
 	gtk_widget_show (image);
 	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
 

@@ -462,10 +462,6 @@ files=(gda-browser-6.0.png)
 add_files_to_zip $archive $prefix share/pixmaps $files
 add_found_files_to_nsh core share/pixmaps
 
-files=(gda-control-center.png)
-add_files_to_zip $archive $prefix share/libgda-6.0/pixmaps $files
-add_found_files_to_nsh core share/libgda-6.0/pixmaps
-
 files=(gdaui-entry-number.xml gdaui-entry-string.xml)
 add_files_to_zip $archive $prefix share/libgda-6.0/ui $files
 add_found_files_to_nsh core share/libgda-6.0/ui

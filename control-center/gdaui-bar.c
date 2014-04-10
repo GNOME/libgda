@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -388,36 +388,14 @@ gdaui_bar_set_icon_from_file (GdauiBar *bar, const gchar *file)
 }
 
 /**
- * gdaui_set_icon_from_stock
- * @bar: a #GdauiBar widget.
- * @stock_id: a stock icon name.
- * @size: a tock icon size.
- *
- * Set the icon using a stock icon for the given gray bar.
+ * gdaui_bar_set_icon_from_resource:
  */
 void
-gdaui_bar_set_icon_from_stock (GdauiBar *bar, const gchar *stock_id, GtkIconSize size)
+gdaui_bar_set_icon_from_resource (GdauiBar *bar, const gchar *resource_name)
 {
-        g_return_if_fail (GDAUI_IS_BAR (bar));
-
-        gtk_image_set_from_stock (GTK_IMAGE (bar->priv->icon), stock_id, size);
-        gdaui_bar_set_show_icon (bar, TRUE);
-}
-
-/**
- * gdaui_set_icon_from_pixbuf
- * @bar: a #GdauiBar widget.
- * @pixbuf: a #GdkPixbuf
- *
- * Set the icon using a stock icon for the given gray bar.
- */
-void
-gdaui_bar_set_icon_from_pixbuf (GdauiBar *bar, GdkPixbuf *pixbuf)
-{
-        g_return_if_fail (GDAUI_IS_BAR (bar));
-
-        gtk_image_set_from_pixbuf (GTK_IMAGE (bar->priv->icon), pixbuf);
-        gdaui_bar_set_show_icon (bar, TRUE);
+	g_return_if_fail (GDAUI_IS_BAR (bar));
+	gtk_image_set_from_resource (GTK_IMAGE (bar->priv->icon), resource_name);
+	gdaui_bar_set_show_icon (bar, TRUE);
 }
 
 /**
@@ -455,49 +433,6 @@ gdaui_bar_get_show_icon (GdauiBar *bar)
         g_return_val_if_fail (GDAUI_IS_BAR (bar), FALSE);
 
         return bar->priv->show_icon;
-}
-
-/**
- * gdaui_bar_add_button_from_stock:
- * @bar: a #GdauiBar
- * @stock_id: the stock name of the button to add
- *
- * Returns: (transfer none): the created #GtkButton
- */
-GtkWidget *
-gdaui_bar_add_button_from_stock (GdauiBar *bar, const gchar *stock_id)
-{
-	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
-	g_return_val_if_fail (stock_id && *stock_id, NULL);
-
-	GtkWidget *vb, *button, *img;
-
-	vb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (vb), GTK_BUTTONBOX_CENTER);
-	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), vb, FALSE, FALSE, 0);
-
-	button = gtk_button_new ();
-	img = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON);
-	gtk_container_add (GTK_CONTAINER (button), img);
-	gtk_box_pack_start (GTK_BOX (vb), button, FALSE, FALSE, 0);
-	g_object_set (G_OBJECT (button), "label", NULL, NULL);
-
-	/* CSS theming */
-	GtkStyleContext *context;
-	context = gtk_widget_get_style_context (vb);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
-	gtk_style_context_add_class (context, "gdauibar_button");
-
-	context = gtk_widget_get_style_context (button);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
-	gtk_style_context_add_class (context, "gdauibar_button");
-
-	context = gtk_widget_get_style_context (img);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
-	gtk_style_context_add_class (context, "gdauibar_button");
-
-	gtk_widget_show_all (vb);
-	return button;
 }
 
 static void
@@ -538,9 +473,9 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar_entry");
 
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (entry),
-				       GTK_ENTRY_ICON_SECONDARY,
-				       GTK_STOCK_CLEAR);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (entry),
+					   GTK_ENTRY_ICON_SECONDARY,
+					   "edit-clear");
 	g_signal_connect (entry, "icon-press",
 			  G_CALLBACK (find_icon_pressed_cb), NULL);
 

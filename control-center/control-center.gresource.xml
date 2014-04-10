@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/application">
+    <file compressed="true">menus.ui</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-control-center.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gdaui-generic.png</file>
+  </gresource>
+</gresources>

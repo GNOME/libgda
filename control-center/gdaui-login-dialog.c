@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -95,7 +95,6 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 {
 	GtkWidget *hbox, *vbox, *image, *label;
 	GtkWidget *nb;
-	GdkPixbuf *icon;
 	GtkWidget *dcontents;
 
 	g_return_if_fail (GDAUI_IS_LOGIN_DIALOG (dialog));
@@ -103,8 +102,8 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	dialog->priv = g_new0 (GdauiLoginDialogPrivate, 1);
         
-	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
-	gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CONNECT, GTK_RESPONSE_OK);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
+	gtk_dialog_add_button (GTK_DIALOG (dialog), _("C_onnect"), GTK_RESPONSE_OK);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_OK);
 
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
@@ -116,7 +115,7 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 	gtk_widget_show (hbox);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, TRUE, TRUE, 0);
 
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_AUTHENTICATION, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-password", GTK_ICON_SIZE_DIALOG);
         gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
 	gtk_widget_show (image);
 	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 5);
@@ -152,10 +151,8 @@ gdaui_login_dialog_init (GdauiLoginDialog *dialog, G_GNUC_UNUSED GdauiLoginDialo
 	g_signal_connect (G_OBJECT (dialog->priv->login), "changed",
 			  G_CALLBACK (login_changed_cb), dialog);
 
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);
-	icon = gdk_pixbuf_new_from_file (path, NULL);
-	g_free (path);
+	GdkPixbuf *icon;
+	icon = gdk_pixbuf_new_from_resource ("/images/gdaui-generic.png", NULL);
 	if (icon) {
 		gtk_window_set_icon (GTK_WINDOW (dialog), icon);
 		g_object_unref (icon);

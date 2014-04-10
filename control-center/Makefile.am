@@ -31,7 +31,16 @@ gda_control_center_6_0_SOURCES=\
 	dsn-properties-dialog.h \
 	main.c \
 	provider-config.c \
-	provider-config.h
+	provider-config.h \
+	control-center.gresources.c
+
+# resources
+RESOURCES=\
+	menus.ui \
+	gda-control-center.png
+
+control-center.gresources.c: control-center.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --sourcedir=$(srcdir)/../libgda-ui/data --generate-source $(srcdir)/control-center.gresource.xml
 
 if PLATFORM_WIN32
 EXTRALDFLAGS=-mwindows
@@ -59,14 +68,13 @@ desktopdir=$(datadir)/applications
 Desktop_in_files = gda-control-center-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
-# icons
-iconsdir=$(datadir)/libgda-6.0/pixmaps
-icons_DATA= \
-	gda-control-center.png \
-	gda-control-center-newcnc.png
-
 EXTRA_DIST = \
+	control-center.gresource.xml \
 	control-center-res.rc \
 	gda-control-center.ico \
-	$(Desktop_in_files) $(icons_DATA)
+	$(Desktop_in_files)
+
 DISTCLEANFILES = $(desktop_DATA)
+
+CLEANFILES = \
+	control-center.gresources.c

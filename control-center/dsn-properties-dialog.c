@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -38,8 +38,8 @@ enum {
 static gboolean
 data_source_info_equal (const GdaDsnInfo *info1, const GdaDsnInfo *info2)
 {
-	#define str_is_equal(x,y) (((x) && (y) && !strcmp ((x),(y))) || (!(x) && (!y)))
-	 if (!info1 && !info2)
+#define str_is_equal(x,y) (((x) && (y) && !strcmp ((x),(y))) || (!(x) && (!y)))
+	if (!info1 && !info2)
                 return TRUE;
         if (!info1 || !info2)
                 return FALSE;
@@ -75,7 +75,7 @@ dsn_changed_cb (GdauiDsnEditor *config, gpointer user_data)
 static void 
 data_source_info_free (GdaDsnInfo *info)
 {
-	g_free (info->provider); 
+	g_free (info->provider);
 	g_free (info->cnc_string); 
 	g_free (info->description);
 	g_free (info->auth_string);
@@ -93,7 +93,6 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 {
 	GdaDsnInfo *dsn_info, *priv_dsn_info;
 	GtkWidget *dialog, *props, *label, *hbox;
-	GdkPixbuf *icon;
 	gchar *str;
 	gint result;
 	GdaProviderInfo *pinfo;
@@ -108,8 +107,8 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 					      parent, GTK_DIALOG_DESTROY_WITH_PARENT,
 					      _("Test"), TEST_BUTTON,
 					      _("Browse"), BROWSE_BUTTON,
-					      GTK_STOCK_REVERT_TO_SAVED, REVERT_BUTTON,
-					      GTK_STOCK_CLOSE, GTK_RESPONSE_OK,
+					      _("_Revert"), REVERT_BUTTON,
+					      _("Close"), GTK_RESPONSE_OK,
 					      NULL);
 	gtk_window_set_default_size (GTK_WINDOW (dialog), 450, 300);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), TEST_BUTTON, pinfo ? TRUE : FALSE);
@@ -132,10 +131,9 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 	g_object_set_data_full (G_OBJECT (dialog), "old_dsn_info", priv_dsn_info,
 				(GDestroyNotify) data_source_info_free);
 
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
-	icon = gdk_pixbuf_new_from_file (path, NULL);
-	g_free (path);
+
+	GdkPixbuf *icon;
+	icon = gdk_pixbuf_new_from_resource ("/images/gda-control-center.png", NULL);
 	if (icon) {
 		gtk_window_set_icon (GTK_WINDOW (dialog), icon);
 		g_object_unref (icon);

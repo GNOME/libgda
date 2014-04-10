@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -63,17 +63,12 @@ list_popup_delete_cb (G_GNUC_UNUSED GtkWidget *menu, gpointer user_data)
 
 static GtkWidget *
 new_menu_item (const gchar *label,
-		 	gboolean pixmap,
-		        GCallback cb_func,
-			gpointer user_data)
+	       GCallback cb_func,
+	       gpointer user_data)
 {
 	GtkWidget *item;
 
-	if (pixmap)
-		item = gtk_image_menu_item_new_from_stock (label, NULL);
-	else
-		item = gtk_menu_item_new_with_mnemonic (label);
-	
+	item = gtk_menu_item_new_with_mnemonic (label);
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (cb_func), user_data);
 
@@ -87,12 +82,10 @@ list_popup_cb (GdauiRawGrid *grid, GtkMenu *menu, gpointer user_data)
 	gboolean ok;
 	GArray *selection;
 
-	item_delete = new_menu_item (GTK_STOCK_DELETE,
-				     TRUE,
+	item_delete = new_menu_item (_("_Delete"),
 				     G_CALLBACK (list_popup_delete_cb),
 				     user_data);
-	item_properties = new_menu_item (GTK_STOCK_PROPERTIES,
-					 TRUE,
+	item_properties = new_menu_item (_("_Properties"),
 					 G_CALLBACK (list_popup_properties_cb),
 					 user_data);
 
@@ -138,10 +131,8 @@ dsn_config_new (void)
 	priv->title = gdaui_bar_new (title);
 	g_free (title);
 
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gdaui-generic.png", NULL);
-	gdaui_bar_set_icon_from_file (GDAUI_BAR (priv->title), path);
-	g_free (path);
+	gdaui_bar_set_icon_from_resource (GDAUI_BAR (priv->title), "/images/gdaui-generic.png");
+
 	gtk_box_pack_start (GTK_BOX (dsn), priv->title, FALSE, FALSE, 0);
 	gtk_widget_show (priv->title);
 
@@ -178,7 +169,7 @@ dsn_config_new (void)
 	gtk_box_pack_start (GTK_BOX (dsn), box, FALSE, FALSE, 0);
 	gtk_widget_show (box);
 
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG);
         gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
 	gtk_widget_show (image);
 	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);

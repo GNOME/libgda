@@ -720,6 +720,7 @@ gdaui_dsn_assistant_new (void)
 	GdauiDsnAssistant *assistant;
 
 	assistant = g_object_new (GDAUI_TYPE_DSN_ASSISTANT, NULL);
+	gtk_window_set_default_size (GTK_WINDOW (assistant), 500, -1);
 	return GTK_WIDGET (assistant);
 }
 

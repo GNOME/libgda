@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -29,11 +29,10 @@
 
 GtkApplication *app;
 GtkWindow *main_window;
-GtkActionGroup *actions;
 
-#define DSN_PAGE      "DSN_Page"
-#define PROVIDER_PAGE "Provider_Page"
-static GtkWidget *create_main_notebook (void);
+#define DSN_PAGE "DSN"
+#define NOTEBOOK "Nb"
+static GtkWidget *create_main_notebook (GtkApplicationWindow *app_window);
 
 static void
 show_error (GtkWindow *parent, const gchar *format, ...)
@@ -60,7 +59,7 @@ show_error (GtkWindow *parent, const gchar *format, ...)
                                                      GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                                      GTK_BUTTONS_CLOSE, "%s", str);
         gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-                                      gtk_button_new_from_stock (GTK_STOCK_OK),
+                                      gtk_button_new_with_mnemonic (_("_Ok")),
                                       GTK_RESPONSE_OK);
         gtk_widget_show_all (dialog);
         gtk_dialog_run (GTK_DIALOG (dialog));
@@ -90,7 +89,7 @@ assistant_closed_cb (GdauiDsnAssistant *assistant, G_GNUC_UNUSED gpointer user_d
 }
 
 static void
-file_new_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
+file_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSED gpointer user_data)
 {
 	GtkWidget *assistant;
 
@@ -103,14 +102,14 @@ file_new_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 }
 
 static void
-file_properties_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
+file_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	GtkWidget *nb = GTK_WIDGET (user_data);
-	GtkWidget *dsn, *provider, *current_widget;
+	GtkWidget *app_window = GTK_WIDGET (user_data);
+	GtkWidget *nb, *dsn, *current_widget;
 	gint current;
 
-	dsn = g_object_get_data (G_OBJECT (nb), DSN_PAGE);
-	provider = g_object_get_data (G_OBJECT (nb), PROVIDER_PAGE);
+	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
+	nb = g_object_get_data (G_OBJECT (app_window), NOTEBOOK);
 
 	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
 	if (current == -1)
@@ -122,14 +121,14 @@ file_properties_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
 }
 
 static void
-file_delete_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
+file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
-	GtkWidget *nb = GTK_WIDGET (user_data);
-	GtkWidget *dsn, *provider, *current_widget;
+	GtkWidget *app_window = GTK_WIDGET (user_data);
+	GtkWidget *nb, *dsn, *current_widget;
 	gint current;
 
-	dsn = g_object_get_data (G_OBJECT (nb), DSN_PAGE);
-	provider = g_object_get_data (G_OBJECT (nb), PROVIDER_PAGE);
+	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
+	nb = g_object_get_data (G_OBJECT (app_window), NOTEBOOK);
 
 	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
 	if (current == -1)
@@ -141,13 +140,13 @@ file_delete_cb (G_GNUC_UNUSED GtkAction *action, gpointer user_data)
 }
 
 static void
-window_closed_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
+window_closed_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSED gpointer user_data)
 {
 	g_application_quit (G_APPLICATION (app));
 }
 
 static void
-about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
+about_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSED gpointer user_data)
 {
 	GdkPixbuf *icon;
 	GtkWidget *dialog;
@@ -168,22 +167,20 @@ about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 		"Christian Rose <menthos@menthos.com> Swedish translations\n" \
 		"Kjartan Maraas <kmaraas@online.no> Norwegian translation\n";
 
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
-	icon = gdk_pixbuf_new_from_file (path, NULL);
-	g_free (path);
 
 	dialog = gtk_about_dialog_new ();
 	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2011 GNOME Foundation");
+	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2014 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
 	gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU Lesser General Public License");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
 	gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialog), authors);
 	gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialog), documenters);
 	gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialog), translator_credits);
-	gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialog), icon);
+	icon = gdk_pixbuf_new_from_resource ("/images/gda-control-center.png", NULL);
+	if (icon)
+		gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialog), icon);
 	g_signal_connect (G_OBJECT (dialog), "response",
 			  G_CALLBACK (gtk_widget_destroy),
 			  dialog);
@@ -192,89 +189,66 @@ about_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED gpointer user_data)
 
 }
 
-static GtkActionEntry ui_actions[] = {
-	{ "Database", NULL, N_("_Data source"), NULL, N_("Database"), NULL },
-	{ "DatabaseClose", GTK_STOCK_CLOSE, N_("_Close"), NULL, N_("Close this window"), G_CALLBACK (window_closed_cb) },
-	{ "DatabaseNew", GTK_STOCK_NEW, N_("_New datasource"), NULL, N_("Create new data source"), G_CALLBACK (file_new_cb) },
-	{ "DatabaseDelete", GTK_STOCK_DELETE, N_("_Delete datasource"), NULL, N_("Delete selected data source"), G_CALLBACK (file_delete_cb) },
-	{ "DatabaseProperties", GTK_STOCK_PROPERTIES, N_("_Properties"), NULL, N_("Edit properties for selected data source"), G_CALLBACK (file_properties_cb) },
-	{ "About", NULL, N_("_About"), NULL, N_("About"), NULL },
-	{ "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, N_("About GNOME-DB"), G_CALLBACK (about_cb) }
+static GActionEntry app_entries[] = {
+	{ "quit", window_closed_cb, NULL, NULL, NULL },
 };
 
-static const gchar *ui_actions_info =
-        "<ui>"
-	"  <menubar name='MenuBar'>"
-	"    <menu name='Database' action='Database'>"
-	"      <menuitem name='DatabaseNew' action= 'DatabaseNew'/>"
-	"      <menuitem name='DatabaseProperties' action= 'DatabaseProperties'/>"
-	"      <menuitem name='DatabaseDelete' action= 'DatabaseDelete'/>"
-	"      <separator/>"
-	"      <menuitem name='DatabaseClose' action= 'DatabaseClose'/>"
-	"    </menu>"
-	"    <menu name='About' action='About'>"
-	"      <menuitem name='HelpAbout' action= 'HelpAbout'/>"
-	"    </menu>"
-	"  </menubar>"
-        "  <toolbar  name='ToolBar'>"
-        "    <toolitem action='DatabaseNew'/>"
-        "    <toolitem action='DatabaseProperties'/>"
-        "    <toolitem action='DatabaseDelete'/>"
-        "  </toolbar>"
-        "</ui>";
+static GActionEntry win_entries[] = {
+	{ "DatasourceNew", file_new_cb, NULL, NULL, NULL },
+	{ "DatasourceDelete", file_delete_cb, NULL, NULL, NULL },
+	{ "DatasourceProperties", file_properties_cb, NULL, NULL, NULL },
+	{ "about", about_cb, NULL, NULL, NULL }
+};
 
 static void
-prepare_menu (GtkBox *vbox, GtkWidget *nb)
+startup (GApplication *app)
 {
-        GtkWidget *menubar;
-	GtkWidget *toolbar;
-	GtkUIManager *ui;
+	GtkBuilder *builder;
+	GMenuModel *appmenu;
+	GMenuModel *menubar;
 
-        actions = gtk_action_group_new ("Actions");
-	gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
-        gtk_action_group_add_actions (actions, ui_actions, G_N_ELEMENTS (ui_actions), nb);
+	builder = gtk_builder_new ();
+	g_assert (gtk_builder_add_from_resource (builder, "/application/menus.ui", NULL));
 
-        ui = gtk_ui_manager_new ();
-        gtk_ui_manager_insert_action_group (ui, actions, 0);
-        gtk_ui_manager_add_ui_from_string (ui, ui_actions_info, -1, NULL);
+	appmenu = (GMenuModel *)gtk_builder_get_object (builder, "appmenu");
+	menubar = (GMenuModel *)gtk_builder_get_object (builder, "menubar");
 
-        menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
-        gtk_box_pack_start (vbox, menubar, FALSE, FALSE, 0);
-	gtk_widget_show (menubar);
+	gtk_application_set_app_menu (GTK_APPLICATION (app), appmenu);
+	gtk_application_set_menubar (GTK_APPLICATION (app), menubar);
 
-	toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
-        gtk_box_pack_start (vbox, toolbar, FALSE, FALSE, 0);
-	gtk_widget_show (toolbar);
-
-	GtkAction *action;
-	action = gtk_action_group_get_action (actions, "DatabaseProperties");
-	g_object_set (G_OBJECT (action), "sensitive", FALSE, NULL);
-	action = gtk_action_group_get_action (actions, "DatabaseDelete");
-	g_object_set (G_OBJECT (action), "sensitive", FALSE, NULL);
+	g_object_unref (builder);
 }
 
-
-static GtkWidget *
-create_main_window (void)
+static void
+activate (GApplication *app)
 {
-	GtkWidget *window, *vbox;
+	static GtkWidget *window = NULL;
+	if (window) {
+		gtk_window_present (GTK_WINDOW (window));
+		return;
+	}
+
+	GtkWidget *vbox;
 	GtkWidget *nb;
-	GdkPixbuf *icon;
+
+	gdaui_init ();
 
 	/* create the main window */
-	window = gtk_application_window_new (app);
+	window = gtk_application_window_new (GTK_APPLICATION (app));
 	main_window = GTK_WINDOW (window);
-	gtk_window_set_title (GTK_WINDOW (window), _("Database access control center"));
+	gtk_window_set_title (GTK_WINDOW (window), _("Datasource access control center"));
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 	gtk_window_set_default_size (GTK_WINDOW (window), 650, 600);
-	g_signal_connect (G_OBJECT (window), "destroy",
-			  G_CALLBACK (window_closed_cb), NULL);
+
+	/* actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (window),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 window);
+
 
 	/* icon */
-	gchar *path;
-	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-control-center.png", NULL);
-	icon = gdk_pixbuf_new_from_file (path, NULL);
-	g_free (path);
+	GdkPixbuf *icon;
+	icon = gdk_pixbuf_new_from_resource ("/images/gda-control-center.png", NULL);
 	if (icon) {
 		gtk_window_set_icon (GTK_WINDOW (window), icon);
 		g_object_unref (icon);
@@ -285,37 +259,30 @@ create_main_window (void)
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_widget_show (vbox);
 
-	nb = create_main_notebook ();	
-	prepare_menu (GTK_BOX (vbox), nb);
-
+	nb = create_main_notebook (GTK_APPLICATION_WINDOW (window));
         gtk_container_set_border_width (GTK_CONTAINER (nb), 6);
 	gtk_box_pack_start (GTK_BOX (vbox), nb, TRUE, TRUE, 0);
 	gtk_widget_show (nb);
 
 	gtk_widget_show (window);
-	return window;
-}
 
-static void
-activate (GtkApplication *app)
-{
-	static GtkWidget *window = NULL;
+	/* set actions start state */
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), "DatasourceProperties");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
 
-	if (! window) {
-		gdaui_init ();
-		window = create_main_window ();
-		gtk_window_set_application (GTK_WINDOW (window), app);
-		gtk_widget_show (window);
-	}
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), "DatasourceDelete");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
 }
 
 int
 main (int argc, char *argv[])
 {
 	gint status;
-	
-	app = gtk_application_new ("org.GnomeDb.GdaBrowser", G_APPLICATION_FLAGS_NONE);
+
+	app = gtk_application_new ("org.Libgda.Preferences", G_APPLICATION_FLAGS_NONE);
 	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+	g_signal_connect (app, "startup", G_CALLBACK (startup), NULL);
 	
 	status = g_application_run (G_APPLICATION (app), argc, argv);
 	
@@ -325,40 +292,40 @@ main (int argc, char *argv[])
 }
 
 static void
-dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, G_GNUC_UNUSED gboolean row_selected, G_GNUC_UNUSED gpointer data)
+dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, GtkApplicationWindow *main_window)
 {
-	GtkAction *action;
 	GArray *selection;
-
 	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (dbrawgrid));
 
-	action = gtk_action_group_get_action (actions, "DatabaseProperties");
-	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceProperties");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), selection ? TRUE : FALSE);
 
-	action = gtk_action_group_get_action (actions, "DatabaseDelete");
-	g_object_set (G_OBJECT (action), "sensitive", selection ? TRUE : FALSE, NULL);
+	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceDelete");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), selection ? TRUE : FALSE);
 	if (selection)
 		g_array_free (selection, TRUE);
 }
 
 static void
-main_nb_page_switched_cb (G_GNUC_UNUSED GtkNotebook *notebook, G_GNUC_UNUSED GtkWidget *page, guint page_num, G_GNUC_UNUSED gpointer data)
+main_nb_page_switched_cb (G_GNUC_UNUSED GtkNotebook *notebook, G_GNUC_UNUSED GtkWidget *page, guint page_num,
+			  GtkApplicationWindow *main_window)
 {
 	gboolean show;
-	GtkAction *action;
-
-	if (!actions)
-		return;
-
 	show = page_num == 0 ? TRUE : FALSE;
-	action = gtk_action_group_get_action (actions, "DatabaseProperties");
-	g_object_set (G_OBJECT (action), "visible", show, NULL);
-	action = gtk_action_group_get_action (actions, "DatabaseDelete");
-	g_object_set (G_OBJECT (action), "visible", show, NULL);
+
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceProperties");
+	//g_object_set (G_OBJECT (action), "visible", show, NULL);
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show);
+
+	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceDelete");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show);
+	//g_object_set (G_OBJECT (action), "visible", show, NULL);
 }
 
 static GtkWidget *
-create_main_notebook (void)
+create_main_notebook (GtkApplicationWindow *app_window)
 {
 	GtkWidget *nb;
 	GtkWidget *dsn;
@@ -366,26 +333,30 @@ create_main_notebook (void)
 	GdauiRawGrid *grid;
 
 	nb = gtk_notebook_new ();
+	g_object_set_data (G_OBJECT (app_window), NOTEBOOK, nb);
         gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), TRUE);
         gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
         gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
         gtk_widget_show (nb);
 	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (main_nb_page_switched_cb), NULL);
+			  G_CALLBACK (main_nb_page_switched_cb), app_window);
+
+	g_action_map_add_action_entries (G_ACTION_MAP (app),
+					 app_entries, G_N_ELEMENTS (app_entries),
+					 app);
 
 	/* data source configuration page */
 	dsn = dsn_config_new ();
-	g_object_set_data (G_OBJECT (nb), DSN_PAGE, dsn);
+	g_object_set_data (G_OBJECT (app_window), DSN_PAGE, dsn);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), dsn,
 				  gtk_label_new (_("Data Sources")));
 	
 	grid = g_object_get_data (G_OBJECT (dsn), "grid");
 	g_signal_connect (G_OBJECT (grid), "selection-changed",
-			  G_CALLBACK (dsn_selection_changed_cb), NULL);
+			  G_CALLBACK (dsn_selection_changed_cb), app_window);
 
 	/* providers configuration page */
 	provider = provider_config_new ();
-	g_object_set_data (G_OBJECT (nb), PROVIDER_PAGE, provider);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), provider,
 				  gtk_label_new (_("Providers")));
 

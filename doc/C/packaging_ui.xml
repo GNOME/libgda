@@ -112,12 +112,9 @@
 `-- share
     |-- applications
     |   `-- gda-control-center-6.0.desktop
-    |-- libgda-6.0
-    |   `-- pixmaps
-    |       `-- gdaui-generic.png
-    `-- pixmaps
-        |-- gda-control-center-newcnc.png
-        `-- gda-control-center.png
+    `-- libgda-6.0
+        `-- pixmaps
+            `-- gdaui-generic.png
 	</programlisting>
       </para>
     </sect2>
