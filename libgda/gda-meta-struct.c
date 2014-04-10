@@ -194,7 +194,7 @@ gda_meta_struct_dispose (GObject *object) {
 						      G_CALLBACK (meta_store_changed_cb), mstruct);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (mstruct->priv->store),
 						      G_CALLBACK (meta_store_reset_cb), mstruct);
-		g_object_ref (mstruct->priv->store);
+		g_object_unref (mstruct->priv->store);
 		mstruct->priv->store = NULL;
 	}
 	
