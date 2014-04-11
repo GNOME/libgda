@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-02 19:34+0000\n"
-"PO-Revision-Date: 2014-04-03 10:41+0200\n"
+"POT-Creation-Date: 2014-04-10 19:11+0000\n"
+"PO-Revision-Date: 2014-04-11 12:35+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -25,16 +25,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
+#: ../control-center/dsn-config.c:85
+#| msgid "Default"
+msgid "_Delete"
+msgstr "_Eliminar"
+
+#: ../control-center/dsn-config.c:88 ../tools/browser/browser-window.c:285
+msgid "_Properties"
+msgstr "_Propiedades"
+
 #. title
-#: ../control-center/dsn-config.c:136 ../control-center/main.c:380
+#: ../control-center/dsn-config.c:129 ../control-center/main.c:352
 msgid "Data Sources"
 msgstr "Fuentes de datos"
 
-#: ../control-center/dsn-config.c:137
+#: ../control-center/dsn-config.c:130
 msgid "Configured data sources in the system"
 msgstr "Fuentes de datos configuradas en el sistema"
 
-#: ../control-center/dsn-config.c:186
+#: ../control-center/dsn-config.c:177
 msgid ""
 "Data sources are the means by which database connections are identified: all "
 "the information needed to open a connection to a specific database using a "
@@ -45,37 +54,47 @@ msgstr ""
 "una conexión contra una base de datos específica usando un «proveedor» se "
 "referencia usando un nombre único."
 
-#: ../control-center/dsn-config.c:268
+#: ../control-center/dsn-config.c:259
 #, c-format
 msgid "Are you sure you want to remove the data source '%s'?"
 msgstr "¿Seguro que quiere eliminar el origen de datos «%s»?"
 
-#: ../control-center/dsn-config.c:272
+#: ../control-center/dsn-config.c:263
 msgid "Data source removal confirmation"
 msgstr "Confirmación del borrado de la fuente de datos"
 
 #. create the dialog
-#: ../control-center/dsn-properties-dialog.c:107
-#: ../control-center/dsn-properties-dialog.c:147
-#: ../control-center/dsn-properties-dialog.c:151
+#: ../control-center/dsn-properties-dialog.c:106
+#: ../control-center/dsn-properties-dialog.c:145
+#: ../control-center/dsn-properties-dialog.c:149
 msgid "Data Source Properties"
 msgstr "Propiedades de la fuente de datos"
 
-#: ../control-center/dsn-properties-dialog.c:109
+#: ../control-center/dsn-properties-dialog.c:108
 msgid "Test"
 msgstr "Prueba"
 
-#: ../control-center/dsn-properties-dialog.c:110
+#: ../control-center/dsn-properties-dialog.c:109
 msgid "Browse"
 msgstr "Examinar"
 
-#: ../control-center/dsn-properties-dialog.c:148
+#: ../control-center/dsn-properties-dialog.c:110
+#| msgid "Never"
+msgid "_Revert"
+msgstr "Re_vertir"
+
+#: ../control-center/dsn-properties-dialog.c:111
+#| msgid "_Close"
+msgid "Close"
+msgstr "Cerrar"
+
+#: ../control-center/dsn-properties-dialog.c:146
 msgid "Change the data source properties (the name can't be modified)."
 msgstr ""
 "Cambia las propiedades de las fuentes de datos (el nombre no puede "
 "modificarse)"
 
-#: ../control-center/dsn-properties-dialog.c:152
+#: ../control-center/dsn-properties-dialog.c:150
 msgid ""
 "For information only, this data source is a system wide data source\n"
 "and you don't have the permission change it."
@@ -84,31 +103,31 @@ msgstr ""
 "el sistema\n"
 "y no tiene permiso para cambiarla."
 
-#: ../control-center/dsn-properties-dialog.c:202
+#: ../control-center/dsn-properties-dialog.c:200
 #, c-format
 msgid "Login for %s"
 msgstr "Iniciar sesión para %s"
 
-#: ../control-center/dsn-properties-dialog.c:224
+#: ../control-center/dsn-properties-dialog.c:222
 msgid "Connection successfully opened!"
 msgstr "Conexión abierta con éxito"
 
-#: ../control-center/dsn-properties-dialog.c:231
+#: ../control-center/dsn-properties-dialog.c:229
 msgid "Could not open connection"
 msgstr "No se pudo abrir la conexión"
 
-#: ../control-center/dsn-properties-dialog.c:232
+#: ../control-center/dsn-properties-dialog.c:230
 #: ../control-center/gdaui-dsn-assistant.c:138
 #: ../libgda-ui/gdaui-raw-form.c:631
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: ../control-center/dsn-properties-dialog.c:268
+#: ../control-center/dsn-properties-dialog.c:266
 msgid "Could not execute browser program"
 msgstr "No se pudo ejecutar el visor"
 
 #. FIXME: add a notice somewhere in the UI
-#: ../control-center/dsn-properties-dialog.c:269 ../libgda/gda-config.c:383
+#: ../control-center/dsn-properties-dialog.c:267 ../libgda/gda-config.c:383
 #: ../libgda/gda-config.c:533 ../libgda/gda-config.c:1068
 #: ../libgda/gda-config.c:1179 ../libgda/gda-config.c:1237
 #: ../libgda/gda-config.c:1314 ../libgda/gda-connection.c:1463
@@ -224,7 +243,7 @@ msgid "No detail"
 msgstr "Sin detalles"
 
 #: ../control-center/gda-control-center-6.0.desktop.in.h:1
-#: ../control-center/main.c:177 ../control-center/main.c:267
+#: ../control-center/main.c:172
 msgid "Database access control center"
 msgstr "Centro de control de acceso de la base de datos"
 
@@ -420,79 +439,43 @@ msgstr ""
 "No se requiere autenticación,\n"
 "confirme la apertura de la conexión"
 
-#: ../control-center/main.c:53 ../libgda-ui/internal/utility.c:482
+#: ../control-center/gdaui-login-dialog.c:105
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: ../control-center/gdaui-login-dialog.c:106
+#| msgid "Connect"
+msgid "C_onnect"
+msgstr "C_onectar"
+
+#: ../control-center/main.c:52 ../libgda-ui/internal/utility.c:482
 #: ../tools/browser/support.c:152
 msgid "Error:"
 msgstr "Error:"
 
-#: ../control-center/main.c:79
+#: ../control-center/main.c:62
+msgid "_Ok"
+msgstr "_Aceptar"
+
+#: ../control-center/main.c:78
 msgid "Could not declare new data source"
 msgstr "No se pudo declarar el nuevo origen de datos"
 
-#: ../control-center/main.c:82
+#: ../control-center/main.c:81
 msgid "No valid data source info was created"
 msgstr "No se creó una información válida para la fuente de datos"
 
-#: ../control-center/main.c:180 ../tools/browser/browser-window.c:1256
+#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1256
 msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
-#: ../control-center/main.c:196
-msgid "_Data source"
-msgstr "Fuente de _datos"
-
-#: ../control-center/main.c:196
-msgid "Database"
-msgstr "Base de datos"
-
-#: ../control-center/main.c:197 ../tools/browser/browser-window.c:296
-#: ../tools/browser/common/ui-formgrid.c:694
-msgid "_Close"
-msgstr "_Cerrar"
-
-#: ../control-center/main.c:197 ../tools/browser/browser-window.c:296
-msgid "Close this window"
-msgstr "Cerrar esta ventana"
-
-#: ../control-center/main.c:198
-msgid "_New datasource"
-msgstr "Fuente de datos _nueva"
-
-#: ../control-center/main.c:198
-msgid "Create new data source"
-msgstr "Crear una fuente de datos nueva"
-
-#: ../control-center/main.c:199
-msgid "_Delete datasource"
-msgstr "Eliminar fuente de _datos"
-
-#: ../control-center/main.c:199
-msgid "Delete selected data source"
-msgstr "Eliminar la fuente de datos seleccionada"
-
-#: ../control-center/main.c:200 ../tools/browser/browser-window.c:285
-msgid "_Properties"
-msgstr "_Propiedades"
-
-#: ../control-center/main.c:200
-msgid "Edit properties for selected data source"
-msgstr "Editar las propiedades de las fuentes de datos seleccionadas"
-
-#: ../control-center/main.c:201 ../control-center/main.c:202
-#: ../tools/browser/browser-window.c:298
-msgid "_About"
-msgstr "Acerca _de"
-
-#: ../control-center/main.c:201 ../tools/browser/browser-window.c:298
-msgid "About"
-msgstr "Acerca de"
-
-#: ../control-center/main.c:202
-msgid "About GNOME-DB"
-msgstr "Acerca de GNOME-DB"
+#: ../control-center/main.c:239
+#| msgid "Database access control center"
+msgid "Datasource access control center"
+msgstr "Centro de control de acceso a la fuente de datos"
 
 #. title
-#: ../control-center/main.c:390 ../control-center/provider-config.c:60
+#: ../control-center/main.c:361 ../control-center/provider-config.c:60
 msgid "Providers"
 msgstr "Proveedores"
 
@@ -500,7 +483,7 @@ msgstr "Proveedores"
 msgid "Installed providers"
 msgstr "Proveedores instalados"
 
-#: ../control-center/provider-config.c:99
+#: ../control-center/provider-config.c:96
 msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
@@ -744,48 +727,48 @@ msgstr "La conexión ya está abierta"
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Error al mantener los metadatos actualizados: %s"
 
-#: ../libgda/gda-connection.c:1817
+#: ../libgda/gda-connection.c:1821
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "El proveedor no proporciona un GdaDataHandler para fechas"
 
-#: ../libgda/gda-connection.c:2961 ../libgda/gda-connection.c:3323
-#: ../libgda/gda-connection.c:3419 ../libgda/gda-connection.c:3509
-#: ../libgda/gda-connection.c:5808
+#: ../libgda/gda-connection.c:2968 ../libgda/gda-connection.c:3330
+#: ../libgda/gda-connection.c:3426 ../libgda/gda-connection.c:3516
+#: ../libgda/gda-connection.c:5830
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:419
 #, c-format
 msgid "Connection is closed"
 msgstr "La conexión está cerrada"
 
-#: ../libgda/gda-connection.c:3195 ../libgda/gda-connection.c:3210
+#: ../libgda/gda-connection.c:3202 ../libgda/gda-connection.c:3217
 msgid "Statement is a selection statement"
 msgstr "La declaración es una declaración de selección"
 
-#: ../libgda/gda-connection.c:3266 ../libgda/gda-connection.c:3365
-#: ../libgda/gda-connection.c:3454
+#: ../libgda/gda-connection.c:3273 ../libgda/gda-connection.c:3372
+#: ../libgda/gda-connection.c:3461
 msgid "Statement is not a selection statement"
 msgstr "La declaración no es una declaración de selección"
 
-#: ../libgda/gda-connection.c:3891
+#: ../libgda/gda-connection.c:3898
 msgid "Invalid argument"
 msgstr "Argumento no válido"
 
-#: ../libgda/gda-connection.c:3901
+#: ../libgda/gda-connection.c:3908
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Faltan argumentos o son erróneos para la tabla «%s»: %s"
 
-#: ../libgda/gda-connection.c:4567
+#: ../libgda/gda-connection.c:4574
 msgid "Meta update error"
 msgstr "Error en la metaactualización"
 
-#: ../libgda/gda-connection.c:5101
+#: ../libgda/gda-connection.c:5123
 msgid "Wrong filter arguments"
 msgstr "Argumentos de filtrado erróneos"
 
-#: ../libgda/gda-connection.c:5289 ../libgda/gda-connection.c:5342
-#: ../libgda/gda-connection.c:5386 ../libgda/gda-connection.c:5430
-#: ../libgda/gda-connection.c:5474
+#: ../libgda/gda-connection.c:5311 ../libgda/gda-connection.c:5364
+#: ../libgda/gda-connection.c:5408 ../libgda/gda-connection.c:5452
+#: ../libgda/gda-connection.c:5496
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
@@ -2140,7 +2123,6 @@ msgstr ""
 
 #: ../libgda/gda-server-provider.c:2014
 #, c-format
-#| msgid "Can't open connection %d: %s\n"
 msgid "Delaying opening connection for %u ms\n"
 msgstr "Retrasando la apertura de la conexión %u ms\n"
 
@@ -2152,7 +2134,6 @@ msgstr ""
 
 #: ../libgda/gda-server-provider.c:2246
 #, c-format
-#| msgid "Can't close connection: %s\n"
 msgid "Delaying closing connection for %u ms\n"
 msgstr "Retrasando el cierre de la conexión %u ms\n"
 
@@ -2172,7 +2153,6 @@ msgstr "No está soportado"
 #: ../libgda/gda-server-provider.c:3182 ../libgda/gda-server-provider.c:3251
 #: ../libgda/gda-server-provider.c:3319
 #, c-format
-#| msgid "Error starting transaction: %s"
 msgid "Delaying transaction for %u ms\n"
 msgstr "Retrasando la transacción %u ms\n"
 
@@ -2315,7 +2295,7 @@ msgstr "Falta el parámetro «%s»"
 
 #: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3091
 #: ../providers/jdbc/gda-jdbc-provider.c:1488
-#: ../providers/mysql/gda-mysql-provider.c:2307
+#: ../providers/mysql/gda-mysql-provider.c:2308
 #: ../providers/postgres/gda-postgres-provider.c:2107
 #: ../providers/web/gda-web-provider.c:1506
 #, c-format
@@ -2475,7 +2455,7 @@ msgstr "No se puede reescribir una sentencia que no sea INSERT o UPDATE"
 #: ../libgda/gda-util.c:1780 ../libgda/gda-util.c:1837
 #: ../libgda/gda-util.c:1877 ../libgda/sqlite/gda-sqlite-provider.c:3072
 #: ../providers/jdbc/gda-jdbc-provider.c:1459
-#: ../providers/mysql/gda-mysql-provider.c:2287
+#: ../providers/mysql/gda-mysql-provider.c:2288
 #: ../providers/postgres/gda-postgres-provider.c:2089
 #: ../providers/web/gda-web-provider.c:1488
 #, c-format
@@ -2875,8 +2855,8 @@ msgstr "Declaración vacía"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3050
 #: ../providers/jdbc/gda-jdbc-provider.c:1425
 #: ../providers/jdbc/gda-jdbc-provider.c:1428
-#: ../providers/mysql/gda-mysql-provider.c:2262
-#: ../providers/mysql/gda-mysql-provider.c:2265
+#: ../providers/mysql/gda-mysql-provider.c:2263
+#: ../providers/mysql/gda-mysql-provider.c:2266
 #: ../providers/postgres/gda-postgres-provider.c:2065
 #: ../providers/postgres/gda-postgres-provider.c:2068
 #: ../providers/web/gda-web-provider.c:1462
@@ -2886,7 +2866,7 @@ msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3110
 #: ../providers/jdbc/gda-jdbc-provider.c:1507
-#: ../providers/mysql/gda-mysql-provider.c:2326
+#: ../providers/mysql/gda-mysql-provider.c:2327
 #: ../providers/postgres/gda-postgres-provider.c:2126
 #: ../providers/web/gda-web-provider.c:1529
 msgid "Can't rewrite statement handle default values"
@@ -2895,12 +2875,12 @@ msgstr ""
 "predeterminados"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3226
-#: ../providers/mysql/gda-mysql-provider.c:2590
+#: ../providers/mysql/gda-mysql-provider.c:2591
 msgid "Can't get BLOB's length"
 msgstr "No se puede obtener la longitud del BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3228
-#: ../providers/mysql/gda-mysql-provider.c:2592
+#: ../providers/mysql/gda-mysql-provider.c:2593
 msgid "BLOB is too big"
 msgstr "El BLOB es demasiado grande"
 
@@ -5920,12 +5900,12 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2584
+#: ../providers/mysql/gda-mysql-provider.c:2585
 msgid "Can't read whole BLOB into memory"
 msgstr "No se puede leer el BLOB completo en la memoria"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2631
+#: ../providers/mysql/gda-mysql-provider.c:2632
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
@@ -5934,7 +5914,7 @@ msgstr ""
 "Tipo de dato «%s» no manejado. Informe del error en http://bugzilla.gnome."
 "org/ para el producto «libgda»."
 
-#: ../providers/mysql/gda-mysql-provider.c:2678
+#: ../providers/mysql/gda-mysql-provider.c:2679
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -8024,6 +8004,15 @@ msgstr "Ventana nueva para la _conexión"
 msgid "Open a new window for a connection"
 msgstr "Abrir una ventana nueva para una conexión"
 
+#: ../tools/browser/browser-window.c:296
+#: ../tools/browser/common/ui-formgrid.c:694
+msgid "_Close"
+msgstr "_Cerrar"
+
+#: ../tools/browser/browser-window.c:296
+msgid "Close this window"
+msgstr "Cerrar esta ventana"
+
 #: ../tools/browser/browser-window.c:297
 msgid "_Help"
 msgstr "Ay_uda"
@@ -8032,6 +8021,14 @@ msgstr "Ay_uda"
 #: ../tools/browser/data-manager/data-console.c:420
 msgid "Help"
 msgstr "Ayuda"
+
+#: ../tools/browser/browser-window.c:298
+msgid "_About"
+msgstr "Acerca _de"
+
+#: ../tools/browser/browser-window.c:298
+msgid "About"
+msgstr "Acerca de"
 
 #: ../tools/browser/browser-window.c:300
 msgid "_Manual"
@@ -11405,6 +11402,30 @@ msgstr "Objetos"
 msgid "Triggers"
 msgstr "Disparadores"
 
+#~ msgid "_Data source"
+#~ msgstr "Fuente de _datos"
+
+#~ msgid "Database"
+#~ msgstr "Base de datos"
+
+#~ msgid "_New datasource"
+#~ msgstr "Fuente de datos _nueva"
+
+#~ msgid "Create new data source"
+#~ msgstr "Crear una fuente de datos nueva"
+
+#~ msgid "_Delete datasource"
+#~ msgstr "Eliminar fuente de _datos"
+
+#~ msgid "Delete selected data source"
+#~ msgstr "Eliminar la fuente de datos seleccionada"
+
+#~ msgid "Edit properties for selected data source"
+#~ msgstr "Editar las propiedades de las fuentes de datos seleccionadas"
+
+#~ msgid "About GNOME-DB"
+#~ msgstr "Acerca de GNOME-DB"
+
 #~ msgid ""
 #~ "Unique GThread from which the connection will be available.This should "
 #~ "only be modified by the database providers' implementation"
@@ -12034,11 +12055,6 @@ msgstr "Disparadores"
 #~ msgstr ""
 #~ "Las cadenas de formato y completado deben tener la misma longitud, "
 #~ "ignorando el completado"
-
-#, fuzzy
-#~| msgid "Default"
-#~ msgid "Delete"
-#~ msgstr "Predeterminado"
 
 #~ msgid "Can't get current favorites"
 #~ msgstr "No se pueden obtener los favoritos actuales"
