@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -197,7 +197,7 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 	/* Create the DSN add button */
 	login->priv->cc_button = gtk_button_new_with_label (_("Data sources..."));
 	gtk_button_set_image (GTK_BUTTON (login->priv->cc_button),
-			      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_BUTTON));
+			      gtk_image_new_from_icon_name ("preferences-system", GTK_ICON_SIZE_BUTTON));
 	g_signal_connect (G_OBJECT (login->priv->cc_button), "clicked",
 			  G_CALLBACK (run_cc_cb), login);
 	gtk_widget_show (login->priv->cc_button);

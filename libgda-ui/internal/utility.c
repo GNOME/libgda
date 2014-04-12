@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2012 Snicksie <none@none.com>
  *
@@ -486,7 +486,7 @@ _gdaui_utility_show_error (GtkWindow *parent, const gchar *format, ...)
                                                      GTK_BUTTONS_CLOSE, "%s", str);
 	g_free (str);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-				      gtk_button_new_from_stock (GTK_STOCK_OK),
+				      gtk_button_new_with_label (_("Ok")),
 				      GTK_RESPONSE_OK);
 	gtk_widget_show_all (dialog);
 	gtk_dialog_run (GTK_DIALOG (dialog));

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -32,13 +32,16 @@
  */
 gboolean
 common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *bindata, 
-		       const gchar **stock, GError **error)
+		       const gchar **out_icon_name, GError **error)
 {
 	gboolean allok = TRUE;
 
+	g_assert (out_icon_name);
+	*out_icon_name = NULL;
+
 	if (value) {
 		if (gda_value_is_null ((GValue *) value)) {
-			*stock = GTK_STOCK_MISSING_IMAGE;
+			*out_icon_name = "image-missing";
 			g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 				     "%s", _("No data"));
 			allok = FALSE;
@@ -70,7 +73,7 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 					memcpy (bindata->data, bin->data, bin->binary_length);
 				}
 				else {
-					*stock = GTK_STOCK_DIALOG_ERROR;
+					*out_icon_name = "dialog-error";
 					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 						     "%s", _("No data"));
 					allok = FALSE;
@@ -101,14 +104,14 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 					}
 				}
 				else {
-					*stock = GTK_STOCK_MISSING_IMAGE;
+					*out_icon_name = "image-missing";
 					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 						     "%s", _("Empty data"));
 					allok = FALSE;
 				}
 			}
 			else {
-				*stock = GTK_STOCK_DIALOG_ERROR;
+				*out_icon_name = "dialog-error";
 				g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 					     "%s", _("Unhandled type of data"));
 				allok = FALSE;
@@ -116,7 +119,7 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 		}
 	}
 	else {
-		*stock = GTK_STOCK_MISSING_IMAGE;
+		*out_icon_name = "image-missing";
 		g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 			     "%s", _("Empty data"));
 		allok = FALSE;
@@ -191,9 +194,11 @@ loader_size_prepared_cb (GdkPixbufLoader *loader, gint width, gint height, PictA
  */
 GdkPixbuf * 
 common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocation *allocation, 
-			 const gchar **stock, GError **error)
+			 const gchar **out_icon_name, GError **error)
 {
 	GdkPixbuf *retpixbuf = NULL;
+	g_assert (out_icon_name);
+	*out_icon_name = NULL;
 
 	if (bindata->data) {
 		if (options->serialize) {
@@ -206,7 +211,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				bindata->data = NULL;
 				bindata->data_length = 0;
 
-				*stock = GTK_STOCK_DIALOG_ERROR;
+				*out_icon_name = "dialog-error";
 				g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 					     _("Error while deserializing data:\n%s"),
 					     loc_error && loc_error->message ? loc_error->message : _("No detail"));
@@ -216,7 +221,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 			else {
 				retpixbuf = gdk_pixbuf_from_pixdata (&pixdata, FALSE, &loc_error);
 				if (!retpixbuf) {
-					*stock = GTK_STOCK_DIALOG_ERROR;
+					*out_icon_name = "dialog-error";
 					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 						     _("Error while interpreting data as an image:\n%s"),
 						     loc_error && loc_error->message ? loc_error->message : _("No detail"));
@@ -254,7 +259,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				if (!retpixbuf) {
 					if (loc_error)
 						g_propagate_error (error, loc_error);
-					*stock = GTK_STOCK_MISSING_IMAGE;
+					*out_icon_name = "image-missing";
 				}
 				else
 					g_object_ref (retpixbuf);
@@ -263,7 +268,7 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 				gchar *notice_msg;
 				notice_msg = g_strdup_printf (_("Error while interpreting data as an image:\n%s"),
 							      loc_error && loc_error->message ? loc_error->message : _("No detail"));
-				*stock = GTK_STOCK_DIALOG_WARNING;
+				*out_icon_name = "dialog-warning";
 				g_set_error_literal (error, loc_error ? loc_error->domain : GDAUI_DATA_ENTRY_ERROR,
 						     loc_error ? loc_error->code : GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
 						     notice_msg);
@@ -360,8 +365,8 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 	dlg = gtk_file_chooser_dialog_new (_("Select image to load"), 
 					   GTK_WINDOW (gtk_widget_get_toplevel (button)),
 					   GTK_FILE_CHOOSER_ACTION_OPEN, 
-					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					   GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_CANCEL,
+					   _("_Open"), GTK_RESPONSE_ACCEPT,
 					   NULL);
 	filter = gtk_file_filter_new ();
 	gtk_file_filter_add_pixbuf_formats (filter);
@@ -487,8 +492,8 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 	dlg = gtk_file_chooser_dialog_new (_("Select a file to save the image to"), 
 					   GTK_WINDOW (gtk_widget_get_toplevel (button)),
 					   GTK_FILE_CHOOSER_ACTION_SAVE, 
-					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					   GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_CANCEL,
+					   _("_Save"), GTK_RESPONSE_ACCEPT,
 					   NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());

@@ -63,8 +63,7 @@ do_ddl_queries (GtkWidget *do_widget)
 		window = gtk_dialog_new_with_buttons ("DDL queries",
 						      GTK_WINDOW (do_widget),
 						      0,
-						      GTK_STOCK_CLOSE,
-						      GTK_RESPONSE_NONE,
+						      "Close", GTK_RESPONSE_NONE,
 						      NULL);
 		data->top_window = window;
 		
@@ -409,7 +408,7 @@ show_named_parameters (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 	dlg = gtk_dialog_new_with_buttons ("Named parameters",
 					   GTK_WINDOW (data->top_window),
 					   GTK_DIALOG_MODAL,
-					   GTK_STOCK_CLOSE, GTK_RESPONSE_REJECT, NULL);
+					   "Close", GTK_RESPONSE_REJECT, NULL);
 
 	label = gtk_label_new ("<b>Named parameters:</b>\n");
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
@@ -478,7 +477,7 @@ show_sql (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 
 		dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (data->top_window),
 							  GTK_DIALOG_MODAL,
-							  msg_type, GTK_BUTTONS_CLOSE, msg);
+							  msg_type, GTK_BUTTONS_CLOSE, "%s", msg);
 		g_free (sql);
 		g_free (msg);
 

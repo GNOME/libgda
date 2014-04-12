@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -205,7 +205,7 @@ gdaui_entry_pict_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
-static void display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_stock, const gchar *notice);
+static void display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_icon_name, const gchar *notice);
 static gboolean popup_menu_cb (GtkWidget *button, GdauiEntryPict *mgpict);
 static gboolean event_cb (GtkWidget *button, GdkEvent *event, GdauiEntryPict *mgpict);
 static void size_allocate_cb (GtkWidget *wid, GtkAllocation *allocation, GdauiEntryPict *mgpict);
@@ -242,7 +242,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	/* image */
 	wid = gtk_image_new ();
 	gtk_misc_set_alignment (GTK_MISC (wid), 0., .5);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (mgpict->priv->sw), wid);
+	gtk_container_add (GTK_CONTAINER (mgpict->priv->sw), wid);
 	gtk_widget_show (wid);
 	mgpict->priv->pict = wid;
 
@@ -255,7 +255,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	g_signal_connect (G_OBJECT (mgpict), "event",
 			  G_CALLBACK (event_cb), mgpict);
 
-	display_image (mgpict, NULL, GTK_STOCK_MISSING_IMAGE, _("No data to display"));
+	display_image (mgpict, NULL, "image-missing", _("No data to display"));
 
 	g_signal_connect (G_OBJECT (mgpict), "realize",
 			  G_CALLBACK (realize_cb), mgwrap);
@@ -353,7 +353,7 @@ static void
 real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 {
 	GdauiEntryPict *mgpict;
-	const gchar *stock = NULL;
+	const gchar *icon_name = NULL;
 	gchar *notice_msg = NULL;
 	GError *error = NULL;
 
@@ -366,20 +366,20 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	mgpict->priv->bindata.data_length = 0;
 
 	/* fill in mgpict->priv->data */
-	if (!common_pict_load_data (&(mgpict->priv->options), value, &(mgpict->priv->bindata), &stock, &error)) {
+	if (!common_pict_load_data (&(mgpict->priv->options), value, &(mgpict->priv->bindata), &icon_name, &error)) {
 		notice_msg = g_strdup (error->message ? error->message : "");
 		g_error_free (error);
 	}
 
 	/* create (if possible) a pixbuf from mgpict->priv->bindata.data */
-	display_image (mgpict, value, stock, notice_msg);
+	display_image (mgpict, value, icon_name, notice_msg);
 	g_free (notice_msg);
 }
 
 static void 
-display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_stock, const gchar *notice)
+display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_icon_name, const gchar *notice)
 {
-	const gchar *stock = error_stock;
+	const gchar *icon_name = error_icon_name;
 	gchar *notice_msg = NULL;
 	GdkPixbuf *pixbuf;
 	PictAllocation alloc;
@@ -397,7 +397,7 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 		g_object_ref (pixbuf);
 	else {
 		pixbuf = common_pict_make_pixbuf (&(mgpict->priv->options), &(mgpict->priv->bindata), &alloc, 
-						  &stock, &error);
+						  &icon_name, &error);
 		if (pixbuf) 
 			common_pict_add_cached_pixbuf (&(mgpict->priv->options), value, pixbuf);
 	}
@@ -412,14 +412,14 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_s
 			g_error_free (error);
 		}
 		else {
-			stock = GTK_STOCK_MISSING_IMAGE;
+			icon_name = "image-missing";
 			notice_msg = g_strdup (_("Empty data"));
 		}
 	}
 
-	if (stock)
-		gtk_image_set_from_stock (GTK_IMAGE (mgpict->priv->pict), 
-					  stock, GTK_ICON_SIZE_DIALOG);
+	if (icon_name)
+		gtk_image_set_from_icon_name (GTK_IMAGE (mgpict->priv->pict), 
+					      icon_name, GTK_ICON_SIZE_DIALOG);
 	gtk_widget_set_tooltip_text (mgpict->priv->pict, notice ? notice : notice_msg);
 	g_free (notice_msg);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 - 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -2156,10 +2156,8 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 
 	dlg = gtk_dialog_new_with_buttons (rtitle, parent,
 					   GTK_DIALOG_MODAL,
-					   GTK_STOCK_CANCEL,
-					   GTK_RESPONSE_REJECT,
-					   GTK_STOCK_OK,
-					   GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_REJECT,
+					   _("_Ok"), GTK_RESPONSE_ACCEPT,
 					   NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_ACCEPT);
 	if (header && *header) {

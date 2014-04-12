@@ -51,8 +51,7 @@ do_data_model_dir (GtkWidget *do_widget)
 		window = gtk_dialog_new_with_buttons ("GdaDataModelDir data model",
 						      GTK_WINDOW (do_widget),
 						      0,
-						      GTK_STOCK_CLOSE,
-						      GTK_RESPONSE_NONE,
+						      "Close", GTK_RESPONSE_NONE,
 						      NULL);
 		
 		g_signal_connect (window, "response",

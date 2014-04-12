@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -197,8 +197,8 @@ button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 	dlg = gtk_file_chooser_dialog_new (title,
 					   (GtkWindow *) gtk_widget_get_ancestor (GTK_WIDGET (filesel), GTK_TYPE_WINDOW), 
 					   filesel->priv->mode, 
-					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					   GTK_STOCK_APPLY, GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_CANCEL,
+					   _("_Apply"), GTK_RESPONSE_ACCEPT,
 					   NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());

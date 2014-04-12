@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -66,10 +66,10 @@ GdkPixbuf   *common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue
 void         common_pict_clear_pixbuf_cache (PictOptions *options);
 
 gboolean     common_pict_load_data   (PictOptions *options, const GValue *value, PictBinData *bindata, 
-				      const gchar **stock, GError **error);
+				      const gchar **out_icon_name, GError **error);
 
 GdkPixbuf   *common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocation *allocation, 
-				      const gchar **stock, GError **error);
+				      const gchar **out_icon_name, GError **error);
 
 void         common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *bindata, PictOptions  *options,
 				      PictCallback callback, gpointer data);

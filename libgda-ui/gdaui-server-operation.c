@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -380,7 +380,7 @@ sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWid
 	gtk_widget_show (wid);
 
 	/* "-" button */
-	image = gtk_image_new_from_stock (GTK_STOCK_REMOVE, GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name ("list-remove", GTK_ICON_SIZE_MENU);
 	wid = gtk_button_new ();
 	gtk_button_set_image (GTK_BUTTON (wid), image);
 	gtk_grid_attach (GTK_GRID (grid), wid, 1, index, 1, 1);
@@ -462,7 +462,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 		model = info_node->model;
 		grid = gdaui_raw_grid_new (model);
-		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), grid);
+		gtk_container_add (GTK_CONTAINER (plwid), grid);
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
 					      GTK_SHADOW_NONE);
 		gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (grid),
@@ -565,7 +565,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		size = gda_server_operation_get_sequence_size (form->priv->op, path);
 		grid = gtk_grid_new ();
 		gtk_grid_set_row_spacing (GTK_GRID (grid), 10);
-		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (plwid), grid);
+		gtk_container_add (GTK_CONTAINER (plwid), grid);
 		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
 					      GTK_SHADOW_NONE);
 		gtk_widget_show (grid);
@@ -598,7 +598,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			gtk_grid_attach (GTK_GRID (grid), wid, 0, size, 1, 1);
 			gtk_widget_show (wid);
 
-			image = gtk_image_new_from_stock (GTK_STOCK_ADD, GTK_ICON_SIZE_MENU);
+			image = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);
 			wid = gtk_button_new ();
 			gtk_button_set_image (GTK_BUTTON (wid), image);
 			gtk_grid_attach (GTK_GRID (grid), wid, 1, size, 1, 1);
@@ -1094,10 +1094,8 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 
 	dlg = gtk_dialog_new_with_buttons (rtitle, parent,
 					   GTK_DIALOG_MODAL,
-					   GTK_STOCK_OK,
-					   GTK_RESPONSE_ACCEPT,
-					   GTK_STOCK_CANCEL,
-					   GTK_RESPONSE_REJECT,
+					   _("_Ok"), GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_REJECT,
 					   NULL);
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
 

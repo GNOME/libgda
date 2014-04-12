@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -689,8 +689,8 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
         dlg = gtk_file_chooser_dialog_new (_("Select image to load"),
                                            GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) rte)),
                                            GTK_FILE_CHOOSER_ACTION_OPEN,
-                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                           GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                           _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                           _("_Open"), GTK_RESPONSE_ACCEPT,
                                            NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());

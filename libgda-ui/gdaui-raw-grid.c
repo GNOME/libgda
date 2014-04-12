@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -1869,7 +1869,6 @@ static void menu_set_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_unset_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static GtkWidget *new_menu_item (const gchar *label,
-				 gboolean pixmap,
 				 GCallback cb_func,
 				 gpointer user_data);
 static GtkWidget *new_check_menu_item (const gchar *label,
@@ -1939,18 +1938,18 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 	}
 
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-			       new_menu_item (GTK_STOCK_COPY, TRUE,
+			       new_menu_item (_("_Copy"),
 					      G_CALLBACK (menu_copy_row_cb), grid));
 	
 
 	if (sel_mode == GTK_SELECTION_MULTIPLE)
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-				       new_menu_item (_("Select _All"), FALSE,
+				       new_menu_item (_("Select _All"),
 						      G_CALLBACK (menu_select_all_cb), grid));
 	
 	if ((sel_mode == GTK_SELECTION_SINGLE) || (sel_mode == GTK_SELECTION_MULTIPLE))
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-				       new_menu_item (_("_Clear Selection"), FALSE,
+				       new_menu_item (_("_Clear Selection"),
 						      G_CALLBACK (menu_unselect_all_cb), grid));
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
 			       new_check_menu_item (_("Show Column _Titles"),
@@ -1958,17 +1957,17 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 						    G_CALLBACK (menu_show_columns_cb), grid));
 	
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-			       new_menu_item (_("_Set filter"), FALSE,
+			       new_menu_item (_("_Set filter"),
 					      G_CALLBACK (menu_set_filter_cb), grid));
 
-	mitem = new_menu_item (_("_Unset filter"), FALSE, G_CALLBACK (menu_unset_filter_cb), grid);
+	mitem = new_menu_item (_("_Unset filter"), G_CALLBACK (menu_unset_filter_cb), grid);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 	if (!gda_data_proxy_get_filter_expr (grid->priv->proxy))
 		gtk_widget_set_sensitive (mitem, FALSE);
 	
 	if (sel_mode != GTK_SELECTION_NONE) {
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
-		gtk_menu_shell_append (GTK_MENU_SHELL (menu), new_menu_item (GTK_STOCK_SAVE_AS, TRUE,
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), new_menu_item (_("Save _As"),
 									     G_CALLBACK (menu_save_as_cb),
 									     grid));
 	}
@@ -1983,16 +1982,12 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 
 static GtkWidget *
 new_menu_item (const gchar *label,
-	       gboolean pixmap,
 	       GCallback cb_func,
 	       gpointer user_data)
 {
 	GtkWidget *item;
 
-	if (pixmap)
-		item = gtk_image_menu_item_new_from_stock (label, NULL);
-	else
-		item = gtk_menu_item_new_with_mnemonic (label);
+	item = gtk_menu_item_new_with_mnemonic (label);
 
 	g_signal_connect (G_OBJECT (item), "activate",
 			  G_CALLBACK (cb_func), user_data);
@@ -2151,8 +2146,8 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	/* create dialog box */
 	dialog = gtk_dialog_new_with_buttons (_("Saving Data"),
 					      GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (grid))), 0,
-					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					      GTK_STOCK_SAVE, GTK_RESPONSE_OK,
+					      _("_Cancel"), GTK_RESPONSE_CANCEL,
+					      _("_Save"), GTK_RESPONSE_OK,
 					      NULL);
 	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (dialog), 6);
@@ -2504,7 +2499,7 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 						     _("If you choose yes, the contents will be lost."));
 	g_free (msg);
 
-	button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	button = gtk_button_new_with_label (_("_Cancel"));
 	gtk_widget_set_can_default (button, TRUE);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 					 GTK_RESPONSE_NO);

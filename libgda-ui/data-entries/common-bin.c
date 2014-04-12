@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -40,8 +40,8 @@ file_load_cb (GtkWidget *button, BinMenu *menu)
         dlg = gtk_file_chooser_dialog_new (_("Select file to load"),
                                            GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                            GTK_FILE_CHOOSER_ACTION_OPEN,
-                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                           GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                           _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                           _("_Open"), GTK_RESPONSE_ACCEPT,
                                            NULL);
 	if (menu->current_folder)
 		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), menu->current_folder);
@@ -110,8 +110,8 @@ file_save_cb (GtkWidget *button, BinMenu *menu)
         dlg = gtk_file_chooser_dialog_new (_("Select a file to save data to"),
                                            GTK_WINDOW (gtk_widget_get_toplevel (button)),
                                            GTK_FILE_CHOOSER_ACTION_SAVE,
-                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                           GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                           _("_Cancel"), GTK_RESPONSE_CANCEL,
+                                           _("_Open"), GTK_RESPONSE_ACCEPT,
                                            NULL);
 
 	if (menu->current_folder)
@@ -214,13 +214,13 @@ common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, G
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 
-	button = gtk_button_new_from_stock (GTK_STOCK_OPEN);
+	button = gtk_button_new_from_icon_name ("document-open", GTK_ICON_SIZE_BUTTON);
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (file_load_cb), binmenu);
 	binmenu->load_button = button;
-	
-	button = gtk_button_new_from_stock (GTK_STOCK_SAVE_AS);
+
+	button = gtk_button_new_from_icon_name ("document-save-as", GTK_ICON_SIZE_BUTTON);
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (file_save_cb), binmenu);

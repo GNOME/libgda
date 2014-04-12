@@ -79,8 +79,7 @@ do_linked_grid_form (GtkWidget *do_widget)
 		window = gtk_dialog_new_with_buttons ("Linked grid and form on the same data",
 						      GTK_WINDOW (do_widget),
 						      0,
-						      GTK_STOCK_CLOSE,
-						      GTK_RESPONSE_NONE,
+						      "Close", GTK_RESPONSE_NONE,
 						      NULL);
 		
 		g_signal_connect (window, "response",

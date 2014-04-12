@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -272,11 +272,11 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
 	case PROP_VALUE:
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
                 cell->priv->value = NULL;
-		g_object_set (G_OBJECT (cell), "pixbuf", NULL, "stock-id", NULL, NULL);
+		g_object_set (G_OBJECT (cell), "pixbuf", NULL, "icon-name", NULL, NULL);
 		if (value) {
                         GValue *gval = g_value_get_boxed (value);
 			GdkPixbuf *pixbuf = NULL;
-			const gchar *stock = NULL;
+			const gchar *icon_name = NULL;
 			GError *error = NULL;
 
 			if (!gval)
@@ -289,7 +289,8 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
 			}
 
 			/* fill in cell->priv->data */
-			if (common_pict_load_data (&(cell->priv->options), gval, &(cell->priv->bindata), &stock, &error)) {
+			if (common_pict_load_data (&(cell->priv->options), gval, &(cell->priv->bindata),
+						   &icon_name, &error)) {
 				/* try to make a pixbuf */
 				pixbuf = common_pict_fetch_cached_pixbuf (&(cell->priv->options), gval);
 				if (pixbuf)
@@ -297,13 +298,13 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
 				else {
 					pixbuf = common_pict_make_pixbuf (&(cell->priv->options),
 									  &(cell->priv->bindata), &(cell->priv->size),
-									  &stock, &error);
+									  &icon_name, &error);
 					if (pixbuf)
 						common_pict_add_cached_pixbuf (&(cell->priv->options), gval, pixbuf);
 				}
 
-				if (!pixbuf && !stock)
-					stock = GTK_STOCK_MISSING_IMAGE;
+				if (!pixbuf && !icon_name)
+					icon_name = "image-missing";
 			}
 
 			/* display something */
@@ -312,8 +313,8 @@ gdaui_data_cell_renderer_pict_set_property (GObject *object,
 				g_object_unref (pixbuf);
 			}
 
-			if (stock)
-				g_object_set (G_OBJECT (cell), "stock-id", stock, NULL);
+			if (icon_name)
+				g_object_set (G_OBJECT (cell), "icon-name", icon_name, NULL);
 			if (error)
 				g_error_free (error);
 
