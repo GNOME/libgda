@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-11 12:09+0000\n"
-"PO-Revision-Date: 2014-04-11 23:00+0100\n"
+"POT-Creation-Date: 2014-04-12 13:21+0000\n"
+"PO-Revision-Date: 2014-04-12 18:54+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,11 +23,12 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: ../control-center/dsn-config.c:85
+#: ../control-center/dsn-config.c:85 ../control-center/menus.ui.h:5
 msgid "_Delete"
 msgstr "_Izbriši"
 
-#: ../control-center/dsn-config.c:88 ../tools/browser/browser-window.c:285
+#: ../control-center/dsn-config.c:88 ../control-center/menus.ui.h:4
+#: ../tools/browser/browser-window.c:285
 msgid "_Properties"
 msgstr "_Lastnosti"
 
@@ -464,6 +465,26 @@ msgstr "Nadzorno središče za dostop do podatkovne zbirke"
 #: ../control-center/main.c:361 ../control-center/provider-config.c:60
 msgid "Providers"
 msgstr "Ponudniki"
+
+#: ../control-center/menus.ui.h:1 ../tools/browser/browser-window.c:289
+msgid "_Quit"
+msgstr "_Končaj"
+
+#: ../control-center/menus.ui.h:2
+msgid "_Data sources"
+msgstr "_Podatkovni viri"
+
+#: ../control-center/menus.ui.h:3
+msgid "_New"
+msgstr "_Novo"
+
+#: ../control-center/menus.ui.h:6 ../tools/browser/browser-window.c:297
+msgid "_Help"
+msgstr "_Pomoč"
+
+#: ../control-center/menus.ui.h:7 ../tools/browser/browser-window.c:298
+msgid "_About"
+msgstr "_O programu"
 
 #: ../control-center/provider-config.c:61
 msgid "Installed providers"
@@ -7833,10 +7854,6 @@ msgstr "_Zapri povezavo"
 msgid "Close this connection"
 msgstr "Zapri to povezavo"
 
-#: ../tools/browser/browser-window.c:289
-msgid "_Quit"
-msgstr "_Končaj"
-
 #: ../tools/browser/browser-window.c:289 ../tools/gda-sql.c:2194
 msgid "Quit"
 msgstr "Končaj"
@@ -7899,17 +7916,9 @@ msgid "Close this window"
 msgstr "Zapri okno"
 
 #: ../tools/browser/browser-window.c:297
-msgid "_Help"
-msgstr "_Pomoč"
-
-#: ../tools/browser/browser-window.c:297
 #: ../tools/browser/data-manager/data-console.c:420
 msgid "Help"
 msgstr "Pomoč"
-
-#: ../tools/browser/browser-window.c:298
-msgid "_About"
-msgstr "_O programu"
 
 #: ../tools/browser/browser-window.c:298
 msgid "About"
@@ -11294,9 +11303,6 @@ msgstr "Predmeti"
 #: ../tools/web-server.c:1889
 msgid "Triggers"
 msgstr "Sprožilniki"
-
-#~ msgid "_Data source"
-#~ msgstr "_Podatkovni vir"
 
 #~ msgid "Database"
 #~ msgstr "Podatkovna zbirka"
