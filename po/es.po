@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-10 19:11+0000\n"
-"PO-Revision-Date: 2014-04-11 12:35+0200\n"
+"POT-Creation-Date: 2014-04-12 13:21+0000\n"
+"PO-Revision-Date: 2014-04-14 11:06+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -25,12 +25,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
-#: ../control-center/dsn-config.c:85
-#| msgid "Default"
+#: ../control-center/dsn-config.c:85 ../control-center/menus.ui.h:5
 msgid "_Delete"
 msgstr "_Eliminar"
 
-#: ../control-center/dsn-config.c:88 ../tools/browser/browser-window.c:285
+#: ../control-center/dsn-config.c:88 ../control-center/menus.ui.h:4
+#: ../tools/browser/browser-window.c:285
 msgid "_Properties"
 msgstr "_Propiedades"
 
@@ -79,12 +79,10 @@ msgid "Browse"
 msgstr "Examinar"
 
 #: ../control-center/dsn-properties-dialog.c:110
-#| msgid "Never"
 msgid "_Revert"
 msgstr "Re_vertir"
 
 #: ../control-center/dsn-properties-dialog.c:111
-#| msgid "_Close"
 msgid "Close"
 msgstr "Cerrar"
 
@@ -444,7 +442,6 @@ msgid "_Cancel"
 msgstr "_Cancelar"
 
 #: ../control-center/gdaui-login-dialog.c:106
-#| msgid "Connect"
 msgid "C_onnect"
 msgstr "C_onectar"
 
@@ -470,7 +467,6 @@ msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
 #: ../control-center/main.c:239
-#| msgid "Database access control center"
 msgid "Datasource access control center"
 msgstr "Centro de control de acceso a la fuente de datos"
 
@@ -478,6 +474,27 @@ msgstr "Centro de control de acceso a la fuente de datos"
 #: ../control-center/main.c:361 ../control-center/provider-config.c:60
 msgid "Providers"
 msgstr "Proveedores"
+
+#: ../control-center/menus.ui.h:1 ../tools/browser/browser-window.c:289
+msgid "_Quit"
+msgstr "_Salir"
+
+#: ../control-center/menus.ui.h:2
+#| msgid "_Data source"
+msgid "_Data sources"
+msgstr "Fuentes de _datos"
+
+#: ../control-center/menus.ui.h:3
+msgid "_New"
+msgstr "_Nueva"
+
+#: ../control-center/menus.ui.h:6 ../tools/browser/browser-window.c:297
+msgid "_Help"
+msgstr "Ay_uda"
+
+#: ../control-center/menus.ui.h:7 ../tools/browser/browser-window.c:298
+msgid "_About"
+msgstr "Acerca _de"
 
 #: ../control-center/provider-config.c:61
 msgid "Installed providers"
@@ -7948,10 +7965,6 @@ msgstr "_Cerrar la conexión"
 msgid "Close this connection"
 msgstr "Cerrar esta conexión"
 
-#: ../tools/browser/browser-window.c:289
-msgid "_Quit"
-msgstr "_Salir"
-
 #: ../tools/browser/browser-window.c:289 ../tools/gda-sql.c:2194
 msgid "Quit"
 msgstr "Salir"
@@ -8014,17 +8027,9 @@ msgid "Close this window"
 msgstr "Cerrar esta ventana"
 
 #: ../tools/browser/browser-window.c:297
-msgid "_Help"
-msgstr "Ay_uda"
-
-#: ../tools/browser/browser-window.c:297
 #: ../tools/browser/data-manager/data-console.c:420
 msgid "Help"
 msgstr "Ayuda"
-
-#: ../tools/browser/browser-window.c:298
-msgid "_About"
-msgstr "Acerca _de"
 
 #: ../tools/browser/browser-window.c:298
 msgid "About"
@@ -11401,9 +11406,6 @@ msgstr "Objetos"
 #: ../tools/web-server.c:1889
 msgid "Triggers"
 msgstr "Disparadores"
-
-#~ msgid "_Data source"
-#~ msgstr "Fuente de _datos"
 
 #~ msgid "Database"
 #~ msgstr "Base de datos"
