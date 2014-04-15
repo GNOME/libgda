@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,7 +41,11 @@ gda_oracle_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	/* CREATE TABLE */
 	string = g_string_new ("CREATE TABLE ");
 
-	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME");
+	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME", error);
+	if (!tmp) {
+		g_string_free (string, TRUE);
+		return NULL;
+	}
 	g_string_append (string, tmp);
 	g_free (tmp);
 	g_string_append (string, " (");
@@ -59,7 +63,13 @@ gda_oracle_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) { 
 				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, 
-										  "/FIELDS_A/@COLUMN_NAME/%d", i);
+										  "/FIELDS_A/@COLUMN_NAME/%d",
+										  error, i);
+				if (!tmp) {
+					g_string_free (string, TRUE);
+					return NULL;
+				}
+
 				pkfields = g_slist_append (pkfields, tmp);
 				nbpkfields ++;
 			}
@@ -75,7 +85,12 @@ gda_oracle_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 				g_string_append (string, ", ");
 				
 			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, 
-									  "/FIELDS_A/@COLUMN_NAME/%d", i);
+									  "/FIELDS_A/@COLUMN_NAME/%d", error, i);
+			if (!tmp) {
+				g_string_free (string, TRUE);
+				return NULL;
+			}
+
 			g_string_append (string, tmp);
 			g_free (tmp);
 			g_string_append_c (string, ' ');

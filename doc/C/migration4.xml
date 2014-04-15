@@ -85,7 +85,7 @@
         <listitem><para>The gda_connection_async_statement_execute() function has been removed</para></listitem>
         <listitem><para>The gda_connection_internal_get_provider_data() has been replaced by
 	<link linkend="gda-connection-internal-get-provider-data-error">gda_connection_internal_get_provider_data_error</link>()</para></listitem>
-        <listitem><para>The </para></listitem>
+        <listitem><para>The <link linkend="gda-server-operation-get-sql-identifier-at">gda_server_operation_get_sql_identifier_at()</link> and <link linkend="gda-server-operation-get-sql-identifier-at-path">gda_server_operation_get_sql_identifier_at_path()</link> now have an extra argument for errors</para></listitem>
         <listitem><para>The </para></listitem>
         <listitem><para>The </para></listitem>
         <listitem><para>The </para></listitem>

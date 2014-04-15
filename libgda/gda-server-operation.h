@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  *
@@ -208,10 +208,11 @@ const GValue              *gda_server_operation_get_value_at            (GdaServ
 const GValue              *gda_server_operation_get_value_at_path       (GdaServerOperation *op, const gchar *path);
 gchar                     *gda_server_operation_get_sql_identifier_at   (GdaServerOperation *op,
 									 GdaConnection *cnc, GdaServerProvider *prov,
-									 const gchar *path_format, ...);    
+									 const gchar *path_format, GError **error,
+									 ...);    
 gchar                     *gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, 
 									    GdaConnection *cnc, GdaServerProvider *prov,
-									    const gchar *path);
+									    const gchar *path, GError **error);
 gboolean                   gda_server_operation_set_value_at            (GdaServerOperation *op, const gchar *value, 
 									 GError **error, const gchar *path_format, ...);
 gboolean                   gda_server_operation_set_value_at_path       (GdaServerOperation *op, const gchar *value, 

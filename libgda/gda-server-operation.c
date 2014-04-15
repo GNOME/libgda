@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2008 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
@@ -2097,6 +2097,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @prov: (allow-none): a #GdaServerProvider, or %NULL
  * @path_format: a complete path to a node (starting with "/")
+ * @error: (allow-none): a place to store errors, or %NULL
  * @...: arguments to use with @path_format to make a complete path
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
@@ -2112,7 +2113,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
  */
 gchar *
 gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
-					    const gchar *path_format, ...)
+					    const gchar *path_format, GError **error, ...)
 {
 	gchar *path, *ret;
 	va_list args;
@@ -2120,11 +2121,11 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 
 	/* build path */
-	va_start (args, path_format);
+	va_start (args, error);
 	path = g_strdup_vprintf (path_format, args);
 	va_end (args);
 
-	ret = gda_server_operation_get_sql_identifier_at_path (op, cnc, prov, path);
+	ret = gda_server_operation_get_sql_identifier_at_path (op, cnc, prov, path, error);
 	g_free (path);
 
 	return ret;
@@ -2136,6 +2137,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @prov: (allow-none): a #GdaServerProvider, or %NULL
  * @path: a complete path to a node (starting with "/")
+ * @error: (allow-none): a place to store errors, or %NULL
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
  * is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
@@ -2143,8 +2145,8 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  * will be applied if both are %NULL).
  *
  * Returns: (transfer full): a new string, or %NULL if the value is undefined or
- * if the @path is not defined or @path does not hold any value, or if the value held is not a string
- * (in that last case a warning is shown).
+ * if the @path is not defined or @path does not hold any value, or if the value held is not a string or
+ * a valid SQL identifier.
  *
  * Since: 4.2.6
  *
@@ -2152,7 +2154,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  */
 gchar *
 gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
-						 const gchar *path)
+						 const gchar *path, GError **error)
 {
 	const GValue *value = NULL;
 	GdaConnectionOptions cncoptions = 0;
@@ -2161,13 +2163,25 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
 
 	value = gda_server_operation_get_value_at_path (op, path);
 	
-	if (!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL))
+	if (!value || (G_VALUE_TYPE (value) == GDA_TYPE_NULL)) {
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+			     _("Wrong SQL identifier value"));
 		return NULL;
+	}
+
 	g_return_val_if_fail (G_VALUE_TYPE (value) == G_TYPE_STRING, NULL);
+
+	const gchar *str;
+	str = g_value_get_string (value);
+	if (!str || !*str) {
+		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+			     _("Wrong SQL identifier value"));
+		return NULL;
+	}
 
 	if (cnc)
 		g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
-	return gda_sql_identifier_quote (g_value_get_string (value), cnc, prov, FALSE,
+	return gda_sql_identifier_quote (str, cnc, prov, FALSE,
 					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 }
 
