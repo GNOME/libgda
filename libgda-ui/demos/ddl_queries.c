@@ -506,9 +506,9 @@ show_sql (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 		else
 			msg = g_strdup_printf ("<b>SQL:</b>\n%s", sql);
 
-		dlg = gtk_message_dialog_new_with_markup (GTK_WINDOW (data->top_window),
-							  GTK_DIALOG_MODAL,
-							  msg_type, GTK_BUTTONS_CLOSE, msg);
+		dlg = gtk_message_dialog_new (GTK_WINDOW (data->top_window),
+					      GTK_DIALOG_MODAL, msg_type, GTK_BUTTONS_CLOSE, NULL);
+		gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dlg), msg);
 		g_free (sql);
 		g_free (msg);
 
