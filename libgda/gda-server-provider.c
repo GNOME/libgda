@@ -185,66 +185,67 @@ gda_server_provider_constructed (GObject *object)
 {
 	GdaServerProvider *provider = (GdaServerProvider *) object;
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
+	const char* gtype_name = G_OBJECT_TYPE_NAME (object);
 
 	/*g_print ("Provider %p (%s) constructed\n", provider, G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (object)));*/
 	if (!provider->priv)
-		g_warning ("Internal error after creation: provider's private part is missing");
+		g_warning ("Internal error after creation of %s: : provider's private part is missing");
 	else {
 		GdaServerProviderBase *fset;
 		fset = CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_BASE];
 
 		if (! fset)
-			g_warning ("Internal provider implemenation error: general virtual functions are missing");
+			g_warning ("Internal provider implementation error for %s: general virtual functions are missing", gtype_name);
 		else {
 			if (! fset->get_name)
-				g_warning ("Internal error after creation: %s() virtual function missing", "get_name");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing", gtype_name, "get_name");
 			if (! fset->get_version)
-				g_warning ("Internal error after creation: %s() virtual function missing", "get_version");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "get_version");
 			if (! fset->get_server_version)
-				g_warning ("Internal error after creation: %s() virtual function missing", "get_server_version");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "get_server_version");
 			if (!fset->supports_feature)
-				g_warning ("Internal error after creation: %s() virtual function missing", "supports_feature");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "supports_feature");
 			if (! fset->statement_to_sql)
-				g_warning ("Internal error after creation: %s() virtual function missing", "statement_to_sql");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_to_sql");
 			if (! fset->statement_rewrite)
-				g_warning ("Internal error after creation: %s() virtual function missing", "statement_rewrite");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_rewrite");
 			if (! fset->open_connection)
-				g_warning ("Internal error after creation: %s() virtual function missing", "open_connection");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "open_connection");
 			if (! fset->close_connection)
-				g_warning ("Internal error after creation: %s() virtual function missing", "close_connection");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "close_connection");
 			if (fset->escape_string && !fset->unescape_string)
-				g_warning ("Internal error after creation: virtual method %s implemented and %s _not_ implemented",
-					   "escape_string()", "unescape_string()");
+				g_warning ("Internal error after creation of %s: : virtual method %s implemented and %s _not_ implemented",
+					   gtype_name, "escape_string()", "unescape_string()");
 			else if (!fset->escape_string && fset->unescape_string)
-				g_warning ("Internal error after creation: virtual method %s implemented and %s _not_ implemented",
-					   "unescape_string()", "escape_string()");
+				g_warning ("Internal error after creation of %s: : virtual method %s implemented and %s _not_ implemented",
+					   gtype_name, "unescape_string()", "escape_string()");
 			if (! fset->get_database)
-				g_warning ("Internal error after creation: %s() virtual function missing", "get_database");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "get_database");
 			if (! fset->statement_prepare)
-				g_warning ("Internal error after creation: %s() virtual function missing", "statement_prepare");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_prepare");
 			if (! fset->statement_execute)
-				g_warning ("Internal error after creation: %s() virtual function missing", "statement_execute");
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_execute");
 			if (fset->begin_transaction || fset->commit_transaction || fset->rollback_transaction) {
 				if (! fset->begin_transaction)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "begin_transaction");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "begin_transaction");
 				if (! fset->commit_transaction)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "commit_transaction");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "commit_transaction");
 				if (! fset->rollback_transaction)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "rollback_transaction");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "rollback_transaction");
 			}
 			if (fset->add_savepoint || fset->rollback_savepoint || fset->delete_savepoint) {
 				if (! fset->add_savepoint)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "add_savepoint");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "add_savepoint");
 				if (! fset->rollback_savepoint)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "rollback_savepoint");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "rollback_savepoint");
 				if (! fset->delete_savepoint)
-					g_warning ("Internal error after creation: %s() virtual function missing",
-						   "delete_savepoint");
+					g_warning ("Internal error after creation of %s: : %s() virtual function missing",
+						   gtype_name, "delete_savepoint");
 			}
 		}
 
@@ -262,23 +263,23 @@ gda_server_provider_constructed (GObject *object)
 		if (xaset && (xaset->xa_start || xaset->xa_end || xaset->xa_prepare || xaset->xa_commit ||
 			      xaset->xa_rollback || xaset->xa_recover)) {
 			if (! xaset->xa_start)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_start");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name, "xa_start");
 			if (! xaset->xa_end)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_end");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name, "xa_end");
 			if (! xaset->xa_prepare)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_prepare");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name, "xa_prepare");
 			if (! xaset->xa_commit)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_commit");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name ,"xa_commit");
 			if (! xaset->xa_rollback)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_rollback");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name, "xa_rollback");
 			if (! xaset->xa_recover)
-				g_warning ("Internal error after creation: %s() virtual function missing",
-					   "xa_recover");
+				g_warning ("Internal error after creation of %s: %s() virtual function missing",
+					   gtype_name, "xa_recover");
 		}
 	}
 
