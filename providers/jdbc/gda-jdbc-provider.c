@@ -257,8 +257,6 @@ GdaServerProviderXa jdbc_xa_functions = {
 static void
 gda_jdbc_provider_class_init (GdaJdbcProviderClass *klass)
 {
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
-
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* set virtual functions */

@@ -265,8 +265,6 @@ GdaServerProviderXa xa_functions = {
 static void
 gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 {
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE, (gpointer) &base_functions);

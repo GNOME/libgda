@@ -213,7 +213,6 @@ worker_get_length (WorkerData *data, GError **error)
 glong
 gda_blob_op_get_length (GdaBlobOp *op)
 {
-	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
 	if (op->priv) {
 		if (! op->priv->cnc || !op->priv->worker) {
@@ -275,7 +274,6 @@ worker_read (WorkerData *data, GError **error)
 glong
 gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
-	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
 
 	if (op->priv) {
@@ -367,7 +365,6 @@ worker_write (WorkerData *data, GError **error)
 glong
 gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
-	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
 
 	if (op->priv) {
@@ -434,7 +431,6 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 
 	if (VFUNCTIONS (op)->write_all != NULL) {
 		if (op->priv) {
-			GdaWorker *worker;
 			if (! op->priv->cnc || !op->priv->worker) {
 				g_warning ("Internal error: no connection of GdaWorker associated to blob operations object");
 				return -1;

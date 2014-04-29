@@ -300,7 +300,6 @@ GdaServerProviderXa mysql_xa_functions = {
 static void
 gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 {
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);

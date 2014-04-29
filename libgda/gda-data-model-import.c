@@ -747,7 +747,6 @@ gda_data_model_import_set_property (GObject *object,
 				    GParamSpec *pspec)
 {
 	GdaDataModelImport *model;
-	const gchar *string;
 
 	model = GDA_DATA_MODEL_IMPORT (object);
 	if (model->priv) {

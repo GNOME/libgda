@@ -550,8 +550,6 @@ GdaServerProviderMeta sqlite_meta_functions = {
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
-	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
-
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* set virtual functions */

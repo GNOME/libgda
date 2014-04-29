@@ -185,7 +185,7 @@ gda_mysql_blob_op_write (GdaBlobOp  *op,
 			 G_GNUC_UNUSED glong       offset)
 {
 	GdaMysqlBlobOp *pgop;
-	GdaBinary *bin;
+	/* GdaBinary *bin; */
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
 	pgop = GDA_MYSQL_BLOB_OP (op);
@@ -194,7 +194,7 @@ gda_mysql_blob_op_write (GdaBlobOp  *op,
 	g_return_val_if_fail (blob, -1);
 
 	/* write blob using bin->data and bin->binary_length */
-	bin = (GdaBinary *) blob;
+	/* bin = (GdaBinary *) blob; */
 	TO_IMPLEMENT;
 
 	return -1;

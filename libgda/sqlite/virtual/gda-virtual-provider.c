@@ -41,7 +41,6 @@ static void
 gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GdaServerProviderClass *prov_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
 
