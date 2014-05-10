@@ -14,16 +14,16 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-14 09:08+0000\n"
-"PO-Revision-Date: 2014-04-14 11:06+0200\n"
+"POT-Creation-Date: 2014-04-16 13:01+0000\n"
+"PO-Revision-Date: 2014-05-10 19:16+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español <gnome-es-list@gnome.org>\n"
+"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Gtranslator 2.91.5\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: ../control-center/dsn-config.c:85 ../control-center/menus.ui.h:5
 msgid "_Delete"
@@ -154,11 +154,11 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1561
 #: ../libgda-ui/data-entries/common-bin.c:81
 #: ../libgda-ui/data-entries/common-bin.c:158
-#: ../libgda-ui/data-entries/plugins/common-pict.c:212
-#: ../libgda-ui/data-entries/plugins/common-pict.c:222
-#: ../libgda-ui/data-entries/plugins/common-pict.c:265
-#: ../libgda-ui/data-entries/plugins/common-pict.c:424
-#: ../libgda-ui/data-entries/plugins/common-pict.c:536
+#: ../libgda-ui/data-entries/plugins/common-pict.c:217
+#: ../libgda-ui/data-entries/plugins/common-pict.c:227
+#: ../libgda-ui/data-entries/plugins/common-pict.c:270
+#: ../libgda-ui/data-entries/plugins/common-pict.c:429
+#: ../libgda-ui/data-entries/plugins/common-pict.c:541
 #: ../libgda-ui/demos/main.c:779 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:106 ../libgda-ui/gdaui-init.c:114
 #: ../libgda-ui/gdaui-init.c:545 ../libgda-ui/gdaui-login.c:448
@@ -438,6 +438,14 @@ msgstr ""
 "confirme la apertura de la conexión"
 
 #: ../control-center/gdaui-login-dialog.c:105
+#: ../libgda-ui/data-entries/common-bin.c:43
+#: ../libgda-ui/data-entries/common-bin.c:113
+#: ../libgda-ui/data-entries/plugins/common-pict.c:368
+#: ../libgda-ui/data-entries/plugins/common-pict.c:495
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:200
+#: ../libgda-ui/gdaui-basic-form.c:2159 ../libgda-ui/gdaui-raw-grid.c:2149
+#: ../libgda-ui/gdaui-raw-grid.c:2502 ../libgda-ui/gdaui-rt-editor.c:692
+#: ../libgda-ui/gdaui-server-operation.c:1098
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -450,7 +458,8 @@ msgstr "C_onectar"
 msgid "Error:"
 msgstr "Error:"
 
-#: ../control-center/main.c:62
+#: ../control-center/main.c:62 ../libgda-ui/gdaui-basic-form.c:2160
+#: ../libgda-ui/gdaui-server-operation.c:1097
 msgid "_Ok"
 msgstr "_Aceptar"
 
@@ -2097,7 +2106,7 @@ msgstr ""
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Se esperaba la etiqueta <%s>, se obtuvo <%s>"
 
-#: ../libgda/gda-server-operation.c:1549 ../libgda/gda-server-operation.c:2268
+#: ../libgda/gda-server-operation.c:1549 ../libgda/gda-server-operation.c:2282
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
@@ -2108,20 +2117,25 @@ msgstr ""
 msgid "Missing attribute named 'path'"
 msgstr "Falta el atributo llamado «path»"
 
-#: ../libgda/gda-server-operation.c:2460
+#: ../libgda/gda-server-operation.c:2168 ../libgda/gda-server-operation.c:2178
+#, c-format
+msgid "Wrong SQL identifier value"
+msgstr "Valor de identificador SQL no válido"
+
+#: ../libgda/gda-server-operation.c:2474
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Falta el valor requerido para «%s»"
 
-#: ../libgda/gda-server-operation.c:2689
+#: ../libgda/gda-server-operation.c:2703
 msgid "Unspecified table name"
 msgstr "Nombre de la tabla no especificado"
 
-#: ../libgda/gda-server-operation.c:2729
+#: ../libgda/gda-server-operation.c:2743
 msgid "Invalid type"
 msgstr "Tipo no válido"
 
-#: ../libgda/gda-server-operation.c:2834
+#: ../libgda/gda-server-operation.c:2848
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "El servidor de la base de datos no soporta la operación CREATE TABLE"
 
@@ -2656,11 +2670,11 @@ msgstr "Falló la ejecución del programa %s: %s"
 msgid "This report document does not handle %s output"
 msgstr "Este informe del documento no maneja salidas en %s"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:222 ../providers/jdbc/gda-jdbc-ddl.c:142
-#: ../providers/mysql/gda-mysql-ddl.c:336
-#: ../providers/oracle/gda-oracle-ddl.c:142
-#: ../providers/postgres/gda-postgres-ddl.c:378
-#: ../providers/web/gda-web-ddl.c:141
+#: ../libgda/sqlite/gda-sqlite-ddl.c:236 ../providers/jdbc/gda-jdbc-ddl.c:157
+#: ../providers/mysql/gda-mysql-ddl.c:353
+#: ../providers/oracle/gda-oracle-ddl.c:157
+#: ../providers/postgres/gda-postgres-ddl.c:398
+#: ../providers/web/gda-web-ddl.c:157
 msgid "Table to create must have at least one row"
 msgstr "La tabla para crear debe tener al menos una fila"
 
@@ -3412,8 +3426,15 @@ msgstr "Error interno de GdaWorker"
 msgid "Select file to load"
 msgstr "Seleccionar archivo para cargar"
 
+#: ../libgda-ui/data-entries/common-bin.c:44
+#: ../libgda-ui/data-entries/common-bin.c:114
+#: ../libgda-ui/data-entries/plugins/common-pict.c:369
+#: ../libgda-ui/gdaui-rt-editor.c:693
+msgid "_Open"
+msgstr "_Abrir"
+
 #: ../libgda-ui/data-entries/common-bin.c:79
-#: ../libgda-ui/data-entries/plugins/common-pict.c:422
+#: ../libgda-ui/data-entries/plugins/common-pict.c:427
 #: ../libgda-ui/gdaui-rt-editor.c:730
 #, c-format
 msgid ""
@@ -3449,8 +3470,8 @@ msgstr[1] "%lu bytes"
 
 #: ../libgda-ui/data-entries/common-bin.c:268
 #: ../libgda-ui/data-entries/common-bin.c:317
-#: ../libgda-ui/data-entries/plugins/common-pict.c:43
-#: ../libgda-ui/data-entries/plugins/common-pict.c:75
+#: ../libgda-ui/data-entries/plugins/common-pict.c:46
+#: ../libgda-ui/data-entries/plugins/common-pict.c:78
 msgid "No data"
 msgstr "Sin datos"
 
@@ -3679,17 +3700,17 @@ msgstr "El separador decimal no puede ser el carácter «%c»"
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr "El separador de miles no puede ser el carácter «%c»"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:106
-#: ../libgda-ui/data-entries/plugins/common-pict.c:121
+#: ../libgda-ui/data-entries/plugins/common-pict.c:109
+#: ../libgda-ui/data-entries/plugins/common-pict.c:124
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:416
 msgid "Empty data"
 msgstr "Datos vacíos"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:113
+#: ../libgda-ui/data-entries/plugins/common-pict.c:116
 msgid "Unhandled type of data"
 msgstr "Tipo de datos no manipulado"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:211
+#: ../libgda-ui/data-entries/plugins/common-pict.c:216
 #, c-format
 msgid ""
 "Error while deserializing data:\n"
@@ -3698,49 +3719,55 @@ msgstr ""
 "Error al deserializar los datos:\n"
 "%s"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:221
-#: ../libgda-ui/data-entries/plugins/common-pict.c:264
+#: ../libgda-ui/data-entries/plugins/common-pict.c:226
+#: ../libgda-ui/data-entries/plugins/common-pict.c:269
 #, c-format
 msgid ""
 "Error while interpreting data as an image:\n"
 "%s"
 msgstr "Error al crear interpretar datos como una imagen: %s"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:328
+#: ../libgda-ui/data-entries/plugins/common-pict.c:333
 msgid "_Copy image"
 msgstr "_Copiar imagen"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:336
+#: ../libgda-ui/data-entries/plugins/common-pict.c:341
 msgid "_Load image from file"
 msgstr "_Cargar imagen del archivo"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:343
+#: ../libgda-ui/data-entries/plugins/common-pict.c:348
 msgid "_Save image"
 msgstr "_Guardar imagen"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:360
+#: ../libgda-ui/data-entries/plugins/common-pict.c:365
 #: ../libgda-ui/gdaui-rt-editor.c:689
 msgid "Select image to load"
 msgstr "Seleccionar la imagen que cargar"
 
 #. determine writable formats
-#: ../libgda-ui/data-entries/plugins/common-pict.c:468
+#: ../libgda-ui/data-entries/plugins/common-pict.c:473
 msgid "Image format"
 msgstr "Formato de la imagen"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:472
+#: ../libgda-ui/data-entries/plugins/common-pict.c:477
 msgid "Format image as:"
 msgstr "Formatear imagen como:"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:484
+#: ../libgda-ui/data-entries/plugins/common-pict.c:489
 msgid "Current format"
 msgstr "Formato actual"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:487
+#: ../libgda-ui/data-entries/plugins/common-pict.c:492
 msgid "Select a file to save the image to"
 msgstr "Seleccionar un archivo donde guardar la imagen"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:534
+#: ../libgda-ui/data-entries/plugins/common-pict.c:496
+#: ../libgda-ui/gdaui-raw-grid.c:2150
+#| msgid "Save"
+msgid "_Save"
+msgstr "_Guardar"
+
+#: ../libgda-ui/data-entries/plugins/common-pict.c:539
 #, c-format
 msgid ""
 "Could not save the image to '%s':\n"
@@ -3812,6 +3839,10 @@ msgstr "Elegir un archivo"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:196
 msgid "Choose a directory"
 msgstr "Elegir una carpeta"
+
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:201
+msgid "_Apply"
+msgstr "_Aplicar"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:235
 msgid "Choose"
@@ -4040,7 +4071,7 @@ msgid "Shown data entries"
 msgstr "Entradas de datos mostradas"
 
 #: ../libgda-ui/gdaui-basic-form.c:958 ../libgda-ui/gdaui-raw-grid.c:826
-#: ../libgda-ui/gdaui-raw-grid.c:2902 ../libgda-ui/gdaui-raw-grid.c:2957
+#: ../libgda-ui/gdaui-raw-grid.c:2897 ../libgda-ui/gdaui-raw-grid.c:2952
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "El atributo «%s» debería ser un valor G_TYPE_STRING"
@@ -4053,12 +4084,12 @@ msgstr "No se puede encontrar la entrada para el GdaHolder"
 msgid "Values to be defined"
 msgstr "Valores que definir"
 
-#: ../libgda-ui/gdaui-basic-form.c:2227 ../libgda-ui/gdaui-raw-grid.c:2729
+#: ../libgda-ui/gdaui-basic-form.c:2225 ../libgda-ui/gdaui-raw-grid.c:2724
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "El documento «%s» no se analizó correctamente"
 
-#: ../libgda-ui/gdaui-basic-form.c:2237 ../libgda-ui/gdaui-raw-grid.c:2739
+#: ../libgda-ui/gdaui-basic-form.c:2235 ../libgda-ui/gdaui-raw-grid.c:2734
 #, c-format
 msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
@@ -4067,7 +4098,7 @@ msgstr ""
 "El DTD «%s» no se analizó correctamente. No se realizará la validación de la "
 "distribución de datos XML (podrían ocurrir algunos errores)"
 
-#: ../libgda-ui/gdaui-basic-form.c:2369
+#: ../libgda-ui/gdaui-basic-form.c:2367
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4296,104 +4327,114 @@ msgstr "No puede ser nulo (NULL)"
 msgid "No title"
 msgstr "Sin título"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1916
+#: ../libgda-ui/gdaui-raw-grid.c:1915
 msgid "Shown columns"
 msgstr "Columnas mostradas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1948
+#: ../libgda-ui/gdaui-raw-grid.c:1941
+#| msgid "Copy"
+msgid "_Copy"
+msgstr "_Copiar"
+
+#: ../libgda-ui/gdaui-raw-grid.c:1947
 msgid "Select _All"
 msgstr "Seleccionar _todo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1953
+#: ../libgda-ui/gdaui-raw-grid.c:1952
 msgid "_Clear Selection"
 msgstr "_Limpiar la selección"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1956
+#: ../libgda-ui/gdaui-raw-grid.c:1955
 msgid "Show Column _Titles"
 msgstr "Mostrar los _títulos de las columnas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1961
+#: ../libgda-ui/gdaui-raw-grid.c:1960
 msgid "_Set filter"
 msgstr "_Activar filtro"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1964
+#: ../libgda-ui/gdaui-raw-grid.c:1963
 msgid "_Unset filter"
 msgstr "_Desactivar filtro"
 
+#: ../libgda-ui/gdaui-raw-grid.c:1970
+#| msgid "Save"
+msgid "Save _As"
+msgstr "Guardar co_mo"
+
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2152
+#: ../libgda-ui/gdaui-raw-grid.c:2147
 msgid "Saving Data"
 msgstr "Guardando datos"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2160
+#: ../libgda-ui/gdaui-raw-grid.c:2155
 msgid "Saving data to a file"
 msgstr "Guardando datos a un archivo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2161
+#: ../libgda-ui/gdaui-raw-grid.c:2156
 msgid "The data will be exported to the selected file."
 msgstr "Los datos se exportarán al archivo seleccionado."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2171 ../tools/config-info.c:426
+#: ../libgda-ui/gdaui-raw-grid.c:2166 ../tools/config-info.c:426
 msgid "File name"
 msgstr "Nombre del archivo"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:2192
+#: ../libgda-ui/gdaui-raw-grid.c:2187
 #: ../tools/browser/schema-browser/table-columns.c:666
 msgid "Details"
 msgstr "Detalles"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:2213
+#: ../libgda-ui/gdaui-raw-grid.c:2208
 msgid "File type:"
 msgstr "Tipo del archivo:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2223
+#: ../libgda-ui/gdaui-raw-grid.c:2218
 msgid "Tab-delimited"
 msgstr "Delimitado por tabuladores"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2224
+#: ../libgda-ui/gdaui-raw-grid.c:2219
 msgid "Comma-delimited"
 msgstr "Delimitado por comas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2225
+#: ../libgda-ui/gdaui-raw-grid.c:2220
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:2232
+#: ../libgda-ui/gdaui-raw-grid.c:2227
 msgid "Data to save:"
 msgstr "Datos que guardar:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2247
+#: ../libgda-ui/gdaui-raw-grid.c:2242
 msgid "All data (without any local modification)"
 msgstr "Todos los datos (sin modificaciones locales)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2248
+#: ../libgda-ui/gdaui-raw-grid.c:2243
 msgid "Only displayed data"
 msgstr "Sólo los datos mostrados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2250
+#: ../libgda-ui/gdaui-raw-grid.c:2245
 msgid "Only selected data"
 msgstr "Sólo los datos seleccionados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2255
+#: ../libgda-ui/gdaui-raw-grid.c:2250
 msgid "Other options"
 msgstr "Otras opciones"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2262
+#: ../libgda-ui/gdaui-raw-grid.c:2257
 msgid "Empty string when NULL?"
 msgstr "¿Cadenas vacías cuando sea NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2265 ../libgda-ui/gdaui-raw-grid.c:2270
+#: ../libgda-ui/gdaui-raw-grid.c:2260 ../libgda-ui/gdaui-raw-grid.c:2265
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Exportar los valores NULL como una cadena vacía \"\""
 
-#: ../libgda-ui/gdaui-raw-grid.c:2272
+#: ../libgda-ui/gdaui-raw-grid.c:2267
 msgid "Invalid data as NULL?"
 msgstr "¿Datos vacíos como NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2275 ../libgda-ui/gdaui-raw-grid.c:2280
+#: ../libgda-ui/gdaui-raw-grid.c:2270 ../libgda-ui/gdaui-raw-grid.c:2275
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4401,28 +4442,28 @@ msgstr ""
 "No exportar datos no válidos,\n"
 "pero exportar un valor NULL en su lugar"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2282
+#: ../libgda-ui/gdaui-raw-grid.c:2277
 msgid "Field names on first row?"
 msgstr "¿Nombres de archivo en la primera fila?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2285 ../libgda-ui/gdaui-raw-grid.c:2290
+#: ../libgda-ui/gdaui-raw-grid.c:2280 ../libgda-ui/gdaui-raw-grid.c:2285
 msgid "Add a row at beginning with columns names"
 msgstr "Añadir una fila al principio con los nombres de las columnas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2467
+#: ../libgda-ui/gdaui-raw-grid.c:2462
 #, c-format
 msgid "Could not save file %s"
 msgstr "No se pudo guardar el archivo %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2475
+#: ../libgda-ui/gdaui-raw-grid.c:2470
 msgid "You must specify a file name"
 msgstr "Debe especificar el nombre del archivo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2481
+#: ../libgda-ui/gdaui-raw-grid.c:2476
 msgid "Got empty file while converting the data"
 msgstr "Se obtuvo un archivo vacío mientras se convertían los datos"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2494
+#: ../libgda-ui/gdaui-raw-grid.c:2489
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4431,7 +4472,7 @@ msgstr ""
 "El archivo %s ya existe\n"
 "¿Quiere sobrescribirlo?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2504
+#: ../libgda-ui/gdaui-raw-grid.c:2499
 msgid "If you choose yes, the contents will be lost."
 msgstr "Si elige sí, se perderá todo el contenido."
 
@@ -4596,19 +4637,19 @@ msgstr "Añadir"
 msgid "Server operation specification"
 msgstr "Especificación de operaciones del servidor"
 
-#: ../libgda-ui/gdaui-server-operation.c:1150
+#: ../libgda-ui/gdaui-server-operation.c:1148
 msgid "<b>Field properties:</b>"
 msgstr "<b>Propiedades del campo:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1169
+#: ../libgda-ui/gdaui-server-operation.c:1167
 msgid "<b>Fields:</b>"
 msgstr "<b>Campos:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1218
+#: ../libgda-ui/gdaui-server-operation.c:1216
 msgid "Add a new field"
 msgstr "Añadir un campo nuevo"
 
-#: ../libgda-ui/gdaui-server-operation.c:1220
+#: ../libgda-ui/gdaui-server-operation.c:1218
 msgid "Remove selected field"
 msgstr "Quitar campo seleccionado"
 
@@ -4695,6 +4736,11 @@ msgstr "Descartar datos modificados"
 #: ../libgda-ui/internal/utility.c:433
 msgid "Correct data first"
 msgstr "Corregir datos primero"
+
+#: ../libgda-ui/internal/utility.c:489
+#| msgid "_Ok"
+msgid "Ok"
+msgstr "Aceptar"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
 msgid "Database file"
@@ -5847,31 +5893,10 @@ msgid "The name of a database to use (filename without the .mdb)"
 msgstr ""
 "El nombre de la base de datos que usar (nombre del archivo sin el .mdb)"
 
-#: ../providers/mysql/gda-mysql-ddl.c:263
-#: ../providers/postgres/gda-postgres-ddl.c:278
+#: ../providers/mysql/gda-mysql-ddl.c:287
+#: ../providers/postgres/gda-postgres-ddl.c:300
 msgid "No field specified in foreign key constraint"
 msgstr "No existe el campo especificado en la restricción de la clave externa"
-
-#: ../providers/mysql/gda-mysql-ddl.c:280
-#: ../providers/postgres/gda-postgres-ddl.c:295
-msgid "Empty field specified in foreign key constraint"
-msgstr "El campo especificado en la restricción de la clave externa está vacío"
-
-#: ../providers/mysql/gda-mysql-ddl.c:295
-#: ../providers/postgres/gda-postgres-ddl.c:312
-msgid "No referenced table specified in foreign key constraint"
-msgstr ""
-"No hay ninguna tabla referenciada en la restricción de la clave externa"
-
-#: ../providers/mysql/gda-mysql-ddl.c:313
-#: ../providers/postgres/gda-postgres-ddl.c:330
-msgid "Empty referenced field specified in foreign key constraint"
-msgstr ""
-"El campo referenciado especificado en la restricción de la clave está vacío"
-
-#: ../providers/mysql/gda-mysql-ddl.c:930
-msgid "Incorrect specified column name"
-msgstr "El nombre de la columna especificado es incorrecto"
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "MySQL boolean representation"
@@ -11405,6 +11430,22 @@ msgstr "Objetos"
 #: ../tools/web-server.c:1889
 msgid "Triggers"
 msgstr "Disparadores"
+
+#~ msgid "Empty field specified in foreign key constraint"
+#~ msgstr ""
+#~ "El campo especificado en la restricción de la clave externa está vacío"
+
+#~ msgid "No referenced table specified in foreign key constraint"
+#~ msgstr ""
+#~ "No hay ninguna tabla referenciada en la restricción de la clave externa"
+
+#~ msgid "Empty referenced field specified in foreign key constraint"
+#~ msgstr ""
+#~ "El campo referenciado especificado en la restricción de la clave está "
+#~ "vacío"
+
+#~ msgid "Incorrect specified column name"
+#~ msgstr "El nombre de la columna especificado es incorrecto"
 
 #~ msgid "Database"
 #~ msgstr "Base de datos"
