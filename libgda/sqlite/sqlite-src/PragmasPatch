@@ -1,6 +1,31 @@
---- sqlite3.c.orig	2013-09-04 00:26:22.000000000 +0200
-+++ sqlite3.c	2013-11-09 12:39:57.315522927 +0100
-@@ -94739,6 +94739,60 @@
+--- sqlite3.c.orig	2014-04-03 19:21:43.000000000 +0200
++++ sqlite3.c	2014-05-11 17:02:06.946536729 +0200
+@@ -97531,6 +97531,24 @@
+   return azModeName[eMode];
+ }
+ 
++static char *gdauniqueFuncName (FuncDef *func)
++{
++	char *sname;
++	uint order = 0;
++	FuncDef *n;
++	int size;
++	for (n = func->pNext; n; n = n->pNext)
++		order++;
++
++	size = strlen (func->zName) + 25;
++	sname = sqlite3_malloc (sizeof (char) * size);
++	if (func->nArg < 0)
++		snprintf (sname, size-1, "%s_ANY_%u", func->zName, order);
++	else
++		snprintf (sname, size-1, "%s_%d_%u", func->zName, func->nArg, order);
++	return sname;
++}
++
+ /*
+ ** Process a pragma statement.  
+ **
+@@ -98257,6 +98275,54 @@
  
  #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
    /*
@@ -27,10 +52,7 @@
 +      FuncDef *func;
 +      for (func =db->aFunc.a[j]; func; func = func->pNext) {
 +	char *sname;
-+	int size;
-+	size = strlen (func->zName) + 25;
-+	sname = sqlite3_malloc (sizeof (char) * size);
-+	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
++	sname = gdauniqueFuncName (func);
 +	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
 +	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
 +	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
@@ -43,10 +65,7 @@
 +      FuncDef *func;
 +      for (func =sqlite3GlobalFunctions.a[j]; func; func = func->pNext) {
 +	char *sname;
-+	int size;
-+	size = strlen (func->zName) + 25;
-+	sname = sqlite3_malloc (sizeof (char) * size);
-+	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
++	sname = gdauniqueFuncName (func);
 +	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
 +	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
 +	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);

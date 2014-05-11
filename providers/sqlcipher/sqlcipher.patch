@@ -1,6 +1,6 @@
---- sqlite3.c.sqlite	2013-11-09 12:42:08.623520057 +0100
-+++ sqlite3.c	2013-11-09 12:41:58.695520274 +0100
-@@ -12566,9 +12566,45 @@
+--- sqlite3.c.sqlite	2014-05-11 17:07:30.623876785 +0200
++++ sqlite3.c	2014-05-11 17:06:54.676177894 +0200
+@@ -13006,9 +13006,45 @@
  #endif /* _SQLITEINT_H_ */
  
  /************** End of sqliteInt.h *******************************************/
@@ -48,7 +48,7 @@
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
-@@ -12578,246 +12614,3589 @@
+@@ -13018,244 +13054,3693 @@
  **    May you share freely, never taking more than you give.
  **
  *************************************************************************
@@ -169,13 +169,13 @@
 +**
 +**   OFFSET   SIZE    DESCRIPTION
 +**      0      16     Header string: "SQLite format 3\000"
-+**     16       2     Page size in bytes.  
++**     16       2     Page size in bytes.  (1 means 65536)
 +**     18       1     File format write version
 +**     19       1     File format read version
 +**     20       1     Bytes of unused space at the end of each page
-+**     21       1     Max embedded payload fraction
-+**     22       1     Min embedded payload fraction
-+**     23       1     Min leaf payload fraction
++**     21       1     Max embedded payload fraction (must be 64)
++**     22       1     Min embedded payload fraction (must be 32)
++**     23       1     Min leaf payload fraction (must be 32)
 +**     24       4     File change counter
 +**     28       4     Reserved for future use
 +**     32       4     First freelist page
@@ -189,9 +189,10 @@
 +**     56       4     1=UTF-8 2=UTF16le 3=UTF16be
 +**     60       4     User version
 +**     64       4     Incremental vacuum mode
-+**     68       4     unused
-+**     72       4     unused
-+**     76       4     unused
++**     68       4     Application-ID
++**     72      20     unused
++**     92       4     The version-valid-for number
++**     96       4     SQLITE_VERSION_NUMBER
 +**
 +** All of the integer values are big-endian (most significant byte first).
 +**
@@ -407,6 +408,7 @@
 -   SQLITE_USE_URI,            /* bOpenUri */
 -   SQLITE_ALLOW_COVERING_INDEX_SCAN,   /* bUseCis */
 -   0x7ffffffe,                /* mxStrlen */
+-   0,                         /* neverCorrupt */
 -   128,                       /* szLookaside */
 -   500,                       /* nLookaside */
 -   {0,0,0,0,0,0,0,0},         /* m */
@@ -443,7 +445,6 @@
 +#  define SQLITE_FILE_HEADER "SQLite format 3"
  #endif
 -};
--
  
  /*
 -** Hash table for global functions - functions common to all
@@ -585,6 +586,7 @@
 +** cursors have to go through this Btree to find their BtShared and
 +** they often do so without holding sqlite3.mutex.
  */
+-
 +struct Btree {
 +  sqlite3 *db;       /* The database connection holding this btree */
 +  BtShared *pBt;     /* Sharable content of this btree */
@@ -743,7 +745,6 @@
 +  Pgno *aOverflow;          /* Cache of overflow page locations */
 +#endif
 +  Pgno pgnoRoot;            /* The root page of this tree */
-+  sqlite3_int64 cachedRowid; /* Next rowid cache.  0 means not valid */
 +  CellInfo info;            /* A parse of the cell we are pointing at */
 +  i64 nKey;        /* Size of pKey, or last integer key */
 +  void *pKey;      /* Saved key that was cursor's last known position */
@@ -960,7 +961,7 @@
 +#define FILE_HEADER_SZ 16
 +
 +#ifndef CIPHER_VERSION
-+#define CIPHER_VERSION "3.0.0"
++#define CIPHER_VERSION "3.1.0"
 +#endif
 +
 +#ifndef CIPHER
@@ -1129,6 +1130,9 @@
 +
 +const char* sqlcipher_codec_get_cipher_provider(codec_ctx *ctx);
 +int sqlcipher_codec_ctx_migrate(codec_ctx *ctx);
++int sqlcipher_codec_add_random(codec_ctx *ctx, const char *data, int random_sz);
++int sqlcipher_cipher_profile(sqlite3 *db, const char *destination);
++static void sqlcipher_profile_callback(void *file, const char *sql, sqlite3_uint64 run_time);
 +#endif
 +#endif
 +/* END SQLCIPHER */
@@ -1188,7 +1192,20 @@
 +  }
 +
 +  CODEC_TRACE(("sqlcipher_codec_pragma: entered db=%p iDb=%d pParse=%p zLeft=%s zRight=%s ctx=%p\n", db, iDb, pParse, zLeft, zRight, ctx));
-+  
++
++
++    if( sqlite3StrICmp(zLeft, "cipher_profile")== 0 && zRight ){
++      char *profile_status = sqlite3_mprintf("%d", sqlcipher_cipher_profile(db, zRight));
++      codec_vdbe_return_static_string(pParse, "cipher_profile", profile_status);
++      sqlite3_free(profile_status);
++  } else
++  if( sqlite3StrICmp(zLeft, "cipher_add_random")==0 && zRight ){
++    if(ctx) {
++      char *add_random_status = sqlite3_mprintf("%d", sqlcipher_codec_add_random(ctx, zRight, sqlite3Strlen30(zRight)));
++      codec_vdbe_return_static_string(pParse, "cipher_add_random", add_random_status);
++      sqlite3_free(add_random_status);
++    }
++  } else
 +  if( sqlite3StrICmp(zLeft, "cipher_migrate")==0 && !zRight ){
 +    if(ctx){
 +      char *migrate_status = sqlite3_mprintf("%d", sqlcipher_codec_ctx_migrate(ctx));
@@ -1335,6 +1352,7 @@
 +  }
 +  return 1;
 +}
++
 +
 +/*
 + * sqlite3Codec can be called in multiple modes.
@@ -1930,6 +1948,7 @@
 +  cipher_ctx *read_ctx;
 +  cipher_ctx *write_ctx;
 +  unsigned int skip_read_hmac;
++  unsigned int need_kdf_salt;
 +};
 +
 +int sqlcipher_register_provider(sqlcipher_provider *p) {
@@ -2497,8 +2516,7 @@
 +  if((rc = sqlcipher_cipher_ctx_init(&ctx->write_ctx)) != SQLITE_OK) return rc; 
 +
 +  if(fd == NULL || sqlite3OsRead(fd, ctx->kdf_salt, FILE_HEADER_SZ, 0) != SQLITE_OK) {
-+    /* if unable to read the bytes, generate random salt */
-+    if(ctx->read_ctx->provider->random(ctx->read_ctx->provider_ctx, ctx->kdf_salt, FILE_HEADER_SZ) != SQLITE_OK) return SQLITE_ERROR;
++    ctx->need_kdf_salt = 1;
 +  }
 +
 +  if((rc = sqlcipher_codec_ctx_set_cipher(ctx, CIPHER, 0)) != SQLITE_OK) return rc;
@@ -2670,8 +2688,13 @@
 +                c_ctx->pass, c_ctx->pass_sz, ctx->kdf_salt, ctx->kdf_salt_sz, c_ctx->kdf_iter, 
 +                ctx->hmac_kdf_salt, c_ctx->fast_kdf_iter, c_ctx->key_sz)); 
 +                
-+
++  
 +  if(c_ctx->pass && c_ctx->pass_sz) { // if pass is not null
++
++    if(ctx->need_kdf_salt) {
++      if(ctx->read_ctx->provider->random(ctx->read_ctx->provider_ctx, ctx->kdf_salt, FILE_HEADER_SZ) != SQLITE_OK) return SQLITE_ERROR;
++      ctx->need_kdf_salt = 0;
++    }
 +    if (c_ctx->pass_sz == ((c_ctx->key_sz * 2) + 3) && sqlite3StrNICmp((const char *)c_ctx->pass ,"x'", 2) == 0) { 
 +      int n = c_ctx->pass_sz - 3; /* adjust for leading x' and tailing ' */
 +      const unsigned char *z = c_ctx->pass + 2; /* adjust lead offset of x' */
@@ -2837,14 +2860,14 @@
 +    char *attach_command = sqlite3_mprintf("ATTACH DATABASE '%s-migrated' as migrate KEY '%q';",
 +                                            db_filename, key);
 +
-+    int rc = sqlcipher_check_connection(db_filename, key, key_sz, "", &user_version);
++    int rc = sqlcipher_check_connection(db_filename, key, ctx->read_ctx->pass_sz, "", &user_version);
 +    if(rc == SQLITE_OK){
 +      CODEC_TRACE(("No upgrade required - exiting\n"));
 +      goto exit;
 +    }
 +    
 +    // Version 2 - check for 4k with hmac format 
-+    rc = sqlcipher_check_connection(db_filename, key, key_sz, pragma_4k_kdf_iter, &user_version);
++    rc = sqlcipher_check_connection(db_filename, key, ctx->read_ctx->pass_sz, pragma_4k_kdf_iter, &user_version);
 +    if(rc == SQLITE_OK) {
 +      CODEC_TRACE(("Version 2 format found\n"));
 +      upgrade_4k_format = 1;
@@ -2853,7 +2876,7 @@
 +    // Version 1 - check both no hmac and 4k together
 +    pragma_1x_and_4k = sqlite3_mprintf("%s%s", pragma_hmac_off,
 +                                             pragma_4k_kdf_iter);
-+    rc = sqlcipher_check_connection(db_filename, key, key_sz, pragma_1x_and_4k, &user_version);
++    rc = sqlcipher_check_connection(db_filename, key, ctx->read_ctx->pass_sz, pragma_1x_and_4k, &user_version);
 +    sqlite3_free(pragma_1x_and_4k);
 +    if(rc == SQLITE_OK) {
 +      CODEC_TRACE(("Version 1 format found\n"));
@@ -2966,6 +2989,52 @@
 +  return rc;
 +}
 +
++int sqlcipher_codec_add_random(codec_ctx *ctx, const char *zRight, int random_sz){
++  const char *suffix = &zRight[random_sz-1];
++  int n = random_sz - 3; /* adjust for leading x' and tailing ' */
++  if (n > 0 &&
++      sqlite3StrNICmp((const char *)zRight ,"x'", 2) == 0 &&
++      sqlite3StrNICmp(suffix, "'", 1) == 0 &&
++      n % 2 == 0) {
++    int rc = 0;
++    int buffer_sz = n / 2;
++    unsigned char *random;
++    const unsigned char *z = (const unsigned char *)zRight + 2; /* adjust lead offset of x' */
++    CODEC_TRACE(("sqlcipher_codec_add_random: using raw random blob from hex\n"));
++    random = sqlcipher_malloc(buffer_sz);
++    memset(random, 0, buffer_sz);
++    cipher_hex2bin(z, n, random);
++    rc = ctx->read_ctx->provider->add_random(ctx->read_ctx->provider_ctx, random, buffer_sz);
++    sqlcipher_free(random, buffer_sz);
++    return rc;
++  }
++  return SQLITE_ERROR;
++}
++
++int sqlcipher_cipher_profile(sqlite3 *db, const char *destination){
++  FILE *f;
++  if( strcmp(destination,"stdout")==0 ){
++    f = stdout;
++  }else if( strcmp(destination, "stderr")==0 ){
++    f = stderr;
++  }else if( strcmp(destination, "off")==0 ){
++    f = 0;
++  }else{
++    f = fopen(destination, "wb");
++    if( f==0 ){
++      return SQLITE_ERROR;
++    }
++  }
++  sqlite3_profile(db, sqlcipher_profile_callback, f);
++  return SQLITE_OK;
++}
++
++static void sqlcipher_profile_callback(void *file, const char *sql, sqlite3_uint64 run_time){
++  FILE *f = (FILE*)file;
++  double elapsed = run_time/1000000.0;
++  if( f ) fprintf(f, "Elapsed time:%.3f ms - %s\n", elapsed, sql);
++}
++
 +
 +#endif
 +/* END SQLCIPHER */
@@ -3007,50 +3076,88 @@
 +#ifdef SQLCIPHER_CRYPTO_LIBTOMCRYPT
 +#include <tomcrypt.h>
 +
-+typedef struct {
-+  prng_state prng;
-+} ltc_ctx;
-+
++#define FORTUNA_MAX_SZ 32
++static prng_state prng;
 +static unsigned int ltc_init = 0;
++static unsigned int ltc_ref_count = 0;
++static sqlite3_mutex* ltc_rand_mutex = NULL;
 +
 +static int sqlcipher_ltc_add_random(void *ctx, void *buffer, int length) {
-+  ltc_ctx *ltc = (ltc_ctx*)ctx;
-+  int rc = fortuna_add_entropy(buffer, length, &(ltc->prng));
-+  return rc != CRYPT_OK ? SQLITE_ERROR : SQLITE_OK;
++  int rc = 0;
++  int data_to_read = length;
++  int block_sz = data_to_read < FORTUNA_MAX_SZ ? data_to_read : FORTUNA_MAX_SZ;
++  const unsigned char * data = (const unsigned char *)buffer;
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_enter(ltc_rand_mutex);
++#endif
++    while(data_to_read > 0){
++      rc = fortuna_add_entropy(data, block_sz, &prng);
++      rc = rc != CRYPT_OK ? SQLITE_ERROR : SQLITE_OK;
++      if(rc != SQLITE_OK){
++        break;
++      }
++      data_to_read -= block_sz;
++      data += block_sz;
++      block_sz = data_to_read < FORTUNA_MAX_SZ ? data_to_read : FORTUNA_MAX_SZ;
++    }
++    fortuna_ready(&prng);
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_leave(ltc_rand_mutex);
++#endif
++  return rc;
 +}
 +
 +static int sqlcipher_ltc_activate(void *ctx) {
-+  ltc_ctx *ltc = (ltc_ctx*)ctx;
-+  int random_buffer_sz = sizeof(char) * 32;
-+  unsigned char *random_buffer = sqlcipher_malloc(random_buffer_sz);
-+  sqlcipher_memset(random_buffer, 0, random_buffer_sz);
-+  
++  unsigned char random_buffer[FORTUNA_MAX_SZ];
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  if(ltc_rand_mutex == NULL){
++    ltc_rand_mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_FAST);
++  }
++  sqlite3_mutex_enter(ltc_rand_mutex);
++#endif
++  sqlcipher_memset(random_buffer, 0, FORTUNA_MAX_SZ);
 +  if(ltc_init == 0) {
 +    if(register_prng(&fortuna_desc) != CRYPT_OK) return SQLITE_ERROR;
 +    if(register_cipher(&rijndael_desc) != CRYPT_OK) return SQLITE_ERROR;
 +    if(register_hash(&sha1_desc) != CRYPT_OK) return SQLITE_ERROR;
++    if(fortuna_start(&prng) != CRYPT_OK) {
++      return SQLITE_ERROR;
++    }
 +    ltc_init = 1;
 +  }
-+  if(fortuna_start(&(ltc->prng)) != CRYPT_OK) {
++  ltc_ref_count++;
++#ifndef SQLCIPHER_TEST
++  sqlite3_randomness(FORTUNA_MAX_SZ, random_buffer);
++#endif
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_leave(ltc_rand_mutex);
++#endif
++  if(sqlcipher_ltc_add_random(ctx, random_buffer, FORTUNA_MAX_SZ) != SQLITE_OK) {
 +    return SQLITE_ERROR;
 +  }
-+  sqlite3_randomness(random_buffer_sz, random_buffer);
-+  if(sqlcipher_ltc_add_random(ctx, random_buffer, random_buffer_sz) != SQLITE_OK) {
-+    return SQLITE_ERROR;
-+  }
-+  if(sqlcipher_ltc_add_random(ctx, &ltc, sizeof(ltc_ctx*)) != SQLITE_OK) {
-+    return SQLITE_ERROR;
-+  }
-+  if(fortuna_ready(&(ltc->prng)) != CRYPT_OK) {
-+    return SQLITE_ERROR;
-+  }
-+  sqlcipher_free(random_buffer, random_buffer_sz);
++  sqlcipher_memset(random_buffer, 0, FORTUNA_MAX_SZ);
 +  return SQLITE_OK;
 +}
 +
 +static int sqlcipher_ltc_deactivate(void *ctx) {
-+  ltc_ctx *ltc = (ltc_ctx*)ctx;
-+  fortuna_done(&(ltc->prng));
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_enter(ltc_rand_mutex);
++#endif
++  ltc_ref_count--;
++  if(ltc_ref_count == 0){
++    fortuna_done(&prng);
++    sqlcipher_memset((void *)&prng, 0, sizeof(prng));
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++    sqlite3_mutex_leave(ltc_rand_mutex);
++    sqlite3_mutex_free(ltc_rand_mutex);
++    ltc_rand_mutex = NULL;
++#endif
++  }
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  else {
++    sqlite3_mutex_leave(ltc_rand_mutex);
++  }
++#endif    
 +  return SQLITE_OK;
 +}
 +
@@ -3059,13 +3166,13 @@
 +}
 +
 +static int sqlcipher_ltc_random(void *ctx, void *buffer, int length) {
-+  ltc_ctx *ltc = (ltc_ctx*)ctx;
-+  int rc;
-+  
-+  if((rc = fortuna_ready(&(ltc->prng))) != CRYPT_OK) {
-+    return SQLITE_ERROR;
-+  }
-+  fortuna_read(buffer, length, &(ltc->prng));
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_enter(ltc_rand_mutex);
++#endif
++  fortuna_read(buffer, length, &prng);
++#ifndef SQLCIPHER_LTC_NO_MUTEX_RAND
++  sqlite3_mutex_leave(ltc_rand_mutex);
++#endif
 +  return SQLITE_OK;
 +}
 +
@@ -3084,7 +3191,6 @@
 +
 +static int sqlcipher_ltc_kdf(void *ctx, const unsigned char *pass, int pass_sz, unsigned char* salt, int salt_sz, int workfactor, int key_sz, unsigned char *key) {
 +  int rc, hash_idx;
-+  ltc_ctx *ltc = (ltc_ctx*)ctx;
 +  unsigned long outlen = key_sz;
 +  unsigned long random_buffer_sz = sizeof(char) * 256;
 +  unsigned char *random_buffer = sqlcipher_malloc(random_buffer_sz);
@@ -3145,7 +3251,6 @@
 +}
 +
 +static int sqlcipher_ltc_ctx_copy(void *target_ctx, void *source_ctx) {
-+  memcpy(target_ctx, source_ctx, sizeof(ltc_ctx));
 +  return SQLITE_OK;
 +}
 +
@@ -3154,15 +3259,12 @@
 +}
 +
 +static int sqlcipher_ltc_ctx_init(void **ctx) {
-+  *ctx = sqlcipher_malloc(sizeof(ltc_ctx));
-+  if(*ctx == NULL) return SQLITE_NOMEM;
-+  sqlcipher_ltc_activate(*ctx);
++  sqlcipher_ltc_activate(NULL);
 +  return SQLITE_OK;
 +}
 +
 +static int sqlcipher_ltc_ctx_free(void **ctx) {
 +  sqlcipher_ltc_deactivate(&ctx);
-+  sqlcipher_free(*ctx, sizeof(ltc_ctx));
 +  return SQLITE_OK;
 +}
 +
@@ -3481,6 +3583,10 @@
 +#include <CommonCrypto/CommonCrypto.h>
 +#include <Security/SecRandom.h>
 +
++static int sqlcipher_cc_add_random(void *ctx, void *buffer, int length) {
++  return SQLITE_OK;
++}
++
 +/* generate a defined number of random bytes */
 +static int sqlcipher_cc_random (void *ctx, void *buffer, int length) {
 +  return (SecRandomCopyBytes(kSecRandomDefault, length, (uint8_t *)buffer) == 0) ? SQLITE_OK : SQLITE_ERROR;
@@ -3577,6 +3683,7 @@
 +  p->ctx_cmp = sqlcipher_cc_ctx_cmp;
 +  p->ctx_init = sqlcipher_cc_ctx_init;
 +  p->ctx_free = sqlcipher_cc_ctx_free;
++  p->add_random = sqlcipher_cc_add_random;
 +  return SQLITE_OK;
 +}
 +
@@ -3735,6 +3842,7 @@
 +   SQLITE_USE_URI,            /* bOpenUri */
 +   SQLITE_ALLOW_COVERING_INDEX_SCAN,   /* bUseCis */
 +   0x7ffffffe,                /* mxStrlen */
++   0,                         /* neverCorrupt */
 +   128,                       /* szLookaside */
 +   500,                       /* nLookaside */
 +   {0,0,0,0,0,0,0,0},         /* m */
@@ -3769,7 +3877,6 @@
 +   0                          /* pSqllogArg */
 +#endif
 +};
-+
 +
 +/*
 +** Hash table for global functions - functions common to all
@@ -3835,14 +3942,10 @@
 +** SQLite was built with.
 +*/
 +
-+#ifndef SQLITE_OMIT_COMPILEOPTION_DIAGS
+ #ifndef SQLITE_OMIT_COMPILEOPTION_DIAGS
  
--#ifndef SQLITE_OMIT_COMPILEOPTION_DIAGS
--
  
- /*
- ** An array of names of all compile-time options.  This array should 
-@@ -22968,7 +26347,7 @@
+@@ -23575,7 +27060,7 @@
  #include <sys/time.h>
  #include <errno.h>
  #if !defined(SQLITE_OMIT_WAL) || SQLITE_MAX_MMAP_SIZE>0
@@ -3851,7 +3954,7 @@
  #endif
  
  
-@@ -45519,7 +48898,39 @@
+@@ -46757,7 +50242,39 @@
  }
  #endif
  
@@ -3892,10 +3995,300 @@
  
  /************** End of pager.c ***********************************************/
  /************** Begin file wal.c *********************************************/
-@@ -46046,3267 +49457,2596 @@
-   if( pWal->nWiData<=iPage ){
-     int nByte = sizeof(u32*)*(iPage+1);
-     volatile u32 **apNew;
+@@ -46994,3557 +50511,2886 @@
+ ** the correct result.  There may be entries in the hash table with
+ ** K>K0 but to the first reader, those entries will appear to be unused
+ ** slots in the hash table and so the first reader will get an answer as
+-** if no values greater than K0 had ever been inserted into the hash table
+-** in the first place - which is what reader one wants.  Meanwhile, the
+-** second reader using K1 will see additional values that were inserted
+-** later, which is exactly what reader two wants.  
+-**
+-** When a rollback occurs, the value of K is decreased. Hash table entries
+-** that correspond to frames greater than the new K value are removed
+-** from the hash table at this point.
+-*/
+-#ifndef SQLITE_OMIT_WAL
+-
+-
+-/*
+-** Trace output macros
+-*/
+-#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
+-SQLITE_PRIVATE int sqlite3WalTrace = 0;
+-# define WALTRACE(X)  if(sqlite3WalTrace) sqlite3DebugPrintf X
+-#else
+-# define WALTRACE(X)
+-#endif
+-
+-/*
+-** The maximum (and only) versions of the wal and wal-index formats
+-** that may be interpreted by this version of SQLite.
+-**
+-** If a client begins recovering a WAL file and finds that (a) the checksum
+-** values in the wal-header are correct and (b) the version field is not
+-** WAL_MAX_VERSION, recovery fails and SQLite returns SQLITE_CANTOPEN.
+-**
+-** Similarly, if a client successfully reads a wal-index header (i.e. the 
+-** checksum test is successful) and finds that the version field is not
+-** WALINDEX_MAX_VERSION, then no read-transaction is opened and SQLite
+-** returns SQLITE_CANTOPEN.
+-*/
+-#define WAL_MAX_VERSION      3007000
+-#define WALINDEX_MAX_VERSION 3007000
+-
+-/*
+-** Indices of various locking bytes.   WAL_NREADER is the number
+-** of available reader locks and should be at least 3.
+-*/
+-#define WAL_WRITE_LOCK         0
+-#define WAL_ALL_BUT_WRITE      1
+-#define WAL_CKPT_LOCK          1
+-#define WAL_RECOVER_LOCK       2
+-#define WAL_READ_LOCK(I)       (3+(I))
+-#define WAL_NREADER            (SQLITE_SHM_NLOCK-3)
+-
+-
+-/* Object declarations */
+-typedef struct WalIndexHdr WalIndexHdr;
+-typedef struct WalIterator WalIterator;
+-typedef struct WalCkptInfo WalCkptInfo;
+-
+-
+-/*
+-** The following object holds a copy of the wal-index header content.
+-**
+-** The actual header in the wal-index consists of two copies of this
+-** object.
+-**
+-** The szPage value can be any power of 2 between 512 and 32768, inclusive.
+-** Or it can be 1 to represent a 65536-byte page.  The latter case was
+-** added in 3.7.1 when support for 64K pages was added.  
+-*/
+-struct WalIndexHdr {
+-  u32 iVersion;                   /* Wal-index version */
+-  u32 unused;                     /* Unused (padding) field */
+-  u32 iChange;                    /* Counter incremented each transaction */
+-  u8 isInit;                      /* 1 when initialized */
+-  u8 bigEndCksum;                 /* True if checksums in WAL are big-endian */
+-  u16 szPage;                     /* Database page size in bytes. 1==64K */
+-  u32 mxFrame;                    /* Index of last valid frame in the WAL */
+-  u32 nPage;                      /* Size of database in pages */
+-  u32 aFrameCksum[2];             /* Checksum of last frame in log */
+-  u32 aSalt[2];                   /* Two salt values copied from WAL header */
+-  u32 aCksum[2];                  /* Checksum over all prior fields */
+-};
+-
+-/*
+-** A copy of the following object occurs in the wal-index immediately
+-** following the second copy of the WalIndexHdr.  This object stores
+-** information used by checkpoint.
+-**
+-** nBackfill is the number of frames in the WAL that have been written
+-** back into the database. (We call the act of moving content from WAL to
+-** database "backfilling".)  The nBackfill number is never greater than
+-** WalIndexHdr.mxFrame.  nBackfill can only be increased by threads
+-** holding the WAL_CKPT_LOCK lock (which includes a recovery thread).
+-** However, a WAL_WRITE_LOCK thread can move the value of nBackfill from
+-** mxFrame back to zero when the WAL is reset.
+-**
+-** There is one entry in aReadMark[] for each reader lock.  If a reader
+-** holds read-lock K, then the value in aReadMark[K] is no greater than
+-** the mxFrame for that reader.  The value READMARK_NOT_USED (0xffffffff)
+-** for any aReadMark[] means that entry is unused.  aReadMark[0] is 
+-** a special case; its value is never used and it exists as a place-holder
+-** to avoid having to offset aReadMark[] indexs by one.  Readers holding
+-** WAL_READ_LOCK(0) always ignore the entire WAL and read all content
+-** directly from the database.
+-**
+-** The value of aReadMark[K] may only be changed by a thread that
+-** is holding an exclusive lock on WAL_READ_LOCK(K).  Thus, the value of
+-** aReadMark[K] cannot changed while there is a reader is using that mark
+-** since the reader will be holding a shared lock on WAL_READ_LOCK(K).
+-**
+-** The checkpointer may only transfer frames from WAL to database where
+-** the frame numbers are less than or equal to every aReadMark[] that is
+-** in use (that is, every aReadMark[j] for which there is a corresponding
+-** WAL_READ_LOCK(j)).  New readers (usually) pick the aReadMark[] with the
+-** largest value and will increase an unused aReadMark[] to mxFrame if there
+-** is not already an aReadMark[] equal to mxFrame.  The exception to the
+-** previous sentence is when nBackfill equals mxFrame (meaning that everything
+-** in the WAL has been backfilled into the database) then new readers
+-** will choose aReadMark[0] which has value 0 and hence such reader will
+-** get all their all content directly from the database file and ignore 
+-** the WAL.
+-**
+-** Writers normally append new frames to the end of the WAL.  However,
+-** if nBackfill equals mxFrame (meaning that all WAL content has been
+-** written back into the database) and if no readers are using the WAL
+-** (in other words, if there are no WAL_READ_LOCK(i) where i>0) then
+-** the writer will first "reset" the WAL back to the beginning and start
+-** writing new content beginning at frame 1.
+-**
+-** We assume that 32-bit loads are atomic and so no locks are needed in
+-** order to read from any aReadMark[] entries.
+-*/
+-struct WalCkptInfo {
+-  u32 nBackfill;                  /* Number of WAL frames backfilled into DB */
+-  u32 aReadMark[WAL_NREADER];     /* Reader marks */
+-};
+-#define READMARK_NOT_USED  0xffffffff
+-
+-
+-/* A block of WALINDEX_LOCK_RESERVED bytes beginning at
+-** WALINDEX_LOCK_OFFSET is reserved for locks. Since some systems
+-** only support mandatory file-locks, we do not read or write data
+-** from the region of the file on which locks are applied.
+-*/
+-#define WALINDEX_LOCK_OFFSET   (sizeof(WalIndexHdr)*2 + sizeof(WalCkptInfo))
+-#define WALINDEX_LOCK_RESERVED 16
+-#define WALINDEX_HDR_SIZE      (WALINDEX_LOCK_OFFSET+WALINDEX_LOCK_RESERVED)
+-
+-/* Size of header before each frame in wal */
+-#define WAL_FRAME_HDRSIZE 24
+-
+-/* Size of write ahead log header, including checksum. */
+-/* #define WAL_HDRSIZE 24 */
+-#define WAL_HDRSIZE 32
+-
+-/* WAL magic value. Either this value, or the same value with the least
+-** significant bit also set (WAL_MAGIC | 0x00000001) is stored in 32-bit
+-** big-endian format in the first 4 bytes of a WAL file.
+-**
+-** If the LSB is set, then the checksums for each frame within the WAL
+-** file are calculated by treating all data as an array of 32-bit 
+-** big-endian words. Otherwise, they are calculated by interpreting 
+-** all data as 32-bit little-endian words.
+-*/
+-#define WAL_MAGIC 0x377f0682
+-
+-/*
+-** Return the offset of frame iFrame in the write-ahead log file, 
+-** assuming a database page size of szPage bytes. The offset returned
+-** is to the start of the write-ahead log frame-header.
+-*/
+-#define walFrameOffset(iFrame, szPage) (                               \
+-  WAL_HDRSIZE + ((iFrame)-1)*(i64)((szPage)+WAL_FRAME_HDRSIZE)         \
+-)
+-
+-/*
+-** An open write-ahead log file is represented by an instance of the
+-** following object.
+-*/
+-struct Wal {
+-  sqlite3_vfs *pVfs;         /* The VFS used to create pDbFd */
+-  sqlite3_file *pDbFd;       /* File handle for the database file */
+-  sqlite3_file *pWalFd;      /* File handle for WAL file */
+-  u32 iCallback;             /* Value to pass to log callback (or 0) */
+-  i64 mxWalSize;             /* Truncate WAL to this size upon reset */
+-  int nWiData;               /* Size of array apWiData */
+-  int szFirstBlock;          /* Size of first block written to WAL file */
+-  volatile u32 **apWiData;   /* Pointer to wal-index content in memory */
+-  u32 szPage;                /* Database page size */
+-  i16 readLock;              /* Which read lock is being held.  -1 for none */
+-  u8 syncFlags;              /* Flags to use to sync header writes */
+-  u8 exclusiveMode;          /* Non-zero if connection is in exclusive mode */
+-  u8 writeLock;              /* True if in a write transaction */
+-  u8 ckptLock;               /* True if holding a checkpoint lock */
+-  u8 readOnly;               /* WAL_RDWR, WAL_RDONLY, or WAL_SHM_RDONLY */
+-  u8 truncateOnCommit;       /* True to truncate WAL file on commit */
+-  u8 syncHeader;             /* Fsync the WAL header if true */
+-  u8 padToSectorBoundary;    /* Pad transactions out to the next sector */
+-  WalIndexHdr hdr;           /* Wal-index header for current transaction */
+-  const char *zWalName;      /* Name of WAL file */
+-  u32 nCkpt;                 /* Checkpoint sequence counter in the wal-header */
+-#ifdef SQLITE_DEBUG
+-  u8 lockError;              /* True if a locking error has occurred */
+-#endif
+-};
+-
+-/*
+-** Candidate values for Wal.exclusiveMode.
+-*/
+-#define WAL_NORMAL_MODE     0
+-#define WAL_EXCLUSIVE_MODE  1     
+-#define WAL_HEAPMEMORY_MODE 2
+-
+-/*
+-** Possible values for WAL.readOnly
+-*/
+-#define WAL_RDWR        0    /* Normal read/write connection */
+-#define WAL_RDONLY      1    /* The WAL file is readonly */
+-#define WAL_SHM_RDONLY  2    /* The SHM file is readonly */
+-
+-/*
+-** Each page of the wal-index mapping contains a hash-table made up of
+-** an array of HASHTABLE_NSLOT elements of the following type.
+-*/
+-typedef u16 ht_slot;
+-
+-/*
+-** This structure is used to implement an iterator that loops through
+-** all frames in the WAL in database page order. Where two or more frames
+-** correspond to the same database page, the iterator visits only the 
+-** frame most recently written to the WAL (in other words, the frame with
+-** the largest index).
+-**
+-** The internals of this structure are only accessed by:
+-**
+-**   walIteratorInit() - Create a new iterator,
+-**   walIteratorNext() - Step an iterator,
+-**   walIteratorFree() - Free an iterator.
+-**
+-** This functionality is used by the checkpoint code (see walCheckpoint()).
+-*/
+-struct WalIterator {
+-  int iPrior;                     /* Last result returned from the iterator */
+-  int nSegment;                   /* Number of entries in aSegment[] */
+-  struct WalSegment {
+-    int iNext;                    /* Next slot in aIndex[] not yet returned */
+-    ht_slot *aIndex;              /* i0, i1, i2... such that aPgno[iN] ascend */
+-    u32 *aPgno;                   /* Array of page numbers. */
+-    int nEntry;                   /* Nr. of entries in aPgno[] and aIndex[] */
+-    int iZero;                    /* Frame number associated with aPgno[0] */
+-  } aSegment[1];                  /* One for every 32KB page in the wal-index */
+-};
+-
+-/*
+-** Define the parameters of the hash tables in the wal-index file. There
+-** is a hash-table following every HASHTABLE_NPAGE page numbers in the
+-** wal-index.
+-**
+-** Changing any of these constants will alter the wal-index format and
+-** create incompatibilities.
+-*/
+-#define HASHTABLE_NPAGE      4096                 /* Must be power of 2 */
+-#define HASHTABLE_HASH_1     383                  /* Should be prime */
+-#define HASHTABLE_NSLOT      (HASHTABLE_NPAGE*2)  /* Must be a power of 2 */
+-
+-/* 
+-** The block of page numbers associated with the first hash-table in a
+-** wal-index is smaller than usual. This is so that there is a complete
+-** hash-table on each aligned 32KB page of the wal-index.
+-*/
+-#define HASHTABLE_NPAGE_ONE  (HASHTABLE_NPAGE - (WALINDEX_HDR_SIZE/sizeof(u32)))
+-
+-/* The wal-index is divided into pages of WALINDEX_PGSZ bytes each. */
+-#define WALINDEX_PGSZ   (                                         \
+-    sizeof(ht_slot)*HASHTABLE_NSLOT + HASHTABLE_NPAGE*sizeof(u32) \
+-)
+-
+-/*
+-** Obtain a pointer to the iPage'th page of the wal-index. The wal-index
+-** is broken into pages of WALINDEX_PGSZ bytes. Wal-index pages are
+-** numbered from zero.
+-**
+-** If this call is successful, *ppPage is set to point to the wal-index
+-** page and SQLITE_OK is returned. If an error (an OOM or VFS error) occurs,
+-** then an SQLite error code is returned and *ppPage is set to 0.
+-*/
+-static int walIndexPage(Wal *pWal, int iPage, volatile u32 **ppPage){
+-  int rc = SQLITE_OK;
+-
+-  /* Enlarge the pWal->apWiData[] array if required */
+-  if( pWal->nWiData<=iPage ){
+-    int nByte = sizeof(u32*)*(iPage+1);
+-    volatile u32 **apNew;
 -    apNew = (volatile u32 **)sqlite3_realloc((void *)pWal->apWiData, nByte);
 -    if( !apNew ){
 -      *ppPage = 0;
@@ -4115,13 +4508,24 @@
 -  *pnTruncate = sqlite3Get4byte(&aFrame[4]);
 -  return 1;
 -}
--
--
++** if no values greater than K0 had ever been inserted into the hash table
++** in the first place - which is what reader one wants.  Meanwhile, the
++** second reader using K1 will see additional values that were inserted
++** later, which is exactly what reader two wants.  
++**
++** When a rollback occurs, the value of K is decreased. Hash table entries
++** that correspond to frames greater than the new K value are removed
++** from the hash table at this point.
++*/
++#ifndef SQLITE_OMIT_WAL
+ 
+ 
 -#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
--/*
+ /*
 -** Names of locks.  This routine is used to provide debugging output and is not
 -** a part of an ordinary build.
--*/
++** Trace output macros
+ */
 -static const char *walLockName(int lockIdx){
 -  if( lockIdx==WAL_WRITE_LOCK ){
 -    return "WRITE-LOCK";
@@ -4138,14 +4542,30 @@
 -}
 -#endif /*defined(SQLITE_TEST) || defined(SQLITE_DEBUG) */
 -    
--
--/*
++#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
++SQLITE_PRIVATE int sqlite3WalTrace = 0;
++# define WALTRACE(X)  if(sqlite3WalTrace) sqlite3DebugPrintf X
++#else
++# define WALTRACE(X)
++#endif
+ 
+ /*
 -** Set or release locks on the WAL.  Locks are either shared or exclusive.
 -** A lock cannot be moved directly between shared and exclusive - it must go
 -** through the unlocked state first.
--**
++** The maximum (and only) versions of the wal and wal-index formats
++** that may be interpreted by this version of SQLite.
+ **
 -** In locking_mode=EXCLUSIVE, all of these routines become no-ops.
--*/
++** If a client begins recovering a WAL file and finds that (a) the checksum
++** values in the wal-header are correct and (b) the version field is not
++** WAL_MAX_VERSION, recovery fails and SQLite returns SQLITE_CANTOPEN.
++**
++** Similarly, if a client successfully reads a wal-index header (i.e. the 
++** checksum test is successful) and finds that the version field is not
++** WALINDEX_MAX_VERSION, then no read-transaction is opened and SQLite
++** returns SQLITE_CANTOPEN.
+ */
 -static int walLockShared(Wal *pWal, int lockIdx){
 -  int rc;
 -  if( pWal->exclusiveMode ) return SQLITE_OK;
@@ -4179,8 +4599,10 @@
 -  WALTRACE(("WAL%p: release EXCLUSIVE-%s cnt=%d\n", pWal,
 -             walLockName(lockIdx), n));
 -}
--
--/*
++#define WAL_MAX_VERSION      3007000
++#define WALINDEX_MAX_VERSION 3007000
+ 
+ /*
 -** Compute a hash on a page number.  The resulting hash value must land
 -** between 0 and (HASHTABLE_NSLOT-1).  The walHashNext() function advances
 -** the hash to the next value in the event of a collision.
@@ -4207,7 +4629,9 @@
 -**
 -** Finally, set *paPgno so that *paPgno[1] is the page number of the
 -** first frame indexed by the hash table, frame (*piZero+1).
--*/
++** Indices of various locking bytes.   WAL_NREADER is the number
++** of available reader locks and should be at least 3.
+ */
 -static int walHashGet(
 -  Wal *pWal,                      /* WAL handle */
 -  int iHash,                      /* Find the iHash'th table */
@@ -4220,11 +4644,17 @@
 -
 -  rc = walIndexPage(pWal, iHash, &aPgno);
 -  assert( rc==SQLITE_OK || iHash>0 );
--
++#define WAL_WRITE_LOCK         0
++#define WAL_ALL_BUT_WRITE      1
++#define WAL_CKPT_LOCK          1
++#define WAL_RECOVER_LOCK       2
++#define WAL_READ_LOCK(I)       (3+(I))
++#define WAL_NREADER            (SQLITE_SHM_NLOCK-3)
+ 
 -  if( rc==SQLITE_OK ){
 -    u32 iZero;
 -    volatile ht_slot *aHash;
--
+ 
 -    aHash = (volatile ht_slot *)&aPgno[HASHTABLE_NPAGE];
 -    if( iHash==0 ){
 -      aPgno = &aPgno[WALINDEX_HDR_SIZE/sizeof(u32)];
@@ -4239,7 +4669,11 @@
 -  }
 -  return rc;
 -}
--
++/* Object declarations */
++typedef struct WalIndexHdr WalIndexHdr;
++typedef struct WalIterator WalIterator;
++typedef struct WalCkptInfo WalCkptInfo;
+ 
 -/*
 -** Return the number of the wal-index page that contains the hash-table
 -** and page-number array that contain entries corresponding to WAL frame
@@ -4256,10 +4690,18 @@
 -  );
 -  return iHash;
 -}
--
--/*
+ 
+ /*
 -** Return the page number associated with frame iFrame in this WAL.
--*/
++** The following object holds a copy of the wal-index header content.
++**
++** The actual header in the wal-index consists of two copies of this
++** object.
++**
++** The szPage value can be any power of 2 between 512 and 32768, inclusive.
++** Or it can be 1 to represent a 65536-byte page.  The latter case was
++** added in 3.7.1 when support for 64K pages was added.  
+ */
 -static u32 walFramePgno(Wal *pWal, u32 iFrame){
 -  int iHash = walFramePage(iFrame);
 -  if( iHash==0 ){
@@ -4267,19 +4709,77 @@
 -  }
 -  return pWal->apWiData[iHash][(iFrame-1-HASHTABLE_NPAGE_ONE)%HASHTABLE_NPAGE];
 -}
--
--/*
++struct WalIndexHdr {
++  u32 iVersion;                   /* Wal-index version */
++  u32 unused;                     /* Unused (padding) field */
++  u32 iChange;                    /* Counter incremented each transaction */
++  u8 isInit;                      /* 1 when initialized */
++  u8 bigEndCksum;                 /* True if checksums in WAL are big-endian */
++  u16 szPage;                     /* Database page size in bytes. 1==64K */
++  u32 mxFrame;                    /* Index of last valid frame in the WAL */
++  u32 nPage;                      /* Size of database in pages */
++  u32 aFrameCksum[2];             /* Checksum of last frame in log */
++  u32 aSalt[2];                   /* Two salt values copied from WAL header */
++  u32 aCksum[2];                  /* Checksum over all prior fields */
++};
+ 
+ /*
 -** Remove entries from the hash table that point to WAL slots greater
 -** than pWal->hdr.mxFrame.
--**
++** A copy of the following object occurs in the wal-index immediately
++** following the second copy of the WalIndexHdr.  This object stores
++** information used by checkpoint.
+ **
 -** This function is called whenever pWal->hdr.mxFrame is decreased due
 -** to a rollback or savepoint.
--**
++** nBackfill is the number of frames in the WAL that have been written
++** back into the database. (We call the act of moving content from WAL to
++** database "backfilling".)  The nBackfill number is never greater than
++** WalIndexHdr.mxFrame.  nBackfill can only be increased by threads
++** holding the WAL_CKPT_LOCK lock (which includes a recovery thread).
++** However, a WAL_WRITE_LOCK thread can move the value of nBackfill from
++** mxFrame back to zero when the WAL is reset.
+ **
 -** At most only the hash table containing pWal->hdr.mxFrame needs to be
 -** updated.  Any later hash tables will be automatically cleared when
 -** pWal->hdr.mxFrame advances to the point where those hash tables are
 -** actually needed.
--*/
++** There is one entry in aReadMark[] for each reader lock.  If a reader
++** holds read-lock K, then the value in aReadMark[K] is no greater than
++** the mxFrame for that reader.  The value READMARK_NOT_USED (0xffffffff)
++** for any aReadMark[] means that entry is unused.  aReadMark[0] is 
++** a special case; its value is never used and it exists as a place-holder
++** to avoid having to offset aReadMark[] indexs by one.  Readers holding
++** WAL_READ_LOCK(0) always ignore the entire WAL and read all content
++** directly from the database.
++**
++** The value of aReadMark[K] may only be changed by a thread that
++** is holding an exclusive lock on WAL_READ_LOCK(K).  Thus, the value of
++** aReadMark[K] cannot changed while there is a reader is using that mark
++** since the reader will be holding a shared lock on WAL_READ_LOCK(K).
++**
++** The checkpointer may only transfer frames from WAL to database where
++** the frame numbers are less than or equal to every aReadMark[] that is
++** in use (that is, every aReadMark[j] for which there is a corresponding
++** WAL_READ_LOCK(j)).  New readers (usually) pick the aReadMark[] with the
++** largest value and will increase an unused aReadMark[] to mxFrame if there
++** is not already an aReadMark[] equal to mxFrame.  The exception to the
++** previous sentence is when nBackfill equals mxFrame (meaning that everything
++** in the WAL has been backfilled into the database) then new readers
++** will choose aReadMark[0] which has value 0 and hence such reader will
++** get all their all content directly from the database file and ignore 
++** the WAL.
++**
++** Writers normally append new frames to the end of the WAL.  However,
++** if nBackfill equals mxFrame (meaning that all WAL content has been
++** written back into the database) and if no readers are using the WAL
++** (in other words, if there are no WAL_READ_LOCK(i) where i>0) then
++** the writer will first "reset" the WAL back to the beginning and start
++** writing new content beginning at frame 1.
++**
++** We assume that 32-bit loads are atomic and so no locks are needed in
++** order to read from any aReadMark[] entries.
+ */
 -static void walCleanupHash(Wal *pWal){
 -  volatile ht_slot *aHash = 0;    /* Pointer to hash table to clear */
 -  volatile u32 *aPgno = 0;        /* Page number array for hash table */
@@ -4287,14 +4787,27 @@
 -  int iLimit = 0;                 /* Zero values greater than this */
 -  int nByte;                      /* Number of bytes to zero in aPgno[] */
 -  int i;                          /* Used to iterate through aHash[] */
--
++struct WalCkptInfo {
++  u32 nBackfill;                  /* Number of WAL frames backfilled into DB */
++  u32 aReadMark[WAL_NREADER];     /* Reader marks */
++};
++#define READMARK_NOT_USED  0xffffffff
+ 
 -  assert( pWal->writeLock );
 -  testcase( pWal->hdr.mxFrame==HASHTABLE_NPAGE_ONE-1 );
 -  testcase( pWal->hdr.mxFrame==HASHTABLE_NPAGE_ONE );
 -  testcase( pWal->hdr.mxFrame==HASHTABLE_NPAGE_ONE+1 );
--
+ 
 -  if( pWal->hdr.mxFrame==0 ) return;
--
++/* A block of WALINDEX_LOCK_RESERVED bytes beginning at
++** WALINDEX_LOCK_OFFSET is reserved for locks. Since some systems
++** only support mandatory file-locks, we do not read or write data
++** from the region of the file on which locks are applied.
++*/
++#define WALINDEX_LOCK_OFFSET   (sizeof(WalIndexHdr)*2 + sizeof(WalCkptInfo))
++#define WALINDEX_LOCK_RESERVED 16
++#define WALINDEX_HDR_SIZE      (WALINDEX_LOCK_OFFSET+WALINDEX_LOCK_RESERVED)
+ 
 -  /* Obtain pointers to the hash-table and page-number array containing 
 -  ** the entry that corresponds to frame pWal->hdr.mxFrame. It is guaranteed
 -  ** that the page said hash-table and array reside on is already mapped.
@@ -4302,7 +4815,9 @@
 -  assert( pWal->nWiData>walFramePage(pWal->hdr.mxFrame) );
 -  assert( pWal->apWiData[walFramePage(pWal->hdr.mxFrame)] );
 -  walHashGet(pWal, walFramePage(pWal->hdr.mxFrame), &aHash, &aPgno, &iZero);
--
++/* Size of header before each frame in wal */
++#define WAL_FRAME_HDRSIZE 24
+ 
 -  /* Zero all hash-table entries that correspond to frame numbers greater
 -  ** than pWal->hdr.mxFrame.
 -  */
@@ -4319,7 +4834,10 @@
 -  */
 -  nByte = (int)((char *)aHash - (char *)&aPgno[iLimit+1]);
 -  memset((void *)&aPgno[iLimit+1], 0, nByte);
--
++/* Size of write ahead log header, including checksum. */
++/* #define WAL_HDRSIZE 24 */
++#define WAL_HDRSIZE 32
+ 
 -#ifdef SQLITE_ENABLE_EXPENSIVE_ASSERT
 -  /* Verify that the every entry in the mapping region is still reachable
 -  ** via the hash table even after the cleanup.
@@ -4336,20 +4854,72 @@
 -  }
 -#endif /* SQLITE_ENABLE_EXPENSIVE_ASSERT */
 -}
--
--
--/*
++/* WAL magic value. Either this value, or the same value with the least
++** significant bit also set (WAL_MAGIC | 0x00000001) is stored in 32-bit
++** big-endian format in the first 4 bytes of a WAL file.
++**
++** If the LSB is set, then the checksums for each frame within the WAL
++** file are calculated by treating all data as an array of 32-bit 
++** big-endian words. Otherwise, they are calculated by interpreting 
++** all data as 32-bit little-endian words.
++*/
++#define WAL_MAGIC 0x377f0682
+ 
++/*
++** Return the offset of frame iFrame in the write-ahead log file, 
++** assuming a database page size of szPage bytes. The offset returned
++** is to the start of the write-ahead log frame-header.
++*/
++#define walFrameOffset(iFrame, szPage) (                               \
++  WAL_HDRSIZE + ((iFrame)-1)*(i64)((szPage)+WAL_FRAME_HDRSIZE)         \
++)
+ 
+ /*
 -** Set an entry in the wal-index that will map database page number
 -** pPage into WAL frame iFrame.
--*/
++** An open write-ahead log file is represented by an instance of the
++** following object.
+ */
 -static int walIndexAppend(Wal *pWal, u32 iFrame, u32 iPage){
 -  int rc;                         /* Return code */
 -  u32 iZero = 0;                  /* One less than frame number of aPgno[1] */
 -  volatile u32 *aPgno = 0;        /* Page number array */
 -  volatile ht_slot *aHash = 0;    /* Hash table */
--
++struct Wal {
++  sqlite3_vfs *pVfs;         /* The VFS used to create pDbFd */
++  sqlite3_file *pDbFd;       /* File handle for the database file */
++  sqlite3_file *pWalFd;      /* File handle for WAL file */
++  u32 iCallback;             /* Value to pass to log callback (or 0) */
++  i64 mxWalSize;             /* Truncate WAL to this size upon reset */
++  int nWiData;               /* Size of array apWiData */
++  int szFirstBlock;          /* Size of first block written to WAL file */
++  volatile u32 **apWiData;   /* Pointer to wal-index content in memory */
++  u32 szPage;                /* Database page size */
++  i16 readLock;              /* Which read lock is being held.  -1 for none */
++  u8 syncFlags;              /* Flags to use to sync header writes */
++  u8 exclusiveMode;          /* Non-zero if connection is in exclusive mode */
++  u8 writeLock;              /* True if in a write transaction */
++  u8 ckptLock;               /* True if holding a checkpoint lock */
++  u8 readOnly;               /* WAL_RDWR, WAL_RDONLY, or WAL_SHM_RDONLY */
++  u8 truncateOnCommit;       /* True to truncate WAL file on commit */
++  u8 syncHeader;             /* Fsync the WAL header if true */
++  u8 padToSectorBoundary;    /* Pad transactions out to the next sector */
++  WalIndexHdr hdr;           /* Wal-index header for current transaction */
++  const char *zWalName;      /* Name of WAL file */
++  u32 nCkpt;                 /* Checkpoint sequence counter in the wal-header */
++#ifdef SQLITE_DEBUG
++  u8 lockError;              /* True if a locking error has occurred */
++#endif
++};
+ 
 -  rc = walHashGet(pWal, walFramePage(iFrame), &aHash, &aPgno, &iZero);
--
++/*
++** Candidate values for Wal.exclusiveMode.
++*/
++#define WAL_NORMAL_MODE     0
++#define WAL_EXCLUSIVE_MODE  1     
++#define WAL_HEAPMEMORY_MODE 2
+ 
 -  /* Assuming the wal-index file was successfully mapped, populate the
 -  ** page number array and hash table entry.
 -  */
@@ -4357,7 +4927,13 @@
 -    int iKey;                     /* Hash table key */
 -    int idx;                      /* Value to write to hash-table slot */
 -    int nCollide;                 /* Number of hash collisions */
--
++/*
++** Possible values for WAL.readOnly
++*/
++#define WAL_RDWR        0    /* Normal read/write connection */
++#define WAL_RDONLY      1    /* The WAL file is readonly */
++#define WAL_SHM_RDONLY  2    /* The SHM file is readonly */
+ 
 -    idx = iFrame - iZero;
 -    assert( idx <= HASHTABLE_NSLOT/2 + 1 );
 -    
@@ -4368,7 +4944,12 @@
 -      int nByte = (int)((u8 *)&aHash[HASHTABLE_NSLOT] - (u8 *)&aPgno[1]);
 -      memset((void*)&aPgno[1], 0, nByte);
 -    }
--
++/*
++** Each page of the wal-index mapping contains a hash-table made up of
++** an array of HASHTABLE_NSLOT elements of the following type.
++*/
++typedef u16 ht_slot;
+ 
 -    /* If the entry in aPgno[] is already set, then the previous writer
 -    ** must have exited unexpectedly in the middle of a transaction (after
 -    ** writing one or more dirty pages to the WAL to free up memory). 
@@ -4379,7 +4960,33 @@
 -      walCleanupHash(pWal);
 -      assert( !aPgno[idx] );
 -    }
--
++/*
++** This structure is used to implement an iterator that loops through
++** all frames in the WAL in database page order. Where two or more frames
++** correspond to the same database page, the iterator visits only the 
++** frame most recently written to the WAL (in other words, the frame with
++** the largest index).
++**
++** The internals of this structure are only accessed by:
++**
++**   walIteratorInit() - Create a new iterator,
++**   walIteratorNext() - Step an iterator,
++**   walIteratorFree() - Free an iterator.
++**
++** This functionality is used by the checkpoint code (see walCheckpoint()).
++*/
++struct WalIterator {
++  int iPrior;                     /* Last result returned from the iterator */
++  int nSegment;                   /* Number of entries in aSegment[] */
++  struct WalSegment {
++    int iNext;                    /* Next slot in aIndex[] not yet returned */
++    ht_slot *aIndex;              /* i0, i1, i2... such that aPgno[iN] ascend */
++    u32 *aPgno;                   /* Array of page numbers. */
++    int nEntry;                   /* Nr. of entries in aPgno[] and aIndex[] */
++    int iZero;                    /* Frame number associated with aPgno[0] */
++  } aSegment[1];                  /* One for every 32KB page in the wal-index */
++};
+ 
 -    /* Write the aPgno[] array entry and the hash-table slot. */
 -    nCollide = idx;
 -    for(iKey=walHash(iPage); aHash[iKey]; iKey=walNextHash(iKey)){
@@ -4387,7 +4994,18 @@
 -    }
 -    aPgno[idx] = iPage;
 -    aHash[iKey] = (ht_slot)idx;
--
++/*
++** Define the parameters of the hash tables in the wal-index file. There
++** is a hash-table following every HASHTABLE_NPAGE page numbers in the
++** wal-index.
++**
++** Changing any of these constants will alter the wal-index format and
++** create incompatibilities.
++*/
++#define HASHTABLE_NPAGE      4096                 /* Must be power of 2 */
++#define HASHTABLE_HASH_1     383                  /* Should be prime */
++#define HASHTABLE_NSLOT      (HASHTABLE_NPAGE*2)  /* Must be a power of 2 */
+ 
 -#ifdef SQLITE_ENABLE_EXPENSIVE_ASSERT
 -    /* Verify that the number of entries in the hash table exactly equals
 -    ** the number of entries in the mapping region.
@@ -4397,16 +5015,13 @@
 -      int nEntry = 0;  /* Number of entries in the hash table */
 -      for(i=0; i<HASHTABLE_NSLOT; i++){ if( aHash[i] ) nEntry++; }
 -      assert( nEntry==idx );
-+    apNew = (volatile u32 **)sqlite3_realloc((void *)pWal->apWiData, nByte);
-+    if( !apNew ){
-+      *ppPage = 0;
-+      return SQLITE_NOMEM;
-     }
-+    memset((void*)&apNew[pWal->nWiData], 0,
-+           sizeof(u32*)*(iPage+1-pWal->nWiData));
-+    pWal->apWiData = apNew;
-+    pWal->nWiData = iPage+1;
-+  }
+-    }
++/* 
++** The block of page numbers associated with the first hash-table in a
++** wal-index is smaller than usual. This is so that there is a complete
++** hash-table on each aligned 32KB page of the wal-index.
++*/
++#define HASHTABLE_NPAGE_ONE  (HASHTABLE_NPAGE - (WALINDEX_HDR_SIZE/sizeof(u32)))
  
 -    /* Verify that the every entry in the mapping region is reachable
 -    ** via the hash table.  This turns out to be a really, really expensive
@@ -4420,6 +5035,40 @@
 -          if( aHash[iKey]==i ) break;
 -        }
 -        assert( aHash[iKey]==i );
+-      }
++/* The wal-index is divided into pages of WALINDEX_PGSZ bytes each. */
++#define WALINDEX_PGSZ   (                                         \
++    sizeof(ht_slot)*HASHTABLE_NSLOT + HASHTABLE_NPAGE*sizeof(u32) \
++)
++
++/*
++** Obtain a pointer to the iPage'th page of the wal-index. The wal-index
++** is broken into pages of WALINDEX_PGSZ bytes. Wal-index pages are
++** numbered from zero.
++**
++** If this call is successful, *ppPage is set to point to the wal-index
++** page and SQLITE_OK is returned. If an error (an OOM or VFS error) occurs,
++** then an SQLite error code is returned and *ppPage is set to 0.
++*/
++static int walIndexPage(Wal *pWal, int iPage, volatile u32 **ppPage){
++  int rc = SQLITE_OK;
++
++  /* Enlarge the pWal->apWiData[] array if required */
++  if( pWal->nWiData<=iPage ){
++    int nByte = sizeof(u32*)*(iPage+1);
++    volatile u32 **apNew;
++    apNew = (volatile u32 **)sqlite3_realloc((void *)pWal->apWiData, nByte);
++    if( !apNew ){
++      *ppPage = 0;
++      return SQLITE_NOMEM;
+     }
+-#endif /* SQLITE_ENABLE_EXPENSIVE_ASSERT */
++    memset((void*)&apNew[pWal->nWiData], 0,
++           sizeof(u32*)*(iPage+1-pWal->nWiData));
++    pWal->apWiData = apNew;
++    pWal->nWiData = iPage+1;
+   }
+ 
 +  /* Request a pointer to the required page from the VFS */
 +  if( pWal->apWiData[iPage]==0 ){
 +    if( pWal->exclusiveMode==WAL_HEAPMEMORY_MODE ){
@@ -4432,12 +5081,10 @@
 +      if( rc==SQLITE_READONLY ){
 +        pWal->readOnly |= WAL_SHM_RDONLY;
 +        rc = SQLITE_OK;
-       }
-     }
--#endif /* SQLITE_ENABLE_EXPENSIVE_ASSERT */
-   }
++      }
++    }
++  }
  
--
 +  *ppPage = pWal->apWiData[iPage];
 +  assert( iPage==0 || *ppPage || rc!=SQLITE_OK );
    return rc;
@@ -4838,7 +5485,7 @@
 -    sqlite3OsClose(pRet->pWalFd);
 -    sqlite3_free(pRet);
 -  }else{
--    int iDC = sqlite3OsDeviceCharacteristics(pRet->pWalFd);
+-    int iDC = sqlite3OsDeviceCharacteristics(pDbFd);
 -    if( iDC & SQLITE_IOCAP_SEQUENTIAL ){ pRet->syncHeader = 0; }
 -    if( iDC & SQLITE_IOCAP_POWERSAFE_OVERWRITE ){
 -      pRet->padToSectorBoundary = 0;
@@ -4934,9 +5581,6 @@
 -      pSegment->iNext++;
 -    }
 -  }
--
--  *piPage = p->iPrior = iRet;
--  return (iRet==0xFFFFFFFF);
 +static int walLockShared(Wal *pWal, int lockIdx){
 +  int rc;
 +  if( pWal->exclusiveMode ) return SQLITE_OK;
@@ -4969,9 +5613,25 @@
 +                         SQLITE_SHM_UNLOCK | SQLITE_SHM_EXCLUSIVE);
 +  WALTRACE(("WAL%p: release EXCLUSIVE-%s cnt=%d\n", pWal,
 +             walLockName(lockIdx), n));
++}
+ 
+-  *piPage = p->iPrior = iRet;
+-  return (iRet==0xFFFFFFFF);
++/*
++** Compute a hash on a page number.  The resulting hash value must land
++** between 0 and (HASHTABLE_NSLOT-1).  The walHashNext() function advances
++** the hash to the next value in the event of a collision.
++*/
++static int walHash(u32 iPage){
++  assert( iPage>0 );
++  assert( (HASHTABLE_NSLOT & (HASHTABLE_NSLOT-1))==0 );
++  return (iPage*HASHTABLE_HASH_1) & (HASHTABLE_NSLOT-1);
++}
++static int walNextHash(int iPriorHash){
++  return (iPriorHash+1)&(HASHTABLE_NSLOT-1);
  }
  
- /*
+-/*
 -** This function merges two sorted lists into a single sorted list.
 -**
 -** aLeft[] and aRight[] are arrays of indices.  The sort key is
@@ -4989,19 +5649,6 @@
 -** The aContent[aLeft[X]] values will be unique for all X.  And the
 -** aContent[aRight[X]] values will be unique too.  But there might be
 -** one or more combinations of X and Y such that
-+** Compute a hash on a page number.  The resulting hash value must land
-+** between 0 and (HASHTABLE_NSLOT-1).  The walHashNext() function advances
-+** the hash to the next value in the event of a collision.
-+*/
-+static int walHash(u32 iPage){
-+  assert( iPage>0 );
-+  assert( (HASHTABLE_NSLOT & (HASHTABLE_NSLOT-1))==0 );
-+  return (iPage*HASHTABLE_HASH_1) & (HASHTABLE_NSLOT-1);
-+}
-+static int walNextHash(int iPriorHash){
-+  return (iPriorHash+1)&(HASHTABLE_NSLOT-1);
-+}
-+
 +/* 
 +** Return pointers to the hash table and page number array stored on
 +** page iHash of the wal-index. The wal-index is broken into 32KB pages
@@ -5479,6 +6126,21 @@
 -  int i;                          /* Loop counter */
 -  volatile WalCkptInfo *pInfo;    /* The checkpoint status information */
 -  int (*xBusy)(void*) = 0;        /* Function to call when waiting for locks */
+-
+-  szPage = walPagesize(pWal);
+-  testcase( szPage<=32768 );
+-  testcase( szPage>=65536 );
+-  pInfo = walCkptInfo(pWal);
+-  if( pInfo->nBackfill>=pWal->hdr.mxFrame ) return SQLITE_OK;
+-
+-  /* Allocate the iterator */
+-  rc = walIteratorInit(pWal, &pIter);
+-  if( rc!=SQLITE_OK ){
+-    return rc;
+-  }
+-  assert( pIter );
+-
+-  if( eMode!=SQLITE_CHECKPOINT_PASSIVE ) xBusy = xBusyCall;
 +static int walIndexRecover(Wal *pWal){
 +  int rc;                         /* Return Code */
 +  i64 nSize;                      /* Size of log file */
@@ -5486,64 +6148,16 @@
 +  int iLock;                      /* Lock offset to lock for checkpoint */
 +  int nLock;                      /* Number of locks to hold */
  
--  szPage = walPagesize(pWal);
--  testcase( szPage<=32768 );
--  testcase( szPage>=65536 );
--  pInfo = walCkptInfo(pWal);
--  if( pInfo->nBackfill>=pWal->hdr.mxFrame ) return SQLITE_OK;
+-  /* Compute in mxSafeFrame the index of the last frame of the WAL that is
+-  ** safe to write into the database.  Frames beyond mxSafeFrame might
+-  ** overwrite database pages that are in use by active readers and thus
+-  ** cannot be backfilled from the WAL.
 +  /* Obtain an exclusive lock on all byte in the locking range not already
 +  ** locked by the caller. The caller is guaranteed to have locked the
 +  ** WAL_WRITE_LOCK byte, and may have also locked the WAL_CKPT_LOCK byte.
 +  ** If successful, the same bytes that are locked here are unlocked before
 +  ** this function returns.
-+  */
-+  assert( pWal->ckptLock==1 || pWal->ckptLock==0 );
-+  assert( WAL_ALL_BUT_WRITE==WAL_WRITE_LOCK+1 );
-+  assert( WAL_CKPT_LOCK==WAL_ALL_BUT_WRITE );
-+  assert( pWal->writeLock );
-+  iLock = WAL_ALL_BUT_WRITE + pWal->ckptLock;
-+  nLock = SQLITE_SHM_NLOCK - iLock;
-+  rc = walLockExclusive(pWal, iLock, nLock);
-+  if( rc ){
-+    return rc;
-+  }
-+  WALTRACE(("WAL%p: recovery begin...\n", pWal));
- 
--  /* Allocate the iterator */
--  rc = walIteratorInit(pWal, &pIter);
-+  memset(&pWal->hdr, 0, sizeof(WalIndexHdr));
-+
-+  rc = sqlite3OsFileSize(pWal->pWalFd, &nSize);
-   if( rc!=SQLITE_OK ){
--    return rc;
-+    goto recovery_error;
-   }
--  assert( pIter );
- 
--  if( eMode!=SQLITE_CHECKPOINT_PASSIVE ) xBusy = xBusyCall;
-+  if( nSize>WAL_HDRSIZE ){
-+    u8 aBuf[WAL_HDRSIZE];         /* Buffer to load WAL header into */
-+    u8 *aFrame = 0;               /* Malloc'd buffer to load entire frame */
-+    int szFrame;                  /* Number of bytes in buffer aFrame[] */
-+    u8 *aData;                    /* Pointer to data part of aFrame buffer */
-+    int iFrame;                   /* Index of last frame read */
-+    i64 iOffset;                  /* Next offset to read from log file */
-+    int szPage;                   /* Page size according to the log */
-+    u32 magic;                    /* Magic value read from WAL header */
-+    u32 version;                  /* Magic value read from WAL header */
-+    int isValid;                  /* True if this frame is valid */
-+
-+    /* Read in the WAL header. */
-+    rc = sqlite3OsRead(pWal->pWalFd, aBuf, WAL_HDRSIZE, 0);
-+    if( rc!=SQLITE_OK ){
-+      goto recovery_error;
-+    }
- 
--  /* Compute in mxSafeFrame the index of the last frame of the WAL that is
--  ** safe to write into the database.  Frames beyond mxSafeFrame might
--  ** overwrite database pages that are in use by active readers and thus
--  ** cannot be backfilled from the WAL.
--  */
+   */
 -  mxSafeFrame = pWal->hdr.mxFrame;
 -  mxPage = pWal->hdr.nPage;
 -  for(i=1; i<WAL_NREADER; i++){
@@ -5560,11 +6174,65 @@
 -      }else{
 -        goto walcheckpoint_out;
 -      }
+-    }
++  assert( pWal->ckptLock==1 || pWal->ckptLock==0 );
++  assert( WAL_ALL_BUT_WRITE==WAL_WRITE_LOCK+1 );
++  assert( WAL_CKPT_LOCK==WAL_ALL_BUT_WRITE );
++  assert( pWal->writeLock );
++  iLock = WAL_ALL_BUT_WRITE + pWal->ckptLock;
++  nLock = SQLITE_SHM_NLOCK - iLock;
++  rc = walLockExclusive(pWal, iLock, nLock);
++  if( rc ){
++    return rc;
+   }
++  WALTRACE(("WAL%p: recovery begin...\n", pWal));
+ 
+-  if( pInfo->nBackfill<mxSafeFrame
+-   && (rc = walBusyLock(pWal, xBusy, pBusyArg, WAL_READ_LOCK(0), 1))==SQLITE_OK
+-  ){
+-    i64 nSize;                    /* Current size of database file */
+-    u32 nBackfill = pInfo->nBackfill;
++  memset(&pWal->hdr, 0, sizeof(WalIndexHdr));
+ 
+-    /* Sync the WAL to disk */
+-    if( sync_flags ){
+-      rc = sqlite3OsSync(pWal->pWalFd, sync_flags);
++  rc = sqlite3OsFileSize(pWal->pWalFd, &nSize);
++  if( rc!=SQLITE_OK ){
++    goto recovery_error;
++  }
++
++  if( nSize>WAL_HDRSIZE ){
++    u8 aBuf[WAL_HDRSIZE];         /* Buffer to load WAL header into */
++    u8 *aFrame = 0;               /* Malloc'd buffer to load entire frame */
++    int szFrame;                  /* Number of bytes in buffer aFrame[] */
++    u8 *aData;                    /* Pointer to data part of aFrame buffer */
++    int iFrame;                   /* Index of last frame read */
++    i64 iOffset;                  /* Next offset to read from log file */
++    int szPage;                   /* Page size according to the log */
++    u32 magic;                    /* Magic value read from WAL header */
++    u32 version;                  /* Magic value read from WAL header */
++    int isValid;                  /* True if this frame is valid */
++
++    /* Read in the WAL header. */
++    rc = sqlite3OsRead(pWal->pWalFd, aBuf, WAL_HDRSIZE, 0);
++    if( rc!=SQLITE_OK ){
++      goto recovery_error;
+     }
+ 
+-    /* If the database may grow as a result of this checkpoint, hint
+-    ** about the eventual size of the db file to the VFS layer.
 +    /* If the database page size is not a power of two, or is greater than
 +    ** SQLITE_MAX_PAGE_SIZE, conclude that the WAL file contains no valid 
 +    ** data. Similarly, if the 'magic' value is invalid, ignore the whole
 +    ** WAL file.
-+    */
+     */
+-    if( rc==SQLITE_OK ){
+-      i64 nReq = ((i64)mxPage * szPage);
+-      rc = sqlite3OsFileSize(pWal->pDbFd, &nSize);
+-      if( rc==SQLITE_OK && nSize<nReq ){
+-        sqlite3OsFileControlHint(pWal->pDbFd, SQLITE_FCNTL_SIZE_HINT, &nReq);
+-      }
 +    magic = sqlite3Get4byte(&aBuf[0]);
 +    szPage = sqlite3Get4byte(&aBuf[8]);
 +    if( (magic&0xFFFFFFFE)!=WAL_MAGIC 
@@ -5573,18 +6241,12 @@
 +     || szPage<512 
 +    ){
 +      goto finished;
-     }
--  }
++    }
 +    pWal->hdr.bigEndCksum = (u8)(magic&0x00000001);
 +    pWal->szPage = szPage;
 +    pWal->nCkpt = sqlite3Get4byte(&aBuf[12]);
 +    memcpy(&pWal->hdr.aSalt, &aBuf[16], 8);
- 
--  if( pInfo->nBackfill<mxSafeFrame
--   && (rc = walBusyLock(pWal, xBusy, pBusyArg, WAL_READ_LOCK(0), 1))==SQLITE_OK
--  ){
--    i64 nSize;                    /* Current size of database file */
--    u32 nBackfill = pInfo->nBackfill;
++
 +    /* Verify that the WAL header checksum is correct */
 +    walChecksumBytes(pWal->hdr.bigEndCksum==SQLITE_BIGENDIAN, 
 +        aBuf, WAL_HDRSIZE-2*4, 0, pWal->hdr.aFrameCksum
@@ -5593,42 +6255,15 @@
 +     || pWal->hdr.aFrameCksum[1]!=sqlite3Get4byte(&aBuf[28])
 +    ){
 +      goto finished;
-+    }
+     }
  
--    /* Sync the WAL to disk */
--    if( sync_flags ){
--      rc = sqlite3OsSync(pWal->pWalFd, sync_flags);
 +    /* Verify that the version number on the WAL format is one that
 +    ** are able to understand */
 +    version = sqlite3Get4byte(&aBuf[4]);
 +    if( version!=WAL_MAX_VERSION ){
 +      rc = SQLITE_CANTOPEN_BKPT;
 +      goto finished;
-     }
- 
--    /* If the database may grow as a result of this checkpoint, hint
--    ** about the eventual size of the db file to the VFS layer.
--    */
--    if( rc==SQLITE_OK ){
--      i64 nReq = ((i64)mxPage * szPage);
--      rc = sqlite3OsFileSize(pWal->pDbFd, &nSize);
--      if( rc==SQLITE_OK && nSize<nReq ){
--        sqlite3OsFileControlHint(pWal->pDbFd, SQLITE_FCNTL_SIZE_HINT, &nReq);
--      }
-+    /* Malloc a buffer to read frames into. */
-+    szFrame = szPage + WAL_FRAME_HDRSIZE;
-+    aFrame = (u8 *)sqlite3_malloc(szFrame);
-+    if( !aFrame ){
-+      rc = SQLITE_NOMEM;
-+      goto recovery_error;
-     }
-+    aData = &aFrame[WAL_FRAME_HDRSIZE];
- 
-+    /* Read all frames from the log file. */
-+    iFrame = 0;
-+    for(iOffset=WAL_HDRSIZE; (iOffset+szFrame)<=nSize; iOffset+=szFrame){
-+      u32 pgno;                   /* Database page number for frame */
-+      u32 nTruncate;              /* dbsize field from frame header */
++    }
  
 -    /* Iterate through the contents of the WAL, copying data to the db file. */
 -    while( rc==SQLITE_OK && 0==walIteratorNext(pIter, &iDbpage, &iFrame) ){
@@ -5638,6 +6273,21 @@
 -      iOffset = walFrameOffset(iFrame, szPage) + WAL_FRAME_HDRSIZE;
 -      /* testcase( IS_BIG_INT(iOffset) ); // requires a 4GiB WAL file */
 -      rc = sqlite3OsRead(pWal->pWalFd, zBuf, szPage, iOffset);
++    /* Malloc a buffer to read frames into. */
++    szFrame = szPage + WAL_FRAME_HDRSIZE;
++    aFrame = (u8 *)sqlite3_malloc(szFrame);
++    if( !aFrame ){
++      rc = SQLITE_NOMEM;
++      goto recovery_error;
++    }
++    aData = &aFrame[WAL_FRAME_HDRSIZE];
++
++    /* Read all frames from the log file. */
++    iFrame = 0;
++    for(iOffset=WAL_HDRSIZE; (iOffset+szFrame)<=nSize; iOffset+=szFrame){
++      u32 pgno;                   /* Database page number for frame */
++      u32 nTruncate;              /* dbsize field from frame header */
++
 +      /* Read and decode the next log frame. */
 +      iFrame++;
 +      rc = sqlite3OsRead(pWal->pWalFd, aFrame, szFrame, iOffset);
@@ -5949,7 +6599,7 @@
 +    sqlite3OsClose(pRet->pWalFd);
 +    sqlite3_free(pRet);
 +  }else{
-+    int iDC = sqlite3OsDeviceCharacteristics(pRet->pWalFd);
++    int iDC = sqlite3OsDeviceCharacteristics(pDbFd);
 +    if( iDC & SQLITE_IOCAP_SEQUENTIAL ){ pRet->syncHeader = 0; }
 +    if( iDC & SQLITE_IOCAP_POWERSAFE_OVERWRITE ){
 +      pRet->padToSectorBoundary = 0;
@@ -6647,13 +7297,7 @@
 -  u32 iRead,                      /* Frame to read */
 -  int nOut,                       /* Size of buffer pOut in bytes */
 -  u8 *pOut                        /* Buffer to write page data to */
-+static int walBusyLock(
-+  Wal *pWal,                      /* WAL connection */
-+  int (*xBusy)(void*),            /* Function to call when busy */
-+  void *pBusyArg,                 /* Context argument for xBusyHandler */
-+  int lockIdx,                    /* Offset of first byte to lock */
-+  int n                           /* Number of bytes to lock */
- ){
+-){
 -  int sz;
 -  i64 iOffset;
 -  sz = pWal->hdr.szPage;
@@ -6663,6 +7307,13 @@
 -  iOffset = walFrameOffset(iRead, sz) + WAL_FRAME_HDRSIZE;
 -  /* testcase( IS_BIG_INT(iOffset) ); // requires a 4GiB WAL */
 -  return sqlite3OsRead(pWal->pWalFd, pOut, (nOut>sz ? sz : nOut), iOffset);
++static int walBusyLock(
++  Wal *pWal,                      /* WAL connection */
++  int (*xBusy)(void*),            /* Function to call when busy */
++  void *pBusyArg,                 /* Context argument for xBusyHandler */
++  int lockIdx,                    /* Offset of first byte to lock */
++  int n                           /* Number of bytes to lock */
++){
 +  int rc;
 +  do {
 +    rc = walLockExclusive(pWal, lockIdx, n);
@@ -7085,7 +7736,7 @@
 -    iAmt -= iFirstAmt;
 -    pContent = (void*)(iFirstAmt + (char*)pContent);
 -    assert( p->syncFlags & (SQLITE_SYNC_NORMAL|SQLITE_SYNC_FULL) );
--    rc = sqlite3OsSync(p->pFd, p->syncFlags);
+-    rc = sqlite3OsSync(p->pFd, p->syncFlags & SQLITE_SYNC_MASK);
 -    if( iAmt==0 || rc ) return rc;
 +static void walLimitSize(Wal *pWal, i64 nMax){
 +  i64 sz;
@@ -7105,13 +7756,19 @@
  
  /*
 -** Write out a single frame of the WAL
--*/
++** Close a connection to a log file.
+ */
 -static int walWriteOneFrame(
 -  WalWriter *p,               /* Where to write the frame */
 -  PgHdr *pPage,               /* The page of the frame to be written */
 -  int nTruncate,              /* The commit flag.  Usually 0.  >0 for commit */
 -  sqlite3_int64 iOffset       /* Byte offset at which to write */
--){
++SQLITE_PRIVATE int sqlite3WalClose(
++  Wal *pWal,                      /* Wal to close */
++  int sync_flags,                 /* Flags to pass to OsSync() (or 0) */
++  int nBuf,
++  u8 *zBuf                        /* Buffer of at least nBuf bytes */
+ ){
 -  int rc;                         /* Result code from subfunctions */
 -  void *pData;                    /* Data actually written */
 -  u8 aFrame[WAL_FRAME_HDRSIZE];   /* Buffer to assemble frame-header in */
@@ -7125,45 +7782,10 @@
 -  if( rc ) return rc;
 -  /* Write the page data */
 -  rc = walWriteToLog(p, pData, p->szPage, iOffset+sizeof(aFrame));
--  return rc;
--}
--
--/* 
--** Write a set of frames to the log. The caller must hold the write-lock
--** on the log file (obtained using sqlite3WalBeginWriteTransaction()).
-+** Close a connection to a log file.
- */
--SQLITE_PRIVATE int sqlite3WalFrames(
--  Wal *pWal,                      /* Wal handle to write to */
--  int szPage,                     /* Database page-size in bytes */
--  PgHdr *pList,                   /* List of dirty pages to write */
--  Pgno nTruncate,                 /* Database size after this commit */
--  int isCommit,                   /* True if this is a commit */
--  int sync_flags                  /* Flags to pass to OsSync() (or 0) */
-+SQLITE_PRIVATE int sqlite3WalClose(
-+  Wal *pWal,                      /* Wal to close */
-+  int sync_flags,                 /* Flags to pass to OsSync() (or 0) */
-+  int nBuf,
-+  u8 *zBuf                        /* Buffer of at least nBuf bytes */
- ){
--  int rc;                         /* Used to catch return codes */
--  u32 iFrame;                     /* Next frame address */
--  PgHdr *p;                       /* Iterator to run through pList with. */
--  PgHdr *pLast = 0;               /* Last frame in list */
--  int nExtra = 0;                 /* Number of extra copies of last page */
--  int szFrame;                    /* The size of a single frame */
--  i64 iOffset;                    /* Next byte to write in WAL file */
--  WalWriter w;                    /* The writer */
--
--  assert( pList );
--  assert( pWal->writeLock );
 +  int rc = SQLITE_OK;
 +  if( pWal ){
 +    int isDelete = 0;             /* True to unlink wal and wal-index files */
- 
--  /* If this frame set completes a transaction, then nTruncate>0.  If
--  ** nTruncate==0 then this frame set does not complete the transaction. */
--  assert( (isCommit!=0)==(nTruncate!=0) );
++
 +    /* If an EXCLUSIVE lock can be obtained on the database file (using the
 +    ** ordinary, rollback-mode locking methods, this guarantees that the
 +    ** connection associated with this log file is the only connection to
@@ -7201,11 +7823,7 @@
 +        }
 +      }
 +    }
- 
--#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
--  { int cnt; for(cnt=0, p=pList; p; p=p->pDirty, cnt++){}
--    WALTRACE(("WAL%p: frame write begin. %d frames. mxFrame=%d. %s\n",
--              pWal, cnt, pWal->hdr.mxFrame, isCommit ? "Commit" : "Spill"));
++
 +    walIndexClose(pWal, isDelete);
 +    sqlite3OsClose(pWal->pWalFd);
 +    if( isDelete ){
@@ -7216,17 +7834,30 @@
 +    WALTRACE(("WAL%p: closed\n", pWal));
 +    sqlite3_free((void *)pWal->apWiData);
 +    sqlite3_free(pWal);
-   }
--#endif
-+  return rc;
-+}
++  }
+   return rc;
+ }
  
--  /* See if it is possible to write these frames into the start of the
--  ** log file, instead of appending to it at pWal->hdr.mxFrame.
--  */
--  if( SQLITE_OK!=(rc = walRestartLog(pWal)) ){
--    return rc;
--  }
+-/* 
+-** Write a set of frames to the log. The caller must hold the write-lock
+-** on the log file (obtained using sqlite3WalBeginWriteTransaction()).
+-*/
+-SQLITE_PRIVATE int sqlite3WalFrames(
+-  Wal *pWal,                      /* Wal handle to write to */
+-  int szPage,                     /* Database page-size in bytes */
+-  PgHdr *pList,                   /* List of dirty pages to write */
+-  Pgno nTruncate,                 /* Database size after this commit */
+-  int isCommit,                   /* True if this is a commit */
+-  int sync_flags                  /* Flags to pass to OsSync() (or 0) */
+-){
+-  int rc;                         /* Used to catch return codes */
+-  u32 iFrame;                     /* Next frame address */
+-  PgHdr *p;                       /* Iterator to run through pList with. */
+-  PgHdr *pLast = 0;               /* Last frame in list */
+-  int nExtra = 0;                 /* Number of extra copies of last page */
+-  int szFrame;                    /* The size of a single frame */
+-  i64 iOffset;                    /* Next byte to write in WAL file */
+-  WalWriter w;                    /* The writer */
 +/*
 +** Try to read the wal-index header.  Return 0 on success and 1 if
 +** there is a problem.
@@ -7249,32 +7880,14 @@
 +  WalIndexHdr h1, h2;             /* Two copies of the header content */
 +  WalIndexHdr volatile *aHdr;     /* Header in shared memory */
  
--  /* If this is the first frame written into the log, write the WAL
--  ** header to the start of the WAL file. See comments at the top of
--  ** this source file for a description of the WAL header format.
--  */
--  iFrame = pWal->hdr.mxFrame;
--  if( iFrame==0 ){
--    u8 aWalHdr[WAL_HDRSIZE];      /* Buffer to assemble wal-header in */
--    u32 aCksum[2];                /* Checksum for wal-header */
+-  assert( pList );
+-  assert( pWal->writeLock );
 +  /* The first page of the wal-index must be mapped at this point. */
 +  assert( pWal->nWiData>0 && pWal->apWiData[0] );
  
--    sqlite3Put4byte(&aWalHdr[0], (WAL_MAGIC | SQLITE_BIGENDIAN));
--    sqlite3Put4byte(&aWalHdr[4], WAL_MAX_VERSION);
--    sqlite3Put4byte(&aWalHdr[8], szPage);
--    sqlite3Put4byte(&aWalHdr[12], pWal->nCkpt);
--    if( pWal->nCkpt==0 ) sqlite3_randomness(8, pWal->hdr.aSalt);
--    memcpy(&aWalHdr[16], pWal->hdr.aSalt, 8);
--    walChecksumBytes(1, aWalHdr, WAL_HDRSIZE-2*4, 0, aCksum);
--    sqlite3Put4byte(&aWalHdr[24], aCksum[0]);
--    sqlite3Put4byte(&aWalHdr[28], aCksum[1]);
--    
--    pWal->szPage = szPage;
--    pWal->hdr.bigEndCksum = SQLITE_BIGENDIAN;
--    pWal->hdr.aFrameCksum[0] = aCksum[0];
--    pWal->hdr.aFrameCksum[1] = aCksum[1];
--    pWal->truncateOnCommit = 1;
+-  /* If this frame set completes a transaction, then nTruncate>0.  If
+-  ** nTruncate==0 then this frame set does not complete the transaction. */
+-  assert( (isCommit!=0)==(nTruncate!=0) );
 +  /* Read the header. This might happen concurrently with a write to the
 +  ** same area of shared memory on a different CPU in a SMP,
 +  ** meaning it is possible that an inconsistent snapshot is read
@@ -7290,22 +7903,59 @@
 +  walShmBarrier(pWal);
 +  memcpy(&h2, (void *)&aHdr[1], sizeof(h2));
  
--    rc = sqlite3OsWrite(pWal->pWalFd, aWalHdr, sizeof(aWalHdr), 0);
--    WALTRACE(("WAL%p: wal-header write %s\n", pWal, rc ? "failed" : "ok"));
--    if( rc!=SQLITE_OK ){
--      return rc;
--    }
+-#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
+-  { int cnt; for(cnt=0, p=pList; p; p=p->pDirty, cnt++){}
+-    WALTRACE(("WAL%p: frame write begin. %d frames. mxFrame=%d. %s\n",
+-              pWal, cnt, pWal->hdr.mxFrame, isCommit ? "Commit" : "Spill"));
 +  if( memcmp(&h1, &h2, sizeof(h1))!=0 ){
 +    return 1;   /* Dirty read */
 +  }  
 +  if( h1.isInit==0 ){
 +    return 1;   /* Malformed header - probably all zeros */
-+  }
+   }
+-#endif
+-
+-  /* See if it is possible to write these frames into the start of the
+-  ** log file, instead of appending to it at pWal->hdr.mxFrame.
+-  */
+-  if( SQLITE_OK!=(rc = walRestartLog(pWal)) ){
+-    return rc;
 +  walChecksumBytes(1, (u8*)&h1, sizeof(h1)-sizeof(h1.aCksum), 0, aCksum);
 +  if( aCksum[0]!=h1.aCksum[0] || aCksum[1]!=h1.aCksum[1] ){
 +    return 1;   /* Checksum does not match */
-+  }
+   }
  
+-  /* If this is the first frame written into the log, write the WAL
+-  ** header to the start of the WAL file. See comments at the top of
+-  ** this source file for a description of the WAL header format.
+-  */
+-  iFrame = pWal->hdr.mxFrame;
+-  if( iFrame==0 ){
+-    u8 aWalHdr[WAL_HDRSIZE];      /* Buffer to assemble wal-header in */
+-    u32 aCksum[2];                /* Checksum for wal-header */
+-
+-    sqlite3Put4byte(&aWalHdr[0], (WAL_MAGIC | SQLITE_BIGENDIAN));
+-    sqlite3Put4byte(&aWalHdr[4], WAL_MAX_VERSION);
+-    sqlite3Put4byte(&aWalHdr[8], szPage);
+-    sqlite3Put4byte(&aWalHdr[12], pWal->nCkpt);
+-    if( pWal->nCkpt==0 ) sqlite3_randomness(8, pWal->hdr.aSalt);
+-    memcpy(&aWalHdr[16], pWal->hdr.aSalt, 8);
+-    walChecksumBytes(1, aWalHdr, WAL_HDRSIZE-2*4, 0, aCksum);
+-    sqlite3Put4byte(&aWalHdr[24], aCksum[0]);
+-    sqlite3Put4byte(&aWalHdr[28], aCksum[1]);
+-    
+-    pWal->szPage = szPage;
+-    pWal->hdr.bigEndCksum = SQLITE_BIGENDIAN;
+-    pWal->hdr.aFrameCksum[0] = aCksum[0];
+-    pWal->hdr.aFrameCksum[1] = aCksum[1];
+-    pWal->truncateOnCommit = 1;
+-
+-    rc = sqlite3OsWrite(pWal->pWalFd, aWalHdr, sizeof(aWalHdr), 0);
+-    WALTRACE(("WAL%p: wal-header write %s\n", pWal, rc ? "failed" : "ok"));
+-    if( rc!=SQLITE_OK ){
+-      return rc;
+-    }
+-
 -    /* Sync the header (unless SQLITE_IOCAP_SEQUENTIAL is true or unless
 -    ** all syncing is turned off by PRAGMA synchronous=OFF).  Otherwise
 -    ** an out-of-order write following a WAL restart could result in
@@ -8137,13 +8787,13 @@
 -**
 -**   OFFSET   SIZE    DESCRIPTION
 -**      0      16     Header string: "SQLite format 3\000"
--**     16       2     Page size in bytes.  
+-**     16       2     Page size in bytes.  (1 means 65536)
 -**     18       1     File format write version
 -**     19       1     File format read version
 -**     20       1     Bytes of unused space at the end of each page
--**     21       1     Max embedded payload fraction
--**     22       1     Min embedded payload fraction
--**     23       1     Min leaf payload fraction
+-**     21       1     Max embedded payload fraction (must be 64)
+-**     22       1     Min embedded payload fraction (must be 32)
+-**     23       1     Min leaf payload fraction (must be 32)
 -**     24       4     File change counter
 -**     28       4     Reserved for future use
 -**     32       4     First freelist page
@@ -8157,9 +8807,10 @@
 -**     56       4     1=UTF-8 2=UTF16le 3=UTF16be
 -**     60       4     User version
 -**     64       4     Incremental vacuum mode
--**     68       4     unused
--**     72       4     unused
--**     76       4     unused
+-**     68       4     Application-ID
+-**     72      20     unused
+-**     92       4     The version-valid-for number
+-**     96       4     SQLITE_VERSION_NUMBER
 -**
 -** All of the integer values are big-endian (most significant byte first).
 -**
@@ -8595,7 +9246,7 @@
 +    iAmt -= iFirstAmt;
 +    pContent = (void*)(iFirstAmt + (char*)pContent);
 +    assert( p->syncFlags & (SQLITE_SYNC_NORMAL|SQLITE_SYNC_FULL) );
-+    rc = sqlite3OsSync(p->pFd, p->syncFlags);
++    rc = sqlite3OsSync(p->pFd, p->syncFlags & SQLITE_SYNC_MASK);
 +    if( iAmt==0 || rc ) return rc;
 +  }
 +  rc = sqlite3OsWrite(p->pFd, pContent, iAmt, iOffset);
@@ -8872,6 +9523,10 @@
 +      pWal->iCallback = iFrame;
 +    }
 +  }
++
++  WALTRACE(("WAL%p: frame write %s\n", pWal, rc ? "failed" : "ok"));
++  return rc;
++}
  
 -/*
 -** An instance of this object represents a single database file.
@@ -8902,10 +9557,6 @@
 -**
 -**     1) The current writer (BtShared.pWriter) concludes its transaction, OR
 -**     2) The number of locks held by other connections drops to zero.
-+  WALTRACE(("WAL%p: frame write %s\n", pWal, rc ? "failed" : "ok"));
-+  return rc;
-+}
-+
 +/* 
 +** This routine is called to implement sqlite3_wal_checkpoint() and
 +** related interfaces.
@@ -9060,7 +9711,6 @@
 -  Pgno *aOverflow;          /* Cache of overflow page locations */
 -#endif
 -  Pgno pgnoRoot;            /* The root page of this tree */
--  sqlite3_int64 cachedRowid; /* Next rowid cache.  0 means not valid */
 -  CellInfo info;            /* A parse of the cell we are pointing at */
 -  i64 nKey;        /* Size of pKey, or last integer key */
 -  void *pKey;      /* Saved key that was cursor's last known position */
@@ -9369,7 +10019,7 @@
  #ifndef SQLITE_OMIT_SHARED_CACHE
  #if SQLITE_THREADSAFE
  
-@@ -88995,10 +91735,24 @@
+@@ -91890,10 +94736,24 @@
  */
  SQLITE_PRIVATE void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
    int rc = sqlite3_overload_function(db, "MATCH", 2);
@@ -9394,7 +10044,32 @@
  }
  
  /*
-@@ -94082,6 +96836,12 @@
+@@ -97531,24 +100391,6 @@
+   return azModeName[eMode];
+ }
+ 
+-static char *gdauniqueFuncName (FuncDef *func)
+-{
+-	char *sname;
+-	uint order = 0;
+-	FuncDef *n;
+-	int size;
+-	for (n = func->pNext; n; n = n->pNext)
+-		order++;
+-
+-	size = strlen (func->zName) + 25;
+-	sname = sqlite3_malloc (sizeof (char) * size);
+-	if (func->nArg < 0)
+-		snprintf (sname, size-1, "%s_ANY_%u", func->zName, order);
+-	else
+-		snprintf (sname, size-1, "%s_%d_%u", func->zName, func->nArg, order);
+-	return sname;
+-}
+-
+ /*
+ ** Process a pragma statement.  
+ **
+@@ -97582,6 +100424,12 @@
    sqlite3 *db = pParse->db;    /* The database connection */
    Db *pDb;                     /* The specific database being pragmaed */
    Vdbe *v = sqlite3GetVdbe(pParse);  /* Prepared statement */
@@ -9407,21 +10082,26 @@
  
    if( v==0 ) return;
    sqlite3VdbeRunOnlyOnce(v);
-@@ -94142,6 +96902,13 @@
+@@ -97642,8 +100490,18 @@
+     }
+     pParse->nErr++;
      pParse->rc = rc;
-   }else
-                             
++
++    goto pragma_out;
++  }
++
 +/* BEGIN SQLCIPHER */
 +#ifdef SQLITE_HAS_CODEC
 +  if(sqlcipher_codec_pragma(db, iDb, pParse, zLeft, zRight)) { 
 +    /* sqlcipher_codec_pragma executes internal */
-+  }else
-+  #endif
-+/* END SQLCIPHER */
-  
- #if !defined(SQLITE_OMIT_PAGER_PRAGMAS) && !defined(SQLITE_OMIT_DEPRECATED)
-   /*
-@@ -94739,60 +97506,6 @@
+     goto pragma_out;
+   }
++#endif
++/* END SQLCIPHER */  
+ 
+   /* Locate the pragma in the lookup table */
+   lwr = 0;
+@@ -98275,54 +101133,6 @@
  
  #ifndef SQLITE_OMIT_SCHEMA_PRAGMAS
    /*
@@ -9448,10 +10128,7 @@
 -      FuncDef *func;
 -      for (func =db->aFunc.a[j]; func; func = func->pNext) {
 -	char *sname;
--	int size;
--	size = strlen (func->zName) + 25;
--	sname = sqlite3_malloc (sizeof (char) * size);
--	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
+-	sname = gdauniqueFuncName (func);
 -	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
 -	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
 -	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
@@ -9464,10 +10141,7 @@
 -      FuncDef *func;
 -      for (func =sqlite3GlobalFunctions.a[j]; func; func = func->pNext) {
 -	char *sname;
--	int size;
--	size = strlen (func->zName) + 25;
--	sname = sqlite3_malloc (sizeof (char) * size);
--	snprintf (sname, size-1, "%s_%d_%d", func->zName, func->nArg, func->iPrefEnc);
+-	sname = gdauniqueFuncName (func);
 -	sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, func->zName, 0);
 -	sqlite3VdbeAddOp2(v, OP_Integer, func->xFinalize ? 1 : 0, 2);
 -	sqlite3VdbeAddOp2(v, OP_Integer, func->nArg, 3);
