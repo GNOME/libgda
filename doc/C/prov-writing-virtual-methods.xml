@@ -577,21 +577,9 @@ gboolean (*key_columns)  (GdaServerProvider *, GdaConnection *, GdaMetaStore *,
   <sect1>
     <title>Methods - misc.</title>
     <sect2>
-      <title>cancel()</title>
-      <para>
-	This method cancels an asynchronous task.
-      </para>
-    </sect2>
-    <sect2>
       <title>create_connection()</title>
       <para>
 	Reserved for internal implementation.
-      </para>
-    </sect2>
-    <sect2>
-      <title>is_busy()</title>
-      <para>
-	This method tests if a connection is already busy in a, asynchronous task.
       </para>
     </sect2>
   </sect1>
