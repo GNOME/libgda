@@ -189,7 +189,7 @@ gda_server_provider_constructed (GObject *object)
 
 	/*g_print ("Provider %p (%s) constructed\n", provider, G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (object)));*/
 	if (!provider->priv)
-		g_warning ("Internal error after creation of %s: : provider's private part is missing");
+		g_warning ("Internal error after creation of %s: provider's private part is missing", gtype_name);
 	else {
 		GdaServerProviderBase *fset;
 		fset = CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_BASE];
