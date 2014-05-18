@@ -232,7 +232,8 @@ gda_blob_op_get_length (GdaBlobOp *op)
 		gpointer callval;
 		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_get_length, (gpointer) &data, NULL, NULL, NULL);
-		g_main_context_unref (context);
+		if (context)
+			g_main_context_unref (context);
 
 		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
 
@@ -297,7 +298,8 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		gpointer callval;
 		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_read, (gpointer) &data, NULL, NULL, NULL);
-		g_main_context_unref (context);
+		if (context)
+			g_main_context_unref (context);
 
 		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
 
@@ -387,7 +389,8 @@ gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		gpointer callval;
 		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_write, (gpointer) &data, NULL, NULL, NULL);
-		g_main_context_unref (context);
+		if (context)
+			g_main_context_unref (context);
 
 		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
 
@@ -449,7 +452,8 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 			gpointer callval;
 			gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
 					   (GdaWorkerFunc) worker_write_all, (gpointer) &data, NULL, NULL, NULL);
-			g_main_context_unref (context);
+			if (context)
+				g_main_context_unref (context);
 
 			gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
 

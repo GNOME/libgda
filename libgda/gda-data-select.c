@@ -3913,7 +3913,8 @@ _gda_data_select_fetch_nb_rows (GdaDataSelect *model)
 		nbrows = *result;
 		g_slice_free (gint, result);
 	}
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	return nbrows;
 }
@@ -3952,7 +3953,8 @@ _gda_data_select_fetch_random  (GdaDataSelect *model, GdaRow **prow, gint rownum
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_fetch_random, &jdata, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	return result ? TRUE : FALSE;
 }
 
@@ -3979,7 +3981,8 @@ _gda_data_select_store_all (GdaDataSelect *model, GError **error)
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, (gpointer) &result, NULL,
 			   (GdaWorkerFunc) worker_store_all, model, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	return result ? TRUE : FALSE;
 }
 
@@ -4011,7 +4014,8 @@ _gda_data_select_fetch_next    (GdaDataSelect *model, GdaRow **prow, gint rownum
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_fetch_next, &jdata, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	return result ? TRUE : FALSE;
 }
 
@@ -4043,7 +4047,8 @@ _gda_data_select_fetch_prev    (GdaDataSelect *model, GdaRow **prow, gint rownum
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_fetch_prev, &jdata, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	return result ? TRUE : FALSE;
 }
 
@@ -4075,6 +4080,7 @@ _gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_fetch_at, &jdata, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	return result ? TRUE : FALSE;
 }
