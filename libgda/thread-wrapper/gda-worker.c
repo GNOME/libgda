@@ -24,7 +24,7 @@
 #include <glib/gi18n-lib.h>
 
 #define DEBUG_NOTIFICATION
-//#undef DEBUG_NOTIFICATION
+#undef DEBUG_NOTIFICATION
 
 typedef struct {
 	ITSignaler        *its; /* ref held */
