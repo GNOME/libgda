@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
 #ifndef __GDA_WORKER_H__
 #define __GDA_WORKER_H__
 
-#include <glib-object.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
@@ -70,9 +70,9 @@ typedef enum {
 } GdaWorkerError;
 
 GdaWorker *gda_worker_new (void);
+GdaWorker *gda_worker_new_unique (GdaWorker **location, gboolean allow_renew);
 GdaWorker *gda_worker_ref (GdaWorker *worker);
 void       gda_worker_unref (GdaWorker *worker);
-gboolean   gda_worker_kill (GdaWorker *worker);
 
 /**
  * GdaWorkerFunc:
@@ -107,6 +107,11 @@ gboolean   gda_worker_set_callback (GdaWorker *worker, GMainContext *context, Gd
 
 gboolean   gda_worker_thread_is_worker (GdaWorker *worker);
 GThread   *gda_worker_get_worker_thread (GdaWorker *worker);
+
+/*
+ * Private
+ */
+void       _gda_worker_bg_unref (GdaWorker *worker);
 
 G_END_DECLS
 

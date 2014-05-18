@@ -154,7 +154,7 @@ static gboolean            gda_mysql_provider_supports_feature (GdaServerProvide
 								GdaConnection         *cnc,
 								GdaConnectionFeature   feature);
 
-static GdaWorker          *gda_mysql_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_mysql_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 
 static const gchar        *gda_mysql_provider_get_name (GdaServerProvider  *provider);
 
@@ -415,21 +415,19 @@ gda_mysql_provider_get_property (GObject *object,
 }
 
 static GdaWorker *
-gda_mysql_provider_create_worker (GdaServerProvider *provider)
+gda_mysql_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
-	/* If PostgreSQL was not compiled with the --enable-thread-safe-client, then it's
-	 * considered thread safe, and we limit the usage of the provider to one single thread */
+	/* see http://dev.mysql.com/doc/refman/5.1/en/c-api-threaded-clients.html */
 
 	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
-
-	if (mysql_thread_safe ())
-		return gda_worker_new ();
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
+	if (mysql_thread_safe ()) {
+		if (for_cnc)
+			return gda_worker_new ();
+		else
+			return gda_worker_new_unique (&unique_worker, TRUE);
 	}
+	else
+		return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*
@@ -498,8 +496,9 @@ real_open_connection (const gchar  *host,
 	if (compress)
 		flags |= CLIENT_COMPRESS;
 	
-	MYSQL *mysql = NULL;
+	MYSQL *mysql;
 	mysql = mysql_init (NULL);
+	g_print ("mysql_init (NULL) ==> %p\n", mysql);
 
 	if ((port > 0) || proto) {
 		gint p = MYSQL_PROTOCOL_DEFAULT;
@@ -1029,9 +1028,9 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 			g_free (sql);
 			
 			if (res) {
-			  g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-				       GDA_SERVER_PROVIDER_OPERATION_ERROR,
-				       "%s", mysql_error (mysql));
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+					     GDA_SERVER_PROVIDER_OPERATION_ERROR,
+					     "%s", mysql_error (mysql));
 				mysql_close (mysql);
 				return FALSE;
 			}
@@ -3186,6 +3185,7 @@ gda_mysql_free_cnc_data (MysqlConnectionData  *cdata)
 		return;
 
 	if (cdata->mysql) {
+		g_print ("mysql_close (%p)\n", cdata->mysql);
 		mysql_close (cdata->mysql);
 		cdata->mysql = NULL;
 	}

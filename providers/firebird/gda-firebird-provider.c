@@ -3,7 +3,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
@@ -99,7 +99,7 @@ static const gchar        *gda_firebird_provider_get_version (GdaServerProvider 
 static gboolean            gda_firebird_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaConnectionFeature feature);
 
-static GdaWorker          *gda_firebird_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_firebird_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static const gchar        *gda_firebird_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_firebird_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -360,18 +360,13 @@ gda_firebird_provider_get_type (void)
 }
 
 static GdaWorker *
-gda_firebird_provider_create_worker (GdaServerProvider *provider)
+gda_firebird_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
-	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
+	/* For a start see http://www.firebirdsql.org/file/documentation/drivers_documentation/python/3.3.0/thread-safety-overview.html
+	 * For now we consider the client to be non thread safe */
 
-	if (0) /* We need to determine if the Firebird API is thread safe */
-		return gda_worker_new ();
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
-	}
+	static GdaWorker *unique_worker = NULL;
+	return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*

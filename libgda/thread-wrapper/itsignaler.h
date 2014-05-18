@@ -53,6 +53,11 @@ typedef gboolean (*ITSignalerFunc) (ITSignaler *its, gpointer user_data);
 guint       itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpointer data, GDestroyNotify notify);
 gboolean    itsignaler_remove (ITSignaler *its, GMainContext *context, guint id);
 
+/*
+ * Private
+ */
+void       _itsignaler_bg_unref (ITSignaler *its);
+
 G_END_DECLS
 
 #endif

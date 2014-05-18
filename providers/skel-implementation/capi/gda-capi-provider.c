@@ -94,7 +94,7 @@ static gboolean            gda_capi_provider_delete_savepoint (GdaServerProvider
 static const gchar        *gda_capi_provider_get_version (GdaServerProvider *provider);
 static gboolean            gda_capi_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							       GdaConnectionFeature feature);
-static GdaWorker          *gda_capi_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_capi_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static GdaConnection      *gda_capi_provider_create_connection (GdaServerProvider *provider);
 static const gchar        *gda_capi_provider_get_name (GdaServerProvider *provider);
 
@@ -830,10 +830,24 @@ gda_capi_provider_supports_feature (GdaServerProvider *provider, GdaConnection *
  * own connection, then this function should return a single GdaWorker for any request (using gda_worker_ref()).
  */
 static GdaWorker *
-gda_capi_provider_create_worker (GdaServerProvider *provider)
+gda_capi_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
-	TO_IMPLEMENT;
-	return gda_worker_new ();
+	TO_IMPLEMENT; /* We need to determine if the API is thread safe, 0 for now */
+
+	static GdaWorker *unique_worker = NULL;
+	if (0) {
+		/* API is thread safe */
+		if (for_cnc)
+			return gda_worker_new ();
+		else
+			return gda_worker_new_unique (&unique_worker, TRUE);
+	}
+	else {
+		gboolean onlyone = FALSE; /* if %TRUE then only 1 thread can ever access the API, if %FALSE, only 1 thread can
+					   * access the API _at any given time_ (i.e. several threads can access the API but only one after
+					   * another and never simultaneously) */
+                return gda_worker_new_unique (&unique_worker, !onlyone);
+	}
 }
 
 /*

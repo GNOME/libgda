@@ -29,6 +29,8 @@ libgda_threadwrapperinclude_HEADERS=$(libgda_threadwrapper_headers)
 
 libgda_threadwrapper_6_0_la_SOURCES = \
 	$(libgda_threadwrapper_headers) \
+	background.h \
+	background.c \
 	itsignaler.h \
 	itsignaler.c \
 	gda-worker.c \
@@ -36,7 +38,8 @@ libgda_threadwrapper_6_0_la_SOURCES = \
 
 # test_itsignaler
 test_itsignaler_CFLAGS = \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 test_itsignaler_SOURCES = \
 	itsignaler.h \
@@ -49,7 +52,8 @@ test_itsignaler_LDADD = \
 
 # test_raw_itsignaler
 test_raw_itsignaler_CFLAGS = \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 test_raw_itsignaler_SOURCES = \
 	itsignaler.h \
@@ -64,7 +68,8 @@ test_raw_itsignaler_LDADD = \
 # test_raw_itsignaler_no_eventfd
 test_raw_itsignaler_no_eventfd_CFLAGS = \
 	-DFORCE_NO_EVENTFD \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 test_raw_itsignaler_no_eventfd_SOURCES = \
 	itsignaler.h \
@@ -76,7 +81,8 @@ test_raw_itsignaler_no_eventfd_LDADD = \
 
 # test_blocking_itsignaler
 test_blocking_itsignaler_CFLAGS = \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 test_blocking_itsignaler_SOURCES = \
 	itsignaler.h \
@@ -90,7 +96,8 @@ test_blocking_itsignaler_LDADD = \
 # perf_itsignaler
 perf_itsignaler_CFLAGS = \
 	-DPERF \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 perf_itsignaler_SOURCES = \
 	itsignaler.h \
@@ -106,7 +113,8 @@ perf_itsignaler_LDADD = \
 perf_itsignaler_no_eventfd_CFLAGS = \
 	-DFORCE_NO_EVENTFD \
 	-DPERF \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 perf_itsignaler_no_eventfd_SOURCES = \
 	itsignaler.h \
@@ -121,6 +129,8 @@ test_worker_CFLAGS = \
 	$(COREDEPS_CFLAGS)
 
 test_worker_SOURCES = \
+	background.h \
+	background.c \
 	itsignaler.h \
 	itsignaler.c \
 	gda-worker.h \
@@ -132,7 +142,8 @@ test_worker_LDADD = \
 
 # test_connect
 test_connect_CFLAGS = \
-	$(COREDEPS_CFLAGS)
+	$(COREDEPS_CFLAGS) \
+	-DNOBG
 
 test_connect_SOURCES = \
 	dummy-object.h \

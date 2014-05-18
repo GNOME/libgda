@@ -22,7 +22,6 @@
 #include <stdlib.h>
 
 int test1 (void);
-int test2 (void);
 int test3 (void);
 int test4 (void);
 int test5 (void);
@@ -41,7 +40,6 @@ main (int argc, char** argv)
 	gint nfailed = 0;
 
 	nfailed += test1 ();
-	nfailed += test2 ();
 	nfailed += test3 ();
 	nfailed += test4 ();
 	nfailed += test5 ();
@@ -70,27 +68,6 @@ test1 (void)
 	gda_worker_unref (worker);
 	return 0;
 }
-
-/*
- * Test 2: killing worker
- */
-int
-test2 (void)
-{
-	g_print ("Test2 started\n");
-	GdaWorker *worker;
-
-	worker = gda_worker_new ();
-	g_usleep (100000);
-	guint i = 0;
-	while (! gda_worker_kill (worker)) {
-		g_print ("Wait %d\n", i++);
-		g_usleep (100000);
-	}
-	gda_worker_unref (worker);
-	return 0;
-}
-
 
 /*
  * Test 3: fetching results

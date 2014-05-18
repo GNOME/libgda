@@ -6,7 +6,7 @@
  * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 Magnus Bergman <magnus.bergman@observer.net>
- * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  *
@@ -367,12 +367,7 @@ gda_oracle_provider_create_worker (GdaServerProvider *provider)
 {
 	/* See http://docs.oracle.com/cd/B10501_01/appdev.920/a96584/oci09adv.htm */
 	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
-	}
+	return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*

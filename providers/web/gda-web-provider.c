@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -89,7 +89,7 @@ static const gchar        *gda_web_provider_get_version (GdaServerProvider *prov
 static gboolean            gda_web_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							      GdaConnectionFeature feature);
 
-static GdaWorker          *gda_web_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_web_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 
 static const gchar        *gda_web_provider_get_name (GdaServerProvider *provider);
 
@@ -260,16 +260,11 @@ gda_web_provider_get_type (void)
 }
 
 static GdaWorker *
-gda_web_provider_create_worker (GdaServerProvider *provider)
+gda_web_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
 	/* Let's assume for now that this provider is not thread safe... */
 	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
-	}
+	return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*

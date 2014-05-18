@@ -150,7 +150,6 @@ gda_server_provider_init (GdaServerProvider *provider,
 							       (GDestroyNotify) gda_server_provider_handler_info_free,
 							       (GDestroyNotify) g_object_unref);
 	provider->priv->jobs_hash = NULL;
-	provider->priv->gen_worker = NULL;
 }
 
 static void
@@ -166,8 +165,6 @@ gda_server_provider_finalize (GObject *object)
 			g_hash_table_destroy (provider->priv->jobs_hash);
 		if (provider->priv->parser)
 			g_object_unref (provider->priv->parser);
-		if (provider->priv->gen_worker)
-			gda_worker_unref (provider->priv->gen_worker);
 
 		g_free (provider->priv);
 		provider->priv = NULL;
@@ -211,6 +208,8 @@ gda_server_provider_constructed (GObject *object)
 				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_rewrite");
 			if (! fset->open_connection)
 				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "open_connection");
+			if (! fset->create_worker)
+				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "create_worker");
 			if (! fset->close_connection)
 				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "close_connection");
 			if (fset->escape_string && !fset->unescape_string)
@@ -473,7 +472,8 @@ gda_server_provider_get_impl_functions_for_class (GObjectClass *klass, GdaServer
 /*
  * _gda_server_provider_create_worker:
  * @prov: a #GdaServerProvider
- * @for_new_cnc: if %FALSE, then we try to reuse a #GdaWorker, otherwise the GdaWorker will be used for a new connection
+ * @for_cnc: if %TRUE, then the #GdaWorker will be used for a connection, and if %FALSE, it will be used for the non connection code
+ *           (in effect the returned #GdaWorker may be the same)
  *
  * Have @prov create a #GdaWorker. Any connection and C API will only be manipulated by the worker's working thread,
  * so if @prov can only be used by 1 thread, then it needs to always return the same object (increasing its reference count).
@@ -483,26 +483,17 @@ gda_server_provider_get_impl_functions_for_class (GObjectClass *klass, GdaServer
  * Returns: (transfer full): a new #GdaWorker
  */
 static GdaWorker *
-_gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_new_cnc)
+_gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
-	if (for_new_cnc) {
-		GdaServerProviderBase *fset;
-		fset = CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_BASE]; /* rem: we don't use
-											       * _gda_server_provider_get_impl_functions()
-											       * because this would fail if not
-											       * called from the worker thread */
-		if (fset->create_worker)
-			return (fset->create_worker) (provider);
-		else
-			return gda_worker_new ();
-	}
-	else {
-		if (!provider->priv->gen_worker)
-			provider->priv->gen_worker = _gda_server_provider_create_worker (provider, TRUE);
-		return gda_worker_ref (provider->priv->gen_worker);
-	}
+	GdaServerProviderBase *fset;
+	fset = CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_BASE]; /* rem: we don't use
+										       * _gda_server_provider_get_impl_functions()
+										       * because this would fail if not
+										       * called from the worker thread */
+	g_assert (fset->create_worker);
+	return (fset->create_worker) (provider, for_cnc);
 }
 
 /*
@@ -749,10 +740,11 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_supports_operation, (gpointer) &data, NULL, NULL, NULL);
 	g_main_context_unref (context);
-	gda_worker_unref (worker);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
 
 	return retval ? TRUE : FALSE;
 }
@@ -959,10 +951,11 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	gda_worker_do_job (worker, context, 0, (gpointer) &op, NULL,
 			   (GdaWorkerFunc) worker_create_operation, (gpointer) &data, NULL, NULL, NULL);
 	g_main_context_unref (context);
-	gda_worker_unref (worker);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
 
 	if (op) {
 		/* test op's conformance */
@@ -2027,13 +2020,16 @@ worker_open_connection (WorkerOpenConnectionData *data, GError **error)
 		}
 		else
 			cdata->worker = gda_worker_ref (data->worker);
+
 		if (fset->prepare_connection) {
 			result = fset->prepare_connection (data->provider, data->cnc, data->params, data->auth);
 			if (!result) {
 				fset->close_connection (data->provider, data->cnc);
 				gda_connection_internal_set_provider_data (data->cnc, NULL, NULL);
-				if (cdata->worker)
-					gda_worker_unref (cdata->worker);
+
+				gda_worker_unref (cdata->worker);
+				cdata->worker = NULL;
+
 				if (cdata->provider_data_destroy_func)
 					cdata->provider_data_destroy_func (cdata);
 			}
@@ -2274,10 +2270,9 @@ stage2_close_connection (GdaConnection *cnc, gpointer result)
 	if (result) {
 		GdaServerProviderConnectionData *cdata;
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
-		if (cdata) {			
+		if (cdata) {
 			gda_connection_internal_set_provider_data (cnc, NULL, NULL);
-			if (cdata->worker)
-				gda_worker_unref (cdata->worker);
+
 			if (cdata->provider_data_destroy_func)
 				cdata->provider_data_destroy_func (cdata);
 		}
@@ -2326,11 +2321,18 @@ _gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnectio
 	jdata->cnc = g_object_ref (cnc);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+
+	GdaWorker *worker;
+	worker = cdata->worker;
+
 	gpointer result;
 	gda_worker_do_job (cdata->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_close_connection, jdata, (GDestroyNotify) WorkerCloseConnectionData_free,
 			   NULL, error);
 	g_main_context_unref (context);
+
+	gda_worker_unref (worker);
+
 	return stage2_close_connection (cnc, result);
 }
 

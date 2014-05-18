@@ -68,7 +68,7 @@ typedef struct {
 	const gchar        *(* get_server_version)    (GdaServerProvider *provider, GdaConnection *cnc);
 	gboolean            (* supports_feature)      (GdaServerProvider *provider, GdaConnection *cnc,
 						       GdaConnectionFeature feature);
-	GdaWorker          *(* create_worker)         (GdaServerProvider *provider); /* may be NULL */
+	GdaWorker          *(* create_worker)         (GdaServerProvider *provider, gboolean for_cnc);
 	GdaConnection      *(* create_connection)     (GdaServerProvider *provider); /* may be NULL */
 	GdaSqlParser       *(* create_parser)         (GdaServerProvider *provider, GdaConnection *cnc); /* may be NULL */
 	GdaDataHandler     *(* get_data_handler)      (GdaServerProvider *provider, GdaConnection *cnc, /* may be NULL */

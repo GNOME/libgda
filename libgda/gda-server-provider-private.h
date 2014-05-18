@@ -34,8 +34,6 @@ struct _GdaServerProviderPrivate {
 	GdaSqlParser  *parser;
 
 	GHashTable    *jobs_hash; /* key = a job ID, value = a # */
-	GdaWorker     *gen_worker; /* worker used when no connection is specified, and yet the provider's code need
-				    * to be executed */
 };
 
 

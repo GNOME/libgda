@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2002 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
@@ -106,7 +106,7 @@ static const gchar        *gda_postgres_provider_get_version (GdaServerProvider 
 static gboolean            gda_postgres_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 								   GdaConnectionFeature feature);
 
-static GdaWorker          *gda_postgres_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_postgres_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static const gchar        *gda_postgres_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_postgres_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -313,21 +313,20 @@ gda_postgres_provider_get_type (void)
 }
 
 static GdaWorker *
-gda_postgres_provider_create_worker (GdaServerProvider *provider)
+gda_postgres_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
 	/* If PostgreSQL was not compiled with the --enable-thread-safety flag, then libPQ is not
 	 * considered thread safe, and we limit the usage of the provider to one single thread */
 
 	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
-
-	if (PQisthreadsafe ())
-		return gda_worker_new ();
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
+	if (PQisthreadsafe ()) {
+		if (for_cnc)
+			return gda_worker_new ();
+		else
+			return gda_worker_new_unique (&unique_worker, TRUE);
 	}
+	else
+		return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*

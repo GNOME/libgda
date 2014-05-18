@@ -93,6 +93,7 @@ static const gchar        *gda_jdbc_provider_get_version (GdaServerProvider *pro
 static gboolean            gda_jdbc_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 							       GdaConnectionFeature feature);
 
+static GdaWorker          *gda_jdbc_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static const gchar        *gda_jdbc_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_jdbc_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -162,7 +163,7 @@ GdaServerProviderBase jdbc_base_functions = {
 	gda_jdbc_provider_get_version,
 	gda_jdbc_provider_get_server_version,
 	gda_jdbc_provider_supports_feature,
-	NULL,
+	gda_jdbc_provider_create_worker,
 	NULL,
 	NULL,
 	gda_jdbc_provider_get_data_handler,
@@ -324,6 +325,14 @@ gda_jdbc_provider_get_type (void)
 	return type;
 }
 
+static GdaWorker *
+gda_jdbc_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
+{
+	/* consider API not thread safe by default */
+
+	static GdaWorker *unique_worker = NULL;
+	return gda_worker_new_unique (&unique_worker, TRUE);
+}
 
 /*
  * Get provider name request

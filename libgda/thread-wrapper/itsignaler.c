@@ -34,6 +34,9 @@
 #endif
 
 #include "itsignaler.h"
+#ifndef NOBG
+  #include "background.h"
+#endif
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -42,11 +45,7 @@
 #include <glib-object.h>
 
 /* optimizations */
-static guint spare_size = 0; /* optimized spare size */
 static guint created_objects = 0; /* counter of all the ITSignaler objects ever created */
-static GPtrArray *spare_array = NULL;
-static GMutex spare_mutex; /* to protect @spare_array */
-
 
 #ifdef G_OS_WIN32
   #define INVALID_SOCK INVALID_SOCKET
@@ -84,7 +83,6 @@ typedef struct {
  */
 struct _ITSignaler {
 	guint8       broken; /* TRUE if the object has suffered an unrecoverable error */
-	guint8       spared; /* TRUE if the object is in the spare array and should not be used */
 
 #ifdef HAVE_FORK
 	/* detect forked process */
@@ -128,7 +126,6 @@ ITSignaler *
 itsignaler_ref (ITSignaler *its)
 {
 	if (its) {
-		g_assert (!its->spared);
 		itsignaler_lock (its);
 		its->ref_count++;
 #ifdef DEBUG_NOTIFICATION
@@ -177,6 +174,7 @@ cleanup_signaling (ITSignaler *its)
 #endif
 }
 
+#ifndef NOBG
 static void
 itsignaler_reset (ITSignaler *its)
 {
@@ -211,6 +209,7 @@ itsignaler_reset (ITSignaler *its)
 			nd->destroy_func (nd->data);
 	}
 }
+#endif
 
 static void
 itsignaler_free (ITSignaler *its)
@@ -227,23 +226,44 @@ itsignaler_free (ITSignaler *its)
 #endif
 	g_mutex_unlock (m);
 	g_mutex_clear (m);
+#ifndef NOBG
+	bg_update_stats (BG_DESTROYED_ITS);
+#endif
 
 	g_free (its);
 }
 
-static void
-trim_spares (void)
+void
+_itsignaler_unref (ITSignaler *its, gboolean give_to_bg)
 {
-	g_mutex_lock (&spare_mutex);
-	for (;spare_array->len > spare_size + 1;) {
-		ITSignaler *its;
-		its = g_ptr_array_remove_index_fast (spare_array, spare_array->len - 1);
+	g_assert (its);
+
+	itsignaler_lock (its);
+	its->ref_count--;
 #ifdef DEBUG_NOTIFICATION
-		g_print ("[I] Trimming operation: get rid of ITSignaler %p\n", its);
+	g_print ("[I] ITSignaler %p --: %u\n", its, its->ref_count);
 #endif
+	if (its->ref_count == 0) {
+		itsignaler_unlock (its);
+
+#ifndef NOBG
+		/* destroy or store as spare */
+		if (!its->broken && give_to_bg) {
+			itsignaler_reset (its);
+			its->ref_count++;
+			bg_set_spare_its (its);
+		}
+		else {
+			itsignaler_unlock (its);
+			itsignaler_free (its);
+		}
+#else
+		itsignaler_unlock (its);
 		itsignaler_free (its);
+#endif
 	}
-	g_mutex_unlock (&spare_mutex);
+	else
+		itsignaler_unlock (its);
 }
 
 /**
@@ -258,35 +278,17 @@ trim_spares (void)
 void
 itsignaler_unref (ITSignaler *its)
 {
-	if (its) {
-		g_assert (!its->spared);
-		itsignaler_lock (its);
-		its->ref_count--;
-#ifdef DEBUG_NOTIFICATION
-		g_print ("[I] ITSignaler %p --: %u\n", its, its->ref_count);
-#endif
-		if (its->ref_count == 0) {
-			spare_size--;
-			itsignaler_unlock (its);
+	if (its)
+		_itsignaler_unref (its, TRUE);
+}
 
-			/* destroy or store as spare */
-			g_mutex_lock (&spare_mutex);
-			if (!its->broken && (spare_array->len < spare_size)) {
-				itsignaler_reset (its);
-				g_ptr_array_add (spare_array, its);
-				its->spared = TRUE;
-			}
-			else {
-				itsignaler_unlock (its);
-				itsignaler_free (its);
-			}
-			g_mutex_unlock (&spare_mutex);
+void
+_itsignaler_bg_unref (ITSignaler *its)
+{
+	g_assert (its);
+	g_assert (its->ref_count == 1);
 
-			trim_spares ();
-		}
-		else
-			itsignaler_unlock (its);
-	}
+	_itsignaler_unref (its, FALSE);
 }
 
 static void
@@ -308,39 +310,16 @@ ITSignaler *
 itsignaler_new (void)
 {
 	ITSignaler *its;
-	gboolean err = FALSE;
-
-	if (G_UNLIKELY (! spare_array)) {
-		static GMutex registering;
-		g_mutex_lock (&registering);
-		g_mutex_init (&spare_mutex);
-		if (!spare_array)
-			spare_array = g_ptr_array_new ();
-		g_mutex_unlock (&registering);
-	}
-
-	trim_spares ();
-
-	g_mutex_lock (&spare_mutex);
-	if (spare_array->len > 0) {
-		/* pick up the 1st spare */
-		its = g_ptr_array_remove_index_fast (spare_array, spare_array->len - 1);
-		its->ref_count = 1;
-		its->spared = FALSE;
-		spare_size++;
-#ifdef DEBUG_NOTIFICATION
-		g_print ("[I]: Reused ITS %p, total created ITSignaler objects: %u, spare size: %u, nb in spare: %d\n", its, created_objects, spare_size, spare_array->len);
-#endif
-		g_mutex_unlock (&spare_mutex);
-
+#ifndef NOBG
+	its = bg_get_spare_its ();
+	if (its)
 		return its;
-	}
-	g_mutex_unlock (&spare_mutex);
+#endif
 
+	gboolean err = FALSE;
 	its = g_new0 (ITSignaler, 1);
 	its->ref_count = 1;
 	its->broken = FALSE;
-	its->spared = FALSE;
 
 #ifdef G_OS_WIN32
 	SECURITY_DESCRIPTOR sd;
@@ -557,9 +536,8 @@ itsignaler_new (void)
 #endif
 
 	created_objects++;
-	spare_size++;
-#ifdef DEBUG_NOTIFICATION
-	g_print ("[I]: total created ITSignaler objects: %u, spare size: %u\n", created_objects, spare_size);
+#ifndef NOBG
+	bg_update_stats (BG_CREATED_ITS);
 #endif
 	return its;
 }
@@ -577,7 +555,6 @@ SOCKET
 itsignaler_windows_get_poll_fd (ITSignaler *its)
 {
 	g_return_val_if_fail (its, -1);
-	g_assert (!its->spared);
 	return its->socks[0];
 }
 
@@ -595,7 +572,6 @@ int
 itsignaler_unix_get_poll_fd (ITSignaler *its)
 {
 	g_return_val_if_fail (its, -1);
-	g_assert (!its->spared);
 
 #ifdef HAVE_EVENTFD
 	return its->event_fd;
@@ -626,7 +602,6 @@ itsignaler_push_notification (ITSignaler *its, gpointer data, GDestroyNotify des
 {
 	g_return_val_if_fail (its, FALSE);
 	g_return_val_if_fail (data, FALSE);
-	g_assert (!its->spared);
 
 	if (its->broken)
 		return FALSE;
@@ -758,7 +733,6 @@ gpointer
 itsignaler_pop_notification (ITSignaler *its, gint timeout_ms)
 {
 	g_return_val_if_fail (its, NULL);
-	g_assert (!its->spared);
 
 	if (timeout_ms == 0)
 		return itsignaler_pop_notification_non_block (its);
@@ -843,7 +817,6 @@ GSource *
 itsignaler_create_source (ITSignaler *its)
 {
 	g_return_val_if_fail (its, NULL);
-	g_assert (!its->spared);
 
 	GSource *source;
 	ITSSource *isource;
@@ -876,7 +849,6 @@ static gboolean
 its_source_prepare (GSource *source, gint *timeout_)
 {
 	ITSSource *isource = (ITSSource*) source;
-	g_assert (! isource->its->spared);
 	*timeout_ = -1;
 	return FALSE;
 }
@@ -885,7 +857,6 @@ static gboolean
 its_source_check (GSource *source)
 {
 	ITSSource *isource = (ITSSource*) source;
-	g_assert (! isource->its->spared);
 
 #ifndef G_OS_WIN32
 	if (isource->pollfd.revents & G_IO_IN)
@@ -905,7 +876,6 @@ static gboolean
 its_source_dispatch (GSource *source, GSourceFunc callback, gpointer user_data)
 {
 	ITSSource *isource = (ITSSource*) source;
-	g_assert (! isource->its->spared);
 	ITSignalerFunc func;
 	func = (ITSignalerFunc) callback;
 
@@ -920,7 +890,7 @@ static
 void its_source_finalize (GSource *source)
 {
 	ITSSource *isource = (ITSSource*) source;
-	g_assert (! isource->its->spared);
+
 	itsignaler_unref (isource->its);
 }
 
@@ -946,7 +916,6 @@ itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpo
 	guint id;
 
 	g_return_val_if_fail (its, 0);
-	g_assert (! its->spared);
 
 	source = itsignaler_create_source (its);
 	if (!source)
@@ -973,7 +942,6 @@ gboolean
 itsignaler_remove (ITSignaler *its, GMainContext *context, guint id)
 {
 	GSource *source;
-	g_assert (! its->spared);
 	source = g_main_context_find_source_by_id (context, id);
 	if (source) {
 		g_source_destroy (source);

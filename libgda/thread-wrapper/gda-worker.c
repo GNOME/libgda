@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,12 @@
 
 #include "gda-worker.h"
 #include "itsignaler.h"
+#include "background.h"
 #include <gda-debug-macros.h>
 #include <glib/gi18n-lib.h>
 
 #define DEBUG_NOTIFICATION
-#undef DEBUG_NOTIFICATION
+//#undef DEBUG_NOTIFICATION
 
 typedef struct {
 	ITSignaler        *its; /* ref held */
@@ -74,12 +75,11 @@ declared_callback_free (DeclaredCallback *dc)
 struct _GdaWorker {
 	GRecMutex rmutex; /* protects all the attributes in GdaWorker and any WorkerJob */
 
-	guint refcount; /* +1 for any user
-			 * Object is destroyed when refcount reaches 0 */
+	guint ref_count; /* +1 for any user
+			 * Object is destroyed when ref_count reaches 0 */
 
 	GThread *worker_thread; /* used to join thread when cleaning up, created when 1st job is submitted */
 	gint8 worker_must_quit; /* set to 1 if worker is requested to exit */
-	gint8 worker_terminated; /* set to 1 by worker thread just before terminating */
 
 	ITSignaler *submit_its; /* used to submit jobs to worker thread, jobs IDs are pushed */
 
@@ -90,6 +90,8 @@ struct _GdaWorker {
 
 	GHashTable *jobs_hash; /* locked by @mutex when reading or writing, by any thread
 				* key = a #WorkerJob's job ID, value = the #WorkerJob */
+
+	GdaWorker **location;
 };
 
 
@@ -184,7 +186,7 @@ worker_thread_main (GdaWorker *worker)
 {
 #define TIMER 150
 #ifdef DEBUG_NOTIFICATION
-	g_print ("[W] Worker %p thread for %p started!\n", worker, g_thread_self());
+	g_print ("[W] GdaWorker %p, worker thread %p started!\n", worker, g_thread_self());
 #endif
 	itsignaler_ref (worker->submit_its);
 	while (1) {
@@ -205,7 +207,7 @@ worker_thread_main (GdaWorker *worker)
 					itsignaler_push_notification (job->reply_its, job, NULL);
 			}
 
-			if (job->status & JOB_CANCELLED)
+			if ((job->status & JOB_CANCELLED) && worker->jobs_hash)
 				g_hash_table_remove (worker->jobs_hash, &job->id);
 			g_rec_mutex_unlock (&worker->rmutex);
 		}
@@ -214,8 +216,12 @@ worker_thread_main (GdaWorker *worker)
 #ifdef DEBUG_NOTIFICATION
 			g_print ("[W] GdaWorker %p, worker thread %p finished!\n", worker, g_thread_self());
 #endif
-			worker->worker_terminated = 1;
 			itsignaler_unref (worker->submit_its);
+			g_rec_mutex_clear (& worker->rmutex);
+			g_slice_free (GdaWorker, worker);
+			bg_update_stats (BG_DESTROYED_WORKER);
+
+			bg_join_thread ();
 			return NULL;
 		}
 	}
@@ -235,6 +241,10 @@ GdaWorker *
 gda_worker_new (void)
 {
 	GdaWorker *worker;
+	worker = bg_get_spare_gda_worker ();
+	if (worker)
+		return worker;
+
 	worker = g_slice_new0 (GdaWorker);
 	worker->submit_its = itsignaler_new ();
 	if (!worker->submit_its) {
@@ -242,19 +252,19 @@ gda_worker_new (void)
 		return NULL;
 	}
 
-	worker->refcount = 1;
+	worker->ref_count = 1;
 
 	worker->callbacks_hash = g_hash_table_new_full (NULL, NULL, NULL,
 							(GDestroyNotify) declared_callback_free);
 	worker->jobs_hash = g_hash_table_new_full (g_int_hash, g_int_equal, NULL, (GDestroyNotify) worker_job_free);
 
 	worker->worker_must_quit = 0;
-	worker->worker_terminated = 0;
+	worker->location = NULL;
 
 	g_rec_mutex_init (& worker->rmutex);
 
 	gchar *str;
-	str = g_strdup_printf ("Wkr%p", worker);
+	str = g_strdup_printf ("ForWkr%p", worker);
 	worker->worker_thread = g_thread_try_new (str, (GThreadFunc) worker_thread_main, worker, NULL);
 	g_free (str);
 	if (!worker->worker_thread) {
@@ -265,12 +275,56 @@ gda_worker_new (void)
 		g_slice_free (GdaWorker, worker);
 		return NULL;
 	}
+	else
+		bg_update_stats (BG_STARTED_THREADS);
 
 #ifdef DEBUG_NOTIFICATION
 	g_print ("[W] created GdaWorker %p\n", worker);
 #endif
 
+	bg_update_stats (BG_CREATED_WORKER);
 	return worker;
+}
+
+static GMutex unique_worker_mutex;
+
+/**
+ * gda_worker_new_unique: (skip)
+ * @location: a place to store and test for existence, not %NULL
+ * @allow_destroy: defines if the created @GdaWorker (see case 1 below) will allow its reference to drop to 0 and be destroyed
+ *
+ * This function creates a new #GdaWorker, or reuses the one at @location. Specifically:
+ * <orderedlist>
+ *   <listitem><para>if *@location is %NULL, then a new #GdaWorker is created. In this case if @allow_destroy is %FALSE, then the returned 
+ *     #GdaWorker's reference count is 2, thus preventing it form ever being destroyed (unless gda_worker_unref() is called somewhere else)</para></listitem>
+ *   <listitem><para>if *@location is not %NULL, the the #GdaWorker it points to is returned, its reference count increased by 1</para></listitem>
+ * </orderedlist>
+ *
+ * When the returned #GdaWorker's reference count reaches 0, then it is destroyed, and *@location is set to %NULL.
+ *
+ * In any case, the returned value is the same as *@location.
+ *
+ * Returns: (transfer full): a #GdaWorker
+ */
+GdaWorker *
+gda_worker_new_unique (GdaWorker **location, gboolean allow_destroy)
+{
+	g_return_val_if_fail (location, NULL);
+
+	g_mutex_lock (&unique_worker_mutex);
+	if (*location)
+		gda_worker_ref (*location);
+	else {
+		GdaWorker *worker;
+		worker = gda_worker_new ();
+		if (! allow_destroy)
+			gda_worker_ref (worker);
+		worker->location = location;
+		*location = worker;
+	}
+	g_mutex_unlock (&unique_worker_mutex);
+
+	return *location;
 }
 
 /**
@@ -288,13 +342,80 @@ gda_worker_ref (GdaWorker *worker)
 {
 	g_return_val_if_fail (worker, NULL);
 	g_rec_mutex_lock (& worker->rmutex);
-	worker->refcount ++;
+	worker->ref_count ++;
 #ifdef DEBUG_NOTIFICATION
-	g_print ("[W] GdaWorker %p reference increased to %u\n", worker, worker->refcount);
+	g_print ("[W] GdaWorker %p reference increased to %u\n", worker, worker->ref_count);
 #endif
 	g_rec_mutex_unlock (& worker->rmutex);
 
 	return worker;
+}
+
+void
+_gda_worker_unref (GdaWorker *worker, gboolean give_to_bg)
+{
+	g_assert (worker);
+
+	gboolean unique_locked = FALSE;
+	if (worker->location) {
+		g_mutex_lock (&unique_worker_mutex);
+		unique_locked = TRUE;
+	}
+
+#ifdef DEBUG_NOTIFICATION
+	g_print ("[W] GdaWorker %p reference decreased to ", worker);
+#endif
+
+	g_rec_mutex_lock (& worker->rmutex);
+	worker->ref_count --;
+
+#ifdef DEBUG_NOTIFICATION
+	g_print ("%u\n", worker->ref_count);
+#endif
+
+	if (worker->ref_count == 0) {
+		/* destroy all the interal resources which will not be reused even if the GdaWorker is reused */
+		g_hash_table_destroy (worker->callbacks_hash);
+		worker->callbacks_hash = NULL;
+		g_hash_table_destroy (worker->jobs_hash);
+		worker->jobs_hash = NULL;
+		if (worker->location)
+			*(worker->location) = NULL;
+
+		if (give_to_bg) {
+			/* re-create the resources so the GdaWorker is ready to be used again */
+			worker->ref_count = 1;
+			worker->callbacks_hash = g_hash_table_new_full (NULL, NULL, NULL,
+									(GDestroyNotify) declared_callback_free);
+			worker->jobs_hash = g_hash_table_new_full (g_int_hash, g_int_equal, NULL, (GDestroyNotify) worker_job_free);
+			worker->worker_must_quit = 0;
+			worker->location = NULL;
+
+			bg_set_spare_gda_worker (worker);
+		}
+		else {
+			/* REM: we don't need to g_thread_join() the worker thread because the "background" will do it */
+
+			/* free all the resources used by @worker */
+			itsignaler_unref (worker->submit_its);
+			worker->worker_must_quit = 1; /* request the worker thread to exit */
+		}
+		g_rec_mutex_unlock (& worker->rmutex);
+	}
+	else
+		g_rec_mutex_unlock (& worker->rmutex);
+
+	if (unique_locked)
+		g_mutex_unlock (&unique_worker_mutex);
+}
+
+void
+_gda_worker_bg_unref (GdaWorker *worker)
+{
+	g_assert (worker);
+	g_assert (worker->ref_count == 1);
+
+	_gda_worker_unref (worker, FALSE);
 }
 
 /**
@@ -312,56 +433,8 @@ gda_worker_ref (GdaWorker *worker)
 void
 gda_worker_unref (GdaWorker *worker)
 {
-	if (worker) {
-		g_rec_mutex_lock (& worker->rmutex);
-		worker->refcount --;
-		g_rec_mutex_unlock (& worker->rmutex);
-
-#ifdef DEBUG_NOTIFICATION
-		g_print ("[W] GdaWorker %p reference decreased to %u\n", worker, worker->refcount);
-#endif
-		if (worker->refcount == 0) {
-			/* request the worker thread to exit */
-			worker->worker_must_quit = 1;
-
-			/* we need to call g_thread_join() to avoid zombie threads */
-			g_thread_join (worker->worker_thread);
-
-			/* free all the resources used by @worker */
-			g_rec_mutex_lock (& worker->rmutex);
-			g_hash_table_destroy (worker->callbacks_hash);
-			worker->callbacks_hash = NULL;
-			g_hash_table_destroy (worker->jobs_hash);
-			worker->jobs_hash = NULL;
-			g_rec_mutex_unlock (& worker->rmutex);
-
-			g_rec_mutex_clear (& worker->rmutex);
-			itsignaler_unref (worker->submit_its);
-			g_slice_free (GdaWorker, worker);
-		}
-	}
-}
-
-/**
- * gda_worker_kill: (skip)
- * @worker: (allow-none): a #GdaWorker, or %NULL
- *
- * Requests that @worker's worker thread be terminated. This is usefull before calling
- * gda_worker_unref() to make sure it won't lock.
- *
- * Returns: %TRUE if the worker thread has exited
- *
- * Since: 6.0
- */
-gboolean
-gda_worker_kill (GdaWorker *worker)
-{
-	if (!worker)
-		return TRUE;
-	worker->worker_must_quit = 1;
-	g_thread_yield ();
-
-	return worker->worker_terminated == 1 ? TRUE : FALSE;
+	if (worker)
+		_gda_worker_unref (worker, TRUE);
 }
 
 /*
@@ -535,6 +608,7 @@ gda_worker_fetch_job_result (GdaWorker *worker, guint job_id, gpointer *out_resu
 	g_rec_mutex_unlock (&worker->rmutex);
 
 	gda_worker_unref (worker);
+
 	return retval;
 }
 

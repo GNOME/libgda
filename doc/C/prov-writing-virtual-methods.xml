@@ -66,6 +66,35 @@
       no other code than the provider's code will ever be executed from within the worker thread (and some code from
       the GdaServerProvider object itself to do the binding).
     </para>
+
+    <sect2 id="prov-create-worker">
+      <title>create_worker() - optional</title>
+      <para>
+	Regarding thread safety, each database API has one of the following behaviours:
+	<orderedlist>
+	  <listitem><para>the API is enough thread safe to allow the API's objects related to a connection to be used by a thread while
+	  the API's objects related to another connection can be used by another thread. In this
+	  case, each connection is used from its own "private" thread (and thus a <link linkend="GdaWorker">GdaWorker</link> object
+	  per connection)</para></listitem>
+	  <listitem><para>the API is not enough thread safe to be in the 1st cathegory. However, it supports being used from
+	  several threads providing that at any time, all the API's objects are used from only one thread.
+	  In this case it is possible for example at one point to use the API from a
+	  thread A, and at a later time from thread B (in case thread A has finished for example). In this case all the connections
+	  are used from a single thread (and thus a single <link linkend="GdaWorker">GdaWorker</link> object).</para></listitem>
+	  <listitem><para>the API is not thread safe, and the thread which first uses (or initializes) the API must be the one from which
+	  all the API objects are manipulated. In this case, the thread which first uses the API must be the only one which ever uses the API
+	  and thus only a single <link linkend="GdaWorker">GdaWorker</link> object must ever exist for the database provider.</para></listitem>
+	</orderedlist>
+      </para>
+      <para>
+	This method creates <link linkend="GdaWorker">GdaWorker</link> objects when the common database provider implementation needs to have
+	a <link linkend="GdaWorker">GdaWorker</link> object.
+      </para>
+      <para>
+	If this function is not implemented, the database provider considers that the API is thread safe enough to have a
+	<link linkend="GdaWorker">GdaWorker</link> for each connection (1st cathegory above).
+      </para>
+    </sect2>
   </sect1>
 
   <sect1>

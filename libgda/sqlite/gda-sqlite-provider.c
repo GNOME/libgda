@@ -8,7 +8,7 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
- * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
@@ -295,7 +295,7 @@ static const gchar        *gda_sqlite_provider_get_version (GdaServerProvider *p
 static gboolean            gda_sqlite_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaConnectionFeature feature);
 
-static GdaWorker          *gda_sqlite_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_sqlite_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static const gchar        *gda_sqlite_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -639,19 +639,22 @@ gda_sqlite_provider_get_type (void)
 	return type;
 }
 
-static GdaWorker *
-gda_sqlite_provider_create_worker (GdaServerProvider *provider)
-{
-	static GdaWorker *unique_worker = NULL;
-	if (unique_worker)
-		return gda_worker_ref (unique_worker);
 
-	if (SQLITE3_CALL (sqlite3_threadsafe) ())
-		return gda_worker_new ();
-	else {
-		unique_worker = gda_worker_new ();
-		return gda_worker_ref (unique_worker);
+
+static GdaWorker *
+gda_sqlite_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
+{
+	/* see http://www.sqlite.org/threadsafe.html */
+
+	static GdaWorker *unique_worker = NULL;
+	if (SQLITE3_CALL (sqlite3_threadsafe) ()) {
+		if (for_cnc)
+			return gda_worker_new ();
+		else
+			return gda_worker_new_unique (&unique_worker, TRUE);
 	}
+	else
+		return gda_worker_new_unique (&unique_worker, TRUE);
 }
 
 /*
