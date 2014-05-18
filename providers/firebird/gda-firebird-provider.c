@@ -1086,22 +1086,21 @@ gda_firebird_provider_create_parser (GdaServerProvider *provider, GdaConnection 
  * The implementation show here simply calls gda_statement_to_sql_extended() but the rendering
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
+ *
+ * NOTE: This implementation can call gda_statement_to_sql_extended() _ONLY_ if it passes a %NULL @cnc argument
  */
 static gchar *
 gda_firebird_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
 					GdaStatement *stmt, GdaSet *params, GdaStatementSqlFlag flags,
 					GSList **params_used, GError **error)
 {
-	//gchar *str;
-	//GdaSqlRenderingContext context;
-	
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
-	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
+	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
 }
 
 

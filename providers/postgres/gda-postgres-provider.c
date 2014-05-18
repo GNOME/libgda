@@ -1572,8 +1572,7 @@ gda_postgres_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider,
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
  *
- * NOTE: This implementation MUST NOT call gda_statement_to_sql_extended() if it is
- *       the GdaServerProvider::statement_to_sql() virtual method's implementation
+ * NOTE: This implementation can call gda_statement_to_sql_extended() _ONLY_ if it passes a %NULL @cnc argument
  */
 static gchar *
 gda_postgres_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
@@ -1586,7 +1585,7 @@ gda_postgres_provider_statement_to_sql (GdaServerProvider *provider, GdaConnecti
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
-	return gda_statement_to_sql_extended (stmt, cnc, params, flags, params_used, error);
+	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
 }
 
 static gboolean

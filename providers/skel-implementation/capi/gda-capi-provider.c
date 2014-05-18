@@ -989,7 +989,7 @@ gda_capi_provider_create_parser (G_GNUC_UNUSED GdaServerProvider *provider, G_GN
  * can be specialized to the database's SQL dialect, see the implementation of gda_statement_to_sql_extended()
  * and SQLite's specialized rendering for more details
  *
- * NOTE: The implementation MUST NOT call gda_statement_to_sql_extended() because this will end up in a loop.
+ * NOTE: This implementation can call gda_statement_to_sql_extended() _ONLY_ if it passes a %NULL @cnc argument
  */
 static gchar *
 gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *cnc,
@@ -1003,7 +1003,8 @@ gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *
 	}
 
 	TO_IMPLEMENT;
-	return NULL;
+
+	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
 }
 
 /*
