@@ -500,12 +500,22 @@ _gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cn
  * Obtain a #GMainContext on which to iterate.
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  *
- * Returns: a #GMainContext. Don't forget to call g_main_context_unref() when done
+ * NB: if @cnc is NOT %NULL and has a #GdaWorker associated, and if we are in its worker thread, then this function
+ *     returns %NULL (to avoid generating contexts which are never used)
+ *
+ * Returns: a #GMainContext, or %NULL. Don't forget to call g_main_context_unref() when done
  */
 GMainContext *
 _gda_server_provider_get_real_main_context (GdaConnection *cnc)
 {
 	GMainContext *context;
+	if (cnc) {
+		GdaServerProviderConnectionData *cdata;
+		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
+		if (cdata && cdata->worker && gda_worker_thread_is_worker (cdata->worker))
+			return NULL;
+	}
+
 	context = gda_connection_get_main_context (cnc, NULL);
 	if (context)
 		g_main_context_ref (context);
@@ -560,7 +570,8 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_version, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	gda_worker_unref (worker);
 	return (const gchar*) retval;
 }
@@ -605,7 +616,8 @@ gda_server_provider_get_name (GdaServerProvider *provider)
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_name, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	gda_worker_unref (worker);
 	return (const gchar*) retval;
 }
@@ -661,7 +673,8 @@ gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (cdata->worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_server_version, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -739,7 +752,8 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_supports_operation, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -950,7 +964,8 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 	GdaServerOperation *op;
 	gda_worker_do_job (worker, context, 0, (gpointer) &op, NULL,
 			   (GdaWorkerFunc) worker_create_operation, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1075,7 +1090,8 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_render_operation, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1170,7 +1186,8 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 	gpointer retval = NULL;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_perform_operation, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1256,7 +1273,8 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 	gpointer retval = NULL;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_supports_feature, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1334,7 +1352,8 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_data_handler, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1393,7 +1412,8 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_data_handler, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1467,7 +1487,8 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_get_default_dbms_type, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1695,7 +1716,8 @@ gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_escape_string, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1764,7 +1786,8 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_unescape_string, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1840,7 +1863,8 @@ gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_create_parser, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -1946,7 +1970,8 @@ _gda_server_provider_create_connection (GdaServerProvider *provider, const gchar
 	gpointer cnc;
 	gda_worker_do_job (worker, context, 0, &cnc, NULL,
 			   (GdaWorkerFunc) worker_create_connection, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 	gda_worker_unref (worker);
 
 	if (cnc)
@@ -2329,7 +2354,8 @@ _gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnectio
 	gda_worker_do_job (cdata->worker, context, 0, &result, NULL,
 			   (GdaWorkerFunc) worker_close_connection, jdata, (GDestroyNotify) WorkerCloseConnectionData_free,
 			   NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	gda_worker_unref (worker);
 
@@ -2407,7 +2433,8 @@ _gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_statement_prepare, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -2513,7 +2540,8 @@ _gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_statement_execute, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -2600,7 +2628,8 @@ _gda_server_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_stmt_to_sql, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -2679,7 +2708,8 @@ _gda_server_provider_identifier_quote (GdaServerProvider *provider, GdaConnectio
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_identifier_quote, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -2904,7 +2934,8 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -2964,7 +2995,8 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -3024,7 +3056,8 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -3085,7 +3118,8 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -3146,7 +3180,8 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
@@ -3232,7 +3267,8 @@ _gda_server_provider_begin_transaction (GdaServerProvider *provider, GdaConnecti
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_begin_transaction, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3300,7 +3336,8 @@ _gda_server_provider_commit_transaction (GdaServerProvider *provider, GdaConnect
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_commit_transaction, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3368,7 +3405,8 @@ _gda_server_provider_rollback_transaction (GdaServerProvider *provider, GdaConne
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_rollback_transaction, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3428,7 +3466,8 @@ _gda_server_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_add_savepoint, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3488,7 +3527,8 @@ _gda_server_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnect
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_rollback_savepoint, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3548,7 +3588,8 @@ _gda_server_provider_delete_savepoint (GdaServerProvider *provider, GdaConnectio
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_delete_savepoint, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3698,7 +3739,8 @@ _gda_server_provider_xa (GdaServerProvider *provider, GdaConnection *cnc, const 
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_xa, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
@@ -3742,7 +3784,8 @@ _gda_server_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_xa, (gpointer) &data, NULL, NULL, error);
-	g_main_context_unref (context);
+	if (context)
+		g_main_context_unref (context);
 
 	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
