@@ -31,7 +31,10 @@
 #define SPARE_WORKER_DELAY_MS 2000
 #define SPARE_ITS_DELAY_MS 2000
 #define MAKE_STATS
-#undef MAKE_STATS
+//#undef MAKE_STATS
+
+#define DEBUG_BG
+#undef DEBUG_BG
 
 #ifdef MAKE_STATS
   #ifndef G_OS_WIN32
@@ -75,7 +78,9 @@ static void
 WorkerSpareData_free (WorkerSpareData *data)
 {
 	if (data->worker) {
+#ifdef DEBUG_BG
 		g_print ("[_gda_worker_bg_unref(%p)]\n", data->worker);
+#endif
 		_gda_worker_bg_unref (data->worker);
 	}
 	g_slice_free (WorkerSpareData, data);
@@ -94,7 +99,9 @@ static void
 ItsSpareData_free (ItsSpareData *data)
 {
 	if (data->its) {
+#ifdef DEBUG_BG
 		g_print ("[_its_bg_unref(%p)]\n", data->its);
+#endif
 		_itsignaler_bg_unref (data->its);
 	}
 	g_slice_free (ItsSpareData, data);
@@ -220,19 +227,25 @@ background_main (gpointer data)
 			case JOB_SPARE_WORKER:
 				g_mutex_lock (&bg_mutex);
 				g_array_append_val (spare_workers, job->u.u2);
+#ifdef DEBUG_BG
 				g_print ("[Cached GdaWorker %p]\n", job->u.u2->worker);
+#endif
 				g_mutex_unlock (&bg_mutex);
 				break;
 			case JOB_SPARE_ITS:
 				g_mutex_lock (&bg_mutex);
 				g_array_append_val (spare_its, job->u.u3);
+#ifdef DEBUG_BG
 				g_print ("[Cached ITS %p]\n", job->u.u3->its);
+#endif
 				g_mutex_unlock (&bg_mutex);
 				break;
 			case JOB_JOIN_THREAD: {
 				JoinThreadData *data;
 				data = job->u.u1;
+#ifdef DEBUG_BG
 				g_print ("[g_thread_join(%p)]\n", data->thread);
+#endif
 
 				bg_update_stats (BG_JOINED_THREADS);
 
@@ -273,12 +286,12 @@ _bg_start (void)
 
 	if (!th_started) {
 		GThread *th;
-		th = g_thread_new ("background", background_main, NULL);
+		th = g_thread_new ("gdaBackground", background_main, NULL);
 		if (th) {
 			th_started = TRUE;
 		}
 		else
-			g_print ("Failed to start BACKGROUND thread\n");
+			g_warning ("Failed to start Gda's background thread\n");
 	}
 
 	g_mutex_unlock (&bg_mutex);
@@ -357,7 +370,9 @@ bg_get_spare_gda_worker (void)
 		WorkerSpareData_free (data);
 
 		g_array_remove_index (spare_workers, 0);
+#ifdef DEBUG_BG
 		g_print ("[Fetched cached GdaWorker %p]\n", worker);
+#endif
 
 		bg_update_stats (BG_REUSED_WORKER_FROM_CACHE);
 	}
@@ -420,7 +435,9 @@ bg_get_spare_its (void)
 		ItsSpareData_free (data);
 
 		g_array_remove_index (spare_its, 0);
+#ifdef DEBUG_BG
 		g_print ("[Fetched cached ITS %p]\n", its);
+#endif
 
 		bg_update_stats (BG_REUSED_ITS_FROM_CACHE);
 	}

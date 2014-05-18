@@ -264,7 +264,7 @@ gda_worker_new (void)
 	g_rec_mutex_init (& worker->rmutex);
 
 	gchar *str;
-	str = g_strdup_printf ("ForWkr%p", worker);
+	str = g_strdup_printf ("gdaForWkr%p", worker);
 	worker->worker_thread = g_thread_try_new (str, (GThreadFunc) worker_thread_main, worker, NULL);
 	g_free (str);
 	if (!worker->worker_thread) {

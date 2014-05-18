@@ -1916,7 +1916,6 @@ gda_worker_new
 gda_worker_new_unique
 gda_worker_ref
 gda_worker_unref
-gda_worker_unref_timed
 gda_worker_kill
 <SUBSECTION>
 GdaWorkerFunc
