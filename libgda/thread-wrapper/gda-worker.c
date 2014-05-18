@@ -731,7 +731,6 @@ dc_callback (ITSignaler *its, DeclaredCallback *dc)
  * is simply replaced.
  *
  * Since this function adds a new source of events to the specified #GMainContext (or the default one if @context is %NULL),
- * FIXME.
  *
  * Notes:
  * <itemizedlist>
@@ -852,7 +851,8 @@ do_itsignaler_cb (ITSignaler *its, GMainLoop *loop)
  * Request that the worker thread call @func with the @data argument, much like gda_worker_submit_job(),
  * but waits (starting a #GMainLoop) for a maximum of @timeout_ms miliseconds for @func to be executed.
  *
- * If this function is called from within @worker's worker thread, then this function simply calls @func with @data.
+ * If this function is called from within @worker's worker thread, then this function simply calls @func with @data and does not
+ * use @context.
  *
  * The following cases are possible if this function is not called from within @worker's worker thread:
  * <itemizedlist>
