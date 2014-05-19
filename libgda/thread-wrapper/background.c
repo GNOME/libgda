@@ -31,7 +31,7 @@
 #define SPARE_WORKER_DELAY_MS 2000
 #define SPARE_ITS_DELAY_MS 2000
 #define MAKE_STATS
-//#undef MAKE_STATS
+#undef MAKE_STATS
 
 #define DEBUG_BG
 #undef DEBUG_BG

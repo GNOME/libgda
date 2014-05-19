@@ -53,7 +53,7 @@ static void gda_ddl_creator_get_property (GObject *object,
 static gboolean load_customization (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **error);
 static GdaServerOperation *prepare_dbo_server_operation (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
 							 GdaMetaDbObject *dbo, GError **error);
-static GStaticRecMutex init_mutex = G_STATIC_REC_MUTEX_INIT;
+static GRecMutex init_mutex;
 
 typedef struct {
 	gchar  *prov;
@@ -119,10 +119,10 @@ gda_ddl_creator_get_type (void) {
 			0
 		};
 		
-		g_static_rec_mutex_lock (&init_mutex);
+		g_rec_mutex_lock (&init_mutex);
 		if (type == 0)
 			type = g_type_register_static (G_TYPE_OBJECT, "GdaDDLCreator", &info, 0);
-		g_static_rec_mutex_unlock (&init_mutex);
+		g_rec_mutex_unlock (&init_mutex);
 	}
 	return type;
 }
@@ -174,7 +174,7 @@ gda_ddl_creator_class_init (GdaDDLCreatorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	g_static_rec_mutex_lock (&init_mutex);
+	g_rec_mutex_lock (&init_mutex);
 	parent_class = g_type_class_peek_parent (klass);
 		
 	/* Properties */
@@ -193,7 +193,7 @@ gda_ddl_creator_class_init (GdaDDLCreatorClass *klass)
 	object_class->dispose = gda_ddl_creator_dispose;
 	object_class->finalize = gda_ddl_creator_finalize;
 	
-	g_static_rec_mutex_unlock (&init_mutex);
+	g_rec_mutex_unlock (&init_mutex);
 }
 
 

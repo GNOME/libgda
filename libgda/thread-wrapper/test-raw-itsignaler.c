@@ -150,12 +150,12 @@ main (int argc, char** argv)
 	if (counter == MAX_ITERATIONS * 2) {
 		gdouble duration;
 		duration = g_timer_elapsed (timer, NULL);
-		g_print ("Test Ok, %0.5f s\n", duration);
+		g_print ("Test Ok, got %u notification in %0.5f s\n", MAX_ITERATIONS, duration);
 		g_timer_destroy (timer);
 		return EXIT_SUCCESS;
 	}
 	else {
-		g_print ("Test Failed: got %d notification(s) out of 20\n", counter);
+		g_print ("Test Failed: got %d notification(s) out of %u\n", counter, MAX_ITERATIONS * 2);
 		g_timer_destroy (timer);
 		return EXIT_SUCCESS;
 	}
