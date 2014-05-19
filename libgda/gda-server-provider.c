@@ -48,6 +48,7 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-debug-macros.h>
+#include "providers-support/gda-data-select-priv.h"
 
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 #define GDA_DEBUG_VIRTUAL
@@ -2462,7 +2463,6 @@ typedef struct {
 	GdaSet               **last_inserted_row;
 } WorkerExecuteStatementData;
 
-
 static gpointer
 worker_statement_execute (WorkerExecuteStatementData *data, GError **error)
 {
@@ -2477,7 +2477,21 @@ worker_statement_execute (WorkerExecuteStatementData *data, GError **error)
 	}
 
 	GObject *result;
-	result = fset->statement_execute (data->provider, data->cnc, data->stmt, data->params, data->model_usage, data->col_types, data->last_inserted_row, error);
+	result = fset->statement_execute (data->provider, data->cnc, data->stmt, data->params, data->model_usage,
+					  data->col_types, data->last_inserted_row, error);
+
+	if (GDA_IS_DATA_SELECT (result)) {
+		/* adjust flags because the providers don't necessarily do it: make sure extra flags as OFFLINE and
+		 * ALLOW_NOPARAM are included */
+		_gda_data_select_update_usage_flags ((GdaDataSelect*) result, data->model_usage);
+
+		/* if necessary honor the OFFLINE flag */
+		if ((data->model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
+		    ! gda_data_select_prepare_for_offline ((GdaDataSelect*) result, error)) {
+			g_object_unref (result);
+			result = NULL;
+		}
+	}
 
 	return (gpointer) result;
 }

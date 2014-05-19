@@ -65,6 +65,7 @@ void           gda_data_select_set_columns                  (GdaDataSelect *mode
 void           gda_data_select_add_exception                (GdaDataSelect *model, GError *error);
 
 /* internal API */
+void           _gda_data_select_update_usage_flags (GdaDataSelect *model, GdaDataModelAccessFlags flags);
 void           _gda_data_select_share_private_data (GdaDataSelect *master, GdaDataSelect *slave);
 
 G_END_DECLS
