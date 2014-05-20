@@ -24,7 +24,7 @@
     and not the <link linkend="GdaServerProvider">GdaServerProvider</link> as "normal" providers do,
     and the number of virtual methods to implement is very limited: only the <link linkend="prov-get-name">get_name()</link>,
     <link linkend="prov-get-version">get_version()</link>, <link linkend="prov-get-server-version">get_server_version()</link>, 
-    <link linkend="prov-open-connection">open_connection()</link> and <link linkend="prov-get-database">get_database()</link>
+    and <link linkend="prov-open-connection">open_connection()</link>
     should be implemented, optionnally the <link linkend="prov-close-connection">close_connection()</link> can
     also be implemented.
   </para>
@@ -147,10 +147,6 @@
 	The connection specific data for the database API can be retrieved using the
 	<link linkend="gda-connection-internal-get-provider-data-error">gda_connection_internal_get_provider_data_error()</link> method.
       </para>
-    </sect2>
-    <sect2>
-      <title>get_database()</title>
-      <para>This method returns the name of the database to which a connection is opened.</para>
     </sect2>
   </sect1>
 

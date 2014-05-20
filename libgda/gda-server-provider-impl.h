@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -136,7 +136,6 @@ typedef struct {
 	gboolean      (* close_connection)      (GdaServerProvider *provider, GdaConnection *cnc);
 	gchar        *(* escape_string)         (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str); /* may be NULL */
 	gchar        *(* unescape_string)       (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str); /* may be NULL */
-	const gchar  *(* get_database)          (GdaServerProvider *provider, GdaConnection *cnc);
 	gboolean      (* perform_operation)     (GdaServerProvider *provider, GdaConnection *cnc, /* may be NULL */
 						 GdaServerOperation *op, GError **error);
 	gboolean      (* begin_transaction)     (GdaServerProvider *provider, GdaConnection *cnc,

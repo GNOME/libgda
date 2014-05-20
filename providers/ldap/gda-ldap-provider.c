@@ -54,7 +54,6 @@ static GObject *gda_ldap_provider_statement_execute (GdaServerProvider *provider
 						     GType *col_types, GdaSet **last_inserted_row, GError **error);
 static const gchar *gda_ldap_provider_get_server_version (GdaServerProvider *provider,
 							  GdaConnection *cnc);
-static const gchar *gda_ldap_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 static GObjectClass *parent_class = NULL;
 
@@ -87,7 +86,6 @@ GdaServerProviderBase ldap_base_functions = {
 	NULL,
 	NULL,
 	NULL,
-	gda_ldap_provider_get_database,
 	NULL,
 	NULL,
 	NULL,
@@ -768,23 +766,6 @@ gda_ldap_provider_get_server_version (GdaServerProvider *provider, GdaConnection
 		/* FIXME: don't know how to get information about the LDAP server! */
 	}
         return cdata->server_version;
-}
-
-/*
- * Get database request
- */
-static const gchar *
-gda_ldap_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	LdapConnectionData *cdata;
-
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-        if (!cdata)
-                return NULL;
-        return cdata->base_dn;
 }
 
 /*

@@ -219,8 +219,6 @@ gda_server_provider_constructed (GObject *object)
 			else if (!fset->escape_string && fset->unescape_string)
 				g_warning ("Internal error after creation of %s: : virtual method %s implemented and %s _not_ implemented",
 					   gtype_name, "unescape_string()", "escape_string()");
-			if (! fset->get_database)
-				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "get_database");
 			if (! fset->statement_prepare)
 				g_warning ("Internal error after creation of %s: : %s() virtual function missing", gtype_name, "statement_prepare");
 			if (! fset->statement_execute)

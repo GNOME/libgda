@@ -74,7 +74,6 @@ static gboolean            gda_postgres_provider_prepare_connection (GdaServerPr
 								     GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean            gda_postgres_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
-static const gchar        *gda_postgres_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 /* DDL operations */
 static gboolean            gda_postgres_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -214,7 +213,6 @@ GdaServerProviderBase postgres_base_functions = {
 	gda_postgres_provider_close_connection,
 	gda_postgres_provider_escape_string,
 	NULL,
-	gda_postgres_provider_get_database,
 	gda_postgres_provider_perform_operation,
 	gda_postgres_provider_begin_transaction,
 	gda_postgres_provider_commit_transaction,
@@ -766,26 +764,6 @@ gda_postgres_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 	if (! ((GdaProviderReuseable*)cdata->reuseable)->server_version)
 		_gda_postgres_compute_version (cnc, cdata->reuseable, NULL);
 	return ((GdaProviderReuseable*)cdata->reuseable)->server_version;
-}
-
-/*
- * Get database request
- *
- * Returns the database name as a string
- */
-static const gchar *
-gda_postgres_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	PostgresConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
-	if (!cdata)
-		return NULL;
-
-	return (const char *) PQdb ((const PGconn *) cdata->pconn);
 }
 
 /*

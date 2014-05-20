@@ -67,7 +67,6 @@ static gboolean            gda_firebird_provider_open_connection (GdaServerProvi
 								  GdaQuarkList *auth);
 static gboolean            gda_firebird_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static const gchar        *gda_firebird_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
-static const gchar        *gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 /* DDL operations */
 static gboolean            gda_firebird_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -210,7 +209,6 @@ GdaServerProviderBase firebird_base_functions = {
 	gda_firebird_provider_close_connection,
 	NULL,
 	NULL,
-	gda_firebird_provider_get_database,
 	gda_firebird_provider_perform_operation,
 	gda_firebird_provider_begin_transaction,
 	gda_firebird_provider_commit_transaction,
@@ -561,26 +559,6 @@ gda_firebird_provider_get_server_version (GdaServerProvider *provider, GdaConnec
 		return FALSE;
 
 	return ((const gchar *) cdata->server_version);
-}
-
-/*
- * Get database request
- *
- * Returns the server version as a string, which should be stored in @cnc's associated FirebirdConnectionData structure
- */
-static const gchar *
-gda_firebird_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	FirebirdConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (FirebirdConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
-	if (!cdata) 
-		return NULL;
-
-	return (const gchar *) cdata->dbname;
 }
 
 /*

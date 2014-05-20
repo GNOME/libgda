@@ -63,7 +63,6 @@ static gchar              *gda_capi_provider_escape_string (GdaServerProvider *p
 static gchar              *gda_capi_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc, const gchar *str);
 
 static const gchar        *gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc);
-static const gchar        *gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc);
 
 /* DDL operations */
 static gboolean            gda_capi_provider_supports_operation (GdaServerProvider *provider, GdaConnection *cnc,
@@ -186,7 +185,6 @@ GdaServerProviderBase base_functions = {
 	gda_capi_provider_close_connection,
 	gda_capi_provider_escape_string,
 	gda_capi_provider_unescape_string,
-	gda_capi_provider_get_database,
 	gda_capi_provider_perform_operation,
 	gda_capi_provider_begin_transaction,
 	gda_capi_provider_commit_transaction,
@@ -473,26 +471,6 @@ gda_capi_provider_unescape_string (GdaServerProvider *provider, GdaConnection *c
  */
 static const gchar *
 gda_capi_provider_get_server_version (GdaServerProvider *provider, GdaConnection *cnc)
-{
-	CapiConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
-	if (!cdata) 
-		return NULL;
-	TO_IMPLEMENT;
-	return NULL;
-}
-
-/*
- * Get database request
- *
- * Returns the database name as a string, which should be stored in @cnc's associated CapiConnectionData structure
- */
-static const gchar *
-gda_capi_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	CapiConnectionData *cdata;
 

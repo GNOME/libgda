@@ -265,7 +265,6 @@ report_provider_status (GdaServerProvider *prov, GdaConnection *cnc)
 		{"unescape_string", TRUE, (AFunc) pclass->unescape_string},
 		{"open_connection", TRUE, (AFunc) pclass->open_connection},
 		{"close_connection", TRUE, (AFunc) pclass->close_connection},
-		{"get_database", TRUE, (AFunc) pclass->get_database},
 		{"supports_operation", is_virt ? FALSE : TRUE, (AFunc) pclass->supports_operation},
 		{"create_operation", FALSE, (AFunc) pclass->create_operation},
 		{"render_operation", FALSE, (AFunc) pclass->render_operation},

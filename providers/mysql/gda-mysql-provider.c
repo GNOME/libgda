@@ -100,8 +100,6 @@ static gboolean            gda_mysql_provider_close_connection (GdaServerProvide
 								GdaConnection      *cnc);
 static const gchar        *gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
 								  GdaConnection      *cnc);
-static const gchar        *gda_mysql_provider_get_database (GdaServerProvider  *provider,
-							    GdaConnection      *cnc);
 
 /* DDL operations */
 static gboolean            gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
@@ -272,7 +270,6 @@ GdaServerProviderBase mysql_base_functions = {
 	gda_mysql_provider_close_connection,
 	NULL,
 	NULL,
-	gda_mysql_provider_get_database,
 	gda_mysql_provider_perform_operation,
 	gda_mysql_provider_begin_transaction,
 	gda_mysql_provider_commit_transaction,
@@ -757,27 +754,6 @@ gda_mysql_provider_get_server_version (GdaServerProvider  *provider,
 	if (! ((GdaProviderReuseable*)cdata->reuseable)->server_version)
 		_gda_mysql_compute_version (cnc, cdata->reuseable, NULL);
 	return ((GdaProviderReuseable*)cdata->reuseable)->server_version;
-}
-
-/*
- * Get database request
- *
- * Returns the server version as a string, which should be stored in @cnc's associated MysqlConnectionData structure
- */
-static const gchar *
-gda_mysql_provider_get_database (GdaServerProvider  *provider,
-				 GdaConnection      *cnc)
-{
-	MysqlConnectionData *cdata;
-
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-
-	cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
-	if (!cdata) 
-		return NULL;
-	TO_IMPLEMENT;
-	return NULL;
 }
 
 /*
