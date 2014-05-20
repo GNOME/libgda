@@ -145,7 +145,7 @@ static void update_meta_store_after_statement_exec (GdaConnection *cnc, GdaState
 static void change_events_array_max_size (GdaConnection *cnc, gint size);
 
 enum {
-	ERROR,
+	SIG_ERROR,
 	OPENED,
         CLOSED,
 	DSN_CHANGED,
@@ -220,7 +220,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 * Gets emitted whenever a connection event occurs. Check the nature of @event to
 	 * see if it's an error or a simple notification
 	 */
-	gda_connection_signals[ERROR] =
+	gda_connection_signals[SIG_ERROR] =
 		g_signal_new ("error",
 			      G_TYPE_FROM_CLASS (object_class),
 			      G_SIGNAL_RUN_LAST,
@@ -2557,7 +2557,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 	}
 
 	if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR)
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[ERROR], 0, event);
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[SIG_ERROR], 0, event);
 
 #ifdef GDA_DEBUG_NO
 	dump_events_array (cnc);

@@ -7,7 +7,7 @@
 +static char *gdauniqueFuncName (FuncDef *func)
 +{
 +	char *sname;
-+	uint order = 0;
++	unsigned int order = 0;
 +	FuncDef *n;
 +	int size;
 +	for (n = func->pNext; n; n = n->pNext)

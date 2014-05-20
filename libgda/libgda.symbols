@@ -978,10 +978,12 @@
 	gda_vprovider_hub_new
 	gda_worker_cancel_job
 	gda_worker_do_job
+	gda_worker_error_quark
 	gda_worker_fetch_job_result
 	gda_worker_forget_job
-	gda_worker_kill
+	gda_worker_get_worker_thread
 	gda_worker_new
+	gda_worker_new_unique
 	gda_worker_ref
 	gda_worker_set_callback
 	gda_worker_submit_job
