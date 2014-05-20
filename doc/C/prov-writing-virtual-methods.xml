@@ -68,7 +68,7 @@
     </para>
 
     <sect2 id="prov-create-worker">
-      <title>create_worker() - optional</title>
+      <title>create_worker() - mandatory</title>
       <para>
 	Regarding thread safety, each database API has one of the following behaviours:
 	<orderedlist>
