@@ -381,7 +381,7 @@ gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	GString *server_url;
 
 	cdata = g_new0 (WebConnectionData, 1);
-	cdata->mutex = gda_mutex_new ();
+	g_rec_mutex_init (& (cdata->mutex));
 	cdata->server_id = NULL;
 	cdata->forced_closing = FALSE;
 	cdata->worker_session = soup_session_sync_new ();
@@ -500,9 +500,9 @@ gda_web_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 	if (!cdata) 
 		return FALSE;
 
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	if (!cdata->forced_closing && cdata->worker_running) {
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		/* send BYE message */
 		xmlDocPtr doc;
 		gchar status;
@@ -528,7 +528,7 @@ gda_web_provider_close_connection (GdaServerProvider *provider, GdaConnection *c
 		xmlFreeDoc (doc);
 	}
 	else
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 
 	_gda_web_do_server_cleanup (cnc, cdata);
 
@@ -1694,10 +1694,10 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 		}
 		else if (!strcmp ((gchar*) node->name, "gda_array")) {
 			GdaDataModel *data_model;
-			gda_mutex_lock (cdata->mutex);
+			g_rec_mutex_lock (& (cdata->mutex));
 			data_model = gda_web_recordset_new (cnc, ps, params, model_usage,
 							    col_types, cdata->session_id, node, error);
-			gda_mutex_unlock (cdata->mutex);
+			g_rec_mutex_unlock (& (cdata->mutex));
 			retval = (GObject*) data_model;
 
 			if (! gda_web_recordset_store (GDA_WEB_RECORDSET (data_model), node, error)) {

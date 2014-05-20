@@ -7,19 +7,14 @@ AM_CPPFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = check_mutex check_parser check_cnc_lock
-check_PROGRAMS = check_mutex check_parser check_cnc_lock
+TESTS = check_parser check_cnc_lock
+check_PROGRAMS = check_parser check_cnc_lock
 
 common_sources = \
         ../test-errors.h \
         ../test-errors.c \
 	common.c \
 	common.h
-
-check_mutex_SOURCES = check_mutex.c
-check_mutex_LDADD = \
-	$(top_builddir)/libgda/libgda-6.0.la \
-	$(COREDEPS_LIBS)
 
 check_parser_SOURCES = check_parser.c
 check_parser_LDADD = \

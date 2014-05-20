@@ -84,7 +84,6 @@ gda_headers = \
 	gda-log.h \
 	gda-meta-store.h \
 	gda-meta-struct.h \
-	gda-mutex.h \
 	gda-quark-list.h \
 	gda-repetitive-statement.h \
 	gda-row.h \
@@ -186,7 +185,6 @@ libgda_sources =  \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
 	gda-marshal.c \
-	gda-mutex.c \
 	gda-server-operation-private.h \
 	gda-types.c \
 	gda-types.h \

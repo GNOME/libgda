@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -181,9 +181,9 @@ worker_got_chunk_cb (SoupMessage *msg, SoupBuffer *chunk, ThreadData *thdata)
 					xmlFreeDoc (doc);
 			}
 			else {
-				gda_mutex_lock (thdata->cdata->mutex);
+				g_rec_mutex_lock (& (thdata->cdata->mutex));
 				g_assert (thdata->cdata->worker_counter == counter_id);
-				gda_mutex_unlock (thdata->cdata->mutex);
+				g_rec_mutex_unlock (& (thdata->cdata->mutex));
 				xmlFreeDoc (doc);
 			}
 		}
@@ -201,7 +201,7 @@ start_worker_in_sub_thread (ThreadData *thdata)
 	
 	while (runagain) {
 		GString *real_url;
-		gda_mutex_lock (thdata->cdata->mutex);
+		g_rec_mutex_lock (& (thdata->cdata->mutex));
 		real_url = g_string_new (thdata->cdata->worker_url);
 		if (thdata->cdata->session_id)
 			g_string_append_printf (real_url, "?%s", thdata->cdata->session_id);
@@ -210,16 +210,16 @@ start_worker_in_sub_thread (ThreadData *thdata)
 			thdata->cdata->worker_counter = 1;
 		else
 			thdata->cdata->worker_counter ++;
-		gda_mutex_unlock (thdata->cdata->mutex);
+		g_rec_mutex_unlock (& (thdata->cdata->mutex));
 
 		msg = soup_message_new ("GET", real_url->str);
 		/*g_print ("=== WORKER Request URL: [%s]\n", real_url->str);*/
 		if (!msg) {
 			g_warning (_("Invalid HOST/SCRIPT '%s'"), real_url->str);
 			g_string_free (real_url, TRUE);
-			gda_mutex_lock (thdata->cdata->mutex);
+			g_rec_mutex_lock (& (thdata->cdata->mutex));
 			thdata->cdata->worker_running = FALSE;
-			gda_mutex_unlock (thdata->cdata->mutex);
+			g_rec_mutex_unlock (& (thdata->cdata->mutex));
 			g_free (thdata);
 			return NULL;
 		}
@@ -230,11 +230,11 @@ start_worker_in_sub_thread (ThreadData *thdata)
 		guint res;
 		res = soup_session_send_message (thdata->cdata->worker_session, msg);
 		
-		gda_mutex_lock (thdata->cdata->mutex);
+		g_rec_mutex_lock (& (thdata->cdata->mutex));
 		thdata->cdata->worker_running = FALSE;
 		runagain = thdata->cdata->worker_needed;
 		runagain = runagain && SOUP_STATUS_IS_SUCCESSFUL (res);
-		gda_mutex_unlock (thdata->cdata->mutex);
+		g_rec_mutex_unlock (& (thdata->cdata->mutex));
 
 		g_signal_handler_disconnect (msg, sigid);
 		g_object_unref (msg);
@@ -259,9 +259,9 @@ start_worker (GdaConnection *cnc, WebConnectionData *cdata)
 	thdata->cdata = cdata;
 
 	/* set cdata->worker_running to TRUE to avoid having to add a delay */
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	cdata->worker_running = TRUE;
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 
 	if (! g_thread_new ("web-worker", (GThreadFunc) start_worker_in_sub_thread,
 			    thdata)) {
@@ -273,21 +273,21 @@ start_worker (GdaConnection *cnc, WebConnectionData *cdata)
 	gint nb_retries;
 	for (nb_retries = 0; nb_retries < 10; nb_retries++) {
 		gboolean wait_over;
-		gda_mutex_lock (cdata->mutex);
+		g_rec_mutex_lock (& (cdata->mutex));
 		wait_over = !cdata->worker_running || cdata->session_id;
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		if (wait_over)
 			break;
 		else
 			g_usleep (200000);
 	}
 
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	if (!cdata->session_id) {
 		/* there was an error */
 		cdata->worker_running = FALSE;
 	}
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 }
 
 /*
@@ -312,17 +312,17 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 		*out_status_chr = 0;
 
 	/* handle the need to run the worker to get an initial sessionID */
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	cdata->worker_needed = TRUE;
 	if (!cdata->worker_running && !cdata->session_id) {
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		start_worker (cnc, cdata);
 
-		gda_mutex_lock (cdata->mutex);
+		g_rec_mutex_lock (& (cdata->mutex));
 		if (! cdata->worker_running) {
 			gda_connection_add_event_string (cnc, _("Could not run PHP script on the server"));
 			cdata->worker_needed = FALSE;
-			gda_mutex_unlock (cdata->mutex);
+			g_rec_mutex_unlock (& (cdata->mutex));
 			return NULL;
 		}
 	}
@@ -330,7 +330,7 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 	/* prepare new message */
 	g_assert (cdata->session_id);
 	real_url = g_strdup_printf ("%s?%s&c=%d", cdata->front_url, cdata->session_id, counter++);
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 	msg = soup_message_new ("POST", real_url);
 	if (!msg) {
 		gda_connection_add_event_string (cnc, _("Invalid HOST/SCRIPT '%s'"), real_url);
@@ -340,7 +340,7 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 	g_free (real_url);
 
 	/* check context */
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	if (gda_connection_get_transaction_status (cnc) &&
 	    (!cdata->worker_running ||
 	     ((msgtype == MESSAGE_EXEC) && (cdata->last_exec_counter != cdata->worker_counter)))) {
@@ -351,22 +351,22 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 		g_object_unref (msg);
 
 		gda_connection_internal_reset_transaction_status (cnc);
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		return NULL;
 	}
 	if (! cdata->worker_running) {
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		start_worker (cnc, cdata);
 
-		gda_mutex_lock (cdata->mutex);
+		g_rec_mutex_lock (& (cdata->mutex));
 		if (! cdata->worker_running) {
 			gda_connection_add_event_string (cnc, _("Could not run PHP script on the server"));
 			g_object_unref (msg);
-			gda_mutex_unlock (cdata->mutex);
+			g_rec_mutex_unlock (& (cdata->mutex));
 			return NULL;
 		}
 	}
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 
 	/* finalize and send message */
  	if (hash_key) {
@@ -393,9 +393,9 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 	g_object_set (G_OBJECT (cdata->front_session), SOUP_SESSION_TIMEOUT, 20, NULL);
 	status = soup_session_send_message (cdata->front_session, msg);
 
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	cdata->worker_needed = FALSE;
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 
 	if (!SOUP_STATUS_IS_SUCCESSFUL (status)) {
 		gda_connection_add_event_string (cnc, msg->reason_phrase);
@@ -408,10 +408,10 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 	doc = _gda_web_decode_response (cnc, cdata, msg->response_body, out_status_chr, &counter_id);
 	g_object_unref (msg);
 	
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	if (msgtype == MESSAGE_EXEC)
 		cdata->last_exec_counter = counter_id;
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
 
 	return doc;
 }
@@ -466,13 +466,13 @@ _gda_web_do_server_cleanup (GdaConnection *cnc, WebConnectionData *cdata)
 	gint nb_retries;
 
 	/* wait for worker to finish */
-	gda_mutex_lock (cdata->mutex);
+	g_rec_mutex_lock (& (cdata->mutex));
 	for (nb_retries = 0; (nb_retries < 10) && cdata->worker_running; nb_retries ++) {
-		gda_mutex_unlock (cdata->mutex);
+		g_rec_mutex_unlock (& (cdata->mutex));
 		g_usleep (50000);
-		gda_mutex_lock (cdata->mutex);
+		g_rec_mutex_lock (& (cdata->mutex));
 	}
-	gda_mutex_unlock (cdata->mutex);
+	g_rec_mutex_unlock (& (cdata->mutex));
  
 	real_url = g_strdup_printf ("%s/gda-clean.php?%s", cdata->server_base_url, cdata->session_id);
 	msg = soup_message_new ("GET", real_url);
@@ -564,8 +564,7 @@ _gda_web_free_cnc_data (WebConnectionData *cdata)
 	g_free (cdata->server_base_url);
 	g_free (cdata->front_url);
 	g_free (cdata->worker_url);
-	if (cdata->mutex)
-		gda_mutex_free (cdata->mutex);
+	g_rec_mutex_clear (& (cdata->mutex));
 	if (cdata->worker_session)
 		g_object_unref (cdata->worker_session);
 	if (cdata->front_session)

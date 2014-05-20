@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 Massimo Cora <maxcvs@email.it>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
@@ -121,7 +121,7 @@ struct _GdaHolderPrivate
 	GdaDataModel    *source_model;
 	gint             source_col;
 
-	GdaMutex        *mutex;
+	GRecMutex        mutex;
 
 	gboolean         validate_changes;
 };
@@ -365,7 +365,7 @@ gda_holder_init (GdaHolder *holder)
 	holder->priv->source_model = NULL;
 	holder->priv->source_col = 0;
 
-	holder->priv->mutex = gda_mutex_new ();
+	g_rec_mutex_init (& (holder->priv->mutex));
 
 	holder->priv->validate_changes = TRUE;
 }
@@ -603,8 +603,7 @@ gda_holder_finalize (GObject   * object)
 	holder = GDA_HOLDER (object);
 	if (holder->priv) {
 		g_free (holder->priv->id);
-
-		gda_mutex_free (holder->priv->mutex);
+		g_rec_mutex_clear (& (holder->priv->mutex));
 
 		g_free (holder->priv);
 		holder->priv = NULL;
@@ -2063,19 +2062,19 @@ static void
 gda_holder_lock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	gda_mutex_lock (holder->priv->mutex);
+	g_rec_mutex_lock (& (holder->priv->mutex));
 }
 
 static gboolean
 gda_holder_trylock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	return gda_mutex_trylock (holder->priv->mutex);
+	return g_rec_mutex_trylock (& (holder->priv->mutex));
 }
 
 static void
 gda_holder_unlock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	gda_mutex_unlock (holder->priv->mutex);
+	g_rec_mutex_unlock (& (holder->priv->mutex));
 }

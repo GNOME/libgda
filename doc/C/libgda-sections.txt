@@ -760,17 +760,6 @@ gda_vconnection_hub_get_type
 </SECTION>
 
 <SECTION>
-<FILE>gda-mutex</FILE>
-<TITLE>GdaMutex</TITLE>
-GdaMutex
-gda_mutex_new
-gda_mutex_lock
-gda_mutex_trylock
-gda_mutex_unlock
-gda_mutex_free
-</SECTION>
-
-<SECTION>
 <FILE>gda-xa-transaction</FILE>
 <TITLE>GdaXaTransaction</TITLE>
 GdaXaTransaction

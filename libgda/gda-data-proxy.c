@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
@@ -46,7 +46,6 @@
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-custom-marshal.h>
 #include <libgda/gda-types.h>
-#include <gda-mutex.h>
 
 /*
  * Main static functions
@@ -202,7 +201,7 @@ static void          display_chunk_free (DisplayChunk *chunk);
  */
 struct _GdaDataProxyPrivate
 {
-	GdaMutex          *mutex;
+	GRecMutex          mutex;
 
 	GdaDataModel      *model; /* Gda model which is proxied */
 
@@ -765,8 +764,9 @@ gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 static void
 do_init (GdaDataProxy *proxy)
 {
-	if (!proxy->priv->mutex)
-		proxy->priv->mutex = gda_mutex_new ();
+	g_rec_mutex_init (& (proxy->priv->mutex)); /* REM: make sure clean_proxy() is called first because
+						    * we must not call g_rec_mutex_init() on an already initialized
+						    * GRecMutex, see doc. */
 
 	proxy->priv->modify_rows = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	proxy->priv->notify_changes = TRUE;
@@ -925,6 +925,8 @@ clean_proxy (GdaDataProxy *proxy)
 		g_free (proxy->priv->columns_attrs);
 		proxy->priv->columns_attrs = NULL;
 	}
+
+	g_rec_mutex_clear (& (proxy->priv->mutex));
 }
 
 static void
@@ -937,10 +939,6 @@ gda_data_proxy_dispose (GObject *object)
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
 		clean_proxy (proxy);
-		if (proxy->priv->mutex) {
-			gda_mutex_free (proxy->priv->mutex);
-			proxy->priv->mutex = NULL;
-		}
 
 		clean_cached_changes (proxy);
 	}
@@ -977,7 +975,7 @@ gda_data_proxy_set_property (GObject *object,
 
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
-		gda_mutex_lock (proxy->priv->mutex);
+		g_rec_mutex_lock (& (proxy->priv->mutex));
 		switch (param_id) {
 		case PROP_MODEL: {
 			GdaDataModel *model;
@@ -1004,7 +1002,7 @@ gda_data_proxy_set_property (GObject *object,
 
 			if (! (gda_data_model_get_access_flags (model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 				g_warning (_("GdaDataProxy can't handle non random access data models"));
-				gda_mutex_unlock (proxy->priv->mutex);
+				g_rec_mutex_unlock (& (proxy->priv->mutex));
 				return;
 			}
 			proxy->priv->model = g_object_ref (model);
@@ -1090,7 +1088,7 @@ gda_data_proxy_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 	}
 }
 
@@ -1104,7 +1102,7 @@ gda_data_proxy_get_property (GObject *object,
 
 	proxy = GDA_DATA_PROXY (object);
 	if (proxy->priv) {
-		gda_mutex_lock (proxy->priv->mutex);
+		g_rec_mutex_lock (& (proxy->priv->mutex));
 		switch (param_id) {
 		case PROP_ADD_NULL_ENTRY:
 			g_value_set_boolean (value, proxy->priv->add_null_entry);
@@ -1122,7 +1120,7 @@ gda_data_proxy_get_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 	}
 }
 
@@ -1466,18 +1464,18 @@ gda_data_proxy_get_values (GdaDataProxy *proxy, gint proxy_row, gint *cols_index
 	g_return_val_if_fail (proxy->priv, NULL);
 	g_return_val_if_fail (proxy_row >= 0, NULL);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	for (i = 0; i < n_cols; i++) {
 		value = gda_data_proxy_get_value_at ((GdaDataModel *) proxy, cols_index[i], proxy_row, NULL);
 		if (value)
 			retval = g_slist_prepend (retval, (GValue *) value);
 		else {
 			g_slist_free (retval);
-			gda_mutex_unlock (proxy->priv->mutex);
+			g_rec_mutex_unlock (& (proxy->priv->mutex));
 			return NULL;
 		}
 	}
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	return g_slist_reverse (retval);
 }
@@ -1506,7 +1504,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 	g_return_val_if_fail (proxy->priv, 0);
 	g_return_val_if_fail (proxy_row >= 0, 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	model_column = col % proxy->priv->model_nb_cols;
 	model_row = proxy_row_to_model_row (proxy, proxy_row);
 	flags = gda_data_model_get_attributes_at (proxy->priv->model, model_column, model_row);
@@ -1546,7 +1544,7 @@ gda_data_proxy_get_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint c
 			flags |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	/*g_print ("%s (%p, %d, %d) => %d\n", __FUNCTION__, proxy, col, proxy_row, flags);*/
 	return flags;
@@ -1572,7 +1570,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	model_col = col % proxy->priv->model_nb_cols;
 	if (alter_flags & GDA_VALUE_ATTR_IS_NULL)
@@ -1628,7 +1626,7 @@ gda_data_proxy_alter_value_attributes (GdaDataProxy *proxy, gint proxy_row, gint
 		}
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -1668,19 +1666,19 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
 
 	if (proxy->priv->add_null_entry && proxy_row == 0) {
 		g_warning (_("The first row is an empty row artificially prepended and cannot be removed"));
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return;
 	}
 
 	if (! (gda_data_model_get_access_flags ((GdaDataModel*) proxy) & GDA_DATA_MODEL_ACCESS_DELETE)) {
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return;
 	}
 
@@ -1737,7 +1735,7 @@ gda_data_proxy_delete (GdaDataProxy *proxy, gint proxy_row)
                                0, proxy_row, TRUE);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -1758,7 +1756,7 @@ gda_data_proxy_undelete (GdaDataProxy *proxy, gint proxy_row)
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -1788,7 +1786,7 @@ gda_data_proxy_undelete (GdaDataProxy *proxy, gint proxy_row)
                                0, proxy_row, FALSE);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -1949,7 +1947,7 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (proxy_row >= 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -2024,7 +2022,7 @@ gda_data_proxy_cancel_row_changes (GdaDataProxy *proxy, gint proxy_row, gint col
 	else
 		g_warning ("GdaDataProxy column %d is not a modifiable data column", col);
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 static gboolean commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GError **error);
@@ -2064,7 +2062,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 	if (!rm)
 		return TRUE;
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	model_row = rm->model_row;
 
@@ -2088,7 +2086,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
                        0, proxy_row, rm->model_row, &lerror);
 	if (lerror) {
 		g_propagate_error (error, lerror);
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE;
 	}
 
@@ -2240,7 +2238,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 	if (adjust_display)
 		adjust_displayed_chunk (proxy);
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	return !err;
 }
@@ -2344,7 +2342,7 @@ gda_data_proxy_set_sample_size (GdaDataProxy *proxy, gint sample_size)
 	g_return_if_fail (GDA_IS_DATA_PROXY (proxy));
 	g_return_if_fail (proxy->priv);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -2358,7 +2356,7 @@ gda_data_proxy_set_sample_size (GdaDataProxy *proxy, gint sample_size)
                                0, sample_size);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -2392,7 +2390,7 @@ gda_data_proxy_set_sample_start (GdaDataProxy *proxy, gint sample_start)
 	g_return_if_fail (proxy->priv);
 	g_return_if_fail (sample_start >= 0);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -2402,7 +2400,7 @@ gda_data_proxy_set_sample_start (GdaDataProxy *proxy, gint sample_start)
 		adjust_displayed_chunk (proxy);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -2505,7 +2503,7 @@ display_chunks_dump (G_GNUC_UNUSED GdaDataProxy *proxy)
 static void
 ensure_chunk_sync (GdaDataProxy *proxy)
 {
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	if (proxy->priv->chunk_sync_idle_id) {
 		gboolean defer_sync = proxy->priv->defer_sync;
 		proxy->priv->defer_sync = FALSE;
@@ -2513,7 +2511,7 @@ ensure_chunk_sync (GdaDataProxy *proxy)
 		chunk_sync_idle (proxy);
 		proxy->priv->defer_sync = defer_sync;
 	}
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /*
@@ -2524,7 +2522,7 @@ static gboolean
 chunk_sync_idle (GdaDataProxy *proxy)
 {
 #define IDLE_STEP 50
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	gboolean finished = FALSE;
 	guint index, max_steps, step;
@@ -2540,7 +2538,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	}
 
 	if (!proxy->priv->chunk_to) {
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE; /* nothing to do */
 	}
 
@@ -2677,7 +2675,7 @@ chunk_sync_idle (GdaDataProxy *proxy)
 	else
 		g_print ("Sync. is NOT finished yet\n");
 #endif
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return !finished;
 }
 
@@ -2686,7 +2684,7 @@ compute_display_chunk (GdaDataProxy *proxy)
 {
 	DisplayChunk *ret_chunk = NULL;
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	if (proxy->priv->filtered_rows) {
 		/* REM: when there is a filter applied, the new rows are mixed with the
 		 * existing ones => no need to treat them appart
@@ -2792,7 +2790,7 @@ compute_display_chunk (GdaDataProxy *proxy)
 		}
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return ret_chunk;
 }
 
@@ -2807,7 +2805,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 {
 	g_return_if_fail (proxy->priv->model);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/*
 	 * Stop idle adding of rows if necessary
@@ -2824,7 +2822,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 	}
 	proxy->priv->chunk_to = compute_display_chunk (proxy);
 	if (!proxy->priv->chunk_to) {
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return; /* nothing to do */
 	}
 
@@ -2874,7 +2872,7 @@ adjust_displayed_chunk (GdaDataProxy *proxy)
 		}
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 /**
@@ -2896,7 +2894,7 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -2909,7 +2907,7 @@ gda_data_proxy_apply_all_changes (GdaDataProxy *proxy, GError **error)
 	gda_data_model_send_hint (proxy->priv->model, GDA_DATA_MODEL_HINT_END_BATCH_UPDATE, NULL);
 	adjust_displayed_chunk (proxy);
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	return allok;
 }
@@ -2931,7 +2929,7 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -2999,7 +2997,7 @@ gda_data_proxy_cancel_all_changes (GdaDataProxy *proxy)
 			gda_data_model_row_updated ((GdaDataModel *) proxy, proxy_row);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	return TRUE;
 }
@@ -3211,13 +3209,13 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), FALSE);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	if (!filter_expr) {
 		if (proxy->priv->filter_stmt)
 			g_object_unref (proxy->priv->filter_stmt);
 		proxy->priv->filter_stmt = NULL;
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 		gboolean retval = apply_filter_statement (proxy, error);
 		return retval;
@@ -3254,7 +3252,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 			g_object_unref (stmt);
 		proxy->priv->force_direct_mapping = FALSE;
 
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE;
 	}
 
@@ -3262,7 +3260,7 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		g_object_unref (proxy->priv->filter_stmt);
 	proxy->priv->filter_stmt = stmt;
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	gboolean retval = apply_filter_statement (proxy, error);
 	return retval;
 }
@@ -3286,7 +3284,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 	g_return_val_if_fail (col >= 0, FALSE);
 	g_return_val_if_fail (col < gda_data_model_get_n_columns ((GdaDataModel*) proxy), FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	if (proxy->priv->filter_stmt) {
 		GdaSqlStatement *sqlst;
@@ -3357,7 +3355,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 		g_free (str);
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return retval;
 }
 
@@ -3395,14 +3393,14 @@ gda_data_proxy_get_filtered_n_rows (GdaDataProxy *proxy)
 	g_return_val_if_fail (GDA_IS_DATA_PROXY (proxy), -1);
 	g_return_val_if_fail (proxy->priv, -1);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	if (! proxy->priv->filtered_rows) {
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return -1;
 	}
 	else {
 		gint n = gda_data_model_get_n_rows (proxy->priv->filtered_rows);
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return n;
 	}
 }
@@ -3419,7 +3417,7 @@ gda_data_proxy_get_n_rows (GdaDataModel *model)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, -1);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	if (proxy->priv->chunk && !proxy->priv->force_direct_mapping)
 		nbrows = proxy->priv->chunk->mapping->len;
@@ -3438,7 +3436,7 @@ gda_data_proxy_get_n_rows (GdaDataModel *model)
 	if (!proxy->priv->force_direct_mapping && proxy->priv->add_null_entry)
 		nbrows += 1;
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	return nbrows;
 }
@@ -3553,10 +3551,10 @@ gda_data_proxy_describe_column (GdaDataModel *model, gint col)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, NULL);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	if (!proxy->priv->columns)
 		create_columns (proxy);
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	if ((col < 0) || (col >= 2 * proxy->priv->model_nb_cols)) {
 		g_warning (_("Column %d out of range (0-%d)"), col,
 			   gda_data_model_get_n_columns (model) - 1);
@@ -3579,12 +3577,12 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 	g_return_val_if_fail (proxy->priv, NULL);
 	g_return_val_if_fail (proxy_row >= 0, NULL);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	if ((proxy_row == 0) && proxy->priv->add_null_entry) {
 		if (!null_value)
 			null_value = gda_value_new_null ();
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return null_value;
 	}
 
@@ -3639,7 +3637,7 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			}
 		}
 
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return retval;
 	}
 
@@ -3677,14 +3675,14 @@ gda_data_proxy_get_value_at (GdaDataModel *model, gint column, gint proxy_row, G
 			}
 		}
 
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return retval;
 	}
 
 	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 		     _("Column %d out of range (0-%d)"), column, 2 *proxy->priv->model_nb_cols - 1);
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return NULL;
 }
 
@@ -3698,9 +3696,9 @@ gda_data_proxy_get_attributes_at (GdaDataModel *model, gint col, gint row)
 	proxy = (GdaDataProxy*) model;
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	attrs = gda_data_proxy_get_value_attributes ((GdaDataProxy *) model, row, col);
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return attrs;
 }
 
@@ -3717,7 +3715,7 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 	g_return_val_if_fail (proxy->priv, FALSE);
 	g_return_val_if_fail (values, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -3764,7 +3762,7 @@ gda_data_proxy_find_row_from_values (GdaDataModel *model, GSList *values, gint *
 		}
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return found ? proxy_row : -1;
 }
 
@@ -3778,9 +3776,9 @@ gda_data_proxy_get_access_flags (GdaDataModel *model)
 
 	if (proxy->priv->model) {
 		GdaDataModelAccessFlags flags;
-		gda_mutex_lock (proxy->priv->mutex);
+		g_rec_mutex_lock (& (proxy->priv->mutex));
 		flags = gda_data_model_get_access_flags (proxy->priv->model) | GDA_DATA_MODEL_ACCESS_RANDOM;
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return flags;
 	}
 	else
@@ -3799,7 +3797,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 	g_return_val_if_fail (proxy_row >= 0, FALSE);
 	g_return_val_if_fail (value, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -3807,7 +3805,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 	if ((proxy_row == 0) && proxy->priv->add_null_entry) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_ROW,
 			      "%s", _("The first row is an empty row artificially prepended and cannot be altered"));
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE;
 	}
 
@@ -3824,7 +3822,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 			GdaValueAttribute attrs;
 			attrs = gda_data_proxy_get_value_attributes (proxy, proxy_row, col);
 			if (attrs & GDA_VALUE_ATTR_NO_MODIF) {
-				gda_mutex_unlock (proxy->priv->mutex);
+				g_rec_mutex_unlock (& (proxy->priv->mutex));
 				return FALSE;
 			}
 			else {
@@ -3834,7 +3832,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 				if ((G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
 				    (exptype != GDA_TYPE_NULL) &&
 				    (exptype != G_VALUE_TYPE (value))) {
-					gda_mutex_unlock (proxy->priv->mutex);
+					g_rec_mutex_unlock (& (proxy->priv->mutex));
 					g_warning (_("Wrong value type: expected '%s' and got '%s'"),
 						   g_type_name (exptype),
 						   g_type_name (G_VALUE_TYPE (value)));
@@ -3845,7 +3843,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 		else if ((G_VALUE_TYPE (cmp_value) != GDA_TYPE_NULL) &&
 			 (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
 			 (G_VALUE_TYPE (value) != G_VALUE_TYPE (cmp_value))) {
-			gda_mutex_unlock (proxy->priv->mutex);
+			g_rec_mutex_unlock (& (proxy->priv->mutex));
 			g_warning (_("Wrong value type: expected '%s' and got '%s'"),
 				   g_type_name (G_VALUE_TYPE (cmp_value)),
 				   g_type_name (G_VALUE_TYPE (value)));
@@ -3853,7 +3851,7 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 		}
 		else if (! gda_value_compare ((GValue *) value, (GValue *) cmp_value)) {
 			/* nothing to do: values are equal */
-			gda_mutex_unlock (proxy->priv->mutex);
+			g_rec_mutex_unlock (& (proxy->priv->mutex));
 			return TRUE;
 		}
 
@@ -3935,11 +3933,11 @@ gda_data_proxy_set_value_at (GdaDataModel *model, gint col, gint proxy_row, cons
 	else {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_VALUE,
 			     _("Trying to change read-only column: %d"), col);
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE;
 	}
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return TRUE;
 }
 
@@ -3985,7 +3983,7 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	if (err)
 		return FALSE;
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* temporary disable changes notification */
 	notify_changes = proxy->priv->notify_changes;
@@ -4004,7 +4002,7 @@ gda_data_proxy_set_values (GdaDataModel *model, gint row, GList *values, GError 
 		/* at least one successful value change occurred */
 		gda_data_model_row_updated (model, row);
 
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return !err;
 }
 
@@ -4019,7 +4017,7 @@ gda_data_proxy_append_values (GdaDataModel *model, const GList *values, GError *
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, -1);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	/* ensure that there is no sync to be done */
 	ensure_chunk_sync (proxy);
@@ -4032,14 +4030,14 @@ gda_data_proxy_append_values (GdaDataModel *model, const GList *values, GError *
 	if (! gda_data_proxy_set_values (model, newrow, (GList *) values, error)) {
 		gda_data_proxy_remove_row (model, newrow, NULL);
 		proxy->priv->notify_changes = notify_changes;
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return -1;
 	}
 	else {
 		proxy->priv->notify_changes = notify_changes;
 		if (proxy->priv->notify_changes)
 			gda_data_model_row_inserted (model, newrow);
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return newrow;
 	}
 }
@@ -4053,9 +4051,9 @@ gda_data_proxy_append_row (GdaDataModel *model, G_GNUC_UNUSED GError **error)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, -1);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	i = gda_data_proxy_append (proxy);
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return i;
 }
 
@@ -4067,17 +4065,17 @@ gda_data_proxy_remove_row (GdaDataModel *model, gint row, GError **error)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_val_if_fail (proxy->priv, FALSE);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
 	if (proxy->priv->add_null_entry && row == 0) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_READ_ONLY_ROW,
 			      "%s", _("The first row is an empty row artificially prepended and cannot be removed"));
-		gda_mutex_unlock (proxy->priv->mutex);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		return FALSE;
 	}
 
 	gda_data_proxy_delete (proxy, row);
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return TRUE;
 }
 
@@ -4089,9 +4087,9 @@ gda_data_proxy_set_notify (GdaDataModel *model, gboolean do_notify_changes)
 	proxy = GDA_DATA_PROXY (model);
 	g_return_if_fail (proxy->priv);
 
-	gda_mutex_lock (proxy->priv->mutex);
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 	proxy->priv->notify_changes = do_notify_changes;
-	gda_mutex_unlock (proxy->priv->mutex);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
 static gboolean

@@ -62,7 +62,6 @@
 #include <sql-parser/gda-statement-struct-trans.h>
 #include <libgda/gda-meta-store-extra.h>
 #include <libgda/gda-util.h>
-#include <libgda/gda-mutex.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-repetitive-statement.h>
 #include <gda-statement-priv.h>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
@@ -23,7 +23,6 @@
 #include <string.h>
 #include <gda-attributes-manager.h>
 #include <gda-value.h>
-#include <gda-mutex.h>
 
 /*
  * Structure for the attribute names
@@ -49,7 +48,7 @@ static void objattrs_unref (ObjAttrs *attrs);
 
 
 struct _GdaAttributesManager {
-	GdaMutex                   *mutex;
+	GRecMutex                   mutex;
 	gboolean                    for_objects; /* TRUE if key->data are GObjects */
 	GdaAttributesManagerSignal  signal_func;
 	gpointer                    signal_data;
@@ -107,7 +106,7 @@ gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal sig
 	GdaAttributesManager *mgr;
 
 	mgr = g_new0 (GdaAttributesManager, 1);
-	mgr->mutex = gda_mutex_new  ();
+	g_rec_mutex_init (& (mgr->mutex));
 	mgr->obj_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
 					       (GDestroyNotify) objattrs_unref);
 	mgr->for_objects = for_objects;
@@ -120,16 +119,16 @@ gda_attributes_manager_new (gboolean for_objects, GdaAttributesManagerSignal sig
 static void
 obj_destroyed_cb (ObjAttrs *attrs, GObject *where_the_object_was)
 {
-	GdaMutex *mutex;
+	GRecMutex *mutex;
 
 	/* rem: we need to keep a pointer to mutex because attrs may be destroyed
 	 * in g_hash_table_remove */
-	mutex = attrs->mgr->mutex;
+	mutex = & (attrs->mgr->mutex);
 
-	gda_mutex_lock (mutex);
+	g_rec_mutex_lock (mutex);
 	attrs->objects = g_slist_remove (attrs->objects, where_the_object_was);
 	g_hash_table_remove (attrs->mgr->obj_hash, where_the_object_was);
-	gda_mutex_unlock (mutex);
+	g_rec_mutex_unlock (mutex);
 }
 
 static void
@@ -150,14 +149,14 @@ foreach_destroy_func (gpointer ptr, ObjAttrs *attrs, GdaAttributesManager *mgr)
 void
 gda_attributes_manager_free (GdaAttributesManager *mgr)
 {
-	GdaMutex *mutex;
-	mutex = mgr->mutex;
-	gda_mutex_lock (mutex);
+	GRecMutex *mutex;
+	mutex = &(mgr->mutex);
+	g_rec_mutex_lock (mutex);
 	g_hash_table_foreach (mgr->obj_hash, (GHFunc) foreach_destroy_func, mgr);
 	g_hash_table_destroy (mgr->obj_hash);
 	g_free (mgr);
-	gda_mutex_unlock (mutex);
-	gda_mutex_free (mutex);
+	g_rec_mutex_unlock (mutex);
+	g_rec_mutex_clear (mutex);
 }
 
 typedef struct {
@@ -178,7 +177,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 	if (mgr->for_objects) 
 		g_return_if_fail (G_IS_OBJECT (ptr));
 	
-	gda_mutex_lock (mgr->mutex);
+	g_rec_mutex_lock (& (mgr->mutex));
 
 	/* pick up the correct ObjAttrs */
 	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
@@ -242,7 +241,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
 	if (mgr->signal_func && mgr->for_objects)
 		mgr->signal_func ((GObject*) ptr, att_name, value, mgr->signal_data);
 
-	gda_mutex_unlock (mgr->mutex);
+	g_rec_mutex_unlock (& (mgr->mutex));
 }
 
 /**
@@ -302,7 +301,7 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 	ObjAttrs *objattrs;
 	const GValue *cvalue = NULL;
 
-	gda_mutex_lock (mgr->mutex);
+	g_rec_mutex_lock (& (mgr->mutex));
 
 	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
 	if (objattrs) {
@@ -311,7 +310,7 @@ gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar
 		cvalue = g_hash_table_lookup (objattrs->values_hash, &attname);
 	}
 
-	gda_mutex_unlock (mgr->mutex);
+	g_rec_mutex_unlock (& (mgr->mutex));
 	return cvalue;
 }
 
@@ -331,13 +330,13 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 {
 	ObjAttrs *from_objattrs, *to_objattrs;
 
-	gda_mutex_lock (from_mgr->mutex);
-	gda_mutex_lock (to_mgr->mutex);
+	g_rec_mutex_lock (& (from_mgr->mutex));
+	g_rec_mutex_lock (& (to_mgr->mutex));
 
 	from_objattrs = g_hash_table_lookup (from_mgr->obj_hash, from);
 	if (!from_objattrs) {
-		gda_mutex_unlock (from_mgr->mutex);
-		gda_mutex_unlock (to_mgr->mutex);
+		g_rec_mutex_unlock (& (to_mgr->mutex));
+		g_rec_mutex_unlock (& (from_mgr->mutex));
 		return;
 	}
 
@@ -350,8 +349,8 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 		if (from_mgr->for_objects) 
 			g_object_weak_ref (G_OBJECT (to), (GWeakNotify) obj_destroyed_cb, from_objattrs);
 
-		gda_mutex_unlock (from_mgr->mutex);
-		gda_mutex_unlock (to_mgr->mutex);
+		g_rec_mutex_unlock (& (to_mgr->mutex));
+		g_rec_mutex_unlock (& (from_mgr->mutex));
 		return;
 	}
 
@@ -361,8 +360,8 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 	cdata.ptr = to;
 	g_hash_table_foreach (from_objattrs->values_hash, (GHFunc) foreach_copy_func, &cdata);
 
-	gda_mutex_unlock (from_mgr->mutex);
-	gda_mutex_unlock (to_mgr->mutex);
+	g_rec_mutex_unlock (& (to_mgr->mutex));
+	g_rec_mutex_unlock (& (from_mgr->mutex));
 }
 
 static void
@@ -386,7 +385,7 @@ gda_attributes_manager_clear (GdaAttributesManager *mgr, gpointer ptr)
 {
 	ObjAttrs *objattrs;
 
-	gda_mutex_lock (mgr->mutex);
+	g_rec_mutex_lock (& (mgr->mutex));
 
 	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
 	if (objattrs) {
@@ -394,7 +393,7 @@ gda_attributes_manager_clear (GdaAttributesManager *mgr, gpointer ptr)
 		g_hash_table_remove (mgr->obj_hash, ptr);
 	}
 
-	gda_mutex_unlock (mgr->mutex);
+	g_rec_mutex_unlock (& (mgr->mutex));
 }
 
 typedef struct {
@@ -421,7 +420,7 @@ gda_attributes_manager_foreach (GdaAttributesManager *mgr, gpointer ptr,
 	g_return_if_fail (func);
 	g_return_if_fail (ptr);
 
-	gda_mutex_lock (mgr->mutex);
+	g_rec_mutex_lock (& (mgr->mutex));
 
 	objattrs = g_hash_table_lookup (mgr->obj_hash, ptr);
 	if (objattrs) {
@@ -432,7 +431,7 @@ gda_attributes_manager_foreach (GdaAttributesManager *mgr, gpointer ptr,
 		g_hash_table_foreach (objattrs->values_hash, (GHFunc) foreach_foreach_func, &fdata);
 	}
 
-	gda_mutex_unlock (mgr->mutex);
+	g_rec_mutex_unlock (& (mgr->mutex));
 }
 
 static void

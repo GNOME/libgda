@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@
 #define NTHREADS 3
 
 typedef struct {
-	GMutex            *mutex;
+	GMutex             mutex;
 	GPrivate          *thread_priv;
 	xmlDocPtr          doc;
 	xmlNodePtr         node;
@@ -108,7 +108,7 @@ main (int argc, char** argv)
 			gint i;
 			GThread *threads[NTHREADS];
 			
-			data.mutex = g_mutex_new ();
+			g_mutex_init (& (data.mutex));
 			data.thread_priv = g_private_new (g_free);
 			data.doc = doc;
 			data.node = NULL;
@@ -131,7 +131,7 @@ main (int argc, char** argv)
 				g_free (priv);
 			}
 			
-			g_mutex_free (data.mutex);
+			g_mutex_clear (& (data.mutex));
 		}
 	}
 	xmlFreeDoc (doc);
@@ -167,11 +167,11 @@ start_thread (ThData *data)
 		xmlChar *prov_name;
 		GdaSqlParser *parser;
 
-		g_mutex_lock (data->mutex);
+		g_mutex_lock (& (data->mutex));
 			
 		if (data->all_done) {
 			ThPrivate *copy = g_new (ThPrivate, 1);
-			g_mutex_unlock (data->mutex);
+			g_mutex_unlock (& (data->mutex));
 			*copy = *thpriv;
 			return copy;
 		}
@@ -185,7 +185,7 @@ start_thread (ThData *data)
 		if (!data->node) {
 			ThPrivate *copy = g_new (ThPrivate, 1);
 			data->all_done = TRUE;
-			g_mutex_unlock (data->mutex);
+			g_mutex_unlock (& (data->mutex));
 			*copy = *thpriv;
 			return copy;
 		}
@@ -199,7 +199,7 @@ start_thread (ThData *data)
 		else
 			parser = g_hash_table_lookup (data->parsers_hash, "");
 
-		g_mutex_unlock (data->mutex);
+		g_mutex_unlock (& (data->mutex));
 		g_thread_yield ();
 
 		/* test elected node */

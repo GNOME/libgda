@@ -30,7 +30,6 @@
 #define WEB_PROVIDER_NAME "Web"
 
 #include <libsoup/soup.h>
-#include <libgda/gda-mutex.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-connection-private.h>
 #include "../reuseable/gda-provider-reuseable.h"
@@ -41,7 +40,7 @@
 typedef struct {
 	GdaServerProviderConnectionData parent;
 	GdaProviderReuseable *reuseable; /* pointer to GdaProviderReuseable, not inherited! */
-	GdaMutex *mutex; /* protected access */
+	GRecMutex mutex; /* protected access */
 
 	gchar *server_id; /* PostgreSQL, MySQL, ... */
 	gchar *server_version; /* native representation */

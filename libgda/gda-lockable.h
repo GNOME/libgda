@@ -47,7 +47,7 @@ struct _GdaLockableIface {
  * @short_description: Interface for locking objects in a multi threaded environment
  * @title: GdaLockable
  * @stability: Stable
- * @see_also: #GdaMutex and #GMutex
+ * @see_also: #GRecMutex and #GMutex
  *
  * This interface is implemented by objects which are thread safe (ie. can be used by several threads at
  * the same time). Before using an object from a thread, one has to call gda_lockable_lock() or

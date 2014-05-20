@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,6 @@
 #include <glib-object.h>
 #include "gda-sql-parser.h"
 #include "gda-statement-struct-pspec.h"
-#include <libgda/gda-mutex.h>
 
 G_BEGIN_DECLS
 
@@ -43,9 +42,9 @@ typedef struct {
 } TokenizerContext;
 
 struct _GdaSqlParserPrivate {
-	GdaMutex *mutex;
- 	gchar    *sql;
-	GSList   *parsed_statements;
+	GRecMutex  mutex;
+	gchar     *sql;
+	GSList    *parsed_statements;
 
 	/* parser */
 	void     *lemon_delimiter;

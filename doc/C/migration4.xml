@@ -72,7 +72,7 @@
     </para>
     </sect2>
 
-    <sect2><title>API changes</title>
+    <sect2 id="migration-4-cnc-api-changes"><title>API changes</title>
     <para>
       This section documents most of the API changes for the <link linkend="GdaConnection">GdaConnection</link> object.
       <itemizedlist>
@@ -86,15 +86,19 @@
         <listitem><para>The gda_connection_internal_get_provider_data() has been replaced by
 	<link linkend="gda-connection-internal-get-provider-data-error">gda_connection_internal_get_provider_data_error</link>()</para></listitem>
         <listitem><para>The <link linkend="gda-server-operation-get-sql-identifier-at">gda_server_operation_get_sql_identifier_at()</link> and <link linkend="gda-server-operation-get-sql-identifier-at-path">gda_server_operation_get_sql_identifier_at_path()</link> now have an extra argument for errors</para></listitem>
-        <listitem><para>The </para></listitem>
-        <listitem><para>The </para></listitem>
-        <listitem><para>The </para></listitem>
-        <listitem><para>The </para></listitem>
       </itemizedlist>
     </para>
     </sect2>
   </sect1>
 
+  <sect1><title>API changes</title>
+    <para>Version 6.0 introduced some API changes which are listed below and in the section about
+    <link linkend="migration-4-cnc-api-changes">GdaConnection's API changes</link>.
+    <itemizedlist>
+      <listitem><para>GdaMutex has been removed, being redundant with GRecMutex</para></listitem>
+    </itemizedlist>
+    </para>
+  </sect1>
 
   <sect1><title>Multi threading and asynchronicity</title>
   <para>

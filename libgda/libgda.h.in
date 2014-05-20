@@ -88,8 +88,6 @@
 
 #include <libgda/gda-meta-store.h>
 
-#include <libgda/gda-mutex.h>
-
 G_BEGIN_DECLS
 
 /**

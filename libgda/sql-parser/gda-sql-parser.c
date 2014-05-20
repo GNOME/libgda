@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
@@ -235,7 +235,7 @@ gda_sql_parser_init (GdaSqlParser *parser)
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 
 	parser->priv = g_new0 (GdaSqlParserPrivate, 1);
-	parser->priv->mutex = gda_mutex_new ();
+	g_rec_mutex_init (& (parser->priv->mutex));
 	parser->priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
 	if (klass->delim_alloc)
 		parser->priv->lemon_delimiter = klass->delim_alloc ((void*(*)(size_t)) g_malloc);
@@ -327,7 +327,7 @@ gda_sql_parser_finalize (GObject *object)
 
 		g_array_free (parser->priv->passed_tokens, TRUE);
 
-		gda_mutex_free (parser->priv->mutex);
+		g_rec_mutex_clear (& (parser->priv->mutex));
 		g_free (parser->priv);
 		parser->priv = NULL;
 	}
@@ -347,7 +347,7 @@ gda_sql_parser_set_property (GObject *object,
 
 	parser = GDA_SQL_PARSER (object);
 	if (parser->priv) {
-		gda_mutex_lock (parser->priv->mutex);
+		g_rec_mutex_lock (& (parser->priv->mutex));
 		switch (param_id) {
 		case PROP_FLAVOUR:
 			parser->priv->flavour = g_value_get_int (value);
@@ -384,7 +384,7 @@ gda_sql_parser_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-		gda_mutex_unlock (parser->priv->mutex);
+		g_rec_mutex_unlock (& (parser->priv->mutex));
 	}
 }
 
@@ -454,7 +454,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	if (!sql)
 		return NULL;
 
-	gda_mutex_lock (parser->priv->mutex);
+	g_rec_mutex_lock (& (parser->priv->mutex));
 
 	if (remain)
 		*remain = NULL;
@@ -652,7 +652,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 
 	parser->priv->mode = parse_mode;
 
-	gda_mutex_unlock (parser->priv->mutex);
+	g_rec_mutex_unlock (& (parser->priv->mutex));
 
 	return stmt;
 }
@@ -699,7 +699,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	if (!sql)
 		return batch;
 
-	gda_mutex_lock (parser->priv->mutex);
+	g_rec_mutex_lock (& (parser->priv->mutex));
 
 	int_sql = sql;
 	while (int_sql && allok) {
@@ -743,7 +743,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 		batch = NULL;
 	}
 
-	gda_mutex_unlock (parser->priv->mutex);
+	g_rec_mutex_unlock (& (parser->priv->mutex));
 
 	return batch;
 }
@@ -1699,7 +1699,7 @@ gda_sql_parser_lock (GdaLockable *lockable)
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
 	g_return_if_fail (parser->priv);
 
-	gda_mutex_lock (parser->priv->mutex);
+	g_rec_mutex_lock (& (parser->priv->mutex));
 }
 
 static gboolean
@@ -1708,7 +1708,7 @@ gda_sql_parser_trylock (GdaLockable *lockable)
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
 	g_return_val_if_fail (parser->priv, FALSE);
 
-	return gda_mutex_trylock (parser->priv->mutex);
+	return g_rec_mutex_trylock (& (parser->priv->mutex));
 }
 
 static void
@@ -1717,5 +1717,5 @@ gda_sql_parser_unlock (GdaLockable *lockable)
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
 	g_return_if_fail (parser->priv);
 
-	gda_mutex_unlock (parser->priv->mutex);
+	g_rec_mutex_unlock (& (parser->priv->mutex));
 }
