@@ -873,7 +873,7 @@ gda_connection_get_main_context (GdaConnection *cnc, GThread *thread)
 	else {
 		g_mutex_lock (&global_mutex);
 		if (all_context_hash)
-			context = g_hash_table_lookup (cnc->priv->context_hash, thread);
+			context = g_hash_table_lookup (all_context_hash, thread);
 		g_mutex_unlock (&global_mutex);
 	}
 
