@@ -282,7 +282,12 @@ _gda_mysql_provider_meta_init (GdaServerProvider  *provider)
 #endif
 }
 
-#define GDA_MYSQL_GET_REUSEABLE_DATA(cdata) ((cdata) ? * ((GdaMysqlReuseable**) (cdata)) : NULL)
+typedef struct {
+	GdaServerProviderConnectionData parent;
+        gpointer reuseable;
+} CncDataGen;
+
+#define GDA_MYSQL_GET_REUSEABLE_DATA(cdata) ((cdata) ? (GdaMysqlReuseable*) (((CncDataGen*) (cdata))->reuseable) : NULL)
 
 gboolean
 _gda_mysql_meta__info (G_GNUC_UNUSED GdaServerProvider  *prov,

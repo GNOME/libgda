@@ -315,7 +315,12 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 #endif
 }
 
-#define GDA_POSTGRES_GET_REUSEABLE_DATA(cdata) ((cdata) ? * ((GdaPostgresReuseable**) (cdata)) : NULL)
+typedef struct {
+	GdaServerProviderConnectionData parent;
+        gpointer reuseable;
+} CncDataGen;
+
+#define GDA_POSTGRES_GET_REUSEABLE_DATA(cdata) ((cdata) ? (GdaPostgresReuseable*) (((CncDataGen*) (cdata))->reuseable) : NULL)
 
 gboolean
 _gda_postgres_meta__info (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
