@@ -2,7 +2,7 @@
  * Copyright (C) 2000 Akira Tagoh <tagoh@src.gnome.org>
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
@@ -59,9 +59,25 @@
 
 #ifdef HAVE_LIBSECRET
   #include <libsecret/secret.h>
+  const SecretSchema *_gda_secret_get_schema (void) G_GNUC_CONST;
+  #define GDA_SECRET_SCHEMA _gda_secret_get_schema ()
+  #define SECRET_LABEL "DSN"
+  const SecretSchema *
+  _gda_secret_get_schema (void)
+  {
+	  static const SecretSchema the_schema = {
+		  "org.gnome-db.DSN", SECRET_SCHEMA_NONE,
+		  {
+			  {  "DSN", SECRET_SCHEMA_ATTRIBUTE_STRING },
+			  {  "NULL", 0 },
+		  }
+	  };
+	  return &the_schema;
+  }
 #else
   #ifdef HAVE_GNOME_KEYRING
   #include <gnome-keyring.h>
+  #define SECRET_LABEL "server"
   #endif
 #endif
 
@@ -74,7 +90,7 @@ gda_dsn_info_get_type (void)
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
-        if (type == 0)
+		if (type == 0)
 			type = g_boxed_type_register_static ("GdaDsnInfo",
 							     (GBoxedCopyFunc) gda_dsn_info_copy,
 							     (GBoxedFreeFunc) gda_dsn_info_free);
@@ -520,9 +536,9 @@ load_config_file (const gchar *file, gboolean is_system)
 				if (sync_keyring) {
 					GError *error = NULL;
 					gchar *auth = NULL;
-					auth = secret_password_lookup_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+					auth = secret_password_lookup_sync (GDA_SECRET_SCHEMA,
 									    NULL, &error,
-									    "server", info->name, NULL);
+									    SECRET_LABEL, info->name, NULL);
 					if (auth) {
 						/*g_print ("Loaded sync. auth info for '%s': %s\n", info->name, auth);*/
 						info->auth_string = g_strdup (auth);
@@ -535,10 +551,10 @@ load_config_file (const gchar *file, gboolean is_system)
 					}
 				}
 				else {
-					secret_password_lookup (SECRET_SCHEMA_COMPAT_NETWORK,
+					secret_password_lookup (GDA_SECRET_SCHEMA,
 								NULL, (GAsyncReadyCallback) secret_password_found_cb,
 								g_strdup (info->name),
-								"server", info->name, NULL);
+								SECRET_LABEL, info->name, NULL);
 				}
 			}
 #else
@@ -548,7 +564,7 @@ load_config_file (const gchar *file, gboolean is_system)
 					GnomeKeyringResult res;
 					gchar *auth = NULL;
 					res = gnome_keyring_find_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, &auth,
-										"server", info->name, NULL);
+										SECRET_LABEL, info->name, NULL);
 					if (res == GNOME_KEYRING_RESULT_OK) {
 						/*g_print ("Loaded sync. auth info for '%s': %s\n", info->name, auth);*/
 						info->auth_string = g_strdup (auth);
@@ -564,7 +580,7 @@ load_config_file (const gchar *file, gboolean is_system)
 					gnome_keyring_find_password (GNOME_KEYRING_NETWORK_PASSWORD,
 								     (GnomeKeyringOperationGetStringCallback) password_found_cb,
 								     tmp, g_free,
-								     "server", tmp, NULL);
+								     SECRET_LABEL, tmp, NULL);
 				}
 			}
   #endif
@@ -1164,15 +1180,15 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	if (! info->is_system && info->auth_string) {
 		/* save to keyring */
 		gchar *tmp;
-		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
+		tmp = g_strdup_printf (_("Gnome-DB: authentication for the '%s' DSN"), info->name);
 		if (sync_keyring) {
 			gboolean res;
 			GError *error = NULL;
-			res = secret_password_store_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+			res = secret_password_store_sync (GDA_SECRET_SCHEMA,
 							  SECRET_COLLECTION_DEFAULT,
 							  tmp, info->auth_string,
 							  NULL, &error,
-							  "server", info->name, NULL);
+							  SECRET_LABEL, info->name, NULL);
 			if (!res) {
 				gda_log_error (_("Couldn't save authentication information for DSN '%s': %s"),
 					       info->name,
@@ -1181,13 +1197,13 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			}
 		}
 		else {
-			secret_password_store (SECRET_SCHEMA_COMPAT_NETWORK,
+			secret_password_store (GDA_SECRET_SCHEMA,
 					       SECRET_COLLECTION_DEFAULT,
 					       tmp, info->auth_string,
 					       NULL,
 					       (GAsyncReadyCallback) secret_password_stored_cb,
 					       g_strdup (info->name),
-					       "server", info->name, NULL);
+					       SECRET_LABEL, info->name, NULL);
 		}
 		g_free (tmp);
 	}
@@ -1196,12 +1212,12 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	if (! info->is_system && info->auth_string) {
 		/* save to keyring */
 		gchar *tmp;
-		tmp = g_strdup_printf (_("Authentication for the '%s' DSN"), info->name);
+		tmp = g_strdup_printf (_("Gnome-DB: authentication for the '%s' DSN"), info->name);
 		if (sync_keyring) {
 			GnomeKeyringResult res;
 			res = gnome_keyring_store_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, GNOME_KEYRING_DEFAULT,
 								 tmp, info->auth_string,
-								 "server", info->name, NULL);
+								 SECRET_LABEL, info->name, NULL);
 			password_stored_cb (res, info->name);
 		}
 		else {
@@ -1211,7 +1227,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 						      GNOME_KEYRING_DEFAULT,
 						      tmp, info->auth_string,
 						      (GnomeKeyringOperationDoneCallback) password_stored_cb, tmp1, g_free,
-						      "server", info->name, NULL);
+						      SECRET_LABEL, info->name, NULL);
 		}
 		g_free (tmp);
 	}
@@ -1306,9 +1322,9 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 		/* remove from keyring */
 		if (sync_keyring) {
 			GError *error = NULL;
-			if (! secret_password_clear_sync (SECRET_SCHEMA_COMPAT_NETWORK,
+			if (! secret_password_clear_sync (GDA_SECRET_SCHEMA,
 							  NULL, &error,
-							  "server", info->name, NULL)) {
+							  SECRET_LABEL, info->name, NULL)) {
 				gda_log_error (_("Couldn't delete authentication information for DSN '%s': %s"),
 					       info->name,
 					       error && error->message ? error->message : _("No detail"));
@@ -1316,10 +1332,10 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 			}
 		}
 		else {
-			secret_password_clear (SECRET_SCHEMA_COMPAT_NETWORK,
+			secret_password_clear (GDA_SECRET_SCHEMA,
 					       NULL, (GAsyncReadyCallback) secret_password_deleted_cb,
 					       g_strdup (info->name),
-					       "server", info->name, NULL);
+					       SECRET_LABEL, info->name, NULL);
 		}
 	}
 #else
@@ -1329,7 +1345,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 		if (sync_keyring) {
 			GnomeKeyringResult res;
 			res = gnome_keyring_delete_password_sync (GNOME_KEYRING_NETWORK_PASSWORD, GNOME_KEYRING_DEFAULT,
-								  "server", info->name, NULL);
+								  SECRET_LABEL, info->name, NULL);
 			password_deleted_cb (res, info->name);
 		}
 		else {
@@ -1338,7 +1354,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 			gnome_keyring_delete_password (GNOME_KEYRING_NETWORK_PASSWORD,
 						       (GnomeKeyringOperationDoneCallback) password_deleted_cb,
 						       tmp, g_free,
-						       "server", info->name, NULL);
+						       SECRET_LABEL, info->name, NULL);
 		}
 	}
   #endif
