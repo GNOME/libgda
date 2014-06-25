@@ -23,7 +23,7 @@
 #include <glib/gi18n-lib.h>
 
 #define DEBUG_NOTIFICATION
-//#undef DEBUG_NOTIFICATION
+#undef DEBUG_NOTIFICATION
 
 #ifdef DEBUG_NOTIFICATION
 static gchar *
@@ -77,10 +77,11 @@ typedef struct _SigClosure SigClosure;
 struct _SigClosure
 {
         GClosure      closure;
+	GMutex        mutex;
 	GMainContext *context; /* ref held */
         gulong        ext_handler_id;
 
-        GCallback     callback;
+        GClosure     *rcl; /* real closure, used in the main loop context */
 
 	ITSignaler   *signal_its;
 	ITSignaler   *return_its;
@@ -92,10 +93,13 @@ sig_closure_finalize (G_GNUC_UNUSED gpointer notify_data, GClosure *closure)
 {
         SigClosure *sig_closure = (SigClosure *)closure;
 
-	g_print ("%s()\n", __FUNCTION__);
 	itsignaler_remove (sig_closure->signal_its, sig_closure->context, sig_closure->its_add_id);
 	itsignaler_unref (sig_closure->signal_its);
 	itsignaler_unref (sig_closure->return_its);
+	if (sig_closure->rcl)
+		g_closure_unref (sig_closure->rcl);
+	g_mutex_clear (& (sig_closure->mutex));
+
 	g_main_context_unref (sig_closure->context);
 }
 
@@ -104,15 +108,14 @@ typedef struct {
         GValue *return_value;
         guint n_param_values;
         GValue *param_values;
-        gpointer invocation_hint; /* FIXME: problem here to copy value! */
-
-        GClosure *rcl; /* real closure, used in the main loop context */
+        gpointer invocation_hint; /* value is never copied */
+	GClosure *rcl;
 } PassedData;
 
 /*
  * This function is called in the thread which emitted the signal
  *
- * In it we pack the data, push it through the ITSignaler to the thead from which the callback will be called, and
+ * In it we pack the data, push it through the ITSignaler to the thread in which the callback will be called, and
  * wait for the result before returning.
  */
 static void
@@ -141,14 +144,20 @@ sig_closure_marshal (GClosure *closure,
                 g_print ("Th%p   Return value expected: none\n", g_thread_self());
 #endif
 
+	gboolean is_owner;
+	is_owner = g_main_context_is_owner (sig_closure->context);
         if (g_main_context_acquire (sig_closure->context)) {
+		/* warning about not owner context */
+		if (!is_owner)
+			g_warning (_("The GMainContext passed when gda_signal_connect() was called is not owned by any thread, you may "
+				     "expect some undesired behaviours, use g_main_context_acquire()"));
+
                 /* the signal has to be propagated in the same thread */
                 GClosure *rcl;
-                rcl = g_cclosure_new (sig_closure->callback, closure->data, NULL);
-                g_closure_set_marshal (rcl, g_cclosure_marshal_generic);
+		rcl = g_closure_ref (sig_closure->rcl);
                 g_closure_invoke (rcl, return_value, n_param_values, param_values, invocation_hint);
                 g_closure_unref (rcl);
-                g_main_context_release (sig_closure->context);
+		g_main_context_release (sig_closure->context);
         }
         else {
 		PassedData data;
@@ -156,15 +165,19 @@ sig_closure_marshal (GClosure *closure,
                 data.invocation_hint = invocation_hint;
                 data.return_value = return_value;
 		data.param_values = (GValue*) param_values;
-                data.rcl = g_cclosure_new (sig_closure->callback, closure->data, NULL);
-                g_closure_set_marshal (data.rcl, g_cclosure_marshal_generic);
+		data.rcl = g_closure_ref (sig_closure->rcl);
+
+		g_mutex_lock (& (sig_closure->mutex)); /* This mutex ensures that push_notification() and
+							* the following pop_notification() are treated as a single atomic operation
+							* in case there are some return values */
 		if (itsignaler_push_notification (sig_closure->signal_its, &data, NULL)) {
 			gpointer rdata;
 			rdata = itsignaler_pop_notification (sig_closure->return_its, -1);
 			g_assert (rdata == &data);
 		}
 		else
-			g_warning ("Internal Gda Connect error, the signal will not be propagated, please report the bug");
+			g_warning ("Internal Gda connect error, the signal will not be propagated, please report the bug");
+		g_mutex_unlock (& (sig_closure->mutex));
 
 		g_closure_unref (data.rcl);
         }
@@ -190,14 +203,12 @@ propagate_signal (ITSignaler *its, SigClosure *sig_closure)
 	return TRUE; /* don't remove the source! */
 }
 
-
-/*
- * FIXME: what is @data for ?
- */
 static SigClosure *
-sig_closure_new (gpointer instance, GMainContext *context, gpointer data)
+sig_closure_new (gpointer instance, GMainContext *context, gboolean swapped, GCallback c_handler, gpointer data)
 {
 	g_assert (context);
+	g_assert (instance);
+	g_assert (c_handler);
 
 	ITSignaler *its1, *its2;
 	its1 = itsignaler_new ();
@@ -215,9 +226,15 @@ sig_closure_new (gpointer instance, GMainContext *context, gpointer data)
         sig_closure = (SigClosure *) closure;
 	sig_closure->context = g_main_context_ref (context);
         sig_closure->ext_handler_id = 0;
-        sig_closure->callback = NULL;
 	sig_closure->signal_its = its1;
 	sig_closure->return_its = its2;
+	g_mutex_init (& (sig_closure->mutex));
+
+	if (swapped)
+		sig_closure->rcl = g_cclosure_new_swap (c_handler, closure->data, NULL);
+	else
+		sig_closure->rcl = g_cclosure_new (c_handler, closure->data, NULL);
+	g_closure_set_marshal (sig_closure->rcl, g_cclosure_marshal_generic);
 
 	sig_closure->its_add_id = itsignaler_add (sig_closure->signal_its, context,
 						  (ITSignalerFunc) propagate_signal, sig_closure, NULL);
@@ -244,32 +261,35 @@ ulong_equal (gconstpointer a, gconstpointer b)
 
 
 /**
- * gda_connect:
+ * gda_signal_connect:
  * @instance: the instance to connect to
  * @detailed_signal: a string of the form "signal-name::detail"
  * @c_handler: the GCallback to connect
  * @data: (allow-none): data to pass to @c_handler, or %NULL
  * @destroy_data: (allow-none): function to destroy @data when not needed anymore, or %NULL
- * @connect_flags:
+ * @connect_flags: a combination of #GConnectFlags.
  * @context: (allow-none): the #GMainContext in which signals will actually be treated, or %NULL for the default one
  *
- * Connects a GCallback function to a signal for a particular object.
+ * Connects a GCallback function to a signal for a particular object. The difference with g_signal_connect() is that the
+ * callback will be called from withing the thread which is the owner of @context. If needed you may have to use g_main_context_acquire()
+ * to ensure a specific thread is the owner of @context.
  *
  * Returns: the handler id, or %0 if an error occurred
  *
  * Since: 6.0
  */
 gulong
-gda_connect (gpointer instance,
-	     const gchar *detailed_signal,
-	     GCallback c_handler,
-	     gpointer data,
-	     GClosureNotify destroy_data,
-	     GConnectFlags connect_flags,
-	     GMainContext *context)
+gda_signal_connect (gpointer instance,
+		    const gchar *detailed_signal,
+		    GCallback c_handler,
+		    gpointer data,
+		    GClosureNotify destroy_data,
+		    GConnectFlags connect_flags,
+		    GMainContext *context)
 {
 	static gulong ids = 1;
         g_return_val_if_fail (instance, 0);
+        g_return_val_if_fail (c_handler, 0);
 
         guint signal_id;
         if (! g_signal_parse_name (detailed_signal, G_TYPE_FROM_INSTANCE (instance), &signal_id, NULL, FALSE)) {
@@ -283,7 +303,8 @@ gda_connect (gpointer instance,
                 context = g_main_context_ref_thread_default ();
 
         SigClosure *sig_closure;
-        sig_closure = sig_closure_new (instance, context, data);
+        sig_closure = sig_closure_new (instance, context,
+				       connect_flags & G_CONNECT_SWAPPED, c_handler, data);
 	g_main_context_unref (context);
 	if (!sig_closure)
 		return 0;
@@ -292,10 +313,12 @@ gda_connect (gpointer instance,
         g_signal_query (signal_id, &query);
         g_assert (query.signal_id == signal_id);
 
-        gulong hid;
-        hid = g_signal_connect_closure (instance, detailed_signal, (GClosure *) sig_closure, 0);
+        gulong hid; /* REM: we don't need to keep a reference to @hid because when the closure is destroyed,
+		     * all the signals are "cleared", see gobject/gsignal.c in GLib's code
+		     */
+        hid = g_signal_connect_closure (instance, detailed_signal, (GClosure *) sig_closure,
+					(connect_flags & G_CONNECT_AFTER) ? TRUE : FALSE);
         g_closure_sink ((GClosure *) sig_closure);
-        sig_closure->callback = c_handler;
 
         if (hid > 0) {
                 if (!handlers_hash)
@@ -314,9 +337,19 @@ gda_connect (gpointer instance,
 
 }
 
+/**
+ * gda_signal_handler_disconnect:
+ * @instance: the instance to disconnect from
+ * @handler_id: the signal handler, as returned by gda_signal_connect()
+ *
+ * Disconnect a callback using the signal handler, see gda_signal_connect()
+ */
 void
-gda_disconnect (gpointer instance, gulong handler_id, GMainContext *context)
+gda_signal_handler_disconnect (gpointer instance, gulong handler_id)
 {
+	g_return_if_fail (instance);
+	g_return_if_fail (handler_id > 0);
+
 	SigClosure *sig_closure = NULL;
 	if (handlers_hash)
 		sig_closure = g_hash_table_lookup (handlers_hash, &handler_id);

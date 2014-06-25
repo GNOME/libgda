@@ -897,7 +897,7 @@ void its_source_finalize (GSource *source)
 /**
  * itsignaler_add:
  * @its: a #ITSignaler object
- * @context: (allow-none): a GMainContext (if NULL, the default context will be used).
+ * @context: (allow-none): a GMainContext (if %NULL, the default context will be used).
  * @func: callback function to be called when a notification is ready
  * @data: data to pass to @func
  * @notify: (allow-none): a function to call when data is no longer in use, or NULL.

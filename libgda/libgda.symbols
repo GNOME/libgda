@@ -86,6 +86,7 @@
 	gda_config_list_dsn
 	gda_config_list_providers
 	gda_config_remove_dsn
+	gda_signal_connect
 	gda_connection_add_event
 	gda_connection_add_event_string
 	gda_connection_add_prepared_statement
@@ -340,6 +341,7 @@
 	gda_default_escape_string
 	gda_default_get_type
 	gda_default_unescape_string
+	gda_signal_handler_disconnect
 	gda_dsn_info_copy
 	gda_dsn_info_free
 	gda_dsn_info_get_type

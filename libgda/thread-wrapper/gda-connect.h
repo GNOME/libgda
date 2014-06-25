@@ -26,30 +26,32 @@ G_BEGIN_DECLS
 
 /**
  * SECTION:gda-connect
- * @short_description: Connect signals to objects and "forward" them to be handled from a specific #GMainContext
+ * @short_description: Inter thread signal propagation
  * @title: GdaConnect
  * @stability: Stable
  * @see_also:
  *
- * The purpose of the #GdaConnect object is to allow one to connect to a signal emitted by an object and be sure that
- * the acutal signal handling will occur _only_ when running a specific #GMainContext.
+ * The purpose of the gda_signal_connect() is to allow one to connect to a signal emitted by an object and be sure that
+ * the acutal signal handling will occur _only_ when running a specific #GMainContext. The gda_signal_handler_disconnect() actually
+ * disconnects the handler.
  *
  * Use these functions for exemple when you need to handle signals from objects which are emitted from within a thread
  * which is not the main UI thread.
  *
- * The #GdaConnect implements its own locking mechanism and can safely be used from multiple
+ * These function implement their own locking mechanism and can safely be used from multiple
  * threads at once without needing further locking.
  */
 
-gulong gda_connect (gpointer instance,
-		    const gchar *detailed_signal,
-		    GCallback c_handler,
-		    gpointer data,
-		    GClosureNotify destroy_data,
-		    GConnectFlags connect_flags,
-		    GMainContext *context);
+gulong gda_signal_connect    (gpointer instance,
+			      const gchar *detailed_signal,
+			      GCallback c_handler,
+			      gpointer data,
+			      GClosureNotify destroy_data,
+			      GConnectFlags connect_flags,
+			      GMainContext *context);
 
-void   gda_disconnect (gpointer instance, gulong handler_id, GMainContext *context);
+void   gda_signal_handler_disconnect (gpointer instance,
+				      gulong handler_id);
 
 G_END_DECLS
 

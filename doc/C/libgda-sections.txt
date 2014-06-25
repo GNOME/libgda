@@ -1921,6 +1921,13 @@ gda_worker_set_callback
 </SECTION>
 
 <SECTION>
+<FILE>gda-connect</FILE>
+<TITLE>Inter thread signal propagation</TITLE>
+gda_signal_connect
+gda_signal_handler_disconnect
+</SECTION>
+
+<SECTION>
 <FILE>gda-repetitive-statement</FILE>
 <TITLE>GdaRepetitiveStatement</TITLE>
 GdaRepetitiveStatement

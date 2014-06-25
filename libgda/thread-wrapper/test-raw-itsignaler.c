@@ -150,7 +150,7 @@ main (int argc, char** argv)
 	if (counter == MAX_ITERATIONS * 2) {
 		gdouble duration;
 		duration = g_timer_elapsed (timer, NULL);
-		g_print ("Test Ok, got %u notification in %0.5f s\n", MAX_ITERATIONS, duration);
+		g_print ("Test Ok, got %u notification in %0.5f s\n", MAX_ITERATIONS * 2, duration);
 		g_timer_destroy (timer);
 		return EXIT_SUCCESS;
 	}

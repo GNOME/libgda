@@ -1116,6 +1116,7 @@ g_object_unref (store);
       <title>Multi threading</title>
       <xi:include href="xml/gda-lockable.xml"/>
       <xi:include href="xml/gda-worker.xml"/>
+      <xi:include href="xml/gda-connect.xml"/>
     </chapter>
 
     <chapter id="misc">
