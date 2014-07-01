@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-06-16 09:23+0000\n"
-"PO-Revision-Date: 2014-06-16 21:52+0100\n"
+"POT-Creation-Date: 2014-07-01 09:23+0000\n"
+"PO-Revision-Date: 2014-07-01 20:36+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -3301,12 +3301,22 @@ msgstr "Izjava UPDATE nima enakega števila ciljnih stolpcev v izrazu"
 msgid "UPDATE statement does not have any target columns to update"
 msgstr "Izjava UPDATE nima določenih ciljnih stolpcev za posodabljanje"
 
-#: ../libgda/thread-wrapper/gda-connect.c:276
+#: ../libgda/thread-wrapper/gda-connect.c:152
+msgid ""
+"The GMainContext passed when gda_signal_connect() was called is not owned by "
+"any thread, you may expect some undesired behaviours, use "
+"g_main_context_acquire()"
+msgstr ""
+"Možnost GMainContext, ki je bila izvedena ob klicu gda_signal_connect() ni v "
+"lasti nobene niti. Pričakovati je nenavadno obnašanje izvajanja. Uporabite "
+"možnost g_main_context_acquire()."
+
+#: ../libgda/thread-wrapper/gda-connect.c:296
 #, c-format
 msgid "Could not find signal named \"%s\""
 msgstr "Ni mogoče najti signala z imenom \"%s\""
 
-#: ../libgda/thread-wrapper/gda-connect.c:326
+#: ../libgda/thread-wrapper/gda-connect.c:359
 #, c-format
 msgid "Could not find handler %lu"
 msgstr "Ni mogoče najti ročnika %lu"
