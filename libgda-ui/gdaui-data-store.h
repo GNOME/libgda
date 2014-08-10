@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -74,9 +74,41 @@ struct _GdauiDataStoreClass
  * @Image:
  * @see_also:
  *
- * The #GdauiDataStore object implements the #GtkTreeModel interface
- * on top of a #GdaDataModel to be able to display its contents
- * in a #GtkTreeView.
+ * The #GdauiDataStore object implements the #GtkTreeModel interface on top of a #GdaDataModel to be able to display its contents
+ * in a #GtkTreeView (however you should not directly a #GdauiTreeStore with a #GtkTreeView but use
+ * a #GdauiRauGrid or #GdauiGrid instead, see explanatione below). You should probably not have to create you own
+ * #GdauiDataStore, but use the ones returned by gtk_tree_view_get_model() (on a #GdauiRawGrid).
+ *
+ * The values returned by gtk_tree_model_get() are pointers to #GValue which do actually contain the values (i.e.
+ * gtk_tree_model_get() does not return strings, integers, or booleans directly). The returned values are the same as returned
+ * by gda_data_model_get_value_at() or similar functions (i.e. there can be NULL values, or errors).
+ * Here is for example a correct way to use the #GdauiDataStore object (assuming for example that column 0 is supposed to hold a string):
+ *
+ * <programlisting><![CDATA[GMainContext *context;
+ * GdauiDataStore *store;
+ * GtkTreeIter iter;
+ *
+ * store = ...
+ * if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter)) {
+ *     GValue *value;
+ *     gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &value, -1);
+ *     if (value == NULL) {
+ *         // an error occured while getting the value, see gda_data_model_get() for details
+ *     }
+ *     else if (G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+ *         gchar *str;
+ *         str = g_value_get_string (value);
+ *         ...
+ *     }
+ *     else if (GDA_VALUE_HOLDS_NULL (value)) {
+ *         ...
+ *     }
+ *     else {
+ *         // this should not happen if column 0 is supposed to hold a string
+ *         g_assert_not_reached ();
+ *     }
+ * }
+ * ]]></programlisting>
  */
 
 GType           gdaui_data_store_get_type             (void) G_GNUC_CONST;
