@@ -20,7 +20,7 @@
   <code>Table</code> class is an implementation of <code>DbTable</code> interface. It uses GDA to get access to a database's table description.
   </p>
   <p>
-  In order to load data, you need to set a <code>Gda.Connection</code> and a table's name. Then <code>update()</code> method will introspect table information using GDA's MetaStore object and executing SELECT commands to retrive meta data to strore store it, you don't need to call update() again unless your table definition has changed.
+  In order to load data, you need to set a <code>Gda.Connection</code> and a table's name. Then <code>update()</code> method will introspect table information using GDA's MetaStore object and executing <code>SELECT</code> commands to retrive meta data to strore store it, you don't need to call <code>update()</code> again unless your table definition has changed.
   </p>
   <section id="table-uml">
   <title>Table class UML definition</title>
@@ -91,10 +91,10 @@
   </code>
   </listing>
   <p>
-  In the above code a new table will be added. Create a new <code>Table</code> object, set its name and connection, use <code>Table.set_field()</code> to set column definitions. You must create <code>DbFieldInfo</code> objects, setting its name, type and attributes is enough to be set in a table. If your column must be a PRIMARY KEY you must set <code>DbFieldInfo.attributes</code> to <code>DbFieldInfo.Attribute.PRIMARY_KEY</code>; if it is autoincrement key you must use <code>|</code> operator to add a <code>DbFieldInfo.Attribute.AUTO_INCREMENT</code> attribute.
+  In the above code a new table will be added. Create a new <code>Table</code> object, set its name and connection, use <code>Table.set_field()</code> to set column definitions. You must create <code>DbFieldInfo</code> objects, setting its name, type and attributes is enough to be set in a table. If your column must be a <code>PRIMARY_KEY</code> you must set <code>DbFieldInfo.attributes</code> to <code>DbFieldInfo.Attribute.PRIMARY_KEY</code>; if it is autoincrement key you must use <code>|</code> operator to add a <code>DbFieldInfo.Attribute.AUTO_INCREMENT</code> attribute.
   </p>
   <p>
-  If the column will refer to a column in other table as a foreign key you must set <code>DbFieldInfo.fkey</code>. ForeignKey object is used for column's foreign keys.
+  If the column will refer to a column in other table as a foreign key you must set <code>DbFieldInfo.fkey</code>. <code>DbFieldInfo.ForeignKey</code> object is used for column's foreign keys.
   </p>
   </section>
   <section>
