@@ -211,6 +211,9 @@ itsignaler_reset (ITSignaler *its)
 }
 #endif
 
+/*
+ * This function requires that @its be locked using itsignaler_lock()
+ */
 static void
 itsignaler_free (ITSignaler *its)
 {
@@ -244,21 +247,17 @@ _itsignaler_unref (ITSignaler *its, gboolean give_to_bg)
 	g_print ("[I] ITSignaler %p --: %u\n", its, its->ref_count);
 #endif
 	if (its->ref_count == 0) {
-		itsignaler_unlock (its);
-
 #ifndef NOBG
 		/* destroy or store as spare */
 		if (!its->broken && give_to_bg) {
 			itsignaler_reset (its);
 			its->ref_count++;
 			bg_set_spare_its (its);
-		}
-		else {
 			itsignaler_unlock (its);
-			itsignaler_free (its);
 		}
+		else
+			itsignaler_free (its);
 #else
-		itsignaler_unlock (its);
 		itsignaler_free (its);
 #endif
 	}
