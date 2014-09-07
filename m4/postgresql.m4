@@ -124,7 +124,7 @@ m4_define([_POSTGRES_CHECK_INTERNAL],
 	        for d in $postgres_test_dir
 	        do
 	            AC_MSG_CHECKING([checking for PostgreSQL files in $d])
-		    echo "looking for $d/include/libpq-fe.h -a -f $d/$pg_loclibdir/libpq$postgres_libext"
+		    #echo "looking for $d/include/libpq-fe.h -a -f $d/$pg_loclibdir/libpq$postgres_libext"
 		    if test -a $d/include/libpq-fe.h -a -f $d/$pg_loclibdir/libpq$postgres_libext
 		    then
 			save_CFLAGS="$CFLAGS"

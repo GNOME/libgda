@@ -173,6 +173,7 @@
 	gda_connection_statement_execute_select_fullv
 	gda_connection_statement_prepare
 	gda_connection_statement_to_sql
+	gda_connection_status_get_type
 	gda_connection_string_split
 	gda_connection_supports_feature
 	gda_connection_update_meta_store
