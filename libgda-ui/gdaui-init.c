@@ -411,29 +411,47 @@ init_plugins_hash (void)
 	g_free (file);
 
 	plugin = g_new0 (GdauiPlugin, 1);
-	plugin->plugin_name = "number";
-	plugin->plugin_descr = "Numeric entry";
+	plugin->plugin_name = "integer";
+	plugin->plugin_descr = "Numeric integer entry";
 	plugin->plugin_file = NULL;
-	plugin->nb_g_types = 12;
+	plugin->nb_g_types = 10;
 	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
 	plugin->valid_g_types [0] = G_TYPE_INT64;
 	plugin->valid_g_types [1] = G_TYPE_UINT64;
-	plugin->valid_g_types [2] = G_TYPE_DOUBLE;
 	plugin->valid_g_types [3] = G_TYPE_INT;
-	plugin->valid_g_types [4] = GDA_TYPE_NUMERIC;
-	plugin->valid_g_types [5] = G_TYPE_FLOAT;
-	plugin->valid_g_types [6] = GDA_TYPE_SHORT;
-	plugin->valid_g_types [7] = GDA_TYPE_USHORT;
-	plugin->valid_g_types [8] = G_TYPE_CHAR;
-	plugin->valid_g_types [9] = G_TYPE_UCHAR;
-	plugin->valid_g_types [10] = G_TYPE_ULONG;
-	plugin->valid_g_types [11] = G_TYPE_UINT;
+	plugin->valid_g_types [4] = GDA_TYPE_SHORT;
+	plugin->valid_g_types [5] = GDA_TYPE_USHORT;
+	plugin->valid_g_types [6] = G_TYPE_CHAR;
+	plugin->valid_g_types [7] = G_TYPE_UCHAR;
+	plugin->valid_g_types [8] = G_TYPE_ULONG;
+	plugin->valid_g_types [9] = G_TYPE_UINT;
+	plugin->options_xml_spec = NULL;
+	plugin->entry_create_func = entry_number_create_func;
+	plugin->cell_create_func = cell_textual_create_func;
+	g_hash_table_insert (hash, plugin->plugin_name, plugin);
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-integer.xml", NULL);
+	xmlChar *xml_spec = get_spec_with_isocodes (file);
+	if (xml_spec) {
+		plugin->options_xml_spec = g_strdup ((gchar*) xml_spec);
+		xmlFree (xml_spec);
+	}
+	g_free (file);
+
+	plugin = g_new0 (GdauiPlugin, 1);
+	plugin->plugin_name = "number";
+	plugin->plugin_descr = "Numeric entry";
+	plugin->plugin_file = NULL;
+	plugin->nb_g_types = 3;
+	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
+	plugin->valid_g_types [0] = GDA_TYPE_NUMERIC;
+	plugin->valid_g_types [1] = G_TYPE_FLOAT;
+	plugin->valid_g_types [1] = G_TYPE_DOUBLE;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = entry_number_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-number.xml", NULL);
-	xmlChar *xml_spec = get_spec_with_isocodes (file);
+	xml_spec = get_spec_with_isocodes (file);
 	if (xml_spec) {
 		plugin->options_xml_spec = g_strdup ((gchar*) xml_spec);
 		xmlFree (xml_spec);

@@ -73,6 +73,7 @@ libgda_ui_data_entries_la_SOURCES = \
 xmldir   = $(datadir)/libgda-6.0/ui
 xml_in_files = \
 	gdaui-entry-string.xml.in \
+	gdaui-entry-integer.xml.in \
 	gdaui-entry-number.xml.in
 
 @INTLTOOL_XML_RULE@
