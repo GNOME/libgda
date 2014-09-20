@@ -185,6 +185,7 @@ libgda_sources =  \
 	gda-meta-store-extra.h \
 	gda-meta-struct-private.h \
 	gda-marshal.c \
+	gda-enum-types.c \
 	gda-server-operation-private.h \
 	gda-types.c \
 	gda-types.h \
@@ -226,13 +227,11 @@ s-enum-types-c: @REBUILD@ $(gda_enum_header_files) Makefile
 # Generate the enums source code, with glib-mkenums:
 # This is based on the same Makefile.am stuff in pango:
 libgda_built_headers = gda-marshal.h gda-enum-types.h
-libgda_built_cfiles = gda-enum-types.c
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_6_0_la_OBJECTS): gda-marshal.c $(libgda_built_headers) $(libgda_built_cfiles) keywords_hash.c
+$(OBJECTS) $(libgda_6_0_la_OBJECTS): gda-marshal.c gda-marshal.h gda-enum-types.h gda-enum-types.c keywords_hash.c
 
 libgda_6_0_la_SOURCES = \
-	$(libgda_built_cfiles) \
 	$(libgda_sources)
 
 libgda_6_0_la_LDFLAGS = \
@@ -275,7 +274,7 @@ endif
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda
 gdainclude_HEADERS=$(libgda_built_headers) $(gda_headers) libgda.h
 
-CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
+CLEANFILES = $(libgda_built_headers) \
 	gda-marshal.c \
 	gda-enum-types.h \
 	s-enum-types-h \
@@ -286,7 +285,7 @@ CLEANFILES = $(libgda_built_headers) $(libgda_built_cfiles) \
 	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
 
 dist-hook:
-	cd $(distdir); rm -f $(libgda_built_headers) $(libgda_built_cfiles)
+	cd $(distdir); rm -f $(libgda_built_headers)
 
 xmldir   = $(datadir)/libgda-6.0
 xml_DATA = information_schema.xml
