@@ -262,7 +262,7 @@ build_menu (GtkWidget *mainwin, GtkWidget *top_nb)
 	menuitem1_menu = gtk_menu_new ();
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (menuitem1), menuitem1_menu);
 	
-	mitem = gtk_image_menu_item_new_from_stock ("gtk-quit", accel_group);
+	mitem = gtk_menu_item_new_with_label ("_Quit");
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menuitem1_menu), mitem);
 	g_signal_connect (mitem, "activate",
