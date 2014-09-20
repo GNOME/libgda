@@ -1,0 +1,3183 @@
+# Czech translation for libgda.
+# Copyright (C) 2011 libgda's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libgda package.
+# Marek Černocký <marek@manet.cz>, 2011, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda master\n"
+"POT-Creation-Date: 2013-09-16 19:44+0000\n"
+"PO-Revision-Date: 2013-09-17 18:51+0200\n"
+"Last-Translator: Marek Černocký <marek@manet.cz>\n"
+"Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+msgctxt "_"
+msgid "translator-credits"
+msgstr "Marek Černocký <marek@manet.cz>"
+
+#. (itstool) path: credit/name
+#: C/index.page:6
+msgid "Vivien Malerba"
+msgstr "Vivien Malerba"
+
+#. (itstool) path: page/title
+#: C/index.page:11
+msgid "Gda Browser Help"
+msgstr "Nápověda k prohlížeči gda"
+
+#. (itstool) path: page/p
+#: C/index.page:12
+msgid ""
+"<app>gda-browser</app> is a tool for database administrators: they can "
+"analyse database's schemas to understand how data is organized, run SQL "
+"commands interactively, and in a broader way manage the data contained in "
+"the databases."
+msgstr ""
+"<app>gda-browser</app> je nástroj pro správce databází: mohou analyzovat "
+"databázová schémata, aby získali přehled o struktuře dat, spouštět "
+"interaktivně příkazy SQL a v krajním případě i spravovat data obsažená v "
+"databázích."
+
+#. (itstool) path: page/p
+#: C/index.page:16
+msgid ""
+"Several connections to databases can be opened at once, allowing the user to "
+"work on multiple databases at once (it is also possible to execute commands "
+"on several connections at the same time)."
+msgstr ""
+"Připojení k databázi je možné otevřít několik naráz, takže uživatel může "
+"pracovat na více databázích naráz (lze také provádět příkazy na několika "
+"přípojeních ve stejnou chvíli)."
+
+#. (itstool) path: page/p
+#: C/index.page:19
+msgid ""
+"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
+"connections to databases for which a database driver (provider) exists in "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
+"moment)."
+msgstr ""
+"Protože <app>gda-browser</app> používá knihovnu <app>libgda</app>, dokáže "
+"otevřít připojení ke všem databázím, pro které existuje databázový ovladač "
+"(poskytovatel) v <app>libgda</app> (v současnosti jsou podporovány <link "
+"href=\"http://www.oracle.com\">Oracle</link>, <link href=\"http://www.mysql."
+"org\">MySQL</link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</"
+"link>, <link href=\"http://www.sqlite.org\">SQLite</link>, MS Access (přes "
+"<link href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link> "
+"library), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</link> a "
+"<link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</"
+"link>)."
+
+#. (itstool) path: section/title
+#: C/index.page:29
+msgid "Presentation"
+msgstr "Představení"
+
+#. (itstool) path: section/title
+#: C/index.page:32
+msgid "Perspectives"
+msgstr "Hlediska"
+
+#. (itstool) path: section/title
+#: C/index.page:36
+msgid "Connections management"
+msgstr "Správa připojení"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:33
+msgctxt "_"
+msgid ""
+"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
+msgstr ""
+"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:40
+#| msgid ""
+#| "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
+msgctxt "_"
+msgid ""
+"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
+msgstr ""
+"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:48
+#| msgid ""
+#| "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+msgctxt "_"
+msgid ""
+"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
+msgstr ""
+"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:56
+#| msgid ""
+#| "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
+msgctxt "_"
+msgid ""
+"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
+msgstr ""
+"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
+
+#. (itstool) path: info/title
+#: C/actions.page:5 C/data-manager-perspective.page:5
+#: C/data-manager-xml-syntax.page:5 C/data-manager-source-editor.page:5
+#: C/declaredfk.page:5 C/diagram.page:5 C/features.page:5 C/general-ui.page:5
+#: C/query-execution-perspective.page:5 C/schema-browser-perspective.page:5
+#: C/transactions.page:5 C/table-insert-data.page:5 C/variables.page:5
+#: C/virtual-connections.page:5 C/ldap-browser-perspective.page:5
+#: C/ldap-connections.page:5
+#| msgid "1"
+msgctxt "sort"
+msgid "1"
+msgstr "1"
+
+#. (itstool) path: page/title
+#: C/actions.page:9
+msgid "Actions"
+msgstr "Akce"
+
+#. (itstool) path: page/p
+#: C/actions.page:10
+msgid ""
+"Actions are bits of SQL code which depends on variables and can be executed "
+"from the contextual menu of any data set presented in a grid."
+msgstr ""
+"Akce jsou kousky kódu SQL, který závisí na proměnných a mohou být spouštěny "
+"z kontextové nabídky libovolné datové sady zobrazené v mřížce."
+
+#. (itstool) path: page/p
+#: C/actions.page:14
+msgid ""
+"For example if there is a table \"products\" which lists some kind of "
+"products and a table \"comments\" which lists all the comments left by users "
+"on a product (presumably the \"comments\" table will have a foreign key on "
+"the \"products\" table to reference it)."
+msgstr ""
+"Pokud třeba máme tabulku „vyrobky“, ve které jsou uvedeny nějaké druhy "
+"výrobků a tabulku „komentare“, ve které jsou k jednotlivým výrobkům "
+"komentáře uživatelů (tabulka „komentare“ bude mít nejspíše cizí klíč v "
+"tabulce „vyrobky“, který na ni bude odkazovat)."
+
+#. (itstool) path: page/p
+#: C/actions.page:19
+msgid ""
+"An action can be defined to show all the entries in the \"comments\" table "
+"provided the key is defining a product. Then anytime a product is listed in "
+"a result set, the contextual menu will allow the user to execute this action "
+"and thus display all the comments on the selected product. This situation is "
+"illustrated in the following figures."
+msgstr ""
+"Nějaká akce může být definována za účelem zobrazit všechny záznamy v tabulce "
+"„komentare“, která poskytuje klíč určující výrobek. Kdykoliv je ve výsledné "
+"sadě uveden výrobek, bude kontextová nabídka poskytovat uživateli spuštění "
+"této akce a tak si zobrazí všechny komentáře pro vybraný výrobek. Tato "
+"situace je ilustrována na následujících obrázcích."
+
+#. (itstool) path: page/p
+#: C/actions.page:25
+msgid ""
+"The first step is to define an action, which is just a favorite in the <link "
+"xref=\"query-execution-perspective\">query execution</link> perspective "
+"which is defined as an action: bring up the properties for the favorite, and "
+"make sure the \"Is action\" toggle is checked:"
+msgstr ""
+"Prvním krokem je definovat akci, která není ničím jiným, než oblíbenou "
+"položkou v hledisku <link xref=\"query-execution-perspective\">Provádění "
+"dotazu</link>, která definuje akci: otevřete vlastnosti oblíbené položky a "
+"ujistěte se, že je zaškrtnuto „Jde o akci“:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:31
+msgid "Action - define an action"
+msgstr "Akce – definice akce"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:32
+msgid ""
+"Define the action to list the comments for a product, from the query "
+"execution perspective"
+msgstr ""
+"Definice akce pro vypsání komentářů k výrobku, z hlediska Provádění dotazu"
+
+#. (itstool) path: figure/title
+#: C/actions.page:36
+msgid "Action - display a list of products"
+msgstr "Akce – zobrazení seznamu výrobků"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:37
+msgid ""
+"In the query execution perspective, let's select all the products. Notice "
+"that there are here two defined actions: \"Add comment on product\" and "
+"\"List comments for product\""
+msgstr ""
+"V hledisku Provádění dotazu vyberme všechny výrobky. Všimněte si, že jsou "
+"zde definovány dvě akce: „Přidat komentář k výrobku“ a „Vypsat komentáře k "
+"výrobku“"
+
+#. (itstool) path: page/p
+#: C/actions.page:42
+msgid "Now let's pop up the contextual menu:"
+msgstr "Nyní zobrazme kontextovou nabídku:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:46
+msgid "Action - contextual menu"
+msgstr "Akce – kontextová nabídka"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:47
+msgid ""
+"Pop up the contextual menu and select <guiseq><gui>Execute action</"
+"gui><gui>List comments for product</gui></guiseq>"
+msgstr ""
+"Zobrazena kontextová nabídka s vybranou položkou <guiseq><gui>Provést akci</"
+"gui><gui>Vypsat komentáře k výrobku</gui></guiseq>"
+
+#. (itstool) path: page/p
+#: C/actions.page:50
+msgid ""
+"After a confirmation of the parameters to execute the action, the result is "
+"there:"
+msgstr ""
+"Po potvrzení požadavku na parametr pro spuštění akce zde máme výsledek:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:54
+msgid "Action - executed"
+msgstr "Akce – spuštěna"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:55
+msgid "The action is now executed"
+msgstr "Akce je nyní spuštěna"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:27
+#| msgid ""
+#| "@@image: 'figures/data-man-persp.png'; "
+#| "md5=b4e0678527c03093031dcb3805bb2841"
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-persp.png' "
+"md5='b4e0678527c03093031dcb3805bb2841'"
+msgstr ""
+"external ref='figures/data-man-persp.png' "
+"md5='b4e0678527c03093031dcb3805bb2841'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:53 C/data-manager-perspective.page:93
+#| msgid ""
+#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-mode.png' "
+"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
+msgstr ""
+"external ref='figures/data-man-mode.png' "
+"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:62
+#| msgid ""
+#| "@@image: 'figures/data-man-xmlcompose.png'; "
+#| "md5=fd3ae97c42d58ddbd87404c92b95ee9c"
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-xmlcompose.png' "
+"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
+msgstr ""
+"external ref='figures/data-man-xmlcompose.png' "
+"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:69
+#| msgid ""
+#| "@@image: 'figures/data-man-uicompose.png'; "
+#| "md5=33b1cf9354761dac4ee3f14a9534357a"
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-uicompose.png' "
+"md5='33b1cf9354761dac4ee3f14a9534357a'"
+msgstr ""
+"external ref='figures/data-man-uicompose.png' "
+"md5='33b1cf9354761dac4ee3f14a9534357a'"
+
+#. (itstool) path: page/title
+#: C/data-manager-perspective.page:8
+msgid "The data manager perspective"
+msgstr "Hledisko pro správu dat"
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:9
+msgid ""
+"Use the data manager perspective to navigate through the database's data. To "
+"switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data "
+"Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></"
+"keyseq> shortcut."
+msgstr ""
+"Použijte hledisko správce dat k procházení dat databáze. K přepnutí do "
+"tohoto hlediska použijte nabídku <guiseq><gui>Hledisko</gui><gui>Správce "
+"dat</gui></guiseq> nebo klávesovou zkratku <keyseq><key>Ctrl</key><key>D</"
+"key></keyseq>."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:14
+msgid ""
+"The workflow in this perspective is organized around the definition of one "
+"or more <em>data sources</em> (which selects data in the database) which, "
+"when executed, result in a data set displayed in a tabular view."
+msgstr ""
+"Pracovní postup v tomto hledisku se točí okolo definování jednoho nebo více "
+"<em>zdrojů dat</em> (které vybírají data v databázi), které po spuštění "
+"vrací výsledek v podobě datové sady zobrazené v tabulkovém zobrazení."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:19
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane to keep "
+"favorite data sources set's definitions, and the right pane being the action "
+"area, where each data source is executed and the results presented in a "
+"tabular view."
+msgstr ""
+"Hledisko je vodorovně rozděleno do dvou panelu: v levém panelu jsou uchovány "
+"definice nastavení oblíbených zdrojů dat a pravý panel je oblastí, ve které "
+"se provádí akce, kde je každý zdroj dat spouštěn a prezentovány výsledky v "
+"tabulkovém zobrazení."
+
+#. (itstool) path: figure/title
+#: C/data-manager-perspective.page:25
+msgid "Data manager perspective"
+msgstr "Hledisko správce dat"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:26
+msgid "The data manager perspective, with two data sources"
+msgstr "Hledisko správce dat, se dvěma zdroji dat"
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:29
+msgid ""
+"In the figure above, there are two data sources: one for the 'customers' "
+"table and one for the 'orders' table (which here lists the orders from a "
+"customer), the later data source depending on the former one as there is a "
+"foreign key from the 'orders' table which references the 'customers' table. "
+"The two data sources have been executed and the result is composed of two "
+"tabular views side by side."
+msgstr ""
+"Na předchozím obrázku jsou dva zdroje dat: jeden pro tabulku "
+"„customers“ (zakaznici) a jeden pro tabulku „orders“ (objednavky) (vypisuje "
+"objednávky od zákazníka). Druhý jmenovaný zdroj dat závisí na prvním, "
+"protože má cizí klíč z tabulky „orders“, který odkazuje na tabulku "
+"„customers“. Oba zdroje dat byly spuštěny a výsledek je složen do dvou "
+"zobrazení tabulek vedle sebe."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:36
+msgid ""
+"Because the 'orders' data source depends on the 'customers' data source, its "
+"corresponding view is on the right of the one corresponding to the "
+"'customers' data source. Also when the row selection of the 'customers' view "
+"changes, the whole contents of the 'orders' view is refreshed."
+msgstr ""
+"Protože zdroj dat „orders“ závisí na zdroji dat „customers“, je příslušné "
+"zobrazení napravo od odpovídajícího zdroje dat „customers“. Rovněž funguje, "
+"že když se změní výběr řádku v zobrazení „customers“, aktualizuje se celý "
+"obsah zobrazení „orders“."
+
+#. (itstool) path: section/title
+#: C/data-manager-perspective.page:44
+msgid "Defining data sources"
+msgstr "Definování zdrojů dat"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:45
+msgid ""
+"The simplest data source is a data source which represents all the data from "
+"a table, displayed when executed as a single tabular view, as if one "
+"executed the <code>SELECT * FROM mytable</code> statement in the <link xref="
+"\"query-execution-perspective\"/>."
+msgstr ""
+"Nejjednodušší zdroj dat je takový, který představuje všechna data z tabulky, "
+"zobrazená při spuštění zobrazení jedné tabulky, podobně jako při provedení "
+"příkazu <code>SELECT * FROM mojetabulka</code> (viz <link xref=\"query-"
+"execution-perspective\"/>)."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:51
+msgid ""
+"The following figure shows the data sources editing mode (switch to editing "
+"mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
+"man-mode.png\"/> toolbar button)."
+msgstr ""
+"Následující obrázek ukazuje režim úpravy zdroje dat (do režimu úprav se "
+"přepnete pomocí tlačítka <media type=\"image\" mime=\"image/png\" src="
+"\"figures/data-man-mode.png\"/> na liště nástrojů)."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:55
+msgid ""
+"Data sources can be defined using an <link xref=\"data-manager-xml-syntax"
+"\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor"
+"\">default interface</link>."
+msgstr ""
+"Zdroje dat se dají definovat pomocí <link xref=\"data-manager-xml-syntax"
+"\">syntaxe XML</link> nebo pomocí <link xref=\"data-manager-source-editor"
+"\">výchozího rozhraní</link>."
+
+#. (itstool) path: figure/title
+#: C/data-manager-perspective.page:60 C/data-manager-perspective.page:65
+msgid "Data sources edition"
+msgstr "Úprava zdrojů dat"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:61
+msgid ""
+"Editing data sources in the data manager perspective, from the XML syntax"
+msgstr "Úprava zdrojů dat v hledisku správce dat, v podobě syntaxe XML"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:66
+msgid ""
+"Editing data sources in the data manager perspective, using the default "
+"interface: two data sources are defined, which list the contents of the "
+"\"customers\" and \"orders\" tables. The setup is the same as the figure "
+"above showing the XML syntax"
+msgstr ""
+"Úprava zdrojů dat v hledisku správce dat, pomocí výchozího rozhraní: jsou "
+"definovány dva zdroje dat, které vypisují obsah tabulek „zakaznici“ a "
+"„objednavky“. Nastavení je stejné, jako na předchozím obrázku se syntaxí XML"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:72 C/query-execution-perspective.page:71
+msgid "The commands available through the command buttons are:"
+msgstr "Příkazy dostupné přes příkazová tlačítka jsou:"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:76
+msgid ""
+"<gui>Reset</gui>: resets the XML editor to a default XML template, only "
+"available when the XML view is currently displayed"
+msgstr ""
+"<gui>Vymazat</gui>: přemaže obsah editoru XML na výchozí šablonu XML, "
+"přístupné jen pokud je zrovna zobrazeno XML"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:78
+msgid ""
+"<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new "
+"data sources as whole table contents (also analyses the database schema to "
+"propose relevant choices), only available when the XML edition mode is not "
+"selected"
+msgstr ""
+"<gui>Přidat</gui>: zobrazí vyskakovací nabídku se zkratkami na rychle "
+"definované nové zdroje dat v podobě kompletního obsahu tabulky (rovněž "
+"analyzuje databázové schéma kvůli náležitým volbám); dostupné je jen když "
+"není vybrán režim úprav XML"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:81
+msgid ""
+"<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code of any data source's definition. The panel is automatically "
+"shown when a variable is detected in the SQL code."
+msgstr ""
+"<gui>Proměnné</gui>: zobrazí/skryje panel <link xref=\"variables-syntax"
+"\">proměnných</link>, ve kterém máte přehled o proměnných obsažených v kódu "
+"SQL pro definici libovolného zdroje dat. Pokud je v kódu SQL nějaká proměnná "
+"zjištěna, zobrazí se panel automaticky."
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:84
+msgid "<gui>Execute</gui>: executes the defined data sources"
+msgstr "<gui>Spustit</gui>: spustit definovaný zdroj dat"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:85
+msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
+msgstr ""
+"<gui>Zobrazit XML</gui>: přepne mezi editorem XML a editorem uživatelského "
+"rozhraní"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:86
+msgid "<gui>Help</gui>: shows some help"
+msgstr "<gui>Nápověda</gui>: zobrazí nápovědu"
+
+#. (itstool) path: section/title
+#: C/data-manager-perspective.page:90
+msgid "Executing defined data sources"
+msgstr "Spouštění zdrojů dat"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:91
+msgid ""
+"To execute a defined set of data sources, simply switch to execute mode "
+"using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
+"mode.png\"/> toolbar button or the <gui>Execute</gui> button."
+msgstr ""
+"Když chcete definovaný zdroj dat spustit, jednoduše se přepněte do režimu "
+"provádění pomocí tlačítka <media type=\"image\" mime=\"image/png\" src="
+"\"figures/data-man-mode.png\"/> na liště nástrojů nebo pomocí tlačítka "
+"<gui>Spustit</gui>."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:96
+msgid ""
+"The layout of tabular views for each data source is automatically generated "
+"in columns using the following rule: if a data source B depends on a data "
+"source A, then its tabular view is displayed on the right of the one for A."
+msgstr ""
+"Rozvržení zobrazené tabulky pro každý ze zdrojů dat se vygeneruje "
+"automaticky po sloupcích za těchto pravidel: pokud zdroj dat B závisí na "
+"zdroji dat A, je v zobrazení tabulky umístěn napravo od A."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:101
+msgid ""
+"Also if you change the selected row of tabular view of a data source A, then "
+"the tabular views of all the data sources depending on A will also have "
+"their tabular view refreshed."
+msgstr ""
+"Rovněž, pokud se změní vybraný řádek zobrazení tabulky ze zdroje dat A, bude "
+"aktualizováno zobrazení tabulek ze všech zdrojů data závisejících na A."
+
+#. (itstool) path: page/title
+#: C/data-manager-xml-syntax.page:7
+msgid "The data manager's XML syntax"
+msgstr "Syntaxe XML ve správě dat"
+
+#. (itstool) path: page/p
+#: C/data-manager-xml-syntax.page:8
+msgid ""
+"The XML tree's root node must be a <code>&lt;data&gt;</code>, which is "
+"allowed to contain one or more data source definitions. Each data source is "
+"defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, "
+"both accepting the following optional attributes:"
+msgstr ""
+"Kořenovým uzlem stromu XML musí být <code>&lt;data&gt;</code>, který může "
+"obsahovat jednu nebo více definic zdrojů dat. Každý zdroj dat je definován "
+"uzly <code>&lt;query&gt;</code> nebo <code>&lt;table&gt;</code>, přičemž oba "
+"přijímají následující volitelné atributy:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:15
+msgid ""
+"\"id\" to specify a data source string ID, used when linking data sources "
+"one to another;"
+msgstr ""
+"„id“ pro určení identifikátoru zdroje dat, který se použije při odkazování z "
+"jednoho zdroje dat na druhý;"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:16
+msgid "\"title\" to specify a title."
+msgstr "„title“ pro určení názvu"
+
+#. (itstool) path: page/p
+#: C/data-manager-xml-syntax.page:18
+msgid ""
+"It is of course possible to use both the <code>&lt;query&gt;</code> or "
+"<code>&lt;table&gt;</code> tags in the same data sources specifications."
+msgstr ""
+"Samozřejmě je možné použít naráz značku <code>&lt;query&gt;</code> i "
+"<code>&lt;table&gt;</code> v jedné specifikaci zdroje dat."
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:24 C/data-manager-xml-syntax.page:73
+#: C/data-manager-xml-syntax.page:154
+msgid "Exported variables"
+msgstr "Exportované proměnné"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:25
+msgid ""
+"Each data source exports some variables which can be reused by other data "
+"sources to introduce a dependency. When the data sources are executed, the "
+"contents of these exported variables are reset depending on the row actually "
+"selected in the resulting tabular view. If no row is selected then the "
+"variable is unset."
+msgstr ""
+"Každý zdroj dat exportuje nějaké proměnné, které je možné použít v jiném "
+"zdroji dat a tak vytvořit závislosti. Když je zdroj dat spuštěn, je obsah "
+"těchto exportovaných proměnných znovu nastaven podle řádku aktuálně "
+"vybraného v zobrazení tabulky s výsledky. Pokud není vybrán žádný řádek, "
+"zůstane proměnná nenastavena."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:31
+msgid ""
+"Any data source depending on a variable is executed again when the variable "
+"changes, and in case the variable is unset, the data source's execution "
+"result is an empty data set."
+msgstr ""
+"Jakýkoliv zdroj dat, který závisí na proměnné je znovu spuštěn, pokud se "
+"proměnná změní a v případě, že je proměnná nenastavena, je výsledkem "
+"spuštění zdroje dat prázdná datová sada."
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:37
+msgid "The <code>&lt;query&gt;</code> tag"
+msgstr "Značka <code>&lt;query&gt;</code>"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:38
+msgid ""
+"Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, "
+"as the contents of the tag. Linkage to other data sources can be achieved "
+"using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
+msgstr ""
+"Značku <code>&lt;query&gt;</code> použijte ke specifikaci příkazu SQL "
+"SELECT, který je přímo obsahem této značky. Odkazu na jiný zdroj dat "
+"dosáhnete použitím<link xref=\"variables-syntax\">proměnných</link> v "
+"příkazu SELECT."
+
+#. (itstool) path: section/code
+#: C/data-manager-xml-syntax.page:44
+#, no-wrap
+msgid ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;query title=\"Customers\" id=\"customers\"&gt;\n"
+"    SELECT id, name FROM customers where name like ##name::string\n"
+"  &lt;/query&gt;\n"
+"  &lt;query title=\"Customer's details\" id=\"cust_details\"&gt;\n"
+"    SELECT * FROM customers WHERE id=##customers@id::int\n"
+"  &lt;/query&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+msgstr ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;query title=\"Zákazníci\" id=\"customers\"&gt;\n"
+"    SELECT id, name FROM customers where name like ##name::string\n"
+"  &lt;/query&gt;\n"
+"  &lt;query title=\"Podrobnosti o zákazníkovi\" id=\"cust_details\"&gt;\n"
+"    SELECT * FROM customers WHERE id=##customers@id::int\n"
+"  &lt;/query&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:54 C/data-manager-xml-syntax.page:130
+msgid "For example the previous XML specification defines two data sources:"
+msgstr "Například předchozí specifikace XML definuje dva zdroje dat:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:58
+msgid ""
+"the <code>customers</code> data source which selects some fields from the "
+"<em>customers</em> table, and which depends on a string variable named "
+"<code>name</code>. This variable has to be set when the data sources are "
+"executed because it won't be exported by any data source in this "
+"specification."
+msgstr ""
+"datový zdroj <code>zakaznici</code>, který vybírá některé z polí z tabulky "
+"<em>zakaznici</em> a který závisí na řetězcové proměnné s názvem "
+"<code>jmeno</code>. Tato proměnná bude nastavena při spuštění zdroje dat, "
+"protože není exportována žádným zdrojem dat v této specifikaci."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:62
+msgid ""
+"the <code>cust_details</code> data source which selects all the details of a "
+"customer specified using its ID. This second data source depends on the "
+"previous one because the <code>customers@id</code> variable is exported from "
+"the <code>customers</code> data source."
+msgstr ""
+"datový zdroj <code>detail_zakaznika</code>, který vybírá všechny podrobnosti "
+"o zákazníkovi určením pomocí jeho ID. Tento druhý zdroj dat závisí na tom "
+"předchozím, protože proměnná <code>zakaznici@id</code> je exportována ze "
+"zdroje dat <code>zakaznici</code>."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:67
+msgid ""
+"Executing this data sources specification will create two tabular views: one "
+"where you can select a customer, and one which displays all the attributes "
+"for the selected customer."
+msgstr ""
+"Spuštěním těchto zdrojů dat se vytvoří dva pohledy na tabulky: jeden, ve "
+"kterém si můžete vybírat zákazníka a jeden, který zobrazuje všechny "
+"vlastnosti vybraného zákazníka."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:74
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each column of the resulting data set (the variable's "
+"type is the same as the column's type):"
+msgstr ""
+"Každý ze zdrojů dat definovaný značkou <code>&lt;query&gt;</code> exportuje "
+"následující proměnné pro každý ze sloupců výsledné datové sady (typ proměnné "
+"je stejný jako typ sloupce):"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:79 C/data-manager-xml-syntax.page:161
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
+"column's position starts at 1"
+msgstr ""
+"<code>&lt;ID zdroje dat&gt;@&lt;pozice sloupce&gt;</code> kde se pozice "
+"sloupce počítá od 1"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:81
+#| msgid ""
+#| "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a "
+#| "table column"
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is "
+"a table column</code>"
+msgstr ""
+"<code>&lt;ID zdroje dat&gt;@&lt;název sloupce&gt; pokud je sloupec zdroje "
+"dat sloupcem tabulky</code>"
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:88
+msgid "The <code>&lt;table&gt;</code> tag"
+msgstr "Značka <code>&lt;table&gt;</code>"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:89
+msgid ""
+"Use the <code>&lt;table&gt;</code> tag to define a data source which will "
+"display the contents of a table. This tag:"
+msgstr ""
+"Značku <code>&lt;table&gt;</code> použijte k definici zdroje dat, který bude "
+"zobrazovat obsah tabulky. Tato značka:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:94
+msgid "requires the \"name\" attribute which represents the table name."
+msgstr "vyžaduje atribut „name“, který představuje název tabulky."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:95
+msgid ""
+"can have a \"id\" attribute corresponding to the data source's ID. If not "
+"present, and ID will be assigned automatically."
+msgstr ""
+"může mít atribut „id“, který odpovídá identifikátoru zdroje dat. Pokud není "
+"přítomen, přiřadí se ID automaticky."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:97
+msgid ""
+"can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on "
+"another data source with the \"foreign_key_table\" attribute defining the "
+"name of the table to which there are foreign keys used to determine the "
+"dependency, and the \"id\" attribute can specify a data source ID if "
+"different than the aforementioned table"
+msgstr ""
+"může obsahovat značku <code>&lt;depend&gt;</code>, která definuje závislost "
+"na jiném zdroji dat s atributem „foreign_key_table“ definujícím název "
+"tabulky, ve které jsou cizí klíče použity k určení závislosti, a atribut "
+"„id“ může určovat ID zdroje dat, pokud je jiný, než výše zmíněná tabulka"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:103
+msgid ""
+"The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, "
+"defines a dependency to another data source from a table:"
+msgstr ""
+"Značka <code>&lt;depend&gt;</code>, která pro zdroj dat z tabulky definuje "
+"závislost na jiném zdroji dat z tabulky:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:108
+msgid ""
+"requires the \"foreign_key_table\" attribute defining the name of the table "
+"to which there are foreign keys used to determine the dependency"
+msgstr ""
+"vyžaduje atribut „foreign_key_table“ definující název tabulky, ve které jsou "
+"cizí klíče použity k určení závislosti"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:110
+msgid ""
+"can have a \"id\" attribute corresponding to the ID of the referenced data "
+"source. If not provided, then the dependency may fail if there is no data "
+"source which ID is the\"foreign_key_table\" attribute."
+msgstr ""
+"může mít atribut „id“, který odpovídá identifikátoru odkazovaného zdroje "
+"dat. Pokud není přítomen, může závislost selhat v případě, že neexistuje "
+"žádný zdroj dat, jehož ID je atributem „foreign_key_table“."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:113
+msgid ""
+"can contain one or more <code>&lt;column&gt;</code> tag which contents "
+"define the columns to identify the foreign key to use; this is necessary if "
+"there are multiple foreign keys, and can be omitted if there is only one "
+"possible foreign key. The listed columns are the one from the table where "
+"the foreign key exists."
+msgstr ""
+"může obsahovat jednu nebo více značek <code>&lt;column&gt;</code>, které "
+"obsahují definice sloupců určujících cizí klíče, které se mají použít. To je "
+"nutné, pokud je cizích klíčů více a může být vynecháno, pokud je jen jeden "
+"možný cizí klíč. Vyjmenované sloupce jsou z tabulky, ve které jsou cizí "
+"klíče."
+
+#. (itstool) path: section/code
+#: C/data-manager-xml-syntax.page:120
+#, no-wrap
+msgid ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;table id=\"the_cust\" name=\"customers\"/&gt;\n"
+"  &lt;table name=\"orders\"&gt;\n"
+"    &lt;depend id=\"the_cust\" foreign_key_table=\"customers\"&gt;\n"
+"      &lt;column&gt;customer_id&lt;/column&gt;\n"
+"    &lt;/depend&gt;\n"
+"  &lt;/table&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+msgstr ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;table id=\"the_cust\" name=\"zakaznici\"/&gt;\n"
+"  &lt;table name=\"objednavky\"&gt;\n"
+"    &lt;depend id=\"the_cust\" foreign_key_table=\"zakaznici\"&gt;\n"
+"      &lt;column&gt;id_zakaznika&lt;/column&gt;\n"
+"    &lt;/depend&gt;\n"
+"  &lt;/table&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:134
+msgid ""
+"the <code>customers</code> data source which selects all the contents of the "
+"<em>customers</em> table."
+msgstr ""
+"zdroj dat <code>zakaznici</code>, který vybírá veškerý obsah z tabulky "
+"<em>zakaznici</em>."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:136
+msgid ""
+"the <code>orders</code> data source which selects among contents of the "
+"<code>orders</code> table, the rows which correspond to a row in the "
+"<code>customers</code> table using the foreign key on table orders which "
+"involves the \"orders.customer_id\" column and the primary key of the "
+"customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag "
+"is necessary here to identify referenced the data source."
+msgstr ""
+"zdroj dat <code>objednavky</code>, který vybírá z obsahu tabulky "
+"<code>objednavky</code> řádky, které odpovídají řádku v tabulce "
+"<code>zakaznici</code>. Výběr se provádí pomocí cizího klíče v tabulce "
+"objednavky, která je navázána přes sloupec „objednavky.id_zakaznika“ a "
+"primární klíč tabulky zakaznici. Atribut „id“ ve značce <code>&lt;depend&gt;"
+"</code> je v tomto případě nutný k určení odkazovaného zdroje dat."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:143
+msgid "Note in this example that:"
+msgstr "Poznámky k tomuto příkladu:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:147
+msgid ""
+"you don't have to specify the fields involved in the foreign key linking the "
+"<code>orders</code> and <code>customers</code> tables"
+msgstr ""
+"nemusíte specifikovat vazební pole v cizím klíči provazujícím tabulky "
+"<code>objednavky</code> a <code>zakaznici</code>"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:149
+msgid ""
+"the data sources IDs have been assigned the names of the selected tables as "
+"no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
+"tags."
+msgstr ""
+"identifikátorům zdrojů dat byly přiřazeny názvy vybraných tabulek, protože "
+"nebyl zadán žádný atribut „id“ pro značku <code>&lt;table&gt;</code>."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:155
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each table's column (the variable's type is the same "
+"as the column's type):"
+msgstr ""
+"Každý zdroj dat definovaný značkou <code>&lt;query&gt;</code> exportuje "
+"následující proměnné pro každý ze sloupců tabulky (typ proměnné je stejný "
+"jako typ sloupce):"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:160
+#| msgid "&lt;data source ID&gt;@&lt;column name&gt;"
+msgid "<code>&lt;data source ID&gt;@&lt;column name&gt;</code>"
+msgstr "<code>&lt;ID zdroje dat&gt;@&lt;název sloupce&gt;</code>"
+
+#. (itstool) path: page/title
+#: C/data-manager-source-editor.page:7
+msgid "The data manager's data sources editor"
+msgstr "Editor zdrojů dat ve správě dat"
+
+#. (itstool) path: page/p
+#: C/data-manager-source-editor.page:8
+msgid "To be done."
+msgstr "Je potřeba dopsat."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:25
+#| msgid ""
+#| "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
+msgstr ""
+"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:65
+#| msgid ""
+#| "@@image: 'figures/declaredfk-dialog.png'; "
+#| "md5=56aba297f8b88248fabc23c54b361a8f"
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk-dialog.png' "
+"md5='56aba297f8b88248fabc23c54b361a8f'"
+msgstr ""
+"external ref='figures/declaredfk-dialog.png' "
+"md5='56aba297f8b88248fabc23c54b361a8f'"
+
+#. (itstool) path: page/title
+#: C/declaredfk.page:8
+msgid "Declared foreign keys"
+msgstr "Deklarované cizí klíče"
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:9
+msgid ""
+"All the foreign key constraints (where the contents of one or more columns "
+"in a table is constrained to be among the values of one or more columns of "
+"another table) are analysed and reported in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>. Foreign key constraints "
+"help understand the database schema and is automatically used where "
+"appropriate by the application."
+msgstr ""
+"Všechny cizí klíče (kde je obsah jednoho nebo více sloupců v tabulce je "
+"omezen na hodnoty pocházející z jednoho nebo více sloupců v jiné tabulce) "
+"jsou analyzovány a zobrazeny v <link xref=\"schema-browser-perspective"
+"\">hledisku Prohlížeč schématu</link>. Cizí klíče pomáhají pochopit "
+"databázové schéma a jsou automaticky používány příslušnou aplikací."
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:16
+msgid ""
+"However sometimes the designer of a database has forgotten or did not whish "
+"to use foreign key constraints, and so it is possible to \"declare foreign "
+"keys\" which are only declaration to the tool and not actually defined in "
+"the database."
+msgstr ""
+"Někdy však návrhář databáze zapomene nebo si nepřeje použít omezení cizím "
+"klíčem a proto máte možnost „deklarovat cizí klíče“, které jsou deklarovány "
+"pouze v nástroji a ne v databázi."
+
+#. (itstool) path: figure/title
+#: C/declaredfk.page:22
+msgid "Declared foreign keys in diagrams"
+msgstr "Deklarované cizí klíče v diagramech"
+
+#. (itstool) path: figure/desc
+#: C/declaredfk.page:23
+msgid ""
+"When displayed in diagrams, declared foreign keys are represented using a "
+"dashed line instead of a solid line for actual foreign keys"
+msgstr ""
+"Při zobrazení v diagramu jsou deklarované cizí klíče reprezentovány pomocí "
+"přerušované čáry namísto plné čáry, jako u cizích klíčů"
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:27 C/variables.page:21
+msgid "Notes:"
+msgstr "Poznámky:"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:31
+msgid ""
+"the (foreign key name, table, referenced table) triplet uniquely identifies "
+"a declared foreign key and thus declaring a new foreign key with the same "
+"triplet will remove any previously declared one."
+msgstr ""
+"trojice (název cizího klíče, tabulka, odkazovaná tabulka) jednoznačně "
+"identifikují deklarovaný cizí klíč a proto deklarování nového cizího klíče "
+"se stejnou trojicí odstraní deklaraci toho předchozího."
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:34
+msgid ""
+"If the same constraint is actually represented by a real foreign key and "
+"also by a declared foreign key, then the real foreign key definition will "
+"mask the declared one"
+msgstr ""
+"Pokud je stejné omezení současně představováno skutečným cizím klíčem a "
+"zároveň deklarovaným cizím klíčem, je definice skutečného cizího klíče "
+"zamaskována tím deklarovaným"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:37
+msgid ""
+"Declared foreign key don't have any policy to determine what action to "
+"perform on UPDATE or DELETE situations, so the reported policy will always "
+"be \"not enforced\""
+msgstr ""
+"Deklarovaný cizí klíč nemá žádné zásady určující, jaké akce se mají provést "
+"při aktualizace (UPDATE) a smazání (DELETE), takže vracená zásada je „nic "
+"neprovádět“"
+
+#. (itstool) path: section/title
+#: C/declaredfk.page:42
+msgid "Declaring a new foreign key"
+msgstr "Deklarování nového cizího klíče"
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:43
+msgid ""
+"A new foreign key can be declared from the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link> using the "
+"<guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which "
+"is present when a table's properties are shown in the current tab."
+msgstr ""
+"Nový cizí klíč může být deklarován z <link xref=\"schema-browser-perspective"
+"\">z hlediska prohlížeče schématu</link> pomocí nabídky "
+"<guiseq><gui>Tabulka</gui><gui>Deklarovat cizí klíč</gui></guiseq>, které je "
+"přítomno v případě, že jsou v aktuální kartě zobrazeny vlastnosti tabulky."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:49
+msgid ""
+"Another way of declaring a foreign key is using the contextual menu on a "
+"table in a diagram, and selecting the <guiseq><gui>Declare foreign key for "
+"this table</gui></guiseq> option."
+msgstr ""
+"Jiným způsobem, jak deklarovat cizí klíč je použít kontextovou nabídku u "
+"tabulky v diagramu a vybrat volbu <guiseq><gui>Deklarovat cizí klíč pro tuto "
+"tabulku</gui></guiseq>."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:53
+msgid ""
+"In any way, to declare a new foreign key, the following information must be "
+"provided:"
+msgstr ""
+"V každém případě je pro deklaraci nového cizího klíče zapotřebí zadat "
+"následující informace:"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:57
+msgid "A foreign key name"
+msgstr "Název cizího klíče"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:58
+msgid "The referenced table"
+msgstr "Odkazovaná tabulka"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:59
+msgid ""
+"Columns and referenced columns for each column involved in the foreign key"
+msgstr ""
+"Sloupce a odkazované sloupce pro každý z dotčených sloupců v cizím klíči"
+
+#. (itstool) path: figure/title
+#: C/declaredfk.page:62
+msgid "Information to declare a new foreign key"
+msgstr "Informace pro deklaraci nového cizího klíče"
+
+#. (itstool) path: figure/desc
+#: C/declaredfk.page:63
+msgid ""
+"UI dialog poping up to declare a new foreign key. Here the referenced table "
+"is 'warehouses', and the involved columns are 'country' and 'city'."
+msgstr ""
+"Uživatelské rozhraní dialogového okna, které se zobrazí pro deklaraci nového "
+"klíče. Odkazovanou tabulkou jsou „sklady“ a dotčené sloupce „země“ a „město“."
+
+#. (itstool) path: section/title
+#: C/declaredfk.page:70
+msgid "Remove a declared foreign key"
+msgstr "Odstranění deklarovaného cizího klíče"
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:71
+msgid ""
+"A declared foreign key can be removed by clicking on the "
+"<guiseq><gui>(Remove)</gui></guiseq> link displayed below each declared "
+"foreign key properties in the table's properties (in the <link xref=\"schema-"
+"browser-perspective\">Schema Browser perspective</link>)."
+msgstr ""
+"Deklarovaný cizí klíč je možné odstranit kliknutím na odkaz "
+"<guiseq><gui>(Odstranit)</gui></guiseq> zobrazený pod vlastnostmi každého z "
+"deklarovaných cizích klíčů ve vlastnostech tabulky (v <link xref=\"schema-"
+"browser-perspective\">hledisku prohlížeče schématu</link>)."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:76
+msgid ""
+"Another way to remove a declared foreign key is in a <link xref=\"diagram"
+"\">diagram</link> page through the contextual menu associated with the "
+"dashed line representing the declared foreign key, selecting the "
+"<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
+msgstr ""
+"Dalším způsobem, jak odstranit deklarovaný cizí klíč je na stránce <link "
+"xref=\"diagram\">diagramu</link> přes kontextovou nabídku patřící k "
+"přerušované čáře reprezentující deklarovaný cizí klíč výběrem volby "
+"<guiseq><gui>Odstranit tento deklarovaný cizí klíč</gui></guiseq>."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/diagram.page:16
+#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgctxt "_"
+msgid ""
+"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
+msgstr ""
+"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
+
+#. (itstool) path: page/title
+#: C/diagram.page:7
+msgid "Diagrams"
+msgstr "Diagramy"
+
+#. (itstool) path: page/p
+#: C/diagram.page:8
+msgid ""
+"Diagrams are present throughout the <app>gda-browser</app>, and are made of "
+"a canvas on which graphical items are displayed (like tables for example)."
+msgstr ""
+"Diagramy se objevují v aplikaci <app>gda-browser</app> všude možně a jsou "
+"tvořeny plochou, na které jsou zobrazeny grafické prvky (jako třeba tabulky)."
+
+#. (itstool) path: figure/title
+#: C/diagram.page:13
+msgid "Diagram"
+msgstr "Diagram"
+
+#. (itstool) path: figure/desc
+#: C/diagram.page:14
+msgid ""
+"Diagram showing some tables and their relations represented by foreign key "
+"constraints (also see <link xref=\"declared-fk\">the declared foreign keys</"
+"link>)"
+msgstr ""
+"Diagram zobrazující nějaké tabulky a vztahy mezi nimi vyjádřené cizími klíči "
+"(viz také <link xref=\"declared-fk\">deklarace cizích klíčů</link>)"
+
+#. (itstool) path: page/p
+#: C/diagram.page:18
+msgid ""
+"The items can be moved around on the canvas (note that as long as the whole "
+"diagram fits in the canvas, it remains centered on it). Other manipulations "
+"are possible:"
+msgstr ""
+"Položky lze po ploše posouvat (všimněte si, že pokud se celý diagram vleze "
+"na plochu, je umístěn na střed). Dále můžete provádět tyto věci:"
+
+#. (itstool) path: item/p
+#: C/diagram.page:23
+msgid ""
+"zooming in and out using the mouse's wheel, or through the contextual menu "
+"(right click on the canvas); a zoom to fit the canvas is also available in "
+"the contextual menu"
+msgstr ""
+"zvětšování nebo zmenšování pomocí kolečka myši nebo přes kontextovou nabídku "
+"(kliknutí pravým tlačítkem na plochu); v kontextové nabídce je také dostupná "
+"možnost pro zvětšení optimální vůči ploše"
+
+#. (itstool) path: item/p
+#: C/diagram.page:25
+msgid ""
+"bring closer or moving away items from one another using the mouse's wheel "
+"while holding the <key>Shift</key> key"
+msgstr ""
+"posouvat položky k sobě nebo od sebe pomocí kolečka myš za současného držení "
+"klávesy <key>Shift</key>"
+
+#. (itstool) path: item/p
+#: C/diagram.page:27
+msgid "arranging items linearly or radially, through the contextual menu"
+msgstr "uspořádávání položek do řady nebo do kruhu, přes kontextovou nabídku"
+
+#. (itstool) path: item/p
+#: C/diagram.page:28
+msgid "printing, through the contextual menu"
+msgstr "tisk, přes kontextovou nabídku"
+
+#. (itstool) path: item/p
+#: C/diagram.page:29
+msgid "exporting as PNG or SVG images, through the contextual menu"
+msgstr "exportování obrázků PNG nebo SVG, přes kontextovou nabídku"
+
+#. (itstool) path: item/p
+#: C/diagram.page:30
+msgid "adding items, through the contextual menu"
+msgstr "přidávání položek, přes kontextovou nabídku"
+
+#. (itstool) path: item/p
+#: C/diagram.page:31
+msgid "removing items, through the items's contextual menu"
+msgstr "odstraňování položek, přes kontextovou nabídku položky"
+
+#. (itstool) path: page/title
+#: C/features.page:8
+msgid "Features"
+msgstr "Funkce"
+
+#. (itstool) path: page/p
+#: C/features.page:9
+msgid "<app>gda-browser</app>'s current features are:"
+msgstr "Funkčnost aplikace <app>gda-browser</app> v současnosti zahrnuje:"
+
+#. (itstool) path: section/title
+#: C/features.page:13
+msgid "General user interface"
+msgstr "Uživatelské rozhraní obecně"
+
+#. (itstool) path: item/p
+#: C/features.page:15 C/features.page:26
+msgid ""
+"multi threaded: each connection is handled in it own thread, meaning that no "
+"single connection can lock the application"
+msgstr ""
+"vícevláknová aplikace: každé připojení je obsluhováno ve svém vlastním "
+"vlákně, takže nemůže jedno připojení zablokovat celou aplikaci"
+
+#. (itstool) path: item/p
+#: C/features.page:17
+msgid "several windows can be opened for a single connection"
+msgstr "pro jedno připojení může být otevřeno několik oken"
+
+#. (itstool) path: item/p
+#: C/features.page:18
+msgid "full screen mode accessible to maximize the screen space usage"
+msgstr "režim celé obrazovky zpřístupňuje k použití maximum možného místa"
+
+#. (itstool) path: section/title
+#: C/features.page:22
+msgid "Connection management"
+msgstr "Správa připojení"
+
+#. (itstool) path: item/p
+#: C/features.page:24
+msgid "multiple simultaneous connections can be opened at once"
+msgstr "v jednu chvíli může být otevřeno více připojení současně"
+
+#. (itstool) path: item/p
+#: C/features.page:25
+msgid ""
+"connections binding: it is possible to <link type=\"topic\" xref=\"virtual-"
+"connections\">\"bind\"</link> several connections into one to execute SQL "
+"commands on several connections at once"
+msgstr ""
+"svazování spojení: je možné několik připojení <link type=\"topic\" xref="
+"\"virtual-connections\">„svázat“</link> dohromady do jednoho, aby se mohly "
+"prováděl příkazy SQL nad více připojeními naráz"
+
+#. (itstool) path: section/title
+#: C/features.page:31
+msgid "Activities"
+msgstr "Aktivity"
+
+#. (itstool) path: section/p
+#: C/features.page:32
+msgid ""
+"The activities are grouped by theme around the notion of <link type=\"topic"
+"\" xref=\"general-ui\">perspectives</link>, the following are currently "
+"implemented:"
+msgstr ""
+"Aktivity jsou seskupeny podle tématu do <link type=\"topic\" xref=\"general-"
+"ui\">hledisek</link>. V současnosti jsou implementovány tyto:"
+
+#. (itstool) path: item/p
+#: C/features.page:36
+msgid ""
+"analyse the database schema (tables, relations, ...), see the <link xref="
+"\"schema-browser-perspective\">Schema browser perspective</link>"
+msgstr ""
+"analýza databázového schématu (tabulky, vztahy mezi nimi, …), viz <link xref="
+"\"schema-browser-perspective\">hledisko Prohlížeč schématu</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:38
+msgid ""
+"execute SQL commands, see the <link xref=\"query-execution-perspective"
+"\">Query execution perspective</link>"
+msgstr ""
+"spouštění příkazů SQL, viz <link xref=\"query-execution-perspective"
+"\">hledisko Prováděn dotazu</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:40
+msgid ""
+"analyse the table's contents, see the <link xref=\"data-manager-perspective"
+"\">Data manager perspective</link>"
+msgstr ""
+"analýza obsahu tabulky, viz <link xref=\"data-manager-perspective\">hledisko "
+"Správce dat</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:42
+msgid ""
+"for <link xref=\"ldap-connection\">LDAP connections</link>, manage the "
+"hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-"
+"perspective\">LDAP browser perspective</link>"
+msgstr ""
+"pro <link xref=\"ldap-connection\">připojení k adresářům LDAP</link>, správu "
+"hierarchických dat ve stromu LDAP, viz <link xref=\"ldap-browser-perspective"
+"\">hledisko Prohlížeč adresáře LDAP</link>"
+
+#. (itstool) path: section/p
+#: C/features.page:45
+msgid "See also the section about <link xref=\"actions\">actions</link>"
+msgstr "Viz také oddíl věnovaný <link xref=\"actions\">akcím</link>"
+
+#. (itstool) path: section/title
+#: C/features.page:50
+msgid "Openness"
+msgstr "Otevřenost"
+
+#. (itstool) path: item/p
+#: C/features.page:52
+msgid ""
+"CSV and other text files can be imported and used in conjunction with <link "
+"type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
+msgstr ""
+"je možné importovat soubory CSV a další textové soubory a používat je ve "
+"spojení se <link type=\"topic\" xref=\"virtual-connections\">svazováním "
+"připojení</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:53
+msgid ""
+"the general framework is opened enough to add new integrated features; "
+"specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
+"\">perspectives</link>"
+msgstr ""
+"obecný vývojářský rámec aplikace je dostatečně otevřeny, aby šli přidávat "
+"nové vestavěné funkce, hlavně se každý může přidat k vývoji nových <link "
+"type=\"topic\" xref=\"general-ui\">hledisek</link>"
+
+#. (itstool) path: section/list
+#: C/features.page:51
+msgid "<_:item-1/> x <_:item-2/>"
+msgstr "<_:item-1/> x <_:item-2/>"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/general-ui.page:18 C/schema-browser-perspective.page:21
+#| msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
+msgctxt "_"
+msgid ""
+"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
+msgstr ""
+"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
+
+#. (itstool) path: page/title
+#: C/general-ui.page:8
+msgid "General interface organization"
+msgstr "Obecně o uspořádání rozhraní"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:9
+msgid ""
+"The <app>gda-browser</app> is composed of one or more top level windows, "
+"each window relating to a single connection (which name is in its title). "
+"For any given connection, several windows can be opened (use the "
+"<guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the "
+"<keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
+msgstr ""
+"Aplikace <app>gda-browser</app> sestává z jednoho nebo více oken nejvyšší "
+"úrovně, přičemž každé z oken přísluší jednomu připojení (jehož název je "
+"uveden v záhlaví okna). Pro libovolné připojení může být otevřeno i více "
+"oken (použijte nabídku <guiseq><gui>Okno</gui><gui>Nové okno</gui></guiseq> "
+"nebo klávesovou zkratku <keyseq><key>Ctrl</key><key>N</key></keyseq>)."
+
+#. (itstool) path: figure/title
+#: C/general-ui.page:16
+msgid "A connection window"
+msgstr "Okno připojení"
+
+#. (itstool) path: figure/desc
+#: C/general-ui.page:17
+msgid ""
+"Window opened for the 'c1' connection (and the Schema browser perspective)"
+msgstr "Okno otevřené pro připojení „p1“ (a hledisko Prohlížeč schématu)"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:21
+msgid ""
+"Within each window, several <em>perspectives</em> are available which are "
+"adapted to different activities:"
+msgstr ""
+"V rámci každého z oken je dispozici několik <em>hledisek</em>, které jsou "
+"uzpůsobené pro různé činnosti:"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:26
+msgid ""
+"the <link xref=\"schema-browser-perspective\">Schema browser perspective</"
+"link> to help understand the database's layout"
+msgstr ""
+"<link xref=\"schema-browser-perspective\">hledisko Prohlížeč schématu</link> "
+"který vám pomůže se vyznat v návrhu databáze"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:27
+msgid ""
+"the <link xref=\"query-execution-perspective\">Query execution perspective</"
+"link> to execute any SQL command"
+msgstr ""
+"<link xref=\"query-execution-perspective\">hledisko Provádění dotazu</link> "
+"k provádění libovolných příkazů SQL"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:28
+msgid ""
+"the <link xref=\"data-manager-perspective\">Data manager perspective</link> "
+"to navigate through the database's contents"
+msgstr ""
+"<link xref=\"data-manager-perspective\">hledisko Správce dat</link> k "
+"procházení obsahu databáze"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:30
+msgid ""
+"The currently displayed perspective can be changed individually for each "
+"window, and, as all perspectives have an action area composed of tabs, tabs "
+"can be moved from one window to the other if the source and destination "
+"window are for the same connection, and display the same perspective (simply "
+"drag and drop a tab from one window to the other using the tab's label as a "
+"handle)."
+msgstr ""
+"Aktuálně vybrané hledisko můžete měnit u každého okna zvlášť a všechna "
+"hlediska mají akční část složenou z karet, které můžete z jednoho do druhého "
+"okna přesouvat, za předpokladu že oboje okna jsou pro totéž připojení a "
+"zobrazují stejný typ hlediska (prostě jen kartu chytněte za ouško s popisem "
+"a přetáhněte do jiného okna)."
+
+#. (itstool) path: p/link
+#: C/legal.xml:4
+msgid "Creative Commons Attribution-Share Alike 3.0 Unported License"
+msgstr "Creative Commons Attribution-Share Alike 3.0 Unported License"
+
+#. (itstool) path: license/p
+#: C/legal.xml:3
+msgid "This work is licensed under a <_:link-1/>."
+msgstr "Tato práce je licencována pod <_:link-1/>"
+
+#. (itstool) path: license/p
+#: C/legal.xml:6
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+msgstr ""
+"Jako speciální výjimku vám držitel autorských práv uděluje svolení "
+"kopírovat, upravovat a šířit ukázkový kód obsažený v tomto dokumentu za "
+"podmínek, které si zvolíte, bez dalších omezení."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/query-execution-perspective.page:17
+#| msgid ""
+#| "@@image: 'figures/query-exec-persp.png'; "
+#| "md5=c52ce85c0f89d26775c8b9dad282910a"
+msgctxt "_"
+msgid ""
+"external ref='figures/query-exec-persp.png' "
+"md5='c52ce85c0f89d26775c8b9dad282910a'"
+msgstr ""
+"external ref='figures/query-exec-persp.png' "
+"md5='c52ce85c0f89d26775c8b9dad282910a'"
+
+#. (itstool) path: page/title
+#: C/query-execution-perspective.page:8
+msgid "The query execution perspective"
+msgstr "Hledisko pro provádění dotazu"
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:9
+msgid ""
+"Use the query perspective to execute SQL statements. To switch to this "
+"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution "
+"(SQL)</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></"
+"keyseq> shortcut."
+msgstr ""
+"Hledisko Provádění dotazu použijte ke spouštění příkazů SQL. Do tohoto "
+"hlediska se přepnete pomocí nabídky <guiseq><gui>Hledisko</"
+"gui><gui>Provádění dotazu (SQL)</gui></guiseq> nebo klávesové zkratky "
+"<keyseq><key>Ctrl</key><key>S</key></keyseq>."
+
+#. (itstool) path: figure/title
+#: C/query-execution-perspective.page:15
+msgid "Query exec perspective"
+msgstr "Hledisko Provádění dotazu"
+
+#. (itstool) path: figure/desc
+#: C/query-execution-perspective.page:16
+msgid "The query exec perspective with one SELECT statement executed"
+msgstr ""
+"Hledisko Provádění dotazu s jedním příkazem SELECT vybraným ke spuštění"
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:20
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorite statements, and the right pane being the action area."
+msgstr ""
+"Hledisko je vodorovně rozděleno do dvou panelů: levý panel pro uživatelem "
+"definované oblíbené příkazy a pravý panel je oblastí, ve které se provádí "
+"akce."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:24
+msgid ""
+"In the figure above, there are two favorites: a SELECT statement (named "
+"\"List customers\") and an INSERT statement (named \"New customer ...\"). "
+"The INSERT statement needs one \"name\" parameter, whereas the SELECT "
+"statement does not require any parameter to be executed."
+msgstr ""
+"Na předchozím obrázku jsou dva oblíbené: příkaz SELECT (pojmenovaný „Seznam "
+"zákazníků“) a příkaz INSERT (pojmenovaný „Nový zákazník…“). Příkaz INSERT "
+"vyžaduje jeden parametr „name“, zatímco příkaz SELECT ke spuštění žádný "
+"parametr nevyžaduje."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:30
+msgid ""
+"The icon difference between the two illustrates the fact that the INSERT "
+"favorite is also marked to be an <link xref=\"actions\">action</link>: it "
+"will be proposed as an action to be executed when the contextual menu is "
+"brought up in any grid representation of a resultset."
+msgstr ""
+"Rozdílné ikony u obou naznačují fakt, že oblíbený příkaz INSERT je rovněž "
+"označen jako <link xref=\"actions\">akce</link>: bude předkládán jako "
+"spustitelná akce v kontextové nabídce, která se objeví u mřížky zobrazující "
+"sadu výsledků."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:35
+msgid ""
+"The left part of the perspective lists the favorite statements which have "
+"been user defined. Activating a favorite (double clicking) resets the SQL "
+"text area's contents to the selected statement's SQL."
+msgstr ""
+"Levá část hlediska zobrazuje oblíbené příkazy, které byly definovány "
+"uživatelem. Aktivace oblíbeného příkazu (dvojitým kliknutím) vymaže textovou "
+"oblast obsahující SQL a nahradí ji vybraným příkazem SQL."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:40
+msgid ""
+"The right pane is composed of zero or more tabs where the SQL is entered and "
+"executed. In each tab there is:"
+msgstr ""
+"Pravý panel je složen z žádné nebo více karet, na kterých se zadává a "
+"provádí SQL. Na každé kartě jsou:"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:45
+msgid "an SQL area in the top left part"
+msgstr "oblast SQL v levé horní části"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:46
+msgid "command buttons in the top right part"
+msgstr "příkazová tlačítka v pravé horní části"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:47
+msgid "execution history in the lower left part"
+msgstr "historie provádění v levé dolní části"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:48
+msgid "execution results in the lower right part"
+msgstr "výsledky provádění v pravé dolní části"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:52
+msgid "SQL area"
+msgstr "Oblast SQL"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:53
+msgid ""
+"The SQL area is an SQL editor. The SQL can be any SQL understood by the "
+"database, with the exception of <link xref=\"variables-syntax\">variables</"
+"link> (which must have a specific syntax)."
+msgstr ""
+"Oblast SQL je editor SQL. SQL může být libovolný kód SQL, kterému databáze "
+"rozumí, vyjma <link xref=\"variables-syntax\">proměnných</link> (které musí "
+"mít specifickou syntaxi)."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:57
+msgid "The keyboard shortcuts in the SQL editor are:"
+msgstr "Klávesové zkratky v editoru SQL jsou:"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:61
+msgid ""
+"<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>mezerník</key></keyseq> pro získání seznamu "
+"dokončování slov"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:62
+msgid ""
+"<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
+msgstr "<keyseq><key>Ctrl</key><key>Enter</key></keyseq> pro spuštění kódu SQL"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:63
+msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
+msgstr "<keyseq><key>Ctrl</key><key>l</key></keyseq> pro vymazání editoru"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:64
+msgid ""
+"<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
+"key><key>Down</key></keyseq> to navigate through the editor's history"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>↑</key></keyseq> a <keyseq><key>Ctrl</"
+"key><key>↓</key></keyseq> pro pohyb v historii editoru"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:70
+msgid "Command buttons"
+msgstr "Příkazová tlačítka"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:75
+msgid ""
+"<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
+"key><key>l</key></keyseq> shortcut)"
+msgstr ""
+"<gui>Vymazat</gui>: vymaže obsah editoru (odpovídá to klávesové zkratce "
+"<keyseq><key>Ctrl</key><key>l</key></keyseq>)"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:76
+msgid ""
+"<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code. The panel is automatically shown when a variable is "
+"detected in the SQL code"
+msgstr ""
+"<gui>Proměnné</gui>: zobrazí nebo skryje panel <link xref=\"variables-syntax"
+"\">Hodnoty proměnných</link>, kde můžete získat informace o hodnotách "
+"proměnných vyskytujících se v kódu SQL. Panel se zobrazí automaticky, když "
+"je v kódu SQL nějaká proměnná zjištěna."
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:79
+msgid ""
+"<gui>Execute</gui>: executes the SQL code. If the SQL code contains some "
+"variables which have not been set, then a popup first appears requesting the "
+"variables to be given values. This is similar to the <keyseq><key>Ctrl</"
+"key><key>ENTER</key></keyseq> shortcut"
+msgstr ""
+"<gui>Spustit</gui>: provede kód SQL. Pokud kód SQL obsahuje nějakou "
+"proměnnou, která nebyla nastavena, objeví se nejprve vyskakovací okno s "
+"požadavkem na zadání hodnoty proměnné. Odpovídá to klávesové zkratce "
+"<keyseq><key>Ctrl</key><key>Enter</key></keyseq>."
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:82
+msgid ""
+"<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
+"comments)"
+msgstr ""
+"<gui>Odsadit</gui>: znovu provede odsazení kódu SQL (varování: tímto se "
+"odstraní případné komentáře)"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:83
+msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
+msgstr "<gui>Oblíbené</gui>: přidá aktuální kód SQL do oblíbených"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:88
+msgid "Execution history"
+msgstr "Historie provádění"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:89
+msgid ""
+"The execution history part contains a list of the past executed statements, "
+"ordered by execution date along with an indication when the statement was "
+"executed (11 minutes in the figure above). Selecting an history item "
+"displays the corresponding result in the execution results part."
+msgstr ""
+"Část s historií provádění obsahuje seznam naposledy provedených příkazů, "
+"které jsou seřazené podle data provedení s tím, že je zobrazeno, kdy byl "
+"příkaz proveden (na obrázku výše to je před 11 minutami). Po vybrání položky "
+"v historii se zobrazí odpovídající výsledky v části s výsledky provádění."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:94
+msgid ""
+"The <gui>Copy</gui> button copies the currently selected history item's SQL "
+"code to the SQL editor, and the <gui>Clear</gui> button removes all the "
+"history items."
+msgstr ""
+"Tlačítko <gui>Kopírovat</gui> zkopíruje kód SQL právě vybrané položky v "
+"historii do editoru SQL a tlačítko <gui>Vymazat</gui> odstraní z historie "
+"všechny položky."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:98
+msgid ""
+"Note that any given history item can also be removed individually using the "
+"<key>Suppr</key> key."
+msgstr ""
+"Upozorňujeme, že danou položku historie lze odstranit i samostatně pomocí "
+"klávesy <key>Suppr</key>."
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:104
+msgid "Execution results"
+msgstr "Výsledky provádění"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:105
+msgid ""
+"The Execution results part displays the execution result of the currently "
+"selected execution history item, as a table for SELECT statement, giving "
+"information for other types of statement, or giving the execution error "
+"notice if the execution failed."
+msgstr ""
+"Část s výsledky provádění zobrazuje výsledky zpracování aktuálně vybrané "
+"položky v historii a to v podobě tabulky pro příkaz SELECT, informací pro "
+"ostatní typy příkazů nebo poznámkou s chybou provádění, pokud provedení "
+"selhalo."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/schema-browser-perspective.page:47
+#| msgid ""
+#| "@@image: 'figures/schema-browser-persp.png'; "
+#| "md5=991ae01b9fb6b17c0b93ee4873b9b985"
+msgctxt "_"
+msgid ""
+"external ref='figures/schema-browser-persp.png' "
+"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
+msgstr ""
+"external ref='figures/schema-browser-persp.png' "
+"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
+
+#. (itstool) path: page/title
+#: C/schema-browser-perspective.page:8
+msgid "The schema browser perspective"
+msgstr "Hledisko pro prohlížení schématu"
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:9
+msgid ""
+"Use the schema browser perspective to understand the database's organisation "
+"(schema). To switch to this perspective, use the <guiseq><gui>Perspective</"
+"gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</"
+"key><key>B</key></keyseq> shortcut."
+msgstr ""
+"Hledisko prohlížeče schématu použijte k získání přehledu o struktuře "
+"databáze (schématu). Do tohoto hlediska se přepnete pomocí nabídky "
+"<guiseq><gui>Hledisko</gui><gui>Prohlížeč schématu</gui></guiseq> nebo "
+"klávesové zkratky <keyseq><key>Ctrl</key><key>B</key></keyseq>."
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:14
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites, and the right pane being the action area."
+msgstr ""
+"Hledisko je vodorovně rozděleno do dvou panelů: levý panel pro uživatelem "
+"definované oblíbené položky a pravý panel je oblastí, ve které se provádí "
+"akce."
+
+#. (itstool) path: figure/title
+#: C/schema-browser-perspective.page:19
+msgid "Schema browser perspective's default view"
+msgstr "Výchozí zobrazení hlediska prohlížeče schématu"
+
+#. (itstool) path: figure/desc
+#: C/schema-browser-perspective.page:20
+msgid "The default Schema browser perspective"
+msgstr "Výchozí podoba hlediska prohlížeče schématu"
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:24
+msgid ""
+"The left part of the perspective lists the favorite database objects or "
+"diagrams. Double clicking on a favorite opens its properties in the right "
+"pane."
+msgstr ""
+"V levé části hlediska jsou vypsány oblíbené databázové objekty nebo "
+"diagramy. Dvojitým kliknutím na oblíbené položce otevřete její vlastnosti v "
+"pravém panelu."
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:29 C/ldap-browser-perspective.page:31
+msgid "The right pane is composed of several types of tabs:"
+msgstr "Pravý panel se skládá z několika typů karet:"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:33
+msgid ""
+"a tab listing all the database's tables and views, in a <em>cloud</em> view "
+"where the tables with the more relations to other tables being displayed in "
+"a larger font; this tab is always present"
+msgstr ""
+"karta vypisující všechny tabulky a pohledy databáze v podobě "
+"<em>„obláčkového“</em> zobrazení, ve kterém jsou tabulky s více vztahy k "
+"ostatním tabulkám zobrazeny větším písmem; tato karta je zobrazena vždy"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:36
+msgid ""
+"zero or more tabs representing a table or views' properties: the list of "
+"columns, the list of constraints (primary or foreign keys, and unique "
+"constraints), a <link xref=\"diagram\">diagram</link> showing the related "
+"tables, and an area to define display preferences for each column's data"
+msgstr ""
+"žádná nebo více karet představujících vlastnosti tabulky nebo pohledu: "
+"seznam sloupců, seznam omezení (primární nebo cizí klíče a jedinečnosti), "
+"<link xref=\"diagram\">diagram</link> zobrazující vztahy mezi tabulkami a "
+"oblast pro definování předvoleb zobrazení pro každý datový sloupec"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:39
+msgid ""
+"zero or more <link xref=\"diagram\">diagrams</link> in which any number of "
+"tables can be represented, where they are linked using their relations (as "
+"foreign key constraints)"
+msgstr ""
+"žádný nebo více <link xref=\"diagram\">diagramů</link> a v každém z nich "
+"může být zobrazen libovolný počet tabulek, které jsou pospojované podle "
+"vztahů mezi nimi (podle cizích klíčů)"
+
+#. (itstool) path: figure/title
+#: C/schema-browser-perspective.page:44
+msgid "Tab showing information about a table"
+msgstr "Karta zobrazující informace o tabulce"
+
+#. (itstool) path: figure/desc
+#: C/schema-browser-perspective.page:45
+msgid ""
+"Example of information displayed for each table, note the difference between "
+"foreign keys implemented in the database and <link xref=\"declared-fk"
+"\">declared foreign keys</link>"
+msgstr ""
+"Příklad informací zobrazených pro každou tabulku, všimněte si rozdílu mezi "
+"cizími klíči, které jsou součástí databáze a <link xref=\"declared-fk"
+"\">deklarovanými cizími klíči</link>"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:14
+#| msgid ""
+#| "@@image: 'figures/trans-begin.png'; md5=0382a22aeb54be0d7fe0ffa29dddf423"
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+msgstr ""
+"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:16
+#| msgid ""
+#| "@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-commit.png' "
+"md5='27f45d32501cc05bd6f6b16263283e9a'"
+msgstr ""
+"external ref='figures/trans-commit.png' "
+"md5='27f45d32501cc05bd6f6b16263283e9a'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:18
+#| msgid ""
+#| "@@image: 'figures/trans-rollback.png'; "
+#| "md5=470522738b1d6bf91b9787baac1c0191"
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-rollback.png' "
+"md5='470522738b1d6bf91b9787baac1c0191'"
+msgstr ""
+"external ref='figures/trans-rollback.png' "
+"md5='470522738b1d6bf91b9787baac1c0191'"
+
+#. (itstool) path: page/title
+#: C/transactions.page:9
+msgid "Transactions"
+msgstr "Transakce"
+
+#. (itstool) path: page/p
+#: C/transactions.page:10
+msgid ""
+"Transactions can be started, committed or rolled back on a per connection "
+"basis:"
+msgstr ""
+"Transakce mohou být spuštěny, potvrzeny nebo vráceny zpět pro jednotlivá "
+"připojení:"
+
+#. (itstool) path: item/p
+#: C/transactions.page:14
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin."
+"png\"/> toolbar button to start a transaction"
+msgstr ""
+"použijte tlačítko lišty nástrojů <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-begin.png\"/> ke spuštění transakce"
+
+#. (itstool) path: item/p
+#: C/transactions.page:16
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit."
+"png\"/> toolbar button to commit the current transaction (apply all the "
+"changes)"
+msgstr ""
+"použijte tlačítko lišty nástrojů <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-commit.png\"/> k potvrzení aktuální transakce (použijí "
+"se všechny změny)"
+
+#. (itstool) path: item/p
+#: C/transactions.page:18
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"rollback.png\"/> toolbar button to abort the current transaction (forget all "
+"the changes)"
+msgstr ""
+"použijte tlačítko lišty nástrojů <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-rollback.png\"/> ke zrušení aktuální transakce (všechny "
+"změny budou zapomenuty)"
+
+#. (itstool) path: note/p
+#: C/transactions.page:22
+msgid ""
+"A transaction may be started automatically when executing a SELECT statement "
+"which involves binary objects (BLOBs), and the transaction may be locked "
+"while the resulting data set is kept in memory (to get rid of a data set in "
+"a <link xref=\"query-execution-perspective\">query execution perspective</"
+"link>, clear the history item relating to the data set)."
+msgstr ""
+"Transakce může být spuštěna automaticky, pokud prováděný příkaz SELECT "
+"manipuluje s binárními objekty (BLOB) a transakce může být uzamknuta po "
+"dobu, co jsou výsledná data uchována v paměti (abyste se datové sady v <link "
+"xref=\"query-execution-perspective\">hledisku provádění dotazu</link> "
+"zbavili, vymažte položku historie vztahující se k datové sadě)."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/table-insert-data.page:20
+#| msgid ""
+#| "@@image: 'figures/table-insert-data.png'; "
+#| "md5=308807b8443d5ab26c8704a6e01aa1ab"
+msgctxt "_"
+msgid ""
+"external ref='figures/table-insert-data.png' "
+"md5='308807b8443d5ab26c8704a6e01aa1ab'"
+msgstr ""
+"external ref='figures/table-insert-data.png' "
+"md5='308807b8443d5ab26c8704a6e01aa1ab'"
+
+#. (itstool) path: page/title
+#: C/table-insert-data.page:8
+msgid "Inserting data in a table"
+msgstr "Vkládání dat do tabulky"
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:9
+msgid ""
+"From the <link xref=\"schema-browser-perspective\">schema browser "
+"perspective</link>, when a table's properties is displayed in a tab, use the "
+"<guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup "
+"appear containing a data entry for each column of the table to insert data "
+"into."
+msgstr ""
+"Když je zobrazena karta s vlastnostmi tabulky v <link xref=\"schema-browser-"
+"perspective\">hledisku prohlížeče schématu</link>, použijte nabídku "
+"<guiseq><gui>Tabulka</gui><gui>Vložit data</gui></guiseq> k zobrazení "
+"dialogového okna, které obsahuje vstupní pole pro zadání dat pro každý ze "
+"sloupců tabulky."
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:14
+msgid "A popup similar to the following will appear:"
+msgstr "Objeví se dialogové okno podobné následujícímu:"
+
+#. (itstool) path: figure/title
+#: C/table-insert-data.page:18
+msgid "Popup to insert data into table"
+msgstr "Dialogové okno pro vkládání dat do tabulky"
+
+#. (itstool) path: figure/desc
+#: C/table-insert-data.page:19
+msgid "A popup to insert data in a table"
+msgstr "Dialogové okno pro vkládání dat do tabulky"
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:22
+msgid "The noticeable points here are:"
+msgstr "Za zmínku stojí, že:"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:26
+msgid ""
+"There is one data entry per column in the table, with the exception (not "
+"shown in this figure) of multiple foreign key fields for which a single drop "
+"down choice widget is shown;"
+msgstr ""
+"Pro každý sloupec tabulky je jedno vstupní pole s výjimkou (na obrázku není) "
+"polí vícenásobných cizích klíčů, pro které je zobrazen jeden rozbalovací "
+"seznam;"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:28
+msgid ""
+"Each data entry has a small button on the right giving information about the "
+"corresponding data entry, and allowing you to reset the data entry's value "
+"to the value it had before any modification done, to set it to NULL or to "
+"set it to a default value. The button's color has the following "
+"signification:"
+msgstr ""
+"Každé vstupní pole má na pravé straně malé tlačítko, které podává informaci "
+"a příslušném datovém záznamu a umožňuje vrátit hodnotu záznamu na hodnotu "
+"před provedením změn, nastavit hodnotu na prázdnou (NULL) a nebo nastavit "
+"hodnotu na výchozí hodnotu. Barva tlačítka má následující význam:"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:33
+msgid "Red: means the current value in the data entry is invalid"
+msgstr "Červená: znamená, že aktuální hodnota v datovém záznamu je neplatná"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:34
+msgid ""
+"Blue: means the current value in the data entry is unused and the column's "
+"default value will be used instead (useful for example for auto incremented "
+"columns)"
+msgstr ""
+"Modrá: znamená, že aktuální hodnota v datovém záznamu je nepoužita a místo "
+"ní bude použita výchozí hodnota sloupce (použitelné např. pro sloupce s "
+"automaticky zvyšovanou hodnotou)"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:36
+msgid "Green: means the current value in the data entry is NULL"
+msgstr ""
+"Červená: znamená, že aktuální hodnota v datovém záznamu je prázdná (NULL)"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:37
+msgid ""
+"Same color as the rest of the UI: means none of the above situations apply"
+msgstr ""
+"Stejná barva jako v ostatních částech uživatelského rozhraní: znamená, že "
+"nenastala ani jedna z předchozích situací"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:40
+msgid ""
+"Columns which are foreign keys to other tables are presented as a drop down "
+"combo box where you can only choose among the values in the referenced table "
+"(hint: to have that values list refreshed you should close the popup dialog "
+"and reopen it);"
+msgstr ""
+"Sloupce, které mají cizí klíče směřující do jiných tabulek jsou prezentovány "
+"rozbalovací seznamem, ve kterém si můžete vybírat pouze z hodnot v "
+"odkazované tabulce (rada: pokud potřebujete seznam hodnot aktualizovat, "
+"zavřete dialogové okno a znovu jej otevřete);"
+
+#. (itstool) path: page/title
+#: C/variables.page:9
+msgid "Variables in SQL code"
+msgstr "Proměnné v kódu SQL"
+
+#. (itstool) path: page/p
+#: C/variables.page:10
+msgid ""
+"Variables (sometimes refered to as <em>placeholders</em>) are places in SQL "
+"code which are replaced by actual values when the SQL code is executed. The "
+"benefits are faster execution times (as the SQL code is parsed only once) "
+"and a protection against SQL injection vulnerabilities."
+msgstr ""
+"Proměnné (někdy také <em>zástupné proměnné</em>) jsou místa v kódu SQL, "
+"která jsou při provádění kódu SQL nahrazena aktuálními hodnotami. Přínosem "
+"je rychlejší provedení (kód SQL je analyzován jen jednou) a ochrana proti "
+"útokům typu „SQL injection“."
+
+#. (itstool) path: page/p
+#: C/variables.page:16
+msgid ""
+"Variables can be used in any SQL code, and are defined using the following "
+"syntax:"
+msgstr ""
+"Proměnné mohou být použity v libovolném kódu SQL a definují se následující "
+"syntaxí:"
+
+#. (itstool) path: page/code
+#: C/variables.page:19
+#, no-wrap
+msgid ""
+"\n"
+"##&lt;variable name&gt;[::&lt;variable type&gt;[::NULL]]"
+msgstr ""
+"\n"
+"##&lt;název proměnné&gt;[::&lt;typ proměnné&gt;[::NULL]]"
+
+#. (itstool) path: item/p
+#: C/variables.page:25
+msgid ""
+"the <em>variable name</em> can contain any SQL identifier character or among "
+"the <code>+-.|@?</code>characters (no space allowed)"
+msgstr ""
+"<em>název proměnné</em> může obsahovat libovolný znak dovolený pro "
+"identifikátory SQL a také znaky <code>+-.|@?</code> (mezery dovoleny nejsou)"
+
+#. (itstool) path: item/p
+#: C/variables.page:27
+msgid ""
+"the <em>variable type</em> can be among: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
+"<code>binary</code>"
+msgstr ""
+"<em>typ proměnné</em> může být: <code>string</code> (řetězec), "
+"<code>boolean</code> (pravdivostní hodnota), <code>int</code> (celé číslo), "
+"<code>date</code> (datum), <code>time</code> (čas), <code>timestamp</code> "
+"(časové razítko), <code>guint</code> (celé číslo glib), <code>blob</code> "
+"(rozsáhlý binární objekt) a <code>binary</code> (binární data)"
+
+#. (itstool) path: item/p
+#: C/variables.page:30
+msgid ""
+"the <code>::NULL</code> can be appended to specify that the variable may "
+"take the special <code>NULL</code> value."
+msgstr ""
+"lze připojit <code>::NULL</code> a tím určit, že proměnná může nabývat "
+"speciální hodnoty <code>NULL</code> (prázdná hodnota)"
+
+#. (itstool) path: page/p
+#: C/variables.page:33
+msgid "Examples:"
+msgstr "Příklady:"
+
+#. (itstool) path: page/code
+#: C/variables.page:36
+#, no-wrap
+msgid ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+msgstr ""
+"\n"
+"##jmeno::string\n"
+"##id::int::NULL\n"
+"##prodej@3::date::NULL\n"
+"##zakaznik@id::int"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:29
+#| msgid ""
+#| "@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
+msgstr ""
+"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:94
+#| msgid ""
+#| "@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-4.png' "
+"md5='9c19e575c63411872a3742efd02473c1'"
+msgstr ""
+"external ref='figures/virtual-cnc-4.png' "
+"md5='9c19e575c63411872a3742efd02473c1'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:108
+#| msgid ""
+#| "@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-5.png' "
+"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
+msgstr ""
+"external ref='figures/virtual-cnc-5.png' "
+"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:117
+#| msgid ""
+#| "@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-2.png' "
+"md5='275c8e47da75738596b0b4c47b06a70a'"
+msgstr ""
+"external ref='figures/virtual-cnc-2.png' "
+"md5='275c8e47da75738596b0b4c47b06a70a'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:124
+#| msgid ""
+#| "@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-3.png' "
+"md5='a47d581b293767deb95f77e555f07e8c'"
+msgstr ""
+"external ref='figures/virtual-cnc-3.png' "
+"md5='a47d581b293767deb95f77e555f07e8c'"
+
+#. (itstool) path: page/title
+#: C/virtual-connections.page:9
+msgid "Connections binding (i.e. virtual connections)"
+msgstr "Svazování připojení (tj. virtuální připojení)"
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:10
+msgid ""
+"Connection binding is a feature which allows to \"bind\" several connections "
+"and/or imported data sets into a single connection, which can be used almost "
+"like a regular connection."
+msgstr ""
+"Svazování připojení je funkce, které dovoluje „svázat“ několik připojení a/"
+"nebo importované datové sady do jednoho připojení, které může být dále "
+"použito podobně jako běžné připojení."
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:14
+msgid ""
+"This feature is useful when one needs to execute an SQL command (for example "
+"to extract data) taking into account data actually stored in different "
+"databases. Without this feature, the way to achieve the same result is by "
+"exporting the necessary data from each database and work on the data outside "
+"of the databases."
+msgstr ""
+"Tato funkce je užitečná, když potřebujete provést příkaz SQL (například "
+"získat data) vůči datům uloženým současně v různých databázích. Bez této "
+"funkce je pro získání stejných výsledků nutné postupovat tak, že exportujete "
+"potřebná data z každé z databází a pracujete s daty mimo původní databáze."
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:20
+msgid ""
+"To create a new \"bound\" connection (or \"virtual\" connection), use the "
+"<guiseq><gui>Connection</gui><gui>Bind connection</gui></guiseq> menu, or "
+"the <keyseq><key>Ctrl</key><key>i</key></keyseq> shortcut. This pops up a "
+"new dialog window from which elements to be included in the \"bound\" "
+"connection can be defined as shown below."
+msgstr ""
+"Pro vytvoření nového „svázaného“ připojení (nebo „virtuálního“ připojení) "
+"použijte nabídku <guiseq><gui>Připojit</gui><gui>Svázat připojení</gui></"
+"guiseq> nebo klávesovou zkratku <keyseq><key>Ctrl</key><key>i</key></"
+"keyseq>. Objeví se nové dialogové okno (viz níže), ve kterém můžete "
+"definovat prvky, které budou součástí „svázaného“ připojení."
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:27
+msgid "Dialog to create a new virtual connection"
+msgstr "Dialogové okno pro vytvoření nového virtuálního připojení"
+
+#. (itstool) path: figure/desc
+#: C/virtual-connections.page:28
+msgid "Here the current connection (c1) will be bound in the \"c1\" schema"
+msgstr "Zde nyní máme připojení (p1), které bude svázáno ve schématu „p1“"
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:31
+msgid "Use the <guiseq><gui>Add binding</gui></guiseq> button to either:"
+msgstr "Použijte tlačítko <guiseq><gui>Přidat do svazku</gui></guiseq> k:"
+
+#. (itstool) path: item/p
+#: C/virtual-connections.page:35
+msgid ""
+"bind a connection to include all the tables of that connection: use the "
+"<guiseq><gui>Bind a connection</gui></guiseq> option. This option simply "
+"adds a new element in the dialog, to specify a schema name and select an "
+"existing connection"
+msgstr ""
+"navázání připojení, což zahrnuje všechny tabulky takovéhoto připojení: "
+"použijte volbu <guiseq><gui>Navázat připojení</gui></guiseq>. Tato volba "
+"jednoduše přidá v dialogovém okně nový prvek, který určí název schématu a "
+"vybere stávající připojení"
+
+#. (itstool) path: item/p
+#: C/virtual-connections.page:36
+msgid ""
+"bind a data set to import data from a text file as a single table: use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option. See section below for "
+"more information."
+msgstr ""
+"navázání datové sady, aby se importovala data z textového souboru jako "
+"tabulka: použijte volbu <guiseq><gui>Navázat datovou sadu</gui></guiseq>. "
+"Další informace viz následující oddíl."
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:40
+msgid "Use case for virtual connections"
+msgstr "Případy použití pro virtuální připojení"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:41
+msgid ""
+"To illustrate virtual connection usage, let's define a simple use case and "
+"see how it's useful. Suppose you have a database which contains the list of "
+"servers which you are responsible for. For simplicity, let's assume that the "
+"database contains a table named \"server\" with the following definition:"
+msgstr ""
+"Pro ilustraci použití virtuálního připojení si ukážeme jednoduchou situaci a "
+"uvidíme, jak je to výhodné. Předpokládejme, že máte databázi, která obsahuje "
+"seznam serverů, za které zodpovídáte. Pro zjednodušení uvažujme databázi "
+"obsahující tabulku s názvem „servery“, která je definována následovně:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:46
+#, no-wrap
+msgid "CREATE TABLE servers (name string, location string);"
+msgstr "CREATE TABLE servery (nazev string, misto string);"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:47
+msgid "Let's suppose this table contains the following information:"
+msgstr "Mějme tuto tabulku obsahující následující informace:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:50
+#, no-wrap
+msgid ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
+msgstr ""
+"\n"
+"&gt; select * from servery ;\n"
+"nazev    | misto    \n"
+"---------+----------\n"
+"moon     | mistnost1\n"
+"darkstar | mistnost2\n"
+"flag     | mistnost3\n"
+"alf      | mistnost2\n"
+"vador    | mistnost3\n"
+"(5 řádků)\n"
+"&gt;\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:62
+msgid ""
+"Now let's assume you have a third party program which gives you a list of "
+"servers for which there might be a problem, the output of this program is a "
+"CSV file with a column for the server name, a column for the error code, and "
+"a column describing the problem. Let's assume the CSV file has the following "
+"contents:"
+msgstr ""
+"Nyní uvažujme, že máte aplikaci od třetí strany, které vám poskytuje seznam "
+"serverů, které mají potenciálně nějaký problém. Výstupem této aplikace je "
+"soubor CSV, který obsahuje sloupec s názvem serveru, sloupec s kódem chyby a "
+"sloupec popisující problém. Předpokládejme, že soubor CSV má následující "
+"obsah:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:67
+#, no-wrap
+msgid ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,file system full\n"
+"vador,1,outdated AV signature\n"
+"darkstar,2,overloaded\n"
+"flag,0,file system full\n"
+"$\n"
+"    "
+msgstr ""
+"\n"
+"$ cat problemy.csv \n"
+"název serveru,kód chyb,popis chyby\n"
+"darkstar,0,zaplněn souborový systém\n"
+"vador,1,zastaralá antivirová databáze\n"
+"darkstar,2,přetížen\n"
+"flag,0,zaplněn souborový systém\n"
+"$\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:76
+msgid ""
+"Let's suppose now you want to know all the servers, where they are located "
+"where there is a problem with error code 0. The solution is to bind the "
+"connection to the database (for example in the \"c1\" schema), import the "
+"problems CSV file (for example in the \"tab\" table), and execute the "
+"following SQL command:"
+msgstr ""
+"Předpokládejme, že teď chcete vědět, kde jsou umístěny servery, u kterých "
+"nastal problém s chybovým kódem 0. Řešení je svázat připojení k databázi "
+"(například ve schématu „p1“), naimportovat soubor CSV problemy (například do "
+"tabulky „tab“) a provést následující příkaz SQL:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:81
+#, no-wrap
+msgid ""
+"\n"
+"SELECT \n"
+"  \"server name\", \n"
+"  location\n"
+"FROM tab\n"
+"  INNER JOIN c1.servers AS s ON (tab.\"server name\" = s.name)\n"
+"WHERE \"Error code\"=0\n"
+"    "
+msgstr ""
+"\n"
+"SELECT \n"
+"  \"název serveru\", \n"
+"  misto\n"
+"FROM tab\n"
+"  INNER JOIN c1.servery AS s ON (tab.\"název serveru\" = s.nazev)\n"
+"WHERE \"kód chyby\"=0\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:89
+msgid "Which returns the expected results as shown in the following figure:"
+msgstr "Což vrátí očekávané výsledky, jak je ukázáno na následujícím obrázku:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:93
+msgid "Expected results from virtual connection"
+msgstr "Očekávané výsledky z virtuálního připojení"
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:100
+msgid "Importing a data set into a virtual connection"
+msgstr "Importování datové sady do virtuálního připojení"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:101
+msgid ""
+"To import a data set into a table in the virtual connection (for example to "
+"import the \"problems.csv\" file from the use case), use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option from the virtual "
+"connection creation dialog:"
+msgstr ""
+"Pro import datové sady do tabulky ve virtuálním připojení (například import "
+"souboru „problemy.csv“ použitý v předchozím oddíle) použijte volbu "
+"<guiseq><gui>Navázat datovou sadu</gui></guiseq> z dialogového okna pro "
+"vytvoření virtuálního připojení:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:107
+msgid "Import a data set into a virtual connection - 1"
+msgstr "Import datové sady do virtuálního připojení – 1"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:110
+msgid ""
+"From there use the <guiseq><gui>Import</gui></guiseq> button which allows "
+"you to select a file to import and also define some import options (file "
+"encoding, file type, ...) After this step, the virtual connection is ready "
+"to be used:"
+msgstr ""
+"Zde pak použijte tlačítko <guiseq><gui>Import</gui></guiseq>, které vám "
+"nabídne výběr souboru, který se má importovat, a také definování některých "
+"voleb importu (kódování souboru, typ souboru, …). Po tomto kroku je "
+"virtuální připojení připraveno k použití:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:116
+msgid "Import a data set into a virtual connection - 2"
+msgstr "Import datové sady do virtuálního připojení – 2"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:119
+msgid ""
+"The resulting virtual connection, identified as \"c2\" here is opened in its "
+"own new window:"
+msgstr ""
+"Výsledné virtuální připojení, zde označené jako „p2“ je otevřeno v svém "
+"vlastním novém okně:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:123
+msgid "New opened virtual connection"
+msgstr "Nově otevřené virtuální připojení"
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:129
+msgid "SQL usable with virtual connections"
+msgstr "SQL použitelné ve virtuálních přípojeních"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:130
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any virtual connection. Be aware however that if you "
+"define database objects (outside of the extended SQL presented next "
+"section), they will be lost the next time the virtual connection is opened."
+msgstr ""
+"Ve virtuálním připojení můžete využít znalost SQL z <link href=\"http://"
+"sqlite.org/lang.html\">SQLite</link>. Uvědomte si ale, že když definujete "
+"databázové objekty (mimo rozšíření SQL, které probráno v následujícím "
+"oddíle), budou při příštím otevření virtuálního připojení ztraceny."
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:135 C/ldap-connections.page:98
+msgid ""
+"See the <link xref=\"sql-sqlite\">SQL understood by LDAP connections and "
+"virtual connections</link> section for more information."
+msgstr ""
+"Více informací viz oddíl <link xref=\"sql-sqlite\">Porozumění SQL v "
+"připojeních k adresáři LDAP a virtuálních připojeních</link>."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:22
+#| msgid ""
+#| "@@image: 'figures/ldap-browser-persp.png'; "
+#| "md5=e2c1bbcb2f65ffe16b632141908f7027"
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-browser-persp.png' "
+"md5='e2c1bbcb2f65ffe16b632141908f7027'"
+msgstr ""
+"external ref='figures/ldap-browser-persp.png' "
+"md5='e2c1bbcb2f65ffe16b632141908f7027'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:47
+#| msgid ""
+#| "@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-classes.png' "
+"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
+msgstr ""
+"external ref='figures/ldap-classes.png' "
+"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:52
+#| msgid ""
+#| "@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
+msgstr ""
+"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
+
+#. (itstool) path: page/title
+#: C/ldap-browser-perspective.page:8
+msgid "The LDAP browser perspective"
+msgstr "Hledisko pro prohlížení adresáře LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:9
+msgid ""
+"Use the LDAP browser perspective to view and manipulate data stored in an "
+"LDAP directory. To switch to this perspective, use the "
+"<guiseq><gui>Perspective</gui><gui>LDAP browser</gui></guiseq> menu, or the "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq> shortcut. This perspective is "
+"of course only available when the opened connection is an <link xref=\"ldap-"
+"connection\">LDAP connection</link>."
+msgstr ""
+"Použijte hledisko Prohlížeč adresáře LDAP k zobrazení a úpravám dat "
+"uložených v adresáři LDAP. Pro přepnutí do tohoto hlediska použijte nabídku "
+"<guiseq><gui>Hledisko</gui><gui>Prohlížeč adresáře LDAP</gui></guiseq> nebo "
+"klávesovou zkratku <keyseq><key>Ctrl</key><key>P</key></keyseq>. Toto "
+"hledisko je samozřejmě dostupné, jen když je otevřené připojení <link xref="
+"\"ldap-connection\">připojením k adresáři LDAP</link>."
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:14
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites (to hold references to specific LDAP entries or "
+"specific LDAP classes), and the right pane being the action area."
+msgstr ""
+"Hledisko je vodorovně rozdělen do dvou panelů: levý panel pro uživatelem "
+"definované oblíbené položky (uchovává odkazy na konkrétní záznamy LDAP nebo "
+"konkrétní třídy LDAP) a pravý panel je oblastí, ve které se provádí akce."
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:20
+msgid "LDAP browser's entry tab"
+msgstr "Karta záznamů v prohlížeči adresáře LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:21
+msgid "LDAP entries tab"
+msgstr "Karta záznamů adresáře LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:25
+msgid ""
+"The left part of the perspective lists the favorite LDAP entries or classes. "
+"Double clicking on a favorite opens its properties in the right pane. Note "
+"that the LDAP entries favorites will always appear before the classes "
+"favorites."
+msgstr ""
+"V levé části hlediska jsou vypsány oblíbené záznamy a třídy LDAP. Dvojitým "
+"kliknutím na oblíbenou položku otevřete její vlastnosti v pravém panelu. "
+"Všimněte si, že oblíbené záznamy jsou vždy uvedeny před oblíbenými třídami."
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:35
+msgid ""
+"tabs to explore the LDAP DIT (Directory Information Tree): when an entry is "
+"selected from the tree, its attributes are displayed (only the valued "
+"attributes are displayed, the ones with no value are hidden), and the "
+"entry's DN (Distinguished Name) is always displayed first. Also note that "
+"the children of each entry are only fetched when necessary to avoid "
+"unnecessary requests to the LDAP server."
+msgstr ""
+"karty ke zkoumání DIT (strom adresářových informací) LDAP: když je ve stromu "
+"vybrán nějaký záznam, zobrazí se jeho atributy (jsou zobrazeny pouze "
+"vyhodnocené atributy, ty bez hodnot jsou skryty) a DN (rozlišovací název) "
+"záznamu je vždy zobrazen první. Rovněž upozorňujeme, že potomci každého ze "
+"záznamů jsou získáni, jen když je nutné předejít nepotřebnému požadavku na "
+"server LDAP."
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:39
+msgid ""
+"tabs to explore the LDAP's classes, see figure below. For a selected class, "
+"all the information regarding the class is displayed (description, OID, "
+"type, ...)"
+msgstr ""
+"karty ke zkoumání tříd LDAP, viz obrázek níže. Pro vybranou třídu se zobrazí "
+"všechny informace, které se jí dotýkají (popis, OID, typ, …)"
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:41
+msgid ""
+"tabs to perform LDAP searches, see figure below. An LDAP search definition "
+"can be saved as a virtual table, see the <link xref=\"ldap-connection#ldap-"
+"table-mapping\">LDAP table's mapping</link>."
+msgstr ""
+"karty k provádění hledání v adresáři LDAP, viz obrázek níže. Definici "
+"hledání v adresáři LDAP je možné uložit jako virtuální tabulku, viz <link "
+"xref=\"ldap-connection#ldap-table-mapping\">mapování tabulek adresáře LDAP</"
+"link>."
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:45
+msgid "LDAP browser's classes tab"
+msgstr "Karta tříd v prohlížeči adresáře LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:46
+msgid "LDAP classes tab"
+msgstr "Karta tříd adresáře LDAP"
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:50
+msgid "LDAP browser's search tab"
+msgstr "Karta hledání v prohlížeči adresáře LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:51
+msgid "LDAP search tab"
+msgstr "Karta hledání v adresáři LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:54
+msgid ""
+"Links in these tabs (identified by blue and underlined text) open a new tab, "
+"or use the first tab next to the current tab to display information about "
+"the selected link. For example in the figure above illustrating an LDAP "
+"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
+"\" tab and display the information about that class."
+msgstr ""
+"Odkazy na této kartě (signalizované modře podtrženým textem) otevřou novou "
+"kartu nebo použijí první kartu vedle aktuální k zobrazení informací o "
+"vybraném odkazu. Například na obrázku výše, kde je ukázána karta se záznamy "
+"LDAP, by se kliknutím na „inetOrgPerson“ otevřela nová karta „Třídy LDAP“, "
+"která by zobrazovala informace o třídě."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-connections.page:52
+#| msgid ""
+#| "@@image: 'figures/ldap-table-mapping.png'; "
+#| "md5=39f204f664cf1202deb716bb19b8993b"
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-table-mapping.png' "
+"md5='39f204f664cf1202deb716bb19b8993b'"
+msgstr ""
+"external ref='figures/ldap-table-mapping.png' "
+"md5='39f204f664cf1202deb716bb19b8993b'"
+
+#. (itstool) path: page/title
+#: C/ldap-connections.page:9
+msgid "LDAP connections"
+msgstr "Připojení k adresáři LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:10
+msgid ""
+"LDAP connections are different than other connections in a way that an LDAP "
+"database stores data in a hierarchical way, in the DIT (Directory "
+"Information Tree), whereas other databases accessible using the <app>gda-"
+"browser</app> application are relational databases."
+msgstr ""
+"Připojení k adresáři LDAP se od ostatních připojení liší v tom, že databáze "
+"LDAP uchovávají data hierarchickým způsobem, v tzv. DIT (Directory "
+"Information Tree – stromě adresářových informací), zatímco ostatní databáze "
+"přístupné z aplikace <app>gda-browser</app> jsou relační databáze."
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:15
+msgid ""
+"As a consequence, LDAP connections are treaded specially: as normal "
+"connections with tables (see the table mapping explained next), and through "
+"the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser "
+"perspective</link>"
+msgstr ""
+"V důsledku toho jsou přípojení k adresářům LDAP spouštěna speciálně: jako "
+"normální připojení s tabulkami (viz mapování tabulek vysvětlené dále) a "
+"zobrazovány z <link xref=\"ldap-browser-perspective\">hlediska Prohlížeč "
+"adresáře LDAP</link>."
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:20
+msgid ""
+"Note that LDAP connections may not be available is either the LDAP database "
+"provider is not installed or if the LDAP support was disabled during the "
+"compilation."
+msgstr ""
+"Upozorňujeme, že připojení LDAP nemusí být k dispozici, pokud není "
+"nainstalován poskytovatel databáze LDAP nebo pokud byla podpora LDAP "
+"zakázána při překladu aplikace."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:26
+msgid "LDAP table's mapping"
+msgstr "Mapování tabulek adresáře LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:27
+msgid ""
+"Within an LDAP connection, it is possible to declare virtual tables which "
+"are mapped to an LDAP search. These virtual tables can then later be used "
+"like any other table. The first column of each LDAP virtual table will "
+"always be the DN (Distinguished Name) of the entry represented in the row; "
+"the other columns depend on the table definition."
+msgstr ""
+"V rámci připojení k adresáři LDAP je možné deklarovat virtuální tabulky, "
+"které jsou mapovány na hledání LDAP. Tyto virtuální tabulky mohou být "
+"později použity podobně jako jiné tabulky. Prvním sloupcem každé takové "
+"virtuální tabulky LDAP je vždy DN (rozlišovací název) záznamu "
+"představujícího řádek; ostatní sloupce pak odvisejí od definice tabulky."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:33
+msgid "An LDAP virtual table is defined by the following attributes:"
+msgstr "Virtuální tabulka LDAP je definována následujícími vlastnostmi:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:37
+msgid "a table name"
+msgstr "název tabulky"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:38
+msgid ""
+"the base DN for the search: the LDAP entry at which the search begins (if "
+"not specified then the top level entry of the LDAP connection is used)"
+msgstr ""
+"základní rozlišovací název DN pro hledání: záznam LDAP, ve kterém hledání "
+"začíná (pokud není určen, je použit záznam nejvyšší úrovně v připojení)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:40
+msgid ""
+"the search filter: a valid LDAP search filter (if none is provided then the "
+"default search filter is \"(objectClass=*)\", requesting any LDAP entry)."
+msgstr ""
+"vyhledávací filtr: platný filtr pro hledání v adresáři LDAP (pokud není "
+"zadán, je výchozí filtr „(objectClass=*)“, který je žádostí o libovolný "
+"záznam LDAP)."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:42
+msgid ""
+"the attributes: the attributes to retrieve, each attribute will be mapped to "
+"a column of the table. The attributes must be a comma separated list of "
+"attributes, where each attribute can optionally be assigned a type and a "
+"multi value option (see below)."
+msgstr ""
+"atributy: atributy, které mají být získány, přičemž každý atribut je mapován "
+"na sloupec tabulky. Atributy musí být v podobě seznamu odděleného čárkami, "
+"kde každému atributu může být volitelně přiřazen typ a volba pro vícenásobné "
+"hodnoty (viz dále)."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:45
+msgid ""
+"the scope: the search scope, \"subtree\" (to search the base DN and the "
+"entire sub tree below), \"onelevel\" (to search the immediate children of "
+"the base DN entry only), or \"base\" (to search the base DN only)"
+msgstr ""
+"rozsah: rozsah hledání, „subtree“ (pro hledání v základním DN a jeho "
+"podřízeném stromě), „onelevel“ (pro hledání jen v přímých potomcích "
+"základního DN) nebo „base“ (pro hledání jen v základním DN)"
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/ldap-connections.page:50 C/ldap-connections.page:51
+msgid "LDAP table's properties"
+msgstr "Vlastnosti tabulek adresáře LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:54
+msgid ""
+"For example in the figure above, the \"users\" table will \"contain\" all "
+"the LDAP entries from the top level LDAP entry of the connection, and have 3 "
+"columns: the DN, the \"cn\" and the \"jpegPhoto\"."
+msgstr ""
+"Například na obrázku výše je tabulka „uzivatele“, která „obsahuje“ všechny "
+"záznamy adresáře LDAP od záznamu nejvyšší úrovně LDAP připojení a má tři "
+"sloupce: DN, „cn“ a „fotkaJPEG“."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:61
+msgid "Attributes to columns mapping"
+msgstr "Mapování atributů na sloupce"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:62
+msgid ""
+"As mentioned in the previous section, each attribute will be mapped to a "
+"column. The column type is normally automatically determined (string, "
+"number, ...) but can be forced by appending to the attribute name the \"::"
+"&lt;type&gt;\" for the requested type."
+msgstr ""
+"Jak bylo zmíněno v předchozím oddíle, každý atribut je mapována na sloupec. "
+"Typ sloupce je normálně určen automaticky (řetězec, číslo, …), ale můžete "
+"jej i vynutit připojením „::&lt;typ&gt“ za název atributu pro požadovaný typ."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:67
+msgid ""
+"Also, because some attributes can have multiple values, the table "
+"construction handles multi-valued attributes in different ways, depending on "
+"each attribute's options. An option can be specified by appending the \"::"
+"&lt;option&gt;\" to the attribute name. Valid options are:"
+msgstr ""
+"Dále platí, že protože některé atributy mohou mít více hodnot, zpracovává "
+"konstrukce tabulky vícehodnotové atributy různými způsoby, v závislosti na "
+"volbách u jednotlivých atributů. Volbu lze zadat tak, že za název atributu "
+"připojíte „::&lt;volba&gt;“. Platné volby jsou:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:74
+msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
+msgstr "„NULL“ nebo „0“: pro atribut bude vracen prázdná hodnota NULL"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:75
+msgid ""
+"\"CSV\": a comma separated value with all the values of the attribute will "
+"be returned. This only works for string attribute types."
+msgstr ""
+"„CVS“: budou vráceny všechny hodnoty atributu jako seznam hodnot oddělených "
+"čárkou. To funguje jen pro atributy typu řetězec."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:77
+msgid ""
+"\"MULT\" or \"*\": a row will be returned for each value of the attribute, "
+"effectively multiplying the number of returned rows"
+msgstr ""
+"„MULT“ nebo „*“: pro každou hodnotu atributu bude vrácen řádek, což v praxi "
+"znásobuje počet vracených řádků"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:79
+msgid ""
+"\"1\": only the first value of the attribute will be used, the other values "
+"ignored"
+msgstr ""
+"„1“: pro atribut bude použita pouze první hodnota, ostatní hodnoty jsou "
+"ignorovány"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:80
+msgid ""
+"\"CONCAT\": the attributes' values are concatenated (with a newline char "
+"between each value)"
+msgstr ""
+"„CONCAT“: hodnoty atributu budou pospojovány (se znakem odřádkování mezi "
+"jednotlivými hodnotami)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:82
+msgid ""
+"\"ERROR\": an error value will be returned (this is the default behaviour)"
+msgstr "„ERROR“: bude vrácena nějaká chybová hodnota (jde o výchozí chování)"
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:87
+msgid "SQL usable with LDAP connections"
+msgstr "SQL použitelné v rámci připojení k adresáři LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:88
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any LDAP connection. Be aware however that if you define "
+"database objects (outside of the extended SQL presented next section), they "
+"will be lost the next time the LDAP connection is opened."
+msgstr ""
+"V libovolném připojení LDAP můžete využít znalosti SQL z <link href=\"http://"
+"sqlite.org/lang.html\">SQLite</link>. Uvědomte si ale, že pokud definujete "
+"databázové objekty (mimo rozšíření SQL uvedené v následujícím oddíle), budou "
+"při příštím otevření připojení LDAP ztraceny."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:93
+msgid ""
+"So it is perfectly safe for example to create a table to store some LDAP "
+"data which may require a long operation to obtain, but after closing the "
+"LDAP connection, the table and its data will be lost."
+msgstr ""
+"Proto je naprosto bezpečné například vytvořit tabulku, která bude uchovávat "
+"nějaká data z adresáře LDAP, která mohou být požadována pro operace, které "
+"trvají déle, ale po zavření připojení k adresáři LDAP, budou tabulka a data "
+"v ní ztraceny."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:105
+msgid "SQL extension to handle LDAP tables"
+msgstr "Rozšíření SQL pro práci s tabulkami adresáře LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:106
+msgid "LDAP tables can be created using an extended set of SQL commands:"
+msgstr "Tabulky LDAP je možné vytvářet pomocí rozšířené sady příkazů SQL:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:110
+msgid ""
+"<code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to declare a new LDAP virtual table"
+msgstr ""
+"<code>CREATE LDAP TABLE &lt;název_tabulky&gt; [BASE='&lt;základní_dn&gt;'] "
+"[FILTER='&lt;filtr&gt;'] [ATTRIBUTES='&lt;filtr&gt;'] [SCOPE='&lt;"
+"filtr&gt;']</code> pro deklaraci nové virtuální tabulky LDAP"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:111
+msgid ""
+"<code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual "
+"table's definition"
+msgstr ""
+"<code>DESCRIBE LDAP TABLE &lt;název_tabulky&gt;</code> pro zobrazení "
+"definice virtuální tabulky adresáře LDAP"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:112
+msgid ""
+"<code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
+"specified part is actually modified)"
+msgstr ""
+"<code>ALTER LDAP TABLE &lt;název_tabulky&gt; [BASE='&lt;základní_dn&gt;'] "
+"[FILTER='&lt;filtr&gt;'] [ATTRIBUTES='&lt;filtr&gt;'] [SCOPE='&lt;"
+"filtr&gt;']</code> pro změnu definice virtuální tabulky LDAP (prakticky je "
+"změněna jen zadaná část)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:113
+msgid ""
+"<code>DROP LDAP TABLE &lt;table_name&gt;</code> to remove an LDAP virtual "
+"table. Note that the usual <code>DROP TABLE &lt;table_name&gt;</code> can "
+"also be used instead."
+msgstr ""
+"<code>DROP LDAP TABLE &lt;název_tabulky&gt;</code> pro odstranění virtuální "
+"tabulky adresáře LDAP. Poznamenejme, že obvykle je místo toho možné použít "
+"<code>DROP TABLE &lt;název_tabulky&gt;</code>."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:116
+msgid "For example the following SQL code:"
+msgstr "Například následující kód SQL:"
+
+#. (itstool) path: section/code
+#: C/ldap-connections.page:119
+#, no-wrap
+msgid ""
+"\n"
+"      CREATE LDAP TABLE users FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM users WHERE cn like '%john%';\n"
+"      ALTER LDAP TABLE users FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*john*))';\n"
+"      SELECT * FROM users;\n"
+"      DROP LDAP TABLE users;\n"
+"    "
+msgstr ""
+"\n"
+"      CREATE LDAP TABLE uzivatele FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM uzivatele WHERE cn like '%petr%';\n"
+"      ALTER LDAP TABLE uzivatele FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*petr*))';\n"
+"      SELECT * FROM uzivatele;\n"
+"      DROP LDAP TABLE uzivatele;\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:127
+msgid ""
+"should display twice the same results, which list all the LDAP entries of "
+"the \"inetOrgPerson\" class with a CommonName (cn) containing the \"john\" "
+"string."
+msgstr ""
+"by měl zobrazit dvakrát ten stejný výsledek, kterým je seznam všech záznamů "
+"LDAP třídy „inetOrgPerson“ s atributem CommonName (cn) obsahujícím text "
+"„petr“."

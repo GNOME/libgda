@@ -1,0 +1,168 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="data-manager-xml-syntax">
+<info>
+  <title type="sort">1</title>
+</info>
+<title>The data manager's XML syntax</title>
+<p>
+  The XML tree's root node must be a <code>&lt;data&gt;</code>, which
+  is allowed to contain one or more data source definitions.
+  Each data source is defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes,
+  both accepting the following optional attributes:
+</p>
+<list>
+  <item><p>"id" to specify a data source string ID, used when linking data sources one to another;</p></item>
+  <item><p>"title" to specify a title.</p></item>
+</list>
+<p>
+  It is of course possible to use both the <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> tags
+  in the same data sources specifications.
+</p>
+
+<section id="data-manager-exp-variables">
+  <title>Exported variables</title>
+  <p>
+    Each data source exports some variables which can be reused by other data sources to introduce
+    a dependency. When the data sources are executed, the contents of these exported variables are
+    reset depending on the row actually selected in the resulting tabular view. If no row is selected
+    then the variable is unset.
+  </p>
+  <p>
+    Any data source depending on a variable is executed again when the variable changes, and
+    in case the variable is unset, the data source's execution result is an empty data set.
+  </p>
+</section>
+<section id="data-manager-query-tag">
+  <title>The <code>&lt;query&gt;</code> tag</title>
+  <p>
+    Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, as the contents of the tag.
+    Linkage to other data sources can be achieved using <link xref="variables-syntax">variables</link> in the
+    SELECT's SQL.
+  </p>
+
+  <code><![CDATA[
+<data>
+  <query title="Customers" id="customers">
+    SELECT id, name FROM customers where name like ##name::string
+  </query>
+  <query title="Customer's details" id="cust_details">
+    SELECT * FROM customers WHERE id=##customers@id::int
+  </query>
+</data>]]>
+  </code>
+  <p>
+    For example the previous XML specification defines two data sources:
+  </p>
+  <list>
+    <item><p>the <code>customers</code> data source which selects some fields from the
+	<em>customers</em> table, and which depends on a string variable named <code>name</code>.
+	This variable has to be set when the data sources are executed because it won't be exported
+	by any data source in this specification.</p></item>
+    <item><p>the <code>cust_details</code> data source which selects all the details of a customer
+	specified using its ID. This second data source depends on the previous one because the
+	<code>customers@id</code> variable is exported from the <code>customers</code> data source.
+    </p></item>
+  </list>
+  <p>
+    Executing this data sources specification will create two tabular views: one where you can select
+    a customer, and one which displays all the attributes for the selected customer.
+  </p>
+
+  <section id="data-manager-query-exp-variables">
+    <title>Exported variables</title>
+    <p>
+      Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for
+      each column of the resulting data set (the variable's type is the same as the column's type):
+    </p>
+    <list>
+      <item><p><code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the column's position
+	  starts at 1</p></item>
+      <item><p><code>&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a table column</code></p></item>
+    </list>
+  </section>
+
+</section>
+
+<section id="data-manager-table-tag">
+  <title>The <code>&lt;table&gt;</code> tag</title>
+  <p>
+    Use the <code>&lt;table&gt;</code> tag to define a data source which will display the contents of a table.
+    This tag:
+  </p>
+  <list>
+    <item><p>requires the "name" attribute which represents the table name.</p></item>
+    <item><p>can have a "id" attribute corresponding to the data source's ID. If not present,
+    and ID will be assigned automatically.</p></item>
+    <item><p>can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on another
+	data source with
+	the "foreign_key_table" attribute defining the name of the table to which there are foreign keys
+	used to determine the dependency, and the "id" attribute can specify a data source ID if different than
+	the aforementioned table</p></item>
+  </list>
+  <p>
+    The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, defines a dependency to
+    another data source from a table:
+  </p>
+    <list>
+    <item><p>requires the "foreign_key_table" attribute defining the name of the table to which there are
+    foreign keys used to determine the dependency</p></item>
+    <item><p>can have a "id" attribute corresponding to the ID of the referenced data source. If not
+    provided, then the dependency may fail if there is no data source which ID is the"foreign_key_table"
+    attribute.</p></item>
+    <item><p>can contain one or more <code>&lt;column&gt;</code> tag which contents define the columns
+    to identify the foreign key to use; this is necessary if there are multiple foreign keys,
+    and can be omitted if there is only one possible foreign key. The listed columns are the one
+    from the table where the foreign key exists.</p></item>
+  </list>
+
+
+  <code><![CDATA[
+<data>
+  <table id="the_cust" name="customers"/>
+  <table name="orders">
+    <depend id="the_cust" foreign_key_table="customers">
+      <column>customer_id</column>
+    </depend>
+  </table>
+</data>]]>
+  </code>
+  <p>
+    For example the previous XML specification defines two data sources:
+  </p>
+  <list>
+    <item><p>the <code>customers</code> data source which selects all the contents of the
+	<em>customers</em> table.</p></item>
+    <item><p>the <code>orders</code> data source which selects among contents of the <code>orders</code>
+	table, the rows which correspond to a row in the <code>customers</code> table using the foreign key
+	on table orders which involves the "orders.customer_id" column and the primary key of the
+	customers table. The "id" attribute of the <code>&lt;depend&gt;</code> tag is necessary here to
+	identify referenced the data source.
+    </p></item>
+  </list>
+  <p>
+    Note in this example that:
+  </p>
+  <list>
+    <item><p>you don't have to specify the fields involved in the foreign key linking the
+	<code>orders</code> and <code>customers</code> tables</p></item>
+    <item><p>the data sources IDs have been assigned the names of the selected tables as no "id" attribute
+	has been specified for the <code>&lt;table&gt;</code> tags.</p></item>
+  </list>
+
+  <section id="data-manager-table-exp-variables">
+    <title>Exported variables</title>
+    <p>
+      Each data source defined by a <code>&lt;query&gt;</code> tag exports the following variable for
+      each table's column (the variable's type is the same as the column's type):
+    </p>
+    <list>
+      <item><p><code>&lt;data source ID&gt;@&lt;column name&gt;</code></p></item>
+      <item><p><code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the column's position
+	  starts at 1</p></item>
+    </list>
+  </section>
+
+
+</section>
+</page>

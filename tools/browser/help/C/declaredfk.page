@@ -1,0 +1,82 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="declared-fk">
+  <info>
+    <title type="sort">1</title>
+    <link type="topic" xref="schema-browser-perspective"/>
+  </info>
+  <title>Declared foreign keys</title>
+  <p>
+    All the foreign key constraints (where the contents of one or more columns in a table
+    is constrained to be among the values of one or more columns of another table) are
+    analysed and reported in the <link xref="schema-browser-perspective">Schema Browser perspective</link>.
+    Foreign key constraints help understand the database schema and is automatically used where appropriate
+    by the application.
+  </p>
+  <p>
+    However sometimes the designer of a database has forgotten or did not whish to use foreign
+    key constraints, and so it is possible to "declare foreign keys" which are only declaration to
+    the tool and not actually defined in the database.
+  </p>
+  <figure>
+    <title>Declared foreign keys in diagrams</title>
+    <desc>When displayed in diagrams, declared foreign keys are represented using a dashed line instead of a
+    solid line for actual foreign keys</desc>
+    <media type="image" mime="image/png" src="figures/declaredfk.png"/>
+  </figure>
+  <p>
+    Notes:
+  </p>
+  <list>
+    <item><p>the (foreign key name, table, referenced table) triplet uniquely identifies a declared
+    foreign key and thus declaring a new foreign key with the same triplet will remove any previously
+    declared one.</p></item>
+    <item><p>If the same constraint is actually represented by a real foreign key and also
+	by a declared foreign key, then the real foreign key definition will mask the
+	declared one</p></item>
+    <item><p>Declared foreign key don't have any policy to determine what action to perform on
+	UPDATE or DELETE situations, so the reported policy will always be "not enforced"</p></item>
+  </list>
+
+  <section id="declare-new-fk">
+    <title>Declaring a new foreign key</title>
+    <p>
+      A new foreign key can be declared from the
+      <link xref="schema-browser-perspective">Schema Browser perspective</link> using the
+      <guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which is present when
+      a table's properties are shown in the current tab.
+    </p>
+    <p>
+      Another way of declaring a foreign key is using the contextual menu on a table in a diagram, and
+      selecting the <guiseq><gui>Declare foreign key for this table</gui></guiseq> option.
+    </p>
+    <p>
+      In any way, to declare a new foreign key, the following information must be provided:
+    </p>
+    <list>
+      <item><p>A foreign key name</p></item>
+      <item><p>The referenced table</p></item>
+      <item><p>Columns and referenced columns for each column involved in the foreign key</p></item>
+    </list>
+    <figure>
+      <title>Information to declare a new foreign key</title>
+      <desc>UI dialog poping up to declare a new foreign key. Here the referenced table is 'warehouses', and
+      the involved columns are 'country' and 'city'.</desc>
+      <media type="image" mime="image/png" src="figures/declaredfk-dialog.png"/>
+    </figure>
+  </section>
+  
+  <section id="remove-fk">
+    <title>Remove a declared foreign key</title>
+    <p>
+      A declared foreign key can be removed by clicking on the <guiseq><gui>(Remove)</gui></guiseq> link
+      displayed below each declared foreign key properties in the table's properties (in the
+      <link xref="schema-browser-perspective">Schema Browser perspective</link>). 
+    </p>
+    <p>
+      Another way to remove a declared foreign key is in a <link xref="diagram">diagram</link> page through
+      the contextual menu associated with the dashed line representing the declared foreign key, selecting
+      the <guiseq><gui>Remove this declared foreign key</gui></guiseq> option.
+    </p>
+  </section>
+</page>

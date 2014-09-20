@@ -1,0 +1,56 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="features">
+  <info>
+    <title type="sort">1</title>
+    <link type="guide" xref="index#presentation"/>	
+  </info>
+  <title>Features</title>
+  <p>
+    <app>gda-browser</app>'s current features are:
+  </p>
+  <section id="features-gen-ui">
+    <title>General user interface</title>
+    <list>	
+      <item><p>multi threaded: each connection is handled in it own thread, meaning that no single
+      connection can lock the application</p></item>
+      <item><p>several windows can be opened for a single connection</p></item>
+      <item><p>full screen mode accessible to maximize the screen space usage</p></item>
+    </list>
+  </section>
+  <section id="features-cnc-mgmt">
+    <title>Connection management</title>
+    <list>
+      <item><p>multiple simultaneous connections can be opened at once</p></item>
+      <item><p>connections binding: it is possible to <link type="topic" xref="virtual-connections">"bind"</link> several connections into one to execute SQL commands on several connections at once</p></item>
+      <item><p>multi threaded: each connection is handled in it own thread, meaning that no single
+      connection can lock the application</p></item>
+    </list>
+  </section>
+  <section id="features-activities">
+    <title>Activities</title>
+    <p>
+      The activities are grouped by theme around the notion of <link type="topic" xref="general-ui">perspectives</link>, the following are currently implemented:
+    </p>
+    <list>	
+      <item><p>analyse the database schema (tables, relations, ...), see 
+      the <link xref="schema-browser-perspective">Schema browser perspective</link></p></item>
+      <item><p>execute SQL commands, see the
+      <link xref="query-execution-perspective">Query execution perspective</link></p></item>
+      <item><p>analyse the table's contents, see the
+      <link xref="data-manager-perspective">Data manager perspective</link></p></item>
+      <item><p>for <link xref="ldap-connection">LDAP connections</link>, manage the hierarchical data in the LDAP tree, see the
+      <link xref="ldap-browser-perspective">LDAP browser perspective</link></p></item>
+    </list>
+    <p>
+      See also the section about <link xref="actions">actions</link>
+    </p>
+  </section>
+  <section id="features-open">
+    <title>Openness</title>
+    <list>
+      <item><p>CSV and other text files can be imported and used in conjunction with <link type="topic" xref="virtual-connections">connection binding</link></p></item>
+      <item><p>the general framework is opened enough to add new integrated features; specifically anyone can develop new <link type="topic" xref="general-ui">perspectives</link></p></item>      
+    </list>
+  </section>
+</page>

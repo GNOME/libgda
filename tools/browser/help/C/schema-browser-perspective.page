@@ -1,0 +1,50 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="schema-browser-perspective">
+<info>
+  <title type="sort">1</title>
+  <link type="guide" xref="index#perspectives"/>
+</info>
+<title>The schema browser perspective</title>
+<p>
+  Use the schema browser perspective to understand the database's organisation (schema). To switch
+  to this perspective, use the <guiseq><gui>Perspective</gui><gui>Schema browser</gui></guiseq> menu, or
+  the <keyseq><key>Ctrl</key><key>B</key></keyseq> shortcut.
+</p>
+<p>
+  The perspective is divided in two horizontal panes: the left pane for the user defined favorites, and
+  the right pane being the action area.
+</p>
+<figure>
+  <title>Schema browser perspective's default view</title>
+  <desc>The default Schema browser perspective</desc>
+  <media type="image" mime="image/png" src="figures/mainwin.png"/>
+</figure>
+
+<p>
+  The left
+  part of the perspective lists the favorite database objects or diagrams. Double clicking on a favorite
+  opens its properties in the right pane.
+</p>
+<p>
+  The right pane is composed of several types of tabs:
+</p>
+<list>
+  <item><p>a tab listing all the database's tables and views, in a <em>cloud</em> view where
+      the tables with the more relations to other tables being displayed in a larger font;
+      this tab is always present</p></item>
+  <item><p>zero or more tabs representing a table or views' properties: the list of columns,
+      the list of constraints (primary or foreign keys, and unique constraints), a <link xref="diagram">diagram</link> showing the
+      related tables, and an area to define display preferences for each column's data</p></item>
+  <item><p>zero or more <link xref="diagram">diagrams</link> in which any number of tables can be represented, where they are
+      linked using their relations (as foreign key constraints)</p></item>
+</list>
+
+<figure>
+  <title>Tab showing information about a table</title>
+  <desc>Example of information displayed for each table, note the difference between foreign keys implemented in
+  the database and <link xref="declared-fk">declared foreign keys</link></desc>
+  <media type="image" mime="image/png" src="figures/schema-browser-persp.png"/>
+</figure>
+
+</page>

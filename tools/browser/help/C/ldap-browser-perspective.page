@@ -1,0 +1,61 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="ldap-browser-perspective">
+<info>
+  <title type="sort">1</title>
+  <link type="guide" xref="index#perspectives"/>
+</info>
+<title>The LDAP browser perspective</title>
+<p>
+  Use the LDAP browser perspective to view and manipulate data stored in an LDAP directory. To switch
+  to this perspective, use the <guiseq><gui>Perspective</gui><gui>LDAP browser</gui></guiseq> menu, or
+  the <keyseq><key>Ctrl</key><key>P</key></keyseq> shortcut. This perspective is of course only available when the opened connection is an <link xref="ldap-connection">LDAP connection</link>.
+</p>
+<p>
+  The perspective is divided in two horizontal panes: the left pane for the user defined 
+  favorites (to hold references to specific LDAP entries or specific LDAP classes), and
+  the right pane being the action area.
+</p>
+<figure>
+  <title>LDAP browser's entry tab</title>
+  <desc>LDAP entries tab</desc>
+  <media type="image" mime="image/png" src="figures/ldap-browser-persp.png"/>
+</figure>
+
+<p>
+  The left
+  part of the perspective lists the favorite LDAP entries or classes. Double clicking on a favorite
+  opens its properties in the right pane. Note that the LDAP entries favorites will always appear
+  before the classes favorites.
+</p>
+<p>
+  The right pane is composed of several types of tabs:
+</p>
+<list>
+  <item><p>tabs to explore the LDAP DIT (Directory Information Tree): when an entry is selected from the
+  tree, its attributes are displayed (only the valued attributes are displayed, the ones with no value
+  are hidden), and the entry's DN (Distinguished Name) is always displayed first. Also note that the children
+  of each entry are only fetched when necessary to avoid unnecessary requests to the LDAP server.</p></item>
+  <item><p>tabs to explore the LDAP's classes, see figure below. For a selected class, all the information
+  regarding the class is displayed (description, OID, type, ...)</p></item>
+  <item><p>tabs to perform LDAP searches, see figure below. An LDAP search definition can be saved as a virtual
+  table, see the <link xref="ldap-connection#ldap-table-mapping">LDAP table's mapping</link>.</p></item>
+</list>
+<figure>
+  <title>LDAP browser's classes tab</title>
+  <desc>LDAP classes tab</desc>
+  <media type="image" mime="image/png" src="figures/ldap-classes.png"/>
+</figure>
+<figure>
+  <title>LDAP browser's search tab</title>
+  <desc>LDAP search tab</desc>
+  <media type="image" mime="image/png" src="figures/ldap-search.png"/>
+</figure>
+<p>
+  Links in these tabs (identified by blue and underlined text) open a new tab, or use the first tab next
+  to the current tab to display information about the selected link. For example in the figure above illustrating
+  an LDAP entries tab, clicking on
+  the "inetOrgPerson" will open a new "LDAP classes" tab and display the information about that class.
+</p>
+
+</page>

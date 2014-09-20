@@ -1,0 +1,58 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="actions">
+  <info>
+    <title type="sort">1</title>
+    <link type="topic" xref="query-execution-perspective"/>
+    <link type="topic" xref="data-manager-perspective"/>
+  </info>
+  <title>Actions</title>
+  <p>
+    Actions are bits of SQL code which depends on variables and can be executed from the contextual
+    menu of any data set presented in a grid.
+  </p>
+  <p>
+    For example if there is a table "products" which lists some kind of products and
+    a table "comments" which lists all the comments left by users on a product (presumably
+    the "comments" table will have a foreign key on the "products" table to reference it).
+  </p>
+  <p>
+    An action can be defined to show all the entries in the "comments" table provided
+    the key is defining a product. Then anytime a product is listed in a result set, the
+    contextual menu will allow the user to execute this action and thus display all
+    the comments on the selected product. This situation is illustrated in the following figures.
+  </p>
+  <p>
+    The first step is to define an action, which is just a favorite in the <link xref="query-execution-perspective">query execution</link>
+    perspective which is defined as an action: bring up the properties for the favorite, and
+    make sure the "Is action" toggle is checked:
+  </p>
+  <figure>
+    <title>Action - define an action</title>
+    <desc>Define the action to list the comments for a product, from the query execution perspective</desc>
+    <media type="image" mime="image/png" src="figures/action-4.png"/>
+  </figure>
+  <figure>
+    <title>Action - display a list of products</title>
+    <desc>In the query execution perspective, let's select all the products. Notice that
+      there are here two defined actions: "Add comment on product" and "List comments
+      for product"</desc>
+    <media type="image" mime="image/png" src="figures/action-1.png"/>
+  </figure>
+  <p>
+    Now let's pop up the contextual menu:
+  </p>
+  <figure>
+    <title>Action - contextual menu</title>
+    <desc>Pop up the contextual menu and select <guiseq><gui>Execute action</gui><gui>List comments for product</gui></guiseq></desc>
+    <media type="image" mime="image/png" src="figures/action-2.png"/>
+  </figure>
+  <p>
+    After a confirmation of the parameters to execute the action, the result is there:
+  </p>
+  <figure>
+    <title>Action - executed</title>
+    <desc>The action is now executed</desc>
+    <media type="image" mime="image/png" src="figures/action-3.png"/>
+  </figure>
+</page>

@@ -1,0 +1,3085 @@
+# Indonesian translation for libgda.
+# Copyright (C) 2012 libgda's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libgda package.
+# Andika Triwidada <andika@gmail.com>, 2012, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda master\n"
+"POT-Creation-Date: 2013-09-17 16:54+0000\n"
+"PO-Revision-Date: 2013-10-23 15:08+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"Language-Team: Indonesian <gnome@i15n.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
+msgctxt "_"
+msgid "translator-credits"
+msgstr "Andika Triwidada <andika@gmail.com>, 2012, 2013."
+
+#. (itstool) path: credit/name
+#: C/index.page:6
+msgid "Vivien Malerba"
+msgstr "Vivien Malerba"
+
+#. (itstool) path: page/title
+#: C/index.page:11
+msgid "Gda Browser Help"
+msgstr "Bantuan Peramban Gda"
+
+#. (itstool) path: page/p
+#: C/index.page:12
+msgid ""
+"<app>gda-browser</app> is a tool for database administrators: they can "
+"analyse database's schemas to understand how data is organized, run SQL "
+"commands interactively, and in a broader way manage the data contained in "
+"the databases."
+msgstr ""
+"<app>gda-browser</app> adalah perkakas untuk para administrator basis data: "
+"mereka dapat menganalisa skema basis data untuk memahami bagaimana data "
+"diorganisasi, menjalankan perintah SQL secara interaktif, dan secara luas "
+"mengelola data yang dimuat dalam basis data."
+
+#. (itstool) path: page/p
+#: C/index.page:16
+msgid ""
+"Several connections to databases can be opened at once, allowing the user to "
+"work on multiple databases at once (it is also possible to execute commands "
+"on several connections at the same time)."
+msgstr ""
+"Beberapa koneksi ke basis data dapat dibuka sekaligus, mengijinkan pengguna "
+"untuk bekerja pada beberapa basis data sekaligus (juga mungkin untuk "
+"mengeksekusi perintah pada beberapa koneksi pada saat yang sama)."
+
+#. (itstool) path: page/p
+#: C/index.page:19
+msgid ""
+"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
+"connections to databases for which a database driver (provider) exists in "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
+"moment)."
+msgstr ""
+"Karena <app>gda-browser</app> memakai pustaka <app>libgda</app>, ini dapat "
+"membuka koneksi ke basis data yang driver basis datanya (penyedia) ada dalam "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> dan <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> didukung pada saat ini)."
+
+#. (itstool) path: section/title
+#: C/index.page:29
+msgid "Presentation"
+msgstr "Presentasi"
+
+#. (itstool) path: section/title
+#: C/index.page:32
+msgid "Perspectives"
+msgstr "Perspektif"
+
+#. (itstool) path: section/title
+#: C/index.page:36
+msgid "Connections management"
+msgstr "Manajemen koneksi"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:33
+msgctxt "_"
+msgid ""
+"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:40
+msgctxt "_"
+msgid ""
+"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:48
+msgctxt "_"
+msgid ""
+"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:56
+msgctxt "_"
+msgid ""
+"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
+msgstr "-"
+
+#. (itstool) path: info/title
+#: C/actions.page:5 C/data-manager-perspective.page:5
+#: C/data-manager-xml-syntax.page:5 C/data-manager-source-editor.page:5
+#: C/declaredfk.page:5 C/diagram.page:5 C/features.page:5 C/general-ui.page:5
+#: C/query-execution-perspective.page:5 C/schema-browser-perspective.page:5
+#: C/transactions.page:5 C/table-insert-data.page:5 C/variables.page:5
+#: C/virtual-connections.page:5 C/ldap-browser-perspective.page:5
+#: C/ldap-connections.page:5
+msgctxt "sort"
+msgid "1"
+msgstr "1"
+
+#. (itstool) path: page/title
+#: C/actions.page:9
+msgid "Actions"
+msgstr "Aksi"
+
+#. (itstool) path: page/p
+#: C/actions.page:10
+msgid ""
+"Actions are bits of SQL code which depends on variables and can be executed "
+"from the contextual menu of any data set presented in a grid."
+msgstr ""
+"Aksi adalah bit-bit dari kode SQL yang bergantung kepada variabel dan dapat "
+"dieksekusi dari menu konteks dari sebarang set data yang disajikan dalam "
+"suatu kisi."
+
+#. (itstool) path: page/p
+#: C/actions.page:14
+msgid ""
+"For example if there is a table \"products\" which lists some kind of "
+"products and a table \"comments\" which lists all the comments left by users "
+"on a product (presumably the \"comments\" table will have a foreign key on "
+"the \"products\" table to reference it)."
+msgstr ""
+"Sebagai contoh bila ada tabel \"products\" yang mendaftar beberapa jenis "
+"produk dan suatu tabel \"comments\" yang mendaftar semua komentar yang "
+"ditinggalkan oleh pengguna pada suatu produk (dengan anggapan bahwa tabel "
+"\"comments\" akan memiliki foreign key pada tabel \"products\" untuk "
+"mengacunya)."
+
+#. (itstool) path: page/p
+#: C/actions.page:19
+msgid ""
+"An action can be defined to show all the entries in the \"comments\" table "
+"provided the key is defining a product. Then anytime a product is listed in "
+"a result set, the contextual menu will allow the user to execute this action "
+"and thus display all the comments on the selected product. This situation is "
+"illustrated in the following figures."
+msgstr ""
+"Suatu aksi dapat didefinisikan untuk menampilkan semua entri dalam tabel "
+"\"comments\" bila disediakan kunci yang mendefinisikan suatu produk. Maka "
+"kapanpun suatu produk didaftar dalam suatu set hasil, menu konteks akan "
+"mengijinkan pengguna mengeksekusi aksi ini dan sehingga menampilkan semua "
+"komentar dari produk yang dipilih. Situasi ini diilustrasikan dalam gambar-"
+"gambar berikut."
+
+#. (itstool) path: page/p
+#: C/actions.page:25
+msgid ""
+"The first step is to define an action, which is just a favorite in the <link "
+"xref=\"query-execution-perspective\">query execution</link> perspective "
+"which is defined as an action: bring up the properties for the favorite, and "
+"make sure the \"Is action\" toggle is checked:"
+msgstr ""
+"Langkah pertama adalah mendefinisikan aksi, yang merupakan sebuah favorit "
+"dalam perspektif <link xref=\"query-execution-perspective\">eksekusi query</"
+"link> yang didefinisikan sebagai suatu aksi: munculkan properti bagi "
+"favorit, dan pastikan jungkit \"Adalah aksi\" dicontreng:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:31
+msgid "Action - define an action"
+msgstr "Aksi - mendefinisikan aksi"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:32
+msgid ""
+"Define the action to list the comments for a product, from the query "
+"execution perspective"
+msgstr ""
+"Definisikan aksi untuk melihat daftar komentar bagi produk, dari perspektif "
+"eksekusi query"
+
+#. (itstool) path: figure/title
+#: C/actions.page:36
+msgid "Action - display a list of products"
+msgstr "Aksi - tampilkan daftar produk"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:37
+msgid ""
+"In the query execution perspective, let's select all the products. Notice "
+"that there are here two defined actions: \"Add comment on product\" and "
+"\"List comments for product\""
+msgstr ""
+"Dalam perspektif eksekusi query, kita pilih semua produk. Perhatikan bahwa "
+"ada dua aksi yang terdefinisi: \"Tambah komentar pada produk\" dan \"Daftar "
+"komentar bagi produk\""
+
+#. (itstool) path: page/p
+#: C/actions.page:42
+msgid "Now let's pop up the contextual menu:"
+msgstr "Sekarang munculkan menu kontekstual:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:46
+msgid "Action - contextual menu"
+msgstr "Aksi - menu kontekstual"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:47
+msgid ""
+"Pop up the contextual menu and select <guiseq><gui>Execute action</"
+"gui><gui>List comments for product</gui></guiseq>"
+msgstr ""
+"Munculkan menu kontekstual dan pilih <guiseq><gui>Eksekusi aksi</"
+"gui><gui>Daftar komentar bagi produk</gui></guiseq>"
+
+#. (itstool) path: page/p
+#: C/actions.page:50
+msgid ""
+"After a confirmation of the parameters to execute the action, the result is "
+"there:"
+msgstr "Setelah konfirmasi parameter untuk mengeksekusi aksi, hasilnya disana:"
+
+#. (itstool) path: figure/title
+#: C/actions.page:54
+msgid "Action - executed"
+msgstr "Aksi - dieksekusi"
+
+#. (itstool) path: figure/desc
+#: C/actions.page:55
+msgid "The action is now executed"
+msgstr "Aksi kini dieksekusi"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:27
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-persp.png' "
+"md5='b4e0678527c03093031dcb3805bb2841'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:53 C/data-manager-perspective.page:93
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-mode.png' "
+"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:62
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-xmlcompose.png' "
+"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:69
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-uicompose.png' "
+"md5='33b1cf9354761dac4ee3f14a9534357a'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/data-manager-perspective.page:8
+msgid "The data manager perspective"
+msgstr "Perspektif manajer data"
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:9
+msgid ""
+"Use the data manager perspective to navigate through the database's data. To "
+"switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data "
+"Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></"
+"keyseq> shortcut."
+msgstr ""
+"Gunakan perspektif manajer data untuk menavigasi data dalam basis data. "
+"Untuk bertukar ke perspektif ini, gunakan menu <guiseq><gui>Perspektif</"
+"gui><gui>Manajer Data</gui></guiseq> atau pintasan <keyseq><key>Ctrl</"
+"key><key>D</key></keyseq>."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:14
+msgid ""
+"The workflow in this perspective is organized around the definition of one "
+"or more <em>data sources</em> (which selects data in the database) which, "
+"when executed, result in a data set displayed in a tabular view."
+msgstr ""
+"Alur kerja dalam perspektif ini diorganisasikan di sekitar definisi dari "
+"satu atau lebih <em>sumber data</em> (yang memilih data dalam basis data) "
+"yang ketika dieksekusi, menghasilkan suatu set data yang ditampilkan dalam "
+"tilikan berbentuk tabel."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:19
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane to keep "
+"favorite data sources set's definitions, and the right pane being the action "
+"area, where each data source is executed and the results presented in a "
+"tabular view."
+msgstr ""
+"Perspektif dibagi menjadi dua panel horisontal: panel kiri untuk menyimpan "
+"definisi set sumber data favorit, dan panel kanan adalah area aksi, dimana "
+"setiap sumber data dieksekusi dan hasilnya ditampilkan dalam tilikan bentuk "
+"tabel."
+
+#. (itstool) path: figure/title
+#: C/data-manager-perspective.page:25
+msgid "Data manager perspective"
+msgstr "Perspektif manajer data"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:26
+msgid "The data manager perspective, with two data sources"
+msgstr "Perspektif manajer data, dengan dua sumber data"
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:29
+msgid ""
+"In the figure above, there are two data sources: one for the 'customers' "
+"table and one for the 'orders' table (which here lists the orders from a "
+"customer), the later data source depending on the former one as there is a "
+"foreign key from the 'orders' table which references the 'customers' table. "
+"The two data sources have been executed and the result is composed of two "
+"tabular views side by side."
+msgstr ""
+"Dalam gambar di atas, ada dua sumber data: satu bagi tabel 'customers' dan "
+"satu bagi tabel 'orders' (yang disini mendaftar pesan dari seorang "
+"pelanggan), sumber data kedua bergantung kepada yang pertama karena ada "
+"foreign key dari tabel 'orders' yang mengacu ke tabel 'customers'. Dua "
+"sumber data telah dieksekusi dan hasilnya tersusun dari dua tilikan bentuk "
+"tabel berdampingan."
+
+#. (itstool) path: page/p
+#: C/data-manager-perspective.page:36
+msgid ""
+"Because the 'orders' data source depends on the 'customers' data source, its "
+"corresponding view is on the right of the one corresponding to the "
+"'customers' data source. Also when the row selection of the 'customers' view "
+"changes, the whole contents of the 'orders' view is refreshed."
+msgstr ""
+"Karena sumber data 'orders' bergantung kepada sumber data 'customers', "
+"viewnya ada di sebelah kanan dari view yang berkaitan dengan sumber data "
+"'customers'. Ketika pilihan baris dari view 'customers' berubah, seluruh isi "
+"view 'orders' disegarkan."
+
+#. (itstool) path: section/title
+#: C/data-manager-perspective.page:44
+msgid "Defining data sources"
+msgstr "Mendefinisikan sumber data"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:45
+msgid ""
+"The simplest data source is a data source which represents all the data from "
+"a table, displayed when executed as a single tabular view, as if one "
+"executed the <code>SELECT * FROM mytable</code> statement in the <link xref="
+"\"query-execution-perspective\"/>."
+msgstr ""
+"Sumber data paling sederhana adalah sumber data yang mewakili semua data "
+"dari suatu tabel, ditampilkan ketika dieksekusi sebagai tilikan bentuk tabel "
+"tunggal, seolah seperti ketika seseorang mengeksekusi pernyataan "
+"<code>SELECT * FROM mytable</code> dalam <link xref=\"query-execution-"
+"perspective\">perspektif eksekusi query</link>."
+
+# unmatched tag?
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:51
+msgid ""
+"The following figure shows the data sources editing mode (switch to editing "
+"mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
+"man-mode.png\"/> toolbar button)."
+msgstr ""
+"Gambar berikut menunjukkan mode penyuntingan sumber data (bertukar ke mode "
+"penyuntingan memakai tombol bilah alat <media type=\"image\" mime=\"image/png"
+"\" src=\"figures/data-man-mode.png\"/>)."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:55
+msgid ""
+"Data sources can be defined using an <link xref=\"data-manager-xml-syntax"
+"\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor"
+"\">default interface</link>."
+msgstr ""
+"Sumber data dapat didefinisikan memakai <link xref=\"data-manager-xml-syntax"
+"\">XML sintaks</link>, atau memakai <link xref=\"data-manager-source-editor"
+"\">antar muka baku</link>."
+
+#. (itstool) path: figure/title
+#: C/data-manager-perspective.page:60 C/data-manager-perspective.page:65
+msgid "Data sources edition"
+msgstr "Penyuntingan sumber data"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:61
+msgid ""
+"Editing data sources in the data manager perspective, from the XML syntax"
+msgstr "Menyunting sumber data dalam perspektif manajer data, dari sintaks XML"
+
+#. (itstool) path: figure/desc
+#: C/data-manager-perspective.page:66
+msgid ""
+"Editing data sources in the data manager perspective, using the default "
+"interface: two data sources are defined, which list the contents of the "
+"\"customers\" and \"orders\" tables. The setup is the same as the figure "
+"above showing the XML syntax"
+msgstr ""
+"Menyunting sumber data dalam perspektif manajer data, memakai antar muka "
+"baku: dua sumber data didefinisikan, yang menampilkan isi tabel \"customers"
+"\" dan \"orders\". Penyiapan sama dengan gambar di atas yang menampilkan "
+"sintaks XML"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:72 C/query-execution-perspective.page:71
+msgid "The commands available through the command buttons are:"
+msgstr "Perintah yang tersedia melalui tombol perintah adalah:"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:76
+msgid ""
+"<gui>Reset</gui>: resets the XML editor to a default XML template, only "
+"available when the XML view is currently displayed"
+msgstr ""
+"<gui>Reset</gui>: mereset penyunting XML ke templat baku XML, hanya tersedia "
+"ketika tilikan XML sedang ditampilkan"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:78
+msgid ""
+"<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new "
+"data sources as whole table contents (also analyses the database schema to "
+"propose relevant choices), only available when the XML edition mode is not "
+"selected"
+msgstr ""
+"<gui>Tambah</gui>: menampilkan menu popup dengan pintasan untuk "
+"mendefinisikan secara cepat sumber data baru sebagai isi seluruh tabel (juga "
+"menganalisa skema basis data untuk mengusulkan pilihan-pilihan yang "
+"relevan), hanya tersedia ketika mode edisi XML tak dipilih"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:81
+msgid ""
+"<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code of any data source's definition. The panel is automatically "
+"shown when a variable is detected in the SQL code."
+msgstr ""
+"<gui>Variabel</gui>: menampilkan/menyembunyikan panel <link xref=\"variables-"
+"syntax\">variabel</link> dimana Anda dapat mengisikan nilai ke variabel yang "
+"ada dalam kode SQL dari sebarang definisi sumber data. Panel secara otomatis "
+"ditunjukkan ketika suatu variabel terdeteksi dalam kode SQL."
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:84
+msgid "<gui>Execute</gui>: executes the defined data sources"
+msgstr "<gui>Eksekusi</gui>: eksekusi sumber data yang didefinisikan"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:85
+msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
+msgstr ""
+"<gui>Tilik XML</gui>: menjungkit antara penyunting XML dan penyunting UI"
+
+#. (itstool) path: item/p
+#: C/data-manager-perspective.page:86
+msgid "<gui>Help</gui>: shows some help"
+msgstr "<gui>Bantuan</gui>: menampilkan bantuan"
+
+#. (itstool) path: section/title
+#: C/data-manager-perspective.page:90
+msgid "Executing defined data sources"
+msgstr "Menjalankan sumber data yang terdefinisi"
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:91
+msgid ""
+"To execute a defined set of data sources, simply switch to execute mode "
+"using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
+"mode.png\"/> toolbar button or the <gui>Execute</gui> button."
+msgstr ""
+"Untuk mengeksekusi sumber data dari set yang didefinisikan, tukar saja ke "
+"mode eksekusi memakai tombol bilah alat <media type=\"image\" mime=\"image/"
+"png\" src=\"figures/data-man-mode.png\"/> atau tombol <gui>Execute</gui>."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:96
+msgid ""
+"The layout of tabular views for each data source is automatically generated "
+"in columns using the following rule: if a data source B depends on a data "
+"source A, then its tabular view is displayed on the right of the one for A."
+msgstr ""
+"Tata letak dari tilikan bentuk tabel bagi setiap sumber data dibuat secara "
+"otomatis dalam kolom memakai aturan berikut: bila suatu sumber data B "
+"bergantung kepada sumber data A, maka tilikan bentuk tabelnya ditampilkan di "
+"sebelah kanan A."
+
+#. (itstool) path: section/p
+#: C/data-manager-perspective.page:101
+msgid ""
+"Also if you change the selected row of tabular view of a data source A, then "
+"the tabular views of all the data sources depending on A will also have "
+"their tabular view refreshed."
+msgstr ""
+"Juga bila Anda mengubah baris yang dipilih dari tilikan bentuk tabel dari "
+"sumber data A, maka tilikan bentuk tabel dari semua sumber data yang "
+"bergantung pada A juga akan disegarkan tilikan bentuk tabelnya."
+
+#. (itstool) path: page/title
+#: C/data-manager-xml-syntax.page:7
+msgid "The data manager's XML syntax"
+msgstr "Sintaks XML manajer data"
+
+#. (itstool) path: page/p
+#: C/data-manager-xml-syntax.page:8
+msgid ""
+"The XML tree's root node must be a <code>&lt;data&gt;</code>, which is "
+"allowed to contain one or more data source definitions. Each data source is "
+"defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, "
+"both accepting the following optional attributes:"
+msgstr ""
+"Node akar pohon XML mesti berupa <code>&lt;data&gt;</code>, yang "
+"diperbolehkan memuat satu atau lebih definisi sumber data. Setiap sumber "
+"data didefinisikan oleh node <code>&lt;query&gt;</code> atau <code>&lt;"
+"table&gt;</code>, keduanya menerima atribut opsional berikut:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:15
+msgid ""
+"\"id\" to specify a data source string ID, used when linking data sources "
+"one to another;"
+msgstr ""
+"\"id\" untuk menyatakan suatu ID string sumber data, dipakai ketika "
+"mengaitkan sumber data satu sama lain;"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:16
+msgid "\"title\" to specify a title."
+msgstr "\"title\" untuk menyatakan judul."
+
+#. (itstool) path: page/p
+#: C/data-manager-xml-syntax.page:18
+msgid ""
+"It is of course possible to use both the <code>&lt;query&gt;</code> or "
+"<code>&lt;table&gt;</code> tags in the same data sources specifications."
+msgstr ""
+"Tentu saja mungkin memakai kedua tag <code>&lt;query&gt;</code> atau "
+"<code>&lt;table&gt;</code> dalam spesifikasi sumber data yang sama."
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:24 C/data-manager-xml-syntax.page:73
+#: C/data-manager-xml-syntax.page:154
+msgid "Exported variables"
+msgstr "Variabel yang diekspor"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:25
+msgid ""
+"Each data source exports some variables which can be reused by other data "
+"sources to introduce a dependency. When the data sources are executed, the "
+"contents of these exported variables are reset depending on the row actually "
+"selected in the resulting tabular view. If no row is selected then the "
+"variable is unset."
+msgstr ""
+"Setiap sumber data mengekspor beberapa variabel yang dapat dipakai ulang "
+"oleh sumber data lain untuk memperkenalkan kebergantungan. Ketika sumber "
+"data dieksekusi, isi dari variabel yang diekspor direset bergantung pada "
+"baris yang benar-benar dipilih dalam tilikan tabulasi hasilnya. Bila tak ada "
+"baris yang dipilih maka variabel dikosongkan."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:31
+msgid ""
+"Any data source depending on a variable is executed again when the variable "
+"changes, and in case the variable is unset, the data source's execution "
+"result is an empty data set."
+msgstr ""
+"Sebarang sumber data yang bergantung pada suatu variabel dieksekusi lagi "
+"ketika variabel berubah, dan bila variabelnya kosong, hasil eksekusi sumber "
+"data adalam set data kosong."
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:37
+msgid "The <code>&lt;query&gt;</code> tag"
+msgstr "Tag <code>&lt;query&gt;</code>"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:38
+msgid ""
+"Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, "
+"as the contents of the tag. Linkage to other data sources can be achieved "
+"using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
+msgstr ""
+"Pakai tag <code>&lt;query&gt;</code> untuk menyatakan pernyataan SQL SELECT, "
+"sebagai isi tab. Tautan ke sumber data lain dapat dicapai memakai <link xref="
+"\"variables-syntax\">variabel</link> dalam SQL milik SELECT."
+
+#. (itstool) path: section/code
+#: C/data-manager-xml-syntax.page:44
+#, no-wrap
+msgid ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;query title=\"Customers\" id=\"customers\"&gt;\n"
+"    SELECT id, name FROM customers where name like ##name::string\n"
+"  &lt;/query&gt;\n"
+"  &lt;query title=\"Customer's details\" id=\"cust_details\"&gt;\n"
+"    SELECT * FROM customers WHERE id=##customers@id::int\n"
+"  &lt;/query&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+msgstr ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;query title=\"Customers\" id=\"customers\"&gt;\n"
+"    SELECT id, name FROM customers where name like ##name::string\n"
+"  &lt;/query&gt;\n"
+"  &lt;query title=\"Customer's details\" id=\"cust_details\"&gt;\n"
+"    SELECT * FROM customers WHERE id=##customers@id::int\n"
+"  &lt;/query&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:54 C/data-manager-xml-syntax.page:130
+msgid "For example the previous XML specification defines two data sources:"
+msgstr ""
+"Sebagai contoh spesifikasi XML sebelumnya mendefinisikan dua sumber data:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:58
+msgid ""
+"the <code>customers</code> data source which selects some fields from the "
+"<em>customers</em> table, and which depends on a string variable named "
+"<code>name</code>. This variable has to be set when the data sources are "
+"executed because it won't be exported by any data source in this "
+"specification."
+msgstr ""
+"sumber data <code>customers</code> yang memilih beberapa ruas dari tabel "
+"<em>customers</em>, dan yang bergantung kepada suatu variabel string bernama "
+"<code>name</code>. Variabel ini mesti sudah diisi ketika sumber data "
+"dieksekusi karena itu tak akan diekspor oleh sebarang sumber data dalam "
+"spesifikasi ini."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:62
+msgid ""
+"the <code>cust_details</code> data source which selects all the details of a "
+"customer specified using its ID. This second data source depends on the "
+"previous one because the <code>customers@id</code> variable is exported from "
+"the <code>customers</code> data source."
+msgstr ""
+"sumber data <code>cust_details</code> yang memilih semua rincian dari suatu "
+"pelanggan dinyatakan memakai IDnya. Sumber data kedua ini bergantung kepada "
+"yang sebelumnya karena variabel <code>customers@id</code> diekspor dari "
+"sumber data <code>customers</code>."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:67
+msgid ""
+"Executing this data sources specification will create two tabular views: one "
+"where you can select a customer, and one which displays all the attributes "
+"for the selected customer."
+msgstr ""
+"Mengeksekusi spesifikasi sumber data ini akan membuat dua tilikan tabulasi: "
+"satu dimana Anda dapat memilih suatu pelanggan, dan satu yang menampilkan "
+"semua atribut bagi pelanggan yang dipilih."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:74
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each column of the resulting data set (the variable's "
+"type is the same as the column's type):"
+msgstr ""
+"Setiap sumber data yang didefinisikan oleh suatu tag <code>&lt;query&gt;</"
+"code> mengekspor variabel berikut bagi setiap kolom dari set data hasilnya "
+"(tipe variabel sama dengan tipe kolom):"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:79 C/data-manager-xml-syntax.page:161
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
+"column's position starts at 1"
+msgstr ""
+"<code>&lt;ID sumber data&gt;@&lt;posisi kolom&gt;</code> dimana posis kolom "
+"dimulai dari 1"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:81
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is "
+"a table column</code>"
+msgstr ""
+"<code>&lt;ID sumber data&gt;@&lt;nama kolom&gt; bila kolom set data adalah "
+"kolom tabel</code>"
+
+#. (itstool) path: section/title
+#: C/data-manager-xml-syntax.page:88
+msgid "The <code>&lt;table&gt;</code> tag"
+msgstr "Tag <code>&lt;table&gt;</code>"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:89
+msgid ""
+"Use the <code>&lt;table&gt;</code> tag to define a data source which will "
+"display the contents of a table. This tag:"
+msgstr ""
+"Pakai tag <code>&lt;table&gt;</code> untuk mendefinisikan sumber data yang "
+"akan menampilkan isi dari suatu tabel. Tag ini:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:94
+msgid "requires the \"name\" attribute which represents the table name."
+msgstr "memerlukan atribut \"name\" yang mewakili nama tabel."
+
+# typo 'and ID' -> 'an ID'?
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:95
+msgid ""
+"can have a \"id\" attribute corresponding to the data source's ID. If not "
+"present, and ID will be assigned automatically."
+msgstr ""
+"bisa punya atribut \"id\" yang terkait dengan ID sumber data. Bila tak ada, "
+"ID akan diberikan secara otomatis."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:97
+msgid ""
+"can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on "
+"another data source with the \"foreign_key_table\" attribute defining the "
+"name of the table to which there are foreign keys used to determine the "
+"dependency, and the \"id\" attribute can specify a data source ID if "
+"different than the aforementioned table"
+msgstr ""
+"bisa memuat tag <code>&lt;depend&gt;</code> yang menentukan dependensi pada "
+"sumber data lain dengan atribut \"foreign_key_table\" yang menentukan nama "
+"tabel yang mana ada foreign key yang dipakai untuk menentukan "
+"kebergantungan, dan atribut \"id\" dapat menyatakan ID sumber data bila "
+"berbeda dengan tabel yang disebut sebelumnya"
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:103
+msgid ""
+"The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, "
+"defines a dependency to another data source from a table:"
+msgstr ""
+"Tag <code>&lt;depend&gt;</code>, yang bagi sumber data dari suatu tabel, "
+"mendefinisikan dependensi ke sumber data lain dari suatu tabel:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:108
+msgid ""
+"requires the \"foreign_key_table\" attribute defining the name of the table "
+"to which there are foreign keys used to determine the dependency"
+msgstr ""
+"memerlukan atribut \"foreign_key_table yang menentukan nama tabel yang mana "
+"ada foreign key yang dipakai untuk menentukan kebergantungan"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:110
+msgid ""
+"can have a \"id\" attribute corresponding to the ID of the referenced data "
+"source. If not provided, then the dependency may fail if there is no data "
+"source which ID is the\"foreign_key_table\" attribute."
+msgstr ""
+"bisa memiliki atribut \"id\" yang berkaitan dengan ID dari sumber data yang "
+"diacu. Bila tak diberikan, maka kebergantungan bisa gagal bila tak ada "
+"sumber data yang IDnya adalah atribut \"foreign_key_table\"."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:113
+msgid ""
+"can contain one or more <code>&lt;column&gt;</code> tag which contents "
+"define the columns to identify the foreign key to use; this is necessary if "
+"there are multiple foreign keys, and can be omitted if there is only one "
+"possible foreign key. The listed columns are the one from the table where "
+"the foreign key exists."
+msgstr ""
+"dapat memuat satu atau lebih tag <code>&lt;column&gt;</code> yang isinya "
+"menentukan kolom yang mengidentifikasikan foreign key yang akan dipakai; ini "
+"diperlukan bila ada beberapa foreign key, dan dapat diabaikan bila hanya ada "
+"satu foreign key yang mungkin. Kolom yang didaftar adalah yang dari tabel "
+"dimana foreign key berada."
+
+#. (itstool) path: section/code
+#: C/data-manager-xml-syntax.page:120
+#, no-wrap
+msgid ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;table id=\"the_cust\" name=\"customers\"/&gt;\n"
+"  &lt;table name=\"orders\"&gt;\n"
+"    &lt;depend id=\"the_cust\" foreign_key_table=\"customers\"&gt;\n"
+"      &lt;column&gt;customer_id&lt;/column&gt;\n"
+"    &lt;/depend&gt;\n"
+"  &lt;/table&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+msgstr ""
+"\n"
+"&lt;data&gt;\n"
+"  &lt;table id=\"the_cust\" name=\"customers\"/&gt;\n"
+"  &lt;table name=\"orders\"&gt;\n"
+"    &lt;depend id=\"the_cust\" foreign_key_table=\"customers\"&gt;\n"
+"      &lt;column&gt;customer_id&lt;/column&gt;\n"
+"    &lt;/depend&gt;\n"
+"  &lt;/table&gt;\n"
+"&lt;/data&gt;\n"
+"  "
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:134
+msgid ""
+"the <code>customers</code> data source which selects all the contents of the "
+"<em>customers</em> table."
+msgstr ""
+"Sumber data <code>customers</code> yang memilih semua isi dari tabel "
+"<em>customers</em>."
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:136
+msgid ""
+"the <code>orders</code> data source which selects among contents of the "
+"<code>orders</code> table, the rows which correspond to a row in the "
+"<code>customers</code> table using the foreign key on table orders which "
+"involves the \"orders.customer_id\" column and the primary key of the "
+"customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag "
+"is necessary here to identify referenced the data source."
+msgstr ""
+"Sumber data <code>orders</code> yang memilih dari dalam isi tabel "
+"<code>orders</code>, baris-baris yang berkaitan dengan suatu baris dalam "
+"tabel <code>customers</code> memakai foreign key pada tabel orders yang "
+"melibatkan kolom \"orders.customer_id\" dan kunci primer dari tabel "
+"customers. Atribut \"id\" dari tag <code>&lt;depend&gt;</code> perlu disini "
+"untuk mengidentifikasi sumber data yang diacu."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:143
+msgid "Note in this example that:"
+msgstr "Perhatikan dalam contoh ini bahwa:"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:147
+msgid ""
+"you don't have to specify the fields involved in the foreign key linking the "
+"<code>orders</code> and <code>customers</code> tables"
+msgstr ""
+"Anda tak perlu menyatakan ruas yang terlibat dalam foreign key yang menaut "
+"tabel <code>orders</code> dan <code>customers</code>"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:149
+msgid ""
+"the data sources IDs have been assigned the names of the selected tables as "
+"no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
+"tags."
+msgstr ""
+"ID sumber data telah diberi nama dari tabel yang dipilih karena tidak ada "
+"atribut \"id\" yang telah dinyatakan bagi tag <code>&lt;table&gt;</code>."
+
+#. (itstool) path: section/p
+#: C/data-manager-xml-syntax.page:155
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each table's column (the variable's type is the same "
+"as the column's type):"
+msgstr ""
+"Setiap sumber data yang didefinisikan oleh tag <code>&lt;query&gt;</code> "
+"mengekspor variabel berikut bagi kolom setiap tabel (tipe variabel sama "
+"dengan tipe kolom):"
+
+#. (itstool) path: item/p
+#: C/data-manager-xml-syntax.page:160
+msgid "<code>&lt;data source ID&gt;@&lt;column name&gt;</code>"
+msgstr "<code>&lt;ID sumber data&gt;@&lt;nama kolom&gt;</code>"
+
+#. (itstool) path: page/title
+#: C/data-manager-source-editor.page:7
+msgid "The data manager's data sources editor"
+msgstr "Penyunting sumber data manajer data"
+
+#. (itstool) path: page/p
+#: C/data-manager-source-editor.page:8
+msgid "To be done."
+msgstr "Akan dikerjakan."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:25
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:65
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk-dialog.png' "
+"md5='56aba297f8b88248fabc23c54b361a8f'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/declaredfk.page:8
+msgid "Declared foreign keys"
+msgstr "Mendeklarasikan foreign key"
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:9
+msgid ""
+"All the foreign key constraints (where the contents of one or more columns "
+"in a table is constrained to be among the values of one or more columns of "
+"another table) are analysed and reported in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>. Foreign key constraints "
+"help understand the database schema and is automatically used where "
+"appropriate by the application."
+msgstr ""
+"Semua konstrain foreign key (dimana isi dari satu atau lebih kolom dalam "
+"sebuah tabel dibatasi di antara salah satu nilai dari satu atau lebih kolom "
+"dari tabel lain) dianalisis dan dilaporkan dalam <link xref=\"schema-browser-"
+"perspective\">Perspektif Peramban Skema</link>. Konstrain foreign key "
+"membantu memahami skema database dan secara otomatis digunakan jika sesuai "
+"dengan aplikasi."
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:16
+msgid ""
+"However sometimes the designer of a database has forgotten or did not whish "
+"to use foreign key constraints, and so it is possible to \"declare foreign "
+"keys\" which are only declaration to the tool and not actually defined in "
+"the database."
+msgstr ""
+"Namun kadang-kadang perancang database telah melupakan atau tidak berharap "
+"untuk menggunakan konstrain foreign key, sehingga mungkin untuk "
+"\"mendeklarasikan foreign key\" yang hanya merupakan deklarasi untuk alat "
+"dan tidak benar-benar didefinisikan dalam database."
+
+#. (itstool) path: figure/title
+#: C/declaredfk.page:22
+msgid "Declared foreign keys in diagrams"
+msgstr "Foreign key yang dideklarasikan dalam bagan"
+
+#. (itstool) path: figure/desc
+#: C/declaredfk.page:23
+msgid ""
+"When displayed in diagrams, declared foreign keys are represented using a "
+"dashed line instead of a solid line for actual foreign keys"
+msgstr ""
+"Ketika ditampilkan dalam bagan, foreign key yang dideklarasikan diwakili "
+"oleh garis putus-putus sebagai pengganti garis utuh bagi foreign key"
+
+#. (itstool) path: page/p
+#: C/declaredfk.page:27 C/variables.page:21
+msgid "Notes:"
+msgstr "Catatan:"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:31
+msgid ""
+"the (foreign key name, table, referenced table) triplet uniquely identifies "
+"a declared foreign key and thus declaring a new foreign key with the same "
+"triplet will remove any previously declared one."
+msgstr ""
+"triplet (nama foreign key, tabel, tabel yang diacu) secara unik "
+"mengidentifikasi suatu foreign key yang dideklarasikan sehingga "
+"mendeklarasikan foreign key baru dengan triplet yang sama akan menghapus "
+"deklarasi sebelumnya."
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:34
+msgid ""
+"If the same constraint is actually represented by a real foreign key and "
+"also by a declared foreign key, then the real foreign key definition will "
+"mask the declared one"
+msgstr ""
+"Bila konstrain yang sama benar-benar diwakili oleh foreign key nyata dan "
+"juga oleh suatu foreign key yang dideklarasikan, makan definisi foreign key "
+"nyata akan menutupi yang dideklarasikan"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:37
+msgid ""
+"Declared foreign key don't have any policy to determine what action to "
+"perform on UPDATE or DELETE situations, so the reported policy will always "
+"be \"not enforced\""
+msgstr ""
+"Foreign key yang dideklarasikan tak punya kebijakan untuk menentukan aksi "
+"apa yang dilakukan pada situasi UPDATE atau DELETE, sehingga kebijakan yang "
+"dilaporkan selalu \"tak ditegakkan\""
+
+#. (itstool) path: section/title
+#: C/declaredfk.page:42
+msgid "Declaring a new foreign key"
+msgstr "Mendeklarasikan suatu foreign key baru"
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:43
+msgid ""
+"A new foreign key can be declared from the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link> using the "
+"<guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which "
+"is present when a table's properties are shown in the current tab."
+msgstr ""
+"Foreign key baru dapat dideklarasikan dari <link xref=\"schema-browser-"
+"perspective\">Perspektif Peramban Skema</link> memakai menu "
+"<guiseq><gui>Tabel</gui><gui>Deklarasikan foreign key</gui></guiseq> uang "
+"ada ketika properti tabel ditunjukkan pada tab kini."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:49
+msgid ""
+"Another way of declaring a foreign key is using the contextual menu on a "
+"table in a diagram, and selecting the <guiseq><gui>Declare foreign key for "
+"this table</gui></guiseq> option."
+msgstr ""
+"Cara lain mendeklarasikan foreign key adalah memakai menu konteks pada suatu "
+"tabel dalam bagan, dan memilih opsi <guiseq><gui>Deklarasikan foreign key "
+"bagi tabel ini</gui></guiseq>."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:53
+msgid ""
+"In any way, to declare a new foreign key, the following information must be "
+"provided:"
+msgstr ""
+"Dengan cara apapun, untuk mendeklarasikan foreign key baru, informasi "
+"berikut mesti diberikan:"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:57
+msgid "A foreign key name"
+msgstr "Nama foreign key"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:58
+msgid "The referenced table"
+msgstr "Tabel yang diacu"
+
+#. (itstool) path: item/p
+#: C/declaredfk.page:59
+msgid ""
+"Columns and referenced columns for each column involved in the foreign key"
+msgstr ""
+"Kolom dan kolom yang diacu bagi setiap kolom yang dilibatkan dalam foreign "
+"key"
+
+#. (itstool) path: figure/title
+#: C/declaredfk.page:62
+msgid "Information to declare a new foreign key"
+msgstr "Informasi untuk mendeklarasikan foreign key baru"
+
+#. (itstool) path: figure/desc
+#: C/declaredfk.page:63
+msgid ""
+"UI dialog poping up to declare a new foreign key. Here the referenced table "
+"is 'warehouses', and the involved columns are 'country' and 'city'."
+msgstr ""
+"Dialog UI yang muncul untuk mendeklarasikan foreign key baru. Disini tabel "
+"yang diacu adalah 'warehouses', dan kolom yang terlibat adalah 'county' dan "
+"'city'."
+
+#. (itstool) path: section/title
+#: C/declaredfk.page:70
+msgid "Remove a declared foreign key"
+msgstr "Hapus suatu foreign key yang dideklarasikan"
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:71
+msgid ""
+"A declared foreign key can be removed by clicking on the <guiseq><gui>"
+"(Remove)</gui></guiseq> link displayed below each declared foreign key "
+"properties in the table's properties (in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>)."
+msgstr ""
+"Foreign key yang dideklarasikan dapat dihapus dengan mengklik tautan "
+"<guiseq><gui>(Hapus)</gui></guiseq> yang ditampilkan di bawah setiap "
+"properti foreign key yang dideklarasikan dalam properti tabel (pada <link "
+"xref=\"schema-browser-perspective\">Perspektif Peramban Skema</link>)."
+
+#. (itstool) path: section/p
+#: C/declaredfk.page:76
+msgid ""
+"Another way to remove a declared foreign key is in a <link xref=\"diagram"
+"\">diagram</link> page through the contextual menu associated with the "
+"dashed line representing the declared foreign key, selecting the "
+"<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
+msgstr ""
+"Cara lain untuk menghapus foreign key yang dideklarasikan adalah dalam "
+"halaman <link xref=\"diagram\">bagan</link> melalui menu konteks yang "
+"berasosiasi dengan garis putus-putus yang mewakili foreign key yang "
+"dideklarasikan, memilih opsi <guiseq><gui>Hapus foreign key yang "
+"dideklarasikan ini</gui></guiseq>."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/diagram.page:16
+msgctxt "_"
+msgid ""
+"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/diagram.page:7
+msgid "Diagrams"
+msgstr "Diagram"
+
+#. (itstool) path: page/p
+#: C/diagram.page:8
+msgid ""
+"Diagrams are present throughout the <app>gda-browser</app>, and are made of "
+"a canvas on which graphical items are displayed (like tables for example)."
+msgstr ""
+"Bagan ada di seluruh <app>gda-browser</app>, dan dibuat dari kanvas tempat "
+"butir-butir grafis ditampilkan (sebagai contoh adalah tabel)."
+
+#. (itstool) path: figure/title
+#: C/diagram.page:13
+msgid "Diagram"
+msgstr "Diagram"
+
+#. (itstool) path: figure/desc
+#: C/diagram.page:14
+msgid ""
+"Diagram showing some tables and their relations represented by foreign key "
+"constraints (also see <link xref=\"declared-fk\">the declared foreign keys</"
+"link>)"
+msgstr ""
+"Bagan yang menampilkan beberapa tabel dan relasi mereka diwakili oleh "
+"konstrain foreign key (lihat juga <link xref=\"declared-fk\">foreign key "
+"yang dideklarasikan</link>)"
+
+#. (itstool) path: page/p
+#: C/diagram.page:18
+msgid ""
+"The items can be moved around on the canvas (note that as long as the whole "
+"diagram fits in the canvas, it remains centered on it). Other manipulations "
+"are possible:"
+msgstr ""
+"Butir-butir dapat dipindah-pinda pada kanvas (perhatikan bahwa selama "
+"seluruh bagan pas dalam kanvas, itu akan tetap di tengahnya). Manipulasi "
+"lain yang mungkin:"
+
+#. (itstool) path: item/p
+#: C/diagram.page:23
+msgid ""
+"zooming in and out using the mouse's wheel, or through the contextual menu "
+"(right click on the canvas); a zoom to fit the canvas is also available in "
+"the contextual menu"
+msgstr ""
+"zum perbesar dan perkecil memakai roda tetikus, atau melalui menu konteks "
+"(klik kanan pada kanvas); zum untuk pas ukuran kanvas juga tersedia dalam "
+"menu konteks"
+
+#. (itstool) path: item/p
+#: C/diagram.page:25
+msgid ""
+"bring closer or moving away items from one another using the mouse's wheel "
+"while holding the <key>Shift</key> key"
+msgstr ""
+"mendekatkan atau menjauhkan butir-butir satu sama lain memakai roda tetikus "
+"ketika menahan tombol <key>Shift</key>"
+
+#. (itstool) path: item/p
+#: C/diagram.page:27
+msgid "arranging items linearly or radially, through the contextual menu"
+msgstr "manata butir-butir secara linier atau radial, melalui menu konteks"
+
+#. (itstool) path: item/p
+#: C/diagram.page:28
+msgid "printing, through the contextual menu"
+msgstr "mencetak, melalui menu kontekstual"
+
+#. (itstool) path: item/p
+#: C/diagram.page:29
+msgid "exporting as PNG or SVG images, through the contextual menu"
+msgstr "mengekspor sebagai gambar PNG atau SVG, melalui menu kontekstual"
+
+#. (itstool) path: item/p
+#: C/diagram.page:30
+msgid "adding items, through the contextual menu"
+msgstr "menambah butir, melalui menu kontekstual"
+
+#. (itstool) path: item/p
+#: C/diagram.page:31
+msgid "removing items, through the items's contextual menu"
+msgstr "menghapus butir, melalui menu kontekstual butir"
+
+#. (itstool) path: page/title
+#: C/features.page:8
+msgid "Features"
+msgstr "Fitur"
+
+#. (itstool) path: page/p
+#: C/features.page:9
+msgid "<app>gda-browser</app>'s current features are:"
+msgstr "Fitur-fitur <app>gda-browser</app> kini adalah:"
+
+#. (itstool) path: section/title
+#: C/features.page:13
+msgid "General user interface"
+msgstr "Antar muka pengguna umum"
+
+#. (itstool) path: item/p
+#: C/features.page:15 C/features.page:26
+msgid ""
+"multi threaded: each connection is handled in it own thread, meaning that no "
+"single connection can lock the application"
+msgstr ""
+"multi threaded: setiap koneksi ditangani dalam threadnya sendiri, yang "
+"berarti bahwa tak ada koneksi tunggal yang dapat mengunci aplikasi"
+
+#. (itstool) path: item/p
+#: C/features.page:17
+msgid "several windows can be opened for a single connection"
+msgstr "beberapa jendela dapat dibuka bagi koneksi tunggal"
+
+#. (itstool) path: item/p
+#: C/features.page:18
+msgid "full screen mode accessible to maximize the screen space usage"
+msgstr ""
+"mode layar penuh dapat dipakai untuk memaksimalkan pemakaian ruang layar"
+
+#. (itstool) path: section/title
+#: C/features.page:22
+msgid "Connection management"
+msgstr "Manajemen koneksi"
+
+#. (itstool) path: item/p
+#: C/features.page:24
+msgid "multiple simultaneous connections can be opened at once"
+msgstr "beberapa koneksi simultan dapat dibuka sekaligus"
+
+#. (itstool) path: item/p
+#: C/features.page:25
+msgid ""
+"connections binding: it is possible to <link type=\"topic\" xref=\"virtual-"
+"connections\">\"bind\"</link> several connections into one to execute SQL "
+"commands on several connections at once"
+msgstr ""
+"pengikatan koneksi: dimungkinkan untuk <link type=\"topic\" xref=\"virtual-"
+"connections\">\"mengikat\"</link> beberapa koneksi menjadi satu untuk "
+"mengeksekusi perintah SQL pada beberapa koneksi sekaligus"
+
+#. (itstool) path: section/title
+#: C/features.page:31
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. (itstool) path: section/p
+#: C/features.page:32
+msgid ""
+"The activities are grouped by theme around the notion of <link type=\"topic"
+"\" xref=\"general-ui\">perspectives</link>, the following are currently "
+"implemented:"
+msgstr ""
+"Aktivitas dikelompokkan menurut tema di sekitar gagasan <link type=\"topic\" "
+"xref=\"general-ui\">perspektif</link>, yang berikut ini kini "
+"diimplementasikan:"
+
+#. (itstool) path: item/p
+#: C/features.page:36
+msgid ""
+"analyse the database schema (tables, relations, ...), see the <link xref="
+"\"schema-browser-perspective\">Schema browser perspective</link>"
+msgstr ""
+"menganalisa skema basis data (tabel, relasi, ...), lihat <link xref=\"schema-"
+"browser-perspective\">Perspektif peramban skema</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:38
+msgid ""
+"execute SQL commands, see the <link xref=\"query-execution-perspective"
+"\">Query execution perspective</link>"
+msgstr ""
+"mengeksekusi perintah SQL, lihat <link xref=\"query-execution-perspective"
+"\">Perspektif eksekusi query</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:40
+msgid ""
+"analyse the table's contents, see the <link xref=\"data-manager-perspective"
+"\">Data manager perspective</link>"
+msgstr ""
+"menganalisa isi tabel, lihat <link xref=\"data-manager-perspective\"> "
+"Perspektif manajer data</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:42
+msgid ""
+"for <link xref=\"ldap-connection\">LDAP connections</link>, manage the "
+"hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-"
+"perspective\">LDAP browser perspective</link>"
+msgstr ""
+"untuk <link xref=\"ldap-connection\">koneksi LDAP</link>, kelola data "
+"hirarkis dalam pohon LDAP, lihat <link xref=\"ldap-browser-perspective"
+"\">perspektif peramban LDAP</link>"
+
+#. (itstool) path: section/p
+#: C/features.page:45
+msgid "See also the section about <link xref=\"actions\">actions</link>"
+msgstr "Lihat juga seksi tentang <link xref=\"actions\">aksi</link>"
+
+#. (itstool) path: section/title
+#: C/features.page:50
+msgid "Openness"
+msgstr "Keterbukaan"
+
+#. (itstool) path: item/p
+#: C/features.page:52
+msgid ""
+"CSV and other text files can be imported and used in conjunction with <link "
+"type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
+msgstr ""
+"CSV dan berkas teks lain dapat diimpor dan dipakai bersama-sama<link type="
+"\"topic\" xref=\"virtual-connections\">pengikatan koneksi</link>"
+
+#. (itstool) path: item/p
+#: C/features.page:53
+msgid ""
+"the general framework is opened enough to add new integrated features; "
+"specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
+"\">perspectives</link>"
+msgstr ""
+"kerangka kerja umum telah cukup dibuka untuk menambah fitur-fitur integrasi "
+"baru: secara khusus, siapapun dapat mengembangkan <link type=\"topic\" xref="
+"\"general-ui\">perspektif</link> baru"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/general-ui.page:18 C/schema-browser-perspective.page:21
+msgctxt "_"
+msgid ""
+"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/general-ui.page:8
+msgid "General interface organization"
+msgstr "Organisasi antar muka umum"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:9
+msgid ""
+"The <app>gda-browser</app> is composed of one or more top level windows, "
+"each window relating to a single connection (which name is in its title). "
+"For any given connection, several windows can be opened (use the "
+"<guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the "
+"<keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
+msgstr ""
+"<app>gda-browser</app> disusun dari satu atau lebih jendela aras puncak, "
+"setiap jendela berkaitan dengan suatu koneks tunggal (yang namanya menjadi "
+"judul). Bagi setiap koneksi, beberapa jendela dapat dibuka (gunakan menu "
+"<guiseq><gui>Jendela</gui><gui>Jendela baru</gui></guiseq> atau pintasan "
+"<keyseq><key>Ctrl</key><key>N</key></keyseq>)."
+
+#. (itstool) path: figure/title
+#: C/general-ui.page:16
+msgid "A connection window"
+msgstr "Suatu jendela koneksi"
+
+#. (itstool) path: figure/desc
+#: C/general-ui.page:17
+msgid ""
+"Window opened for the 'c1' connection (and the Schema browser perspective)"
+msgstr "Jendela yang dibuka bagi koneksi 'c1' (dan perspektif peramban Skema)"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:21
+msgid ""
+"Within each window, several <em>perspectives</em> are available which are "
+"adapted to different activities:"
+msgstr ""
+"Dalam setiap jendela, tersedia beberapa <em>perspektif</em> yang disesuaikan "
+"ke aktivitas berbeda:"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:26
+msgid ""
+"the <link xref=\"schema-browser-perspective\">Schema browser perspective</"
+"link> to help understand the database's layout"
+msgstr ""
+"<link xref=\"schema-browser-perspective\">Perspektif peramban skema</link> "
+"untuk membantu memahami tata letak basis data"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:27
+msgid ""
+"the <link xref=\"query-execution-perspective\">Query execution perspective</"
+"link> to execute any SQL command"
+msgstr ""
+"<link xref=\"query-execution-perspective\">Perspektif eksekusi query</link> "
+"untuk mengeksekusi sebarang perintah SQL"
+
+#. (itstool) path: item/p
+#: C/general-ui.page:28
+msgid ""
+"the <link xref=\"data-manager-perspective\">Data manager perspective</link> "
+"to navigate through the database's contents"
+msgstr ""
+"<link xref=\"data-manager-perspective\">Perspektif manajer data</link> untuk "
+"menavigasi melalui isi basis data"
+
+#. (itstool) path: page/p
+#: C/general-ui.page:30
+msgid ""
+"The currently displayed perspective can be changed individually for each "
+"window, and, as all perspectives have an action area composed of tabs, tabs "
+"can be moved from one window to the other if the source and destination "
+"window are for the same connection, and display the same perspective (simply "
+"drag and drop a tab from one window to the other using the tab's label as a "
+"handle)."
+msgstr ""
+"Perspektif yang kini ditampilkan dapat diubah secara individu bagi setiap "
+"jendela, dan seperti semua perspektif, memiliki area aksi yang tersusun atas "
+"tab; tab dapat dipindahkan dari satu jendela ke lainnya bisa jendela sumber "
+"dan tujuan memakai koneksi yang sama, dan menampilkan perspektif yang sama "
+"(cukup seret dan jatuhkan suatu tab dari satu jendela ke lainnya memakai "
+"label tab sebagai pegangan)."
+
+#. (itstool) path: p/link
+#: C/legal.xml:4
+msgid "Creative Commons Attribution-Share Alike 3.0 Unported License"
+msgstr "Creative Commons Attribution-Share Alike 3.0 Unported License"
+
+#. (itstool) path: license/p
+#: C/legal.xml:3
+msgid "This work is licensed under a <_:link-1/>."
+msgstr "Karya ini dilisensikan di bawah <_:link-1/>."
+
+#. (itstool) path: license/p
+#: C/legal.xml:6
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+msgstr ""
+"Sebagai pengecualian khusus, para pemegang hak cipta memberi Anda ijin untuk "
+"menyalin, mengubah, dan mendistribusikan kode contoh yang dimuat dalam "
+"dokumen ini di bawah syarat yang Anda pilih, tanpa pembatasan."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/query-execution-perspective.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/query-exec-persp.png' "
+"md5='c52ce85c0f89d26775c8b9dad282910a'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/query-execution-perspective.page:8
+msgid "The query execution perspective"
+msgstr "Perspektif eksekusi query"
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:9
+msgid ""
+"Use the query perspective to execute SQL statements. To switch to this "
+"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)"
+"</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> "
+"shortcut."
+msgstr ""
+"Pakai perspektif query untuk mengeksekusi pernyataan SQL. Untuk bertukar ke "
+"perspektif ini, gunakan menu <guiseq><gui>Perspektif</gui><gui>Eksekusi "
+"query (SQL)</gui></guiseq>, atau pintasan <keyseq><key>Ctrl</key><key>S</"
+"key></keyseq>."
+
+#. (itstool) path: figure/title
+#: C/query-execution-perspective.page:15
+msgid "Query exec perspective"
+msgstr "Perspektif query exec"
+
+#. (itstool) path: figure/desc
+#: C/query-execution-perspective.page:16
+msgid "The query exec perspective with one SELECT statement executed"
+msgstr "Perspektif query exec dengan satu pernyataan SELECT dieksekusi"
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:20
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorite statements, and the right pane being the action area."
+msgstr ""
+"Perspektif dibagi menjadi dua panel horisontal: panel kiri bagi pernyataan "
+"favorit yang didefinisikan pengguna, dan panel kanan adalah area aksi."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:24
+msgid ""
+"In the figure above, there are two favorites: a SELECT statement (named "
+"\"List customers\") and an INSERT statement (named \"New customer ...\"). "
+"The INSERT statement needs one \"name\" parameter, whereas the SELECT "
+"statement does not require any parameter to be executed."
+msgstr ""
+"Pada gambar di atas, ada dua favorit: suatu pernyataan SELECT (dinamai "
+"\"List customers\") dan suatu pernyataan INSERT (dinamai \"New customer ..."
+"\"). Pernyataan INSERT memerlukan satu parameter \"name\", sedangkan "
+"pernyataan SELECT tak memerlukan parameter untuk dieksekusi."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:30
+msgid ""
+"The icon difference between the two illustrates the fact that the INSERT "
+"favorite is also marked to be an <link xref=\"actions\">action</link>: it "
+"will be proposed as an action to be executed when the contextual menu is "
+"brought up in any grid representation of a resultset."
+msgstr ""
+"Perbedaan ikon antara keduanya mengilustrasikan fakta bahwa favorit INSERT "
+"juga ditandai sebagai <link xref=\"action\">aksi</link>: ini akan diusulkan "
+"sebagai aksi untuk dieksekusi ketika menu kontekstual dimunculkan dalam "
+"representasi kisi manapun dari set hasil."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:35
+msgid ""
+"The left part of the perspective lists the favorite statements which have "
+"been user defined. Activating a favorite (double clicking) resets the SQL "
+"text area's contents to the selected statement's SQL."
+msgstr ""
+"Panel kiri dari perspektif mendaftar pernyataan favorit yang telah "
+"didefinisikan oleh pengguna. Mengaktifkan suatu favorit (klik ganda) mereset "
+"isi area teks SQL ke SQL pernyataan yang dipilih."
+
+#. (itstool) path: page/p
+#: C/query-execution-perspective.page:40
+msgid ""
+"The right pane is composed of zero or more tabs where the SQL is entered and "
+"executed. In each tab there is:"
+msgstr ""
+"Panel kanan tersusun dari nol atau lebih tab dimana SQL dimasukkan dan "
+"dieksekusi. Dalam setiap tab ada:"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:45
+msgid "an SQL area in the top left part"
+msgstr "suatu area SQL di bagian kiri atas"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:46
+msgid "command buttons in the top right part"
+msgstr "tombol perintah di bagian kanan atas"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:47
+msgid "execution history in the lower left part"
+msgstr "riwayat eksekusi di bagian kiri bawah"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:48
+msgid "execution results in the lower right part"
+msgstr "hasil eksekusi di bagian kanan bawah"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:52
+msgid "SQL area"
+msgstr "Area SQL"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:53
+msgid ""
+"The SQL area is an SQL editor. The SQL can be any SQL understood by the "
+"database, with the exception of <link xref=\"variables-syntax\">variables</"
+"link> (which must have a specific syntax)."
+msgstr ""
+"Area SQL adalan suatu penyunting SQL. SQL bisa berupa sebarang SQL yang "
+"dimengerti oleh basis data tersebut, dengan pengecualian <link xref="
+"\"variables-syntax\">variabel</link> (yang mesti memiliki sintaks tertentu)."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:57
+msgid "The keyboard shortcuts in the SQL editor are:"
+msgstr "Pintasan papan tik dalam penyunting SQL adalah:"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:61
+msgid ""
+"<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>SPASI</key></keyseq> untuk memperoleh daftar "
+"pelengkapan"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:62
+msgid ""
+"<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> untuk mengeksekusi kode SQL"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:63
+msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>l</key></keyseq> untuk membersihkan penyunting"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:64
+msgid ""
+"<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
+"key><key>Down</key></keyseq> to navigate through the editor's history"
+msgstr ""
+"<keyseq><key>Ctrl</key><key>Up</key></keyseq> dan <keyseq><key>Ctrl</"
+"key><key>Down</key></keyseq> untuk navitasi dalam riwayat penyunting"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:70
+msgid "Command buttons"
+msgstr "Tombol perintah"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:75
+msgid ""
+"<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
+"key><key>l</key></keyseq> shortcut)"
+msgstr ""
+"<gui>Bersihkan</gui>: bersihkan penyunting (serupa dengan pintasan "
+"<keyseq><key>Ctrl</key><key>l</key></keyseq>)"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:76
+msgid ""
+"<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code. The panel is automatically shown when a variable is "
+"detected in the SQL code"
+msgstr ""
+"<gui>Variabel</gui>: menampilkan atau menyembunyikan panel <link xref="
+"\"variables-syntax\">variabel</link> dimana Anda dapat memberikan nilai-"
+"nilai ke variabel yang ada dalam kode SQL. Panel otomatis ditampilkan ketika "
+"suatu variabel terdeteksi dalam kode SQL"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:79
+msgid ""
+"<gui>Execute</gui>: executes the SQL code. If the SQL code contains some "
+"variables which have not been set, then a popup first appears requesting the "
+"variables to be given values. This is similar to the <keyseq><key>Ctrl</"
+"key><key>ENTER</key></keyseq> shortcut"
+msgstr ""
+"<gui>Eksekusi</gui>: eksekusi kode SQL. Bila kode SQL memuat beberapa "
+"variabel yang belum ditata, maka akan muncul popup yang meminta agar "
+"variabel diisi nilainya. Ini serupa dengan pintasan <keyseq><key>Ctrl</"
+"key><key>ENTER</key></keyseq>"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:82
+msgid ""
+"<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
+"comments)"
+msgstr ""
+"<gui>Indentasi</gui>: indentasi ulang kode SQL (peringatan: ini menghapus "
+"semua komentar)"
+
+#. (itstool) path: item/p
+#: C/query-execution-perspective.page:83
+msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
+msgstr "<gui>Favorit</gui>: menambahkan kode SQL kini ke favorit"
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:88
+msgid "Execution history"
+msgstr "Riwayat eksekusi"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:89
+msgid ""
+"The execution history part contains a list of the past executed statements, "
+"ordered by execution date along with an indication when the statement was "
+"executed (11 minutes in the figure above). Selecting an history item "
+"displays the corresponding result in the execution results part."
+msgstr ""
+"Bagian riwayat eksekusi memuat daftar dari pernyataan yang pernah "
+"dieksekusi, diurutkan menurut tanggal eksekusi ditambah dengan indikasi "
+"kapan pernyataan dieksekusi (11 menit pada gambar di atas). Memilih butir "
+"riwayat akan menampilkan hasil yang bersangkutan pada bagian hasil eksekusi."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:94
+msgid ""
+"The <gui>Copy</gui> button copies the currently selected history item's SQL "
+"code to the SQL editor, and the <gui>Clear</gui> button removes all the "
+"history items."
+msgstr ""
+"Tombol <gui>Salin</gui> menyalin kode SQL butir riwayat yang kini dipilih ke "
+"penyunting SQL, dan tombol <gui>Bersihkan</gui> menghapus semua butir "
+"riwayat."
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:98
+msgid ""
+"Note that any given history item can also be removed individually using the "
+"<key>Suppr</key> key."
+msgstr ""
+"Perhatikan bahwa sebarang butir riwayat yang diberikan juga dapat dihapus "
+"secara individu memakai tombol <key>Suppr</key>."
+
+#. (itstool) path: section/title
+#: C/query-execution-perspective.page:104
+msgid "Execution results"
+msgstr "Hasil eksekusi"
+
+#. (itstool) path: section/p
+#: C/query-execution-perspective.page:105
+msgid ""
+"The Execution results part displays the execution result of the currently "
+"selected execution history item, as a table for SELECT statement, giving "
+"information for other types of statement, or giving the execution error "
+"notice if the execution failed."
+msgstr ""
+"Bagian hasil eksekusi menampilkan hasil eksekusi dari butir riwayat eksekusi "
+"yang kini dipilih, sebagai suatu tabel bagi pernyataan SELECT, memberikan "
+"informasi bagi pernyataan tipe lain, atau memberi pemberitahuan galat "
+"eksekusi bila eksekusi gagal."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/schema-browser-perspective.page:47
+msgctxt "_"
+msgid ""
+"external ref='figures/schema-browser-persp.png' "
+"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/schema-browser-perspective.page:8
+msgid "The schema browser perspective"
+msgstr "Perspektif peramban skema"
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:9
+msgid ""
+"Use the schema browser perspective to understand the database's organisation "
+"(schema). To switch to this perspective, use the <guiseq><gui>Perspective</"
+"gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</"
+"key><key>B</key></keyseq> shortcut."
+msgstr ""
+"Gunakan perspektif peramban skema untuk memahami organisasi basis data "
+"(skema). Untuk berpindah ke perspektif ini, gunakan menu "
+"<guiseq><gui>Perspektif</gui><gui>Peramban skema</gui></guiseq>, atau "
+"pintasan <keyseq><key>Ctrl</key><key>B</key></keyseq>."
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:14
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites, and the right pane being the action area."
+msgstr ""
+"Perspektif dibagi menjadi dua bidang horisontal: panel kiri bagi favorit "
+"yang didefinisikan pengguna, dan panel kanan adalah area aksi."
+
+#. (itstool) path: figure/title
+#: C/schema-browser-perspective.page:19
+msgid "Schema browser perspective's default view"
+msgstr "Tilikan baku perspektif peramban skema"
+
+#. (itstool) path: figure/desc
+#: C/schema-browser-perspective.page:20
+msgid "The default Schema browser perspective"
+msgstr "Perspektif peramban skema baku"
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:24
+msgid ""
+"The left part of the perspective lists the favorite database objects or "
+"diagrams. Double clicking on a favorite opens its properties in the right "
+"pane."
+msgstr ""
+"Perspektif bagian kiri mendaftar diagram atau objek basis data favorit. Klik "
+"ganda pada suatu favorit membuka propertinya pada panel kanan."
+
+#. (itstool) path: page/p
+#: C/schema-browser-perspective.page:29 C/ldap-browser-perspective.page:31
+msgid "The right pane is composed of several types of tabs:"
+msgstr "Panel kanan tersusun atas beberapa tipe tab:"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:33
+msgid ""
+"a tab listing all the database's tables and views, in a <em>cloud</em> view "
+"where the tables with the more relations to other tables being displayed in "
+"a larger font; this tab is always present"
+msgstr ""
+"suatu tab yang mendaftar semua view dan tabel basis data, dalam suatu "
+"tilikan <em>awan</em> dimana tabel dengan relasi ke tabel lain lebih banyak "
+"ditampilkan dalam fonta yang lebih besar; tab ini selalu ada"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:36
+msgid ""
+"zero or more tabs representing a table or views' properties: the list of "
+"columns, the list of constraints (primary or foreign keys, and unique "
+"constraints), a <link xref=\"diagram\">diagram</link> showing the related "
+"tables, and an area to define display preferences for each column's data"
+msgstr ""
+"nol atau lebih tab mewakili properti tabel atau view: daftar kolom, daftar "
+"konstrain (kunci primer atau foreign key, dan konstrain unik), <link xref="
+"\"diagram\">bagan</link> yang menunjukkan tabel yang terhubung, dan suatu "
+"area untuk menentukan preferensi tampilan bagi data untuk setiap kolom"
+
+#. (itstool) path: item/p
+#: C/schema-browser-perspective.page:39
+msgid ""
+"zero or more <link xref=\"diagram\">diagrams</link> in which any number of "
+"tables can be represented, where they are linked using their relations (as "
+"foreign key constraints)"
+msgstr ""
+"nol atau lebih <link xref=\"diagram\">bagan</link> dimana berapa banyakpun "
+"tabel dapat diwakili, dimana mereka ditautkan memakai relasi mereka (sebagai "
+"konstrain foreign key)"
+
+#. (itstool) path: figure/title
+#: C/schema-browser-perspective.page:44
+msgid "Tab showing information about a table"
+msgstr "Tab menunjukkan informasi tentang suatu tabel"
+
+#. (itstool) path: figure/desc
+#: C/schema-browser-perspective.page:45
+msgid ""
+"Example of information displayed for each table, note the difference between "
+"foreign keys implemented in the database and <link xref=\"declared-fk"
+"\">declared foreign keys</link>"
+msgstr ""
+"Contoh dari informasi yang ditampilkan bagi setiap tabel, perhatikan "
+"perbedaan antara foreign key yang diimplementasikan dalam basis data dan "
+"<link xref=\"declared-fk\">foreign key yang dideklarasikan</link>"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:14
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:16
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-commit.png' "
+"md5='27f45d32501cc05bd6f6b16263283e9a'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:18
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-rollback.png' "
+"md5='470522738b1d6bf91b9787baac1c0191'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/transactions.page:9
+msgid "Transactions"
+msgstr "Transaksi"
+
+#. (itstool) path: page/p
+#: C/transactions.page:10
+msgid ""
+"Transactions can be started, committed or rolled back on a per connection "
+"basis:"
+msgstr ""
+"Transaksi dapat dimulai, dikomit, atau di-rollback berdasarkan koneksi:"
+
+#. (itstool) path: item/p
+#: C/transactions.page:14
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin."
+"png\"/> toolbar button to start a transaction"
+msgstr ""
+"gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src="
+"\"figures/trans-begin.png\"/> untuk memulai transaksi"
+
+#. (itstool) path: item/p
+#: C/transactions.page:16
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit."
+"png\"/> toolbar button to commit the current transaction (apply all the "
+"changes)"
+msgstr ""
+"gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src="
+"\"figures/trans-commit.png\"/> untuk komit transaksi kini (menerapkan semua "
+"perubahan)"
+
+#. (itstool) path: item/p
+#: C/transactions.page:18
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"rollback.png\"/> toolbar button to abort the current transaction (forget all "
+"the changes)"
+msgstr ""
+"gunakan tombol bilah perkakas <media type=\"image\" mime=\"image/png\" src="
+"\"figures/trans-rollback.png\"/> untuk menggugurkan transaksi kini (lupakan "
+"semua perubahan)"
+
+#. (itstool) path: note/p
+#: C/transactions.page:22
+msgid ""
+"A transaction may be started automatically when executing a SELECT statement "
+"which involves binary objects (BLOBs), and the transaction may be locked "
+"while the resulting data set is kept in memory (to get rid of a data set in "
+"a <link xref=\"query-execution-perspective\">query execution perspective</"
+"link>, clear the history item relating to the data set)."
+msgstr ""
+"Suatu transaksi mungkin otomatis dimulai ketika mengeksekusi suatu "
+"pernyataan SELECT yang melibatkan objek biner (BLOB), dan transaksi mungkin "
+"dikunci ketika set data hasilnya disimpan di memori (untuk menyingkirkan set "
+"data dalam <link xref=\"query-execution-perspective\">perspektif eksekusi "
+"query</link>, bersihkan butir riwayat yang terkait dengan set data tersebut)."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/table-insert-data.page:20
+msgctxt "_"
+msgid ""
+"external ref='figures/table-insert-data.png' "
+"md5='308807b8443d5ab26c8704a6e01aa1ab'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/table-insert-data.page:8
+msgid "Inserting data in a table"
+msgstr "Menyisipkan data dalam suatu tabel"
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:9
+msgid ""
+"From the <link xref=\"schema-browser-perspective\">schema browser "
+"perspective</link>, when a table's properties is displayed in a tab, use the "
+"<guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup "
+"appear containing a data entry for each column of the table to insert data "
+"into."
+msgstr ""
+"Dari <link xref=\"schema-browser-perspective\">perspektif peramban skema</"
+"link>, ketika suatu properti tabel ditampilkan dalam tab, gunakan menu "
+"<guiseq><gui>Tabel</gui><gui>Sisip data</gui></guiseq> untuk memunculkan "
+"popup yang memuat entri data bagi setiap kolom tabel tempat menyisipkan data."
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:14
+msgid "A popup similar to the following will appear:"
+msgstr "Popup yang serupa dengan yang berikut akan muncul:"
+
+#. (itstool) path: figure/title
+#: C/table-insert-data.page:18
+msgid "Popup to insert data into table"
+msgstr "Popup untuk menyisipkan data ke dalam tabel"
+
+#. (itstool) path: figure/desc
+#: C/table-insert-data.page:19
+msgid "A popup to insert data in a table"
+msgstr "Suatu popup untuk menyisipkan data dalam suatu tabel"
+
+#. (itstool) path: page/p
+#: C/table-insert-data.page:22
+msgid "The noticeable points here are:"
+msgstr "Poin penting disini adalah:"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:26
+msgid ""
+"There is one data entry per column in the table, with the exception (not "
+"shown in this figure) of multiple foreign key fields for which a single drop "
+"down choice widget is shown;"
+msgstr ""
+"Ada satu entri data per kolom dalam tabel, dengan perkecualian (tak "
+"ditampilkan dalam gambar ini) ruas foreign key berganda yang untuknya "
+"ditampilkan widget pilihan drop down tunggal;"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:28
+msgid ""
+"Each data entry has a small button on the right giving information about the "
+"corresponding data entry, and allowing you to reset the data entry's value "
+"to the value it had before any modification done, to set it to NULL or to "
+"set it to a default value. The button's color has the following "
+"signification:"
+msgstr ""
+"Setiap entri data memiliki tombol kecil di kanan yang memberi informasi "
+"tentang entri data yang berkaitan, dan mengijinkan Anda mereset nilai entri "
+"data ke nilai yang dipunyainya sebelum modifikasi dilakukan, menatanya ke "
+"NULL, atau ke nilai baku. Warna tombol memiliki arti berikut:"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:33
+msgid "Red: means the current value in the data entry is invalid"
+msgstr "Merah: berarti nilai kini dalam entri data tak valid"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:34
+msgid ""
+"Blue: means the current value in the data entry is unused and the column's "
+"default value will be used instead (useful for example for auto incremented "
+"columns)"
+msgstr ""
+"Biru: berarti nilai kini dalam entri data tak dipakai dan nilai baku kolom "
+"akan dipakai sebagai gantinya (berguna misalnya untuk kolom yang dinaikkan "
+"otomatis)"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:36
+msgid "Green: means the current value in the data entry is NULL"
+msgstr "Hijau: berarti nilai kini dalam entri data adalah NULL"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:37
+msgid ""
+"Same color as the rest of the UI: means none of the above situations apply"
+msgstr ""
+"Warna yang sama dengan sisa UI: berarti situasi di atas tak ada yang berlaku"
+
+#. (itstool) path: item/p
+#: C/table-insert-data.page:40
+msgid ""
+"Columns which are foreign keys to other tables are presented as a drop down "
+"combo box where you can only choose among the values in the referenced table "
+"(hint: to have that values list refreshed you should close the popup dialog "
+"and reopen it);"
+msgstr ""
+"Kolom yang menjadi foreign key bagi tabel lain ditampilkan sebagai kotak "
+"kombo drop down dimana Anda hanya dapat memilih diantara nilai-nilai dalam "
+"tabel yang diacu (petunjuk: untuk menyegarkan daftar nilai Anda mesti "
+"menutup dialog pop up dan membuka ulang);"
+
+#. (itstool) path: page/title
+#: C/variables.page:9
+msgid "Variables in SQL code"
+msgstr "Variabel dalam kode SQL"
+
+#. (itstool) path: page/p
+#: C/variables.page:10
+msgid ""
+"Variables (sometimes refered to as <em>placeholders</em>) are places in SQL "
+"code which are replaced by actual values when the SQL code is executed. The "
+"benefits are faster execution times (as the SQL code is parsed only once) "
+"and a protection against SQL injection vulnerabilities."
+msgstr ""
+"Variabel (terkadang diacu sebagai <em>placeholder</em> adalah tempat-tempat "
+"dalam kode SQL yang digantikan oleh nilai sebenarnya ketika kode SQL "
+"dieksekusi. Keuntungannya adalah waktu eksekusi lebih cepat (karena kode SQL "
+"hanya diurai sekali) dan proteksi atas vulnerability injeksi SQL."
+
+#. (itstool) path: page/p
+#: C/variables.page:16
+msgid ""
+"Variables can be used in any SQL code, and are defined using the following "
+"syntax:"
+msgstr ""
+"Variabel dapat dipakai dalam sebarang kode SQL, dan didefisikan memakai "
+"sintaks berikut:"
+
+#. (itstool) path: page/code
+#: C/variables.page:19
+#, no-wrap
+msgid ""
+"\n"
+"##&lt;variable name&gt;[::&lt;variable type&gt;[::NULL]]"
+msgstr ""
+"\n"
+"##&lt;variable name&gt;[::&lt;variable type&gt;[::NULL]]"
+
+#. (itstool) path: item/p
+#: C/variables.page:25
+msgid ""
+"the <em>variable name</em> can contain any SQL identifier character or among "
+"the <code>+-.|@?</code>characters (no space allowed)"
+msgstr ""
+"<em>nama variabel</em> dapat memuat sebarang karakter identifier SQL atau "
+"dari karakter <code>+-.|@?</code> (spasi tak diijinkan)"
+
+#. (itstool) path: item/p
+#: C/variables.page:27
+msgid ""
+"the <em>variable type</em> can be among: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
+"<code>binary</code>"
+msgstr ""
+"<em>tipe variabel</em> bisa berupa: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code>, dan "
+"<code>binary</code>"
+
+#. (itstool) path: item/p
+#: C/variables.page:30
+msgid ""
+"the <code>::NULL</code> can be appended to specify that the variable may "
+"take the special <code>NULL</code> value."
+msgstr ""
+"<code>::NULL</code> dapat diimbuhkan untuk menyatakan bahwa variabel boleh "
+"menerima nilai khusus <code>NULL</code>."
+
+#. (itstool) path: page/p
+#: C/variables.page:33
+msgid "Examples:"
+msgstr "Contoh:"
+
+#. (itstool) path: page/code
+#: C/variables.page:36
+#, no-wrap
+msgid ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+msgstr ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:29
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:94
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-4.png' "
+"md5='9c19e575c63411872a3742efd02473c1'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:108
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-5.png' "
+"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:117
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-2.png' "
+"md5='275c8e47da75738596b0b4c47b06a70a'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:124
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-3.png' "
+"md5='a47d581b293767deb95f77e555f07e8c'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/virtual-connections.page:9
+msgid "Connections binding (i.e. virtual connections)"
+msgstr "Pengikatan koneksi (yaitu koneksi virtual)"
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:10
+msgid ""
+"Connection binding is a feature which allows to \"bind\" several connections "
+"and/or imported data sets into a single connection, which can be used almost "
+"like a regular connection."
+msgstr ""
+"Pengikatan koneksi adalah suatu fitur yang mengijinkan \"pengikatan\" "
+"beberapa koneksi dan/atau set data yang diimpor ke dalam suatu koneksi "
+"tunggal, yang dapat dipakai hampir seperti koneksi biasa."
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:14
+msgid ""
+"This feature is useful when one needs to execute an SQL command (for example "
+"to extract data) taking into account data actually stored in different "
+"databases. Without this feature, the way to achieve the same result is by "
+"exporting the necessary data from each database and work on the data outside "
+"of the databases."
+msgstr ""
+"Fitur ini berguna ketika seseorang perlu mengeksekusi suatu perintah SQL "
+"(sebagai contoh untuk mengekstrak data) dengan mempertimbangkan bahwa data "
+"sebenarnya disimpan di basis data yang berbeda. Tanpa fitur ini, cara "
+"mencapai hasil yang sama adalah dengan mengekspor data yang diperlukan dari "
+"setiap basis data dan bekerja pada data di luar basis data."
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:20
+msgid ""
+"To create a new \"bound\" connection (or \"virtual\" connection), use the "
+"<guiseq><gui>Connection</gui><gui>Bind connection</gui></guiseq> menu, or "
+"the <keyseq><key>Ctrl</key><key>i</key></keyseq> shortcut. This pops up a "
+"new dialog window from which elements to be included in the \"bound\" "
+"connection can be defined as shown below."
+msgstr ""
+"Untuk membuat koneksi \"terikat\" baru (atau koneksi \"virtual\"), gunakan "
+"menu  <guiseq><gui>Koneksi</gui><gui>Ikat koneksi</gui></guiseq>, atau "
+"pintasan <keyseq><key>Ctrl</key><key>i</key></keyseq>. Ini memunculkan "
+"jendela dialog baru dimana kita dapat menentukan elemen mana yang akan "
+"disertakan dalam koneksi \"terikat\" seperti ditunjukkan di bawah."
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:27
+msgid "Dialog to create a new virtual connection"
+msgstr "Dialog untuk membuat koneksi virtual baru"
+
+#. (itstool) path: figure/desc
+#: C/virtual-connections.page:28
+msgid "Here the current connection (c1) will be bound in the \"c1\" schema"
+msgstr "Disini koneksi kini (c1) akan diikatkan dalam skema \"c1\""
+
+#. (itstool) path: page/p
+#: C/virtual-connections.page:31
+msgid "Use the <guiseq><gui>Add binding</gui></guiseq> button to either:"
+msgstr "Gunakan tombol <guiseq><gui>Tambah ikatan</gui></guiseq> untuk:"
+
+#. (itstool) path: item/p
+#: C/virtual-connections.page:35
+msgid ""
+"bind a connection to include all the tables of that connection: use the "
+"<guiseq><gui>Bind a connection</gui></guiseq> option. This option simply "
+"adds a new element in the dialog, to specify a schema name and select an "
+"existing connection"
+msgstr ""
+"ikat suatu koneksi untuk menyertakan semua tabel dari koneksi tersebut: "
+"pakai opsi <guiseq><gui>Ikatkan koneksi</gui></guiseq>. Opsi ini hanya "
+"sekedar menambah elemen baru dalam dialog, untuk menyatakan nama skema dan "
+"memilih koneksi yang ada"
+
+#. (itstool) path: item/p
+#: C/virtual-connections.page:36
+msgid ""
+"bind a data set to import data from a text file as a single table: use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option. See section below for "
+"more information."
+msgstr ""
+"ikat suatu set data untuk mengimpor data dari berkas teks sebagai suatu "
+"tabel tunggal: pakai opsi <guiseq><gui>Ikatkan set data</gui></guiseq>. "
+"Lihat seksi di bawah untuk informasi lebih lanjut."
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:40
+msgid "Use case for virtual connections"
+msgstr "Use case bagi koneksi virtual"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:41
+msgid ""
+"To illustrate virtual connection usage, let's define a simple use case and "
+"see how it's useful. Suppose you have a database which contains the list of "
+"servers which you are responsible for. For simplicity, let's assume that the "
+"database contains a table named \"server\" with the following definition:"
+msgstr ""
+"Untuk mengilustrasikan penggunaan koneksi virtual, mari kita definisika "
+"suatu use case sederhana dan melihat bagaimana itu berguna. Misalnya Anda "
+"memiliki basis data yang memuat daftar server yang menjadi tanggung jawab "
+"Anda. Untuk kesederhanaan, kita asumsikan bahwa basis data memuat suatu "
+"tabel bernama \"server\" dengan definisi berikut:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:46
+#, no-wrap
+msgid "CREATE TABLE servers (name string, location string);"
+msgstr "CREATE TABLE servers (name string, location string);"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:47
+msgid "Let's suppose this table contains the following information:"
+msgstr "Misalnya tabel ini memuat informasi berikut:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:50
+#, no-wrap
+msgid ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
+msgstr ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:62
+msgid ""
+"Now let's assume you have a third party program which gives you a list of "
+"servers for which there might be a problem, the output of this program is a "
+"CSV file with a column for the server name, a column for the error code, and "
+"a column describing the problem. Let's assume the CSV file has the following "
+"contents:"
+msgstr ""
+"Kini asumsikan bahwa Anda memiliki program dari pihak ketiga yang memberikan "
+"daftar server yang mungkin punya masalah, keluaran program ini adakah berkas "
+"CSV dengan satu kolom untuk nama server, satu kolom untuk kode galat, dan "
+"satu kolom menjelaskan masalahnya. Asumsikan berkas CSV memiliki isi berikut:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:67
+#, no-wrap
+msgid ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,file system full\n"
+"vador,1,outdated AV signature\n"
+"darkstar,2,overloaded\n"
+"flag,0,file system full\n"
+"$\n"
+"    "
+msgstr ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,file system full\n"
+"vador,1,outdated AV signature\n"
+"darkstar,2,overloaded\n"
+"flag,0,file system full\n"
+"$\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:76
+msgid ""
+"Let's suppose now you want to know all the servers, where they are located "
+"where there is a problem with error code 0. The solution is to bind the "
+"connection to the database (for example in the \"c1\" schema), import the "
+"problems CSV file (for example in the \"tab\" table), and execute the "
+"following SQL command:"
+msgstr ""
+"Misalkan Anda ingin tahu semua server, dimana lokasi ada masalah dengan kode "
+"galat 0. Solusinya adalah dengan mengikat koneksi ke basis data (sebagai "
+"contoh dalam skema \"c1\"), mengimpor berkas masalah CSV (sebagai contoh "
+"dalam tabel \"tab\"), dan mengeksekusi perintah SQL berikut:"
+
+#. (itstool) path: section/code
+#: C/virtual-connections.page:81
+#, no-wrap
+msgid ""
+"\n"
+"SELECT \n"
+"  \"server name\", \n"
+"  location\n"
+"FROM tab\n"
+"  INNER JOIN c1.servers AS s ON (tab.\"server name\" = s.name)\n"
+"WHERE \"Error code\"=0\n"
+"    "
+msgstr ""
+"\n"
+"SELECT \n"
+"  \"server name\", \n"
+"  location\n"
+"FROM tab\n"
+"  INNER JOIN c1.servers AS s ON (tab.\"server name\" = s.name)\n"
+"WHERE \"Error code\"=0\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:89
+msgid "Which returns the expected results as shown in the following figure:"
+msgstr ""
+"Yang mengembalikan hasil yang diharapkan yang ditunjukkan dalam gambar "
+"berikut:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:93
+msgid "Expected results from virtual connection"
+msgstr "Hasil yang diharapkan dari koneksi virtual"
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:100
+msgid "Importing a data set into a virtual connection"
+msgstr "Mengimpor set data ke dalam koneksi virtual"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:101
+msgid ""
+"To import a data set into a table in the virtual connection (for example to "
+"import the \"problems.csv\" file from the use case), use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option from the virtual "
+"connection creation dialog:"
+msgstr ""
+"Untuk mengimpor set data ke dalam tabel di koneksi virtual (sebagai contoh "
+"untuk mengimpor berkas \"problems.csv\" dari use case), gunakan opsi "
+"<guiseq><gui>Ikatkan set data</gui></guiseq> dari dialog pembuatan koneksi "
+"virtual:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:107
+msgid "Import a data set into a virtual connection - 1"
+msgstr "Mengimpor set data ke dalam koneksi virtual - 1"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:110
+msgid ""
+"From there use the <guiseq><gui>Import</gui></guiseq> button which allows "
+"you to select a file to import and also define some import options (file "
+"encoding, file type, ...) After this step, the virtual connection is ready "
+"to be used:"
+msgstr ""
+"Dari sana gunakan tombol <guiseq><gui>Impro</gui></guiseq> yang mengijinkan "
+"Anda memilih berkas untuk diimpor dan juga mendefinisikan beberapa opsi "
+"impor (pengkodean berkas, tipe berkas, ...). Setelah langkah ini, koneksi "
+"virtual siap untuk dipakai:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:116
+msgid "Import a data set into a virtual connection - 2"
+msgstr "Mengimpor set data ke dalam koneksi virtual - 2"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:119
+msgid ""
+"The resulting virtual connection, identified as \"c2\" here is opened in its "
+"own new window:"
+msgstr ""
+"Koneksi virtual hasil, diidentifikasi sebagai \"c2\" disini dibuka dalam "
+"jendelanya sendiri:"
+
+#. (itstool) path: figure/title
+#: C/virtual-connections.page:123
+msgid "New opened virtual connection"
+msgstr "Koneksi virtual baru yang dibuka"
+
+#. (itstool) path: section/title
+#: C/virtual-connections.page:129
+msgid "SQL usable with virtual connections"
+msgstr "SQL yang dapat dipakai dengan koneksi virtual"
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:130
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any virtual connection. Be aware however that if you "
+"define database objects (outside of the extended SQL presented next "
+"section), they will be lost the next time the virtual connection is opened."
+msgstr ""
+"Anda dapat memakai SQL yang dipahami oleh <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> dalam sebarang koneksi virtual. Namun sadarilah "
+"bahwa jika Anda menentukan objek basis data (di luar SQL yang diperluas yang "
+"disajikan di seksi berikutnya), mereka akan hilang saat berikutnya koneksi "
+"virtual dibuka."
+
+#. (itstool) path: section/p
+#: C/virtual-connections.page:135 C/ldap-connections.page:98
+msgid ""
+"See the <link xref=\"sql-sqlite\">SQL understood by LDAP connections and "
+"virtual connections</link> section for more information."
+msgstr ""
+"Lihat bagian <link xref=\"sql-sqlite\">SQL yang dipahami oleh koneksi LDAP "
+"dan koneksi virtual</link> untuk informasi lebih lanjut."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:22
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-browser-persp.png' "
+"md5='e2c1bbcb2f65ffe16b632141908f7027'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:47
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-classes.png' "
+"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
+msgstr "-"
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:52
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/ldap-browser-perspective.page:8
+msgid "The LDAP browser perspective"
+msgstr "Perspektif peramban LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:9
+msgid ""
+"Use the LDAP browser perspective to view and manipulate data stored in an "
+"LDAP directory. To switch to this perspective, use the "
+"<guiseq><gui>Perspective</gui><gui>LDAP browser</gui></guiseq> menu, or the "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq> shortcut. This perspective is "
+"of course only available when the opened connection is an <link xref=\"ldap-"
+"connection\">LDAP connection</link>."
+msgstr ""
+"Pakai perspektif peramban LDAP untuk melihat dan memanipulasi data yang "
+"disimpan dalam direktori LDAP. Untuk berpindah ke perspektif ini, pakai menu "
+"<guiseq><gui>Perspective</gui><gui>Peramban LDAP</gui></guiseq> atau "
+"pintasan <keyseq><key>Ctrl</key><key>P</key></keyseq>. Perspektif ini tentu "
+"saja hanya tersedia ketika koneksi yang dibuka adalah suatu <link xref="
+"\"ldap-connection\">koneksi LDAP</link>."
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:14
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites (to hold references to specific LDAP entries or "
+"specific LDAP classes), and the right pane being the action area."
+msgstr ""
+"Perspektif dibagi menjadi dua panel horisontal: panel kiri bagi favorit yang "
+"didefinisikan pengguna (untuk memuat acuan ke entri LDAP tertentu atau kelas "
+"LDAP tertentu), dan panel kanan adalah area aksi."
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:20
+msgid "LDAP browser's entry tab"
+msgstr "Tab entri peramban LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:21
+msgid "LDAP entries tab"
+msgstr "Tab entri LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:25
+msgid ""
+"The left part of the perspective lists the favorite LDAP entries or classes. "
+"Double clicking on a favorite opens its properties in the right pane. Note "
+"that the LDAP entries favorites will always appear before the classes "
+"favorites."
+msgstr ""
+"Perspektif bagian kiri menampilkan daftar kelas atau entri LDAP favorit. "
+"Klik ganda pada suatu favorit membuka propertinya pada panel kanan. "
+"Perhatikan bahwa favorit entri LDAP selalu muncul sebelum favorit kelas."
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:35
+msgid ""
+"tabs to explore the LDAP DIT (Directory Information Tree): when an entry is "
+"selected from the tree, its attributes are displayed (only the valued "
+"attributes are displayed, the ones with no value are hidden), and the "
+"entry's DN (Distinguished Name) is always displayed first. Also note that "
+"the children of each entry are only fetched when necessary to avoid "
+"unnecessary requests to the LDAP server."
+msgstr ""
+"tab untuk mengeksplorasi DIT (Directory Information Tree) LDAP: ketika suatu "
+"entri dipilih dari pohon, atributnya ditampilkan (hanya atribut yang punya "
+"nilai ditampilkan, yang tak punya nilai disembunyikan), dan DN "
+"(Distinguished Name) entri selalu ditampilkan pertama. Perhatikan juga bahwa "
+"anak dari setiap entri hanya akan diambil ketika diperlukan untuk "
+"menghindari permintaan yang tak diperlukan ke server LDAP."
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:39
+msgid ""
+"tabs to explore the LDAP's classes, see figure below. For a selected class, "
+"all the information regarding the class is displayed (description, OID, "
+"type, ...)"
+msgstr ""
+"tab untuk mengeksplorasi kelas LDAP, lihat gambar di bawah. Bagi suatu kelas "
+"yang dipilih, semua informasi tentang kelas tersebut ditampilkan (deskripsi, "
+"OID, tipe, ...)"
+
+#. (itstool) path: item/p
+#: C/ldap-browser-perspective.page:41
+msgid ""
+"tabs to perform LDAP searches, see figure below. An LDAP search definition "
+"can be saved as a virtual table, see the <link xref=\"ldap-connection#ldap-"
+"table-mapping\">LDAP table's mapping</link>."
+msgstr ""
+"tab untuk melakukan pencarian LDAP, lihat gambar di bawah. Suatu definisi "
+"pencarian LDAP dapat disimpan sebagai tabel virtual, lihat <link xref=\"ldap-"
+"connection#ldap-table-mapping\">pemetaan tabel LDAP</link>."
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:45
+msgid "LDAP browser's classes tab"
+msgstr "tab kelas peramban LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:46
+msgid "LDAP classes tab"
+msgstr "tab kelas LDAP"
+
+#. (itstool) path: figure/title
+#: C/ldap-browser-perspective.page:50
+msgid "LDAP browser's search tab"
+msgstr "tab pencarian peramban LDAP"
+
+#. (itstool) path: figure/desc
+#: C/ldap-browser-perspective.page:51
+msgid "LDAP search tab"
+msgstr "tab pencarian LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-browser-perspective.page:54
+msgid ""
+"Links in these tabs (identified by blue and underlined text) open a new tab, "
+"or use the first tab next to the current tab to display information about "
+"the selected link. For example in the figure above illustrating an LDAP "
+"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
+"\" tab and display the information about that class."
+msgstr ""
+"Taut dalam tab ini (ditandai oleh teks biru dan yang digarisbawahi) membuka "
+"tab baru, atau memakai tab pertama setelah tab kini untuk menampilkan "
+"informasi tentang taut yang dipilih. Sebagai contoh pada gambar di atas yang "
+"mengilustrasikan tab entri LDAP, mengklik \"inetOrgPerson\" akan membuka tab "
+"baru \"kelas LDAP\" dan menampilkan informasi tentang kelas tersebut."
+
+#. (itstool) path: media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-connections.page:52
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-table-mapping.png' "
+"md5='39f204f664cf1202deb716bb19b8993b'"
+msgstr "-"
+
+#. (itstool) path: page/title
+#: C/ldap-connections.page:9
+msgid "LDAP connections"
+msgstr "Koneksi LDAP"
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:10
+msgid ""
+"LDAP connections are different than other connections in a way that an LDAP "
+"database stores data in a hierarchical way, in the DIT (Directory "
+"Information Tree), whereas other databases accessible using the <app>gda-"
+"browser</app> application are relational databases."
+msgstr ""
+"Koneksi LDAP berbeda dengan koneksi lain dalam hal bahwa basis data LDAP "
+"menyimpan data secara hirarkis, dalam DIT (Directory Information Tree, pohon "
+"informasi direktori), sementara basis data lain yang dapat diakses melalui "
+"aplikasi <app>gda-browser</app> adalah basis data relasional."
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:15
+msgid ""
+"As a consequence, LDAP connections are treaded specially: as normal "
+"connections with tables (see the table mapping explained next), and through "
+"the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser "
+"perspective</link>"
+msgstr ""
+"Akibatnya, koneksi LDAP diperlakukan secara khusus: sebagai koneksi normal "
+"dengan tabel (lihat pemetaan tabel yang dijelaskan selanjutnya), dan melalui "
+"kehadiran <link xref=\"ldap-browser-perspective\">Perspektif peramban LDAP</"
+"link>"
+
+#. (itstool) path: page/p
+#: C/ldap-connections.page:20
+msgid ""
+"Note that LDAP connections may not be available is either the LDAP database "
+"provider is not installed or if the LDAP support was disabled during the "
+"compilation."
+msgstr ""
+"Perhatikan bahwa koneksi LDAP mungkin tak tersedia bila penyedia basis data "
+"LDAP tak terpasang atau bila dukungan LDAP dimatikan selama kompilasi."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:26
+msgid "LDAP table's mapping"
+msgstr "Pemetaan tabel LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:27
+msgid ""
+"Within an LDAP connection, it is possible to declare virtual tables which "
+"are mapped to an LDAP search. These virtual tables can then later be used "
+"like any other table. The first column of each LDAP virtual table will "
+"always be the DN (Distinguished Name) of the entry represented in the row; "
+"the other columns depend on the table definition."
+msgstr ""
+"Dalam suatu koneksi LDAP, mungkin untuk mendeklarasikan tabel virtual yang "
+"dipetakan ke suatu pencarian LDAP. Tabel virtual ini kemudian dapat dipakai "
+"seperti sebarang tabel lainnya. Kolom pertama dari setiap tabel virtual LDAP "
+"akan selalu berupa DN (Distinguished Name) dari entri yang diwakili dalam "
+"baris; kolom lain bergantung kepada definisi tabel."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:33
+msgid "An LDAP virtual table is defined by the following attributes:"
+msgstr "Suatu tabel virtual LDAP didefinisikan oleh atribut-atribut berikut:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:37
+msgid "a table name"
+msgstr "suatu nama tabel"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:38
+msgid ""
+"the base DN for the search: the LDAP entry at which the search begins (if "
+"not specified then the top level entry of the LDAP connection is used)"
+msgstr ""
+"DN basis bagi pencarian: entri LDAP tempat pencarian dimulai (bila tak "
+"dinyatakan maka entri aras puncak dari koneksi LDAP dipakai)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:40
+msgid ""
+"the search filter: a valid LDAP search filter (if none is provided then the "
+"default search filter is \"(objectClass=*)\", requesting any LDAP entry)."
+msgstr ""
+"penyaring pencarian: suatu penyaring pencarian LDAP yang alid (bila tak "
+"diberikan maka penyaring pencarian baku adalah \"(objectClass=*)\", meminta "
+"sebarang entri LDAP)."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:42
+msgid ""
+"the attributes: the attributes to retrieve, each attribute will be mapped to "
+"a column of the table. The attributes must be a comma separated list of "
+"attributes, where each attribute can optionally be assigned a type and a "
+"multi value option (see below)."
+msgstr ""
+"atribut: atribut yang akan diambil, setiap atribut akan dipetakan ke suatu "
+"kolom dari tabel. Atribut mesti berupa daftar atribut yang dipisah dengan "
+"koma, dimana setiap atribut dapat dipilih untuk diberi suatu tipe dan suatu "
+"opsi nilai berganda (lihat di bawah)."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:45
+msgid ""
+"the scope: the search scope, \"subtree\" (to search the base DN and the "
+"entire sub tree below), \"onelevel\" (to search the immediate children of "
+"the base DN entry only), or \"base\" (to search the base DN only)"
+msgstr ""
+"skup: skup pencarian, \"subtree\" (untuk mencari DN basis dan seluruh sub "
+"tree di bawah), \"onelevel\" (untuk mencari hanya anak langsung dari entri "
+"DN basis), atau \"base\"  (untuk mencari hanya DN basis)"
+
+#. (itstool) path: figure/title
+#. (itstool) path: figure/desc
+#: C/ldap-connections.page:50 C/ldap-connections.page:51
+msgid "LDAP table's properties"
+msgstr "Properti tabel LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:54
+msgid ""
+"For example in the figure above, the \"users\" table will \"contain\" all "
+"the LDAP entries from the top level LDAP entry of the connection, and have 3 "
+"columns: the DN, the \"cn\" and the \"jpegPhoto\"."
+msgstr ""
+"Sebagai contoh pada gambar di atas, tabel \"users\" akan \"memuat\" semua "
+"entri LDAP dari aras puncak entri LDAP koneksi, dan memiliki 3 kolom, DN, "
+"\"cn\" dan \"jpegPhoto\"."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:61
+msgid "Attributes to columns mapping"
+msgstr "Pemetaan atribut ke kolom"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:62
+msgid ""
+"As mentioned in the previous section, each attribute will be mapped to a "
+"column. The column type is normally automatically determined (string, "
+"number, ...) but can be forced by appending to the attribute name the \"::"
+"&lt;type&gt;\" for the requested type."
+msgstr ""
+"Seperti yang disebutkan di seksi sebelumnya, setiap atribut akan dipetakan "
+"ke kolom. Tipe kolom biasanya ditentukan secara otomatis (string, "
+"angka, ...) tapi dapat dipaksa dengan menambahkan ke nama atribut \"::&lt;"
+"type&gt;\" bagi tipe yang diminta."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:67
+msgid ""
+"Also, because some attributes can have multiple values, the table "
+"construction handles multi-valued attributes in different ways, depending on "
+"each attribute's options. An option can be specified by appending the \"::"
+"&lt;option&gt;\" to the attribute name. Valid options are:"
+msgstr ""
+"Karena beberapa atribut dapat memiliki nilai berganda, konstruksi tabel "
+"menangani atribut multi nilai dengan cara berbeda, bergantung kepada setiap "
+"opsi atribut. Suatu opsi dapat dinyatakan dengan menambahkan \"::&lt;"
+"option&gt;\" ke nama atribut. Opsi yang valid adalah:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:74
+msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
+msgstr "\"NULL\" atau \"0\": suatu nilai NULL akan dikembalikan bagi atribut"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:75
+msgid ""
+"\"CSV\": a comma separated value with all the values of the attribute will "
+"be returned. This only works for string attribute types."
+msgstr ""
+"\"CSV\": nilai yang dipisah koma dengan semua nilai dari atribut akan "
+"dikembalikan. Ini hanya bekerja bagi tipe atribut string."
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:77
+msgid ""
+"\"MULT\" or \"*\": a row will be returned for each value of the attribute, "
+"effectively multiplying the number of returned rows"
+msgstr ""
+"\"MULT\" atau \"*\": satu baris akan dikembalikan bagi setiap nilai dari "
+"atribut, secara efektif mengalikan cacah baris yang dikembalikan"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:79
+msgid ""
+"\"1\": only the first value of the attribute will be used, the other values "
+"ignored"
+msgstr ""
+"\"1\": hanya nilai pertama dari atribut yang akan dipakai, nilai lain "
+"diabaikan"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:80
+msgid ""
+"\"CONCAT\": the attributes' values are concatenated (with a newline char "
+"between each value)"
+msgstr ""
+"\"CONCAT\": nilai atribut akan disambung (dengan karakter baris-baru antar "
+"setiap nilai)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:82
+msgid ""
+"\"ERROR\": an error value will be returned (this is the default behaviour)"
+msgstr "\"ERROR\": nilai galat akan dikembalikan (ini adalah perilaku baku)"
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:87
+msgid "SQL usable with LDAP connections"
+msgstr "SQL yang dapat dipakai dengan koneksi LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:88
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any LDAP connection. Be aware however that if you define "
+"database objects (outside of the extended SQL presented next section), they "
+"will be lost the next time the LDAP connection is opened."
+msgstr ""
+"Anda dapat memakai SQL yang dipahami oleh <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> dalam sebarang koneksi LDAP. Namun sadarilah bahwa "
+"bila Anda mendefinisikan objek basis data (di luar dari SQL yang diperluas "
+"seperti dibahas di bagian selanjutnya), mereka akan hilang kali berikutnya "
+"koneksi LDAP dibuka."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:93
+msgid ""
+"So it is perfectly safe for example to create a table to store some LDAP "
+"data which may require a long operation to obtain, but after closing the "
+"LDAP connection, the table and its data will be lost."
+msgstr ""
+"Maka sebagai contoh, sepenuhnya aman untuk membuat tabel untuk menyimpan "
+"sebagian data LDAP yang mungkin memerlukan waktu lama untuk memperolehnya, "
+"tapi setelah menutup koneksi LDAP, tabel dan datanya akan hilang."
+
+#. (itstool) path: section/title
+#: C/ldap-connections.page:105
+msgid "SQL extension to handle LDAP tables"
+msgstr "Ekstensi SQL untuk menangani tabel LDAP"
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:106
+msgid "LDAP tables can be created using an extended set of SQL commands:"
+msgstr "Tabel LDAP dapat dibuat memakai set yang diperluas dari perintah SQL:"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:110
+msgid ""
+"<code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to declare a new LDAP virtual table"
+msgstr ""
+"<code>CREATE LDAP TABLE &lt;nama_tabel&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> untuk mendeklarasikan tabel virtual LDAP baru"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:111
+msgid ""
+"<code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual "
+"table's definition"
+msgstr ""
+"<code>DESCRIBE LDAP TABLE &lt;nama_tabel&gt;</code> untuk menunjukkan "
+"definisi tabel virtual LDAP"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:112
+msgid ""
+"<code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
+"specified part is actually modified)"
+msgstr ""
+"<code>ALTER LDAP TABLE &lt;nama_tabel&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> untuk mengubah definisi tabel virtual LDAP (hanya bagian "
+"yang dinyatakan yang benar-benar diubah)"
+
+#. (itstool) path: item/p
+#: C/ldap-connections.page:113
+msgid ""
+"<code>DROP LDAP TABLE &lt;table_name&gt;</code> to remove an LDAP virtual "
+"table. Note that the usual <code>DROP TABLE &lt;table_name&gt;</code> can "
+"also be used instead."
+msgstr ""
+"<code>DROP LDAP TABLE &lt;nama_tabel&gt;</code> untuk menghapus tabel "
+"virtual DLAP. Perhatikan bahwa <code>DROP TABLE &lt;nama_tabel&gt;</code> "
+"yang biasa juga dapat dipakai."
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:116
+msgid "For example the following SQL code:"
+msgstr "Sebagai contoh kode SQL berikut:"
+
+#. (itstool) path: section/code
+#: C/ldap-connections.page:119
+#, no-wrap
+msgid ""
+"\n"
+"      CREATE LDAP TABLE users FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM users WHERE cn like '%john%';\n"
+"      ALTER LDAP TABLE users FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*john*))';\n"
+"      SELECT * FROM users;\n"
+"      DROP LDAP TABLE users;\n"
+"    "
+msgstr ""
+"\n"
+"      CREATE LDAP TABLE users FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM users WHERE cn like '%john%';\n"
+"      ALTER LDAP TABLE users FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*john*))';\n"
+"      SELECT * FROM users;\n"
+"      DROP LDAP TABLE users;\n"
+"    "
+
+#. (itstool) path: section/p
+#: C/ldap-connections.page:127
+msgid ""
+"should display twice the same results, which list all the LDAP entries of "
+"the \"inetOrgPerson\" class with a CommonName (cn) containing the \"john\" "
+"string."
+msgstr ""
+"mesti menampilkan hasil yang sama dua kali, yang mendaftar semua entri LDAP "
+"dari kelas \"inetOrgPerson\" dengan CommonName (cn) yang memuat string \"john"
+"\"."

@@ -1,0 +1,36 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="general-ui">
+  <info>
+    <title type="sort">1</title>
+    <link type="guide" xref="index#presentation"/>
+  </info>
+  <title>General interface organization</title>
+  <p>
+    The <app>gda-browser</app> is composed of one or more top level windows, each window relating to a
+    single connection (which name is in its title). For any given connection, several windows can be opened
+    (use the <guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or
+    the <keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut).
+  </p>
+  <figure>
+    <title>A connection window</title>
+    <desc>Window opened for the 'c1' connection (and the Schema browser perspective)</desc>
+    <media type="image" mime="image/png" src="figures/mainwin.png"/>
+  </figure>
+
+  <p>
+    Within each window, several <em>perspectives</em> are available which are adapted to
+    different activities:
+  </p>
+  <list>
+    <item><p>the <link xref="schema-browser-perspective">Schema browser perspective</link> to help understand the database's layout</p></item>
+    <item><p>the <link xref="query-execution-perspective">Query execution perspective</link> to execute any SQL command</p></item>
+    <item><p>the <link xref="data-manager-perspective">Data manager perspective</link> to navigate through the database's contents</p></item>
+  </list>
+  <p>
+    The currently displayed perspective can be changed individually for each window, and, as all perspectives 
+    have an action area composed of tabs, tabs can be moved from one window to the other if the source
+    and destination window are for the same connection, and display the same perspective (simply drag
+    and drop a tab from one window to the other using the tab's label as a handle).
+  </p>
+</page>

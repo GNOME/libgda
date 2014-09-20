@@ -1,0 +1,111 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="query-execution-perspective">
+<info>
+  <title type="sort">1</title>
+  <link type="guide" xref="index#perspectives"/>
+</info>
+<title>The query execution perspective</title>
+<p>
+  Use the query perspective to execute SQL statements. To switch
+  to this perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)</gui></guiseq>
+  menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> shortcut.
+</p>
+<figure>
+  <title>Query exec perspective</title>
+  <desc>The query exec perspective with one SELECT statement executed</desc>
+  <media type="image" mime="image/png" src="figures/query-exec-persp.png"/>
+</figure>
+
+<p>
+  The perspective is divided in two horizontal panes: the left pane for the user defined favorite statements,
+  and the right pane being the action area.
+</p>
+<p>
+  In the figure above, there are two favorites: a SELECT
+  statement (named "List customers") and an INSERT statement (named "New customer ...").
+  The INSERT statement needs one "name" parameter, whereas the SELECT statement does not require
+  any parameter to be executed.
+</p>
+<p>
+  The icon difference between the two illustrates the fact that the INSERT favorite is also
+  marked to be an <link xref="actions">action</link>: it will be proposed as an action to
+  be executed when the contextual menu is brought up in any grid representation of a resultset.
+</p>
+<p>
+  The left
+  part of the perspective lists the favorite statements which have been user defined. Activating a
+  favorite (double clicking) resets the SQL text area's contents to the selected statement's SQL.
+</p>
+<p>
+  The right pane is composed of zero or more tabs where the SQL is entered and executed. In each tab
+  there is:
+</p>
+<list>
+  <item><p>an SQL area in the top left part</p></item>
+  <item><p>command buttons in the top right part</p></item>
+  <item><p>execution history in the lower left part</p></item>
+  <item><p>execution results in the lower right part</p></item>
+</list>
+
+<section id="query-exec-sql">
+  <title>SQL area</title>
+  <p>
+    The SQL area is an SQL editor. The SQL can be any SQL understood by the database, with the exception
+    of <link xref="variables-syntax">variables</link> (which must have a specific syntax).
+  </p>
+  <p>
+    The keyboard shortcuts in the SQL editor are:
+  </p>
+  <list>
+    <item><p><keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list</p></item>
+    <item><p><keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code</p></item>
+    <item><p><keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor</p></item>
+    <item><p><keyseq><key>Ctrl</key><key>Up</key></keyseq> and
+	<keyseq><key>Ctrl</key><key>Down</key></keyseq> to navigate through the editor's history</p></item>
+  </list>
+</section>
+
+<section id="query-exec-command-buttons">
+  <title>Command buttons</title>
+  <p>
+    The commands available through the command buttons are:
+  </p>
+  <list>
+    <item><p><gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</key><key>l</key></keyseq> shortcut)</p></item>
+    <item><p><gui>Variables</gui>: shows or hides the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
+	present in the SQL code. The panel is automatically shown when a variable is detected in 
+	the SQL code</p></item>
+    <item><p><gui>Execute</gui>: executes the SQL code. If the SQL code contains some variables which have not been
+	set, then a popup first appears requesting the variables to be given values. This is similar
+	to the <keyseq><key>Ctrl</key><key>ENTER</key></keyseq> shortcut</p></item>
+    <item><p><gui>Indent</gui>: re-indents the SQL code (warning: this removes any comments)</p></item>
+    <item><p><gui>Favorites</gui>: adds the current SQL code to the favorites</p></item>
+  </list>
+</section>
+
+<section id="query-exec-history">
+  <title>Execution history</title>
+  <p>
+    The execution history part contains a list of the past executed statements, ordered by execution date
+    along with an indication when the statement was executed (11 minutes in the figure above). Selecting
+    an history item displays the corresponding result in the execution results part.
+  </p>
+  <p>
+    The <gui>Copy</gui> button copies the currently selected history item's SQL code to the SQL editor, and the
+    <gui>Clear</gui> button removes all the history items.
+  </p>
+  <p>
+    Note that any given history item can also be removed individually using the <key>Suppr</key> key.
+  </p>
+</section>
+
+<section id="query-exec-results">
+  <title>Execution results</title>
+  <p>
+    The Execution results part displays the execution result of the currently selected execution
+    history item, as a table for SELECT statement, giving information for other types of
+    statement, or giving the execution error notice if the execution failed.
+  </p>
+</section>
+</page>

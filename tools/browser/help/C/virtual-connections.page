@@ -1,0 +1,140 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="virtual-connections">
+  <info>
+    <title type="sort">1</title>
+    <link type="guide" xref="features"/>
+    <link type="guide" xref="index#connections"/>
+  </info>
+  <title>Connections binding (i.e. virtual connections)</title>
+  <p>
+    Connection binding is a feature which allows to "bind" several connections and/or imported
+    data sets into a single connection, which can be used almost like a regular connection.
+  </p>
+  <p>
+    This feature is useful when one needs to execute an SQL command (for example to extract data)
+    taking into account data actually stored in different databases. Without this feature, the way
+    to achieve the same result is by exporting the necessary data from each database and work on
+    the data outside of the databases.
+  </p>
+  <p>
+    To create a new "bound" connection (or "virtual" connection), use the
+    <guiseq><gui>Connection</gui><gui>Bind connection</gui></guiseq> menu, or the
+    <keyseq><key>Ctrl</key><key>i</key></keyseq> shortcut. This pops up a new dialog window
+    from which elements to be included in the "bound" connection can be defined as shown below.
+  </p>
+  <figure>
+    <title>Dialog to create a new virtual connection</title>
+    <desc>Here the current connection (c1) will be bound in the "c1" schema</desc>
+    <media type="image" mime="image/png" src="figures/virtual-cnc.png"/>
+  </figure>
+  <p>
+    Use the <guiseq><gui>Add binding</gui></guiseq> button to either:
+  </p>
+  <list>	
+    <item><p>bind a connection to include all the tables of that connection: use the <guiseq><gui>Bind a connection</gui></guiseq> option. This option simply adds a new element in the dialog, to specify a schema name and select an existing connection</p></item>
+    <item><p>bind a data set to import data from a text file as a single table: use the <guiseq><gui>Bind a data set</gui></guiseq> option. See section below for more information.</p></item>
+  </list>
+
+  <section id="vcnc-use-case">
+    <title>Use case for virtual connections</title>
+    <p>
+      To illustrate virtual connection usage, let's define a simple use case and see how it's useful. Suppose you have
+      a database which contains the list of servers which you are responsible for. For simplicity, let's assume that
+      the database contains a table named "server" with the following definition:
+    </p>
+    <code>CREATE TABLE servers (name string, location string);</code>
+    <p>
+      Let's suppose this table contains the following information:
+    </p>
+    <code>
+> select * from servers ;
+name     | location
+---------+---------
+moon     | room1   
+darkstar | room2   
+flag     | room3   
+alf      | room2   
+vador    | room3   
+(5 rows)
+>
+    </code>
+    <p>
+      Now let's assume you have a third party program which gives you a list of servers for which there might be a
+      problem, the output of this program is a CSV file with a column for the server name, a column for the error code,
+      and a column describing the problem. Let's assume the CSV file has the following contents:
+    </p>
+    <code>
+$ cat problems.csv 
+Server name,Error code,Error description
+darkstar,0,file system full
+vador,1,outdated AV signature
+darkstar,2,overloaded
+flag,0,file system full
+$
+    </code>
+    <p>
+      Let's suppose now you want to know all the servers, where they are located where there is a problem with
+      error code 0. The solution is to bind the connection to the database (for example in the "c1" schema), import
+      the problems CSV file (for example in the "tab" table), and execute the following SQL command:
+    </p>
+    <code>
+SELECT 
+  "server name", 
+  location
+FROM tab
+  INNER JOIN c1.servers AS s ON (tab."server name" = s.name)
+WHERE "Error code"=0
+    </code>
+    <p>
+      Which returns the expected results as shown in the following figure:
+    </p>
+    <figure>
+      <title>Expected results from virtual connection</title>
+      <media type="image" mime="image/png" src="figures/virtual-cnc-4.png"/>
+    </figure>
+  </section>
+
+
+  <section id="vcnc-import-dataset">
+    <title>Importing a data set into a virtual connection</title>
+    <p>
+      To import a data set into a table in the virtual connection (for example to import the "problems.csv" file
+      from the use case), use the <guiseq><gui>Bind a data set</gui></guiseq> option from the virtual connection
+      creation dialog:
+    </p>
+    <figure>
+      <title>Import a data set into a virtual connection - 1</title>
+      <media type="image" mime="image/png" src="figures/virtual-cnc-5.png"/>
+    </figure>
+    <p>
+      From there use the <guiseq><gui>Import</gui></guiseq> button which allows you to select a file
+      to import and also define some import options (file encoding, file type, ...) After this step,
+      the virtual connection is ready to be used:
+    </p>
+    <figure>
+      <title>Import a data set into a virtual connection - 2</title>
+      <media type="image" mime="image/png" src="figures/virtual-cnc-2.png"/>
+    </figure>
+    <p>
+      The resulting virtual connection, identified as "c2" here is opened in its own new window:
+    </p>
+    <figure>
+      <title>New opened virtual connection</title>
+      <media type="image" mime="image/png" src="figures/virtual-cnc-3.png"/>
+    </figure>
+  </section>
+
+  <section id="virtual-ddl-sql">
+    <title>SQL usable with virtual connections</title>
+    <p>
+      You can use the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> in any virtual
+      connection. Be aware however that if you define database objects (outside of the extended SQL
+      presented next section), they will be lost the next time the virtual connection is opened.
+    </p>
+    <p>
+      See the <link xref="sql-sqlite">SQL understood by LDAP connections and virtual connections</link>
+      section for more information.
+    </p>
+  </section>
+</page>

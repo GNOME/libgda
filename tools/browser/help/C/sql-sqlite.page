@@ -1,0 +1,100 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="sql-sqlite">
+  <info>
+    <title type="sort">1</title>
+  </info>
+  <title>SQL understood by LDAP connections and virtual connections</title>
+  <p>
+    Both virtual connections in <app>gda-browser</app> and LDAP connections internally rely on
+    <link href="http://www.sqlite.org/vtab.html">SQLite's virtual tables</link> mechanism, and
+    as a consequence, the SQL to use in these connections is the same and the limitations
+    are the same.
+  </p>
+  <p>
+    All the SQL understood by <link href="http://sqlite.org/lang.html">SQLite</link> is usable
+    in these connections, with the limitations and modifications detailed in the next sections.
+  </p>
+
+  <section id="sql-sqlite-dbobjects">
+    <title>Database objects</title>
+    <p>
+      It is possible to create database objects (tables, views, ...) but these will be lost when the
+      connection is closed. The only "persistent" objects are the ones automatically created
+      when the connection is opened (and they contain no data as they are merely proxies to
+      other sources of data).
+    </p>
+  </section>
+
+  <section id="sql-sqlite-extrafunctions">
+    <title>Extra available functions</title>
+    <p>
+      All the functions provided by <link href="http://sqlite.org/lang_corefunc.html">SQLite</link>
+      are usable in these connections, and a few other ones have been added:
+    </p>
+    <list>
+      <item>
+	<p>
+	  the <cmd>gda_file_exists()</cmd> function accepts a filename as argument,
+	  and returns 0 if the file with that filename does not
+	  exist, or 1 if it does.
+	</p>
+      </item>
+
+      <item>
+	<p>
+	  the <cmd>gda_hex_print()</cmd> function
+	  accepts at most 2 arguments, in that order:
+	</p>
+	<list>
+	  <item><p>a blob value</p></item>
+	  <item><p>a length (not mandatory)</p></item>
+	</list>
+	<p>
+	  It returns a string suitable to be printed (where all the non ascii characters are converted to
+	  the "\xyz" syntax where "xyz" is the decimal value of the character), limited to the specified
+	  length if any.
+	</p>
+      </item>
+
+
+      <item>
+	<p>
+	  the <cmd>gda_hex()</cmd> function
+	  accepts at most 2 arguments, in that order:
+	</p>
+	<list>
+	  <item><p>a blob value</p></item>
+	  <item><p>a length (not mandatory)</p></item>
+	</list>
+	<p>It returns a hex dump string of the blob value, limited to the specified length if any</p>
+      </item>
+
+      <item>
+	<p>
+	  the <cmd>gda_rmdiacr()</cmd> function
+	  accepts at most 2 arguments, in that order:
+	</p>
+	<list>
+	  <item><p>a string value</p></item>
+	  <item><p>a case conversion to do (not mandatory), as a string which must be
+	  'upper' or 'lower'</p></item>
+	</list>
+	<p>
+	  It returns a string where all the diacritical signs (for example accents) from the input string,
+	  and optionally converts the string to upper or lower case if specified. This function takes into
+	  account the current locale and is useful to do some text search.
+	</p>
+      </item>
+
+      <item>
+	<p>
+	  the <cmd>gda_upper()</cmd> and <cmd>gda_lower()</cmd> functions
+	  accept one string argument and convert it to upper or lower case, taking into account
+	  the locale (the standard SQLite <cmd>upper()</cmd> and <cmd>lower()</cmd>
+	  functions only operating on ASCII characters).
+	</p>
+      </item>
+    </list>
+  </section>
+</page>

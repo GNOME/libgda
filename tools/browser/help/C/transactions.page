@@ -1,0 +1,30 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="transactions">
+  <info>
+    <title type="sort">1</title>
+    <link type="topic" xref="query-execution-perspective"/>
+    <link type="guide" xref="index#connections"/>
+  </info>
+  <title>Transactions</title>
+  <p>
+    Transactions can be started, committed or rolled back on a per connection basis:
+  </p>
+  <list>
+    <item><p>use the <media type="image" mime="image/png" src="figures/trans-begin.png"/> toolbar 
+    button to start a transaction</p></item>
+    <item><p>use the <media type="image" mime="image/png" src="figures/trans-commit.png"/> toolbar 
+    button to commit the current transaction (apply all the changes)</p></item>
+    <item><p>use the <media type="image" mime="image/png" src="figures/trans-rollback.png"/> toolbar 
+    button to abort the current transaction (forget all the changes)</p></item>
+  </list>
+  <note>
+    <p>
+      A transaction may be started automatically when executing a SELECT statement which involves
+      binary objects (BLOBs), and the transaction may be locked while the resulting data set is
+      kept in memory (to get rid of a data set in a
+      <link xref="query-execution-perspective">query execution perspective</link>, clear the
+      history item relating to the data set).
+    </p>
+  </note>
+</page>

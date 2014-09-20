@@ -1,0 +1,33 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="diagram">
+  <info>
+    <title type="sort">1</title>
+  </info>
+  <title>Diagrams</title>
+  <p>
+    Diagrams are present throughout the <app>gda-browser</app>, and are made of a canvas on which
+    graphical items are displayed (like tables for example).
+  </p>
+  <figure>
+    <title>Diagram</title>
+    <desc>Diagram showing some tables and their relations represented by foreign key constraints (also see 
+    <link xref="declared-fk">the declared foreign keys</link>)</desc>
+    <media type="image" mime="image/png" src="figures/diagram.png"/>
+  </figure>
+  <p>
+    The items can be moved around on the canvas (note that as long as the whole diagram fits in the
+    canvas, it remains centered on it). Other manipulations are possible:
+  </p>
+  <list>
+    <item><p>zooming in and out using the mouse's wheel, or through the contextual menu (right
+	click on the canvas); a zoom to fit the canvas is also available in the contextual menu</p></item>
+    <item><p>bring closer or moving away items from one another using the mouse's wheel while holding the
+    <key>Shift</key> key</p></item>
+    <item><p>arranging items linearly or radially, through the contextual menu</p></item>
+    <item><p>printing, through the contextual menu</p></item>
+    <item><p>exporting as PNG or SVG images, through the contextual menu</p></item>
+    <item><p>adding items, through the contextual menu</p></item>
+    <item><p>removing items, through the items's contextual menu</p></item>
+  </list>
+</page>

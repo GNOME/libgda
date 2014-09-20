@@ -1020,6 +1020,7 @@ tools/browser/schema-browser/Makefile
 tools/browser/query-exec/Makefile
 tools/browser/data-manager/Makefile
 tools/browser/ldap-browser/Makefile
+tools/browser/help/Makefile
 tools/common/Makefile
 tools/misc/Makefile
 tools/help/Makefile

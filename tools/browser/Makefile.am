@@ -4,6 +4,7 @@ SUBDIRS = dummy-perspective schema-browser query-exec data-manager
 if LDAP
 SUBDIRS += ldap-browser
 endif
+SUBDIRS += help
 
 AM_CPPFLAGS = \
         -I$(top_srcdir) \

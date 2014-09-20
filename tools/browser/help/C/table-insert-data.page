@@ -1,0 +1,44 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="table-insert-data">
+  <info>
+    <title type="sort">1</title>
+    <link type="topic" xref="schema-browser-perspective"/>
+  </info>
+  <title>Inserting data in a table</title>
+  <p>
+    From the <link xref="schema-browser-perspective">schema browser perspective</link>, when a table's
+    properties is displayed in a tab, use the <guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu
+    to have a popup appear containing a data entry for each column of the table to insert data into.
+  </p>
+  <p>
+    A popup similar to the following will appear:
+  </p>
+  <figure>
+    <title>Popup to insert data into table</title>
+    <desc>A popup to insert data in a table</desc>
+    <media type="image" mime="image/png" src="figures/table-insert-data.png"/>
+  </figure>
+  <p>
+    The noticeable points here are:
+  </p>
+  <list>
+    <item><p>There is one data entry per column in the table, with the exception (not shown in this
+	figure) of multiple foreign key fields for which a single drop down choice widget is shown;</p></item>
+    <item><p>Each data entry has a small button on the right giving information about the corresponding
+	data entry, and allowing you to reset the data entry's value to the value it had before any
+	modification done, to set it to NULL or to set it to a default value. The button's color has the
+	following signification:</p>
+	<list>
+	  <item><p>Red: means the current value in the data entry is invalid</p></item>
+	  <item><p>Blue: means the current value in the data entry is unused and the column's default value
+	      will be used instead (useful for example for auto incremented columns)</p></item>
+	  <item><p>Green: means the current value in the data entry is NULL</p></item>
+	  <item><p>Same color as the rest of the UI: means none of the above situations apply</p></item>
+	</list>
+    </item>
+    <item><p>Columns which are foreign keys to other tables are presented as a drop down combo box where
+	you can only choose among the values in the referenced table (hint: to have that values list
+	refreshed you should close the popup dialog and reopen it);</p></item>
+  </list>
+</page>

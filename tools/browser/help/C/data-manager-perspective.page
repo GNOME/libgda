@@ -1,0 +1,106 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="data-manager-perspective">
+<info>
+  <title type="sort">1</title>
+  <link type="guide" xref="index#perspectives"/>
+</info>
+<title>The data manager perspective</title>
+<p>
+  Use the data manager perspective to navigate through the database's data. To switch
+  to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data Manager</gui></guiseq>
+  menu, or the <keyseq><key>Ctrl</key><key>D</key></keyseq> shortcut.
+</p>
+<p>
+  The workflow in this perspective is organized around the definition of one or more <em>data sources</em>
+  (which selects data in the database) which, when executed, result in a data set displayed in
+  a tabular view.
+</p>
+<p>
+  The perspective is divided in two horizontal panes: the left pane to keep favorite data sources set's
+  definitions, and the right pane being the action area, where each data source is executed and the
+  results presented in a tabular view.
+</p>
+<figure>
+  <title>Data manager perspective</title>
+  <desc>The data manager perspective, with two data sources</desc>
+  <media type="image" mime="image/png" src="figures/data-man-persp.png"/>
+</figure>
+<p>
+  In the figure above, there are two data sources: one for the 'customers' table and one for the
+  'orders' table (which here lists the orders from a customer), the later data source
+  depending on the former one as there is a foreign key from
+  the 'orders' table which references the 'customers' table. The two data sources have been
+  executed and the result is composed of two tabular views side by side.
+</p>
+<p>
+  Because the 'orders' data source
+  depends on the 'customers' data source, its corresponding view is on the right of the one
+  corresponding to the 'customers' data source.
+  Also when the row selection of the 'customers' view changes, the whole contents of the 'orders' view
+  is refreshed.
+</p>
+<section id="data-manager-def-data-source">
+  <title>Defining data sources</title>
+  <p>
+    The simplest data source
+    is a data source which represents all the data from a table, displayed when executed as a single
+    tabular view, as if one executed the <code>SELECT * FROM mytable</code> statement in
+    the <link xref="query-execution-perspective"/>.
+  </p>
+  <p>
+    The following figure shows the data sources editing mode (switch to editing mode using the
+    <media type="image" mime="image/png" src="figures/data-man-mode.png"/> toolbar button).
+  </p>
+  <p>
+    Data sources can be defined using an <link xref="data-manager-xml-syntax">XML syntax</link>, or
+    using the <link xref="data-manager-source-editor">default interface</link>.
+  </p>
+  <figure>
+    <title>Data sources edition</title>
+    <desc>Editing data sources in the data manager perspective, from the XML syntax</desc>
+    <media type="image" mime="image/png" src="figures/data-man-xmlcompose.png"/>
+  </figure>
+  <figure>
+    <title>Data sources edition</title>
+    <desc>Editing data sources in the data manager perspective, using the default interface:
+      two data sources are defined, which list the contents of the "customers" and "orders"
+      tables. The setup is the same as the figure above showing the XML syntax</desc>
+    <media type="image" mime="image/png" src="figures/data-man-uicompose.png"/>
+  </figure>
+
+  <p>
+    The commands available through the command buttons are:
+  </p>
+  <list>
+    <item><p><gui>Reset</gui>: resets the XML editor to a default XML template, only available when the XML
+    view is currently displayed</p></item>
+    <item><p><gui>Add</gui>: displays a popup menu with shortcuts to quickly define new data sources
+	as whole table contents (also analyses the database schema to propose relevant choices),
+	only available when the XML edition mode is not selected</p></item>
+    <item><p><gui>Variables</gui>: shows/hide the <link xref="variables-syntax">variables</link> panel where you can give values to the variables
+    present in the SQL code of any data source's definition. The panel is automatically shown when a variable is detected in 
+    the SQL code.</p></item>
+    <item><p><gui>Execute</gui>: executes the defined data sources</p></item>
+    <item><p><gui>View XML</gui>: toggles between the XML editor and the UI editor</p></item>
+    <item><p><gui>Help</gui>: shows some help</p></item>
+  </list>
+</section>
+<section id="data-manager-exec-data-source">
+  <title>Executing defined data sources</title>
+  <p>
+    To execute a defined set of data sources, simply switch to execute mode using
+    the <media type="image" mime="image/png" src="figures/data-man-mode.png"/> toolbar button
+    or the <gui>Execute</gui> button.
+  </p>
+  <p>
+    The layout of tabular views for each data source is automatically generated in columns using the following
+    rule: if a data source B depends on a data source A, then its tabular view is displayed on
+    the right of the one for A.
+  </p>
+  <p>
+    Also if you change the selected row of tabular view of a data source A, then the tabular views of
+    all the data sources depending on A will also have their tabular view refreshed.
+  </p>
+</section>
+</page>

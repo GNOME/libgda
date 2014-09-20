@@ -1,0 +1,39 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="index">
+  <info>
+    <credit type="author">
+      <name>Vivien Malerba</name>
+      <email>malerba@gnome-db.org</email>
+    </credit>
+  </info>
+
+  <title>Gda Browser Help</title>
+  <p><app>gda-browser</app> is a tool for database administrators: they can analyse database's schemas
+    to understand how data is organized, run SQL commands interactively, and in a broader way manage
+    the data contained in the databases.</p>
+
+  <p>Several connections to databases can be opened at once, allowing the user to work on multiple
+    databases at once (it is also possible to execute commands on several connections at the same time).</p>
+
+  <p>As <app>gda-browser</app> uses the <app>libgda</app> library, it can open connections to databases
+    for which a database driver (provider) exists in <app>libgda</app>
+    (<link href="http://www.oracle.com">Oracle</link>, <link href="http://www.mysql.org">MySQL</link>,
+    <link href="http://www.postgresql.org/">PostgreSQL</link>, <link href="http://www.sqlite.org">SQLite</link>,
+    MS Access (through the <link href="http://sourceforge.net/projects/mdbtools/">MDBTools</link> library),
+    <link href="http://en.wikipedia.org/wiki/LDAP">LDAP</link> and
+    <link href="http://java.sun.com/docs/books/tutorial/jdbc/index.html">JDBC</link> are supported at
+    the moment). </p>
+
+  <section id="presentation" style="1column">
+    <title>Presentation</title>
+  </section>
+  <section id="perspectives" style="1column">
+    <title>Perspectives</title>
+  </section>
+
+  <section id="connections" style="1column">
+    <title>Connections management</title>
+  </section>
+
+</page>

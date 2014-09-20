@@ -1,0 +1,2079 @@
+# Brazilian Portuguese translation for libgda.
+# Copyright (C) 2013 libgda's COPYRIGHT HOLDER
+# This file is distributed under the same license as the libgda package.
+# Georges Neto <georges.stavracas@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgda master\n"
+"POT-Creation-Date: 2013-05-17 04:31+0000\n"
+"PO-Revision-Date: 2013-05-21 17:21-0300\n"
+"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-connections.page:52(None)
+msgid ""
+"@@image: 'figures/ldap-table-mapping.png'; "
+"md5=39f204f664cf1202deb716bb19b8993b"
+msgstr ""
+"@@image: 'figures/ldap-table-mapping.png'; "
+"md5=39f204f664cf1202deb716bb19b8993b"
+
+#: C/ldap-connections.page:5(title) C/ldap-browser-perspective.page:5(title)
+#: C/virtual-connections.page:5(title) C/variables.page:5(title)
+#: C/table-insert-data.page:5(title) C/transactions.page:5(title)
+#: C/schema-browser-perspective.page:5(title)
+#: C/query-execution-perspective.page:5(title) C/general-ui.page:5(title)
+#: C/features.page:5(title) C/diagram.page:5(title) C/declaredfk.page:5(title)
+#: C/data-manager-source-editor.page:5(title)
+#: C/data-manager-xml-syntax.page:5(title)
+#: C/data-manager-perspective.page:5(title) C/actions.page:5(title)
+msgid "1"
+msgstr "1"
+
+#: C/ldap-connections.page:9(title)
+msgid "LDAP connections"
+msgstr "Conexões LDAP"
+
+#: C/ldap-connections.page:10(p)
+msgid ""
+"LDAP connections are different than other connections in a way that an LDAP "
+"database stores data in a hierarchical way, in the DIT (Directory "
+"Information Tree), whereas other databases accessible using the <app>gda-"
+"browser</app> application are relational databases."
+msgstr ""
+"Conexões LDAP são diferentes de outras conexões de modo que um banco de "
+"dados LDAP registra informações de modo hierárquico, na Árvore de "
+"Informações de Diretório (DIT), enquanto que outros bancos de dados "
+"acessados usando o aplicativo <app>gda-browser</app> são bancos de dados "
+"relacionais."
+
+#: C/ldap-connections.page:15(p)
+msgid ""
+"As a consequence, LDAP connections are treaded specially: as normal "
+"connections with tables (see the table mapping explained next), and through "
+"the presence of the <link xref=\"ldap-browser-perspective\"> LDAP browser "
+"perspective</link>"
+msgstr ""
+"Como consequência, conexões LDAP são tratadas de forma especial: como "
+"conexões normais com tabelas (veja o mapeamento de tabela a explicado a "
+"seguir), e enquanto estiver presente o <link xref=\"ldap-browser-perspective"
+"\">navegador de perspectiva LDAP</link>"
+
+#: C/ldap-connections.page:20(p)
+msgid ""
+"Note that LDAP connections may not be available is either the LDAP database "
+"provider is not installed or if the LDAP support was disabled during the "
+"compilation."
+msgstr ""
+"Note que conexões LDAP podem não estar disponíveis caso o banco de dados "
+"LDAP não esteja instalado ou o suporte a LDAP foi desabilitado durante a "
+"compilação."
+
+#: C/ldap-connections.page:26(title)
+msgid "LDAP table's mapping"
+msgstr "Mapeamento de tabela LDAP"
+
+#: C/ldap-connections.page:27(p)
+msgid ""
+"Within an LDAP connection, it is possible to declare virtual tables which "
+"are mapped to an LDAP search. These virtual tables can then later be used "
+"like any other table. The first column of each LDAP virtual table will "
+"always be the DN (Distinguished Name) of the entry represented in the row; "
+"the other columns depend on the table definition."
+msgstr ""
+"Em uma conexão LDAP, é possível declarar tabelas virtuais que são mapeadas à "
+"uma pesquisa LDAP. Essas tabelas virtuais podem então ser usadas "
+"posteriormente como qualquer outra tabela. A primeira coluna de cada tabela "
+"virtual LDAP será sempre o DN (Nome distinto) de cada registro representado "
+"na linha; as outras colunas dependem da definição da tabela."
+
+#: C/ldap-connections.page:33(p)
+msgid "An LDAP virtual table is defined by the following attributes:"
+msgstr "Uma tabela virtual LDAP é definida pelos seguintes atributos:"
+
+#: C/ldap-connections.page:37(p)
+msgid "a table name"
+msgstr "um nome de tabela"
+
+#: C/ldap-connections.page:38(p)
+msgid ""
+"the base DN for the search: the LDAP entry at which the search begins (if "
+"not specified then the top level entry of the LDAP connection is used)"
+msgstr ""
+"a base DN para pesquisa: o registro LDAP o qual a pesquisa começa (caso não "
+"seja especificado, é utilizado o registro de nível superior da conexão LDAP)"
+
+#: C/ldap-connections.page:40(p)
+msgid ""
+"the search filter: a valid LDAP search filter (if none is provided then the "
+"default search filter is \"(objectClass=*)\", requesting any LDAP entry)."
+msgstr ""
+"o filtro de pesquisa: um filtro de pesquisa LDAP válido (se nenhum for "
+"fornecido, o filtro de pesquisa padrão é \"(objectClass=*)\", requisitando "
+"qualquer registro LDAP)."
+
+#: C/ldap-connections.page:42(p)
+msgid ""
+"the attributes: the attributes to retrieve, each attribute will be mapped to "
+"a column of the table. The attributes must be a comma separated list of "
+"attributes, where each attribute can optionally be assigned a type and a "
+"multi value option (see below)."
+msgstr ""
+"os atributos: os atributos a receber, cada atributo será mapeado a uma "
+"coluna da tabela. Os atributos devem estar em uma lista de atributos, "
+"separados por vírgulas, onde a cada atributo pode opcionalmente ser "
+"atribuído um tipo e uma opção multi valor (veja abaixo)."
+
+#: C/ldap-connections.page:45(p)
+msgid ""
+"the scope: the search scope, \"subtree\" (to search the base DN and the "
+"entire sub tree below), \"onelevel\" (to search the immediate children of "
+"the base DN entry only), or \"base\" (to search the base DN only)"
+msgstr ""
+"o escopo: o escopo da pesquisa, \"subtree\" (para pesquisar a base DN e a "
+"subárvore completa abaixo), \"onelevel\" (para pesquisar apenas o filho "
+"imediato do registro base DN), ou \"base\" (para pesquisar apenas o registro "
+"base DN)"
+
+#: C/ldap-connections.page:50(title) C/ldap-connections.page:51(desc)
+msgid "LDAP table's properties"
+msgstr "Propriedades da tabela LDAP"
+
+#: C/ldap-connections.page:54(p)
+msgid ""
+"For example in the figure above, the \"users\" table will \"contain\" all "
+"the LDAP entries from the top level LDAP entry of the connection, and have 3 "
+"columns: the DN, the \"cn\" and the \"jpegPhoto\"."
+msgstr ""
+"Por exemplo, na figura acima, a tabela \"users\" \"contém\" todos os "
+"registros LDAP do registro de nível superior LDAP da conexão, e tem 3 "
+"colunas: o DN, a \"cn\" e a \"jpegPhoto\"."
+
+#: C/ldap-connections.page:61(title)
+msgid "Attributes to columns mapping"
+msgstr ""
+
+#: C/ldap-connections.page:62(p)
+msgid ""
+"As mentioned in the previous section, each attribute will be mapped to a "
+"column. The column type is normally automatically determined (string, "
+"number, ...) but can be forced by appending to the attribute name the \"::"
+"&lt;type&gt;\" for the requested type."
+msgstr ""
+
+#: C/ldap-connections.page:67(p)
+msgid ""
+"Also, because some attributes can have multiple values, the table "
+"construction handles multi-valued attributes in different ways, depending on "
+"each attribute's options. An option can be specified by appending the \"::"
+"&lt;option&gt;\" to the attribute name. Valid options are:"
+msgstr ""
+
+#: C/ldap-connections.page:74(p)
+msgid "\"NULL\" or \"0\": a NULL value will be returned for the attribute"
+msgstr ""
+
+#: C/ldap-connections.page:75(p)
+msgid ""
+"\"CSV\": a comma separated value with all the values of the attribute will "
+"be returned. This only works for string attribute types."
+msgstr ""
+
+#: C/ldap-connections.page:77(p)
+msgid ""
+"\"MULT\" or \"*\": a row will be returned for each value of the attribute, "
+"effectively multiplying the number of returned rows"
+msgstr ""
+
+#: C/ldap-connections.page:79(p)
+msgid ""
+"\"1\": only the first value of the attribute will be used, the other values "
+"ignored"
+msgstr ""
+
+#: C/ldap-connections.page:80(p)
+msgid ""
+"\"CONCAT\": the attributes' values are concatenated (with a newline char "
+"between each value)"
+msgstr ""
+
+#: C/ldap-connections.page:82(p)
+msgid ""
+"\"ERROR\": an error value will be returned (this is the default behaviour)"
+msgstr ""
+
+#: C/ldap-connections.page:87(title)
+msgid "SQL usable with LDAP connections"
+msgstr ""
+
+#: C/ldap-connections.page:88(p)
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any LDAP connection. Be aware however that if you define "
+"database objects (outside of the extended SQL presented next section), they "
+"will be lost the next time the LDAP connection is opened."
+msgstr ""
+
+#: C/ldap-connections.page:93(p)
+msgid ""
+"So it is perfectly safe for example to create a table to store some LDAP "
+"data which may require a long operation to obtain, but after closing the "
+"LDAP connection, the table and its data will be lost."
+msgstr ""
+
+#: C/ldap-connections.page:98(p) C/virtual-connections.page:135(p)
+msgid ""
+"See the <link xref=\"sql-sqlite\">SQL understood by LDAP connections and "
+"virtual connections</link> section for more information."
+msgstr ""
+
+#: C/ldap-connections.page:105(title)
+msgid "SQL extension to handle LDAP tables"
+msgstr ""
+
+#: C/ldap-connections.page:106(p)
+msgid "LDAP tables can be created using an extended set of SQL commands:"
+msgstr ""
+
+#: C/ldap-connections.page:110(p)
+msgid ""
+"<code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to declare a new LDAP virtual table"
+msgstr ""
+
+#: C/ldap-connections.page:111(p)
+msgid ""
+"<code>DESCRIBE LDAP TABLE &lt;table_name&gt;</code> to show LDAP virtual "
+"table's definition"
+msgstr ""
+
+#: C/ldap-connections.page:112(p)
+msgid ""
+"<code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
+"filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
+"specified part is actually modified)"
+msgstr ""
+
+#: C/ldap-connections.page:113(p)
+msgid ""
+"<code>DROP LDAP TABLE &lt;table_name&gt;</code> to remove an LDAP virtual "
+"table. Note that the usual <code>DROP TABLE &lt;table_name&gt;</code> can "
+"also be used instead."
+msgstr ""
+
+#: C/ldap-connections.page:116(p)
+msgid "For example the following SQL code:"
+msgstr ""
+
+#: C/ldap-connections.page:119(code)
+#, no-wrap
+msgid ""
+"\n"
+"      CREATE LDAP TABLE users FILTER='(objectClass=inetOrgPerson)'\n"
+"              ATTRIBUTES='cn,sn,givenName,seeAlso::*' SCOPE='subtree';\n"
+"      SELECT * FROM users WHERE cn like '%john%';\n"
+"      ALTER LDAP TABLE users FILTER='(&amp;(objectClass=inetOrgPerson)(cn=*john*))';\n"
+"      SELECT * FROM users;\n"
+"      DROP LDAP TABLE users;\n"
+"    "
+msgstr ""
+
+#: C/ldap-connections.page:127(p)
+msgid ""
+"should display twice the same results, which list all the LDAP entries of "
+"the \"inetOrgPerson\" class with a CommonName (cn) containing the \"john\" "
+"string."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:22(None)
+msgid ""
+"@@image: 'figures/ldap-browser-persp.png'; "
+"md5=e2c1bbcb2f65ffe16b632141908f7027"
+msgstr ""
+"@@image: 'figures/ldap-browser-persp.png'; "
+"md5=e2c1bbcb2f65ffe16b632141908f7027"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:47(None)
+msgid ""
+"@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
+msgstr ""
+"@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/ldap-browser-perspective.page:52(None)
+msgid ""
+"@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
+msgstr ""
+"@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
+
+#: C/ldap-browser-perspective.page:8(title)
+msgid "The LDAP browser perspective"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:9(p)
+msgid ""
+"Use the LDAP browser perspective to view and manipulate data stored in an "
+"LDAP directory. To switch to this perspective, use the "
+"<guiseq><gui>Perspective</gui><gui>LDAP browser</gui></guiseq> menu, or the "
+"<keyseq><key>Ctrl</key><key>P</key></keyseq> shortcut. This perspective is "
+"of course only available when the opened connection is an <link xref=\"ldap-"
+"connection\">LDAP connection</link>."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:14(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites (to hold references to specific LDAP entries or "
+"specific LDAP classes), and the right pane being the action area."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:20(title)
+msgid "LDAP browser's entry tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:21(desc)
+msgid "LDAP entries tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:25(p)
+msgid ""
+"The left part of the perspective lists the favorite LDAP entries or classes. "
+"Double clicking on a favorite opens its properties in the right pane. Note "
+"that the LDAP entries favorites will always appear before the classes "
+"favorites."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:31(p)
+#: C/schema-browser-perspective.page:29(p)
+msgid "The right pane is composed of several types of tabs:"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:35(p)
+msgid ""
+"tabs to explore the LDAP DIT (Directory Information Tree): when an entry is "
+"selected from the tree, its attributes are displayed (only the valued "
+"attributes are displayed, the ones with no value are hidden), and the "
+"entry's DN (Distinguished Name) is always displayed first. Also note that "
+"the children of each entry are only fetched when necessary to avoid "
+"unnecessary requests to the LDAP server."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:39(p)
+msgid ""
+"tabs to explore the LDAP's classes, see figure below. For a selected class, "
+"all the information regarding the class is displayed (description, OID, "
+"type, ...)"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:41(p)
+msgid ""
+"tabs to perform LDAP searches, see figure below. An LDAP search definition "
+"can be saved as a virtual table, see the <link xref=\"ldap-connection#ldap-"
+"table-mapping\">LDAP table's mapping</link>."
+msgstr ""
+
+#: C/ldap-browser-perspective.page:45(title)
+msgid "LDAP browser's classes tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:46(desc)
+msgid "LDAP classes tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:50(title)
+msgid "LDAP browser's search tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:51(desc)
+msgid "LDAP search tab"
+msgstr ""
+
+#: C/ldap-browser-perspective.page:54(p)
+msgid ""
+"Links in these tabs (identified by blue and underlined text) open a new tab, "
+"or use the first tab next to the current tab to display information about "
+"the selected link. For example in the figure above illustrating an LDAP "
+"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
+"\" tab and display the information about that class."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:29(None)
+msgid ""
+"@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
+msgstr ""
+"@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:94(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
+msgstr ""
+"@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:108(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
+msgstr ""
+"@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:117(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
+msgstr ""
+"@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/virtual-connections.page:124(None)
+msgid ""
+"@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
+msgstr ""
+"@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
+
+#: C/virtual-connections.page:9(title)
+msgid "Connections binding (i.e. virtual connections)"
+msgstr ""
+
+#: C/virtual-connections.page:10(p)
+msgid ""
+"Connection binding is a feature which allows to \"bind\" several connections "
+"and/or imported data sets into a single connection, which can be used almost "
+"like a regular connection."
+msgstr ""
+
+#: C/virtual-connections.page:14(p)
+msgid ""
+"This feature is useful when one needs to execute an SQL command (for example "
+"to extract data) taking into account data actually stored in different "
+"databases. Without this feature, the way to achieve the same result is by "
+"exporting the necessary data from each database and work on the data outside "
+"of the databases."
+msgstr ""
+
+#: C/virtual-connections.page:20(p)
+msgid ""
+"To create a new \"bound\" connection (or \"virtual\" connection), use the "
+"<guiseq><gui>Connection</gui><gui>Bind connection</gui></guiseq> menu, or "
+"the <keyseq><key>Ctrl</key><key>i</key></keyseq> shortcut. This pops up a "
+"new dialog window from which elements to be included in the \"bound\" "
+"connection can be defined as shown below."
+msgstr ""
+
+#: C/virtual-connections.page:27(title)
+msgid "Dialog to create a new virtual connection"
+msgstr ""
+
+#: C/virtual-connections.page:28(desc)
+msgid "Here the current connection (c1) will be bound in the \"c1\" schema"
+msgstr ""
+
+#: C/virtual-connections.page:31(p)
+msgid "Use the <guiseq><gui>Add binding</gui></guiseq> button to either:"
+msgstr ""
+
+#: C/virtual-connections.page:35(p)
+msgid ""
+"bind a connection to include all the tables of that connection: use the "
+"<guiseq><gui>Bind a connection</gui></guiseq> option. This option simply "
+"adds a new element in the dialog, to specify a schema name and select an "
+"existing connection"
+msgstr ""
+
+#: C/virtual-connections.page:36(p)
+msgid ""
+"bind a data set to import data from a text file as a single table: use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option. See section below for "
+"more information."
+msgstr ""
+
+#: C/virtual-connections.page:40(title)
+msgid "Use case for virtual connections"
+msgstr ""
+
+#: C/virtual-connections.page:41(p)
+msgid ""
+"To illustrate virtual connection usage, let's define a simple use case and "
+"see how it's useful. Suppose you have a database which contains the list of "
+"servers which you are responsible for. For simplicity, let's assume that the "
+"database contains a table named \"server\" with the following definition:"
+msgstr ""
+
+#: C/virtual-connections.page:46(code)
+#, no-wrap
+msgid "CREATE TABLE servers (name string, location string);"
+msgstr ""
+
+#: C/virtual-connections.page:47(p)
+msgid "Let's suppose this table contains the following information:"
+msgstr ""
+
+#: C/virtual-connections.page:50(code)
+#, no-wrap
+msgid ""
+"\n"
+"&gt; select * from servers ;\n"
+"name     | location\n"
+"---------+---------\n"
+"moon     | room1   \n"
+"darkstar | room2   \n"
+"flag     | room3   \n"
+"alf      | room2   \n"
+"vador    | room3   \n"
+"(5 rows)\n"
+"&gt;\n"
+"    "
+msgstr ""
+
+#: C/virtual-connections.page:62(p)
+msgid ""
+"Now let's assume you have a third party program which gives you a list of "
+"servers for which there might be a problem, the output of this program is a "
+"CSV file with a column for the server name, a column for the error code, and "
+"a column describing the problem. Let's assume the CSV file has the following "
+"contents:"
+msgstr ""
+
+#: C/virtual-connections.page:67(code)
+#, no-wrap
+msgid ""
+"\n"
+"$ cat problems.csv \n"
+"Server name,Error code,Error description\n"
+"darkstar,0,file system full\n"
+"vador,1,outdated AV signature\n"
+"darkstar,2,overloaded\n"
+"flag,0,file system full\n"
+"$\n"
+"    "
+msgstr ""
+
+#: C/virtual-connections.page:76(p)
+msgid ""
+"Let's suppose now you want to know all the servers, where they are located "
+"where there is a problem with error code 0. The solution is to bind the "
+"connection to the database (for example in the \"c1\" schema), import the "
+"problems CSV file (for example in the \"tab\" table), and execute the "
+"following SQL command:"
+msgstr ""
+
+#: C/virtual-connections.page:81(code)
+#, no-wrap
+msgid ""
+"\n"
+"SELECT \n"
+"  \"server name\", \n"
+"  location\n"
+"FROM tab\n"
+"  INNER JOIN c1.servers AS s ON (tab.\"server name\" = s.name)\n"
+"WHERE \"Error code\"=0\n"
+"    "
+msgstr ""
+
+#: C/virtual-connections.page:89(p)
+msgid "Which returns the expected results as shown in the following figure:"
+msgstr ""
+
+#: C/virtual-connections.page:93(title)
+msgid "Expected results from virtual connection"
+msgstr ""
+
+#: C/virtual-connections.page:100(title)
+msgid "Importing a data set into a virtual connection"
+msgstr ""
+
+#: C/virtual-connections.page:101(p)
+msgid ""
+"To import a data set into a table in the virtual connection (for example to "
+"import the \"problems.csv\" file from the use case), use the "
+"<guiseq><gui>Bind a data set</gui></guiseq> option from the virtual "
+"connection creation dialog:"
+msgstr ""
+
+#: C/virtual-connections.page:107(title)
+msgid "Import a data set into a virtual connection - 1"
+msgstr ""
+
+#: C/virtual-connections.page:110(p)
+msgid ""
+"From there use the <guiseq><gui>Import</gui></guiseq> button which allows "
+"you to select a file to import and also define some import options (file "
+"encoding, file type, ...) After this step, the virtual connection is ready "
+"to be used:"
+msgstr ""
+
+#: C/virtual-connections.page:116(title)
+msgid "Import a data set into a virtual connection - 2"
+msgstr ""
+
+#: C/virtual-connections.page:119(p)
+msgid ""
+"The resulting virtual connection, identified as \"c2\" here is opened in its "
+"own new window:"
+msgstr ""
+
+#: C/virtual-connections.page:123(title)
+msgid "New opened virtual connection"
+msgstr ""
+
+#: C/virtual-connections.page:129(title)
+msgid "SQL usable with virtual connections"
+msgstr ""
+
+#: C/virtual-connections.page:130(p)
+msgid ""
+"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
+"\">SQLite</link> in any virtual connection. Be aware however that if you "
+"define database objects (outside of the extended SQL presented next "
+"section), they will be lost the next time the virtual connection is opened."
+msgstr ""
+
+#: C/variables.page:9(title)
+msgid "Variables in SQL code"
+msgstr ""
+
+#: C/variables.page:10(p)
+msgid ""
+"Variables (sometimes refered to as <em>placeholders</em>) are places in SQL "
+"code which are replaced by actual values when the SQL code is executed. The "
+"benefits are faster execution times (as the SQL code is parsed only once) "
+"and a protection against SQL injection vulnerabilities."
+msgstr ""
+
+#: C/variables.page:16(p)
+msgid ""
+"Variables can be used in any SQL code, and are defined using the following "
+"syntax:"
+msgstr ""
+
+#: C/variables.page:21(p) C/declaredfk.page:27(p)
+msgid "Notes:"
+msgstr ""
+
+#: C/variables.page:25(p)
+msgid ""
+"the <em>variable name</em> can contain any SQL identifier character or among "
+"the <code>+-.|@?</code>characters (no space allowed)"
+msgstr ""
+
+#: C/variables.page:27(p)
+msgid ""
+"the <em>variable type</em> can be among: <code>string</code>, <code>boolean</"
+"code>, <code>int</code>, <code>date</code>, <code>time</code>, "
+"<code>timestamp</code>, <code>guint</code>, <code>blob</code> and "
+"<code>binary</code>"
+msgstr ""
+
+#: C/variables.page:30(p)
+msgid ""
+"the <code>::NULL</code> can be appended to specify that the variable may "
+"take the special <code>NULL</code> value."
+msgstr ""
+
+#: C/variables.page:33(p)
+msgid "Examples:"
+msgstr ""
+
+#: C/variables.page:36(code)
+#, no-wrap
+msgid ""
+"\n"
+"##name::string\n"
+"##id::int::NULL\n"
+"##sales@3::date::NULL\n"
+"##customers@id::int"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/table-insert-data.page:20(None)
+msgid ""
+"@@image: 'figures/table-insert-data.png'; "
+"md5=308807b8443d5ab26c8704a6e01aa1ab"
+msgstr ""
+
+#: C/table-insert-data.page:8(title)
+msgid "Inserting data in a table"
+msgstr ""
+
+#: C/table-insert-data.page:9(p)
+msgid ""
+"From the <link xref=\"schema-browser-perspective\">schema browser "
+"perspective</link>, when a table's properties is displayed in a tab, use the "
+"<guiseq><gui>Table</gui><gui>Insert data</gui></guiseq> menu to have a popup "
+"appear containing a data entry for each column of the table to insert data "
+"into."
+msgstr ""
+
+#: C/table-insert-data.page:14(p)
+msgid "A popup similar to the following will appear:"
+msgstr ""
+
+#: C/table-insert-data.page:18(title)
+msgid "Popup to insert data into table"
+msgstr ""
+
+#: C/table-insert-data.page:19(desc)
+msgid "A popup to insert data in a table"
+msgstr ""
+
+#: C/table-insert-data.page:22(p)
+msgid "The noticeable points here are:"
+msgstr ""
+
+#: C/table-insert-data.page:26(p)
+msgid ""
+"There is one data entry per column in the table, with the exception (not "
+"shown in this figure) of multiple foreign key fields for which a single drop "
+"down choice widget is shown;"
+msgstr ""
+
+#: C/table-insert-data.page:28(p)
+msgid ""
+"Each data entry has a small button on the right giving information about the "
+"corresponding data entry, and allowing you to reset the data entry's value "
+"to the value it had before any modification done, to set it to NULL or to "
+"set it to a default value. The button's color has the following "
+"signification:"
+msgstr ""
+
+#: C/table-insert-data.page:33(p)
+msgid "Red: means the current value in the data entry is invalid"
+msgstr ""
+
+#: C/table-insert-data.page:34(p)
+msgid ""
+"Blue: means the current value in the data entry is unused and the column's "
+"default value will be used instead (useful for example for auto incremented "
+"columns)"
+msgstr ""
+
+#: C/table-insert-data.page:36(p)
+msgid "Green: means the current value in the data entry is NULL"
+msgstr ""
+
+#: C/table-insert-data.page:37(p)
+msgid ""
+"Same color as the rest of the UI: means none of the above situations apply"
+msgstr ""
+
+#: C/table-insert-data.page:40(p)
+msgid ""
+"Columns which are foreign keys to other tables are presented as a drop down "
+"combo box where you can only choose among the values in the referenced table "
+"(hint: to have that values list refreshed you should close the popup dialog "
+"and reopen it);"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:14(None)
+msgid ""
+"@@image: 'figures/trans-begin.png'; md5=0382a22aeb54be0d7fe0ffa29dddf423"
+msgstr ""
+"@@image: 'figures/trans-begin.png'; md5=0382a22aeb54be0d7fe0ffa29dddf423"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:16(None)
+msgid ""
+"@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
+msgstr ""
+"@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/transactions.page:18(None)
+msgid ""
+"@@image: 'figures/trans-rollback.png'; md5=470522738b1d6bf91b9787baac1c0191"
+msgstr ""
+"@@image: 'figures/trans-rollback.png'; md5=470522738b1d6bf91b9787baac1c0191"
+
+#: C/transactions.page:9(title)
+msgid "Transactions"
+msgstr ""
+
+#: C/transactions.page:10(p)
+msgid ""
+"Transactions can be started, committed or rolled back on a per connection "
+"basis:"
+msgstr ""
+
+#: C/transactions.page:14(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin."
+"png\"/> toolbar button to start a transaction"
+msgstr ""
+
+#: C/transactions.page:16(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit."
+"png\"/> toolbar button to commit the current transaction (apply all the "
+"changes)"
+msgstr ""
+
+#: C/transactions.page:18(p)
+msgid ""
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"rollback.png\"/> toolbar button to abort the current transaction (forget all "
+"the changes)"
+msgstr ""
+
+#: C/transactions.page:22(p)
+msgid ""
+"A transaction may be started automatically when executing a SELECT statement "
+"which involves binary objects (BLOBs), and the transaction may be locked "
+"while the resulting data set is kept in memory (to get rid of a data set in "
+"a <link xref=\"query-execution-perspective\">query execution perspective</"
+"link>, clear the history item relating to the data set)."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/schema-browser-perspective.page:21(None) C/general-ui.page:18(None)
+msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
+msgstr "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/schema-browser-perspective.page:47(None)
+msgid ""
+"@@image: 'figures/schema-browser-persp.png'; "
+"md5=991ae01b9fb6b17c0b93ee4873b9b985"
+msgstr ""
+"@@image: 'figures/schema-browser-persp.png'; "
+"md5=991ae01b9fb6b17c0b93ee4873b9b985"
+
+#: C/schema-browser-perspective.page:8(title)
+msgid "The schema browser perspective"
+msgstr ""
+
+#: C/schema-browser-perspective.page:9(p)
+msgid ""
+"Use the schema browser perspective to understand the database's organisation "
+"(schema). To switch to this perspective, use the <guiseq><gui>Perspective</"
+"gui><gui>Schema browser</gui></guiseq> menu, or the <keyseq><key>Ctrl</"
+"key><key>B</key></keyseq> shortcut."
+msgstr ""
+
+#: C/schema-browser-perspective.page:14(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorites, and the right pane being the action area."
+msgstr ""
+
+#: C/schema-browser-perspective.page:19(title)
+msgid "Schema browser perspective's default view"
+msgstr ""
+
+#: C/schema-browser-perspective.page:20(desc)
+msgid "The default Schema browser perspective"
+msgstr ""
+
+#: C/schema-browser-perspective.page:24(p)
+msgid ""
+"The left part of the perspective lists the favorite database objects or "
+"diagrams. Double clicking on a favorite opens its properties in the right "
+"pane."
+msgstr ""
+
+#: C/schema-browser-perspective.page:33(p)
+msgid ""
+"a tab listing all the database's tables and views, in a <em>cloud</em> view "
+"where the tables with the more relations to other tables being displayed in "
+"a larger font; this tab is always present"
+msgstr ""
+
+#: C/schema-browser-perspective.page:36(p)
+msgid ""
+"zero or more tabs representing a table or views' properties: the list of "
+"columns, the list of constraints (primary or foreign keys, and unique "
+"constraints), a <link xref=\"diagram\">diagram</link> showing the related "
+"tables, and an area to define display preferences for each column's data"
+msgstr ""
+
+#: C/schema-browser-perspective.page:39(p)
+msgid ""
+"zero or more <link xref=\"diagram\">diagrams</link> in which any number of "
+"tables can be represented, where they are linked using their relations (as "
+"foreign key constraints)"
+msgstr ""
+
+#: C/schema-browser-perspective.page:44(title)
+msgid "Tab showing information about a table"
+msgstr ""
+
+#: C/schema-browser-perspective.page:45(desc)
+msgid ""
+"Example of information displayed for each table, note the difference between "
+"foreign keys implemented in the database and <link xref=\"declared-fk"
+"\">declared foreign keys</link>"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/query-execution-perspective.page:17(None)
+msgid ""
+"@@image: 'figures/query-exec-persp.png'; md5=c52ce85c0f89d26775c8b9dad282910a"
+msgstr ""
+
+#: C/query-execution-perspective.page:8(title)
+msgid "The query execution perspective"
+msgstr ""
+
+#: C/query-execution-perspective.page:9(p)
+msgid ""
+"Use the query perspective to execute SQL statements. To switch to this "
+"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)"
+"</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> "
+"shortcut."
+msgstr ""
+
+#: C/query-execution-perspective.page:15(title)
+msgid "Query exec perspective"
+msgstr ""
+
+#: C/query-execution-perspective.page:16(desc)
+msgid "The query exec perspective with one SELECT statement executed"
+msgstr ""
+
+#: C/query-execution-perspective.page:20(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane for the "
+"user defined favorite statements, and the right pane being the action area."
+msgstr ""
+
+#: C/query-execution-perspective.page:24(p)
+msgid ""
+"In the figure above, there are two favorites: a SELECT statement (named "
+"\"List customers\") and an INSERT statement (named \"New customer ...\"). "
+"The INSERT statement needs one \"name\" parameter, whereas the SELECT "
+"statement does not require any parameter to be executed."
+msgstr ""
+
+#: C/query-execution-perspective.page:30(p)
+msgid ""
+"The icon difference between the two illustrates the fact that the INSERT "
+"favorite is also marked to be an <link xref=\"actions\">action</link>: it "
+"will be proposed as an action to be executed when the contextual menu is "
+"brought up in any grid representation of a resultset."
+msgstr ""
+
+#: C/query-execution-perspective.page:35(p)
+msgid ""
+"The left part of the perspective lists the favorite statements which have "
+"been user defined. Activating a favorite (double clicking) resets the SQL "
+"text area's contents to the selected statement's SQL."
+msgstr ""
+
+#: C/query-execution-perspective.page:40(p)
+msgid ""
+"The right pane is composed of zero or more tabs where the SQL is entered and "
+"executed. In each tab there is:"
+msgstr ""
+
+#: C/query-execution-perspective.page:45(p)
+msgid "an SQL area in the top left part"
+msgstr ""
+
+#: C/query-execution-perspective.page:46(p)
+msgid "command buttons in the top right part"
+msgstr ""
+
+#: C/query-execution-perspective.page:47(p)
+msgid "execution history in the lower left part"
+msgstr ""
+
+#: C/query-execution-perspective.page:48(p)
+msgid "execution results in the lower right part"
+msgstr ""
+
+#: C/query-execution-perspective.page:52(title)
+msgid "SQL area"
+msgstr ""
+
+#: C/query-execution-perspective.page:53(p)
+msgid ""
+"The SQL area is an SQL editor. The SQL can be any SQL understood by the "
+"database, with the exception of <link xref=\"variables-syntax\">variables</"
+"link> (which must have a specific syntax)."
+msgstr ""
+
+#: C/query-execution-perspective.page:57(p)
+msgid "The keyboard shortcuts in the SQL editor are:"
+msgstr ""
+
+#: C/query-execution-perspective.page:61(p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>SPACE</key></keyseq> to obtain a completion list"
+msgstr ""
+
+#: C/query-execution-perspective.page:62(p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>ENTER</key></keyseq> to execute the SQL code"
+msgstr ""
+
+#: C/query-execution-perspective.page:63(p)
+msgid "<keyseq><key>Ctrl</key><key>l</key></keyseq> to clear the editor"
+msgstr ""
+
+#: C/query-execution-perspective.page:64(p)
+msgid ""
+"<keyseq><key>Ctrl</key><key>Up</key></keyseq> and <keyseq><key>Ctrl</"
+"key><key>Down</key></keyseq> to navigate through the editor's history"
+msgstr ""
+
+#: C/query-execution-perspective.page:70(title)
+msgid "Command buttons"
+msgstr ""
+
+#: C/query-execution-perspective.page:71(p)
+#: C/data-manager-perspective.page:72(p)
+msgid "The commands available through the command buttons are:"
+msgstr ""
+
+#: C/query-execution-perspective.page:75(p)
+msgid ""
+"<gui>Clear</gui>: clears the editor (similar to the <keyseq><key>Ctrl</"
+"key><key>l</key></keyseq> shortcut)"
+msgstr ""
+
+#: C/query-execution-perspective.page:76(p)
+msgid ""
+"<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code. The panel is automatically shown when a variable is "
+"detected in the SQL code"
+msgstr ""
+
+#: C/query-execution-perspective.page:79(p)
+msgid ""
+"<gui>Execute</gui>: executes the SQL code. If the SQL code contains some "
+"variables which have not been set, then a popup first appears requesting the "
+"variables to be given values. This is similar to the <keyseq><key>Ctrl</"
+"key><key>ENTER</key></keyseq> shortcut"
+msgstr ""
+
+#: C/query-execution-perspective.page:82(p)
+msgid ""
+"<gui>Indent</gui>: re-indents the SQL code (warning: this removes any "
+"comments)"
+msgstr ""
+
+#: C/query-execution-perspective.page:83(p)
+msgid "<gui>Favorites</gui>: adds the current SQL code to the favorites"
+msgstr ""
+
+#: C/query-execution-perspective.page:88(title)
+msgid "Execution history"
+msgstr ""
+
+#: C/query-execution-perspective.page:89(p)
+msgid ""
+"The execution history part contains a list of the past executed statements, "
+"ordered by execution date along with an indication when the statement was "
+"executed (11 minutes in the figure above). Selecting an history item "
+"displays the corresponding result in the execution results part."
+msgstr ""
+
+#: C/query-execution-perspective.page:94(p)
+msgid ""
+"The <gui>Copy</gui> button copies the currently selected history item's SQL "
+"code to the SQL editor, and the <gui>Clear</gui> button removes all the "
+"history items."
+msgstr ""
+
+#: C/query-execution-perspective.page:98(p)
+msgid ""
+"Note that any given history item can also be removed individually using the "
+"<key>Suppr</key> key."
+msgstr ""
+
+#: C/query-execution-perspective.page:104(title)
+msgid "Execution results"
+msgstr ""
+
+#: C/query-execution-perspective.page:105(p)
+msgid ""
+"The Execution results part displays the execution result of the currently "
+"selected execution history item, as a table for SELECT statement, giving "
+"information for other types of statement, or giving the execution error "
+"notice if the execution failed."
+msgstr ""
+
+#: C/legal.xml:3(p)
+msgid ""
+"This work is licensed under a <link href=\"http://creativecommons.org/"
+"licenses/by-sa/3.0/\">Creative Commons Attribution-Share Alike 3.0 Unported "
+"License</link>."
+msgstr ""
+
+#: C/legal.xml:6(p)
+msgid ""
+"As a special exception, the copyright holders give you permission to copy, "
+"modify, and distribute the example code contained in this document under the "
+"terms of your choosing, without restriction."
+msgstr ""
+
+#: C/index.page:6(name)
+msgid "Vivien Malerba"
+msgstr "Vivien Malerba"
+
+#: C/index.page:7(email)
+msgid "malerba@gnome-db.org"
+msgstr "malerba@gnome-db.org"
+
+#: C/index.page:11(title)
+msgid "Gda Browser Help"
+msgstr ""
+
+#: C/index.page:12(p)
+msgid ""
+"<app>gda-browser</app> is a tool for database administrators: they can "
+"analyse database's schemas to understand how data is organized, run SQL "
+"commands interactively, and in a broader way manage the data contained in "
+"the databases."
+msgstr ""
+
+#: C/index.page:16(p)
+msgid ""
+"Several connections to databases can be opened at once, allowing the user to "
+"work on multiple databases at once (it is also possible to execute commands "
+"on several connections at the same time)."
+msgstr ""
+
+#: C/index.page:19(p)
+msgid ""
+"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
+"connections to databases for which a database driver (provider) exists in "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
+"moment)."
+msgstr ""
+
+#: C/index.page:29(title)
+msgid "Presentation"
+msgstr ""
+
+#: C/index.page:32(title)
+msgid "Perspectives"
+msgstr ""
+
+#: C/index.page:36(title)
+msgid "Connections management"
+msgstr ""
+
+#: C/general-ui.page:8(title)
+msgid "General interface organization"
+msgstr ""
+
+#: C/general-ui.page:9(p)
+msgid ""
+"The <app>gda-browser</app> is composed of one or more top level windows, "
+"each window relating to a single connection (which name is in its title). "
+"For any given connection, several windows can be opened (use the "
+"<guiseq><gui>Window</gui><gui>New window</gui></guiseq> menu or the "
+"<keyseq><key>Ctrl</key><key>N</key></keyseq> shortcut)."
+msgstr ""
+
+#: C/general-ui.page:16(title)
+msgid "A connection window"
+msgstr ""
+
+#: C/general-ui.page:17(desc)
+msgid ""
+"Window opened for the 'c1' connection (and the Schema browser perspective)"
+msgstr ""
+
+#: C/general-ui.page:21(p)
+msgid ""
+"Within each window, several <em>perspectives</em> are available which are "
+"adapted to different activities:"
+msgstr ""
+
+#: C/general-ui.page:26(p)
+msgid ""
+"the <link xref=\"schema-browser-perspective\">Schema browser perspective</"
+"link> to help understand the database's layout"
+msgstr ""
+
+#: C/general-ui.page:27(p)
+msgid ""
+"the <link xref=\"query-execution-perspective\">Query execution perspective</"
+"link> to execute any SQL command"
+msgstr ""
+
+#: C/general-ui.page:28(p)
+msgid ""
+"the <link xref=\"data-manager-perspective\">Data manager perspective</link> "
+"to navigate through the database's contents"
+msgstr ""
+
+#: C/general-ui.page:30(p)
+msgid ""
+"The currently displayed perspective can be changed individually for each "
+"window, and, as all perspectives have an action area composed of tabs, tabs "
+"can be moved from one window to the other if the source and destination "
+"window are for the same connection, and display the same perspective (simply "
+"drag and drop a tab from one window to the other using the tab's label as a "
+"handle)."
+msgstr ""
+
+#: C/features.page:8(title)
+msgid "Features"
+msgstr ""
+
+#: C/features.page:9(p)
+msgid "<app>gda-browser</app>'s current features are:"
+msgstr ""
+
+#: C/features.page:13(title)
+msgid "General user interface"
+msgstr ""
+
+#: C/features.page:15(p) C/features.page:26(p)
+msgid ""
+"multi threaded: each connection is handled in it own thread, meaning that no "
+"single connection can lock the application"
+msgstr ""
+
+#: C/features.page:17(p)
+msgid "several windows can be opened for a single connection"
+msgstr ""
+
+#: C/features.page:18(p)
+msgid "full screen mode accessible to maximize the screen space usage"
+msgstr ""
+
+#: C/features.page:22(title)
+msgid "Connection management"
+msgstr ""
+
+#: C/features.page:24(p)
+msgid "multiple simultaneous connections can be opened at once"
+msgstr ""
+
+#: C/features.page:25(p)
+msgid ""
+"connections binding: it is possible to <link type=\"topic\" xref=\"virtual-"
+"connections\">\"bind\"</link> several connections into one to execute SQL "
+"commands on several connections at once"
+msgstr ""
+
+#: C/features.page:31(title)
+msgid "Activities"
+msgstr ""
+
+#: C/features.page:32(p)
+msgid ""
+"The activities are grouped by theme around the notion of <link type=\"topic"
+"\" xref=\"general-ui\">perspectives</link>, the following are currently "
+"implemented:"
+msgstr ""
+
+#: C/features.page:36(p)
+msgid ""
+"analyse the database schema (tables, relations, ...), see the <link xref="
+"\"schema-browser-perspective\">Schema browser perspective</link>"
+msgstr ""
+
+#: C/features.page:38(p)
+msgid ""
+"execute SQL commands, see the <link xref=\"query-execution-perspective"
+"\">Query execution perspective</link>"
+msgstr ""
+
+#: C/features.page:40(p)
+msgid ""
+"analyse the table's contents, see the <link xref=\"data-manager-perspective"
+"\">Data manager perspective</link>"
+msgstr ""
+
+#: C/features.page:42(p)
+msgid ""
+"for <link xref=\"ldap-connection\">LDAP connections</link>, manage the "
+"hierarchical data in the LDAP tree, see the <link xref=\"ldap-browser-"
+"perspective\">LDAP browser perspective</link>"
+msgstr ""
+
+#: C/features.page:45(p)
+msgid "See also the section about <link xref=\"actions\">actions</link>"
+msgstr ""
+
+#: C/features.page:50(title)
+msgid "Openness"
+msgstr ""
+
+#: C/features.page:52(p)
+msgid ""
+"CSV and other text files can be imported and used in conjunction with <link "
+"type=\"topic\" xref=\"virtual-connections\">connection binding</link>"
+msgstr ""
+
+#: C/features.page:53(p)
+msgid ""
+"the general framework is opened enough to add new integrated features; "
+"specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
+"\">perspectives</link>"
+msgstr ""
+
+#: C/features.page:51(list)
+msgid "<placeholder-1/> x <placeholder-2/>"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/diagram.page:16(None)
+msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+msgstr "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
+
+#: C/diagram.page:7(title)
+msgid "Diagrams"
+msgstr ""
+
+#: C/diagram.page:8(p)
+msgid ""
+"Diagrams are present throughout the <app>gda-browser</app>, and are made of "
+"a canvas on which graphical items are displayed (like tables for example)."
+msgstr ""
+
+#: C/diagram.page:13(title)
+msgid "Diagram"
+msgstr ""
+
+#: C/diagram.page:14(desc)
+msgid ""
+"Diagram showing some tables and their relations represented by foreign key "
+"constraints (also see <link xref=\"declared-fk\">the declared foreign keys</"
+"link>)"
+msgstr ""
+
+#: C/diagram.page:18(p)
+msgid ""
+"The items can be moved around on the canvas (note that as long as the whole "
+"diagram fits in the canvas, it remains centered on it). Other manipulations "
+"are possible:"
+msgstr ""
+
+#: C/diagram.page:23(p)
+msgid ""
+"zooming in and out using the mouse's wheel, or through the contextual menu "
+"(right click on the canvas); a zoom to fit the canvas is also available in "
+"the contextual menu"
+msgstr ""
+
+#: C/diagram.page:25(p)
+msgid ""
+"bring closer or moving away items from one another using the mouse's wheel "
+"while holding the <key>Shift</key> key"
+msgstr ""
+
+#: C/diagram.page:27(p)
+msgid "arranging items linearly or radially, through the contextual menu"
+msgstr ""
+
+#: C/diagram.page:28(p)
+msgid "printing, through the contextual menu"
+msgstr ""
+
+#: C/diagram.page:29(p)
+msgid "exporting as PNG or SVG images, through the contextual menu"
+msgstr ""
+
+#: C/diagram.page:30(p)
+msgid "adding items, through the contextual menu"
+msgstr ""
+
+#: C/diagram.page:31(p)
+msgid "removing items, through the items's contextual menu"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/declaredfk.page:25(None)
+msgid "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
+msgstr ""
+"@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/declaredfk.page:65(None)
+msgid ""
+"@@image: 'figures/declaredfk-dialog.png'; "
+"md5=56aba297f8b88248fabc23c54b361a8f"
+msgstr ""
+"@@image: 'figures/declaredfk-dialog.png'; "
+"md5=56aba297f8b88248fabc23c54b361a8f"
+
+#: C/declaredfk.page:8(title)
+msgid "Declared foreign keys"
+msgstr ""
+
+#: C/declaredfk.page:9(p)
+msgid ""
+"All the foreign key constraints (where the contents of one or more columns "
+"in a table is constrained to be among the values of one or more columns of "
+"another table) are analysed and reported in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>. Foreign key constraints "
+"help understand the database schema and is automatically used where "
+"appropriate by the application."
+msgstr ""
+
+#: C/declaredfk.page:16(p)
+msgid ""
+"However sometimes the designer of a database has forgotten or did not whish "
+"to use foreign key constraints, and so it is possible to \"declare foreign "
+"keys\" which are only declaration to the tool and not actually defined in "
+"the database."
+msgstr ""
+
+#: C/declaredfk.page:22(title)
+msgid "Declared foreign keys in diagrams"
+msgstr ""
+
+#: C/declaredfk.page:23(desc)
+msgid ""
+"When displayed in diagrams, declared foreign keys are represented using a "
+"dashed line instead of a solid line for actual foreign keys"
+msgstr ""
+
+#: C/declaredfk.page:31(p)
+msgid ""
+"the (foreign key name, table, referenced table) triplet uniquely identifies "
+"a declared foreign key and thus declaring a new foreign key with the same "
+"triplet will remove any previously declared one."
+msgstr ""
+
+#: C/declaredfk.page:34(p)
+msgid ""
+"If the same constraint is actually represented by a real foreign key and "
+"also by a declared foreign key, then the real foreign key definition will "
+"mask the declared one"
+msgstr ""
+
+#: C/declaredfk.page:37(p)
+msgid ""
+"Declared foreign key don't have any policy to determine what action to "
+"perform on UPDATE or DELETE situations, so the reported policy will always "
+"be \"not enforced\""
+msgstr ""
+
+#: C/declaredfk.page:42(title)
+msgid "Declaring a new foreign key"
+msgstr ""
+
+#: C/declaredfk.page:43(p)
+msgid ""
+"A new foreign key can be declared from the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link> using the "
+"<guiseq><gui>Table</gui><gui>Declare foreign key</gui></guiseq> menu which "
+"is present when a table's properties are shown in the current tab."
+msgstr ""
+
+#: C/declaredfk.page:49(p)
+msgid ""
+"Another way of declaring a foreign key is using the contextual menu on a "
+"table in a diagram, and selecting the <guiseq><gui>Declare foreign key for "
+"this table</gui></guiseq> option."
+msgstr ""
+
+#: C/declaredfk.page:53(p)
+msgid ""
+"In any way, to declare a new foreign key, the following information must be "
+"provided:"
+msgstr ""
+
+#: C/declaredfk.page:57(p)
+msgid "A foreign key name"
+msgstr ""
+
+#: C/declaredfk.page:58(p)
+msgid "The referenced table"
+msgstr ""
+
+#: C/declaredfk.page:59(p)
+msgid ""
+"Columns and referenced columns for each column involved in the foreign key"
+msgstr ""
+
+#: C/declaredfk.page:62(title)
+msgid "Information to declare a new foreign key"
+msgstr ""
+
+#: C/declaredfk.page:63(desc)
+msgid ""
+"UI dialog poping up to declare a new foreign key. Here the referenced table "
+"is 'warehouses', and the involved columns are 'country' and 'city'."
+msgstr ""
+
+#: C/declaredfk.page:70(title)
+msgid "Remove a declared foreign key"
+msgstr ""
+
+#: C/declaredfk.page:71(p)
+msgid ""
+"A declared foreign key can be removed by clicking on the <guiseq><gui>"
+"(Remove)</gui></guiseq> link displayed below each declared foreign key "
+"properties in the table's properties (in the <link xref=\"schema-browser-"
+"perspective\">Schema Browser perspective</link>)."
+msgstr ""
+
+#: C/declaredfk.page:76(p)
+msgid ""
+"Another way to remove a declared foreign key is in a <link xref=\"diagram"
+"\">diagram</link> page through the contextual menu associated with the "
+"dashed line representing the declared foreign key, selecting the "
+"<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
+msgstr ""
+
+#: C/data-manager-source-editor.page:7(title)
+msgid "The data manager's data sources editor"
+msgstr ""
+
+#: C/data-manager-source-editor.page:8(p)
+msgid "To be done."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:7(title)
+msgid "The data manager's XML syntax"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:8(p)
+msgid ""
+"The XML tree's root node must be a <code>&lt;data&gt;</code>, which is "
+"allowed to contain one or more data source definitions. Each data source is "
+"defined by <code>&lt;query&gt;</code> or <code>&lt;table&gt;</code> nodes, "
+"both accepting the following optional attributes:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:15(p)
+msgid ""
+"\"id\" to specify a data source string ID, used when linking data sources "
+"one to another;"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:16(p)
+msgid "\"title\" to specify a title."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:18(p)
+msgid ""
+"It is of course possible to use both the <code>&lt;query&gt;</code> or "
+"<code>&lt;table&gt;</code> tags in the same data sources specifications."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:24(title)
+#: C/data-manager-xml-syntax.page:73(title)
+#: C/data-manager-xml-syntax.page:154(title)
+msgid "Exported variables"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:25(p)
+msgid ""
+"Each data source exports some variables which can be reused by other data "
+"sources to introduce a dependency. When the data sources are executed, the "
+"contents of these exported variables are reset depending on the row actually "
+"selected in the resulting tabular view. If no row is selected then the "
+"variable is unset."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:31(p)
+msgid ""
+"Any data source depending on a variable is executed again when the variable "
+"changes, and in case the variable is unset, the data source's execution "
+"result is an empty data set."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:37(title)
+msgid "The <code>&lt;query&gt;</code> tag"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:38(p)
+msgid ""
+"Use the <code>&lt;query&gt;</code> tag to specify an SQL SELECT statement, "
+"as the contents of the tag. Linkage to other data sources can be achieved "
+"using <link xref=\"variables-syntax\">variables</link> in the SELECT's SQL."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:54(p) C/data-manager-xml-syntax.page:130(p)
+msgid "For example the previous XML specification defines two data sources:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:58(p)
+msgid ""
+"the <code>customers</code> data source which selects some fields from the "
+"<em>customers</em> table, and which depends on a string variable named "
+"<code>name</code>. This variable has to be set when the data sources are "
+"executed because it won't be exported by any data source in this "
+"specification."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:62(p)
+msgid ""
+"the <code>cust_details</code> data source which selects all the details of a "
+"customer specified using its ID. This second data source depends on the "
+"previous one because the <code>customers@id</code> variable is exported from "
+"the <code>customers</code> data source."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:67(p)
+msgid ""
+"Executing this data sources specification will create two tabular views: one "
+"where you can select a customer, and one which displays all the attributes "
+"for the selected customer."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:74(p)
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each column of the resulting data set (the variable's "
+"type is the same as the column's type):"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:79(p) C/data-manager-xml-syntax.page:161(p)
+msgid ""
+"<code>&lt;data source ID&gt;@&lt;column position&gt;</code> where the "
+"column's position starts at 1"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:81(code)
+#, no-wrap
+msgid "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a table column"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:88(title)
+msgid "The <code>&lt;table&gt;</code> tag"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:89(p)
+msgid ""
+"Use the <code>&lt;table&gt;</code> tag to define a data source which will "
+"display the contents of a table. This tag:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:94(p)
+msgid "requires the \"name\" attribute which represents the table name."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:95(p)
+msgid ""
+"can have a \"id\" attribute corresponding to the data source's ID. If not "
+"present, and ID will be assigned automatically."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:97(p)
+msgid ""
+"can contain a <code>&lt;depend&gt;</code> tag which defines a dependency on "
+"another data source with the \"foreign_key_table\" attribute defining the "
+"name of the table to which there are foreign keys used to determine the "
+"dependency, and the \"id\" attribute can specify a data source ID if "
+"different than the aforementioned table"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:103(p)
+msgid ""
+"The <code>&lt;depend&gt;</code> tag, which, for a data source from a table, "
+"defines a dependency to another data source from a table:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:108(p)
+msgid ""
+"requires the \"foreign_key_table\" attribute defining the name of the table "
+"to which there are foreign keys used to determine the dependency"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:110(p)
+msgid ""
+"can have a \"id\" attribute corresponding to the ID of the referenced data "
+"source. If not provided, then the dependency may fail if there is no data "
+"source which ID is the\"foreign_key_table\" attribute."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:113(p)
+msgid ""
+"can contain one or more <code>&lt;column&gt;</code> tag which contents "
+"define the columns to identify the foreign key to use; this is necessary if "
+"there are multiple foreign keys, and can be omitted if there is only one "
+"possible foreign key. The listed columns are the one from the table where "
+"the foreign key exists."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:134(p)
+msgid ""
+"the <code>customers</code> data source which selects all the contents of the "
+"<em>customers</em> table."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:136(p)
+msgid ""
+"the <code>orders</code> data source which selects among contents of the "
+"<code>orders</code> table, the rows which correspond to a row in the "
+"<code>customers</code> table using the foreign key on table orders which "
+"involves the \"orders.customer_id\" column and the primary key of the "
+"customers table. The \"id\" attribute of the <code>&lt;depend&gt;</code> tag "
+"is necessary here to identify referenced the data source."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:143(p)
+msgid "Note in this example that:"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:147(p)
+msgid ""
+"you don't have to specify the fields involved in the foreign key linking the "
+"<code>orders</code> and <code>customers</code> tables"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:149(p)
+msgid ""
+"the data sources IDs have been assigned the names of the selected tables as "
+"no \"id\" attribute has been specified for the <code>&lt;table&gt;</code> "
+"tags."
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:155(p)
+msgid ""
+"Each data source defined by a <code>&lt;query&gt;</code> tag exports the "
+"following variable for each table's column (the variable's type is the same "
+"as the column's type):"
+msgstr ""
+
+#: C/data-manager-xml-syntax.page:160(code)
+#, no-wrap
+msgid "&lt;data source ID&gt;@&lt;column name&gt;"
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:27(None)
+msgid ""
+"@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
+msgstr ""
+"@@image: 'figures/data-man-persp.png'; md5=b4e0678527c03093031dcb3805bb2841"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:53(None)
+#: C/data-manager-perspective.page:93(None)
+msgid ""
+"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+msgstr ""
+"@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:62(None)
+msgid ""
+"@@image: 'figures/data-man-xmlcompose.png'; "
+"md5=fd3ae97c42d58ddbd87404c92b95ee9c"
+msgstr ""
+"@@image: 'figures/data-man-xmlcompose.png'; "
+"md5=fd3ae97c42d58ddbd87404c92b95ee9c"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/data-manager-perspective.page:69(None)
+msgid ""
+"@@image: 'figures/data-man-uicompose.png'; "
+"md5=33b1cf9354761dac4ee3f14a9534357a"
+msgstr ""
+"@@image: 'figures/data-man-uicompose.png'; "
+"md5=33b1cf9354761dac4ee3f14a9534357a"
+
+#: C/data-manager-perspective.page:8(title)
+msgid "The data manager perspective"
+msgstr ""
+
+#: C/data-manager-perspective.page:9(p)
+msgid ""
+"Use the data manager perspective to navigate through the database's data. To "
+"switch to this perspective, use the <guiseq><gui>Perspective</gui><gui>Data "
+"Manager</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>D</key></"
+"keyseq> shortcut."
+msgstr ""
+
+#: C/data-manager-perspective.page:14(p)
+msgid ""
+"The workflow in this perspective is organized around the definition of one "
+"or more <em>data sources</em> (which selects data in the database) which, "
+"when executed, result in a data set displayed in a tabular view."
+msgstr ""
+
+#: C/data-manager-perspective.page:19(p)
+msgid ""
+"The perspective is divided in two horizontal panes: the left pane to keep "
+"favorite data sources set's definitions, and the right pane being the action "
+"area, where each data source is executed and the results presented in a "
+"tabular view."
+msgstr ""
+
+#: C/data-manager-perspective.page:25(title)
+msgid "Data manager perspective"
+msgstr ""
+
+#: C/data-manager-perspective.page:26(desc)
+msgid "The data manager perspective, with two data sources"
+msgstr ""
+
+#: C/data-manager-perspective.page:29(p)
+msgid ""
+"In the figure above, there are two data sources: one for the 'customers' "
+"table and one for the 'orders' table (which here lists the orders from a "
+"customer), the later data source depending on the former one as there is a "
+"foreign key from the 'orders' table which references the 'customers' table. "
+"The two data sources have been executed and the result is composed of two "
+"tabular views side by side."
+msgstr ""
+
+#: C/data-manager-perspective.page:36(p)
+msgid ""
+"Because the 'orders' data source depends on the 'customers' data source, its "
+"corresponding view is on the right of the one corresponding to the "
+"'customers' data source. Also when the row selection of the 'customers' view "
+"changes, the whole contents of the 'orders' view is refreshed."
+msgstr ""
+
+#: C/data-manager-perspective.page:44(title)
+msgid "Defining data sources"
+msgstr ""
+
+#: C/data-manager-perspective.page:45(p)
+msgid ""
+"The simplest data source is a data source which represents all the data from "
+"a table, displayed when executed as a single tabular view, as if one "
+"executed the <code>SELECT * FROM mytable</code> statement in the <link xref="
+"\"query-execution-perspective\"/>."
+msgstr ""
+
+#: C/data-manager-perspective.page:51(p)
+msgid ""
+"The following figure shows the data sources editing mode (switch to editing "
+"mode using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-"
+"man-mode.png\"/> toolbar button)."
+msgstr ""
+
+#: C/data-manager-perspective.page:55(p)
+msgid ""
+"Data sources can be defined using an <link xref=\"data-manager-xml-syntax"
+"\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor"
+"\">default interface</link>."
+msgstr ""
+
+#: C/data-manager-perspective.page:60(title)
+#: C/data-manager-perspective.page:65(title)
+msgid "Data sources edition"
+msgstr ""
+
+#: C/data-manager-perspective.page:61(desc)
+msgid ""
+"Editing data sources in the data manager perspective, from the XML syntax"
+msgstr ""
+
+#: C/data-manager-perspective.page:66(desc)
+msgid ""
+"Editing data sources in the data manager perspective, using the default "
+"interface: two data sources are defined, which list the contents of the "
+"\"customers\" and \"orders\" tables. The setup is the same as the figure "
+"above showing the XML syntax"
+msgstr ""
+
+#: C/data-manager-perspective.page:76(p)
+msgid ""
+"<gui>Reset</gui>: resets the XML editor to a default XML template, only "
+"available when the XML view is currently displayed"
+msgstr ""
+
+#: C/data-manager-perspective.page:78(p)
+msgid ""
+"<gui>Add</gui>: displays a popup menu with shortcuts to quickly define new "
+"data sources as whole table contents (also analyses the database schema to "
+"propose relevant choices), only available when the XML edition mode is not "
+"selected"
+msgstr ""
+
+#: C/data-manager-perspective.page:81(p)
+msgid ""
+"<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
+"\">variables</link> panel where you can give values to the variables present "
+"in the SQL code of any data source's definition. The panel is automatically "
+"shown when a variable is detected in the SQL code."
+msgstr ""
+
+#: C/data-manager-perspective.page:84(p)
+msgid "<gui>Execute</gui>: executes the defined data sources"
+msgstr ""
+
+#: C/data-manager-perspective.page:85(p)
+msgid "<gui>View XML</gui>: toggles between the XML editor and the UI editor"
+msgstr ""
+
+#: C/data-manager-perspective.page:86(p)
+msgid "<gui>Help</gui>: shows some help"
+msgstr ""
+
+#: C/data-manager-perspective.page:90(title)
+msgid "Executing defined data sources"
+msgstr ""
+
+#: C/data-manager-perspective.page:91(p)
+msgid ""
+"To execute a defined set of data sources, simply switch to execute mode "
+"using the <media type=\"image\" mime=\"image/png\" src=\"figures/data-man-"
+"mode.png\"/> toolbar button or the <gui>Execute</gui> button."
+msgstr ""
+
+#: C/data-manager-perspective.page:96(p)
+msgid ""
+"The layout of tabular views for each data source is automatically generated "
+"in columns using the following rule: if a data source B depends on a data "
+"source A, then its tabular view is displayed on the right of the one for A."
+msgstr ""
+
+#: C/data-manager-perspective.page:101(p)
+msgid ""
+"Also if you change the selected row of tabular view of a data source A, then "
+"the tabular views of all the data sources depending on A will also have "
+"their tabular view refreshed."
+msgstr ""
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:33(None)
+msgid "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
+msgstr "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:40(None)
+msgid "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
+msgstr "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:48(None)
+msgid "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+msgstr "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
+
+#. When image changes, this message will be marked fuzzy or untranslated for you.
+#. It doesn't matter what you translate it to: it's not used at all.
+#: C/actions.page:56(None)
+msgid "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
+msgstr "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
+
+#: C/actions.page:9(title)
+msgid "Actions"
+msgstr ""
+
+#: C/actions.page:10(p)
+msgid ""
+"Actions are bits of SQL code which depends on variables and can be executed "
+"from the contextual menu of any data set presented in a grid."
+msgstr ""
+
+#: C/actions.page:14(p)
+msgid ""
+"For example if there is a table \"products\" which lists some kind of "
+"products and a table \"comments\" which lists all the comments left by users "
+"on a product (presumably the \"comments\" table will have a foreign key on "
+"the \"products\" table to reference it)."
+msgstr ""
+
+#: C/actions.page:19(p)
+msgid ""
+"An action can be defined to show all the entries in the \"comments\" table "
+"provided the key is defining a product. Then anytime a product is listed in "
+"a result set, the contextual menu will allow the user to execute this action "
+"and thus display all the comments on the selected product. This situation is "
+"illustrated in the following figures."
+msgstr ""
+
+#: C/actions.page:25(p)
+msgid ""
+"The first step is to define an action, which is just a favorite in the <link "
+"xref=\"query-execution-perspective\">query execution</link> perspective "
+"which is defined as an action: bring up the properties for the favorite, and "
+"make sure the \"Is action\" toggle is checked:"
+msgstr ""
+
+#: C/actions.page:31(title)
+msgid "Action - define an action"
+msgstr ""
+
+#: C/actions.page:32(desc)
+msgid ""
+"Define the action to list the comments for a product, from the query "
+"execution perspective"
+msgstr ""
+
+#: C/actions.page:36(title)
+msgid "Action - display a list of products"
+msgstr ""
+
+#: C/actions.page:37(desc)
+msgid ""
+"In the query execution perspective, let's select all the products. Notice "
+"that there are here two defined actions: \"Add comment on product\" and "
+"\"List comments for product\""
+msgstr ""
+
+#: C/actions.page:42(p)
+msgid "Now let's pop up the contextual menu:"
+msgstr ""
+
+#: C/actions.page:46(title)
+msgid "Action - contextual menu"
+msgstr "Ação - menu de contexto"
+
+#: C/actions.page:47(desc)
+msgid ""
+"Pop up the contextual menu and select <guiseq><gui>Execute action</"
+"gui><gui>List comments for product</gui></guiseq>"
+msgstr ""
+"Exibe o menu de contexto e seleciona <guiseq><gui>Executar ação</"
+"gui><gui>Listar comentários para produto</gui></guiseq>"
+
+#: C/actions.page:50(p)
+msgid ""
+"After a confirmation of the parameters to execute the action, the result is "
+"there:"
+msgstr ""
+
+#: C/actions.page:54(title)
+msgid "Action - executed"
+msgstr "Ação - executada"
+
+#: C/actions.page:55(desc)
+msgid "The action is now executed"
+msgstr ""
+
+#. Put one translator per line, in the form of NAME <EMAIL>, YEAR1, YEAR2
+#: C/index.page:0(None)
+msgid "translator-credits"
+msgstr "Georges Neto <georges.stavracas@gmail.com>, 2013"
