@@ -56,3 +56,4 @@ omf.make
 ylwrap
 *.log
 *.trs
+test-driver

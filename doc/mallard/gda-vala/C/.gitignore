@@ -10,5 +10,7 @@ jquery.syntax.js
 jquery.syntax.layout.yelp.js
 record-class.html
 table-class.html
+db-field-info-interface.html
+db-table-interface.html
 yelp-note-tip.png
 yelp.js

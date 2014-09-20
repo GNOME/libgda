@@ -78,11 +78,14 @@ struct _GdauiDataEntryIface
 	void            (*set_unknown_color)     (GdauiDataEntry *de, gdouble red, gdouble green,
 						  gdouble blue, gdouble alpha);
 	/* New Validating mecanism */
-	gboolean				(*validate)						 	 (GdauiDataEntry* de, GError **error);
+	gboolean	(*validate)		 (GdauiDataEntry* de, GError **error);
+
 	/*< private >*/
 	/* Padding for future expansion */
+        void (*_gdaui_reserved1) (void);
         void (*_gdaui_reserved2) (void);
         void (*_gdaui_reserved3) (void);
+        void (*_gdaui_reserved4) (void);
 };
 
 /**
