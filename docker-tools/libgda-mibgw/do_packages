@@ -1,0 +1,32 @@
+#!/bin/sh
+
+pushd Packager > /dev/null 2>&1 || {
+    echo "Can't change to the 'Packager' directory"
+    exit 1
+}
+
+./make-zip-setup.sh 32 || {
+    echo "Error!"
+    popd > /dev/null 2>&1
+    exit 1
+}
+
+makensis -V0 gda-browser.nsi || {
+    echo "Can't generate Setup EXE file"
+    popd > /dev/null 2>&1
+    exit 1
+}
+
+cp libgda*.zip GdaBrowserSetup*.exe /install/libgda/ || {
+    echo "Could not copy ZIP and EXE files to installation directory!"
+    popd > /dev/null 2>&1
+    exit 1
+}
+
+popd > /dev/null 2>&1 || {
+    echo "Can't get back to initial working directory, now in `pwd`"
+}
+
+chown -R $UID:$GID /install/libgda || {
+    echo "Installed files will remain owned by root:root, could not change them to $UID:$GID"
+}

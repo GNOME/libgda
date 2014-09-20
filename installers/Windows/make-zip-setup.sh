@@ -18,13 +18,13 @@
 
 if [ "$1" = "32" ]
 then
-  depend_path="/usr/i686-w64-mingw32/sys-root/mingw /usr/i686-pc-mingw32/sys-root/mingw /local/Win32.Fedora /local/Win32/graphviz /local/Win32/bdb /local/Win32/mysql /local/Win32/pgsql /local/Win32/ldap /local/Win32/mdb /local/Win32/oracle"
-  prefix=/local/Win32/Libgda
+  depend_path="/usr/i686-w64-mingw32/sys-root/mingw /usr/i686-pc-mingw32/sys-root/mingw /local/Win32.Fedora $DEPEND/graphviz $DEPEND/bdb $DEPEND/mysql $DEPEND/pgsql $DEPEND/ldap $DEPEND/mdb $DEPEND/oracle $DEPEND/graph"
+  prefix=$PREFIX/libgda
 else
   if [ "$1" = "64" ]
   then
       depend_path="/usr/x86_64-w64-mingw32/sys-root/mingw /local/Win64Compiled /local/Win64/bdb /local/Win64/mysql /local/Win64/pgsql /local/Win64/ldap /local/Win64/mdb /local/Win64/oracle"
-      prefix=/local/Win32/Libgda
+      prefix=$PREFIX/libgda
   else
       echo "You must specify the 32 or 64 bits."
       exit 1
@@ -38,8 +38,7 @@ debug=no
 #
 # determine version
 #
-current_dir=`pwd`
-conf=$current_dir/../../configure.ac
+conf=$SRC/libgda/configure.ac
 if test -e $conf
 then
     major=`cat $conf | grep m4_define | grep major | sed -e 's/[^ ]* \([0-9]*\).*/\1/'`
@@ -48,13 +47,25 @@ then
     version="$major.$minor.$micro"
     echo "Determined version [$version]"
 else
-    echo "configure.ac file not found"
+    echo "configure.ac file not found, no version determined"
 fi
 
+current_dir=`pwd`
 archive=${current_dir}/libgda-${version}.zip
 archive_dev=${current_dir}/libgda-dev-${version}.zip
 archive_ext=${current_dir}/libgda-dep-${version}.zip
-nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh prov_oracle.nsh prov_postgresql.nsh prov_sqlite.nsh prov_sqlcipher.nsh prov_web.nsh prov_ldap.nsh)
+
+# oracle build?
+with_oracle=no
+nsh_ora=
+if [ -e $prefix/lib/libgda-6.0/providers/libgda-oracle.dll ]
+then
+    with_oracle=yes
+    nsh_ora=prov_oracle.nsh
+fi
+
+# define NSH files
+nshfiles=(core.nsh prov_bdb.nsh prov_mdb.nsh prov_mysql.nsh $nsh_ora prov_postgresql.nsh prov_sqlite.nsh prov_sqlcipher.nsh prov_web.nsh prov_ldap.nsh)
 tmpfile=`mktemp`
 
 # remove current archive if it exists
@@ -269,11 +280,16 @@ Section "PostgreSQL" SEC05
   SetOverwrite try
 EOF
 
-cat > prov_oracle.nsh <<EOF
+if test "x$with_oracle" == "xyes"
+then
+    cat > prov_oracle.nsh <<EOF
 Section /o "Oracle" SEC06
   SetOutPath "\$INSTDIR\bin"
   SetOverwrite try
 EOF
+else
+    touch prov_oracle.nsh
+fi
 
 cat > prov_sqlite.nsh <<EOF
 Section "SQLite" SEC07
@@ -326,7 +342,7 @@ EOF
 #
 # dependencies DLLs
 #
-files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libffi*.dll *readline*.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll zlib1.dll libsqlite3-0.dll)
+files=(libexpat-1.dll libgio-2.*.dll libglib-2.*.dll libgmodule-2.*.dll libgobject-2.*.dll libgthread-2.*.dll libxml2*.dll libsoup-2.*.dll libgdk_pixbuf-2.*.dll libgdk-3-0.dll libgtk-3-0.dll libatk-1.*.dll libpng*.dll libpango-1.*.dll libpangocairo-1.*.dll libpangoft2-1.*.dll libpangowin32-1.*.dll libcairo-2.dll libcairo-gobject-2.dll libfontconfig-1.dll libgoocanvas-*.dll libcdt*.dll libcgraph*.dll libgvc*.dll libpathplan*.dll libxdot*.dll libfreetype-6.dll libintl-8.dll libpixman-1-0.dll libjasper-1.dll libjpeg*.dll libffi*.dll *readline*.dll iconv.dll libgraph*.dll libgtksourceview*.dll libtermcap*.dll zlib1.dll libsqlite3-0.dll libxml2*.dll libxslt*.dll libgcc*.dll libssl*.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh core bin
 
@@ -338,7 +354,7 @@ files=(libmySQL.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_mysql bin
 
-files=(libeay32.dll libpq.dll libxml2.dll libxslt.dll msvcr71.dll ssleay32.dll)
+files=(libpq.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_postgresql bin
 
@@ -400,9 +416,12 @@ files=(web_specs_auth.xml web_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-6.0 $files
 add_found_files_to_nsh prov_web share/libgda-6.0
 
-files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
-add_files_to_zip $archive $prefix share/libgda-6.0 $files
-add_found_files_to_nsh prov_oracle share/libgda-6.0
+if test "x$with_oracle" == "xyes"
+then
+    files=(oracle_specs_dsn.xml oracle_specs_create_table.xml)
+    add_files_to_zip $archive $prefix share/libgda-6.0 $files
+    add_found_files_to_nsh prov_oracle share/libgda-6.0
+fi
 
 files=(ldap_specs_auth.xml ldap_specs_dsn.xml)
 add_files_to_zip $archive $prefix share/libgda-6.0 $files
@@ -412,55 +431,12 @@ files=(gdaui-generic.png)
 add_files_to_zip $archive $prefix share/libgda-6.0/pixmaps $files
 add_found_files_to_nsh core share/libgda-6.0/pixmaps
 
-
-#
-#copy some Gnome files to be installed on Windows
-#
-cp /usr/share/icons/gnome/16x16/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/16x16/actions
-cp /usr/share/icons/gnome/22x22/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/22x22/actions
-cp /usr/share/icons/gnome/24x24/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/24x24/actions
-cp /usr/share/icons/gnome/32x32/actions/bookmark-new.png $prefix/share/libgda-6.0/icons/hicolor/32x32/actions
-cp /usr/share/icons/gnome/16x16/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/16x16/actions
-cp /usr/share/icons/gnome/22x22/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/22x22/actions
-cp /usr/share/icons/gnome/24x24/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/24x24/actions
-cp /usr/share/icons/gnome/32x32/actions/window-new.png $prefix/share/libgda-6.0/icons/hicolor/32x32/actions
-mkdir -p $prefix/share/libgda-6.0/icons/hicolor/16x16/apps
-mkdir -p $prefix/share/libgda-6.0/icons/hicolor/22x22/apps
-mkdir -p $prefix/share/libgda-6.0/icons/hicolor/24x24/apps
-mkdir -p $prefix/share/libgda-6.0/icons/hicolor/32x32/apps
-cp /usr/share/icons/gnome/16x16/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/16x16/apps
-cp /usr/share/icons/gnome/22x22/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/22x22/apps
-cp /usr/share/icons/gnome/24x24/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/24x24/apps
-cp /usr/share/icons/gnome/32x32/apps/accessories-text-editor.png $prefix/share/libgda-6.0/icons/hicolor/32x32/apps
-
 add_all_files_to_zip $archive $prefix share/libgda-6.0/pixmaps
 add_found_files_to_nsh core share/libgda-6.0/pixmaps
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/16x16/actions
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/16x16/actions
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/22x22/actions
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/22x22/actions
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/24x24/actions
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/24x24/actions
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/32x32/actions
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/32x32/actions
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/scalable/actions
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/scalable/actions
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/16x16/apps
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/16x16/apps
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/22x22/apps
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/22x22/apps
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/24x24/apps
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/24x24/apps
-add_all_files_to_zip $archive $prefix share/libgda-6.0/icons/hicolor/32x32/apps
-add_found_files_to_nsh core share/libgda-6.0/icons/hicolor/32x32/apps
 
 files=(index.theme)
 add_files_to_zip $archive . share/libgda-6.0/icons/hicolor $files
 add_found_files_to_nsh core share/libgda-6.0/icons/hicolor
-
-files=(gda-browser-6.0.png)
-add_files_to_zip $archive $prefix share/pixmaps $files
-add_found_files_to_nsh core share/pixmaps
 
 files=(gdaui-entry-number.xml gdaui-entry-string.xml)
 add_files_to_zip $archive $prefix share/libgda-6.0/ui $files
@@ -549,9 +525,12 @@ files=(libgda-ldap.dll)
 add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
 add_found_files_to_nsh prov_ldap lib/libgda-6.0/providers
 
-files=(libgda-oracle.dll)
-add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
-add_found_files_to_nsh prov_oracle lib/libgda-6.0/providers
+if test "x$with_oracle" == "xyes"
+then
+    files=(libgda-oracle.dll)
+    add_files_to_zip $archive $prefix lib/libgda-6.0/providers $files
+    add_found_files_to_nsh prov_oracle lib/libgda-6.0/providers
+fi
 
 files=(gdaui-entry-filesel-spec.xml gdaui-entry-password.xml gdaui-entry-pict-spec.xml gdaui-entry-pict-spec_string.xml libgda-ui-plugins.dll)
 add_files_to_zip $archive $prefix lib/libgda-6.0/plugins $files
@@ -560,7 +539,7 @@ add_found_files_to_nsh core lib/libgda-6.0/plugins
 #
 # includes
 #
-files=(gda-attributes-manager.h gda-batch.h gda-binreloc.h gda-blob-op.h gda-column.h gda-config.h gda-connection-event.h gda-connection.h gda-connection-private.h gda-data-access-wrapper.h gda-data-comparator.h gda-data-handler.h gda-data-model-array.h gda-data-model-bdb.h gda-data-model-dir.h gda-data-model-extra.h gda-data-model.h gda-data-model-import.h gda-data-model-iter-extra.h gda-data-model-iter.h gda-data-model-private.h gda-data-proxy.h gda-data-select.h gda-decl.h gda-enums.h gda-enum-types.h gda-holder.h gda-lockable.h gda-log.h gda-marshal.h gda-meta-store.h gda-meta-struct.h gda-mutex.h gda-quark-list.h gda-row.h gda-server-operation.h gda-server-provider-extra.h gda-server-provider.h gda-server-provider-private.h gda-set.h gda-statement-extra.h gda-statement.h gda-transaction-status.h gda-transaction-status-private.h gda-util.h gda-value.h gda-xa-transaction.h libgda.h libgda-global-variables.h gda-repetitive-statement.h gda-sql-builder.h gda-tree.h gda-tree-manager.h gda-tree-mgr-columns.h gda-tree-mgr-label.h gda-tree-mgr-schemas.h gda-tree-mgr-select.h gda-tree-mgr-tables.h gda-tree-node.h gda-tree-mgr-ldap.h gda-data-model-ldap.h)
+files=(gda-attributes-manager.h gda-batch.h gda-binreloc.h gda-blob-op.h gda-column.h gda-config.h gda-connection-event.h gda-connection.h gda-connection-private.h gda-data-access-wrapper.h gda-data-comparator.h gda-data-handler.h gda-data-model-array.h gda-data-model-bdb.h gda-data-model-dir.h gda-data-model-extra.h gda-data-model.h gda-data-model-import.h gda-data-model-iter-extra.h gda-data-model-iter.h gda-data-model-private.h gda-data-proxy.h gda-data-select.h gda-decl.h gda-enums.h gda-enum-types.h gda-holder.h gda-lockable.h gda-log.h gda-marshal.h gda-meta-store.h gda-meta-struct.h gda-quark-list.h gda-row.h gda-server-operation.h gda-server-provider-extra.h gda-server-provider.h gda-server-provider-private.h gda-set.h gda-statement-extra.h gda-statement.h gda-transaction-status.h gda-transaction-status-private.h gda-util.h gda-value.h gda-xa-transaction.h libgda.h libgda-global-variables.h gda-repetitive-statement.h gda-sql-builder.h gda-tree.h gda-tree-manager.h gda-tree-mgr-columns.h gda-tree-mgr-label.h gda-tree-mgr-schemas.h gda-tree-mgr-select.h gda-tree-mgr-tables.h gda-tree-node.h gda-tree-mgr-ldap.h gda-data-model-ldap.h)
 add_files_to_zip $archive_dev $prefix include/libgda-6.0/libgda $files
 
 files=(gda-sqlite-provider.h)
@@ -622,10 +601,11 @@ do
     echo "SectionEnd" >> $item
 done
 
-cat gda-browser-tmpl.nsi | sed -e "s,GdaBrowserSetup,GdaBrowserSetup-${version}," > gda-browser.nsi
+now=`date '+%Y%m%d'`
+cat gda-browser-tmpl.nsi | sed -e "s,GdaBrowserSetup,GdaBrowserSetup-${version}-${now}," > gda-browser.nsi
 
 #
-# The End
+# Summary
 #
 rm -f $tmpfile
 echo "Archives written to:"
