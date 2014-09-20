@@ -1,10 +1,12 @@
 noinst_LTLIBRARIES = libperspective.la
 
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/tools \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_srcdir)/libgda/sqlite \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
@@ -17,36 +19,38 @@ marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_dm_marshal > $@
 
 libperspective_la_SOURCES = \
+        marshal.c \
+        marshal.h \
 	analyser.c \
 	analyser.h \
-	marshal.c \
-	marshal.h \
-	data-console.h \
 	data-console.c \
-	data-source.h \
-	data-source.c \
-	data-widget.h \
-	data-widget.c \
+	data-console.h \
 	data-favorite-selector.c \
 	data-favorite-selector.h \
+	data-manager-perspective.c \
+	data-manager-perspective.h \
+	data-source.c \
+	data-source-editor.c \
+	data-source-editor.h \
+	data-source.h \
+	data-source-manager.c \
+	data-source-manager.h \
+	data-widget.c \
+	data-widget.h \
 	perspective-main.c \
 	perspective-main.h \
-	xml-spec-editor.c \
-	xml-spec-editor.h \
 	ui-spec-editor.c \
 	ui-spec-editor.h \
-	data-manager-perspective.h \
-	data-manager-perspective.c \
-	data-source-editor.h \
-	data-source-editor.c \
-	data-source-manager.h \
-	data-source-manager.c
+	xml-spec-editor.c \
+	xml-spec-editor.h
+
 
 $(OBJECTS): marshal.c marshal.h
 
 EXTRA_DIST= \
-        marshal.list
+	$(langspec_DATA) \
+	marshal.list
 
 CLEANFILES = \
-        marshal.h \
-        marshal.c
+	marshal.h \
+	marshal.c

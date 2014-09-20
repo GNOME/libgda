@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #define __QUERY_FAVORITE_SELECTOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "../common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -44,12 +44,12 @@ struct _QueryFavoriteSelectorClass {
 	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (QueryFavoriteSelector *sel, gint fav_id,
-						  ToolsFavoritesType fav_type, const gchar *fav_contents);
+						  TFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    query_favorite_selector_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *query_favorite_selector_new      (BrowserConnection *bcnc);
+GtkWidget               *query_favorite_selector_new      (TConnection *tcnc);
 
 G_END_DECLS
 

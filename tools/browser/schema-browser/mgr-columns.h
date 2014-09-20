@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #define ___MGR_COLUMNS_H__
 
 #include <libgda/gda-tree-manager.h>
-#include "browser-connection.h"
+#include "t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -55,7 +55,7 @@ struct _MgrColumnsClass {
 };
 
 GType           mgr_columns_get_type                 (void) G_GNUC_CONST;
-GdaTreeManager* mgr_columns_new                      (BrowserConnection *bcnc, const gchar *schema, const gchar *table);
+GdaTreeManager* mgr_columns_new                      (TConnection *tcnc, const gchar *schema, const gchar *table);
 
 #define MGR_COLUMNS_COL_NAME_ATT_NAME "markup"
 #define MGR_COLUMNS_COL_TYPE_ATT_NAME "type"

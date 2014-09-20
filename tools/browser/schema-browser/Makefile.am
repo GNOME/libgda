@@ -5,6 +5,9 @@ ldap_flags=-DHAVE_LDAP
 endif
 
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/tools \
+	-I$(top_srcdir)/tools/base \
+	-I$(top_srcdir)/tools/common \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \

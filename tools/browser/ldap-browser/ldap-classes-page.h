@@ -21,7 +21,7 @@
 #define __LDAP_CLASSES_PAGE_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -46,7 +46,7 @@ struct _LdapClassesPageClass {
 
 GType        ldap_classes_page_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *ldap_classes_page_new            (BrowserConnection *bcnc, const gchar *dn);
+GtkWidget   *ldap_classes_page_new            (TConnection *tcnc, const gchar *dn);
 const gchar *ldap_classes_page_get_current_class (LdapClassesPage *ldap_classes_page);
 void         ldap_classes_page_set_current_class (LdapClassesPage *ldap_classes_page, const gchar *classname);
 

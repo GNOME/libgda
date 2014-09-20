@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@
 #define __FAVORITE_SELECTOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include <t-connection.h>
+#include <t-favorites.h>
 
 G_BEGIN_DECLS
 
@@ -36,20 +37,20 @@ typedef struct _FavoriteSelectorClass   FavoriteSelectorClass;
 typedef struct _FavoriteSelectorPrivate FavoriteSelectorPrivate;
 
 struct _FavoriteSelector {
-	GtkBox               parent;
+	GtkBox                   parent;
 	FavoriteSelectorPrivate *priv;
 };
 
 struct _FavoriteSelectorClass {
-	GtkBoxClass          parent_class;
+	GtkBoxClass              parent_class;
 
-	void                (*selection_changed) (FavoriteSelector *sel, gint fav_id,
-						  ToolsFavoritesType fav_type, const gchar *fav_contents);
+	void                   (*selection_changed) (FavoriteSelector *sel, gint fav_id,
+						     TFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    favorite_selector_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *favorite_selector_new      (BrowserConnection *bcnc);
+GtkWidget               *favorite_selector_new      (TConnection *tcnc);
 
 G_END_DECLS
 

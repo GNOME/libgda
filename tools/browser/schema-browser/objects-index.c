@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -25,15 +25,15 @@
 #include "objects-index.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
-#include "../common/objects-cloud.h"
+#include "../objects-cloud.h"
 
 struct _ObjectsIndexPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	ObjectsCloud      *cloud;
 };
 
@@ -42,7 +42,7 @@ static void objects_index_init       (ObjectsIndex *index,
 				       ObjectsIndexClass *klass);
 static void objects_index_dispose   (GObject *object);
 
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, ObjectsIndex *index);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, ObjectsIndex *index);
 
 enum {
 	SELECTION_CHANGED,
@@ -94,10 +94,10 @@ objects_index_dispose (GObject *object)
 
 	/* free memory */
 	if (index->priv) {
-		if (index->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (index->priv->bcnc,
+		if (index->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (index->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), index);
-			g_object_unref (index->priv->bcnc);
+			g_object_unref (index->priv->tcnc);
 		}
 		g_free (index->priv);
 		index->priv = NULL;
@@ -136,7 +136,7 @@ cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *sel, G_GNUC_UNUSED Objects
 {
 	/* FIXME: adjust with sel->priv->type */
 	g_signal_emit (index, objects_index_signals [SELECTION_CHANGED], 0,
-		       GDA_TOOLS_FAVORITES_TABLES, sel_contents);
+		       T_FAVORITES_TABLES, sel_contents);
 }
 
 static void
@@ -153,15 +153,15 @@ find_changed_cb (GtkEntry *entry, ObjectsIndex *index)
  * Returns:
  */
 GtkWidget *
-objects_index_new (BrowserConnection *bcnc)
+objects_index_new (TConnection *tcnc)
 {
 	ObjectsIndex *index;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 	index = OBJECTS_INDEX (g_object_new (OBJECTS_INDEX_TYPE, NULL));
 
-	index->priv->bcnc = g_object_ref (bcnc);
-	g_signal_connect (index->priv->bcnc, "meta-changed",
+	index->priv->tcnc = g_object_ref (tcnc);
+	g_signal_connect (index->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), index);
 
 	/* header */
@@ -181,7 +181,7 @@ objects_index_new (BrowserConnection *bcnc)
 	/* cloud */
 	GdaMetaStruct *mstruct;
 	GtkWidget *cloud;
-	mstruct = browser_connection_get_meta_struct (index->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (index->priv->tcnc);
 	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
 	objects_cloud_show_schemas (OBJECTS_CLOUD (cloud), TRUE);
 	gtk_box_pack_start (GTK_BOX (index), cloud, TRUE, TRUE, 0);
@@ -199,7 +199,7 @@ objects_index_new (BrowserConnection *bcnc)
 }
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, ObjectsIndex *index)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, ObjectsIndex *index)
 {
 	objects_cloud_set_meta_struct (index->priv->cloud, mstruct);
 }

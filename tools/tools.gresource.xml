@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-action.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-auth-big.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-auth.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-bookmark.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-column-fknn.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-column-fk.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-column-nn.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-column-pk.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-column.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-connected-big.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-connected.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-diagram.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-class-a.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-class-s.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-class-u.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-class-x.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-entry.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-group.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-organization.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-ldap-person.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-menu-ind.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-non-connected-big.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-non-connected.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-query.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-reference.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-schema.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-table.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">gda-browser-view.png</file>
+  </gresource>
+</gresources>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,8 @@
 #define ___MGR_FAVORITES_H__
 
 #include <libgda/gda-tree-manager.h>
-#include "browser-connection.h"
+#include "common/t-connection.h"
+#include "common/t-favorites.h"
 
 G_BEGIN_DECLS
 
@@ -52,7 +53,7 @@ struct _MgrFavoritesClass {
  */
 
 GType           mgr_favorites_get_type                 (void) G_GNUC_CONST;
-GdaTreeManager* mgr_favorites_new                      (BrowserConnection *bcnc, ToolsFavoritesType type,
+GdaTreeManager* mgr_favorites_new                      (TConnection *bcnc, TFavoritesType type,
 							gint order_key);
 
 /* name of the attribute which stores the favorite name */

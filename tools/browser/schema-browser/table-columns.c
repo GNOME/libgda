@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
@@ -27,20 +27,20 @@
 #include "table-info.h"
 #include "table-columns.h"
 #include <libgda-ui/gdaui-tree-store.h>
-#include "../tool-utils.h"
-#include "../support.h"
+#include <t-utils.h>
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "mgr-columns.h"
 #include "schema-browser-perspective.h"
 #include "../browser-window.h"
-#include "../common/fk-declare.h"
+#include "../fk-declare.h"
 #ifdef HAVE_LDAP
 #include "../ldap-browser/ldap-browser-perspective.h"
 #endif
 #include <libgda/gda-debug-macros.h>
 
 struct _TableColumnsPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	TableInfo *tinfo;
 	GdaTree *columns_tree;
 	guint idle_update_columns;
@@ -60,7 +60,7 @@ static void table_columns_init       (TableColumns *tcolumns, TableColumnsClass 
 static void table_columns_dispose    (GObject *object);
 static void table_columns_show_all   (GtkWidget *widget);
 
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns);
 
 static GObjectClass *parent_class = NULL;
 
@@ -102,10 +102,10 @@ table_columns_dispose (GObject *object)
 			g_source_remove (tcolumns->priv->idle_update_columns);
 		if (tcolumns->priv->columns_tree)
 			g_object_unref (tcolumns->priv->columns_tree);
-		if (tcolumns->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (tcolumns->priv->bcnc,
+		if (tcolumns->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (tcolumns->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), tcolumns);
-			g_object_unref (tcolumns->priv->bcnc);
+			g_object_unref (tcolumns->priv->tcnc);
 		}
 		g_free (tcolumns->priv);
 		tcolumns->priv = NULL;
@@ -120,7 +120,7 @@ table_columns_show_all (GtkWidget *widget)
 	TableColumns *tcolumns = (TableColumns *) widget;
         GTK_WIDGET_CLASS (parent_class)->show_all (widget);
 #ifdef HAVE_LDAP
-	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+	if (t_connection_is_ldap (tcolumns->priv->tcnc)) {
 		if (! tcolumns->priv->ldap_props_shown) {
 			gtk_widget_hide (tcolumns->priv->ldap_header);
 			gtk_widget_hide (tcolumns->priv->ldap_text);
@@ -180,14 +180,14 @@ static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibilit
 static GSList *build_reverse_depend_list (GdaMetaStruct *mstruct, GdaMetaTable *mtable);
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableColumns *tcolumns)
 {
 	GtkTextBuffer *tbuffer;
 	GtkTextIter start, end;
 
 	/* cleanups */
 #ifdef HAVE_LDAP
-	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+	if (t_connection_is_ldap (tcolumns->priv->tcnc)) {
 		tbuffer = tcolumns->priv->ldap_def;
 		gtk_text_buffer_get_start_iter (tbuffer, &start);
 		gtk_text_buffer_get_end_iter (tbuffer, &end);
@@ -319,7 +319,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 								fk->fk_names_array [i], -1);
 					gtk_text_buffer_insert (tbuffer, &current, " ", -1);
 					gtk_text_buffer_insert_pixbuf (tbuffer, &current,
-								       browser_get_pixbuf_icon (BROWSER_ICON_REFERENCE));
+								       ui_get_pixbuf_icon (UI_ICON_REFERENCE));
 
 					gtk_text_buffer_insert (tbuffer, &current, " ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
@@ -357,7 +357,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on UPDATE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								gda_tools_utils_fk_policy_to_string (policy),
+								t_utils_fk_policy_to_string (policy),
 								-1);
 				}
 				policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY (fk);
@@ -367,7 +367,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 					gtk_text_buffer_insert (tbuffer, &current, _("Policy on DELETE"), -1);
 					gtk_text_buffer_insert (tbuffer, &current, ": ", -1);
 					gtk_text_buffer_insert (tbuffer, &current,
-								gda_tools_utils_fk_policy_to_string (policy),
+								t_utils_fk_policy_to_string (policy),
 								-1);
 				}
 				
@@ -378,7 +378,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 			GdaDataModel *model;
 			GError *error = NULL;
 			g_value_set_string ((catalog_v = gda_value_new (G_TYPE_STRING)), dbo->obj_catalog);
-			model = gda_meta_store_extract (browser_connection_get_meta_store (tcolumns->priv->bcnc),
+			model = gda_meta_store_extract (t_connection_get_meta_store (tcolumns->priv->tcnc),
 							"SELECT tc.constraint_name, k.column_name FROM _key_column_usage k INNER JOIN _table_constraints tc ON (k.table_catalog=tc.table_catalog AND k.table_schema=tc.table_schema AND k.table_name=tc.table_name AND k.constraint_name=tc.constraint_name) WHERE tc.constraint_type='UNIQUE' AND k.table_catalog = ##catalog::string AND k.table_schema = ##schema::string AND k.table_name = ##tname::string ORDER by k.ordinal_position", &error,
 							"catalog", catalog_v,
 							"schema", schema_v,
@@ -458,12 +458,12 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 			}
 
 #ifdef HAVE_LDAP
-			if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+			if (t_connection_is_ldap (tcolumns->priv->tcnc)) {
 				const gchar *base_dn, *filter, *attributes, *scope_str;
 				GdaLdapSearchScope scope;
 				tbuffer = tcolumns->priv->ldap_def;
 				gtk_text_buffer_get_start_iter (tbuffer, &current);
-				if (browser_connection_describe_table  (tcolumns->priv->bcnc, dbo->obj_name,
+				if (t_connection_describe_table  (tcolumns->priv->tcnc, dbo->obj_name,
 									&base_dn, &filter,
 									&attributes, &scope, NULL)) {
 					gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current,
@@ -584,8 +584,8 @@ table_columns_new (TableInfo *tinfo)
 	tcolumns = TABLE_COLUMNS (g_object_new (TABLE_COLUMNS_TYPE, NULL));
 
 	tcolumns->priv->tinfo = tinfo;
-	tcolumns->priv->bcnc = g_object_ref (table_info_get_connection (tinfo));
-	g_signal_connect (tcolumns->priv->bcnc, "meta-changed",
+	tcolumns->priv->tcnc = g_object_ref (table_info_get_connection (tinfo));
+	g_signal_connect (tcolumns->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), tcolumns);
 	
 	/* main container */
@@ -598,7 +598,7 @@ table_columns_new (TableInfo *tinfo)
 	 * Columns
 	 */
 	tcolumns->priv->columns_tree = gda_tree_new ();
-	manager = mgr_columns_new (tcolumns->priv->bcnc, table_info_get_table_schema (tinfo), 
+	manager = mgr_columns_new (tcolumns->priv->tcnc, table_info_get_table_schema (tinfo), 
 				   table_info_get_table_name (tinfo));
         gda_tree_add_manager (tcolumns->priv->columns_tree, manager);
         g_object_unref (manager);
@@ -622,7 +622,7 @@ table_columns_new (TableInfo *tinfo)
 				      G_TYPE_STRING, MGR_COLUMNS_COL_DEFAULT_ATT_NAME,
                                       G_TYPE_OBJECT, "icon",
 				      G_TYPE_STRING, MGR_COLUMNS_COL_DETAILS);
-        treeview = browser_make_tree_view (model);
+        treeview = ui_make_tree_view (model);
         g_object_unref (model);
 
         /* Colum: Name */
@@ -683,7 +683,7 @@ table_columns_new (TableInfo *tinfo)
 	gtk_paned_pack2 (GTK_PANED (paned), vbox, TRUE, TRUE);
 
 #ifdef HAVE_LDAP
-	if (browser_connection_is_ldap (tcolumns->priv->bcnc)) {
+	if (t_connection_is_ldap (tcolumns->priv->tcnc)) {
 		GtkWidget *label;
 		gchar *str;
 		
@@ -778,9 +778,9 @@ table_columns_new (TableInfo *tinfo)
 	 * initial update
 	 */
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (tcolumns->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (tcolumns->priv->tcnc);
 	if (mstruct)
-		meta_changed_cb (tcolumns->priv->bcnc, mstruct, tcolumns);
+		meta_changed_cb (tcolumns->priv->tcnc, mstruct, tcolumns);
 
 	return (GtkWidget*) tcolumns;
 }
@@ -903,7 +903,7 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 		fk_name = g_object_get_data (G_OBJECT (tag), "fk_name");
 		dn = g_object_get_data (G_OBJECT (tag), "dn");
 
-		bpers = SCHEMA_BROWSER_PERSPECTIVE (browser_find_parent_widget (GTK_WIDGET (tcolumns),
+		bpers = SCHEMA_BROWSER_PERSPECTIVE (ui_find_parent_widget (GTK_WIDGET (tcolumns),
 						    TYPE_SCHEMA_BROWSER_PERSPECTIVE));
 		if (table_name && table_schema && table_short_name && bpers) {
 			schema_browser_perspective_display_table_info (bpers,
@@ -920,13 +920,13 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 			table_name = table_info_get_table_name (tcolumns->priv->tinfo);
 			g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), table_schema);
 			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), table_name);
-			mstruct = browser_connection_get_meta_struct (tcolumns->priv->bcnc);
+			mstruct = t_connection_get_meta_struct (tcolumns->priv->tcnc);
 			dbo = gda_meta_struct_get_db_object (mstruct, NULL, v1, v2);
 			gda_value_free (v1);
 			gda_value_free (v2);
 			parent = gtk_widget_get_toplevel (GTK_WIDGET (tcolumns));
 			if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
-				browser_show_error ((GtkWindow*) parent,
+				ui_show_error ((GtkWindow*) parent,
 						    _("Could not find table '%s.%s'"),
 						    table_schema, table_name);
 			}
@@ -948,7 +948,7 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 					if (! fk_declare_undeclare (mstruct,
 								    BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
 								    fk, &error)) {
-						browser_show_error ((GtkWindow *) parent, _("Failed to undeclare foreign key: %s"),
+						ui_show_error ((GtkWindow *) parent, _("Failed to undeclare foreign key: %s"),
 								    error && error->message ? error->message : _("No detail"));
 						g_clear_error (&error);
 					}
@@ -957,11 +957,11 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 									    GTK_MESSAGE_INFO, "fkdeclare",
 									    _("Successfully undeclared foreign key"));
 					else
-						browser_show_message ((GtkWindow *) parent, "%s",
+						ui_show_message ((GtkWindow *) parent, "%s",
 								      _("Successfully undeclared foreign key"));
 				}
 				else
-					browser_show_error ((GtkWindow*) parent,
+					ui_show_error ((GtkWindow*) parent,
 							    _("Could not find declared foreign key '%s'"),
 							    fk_name);
 			}

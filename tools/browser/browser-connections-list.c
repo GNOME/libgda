@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -20,13 +20,11 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <libgda/binreloc/gda-binreloc.h>
 #include "browser-connections-list.h"
-#include "browser-core.h"
+#include <common/t-app.h>
 #include "browser-window.h"
-#include "browser-connection.h"
 #include <libgda-ui/gdaui-login.h>
-#include "support.h"
+#include "ui-support.h"
 #include "login-dialog.h"
 
 /* 
@@ -36,8 +34,8 @@ static void browser_connections_list_class_init (BrowserConnectionsListClass *kl
 static void browser_connections_list_init (BrowserConnectionsList *stmt);
 static void browser_connections_list_dispose (GObject *object);
 
-static void connection_added_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist);
-static void connection_removed_cb (BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist);
+static void connection_added_cb (TApp *app, TConnection *tcnc, BrowserConnectionsList *clist);
+static void connection_removed_cb (TApp *app, TConnection *tcnc, BrowserConnectionsList *clist);
 
 struct _BrowserConnectionsListPrivate
 {
@@ -114,9 +112,9 @@ browser_connections_list_dispose (GObject *object)
 
 	if (clist->priv) {
 		if (clist->priv->cnc_added_sigid > 0)
-			g_signal_handler_disconnect (browser_core_get (), clist->priv->cnc_added_sigid);
+			g_signal_handler_disconnect (t_app_get (), clist->priv->cnc_added_sigid);
 		if (clist->priv->cnc_removed_sigid > 0)
-			g_signal_handler_disconnect (browser_core_get (), clist->priv->cnc_removed_sigid);
+			g_signal_handler_disconnect (t_app_get (), clist->priv->cnc_removed_sigid);
 
 		g_free (clist->priv);
 		clist->priv = NULL;
@@ -128,7 +126,7 @@ browser_connections_list_dispose (GObject *object)
 
 enum
 {
-	COLUMN_BCNC,
+	COLUMN_TCNC,
 	NUM_COLUMNS
 };
 
@@ -145,13 +143,13 @@ static void cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				 GtkTreeIter *iter,
 				 G_GNUC_UNUSED gpointer data)
 {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gchar *str, *cncstr = NULL;
 	gchar *markup;
 	const GdaDsnInfo *cncinfo;
 
-	gtk_tree_model_get (tree_model, iter, COLUMN_BCNC, &bcnc, -1);
-	cncinfo = browser_connection_get_information (bcnc);
+	gtk_tree_model_get (tree_model, iter, COLUMN_TCNC, &tcnc, -1);
+	cncinfo = t_connection_get_information (tcnc);
 	if (cncinfo) {
 		if (cncinfo->name)
 			cncstr = g_strdup_printf (_("DSN: %s"), cncinfo->name);
@@ -159,7 +157,7 @@ static void cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 			cncstr = g_strdup_printf (_("Provider: %s"), cncinfo->provider);
 	}
 
-	markup = g_markup_escape_text (browser_connection_get_name (bcnc), -1);
+	markup = g_markup_escape_text (t_connection_get_name (tcnc), -1);
 	if (cncstr)
 		str = g_strdup_printf ("%s\n<small>%s</small>",
 				       markup, cncstr);
@@ -170,7 +168,7 @@ static void cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 	
 	g_object_set ((GObject*) cell, "markup", str, NULL);
 	g_free (str);
-	g_object_unref (bcnc);
+	g_object_unref (tcnc);
 }
 
 static void
@@ -178,13 +176,13 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	BrowserConnection *bcnc = NULL;
+	TConnection *tcnc = NULL;
 	const GdaDsnInfo *cncinfo = NULL;
 
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-		gtk_tree_model_get (model, &iter, COLUMN_BCNC, &bcnc, -1);
-		cncinfo = browser_connection_get_information (bcnc);
-		g_object_unref (bcnc);
+		gtk_tree_model_get (model, &iter, COLUMN_TCNC, &tcnc, -1);
+		cncinfo = t_connection_get_information (tcnc);
+		g_object_unref (tcnc);
 
 		gtk_widget_set_sensitive (_clist->priv->close_cnc_button, TRUE);
 	}
@@ -216,9 +214,9 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 					       "to this connection (favorites, descriptions, ...)"), NULL);
 		gda_set_add_holder (dset, holder);
 		g_object_unref (holder);
-		if (bcnc) {
+		if (tcnc) {
 			const gchar *dict_file_name;
-			dict_file_name = browser_connection_get_dictionary_file (bcnc);
+			dict_file_name = t_connection_get_dictionary_file (tcnc);
 			
 			if (dict_file_name)
 				gda_set_set_holder_value (dset, NULL, "GDA_BROWSER_DICT_FILE",
@@ -279,10 +277,10 @@ connection_close_cb (G_GNUC_UNUSED GtkButton *button, BrowserConnectionsList *cl
 	
 	select = gtk_tree_view_get_selection (clist->priv->treeview);
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
-		BrowserConnection *bcnc;
-		gtk_tree_model_get (model, &iter, COLUMN_BCNC, &bcnc, -1);
-		g_object_unref (bcnc);
-		browser_connection_close (NULL, bcnc);
+		TConnection *tcnc;
+		gtk_tree_model_get (model, &iter, COLUMN_TCNC, &tcnc, -1);
+		g_object_unref (tcnc);
+		t_connection_close (tcnc);
 	}
 }
 
@@ -290,25 +288,16 @@ static void
 connection_new_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED BrowserConnectionsList *clist)
 {
 	LoginDialog *dialog;
-	GdaConnection *cnc;
 	GError *error = NULL;
-	dialog = login_dialog_new (NULL);
-	
-	cnc = login_dialog_run (dialog, TRUE, &error);
-	if (cnc) {
-		BrowserConnection *bcnc;
-		BrowserWindow *nbwin;
-		bcnc = browser_connection_new (cnc);
-		nbwin = browser_window_new (bcnc, NULL);
 
-		browser_core_take_window (nbwin);
-		browser_core_take_connection (bcnc);
-	}
+	dialog = login_dialog_new (NULL);
+	login_dialog_run_open_connection (dialog, TRUE, &error);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
 }
 
 /**
  * browser_connections_list_show
- * @current: (allow-none): a connection to select for displaed properties, or %NULL
+ * @current: (allow-none): a connection to select for displayed properties, or %NULL
  *
  * Creates a new #BrowserConnectionsList widget and displays it.
  * Only one is created and shown (singleton)
@@ -316,7 +305,7 @@ connection_new_cb (G_GNUC_UNUSED GtkButton *button, G_GNUC_UNUSED BrowserConnect
  * Returns: the new object
  */
 void
-browser_connections_list_show (BrowserConnection *current)
+browser_connections_list_show (TConnection *current)
 {
 	if (!_clist) {
 		GtkWidget *clist, *sw, *grid, *treeview, *label, *wid;
@@ -330,9 +319,10 @@ browser_connections_list_show (BrowserConnection *current)
 		g_signal_connect (G_OBJECT (clist), "delete-event",
 				  G_CALLBACK (delete_event), NULL);
 
-		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected.png", NULL);
-		gtk_window_set_icon_from_file (GTK_WINDOW (clist), str, NULL);
-		g_free (str);
+		GdkPixbuf *icon;
+		icon = gdk_pixbuf_new_from_resource ("/images/gda-browser-connected.png", NULL);
+		gtk_window_set_icon (GTK_WINDOW (clist), icon);
+		g_object_unref (icon);
 
 		/* table layout */
 		grid = gtk_grid_new ();
@@ -346,9 +336,7 @@ browser_connections_list_show (BrowserConnection *current)
 		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 		gtk_grid_attach (GTK_GRID (grid), hbox, 0, 0, 3, 1);
 
-		str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-connected-big.png", NULL);
-		wid = gtk_image_new_from_file (str);
-		g_free (str);
+		wid = gtk_image_new_from_resource ("/images/gda-browser-connected-big.png");
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
 
 		wid = gtk_label_new ("");
@@ -405,9 +393,9 @@ browser_connections_list_show (BrowserConnection *current)
 		/* GtkTreeModel and view */
 		GtkListStore *store;
 		store = gtk_list_store_new (NUM_COLUMNS,
-					    BROWSER_TYPE_CONNECTION);
+					    T_TYPE_CONNECTION);
 		
-		treeview = browser_make_tree_view (GTK_TREE_MODEL (store));
+		treeview = ui_make_tree_view (GTK_TREE_MODEL (store));
 		_clist->priv->treeview = GTK_TREE_VIEW (treeview);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 		gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
@@ -433,16 +421,14 @@ browser_connections_list_show (BrowserConnection *current)
 		
 
 		/* initial filling */
-		GSList *connections, *list;
-		connections =  browser_core_get_connections ();
-		for (list = connections; list; list = list->next)
-			connection_added_cb (browser_core_get(), BROWSER_CONNECTION (list->data),
+		GSList *list;
+		for (list = (GSList*) t_app_get_all_connections (); list; list = list->next)
+			connection_added_cb (t_app_get(), T_CONNECTION (list->data),
 					     (BrowserConnectionsList*) clist);
-		g_slist_free (connections);
 
-		_clist->priv->cnc_added_sigid = g_signal_connect (browser_core_get (), "connection-added",
+		_clist->priv->cnc_added_sigid = g_signal_connect (t_app_get (), "connection-added",
 								  G_CALLBACK (connection_added_cb), _clist);
-		_clist->priv->cnc_removed_sigid = g_signal_connect (browser_core_get (), "connection-removed",
+		_clist->priv->cnc_removed_sigid = g_signal_connect (t_app_get (), "connection-removed",
 								    G_CALLBACK (connection_removed_cb), _clist);
 		
 		gtk_widget_show_all (clist);
@@ -458,10 +444,10 @@ browser_connections_list_show (BrowserConnection *current)
 		model = gtk_tree_view_get_model (GTK_TREE_VIEW (_clist->priv->treeview));
 		if (gtk_tree_model_get_iter_first (model, &iter)) {
 			do {
-				BrowserConnection *bcnc;
-				gtk_tree_model_get (model, &iter, COLUMN_BCNC, &bcnc, -1);
-				g_object_unref (bcnc);
-				if (bcnc == current) {
+				TConnection *tcnc;
+				gtk_tree_model_get (model, &iter, COLUMN_TCNC, &tcnc, -1);
+				g_object_unref (tcnc);
+				if (tcnc == current) {
 					GtkTreeSelection *select;
 					select = gtk_tree_view_get_selection (GTK_TREE_VIEW (_clist->priv->treeview));
 					gtk_tree_selection_select_iter (select, &iter);
@@ -484,19 +470,18 @@ browser_connections_list_show (BrowserConnection *current)
 }
 
 static void
-connection_added_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
+connection_added_cb (G_GNUC_UNUSED TApp *app, TConnection *tcnc, BrowserConnectionsList *clist)
 {
 	GtkListStore *store;
 	GtkTreeIter iter;
 
 	store = GTK_LIST_STORE (gtk_tree_view_get_model (clist->priv->treeview));
 	gtk_list_store_append (store, &iter);
-	gtk_list_store_set (store, &iter,
-			    COLUMN_BCNC, bcnc, -1);
+	gtk_list_store_set (store, &iter, COLUMN_TCNC, tcnc, -1);
 }
 
 static void
-connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc, BrowserConnectionsList *clist)
+connection_removed_cb (G_GNUC_UNUSED TApp *app, TConnection *tcnc, BrowserConnectionsList *clist)
 {
 	GtkTreeModel *model;
 	GtkTreeIter iter;
@@ -508,10 +493,10 @@ connection_removed_cb (G_GNUC_UNUSED BrowserCore *bcore, BrowserConnection *bcnc
 	g_assert (gtk_tree_model_get_iter_first (model, &iter));
 
 	do {
-		BrowserConnection *mbcnc;
-		gtk_tree_model_get (model, &iter, COLUMN_BCNC, &mbcnc, -1);
-		g_object_unref (mbcnc);
-		if (mbcnc == bcnc) {
+		TConnection *mtcnc;
+		gtk_tree_model_get (model, &iter, COLUMN_TCNC, &mtcnc, -1);
+		g_object_unref (mtcnc);
+		if (mtcnc == tcnc) {
 			is_selected_item = gtk_tree_selection_iter_is_selected (select, &iter);
 			gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
 			break;

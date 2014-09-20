@@ -32,7 +32,7 @@
 #include "../canvas/browser-canvas-db-relations.h"
 
 struct _TableRelationsPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	TableInfo *tinfo;
 	GtkWidget *canvas;
 	gboolean all_schemas;
@@ -42,7 +42,7 @@ static void table_relations_class_init (TableRelationsClass *klass);
 static void table_relations_init       (TableRelations *trels, TableRelationsClass *klass);
 static void table_relations_dispose   (GObject *object);
 
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, TableRelations *trels);
 
 static GObjectClass *parent_class = NULL;
 
@@ -78,10 +78,10 @@ table_relations_dispose (GObject *object)
 
 	/* free memory */
 	if (trels->priv) {
-		if (trels->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (trels->priv->bcnc,
+		if (trels->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (trels->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), trels);
-			g_object_unref (trels->priv->bcnc);
+			g_object_unref (trels->priv->tcnc);
 		}
 		g_free (trels->priv);
 		trels->priv = NULL;
@@ -114,7 +114,7 @@ table_relations_get_type (void)
 }
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableRelations *trels)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableRelations *trels)
 {
 	GdaMetaDbObject *dbo;
 	GValue *tname, *tschema;
@@ -187,8 +187,8 @@ table_relations_new (TableInfo *tinfo)
 	trels = TABLE_RELATIONS (g_object_new (TABLE_RELATIONS_TYPE, NULL));
 
 	trels->priv->tinfo = tinfo;
-	trels->priv->bcnc = g_object_ref (table_info_get_connection (tinfo));
-	g_signal_connect (trels->priv->bcnc, "meta-changed",
+	trels->priv->tcnc = g_object_ref (table_info_get_connection (tinfo));
+	g_signal_connect (trels->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), trels);
 	
 	/*
@@ -202,9 +202,9 @@ table_relations_new (TableInfo *tinfo)
 	 * initial update
 	 */
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (trels->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (trels->priv->tcnc);
 	if (mstruct)
-		meta_changed_cb (trels->priv->bcnc, mstruct, trels);
+		meta_changed_cb (trels->priv->tcnc, mstruct, trels);
 
 	return (GtkWidget*) trels;
 }

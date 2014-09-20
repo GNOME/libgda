@@ -20,10 +20,8 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
-#include <libgda/binreloc/gda-binreloc.h>
 #include "auth-dialog.h"
-#include "browser-spinner.h"
-#include "support.h"
+#include "ui-support.h"
 
 /* 
  * Main static functions 
@@ -36,12 +34,12 @@ static void auth_dialog_dispose (GObject *object);
 static GObjectClass  *parent_class = NULL;
 
 typedef struct {
-	AuthDialogConnection ext;
-	GdaDsnInfo  cncinfo;
-	GtkWidget  *auth_widget;
-	GString    *auth_string;
-
-	guint jobid;
+	gchar         *cnc_string;
+	TConnection   *tcnc; /* ref held */
+	GError        *cnc_open_error;
+	GdaDsnInfo     cncinfo;
+	GtkWidget     *auth_widget;
+	GString       *auth_string;
 } AuthData;
 
 static void
@@ -52,14 +50,14 @@ auth_data_free (AuthData *ad)
 	g_free (ad->cncinfo.provider);
 	g_free (ad->cncinfo.cnc_string);
 	g_free (ad->cncinfo.auth_string);
-	g_free (ad->ext.cnc_string);
+	g_free (ad->cnc_string);
 	if (ad->auth_string)
 		g_string_free (ad->auth_string, TRUE);
 
-	if (ad->ext.cnc_open_error)
-		g_error_free (ad->ext.cnc_open_error);
-	if (ad->ext.cnc)
-		g_object_unref (ad->ext.cnc);
+	if (ad->cnc_open_error)
+		g_error_free (ad->cnc_open_error);
+	if (ad->tcnc)
+		g_object_unref (ad->tcnc);
 	g_free (ad);
 }
 
@@ -68,7 +66,6 @@ struct _AuthDialogPrivate
 	GSList    *auth_list; /* list of AuthData pointers */
 	GtkWidget *spinner;
 	guint      source_id; /* timer to check if connections have been opened */
-	GMainLoop *loop; /* waiting loop */
 };
 
 /* module error */
@@ -120,16 +117,6 @@ auth_dialog_class_init (AuthDialogClass *class)
 	/* virtual functions */
 	object_class->dispose = auth_dialog_dispose;
 }
-
-/*
-static void
-auth_contents_changed_cb (GdauiAuth *auth, gboolean is_valid, AuthDialog *dialog)
-{
-	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, is_valid);
-	if (is_valid)
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
-}
-*/
 
 static void
 update_ad_auth (AuthData *ad)
@@ -195,33 +182,30 @@ static void
 auth_dialog_init (AuthDialog *dialog)
 {
 	GtkWidget *label, *hbox, *wid;
-	char *markup, *str;
+	char *markup;
 	GtkWidget *dcontents;
 
 	dialog->priv = g_new0 (AuthDialogPrivate, 1);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-				GTK_STOCK_CONNECT,
-				GTK_RESPONSE_ACCEPT,
-				GTK_STOCK_CANCEL,
-				GTK_RESPONSE_REJECT, NULL);
+				_("C_onnect"), GTK_RESPONSE_ACCEPT,
+				_("_Cancel"), GTK_RESPONSE_REJECT, NULL);
 
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth.png", NULL);
-	gtk_window_set_icon_from_file (GTK_WINDOW (dialog), str, NULL);
-	g_free (str);
+	GdkPixbuf *pix;
+	pix = gdk_pixbuf_new_from_resource ("/images/gda-browser-auth.png", NULL);
+	gtk_window_set_icon (GTK_WINDOW (dialog), pix);
+	g_object_unref (pix);
 
 	/* label and spinner */
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-auth-big.png", NULL);
-	wid = gtk_image_new_from_file (str);
-	g_free (str);
+	wid = gtk_image_new_from_resource ("/images/gda-browser-auth-big.png");
 	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");
@@ -232,7 +216,7 @@ auth_dialog_init (AuthDialog *dialog)
 	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 12);
 	
-	dialog->priv->spinner = browser_spinner_new ();
+	dialog->priv->spinner = gtk_spinner_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), dialog->priv->spinner, FALSE, FALSE, 0);
 
 	gtk_widget_show_all (hbox);
@@ -260,8 +244,6 @@ auth_dialog_dispose (GObject *object)
 		}
 		if (dialog->priv->source_id)
 			g_source_remove (dialog->priv->source_id);
-		if (dialog->priv->loop)
-			g_main_loop_quit (dialog->priv->loop);
 		g_free (dialog->priv);
 		dialog->priv = NULL;
 	}
@@ -287,58 +269,26 @@ auth_dialog_new (GtkWindow *parent)
 }
 
 static void
-cnc_opened_cb (GdaConnection *cnc, guint job_id, gboolean result, GError *error, AuthDialog *dialog)
-{
-	if (result) {
-#ifdef HAVE_LDAP
-		if (cnc && GDA_IS_LDAP_CONNECTION (cnc)) {
-			/* force classes init */
-			gda_ldap_get_class_info (GDA_LDAP_CONNECTION (cnc), "top");
-		}
-#endif
-	}
-
-	GSList *list;
-	gboolean finished = TRUE;
-	for (list = dialog->priv->auth_list; list; list = list->next) {
-		AuthData *ad = (AuthData*) list->data;
-
-		g_print ("%s (job => %u, result => %d)\n", __FUNCTION__, job_id, result);
-		if (ad->jobid == job_id) {
-			if (!result) {
-				g_object_unref (ad->ext.cnc);
-				ad->ext.cnc = NULL;
-				if (error)
-					ad->ext.cnc_open_error = g_error_copy (error);
-			}
-			ad->jobid = 0;
-		}
-		else if (ad->jobid)
-			finished = FALSE;
-	}
-}
-
-static void
 real_connection_open (AuthDialog *dialog, AuthData *ad)
 {
-#ifndef DUMMY
-	GdaConnection *cnc;
-	GdaDsnInfo *info = &(ad->cncinfo);
-	if (info->name)
-		ad->ext.cnc = gda_connection_new_from_dsn (info->name, ad->auth_string ? ad->auth_string->str : NULL,
-							   GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-							   &(ad->ext.cnc_open_error));
-	else
-		ad->ext.cnc = gda_connection_new_from_string (info->provider, info->cnc_string,
-							      ad->auth_string ? ad->auth_string->str : NULL,
-							      GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-							      &(ad->ext.cnc_open_error));
-	ad->jobid = gda_connection_open_async (ad->ext.cnc, (GdaConnectionOpenFunc*) cnc_opened_cb, dialog,
-					       &(ad->ext.cnc_open_error));
-#else /* DUMMY defined */
+#ifdef DUMMY
 	sleep (5);
-	g_set_error (&(ad->ext.cnc_open_error), GDA_TOOLS_ERROR, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
+	g_set_error (&(ad->cnc_open_error), T_ERROR, TOOLS_INTERNAL_COMMAND_ERROR, "%s", "Dummy error!");
+	return;
 #endif
+
+	TConnection *tcnc;
+	GdaDsnInfo *cncinfo = &(ad->cncinfo);
+	if (cncinfo->name)
+		ad->tcnc = t_connection_open (NULL, cncinfo->name, ad->auth_string ? ad->auth_string->str : NULL, FALSE, &(ad->cnc_open_error));
+	else {
+		gchar *tmp;
+		tmp = g_strdup_printf ("%s://%s", cncinfo->provider, cncinfo->cnc_string);
+		ad->tcnc = t_connection_open (NULL, tmp, ad->auth_string ? ad->auth_string->str : NULL, FALSE, &(ad->cnc_open_error));
+		g_free (tmp);
+	}
+	if (ad->tcnc)
+		ad->tcnc = g_object_ref (ad->tcnc);
 }
 
 static void
@@ -349,7 +299,7 @@ update_dialog_focus (AuthDialog *dialog)
 	for (list = dialog->priv->auth_list; list; list = list->next) {
 		AuthData *ad;
 		ad = (AuthData*) list->data;
-		if (ad->auth_widget && !ad->ext.cnc &&
+		if (ad->auth_widget && !ad->tcnc &&
 		    ! gdaui_basic_form_is_valid (GDAUI_BASIC_FORM (ad->auth_widget))) {
 			allvalid = FALSE;
 			gtk_widget_grab_focus (ad->auth_widget);
@@ -400,7 +350,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	GdaDsnInfo *info;
         gchar *user, *pass, *real_cnc, *real_provider, *real_auth_string = NULL;
 
-	/* if cnc string is a regular file, then use it with SQLite */
+	/* if cnc string is a regular file, then use it with SQLite or MSAccess */
         if (g_file_test (cnc_string, G_FILE_TEST_IS_REGULAR)) {
                 gchar *path, *file, *e1, *e2;
                 const gchar *pname = "SQLite";
@@ -438,7 +388,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
 	AuthData *ad;
 	ad = g_new0 (AuthData, 1);
-	ad->ext.cnc_string = g_strdup (cnc_string);
+	ad->cnc_string = g_strdup (cnc_string);
 	ad->auth_string = NULL;
 	info = gda_config_get_dsn_info (real_cnc);
         if (info && !real_provider) {
@@ -518,7 +468,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 
 		dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 		label = gtk_label_new ("");
-		tmp = g_strdup (ad->ext.cnc_string);
+		tmp = g_strdup (ad->cnc_string);
 		for (ptr = tmp; *ptr; ptr++) {
 			if (*ptr == ':') {
 				/* remove everything up to the '@' */
@@ -587,7 +537,6 @@ auth_dialog_run (AuthDialog *dialog)
 	gboolean allopened = FALSE;
 
 	g_return_val_if_fail (AUTH_IS_DIALOG (dialog), FALSE);
-
 	gtk_widget_show (GTK_WIDGET (dialog));
 	
 	while (1) {
@@ -611,7 +560,7 @@ auth_dialog_run (AuthDialog *dialog)
 			result = GTK_RESPONSE_ACCEPT;
 
 		gtk_widget_show (dialog->priv->spinner);
-		browser_spinner_start (BROWSER_SPINNER (dialog->priv->spinner));
+		gtk_spinner_start (GTK_SPINNER (dialog->priv->spinner));
 
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, FALSE);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT, FALSE);
@@ -620,7 +569,7 @@ auth_dialog_run (AuthDialog *dialog)
 			for (list = dialog->priv->auth_list; list; list = list->next) {
 				AuthData *ad;
 				ad = (AuthData *) list->data;
-				if (ad->auth_widget && !ad->jobid) {
+				if (ad->auth_widget) {
 					GSList *plist;
 					GdaSet *set;
 					set = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (ad->auth_widget));
@@ -659,24 +608,17 @@ auth_dialog_run (AuthDialog *dialog)
 				}
 			}
 
-			if (dialog->priv->source_id != 0) {
-				dialog->priv->loop = g_main_loop_new (NULL, FALSE);
-				g_main_loop_run (dialog->priv->loop);
-				g_main_loop_unref (dialog->priv->loop);
-				dialog->priv->loop = NULL;
-			}
-
 			allopened = TRUE;
 			for (list = dialog->priv->auth_list; list; list = list->next) {
 				AuthData *ad;
 				
 				ad = (AuthData *) list->data;
-				if (ad->auth_widget && !ad->ext.cnc) {
-					g_print ("ERROR: %s\n", ad->ext.cnc_open_error && ad->ext.cnc_open_error->message ? 
-						 ad->ext.cnc_open_error->message : _("No detail"));
-					browser_show_error (GTK_WINDOW (dialog), _("Could not open connection:\n%s"),
-							    ad->ext.cnc_open_error && ad->ext.cnc_open_error->message ? 
-							    ad->ext.cnc_open_error->message : _("No detail"));
+				if (ad->auth_widget && !ad->tcnc) {
+					g_print ("ERROR: %s\n", ad->cnc_open_error && ad->cnc_open_error->message ?
+						 ad->cnc_open_error->message : _("No detail"));
+					ui_show_error (GTK_WINDOW (dialog), _("Could not open connection:\n%s"),
+						       ad->cnc_open_error && ad->cnc_open_error->message ?
+						       ad->cnc_open_error->message : _("No detail"));
 					allopened = FALSE;
 					gtk_widget_set_sensitive (ad->auth_widget, TRUE);
 				}
@@ -689,7 +631,7 @@ auth_dialog_run (AuthDialog *dialog)
 			goto out;
 		}
 		
-		browser_spinner_stop (BROWSER_SPINNER (dialog->priv->spinner));
+		gtk_spinner_stop (GTK_SPINNER (dialog->priv->spinner));
 		gtk_widget_hide (dialog->priv->spinner);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT, TRUE);
@@ -697,17 +639,4 @@ auth_dialog_run (AuthDialog *dialog)
 
  out:
 	return allopened;
-}
-
-
-/**
- * auth_dialog_get_connections
- *
- * Returns: a list of pointers to AuthDialogConnection structures.
- */
-const GSList *
-auth_dialog_get_connections (AuthDialog *dialog)
-{
-	g_return_val_if_fail (AUTH_IS_DIALOG (dialog), NULL);
-	return dialog->priv->auth_list;
 }

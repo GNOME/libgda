@@ -1,16 +1,16 @@
-gda-sql-5.0
+gda-sql-6.0
 -----------
 Console program to open connections to databases and execute SQL commands.
 
 
-gda-list-config-5.0
+gda-list-config-6.0
 -------------------
 Gives a list of installed database providers (along with all the parameters
 they each accept when opening a connection, and a list of the configured DSN
 (data source name).
 
 
-gda-list-server-op-5.0:
+gda-list-server-op-6.0:
 -----------------------
 Gives a list of named parameters expected, for each database provider and for
 each type of server operation.

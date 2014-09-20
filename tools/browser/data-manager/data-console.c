@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -25,18 +25,19 @@
 #include "xml-spec-editor.h"
 #include "ui-spec-editor.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
 #include "../browser-perspective.h"
-#include "../browser-stock-icons.h"
 #include <libgda-ui/internal/popup-container.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda-ui/libgda-ui.h>
 #include "data-source-manager.h"
 #include <gdk/gdkkeysyms.h>
 #include "analyser.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #define MAIN_PAGE_EDITORS 0
 #define MAIN_PAGE_DATA 1
@@ -54,7 +55,7 @@ struct _DataConsolePrivate {
 
 	GdauiBar *header;
 	LayoutType layout_type;
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GtkWidget *main_notebook; /* 2 pages: MAIN_PAGE_EDITORS & MAIN_PAGE_DATA */
 	GtkWidget *editors_notebook; /* 2 pages: EDITOR_PAGE_XML & EDITOR_PAGE_UI */
@@ -194,8 +195,8 @@ data_console_dispose (GObject *object)
 			gtk_widget_destroy (dconsole->priv->params_form);
 		if (dconsole->priv->popup_container)
                         gtk_widget_destroy (dconsole->priv->popup_container);
-		if (dconsole->priv->bcnc)
-			g_object_unref (dconsole->priv->bcnc);
+		if (dconsole->priv->tcnc)
+			g_object_unref (dconsole->priv->tcnc);
 		if (dconsole->priv->agroup)
 			g_object_unref (dconsole->priv->agroup);
 		if (dconsole->priv->mgr) {
@@ -251,10 +252,10 @@ data_console_get_type (void)
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-data_console_new_with_fav_id (BrowserConnection *bcnc, gint fav_id)
+data_console_new_with_fav_id (TConnection *tcnc, gint fav_id)
 {
 	GtkWidget *dconsole;
-	dconsole = data_console_new (bcnc);
+	dconsole = data_console_new (tcnc);
 	data_console_set_fav_id (DATA_CONSOLE (dconsole), fav_id, NULL);
 
 	return dconsole;
@@ -276,16 +277,16 @@ static void save_clicked_cb (GtkWidget *button, DataConsole *dconsole);
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-data_console_new (BrowserConnection *bcnc)
+data_console_new (TConnection *tcnc)
 {
 	DataConsole *dconsole;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	dconsole = DATA_CONSOLE (g_object_new (DATA_CONSOLE_TYPE, NULL));
 
-	dconsole->priv->bcnc = g_object_ref (bcnc);
-	dconsole->priv->mgr = data_source_manager_new (bcnc);
+	dconsole->priv->tcnc = g_object_ref (tcnc);
+	dconsole->priv->mgr = data_source_manager_new (tcnc);
 	g_signal_connect (dconsole->priv->mgr, "list-changed",
 			  G_CALLBACK (data_source_mgr_changed_cb), dconsole);
 	g_signal_connect (dconsole->priv->mgr, "source-changed",
@@ -305,7 +306,7 @@ data_console_new (BrowserConnection *bcnc)
         gtk_widget_show (label);
 	dconsole->priv->header = GDAUI_BAR (label);
 
-	wid = gdaui_bar_add_button_from_stock (GDAUI_BAR (label), GTK_STOCK_SAVE);
+	wid = gdaui_bar_add_button_from_icon_name (GDAUI_BAR (label), "document-save");
 	dconsole->priv->save_button = wid;
 
 	g_signal_connect (wid, "clicked",
@@ -383,41 +384,41 @@ data_console_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Reset"), GTK_STOCK_CLEAR,
-					    _("Reset the editor's\ncontents"));
+	button = ui_make_small_button (FALSE, FALSE, _("Reset"), "edit-clear",
+				       _("Reset the editor's\ncontents"));
 	dconsole->priv->clear_xml_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (editor_clear_clicked_cb), dconsole);
 
-	button = browser_make_small_button (FALSE, TRUE, _("Add"), GTK_STOCK_ADD,
-					    _("Add a new data source"));
+	button = ui_make_small_button (FALSE, TRUE, _("Add"), "list-add",
+				       _("Add a new data source"));
 	dconsole->priv->add_source_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (add_source_clicked_cb), dconsole);
 
-	button = browser_make_small_button (TRUE, FALSE, _("Variables"), NULL, _("Show variables needed"));
+	button = ui_make_small_button (TRUE, FALSE, _("Variables"), NULL, _("Show variables needed"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	dconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (variables_clicked_cb), dconsole);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute specified\n"
-										      "data manager"));
+	button = ui_make_small_button (FALSE, FALSE, _("Execute"), "system-run",
+				       _("Execute specified\ndata manager"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (execute_clicked_cb), dconsole);
 
-	button = browser_make_small_button (TRUE, FALSE, _("View XML"), NULL, _("View specifications\n"
-									 "as XML (advanced)"));
+	button = ui_make_small_button (TRUE, FALSE, _("View XML"), NULL,
+				       _("View specifications\nas XML (advanced)"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	spec_editor_toggled_cb (GTK_TOGGLE_BUTTON (button), dconsole);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (spec_editor_toggled_cb), dconsole);
 
 #ifdef HAVE_GDU
-	button = browser_make_small_button (FALSE, FALSE, _("Help"), GTK_STOCK_HELP, _("Help"));
+	button = ui_make_small_button (FALSE, FALSE, _("Help"), "help-browser", _("Help"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (help_clicked_cb), dconsole);
@@ -496,11 +497,11 @@ void
 data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 {
 	g_return_if_fail (IS_DATA_CONSOLE (dconsole));
-	ToolsFavoritesAttributes fav;
+	TFavoritesAttributes fav;
 
 	if ((fav_id >=0) &&
-	    gda_tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
-				   fav_id, &fav, error)) {
+	    t_favorites_get (t_connection_get_favorites (dconsole->priv->tcnc),
+			     fav_id, &fav, error)) {
 		gchar *str, *tmp;
 		tmp = g_markup_printf_escaped (_("'%s' data manager"), fav.name);
 		str = g_strdup_printf ("<b>%s</b>\n%s", _("Data manager"), tmp);
@@ -510,7 +511,7 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 		
 		dconsole->priv->fav_id = fav.id;
 		
-		gda_tools_favorites_reset_attributes (&fav);
+		t_favorites_reset_attributes (&fav);
 	}
 	else {
 		gchar *str;
@@ -538,34 +539,34 @@ real_save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 	str = xml_spec_editor_get_xml_text (XML_SPEC_EDITOR (dconsole->priv->xml_sped));
 
 	GError *lerror = NULL;
-	ToolsFavorites *bfav;
-	ToolsFavoritesAttributes fav;
+	TFavorites *bfav;
+	TFavoritesAttributes favatt;
 
-	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
-	fav.id = dconsole->priv->fav_id;
-	fav.type = GDA_TOOLS_FAVORITES_DATA_MANAGERS;
-	fav.name = gtk_editable_get_chars (GTK_EDITABLE (dconsole->priv->name_entry), 0, -1);
-	if (!*fav.name) {
-		g_free (fav.name);
-		fav.name = g_strdup (_("Data manager"));
+	memset (&favatt, 0, sizeof (TFavoritesAttributes));
+	favatt.id = dconsole->priv->fav_id;
+	favatt.type = T_FAVORITES_DATA_MANAGERS;
+	favatt.name = gtk_editable_get_chars (GTK_EDITABLE (dconsole->priv->name_entry), 0, -1);
+	if (!*favatt.name) {
+		g_free (favatt.name);
+		favatt.name = g_strdup (_("Data manager"));
 	}
-	fav.contents = str;
+	favatt.contents = str;
 	
 	gtk_widget_hide (dconsole->priv->popup_container);
 	
-	bfav = browser_connection_get_favorites (dconsole->priv->bcnc);
-	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
-		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
-				    "<b>%s:</b>\n%s",
-				    _("Could not save data manager"),
-				    lerror && lerror->message ? lerror->message : _("No detail"));
+	bfav = t_connection_get_favorites (dconsole->priv->tcnc);
+	if (! t_favorites_add (bfav, 0, &favatt, ORDER_KEY_DATA_MANAGERS, G_MAXINT, &lerror)) {
+		ui_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
+			       "<b>%s:</b>\n%s",
+			       _("Could not save data manager"),
+			       lerror && lerror->message ? lerror->message : _("No detail"));
 		if (lerror)
 			g_error_free (lerror);
 	}
 
-	data_console_set_fav_id (dconsole, fav.id, NULL);
+	data_console_set_fav_id (dconsole, favatt.id, NULL);
 
-	g_free (fav.name);
+	g_free (favatt.name);
 	g_free (str);
 }
 
@@ -592,11 +593,11 @@ save_clicked_cb (GtkWidget *button, DataConsole *dconsole)
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
 		dconsole->priv->name_entry = wid;
 		if (dconsole->priv->fav_id > 0) {
-			ToolsFavoritesAttributes fav;
-			if (gda_tools_favorites_get (browser_connection_get_favorites (dconsole->priv->bcnc),
-						   dconsole->priv->fav_id, &fav, NULL)) {
+			TFavoritesAttributes fav;
+			if (t_favorites_get (t_connection_get_favorites (dconsole->priv->tcnc),
+					     dconsole->priv->fav_id, &fav, NULL)) {
 				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
-				gda_tools_favorites_reset_attributes (&fav);
+				t_favorites_reset_attributes (&fav);
 			}
 		}
 
@@ -625,8 +626,8 @@ execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 static void
 help_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 {
-	browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
-			   "data-manager-perspective");
+	ui_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) dconsole),
+		      "data-manager-perspective");
 }
 #endif
 
@@ -720,7 +721,7 @@ add_source_mitem_activated_cb (GtkMenuItem *mitem, DataConsole *dconsole)
 
 	table = (gchar*) g_object_get_data ((GObject*) mitem, "_table");
 
-	source = data_source_new (dconsole->priv->bcnc, DATA_SOURCE_UNKNOWN);
+	source = data_source_new (dconsole->priv->tcnc, DATA_SOURCE_UNKNOWN);
 	list = (GSList*) data_source_manager_get_sources (dconsole->priv->mgr);
 	str = g_strdup_printf (_("source%d"), g_slist_length (list) + 1);
 	data_source_set_id (source, str);
@@ -750,7 +751,7 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 	GdaMetaStruct *mstruct;
 	DataSource *current_source;
 
-	mstruct = browser_connection_get_meta_struct (dconsole->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (dconsole->priv->tcnc);
 	current_source = ui_spec_editor_get_selected_source (UI_SPEC_EDITOR (dconsole->priv->ui_sped));
 
 	/* remove customization, if any */
@@ -920,7 +921,7 @@ compose_mode_toggled_cb (G_GNUC_UNUSED GtkToggleAction *action, DataConsole *dco
 }
 
 static GtkToggleActionEntry ui_actions[] = {
-	{ "ComposeMode", BROWSER_STOCK_BUILDER, N_("_Toggle mode"), NULL, N_("Switch between compose and execute modes"),
+	{ "ComposeMode", NULL /*BROWSER_STOCK_BUILDER*/, N_("_Toggle mode"), NULL, N_("Switch between compose and execute modes"),
 	  G_CALLBACK (compose_mode_toggled_cb), TRUE},
 };
 static const gchar *ui_actions_console =
@@ -964,9 +965,9 @@ data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button
 	const gchar *tab_name;
 
 	tab_name = _("Data manager");
-	return browser_make_tab_label_with_stock (tab_name,
-						  STOCK_CONSOLE,
-						  out_close_button ? TRUE : FALSE, out_close_button);
+	return ui_make_tab_label_with_icon (tab_name,
+					    NULL,
+					    out_close_button ? TRUE : FALSE, out_close_button);
 }
 
 /**

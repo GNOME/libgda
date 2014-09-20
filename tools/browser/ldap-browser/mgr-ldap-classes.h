@@ -19,7 +19,7 @@
 #ifndef __MGR_LDAP_CLASSES_H__
 #define __MGR_LDAP_CLASSES_H__
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include "gda-tree-manager.h"
 
 G_BEGIN_DECLS
@@ -45,7 +45,7 @@ struct _MgrLdapClassesClass {
 };
 
 GType              mgr_ldap_classes_get_type  (void) G_GNUC_CONST;
-GdaTreeManager*    mgr_ldap_classes_new       (BrowserConnection *bcnc, gboolean flat, const gchar *classname);
+GdaTreeManager*    mgr_ldap_classes_new       (TConnection *tcnc, gboolean flat, const gchar *classname);
 
 G_END_DECLS
 

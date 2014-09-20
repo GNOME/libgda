@@ -43,13 +43,13 @@ data_manager_add_proposals_to_menu (GtkWidget *menu,
 	if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
 		GSList *fields = NULL, *flist;
 		GdaSqlStatement *sql_statement;
-		BrowserConnection *bcnc;
+		TConnection *tcnc;
 		GHashTable *hash; /* key = a menu string, value= 0x1 */
 		
 		g_object_get (G_OBJECT (stmt), "structure", &sql_statement, NULL);
 		
-		bcnc = data_source_manager_get_browser_cnc (mgr);
-		if (browser_connection_check_sql_statement_validify (bcnc, sql_statement, NULL))
+		tcnc = data_source_manager_get_browser_cnc (mgr);
+		if (t_connection_check_sql_statement_validify (tcnc, sql_statement, NULL))
 			fields = ((GdaSqlStatementSelect *) sql_statement->contents)->expr_list;
 		
 		hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
@@ -257,11 +257,11 @@ add_data_source_mitem_activated_cb (GtkMenuItem *mitem, DataSourceManager *mgr)
 	DataSource *source;
 	GError *lerror = NULL;
 	xmlNodePtr sourcespec;
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
-	bcnc = data_source_manager_get_browser_cnc (mgr);
+	tcnc = data_source_manager_get_browser_cnc (mgr);
 	sourcespec = (xmlNodePtr) g_object_get_data ((GObject*) mitem, "xml");
-	source = data_source_new_from_xml_node (bcnc, sourcespec, &lerror);
+	source = data_source_new_from_xml_node (tcnc, sourcespec, &lerror);
 	if (source) {
 		data_source_manager_add_source (mgr, source);
 		g_object_unref (source);

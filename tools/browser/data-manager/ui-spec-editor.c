@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include "ui-spec-editor.h"
 #include "data-source.h"
 #include <libgda/libgda.h>
-#include "../support.h"
+#include "../ui-support.h"
 #include "data-source-editor.h"
 #include <gdk/gdkkeysyms.h>
 
@@ -108,10 +108,10 @@ cell_pixbuf_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRend
 	stype = data_source_get_source_type (source);
 	switch (stype) {
 	case DATA_SOURCE_TABLE:
-		g_object_set (cell, "pixbuf", browser_get_pixbuf_icon (BROWSER_ICON_TABLE), NULL);
+		g_object_set (cell, "pixbuf", ui_get_pixbuf_icon (UI_ICON_TABLE), NULL);
 		break;
 	case DATA_SOURCE_SELECT:
-		g_object_set (cell, "pixbuf", browser_get_pixbuf_icon (BROWSER_ICON_QUERY), NULL);
+		g_object_set (cell, "pixbuf", ui_get_pixbuf_icon (UI_ICON_QUERY), NULL);
 		break;
 	default:
 		g_object_set (cell, "pixbuf", NULL, NULL);
@@ -161,7 +161,7 @@ do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, UiSpecEdi
                 g_signal_connect (menu, "deactivate",
                                   G_CALLBACK (gtk_widget_hide), NULL);
 
-                mitem = gtk_image_menu_item_new_with_label (_("Remove"));
+                mitem = gtk_menu_item_new_with_label (_("Remove"));
                 gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
                 gtk_widget_show (mitem);
                 g_signal_connect (mitem, "activate",
@@ -255,7 +255,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	sped->priv->sources_model = gtk_list_store_new (NUM_COLUMNS,
 							G_TYPE_POINTER);
 
-	sped->priv->sources_tree = browser_make_tree_view (GTK_TREE_MODEL (sped->priv->sources_model));
+	sped->priv->sources_tree = ui_make_tree_view (GTK_TREE_MODEL (sped->priv->sources_model));
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (sped->priv->sources_tree), FALSE);
 	gtk_widget_set_size_request (sped->priv->sources_tree, 170, -1);
 

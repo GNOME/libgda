@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #define __XML_SPEC_EDITOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include "data-source-manager.h"
 
 G_BEGIN_DECLS

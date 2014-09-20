@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,6 +28,9 @@ G_BEGIN_DECLS
 #define BROWSER_PERSPECTIVE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, BROWSER_PERSPECTIVE_TYPE, BrowserPerspective))
 #define IS_BROWSER_PERSPECTIVE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, BROWSER_PERSPECTIVE_TYPE))
 #define BROWSER_PERSPECTIVE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), BROWSER_PERSPECTIVE_TYPE, BrowserPerspectiveIface))
+
+typedef struct _BrowserPerspectiveIface   BrowserPerspectiveIface;
+typedef struct _BrowserPerspective        BrowserPerspective;
 
 /* struct for the interface */
 struct _BrowserPerspectiveIface {
@@ -66,6 +69,21 @@ void            browser_perspective_page_tab_label_change (BrowserPerspective *p
 
 BrowserWindow  *browser_perspective_get_window (BrowserPerspective *perspective);
 void            browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebook *nb);
+
+/*
+ * All perspectives information
+ */
+typedef struct {
+	const gchar          *perspective_name;
+	const gchar          *menu_shortcut;
+	BrowserPerspective *(*perspective_create) (BrowserWindow *);
+} BrowserPerspectiveFactory;
+#define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
+
+BrowserPerspectiveFactory *browser_get_default_factory (void);
+BrowserPerspectiveFactory *browser_get_factory         (const gchar *factory);
+void                       browser_set_default_factory (const gchar *factory);
+const GSList              *browser_get_factories       (void);
 
 G_END_DECLS
 

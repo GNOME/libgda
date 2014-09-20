@@ -21,12 +21,15 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "connection-binding-properties.h"
-#include "browser-connection.h"
-#include "support.h"
+#include <common/t-app.h>
+#include <common/t-connection.h>
+#include <common/t-errors.h>
+#include "ui-support.h"
 #include <libgda-ui/libgda-ui.h>
 #include <libgda-ui/gdaui-plugin.h>
-#include "common/gdaui-entry-import.h"
-#include "../tool-utils.h"
+#include "gdaui-entry-import.h"
+//#include "../tool-utils.h"
+
 
 /* 
  * Main static functions 
@@ -41,13 +44,20 @@ static void update_display (ConnectionBindingProperties *cprop);
 
 struct _ConnectionBindingPropertiesPrivate
 {
-	BrowserVirtualConnectionSpecs *specs;
+	TVirtualConnectionSpecs *specs;
 	GtkGrid     *layout_grid;
 	GtkWidget   *menu;
 };
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
+
+enum
+{
+        CNC_LIST_COLUMN_TCNC = 0,
+        CNC_LIST_COLUMN_NAME = 1,
+        CNC_LIST_NUM_COLUMNS
+};
 
 GType
 connection_binding_properties_get_type (void)
@@ -104,7 +114,7 @@ connection_binding_properties_dispose (GObject *object)
 
 	if (cprop->priv) {
 		if (cprop->priv->specs)
-			browser_virtual_connection_specs_free (cprop->priv->specs);
+			t_virtual_connection_specs_free (cprop->priv->specs);
 		if (cprop->priv->menu)
 			gtk_widget_destroy (cprop->priv->menu);
 		g_free (cprop->priv);
@@ -119,35 +129,35 @@ connection_binding_properties_dispose (GObject *object)
 static void
 help_clicked_cb (GtkButton *button, G_GNUC_UNUSED ConnectionBindingProperties *cprop)
 {
-        browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) button),
-                           "virtual-connections");
+        ui_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) button),
+		      "virtual-connections");
         g_signal_stop_emission_by_name (button, "clicked");
 }
 #endif
 
 /**
  * connection_binding_properties_new_create
- * @bcnc: a #BrowserConnection
+ * @tcnc: a #TConnection
  *
  * Creates a new #ConnectionBindingProperties window. The window will allow a new
- * virtual connection to be opened using tables from @bcnc.
+ * virtual connection to be opened using tables from @tcnc.
  *
  * Returns: the new object
  */
 GtkWidget *
-connection_binding_properties_new_create (BrowserConnection *bcnc)
+connection_binding_properties_new_create (TConnection *tcnc)
 {
 	ConnectionBindingProperties *cprop;
-	BrowserVirtualConnectionSpecs *specs;
-	BrowserVirtualConnectionPart *part;
+	TVirtualConnectionSpecs *specs;
+	TVirtualConnectionPart *part;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
-	specs = g_new0 (BrowserVirtualConnectionSpecs, 1);
-	part = g_new0 (BrowserVirtualConnectionPart, 1);
-	part->part_type = BROWSER_VIRTUAL_CONNECTION_PART_CNC;
-	part->u.cnc.table_schema = g_strdup (browser_connection_get_name (bcnc));
-	part->u.cnc.source_cnc = g_object_ref (G_OBJECT (bcnc));
+	specs = g_new0 (TVirtualConnectionSpecs, 1);
+	part = g_new0 (TVirtualConnectionPart, 1);
+	part->part_type = T_VIRTUAL_CONNECTION_PART_CNC;
+	part->u.cnc.table_schema = g_strdup (t_connection_get_name (tcnc));
+	part->u.cnc.source_cnc = g_object_ref (G_OBJECT (tcnc));
 	specs->parts = g_slist_append (NULL, part);
 
 	cprop = CONNECTION_BINDING_PROPERTIES (g_object_new (CONNECTION_TYPE_BINDING_PROPERTIES, NULL));
@@ -158,10 +168,10 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 	update_display (cprop);
 
 	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("Create connection"), GTK_RESPONSE_OK));
-	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL));
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("_Cancel"), GTK_RESPONSE_CANCEL));
 #ifdef HAVE_GDU
         GtkWidget *help_btn;
-        help_btn = gtk_button_new_from_stock (GTK_STOCK_HELP);
+        help_btn = gtk_button_new_from_icon_name (_("_Help"), GTK_ICON_SIZE_DIALOG);
         g_signal_connect (help_btn, "clicked",
                           G_CALLBACK (help_clicked_cb), cprop);
         gtk_widget_show (help_btn);
@@ -173,28 +183,28 @@ connection_binding_properties_new_create (BrowserConnection *bcnc)
 
 /**
  * connection_binding_properties_new_edit
- * @specs: a #BrowserVirtualConnectionSpecs pointer
+ * @specs: a #TVirtualConnectionSpecs pointer
  *
  * Creates a new #ConnectionBindingProperties window, starting with a _copy_ of @specs
  *
  * Returns: the new object
  */
 GtkWidget *
-connection_binding_properties_new_edit (const BrowserVirtualConnectionSpecs *specs)
+connection_binding_properties_new_edit (const TVirtualConnectionSpecs *specs)
 {
 	ConnectionBindingProperties *cprop;
 
 	g_return_val_if_fail (specs, NULL);
 
 	cprop = CONNECTION_BINDING_PROPERTIES (g_object_new (CONNECTION_TYPE_BINDING_PROPERTIES, NULL));
-	cprop->priv->specs = browser_virtual_connection_specs_copy (specs);
+	cprop->priv->specs = t_virtual_connection_specs_copy (specs);
 	gtk_window_set_title (GTK_WINDOW (cprop), _("Virtual connection's properties"));
 
 	create_layout (cprop);
 	update_display (cprop);
 
-	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_APPLY, GTK_RESPONSE_OK));
-	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL));
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("_Apply"), GTK_RESPONSE_OK));
+	gtk_widget_show (gtk_dialog_add_button (GTK_DIALOG (cprop), _("_Cancel"), GTK_RESPONSE_CANCEL));
 
 	return (GtkWidget*) cprop;
 }
@@ -238,10 +248,10 @@ create_layout (ConnectionBindingProperties *cprop)
 }
 
 static void add_part_clicked_cb (GtkWidget *button, ConnectionBindingProperties *cprop);
-static void del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part);
+static void del_part_clicked_cb (GtkWidget *button, TVirtualConnectionPart *part);
 
-static GtkWidget *create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionModel *pm);
-static GtkWidget *create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionCnc *cnc);
+static GtkWidget *create_part_for_model (ConnectionBindingProperties *cprop, TVirtualConnectionPart *part, TVirtualConnectionModel *pm);
+static GtkWidget *create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart *part, TVirtualConnectionCnc *cnc);
 
 static void
 update_display (ConnectionBindingProperties *cprop)
@@ -255,15 +265,15 @@ update_display (ConnectionBindingProperties *cprop)
 	if (cprop->priv->specs) {
 		GSList *list;
 		for (list = cprop->priv->specs->parts; list; list = list->next, top++) {
-			BrowserVirtualConnectionPart *part;
+			TVirtualConnectionPart *part;
 			GtkWidget *display = NULL;
 
-			part = (BrowserVirtualConnectionPart*) list->data;
+			part = (TVirtualConnectionPart*) list->data;
 			switch (part->part_type) {
-			case BROWSER_VIRTUAL_CONNECTION_PART_MODEL:
+			case T_VIRTUAL_CONNECTION_PART_MODEL:
 				display = create_part_for_model (cprop, part, &(part->u.model));
 				break;
-			case BROWSER_VIRTUAL_CONNECTION_PART_CNC:
+			case T_VIRTUAL_CONNECTION_PART_CNC:
 				display = create_part_for_cnc (cprop, part, &(part->u.cnc));
 				break;
 			default:
@@ -277,7 +287,7 @@ update_display (ConnectionBindingProperties *cprop)
 	/* bottom button to add a part */
 	GtkWidget *arrow, *button;
 	button = gtk_button_new ();
-	label = browser_make_tab_label_with_stock (_("Add binding"), GTK_STOCK_ADD, FALSE, NULL);
+	label = ui_make_tab_label_with_icon (_("Add binding"), "list-add", FALSE, NULL);
 	gtk_container_add (GTK_CONTAINER (button), label);
 	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
 	gtk_box_pack_start (GTK_BOX (label), arrow, FALSE, FALSE, 0);
@@ -294,21 +304,21 @@ update_display (ConnectionBindingProperties *cprop)
 static void
 add_part_mitem_cb (GtkMenuItem *mitem, ConnectionBindingProperties *cprop)
 {
-	BrowserVirtualConnectionType part_type;
-	BrowserVirtualConnectionPart *part;
+	TVirtualConnectionType part_type;
+	TVirtualConnectionPart *part;
 
 	part_type = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mitem), "part-type"));
-	part = g_new0 (BrowserVirtualConnectionPart, 1);
+	part = g_new0 (TVirtualConnectionPart, 1);
 	part->part_type = part_type;
 	switch (part_type) {
-	case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
-		BrowserVirtualConnectionModel *pm;
+	case T_VIRTUAL_CONNECTION_PART_MODEL: {
+		TVirtualConnectionModel *pm;
 		pm = &(part->u.model);
 		pm->table_name = g_strdup ("tab");
 		break;
 	}
-	case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
-		BrowserVirtualConnectionCnc *scnc;
+	case T_VIRTUAL_CONNECTION_PART_CNC: {
+		TVirtualConnectionCnc *scnc;
 		scnc = &(part->u.cnc);
 		scnc->table_schema = g_strdup ("sub");
 		break;
@@ -329,13 +339,13 @@ add_part_clicked_cb (G_GNUC_UNUSED GtkWidget *button, ConnectionBindingPropertie
 		menu = gtk_menu_new ();
 		entry = gtk_menu_item_new_with_label (_("Bind a connection"));
 		g_object_set_data (G_OBJECT (entry), "part-type",
-				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_CNC));
+				   GINT_TO_POINTER (T_VIRTUAL_CONNECTION_PART_CNC));
 		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
 		gtk_widget_show (entry);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 		entry = gtk_menu_item_new_with_label (_("Bind a data set"));
 		g_object_set_data (G_OBJECT (entry), "part-type",
-				   GINT_TO_POINTER (BROWSER_VIRTUAL_CONNECTION_PART_MODEL));
+				   GINT_TO_POINTER (T_VIRTUAL_CONNECTION_PART_MODEL));
 		g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (add_part_mitem_cb), cprop);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), entry);
 		gtk_widget_show (entry);
@@ -348,18 +358,18 @@ add_part_clicked_cb (G_GNUC_UNUSED GtkWidget *button, ConnectionBindingPropertie
 }
 
 static void
-del_part_clicked_cb (GtkWidget *button, BrowserVirtualConnectionPart *part)
+del_part_clicked_cb (GtkWidget *button, TVirtualConnectionPart *part)
 {
 	ConnectionBindingProperties *cprop;
 	cprop = g_object_get_data (G_OBJECT (button), "cprop");
 
 	cprop->priv->specs->parts = g_slist_remove (cprop->priv->specs->parts, part);
-	browser_virtual_connection_part_free (part);
+	t_virtual_connection_part_free (part);
 	update_display (cprop);
 }
 
 static void
-part_for_model_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualConnectionModel *pm)
+part_for_model_holder_changed_cb (GdaSet *set, GdaHolder *holder, TVirtualConnectionModel *pm)
 {
 	const gchar *hid;
 	const GValue *value;
@@ -395,7 +405,7 @@ plugin_entry_import_create_func (G_GNUC_UNUSED GdaDataHandler *handler, GType ty
 }
 
 static GtkWidget *
-create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionModel *pm)
+create_part_for_model (ConnectionBindingProperties *cprop, TVirtualConnectionPart *part, TVirtualConnectionModel *pm)
 {
 	GtkWidget *hbox, *vbox, *label, *button;
 	gchar *str;
@@ -422,8 +432,8 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 	g_free (str);
 	gtk_widget_set_tooltip_text (label, _("Import a data set and make it appear as a table"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-	button = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_REMOVE,
-					    _("Remove this bind"));
+	button = ui_make_small_button (FALSE, FALSE, NULL, "list-remove",
+				       _("Remove this bind"));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 10);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (del_part_clicked_cb), part);
@@ -458,7 +468,7 @@ create_part_for_model (ConnectionBindingProperties *cprop, BrowserVirtualConnect
 
 static GError *
 part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *holder, GValue *new_value,
-					G_GNUC_UNUSED BrowserVirtualConnectionCnc *cnc)
+					G_GNUC_UNUSED TVirtualConnectionCnc *cnc)
 {
 	const gchar *hid;
 
@@ -472,7 +482,7 @@ part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *ho
 			if (((ptr == str) && ! g_ascii_isalpha (*ptr)) ||
 			    ((ptr != str) && (*ptr != '_') && !g_ascii_isalnum (*ptr))) {
 				GError *error = NULL;
-				g_set_error (&error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+				g_set_error (&error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 					     "%s", _("Invalid schema name"));
 				return error;
 			}
@@ -484,7 +494,7 @@ part_for_cnc_validate_holder_change_cb (G_GNUC_UNUSED GdaSet *set, GdaHolder *ho
 }
 
 static void
-part_for_cnc_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualConnectionCnc *cnc)
+part_for_cnc_holder_changed_cb (GdaSet *set, GdaHolder *holder, TVirtualConnectionCnc *cnc)
 {
 	const gchar *hid;
 	const GValue *value;
@@ -513,7 +523,7 @@ part_for_cnc_holder_changed_cb (GdaSet *set, GdaHolder *holder, BrowserVirtualCo
 }
 
 static GtkWidget *
-create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectionPart *part, BrowserVirtualConnectionCnc *cnc)
+create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart *part, TVirtualConnectionCnc *cnc)
 {
 	GtkWidget *hbox, *vbox, *label, *button;
 	gchar *str;
@@ -532,8 +542,8 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectio
 					      "schema as a prefix"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
-	button = browser_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_REMOVE,
-					    _("Remove this bind"));
+	button = ui_make_small_button (FALSE, FALSE, NULL, "list-remove",
+				       _("Remove this bind"));
 	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 10);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (del_part_clicked_cb), part);
@@ -546,16 +556,16 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, BrowserVirtualConnectio
 	set = gda_set_new_inline (1,
 				  "SCHEMA", G_TYPE_STRING, cnc->table_schema);
 
-	holder = gda_holder_new (BROWSER_TYPE_CONNECTION);
+	holder = gda_holder_new (T_TYPE_CONNECTION);
 	g_object_set (holder, "id", "CNC", "name", "Connection", "not-null", TRUE, NULL);
 	g_assert (gda_set_add_holder (set, holder));
 
-	g_value_set_object ((value = gda_value_new (BROWSER_TYPE_CONNECTION)), cnc->source_cnc);
+	g_value_set_object ((value = gda_value_new (T_TYPE_CONNECTION)), cnc->source_cnc);
 	g_assert (gda_holder_set_value (holder, value, NULL));
 	gda_value_free (value);
 
-	g_assert (gda_holder_set_source_model (holder, browser_get_connections_list (),
-					       CNC_LIST_COLUMN_BCNC, NULL));
+	g_assert (gda_holder_set_source_model (holder, t_app_get_all_connections_m (),
+					       CNC_LIST_COLUMN_TCNC, NULL));
 	g_object_unref (holder);
 
 	holder = gda_set_get_holder (set, "SCHEMA");
@@ -585,11 +595,11 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
 		goto out;
 
 	for (list = cprop->priv->specs->parts; list; list = list->next) {
-		BrowserVirtualConnectionPart *part;
-		part = (BrowserVirtualConnectionPart*) list->data;
+		TVirtualConnectionPart *part;
+		part = (TVirtualConnectionPart*) list->data;
 		switch (part->part_type) {
-		case BROWSER_VIRTUAL_CONNECTION_PART_MODEL: {
-			BrowserVirtualConnectionModel *pm;
+		case T_VIRTUAL_CONNECTION_PART_MODEL: {
+			TVirtualConnectionModel *pm;
 			pm = &(part->u.model);
 			if (!pm->table_name || ! *pm->table_name || !pm->model)
 				goto out;
@@ -598,8 +608,8 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
 			g_hash_table_insert (schemas_hash, pm->table_name, (gpointer) 0x01);
 			break;
 		}
-		case BROWSER_VIRTUAL_CONNECTION_PART_CNC: {
-			BrowserVirtualConnectionCnc *cnc;
+		case T_VIRTUAL_CONNECTION_PART_CNC: {
+			TVirtualConnectionCnc *cnc;
 			cnc = &(part->u.cnc);
 			if (! cnc->source_cnc || ! cnc->table_schema || ! *cnc->table_schema)
 				goto out;
@@ -623,9 +633,9 @@ update_buttons_sensitiveness (ConnectionBindingProperties *cprop)
  * connection_binding_properties_get_specs
  * @prop: a #ConnectionBindingProperties widget
  *
- * Returns: a pointer to a read only #BrowserVirtualConnectionSpecs
+ * Returns: a pointer to a read only #TVirtualConnectionSpecs
  */
-const BrowserVirtualConnectionSpecs *
+const TVirtualConnectionSpecs *
 connection_binding_properties_get_specs (ConnectionBindingProperties *prop)
 {
 	g_return_val_if_fail (CONNECTION_IS_BINDING_PROPERTIES (prop), NULL);

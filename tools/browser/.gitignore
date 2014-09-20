@@ -1,6 +1,2 @@
-gda-browser-6.0
-gda-browser-6.*.desktop
-canvas-example
-marshal.c
-marshal.h
-favorites-test
+marshal.[ch]
+

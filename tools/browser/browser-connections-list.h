@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 
 #include <gtk/gtk.h>
 #include "decl.h"
+#include <common/t-connection.h>
 
 G_BEGIN_DECLS
 
@@ -48,7 +49,7 @@ struct _BrowserConnectionsListClass
 };
 
 GType           browser_connections_list_get_type               (void) G_GNUC_CONST;
-void            browser_connections_list_show                   (BrowserConnection *current);
+void            browser_connections_list_show                   (TConnection *current);
 
 G_END_DECLS
 

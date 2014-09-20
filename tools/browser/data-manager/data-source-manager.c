@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include "browser-connection.h"
-#include "support.h"
+#include "common/t-connection.h"
+#include "../ui-support.h"
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
@@ -53,7 +53,7 @@ static void ensure_source_unique_id (DataSourceManager *mgr, DataSource *source)
 static GObjectClass  *parent_class = NULL;
 
 struct _DataSourceManagerPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	GSList *sources_list;
         GdaSet *params; /* execution params */
 	gboolean emit_changes;
@@ -205,8 +205,8 @@ data_source_manager_dispose (GObject *object)
 			mgr->priv->sources_list = NULL;
 		}
 
-		if (mgr->priv->bcnc)
-			g_object_unref (mgr->priv->bcnc);
+		if (mgr->priv->tcnc)
+			g_object_unref (mgr->priv->tcnc);
 
 		g_free (mgr->priv);
 		mgr->priv = NULL;
@@ -218,20 +218,20 @@ data_source_manager_dispose (GObject *object)
 
 /**
  * data_source_manager_new
- * @bcnc:
+ * @tcnc:
  *
  * Creates a new #DataSourceManager object
  *
  * Returns: a new object
  */
 DataSourceManager*
-data_source_manager_new (BrowserConnection *bcnc)
+data_source_manager_new (TConnection *tcnc)
 {
 	DataSourceManager *mgr;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	mgr = DATA_SOURCE_MANAGER (g_object_new (DATA_SOURCE_MANAGER_TYPE, NULL));
-	mgr->priv->bcnc = g_object_ref (bcnc);
+	mgr->priv->tcnc = g_object_ref (tcnc);
 
 	return mgr;
 }
@@ -421,7 +421,7 @@ compute_params (DataSourceManager *mgr)
 {
 	/* cleanning process */
 	if (mgr->priv->params) {
-		browser_connection_keep_variables (mgr->priv->bcnc, mgr->priv->params);
+		t_connection_keep_variables (mgr->priv->tcnc, mgr->priv->params);
 		g_object_unref (mgr->priv->params);
         }
         mgr->priv->params = NULL;
@@ -464,7 +464,7 @@ compute_params (DataSourceManager *mgr)
 		}
 	}
 
-	browser_connection_load_variables (mgr->priv->bcnc, mgr->priv->params);
+	t_connection_load_variables (mgr->priv->tcnc, mgr->priv->params);
 }
 
 
@@ -626,11 +626,11 @@ data_source_manager_destroy_sources_array (GArray *array)
  * data_source_manager_get_browser_cnc
  * @mgr:
  */
-BrowserConnection *
+TConnection *
 data_source_manager_get_browser_cnc (DataSourceManager *mgr)
 {
 	g_return_val_if_fail (IS_DATA_SOURCE_MANAGER (mgr), NULL);
-	return mgr->priv->bcnc;
+	return mgr->priv->tcnc;
 }
 
 /**

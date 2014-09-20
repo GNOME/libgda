@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -34,11 +34,11 @@
 #endif
 #include "query-editor.h"
 #include <binreloc/gda-binreloc.h>
-#include "../browser-connection.h"
+#include "../common/t-connection.h"
 #include "../browser-window.h"
 #include <libgda-ui/internal/popup-container.h>
-#include "../support.h"
-#include "../common/widget-overlay.h"
+#include "../ui-support.h"
+#include "../widget-overlay.h"
 
 #define QUERY_EDITOR_LANGUAGE_SQL "gda-sql"
 #define COLOR_ALTER_FACTOR 1.8
@@ -360,11 +360,11 @@ display_completions (QueryEditor *editor)
 	if (!str)
 		return;
 
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gchar **compl;
 
-	bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) editor));
-	compl = browser_connection_get_completions (bcnc, str, ptr - str, strlen (str));
+	tcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) editor));
+	compl = t_connection_get_completions (tcnc, str, ptr - str, strlen (str));
 	g_free (str);
 
 	if (compl) {
@@ -376,7 +376,7 @@ display_completions (QueryEditor *editor)
 			GtkWidget *popup, *sw;
 			
 			model = gtk_list_store_new (1, G_TYPE_STRING);
-			treeview = browser_make_tree_view (GTK_TREE_MODEL (model));
+			treeview = ui_make_tree_view (GTK_TREE_MODEL (model));
 			gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 			gtk_tree_view_set_grid_lines (GTK_TREE_VIEW (treeview), GTK_TREE_VIEW_GRID_LINES_NONE);
 			gtk_tree_selection_set_mode (gtk_tree_view_get_selection (GTK_TREE_VIEW (treeview)),
@@ -1900,7 +1900,7 @@ query_editor_history_batch_new (GTimeVal run_time, GdaSet *params)
 		qib->params = gda_set_copy (params);
 
 #ifdef QUERY_EDITOR_DEBUG
-	g_print ("\t%s() => %p\n", __FUNCTION__, qib);
+	g_print ("%s (%p)\n", __FUNCTION__, qib);
 #endif
 	return qib;
 }
@@ -1922,7 +1922,7 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 	g_return_if_fail (qib);
 	qib->ref_count--;
 #ifdef QUERY_EDITOR_DEBUG
-	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qib, qib->ref_count);
+	g_print ("%s (%p)\n", __FUNCTION__, qib);
 #endif
 	if (qib->ref_count <= 0) {
 		if (qib->hist_items) {
@@ -1932,15 +1932,11 @@ query_editor_history_batch_unref (QueryEditorHistoryBatch *qib)
 		if (qib->params)
 			g_object_unref (qib->params);
 
+#ifdef QUERY_EDITOR_DEBUG
+		g_print ("Freeing QueryEditorHistoryBatch (%p)\n", qib);
+#endif
 		g_free (qib);
-#ifdef QUERY_EDITOR_DEBUG
-		g_print ("\t%s() => %p\n", __FUNCTION__, qib);
-#endif
 	}
-#ifdef QUERY_EDITOR_DEBUG
-	else
-		g_print ("\tFAILED %s() => %p:%d\n", __FUNCTION__, qib, qib->ref_count);
-#endif
 }
 
 static void
@@ -1981,7 +1977,7 @@ query_editor_history_item_new (const gchar *sql, GObject *result, GError *error)
 		qih->exec_error = g_error_copy (error);
 
 #ifdef QUERY_EDITOR_DEBUG
-	g_print ("\t%s() => %p\n", __FUNCTION__, qih);
+	g_print ("%s() => %p\n", __FUNCTION__, qih);
 #endif
 	return qih;
 }
@@ -2003,7 +1999,7 @@ query_editor_history_item_unref (QueryEditorHistoryItem *qih)
 	g_return_if_fail (qih);
 	qih->ref_count--;
 #ifdef QUERY_EDITOR_DEBUG
-	g_print ("%s (%p) ref count:%d\n", __FUNCTION__, qih, qih->ref_count);
+	g_print ("%s (%p)\n", __FUNCTION__, qih);
 #endif
 	if (qih->ref_count <= 0) {
 		g_free (qih->sql);
@@ -2011,15 +2007,12 @@ query_editor_history_item_unref (QueryEditorHistoryItem *qih)
 			g_object_unref (qih->result);
 		if (qih->exec_error)
 			g_error_free (qih->exec_error);
+#ifdef QUERY_EDITOR_DEBUG
+		g_print ("Freeing QueryEditorHistoryItem %p\n", qih);
+#endif
+
 		g_free (qih);
-#ifdef QUERY_EDITOR_DEBUG
-		g_print ("\t%s() => %p\n", __FUNCTION__, qih);
-#endif
 	}
-#ifdef QUERY_EDITOR_DEBUG
-	else
-		g_print ("\tFAILED %s() => %p:%d\n", __FUNCTION__, qih, qih->ref_count);
-#endif
 }
 
 /*
@@ -2061,5 +2054,8 @@ hist_item_data_unref (HistItemData *hdata)
 		if (hdata->tag)
 			g_object_unref (hdata->tag);
 		g_free (hdata);
+#ifdef QUERY_EDITOR_DEBUG
+		g_print ("HistItemData %p freed\n", hdata);
+#endif
 	}
 }

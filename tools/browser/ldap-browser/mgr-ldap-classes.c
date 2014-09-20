@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,9 +21,10 @@
 #include "mgr-ldap-classes.h"
 #include "gda-tree-node.h"
 #include <sqlite/virtual/gda-ldap-connection.h>
+#include "../ui-support.h"
 
 struct _MgrLdapClassesPriv {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gchar *class;
 	gboolean flat;
 };
@@ -71,8 +72,8 @@ mgr_ldap_classes_dispose (GObject *object)
 	g_return_if_fail (MGR_IS_LDAP_CLASSES (mgr));
 
 	if (mgr->priv) {
-		if (mgr->priv->bcnc)
-			g_object_unref (mgr->priv->bcnc);
+		if (mgr->priv->tcnc)
+			g_object_unref (mgr->priv->tcnc);
 		g_free (mgr->priv->class);
 		g_free (mgr->priv);
 		mgr->priv = NULL;
@@ -126,14 +127,14 @@ mgr_ldap_classes_get_type (void)
  * Returns: (transfer full): a new #GdaTreeManager object
  */
 GdaTreeManager*
-mgr_ldap_classes_new (BrowserConnection *bcnc, gboolean flat, const gchar *classname)
+mgr_ldap_classes_new (TConnection *tcnc, gboolean flat, const gchar *classname)
 {
 	MgrLdapClasses *mgr;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	mgr = (MgrLdapClasses*) g_object_new (MGR_TYPE_LDAP_CLASSES, NULL);
 
-	mgr->priv->bcnc = g_object_ref (bcnc);
+	mgr->priv->tcnc = g_object_ref (tcnc);
 	mgr->priv->flat = flat;
 	if (!flat) {
 		if (classname)
@@ -181,7 +182,7 @@ mgr_ldap_classes_update_children_nonflat (MgrLdapClasses *mgr, GdaTreeNode *node
 					    GError **error)
 {
 	gchar *real_class = NULL;
-	if (!mgr->priv->bcnc) {
+	if (!mgr->priv->tcnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     "%s", _("No LDAP connection specified"));
 		if (out_error)
@@ -207,14 +208,14 @@ mgr_ldap_classes_update_children_nonflat (MgrLdapClasses *mgr, GdaTreeNode *node
 	gboolean list_to_free = FALSE;
 	if (real_class) {
 		GdaLdapClass *lcl;
-		lcl = browser_connection_get_class_info (mgr->priv->bcnc, real_class);
+		lcl = t_connection_get_class_info (mgr->priv->tcnc, real_class);
 		if (!lcl)
 			goto onerror;
 		classes_list = (GSList*) lcl->children;
 	}
 	else {
 		/* sort by kind */
-		classes_list = g_slist_copy ((GSList*) browser_connection_get_top_classes (mgr->priv->bcnc));
+		classes_list = g_slist_copy ((GSList*) t_connection_get_top_classes (mgr->priv->tcnc));
 		classes_list = g_slist_sort (classes_list, (GCompareFunc) class_sort_func);
 		list_to_free = TRUE;
 	}
@@ -237,7 +238,7 @@ mgr_ldap_classes_update_children_nonflat (MgrLdapClasses *mgr, GdaTreeNode *node
 		gda_value_free (value);
 
 		/* icon */
-		pixbuf = browser_get_pixbuf_for_ldap_class (sub->kind);
+		pixbuf = ui_connection_ldap_icon_for_class_kind (sub->kind);
 		value = gda_value_new (G_TYPE_OBJECT);
 		g_value_set_object (value, pixbuf);
 		gda_tree_node_set_node_attribute (snode, "icon", value, NULL);
@@ -269,7 +270,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 					 gboolean *out_error,
 					 GError **error)
 {
-	if (!mgr->priv->bcnc) {
+	if (!mgr->priv->tcnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     "%s", _("No LDAP connection specified"));
 		if (out_error)
@@ -279,7 +280,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 
 	const GSList *top_classes_list;
 	GSList *list = NULL, *classes_list = NULL;
-	top_classes_list = browser_connection_get_top_classes (mgr->priv->bcnc);
+	top_classes_list = t_connection_get_top_classes (mgr->priv->tcnc);
 	for (list = (GSList*) top_classes_list; list; list = list->next) {
 		GdaLdapClass *lcl;
 		lcl = (GdaLdapClass*) list->data;
@@ -300,7 +301,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 		if (kind != sub->kind) {
 			/* add extra node as separator */
 			const gchar *tmp;
-			tmp = browser_get_kind_for_ldap_class (sub->kind);
+			tmp = ui_connection_ldap_class_kind_to_string (sub->kind);
 			snode = gda_tree_manager_create_node ((GdaTreeManager*) mgr, node, tmp);
 			list = g_slist_prepend (list, snode);
 			kind = sub->kind;
@@ -311,7 +312,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 			gda_value_free (value);
 
 			/* icon */
-			pixbuf = browser_get_pixbuf_for_ldap_class (sub->kind);
+			pixbuf = ui_connection_ldap_icon_for_class_kind (sub->kind);
 			value = gda_value_new (G_TYPE_OBJECT);
 			g_value_set_object (value, pixbuf);
 			gda_tree_node_set_node_attribute (snode, "icon", value, NULL);
@@ -325,7 +326,7 @@ mgr_ldap_classes_update_children_flat (MgrLdapClasses *mgr, GdaTreeNode *node,
 		gda_value_free (value);
 		
 		/* icon */
-		pixbuf = browser_get_pixbuf_for_ldap_class (sub->kind);
+		pixbuf = ui_connection_ldap_icon_for_class_kind (sub->kind);
 		value = gda_value_new (G_TYPE_OBJECT);
 		g_value_set_object (value, pixbuf);
 		gda_tree_node_set_node_attribute (snode, "icon", value, NULL);

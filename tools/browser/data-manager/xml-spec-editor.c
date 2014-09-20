@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -23,9 +23,9 @@
 #include "xml-spec-editor.h"
 #include "data-source.h"
 #include <libgda/libgda.h>
-#include "../support.h"
-#include "../../tool-utils.h"
+#include "../ui-support.h"
 #include <libgda/gda-debug-macros.h>
+#include <common/t-errors.h>
 
 #ifdef HAVE_GTKSOURCEVIEW
 #ifdef GTK_DISABLE_SINGLE_INCLUDES
@@ -170,7 +170,7 @@ signal_editor_changed (XmlSpecEditor *sped)
 
 	if (!doc) {
 		TO_IMPLEMENT;
-		g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (&lerror, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Error parsing XML specifications"));
 		goto out;
 	}
@@ -184,19 +184,19 @@ signal_editor_changed (XmlSpecEditor *sped)
 	}
 
 	if (strcmp ((gchar*) node->name, "data")) {
-		g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (&lerror, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     _("Expecting <%s> root node"), "data");
 		xmlFreeDoc (doc);
 		goto out;
 	}
 
-	BrowserConnection *bcnc;
-	bcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
+	TConnection *tcnc;
+	tcnc = data_source_manager_get_browser_cnc (sped->priv->mgr);
 	for (node = node->children; node; node = node->next) {
 		if (!strcmp ((gchar*) node->name, "table") ||
 		    !strcmp ((gchar*) node->name, "query")) {
 			DataSource *source;
-			source = data_source_new_from_xml_node (bcnc, node, &lerror);
+			source = data_source_new_from_xml_node (tcnc, node, &lerror);
 			if (!source) {
 				if (newlist) {
 					g_slist_foreach (newlist, (GFunc) g_object_unref, NULL);

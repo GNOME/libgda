@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #define __CONNECTION_BINDING_PROPERTIES_H_
 
 #include <gtk/gtk.h>
-#include "browser-virtual-connection.h"
+#include <common/t-virtual-connection.h>
 #include "decl.h"
 
 G_BEGIN_DECLS
@@ -49,11 +49,11 @@ struct _ConnectionBindingPropertiesClass
 };
 
 GType           connection_binding_properties_get_type               (void) G_GNUC_CONST;
-GtkWidget      *connection_binding_properties_new_create             (BrowserConnection *bcnc);
+GtkWidget      *connection_binding_properties_new_create             (TConnection *tcnc);
 
-GtkWidget      *connection_binding_properties_new_edit               (const BrowserVirtualConnectionSpecs *specs);
+GtkWidget      *connection_binding_properties_new_edit               (const TVirtualConnectionSpecs *specs);
 
-const BrowserVirtualConnectionSpecs *connection_binding_properties_get_specs (ConnectionBindingProperties *prop);
+const TVirtualConnectionSpecs *connection_binding_properties_get_specs (ConnectionBindingProperties *prop);
 
 G_END_DECLS
 

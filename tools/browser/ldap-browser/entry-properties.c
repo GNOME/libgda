@@ -24,10 +24,13 @@
 #include "marshal.h"
 #include <time.h>
 #include <libgda-ui/libgda-ui.h>
+#include "../ui-support.h"
 #include "../text-search.h"
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 struct _EntryPropertiesPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GtkTextView *view;
 	GtkTextBuffer *text;
@@ -104,8 +107,8 @@ entry_properties_dispose (GObject *object)
 
 	/* free memory */
 	if (eprop->priv) {
-		if (eprop->priv->bcnc) {
-			g_object_unref (eprop->priv->bcnc);
+		if (eprop->priv->tcnc) {
+			g_object_unref (eprop->priv->tcnc);
 		}
 
 		g_free (eprop->priv);
@@ -152,13 +155,13 @@ static void show_search_bar (EntryProperties *eprop);
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-entry_properties_new (BrowserConnection *bcnc)
+entry_properties_new (TConnection *tcnc)
 {
 	EntryProperties *eprop;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	eprop = ENTRY_PROPERTIES (g_object_new (ENTRY_PROPERTIES_TYPE, NULL));
-	eprop->priv->bcnc = g_object_ref (bcnc);
+	eprop->priv->tcnc = g_object_ref (tcnc);
 	
 	GtkWidget *sw;
         sw = gtk_scrolled_window_new (NULL, NULL);
@@ -239,7 +242,7 @@ data_save_cb (GtkWidget *mitem, EntryProperties *eprop)
 			bin = gda_value_get_binary (binvalue);
 		if (!bin || !g_file_set_contents (filename, (gchar*) bin->data,
 						  bin->binary_length, &lerror)) {
-			browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (eprop)),
+			ui_show_error ((GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (eprop)),
 					    _("Could not save data: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
@@ -747,7 +750,7 @@ entry_info_fetched_done (EntryProperties *eprop, GdaLdapEntry *entry)
 {
 	GtkTextBuffer *tbuffer;
 	GtkTextIter start, end;
-	BrowserConnection *bcnc = eprop->priv->bcnc;
+	TConnection *tcnc = eprop->priv->tcnc;
 	
 	tbuffer = eprop->priv->text;
 	gtk_text_buffer_get_start_iter (tbuffer, &start);
@@ -771,7 +774,7 @@ entry_info_fetched_done (EntryProperties *eprop, GdaLdapEntry *entry)
 	/* other attributes */
 	const gchar *basedn;
 	GdaDataHandler *ts_dh = NULL;
-	basedn = browser_connection_ldap_get_base_dn (bcnc);
+	basedn = t_connection_ldap_get_base_dn (tcnc);
 
 	for (i = 0; i < entry->nb_attributes; i++) {
 		GdaLdapAttribute *attr;
@@ -949,11 +952,11 @@ entry_properties_set_dn (EntryProperties *eprop, const gchar *dn)
 
 	if (dn && *dn) {
 		GdaLdapEntry *entry;
-		entry = browser_connection_ldap_describe_entry (eprop->priv->bcnc, dn, NULL);
+		entry = t_connection_ldap_describe_entry (eprop->priv->tcnc, dn, NULL);
 		if (entry)
 			entry_info_fetched_done (eprop, entry);
 		else 
-			browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
+			ui_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eprop)),
 					      "%s", _("Could not get information about LDAP entry"));
 	}
 }

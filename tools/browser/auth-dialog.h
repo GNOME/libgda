@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 
 #include <libgda-ui/libgda-ui.h>
 #include <gtk/gtk.h>
+#include <common/t-connection.h>
 
 G_BEGIN_DECLS
 
@@ -56,19 +57,11 @@ struct _AuthDialogClass
 	GtkDialogClass          parent_class;
 };
 
-typedef struct {
-	gchar         *cnc_string;
-	GdaConnection *cnc;
-	GError        *cnc_open_error;
-} AuthDialogConnection;
-
 GType               auth_dialog_get_type          (void) G_GNUC_CONST;
 AuthDialog         *auth_dialog_new               (GtkWindow *parent);
 gboolean            auth_dialog_add_cnc_string    (AuthDialog *dialog, const gchar *cnc_string, GError **error);
 
 gboolean            auth_dialog_run               (AuthDialog *dialog);
-
-const GSList       *auth_dialog_get_connections   (AuthDialog *dialog);
 
 G_END_DECLS
 

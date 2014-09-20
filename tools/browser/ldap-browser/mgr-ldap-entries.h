@@ -19,7 +19,7 @@
 #ifndef __MGR_LDAP_ENTRIES_H__
 #define __MGR_LDAP_ENTRIES_H__
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include <libgda/gda-tree-manager.h>
 
 G_BEGIN_DECLS
@@ -45,7 +45,7 @@ struct _MgrLdapEntriesClass {
 };
 
 GType           mgr_ldap_entries_get_type  (void) G_GNUC_CONST;
-GdaTreeManager* mgr_ldap_entries_new       (BrowserConnection *bcnc, const gchar *dn);
+GdaTreeManager* mgr_ldap_entries_new       (TConnection *tcnc, const gchar *dn);
 
 G_END_DECLS
 

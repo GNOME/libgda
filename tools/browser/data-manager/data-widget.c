@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,11 +21,10 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "data-widget.h"
-#include "../browser-connection.h"
-#include "../browser-spinner.h"
-#include "../common/ui-formgrid.h"
+#include "common/t-connection.h"
+#include "../ui-formgrid.h"
 #include "../browser-window.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "data-source-editor.h"
 #include "analyser.h"
 
@@ -44,7 +43,7 @@ typedef struct {
 	gint edit_widget_page;
 	gint edit_widget_previous_page;
 
-	BrowserSpinner *spinner;
+	GtkWidget *spinner;
 	guint spinner_show_timer_id;
 	GtkWidget *data_widget;
 	GtkWidget *error_widget;
@@ -236,7 +235,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 	gtk_box_pack_start (GTK_BOX (header), label, TRUE, TRUE, 0);
 
-	image = gtk_image_new_from_pixbuf (browser_get_pixbuf_icon (BROWSER_ICON_MENU_INDICATOR));
+	image = gtk_image_new_from_pixbuf (ui_get_pixbuf_icon (UI_ICON_MENU_INDICATOR));
 	button = gtk_button_new ();
 	gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
 	gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
@@ -255,10 +254,9 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);
 	part->nb = GTK_NOTEBOOK (nb);
 
-	part->spinner = BROWSER_SPINNER (browser_spinner_new ());
-	browser_spinner_set_size ((BrowserSpinner*) part->spinner, GTK_ICON_SIZE_LARGE_TOOLBAR);
+	part->spinner = gtk_spinner_new ();
 	page = gtk_alignment_new (0.5, 0.5, 0., 0.);
-	gtk_container_add (GTK_CONTAINER (page), (GtkWidget*) part->spinner);
+	gtk_container_add (GTK_CONTAINER (page), part->spinner);
 	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, NULL);
 	part->data_widget = NULL;
 
@@ -625,7 +623,7 @@ static gboolean
 source_exec_started_cb_timeout (DataPart *part)
 {
 	gtk_notebook_set_current_page (part->nb, 0);
-	browser_spinner_start (part->spinner);
+	gtk_spinner_start (GTK_SPINNER (part->spinner));
 	part->spinner_show_timer_id = 0;
 	return FALSE; /* remove timer */
 }
@@ -700,7 +698,7 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 		part->spinner_show_timer_id = 0;
 	}
 	else
-		browser_spinner_stop (part->spinner);
+		gtk_spinner_stop (GTK_SPINNER (part->spinner));
 	
 #ifdef GDA_DEBUG_NO
 	g_print ("==== Execution of source [%s] finished\n", data_source_get_title (part->source));
@@ -712,10 +710,10 @@ source_exec_finished_cb (G_GNUC_UNUSED DataSource *source, GError *error, DataPa
 	
 	if (! part->data_widget) {
 		GtkWidget *cwid, *wid;
-		BrowserConnection *bcnc;
-		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) part->dwid));
+		TConnection *tcnc;
+		tcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) part->dwid));
 		cwid = (GtkWidget*) data_source_create_grid (part->source);
-		ui_formgrid_handle_user_prefs (UI_FORMGRID (cwid), bcnc,
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (cwid), tcnc,
 					       data_source_get_statement (part->source));
 		g_signal_connect (cwid, "data-set-changed",
 				  G_CALLBACK (formgrid_data_set_changed_cb), part);

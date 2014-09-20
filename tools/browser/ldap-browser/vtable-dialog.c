@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,10 +21,12 @@
 #include <gtk/gtk.h>
 #include "vtable-dialog.h"
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #define SPACING 3
 
 struct _VtableDialogPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	GtkWidget *tname_entry;
 	GtkWidget *tname_replace;
 };
@@ -63,8 +65,8 @@ vtable_dialog_dispose (GObject *object)
 
 	/* free memory */
 	if (dlg->priv) {
-		if (dlg->priv->bcnc)
-			g_object_unref (dlg->priv->bcnc);
+		if (dlg->priv->tcnc)
+			g_object_unref (dlg->priv->tcnc);
 		g_free (dlg->priv);
 		dlg->priv = NULL;
 	}
@@ -101,13 +103,13 @@ vtable_dialog_get_type (void)
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-vtable_dialog_new (GtkWindow *parent, BrowserConnection *bcnc)
+vtable_dialog_new (GtkWindow *parent, TConnection *tcnc)
 {
 	VtableDialog *dlg;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	dlg = VTABLE_DIALOG (g_object_new (VTABLE_DIALOG_TYPE, NULL));
-	dlg->priv->bcnc = g_object_ref (bcnc);
+	dlg->priv->tcnc = g_object_ref (tcnc);
 
 	if (parent)
 		gtk_window_set_transient_for (GTK_WINDOW (dlg), parent);

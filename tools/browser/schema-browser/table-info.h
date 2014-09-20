@@ -21,7 +21,7 @@
 #define __TABLE_INFO_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -46,11 +46,11 @@ struct _TableInfoClass {
 
 GType                    table_info_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *table_info_new      (BrowserConnection *bcnc,
+GtkWidget               *table_info_new      (TConnection *tcnc,
 					      const gchar *schema, const gchar *table);
 const gchar             *table_info_get_table_schema (TableInfo *table_info);
 const gchar             *table_info_get_table_name (TableInfo *table_info);
-BrowserConnection       *table_info_get_connection (TableInfo *table_info);
+TConnection       *table_info_get_connection (TableInfo *table_info);
 
 G_END_DECLS
 

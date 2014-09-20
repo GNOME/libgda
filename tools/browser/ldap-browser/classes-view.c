@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,16 +21,15 @@
 #include <string.h>
 #include "classes-view.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
-#include "../browser-stock-icons.h"
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-classes.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda/gda-debug-macros.h>
 
 struct _ClassesViewPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GdaTree           *classes_tree;
 	GdauiTreeStore    *classes_store;
@@ -73,8 +72,8 @@ classes_view_dispose (GObject *object)
 
 	/* free memory */
 	if (eview->priv) {
-		if (eview->priv->bcnc)
-			g_object_unref (eview->priv->bcnc);
+		if (eview->priv->tcnc)
+			g_object_unref (eview->priv->tcnc);
 		if (eview->priv->classes_tree)
 			g_object_unref (eview->priv->classes_tree);
 
@@ -198,14 +197,14 @@ text_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRender
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-classes_view_new (BrowserConnection *bcnc, const gchar *classname)
+classes_view_new (TConnection *tcnc, const gchar *classname)
 {
 	ClassesView *eview;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	eview = CLASSES_VIEW (g_object_new (CLASSES_VIEW_TYPE, NULL));
-	eview->priv->bcnc = g_object_ref ((GObject*) bcnc);
+	eview->priv->tcnc = g_object_ref ((GObject*) tcnc);
 	g_signal_connect (eview, "drag-data-get",
 			  G_CALLBACK (source_drag_data_get_cb), eview);
 
@@ -214,7 +213,7 @@ classes_view_new (BrowserConnection *bcnc, const gchar *classname)
 	GtkCellRenderer *renderer;
         GtkTreeViewColumn *column;
 	eview->priv->classes_tree = gda_tree_new ();
-	mgr = mgr_ldap_classes_new (eview->priv->bcnc, FALSE, NULL);
+	mgr = mgr_ldap_classes_new (eview->priv->tcnc, FALSE, NULL);
 	gda_tree_add_manager (eview->priv->classes_tree, mgr);
 	gda_tree_manager_add_manager (mgr, mgr);
 	gda_tree_update_all (eview->priv->classes_tree, NULL);

@@ -20,7 +20,7 @@
 #ifndef __CLASS_PROPERTIES_H__
 #define __CLASS_PROPERTIES_H__
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -48,7 +48,7 @@ struct _ClassPropertiesClass {
 
 GType                    class_properties_get_type  (void) G_GNUC_CONST;
 
-GtkWidget               *class_properties_new       (BrowserConnection *bcnc);
+GtkWidget               *class_properties_new       (TConnection *tcnc);
 void                     class_properties_set_class (ClassProperties *eprop, const gchar *classname);
 
 G_END_DECLS

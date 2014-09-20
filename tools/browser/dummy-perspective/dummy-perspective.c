@@ -22,6 +22,8 @@
 #include <glib/gi18n-lib.h>
 #include "dummy-perspective.h"
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 /* 
  * Main static functions 
  */

@@ -21,7 +21,7 @@
 #define __UI_SPEC_EDITOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include "data-source-manager.h"
 
 G_BEGIN_DECLS

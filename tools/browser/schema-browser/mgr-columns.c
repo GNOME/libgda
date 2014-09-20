@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include "mgr-columns.h"
-#include "support.h"
+#include "../ui-support.h"
 
 struct _MgrColumnsPriv {
-	BrowserConnection  *bcnc;
+	TConnection  *tcnc;
 	gchar *schema;
 	gchar *table_name;
 };
@@ -73,7 +73,7 @@ mgr_columns_class_init (MgrColumnsClass *klass)
 
 	g_object_class_install_property (object_class, PROP_BROWSER_CNC,
                                          g_param_spec_object ("browser-connection", NULL, "Connection to use",
-                                                              BROWSER_TYPE_CONNECTION,
+                                                              T_TYPE_CONNECTION,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	object_class->dispose = mgr_columns_dispose;
 }
@@ -90,8 +90,8 @@ mgr_columns_dispose (GObject *object)
 	MgrColumns *mgr = (MgrColumns *) object;
 
 	if (mgr->priv) {
-		if (mgr->priv->bcnc)
-			g_object_unref (mgr->priv->bcnc);
+		if (mgr->priv->tcnc)
+			g_object_unref (mgr->priv->tcnc);
 		g_free (mgr->priv->schema);
 		g_free (mgr->priv->table_name);
 
@@ -157,9 +157,9 @@ mgr_columns_set_property (GObject *object,
         if (mgr->priv) {
                 switch (param_id) {
 		case PROP_BROWSER_CNC:
-			mgr->priv->bcnc = (BrowserConnection*) g_value_get_object (value);
-			if (mgr->priv->bcnc)
-				g_object_ref (mgr->priv->bcnc);
+			mgr->priv->tcnc = (TConnection*) g_value_get_object (value);
+			if (mgr->priv->tcnc)
+				g_object_ref (mgr->priv->tcnc);
 			
 			break;
 		default:
@@ -181,7 +181,7 @@ mgr_columns_get_property (GObject *object,
         if (mgr->priv) {
                 switch (param_id) {
 		case PROP_BROWSER_CNC:
-			g_value_set_object (value, mgr->priv->bcnc);
+			g_value_set_object (value, mgr->priv->tcnc);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -192,7 +192,7 @@ mgr_columns_get_property (GObject *object,
 
 /**
  * mgr_columns_new
- * @bcnc: a #BrowserConnection object
+ * @tcnc: a #TConnection object
  * @schema: the schema the table is in
  * @name: the table's name
  *
@@ -202,15 +202,15 @@ mgr_columns_get_property (GObject *object,
  * Returns: a new #GdaTreeManager object
  */
 GdaTreeManager*
-mgr_columns_new (BrowserConnection *bcnc, const gchar *schema, const gchar *table)
+mgr_columns_new (TConnection *tcnc, const gchar *schema, const gchar *table)
 {
 	MgrColumns *mgr;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 	g_return_val_if_fail (schema, NULL);
 	g_return_val_if_fail (table, NULL);
 
 	mgr = (MgrColumns*) g_object_new (MGR_COLUMNS_TYPE,
-					  "browser-connection", bcnc, NULL);
+					  "browser-connection", tcnc, NULL);
 	mgr->priv->schema = g_strdup (schema);
 	mgr->priv->table_name = g_strdup (table);
 
@@ -272,7 +272,7 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 		ehash = hash_for_existing_nodes (children_nodes);
 
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (mgr->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (mgr->priv->tcnc);
 	if (!mstruct) {
 		g_set_error (error, MGR_COLUMNS_ERROR, MGR_COLUMNS_NO_META_STRUCT,
                              "%s", _("Not ready"));
@@ -353,21 +353,21 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 		gda_value_free (av);
 		
 		/* icon */
-		BrowserIconType type = BROWSER_ICON_COLUMN;
+		UiIconType type = UI_ICON_COLUMN;
 		GdkPixbuf *pixbuf;
 		gboolean is_fk = column_is_fk_part (dbo, index);
 		if (col->pkey)
-			type = BROWSER_ICON_COLUMN_PK;
+			type = UI_ICON_COLUMN_PK;
 		else if (!col->nullok) {
 			if (is_fk)
-				type = BROWSER_ICON_COLUMN_FK_NN;
+				type = UI_ICON_COLUMN_FK_NN;
 			else
-				type = BROWSER_ICON_COLUMN_NN;
+				type = UI_ICON_COLUMN_NN;
 		}
 		else if (is_fk)
-			type = BROWSER_ICON_COLUMN_FK;
+			type = UI_ICON_COLUMN_FK;
 		
-		pixbuf = browser_get_pixbuf_icon (type);
+		pixbuf = ui_get_pixbuf_icon (type);
 		av = gda_value_new (G_TYPE_OBJECT);
 		g_value_set_object (av, pixbuf);
 		gda_tree_node_set_node_attribute (snode, "icon", av, NULL);

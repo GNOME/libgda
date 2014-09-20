@@ -1,10 +1,12 @@
 noinst_LTLIBRARIES = libperspective.la
 
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/tools \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
+	-I$(top_srcdir)/libgda/sqlite \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	$(GTK_CFLAGS) \
@@ -37,7 +39,6 @@ $(OBJECTS): marshal.c marshal.h
 EXTRA_DIST= \
 	$(langspec_DATA) \
 	marshal.list
-
 
 CLEANFILES = \
 	marshal.h \

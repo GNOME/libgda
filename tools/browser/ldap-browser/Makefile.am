@@ -1,6 +1,7 @@
 noinst_LTLIBRARIES = libperspective.la
 
 AM_CPPFLAGS = \
+	-I$(top_srcdir)/tools \
 	-I$(top_srcdir)/tools/browser \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \

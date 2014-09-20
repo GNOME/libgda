@@ -21,7 +21,7 @@
 #define __LDAP_ENTRIES_PAGE_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -46,7 +46,7 @@ struct _LdapEntriesPageClass {
 
 GType        ldap_entries_page_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *ldap_entries_page_new            (BrowserConnection *bcnc, const gchar *dn);
+GtkWidget   *ldap_entries_page_new            (TConnection *tcnc, const gchar *dn);
 const gchar *ldap_entries_page_get_current_dn (LdapEntriesPage *ldap_entries_page);
 void         ldap_entries_page_set_current_dn (LdapEntriesPage *ldap_entries_page, const gchar *dn);
 

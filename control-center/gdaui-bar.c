@@ -399,6 +399,19 @@ gdaui_bar_set_icon_from_resource (GdauiBar *bar, const gchar *resource_name)
 }
 
 /**
+ * gdaui_bar_set_icon_from_pixbuf:
+ */
+void
+gdaui_bar_set_icon_from_pixbuf (GdauiBar *bar, GdkPixbuf *pixbuf)
+{
+	g_return_if_fail (GDAUI_IS_BAR (bar));
+	g_return_if_fail (!pixbuf || GDK_IS_PIXBUF (pixbuf));
+
+	gtk_image_set_from_pixbuf (GTK_IMAGE (bar->priv->icon), pixbuf);
+	gdaui_bar_set_show_icon (bar, TRUE);
+}
+
+/**
  * gdaui_bar_set_show_icon
  * @bar: a #GdauiBar widget.
  * @show: whether to show the icon or not.
@@ -481,4 +494,39 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 
 	gtk_widget_show_all (vb);
 	return entry;
+}
+
+/**
+ * gdaui_bar_add_button_from_icon_name:
+ * @bar: a #GdauiBar
+ * @icon_name: an icon name
+ *
+ * Returns: (transfer none): the created #GtkButton
+ */
+GtkWidget *
+gdaui_bar_add_button_from_icon_name (GdauiBar *bar, const gchar *icon_name)
+{
+	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
+
+	GtkWidget *vb, *button;
+
+	vb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (vb), GTK_BUTTONBOX_CENTER);
+	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), vb, FALSE, FALSE, 0);
+
+	button = gtk_button_new_from_icon_name (icon_name, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_box_pack_start (GTK_BOX (vb), button, FALSE, FALSE, 0);
+
+	/* CSS theming */
+	GtkStyleContext *context;
+	context = gtk_widget_get_style_context (vb);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_button");
+
+	context = gtk_widget_get_style_context (button);
+	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_class (context, "gdauibar_button");
+
+	gtk_widget_show_all (vb);
+	return button;
 }

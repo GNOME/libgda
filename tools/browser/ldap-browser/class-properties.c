@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,9 +23,10 @@
 #include "class-properties.h"
 #include "marshal.h"
 #include "../text-search.h"
+#include "../ui-support.h"
 
 struct _ClassPropertiesPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GtkTextView *view;
 	GtkTextBuffer *text;
@@ -88,8 +89,8 @@ class_properties_dispose (GObject *object)
 
 	/* free memory */
 	if (cprop->priv) {
-		if (cprop->priv->bcnc) {
-			g_object_unref (cprop->priv->bcnc);
+		if (cprop->priv->tcnc) {
+			g_object_unref (cprop->priv->tcnc);
 		}
 		g_free (cprop->priv);
 		cprop->priv = NULL;
@@ -134,13 +135,13 @@ static void show_search_bar (ClassProperties *cprop);
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-class_properties_new (BrowserConnection *bcnc)
+class_properties_new (TConnection *tcnc)
 {
 	ClassProperties *cprop;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	cprop = CLASS_PROPERTIES (g_object_new (CLASS_PROPERTIES_TYPE, NULL));
-	cprop->priv->bcnc = g_object_ref (bcnc);
+	cprop->priv->tcnc = g_object_ref (tcnc);
 	
 	GtkWidget *sw;
         sw = gtk_scrolled_window_new (NULL, NULL);
@@ -401,9 +402,9 @@ class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 	if (!classname || !*classname)
 		return;
 
-	lcl = browser_connection_get_class_info (cprop->priv->bcnc, classname);
+	lcl = t_connection_get_class_info (cprop->priv->tcnc, classname);
 	if (!lcl) {
-		browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) cprop)),
+		ui_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) cprop)),
 				      "%s", _("Could not get information about LDAP class"));
 		return;
 	}
@@ -439,9 +440,9 @@ class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 						  "section", NULL);
 	gtk_text_buffer_insert (tbuffer, &current, "\n", 1);
 
-	gtk_text_buffer_insert_pixbuf (tbuffer, &current, browser_get_pixbuf_for_ldap_class (lcl->kind)); 
+	gtk_text_buffer_insert_pixbuf (tbuffer, &current, ui_connection_ldap_icon_for_class_kind (lcl->kind)); 
 
-	kind = browser_get_kind_for_ldap_class (lcl->kind);
+	kind = ui_connection_ldap_class_kind_to_string (lcl->kind);
 	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1, "starter", NULL);
 	gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, kind, -1,
 						  "data", NULL);
@@ -516,7 +517,7 @@ class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 			GtkTextTag *tag;
 			olcl = (GdaLdapClass*) list->data;
 			gtk_text_buffer_insert_pixbuf (tbuffer, &current,
-						       browser_get_pixbuf_for_ldap_class (olcl->kind)); 
+						       ui_connection_ldap_icon_for_class_kind (olcl->kind)); 
 			gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1, "starter", NULL);
 			tag = gtk_text_buffer_create_tag (tbuffer, NULL,
 							  "foreground", "blue",
@@ -562,7 +563,7 @@ class_properties_set_class (ClassProperties *cprop, const gchar *classname)
 			olcl = (GdaLdapClass*) list->data;
 
 			gtk_text_buffer_insert_pixbuf (tbuffer, &current,
-						       browser_get_pixbuf_for_ldap_class (olcl->kind)); 
+						       ui_connection_ldap_icon_for_class_kind (olcl->kind)); 
 			gtk_text_buffer_insert_with_tags_by_name (tbuffer, &current, " ", -1, "starter", NULL);
 			tag = gtk_text_buffer_create_tag (tbuffer, NULL,
 							  "foreground", "blue",

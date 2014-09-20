@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,8 @@
 
 #include <gtk/gtk.h>
 #include "decl.h"
-#include "browser-connection.h"
+#include <common/t-connection.h>
+#include "browser-perspective.h"
 
 G_BEGIN_DECLS
 
@@ -31,20 +32,21 @@ G_BEGIN_DECLS
 #define BROWSER_WINDOW_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, browser_window_get_type (), BrowserWindowClass)
 #define BROWSER_IS_WINDOW(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, browser_window_get_type ())
 
+typedef struct _BrowserWindow BrowserWindow;
 typedef struct _BrowserWindowClass BrowserWindowClass;
 typedef struct _BrowserWindowPrivate BrowserWindowPrivate;
 
 /* struct for the object's data */
 struct _BrowserWindow
 {
-	GtkWindow             object;
+	GtkApplicationWindow  object;
 	BrowserWindowPrivate *priv;
 };
 
 /* struct for the object's class */
 struct _BrowserWindowClass
 {
-	GtkWindowClass        parent_class;
+	GtkApplicationWindowClass parent_class;
 	
 	/* signals */
 	void                (*fullscreen_changed) (BrowserWindow *bwin, gboolean fullscreen);
@@ -62,8 +64,8 @@ struct _BrowserWindowClass
  */
 
 GType               browser_window_get_type               (void) G_GNUC_CONST;
-BrowserWindow      *browser_window_new                    (BrowserConnection *bcnc, BrowserPerspectiveFactory *factory);
-BrowserConnection  *browser_window_get_connection         (BrowserWindow *bwin);
+BrowserWindow      *browser_window_new                    (TConnection *tcnc, BrowserPerspectiveFactory *factory);
+TConnection        *browser_window_get_connection         (BrowserWindow *bwin);
 
 guint               browser_window_push_status            (BrowserWindow *bwin, const gchar *context,
 							   const gchar *text, gboolean auto_clear);

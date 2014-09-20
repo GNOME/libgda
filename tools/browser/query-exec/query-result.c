@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -24,8 +24,10 @@
 #include "../browser-window.h"
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
-#include "../common/ui-formgrid.h"
+#include "../ui-formgrid.h"
 #include "marshal.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _QueryResultPrivate {
 	QueryEditor *history;
@@ -372,19 +374,19 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 	grid = ui_formgrid_new (model, TRUE, GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
 	ui_formgrid_set_sample_size (UI_FORMGRID (grid), 300);
 	if (sql) {
-		BrowserConnection *bcnc;
-		bcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) qres));
-		if (!bcnc)
+		TConnection *tcnc;
+		tcnc = browser_window_get_connection ((BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) qres));
+		if (!tcnc)
 			goto out;
 
 		GdaSqlParser *parser;
 		GdaStatement *stmt;
-		parser = browser_connection_create_parser (bcnc);
+		parser = t_connection_create_parser (tcnc);
 		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 		g_object_unref (parser);
 		if (!stmt)
 			goto out;
-		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), bcnc, stmt);
+		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), tcnc, stmt);
 		g_object_unref (stmt);
 
 		GtkUIManager *uimanager;

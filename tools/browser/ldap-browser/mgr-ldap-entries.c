@@ -21,9 +21,10 @@
 #include <libgda/libgda.h>
 #include "mgr-ldap-entries.h"
 #include <libgda/gda-tree-node.h>
+#include "../ui-support.h"
 
 struct _MgrLdapEntriesPriv {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gchar             *dn;
 };
 
@@ -71,8 +72,8 @@ mgr_ldap_entries_dispose (GObject *object)
 	g_return_if_fail (MGR_IS_LDAP_ENTRIES (mgr));
 
 	if (mgr->priv) {
-		if (mgr->priv->bcnc)
-			g_object_unref (mgr->priv->bcnc);
+		if (mgr->priv->tcnc)
+			g_object_unref (mgr->priv->tcnc);
 		g_free (mgr->priv->dn);
 		g_free (mgr->priv);
 		mgr->priv = NULL;
@@ -117,7 +118,7 @@ mgr_ldap_entries_get_type (void)
 
 /**
  * mgr_ldap_entries_new:
- * @cnc: a #BrowserConnection object
+ * @cnc: a #TConnection object
  * @dn: (allow-none): a schema name or %NULL
  *
  * Creates a new #BrowserTreeManager object which will list the children of the LDAP entry which Distinguished name
@@ -127,14 +128,14 @@ mgr_ldap_entries_get_type (void)
  * Returns: (transfer full): a new #BrowserTreeManager object
  */
 GdaTreeManager*
-mgr_ldap_entries_new (BrowserConnection *bcnc, const gchar *dn)
+mgr_ldap_entries_new (TConnection *tcnc, const gchar *dn)
 {
 	MgrLdapEntries *mgr;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	mgr = (MgrLdapEntries*) g_object_new (MGR_TYPE_LDAP_ENTRIES, NULL);
 
-	mgr->priv->bcnc = g_object_ref (bcnc);
+	mgr->priv->tcnc = g_object_ref (tcnc);
 	if (dn)
 		mgr->priv->dn = g_strdup (dn);
 
@@ -172,7 +173,7 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	MgrLdapEntries *mgr = MGR_LDAP_ENTRIES (manager);
 	gchar *real_dn = NULL;
 
-	g_return_val_if_fail (mgr->priv->bcnc, NULL);
+	g_return_val_if_fail (mgr->priv->tcnc, NULL);
 
 	if (mgr->priv->dn)
 		real_dn = g_strdup (mgr->priv->dn);
@@ -186,7 +187,7 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 	GdaLdapEntry **entries;
 	gchar *attrs[] = {"objectClass", "cn", NULL};
-	entries = browser_connection_ldap_get_entry_children (mgr->priv->bcnc, real_dn, attrs, error);
+	entries = t_connection_ldap_get_entry_children (mgr->priv->tcnc, real_dn, attrs, error);
 	
 	if (entries) {
 		guint i;
@@ -238,7 +239,7 @@ mgr_ldap_entries_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 			/* icon */
 			GdkPixbuf *pixbuf;
 			attr = g_hash_table_lookup (lentry->attributes_hash, "objectClass");
-			pixbuf = browser_connection_ldap_icon_for_class (attr);
+			pixbuf = ui_connection_ldap_icon_for_class (attr);
 
 			dnv = gda_value_new (G_TYPE_OBJECT);
 			g_value_set_object (dnv, pixbuf);

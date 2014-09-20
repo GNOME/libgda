@@ -21,7 +21,7 @@
 #define __RELATIONS_DIAGRAM_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -45,8 +45,8 @@ struct _RelationsDiagramClass {
 };
 
 GType                    relations_diagram_get_type (void) G_GNUC_CONST;
-GtkWidget               *relations_diagram_new (BrowserConnection *bcnc);
-GtkWidget               *relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError **error);
+GtkWidget               *relations_diagram_new (TConnection *tcnc);
+GtkWidget               *relations_diagram_new_with_fav_id (TConnection *tcnc, gint fav_id, GError **error);
 gint                     relations_diagram_get_fav_id (RelationsDiagram *diagram);
 
 G_END_DECLS

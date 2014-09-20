@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include "../browser-window.h"
 #include "../browser-page.h"
 #include "data-favorite-selector.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 /* 
  * Main static functions 
@@ -51,7 +53,7 @@ struct _DataManagerPerspectivePriv {
 	GtkWidget *favorites;
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
-        BrowserConnection *bcnc;
+        TConnection *tcnc;
 };
 
 GType
@@ -129,7 +131,7 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, TFavoritesType fav_type,
                                       const gchar *selection, DataManagerPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
@@ -142,7 +144,7 @@ static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 BrowserPerspective *
 data_manager_perspective_new (BrowserWindow *bwin)
 {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	BrowserPerspective *bpers;
 	DataManagerPerspective *perspective;
 	gboolean fav_supported;
@@ -150,15 +152,15 @@ data_manager_perspective_new (BrowserWindow *bwin)
 	bpers = (BrowserPerspective*) g_object_new (TYPE_DATA_MANAGER_PERSPECTIVE, NULL);
 	perspective = (DataManagerPerspective*) bpers;
 	perspective->priv->bwin = bwin;
-        bcnc = browser_window_get_connection (bwin);
-        perspective->priv->bcnc = g_object_ref (bcnc);
-	fav_supported = browser_connection_get_favorites (bcnc) ? TRUE : FALSE;
+        tcnc = browser_window_get_connection (bwin);
+        perspective->priv->tcnc = g_object_ref (tcnc);
+	fav_supported = t_connection_get_favorites (tcnc) ? TRUE : FALSE;
 
 	/* contents */
         GtkWidget *paned, *nb, *wid;
         paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	if (fav_supported) {
-		wid = data_favorite_selector_new (bcnc);
+		wid = data_favorite_selector_new (tcnc);
 		g_signal_connect (wid, "selection-changed",
 				  G_CALLBACK (fav_selection_changed_cb), bpers);
 		gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
@@ -173,7 +175,7 @@ data_manager_perspective_new (BrowserWindow *bwin)
         gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
 
 	GtkWidget *page, *tlabel, *button;
-	page = data_console_new (bcnc);
+	page = data_console_new (tcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
         g_signal_connect (button, "clicked",
                           G_CALLBACK (close_button_clicked_cb), page);
@@ -210,9 +212,9 @@ add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 
 	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
 	if (fav_id >= 0)
-		page = data_console_new_with_fav_id (perspective->priv->bcnc, fav_id);
+		page = data_console_new_with_fav_id (perspective->priv->tcnc, fav_id);
 	else
-		page = data_console_new (perspective->priv->bcnc);
+		page = data_console_new (perspective->priv->tcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
         g_signal_connect (button, "clicked",
                           G_CALLBACK (close_button_clicked_cb), page);
@@ -231,7 +233,7 @@ add_new_data_console (BrowserPerspective *bpers, gint fav_id)
 }
 
 static void
-fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
+fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, TFavoritesType fav_type,
                           const gchar *selection, DataManagerPerspective *perspective)
 {
 	/* find or create page for this favorite */
@@ -239,7 +241,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id, ToolsFav
 	gint current_page, npages, i;
 	DataConsole *page_to_reuse = NULL;
 
-	if (fav_type != GDA_TOOLS_FAVORITES_DATA_MANAGERS)
+	if (fav_type != T_FAVORITES_DATA_MANAGERS)
 		return;
 
 	/* change current page if possible */
@@ -295,8 +297,8 @@ data_manager_perspective_dispose (GObject *object)
 	perspective = DATA_MANAGER_PERSPECTIVE (object);
 	if (perspective->priv) {
 		browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
-                if (perspective->priv->bcnc)
-                        g_object_unref (perspective->priv->bcnc);
+                if (perspective->priv->tcnc)
+                        g_object_unref (perspective->priv->tcnc);
 
                 g_free (perspective->priv);
                 perspective->priv = NULL;

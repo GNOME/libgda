@@ -52,15 +52,18 @@ struct _GdauiBarClass
 	GtkBoxClass parent_class;
 };
 
-GType        gdaui_bar_get_type              (void) G_GNUC_CONST;
-GtkWidget   *gdaui_bar_new                   (const gchar *text);
-const gchar *gdaui_bar_get_text              (GdauiBar *bar);
-void         gdaui_bar_set_text              (GdauiBar *bar, const gchar *text);
-void         gdaui_bar_set_icon_from_file    (GdauiBar *bar, const gchar *file);
-void         gdaui_bar_set_icon_from_resource(GdauiBar *bar, const gchar *resource_name);
-void         gdaui_bar_set_show_icon         (GdauiBar *bar, gboolean show);
-gboolean     gdaui_bar_get_show_icon         (GdauiBar *bar);
-GtkWidget   *gdaui_bar_add_search_entry      (GdauiBar *bar);
+GType        gdaui_bar_get_type                  (void) G_GNUC_CONST;
+GtkWidget   *gdaui_bar_new                       (const gchar *text);
+const gchar *gdaui_bar_get_text                  (GdauiBar *bar);
+void         gdaui_bar_set_text                  (GdauiBar *bar, const gchar *text);
+void         gdaui_bar_set_icon_from_file        (GdauiBar *bar, const gchar *file);
+void         gdaui_bar_set_icon_from_resource    (GdauiBar *bar, const gchar *resource_name);
+void         gdaui_bar_set_icon_from_pixbuf      (GdauiBar *bar, GdkPixbuf *pixbuf);
+void         gdaui_bar_set_show_icon             (GdauiBar *bar, gboolean show);
+gboolean     gdaui_bar_get_show_icon             (GdauiBar *bar);
+
+GtkWidget   *gdaui_bar_add_search_entry          (GdauiBar *bar);
+GtkWidget   *gdaui_bar_add_button_from_icon_name (GdauiBar *bar, const gchar *icon_name);
 
 G_END_DECLS
 

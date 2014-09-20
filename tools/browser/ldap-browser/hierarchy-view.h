@@ -20,7 +20,7 @@
 #define __HIERARCHY_VIEW_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -45,7 +45,7 @@ struct _HierarchyViewClass {
 
 GType        hierarchy_view_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *hierarchy_view_new            (BrowserConnection *bcnc, const gchar *dn);
+GtkWidget   *hierarchy_view_new            (TConnection *tcnc, const gchar *dn);
 const gchar *hierarchy_view_get_current_dn (HierarchyView *hierarchy_view, const gchar **out_current_cn);
 void         hierarchy_view_set_current_dn (HierarchyView *hierarchy_view, const gchar *dn);
 

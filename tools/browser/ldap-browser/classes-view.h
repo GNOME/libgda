@@ -20,7 +20,7 @@
 #define __CLASSES_VIEW_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -45,7 +45,7 @@ struct _ClassesViewClass {
 
 GType        classes_view_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *classes_view_new            (BrowserConnection *bcnc, const gchar *classname);
+GtkWidget   *classes_view_new            (TConnection *tcnc, const gchar *classname);
 const gchar *classes_view_get_current_class (ClassesView *classes_view);
 void         classes_view_set_current_class (ClassesView *classes_view, const gchar *classname);
 

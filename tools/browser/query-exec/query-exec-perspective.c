@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -24,11 +24,12 @@
 #include "../browser-window.h"
 #include "../browser-page.h"
 #include "query-console-page.h"
-#include "../browser-stock-icons.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "query-favorite-selector.h"
 #include "query-editor.h"
 #include <libgda/gda-debug-macros.h>
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 /* 
  * Main static functions 
@@ -60,7 +61,7 @@ struct _QueryExecPerspectivePrivate {
 	GtkWidget *favorites;
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 };
 
 GType
@@ -137,7 +138,7 @@ query_exec_perspective_init (QueryExecPerspective *perspective)
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
 
-static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, ToolsFavoritesType fav_type,
+static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, TFavoritesType fav_type,
                                       const gchar *selection, QueryExecPerspective *perspective);
 static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 
@@ -149,7 +150,7 @@ static void close_button_clicked_cb (GtkWidget *wid, GtkWidget *page_widget);
 BrowserPerspective *
 query_exec_perspective_new (BrowserWindow *bwin)
 {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	BrowserPerspective *bpers;
 	QueryExecPerspective *perspective;
 	gboolean fav_supported;
@@ -158,15 +159,15 @@ query_exec_perspective_new (BrowserWindow *bwin)
 	perspective = (QueryExecPerspective*) bpers;
 
 	perspective->priv->bwin = bwin;
-	bcnc = browser_window_get_connection (bwin);
-	perspective->priv->bcnc = g_object_ref (bcnc);
-	fav_supported = browser_connection_get_favorites (bcnc) ? TRUE : FALSE;
+	tcnc = browser_window_get_connection (bwin);
+	perspective->priv->tcnc = g_object_ref (tcnc);
+	fav_supported = t_connection_get_favorites (tcnc) ? TRUE : FALSE;
 
 	/* contents */
 	GtkWidget *paned, *nb, *wid;
 	paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	if (fav_supported) {
-		wid = query_favorite_selector_new (bcnc);
+		wid = query_favorite_selector_new (tcnc);
 		g_signal_connect (wid, "selection-changed",
 				  G_CALLBACK (fav_selection_changed_cb), bpers);
 		gtk_paned_pack1 (GTK_PANED (paned), wid, FALSE, TRUE);
@@ -182,7 +183,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 
 	GtkWidget *page, *tlabel, *button;
 
-	page = query_console_page_new (bcnc);
+	page = query_console_page_new (tcnc);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (close_button_clicked_cb), page);
@@ -211,7 +212,7 @@ query_exec_perspective_new (BrowserWindow *bwin)
 
 static void
 fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
-			  G_GNUC_UNUSED ToolsFavoritesType fav_type, const gchar *selection,
+			  G_GNUC_UNUSED TFavoritesType fav_type, const gchar *selection,
 			  QueryExecPerspective *perspective)
 {
 	GtkNotebook *nb;
@@ -252,8 +253,8 @@ query_exec_perspective_dispose (GObject *object)
 	perspective = QUERY_EXEC_PERSPECTIVE (object);
 	if (perspective->priv) {
 		browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
-		if (perspective->priv->bcnc)
-			g_object_unref (perspective->priv->bcnc);
+		if (perspective->priv->tcnc)
+			g_object_unref (perspective->priv->tcnc);
 
 		g_free (perspective->priv);
 		perspective->priv = NULL;
@@ -268,13 +269,13 @@ query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 {
 	GtkWidget *page, *tlabel, *button;
 	QueryExecPerspective *perspective;
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gint i;
 
 	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
-	bcnc = perspective->priv->bcnc;
+	tcnc = perspective->priv->tcnc;
 
-	page = query_console_page_new (bcnc);
+	page = query_console_page_new (tcnc);
 	gtk_widget_show (page);
 	tlabel = browser_page_get_tab_label (BROWSER_PAGE (page), &button);
 	g_signal_connect (button, "clicked",
@@ -316,7 +317,7 @@ static const GtkToggleActionEntry ui_toggle_actions [] =
 
 static GtkActionEntry ui_actions[] = {
         { "QueryExecMenu", NULL, N_("_Query"), NULL, N_("Query"), NULL },
-        { "QueryExecItem1", STOCK_CONSOLE, N_("_New Editor"), "<control>T", N_("Open a new query editor"),
+        { "QueryExecItem1", GTK_STOCK_MISSING_IMAGE, N_("_New Editor"), "<control>T", N_("Open a new query editor"),
           G_CALLBACK (query_exec_add_cb)},
 };
 

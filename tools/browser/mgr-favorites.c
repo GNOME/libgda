@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include "mgr-favorites.h"
-#include "support.h"
+#include "ui-support.h"
 #include <libgda/gda-debug-macros.h>
 
 /* asynchronous (in idle loop) icon resolution */
@@ -39,12 +39,12 @@ icon_resolution_data_free (IconResolutionData *data)
 }
 
 struct _MgrFavoritesPriv {
-	BrowserConnection    *bcnc;
-	ToolsFavoritesType  fav_type;
-	gint                  order_key;
+	TConnection         *tcnc;
+	TFavoritesType       fav_type;
+	gint                 order_key;
 
-	GSList               *icons_resol_list; /* list of IconResolutionData pointers */
-        guint                 icons_resol_timer;
+	GSList              *icons_resol_list; /* list of IconResolutionData pointers */
+        guint                icons_resol_timer;
 };
 
 static void mgr_favorites_class_init (MgrFavoritesClass *klass);
@@ -91,7 +91,7 @@ mgr_favorites_class_init (MgrFavoritesClass *klass)
 
 	g_object_class_install_property (object_class, PROP_BROWSER_CNC,
                                          g_param_spec_object ("browser-connection", NULL, "Connection to use",
-                                                              BROWSER_TYPE_CONNECTION,
+                                                              T_TYPE_CONNECTION,
                                                               G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	object_class->dispose = mgr_favorites_dispose;
 }
@@ -108,8 +108,8 @@ mgr_favorites_dispose (GObject *object)
 	MgrFavorites *mgr = (MgrFavorites *) object;
 
 	if (mgr->priv) {
-		if (mgr->priv->bcnc)
-			g_object_unref (mgr->priv->bcnc);
+		if (mgr->priv->tcnc)
+			g_object_unref (mgr->priv->tcnc);
 
 		if (mgr->priv->icons_resol_timer) {
                         g_source_remove (mgr->priv->icons_resol_timer);
@@ -175,9 +175,9 @@ mgr_favorites_set_property (GObject *object,
         if (mgr->priv) {
                 switch (param_id) {
 		case PROP_BROWSER_CNC:
-			mgr->priv->bcnc = (BrowserConnection*) g_value_get_object (value);
-			if (mgr->priv->bcnc)
-				g_object_ref (mgr->priv->bcnc);
+			mgr->priv->tcnc = (TConnection*) g_value_get_object (value);
+			if (mgr->priv->tcnc)
+				g_object_ref (mgr->priv->tcnc);
 			
 			break;
 		default:
@@ -199,7 +199,7 @@ mgr_favorites_get_property (GObject *object,
         if (mgr->priv) {
                 switch (param_id) {
 		case PROP_BROWSER_CNC:
-			g_value_set_object (value, mgr->priv->bcnc);
+			g_value_set_object (value, mgr->priv->tcnc);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -210,35 +210,35 @@ mgr_favorites_get_property (GObject *object,
 
 /**
  * mgr_favorites_new
- * @bcnc: a #BrowserConnection object
+ * @tcnc: a #TConnection object
  * @type: the type of favorites to handle
- * @order_key: ordering key, see gda_tools_favorites_add()
+ * @order_key: ordering key, see t_favorites_add()
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each favorite of the @type type
  *
  * Returns: a new #GdaTreeManager object
  */
 GdaTreeManager*
-mgr_favorites_new (BrowserConnection *bcnc, ToolsFavoritesType type, gint order_key)
+mgr_favorites_new (TConnection *tcnc, TFavoritesType type, gint order_key)
 {
 	MgrFavorites *mgr;
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	mgr = (MgrFavorites*) g_object_new (MGR_FAVORITES_TYPE,
-					    "browser-connection", bcnc, NULL);
+					    "browser-connection", tcnc, NULL);
 	mgr->priv->fav_type = type;
 	mgr->priv->order_key = order_key;
 	return (GdaTreeManager*) mgr;
 }
 
 static gchar *
-create_summary_for_statement (BrowserConnection *bcnc, const gchar *sql)
+create_summary_for_statement (TConnection *tcnc, const gchar *sql)
 {
 	GdaSqlParser *parser;
 	GString *string;
 	GdaBatch *batch;
 
-	parser = browser_connection_create_parser (bcnc);
+	parser = t_connection_create_parser (tcnc);
 	string = g_string_new ("");
 	
 	batch = gda_sql_parser_parse_string_as_batch (parser, sql, NULL, NULL);
@@ -364,7 +364,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	GHashTable *ehash = NULL;
 	GSList *fav_list;
 	GError *lerror = NULL;
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	if (out_error)
 		*out_error = FALSE;
@@ -372,15 +372,15 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	if (children_nodes)
 		ehash = hash_for_existing_nodes (children_nodes);
 
-	bcnc = mgr->priv->bcnc;
-	fav_list = gda_tools_favorites_list (browser_connection_get_favorites (bcnc),
-					   0, mgr->priv->fav_type,
-					   mgr->priv->order_key, &lerror);
+	tcnc = mgr->priv->tcnc;
+	fav_list = t_favorites_list (t_connection_get_favorites (tcnc),
+				     0, mgr->priv->fav_type,
+				     mgr->priv->order_key, &lerror);
 	if (fav_list) {
 		GSList *list;
 		gint pos;
 		for (list = fav_list, pos = 0; list; list = list->next, pos ++) {
-			ToolsFavoritesAttributes *fav = (ToolsFavoritesAttributes *) list->data;
+			TFavoritesAttributes *fav = (TFavoritesAttributes *) list->data;
 			GdaTreeNode* snode = NULL;
 			GValue *av;
 
@@ -393,7 +393,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				g_object_ref (G_OBJECT (snode));
 			}
 
-			if (fav->type == GDA_TOOLS_FAVORITES_TABLES) {
+			if (fav->type == T_FAVORITES_TABLES) {
 				if (!snode) {
 					GdaQuarkList *ql;
 					const gchar *fname = NULL;
@@ -430,7 +430,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 						
 						/* icon */
 						GdkPixbuf *pixbuf;
-						pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+						pixbuf = ui_get_pixbuf_icon (UI_ICON_TABLE);
 						av = gda_value_new (G_TYPE_OBJECT);
 						g_value_set_object (av, pixbuf);
 						gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
@@ -440,7 +440,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 						gda_quark_list_free (ql);
 				}
 			}
-			else if (fav->type == GDA_TOOLS_FAVORITES_DIAGRAMS) {
+			else if (fav->type == T_FAVORITES_DIAGRAMS) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 									
@@ -458,7 +458,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 					
 					/* icon */
 					GdkPixbuf *pixbuf;
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
+					pixbuf = ui_get_pixbuf_icon (UI_ICON_DIAGRAM);
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
@@ -476,7 +476,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gda_tree_node_set_node_attribute (snode, "markup", av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == GDA_TOOLS_FAVORITES_QUERIES) {
+			else if (fav->type == T_FAVORITES_QUERIES) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 					
@@ -497,28 +497,27 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gboolean is_action = FALSE;
 				GSList *favlist;
 				GdkPixbuf *pixbuf;
-				favlist = gda_tools_favorites_list (browser_connection_get_favorites (bcnc),
-								  0, GDA_TOOLS_FAVORITES_ACTIONS,
-								  -1, NULL);
+				favlist = t_favorites_list (t_connection_get_favorites (tcnc),
+							    0, T_FAVORITES_ACTIONS, -1, NULL);
 				if (favlist) {
 					gchar *tmp;
 					tmp = g_strdup_printf ("QUERY%d", fav->id);
 					GSList *list;
 					for (list = favlist; list; list = list->next) {
-						ToolsFavoritesAttributes *afav;
-						afav = (ToolsFavoritesAttributes*) list->data;
+						TFavoritesAttributes *afav;
+						afav = (TFavoritesAttributes*) list->data;
 						if (!strcmp (afav->contents, tmp)) {
 							is_action = TRUE;
 							break;
 						}
 					}
 					g_free (tmp);
-					gda_tools_favorites_free_list (favlist);
+					t_favorites_free_list (favlist);
 				}
 				if (is_action)
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_ACTION);
+					pixbuf = ui_get_pixbuf_icon (UI_ICON_ACTION);
 				else
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_QUERY);
+					pixbuf = ui_get_pixbuf_icon (UI_ICON_QUERY);
 				av = gda_value_new (G_TYPE_OBJECT);
 				g_value_set_object (av, pixbuf);
 				gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
@@ -526,7 +525,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 
 				/* summary */
 				g_value_take_string ((av = gda_value_new (G_TYPE_STRING)),
-						     create_summary_for_statement (bcnc, fav->contents));
+						     create_summary_for_statement (tcnc, fav->contents));
 				gda_tree_node_set_node_attribute (snode, "summary", av, NULL);
 				gda_value_free (av);
 
@@ -542,7 +541,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == GDA_TOOLS_FAVORITES_DATA_MANAGERS) {
+			else if (fav->type == T_FAVORITES_DATA_MANAGERS) {
 				if (!snode) {
 					snode = gda_tree_manager_create_node (manager, node, NULL);
 					
@@ -566,7 +565,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 
 					/* icon */
 					GdkPixbuf *pixbuf;
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+					pixbuf = ui_get_pixbuf_icon (UI_ICON_TABLE);
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
@@ -586,7 +585,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 				gda_value_free (av);
 			}
 #ifdef HAVE_LDAP
-			else if (fav->type == GDA_TOOLS_FAVORITES_LDAP_DN) {
+			else if (fav->type == T_FAVORITES_LDAP_DN) {
 				if (!snode) {
 					/* favorite ID */
 					snode = gda_tree_manager_create_node (manager, node, NULL);
@@ -599,7 +598,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 
 					/* icon */
 					GdkPixbuf *pixbuf;
-					pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ENTRY);
+					pixbuf = ui_get_pixbuf_icon (UI_ICON_LDAP_ENTRY);
 					
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
@@ -676,7 +675,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 								  av, NULL);
 				gda_value_free (av);
 			}
-			else if (fav->type == GDA_TOOLS_FAVORITES_LDAP_CLASS) {
+			else if (fav->type == T_FAVORITES_LDAP_CLASS) {
 				if (!snode) {
 					/* favorite ID */
 					snode = gda_tree_manager_create_node (manager, node, NULL);
@@ -690,8 +689,8 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 					/* icon */
 					GdkPixbuf *pixbuf;
 					GdaLdapClass *lcl;
-					lcl = browser_connection_get_class_info (bcnc, fav->name);
-					pixbuf = browser_get_pixbuf_for_ldap_class (lcl ? lcl->kind : GDA_LDAP_CLASS_KIND_UNKNOWN);					
+					lcl = t_connection_get_class_info (tcnc, fav->name);
+					pixbuf = ui_connection_ldap_icon_for_class_kind (lcl ? lcl->kind : GDA_LDAP_CLASS_KIND_UNKNOWN);
 					av = gda_value_new (G_TYPE_OBJECT);
 					g_value_set_object (av, pixbuf);
 					gda_tree_node_set_node_attribute (snode, "icon", av, NULL);
@@ -744,7 +743,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 			if (snode)
 				nodes_list = g_slist_prepend (nodes_list, snode);
 		}
-		gda_tools_favorites_free_list (fav_list);
+		t_favorites_free_list (fav_list);
 	}
 	else if (lerror) {
 		if (out_error)
@@ -766,7 +765,7 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 		gchar *str;
 		GValue *value;
 
-		if (mgr->priv->fav_type & GDA_TOOLS_FAVORITES_TABLES) {
+		if (mgr->priv->fav_type & T_FAVORITES_TABLES) {
 			str = g_strdup_printf ("<i>%s</i>", _("No favorite:\ndrag item to\ndefine one"));
 			snode = gda_tree_manager_create_node (manager, node, str);
 			g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
@@ -794,7 +793,7 @@ icons_resol_cb (MgrFavorites *mgr)
                                                                    mgr->priv->icons_resol_list);
 
 		GdkPixbuf *pixbuf;
-		pixbuf = browser_connection_ldap_icon_for_dn (mgr->priv->bcnc, data->dn, NULL);
+		pixbuf = ui_connection_ldap_icon_for_dn (mgr->priv->tcnc, data->dn, NULL);
 		if (pixbuf) {
 			GValue *av;
 			av = gda_value_new (G_TYPE_OBJECT);

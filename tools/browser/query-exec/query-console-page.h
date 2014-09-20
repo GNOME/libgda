@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 #define __QUERY_CONSOLE_PAGE_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "../common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -46,7 +46,7 @@ struct _QueryConsolePageClass {
 
 GType                    query_console_page_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *query_console_page_new      (BrowserConnection *bcnc);
+GtkWidget               *query_console_page_new      (TConnection *tcnc);
 void                     query_console_page_set_text (QueryConsolePage *console, const gchar *text, gint fav_id);
 
 G_END_DECLS

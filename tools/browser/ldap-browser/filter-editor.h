@@ -22,7 +22,7 @@
 
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -50,7 +50,7 @@ struct _FilterEditorClass {
 
 GType        filter_editor_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *filter_editor_new            (BrowserConnection *bcnc);
+GtkWidget   *filter_editor_new            (TConnection *tcnc);
 void         filter_editor_clear          (FilterEditor *fedit);
 void         filter_editor_set_settings   (FilterEditor *fedit,
 					   const gchar *base_dn, const gchar *filter,

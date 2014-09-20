@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -22,7 +22,7 @@
 #include <string.h>
 #include "table-info.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "table-columns.h"
 #include "table-preferences.h"
@@ -31,18 +31,19 @@
 #endif
 #include "schema-browser-perspective.h"
 #include "../browser-page.h"
-#include "../browser-stock-icons.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-basic-form.h>
 #include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
-#include "../common/fk-declare.h"
+#include "../fk-declare.h"
 #include <libgda/gda-debug-macros.h>
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 struct _TableInfoPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	gchar *schema;
 	gchar *table_name;
@@ -75,7 +76,7 @@ static GtkActionGroup      *table_info_page_get_actions_group (BrowserPage *page
 static const gchar         *table_info_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, TableInfo *tinfo);
 
 /* properties */
 enum {
@@ -133,10 +134,10 @@ table_info_dispose (GObject *object)
 		g_free (tinfo->priv->schema);
 		g_free (tinfo->priv->table_name);
 		g_free (tinfo->priv->table_short_name);
-		if (tinfo->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (tinfo->priv->bcnc,
+		if (tinfo->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (tinfo->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), tinfo);
-			g_object_unref (tinfo->priv->bcnc);
+			g_object_unref (tinfo->priv->tcnc);
 		}
 
 		g_free (tinfo->priv);
@@ -260,7 +261,7 @@ source_drag_data_get_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkDragC
 }
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
 {
 	GdaMetaDbObject *dbo;
 	GValue *schema_v = NULL, *name_v;
@@ -294,7 +295,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 		gtk_drag_source_set ((GtkWidget *) tinfo->priv->header, GDK_BUTTON1_MASK | GDK_BUTTON3_MASK,
 				     dbo_table, G_N_ELEMENTS (dbo_table), GDK_ACTION_COPY);
 		gtk_drag_source_set_icon_pixbuf ((GtkWidget *) tinfo->priv->header,
-						 browser_get_pixbuf_icon (BROWSER_ICON_TABLE));
+						 ui_get_pixbuf_icon (UI_ICON_TABLE));
 		g_signal_connect (tinfo->priv->header, "drag-data-get",
 				  G_CALLBACK (source_drag_data_get_cb), tinfo);
 	}
@@ -308,19 +309,19 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-table_info_new (BrowserConnection *bcnc,
+table_info_new (TConnection *tcnc,
 		const gchar *schema, const gchar *table)
 {
 	TableInfo *tinfo;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 	g_return_val_if_fail (schema, NULL);
 	g_return_val_if_fail (table, NULL);
 
 	tinfo = TABLE_INFO (g_object_new (TABLE_INFO_TYPE, NULL));
 
-	tinfo->priv->bcnc = g_object_ref (bcnc);
-	g_signal_connect (tinfo->priv->bcnc, "meta-changed",
+	tinfo->priv->tcnc = g_object_ref (tcnc);
+	g_signal_connect (tinfo->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), tinfo);
 	tinfo->priv->schema = g_strdup (schema);
 	tinfo->priv->table_name = g_strdup (table);
@@ -353,7 +354,7 @@ table_info_new (BrowserConnection *bcnc,
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (hbox), gtk_label_new (""), TRUE, TRUE, 0);
-	image = gtk_image_new_from_stock (GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG);
+	image = gtk_image_new_from_icon_name ("dialog-warning", GTK_ICON_SIZE_DIALOG);
 	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 10);
 	label = gtk_label_new (_("Table not found. If you think this is an error,\n"
 				 "please refresh the meta data from the database\n"
@@ -409,9 +410,9 @@ table_info_new (BrowserConnection *bcnc,
 	display_table_not_found_error (tinfo, TRUE);
 	
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (tinfo->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
 	if (mstruct)
-		meta_changed_cb (tinfo->priv->bcnc, mstruct, tinfo);
+		meta_changed_cb (tinfo->priv->tcnc, mstruct, tinfo);
 
 	return (GtkWidget*) tinfo;
 }
@@ -439,11 +440,11 @@ table_info_get_table_name (TableInfo *tinfo)
 /**
  * table_info_get_connection
  */
-BrowserConnection *
+TConnection *
 table_info_get_connection (TableInfo *tinfo)
 {
 	g_return_val_if_fail (IS_TABLE_INFO (tinfo), NULL);
-	return tinfo->priv->bcnc;
+	return tinfo->priv->tcnc;
 }
 
 /*
@@ -452,20 +453,20 @@ table_info_get_connection (TableInfo *tinfo)
 static void
 action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 {
-	ToolsFavorites *bfav;
-        ToolsFavoritesAttributes fav;
+	TFavorites *bfav;
+        TFavoritesAttributes fav;
         GError *error = NULL;
 
-        memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
+        memset (&fav, 0, sizeof (TFavoritesAttributes));
         fav.id = -1;
-        fav.type = GDA_TOOLS_FAVORITES_TABLES;
+        fav.type = T_FAVORITES_TABLES;
         fav.name = NULL;
         fav.descr = NULL;
         fav.contents = table_info_to_selection (tinfo);
 
-        bfav = browser_connection_get_favorites (tinfo->priv->bcnc);
-        if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &error)) {
-                browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
+        bfav = t_connection_get_favorites (tinfo->priv->tcnc);
+        if (! t_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &error)) {
+                ui_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));
                 if (error)
@@ -522,7 +523,7 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 		params = g_object_get_data (G_OBJECT (dialog), "params");
 
 		GObject *result;
-		result = browser_connection_execute_statement (tinfo->priv->bcnc,
+		result = t_connection_execute_statement (tinfo->priv->tcnc,
 							       stmt, params,
 							       GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL, &lerror);
 		if (result) {
@@ -533,7 +534,7 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 			g_object_unref (result);
 		}
 		else {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
+			ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tinfo)),
 					    _("Error executing query: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
@@ -542,7 +543,7 @@ insert_response_cb (GtkWidget *dialog, gint response_id, TableInfo *tinfo)
 	}
 #ifdef HAVE_GDU
 	else if (response_id == GTK_RESPONSE_HELP) {
-		browser_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
+		ui_show_help ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo),
 				   "table-insert-data");
 	}
 #endif
@@ -645,7 +646,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 			if (fkdata->model && !fkdata->model_rerunning) {
 				GObject *result;
 				fkdata->model_rerunning = TRUE;
-				result = browser_connection_execute_statement (tinfo->priv->bcnc,
+				result = t_connection_execute_statement (tinfo->priv->tcnc,
 									       fkdata->stmt, NULL,
 									       GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
 									       NULL);
@@ -658,9 +659,9 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	BrowserWindow *bwin;
 	GdaMetaStruct *mstruct;
 	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
-	mstruct = browser_connection_get_meta_struct (tinfo->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
 	if (!mstruct) {
-		browser_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
+		ui_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
 		return;
 	}
 
@@ -677,7 +678,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	gda_value_free (v2);
 
 	if (! dbo) {
-		browser_show_error (GTK_WINDOW (bwin), _("Can't find information about table"));
+		ui_show_error (GTK_WINDOW (bwin), _("Can't find information about table"));
 		return;
 	}
 
@@ -712,7 +713,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 		gchar *sql;
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
 
-		browser_show_error (GTK_WINDOW (bwin),
+		ui_show_error (GTK_WINDOW (bwin),
 				    _("Internal error while building INSERT statement:\n%s"), sql);
 		g_free (sql);
 		g_object_unref (stmt);
@@ -729,9 +730,9 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 		const GValue *autoinc;
 		GdaHolder *holder;
 
-		plugin = browser_connection_get_table_column_attribute (tinfo->priv->bcnc,
+		plugin = t_connection_get_table_column_attribute (tinfo->priv->tcnc,
 									mtable,	col,
-									BROWSER_CONNECTION_COLUMN_PLUGIN,
+									T_CONNECTION_COLUMN_PLUGIN,
 									NULL);
 		holder = gda_set_get_holder (params, col->column_name);
 		if (!holder)
@@ -792,7 +793,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 		g_value_set_string ((name_v = gda_value_new (G_TYPE_STRING)), rdbo->obj_name);
 		dbo = gda_meta_struct_get_db_object (mstruct, NULL, schema_v, name_v);
 
-		cmodel = gda_meta_store_extract (browser_connection_get_meta_store (tinfo->priv->bcnc),
+		cmodel = gda_meta_store_extract (t_connection_get_meta_store (tinfo->priv->tcnc),
 						"SELECT tc.constraint_name, k.column_name FROM _key_column_usage k INNER JOIN _table_constraints tc ON (k.table_catalog=tc.table_catalog AND k.table_schema=tc.table_schema AND k.table_name=tc.table_name AND k.constraint_name=tc.constraint_name) WHERE tc.constraint_type='UNIQUE' AND k.table_catalog = ##catalog::string AND k.table_schema = ##schema::string AND k.table_name = ##tname::string ORDER by k.ordinal_position", &lerror,
 						"catalog", catalog_v,
 						"schema", schema_v,
@@ -862,7 +863,7 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 				fkdata->stmt = stmt;
 
 				GObject *result;
-				result = browser_connection_execute_statement (tinfo->priv->bcnc, stmt, NULL,
+				result = t_connection_execute_statement (tinfo->priv->tcnc, stmt, NULL,
 									       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 									       NULL, NULL);
 				fkdata->insert_params = g_object_ref (params);
@@ -934,14 +935,14 @@ action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	GValue *v1, *v2;
 
 	parent = (GtkWidget*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
-	mstruct = browser_connection_get_meta_struct (tinfo->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
 	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), tinfo->priv->schema);
 	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), tinfo->priv->table_name);
 	dbo = gda_meta_struct_get_db_object (mstruct, NULL, v1, v2);
 	gda_value_free (v1);
 	gda_value_free (v2);
 	if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
-		browser_show_error ((GtkWindow *) parent, _("Can't find information about table '%s'"),
+		ui_show_error ((GtkWindow *) parent, _("Can't find information about table '%s'"),
 				    tinfo->priv->table_short_name);
 		return;
 	}
@@ -953,7 +954,7 @@ action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 		if (! fk_declare_write (FK_DECLARE (dlg),
 					BROWSER_IS_WINDOW (parent) ? BROWSER_WINDOW (parent) : NULL,
 					&error)) {
-			browser_show_error ((GtkWindow *) parent, _("Failed to declare foreign key: %s"),
+			ui_show_error ((GtkWindow *) parent, _("Failed to declare foreign key: %s"),
 					    error && error->message ? error->message : _("No detail"));
 			g_clear_error (&error);
 		}
@@ -962,7 +963,7 @@ action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 						    GTK_MESSAGE_INFO, "fkdeclare",
 						    _("Successfully declared foreign key"));
 		else
-			browser_show_message ((GtkWindow *) parent, "%s",
+			ui_show_message ((GtkWindow *) parent, "%s",
 					      _("Successfully declared foreign key"));
 	}
 	
@@ -971,7 +972,7 @@ action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 
 static GtkActionEntry ui_actions[] = {
 	{ "Table", NULL, N_("_Table"), NULL, N_("Table"), NULL },
-	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
+	{ "AddToFav", NULL, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
 	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View table's contents"),
 	  G_CALLBACK (action_view_contents_cb)},
@@ -1026,9 +1027,9 @@ table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 	GdkPixbuf *table_pixbuf;
 
 	tinfo = TABLE_INFO (page);
-	table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_TABLE);
+	table_pixbuf = ui_get_pixbuf_icon (UI_ICON_TABLE);
 	tab_name = tinfo->priv->table_short_name ? tinfo->priv->table_short_name : tinfo->priv->table_name;
-	return browser_make_tab_label_with_pixbuf (tab_name,
-						   table_pixbuf,
-						   out_close_button ? TRUE : FALSE, out_close_button);
+	return ui_make_tab_label_with_pixbuf (tab_name,
+					      table_pixbuf,
+					      out_close_button ? TRUE : FALSE, out_close_button);
 }

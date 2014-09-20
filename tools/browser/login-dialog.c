@@ -19,10 +19,8 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda/binreloc/gda-binreloc.h>
 #include "login-dialog.h"
-#include "browser-spinner.h"
-#include "support.h"
+#include "ui-support.h"
 
 /* 
  * Main static functions 
@@ -31,7 +29,7 @@ static void login_dialog_class_init (LoginDialogClass * class);
 static void login_dialog_init (LoginDialog *dialog);
 static void login_dialog_dispose (GObject *object);
 
-static GdaConnection *real_open_connection (const GdaDsnInfo *cncinfo, GError **error);
+static TConnection *real_open_connection (const GdaDsnInfo *cncinfo, GError **error);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -104,33 +102,30 @@ static void
 login_dialog_init (LoginDialog *dialog)
 {
 	GtkWidget *label, *hbox, *wid;
-	char *markup, *str;
+	char *markup;
 	GtkWidget *dcontents;
 
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
 	dialog->priv = g_new0 (LoginDialogPrivate, 1);
 
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog),
-				GTK_STOCK_CONNECT,
-				GTK_RESPONSE_ACCEPT,
-				GTK_STOCK_CANCEL,
-				GTK_RESPONSE_REJECT, NULL);
+				_("C_onnect"), GTK_RESPONSE_ACCEPT,
+				_("_Cancel"), GTK_RESPONSE_REJECT, NULL);
 
 	gtk_box_set_spacing (GTK_BOX (dcontents), 5);
 	gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, FALSE);
 
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-non-connected.png", NULL);
-	gtk_window_set_icon_from_file (GTK_WINDOW (dialog), str, NULL);
-	g_free (str);
+	GdkPixbuf *pix;
+	pix = gdk_pixbuf_new_from_resource ("/images/gda-browser-non-connected.png", NULL);
+	gtk_window_set_icon (GTK_WINDOW (dialog), pix);
+	g_object_unref (pix);
 
 	/* label and spinner */
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); 
 	gtk_container_set_border_width (GTK_CONTAINER (hbox), 10);
 	gtk_box_pack_start (GTK_BOX (dcontents), hbox, FALSE, FALSE, 0);
 	
-	str = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "gda-browser-non-connected-big.png", NULL);
-	wid = gtk_image_new_from_file (str);
-	g_free (str);
+	wid = gtk_image_new_from_resource ("/images/gda-browser-non-connected-big.png");
 	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 0);
 
 	label = gtk_label_new ("");
@@ -144,7 +139,7 @@ login_dialog_init (LoginDialog *dialog)
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 12);
 	gtk_widget_show_all (hbox);
 	
-	dialog->priv->spinner = browser_spinner_new ();
+	dialog->priv->spinner = gtk_spinner_new ();
 	gtk_container_add (GTK_CONTAINER (hbox), dialog->priv->spinner);
 
 	/* login (not shown) */
@@ -177,7 +172,7 @@ login_dialog_dispose (GObject *object)
 }
 
 /**
- * login_dialog_new
+ * login_dialog_new:
  *
  * Creates a new dialog dialog
  *
@@ -192,20 +187,20 @@ login_dialog_new (GtkWindow *parent)
 }
 
 /**
- * login_dialog_run
+ * login_dialog_run_open_connection:
  * @dialog: a #GdaLogin object
  * @retry: if set to %TRUE, then this method returns only when either a connection has been opened or the
  *         user gave up
  * @error: a place to store errors, or %NULL
  *
- * Displays the dialog and returns a new #GdaConnection, or %NULL
+ * Displays the dialog and returns a new #TConnection, or %NULL
  *
- * Return: a new #GdaConnection, or %NULL
+ * Return: (transfer none): a new #TConnection, or %NULL
  */
-GdaConnection *
-login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
+TConnection *
+login_dialog_run_open_connection (LoginDialog *dialog, gboolean retry, GError **error)
 {
-	GdaConnection *cnc = NULL;
+	TConnection *tcnc = NULL;
 
 	g_return_val_if_fail (LOGIN_IS_DIALOG (dialog), NULL);
 
@@ -215,7 +210,7 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 		result = gtk_dialog_run (GTK_DIALOG (dialog));
 
 		gtk_widget_show (dialog->priv->spinner);
-		browser_spinner_start (BROWSER_SPINNER (dialog->priv->spinner));
+		gtk_spinner_start (GTK_SPINNER (dialog->priv->spinner));
 		gtk_widget_set_sensitive (dialog->priv->login, FALSE);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, FALSE);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT, FALSE);
@@ -225,14 +220,14 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 			GError *lerror = NULL;
 
 			info = gdaui_login_get_connection_information (GDAUI_LOGIN (dialog->priv->login));
-			cnc = real_open_connection (info, &lerror);
-			browser_spinner_stop (BROWSER_SPINNER (dialog->priv->spinner));
-			if (cnc)
+			tcnc = real_open_connection (info, &lerror);
+			gtk_spinner_stop (GTK_SPINNER (dialog->priv->spinner));
+			if (tcnc)
 				goto out;
 			else {
 				if (retry) {
-					browser_show_error (GTK_WINDOW (dialog), _("Could not open connection:\n%s"),
-							    lerror && lerror->message ? lerror->message : _("No detail"));
+					ui_show_error (GTK_WINDOW (dialog), _("Could not open connection:\n%s"),
+						       lerror && lerror->message ? lerror->message : _("No detail"));
 					if (lerror)
 						g_error_free (lerror);
 				}
@@ -250,7 +245,7 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 		}
 		
 		gtk_widget_set_sensitive (dialog->priv->login, TRUE);
-		browser_spinner_stop (BROWSER_SPINNER (dialog->priv->spinner));
+		gtk_spinner_stop (GTK_SPINNER (dialog->priv->spinner));
 		gtk_widget_hide (dialog->priv->spinner);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT, TRUE);
 		gtk_dialog_set_response_sensitive (GTK_DIALOG (dialog), GTK_RESPONSE_REJECT, TRUE);
@@ -258,19 +253,19 @@ login_dialog_run (LoginDialog *dialog, gboolean retry, GError **error)
 
  out:
 	gtk_widget_hide (GTK_WIDGET (dialog));
-	return cnc;
+	return tcnc;
 }
 
 /**
- * real_open_connection
+ * real_open_connection:
  * @cncinfo: a pointer to a #GdaDsnInfo, describing the connection to open
  * @error:
  *
  * Opens a connection in a sub thread while running a main loop
  *
- * Returns: a new #GdaConnection, or %NULL if an error occurred
+ * Returns: (transfer none): a new #TConnection, or %NULL if an error occurred
  */
-static GdaConnection *
+static TConnection *
 real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 {
 #ifdef DUMMY
@@ -279,16 +274,15 @@ real_open_connection (const GdaDsnInfo *cncinfo, GError **error)
 	return NULL;
 #endif
 
-	GdaConnection *cnc;
+	TConnection *tcnc;
 	if (cncinfo->name)
-		cnc = gda_connection_open_from_dsn (cncinfo->name, cncinfo->auth_string,
-						    GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						    error);
-	else
-		cnc = gda_connection_open_from_string (cncinfo->provider, cncinfo->cnc_string,
-						       cncinfo->auth_string,
-						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA,
-						       error);
+		tcnc = t_connection_open (NULL, cncinfo->name, cncinfo->auth_string, FALSE, error);
+	else {
+		gchar *tmp;
+		tmp = g_strdup_printf ("%s://%s", cncinfo->provider, cncinfo->cnc_string);
+		tcnc = t_connection_open (NULL, tmp, cncinfo->auth_string, FALSE, error);
+		g_free (tmp);
+	}
 	
-	return cnc;
+	return tcnc;
 }

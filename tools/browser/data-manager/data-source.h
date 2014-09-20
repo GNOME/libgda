@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 
 #include <libgda-ui/libgda-ui.h>
 #include "decl.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -78,8 +79,8 @@ gboolean            data_source_add_dependency      (DataSource *source, const g
 void                data_source_set_query           (DataSource *source, const gchar *sql, GError **warning);
 
 /* other API */
-DataSource         *data_source_new                 (BrowserConnection *bcnc, DataSourceType type);
-DataSource         *data_source_new_from_xml_node   (BrowserConnection *bcnc, xmlNodePtr node, GError **error);
+DataSource         *data_source_new                 (TConnection *tcnc, DataSourceType type);
+DataSource         *data_source_new_from_xml_node   (TConnection *tcnc, xmlNodePtr node, GError **error);
 void                data_source_set_params          (DataSource *source, GdaSet *params);
 xmlNodePtr          data_source_to_xml_node         (DataSource *source);
 
@@ -94,9 +95,9 @@ gboolean            data_source_execution_going_on  (DataSource *source);
 GtkWidget          *data_source_create_grid         (DataSource *source);
 
 /*
-DataSource         *data_source_new_from_table      (BrowserConnection *bcnc,
+DataSource         *data_source_new_from_table      (TConnection *tcnc,
 						     const gchar *table_schema, const gchar *table_name);
-DataSource         *data_source_new_from_select     (BrowserConnection *bcnc, const gchar *select_sql);
+DataSource         *data_source_new_from_select     (TConnection *tcnc, const gchar *select_sql);
 */
 
 void                data_source_should_rerun        (DataSource *source);

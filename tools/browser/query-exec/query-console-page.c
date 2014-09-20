@@ -22,12 +22,11 @@
 #include <string.h>
 #include "query-console-page.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "query-exec-perspective.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
-#include "../browser-stock-icons.h"
 #include "query-editor.h"
 #include "query-result.h"
 #include <libgda-ui/internal/popup-container.h>
@@ -35,8 +34,10 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/gda-debug-macros.h>
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 struct _QueryConsolePagePrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	GdaSqlParser *parser;
 
 	GtkActionGroup *agroup;
@@ -83,8 +84,8 @@ static GtkWidget           *query_console_page_page_get_tab_label (BrowserPage *
 static GObjectClass *parent_class = NULL;
 
 /*
- * QueryConsolePage class implementation
- */
+* QueryConsolePage class implementation
+*/
 
 static void
 query_console_page_class_init (QueryConsolePageClass *klass)
@@ -132,7 +133,7 @@ query_console_page_init (QueryConsolePage *tconsole, G_GNUC_UNUSED QueryConsoleP
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (tconsole), GTK_ORIENTATION_VERTICAL);
 }
 
-static void connection_busy_cb (BrowserConnection *bcnc, gboolean is_busy,
+static void connection_busy_cb (TConnection *tcnc, gboolean is_busy,
 				gchar *reason, QueryConsolePage *tconsole);
 static void
 query_console_page_dispose (GObject *object)
@@ -141,10 +142,10 @@ query_console_page_dispose (GObject *object)
 
 	/* free memory */
 	if (tconsole->priv) {
-		if (tconsole->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (tconsole->priv->bcnc,
+		if (tconsole->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (tconsole->priv->tcnc,
 							      G_CALLBACK (connection_busy_cb), tconsole);
-			g_object_unref (tconsole->priv->bcnc);
+			g_object_unref (tconsole->priv->tcnc);
 		}
 		if (tconsole->priv->parser)
 			g_object_unref (tconsole->priv->parser);
@@ -217,15 +218,15 @@ static void rerun_requested_cb (QueryResult *qres, QueryEditorHistoryBatch *batc
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-query_console_page_new (BrowserConnection *bcnc)
+query_console_page_new (TConnection *tcnc)
 {
 	QueryConsolePage *tconsole;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	tconsole = QUERY_CONSOLE_PAGE (g_object_new (QUERY_CONSOLE_PAGE_TYPE, NULL));
 
-	tconsole->priv->bcnc = g_object_ref (bcnc);
+	tconsole->priv->tcnc = g_object_ref (tcnc);
 	
 	/* header */
         GtkWidget *label;
@@ -304,36 +305,37 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Clear"),
-					    GTK_STOCK_CLEAR, _("Clear the editor's\ncontents"));
+	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
+				       "_Clear", _("Clear the editor's\ncontents"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_clear_clicked_cb), tconsole);
 
-	button = browser_make_small_button (TRUE, FALSE, _("Variables"), NULL,
-					    _("Show variables needed\nto execute SQL"));
+	button = ui_make_small_button (TRUE, FALSE, _("Variables"),
+				       NULL, _("Show variables needed\nto execute SQL"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	tconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
 	g_signal_connect (button, "toggled",
 			  G_CALLBACK (sql_variables_clicked_cb), tconsole);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Execute"), GTK_STOCK_EXECUTE, _("Execute SQL in editor"));
+	button = ui_make_small_button (FALSE, FALSE, _("Execute"),
+				       "_Execute", _("Execute SQL in editor"));
 	tconsole->priv->exec_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
 	
-	button = browser_make_small_button (FALSE, FALSE, _("Indent"),
-					    GTK_STOCK_INDENT, _("Indent SQL in editor\n"
-								"and make the code more readable\n"
-								"(removes comments)"));
+	button = ui_make_small_button (FALSE, FALSE, _("Indent"),
+				       NULL, _("Indent SQL in editor\n"
+					       "and make the code more readable\n"
+					       "(removes comments)"));
 	tconsole->priv->indent_button = button;
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
 
-	button = browser_make_small_button (FALSE, TRUE, _("Favorite"),
-					    STOCK_ADD_BOOKMARK, _("Add SQL to favorite"));
+	button = ui_make_small_button (FALSE, TRUE, _("Favorite"),
+				       NULL, _("Add SQL to favorite"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
@@ -365,16 +367,16 @@ query_console_page_new (BrowserConnection *bcnc)
 	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Copy"), GTK_STOCK_COPY,
-					    _("Copy selected history\nto editor"));
+	button = ui_make_small_button (FALSE, FALSE, _("Copy"),
+				       "_Copy", _("Copy selected history\nto editor"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_copy_clicked_cb), tconsole);
 	tconsole->priv->history_copy_button = button;
 	gtk_widget_set_sensitive (button, FALSE);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Clear"),
-					    GTK_STOCK_CLEAR, _("Clear history"));
+	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
+				       "_Clear", _("Clear history"));
 	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (history_clear_clicked_cb), tconsole);
@@ -404,18 +406,18 @@ query_console_page_new (BrowserConnection *bcnc)
 
 	/* busy connection handling */
 	gchar *reason = NULL;
-	if (browser_connection_is_busy (tconsole->priv->bcnc, &reason)) {
-		connection_busy_cb (tconsole->priv->bcnc, TRUE, reason, tconsole);
+	if (t_connection_is_busy (tconsole->priv->tcnc, &reason)) {
+		connection_busy_cb (tconsole->priv->tcnc, TRUE, reason, tconsole);
 		g_free (reason);
 	}
-	g_signal_connect (tconsole->priv->bcnc, "busy",
+	g_signal_connect (tconsole->priv->tcnc, "busy",
 			  G_CALLBACK (connection_busy_cb), tconsole);
 
 	return (GtkWidget*) tconsole;
 }
 
 static void
-connection_busy_cb (G_GNUC_UNUSED BrowserConnection *bcnc, gboolean is_busy, G_GNUC_UNUSED gchar *reason, QueryConsolePage *tconsole)
+connection_busy_cb (G_GNUC_UNUSED TConnection *tcnc, gboolean is_busy, G_GNUC_UNUSED gchar *reason, QueryConsolePage *tconsole)
 {
 	gtk_widget_set_sensitive (tconsole->priv->exec_button, !is_busy);
 	gtk_widget_set_sensitive (tconsole->priv->indent_button, !is_busy);
@@ -500,7 +502,7 @@ compute_params (QueryConsolePage *tconsole)
 	GdaBatch *batch;
 
 	if (tconsole->priv->params) {
-		browser_connection_keep_variables (tconsole->priv->bcnc, tconsole->priv->params);
+		t_connection_keep_variables (tconsole->priv->tcnc, tconsole->priv->params);
 		g_object_unref (tconsole->priv->params);
 	}
 	tconsole->priv->params = NULL;
@@ -511,7 +513,7 @@ compute_params (QueryConsolePage *tconsole)
 	}
 
 	if (!tconsole->priv->parser)
-		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
+		tconsole->priv->parser = t_connection_create_parser (tconsole->priv->tcnc);
 
 	sql = query_editor_get_all_text (tconsole->priv->editor);
 	batch = gda_sql_parser_parse_string_as_batch (tconsole->priv->parser, sql, NULL, NULL);
@@ -522,9 +524,9 @@ compute_params (QueryConsolePage *tconsole)
 
 		if (gda_batch_get_parameters (batch, &(tconsole->priv->params), &error)) {
 			if (tconsole->priv->params) {
-				browser_connection_define_ui_plugins_for_batch (tconsole->priv->bcnc,
-										batch,
-										tconsole->priv->params);
+				t_connection_define_ui_plugins_for_batch (tconsole->priv->tcnc,
+									  batch,
+									  tconsole->priv->params);
 				show_variables = TRUE;
 				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
 				g_object_set ((GObject*) tconsole->priv->params_form,
@@ -546,7 +548,7 @@ compute_params (QueryConsolePage *tconsole)
 		gtk_widget_show (tconsole->priv->params_form);
 		g_object_unref (batch);
 
-		browser_connection_load_variables (tconsole->priv->bcnc, tconsole->priv->params);
+		t_connection_load_variables (tconsole->priv->tcnc, tconsole->priv->params);
 		if (tconsole->priv->params && show_variables &&
 		    gda_set_is_valid (tconsole->priv->params, NULL))
 			show_variables = FALSE;
@@ -606,7 +608,7 @@ sql_indent_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconso
 	GdaBatch *batch;
 
 	if (!tconsole->priv->parser)
-		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
+		tconsole->priv->parser = t_connection_create_parser (tconsole->priv->tcnc);
 
 	sql = query_editor_get_all_text (tconsole->priv->editor);
 	batch = gda_sql_parser_parse_string_as_batch (tconsole->priv->parser, sql, NULL, NULL);
@@ -617,8 +619,8 @@ sql_indent_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconso
 		stmt_list = gda_batch_get_statements (batch);
 		string = g_string_new ("");
 		for (list = stmt_list; list; list = list->next) {
-			sql = browser_connection_render_pretty_sql (tconsole->priv->bcnc,
-								    GDA_STATEMENT (list->data));
+			sql = t_connection_render_pretty_sql (tconsole->priv->tcnc,
+							      GDA_STATEMENT (list->data));
 			if (!sql)
 				sql = gda_statement_to_sql (GDA_STATEMENT (list->data), NULL, NULL);
 			if (list != stmt_list)
@@ -641,7 +643,7 @@ static void
 sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
 {
 	GtkWidget *menu, *mitem;
-	ToolsFavorites *bfav;
+	TFavorites *tfav;
 
 	if (tconsole->priv->favorites_menu)
 		gtk_widget_destroy (tconsole->priv->favorites_menu);
@@ -654,10 +656,10 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 	gtk_widget_show (mitem);
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 
-	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+	tfav = t_connection_get_favorites (tconsole->priv->tcnc);
 	if (tconsole->priv->fav_id >= 0) {
-		ToolsFavoritesAttributes fav;
-		if (gda_tools_favorites_get (bfav, tconsole->priv->fav_id, &fav, NULL)) {
+		TFavoritesAttributes fav;
+		if (t_favorites_get (tfav, tconsole->priv->fav_id, &fav, NULL)) {
 			gchar *str;
 			str = g_strdup_printf (_("Modify favorite '%s'"), fav.name);
 			mitem = gtk_menu_item_new_with_label (str);
@@ -670,12 +672,12 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 					   GINT_TO_POINTER (tconsole->priv->fav_id));
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-			gda_tools_favorites_reset_attributes (&fav);
+			t_favorites_reset_attributes (&fav);
 		}
 	}
 
 	GSList *allfav;
-	allfav = gda_tools_favorites_list (bfav, 0, GDA_TOOLS_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
+	allfav = t_favorites_list (tfav, 0, T_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
 	if (allfav) {
 		GtkWidget *submenu;
 		GSList *list;
@@ -687,8 +689,8 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 		submenu = gtk_menu_new ();
 		gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
 		for (list = allfav; list; list = list->next) {
-			ToolsFavoritesAttributes *fav;
-			fav = (ToolsFavoritesAttributes*) list->data;
+			TFavoritesAttributes *fav;
+			fav = (TFavoritesAttributes*) list->data;
 			if (fav->id == tconsole->priv->fav_id)
 				continue;
 			gchar *str;
@@ -704,7 +706,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 			gtk_widget_show (mitem);
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 		}
-		gda_tools_favorites_free_list (allfav);
+		t_favorites_free_list (allfav);
 	}
 
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
@@ -721,8 +723,8 @@ fav_form_name_activated_cb (G_GNUC_UNUSED GtkWidget *form, GtkWidget *dlg)
 static void
 sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *tconsole)
 {
-	ToolsFavorites *bfav;
-	ToolsFavoritesAttributes fav;
+	TFavorites *tfav;
+	TFavoritesAttributes fav;
 	GError *error = NULL;
 
 	GdaSet *set;
@@ -747,17 +749,17 @@ sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *t
 
 	memset (&fav, 0, sizeof (fav));
 	fav.id = -1;
-	fav.type = GDA_TOOLS_FAVORITES_QUERIES;
+	fav.type = T_FAVORITES_QUERIES;
 	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
 	cvalue = gda_set_get_holder_value (set, _("Favorite's name"));
 	fav.name = (gchar*) g_value_get_string (cvalue);
 
-	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+	tfav = t_connection_get_favorites (tconsole->priv->tcnc);
 
-	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
-		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
-                                    _("Could not add favorite: %s"),
-                                    error && error->message ? error->message : _("No detail"));
+	if (! t_favorites_add (tfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+		ui_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
+			       _("Could not add favorite: %s"),
+			       error && error->message ? error->message : _("No detail"));
                 if (error)
                         g_error_free (error);
 	}
@@ -772,22 +774,22 @@ sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *t
 static void
 sql_favorite_modify_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *tconsole)
 {
-	ToolsFavorites *bfav;
-	ToolsFavoritesAttributes fav;
+	TFavorites *tfav;
+	TFavoritesAttributes fav;
 	GError *error = NULL;
 
 	memset (&fav, 0, sizeof (fav));
 	fav.id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (mitem), "favid"));
-	fav.type = GDA_TOOLS_FAVORITES_QUERIES;
+	fav.type = T_FAVORITES_QUERIES;
 	fav.contents = query_editor_get_all_text (tconsole->priv->editor);
 	fav.name = g_object_get_data (G_OBJECT (mitem), "favname");
 
-	bfav = browser_connection_get_favorites (tconsole->priv->bcnc);
+	tfav = t_connection_get_favorites (tconsole->priv->tcnc);
 
-	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
-		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
-                                    _("Could not add favorite: %s"),
-                                    error && error->message ? error->message : _("No detail"));
+	if (! t_favorites_add (tfav, 0, &fav, ORDER_KEY_QUERIES, G_MAXINT, &error)) {
+		ui_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) tconsole),
+			       _("Could not add favorite: %s"),
+			       error && error->message ? error->message : _("No detail"));
                 if (error)
                         g_error_free (error);
 	}
@@ -930,21 +932,21 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 
 	/* if a query is being executed, then show an error */
 	if (tconsole->priv->currently_executing) {
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-				    _("A query is already being executed, "
-				      "to execute another query, open a new connection."));
+		ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+			       _("A query is already being executed, "
+				 "to execute another query, open a new connection."));
 		return;
 	}
 	tconsole->priv->currently_executing = TRUE;
 
 	if (!tconsole->priv->parser)
-		tconsole->priv->parser = browser_connection_create_parser (tconsole->priv->bcnc);
+		tconsole->priv->parser = t_connection_create_parser (tconsole->priv->tcnc);
 
 	batch = gda_sql_parser_parse_string_as_batch (tconsole->priv->parser, sql, &remain, &error);
 	if (!batch) {
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-				    _("Error while parsing code: %s"),
-				    error && error->message ? error->message : _("No detail"));
+		ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+			       _("Error while parsing code: %s"),
+			       error && error->message ? error->message : _("No detail"));
 		g_clear_error (&error);
 		return;
 	}
@@ -970,11 +972,11 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 		GdaStatement *stmt;
 		GObject *result;
 		GError *lerror = NULL;
-		within_transaction = browser_connection_get_transaction_status (tconsole->priv->bcnc) ? TRUE : FALSE;
+		within_transaction = t_connection_get_transaction_status (tconsole->priv->tcnc) ? TRUE : FALSE;
 		stmt = GDA_STATEMENT (list->data);
-		result = browser_connection_execute_statement (tconsole->priv->bcnc, stmt, params,
-							       GDA_STATEMENT_MODEL_RANDOM_ACCESS,
-							       NULL, &lerror);
+		result = t_connection_execute_statement (tconsole->priv->tcnc, stmt, params,
+							 GDA_STATEMENT_MODEL_RANDOM_ACCESS,
+							 NULL, &lerror);
 		if (result) {
 			QueryEditorHistoryItem *history;
 			GdaSqlStatement *sqlst;
@@ -987,13 +989,14 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 			}
 			else
 				history = query_editor_history_item_new (sqlst->sql, result, lerror);
+			g_object_unref (result);
 			gda_sql_statement_free (sqlst);
 			
 			history->within_transaction = within_transaction;
 
 			/* display a message if a transaction has been started */
 			if (! history->within_transaction &&
-			    browser_connection_get_transaction_status (tconsole->priv->bcnc) &&
+			    t_connection_get_transaction_status (tconsole->priv->tcnc) &&
 			    gda_statement_get_statement_type (stmt) != GDA_SQL_STATEMENT_BEGIN) {
 				browser_window_show_notice_printf (BROWSER_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
 								   GTK_MESSAGE_INFO,
@@ -1013,9 +1016,9 @@ actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 						    "QueryConsolePage", _("Statement executed"), TRUE);			
 		}
 		else {
-			browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-					    _("Error executing query:\n%s"),
-					    lerror && lerror->message ? lerror->message : _("No detail"));
+			ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+				       _("Error executing query:\n%s"),
+				       lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
 			break;
 		}
@@ -1029,9 +1032,9 @@ rerun_requested_cb (QueryResult *qres, QueryEditorHistoryBatch *batch,
 		    QueryEditorHistoryItem *item, QueryConsolePage *tconsole)
 {
 	if (!batch || !item || !item->sql) {
-		browser_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
-				    _("Internal error, please report error to "
-				      "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+		ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
+			       _("Internal error, please report error to "
+				 "http://bugzilla.gnome.org/ for the \"libgda\" product"));
 		return;
 	}
 
@@ -1106,7 +1109,7 @@ query_console_page_page_get_actions_group (BrowserPage *page)
 
 		GtkAction *action;
 		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
-		gtk_action_set_sensitive (action, !browser_connection_is_busy (tconsole->priv->bcnc, NULL));
+		gtk_action_set_sensitive (action, !t_connection_is_busy (tconsole->priv->tcnc, NULL));
 	}
 	return g_object_ref (tconsole->priv->agroup);
 }
@@ -1123,9 +1126,8 @@ query_console_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_
 	const gchar *tab_name;
 
 	tab_name = _("Query editor");
-	return browser_make_tab_label_with_stock (tab_name,
-						  STOCK_CONSOLE,
-						  out_close_button ? TRUE : FALSE, out_close_button);
+	return ui_make_tab_label_with_icon (tab_name, NULL/*STOCK_CONSOLE*/,
+					    out_close_button ? TRUE : FALSE, out_close_button);
 }
 
 static void

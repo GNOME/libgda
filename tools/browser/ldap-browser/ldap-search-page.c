@@ -22,14 +22,16 @@
 #include "ldap-search-page.h"
 #include "filter-editor.h"
 #include "../gdaui-bar.h"
+#include "../ui-support.h"
 #include "../browser-page.h"
 #include "../browser-window.h"
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include <virtual/gda-ldap-connection.h>
-#include <common/ui-formgrid.h>
-#include "../browser-stock-icons.h"
+#include "../ui-formgrid.h"
 #include "vtable-dialog.h"
 #include <libgda/gda-debug-macros.h>
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 typedef struct {
 	gchar              *base_dn;
@@ -51,7 +53,7 @@ history_item_free (HistoryItem *item)
 }
 
 struct _LdapSearchPagePrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GtkWidget *search_entry;
 	GtkWidget *result_view;
@@ -116,8 +118,8 @@ ldap_search_page_dispose (GObject *object)
 
 	/* free memory */
 	if (epage->priv) {
-		if (epage->priv->bcnc)
-			g_object_unref (epage->priv->bcnc);
+		if (epage->priv->tcnc)
+			g_object_unref (epage->priv->tcnc);
 		if (epage->priv->agroup)
 			g_object_unref (epage->priv->agroup);
 		if (epage->priv->history_items) {
@@ -213,7 +215,7 @@ filter_exec_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 				    &base_dn, &filter, &attributes, &scope);
 
 	GdaDataModel *model;
-	model = browser_connection_ldap_search (epage->priv->bcnc,
+	model = t_connection_ldap_search (epage->priv->tcnc,
 						base_dn, filter,
 						attributes, scope, &lerror);
 	g_free (base_dn);
@@ -252,20 +254,20 @@ search_entry_activated_cb (G_GNUC_UNUSED FilterEditor *feditor, LdapSearchPage *
 
 /**
  * ldap_search_page_new:
- * @bcnc:
+ * @tcnc:
  * @base_dn: the base DN to put in the search page by default
  *
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
+ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
 {
 	LdapSearchPage *epage;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	epage = LDAP_SEARCH_PAGE (g_object_new (LDAP_SEARCH_PAGE_TYPE, NULL));
-	epage->priv->bcnc = g_object_ref ((GObject*) bcnc);
+	epage->priv->tcnc = g_object_ref ((GObject*) tcnc);
 
 	/* header */
         GtkWidget *label;
@@ -292,9 +294,9 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_box_pack_start (GTK_BOX (epage), hb, FALSE, FALSE, 3);
 
-	wid = filter_editor_new (bcnc);
+	wid = filter_editor_new (tcnc);
 	if (!base_dn)
-		base_dn = browser_connection_ldap_get_base_dn (bcnc);
+		base_dn = t_connection_ldap_get_base_dn (tcnc);
 	filter_editor_set_settings (FILTER_EDITOR (wid), base_dn, NULL, NULL,
 				    GDA_LDAP_SEARCH_SUBTREE);
 	gtk_box_pack_start (GTK_BOX (hb), wid, TRUE, TRUE, 0);
@@ -306,14 +308,14 @@ ldap_search_page_new (BrowserConnection *bcnc, const gchar *base_dn)
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (bb), GTK_BUTTONBOX_END);
 	gtk_box_pack_start (GTK_BOX (hb), bb, FALSE, FALSE, 5);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Clear"),
-                                            GTK_STOCK_CLEAR, _("Clear the search settings"));
+	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
+				       GTK_STOCK_CLEAR, _("Clear the search settings"));
 	gtk_box_pack_start (GTK_BOX (bb), button, TRUE, TRUE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (filter_clear_clicked_cb), epage);
 
-	button = browser_make_small_button (FALSE, FALSE, _("Execute"),
-					    GTK_STOCK_EXECUTE, _("Execute LDAP search"));
+	button = ui_make_small_button (FALSE, FALSE, _("Execute"),
+				       GTK_STOCK_EXECUTE, _("Execute LDAP search"));
 	gtk_box_pack_start (GTK_BOX (bb), button, TRUE, TRUE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (filter_exec_clicked_cb), epage);
@@ -349,7 +351,7 @@ action_define_as_table_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epag
 
 	parent = (GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) epage);
 
-	dlg = vtable_dialog_new (parent, epage->priv->bcnc);
+	dlg = vtable_dialog_new (parent, epage->priv->tcnc);
 	res = gtk_dialog_run (GTK_DIALOG (dlg));
 	gtk_widget_hide (dlg);
 	if (res == GTK_RESPONSE_OK) {
@@ -363,16 +365,16 @@ action_define_as_table_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epag
 		tname = vtable_dialog_get_table_name (VTABLE_DIALOG (dlg));
 		replace = vtable_dialog_get_replace_if_exists (VTABLE_DIALOG (dlg));
 		if (replace)
-			browser_connection_undeclare_table (epage->priv->bcnc, tname, NULL);
-		if (! browser_connection_declare_table (epage->priv->bcnc, tname, base_dn, filter,
+			t_connection_undeclare_table (epage->priv->tcnc, tname, NULL);
+		if (! t_connection_declare_table (epage->priv->tcnc, tname, base_dn, filter,
 							attributes, scope, &lerror)) {
-			browser_show_error (parent,
+			ui_show_error (parent,
 					    _("Could not define virtual table for this LDAP search: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
 			g_clear_error (&lerror);
 		}
 		else
-			browser_show_message (parent,
+			ui_show_message (parent,
 					      _("Virtual table '%s' for this LDAP search has been defined"),
 					      tname);
 	}
@@ -449,7 +451,7 @@ action_class_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epage)
 */
 static GtkActionEntry ui_actions[] = {
 	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-	{ "DefineAsTable", BROWSER_STOCK_TABLE_ADD, N_("Define as Table"), NULL, N_("Define search as a virtual table"),
+	{ "DefineAsTable", /*BROWSER_STOCK_TABLE_ADD*/ NULL, N_("Define as Table"), NULL, N_("Define search as a virtual table"),
 	  G_CALLBACK (action_define_as_table_cb)},
 	/*
 	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous class"), NULL, N_("Move back to previous LDAP class"),
@@ -524,7 +526,7 @@ ldap_search_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_bu
 
 	search_pixbuf = gtk_widget_render_icon_pixbuf (GTK_WIDGET (page), GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 	tab_name = _("LDAP search");
-	return browser_make_tab_label_with_pixbuf (tab_name,
+	return ui_make_tab_label_with_pixbuf (tab_name,
 						   search_pixbuf,
 						   out_close_button ? TRUE : FALSE, out_close_button);
 }

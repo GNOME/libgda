@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #define __DATA_FAVORITE_SELECTOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -44,12 +44,12 @@ struct _DataFavoriteSelectorClass {
 	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (DataFavoriteSelector *sel, gint fav_id,
-						  ToolsFavoritesType fav_type, const gchar *fav_contents);
+						  TFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    data_favorite_selector_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *data_favorite_selector_new      (BrowserConnection *bcnc);
+GtkWidget               *data_favorite_selector_new      (TConnection *tcnc);
 
 G_END_DECLS
 

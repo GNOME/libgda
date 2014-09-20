@@ -30,10 +30,10 @@
 #include "../browser-perspective.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
-#include "../../tool-utils.h"
+#include "../../base-tool-utils.h"
 
 struct _RelationsDiagramPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gint fav_id; /* diagram's ID as a favorite, -1=>not a favorite */
 
 	GdauiBar *header;
@@ -63,8 +63,8 @@ static GtkActionGroup      *relations_diagram_page_get_actions_group (BrowserPag
 static const gchar         *relations_diagram_page_get_actions_ui (BrowserPage *page);
 static GtkWidget           *relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
-static void favorites_changed_cb (BrowserConnection *bcnc, RelationsDiagram *diagram);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
+static void favorites_changed_cb (TConnection *tcnc, RelationsDiagram *diagram);
 static void relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **error);
 
 /* properties */
@@ -118,12 +118,12 @@ relations_diagram_dispose (GObject *object)
 
 	/* free memory */
 	if (diagram->priv) {
-		if (diagram->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (diagram->priv->bcnc,
+		if (diagram->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (diagram->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), diagram);
-			g_signal_handlers_disconnect_by_func (diagram->priv->bcnc,
+			g_signal_handlers_disconnect_by_func (diagram->priv->tcnc,
 							      G_CALLBACK (favorites_changed_cb), diagram);
-			g_object_unref (diagram->priv->bcnc);
+			g_object_unref (diagram->priv->tcnc);
 		}
 
 		if (diagram->priv->popup_container)
@@ -197,13 +197,13 @@ relations_diagram_get_property (GObject *object,
 }
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram)
 {
 	g_object_set (G_OBJECT (diagram->priv->canvas), "meta-struct", mstruct, NULL);
 }
 
 static void
-favorites_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, RelationsDiagram *diagram)
+favorites_changed_cb (G_GNUC_UNUSED TConnection *tcnc, RelationsDiagram *diagram)
 {
 	if (diagram->priv->fav_id >= 0)
 		relations_diagram_set_fav_id (diagram, diagram->priv->fav_id, NULL);
@@ -220,12 +220,12 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	str = browser_canvas_serialize_items (BROWSER_CANVAS (diagram->priv->canvas));
 
 	GError *lerror = NULL;
-	ToolsFavorites *bfav;
-	ToolsFavoritesAttributes fav;
+	TFavorites *bfav;
+	TFavoritesAttributes fav;
 
-	memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
+	memset (&fav, 0, sizeof (TFavoritesAttributes));
 	fav.id = diagram->priv->fav_id;
-	fav.type = GDA_TOOLS_FAVORITES_DIAGRAMS;
+	fav.type = T_FAVORITES_DIAGRAMS;
 	fav.name = gtk_editable_get_chars (GTK_EDITABLE (diagram->priv->name_entry), 0, -1);
 	if (!*fav.name) {
 		g_free (fav.name);
@@ -235,9 +235,9 @@ real_save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 	
 	gtk_widget_hide (diagram->priv->popup_container);
 	
-	bfav = browser_connection_get_favorites (diagram->priv->bcnc);
-	if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &lerror)) {
-		browser_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
+	bfav = t_connection_get_favorites (diagram->priv->tcnc);
+	if (! t_favorites_add (bfav, 0, &fav, ORDER_KEY_SCHEMA, G_MAXINT, &lerror)) {
+		ui_show_error ((GtkWindow*) gtk_widget_get_toplevel (button),
 				    "<b>%s:</b>\n%s",
 				    _("Could not save diagram"),
 				    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -274,11 +274,11 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
 		gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
 		diagram->priv->name_entry = wid;
 		if (diagram->priv->fav_id > 0) {
-			ToolsFavoritesAttributes fav;
-			if (gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+			TFavoritesAttributes fav;
+			if (t_favorites_get (t_connection_get_favorites (diagram->priv->tcnc),
 						   diagram->priv->fav_id, &fav, NULL)) {
 				gtk_entry_set_text (GTK_ENTRY (wid), fav.name);
-				gda_tools_favorites_reset_attributes (&fav);
+				t_favorites_reset_attributes (&fav);
 			}
 		}
 
@@ -304,18 +304,18 @@ save_clicked_cb (GtkWidget *button, RelationsDiagram *diagram)
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-relations_diagram_new (BrowserConnection *bcnc)
+relations_diagram_new (TConnection *tcnc)
 {
 	RelationsDiagram *diagram;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	diagram = RELATIONS_DIAGRAM (g_object_new (RELATIONS_DIAGRAM_TYPE, NULL));
 
-	diagram->priv->bcnc = g_object_ref (bcnc);
-	g_signal_connect (diagram->priv->bcnc, "meta-changed",
+	diagram->priv->tcnc = g_object_ref (tcnc);
+	g_signal_connect (diagram->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), diagram);
-	g_signal_connect (bcnc, "favorites-changed",
+	g_signal_connect (tcnc, "favorites-changed",
 			  G_CALLBACK (favorites_changed_cb), diagram);
 
 
@@ -347,34 +347,34 @@ relations_diagram_new (BrowserConnection *bcnc)
         gtk_widget_show_all (wid);
 	
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (diagram->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (diagram->priv->tcnc);
 	if (mstruct)
-		meta_changed_cb (diagram->priv->bcnc, mstruct, diagram);
+		meta_changed_cb (diagram->priv->tcnc, mstruct, diagram);
 	
 	return (GtkWidget*) diagram;
 }
 
 GtkWidget *
-relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError **error)
+relations_diagram_new_with_fav_id (TConnection *tcnc, gint fav_id, GError **error)
 {
 	RelationsDiagram *diagram = NULL;
-	ToolsFavoritesAttributes fav;
+	TFavoritesAttributes fav;
 	xmlDocPtr doc = NULL;
 
-	if (! gda_tools_favorites_get (browser_connection_get_favorites (bcnc),
+	if (! t_favorites_get (t_connection_get_favorites (tcnc),
 				     fav_id, &fav, error))
 		return FALSE;
 
 
 	doc = xmlParseDoc (BAD_CAST fav.contents);
 	if (!doc) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Error parsing favorite's contents"));
 		goto out;
 	}
 
 	/* create diagram */
-	diagram = RELATIONS_DIAGRAM (relations_diagram_new (bcnc));
+	diagram = RELATIONS_DIAGRAM (relations_diagram_new (tcnc));
 	if (!diagram)
 		goto out;
 	gchar *str, *tmp;
@@ -427,7 +427,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 					xmlFree (schema);
 				if (name)
 					xmlFree (name);
-				g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
+				g_set_error (error, T_ERROR, T_STORED_DATA_ERROR,
 					     "%s", _("Missing table attribute in favorite's contents"));
 				gtk_widget_destroy ((GtkWidget*) diagram);
 				diagram = NULL;
@@ -437,7 +437,7 @@ relations_diagram_new_with_fav_id (BrowserConnection *bcnc, gint fav_id, GError 
 	}
 
  out:
-	gda_tools_favorites_reset_attributes (&fav);
+	t_favorites_reset_attributes (&fav);
 	if (doc)
 		xmlFreeDoc (doc);
 	return (GtkWidget*) diagram;
@@ -452,10 +452,10 @@ static void
 relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **error)
 {
 	g_return_if_fail (IS_RELATIONS_DIAGRAM (diagram));
-	ToolsFavoritesAttributes fav;
+	TFavoritesAttributes fav;
 
 	if ((fav_id >=0) &&
-	    gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+	    t_favorites_get (t_connection_get_favorites (diagram->priv->tcnc),
 				   fav_id, &fav, error)) {
 		gchar *str, *tmp;
 		tmp = g_markup_printf_escaped (_("'%s' diagram"), fav.name);
@@ -466,7 +466,7 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 		
 		diagram->priv->fav_id = fav.id;
 		
-		gda_tools_favorites_reset_attributes (&fav);
+		t_favorites_reset_attributes (&fav);
 	}
 	else {
 		gchar *str;
@@ -555,17 +555,17 @@ relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_b
 
 	diagram = RELATIONS_DIAGRAM (page);
 	if (diagram->priv->fav_id > 0) {
-		ToolsFavoritesAttributes fav;
-		if (gda_tools_favorites_get (browser_connection_get_favorites (diagram->priv->bcnc),
+		TFavoritesAttributes fav;
+		if (t_favorites_get (t_connection_get_favorites (diagram->priv->tcnc),
 					   diagram->priv->fav_id, &fav, NULL)) {
 			tab_name = g_strdup (fav.name);
-			gda_tools_favorites_reset_attributes (&fav);
+			t_favorites_reset_attributes (&fav);
 		}
 	}
 	if (!tab_name)
 		tab_name = g_strdup (_("Diagram"));
 
-	table_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_DIAGRAM);
+	table_pixbuf = ui_get_pixbuf_icon (UI_ICON_DIAGRAM);
 	wid = browser_make_tab_label_with_pixbuf (tab_name,
 						  table_pixbuf,
 						  out_close_button ? TRUE : FALSE, out_close_button);

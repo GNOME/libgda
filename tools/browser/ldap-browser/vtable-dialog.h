@@ -19,7 +19,7 @@
 #ifndef __VTABLE_DIALOG_H__
 #define __VTABLE_DIALOG_H__
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -44,7 +44,7 @@ struct _VtableDialogClass {
 
 GType           vtable_dialog_get_type       (void) G_GNUC_CONST;
 
-GtkWidget      *vtable_dialog_new            (GtkWindow *parent, BrowserConnection *bcnc);
+GtkWidget      *vtable_dialog_new            (GtkWindow *parent, TConnection *tcnc);
 const gchar    *vtable_dialog_get_table_name (VtableDialog *dlg);
 gboolean        vtable_dialog_get_replace_if_exists (VtableDialog *dlg);
 

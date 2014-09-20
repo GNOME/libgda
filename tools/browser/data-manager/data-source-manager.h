@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 #ifndef __DATA_SOURCE_MANAGER_H_
 #define __DATA_SOURCE_MANAGER_H_
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include "data-source.h"
 
 G_BEGIN_DECLS
@@ -53,13 +53,13 @@ struct _DataSourceManagerClass
 
 GType               data_source_manager_get_type            (void) G_GNUC_CONST;
 
-DataSourceManager  *data_source_manager_new                 (BrowserConnection *bcnc);
+DataSourceManager  *data_source_manager_new                 (TConnection *tcnc);
 void                data_source_manager_add_source          (DataSourceManager *mgr, DataSource *source);
 void                data_source_manager_remove_source       (DataSourceManager *mgr, DataSource *source);
 void                data_source_manager_replace_all         (DataSourceManager *mgr, const GSList *sources_list);
 
 GdaSet              *data_source_manager_get_params (DataSourceManager *mgr);
-BrowserConnection   *data_source_manager_get_browser_cnc (DataSourceManager *mgr);
+TConnection   *data_source_manager_get_browser_cnc (DataSourceManager *mgr);
 
 GArray              *data_source_manager_get_sources_array (DataSourceManager *mgr, GError **error);
 void                 data_source_manager_destroy_sources_array (GArray *array);

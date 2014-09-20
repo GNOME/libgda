@@ -21,7 +21,7 @@
 #define __OBJECTS_INDEX_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -45,12 +45,12 @@ struct _ObjectsIndexClass {
 
 	/* signals */
 	void                (*selection_changed) (ObjectsIndex *sel,
-						  ToolsFavoritesType fav_type, const gchar *fav_contents);
+						  TFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    objects_index_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *objects_index_new      (BrowserConnection *bcnc);
+GtkWidget               *objects_index_new      (TConnection *tcnc);
 
 G_END_DECLS
 

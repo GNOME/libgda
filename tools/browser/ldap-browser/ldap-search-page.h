@@ -21,7 +21,7 @@
 #define __LDAP_SEARCH_PAGE_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -46,7 +46,7 @@ struct _LdapSearchPageClass {
 
 GType        ldap_search_page_get_type       (void) G_GNUC_CONST;
 
-GtkWidget   *ldap_search_page_new            (BrowserConnection *bcnc, const gchar *base_dn);
+GtkWidget   *ldap_search_page_new            (TConnection *tcnc, const gchar *base_dn);
 
 G_END_DECLS
 

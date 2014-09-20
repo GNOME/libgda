@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,16 +21,15 @@
 #include <string.h>
 #include "hierarchy-view.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
-#include "../browser-stock-icons.h"
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-entries.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda/gda-debug-macros.h>
 
 struct _HierarchyViewPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GdaTree           *ldap_tree;
 	GdauiTreeStore    *ldap_store;
@@ -77,8 +76,8 @@ hierarchy_view_dispose (GObject *object)
 
 	/* free memory */
 	if (eview->priv) {
-		if (eview->priv->bcnc)
-			g_object_unref (eview->priv->bcnc);
+		if (eview->priv->tcnc)
+			g_object_unref (eview->priv->tcnc);
 		if (eview->priv->ldap_tree)
 			g_object_unref (eview->priv->ldap_tree);
 		if (eview->priv->to_show) {
@@ -204,14 +203,14 @@ text_cell_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column, GtkCellRender
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-hierarchy_view_new (BrowserConnection *bcnc, const gchar *dn)
+hierarchy_view_new (TConnection *tcnc, const gchar *dn)
 {
 	HierarchyView *eview;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	eview = HIERARCHY_VIEW (g_object_new (HIERARCHY_VIEW_TYPE, NULL));
-	eview->priv->bcnc = g_object_ref ((GObject*) bcnc);
+	eview->priv->tcnc = g_object_ref ((GObject*) tcnc);
 	g_signal_connect (eview, "drag-data-get",
 			  G_CALLBACK (source_drag_data_get_cb), eview);
 
@@ -220,7 +219,7 @@ hierarchy_view_new (BrowserConnection *bcnc, const gchar *dn)
 	GtkCellRenderer *renderer;
         GtkTreeViewColumn *column;
 	eview->priv->ldap_tree = gda_tree_new ();
-	mgr = mgr_ldap_entries_new (eview->priv->bcnc, NULL);
+	mgr = mgr_ldap_entries_new (eview->priv->tcnc, NULL);
 	gda_tree_add_manager (eview->priv->ldap_tree, mgr);
 	gda_tree_manager_add_manager (mgr, mgr);
 	gda_tree_update_children (eview->priv->ldap_tree, NULL, NULL);
@@ -267,7 +266,7 @@ hierarchy_view_new (BrowserConnection *bcnc, const gchar *dn)
 		const gchar *basedn;
 		GArray *array;
 
-		basedn = browser_connection_ldap_get_base_dn (eview->priv->bcnc);
+		basedn = t_connection_ldap_get_base_dn (eview->priv->tcnc);
 		array = g_array_new (TRUE, FALSE, sizeof (gchar*));
 		make_dn_hierarchy (basedn, dn, array);
 		if (array->len > 0) {
@@ -518,7 +517,7 @@ go_to_row (HierarchyView *eview, GtkTreePath *path)
 		}
 		else {
 			/* DN not found! */
-			browser_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eview)),
+			ui_show_message (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) eview)),
 					      _("Could not find LDAP entry with DN '%s'"), tofind);
 			goto out;
 		}
@@ -565,7 +564,7 @@ hierarchy_view_set_current_dn (HierarchyView *hierarchy_view, const gchar *dn)
 		hierarchy_view->priv->to_show = NULL;
 	}
 
-	basedn = browser_connection_ldap_get_base_dn (hierarchy_view->priv->bcnc);
+	basedn = t_connection_ldap_get_base_dn (hierarchy_view->priv->tcnc);
 	array = g_array_new (TRUE, FALSE, sizeof (gchar*));
 	make_dn_hierarchy (basedn, dn, array);
 	if (array->len > 0) {

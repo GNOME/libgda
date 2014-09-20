@@ -2,7 +2,7 @@
  * Copyright (C) 2010 Claude Paroz <claude@2xlibre.net>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,14 +21,16 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include "browser-connection.h"
-#include "support.h"
+#include "../common/t-connection.h"
+#include "../ui-support.h"
 #include "marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>
-#include "../common/ui-formgrid.h"
-#include "../../tool-utils.h"
+#include "../ui-formgrid.h"
+#include "common/t-errors.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #include "data-source.h"
 #define DEFAULT_DATA_SOURCE_NAME "DataSource"
@@ -130,7 +132,7 @@ dependency_find (GSList *dep_list, const gchar *id, const gchar *table, gint siz
 }
 
 struct _DataSourcePrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	gchar             *title;
 	gchar             *impl_title;
 	gchar             *id;
@@ -227,7 +229,7 @@ data_source_init (DataSource *source)
 {
 	source->priv = g_new0 (DataSourcePrivate, 1);
 	source->priv->id = g_strdup (DEFAULT_DATA_SOURCE_NAME);
-	source->priv->bcnc = NULL;
+	source->priv->tcnc = NULL;
 	source->priv->source_type = DATA_SOURCE_UNKNOWN;
 	source->priv->need_rerun = FALSE;
 	source->priv->exec_id = 0;
@@ -316,8 +318,8 @@ data_source_dispose (GObject *object)
 
 	source = DATA_SOURCE (object);
 	if (source->priv) {
-		if (source->priv->bcnc)
-			g_object_unref (source->priv->bcnc);
+		if (source->priv->tcnc)
+			g_object_unref (source->priv->tcnc);
 		data_source_reset (source);
 		g_free (source->priv->id);
 		g_free (source->priv->title);
@@ -336,20 +338,20 @@ static gboolean init_from_table_node (DataSource *source, xmlNodePtr node, GErro
 
 /**
  * data_source_new
- * @bcnc: a #BrowserConnection
+ * @tcnc: a #TConnection
  * @type: the new data source's requested type
  *
  * Returns: a new #DataSource object
  */
 DataSource *
-data_source_new (BrowserConnection *bcnc, DataSourceType type)
+data_source_new (TConnection *tcnc, DataSourceType type)
 {
 	DataSource *source;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	source = DATA_SOURCE (g_object_new (DATA_SOURCE_TYPE, NULL));
-	source->priv->bcnc = g_object_ref (bcnc);
+	source->priv->tcnc = g_object_ref (tcnc);
 	source->priv->source_type = type;
 
 	return source;
@@ -357,7 +359,7 @@ data_source_new (BrowserConnection *bcnc, DataSourceType type)
 
 /**
  * data_source_new_from_xml_node
- * @bcnc: a #BrowserConnection
+ * @tcnc: a #TConnection
  * @node:
  * @error:
  *
@@ -366,15 +368,15 @@ data_source_new (BrowserConnection *bcnc, DataSourceType type)
  * Returns: a new object
  */
 DataSource*
-data_source_new_from_xml_node (BrowserConnection *bcnc, xmlNodePtr node, GError **error)
+data_source_new_from_xml_node (TConnection *tcnc, xmlNodePtr node, GError **error)
 {
 	DataSource *source;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 	g_return_val_if_fail (node, NULL);
 
 	source = DATA_SOURCE (g_object_new (DATA_SOURCE_TYPE, NULL));
-	source->priv->bcnc = g_object_ref (bcnc);
+	source->priv->tcnc = g_object_ref (tcnc);
 	xmlChar *prop;
 	prop = xmlGetProp (node, BAD_CAST "title");
 	if (prop) {
@@ -399,7 +401,7 @@ data_source_new_from_xml_node (BrowserConnection *bcnc, xmlNodePtr node, GError 
 		init_from_query (source, node);
 	}
 	else {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 			     /* Translators: Do not translate "table" nor "query" */
 			     _("Node must be \"table\" or \"query\", and is \"%s\""), (gchar*)node->name);
 		g_object_unref (source);
@@ -431,16 +433,16 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 	gchar **split;
 	gint len;
 
-	mstruct = browser_connection_get_meta_struct (source->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (source->priv->tcnc);
 	if (! mstruct) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_STORED_DATA_ERROR,
+		g_set_error (error, T_ERROR, T_STORED_DATA_ERROR,
 			     "%s", _("Not ready"));
 		return NULL;
 	}
 
 	split = gda_sql_identifier_split (table_name);
 	if (! split) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 			     _("Malformed table name \"%s\""), table_name);
 		return NULL;
 	}
@@ -457,12 +459,12 @@ get_meta_table (DataSource *source, const gchar *table_name, GError **error)
 	if (vname[2]) gda_value_free (vname[2]);
 
 	if (! dbo) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     _("Could not find the \"%s\" table"), table_name);
 		return NULL;
 	}
 	if ((dbo->obj_type != GDA_META_DB_TABLE) && (dbo->obj_type != GDA_META_DB_VIEW)) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     _("The \"%s\" object is not a table"), table_name);
 		return NULL;
 	}
@@ -480,7 +482,7 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
 #endif
 	tname = xmlGetProp (node, BAD_CAST "name");
 	if (!tname) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 			     /* Translators: Do not translate "name" */
 			     "%s", _("Missing attribute \"name\" for table"));
 		return FALSE;
@@ -621,12 +623,12 @@ data_source_add_dependency (DataSource *source, const gchar *table,
 		}
 	}
 	if (!fk) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     _("Could not find any foreign key to \"%s\""), table);
 		return FALSE;
 	}
 	else if (fk->cols_nb <= 0) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     _("The fields involved in the foreign key to \"%s\" are not known"),
 			     table);
 		return FALSE;
@@ -890,7 +892,7 @@ data_source_execute (DataSource *source, GError **error)
 		if (source->priv->init_error)
 			g_propagate_error (error, source->priv->init_error);
 		else
-			g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+			g_set_error (error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 				     "%s", _("No SELECT statement to execute"));
 	}
 
@@ -898,15 +900,15 @@ data_source_execute (DataSource *source, GError **error)
 		if (source->priv->need_rerun) {
 			source->priv->need_rerun = FALSE;
 			g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
-			browser_connection_rerun_select (source->priv->bcnc, source->priv->model, &lerror);
+			t_connection_rerun_select (source->priv->tcnc, source->priv->model, &lerror);
 			gda_data_model_dump (source->priv->model, NULL);
-			g_signal_emit (source, data_source_signals [EXEC_FINISHED], lerror);
+			g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
 		}
 	}
 	else {
 		GObject *result;
 		g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
-		result = browser_connection_execute_statement (source->priv->bcnc,
+		result = t_connection_execute_statement (source->priv->tcnc,
 							       source->priv->stmt,
 							       source->priv->params,
 							       GDA_STATEMENT_MODEL_RANDOM_ACCESS |
@@ -924,10 +926,10 @@ data_source_execute (DataSource *source, GError **error)
 			}
 			else {
 				g_object_unref (result);
-				g_set_error (&lerror, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+				g_set_error (&lerror, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 					     "%s", _("Statement to execute is not a selection statement"));
 			}
-			g_signal_emit (source, data_source_signals [EXEC_FINISHED], lerror);
+			g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
 		}
 
 		g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
@@ -1084,7 +1086,7 @@ update_export_information (DataSource *source)
 	/* Get GdaSqlStatement */
 	GdaSqlStatement *sqlst;
 	g_object_get ((GObject*) source->priv->stmt, "structure", &sqlst, NULL);
-	if (browser_connection_check_sql_statement_validify (source->priv->bcnc, sqlst, NULL))
+	if (t_connection_check_sql_statement_validify (source->priv->tcnc, sqlst, NULL))
 		g_object_set ((GObject*) source->priv->stmt, "structure", sqlst, NULL);
 	if (! sqlst)
 		return;
@@ -1170,7 +1172,7 @@ data_source_set_table (DataSource *source, const gchar *table, GError **error)
 	b = gda_sql_builder_new (GDA_SQL_STATEMENT_SELECT);
 	source->priv->builder = b;
 	if (! gda_sql_builder_select_add_target (b, table, NULL)) {
-		g_set_error (error, GDA_TOOLS_ERROR, GDA_TOOLS_INTERNAL_COMMAND_ERROR,
+		g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 			     "%s", _("Could not build SELECT statement"));
 		return FALSE;
 	}
@@ -1227,7 +1229,7 @@ data_source_set_query (DataSource *source, const gchar *sql, GError **warning)
 
 	GdaSqlParser *parser;
 	const gchar *remain;
-	parser = browser_connection_create_parser (source->priv->bcnc);
+	parser = t_connection_create_parser (source->priv->tcnc);
 	source->priv->stmt = gda_sql_parser_parse_string (parser, sql,
 							  &remain, warning);
 	g_object_unref (parser);
@@ -1237,13 +1239,13 @@ data_source_set_query (DataSource *source, const gchar *sql, GError **warning)
 	}
 
 	if (remain)
-		g_set_error (warning, GDA_TOOLS_ERROR, GDA_TOOLS_COMMAND_ARGUMENTS_ERROR,
+		g_set_error (warning, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
 			     "%s", _("Multiple statements detected, only the first will be used"));
 
 	/* try to normalize the statement */
 	GdaSqlStatement *sqlst;
 	g_object_get ((GObject*) source->priv->stmt, "structure", &sqlst, NULL);
-	if (browser_connection_normalize_sql_statement (source->priv->bcnc, sqlst, NULL))
+	if (t_connection_normalize_sql_statement (source->priv->tcnc, sqlst, NULL))
 		g_object_set ((GObject*) source->priv->stmt, "structure", sqlst, NULL);
 	gda_sql_statement_free (sqlst);
 	
@@ -1299,7 +1301,7 @@ compute_import_params (DataSource *source)
 #endif
 		}
 
-		browser_connection_define_ui_plugins_for_stmt (source->priv->bcnc, source->priv->stmt,
+		t_connection_define_ui_plugins_for_stmt (source->priv->tcnc, source->priv->stmt,
 							       source->priv->params);
 
 		g_signal_connect (source->priv->params, "holder-changed",

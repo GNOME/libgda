@@ -20,7 +20,7 @@
 #ifndef __ENTRY_PROPERTIES_H__
 #define __ENTRY_PROPERTIES_H__
 
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -49,7 +49,7 @@ struct _EntryPropertiesClass {
 
 GType                    entry_properties_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *entry_properties_new      (BrowserConnection *bcnc);
+GtkWidget               *entry_properties_new      (TConnection *tcnc);
 void                     entry_properties_set_dn   (EntryProperties *eprop, const gchar *dn);
 
 G_END_DECLS

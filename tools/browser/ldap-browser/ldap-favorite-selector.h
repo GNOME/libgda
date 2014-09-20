@@ -21,7 +21,7 @@
 #define __LDAP_FAVORITE_SELECTOR_H__
 
 #include <gtk/gtk.h>
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 
 G_BEGIN_DECLS
 
@@ -44,12 +44,12 @@ struct _LdapFavoriteSelectorClass {
 	GtkBoxClass          parent_class;
 
 	void                (*selection_changed) (LdapFavoriteSelector *sel, gint fav_id,
-						  ToolsFavoritesType fav_type, const gchar *fav_contents);
+						  TFavoritesType fav_type, const gchar *fav_contents);
 };
 
 GType                    ldap_favorite_selector_get_type (void) G_GNUC_CONST;
 
-GtkWidget               *ldap_favorite_selector_new      (BrowserConnection *bcnc);
+GtkWidget               *ldap_favorite_selector_new      (TConnection *tcnc);
 
 G_END_DECLS
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #include "table-info.h"
 #include "table-preferences.h"
 #include <libgda-ui/gdaui-tree-store.h>
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "schema-browser-perspective.h"
 #include "../query-exec/query-editor.h"
@@ -36,7 +36,7 @@
 #include <libgda/gda-debug-macros.h>
 
 struct _TablePreferencesPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	TableInfo *tinfo;
 	GtkListStore *columns_store;
 	GtkTreeView *columns_treeview;
@@ -63,7 +63,7 @@ static void table_preferences_dispose   (GObject *object);
 
 static GtkWidget *create_column_properties (TablePreferences *tpref);
 static void       update_column_properties (TablePreferences *tpref);
-static void meta_changed_cb (BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferences *tpreferences);
+static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, TablePreferences *tpreferences);
 static void plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref);
 
 static GObjectClass *parent_class = NULL;
@@ -105,10 +105,10 @@ table_preferences_dispose (GObject *object)
 
 	/* free memory */
 	if (tpref->priv) {
-		if (tpref->priv->bcnc) {
-			g_signal_handlers_disconnect_by_func (tpref->priv->bcnc,
+		if (tpref->priv->tcnc) {
+			g_signal_handlers_disconnect_by_func (tpref->priv->tcnc,
 							      G_CALLBACK (meta_changed_cb), tpref);
-			g_object_unref (tpref->priv->bcnc);
+			g_object_unref (tpref->priv->tcnc);
 		}
 
 		if (tpref->priv->columns_store)
@@ -156,7 +156,7 @@ enum
 };
 
 static void
-meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, TablePreferences *tpref)
+meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TablePreferences *tpref)
 {
 	gtk_list_store_clear (tpref->priv->columns_store);
 
@@ -190,10 +190,10 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 			GtkTreeIter iter;
 			gchar *eprops;
 			GError *error = NULL;
-			eprops = browser_connection_get_table_column_attribute (tpref->priv->bcnc,
+			eprops = t_connection_get_table_column_attribute (tpref->priv->tcnc,
 										tpref->priv->current_table,
 										column,
-										BROWSER_CONNECTION_COLUMN_PLUGIN,
+										T_CONNECTION_COLUMN_PLUGIN,
 										&error);
 			if (error) {
 				TO_IMPLEMENT; /* FIXME: add a notice somewhere in the UI */
@@ -213,7 +213,7 @@ meta_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, GdaMetaStruct *mstruct, 
 }
 
 static void
-table_column_pref_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, G_GNUC_UNUSED GdaMetaTable *table,
+table_column_pref_changed_cb (G_GNUC_UNUSED TConnection *tcnc, G_GNUC_UNUSED GdaMetaTable *table,
 			      GdaMetaTableColumn *column,
 			      const gchar *attr_name, const gchar *value, TablePreferences *tpref)
 {
@@ -222,7 +222,7 @@ table_column_pref_changed_cb (G_GNUC_UNUSED BrowserConnection *bcnc, G_GNUC_UNUS
 	gboolean valid;
 	GtkTreeModel *model;
 	
-	if (strcmp (attr_name, BROWSER_CONNECTION_COLUMN_PLUGIN))
+	if (strcmp (attr_name, T_CONNECTION_COLUMN_PLUGIN))
 		return;
 
 	model = GTK_TREE_MODEL (tpref->priv->columns_store);
@@ -313,22 +313,15 @@ table_preferences_new (TableInfo *tinfo)
 	tpref = TABLE_PREFERENCES (g_object_new (TABLE_PREFERENCES_TYPE, NULL));
 
 	tpref->priv->tinfo = tinfo;
-	tpref->priv->bcnc = g_object_ref (table_info_get_connection (tinfo));
-	g_signal_connect (tpref->priv->bcnc, "meta-changed",
+	tpref->priv->tcnc = g_object_ref (table_info_get_connection (tinfo));
+	g_signal_connect (tpref->priv->tcnc, "meta-changed",
 			  G_CALLBACK (meta_changed_cb), tpref);
-	g_signal_connect (tpref->priv->bcnc, "table-column-pref-changed",
+	g_signal_connect (tpref->priv->tcnc, "table-column-pref-changed",
 			  G_CALLBACK (table_column_pref_changed_cb), tpref);
-	
-	/* top vbox */
-	GtkWidget *top_vbox;
-	top_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_box_pack_start (GTK_BOX (tpref), top_vbox, TRUE, TRUE, 0);
 
-	/* Field's display properties */
 	GtkWidget *grid;
-
 	grid = gtk_grid_new ();
-	gtk_box_pack_start (GTK_BOX (top_vbox), grid, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (tpref), grid, TRUE, TRUE, 0);
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
 	gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
@@ -355,7 +348,7 @@ table_preferences_new (TableInfo *tinfo)
 	tpref->priv->columns_store = gtk_list_store_new (NUM_COLUMNS,
 							 G_TYPE_POINTER, G_TYPE_GTYPE,
 							 G_TYPE_STRING);
-	treeview = browser_make_tree_view (GTK_TREE_MODEL (tpref->priv->columns_store));
+	treeview = ui_make_tree_view (GTK_TREE_MODEL (tpref->priv->columns_store));
 	tpref->priv->columns_treeview = GTK_TREE_VIEW (treeview);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
@@ -391,15 +384,15 @@ table_preferences_new (TableInfo *tinfo)
 	gtk_grid_attach (GTK_GRID (grid), tpref->priv->field_props, 1, 1, 1, 1);
 
 	/* show all */
-	gtk_widget_show_all (top_vbox);
+	gtk_widget_show_all (grid);
 
 	/*
 	 * initial update
 	 */
 	GdaMetaStruct *mstruct;
-	mstruct = browser_connection_get_meta_struct (tpref->priv->bcnc);
+	mstruct = t_connection_get_meta_struct (tpref->priv->tcnc);
 	if (mstruct)
-		meta_changed_cb (tpref->priv->bcnc, mstruct, tpref);
+		meta_changed_cb (tpref->priv->tcnc, mstruct, tpref);
 	selection_changed_cb (select, tpref);
 
 	g_signal_connect (tpref->priv->columns_store, "row-changed",
@@ -556,10 +549,10 @@ update_column_properties (TablePreferences *tpref)
 	gchar *eprops;
 	GError *error = NULL;
 	tpref->priv->save_plugin_changes = FALSE;
-	eprops = browser_connection_get_table_column_attribute (tpref->priv->bcnc,
+	eprops = t_connection_get_table_column_attribute (tpref->priv->tcnc,
 								tpref->priv->current_table,
 								tpref->priv->current_column,
-								BROWSER_CONNECTION_COLUMN_PLUGIN, &error);
+								T_CONNECTION_COLUMN_PLUGIN, &error);
 	if (error) {
 		TO_IMPLEMENT; /* FIXME: add a notice somewhere in the UI */
 		g_warning ("Error: %s\n", error->message);
@@ -690,10 +683,10 @@ plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref)
 		if (tpref->priv->save_plugin_changes &&
 		    tpref->priv->current_table &&
 		    tpref->priv->current_column &&
-		    ! browser_connection_set_table_column_attribute (tpref->priv->bcnc,
+		    ! t_connection_set_table_column_attribute (tpref->priv->tcnc,
 								     tpref->priv->current_table,
 								     tpref->priv->current_column,
-								     BROWSER_CONNECTION_COLUMN_PLUGIN,
+								     T_CONNECTION_COLUMN_PLUGIN,
 								     plugin ? plugin->plugin_name : NULL,
 								     &error)) {
 			TO_IMPLEMENT; /* FIXME: add a notice somewhere in the UI */
@@ -763,10 +756,10 @@ options_form_param_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED
 						 G_CALLBACK (columns_model_row_changed_cb), tpref);
 		if (tpref->priv->current_table &&
 		    tpref->priv->current_column &&
-		    ! browser_connection_set_table_column_attribute (tpref->priv->bcnc,
+		    ! t_connection_set_table_column_attribute (tpref->priv->tcnc,
 								     tpref->priv->current_table,
 								     tpref->priv->current_column,
-								     BROWSER_CONNECTION_COLUMN_PLUGIN,
+								     T_CONNECTION_COLUMN_PLUGIN,
 								     plugin_all ? plugin_all->str : NULL,
 								     &error)) {
 			TO_IMPLEMENT; /* FIXME: add a notice somewhere in the UI */

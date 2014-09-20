@@ -46,6 +46,7 @@ struct _DummyObjectClass
 	void                     (*sig0)   (DummyObject *object);
 	void                     (*sig1)   (DummyObject *object, gint i);
 	void                     (*sig2)   (DummyObject *object, gint i, gchar *str);
+	gchar                   *(*sig3)   (DummyObject *object, gchar *str, gint i);
 };
 
 GType               dummy_object_get_type                (void) G_GNUC_CONST;

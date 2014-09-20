@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,17 +23,18 @@
 #include "hierarchy-view.h"
 #include "entry-properties.h"
 #include "../dnd.h"
-#include "../support.h"
+#include "../ui-support.h"
 #include "../gdaui-bar.h"
 #include "../browser-page.h"
-#include "../browser-stock-icons.h"
 #include "../browser-window.h"
-#include "../browser-connection.h"
+#include "common/t-connection.h"
 #include <virtual/gda-ldap-connection.h>
 #include "mgr-ldap-entries.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include "ldap-browser-perspective.h"
 #include <libgda/gda-debug-macros.h>
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 typedef struct {
 	gchar *dn;
@@ -49,7 +50,7 @@ history_item_free (HistoryItem *item)
 }
 
 struct _LdapEntriesPagePrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 
 	GtkWidget *entries_view;
 	GtkWidget *entry_props;
@@ -114,8 +115,8 @@ ldap_entries_page_dispose (GObject *object)
 
 	/* free memory */
 	if (ebrowser->priv) {
-		if (ebrowser->priv->bcnc)
-			g_object_unref (ebrowser->priv->bcnc);
+		if (ebrowser->priv->tcnc)
+			g_object_unref (ebrowser->priv->tcnc);
 		if (ebrowser->priv->agroup)
 			g_object_unref (ebrowser->priv->agroup);
 		if (ebrowser->priv->history_items) {
@@ -307,14 +308,14 @@ open_class_requested_cb (G_GNUC_UNUSED EntryProperties *eprop, const gchar *clas
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
+ldap_entries_page_new (TConnection *tcnc, const gchar *dn)
 {
 	LdapEntriesPage *ebrowser;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	ebrowser = LDAP_ENTRIES_PAGE (g_object_new (LDAP_ENTRIES_PAGE_TYPE, NULL));
-	ebrowser->priv->bcnc = g_object_ref ((GObject*) bcnc);
+	ebrowser->priv->tcnc = g_object_ref ((GObject*) tcnc);
 
 	/* header */
         GtkWidget *label;
@@ -348,7 +349,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
         gtk_misc_set_alignment (GTK_MISC (label), 0., yalign);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
-	hview = hierarchy_view_new (bcnc, dn);
+	hview = hierarchy_view_new (tcnc, dn);
 	ebrowser->priv->entries_view = hview;
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
@@ -376,7 +377,7 @@ ldap_entries_page_new (BrowserConnection *bcnc, const gchar *dn)
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *props;
-	props = entry_properties_new (bcnc);
+	props = entry_properties_new (tcnc);
 	gtk_box_pack_start (GTK_BOX (vbox), props, TRUE, TRUE, 0);
 	ebrowser->priv->entry_props = props;
 	g_signal_connect (props, "open-dn",
@@ -418,22 +419,22 @@ ldap_entries_page_set_current_dn (LdapEntriesPage *ldap_entries_page, const gcha
 static void
 action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapEntriesPage *ebrowser)
 {
-	ToolsFavorites *bfav;
-        ToolsFavoritesAttributes fav;
+	TFavorites *bfav;
+        TFavoritesAttributes fav;
         GError *error = NULL;
 	const gchar *cn;
 
 	hierarchy_view_get_current_dn (HIERARCHY_VIEW (ebrowser->priv->entries_view), &cn);
-        memset (&fav, 0, sizeof (ToolsFavoritesAttributes));
+        memset (&fav, 0, sizeof (TFavoritesAttributes));
         fav.id = -1;
-        fav.type = GDA_TOOLS_FAVORITES_LDAP_DN;
+        fav.type = T_FAVORITES_LDAP_DN;
         fav.name = ldap_entries_page_to_selection (ebrowser);
         fav.descr = (gchar*) cn;
         fav.contents = ldap_entries_page_to_selection (ebrowser);
 
-        bfav = browser_connection_get_favorites (ebrowser->priv->bcnc);
-        if (! gda_tools_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
-                browser_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) ebrowser),
+        bfav = t_connection_get_favorites (ebrowser->priv->tcnc);
+        if (! t_favorites_add (bfav, 0, &fav, ORDER_KEY_LDAP, G_MAXINT, &error)) {
+                ui_show_error ((GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) ebrowser),
                                     _("Could not add favorite: %s"),
                                     error && error->message ? error->message : _("No detail"));
                 if (error)
@@ -511,7 +512,7 @@ action_dn_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapEntriesPage *ebrowser
 
 static GtkActionEntry ui_actions[] = {
 	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-	{ "AddToFav", STOCK_ADD_BOOKMARK, N_("Add to _Favorites"), NULL, N_("Add entry to favorites"),
+	{ "AddToFav", /*STOCK_ADD_BOOKMARK*/ NULL, N_("Add to _Favorites"), NULL, N_("Add entry to favorites"),
 	  G_CALLBACK (action_add_to_fav_cb)},
 	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous Entry"), NULL, N_("Move back to previous LDAP entry"),
 	  G_CALLBACK (action_dn_back_cb)},
@@ -575,9 +576,9 @@ ldap_entries_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_b
 	const gchar *tab_name;
 	GdkPixbuf *entries_pixbuf;
 
-	entries_pixbuf = browser_get_pixbuf_icon (BROWSER_ICON_LDAP_ORGANIZATION);
+	entries_pixbuf = ui_get_pixbuf_icon (UI_ICON_LDAP_ORGANIZATION);
 	tab_name = _("LDAP entries");
-	return browser_make_tab_label_with_pixbuf (tab_name,
+	return ui_make_tab_label_with_pixbuf (tab_name,
 						   entries_pixbuf,
 						   out_close_button ? TRUE : FALSE, out_close_button);
 }

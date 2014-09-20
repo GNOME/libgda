@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 
 #include <libgda-ui/libgda-ui.h>
 #include <gtk/gtk.h>
+#include <common/t-connection.h>
 
 G_BEGIN_DECLS
 
@@ -56,9 +57,9 @@ struct _LoginDialogClass
 	GtkDialogClass          parent_class;
 };
 
-GType               login_dialog_get_type          (void) G_GNUC_CONST;
-LoginDialog        *login_dialog_new               (GtkWindow *parent);
-GdaConnection      *login_dialog_run               (LoginDialog *dialog, gboolean retry, GError **error);
+GType               login_dialog_get_type            (void) G_GNUC_CONST;
+LoginDialog        *login_dialog_new                 (GtkWindow *parent);
+TConnection        *login_dialog_run_open_connection (LoginDialog *dialog, gboolean retry, GError **error);
 
 G_END_DECLS
 

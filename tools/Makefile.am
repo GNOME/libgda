@@ -1,19 +1,18 @@
-if HAVE_UI
-BROWSER_DIR=browser
-endif
-
 if LDAP
 ldap_flags=-DHAVE_LDAP
+ldap_lib=browser/ldap-browser/libperspective.la
 endif
 
-SUBDIRS = cmdtool $(BROWSER_DIR) help
+SUBDIRS = misc common base help
 
 bin_PROGRAMS = \
-	gda-list-config-6.0 \
-	gda-sql-6.0 \
-	gda-list-server-op-6.0
+	gda-sql-6.0
 
-noinst_PROGRAMS = information-schema-doc information-schema-types
+if HAVE_UI
+bin_PROGRAMS+=gda-browser-6.0
+SUBDIRS+=browser
+noinst_LTLIBRARIES = libbrowser.la
+endif
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -23,49 +22,109 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir)/libgda \
 	-I$(top_srcdir)/tools \
-	-I$(top_srcdir)/tools/cmdtool \
+	-I$(top_srcdir)/tools/base \
+	-I$(top_srcdir)/tools/common \
 	$(ldap_flags) \
 	$(COREDEPS_CFLAGS) \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
-gda_list_config_6_0_SOURCES = \
-        gda-list-config.c
-
-gda_list_config_6_0_LDADD = \
-        $(top_builddir)/libgda/libgda-6.0.la \
-        $(COREDEPS_LIBS)
-
 gda_sql_6_0_SOURCES = \
-	tool-utils.h \
-	tool-utils.c \
-	config-info.h \
-	config-info.c \
-	tools-favorites.h \
-	tools-favorites.c \
-        gda-sql.c \
-	gda-sql.h \
-	gda-threader.h \
-	gda-threader.c \
-	command-exec.h \
-	command-exec.c \
-	$(top_srcdir)/libgda/global.h \
-	$(top_srcdir)/libgda/md5.h \
-	$(top_srcdir)/libgda/md5c.c
+        tools-main.c
 
 gda_sql_6_0_LDADD = \
-	cmdtool/libcmdtool.la \
+	common/libcommon.la \
+	base/libbasetool.la \
         $(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS) \
 	$(READLINE_LIB) \
         $(HISTORY_LIB)
 
 if LIBSOUP
-gda_sql_6_0_SOURCES += web-server.h web-server.c html-doc.h html-doc.c
-AM_CPPFLAGS += $(LIBSOUP_CFLAGS)
 gda_sql_6_0_LDADD += $(LIBSOUP_LIBS)
 endif
 
+if HAVE_UI
+gda_browser_6_0_SOURCES = \
+	tools-main.c \
+	tools.gresources.c
 
+if PLATFORM_WIN32
+EXTRALDFLAGS=-mwindows
+gda_browser_6_0_SOURCES += gda-browser-res.rc
+else
+EXTRALDFLAGS=
+endif
+
+libbrowser_la_SOURCES=
+
+libbrowser_la_LIBADD = \
+	common/libcommonui.la \
+	base/libbasetool.la \
+	browser/libbrowsercore.la \
+	$(ldap_lib) \
+	browser/schema-browser/libperspective.la \
+	browser/dummy-perspective/libperspective.la \
+	browser/query-exec/libperspective.la \
+	browser/data-manager/libperspective.la
+
+gda_browser_6_0_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	$(GTK_CFLAGS) \
+        $(GTKSOURCEVIEW_CFLAGS) \
+        $(MAC_INTEGRATION_CFLAGS) \
+	-DIS_BROWSER
+
+gda_browser_6_0_LDFLAGS = $(EXTRALDFLAGS)
+
+gda_browser_6_0_LDADD = \
+	libbrowser.la \
+        $(top_builddir)/libgda/libgda-6.0.la \
+        $(COREDEPS_LIBS) \
+	$(READLINE_LIB) \
+        $(HISTORY_LIB) \
+	$(top_builddir)/libgda-ui/internal/libgda-ui-internal.la \
+	$(top_builddir)/libgda-ui/libgda-ui-6.0.la \
+	$(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
+
+if LIBSOUP
+gda_browser_6_0_LDADD += $(LIBSOUP_LIBS)
+endif
+endif
+
+# resources
+RESOURCES=\
+	resources/gda-browser-action.png \
+	resources/gda-browser-auth-big.png \
+	resources/gda-browser-auth.png \
+	resources/gda-browser-bookmark.png \
+	resources/gda-browser-column-fknn.png \
+	resources/gda-browser-column-fk.png \
+	resources/gda-browser-column-nn.png \
+	resources/gda-browser-column-pk.png \
+	resources/gda-browser-column.png \
+	resources/gda-browser-connected-big.png \
+	resources/gda-browser-connected.png \
+	resources/gda-browser-diagram.png \
+	resources/gda-browser-ldap-class-a.png \
+	resources/gda-browser-ldap-class-s.png \
+	resources/gda-browser-ldap-class-u.png \
+	resources/gda-browser-ldap-class-x.png \
+	resources/gda-browser-ldap-entry.png \
+	resources/gda-browser-ldap-group.png \
+	resources/gda-browser-ldap-organization.png \
+	resources/gda-browser-ldap-person.png \
+	resources/gda-browser-menu-ind.png \
+	resources/gda-browser-non-connected-big.png \
+	resources/gda-browser-non-connected.png \
+	resources/gda-browser.png \
+	resources/gda-browser-query.png \
+	resources/gda-browser-reference.png \
+	resources/gda-browser-schema.png \
+	resources/gda-browser-table.png \
+	resources/gda-browser-view.png
+
+tools.gresources.c: tools.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=resources --generate-source $(srcdir)/tools.gresource.xml
 
 # setenv() is in libiberty in mingw
 if PLATFORM_WIN32
@@ -79,45 +138,26 @@ endif
 gda-sql-res.o: gda-sql-res.rc
 	$(WINDRES) $^ -o $@
 
-gda_list_server_op_6_0_SOURCES = \
-        gda-list-server-op.c \
-	gda-tree-mgr-xml.c \
-	gda-tree-mgr-xml.h
-
-gda_list_server_op_6_0_LDADD = \
-        $(top_builddir)/libgda/libgda-6.0.la \
-        $(COREDEPS_LIBS)
-
-
-information_schema_doc_SOURCES = \
-        information-schema-doc.c
-
-information_schema_doc_LDADD = \
-        $(top_builddir)/libgda/libgda-6.0.la \
-        $(COREDEPS_LIBS)
-
-information_schema_types_SOURCES = \
-        information-schema-types.c
-
-information_schema_types_LDADD = \
-        $(top_builddir)/libgda/libgda-6.0.la \
-        $(COREDEPS_LIBS)
+gda-browser-res.o: gda-browser-res.rc
+	$(WINDRES) $^ -o $@
 
 webdatadir = $(datadir)/libgda-6.0/web
 webdata_DATA = \
-	cnc.js \
-	md5.js \
-	jquery.js \
-	mouseapp_2.js \
-	mouseirb_2.js \
-	irb.js \
-	gda.css \
-	gda-print.css \
-	irb.css
+	webdata/cnc.js \
+	webdata/md5.js \
+	webdata/jquery.js \
+	webdata/mouseapp_2.js \
+	webdata/mouseirb_2.js \
+	webdata/irb.js \
+	webdata/gda.css \
+	webdata/gda-print.css \
+	webdata/irb.css
 
 EXTRA_DIST = \
 	gda-sql-res.rc \
 	gda-sql.ico \
+	gda-browser-res.rc \
+	gda-browser.ico \
 	$(webdata_DATA)
 
 mans = \
@@ -157,13 +197,11 @@ endif
 install-exec-hook:
 if DEFAULT_BINARY
 	cd $(DESTDIR)$(bindir) \
-	&& rm -f gda-list-config$(EXEEXT) gda-sql$(EXEEXT) gda-list-server-op$(EXEEXT) \
-	&& $(LN_S) gda-list-config-6.0$(EXEEXT) gda-list-config$(EXEEXT) \
-	&& $(LN_S) gda-sql-6.0$(EXEEXT) gda-sql$(EXEEXT) \
-	&& $(LN_S) gda-list-server-op-6.0$(EXEEXT) gda-list-server-op$(EXEEXT)
+	&& rm -f gda-sql$(EXEEXT) \
+	&& $(LN_S) gda-sql-6.0$(EXEEXT) gda-sql$(EXEEXT)
 endif
 
 uninstall-local:
 if DEFAULT_BINARY
-	rm -f $(DESTDIR)$(bindir)/gda-list-config$(EXEEXT) $(DESTDIR)$(bindir)/gda-sql$(EXEEXT) $(DESTDIR)$(bindir)/gda-list-server-op$(EXEEXT)
+	rm -f $(DESTDIR)$(bindir)/gda-sql$(EXEEXT)
 endif

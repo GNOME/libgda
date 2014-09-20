@@ -21,10 +21,7 @@
 
 G_BEGIN_DECLS
 
-typedef struct _BrowserCore BrowserCore;
-
 typedef struct _BrowserVariable BrowserVariable;
-typedef struct _BrowserConnection BrowserConnection;
 typedef struct _BrowserWindow BrowserWindow;
 
 typedef struct _BrowserData BrowserData;
@@ -34,13 +31,6 @@ typedef struct _BrowserPerspective        BrowserPerspective;
 
 typedef struct _BrowserPageIface   BrowserPageIface;
 typedef struct _BrowserPage        BrowserPage;
-
-typedef struct {
-	const gchar          *perspective_name;
-	const gchar          *menu_shortcut;
-	BrowserPerspective *(*perspective_create) (BrowserWindow *);
-} BrowserPerspectiveFactory;
-#define BROWSER_PERSPECTIVE_FACTORY(x) ((BrowserPerspectiveFactory*)(x))
 
 #define DEFAULT_FAVORITES_SIZE 150
 

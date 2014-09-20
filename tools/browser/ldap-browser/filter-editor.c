@@ -24,7 +24,7 @@
 #include <libgda-ui/gdaui-data-selector.h>
 
 struct _FilterEditorPrivate {
-	BrowserConnection *bcnc;
+	TConnection *tcnc;
 	GtkWidget *base_dn;
 	GtkWidget *filter;
 	GtkWidget *attributes;
@@ -73,7 +73,7 @@ static void
 filter_editor_init (FilterEditor *feditor, G_GNUC_UNUSED FilterEditorClass *klass)
 {
 	feditor->priv = g_new0 (FilterEditorPrivate, 1);
-	feditor->priv->bcnc = NULL;
+	feditor->priv->tcnc = NULL;
 	feditor->priv->default_scope = GDA_LDAP_SEARCH_SUBTREE;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (feditor), GTK_ORIENTATION_VERTICAL);
@@ -86,8 +86,8 @@ filter_editor_dispose (GObject *object)
 
 	/* free memory */
 	if (feditor->priv) {
-		if (feditor->priv->bcnc)
-			g_object_unref (feditor->priv->bcnc);
+		if (feditor->priv->tcnc)
+			g_object_unref (feditor->priv->tcnc);
 		g_free (feditor->priv);
 		feditor->priv = NULL;
 	}
@@ -131,7 +131,7 @@ activated_cb (G_GNUC_UNUSED GtkEntry *entry, FilterEditor *feditor)
  * Returns: a new #GtkWidget
  */
 GtkWidget *
-filter_editor_new (BrowserConnection *bcnc)
+filter_editor_new (TConnection *tcnc)
 {
 	FilterEditor *feditor;
 	GtkWidget *grid, *label, *entry;
@@ -140,10 +140,10 @@ filter_editor_new (BrowserConnection *bcnc)
 	GValue *v1, *v2;
 	gfloat ya;
 
-	g_return_val_if_fail (BROWSER_IS_CONNECTION (bcnc), NULL);
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	feditor = FILTER_EDITOR (g_object_new (FILTER_EDITOR_TYPE, NULL));
-	feditor->priv->bcnc = g_object_ref ((GObject*) bcnc);
+	feditor->priv->tcnc = g_object_ref ((GObject*) tcnc);
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);

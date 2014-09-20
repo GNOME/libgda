@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -21,7 +21,14 @@
 #include "browser-perspective.h"
 #include "browser-page.h"
 #include "browser-window.h"
-#include "support.h"
+#include "ui-support.h"
+#include <string.h>
+
+#include "schema-browser/perspective-main.h"
+#include "query-exec/perspective-main.h"
+#include "data-manager/perspective-main.h"
+#include "ldap-browser/perspective-main.h"
+#include "dummy-perspective/perspective-main.h"
 
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
@@ -166,8 +173,7 @@ browser_perspective_get_window (BrowserPerspective *pers)
 	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window)
 		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window) (pers);
 	else
-		return (BrowserWindow*) browser_find_parent_widget (GTK_WIDGET (pers),
-								    BROWSER_PERSPECTIVE_TYPE);
+		return (BrowserWindow*) ui_find_parent_widget (GTK_WIDGET (pers), BROWSER_PERSPECTIVE_TYPE);
 }
 
 static void nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
@@ -287,4 +293,129 @@ adapt_notebook_for_fullscreen (BrowserPerspective *perspective)
 	if (fullscreen && gtk_notebook_get_n_pages (nb) == 1)
 		showtabs = FALSE;
 	gtk_notebook_set_show_tabs (nb, showtabs);
+}
+
+/*
+ * All perspectives information
+ */
+GSList *factories = NULL; /* list of PerspectiveFactory pointers, statically compiled */
+BrowserPerspectiveFactory *default_factory; /* used by default, no ref held on it */
+
+static void
+_factories_init (void)
+{
+	static gboolean init_done = FALSE;
+	if (G_LIKELY (init_done))
+		return;
+
+	/* initialize factories */
+	BrowserPerspectiveFactory *pers;
+
+	pers = schema_browser_perspective_get_factory ();
+	factories = g_slist_append (factories, pers);
+
+	pers = query_exec_perspective_get_factory ();
+	factories = g_slist_append (factories, pers);
+
+	pers = data_manager_perspective_get_factory ();
+	factories = g_slist_append (factories, pers);
+
+	pers = ldap_browser_perspective_get_factory ();
+	factories = g_slist_append (factories, pers);
+
+	pers = dummy_perspective_get_factory ();
+	factories = g_slist_append (factories, pers);
+
+	if (factories)
+                default_factory = BROWSER_PERSPECTIVE_FACTORY (factories->data);
+
+	init_done = TRUE;
+}
+
+/**
+ * browser_get_factory
+ * @factory: the name of the requested factory
+ *
+ * Get a pointer to a #BrowserPerspectiveFactory, from its name
+ *
+ * Returns: a pointer to the #BrowserPerspectiveFactory, or %NULL if not found
+ */
+BrowserPerspectiveFactory *
+browser_get_factory (const gchar *factory)
+{
+        GSList *list;
+        g_return_val_if_fail (factory, NULL);
+	_factories_init ();
+
+        for (list = factories; list; list = list->next) {
+                BrowserPerspectiveFactory *bpf = BROWSER_PERSPECTIVE_FACTORY (list->data);
+                if (!g_ascii_strcasecmp (bpf->perspective_name, factory))
+                        return bpf;
+        }
+        return NULL;
+}
+
+/**
+ * browser_get_default_factory
+ *
+ * Get the default #BrowserPerspectiveFactory used when making new #BrowserWindow if none
+ * is provided when calling browser_window_new().
+ *
+ * Returns: the default #BrowserPerspectiveFactory
+ */
+BrowserPerspectiveFactory *
+browser_get_default_factory (void)
+{
+	_factories_init ();
+        return default_factory;
+}
+
+/**
+ * browser_set_default_factory
+ * @factory: the name of a #BrowserPerspectiveFactory
+ *
+ * Sets the default #BrowserPerspectiveFactory used when making new #BrowserWindow if none
+ * is provided when calling browser_window_new().
+ */
+void
+browser_set_default_factory (const gchar *factory)
+{
+        GSList *list;
+        gchar *lc2;
+
+        if (!factory)
+                return;
+
+	_factories_init ();
+
+        lc2 = g_utf8_strdown (factory, -1);
+        for (list = factories; list; list = list->next) {
+                BrowserPerspectiveFactory *fact = BROWSER_PERSPECTIVE_FACTORY (list->data);
+                gchar *lc1;
+                lc1 = g_utf8_strdown (fact->perspective_name, -1);
+
+                if (strstr (lc1, lc2)) {
+                        default_factory = fact;
+                        g_free (lc1);
+                        break;
+                }
+
+                g_free (lc1);
+        }
+        g_free (lc2);
+}
+
+/**
+ * browser_get_factories
+ *
+ * Get a list of all the known Perspective factories
+ *
+ * Returns: a constant list which must not be altered
+ */
+const GSList *
+browser_get_factories (void)
+{
+	_factories_init ();
+
+        return factories;
 }
