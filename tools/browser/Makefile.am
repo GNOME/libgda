@@ -122,6 +122,10 @@ gda_browser_5_0_LDADD=\
 	$(top_builddir)/libgda-ui/libgda-ui-5.0.la \
 	$(COREDEPS_LIBS) $(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
 
+@INTLTOOL_XML_RULE@
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = gda-browser-5.0.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 
