@@ -281,6 +281,7 @@ tools/browser/data-manager/perspective-main.c
 tools/browser/data-manager/ui-spec-editor.c
 tools/browser/data-manager/xml-spec-editor.c
 tools/browser/fk-declare.c
+tools/browser/gda-browser-6.0.appdata.xml.in
 tools/browser/gda-browser-6.0.desktop.in
 tools/browser/gdaui-data-import.c
 tools/browser/gdaui-entry-import.c
