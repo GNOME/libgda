@@ -76,11 +76,20 @@ libbrowsercore_la_SOURCES=\
 
 $(OBJECTS): marshal.c marshal.h
 
-@INTLTOOL_DESKTOP_RULE@
+@INTLTOOL_XML_RULE@
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = gda-browser-6.0.appdata.xml.in
 
+@INTLTOOL_DESKTOP_RULE@
 desktopdir=$(datadir)/applications
 Desktop_in_files = gda-browser-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \
-	marshal.list
+	marshal.list \
+	$(Desktop_in_files) \
+	$(appdata_in_files)
+
+CLEANFILES = \
+	$(appdata_DATA)

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Ryan Lerch <rlerch@redhat.com> -->
+
+<application>
+  <id type="desktop">gda-browser-6.0.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <summary>View the schema and data of databases</summary>
+  <description>
+    <_p>
+      Database Browser provides quick access to the data and schema of a database,
+      and displays it in a intuitive graphical interface.
+      It provides three perspectives to interact with a database: the schema browser,
+      query execution, and data manager.
+      The schema browser allows the user to view the tables of a database, and
+      inspect the table's properties and relations.
+      The query exeution perspective allows the user to execute SQL queries on
+      the database.
+      The data manager perspective allows the user to view the data contained in
+      the database in a tabular form.
+    </_p>
+  </description>
+  <url type="homepage">http://www.gnome-db.org/GdaBrowser</url>
+  <screenshots>
+    <screenshot type="default">http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=GdaBrowser-tablerels.png</screenshot>
+    <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=GdaBrowser-index.png</screenshot>
+    <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=GdaBrowser-query1.png</screenshot>
+    <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=dataman-persp.png</screenshot>
+  </screenshots>
+  <updatecontact>vmalerba_at_gmail.com</updatecontact>
+</application>
