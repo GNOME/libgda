@@ -27,7 +27,9 @@
 #include "schema-browser/perspective-main.h"
 #include "query-exec/perspective-main.h"
 #include "data-manager/perspective-main.h"
-#include "ldap-browser/perspective-main.h"
+#ifdef HAVE_LDAP
+  #include "ldap-browser/perspective-main.h"
+#endif
 #include "dummy-perspective/perspective-main.h"
 
 static GRecMutex init_rmutex;
@@ -320,8 +322,10 @@ _factories_init (void)
 	pers = data_manager_perspective_get_factory ();
 	factories = g_slist_append (factories, pers);
 
+#ifdef HAVE_LDAP
 	pers = ldap_browser_perspective_get_factory ();
 	factories = g_slist_append (factories, pers);
+#endif
 
 	pers = dummy_perspective_get_factory ();
 	factories = g_slist_append (factories, pers);
