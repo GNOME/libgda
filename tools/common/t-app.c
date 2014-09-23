@@ -313,12 +313,10 @@ idle_create_window (GApplication *app)
 	gtk_window_set_default_size ((GtkWindow*) bwin, 640, 480);
 #define PRGNAME "Gda Browser"
 	gtk_window_set_title (GTK_WINDOW (bwin), PRGNAME);
-
 	gtk_widget_show (bwin);
+
 	g_application_release (app); /* release now that the 1st window has been created, cf. t_app_add_feature() where
 				      * g_application_hold() is called */
-
-	global_t_app->priv->features |= T_APP_BROWSER;
 
 	g_object_unref (G_OBJECT (global_t_app));
 
@@ -350,10 +348,12 @@ t_app_add_feature (TAppFeatures feature)
 	}
 
 #ifdef HAVE_GTK_CLASSES
-	if (feature & T_APP_BROWSER) {
+	if ((feature & T_APP_BROWSER) &&
+	    !(global_t_app->priv->features & T_APP_BROWSER)) {
 		g_application_hold (G_APPLICATION (global_t_app)); /* up until the 1st window is created */
 		g_object_ref (G_OBJECT (global_t_app));
 		g_idle_add ((GSourceFunc) idle_create_window, global_t_app);
+		global_t_app->priv->features |= T_APP_BROWSER;
 	}
 #endif
 
@@ -578,7 +578,7 @@ t_app_open_connections (gint argc, const gchar *argv[], GError **error)
 		if (info)
 			str = g_strdup (info->name);
 		else
-			str = g_strdup_printf ("c%d", i-1);
+			str = g_strdup_printf ("c%d", i);
 		if (!ostream) {
 			gchar *params, *prov, *user;
 			gda_connection_string_split (argv[i], &params, &prov, &user, NULL);

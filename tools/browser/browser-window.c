@@ -364,6 +364,7 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	bwin = BROWSER_WINDOW (g_object_new (BROWSER_TYPE_WINDOW, "application", t_app_get(), NULL));
+	gtk_application_add_window (GTK_APPLICATION (t_app_get ()), GTK_WINDOW (bwin));
 	bwin->priv->tcnc = g_object_ref (tcnc);
 	bwin->priv->trans_status_sigid = gda_signal_connect (tcnc, "transaction-status-changed",
 							     G_CALLBACK (transaction_status_changed_cb), bwin,

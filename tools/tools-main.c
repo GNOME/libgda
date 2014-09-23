@@ -116,7 +116,7 @@ static GOptionEntry entries[] = {
 };
 
 
-static void output_data_model (TContext *console, GdaDataModel *model);
+static void output_data_model (GdaDataModel *model);
 
 static gboolean
 ticker (G_GNUC_UNUSED gpointer data)
@@ -193,11 +193,12 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	GError *error = NULL;
 	int exit_status = EXIT_SUCCESS;
 	gboolean is_interactive = TRUE; /* final interactivity status */
+	gboolean nocnc = FALSE;
 #ifdef IS_BROWSER
+	gboolean ui = TRUE;
 	is_interactive = FALSE;
-#else
-	t_app_add_feature (T_APP_TERM_CONSOLE);
 #endif
+	t_app_add_feature (T_APP_TERM_CONSOLE);
 
 	/* options parsing */
 	context = g_option_context_new (_("[DSN|connection string]..."));        
@@ -206,12 +207,14 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
         if (!g_option_context_parse (context, &argc, &argv, &error)) {
                 g_fprintf  (stderr, "Can't parse arguments: %s\n", error->message);
 		exit_status = EXIT_FAILURE;
+		t_app_request_quit ();
 		goto out;
         }
         g_option_context_free (context);
 
 	if (show_version) {
 		g_application_command_line_print (cmdline, _("GDA SQL console version " PACKAGE_VERSION "\n"));
+		t_app_request_quit ();
 		goto out;
 	}
 
@@ -221,29 +224,31 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	if (list_providers ||
 	    list_configs ||
 	    list_data_files ||
-	    purge_data_files)
+	    purge_data_files) {
 		is_interactive = FALSE;
-	if (is_interactive)
-		t_app_add_feature (T_APP_TERM_CONSOLE);
+#ifdef IS_BROWSER
+		ui = FALSE;
+#endif
+		nocnc = TRUE;
+	}
 
 	TContext *term_console;
 	FILE *ostream = NULL;
 	term_console = t_app_get_term_console ();
-	if (term_console) {
-		t_term_context_set_interactive (T_TERM_CONTEXT (term_console), is_interactive);
+	g_assert (term_console);
+	t_term_context_set_interactive (T_TERM_CONTEXT (term_console), is_interactive);
 
-		/* output file */
-		if (outfile) {
-			if (! t_context_set_output_file (term_console, outfile, &error)) {
-				g_print ("Can't set output file as '%s': %s\n", outfile,
-					 error->message);
-				exit_status = EXIT_FAILURE;
-				goto out;
-			}
+	/* output file */
+	if (outfile) {
+		if (! t_context_set_output_file (term_console, outfile, &error)) {
+			g_print ("Can't set output file as '%s': %s\n", outfile,
+				 error->message);
+			exit_status = EXIT_FAILURE;
+			t_app_request_quit ();
+			goto out;
 		}
-
-		ostream = t_context_get_output_stream (term_console, NULL);
 	}
+	ostream = t_context_get_output_stream (term_console, NULL);
 
 	/* welcome message */
 	if (is_interactive && !ostream) {
@@ -258,8 +263,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 #endif
 		gchar *c1, *c2, *c3, *c4;
 		ToolOutputFormat oformat = BASE_TOOL_OUTPUT_FORMAT_DEFAULT;
-		if (term_console)
-			oformat = t_context_get_output_format (term_console);
+		oformat = t_context_get_output_format (term_console);
 
 #ifdef IS_BROWSER
   #define PRGNAME "Gda Browser"
@@ -291,7 +295,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 		}
 		else {
 			GdaDataModel *model = t_config_info_list_all_providers ();
-			output_data_model (term_console, model);
+			output_data_model (model);
 			g_object_unref (model);
 		}
 	}
@@ -302,7 +306,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 		}
 		else {
 			GdaDataModel *model = t_config_info_list_all_dsn ();
-			output_data_model (term_console, model);
+			output_data_model (model);
 			g_object_unref (model);
 		}
 	}
@@ -315,7 +319,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 		g_free (confdir);
 		model = t_config_info_list_data_files (&error);
 		if (model) {
-			output_data_model (term_console, model);
+			output_data_model (model);
 			g_object_unref (model);
 		}
 		else
@@ -335,21 +339,20 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 				 error->message);	
 	}
 
-	if (term_console) {
-		/* commands file */
-		if (commandsfile) {
-			if (! t_term_context_set_input_file (T_TERM_CONTEXT (term_console), commandsfile, &error)) {
-				g_print ("Can't read file '%s': %s\n", commandsfile,
-					 error->message);
-				exit_status = EXIT_FAILURE;
-				goto out;
-			}
+	/* commands file */
+	if (commandsfile) {
+		if (! t_term_context_set_input_file (T_TERM_CONTEXT (term_console), commandsfile, &error)) {
+			g_print ("Can't read file '%s': %s\n", commandsfile,
+				 error->message);
+			exit_status = EXIT_FAILURE;
+			t_app_request_quit ();
+			goto out;
 		}
-		else {
-			/* check if stdin is a term */
-			if (!isatty (fileno (stdin))) 
-				t_term_context_set_input_stream (T_TERM_CONTEXT (term_console), stdin);
-		}
+	}
+	else {
+		/* check if stdin is a term */
+		if (!isatty (fileno (stdin)))
+			t_term_context_set_input_stream (T_TERM_CONTEXT (term_console), stdin);
 	}
 
 	/* recreating an argv[] array, one entry per connection to open, and we don't want to include there
@@ -377,6 +380,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 						exit_status = EXIT_FAILURE;
 						fclose (file);
 						free_strings_array (array);
+						t_app_request_quit ();
 						goto out;
 					}
 
@@ -387,6 +391,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 						exit_status = EXIT_FAILURE;
 						fclose (file);
 						free_strings_array (array);
+						t_app_request_quit ();
 						goto out;
 					}
 					fclose (file);
@@ -416,21 +421,22 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 			    NULL, 0, NULL);
 
 	/* open connections if specified */
-	if (! t_app_open_connections (array->len, (const gchar **) array->data, &error)) {
-		g_print (_("Error opening connection: %s\n"), error && error->message ? error->message : _("No detail"));
-		g_clear_error (&error);
-		exit_status = EXIT_FAILURE;
-		free_strings_array (array);
-		goto out;
+	if (! nocnc) {
+		if (! t_app_open_connections (array->len, (const gchar **) array->data, &error)) {
+			g_print (_("Error opening connection: %s\n"), error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+			exit_status = EXIT_FAILURE;
+			free_strings_array (array);
+			t_app_request_quit ();
+			goto out;
+		}
 	}
 
-	if (term_console) {
-		GSList *cnclist;
-		cnclist = (GSList*) t_app_get_all_connections ();
-		if (cnclist) {
-			cnclist = g_slist_last (cnclist);
-			t_context_set_connection (term_console, T_CONNECTION (cnclist->data));
-		}
+	GSList *cnclist;
+	cnclist = (GSList*) t_app_get_all_connections ();
+	if (cnclist) {
+		cnclist = g_slist_last (cnclist);
+		t_context_set_connection (term_console, T_CONNECTION (cnclist->data));
 	}
 
 	free_strings_array (array);
@@ -445,6 +451,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 			g_print (_("Can't run HTTP server on port %d: %s\n"),
 				 http_port, lerror && lerror->message ? lerror->message : _("No detail"));
 			exit_status = EXIT_FAILURE;
+			t_app_request_quit ();
 			goto out;
 		}
 	}
@@ -458,50 +465,62 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 			g_print ("\n");
 	}
 
-	if (term_console)
+	if (is_interactive)
 		term_console_thread = t_context_run (term_console);
+	else {
+#ifdef IS_BROWSER
+		if (!ui)
+			t_app_request_quit ();
+#else
+		t_app_request_quit ();
+#endif
+	}
 
 #ifdef IS_BROWSER
-	GtkBuilder *builder;
-	builder = gtk_builder_new ();
-	gtk_builder_add_from_string (builder,
-				     "<interface>"
-				     "  <menu id='app-menu'>"
-				     "    <section>"
-				     "      <item>"
-				     "        <attribute name='label' translatable='yes'>_New Window</attribute>"
-				     "        <attribute name='action'>app.new</attribute>"
-				     "        <attribute name='accel'>&lt;Primary&gt;n</attribute>"
-				     "      </item>"
-				     "    </section>"
-				     "    <section>"
-				     "      <item>"
-				     "        <attribute name='label' translatable='yes'>_About Bloatpad</attribute>"
-				     "        <attribute name='action'>app.about</attribute>"
-				     "      </item>"
-				     "    </section>"
-				     "    <section>"
-				     "      <item>"
-				     "        <attribute name='label' translatable='yes'>_Quit</attribute>"
-				     "        <attribute name='action'>app.quit</attribute>"
-				     "        <attribute name='accel'>&lt;Primary&gt;q</attribute>"
-				     "      </item>"
-				     "    </section>"
-				     "  </menu>"
-				     "  <menu id='menubar'>"
-				     "    <submenu label='_Edit'>"
-				     "      <item label='_Copy' action='win.copy'/>"
-				     "      <item label='_Paste' action='win.paste'/>"
-				     "    </submenu>"
-				     "  </menu>"
-				     "</interface>", -1, NULL);
-	gtk_application_set_app_menu (GTK_APPLICATION (t_app_get ()),
-				      G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
-	gtk_application_set_menubar (GTK_APPLICATION (t_app_get ()),
-				     G_MENU_MODEL (gtk_builder_get_object (builder, "menubar")));
-	g_object_unref (builder);
+	if (ui) {
+		GtkBuilder *builder;
+		builder = gtk_builder_new ();
+		gtk_builder_add_from_string (builder,
+					     "<interface>"
+					     "  <menu id='app-menu'>"
+					     "    <section>"
+					     "      <item>"
+					     "        <attribute name='label' translatable='yes'>_New Window</attribute>"
+					     "        <attribute name='action'>app.new</attribute>"
+					     "        <attribute name='accel'>&lt;Primary&gt;n</attribute>"
+					     "      </item>"
+					     "    </section>"
+					     "    <section>"
+					     "      <item>"
+					     "        <attribute name='label' translatable='yes'>_About Bloatpad</attribute>"
+					     "        <attribute name='action'>app.about</attribute>"
+					     "      </item>"
+					     "    </section>"
+					     "    <section>"
+					     "      <item>"
+					     "        <attribute name='label' translatable='yes'>_Quit</attribute>"
+					     "        <attribute name='action'>app.quit</attribute>"
+					     "        <attribute name='accel'>&lt;Primary&gt;q</attribute>"
+					     "      </item>"
+					     "    </section>"
+					     "  </menu>"
+					     "  <menu id='menubar'>"
+					     "    <submenu label='_Edit'>"
+					     "      <item label='_Copy' action='win.copy'/>"
+					     "      <item label='_Paste' action='win.paste'/>"
+					     "    </submenu>"
+					     "  </menu>"
+					     "</interface>", -1, NULL);
+		gtk_application_set_app_menu (GTK_APPLICATION (t_app_get ()),
+					      G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+		gtk_application_set_menubar (GTK_APPLICATION (t_app_get ()),
+					     G_MENU_MODEL (gtk_builder_get_object (builder, "menubar")));
+		g_object_unref (builder);
 
-	t_app_add_feature (T_APP_BROWSER);
+		t_app_add_feature (T_APP_BROWSER);
+		if (!is_interactive)
+			t_app_remove_feature (T_APP_TERM_CONSOLE);
+	}
 #endif
 
  out:
@@ -555,13 +574,18 @@ main (int argc, char *argv[])
  * Dumps the data model contents onto @data->output
  */
 static void
-output_data_model (TContext *console, GdaDataModel *model)
+output_data_model (GdaDataModel *model)
 {
 	gchar *str;
-	FILE *ostream;
-	ToolOutputFormat oformat;
-	ostream = t_context_get_output_stream (console, NULL);
-	oformat = t_context_get_output_format (console);
+	FILE *ostream = NULL;
+	ToolOutputFormat oformat = BASE_TOOL_OUTPUT_FORMAT_DEFAULT;
+	TContext *console;
+
+	console = t_app_get_term_console ();
+	if (console) {
+		ostream = t_context_get_output_stream (console, NULL);
+		oformat = t_context_get_output_format (console);
+	}
 	str = base_tool_output_data_model_to_string (model, oformat, ostream, t_app_get_options ());
 	base_tool_output_output_string (ostream, str);
 	g_free (str);
