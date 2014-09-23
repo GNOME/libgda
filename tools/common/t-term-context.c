@@ -536,7 +536,6 @@ t_term_context_treat_single_line (TTermContext *term_console, const gchar *cmde)
 static void
 quit_requested_cb (TApp *app, TContext *self)
 {
-	g_print ("TERM quit_requested_cb ()\n");
 	g_main_loop_quit (T_TERM_CONTEXT (self)->priv->main_loop);
 }
 
@@ -593,7 +592,6 @@ t_term_context_run (TContext *self)
 		main_loop = g_main_loop_new (context, TRUE);
 		term_console->priv->main_loop = main_loop;
 		g_main_loop_run (main_loop);
-		g_print ("term console's main loop stopped, th=%p\n", g_thread_self());
 		term_console->priv->main_loop = NULL;
 		g_main_loop_unref (main_loop);
 		g_main_context_unref (context);
