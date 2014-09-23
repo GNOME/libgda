@@ -80,6 +80,7 @@ struct _SigClosure
 	GMutex        mutex;
 	GMainContext *context; /* ref held */
         gulong        ext_handler_id;
+	gulong        handler_id;
 
         GClosure     *rcl; /* real closure, used in the main loop context */
 
@@ -93,6 +94,7 @@ sig_closure_finalize (G_GNUC_UNUSED gpointer notify_data, GClosure *closure)
 {
         SigClosure *sig_closure = (SigClosure *)closure;
 
+	/*g_print ("%s (%p)\n", __FUNCTION__, closure);*/
 	itsignaler_remove (sig_closure->signal_its, sig_closure->context, sig_closure->its_add_id);
 	itsignaler_unref (sig_closure->signal_its);
 	itsignaler_unref (sig_closure->return_its);
@@ -244,6 +246,7 @@ sig_closure_new (gpointer instance, GMainContext *context, gboolean swapped, GCa
         gpointer notify_data = NULL; /* as unused in sig_closure_finalize() */
         g_closure_add_finalize_notifier (closure, notify_data, sig_closure_finalize);
 
+	/*g_print ("%s (%p)\n", __FUNCTION__, closure);*/
         return sig_closure;
 }
 
@@ -313,18 +316,18 @@ gda_signal_connect (gpointer instance,
         g_signal_query (signal_id, &query);
         g_assert (query.signal_id == signal_id);
 
-        gulong hid; /* REM: we don't need to keep a reference to @hid because when the closure is destroyed,
-		     * all the signals are "cleared", see gobject/gsignal.c in GLib's code
-		     */
-        hid = g_signal_connect_closure (instance, detailed_signal, (GClosure *) sig_closure,
+        gulong handler_id;
+        handler_id = g_signal_connect_closure (instance, detailed_signal, (GClosure *) sig_closure,
 					(connect_flags & G_CONNECT_AFTER) ? TRUE : FALSE);
+	g_closure_ref ((GClosure *) sig_closure);
         g_closure_sink ((GClosure *) sig_closure);
 
-        if (hid > 0) {
+        if (handler_id > 0) {
                 if (!handlers_hash)
                         handlers_hash = g_hash_table_new_full (ulong_hash, ulong_equal,
                                                                NULL, (GDestroyNotify) g_closure_unref);
 		sig_closure->ext_handler_id = ids++;
+		sig_closure->handler_id = handler_id;
                 g_hash_table_insert (handlers_hash, &(sig_closure->ext_handler_id),
 				     (GClosure*) sig_closure);
 
@@ -353,8 +356,10 @@ gda_signal_handler_disconnect (gpointer instance, gulong handler_id)
 	SigClosure *sig_closure = NULL;
 	if (handlers_hash)
 		sig_closure = g_hash_table_lookup (handlers_hash, &handler_id);
-	if (sig_closure)
+	if (sig_closure) {
+		g_signal_handler_disconnect (instance, sig_closure->handler_id);
 		g_hash_table_remove (handlers_hash, &handler_id);
+	}
 	else
 		g_warning (_("Could not find handler %lu"), handler_id);
 }
