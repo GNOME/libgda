@@ -71,16 +71,12 @@ _value_stringify (const GValue *value)
 }
 #endif
 
-static GHashTable *handlers_hash = NULL;
-
 typedef struct _SigClosure SigClosure;
 struct _SigClosure
 {
         GClosure      closure;
 	GMutex        mutex;
 	GMainContext *context; /* ref held */
-        gulong        ext_handler_id;
-	gulong        handler_id;
 
         GClosure     *rcl; /* real closure, used in the main loop context */
 
@@ -227,7 +223,6 @@ sig_closure_new (gpointer instance, GMainContext *context, gboolean swapped, GCa
         closure = g_closure_new_simple (sizeof (SigClosure), data);
         sig_closure = (SigClosure *) closure;
 	sig_closure->context = g_main_context_ref (context);
-        sig_closure->ext_handler_id = 0;
 	sig_closure->signal_its = its1;
 	sig_closure->return_its = its2;
 	g_mutex_init (& (sig_closure->mutex));
@@ -249,19 +244,6 @@ sig_closure_new (gpointer instance, GMainContext *context, gboolean swapped, GCa
 	/*g_print ("%s (%p)\n", __FUNCTION__, closure);*/
         return sig_closure;
 }
-
-static guint
-ulong_hash (gconstpointer key)
-{
-	return (guint) *((gulong*) key);
-}
-
-static gboolean
-ulong_equal (gconstpointer a, gconstpointer b)
-{
-	return *((const gulong*) a) == *((const gulong*) b);
-}
-
 
 /**
  * gda_signal_connect:
@@ -290,7 +272,6 @@ gda_signal_connect (gpointer instance,
 		    GConnectFlags connect_flags,
 		    GMainContext *context)
 {
-	static gulong ids = 1;
         g_return_val_if_fail (instance, 0);
         g_return_val_if_fail (c_handler, 0);
 
@@ -318,21 +299,9 @@ gda_signal_connect (gpointer instance,
 
         gulong handler_id;
         handler_id = g_signal_connect_closure (instance, detailed_signal, (GClosure *) sig_closure,
-					(connect_flags & G_CONNECT_AFTER) ? TRUE : FALSE);
-	g_closure_ref ((GClosure *) sig_closure);
-        g_closure_sink ((GClosure *) sig_closure);
-
-        if (handler_id > 0) {
-                if (!handlers_hash)
-                        handlers_hash = g_hash_table_new_full (ulong_hash, ulong_equal,
-                                                               NULL, (GDestroyNotify) g_closure_unref);
-		sig_closure->ext_handler_id = ids++;
-		sig_closure->handler_id = handler_id;
-                g_hash_table_insert (handlers_hash, &(sig_closure->ext_handler_id),
-				     (GClosure*) sig_closure);
-
-                return sig_closure->ext_handler_id;
-        }
+					       (connect_flags & G_CONNECT_AFTER) ? TRUE : FALSE);
+        if (handler_id > 0)
+                return handler_id;
         else {
                 g_closure_unref ((GClosure *) sig_closure);
                 return 0;
@@ -345,7 +314,10 @@ gda_signal_connect (gpointer instance,
  * @instance: the instance to disconnect from
  * @handler_id: the signal handler, as returned by gda_signal_connect()
  *
- * Disconnect a callback using the signal handler, see gda_signal_connect()
+ * Disconnect a callback using the signal handler, see gda_signal_connect(). This function is similar to calling
+ * g_signal_handler_disconnect().
+ *
+ * Since: 6.0
  */
 void
 gda_signal_handler_disconnect (gpointer instance, gulong handler_id)
@@ -353,13 +325,5 @@ gda_signal_handler_disconnect (gpointer instance, gulong handler_id)
 	g_return_if_fail (instance);
 	g_return_if_fail (handler_id > 0);
 
-	SigClosure *sig_closure = NULL;
-	if (handlers_hash)
-		sig_closure = g_hash_table_lookup (handlers_hash, &handler_id);
-	if (sig_closure) {
-		g_signal_handler_disconnect (instance, sig_closure->handler_id);
-		g_hash_table_remove (handlers_hash, &handler_id);
-	}
-	else
-		g_warning (_("Could not find handler %lu"), handler_id);
+	g_signal_handler_disconnect (instance, handler_id);
 }
