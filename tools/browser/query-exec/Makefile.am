@@ -3,6 +3,8 @@ noinst_LTLIBRARIES = libperspective.la
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/tools \
 	-I$(top_srcdir)/tools/browser \
+	-I$(top_srcdir)/tools/common \
+	-I$(top_srcdir)/tools/base \
 	-I$(top_builddir) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \

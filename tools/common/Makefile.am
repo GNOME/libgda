@@ -10,8 +10,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/tools \
 	-I$(top_srcdir)/tools/base \
         $(COREDEPS_CFLAGS) \
-        $(COREDEPS_WFLAGS) \
-	$(GTK_CFLAGS)
+        $(COREDEPS_WFLAGS)
 
 marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_marshal > $@
@@ -57,8 +56,7 @@ noinst_LTLIBRARIES += libcommonui.la
 
 libcommonui_la_CFLAGS = \
 	$(AM_CPPFLAGS) \
-        $(GTK_CFLAGS) \
-	-DHAVE_GTK_CLASSES
+        $(GTK_CFLAGS)
 
 libcommonui_la_SOURCES = \
 	$(nonuisources)

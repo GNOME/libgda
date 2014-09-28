@@ -217,6 +217,10 @@ then
 		have_ui=no])
 fi
 AM_CONDITIONAL(HAVE_UI, test x"$have_ui" = "xyes")
+if test "x$GTK_CFLAGS" != "x"
+then
+	GTK_CFLAGS="$GTK_CFLAGS -DHAVE_GTK_CLASSES"
+fi
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
