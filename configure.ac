@@ -545,7 +545,7 @@ fi
 if test "x$enable_vala" = "xyes"
 then
 	AM_PROG_VALAC([0.17.7])
-	VAPIGEN_CHECK([0.17.7],[0.18],,no)
+	VAPIGEN_CHECK([0.17.7],,,no)
 else
 	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
 fi
