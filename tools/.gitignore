@@ -7,3 +7,4 @@ information-schema-types
 gda-sql-6.*.1
 gda-ldap-browser-6*
 tools.gresources.c
+test-splitter

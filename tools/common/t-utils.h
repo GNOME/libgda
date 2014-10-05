@@ -25,7 +25,9 @@
 
 const gchar *t_utils_fk_policy_to_string (GdaMetaForeignKeyPolicy policy);
 gchar       *t_utils_compute_prompt (TContext *console, gboolean in_command, gboolean for_readline, ToolOutputFormat format);
-gboolean     t_utils_command_is_complete (const gchar *command);
+
+gchar      **t_utils_split_text_into_single_commands (TContext *console, const gchar *commands, GError **error);
+gboolean     t_utils_command_is_complete (TContext *console, const gchar *command);
 
 gboolean     t_utils_check_shell_argument (const gchar *arg);
 

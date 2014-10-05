@@ -1868,7 +1868,7 @@ gda_sql_console_execute (WebServer *server, TContext *console, const gchar *comm
 	loc_cmde = g_strdup (command);
 	g_strchug (loc_cmde);
 	if (*loc_cmde) {
-		if (t_utils_command_is_complete (loc_cmde)) {
+		if (t_utils_command_is_complete (console, loc_cmde)) {
 			/* execute command */
 			ToolCommandResult *res;
 			

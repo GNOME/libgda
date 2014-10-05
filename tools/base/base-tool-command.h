@@ -109,6 +109,7 @@ ToolCommand       *base_tool_command_group_find    (ToolCommandGroup *group, con
 GSList            *base_tool_command_get_all_commands (ToolCommandGroup *group);
 GSList            *base_tool_command_get_commands  (ToolCommandGroup *group, const gchar *prefix);
 
+gboolean           base_tool_command_is_internal   (const gchar *cmde);
 ToolCommandResult *base_tool_command_group_execute (ToolCommandGroup *group, const gchar *cmde,
 						    gpointer user_data, GError **error);
 

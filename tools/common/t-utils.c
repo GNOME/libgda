@@ -129,33 +129,180 @@ t_utils_compute_prompt (TContext *console, gboolean in_command, gboolean for_rea
 }
 
 /**
+ * t_utils_split_text_into_single_commands:
+ * @console: a #TContext
+ * @commands: a string containing one or more internal or SQL commands
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Splits @commands into separate commands, either internal or SQL.
+ * Also this function:
+ *   - ignores comment lines (starting with '#')
+ *   - ignores "would be commands" composed of only isspace() characters
+ *
+ * Returns: (transfer full): an array of strings, one for each actual command, or %NULL if @commands is %NULL or empty (""). Free using g_strfreev().
+ */
+gchar **
+t_utils_split_text_into_single_commands (TContext *console, const gchar *commands, GError **error)
+{
+	g_return_val_if_fail (! console || T_IS_CONTEXT (console), NULL);
+
+	if (!commands || !(*commands))
+		return NULL;
+
+	GArray *parts;
+	parts = g_array_new (TRUE, FALSE, sizeof (gchar*));
+	const gchar *start;
+	for (start = commands; *start; ) {
+	ignore_parts:
+		/* ignore newlines */
+		for (; *start == '\n'; start++);
+		if (! *start)
+			break;
+
+		/* ignore comments */
+		if (*start == '#') {
+			for (; *start != '\n'; start++);
+			if (! *start)
+				break;
+			goto ignore_parts;
+		}
+
+		/* ignore parts which are composed of spaces only */
+		const gchar *hold = start;
+		for (; *start && isspace (*start); start++);
+		if (!*start) {
+			if (parts->len == 0) {
+				/* the whole @commands argument is empty => return NULL */
+				g_array_free (parts, TRUE);
+				parts = NULL;
+			}
+			break;
+		}
+		else if (start != hold)
+			goto ignore_parts;
+
+		/* real job here */
+		if (base_tool_command_is_internal (start)) {
+			/* determine end of internal command */
+			const gchar *end;
+			gboolean inquotes = FALSE;
+			gchar *chunk;
+			for (end = start; *end; end++) {
+				if (*end == '\\') { /* ignore next char */
+					end++;
+					if (!*end)
+						break;
+					else
+						continue;
+				}
+
+				if (*end == '"')
+					inquotes = !inquotes;
+				else if ((*end == '\n') && !inquotes)
+					break;
+			}
+			if (inquotes) {
+				/* error: quotes non closed */
+				g_set_error (error, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_SYNTAX_ERROR,
+					     _("Syntax error"));
+				gchar **res;
+				res = (gchar **) g_array_free (parts, FALSE);
+				g_strfreev (res);
+				return NULL;
+			}
+			chunk = g_strndup (start, end - start);
+			g_array_append_val (parts, chunk);
+
+			if (*end)
+				start = end + 1;
+			else
+				break;
+		}
+		else {
+			/* parse statement */
+			GdaStatement *stmt;
+			const gchar *remain = NULL;
+			GdaSqlParser *parser = NULL;
+			if (console)
+				parser = t_connection_get_parser (t_context_get_connection (console));
+			else
+				parser = gda_sql_parser_new ();
+			stmt = gda_sql_parser_parse_string (parser, start, &remain, error);
+			if (!console)
+				g_object_unref (parser);
+
+			if (stmt) {
+				g_object_unref (stmt);
+
+				gchar *chunk;
+				if (remain)
+					chunk = g_strndup (start, remain - start);
+				else
+					chunk = g_strdup (start);
+				g_array_append_val (parts, chunk);
+
+				if (remain)
+					start = remain;
+				else
+					break;
+			}
+			else {
+				gchar **res;
+				res = (gchar **) g_array_free (parts, FALSE);
+				g_strfreev (res);
+				return NULL;
+			}
+		}
+	}
+
+	if (parts)
+		return (gchar **) g_array_free (parts, FALSE);
+	else
+		return NULL;
+}
+
+/**
  * t_utils_command_is_complete:
+ * @console: a #TContext
+ * @command: a string
+ *
+ * Determines if @command represents one or more (internal or SQL) complete commands, used by interactive
+ * sessions.
+ *
+ * Returns: %TRUE if @command is determined to be complete
  */
 gboolean
-t_utils_command_is_complete (const gchar *command)
+t_utils_command_is_complete (TContext *console, const gchar *command)
 {
 	if (!command || !(*command))
 		return FALSE;
-	if ((*command == '\\') || (*command == '.')) {
-		/* internal command */
-		return TRUE;
-	}
-	else if (*command == '#') {
-		/* comment, to be ignored */
-		return TRUE;
-	}
-	else {
-		gint i, len;
-		len = strlen (command);
-		for (i = len - 1; i > 0; i--) {
-			if ((command [i] != ' ') && (command [i] != '\n') && (command [i] != '\r'))
-				break;
+
+	gchar **parts;
+	parts = t_utils_split_text_into_single_commands (console, command, NULL);
+	if (!parts)
+		return FALSE;
+
+	guint i;
+	gboolean retval = FALSE;
+	for (i = 0; parts [i]; i++);
+	if (i > 0) {
+		const gchar *str;
+		str = parts [i-1];
+
+		if (*str) {
+			if (base_tool_command_is_internal (str))
+				retval = TRUE;
+			else {
+				guint l;
+				for (l = strlen (str) - 1; (l > 0) && isspace (str[l]); l--); /* ignore spaces
+											       * at the end */
+				if (str[l] == ';')
+					retval = TRUE; /* we consider the end of the command when there is a ';' */
+			}
 		}
-		if (command [i] == ';')
-			return TRUE;
-		else
-			return FALSE;
-	}	
+	}
+	g_strfreev (parts);
+	return retval;
 }
 
 /**

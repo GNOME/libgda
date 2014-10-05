@@ -299,7 +299,8 @@ term_treat_line (TTermContext *term_console, const gchar *cmde, TermLineData *ld
 			g_string_append_c (term_console->priv->partial_command, '\n');
 			g_string_append (term_console->priv->partial_command, loc_cmde);
 		}
-		if (ldata->single_line || t_utils_command_is_complete (term_console->priv->partial_command->str)) {
+		if (ldata->single_line ||
+		    t_utils_command_is_complete (T_CONTEXT (term_console), term_console->priv->partial_command->str)) {
 			/* execute command */
 			ToolCommandResult *res;
 			FILE *to_stream;

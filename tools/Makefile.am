@@ -14,6 +14,9 @@ SUBDIRS+=browser
 noinst_LTLIBRARIES = libbrowser.la
 endif
 
+TESTS = test-splitter
+check_PROGRAMS = $(TESTS)
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
@@ -204,4 +207,17 @@ endif
 uninstall-local:
 if DEFAULT_BINARY
 	rm -f $(DESTDIR)$(bindir)/gda-sql$(EXEEXT)
+endif
+
+test_splitter_SOURCES = test-splitter.c
+test_splitter_LDADD = \
+	common/libcommon.la \
+	base/libbasetool.la \
+        $(top_builddir)/libgda/libgda-6.0.la \
+        $(COREDEPS_LIBS) \
+	$(READLINE_LIB) \
+        $(HISTORY_LIB)
+
+if LIBSOUP
+test_splitter_LDADD += $(LIBSOUP_LIBS)
 endif

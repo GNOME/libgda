@@ -238,6 +238,7 @@ base_tool_command_group_find (ToolCommandGroup *group, const gchar *name, GError
 	GSList *list;
         gsize length;
 
+	g_return_val_if_fail (group, NULL);
         if (!name)
                 return NULL;
 
@@ -383,15 +384,32 @@ split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 }
 
 /**
+ * base_tool_command_is_internal:
+ * @group: a #ToolCommandGroup pointer
+ * @cmde: any command (internal or SQL)
+ *
+ * Returns: %TRUE if @cmde is considered as an internal command (starts with '.' or '\\')
+ */
+gboolean
+base_tool_command_is_internal (const gchar *cmde)
+{
+	g_return_val_if_fail (cmde, FALSE);
+	if ((*cmde == '.') || (*cmde == '\\'))
+		return TRUE;
+	else
+		return FALSE;
+}
+
+/**
  * base_tool_command_group_execute:
  * @group: a #ToolCommandGroup pointer
- * @cmde: the command as a string (name + arguments)
+ * @cmde: an internal command as a string (name + arguments), without the '.' or '\\' beginning
  * @limit_width: pass to %TRUE if, in case the command is a HELP command, the width must be limited by a terminal's width
  * @color_term: pass to %TRUE if, in case the command is a HELP command, the output will be for a terminal color
- * @user_data: (allow-none): a pointer
+ * @user_data: (allow-none): a pointer, see the #ToolCommandFunc type
  * @error: (allow-none): a place to store errors, or %NULL
  *
- * Executes @cmde
+ * Executes @cmde, which must be an internal command.
  *
  * Returns: (transfer full): a new #ToolCommandResult result
  */

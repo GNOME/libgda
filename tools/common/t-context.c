@@ -378,6 +378,17 @@ t_context_execute_sql_command (TContext *console, const gchar *command,
 	return res;
 }
 
+/**
+ * t_context_command_execute:
+ * @console: a #TContext
+ * @command: a string containing one or more internal or SQL commands
+ * @usage: a #GdaStatementModelUsage for the returned #GdaDataModel objects, if any
+ * @error: a place to store errors, or %NULL
+ *
+ * Executes @command
+ *
+ * Returns: (transfer full): a new #ToolCommandResult
+ */
 ToolCommandResult *
 t_context_command_execute (TContext *console, const gchar *command,
 			   GdaStatementModelUsage usage, GError **error)
@@ -387,10 +398,13 @@ t_context_command_execute (TContext *console, const gchar *command,
 	g_return_val_if_fail (T_IS_CONTEXT (console), NULL);
 	tcnc = console->priv->current;
 
+	gchar **parts;
+	parts = t_utils_split_text_into_single_commands (console, command, error);
+
 	if (!command || !(*command))
                 return NULL;
 
-        if ((*command == '\\') || (*command == '.'))
+	if (base_tool_command_is_internal (command))
 		return base_tool_command_group_execute (console->priv->command_group, command + 1,
 							console, error);
 
