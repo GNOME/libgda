@@ -448,6 +448,9 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	gint *delim_trans = delim_tokens;
 	gint *parser_trans= parser_tokens;
 
+	if (remain)
+		*remain = NULL;
+
 	g_return_val_if_fail (GDA_IS_SQL_PARSER (parser), NULL);
 	g_return_val_if_fail (parser->priv, NULL);
 
@@ -455,9 +458,6 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		return NULL;
 
 	g_rec_mutex_lock (& (parser->priv->mutex));
-
-	if (remain)
-		*remain = NULL;
 
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 	if (klass->delim_alloc) {
