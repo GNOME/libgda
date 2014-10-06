@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-21 21:17+0000\n"
-"PO-Revision-Date: 2014-09-22 09:03+0700\n"
+"POT-Creation-Date: 2014-10-06 09:43+0000\n"
+"PO-Revision-Date: 2014-10-07 01:27+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -177,11 +177,11 @@ msgstr "Tak bisa mengeksekusi program peramban"
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
-#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:858
-#: ../tools/browser/browser-window.c:872 ../tools/browser/browser-window.c:886
-#: ../tools/browser/browser-window.c:1107
-#: ../tools/browser/browser-window.c:1145
-#: ../tools/browser/browser-window.c:1411
+#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
+#: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
+#: ../tools/browser/browser-window.c:1108
+#: ../tools/browser/browser-window.c:1146
+#: ../tools/browser/browser-window.c:1412
 #: ../tools/browser/data-manager/analyser.c:278
 #: ../tools/browser/data-manager/data-console.c:562
 #: ../tools/browser/data-manager/data-favorite-selector.c:203
@@ -219,7 +219,7 @@ msgstr "Tak bisa mengeksekusi program peramban"
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
 #: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
 #: ../tools/common/t-connection.c:425 ../tools/common/t-connection.c:955
-#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:336
+#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:337
 #: ../tools/common/web-server.c:1995 ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
 msgid "No detail"
@@ -460,7 +460,7 @@ msgstr "Tidak dapat mendeklarasikan sumber data baru"
 msgid "No valid data source info was created"
 msgstr "Tak ada info sumber data yang valid yang dibuat"
 
-#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1184
+#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1185
 msgid "Database access services for the GNOME Desktop"
 msgstr "Layanan akses basis data bagi Desktop GNOME"
 
@@ -2354,7 +2354,7 @@ msgstr ""
 #: ../tools/common/t-app.c:2931 ../tools/common/t-app.c:4624
 #: ../tools/common/t-app.c:5141 ../tools/common/t-app.c:5242
 #: ../tools/common/t-app.c:5339 ../tools/common/t-app.c:5437
-#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:407
+#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Sambungan tak dinyatakan"
@@ -3290,7 +3290,7 @@ msgstr ""
 msgid "UPDATE statement does not have any target columns to update"
 msgstr "Pernyataan UPDATE tak memiliki kolom target yang akan diperbarui"
 
-#: ../libgda/thread-wrapper/gda-connect.c:152
+#: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
 "The GMainContext passed when gda_signal_connect() was called is not owned by "
 "any thread, you may expect some undesired behaviours, use "
@@ -3300,15 +3300,10 @@ msgstr ""
 "dimiliki oleh sebarang thread, Anda bisa mengharapkan beberapa perilaku yang "
 "tak diinginkan, gunakan g_main_context_acquire()"
 
-#: ../libgda/thread-wrapper/gda-connect.c:296
+#: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
 msgid "Could not find signal named \"%s\""
 msgstr "Tak bisa temukan sinyal bernama \"%s\""
-
-#: ../libgda/thread-wrapper/gda-connect.c:359
-#, c-format
-msgid "Could not find handler %lu"
-msgstr "Tak bisa temukan penangan %lu"
 
 #: ../libgda/thread-wrapper/gda-worker.c:172
 msgid ""
@@ -7639,17 +7634,17 @@ msgstr "Tak bisa menutup koneksi: %s\n"
 msgid "Invalid unnamed command"
 msgstr "Perintah tanpa nama yang tak valid"
 
-#: ../tools/base/base-tool-command.c:280
+#: ../tools/base/base-tool-command.c:281
 #, c-format
 msgid "Command '%s' not found"
 msgstr "Perintah '%s' tak ditemukan"
 
-#: ../tools/base/base-tool-command.c:311
+#: ../tools/base/base-tool-command.c:312
 #, c-format
 msgid "Syntax error after '\\'"
 msgstr "Galat sintaks setelah '\\'"
 
-#: ../tools/base/base-tool-command.c:341
+#: ../tools/base/base-tool-command.c:342
 #, c-format
 msgid "Unbalanced usage of quotes"
 msgstr "Pemakaian kutip yang tak imbang"
@@ -7936,69 +7931,69 @@ msgstr "Rollback transaksi"
 msgid "Rollback current transaction"
 msgstr "Rollback transaksi kini"
 
-#: ../tools/browser/browser-window.c:494 ../tools/browser/browser-window.c:549
+#: ../tools/browser/browser-window.c:495 ../tools/browser/browser-window.c:550
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:975
 #: ../tools/browser/ui-formgrid.c:777
 msgid "LDAP browser"
 msgstr "Peramban LDAP"
 
-#: ../tools/browser/browser-window.c:778
+#: ../tools/browser/browser-window.c:779
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Apakah Anda ingin menutup koneksi '%s'?"
 
-#: ../tools/browser/browser-window.c:808 ../tools/browser/browser-window.c:815
+#: ../tools/browser/browser-window.c:809 ../tools/browser/browser-window.c:816
 msgid "Do you want to quit the application?"
 msgstr "Apakah Anda keluar aplikasi?"
 
-#: ../tools/browser/browser-window.c:809
+#: ../tools/browser/browser-window.c:810
 msgid "all the connections will be closed."
 msgstr "semua koneksi akan ditutup."
 
-#: ../tools/browser/browser-window.c:816
+#: ../tools/browser/browser-window.c:817
 msgid "the connection will be closed."
 msgstr "koneksi akan ditutup."
 
-#: ../tools/browser/browser-window.c:857
+#: ../tools/browser/browser-window.c:858
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Galat memulai transaksi: %s"
 
-#: ../tools/browser/browser-window.c:871
+#: ../tools/browser/browser-window.c:872
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Galat saat mengkomit transaksi: %s"
 
-#: ../tools/browser/browser-window.c:885
+#: ../tools/browser/browser-window.c:886
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Galat saat me-rollback transaksi: %s"
 
-#: ../tools/browser/browser-window.c:965
+#: ../tools/browser/browser-window.c:966
 msgid "Hit the Escape key to leave the fullscreen mode"
 msgstr "Tekan tombol Escape untuk meninggalkan mode layar penuh"
 
-#: ../tools/browser/browser-window.c:1106
+#: ../tools/browser/browser-window.c:1107
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Galat saat memperbarui koneksi terikat: %s"
 
-#: ../tools/browser/browser-window.c:1144
+#: ../tools/browser/browser-window.c:1145
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Tak bisa membuka koneksi pengikatan: %s"
 
-#: ../tools/browser/browser-window.c:1181
+#: ../tools/browser/browser-window.c:1182
 #: ../tools/browser/gda-browser-6.0.desktop.in.h:1
 msgid "Database browser"
 msgstr "Peramban basis data"
 
-#: ../tools/browser/browser-window.c:1518
+#: ../tools/browser/browser-window.c:1519
 msgid "Don't show this message again"
 msgstr "Jangan tunjukkan pesan ini lagi"
 
-#: ../tools/browser/browser-window.c:1665
+#: ../tools/browser/browser-window.c:1666
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -10845,16 +10840,16 @@ msgstr "Tak bisa menginterpretasi nilai bagi parameter '%s'"
 msgid "No internal parameter named '%s' required by query"
 msgstr "Tak ada parameter internal bernama '%s' yang diperlukan oleh query"
 
-#: ../tools/common/t-context.c:412
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Koneksi ditutup"
 
-#: ../tools/common/t-context.c:543
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Tak bisa membuka berkas '%s' untuk ditulisi: %s\n"
 
-#: ../tools/common/t-context.c:557 ../tools/common/t-context.c:566
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Tak bisa membuka pipa '%s': %s"
@@ -10863,7 +10858,7 @@ msgstr "Tak bisa membuka pipa '%s': %s"
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Tak bisa menginisialisasi kamus untuk menyimpan favorit"
 
-#: ../tools/common/t-term-context.c:478
+#: ../tools/common/t-term-context.c:479
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "Tak bisa membuka berkas '%s' untuk dibaca: %s\n"
@@ -10891,6 +10886,11 @@ msgstr "atur ke NULL"
 #: ../tools/common/t-utils.c:52
 msgid "set to default value"
 msgstr "atur ke nilai baku"
+
+#: ../tools/common/t-utils.c:207
+#, c-format
+msgid "Syntax error"
+msgstr "Galat sintaks"
 
 #: ../tools/common/t-virtual-connection.c:91
 msgid "Bound connection is used"
