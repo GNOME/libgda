@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-23 09:29+0000\n"
-"PO-Revision-Date: 2014-09-23 19:18+0200\n"
+"POT-Creation-Date: 2014-10-06 21:38+0000\n"
+"PO-Revision-Date: 2014-10-15 18:26+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -187,11 +187,11 @@ msgstr "No se pudo ejecutar el visor"
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
-#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:858
-#: ../tools/browser/browser-window.c:872 ../tools/browser/browser-window.c:886
-#: ../tools/browser/browser-window.c:1107
-#: ../tools/browser/browser-window.c:1145
-#: ../tools/browser/browser-window.c:1411
+#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
+#: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
+#: ../tools/browser/browser-window.c:1108
+#: ../tools/browser/browser-window.c:1146
+#: ../tools/browser/browser-window.c:1412
 #: ../tools/browser/data-manager/analyser.c:278
 #: ../tools/browser/data-manager/data-console.c:562
 #: ../tools/browser/data-manager/data-favorite-selector.c:203
@@ -229,7 +229,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
 #: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
 #: ../tools/common/t-connection.c:425 ../tools/common/t-connection.c:955
-#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:336
+#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:337
 #: ../tools/common/web-server.c:1995 ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
 msgid "No detail"
@@ -472,7 +472,7 @@ msgstr "No se pudo declarar el nuevo origen de datos"
 msgid "No valid data source info was created"
 msgstr "No se creó una información válida para la fuente de datos"
 
-#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1184
+#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1185
 msgid "Database access services for the GNOME Desktop"
 msgstr "Servicios de acceso a bases de datos para el Escritorio GNOME"
 
@@ -2411,7 +2411,7 @@ msgstr ""
 #: ../tools/common/t-app.c:2931 ../tools/common/t-app.c:4624
 #: ../tools/common/t-app.c:5141 ../tools/common/t-app.c:5242
 #: ../tools/common/t-app.c:5339 ../tools/common/t-app.c:5437
-#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:407
+#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "No se especificó una conexión"
@@ -3369,7 +3369,7 @@ msgid "UPDATE statement does not have any target columns to update"
 msgstr ""
 "La declaración UPDATE no tiene ninguna columna de destino para actualizar"
 
-#: ../libgda/thread-wrapper/gda-connect.c:152
+#: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
 "The GMainContext passed when gda_signal_connect() was called is not owned by "
 "any thread, you may expect some undesired behaviours, use "
@@ -3379,15 +3379,10 @@ msgstr ""
 "ningún hilo; es posible que experimente un comportamiento no esperado, use "
 "g_main_context_acquire()"
 
-#: ../libgda/thread-wrapper/gda-connect.c:296
+#: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
 msgid "Could not find signal named \"%s\""
 msgstr "No se pudo encontrar la señal «%s»"
-
-#: ../libgda/thread-wrapper/gda-connect.c:359
-#, c-format
-msgid "Could not find handler %lu"
-msgstr "No se pudo encontrar el manejador %lu"
 
 #: ../libgda/thread-wrapper/gda-worker.c:172
 msgid ""
@@ -7755,17 +7750,17 @@ msgstr "No puede cerrar la conexión: %s\n"
 msgid "Invalid unnamed command"
 msgstr "Comando sin nombre no válido"
 
-#: ../tools/base/base-tool-command.c:280
+#: ../tools/base/base-tool-command.c:281
 #, c-format
 msgid "Command '%s' not found"
 msgstr "Comando«%s» no encontrado"
 
-#: ../tools/base/base-tool-command.c:311
+#: ../tools/base/base-tool-command.c:312
 #, c-format
 msgid "Syntax error after '\\'"
 msgstr "Error de sintaxis después de «\\»"
 
-#: ../tools/base/base-tool-command.c:341
+#: ../tools/base/base-tool-command.c:342
 #, c-format
 msgid "Unbalanced usage of quotes"
 msgstr "Uso de cuotas no balanceado"
@@ -8029,7 +8024,6 @@ msgstr "Manual"
 
 #. BROWSER_STOCK_BEGIN
 #: ../tools/browser/browser-window.c:286
-#| msgid "Begin a new transaction"
 msgid "Begin transaction"
 msgstr "Iniciar transacción"
 
@@ -8039,7 +8033,6 @@ msgstr "Iniciar una transacción nueva"
 
 #. BROWSER_STOCK_COMMIT
 #: ../tools/browser/browser-window.c:288
-#| msgid "Commit current transaction"
 msgid "Commit transaction"
 msgstr "Efectuar transacción"
 
@@ -8049,7 +8042,6 @@ msgstr "Efectuar la transacción actual"
 
 #. BROWSER_STOCK_ROLLBACK
 #: ../tools/browser/browser-window.c:290
-#| msgid "Rollback current transaction"
 msgid "Rollback transaction"
 msgstr "Deshacer transacción"
 
@@ -8057,69 +8049,69 @@ msgstr "Deshacer transacción"
 msgid "Rollback current transaction"
 msgstr "Deshacer la transacción actual"
 
-#: ../tools/browser/browser-window.c:494 ../tools/browser/browser-window.c:549
+#: ../tools/browser/browser-window.c:495 ../tools/browser/browser-window.c:550
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:975
 #: ../tools/browser/ui-formgrid.c:777
 msgid "LDAP browser"
 msgstr "Visor LDAP"
 
-#: ../tools/browser/browser-window.c:778
+#: ../tools/browser/browser-window.c:779
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "¿Quiere cerrar la conexión «%s»?"
 
-#: ../tools/browser/browser-window.c:808 ../tools/browser/browser-window.c:815
+#: ../tools/browser/browser-window.c:809 ../tools/browser/browser-window.c:816
 msgid "Do you want to quit the application?"
 msgstr "¿Quiere salir de la aplicación?"
 
-#: ../tools/browser/browser-window.c:809
+#: ../tools/browser/browser-window.c:810
 msgid "all the connections will be closed."
 msgstr "se cerrarán todas las conexiones."
 
-#: ../tools/browser/browser-window.c:816
+#: ../tools/browser/browser-window.c:817
 msgid "the connection will be closed."
 msgstr "se cerrará la conexión."
 
-#: ../tools/browser/browser-window.c:857
+#: ../tools/browser/browser-window.c:858
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Error al iniciar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:871
+#: ../tools/browser/browser-window.c:872
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Error al efectuar la transacción: %s"
 
-#: ../tools/browser/browser-window.c:885
+#: ../tools/browser/browser-window.c:886
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Error al deshacer la transacción: %s"
 
-#: ../tools/browser/browser-window.c:965
+#: ../tools/browser/browser-window.c:966
 msgid "Hit the Escape key to leave the fullscreen mode"
 msgstr "Pulse Esc para salir del modo pantalla completa"
 
-#: ../tools/browser/browser-window.c:1106
+#: ../tools/browser/browser-window.c:1107
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Error al actualizar la conexión vinculada: %s"
 
-#: ../tools/browser/browser-window.c:1144
+#: ../tools/browser/browser-window.c:1145
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "No se pudo abrir la conexión de vinculación: %s"
 
-#: ../tools/browser/browser-window.c:1181
+#: ../tools/browser/browser-window.c:1182
 #: ../tools/browser/gda-browser-6.0.desktop.in.h:1
 msgid "Database browser"
 msgstr "Visor de la base de datos"
 
-#: ../tools/browser/browser-window.c:1518
+#: ../tools/browser/browser-window.c:1519
 msgid "Don't show this message again"
 msgstr "No mostrar este mensaje de nuevo"
 
-#: ../tools/browser/browser-window.c:1665
+#: ../tools/browser/browser-window.c:1666
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -8745,7 +8737,6 @@ msgid "Data set import from file"
 msgstr "Conjunto de datos importados de archivo"
 
 #: ../tools/browser/gdaui-entry-import.c:185
-#| msgid "_Ok"
 msgid "_OK"
 msgstr "_Aceptar"
 
@@ -11007,16 +10998,16 @@ msgstr "No se pudo interpretar el valor del parámetro «%s»"
 msgid "No internal parameter named '%s' required by query"
 msgstr "No existe el parámetro interno llamado «%s» necesario para la consulta"
 
-#: ../tools/common/t-context.c:412
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Conexión cerrada"
 
-#: ../tools/common/t-context.c:543
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "No se puede abrir el archivo «%s» para escritura: %s\n"
 
-#: ../tools/common/t-context.c:557 ../tools/common/t-context.c:566
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "No se puede abrir la tubería «%s»: %s"
@@ -11025,7 +11016,7 @@ msgstr "No se puede abrir la tubería «%s»: %s"
 msgid "Can't initialize dictionary to store favorites"
 msgstr "No se puede inicializar el diccionario para almacenar los favoritos"
 
-#: ../tools/common/t-term-context.c:478
+#: ../tools/common/t-term-context.c:479
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "No se puede abrir el archivo «%s» para lectura: %s\n"
@@ -11053,6 +11044,12 @@ msgstr "establecer a NULL"
 #: ../tools/common/t-utils.c:52
 msgid "set to default value"
 msgstr "establecer a un valor predeterminado"
+
+#: ../tools/common/t-utils.c:207
+#, c-format
+#| msgid "Syntax error after '\\'"
+msgid "Syntax error"
+msgstr "Error de sintaxis"
 
 #: ../tools/common/t-virtual-connection.c:91
 msgid "Bound connection is used"
@@ -11223,6 +11220,9 @@ msgstr "Error: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "No se puede analizar el archivo «%s», se ignorará"
+
+#~ msgid "Could not find handler %lu"
+#~ msgstr "No se pudo encontrar el manejador %lu"
 
 #~ msgid "History"
 #~ msgstr "Histórico"
