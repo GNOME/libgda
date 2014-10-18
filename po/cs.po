@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-22 21:39+0000\n"
-"PO-Revision-Date: 2014-09-23 08:11+0200\n"
+"POT-Creation-Date: 2014-10-06 21:38+0000\n"
+"PO-Revision-Date: 2014-10-18 16:06+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -180,11 +180,11 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/postgres/gda-postgres-util.c:104
 #: ../providers/postgres/gda-postgres-util.c:107
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
-#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:858
-#: ../tools/browser/browser-window.c:872 ../tools/browser/browser-window.c:886
-#: ../tools/browser/browser-window.c:1107
-#: ../tools/browser/browser-window.c:1145
-#: ../tools/browser/browser-window.c:1411
+#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
+#: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
+#: ../tools/browser/browser-window.c:1108
+#: ../tools/browser/browser-window.c:1146
+#: ../tools/browser/browser-window.c:1412
 #: ../tools/browser/data-manager/analyser.c:278
 #: ../tools/browser/data-manager/data-console.c:562
 #: ../tools/browser/data-manager/data-favorite-selector.c:203
@@ -222,7 +222,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
 #: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
 #: ../tools/common/t-connection.c:425 ../tools/common/t-connection.c:955
-#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:336
+#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:337
 #: ../tools/common/web-server.c:1995 ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
 msgid "No detail"
@@ -462,7 +462,7 @@ msgstr "Nelze deklarovat nový zdroj dat"
 msgid "No valid data source info was created"
 msgstr "Nebyly vytvořeny žádné platné informace zdroje dat"
 
-#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1184
+#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1185
 msgid "Database access services for the GNOME Desktop"
 msgstr "Služby pro přístupu k databázím pro pracovní prostředí GNOME"
 
@@ -2350,7 +2350,7 @@ msgstr ""
 #: ../tools/common/t-app.c:2931 ../tools/common/t-app.c:4624
 #: ../tools/common/t-app.c:5141 ../tools/common/t-app.c:5242
 #: ../tools/common/t-app.c:5339 ../tools/common/t-app.c:5437
-#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:407
+#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Nezadáno žádné připojení"
@@ -3283,7 +3283,7 @@ msgstr "Příkaz UPDATE nemá stejný počet cílových sloupců a výrazů"
 msgid "UPDATE statement does not have any target columns to update"
 msgstr "Příkaz UPDATE nemá žádný cílový sloupe, který se má aktualizovat"
 
-#: ../libgda/thread-wrapper/gda-connect.c:152
+#: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
 "The GMainContext passed when gda_signal_connect() was called is not owned by "
 "any thread, you may expect some undesired behaviours, use "
@@ -3293,15 +3293,10 @@ msgstr ""
 "vláknem, takže můžete očekávat nežádoucí chování, použijte "
 "g_main_context_acquire()"
 
-#: ../libgda/thread-wrapper/gda-connect.c:296
+#: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
 msgid "Could not find signal named \"%s\""
 msgstr "Nelze najít signál s názvem „%s“"
-
-#: ../libgda/thread-wrapper/gda-connect.c:359
-#, c-format
-msgid "Could not find handler %lu"
-msgstr "Nelze najít obsluhu %lu"
 
 #: ../libgda/thread-wrapper/gda-worker.c:172
 msgid ""
@@ -7636,17 +7631,17 @@ msgstr "Nelze zavřít připojení: %s\n"
 msgid "Invalid unnamed command"
 msgstr "Neplatný nepojmenovaný příkaz"
 
-#: ../tools/base/base-tool-command.c:280
+#: ../tools/base/base-tool-command.c:281
 #, c-format
 msgid "Command '%s' not found"
 msgstr "Příkaz „%s“ nebyl nalezen"
 
-#: ../tools/base/base-tool-command.c:311
+#: ../tools/base/base-tool-command.c:312
 #, c-format
 msgid "Syntax error after '\\'"
 msgstr "Syntaktická chyba po „\\“"
 
-#: ../tools/base/base-tool-command.c:341
+#: ../tools/base/base-tool-command.c:342
 #, c-format
 msgid "Unbalanced usage of quotes"
 msgstr "Nevyrovnané použití uvozovek"
@@ -7935,69 +7930,69 @@ msgstr "Vrátit zpět transakci"
 msgid "Rollback current transaction"
 msgstr "Vrátit zpět současnou transakci"
 
-#: ../tools/browser/browser-window.c:494 ../tools/browser/browser-window.c:549
+#: ../tools/browser/browser-window.c:495 ../tools/browser/browser-window.c:550
 #: ../tools/browser/ldap-browser/perspective-main.c:33
 #: ../tools/browser/schema-browser/table-columns.c:975
 #: ../tools/browser/ui-formgrid.c:777
 msgid "LDAP browser"
 msgstr "Prohlížeč adresáře LDAP"
 
-#: ../tools/browser/browser-window.c:778
+#: ../tools/browser/browser-window.c:779
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Chcete uzavřít připojení „%s“?"
 
-#: ../tools/browser/browser-window.c:808 ../tools/browser/browser-window.c:815
+#: ../tools/browser/browser-window.c:809 ../tools/browser/browser-window.c:816
 msgid "Do you want to quit the application?"
 msgstr "Chcete aplikaci ukončit?"
 
-#: ../tools/browser/browser-window.c:809
+#: ../tools/browser/browser-window.c:810
 msgid "all the connections will be closed."
 msgstr "všechna připojení budou uzavřena"
 
-#: ../tools/browser/browser-window.c:816
+#: ../tools/browser/browser-window.c:817
 msgid "the connection will be closed."
 msgstr "připojení bude uzavřeno"
 
-#: ../tools/browser/browser-window.c:857
+#: ../tools/browser/browser-window.c:858
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Chyba zahájení transakce: %s"
 
-#: ../tools/browser/browser-window.c:871
+#: ../tools/browser/browser-window.c:872
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Chyba schvalování transakce: %s"
 
-#: ../tools/browser/browser-window.c:885
+#: ../tools/browser/browser-window.c:886
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Chyba při vracení transakce zpět: %s"
 
-#: ../tools/browser/browser-window.c:965
+#: ../tools/browser/browser-window.c:966
 msgid "Hit the Escape key to leave the fullscreen mode"
 msgstr "Režim celé obrazovky opustíte zmáčknutím klávesy Escape"
 
-#: ../tools/browser/browser-window.c:1106
+#: ../tools/browser/browser-window.c:1107
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Chyba aktualizace svázaného připojení: %s"
 
-#: ../tools/browser/browser-window.c:1144
+#: ../tools/browser/browser-window.c:1145
 #, c-format
 msgid "Could not open binding connection: %s"
 msgstr "Nelze otevřít svázaná připojení: %s"
 
-#: ../tools/browser/browser-window.c:1181
+#: ../tools/browser/browser-window.c:1182
 #: ../tools/browser/gda-browser-6.0.desktop.in.h:1
 msgid "Database browser"
 msgstr "Prohlížeč databáze"
 
-#: ../tools/browser/browser-window.c:1518
+#: ../tools/browser/browser-window.c:1519
 msgid "Don't show this message again"
 msgstr "Tuto zprávu již příště nezobrazovat"
 
-#: ../tools/browser/browser-window.c:1665
+#: ../tools/browser/browser-window.c:1666
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -10868,16 +10863,16 @@ msgstr "Nelze interpretovat hodnotu parametru „%s“"
 msgid "No internal parameter named '%s' required by query"
 msgstr "Žádný interní parametr s názvem „%s“ požadovaný dotazem"
 
-#: ../tools/common/t-context.c:412
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Připojení uzavřeno"
 
-#: ../tools/common/t-context.c:543
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Nelze otevřít soubor „%s“ pro zápis: %s\n"
 
-#: ../tools/common/t-context.c:557 ../tools/common/t-context.c:566
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Nelze otevřít rouru „%s“: %s"
@@ -10886,7 +10881,7 @@ msgstr "Nelze otevřít rouru „%s“: %s"
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Nelze inicializovat slovník pro uložení oblíbených"
 
-#: ../tools/common/t-term-context.c:478
+#: ../tools/common/t-term-context.c:479
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "Nelze otevřít soubor „%s“ pro čtení: %s\n"
@@ -10914,6 +10909,11 @@ msgstr "nastavit na prázdné (NULL)"
 #: ../tools/common/t-utils.c:52
 msgid "set to default value"
 msgstr "nastavit na výchozí hodnotu"
+
+#: ../tools/common/t-utils.c:207
+#, c-format
+msgid "Syntax error"
+msgstr "Syntaktická chyba"
 
 #: ../tools/common/t-virtual-connection.c:91
 msgid "Bound connection is used"
