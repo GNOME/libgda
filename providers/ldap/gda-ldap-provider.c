@@ -374,7 +374,7 @@ fetch_user_dn (const gchar *url, const gchar *base, const gchar *username, LdapA
  */
 static gboolean
 gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
-				   GdaQuarkList *params, GdaQuarkList *auth)
+				      GdaQuarkList *params, GdaQuarkList *auth)
 {
 	g_return_val_if_fail (GDA_IS_LDAP_PROVIDER (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
@@ -394,6 +394,14 @@ gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection
 	int rtls_method = -1;
 	gint rport;
 	gboolean use_ssl, use_cache;
+
+	/* calling the parent's function first */
+	GdaServerProviderBase *parent_functions;
+        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	if (parent_functions->prepare_connection) {
+		if (! parent_functions->prepare_connection (GDA_SERVER_PROVIDER (provider), cnc, params, auth))
+			return FALSE;
+	}
 
         base_dn = gda_quark_list_find (params, "DB_NAME");
         if (!base_dn) {
@@ -815,7 +823,7 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 									       cmde->table_name, cmde->base_dn,
 									       cmde->filter, cmde->attributes,
 									       cmde->scope, &lerror))
-					retval = (GObject*) gda_set_new (NULL);
+						retval = (GObject*) gda_set_new (NULL);
 					else {
 						event = gda_connection_point_available_event (cnc,
 											      GDA_CONNECTION_EVENT_ERROR);

@@ -49,6 +49,8 @@ static GObjectClass  *parent_class = NULL;
 static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
 static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
 								GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean       gda_vprovider_data_model_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+								   GdaQuarkList *params, GdaQuarkList *auth);
 static gboolean       gda_vprovider_data_model_close_connection (GdaServerProvider *provider,
 								 GdaConnection *cnc);
 static GObject        *gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
@@ -81,7 +83,7 @@ GdaServerProviderBase data_model_base_functions = {
 	NULL,
 	NULL,
 	gda_vprovider_data_model_open_connection,
-	NULL,
+	gda_vprovider_data_model_prepare_connection,
 	gda_vprovider_data_model_close_connection,
 	NULL,
 	NULL,
@@ -426,6 +428,25 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 
 	return TRUE;
 }
+
+static gboolean
+gda_vprovider_data_model_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc,
+					     GdaQuarkList *params, GdaQuarkList *auth)
+{
+	g_return_val_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+	/* calling the parent's function first */
+	GdaServerProviderBase *parent_functions;
+        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	if (parent_functions->prepare_connection) {
+		if (! parent_functions->prepare_connection (GDA_SERVER_PROVIDER (provider), cnc, params, auth))
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
 
 static void
 cnc_close_foreach_func (G_GNUC_UNUSED GdaDataModel *model, const gchar *table_name, GdaVconnectionDataModel *cnc)
