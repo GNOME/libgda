@@ -734,7 +734,11 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	*ppVtab = &(vtable->base);
 
 	if (SQLITE3_CALL (sqlite3_declare_vtab) (db, sql->str) != SQLITE_OK) {
-		*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't declare virtual table (%s)"), sql->str);
+		sqlite3_mutex_enter (sqlite3_db_mutex (db));
+		*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't declare virtual table (\"%s\"): %s"), sql->str,
+							 sqlite3_errmsg (db));
+		sqlite3_mutex_leave (sqlite3_db_mutex (db));
+
 		g_string_free (sql, TRUE);
 		g_free (vtable);
 		*ppVtab = NULL;
