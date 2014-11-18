@@ -413,7 +413,9 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	if (getenv ("GDA_SQL_CNC")) {
 		const gchar *cncname;
 		cncname = getenv ("GDA_SQL_CNC");
-		g_array_append_val (array, cncname);
+		gchar *tmp;
+		tmp = g_strdup (cncname);
+		g_array_append_val (array, tmp);
 	}
 
 	gda_signal_connect (application, "connection-added",

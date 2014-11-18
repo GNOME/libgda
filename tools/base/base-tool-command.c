@@ -438,7 +438,10 @@ base_tool_command_group_execute (ToolCommandGroup *group, const gchar *cmde,
 	if (!cmd) {
 		if (args[0] && ((*args[0] == 'h') || (*args[0] == '?'))) {
 			/* help requested */
+			g_clear_error (error);
 			res = base_tool_help_get_command_help (group, args [1], error);
+			if (!res)
+				return NULL;
 		}
 		else {
 			g_strfreev (args);
@@ -446,7 +449,7 @@ base_tool_command_group_execute (ToolCommandGroup *group, const gchar *cmde,
 		}
 	}
 
-	if (!res) {
+	if (cmd && !res) {
 		if (cmd->command_func)
 			res = cmd->command_func (cmd, nargs - 1, (const gchar**) args + 1, user_data, error);
 		else
