@@ -1,0 +1,19 @@
+dn: ou=admins,ou=groups,dc=gnome-db,dc=org
+changetype: modify
+delete: uniqueMember
+uniqueMember: cn=dummy
+
+dn: ou=management,ou=groups,dc=gnome-db,dc=org
+changetype: modify
+delete: uniqueMember
+uniqueMember: cn=dummy
+
+dn: ou=Web Site,ou=projects,ou=groups,dc=gnome-db,dc=org
+changetype: modify
+delete: uniqueMember
+uniqueMember: cn=dummy
+
+dn: ou=Secret,ou=projects,ou=groups,dc=gnome-db,dc=org
+changetype: modify
+delete: uniqueMember
+uniqueMember: cn=dummy

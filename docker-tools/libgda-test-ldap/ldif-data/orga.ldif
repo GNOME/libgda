@@ -1,0 +1,66 @@
+# Organisation object
+dn: dc=gnome-db,dc=org
+dc: gnome-db
+description: Gnome DB Project Corporate Directory
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: Gnome DB Project
+
+# Admin user
+dn: cn=ldapadmin,dc=gnome-db,dc=org
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: ldapadmin
+description: Corporate Directory Administrator
+userPassword: wmMF3fd2FW
+
+# Unit for our corporate directory
+dn: ou=people,dc=gnome-db,dc=org
+ou: people
+description: All people in Gnome DB
+objectclass: organizationalUnit
+
+# Unit for groups
+dn: ou=groups,dc=gnome-db,dc=org
+ou: groups
+description: All the groups
+objectclass: organizationalUnit
+
+# Unit for admins
+dn: ou=admins,ou=groups,dc=gnome-db,dc=org
+ou: admins
+description: Administrators group
+cn: Administrators
+objectclass: groupOfUniqueNames
+uniquemember: cn=dummy
+
+# Unit for management
+dn: ou=management,ou=groups,dc=gnome-db,dc=org
+ou: management
+description: Management group
+cn: Management
+objectclass: groupOfUniqueNames
+uniquemember: cn=dummy
+
+# Unit for projects
+dn: ou=projects,ou=groups,dc=gnome-db,dc=org
+ou: projects
+description: Projects's group
+objectclass: organizationalUnit
+
+# Unit for Web site project
+dn: ou=Web Site,ou=projects,ou=groups,dc=gnome-db,dc=org
+ou: Web Site
+cn: Web site project
+description: Web site project's members
+objectclass: groupOfUniqueNames
+uniquemember: cn=dummy
+
+# Unit for Secret project
+dn: ou=Secret,ou=projects,ou=groups,dc=gnome-db,dc=org
+ou: Secret
+cn: Secret project
+description: Secret project's members
+objectclass: groupOfUniqueNames
+uniquemember: cn=dummy

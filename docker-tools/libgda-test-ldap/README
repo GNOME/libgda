@@ -1,0 +1,45 @@
+Use the scripts contained here to create an OpenLDAP server docker image which can be used
+to test Libgda's LDAP provider.
+
+* build.sh builds the docker image (named "libgda-test-ldap"). It uses the names.csv file to create the
+  initial contents of the LDAP directory (fake Gnome-DB directory), using the gen_names_ldif.pl script.
+
+* start.sh starts a docker container from the built image, stop it using CTRL-C
+
+
+
+Notes about LDAP users:
+-----------------------
+The setup script creates two admin users:
+* "cn=admin,dc=gnome-db,dc=org"   	 with password 	   TnUtfv0NFI
+* "cn=ldapadmin,dc=gnome-db,dc=org" 	 with password	   wmMF3fd2FW
+All other user's passwords are defined as: lowercase (<givenName><sn>) where "a" is converted to "@" and "i" to "1"
+
+
+
+LDAP test:
+----------
+$ ldapsearch -h 127.0.0.1 -x -D cn=ldapadmin,dc=gnome-db,dc=org -w wmMF3fd2FW -LLL -b dc=gnome-db,dc=org "(uid=stephen.ryan)"
+dn: cn=Stephen Ryan,ou=people,dc=gnome-db,dc=org
+objectClass: inetOrgPerson
+uid: stephen.ryan
+sn: Ryan
+givenName: Stephen
+cn: Stephen Ryan
+displayName: Stephen Ryan
+userPassword:: U3RlcGhlblJ5QG4=
+mail: stephen.ryan@gnome-db.org
+description: Call me Stephen
+
+$ ldapsearch -h 127.0.0.1 -x -D cn=ldapadmin,dc=gnome-db,dc=org -w wmMF3fd2FW -LLL -b dc=gnome-db,dc=org "(cn=Shaun Mitchell)"
+dn: cn=Shaun Mitchell,ou=people,dc=gnome-db,dc=org
+objectClass: inetOrgPerson
+uid: shaun.mitchell
+sn: Mitchell
+givenName: Shaun
+cn: Shaun Mitchell
+displayName: Shaun Mitchell
+userPassword:: U2hAdW5NMXRjaGVsbA==
+mail: shaun.mitchell@gnome-db.org
+description: Call me Shaun
+jpegPhoto:: /9j/4AAQSkZJRg[...]

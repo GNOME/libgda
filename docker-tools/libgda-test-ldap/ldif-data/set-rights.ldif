@@ -1,0 +1,11 @@
+dn: olcDatabase={3}hdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to attrs=userPassword,shadowLastChange
+  by dn="cn=ldapadmin,dc=gnome-db,dc=org" write
+  by self read
+  by anonymous auth
+  by * none
+olcAccess: {1}to dn.subtree="dc=gnome-db,dc=org"
+  by dn="cn=ldapadmin,dc=gnome-db,dc=org" write
+  by users read
