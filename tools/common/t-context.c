@@ -454,7 +454,7 @@ t_context_get_id (TContext *console)
 void
 t_context_set_command_group (TContext *console, ToolCommandGroup *group)
 {
-	g_return_val_if_fail (T_IS_CONTEXT (console), NULL);
+	g_return_if_fail (T_IS_CONTEXT (console));
 	console->priv->command_group = group;
 }
 
