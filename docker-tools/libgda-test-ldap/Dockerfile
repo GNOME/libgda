@@ -1,8 +1,7 @@
-FROM centos:centos6
-#FROM fedora:20
+FROM fedora:20
 
 MAINTAINER Vivien Malerba "vmalerba@gmail.com"
-ENV REFRESHED_AT 2014-11-13
+ENV REFRESHED_AT 2014-11-19
 
 COPY install.sh run.sh /
 COPY ldif-data /ldif-data/
