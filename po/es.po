@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-10-06 21:38+0000\n"
-"PO-Revision-Date: 2014-10-15 18:26+0200\n"
+"POT-Creation-Date: 2014-11-19 10:25+0000\n"
+"PO-Revision-Date: 2014-11-19 13:45+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -152,9 +152,9 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3369
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:437
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:832
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1560
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:458
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:857
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1585
 #: ../libgda-ui/data-entries/common-bin.c:81
 #: ../libgda-ui/data-entries/common-bin.c:158
 #: ../libgda-ui/data-entries/plugins/common-pict.c:217
@@ -173,11 +173,11 @@ msgstr "No se pudo ejecutar el visor"
 #: ../providers/jdbc/gda-jdbc-provider.c:1610
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164 ../providers/jdbc/libmain.c:480
-#: ../providers/ldap/gda-ldap-provider.c:823
-#: ../providers/ldap/gda-ldap-provider.c:833
-#: ../providers/ldap/gda-ldap-provider.c:875
-#: ../providers/ldap/gda-ldap-provider.c:886
-#: ../providers/ldap/gda-ldap-provider.c:947
+#: ../providers/ldap/gda-ldap-provider.c:831
+#: ../providers/ldap/gda-ldap-provider.c:841
+#: ../providers/ldap/gda-ldap-provider.c:883
+#: ../providers/ldap/gda-ldap-provider.c:894
+#: ../providers/ldap/gda-ldap-provider.c:955
 #: ../providers/mdb/gda-mdb-provider.c:375
 #: ../providers/mysql/gda-mysql-provider.c:2004
 #: ../providers/mysql/gda-mysql-provider.c:2019
@@ -764,7 +764,7 @@ msgstr "El proveedor no proporciona un GdaDataHandler para fechas"
 #: ../libgda/gda-connection.c:3413 ../libgda/gda-connection.c:3496
 #: ../libgda/gda-connection.c:5804
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:418
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
 #, c-format
 msgid "Connection is closed"
 msgstr "La conexión está cerrada"
@@ -814,7 +814,7 @@ msgstr ""
 #: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1938
 #: ../libgda/gda-data-select.c:2894 ../libgda/gda-data-select.c:2961
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:931
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
 #: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -3085,68 +3085,69 @@ msgid "Internal error: invalid provider handle"
 msgstr "Error interno: manejo del proveedor no válido"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:555
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:576
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "Uso incorrecto de las tablas virtuales de Libgda"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:563
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:584
 msgid "Data model must have at least one column"
 msgstr "El modelo de datos debe tener al menos una columna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:580
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:601
 msgid "Could not compute virtual table's columns"
 msgstr "No se pudieron computar las tablas de la tabla virtual"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:603
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:624
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr ""
 "No se puede obtener la descripción del modelo de datos para la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:655
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:676
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr ""
 "No se puede obtener el tipo de la columna del modelo para la columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:716
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:738
 #, c-format
-msgid "Can't declare virtual table (%s)"
-msgstr "No se puede declarar la tabla virtual (%s)"
+#| msgid "Can't declare virtual table (%s)"
+msgid "Can't declare virtual table (\"%s\"): %s"
+msgstr "No se puede declarar la tabla virtual («%s»): %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:853
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:878
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Error interno de SQLite: no hay datos sobre los que iterar"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:960
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:985
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "No se pudo encontrar el valor solicitado en la fila %d y columna %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:982
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
 msgid "Column not found"
 msgstr "No se encontró la columna"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1455
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1480
 msgid "No statement specified to modify the data"
 msgstr "No ha especificado ninguna declaración para modificar los datos"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1462
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1487
 msgid "Invalid statement specified to modify the data"
 msgstr "Declaración proporcionada no válida para modificar los datos"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1482
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1519
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1527
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1507
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1544
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1552
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Parámetro no válido en la declaración para modificar los datos"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1559
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1584
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Falló al modificar los datos: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1641
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1666
 msgid "Data model representing the table is read only"
 msgstr "El modelo de datos que representa la tabla es de sólo lectura"
 
@@ -3490,7 +3491,7 @@ msgid "Data size"
 msgstr "Tamaño de datos"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
-#: ../providers/ldap/gda-ldap-provider.c:998
+#: ../providers/ldap/gda-ldap-provider.c:1006
 #: ../providers/mysql/gda-mysql-provider.c:638
 #: ../providers/mysql/gda-mysql-provider.c:692
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3525,7 +3526,7 @@ msgstr "Tipo de dato"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
 #: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1012 ../tools/common/t-app.c:2303
+#: ../providers/ldap/gda-ldap-provider.c:1020 ../tools/common/t-app.c:2303
 #: ../tools/common/t-app.c:3689 ../tools/common/t-app.c:5491
 #: ../tools/common/t-config-info.c:122 ../tools/common/t-config-info.c:291
 msgid "Value"
@@ -5658,25 +5659,25 @@ msgstr ""
 "No se pudo encontrar la JVM de tiempo de ejecucicón (libjvm.so), el "
 "proveedor JDBC no está disponible."
 
-#: ../providers/ldap/gda-ldap-provider.c:401
+#: ../providers/ldap/gda-ldap-provider.c:409
 msgid "The connection string must contain the DB_NAME value"
 msgstr "La cadena de conexión debe contener el valor DB_NAME"
 
-#: ../providers/ldap/gda-ldap-provider.c:442
+#: ../providers/ldap/gda-ldap-provider.c:450
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Valor no válido para «TLS_REQCERT»"
 
-#: ../providers/ldap/gda-ldap-provider.c:859 ../tools/common/t-app.c:2704
+#: ../providers/ldap/gda-ldap-provider.c:867 ../tools/common/t-app.c:2704
 #: ../tools/common/t-app.c:4432 ../tools/common/t-app.c:4548
 #, c-format
 msgid "Too many arguments"
 msgstr "Demasiados argumentos"
 
-#: ../providers/ldap/gda-ldap-provider.c:1011
+#: ../providers/ldap/gda-ldap-provider.c:1019
 msgid "Parameter"
 msgstr "Parámetro"
 
-#: ../providers/ldap/gda-ldap-provider.c:1225
+#: ../providers/ldap/gda-ldap-provider.c:1233
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "cerca de «%s»: error de sintaxis"
@@ -11047,7 +11048,6 @@ msgstr "establecer a un valor predeterminado"
 
 #: ../tools/common/t-utils.c:207
 #, c-format
-#| msgid "Syntax error after '\\'"
 msgid "Syntax error"
 msgstr "Error de sintaxis"
 
