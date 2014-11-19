@@ -1951,6 +1951,12 @@ gda_connection_insert_row_into_table (GdaConnection *cnc, const gchar *table, GE
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
+
 	va_start (args, error);
 	while ((col_name = va_arg (args, gchar*))) {
 		clist = g_slist_prepend (clist, col_name);
@@ -2014,6 +2020,12 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 	g_return_val_if_fail (table && *table, FALSE);
 	g_return_val_if_fail (col_names, FALSE);
 	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	/* Construct insert query and list of GdaHolders */
 	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_INSERT);
@@ -2121,6 +2133,12 @@ gda_connection_update_row_in_table (GdaConnection *cnc, const gchar *table,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
+
 	va_start (args, error);
 	while ((col_name = va_arg (args, gchar*))) {
 		clist = g_slist_prepend (clist, col_name);
@@ -2188,6 +2206,12 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 	g_return_val_if_fail (table && *table, FALSE);
 	g_return_val_if_fail (col_names, FALSE);
 	g_return_val_if_fail (g_slist_length (col_names) == g_slist_length (values), FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	/* Construct update query and list of GdaHolders */
 	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_UPDATE);
@@ -2326,6 +2350,12 @@ gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table && *table, FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	/* Construct delete query and list of GdaHolders */
 	sql_stm = gda_sql_statement_new (GDA_SQL_STATEMENT_DELETE);
@@ -2757,6 +2787,12 @@ gda_connection_batch_execute (GdaConnection *cnc, GdaBatch *batch, GdaSet *param
 	GSList *retlist = NULL, *stmt_list;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (GDA_IS_BATCH (batch), NULL);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	gda_connection_lock ((GdaLockable*) cnc);
 	cnc->priv->auto_clear_events = FALSE;
@@ -3304,6 +3340,12 @@ gda_connection_statement_execute_select_fullv (GdaConnection *cnc, GdaStatement 
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return NULL;
+	}
+
 	va_list ap;
 	GdaDataModel *model = NULL;
 	GType *types, *req_types;
@@ -3402,6 +3444,12 @@ gda_connection_statement_execute_select_full (GdaConnection *cnc, GdaStatement *
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return NULL;
+	}
+
 	g_object_ref ((GObject*) cnc);
 
 	gda_connection_lock ((GdaLockable*) cnc);
@@ -3481,6 +3529,12 @@ gda_connection_repetitive_statement_execute (GdaConnection *cnc, GdaRepetitiveSt
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
 	g_return_val_if_fail (GDA_IS_REPETITIVE_STATEMENT (rstmt), NULL);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return NULL;
+	}
 
 	g_object_get (rstmt, "statement", &stmt, NULL);
 	g_return_val_if_fail (stmt, NULL);
@@ -3577,6 +3631,12 @@ gda_connection_begin_transaction (GdaConnection *cnc, const gchar *name, GdaTran
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
+
 	return _gda_server_provider_begin_transaction (cnc->priv->provider_obj, cnc, name, level, error);
 }
 
@@ -3597,6 +3657,12 @@ gda_connection_commit_transaction (GdaConnection *cnc, const gchar *name, GError
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	return _gda_server_provider_commit_transaction (cnc->priv->provider_obj, cnc, name, error);
 }
@@ -3620,6 +3686,12 @@ gda_connection_rollback_transaction (GdaConnection *cnc, const gchar *name, GErr
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
+
 	return _gda_server_provider_rollback_transaction (cnc->priv->provider_obj, cnc, name, error);
 }
 
@@ -3638,6 +3710,12 @@ gda_connection_add_savepoint (GdaConnection *cnc, const gchar *name, GError **er
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	return _gda_server_provider_add_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
@@ -3658,6 +3736,12 @@ gda_connection_rollback_savepoint (GdaConnection *cnc, const gchar *name, GError
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
+
 	return _gda_server_provider_rollback_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
 
@@ -3676,6 +3760,12 @@ gda_connection_delete_savepoint (GdaConnection *cnc, const gchar *name, GError *
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	return _gda_server_provider_delete_savepoint (cnc->priv->provider_obj, cnc, name, error);
 }
@@ -4611,6 +4701,11 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (cnc->priv->provider_obj, FALSE);
 
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 	gda_connection_lock ((GdaLockable*) cnc);
 
 	/* Get or create the GdaMetaStore object */
@@ -5006,10 +5101,18 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 				    GdaConnectionMetaType meta_type,
 				    GError **error, gint nb_filters, ...)
 {
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
 	GList* filters = NULL;
 	GdaDataModel* model = NULL;
 	gint i;
   
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return NULL;
+	}
+
 	if (nb_filters > 0) {
 		va_list ap;
 		va_start (ap, nb_filters);
@@ -5067,6 +5170,12 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (cnc->priv->provider_obj, NULL);
+
+	if (! gda_connection_is_opened (cnc)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_CLOSED_ERROR,
+			     "%s", _("Connection is closed"));
+		return FALSE;
+	}
 
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
