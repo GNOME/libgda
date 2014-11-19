@@ -42,8 +42,7 @@ typedef struct {
 static void
 _ldap_table_map_free (LdapTableMap *map)
 {
-	if (map->ldap_cnc)
-		g_object_unref (map->ldap_cnc);
+	map->ldap_cnc = NULL;
 	g_free (map->table_name);
 	g_free (map->base_dn);
 	g_free (map->filter);
@@ -165,23 +164,30 @@ vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 	LdapTableMap *map = NULL;
 	GSList *list;
 
-	lcnc = GDA_LDAP_CONNECTION (cnc);
-	for (list = lcnc->priv->maps; list; list = list->next) {
-		if (!strcmp (((LdapTableMap*)list->data)->table_name, table_name)) {
-			map = (LdapTableMap*)list->data;
-			break;
+	lcnc = (GdaLdapConnection*) cnc;
+
+	/* if @lcnc->priv is NULL, then @cnc is currently being destroyed */
+	if (lcnc->priv) {
+		for (list = lcnc->priv->maps; list; list = list->next) {
+			if (!strcmp (((LdapTableMap*)list->data)->table_name, table_name)) {
+				map = (LdapTableMap*)list->data;
+				break;
+			}
+		}
+		if (map) {
+			lcnc->priv->maps = g_slist_remove (lcnc->priv->maps, map);
+#ifdef GDA_DEBUG_NO
+			g_print ("VTable dropped: %s\n", table_name);
+			dump_vtables (lcnc);
+#endif
 		}
 	}
-	if (map) {
-		lcnc->priv->maps = g_slist_remove (lcnc->priv->maps, map);
-#ifdef GDA_DEBUG_NO
-		g_print ("VTable dropped: %s\n", table_name);
-		dump_vtables (lcnc);
-#endif
-	}
+
 	if (GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_dropped)
 		GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_dropped (cnc, table_name);
-	update_connection_startup_file (GDA_LDAP_CONNECTION (cnc));
+
+	if (lcnc->priv)
+		update_connection_startup_file (GDA_LDAP_CONNECTION (cnc));
 }
 
 /*
@@ -726,7 +732,8 @@ gda_ldap_connection_declare_table (GdaLdapConnection *cnc, const gchar *table_na
         GDA_VCONNECTION_DATA_MODEL_SPEC (map)->create_model_func = NULL;
         GDA_VCONNECTION_DATA_MODEL_SPEC (map)->create_filter_func = _ldap_table_create_filter;
         GDA_VCONNECTION_DATA_MODEL_SPEC (map)->create_filtered_model_func = _ldap_table_create_model_func;
-	map->ldap_cnc = g_object_ref (cnc);
+	map->ldap_cnc = GDA_CONNECTION (cnc); /* we can't hold a reference here because it would be self referencing,
+					       * and we don't need to because the @map is destroyed when @cnc is destroyed */
 	map->table_name = gda_sql_identifier_quote (table_name, GDA_CONNECTION (cnc), NULL, TRUE, FALSE);
 	map->filters_hash = NULL;
 	if (base_dn)
