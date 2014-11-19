@@ -334,6 +334,9 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 		else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 			update_store = TRUE;
 		store = gda_meta_store_new_with_file (dict_file_name);
+		g_print (_("All the information related to the '%s' connection will be stored "
+			   "in the '%s' file\n"),
+			 t_connection_get_name (tcnc), dict_file_name);
 	}
 	else {
 		store = gda_meta_store_new (NULL);
@@ -405,7 +408,6 @@ t_connection_set_property (GObject *object,
 			g_object_set (G_OBJECT (tcnc->priv->cnc), "execution-timer", TRUE, NULL);
 			g_signal_connect (tcnc->priv->cnc, "status-changed",
 					  G_CALLBACK (cnc_status_changed_cb), tcnc);
-			TO_IMPLEMENT;
 			/*
 			  tcnc->priv->transaction_status_signal =
 			  gda_thread_wrapper_connect_raw (tcnc->priv->wrapper,
@@ -427,16 +429,6 @@ t_connection_set_property (GObject *object,
 				g_signal_emit (tcnc, t_connection_signals [NOTICE], 0, tmp);
 				g_free (tmp);
 			}
-			TO_IMPLEMENT;
-			/*
-			  g_object_get (G_OBJECT (tcnc->priv->cnc), "meta-store", &store, NULL);
-			  tcnc->priv->meta_store_signal =
-			  gda_thread_wrapper_connect_raw (tcnc->priv->wrapper, store, "meta-changed",
-			  FALSE, FALSE,
-			  (GdaThreadWrapperCallback) meta_changed_cb,
-			  tcnc);
-			  g_object_unref (store);
-			*/
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -862,7 +854,6 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 	else
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
 							  GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
-
 	g_free (real_cnc_string);
 	g_free (real_cnc);
 	g_free (user);
@@ -871,16 +862,10 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 	g_free (real_auth_string);
 
 	if (newcnc) {
-		gchar *dict_file_name = NULL;
-		gchar *cnc_string;
 		const gchar *rootname;
 		gint i;
 		g_object_set (G_OBJECT (newcnc), "execution-timer", TRUE, NULL);
 		g_object_set (newcnc, "execution-slowdown", 2000000, NULL);
-		g_object_get (G_OBJECT (newcnc),
-			      "cnc-string", &cnc_string, NULL);
-		dict_file_name = t_config_info_compute_dict_file_name (info, cnc_string);
-		g_free (cnc_string);
 
 		tcnc = t_connection_new (newcnc);
 		g_object_unref (newcnc);
@@ -914,56 +899,6 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 				 (order [1] == G_DATE_DAY) ? "DD" : ((order [1] == G_DATE_MONTH) ? "MM" : "YYYY"), sep,
 				 (order [2] == G_DATE_DAY) ? "DD" : ((order [2] == G_DATE_MONTH) ? "MM" : "YYYY"));
 		}
-
-		/* dictionay related work */
-		GdaMetaStore *store;
-		gboolean update_store = FALSE;
-
-		if (dict_file_name) {
-			if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
-				update_store = TRUE;
-			store = gda_meta_store_new_with_file (dict_file_name);
-			g_print (_("All the information related to the '%s' connection will be stored "
-				   "in the '%s' file\n"),
-				 t_connection_get_name (tcnc), dict_file_name);
-		}
-		else {
-			store = gda_meta_store_new (NULL);
-			if (store)
-				update_store = TRUE;
-		}
-
-		t_config_info_update_meta_store_properties (store, newcnc);
-
-		g_object_set (G_OBJECT (t_connection_get_cnc (tcnc)), "meta-store", store, NULL);
-
-		if (update_store) {
-			FILE *ostream = NULL;
-			if (use_term) {
-				ostream = t_context_get_output_stream (t_app_get_term_console (), NULL);
-				if (!ostream) {
-					g_print (_("Getting database schema information for connection '%s', this may take some time... "),
-						 t_connection_get_name (tcnc));
-					fflush (stdout);
-				}
-			}
-
-			GError *lerror = NULL;
-			if (!gda_connection_update_meta_store (t_connection_get_cnc (tcnc), NULL, &lerror)) {
-				if (use_term && !ostream)
-					g_print (_("error: %s\n"), 
-						 lerror && lerror->message ? lerror->message : _("No detail"));
-				if (lerror)
-					g_error_free (lerror);
-			}
-			else
-				if (use_term && !ostream)
-					g_print (_("Done.\n"));
-		}
-
-		if (store)
-			g_object_unref (store);
-		g_free (dict_file_name);
 	}
 
 	return tcnc;
