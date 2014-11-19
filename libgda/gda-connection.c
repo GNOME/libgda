@@ -73,6 +73,7 @@
 #include <glib/gstdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctype.h>
 
 static GMutex global_mutex;
 static GdaSqlParser *internal_parser = NULL;
@@ -1437,6 +1438,7 @@ gda_connection_open_async (GdaConnection *cnc, GdaConnectionOpenFunc callback, g
 	if (gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_ALREADY_OPENED_ERROR,
 			     "%s", _("Connection is alreay opened"));
+		return 0;
 	}
 
 	GdaQuarkList *params, *auth;
@@ -3036,6 +3038,7 @@ gda_connection_statement_execute_v (GdaConnection *cnc, GdaStatement *stmt, GdaS
 	}
 
 	g_object_unref ((GObject*) cnc);
+
 	if (timer)
 		g_timer_destroy (timer);
 
@@ -3063,9 +3066,18 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
 
 	g_return_val_if_fail (sql != NULL
 			      || GDA_IS_CONNECTION (cnc)
-			      || !gda_connection_is_opened (cnc)
-			      || g_str_has_prefix (sql, "SELECT"),
+			      || !gda_connection_is_opened (cnc),
 			      NULL);
+
+	while (isspace (*sql))
+		sql++;
+	g_return_val_if_fail (((sql[0] == 'S') || (sql[0] == 's')) &&
+			      ((sql[1] == 'E') || (sql[1] == 'e')) &&
+			      ((sql[2] == 'L') || (sql[2] == 'l')) &&
+			      ((sql[3] == 'E') || (sql[3] == 'e')) &&
+			      ((sql[4] == 'C') || (sql[4] == 'c')) &&
+			      ((sql[5] == 'T') || (sql[5] == 't')) &&
+			      isspace (sql[6]), NULL);
 
 	g_mutex_lock (&global_mutex);
 	if (!internal_parser)
