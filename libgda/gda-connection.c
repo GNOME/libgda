@@ -367,6 +367,8 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	 * Artificially slows down the execution of queries. This property can be used to
 	 * debug some problems. If non zero, this value is the number of microseconds waited before actually
 	 * executing each query.
+	 * NB: this parameter is ignored during the meta store update (it is set to 0 before the meta data update
+	 * and restored to its state after).
 	 *
 	 * Since: 5.2.0
 	 **/
@@ -4724,6 +4726,14 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	store = gda_connection_get_meta_store (cnc);
 	g_assert (store);
 
+	guint real_slowdown = cnc->priv->exec_slowdown;
+	if (real_slowdown > 0) {
+		/* we don't honor the exec slowdown during meta data updates, it would complicate
+		 * the code quite a lot (slowdown is don in the worker thread) and it's only
+		 * for debug purposes */
+		cnc->priv->exec_slowdown = 0;
+	}
+
 	_gda_connection_status_start_batch (cnc, GDA_CONNECTION_STATUS_BUSY);
 
 	if (context) {
@@ -4737,6 +4747,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		if (!lcontext) {
 			_gda_connection_status_stop_batch (cnc);
 			gda_connection_unlock ((GdaLockable*) cnc);
+			cnc->priv->exec_slowdown = real_slowdown;
 			return FALSE;
 		}
 		/* alter local context because "_tables" and "_views" always go together so only
@@ -4752,6 +4763,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 				_gda_connection_status_stop_batch (cnc);
 				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
+				cnc->priv->exec_slowdown = real_slowdown;
 				return FALSE;
 			}
 		}
@@ -4761,6 +4773,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 				_gda_connection_status_stop_batch (cnc);
 				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
+				cnc->priv->exec_slowdown = real_slowdown;
 				return FALSE;
 			}
 		}
@@ -4791,13 +4804,11 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		for (list = cbd.context_templates; list; list = list->next) 
 			g_hash_table_insert (cbd.context_templates_hash, ((GdaMetaContext*)list->data)->table_name,
 					     list->data);
-		
+
 		signal_id = g_signal_connect (store, "suggest-update",
 					      G_CALLBACK (suggest_update_cb_downstream), &cbd);
-		
 		retval = local_meta_update (cnc->priv->provider_obj, cnc, 
 					    (GdaMetaContext*) (cbd.context_templates->data), error);
-		
 		g_signal_handler_disconnect (store, signal_id);
 
 		/* free the memory associated with each template */
@@ -4822,6 +4833,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 
 		_gda_connection_status_stop_batch (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
+		cnc->priv->exec_slowdown = real_slowdown;
 		return retval;
 	}
 	else {
@@ -4865,6 +4877,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		if (! _gda_meta_store_begin_data_reset (store, error)) {
 			_gda_connection_status_stop_batch (cnc);
 			gda_connection_unlock ((GdaLockable*) cnc);
+			cnc->priv->exec_slowdown = real_slowdown;
 			return FALSE;
 		}
 
@@ -4892,12 +4905,14 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		retval = _gda_meta_store_finish_data_reset (store, error);
 		_gda_connection_status_stop_batch (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
+		cnc->priv->exec_slowdown = real_slowdown;
 		return retval;
 
 	onerror:
 		_gda_connection_status_stop_batch (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
 		_gda_meta_store_cancel_data_reset (store, NULL);
+		cnc->priv->exec_slowdown = real_slowdown;
 		return FALSE;
 	}
 }
