@@ -286,6 +286,7 @@
 	gda_data_model_thaw
 	gda_data_pivot_add_data
 	gda_data_pivot_add_field
+	gda_data_pivot_error_quark
 	gda_data_pivot_get_type
 	gda_data_pivot_new
 	gda_data_pivot_populate
