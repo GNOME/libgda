@@ -43,3 +43,10 @@ userPassword:: U2hAdW5NMXRjaGVsbA==
 mail: shaun.mitchell@gnome-db.org
 description: Call me Shaun
 jpegPhoto:: /9j/4AAQSkZJRg[...]
+
+$ gda-sql-6.0 "LDAP://cn=ldapadmin,dc=gnome-db,dc=org:wmMF3fd2FW@HOST=127.0.0.1;DB_NAME=dc=gnome-db,dc=org"
+c0> .ldap_search "cn=Shaun Mitchell"
+Distinguished name                             │ cn            
+───────────────────────────────────────────────┼───────────────
+cn=Shaun Mitchell,ou=people,dc=gnome-db,dc=org │ Shaun Mitchell
+(1 row)

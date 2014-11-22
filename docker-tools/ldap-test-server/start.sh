@@ -17,4 +17,4 @@ then
 fi
 
 echo "Running LDAP server, hit CTRL-C to stop"
-docker run -t -i -p 389:389 --rm "$image_name"
+docker run -t -i -p 389:389 --rm --name test-ldap "$image_name"
