@@ -1315,7 +1315,6 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
 	if (unique_instance->priv->emit_signals)
 		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
-	data_source_info_free (info);
 
 #ifdef HAVE_LIBSECRET
 	if (! info->is_system) {
@@ -1359,6 +1358,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	}
   #endif
 #endif
+	data_source_info_free (info);
 
 	if (save_system)
 		save_config_file (TRUE);
