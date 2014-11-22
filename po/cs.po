@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-10-06 21:38+0000\n"
-"PO-Revision-Date: 2014-10-18 16:06+0200\n"
+"POT-Creation-Date: 2014-11-22 10:24+0000\n"
+"PO-Revision-Date: 2014-10-22 21:37+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -124,7 +124,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../control-center/dsn-properties-dialog.c:267 ../libgda/gda-config.c:399
 #: ../libgda/gda-config.c:549 ../libgda/gda-config.c:1084
 #: ../libgda/gda-config.c:1195 ../libgda/gda-config.c:1253
-#: ../libgda/gda-config.c:1330 ../libgda/gda-connection.c:1462
+#: ../libgda/gda-config.c:1330 ../libgda/gda-connection.c:1466
 #: ../libgda/gda-data-model.c:2475 ../libgda/gda-data-model.c:2483
 #: ../libgda/gda-data-model-dir.c:384 ../libgda/gda-data-model-import.c:1720
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
@@ -143,11 +143,11 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3226
 #: ../libgda/sqlite/gda-sqlite-provider.c:3238
 #: ../libgda/sqlite/gda-sqlite-provider.c:3369
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:437
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:832
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1560
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:256
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:458
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:857
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1585
 #: ../libgda-ui/data-entries/common-bin.c:81
 #: ../libgda-ui/data-entries/common-bin.c:158
 #: ../libgda-ui/data-entries/plugins/common-pict.c:217
@@ -166,11 +166,11 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/jdbc/gda-jdbc-provider.c:1610
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164 ../providers/jdbc/libmain.c:480
-#: ../providers/ldap/gda-ldap-provider.c:823
-#: ../providers/ldap/gda-ldap-provider.c:833
-#: ../providers/ldap/gda-ldap-provider.c:875
-#: ../providers/ldap/gda-ldap-provider.c:886
-#: ../providers/ldap/gda-ldap-provider.c:947
+#: ../providers/ldap/gda-ldap-provider.c:831
+#: ../providers/ldap/gda-ldap-provider.c:841
+#: ../providers/ldap/gda-ldap-provider.c:883
+#: ../providers/ldap/gda-ldap-provider.c:894
+#: ../providers/ldap/gda-ldap-provider.c:955
 #: ../providers/mdb/gda-mdb-provider.c:375
 #: ../providers/mysql/gda-mysql-provider.c:2004
 #: ../providers/mysql/gda-mysql-provider.c:2019
@@ -221,9 +221,9 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/schema-browser/table-preferences.c:766
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
 #: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
-#: ../tools/common/t-connection.c:425 ../tools/common/t-connection.c:955
-#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:337
-#: ../tools/common/web-server.c:1995 ../tools/misc/gda-list-server-op.c:68
+#: ../tools/common/t-connection.c:427 ../tools/common/t-connection.c:1141
+#: ../tools/common/t-term-context.c:337 ../tools/common/web-server.c:1995
+#: ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
 msgid "No detail"
 msgstr "Bez podrobností"
@@ -570,8 +570,8 @@ msgstr "Neznámý DSN „%s“"
 msgid "Provider '%s' not found"
 msgstr "Poskytovatel „%s“ nebyl nalezen"
 
-#: ../libgda/gda-config.c:1577 ../libgda/gda-connection.c:1013
-#: ../libgda/gda-connection.c:1162
+#: ../libgda/gda-config.c:1577 ../libgda/gda-connection.c:1016
+#: ../libgda/gda-connection.c:1165
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Není nainstalován žádný poskytovatel „%s“"
@@ -640,23 +640,23 @@ msgstr "Heslo"
 msgid "Error loading provider '%s': %s"
 msgstr "Chyba při načítání poskytovatele „%s“: %s"
 
-#: ../libgda/gda-connection.c:313
+#: ../libgda/gda-connection.c:314
 msgid "DSN to use"
 msgstr "DSN, které se má použít"
 
-#: ../libgda/gda-connection.c:316
+#: ../libgda/gda-connection.c:317
 msgid "Connection string to use"
 msgstr "Připojovací řetězec, který se má použít"
 
-#: ../libgda/gda-connection.c:319
+#: ../libgda/gda-connection.c:320
 msgid "Provider to use"
 msgstr "Poskytovatel, který se má použít"
 
-#: ../libgda/gda-connection.c:324
+#: ../libgda/gda-connection.c:325
 msgid "Authentication string to use"
 msgstr "Ověřovací řetězec, který se má použít"
 
-#: ../libgda/gda-connection.c:328 ../libgda-ui/data/server_operation.glade.h:6
+#: ../libgda/gda-connection.c:329 ../libgda-ui/data/server_operation.glade.h:6
 #: ../libgda-ui/gdaui-server-operation.c:778
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
@@ -665,122 +665,131 @@ msgid "Options"
 msgstr "Volby"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:333
+#: ../libgda/gda-connection.c:334
 msgid "GdaMetaStore used by the connection"
 msgstr "Objekt GdaMetaStore použitý tímto připojením"
 
-#: ../libgda/gda-connection.c:347
+#: ../libgda/gda-connection.c:348
 msgid "Number of history events to keep in memory"
 msgstr "Počet událostí historie k uchování v paměti"
 
-#: ../libgda/gda-connection.c:360
+#: ../libgda/gda-connection.c:361
 msgid "Computes execution delay for each executed statement"
 msgstr "Počítá odložení zpracování pro každý spuštěný příkaz"
 
-#: ../libgda/gda-connection.c:374
+#: ../libgda/gda-connection.c:377
 msgid "Artificially slows down the execution of queries"
 msgstr "Uměle zpomaluje provádění dotazů"
 
-#: ../libgda/gda-connection.c:624 ../libgda/gda-connection.c:652
-#: ../libgda/gda-connection.c:666 ../libgda/gda-connection.c:681
+#: ../libgda/gda-connection.c:627 ../libgda/gda-connection.c:655
+#: ../libgda/gda-connection.c:669 ../libgda/gda-connection.c:684
 #, c-format
 msgid "Can't set the '%s' property when the connection is opened"
 msgstr "Jakmile je připojení otevřeno, nelze nastavit vlastnost „%s“"
 
-#: ../libgda/gda-connection.c:632
+#: ../libgda/gda-connection.c:635
 #, c-format
 msgid "No DSN named '%s' defined"
 msgstr "Není definován žádný DSN pojmenovaný „%s“"
 
-#: ../libgda/gda-connection.c:702
+#: ../libgda/gda-connection.c:705
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
 msgstr "Jakmile je připojení otevřeno, nelze měnit vlastnost „%s“"
 
-#: ../libgda/gda-connection.c:975
+#: ../libgda/gda-connection.c:978
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "Chybná specifikace zdroje dat „%s“"
 
-#: ../libgda/gda-connection.c:983 ../libgda/gda-connection.c:1331
-#: ../libgda/gda-connection.c:1333
+#: ../libgda/gda-connection.c:986 ../libgda/gda-connection.c:1334
+#: ../libgda/gda-connection.c:1336
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
 
-#: ../libgda/gda-connection.c:1022
+#: ../libgda/gda-connection.c:1025
 msgid "Datasource configuration error: no provider specified"
 msgstr "Chyba nastavení zdroje dat: není určen žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1125 ../tools/browser/auth-dialog.c:384
-#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:760
+#: ../libgda/gda-connection.c:1128 ../tools/browser/auth-dialog.c:384
+#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:752
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Chybný připojovací řetězec „%s“"
 
-#: ../libgda/gda-connection.c:1131
+#: ../libgda/gda-connection.c:1134
 msgid "No database driver specified"
 msgstr "Nezadán žádný databázový ovladač"
 
-#: ../libgda/gda-connection.c:1321
+#: ../libgda/gda-connection.c:1324
 msgid "No provider specified"
 msgstr "Není zadán žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1343 ../libgda/gda-connection.c:1345
+#: ../libgda/gda-connection.c:1346 ../libgda/gda-connection.c:1348
 msgid "No DSN or connection string specified"
 msgstr "Není zadán žádný DSN nebo připojovací řetězec"
 
-#: ../libgda/gda-connection.c:1439
+#: ../libgda/gda-connection.c:1442
 msgid "Connection is alreay opened"
 msgstr "Připojení je již otevřeno"
 
-#: ../libgda/gda-connection.c:1461
+#: ../libgda/gda-connection.c:1465
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Chyba při snaze udržet metadata v aktuálním stavu: %s"
 
-#: ../libgda/gda-connection.c:1820
+#: ../libgda/gda-connection.c:1824
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "Poskytovatel neposkytuje GdaDataHandler pro data"
 
-#: ../libgda/gda-connection.c:2967 ../libgda/gda-connection.c:3324
-#: ../libgda/gda-connection.c:3413 ../libgda/gda-connection.c:3496
-#: ../libgda/gda-connection.c:5804
+#: ../libgda/gda-connection.c:1960 ../libgda/gda-connection.c:2030
+#: ../libgda/gda-connection.c:2142 ../libgda/gda-connection.c:2216
+#: ../libgda/gda-connection.c:2360 ../libgda/gda-connection.c:2797
+#: ../libgda/gda-connection.c:3007 ../libgda/gda-connection.c:3359
+#: ../libgda/gda-connection.c:3380 ../libgda/gda-connection.c:3463
+#: ../libgda/gda-connection.c:3475 ../libgda/gda-connection.c:3549
+#: ../libgda/gda-connection.c:3564 ../libgda/gda-connection.c:3650
+#: ../libgda/gda-connection.c:3677 ../libgda/gda-connection.c:3705
+#: ../libgda/gda-connection.c:3730 ../libgda/gda-connection.c:3755
+#: ../libgda/gda-connection.c:3780 ../libgda/gda-connection.c:4720
+#: ../libgda/gda-connection.c:5139 ../libgda/gda-connection.c:5203
+#: ../libgda/gda-connection.c:5940
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:418
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
 #, c-format
 msgid "Connection is closed"
 msgstr "Připojení je uzavřeno"
 
-#: ../libgda/gda-connection.c:3196 ../libgda/gda-connection.c:3211
+#: ../libgda/gda-connection.c:3246 ../libgda/gda-connection.c:3261
 msgid "Statement is a selection statement"
 msgstr "Příkaz je příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:3267 ../libgda/gda-connection.c:3360
-#: ../libgda/gda-connection.c:3442
+#: ../libgda/gda-connection.c:3317 ../libgda/gda-connection.c:3416
+#: ../libgda/gda-connection.c:3504
 msgid "Statement is not a selection statement"
 msgstr "Příkaz není příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:3872
+#: ../libgda/gda-connection.c:3976
 msgid "Invalid argument"
 msgstr "Neplatný parametr"
 
-#: ../libgda/gda-connection.c:3882
+#: ../libgda/gda-connection.c:3986
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Chybějící nebo nesprávné parametry pro tabulku „%s“: %s"
 
-#: ../libgda/gda-connection.c:4548
+#: ../libgda/gda-connection.c:4652
 msgid "Meta update error"
 msgstr "Chyba aktualizace metaúdajů"
 
-#: ../libgda/gda-connection.c:5097
+#: ../libgda/gda-connection.c:5233
 msgid "Wrong filter arguments"
 msgstr "Nesprávné parametry filtru"
 
-#: ../libgda/gda-connection.c:5285 ../libgda/gda-connection.c:5338
-#: ../libgda/gda-connection.c:5382 ../libgda/gda-connection.c:5426
-#: ../libgda/gda-connection.c:5470
+#: ../libgda/gda-connection.c:5421 ../libgda/gda-connection.c:5474
+#: ../libgda/gda-connection.c:5518 ../libgda/gda-connection.c:5562
+#: ../libgda/gda-connection.c:5606
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná transakce"
@@ -795,7 +804,7 @@ msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná tra
 #: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1938
 #: ../libgda/gda-data-select.c:2894 ../libgda/gda-data-select.c:2961
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:931
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
 #: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -2948,29 +2957,29 @@ msgstr "Požadovaný řádek nebyl nalezen"
 msgid "Can't set iterator on requested row"
 msgstr "Nelze nastavit iterátor na požadovaný řádek"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:126
 #, c-format
 msgid "Error storing list of created LDAP tables: %s"
 msgstr "Chyba uchování seznamu vytvořených tabulek LDAP: %s"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:204
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:210
 msgid "File used to store startup data"
 msgstr "Soubor použitý k uchování počátečních dat"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:255
 #, c-format
 msgid "Error recreating LDAP tables: %s"
 msgstr "Chyba při opětovném vytvoření tabulek LDAP: %s"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:774
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:781
 msgid "Can't remove non LDAP virtual table"
 msgstr "Nelze odstranit virtuální tabulku, která není pro LDAP"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:822
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:829
 msgid "Can't describe non LDAP virtual table"
 msgstr "Nelze popsat virtuální tabulku, která není pro LDAP"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:829
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:836
 msgid "Unknown LDAP virtual table"
 msgstr "Neznámá virtuální tabulka LDAP"
 
@@ -3015,66 +3024,66 @@ msgid "Internal error: invalid provider handle"
 msgstr "Interní chyba: neplatný ovladač poskytovatele"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:555
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:576
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "Nesprávné použití virtuálních tabulek libgda"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:563
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:584
 msgid "Data model must have at least one column"
 msgstr "Datový model musí mít nejméně jeden sloupec"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:580
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:601
 msgid "Could not compute virtual table's columns"
 msgstr "Nelze vypočítat sloupce virtuální tabulky"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:603
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:624
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Nelze získat popis datového modelu pro sloupec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:655
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:676
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Nelze získat typ sloupce datového modelu pro sloupec %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:716
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:738
 #, c-format
-msgid "Can't declare virtual table (%s)"
-msgstr "Nelze deklarovat virtuální tabulku (%s)"
+msgid "Can't declare virtual table (\"%s\"): %s"
+msgstr "Nelze deklarovat virtuální tabulku („%s“): %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:853
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:878
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Interní chyba SQLite: nejsou žádná data, přes která by se iterovalo"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:960
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:985
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "Požadovanou hodnotu nelze v řádku %d a ve sloupci %d najít"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:982
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
 msgid "Column not found"
 msgstr "Sloupec nebyl nalezen"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1455
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1480
 msgid "No statement specified to modify the data"
 msgstr "Pro změnu dat nebyl poskytnut žádný příkaz"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1462
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1487
 msgid "Invalid statement specified to modify the data"
 msgstr "Pro změnu dat byl poskytnut neplatný příkaz"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1482
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1519
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1527
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1507
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1544
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1552
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Pro změnu dat byl poskytnut příkaz s neplatným parametrem"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1559
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1584
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Selhala změna dat: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1641
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1666
 msgid "Data model representing the table is read only"
 msgstr "Datový model představující tabulku je pouze ke čtení"
 
@@ -3125,7 +3134,7 @@ msgstr "Tabulka „%s“ nebyla nalezena"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:796
 #: ../libgda/sql-parser/gda-statement-struct.c:811
-#: ../tools/common/t-connection.c:1901 ../tools/common/t-connection.c:1955
+#: ../tools/common/t-connection.c:1836 ../tools/common/t-connection.c:1890
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Nelze zjistit tabulku pro pole „%s“"
@@ -3405,7 +3414,7 @@ msgid "Data size"
 msgstr "Velikost dat"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
-#: ../providers/ldap/gda-ldap-provider.c:998
+#: ../providers/ldap/gda-ldap-provider.c:1006
 #: ../providers/mysql/gda-mysql-provider.c:638
 #: ../providers/mysql/gda-mysql-provider.c:692
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3440,7 +3449,7 @@ msgstr "Datový typ"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
 #: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1012 ../tools/common/t-app.c:2303
+#: ../providers/ldap/gda-ldap-provider.c:1020 ../tools/common/t-app.c:2303
 #: ../tools/common/t-app.c:3689 ../tools/common/t-app.c:5491
 #: ../tools/common/t-config-info.c:122 ../tools/common/t-config-info.c:291
 msgid "Value"
@@ -5565,25 +5574,25 @@ msgstr ""
 "Nelze najít běhové prostředí JVM (libjvm.so), poskytovatel JDBC není "
 "dostupný."
 
-#: ../providers/ldap/gda-ldap-provider.c:401
+#: ../providers/ldap/gda-ldap-provider.c:409
 msgid "The connection string must contain the DB_NAME value"
 msgstr "Připojovací řetězec musí obsahovat hodnotu DB_NAME (název databáze)"
 
-#: ../providers/ldap/gda-ldap-provider.c:442
+#: ../providers/ldap/gda-ldap-provider.c:450
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neplatná hodnota pro „TLS_REQCERT“"
 
-#: ../providers/ldap/gda-ldap-provider.c:859 ../tools/common/t-app.c:2704
+#: ../providers/ldap/gda-ldap-provider.c:867 ../tools/common/t-app.c:2704
 #: ../tools/common/t-app.c:4432 ../tools/common/t-app.c:4548
 #, c-format
 msgid "Too many arguments"
 msgstr "Příliš mnoho parametrů"
 
-#: ../providers/ldap/gda-ldap-provider.c:1011
+#: ../providers/ldap/gda-ldap-provider.c:1019
 msgid "Parameter"
 msgstr "Parametr"
 
-#: ../providers/ldap/gda-ldap-provider.c:1225
+#: ../providers/ldap/gda-ldap-provider.c:1233
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "poblíž „%s“: syntaktická chyba"
@@ -7771,7 +7780,7 @@ msgstr "Použít celou obrazovku"
 msgid "_Connection"
 msgstr "_Připojení"
 
-#: ../tools/browser/browser-window.c:264 ../tools/common/t-connection.c:1094
+#: ../tools/browser/browser-window.c:264 ../tools/common/t-connection.c:1029
 msgid "Connection"
 msgstr "Připojení"
 
@@ -10386,12 +10395,12 @@ msgid "Getting database schema information, this may take some time... "
 msgstr ""
 "Získávají se informace o databázovém schématu, to může nějakou chvíli trvat…"
 
-#: ../tools/common/t-app.c:2792 ../tools/common/t-connection.c:954
+#: ../tools/common/t-app.c:2792
 #, c-format
 msgid "error: %s\n"
 msgstr "chyba: %s\n"
 
-#: ../tools/common/t-app.c:2799 ../tools/common/t-connection.c:961
+#: ../tools/common/t-app.c:2799
 #, c-format
 msgid "Done.\n"
 msgstr "Hotovo.\n"
@@ -10413,7 +10422,7 @@ msgstr "DSN nebo připojovací řetězec"
 msgid "Missing required connection names"
 msgstr "Schází názvy požadovaného připojení"
 
-#: ../tools/common/t-app.c:2986 ../tools/common/t-connection.c:711
+#: ../tools/common/t-app.c:2986 ../tools/common/t-connection.c:703
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Název připojení „%s“ je neplatný"
@@ -10764,42 +10773,13 @@ msgstr "p%u"
 msgid "Analysing database schema"
 msgstr "Analyzuje se databázové schéma"
 
-#: ../tools/common/t-connection.c:291 ../tools/common/t-connection.c:424
-#: ../tools/common/t-connection.c:1205
+#: ../tools/common/t-connection.c:291 ../tools/common/t-connection.c:426
+#: ../tools/common/t-connection.c:1140
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Chyba při získávání metadat z připojení: %s"
 
-#: ../tools/common/t-connection.c:784
-#, c-format
-msgid "\tUsername for '%s': "
-msgstr "\tUživatelské jméno pro „%s“:"
-
-#: ../tools/common/t-connection.c:791 ../tools/common/t-connection.c:806
-#, c-format
-msgid "No username for '%s'"
-msgstr "Žádné jméno uživatele pro „%s“"
-
-#: ../tools/common/t-connection.c:815
-#, c-format
-msgid "\tPassword for '%s': "
-msgstr "\tHeslo pro „%s“:"
-
-#: ../tools/common/t-connection.c:824 ../tools/common/t-connection.c:833
-#, c-format
-msgid "No password for '%s'"
-msgstr "Pro „%s“ není žádné heslo"
-
-#: ../tools/common/t-connection.c:912
-#, c-format
-msgid ""
-"Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
-"MM the month and DD the day\n"
-msgstr ""
-"Formát data pro toto připojení bude %s%c%s%c%s, kde YYYY je rok, MM je měsíc "
-"a DD je den\n"
-
-#: ../tools/common/t-connection.c:926
+#: ../tools/common/t-connection.c:337
 #, c-format
 msgid ""
 "All the information related to the '%s' connection will be stored in the "
@@ -10808,48 +10788,68 @@ msgstr ""
 "Všechny informace vztahující se k připojení „%s“ budou uloženy v souboru "
 "„%s“\n"
 
-#: ../tools/common/t-connection.c:945
+#: ../tools/common/t-connection.c:776
+#, c-format
+msgid "\tUsername for '%s': "
+msgstr "\tUživatelské jméno pro „%s“:"
+
+#: ../tools/common/t-connection.c:783 ../tools/common/t-connection.c:798
+#, c-format
+msgid "No username for '%s'"
+msgstr "Žádné jméno uživatele pro „%s“"
+
+#: ../tools/common/t-connection.c:807
+#, c-format
+msgid "\tPassword for '%s': "
+msgstr "\tHeslo pro „%s“:"
+
+#: ../tools/common/t-connection.c:816 ../tools/common/t-connection.c:825
+#, c-format
+msgid "No password for '%s'"
+msgstr "Pro „%s“ není žádné heslo"
+
+#: ../tools/common/t-connection.c:897
 #, c-format
 msgid ""
-"Getting database schema information for connection '%s', this may take some "
-"time... "
+"Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
+"MM the month and DD the day\n"
 msgstr ""
-"Získávají se informace o databázovém schématu pro připojení „%s“, to může "
-"nějakou chvíli trvat…"
+"Formát data pro toto připojení bude %s%c%s%c%s, kde YYYY je rok, MM je měsíc "
+"a DD je den\n"
 
-#: ../tools/common/t-connection.c:1096
+#: ../tools/common/t-connection.c:1031
 msgid "unnamed"
 msgstr "nepojmenováno"
 
-#: ../tools/common/t-connection.c:1099
+#: ../tools/common/t-connection.c:1034
 msgid "data source"
 msgstr "zdroj dat"
 
-#: ../tools/common/t-connection.c:1194
+#: ../tools/common/t-connection.c:1129
 msgid "Getting database schema information"
 msgstr "Získávají se informace o databázovém schématu"
 
-#: ../tools/common/t-connection.c:1550
+#: ../tools/common/t-connection.c:1485
 msgid "Connection not yet opened"
 msgstr "Připojení není zatím otevřeno"
 
-#: ../tools/common/t-connection.c:1556
+#: ../tools/common/t-connection.c:1491
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Nelze inicializovat slovník pro uchování předvoleb tabulek"
 
-#: ../tools/common/t-connection.c:1602 ../tools/common/t-connection.c:1608
-#: ../tools/common/t-connection.c:1744 ../tools/common/t-favorites.c:628
+#: ../tools/common/t-connection.c:1537 ../tools/common/t-connection.c:1543
+#: ../tools/common/t-connection.c:1679 ../tools/common/t-favorites.c:628
 #: ../tools/common/t-favorites.c:634 ../tools/common/t-favorites.c:1061
 #: ../tools/common/t-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
 msgstr "Nelez inicializovat transakci pro přístup k oblíbeným"
 
-#: ../tools/common/t-connection.c:1689 ../tools/common/t-favorites.c:807
+#: ../tools/common/t-connection.c:1624 ../tools/common/t-favorites.c:807
 #: ../tools/common/t-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
 msgstr "Nelze schválit transakci pro přístup k oblíbeným"
 
-#: ../tools/common/t-connection.c:2248
+#: ../tools/common/t-connection.c:2183
 msgid "Could not execute LDAP search"
 msgstr "Nelze provést hledání v adresáři LDAP"
 
