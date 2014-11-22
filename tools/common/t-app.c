@@ -1077,7 +1077,7 @@ build_commands (TApp *self, TAppFeatures features)
 	c->group = _("DSN (data sources) management");
 	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<DSN>]"), "l");
-	c->description = _("List all DSN (or named DSN's attributes)");
+	c->description = _("List all DSN (or specified DSN's attributes)");
 	c->command_func = (ToolCommandFunc) extra_command_list_dsn;
 #ifdef HAVE_LIBSOUP
 	base_tool_command_group_add (self->web_commands, c);
@@ -2568,12 +2568,27 @@ extra_command_create_dsn (ToolCommand *command, guint argc, const gchar **argv,
 	
 	newdsn.cnc_string = real_cnc;
 	newdsn.auth_string = NULL;
+	GString *auth = NULL;
 	if (user) {
 		gchar *tmp;
 		tmp = gda_rfc1738_encode (user);
-		newdsn.auth_string = g_strdup_printf ("USERNAME=%s", tmp);
+		auth = g_string_new ("USERNAME=");
+		g_string_append (auth, tmp);
 		g_free (tmp);
 	}
+	if (pass) {
+		gchar *tmp;
+		tmp = gda_rfc1738_encode (pass);
+		if (auth)
+			g_string_append (auth, ";PASSWORD=");
+		else
+			auth = g_string_new ("PASSWORD=");
+		g_string_append (auth, tmp);
+		g_free (tmp);
+	}
+	if (auth)
+		newdsn.auth_string = g_string_free (auth, FALSE);
+
 	newdsn.is_system = FALSE;
 
 	if (!newdsn.provider) {
