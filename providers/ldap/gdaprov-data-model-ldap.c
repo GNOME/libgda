@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -277,8 +277,6 @@ gda_data_model_ldap_dispose (GObject *object)
 	if (model->priv) {
 		if (model->priv->row_mult)
 			row_multiplier_free (model->priv->row_mult);
-		if (model->priv->cnc)
-			g_object_unref (model->priv->cnc);
 		if (model->priv->columns) {
                         g_list_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
                         g_list_free (model->priv->columns);
@@ -298,8 +296,15 @@ gda_data_model_ldap_dispose (GObject *object)
 
 		if (model->priv->top_exec) {
 			LdapConnectionData *cdata;
+			if (!model->priv->cnc)
+				g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
 			cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (model->priv->cnc));
 			ldap_part_free (model->priv->top_exec, cdata);
+		}
+
+		if (model->priv->cnc) {
+			g_object_remove_weak_pointer ((GObject*) model->priv->cnc, (gpointer*) &(model->priv->cnc));
+			model->priv->cnc = NULL;
 		}
 
 		g_free (model->priv->base_dn);
@@ -378,7 +383,8 @@ gda_data_model_ldap_set_property (GObject *object,
 					g_warning ("cnc is not an LDAP connection");
 					break;
 				}
-				model->priv->cnc = g_object_ref (cnc);
+				model->priv->cnc = cnc;
+				g_object_add_weak_pointer ((GObject*) cnc, (gpointer*) &(model->priv->cnc));
 			}
 			break;
 		}
@@ -406,6 +412,9 @@ gda_data_model_ldap_set_property (GObject *object,
 					g_array_free (model->priv->column_mv_actions, TRUE);
 					model->priv->column_mv_actions = NULL;
 				}
+
+				if (!model->priv->cnc)
+					g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
 
 				model->priv->columns = _ldap_compute_columns (model->priv->cnc, csv,
 									      &model->priv->attributes,
@@ -702,6 +711,8 @@ update_iter_from_ldap_row (GdaDataModelLdap *imodel, GdaDataModelIter *iter)
 	gint j, nb;
 	LdapConnectionData *cdata;
 	GSList *holders_set = NULL;
+
+	g_return_if_fail (imodel->priv->cnc);
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (imodel->priv->cnc));
 	g_return_if_fail (cdata);
 
@@ -937,6 +948,8 @@ execute_ldap_search (GdaDataModelLdap *model)
 	LDAPMessage *msg = NULL;
 	int lscope, res = 0;
 	LdapConnectionData *cdata;
+
+	g_return_if_fail (model->priv->cnc);
 	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (model->priv->cnc));
 	g_return_if_fail (cdata);
 
@@ -1343,6 +1356,10 @@ ldap_part_split (LdapPart *part, GdaDataModelLdap *model, gboolean *out_error)
 	if (out_error)
 		*out_error = FALSE;
 	g_assert (!part->children);
+
+	if (!model->priv->cnc)
+		g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
+
 	mparts = _gdaprov_data_model_ldap_new (model->priv->cnc, part->base_dn, NULL, NULL,
 					      GDA_LDAP_SEARCH_ONELEVEL);
 	if (!mparts) {
