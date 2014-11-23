@@ -10,7 +10,7 @@
     <para>
       &LIBGDA;'s global limitations are:
       <sect2 id="threads"><title>Multi threaded environment</title>
-	<para>&LIBGDA; is not thread safe. However it supports working with threads as long as any object 
+	<para>&LIBGDA; is not thread safe, however it supports working with threads as long as any object 
 	  (except otherwise stated) created by the API is used by one single thread (that is there is no
 	  situation when two threads try to access the same object at the same time). Exceptions are:
 	  <itemizedlist>
@@ -21,29 +21,17 @@
 		lock an object's usage (especially when getting and
 		setting properties before or after calling methods).</para></listitem>
 	    <listitem><para>Any <link linkend="GdaConnection">GdaConnection</link> object can be accessed from any thread 
-		(that object implements the <link linkend="GdaLockable">GdaLockable</link> interface). Also
-		some database providers may impose other limitations (inherited from the database's specific client APIs)
-		such as only one thread can use the connection object, or even that only one thread can use the database
-		provider.</para></listitem>
+	        (that object implements the <link linkend="GdaLockable">GdaLockable</link> interface). Specifically
+	        &LIBGDA; removes the limits imposed by some database provider's API regarding threads.</para></listitem>
 	    <listitem><para>Any <link linkend="GdaAttributesManager">GdaAttributesManager</link> can safely be accessed from
 		any thread.</para></listitem>
 	  </itemizedlist>
 	</para>
-	
-	<para>Note that multi threading support is still at an early stage and may contain bugs</para>
       </sect2>
     </para>
   </sect1>
 
   <sect1 id="limitations_mysql"><title>For MySQL</title>
-    <sect2><title>Multi threaded environment</title>
-      <para>
-	If MySQL client was not compiled with the <option>--enable-thread-safe-client</option> flag, 
-	then the database provider will only allow
-	connections to be opened from the thread which initializes &LIBGDA;. Otherwise there is no limitation.
-      </para>
-    </sect2>
-
     <sect2><title>Statements execution</title>
       <para>
 	<itemizedlist>
@@ -64,7 +52,6 @@
 	time but GMT.
       </para>
     </sect2>
-
   </sect1>
 
   <sect1 id="limitations_oracle"><title>For Oracle</title>
@@ -104,14 +91,6 @@
 	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s
 	last_insert_row parameter will return a new <link linkend="GdaSet">GdaSet</link> object only if the table has OIDs
 	(to ensure this, the "WITH OIDS" option should be added at the end of a CREATE TABLE query).
-      </para>
-    </sect2>
-
-    <sect2><title>Multi threaded environment</title>
-      <para>
-	If PostgreSQL was not compiled with the <option>--enable-thread-safety</option> flag, 
-	then the database provider will only allow
-	connections to be opened from the thread which initializes &LIBGDA;. Otherwise there is no limitation.
       </para>
     </sect2>
 
@@ -164,14 +143,6 @@
 	the execution happens. The consequence is that for example if a variable holds the "11:23:55+2" time (11 hours,
 	23 minutes and 55 seconds, at GMT + 2), then the actual time stored in the database will be "09:23:55", the same
 	time but GMT.
-      </para>
-    </sect2>
-
-    <sect2><title>Multi threaded environment</title>
-      <para>
-	No limitation if sqlite has been compiled with the SQLITE_THREADSAFE=1 flag (which is the case for the
-	embedded version of SQLite). If the system installed SQLite is used and if it was not compiled using that
-	flag, then &LIBGDA; sets the SQLite library in a state where multi threading is fully supported.
       </para>
     </sect2>
 
@@ -236,15 +207,15 @@
       needs to load the Java Virtual Machine (JVM) runtime first).
     </para>
 
+    <para>
+      The JDBC provider is a bit specific since it needs to be installed to be used, but it also requires external
+      JDBC drivers (usually published by the database's editor). As a result, actual JDBC drivers will be useable
+      only when the two conditions are met.
+    </para>
+
     <sect2><title>Last inserted row's values</title>
       <para>
 	Not yet supported.
-      </para>
-    </sect2>
-
-    <sect2><title>Multi threaded environment</title>
-      <para>
-	No specific limitation.
       </para>
     </sect2>
   </sect1>

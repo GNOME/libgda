@@ -408,6 +408,10 @@ DETACH DATABASE plaintext; </programlisting>
 	or provide the URL parameter (like for any JDBC provider) to specify a connection to open.
       </para>
     </sect2>
+
+    <para>
+      Also refer to the <link linkend="limitations_jdbc">JDBC provider's limitations</link>.
+    </para>
   </sect1>
   
 </chapter>

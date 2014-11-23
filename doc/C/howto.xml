@@ -38,7 +38,7 @@ else {
     </para>
   </sect1>
 
-  <sect1>
+  <sect1 id="defining_dsn">
     <title>Define a data source (DSN)</title>
     <para>
       The <link linkend="libgda-6.0-Configuration">Configuration section</link> details how to manage data sources

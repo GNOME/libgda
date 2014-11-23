@@ -269,40 +269,93 @@
       </para>
     </chapter>
     
-    <chapter id="architecture">
+    <chapter>
       <title>Architecture</title>
-      <para>
-	&LIBGDA; is composed of three independent layers. The lower level is
-	covered by the &GDA; providers, which are plug-ins whose task is
-	to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
-	That is, they are objects implementing the &GDA; interfaces.
-      </para>
-      <para>
-	Then, in a middle layer, are the client libraries: an easy-to-use and
-	full featured library which offers access to all the architecture,
-	also including several utility functions to help you on the development
-	of applications based on &GDA;. This library, although targeted to client
-	applications, also includes a set of helper classes and functions to help
-	in the addition of new providers to the &LIBGDA; architecture.
-      </para>
-      <para>
-	Finally, at the upper level sit all the client applications provided in
-	the suite, as well as any application that may make use of the client
-	libraries.
-      </para>
-      <mediaobject>
-	<imageobject role="html">
-          <imagedata fileref="architecture.png" format="PNG"/>
-	</imageobject>
-	<textobject>
-          <phrase>Typical &LIBGDA; application's architecture</phrase>
-	</textobject>
-	<caption>
-          <para>
-	    Architecture of an application connected to 4 databases of 3 different types.
-          </para>
-	</caption>
-      </mediaobject>
+      <section>
+	<title>Architecture</title>
+	<para>
+	  A &LIBGDA; application is composed of three layers. The lower level layer are
+	  the &GDA; providers: plug-ins whose task is
+	  to map the <acronym>RDBMS</acronym>-specific &API; to the &GDA; model.
+	</para>
+	<para>
+	  Then, in a middle layer, are the libraries provided by &LIBGDA; and used by
+	  the programmer: an easy-to-use and
+	  full featured set of libraries.
+	</para>
+	<para>
+	  Finally, at the upper layer is the application part itself, as writen by the
+	  developer.
+	</para>
+	<mediaobject>
+	  <imageobject role="html">
+            <imagedata fileref="architecture.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+            <phrase>Typical &LIBGDA; application's architecture</phrase>
+	  </textobject>
+	  <caption>
+            <para>
+	      Architecture of an application connected to 4 databases of 3 different types.
+            </para>
+	  </caption>
+	</mediaobject>
+	<para>&LIBGDA; also includes:
+	  <itemizedlist>
+	    <listitem><para>some example code which can be "cloned" to create new database providers for
+		database engines not yet supported by &LIBGDA;</para></listitem>
+	    <listitem><para>a graphical configuration manager</para></listitem>
+	    <listitem><para>an <link linkend="libgda-sql">SQL console</link> to connect to dabatase serveurs and perform some
+		&LIBGDA; related administrative tasks</para></listitem>
+	    <listitem><para>some other more <link linkend="part_tools">specific tools</link></para></listitem>
+	  </itemizedlist>
+	</para>
+      </section>
+
+
+      <section>
+	<title>Data sources</title>
+	<para>
+	  To open a connection, the programmer needs to specify the database provider to use, and some
+	  connection parameters, some of them specific to the database engine to be used, some of them
+	  more generic (such as the "DB_NAME" parameter to specify a database name).
+	</para>
+	<para>
+	  All the parameters are combined together to give &LIBGDA; enough information to open a connection; refer
+	  to <link linkend="gda-connection-new-from-string">gda_connection_new_from_string()</link> for more
+	  information.
+	</para>
+	<para>
+	  However, remembering the complete string to open a connection can be tedious, and so &LIBGDA; supports
+	  named data sources (DSN) whereby a connection is specified and named once and opened refering to
+	  its name rather than to the actual parameters used. Refer to
+	  the <link linkend="defining_dsn">Define a data source (DSN)</link> section, and the
+	  <link linkend="gda-config-define-dsn">gda_config_define_dsn()</link> and
+	  <link linkend="gda-connection-new-from-dsn">gda_connection_new_from_dsn()</link> functions.
+	</para>
+	<para>
+	  DSN can have a scope limited to the user, or be system wide. User scope DSN definitions are stored
+	  in $XDG_DIR/libgda where $XDG_DIR is determined by the XDG Base Directory Specification (using
+	  <link linkend="g-get-user-data-dir">g_get_user_data_dir()</link>). System wide definitions are stored
+	  in $ETC/$VERSION where $ETC is the configuration directory where &LIBGDA; is installed and $VERSION
+	  is &LIBGDA;'s major version.
+	</para>
+	<para>
+	  Note that these locations can be changes osing some properties of the global
+	  <link linkend="GdaConfig">GdaConfig</link> object.
+	</para>
+      </section>
+
+      <section>
+	<title>Authentication information management</title>
+	<para>
+	  When named data sources are used, &LIBGDA; can also store authentication information (username and
+	  password). This is accomplished using
+	  <ulink url="https://wiki.gnome.org/Projects/Libsecret">libsecret</ulink>, or
+	  <ulink url="https://wiki.gnome.org/Projects/GnomeKeyring">libgnome-keyring</ulink> if available,
+	  or stored in an insecure way (along the DSN definition) if none of these libraries are available.
+	</para>
+      </section>
     </chapter>
 
     <xi:include href="abstraction.xml"/>
