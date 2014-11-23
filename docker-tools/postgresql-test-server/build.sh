@@ -8,7 +8,7 @@ docker version > /dev/null 2>&1 || {
     exit 1
 }
 
-# download Notrhwind data if necessary
+# download Northwind data if necessary
 sqlfile=setup-data/northwind.sql
 if [ ! -e $sqlfile ]
 then

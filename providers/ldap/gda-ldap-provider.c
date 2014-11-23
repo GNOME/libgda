@@ -966,6 +966,12 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		g_free (sql);
 	}
 
+	/* check connection to LDAP is Ok */
+	LdapConnectionData *cdata;
+        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	if (! gda_ldap_ensure_bound (cdata, error))
+		return NULL;
+
 	GdaServerProviderBase *fset;
 	fset = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	return fset->statement_execute (provider, cnc, stmt, params,

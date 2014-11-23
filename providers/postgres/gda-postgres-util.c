@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,9 @@
 static GdaConnectionEventCode
 gda_postgres_sqlsate_to_gda_code (const gchar *sqlstate)
 {
-        guint64 gda_code = g_ascii_strtoull (sqlstate, NULL, 0);
+        guint64 gda_code = 0;
+	if (sqlstate)
+		gda_code = g_ascii_strtoull (sqlstate, NULL, 0);
 
         switch (gda_code) {
                 case 42501:

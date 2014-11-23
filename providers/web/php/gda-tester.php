@@ -56,7 +56,7 @@ if ($test_connections) {
 	}
 }
 else {
-	echo "<p>Connections listed below but not tested (set <tt>\$test_connections</tt> to <tt>true</tt> in the <tt>gda-config.php</tt> file to change):</p>\n";
+	echo "<p>Connections listed below but not tested (set <tt>\$test_connections</tt> to <tt>true</tt> in the <tt>gda-tester.php</tt> file to change):</p>\n";
 	echo "<ul>\n";
 	foreach ($cnc as $dbname => $dbpass) {
 		echo "<li>Connection '".$dbname."'</li>\n";
