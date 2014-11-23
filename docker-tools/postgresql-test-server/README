@@ -1,0 +1,22 @@
+Use the scripts contained here to create a PostgreSQL server docker image which can be used
+to test Libgda's PostgreSQL provider.
+
+* build.sh builds the docker image (named "libgda-test-postgresql"). It creates a database populated with
+  data from the NorthWind database (https://code.google.com/p/northwindextended/).
+
+* start.sh starts a docker container from the built image, stop it using CTRL-C
+
+
+Parameters:
+-----------
+* created database name: gda
+* created user name:     gdauser
+* created user password: gdauser
+
+
+
+PostgreSQL test:
+----------------
+$ PGPASSWORD=gdauser psql -h 127.0.0.1 -U gdauser -d gda
+
+$ gda-sql-6.0 "PostgreSQL://gdauser:gdauser@HOST=127.0.0.1;DB_NAME=gda"
