@@ -111,7 +111,6 @@ struct _GdaConnectionPrivate {
 	GThread              *worker_thread; /* no ref held, used only for comparisons */
 
 	/* multi threading locking */
-	GMutex                object_mutex;
 	GRecMutex             rmutex;
 
 	/* auto meta data update */
@@ -427,7 +426,6 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 
 	cnc->priv = g_new0 (GdaConnectionPrivate, 1);
-	g_mutex_init (&cnc->priv->object_mutex);
 	g_rec_mutex_init (&cnc->priv->rmutex);
 	cnc->priv->provider_obj = NULL;
 	cnc->priv->dsn = NULL;
@@ -545,7 +543,6 @@ gda_connection_finalize (GObject *object)
 	g_free (cnc->priv->cnc_string);
 	g_free (cnc->priv->auth_string);
 
-	g_mutex_clear (& cnc->priv->object_mutex);
 	g_rec_mutex_clear (&cnc->priv->rmutex);
 
 	g_free (cnc->priv);
@@ -5953,7 +5950,7 @@ GdaMetaStore *
 gda_connection_get_meta_store (GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_mutex_lock (& cnc->priv->object_mutex);
+	gda_connection_lock ((GdaLockable*) cnc);
 	if (!cnc->priv->meta_store) {
 		cnc->priv->meta_store = gda_meta_store_new (NULL);
 		GdaConnection *scnc;
@@ -5963,7 +5960,7 @@ gda_connection_get_meta_store (GdaConnection *cnc)
 		    ! gda_connection_get_main_context (scnc, NULL))
 			gda_connection_set_main_context (scnc, NULL, gda_connection_get_main_context (cnc, NULL));
 	}
-	g_mutex_unlock (& cnc->priv->object_mutex);
+	gda_connection_unlock ((GdaLockable*) cnc);
 
 	return cnc->priv->meta_store;
 }
