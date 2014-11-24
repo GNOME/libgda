@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-11-22 10:24+0000\n"
-"PO-Revision-Date: 2014-10-22 21:37+0100\n"
+"POT-Creation-Date: 2014-11-24 10:25+0000\n"
+"PO-Revision-Date: 2014-11-24 20:33+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -124,7 +124,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../control-center/dsn-properties-dialog.c:267 ../libgda/gda-config.c:399
 #: ../libgda/gda-config.c:549 ../libgda/gda-config.c:1084
 #: ../libgda/gda-config.c:1195 ../libgda/gda-config.c:1253
-#: ../libgda/gda-config.c:1330 ../libgda/gda-connection.c:1466
+#: ../libgda/gda-config.c:1329 ../libgda/gda-connection.c:1466
 #: ../libgda/gda-data-model.c:2475 ../libgda/gda-data-model.c:2483
 #: ../libgda/gda-data-model-dir.c:384 ../libgda/gda-data-model-import.c:1720
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
@@ -177,8 +177,8 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/mysql/gda-mysql-util.c:69
 #: ../providers/postgres/gda-postgres-provider.c:1808
 #: ../providers/postgres/gda-postgres-provider.c:1823
-#: ../providers/postgres/gda-postgres-util.c:104
-#: ../providers/postgres/gda-postgres-util.c:107
+#: ../providers/postgres/gda-postgres-util.c:106
+#: ../providers/postgres/gda-postgres-util.c:109
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
 #: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
 #: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
@@ -220,7 +220,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/schema-browser/table-preferences.c:693
 #: ../tools/browser/schema-browser/table-preferences.c:766
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
-#: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
+#: ../tools/common/t-app.c:2808 ../tools/common/t-connection.c:292
 #: ../tools/common/t-connection.c:427 ../tools/common/t-connection.c:1141
 #: ../tools/common/t-term-context.c:337 ../tools/common/web-server.c:1995
 #: ../tools/misc/gda-list-server-op.c:68
@@ -555,7 +555,7 @@ msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Gnome-DB: ověření pro DSN „%s“"
 
 #: ../libgda/gda-config.c:1252 ../libgda/gda-config.c:1264
-#: ../libgda/gda-config.c:1328
+#: ../libgda/gda-config.c:1327
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Nelze smazat ověřovací informace pro DSN „%s“: %s"
@@ -588,7 +588,7 @@ msgstr "Nelze vytvořit instanci poskytovatele „%s“"
 
 #: ../libgda/gda-config.c:1659 ../libgda/gda-data-model-dsn-list.c:109
 #: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2504
-#: ../tools/common/t-app.c:2857 ../tools/common/t-config-info.c:69
+#: ../tools/common/t-app.c:2872 ../tools/common/t-config-info.c:69
 #: ../tools/common/t-config-info.c:130 ../tools/common/t-config-info.c:313
 #: ../tools/common/t-config-info.c:429
 msgid "Provider"
@@ -618,7 +618,7 @@ msgstr "Seznam nainstalovaných poskytovatelů"
 
 #: ../libgda/gda-config.c:1837 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
-#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2859
+#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2874
 msgid "Username"
 msgstr "Uživatelské jméno"
 
@@ -1348,7 +1348,7 @@ msgid "Could not get information from source data model"
 msgstr "Nelze získat informace z modelu zdrojových dat"
 
 #: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3079
-#: ../tools/common/t-app.c:3010
+#: ../tools/common/t-app.c:3025
 msgid "Could not create virtual connection"
 msgstr "Nelze vytvořit virtuální připojení"
 
@@ -2356,9 +2356,9 @@ msgstr ""
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:614
 #: ../libgda-report/engine/gda-report-engine.c:641
-#: ../tools/common/t-app.c:2931 ../tools/common/t-app.c:4624
-#: ../tools/common/t-app.c:5141 ../tools/common/t-app.c:5242
-#: ../tools/common/t-app.c:5339 ../tools/common/t-app.c:5437
+#: ../tools/common/t-app.c:2946 ../tools/common/t-app.c:4639
+#: ../tools/common/t-app.c:5156 ../tools/common/t-app.c:5257
+#: ../tools/common/t-app.c:5354 ../tools/common/t-app.c:5452
 #: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
@@ -2549,7 +2549,7 @@ msgstr "Neznámý dotaz „%s“"
 
 #: ../libgda-report/engine/gda-report-engine.c:609
 #: ../libgda-report/engine/gda-report-engine.c:636
-#: ../tools/common/t-app.c:2735 ../tools/common/t-app.c:2945
+#: ../tools/common/t-app.c:2750 ../tools/common/t-app.c:2960
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Nenalezeno žádné připojení pojmenované „%s“"
@@ -3414,7 +3414,7 @@ msgid "Data size"
 msgstr "Velikost dat"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
-#: ../providers/ldap/gda-ldap-provider.c:1006
+#: ../providers/ldap/gda-ldap-provider.c:1012
 #: ../providers/mysql/gda-mysql-provider.c:638
 #: ../providers/mysql/gda-mysql-provider.c:692
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3449,8 +3449,8 @@ msgstr "Datový typ"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
 #: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1020 ../tools/common/t-app.c:2303
-#: ../tools/common/t-app.c:3689 ../tools/common/t-app.c:5491
+#: ../providers/ldap/gda-ldap-provider.c:1026 ../tools/common/t-app.c:2303
+#: ../tools/common/t-app.c:3704 ../tools/common/t-app.c:5506
 #: ../tools/common/t-config-info.c:122 ../tools/common/t-config-info.c:291
 msgid "Value"
 msgstr "Hodnota"
@@ -5006,8 +5006,8 @@ msgstr "Typ"
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
 #: ../tools/browser/query-exec/query-favorite-selector.c:352
 #: ../tools/common/t-app.c:1803 ../tools/common/t-app.c:2302
-#: ../tools/common/t-app.c:2856 ../tools/common/t-app.c:3688
-#: ../tools/common/t-app.c:3770
+#: ../tools/common/t-app.c:2871 ../tools/common/t-app.c:3703
+#: ../tools/common/t-app.c:3785
 msgid "Name"
 msgstr "Název"
 
@@ -5582,17 +5582,17 @@ msgstr "Připojovací řetězec musí obsahovat hodnotu DB_NAME (název databáz
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neplatná hodnota pro „TLS_REQCERT“"
 
-#: ../providers/ldap/gda-ldap-provider.c:867 ../tools/common/t-app.c:2704
-#: ../tools/common/t-app.c:4432 ../tools/common/t-app.c:4548
+#: ../providers/ldap/gda-ldap-provider.c:867 ../tools/common/t-app.c:2719
+#: ../tools/common/t-app.c:4447 ../tools/common/t-app.c:4563
 #, c-format
 msgid "Too many arguments"
 msgstr "Příliš mnoho parametrů"
 
-#: ../providers/ldap/gda-ldap-provider.c:1019
+#: ../providers/ldap/gda-ldap-provider.c:1025
 msgid "Parameter"
 msgstr "Parametr"
 
-#: ../providers/ldap/gda-ldap-provider.c:1233
+#: ../providers/ldap/gda-ldap-provider.c:1239
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "poblíž „%s“: syntaktická chyba"
@@ -5612,47 +5612,47 @@ msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Neočekávaný datový typ „%s“ pro atribut objectClass!"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:218
-#: ../providers/ldap/gdaprov-data-model-ldap.c:419
-#: ../providers/ldap/gdaprov-data-model-ldap.c:434
+#: ../providers/ldap/gdaprov-data-model-ldap.c:428
+#: ../providers/ldap/gdaprov-data-model-ldap.c:443
 msgid "Distinguished name"
 msgstr "Rozlišovací název DN"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:416
-#: ../providers/ldap/gdaprov-data-model-ldap.c:431
+#: ../providers/ldap/gdaprov-data-model-ldap.c:425
+#: ../providers/ldap/gdaprov-data-model-ldap.c:440
 msgid "Relative distinguished name"
 msgstr "Relativní rozlišovací název DN"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:902
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1199
+#: ../providers/ldap/gdaprov-data-model-ldap.c:913
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1212
 msgid "Truncated result because LDAP server limit encountered"
 msgstr "Zkrácený výsledek, protože se narazilo na limit serveru LDAP"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1583
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1600
 #, c-format
 msgid "Unknown GdaLdapModificationType %d"
 msgstr "Neznámý GdaLdapModificationType %d"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1590
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1607
 msgid "No GdaLdapEntry specified"
 msgstr "Není určen žádný GdaLdapEntry"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1596
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1613
 msgid "No GdaLdapEntry specified to define attributes to add"
 msgstr "Není určen žádný GdaLdapEntry pro definici atributů k přidání"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1602
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1619
 msgid "No GdaLdapEntry specified to define attributes to remove"
 msgstr "Není určen žádný GdaLdapEntry pro definici atributů k odstranění"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1608
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1625
 msgid "No GdaLdapEntry specified to define attributes to replace"
 msgstr "Není určen žádný GdaLdapEntry pro definici atributů k nahrazení"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1614
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1631
 msgid "No GdaLdapEntry specified to compare attributes"
 msgstr "Není určen žádný GdaLdapEntry pro porovnání atributů"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1619
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1636
 msgid "GdaLdapEntry specified to compare have different DN"
 msgstr "GdaLdapEntry určený k porovnání má různé DN"
 
@@ -7739,7 +7739,7 @@ msgid "Opened connections"
 msgstr "Otevřená připojení"
 
 #: ../tools/browser/browser-connections-list.c:344
-#: ../tools/common/t-app.c:2860
+#: ../tools/common/t-app.c:2875
 msgid "List of opened connections"
 msgstr "Seznam otevřených připojení"
 
@@ -9930,8 +9930,8 @@ msgid "%s [<DSN>]"
 msgstr "%s [<DSN>]"
 
 #: ../tools/common/t-app.c:1080
-msgid "List all DSN (or named DSN's attributes)"
-msgstr "Vypsat všechny DSN (nebo atributy DSN zadaného názvem)"
+msgid "List all DSN (or specified DSN's attributes)"
+msgstr "Vypsat všechny DSN (nebo atributy určeného DSN)"
 
 #: ../tools/common/t-app.c:1090
 #, c-format
@@ -10257,9 +10257,9 @@ msgstr "Historie není podporována"
 
 #: ../tools/common/t-app.c:1471 ../tools/common/t-app.c:1512
 #: ../tools/common/t-app.c:1562 ../tools/common/t-app.c:1611
-#: ../tools/common/t-app.c:1750 ../tools/common/t-app.c:2744
-#: ../tools/common/t-app.c:3612 ../tools/common/t-app.c:4248
-#: ../tools/common/t-app.c:4416 ../tools/common/t-app.c:4534
+#: ../tools/common/t-app.c:1750 ../tools/common/t-app.c:2759
+#: ../tools/common/t-app.c:3627 ../tools/common/t-app.c:4263
+#: ../tools/common/t-app.c:4431 ../tools/common/t-app.c:4549
 msgid "No current connection"
 msgstr "Žádné aktuální připojení"
 
@@ -10381,180 +10381,180 @@ msgstr "Seznam DSN"
 msgid "Missing arguments"
 msgstr "Schází parametry"
 
-#: ../tools/common/t-app.c:2581
+#: ../tools/common/t-app.c:2596
 msgid "Missing provider name"
 msgstr "Schází název poskytovatele"
 
-#: ../tools/common/t-app.c:2607
+#: ../tools/common/t-app.c:2622
 msgid "Missing DSN name"
 msgstr "Schází název DSN"
 
-#: ../tools/common/t-app.c:2785
+#: ../tools/common/t-app.c:2800
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
 "Získávají se informace o databázovém schématu, to může nějakou chvíli trvat…"
 
-#: ../tools/common/t-app.c:2792
+#: ../tools/common/t-app.c:2807
 #, c-format
 msgid "error: %s\n"
 msgstr "chyba: %s\n"
 
-#: ../tools/common/t-app.c:2799
+#: ../tools/common/t-app.c:2814
 #, c-format
 msgid "Done.\n"
 msgstr "Hotovo.\n"
 
-#: ../tools/common/t-app.c:2819 ../tools/common/t-app.c:2981
+#: ../tools/common/t-app.c:2834 ../tools/common/t-app.c:2996
 #, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Připojení s názvem „%s“ již existuje"
 
-#: ../tools/common/t-app.c:2847
+#: ../tools/common/t-app.c:2862
 msgid "No opened connection"
 msgstr "Žádné otevřené připojení"
 
-#: ../tools/common/t-app.c:2858
+#: ../tools/common/t-app.c:2873
 msgid "DSN or connection string"
 msgstr "DSN nebo připojovací řetězec"
 
-#: ../tools/common/t-app.c:2973
+#: ../tools/common/t-app.c:2988
 msgid "Missing required connection names"
 msgstr "Schází názvy požadovaného připojení"
 
-#: ../tools/common/t-app.c:2986 ../tools/common/t-connection.c:703
+#: ../tools/common/t-app.c:3001 ../tools/common/t-connection.c:703
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Název připojení „%s“ je neplatný"
 
-#: ../tools/common/t-app.c:2996
+#: ../tools/common/t-app.c:3011
 #, c-format
 msgid "No connection or dataset named '%s' found"
 msgstr "Nenalezeno žádné připojení nebo datová sada pojmenované „%s“"
 
 #. force create of meta store
 #. add existing connections to virtual connection
-#: ../tools/common/t-app.c:3017
+#: ../tools/common/t-app.c:3032
 msgid "Bound connections are as:"
 msgstr "Návazná připojení jsou:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
-#: ../tools/common/t-app.c:3030
+#: ../tools/common/t-app.c:3045
 #, c-format
 msgid "%s in the '%s' namespace"
 msgstr "%s ve jmenném prostoru „%s“"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
-#: ../tools/common/t-app.c:3044
+#: ../tools/common/t-app.c:3059
 #, c-format
 msgid "%s mapped to the %s table"
 msgstr "%s mapovaná do tabulky %s"
 
-#: ../tools/common/t-app.c:3077 ../tools/common/t-app.c:3180
-#: ../tools/common/t-app.c:3214 ../tools/common/t-app.c:3237
-#: ../tools/common/t-app.c:3275 ../tools/common/t-app.c:3314
-#: ../tools/common/t-app.c:3415 ../tools/common/t-app.c:3468
-#: ../tools/common/t-app.c:3544 ../tools/common/t-app.c:4971
-#: ../tools/common/t-app.c:5060
+#: ../tools/common/t-app.c:3092 ../tools/common/t-app.c:3195
+#: ../tools/common/t-app.c:3229 ../tools/common/t-app.c:3252
+#: ../tools/common/t-app.c:3290 ../tools/common/t-app.c:3329
+#: ../tools/common/t-app.c:3430 ../tools/common/t-app.c:3483
+#: ../tools/common/t-app.c:3559 ../tools/common/t-app.c:4986
+#: ../tools/common/t-app.c:5075
 msgid "No connection opened"
 msgstr "Není otevřeno žádné připojení"
 
-#: ../tools/common/t-app.c:3097
+#: ../tools/common/t-app.c:3112
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Nelze zapsat do dočasného souboru „%s“: %s"
 
-#: ../tools/common/t-app.c:3134
+#: ../tools/common/t-app.c:3149
 #, c-format
 msgid "could not start editor '%s'"
 msgstr "nelze spustit editor „%s“"
 
-#: ../tools/common/t-app.c:3139
+#: ../tools/common/t-app.c:3154
 msgid "Could not start /bin/sh"
 msgstr "Nelze spustit /bin/sh"
 
-#: ../tools/common/t-app.c:3281
+#: ../tools/common/t-app.c:3296
 msgid "Missing FILE to write to"
 msgstr "Schází SOUBOR, do kterého se má zapisovat"
 
-#: ../tools/common/t-app.c:3320
+#: ../tools/common/t-app.c:3335
 msgid "Favorite name"
 msgstr "Název oblíbeného"
 
-#: ../tools/common/t-app.c:3321
+#: ../tools/common/t-app.c:3336
 msgid "Comments"
 msgstr "Komentáře"
 
-#: ../tools/common/t-app.c:3322
+#: ../tools/common/t-app.c:3337
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/common/t-app.c:3428 ../tools/common/t-app.c:3528
-#: ../tools/common/t-app.c:3593
+#: ../tools/common/t-app.c:3443 ../tools/common/t-app.c:3543
+#: ../tools/common/t-app.c:3608
 msgid "Missing query buffer name"
 msgstr "Schází název paměti dotazů"
 
-#: ../tools/common/t-app.c:3452
+#: ../tools/common/t-app.c:3467
 msgid "Query buffer is empty"
 msgstr "Paměť dotazů je prázdná"
 
-#: ../tools/common/t-app.c:3496 ../tools/common/t-favorites.c:1091
+#: ../tools/common/t-app.c:3511 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
 msgstr "Nelze přidat oblíbenou"
 
-#: ../tools/common/t-app.c:3678 ../tools/common/t-app.c:3743
-#: ../tools/common/t-app.c:4459
+#: ../tools/common/t-app.c:3693 ../tools/common/t-app.c:3758
+#: ../tools/common/t-app.c:4474
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr "Není definován žádný parametr s názvem „%s“"
 
-#: ../tools/common/t-app.c:3690
+#: ../tools/common/t-app.c:3705
 msgid "List of defined parameters"
 msgstr "Seznam definovaných parametrů"
 
-#: ../tools/common/t-app.c:3771
+#: ../tools/common/t-app.c:3786
 msgid "dimensions (columns x rows)"
 msgstr "rozměry (sloupců × řádků)"
 
-#: ../tools/common/t-app.c:3772
+#: ../tools/common/t-app.c:3787
 msgid "List of kept data"
 msgstr "Vypsat přechovávaná data"
 
-#: ../tools/common/t-app.c:3821 ../tools/common/t-app.c:3862
-#: ../tools/common/t-app.c:3985 ../tools/common/t-app.c:4054
-#: ../tools/common/t-app.c:4126
+#: ../tools/common/t-app.c:3836 ../tools/common/t-app.c:3877
+#: ../tools/common/t-app.c:4000 ../tools/common/t-app.c:4069
+#: ../tools/common/t-app.c:4141
 msgid "Missing argument"
 msgstr "Schází argument"
 
-#: ../tools/common/t-app.c:3830 ../tools/common/t-app.c:3872
-#: ../tools/common/t-app.c:3993 ../tools/common/t-app.c:4062
+#: ../tools/common/t-app.c:3845 ../tools/common/t-app.c:3887
+#: ../tools/common/t-app.c:4008 ../tools/common/t-app.c:4077
 #, c-format
 msgid "Could not find dataset named '%s'"
 msgstr "Nelze najít datovou sadu pojmenovanou „%s“"
 
-#: ../tools/common/t-app.c:4014
+#: ../tools/common/t-app.c:4029
 #, c-format
 msgid "Could not identify column '%s'"
 msgstr "Nelze zjistit sloupec „%s“"
 
-#: ../tools/common/t-app.c:4117
+#: ../tools/common/t-app.c:4132
 #, c-format
 msgid "Unknown import format '%s'"
 msgstr "Neznámý importní formát „%s“"
 
-#: ../tools/common/t-app.c:4138
+#: ../tools/common/t-app.c:4153
 #, c-format
 msgid "Could not import file '%s'"
 msgstr "Nelze importovat soubor „%s“"
 
-#: ../tools/common/t-app.c:4222
+#: ../tools/common/t-app.c:4237
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Graf zapsán do „%s“\n"
 
-#: ../tools/common/t-app.c:4225
+#: ../tools/common/t-app.c:4240
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -10569,131 +10569,131 @@ msgstr ""
 "Poznámka: pro zobrazení grafu nastavte proměnnou prostředí "
 "GDA_SQL_VIEWER_PNG nebo GDA_SQL_VIEWER_PDF\n"
 
-#: ../tools/common/t-app.c:4281
+#: ../tools/common/t-app.c:4296
 msgid "Could not start HTTPD server"
 msgstr "Nelze spustit server HTTPD"
 
-#: ../tools/common/t-app.c:4303
+#: ../tools/common/t-app.c:4318
 msgid "HTTPD server stopped"
 msgstr "Server HTTPD zastaven"
 
-#: ../tools/common/t-app.c:4322
+#: ../tools/common/t-app.c:4337
 msgid "HTTPD server started"
 msgstr "Server HTTPD spuštěn"
 
-#: ../tools/common/t-app.c:4327
+#: ../tools/common/t-app.c:4342
 msgid "Invalid port specification"
 msgstr "Neplatné zadání portu"
 
-#: ../tools/common/t-app.c:4364
+#: ../tools/common/t-app.c:4379
 msgid "Wrong row condition"
 msgstr "Nesprávná podmínka řádku"
 
-#: ../tools/common/t-app.c:4393
+#: ../tools/common/t-app.c:4408
 msgid "No unique row identified"
 msgstr "Nebyl zjištěn žádný jedinečný řádek"
 
-#: ../tools/common/t-app.c:4465 ../tools/common/t-app.c:4606
+#: ../tools/common/t-app.c:4480 ../tools/common/t-app.c:4621
 msgid "Wrong number of arguments"
 msgstr "Nesprávný počet parametrů"
 
-#: ../tools/common/t-app.c:4477 ../tools/common/t-app.c:4491
+#: ../tools/common/t-app.c:4492 ../tools/common/t-app.c:4506
 msgid "Could not write file"
 msgstr "Nelze zapsat soubor"
 
-#: ../tools/common/t-app.c:4643
+#: ../tools/common/t-app.c:4658
 msgid "Missing data on which to operate"
 msgstr "Schází data, se kterými se má operovat"
 
-#: ../tools/common/t-app.c:4648
+#: ../tools/common/t-app.c:4663
 msgid "Missing row fields specifications"
 msgstr "Schází specifikace řádkových polí"
 
-#: ../tools/common/t-app.c:4666
+#: ../tools/common/t-app.c:4681
 msgid "Wrong SELECT argument"
 msgstr "Nesprávné argument příkazu SELECT"
 
-#: ../tools/common/t-app.c:4704 ../tools/common/t-app.c:4732
+#: ../tools/common/t-app.c:4719 ../tools/common/t-app.c:4747
 msgid "Wrong data field argument"
 msgstr "Nesprávný argument datového pole"
 
-#: ../tools/common/t-app.c:4804
+#: ../tools/common/t-app.c:4819
 msgid "Missing foreign key declaration specification"
 msgstr "Schází specifikace deklarace cizího klíče"
 
-#: ../tools/common/t-app.c:4921
+#: ../tools/common/t-app.c:4936
 msgid "Malformed foreign key declaration specification"
 msgstr "Chybná specifikace deklarace cizího klíče"
 
-#: ../tools/common/t-app.c:4953
+#: ../tools/common/t-app.c:4968
 #, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Chybná specifikace názvu tabulky „%s“"
 
-#: ../tools/common/t-app.c:5045 ../tools/common/t-app.c:5122
+#: ../tools/common/t-app.c:5060 ../tools/common/t-app.c:5137
 msgid "Missing foreign key name argument"
 msgstr "Schází argument s názvem cizího klíče"
 
-#: ../tools/common/t-app.c:5147 ../tools/common/t-app.c:5248
-#: ../tools/common/t-app.c:5345 ../tools/common/t-app.c:5443
+#: ../tools/common/t-app.c:5162 ../tools/common/t-app.c:5263
+#: ../tools/common/t-app.c:5360 ../tools/common/t-app.c:5458
 msgid "Connection is not an LDAP connection"
 msgstr "Připojení není připojení LDAP"
 
-#: ../tools/common/t-app.c:5169
+#: ../tools/common/t-app.c:5184
 #, c-format
 msgid "Unknown search scope '%s'"
 msgstr "Neznámý rozsah hledání „%s“"
 
-#: ../tools/common/t-app.c:5179
+#: ../tools/common/t-app.c:5194
 msgid "Missing filter which to operate"
 msgstr "Schází filtr, se kterými se má operovat"
 
-#: ../tools/common/t-app.c:5263
+#: ../tools/common/t-app.c:5278
 msgid "Missing current DN or new DN specification"
 msgstr "Schází určení současného DN nebo nového DN"
 
-#: ../tools/common/t-app.c:5360
+#: ../tools/common/t-app.c:5375
 msgid "Missing DN of LDAP entry"
 msgstr "Schází DN záznamu LDAP"
 
-#: ../tools/common/t-app.c:5365
+#: ../tools/common/t-app.c:5380
 msgid "Missing operation to perform on LDAP entry's attributes"
 msgstr "Schází operace, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/common/t-app.c:5377
+#: ../tools/common/t-app.c:5392
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "Neznámá operace „%s“, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/common/t-app.c:5398
+#: ../tools/common/t-app.c:5413
 #, c-format
 msgid "Wrong attribute value specification '%s'"
 msgstr "Zadána nesprávná hodnota atributu „%s“"
 
-#: ../tools/common/t-app.c:5457
+#: ../tools/common/t-app.c:5472
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Schází argument s DN (rozlišovacím názvem)"
 
-#: ../tools/common/t-app.c:5470
+#: ../tools/common/t-app.c:5485
 #, c-format
 msgid "Unknown '%s' argument"
 msgstr "Neznámý argument „%s“"
 
-#: ../tools/common/t-app.c:5481
+#: ../tools/common/t-app.c:5496
 #, c-format
 msgid "Could not find entry with DN '%s'"
 msgstr "Nelze najít záznam s DN „%s“"
 
-#: ../tools/common/t-app.c:5489 ../tools/common/t-config-info.c:121
+#: ../tools/common/t-app.c:5504 ../tools/common/t-config-info.c:121
 #: ../tools/common/t-config-info.c:290
 msgid "Attribute"
 msgstr "Atribut"
 
-#: ../tools/common/t-app.c:5490
+#: ../tools/common/t-app.c:5505
 msgid "Required?"
 msgstr "Vyžadováno?"
 
-#: ../tools/common/t-app.c:5492
+#: ../tools/common/t-app.c:5507
 msgid "LDAP entry's Attributes"
 msgstr "Atributy záznamu LDAP"
 
