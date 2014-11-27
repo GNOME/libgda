@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -23,9 +23,6 @@
 
 #include <gtk/gtk.h>
 #include <libgda/libgda.h>
-#ifdef HAVE_LIBGLADE
-#include <glade/glade.h>
-#endif
 
 G_BEGIN_DECLS
 

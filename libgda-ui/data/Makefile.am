@@ -6,9 +6,9 @@ icons_DATA= \
 
 # other
 xmldir = $(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)
-xml_DATA = import_encodings.xml server_operation.glade
+xml_DATA = import_encodings.xml
 
 EXTRA_DIST = \
 	$(icons_DATA) \
 	import_encodings.xml \
-	server_operation.glade 
+	server_operation.xml

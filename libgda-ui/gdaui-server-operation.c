@@ -68,9 +68,7 @@ struct _GdauiServerOperationPriv
 {
 	GdaServerOperation     *op;
 	GSList                 *widget_data; /* list of WidgetData structures */
-#ifdef HAVE_LIBGLADE
-	GladeXML               *glade;
-#endif
+	GtkBuilder             *builder;
 	gboolean                opt_header;
 };
 
@@ -214,9 +212,7 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 	wid->priv = g_new0 (GdauiServerOperationPriv, 1);
 	wid->priv->op = NULL;
 	wid->priv->widget_data = NULL;
-#ifdef HAVE_LIBGLADE
-	wid->priv->glade = NULL;
-#endif
+	wid->priv->builder = NULL;
 	wid->priv->opt_header = FALSE;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
@@ -274,10 +270,8 @@ gdaui_server_operation_dispose (GObject *object)
 			form->priv->widget_data = NULL;
 		}
 
-#ifdef HAVE_LIBGLADE
-		if (form->priv->glade)
-			g_object_unref (form->priv->glade);
-#endif
+		if (form->priv->builder)
+			g_object_unref (form->priv->builder);
 
 		/* the private area itself */
 		g_free (form->priv);
@@ -411,9 +405,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		*section_str = NULL;
 
 	/* very custom widget rendering goes here */
-	if ((gda_server_operation_get_op_type (form->priv->op) == GDA_SERVER_OPERATION_CREATE_TABLE) &&
+	/*if ((gda_server_operation_get_op_type (form->priv->op) == GDA_SERVER_OPERATION_CREATE_TABLE) &&
 	    !strcmp (path, "/FIELDS_A"))
-		return create_table_fields_array_create_widget (form, path, section_str, label_widgets);
+	    return create_table_fields_array_create_widget (form, path, section_str, label_widgets);*/
 
 	/* generic widget rendering */
 	switch (info_node->type) {
@@ -464,8 +458,9 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		model = info_node->model;
 		grid = gdaui_raw_grid_new (model);
 		gtk_container_add (GTK_CONTAINER (plwid), grid);
-		gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
-					      GTK_SHADOW_NONE);
+		if (GTK_IS_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))))
+			gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (plwid))),
+						      GTK_SHADOW_NONE);
 		gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (grid),
 						 GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE);
 		gtk_widget_show (grid);
@@ -689,54 +684,47 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 {
 	gint i;
 	gchar **topnodes;
-#ifdef HAVE_LIBGLADE
-	gchar *glade_file;
-#endif
 
 	/* parameters list management */
 	if (!form->priv->op)
 		/* nothing to do */
 		return;
 
-	/* load Glade file for specific GUI if it exists */
-#ifdef HAVE_LIBGLADE
-	glade_file = gdaui_gbr_get_data_dir_path ("server_operation.glade");
-	form->priv->glade = glade_xml_new (glade_file,
-					   gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)),
-					   NULL);
-	g_free (glade_file);
-	if (form->priv->glade) {
-		GtkWidget *mainw;
-		mainw = glade_xml_get_widget (form->priv->glade,
-					      gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (form->priv->op)));
+	/* load specific GUI */
+	if (!form->priv->builder) {
+		form->priv->builder = gtk_builder_new ();
+		if (! gtk_builder_add_from_resource (form->priv->builder, "/gdaui/glade/data/server_operation.xml", NULL)) {
+			g_message ("Could not load GdaServerOperation UI data, please report error to "
+				   "http://bugzilla.gnome.org/ for the \"libgda\" product");
+			g_object_unref (form->priv->builder);
+			form->priv->builder = NULL;
+		}
+	}
+
+	GtkWidget *mainw = NULL;
+	if (form->priv->builder) {
+		mainw = (GtkWidget*) gtk_builder_get_object (form->priv->builder,
+							     gda_server_operation_op_type_to_string
+							     (gda_server_operation_get_op_type (form->priv->op)));
 		if (mainw) {
+			gtk_widget_unparent (mainw);
 			gtk_box_pack_start (GTK_BOX (form), mainw, TRUE, TRUE, 0);
 			gtk_widget_show (mainw);
 		}
-		else {
-			g_object_unref (form->priv->glade);
-			form->priv->glade = NULL;
-		}
 	}
-#endif
 
 	/* user visible widgets */
 	topnodes = gda_server_operation_get_root_nodes (form->priv->op);
-	i = 0;
-	while (topnodes[i]) {
+	for (i = 0; topnodes[i]; i++) {
 		GtkWidget *plwid;
 		gchar *section_str;
 		GtkWidget *container = NULL;
 
-#ifdef HAVE_LIBGLADE
-		if (form->priv->glade) {
-			container = glade_xml_get_widget (form->priv->glade, topnodes[i]);
-			if (!container) {
-				i++;
+		if (mainw) {
+			container = (GtkWidget*) gtk_builder_get_object (form->priv->builder, topnodes[i]);
+			if (!container)
 				continue;
-			}
 		}
-#endif
 		if (!container)
 			container = (GtkWidget *) form;
 
@@ -806,21 +794,18 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				break;
 			}
 		}
-
-		i++;
 	}
 
 	/* destroying unused widgets in the Glade description */
-#ifdef HAVE_LIBGLADE
-	if (form->priv->glade) {
-		GList *widgets, *list;
+	if (mainw) {
+		GSList *widgets, *list;
 
-		widgets = glade_xml_get_widget_prefix (form->priv->glade, "/");
+		widgets = gtk_builder_get_objects (form->priv->builder);
 		for (list = widgets; list; list = list->next) {
 			const gchar *name;
 
-			name = glade_get_widget_name ((GtkWidget *) (list->data));
-			if (!gda_server_operation_get_node_info (form->priv->op, name)) {
+			name = gtk_buildable_get_name ((GtkBuildable *) (list->data));
+			if ((name[0] == '/') && !gda_server_operation_get_node_info (form->priv->op, name)) {
 				GtkWidget *parent;
 
 				/* dirty hack to remove a notebook page */
@@ -837,15 +822,13 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 					gtk_notebook_remove_page (GTK_NOTEBOOK (parent), pageno);
 				}
 				else
-					gtk_widget_destroy ((GtkWidget *) (list->data));
+					gtk_widget_hide ((GtkWidget *) (list->data));
 			}
 		}
-		g_list_free (widgets);
+		g_slist_free (widgets);
 	}
-#endif
 
 	g_strfreev (topnodes);
-
 }
 
 /*
