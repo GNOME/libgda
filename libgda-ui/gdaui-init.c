@@ -73,16 +73,9 @@ gdaui_init (void)
 		return;
 	}
 
-	/*
-	gchar *str;
-	gdaui_gbr_init ();
-	str = gdaui_gbr_get_locale_dir_path ();
-	bindtextdomain (GETTEXT_PACKAGE, str);
-	g_free (str);
-	*/
-
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 
+	_gdaui_register_resource ();
 	gda_init ();
 	if (! gdaui_plugins_hash)
 		gdaui_plugins_hash = init_plugins_hash ();
@@ -90,7 +83,6 @@ gdaui_init (void)
 	/* initialize CSS */
 	GBytes *css_data;
 	GError *error = NULL;
-	_gdaui_register_resource ();
 	css_data = g_resources_lookup_data ("/gdaui/gdaui.css", G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
 	if (css_data) {
 		GtkCssProvider *css_provider;
@@ -114,7 +106,6 @@ gdaui_init (void)
 			   error && error->message ? error->message : _("No detail"));
 		g_clear_error (&error);
 	}
-	_gdaui_unregister_resource ();
 
 	initialized = TRUE;
 }
@@ -399,16 +390,17 @@ init_plugins_hash (void)
 	plugin->entry_create_func = entry_string_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-string.xml", NULL);
-	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
-		g_message ("Could not find file '%s': '%s' data entry will not report any possible option",
-			   file, plugin->plugin_name);
-        }
-	else {
-		gsize len;
-		g_file_get_contents (file, &(plugin->options_xml_spec), &len, NULL);
+	GBytes *bytes;
+	bytes = g_resources_lookup_data ("/gdaui/data-entries/gdaui-entry-string.xml", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	if (bytes) {
+		const char *data;
+		data = (const char *) g_bytes_get_data (bytes, NULL);
+		plugin->options_xml_spec = g_strdup (data);
+		g_bytes_unref (bytes);
 	}
-	g_free (file);
+	else
+		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
+                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "integer";
@@ -429,13 +421,17 @@ init_plugins_hash (void)
 	plugin->entry_create_func = entry_number_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-integer.xml", NULL);
-	xmlChar *xml_spec = get_spec_with_isocodes (file);
-	if (xml_spec) {
-		plugin->options_xml_spec = g_strdup ((gchar*) xml_spec);
-		xmlFree (xml_spec);
+
+	bytes = g_resources_lookup_data ("/gdaui/data-entries/gdaui-entry-integer.xml", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	if (bytes) {
+		const char *data;
+		data = (const char *) g_bytes_get_data (bytes, NULL);
+		plugin->options_xml_spec = g_strdup (data);
+		g_bytes_unref (bytes);
 	}
-	g_free (file);
+	else
+		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
+                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "number";
@@ -450,13 +446,20 @@ init_plugins_hash (void)
 	plugin->entry_create_func = entry_number_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
 	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "ui", "gdaui-entry-number.xml", NULL);
-	xml_spec = get_spec_with_isocodes (file);
-	if (xml_spec) {
-		plugin->options_xml_spec = g_strdup ((gchar*) xml_spec);
+
+	bytes = g_resources_lookup_data ("/gdaui/data-entries/gdaui-entry-number.xml", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	if (bytes) {
+		const char *data;
+		data = (const char *) g_bytes_get_data (bytes, NULL);
+		xmlChar *xml_spec;
+		xml_spec = get_spec_with_isocodes (data);
+		plugin->options_xml_spec = g_strdup ((gchar *) xml_spec);
+		g_bytes_unref (bytes);
 		xmlFree (xml_spec);
 	}
-	g_free (file);
+	else
+		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
+                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "textual";
@@ -695,7 +698,7 @@ find_child_node_from_name (xmlNodePtr parent, const gchar *name, const gchar *at
 }
 
 static xmlChar *
-get_spec_with_isocodes (const gchar *file)
+get_spec_with_isocodes (const gchar *data_spec)
 {
 	xmlDocPtr spec, isocodes = NULL;
 	xmlChar *retval = NULL;
@@ -722,9 +725,10 @@ get_spec_with_isocodes (const gchar *file)
 	/* 
 	 * Load spec string 
 	 */
-	spec = xmlParseFile (file);
+	spec = xmlParseDoc (BAD_CAST data_spec);
 	if (!spec) {
-		g_warning ("Can't load '%s' file", file);
+		g_warning ("Can't parse XML data, please report error to "
+                           "http://bugzilla.gnome.org/ for the \"libgda\" product");
 		goto cleanup;
 	}
 

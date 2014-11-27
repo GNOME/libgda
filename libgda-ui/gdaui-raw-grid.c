@@ -2727,15 +2727,22 @@ gdaui_raw_grid_set_layout_from_file (GdauiRawGrid *grid, const gchar *file_name,
 
         xmlDtdPtr dtd = NULL;
 
-	gchar *file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "gdaui-layout.dtd", NULL);
-        if (g_file_test (file, G_FILE_TEST_EXISTS))
-                dtd = xmlParseDTD (NULL, BAD_CAST file);
-        if (dtd == NULL) {
-                g_warning (_("'%s' DTD not parsed successfully. "
-                             "XML data layout validation will not be "
-                             "performed (some errors may occur)"), file);
-        }
-        g_free (file);
+	GBytes *bytes;
+	bytes = g_resources_lookup_data ("/gdaui/gdaui-layout.dtd", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	if (bytes) {
+		xmlParserInputBufferPtr	ibuffer;
+		gsize size;
+		const char *data;
+		data = (const char *) g_bytes_get_data (bytes, &size);
+		ibuffer = xmlParserInputBufferCreateMem (data, size, XML_CHAR_ENCODING_NONE);
+		dtd = xmlIOParseDTD (NULL, ibuffer, XML_CHAR_ENCODING_NONE);
+		/* No need to call xmlFreeParserInputBuffer (ibuffer), because xmlIOParseDTD() does it */
+		g_bytes_unref (bytes);
+	}
+
+        if (! dtd)
+                g_warning ("DTD not parsed successfully, please report error to "
+                           "http://bugzilla.gnome.org/ for the \"libgda\" product");
 
         /* Get the root element node */
         xmlNodePtr root_node = NULL;

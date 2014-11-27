@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -20,7 +20,6 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include <libgda/binreloc/gda-binreloc.h>
 #include "gdaui-entry-bin.h"
 #include "common-bin.h"
 
@@ -105,12 +104,11 @@ gdaui_entry_bin_class_init (GdauiEntryBinClass *class)
 	GTK_WIDGET_CLASS (class)->show = show;
 
 	if (! attach_pixbuf) {
-		gchar *tmp;
-		tmp = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "pixmaps", "bin-attachment-16x16.png", NULL);
-		attach_pixbuf = gdk_pixbuf_new_from_file (tmp, NULL);
+		#define ICON_FILE "/gdaui/images/data/bin-attachment-16x16.png"
+		attach_pixbuf = gdk_pixbuf_new_from_resource (ICON_FILE, NULL);
 		if (!attach_pixbuf)
-			g_warning ("Could not find icon file %s", tmp);
-		g_free (tmp);
+			g_warning ("Could not find icon file %s in resources please report error to "
+				   "http://bugzilla.gnome.org/ for the \"libgda\" product", ICON_FILE);
 	}
 }
 
