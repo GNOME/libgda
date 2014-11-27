@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -25,6 +25,7 @@
 #include  <glib/gi18n-lib.h>
 #include <libgda-ui/gdaui-raw-form.h>
 #include <libgda-ui/gdaui-raw-grid.h>
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 /* signals */
 enum {

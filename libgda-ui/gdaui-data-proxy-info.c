@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -27,6 +27,7 @@
 #include "gdaui-raw-grid.h"
 #include "gdaui-data-proxy-info.h"
 #include "gdaui-enum-types.h"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_data_proxy_info_class_init (GdauiDataProxyInfoClass * class);
 static void gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid);

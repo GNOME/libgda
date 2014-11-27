@@ -33,6 +33,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <gtk/gtk.h>
 #include <libgda/gda-debug-macros.h>
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_raw_grid_class_init (GdauiRawGridClass *klass);
 static void gdaui_raw_grid_init (GdauiRawGrid *wid);

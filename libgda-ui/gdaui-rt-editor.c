@@ -26,6 +26,7 @@
 #define MAX_BULLETS 2
 //gchar * bullet_strings[] = {"•", "◦"};
 #include <libgda-ui.h>
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};
 gchar     *lists_tokens[MAX_BULLETS] = {"- ", " - "};

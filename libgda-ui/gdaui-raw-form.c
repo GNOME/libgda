@@ -33,6 +33,7 @@
 #include "internal/utility.h"
 #include "data-entries/gdaui-entry-shell.h"
 #include <libgda/gda-debug-macros.h>
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_raw_form_class_init (GdauiRawFormClass * class);
 static void gdaui_raw_form_init (GdauiRawForm *wid);

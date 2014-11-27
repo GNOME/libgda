@@ -32,6 +32,7 @@
 #include "gdaui-data-selector.h"
 #include "gdaui-data-proxy-info.h"
 #include <libgda/gda-debug-macros.h>
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_server_operation_class_init (GdauiServerOperationClass *class);
 static void gdaui_server_operation_init (GdauiServerOperation *wid);
