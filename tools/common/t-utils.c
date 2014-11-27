@@ -223,7 +223,7 @@ t_utils_split_text_into_single_commands (TContext *console, const gchar *command
 			GdaStatement *stmt;
 			const gchar *remain = NULL;
 			GdaSqlParser *parser = NULL;
-			if (console)
+			if (console && t_context_get_connection (console))
 				parser = t_connection_get_parser (t_context_get_connection (console));
 			else
 				parser = gda_sql_parser_new ();
