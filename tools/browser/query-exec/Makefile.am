@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/tools/common \
 	-I$(top_srcdir)/tools/base \
 	-I$(top_builddir) \
+	-I$(top_builddir)/libgda \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/libgda \
 	-I$(top_srcdir)/libgda/sqlite \

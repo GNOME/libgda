@@ -165,8 +165,8 @@ DTD_FILES = gdaui-layout.dtd
 dtddir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/dtd
 dtd_DATA=$(DTD_FILES)
 
-gdaui-resources.h gdaui-resources.c: $(srcdir)/gdaui.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --generate-dependencies $(srcdir)/gdaui.gresource.xml)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name _gdaui --manual-register $<
+gdaui-resources.h gdaui-resources.c: $(srcdir)/gdaui.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --sourcedir=$(builddir) --generate-dependencies $(srcdir)/gdaui.gresource.xml)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --sourcedir=$(builddir) --generate --c-name _gdaui --manual-register $<
 
 EXTRA_DIST = $(DTD_FILES) \
 	libgda-ui.symbols \
