@@ -53,6 +53,7 @@ void                             gda_connection_internal_set_provider_data      
 										  GDestroyNotify destroy_func);
 GdaServerProviderConnectionData *gda_connection_internal_get_provider_data_error (GdaConnection *cnc, GError **error);
 void                             _gda_connection_internal_set_worker_thread (GdaConnection *cnc, GThread *thread);
+GdaWorker                       *gda_connection_internal_get_worker (GdaServerProviderConnectionData *data);
 
 /*
  * Connection's events

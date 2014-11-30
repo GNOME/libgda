@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
- * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  *
@@ -40,7 +40,7 @@ struct _GdaServerProviderPrivate {
 /*
  * Getting the GMainContext to use with the GdaWorker
  */
-GMainContext *_gda_server_provider_get_real_main_context (GdaConnection *cnc);
+GMainContext *gda_server_provider_get_real_main_context (GdaConnection *cnc);
 
 /*
  * GdaServerProvider's virtual functions access

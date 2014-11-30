@@ -495,9 +495,11 @@ _gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cn
 	return (fset->create_worker) (provider, for_cnc);
 }
 
-/*
- * Obtain a #GMainContext on which to iterate.
+/**
+ * gda_server_provider_get_real_main_context: (skip)
  * @cnc: (allow-none): a #GdaConnection, or %NULL
+ *
+ * Obtain a #GMainContext on which to iterate. This function is reserved to database provider's implementations.
  *
  * NB: if @cnc is NOT %NULL and has a #GdaWorker associated, and if we are in its worker thread, then this function
  *     returns %NULL (to avoid generating contexts which are never used)
@@ -505,7 +507,7 @@ _gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cn
  * Returns: a #GMainContext, or %NULL. Don't forget to call g_main_context_unref() when done
  */
 GMainContext *
-_gda_server_provider_get_real_main_context (GdaConnection *cnc)
+gda_server_provider_get_real_main_context (GdaConnection *cnc)
 {
 	GMainContext *context;
 	if (cnc) {
@@ -556,7 +558,7 @@ gda_server_provider_get_version (GdaServerProvider *provider)
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (NULL);
+	context = gda_server_provider_get_real_main_context (NULL);
 
 	GdaWorker *worker;
 	worker = _gda_server_provider_create_worker (provider, FALSE);
@@ -602,7 +604,7 @@ gda_server_provider_get_name (GdaServerProvider *provider)
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (NULL);
+	context = gda_server_provider_get_real_main_context (NULL);
 
 	GdaWorker *worker;
 	worker = _gda_server_provider_create_worker (provider, FALSE);
@@ -662,7 +664,7 @@ gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	}
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerGetInfoData data;
 	data.worker = cdata->worker;
@@ -739,7 +741,7 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerSupportsOperationData data;
 	data.worker = worker;
@@ -951,7 +953,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerCreateOperationData data;
 	data.worker = worker;
@@ -1078,7 +1080,7 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerRenderOperationData data;
 	data.worker = worker;
@@ -1161,7 +1163,7 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerPerformOperationData data;
 	data.worker = worker;
@@ -1261,7 +1263,7 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerSupportsFeatureData data;
 	data.worker = worker;
@@ -1339,7 +1341,7 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTypeData data;
 	data.worker = worker;
@@ -1399,7 +1401,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTypeData data;
 	data.worker = worker;
@@ -1474,7 +1476,7 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTypeData data;
 	data.worker = worker;
@@ -1704,7 +1706,7 @@ gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerEscapeData data;
 	data.worker = worker;
@@ -1774,7 +1776,7 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerEscapeData data;
 	data.worker = worker;
@@ -1852,7 +1854,7 @@ gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerParserData data;
 	data.worker = worker;
@@ -1957,7 +1959,7 @@ _gda_server_provider_create_connection (GdaServerProvider *provider, const gchar
 	g_return_val_if_fail (!dsn_string || !cnc_string, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (NULL);
+	context = gda_server_provider_get_real_main_context (NULL);
 
 	GdaWorker *worker;
 	worker = _gda_server_provider_create_worker (provider, FALSE);
@@ -2096,7 +2098,7 @@ stage2_open_connection (GdaWorker *worker, GdaConnection *cnc, gpointer result)
 		if (!cdata) {
 			g_warning ("Internal error: connection reported as opened, yet no provider data set");
 			result = NULL;
-			_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
+			gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 		}
 		else {
 			g_signal_emit_by_name (G_OBJECT (cnc), "opened");
@@ -2167,7 +2169,7 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 	if (cb_func) {
 		if (!gda_worker_set_callback (worker, context,
 					      (GdaWorkerCallback) server_provider_job_done_callback, provider, error)) {
-			_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
+			gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 			gda_worker_unref (worker);
 			return FALSE;
@@ -2195,7 +2197,7 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 						(GdaWorkerFunc) worker_open_connection,
 						jdata, NULL, NULL, error);
 		if (job_id == 0) {
-			_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
+			gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 			WorkerOpenConnectionData_free (jdata);
 			return FALSE; /* error */
@@ -2300,10 +2302,10 @@ stage2_close_connection (GdaConnection *cnc, gpointer result)
 			if (cdata->provider_data_destroy_func)
 				cdata->provider_data_destroy_func (cdata);
 		}
-		_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
+		gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 	}
 	else
-		_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+		gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -2336,7 +2338,7 @@ _gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnectio
 	}
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerCloseConnectionData *jdata;
 	jdata = g_slice_new (WorkerCloseConnectionData);
@@ -2344,7 +2346,7 @@ _gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnectio
 	jdata->provider = provider;
 	jdata->cnc = g_object_ref (cnc);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 
 	GdaWorker *worker;
 	worker = cdata->worker;
@@ -2420,7 +2422,7 @@ _gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnecti
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerPrepareStatementData data;
 	data.worker = worker;
@@ -2428,14 +2430,14 @@ _gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnecti
 	data.cnc = cnc;
 	data.stmt = stmt;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_statement_prepare, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -2536,7 +2538,7 @@ _gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnecti
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerExecuteStatementData data;
 	data.worker = worker;
@@ -2548,14 +2550,14 @@ _gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnecti
 	data.col_types = col_types;
 	data.last_inserted_row = last_inserted_row;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_statement_execute, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -2625,7 +2627,7 @@ _gda_server_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnecti
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerStmtToSQLData data;
 	data.worker = worker;
@@ -2636,14 +2638,14 @@ _gda_server_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnecti
 	data.flags = flags;
 	data.params_used = params_used;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_stmt_to_sql, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -2706,7 +2708,7 @@ _gda_server_provider_identifier_quote (GdaServerProvider *provider, GdaConnectio
 		worker = _gda_server_provider_create_worker (provider, FALSE);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerIdentifierQuoteData data;
 	data.worker = worker;
@@ -2716,14 +2718,14 @@ _gda_server_provider_identifier_quote (GdaServerProvider *provider, GdaConnectio
 	data.for_meta_store = for_meta_store;
 	data.force_quotes = force_quotes;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_identifier_quote, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -2927,7 +2929,7 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerMetaData data;
 	data.worker = worker;
@@ -2942,14 +2944,14 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -2988,7 +2990,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerMetaData data;
 	data.worker = worker;
@@ -3003,14 +3005,14 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -3049,7 +3051,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerMetaData data;
 	data.worker = worker;
@@ -3064,14 +3066,14 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -3111,7 +3113,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerMetaData data;
 	data.worker = worker;
@@ -3126,14 +3128,14 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = value2;
 	data.values[3] = NULL;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -3173,7 +3175,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerMetaData data;
 	data.worker = worker;
@@ -3188,14 +3190,14 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = value2;
 	data.values[3] = value3;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	if (cnc)
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
@@ -3266,7 +3268,7 @@ _gda_server_provider_begin_transaction (GdaServerProvider *provider, GdaConnecti
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3275,14 +3277,14 @@ _gda_server_provider_begin_transaction (GdaServerProvider *provider, GdaConnecti
 	data.name = name;
 	data.level = level;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_begin_transaction, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3336,7 +3338,7 @@ _gda_server_provider_commit_transaction (GdaServerProvider *provider, GdaConnect
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3344,14 +3346,14 @@ _gda_server_provider_commit_transaction (GdaServerProvider *provider, GdaConnect
 	data.cnc = cnc;
 	data.name = name;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_commit_transaction, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3405,7 +3407,7 @@ _gda_server_provider_rollback_transaction (GdaServerProvider *provider, GdaConne
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3413,14 +3415,14 @@ _gda_server_provider_rollback_transaction (GdaServerProvider *provider, GdaConne
 	data.cnc = cnc;
 	data.name = name;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_rollback_transaction, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3466,7 +3468,7 @@ _gda_server_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3474,14 +3476,14 @@ _gda_server_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *
 	data.cnc = cnc;
 	data.name = name;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_add_savepoint, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3527,7 +3529,7 @@ _gda_server_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnect
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3535,14 +3537,14 @@ _gda_server_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnect
 	data.cnc = cnc;
 	data.name = name;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_rollback_savepoint, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3588,7 +3590,7 @@ _gda_server_provider_delete_savepoint (GdaServerProvider *provider, GdaConnectio
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerTransactionData data;
 	data.worker = worker;
@@ -3596,14 +3598,14 @@ _gda_server_provider_delete_savepoint (GdaServerProvider *provider, GdaConnectio
 	data.cnc = cnc;
 	data.name = name;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_delete_savepoint, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3738,7 +3740,7 @@ _gda_server_provider_xa (GdaServerProvider *provider, GdaConnection *cnc, const 
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerXAData data;
 	data.worker = worker;
@@ -3747,14 +3749,14 @@ _gda_server_provider_xa (GdaServerProvider *provider, GdaConnection *cnc, const 
 	data.trx = trx;
 	data.type = type;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_xa, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -3783,7 +3785,7 @@ _gda_server_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc
 	worker = gda_worker_ref (cdata->worker);
 
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (cnc);
+	context = gda_server_provider_get_real_main_context (cnc);
 
 	WorkerXAData data;
 	data.worker = worker;
@@ -3792,14 +3794,14 @@ _gda_server_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc
 	data.trx = NULL;
 	data.type = GDA_XA_RECOVER;
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_BUSY);
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_xa, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_IDLE);
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);

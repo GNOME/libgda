@@ -223,7 +223,7 @@ gda_blob_op_get_length (GdaBlobOp *op)
 		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = _gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (op->priv->cnc);
 
 		WorkerData data;
 		data.op = op;
@@ -286,7 +286,7 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = _gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (op->priv->cnc);
 
 		WorkerData data;
 		data.op = op;
@@ -378,7 +378,7 @@ gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = _gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (op->priv->cnc);
 
 		WorkerData data;
 		data.op = op;
@@ -442,7 +442,7 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 			gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
 
 			GMainContext *context;
-			context = _gda_server_provider_get_real_main_context (op->priv->cnc);
+			context = gda_server_provider_get_real_main_context (op->priv->cnc);
 
 			WorkerData data;
 			data.op = op;

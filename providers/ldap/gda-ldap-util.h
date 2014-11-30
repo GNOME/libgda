@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@
 
 #include <glib.h>
 #include "gda-ldap.h"
+#include <virtual/gda-ldap-connection.h>
 
 /*
  * Attributes
@@ -43,8 +44,8 @@ typedef struct {
 } LdapAttribute;
 
 LdapAttrType  *gda_ldap_get_type_info (const gchar *oid);
-LdapAttribute *gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute);
-GType          gda_ldap_get_g_type    (LdapConnectionData *cdata, const gchar *attribute, const gchar *specified_gtype);
+LdapAttribute *gda_ldap_get_attr_info (GdaLdapConnection *cnc, LdapConnectionData *cdata, const gchar *attribute);
+GType          gda_ldap_get_g_type    (GdaLdapConnection *cnc, LdapConnectionData *cdata, const gchar *attribute, const gchar *specified_gtype);
 
 /*
  * Misc.

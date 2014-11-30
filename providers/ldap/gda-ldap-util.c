@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,10 @@
 #include <glib/gi18n-lib.h>
 #include "gda-ldap.h"
 #include "gda-ldap-util.h"
-#include <sqlite/virtual/gda-ldap-connection.h>
 #include <gda-util.h>
 #include <libgda/gda-debug-macros.h>
+#include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
+#include <libgda/gda-connection-internal.h> /* for gda_connection_set_status() */
 
 static void
 ldap_attribute_free (LdapAttribute *lat)
@@ -330,36 +331,35 @@ gda_ldap_get_type_info (const gchar *oid)
 	return retval ? retval : &unknown_type;
 }
 
-/**
- * gda_ldap_get_attr_info:
- *
- * Returns: the #LdapAttribute for @attribute, or %NULL
- */
-LdapAttribute *
-gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
+typedef struct {
+	GdaLdapConnection *cnc;
+	LdapConnectionData *cdata;
+	const gchar *attribute;
+} WorkerLdapAttrInfoData;
+
+static LdapAttribute *
+worker_gda_ldap_get_attr_info (WorkerLdapAttrInfoData *data, GError **error)
 {
 	LdapAttribute *retval = NULL;
-	if (! attribute || !cdata)
-		return NULL;
 
-	if (cdata->attributes_hash)
-		return g_hash_table_lookup (cdata->attributes_hash, attribute);
+	if (data->cdata->attributes_hash)
+		return g_hash_table_lookup (data->cdata->attributes_hash, data->attribute);
 
 	/* initialize known types */
-	cdata->attributes_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+	data->cdata->attributes_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
 							NULL,
 							(GDestroyNotify) ldap_attribute_free);
 	
 
-	if (cdata->attributes_cache_file) {
+	if (data->cdata->attributes_cache_file) {
 		/* try to load from cache file, which must contain one line per attribute:
 		 * <syntax oid>,0|1,<attribute name>
 		 */
-		gchar *data;
-		if (g_file_get_contents (cdata->attributes_cache_file, &data, NULL, NULL)) {
+		gchar *fdata;
+		if (g_file_get_contents (data->cdata->attributes_cache_file, &fdata, NULL, NULL)) {
 			gchar *start, *ptr;
 			gchar **array;
-			start = data;
+			start = fdata;
 			while (1) {
 				gboolean done = FALSE;
 				for (ptr = start; *ptr && (*ptr != '\n'); ptr++);
@@ -376,7 +376,7 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 						lat->name = g_strdup (array[2]);
 						lat->type = gda_ldap_get_type_info (array[0]);
 						lat->single_value = (*array[1] == '0' ? FALSE : TRUE);
-						g_hash_table_insert (cdata->attributes_hash,
+						g_hash_table_insert (data->cdata->attributes_hash,
 								     lat->name, lat);
 						/*g_print ("CACHE ADDED [%s][%p][%d] for OID %s\n",
 						  lat->name, lat->type, lat->single_value,
@@ -389,8 +389,8 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 				else
 					start = ptr+1;
 			}
-			g_free (data);
-			return g_hash_table_lookup (cdata->attributes_hash, attribute);
+			g_free (fdata);
+			return g_hash_table_lookup (data->cdata->attributes_hash, data->attribute);
 		}
 	}
 
@@ -403,25 +403,25 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 	char *schema_attrs[] = {"attributeTypes", NULL};
 	
 	/* look for subschema */
-	if (! gda_ldap_ensure_bound (cdata, NULL))
+	if (! gda_ldap_ensure_bound (data->cnc, NULL))
 		return NULL;
 
-	res = ldap_search_ext_s (cdata->handle, "", LDAP_SCOPE_BASE,
+	res = ldap_search_ext_s (data->cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	if (res != LDAP_SUCCESS) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
-	if ((entry = ldap_first_entry (cdata->handle, msg))) {
+	if ((entry = ldap_first_entry (data->cdata->handle, msg))) {
 		char *attr;
 		BerElement *ber;
-		if ((attr = ldap_first_attribute (cdata->handle, entry, &ber))) {
+		if ((attr = ldap_first_attribute (data->cdata->handle, entry, &ber))) {
 			BerValue **bvals;
-			if ((bvals = ldap_get_values_len (cdata->handle, entry, attr))) {
+			if ((bvals = ldap_get_values_len (data->cdata->handle, entry, attr))) {
 				subschema = g_strdup (bvals[0]->bv_val);
 				ldap_value_free_len (bvals);
 			}
@@ -433,41 +433,41 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 	ldap_msgfree (msg);
 
 	if (! subschema) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
 	/* look for attributeTypes */
-	res = ldap_search_ext_s (cdata->handle, subschema, LDAP_SCOPE_BASE,
+	res = ldap_search_ext_s (data->cdata->handle, subschema, LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 schema_attrs, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	g_free (subschema);
 	if (res != LDAP_SUCCESS) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
-	if (cdata->attributes_cache_file)
+	if (data->cdata->attributes_cache_file)
 		string = g_string_new ("# Cache file. This file can safely be removed, in this case\n"
 				       "# it will be automatically recreated.\n"
 				       "# DO NOT MODIFY\n");
-	for (entry = ldap_first_entry (cdata->handle, msg);
+	for (entry = ldap_first_entry (data->cdata->handle, msg);
 	     entry;
-	     entry = ldap_next_entry (cdata->handle, msg)) {
+	     entry = ldap_next_entry (data->cdata->handle, msg)) {
 		char *attr;
 		BerElement *ber;
-		for (attr = ldap_first_attribute (cdata->handle, msg, &ber);
+		for (attr = ldap_first_attribute (data->cdata->handle, msg, &ber);
 		     attr;
-		     attr = ldap_next_attribute (cdata->handle, msg, ber)) {
+		     attr = ldap_next_attribute (data->cdata->handle, msg, ber)) {
 			if (strcasecmp(attr, "attributeTypes")) {
 				ldap_memfree (attr);
 				continue;
 			}
 
 			BerValue **bvals;
-			bvals = ldap_get_values_len (cdata->handle, entry, attr);
+			bvals = ldap_get_values_len (data->cdata->handle, entry, attr);
 			if (bvals) {
 				gint i;
 				for (i = 0; bvals[i]; i++) {
@@ -484,7 +484,7 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 						lat->name = g_strdup (at->at_names [0]);
 						lat->type = gda_ldap_get_type_info (at->at_syntax_oid);
 						lat->single_value = (at->at_single_value == 0 ? FALSE : TRUE);
-						g_hash_table_insert (cdata->attributes_hash,
+						g_hash_table_insert (data->cdata->attributes_hash,
 								     lat->name, lat);
 						/*g_print ("ADDED [%s][%p][%d] for OID %s\n",
 						  lat->name, lat->type, lat->single_value,
@@ -510,19 +510,64 @@ gda_ldap_get_attr_info (LdapConnectionData *cdata, const gchar *attribute)
 	ldap_msgfree (msg);
 
 	if (string) {
-		if (! g_file_set_contents (cdata->attributes_cache_file, string->str, -1, NULL)) {
+		if (! g_file_set_contents (data->cdata->attributes_cache_file, string->str, -1, NULL)) {
 			gchar *dirname;
-			dirname = g_path_get_dirname (cdata->attributes_cache_file);
+			dirname = g_path_get_dirname (data->cdata->attributes_cache_file);
 			g_mkdir_with_parents (dirname, 0700);
 			g_free (dirname);
-			g_file_set_contents (cdata->attributes_cache_file, string->str, -1, NULL);
+			g_file_set_contents (data->cdata->attributes_cache_file, string->str, -1, NULL);
 		}
 		g_string_free (string, TRUE);
 	}
 
-	gda_ldap_may_unbind (cdata);
-	retval = g_hash_table_lookup (cdata->attributes_hash, attribute);
+	gda_ldap_may_unbind (data->cnc);
+	retval = g_hash_table_lookup (data->cdata->attributes_hash, data->attribute);
 	return retval;
+}
+
+/**
+ * gda_ldap_get_attr_info:
+ * @cnc: a #GdaLdapConnection
+ * @cdata:
+ * @attribute:
+ *
+ * Returns: (transfer none): the #LdapAttribute for @attribute, or %NULL
+ */
+LdapAttribute *
+gda_ldap_get_attr_info (GdaLdapConnection *cnc, LdapConnectionData *cdata, const gchar *attribute)
+{
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	if (! attribute || !cdata)
+		return NULL;
+
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	WorkerLdapAttrInfoData data;
+	data.cnc = cnc;
+	data.cdata = cdata;
+	data.attribute = attribute;
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gda_ldap_get_attr_info, (gpointer) &data, NULL, NULL, NULL);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
+	return (LdapAttribute*) retval;
 }
 
 /*
@@ -532,32 +577,21 @@ static gchar **make_array_from_strv (char **values, guint *out_size);
 static void classes_h_func (GdaLdapClass *lcl, gchar **supclasses, LdapConnectionData *cdata);
 static gint classes_sort (GdaLdapClass *lcl1, GdaLdapClass *lcl2);
 
-/**
- * gdaprov_ldap_get_class_info:
- * @cnc: a #GdaLdapConnection (not %NULL)
- * @classname: the class name (not %NULL)
- *
- * Returns: the #GdaLdapClass for @classname, or %NULL
- */
-GdaLdapClass *
-gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
+typedef struct {
+	GdaLdapConnection *cnc;
+	LdapConnectionData *cdata;
+	const gchar *classname;
+} WorkerLdapClassInfoData;
+
+static GdaLdapClass *
+worker_gdaprov_ldap_get_class_info (WorkerLdapClassInfoData *data, GError **error)
 {
 	GdaLdapClass *retval = NULL;
-	LdapConnectionData *cdata;
-	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (classname, NULL);
-	
-        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-        if (!cdata)
-		return NULL;
-
-	if (cdata->classes_hash)
-		return g_hash_table_lookup (cdata->classes_hash, classname);
 
 	/* initialize known classes */
-	cdata->classes_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
-						     NULL,
-						     (GDestroyNotify) ldap_class_free);
+	data->cdata->classes_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
+							   NULL,
+							   (GDestroyNotify) ldap_class_free);
 
 	LDAPMessage *msg, *entry;
 	int res;
@@ -567,25 +601,25 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	char *schema_attrs[] = {"objectClasses", NULL};
 	
 	/* look for subschema */
-	if (! gda_ldap_ensure_bound (cdata, NULL))
+	if (! gda_ldap_ensure_bound (data->cnc, NULL))
 		return NULL;
 
-	res = ldap_search_ext_s (cdata->handle, "", LDAP_SCOPE_BASE,
+	res = ldap_search_ext_s (data->cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	if (res != LDAP_SUCCESS) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
-	if ((entry = ldap_first_entry (cdata->handle, msg))) {
+	if ((entry = ldap_first_entry (data->cdata->handle, msg))) {
 		char *attr;
 		BerElement *ber;
-		if ((attr = ldap_first_attribute (cdata->handle, entry, &ber))) {
+		if ((attr = ldap_first_attribute (data->cdata->handle, entry, &ber))) {
 			BerValue **bvals;
-			if ((bvals = ldap_get_values_len (cdata->handle, entry, attr))) {
+			if ((bvals = ldap_get_values_len (data->cdata->handle, entry, attr))) {
 				subschema = g_strdup (bvals[0]->bv_val);
 				ldap_value_free_len (bvals);
 			}
@@ -597,39 +631,39 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	ldap_msgfree (msg);
 
 	if (! subschema) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
 	/* look for attributeTypes */
-	res = ldap_search_ext_s (cdata->handle, subschema, LDAP_SCOPE_BASE,
+	res = ldap_search_ext_s (data->cdata->handle, subschema, LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 schema_attrs, 0,
 				 NULL, NULL, NULL, 0,
 				 &msg);
 	g_free (subschema);
 	if (res != LDAP_SUCCESS) {
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 
 	GHashTable *h_refs;
 	h_refs = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify) g_strfreev);
-	for (entry = ldap_first_entry (cdata->handle, msg);
+	for (entry = ldap_first_entry (data->cdata->handle, msg);
 	     entry;
-	     entry = ldap_next_entry (cdata->handle, msg)) {
+	     entry = ldap_next_entry (data->cdata->handle, msg)) {
 		char *attr;
 		BerElement *ber;
-		for (attr = ldap_first_attribute (cdata->handle, msg, &ber);
+		for (attr = ldap_first_attribute (data->cdata->handle, msg, &ber);
 		     attr;
-		     attr = ldap_next_attribute (cdata->handle, msg, ber)) {
+		     attr = ldap_next_attribute (data->cdata->handle, msg, ber)) {
 			if (strcasecmp(attr, "objectClasses")) {
 				ldap_memfree (attr);
 				continue;
 			}
 
 			BerValue **bvals;
-			bvals = ldap_get_values_len (cdata->handle, entry, attr);
+			bvals = ldap_get_values_len (data->cdata->handle, entry, attr);
 			if (bvals) {
 				gint i;
 				for (i = 0; bvals[i]; i++) {
@@ -655,7 +689,7 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 							g_print ("  oc_names[%d] = %s\n",
 								 k, lcl->names[k]);
 #endif
-							g_hash_table_insert (cdata->classes_hash,
+							g_hash_table_insert (data->cdata->classes_hash,
 									     lcl->names[k],
 									     lcl);
 						}
@@ -692,7 +726,7 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 						if (refs)
 							g_hash_table_insert (h_refs, lcl, refs);
 						else
-							cdata->top_classes = g_slist_insert_sorted (cdata->top_classes,
+							data->cdata->top_classes = g_slist_insert_sorted (data->cdata->top_classes,
 									     lcl, (GCompareFunc) classes_sort);
 #ifdef CLASS_DEBUG
 						for (k = 0; oc->oc_sup_oids && oc->oc_sup_oids[k]; k++)
@@ -732,12 +766,67 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	ldap_msgfree (msg);
 
 	/* create hierarchy */
-	g_hash_table_foreach (h_refs, (GHFunc) classes_h_func, cdata);
+	g_hash_table_foreach (h_refs, (GHFunc) classes_h_func, data->cdata);
 	g_hash_table_destroy (h_refs);
 
-	retval = g_hash_table_lookup (cdata->classes_hash, classname);
-	gda_ldap_may_unbind (cdata);
+	retval = g_hash_table_lookup (data->cdata->classes_hash, data->classname);
+	gda_ldap_may_unbind (data->cnc);
 	return retval;
+}
+
+/**
+ * gdaprov_ldap_get_class_info:
+ * @cnc: a #GdaLdapConnection (not %NULL)
+ * @classname: the class name (not %NULL)
+ *
+ * Returns: the #GdaLdapClass for @classname, or %NULL
+ */
+GdaLdapClass *
+gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (classname, NULL);
+
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	LdapConnectionData *cdata;
+        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+                return NULL;
+	}
+
+	if (cdata->classes_hash) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+		return g_hash_table_lookup (cdata->classes_hash, classname);
+	}
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	WorkerLdapClassInfoData data;
+	data.cnc = cnc;
+	data.cdata = cdata;
+	data.classname = classname;
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gdaprov_ldap_get_class_info, (gpointer) &data, NULL, NULL, NULL);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
+	return (GdaLdapClass*) retval;
 }
 
 static gint
@@ -831,14 +920,14 @@ gdaprov_ldap_get_top_classes (GdaLdapConnection *cnc)
  * to the specified GType if any)
  */
 GType
-gda_ldap_get_g_type (LdapConnectionData *cdata, const gchar *attribute_name, const gchar *specified_gtype)
+gda_ldap_get_g_type (GdaLdapConnection *cnc, LdapConnectionData *cdata, const gchar *attribute_name, const gchar *specified_gtype)
 {
 	GType coltype = GDA_TYPE_NULL;
 	if (specified_gtype)
 		coltype = gda_g_type_from_string (specified_gtype);
 	if ((coltype == G_TYPE_INVALID) || (coltype == GDA_TYPE_NULL)) {
 		LdapAttribute *lat;
-		lat = gda_ldap_get_attr_info (cdata, attribute_name);
+		lat = gda_ldap_get_attr_info (cnc, cdata, attribute_name);
 		if (lat)
 			coltype = lat->type->gtype;
 	}
@@ -1166,7 +1255,6 @@ gboolean
 gda_ldap_parse_dn (const char *attr, gchar **out_userdn)
 {
 	LDAPDN tmpDN;
-
 	if (out_userdn)
 		*out_userdn = NULL;
 
@@ -1209,27 +1297,24 @@ attr_array_sort_func (gconstpointer a, gconstpointer b)
 	return strcmp (att1->attr_name, att2->attr_name);
 }
 
-GdaLdapEntry *
-gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error)
-{
+typedef struct {
+	GdaLdapConnection *cnc;
 	LdapConnectionData *cdata;
-	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (!dn || (dn && *dn), NULL);
+	const gchar *dn;
+} WorkerLdapDescrEntryData;
 
-        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-        if (!cdata)
-                return NULL;
-
-
-	if (! gda_ldap_ensure_bound (cdata, error))
+static GdaLdapEntry *
+worker_gdaprov_ldap_describe_entry (WorkerLdapDescrEntryData *data, GError **error)
+{
+	if (! gda_ldap_ensure_bound (data->cnc, error))
 		return NULL;
 
 	int res;
 	LDAPMessage *msg = NULL;
 	const gchar *real_dn;
-	real_dn = dn ? dn : cdata->base_dn;
+	real_dn = data->dn ? data->dn : data->cdata->base_dn;
  retry:
-	res = ldap_search_ext_s (cdata->handle, real_dn, LDAP_SCOPE_BASE,
+	res = ldap_search_ext_s (data->cdata->handle, real_dn, LDAP_SCOPE_BASE,
 				 "(objectClass=*)", NULL, 0,
 				 NULL, NULL, NULL, -1,
 				 &msg);
@@ -1243,10 +1328,10 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 		GdaLdapEntry *lentry;
 		GArray *array = NULL;
 
-		nb_entries = ldap_count_entries (cdata->handle, msg);
+		nb_entries = ldap_count_entries (data->cdata->handle, msg);
 		if (nb_entries == 0) {
 			ldap_msgfree (msg);
-			gda_ldap_may_unbind (cdata);
+			gda_ldap_may_unbind (data->cnc);
 			return NULL;
 		}
 		else if (nb_entries > 1) {
@@ -1254,7 +1339,7 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 				     _("LDAP server returned more than one entry with DN '%s'"),
 				     real_dn);
-			gda_ldap_may_unbind (cdata);
+			gda_ldap_may_unbind (data->cnc);
 			return NULL;
 		}
 
@@ -1262,13 +1347,13 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 		lentry->dn = g_strdup (real_dn);
 		lentry->attributes_hash = g_hash_table_new (g_str_hash, g_str_equal);
 		array = g_array_new (TRUE, FALSE, sizeof (GdaLdapAttribute*));
-		ldap_row = ldap_first_entry (cdata->handle, msg);
-		for (attr = ldap_first_attribute (cdata->handle, ldap_row, &ber);
+		ldap_row = ldap_first_entry (data->cdata->handle, msg);
+		for (attr = ldap_first_attribute (data->cdata->handle, ldap_row, &ber);
 		     attr;
-		     attr = ldap_next_attribute (cdata->handle, ldap_row, ber)) {
+		     attr = ldap_next_attribute (data->cdata->handle, ldap_row, ber)) {
 			BerValue **bvals;
 			GArray *varray = NULL;
-			bvals = ldap_get_values_len (cdata->handle, ldap_row, attr);
+			bvals = ldap_get_values_len (data->cdata->handle, ldap_row, attr);
 			if (bvals) {
 				gint i;
 				for (i = 0; bvals [i]; i++) {
@@ -1276,9 +1361,9 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 						varray = g_array_new (TRUE, FALSE, sizeof (GValue *));
 					GValue *value;
 					GType type;
-					type = gda_ldap_get_g_type (cdata, attr, NULL);
+					type = gda_ldap_get_g_type (data->cnc, data->cdata, attr, NULL);
 					/*g_print ("Type for attr %s is %s\n", attr, gda_g_type_to_string (type)); */
-					value = gda_ldap_attr_value_to_g_value (cdata, type, bvals[i]);
+					value = gda_ldap_attr_value_to_g_value (data->cdata, type, bvals[i]);
 					g_array_append_val (varray, value);
 				}
 				ldap_value_free_len (bvals);
@@ -1305,13 +1390,13 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 			lentry->nb_attributes = array->len;
 			g_array_free (array, FALSE);
 		}
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return lentry;
 	}
 	case LDAP_SERVER_DOWN: {
 		gint i;
 		for (i = 0; i < 5; i++) {
-			if (gda_ldap_rebind (cdata, NULL))
+			if (gda_ldap_rebind (data->cnc, NULL))
 				goto retry;
 			g_usleep (G_USEC_PER_SEC * 2);
 		}
@@ -1319,13 +1404,56 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 	default: {
 		/* error */
 		int ldap_errno;
-		ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
+		ldap_get_option (data->cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string(ldap_errno));
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 	}
+}
+
+GdaLdapEntry *
+gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!dn || (dn && *dn), NULL);
+
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	LdapConnectionData *cdata;
+        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+                return NULL;
+	}
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	WorkerLdapDescrEntryData data;
+	data.cnc = cnc;
+	data.cdata = cdata;
+	data.dn = dn;
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gdaprov_ldap_describe_entry, (gpointer) &data, NULL, NULL, error);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
+	return (GdaLdapEntry*) retval;
 }
 
 static gint
@@ -1337,26 +1465,21 @@ entry_array_sort_func (gconstpointer a, gconstpointer b)
 	return strcmp (e2->dn, e1->dn);
 }
 
-GdaLdapEntry **
-gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar **attributes,
-				 GError **error)
-{
+typedef struct {
+	GdaLdapConnection *cnc;
 	LdapConnectionData *cdata;
-	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (!dn || (dn && *dn), NULL);
+	const gchar *dn;
+	gchar **attributes;
+} WorkerEntryChildrenData;
 
-        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-        if (!cdata)
-                return NULL;
-
-	if (! gda_ldap_ensure_bound (cdata, error))
-		return NULL;
-
+GdaLdapEntry **
+worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **error)
+{
 	int res;
 	LDAPMessage *msg = NULL;
  retry:
-	res = ldap_search_ext_s (cdata->handle, dn ? dn : cdata->base_dn, LDAP_SCOPE_ONELEVEL,
-				 "(objectClass=*)", attributes, 0,
+	res = ldap_search_ext_s (data->cdata->handle, data->dn ? data->dn : data->cdata->base_dn, LDAP_SCOPE_ONELEVEL,
+				 "(objectClass=*)", data->attributes, 0,
 				 NULL, NULL, NULL, -1,
 				 &msg);
 
@@ -1367,12 +1490,12 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 		GArray *children;
 
 		children = g_array_new (TRUE, FALSE, sizeof (GdaLdapEntry *));
-		for (ldap_row = ldap_first_entry (cdata->handle, msg);
+		for (ldap_row = ldap_first_entry (data->cdata->handle, msg);
 		     ldap_row;
-		     ldap_row = ldap_next_entry (cdata->handle, ldap_row)) {
+		     ldap_row = ldap_next_entry (data->cdata->handle, ldap_row)) {
 			char *attr;
 			GdaLdapEntry *lentry = NULL;
-			attr = ldap_get_dn (cdata->handle, ldap_row);
+			attr = ldap_get_dn (data->cdata->handle, ldap_row);
 			if (attr) {
 				gchar *userdn = NULL;
 				if (gda_ldap_parse_dn (attr, &userdn)) {
@@ -1397,17 +1520,17 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 					     _("Could not parse distinguished name returned by LDAP server"));
 				break;
 			}
-			else if (attributes) {
+			else if (data->attributes) {
 				BerElement* ber;
 				GArray *array; /* array of GdaLdapAttribute pointers */
 				lentry->attributes_hash = g_hash_table_new (g_str_hash, g_str_equal);
 				array = g_array_new (TRUE, FALSE, sizeof (GdaLdapAttribute*));
-				for (attr = ldap_first_attribute (cdata->handle, ldap_row, &ber);
+				for (attr = ldap_first_attribute (data->cdata->handle, ldap_row, &ber);
 				     attr;
-				     attr = ldap_next_attribute (cdata->handle, ldap_row, ber)) {
+				     attr = ldap_next_attribute (data->cdata->handle, ldap_row, ber)) {
 					BerValue **bvals;
 					GArray *varray = NULL;
-					bvals = ldap_get_values_len (cdata->handle, ldap_row, attr);
+					bvals = ldap_get_values_len (data->cdata->handle, ldap_row, attr);
 					if (bvals) {
 						gint i;
 						for (i = 0; bvals [i]; i++) {
@@ -1415,9 +1538,9 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 								varray = g_array_new (TRUE, FALSE, sizeof (GValue *));
 							GValue *value;
 							GType type;
-							type = gda_ldap_get_g_type (cdata, attr, NULL);
+							type = gda_ldap_get_g_type (data->cnc, data->cdata, attr, NULL);
 							/*g_print ("%d Type for attr %s is %s\n", i, attr, gda_g_type_to_string (type));*/
-							value = gda_ldap_attr_value_to_g_value (cdata, type, bvals[i]);
+							value = gda_ldap_attr_value_to_g_value (data->cdata, type, bvals[i]);
 							g_array_append_val (varray, value);
 						}
 						ldap_value_free_len (bvals);
@@ -1447,7 +1570,7 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 			g_array_append_val (children, lentry);
 		}
 		ldap_msgfree (msg);
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		if (children) {
 			g_array_sort (children, (GCompareFunc) entry_array_sort_func);
 			return (GdaLdapEntry**) g_array_free (children, FALSE);
@@ -1458,7 +1581,7 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 	case LDAP_SERVER_DOWN: {
 		gint i;
 		for (i = 0; i < 5; i++) {
-			if (gda_ldap_rebind (cdata, NULL))
+			if (gda_ldap_rebind (data->cnc, NULL))
 				goto retry;
 			g_usleep (G_USEC_PER_SEC * 2);
 		}
@@ -1466,13 +1589,61 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 	default: {
 		/* error */
 		int ldap_errno;
-		ldap_get_option (cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
+		ldap_get_option (data->cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string(ldap_errno));
-		gda_ldap_may_unbind (cdata);
+		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
 	}
+}
+
+GdaLdapEntry **
+gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar **attributes, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
+	g_return_val_if_fail (!dn || (dn && *dn), NULL);
+
+	if (! gda_ldap_ensure_bound (cnc, error))
+		return NULL;
+
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	LdapConnectionData *cdata;
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+		g_warning ("cdata != NULL failed");
+		return NULL;
+	}
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	WorkerEntryChildrenData data;
+	data.cnc = cnc;
+	data.cdata = cdata;
+	data.dn = dn;
+	data.attributes = attributes;
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gdaprov_ldap_get_entry_children, (gpointer) &data, NULL, NULL, error);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
+	return (GdaLdapEntry **) retval;
 }
 
 gchar **
@@ -1572,7 +1743,7 @@ def_cmp_func (GdaLdapAttributeDefinition *def1, GdaLdapAttributeDefinition *def2
 }
 
 static GSList *
-handle_ldap_class (LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist, GHashTable *hash)
+handle_ldap_class (GdaLdapConnection *cnc, LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist, GHashTable *hash)
 {
 	guint j;
 	/*g_print ("Class [%s] (%s)\n", kl->oid, kl->names[0]);*/
@@ -1580,7 +1751,7 @@ handle_ldap_class (LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist,
 		/*g_print ("  attr [%s] REQ\n", kl->req_attributes [j]);*/
 		GdaLdapAttributeDefinition *def;
 		LdapAttribute *latt;
-		latt = gda_ldap_get_attr_info (cdata, kl->req_attributes [j]);
+		latt = gda_ldap_get_attr_info (cnc, cdata, kl->req_attributes [j]);
 		def = g_hash_table_lookup (hash, kl->req_attributes [j]);
 		if (def)
 			def->required = TRUE;
@@ -1597,7 +1768,7 @@ handle_ldap_class (LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist,
 		/*g_print ("  attr [%s] OPT\n", kl->opt_attributes [j]);*/
 		GdaLdapAttributeDefinition *def;
 		LdapAttribute *latt;
-		latt = gda_ldap_get_attr_info (cdata, kl->opt_attributes [j]);
+		latt = gda_ldap_get_attr_info (cnc, cdata, kl->opt_attributes [j]);
 		def = g_hash_table_lookup (hash, kl->opt_attributes [j]);
 		if (!def) {
 			def = g_new0 (GdaLdapAttributeDefinition, 1);
@@ -1612,7 +1783,7 @@ handle_ldap_class (LdapConnectionData *cdata, GdaLdapClass *kl, GSList *retlist,
 	/* handle parents */
 	GSList *list;
 	for (list = kl->parents; list; list = list->next)
-		retlist = handle_ldap_class (cdata, (GdaLdapClass*) list->data, retlist, hash);
+		retlist = handle_ldap_class (cnc, cdata, (GdaLdapClass*) list->data, retlist, hash);
 
 	return retlist;
 }
@@ -1648,7 +1819,7 @@ gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *obje
 			/*g_warning (_("Can't get information about '%s' class"), tmp);*/
 			continue;
 		}
-		retlist = handle_ldap_class (cdata, kl, retlist, hash);
+		retlist = handle_ldap_class (cnc, cdata, kl, retlist, hash);
 	}
 	g_hash_table_destroy (hash);
 

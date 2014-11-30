@@ -42,7 +42,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <gda-statement-priv.h>
 #include <thread-wrapper/gda-worker.h>
-#include <libgda/gda-server-provider-private.h> /* for _gda_server_provider_get_real_main_context () */
+#include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
 
 #define CLASS(x) (GDA_DATA_SELECT_CLASS (G_OBJECT_GET_CLASS (x)))
 
@@ -3910,7 +3910,7 @@ static gint
 _gda_data_select_fetch_nb_rows (GdaDataSelect *model)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	gint nbrows = -1;
 	gint *result;
@@ -3949,7 +3949,7 @@ static gboolean
 _gda_data_select_fetch_random  (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	WorkerData jdata;
 	jdata.model = model;
@@ -3982,7 +3982,7 @@ static gboolean
 _gda_data_select_store_all (GdaDataSelect *model, GError **error)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	gpointer result;
 	gda_worker_do_job (model->priv->worker, context, 0, (gpointer) &result, NULL,
@@ -4010,7 +4010,7 @@ static gboolean
 _gda_data_select_fetch_next    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	WorkerData jdata;
 	jdata.model = model;
@@ -4043,7 +4043,7 @@ static gboolean
 _gda_data_select_fetch_prev    (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	WorkerData jdata;
 	jdata.model = model;
@@ -4076,7 +4076,7 @@ static gboolean
 _gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GMainContext *context;
-	context = _gda_server_provider_get_real_main_context (model->priv->cnc);
+	context = gda_server_provider_get_real_main_context (model->priv->cnc);
 
 	WorkerData jdata;
 	jdata.model = model;

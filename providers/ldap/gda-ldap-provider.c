@@ -6,7 +6,7 @@
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,8 @@
 #include "gda-ldap-provider.h"
 #include "gdaprov-data-model-ldap.h"
 #include "gda-ldap-util.h"
+#include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
+#include <libgda/gda-connection-internal.h> /* for gda_connection_set_status() */
 
 static void gda_ldap_provider_class_init (GdaLdapProviderClass *klass);
 static void gda_ldap_provider_init       (GdaLdapProvider *provider,
@@ -48,6 +50,7 @@ static const gchar *gda_ldap_provider_get_version (GdaServerProvider *provider);
 static GdaConnection *gda_ldap_provider_create_connection (GdaServerProvider *provider);
 static gboolean gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection *cnc, 
 						      GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean gda_ldap_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
 static GObject *gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection *cnc,
 						     GdaStatement *stmt, GdaSet *params,
 						     GdaStatementModelUsage model_usage,
@@ -83,7 +86,7 @@ GdaServerProviderBase ldap_base_functions = {
 	NULL,
 	NULL,
 	gda_ldap_provider_prepare_connection,
-	NULL,
+	gda_ldap_provider_close_connection,
 	NULL,
 	NULL,
 	NULL,
@@ -268,6 +271,8 @@ LdapAuthMapping mappings[] = {
 };
 
 /*
+ * Function called during initialization phase => no need to use the GdaWorker object
+ *
  * Using @url and @username, performs the following tasks:
  * - bind to the LDAP server anonymously
  * - search the directory to identify the entry for the provided user name,
@@ -631,8 +636,51 @@ gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection
 	g_object_set_data ((GObject*) cnc, "__gda_connection_LDAP", (gpointer) 0x01);
 	gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
 							   cdata, (GDestroyNotify) gda_ldap_free_cnc_data);
-	gda_ldap_may_unbind (cdata);
+	gda_ldap_may_unbind (GDA_LDAP_CONNECTION (cnc));
 	return TRUE;
+}
+
+/*
+ * Close connection request
+ *
+ * In this function, the following _must_ be done:
+ *   - Actually close the connection to the database using @cnc's associated LdapConnectionData structure
+ *   - Free the LdapConnectionData structure and its contents
+ *
+ * Returns: TRUE if no error occurred, or FALSE otherwise (and an ERROR connection event must be added to @cnc)
+ */
+static gboolean
+gda_ldap_provider_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
+{
+	LdapConnectionData *cdata;
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+
+	/* Close the connection using the C API */
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	if (!cdata)
+		return FALSE;
+
+	if (cdata->handle) {
+		ldap_unbind_ext (cdata->handle, NULL, NULL);
+		cdata->handle = NULL;
+	}
+
+	GdaServerProviderBase *fset;
+	fset = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	return fset->close_connection (provider, cnc);
+}
+
+
+gpointer
+worker_gda_ldap_may_unbind (LdapConnectionData *cdata, GError **error)
+{
+	if (cdata->handle) {
+                ldap_unbind_ext (cdata->handle, NULL, NULL);
+		cdata->handle = NULL;
+	}
+
+	return NULL;
 }
 
 /*
@@ -640,40 +688,60 @@ gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection
  * This allows to avoid keeping the connection to the LDAP server if unused
  */
 void
-gda_ldap_may_unbind (LdapConnectionData *cdata)
+gda_ldap_may_unbind (GdaLdapConnection *cnc)
 {
-	if (!cdata || (cdata->keep_bound_count > 0))
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	LdapConnectionData *cdata;
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+	if (!cdata || (cdata->keep_bound_count > 0)) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		return;
-	if (cdata->handle) {
-                ldap_unbind_ext (cdata->handle, NULL, NULL);
-		cdata->handle = NULL;
 	}
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gda_ldap_may_unbind, (gpointer) cdata, NULL, NULL, NULL);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
 }
 
 /*
  * Makes sure the connection is opened
  */
 gboolean
-gda_ldap_ensure_bound (LdapConnectionData *cdata, GError **error)
+gda_ldap_ensure_bound (GdaLdapConnection *cnc, GError **error)
 {
+	LdapConnectionData *cdata;
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+
 	if (!cdata)
 		return FALSE;
 	else if (cdata->handle)
 		return TRUE;
 
-	return gda_ldap_rebind (cdata, error);
+	return gda_ldap_rebind (cnc, error);
 }
 
-/*
- * Reopens a connection after the server has closed it (possibly because of a timeout)
- *
- * If it fails, then @cdata is left unchanged, otherwise it is modified to be useable again.
- */
-gboolean
-gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
+
+gpointer
+worker_gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 {
 	if (!cdata)
-		return FALSE;
+		return NULL;
 
 	/*g_print ("Trying to reconnect...\n");*/
 	LDAP *ld;
@@ -682,7 +750,7 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 	if (res != LDAP_SUCCESS) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", ldap_err2string (res));
-		return FALSE;
+		return NULL;
 	}
 
 	/* set protocol version to 3 by default */
@@ -697,7 +765,7 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 			g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 				     "%s", ldap_err2string (res));
 			ldap_unbind_ext (ld, NULL, NULL);
-			return FALSE;
+			return NULL;
 		}
         }
 
@@ -721,7 +789,7 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
-                return FALSE;
+                return NULL;
 	}
 
 	/* time limit */
@@ -731,7 +799,7 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
-                return FALSE;
+                return NULL;
 	}
 
 	/* size limit */
@@ -741,7 +809,7 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
 			     "%s", ldap_err2string (res));
 		ldap_unbind_ext (ld, NULL, NULL);
-                return FALSE;
+                return NULL;
 	}
 
 	/* all ok */
@@ -752,7 +820,46 @@ gda_ldap_rebind (LdapConnectionData *cdata, GError **error)
 	cdata->handle = ld;
 
 	/*g_print ("Reconnected!\n");*/
-	return TRUE;
+	return (gpointer) 0x01;
+}
+
+/*
+ * Reopens a connection after the server has closed it (possibly because of a timeout)
+ */
+gboolean
+gda_ldap_rebind (GdaLdapConnection *cnc, GError **error)
+{
+	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	LdapConnectionData *cdata;
+	cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
+        if (!cdata) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+		g_warning ("cdata != NULL failed");
+		return FALSE;
+	}
+
+	GdaServerProviderConnectionData *pcdata;
+	pcdata = gda_connection_internal_get_provider_data_error ((GdaConnection*) cnc, NULL);
+
+	GdaWorker *worker;
+	worker = gda_worker_ref (gda_connection_internal_get_worker (pcdata));
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context ((GdaConnection *) cnc);
+
+	gpointer retval;
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_gda_ldap_rebind, (gpointer) cdata, NULL, NULL, error);
+	if (context)
+		g_main_context_unref (context);
+
+	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+
+	gda_worker_unref (worker);
+
+	return retval ? TRUE : FALSE;
 }
 
 /*
@@ -967,9 +1074,7 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	}
 
 	/* check connection to LDAP is Ok */
-	LdapConnectionData *cdata;
-        cdata = (LdapConnectionData*) gda_virtual_connection_internal_get_provider_data (GDA_VIRTUAL_CONNECTION (cnc));
-	if (! gda_ldap_ensure_bound (cdata, error))
+	if (! gda_ldap_ensure_bound (GDA_LDAP_CONNECTION (cnc), error))
 		return NULL;
 
 	GdaServerProviderBase *fset;

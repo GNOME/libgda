@@ -48,7 +48,7 @@ guint              _gda_connection_get_exec_slowdown (GdaConnection *cnc);
 
 void               _gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus status);
 void               _gda_connection_status_stop_batch (GdaConnection *cnc);
-void               _gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status);
+void               gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status);
 
 /*
  * Opens a connection to an SQLite database. This function is intended to be used

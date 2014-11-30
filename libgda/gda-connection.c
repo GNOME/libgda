@@ -1578,15 +1578,17 @@ assert_status_transaction (GdaConnectionStatus old, GdaConnectionStatus new)
 	}
 }
 
-/*
- * _gda_connection_set_status:
+/**
+ * gda_connection_set_status: (skip)
+ * @cnc: a #GdaConnection
  *
- * Set @cnc's new status, may emit the "status-changed" signal along the way
+ * Set @cnc's new status, may emit the "status-changed" signal along the way. This function is reserved to database
+ * provider's implementation
  *
  * WARNING: @cnc _MUST_ be locked before this function is called
  */
 void
-_gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
+gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
 {
 	if (!cnc || (status == cnc->priv->status))
 		return;
@@ -5911,6 +5913,24 @@ _gda_connection_internal_set_worker_thread (GdaConnection *cnc, GThread *thread)
 	else
 		cnc->priv->worker_thread = thread;
 	g_mutex_unlock (&global_mutex);
+}
+
+/**
+ * gda_connection_internal_get_worker: (skip)
+ * @data: (allow-none): a #GdaServerProviderConnectionData, or %NULL
+ *
+ * Retreive a pointer to the #GdaWorker used internally by the connection. This function is reserved to
+ * database provider's implementation and should not be used otherwise.
+ *
+ * Returns: (transfer none): the #GdaWorker, or %NULL
+ */
+GdaWorker *
+gda_connection_internal_get_worker (GdaServerProviderConnectionData *data)
+{
+	if (data)
+		return data->worker;
+	else
+		return NULL;
 }
 
 /**

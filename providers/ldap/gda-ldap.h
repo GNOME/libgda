@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2002 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dj@starfire-programming.net>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,18 @@
 #include <glib.h>
 #include <libgda/libgda.h>
 #include <libgda/gda-connection-private.h>
+#include <virtual/gda-ldap-connection.h>
+
+/*
+ * Note about thread safety:
+ * the doc says: "libldap is thread safe in the sense that multiple
+ * threads can use separate LDAP* handles without running into concurrency
+ * issues; except for library initialization, all accesses to common data
+ * (i.e. global variables) is read-only."
+ *
+ * Here each LDAP handle is treated in its own thread, and function like ldap_str2dn(), ldap_dnfree(),
+ * are considered thread safe.
+ */
 
 /*
  * Provider's specific connection data
@@ -57,8 +69,8 @@ typedef struct {
 	GHashTable   *classes_hash; /* key = class name, value = a #LdapClass */
 } LdapConnectionData;
 
-void     gda_ldap_may_unbind (LdapConnectionData *cdata);
-gboolean gda_ldap_ensure_bound (LdapConnectionData *cdata, GError **error);
-gboolean gda_ldap_rebind (LdapConnectionData *cdata, GError **error);
+void     gda_ldap_may_unbind (GdaLdapConnection *cnc);
+gboolean gda_ldap_ensure_bound (GdaLdapConnection *cnc, GError **error);
+gboolean gda_ldap_rebind (GdaLdapConnection *cnc, GError **error);
 
 #endif

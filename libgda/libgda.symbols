@@ -139,6 +139,7 @@
 	gda_connection_insert_row_into_table_v
 	gda_connection_internal_change_transaction_state
 	gda_connection_internal_get_provider_data_error
+	gda_connection_internal_get_worker
 	gda_connection_internal_reset_transaction_status
 	gda_connection_internal_savepoint_added
 	gda_connection_internal_savepoint_removed
@@ -166,6 +167,7 @@
 	gda_connection_rollback_savepoint
 	gda_connection_rollback_transaction
 	gda_connection_set_main_context
+	gda_connection_set_status
 	gda_connection_statement_execute
 	gda_connection_statement_execute_non_select
 	gda_connection_statement_execute_select
@@ -591,6 +593,7 @@
 	gda_server_provider_get_default_dbms_type
 	gda_server_provider_get_impl_functions_for_class
 	gda_server_provider_get_name
+	gda_server_provider_get_real_main_context
 	gda_server_provider_get_server_version
 	gda_server_provider_get_type
 	gda_server_provider_get_version
