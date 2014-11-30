@@ -72,7 +72,7 @@ struct _GdaLdapConnectionClass {
  *   <listitem>
  *      <para>The CREATE LDAP TABLE: <synopsis>CREATE LDAP TABLE &lt;table name&gt; [BASE=&lt;base DN&gt;] [FILTER=&lt;LDAP filter&gt;] [ATTRIBUTES=&lt;LDAP attributes&gt;] [SCOPE=&lt;search scope&gt;]</synopsis>
  *      </para>
- *      <para>Each of the BASE, FILTER, ATTRIBUTES and SCOPE specifications is optional. Use this command to declare a table, for example: <programlisting>CREATE LDAP TABLE users FILTER='(cn=*doe*)' SCOPE= 'SUBTREE';</programlisting>.
+ *      <para>Each of the BASE, FILTER, ATTRIBUTES and SCOPE specifications is optional. Use this command to declare a table, for example: <programlisting>CREATE LDAP TABLE users FILTER='(cn=*doe*)' SCOPE= 'SUBTREE';</programlisting>
  *        The allowed SCOPE values are: 'BASE', 'ONELEVEL' and 'SUBTREE'.
  *      </para>
  *      <para>See the <link linkend="gda-ldap-connection-declare-table">gda_ldap_connection_declare_table()</link>
@@ -93,6 +93,9 @@ struct _GdaLdapConnectionClass {
  *        the definition of the virtual table is returned instead. When altering the virtual table, only the
  *        specified parameters are altered (ie. you don't need to repeat the parameters you don't want to
  *        be modified)
+ *      </para>
+ *      <para>Again, refer to the <link linkend="gda-ldap-connection-declare-table">gda_ldap_connection_declare_table()</link>
+ *        section for more information about the ATTRIBUTES syntax.
  *      </para>
  *   </listitem>
  *   <listitem>

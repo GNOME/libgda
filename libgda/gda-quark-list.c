@@ -353,6 +353,14 @@ name_is_protected (const gchar *name)
  * "DB_NAME=notes;USERNAME=al%%20fred" string will specify a username as "al fred"). If this formalism
  * is not respected, then some unexpected results may occur.
  *
+ * Some corner cases for any string part (delimited by the semi-colon):
+ * <itemisedlist>
+ *    <listitem><para>If it does not respect the "&lt;key&gt;=&lt;value&gt;" format then it will be ignored.</para></listitem>
+ *    <listitem><para>Only the 1st equal character is used to separate the key from the value part (which means
+ *       any other equal sign will be part of the value)</para></listitem>
+ * </itemisedlist>
+ *
+ *
  * Adds new key->value pairs from the given @string. If @cleanup is
  * set to %TRUE, the previous contents will be discarded before adding
  * the new pairs.
@@ -371,9 +379,8 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 
 	arr = (gchar **) g_strsplit (string, ";", 0);
 	if (arr) {
-		gint n = 0;
-
-		while (arr[n] && (* (arr[n]))) {
+		guint n;
+		for (n = 0; arr[n] && (* (arr[n])); n++) {
 			gchar **pair;
 			gchar *tmp;
 			for (tmp = arr[n]; *tmp; tmp++) {
@@ -382,7 +389,6 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 			}
 			if (!*tmp) {
 				/* ignore this string since it does not contain the '=' char */
-				n++;
 				continue;
 			}
 
@@ -431,7 +437,6 @@ gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboole
 			}
 			else
 				g_strfreev (pair);
-			n++;
 		}
 		g_strfreev (arr);
 	}
