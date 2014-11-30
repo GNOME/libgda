@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -20,8 +20,8 @@
 
 #include <glib/gi18n-lib.h>
 #include <string.h>
+#include "t-app.h"
 #include "relations-diagram.h"
-#include "../support.h"
 #include "../gdaui-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
@@ -30,7 +30,8 @@
 #include "../browser-perspective.h"
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
-#include "../../base-tool-utils.h"
+#include "../ui-support.h"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _RelationsDiagramPrivate {
 	TConnection *tcnc;
@@ -332,7 +333,7 @@ relations_diagram_new (TConnection *tcnc)
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	diagram->priv->header = GDAUI_BAR (label);
 
-	wid = gdaui_bar_add_button_from_stock (GDAUI_BAR (label), GTK_STOCK_SAVE);
+	wid = gdaui_bar_add_button_from_icon_name (GDAUI_BAR (label), "document-save");
 	diagram->priv->save_button = wid;
 
 	g_signal_connect (wid, "clicked",
@@ -566,9 +567,9 @@ relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_b
 		tab_name = g_strdup (_("Diagram"));
 
 	table_pixbuf = ui_get_pixbuf_icon (UI_ICON_DIAGRAM);
-	wid = browser_make_tab_label_with_pixbuf (tab_name,
-						  table_pixbuf,
-						  out_close_button ? TRUE : FALSE, out_close_button);
+	wid = ui_make_tab_label_with_pixbuf (tab_name,
+					     table_pixbuf,
+					     out_close_button ? TRUE : FALSE, out_close_button);
 	g_free (tab_name);
 	return wid;
 }

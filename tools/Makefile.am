@@ -58,6 +58,10 @@ else
 EXTRALDFLAGS=
 endif
 
+if HAVE_GOOCANVAS
+CANVAS_LDADD=browser/canvas/libcanvas.la -lm
+endif
+
 libbrowser_la_SOURCES=
 
 libbrowser_la_LIBADD = \
@@ -66,6 +70,7 @@ libbrowser_la_LIBADD = \
 	browser/libbrowsercore.la \
 	$(ldap_lib) \
 	browser/schema-browser/libperspective.la \
+	$(CANVAS_LDADD) \
 	browser/dummy-perspective/libperspective.la \
 	browser/query-exec/libperspective.la \
 	browser/data-manager/libperspective.la

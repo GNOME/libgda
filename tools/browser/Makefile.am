@@ -4,6 +4,9 @@ SUBDIRS = dummy-perspective schema-browser query-exec data-manager
 if LDAP
 SUBDIRS += ldap-browser
 endif
+if HAVE_GOOCANVAS
+SUBDIRS += canvas
+endif
 SUBDIRS += help
 
 AM_CPPFLAGS = \
@@ -93,3 +96,4 @@ EXTRA_DIST = \
 
 CLEANFILES = \
 	$(appdata_DATA)
+

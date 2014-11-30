@@ -1019,6 +1019,7 @@ tools/Makefile
 tools/gda-sql-6.0.1:tools/gda-sql.1.in
 tools/base/Makefile
 tools/browser/Makefile
+tools/browser/canvas/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/schema-browser/Makefile
 tools/browser/query-exec/Makefile

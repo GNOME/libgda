@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -26,7 +26,6 @@
 #include "table-info.h"
 #include "table-relations.h"
 #include <libgda-ui/gdaui-tree-store.h>
-#include "../support.h"
 #include "../gdaui-bar.h"
 #include "schema-browser-perspective.h"
 #include "../canvas/browser-canvas-db-relations.h"
