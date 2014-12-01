@@ -31,6 +31,7 @@
 
 struct _GdaVconnectionDataModelPrivate {
 	GSList *table_data_list; /* list of GdaVConnectionTableData structures */
+	gboolean being_disposed;
 
 	GMutex        lock_context;
 	GdaStatement *executed_stmt;
@@ -81,7 +82,8 @@ vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 	td = _gda_vconnection_get_table_data_by_name (cnc, table_name);
 	if (td)
 		cnc->priv->table_data_list = g_slist_remove (cnc->priv->table_data_list, td);
-	_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
+	if (! cnc->priv->being_disposed)
+		_gda_connection_signal_meta_table_update ((GdaConnection *)cnc, table_name);
 #ifdef GDA_DEBUG_NO
 	dump_all_tables (cnc);
 #endif
@@ -139,6 +141,7 @@ gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, G_GNUC_UNUSED Gda
 {
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
+	cnc->priv->being_disposed = FALSE;
 	g_mutex_init (& (cnc->priv->lock_context));
 
 	g_object_set (G_OBJECT (cnc), "cnc-string", "_IS_VIRTUAL=TRUE", NULL);
@@ -153,6 +156,7 @@ gda_vconnection_data_model_dispose (GObject *object)
 
 	/* free memory */
 	if (cnc->priv) {
+		cnc->priv->being_disposed = TRUE;
 		while (cnc->priv->table_data_list) {
 			GdaVConnectionTableData *td;
 			td = (GdaVConnectionTableData *) cnc->priv->table_data_list->data;
