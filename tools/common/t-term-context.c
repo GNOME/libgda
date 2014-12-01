@@ -237,6 +237,9 @@ display_result (TApp *main_data, ToolCommandResult *res)
 	}
 	case BASE_TOOL_COMMAND_RESULT_EXIT:
 		break;
+	case BASE_TOOL_COMMAND_RESULT_DATA_MODEL:
+		t_app_store_data_model (res->u.model, T_LAST_DATA_MODEL_NAME);
+		/* warning: no break! */
 	default: {
 		gchar *str;
 		FILE *ostream;
