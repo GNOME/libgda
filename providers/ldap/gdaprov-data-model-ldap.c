@@ -716,7 +716,7 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 	BerElement* ber;
 	char *attr;
 	GdaHolder *holder;
-	gint j, nb;
+	gint j;
 	GSList *holders_set = NULL;
 
 	g_object_get (G_OBJECT (data->iter), "update-model", &update_model, NULL);
@@ -750,11 +750,9 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 	else
 		gda_holder_force_invalid (holder);
 
-	nb = g_slist_length (((GdaSet*) data->iter)->holders);
-	for (j = 1; j < nb; j++) {
-		holder = (GdaHolder*) (g_slist_nth_data (((GdaSet*) data->iter)->holders, j));
-		gda_holder_set_value (holder, NULL, NULL);
-	}
+	GSList *list;
+	for (list = GDA_SET (data->iter)->holders->next; list; list = list->next)
+		gda_holder_set_value (GDA_HOLDER (list->data), NULL, NULL);
 
 	if (data->imodel->priv->row_mult)
 		goto out;
@@ -865,9 +863,13 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 						gda_holder_force_invalid (holder);
 					break;
 				case MULTIPLE_VALUE_ACTION_SET_INVALID:
-				default:
-					gda_holder_force_invalid (holder);
+				default: {
+					GError *lerror = NULL;
+					g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+						     _("Multiple value LDAP attribute does not fit into a single value"));
+					gda_holder_force_invalid_e (holder, lerror);
 					break;
+				}
 				}
 			}
 			else if (bvals[0]) {
