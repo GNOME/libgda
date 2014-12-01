@@ -1018,9 +1018,14 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 	else if (G_VALUE_TYPE (value) == G_TYPE_ERROR) {
 		GError *lerror;
 		lerror = g_value_get_boxed (value);
-		//SQLITE3_CALL (sqlite3_result_error) (ctx, lerror && lerror->message ? lerror->message : _("No detail"), -1);
+		/* Can't call:
+		 * SQLITE3_CALL (sqlite3_result_error) (ctx, lerror && lerror->message ? lerror->message : _("No detail"), -1);
+		 * because then the whole processing stops and no further rows are read */
 		if (lerror)
 			lerror = g_error_copy (lerror);
+		else
+			g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
+				     _("No detail"));
 		g_hash_table_insert (error_blobs_hash, lerror, GINT_TO_POINTER (1));
 		SQLITE3_CALL (sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
 	}

@@ -1061,8 +1061,12 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 	g_return_val_if_fail (iter->priv, NULL);
 
 	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
-	if (param)
-		return gda_holder_get_value (param);
+	if (param) {
+		if (gda_holder_is_valid (param))
+			return gda_holder_get_value (param);
+		else
+			return NULL;
+	}
 	else
 		return NULL;
 }
@@ -1089,9 +1093,10 @@ gda_data_model_iter_get_value_at_e (GdaDataModelIter *iter, gint col, GError **e
 
 	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
 	if (param) {
-		if (error)
-			gda_holder_is_valid_e (param, error);
-		return gda_holder_get_value (param);
+		if (gda_holder_is_valid_e (param, error))
+			return gda_holder_get_value (param);
+		else
+			return NULL;
 	}
 	else
 		return NULL;
@@ -1145,8 +1150,12 @@ gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *fi
 	g_return_val_if_fail (iter->priv, NULL);
 
 	param = gda_set_get_holder ((GdaSet *) iter, field_name);
-	if (param)
-		return gda_holder_get_value (param);
+	if (param) {
+		if (gda_holder_is_valid (param))
+			return gda_holder_get_value (param);
+		else
+			return NULL;
+	}
 	else
 		return NULL;
 }
