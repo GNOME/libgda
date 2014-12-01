@@ -2022,6 +2022,26 @@ WorkerOpenConnectionData_free (WorkerOpenConnectionData *data)
 	g_slice_free (WorkerOpenConnectionData, data);
 }
 
+static void
+compute_error (GdaConnection *cnc, GError **error)
+{
+	if (!error)
+		return;
+	const GList *events, *l;
+	events = gda_connection_get_events (cnc);
+
+	for (l = g_list_last ((GList*) events); l; l = l->prev) {
+		GdaConnectionEvent *event;
+
+		event = GDA_CONNECTION_EVENT (l->data);
+		if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR) {
+			if (!(*error))
+				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
+					     "%s", gda_connection_event_get_description (event));
+		}
+	}
+}
+
 static gpointer
 worker_open_connection (WorkerOpenConnectionData *data, GError **error)
 {
@@ -2050,6 +2070,8 @@ worker_open_connection (WorkerOpenConnectionData *data, GError **error)
 		if (fset->prepare_connection) {
 			result = fset->prepare_connection (data->provider, data->cnc, data->params, data->auth);
 			if (!result) {
+				compute_error (data->cnc, error);
+
 				fset->close_connection (data->provider, data->cnc);
 				gda_connection_internal_set_provider_data (data->cnc, NULL, NULL);
 
@@ -2067,21 +2089,8 @@ worker_open_connection (WorkerOpenConnectionData *data, GError **error)
 		gda_quark_list_protect_values (data->params);
 
 	/* error computing */
-	if (!result) {
-		const GList *events, *l;
-		events = gda_connection_get_events (data->cnc);
-
-		for (l = g_list_last ((GList*) events); l; l = l->prev) {
-			GdaConnectionEvent *event;
-
-			event = GDA_CONNECTION_EVENT (l->data);
-			if (gda_connection_event_get_event_type (event) == GDA_CONNECTION_EVENT_ERROR) {
-				if (error && !(*error))
-					g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_OPEN_ERROR,
-						     "%s", gda_connection_event_get_description (event));
-			}
-		}
-	}
+	if (!result)
+		compute_error (data->cnc, error);
 
 	return result ? (gpointer) 0x01 : NULL;
 }
