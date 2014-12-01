@@ -379,8 +379,7 @@ gda_data_model_ldap_set_property (GObject *object,
 			GdaConnection *cnc;
 			cnc = g_value_get_object (value);
 			if (cnc) {
-				if (g_object_get_data ((GObject*) cnc,
-						       "__gda_connection_LDAP") != (gpointer) 0x01) {
+				if (!GDA_IS_LDAP_CONNECTION (cnc)) {
 					g_warning ("cnc is not an LDAP connection");
 					break;
 				}

@@ -633,7 +633,6 @@ gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection
 	g_free (fname);
 
 	/* open virtual connection */
-	g_object_set_data ((GObject*) cnc, "__gda_connection_LDAP", (gpointer) 0x01);
 	gda_virtual_connection_internal_set_provider_data (GDA_VIRTUAL_CONNECTION (cnc), 
 							   cdata, (GDestroyNotify) gda_ldap_free_cnc_data);
 	gda_ldap_may_unbind (GDA_LDAP_CONNECTION (cnc));
