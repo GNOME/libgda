@@ -1865,7 +1865,7 @@ compute_public_data (GdaSet *set)
 /**
  * gda_set_add_holder:
  * @set: a #GdaSet object
- * @holder: a #GdaHolder object
+ * @holder: (transfer none): a #GdaHolder object
  *
  * Adds @holder to the list of holders managed within @set.
  *
@@ -1873,7 +1873,7 @@ compute_public_data (GdaSet *set)
  * will not be added to the set (even if @holder's type or value is not the same as the
  * one already in @set).
  *
- * Returns: TRUE if @holder has been added to @set (and FALSE if it has not been added because there is another #GdaHolder
+ * Returns: %TRUE if @holder has been added to @set (and FALSE if it has not been added because there is another #GdaHolder
  * with the same ID)
  */
 gboolean
