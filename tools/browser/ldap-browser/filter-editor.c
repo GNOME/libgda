@@ -167,18 +167,21 @@ filter_editor_new (TConnection *tcnc)
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
 	entry = gtk_entry_new ();
+	gtk_widget_set_hexpand (entry, TRUE);
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, 0, 1, 1);
 	feditor->priv->base_dn = entry;
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
+	gtk_widget_set_hexpand (entry, TRUE);
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, 1, 1, 1);
 	feditor->priv->filter = entry;
 	g_signal_connect (entry, "activate",
 			  G_CALLBACK (activated_cb), feditor);
 
 	entry = gtk_entry_new ();
+	gtk_widget_set_hexpand (entry, TRUE);
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, 2, 1, 1);
 	feditor->priv->attributes = entry;
 	g_signal_connect (entry, "activate",
@@ -211,6 +214,7 @@ filter_editor_new (TConnection *tcnc)
 
 	gint cols[] = {1};
 	entry = gdaui_combo_new_with_model (model, 1, cols);
+	gtk_widget_set_hexpand (entry, TRUE);
 	g_object_unref (model);
 	gtk_grid_attach (GTK_GRID (grid), entry, 1, 3, 1, 1);
 	feditor->priv->scope = entry;

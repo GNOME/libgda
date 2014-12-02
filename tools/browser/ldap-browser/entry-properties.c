@@ -926,8 +926,6 @@ entry_info_fetched_done (EntryProperties *eprop, GdaLdapEntry *entry)
 
 	if (eprop->priv->text_search && gtk_widget_get_visible (eprop->priv->text_search))
 		text_search_rerun (TEXT_SEARCH (eprop->priv->text_search));
-
-	g_object_unref (eprop);
 }
 
 /**
