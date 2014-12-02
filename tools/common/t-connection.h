@@ -211,7 +211,10 @@ gboolean             t_connection_undeclare_table   (TConnection *tcnc,
 						     const gchar *table_name,
 						     GError **error);
 
-#endif
+#endif /* HAVE_LDAP */
+
+/* Information about the connection */
+GdaSet              *t_connection_get_all_infos (TConnection *tcnc);
 
 G_END_DECLS
 

@@ -66,6 +66,7 @@ struct _TConnectionPrivate {
         GdaConnection *store_cnc;
 
         GdaSet        *variables;
+	GdaSet        *infos;
 };
 
 
@@ -239,6 +240,7 @@ t_connection_init (TConnection *tcnc)
 
 	tcnc->priv->variables = NULL;
 	tcnc->priv->query_buffer = NULL;
+	tcnc->priv->infos = gda_set_new (NULL);
 }
 
 static void
@@ -334,9 +336,16 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 		else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
 			update_store = TRUE;
 		store = gda_meta_store_new_with_file (dict_file_name);
-		g_print (_("All the information related to the '%s' connection will be stored "
-			   "in the '%s' file\n"),
-			 t_connection_get_name (tcnc), dict_file_name);
+
+		GdaHolder *h;
+		h = gda_set_get_holder (tcnc->priv->infos, "meta_filename");
+		if (!h) {
+			h = gda_holder_new (G_TYPE_STRING);
+			g_object_set (h, "id", "meta_filename",
+				      "description", _("File containing the meta data associated to the connection"), NULL);
+			gda_set_add_holder (tcnc->priv->infos, h);
+		}
+		g_assert (gda_holder_set_value_str (h, NULL, dict_file_name, NULL));
 	}
 	else {
 		store = gda_meta_store_new (NULL);
@@ -549,6 +558,9 @@ t_connection_dispose (GObject *object)
 		g_free (tcnc->priv->query_buffer);
 
 		t_connection_set_busy_state (tcnc, FALSE, NULL);
+
+		if (tcnc->priv->infos)
+			g_object_unref (tcnc->priv->infos);
 
 		g_free (tcnc->priv);
 		tcnc->priv = NULL;
@@ -893,11 +905,35 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 		/* show date format */
 		GDateDMY order[3];
 		gchar sep;
-		if (gda_connection_get_date_format (t_connection_get_cnc (tcnc), &order[0], &order[1], &order[2], &sep, NULL)) {
-			g_print (_("Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, MM the month and DD the day\n"),
-				 (order [0] == G_DATE_DAY) ? "DD" : ((order [0] == G_DATE_MONTH) ? "MM" : "YYYY"), sep,
-				 (order [1] == G_DATE_DAY) ? "DD" : ((order [1] == G_DATE_MONTH) ? "MM" : "YYYY"), sep,
-				 (order [2] == G_DATE_DAY) ? "DD" : ((order [2] == G_DATE_MONTH) ? "MM" : "YYYY"));
+		if (gda_connection_get_date_format (t_connection_get_cnc (tcnc),
+						    &order[0], &order[1], &order[2], &sep, NULL)) {
+			GString *string;
+			guint i;
+			string = g_string_new ("");
+			for (i = 0; i < 3; i++) {
+				if (i > 0)
+					g_string_append_c (string, sep);
+				if (order [i] == G_DATE_DAY)
+					g_string_append (string, "DD");
+				else if (order [i] == G_DATE_MONTH)
+					g_string_append (string, "MM");
+				else
+					g_string_append (string, "YYYY");
+			}
+			g_print (_("Date format for this connection will be: %s, where YYYY is the year, MM the month and DD the day\n"),
+				 string->str);
+
+			GdaHolder *h;
+			h = gda_set_get_holder (tcnc->priv->infos, "date_format");
+			if (!h) {
+				h = gda_holder_new (G_TYPE_STRING);
+				g_object_set (h, "id", "date_format",
+					      "description", _("Format of the date used for by connection, where "
+							       "YYYY is the year, MM the month and DD the day"), NULL);
+				gda_set_add_holder (tcnc->priv->infos, h);
+			}
+			g_assert (gda_holder_set_value_str (h, NULL, string->str, NULL));
+			g_string_free (string, TRUE);
 		}
 	}
 
@@ -2381,4 +2417,55 @@ t_connection_get_query_buffer (TConnection *tcnc)
 {
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 	return tcnc->priv->query_buffer;
+}
+
+
+/**
+ * t_connection_get_all_infos:
+ * @tcnc: a #TConnection
+ *
+ * Returns: (transfer none): a #GdaSet containing all the names informations anout @tcnc
+ */
+GdaSet *
+t_connection_get_all_infos (TConnection *tcnc)
+{
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
+
+	/* refresh some information here */
+	/* provider name */
+	GdaHolder *h;
+	h = gda_set_get_holder (tcnc->priv->infos, "db_provider");
+	if (!h) {
+		h = gda_holder_new (G_TYPE_STRING);
+		g_object_set (h, "id", "db_provider",
+			      "description", _("Database provider"), NULL);
+		gda_set_add_holder (tcnc->priv->infos, h);
+	}
+	g_assert (gda_holder_set_value_str (h, NULL, gda_connection_get_provider_name (tcnc->priv->cnc), NULL));
+
+	/* database name */
+	h = gda_set_get_holder (tcnc->priv->infos, "db_name");
+	if (!h) {
+		h = gda_holder_new (G_TYPE_STRING);
+		g_object_set (h, "id", "db_name",
+			      "description", _("Database name"), NULL);
+		gda_set_add_holder (tcnc->priv->infos, h);
+	}
+	const gchar *str;
+	str = gda_connection_get_cnc_string (tcnc->priv->cnc);
+	GdaQuarkList *ql;
+	ql = gda_quark_list_new_from_string (str);
+	if (ql) {
+		const gchar *name;
+		name = gda_quark_list_find (ql, "DB_NAME");
+		if (name)
+			g_assert (gda_holder_set_value_str (h, NULL, name, NULL));
+		else
+			gda_holder_force_invalid (h);
+		gda_quark_list_free (ql);
+	}
+	else
+		gda_holder_force_invalid (h);
+
+	return tcnc->priv->infos;
 }

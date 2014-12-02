@@ -822,6 +822,8 @@ static ToolCommandResult *extra_command_copyright (ToolCommand *command, guint a
 						   TContext *console, GError **error);
 static ToolCommandResult *extra_command_option (ToolCommand *command, guint argc, const gchar **argv,
 						TContext *console, GError **error);
+static ToolCommandResult *extra_command_info (ToolCommand *command, guint argc, const gchar **argv,
+					      TContext *console, GError **error);
 static ToolCommandResult *extra_command_quit (ToolCommand *command, guint argc, const gchar **argv,
 					      TContext *console, GError **error);
 static ToolCommandResult *extra_command_cd (ToolCommand *command, guint argc, const gchar **argv,
@@ -1182,6 +1184,17 @@ build_commands (TApp *self, TAppFeatures features)
 	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>]]"), "option");
 	c->description = _("Set or show an option, or list all options ");
 	c->command_func = (ToolCommandFunc) extra_command_option;
+#ifdef HAVE_LIBSOUP
+	base_tool_command_group_add (self->web_commands, c);
+#endif
+	base_tool_command_group_add (self->term_commands, c);
+
+	c = g_new0 (ToolCommand, 1);
+	c->group = _("General");
+	c->group_id = NULL;
+	c->name = g_strdup_printf (_("%s [<NAME>]"), "info");
+	c->description = _("Show a piece of information, or all information about the connection");
+	c->command_func = (ToolCommandFunc) extra_command_info;
 #ifdef HAVE_LIBSOUP
 	base_tool_command_group_add (self->web_commands, c);
 #endif
@@ -2309,6 +2322,8 @@ extra_command_option (ToolCommand *command, guint argc, const gchar **argv,
 			GValue *value;
 			GdaHolder *opt;
 			opt = GDA_HOLDER (list->data);
+			if (!gda_holder_is_valid (opt))
+				continue;
 			row = gda_data_model_append_row (model, NULL);
 
 			value = gda_value_new_from_string (gda_holder_get_id (opt), G_TYPE_STRING);
@@ -2321,6 +2336,77 @@ extra_command_option (ToolCommand *command, guint argc, const gchar **argv,
 			gda_value_free (value);
 
 			value = (GValue*) gda_holder_get_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION);
+			gda_data_model_set_value_at (model, 2, row, value, NULL);
+		}
+
+		res = g_new0 (ToolCommandResult, 1);
+		res->type = BASE_TOOL_COMMAND_RESULT_DATA_MODEL;
+		res->u.model = model;
+	}
+
+	return res;
+}
+
+static ToolCommandResult *
+extra_command_info (ToolCommand *command, guint argc, const gchar **argv,
+		    TContext *console, GError **error)
+{
+	ToolCommandResult *res = NULL;
+	const gchar *oname = NULL;
+
+	g_assert (console);
+	g_assert (global_t_app);
+
+	if (argv[0] && *argv[0])
+		oname = argv[0];
+
+	if (oname) {
+		GdaSet *infos;
+		infos = t_connection_get_all_infos (t_context_get_connection (console));
+		GdaHolder *opt = gda_set_get_holder (infos, oname);
+		if (opt) {
+			res = g_new0 (ToolCommandResult, 1);
+			res->type = BASE_TOOL_COMMAND_RESULT_SET;
+			res->u.set = gda_set_new (NULL);
+			gda_set_add_holder (res->u.set, gda_holder_copy (opt));
+		}
+		else {
+			g_set_error (error, T_ERROR, T_COMMAND_ARGUMENTS_ERROR,
+				     _("No option named '%s'"), oname);
+			return NULL;
+		}
+	}
+	else {
+		/* list parameter's values */
+		GdaDataModel *model;
+		GSList *list;
+		model = gda_data_model_array_new_with_g_types (3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+		gda_data_model_set_column_title (model, 0, _("Name"));
+		gda_data_model_set_column_title (model, 1, _("Value"));
+		gda_data_model_set_column_title (model, 2, _("Description"));
+		g_object_set_data (G_OBJECT (model), "name", _("Current connection's information"));
+		for (list = t_connection_get_all_infos (t_context_get_connection (console))->holders;
+		     list;
+		     list = list->next) {
+			gint row;
+			gchar *str;
+			GValue *value;
+			GdaHolder *info;
+			info = GDA_HOLDER (list->data);
+			if (!gda_holder_is_valid (info))
+				continue;
+			row = gda_data_model_append_row (model, NULL);
+
+			value = gda_value_new_from_string (gda_holder_get_id (info), G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 0, row, value, NULL);
+			gda_value_free (value);
+
+			str = gda_holder_get_value_str (info, NULL);
+			value = gda_value_new_from_string (str ? str : "(NULL)", G_TYPE_STRING);
+			gda_data_model_set_value_at (model, 1, row, value, NULL);
+			gda_value_free (value);
+
+			value = (GValue*) gda_holder_get_attribute (info, GDA_ATTRIBUTE_DESCRIPTION);
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
 		}
 
