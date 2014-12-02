@@ -354,11 +354,11 @@ name_is_protected (const gchar *name)
  * is not respected, then some unexpected results may occur.
  *
  * Some corner cases for any string part (delimited by the semi-colon):
- * <itemisedlist>
+ * <itemizedlist>
  *    <listitem><para>If it does not respect the "&lt;key&gt;=&lt;value&gt;" format then it will be ignored.</para></listitem>
  *    <listitem><para>Only the 1st equal character is used to separate the key from the value part (which means
  *       any other equal sign will be part of the value)</para></listitem>
- * </itemisedlist>
+ * </itemizedlist>
  *
  *
  * Adds new key->value pairs from the given @string. If @cleanup is
