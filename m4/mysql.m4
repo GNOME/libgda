@@ -66,7 +66,7 @@ m4_define([_MYSQL_CHECK_INTERNAL],
     then
         if test "x$platform_win32" = xyes
 	then
-	    mysql_loclibdir=lib/opt
+	    mysql_loclibdir=bin
 	else
 	    mysql_loclibdir=lib
 	fi
@@ -81,7 +81,7 @@ m4_define([_MYSQL_CHECK_INTERNAL],
     mysql_test_dir=""
     AC_ARG_WITH(mysql,
               AS_HELP_STRING([--with-mysql[=@<:@yes/no/<directory>@:>@]],
-                             [Locate Mysql files]),[
+                             [Locate MySQL files]),[
 			     if test $withval = no
 			     then
 			         try_mysql=false
@@ -91,7 +91,7 @@ m4_define([_MYSQL_CHECK_INTERNAL],
 			     fi])
     AC_ARG_WITH(mysql-libdir-name,
               AS_HELP_STRING([--with-mysql-libdir-name[=@<:@<dir. name>@:>@]],
-                             [Locate Mysql library file, related to the MYSQL prefix specified from --with-mysql]),
+                             [Locate MySQL library file, related to the prefix specified from --with-mysql]),
 			     [mysql_loclibdir=$withval])
 
     # try with the default available mysql_config
@@ -117,13 +117,13 @@ m4_define([_MYSQL_CHECK_INTERNAL],
 	    then
 	        mysql_libext=".so"
 	    else
-	        mysql_libext=".lib"
+	        mysql_libext=".dll"
 	    fi
 	    if test $platform_win32 = yes
 	    then
 	        for d in $mysql_test_dir
 	        do
-	            AC_MSG_CHECKING([checking for mysql files in $d])
+	            AC_MSG_CHECKING([checking for MySQL files in $d])
 		    if test -a $d/include/mysql.h -a -f $d/$mysql_loclibdir/libmysql$mysql_libext
 		    then
 			save_CFLAGS="$CFLAGS"
@@ -168,7 +168,7 @@ int main() {
 	        done
 	    fi
 	else
-	    AC_MSG_CHECKING([checking for Mysql headers])
+	    AC_MSG_CHECKING([checking for MySQL headers])
 	    save_CFLAGS="$CFLAGS"
 	    CFLAGS="$CFLAGS $MYSQL_CFLAGS"
             save_LIBS="$LIBS"

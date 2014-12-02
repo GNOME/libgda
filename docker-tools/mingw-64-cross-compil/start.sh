@@ -1,6 +1,6 @@
 #!/bin/sh
 
-image_name="libgda-mingw32"
+image_name="libgda-mingw64"
 
 # test docker install
 docker version > /dev/null 2>&1 || {
@@ -21,7 +21,7 @@ if test "$#" -eq 1
 then
     destdir=$1
 else
-    destdir=/home/vivien/Devel/VMShared/bin-win32
+    destdir=/home/vivien/Devel/VMShared/bin-win64
 fi
 if [ ! -e $destdir ]
 then
@@ -61,7 +61,7 @@ else
 fi
 
 echo "Using libgda's source files in:  ${gda_src}"
-echo "Win32 compiled files will be in: ${destdir}"
+echo "Win64 compiled files will be in: ${destdir}"
 echo "Once in the container, run:"
 echo "# ./configure"
 echo "# make"

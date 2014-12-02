@@ -1,6 +1,6 @@
 #!/bin/sh
 
-image_name="libgda-mingw32"
+image_name="libgda-mingw64"
 
 # test docker install
 docker version > /dev/null 2>&1 || {
@@ -8,11 +8,11 @@ docker version > /dev/null 2>&1 || {
     exit 1
 }
 
-# download Win32 binaries if necessary
-if [ ! -d Win32 ]
+# download Win64 binaries if necessary
+if [ ! -d Win64 ]
 then
-    echo "Missing Win32/ directory, downloading archive (about 3Mb)..."
-    tarball="https://people.gnome.org/~vivien/Win32_docker_02.txz"
+    echo "Missing Win64/ directory, downloading archive (about 1Mb)..."
+    tarball="https://people.gnome.org/~vivien/Win64_docker_02.txz"
     wget -q $tarball > /dev/null 2>&1 || {
 	echo "Unable to get $tarball, check with Libgda's maintainer!"
 	exit 1

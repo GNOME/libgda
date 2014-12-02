@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# Prefix of mingw tools. prefix + tool should make up full path
+# to the tool, e.g. prefix is '/usr/bin/i686-mingw32msvc-' on Debian
+# or '/usr/local/mingw32/bin/' on FreeBSD.
+MINGW_TOOL_PREFIX=/usr/bin/i686-w64-mingw32-
+
+# These python variables are medit-only
+if [ "x$1" = "x--with-python=2.5" -o "x$2" = "x--with-python=2.5" ]; then
+  export PYTHON_PREFIX=${PYTHON_PREFIX:-/usr/local/win/Python25}
+  export PYTHON25_HOME=$PYTHON_PREFIX
+else
+  export PYTHON_PREFIX=${PYTHON_PREFIX:-/usr/local/win/Python24}
+  export PYTHON24_HOME=$PYTHON_PREFIX
+fi
+export PYTHON_HOME=$PYTHON_PREFIX
+export PYTHON24_HOME=${PYTHON24_HOME:-/usr/local/win/Python24}
+export PYTHON25_HOME=${PYTHON25_HOME:-/usr/local/win/Python25}
+
+# Find configure script to run
+if [ x$CONFIGURE = x ]; then
+    CONFIGURE="configure"
+    if [ ! -e $CONFIGURE ]; then
+        CONFIGURE=`dirname $0`/../configure
+    fi
+    if [ ! -e $CONFIGURE ]; then
+        echo "Can't find configure script"
+        exit 1
+    fi
+    configure_dir=`dirname "$CONFIGURE"`
+    configure_dir=`cd "$configure_dir" && pwd`
+    CONFIGURE="$configure_dir"/configure
+    CONFIG_GUESS="$configure_dir"/config.guess
+fi
+
+# autoconf is not intelligent enough to guess that
+# i686-pc-mingw32msvc target has anything to do with
+# debian /usr/bin/i686-mingw32msvc-gcc or freebsd
+# /usr/local/mingw32/bin/gcc, hence these variables
+export ADDR2LINE="${MINGW_TOOL_PREFIX}addr2line"
+export AS="${MINGW_TOOL_PREFIX}as"
+export CC="${MINGW_TOOL_PREFIX}gcc"
+export CPP="${MINGW_TOOL_PREFIX}cpp"
+export CPPFILT="${MINGW_TOOL_PREFIX}c++filt"
+export CXX="${MINGW_TOOL_PREFIX}g++"
+export DLLTOOL="${MINGW_TOOL_PREFIX}dlltool"
+export DLLWRAP="${MINGW_TOOL_PREFIX}dllwrap"
+export GCOV="${MINGW_TOOL_PREFIX}gcov"
+export LD="${MINGW_TOOL_PREFIX}ld"
+export NM="${MINGW_TOOL_PREFIX}nm"
+export OBJCOPY="${MINGW_TOOL_PREFIX}objcopy"
+export OBJDUMP="${MINGW_TOOL_PREFIX}objdump"
+export READELF="${MINGW_TOOL_PREFIX}readelf"
+export SIZE="${MINGW_TOOL_PREFIX}size"
+export STRINGS="${MINGW_TOOL_PREFIX}strings"
+export WINDRES="${MINGW_TOOL_PREFIX}windres"
+export AR="${MINGW_TOOL_PREFIX}ar"
+export RANLIB="${MINGW_TOOL_PREFIX}ranlib"
+export STRIP="${MINGW_TOOL_PREFIX}strip"
+
+export LDFLAGS="-L$GTK_PREFIX/lib $LDFLAGS"
+export CPPFLAGS="-I$GTK_PREFIX/include $CPPFLAGS"
+export MMSFLAGS="-mms-bitfields"
+export MMSFLAGS=
+export CFLAGS="-I$GTK_PREFIX/include $MMSFLAGS -march=i686 ${CFLAGS:-"-g"}"
+export CXXFLAGS="-I$GTK_PREFIX/include $MMSFLAGS -march=i686 ${CFLAGS:-"-g"}"
+
+TARGET=i686-pc-mingw32msvc
+export PKG_CONFIG_PATH=/usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig
+
+# Now actually run configure. FOO=foo arguments *must* be there if you
+# want automatic re-configuring (which happens if you modify configure.ac and
+# run make) work.
+# NOTE: --build *must* be here, it's autoconf bug (aka 'feature'), confirmed and
+# *documented*.
+echo sh $CONFIGURE --build=`$CONFIG_GUESS` --host=$TARGET --target=$TARGET \
+GTK_PREFIX="$GTK_PREFIX" \
+PYTHON_PREFIX="$PYTHON_PREFIX" PYTHON_HOME="$PYTHON_HOME" \
+PYTHON24_HOME="$PYTHON24_HOME" PYTHON25_HOME="$PYTHON25_HOME" \
+AR="$AR" RANLIB="$RANLIB" STRIP="$STRIP" AS="$AS" DLLTOOL="$DLLTOOL" \
+OBJDUMP="$OBJDUMP" NM="$NM" WINDRES="$WINDRES" $@
+exec sh $CONFIGURE --build=`$CONFIG_GUESS` --host=$TARGET --target=$TARGET \
+GTK_PREFIX="$GTK_PREFIX" \
+PYTHON_PREFIX="$PYTHON_PREFIX" PYTHON_HOME="$PYTHON_HOME" \
+PYTHON24_HOME="$PYTHON24_HOME" PYTHON25_HOME="$PYTHON25_HOME" \
+AR="$AR" RANLIB="$RANLIB" STRIP="$STRIP" AS="$AS" DLLTOOL="$DLLTOOL" \
+OBJDUMP="$OBJDUMP" NM="$NM" WINDRES="$WINDRES" $@

@@ -350,7 +350,7 @@ files=(libdb51.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_bdb bin
 
-files=(libmySQL.dll)
+files=(libmysql.dll)
 add_files_to_zip $archive_ext "${depend_path}" bin $files
 add_found_files_to_nsh prov_mysql bin
 
