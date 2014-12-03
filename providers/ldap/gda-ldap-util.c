@@ -406,6 +406,7 @@ worker_gda_ldap_get_attr_info (WorkerLdapAttrInfoData *data, GError **error)
 	if (! gda_ldap_ensure_bound (data->cnc, NULL))
 		return NULL;
 
+	gda_ldap_execution_slowdown (data->cnc);
 	res = ldap_search_ext_s (data->cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
@@ -438,6 +439,7 @@ worker_gda_ldap_get_attr_info (WorkerLdapAttrInfoData *data, GError **error)
 	}
 
 	/* look for attributeTypes */
+	gda_ldap_execution_slowdown (data->cnc);
 	res = ldap_search_ext_s (data->cdata->handle, subschema, LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 schema_attrs, 0,
@@ -604,6 +606,7 @@ worker_gdaprov_ldap_get_class_info (WorkerLdapClassInfoData *data, GError **erro
 	if (! gda_ldap_ensure_bound (data->cnc, NULL))
 		return NULL;
 
+	gda_ldap_execution_slowdown (data->cnc);
 	res = ldap_search_ext_s (data->cdata->handle, "", LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 subschemasubentry, 0,
@@ -636,6 +639,7 @@ worker_gdaprov_ldap_get_class_info (WorkerLdapClassInfoData *data, GError **erro
 	}
 
 	/* look for attributeTypes */
+	gda_ldap_execution_slowdown (data->cnc);
 	res = ldap_search_ext_s (data->cdata->handle, subschema, LDAP_SCOPE_BASE,
 				 "(objectclass=*)",
 				 schema_attrs, 0,
@@ -1309,6 +1313,8 @@ worker_gdaprov_ldap_describe_entry (WorkerLdapDescrEntryData *data, GError **err
 	if (! gda_ldap_ensure_bound (data->cnc, error))
 		return NULL;
 
+	gda_ldap_execution_slowdown (data->cnc);
+
 	int res;
 	LDAPMessage *msg = NULL;
 	const gchar *real_dn;
@@ -1824,4 +1830,21 @@ gdaprov_ldap_get_attributes_list (GdaLdapConnection *cnc, GdaLdapAttribute *obje
 	g_hash_table_destroy (hash);
 
 	return retlist;
+}
+
+/*
+ * gda_ldap_execution_slowdown:
+ *
+ * This function honors the GdaConnection:execution-slowdown property when using the LDAP interface
+ * directly
+ */
+void
+gda_ldap_execution_slowdown (GdaLdapConnection *cnc)
+{
+	guint delay;
+	g_object_get (cnc, "execution-slowdown", &delay, NULL);
+	if (delay > 0) {
+		g_print ("Delaying LDAP query execution for %u ms\n", delay);
+                g_usleep (delay);
+	}
 }

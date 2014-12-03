@@ -1040,6 +1040,7 @@ worker_execute_ldap_search (WorkerSearchData *data, GError **error)
 #else
 	retry:
 #endif
+	gda_ldap_execution_slowdown (data->cnc);
 	res = ldap_search_ext_s (data->cdata->handle, data->model->priv->current_exec->base_dn, lscope,
 				 data->model->priv->filter,
 				 (char**) data->model->priv->attributes->data, 0,

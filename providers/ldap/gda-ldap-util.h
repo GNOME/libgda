@@ -58,4 +58,9 @@ gboolean       gda_ldap_parse_dn (const char *attr, gchar **out_userdn);
 
 gboolean       gdaprov_ldap_is_dn (const gchar *dn);
 
+/*
+ * Debug purposes
+ */
+void           gda_ldap_execution_slowdown (GdaLdapConnection *cnc);
+
 #endif
