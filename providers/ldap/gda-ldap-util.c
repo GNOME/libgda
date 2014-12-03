@@ -1482,8 +1482,14 @@ GdaLdapEntry **
 worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **error)
 {
 	int res;
-	LDAPMessage *msg = NULL;
+	LDAPMessage *msg;
+	gda_ldap_execution_slowdown (data->cnc);
+
+	if (! gda_ldap_ensure_bound (data->cnc, error))
+		return NULL;
+
  retry:
+	msg = NULL;
 	res = ldap_search_ext_s (data->cdata->handle, data->dn ? data->dn : data->cdata->base_dn, LDAP_SCOPE_ONELEVEL,
 				 "(objectClass=*)", data->attributes, 0,
 				 NULL, NULL, NULL, -1,
@@ -1586,6 +1592,10 @@ worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **
 	}
 	case LDAP_SERVER_DOWN: {
 		gint i;
+		if (msg) {
+			ldap_msgfree (msg);
+			msg = NULL;
+		}
 		for (i = 0; i < 5; i++) {
 			if (gda_ldap_rebind (data->cnc, NULL))
 				goto retry;
@@ -1598,6 +1608,8 @@ worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **
 		ldap_get_option (data->cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_OTHER_ERROR,
 			     "%s", ldap_err2string(ldap_errno));
+		if (msg)
+			ldap_msgfree (msg);
 		gda_ldap_may_unbind (data->cnc);
 		return NULL;
 	}
@@ -1609,9 +1621,6 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 {
 	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (!dn || (dn && *dn), NULL);
-
-	if (! gda_ldap_ensure_bound (cnc, error))
-		return NULL;
 
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
