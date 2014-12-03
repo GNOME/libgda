@@ -116,7 +116,7 @@ libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in
 libgda-ui/data-entries/plugins/libmain.c
-libgda-ui/data/server_operation.glade
+[type: gettext/glade]libgda-ui/data/server_operation.xml
 libgda-ui/demos/main.c
 libgda-ui/gdaui-basic-form.c
 libgda-ui/gdaui-cloud.c
@@ -269,6 +269,12 @@ tools/base/base-tool-output.c
 tools/browser/auth-dialog.c
 tools/browser/browser-connections-list.c
 tools/browser/browser-window.c
+tools/browser/canvas/browser-canvas.c
+tools/browser/canvas/browser-canvas-column.c
+tools/browser/canvas/browser-canvas-db-relations.c
+tools/browser/canvas/browser-canvas-fkey.c
+tools/browser/canvas/browser-canvas-print.c
+tools/browser/canvas/browser-canvas-table.c
 tools/browser/connection-binding-properties.c
 tools/browser/data-manager/analyser.c
 tools/browser/data-manager/data-console.c
