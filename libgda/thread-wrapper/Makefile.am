@@ -152,6 +152,10 @@ test_connect_SOURCES = \
 	itsignaler.c \
 	gda-connect.h \
 	gda-connect.c \
+	background.h \
+	background.c \
+	gda-worker.h \
+	gda-worker.c \
 	test-connect.c
 
 test_connect_LDADD = \

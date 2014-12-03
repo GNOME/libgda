@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2013 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,7 @@ int test9 (void);
 int test10 (void);
 int test11 (void);
 int test12 (void);
+int test13 (void);
 
 
 int
@@ -50,6 +51,7 @@ main (int argc, char** argv)
 	nfailed += test10 ();
 	nfailed += test11 ();
 	nfailed += test12 ();
+	nfailed += test13 ();
 
 	g_print ("Test %s\n", nfailed > 0 ? "Failed" : "Ok");
 	return nfailed > 0 ? 1 : 0;
@@ -802,6 +804,80 @@ test12 (void)
 		g_clear_error (&error);
 		nfailed ++;
 	}
+
+	g_print ("Unref worker...\n");
+
+	gda_worker_unref (worker);
+	g_print ("%s done\n", __FUNCTION__);
+
+	return nfailed;
+}
+
+/*
+ * Test 13: gda_worker_do_job() for several jobs
+ */
+static gpointer
+test13_func (gpointer data, GError **error)
+{
+	g_print ("%s (%s) in thread %p\n", __FUNCTION__, (gchar *) data, g_thread_self ());
+	static guint i = 1;
+	g_usleep (G_USEC_PER_SEC / 2); /* wait half a second */
+	i++;
+	return (gpointer) GUINT_TO_POINTER (i);
+}
+
+gboolean test13_sub_failed = FALSE;
+gboolean
+test13_time_func (GdaWorker *worker)
+{
+	/* this time we should get 3, because the previous call to test13_func() should have returned 2 */
+	g_print ("Sumbitting another job for test13_func()\n");
+	gpointer result;
+	GError *error = NULL;
+	if (!gda_worker_do_job (worker, NULL, 0, &result, NULL,
+				(GdaWorkerFunc) test13_func, "2nd", NULL,
+				NULL, &error)) {
+		g_print ("gda_worker_do_job() failed: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+		test13_sub_failed = TRUE;
+	}
+	else if (GPOINTER_TO_UINT (result) != 3) {
+		g_print ("In %s(): expected 3 and got %u\n", __FUNCTION__, GPOINTER_TO_UINT (result));
+		test13_sub_failed = TRUE;
+	}
+
+	gda_worker_unref (worker);
+
+	return G_SOURCE_REMOVE;
+}
+
+int
+test13 (void)
+{
+	g_print ("%s started, main thread is %p\n", __FUNCTION__, g_thread_self ());
+	GdaWorker *worker;
+	gint nfailed = 0;
+
+	worker = gda_worker_new ();
+	GError *error = NULL;
+
+	g_timeout_add (200, (GSourceFunc) test13_time_func, gda_worker_ref (worker));
+
+	g_print ("Sumbitting job for test13_func()\n");
+	gpointer result;
+	if (!gda_worker_do_job (worker, NULL, 0, &result, NULL,
+				(GdaWorkerFunc) test13_func, "1st", NULL,
+				NULL, &error)) {
+		g_print ("gda_worker_do_job() failed: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+		nfailed ++;
+	}
+	else if (GPOINTER_TO_UINT (result) != 2) {
+		g_print ("In %s(): expected 2 and got %u\n", __FUNCTION__, GPOINTER_TO_UINT (result));
+		nfailed ++;
+	}
+	else if (test13_sub_failed)
+		nfailed ++;
 
 	g_print ("Unref worker...\n");
 

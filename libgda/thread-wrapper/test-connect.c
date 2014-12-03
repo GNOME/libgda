@@ -19,6 +19,7 @@
 #include <glib.h>
 #include <string.h>
 #include "gda-connect.h"
+#include "gda-worker.h"
 #include "dummy-object.h"
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +30,7 @@ int test1 (void);
 int test2 (void);
 int test3 (void);
 int test4 (void);
+int test5 (void);
 
 int
 main (int argc, char** argv)
@@ -48,6 +50,7 @@ main (int argc, char** argv)
 	nfailed += test2 ();
 	nfailed += test3 ();
 	nfailed += test4 ();
+	nfailed += test5 ();
 
 	g_main_context_release (context);
 	g_main_context_unref (context);
@@ -415,3 +418,112 @@ test4 (void)
 	return retval;
 }
 
+/*
+ * Test 5: gda_worker_do_job() for several jobs, with signal emitting
+ */
+static gpointer
+test5_func (DummyObject *obj, GError **error)
+{
+	static guint i = 1;
+	g_usleep (G_USEC_PER_SEC / 2);
+	i++;
+	g_signal_emit_by_name (obj, "sig2", i * 2, NULL);
+
+	return (gpointer) GUINT_TO_POINTER (i);
+}
+
+typedef struct {
+	GdaWorker *worker;
+	DummyObject *obj;
+} Test5Data;
+gboolean test5_sub_failed = FALSE;
+gboolean
+test5_time_func (Test5Data *data)
+{
+	/* this time we should get 3, because the previous call to test5_func() should have returned 2 */
+	g_print ("Sumbitting another job for test5_func()\n");
+	gpointer result;
+	GError *error = NULL;
+	if (!gda_worker_do_job (data->worker, NULL, 0, &result, NULL,
+				(GdaWorkerFunc) test5_func, data->obj, NULL,
+				NULL, &error)) {
+		g_print ("gda_worker_do_job() failed: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+		test5_sub_failed = TRUE;
+	}
+	else if (GPOINTER_TO_UINT (result) != 3) {
+		g_print ("In %s(): expected 3 and got %u\n", __FUNCTION__, GPOINTER_TO_UINT (result));
+		test5_sub_failed = TRUE;
+	}
+
+	gda_worker_unref (data->worker);
+
+	return G_SOURCE_REMOVE;
+}
+
+gint test5_sig1_int = 0;
+gint test5_sig2_int = 0;
+static void
+test5_sig2_cb (DummyObject *obj, gint i, gchar *str, gpointer data)
+{
+	g_print ("%s(..., %d, ...) in thread %p\n", __FUNCTION__, i, g_thread_self ());
+	if (test5_sig1_int == 0)
+		test5_sig1_int = i;
+	else if (test5_sig2_int == 0)
+		test5_sig2_int = i;
+	else
+		g_assert_not_reached ();
+}
+
+int
+test5 (void)
+{
+	g_print ("%s started, main thread is %p\n", __FUNCTION__, g_thread_self ());
+	GdaWorker *worker;
+	gint nfailed = 0;
+
+	DummyObject *obj;
+	obj = dummy_object_new ();
+
+	gulong hid;
+	hid = gda_signal_connect (obj, "sig2",
+				  G_CALLBACK (test5_sig2_cb),
+				  NULL, NULL, 0, NULL);
+
+
+	worker = gda_worker_new ();
+	GError *error = NULL;
+	Test5Data d5;
+	d5.worker = gda_worker_ref (worker);
+	d5.obj = obj;
+	g_timeout_add (200, (GSourceFunc) test5_time_func, &d5);
+
+	g_print ("Sumbitting job for test5_func()\n");
+	gpointer result;
+	if (!gda_worker_do_job (worker, NULL, 0, &result, NULL,
+				(GdaWorkerFunc) test5_func, obj, NULL,
+				NULL, &error)) {
+		g_print ("gda_worker_do_job() failed: %s\n", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+		nfailed ++;
+	}
+	else if (GPOINTER_TO_UINT (result) != 2) {
+		g_print ("In %s(): expected 2 and got %u\n", __FUNCTION__, GPOINTER_TO_UINT (result));
+		nfailed ++;
+	}
+	else if (test5_sub_failed)
+		nfailed ++;
+	else if ((test5_sig1_int != 4) || (test5_sig2_int != 6)) {
+		g_print ("Expected test5_sig1_int=4 and test5_sig2_int=6, got test5_sig1_int=%d and test5_sig2_int=%d\n",
+			 test5_sig1_int, test5_sig2_int);
+		nfailed++;
+	}
+
+	gda_signal_handler_disconnect (obj, hid);
+	g_print ("Unref worker...\n");
+
+	gda_worker_unref (worker);
+	g_print ("%s done\n", __FUNCTION__);
+
+	return nfailed;
+}
