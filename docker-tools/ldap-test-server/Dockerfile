@@ -1,7 +1,7 @@
-FROM fedora:20
+FROM fedora:21
 
 MAINTAINER Vivien Malerba "vmalerba@gmail.com"
-ENV REFRESHED_AT 2014-11-19
+ENV REFRESHED_AT 2014-12-13
 
 COPY install.sh run.sh /
 COPY ldif-data /ldif-data/
