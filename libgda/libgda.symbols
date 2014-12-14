@@ -98,6 +98,7 @@
 	gda_connection_commit_transaction
 	gda_connection_create_operation
 	gda_connection_create_parser
+	gda_connection_decrease_usage
 	gda_connection_delete_savepoint
 	gda_connection_del_prepared_statement
 	gda_connection_delete_row_from_table
@@ -135,6 +136,7 @@
 	gda_connection_get_status
 	gda_connection_get_transaction_status
 	gda_connection_get_type
+	gda_connection_increase_usage
 	gda_connection_insert_row_into_table
 	gda_connection_insert_row_into_table_v
 	gda_connection_internal_change_transaction_state
@@ -167,7 +169,6 @@
 	gda_connection_rollback_savepoint
 	gda_connection_rollback_transaction
 	gda_connection_set_main_context
-	gda_connection_set_status
 	gda_connection_statement_execute
 	gda_connection_statement_execute_non_select
 	gda_connection_statement_execute_select

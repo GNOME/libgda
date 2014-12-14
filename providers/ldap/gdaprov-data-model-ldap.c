@@ -31,7 +31,7 @@
 #include "gdaprov-data-model-ldap.h"
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
-#include <libgda/gda-connection-internal.h> /* for gda_connection_set_status() */
+#include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
 
 #define GDA_DEBUG_SUBSEARCHES
 #undef GDA_DEBUG_SUBSEARCHES
@@ -959,14 +959,14 @@ update_iter_from_ldap_row (GdaDataModelLdap *imodel, GdaDataModelIter *iter)
 	data.imodel = imodel;
 	data.iter = iter;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_update_iter_from_ldap_row, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1208,14 +1208,14 @@ execute_ldap_search (GdaDataModelLdap *model)
 	data.cdata = cdata;
 	data.model = model;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_execute_ldap_search, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1348,14 +1348,14 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	data.imodel = imodel;
 	data.iter = iter;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gda_data_model_ldap_iter_next, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1479,14 +1479,14 @@ ldap_part_free (LdapPart *part, GdaLdapConnection *cnc)
 	data.cdata = cdata;
 	data.part = part;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_ldap_part_free, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1956,14 +1956,14 @@ gdaprov_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
 	data.entry = entry;
 	data.ref_entry = ref_entry;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gdaprov_ldap_modify, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -2062,14 +2062,14 @@ gdaprov_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, cons
 	data.current_dn = current_dn;
 	data.new_dn = new_dn;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gdaprov_ldap_rename_entry, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);

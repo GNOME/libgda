@@ -38,7 +38,7 @@
 #include "gdaprov-data-model-ldap.h"
 #include "gda-ldap-util.h"
 #include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
-#include <libgda/gda-connection-internal.h> /* for gda_connection_set_status() */
+#include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
 
 static void gda_ldap_provider_class_init (GdaLdapProviderClass *klass);
 static void gda_ldap_provider_init       (GdaLdapProvider *provider,

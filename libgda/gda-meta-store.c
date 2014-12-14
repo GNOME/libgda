@@ -799,8 +799,13 @@ gda_meta_store_constructor (GType type,
 		/* in memory DB */
 		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=__gda_tmp", NULL);
 
-	if (store->priv->cnc)
+	if (store->priv->cnc) {
+		gda_lockable_lock (GDA_LOCKABLE (store->priv->cnc));
+		gda_connection_increase_usage (store->priv->cnc); /* USAGE ++ */
 		store->priv->schema_ok = initialize_cnc_struct (store, &(store->priv->init_error));
+		gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
+		gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
+	}
 
 	/* create a local copy of all the DbObject structures defined in klass->cpriv */
 	if (store->priv->catalog && !store->priv->schema) {
@@ -4156,6 +4161,8 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 	}
 
 	/* start a transaction if possible */
+	gda_lockable_lock (GDA_LOCKABLE (store->priv->cnc));
+	gda_connection_increase_usage (store->priv->cnc); /* USAGE ++ */
 	if (! gda_connection_get_transaction_status (store->priv->cnc))
 		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
 									GDA_TRANSACTION_ISOLATION_UNKNOWN,
@@ -4182,12 +4189,16 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 	}
 	if (started_transaction)
 		gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+	gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
+	gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
 	g_rec_mutex_unlock (& (store->priv->mutex));
 	return TRUE;
 
  onerror:
 	if (started_transaction)
 		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+	gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
+	gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
 	g_rec_mutex_unlock (& (store->priv->mutex));
 	return FALSE;
 }

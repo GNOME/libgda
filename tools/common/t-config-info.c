@@ -20,6 +20,7 @@
 #include "t-errors.h"
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
+#include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
 
 /*
  * Replace @argvi's contents with the connection name
@@ -731,11 +732,19 @@ t_config_info_update_meta_store_properties (GdaMetaStore *mstore, GdaConnection 
 	g_value_take_boxed ((dvalue = gda_value_new (G_TYPE_DATE)), date);
 	tmp = gda_value_stringify (dvalue);
 	gda_value_free (dvalue);
+
+	GdaConnection *icnc;
+	icnc = gda_meta_store_get_internal_connection (mstore);
+	gda_lockable_lock (GDA_LOCKABLE (icnc));
+	gda_connection_increase_usage (icnc); /* USAGE ++ */
+
 	gda_meta_store_set_attribute_value (mstore, "last-used", tmp, NULL);
 	g_free (tmp);
-	
 	gda_meta_store_set_attribute_value (mstore, "cnc-string",
 					    gda_connection_get_cnc_string (rel_cnc), NULL);
 	gda_meta_store_set_attribute_value (mstore, "cnc-provider",
 					    gda_connection_get_provider_name (rel_cnc), NULL);
+
+	gda_connection_decrease_usage (icnc); /* USAGE -- */
+	gda_lockable_unlock (GDA_LOCKABLE (icnc));
 }

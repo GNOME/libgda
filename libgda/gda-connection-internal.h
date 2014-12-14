@@ -46,9 +46,9 @@ G_BEGIN_DECLS
 GdaWorker         *_gda_connection_get_worker (GdaConnection *cnc);
 guint              _gda_connection_get_exec_slowdown (GdaConnection *cnc);
 
-void               _gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus status);
-void               _gda_connection_status_stop_batch (GdaConnection *cnc);
-void               gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status);
+void               _gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status);
+void               gda_connection_increase_usage (GdaConnection *cnc);
+void               gda_connection_decrease_usage (GdaConnection *cnc);
 
 /*
  * Opens a connection to an SQLite database. This function is intended to be used

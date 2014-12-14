@@ -102,7 +102,7 @@ struct _GdaConnectionPrivate {
 	GList                *events_list; /* for API compat */
 
 	GdaConnectionStatus   status;
-	guint                 batch_status;
+	guint                 busy_count;
 
 	GdaTransactionStatus *trans_status;
 	GHashTable           *prepared_stmts;
@@ -445,7 +445,7 @@ gda_connection_init (GdaConnection *cnc, G_GNUC_UNUSED GdaConnectionClass *klass
 	cnc->priv->events_array_full = FALSE;
 	cnc->priv->events_array_next = 0;
 	cnc->priv->status = GDA_CONNECTION_STATUS_CLOSED;
-	cnc->priv->batch_status = 0;
+	cnc->priv->busy_count = 0;
 	cnc->priv->trans_status = NULL; /* no transaction yet */
 	cnc->priv->prepared_stmts = NULL;
 
@@ -1578,77 +1578,105 @@ assert_status_transaction (GdaConnectionStatus old, GdaConnectionStatus new)
 	}
 }
 
-/**
- * gda_connection_set_status: (skip)
+/*
+ * _gda_connection_declare_closed:
  * @cnc: a #GdaConnection
- *
- * Set @cnc's new status, may emit the "status-changed" signal along the way. This function is reserved to database
- * provider's implementation
- *
- * WARNING: @cnc _MUST_ be locked before this function is called
  */
 void
-gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
+_gda_connection_declare_closed (GdaConnection *cnc)
 {
-	if (!cnc || (status == cnc->priv->status))
+	if (!cnc)
 		return;
 
-	if ((cnc->priv->batch_status > 0) &&
-	    (status != GDA_CONNECTION_STATUS_CLOSED))
-		return;
+	g_return_if_fail (cnc->priv->status == GDA_CONNECTION_STATUS_IDLE);
 
-	assert_status_transaction (cnc->priv->status, status);
-	cnc->priv->batch_status = 0;
-	cnc->priv->status = status;
-	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
-	if (status == GDA_CONNECTION_STATUS_CLOSED)
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[CLOSED], 0, status);
+	assert_status_transaction (cnc->priv->status, GDA_CONNECTION_STATUS_CLOSED);
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, GDA_CONNECTION_STATUS_CLOSED);
 }
 
 /*
- * _gda_connection_status_start_batch:
+ * _gda_connection_set_status:
+ * This function can't be used to switch to GDA_CONNECTION_STATUS_BUSY, one must switch to
+ * GDA_CONNECTION_STATUS_IDLE and use gda_connection_increase/decrease_usage() functions.
  *
- * This function ensures that the connection's status is set and remains to @status, except for the CLOSED
- * status.
- *
- * To cancel the effect, use _gda_connection_status_stop_batch().
- *
- * WARNING: @cnc _MUST_ be locked before this function is called
+ * WARNING: @cnc _MUST_ be locked using gda_connection_lock() before this function is called
  */
 void
-_gda_connection_status_start_batch (GdaConnection *cnc, GdaConnectionStatus status)
+_gda_connection_set_status (GdaConnection *cnc, GdaConnectionStatus status)
 {
-	cnc->priv->batch_status++;
-	if (cnc->priv->status != status) {
-		assert_status_transaction (cnc->priv->status, status);
-		cnc->priv->status = status;
-		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
+	if (!cnc || (cnc->priv->status == status))
+		return;
+	if ((status == GDA_CONNECTION_STATUS_CLOSED) ||
+	    (status == GDA_CONNECTION_STATUS_OPENING))
+		g_return_if_fail (cnc->priv->busy_count == 0);
+	g_return_if_fail (status != GDA_CONNECTION_STATUS_BUSY);
+	assert_status_transaction (cnc->priv->status, status);
+	cnc->priv->status = status;
+	g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, status);
+	/*g_print ("CNC %p status is %d\n", cnc, cnc->priv->status);*/
+}
+
+/**
+ * gda_connection_increase_usage:
+ * @cnc: a #GdaConnection
+ *
+ * Declare that @cnc is being used, which may emit the "status-changed" signal along the way. Any call to this function
+ * must be followed by one single call to gda_connection_decrease_usage(). The connection's status must either be
+ * IDLE, BUSY, or OPENING when this function is called. If the status is IDLE, then it will be switched to BUSY.
+ *
+ * Note: This function is reserved to database provider's implementation
+ *
+ * WARNING: @cnc _MUST_ be locked using gda_lockable_lock() before this function is called
+ */
+void
+gda_connection_increase_usage (GdaConnection *cnc)
+{
+	if (!cnc)
+		return;
+
+	g_return_if_fail ((cnc->priv->status == GDA_CONNECTION_STATUS_IDLE) ||
+			  (cnc->priv->status == GDA_CONNECTION_STATUS_BUSY) ||
+			  (cnc->priv->status == GDA_CONNECTION_STATUS_OPENING));
+
+	cnc->priv->busy_count ++;
+	if (cnc->priv->status == GDA_CONNECTION_STATUS_IDLE) {
+		assert_status_transaction (cnc->priv->status, GDA_CONNECTION_STATUS_BUSY);
+		cnc->priv->status = GDA_CONNECTION_STATUS_BUSY;
+		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, GDA_CONNECTION_STATUS_BUSY);
+		/*g_print ("CNC %p status is %d\n", cnc, cnc->priv->status);*/
 	}
 }
 
-/*
- * _gda_connection_status_stop_batch:
+/**
+ * gda_connection_decrease_usage:
+ * @cnc: a #GdaConnection
  *
- * See _gda_connection_status_start_batch().
+ * Declare that @cnc is not being used, which may emit the "status-changed" signal along the way. Any call to this function
+ * must be following a single call to gda_connection_increase_usage(). The connection's status must either be
+ * BUSY or OPENING when this function is called. If it's BUSY, then it may be changed to IDLE after this call.
  *
- * This functions ensures that the connections's status is IDLE.
+ * Note: This function is reserved to database provider's implementation
  *
- * WARNING: @cnc _MUST_ be locked before this function is called
+ * WARNING: @cnc _MUST_ be locked using gda_lockable_lock() before this function is called
  */
 void
-_gda_connection_status_stop_batch (GdaConnection *cnc)
+gda_connection_decrease_usage (GdaConnection *cnc)
 {
-	if (cnc->priv->batch_status == 0)
+	if (!cnc)
 		return;
 
-	cnc->priv->batch_status --;
-	if (cnc->priv->status != GDA_CONNECTION_STATUS_IDLE) {
+	g_assert (cnc->priv->busy_count > 0);
+	g_return_if_fail ((cnc->priv->status == GDA_CONNECTION_STATUS_BUSY) ||
+			  (cnc->priv->status == GDA_CONNECTION_STATUS_OPENING));
+
+	cnc->priv->busy_count --;
+	if ((cnc->priv->busy_count == 0) && (cnc->priv->status == GDA_CONNECTION_STATUS_BUSY)) {
 		assert_status_transaction (cnc->priv->status, GDA_CONNECTION_STATUS_IDLE);
 		cnc->priv->status = GDA_CONNECTION_STATUS_IDLE;
 		g_signal_emit (G_OBJECT (cnc), gda_connection_signals[STATUS_CHANGED], 0, GDA_CONNECTION_STATUS_IDLE);
+		/*g_print ("CNC %p status is %d\n", cnc, cnc->priv->status);*/
 	}
 }
-
 
 /**
  * gda_connection_get_status:
@@ -4733,7 +4761,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		cnc->priv->exec_slowdown = 0;
 	}
 
-	_gda_connection_status_start_batch (cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage (cnc); /* USAGE ++ */
 
 	if (context) {
 		GdaMetaContext *lcontext;
@@ -4744,7 +4772,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 
 		lcontext = _gda_meta_store_validate_context (store, context, error);
 		if (!lcontext) {
-			_gda_connection_status_stop_batch (cnc);
+			gda_connection_decrease_usage (cnc); /* USAGE -- */
 			gda_connection_unlock ((GdaLockable*) cnc);
 			cnc->priv->exec_slowdown = real_slowdown;
 			return FALSE;
@@ -4759,7 +4787,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		up_templates = build_upstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!up_templates) {
 			if (lerror) {
-				_gda_connection_status_stop_batch (cnc);
+				gda_connection_decrease_usage (cnc); /* USAGE -- */
 				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
 				cnc->priv->exec_slowdown = real_slowdown;
@@ -4769,7 +4797,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		dn_templates = build_downstream_context_templates (store, lcontext, NULL, &lerror);
 		if (!dn_templates) {
 			if (lerror) {
-				_gda_connection_status_stop_batch (cnc);
+				gda_connection_decrease_usage (cnc); /* USAGE -- */
 				gda_connection_unlock ((GdaLockable*) cnc);
 				g_propagate_error (error, lerror);
 				cnc->priv->exec_slowdown = real_slowdown;
@@ -4830,7 +4858,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		g_slist_free (cbd.context_templates);
 		g_hash_table_destroy (cbd.context_templates_hash);
 
-		_gda_connection_status_stop_batch (cnc);
+		gda_connection_decrease_usage (cnc); /* USAGE -- */
 		gda_connection_unlock ((GdaLockable*) cnc);
 		cnc->priv->exec_slowdown = real_slowdown;
 		return retval;
@@ -4874,7 +4902,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		gboolean retval;
 
 		if (! _gda_meta_store_begin_data_reset (store, error)) {
-			_gda_connection_status_stop_batch (cnc);
+			gda_connection_decrease_usage (cnc); /* USAGE -- */
 			gda_connection_unlock ((GdaLockable*) cnc);
 			cnc->priv->exec_slowdown = real_slowdown;
 			return FALSE;
@@ -4902,13 +4930,13 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 			}
 		}
 		retval = _gda_meta_store_finish_data_reset (store, error);
-		_gda_connection_status_stop_batch (cnc);
+		gda_connection_decrease_usage (cnc); /* USAGE -- */
 		gda_connection_unlock ((GdaLockable*) cnc);
 		cnc->priv->exec_slowdown = real_slowdown;
 		return retval;
 
 	onerror:
-		_gda_connection_status_stop_batch (cnc);
+		gda_connection_decrease_usage (cnc); /* USAGE -- */
 		gda_connection_unlock ((GdaLockable*) cnc);
 		_gda_meta_store_cancel_data_reset (store, NULL);
 		cnc->priv->exec_slowdown = real_slowdown;

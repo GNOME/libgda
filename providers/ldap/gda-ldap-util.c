@@ -25,7 +25,7 @@
 #include <gda-util.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
-#include <libgda/gda-connection-internal.h> /* for gda_connection_set_status() */
+#include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
 
 static void
 ldap_attribute_free (LdapAttribute *lat)
@@ -558,14 +558,14 @@ gda_ldap_get_attr_info (GdaLdapConnection *cnc, LdapConnectionData *cdata, const
 	data.cdata = cdata;
 	data.attribute = attribute;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gda_ldap_get_attr_info, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -819,14 +819,14 @@ gdaprov_ldap_get_class_info (GdaLdapConnection *cnc, const gchar *classname)
 	data.cdata = cdata;
 	data.classname = classname;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gdaprov_ldap_get_class_info, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1448,14 +1448,14 @@ gdaprov_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **e
 	data.cdata = cdata;
 	data.dn = dn;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gdaprov_ldap_describe_entry, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
@@ -1647,14 +1647,14 @@ gdaprov_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar *dn, gchar 
 	data.dn = dn;
 	data.attributes = attributes;
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_BUSY);
+	gda_connection_increase_usage ((GdaConnection*) cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_gdaprov_ldap_get_entry_children, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
-	gda_connection_set_status ((GdaConnection*) cnc, GDA_CONNECTION_STATUS_IDLE);
+	gda_connection_decrease_usage ((GdaConnection*) cnc); /* USAGE -- */
 	gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 
 	gda_worker_unref (worker);
