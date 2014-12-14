@@ -558,7 +558,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_label_set_markup (GTK_LABEL (label),
 			      _("The following fields represent the information needed "
 				"to create a new database "
-				"(mandatory fields are marked with a star)."
+				"(mandatory fields are marked with a star). "
 				"This information is database-specific, so check "
 				"the manual for more information."));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);

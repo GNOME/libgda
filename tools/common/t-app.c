@@ -1407,7 +1407,7 @@ build_commands (TApp *self, TAppFeatures features)
 	c->group_id = "LDAP";
 	c->name = g_strdup_printf (_("%s <DN> [\"all\"|\"set\"|\"unset\"]"), "ldap_descr");
 	c->description = _("Shows attributes for the entry identified by its DN. If the "
-			   "\"set\" 2nd parameter is passed, then all set attributes are show, if "
+			   "\"set\" 2nd parameter is passed, then all set attributes are shown, if "
 			   "the \"all\" 2nd parameter is passed, then the unset attributes are "
 			   "also shown, and if the \"unset\" 2nd parameter "
 			   "is passed, then only non set attributes are shown.");

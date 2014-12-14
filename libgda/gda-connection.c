@@ -1436,7 +1436,7 @@ gda_connection_open_async (GdaConnection *cnc, GdaConnectionOpenFunc callback, g
 	/* return an error if connection is already opened */
 	if (gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_ALREADY_OPENED_ERROR,
-			     "%s", _("Connection is alreay opened"));
+			     "%s", _("Connection is already opened"));
 		return 0;
 	}
 

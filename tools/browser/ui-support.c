@@ -64,7 +64,7 @@ ui_connection_ldap_class_kind_to_string (GdaLdapClassKind kind)
         case GDA_LDAP_CLASS_KIND_STRUTURAL:
                 return _("Structural");
         case GDA_LDAP_CLASS_KIND_AUXILIARY:
-                return _("Auxilliary");
+                return _("Auxiliary");
 	case GDA_LDAP_CLASS_KIND_UNKNOWN:
                 return _("Unknown");
         default:

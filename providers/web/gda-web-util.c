@@ -520,7 +520,7 @@ _gda_web_set_connection_error_from_xmldoc (GdaConnection *cnc, xmlDocPtr doc, GE
 				xmlFree (prop);
 			}
 			else
-				ev = gda_connection_add_event_string (cnc, _("Non detailled error"));
+				ev = gda_connection_add_event_string (cnc, _("Non detailed error"));
 			break;
 		}
 	}

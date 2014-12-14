@@ -148,7 +148,7 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 		str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
 				       _("Data Source Properties"),
 				       _("For information only, this data source is a system wide data source\n"
-					 "and you don't have the permission change it."));
+					 "and you don't have the permission to change it."));
 
 	label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), str);

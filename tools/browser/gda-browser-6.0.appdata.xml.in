@@ -13,7 +13,7 @@
       query execution, and data manager.
       The schema browser allows the user to view the tables of a database, and
       inspect the table's properties and relations.
-      The query exeution perspective allows the user to execute SQL queries on
+      The query execution perspective allows the user to execute SQL queries on
       the database.
       The data manager perspective allows the user to view the data contained in
       the database in a tabular form.
