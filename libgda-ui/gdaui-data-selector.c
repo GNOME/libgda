@@ -199,7 +199,7 @@ gdaui_data_selector_unselect_row (GdauiDataSelector *iface, gint row)
 /**
  * gdaui_data_selector_set_column_visible:
  * @iface: an object which implements the #GdauiDataSelector interface
- * @column: a column number, starting at %0, or -1 tp apply to all the columns
+ * @column: a column number, starting at %0, or -1 to apply to all the columns
  * @visible: required visibility of the data in the @column column
  *
  * Shows or hides the data at column @column

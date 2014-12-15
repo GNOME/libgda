@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -73,8 +73,6 @@ gda_lockable_class_init (G_GNUC_UNUSED gpointer g_class)
  * Locks @lockable. If it is already locked by another thread, the current thread will block until it is unlocked 
  * by the other thread.
  *
- * This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
- *
  * Note: unlike g_mutex_lock(), this method recursive, which means a thread can lock @lockable several times 
  * (and has to unlock it as many times to actually unlock it).
  */
@@ -95,8 +93,6 @@ gda_lockable_lock (GdaLockable *lockable)
  *
  * Tries to lock @lockable. If it is already locked by another thread, then it immediately returns FALSE, otherwise
  * it locks @lockable.
- *
- * This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
  *
  * Note: unlike g_mutex_lock(), this method recursive, which means a thread can lock @lockable several times 
  * (and has to unlock it as many times to actually unlock it).
@@ -122,8 +118,6 @@ gda_lockable_trylock (GdaLockable *lockable)
  *
  * Unlocks @lockable. This method should not be called if the current does not already holds a lock on @lockable (having
  * used gda_lockable_lock() or gda_lockable_trylock()).
- *
- * This function can be used even if g_thread_init() has not yet been called, and, in that case, will do nothing.
  */
 void
 gda_lockable_unlock (GdaLockable *lockable)
