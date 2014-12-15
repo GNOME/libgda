@@ -1913,29 +1913,39 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 
 	/* create the menu */
 	menu = gtk_menu_new ();
-	mitem = gtk_menu_item_new_with_label (_("Shown columns"));
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-	gtk_widget_show (mitem);
-	
-	submenu = gtk_menu_new ();
-	gtk_widget_show (submenu);
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+
+	/* shown columns */
+	guint nentries = 0;
 	for (list = grid->priv->columns_data; list; list = list->next) {
 		ColumnData *cdata = (ColumnData*) list->data;
-		gchar *tmp;
-
-		if (cdata->prog_hidden)
-			continue;
-		tmp = remove_double_underscores (cdata->title);
-		mitem = gtk_check_menu_item_new_with_label (tmp);
-		g_free (tmp);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !cdata->hidden);
-		gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+		if (! cdata->prog_hidden)
+			nentries ++;
+	}
+	if (nentries > 1) {
+		mitem = gtk_menu_item_new_with_label (_("Shown columns"));
+		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 		gtk_widget_show (mitem);
 
-		g_object_set_data (G_OBJECT (mitem), "c", cdata);
-		g_signal_connect (mitem, "toggled",
-				  G_CALLBACK (hidden_column_mitem_toggled_cb), grid);
+		submenu = gtk_menu_new ();
+		gtk_widget_show (submenu);
+		gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
+		for (list = grid->priv->columns_data; list; list = list->next) {
+			ColumnData *cdata = (ColumnData*) list->data;
+			if (cdata->prog_hidden)
+				continue;
+
+			gchar *tmp;
+			tmp = remove_double_underscores (cdata->title);
+			mitem = gtk_check_menu_item_new_with_label (tmp);
+			g_free (tmp);
+			gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), !cdata->hidden);
+			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
+			gtk_widget_show (mitem);
+
+			g_object_set_data (G_OBJECT (mitem), "c", cdata);
+			g_signal_connect (mitem, "toggled",
+					  G_CALLBACK (hidden_column_mitem_toggled_cb), grid);
+		}
 	}
 
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
@@ -3314,9 +3324,9 @@ gdaui_raw_grid_selector_set_column_visible (GdauiDataSelector *iface, gint colum
 	g_assert (pos >= 0);
 
 	viewcol = gtk_tree_view_get_column (GTK_TREE_VIEW (grid), pos);
+	gtk_tree_view_column_set_visible (viewcol, visible);
 
 	/* Sets the column's visibility */
-	gtk_tree_view_column_set_visible (viewcol, visible);
 	ColumnData *cdata;
 	cdata = g_slist_nth_data (grid->priv->columns_data, column);
 	g_assert (cdata);
