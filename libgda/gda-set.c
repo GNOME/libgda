@@ -2186,32 +2186,29 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
 {
 	GdaSetNode *node;
 	GdaSetGroup *retval = NULL;
-	GSList *list, *sublist;
-	GdaHolder *node_holder;
+	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	/* FIXME: May is better to use holder's hash for better performance */
 	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
 
-	for (list = set->groups_list; list && !retval; list = list->next) {
+	for (list = set->groups_list; list; list = list->next) {
 		retval = GDA_SET_GROUP (list->data);
-		sublist = gda_set_group_get_nodes (retval);
-		while (sublist && !retval) {
+		GSList *sublist;
+		for (sublist = gda_set_group_get_nodes (retval); sublist; sublist = sublist->next) {
 			node = GDA_SET_NODE (sublist->data);
 			if (node) {
+				GdaHolder *node_holder;
 				node_holder = gda_set_node_get_holder (node);
 				if (node_holder == holder) /* FIXME: May is better to compare holders ID */
 					break;
-				else {
-					sublist = g_slist_next (sublist);
-					retval = NULL;
-				}
 			}
 		}
+		if (sublist)
+			break;
 	}
-	return retval;
+	return list ? retval : NULL;
 }
 
 
