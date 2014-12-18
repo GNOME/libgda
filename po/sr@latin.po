@@ -1,15 +1,15 @@
-# Serbian translation of libgda
+# Serbian translation of libgda.
 # Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003—2014.
 # This file is distributed under the same license as the libgda package.
-# Maintainer: Dejan Matijević <dejan@ns.sympatico.ca>
+# Dejan Matijević <dejan@ns.sympatico.ca>
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2013—2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
-"&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-28 09:35+0000\n"
-"PO-Revision-Date: 2014-09-28 14:40+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&"
+"keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2014-12-17 22:30+0000\n"
+"PO-Revision-Date: 2014-12-18 10:17+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -88,11 +88,15 @@ msgid "Change the data source properties (the name can't be modified)."
 msgstr "Izmenite svojstva izvora podataka (naziv ne može biti izmenjen)."
 
 #: ../control-center/dsn-properties-dialog.c:150
+#| msgid ""
+#| "For information only, this data source is a system wide data source\n"
+#| "and you don't have the permission change it."
 msgid ""
 "For information only, this data source is a system wide data source\n"
-"and you don't have the permission change it."
+"and you don't have the permission to change it."
 msgstr ""
-"Samo da znate, ovaj izvor podataka je sveopšte sistemski izvor podataka\n"
+"Samo radi obaveštenja, ovaj izvor podataka je sveopšte sistemski izvor "
+"podataka\n"
 "i vi niste ovlašćeni da ga menjate."
 
 #: ../control-center/dsn-properties-dialog.c:200
@@ -110,7 +114,7 @@ msgstr "Ne mogu da otvorim vezu"
 
 #: ../control-center/dsn-properties-dialog.c:230
 #: ../control-center/gdaui-dsn-assistant.c:138
-#: ../libgda-ui/gdaui-raw-form.c:631
+#: ../libgda-ui/gdaui-raw-form.c:632
 msgid "Unknown error"
 msgstr "Nepoznata greška"
 
@@ -122,7 +126,7 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../control-center/dsn-properties-dialog.c:267 ../libgda/gda-config.c:399
 #: ../libgda/gda-config.c:549 ../libgda/gda-config.c:1084
 #: ../libgda/gda-config.c:1195 ../libgda/gda-config.c:1253
-#: ../libgda/gda-config.c:1330 ../libgda/gda-connection.c:1462
+#: ../libgda/gda-config.c:1329 ../libgda/gda-connection.c:1463
 #: ../libgda/gda-data-model.c:2475 ../libgda/gda-data-model.c:2483
 #: ../libgda/gda-data-model-dir.c:384 ../libgda/gda-data-model-import.c:1720
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
@@ -130,7 +134,7 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../libgda/gda-data-proxy.c:3121 ../libgda/gda-data-select.c:413
 #: ../libgda/gda-data-select.c:2342 ../libgda/gda-data-select.c:2352
 #: ../libgda/gda-data-select.c:3793 ../libgda/gda-holder.c:545
-#: ../libgda/gda-holder.c:1956 ../libgda/gda-meta-store.c:1010
+#: ../libgda/gda-holder.c:1956 ../libgda/gda-meta-store.c:1015
 #: ../libgda/gda-server-operation.c:633 ../libgda/gda-server-operation.c:1037
 #: ../libgda/gda-set.c:1184 ../libgda/gda-tree-mgr-select.c:187
 #: ../libgda/gda-tree-mgr-select.c:222
@@ -141,11 +145,12 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3226
 #: ../libgda/sqlite/gda-sqlite-provider.c:3238
 #: ../libgda/sqlite/gda-sqlite-provider.c:3369
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:437
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:832
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1560
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:256
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:458
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:857
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1028
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1590
 #: ../libgda-ui/data-entries/common-bin.c:81
 #: ../libgda-ui/data-entries/common-bin.c:158
 #: ../libgda-ui/data-entries/plugins/common-pict.c:217
@@ -154,9 +159,9 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:429
 #: ../libgda-ui/data-entries/plugins/common-pict.c:541
 #: ../libgda-ui/demos/main.c:779 ../libgda-ui/gdaui-data-filter.c:161
-#: ../libgda-ui/gdaui-init.c:106 ../libgda-ui/gdaui-init.c:114
-#: ../libgda-ui/gdaui-init.c:563 ../libgda-ui/gdaui-login.c:448
-#: ../libgda-ui/gdaui-rt-editor.c:732
+#: ../libgda-ui/gdaui-init.c:98 ../libgda-ui/gdaui-init.c:106
+#: ../libgda-ui/gdaui-init.c:566 ../libgda-ui/gdaui-login.c:448
+#: ../libgda-ui/gdaui-rt-editor.c:733
 #: ../providers/jdbc/gda-jdbc-provider.c:526
 #: ../providers/jdbc/gda-jdbc-provider.c:1455
 #: ../providers/jdbc/gda-jdbc-provider.c:1484
@@ -164,25 +169,27 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../providers/jdbc/gda-jdbc-provider.c:1610
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:154
 #: ../providers/jdbc/libmain.c:164 ../providers/jdbc/libmain.c:480
-#: ../providers/ldap/gda-ldap-provider.c:823
-#: ../providers/ldap/gda-ldap-provider.c:833
-#: ../providers/ldap/gda-ldap-provider.c:875
-#: ../providers/ldap/gda-ldap-provider.c:886
+#: ../providers/ldap/gda-ldap-provider.c:937
 #: ../providers/ldap/gda-ldap-provider.c:947
+#: ../providers/ldap/gda-ldap-provider.c:989
+#: ../providers/ldap/gda-ldap-provider.c:1000
+#: ../providers/ldap/gda-ldap-provider.c:1061
 #: ../providers/mdb/gda-mdb-provider.c:375
 #: ../providers/mysql/gda-mysql-provider.c:2004
 #: ../providers/mysql/gda-mysql-provider.c:2019
 #: ../providers/mysql/gda-mysql-util.c:69
 #: ../providers/postgres/gda-postgres-provider.c:1808
 #: ../providers/postgres/gda-postgres-provider.c:1823
-#: ../providers/postgres/gda-postgres-util.c:104
-#: ../providers/postgres/gda-postgres-util.c:107
+#: ../providers/postgres/gda-postgres-util.c:106
+#: ../providers/postgres/gda-postgres-util.c:109
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
 #: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
 #: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
 #: ../tools/browser/browser-window.c:1108
 #: ../tools/browser/browser-window.c:1146
 #: ../tools/browser/browser-window.c:1412
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:424
+#: ../tools/browser/canvas/browser-canvas-fkey.c:474
 #: ../tools/browser/data-manager/analyser.c:278
 #: ../tools/browser/data-manager/data-console.c:562
 #: ../tools/browser/data-manager/data-favorite-selector.c:203
@@ -209,7 +216,7 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../tools/browser/query-exec/query-result.c:505
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:352
-#: ../tools/browser/schema-browser/relations-diagram.c:243
+#: ../tools/browser/schema-browser/relations-diagram.c:244
 #: ../tools/browser/schema-browser/table-columns.c:952
 #: ../tools/browser/schema-browser/table-info.c:471
 #: ../tools/browser/schema-browser/table-info.c:539
@@ -218,11 +225,12 @@ msgstr "Ne mogu da pokrenem program za razgledanje"
 #: ../tools/browser/schema-browser/table-preferences.c:693
 #: ../tools/browser/schema-browser/table-preferences.c:766
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
-#: ../tools/common/t-app.c:2793 ../tools/common/t-connection.c:292
-#: ../tools/common/t-connection.c:425 ../tools/common/t-connection.c:955
-#: ../tools/common/t-connection.c:1206 ../tools/common/t-term-context.c:336
-#: ../tools/common/web-server.c:1995 ../tools/misc/gda-list-server-op.c:68
+#: ../tools/common/t-app.c:2894 ../tools/common/t-connection.c:294
+#: ../tools/common/t-connection.c:436 ../tools/common/t-connection.c:1177
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1995
+#: ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
+#, c-format
 msgid "No detail"
 msgstr "Nema pojedinosti"
 
@@ -313,13 +321,17 @@ msgid "Create a new database?"
 msgstr "Da napravim novu bazu podataka?"
 
 #: ../control-center/gdaui-dsn-assistant.c:559
+#| msgid ""
+#| "The following fields represent the information needed to create a new "
+#| "database (mandatory fields are marked with a star).This information is "
+#| "database-specific, so check the manual for more information."
 msgid ""
 "The following fields represent the information needed to create a new "
-"database (mandatory fields are marked with a star).This information is "
+"database (mandatory fields are marked with a star). This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
-"Sledeća polja predstavljaju podatke potrebne za stvaranje nove baze podataka "
-"(obavezna polja su označena zvezdicom). Ovaj podatak je poseban za bazu "
+"Sledeća polja predstavljaju podatke potrebne za stvaranje nove baze podataka ("
+"obavezna polja su označena zvezdicom). Ovaj podatak je poseban za bazu "
 "podataka, zato proverite uputstvo za više podataka."
 
 #: ../control-center/gdaui-dsn-assistant.c:583
@@ -394,8 +406,8 @@ msgstr ""
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:216 ../libgda/gda-config.c:1662
-#: ../tools/browser/auth-dialog.c:265 ../tools/common/t-config-info.c:205
-#: ../tools/common/t-config-info.c:365
+#: ../tools/browser/auth-dialog.c:265 ../tools/common/t-config-info.c:206
+#: ../tools/common/t-config-info.c:366
 msgid "Authentication"
 msgstr "Potvrđivanje identiteta"
 
@@ -427,9 +439,9 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/common-pict.c:368
 #: ../libgda-ui/data-entries/plugins/common-pict.c:495
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:200
-#: ../libgda-ui/gdaui-basic-form.c:2159 ../libgda-ui/gdaui-raw-grid.c:2149
-#: ../libgda-ui/gdaui-raw-grid.c:2502 ../libgda-ui/gdaui-rt-editor.c:692
-#: ../libgda-ui/gdaui-server-operation.c:1098
+#: ../libgda-ui/gdaui-basic-form.c:2158 ../libgda-ui/gdaui-raw-grid.c:2160
+#: ../libgda-ui/gdaui-raw-grid.c:2513 ../libgda-ui/gdaui-rt-editor.c:693
+#: ../libgda-ui/gdaui-server-operation.c:1082
 #: ../tools/browser/auth-dialog.c:192
 #: ../tools/browser/connection-binding-properties.c:171
 #: ../tools/browser/connection-binding-properties.c:207
@@ -448,8 +460,8 @@ msgstr "_Poveži se"
 msgid "Error:"
 msgstr "Greška:"
 
-#: ../control-center/main.c:62 ../libgda-ui/gdaui-basic-form.c:2160
-#: ../libgda-ui/gdaui-server-operation.c:1097
+#: ../control-center/main.c:62 ../libgda-ui/gdaui-basic-form.c:2159
+#: ../libgda-ui/gdaui-server-operation.c:1081
 msgid "_Ok"
 msgstr "_U redu"
 
@@ -555,7 +567,7 @@ msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Gnomova baza podataka: potvrđivanje identiteta za „%s“ DSN"
 
 #: ../libgda/gda-config.c:1252 ../libgda/gda-config.c:1264
-#: ../libgda/gda-config.c:1328
+#: ../libgda/gda-config.c:1327
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Ne mogu da obrišem podatke za potvrđivanje identiteta za DSN „%s“: %s"
@@ -587,10 +599,10 @@ msgid "Can't instantiate provider '%s'"
 msgstr "Ne mogu da pokrenem dostavljača „%s“"
 
 #: ../libgda/gda-config.c:1659 ../libgda/gda-data-model-dsn-list.c:109
-#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2504
-#: ../tools/common/t-app.c:2857 ../tools/common/t-config-info.c:69
-#: ../tools/common/t-config-info.c:130 ../tools/common/t-config-info.c:313
-#: ../tools/common/t-config-info.c:429
+#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2590
+#: ../tools/common/t-app.c:2958 ../tools/common/t-config-info.c:70
+#: ../tools/common/t-config-info.c:131 ../tools/common/t-config-info.c:314
+#: ../tools/common/t-config-info.c:430
 msgid "Provider"
 msgstr "Dostavljač"
 
@@ -598,17 +610,17 @@ msgstr "Dostavljač"
 #: ../libgda/gda-data-model-dsn-list.c:116
 #: ../tools/browser/data-manager/data-source-editor.c:166
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307
-#: ../tools/common/t-app.c:2304 ../tools/common/t-app.c:2503
-#: ../tools/common/t-config-info.c:70 ../tools/common/t-config-info.c:144
-#: ../tools/common/t-config-info.c:327
+#: ../tools/common/t-app.c:2317 ../tools/common/t-app.c:2386
+#: ../tools/common/t-app.c:2589 ../tools/common/t-config-info.c:71
+#: ../tools/common/t-config-info.c:145 ../tools/common/t-config-info.c:328
 msgid "Description"
 msgstr "Opis"
 
-#: ../libgda/gda-config.c:1661 ../tools/common/t-config-info.c:158
+#: ../libgda/gda-config.c:1661 ../tools/common/t-config-info.c:159
 msgid "DSN parameters"
 msgstr "Parametri DSN-a"
 
-#: ../libgda/gda-config.c:1663 ../tools/common/t-config-info.c:244
+#: ../libgda/gda-config.c:1663 ../tools/common/t-config-info.c:245
 msgid "File"
 msgstr "Datoteka"
 
@@ -618,7 +630,7 @@ msgstr "Spisak instaliranih dostavljača"
 
 #: ../libgda/gda-config.c:1837 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
-#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2859
+#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2960
 msgid "Username"
 msgstr "Korisničko ime"
 
@@ -656,8 +668,8 @@ msgstr "Dostavljač za korišćenje"
 msgid "Authentication string to use"
 msgstr "Niska potvrđivanja identiteta za korišćenje"
 
-#: ../libgda/gda-connection.c:328 ../libgda-ui/data/server_operation.glade.h:6
-#: ../libgda-ui/gdaui-server-operation.c:778
+#: ../libgda/gda-connection.c:328 ../libgda-ui/data/server_operation.xml.h:5
+#: ../libgda-ui/gdaui-server-operation.c:767
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
@@ -677,7 +689,7 @@ msgstr "Broj događaja istorijata za čuvanje u memoriji"
 msgid "Computes execution delay for each executed statement"
 msgstr "Izračunava zastoj izvršavanja za svako izvršeno stanje"
 
-#: ../libgda/gda-connection.c:374
+#: ../libgda/gda-connection.c:376
 msgid "Artificially slows down the execution of queries"
 msgstr "Veštački usporava izvršavanje upita"
 
@@ -713,7 +725,7 @@ msgid "Datasource configuration error: no provider specified"
 msgstr "greška podešavanja izvora podataka: nije naveden dostavljač"
 
 #: ../libgda/gda-connection.c:1125 ../tools/browser/auth-dialog.c:384
-#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:760
+#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:764
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Loša niska veze „%s“"
@@ -731,56 +743,66 @@ msgid "No DSN or connection string specified"
 msgstr "Nije naveden DSN ili niska veze"
 
 #: ../libgda/gda-connection.c:1439
-msgid "Connection is alreay opened"
+#| msgid "Connection is alreay opened"
+msgid "Connection is already opened"
 msgstr "Veza je već otvorena"
 
-#: ../libgda/gda-connection.c:1461
+#: ../libgda/gda-connection.c:1462
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Greška prilikom održavanja meta podataka dograđenim: %s"
 
-#: ../libgda/gda-connection.c:1820
+#: ../libgda/gda-connection.c:1851
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "Dostavljač ne dostavlja Gda rukovaoca podataka za podatke"
 
-#: ../libgda/gda-connection.c:2967 ../libgda/gda-connection.c:3324
-#: ../libgda/gda-connection.c:3413 ../libgda/gda-connection.c:3496
-#: ../libgda/gda-connection.c:5804
+#: ../libgda/gda-connection.c:1987 ../libgda/gda-connection.c:2057
+#: ../libgda/gda-connection.c:2169 ../libgda/gda-connection.c:2243
+#: ../libgda/gda-connection.c:2387 ../libgda/gda-connection.c:2824
+#: ../libgda/gda-connection.c:3034 ../libgda/gda-connection.c:3386
+#: ../libgda/gda-connection.c:3407 ../libgda/gda-connection.c:3490
+#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3576
+#: ../libgda/gda-connection.c:3591 ../libgda/gda-connection.c:3677
+#: ../libgda/gda-connection.c:3704 ../libgda/gda-connection.c:3732
+#: ../libgda/gda-connection.c:3757 ../libgda/gda-connection.c:3782
+#: ../libgda/gda-connection.c:3807 ../libgda/gda-connection.c:4747
+#: ../libgda/gda-connection.c:5166 ../libgda/gda-connection.c:5230
+#: ../libgda/gda-connection.c:5985
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:418
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
 #, c-format
 msgid "Connection is closed"
 msgstr "Veza je zatvorena"
 
-#: ../libgda/gda-connection.c:3196 ../libgda/gda-connection.c:3211
+#: ../libgda/gda-connection.c:3273 ../libgda/gda-connection.c:3288
 msgid "Statement is a selection statement"
 msgstr "Tvrdnja jeste tvrdnja izbora"
 
-#: ../libgda/gda-connection.c:3267 ../libgda/gda-connection.c:3360
-#: ../libgda/gda-connection.c:3442
+#: ../libgda/gda-connection.c:3344 ../libgda/gda-connection.c:3443
+#: ../libgda/gda-connection.c:3531
 msgid "Statement is not a selection statement"
 msgstr "Tvrdnja nije tvrdnja izbora"
 
-#: ../libgda/gda-connection.c:3872
+#: ../libgda/gda-connection.c:4003
 msgid "Invalid argument"
 msgstr "Pogrešan agrgument"
 
-#: ../libgda/gda-connection.c:3882
+#: ../libgda/gda-connection.c:4013
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Nedostaju ili su pogrešne osobine za tabelu „%s“: %s"
 
-#: ../libgda/gda-connection.c:4548
+#: ../libgda/gda-connection.c:4679
 msgid "Meta update error"
 msgstr "Greška meta osvežavanja"
 
-#: ../libgda/gda-connection.c:5097
+#: ../libgda/gda-connection.c:5260
 msgid "Wrong filter arguments"
 msgstr "Pogrešne osobine propusnika"
 
-#: ../libgda/gda-connection.c:5285 ../libgda/gda-connection.c:5338
-#: ../libgda/gda-connection.c:5382 ../libgda/gda-connection.c:5426
-#: ../libgda/gda-connection.c:5470
+#: ../libgda/gda-connection.c:5448 ../libgda/gda-connection.c:5501
+#: ../libgda/gda-connection.c:5545 ../libgda/gda-connection.c:5589
+#: ../libgda/gda-connection.c:5633
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Praćenje stanja prenosa veze: ne postoji prenos za %s"
@@ -791,11 +813,11 @@ msgstr "Praćenje stanja prenosa veze: ne postoji prenos za %s"
 #: ../libgda/gda-data-model-bdb.c:761 ../libgda/gda-data-model-bdb.c:790
 #: ../libgda/gda-data-model-dir.c:770 ../libgda/gda-data-model-dir.c:869
 #: ../libgda/gda-data-model-dir.c:911 ../libgda/gda-data-model-dsn-list.c:311
-#: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1123
+#: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1128
 #: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1938
 #: ../libgda/gda-data-select.c:2894 ../libgda/gda-data-select.c:2961
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:931
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
 #: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -1132,15 +1154,15 @@ msgid "Cannot remove file '%s'"
 msgstr "Ne mogu da uklonim datoteku „%s“"
 
 #: ../libgda/gda-data-model-dsn-list.c:103
-#: ../libgda/gda-data-model-dsn-list.c:104 ../tools/common/t-app.c:2502
-#: ../tools/common/t-config-info.c:427
+#: ../libgda/gda-data-model-dsn-list.c:104 ../tools/common/t-app.c:2588
+#: ../tools/common/t-config-info.c:428
 msgid "DSN"
 msgstr "DSN"
 
 #. To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 #. * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon
 #: ../libgda/gda-data-model-dsn-list.c:123
-#: ../libgda/gda-data-model-dsn-list.c:124 ../tools/common/t-config-info.c:430
+#: ../libgda/gda-data-model-dsn-list.c:124 ../tools/common/t-config-info.c:431
 msgid "Connection string"
 msgstr "Niska veze"
 
@@ -1340,7 +1362,7 @@ msgid "Could not get information from source data model"
 msgstr "Ne mogu da dobavim podatke iz obrasca izvora podataka"
 
 #: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3079
-#: ../tools/common/t-app.c:3010
+#: ../tools/common/t-app.c:3111
 msgid "Could not create virtual connection"
 msgstr "Ne mogu da napravim virtuelnu vezu"
 
@@ -1713,129 +1735,129 @@ msgstr "Katalog u kome će biti napravljeni predmeti baze podataka"
 msgid "Schema in which the database objects will be created"
 msgstr "Šema u kojoj će biti napravljeni predmeti baze podataka"
 
-#: ../libgda/gda-meta-store.c:811
+#: ../libgda/gda-meta-store.c:816
 msgid "Catalog specified but no schema specified, store will not be usable"
 msgstr "Katalog je naveden ali šema nije, skladište neće biti upotrebljivo"
 
-#: ../libgda/gda-meta-store.c:899
+#: ../libgda/gda-meta-store.c:904
 msgid "Can't obtain connection lock"
 msgstr "Ne mogu da dobijem zaključavanje veze"
 
-#: ../libgda/gda-meta-store.c:1158 ../libgda/gda-meta-store.c:1167
-#: ../libgda/gda-meta-store.c:2361 ../libgda/gda-meta-store.c:2370
+#: ../libgda/gda-meta-store.c:1163 ../libgda/gda-meta-store.c:1172
+#: ../libgda/gda-meta-store.c:2366 ../libgda/gda-meta-store.c:2375
 msgid "Could not set the internal schema's version"
 msgstr "Ne mogu da podesim izdanje unutrašnje šeme"
 
-#: ../libgda/gda-meta-store.c:1536
+#: ../libgda/gda-meta-store.c:1541
 msgid "Missing view name from <view> node"
 msgstr "Nedostaje naziv pregleda iz <view> čvora"
 
-#: ../libgda/gda-meta-store.c:1576
+#: ../libgda/gda-meta-store.c:1581
 msgid "Missing view definition from <view> node"
 msgstr "Nedostaje odrednica pregleda iz <view> čvora"
 
-#: ../libgda/gda-meta-store.c:1590
+#: ../libgda/gda-meta-store.c:1595
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr "Odrednica pregleda sadrži više od jedne tvrdnje (za pregled „%s“)"
 
-#: ../libgda/gda-meta-store.c:1617
+#: ../libgda/gda-meta-store.c:1622
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Odrednica pregleda nije tvrdnja izbora (za pregled „%s“)"
 
-#: ../libgda/gda-meta-store.c:1644 ../libgda/gda-meta-struct-io.c:178
+#: ../libgda/gda-meta-store.c:1649 ../libgda/gda-meta-struct-io.c:178
 msgid "Missing table name from <table> node"
 msgstr "Nedostaje naziv tabele iz <table> čvora"
 
-#: ../libgda/gda-meta-store.c:1880
+#: ../libgda/gda-meta-store.c:1885
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "Kolona „%s“ već postoji i ima drugačije odlike"
 
-#: ../libgda/gda-meta-store.c:1915
+#: ../libgda/gda-meta-store.c:1920
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr "Nedostaje naziv uputne tabele stranog ključa (za tabelu „%s“)"
 
-#: ../libgda/gda-meta-store.c:1969
+#: ../libgda/gda-meta-store.c:1974
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Nedostaje naziv kolone stranog ključa (za tabelu „%s“)"
 
-#: ../libgda/gda-meta-store.c:1981
+#: ../libgda/gda-meta-store.c:1986
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "Nisam pronašao kolonu „%s“ u tabeli „%s“"
 
-#: ../libgda/gda-meta-store.c:2236 ../libgda/gda-meta-struct.c:1336
+#: ../libgda/gda-meta-store.c:2241 ../libgda/gda-meta-struct.c:1336
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Nisam pronašao kolonu „%s“ stranog ključa u tabeli „%s“"
 
-#: ../libgda/gda-meta-store.c:2418 ../libgda/gda-meta-store.c:2450
+#: ../libgda/gda-meta-store.c:2423 ../libgda/gda-meta-store.c:2455
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr "Opis šeme ne sadrži predmet „%s“, proverite instalaciju"
 
-#: ../libgda/gda-meta-store.c:2489
+#: ../libgda/gda-meta-store.c:2494
 #, c-format
 msgid "Could not find description for column named '%s'"
 msgstr "Ne mogu da pronađem opis za kolonu pod nazivom „%s“"
 
-#: ../libgda/gda-meta-store.c:2604 ../libgda/gda-meta-store.c:2615
-#: ../libgda/gda-meta-store.c:2649
+#: ../libgda/gda-meta-store.c:2609 ../libgda/gda-meta-store.c:2620
+#: ../libgda/gda-meta-store.c:2654
 msgid "Could not get the internal schema's version"
 msgstr "Ne mogu da dobavim izdanje unutrašnje šeme"
 
-#: ../libgda/gda-meta-store.c:2773 ../libgda/gda-meta-store.c:2895
+#: ../libgda/gda-meta-store.c:2778 ../libgda/gda-meta-store.c:2900
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Više od jedne tvrdnje SKuLa"
 
-#: ../libgda/gda-meta-store.c:2802 ../libgda/gda-meta-store.c:2923
+#: ../libgda/gda-meta-store.c:2807 ../libgda/gda-meta-store.c:2928
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parametar „%s“ nije prisutan u tvrdnji"
 
-#: ../libgda/gda-meta-store.c:2819 ../libgda/gda-meta-store.c:2937
+#: ../libgda/gda-meta-store.c:2824 ../libgda/gda-meta-store.c:2942
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Nije podešena vrednost za parametar „%s“"
 
-#: ../libgda/gda-meta-store.c:3526
+#: ../libgda/gda-meta-store.c:3531
 msgid "Data models should have the same number of columns"
 msgstr "Obrasci podataka treba da imaju isti broj kolona"
 
-#: ../libgda/gda-meta-store.c:3589 ../libgda/gda-meta-store.c:4636
-#: ../libgda/gda-meta-store.c:4739
+#: ../libgda/gda-meta-store.c:3594 ../libgda/gda-meta-store.c:4647
+#: ../libgda/gda-meta-store.c:4750
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Nepoznat predmet baze podataka „%s“"
 
-#: ../libgda/gda-meta-store.c:3605
+#: ../libgda/gda-meta-store.c:3610
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Ne mogu da podesim vrednost za parametar „%s“"
 
-#: ../libgda/gda-meta-store.c:3634
+#: ../libgda/gda-meta-store.c:3639
 msgid "Could not create SELECT statement"
 msgstr "Ne mogu da napravim tvrdnju IZABERI"
 
-#: ../libgda/gda-meta-store.c:3649
+#: ../libgda/gda-meta-store.c:3654
 msgid "Could not create DELETE statement"
 msgstr "Ne mogu da napravim tvrdnju OBRIŠI"
 
-#: ../libgda/gda-meta-store.c:3699
+#: ../libgda/gda-meta-store.c:3704
 msgid "A transaction has already been started"
 msgstr "Prenos je već pokrenut"
 
-#: ../libgda/gda-meta-store.c:4086
+#: ../libgda/gda-meta-store.c:4091
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Nisam pronašao osobinu „%s“"
 
-#: ../libgda/gda-meta-store.c:4089
+#: ../libgda/gda-meta-store.c:4094
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
@@ -1844,11 +1866,11 @@ msgstr[1] "Atribut „%s“ ima %d vrednosti"
 msgstr[2] "Atribut „%s“ ima %d vrednosti"
 msgstr[3] "Atribut „%s“ ima %d vrednost"
 
-#: ../libgda/gda-meta-store.c:4136
+#: ../libgda/gda-meta-store.c:4141
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Nazivi atributa koji počinju na „_“ su obezbeđeni za unutrašnju upotrebu"
 
-#: ../libgda/gda-meta-store.c:4164
+#: ../libgda/gda-meta-store.c:4171
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1856,16 +1878,16 @@ msgstr ""
 "Ne mogu da započnem prenos jer je jedan već započet, ovo može dovesti do "
 "problema atributa Gda meta skladišta"
 
-#: ../libgda/gda-meta-store.c:4279
+#: ../libgda/gda-meta-store.c:4290
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Ne mogu da obradim IksML opis predmeta proizvoljne baze podataka za dodavanje"
 
-#: ../libgda/gda-meta-store.c:4293
+#: ../libgda/gda-meta-store.c:4304
 msgid "Missing custom database object name"
 msgstr "Nedostaje proizvoljni naziv predmeta baze podataka"
 
-#: ../libgda/gda-meta-store.c:4298
+#: ../libgda/gda-meta-store.c:4309
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1873,46 +1895,46 @@ msgstr ""
 "Proizvoljni nazivi predmeta baze podataka koji počinju na „_“ su obezbeđeni za "
 "unutrašnju upotrebu"
 
-#: ../libgda/gda-meta-store.c:4396
+#: ../libgda/gda-meta-store.c:4407
 msgid "Another object with the same name already exists"
 msgstr "Još jedan predmet sa istim nazivom već postoji"
 
-#: ../libgda/gda-meta-store.c:4498
+#: ../libgda/gda-meta-store.c:4509
 msgid "Missing table name in meta data context"
 msgstr "Nedostaje naziv tabele u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4525
+#: ../libgda/gda-meta-store.c:4536
 msgid "Missing column name in meta data context"
 msgstr "Nedostaje naziv kolone u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4541
+#: ../libgda/gda-meta-store.c:4552
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Nedostaje uslov u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4566
+#: ../libgda/gda-meta-store.c:4577
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Loš uslov u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4583
+#: ../libgda/gda-meta-store.c:4594
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Nepoznat naziv kolone „%s“ u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4605
+#: ../libgda/gda-meta-store.c:4616
 msgid "Unknown table in meta data context"
 msgstr "Nepoznata tabela u sadržaju meta podataka"
 
-#: ../libgda/gda-meta-store.c:4878 ../libgda/gda-meta-store.c:4908
-#: ../libgda/gda-meta-store.c:5097 ../libgda/gda-meta-store.c:5126
+#: ../libgda/gda-meta-store.c:4889 ../libgda/gda-meta-store.c:4919
+#: ../libgda/gda-meta-store.c:5108 ../libgda/gda-meta-store.c:5137
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Ne mogu da nađem predmet pod nazivom „%s“"
 
-#: ../libgda/gda-meta-store.c:4976 ../libgda/gda-meta-store.c:4995
+#: ../libgda/gda-meta-store.c:4987 ../libgda/gda-meta-store.c:5006
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Ne mogu da pronađem kolonu „%s“ u tabeli „%s“"
@@ -2093,71 +2115,71 @@ msgstr "Neispravna vrsta"
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Radnju NAPRAVI TABELU ne podržava server baze podataka"
 
-#: ../libgda/gda-server-provider.c:981
+#: ../libgda/gda-server-provider.c:983
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr "Dostavljač %s je napravio radnju gda servera bez čvora za „%s“"
 
-#: ../libgda/gda-server-provider.c:985
+#: ../libgda/gda-server-provider.c:987
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
 "Dostavljač %s je napravio radnju gda servera sa pogrešnom vrstom čvora za „%s“"
 
-#: ../libgda/gda-server-provider.c:2032
+#: ../libgda/gda-server-provider.c:2054
 #, c-format
 msgid "Delaying opening connection for %u ms\n"
 msgstr "Odlažem otvaranje veze za %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2155
+#: ../libgda/gda-server-provider.c:2166
 msgid ""
 "You need to define a GMainContext using gda_connection_set_main_context()"
 msgstr ""
 "Treba da odredite Gglavni kontekst koristeći "
 "„gda_connection_set_main_context()“"
 
-#: ../libgda/gda-server-provider.c:2267
+#: ../libgda/gda-server-provider.c:2278
 #, c-format
 msgid "Delaying closing connection for %u ms\n"
 msgstr "Odlažem zatvaranje veze za %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2473
+#: ../libgda/gda-server-provider.c:2480
 #, c-format
 msgid "Delaying statement execution for %u ms\n"
 msgstr "Odlažem izvršavanje saopštenja za %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2776 ../libgda/gda-server-provider.c:2788
-#: ../libgda/gda-server-provider.c:2800 ../libgda/gda-server-provider.c:2812
-#: ../libgda/gda-server-provider.c:2824
+#: ../libgda/gda-server-provider.c:2787 ../libgda/gda-server-provider.c:2799
+#: ../libgda/gda-server-provider.c:2811 ../libgda/gda-server-provider.c:2823
+#: ../libgda/gda-server-provider.c:2835
 #: ../providers/web/gda-web-provider.c:623
 #: ../providers/web/gda-web-provider.c:652
 msgid "Not supported"
 msgstr "Nije podržano"
 
-#: ../libgda/gda-server-provider.c:3232 ../libgda/gda-server-provider.c:3302
-#: ../libgda/gda-server-provider.c:3371
+#: ../libgda/gda-server-provider.c:3253 ../libgda/gda-server-provider.c:3323
+#: ../libgda/gda-server-provider.c:3392
 #, c-format
 msgid "Delaying transaction for %u ms\n"
 msgstr "Odlažem prenos za %u ms\n"
 
-#: ../libgda/gda-server-provider.c:3241 ../libgda/gda-server-provider.c:3311
-#: ../libgda/gda-server-provider.c:3380
+#: ../libgda/gda-server-provider.c:3262 ../libgda/gda-server-provider.c:3332
+#: ../libgda/gda-server-provider.c:3401
 msgid "Database provider does not support transactions"
 msgstr "Dostavljač baze podataka ne podržava prenose"
 
-#: ../libgda/gda-server-provider.c:3442 ../libgda/gda-server-provider.c:3503
-#: ../libgda/gda-server-provider.c:3564
+#: ../libgda/gda-server-provider.c:3463 ../libgda/gda-server-provider.c:3524
+#: ../libgda/gda-server-provider.c:3585
 msgid "Database provider does not support savepoints"
 msgstr "Dostavljač baze podataka ne podržava tačke čuvanja"
 
-#: ../libgda/gda-server-provider.c:3642
+#: ../libgda/gda-server-provider.c:3663
 #, c-format
 msgid "Delaying distributed transaction for %u ms\n"
 msgstr "Odlažem raspodeljeni prenos za %u ms\n"
 
-#: ../libgda/gda-server-provider.c:3653 ../libgda/gda-server-provider.c:3664
-#: ../libgda/gda-server-provider.c:3675 ../libgda/gda-server-provider.c:3686
-#: ../libgda/gda-server-provider.c:3697 ../libgda/gda-server-provider.c:3708
+#: ../libgda/gda-server-provider.c:3674 ../libgda/gda-server-provider.c:3685
+#: ../libgda/gda-server-provider.c:3696 ../libgda/gda-server-provider.c:3707
+#: ../libgda/gda-server-provider.c:3718 ../libgda/gda-server-provider.c:3729
 msgid "Database provider does not support distributed transactions"
 msgstr "Dostavljač baze podataka ne podržava raspodeljene prenose"
 
@@ -2193,7 +2215,7 @@ msgstr "Gda držač mora da ima IB"
 msgid "One or more values are invalid"
 msgstr "Neispravna je jedna ili više vrednosti"
 
-#: ../libgda/gda-set.c:2290 ../libgda/gda-set.c:2303
+#: ../libgda/gda-set.c:2287 ../libgda/gda-set.c:2300
 msgid ""
 "Replacing data model must have the same characteristics as the data model it "
 "replaces"
@@ -2328,6 +2350,7 @@ msgid "Unable to get column name"
 msgstr "Ne mogu da dobavim naziv kolone"
 
 #: ../libgda/gda-tree-mgr-label.c:212
+#: ../tools/browser/canvas/browser-canvas-table.c:315
 msgid "No name"
 msgstr "Nema naziva"
 
@@ -2358,10 +2381,10 @@ msgstr ""
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:614
 #: ../libgda-report/engine/gda-report-engine.c:641
-#: ../tools/common/t-app.c:2931 ../tools/common/t-app.c:4624
-#: ../tools/common/t-app.c:5141 ../tools/common/t-app.c:5242
-#: ../tools/common/t-app.c:5339 ../tools/common/t-app.c:5437
-#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:407
+#: ../tools/common/t-app.c:3032 ../tools/common/t-app.c:4725
+#: ../tools/common/t-app.c:5242 ../tools/common/t-app.c:5343
+#: ../tools/common/t-app.c:5440 ../tools/common/t-app.c:5538
+#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Nije navedena veza"
@@ -2550,7 +2573,7 @@ msgstr "Nepoznat upit „%s“"
 
 #: ../libgda-report/engine/gda-report-engine.c:609
 #: ../libgda-report/engine/gda-report-engine.c:636
-#: ../tools/common/t-app.c:2735 ../tools/common/t-app.c:2945
+#: ../tools/common/t-app.c:2836 ../tools/common/t-app.c:3046
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Nisam pronašao vezu „%s“"
@@ -2958,33 +2981,33 @@ msgstr "Ne mogu da pronađem zatraženi red"
 msgid "Can't set iterator on requested row"
 msgstr "Ne mogu da podesim pristupnika na zahtevanom redu"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:126
 #, c-format
 msgid "Error storing list of created LDAP tables: %s"
 msgstr "Greška skladištenja spiska napravljenih LDAP tabela: %s"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:204
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:210
 msgid "File used to store startup data"
 msgstr "Datoteka korišćena za skladištenje početnih podataka"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:255
 #, c-format
 msgid "Error recreating LDAP tables: %s"
 msgstr "Greška ponovnog stvaranja LDAP tabela: %s"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:774
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:781
 msgid "Can't remove non LDAP virtual table"
 msgstr "Ne mogu da uklonim ne LDAP virtuelnu tabelu"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:822
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:829
 msgid "Can't describe non LDAP virtual table"
 msgstr "Ne mogu da opišem ne LDAP virtuelnu tabelu"
 
-#: ../libgda/sqlite/virtual/gda-ldap-connection.c:829
+#: ../libgda/sqlite/virtual/gda-ldap-connection.c:836
 msgid "Unknown LDAP virtual table"
 msgstr "Nepoznata LDAP virtuelna tabela"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:413
+#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:417
 msgid "Table to remove not found"
 msgstr "Nisam pronašao tabelu za uklanjanje"
 
@@ -3023,66 +3046,67 @@ msgid "Internal error: invalid provider handle"
 msgstr "Unutrašnja greška: neispravna ručka dostavljača"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:555
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:576
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "Pogrešno korišćenje virtuelnih tabela Libgdaa"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:563
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:584
 msgid "Data model must have at least one column"
 msgstr "Obrazac podataka mora da ima barem jednu kolonu"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:580
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:601
 msgid "Could not compute virtual table's columns"
 msgstr "Ne mogu da izračunam kolone virtualne tabele"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:603
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:624
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Ne mogu da dobavim opis obrasca podataka za kolonu %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:655
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:676
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Ne mogu da dobavim vrstu kolone obrasca podataka za kolonu %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:716
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:738
 #, c-format
-msgid "Can't declare virtual table (%s)"
-msgstr "Ne mogu da objavim virtuelnu tabelu (%s)"
+#| msgid "Can't declare virtual table (%s)"
+msgid "Can't declare virtual table (\"%s\"): %s"
+msgstr "Ne mogu da objavim virtuelnu tabelu („%s“): %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:853
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:878
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Unutrašnja greška SKuLajta: nema podataka za pristupljanje"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:960
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:985
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "Ne mogu da pronađem zahtevanu vrednost u %d. redu i %d. koloni"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:982
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
 msgid "Column not found"
 msgstr "Nisam pronašao kolonu"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1455
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1485
 msgid "No statement specified to modify the data"
 msgstr "Nije navedena nijedna tvrdnja za menjanje podataka"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1462
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1492
 msgid "Invalid statement specified to modify the data"
 msgstr "Navedena je neispravna tvrdnja za menjanje podataka"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1482
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1519
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1527
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1512
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1549
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1557
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Neispravan parametar u tvrdnji za menjanje podataka"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1559
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1589
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Nisam uspeo da izmenim podatke: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1641
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1671
 msgid "Data model representing the table is read only"
 msgstr "Obrazac podataka koji predstavlja tabelu je samo za čitanje"
 
@@ -3133,7 +3157,7 @@ msgstr "Nisam pronašao tabelu „%s“"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:796
 #: ../libgda/sql-parser/gda-statement-struct.c:811
-#: ../tools/common/t-connection.c:1901 ../tools/common/t-connection.c:1955
+#: ../tools/common/t-connection.c:1872 ../tools/common/t-connection.c:1926
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Ne mogu da prepoznam tabelu za polje „%s“"
@@ -3292,7 +3316,7 @@ msgstr "Tvrdnja OSVEŽI nema isti broj ciljnih stubaca i izraza"
 msgid "UPDATE statement does not have any target columns to update"
 msgstr "Tvrdnja OSVEŽI nema nijedan ciljni stubac za osvežavanje"
 
-#: ../libgda/thread-wrapper/gda-connect.c:154
+#: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
 "The GMainContext passed when gda_signal_connect() was called is not owned by "
 "any thread, you may expect some undesired behaviours, use "
@@ -3302,15 +3326,10 @@ msgstr ""
 "vlasništvu nijedne niti, očekujte neka neželjena ponašanja, koristite "
 "„g_main_context_acquire()“"
 
-#: ../libgda/thread-wrapper/gda-connect.c:299
+#: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
 msgid "Could not find signal named \"%s\""
 msgstr "Ne mogu da nađem signal pod nazivom „%s“"
-
-#: ../libgda/thread-wrapper/gda-connect.c:364
-#, c-format
-msgid "Could not find handler %lu"
-msgstr "Ne mogu da pronađem rukovaoca „%lu“"
 
 #: ../libgda/thread-wrapper/gda-worker.c:172
 msgid ""
@@ -3364,13 +3383,13 @@ msgstr "Izaberi datoteku za učitavanje"
 #: ../libgda-ui/data-entries/common-bin.c:44
 #: ../libgda-ui/data-entries/common-bin.c:114
 #: ../libgda-ui/data-entries/plugins/common-pict.c:369
-#: ../libgda-ui/gdaui-rt-editor.c:693
+#: ../libgda-ui/gdaui-rt-editor.c:694
 msgid "_Open"
 msgstr "_Otvori"
 
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/plugins/common-pict.c:427
-#: ../libgda-ui/gdaui-rt-editor.c:730
+#: ../libgda-ui/gdaui-rt-editor.c:731
 #, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
@@ -3420,7 +3439,7 @@ msgid "Data size"
 msgstr "Veličina podataka"
 
 #: ../libgda-ui/data-entries/common-bin.c:302
-#: ../providers/ldap/gda-ldap-provider.c:998
+#: ../providers/ldap/gda-ldap-provider.c:1116
 #: ../providers/mysql/gda-mysql-provider.c:638
 #: ../providers/mysql/gda-mysql-provider.c:692
 #: ../providers/mysql/gda-mysql-util.c:63
@@ -3448,20 +3467,21 @@ msgid "Data type"
 msgstr "Vrsta podatka"
 
 #. FIXME: find a better label
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:159
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:158
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:155
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
-#: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1012 ../tools/common/t-app.c:2303
-#: ../tools/common/t-app.c:3689 ../tools/common/t-app.c:5491
-#: ../tools/common/t-config-info.c:122 ../tools/common/t-config-info.c:291
+#: ../libgda-ui/gdaui-basic-form.c:833 ../libgda-ui/gdaui-basic-form.c:869
+#: ../libgda-ui/gdaui-raw-grid.c:786
+#: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2316
+#: ../tools/common/t-app.c:2385 ../tools/common/t-app.c:3790
+#: ../tools/common/t-app.c:5592 ../tools/common/t-config-info.c:123
+#: ../tools/common/t-config-info.c:292
 msgid "Value"
 msgstr "Vrednost"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:160
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:159
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:156
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:188
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:169
@@ -3469,7 +3489,7 @@ msgstr "Vrednost"
 msgid "GValue to render"
 msgstr "G-vrednost za iscrtavanje"
 
-#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:172
+#: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:171
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:168
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:159
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
@@ -3680,7 +3700,7 @@ msgid "_Save image"
 msgstr "_Sačuvaj sliku"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:365
-#: ../libgda-ui/gdaui-rt-editor.c:689
+#: ../libgda-ui/gdaui-rt-editor.c:690
 msgid "Select image to load"
 msgstr "Izaberi sliku za učitavanje"
 
@@ -3702,7 +3722,7 @@ msgid "Select a file to save the image to"
 msgstr "Izaberite datoteku za čuvanje slike"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:496
-#: ../libgda-ui/gdaui-raw-grid.c:2150
+#: ../libgda-ui/gdaui-raw-grid.c:2161
 msgid "_Save"
 msgstr "_Sačuvaj"
 
@@ -3915,31 +3935,31 @@ msgstr "Prekida redove u rečima između"
 msgid "Break lines in between words or graphemes"
 msgstr "Prelama redove između reči ili grafema"
 
-#: ../libgda-ui/data/server_operation.glade.h:1 ../tools/common/t-app.c:938
-#: ../tools/common/t-app.c:1042 ../tools/common/t-app.c:1055
-#: ../tools/common/t-app.c:1066 ../tools/common/t-app.c:1153
-#: ../tools/common/t-app.c:1161 ../tools/common/t-app.c:1169
-#: ../tools/common/t-app.c:1180
+#: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:940
+#: ../tools/common/t-app.c:1044 ../tools/common/t-app.c:1057
+#: ../tools/common/t-app.c:1068 ../tools/common/t-app.c:1155
+#: ../tools/common/t-app.c:1163 ../tools/common/t-app.c:1171
+#: ../tools/common/t-app.c:1182 ../tools/common/t-app.c:1193
 msgid "General"
 msgstr "Opšte"
 
-#: ../libgda-ui/data/server_operation.glade.h:2
-msgid "hello"
-msgstr "pozdrav"
-
-#: ../libgda-ui/data/server_operation.glade.h:3
+#: ../libgda-ui/data/server_operation.xml.h:2
 #: ../tools/browser/fk-declare.c:252
 #: ../tools/browser/schema-browser/table-info.c:380
 msgid "Columns"
 msgstr "Kolone"
 
-#: ../libgda-ui/data/server_operation.glade.h:4
+#: ../libgda-ui/data/server_operation.xml.h:3
 msgid "Foreign keys"
 msgstr "Strani ključevi"
 
-#: ../libgda-ui/data/server_operation.glade.h:5
+#: ../libgda-ui/data/server_operation.xml.h:4
 msgid "Constraints"
 msgstr "Ograničenja"
+
+#: ../libgda-ui/data/server_operation.xml.h:6
+msgid "CREATE_TABLE"
+msgstr "NAPRAVI_TABELU"
 
 #: ../libgda-ui/demos/main.c:767
 #, c-format
@@ -3986,7 +4006,7 @@ msgstr ""
 "treba nikada prestati da se vrti), a zastoj od jedne sekunde se dodaje kad "
 "god se koristi veza."
 
-#: ../libgda-ui/gdaui-basic-form.c:291
+#: ../libgda-ui/gdaui-basic-form.c:290
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -3994,55 +4014,46 @@ msgstr ""
 "Pokazivač na odredbu IksML rasporeda  (kao „xmlNodePtr“ u „<gdaui_form>“ "
 "čvor)"
 
-#: ../libgda-ui/gdaui-basic-form.c:295
+#: ../libgda-ui/gdaui-basic-form.c:294
 msgid "List of parameters to show in the form"
 msgstr "Spisak parametara za prikazivanje u obrascu"
 
-#: ../libgda-ui/gdaui-basic-form.c:309
+#: ../libgda-ui/gdaui-basic-form.c:308
 msgid "Show Entry actions"
 msgstr "Prikaži radnje unosa"
 
-#: ../libgda-ui/gdaui-basic-form.c:314
+#: ../libgda-ui/gdaui-basic-form.c:313
 msgid "Entries Auto-default"
 msgstr "Samostalno osnovno unosa"
 
-#: ../libgda-ui/gdaui-basic-form.c:319
+#: ../libgda-ui/gdaui-basic-form.c:318
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "Izabrano ako širenje obrasca uspravno ima smisla"
 
-#: ../libgda-ui/gdaui-basic-form.c:343
+#: ../libgda-ui/gdaui-basic-form.c:342
 msgid "Shown data entries"
 msgstr "Prikazani unosi podataka"
 
-#: ../libgda-ui/gdaui-basic-form.c:958 ../libgda-ui/gdaui-raw-grid.c:826
-#: ../libgda-ui/gdaui-raw-grid.c:2897 ../libgda-ui/gdaui-raw-grid.c:2952
+#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:827
+#: ../libgda-ui/gdaui-raw-grid.c:2915 ../libgda-ui/gdaui-raw-grid.c:2970
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Osobina „%s“ treba da bude vrednost „G_TYPE_STRING“"
 
-#: ../libgda-ui/gdaui-basic-form.c:1894
+#: ../libgda-ui/gdaui-basic-form.c:1893
 msgid "Can't find data entry for GdaHolder"
 msgstr "Ne mogu da pronađem unos podataka za Gda držača"
 
-#: ../libgda-ui/gdaui-basic-form.c:2155
+#: ../libgda-ui/gdaui-basic-form.c:2154
 msgid "Values to be defined"
 msgstr "Vrednosti za određivanje"
 
-#: ../libgda-ui/gdaui-basic-form.c:2225 ../libgda-ui/gdaui-raw-grid.c:2724
+#: ../libgda-ui/gdaui-basic-form.c:2224 ../libgda-ui/gdaui-raw-grid.c:2735
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument „%s“ nije uspešno obrađen"
 
-#: ../libgda-ui/gdaui-basic-form.c:2235 ../libgda-ui/gdaui-raw-grid.c:2734
-#, c-format
-msgid ""
-"'%s' DTD not parsed successfully. XML data layout validation will not be "
-"performed (some errors may occur)"
-msgstr ""
-"DTD „%s“ nije uspešno obrađen: Provera rasporeda IksML podataka neće biti "
-"obavljena (mogu se desiti neke greške)"
-
-#: ../libgda-ui/gdaui-basic-form.c:2367
+#: ../libgda-ui/gdaui-basic-form.c:2373
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4099,11 +4110,11 @@ msgstr "Podesi propusnik"
 msgid "Clear filter"
 msgstr "Očisti propusnik"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:821
+#: ../libgda-ui/gdaui-data-proxy-info.c:822
 msgid "Undelete the selected entry"
 msgstr "Poništi brisanje izabranog unosa"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:828
+#: ../libgda-ui/gdaui-data-proxy-info.c:829
 msgid "Delete the selected entry"
 msgstr "Obrišite izabrani unos"
 
@@ -4137,11 +4148,11 @@ msgstr "Ne mogu da pristupim redu kada je obrazac podataka ponovo podešen"
 msgid "Attempt to initialize an already initialized library"
 msgstr "Pokušavam da pokrene već pokrenutu biblioteku"
 
-#: ../libgda-ui/gdaui-init.c:530
+#: ../libgda-ui/gdaui-init.c:533
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Ne mogu da otvorim direktorijum priključaka, nema učitanih priključaka."
 
-#: ../libgda-ui/gdaui-init.c:550
+#: ../libgda-ui/gdaui-init.c:553
 #: ../tools/browser/data-manager/data-widget.c:381
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/data-widget.c:388
@@ -4152,12 +4163,12 @@ msgstr "Ne mogu da otvorim direktorijum priključaka, nema učitanih priključak
 msgid "Error: %s"
 msgstr "Greška: %s"
 
-#: ../libgda-ui/gdaui-init.c:558
+#: ../libgda-ui/gdaui-init.c:561
 #, c-format
 msgid "Loading file %s...\n"
 msgstr "Učitavam datoteku „%s“...\n"
 
-#: ../libgda-ui/gdaui-init.c:562
+#: ../libgda-ui/gdaui-init.c:565
 #, c-format
 msgid "Plugins load warning: %s"
 msgstr "Upozorenje učitavanja priključaka: %s"
@@ -4180,197 +4191,197 @@ msgstr "Izvori podataka..."
 msgid "Could not execute the Database access control center"
 msgstr "Ne mogu da izvršim upravljački centar pristupa bazi podataka"
 
-#: ../libgda-ui/gdaui-raw-form.c:184 ../libgda-ui/gdaui-raw-grid.c:316
+#: ../libgda-ui/gdaui-raw-form.c:185 ../libgda-ui/gdaui-raw-grid.c:317
 msgid "Data to display"
 msgstr "Podaci za prikaz"
 
-#: ../libgda-ui/gdaui-raw-form.c:200 ../libgda-ui/gdaui-raw-grid.c:196
+#: ../libgda-ui/gdaui-raw-form.c:201 ../libgda-ui/gdaui-raw-grid.c:197
 msgid "Delete the current record"
 msgstr "Briše trenutni zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:204 ../libgda-ui/gdaui-raw-grid.c:200
+#: ../libgda-ui/gdaui-raw-form.c:205 ../libgda-ui/gdaui-raw-grid.c:201
 msgid "Create a new record"
 msgstr "Napravite novi zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:205 ../libgda-ui/gdaui-raw-grid.c:201
+#: ../libgda-ui/gdaui-raw-form.c:206 ../libgda-ui/gdaui-raw-grid.c:202
 msgid "Commit the modifications"
 msgstr "Predaj izmene"
 
-#: ../libgda-ui/gdaui-raw-form.c:206 ../libgda-ui/gdaui-raw-grid.c:202
+#: ../libgda-ui/gdaui-raw-form.c:207 ../libgda-ui/gdaui-raw-grid.c:203
 msgid "Clear all the modifications"
 msgstr "Očisti sve izmene"
 
-#: ../libgda-ui/gdaui-raw-form.c:207
+#: ../libgda-ui/gdaui-raw-form.c:208
 msgid "Go to first record"
 msgstr "Ide na prvi zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:208
+#: ../libgda-ui/gdaui-raw-form.c:209
 msgid "Go to last record"
 msgstr "Ide na poslednji zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:209
+#: ../libgda-ui/gdaui-raw-form.c:210
 msgid "Go to previous record"
 msgstr "Ide na prethodni zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:210
+#: ../libgda-ui/gdaui-raw-form.c:211
 msgid "Go to next record"
 msgstr "Ide na sledeći zapis"
 
-#: ../libgda-ui/gdaui-raw-form.c:211 ../libgda-ui/gdaui-raw-grid.c:207
+#: ../libgda-ui/gdaui-raw-form.c:212 ../libgda-ui/gdaui-raw-grid.c:208
 msgid "Filter records"
 msgstr "Izdvoj zapise"
 
-#: ../libgda-ui/gdaui-raw-form.c:630
+#: ../libgda-ui/gdaui-raw-form.c:631
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Ne mogu da priložim red u obrazac podataka: %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:203
+#: ../libgda-ui/gdaui-raw-grid.c:204
 msgid "Go to first chunck"
 msgstr "Ide na prvi deo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:204
+#: ../libgda-ui/gdaui-raw-grid.c:205
 msgid "Go to last chunck"
 msgstr "Ide na poslednji deo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:205
+#: ../libgda-ui/gdaui-raw-grid.c:206
 msgid "Go to previous chunck"
 msgstr "Ide na prethodni deo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:206
+#: ../libgda-ui/gdaui-raw-grid.c:207
 msgid "Go to next chunck"
 msgstr "Ide na sledeći deo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:321
+#: ../libgda-ui/gdaui-raw-grid.c:322
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
 msgstr ""
 "Pokazivač na odredbu IksML rasporeda (kao „xmlNodePtr“ u „<gdaui_grid>“ čvor)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:324
+#: ../libgda-ui/gdaui-raw-grid.c:325
 msgid "Info cell visible"
 msgstr "Podaci polja su vidljivi"
 
-#: ../libgda-ui/gdaui-raw-grid.c:328
+#: ../libgda-ui/gdaui-raw-grid.c:329
 msgid "Global Actions visible"
 msgstr "Opšte radnje su vidljive"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:788 ../libgda-ui/gdaui-raw-grid.c:811
+#: ../libgda-ui/gdaui-raw-grid.c:789 ../libgda-ui/gdaui-raw-grid.c:812
 msgid "Can't be NULL"
 msgstr "Ne može biti NIŠTA"
 
-#: ../libgda-ui/gdaui-raw-grid.c:819
+#: ../libgda-ui/gdaui-raw-grid.c:820
 msgid "No title"
 msgstr "Bez naslova"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1915
+#: ../libgda-ui/gdaui-raw-grid.c:1925
 msgid "Shown columns"
 msgstr "Prikazane kolone"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1941
+#: ../libgda-ui/gdaui-raw-grid.c:1952
 msgid "_Copy"
 msgstr "_Umnoži"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1947
+#: ../libgda-ui/gdaui-raw-grid.c:1958
 msgid "Select _All"
 msgstr "Izaberi _sve"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1952
+#: ../libgda-ui/gdaui-raw-grid.c:1963
 msgid "_Clear Selection"
 msgstr "_Očisti izbor"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1955
+#: ../libgda-ui/gdaui-raw-grid.c:1966
 msgid "Show Column _Titles"
 msgstr "Prikaži _naslove kolona"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1960
+#: ../libgda-ui/gdaui-raw-grid.c:1971
 msgid "_Set filter"
 msgstr "_Podesi propusnik"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1963
+#: ../libgda-ui/gdaui-raw-grid.c:1974
 msgid "_Unset filter"
 msgstr "_Poništi propusnik"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1970
+#: ../libgda-ui/gdaui-raw-grid.c:1981
 msgid "Save _As"
 msgstr "Sačuvaj _kao"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2147
+#: ../libgda-ui/gdaui-raw-grid.c:2158
 msgid "Saving Data"
 msgstr "Čuvam podatke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2155
+#: ../libgda-ui/gdaui-raw-grid.c:2166
 msgid "Saving data to a file"
 msgstr "Čuvam podatke u datoteku"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2156
+#: ../libgda-ui/gdaui-raw-grid.c:2167
 msgid "The data will be exported to the selected file."
 msgstr "Podaci će biti izvezeni u izabranu datoteku."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2166 ../tools/common/t-config-info.c:426
+#: ../libgda-ui/gdaui-raw-grid.c:2177 ../tools/common/t-config-info.c:427
 msgid "File name"
 msgstr "Naziv datoteke"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:2187
+#: ../libgda-ui/gdaui-raw-grid.c:2198
 #: ../tools/browser/schema-browser/table-columns.c:666
 msgid "Details"
 msgstr "Pojedinosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:2208
+#: ../libgda-ui/gdaui-raw-grid.c:2219
 msgid "File type:"
 msgstr "Vrsta datoteke:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2218
+#: ../libgda-ui/gdaui-raw-grid.c:2229
 msgid "Tab-delimited"
 msgstr "Razdvojeni tabulatorom"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2219
+#: ../libgda-ui/gdaui-raw-grid.c:2230
 msgid "Comma-delimited"
 msgstr "Razdvojeni zapetom"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2220
+#: ../libgda-ui/gdaui-raw-grid.c:2231
 msgid "XML"
 msgstr "IksML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:2227
+#: ../libgda-ui/gdaui-raw-grid.c:2238
 msgid "Data to save:"
 msgstr "Podaci za čuvanje:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2242
+#: ../libgda-ui/gdaui-raw-grid.c:2253
 msgid "All data (without any local modification)"
 msgstr "Svi podaci (bez ikakvih mesnih izmena)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2243
+#: ../libgda-ui/gdaui-raw-grid.c:2254
 msgid "Only displayed data"
 msgstr "Samo prikazani podaci"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2245
+#: ../libgda-ui/gdaui-raw-grid.c:2256
 msgid "Only selected data"
 msgstr "Samo izabrani podaci"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2250
+#: ../libgda-ui/gdaui-raw-grid.c:2261
 msgid "Other options"
 msgstr "Ostale mogućnosti"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2257
+#: ../libgda-ui/gdaui-raw-grid.c:2268
 msgid "Empty string when NULL?"
 msgstr "Prazna niska kada je NIŠTA?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2260 ../libgda-ui/gdaui-raw-grid.c:2265
+#: ../libgda-ui/gdaui-raw-grid.c:2271 ../libgda-ui/gdaui-raw-grid.c:2276
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Izvezi NIŠTAVNE vrednosti kao praznu „“ nisku"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2267
+#: ../libgda-ui/gdaui-raw-grid.c:2278
 msgid "Invalid data as NULL?"
 msgstr "Neispravni podaci kao NIŠTA?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2270 ../libgda-ui/gdaui-raw-grid.c:2275
+#: ../libgda-ui/gdaui-raw-grid.c:2281 ../libgda-ui/gdaui-raw-grid.c:2286
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4378,28 +4389,28 @@ msgstr ""
 "Ne izvozi neispravne podatke,\n"
 "već izvozi NIŠTAVNU vrednost"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2277
+#: ../libgda-ui/gdaui-raw-grid.c:2288
 msgid "Field names on first row?"
 msgstr "Nazivi polja na prvom redu?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2280 ../libgda-ui/gdaui-raw-grid.c:2285
+#: ../libgda-ui/gdaui-raw-grid.c:2291 ../libgda-ui/gdaui-raw-grid.c:2296
 msgid "Add a row at beginning with columns names"
 msgstr "Dodaj red na početak sa nazivima kolona"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2462
+#: ../libgda-ui/gdaui-raw-grid.c:2473
 #, c-format
 msgid "Could not save file %s"
 msgstr "Ne mogu da sačuvam datoteku „%s“"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2470
+#: ../libgda-ui/gdaui-raw-grid.c:2481
 msgid "You must specify a file name"
 msgstr "Morate navesti naziv datoteke"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2476
+#: ../libgda-ui/gdaui-raw-grid.c:2487
 msgid "Got empty file while converting the data"
 msgstr "Dobih praznu datoteku pri pretvaranju podataka"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2489
+#: ../libgda-ui/gdaui-raw-grid.c:2500
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4408,11 +4419,11 @@ msgstr ""
 "Datoteka „%s“ već postoji.\n"
 "Da li želite da je zamenite?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2499
+#: ../libgda-ui/gdaui-raw-grid.c:2510
 msgid "If you choose yes, the contents will be lost."
 msgstr "Ukoliko izaberete da, sadržaj će biti izgubljen."
 
-#: ../libgda-ui/gdaui-rt-editor.c:92
+#: ../libgda-ui/gdaui-rt-editor.c:93
 msgid ""
 "\"\"\"= Title level 1 =\n"
 "== Title level 2 ==\n"
@@ -4463,125 +4474,125 @@ msgstr ""
 "Sirove oblasti su zatvorene unutar tri dvostruka navodnika i nikakav "
 "označavač se ne tumači"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "_Bold"
 msgstr "Pode_bljano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:159
+#: ../libgda-ui/gdaui-rt-editor.c:160
 msgid "Bold text"
 msgstr "Podebljani tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "_Italic"
 msgstr "_Iskošeno"
 
-#: ../libgda-ui/gdaui-rt-editor.c:160
+#: ../libgda-ui/gdaui-rt-editor.c:161
 msgid "Italic text"
 msgstr "Iskošeni tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:161
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "_Underline"
 msgstr "Pod_vučeno"
 
-#: ../libgda-ui/gdaui-rt-editor.c:161
+#: ../libgda-ui/gdaui-rt-editor.c:162
 msgid "Underline text"
 msgstr "Podvučeni tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:163
 msgid "_Strike through"
 msgstr "Pre_crtano"
 
-#: ../libgda-ui/gdaui-rt-editor.c:162
+#: ../libgda-ui/gdaui-rt-editor.c:163
 msgid "Strike through text"
 msgstr "Precrtani tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "_Syntax help"
 msgstr "_Sadržajna pomoć"
 
-#: ../libgda-ui/gdaui-rt-editor.c:163
+#: ../libgda-ui/gdaui-rt-editor.c:164
 msgid "Show syntax help"
 msgstr "Prikažite sadržajnu pomoć"
 
-#: ../libgda-ui/gdaui-rt-editor.c:167
+#: ../libgda-ui/gdaui-rt-editor.c:168
 msgid "_Add image"
 msgstr "Dodaj _sliku"
 
-#: ../libgda-ui/gdaui-rt-editor.c:167
+#: ../libgda-ui/gdaui-rt-editor.c:168
 msgid "Insert image"
 msgstr "Umetnite sliku"
 
-#: ../libgda-ui/gdaui-rt-editor.c:168
+#: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "_Normal text"
 msgstr "_Običan tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:168
+#: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "Reset to normal text"
 msgstr "Vratite na običan tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:243
+#: ../libgda-ui/gdaui-rt-editor.c:244
 msgid "Don't display a specific background for the text"
 msgstr "Ne prikazuj naročitu pozadinu za tekst"
 
-#: ../libgda-ui/gdaui-rt-editor.c:253
+#: ../libgda-ui/gdaui-rt-editor.c:254
 msgid "Display raw markup text instead of formatted text"
 msgstr "Prikaži sirovi tekst označavanja umesto oblikovanog teksta"
 
-#: ../libgda-ui/gdaui-rt-editor.c:264
+#: ../libgda-ui/gdaui-rt-editor.c:265
 msgid "The buffer which is displayed"
 msgstr "Međumemorija koja je prikazana"
 
-#: ../libgda-ui/gdaui-rt-editor.c:275
+#: ../libgda-ui/gdaui-rt-editor.c:276
 msgid "Determines if the contents appears in a scrolled window"
 msgstr "Određuje da li se sadržaj pojavljuje u premaknutom prozoru"
 
-#: ../libgda-ui/gdaui-rt-editor.c:896
+#: ../libgda-ui/gdaui-rt-editor.c:897
 msgid "Reset font size"
 msgstr "Vrati veličinu pisma"
 
-#: ../libgda-ui/gdaui-rt-editor.c:902
+#: ../libgda-ui/gdaui-rt-editor.c:903
 msgid "Decrease font size (zoom out)"
 msgstr "Umanji veličinu pisma (umanji)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:908
+#: ../libgda-ui/gdaui-rt-editor.c:909
 msgid "Increase font size (zoom in)"
 msgstr "Uvećaj veličinu pisma (uvećaj)"
 
-#: ../libgda-ui/gdaui-rt-editor.c:914
+#: ../libgda-ui/gdaui-rt-editor.c:915
 msgid "Show source markup"
 msgstr "Pokaži oznaku izvora"
 
-#: ../libgda-ui/gdaui-server-operation.c:199
+#: ../libgda-ui/gdaui-server-operation.c:198
 msgid "The specification of the operation to implement"
 msgstr "Odredba radnje za ugradnju"
 
-#: ../libgda-ui/gdaui-server-operation.c:205
+#: ../libgda-ui/gdaui-server-operation.c:204
 msgid "Request section header to be hidden if there is only one section"
 msgstr "Zahteva da zaglavlje odeljka bude skriveno ako postoji samo jedan odeljak"
 
 #. last row is for new entries
-#: ../libgda-ui/gdaui-server-operation.c:596
+#: ../libgda-ui/gdaui-server-operation.c:592
 #: ../tools/browser/data-manager/data-console.c:394
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../libgda-ui/gdaui-server-operation.c:1093
+#: ../libgda-ui/gdaui-server-operation.c:1077
 msgid "Server operation specification"
 msgstr "Odredba radnje servera"
 
-#: ../libgda-ui/gdaui-server-operation.c:1148
+#: ../libgda-ui/gdaui-server-operation.c:1132
 msgid "<b>Field properties:</b>"
 msgstr "<b>Svojstva polja:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1167
+#: ../libgda-ui/gdaui-server-operation.c:1151
 msgid "<b>Fields:</b>"
 msgstr "<b>Polja:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1216
+#: ../libgda-ui/gdaui-server-operation.c:1200
 msgid "Add a new field"
 msgstr "Dodajte novo polje"
 
-#: ../libgda-ui/gdaui-server-operation.c:1218
+#: ../libgda-ui/gdaui-server-operation.c:1202
 msgid "Remove selected field"
 msgstr "Uklonite izabrano polje"
 
@@ -4725,6 +4736,7 @@ msgstr "Direktorijum u kome je uskladištena datoteka baze podataka"
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
 #: ../providers/web/web_specs_dsn.xml.in.h:8
+#: ../tools/common/t-connection.c:2451
 msgid "Database name"
 msgstr "Naziv baze podataka"
 
@@ -4883,7 +4895,7 @@ msgstr "Nije NIŠTA"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
-#: ../tools/common/t-app.c:1882 ../tools/common/web-server.c:863
+#: ../tools/common/t-app.c:1895 ../tools/common/web-server.c:863
 msgid "Default"
 msgstr "Podrazumevano"
 
@@ -4976,7 +4988,7 @@ msgstr "Opis popisa"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../tools/browser/schema-browser/table-columns.c:645
-#: ../tools/common/t-app.c:1804 ../tools/common/t-app.c:1880
+#: ../tools/common/t-app.c:1817 ../tools/common/t-app.c:1893
 #: ../tools/common/web-server.c:861
 msgid "Type"
 msgstr "Vrsta"
@@ -5009,9 +5021,9 @@ msgstr "Vrsta"
 #: ../tools/browser/data-manager/data-favorite-selector.c:306
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
 #: ../tools/browser/query-exec/query-favorite-selector.c:352
-#: ../tools/common/t-app.c:1803 ../tools/common/t-app.c:2302
-#: ../tools/common/t-app.c:2856 ../tools/common/t-app.c:3688
-#: ../tools/common/t-app.c:3770
+#: ../tools/common/t-app.c:1816 ../tools/common/t-app.c:2315
+#: ../tools/common/t-app.c:2384 ../tools/common/t-app.c:2957
+#: ../tools/common/t-app.c:3789 ../tools/common/t-app.c:3871
 msgid "Name"
 msgstr "Naziv"
 
@@ -5144,7 +5156,7 @@ msgstr "Kolone tabele"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
-#: ../tools/common/t-app.c:1731 ../tools/common/t-app.c:1734
+#: ../tools/common/t-app.c:1744 ../tools/common/t-app.c:1747
 #: ../tools/common/web-server.c:833 ../tools/common/web-server.c:836
 msgid "Auto increment"
 msgstr "Samostalno povećavanje"
@@ -5160,7 +5172,7 @@ msgstr "Samostalno povećavanje"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
-#: ../tools/common/t-app.c:2038
+#: ../tools/common/t-app.c:2051
 msgid "Unique"
 msgstr "Jedinstveno"
 
@@ -5176,7 +5188,7 @@ msgstr "Jedinstveno"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
 #: ../tools/browser/schema-browser/table-columns.c:231
-#: ../tools/common/t-app.c:1991
+#: ../tools/common/t-app.c:2004
 msgid "Primary key"
 msgstr "Osnovni ključ"
 
@@ -5577,85 +5589,78 @@ msgstr ""
 "Ne mogu da pronađem JVM vreme pokretanja (libjvm.so), JDBC dostavljač nije "
 "dostupan."
 
-#: ../providers/ldap/gda-ldap-provider.c:401
+#: ../providers/ldap/gda-ldap-provider.c:414
 msgid "The connection string must contain the DB_NAME value"
 msgstr "Niska veze mora da sadrži vrednost BP_NAZIV"
 
-#: ../providers/ldap/gda-ldap-provider.c:442
+#: ../providers/ldap/gda-ldap-provider.c:455
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neispravna vrednost za „TLS_REKuCERT“"
 
-#: ../providers/ldap/gda-ldap-provider.c:859 ../tools/common/t-app.c:2704
-#: ../tools/common/t-app.c:4432 ../tools/common/t-app.c:4548
+#: ../providers/ldap/gda-ldap-provider.c:973 ../tools/common/t-app.c:2805
+#: ../tools/common/t-app.c:4533 ../tools/common/t-app.c:4649
 #, c-format
 msgid "Too many arguments"
 msgstr "Previše argumenata"
 
-#: ../providers/ldap/gda-ldap-provider.c:1011
+#: ../providers/ldap/gda-ldap-provider.c:1129
 msgid "Parameter"
 msgstr "Parametar"
 
-#: ../providers/ldap/gda-ldap-provider.c:1225
+#: ../providers/ldap/gda-ldap-provider.c:1343
 #, c-format
 msgid "near \"%s\": syntax error"
 msgstr "blizu „%s“: sadržajna greška"
 
-#: ../providers/ldap/gda-ldap-util.c:1255
+#: ../providers/ldap/gda-ldap-util.c:1346
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "LDAP server je vratio više od jednog unosa sa DN-om „%s“"
 
-#: ../providers/ldap/gda-ldap-util.c:1397
+#: ../providers/ldap/gda-ldap-util.c:1532
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr "Ne mogu da obradim izdvojeni naziv koji je vratio LDAP server"
 
-#: ../providers/ldap/gda-ldap-util.c:1639
+#: ../providers/ldap/gda-ldap-util.c:1825
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Neočekivana vrsta podataka „%s“ za atribut razreda predmeta!"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:218
-#: ../providers/ldap/gdaprov-data-model-ldap.c:419
-#: ../providers/ldap/gdaprov-data-model-ldap.c:434
+#: ../providers/ldap/gdaprov-data-model-ldap.c:220
+#: ../providers/ldap/gdaprov-data-model-ldap.c:428
+#: ../providers/ldap/gdaprov-data-model-ldap.c:443
 msgid "Distinguished name"
 msgstr "Izdvojeni naziv"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:416
-#: ../providers/ldap/gdaprov-data-model-ldap.c:431
+#: ../providers/ldap/gdaprov-data-model-ldap.c:425
+#: ../providers/ldap/gdaprov-data-model-ldap.c:440
 msgid "Relative distinguished name"
 msgstr "Relativan izdvojeni naziv"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:902
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1199
+#: ../providers/ldap/gdaprov-data-model-ldap.c:868
+#, c-format
+msgid "Multiple value LDAP attribute does not fit into a single value"
+msgstr "LDAP atribut višestruke vrednosti ne može da stane u jednu vrednost"
+
+#: ../providers/ldap/gdaprov-data-model-ldap.c:914
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1294
 msgid "Truncated result because LDAP server limit encountered"
 msgstr "Skraćeni rezultat zato što sam naišao na ograničenje LDAP servera"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1583
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1899
+msgid "No GdaLdapEntry specified"
+msgstr "Nije naveden Gda Ldap unos"
+
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1911
 #, c-format
 msgid "Unknown GdaLdapModificationType %d"
 msgstr "Nepoznata Gda Ldap vrsta izmene %d"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1590
-msgid "No GdaLdapEntry specified"
-msgstr "Nije naveden Gda Ldap unos"
-
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1596
-msgid "No GdaLdapEntry specified to define attributes to add"
-msgstr "Nije naveden Gda Ldap unos za određivanje osobina za dodavanje"
-
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1602
-msgid "No GdaLdapEntry specified to define attributes to remove"
-msgstr "Nije naveden Gda Ldap unos za određivanje osobina za uklanjanje"
-
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1608
-msgid "No GdaLdapEntry specified to define attributes to replace"
-msgstr "Nije naveden Gda Ldap unos za određivanje osobina za zamenjivanje"
-
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1614
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1917
 msgid "No GdaLdapEntry specified to compare attributes"
 msgstr "Nije naveden Gda Ldap unos za poređenje osobina"
 
-#: ../providers/ldap/gdaprov-data-model-ldap.c:1619
+#: ../providers/ldap/gdaprov-data-model-ldap.c:1921
 msgid "GdaLdapEntry specified to compare have different DN"
 msgstr "Navedeni Gda Ldap unos za poređenje ima različit naziv domena"
 
@@ -5874,8 +5879,8 @@ msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
 msgstr ""
-"Ne upravljana vrsta podataka „%s“, prijavite grešku na "
-"„http://bugzilla.gnome.org/“ za proizvod „libgda“."
+"Ne upravljana vrsta podataka „%s“, prijavite grešku na „http://bugzilla.gnome."
+"org/“ za proizvod „libgda“."
 
 #: ../providers/mysql/gda-mysql-provider.c:2653
 msgid ""
@@ -6342,8 +6347,9 @@ msgstr "Napomena tabele"
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/browser/schema-browser/mgr-columns.c:385
-#: ../tools/common/t-app.c:2098
+#: ../tools/common/t-app.c:2111
 msgid "Foreign key"
 msgstr "Strani ključ"
 
@@ -6840,8 +6846,8 @@ msgid ""
 "empty)"
 msgstr ""
 "Domaćin na kome radi server baze podataka (za servere koji rade na "
-"priključnicama juniksovog domena, unesite putanju priključnice (obično je "
-"„/tmp“), ili ostavite ovo polje praznim)"
+"priključnicama juniksovog domena, unesite putanju priključnice (obično je „/"
+"tmp“), ili ostavite ovo polje praznim)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:7
@@ -6866,7 +6872,7 @@ msgid "Whether to require SSL or not when connecting"
 msgstr "Da li da zahteva SSL ili ne pri povezivanju"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
-#: ../tools/common/t-app.c:1805
+#: ../tools/common/t-app.c:1818
 msgid "Owner"
 msgstr "Vlasnik"
 
@@ -7566,7 +7572,8 @@ msgid "Error cleaning data on the server for session %s"
 msgstr "Greška čišćenja podataka na serveru za sesiju %s"
 
 #: ../providers/web/gda-web-util.c:523
-msgid "Non detailled error"
+#| msgid "Non detailled error"
+msgid "Non detailed error"
 msgstr "Greška bez podataka"
 
 #: ../providers/web/libmain.c:75
@@ -7635,17 +7642,17 @@ msgstr "Ne mogu da zatvorim vezu: %s\n"
 msgid "Invalid unnamed command"
 msgstr "Neispravna neimenovana naredba"
 
-#: ../tools/base/base-tool-command.c:280
+#: ../tools/base/base-tool-command.c:281
 #, c-format
 msgid "Command '%s' not found"
 msgstr "Nisam pronašao naredbu „%s“"
 
-#: ../tools/base/base-tool-command.c:311
+#: ../tools/base/base-tool-command.c:312
 #, c-format
 msgid "Syntax error after '\\'"
 msgstr "Sadržajna greška nakon „\\“"
 
-#: ../tools/base/base-tool-command.c:341
+#: ../tools/base/base-tool-command.c:342
 #, c-format
 msgid "Unbalanced usage of quotes"
 msgstr "Neuravnotežena upotreba navodnika"
@@ -7711,6 +7718,7 @@ msgid "Provider: %s"
 msgstr "Dostavljač: %s"
 
 #: ../tools/browser/browser-connections-list.c:203
+#: ../tools/common/t-connection.c:2441
 msgid "Database provider"
 msgstr "Dostavljač baze podataka"
 
@@ -7735,7 +7743,7 @@ msgid "Opened connections"
 msgstr "Otvorene veze"
 
 #: ../tools/browser/browser-connections-list.c:344
-#: ../tools/common/t-app.c:2860
+#: ../tools/common/t-app.c:2961
 msgid "List of opened connections"
 msgstr "Spisak otvorenih veza"
 
@@ -7776,7 +7784,7 @@ msgstr "Koristite ceo ekran"
 msgid "_Connection"
 msgstr "_Veza"
 
-#: ../tools/browser/browser-window.c:264 ../tools/common/t-connection.c:1094
+#: ../tools/browser/browser-window.c:264 ../tools/common/t-connection.c:1065
 msgid "Connection"
 msgstr "Veza"
 
@@ -7830,7 +7838,7 @@ msgstr "_Zatvori vezu"
 msgid "Close this connection"
 msgstr "Zatvorite ovu vezu"
 
-#: ../tools/browser/browser-window.c:273 ../tools/common/t-app.c:1156
+#: ../tools/browser/browser-window.c:273 ../tools/common/t-app.c:1158
 msgid "Quit"
 msgstr "Izađite iz programa"
 
@@ -7910,7 +7918,6 @@ msgstr "Uputstvo"
 
 #. BROWSER_STOCK_BEGIN
 #: ../tools/browser/browser-window.c:286
-#| msgid "Begin a new transaction"
 msgid "Begin transaction"
 msgstr "Započnite prenos"
 
@@ -7920,7 +7927,6 @@ msgstr "Započnite novi prenos"
 
 #. BROWSER_STOCK_COMMIT
 #: ../tools/browser/browser-window.c:288
-#| msgid "Commit current transaction"
 msgid "Commit transaction"
 msgstr "Predajte prenos"
 
@@ -7930,7 +7936,6 @@ msgstr "Predajte tekući prenos"
 
 #. BROWSER_STOCK_ROLLBACK
 #: ../tools/browser/browser-window.c:290
-#| msgid "Rollback current transaction"
 msgid "Rollback transaction"
 msgstr "Vratite na stari prenos"
 
@@ -8009,6 +8014,171 @@ msgid ""
 msgstr ""
 "Tekući vidokrug je izmenjen na vidokrug „%s“, možete da se prebacite na "
 "prethodni vidokrug u izborniku „Vidokrug/%s“, ili koristeći prečicu „%s“"
+
+#: ../tools/browser/canvas/browser-canvas.c:354
+msgid "Linear layout"
+msgstr "Linearni raspored"
+
+#: ../tools/browser/canvas/browser-canvas.c:359
+msgid "Radial layout"
+msgstr "Radijalni raspored"
+
+#: ../tools/browser/canvas/browser-canvas.c:466
+msgid "Save diagram as"
+msgstr "Sačuvaj dijagram kao"
+
+#: ../tools/browser/canvas/browser-canvas.c:474
+msgid "PNG Image"
+msgstr "PNG sliku"
+
+#: ../tools/browser/canvas/browser-canvas.c:479
+msgid "SVG file"
+msgstr "SVG datoteku"
+
+#: ../tools/browser/canvas/browser-canvas.c:517
+msgid "Failed to create SVG file"
+msgstr "Nisam uspeo da napravim SVG datoteku"
+
+#: ../tools/browser/canvas/browser-canvas.c:525
+msgid "File format to save to is not recognized."
+msgstr "Zapis datoteke za čuvanje nije prepoznat."
+
+#: ../tools/browser/canvas/browser-canvas.c:545
+msgid "Failed to create PNG file"
+msgstr "Nisam uspeo da napravim PNG datoteku"
+
+#: ../tools/browser/canvas/browser-canvas-column.c:169
+#, c-format
+msgid "Type: %s"
+msgstr "Vrsta: %s"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:381
+msgid "Remove from graph"
+msgstr "Ukloni iz grafikona"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:385
+msgid "Add referenced tables to graph"
+msgstr "Dodaj uputne tabele u grafikon"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:389
+msgid "Add tables referencing this table to graph"
+msgstr "Dodaj tabele koje upućuju na ovu tabelu u grafikon"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:398
+msgid "Declare foreign key for this table"
+msgstr "Objavi strani ključ za ovu tabelu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:423
+#: ../tools/browser/schema-browser/table-info.c:957
+#, c-format
+msgid "Failed to declare foreign key: %s"
+msgstr "Nisam uspeo da objavim strani ključ: %s"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:430
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:433
+#: ../tools/browser/schema-browser/table-info.c:964
+#: ../tools/browser/schema-browser/table-info.c:967
+msgid "Successfully declared foreign key"
+msgstr "Uspešno je objavljen strani ključ"
+
+#. entry to display a window with tables in it
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:633
+msgid "Add tables"
+msgstr "Dodaj tabele"
+
+#. entry to display sub menus
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:639
+msgid "Add one table"
+msgstr "Dodaj jednu tabelu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:702
+msgid "Add all tables"
+msgstr "Dodaj sve tabele"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:717
+msgid "Add all tables in schema"
+msgstr "Dodaj sve tabele u šemu"
+
+#: ../tools/browser/canvas/browser-canvas-db-relations.c:831
+msgid "Select tables to add to diagram"
+msgstr "Izaberi tabele za dodavanje u dijagram"
+
+#: ../tools/browser/canvas/browser-canvas-fkey.c:422
+#: ../tools/common/t-app.c:2109
+msgid "Declared foreign key"
+msgstr "Objavljen je strani ključ"
+
+#. To translators: the UPDATE is an SQL operation type
+#: ../tools/browser/canvas/browser-canvas-fkey.c:424
+#: ../tools/browser/schema-browser/table-columns.c:357
+#: ../tools/common/t-app.c:2141
+msgid "Policy on UPDATE"
+msgstr "Politika na DOGRADI"
+
+#. To translators: the DELETE is an SQL operation type
+#: ../tools/browser/canvas/browser-canvas-fkey.c:426
+#: ../tools/browser/schema-browser/table-columns.c:367
+#: ../tools/common/t-app.c:2145
+msgid "Policy on DELETE"
+msgstr "Politika na OBRIŠI"
+
+#: ../tools/browser/canvas/browser-canvas-fkey.c:473
+#: ../tools/browser/schema-browser/table-columns.c:951
+#, c-format
+msgid "Failed to undeclare foreign key: %s"
+msgstr "Nisam uspeo da poništim objavu stranog ključa: %s"
+
+#: ../tools/browser/canvas/browser-canvas-fkey.c:480
+#: ../tools/browser/canvas/browser-canvas-fkey.c:483
+#: ../tools/browser/schema-browser/table-columns.c:958
+#: ../tools/browser/schema-browser/table-columns.c:961
+msgid "Successfully undeclared foreign key"
+msgstr "Uspešno je poništena objava stranog ključa"
+
+#: ../tools/browser/canvas/browser-canvas-fkey.c:495
+msgid "Remove this declared foreign key"
+msgstr "Ukloni ovaj objavljeni strani ključ"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:82
+msgid "Page size and zoom"
+msgstr "Veličina stranice i uveličanje"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:180
+#, c-format
+msgid "Page %d of %d horizontally and %d of %d vertically"
+msgstr "Stranica %d od %d vodoravno i %d od %d uspravno"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:238
+msgid "Adjust page's size and orientation"
+msgstr "Doteraj veličinu i usmerenje stranice"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:244
+msgid "<b>Zoom</b>"
+msgstr "<b>Uveličanje</b>"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:256
+msgid "Number of pages used:"
+msgstr "Broj korišćenih stranica:"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:267
+msgid "horizontally"
+msgstr "vodoravno"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:278
+msgid "vertically"
+msgstr "uspravno"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:282
+msgid "Zoom factor:"
+msgstr "Odnos uvećanja:"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:295
+msgid "<b>Page numbers</b>"
+msgstr "<b>Brojevi stranica</b>"
+
+#: ../tools/browser/canvas/browser-canvas-print.c:308
+msgid "Print page numbers"
+msgstr "Štampaj brojeve stranica"
 
 #: ../tools/browser/connection-binding-properties.c:165
 msgid "New virtual connection"
@@ -8101,8 +8271,8 @@ msgstr "Upravnik podataka"
 
 #: ../tools/browser/data-manager/data-console.c:302
 #: ../tools/browser/data-manager/data-console.c:518
-#: ../tools/browser/schema-browser/relations-diagram.c:329
-#: ../tools/browser/schema-browser/relations-diagram.c:473
+#: ../tools/browser/schema-browser/relations-diagram.c:330
+#: ../tools/browser/schema-browser/relations-diagram.c:474
 msgid "Unsaved"
 msgstr "Nesačuvano"
 
@@ -8176,7 +8346,7 @@ msgstr "Upravnik podataka „%s“"
 #: ../tools/browser/data-manager/data-console.c:551
 #: ../tools/browser/data-manager/data-console.c:967
 #: ../tools/browser/data-manager/perspective-main.c:33
-#: ../tools/browser/schema-browser/relations-diagram.c:508
+#: ../tools/browser/schema-browser/relations-diagram.c:509
 #: ../tools/browser/schema-browser/table-info.c:487
 msgid "Data manager"
 msgstr "Upravnik podataka"
@@ -8191,7 +8361,7 @@ msgstr "Naziv upravnika podataka"
 
 #: ../tools/browser/data-manager/data-console.c:607
 #: ../tools/browser/ldap-browser/entry-properties.c:278
-#: ../tools/browser/schema-browser/relations-diagram.c:288
+#: ../tools/browser/schema-browser/relations-diagram.c:289
 msgid "Save"
 msgstr "Sačuvaj"
 
@@ -8520,13 +8690,22 @@ msgid "Missing information to undeclare foreign key"
 msgstr "Nedostaju podaci za poništavanje objave stranog ključa"
 
 #: ../tools/browser/gda-browser-6.0.appdata.xml.in.h:1
+#| msgid ""
+#| "Database Browser provides quick access to the data and schema of a "
+#| "database, and displays it in a intuitive graphical interface. It provides "
+#| "three perspectives to interact with a database: the schema browser, query "
+#| "execution, and data manager. The schema browser allows the user to view "
+#| "the tables of a database, and inspect the table's properties and "
+#| "relations. The query exeution perspective allows the user to execute SQL "
+#| "queries on the database. The data manager perspective allows the user to "
+#| "view the data contained in the database in a tabular form."
 msgid ""
 "Database Browser provides quick access to the data and schema of a database, "
 "and displays it in a intuitive graphical interface. It provides three "
 "perspectives to interact with a database: the schema browser, query "
 "execution, and data manager. The schema browser allows the user to view the "
 "tables of a database, and inspect the table's properties and relations. The "
-"query exeution perspective allows the user to execute SQL queries on the "
+"query execution perspective allows the user to execute SQL queries on the "
 "database. The data manager perspective allows the user to view the data "
 "contained in the database in a tabular form."
 msgstr ""
@@ -8620,7 +8799,6 @@ msgid "Data set import from file"
 msgstr "Uvoz skupa podataka iz datoteke"
 
 #: ../tools/browser/gdaui-entry-import.c:185
-#| msgid "_Ok"
 msgid "_OK"
 msgstr "U _redu"
 
@@ -8737,7 +8915,7 @@ msgstr "Izdvojeni naziv:"
 msgid "Can't display attribute value"
 msgstr "Ne mogu da prikažem vrednost osobine"
 
-#: ../tools/browser/ldap-browser/entry-properties.c:960
+#: ../tools/browser/ldap-browser/entry-properties.c:958
 msgid "Could not get information about LDAP entry"
 msgstr "Ne mogu da dobavim podatke o LDAP unosu"
 
@@ -8773,8 +8951,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:514
 #: ../tools/browser/ldap-browser/ldap-search-page.c:453
-#: ../tools/common/t-app.c:1385 ../tools/common/t-app.c:1393
-#: ../tools/common/t-app.c:1405 ../tools/common/t-app.c:1413
+#: ../tools/common/t-app.c:1398 ../tools/common/t-app.c:1406
+#: ../tools/common/t-app.c:1418 ../tools/common/t-app.c:1426
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -9375,46 +9553,46 @@ msgstr "Popis tabele"
 msgid "Schema browser"
 msgstr "Preglednik šeme"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:232
-#: ../tools/browser/schema-browser/relations-diagram.c:566
+#: ../tools/browser/schema-browser/relations-diagram.c:233
+#: ../tools/browser/schema-browser/relations-diagram.c:567
 msgid "Diagram"
 msgstr "Dijagram"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:242
+#: ../tools/browser/schema-browser/relations-diagram.c:243
 msgid "Could not save diagram"
 msgstr "Ne mogu da sačuvam dijagram"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:268
+#: ../tools/browser/schema-browser/relations-diagram.c:269
 msgid "Canvas's name"
 msgstr "Naziv platna"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:329
-#: ../tools/browser/schema-browser/relations-diagram.c:382
-#: ../tools/browser/schema-browser/relations-diagram.c:462
-#: ../tools/browser/schema-browser/relations-diagram.c:473
+#: ../tools/browser/schema-browser/relations-diagram.c:330
+#: ../tools/browser/schema-browser/relations-diagram.c:383
+#: ../tools/browser/schema-browser/relations-diagram.c:463
+#: ../tools/browser/schema-browser/relations-diagram.c:474
 msgid "Relations diagram"
 msgstr "Dijagram međuodnosa"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:372
+#: ../tools/browser/schema-browser/relations-diagram.c:373
 msgid "Error parsing favorite's contents"
 msgstr "Greška obrade sadržaja omiljenog"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:381
-#: ../tools/browser/schema-browser/relations-diagram.c:461
+#: ../tools/browser/schema-browser/relations-diagram.c:382
+#: ../tools/browser/schema-browser/relations-diagram.c:462
 #, c-format
 msgid "'%s' diagram"
 msgstr "Dijagram „%s“"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:431
+#: ../tools/browser/schema-browser/relations-diagram.c:432
 msgid "Missing table attribute in favorite's contents"
 msgstr "Nedostaje osobina tabele u sadržaju omiljenog"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:517
+#: ../tools/browser/schema-browser/relations-diagram.c:518
 #: ../tools/browser/schema-browser/table-info.c:977
 msgid "_Contents"
 msgstr "_Sadržaj"
 
-#: ../tools/browser/schema-browser/relations-diagram.c:517
+#: ../tools/browser/schema-browser/relations-diagram.c:518
 msgid "View contents"
 msgstr "Pregledajte sadržaj"
 
@@ -9423,7 +9601,7 @@ msgid "_Schema"
 msgstr "_Šema"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:314
-#: ../tools/common/t-app.c:1802
+#: ../tools/common/t-app.c:1815
 msgid "Schema"
 msgstr "Šema"
 
@@ -9455,18 +9633,6 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr "nepodudarne vrste: „%s“ za strani ključ i „%s“ za uputni primarni ključ"
-
-#. To translators: the UPDATE is an SQL operation type
-#: ../tools/browser/schema-browser/table-columns.c:357
-#: ../tools/common/t-app.c:2128
-msgid "Policy on UPDATE"
-msgstr "Politika na DOGRADI"
-
-#. To translators: the DELETE is an SQL operation type
-#: ../tools/browser/schema-browser/table-columns.c:367
-#: ../tools/common/t-app.c:2132
-msgid "Policy on DELETE"
-msgstr "Politika na OBRIŠI"
 
 #: ../tools/browser/schema-browser/table-columns.c:387
 #, c-format
@@ -9502,16 +9668,6 @@ msgstr "Pravila ograničenja i celovitosti"
 #, c-format
 msgid "Could not find table '%s.%s'"
 msgstr "Ne mogu da pronađem tabelu „%s.%s“"
-
-#: ../tools/browser/schema-browser/table-columns.c:951
-#, c-format
-msgid "Failed to undeclare foreign key: %s"
-msgstr "Nisam uspeo da poništim objavu stranog ključa: %s"
-
-#: ../tools/browser/schema-browser/table-columns.c:958
-#: ../tools/browser/schema-browser/table-columns.c:961
-msgid "Successfully undeclared foreign key"
-msgstr "Uspešno je poništena objava stranog ključa"
 
 #: ../tools/browser/schema-browser/table-columns.c:965
 #, c-format
@@ -9581,16 +9737,6 @@ msgstr "Vrednosti za umetanje u tabelu"
 #, c-format
 msgid "Can't find information about table '%s'"
 msgstr "Ne mogu da pronađem podatke o tabeli „%s“"
-
-#: ../tools/browser/schema-browser/table-info.c:957
-#, c-format
-msgid "Failed to declare foreign key: %s"
-msgstr "Nisam uspeo da objavim strani ključ: %s"
-
-#: ../tools/browser/schema-browser/table-info.c:964
-#: ../tools/browser/schema-browser/table-info.c:967
-msgid "Successfully declared foreign key"
-msgstr "Uspešno je objavljen strani ključ"
 
 #: ../tools/browser/schema-browser/table-info.c:974
 msgid "_Table"
@@ -9721,7 +9867,8 @@ msgid "Structural"
 msgstr "Strukturni"
 
 #: ../tools/browser/ui-support.c:67
-msgid "Auxilliary"
+#| msgid "Auxilliary"
+msgid "Auxiliary"
 msgstr "Pomoćni"
 
 #: ../tools/browser/ui-support.c:241
@@ -9785,30 +9932,30 @@ msgstr "Određuje osobine LDAP-a koje se po osnovi dovlače LDAP naredbama"
 msgid "Opening connection '%s' for: "
 msgstr "Otvaram vezu „%s“ za: "
 
-#: ../tools/common/t-app.c:940 ../tools/common/t-app.c:1131
-#: ../tools/common/t-app.c:1193 ../tools/common/t-app.c:1201
+#: ../tools/common/t-app.c:942 ../tools/common/t-app.c:1133
+#: ../tools/common/t-app.c:1206 ../tools/common/t-app.c:1214
 #, c-format
 msgid "%s [<FILE>]"
 msgstr "%s [<DATOTEKA>]"
 
-#: ../tools/common/t-app.c:941
+#: ../tools/common/t-app.c:943
 msgid "Show commands history, or save it to file"
 msgstr "Prikazuje istorijat naredbi, ili ga čuva u datoteku"
 
-#: ../tools/common/t-app.c:946 ../tools/common/t-app.c:957
-#: ../tools/common/t-app.c:968 ../tools/common/t-app.c:979
-#: ../tools/common/t-app.c:990 ../tools/common/t-app.c:1001
-#: ../tools/common/t-app.c:1012 ../tools/common/t-app.c:1023
-#: ../tools/common/t-app.c:1032
+#: ../tools/common/t-app.c:948 ../tools/common/t-app.c:959
+#: ../tools/common/t-app.c:970 ../tools/common/t-app.c:981
+#: ../tools/common/t-app.c:992 ../tools/common/t-app.c:1003
+#: ../tools/common/t-app.c:1014 ../tools/common/t-app.c:1025
+#: ../tools/common/t-app.c:1034
 msgid "Information"
 msgstr "Podaci"
 
-#: ../tools/common/t-app.c:948
+#: ../tools/common/t-app.c:950
 #, c-format
 msgid "%s [<META DATA TYPE>]"
 msgstr "%s [<VRSTA META PODATAKA>]"
 
-#: ../tools/common/t-app.c:949
+#: ../tools/common/t-app.c:951
 msgid ""
 "Force reading the database meta data (or part of the meta data, ex:\"tables"
 "\")"
@@ -9816,12 +9963,12 @@ msgstr ""
 "Primorava čitanje meta podataka baze podataka (ili dela meta podataka, bivše:"
 "„tables“)"
 
-#: ../tools/common/t-app.c:959
+#: ../tools/common/t-app.c:961
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
 msgstr "%s <fknaziv> <tabelaA>(<kolA>,...) <tabelaB>(<kolB>,...)"
 
-#: ../tools/common/t-app.c:960
+#: ../tools/common/t-app.c:962
 msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
@@ -9829,95 +9976,95 @@ msgstr ""
 "Objavi novi strani ključ (nije zapravo u bazi podataka): tabela A upućuje na "
 "tabelu B"
 
-#: ../tools/common/t-app.c:970
+#: ../tools/common/t-app.c:972
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
 msgstr "%s <fknaziv> <tabelaA> <tabelaB>"
 
-#: ../tools/common/t-app.c:971
+#: ../tools/common/t-app.c:973
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Poništi objavu stranog ključa (nije zapravo u bazi podataka)"
 
-#: ../tools/common/t-app.c:981
+#: ../tools/common/t-app.c:983
 #, c-format
 msgid "%s [<TABLE>]"
 msgstr "%s [<TABELA>]"
 
-#: ../tools/common/t-app.c:982
+#: ../tools/common/t-app.c:984
 msgid "List all tables (or named table)"
 msgstr "Ispisuje sve tabele (ili imenovanu tabelu)"
 
-#: ../tools/common/t-app.c:992
+#: ../tools/common/t-app.c:994
 #, c-format
 msgid "%s [<VIEW>]"
 msgstr "%s [<PREGLED>]"
 
-#: ../tools/common/t-app.c:993
+#: ../tools/common/t-app.c:995
 msgid "List all views (or named view)"
 msgstr "Ispisuje sve preglede (ili imenovani pregled)"
 
-#: ../tools/common/t-app.c:1003
+#: ../tools/common/t-app.c:1005
 #, c-format
 msgid "%s [<SCHEMA>]"
 msgstr "%s [<ŠEMA>]"
 
-#: ../tools/common/t-app.c:1004
+#: ../tools/common/t-app.c:1006
 msgid "List all schemas (or named schema)"
 msgstr "Ispisuje sve šeme (ili imenovanu šemu)"
 
-#: ../tools/common/t-app.c:1014
+#: ../tools/common/t-app.c:1016
 #, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
 msgstr "%s [<NAZIV_PREDM>|<ŠEMA>.*]"
 
-#: ../tools/common/t-app.c:1015
+#: ../tools/common/t-app.c:1017
 msgid "Describe object or full list of objects"
 msgstr "Opisuje predmet ili čitav spisak predmeta"
 
-#: ../tools/common/t-app.c:1025
+#: ../tools/common/t-app.c:1027
 #, c-format
 msgid "%s [<TABLE1> [<TABLE2>...]]"
 msgstr "%s [<TABELA1> [<TABELA2>...]]"
 
-#: ../tools/common/t-app.c:1026
+#: ../tools/common/t-app.c:1028
 msgid "Create a graph of all or the listed tables"
 msgstr "Stvara grafikon svih ili ispisanih tabela"
 
-#: ../tools/common/t-app.c:1034
+#: ../tools/common/t-app.c:1036
 #, c-format
 msgid "%s [<port> [<authentication token>]]"
 msgstr "%s [<priključnik> [<obrazac potvrđivanja identiteta>]]"
 
-#: ../tools/common/t-app.c:1035
+#: ../tools/common/t-app.c:1037
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
 "Pokreće/zaustavlja ugneždeni HTTP server (na datom priključniku ili na 12345 "
 "po osnovi)"
 
-#: ../tools/common/t-app.c:1044
+#: ../tools/common/t-app.c:1046
 #, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
 msgstr "%s [[<CNC_NAZIV>] [<DSN>|<NISKA VEZE>]]"
 
-#: ../tools/common/t-app.c:1045
+#: ../tools/common/t-app.c:1047
 msgid "Opens a new connection or lists opened connections"
 msgstr "Otvara novu vezu ili ispisuje otvorene veze"
 
-#: ../tools/common/t-app.c:1057
+#: ../tools/common/t-app.c:1059
 #, c-format
 msgid "%s [<CNC_NAME>]"
 msgstr "%s [<CNC_NAZIV>]"
 
-#: ../tools/common/t-app.c:1058
+#: ../tools/common/t-app.c:1060
 msgid "Close a connection"
 msgstr "Zatvara vezu"
 
-#: ../tools/common/t-app.c:1068
+#: ../tools/common/t-app.c:1070
 #, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
 msgstr "%s <CNC NAZIV> <NAZIV PREDM> [<NAZIV PREDM> ...]"
 
-#: ../tools/common/t-app.c:1069
+#: ../tools/common/t-app.c:1071
 msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing "
 "SQL commands to be executed across multiple connections and/or datasets)"
@@ -9926,207 +10073,215 @@ msgstr ""
 "(omogućavajući izvršavanje SKuL naredbi preko višestrukih veza i/ili skupova "
 "podataka)"
 
-#: ../tools/common/t-app.c:1077 ../tools/common/t-app.c:1088
-#: ../tools/common/t-app.c:1099 ../tools/common/t-app.c:1110
+#: ../tools/common/t-app.c:1079 ../tools/common/t-app.c:1090
+#: ../tools/common/t-app.c:1101 ../tools/common/t-app.c:1112
 msgid "DSN (data sources) management"
 msgstr "DSN (izvorima podataka) upravljanje"
 
-#: ../tools/common/t-app.c:1079
+#: ../tools/common/t-app.c:1081
 #, c-format
 msgid "%s [<DSN>]"
 msgstr "%s [<DSN>]"
 
-#: ../tools/common/t-app.c:1080
-msgid "List all DSN (or named DSN's attributes)"
-msgstr "Ispisuje sve DSN-e (ili osobine imenovanih DSN-a)"
+#: ../tools/common/t-app.c:1082
+#| msgid "List all DSN (or named DSN's attributes)"
+msgid "List all DSN (or specified DSN's attributes)"
+msgstr "Ispisuje sve DSN-e (ili navedene osobine DSN-a)"
 
-#: ../tools/common/t-app.c:1090
+#: ../tools/common/t-app.c:1092
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
 msgstr "%s <DSN_NAZIV> <DSN_ODREDNICA> [<OPIS>]"
 
-#: ../tools/common/t-app.c:1091
+#: ../tools/common/t-app.c:1093
 msgid "Create (or modify) a DSN"
 msgstr "Stvara (ili menja) DSN"
 
-#: ../tools/common/t-app.c:1101
+#: ../tools/common/t-app.c:1103
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
 msgstr "%s <DSN_NAZIV> [<DSN_NAZIV>...]"
 
-#: ../tools/common/t-app.c:1102
+#: ../tools/common/t-app.c:1104
 msgid "Remove a DSN"
 msgstr "Uklanja DSN"
 
-#: ../tools/common/t-app.c:1112
+#: ../tools/common/t-app.c:1114
 #, c-format
 msgid "%s [<PROVIDER>]"
 msgstr "%s [<DOSTAVLJAČ>]"
 
-#: ../tools/common/t-app.c:1113
+#: ../tools/common/t-app.c:1115
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
 "Ispisuje sve instalirane dostavljače baze podataka (ili osobine imenovanog)"
 
-#: ../tools/common/t-app.c:1121 ../tools/common/t-app.c:1129
-#: ../tools/common/t-app.c:1137 ../tools/common/t-app.c:1145
-#: ../tools/common/t-app.c:1263
+#: ../tools/common/t-app.c:1123 ../tools/common/t-app.c:1131
+#: ../tools/common/t-app.c:1139 ../tools/common/t-app.c:1147
+#: ../tools/common/t-app.c:1276
 msgid "Input/Output"
 msgstr "Ulaz/izlaz"
 
-#: ../tools/common/t-app.c:1123 ../tools/common/t-app.c:1225
+#: ../tools/common/t-app.c:1125 ../tools/common/t-app.c:1238
 #, c-format
 msgid "%s <FILE>"
 msgstr "%s <DATOTEKA>"
 
-#: ../tools/common/t-app.c:1124
+#: ../tools/common/t-app.c:1126
 msgid "Execute commands from file"
 msgstr "Izvršava naredbe iz datoteke"
 
-#: ../tools/common/t-app.c:1132
+#: ../tools/common/t-app.c:1134
 msgid "Send output to a file or |pipe"
 msgstr "šalje izlaz u datoteku ili do |spojke"
 
-#: ../tools/common/t-app.c:1139 ../tools/common/t-app.c:1147
+#: ../tools/common/t-app.c:1141 ../tools/common/t-app.c:1149
 #, c-format
 msgid "%s [<TEXT>]"
 msgstr "%s [<TEKST>]"
 
-#: ../tools/common/t-app.c:1140
+#: ../tools/common/t-app.c:1142
 msgid "Print TEXT or an empty line to standard output"
 msgstr "Ispisuje TEKST ili prazan red na standardni izlaz"
 
-#: ../tools/common/t-app.c:1148
+#: ../tools/common/t-app.c:1150
 msgid "Send TEXT or an empty line to current output stream"
 msgstr "Šalje TEKST ili prazan red na tok tekućeg izlaza"
 
-#: ../tools/common/t-app.c:1163
+#: ../tools/common/t-app.c:1165
 #, c-format
 msgid "%s [<DIR>]"
 msgstr "%s [<DIR>]"
 
-#: ../tools/common/t-app.c:1164
+#: ../tools/common/t-app.c:1166
 msgid "Change the current working directory"
 msgstr "Menja tekući radni direktorijum"
 
-#: ../tools/common/t-app.c:1172
+#: ../tools/common/t-app.c:1174
 msgid "Show usage and distribution terms"
 msgstr "Prikazuje odredbe korišćenja i raspodeljivanja"
 
-#: ../tools/common/t-app.c:1182
+#: ../tools/common/t-app.c:1184
 #, c-format
 msgid "%s [<NAME> [<VALUE>]]"
 msgstr "%s [<NAZIV> [<VREDNOST>]]"
 
-#: ../tools/common/t-app.c:1183
+#: ../tools/common/t-app.c:1185
 msgid "Set or show an option, or list all options "
 msgstr "Postavlja ili pokazuje mogućnost, ili ispisuje sve mogućnosti "
 
-#: ../tools/common/t-app.c:1191 ../tools/common/t-app.c:1199
-#: ../tools/common/t-app.c:1207 ../tools/common/t-app.c:1215
-#: ../tools/common/t-app.c:1223 ../tools/common/t-app.c:1231
-#: ../tools/common/t-app.c:1239 ../tools/common/t-app.c:1247
-#: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1271
+#: ../tools/common/t-app.c:1195 ../tools/common/t-app.c:1305
+#, c-format
+msgid "%s [<NAME>]"
+msgstr "%s [<NAZIV>]"
+
+#: ../tools/common/t-app.c:1196
+#| msgid ""
+#| "Can't get the list of files used to store information about each "
+#| "connection: %s\n"
+msgid "Show a piece of information, or all information about the connection"
+msgstr "Prikazuje deo podataka, ili sve podatke o vezi"
+
+#: ../tools/common/t-app.c:1204 ../tools/common/t-app.c:1212
+#: ../tools/common/t-app.c:1220 ../tools/common/t-app.c:1228
+#: ../tools/common/t-app.c:1236 ../tools/common/t-app.c:1244
+#: ../tools/common/t-app.c:1252 ../tools/common/t-app.c:1260
+#: ../tools/common/t-app.c:1268 ../tools/common/t-app.c:1284
 msgid "Query buffer & query favorites"
 msgstr "Međumemorija upita i omiljeni upita"
 
-#: ../tools/common/t-app.c:1194
+#: ../tools/common/t-app.c:1207
 msgid "Edit the query buffer (or file) with external editor"
 msgstr "Uređuje međumemoriju upita (ili datoteku) spoljnim uređivačem"
 
-#: ../tools/common/t-app.c:1202
+#: ../tools/common/t-app.c:1215
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr "Vraća međumemoriju upita (ili učitava datoteku u međumemoriju upita)"
 
-#: ../tools/common/t-app.c:1210
+#: ../tools/common/t-app.c:1223
 msgid "Show the contents of the query buffer"
 msgstr "Pokazuje sadržaj međumemorije upita"
 
-#: ../tools/common/t-app.c:1217
+#: ../tools/common/t-app.c:1230
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
 msgstr "%s [<NAZIV_OMILJENOG>]"
 
-#: ../tools/common/t-app.c:1218
+#: ../tools/common/t-app.c:1231
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
 "Izvršava sadržaj međumemorije upita, ili izvršava navedenog omiljenog upita"
 
-#: ../tools/common/t-app.c:1226
+#: ../tools/common/t-app.c:1239
 msgid "Write query buffer to file"
 msgstr "Zapisuje međumemoriju upita u datoteku"
 
-#: ../tools/common/t-app.c:1233 ../tools/common/t-app.c:1241
-#: ../tools/common/t-app.c:1249
+#: ../tools/common/t-app.c:1246 ../tools/common/t-app.c:1254
+#: ../tools/common/t-app.c:1262
 #, c-format
 msgid "%s <FAVORITE_NAME>"
 msgstr "%s <NAZIV_OMILJENOG>"
 
-#: ../tools/common/t-app.c:1234
+#: ../tools/common/t-app.c:1247
 msgid "Save query buffer as favorite"
 msgstr "Čuva međumemoriju upita kao omiljeno"
 
-#: ../tools/common/t-app.c:1242
+#: ../tools/common/t-app.c:1255
 msgid "Load a query favorite into query buffer"
 msgstr "Učitava omiljeni upit u međumemoriju upita"
 
-#: ../tools/common/t-app.c:1250
+#: ../tools/common/t-app.c:1263
 msgid "Delete a query favorite"
 msgstr "Briše omiljenog upita"
 
-#: ../tools/common/t-app.c:1257 ../tools/common/t-app.c:1320
+#: ../tools/common/t-app.c:1270 ../tools/common/t-app.c:1333
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: ../tools/common/t-app.c:1258
+#: ../tools/common/t-app.c:1271
 msgid "List all query favorites"
 msgstr "Ispisuje sve omiljene upita"
 
-#: ../tools/common/t-app.c:1266
+#: ../tools/common/t-app.c:1279
 msgid "Set output format"
 msgstr "Postavlja zapis izlaza"
 
-#: ../tools/common/t-app.c:1273
+#: ../tools/common/t-app.c:1286
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
 msgstr "%s [<NAZIV>|<TABELA> <KOLONA> <USLOV_REDA>] <DATOTEKA>"
 
-#: ../tools/common/t-app.c:1274
+#: ../tools/common/t-app.c:1287
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr "Izvozi unutrašnji parametar ili vrednost tabele u datoteku DATOTEKE"
 
-#: ../tools/common/t-app.c:1279 ../tools/common/t-app.c:1290
-#: ../tools/common/t-app.c:1301 ../tools/common/t-app.c:1309
+#: ../tools/common/t-app.c:1292 ../tools/common/t-app.c:1303
+#: ../tools/common/t-app.c:1314 ../tools/common/t-app.c:1322
 msgid "Execution context"
 msgstr "Sadržaj izvršavanja"
 
-#: ../tools/common/t-app.c:1281
+#: ../tools/common/t-app.c:1294
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
 msgstr "%s [<NAZIV> [<VREDNOST>|_ništa_]]"
 
-#: ../tools/common/t-app.c:1282
+#: ../tools/common/t-app.c:1295
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Postavlja ili pokazuje unutrašnji parametar, ili ispisuje sve ako nijedan "
 "parametar nije naveden "
 
-#: ../tools/common/t-app.c:1292
-#, c-format
-msgid "%s [<NAME>]"
-msgstr "%s [<NAZIV>]"
-
-#: ../tools/common/t-app.c:1293
+#: ../tools/common/t-app.c:1306
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr "Poništava (briše) unutrašnji imenovani parametar (ili sve parametre)"
 
-#: ../tools/common/t-app.c:1303
+#: ../tools/common/t-app.c:1316
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
 msgstr "%s <NAZIV> [<DATOTEKA>|<TABELA> <KOLONA> <USLOV_REDA>]"
 
-#: ../tools/common/t-app.c:1304
+#: ../tools/common/t-app.c:1317
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
@@ -10134,12 +10289,12 @@ msgstr ""
 "Postavlja unutrašnji parametar kao sadržaj datoteke DATOTEKE ili iz vrednosti "
 "postojeće tabele"
 
-#: ../tools/common/t-app.c:1311
+#: ../tools/common/t-app.c:1324
 #, c-format
 msgid "%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"
 msgstr "%s <IZABERI> <POLJA_REDA> [<POLJA_KOLONE> [<POLJA_PODATAKA> ...]]"
 
-#: ../tools/common/t-app.c:1312
+#: ../tools/common/t-app.c:1325
 msgid ""
 "Performs a statistical analysis on the data from SELECT, using ROW_FIELDS "
 "and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
@@ -10147,32 +10302,32 @@ msgstr ""
 "Obavlja statističku analizu nad podacima iz IZABERI, koristeći uslov "
 "POLJA_REDA i POLJA_KOLONE i dodatno POLJA_PODATAKA za podatke"
 
-#: ../tools/common/t-app.c:1318 ../tools/common/t-app.c:1329
-#: ../tools/common/t-app.c:1340 ../tools/common/t-app.c:1351
-#: ../tools/common/t-app.c:1362 ../tools/common/t-app.c:1373
+#: ../tools/common/t-app.c:1331 ../tools/common/t-app.c:1342
+#: ../tools/common/t-app.c:1353 ../tools/common/t-app.c:1364
+#: ../tools/common/t-app.c:1375 ../tools/common/t-app.c:1386
 msgid "Datasets' manipulations"
 msgstr "Upravljanje skupovima podataka"
 
-#: ../tools/common/t-app.c:1321
+#: ../tools/common/t-app.c:1334
 msgid "Lists all the datasets kept in memory for reference"
 msgstr "Ispisuje sve skupove podataka zadržane u memoriji za uputu"
 
-#: ../tools/common/t-app.c:1331
+#: ../tools/common/t-app.c:1344
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
 msgstr "%s <NAZIV SKUPA PODATAKA> <ŠABLON>"
 
-#: ../tools/common/t-app.c:1332
+#: ../tools/common/t-app.c:1345
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr ""
 "Pokazuje sadržaj skupa podataka gde redovi odgovaraju regularnom izrazu"
 
-#: ../tools/common/t-app.c:1342
+#: ../tools/common/t-app.c:1355
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgstr "%s <NAZIV SKUPA PODATAKA> [<KOLONA> [<KOLONA> ...]]"
 
-#: ../tools/common/t-app.c:1343
+#: ../tools/common/t-app.c:1356
 msgid ""
 "Show a dataset's contents, showing only the specified columns if any "
 "specified"
@@ -10180,163 +10335,164 @@ msgstr ""
 "Pokazuje sadržaj skupa podataka, pokazujući samo navedene kolone ako je neka "
 "navedena"
 
-#: ../tools/common/t-app.c:1353
+#: ../tools/common/t-app.c:1366
 #, c-format
 msgid "%s <DATASET NAME> [<DATASET NAME> ...]"
 msgstr "%s <NAZIV SKUPA PODATAKA> [<NAZIV SKUPA PODATAKA> ...]"
 
-#: ../tools/common/t-app.c:1354
+#: ../tools/common/t-app.c:1367
 msgid "Remove one or more datasets"
 msgstr "Uklanja jedan ili više skupova podataka"
 
-#: ../tools/common/t-app.c:1364
+#: ../tools/common/t-app.c:1377
 #, c-format
 msgid "%s <DATASET NAME> <DATASET NAME>"
 msgstr "%s <NAZIV SKUPA PODATAKA> <NAZIV SKUPA PODATAKA>"
 
-#: ../tools/common/t-app.c:1365
+#: ../tools/common/t-app.c:1378
 msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr ""
 "Preimenuje skup podataka, korisno za preimenovanje „_“ skupa podataka za "
 "njegovo zadržavanje"
 
-#: ../tools/common/t-app.c:1375
+#: ../tools/common/t-app.c:1388
 #, c-format
 msgid "%s CSV <FILE NAME>"
 msgstr "%s CSV <NAZIV DATOTEKE>"
 
-#: ../tools/common/t-app.c:1376
+#: ../tools/common/t-app.c:1389
 msgid "Import a dataset from a file"
 msgstr "Uvozi skup podataka iz datoteke"
 
-#: ../tools/common/t-app.c:1387
+#: ../tools/common/t-app.c:1400
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
 msgstr "%s <propusnik> [<osnova|jedan-nivo|podstablo> [<osnovni DN>]]"
 
-#: ../tools/common/t-app.c:1388
+#: ../tools/common/t-app.c:1401
 msgid "Search LDAP entries"
 msgstr "Traži LDAP unose"
 
-#: ../tools/common/t-app.c:1395
+#: ../tools/common/t-app.c:1408
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 
-#: ../tools/common/t-app.c:1396
+#: ../tools/common/t-app.c:1409
+#| msgid ""
+#| "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
+#| "parameter is passed, then all set attributes are show, if the \"all\" 2nd "
+#| "parameter is passed, then the unset attributes are also shown, and if the "
+#| "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
-"parameter is passed, then all set attributes are show, if the \"all\" 2nd "
+"parameter is passed, then all set attributes are shown, if the \"all\" 2nd "
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
 "Prikazuje osobine za unos prepoznat svojim DN-om. Ako je za 2° parametar "
-"prosleđeno „set“, tada su prikazane sve postavljene osobine (set), ako je za "
-"2° parametar prosleđeno „all“, tada su takođe prikazane i poništene osobine "
-"(unset), i ako je za 2° parametar prosleđeno „unset“, tada su prikazane samo "
+"prosleđeno „set“, tada se prikazuju sve postavljene osobine (set), ako je za "
+"2° parametar prosleđeno „all“, tada se takođe prikazuju i poništene osobine "
+"(unset), i ako je za 2° parametar prosleđeno „unset“, tada se prikazuju samo "
 "nepostavljene osobine."
 
-#: ../tools/common/t-app.c:1407
+#: ../tools/common/t-app.c:1420
 #, c-format
 msgid "%s <DN> <new DN>"
 msgstr "%s <DN> <novi DN>"
 
-#: ../tools/common/t-app.c:1408
+#: ../tools/common/t-app.c:1421
 msgid "Renames an LDAP entry"
 msgstr "Preimenuje LDAP unos"
 
-#: ../tools/common/t-app.c:1415
+#: ../tools/common/t-app.c:1428
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
 msgstr "%s <DN> <RADNJA> [<OSOBINA>[=<VREDNOST>]] [<OSOBINA>=<VREDNOST> ...]"
 
-#: ../tools/common/t-app.c:1416
+#: ../tools/common/t-app.c:1429
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
 msgstr "Menja osobine LDAP unosa; <RADNJA> može biti OBRIŠI, ZAMENI ili DODAJ"
 
-#: ../tools/common/t-app.c:1453
+#: ../tools/common/t-app.c:1466
 msgid "History is not supported"
 msgstr "Istorijat nije podržan"
 
-#: ../tools/common/t-app.c:1471 ../tools/common/t-app.c:1512
-#: ../tools/common/t-app.c:1562 ../tools/common/t-app.c:1611
-#: ../tools/common/t-app.c:1750 ../tools/common/t-app.c:2744
-#: ../tools/common/t-app.c:3612 ../tools/common/t-app.c:4248
-#: ../tools/common/t-app.c:4416 ../tools/common/t-app.c:4534
+#: ../tools/common/t-app.c:1484 ../tools/common/t-app.c:1525
+#: ../tools/common/t-app.c:1575 ../tools/common/t-app.c:1624
+#: ../tools/common/t-app.c:1763 ../tools/common/t-app.c:2845
+#: ../tools/common/t-app.c:3713 ../tools/common/t-app.c:4349
+#: ../tools/common/t-app.c:4517 ../tools/common/t-app.c:4635
 msgid "No current connection"
 msgstr "Nema tekuće veze"
 
-#: ../tools/common/t-app.c:1541
+#: ../tools/common/t-app.c:1554
 msgid "List of tables"
 msgstr "Spisak tabela"
 
-#: ../tools/common/t-app.c:1590
+#: ../tools/common/t-app.c:1603
 msgid "List of views"
 msgstr "Spisak pregleda"
 
-#: ../tools/common/t-app.c:1637
+#: ../tools/common/t-app.c:1650
 msgid "List of schemas"
 msgstr "Spisak šema"
 
-#: ../tools/common/t-app.c:1711 ../tools/common/t-app.c:1849
+#: ../tools/common/t-app.c:1724 ../tools/common/t-app.c:1862
 msgid "No object found"
 msgstr "Nisam pronašao predmete"
 
-#: ../tools/common/t-app.c:1879 ../tools/common/web-server.c:860
+#: ../tools/common/t-app.c:1892 ../tools/common/web-server.c:860
 msgid "Column"
 msgstr "Kolona"
 
-#: ../tools/common/t-app.c:1881 ../tools/common/web-server.c:862
+#: ../tools/common/t-app.c:1894 ../tools/common/web-server.c:862
 msgid "Nullable"
 msgstr "Ništavno"
 
-#: ../tools/common/t-app.c:1883 ../tools/common/web-server.c:864
+#: ../tools/common/t-app.c:1896 ../tools/common/web-server.c:864
 msgid "Extra"
 msgstr "Posebno"
 
-#: ../tools/common/t-app.c:1886
+#: ../tools/common/t-app.c:1899
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr "Spisak kolona za pregled „%s“"
 
-#: ../tools/common/t-app.c:1890
+#: ../tools/common/t-app.c:1903
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr "Spisak kolona za tabelu „%s“"
 
-#: ../tools/common/t-app.c:1902 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1915 ../tools/common/web-server.c:875
 msgid "yes"
 msgstr "da"
 
-#: ../tools/common/t-app.c:1902 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1915 ../tools/common/web-server.c:875
 msgid "no"
 msgstr "ne"
 
-#: ../tools/common/t-app.c:1933
+#: ../tools/common/t-app.c:1946
 #, c-format
 msgid "Could not determine columns of view '%s'"
 msgstr "Ne mogu da odredim kolone pregleda „%s“"
 
-#: ../tools/common/t-app.c:1937
+#: ../tools/common/t-app.c:1950
 #, c-format
 msgid "Could not determine columns of table '%s'"
 msgstr "Ne mogu da odredim kolone tabele „%s“"
 
-#: ../tools/common/t-app.c:1950
+#: ../tools/common/t-app.c:1963
 #, c-format
 msgid "View definition: %s"
 msgstr "Odrednica pregleda: %s"
 
-#: ../tools/common/t-app.c:2096
-msgid "Declared foreign key"
-msgstr "Objavljen je strani ključ"
-
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2110
+#: ../tools/common/t-app.c:2123
 #, c-format
 msgid "references %s"
 msgstr "upućuje na %s"
@@ -10344,221 +10500,226 @@ msgstr "upućuje na %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2116
+#: ../tools/common/t-app.c:2129
 #, c-format
 msgid "references %s.%s"
 msgstr "upućuje na %s.%s"
 
-#: ../tools/common/t-app.c:2199
+#: ../tools/common/t-app.c:2212
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr "Nepoznat zapis izlaza: „%s“, vratite na osnovno"
 
-#: ../tools/common/t-app.c:2293
+#: ../tools/common/t-app.c:2306 ../tools/common/t-app.c:2375
 #, c-format
 msgid "No option named '%s'"
 msgstr "Nema mogućnosti pod nazivom „%s“"
 
-#: ../tools/common/t-app.c:2305
+#: ../tools/common/t-app.c:2318
 msgid "List of options"
 msgstr "Spisak mogućnosti"
 
-#: ../tools/common/t-app.c:2378
+#: ../tools/common/t-app.c:2387
+#| msgid "enter authentication information"
+msgid "Current connection's information"
+msgstr "Podaci trenutne veze"
+
+#: ../tools/common/t-app.c:2464
 #, c-format
 msgid "Could not get home directory: %s"
 msgstr "Ne mogu da dobavim lični direktorijum: %s"
 
-#: ../tools/common/t-app.c:2404
+#: ../tools/common/t-app.c:2490
 #, c-format
 msgid "Working directory is now: %s"
 msgstr "Radni direktorijum je sada: %s"
 
-#: ../tools/common/t-app.c:2409
+#: ../tools/common/t-app.c:2495
 #, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr "Ne mogu da promenim radni direktorijum u „%s“: %s"
 
-#: ../tools/common/t-app.c:2505
+#: ../tools/common/t-app.c:2591
 msgid "DSN list"
 msgstr "DSN spisak"
 
-#: ../tools/common/t-app.c:2560
+#: ../tools/common/t-app.c:2646
 msgid "Missing arguments"
 msgstr "Nedostaju argumenti"
 
-#: ../tools/common/t-app.c:2581
+#: ../tools/common/t-app.c:2682
 msgid "Missing provider name"
 msgstr "Nedostaje naziv dostavljača"
 
-#: ../tools/common/t-app.c:2607
+#: ../tools/common/t-app.c:2708
 msgid "Missing DSN name"
 msgstr "Nedostaje naziv DSN-a"
 
-#: ../tools/common/t-app.c:2785
+#: ../tools/common/t-app.c:2886
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr "Dobavljam podatke šeme baze podataka, ovo bi moglo da potraje... "
 
-#: ../tools/common/t-app.c:2792 ../tools/common/t-connection.c:954
+#: ../tools/common/t-app.c:2893
 #, c-format
 msgid "error: %s\n"
 msgstr "greška: %s\n"
 
-#: ../tools/common/t-app.c:2799 ../tools/common/t-connection.c:961
+#: ../tools/common/t-app.c:2900
 #, c-format
 msgid "Done.\n"
 msgstr "Urađeno.\n"
 
-#: ../tools/common/t-app.c:2819 ../tools/common/t-app.c:2981
+#: ../tools/common/t-app.c:2920 ../tools/common/t-app.c:3082
 #, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Veza pod nazivom „%s“ već postoji"
 
-#: ../tools/common/t-app.c:2847
+#: ../tools/common/t-app.c:2948
 msgid "No opened connection"
 msgstr "Nema otvorene veze"
 
-#: ../tools/common/t-app.c:2858
+#: ../tools/common/t-app.c:2959
 msgid "DSN or connection string"
 msgstr "DSN ili niska veze"
 
-#: ../tools/common/t-app.c:2973
+#: ../tools/common/t-app.c:3074
 msgid "Missing required connection names"
 msgstr "Nedostaju nazivi zatražene veze"
 
-#: ../tools/common/t-app.c:2986 ../tools/common/t-connection.c:711
+#: ../tools/common/t-app.c:3087 ../tools/common/t-connection.c:715
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Naziv veze „%s“ je neispravan"
 
-#: ../tools/common/t-app.c:2996
+#: ../tools/common/t-app.c:3097
 #, c-format
 msgid "No connection or dataset named '%s' found"
 msgstr "Nisam pronašao vezu ili skup podataka pod nazivom „%s“"
 
 #. force create of meta store
 #. add existing connections to virtual connection
-#: ../tools/common/t-app.c:3017
+#: ../tools/common/t-app.c:3118
 msgid "Bound connections are as:"
 msgstr "Svezane veze su kao:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
-#: ../tools/common/t-app.c:3030
+#: ../tools/common/t-app.c:3131
 #, c-format
 msgid "%s in the '%s' namespace"
 msgstr "%s u „%s“ prostoru naziva"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
-#: ../tools/common/t-app.c:3044
+#: ../tools/common/t-app.c:3145
 #, c-format
 msgid "%s mapped to the %s table"
 msgstr "%s je mapirano na %s tabelu"
 
-#: ../tools/common/t-app.c:3077 ../tools/common/t-app.c:3180
-#: ../tools/common/t-app.c:3214 ../tools/common/t-app.c:3237
-#: ../tools/common/t-app.c:3275 ../tools/common/t-app.c:3314
-#: ../tools/common/t-app.c:3415 ../tools/common/t-app.c:3468
-#: ../tools/common/t-app.c:3544 ../tools/common/t-app.c:4971
-#: ../tools/common/t-app.c:5060
+#: ../tools/common/t-app.c:3178 ../tools/common/t-app.c:3281
+#: ../tools/common/t-app.c:3315 ../tools/common/t-app.c:3338
+#: ../tools/common/t-app.c:3376 ../tools/common/t-app.c:3415
+#: ../tools/common/t-app.c:3516 ../tools/common/t-app.c:3569
+#: ../tools/common/t-app.c:3645 ../tools/common/t-app.c:5072
+#: ../tools/common/t-app.c:5161
 msgid "No connection opened"
 msgstr "Nije otvorena veza"
 
-#: ../tools/common/t-app.c:3097
+#: ../tools/common/t-app.c:3198
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Ne mogu da pišem u privremenu datoteku „%s“: %s"
 
-#: ../tools/common/t-app.c:3134
+#: ../tools/common/t-app.c:3235
 #, c-format
 msgid "could not start editor '%s'"
 msgstr "ne mogu da pokrenem uređivač „%s“"
 
-#: ../tools/common/t-app.c:3139
+#: ../tools/common/t-app.c:3240
 msgid "Could not start /bin/sh"
 msgstr "Ne mogu da pokrenem „/bin/sh“"
 
-#: ../tools/common/t-app.c:3281
+#: ../tools/common/t-app.c:3382
 msgid "Missing FILE to write to"
 msgstr "Nedostaje DATOTEKA za pisanje"
 
-#: ../tools/common/t-app.c:3320
+#: ../tools/common/t-app.c:3421
 msgid "Favorite name"
 msgstr "Naziv omiljenog"
 
-#: ../tools/common/t-app.c:3321
+#: ../tools/common/t-app.c:3422
 msgid "Comments"
 msgstr "Napomene"
 
-#: ../tools/common/t-app.c:3322
+#: ../tools/common/t-app.c:3423
 msgid "SQL"
 msgstr "SKuL"
 
-#: ../tools/common/t-app.c:3428 ../tools/common/t-app.c:3528
-#: ../tools/common/t-app.c:3593
+#: ../tools/common/t-app.c:3529 ../tools/common/t-app.c:3629
+#: ../tools/common/t-app.c:3694
 msgid "Missing query buffer name"
 msgstr "Nedostaje naziv međumemorije upita"
 
-#: ../tools/common/t-app.c:3452
+#: ../tools/common/t-app.c:3553
 msgid "Query buffer is empty"
 msgstr "Međumemorija upita je prazna"
 
-#: ../tools/common/t-app.c:3496 ../tools/common/t-favorites.c:1091
+#: ../tools/common/t-app.c:3597 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
 msgstr "Ne mogu da pronađem omiljenog"
 
-#: ../tools/common/t-app.c:3678 ../tools/common/t-app.c:3743
-#: ../tools/common/t-app.c:4459
+#: ../tools/common/t-app.c:3779 ../tools/common/t-app.c:3844
+#: ../tools/common/t-app.c:4560
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr "Nije određen DSN pod nazivom „%s“"
 
-#: ../tools/common/t-app.c:3690
+#: ../tools/common/t-app.c:3791
 msgid "List of defined parameters"
 msgstr "Spisak određenih parametara"
 
-#: ../tools/common/t-app.c:3771
+#: ../tools/common/t-app.c:3872
 msgid "dimensions (columns x rows)"
 msgstr "veličina (kolone h redovi)"
 
-#: ../tools/common/t-app.c:3772
+#: ../tools/common/t-app.c:3873
 msgid "List of kept data"
 msgstr "Spisak zadržanih podataka"
 
-#: ../tools/common/t-app.c:3821 ../tools/common/t-app.c:3862
-#: ../tools/common/t-app.c:3985 ../tools/common/t-app.c:4054
-#: ../tools/common/t-app.c:4126
+#: ../tools/common/t-app.c:3922 ../tools/common/t-app.c:3963
+#: ../tools/common/t-app.c:4086 ../tools/common/t-app.c:4155
+#: ../tools/common/t-app.c:4227
 msgid "Missing argument"
 msgstr "Nedostaje argument"
 
-#: ../tools/common/t-app.c:3830 ../tools/common/t-app.c:3872
-#: ../tools/common/t-app.c:3993 ../tools/common/t-app.c:4062
+#: ../tools/common/t-app.c:3931 ../tools/common/t-app.c:3973
+#: ../tools/common/t-app.c:4094 ../tools/common/t-app.c:4163
 #, c-format
 msgid "Could not find dataset named '%s'"
 msgstr "Ne mogu da nađem skup podataka pod nazivom „%s“"
 
-#: ../tools/common/t-app.c:4014
+#: ../tools/common/t-app.c:4115
 #, c-format
 msgid "Could not identify column '%s'"
 msgstr "Ne mogu da odredim stubac „%s“"
 
-#: ../tools/common/t-app.c:4117
+#: ../tools/common/t-app.c:4218
 #, c-format
 msgid "Unknown import format '%s'"
 msgstr "Nepoznat zapis uvoza „%s“"
 
-#: ../tools/common/t-app.c:4138
+#: ../tools/common/t-app.c:4239
 #, c-format
 msgid "Could not import file '%s'"
 msgstr "Ne mogu da uvezem datoteku „%s“"
 
-#: ../tools/common/t-app.c:4222
+#: ../tools/common/t-app.c:4323
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Grafikon je upisan u „%s“\n"
 
-#: ../tools/common/t-app.c:4225
+#: ../tools/common/t-app.c:4326
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -10573,294 +10734,294 @@ msgstr ""
 "Napomena: postavite promenljive okruženja „GDA_SQL_VIEWER_PNG“ ili "
 "„GDA_SQL_VIEWER_PDF“ da prikažete grafikon\n"
 
-#: ../tools/common/t-app.c:4281
+#: ../tools/common/t-app.c:4382
 msgid "Could not start HTTPD server"
 msgstr "Ne mogu da pokrenem HTTPD server"
 
-#: ../tools/common/t-app.c:4303
+#: ../tools/common/t-app.c:4404
 msgid "HTTPD server stopped"
 msgstr "Zaustavljen je HTTPD server"
 
-#: ../tools/common/t-app.c:4322
+#: ../tools/common/t-app.c:4423
 msgid "HTTPD server started"
 msgstr "Pokrenut je HTTP server"
 
-#: ../tools/common/t-app.c:4327
+#: ../tools/common/t-app.c:4428
 msgid "Invalid port specification"
 msgstr "Neispravna odredba priključnika"
 
-#: ../tools/common/t-app.c:4364
+#: ../tools/common/t-app.c:4465
 msgid "Wrong row condition"
 msgstr "Pogrešan uslov reda"
 
-#: ../tools/common/t-app.c:4393
+#: ../tools/common/t-app.c:4494
 msgid "No unique row identified"
 msgstr "Nije prepoznat jedinstveni red"
 
-#: ../tools/common/t-app.c:4465 ../tools/common/t-app.c:4606
+#: ../tools/common/t-app.c:4566 ../tools/common/t-app.c:4707
 msgid "Wrong number of arguments"
 msgstr "Pogrešan broj argumenata"
 
-#: ../tools/common/t-app.c:4477 ../tools/common/t-app.c:4491
+#: ../tools/common/t-app.c:4578 ../tools/common/t-app.c:4592
 msgid "Could not write file"
 msgstr "Ne mogu da zapišem datoteku"
 
-#: ../tools/common/t-app.c:4643
+#: ../tools/common/t-app.c:4744
 msgid "Missing data on which to operate"
 msgstr "Nedostaju podaci nad kojima raditi"
 
-#: ../tools/common/t-app.c:4648
+#: ../tools/common/t-app.c:4749
 msgid "Missing row fields specifications"
 msgstr "Nedostaju odredbe polja reda"
 
-#: ../tools/common/t-app.c:4666
+#: ../tools/common/t-app.c:4767
 msgid "Wrong SELECT argument"
 msgstr "Pogrešan argument „SELECT“ (izaberi)"
 
-#: ../tools/common/t-app.c:4704 ../tools/common/t-app.c:4732
+#: ../tools/common/t-app.c:4805 ../tools/common/t-app.c:4833
 msgid "Wrong data field argument"
 msgstr "Pogrešan argument polja podataka"
 
-#: ../tools/common/t-app.c:4804
+#: ../tools/common/t-app.c:4905
 msgid "Missing foreign key declaration specification"
 msgstr "Nedostaje odredba objave stranog ključa"
 
-#: ../tools/common/t-app.c:4921
+#: ../tools/common/t-app.c:5022
 msgid "Malformed foreign key declaration specification"
 msgstr "Loša odredba objave stranog ključa"
 
-#: ../tools/common/t-app.c:4953
+#: ../tools/common/t-app.c:5054
 #, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Loša odredba naziva tabele „%s“"
 
-#: ../tools/common/t-app.c:5045 ../tools/common/t-app.c:5122
+#: ../tools/common/t-app.c:5146 ../tools/common/t-app.c:5223
 msgid "Missing foreign key name argument"
 msgstr "Nedostaje argument naziva stranog ključa"
 
-#: ../tools/common/t-app.c:5147 ../tools/common/t-app.c:5248
-#: ../tools/common/t-app.c:5345 ../tools/common/t-app.c:5443
+#: ../tools/common/t-app.c:5248 ../tools/common/t-app.c:5349
+#: ../tools/common/t-app.c:5446 ../tools/common/t-app.c:5544
 msgid "Connection is not an LDAP connection"
 msgstr "Veza nije LDAP veza"
 
-#: ../tools/common/t-app.c:5169
+#: ../tools/common/t-app.c:5270
 #, c-format
 msgid "Unknown search scope '%s'"
 msgstr "Nepoznat doseg pretrage „%s“"
 
-#: ../tools/common/t-app.c:5179
+#: ../tools/common/t-app.c:5280
 msgid "Missing filter which to operate"
 msgstr "Nedostaje propusnik koji obraditi"
 
-#: ../tools/common/t-app.c:5263
+#: ../tools/common/t-app.c:5364
 msgid "Missing current DN or new DN specification"
 msgstr "Nedostaje odredba tekućeg ili novog DN-a"
 
-#: ../tools/common/t-app.c:5360
+#: ../tools/common/t-app.c:5461
 msgid "Missing DN of LDAP entry"
 msgstr "Nedostaje DN LDAP unosa"
 
-#: ../tools/common/t-app.c:5365
+#: ../tools/common/t-app.c:5466
 msgid "Missing operation to perform on LDAP entry's attributes"
 msgstr "Nedostaje radnja za obavljanje nad osobinama LDAP unosa"
 
-#: ../tools/common/t-app.c:5377
+#: ../tools/common/t-app.c:5478
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "Nepoznata radnja „%s“ za obavljanje nad osobinama LDAP unosa"
 
-#: ../tools/common/t-app.c:5398
+#: ../tools/common/t-app.c:5499
 #, c-format
 msgid "Wrong attribute value specification '%s'"
 msgstr "Pogrešna odredba vrednosti atributa „%s“"
 
-#: ../tools/common/t-app.c:5457
+#: ../tools/common/t-app.c:5558
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Nedostaje argument DN (Izdvojeni naziv)"
 
-#: ../tools/common/t-app.c:5470
+#: ../tools/common/t-app.c:5571
 #, c-format
 msgid "Unknown '%s' argument"
 msgstr "Nepoznat „%s“ argument"
 
-#: ../tools/common/t-app.c:5481
+#: ../tools/common/t-app.c:5582
 #, c-format
 msgid "Could not find entry with DN '%s'"
 msgstr "Ne mogu da pronađem unos sa DN-om „%s“"
 
-#: ../tools/common/t-app.c:5489 ../tools/common/t-config-info.c:121
-#: ../tools/common/t-config-info.c:290
+#: ../tools/common/t-app.c:5590 ../tools/common/t-config-info.c:122
+#: ../tools/common/t-config-info.c:291
 msgid "Attribute"
 msgstr "Osobina"
 
-#: ../tools/common/t-app.c:5490
+#: ../tools/common/t-app.c:5591
 msgid "Required?"
 msgstr "Potrebno?"
 
-#: ../tools/common/t-app.c:5492
+#: ../tools/common/t-app.c:5593
 msgid "LDAP entry's Attributes"
 msgstr "Osobine LDAP unosa"
 
-#: ../tools/common/t-config-info.c:71
+#: ../tools/common/t-config-info.c:72
 msgid "Installed providers list"
 msgstr "Spisak instaliranih dostavljača"
 
-#: ../tools/common/t-config-info.c:109
+#: ../tools/common/t-config-info.c:110
 #, c-format
 msgid "Could not find provider '%s'"
 msgstr "Ne mogu da pronađem dostavljača „%s“"
 
-#: ../tools/common/t-config-info.c:124
+#: ../tools/common/t-config-info.c:125
 #, c-format
 msgid "Provider '%s' description"
 msgstr "Opis dostavljača „%s“"
 
-#: ../tools/common/t-config-info.c:278
+#: ../tools/common/t-config-info.c:279
 #, c-format
 msgid "Could not find data source '%s'"
 msgstr "Ne mogu da pronađem izvor podataka „%s“"
 
-#: ../tools/common/t-config-info.c:293
+#: ../tools/common/t-config-info.c:294
 #, c-format
 msgid "DSN '%s' description"
 msgstr "Opis DSN-a „%s“"
 
-#: ../tools/common/t-config-info.c:299
+#: ../tools/common/t-config-info.c:300
 msgid "DSN name"
 msgstr "Naziv DSN-a"
 
-#: ../tools/common/t-config-info.c:341
+#: ../tools/common/t-config-info.c:342
 msgid "Parameters"
 msgstr "Parametri"
 
-#: ../tools/common/t-config-info.c:389
+#: ../tools/common/t-config-info.c:390
 msgid "System DSN?"
 msgstr "Sistemski DSN?"
 
-#: ../tools/common/t-config-info.c:395
+#: ../tools/common/t-config-info.c:396
 msgid "Yes"
 msgstr "Da"
 
-#: ../tools/common/t-config-info.c:395
+#: ../tools/common/t-config-info.c:396
 msgid "No"
 msgstr "Ne"
 
-#: ../tools/common/t-config-info.c:428
+#: ../tools/common/t-config-info.c:429
 msgid "Last used"
 msgstr "Poslednja upotreba"
 
-#: ../tools/common/t-config-info.c:471
+#: ../tools/common/t-config-info.c:472
 #, c-format
 msgid "(%s)"
 msgstr "(%s)"
 
-#: ../tools/common/t-config-info.c:555
+#: ../tools/common/t-config-info.c:556
 #, c-format
 msgid "Unknown criteria '%s'"
 msgstr "Nepoznato merilo „%s“"
 
-#: ../tools/common/t-config-info.c:614
+#: ../tools/common/t-config-info.c:615
 msgid "Failed to remove: "
 msgstr "Nisam uspeo da uklonim: "
 
-#: ../tools/common/t-config-info.c:643
+#: ../tools/common/t-config-info.c:644
 #, c-format
 msgid "No file to purge!"
 msgstr "Nema datoteke za izbacivanje!"
 
-#: ../tools/common/t-connection.c:226
+#: ../tools/common/t-connection.c:227
 #, c-format
 msgid "c%u"
 msgstr "c%u"
 
-#: ../tools/common/t-connection.c:264
+#: ../tools/common/t-connection.c:266
 msgid "Analysing database schema"
 msgstr "Obrađujem šemu baze podataka"
 
-#: ../tools/common/t-connection.c:291 ../tools/common/t-connection.c:424
-#: ../tools/common/t-connection.c:1205
+#: ../tools/common/t-connection.c:293 ../tools/common/t-connection.c:435
+#: ../tools/common/t-connection.c:1176
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Greška prilikom dovlačenja meta podataka sa veze: %s"
 
-#: ../tools/common/t-connection.c:784
+#: ../tools/common/t-connection.c:345
+#| msgid "Error while fetching meta data from the connection: %s"
+msgid "File containing the meta data associated to the connection"
+msgstr "Datoteka koja sadrži metapodatke pridružene vezi"
+
+#: ../tools/common/t-connection.c:788
 #, c-format
 msgid "\tUsername for '%s': "
 msgstr "\tKorisničko ime za „%s“: "
 
-#: ../tools/common/t-connection.c:791 ../tools/common/t-connection.c:806
+#: ../tools/common/t-connection.c:795 ../tools/common/t-connection.c:810
 #, c-format
 msgid "No username for '%s'"
 msgstr "Nema korisničkog imena za „%s“:"
 
-#: ../tools/common/t-connection.c:815
+#: ../tools/common/t-connection.c:819
 #, c-format
 msgid "\tPassword for '%s': "
 msgstr "\tLozinka za „%s“: "
 
-#: ../tools/common/t-connection.c:824 ../tools/common/t-connection.c:833
+#: ../tools/common/t-connection.c:828 ../tools/common/t-connection.c:837
 #, c-format
 msgid "No password for '%s'"
 msgstr "Nema lozinke za „%s“"
 
-#: ../tools/common/t-connection.c:912
+#: ../tools/common/t-connection.c:923
 #, c-format
+#| msgid ""
+#| "Date format for this connection will be: %s%c%s%c%s, where YYYY is the "
+#| "year, MM the month and DD the day\n"
 msgid ""
-"Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
-"MM the month and DD the day\n"
+"Date format for this connection will be: %s, where YYYY is the year, MM the "
+"month and DD the day\n"
 msgstr ""
-"Zapis datuma za ovu vezu će biti: %s%c%s%c%s, gde je GGGG godina, MM mesec a "
-"DD dan\n"
+"Zapis datuma za ovu vezu će biti: %s, gde je GGGG godina, MM mesec a DD dan\n"
 
-#: ../tools/common/t-connection.c:926
-#, c-format
+#: ../tools/common/t-connection.c:931
+#| msgid ""
+#| "Date format for this connection will be: %s%c%s%c%s, where YYYY is the "
+#| "year, MM the month and DD the day\n"
 msgid ""
-"All the information related to the '%s' connection will be stored in the "
-"'%s' file\n"
-msgstr ""
-"Svi podaci koji se odnose na „%s“ vezu biće uskladišteni u datoteci „%s“\n"
+"Format of the date used for by connection, where YYYY is the year, MM the "
+"month and DD the day"
+msgstr "Zapis datuma koji koristi veza, gde je GGGG godina, MM mesec a DD dan"
 
-#: ../tools/common/t-connection.c:945
-#, c-format
-msgid ""
-"Getting database schema information for connection '%s', this may take some "
-"time... "
-msgstr ""
-"Dobavljam podatke šeme baze podataka za vezu „%s“, ovo bi moglo da potraje... "
-
-#: ../tools/common/t-connection.c:1096
+#: ../tools/common/t-connection.c:1067
 msgid "unnamed"
 msgstr "neimenovano"
 
-#: ../tools/common/t-connection.c:1099
+#: ../tools/common/t-connection.c:1070
 msgid "data source"
 msgstr "izvor podataka"
 
-#: ../tools/common/t-connection.c:1194
+#: ../tools/common/t-connection.c:1165
 msgid "Getting database schema information"
 msgstr "Dobavljam podatke šeme baze podataka"
 
-#: ../tools/common/t-connection.c:1550
+#: ../tools/common/t-connection.c:1521
 msgid "Connection not yet opened"
 msgstr "Veza još nije otvorena"
 
-#: ../tools/common/t-connection.c:1556
+#: ../tools/common/t-connection.c:1527
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Ne mogu da pokrenem rečnik da uskladištim postavke tabele"
 
-#: ../tools/common/t-connection.c:1602 ../tools/common/t-connection.c:1608
-#: ../tools/common/t-connection.c:1744 ../tools/common/t-favorites.c:628
+#: ../tools/common/t-connection.c:1573 ../tools/common/t-connection.c:1579
+#: ../tools/common/t-connection.c:1715 ../tools/common/t-favorites.c:628
 #: ../tools/common/t-favorites.c:634 ../tools/common/t-favorites.c:1061
 #: ../tools/common/t-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
 msgstr "Ne mogu da pokrenem prenos da pristupim omiljenima"
 
-#: ../tools/common/t-connection.c:1689 ../tools/common/t-favorites.c:807
+#: ../tools/common/t-connection.c:1660 ../tools/common/t-favorites.c:807
 #: ../tools/common/t-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
 msgstr "Ne mogu da predam prenos da pristupim omiljenima"
 
-#: ../tools/common/t-connection.c:2248
+#: ../tools/common/t-connection.c:2219
 msgid "Could not execute LDAP search"
 msgstr "Ne mogu da izvršim LDAP pretragu"
 
@@ -10874,16 +11035,16 @@ msgstr "Ne mogu da rastumačim vrednost „%s“ parametra"
 msgid "No internal parameter named '%s' required by query"
 msgstr "Nijedan unutrašnji parametar pod nazivom „%s“ nije potreban upitom"
 
-#: ../tools/common/t-context.c:412
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Veza je zatvorena"
 
-#: ../tools/common/t-context.c:543
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Ne mogu da otvorim datoteku „%s“ za upis: %s\n"
 
-#: ../tools/common/t-context.c:557 ../tools/common/t-context.c:566
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Ne mogu da otvorim spojku „%s“: %s"
@@ -10892,7 +11053,7 @@ msgstr "Ne mogu da otvorim spojku „%s“: %s"
 msgid "Can't initialize dictionary to store favorites"
 msgstr "Ne mogu da pokrenem rečnik da uskladištim omiljene"
 
-#: ../tools/common/t-term-context.c:478
+#: ../tools/common/t-term-context.c:482
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
 msgstr "Ne mogu da otvorim datoteku „%s“ za čitanje: %s\n"
@@ -10920,6 +11081,12 @@ msgstr "postavi na NIŠTA"
 #: ../tools/common/t-utils.c:52
 msgid "set to default value"
 msgstr "postavi na osnovnu vrednost"
+
+#: ../tools/common/t-utils.c:207
+#, c-format
+#| msgid "Syntax error after '\\'"
+msgid "Syntax error"
+msgstr "Sadržajna greška"
 
 #: ../tools/common/t-virtual-connection.c:91
 msgid "Bound connection is used"
@@ -11091,6 +11258,41 @@ msgstr "Greška: %s\n"
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Ne mogu da obradim datoteku „%s“, zanemarujem je"
 
+#~ msgid "Could not find handler %lu"
+#~ msgstr "Ne mogu da pronađem rukovaoca „%lu“"
+
+#~ msgid "hello"
+#~ msgstr "pozdrav"
+
+#~ msgid ""
+#~ "'%s' DTD not parsed successfully. XML data layout validation will not be "
+#~ "performed (some errors may occur)"
+#~ msgstr ""
+#~ "DTD „%s“ nije uspešno obrađen: Provera rasporeda IksML podataka neće biti "
+#~ "obavljena (mogu se desiti neke greške)"
+
+#~ msgid "No GdaLdapEntry specified to define attributes to add"
+#~ msgstr "Nije naveden Gda Ldap unos za određivanje osobina za dodavanje"
+
+#~ msgid "No GdaLdapEntry specified to define attributes to remove"
+#~ msgstr "Nije naveden Gda Ldap unos za određivanje osobina za uklanjanje"
+
+#~ msgid "No GdaLdapEntry specified to define attributes to replace"
+#~ msgstr "Nije naveden Gda Ldap unos za određivanje osobina za zamenjivanje"
+
+#~ msgid ""
+#~ "All the information related to the '%s' connection will be stored in the "
+#~ "'%s' file\n"
+#~ msgstr ""
+#~ "Svi podaci koji se odnose na „%s“ vezu biće uskladišteni u datoteci „%s“\n"
+
+#~ msgid ""
+#~ "Getting database schema information for connection '%s', this may take "
+#~ "some time... "
+#~ msgstr ""
+#~ "Dobavljam podatke šeme baze podataka za vezu „%s“, ovo bi moglo da "
+#~ "potraje... "
+
 #~ msgid "History"
 #~ msgstr "Istorijat"
 
@@ -11121,105 +11323,11 @@ msgstr "Ne mogu da obradim datoteku „%s“, zanemarujem je"
 #~ msgid "Form"
 #~ msgstr "Oblik"
 
-#~ msgid "Linear layout"
-#~ msgstr "Linearni raspored"
-
-#~ msgid "Radial layout"
-#~ msgstr "Radijalni raspored"
-
-#~ msgid "Save diagram as"
-#~ msgstr "Sačuvaj dijagram kao"
-
-#~ msgid "PNG Image"
-#~ msgstr "PNG sliku"
-
-#~ msgid "SVG file"
-#~ msgstr "SVG datoteku"
-
-#~ msgid "Failed to create SVG file"
-#~ msgstr "Nisam uspeo da napravim SVG datoteku"
-
-#~ msgid "File format to save to is not recognized."
-#~ msgstr "Zapis datoteke za čuvanje nije prepoznat."
-
-#~ msgid "Failed to create PNG file"
-#~ msgstr "Nisam uspeo da napravim PNG datoteku"
-
-#~ msgid "Type: %s"
-#~ msgstr "Vrsta: %s"
-
-#~ msgid "Remove from graph"
-#~ msgstr "Ukloni iz grafikona"
-
-#~ msgid "Add referenced tables to graph"
-#~ msgstr "Dodaj uputne tabele u grafikon"
-
-#~ msgid "Add tables referencing this table to graph"
-#~ msgstr "Dodaj tabele koje upućuju na ovu tabelu u grafikon"
-
-#~ msgid "Declare foreign key for this table"
-#~ msgstr "Objavi strani ključ za ovu tabelu"
-
-#~ msgid "Add tables"
-#~ msgstr "Dodaj tabele"
-
-#~ msgid "Add one table"
-#~ msgstr "Dodaj jednu tabelu"
-
-#~ msgid "Add all tables"
-#~ msgstr "Dodaj sve tabele"
-
-#~ msgid "Add all tables in schema"
-#~ msgstr "Dodaj sve tabele u šemu"
-
-#~ msgid "Select tables to add to diagram"
-#~ msgstr "Izaberi tabele za dodavanje u dijagram"
-
-#~ msgid "Remove this declared foreign key"
-#~ msgstr "Ukloni ovaj objavljeni strani ključ"
-
-#~ msgid "Page size and zoom"
-#~ msgstr "Veličina stranice i uveličanje"
-
-#~ msgid "Page %d of %d horizontally and %d of %d vertically"
-#~ msgstr "Stranica %d od %d vodoravno i %d od %d uspravno"
-
-#~ msgid "Adjust page's size and orientation"
-#~ msgstr "Doteraj veličinu i usmerenje stranice"
-
-#~ msgid "<b>Zoom</b>"
-#~ msgstr "<b>Uveličanje</b>"
-
-#~ msgid "Number of pages used:"
-#~ msgstr "Broj korišćenih stranica:"
-
-#~ msgid "horizontally"
-#~ msgstr "vodoravno"
-
-#~ msgid "vertically"
-#~ msgstr "uspravno"
-
-#~ msgid "Zoom factor:"
-#~ msgstr "Odnos uvećanja:"
-
-#~ msgid "<b>Page numbers</b>"
-#~ msgstr "<b>Brojevi stranica</b>"
-
-#~ msgid "Print page numbers"
-#~ msgstr "Štampaj brojeve stranica"
-
 #~ msgid "[DSN|connection string]..."
 #~ msgstr "[DSN|niska veze]..."
 
 #~ msgid "All files are in the directory: %s\n"
 #~ msgstr "Sve datoteke su u direktorijumu: %s\n"
-
-#~ msgid ""
-#~ "Can't get the list of files used to store information about each "
-#~ "connection: %s\n"
-#~ msgstr ""
-#~ "Ne mogu da dobavim spisak datoteka korišćenih za skladištenje podataka o "
-#~ "svakoj vezi: %s\n"
 
 #~ msgid ""
 #~ "Error while purging files used to store information about each "
