@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2006 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -30,6 +30,7 @@
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-util.h>
 #include <glib/gi18n-lib.h>
+#include <gio/gio.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 
 #include <libgda/handlers/gda-handler-numerical.h>
@@ -439,4 +440,36 @@ gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data
  theend:
 	g_free (file);
 	return contents;
+}
+
+/**
+ * gda_server_provider_load_resource_contents:
+ * @prov_name: the provider's name
+ * @resource: the name of the resource to load
+ *
+ * Loads and returns the contents of the specified resource.
+ * This function should only be used by database provider's implementations
+ *
+ * Returns: (transfer full): a new string containing the resource's contents, or %NULL if not found or if an error occurred
+ */
+gchar *
+gda_server_provider_load_resource_contents (const gchar *prov_name, const gchar *resource)
+{
+	g_return_val_if_fail (prov_name, NULL);
+	g_return_val_if_fail (resource, NULL);
+
+	gchar *rname;
+	rname = g_strdup_printf ("/spec/%s/%s", prov_name, resource);
+	g_print ("Using resource %s\n", rname);
+
+	GBytes *bytes;
+	bytes = g_resources_lookup_data (rname, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	g_free (rname);
+	if (!bytes)
+		return NULL;
+
+	gchar *retval;
+	retval = g_strdup ((const gchar*) g_bytes_get_data (bytes, NULL));
+	g_bytes_unref (bytes);
+	return retval;
 }

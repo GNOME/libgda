@@ -604,6 +604,7 @@
 	gda_server_provider_handler_use_default
 	gda_server_provider_internal_get_parser
 	gda_server_provider_load_file_contents
+	gda_server_provider_load_resource_contents
 	gda_server_provider_perform_operation
 	gda_server_provider_perform_operation_default
 	gda_server_provider_render_operation

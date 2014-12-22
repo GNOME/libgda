@@ -84,6 +84,7 @@ void            _gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *
  */
 gchar         *gda_server_provider_find_file                (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename);
 gchar         *gda_server_provider_load_file_contents       (const gchar *inst_dir, const gchar *data_dir, const gchar *filename);
+gchar         *gda_server_provider_load_resource_contents   (const gchar *prov_name, const gchar *resource);
 
 G_END_DECLS
 
