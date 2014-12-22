@@ -1,0 +1,14 @@
+[Desktop Entry]
+_Name=Database browser
+_Comment=Browse database's contents
+Icon=gda-browser-6.0
+Exec=gda-browser-6.0
+Terminal=false
+Type=Application
+Categories=GTK;Development;Database;
+StartupNotify=true
+Keywords=SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;
+X-GNOME-Bugzilla-Bugzilla=GNOME
+X-GNOME-Bugzilla-Product=Libgda
+X-GNOME-Bugzilla-Component=Tools
+X-GNOME-Bugzilla-Version=@GDA_VERSION@

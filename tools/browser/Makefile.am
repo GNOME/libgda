@@ -79,6 +79,11 @@ libbrowsercore_la_SOURCES=\
 
 $(OBJECTS): marshal.c marshal.h
 
+# app icon
+appiconsdir=$(datadir)/pixmaps
+appicons_DATA= \
+	data/256x256/gda-browser-6.0.png
+
 @INTLTOOL_XML_RULE@
 appdatadir = $(datadir)/appdata
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
@@ -92,7 +97,8 @@ desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 EXTRA_DIST = \
 	marshal.list \
 	$(Desktop_in_files) \
-	$(appdata_in_files)
+	$(appdata_in_files) \
+	$(appicons_DATA)
 
 CLEANFILES = \
 	$(appdata_DATA)
