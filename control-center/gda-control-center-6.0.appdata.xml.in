@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Vivien Malerba <malerba@gnome-db.org> -->
+
+<application>
+  <id type="desktop">gda-control-center-6.0.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <summary></summary>
+  <description>
+    <_p>
+      From the database control center, you can manage the defined named data sources (database connections), and
+      check which database providers are installed (and useable to connect to different databases).
+    </_p>
+  </description>
+  <url type="homepage">http://www.gnome-db.org/</url>
+  <screenshots>
+    <screenshot type="default">http://www.gnome-db.org/ScreenShots?action=AttachFile&do=get&target=gdp2.png</screenshot>
+  </screenshots>
+  <updatecontact>vmalerba_at_gmail.com</updatecontact>
+</application>

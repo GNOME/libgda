@@ -1014,6 +1014,7 @@ libgda-ui/demos/Makefile
 libgda-ui/demos/geninclude.pl
 libgda-ui/glade/Makefile
 control-center/Makefile
+control-center/gda-control-center-6.0.desktop.in
 control-center/data/Makefile
 tools/Makefile
 tools/gda-sql-6.0.1:tools/gda-sql.1.in

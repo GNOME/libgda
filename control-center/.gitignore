@@ -1,3 +1,5 @@
 gda-control-center-6.0
-gda-control-center-6.*.desktop
+gda-control-center-*.desktop
+gda-control-center-*.desktop.in
 control-center.gresources.c
+gda-control-center-*.appdata.xml

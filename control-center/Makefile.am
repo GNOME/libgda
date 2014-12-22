@@ -62,8 +62,17 @@ gda_control_center_6_0_LDADD=\
 	$(top_builddir)/libgda-ui/libgda-ui-6.0.la \
 	$(COREDEPS_LIBS) $(GTK_LIBS)
 
-@INTLTOOL_DESKTOP_RULE@
+# app icon
+appiconsdir=$(datadir)/pixmaps
+appicons_DATA= \
+	gda-control-center.png
 
+@INTLTOOL_XML_RULE@
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = gda-control-center-6.0.appdata.xml.in
+
+@INTLTOOL_DESKTOP_RULE@
 desktopdir=$(datadir)/applications
 Desktop_in_files = gda-control-center-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
@@ -72,9 +81,11 @@ EXTRA_DIST = \
 	control-center.gresource.xml \
 	control-center-res.rc \
 	gda-control-center.ico \
+	$(appdata_in_files) \
 	$(Desktop_in_files)
 
-DISTCLEANFILES = $(desktop_DATA)
+DISTCLEANFILES = $(desktop_DATA) \
+	$(appdata_DATA)
 
 CLEANFILES = \
 	control-center.gresources.c
