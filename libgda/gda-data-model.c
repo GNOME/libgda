@@ -1938,9 +1938,6 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 
 		if (strcmp ((gchar*)xml_field->name, "gda_value") && 
 		    strcmp ((gchar*)xml_field->name, "gda_array_value")) {
-			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_XML_FORMAT_ERROR,
-				     _("Expected tag <gda_value> or <gda_array_value>, "
-				       "got <%s>, ignoring"), (gchar*)xml_field->name);
 			continue;
 		}
 		

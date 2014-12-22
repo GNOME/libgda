@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Brecht Sanders <brecht@edustria.be>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -1583,7 +1583,6 @@ init_node_import (GdaDataModelImport *model)
 	GSList *list;
 	gint pos;
 	gchar *str;
-	GError *error = NULL;
 
 	node = model->priv->extract.node.node;
 	if (!node)
@@ -1716,8 +1715,11 @@ init_node_import (GdaDataModelImport *model)
 	clean_field_specs (fields);
 	model->priv->columns = g_slist_reverse (model->priv->columns);
 
-	if (cur && ! gda_data_model_add_data_from_xml_node (ramodel, cur, &error))
+	GError *error = NULL;
+	if (cur && ! gda_data_model_add_data_from_xml_node (ramodel, cur, &error)) {
 		add_error (model, error && error->message ? error->message : _("No detail"));
+		g_clear_error (&error);
+	}
 }
 
 
