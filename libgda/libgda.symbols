@@ -568,6 +568,7 @@
 	gda_server_operation_get_value_at
 	gda_server_operation_get_value_at_path
 	gda_server_operation_is_valid
+	gda_server_operation_is_valid_from_resource
 	gda_server_operation_load_data_from_xml
 	gda_server_operation_new
 	gda_server_operation_op_type_to_string

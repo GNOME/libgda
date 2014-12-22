@@ -238,6 +238,7 @@ guint                      gda_server_operation_add_item_to_sequence    (GdaServ
 gboolean                   gda_server_operation_del_item_from_sequence  (GdaServerOperation *op, const gchar *item_path);
 
 gboolean                   gda_server_operation_is_valid                (GdaServerOperation *op, const gchar *xml_file, GError **error);
+gboolean                   gda_server_operation_is_valid_from_resource  (GdaServerOperation *op, const gchar *resource, GError **error);
 
 /*
  * Database creation and destruction

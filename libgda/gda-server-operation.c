@@ -44,6 +44,7 @@
 #include <locale.h>
 #endif
 #include <glib/gi18n-lib.h>
+#include <gio/gio.h>
 
 extern gchar *gda_lang_locale;
 
@@ -80,7 +81,8 @@ enum
 	PROP_CNC,
 	PROP_PROV,
 	PROP_OP_TYPE,
-	PROP_SPEC_FILE
+	PROP_SPEC_FILE,
+	PROP_SPEC_RESOURCE
 };
 
 extern xmlDtdPtr _gda_server_op_dtd;
@@ -199,6 +201,10 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 	g_object_class_install_property (object_class, PROP_SPEC_FILE,
 					 g_param_spec_string ("spec-filename", NULL,
 							      "XML file which contains the object's data structure", 
+							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (object_class, PROP_SPEC_RESOURCE,
+					 g_param_spec_string ("spec-resource", NULL,
+							      "Name of the resource which contains the XML data representing the object's data structure",
 							      NULL, G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
 	g_object_class_install_property (object_class, PROP_OP_TYPE,
 					 g_param_spec_int ("op-type", NULL, "Type of operation to be done", 
@@ -545,6 +551,7 @@ gda_server_operation_set_property (GObject *object,
 				   const GValue *value,
 				   GParamSpec *pspec)
 {
+	static GHashTable *doc_hash = NULL; /* key = file name, value = xmlDocPtr */
 	GdaServerOperation *op;
 
 	op = GDA_SERVER_OPERATION (object);
@@ -584,16 +591,12 @@ gda_server_operation_set_property (GObject *object,
 		case PROP_SPEC_FILE: {
 			xmlDocPtr doc;
 			const gchar *xmlfile;
-			static GHashTable *doc_hash = NULL; /* key = file name, value = xmlDocPtr */
 
 			xmlfile = g_value_get_string (value);
 			if (!xmlfile)
 				return;
 
-			if (!doc_hash)
-				doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
-								  g_free, (GDestroyNotify) xmlFreeDoc);
-			else {
+			if (doc_hash) {
 				doc = g_hash_table_lookup (doc_hash, xmlfile);
 				if (doc) {
 					op->priv->xml_spec_doc = doc;
@@ -610,11 +613,58 @@ gda_server_operation_set_property (GObject *object,
 			if (doc) {
 				if (!use_xml_spec (op, doc, xmlfile))
 					return;
+				if (!doc_hash)
+					doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+									  g_free, (GDestroyNotify) xmlFreeDoc);
 				g_hash_table_insert (doc_hash, g_strdup (xmlfile), doc);
 			}
 			else {
 				g_warning (_("GdaServerOperation: could not load file '%s'"), xmlfile);
 				return;	
+			}
+			break;
+		}
+		case PROP_SPEC_RESOURCE: {
+			const gchar *resource_name;
+			resource_name = g_value_get_string (value);
+
+			if (! resource_name)
+				return;
+
+			xmlDocPtr doc = NULL;
+			if (doc_hash) {
+				doc = g_hash_table_lookup (doc_hash, resource_name);
+				if (doc) {
+					op->priv->xml_spec_doc = doc;
+					break;
+				}
+			}
+
+			GBytes *bytes = NULL;
+			if (resource_name) {
+				bytes = g_resources_lookup_data (resource_name, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+				if (!bytes) {
+					g_warning ("Resource %s not found", resource_name);
+					return;
+				}
+			}
+
+			const gchar *xmldata;
+			xmldata = (const gchar*) g_bytes_get_data (bytes, NULL);
+
+			doc = xmlParseMemory (xmldata, strlen (xmldata));
+			g_bytes_unref (bytes);
+			if (doc) {
+				if (!use_xml_spec (op, doc, NULL))
+					return;
+				if (!doc_hash)
+					doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+									  g_free, (GDestroyNotify) xmlFreeDoc);
+				g_hash_table_insert (doc_hash, g_strdup (resource_name), doc);
+			}
+			else {
+				g_warning (_("GdaServerOperation: could not load specified contents"));
+				return;
 			}
 			break;
 		}
@@ -665,7 +715,8 @@ gda_server_operation_get_property (GObject *object,
 }
 
 /*
- * Steals @doc (it is freed if necessary)
+ * if %FALSE is returned, then @doc is freed, otherwise it's not stolen.
+ * @xmlfile may be %NULL
  */
 static gboolean
 use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
@@ -716,7 +767,6 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 		}
 		
 		xmlDoValidityCheckingDefaultValue = xmlcheck;
-		xmlFreeDoc (doc);
 		return FALSE;
 	}
 #endif
@@ -1026,7 +1076,8 @@ _gda_server_operation_new_from_string (GdaServerOperationType op_type,
 		return NULL;
 	obj = g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", op_type, NULL);
 	op = GDA_SERVER_OPERATION (obj);
-	use_xml_spec (op, doc, NULL);
+	if (use_xml_spec (op, doc, NULL))
+		xmlFreeDoc (doc);
 
 	if (!op->priv->topnodes && op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
 		/* load XML file */
@@ -2504,6 +2555,54 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 	}
 
 	return valid;
+}
+
+/**
+ * gda_server_operation_is_valid_from_resource:
+ * @op: a #GdaServerOperation widget
+ * @resource: (allow-none): the name of a resource containing an XML specification data (see gda_server_operation_new()) or %NULL
+ * @error: a place to store an error, or %NULL
+ *
+ * Tells if all the required values in @op have been defined.
+ *
+ * if @xml_data is not %NULL, the validity of @op is tested against that specification,
+ * and not against the current @op's specification.
+ *
+ * Returns: %TRUE if @op is valid
+ */
+gboolean
+gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar *resource, GError **error)
+{
+	GSList *list;
+
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+	g_return_val_if_fail (op->priv, FALSE);
+
+	if (resource) {
+		xmlNodePtr save;
+		gboolean valid = TRUE;
+
+		save = gda_server_operation_save_data_to_xml (op, error);
+		if (save) {
+			GdaServerOperation *op2;
+			op2 = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION,
+								  "op-type", op->priv->op_type,
+								  "spec-resource", resource, NULL));
+			if (gda_server_operation_load_data_from_xml (op2, save, error))
+				valid = gda_server_operation_is_valid (op2, NULL, error);
+			else
+				valid = FALSE;
+			xmlFreeNode (save);
+			g_object_unref (op2);
+		}
+		else
+			valid = FALSE;
+
+		return valid;
+	}
+	else
+		return gda_server_operation_is_valid (op, NULL, error);
+
 }
 
 /**
