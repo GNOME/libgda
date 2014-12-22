@@ -836,35 +836,41 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 
 	if (type == GDA_SERVER_OPERATION_CREATE_USER) {
 		if (cdata && (cdata->reuseable->version_float < 8.1))
-			str = g_strdup ("postgres_specs_create_user.xml");
+			str = g_strdup ("postgres_specs_create_user");
 		else
-			str = g_strdup ("postgres_specs_create_role.xml");
+			str = g_strdup ("postgres_specs_create_role");
 	}
 	else if (type == GDA_SERVER_OPERATION_DROP_USER) {
 		if (cdata && (cdata->reuseable->version_float < 8.1))
-			str = g_strdup ("postgres_specs_drop_user.xml");
+			str = g_strdup ("postgres_specs_drop_user");
 		else
-			str = g_strdup ("postgres_specs_drop_role.xml");
+			str = g_strdup ("postgres_specs_drop_role");
 	}
 	else {
 		file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-		str = g_strdup_printf ("postgres_specs_%s.xml", file);
+		str = g_strdup_printf ("postgres_specs_%s", file);
 		g_free (file);
 	}
 
+	gchar *tmp;
+	tmp = g_strdup_printf ("%s.xml", str);
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
+        file = gda_server_provider_find_file (provider, dir, tmp);
 	g_free (dir);
+	g_free (tmp);
 
-        if (! file) {
-                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, _("Missing spec. file '%s'"), str);
+	if (file) {
 		g_free (str);
-                return NULL;
+		op = gda_server_operation_new (type, file);
+		g_free (file);
+	}
+	else {
+		file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
+		g_free (str);
+		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
+							 "spec-resource", file, NULL));
+		g_free (file);
         }
-        g_free (str);
-
-        op = gda_server_operation_new (type, file);
-        g_free (file);
 
         return op;
 }
@@ -879,7 +885,6 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
         gchar *sql = NULL;
         gchar *file;
         gchar *str;
-	gchar *dir;
 	PostgresConnectionData *cdata = NULL;
 	GdaServerOperationType type;
 
@@ -891,38 +896,31 @@ gda_postgres_provider_render_operation (GdaServerProvider *provider, GdaConnecti
 	type = gda_server_operation_get_op_type (op);
 	if (type == GDA_SERVER_OPERATION_CREATE_USER) {
 		if (cdata && (cdata->reuseable->version_float < 8.1))
-			str = g_strdup ("postgres_specs_create_user.xml");
+			str = g_strdup ("postgres_specs_create_user");
 		else
-			str = g_strdup ("postgres_specs_create_role.xml");
+			str = g_strdup ("postgres_specs_create_role");
 	}
 	else if (type == GDA_SERVER_OPERATION_DROP_USER) {
 		if (cdata && (cdata->reuseable->version_float < 8.1))
-			str = g_strdup ("postgres_specs_drop_user.xml");
+			str = g_strdup ("postgres_specs_drop_user");
 		else
-			str = g_strdup ("postgres_specs_drop_role.xml");
+			str = g_strdup ("postgres_specs_drop_role");
 	}
 	else {
 		file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-		str = g_strdup_printf ("postgres_specs_%s.xml", file);
+		str = g_strdup_printf ("postgres_specs_%s", file);
 		g_free (file);
 	}
 
 	/* test @op's validity */
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
-	g_free (dir);
+	file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
+	g_free (str);
 
-        if (! file) {
-                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_OPERATION_ERROR, _("Missing spec. file '%s'"), str);
-		g_free (str);
-                return NULL;
-        }
-        g_free (str);
-        if (!gda_server_operation_is_valid (op, file, error)) {
-                g_free (file);
-                return NULL;
-        }
-        g_free (file);
+	if (!gda_server_operation_is_valid_from_resource (op, file, error)) {
+		g_free (file);
+		return NULL;
+	}
+	g_free (file);
 
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {

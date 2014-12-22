@@ -3,3 +3,4 @@ parser.c
 parser.h
 gen_def
 *token_types.h
+*.gresources.c

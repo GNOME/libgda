@@ -24,6 +24,7 @@ libgda_postgres_la_SOURCES = \
 	gda-postgres-util.c \
 	gda-postgres-util.h \
 	gda-postgres.h \
+	postgres.gresources.c \
 	libmain.c
 
 libgda_postgres_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
@@ -55,8 +56,21 @@ xml_in_files = \
 
 xml_DATA = $(xml_in_files:.xml.in=.xml) 
 
+# resources
+RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
+postgres.gresources.c: postgres.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/postgres.gresource.xml
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-postgres-6.0.pc
+
+CLEANFILES = \
+	postgres.gresources.c \
+	$(RESOURCES)
 
 EXTRA_DIST = $(xml_in_files) libgda-postgres-6.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
