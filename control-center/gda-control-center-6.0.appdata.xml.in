@@ -13,7 +13,7 @@
   </description>
   <url type="homepage">http://www.gnome-db.org/</url>
   <screenshots>
-    <screenshot type="default">http://www.gnome-db.org/ScreenShots?action=AttachFile&do=get&target=gdp2.png</screenshot>
+    <screenshot type="default">http://www.gnome-db.org/ScreenShots?action=AttachFile&amp;do=get&amp;target=gdp2.png</screenshot>
   </screenshots>
   <updatecontact>vmalerba_at_gmail.com</updatecontact>
 </application>
