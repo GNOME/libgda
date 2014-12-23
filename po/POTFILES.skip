@@ -1,7 +1,9 @@
+control-center/gda-control-center-6.0.desktop.in
 doc/C/prov-writing-assembly.xml
+libgda/data/Table.c
+libgda/sqlite/sqlite-src/sqlite3.c
 libgda/sqlite/sql-parser.c/lemon.c
 libgda/sqlite/sql-parser.c/lempar.c
-libgda/sqlite/sqlite-src/sqlite3.c
 providers/firebird/firebird_specs_create_table.xml.in
 providers/firebird/firebird_specs_dsn.xml.in
 providers/firebird/gda-firebird-blob-op.c
@@ -33,4 +35,4 @@ providers/skel-implementation/models/models_specs_dsn.xml.in
 providers/sqlcipher/sqlite3.c
 testing/html.c
 tests/gda-ddl-creator.c
-libgda/data/Table.c
+tools/browser/gda-browser-6.0.desktop.in
