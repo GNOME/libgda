@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2014-12-25 10:28+0000\n"
-"PO-Revision-Date: 2014-12-25 19:38+0100\n"
+"PO-Revision-Date: 2014-12-25 20:05+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -91,7 +91,6 @@ msgid "Change the data source properties (the name can't be modified)."
 msgstr "Spremeni lastnosti podatkovnega vira (imena ni mogoče spremeniti)."
 
 #: ../control-center/dsn-properties-dialog.c:150
-#, fuzzy
 msgid ""
 "For information only, this data source is a system wide data source\n"
 "and you don't have the permission to change it."
@@ -331,7 +330,6 @@ msgid "Create a new database?"
 msgstr "Ali naj se ustvari nova podatkovna zbirka?"
 
 #: ../control-center/gdaui-dsn-assistant.c:559
-#, fuzzy
 msgid ""
 "The following fields represent the information needed to create a new "
 "database (mandatory fields are marked with a star). This information is "
@@ -340,7 +338,7 @@ msgstr ""
 "Naslednja polja vključujejo osnovne podrobnosti za novo podatkovno zbirko "
 "(obvezna polja so označena z zvezdico). Podatki so odvisni od vrste "
 "podatkovne zbirke, zato je včasih koristno prej pregledati priročnik za več "
-"podrobnosti.\n"
+"podrobnosti."
 
 #: ../control-center/gdaui-dsn-assistant.c:583
 msgid "New database definition"
@@ -749,9 +747,8 @@ msgid "No DSN or connection string specified"
 msgstr "Ni določenega DSN ali niza povezave"
 
 #: ../libgda/gda-connection.c:1439
-#, fuzzy
 msgid "Connection is already opened"
-msgstr "Povezava ni odprta"
+msgstr "Povezava je že odprta"
 
 #: ../libgda/gda-connection.c:1462
 #, c-format
@@ -2044,9 +2041,8 @@ msgid "GdaServerOperation: could not load file '%s'"
 msgstr "GdaServerOperation: ni mogoče naložiti datoteke '%s'"
 
 #: ../libgda/gda-server-operation.c:666
-#, fuzzy
 msgid "GdaServerOperation: could not load specified contents"
-msgstr "GdaServerOperation: ni mogoče naložiti datoteke '%s'"
+msgstr "GdaServerOperation: ni mogoče naložiti določene vsebine"
 
 #: ../libgda/gda-server-operation.c:682 ../libgda/gda-server-operation.c:1087
 #, c-format
@@ -5650,7 +5646,7 @@ msgstr "Relativno razločno ime"
 #: ../providers/ldap/gdaprov-data-model-ldap.c:868
 #, c-format
 msgid "Multiple value LDAP attribute does not fit into a single value"
-msgstr ""
+msgstr "Atributa LDAP z več vrednostmi ni mogoče zapisati kot eno vrednost"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:914
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1294
@@ -10181,11 +10177,8 @@ msgid "%s [<NAME>]"
 msgstr "%s [<ime>]"
 
 #: ../tools/common/t-app.c:1196
-#, fuzzy
 msgid "Show a piece of information, or all information about the connection"
-msgstr ""
-"Ni mogoče pridobiti seznama datotek s shranjenimi podatki posameznih "
-"povezav: %s\n"
+msgstr "Pokaže del ali vse podrobnosti povezave"
 
 #: ../tools/common/t-app.c:1204 ../tools/common/t-app.c:1212
 #: ../tools/common/t-app.c:1220 ../tools/common/t-app.c:1228
@@ -10389,7 +10382,6 @@ msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <razločno_ime_DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/common/t-app.c:1409
-#, fuzzy
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
 "parameter is passed, then all set attributes are shown, if the \"all\" 2nd "
