@@ -1,15 +1,15 @@
 # Serbian translation of libgda
 # Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003—2014.
 # This file is distributed under the same license as the libgda package.
-# Maintainer: Дејан Матијевић <dejan@ns.sympatico.ca>
+# Дејан Матијевић <dejan@ns.sympatico.ca>
 # Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
-"&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-12-19 14:34+0000\n"
-"PO-Revision-Date: 2014-02-03 19:20+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda&"
+"keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2014-12-25 10:28+0000\n"
+"PO-Revision-Date: 2014-12-25 13:41+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -1121,11 +1121,11 @@ msgstr "Не могу да испишем особине модела подат
 msgid "Could not dump data model's contents: %s"
 msgstr "Не могу да испишем садржај модела података: %s"
 
-#: ../libgda/gda-data-model.c:2704
+#: ../libgda/gda-data-model.c:2703
 msgid "Data model does not support backward cursor move"
 msgstr "Образац података не подржава померање курсора уназад"
 
-#: ../libgda/gda-data-model.c:3003
+#: ../libgda/gda-data-model.c:3002
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
@@ -1136,7 +1136,7 @@ msgstr[1] "%d реда"
 msgstr[2] "%d редова"
 msgstr[3] "%d ред"
 
-#: ../libgda/gda-data-model.c:3005
+#: ../libgda/gda-data-model.c:3004
 #, c-format
 msgid "0 row"
 msgstr "0 реда"
@@ -1553,7 +1553,7 @@ msgstr "Услов јединственог реда је већ наведен"
 
 #: ../libgda/gda-data-select.c:1712 ../libgda/gda-data-select.c:1723
 msgid "No table to select from in SELECT statement"
-msgstr "Нема табеле из које изабрати у тврдњи ИЗАБЕРИ "
+msgstr "Нема табеле из које изабрати у тврдњи ИЗАБЕРИ"
 
 #: ../libgda/gda-data-select.c:1717
 msgid "SELECT statement uses more than one table to select from"
@@ -2510,7 +2510,7 @@ msgstr "Бинарно представљање"
 msgid "Boolean representation"
 msgstr "Логичко представљање"
 
-#: ../libgda/handlers/gda-handler-numerical.c:139
+#: ../libgda/handlers/gda-handler-numerical.c:137
 msgid "Numerical representation"
 msgstr "Бројчано представљање"
 
@@ -2605,7 +2605,7 @@ msgstr "Не могу да преокренем параметар из врст
 #: ../libgda-report/engine/gda-report-engine.c:1176
 #, c-format
 msgid "Expression '%s' should return exactly one value"
-msgstr "Израз „%s“ треба да да тачно једну вредност"
+msgstr "Израз „%s“ треба да дâ тачно једну вредност"
 
 #: ../libgda-report/engine/gda-report-engine.c:1216
 msgid "Binary data"
@@ -3499,7 +3499,7 @@ msgstr "Вредности"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:169
 msgid "GList of GValue to render, not limited to PK fields "
-msgstr "Г-списак Г-вредности за исцртавање, неограничен на ПК поља"
+msgstr "Г-списак Г-вредности за исцртавање, неограничен на ПК поља "
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:160
 msgid "The information and status changer can be activated"
@@ -3866,8 +3866,8 @@ msgstr "Серијализована слика"
 msgid ""
 "Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)"
 msgstr ""
-"Поставите на изабрано ако подаци потичу из серијализоване Гдк сличице "
-"(Ф-број на пример)"
+"Поставите на изабрано ако подаци потичу из серијализоване Гдк сличице (Ф-"
+"број на пример)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:5
 msgid "Base 64"
@@ -5867,8 +5867,8 @@ msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
 msgstr ""
-"Не управљана врста података „%s“, пријавите грешку на „http://bugzilla.gnome."
-"org/“ за производ „libgda“"
+"Не управљана врста података „%s“, пријавите грешку на "
+"„http://bugzilla.gnome.org/“ за производ „libgda“."
 
 #: ../providers/mysql/gda-mysql-provider.c:2731
 msgid ""
@@ -5896,10 +5896,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Број делова реда је прочитан још од стварања предмета"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:989
-#: ../providers/mysql/gda-mysql-recordset.c:1002
-#: ../providers/mysql/gda-mysql-recordset.c:1015
-#: ../providers/mysql/gda-mysql-recordset.c:1034
+#: ../providers/mysql/gda-mysql-recordset.c:984
+#: ../providers/mysql/gda-mysql-recordset.c:997
+#: ../providers/mysql/gda-mysql-recordset.c:1010
+#: ../providers/mysql/gda-mysql-recordset.c:1029
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Неисправна врста података свезе колоне. %d\n"
@@ -5925,7 +5925,7 @@ msgstr "Врста „%s“ није мапирана за вредност %d/%
 msgid "Type %s not mapped for value %f"
 msgstr "Врста „%s“ није мапирана за вредност %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1024
+#: ../providers/mysql/gda-mysql-recordset.c:1019
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Врста „%s“ није мапирана за вредност %s"
@@ -6288,7 +6288,7 @@ msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
 "Прикључница: Веза датотеке Јуниксове прикључнице на месни сервер (Само месни "
-"Јуникс сервер)"
+"Јуникс сервер)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
@@ -6771,7 +6771,7 @@ msgstr "Преноси нису подржани у поновљивом чит�
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:698
+#: ../providers/postgres/gda-postgres-recordset.c:694
 msgid "Internal error"
 msgstr "Унутрашња грешка"
 
@@ -6802,12 +6802,12 @@ msgstr "Број делова редова је прочитан још од с�
 msgid "Invalid date format '%s'"
 msgstr "Неисправан запис датума „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:692
+#: ../providers/postgres/gda-postgres-recordset.c:688
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Неисправна вредност временске ознаке „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:770
+#: ../providers/postgres/gda-postgres-recordset.c:766
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Неисправно представљање бинарне ниске „%s ...“"
@@ -8537,11 +8537,11 @@ msgstr ""
 
 #: ../tools/browser/data-manager/analyser.c:192
 msgid "Obtain referenced data in table "
-msgstr "Набави упутне податке у табели"
+msgstr "Набави упутне податке у табели "
 
 #: ../tools/browser/data-manager/analyser.c:209
 msgid "List referencing data in "
-msgstr "Испиши упутне податаке"
+msgstr "Испиши упутне податаке "
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -8923,6 +8923,25 @@ msgstr "Очекујем корени чвор <%s>"
 #: ../tools/browser/query-exec/query-console-page.c:318
 msgid "SQL code to execute:"
 msgstr "СКуЛ код за извршавање:"
+
+#: ../tools/browser/gda-browser-5.0.appdata.xml.in.h:1
+msgid ""
+"Database Browser provides quick access to the data and schema of a database, "
+"and displays it in a intuitive graphical interface. It provides three "
+"perspectives to interact with a database: the schema browser, query "
+"execution, and data manager. The schema browser allows the user to view the "
+"tables of a database, and inspect the table's properties and relations. The "
+"query exeution perspective allows the user to execute SQL queries on the "
+"database. The data manager perspective allows the user to view the data "
+"contained in the database in a tabular form."
+msgstr ""
+"Прегледник базе подтака обезбеђује брз приступ подацима и шеми базе "
+"података, и приказује га у докучивом графичком сучељу. Обезбеђује три "
+"видокруга за деловање са базом података: прегледника шеме, извршавање упита, "
+"и управника података. Прегледник шеме омогућава кориснику да види табеле "
+"базе података, и да провери својства и односе табеле. Извршавање упита "
+"омогућава кориснику да изврши СКуЛ упите на бази података. Управник података "
+"омогућава кориснику да види податке садржане у бази података у облику табеле."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "Browse your database's contents"
@@ -9496,7 +9515,7 @@ msgstr "Грешка приликом обраде кода: %s"
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
-msgstr "Упит је већ извршен, да извршите други упит, отворите нову везу"
+msgstr "Упит је већ извршен, да извршите други упит, отворите нову везу."
 
 #: ../tools/browser/query-exec/query-console-page.c:1179
 msgid ""
@@ -9724,7 +9743,7 @@ msgstr "Не могу да учитам дијаграм"
 #: ../tools/browser/schema-browser/table-columns.c:269
 #, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Објављени страни кључ „%s“ на"
+msgstr "Објављени страни кључ „%s“ на "
 
 #: ../tools/browser/schema-browser/table-columns.c:272
 #, c-format
@@ -10123,7 +10142,7 @@ msgstr "Списак инсталираних достављача"
 #: ../tools/config-info.c:109
 #, c-format
 msgid "Could not find provider '%s'"
-msgstr "Не могу да пронађем достављача „%s“."
+msgstr "Не могу да пронађем достављача „%s“"
 
 #: ../tools/config-info.c:121 ../tools/config-info.c:290
 #: ../tools/gda-sql.c:5373
@@ -10138,7 +10157,7 @@ msgstr "Опис достављача „%s“"
 #: ../tools/config-info.c:278
 #, c-format
 msgid "Could not find data source '%s'"
-msgstr "Не могу да пронађем извор података „%s“."
+msgstr "Не могу да пронађем извор података „%s“"
 
 #: ../tools/config-info.c:293
 #, c-format
@@ -10181,7 +10200,7 @@ msgstr "Непознато мерило „%s“"
 
 #: ../tools/config-info.c:614
 msgid "Failed to remove: "
-msgstr "Нисам успео да уклоним:"
+msgstr "Нисам успео да уклоним: "
 
 #: ../tools/config-info.c:643
 #, c-format
@@ -10230,7 +10249,7 @@ msgstr "Не могу да обрадим датотеку „%s“, занем�
 #: ../tools/gda-sql.c:196
 #, c-format
 msgid "GDA SQL console version "
-msgstr "Издање ГДА СКуЛ конзоле"
+msgstr "Издање ГДА СКуЛ конзоле "
 
 #: ../tools/gda-sql.c:214
 msgid ""
@@ -10259,7 +10278,7 @@ msgstr "Знак раздвајача за ЦСВ датотеку"
 
 #: ../tools/gda-sql.c:352
 msgid "Welcome to the GDA SQL console, version "
-msgstr "Добро дошли у ГДА СКуЛ конзолу, издање"
+msgstr "Добро дошли у ГДА СКуЛ конзолу, издање "
 
 #: ../tools/gda-sql.c:358
 #, c-format
@@ -10279,7 +10298,7 @@ msgstr ""
 #: ../tools/gda-sql.c:413
 #, c-format
 msgid "Opening connection '%s' for: "
-msgstr "Отварам везу „%s“ за:"
+msgstr "Отварам везу „%s“ за: "
 
 #: ../tools/gda-sql.c:429
 #, c-format
@@ -10343,7 +10362,7 @@ msgstr "\tКорисничко име за „%s“: "
 #: ../tools/gda-sql.c:1294
 #, c-format
 msgid "No username for '%s'"
-msgstr "Нема корисничког имена за „%s“: "
+msgstr "Нема корисничког имена за „%s“"
 
 #: ../tools/gda-sql.c:1311
 #, c-format
@@ -10627,7 +10646,7 @@ msgstr "%s [<НАЗИВ> [<ВРЕДНОСТ>]]"
 
 #: ../tools/gda-sql.c:2221
 msgid "Set or show an option, or list all options "
-msgstr "Поставља или показује могућност, или исписује све могућности"
+msgstr "Поставља или показује могућност, или исписује све могућности "
 
 #: ../tools/gda-sql.c:2227 ../tools/gda-sql.c:2235 ../tools/gda-sql.c:2243
 #: ../tools/gda-sql.c:2251 ../tools/gda-sql.c:2259 ../tools/gda-sql.c:2267
@@ -10715,7 +10734,7 @@ msgstr "%s [<НАЗИВ> [<ВРЕДНОСТ>|_ништа_]]"
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Поставља или показује унутрашњи параметар, или исписује све ако ниједан "
-"параметар није наведен"
+"параметар није наведен "
 
 #: ../tools/gda-sql.c:2336
 #, c-format
@@ -10736,7 +10755,7 @@ msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
 msgstr ""
-"Поставља унутрашњи параметар као садржај датотеке ДАТОТЕКЕ или из вредности "
+"Поставља унутрашњи параметар као садржај датотеке ДАТОТЕКА или из вредности "
 "постојеће табеле"
 
 #: ../tools/gda-sql.c:2353
