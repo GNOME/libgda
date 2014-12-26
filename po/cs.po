@@ -10948,7 +10948,7 @@ msgid ""
 "month and DD the day"
 msgstr ""
 "Formát data používaný tímto připojením, kde YYYY je rok, MM je měsíc a DD je "
-"den\n"
+"den"
 
 #: ../tools/common/t-connection.c:1067
 msgid "unnamed"
