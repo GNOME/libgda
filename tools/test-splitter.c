@@ -108,5 +108,5 @@ main (int argc, char * argv[])
 	else
 		g_print ("%u tests Ok\n", nb);
 
-	return nfailed ? 0 : 1;
+	return nfailed ? 1 : 0;
 }

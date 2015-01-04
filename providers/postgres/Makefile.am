@@ -59,7 +59,7 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 # resources
 RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 postgres.gresources.c: postgres.gresource.xml $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/postgres.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --sourcedir=$(builddir) --generate-source $(srcdir)/postgres.gresource.xml
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
@@ -72,5 +72,7 @@ CLEANFILES = \
 	postgres.gresources.c \
 	$(RESOURCES)
 
-EXTRA_DIST = $(xml_in_files) libgda-postgres-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) \
+	libgda-postgres-6.0.pc.in \
+	postgres.gresource.xml
 DISTCLEANFILES = $(xml_DATA)

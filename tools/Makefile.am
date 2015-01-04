@@ -14,6 +14,7 @@ SUBDIRS+=browser
 noinst_LTLIBRARIES = libbrowser.la
 endif
 
+#TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 TESTS = test-splitter
 check_PROGRAMS = $(TESTS)
 
@@ -101,6 +102,7 @@ endif
 
 # resources
 RESOURCES=\
+	tools.gresource.xml \
 	resources/gda-browser-action.png \
 	resources/gda-browser-auth-big.png \
 	resources/gda-browser-auth.png \
@@ -131,7 +133,7 @@ RESOURCES=\
 	resources/gda-browser-table.png \
 	resources/gda-browser-view.png
 
-tools.gresources.c: tools.gresource.xml $(RESOURCES)
+tools.gresources.c: $(RESOURCES)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=resources --generate-source $(srcdir)/tools.gresource.xml
 
 # setenv() is in libiberty in mingw
@@ -166,7 +168,8 @@ EXTRA_DIST = \
 	gda-sql.ico \
 	gda-browser-res.rc \
 	gda-browser.ico \
-	$(webdata_DATA)
+	$(webdata_DATA) \
+	$(RESOURCES)
 
 mans = \
 	gda-sql-6.0.1

@@ -10,8 +10,8 @@ AM_CPPFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = check_dataobject check_datamodeliterator check_table
-check_PROGRAMS = check_dataobject check_datamodeliterator check_table
+TESTS = check_dataobject check_table
+check_PROGRAMS = check_dataobject check_table
 
 CLEANFILES =
 

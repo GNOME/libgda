@@ -344,8 +344,8 @@ test5 (void)
 
 	g_object_unref (cnc);
 
-	if (nsignals != 8) {
-		g_print ("Expected %d signals and got %d\n", 8, nsignals);
+	if (nsignals != 6) {
+		g_print ("Expected %d signals and got %d\n", 6, nsignals);
 		return 1;
 	}
 

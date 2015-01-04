@@ -2,6 +2,7 @@ QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
 lib_LTLIBRARIES = libgda-6.0.la
 
+TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
 check_PROGRAMS = test-cnc-open test-cnc-exec test-cnc-meta
 TESTS = test-cnc-open test-cnc-exec test-cnc-meta
 

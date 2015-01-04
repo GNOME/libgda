@@ -51,6 +51,9 @@ endif
 
 libcommon_la_SOURCES = $(nonuisources)
 
+EXTRA_DIST = \
+	marshal.list
+
 if HAVE_UI
 noinst_LTLIBRARIES += libcommonui.la
 

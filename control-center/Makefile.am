@@ -35,11 +35,12 @@ gda_control_center_6_0_SOURCES=\
 	control-center.gresources.c
 
 # resources
-RESOURCES=\
+RESOURCES = \
+	control-center.gresource.xml \
 	menus.ui \
 	gda-control-center.png
 
-control-center.gresources.c: control-center.gresource.xml $(RESOURCES)
+control-center.gresources.c: $(RESOURCES)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --sourcedir=$(srcdir)/../libgda-ui/data --generate-source $(srcdir)/control-center.gresource.xml
 
 if PLATFORM_WIN32
@@ -78,13 +79,14 @@ Desktop_in_files = gda-control-center-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \
-	control-center.gresource.xml \
+	$(RESOURCES) \
 	control-center-res.rc \
 	gda-control-center.ico \
 	$(appdata_in_files) \
 	$(Desktop_in_files)
 
-DISTCLEANFILES = $(desktop_DATA) \
+DISTCLEANFILES = \
+	$(desktop_DATA) \
 	$(appdata_DATA)
 
 CLEANFILES = \

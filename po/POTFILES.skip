@@ -36,3 +36,4 @@ providers/sqlcipher/sqlite3.c
 testing/html.c
 tests/gda-ddl-creator.c
 tools/browser/gda-browser-6.0.desktop.in
+libgda/data/Table.c

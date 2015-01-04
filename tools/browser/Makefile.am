@@ -100,6 +100,7 @@ EXTRA_DIST = \
 	$(appdata_in_files) \
 	$(appicons_DATA)
 
-CLEANFILES = \
+DISTCLEANFILES = \
+	$(desktop_DATA) \
 	$(appdata_DATA)
 
