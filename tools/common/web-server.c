@@ -1519,7 +1519,7 @@ compute_all_triggers_content (HtmlDoc *hdoc, TConnection *tcnc, GError **error)
 	GdaDataModel *model;
 	gint i, nrows;
 	GValue *schema = NULL, *tschema = NULL, *tname = NULL;
-	xmlNodePtr sul, li, a, div = NULL, sdiv = NULL;
+	xmlNodePtr sul = NULL, li, a, div = NULL, sdiv = NULL;
 	gboolean content_added = FALSE;
 
 	rfc_cnc_name = gda_rfc1738_encode (t_connection_get_name (tcnc));

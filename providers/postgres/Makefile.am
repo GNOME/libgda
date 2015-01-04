@@ -63,7 +63,7 @@ postgres.gresources.c: postgres.gresource.xml $(RESOURCES)
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
-	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-postgres-6.0.pc

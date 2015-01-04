@@ -184,6 +184,9 @@ t_app_dispose (GObject *object)
 
         self = T_APP (object);
         if (self->priv) {
+		if (self->priv->mem_data_models)
+			g_hash_table_destroy (self->priv->mem_data_models);
+
 		while (self->priv->tcontext_list)
 			g_object_unref (G_OBJECT (self->priv->tcontext_list->data));
 

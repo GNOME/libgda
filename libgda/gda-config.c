@@ -1772,6 +1772,8 @@ create_internal_provider (const gchar *path,
 			  const gchar *prov_name, const gchar *prov_descr,
 			  gchar *dsn_spec, gchar *auth_spec)
 {
+	g_return_val_if_fail (prov_name, NULL);
+
 	InternalProvider *ip;
 	GdaProviderInfo *info;
 
@@ -1901,8 +1903,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 #endif
 			continue;
 
-		path = g_build_path (G_DIR_SEPARATOR_S, dirname,
-				     name, NULL);
+		path = g_build_path (G_DIR_SEPARATOR_S, dirname, name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		if (!handle) {
 			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
