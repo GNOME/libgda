@@ -831,3 +831,100 @@ gdaui_set_default_path (const gchar *path)
 	if (path)
 		gdaui_path = g_strdup (path);
 }
+
+static guint
+nocase_hash (gconstpointer key)
+{
+	gchar *cmp;
+	cmp = g_utf8_casefold ((const gchar*) key, -1);
+	guint retval;
+	retval = g_str_hash (cmp);
+	g_free (cmp);
+	return retval;
+}
+
+static gboolean
+nocase_equal (gconstpointer a, gconstpointer b)
+{
+	gchar *ca, *cb;
+	ca = g_utf8_casefold ((const gchar*) a, -1);
+	cb = g_utf8_casefold ((const gchar*) b, -1);
+
+	gboolean retval;
+	retval = g_str_equal (ca, cb);
+	g_free (ca);
+	g_free (cb);
+	return retval;
+}
+
+/**
+ * gdaui_get_icon_for_db_engine:
+ * @engine: a database engine (case non sensitive), like "PostgreSQL", "MySQL", etc.
+ *
+ * Get an icon for the database engine.
+ *
+ * Returns: (transfer none): a #GdkPixbuf, or %NULL if none found
+ *
+ * Since: 6.0
+ */
+GdkPixbuf *
+gdaui_get_icon_for_db_engine (const gchar *engine)
+{
+	g_return_val_if_fail (engine && *engine, NULL);
+	static GHashTable *icons_hash = NULL;
+	GdkPixbuf *pix;
+
+	if (! icons_hash) {
+		icons_hash = g_hash_table_new_full (nocase_hash, nocase_equal, g_free, g_object_unref);
+		/* add icons from resources */
+		gchar **dbs;
+#define RESOURCES_PREFIX "/gdaui/db-engines/data"
+		dbs = g_resources_enumerate_children (RESOURCES_PREFIX, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+		if (dbs) {
+			guint i;
+			for (i = 0; dbs[i]; i++) {
+				/* dbs[i] is for example "Firebird.png", we need to grab the key from that */
+				gchar *path;
+				path = g_strdup_printf ("%s/%s", RESOURCES_PREFIX, dbs[i]);
+				pix = gdk_pixbuf_new_from_resource (path, NULL);
+				g_free (path);
+				if (pix) {
+					gchar *tmp;
+					gint len;
+					len = strlen (dbs[i]) - 4;
+					g_assert (len > 0);
+					tmp = dbs[i] + len;
+					g_assert (! strcmp (tmp, ".png"));
+					if (tmp > dbs[i]) {
+						gchar *key, *tmp;
+						key = g_strdup (dbs[i]);
+						for (tmp = key + len;
+						     (tmp > key + 4) || ((len <= 4) && (tmp == key + len));
+						     tmp --) {
+							*tmp = 0;
+							if (g_hash_table_lookup (icons_hash, key)) {
+								g_hash_table_remove (icons_hash, key);
+								break;
+							}
+							g_print ("Inserted '%s'\n", key);
+							g_hash_table_insert (icons_hash, g_strdup (key), g_object_ref (pix));
+						}
+						g_free (key);
+					}
+					g_object_unref (pix);
+				}
+				else
+					g_warning ("Could not load GdkPixbuf for resource %s", dbs[i]);
+			}
+			g_strfreev (dbs);
+		}
+		else
+			g_warning ("Could not locate any DB engine resource");
+	}
+
+	gchar *ekey;
+	ekey = g_utf8_casefold (engine, -1);
+	pix = g_hash_table_lookup (icons_hash, ekey);
+	g_free (ekey);
+	return pix;
+}

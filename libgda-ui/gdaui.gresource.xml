@@ -22,6 +22,20 @@
     <file compressed="true">data-entries/gdaui-entry-number.xml</file>
   </gresource>
   <gresource prefix="/gdaui/glade">
-    <file compressed="no">data/server_operation.xml</file>
+    <file compressed="true">data/server_operation.xml</file>
+  </gresource>
+  <gresource prefix="/gdaui/db-engines">
+    <file>data/Bdb.png</file>
+    <file>data/Firebird.png</file>
+    <file>data/LDAP.png</file>
+    <file>data/Mariadb.png</file>
+    <file>data/Mdb.png</file>
+    <file>data/MySQL.png</file>
+    <file>data/Oracle.png</file>
+    <file>data/PostgreSQL.png</file>
+    <file>data/SQLite.png</file>
+    <file>data/SQLCipher.png</file>
+    <file>data/SqlServer.png</file>
+    <file>data/Web.png</file>
   </gresource>
 </gresources>

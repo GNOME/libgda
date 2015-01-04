@@ -140,6 +140,7 @@
 	gdaui_form_get_type
 	gdaui_form_new
 	gdaui_get_default_path
+	gdaui_get_icon_for_db_engine
 	gdaui_grid_get_type
 	gdaui_grid_new
 	gdaui_grid_set_sample_size
