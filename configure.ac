@@ -206,7 +206,7 @@ AC_ARG_WITH(ui,
 
 if test "$with_ui" = "auto" -o "$with_ui" = "yes"
 then
-	GTK_MODULES="gtk+-3.0 >= 3.0.0"
+	GTK_MODULES="gtk+-3.0 >= 3.12.0"
 	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
 		AC_DEFINE(HAVE_UI, [1], [GTK+ support enabled])
 		have_ui=yes], [
@@ -568,7 +568,7 @@ fi
 if test "x$enable_vala" = "xyes"
 then
 	AM_PROG_VALAC([0.17.7])
-	VAPIGEN_CHECK([0.17.7],[0.22],,no)
+	VAPIGEN_CHECK([0.17.7],[0.26],,no)
 else
 	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
 fi
