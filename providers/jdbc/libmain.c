@@ -53,6 +53,7 @@ static gchar      *module_path = NULL;
 EXPORT const gchar      **plugin_get_sub_names (void);
 EXPORT const gchar       *plugin_get_sub_description (const gchar *name);
 EXPORT gchar             *plugin_get_sub_dsn_spec (const gchar *name);
+EXPORT const gchar       *plugin_get_sub_icon_id (const gchar *name);
 EXPORT GdaServerProvider *plugin_create_sub_provider (const gchar *name);
 
 /* locate and load JAVA virtual machine */
@@ -309,6 +310,17 @@ plugin_get_sub_dsn_spec (const gchar *name)
 	return ret;
 }
 
+EXPORT const gchar *
+plugin_get_sub_icon_id (const gchar *name)
+{
+	JdbcDriver *dr;
+	dr = g_hash_table_lookup (jdbc_drivers_hash, name);
+	if (dr)
+		return dr->native_db;
+	else
+		return NULL;
+}
+
 EXPORT GdaServerProvider *
 plugin_create_sub_provider (const gchar *name)
 {
@@ -473,12 +485,22 @@ load_jvm ()
 		gchar *path;
 		GError *error = NULL;
 		path = g_build_filename (module_path, "gdaprovider-6.0.jar", NULL);
-		jni_wrapper_create_vm (&_jdbc_provider_java_vm, __CreateJavaVM, module_path, path, &error);
-		if (!_jdbc_provider_java_vm) {
+		if (! g_file_test (path, G_FILE_TEST_IS_REGULAR)) {
 			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
-				g_warning (_("Can't create JAVA virtual machine: %s"),
-					   error && error->message ? error->message : _("No detail"));
+				g_warning (_("Could not find Libgda's JAR (gdaprovider-6.0.jar), "
+					     "JDBC provider is unavailable."));
 			jvm_found = FALSE;
+		}
+		else {
+			jni_wrapper_create_vm (&_jdbc_provider_java_vm, __CreateJavaVM, module_path, path, &error);
+			g_free (path);
+			if (!_jdbc_provider_java_vm) {
+				if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
+					g_warning (_("Can't create JAVA virtual machine: %s"),
+						   error && error->message ? error->message : _("No detail"));
+				g_clear_error (&error);
+				jvm_found = FALSE;
+			}
 		}
 	}
 	else {

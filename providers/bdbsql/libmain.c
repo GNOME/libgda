@@ -34,6 +34,7 @@ static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
+const gchar       *plugin_get_icon_id (void);
 GdaServerProvider *plugin_create_provider (void);
 GModule           *bdbsql_module = NULL;
 
@@ -43,12 +44,15 @@ GModule           *bdbsql_module = NULL;
 const gchar *
 g_module_check_init (GModule *module)
 {
-	if (! bdbsql_module)
+	if (! bdbsql_module) {
 		bdbsql_module = find_sqlite_library ("libdb_sql-5");
+		if (! bdbsql_module)
+			bdbsql_module = find_sqlite_library ("libdb_sql-6");
+	}
 	if (bdbsql_module)
 		load_symbols (bdbsql_module);
 	if (! s3r)
-		return _("Can't find libdb_sql-5." G_MODULE_SUFFIX " file.");
+		return _("Can't find libdb_sql-5." G_MODULE_SUFFIX " or libdb_sql-6." G_MODULE_SUFFIX "file, or any dependent library");
 
         /*g_module_make_resident (module);*/
         return NULL;
@@ -86,7 +90,7 @@ plugin_get_name (void)
 const gchar *
 plugin_get_description (void)
 {
-	return _("Provider for BDB SQL databases");
+	return _("Provider for Berkeley DB SQL databases");
 }
 
 gchar *
@@ -109,6 +113,12 @@ plugin_get_auth_spec (void)
 	     "</data-set-spec>"
 
 	return g_strdup (AUTH);
+}
+
+const gchar *
+plugin_get_icon_id (void)
+{
+	return "bdb";
 }
 
 GdaServerProvider *

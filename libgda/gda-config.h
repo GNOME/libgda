@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
  * Copyright (C) 2003 - 2007 Murray Cumming <murrayc@murrayc.com>
@@ -103,6 +103,7 @@ struct _GdaProviderInfo {
         gchar             *description;
         GdaSet            *dsn_params;  /* Specs to create a DSN */
 	GdaSet            *auth_params; /* Specs to authenticate a client */
+	gchar             *icon_id; /* use gdaui_get_icon_for_db_engine(icon_id) to get the actual GdkPixbuf */
 
 	/*< private >*/
 	/* Padding for future expansion */

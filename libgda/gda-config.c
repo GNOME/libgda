@@ -1770,7 +1770,7 @@ load_all_providers (void)
 static InternalProvider *
 create_internal_provider (const gchar *path,
 			  const gchar *prov_name, const gchar *prov_descr,
-			  gchar *dsn_spec, gchar *auth_spec)
+			  gchar *dsn_spec, gchar *auth_spec, const gchar *icon_id)
 {
 	g_return_val_if_fail (prov_name, NULL);
 
@@ -1846,6 +1846,9 @@ create_internal_provider (const gchar *path,
                 gda_holder_set_attribute_static (h, GDAUI_ATTRIBUTE_PLUGIN, value);
                 gda_value_free (value);
 	}
+
+	info->icon_id = icon_id ? g_strdup (icon_id) : g_strdup (prov_name);
+
 	return ip;
 }
 
@@ -1879,12 +1882,14 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 		const gchar * (* plugin_get_description) (void);
 		gchar * (* plugin_get_dsn_spec) (void);
 		gchar * (* plugin_get_auth_spec) (void);
+		const gchar * (*plugin_get_icon_id) (void);
 		
 		/* methods for shared libraries which provide several types of providers (ODBC, JDBC, ...) */
 		const gchar ** (* plugin_get_sub_names) (void);
 		const gchar * (* plugin_get_sub_description) (const gchar *name);
 		gchar * (* plugin_get_sub_dsn_spec) (const gchar *name);
 		gchar * (* plugin_get_sub_auth_spec) (const gchar *name);
+		const gchar * (*plugin_get_sub_icon_id) (const gchar *name);
 
 		if (recurs) {
 			gchar *cname;
@@ -1928,6 +1933,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				 (gpointer *) &plugin_get_dsn_spec);
 		g_module_symbol (handle, "plugin_get_auth_spec",
 				 (gpointer *) &plugin_get_auth_spec);
+		g_module_symbol (handle, "plugin_get_icon_id",
+				 (gpointer *) &plugin_get_icon_id);
 		g_module_symbol (handle, "plugin_get_sub_names",
 				 (gpointer *) &plugin_get_sub_names);
 		g_module_symbol (handle, "plugin_get_sub_description",
@@ -1936,6 +1943,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				 (gpointer *) &plugin_get_sub_dsn_spec);
 		g_module_symbol (handle, "plugin_get_sub_auth_spec",
 				 (gpointer *) &plugin_get_sub_auth_spec);
+		g_module_symbol (handle, "plugin_get_sub_icon_id",
+				 (gpointer *) &plugin_get_sub_icon_id);
 
 		if (plugin_get_sub_names) {
 			const gchar **subnames = plugin_get_sub_names ();
@@ -1949,7 +1958,9 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 							       plugin_get_sub_dsn_spec ? 
 							       plugin_get_sub_dsn_spec (*ptr) : NULL,
 							       plugin_get_sub_auth_spec ?
-							       plugin_get_sub_auth_spec (*ptr) : NULL);
+							       plugin_get_sub_auth_spec (*ptr) : NULL,
+							       plugin_get_sub_icon_id ?
+							       plugin_get_sub_icon_id (*ptr) : NULL);
 				if (ip) {
 					unique_instance->priv->prov_list =
 						g_slist_prepend (unique_instance->priv->prov_list, ip);
@@ -1965,7 +1976,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 						       plugin_get_name ? plugin_get_name () : name,
 						       plugin_get_description ? plugin_get_description () : NULL,
 						       plugin_get_dsn_spec ? plugin_get_dsn_spec () : NULL,
-						       plugin_get_auth_spec ? plugin_get_auth_spec () : NULL);
+						       plugin_get_auth_spec ? plugin_get_auth_spec () : NULL,
+						       plugin_get_icon_id ? plugin_get_icon_id () : NULL);
 			if (ip) {
 				unique_instance->priv->prov_list =
 					g_slist_prepend (unique_instance->priv->prov_list, ip);

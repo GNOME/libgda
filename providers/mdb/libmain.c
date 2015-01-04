@@ -32,6 +32,7 @@ const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
 GdaServerProvider *plugin_create_provider (void);
+const gchar       *plugin_get_icon_id (void);
 
 /*
  * Functions executed when calling g_module_open() and g_module_close()
@@ -92,6 +93,12 @@ plugin_get_auth_spec (void)
              "</data-set-spec>"
 
         return g_strdup (AUTH);
+}
+
+const gchar *
+plugin_get_icon_id (void)
+{
+	return "mdb";
 }
 
 GdaServerProvider *

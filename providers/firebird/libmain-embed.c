@@ -31,6 +31,7 @@ static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
+const gchar       *plugin_get_icon_id (void);
 GdaServerProvider *plugin_create_provider (void);
 
 /*
@@ -79,6 +80,13 @@ plugin_get_dsn_spec (void)
 	g_free (dir);
 	return ret;
 }
+
+const gchar *
+plugin_get_icon_id (void)
+{
+	return FIREBIRD_PROVIDER_NAME;
+}
+
 
 gchar *
 plugin_get_auth_spec (void)

@@ -377,7 +377,7 @@ jni_wrapper_handle_exception (JNIEnv *jenv, gint *out_error_code, gchar **out_sq
 			GValue *res;
 
 			res = jni_wrapper_method_call (jenv, get_message_method, exc_value, NULL, NULL, NULL);
-			
+
 			if (res) {
 				if (G_VALUE_TYPE (res) == G_TYPE_STRING) {
 					g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
