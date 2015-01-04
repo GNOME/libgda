@@ -1,0 +1,21 @@
+Use the scripts contained here to create a MySQL server docker image which can be used
+to test Libgda's MySQL provider.
+
+* build.sh builds the docker image (named "libgda-test-mysql"). It creates a database populated with
+  data from the NorthWind database (https://code.google.com/p/northwindextended/).
+
+* start.sh starts a docker container from the built image, stop it using CTRL-C
+
+
+Parameters:
+-----------
+* created database name: gda
+* created user name/pass: root/gdauser (can only log from docker's localhost)
+* created user name/pass: gdauser/gdauser (can only log from any host, incl. docker's localhost)
+
+
+MySQL test:
+----------------
+$ mysql -h 127.0.0.1 -u gdauser --password=gdauser gda
+
+$ gda-sql-6.0 "MySQL://gdauser:gdauser@HOST=127.0.0.1;DB_NAME=gda"

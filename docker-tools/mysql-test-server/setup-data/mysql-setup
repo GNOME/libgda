@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mysql_install_db --user=mysql --explicit_defaults_for_timestamp
+/usr/bin/mysqld_safe --explicit_defaults_for_timestamp &
+echo "Let's give the server some time to start..."
+sleep 5
+echo "Now continue."
+
