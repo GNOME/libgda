@@ -9,10 +9,8 @@ to test Libgda's PostgreSQL provider.
 
 Parameters:
 -----------
-* created database name: gda
-* created user name:     gdauser
-* created user password: gdauser
-
+* created database name:  gda
+* created user name/pass: gdauser/gdauser
 
 
 PostgreSQL test:

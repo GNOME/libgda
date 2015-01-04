@@ -1,7 +1,7 @@
 #!/bin/sh
 
-docker_cmd="sudo docker"
-#docker_cmd="docker"
+#docker_cmd="sudo docker"
+docker_cmd="docker"
 image_name="libgda-test-ldap"
 
 # test docker install

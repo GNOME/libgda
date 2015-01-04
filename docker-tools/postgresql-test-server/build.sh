@@ -15,7 +15,7 @@ sqlfile=setup-data/northwind.sql
 if [ ! -e $sqlfile ]
 then
     echo "Missing $sqlfile, downloading (about 0.3 Mb)..."
-    file="https://people.gnome.org/~vivien/norhtwind_postgres_01.sql"
+    file="https://people.gnome.org/~vivien/northwind_postgres_01.sql"
     wget -q $file > /dev/null 2>&1 || {
         echo "Unable to get $file, check with Libgda's maintainer!"
         exit 1
