@@ -154,6 +154,7 @@ gdaui_bar_init (GdauiBar *bar)
         gtk_misc_set_alignment (GTK_MISC (bar->priv->label), 0., 0.5);
         gtk_box_pack_end (GTK_BOX (bar->priv->content_area), bar->priv->label,
                           TRUE, TRUE, 0);
+	gtk_label_set_line_wrap (GTK_LABEL (bar->priv->label), TRUE);
         gtk_widget_show (bar->priv->label);
 
 	/* CSS theming */

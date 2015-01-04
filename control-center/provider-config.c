@@ -31,18 +31,129 @@
 typedef struct {
 	GtkWidget *title;
 	GtkWidget *provider_list;
+	GtkWidget *prov_image;
+	GtkWidget *prov_name;
+	GtkWidget *prov_loc;
 } ProviderConfigPrivate;
 
 /*
  * Public functions
  */
 
+static void
+provider_selection_changed_cb (GtkTreeSelection *selection, ProviderConfigPrivate *priv)
+{
+	GdaDataModelIter *sel_iter;
+	sel_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (priv->provider_list));
+	GdkPixbuf *pix = NULL;
+	if (sel_iter) {
+		const GValue *cvalue;
+		cvalue = gda_data_model_iter_get_value_at (sel_iter, 0);
+		g_print ("Provider: %s\n", gda_value_stringify (cvalue));
+
+		GdaProviderInfo *pinfo;
+		pinfo = gda_config_get_provider_info (g_value_get_string (cvalue));
+		g_assert (pinfo);
+		pix = gdaui_get_icon_for_db_engine (pinfo->icon_id);
+
+		gchar *tmp, *tmp1, *tmp2;
+		tmp1 = g_markup_printf_escaped ("%s", pinfo->id);
+		tmp2 = g_markup_printf_escaped ("%s", pinfo->description);
+		tmp = g_strdup_printf ("<b><big>%s</big></b>\n%s", tmp1, tmp2);
+		g_free (tmp1);
+		g_free (tmp2);
+		gtk_label_set_markup (GTK_LABEL (priv->prov_name), tmp);
+		g_free (tmp);
+
+		GString *string;
+		string = g_string_new ("");
+
+		GdaSet *set;
+		set = pinfo->dsn_params;
+		if (set) {
+			tmp1 = g_markup_printf_escaped ("%s", _("Accepted connection parameters"));
+			g_string_append_printf (string, "<b><u>%s</u></b>:\n", tmp1);
+			g_free (tmp1);
+
+			GSList *list;
+			for (list = set->holders; list; list = list->next) {
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				tmp1 = g_markup_printf_escaped ("%s", gda_holder_get_id (holder));
+				gchar *descr;
+				g_object_get (holder, "description", &descr, NULL);
+				tmp2 = descr ? g_markup_printf_escaped ("%s", descr) : NULL;
+				g_free (descr);
+				if (gda_holder_get_not_null (holder)) {
+					if (tmp2)
+						g_string_append_printf (string, "<b>%s</b>: %s\n", tmp1, tmp2);
+					else
+						g_string_append_printf (string, "<b>%s</b>:\n", tmp1);
+				}
+				else {
+					if (tmp2)
+						g_string_append_printf (string, "<b>%s</b> (%s): %s\n",
+									tmp1, _("optional"), tmp2);
+					else
+						g_string_append_printf (string, "<b>%s</b> (%s):\n",
+									tmp1, _("optional"));
+				}
+				g_free (tmp1);
+				g_free (tmp2);
+			}
+		}
+
+		set = pinfo->auth_params;
+		if (set && set->holders) {
+			tmp1 = g_markup_printf_escaped ("%s", _("Authentication parameters"));
+			g_string_append_printf (string, "\n<b><u>%s</u></b>:\n", tmp1);
+			g_free (tmp1);
+
+			GSList *list;
+			for (list = set->holders; list; list = list->next) {
+				GdaHolder *holder = GDA_HOLDER (list->data);
+				tmp1 = g_markup_printf_escaped ("%s", gda_holder_get_id (holder));
+				gchar *descr;
+				g_object_get (holder, "description", &descr, NULL);
+				tmp2 = descr ? g_markup_printf_escaped ("%s", descr) : NULL;
+				g_free (descr);
+				if (gda_holder_get_not_null (holder)) {
+					if (tmp2)
+						g_string_append_printf (string, "<b>%s</b>: %s\n", tmp1, tmp2);
+					else
+						g_string_append_printf (string, "<b>%s</b>\n", tmp1);
+				}
+				else {
+					if (tmp2)
+						g_string_append_printf (string, "<b>%s</b> (%s): %s\n",
+									tmp1, _("optional"), tmp2);
+					else
+						g_string_append_printf (string, "<b>%s</b> (%s)\n",
+									tmp1, _("optional"));
+				}
+				g_free (tmp1);
+				g_free (tmp2);
+			}
+		}
+
+		tmp1 = g_markup_printf_escaped ("%s", _("Shared object file"));
+		tmp2 = g_markup_printf_escaped ("%s", pinfo->location);
+		g_string_append_printf (string, "\n<b><u>%s</u></b>:\n%s", tmp1, tmp2);
+		g_free (tmp1);
+		g_free (tmp2);
+
+		gtk_label_set_markup (GTK_LABEL (priv->prov_loc), string->str);
+		g_string_free (string, TRUE);
+	}
+	gtk_image_set_from_pixbuf (GTK_IMAGE (priv->prov_image), pix);
+	gtk_widget_grab_focus (priv->provider_list);
+}
+
 GtkWidget *
 provider_config_new (void)
 {
 	ProviderConfigPrivate *priv;
 	GtkWidget *provider;
-	GtkWidget *box;
+	GtkWidget *box, *paned;
 	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *sw;
@@ -58,7 +169,8 @@ provider_config_new (void)
 
 	/* title */
 	title = g_strdup_printf ("<b>%s</b>\n%s", _("Providers"),
-				 _("Installed providers"));
+				 _("Providers are addons that actually implement the access "
+				   "to each database using the means provided by each database vendor."));
 	priv->title = gdaui_bar_new (title);
 	g_free (title);
 
@@ -67,37 +179,82 @@ provider_config_new (void)
 	gtk_box_pack_start (GTK_BOX (provider), priv->title, FALSE, FALSE, 0);
 	gtk_widget_show (priv->title);
 
+	/* horizontal box for the provider list and its properties */
+	paned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+	gtk_paned_set_position (GTK_PANED (paned), 200);
+	gtk_box_pack_start (GTK_BOX (provider), paned, TRUE, TRUE, 0);
+	gtk_widget_show (paned);
+
 	/* create the provider list */
 	sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_box_pack_start (GTK_BOX (provider), sw, TRUE, TRUE, 0);
+	gtk_paned_add1 (GTK_PANED (paned), sw);
 
 	model = gda_config_list_providers ();
 	priv->provider_list = gdaui_raw_grid_new (model);
-	g_object_unref (model);
 	gdaui_data_proxy_column_set_editable (GDAUI_DATA_PROXY (priv->provider_list), 0, FALSE);
-	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->provider_list), 2, FALSE);
+	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->provider_list), -1, FALSE);
+	gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (priv->provider_list), 0, TRUE);
+	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->provider_list), FALSE);
 	g_object_set (G_OBJECT (priv->provider_list), "info-cell-visible", FALSE, NULL);
+
+	GtkTreeSelection *selection;
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->provider_list));
+	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
+	g_signal_connect (selection, "changed",
+			  G_CALLBACK (provider_selection_changed_cb), priv);
 	gtk_container_add (GTK_CONTAINER (sw), priv->provider_list);
-	
 	gtk_widget_show_all (sw);
+	g_object_unref (model);
 
-	/* add tip */
-	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	gtk_widget_show (box);
-        gtk_container_set_border_width (GTK_CONTAINER (box), 6);
-	gtk_box_pack_start (GTK_BOX (provider), box, FALSE, FALSE, 0);
+	/* properties */
+	sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), GTK_POLICY_AUTOMATIC,
+					GTK_POLICY_AUTOMATIC);
+	gtk_paned_add2 (GTK_PANED (paned), sw);
 
-	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG);
-	gtk_widget_show (image);
-	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
+	GtkWidget *grid;
+	grid = gtk_grid_new ();
+	gtk_paned_add2 (GTK_PANED (paned), grid);
+	g_object_set (grid, "margin-top", 20, NULL);
+	gtk_container_add (GTK_CONTAINER (sw), grid);
+	gtk_widget_show (sw);
 
-	label = gtk_label_new (_("Providers are addons that actually implement the access "
-				 "to each database using the means provided by each database vendor."));
-	gtk_widget_show (label);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
+	priv->prov_image = gtk_image_new ();
+	g_object_set (priv->prov_image,
+		      "halign", GTK_ALIGN_END,
+		      "valign", GTK_ALIGN_START,
+		      "hexpand", TRUE,
+		      "vexpand", FALSE, NULL);
+	gtk_grid_attach (GTK_GRID (grid), priv->prov_image, 1, 0, 1, 1);
 
+	priv->prov_name = gtk_label_new ("");
+	g_object_set (priv->prov_name,
+		      "xalign", 0.,
+		      "yalign", 0.,
+		      "halign", GTK_ALIGN_START,
+		      "valign", GTK_ALIGN_START,
+		      "hexpand", TRUE,
+		      "margin-start", 20, NULL);
+	gtk_label_set_line_wrap (GTK_LABEL (priv->prov_name), TRUE);
+	gtk_label_set_selectable (GTK_LABEL (priv->prov_name), TRUE);
+	gtk_grid_attach (GTK_GRID (grid), priv->prov_name, 0, 0, 1, 1);
+	gtk_widget_set_size_request (priv->prov_name, -1, 96);
+
+	priv->prov_loc = gtk_label_new ("");
+	gtk_label_set_line_wrap (GTK_LABEL (priv->prov_loc), TRUE);
+	g_object_set (priv->prov_loc,
+		      "xalign", 0.,
+		      "halign", GTK_ALIGN_START,
+		      "hexpand", TRUE,
+		      "margin-start", 20, NULL);
+	gtk_widget_set_hexpand (priv->prov_loc, TRUE);
+	gtk_label_set_selectable (GTK_LABEL (priv->prov_loc), TRUE);
+	gtk_grid_attach (GTK_GRID (grid), priv->prov_loc, 0, 1, 2, 1);
+	
+	gtk_widget_show_all (grid);
+
+	gdaui_data_selector_select_row (GDAUI_DATA_SELECTOR (priv->provider_list), 0);
 	return provider;
 }

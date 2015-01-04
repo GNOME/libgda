@@ -127,7 +127,11 @@ dsn_config_new (void)
 
 	/* title */
 	title = g_strdup_printf ("<b>%s</b>\n%s", _("Data Sources"),
-				 _("Configured data sources in the system"));
+				 _("Data sources are the means by which database "
+				 "connections are identified: all "
+				 "the information needed to open a connection to "
+				 "a specific database using a 'provider' is referenced using "
+				 "a unique name."));
 	priv->title = gdaui_bar_new (title);
 	g_free (title);
 
@@ -162,26 +166,6 @@ dsn_config_new (void)
 			  G_CALLBACK (list_double_clicked_cb), dsn);
 	g_signal_connect (priv->dsn_list, "populate-popup",
 			  G_CALLBACK (list_popup_cb), dsn);
-
-	/* add tip */
-	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-        gtk_container_set_border_width (GTK_CONTAINER (box), 6);
-	gtk_box_pack_start (GTK_BOX (dsn), box, FALSE, FALSE, 0);
-	gtk_widget_show (box);
-
-	image = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG);
-        gtk_misc_set_alignment (GTK_MISC (image), 0.5, 0.0);
-	gtk_widget_show (image);
-	gtk_box_pack_start (GTK_BOX (box), image, FALSE, FALSE, 0);
-
-	label = gtk_label_new (_("Data sources are the means by which database "
-				 "connections are identified: all "
-				 "the information needed to open a connection to "
-				 "a specific database using a 'provider' is referenced using "
-				 "a unique name."));
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-	gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);
-	gtk_widget_show (label);
 
 	return dsn;
 }

@@ -7,35 +7,26 @@
         <attribute name="action">app.quit</attribute>
         <attribute name="accel">&lt;Primary&gt;q</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">app.about</attribute>
+        <attribute name="accel">&lt;Primary&gt;a</attribute>
+      </item>
     </section>
   </menu>
   <menu id="menubar">
-    <submenu>
-      <attribute name="label" translatable="yes">_Data sources</attribute>
-      <section>
-	<item>
-          <attribute name="label" translatable="yes">_New</attribute>
-          <attribute name="action">win.DatasourceNew</attribute>
-          <attribute name="accel">&lt;Primary&gt;n</attribute>
-	</item>
-	<item>
-          <attribute name="label" translatable="yes">_Properties</attribute>
-          <attribute name="action">win.DatasourceProperties</attribute>
-	</item>
-	<item>
-          <attribute name="label" translatable="yes">_Delete</attribute>
-          <attribute name="action">win.DatasourceDelete</attribute>
-          <attribute name="accel">&lt;Primary&gt;d</attribute>
-	</item>
-      </section>
-    </submenu>
-    <submenu>
-      <attribute name="label" translatable="yes">_Help</attribute>
+    <section>
+      <attribute name="display-hint">horizontal-buttons</attribute>
       <item>
-        <attribute name="label" translatable="yes">_About</attribute>
-        <attribute name="action">win.about</attribute>
-        <attribute name="accel">&lt;Primary&gt;a</attribute>
+        <attribute name="label" translatable="yes">_Data sources</attribute>
+        <attribute name="action">win.ShowDatasources</attribute>
+        <attribute name="accel">&lt;Primary&gt;D</attribute>
       </item>
-    </submenu>
+      <item>
+        <attribute name="label" translatable="yes">_Providers</attribute>
+        <attribute name="action">win.ShowProviders</attribute>
+        <attribute name="accel">&lt;Primary&gt;P</attribute>
+      </item>
+    </section>
   </menu>
 </interface>

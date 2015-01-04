@@ -31,8 +31,9 @@ GtkApplication *app;
 GtkWindow *main_window;
 
 #define DSN_PAGE "DSN"
-#define NOTEBOOK "Nb"
-static GtkWidget *create_main_notebook (GtkApplicationWindow *app_window);
+#define PROV_PAGE "Prov"
+#define STACK "Nb"
+static GtkWidget *create_main_stack (GtkApplicationWindow *app_window);
 
 static void
 show_error (GtkWindow *parent, const gchar *format, ...)
@@ -109,7 +110,7 @@ file_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gp
 	gint current;
 
 	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
-	nb = g_object_get_data (G_OBJECT (app_window), NOTEBOOK);
+	nb = g_object_get_data (G_OBJECT (app_window), STACK);
 
 	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
 	if (current == -1)
@@ -128,7 +129,7 @@ file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpoint
 	gint current;
 
 	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
-	nb = g_object_get_data (G_OBJECT (app_window), NOTEBOOK);
+	nb = g_object_get_data (G_OBJECT (app_window), STACK);
 
 	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
 	if (current == -1)
@@ -137,6 +138,38 @@ file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpoint
 	current_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (nb), current);
 	if (current_widget == dsn)
 		dsn_config_delete (dsn);
+}
+
+static void
+show_datasources_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *parameter, gpointer user_data)
+{
+	GtkWidget *app_window;
+	GtkWidget *stack;
+	app_window = GTK_WIDGET (user_data);
+	stack = g_object_get_data (G_OBJECT (app_window), STACK);
+	gtk_stack_set_visible_child_name (GTK_STACK (stack), DSN_PAGE);
+
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (app_window), "ShowDatasources");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+	action = g_action_map_lookup_action (G_ACTION_MAP (app_window), "ShowProviders");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+}
+
+static void
+show_providers_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *parameter, gpointer user_data)
+{
+	GtkWidget *app_window;
+	GtkWidget *stack;
+	app_window = GTK_WIDGET (user_data);
+	stack = g_object_get_data (G_OBJECT (app_window), STACK);
+	gtk_stack_set_visible_child_name (GTK_STACK (stack), PROV_PAGE);
+
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (app_window), "ShowDatasources");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+	action = g_action_map_lookup_action (G_ACTION_MAP (app_window), "ShowProviders");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
 }
 
 static void
@@ -169,9 +202,9 @@ about_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSE
 
 
 	dialog = gtk_about_dialog_new ();
-	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database access control center"));
+	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database sources control center"));
 	gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 1998 - 2014 GNOME Foundation");
+	gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "© 1998 - 2014 GNOME Foundation");
 	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
 	gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU Lesser General Public License");
 	gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
@@ -191,33 +224,34 @@ about_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSE
 
 static GActionEntry app_entries[] = {
 	{ "quit", window_closed_cb, NULL, NULL, NULL },
+	{ "about", about_cb, NULL, NULL, NULL }
 };
 
 static GActionEntry win_entries[] = {
 	{ "DatasourceNew", file_new_cb, NULL, NULL, NULL },
 	{ "DatasourceDelete", file_delete_cb, NULL, NULL, NULL },
 	{ "DatasourceProperties", file_properties_cb, NULL, NULL, NULL },
-	{ "about", about_cb, NULL, NULL, NULL }
+	{ "ShowDatasources", show_datasources_cb, NULL, NULL, NULL },
+	{ "ShowProviders", show_providers_cb, NULL, NULL, NULL },
 };
 
 static void
 startup (GApplication *app)
 {
+	g_action_map_add_action_entries (G_ACTION_MAP (app),
+					 app_entries, G_N_ELEMENTS (app_entries),
+					 NULL);
 	GtkBuilder *builder;
-	GMenuModel *appmenu;
-	GMenuModel *menubar;
-
 	builder = gtk_builder_new ();
 	g_assert (gtk_builder_add_from_resource (builder, "/application/menus.ui", NULL));
 
-	appmenu = (GMenuModel *)gtk_builder_get_object (builder, "appmenu");
-	menubar = (GMenuModel *)gtk_builder_get_object (builder, "menubar");
+	GMenuModel *appmenu;
+	appmenu = G_MENU_MODEL (gtk_builder_get_object (builder, "appmenu"));
 
 	gtk_application_set_app_menu (GTK_APPLICATION (app), appmenu);
-	gtk_application_set_menubar (GTK_APPLICATION (app), menubar);
-
 	g_object_unref (builder);
 }
+
 
 static void
 activate (GApplication *app)
@@ -236,16 +270,25 @@ activate (GApplication *app)
 	/* create the main window */
 	window = gtk_application_window_new (GTK_APPLICATION (app));
 	main_window = GTK_WINDOW (window);
-	gtk_window_set_title (GTK_WINDOW (window), _("Datasource access control center"));
+
+	GtkWidget *header;
+	header = gtk_header_bar_new ();
+	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (header), TRUE);
+	gtk_header_bar_set_title (GTK_HEADER_BAR (header), _("Datasource access control center"));
+	gtk_header_bar_set_has_subtitle (GTK_HEADER_BAR (header), FALSE);
+
+	gtk_window_set_titlebar (GTK_WINDOW (window), header);
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size (GTK_WINDOW (window), 650, 600);
+	gtk_window_set_default_size (GTK_WINDOW (window), 780, 500);
 
-	/* actions */
-	g_action_map_add_action_entries (G_ACTION_MAP (window),
-					 win_entries, G_N_ELEMENTS (win_entries),
-					 window);
+	GtkWidget *menu_button;
+	menu_button = gtk_menu_button_new ();
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (header), menu_button);
 
-
+	GtkWidget *menu_icon;
+	menu_icon = gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
+	gtk_button_set_image (GTK_BUTTON (menu_button), menu_icon);
+	
 	/* icon */
 	GdkPixbuf *icon;
 	icon = gdk_pixbuf_new_from_resource ("/images/gda-control-center.png", NULL);
@@ -254,24 +297,36 @@ activate (GApplication *app)
 		g_object_unref (icon);
 	}
 
-	/* menu and contents */
+	/* contents */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_widget_show (vbox);
 
-	nb = create_main_notebook (GTK_APPLICATION_WINDOW (window));
+	nb = create_main_stack (GTK_APPLICATION_WINDOW (window));
         gtk_container_set_border_width (GTK_CONTAINER (nb), 6);
 	gtk_box_pack_start (GTK_BOX (vbox), nb, TRUE, TRUE, 0);
 	gtk_widget_show (nb);
 
-	gtk_widget_show (window);
+	gtk_widget_show_all (window);
+
+	/* menus */
+	g_action_map_add_action_entries (G_ACTION_MAP (window),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 window);
+
+	GtkBuilder *builder;
+	GMenuModel *menubar;
+	builder = gtk_builder_new ();
+	g_assert (gtk_builder_add_from_resource (builder, "/application/menus.ui", NULL));
+
+	menubar = G_MENU_MODEL (gtk_builder_get_object (builder, "menubar"));
+
+	gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (menu_button), menubar);
+	g_object_unref (builder);
 
 	/* set actions start state */
 	GAction *action;
-	action = g_action_map_lookup_action (G_ACTION_MAP (window), "DatasourceProperties");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (window), "DatasourceDelete");
+	action = g_action_map_lookup_action (G_ACTION_MAP (window), "ShowDatasources");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
 }
 
@@ -281,11 +336,14 @@ main (int argc, char *argv[])
 	gint status;
 
 	app = gtk_application_new ("org.Libgda.Preferences", G_APPLICATION_FLAGS_NONE);
-	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
 	g_signal_connect (app, "startup", G_CALLBACK (startup), NULL);
-	
+	g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+
+	g_action_map_add_action_entries (G_ACTION_MAP (app),
+					 app_entries, G_N_ELEMENTS (app_entries),
+					 app);
+
 	status = g_application_run (G_APPLICATION (app), argc, argv);
-	
 	g_object_unref (app);
 
 	return status;
@@ -307,49 +365,23 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, GtkApplicationWindow *main_wi
 		g_array_free (selection, TRUE);
 }
 
-static void
-main_nb_page_switched_cb (G_GNUC_UNUSED GtkNotebook *notebook, G_GNUC_UNUSED GtkWidget *page, guint page_num,
-			  GtkApplicationWindow *main_window)
-{
-	gboolean show;
-	show = page_num == 0 ? TRUE : FALSE;
-
-	GAction *action;
-	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceProperties");
-	//g_object_set (G_OBJECT (action), "visible", show, NULL);
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show);
-
-	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceDelete");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), show);
-	//g_object_set (G_OBJECT (action), "visible", show, NULL);
-}
-
 static GtkWidget *
-create_main_notebook (GtkApplicationWindow *app_window)
+create_main_stack (GtkApplicationWindow *app_window)
 {
-	GtkWidget *nb;
+	GtkWidget *stack;
 	GtkWidget *dsn;
 	GtkWidget *provider;
 	GdauiRawGrid *grid;
 
-	nb = gtk_notebook_new ();
-	g_object_set_data (G_OBJECT (app_window), NOTEBOOK, nb);
-        gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), TRUE);
-        gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
-        gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
-        gtk_widget_show (nb);
-	g_signal_connect (G_OBJECT (nb), "switch-page",
-			  G_CALLBACK (main_nb_page_switched_cb), app_window);
-
-	g_action_map_add_action_entries (G_ACTION_MAP (app),
-					 app_entries, G_N_ELEMENTS (app_entries),
-					 app);
+	stack = gtk_stack_new ();
+	g_object_set_data (G_OBJECT (app_window), STACK, stack);
+        gtk_widget_show (stack);
+	gtk_stack_set_transition_type (GTK_STACK (stack), GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT);
 
 	/* data source configuration page */
 	dsn = dsn_config_new ();
 	g_object_set_data (G_OBJECT (app_window), DSN_PAGE, dsn);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), dsn,
-				  gtk_label_new (_("Data Sources")));
+	gtk_stack_add_named (GTK_STACK (stack), dsn, DSN_PAGE);
 	
 	grid = g_object_get_data (G_OBJECT (dsn), "grid");
 	g_signal_connect (G_OBJECT (grid), "selection-changed",
@@ -357,8 +389,7 @@ create_main_notebook (GtkApplicationWindow *app_window)
 
 	/* providers configuration page */
 	provider = provider_config_new ();
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), provider,
-				  gtk_label_new (_("Providers")));
+	gtk_stack_add_named (GTK_STACK (stack), provider, PROV_PAGE);
 
-	return nb;
+	return stack;
 }
