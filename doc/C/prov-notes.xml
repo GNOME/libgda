@@ -390,7 +390,7 @@ DETACH DATABASE plaintext; </programlisting>
 	      (if set)</para></listitem>
 	  <listitem><para>in the <filename>$HOME/.local/share/libgda/config</filename> directory (or 
 	      <filename class="directory">$HOME/.libgda</filename> if if exists and
-	      <filename>$HOME/.local/share/libgda/config</filename> does not)</para></listitem>
+	      <filename>$HOME/.local/share/libgda/config</filename> if does not)</para></listitem>
 	</orderedlist>
       </para>
     </sect2>
@@ -400,7 +400,7 @@ DETACH DATABASE plaintext; </programlisting>
       <para>
 	To connect to a database, the expected connection parameters are the ones required by the JDBC driver being
 	used, which varies from driver to driver (for more information, refer to each driver's documentation). Thus
-	&Libgda; expects only one argument named "URL" which it passes (without any modification) to the JDBC driver.
+	&LIBGDA; expects only one argument named "URL" which it passes (without any modification) to the JDBC driver.
       </para>
       <para>
 	However, for some widely used servers (such as SqlServer), Libgda also accepts some parameters like

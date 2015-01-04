@@ -22,7 +22,7 @@
 ]>
 <book id="index" xmlns:xi="http://www.w3.org/2003/XInclude">
   <bookinfo>
-    <title>GNOME Data Access 5 manual</title>
+    <title>GNOME Data Access 6 manual</title>
     <releaseinfo>for version &version;</releaseinfo>
     <authorgroup>
       <author>
@@ -100,7 +100,7 @@
     </authorgroup>
     <date>&builddate;</date>
     <copyright>
-      <year>1999 - 2011</year>
+      <year>1999 - 2014</year>
       <holder>&copy;</holder>
     </copyright>
     <abstract>

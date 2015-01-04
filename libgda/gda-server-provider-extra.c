@@ -451,6 +451,8 @@ gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data
  * This function should only be used by database provider's implementations
  *
  * Returns: (transfer full): a new string containing the resource's contents, or %NULL if not found or if an error occurred
+ *
+ * Since: 6.0
  */
 gchar *
 gda_server_provider_load_resource_contents (const gchar *prov_name, const gchar *resource)
@@ -460,7 +462,6 @@ gda_server_provider_load_resource_contents (const gchar *prov_name, const gchar 
 
 	gchar *rname;
 	rname = g_strdup_printf ("/spec/%s/%s", prov_name, resource);
-	g_print ("Using resource %s\n", rname);
 
 	GBytes *bytes;
 	bytes = g_resources_lookup_data (rname, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);

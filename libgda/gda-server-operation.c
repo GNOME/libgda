@@ -2494,6 +2494,8 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
  * and not against the current @op's specification.
  *
  * Returns: %TRUE if @op is valid
+ *
+ * Since: 6.0
  */
 gboolean
 gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GError **error)
