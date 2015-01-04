@@ -602,24 +602,101 @@ _gda_jdbc_meta_view_cols (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED G
 }
 
 gboolean
-_gda_jdbc_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
-				 G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
-				 G_GNUC_UNUSED GError **error)
+_gda_jdbc_meta__constraints_tab (GdaServerProvider *prov, GdaConnection *cnc,
+				 GdaMetaStore *store, GdaMetaContext *context,
+				 GError **error)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	return _gda_jdbc_meta_constraints_tab (prov, cnc, store, context, error, NULL, NULL, NULL, NULL);
 }
 
 gboolean
 _gda_jdbc_meta_constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
 				G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
-				G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *table_catalog,
-				G_GNUC_UNUSED const GValue *table_schema,
-				G_GNUC_UNUSED const GValue *table_name,
-				G_GNUC_UNUSED const GValue *constraint_name_n)
+				G_GNUC_UNUSED GError **error, const GValue *table_catalog,
+				const GValue *table_schema,
+				const GValue *table_name,
+				const GValue *constraint_name_n)
 {
-	TO_IMPLEMENT;
-	return TRUE;
+	JdbcConnectionData *cdata;
+	GdaDataModel *model = NULL;
+	gboolean retval = FALSE;
+	gint error_code;
+	gchar *sql_state;
+	GValue *jexec_res;
+	GError *lerror = NULL;
+
+	JNIEnv *jenv = NULL;
+	gboolean jni_detach;
+
+	jstring catalog = NULL, schema = NULL, table = NULL, constraint = NULL;
+
+	/* Get private data */
+	cdata = (JdbcConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
+	if (!cdata)
+		return FALSE;
+
+	jenv = _gda_jdbc_get_jenv (&jni_detach, error);
+	if (!jenv) 
+		return FALSE;
+
+	if (! cdata->jmeta_obj && !init_meta_obj (cnc, jenv, cdata, error))
+		goto out;
+
+	if (table_catalog) {
+		catalog = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_catalog));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	if (table_schema) {
+		schema = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_schema));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	if (table_name) {
+		table = (*jenv)->NewStringUTF (jenv, g_value_get_string (table_name));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	if (constraint_name_n) {
+		constraint = (*jenv)->NewStringUTF (jenv, g_value_get_string (constraint_name_n));
+		if ((*jenv)->ExceptionCheck (jenv))
+			goto out;
+	}
+
+	/* get data from JDBC: Tables */
+	jexec_res = jni_wrapper_method_call (jenv, GdaJMeta__getTableConstraints,
+					     cdata->jmeta_obj, &error_code, &sql_state, &lerror,
+					     catalog, schema, table, constraint);
+	if (!jexec_res) {
+		if (error && lerror)
+			*error = g_error_copy (lerror);
+		_gda_jdbc_make_error (cnc, error_code, sql_state, lerror);
+		_gda_jdbc_release_jenv (jni_detach);
+		return FALSE;
+	}
+
+	model = (GdaDataModel *) gda_jdbc_recordset_new (cnc, NULL, NULL, jenv,
+							 jexec_res, GDA_DATA_MODEL_ACCESS_RANDOM, NULL);
+	if (model)
+		retval = gda_meta_store_modify_with_context (store, context, model, error);
+
+ out:
+	if (catalog)
+		(*jenv)-> DeleteLocalRef (jenv, catalog);
+	if (schema)
+		(*jenv)-> DeleteLocalRef (jenv, schema);
+	if (table)
+		(*jenv)-> DeleteLocalRef (jenv, table);
+	if (constraint)
+		(*jenv)-> DeleteLocalRef (jenv, constraint);
+	if (model)
+		g_object_unref (model);
+	_gda_jdbc_release_jenv (jni_detach);
+		
+	return retval;
 }
 
 gboolean

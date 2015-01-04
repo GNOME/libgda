@@ -76,6 +76,7 @@ extern JniWrapperMethod *GdaJMeta__getSchemas;
 extern JniWrapperMethod *GdaJMeta__getTables;
 extern JniWrapperMethod *GdaJMeta__getViews;
 extern JniWrapperMethod *GdaJMeta__getColumns;
+extern JniWrapperMethod *GdaJMeta__getTableConstraints;
 
 
 /* debug features */

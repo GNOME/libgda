@@ -49,6 +49,10 @@ class GdaJMeta {
 		return new GdaJMetaColumns (this, catalog, schema, tab_name);
 	}
 
+	public GdaJResultSet getTableConstraints (String catalog, String schema, String table, String constraint_name) throws Exception {
+		return new GdaJMetaTableConstraints (this, catalog, schema, table, constraint_name);
+	}
+
 	// class initializer
 	static {
 		initIDs ();
@@ -349,6 +353,78 @@ class GdaJMetaColumns extends GdaJMetaResultSet {
 		(col_values.elementAt (12)).setCValue (rs, 8, c_pointer); // numeric_precision
 
 		(col_values.elementAt (23)).setCValue (rs, 11, c_pointer); // comments
+
+		return true;
+	}
+}
+
+/*
+ * Meta data for tables
+ */
+class GdaJMetaTableConstraints extends GdaJMetaResultSet {
+	protected GdaJMetaTableConstraints (GdaJMeta jm) {
+		super (10, jm);
+		meta_col_infos.add (new GdaJColumnInfos ("constraint_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("constraint_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("constraint_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_catalog", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_schema", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("table_name", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("constraint_type", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("check_clause", null, java.sql.Types.VARCHAR));
+		meta_col_infos.add (new GdaJColumnInfos ("is_deferrable", null, java.sql.Types.BOOLEAN));
+		meta_col_infos.add (new GdaJColumnInfos ("initially_deferred", null, java.sql.Types.BOOLEAN));
+		md = jm.md;
+	}
+
+	public GdaJMetaTableConstraints (GdaJMeta jm, String catalog, String schema, String table, String name) throws Exception {
+		this (jm);
+		/* USE:
+		 * md.getPrimaryKeys()
+		 * md.getExportedKeys()
+		 * md.getIndexInfo(unique => true)
+		 * check constraints: not supported.
+		 * see http://sahits.ch/blog/?p=850
+		 */
+		rs = md.getTables (catalog, schema, name, null);
+	}
+
+	protected void columnTypesDeclared () {
+		// the catalog part cannot be NULL, but "" instead
+		GdaJValue cv = col_values.elementAt (0);
+		cv.no_null = true;
+		cv.convert_lc = true;
+		(col_values.elementAt (1)).convert_lc = true;
+		(col_values.elementAt (2)).convert_lc = true;
+		(col_values.elementAt (6)).convert_lc = true;
+		(col_values.elementAt (7)).convert_lc = true;
+	}
+
+	public boolean fillNextRow (long c_pointer) throws Exception {
+		if (! rs.next ())
+			return false;
+
+		GdaJValue cv;
+
+		cv = col_values.elementAt (0);
+		cv.setCValue (rs, 0, c_pointer);
+		cv = col_values.elementAt (1);
+		cv.setCValue (rs, 1, c_pointer);
+		cv = col_values.elementAt (2);
+		cv.setCValue (rs, 2, c_pointer);
+		cv = col_values.elementAt (3);
+		cv.setCValue (rs, 3, c_pointer);
+
+		cv = col_values.elementAt (5);
+		cv.setCValue (rs, 4, c_pointer);
+
+		String ln = GdaJValue.toLower (rs.getString (2) + "." + rs.getString (3));
+		if (jm.schemaIsCurrent (rs.getString (2)))
+			cv.setCString (c_pointer, 6, GdaJValue.toLower (rs.getString (3)));
+		else
+			cv.setCString (c_pointer, 6, ln);
+		cv = col_values.elementAt (7);
+		cv.setCString (c_pointer, 7, ln);
 
 		return true;
 	}
