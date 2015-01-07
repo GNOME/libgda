@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-12-23 22:32+0000\n"
-"PO-Revision-Date: 2014-12-24 11:42+0700\n"
+"POT-Creation-Date: 2015-01-07 10:27+0000\n"
+"PO-Revision-Date: 2015-01-08 01:55+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -19,28 +19,23 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.7.1\n"
 
-#: ../control-center/dsn-config.c:85 ../control-center/menus.ui.h:5
+#: ../control-center/dsn-config.c:85
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:383
 msgid "_Delete"
 msgstr "_Hapus"
 
-#: ../control-center/dsn-config.c:88 ../control-center/menus.ui.h:4
-#: ../tools/browser/browser-window.c:269
+#: ../control-center/dsn-config.c:88 ../tools/browser/browser-window.c:269
 #: ../tools/browser/data-manager/data-favorite-selector.c:400
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:377
 msgid "_Properties"
 msgstr "_Properti"
 
 #. title
-#: ../control-center/dsn-config.c:129 ../control-center/main.c:352
+#: ../control-center/dsn-config.c:129
 msgid "Data Sources"
 msgstr "Sumber Data"
 
 #: ../control-center/dsn-config.c:130
-msgid "Configured data sources in the system"
-msgstr "Sumber data yang telah tertata di sistem"
-
-#: ../control-center/dsn-config.c:177
 msgid ""
 "Data sources are the means by which database connections are identified: all the "
 "information needed to open a connection to a specific database using a 'provider' is "
@@ -50,12 +45,12 @@ msgstr ""
 "diperlukan untuk membuka suatu koneksi ke suatu basis data spesifik memakai suatu "
 "penyedia diacu memakai suatu nama yang unik."
 
-#: ../control-center/dsn-config.c:259
+#: ../control-center/dsn-config.c:243
 #, c-format
 msgid "Are you sure you want to remove the data source '%s'?"
 msgstr "Anda yakin ingin menghapus sumber data '%s'?"
 
-#: ../control-center/dsn-config.c:263
+#: ../control-center/dsn-config.c:247
 msgid "Data source removal confirmation"
 msgstr "Konfirmasi penghapusan sumber data"
 
@@ -152,8 +147,8 @@ msgstr "Tak bisa mengeksekusi program peramban"
 #: ../providers/jdbc/gda-jdbc-provider.c:526 ../providers/jdbc/gda-jdbc-provider.c:1455
 #: ../providers/jdbc/gda-jdbc-provider.c:1484 ../providers/jdbc/gda-jdbc-provider.c:1544
 #: ../providers/jdbc/gda-jdbc-provider.c:1610 ../providers/jdbc/gda-jdbc-util.c:45
-#: ../providers/jdbc/libmain.c:154 ../providers/jdbc/libmain.c:164
-#: ../providers/jdbc/libmain.c:480 ../providers/ldap/gda-ldap-provider.c:937
+#: ../providers/jdbc/libmain.c:155 ../providers/jdbc/libmain.c:165
+#: ../providers/jdbc/libmain.c:500 ../providers/ldap/gda-ldap-provider.c:937
 #: ../providers/ldap/gda-ldap-provider.c:947 ../providers/ldap/gda-ldap-provider.c:989
 #: ../providers/ldap/gda-ldap-provider.c:1000 ../providers/ldap/gda-ldap-provider.c:1061
 #: ../providers/mdb/gda-mdb-provider.c:375 ../providers/mysql/gda-mysql-provider.c:2004
@@ -203,7 +198,7 @@ msgstr "Tak bisa mengeksekusi program peramban"
 #: ../tools/browser/schema-browser/table-preferences.c:693
 #: ../tools/browser/schema-browser/table-preferences.c:766
 #: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
-#: ../tools/common/t-app.c:2894 ../tools/common/t-connection.c:294
+#: ../tools/common/t-app.c:2897 ../tools/common/t-connection.c:294
 #: ../tools/common/t-connection.c:436 ../tools/common/t-connection.c:1177
 #: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1995
 #: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
@@ -221,7 +216,7 @@ msgstr ""
 "basis data) yang didefinisikan, dan memeriksa penyedia basis data mana yang terpasang "
 "(dan dapat dipakai untuk menyambung ke basis data yang berbeda)."
 
-#: ../control-center/gda-control-center-6.0.desktop.in.in.h:1 ../control-center/main.c:172
+#: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
 msgid "Database access control center"
 msgstr "Pusat kendali akses basis data"
 
@@ -346,7 +341,7 @@ msgstr ""
 "Ruas-ruas berikut mewakili informasi otentikasi yang diperlukan untuk membuka suatu "
 "koneksi."
 
-#: ../control-center/gdaui-dsn-assistant.c:631
+#: ../control-center/gdaui-dsn-assistant.c:631 ../control-center/provider-config.c:107
 msgid "Authentication parameters"
 msgstr "Parameter otentikasi"
 
@@ -434,63 +429,71 @@ msgstr "_Batal"
 msgid "C_onnect"
 msgstr "S_ambung"
 
-#: ../control-center/main.c:52 ../libgda-ui/internal/utility.c:482
+#: ../control-center/main.c:53 ../libgda-ui/internal/utility.c:482
 #: ../tools/browser/ui-support.c:199
 msgid "Error:"
 msgstr "Galat:"
 
-#: ../control-center/main.c:62 ../libgda-ui/gdaui-basic-form.c:2159
+#: ../control-center/main.c:63 ../libgda-ui/gdaui-basic-form.c:2159
 #: ../libgda-ui/gdaui-server-operation.c:1081
 msgid "_Ok"
 msgstr "_Ok"
 
-#: ../control-center/main.c:78
+#: ../control-center/main.c:79
 msgid "Could not declare new data source"
 msgstr "Tidak dapat mendeklarasikan sumber data baru"
 
-#: ../control-center/main.c:81
+#: ../control-center/main.c:82
 msgid "No valid data source info was created"
 msgstr "Tak ada info sumber data yang valid yang dibuat"
 
-#: ../control-center/main.c:175 ../tools/browser/browser-window.c:1185
+#: ../control-center/main.c:205
+msgid "Database sources control center"
+msgstr "Pusat kendali sumber basis data"
+
+#: ../control-center/main.c:208 ../tools/browser/browser-window.c:1185
 msgid "Database access services for the GNOME Desktop"
 msgstr "Layanan akses basis data bagi Desktop GNOME"
 
-#: ../control-center/main.c:239
+#: ../control-center/main.c:277
 msgid "Datasource access control center"
 msgstr "Pusat kendali akses sumber data"
-
-#. title
-#: ../control-center/main.c:361 ../control-center/provider-config.c:60
-msgid "Providers"
-msgstr "Penyedia"
 
 #: ../control-center/menus.ui.h:1 ../tools/browser/browser-window.c:273
 msgid "_Quit"
 msgstr "_Keluar"
 
-#: ../control-center/menus.ui.h:2
-msgid "_Data sources"
-msgstr "Sumber _data"
-
-#: ../control-center/menus.ui.h:3
-msgid "_New"
-msgstr "_Baru"
-
-#: ../control-center/menus.ui.h:6 ../tools/browser/browser-window.c:281
-#: ../tools/browser/connection-binding-properties.c:174
-msgid "_Help"
-msgstr "_Bantuan"
-
-#: ../control-center/menus.ui.h:7 ../tools/browser/browser-window.c:282
+#: ../control-center/menus.ui.h:2 ../tools/browser/browser-window.c:282
 msgid "_About"
 msgstr "Tent_ang"
 
-#: ../control-center/provider-config.c:61
-msgid "Installed providers"
-msgstr "Penyedia terpasang"
+#: ../control-center/menus.ui.h:3
+msgid "_Data sources"
+msgstr "Sumber _data"
 
-#: ../control-center/provider-config.c:96
+#: ../control-center/menus.ui.h:4
+msgid "_Providers"
+msgstr "_Penyedia"
+
+#: ../control-center/provider-config.c:74
+msgid "Accepted connection parameters"
+msgstr "Parameter koneksi yang diterima"
+
+#: ../control-center/provider-config.c:95 ../control-center/provider-config.c:98
+#: ../control-center/provider-config.c:128 ../control-center/provider-config.c:131
+msgid "optional"
+msgstr "opsional"
+
+#: ../control-center/provider-config.c:138
+msgid "Shared object file"
+msgstr "Berkas objek bersama"
+
+#. title
+#: ../control-center/provider-config.c:171
+msgid "Providers"
+msgstr "Penyedia"
+
+#: ../control-center/provider-config.c:172
 msgid ""
 "Providers are addons that actually implement the access to each database using the means "
 "provided by each database vendor."
@@ -574,8 +577,8 @@ msgid "Can't instantiate provider '%s'"
 msgstr "Tak bisa menginstansikan penyedia '%s'"
 
 #: ../libgda/gda-config.c:1659 ../libgda/gda-data-model-dsn-list.c:109
-#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2590
-#: ../tools/common/t-app.c:2958 ../tools/common/t-config-info.c:70
+#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2593
+#: ../tools/common/t-app.c:2961 ../tools/common/t-config-info.c:70
 #: ../tools/common/t-config-info.c:131 ../tools/common/t-config-info.c:314
 #: ../tools/common/t-config-info.c:430
 msgid "Provider"
@@ -584,8 +587,8 @@ msgstr "Penyedia"
 #: ../libgda/gda-config.c:1660 ../libgda/gda-data-model-dsn-list.c:115
 #: ../libgda/gda-data-model-dsn-list.c:116
 #: ../tools/browser/data-manager/data-source-editor.c:166
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307 ../tools/common/t-app.c:2317
-#: ../tools/common/t-app.c:2386 ../tools/common/t-app.c:2589
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307 ../tools/common/t-app.c:2320
+#: ../tools/common/t-app.c:2389 ../tools/common/t-app.c:2592
 #: ../tools/common/t-config-info.c:71 ../tools/common/t-config-info.c:145
 #: ../tools/common/t-config-info.c:328
 msgid "Description"
@@ -603,9 +606,9 @@ msgstr "Berkas"
 msgid "List of installed providers"
 msgstr "Daftar penyedia terpasang"
 
-#: ../libgda/gda-config.c:1837 ../libgda/gda-data-model-dsn-list.c:129
+#: ../libgda/gda-config.c:1839 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130 ../providers/ldap/ldap_specs_auth.xml.in.h:1
-#: ../tools/common/t-app.c:2960
+#: ../tools/common/t-app.c:2963
 msgid "Username"
 msgstr "Nama pengguna"
 
@@ -614,7 +617,7 @@ msgstr "Nama pengguna"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1839 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1841 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -622,7 +625,7 @@ msgstr "Nama pengguna"
 msgid "Password"
 msgstr "Kata Sandi"
 
-#: ../libgda/gda-config.c:1909
+#: ../libgda/gda-config.c:1915
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Galat saat memuat penyedia '%s': %s"
@@ -1110,7 +1113,7 @@ msgid "Cannot remove file '%s'"
 msgstr "Tak dapat menghapus berkas '%s'"
 
 #: ../libgda/gda-data-model-dsn-list.c:103 ../libgda/gda-data-model-dsn-list.c:104
-#: ../tools/common/t-app.c:2588 ../tools/common/t-config-info.c:428
+#: ../tools/common/t-app.c:2591 ../tools/common/t-config-info.c:428
 msgid "DSN"
 msgstr "DSN"
 
@@ -1311,7 +1314,7 @@ msgid "Could not get information from source data model"
 msgstr "Tak bisa mendapat informasi dari model data sumber"
 
 #: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3079
-#: ../tools/common/t-app.c:3111
+#: ../tools/common/t-app.c:3114
 msgid "Could not create virtual connection"
 msgstr "Tak bisa membuat sambungan virtual"
 
@@ -2018,20 +2021,20 @@ msgstr "Kurang atribut bernama 'path'"
 msgid "Wrong SQL identifier value"
 msgstr "Nilai identifier SQL salah"
 
-#: ../libgda/gda-server-operation.c:2525
+#: ../libgda/gda-server-operation.c:2527
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Kurang nilai yang diperlukan bagi '%s'"
 
-#: ../libgda/gda-server-operation.c:2802
+#: ../libgda/gda-server-operation.c:2804
 msgid "Unspecified table name"
 msgstr "Nama tabel tak dinyatakan"
 
-#: ../libgda/gda-server-operation.c:2842
+#: ../libgda/gda-server-operation.c:2844
 msgid "Invalid type"
 msgstr "Jenis tak valid"
 
-#: ../libgda/gda-server-operation.c:2947
+#: ../libgda/gda-server-operation.c:2949
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Operasi CREATE TABLE tak didukung oleh server basis data"
 
@@ -2287,9 +2290,9 @@ msgid "Could not bind SELECT statement's parameter '%s' to provided parameters: 
 msgstr "Tak bisa mengikat parameter pernyataan SELECT '%s' ke parameter yang diberikan: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:300 ../libgda-report/engine/gda-report-engine.c:614
-#: ../libgda-report/engine/gda-report-engine.c:641 ../tools/common/t-app.c:3032
-#: ../tools/common/t-app.c:4725 ../tools/common/t-app.c:5242 ../tools/common/t-app.c:5343
-#: ../tools/common/t-app.c:5440 ../tools/common/t-app.c:5538
+#: ../libgda-report/engine/gda-report-engine.c:641 ../tools/common/t-app.c:3035
+#: ../tools/common/t-app.c:4728 ../tools/common/t-app.c:5245 ../tools/common/t-app.c:5346
+#: ../tools/common/t-app.c:5443 ../tools/common/t-app.c:5541
 #: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
@@ -2474,8 +2477,8 @@ msgid "Unknown query '%s'"
 msgstr "Query '%s' tak dikenal"
 
 #: ../libgda-report/engine/gda-report-engine.c:609
-#: ../libgda-report/engine/gda-report-engine.c:636 ../tools/common/t-app.c:2836
-#: ../tools/common/t-app.c:3046
+#: ../libgda-report/engine/gda-report-engine.c:636 ../tools/common/t-app.c:2839
+#: ../tools/common/t-app.c:3049
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Koneksi bernama '%s' tak ditemukan"
@@ -3308,8 +3311,8 @@ msgstr "Jenis data"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:833 ../libgda-ui/gdaui-basic-form.c:869
 #: ../libgda-ui/gdaui-raw-grid.c:786 ../providers/ldap/gda-ldap-provider.c:1130
-#: ../tools/common/t-app.c:2316 ../tools/common/t-app.c:2385 ../tools/common/t-app.c:3790
-#: ../tools/common/t-app.c:5592 ../tools/common/t-config-info.c:123
+#: ../tools/common/t-app.c:2319 ../tools/common/t-app.c:2388 ../tools/common/t-app.c:3793
+#: ../tools/common/t-app.c:5595 ../tools/common/t-config-info.c:123
 #: ../tools/common/t-config-info.c:292
 msgid "Value"
 msgstr "Nilai"
@@ -3759,10 +3762,10 @@ msgstr "Penggal baris di antara kata"
 msgid "Break lines in between words or graphemes"
 msgstr "Penggal baris di antara kata atau grafem"
 
-#: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:940
-#: ../tools/common/t-app.c:1044 ../tools/common/t-app.c:1057 ../tools/common/t-app.c:1068
-#: ../tools/common/t-app.c:1155 ../tools/common/t-app.c:1163 ../tools/common/t-app.c:1171
-#: ../tools/common/t-app.c:1182 ../tools/common/t-app.c:1193
+#: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:943
+#: ../tools/common/t-app.c:1047 ../tools/common/t-app.c:1060 ../tools/common/t-app.c:1071
+#: ../tools/common/t-app.c:1158 ../tools/common/t-app.c:1166 ../tools/common/t-app.c:1174
+#: ../tools/common/t-app.c:1185 ../tools/common/t-app.c:1196
 msgid "General"
 msgstr "Umum"
 
@@ -4563,7 +4566,7 @@ msgstr "Tak bisa menambah model data BDB ke koneksi: %s"
 msgid "-"
 msgstr "-"
 
-#: ../providers/bdb/libmain.c:75
+#: ../providers/bdb/libmain.c:76
 msgid "Provider for Berkeley databases"
 msgstr "Penyedia bagi basis data Berkeley"
 
@@ -4696,7 +4699,7 @@ msgstr "Bukan NULL"
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26 ../tools/common/t-app.c:1895
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26 ../tools/common/t-app.c:1898
 #: ../tools/common/web-server.c:863
 msgid "Default"
 msgstr "Baku"
@@ -4789,8 +4792,8 @@ msgstr "Deskripsi indeks"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
-#: ../tools/browser/schema-browser/table-columns.c:645 ../tools/common/t-app.c:1817
-#: ../tools/common/t-app.c:1893 ../tools/common/web-server.c:861
+#: ../tools/browser/schema-browser/table-columns.c:645 ../tools/common/t-app.c:1820
+#: ../tools/common/t-app.c:1896 ../tools/common/web-server.c:861
 msgid "Type"
 msgstr "Jenis"
 
@@ -4821,9 +4824,9 @@ msgstr "Jenis"
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:2
 #: ../tools/browser/data-manager/data-favorite-selector.c:306
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
-#: ../tools/browser/query-exec/query-favorite-selector.c:352 ../tools/common/t-app.c:1816
-#: ../tools/common/t-app.c:2315 ../tools/common/t-app.c:2384 ../tools/common/t-app.c:2957
-#: ../tools/common/t-app.c:3789 ../tools/common/t-app.c:3871
+#: ../tools/browser/query-exec/query-favorite-selector.c:352 ../tools/common/t-app.c:1819
+#: ../tools/common/t-app.c:2318 ../tools/common/t-app.c:2387 ../tools/common/t-app.c:2960
+#: ../tools/common/t-app.c:3792 ../tools/common/t-app.c:3874
 msgid "Name"
 msgstr "Nama"
 
@@ -4955,8 +4958,8 @@ msgstr "Kolom tabel"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20 ../tools/common/t-app.c:1744
-#: ../tools/common/t-app.c:1747 ../tools/common/web-server.c:833
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20 ../tools/common/t-app.c:1747
+#: ../tools/common/t-app.c:1750 ../tools/common/web-server.c:833
 #: ../tools/common/web-server.c:836
 msgid "Auto increment"
 msgstr "Naik otomatis"
@@ -4971,7 +4974,7 @@ msgstr "Naik otomatis"
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22 ../tools/common/t-app.c:2051
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22 ../tools/common/t-app.c:2054
 msgid "Unique"
 msgstr "Unik"
 
@@ -4986,7 +4989,7 @@ msgstr "Unik"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:24
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
-#: ../tools/browser/schema-browser/table-columns.c:231 ../tools/common/t-app.c:2004
+#: ../tools/browser/schema-browser/table-columns.c:231 ../tools/common/t-app.c:2007
 msgid "Primary key"
 msgstr "Kunci primer"
 
@@ -5257,13 +5260,13 @@ msgstr "Nama baru"
 msgid "New table name"
 msgstr "Nama tabel baru"
 
-#: ../providers/bdbsql/libmain.c:51
+#: ../providers/bdbsql/libmain.c:55
 msgid "Can't find libdb_sql-5."
 msgstr "Tak bisa temukan libdb_sql-5."
 
-#: ../providers/bdbsql/libmain.c:89
-msgid "Provider for BDB SQL databases"
-msgstr "Penyedia bagi basis data SQL BDB"
+#: ../providers/bdbsql/libmain.c:93
+msgid "Provider for Berkeley DB SQL databases"
+msgstr "Penyedia bagi basis data SQL Berkeley DB"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
 msgid "The name of a database to connect to (without the .fdb)"
@@ -5273,7 +5276,7 @@ msgstr "Nama basis data untuk dihubungi (tanpa akhiran .fdb)"
 msgid "Provider for Firebird databases"
 msgstr "Penyedia bagi basis data Firebird"
 
-#: ../providers/firebird/libmain-embed.c:69
+#: ../providers/firebird/libmain-embed.c:70
 msgid "Provider for embedded Firebird databases"
 msgstr "Penyedia bagi basis data Firebird tertanam"
 
@@ -5363,17 +5366,21 @@ msgstr ""
 "Kalimat koneksi diperlukan oleh driver JDBC, lihatlah ke driver JDBC yang dipakai untuk "
 "isi dan formatnya"
 
-#: ../providers/jdbc/libmain.c:153 ../providers/jdbc/libmain.c:163
+#: ../providers/jdbc/libmain.c:154 ../providers/jdbc/libmain.c:164
 #, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
 msgstr "Tak bisa mendapat daftar driver JDBC yang terpasang: %s"
 
-#: ../providers/jdbc/libmain.c:479
+#: ../providers/jdbc/libmain.c:490
+msgid "Could not find Libgda's JAR (gdaprovider-6.0.jar), JDBC provider is unavailable."
+msgstr "Tak bisa temukan JAR Libgda (gdaprovider-6.0.jar), penyedia JDBC tak tersedia."
+
+#: ../providers/jdbc/libmain.c:499
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
 msgstr "Tak bisa membuat mesin virtual JAVA: %s"
 
-#: ../providers/jdbc/libmain.c:487
+#: ../providers/jdbc/libmain.c:509
 msgid "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr "Tak bisa temukan runtime JVM (libjvm.so), penyedia JDBC tak tersedia."
 
@@ -5385,8 +5392,8 @@ msgstr "String koneksi mesti memuat nilai DB_NAME"
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Nilai tak valid bagi 'TLS_REQCERT'"
 
-#: ../providers/ldap/gda-ldap-provider.c:973 ../tools/common/t-app.c:2805
-#: ../tools/common/t-app.c:4533 ../tools/common/t-app.c:4649
+#: ../providers/ldap/gda-ldap-provider.c:973 ../tools/common/t-app.c:2808
+#: ../tools/common/t-app.c:4536 ../tools/common/t-app.c:4652
 #, c-format
 msgid "Too many arguments"
 msgstr "Terlalu banyak argumen"
@@ -5591,7 +5598,7 @@ msgstr "Tak dapat membuka berkas %s"
 msgid "Could not map table '%s': %s"
 msgstr "Tak bisa petakan tabel '%s': %s"
 
-#: ../providers/mdb/libmain.c:72
+#: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
 msgstr "Penyedia bagi berkas Microsoft Access"
 
@@ -6109,7 +6116,7 @@ msgstr "Komentar tabel"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
-#: ../tools/browser/schema-browser/mgr-columns.c:385 ../tools/common/t-app.c:2111
+#: ../tools/browser/schema-browser/mgr-columns.c:385 ../tools/common/t-app.c:2114
 msgid "Foreign key"
 msgstr "Foreign key"
 
@@ -6619,7 +6626,7 @@ msgstr "Opsi koneksi ekstra"
 msgid "Whether to require SSL or not when connecting"
 msgstr "Apakah menuntun SSL atau tidak ketika menyambung"
 
-#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22 ../tools/common/t-app.c:1818
+#: ../providers/postgres/postgres_specs_create_db.xml.in.h:22 ../tools/common/t-app.c:1821
 msgid "Owner"
 msgstr "Pemilik"
 
@@ -7467,7 +7474,7 @@ msgstr ""
 msgid "Opened connections"
 msgstr "Koneksi terbuka"
 
-#: ../tools/browser/browser-connections-list.c:344 ../tools/common/t-app.c:2961
+#: ../tools/browser/browser-connections-list.c:344 ../tools/common/t-app.c:2964
 msgid "List of opened connections"
 msgstr "Daftar dari koneksi yang terbuka"
 
@@ -7561,7 +7568,7 @@ msgstr "_Tutup Koneksi"
 msgid "Close this connection"
 msgstr "Tutup koneksi ini"
 
-#: ../tools/browser/browser-window.c:273 ../tools/common/t-app.c:1158
+#: ../tools/browser/browser-window.c:273 ../tools/common/t-app.c:1161
 msgid "Quit"
 msgstr "Keluar"
 
@@ -7621,6 +7628,11 @@ msgstr "_Tutup"
 #: ../tools/browser/browser-window.c:280
 msgid "Close this window"
 msgstr "Tutup jendela ini"
+
+#: ../tools/browser/browser-window.c:281
+#: ../tools/browser/connection-binding-properties.c:174
+msgid "_Help"
+msgstr "_Bantuan"
 
 #: ../tools/browser/browser-window.c:281 ../tools/browser/data-manager/data-console.c:421
 msgid "Help"
@@ -7823,19 +7835,19 @@ msgstr "Tambah semua tabel dalam skema"
 msgid "Select tables to add to diagram"
 msgstr "Pilih tabel yang akan ditambahkan ke diagram"
 
-#: ../tools/browser/canvas/browser-canvas-fkey.c:422 ../tools/common/t-app.c:2109
+#: ../tools/browser/canvas/browser-canvas-fkey.c:422 ../tools/common/t-app.c:2112
 msgid "Declared foreign key"
 msgstr "Deklarasikan foreign key"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
-#: ../tools/browser/schema-browser/table-columns.c:357 ../tools/common/t-app.c:2141
+#: ../tools/browser/schema-browser/table-columns.c:357 ../tools/common/t-app.c:2144
 msgid "Policy on UPDATE"
 msgstr "Kebijakan saat UPDATE"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
-#: ../tools/browser/schema-browser/table-columns.c:367 ../tools/common/t-app.c:2145
+#: ../tools/browser/schema-browser/table-columns.c:367 ../tools/common/t-app.c:2148
 msgid "Policy on DELETE"
 msgstr "Kebijakan saat DELETE"
 
@@ -8636,8 +8648,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:514
-#: ../tools/browser/ldap-browser/ldap-search-page.c:453 ../tools/common/t-app.c:1398
-#: ../tools/common/t-app.c:1406 ../tools/common/t-app.c:1418 ../tools/common/t-app.c:1426
+#: ../tools/browser/ldap-browser/ldap-search-page.c:453 ../tools/common/t-app.c:1401
+#: ../tools/common/t-app.c:1409 ../tools/common/t-app.c:1421 ../tools/common/t-app.c:1429
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -9270,7 +9282,7 @@ msgid "_Schema"
 msgstr "_Skema"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:314
-#: ../tools/common/t-app.c:1815
+#: ../tools/common/t-app.c:1818
 msgid "Schema"
 msgstr "Skema"
 
@@ -9565,19 +9577,19 @@ msgstr "Dijangkitkan oleh konsol SQL GDA"
 msgid "Console"
 msgstr "Konsol"
 
-#: ../tools/common/t-app.c:250
+#: ../tools/common/t-app.c:253
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
 msgstr "Isi dengan TRUE ketika baris pertama dari berkas CSV memuat nama kolom"
 
-#: ../tools/common/t-app.c:256
+#: ../tools/common/t-app.c:259
 msgid "Quote character for CSV format"
 msgstr "Karakter kutip bagi format CSV"
 
-#: ../tools/common/t-app.c:262
+#: ../tools/common/t-app.c:265
 msgid "Separator character for CSV format"
 msgstr "Karakter pemisah bagi format CSV"
 
-#: ../tools/common/t-app.c:272
+#: ../tools/common/t-app.c:275
 msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none"
 "\")"
@@ -9585,138 +9597,138 @@ msgstr ""
 "Menentukan bagaimana kolom DN ditangani bagi LDAP yang dicari (antara \"dn\", \"rdn\", "
 "dan \"none\")"
 
-#: ../tools/common/t-app.c:278
+#: ../tools/common/t-app.c:281
 msgid "Defines the LDAP attributes which are fetched by default by LDAP commands"
 msgstr "Menentukan atribut LDAP yang diambil secara baku oleh perintah LDAP"
 
-#: ../tools/common/t-app.c:585
+#: ../tools/common/t-app.c:588
 #, c-format
 msgid "Opening connection '%s' for: "
 msgstr "Membuka koneksi '%s' bagi:"
 
-#: ../tools/common/t-app.c:942 ../tools/common/t-app.c:1133 ../tools/common/t-app.c:1206
-#: ../tools/common/t-app.c:1214
+#: ../tools/common/t-app.c:945 ../tools/common/t-app.c:1136 ../tools/common/t-app.c:1209
+#: ../tools/common/t-app.c:1217
 #, c-format
 msgid "%s [<FILE>]"
 msgstr "%s [<BERKAS>]"
 
-#: ../tools/common/t-app.c:943
+#: ../tools/common/t-app.c:946
 msgid "Show commands history, or save it to file"
 msgstr "Tunjukkan riwayat perintah, atau menyimpannya ke berkas"
 
-#: ../tools/common/t-app.c:948 ../tools/common/t-app.c:959 ../tools/common/t-app.c:970
-#: ../tools/common/t-app.c:981 ../tools/common/t-app.c:992 ../tools/common/t-app.c:1003
-#: ../tools/common/t-app.c:1014 ../tools/common/t-app.c:1025 ../tools/common/t-app.c:1034
+#: ../tools/common/t-app.c:951 ../tools/common/t-app.c:962 ../tools/common/t-app.c:973
+#: ../tools/common/t-app.c:984 ../tools/common/t-app.c:995 ../tools/common/t-app.c:1006
+#: ../tools/common/t-app.c:1017 ../tools/common/t-app.c:1028 ../tools/common/t-app.c:1037
 msgid "Information"
 msgstr "Informasi"
 
-#: ../tools/common/t-app.c:950
+#: ../tools/common/t-app.c:953
 #, c-format
 msgid "%s [<META DATA TYPE>]"
 msgstr "%s [<TIPE META DATA>]"
 
-#: ../tools/common/t-app.c:951
+#: ../tools/common/t-app.c:954
 msgid "Force reading the database meta data (or part of the meta data, ex:\"tables\")"
 msgstr "Memaksa membaca meta data basis data (atau bagian dari meta data, mis:\"tables\")"
 
-#: ../tools/common/t-app.c:961
+#: ../tools/common/t-app.c:964
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
 msgstr "%s <namafk> <tabelA>(<kolA>,...) <tabelB>(<kolB>,...)"
 
-#: ../tools/common/t-app.c:962
+#: ../tools/common/t-app.c:965
 msgid "Declare a new foreign key (not actually in database): tableA references tableB"
 msgstr ""
 "Deklarasikan foreign key baru (tidak benar-benar dalam basis data): tabelA mengacu tabelB"
 
-#: ../tools/common/t-app.c:972
+#: ../tools/common/t-app.c:975
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
 msgstr "%s <namafk> <tabelA> <tabelB>"
 
-#: ../tools/common/t-app.c:973
+#: ../tools/common/t-app.c:976
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Batalkan deklarasi foreign key (tidak benar-benar dalam basis data)"
 
-#: ../tools/common/t-app.c:983
+#: ../tools/common/t-app.c:986
 #, c-format
 msgid "%s [<TABLE>]"
 msgstr "%s [<TABEL>]"
 
-#: ../tools/common/t-app.c:984
+#: ../tools/common/t-app.c:987
 msgid "List all tables (or named table)"
 msgstr "Tampilkan daftar semua tabel (atau tabel yang dinamai)"
 
-#: ../tools/common/t-app.c:994
+#: ../tools/common/t-app.c:997
 #, c-format
 msgid "%s [<VIEW>]"
 msgstr "%s [<VIEW>]"
 
-#: ../tools/common/t-app.c:995
+#: ../tools/common/t-app.c:998
 msgid "List all views (or named view)"
 msgstr "Tampilkan daftar semua view (atau view yang dinamai)"
 
-#: ../tools/common/t-app.c:1005
+#: ../tools/common/t-app.c:1008
 #, c-format
 msgid "%s [<SCHEMA>]"
 msgstr "%s [<SKEMA>]"
 
-#: ../tools/common/t-app.c:1006
+#: ../tools/common/t-app.c:1009
 msgid "List all schemas (or named schema)"
 msgstr "Tampilkan daftar semua skema (atau skema yang dinamai)"
 
-#: ../tools/common/t-app.c:1016
+#: ../tools/common/t-app.c:1019
 #, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
 msgstr "%s [<NAMA_OBJ>|<SKEMA>.*]"
 
-#: ../tools/common/t-app.c:1017
+#: ../tools/common/t-app.c:1020
 msgid "Describe object or full list of objects"
 msgstr "Terangkan objek atau daftar lengkap objek"
 
-#: ../tools/common/t-app.c:1027
+#: ../tools/common/t-app.c:1030
 #, c-format
 msgid "%s [<TABLE1> [<TABLE2>...]]"
 msgstr "%s [<TABEL1> [<TABEL2>...]]"
 
-#: ../tools/common/t-app.c:1028
+#: ../tools/common/t-app.c:1031
 msgid "Create a graph of all or the listed tables"
 msgstr "Buat bagan dari semua atau tabel yang didaftar"
 
-#: ../tools/common/t-app.c:1036
+#: ../tools/common/t-app.c:1039
 #, c-format
 msgid "%s [<port> [<authentication token>]]"
 msgstr "%s [<port> [<token otentikasi>]]"
 
-#: ../tools/common/t-app.c:1037
+#: ../tools/common/t-app.c:1040
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
 "Mulai/hentikan server HTTP tertempel (pada port yang diberikan atau secara baku di 12345)"
 
-#: ../tools/common/t-app.c:1046
+#: ../tools/common/t-app.c:1049
 #, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
 msgstr "%s [[<NAMA_CNC> [<DSN>|<STRING KONEKSI>]]"
 
-#: ../tools/common/t-app.c:1047
+#: ../tools/common/t-app.c:1050
 msgid "Opens a new connection or lists opened connections"
 msgstr "Buka koneksi baru atau tampilkan daftar koneksi terbuka"
 
-#: ../tools/common/t-app.c:1059
+#: ../tools/common/t-app.c:1062
 #, c-format
 msgid "%s [<CNC_NAME>]"
 msgstr "%s [<NAMA_CNC>]"
 
-#: ../tools/common/t-app.c:1060
+#: ../tools/common/t-app.c:1063
 msgid "Close a connection"
 msgstr "Tutup koneksi"
 
-#: ../tools/common/t-app.c:1070
+#: ../tools/common/t-app.c:1073
 #, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
 msgstr "%s <NAMA_CNC> <NAMA OBJ> [<NAMA OBJ> ...]"
 
-#: ../tools/common/t-app.c:1071
+#: ../tools/common/t-app.c:1074
 msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands "
 "to be executed across multiple connections and/or datasets)"
@@ -9724,218 +9736,218 @@ msgstr ""
 "Ikat koneksi-koneksi atau dataset-dataset (<NAMA OBJ>) menjadi satu yang baru "
 "(memungkinkan perintah SQL dieksekusi sekaligus pada beberapa koneksi dan/atau dataset) "
 
-#: ../tools/common/t-app.c:1079 ../tools/common/t-app.c:1090 ../tools/common/t-app.c:1101
-#: ../tools/common/t-app.c:1112
+#: ../tools/common/t-app.c:1082 ../tools/common/t-app.c:1093 ../tools/common/t-app.c:1104
+#: ../tools/common/t-app.c:1115
 msgid "DSN (data sources) management"
 msgstr "Manajemen DSN (sumber data)"
 
-#: ../tools/common/t-app.c:1081
+#: ../tools/common/t-app.c:1084
 #, c-format
 msgid "%s [<DSN>]"
 msgstr "%s [<DSN>]"
 
-#: ../tools/common/t-app.c:1082
+#: ../tools/common/t-app.c:1085
 msgid "List all DSN (or specified DSN's attributes)"
 msgstr "Tampilkan daftar semua DSN (atau atribut DSN yang dinamai)"
 
-#: ../tools/common/t-app.c:1092
+#: ../tools/common/t-app.c:1095
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
 msgstr "%s <NAMA_DSN> <DEFINISI_DSN> [<DESKRIPSI>]"
 
-#: ../tools/common/t-app.c:1093
+#: ../tools/common/t-app.c:1096
 msgid "Create (or modify) a DSN"
 msgstr "Buat (atau ubah) suatu DSN"
 
-#: ../tools/common/t-app.c:1103
+#: ../tools/common/t-app.c:1106
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
 msgstr "%s <NAMA_DSN> [<NAMA_DSN>...]"
 
-#: ../tools/common/t-app.c:1104
+#: ../tools/common/t-app.c:1107
 msgid "Remove a DSN"
 msgstr "Hapus suatu DSN"
 
-#: ../tools/common/t-app.c:1114
+#: ../tools/common/t-app.c:1117
 #, c-format
 msgid "%s [<PROVIDER>]"
 msgstr "%s [<PENYEDIA>]"
 
-#: ../tools/common/t-app.c:1115
+#: ../tools/common/t-app.c:1118
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
 "Tampilkan daftar semua penyedia basis data yang terpasang (atau atribut penyedia yang "
 "dinamai)"
 
-#: ../tools/common/t-app.c:1123 ../tools/common/t-app.c:1131 ../tools/common/t-app.c:1139
-#: ../tools/common/t-app.c:1147 ../tools/common/t-app.c:1276
+#: ../tools/common/t-app.c:1126 ../tools/common/t-app.c:1134 ../tools/common/t-app.c:1142
+#: ../tools/common/t-app.c:1150 ../tools/common/t-app.c:1279
 msgid "Input/Output"
 msgstr "Masukan/Keluaran"
 
-#: ../tools/common/t-app.c:1125 ../tools/common/t-app.c:1238
+#: ../tools/common/t-app.c:1128 ../tools/common/t-app.c:1241
 #, c-format
 msgid "%s <FILE>"
 msgstr "%s <BERKAS>"
 
-#: ../tools/common/t-app.c:1126
+#: ../tools/common/t-app.c:1129
 msgid "Execute commands from file"
 msgstr "Eksekusi perintah dari berkas"
 
-#: ../tools/common/t-app.c:1134
+#: ../tools/common/t-app.c:1137
 msgid "Send output to a file or |pipe"
 msgstr "Kirim keluaran ke suatu berkas atau |pipe"
 
-#: ../tools/common/t-app.c:1141 ../tools/common/t-app.c:1149
+#: ../tools/common/t-app.c:1144 ../tools/common/t-app.c:1152
 #, c-format
 msgid "%s [<TEXT>]"
 msgstr "%s [<TEKS>]"
 
-#: ../tools/common/t-app.c:1142
+#: ../tools/common/t-app.c:1145
 msgid "Print TEXT or an empty line to standard output"
 msgstr "Cetak TEKS atau baris kosong ke keluaran standar"
 
-#: ../tools/common/t-app.c:1150
+#: ../tools/common/t-app.c:1153
 msgid "Send TEXT or an empty line to current output stream"
 msgstr "Kirim TEKS atau baris kosong ke stream keluaran saat ini"
 
-#: ../tools/common/t-app.c:1165
+#: ../tools/common/t-app.c:1168
 #, c-format
 msgid "%s [<DIR>]"
 msgstr "%s [<DIR>]"
 
-#: ../tools/common/t-app.c:1166
+#: ../tools/common/t-app.c:1169
 msgid "Change the current working directory"
 msgstr "Ubah direktori kerja kini"
 
-#: ../tools/common/t-app.c:1174
+#: ../tools/common/t-app.c:1177
 msgid "Show usage and distribution terms"
 msgstr "Tampilkan syarat distribusi dan penggunaan"
 
-#: ../tools/common/t-app.c:1184
+#: ../tools/common/t-app.c:1187
 #, c-format
 msgid "%s [<NAME> [<VALUE>]]"
 msgstr "%s [<NAMA> [<NILAI>]]"
 
-#: ../tools/common/t-app.c:1185
+#: ../tools/common/t-app.c:1188
 msgid "Set or show an option, or list all options "
 msgstr "Atur atau tampilkan opsi, atau tampilkan daftar semua opsi "
 
-#: ../tools/common/t-app.c:1195 ../tools/common/t-app.c:1305
+#: ../tools/common/t-app.c:1198 ../tools/common/t-app.c:1308
 #, c-format
 msgid "%s [<NAME>]"
 msgstr "%s [<NAMA>]"
 
-#: ../tools/common/t-app.c:1196
+#: ../tools/common/t-app.c:1199
 msgid "Show a piece of information, or all information about the connection"
 msgstr "Tampilkan sepenggal informasi, atau semua informasi tentang sambungan"
 
-#: ../tools/common/t-app.c:1204 ../tools/common/t-app.c:1212 ../tools/common/t-app.c:1220
-#: ../tools/common/t-app.c:1228 ../tools/common/t-app.c:1236 ../tools/common/t-app.c:1244
-#: ../tools/common/t-app.c:1252 ../tools/common/t-app.c:1260 ../tools/common/t-app.c:1268
-#: ../tools/common/t-app.c:1284
+#: ../tools/common/t-app.c:1207 ../tools/common/t-app.c:1215 ../tools/common/t-app.c:1223
+#: ../tools/common/t-app.c:1231 ../tools/common/t-app.c:1239 ../tools/common/t-app.c:1247
+#: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1263 ../tools/common/t-app.c:1271
+#: ../tools/common/t-app.c:1287
 msgid "Query buffer & query favorites"
 msgstr "Singgahan query & query favorit"
 
-#: ../tools/common/t-app.c:1207
+#: ../tools/common/t-app.c:1210
 msgid "Edit the query buffer (or file) with external editor"
 msgstr "Sunting penyangga (atau berkas) query dengan penyunting eksternal"
 
-#: ../tools/common/t-app.c:1215
+#: ../tools/common/t-app.c:1218
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr "Reset penyangga query (atau muat berkas ke dalam penyangga query)"
 
-#: ../tools/common/t-app.c:1223
+#: ../tools/common/t-app.c:1226
 msgid "Show the contents of the query buffer"
 msgstr "Tampilkan isi penyangga query"
 
-#: ../tools/common/t-app.c:1230
+#: ../tools/common/t-app.c:1233
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
 msgstr "%s [<NAMA_FAVORIT>]"
 
-#: ../tools/common/t-app.c:1231
+#: ../tools/common/t-app.c:1234
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr "Eksekusi isi penyangga query, atau eksekusi query favorit yang dinyatakan"
 
-#: ../tools/common/t-app.c:1239
+#: ../tools/common/t-app.c:1242
 msgid "Write query buffer to file"
 msgstr "Tulis singgahan query ke berkas"
 
-#: ../tools/common/t-app.c:1246 ../tools/common/t-app.c:1254 ../tools/common/t-app.c:1262
+#: ../tools/common/t-app.c:1249 ../tools/common/t-app.c:1257 ../tools/common/t-app.c:1265
 #, c-format
 msgid "%s <FAVORITE_NAME>"
 msgstr "%s <NAMA_FAVORIT>"
 
-#: ../tools/common/t-app.c:1247
+#: ../tools/common/t-app.c:1250
 msgid "Save query buffer as favorite"
 msgstr "Simpan singgahan query sebagai favorit"
 
-#: ../tools/common/t-app.c:1255
+#: ../tools/common/t-app.c:1258
 msgid "Load a query favorite into query buffer"
 msgstr "Muat suatu query favorit ke dalam penyangga query"
 
-#: ../tools/common/t-app.c:1263
+#: ../tools/common/t-app.c:1266
 msgid "Delete a query favorite"
 msgstr "Hapus suatu query favorit"
 
-#: ../tools/common/t-app.c:1270 ../tools/common/t-app.c:1333
+#: ../tools/common/t-app.c:1273 ../tools/common/t-app.c:1336
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: ../tools/common/t-app.c:1271
+#: ../tools/common/t-app.c:1274
 msgid "List all query favorites"
 msgstr "Lihat daftar semua query favorit"
 
-#: ../tools/common/t-app.c:1279
+#: ../tools/common/t-app.c:1282
 msgid "Set output format"
 msgstr "Tata bentuk keluaran"
 
-#: ../tools/common/t-app.c:1286
+#: ../tools/common/t-app.c:1289
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
 msgstr "%s [<NAMA>|<TABEL> <KOLOM> <SYARAT_BARIS>] <BERKAS>"
 
-#: ../tools/common/t-app.c:1287
+#: ../tools/common/t-app.c:1290
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr "Ekspor parameter internal atau nilai tabel ke berkas BERKAS"
 
-#: ../tools/common/t-app.c:1292 ../tools/common/t-app.c:1303 ../tools/common/t-app.c:1314
-#: ../tools/common/t-app.c:1322
+#: ../tools/common/t-app.c:1295 ../tools/common/t-app.c:1306 ../tools/common/t-app.c:1317
+#: ../tools/common/t-app.c:1325
 msgid "Execution context"
 msgstr "Konteks eksekusi"
 
-#: ../tools/common/t-app.c:1294
+#: ../tools/common/t-app.c:1297
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
 msgstr "%s [<NAMA> [<NILAI>|_null_]]"
 
-#: ../tools/common/t-app.c:1295
+#: ../tools/common/t-app.c:1298
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Tata atau tampilkan parameter internal, atau tampilkan seluruh daftar bila tak ada "
 "parameter yang dinyatakan "
 
-#: ../tools/common/t-app.c:1306
+#: ../tools/common/t-app.c:1309
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr "Kosongkan (hapus) parameter internal yang dinamai (atau semua parameter)"
 
-#: ../tools/common/t-app.c:1316
+#: ../tools/common/t-app.c:1319
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
 msgstr "%s <NAMA> [<BERKAS>|<TABEL> <KOLOM> <SYARAT_BARIS>]"
 
-#: ../tools/common/t-app.c:1317
+#: ../tools/common/t-app.c:1320
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing table's value"
 msgstr "Tata parameter internal sebagai isi berkas BERKAS atau dari nilai tabel yang ada"
 
-#: ../tools/common/t-app.c:1324
+#: ../tools/common/t-app.c:1327
 #, c-format
 msgid "%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"
 msgstr "%s <SELECT> <RUAS_BARIS> [<RUAS_KOLOM> [<RUAS_DATA> ...]]"
 
-#: ../tools/common/t-app.c:1325
+#: ../tools/common/t-app.c:1328
 msgid ""
 "Performs a statistical analysis on the data from SELECT, using ROW_FIELDS and "
 "COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
@@ -9943,75 +9955,75 @@ msgstr ""
 "Lakukan analisis statistik pada data dari SELECT, memakai kriteria RUAS_BARIS dan "
 "RUAS_KOLOM dan secara opsional RUAS_DATA bagi data"
 
-#: ../tools/common/t-app.c:1331 ../tools/common/t-app.c:1342 ../tools/common/t-app.c:1353
-#: ../tools/common/t-app.c:1364 ../tools/common/t-app.c:1375 ../tools/common/t-app.c:1386
+#: ../tools/common/t-app.c:1334 ../tools/common/t-app.c:1345 ../tools/common/t-app.c:1356
+#: ../tools/common/t-app.c:1367 ../tools/common/t-app.c:1378 ../tools/common/t-app.c:1389
 msgid "Datasets' manipulations"
 msgstr "Manipulasi dataset"
 
-#: ../tools/common/t-app.c:1334
+#: ../tools/common/t-app.c:1337
 msgid "Lists all the datasets kept in memory for reference"
 msgstr "Tampilkan daftar semua dataset yang dipertahankan di memori bagi acuan"
 
-#: ../tools/common/t-app.c:1344
+#: ../tools/common/t-app.c:1347
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
 msgstr "%s <NAMA DATASET> <POLA>"
 
-#: ../tools/common/t-app.c:1345
+#: ../tools/common/t-app.c:1348
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr "Tampilkan isi dataset yang barisnya cocok dengan ekspresi reguler"
 
-#: ../tools/common/t-app.c:1355
+#: ../tools/common/t-app.c:1358
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgstr "%s <NAMA DATASET> [<KOLOM> [<KOLOM> ...]]"
 
-#: ../tools/common/t-app.c:1356
+#: ../tools/common/t-app.c:1359
 msgid "Show a dataset's contents, showing only the specified columns if any specified"
 msgstr "Tampilkan isi dataset, hanya kolom yang dinyatakan bila diberikan"
 
-#: ../tools/common/t-app.c:1366
+#: ../tools/common/t-app.c:1369
 #, c-format
 msgid "%s <DATASET NAME> [<DATASET NAME> ...]"
 msgstr "%s <NAMA DATASET> [<NAMA DATASET>...]"
 
-#: ../tools/common/t-app.c:1367
+#: ../tools/common/t-app.c:1370
 msgid "Remove one or more datasets"
 msgstr "Buang satu dataset atau lebih"
 
-#: ../tools/common/t-app.c:1377
+#: ../tools/common/t-app.c:1380
 #, c-format
 msgid "%s <DATASET NAME> <DATASET NAME>"
 msgstr "%s <NAMA DATASET> <NAMA DATASET>"
 
-#: ../tools/common/t-app.c:1378
+#: ../tools/common/t-app.c:1381
 msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr "Ubah nama dataset, berguna untuk mengubah dataset '_' untuk mempertahankannya"
 
-#: ../tools/common/t-app.c:1388
+#: ../tools/common/t-app.c:1391
 #, c-format
 msgid "%s CSV <FILE NAME>"
 msgstr "%s CSV <NAMA BERKAS>"
 
-#: ../tools/common/t-app.c:1389
+#: ../tools/common/t-app.c:1392
 msgid "Import a dataset from a file"
 msgstr "Impor dataset dari suatu berkas"
 
-#: ../tools/common/t-app.c:1400
+#: ../tools/common/t-app.c:1403
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
 msgstr "%s <penyaring> [<base|onelevel|subtree> [<DN basis>]]"
 
-#: ../tools/common/t-app.c:1401
+#: ../tools/common/t-app.c:1404
 msgid "Search LDAP entries"
 msgstr "Cari entri LDAP"
 
-#: ../tools/common/t-app.c:1408
+#: ../tools/common/t-app.c:1411
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 
-#: ../tools/common/t-app.c:1409
+#: ../tools/common/t-app.c:1412
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd parameter is "
 "passed, then all set attributes are shown, if the \"all\" 2nd parameter is passed, then "
@@ -10023,92 +10035,92 @@ msgstr ""
 "diberikan, maka atribut yang tak ditata juga ditunjukkan, dan bila parameter ke-2 \"unset"
 "\" diberikan, maka hanya atribut yang tak ditata yang ditunjukkan."
 
-#: ../tools/common/t-app.c:1420
+#: ../tools/common/t-app.c:1423
 #, c-format
 msgid "%s <DN> <new DN>"
 msgstr "%s <DN> <DN baru>"
 
-#: ../tools/common/t-app.c:1421
+#: ../tools/common/t-app.c:1424
 msgid "Renames an LDAP entry"
 msgstr "Ubah nama entri LDAP"
 
-#: ../tools/common/t-app.c:1428
+#: ../tools/common/t-app.c:1431
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
 msgstr "%s <DN> <OPERASI> [<ATR>[=<NILAI>]] [<ATR=<NILAI> ...]"
 
-#: ../tools/common/t-app.c:1429
+#: ../tools/common/t-app.c:1432
 msgid "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or ADD"
 msgstr "Mengubah atribut entri LDAP; <OPERASI> boleh DELETE, REPLACE, atau ADD"
 
-#: ../tools/common/t-app.c:1466
+#: ../tools/common/t-app.c:1469
 msgid "History is not supported"
 msgstr "Riwayat tak didukung"
 
-#: ../tools/common/t-app.c:1484 ../tools/common/t-app.c:1525 ../tools/common/t-app.c:1575
-#: ../tools/common/t-app.c:1624 ../tools/common/t-app.c:1763 ../tools/common/t-app.c:2845
-#: ../tools/common/t-app.c:3713 ../tools/common/t-app.c:4349 ../tools/common/t-app.c:4517
-#: ../tools/common/t-app.c:4635
+#: ../tools/common/t-app.c:1487 ../tools/common/t-app.c:1528 ../tools/common/t-app.c:1578
+#: ../tools/common/t-app.c:1627 ../tools/common/t-app.c:1766 ../tools/common/t-app.c:2848
+#: ../tools/common/t-app.c:3716 ../tools/common/t-app.c:4352 ../tools/common/t-app.c:4520
+#: ../tools/common/t-app.c:4638
 msgid "No current connection"
 msgstr "Kini tak ada koneksi"
 
-#: ../tools/common/t-app.c:1554
+#: ../tools/common/t-app.c:1557
 msgid "List of tables"
 msgstr "Daftar tabel"
 
-#: ../tools/common/t-app.c:1603
+#: ../tools/common/t-app.c:1606
 msgid "List of views"
 msgstr "Daftar view"
 
-#: ../tools/common/t-app.c:1650
+#: ../tools/common/t-app.c:1653
 msgid "List of schemas"
 msgstr "Daftar skema"
 
-#: ../tools/common/t-app.c:1724 ../tools/common/t-app.c:1862
+#: ../tools/common/t-app.c:1727 ../tools/common/t-app.c:1865
 msgid "No object found"
 msgstr "Objek tak ada yang ditemukan"
 
-#: ../tools/common/t-app.c:1892 ../tools/common/web-server.c:860
+#: ../tools/common/t-app.c:1895 ../tools/common/web-server.c:860
 msgid "Column"
 msgstr "Kolom"
 
-#: ../tools/common/t-app.c:1894 ../tools/common/web-server.c:862
+#: ../tools/common/t-app.c:1897 ../tools/common/web-server.c:862
 msgid "Nullable"
 msgstr "Boleh null"
 
-#: ../tools/common/t-app.c:1896 ../tools/common/web-server.c:864
+#: ../tools/common/t-app.c:1899 ../tools/common/web-server.c:864
 msgid "Extra"
 msgstr "Ekstra"
 
-#: ../tools/common/t-app.c:1899
+#: ../tools/common/t-app.c:1902
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr "Daftar kolom bagi view '%s'"
 
-#: ../tools/common/t-app.c:1903
+#: ../tools/common/t-app.c:1906
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr "Daftar kolom bagi tabel '%s'"
 
-#: ../tools/common/t-app.c:1915 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1918 ../tools/common/web-server.c:875
 msgid "yes"
 msgstr "ya"
 
-#: ../tools/common/t-app.c:1915 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1918 ../tools/common/web-server.c:875
 msgid "no"
 msgstr "tidak"
 
-#: ../tools/common/t-app.c:1946
+#: ../tools/common/t-app.c:1949
 #, c-format
 msgid "Could not determine columns of view '%s'"
 msgstr "Tak bisa menentukan kolom dari view '%s'"
 
-#: ../tools/common/t-app.c:1950
+#: ../tools/common/t-app.c:1953
 #, c-format
 msgid "Could not determine columns of table '%s'"
 msgstr "Tak bisa menentukan kolom dari tabel '%s'"
 
-#: ../tools/common/t-app.c:1963
+#: ../tools/common/t-app.c:1966
 #, c-format
 msgid "View definition: %s"
 msgstr "Definisi view: %s"
@@ -10116,7 +10128,7 @@ msgstr "Definisi view: %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2123
+#: ../tools/common/t-app.c:2126
 #, c-format
 msgid "references %s"
 msgstr "referensi %s"
@@ -10124,220 +10136,220 @@ msgstr "referensi %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2129
+#: ../tools/common/t-app.c:2132
 #, c-format
 msgid "references %s.%s"
 msgstr "referensi %s.%s"
 
-#: ../tools/common/t-app.c:2212
+#: ../tools/common/t-app.c:2215
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr "Format keluaran tak dikenal: '%s', direset ke baku"
 
-#: ../tools/common/t-app.c:2306 ../tools/common/t-app.c:2375
+#: ../tools/common/t-app.c:2309 ../tools/common/t-app.c:2378
 #, c-format
 msgid "No option named '%s'"
 msgstr "Tak ada opsi bernama '%s'"
 
-#: ../tools/common/t-app.c:2318
+#: ../tools/common/t-app.c:2321
 msgid "List of options"
 msgstr "Daftar opsi"
 
-#: ../tools/common/t-app.c:2387
+#: ../tools/common/t-app.c:2390
 msgid "Current connection's information"
 msgstr "Informasi sambungan saat ini"
 
-#: ../tools/common/t-app.c:2464
+#: ../tools/common/t-app.c:2467
 #, c-format
 msgid "Could not get home directory: %s"
 msgstr "Tak bisa mendapat direktori home: %s"
 
-#: ../tools/common/t-app.c:2490
+#: ../tools/common/t-app.c:2493
 #, c-format
 msgid "Working directory is now: %s"
 msgstr "Direktori kerja kini: %s"
 
-#: ../tools/common/t-app.c:2495
+#: ../tools/common/t-app.c:2498
 #, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr "Tak bisa mengubah direktori kerja ke '%s': %s"
 
-#: ../tools/common/t-app.c:2591
+#: ../tools/common/t-app.c:2594
 msgid "DSN list"
 msgstr "Daftar DSN"
 
-#: ../tools/common/t-app.c:2646
+#: ../tools/common/t-app.c:2649
 msgid "Missing arguments"
 msgstr "Argumen hilang"
 
-#: ../tools/common/t-app.c:2682
+#: ../tools/common/t-app.c:2685
 msgid "Missing provider name"
 msgstr "Nama penyedia hilang"
 
-#: ../tools/common/t-app.c:2708
+#: ../tools/common/t-app.c:2711
 msgid "Missing DSN name"
 msgstr "Nama DSN hilang"
 
-#: ../tools/common/t-app.c:2886
+#: ../tools/common/t-app.c:2889
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr "Mengambil informasi skema basis data, ini mungkin makan waktu... "
 
-#: ../tools/common/t-app.c:2893
+#: ../tools/common/t-app.c:2896
 #, c-format
 msgid "error: %s\n"
 msgstr "galat: %s\n"
 
-#: ../tools/common/t-app.c:2900
+#: ../tools/common/t-app.c:2903
 #, c-format
 msgid "Done.\n"
 msgstr "Selesai.\n"
 
-#: ../tools/common/t-app.c:2920 ../tools/common/t-app.c:3082
+#: ../tools/common/t-app.c:2923 ../tools/common/t-app.c:3085
 #, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Koneksi bernama '%s' telah ada"
 
-#: ../tools/common/t-app.c:2948
+#: ../tools/common/t-app.c:2951
 msgid "No opened connection"
 msgstr "Tak ada koneksi terbuka"
 
-#: ../tools/common/t-app.c:2959
+#: ../tools/common/t-app.c:2962
 msgid "DSN or connection string"
 msgstr "String koneksi atau DSN"
 
-#: ../tools/common/t-app.c:3074
+#: ../tools/common/t-app.c:3077
 msgid "Missing required connection names"
 msgstr "Kehilangan nama koneksi yang diperlukan"
 
-#: ../tools/common/t-app.c:3087 ../tools/common/t-connection.c:715
+#: ../tools/common/t-app.c:3090 ../tools/common/t-connection.c:715
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Nama koneksi '%s' tak valid"
 
-#: ../tools/common/t-app.c:3097
+#: ../tools/common/t-app.c:3100
 #, c-format
 msgid "No connection or dataset named '%s' found"
 msgstr "Tak ditemukan koneksi atau dataset bernama '%s'"
 
 #. force create of meta store
 #. add existing connections to virtual connection
-#: ../tools/common/t-app.c:3118
+#: ../tools/common/t-app.c:3121
 msgid "Bound connections are as:"
 msgstr "Koneksi yang diikat sebagai:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
-#: ../tools/common/t-app.c:3131
+#: ../tools/common/t-app.c:3134
 #, c-format
 msgid "%s in the '%s' namespace"
 msgstr "%s dalam namespace '%s'"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
-#: ../tools/common/t-app.c:3145
+#: ../tools/common/t-app.c:3148
 #, c-format
 msgid "%s mapped to the %s table"
 msgstr "%s dipetakan ke tabel %s"
 
-#: ../tools/common/t-app.c:3178 ../tools/common/t-app.c:3281 ../tools/common/t-app.c:3315
-#: ../tools/common/t-app.c:3338 ../tools/common/t-app.c:3376 ../tools/common/t-app.c:3415
-#: ../tools/common/t-app.c:3516 ../tools/common/t-app.c:3569 ../tools/common/t-app.c:3645
-#: ../tools/common/t-app.c:5072 ../tools/common/t-app.c:5161
+#: ../tools/common/t-app.c:3181 ../tools/common/t-app.c:3284 ../tools/common/t-app.c:3318
+#: ../tools/common/t-app.c:3341 ../tools/common/t-app.c:3379 ../tools/common/t-app.c:3418
+#: ../tools/common/t-app.c:3519 ../tools/common/t-app.c:3572 ../tools/common/t-app.c:3648
+#: ../tools/common/t-app.c:5075 ../tools/common/t-app.c:5164
 msgid "No connection opened"
 msgstr "Tak ada koneksi terbuka"
 
-#: ../tools/common/t-app.c:3198
+#: ../tools/common/t-app.c:3201
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Tak bisa menulis ke berkas temporer '%s': %s"
 
-#: ../tools/common/t-app.c:3235
+#: ../tools/common/t-app.c:3238
 #, c-format
 msgid "could not start editor '%s'"
 msgstr "tak bisa memulai penyunting '%s'"
 
-#: ../tools/common/t-app.c:3240
+#: ../tools/common/t-app.c:3243
 msgid "Could not start /bin/sh"
 msgstr "Tak bisa memulai /bin/sh"
 
-#: ../tools/common/t-app.c:3382
+#: ../tools/common/t-app.c:3385
 msgid "Missing FILE to write to"
 msgstr "Kehilangan BERKAS untuk ditulisi"
 
-#: ../tools/common/t-app.c:3421
+#: ../tools/common/t-app.c:3424
 msgid "Favorite name"
 msgstr "Nama favorit"
 
-#: ../tools/common/t-app.c:3422
+#: ../tools/common/t-app.c:3425
 msgid "Comments"
 msgstr "Komentar"
 
-#: ../tools/common/t-app.c:3423
+#: ../tools/common/t-app.c:3426
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/common/t-app.c:3529 ../tools/common/t-app.c:3629 ../tools/common/t-app.c:3694
+#: ../tools/common/t-app.c:3532 ../tools/common/t-app.c:3632 ../tools/common/t-app.c:3697
 msgid "Missing query buffer name"
 msgstr "Kehilangan nama singgahan query"
 
-#: ../tools/common/t-app.c:3553
+#: ../tools/common/t-app.c:3556
 msgid "Query buffer is empty"
 msgstr "Singgahan query kosong"
 
-#: ../tools/common/t-app.c:3597 ../tools/common/t-favorites.c:1091
+#: ../tools/common/t-app.c:3600 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
 msgstr "Tak bisa temukan favorit"
 
-#: ../tools/common/t-app.c:3779 ../tools/common/t-app.c:3844 ../tools/common/t-app.c:4560
+#: ../tools/common/t-app.c:3782 ../tools/common/t-app.c:3847 ../tools/common/t-app.c:4563
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr "Parameter bernama '%s' tak didefinisikan"
 
-#: ../tools/common/t-app.c:3791
+#: ../tools/common/t-app.c:3794
 msgid "List of defined parameters"
 msgstr "Daftar parameter terdefinisi"
 
-#: ../tools/common/t-app.c:3872
+#: ../tools/common/t-app.c:3875
 msgid "dimensions (columns x rows)"
 msgstr "dimensi (kolom x baris)"
 
-#: ../tools/common/t-app.c:3873
+#: ../tools/common/t-app.c:3876
 msgid "List of kept data"
 msgstr "Daftar data yang disimpan"
 
-#: ../tools/common/t-app.c:3922 ../tools/common/t-app.c:3963 ../tools/common/t-app.c:4086
-#: ../tools/common/t-app.c:4155 ../tools/common/t-app.c:4227
+#: ../tools/common/t-app.c:3925 ../tools/common/t-app.c:3966 ../tools/common/t-app.c:4089
+#: ../tools/common/t-app.c:4158 ../tools/common/t-app.c:4230
 msgid "Missing argument"
 msgstr "Kurang argumen"
 
-#: ../tools/common/t-app.c:3931 ../tools/common/t-app.c:3973 ../tools/common/t-app.c:4094
-#: ../tools/common/t-app.c:4163
+#: ../tools/common/t-app.c:3934 ../tools/common/t-app.c:3976 ../tools/common/t-app.c:4097
+#: ../tools/common/t-app.c:4166
 #, c-format
 msgid "Could not find dataset named '%s'"
 msgstr "Tak bisa temukan dataset bernama '%s'"
 
-#: ../tools/common/t-app.c:4115
+#: ../tools/common/t-app.c:4118
 #, c-format
 msgid "Could not identify column '%s'"
 msgstr "Tak bisa mengidentifikasi kolom '%s'"
 
-#: ../tools/common/t-app.c:4218
+#: ../tools/common/t-app.c:4221
 #, c-format
 msgid "Unknown import format '%s'"
 msgstr "Format impor '%s' tak dikenal"
 
-#: ../tools/common/t-app.c:4239
+#: ../tools/common/t-app.c:4242
 #, c-format
 msgid "Could not import file '%s'"
 msgstr "Tak bisa mengimpor berkas '%s'"
 
-#: ../tools/common/t-app.c:4323
+#: ../tools/common/t-app.c:4326
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Graf ditulis ke '%s'\n"
 
-#: ../tools/common/t-app.c:4326
+#: ../tools/common/t-app.c:4329
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -10352,131 +10364,131 @@ msgstr ""
 "Catatan: tata variabel lingkungan GDA_SQL_VIEWER_PNG atau GDA_SQL_VIEWER_PDF untuk "
 "menilik bagan\n"
 
-#: ../tools/common/t-app.c:4382
+#: ../tools/common/t-app.c:4385
 msgid "Could not start HTTPD server"
 msgstr "Tak bisa memulai server HTTPD"
 
-#: ../tools/common/t-app.c:4404
+#: ../tools/common/t-app.c:4407
 msgid "HTTPD server stopped"
 msgstr "Server HTTPD dihentikan"
 
-#: ../tools/common/t-app.c:4423
+#: ../tools/common/t-app.c:4426
 msgid "HTTPD server started"
 msgstr "Server HTTP dijalankan"
 
-#: ../tools/common/t-app.c:4428
+#: ../tools/common/t-app.c:4431
 msgid "Invalid port specification"
 msgstr "Spesifikasi port tak valid"
 
-#: ../tools/common/t-app.c:4465
+#: ../tools/common/t-app.c:4468
 msgid "Wrong row condition"
 msgstr "Kondisi baris salah"
 
-#: ../tools/common/t-app.c:4494
+#: ../tools/common/t-app.c:4497
 msgid "No unique row identified"
 msgstr "Baris unik tak teridentifikasi"
 
-#: ../tools/common/t-app.c:4566 ../tools/common/t-app.c:4707
+#: ../tools/common/t-app.c:4569 ../tools/common/t-app.c:4710
 msgid "Wrong number of arguments"
 msgstr "Cacah argumen salah"
 
-#: ../tools/common/t-app.c:4578 ../tools/common/t-app.c:4592
+#: ../tools/common/t-app.c:4581 ../tools/common/t-app.c:4595
 msgid "Could not write file"
 msgstr "Tak bisa menulis berkas"
 
-#: ../tools/common/t-app.c:4744
+#: ../tools/common/t-app.c:4747
 msgid "Missing data on which to operate"
 msgstr "Kurang data tempat beroperasi"
 
-#: ../tools/common/t-app.c:4749
+#: ../tools/common/t-app.c:4752
 msgid "Missing row fields specifications"
 msgstr "Kurang spesifikasi ruas baris"
 
-#: ../tools/common/t-app.c:4767
+#: ../tools/common/t-app.c:4770
 msgid "Wrong SELECT argument"
 msgstr "Argumen SELECT salah"
 
-#: ../tools/common/t-app.c:4805 ../tools/common/t-app.c:4833
+#: ../tools/common/t-app.c:4808 ../tools/common/t-app.c:4836
 msgid "Wrong data field argument"
 msgstr "Argumen ruas data salah"
 
-#: ../tools/common/t-app.c:4905
+#: ../tools/common/t-app.c:4908
 msgid "Missing foreign key declaration specification"
 msgstr "Kurang spesifikasi deklarasi foreign key"
 
-#: ../tools/common/t-app.c:5022
+#: ../tools/common/t-app.c:5025
 msgid "Malformed foreign key declaration specification"
 msgstr "Spesifikasi deklarasi foreign key rusak"
 
-#: ../tools/common/t-app.c:5054
+#: ../tools/common/t-app.c:5057
 #, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Spesifikasi nama tabel '%s' rusak"
 
-#: ../tools/common/t-app.c:5146 ../tools/common/t-app.c:5223
+#: ../tools/common/t-app.c:5149 ../tools/common/t-app.c:5226
 msgid "Missing foreign key name argument"
 msgstr "Kurang argumen nama foreign key"
 
-#: ../tools/common/t-app.c:5248 ../tools/common/t-app.c:5349 ../tools/common/t-app.c:5446
-#: ../tools/common/t-app.c:5544
+#: ../tools/common/t-app.c:5251 ../tools/common/t-app.c:5352 ../tools/common/t-app.c:5449
+#: ../tools/common/t-app.c:5547
 msgid "Connection is not an LDAP connection"
 msgstr "Koneksi bukan suatu koneksi LDAP"
 
-#: ../tools/common/t-app.c:5270
+#: ../tools/common/t-app.c:5273
 #, c-format
 msgid "Unknown search scope '%s'"
 msgstr "Skup pencarian '%s' tak dikenal"
 
-#: ../tools/common/t-app.c:5280
+#: ../tools/common/t-app.c:5283
 msgid "Missing filter which to operate"
 msgstr "Kurang penyaring tempat beroperasi"
 
-#: ../tools/common/t-app.c:5364
+#: ../tools/common/t-app.c:5367
 msgid "Missing current DN or new DN specification"
 msgstr "Kurang DN kini atau spesifikasi DN baru"
 
-#: ../tools/common/t-app.c:5461
+#: ../tools/common/t-app.c:5464
 msgid "Missing DN of LDAP entry"
 msgstr "Kurang DN dari entri LDAP"
 
-#: ../tools/common/t-app.c:5466
+#: ../tools/common/t-app.c:5469
 msgid "Missing operation to perform on LDAP entry's attributes"
 msgstr "Kurang operasi untuk dilakukan pada atribut entri LDAP"
 
-#: ../tools/common/t-app.c:5478
+#: ../tools/common/t-app.c:5481
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "Operasi '%s' tak dikenal untuk melakukan pada atribut entri LDAP"
 
-#: ../tools/common/t-app.c:5499
+#: ../tools/common/t-app.c:5502
 #, c-format
 msgid "Wrong attribute value specification '%s'"
 msgstr "Galat spesifikasi nilai atribut '%s'"
 
-#: ../tools/common/t-app.c:5558
+#: ../tools/common/t-app.c:5561
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Kurang argumen DN (distinguished name)"
 
-#: ../tools/common/t-app.c:5571
+#: ../tools/common/t-app.c:5574
 #, c-format
 msgid "Unknown '%s' argument"
 msgstr "Argumen '%s' tak dikenal"
 
-#: ../tools/common/t-app.c:5582
+#: ../tools/common/t-app.c:5585
 #, c-format
 msgid "Could not find entry with DN '%s'"
 msgstr "Tak bisa temukan dengan DN '%s'"
 
-#: ../tools/common/t-app.c:5590 ../tools/common/t-config-info.c:122
+#: ../tools/common/t-app.c:5593 ../tools/common/t-config-info.c:122
 #: ../tools/common/t-config-info.c:291
 msgid "Attribute"
 msgstr "Atribut"
 
-#: ../tools/common/t-app.c:5591
+#: ../tools/common/t-app.c:5594
 msgid "Required?"
 msgstr "Diperlukan?"
 
-#: ../tools/common/t-app.c:5593
+#: ../tools/common/t-app.c:5596
 msgid "LDAP entry's Attributes"
 msgstr "Atribut entri LDAP"
 
