@@ -897,29 +897,32 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 		
 		tmp = g_strdup_printf ("%p", item);
 #ifdef GRAPHVIZ_NEW_API
-		node = agnode (graph, tmp, 0);
+		node = agnode (graph, tmp, 1);
 #else
 		node = agnode (graph, tmp);
 #endif
 		nl->node = node;
 		g_hash_table_insert (nodes_hash, item, node);
-		
-		tmp = g_strdup_printf ("%p", node);
-		agset (node, "label", tmp);
-		g_free (tmp);
-		
 		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (item), &bounds);
 		nl->width = bounds.x2 - bounds.x1;
 		nl->height = bounds.y2 - bounds.y1;
 		val = (bounds.y2 - bounds.y1) / GV_SCALE;
-		tmp = g_strdup_printf ("%.3f", val);
-		agset (node, "height", tmp);
-		g_free (tmp);
-		val = (bounds.x2 - bounds.x1) / GV_SCALE;
-		tmp = g_strdup_printf ("%.3f", val);
-		agset (node, "width", tmp);
-		g_free (tmp);
-		
+
+		if (node) {
+			tmp = g_strdup_printf ("%p", node);
+			agset (node, "label", tmp);
+			g_free (tmp);
+
+			tmp = g_strdup_printf ("%.3f", val);
+			agset (node, "height", tmp);
+			g_free (tmp);
+
+			val = (bounds.x2 - bounds.x1) / GV_SCALE;
+			tmp = g_strdup_printf ("%.3f", val);
+			agset (node, "width", tmp);
+			g_free (tmp);
+		}
+
 		nl->start_x = bounds.x1;
 		nl->start_y = bounds.y1;
 		nl->cur_x = nl->start_x;
