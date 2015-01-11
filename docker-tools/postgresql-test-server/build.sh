@@ -20,7 +20,7 @@ then
         echo "Unable to get $file, check with Libgda's maintainer!"
         exit 1
     }
-    mv norhtwind_postgres_01.sql $sqlfile
+    mv northwind_postgres_01.sql $sqlfile
     echo "Download complete"
 fi
 
