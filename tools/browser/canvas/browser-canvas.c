@@ -900,6 +900,7 @@ browser_canvas_perform_auto_layout (BrowserCanvas *canvas, gboolean animate, Bro
 #else
 		node = agnode (graph, tmp);
 #endif
+		g_free (tmp);
 		nl->node = node;
 		g_hash_table_insert (nodes_hash, item, node);
 		goo_canvas_item_get_bounds (GOO_CANVAS_ITEM (item), &bounds);
