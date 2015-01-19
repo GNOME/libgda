@@ -1165,35 +1165,32 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED
         GdaServerOperation *op;
         gchar *str;
 	gchar *dir;
-
-        file = g_strdup_printf (PNAME "_specs_%s.xml", gda_server_operation_op_type_to_string (type));
+        file = g_strdup_printf (PNAME "_specs_%s", gda_server_operation_op_type_to_string (type));
         str = g_utf8_strdown (file, -1);
         g_free (file);
 
+	gchar *tmp;
+	tmp = g_strdup_printf ("%s.xml", str);
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
+        file = gda_server_provider_find_file (provider, dir, tmp);
 	g_free (dir);
+	g_free (tmp);
 
-        if (! file) {
-		const gchar *contents;
-		contents = emb_get_file (str);
-		if (contents) {
-			op = _gda_server_operation_new_from_string (type, contents);
-			return op;
-		}
-		else {
-			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
-				     GDA_SERVER_OPERATION_XML_ERROR,
-				     _("Missing spec. file '%s'"), str);
-			g_free (str);
-			return NULL;
-		}
-        }
-
-        g_free (str);
-
-        op = gda_server_operation_new (type, file);
-        g_free (file);
+	if (file) {
+		g_free (str);
+		op = gda_server_operation_new (type, file);
+		g_free (file);
+	}
+	else {
+		gchar *lpname;
+		lpname = g_utf8_strdown (PNAME, -1);
+		file = g_strdup_printf ("/spec/%s/%s.raw.xml", lpname, str);
+		g_free (str);
+		g_free (lpname);
+		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
+							 "spec-resource", file, NULL));
+		g_free (file);
+	}
 
         return op;
 }

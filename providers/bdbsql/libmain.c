@@ -99,9 +99,12 @@ plugin_get_dsn_spec (void)
 	gchar *ret, *dir;
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-	ret = gda_server_provider_load_file_contents (module_path, dir, "sqlite_specs_dsn.xml");
+	ret = gda_server_provider_load_file_contents (module_path, dir, "bdbsql_specs_dsn.xml");
 	g_free (dir);
-	return ret;
+	if (ret)
+		return ret;
+	else
+		return gda_server_provider_load_resource_contents ("bdbsql", "bdbsql_specs_dsn.raw.xml");
 }
 
 gchar *
