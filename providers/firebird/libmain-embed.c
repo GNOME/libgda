@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
  *
@@ -78,7 +78,10 @@ plugin_get_dsn_spec (void)
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	ret = gda_server_provider_load_file_contents (module_path, dir, "firebird_specs_dsn_emb.xml");
 	g_free (dir);
-	return ret;
+	if (ret)
+		return ret;
+	else
+		return gda_server_provider_load_resource_contents ("firebird", "firebird_specs_dsn.raw.xml");
 }
 
 const gchar *

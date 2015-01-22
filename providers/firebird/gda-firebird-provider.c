@@ -3,7 +3,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
@@ -614,7 +614,7 @@ static GdaServerOperation *
 gda_firebird_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
 					GdaServerOperationType type, GdaSet *options, GError **error)
 {
-        gchar *file;
+        gchar *file, *stype;
         GdaServerOperation *op;
         gchar *str;
 	gchar *dir;
@@ -624,23 +624,25 @@ gda_firebird_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("firebird_specs_%s.xml", file);
-        g_free (file);
+        stype = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+        str = g_strdup_printf ("firebird_specs_%s.xml", stype);
 
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
         g_free (str);
 
-        if (! file) {
-                g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR,
-			     _("Missing spec. file '%s'"), file);
-                return NULL;
+	if (file) {
+		op = gda_server_operation_new (type, file);
+		g_free (file);
+	}
+	else {
+		file = g_strdup_printf ("/spec/firebird/%s.raw.xml", stype);
+		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
+							 "spec-resource", file, NULL));
+		g_free (file);
         }
-
-        op = gda_server_operation_new (type, file);
-        g_free (file);
+	g_free (stype);
 
         return op;
 }
