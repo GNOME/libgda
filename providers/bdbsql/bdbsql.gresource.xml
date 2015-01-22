@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/spec/bdbsql">
+    <file compressed="true">bdbsql_specs_add_column.raw.xml</file>
+    <file compressed="true">bdbsql_specs_create_db.raw.xml</file>
+    <file compressed="true">bdbsql_specs_create_index.raw.xml</file>
+    <file compressed="true">bdbsql_specs_create_table.raw.xml</file>
+    <file compressed="true">bdbsql_specs_create_view.raw.xml</file>
+    <file compressed="true">bdbsql_specs_drop_db.raw.xml</file>
+    <file compressed="true">bdbsql_specs_drop_index.raw.xml</file>
+    <file compressed="true">bdbsql_specs_drop_table.raw.xml</file>
+    <file compressed="true">bdbsql_specs_drop_view.raw.xml</file>
+    <file compressed="true">bdbsql_specs_dsn.raw.xml</file>
+    <file compressed="true">bdbsql_specs_rename_table.raw.xml</file>
+  </gresource>
+</gresources>
