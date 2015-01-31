@@ -31,6 +31,7 @@ libgda_mdb_la_SOURCES = \
 	gda-mdb-provider.c \
 	gda-mdb-provider.h \
 	gda-mdb.h \
+	mdb.gresources.c \
 	libmain.c
 
 libgda_mdb_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
@@ -46,8 +47,21 @@ xml_in_files = mdb_specs_dsn.xml.in
 
 xml_DATA = $(xml_in_files:.xml.in=.xml)
 
+# resources
+RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
+mdb.gresources.c: mdb.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/mdb.gresource.xml
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mdb-6.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-mdb-6.0.pc.in
 DISTCLEANFILES = $(xml_DATA)
+
+CLEANFILES = \
+	mdb.gresources.c \
+	$(RESOURCES)
