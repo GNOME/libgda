@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/jdbc">
-    <file compressed="true">jdbc-mappings.xml</file>
+  <gresource prefix="/spec/jdbc">
+    <file compressed="true">jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.raw.xml</file>
+    <file compressed="true">jdbc_specs_dsn.raw.xml</file>
   </gresource>
 </gresources>

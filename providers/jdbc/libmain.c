@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -304,8 +304,22 @@ plugin_get_sub_dsn_spec (const gchar *name)
 	tmp = g_strdup_printf ("jdbc_specs_%s_dsn.xml", name);
 	ret = gda_server_provider_load_file_contents (module_path, dir, tmp);
 	g_free (tmp);
-	if (!ret)
-		ret = gda_server_provider_load_file_contents (module_path, dir, "jdbc_specs_dsn.xml");
+	if (ret)
+		goto out;
+
+	tmp = g_strdup_printf ("jdbc_specs_%s_dsn.raw.xml", name);
+	ret = gda_server_provider_load_resource_contents ("jdbc", tmp);
+	g_free (tmp);
+	if (ret)
+		goto out;
+
+	ret = gda_server_provider_load_file_contents (module_path, dir, "jdbc_specs_dsn.xml");
+	if (ret)
+		goto out;
+
+	ret = gda_server_provider_load_resource_contents ("jdbc", "jdbc_specs_dsn.raw.xml");
+
+ out:
 	g_free (dir);
 	return ret;
 }

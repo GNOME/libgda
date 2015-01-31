@@ -30,6 +30,7 @@ jni_headers = $(jni_sources:.c=.h)
 jni_classes = $(jni_sources:.c=.class) 
 
 resources = jdbc-resources.h jdbc-resources.c
+RAWRESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 
 $(libgda_jdbc_la_OBJECTS): $(jni_headers) $(resources)
 
@@ -70,8 +71,12 @@ if PLATFORM_WIN32
 libgda_jdbc_la_LDFLAGS += -Wl,--kill-at
 endif
 
-jdbc-resources.h jdbc-resources.c: $(srcdir)/jdbc.gresource.xml Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/jdbc.gresource.xml)
+jdbc-resources.h jdbc-resources.c: $(srcdir)/jdbc.gresource.xml $(RAWRESOURCES) Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/jdbc.gresource.xml)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name _jdbc --manual-register $<
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 CLEANFILES = $(resources)
 
@@ -104,7 +109,6 @@ clean-local:
 xmldir   = $(datadir)/libgda-6.0
 xml_in_files = \
 	jdbc_specs_dsn.xml.in \
-	jdbc_specs_create_table.xml.in \
 	jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in
 
 @INTLTOOL_XML_RULE@
