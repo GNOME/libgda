@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/spec/ldap">
+    <file compressed="true">ldap_specs_auth.raw.xml</file>
+    <file compressed="true">ldap_specs_dsn.raw.xml</file>
+  </gresource>
+</gresources>
