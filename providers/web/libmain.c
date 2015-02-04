@@ -4,7 +4,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -83,7 +83,10 @@ plugin_get_dsn_spec (void)
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	ret = gda_server_provider_load_file_contents (module_path, dir, "web_specs_dsn.xml");
 	g_free (dir);
-	return ret;
+	if (ret)
+		return ret;
+	else
+		return gda_server_provider_load_resource_contents ("web", "web_specs_dsn.raw.xml");
 }
 
 gchar *
@@ -94,7 +97,10 @@ plugin_get_auth_spec (void)
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	ret = gda_server_provider_load_file_contents (module_path, dir, "web_specs_auth.xml");
 	g_free (dir);
-	return ret;
+	if (ret)
+		return ret;
+	else
+		return gda_server_provider_load_resource_contents ("web", "web_specs_auth.raw.xml");
 }
 
 GdaServerProvider *

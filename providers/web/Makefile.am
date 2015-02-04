@@ -26,6 +26,7 @@ libgda_web_la_SOURCES = \
 	gda-web-util.h \
 	gda-web-util.c \
 	gda-web.h \
+	web.gresources.c \
 	libmain.c
 
 libgda_web_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
@@ -42,6 +43,15 @@ xml_in_files = \
 @INTLTOOL_XML_RULE@
 
 xml_DATA = $(xml_in_files:.xml.in=.xml) 
+
+# resources
+RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
+web.gresources.c: web.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/web.gresource.xml
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-web-6.0.pc
@@ -65,3 +75,7 @@ EXTRA_DIST = $(xml_in_files) libgda-web-6.0.pc.in \
 	$(php_DATA)
 
 DISTCLEANFILES = $(xml_DATA)
+
+CLEANFILES = \
+        web.gresources.c \
+        $(RESOURCES)

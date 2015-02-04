@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/spec/web">
+    <file compressed="true">web_specs_auth.raw.xml</file>
+    <file compressed="true">web_specs_dsn.raw.xml</file>
+  </gresource>
+</gresources>
