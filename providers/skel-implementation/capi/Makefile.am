@@ -49,6 +49,7 @@ libgda_capi_la_SOURCES = \
 	gda-capi-recordset.c \
 	gda-capi-recordset.h \
 	gda-capi.h \
+	capi.gresources.c \
 	libmain.c \
 	parser.h \
         parser.c \
@@ -69,6 +70,15 @@ xml_in_files = \
 #xml_DATA = $(xml_in_files:.xml.in=.xml) 
 noinst_DATA = $(xml_in_files:.xml.in=.xml)
 
+# resources
+RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
+capi.gresources.c: capi.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/capi.gresource.xml
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+
 pkgconfigdir = $(libdir)/pkgconfig
 #pkgconfig_DATA = libgda-capi-6.0.pc
 noinst_DATA += libgda-capi-6.0.pc
@@ -77,4 +87,5 @@ EXTRA_DIST = $(xml_in_files) libgda-capi-6.0.pc.in parser.y gen_def.c $(keyword_
 DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
-	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
+	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c \
+	capi.gresources.c

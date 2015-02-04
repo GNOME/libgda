@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/spec/capi">
+    <file compressed="true">capi_specs_create_table.raw.xml</file>
+    <file compressed="true">capi_specs_dsn.raw.xml</file>
+  </gresource>
+</gresources>
