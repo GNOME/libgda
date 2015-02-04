@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/spec/oracle">
+    <file compressed="true">oracle_specs_create_table.raw.xml</file>
+    <file compressed="true">oracle_specs_drop_table.raw.xml</file>
+    <file compressed="true">oracle_specs_dsn.raw.xml</file>
+  </gresource>
+</gresources>

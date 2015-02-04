@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 Tim Coleman <tim@timcoleman.com>
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -80,7 +80,10 @@ plugin_get_dsn_spec (void)
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
 	ret = gda_server_provider_load_file_contents (module_path, dir, "oracle_specs_dsn.xml");
 	g_free (dir);
-	return ret;
+	if (ret)
+		return ret;
+	else
+		return gda_server_provider_load_resource_contents ("oracle", "oracle_specs_dsn.raw.xml");
 }
 
 GdaServerProvider *
