@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2015-01-04 22:30+0000\n"
-"PO-Revision-Date: 2015-01-04 13:57+0100\n"
+"PO-Revision-Date: 2015-02-04 19:08+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -8035,11 +8035,11 @@ msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas.c:354
 msgid "Linear layout"
-msgstr ""
+msgstr "Přímé rozložení"
 
 #: ../tools/browser/canvas/browser-canvas.c:359
 msgid "Radial layout"
-msgstr ""
+msgstr "Kruhové rozložení"
 
 #: ../tools/browser/canvas/browser-canvas.c:466
 msgid "Save diagram as"
