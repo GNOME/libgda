@@ -5,7 +5,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
- * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 yselkowitz <yselkowitz@users.sourceforge.net>
@@ -93,7 +93,6 @@ GdaServerProviderBase data_model_base_functions = {
         NULL,
         NULL,
 	NULL,
-        NULL,
         NULL,
         NULL,
         NULL,

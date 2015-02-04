@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -74,7 +74,6 @@ GdaServerProviderBase data_model_base_functions = {
         NULL,
         NULL,
 	NULL,
-        NULL,
         NULL,
         NULL,
         NULL,

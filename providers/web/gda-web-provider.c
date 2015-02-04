@@ -143,7 +143,6 @@ GdaServerProviderBase web_base_functions = {
 	gda_web_provider_close_connection,
 	NULL,
 	NULL,
-	NULL,
 	gda_web_provider_perform_operation,
 	gda_web_provider_begin_transaction,
 	gda_web_provider_commit_transaction,

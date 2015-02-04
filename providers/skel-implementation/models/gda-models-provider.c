@@ -84,7 +84,6 @@ GdaServerProviderBase data_model_base_functions = {
         NULL,
         NULL,
         NULL,
-        NULL,
 
         NULL, NULL, NULL, NULL, /* padding */
 };
