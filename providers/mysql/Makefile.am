@@ -38,6 +38,7 @@ libgda_mysql_la_SOURCES = \
 	gda-mysql-pstmt.c \
 	gda-mysql-pstmt.h \
 	gda-mysql.h \
+	mysql.gresources.c \
 	libmain.c
 
 libgda_mysql_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
@@ -65,11 +66,23 @@ xml_in_files = \
 
 @INTLTOOL_XML_RULE@
 
-xml_DATA = $(xml_in_files:.xml.in=.xml) 
-CLEANFILES = $(genfiles)
+xml_DATA = $(xml_in_files:.xml.in=.xml)
+
+# resources
+RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
+mysql.gresources.c: mysql.gresource.xml $(RESOURCES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/mysql.gresource.xml
+
+%.raw.xml:%.xml.in
+	@echo "  GEN      $@"
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-6.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-mysql-6.0.pc.in
 DISTCLEANFILES = $(xml_DATA) $(genfiles)
+
+CLEANFILES = \
+	$(genfiles) \
+	mysql.gresources.c
