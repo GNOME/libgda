@@ -350,9 +350,23 @@ extract_named_parameters (GdaServerOperation *op, const gchar *root_path, GtkTex
 		g_free (str);
 		break;
 	}
-	case GDA_SERVER_OPERATION_NODE_SEQUENCE:
+	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
 		gtk_text_buffer_insert (tbuffer, &iter, "Sequence)\n", -1);
+		guint i, size = gda_server_operation_get_sequence_size (op, root_path);
+		for (i = 0; i < size; i++) {
+			gchar **names;
+			names = gda_server_operation_get_sequence_item_names (op, root_path);
+			guint n;
+			for (n = 0; names [n]; n++) {
+				gchar *npath;
+				npath = g_strdup_printf ("%s/%u%s", root_path, i, names [n]);
+				extract_named_parameters (op, npath, tbuffer);
+				g_free (npath);
+			}
+			g_strfreev (names);
+		}
 		break;
+	}
 
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM:
 		gtk_text_buffer_insert (tbuffer, &iter, "Sequence item)\n", -1);
@@ -428,6 +442,22 @@ show_named_parameters (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 	gtk_text_buffer_create_tag (buffer, "req_pathname",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
+
+	xmlNodePtr xml;
+	xml = gda_server_operation_save_data_to_xml (data->op, NULL);
+	if (xml) {
+		g_print ("XML rendering of the GdaServerOperation is:\n");
+                xmlBufferPtr buffer;
+                buffer = xmlBufferCreate ();
+                xmlNodeDump (buffer, NULL, xml, 0, 1);
+                xmlFreeNode (xml);
+                xmlBufferDump (stdout, buffer);
+                xmlBufferFree (buffer);
+		g_print ("\n");
+	}
+	else {
+		g_print ("XML rendering ERROR\n");
+	}
 
 	root_nodes = gda_server_operation_get_root_nodes (data->op);
 	for (i = 0; root_nodes && root_nodes[i]; i++)
