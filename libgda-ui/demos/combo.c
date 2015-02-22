@@ -120,7 +120,7 @@ do_combo (GtkWidget *do_widget)
 
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), "<b>Options:</b>");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 		option = gtk_check_button_new_with_label ("Add NULL entry");
@@ -139,7 +139,7 @@ do_combo (GtkWidget *do_widget)
 		GtkWidget *form;
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), "<b>Current selection is:</b>");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 		sel = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (combo));
@@ -153,7 +153,7 @@ do_combo (GtkWidget *do_widget)
 		GtkWidget *hbox, *entry, *button;
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), "<b>Selection forcing:</b>");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -180,7 +180,7 @@ do_combo (GtkWidget *do_widget)
 		gint i, ncols;
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), "<b>Show columns:</b>");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		ncols = gda_data_model_get_n_columns (model);
 		for (i = 0; i < ncols; i++) {

@@ -71,7 +71,7 @@ do_form_model_change (GtkWidget *do_widget)
 		
 		/* allow choosing which data model to display */
 		label = gtk_label_new ("");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
                 gtk_label_set_markup (GTK_LABEL (label), "<b>Choose which data model to display:</b>");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
@@ -95,7 +95,7 @@ do_form_model_change (GtkWidget *do_widget)
 
 		/* Create the form widget */
 		label = gtk_label_new ("");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
                 gtk_label_set_markup (GTK_LABEL (label), "<b>GdauiForm:</b>");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 

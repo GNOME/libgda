@@ -79,12 +79,12 @@ do_ddl_queries (GtkWidget *do_widget)
 		
 		label = gtk_label_new ("<b>Tested provider and operation:</b>");
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 		
 		/* provider selection */
 		label = gtk_label_new ("Tested provider:");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		wid = gdaui_provider_selector_new ();
@@ -97,7 +97,7 @@ do_ddl_queries (GtkWidget *do_widget)
 
 		/* operation selection */
 		label = gtk_label_new ("Tested operation:");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		
 		wid = gdaui_combo_new ();
@@ -108,7 +108,7 @@ do_ddl_queries (GtkWidget *do_widget)
 
 		/* container for GdauiServerOperation */
 		label = gtk_label_new ("<b>GdauiServerOperation widget:</b>");
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 2, 1);
 
@@ -411,7 +411,7 @@ show_named_parameters (G_GNUC_UNUSED GtkButton *button, DemoData *data)
 					   "Close", GTK_RESPONSE_REJECT, NULL);
 
 	label = gtk_label_new ("<b>Named parameters:</b>\n");
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (dlg))),
 			    label, FALSE, FALSE, 0);

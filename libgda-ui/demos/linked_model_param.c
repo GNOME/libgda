@@ -85,7 +85,7 @@ do_linked_model_param (GtkWidget *do_widget)
 		/* create a basic form to set the values in params */
 		label = gtk_label_new ("<b>GdauiBasicForm to choose a sales person:</b>");
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
 		gtk_widget_show (label);
 
@@ -96,7 +96,7 @@ do_linked_model_param (GtkWidget *do_widget)
 		/* create grid widget */
 		label = gtk_label_new ("<b>GdauiGrid for the customers:</b>");
 		gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 0);
 		gtk_widget_show (label);
 
