@@ -3340,8 +3340,6 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 			expr->value = gda_value_new (G_TYPE_STRING);
 			g_value_take_string (expr->value, colname);
 		}
-		else
-			g_free (colname);
 
 		g_object_set (G_OBJECT (proxy->priv->filter_stmt), "structure", sqlst, NULL);
 #ifdef GDA_DEBUG_NO
