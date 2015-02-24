@@ -3040,6 +3040,8 @@ sql_where_foreach (GdaSqlAnyPart *part, GdaDataProxy *proxy, G_GNUC_UNUSED GErro
 
 /*
  * Applies proxy->priv->filter_stmt
+ *
+ * Make sure proxy->priv->mutex is locked
  */
 static gboolean
 apply_filter_statement (GdaDataProxy *proxy, GError **error)
@@ -3115,6 +3117,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 
 	/* execute statement */
 	GError *lerror = NULL;
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	filtered_rows = gda_connection_statement_execute_select (vcnc, stmt, NULL, &lerror);
      	if (!filtered_rows) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
@@ -3122,6 +3125,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 		g_clear_error (&lerror);
 		proxy->priv->force_direct_mapping = FALSE;
 		gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
+		g_rec_mutex_lock (& (proxy->priv->mutex));
 		goto clean_previous_filter;
 	}
 
@@ -3135,12 +3139,14 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 			      "%s", _("Error in filter expression"));
 		proxy->priv->force_direct_mapping = FALSE;
 		filtered_rows = NULL;
+		g_rec_mutex_lock (& (proxy->priv->mutex));
 		goto clean_previous_filter;
 	}
 	filtered_rows = copy;
 	proxy->priv->force_direct_mapping = FALSE;
+	g_rec_mutex_lock (& (proxy->priv->mutex));
 
- clean_previous_filter:
+ clean_previous_filter: /* NEED TO BE LOCKED HERE */
 	if (proxy->priv->filter_expr) {
 		g_free (proxy->priv->filter_expr);
 		proxy->priv->filter_expr = NULL;
@@ -3173,6 +3179,7 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	gda_data_model_reset (GDA_DATA_MODEL (proxy));
 
 	adjust_displayed_chunk (proxy);
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 	if (!stmt)
 		return TRUE;
@@ -3215,7 +3222,6 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		if (proxy->priv->filter_stmt)
 			g_object_unref (proxy->priv->filter_stmt);
 		proxy->priv->filter_stmt = NULL;
-		g_rec_mutex_unlock (& (proxy->priv->mutex));
 
 		gboolean retval = apply_filter_statement (proxy, error);
 		return retval;
@@ -3260,7 +3266,6 @@ gda_data_proxy_set_filter_expr (GdaDataProxy *proxy, const gchar *filter_expr, G
 		g_object_unref (proxy->priv->filter_stmt);
 	proxy->priv->filter_stmt = stmt;
 
-	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	gboolean retval = apply_filter_statement (proxy, error);
 	return retval;
 }
@@ -3351,11 +3356,11 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 	else {
 		gchar *str;
 		str = g_strdup_printf ("ORDER BY _%d", col + 1);
+		g_rec_mutex_unlock (& (proxy->priv->mutex));
 		retval = gda_data_proxy_set_filter_expr (proxy, str, error);
 		g_free (str);
 	}
 
-	g_rec_mutex_unlock (& (proxy->priv->mutex));
 	return retval;
 }
 
