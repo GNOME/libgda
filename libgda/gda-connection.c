@@ -2,7 +2,7 @@
  * Copyright (C) 2000 - 2001 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Andrew Hill <andru@src.gnome.org>
  * Copyright (C) 2002 Cleber Rodrigues <cleberrrjr@bol.com.br>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
@@ -785,7 +785,10 @@ gda_connection_get_property (GObject *object,
  * @thread: (allow-none): the #GThread in which @context will be used, or %NULL (for the current thread)
  * @context: (allow-none): a #GMainContext, or %NULL
  *
- * Defines the #GMainContext which will still process events while a potentially blocking operation is performed.
+ * Defines the #GMainContext which will still process events while a potentially blocking operation is performed using
+ * @cnc. If @cnc is %NULL, then this function applies to all the connections, except the ones for which a different
+ * context has been defined (be it user defined connections or internal connections used in other objects).
+ * On the other hand, if @cnc is not %NULL, then the setting only applied to @cnc.
  *
  * For exemple if there is a GUI which needs to continue to handle events, then you can use this function to pass
  * the default #GMainContext used for the UI refreshing, for example:
@@ -847,7 +850,10 @@ gda_connection_set_main_context (GdaConnection *cnc, GThread *thread, GMainConte
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @thread: (allow-none): the #GThread in which @context will be used, or %NULL (for the current thread)
  *
- * Get the #GMainContext used while a potentially blocking operation is performed, see gda_connection_set_main_context().
+ * Get the #GMainContext used while a potentially blocking operation is performed using @nc, see
+ * gda_connection_set_main_context(). If @cnc is %NULL, then the setting applies to all the connections for which
+ * no other similar setting has been set.
+ *
  * If no main context has been defined, then some function calls (for example connection opening) may block until the
  * operation has finished.
  *
@@ -868,6 +874,8 @@ gda_connection_get_main_context (GdaConnection *cnc, GThread *thread)
 		g_mutex_lock (&global_mutex);
 		if (cnc->priv->context_hash)
 			context = g_hash_table_lookup (cnc->priv->context_hash, thread);
+		if (!context && all_context_hash)
+			context = g_hash_table_lookup (all_context_hash, thread);
 		g_mutex_unlock (&global_mutex);
 	}
 	else {
