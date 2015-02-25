@@ -3082,7 +3082,10 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 			proxy->priv->force_direct_mapping = FALSE;
 			goto clean_previous_filter;
 		}
-
+		GMainContext *ctx;
+		ctx = gda_connection_get_main_context (NULL, NULL);
+		if (ctx)
+			gda_connection_set_main_context (vcnc, NULL, ctx);
 		proxy->priv->filter_vcnc = vcnc;
 	}
 

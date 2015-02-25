@@ -796,10 +796,10 @@ main (int argc, char **argv)
 	if (! full_filename)
 		gda_connection_update_meta_store (demo_cnc, NULL, NULL);
 
-	/* set main context for connection */
+	/* set main context for the connection */
 	GMainContext *context;
 	context = g_main_context_ref_thread_default ();
-	gda_connection_set_main_context (demo_cnc, NULL, context);
+	gda_connection_set_main_context (NULL, NULL, context);
 	g_main_context_unref (context);
 	g_object_set (demo_cnc, "execution-slowdown", 1000000, NULL);
 
