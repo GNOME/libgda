@@ -72,13 +72,13 @@ libgda_jdbc_la_LDFLAGS += -Wl,--kill-at
 endif
 
 jdbc-resources.h jdbc-resources.c: $(srcdir)/jdbc.gresource.xml $(RAWRESOURCES) Makefile $(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/jdbc.gresource.xml)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate --c-name _jdbc --manual-register $<
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --generate --c-name _jdbc --manual-register $<
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
-	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
-CLEANFILES = $(resources)
+CLEANFILES = $(resources) $(RAWRESOURCES)
 
 $(jni_headers): $(jdbcprov_classes)
 	$(JAVAH) -classpath . -d $(builddir) -force `basename $@ | sed -e 's/\.h$$//'`

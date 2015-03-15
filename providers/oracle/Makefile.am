@@ -75,11 +75,11 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 # resources
 RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 oracle.gresources.c: oracle.gresource.xml $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/oracle.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $(srcdir)/oracle.gresource.xml
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
-	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-oracle-6.0.pc
@@ -89,4 +89,5 @@ DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = parser.h parser.c parser.out oracle_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
 	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c \
-	oracle.gresources.c
+	oracle.gresources.c \
+	$(RESOURCES)

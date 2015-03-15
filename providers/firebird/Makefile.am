@@ -76,11 +76,11 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 # resources
 RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 firebird.gresources.c: firebird.gresource.xml $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/firebird.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $(srcdir)/firebird.gresource.xml
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
-	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -95,4 +95,5 @@ CLEANFILES = \
 	parser.out \
 	firebird_token_types.h \
 	gen_def$(EXEEXT_FOR_BUILD) \
-	firebird.gresource.c
+	firebird.gresource.c \
+	$(RESOURCES)

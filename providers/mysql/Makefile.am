@@ -71,11 +71,11 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 # resources
 RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 mysql.gresources.c: mysql.gresource.xml $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/mysql.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $(srcdir)/mysql.gresource.xml
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
-	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-ZA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-ZA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
+	@cat $< | sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'> $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-6.0.pc
@@ -85,4 +85,5 @@ DISTCLEANFILES = $(xml_DATA) $(genfiles)
 
 CLEANFILES = \
 	$(genfiles) \
-	mysql.gresources.c
+	mysql.gresources.c \
+	$(RESOURCES)
