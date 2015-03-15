@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -29,11 +29,9 @@
 #include "gdaui-data-selector.h"
 #include "gdaui-data-proxy.h"
 #include "gdaui-basic-form.h"
-#include "gdaui-data-filter.h"
 #include "internal/utility.h"
 #include "data-entries/gdaui-entry-shell.h"
 #include <libgda/gda-debug-macros.h>
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_raw_form_class_init (GdauiRawFormClass * class);
 static void gdaui_raw_form_init (GdauiRawForm *wid);
@@ -60,7 +58,8 @@ static void            gdaui_raw_form_widget_init         (GdauiDataProxyIface *
 static GdaDataProxy   *gdaui_raw_form_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
 static void            gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions);
-static GtkActionGroup *gdaui_raw_form_get_actions_group   (GdauiDataProxy *iface);
+static gboolean        gdaui_raw_form_supports_action       (GdauiDataProxy *iface, GdauiAction action);
+static void            gdaui_raw_form_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_raw_form_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
 static GdauiDataProxyWriteMode gdaui_raw_form_widget_get_write_mode (GdauiDataProxy *iface);
 
@@ -81,11 +80,6 @@ struct _GdauiRawFormPriv
 	GdaDataModelIter           *iter;  /* proxy's iter */
 
 	GdauiDataProxyWriteMode     write_mode;
-
-	GtkActionGroup             *actions_group;
-
-	GtkWidget                  *filter;
-	GtkWidget                  *filter_window;
 };
 
 #define PAGE_NO_DATA 0
@@ -145,7 +139,8 @@ gdaui_raw_form_widget_init (GdauiDataProxyIface *iface)
 	iface->get_proxy = gdaui_raw_form_get_proxy;
 	iface->set_column_editable = gdaui_raw_form_set_column_editable;
 	iface->show_column_actions = gdaui_raw_form_show_column_actions;
-	iface->get_actions_group = gdaui_raw_form_get_actions_group;
+	iface->supports_action = gdaui_raw_form_supports_action;
+	iface->perform_action = gdaui_raw_form_perform_action;
 	iface->set_write_mode = gdaui_raw_form_widget_set_write_mode;
 	iface->get_write_mode = gdaui_raw_form_widget_get_write_mode;
 }
@@ -187,39 +182,237 @@ gdaui_raw_form_class_init (GdauiRawFormClass *class)
 							      G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
-static void action_new_cb (GtkAction *action, GdauiRawForm *form);
-static void action_delete_cb (GtkToggleAction *action, GdauiRawForm *form);
-static void action_commit_cb (GtkAction *action, GdauiRawForm *form);
-static void action_reset_cb (GtkAction *action, GdauiRawForm *form);
-static void action_first_record_cb (GtkAction *action, GdauiRawForm *form);
-static void action_prev_record_cb (GtkAction *action, GdauiRawForm *form);
-static void action_next_record_cb (GtkAction *action, GdauiRawForm *form);
-static void action_last_record_cb (GtkAction *action, GdauiRawForm *form);
-static void action_filter_cb (GtkAction *action, GdauiRawForm *form);
-
-static GtkToggleActionEntry ui_actions_t[] = {
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the current record"), G_CALLBACK (action_delete_cb), FALSE},
-};
-
-static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new record"), G_CALLBACK (action_new_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the modifications"), G_CALLBACK (action_commit_cb)},
-	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstRecord", GTK_STOCK_GOTO_FIRST, "_First record", NULL, N_("Go to first record"), G_CALLBACK (action_first_record_cb)},
-	{ "ActionLastRecord", GTK_STOCK_GOTO_LAST, "_Last record", NULL, N_("Go to last record"), G_CALLBACK (action_last_record_cb)},
-	{ "ActionPrevRecord", GTK_STOCK_GO_BACK, "_Previous record", NULL, N_("Go to previous record"), G_CALLBACK (action_prev_record_cb)},
-	{ "ActionNextRecord", GTK_STOCK_GO_FORWARD, "Ne_xt record", NULL, N_("Go to next record"), G_CALLBACK (action_next_record_cb)},
-	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
-};
+static gboolean
+gdaui_raw_form_supports_action (GdauiDataProxy *iface, GdauiAction action)
+{
+	switch (action) {
+	case GDAUI_ACTION_NEW_DATA:
+	case GDAUI_ACTION_WRITE_MODIFIED_DATA:
+	case GDAUI_ACTION_DELETE_SELECTED_DATA:
+	case GDAUI_ACTION_UNDELETE_SELECTED_DATA:
+	case GDAUI_ACTION_RESET_DATA:
+	case GDAUI_ACTION_MOVE_FIRST_RECORD:
+        case GDAUI_ACTION_MOVE_PREV_RECORD:
+        case GDAUI_ACTION_MOVE_NEXT_RECORD:
+        case GDAUI_ACTION_MOVE_LAST_RECORD:
+		return TRUE;
+	default:
+		return FALSE;
+	};
+}
 
 static void
-action_new_activated_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *wid)
+form_holder_changed_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
 {
-	/* make the first entry grab the focus */
-	if (wid->priv->iter && GDA_SET (wid->priv->iter)->holders)
-		gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (wid),
-						   (GdaHolder *)
-						   GDA_SET (wid->priv->iter)->holders->data);
+	if (form->priv->write_mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) {
+		gint row;
+
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		if (row >= 0) {
+			/* write back the current row */
+			if (gda_data_proxy_row_has_changed (form->priv->proxy, row)) {
+				GError *error = NULL;
+				if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
+					_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
+					if (error)
+						g_error_free (error);
+				}
+			}
+		}
+	}
+}
+
+static void arrow_actions_real_do (GdauiRawForm *form, gint movement);
+
+static void
+gdaui_raw_form_perform_action (GdauiDataProxy *iface, GdauiAction action)
+{
+	GdauiRawForm *form = GDAUI_RAW_FORM (iface);
+
+	switch (action) {
+	case GDAUI_ACTION_NEW_DATA: {
+		gint newrow;
+		GError *error = NULL;
+		GSList *list;
+
+		if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+			/* validate current row (forces calling iter_validate_set_cb()) */
+			if (gda_data_model_iter_is_valid (form->priv->iter) &&
+			    ! gda_set_is_valid (GDA_SET (form->priv->iter), NULL))
+				return;
+		}
+
+		/* append a row in the proxy */
+		g_signal_handlers_block_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
+		newrow = gda_data_model_append_row (GDA_DATA_MODEL (form->priv->proxy), &error);
+		if (newrow == -1) {
+			g_warning (_("Can't append row to data model: %s"),
+				   error && error->message ? error->message : _("Unknown error"));
+			g_error_free (error);
+			g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
+			return;
+		}
+
+		if (!gda_data_model_iter_move_to_row (form->priv->iter, newrow)) {
+			g_warning ("Can't set GdaDataModelIterator on new row");
+			g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
+			return;
+		}
+
+		/* set parameters to their default values */
+		for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
+			GdaHolder *param;
+			const GValue *value;
+
+			g_object_get (G_OBJECT (list->data), "full_bind", &param, NULL);
+			if (! param) {
+				value = gda_holder_get_default_value (GDA_HOLDER (list->data));
+				if (value)
+					gda_holder_set_value_to_default (GDA_HOLDER (list->data));
+			}
+			else
+				g_object_unref (param);
+		}
+
+		g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
+		form_holder_changed_cb (form, NULL);
+
+		/* make the first entry grab the focus */
+		if (form->priv->iter && GDA_SET (form->priv->iter)->holders)
+			gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (form),
+							   (GdaHolder *)
+							   GDA_SET (form->priv->iter)->holders->data);
+		break;
+	}
+	case GDAUI_ACTION_WRITE_MODIFIED_DATA: {
+		gint row;
+		GError *error = NULL;
+		gboolean allok = TRUE;
+		gint mod1, mod2;
+
+		mod1 = gda_data_proxy_get_n_modified_rows (form->priv->proxy);
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+			gint newrow;
+
+			allok = gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error);
+			if (allok) {
+				newrow = gda_data_model_iter_get_row (form->priv->iter);
+				if (row != newrow) /* => current row has changed because the proxy had to emit a "row_removed" when
+						      actually succeeded the commit
+						      => we need to come back to that row
+						   */
+					gda_data_model_iter_move_to_row (form->priv->iter, row);
+			}
+		}
+		else
+			allok = gda_data_proxy_apply_all_changes (form->priv->proxy, &error);
+
+		mod2 = gda_data_proxy_get_n_modified_rows (form->priv->proxy);
+		if (!allok) {
+			if (mod1 != mod2)
+				/* the data model has changed while doing the writing */
+				_gdaui_utility_display_error ((GdauiDataProxy *) form, FALSE, error);
+			else
+				_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
+			g_error_free (error);
+		}
+
+		/* get to a correct selected row */
+		for (; (row >= 0) &&!gda_data_model_iter_move_to_row (form->priv->iter, row); row--);
+
+		break;
+	}
+	case GDAUI_ACTION_DELETE_SELECTED_DATA: {
+		gint row;
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		g_return_if_fail (row >= 0);
+		gda_data_proxy_delete (form->priv->proxy, row);
+		
+		if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+			/* force the proxy to apply the current row deletion */
+			gint newrow;
+			
+			newrow = gda_data_model_iter_get_row (form->priv->iter);
+			if (row == newrow) {/* => row has been marked as delete but not yet really deleted */
+				GError *error = NULL;
+				if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
+					_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
+					if (error)
+						g_error_free (error);
+				}
+			}
+		}
+		break;
+	}
+
+	case GDAUI_ACTION_UNDELETE_SELECTED_DATA: {
+		gint row;
+		
+		row = gda_data_model_iter_get_row (form->priv->iter);
+		g_return_if_fail (row >= 0);
+		gda_data_proxy_undelete (form->priv->proxy, row);
+
+		break;
+	}
+	case GDAUI_ACTION_RESET_DATA: {
+		gda_data_proxy_cancel_all_changes (form->priv->proxy);
+		gda_data_model_send_hint (GDA_DATA_MODEL (form->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
+		break;
+	}
+	case GDAUI_ACTION_MOVE_FIRST_RECORD:
+		arrow_actions_real_do (form, -2);
+		break;
+        case GDAUI_ACTION_MOVE_PREV_RECORD:
+		arrow_actions_real_do (form, -1);
+		break;
+        case GDAUI_ACTION_MOVE_NEXT_RECORD:
+		arrow_actions_real_do (form, 1);
+		break;
+        case GDAUI_ACTION_MOVE_LAST_RECORD:
+		arrow_actions_real_do (form, 2);
+		break;
+	default:
+		break;
+	}
+}
+
+static void
+arrow_actions_real_do (GdauiRawForm *form, gint movement)
+{
+	gint row, oldrow;
+
+	row = gda_data_model_iter_get_row (form->priv->iter);
+	g_return_if_fail (row >= 0);
+	oldrow = row;
+
+	/* see if some data have been modified and need to be written to the DBMS */
+	/* if ((form->priv->mode & GDAUI_ACTION_MODIF_AUTO_COMMIT) && */
+	/* 	    gda_data_proxy_has_changed (form->priv->proxy)) */
+	/* 		action_commit_cb (NULL, form); */
+
+	/* movement */
+	switch (movement) {
+	case -2:
+		row = 0;
+		break;
+	case -1:
+		if (row > 0)
+			row--;
+		break;
+	case 1:
+		if (row < gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) - 1 )
+			row++;
+		break;
+	case 2:
+		row = gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) - 1;
+		break;
+	default:
+		g_assert_not_reached ();
+	}
+
+	if (oldrow != row)
+		gda_data_model_iter_move_to_row (form->priv->iter, row);
 }
 
 static void
@@ -247,30 +440,8 @@ form_activated_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
 }
 
 static void
-form_holder_changed_cb (GdauiRawForm *form, G_GNUC_UNUSED gpointer data)
-{
-	if (form->priv->write_mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) {
-		gint row;
-
-		row = gda_data_model_iter_get_row (form->priv->iter);
-		if (row >= 0) {
-			/* write back the current row */
-			if (gda_data_proxy_row_has_changed (form->priv->proxy, row)) {
-				GError *error = NULL;
-				if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
-					_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
-					if (error)
-						g_error_free (error);
-				}
-			}
-		}
-	}
-}
-
-static void
 gdaui_raw_form_init (GdauiRawForm *wid)
 {
-	GtkAction *action;
 	wid->priv = g_new0 (GdauiRawFormPriv, 1);
 
 	wid->priv->data_model = NULL;
@@ -282,19 +453,6 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 			  G_CALLBACK (form_activated_cb), NULL);
 	g_signal_connect (G_OBJECT (wid), "holder-changed",
 			  G_CALLBACK (form_holder_changed_cb), NULL);
-
-	/* action group */
-        wid->priv->actions_group = gtk_action_group_new ("Actions");
-	gtk_action_group_set_translation_domain (wid->priv->actions_group, GETTEXT_PACKAGE);
-
-        gtk_action_group_add_actions (wid->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions), wid);
-        gtk_action_group_add_toggle_actions (wid->priv->actions_group, ui_actions_t, G_N_ELEMENTS (ui_actions_t), wid);
-	action = gtk_action_group_get_action (wid->priv->actions_group, "ActionNew");
-	g_signal_connect (G_OBJECT (action), "activate",
-			  G_CALLBACK (action_new_activated_cb), wid);
-
-	wid->priv->filter = NULL;
-	wid->priv->filter_window = NULL;
 
 	/* raw forms' default unknown color */
 	gdaui_basic_form_set_unknown_color ((GdauiBasicForm*) wid, -1., -1., -1., -1.);
@@ -332,15 +490,6 @@ gdaui_raw_form_dispose (GObject *object)
 
 	if (form->priv) {
 		gdaui_raw_form_clean (form);
-
-		if (form->priv->filter)
-			gtk_widget_destroy (form->priv->filter);
-		if (form->priv->filter_window)
-			gtk_widget_destroy (form->priv->filter_window);
-
-		/* UI */
-		if (form->priv->actions_group)
-			g_object_unref (G_OBJECT (form->priv->actions_group));
 
 		/* the private area itself */
 		g_free (form->priv);
@@ -605,360 +754,6 @@ proxy_row_inserted_or_removed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, G
 			gda_data_model_iter_move_to_row (form->priv->iter, row > 0 ? row - 1 : 0);
 }
 
-/*
- *
- * Modification buttons (Commit changes, Reset form, New entry, Delete)
- *
- */
-static void
-action_new_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	gint newrow;
-	GError *error = NULL;
-	GSList *list;
-
-	if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
-		/* validate current row (forces calling iter_validate_set_cb()) */
-		if (gda_data_model_iter_is_valid (form->priv->iter) &&
-		    ! gda_set_is_valid (GDA_SET (form->priv->iter), NULL))
-			return;
-	}
-
-	/* append a row in the proxy */
-	g_signal_handlers_block_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
-	newrow = gda_data_model_append_row (GDA_DATA_MODEL (form->priv->proxy), &error);
-	if (newrow == -1) {
-		g_warning (_("Can't append row to data model: %s"),
-			   error && error->message ? error->message : _("Unknown error"));
-		g_error_free (error);
-		g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
-		return;
-	}
-
-	if (!gda_data_model_iter_move_to_row (form->priv->iter, newrow)) {
-		g_warning ("Can't set GdaDataModelIterator on new row");
-		g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
-		return;
-	}
-
-	/* set parameters to their default values */
-	for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
-		GdaHolder *param;
-		const GValue *value;
-
-		g_object_get (G_OBJECT (list->data), "full_bind", &param, NULL);
-		if (! param) {
-			value = gda_holder_get_default_value (GDA_HOLDER (list->data));
-			if (value)
-				gda_holder_set_value_to_default (GDA_HOLDER (list->data));
-		}
-		else
-			g_object_unref (param);
-	}
-
-	g_signal_handlers_unblock_by_func (form, G_CALLBACK (form_holder_changed_cb), NULL);
-	form_holder_changed_cb (form, NULL);
-}
-
-static void
-action_delete_cb (GtkToggleAction *action, GdauiRawForm *form)
-{
-	if (gtk_toggle_action_get_active (action)) {
-		gint row;
-		row = gda_data_model_iter_get_row (form->priv->iter);
-		g_return_if_fail (row >= 0);
-		gda_data_proxy_delete (form->priv->proxy, row);
-		
-		if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
-			/* force the proxy to apply the current row deletion */
-			gint newrow;
-			
-			newrow = gda_data_model_iter_get_row (form->priv->iter);
-			if (row == newrow) {/* => row has been marked as delete but not yet really deleted */
-				GError *error = NULL;
-				if (!gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error)) {
-					_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
-					if (error)
-						g_error_free (error);
-				}
-			}
-		}
-	}
-	else {
-		gint row;
-		
-		row = gda_data_model_iter_get_row (form->priv->iter);
-		g_return_if_fail (row >= 0);
-		gda_data_proxy_undelete (form->priv->proxy, row);
-	}
-}
-
-static void
-action_commit_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	gint row;
-	GError *error = NULL;
-	gboolean allok = TRUE;
-	gint mod1, mod2;
-
-	mod1 = gda_data_proxy_get_n_modified_rows (form->priv->proxy);
-	row = gda_data_model_iter_get_row (form->priv->iter);
-	if (form->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
-		gint newrow;
-
-		allok = gda_data_proxy_apply_row_changes (form->priv->proxy, row, &error);
-		if (allok) {
-			newrow = gda_data_model_iter_get_row (form->priv->iter);
-			if (row != newrow) /* => current row has changed because the proxy had to emit a "row_removed" when
-					      actually succeeded the commit
-					      => we need to come back to that row
-					   */
-				gda_data_model_iter_move_to_row (form->priv->iter, row);
-		}
-	}
-	else
-		allok = gda_data_proxy_apply_all_changes (form->priv->proxy, &error);
-
-	mod2 = gda_data_proxy_get_n_modified_rows (form->priv->proxy);
-	if (!allok) {
-		if (mod1 != mod2)
-			/* the data model has changed while doing the writing */
-			_gdaui_utility_display_error ((GdauiDataProxy *) form, FALSE, error);
-		else
-			_gdaui_utility_display_error ((GdauiDataProxy *) form, TRUE, error);
-		g_error_free (error);
-	}
-
-	/* get to a correct selected row */
-	for (; (row >= 0) &&!gda_data_model_iter_move_to_row (form->priv->iter, row); row--);
-}
-
-static void
-action_reset_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	gda_data_proxy_cancel_all_changes (form->priv->proxy);
-	gda_data_model_send_hint (GDA_DATA_MODEL (form->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
-}
-
-static void arrow_actions_real_do (GdauiRawForm *form, gint movement);
-static void
-action_first_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	arrow_actions_real_do (form, -2);
-}
-
-static void
-action_prev_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	arrow_actions_real_do (form, -1);
-}
-
-static void
-action_next_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	arrow_actions_real_do (form, 1);
-}
-
-static void
-action_last_record_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	arrow_actions_real_do (form, 2);
-}
-
-static void
-hide_filter_window (GdauiRawForm *form)
-{
-	gtk_widget_hide (form->priv->filter_window);
-	gtk_grab_remove (form->priv->filter_window);
-}
-
-static gboolean
-filter_event (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventAny *event, GdauiRawForm *form)
-{
-	hide_filter_window (form);
-	return TRUE;
-}
-
-static gboolean
-key_press_filter_event (G_GNUC_UNUSED GtkWidget *widget, GdkEventKey *event, GdauiRawForm *form)
-{
-	if (event->keyval == GDK_KEY_Escape ||
-	    event->keyval == GDK_KEY_Tab ||
-            event->keyval == GDK_KEY_KP_Tab ||
-            event->keyval == GDK_KEY_ISO_Left_Tab) {
-		hide_filter_window (form);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-static void
-filter_position_func (GtkWidget *widget,
-		      GtkWidget *search_dialog,
-		      G_GNUC_UNUSED gpointer   user_data)
-{
-	gint x, y;
-	gint tree_x, tree_y;
-	gint tree_width, tree_height;
-	GdkWindow *window;
-	GdkScreen *screen;
-	GtkRequisition requisition;
-	gint monitor_num;
-	GdkRectangle monitor;
-
-	window = gtk_widget_get_window (widget);
-	screen = gdk_window_get_screen (window);
-	monitor_num = gdk_screen_get_monitor_at_window (screen, window);
-	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
-
-	gtk_widget_realize (search_dialog);
-
-	gdk_window_get_origin (window, &tree_x, &tree_y);
-	tree_width = gdk_window_get_width (window);
-	tree_height = gdk_window_get_height (window);
-	gtk_widget_get_preferred_size (search_dialog, NULL, &requisition);
-
-	if (tree_x + tree_width > gdk_screen_get_width (screen))
-		x = gdk_screen_get_width (screen) - requisition.width;
-	else if (tree_x + tree_width - requisition.width < 0)
-		x = 0;
-	else
-		x = tree_x + tree_width - requisition.width;
-
-	if (tree_y + tree_height + requisition.height > gdk_screen_get_height (screen))
-		y = gdk_screen_get_height (screen) - requisition.height;
-	else if (tree_y + tree_height < 0) /* isn't really possible ... */
-		y = 0;
-	else
-		y = tree_y + tree_height;
-
-	gtk_window_move (GTK_WINDOW (search_dialog), x, y);
-}
-
-static gboolean
-popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
-{
-	GdkDeviceManager *manager;
-	GdkDevice *pointer;
-	GdkWindow *window;
-	window = gtk_widget_get_window (widget);
-	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-	pointer = gdk_device_manager_get_client_pointer (manager);
-        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
-                              GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-                              NULL, activate_time) == GDK_GRAB_SUCCESS) {
-		GdkDevice *keyb;
-		keyb = gdk_device_get_associated_device (pointer);
-                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
-				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) == 0)
-                        return TRUE;
-		else {
-                        gdk_device_ungrab (pointer, activate_time);
-                        return FALSE;
-                }
-        }
-        return FALSE;
-}
-
-static void
-action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawForm *form)
-{
-	GtkWidget *toplevel;
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (form));
-
-	if (!form->priv->filter_window) {
-		/* create filter window */
-		GtkWidget *frame, *vbox;
-
-		form->priv->filter_window = gtk_window_new (GTK_WINDOW_POPUP);
-
-		gtk_widget_set_events (form->priv->filter_window,
-				       gtk_widget_get_events (form->priv->filter_window) | GDK_KEY_PRESS_MASK);
-
-		if (gtk_widget_is_toplevel (toplevel) && gtk_window_get_group ((GtkWindow*) toplevel))
-			gtk_window_group_add_window (gtk_window_get_group ((GtkWindow*) toplevel),
-						     GTK_WINDOW (form->priv->filter_window));
-
-		g_signal_connect (form->priv->filter_window, "delete-event",
-				  G_CALLBACK (filter_event), form);
-		g_signal_connect (form->priv->filter_window, "button-press-event",
-				  G_CALLBACK (filter_event), form);
-		g_signal_connect (form->priv->filter_window, "key-press-event",
-				  G_CALLBACK (key_press_filter_event), form);
-		frame = gtk_frame_new (NULL);
-		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-		gtk_widget_show (frame);
-		gtk_container_add (GTK_CONTAINER (form->priv->filter_window), frame);
-
-		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-		gtk_widget_show (vbox);
-		gtk_container_add (GTK_CONTAINER (frame), vbox);
-		gtk_container_set_border_width (GTK_CONTAINER (vbox), 3);
-
-		/* add real filter widget */
-		if (! form->priv->filter) {
-			form->priv->filter = gdaui_data_filter_new (GDAUI_DATA_PROXY (form));
-			gtk_widget_show (form->priv->filter);
-		}
-		gtk_container_add (GTK_CONTAINER (vbox), form->priv->filter);
-	}
-	else if (gtk_widget_is_toplevel (toplevel)) {
-		if (gtk_window_get_group ((GtkWindow*) toplevel))
-			gtk_window_group_add_window (gtk_window_get_group ((GtkWindow*) toplevel),
-						     GTK_WINDOW (form->priv->filter_window));
-		else if (gtk_window_get_group ((GtkWindow*) form->priv->filter_window))
-			gtk_window_group_remove_window (gtk_window_get_group ((GtkWindow*) form->priv->filter_window),
-							GTK_WINDOW (form->priv->filter_window));
-	}
-
-	/* move the filter window to a correct location */
-	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
-	gtk_widget_show (form->priv->filter_window);
-	gtk_grab_add (form->priv->filter_window);
-	filter_position_func (GTK_WIDGET (form), form->priv->filter_window, NULL);
-	gtk_widget_show (form->priv->filter_window);
-	popup_grab_on_window (form->priv->filter_window,
-			      gtk_get_current_event_time ());
-}
-
-
-static void
-arrow_actions_real_do (GdauiRawForm *form, gint movement)
-{
-	gint row, oldrow;
-
-	row = gda_data_model_iter_get_row (form->priv->iter);
-	g_return_if_fail (row >= 0);
-	oldrow = row;
-
-	/* see if some data have been modified and need to be written to the DBMS */
-	/* if ((form->priv->mode & GDAUI_ACTION_MODIF_AUTO_COMMIT) && */
-	/* 	    gda_data_proxy_has_changed (form->priv->proxy)) */
-	/* 		action_commit_cb (NULL, form); */
-
-	/* movement */
-	switch (movement) {
-	case -2:
-		row = 0;
-		break;
-	case -1:
-		if (row > 0)
-			row--;
-		break;
-	case 1:
-		if (row < gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) - 1 )
-			row++;
-		break;
-	case 2:
-		row = gda_data_model_get_n_rows (GDA_DATA_MODEL (form->priv->proxy)) - 1;
-		break;
-	default:
-		g_assert_not_reached ();
-	}
-
-	if (oldrow != row)
-		gda_data_model_iter_move_to_row (form->priv->iter, row);
-}
 
 /*
  * GdauiDataProxy interface implementation
@@ -1005,18 +800,6 @@ gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, G_GNUC_UNUSED gint co
 
 	/* REM: don't take care of the @column argument */
 	g_object_set ((GObject*) form, "show-actions", show_actions, NULL);
-}
-
-static GtkActionGroup *
-gdaui_raw_form_get_actions_group (GdauiDataProxy *iface)
-{
-	GdauiRawForm *form;
-
-	g_return_val_if_fail (GDAUI_IS_RAW_FORM (iface), NULL);
-	form = GDAUI_RAW_FORM (iface);
-	g_return_val_if_fail (form->priv, NULL);
-
-	return form->priv->actions_group;
 }
 
 static gboolean

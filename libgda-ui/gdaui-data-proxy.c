@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -153,35 +153,26 @@ gdaui_data_proxy_column_show_actions (GdauiDataProxy *iface, gint column, gboole
 }
 
 /**
- * gdaui_data_proxy_get_actions_group:
+ * gdaui_data_proxy_supports_action:
  * @iface: an object which implements the #GdauiDataProxy interface
+ * @action: a #GdauiAction action
  *
- * Each widget imlplementing the #GdauiDataProxy interface provides actions. Actions can be triggered
- * using the gdaui_data_proxy_perform_action() method, but using this method allows for the creation of
- * toolbars, menus, etc calling these actions.
+ * Determines if @action can be used on @iface (using gdaui_data_proxy_perform_action()).
  *
- * The actions are among: 
- * <itemizedlist><listitem><para>Data edition actions: "ActionNew", "ActionCommit", 
- *    "ActionDelete", "ActionReset". Note that the "ActionDelete" action is actually a #GtkToggleAction
- *    action which can be used to delete a row or undelete it.</para></listitem>
- * <listitem><para>Record by record moving: "ActionFirstRecord", "ActionPrevRecord", 
- *    "ActionNextRecord", "ActionLastRecord".</para></listitem>
- * <listitem><para>Chuncks of records moving: "ActionFirstChunck", "ActionPrevChunck", 
- *     "ActionNextChunck", "ActionLastChunck".</para></listitem>
- * <listitem><para>Filtering: "ActionFilter".</para></listitem></itemizedlist>
- * 
- * Returns: (transfer none): the #GtkActionGroup with all the possible actions on the widget.
+ * Returns: %TRUE if the requested action is supported, %FALSE otherwise
  *
- * Since: 4.2
+ * Since: 6.0
  */
-GtkActionGroup *
-gdaui_data_proxy_get_actions_group (GdauiDataProxy *iface)
+gboolean
+gdaui_data_proxy_supports_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	g_return_val_if_fail (GDAUI_IS_DATA_PROXY (iface), NULL);
+	g_return_val_if_fail (GDAUI_IS_DATA_PROXY (iface), FALSE);
+	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK), FALSE);
 
-	if (GDAUI_DATA_PROXY_GET_IFACE (iface)->get_actions_group)
-		return (GDAUI_DATA_PROXY_GET_IFACE (iface)->get_actions_group) (iface);
-	return NULL;
+	if (GDAUI_DATA_PROXY_GET_IFACE (iface)->supports_action)
+		return (GDAUI_DATA_PROXY_GET_IFACE (iface)->supports_action) (iface, action);
+	else
+		return FALSE;
 }
 
 /**
@@ -199,63 +190,15 @@ gdaui_data_proxy_get_actions_group (GdauiDataProxy *iface)
 void
 gdaui_data_proxy_perform_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	gchar *action_name = NULL;
-	GtkActionGroup *group;
-	GtkAction *gtkaction;
+	g_return_val_if_fail (GDAUI_IS_DATA_PROXY (iface), FALSE);
+	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK), FALSE);
 
-	g_return_if_fail (GDAUI_IS_DATA_PROXY (iface));
-	group = gdaui_data_proxy_get_actions_group (iface);
-	if (!group) {
-		g_warning ("Object class %s does not support the gdaui_data_proxy_get_actions_group() method",
-			   G_OBJECT_TYPE_NAME (iface));
-		return;
+	if (gdaui_data_proxy_supports_action (iface, action)) {
+		if (GDAUI_DATA_PROXY_GET_IFACE (iface)->perform_action)
+			return (GDAUI_DATA_PROXY_GET_IFACE (iface)->perform_action) (iface, action);
 	}
-	
-	switch (action) {
-	case GDAUI_ACTION_NEW_DATA:
-		action_name = "ActionNew";
-		break;
-	case GDAUI_ACTION_WRITE_MODIFIED_DATA:
-		action_name = "ActionCommit";
-		break;
-        case GDAUI_ACTION_DELETE_SELECTED_DATA:
-        case GDAUI_ACTION_UNDELETE_SELECTED_DATA:
-		action_name = "ActionDelete";
-		break;
-        case GDAUI_ACTION_RESET_DATA:
-		action_name = "ActionReset";
-		break;
-        case GDAUI_ACTION_MOVE_FIRST_RECORD:
-		action_name = "ActionFirstRecord";
-		break;
-        case GDAUI_ACTION_MOVE_PREV_RECORD:
-		action_name = "ActionPrevRecord";
-		break;
-        case GDAUI_ACTION_MOVE_NEXT_RECORD:
-		action_name = "ActionNextRecord";
-		break;
-        case GDAUI_ACTION_MOVE_LAST_RECORD:
-		action_name = "ActionLastRecord";
-		break;
-        case GDAUI_ACTION_MOVE_FIRST_CHUNCK:
-		action_name = "ActionFirstChunck";
-		break;
-        case GDAUI_ACTION_MOVE_PREV_CHUNCK:
-		action_name = "ActionPrevChunck";
-		break;
-        case GDAUI_ACTION_MOVE_NEXT_CHUNCK:
-		action_name = "ActionNextChunck";
-		break;
-        case GDAUI_ACTION_MOVE_LAST_CHUNCK:
-		action_name = "ActionLastChunck";
-		break;
-	default:
-		g_assert_not_reached ();
-	}
-
-	gtkaction = gtk_action_group_get_action (group, action_name);
-	if (gtkaction)
-		gtk_action_activate (gtkaction);
+	else
+		g_warning (_("GdauiAction is not supported by this GdauiDataProxy interface"));
 }
 
 /**

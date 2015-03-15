@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -47,7 +47,8 @@ static void            gdaui_grid_widget_init         (GdauiDataProxyIface *ifac
 static GdaDataProxy   *gdaui_grid_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_grid_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
 static void            gdaui_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions);
-static GtkActionGroup *gdaui_grid_get_actions_group   (GdauiDataProxy *iface);
+static gboolean        gdaui_grid_supports_action       (GdauiDataProxy *iface, GdauiAction action);
+static void            gdaui_grid_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_grid_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
 static GdauiDataProxyWriteMode gdaui_grid_widget_get_write_mode (GdauiDataProxy *iface);
 
@@ -125,7 +126,8 @@ gdaui_grid_widget_init (GdauiDataProxyIface *iface)
 	iface->get_proxy = gdaui_grid_get_proxy;
 	iface->set_column_editable = gdaui_grid_set_column_editable;
 	iface->show_column_actions = gdaui_grid_show_column_actions;
-	iface->get_actions_group = gdaui_grid_get_actions_group;
+	iface->supports_action = gdaui_grid_supports_action;
+	iface->perform_action = gdaui_grid_perform_action;
 	iface->set_write_mode = gdaui_grid_widget_set_write_mode;
 	iface->get_write_mode = gdaui_grid_widget_get_write_mode;
 }
@@ -351,11 +353,18 @@ gdaui_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean sho
 					      column, show_actions);
 }
 
-static GtkActionGroup *
-gdaui_grid_get_actions_group (GdauiDataProxy *iface)
+static gboolean
+gdaui_grid_supports_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	return gdaui_data_proxy_get_actions_group ((GdauiDataProxy*) GDAUI_GRID (iface)->priv->raw_grid);
+	return gdaui_data_proxy_supports_action ((GdauiDataProxy*) GDAUI_GRID (iface)->priv->raw_grid, action);
 }
+
+static void
+gdaui_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
+{
+	gdaui_data_proxy_perform_action ((GdauiDataProxy*) GDAUI_GRID (iface)->priv->raw_grid, action);
+}
+
 
 static gboolean
 gdaui_grid_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode)

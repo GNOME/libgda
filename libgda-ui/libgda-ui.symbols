@@ -64,15 +64,16 @@
 	gdaui_data_filter_new
 	gdaui_data_proxy_column_set_editable
 	gdaui_data_proxy_column_show_actions
-	gdaui_data_proxy_get_actions_group
 	gdaui_data_proxy_get_proxy
 	gdaui_data_proxy_get_type
 	gdaui_data_proxy_get_write_mode
 	gdaui_data_proxy_info_flag_get_type
+	gdaui_data_proxy_info_get_item
 	gdaui_data_proxy_info_get_type
 	gdaui_data_proxy_info_new
 	gdaui_data_proxy_perform_action
 	gdaui_data_proxy_set_write_mode
+	gdaui_data_proxy_supports_action
 	gdaui_data_proxy_write_mode_get_type
 	gdaui_data_selector_get_data_set
 	gdaui_data_selector_get_model

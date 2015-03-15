@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -26,8 +26,8 @@
 #include "gdaui-data-selector.h"
 #include "gdaui-raw-grid.h"
 #include "gdaui-data-proxy-info.h"
+#include "gdaui-data-filter.h"
 #include "gdaui-enum-types.h"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_data_proxy_info_class_init (GdauiDataProxyInfoClass * class);
 static void gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid);
@@ -54,24 +54,67 @@ static void proxy_reset_cb (GdaDataProxy *wid, GdauiDataProxyInfo *info);
 static void raw_grid_selection_changed_cb (GdauiRawGrid *grid, GdauiDataProxyInfo *info);
 
 
+typedef enum {
+	/* row modification actions */
+	ACTION_NEW,
+	ACTION_COMMIT,
+	ACTION_DELETE,
+	ACTION_RESET,
+
+	/* current row move actions */
+	ACTION_FIRSTRECORD,
+	ACTION_PREVRECORD,
+	ACTION_NEXTRECORD,
+	ACTION_LASTRECORD,
+
+	/* chunk changes actions */
+	ACTION_FIRSTCHUNCK,
+	ACTION_PREVCHUNCK,
+	ACTION_NEXTCHUNCK,
+	ACTION_LASTCHUNCK,
+
+	ACTION_FILTER, /* button to display a search GdaUiDataFilter */
+	ACTION_CURRENT_ROW, /* indicates current row */
+
+	ACTION_COUNT
+} ActionType;
+
+typedef struct {
+	GdauiAction  action;
+	GdauiAction  toggle_action; /* if != @action */
+	const gchar *icon_name;
+	const gchar *tip;
+} UIAction;
+
+UIAction uiactions[] = {
+	{GDAUI_ACTION_NEW_DATA, GDAUI_ACTION_NEW_DATA, "list-add-symbolic", N_("Insert new data")},
+	{GDAUI_ACTION_WRITE_MODIFIED_DATA, GDAUI_ACTION_WRITE_MODIFIED_DATA, "document-save-symbolic", N_("Commit the changes")},
+	{GDAUI_ACTION_DELETE_SELECTED_DATA, GDAUI_ACTION_UNDELETE_SELECTED_DATA, "edit-delete-symbolic", N_("Delete the selected entry")}, /* undelete: "document-revert" */
+	{GDAUI_ACTION_RESET_DATA, GDAUI_ACTION_RESET_DATA, "edit-undo-symbolic", N_("Cancel any modification")},
+
+	{GDAUI_ACTION_MOVE_FIRST_RECORD, GDAUI_ACTION_MOVE_FIRST_RECORD, "go-first-symbolic", N_("Move to first entry")},
+	{GDAUI_ACTION_MOVE_PREV_RECORD, GDAUI_ACTION_MOVE_PREV_RECORD, "go-previous-symbolic", N_("Move to previous entry")},
+	{GDAUI_ACTION_MOVE_NEXT_RECORD, GDAUI_ACTION_MOVE_NEXT_RECORD, "go-next-symbolic", N_("Move to next entry")},
+	{GDAUI_ACTION_MOVE_LAST_RECORD, GDAUI_ACTION_MOVE_LAST_RECORD, "go-last-symbolic", N_("Move to last entry")},
+
+	{GDAUI_ACTION_MOVE_FIRST_CHUNCK, GDAUI_ACTION_MOVE_FIRST_CHUNCK, "go-first-symbolic", N_("Show first chunck of data")},
+	{GDAUI_ACTION_MOVE_PREV_CHUNCK, GDAUI_ACTION_MOVE_PREV_CHUNCK, "go-previous-symbolic", N_("Show previous chunck of data")},
+	{GDAUI_ACTION_MOVE_NEXT_CHUNCK, GDAUI_ACTION_MOVE_NEXT_CHUNCK, "go-next-symbolic", N_("Show next chunck of data")},
+	{GDAUI_ACTION_MOVE_LAST_CHUNCK, GDAUI_ACTION_MOVE_LAST_CHUNCK, "go-last-symbolic", N_("Show last chunck of data")},
+};
+
 struct _GdauiDataProxyInfoPriv
 {
 	GdauiDataProxy *data_proxy;
 	GdaDataProxy      *proxy;
 	GdaDataModelIter  *iter;
-	GdauiDataProxyInfoFlag flags; /* ORed values. */
+	GdauiDataProxyInfoFlag flags; /* ORed values, only modified when setting property */
 
-	GtkUIManager      *uimanager;
-	GtkActionGroup    *agroup; /* no ref held! */
-	guint              merge_id_row_modif;
-	guint              merge_id_row_move;
-	guint              merge_id_chunck_change;
-
-	GtkWidget         *buttons_bar;
-	gboolean           buttons_bar_from_ui;
-	GtkWidget         *tool_item;
 	GtkWidget         *current_sample;
 	GtkWidget         *row_spin;
+
+	GtkWidget         *action_items [ACTION_COUNT];
+	GtkWidget         *filter_popover;
 
 	guint              idle_id;
 };
@@ -83,8 +126,7 @@ static GObjectClass *parent_class = NULL;
 enum {
 	PROP_0,
 	PROP_DATA_PROXY,
-	PROP_FLAGS,
-	PROP_UI_MANAGER
+	PROP_FLAGS
 };
 
 GType
@@ -106,7 +148,7 @@ gdaui_data_proxy_info_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiDataProxyInfo", &info, 0);
+		type = g_type_register_static (GTK_TYPE_TOOLBAR, "GdauiDataProxyInfo", &info, 0);
 	}
 
 	return type;
@@ -132,17 +174,6 @@ gdaui_data_proxy_info_class_init (GdauiDataProxyInfoClass *klass)
                                          g_param_spec_flags ("flags", NULL, NULL, GDAUI_TYPE_DATA_PROXY_INFO_FLAG,
 							     GDAUI_DATA_PROXY_INFO_CURRENT_ROW,
 							     G_PARAM_READABLE | G_PARAM_WRITABLE));
-	/**
-	 * GdauiDataProxyInfo:ui-manager:
-	 *
-	 * Use this property to obtain the #GtkUIManager object internally used (to add new actions
-	 * for example).
-	 *
-	 * Since: 4.2.9
-	 */
-	g_object_class_install_property (object_class, PROP_UI_MANAGER,
-                                         g_param_spec_object ("ui-manager", NULL, NULL, GTK_TYPE_UI_MANAGER,
-							      G_PARAM_READABLE));
 }
 
 static void
@@ -152,8 +183,6 @@ gdaui_data_proxy_info_init (GdauiDataProxyInfo *wid)
 	wid->priv->data_proxy = NULL;
 	wid->priv->proxy = NULL;
 	wid->priv->row_spin = NULL;
-	wid->priv->buttons_bar = NULL;
-	wid->priv->tool_item = NULL;
 }
 
 /**
@@ -175,9 +204,10 @@ gdaui_data_proxy_info_new (GdauiDataProxy *data_proxy, GdauiDataProxyInfoFlag fl
 	g_return_val_if_fail (!data_proxy || GDAUI_IS_DATA_PROXY (data_proxy), NULL);
 
 	info = (GtkWidget *) g_object_new (GDAUI_TYPE_DATA_PROXY_INFO,
+					   "toolbar-style", GTK_TOOLBAR_ICONS,
+					   "icon-size", GTK_ICON_SIZE_MENU,
 					   "data-proxy", data_proxy,
 					   "flags", flags, NULL);
-
 	return info;
 }
 
@@ -245,19 +275,6 @@ gdaui_data_proxy_info_dispose (GObject *object)
 			data_proxy_destroyed_cb (info->priv->data_proxy, info);
 		if (info->priv->idle_id)
 			g_source_remove (info->priv->idle_id);
-
-		if (info->priv->uimanager) {
-			if (info->priv->merge_id_row_modif)
-				gtk_ui_manager_remove_ui (info->priv->uimanager,
-							  info->priv->merge_id_row_modif);
-			if (info->priv->merge_id_row_move)
-				gtk_ui_manager_remove_ui (info->priv->uimanager,
-							  info->priv->merge_id_row_move);
-			if (info->priv->merge_id_chunck_change)
-				gtk_ui_manager_remove_ui (info->priv->uimanager,
-							  info->priv->merge_id_chunck_change);
-			g_object_unref (info->priv->uimanager);
-		}
 
 		/* the private area itself */
 		g_free (info->priv);
@@ -360,9 +377,6 @@ gdaui_data_proxy_info_get_property (GObject *object,
 		case PROP_FLAGS:
 			g_value_set_flags (value, info->priv->flags);
 			break;
-		case PROP_UI_MANAGER:
-			g_value_set_object (value, info->priv->uimanager);
-			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -409,56 +423,43 @@ raw_grid_selection_changed_cb (G_GNUC_UNUSED GdauiRawGrid *grid, GdauiDataProxyI
 	modif_buttons_update (info);
 }
 
-/*
- *
- * Modification buttons (Commit changes, Reset info, New entry, Delete)
- *
- */
-static const gchar *ui_base =
-	"<ui>"
-	"  <toolbar name='ToolBar'>"
-	"    <placeholder name='RowModif'/>"
-	"    <placeholder name='RowModifExtension'/>"
-	"    <placeholder name='RowMove'/>"
-	"    <placeholder name='ChunkChange'/>"
-	"    <toolitem action='ActionFilter'/>"
-	"  </toolbar>"
-	"</ui>";
+static void
+filter_item_clicked_cb (GtkToolButton *titem, GdauiDataProxyInfo *info)
+{
+	if (!info->priv->filter_popover) {
+		/* create filter window */
+		info->priv->filter_popover = gtk_popover_new (GTK_WIDGET (titem));
 
-static const gchar *ui_row_modif =
-	"<ui>"
-	"  <toolbar name='ToolBar'>"
-	"    <placeholder name='RowModif'>"
-	"      <toolitem action='ActionNew'/>"
-	"      <toolitem action='ActionDelete'/>"
-	"      <toolitem action='ActionCommit'/>"
-	"      <toolitem action='ActionReset'/>"
-	"    </placeholder>"
-	"  </toolbar>"
-	"</ui>";
-static const gchar *ui_row_move =
-	"<ui>"
-	"  <toolbar name='ToolBar'>"
-	"    <placeholder name='RowMove'>"
-	"      <toolitem action='ActionFirstRecord'/>"
-	"      <toolitem action='ActionPrevRecord'/>"
-	"      <toolitem action='ActionNextRecord'/>"
-	"      <toolitem action='ActionLastRecord'/>"
-	"    </placeholder>"
-	"  </toolbar>"
-	"</ui>";
-static const gchar *ui_chunck_change =
-	"<ui>"
-	"  <toolbar name='ToolBar'>"
-	"    <placeholder name='ChunkChange'>"
-	"      <toolitem action='ActionFirstChunck'/>"
-	"      <toolitem action='ActionPrevChunck'/>"
-	"      <toolitem action='ActionNextChunck'/>"
-	"      <toolitem action='ActionLastChunck'/>"
-	"    </placeholder>"
-	"  </toolbar>"
-	"</ui>";
+		/* add real filter widget */
+		GtkWidget *filter;
+		filter = gdaui_data_filter_new (info->priv->data_proxy);
+		gtk_widget_show (filter);
+		gtk_container_add (GTK_CONTAINER (info->priv->filter_popover), filter);
+	}
 
+	gtk_widget_show (info->priv->filter_popover);
+}
+
+static void
+action_statefull_clicked_cb (GtkToggleToolButton *toggle_tool_button, GdauiDataProxyInfo *info)
+{
+	UIAction *uiaction;;
+	uiaction = g_object_get_data ((GObject*) toggle_tool_button, "uia");
+	GdauiAction action;
+	if (gtk_toggle_tool_button_get_active (toggle_tool_button))
+		action = uiaction->action;
+	else
+		action = uiaction->toggle_action;
+	gdaui_data_proxy_perform_action (info->priv->data_proxy, action);
+}
+
+static void
+action_stateless_clicked_cb (GtkToolButton *tool_button, GdauiDataProxyInfo *info)
+{
+	UIAction *uiaction;;
+	uiaction = g_object_get_data ((GObject*) tool_button, "uia");
+	gdaui_data_proxy_perform_action (info->priv->data_proxy, uiaction->action);
+}
 
 static void row_spin_changed_cb (GtkSpinButton *spin, GdauiDataProxyInfo *info);
 static void
@@ -466,100 +467,173 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 {
 	GtkWidget *wid;
 	GdauiDataProxyInfoFlag flags = info->priv->flags;
+	GtkWidget **action_items = info->priv->action_items;
 
 	if (! info->priv->data_proxy)
 		return;
 
-	if (info->priv->tool_item) {
-		/* remove tool_item from toolbar */
-		gtk_container_remove (GTK_CONTAINER (info->priv->buttons_bar),
-				      info->priv->tool_item);
-		gtk_widget_unparent (info->priv->tool_item);
-	}
+	/* row modification actions */
+	if ((flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS) && !action_items[ACTION_NEW]) {
+		ActionType atype;
+		for (atype = ACTION_NEW; atype <= ACTION_RESET; atype++) {
+			UIAction *uiaction = &(uiactions[atype]);
 
-	if (info->priv->uimanager) {
-		if (info->priv->merge_id_row_modif) {
-			gtk_ui_manager_remove_ui (info->priv->uimanager, info->priv->merge_id_row_modif);
-			info->priv->merge_id_row_modif = 0;
+			if (! gdaui_data_proxy_supports_action (info->priv->data_proxy, uiaction->action))
+				continue;
+
+			gboolean is_toggle;
+			is_toggle = (uiaction->action == uiaction->toggle_action) ? FALSE : TRUE;
+			if (is_toggle)
+				action_items[atype] = (GtkWidget*) gtk_toggle_tool_button_new ();
+			else	
+				action_items[atype] = (GtkWidget*) gtk_tool_button_new (NULL, NULL);
+			gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (action_items[atype]), uiaction->icon_name);
+			g_object_set_data ((GObject*) action_items[atype], "uia", uiaction);
+			gtk_widget_set_tooltip_text (action_items[atype], uiaction->tip);
+
+			gtk_toolbar_insert (GTK_TOOLBAR (info), GTK_TOOL_ITEM (action_items[atype]), -1);
+			gtk_widget_show (action_items[atype]);
+
+			if (is_toggle)
+				g_signal_connect (action_items[atype], "toggled",
+						  G_CALLBACK (action_statefull_clicked_cb), info);
+			else
+				g_signal_connect (action_items[atype], "clicked",
+						  G_CALLBACK (action_stateless_clicked_cb), info);
 		}
-		if (info->priv->merge_id_row_move) {
-			gtk_ui_manager_remove_ui (info->priv->uimanager, info->priv->merge_id_row_move);
-			info->priv->merge_id_row_move = 0;
+	}
+	else if (! (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS) && action_items[ACTION_NEW]) {
+		ActionType atype;
+		for (atype = ACTION_NEW; atype <= ACTION_RESET; atype++) {
+			if (action_items[atype]) {
+				gtk_widget_destroy (action_items[atype]);
+				action_items[atype] = NULL;
+			}
 		}
-		if (info->priv->merge_id_chunck_change) {
-			gtk_ui_manager_remove_ui (info->priv->uimanager, info->priv->merge_id_chunck_change);
-			info->priv->merge_id_chunck_change = 0;
+	}
+
+	/* current row move actions */
+	if ((flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) && !action_items[ACTION_FIRSTRECORD]) {
+		ActionType atype;
+		for (atype = ACTION_FIRSTRECORD; atype <= ACTION_LASTRECORD; atype++) {
+			UIAction *uiaction = &(uiactions[atype]);
+
+			if (! gdaui_data_proxy_supports_action (info->priv->data_proxy, uiaction->action))
+				continue;
+
+			gboolean is_toggle;
+			is_toggle = (uiaction->action == uiaction->toggle_action) ? FALSE : TRUE;
+			if (is_toggle)
+				action_items[atype] = (GtkWidget*) gtk_toggle_tool_button_new ();
+			else
+				action_items[atype] = (GtkWidget*) gtk_tool_button_new (NULL, NULL);
+			gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (action_items[atype]), uiaction->icon_name);
+			g_object_set_data ((GObject*) action_items[atype], "uia", uiaction);
+			gtk_widget_set_tooltip_text (action_items[atype], uiaction->tip);
+
+			gtk_toolbar_insert (GTK_TOOLBAR (info), GTK_TOOL_ITEM (action_items[atype]), -1);
+			gtk_widget_show (action_items[atype]);
+
+			if (is_toggle)
+				g_signal_connect (action_items[atype], "toggled",
+						  G_CALLBACK (action_statefull_clicked_cb), info);
+			else
+				g_signal_connect (action_items[atype], "clicked",
+						  G_CALLBACK (action_stateless_clicked_cb), info);
 		}
-		gtk_ui_manager_remove_action_group (info->priv->uimanager, info->priv->agroup);
-		info->priv->agroup = NULL;
 	}
-	else {
-		info->priv->uimanager = gtk_ui_manager_new ();	
-		gtk_ui_manager_add_ui_from_string (info->priv->uimanager, ui_base, -1, NULL);
-	}
-
-	info->priv->agroup = gdaui_data_proxy_get_actions_group (info->priv->data_proxy);
-	gtk_ui_manager_insert_action_group (info->priv->uimanager, info->priv->agroup, 0);
-
-	if (flags & (GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS |
-		     GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS |
-		     GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)) {
-		GtkUIManager *ui;
-		ui = info->priv->uimanager;
-		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS)
-			info->priv->merge_id_row_modif = gtk_ui_manager_add_ui_from_string (ui, ui_row_modif,
-											    -1, NULL);
-		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
-			info->priv->merge_id_row_move = gtk_ui_manager_add_ui_from_string (ui, ui_row_move,
-											   -1, NULL);
-		if (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
-			info->priv->merge_id_chunck_change = gtk_ui_manager_add_ui_from_string (ui, ui_chunck_change,
-												-1, NULL);
-	}
-
-	/* get rid of previous toolbar if any */
-	if (info->priv->buttons_bar) {
-		if (gtk_widget_get_parent (info->priv->buttons_bar)) {
-			gtk_container_remove (GTK_CONTAINER (info), info->priv->buttons_bar);
-			gtk_widget_unparent (info->priv->buttons_bar);
+	else if (! (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) && action_items[ACTION_FIRSTRECORD]) {
+		ActionType atype;
+		for (atype = ACTION_FIRSTRECORD; atype <= ACTION_LASTRECORD; atype++) {
+			if (action_items[atype]) {
+				gtk_widget_destroy (action_items[atype]);
+				action_items[atype] = NULL;
+			}
 		}
-		if (info->priv->buttons_bar_from_ui)
-			g_object_unref (info->priv->buttons_bar);
-		else
-			gtk_widget_destroy (info->priv->buttons_bar);
-		info->priv->buttons_bar = NULL;
 	}
 
-	/* create new toolbar */
-	GtkUIManager *ui;
-	ui = info->priv->uimanager;
-	info->priv->buttons_bar = gtk_ui_manager_get_widget (ui, "/ToolBar");
-	if (info->priv->buttons_bar)
-		info->priv->buttons_bar_from_ui = TRUE;
-	else {
-		info->priv->buttons_bar = gtk_toolbar_new ();
-		info->priv->buttons_bar_from_ui = FALSE;
-	}
-	g_object_ref_sink (info->priv->buttons_bar);
-	gtk_toolbar_set_icon_size (GTK_TOOLBAR (info->priv->buttons_bar), GTK_ICON_SIZE_MENU);
-	g_object_set (G_OBJECT (info->priv->buttons_bar), "toolbar-style", GTK_TOOLBAR_ICONS, NULL);
-	gtk_box_pack_start (GTK_BOX (info), info->priv->buttons_bar, TRUE, TRUE, 0);
-	gtk_widget_show (info->priv->buttons_bar);
+	/* chunk changes actions */
+	if ((flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) && !action_items[ACTION_FIRSTCHUNCK]) {
+		ActionType atype;
+		for (atype = ACTION_FIRSTCHUNCK; atype <= ACTION_LASTCHUNCK; atype++) {
+			UIAction *uiaction = &(uiactions[atype]);
 
+			if (! gdaui_data_proxy_supports_action (info->priv->data_proxy, uiaction->action))
+				continue;
+
+			gboolean is_toggle;
+			is_toggle = (uiaction->action == uiaction->toggle_action) ? FALSE : TRUE;
+			if (is_toggle)
+				action_items[atype] = (GtkWidget*) gtk_toggle_tool_button_new ();
+			else	
+				action_items[atype] = (GtkWidget*) gtk_tool_button_new (NULL, NULL);
+			gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (action_items[atype]), uiaction->icon_name);
+			g_object_set_data ((GObject*) action_items[atype], "uia", uiaction);
+			gtk_widget_set_tooltip_text (action_items[atype], uiaction->tip);
+
+			gtk_toolbar_insert (GTK_TOOLBAR (info), GTK_TOOL_ITEM (action_items[atype]), -1);
+			gtk_widget_show (action_items[atype]);
+
+			if (is_toggle)
+				g_signal_connect (action_items[atype], "toggled",
+						  G_CALLBACK (action_statefull_clicked_cb), info);
+			else
+				g_signal_connect (action_items[atype], "clicked",
+						  G_CALLBACK (action_stateless_clicked_cb), info);
+		}
+	}
+	else if (! (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) && action_items[ACTION_FIRSTCHUNCK]) {
+		ActionType atype;
+		for (atype = ACTION_FIRSTCHUNCK; atype <= ACTION_LASTCHUNCK; atype++) {
+			if (action_items[atype]) {
+				gtk_widget_destroy (action_items[atype]);
+				action_items[atype] = NULL;
+			}
+		}
+	}
+
+	/* filter button */
+	if (! (flags & GDAUI_DATA_PROXY_INFO_NO_FILTER) && ! action_items[ACTION_FILTER]) {
+		GtkWidget *icon;
+		icon = gtk_image_new_from_icon_name ("edit-find-symbolic", GTK_ICON_SIZE_MENU);
+		action_items[ACTION_FILTER] = (GtkWidget*) gtk_tool_button_new (icon, NULL);
+		gtk_toolbar_insert (GTK_TOOLBAR (info), GTK_TOOL_ITEM (action_items[ACTION_FILTER]), -1);
+		gtk_widget_set_tooltip_text (action_items[ACTION_FILTER], _("Filter data"));
+		gtk_widget_show (action_items[ACTION_FILTER]);
+		g_signal_connect (action_items[ACTION_FILTER], "clicked",
+				  G_CALLBACK (filter_item_clicked_cb), info);
+	}
+	else if ((flags & GDAUI_DATA_PROXY_INFO_NO_FILTER) && action_items[ACTION_FILTER]) {
+		gtk_widget_destroy (action_items[ACTION_FILTER]);
+		action_items[ACTION_FILTER] = NULL;
+	}
+	else if (action_items[ACTION_FILTER]) {
+		/* reposition the tool item at the end of the toolbar */
+		g_object_ref ((GObject*) action_items[ACTION_FILTER]);
+		gtk_container_remove (GTK_CONTAINER (info), action_items[ACTION_FILTER]);
+		gtk_toolbar_insert (GTK_TOOLBAR (info), GTK_TOOL_ITEM (action_items[ACTION_FILTER]), -1);
+		g_object_unref ((GObject*) action_items[ACTION_FILTER]);
+	}
+
+	/* row indication */
+	if (action_items[ACTION_CURRENT_ROW]) {
+		gtk_widget_destroy (action_items[ACTION_CURRENT_ROW]);
+		action_items[ACTION_CURRENT_ROW] = NULL;
+	}
 	if (flags & GDAUI_DATA_PROXY_INFO_CURRENT_ROW) {
-		if (info->priv->tool_item) {
+		if (action_items[ACTION_CURRENT_ROW]) {
 			/* remove the current contents */
-			gtk_widget_destroy (gtk_bin_get_child (GTK_BIN (info->priv->tool_item)));
+			gtk_widget_destroy (gtk_bin_get_child (GTK_BIN (action_items[ACTION_CURRENT_ROW])));
 			info->priv->row_spin = NULL;
 			info->priv->current_sample = NULL;
-			gtk_toolbar_insert (GTK_TOOLBAR (info->priv->buttons_bar),
-					    GTK_TOOL_ITEM (info->priv->tool_item), -1);
+			gtk_toolbar_insert (GTK_TOOLBAR (info),
+					    GTK_TOOL_ITEM (action_items[ACTION_CURRENT_ROW]), -1);
 		}
 		else {
 			GtkToolItem *ti;
 			ti = gtk_tool_item_new  ();
-			gtk_toolbar_insert (GTK_TOOLBAR (info->priv->buttons_bar), ti, -1);
-			info->priv->tool_item = GTK_WIDGET (g_object_ref (G_OBJECT (ti)));
+			gtk_toolbar_insert (GTK_TOOLBAR (info), ti, -1);
+			action_items[ACTION_CURRENT_ROW] = GTK_WIDGET (g_object_ref (G_OBJECT (ti)));
 		}
 
 		GtkWidget *toolwid;
@@ -602,11 +676,9 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 
 		pango_font_description_free (fdc);
 
-		gtk_container_add (GTK_CONTAINER (info->priv->tool_item), toolwid);
-		gtk_widget_show_all (info->priv->tool_item);
+		gtk_container_add (GTK_CONTAINER (action_items[ACTION_CURRENT_ROW]), toolwid);
+		gtk_widget_show_all (action_items[ACTION_CURRENT_ROW]);
 	}
-	else if (info->priv->tool_item)
-		gtk_widget_hide (info->priv->tool_item);
 }
 
 static void
@@ -652,9 +724,10 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 	gint proxied_rows = 0;
 	gint all_rows = 0;
 
-	GtkAction *action;
 	gint sample_first_row = 0, sample_last_row = 0, sample_size = 0;
 	GdauiDataProxyInfoFlag flags = 0;
+
+	GtkWidget **action_items = info->priv->action_items;
 
 	model_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (info->priv->data_proxy));
 	if (info->priv->proxy) {
@@ -742,142 +815,168 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 	}
 
 	/* current row modifications */
-	if (info->priv->buttons_bar) {
-		gboolean changed = FALSE;
-		gboolean to_be_deleted = FALSE;
-		gboolean is_inserted = FALSE;
-		gboolean force_del_btn = FALSE;
-		gboolean force_undel_btn = FALSE;
-		gboolean has_selection;
+	gboolean changed = FALSE;
+	gboolean to_be_deleted = FALSE;
+	gboolean is_inserted = FALSE;
+	gboolean force_del_btn = FALSE;
+	gboolean force_undel_btn = FALSE;
+	gboolean has_selection;
 
-		has_selection = (row >= 0) ? TRUE : FALSE;
-		if (info->priv->proxy) {
-			changed = gda_data_proxy_has_changed (info->priv->proxy);
+	has_selection = (row >= 0) ? TRUE : FALSE;
+	if (info->priv->proxy) {
+		changed = gda_data_proxy_has_changed (info->priv->proxy);
 
-			if (has_selection) {
-				to_be_deleted = gda_data_proxy_row_is_deleted (info->priv->proxy, row);
-				is_inserted = gda_data_proxy_row_is_inserted (info->priv->proxy, row);
-			}
-			else
-				if (GDAUI_IS_RAW_GRID (info->priv->data_proxy)) {
-					/* bad for encapsulation, but very useful... */
-					GList *sel, *list;
+		if (has_selection) {
+			to_be_deleted = gda_data_proxy_row_is_deleted (info->priv->proxy, row);
+			is_inserted = gda_data_proxy_row_is_inserted (info->priv->proxy, row);
+		}
+		else if (GDAUI_IS_RAW_GRID (info->priv->data_proxy)) {
+			/* bad for encapsulation, but very useful... */
+			GList *sel, *list;
 
-					sel = _gdaui_raw_grid_get_selection ((GdauiRawGrid*) info->priv->data_proxy);
-					if (sel) {
-						list = sel;
-						while (list && (!force_del_btn || !force_undel_btn)) {
-							if ((GPOINTER_TO_INT (list->data) != -1) &&
-							    gda_data_proxy_row_is_deleted (info->priv->proxy,
-											   GPOINTER_TO_INT (list->data)))
-								force_undel_btn = TRUE;
-							else
-								force_del_btn = TRUE;
-							list = g_list_next (list);
-						}
-						list = sel;
-
-						is_inserted = TRUE;
-						while (list && is_inserted) {
-							if (GPOINTER_TO_INT (list->data) != -1)
-								is_inserted = FALSE;
-							list = g_list_next (list);
-						}
-						g_list_free (sel);
-					}
+			sel = _gdaui_raw_grid_get_selection ((GdauiRawGrid*) info->priv->data_proxy);
+			if (sel) {
+				list = sel;
+				while (list && (!force_del_btn || !force_undel_btn)) {
+					if ((GPOINTER_TO_INT (list->data) != -1) &&
+					    gda_data_proxy_row_is_deleted (info->priv->proxy,
+									   GPOINTER_TO_INT (list->data)))
+						force_undel_btn = TRUE;
+					else
+						force_del_btn = TRUE;
+					list = g_list_next (list);
 				}
+				list = sel;
+
+				is_inserted = TRUE;
+				while (list && is_inserted) {
+					if (GPOINTER_TO_INT (list->data) != -1)
+						is_inserted = FALSE;
+					list = g_list_next (list);
+				}
+				g_list_free (sel);
+			}
+		}
+	}
+
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS) {
+		GdauiDataProxyWriteMode mode;
+		mode = gdaui_data_proxy_get_write_mode (info->priv->data_proxy);
+
+		if (info->priv->action_items [ACTION_COMMIT]) {
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_COMMIT], changed ? TRUE : FALSE);
+			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
+				gtk_widget_hide (action_items [ACTION_COMMIT]);
+			else
+				gtk_widget_show (action_items [ACTION_COMMIT]);
 		}
 
-		if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS) {
-			GdauiDataProxyWriteMode mode;
-			mode = gdaui_data_proxy_get_write_mode (info->priv->data_proxy);
-
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionCommit");
-			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
+		if (info->priv->action_items [ACTION_RESET]) {
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_RESET], changed ? TRUE : FALSE);
 			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
-				gtk_action_set_visible (action, FALSE);
+				gtk_widget_hide (action_items [ACTION_RESET]);
 			else
-				gtk_action_set_visible (action, TRUE);
+				gtk_widget_show (action_items [ACTION_RESET]);
+		}
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionReset");
-			g_object_set (G_OBJECT (action), "sensitive", changed ? TRUE : FALSE, NULL);
-			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
-				gtk_action_set_visible (action, FALSE);
-			else
-				gtk_action_set_visible (action, TRUE);
+		if (info->priv->action_items [ACTION_NEW]) {
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_NEW],
+						  flags & GDA_DATA_MODEL_ACCESS_INSERT ? TRUE : FALSE);
+		}
 
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionNew");
-			g_object_set (G_OBJECT (action), "sensitive",
-				      flags & GDA_DATA_MODEL_ACCESS_INSERT ? TRUE : FALSE, NULL);
-
-			action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowModif/ActionDelete");
-			gtk_action_block_activate (action);
-			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), to_be_deleted);
-			gtk_action_unblock_activate (action);
+		if (info->priv->action_items [ACTION_DELETE]) {
+			g_signal_handlers_block_by_func (action_items[ACTION_DELETE],
+							 G_CALLBACK (action_statefull_clicked_cb), info);
+			gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (action_items[ACTION_DELETE]),
+							   to_be_deleted);
+			g_signal_handlers_unblock_by_func (action_items[ACTION_DELETE],
+							   G_CALLBACK (action_statefull_clicked_cb), info);
 
 			if (to_be_deleted) {
 				wrows = (flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
 					(force_undel_btn || has_selection);
-				g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
-				gtk_action_set_tooltip (action, _("Undelete the selected entry"));
+				gtk_widget_set_tooltip_text (info->priv->action_items [ACTION_DELETE],
+							     _("Undelete the selected entry"));
 			}
 			else {
 				wrows = is_inserted ||
 					((flags & GDA_DATA_MODEL_ACCESS_DELETE) &&
 					 (force_del_btn || has_selection));
-				g_object_set (G_OBJECT (action), "sensitive", wrows, NULL);
-				gtk_action_set_tooltip (action, _("Delete the selected entry"));
+				gtk_widget_set_tooltip_text (info->priv->action_items [ACTION_DELETE],
+							     _("Delete the selected entry"));
 			}
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_DELETE], wrows);
 
 			if ((mode == GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) ||
 			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) ||
 			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED))
-				gtk_action_set_visible (action, FALSE);
+				gtk_widget_hide (action_items [ACTION_DELETE]);
 			else
-				gtk_action_set_visible (action, TRUE);
+				gtk_widget_show (action_items [ACTION_DELETE]);
 		}
 	}
 
 	/* current row moving */
 	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionFirstRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionPrevRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row <= 0) ? FALSE : TRUE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionNextRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
-			      NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/RowMove/ActionLastRecord");
-		g_object_set (G_OBJECT (action), "sensitive", (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE,
-			      NULL);
+		if (info->priv->action_items [ACTION_FIRSTRECORD])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_FIRSTRECORD], (row <= 0) ? FALSE : TRUE);
+		if (info->priv->action_items [ACTION_PREVRECORD])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_PREVRECORD], (row <= 0) ? FALSE : TRUE);
+		if (info->priv->action_items [ACTION_NEXTRECORD])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_NEXTRECORD],
+						  (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE);
+		if (info->priv->action_items [ACTION_LASTRECORD])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_LASTRECORD],
+						  (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE);
 	}
 
 	/* chunck indications */
 	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) {
 		gboolean abool;
 		wrows = (sample_size > 0) ? TRUE : FALSE;
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionFirstChunck");
-		g_object_set (G_OBJECT (action), "sensitive", wrows && sample_first_row > 0 ? TRUE : FALSE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionPrevChunck");
-		g_object_set (G_OBJECT (action), "sensitive", wrows && sample_first_row > 0 ? TRUE : FALSE, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionNextChunck");
-		abool = (proxied_rows != -1) ? wrows && (sample_last_row < proxied_rows - 1) : TRUE;
-		g_object_set (G_OBJECT (action), "sensitive", abool, NULL);
-		action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ChunkChange/ActionLastChunck");
-		g_object_set (G_OBJECT (action), "sensitive", wrows && (sample_last_row < proxied_rows - 1), NULL);
+		if (info->priv->action_items [ACTION_FIRSTCHUNCK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_FIRSTCHUNCK],
+						  wrows && (sample_first_row > 0) ? TRUE : FALSE);
+		if (info->priv->action_items [ACTION_PREVCHUNCK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_PREVCHUNCK],
+						  wrows && (sample_first_row > 0) ? TRUE : FALSE);
+
+		abool = (proxied_rows != -1) ? (wrows && (sample_last_row < proxied_rows - 1)) : TRUE;
+		if (info->priv->action_items [ACTION_NEXTCHUNCK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_NEXTCHUNCK], abool);
+		if (info->priv->action_items [ACTION_LASTCHUNCK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_LASTCHUNCK],
+						  wrows && (sample_last_row < proxied_rows - 1));
 	}
-
-	/* filter */
-	action = gtk_ui_manager_get_action (info->priv->uimanager, "/ToolBar/ActionFilter");
-	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_NO_FILTER)
-		g_object_set (G_OBJECT (action), "visible", FALSE, NULL);
-	else
-		g_object_set (G_OBJECT (action), "visible", TRUE, NULL);
-
-	if (info->priv->uimanager)
-		gtk_ui_manager_ensure_update (info->priv->uimanager);
 
 	/* remove IDLE */
 	info->priv->idle_id = 0;
 	return FALSE;
+}
+
+/**
+ * gdaui_data_proxy_info_get_item:
+ * @info: a #GdauiDataProxyInfo object
+ * @action: a #GdauiAction action
+ *
+ * Get the #GtkToolItem corresponding to the @action action
+ *
+ * Returns: the #GtkToolItem, or %NULL on error
+ *
+ * Since: 6.0
+ */
+GtkToolItem *
+gdaui_data_proxy_info_get_item (GdauiDataProxyInfo *info, GdauiAction action)
+{
+	g_return_val_if_fail (GDAUI_IS_DATA_PROXY_INFO (info), NULL);
+	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK), NULL);
+
+	ActionType type;
+	for (type = ACTION_NEW; type < ACTION_COUNT; type++) {
+		UIAction *act;
+		act = &(uiactions[type]);
+		if (act->action == action)
+			return GTK_TOOL_ITEM (info->priv->action_items [type]);
+	}
+	return NULL;
 }

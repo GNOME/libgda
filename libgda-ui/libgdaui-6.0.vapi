@@ -173,13 +173,11 @@ namespace Gdaui {
 	public class DataFilterPriv {
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h", type_id = "gdaui_data_proxy_info_get_type ()")]
-	public class DataProxyInfo : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public class DataProxyInfo : Gtk.Toolbar, Atk.Implementor, Gtk.Buildable, Gtk.Orientable, Gtk.ToolShell {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public DataProxyInfo (Gdaui.DataProxy data_proxy, Gdaui.DataProxyInfoFlag flags);
 		[NoAccessorMethod]
 		public Gdaui.DataProxy data_proxy { owned get; set; }
-		[NoAccessorMethod]
-		public Gtk.UIManager ui_manager { owned get; }
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h")]
 	[Compact]
@@ -451,8 +449,6 @@ namespace Gdaui {
 		public void set_sample_size (int sample_size);
 		public void set_sample_start (int sample_start);
 		[NoAccessorMethod]
-		public bool global_actions_visible { get; set; }
-		[NoAccessorMethod]
 		public bool info_cell_visible { get; set; }
 		[NoAccessorMethod]
 		public Gda.DataModel model { owned get; set; }
@@ -613,15 +609,15 @@ namespace Gdaui {
 	public interface DataProxy : GLib.Object {
 		public void column_set_editable (int column, bool editable);
 		public void column_show_actions (int column, bool show_actions);
-		public abstract unowned Gtk.ActionGroup get_actions_group ();
 		public abstract unowned Gda.DataProxy get_proxy ();
 		public abstract Gdaui.DataProxyWriteMode get_write_mode ();
-		public void perform_action (Gdaui.Action action);
+		public abstract void perform_action (Gdaui.Action action);
 		[NoWrapper]
 		public abstract void set_column_editable (int column, bool editable);
 		public abstract bool set_write_mode (Gdaui.DataProxyWriteMode mode);
 		[NoWrapper]
 		public abstract void show_column_actions (int column, bool show_actions);
+		public abstract bool supports_action (Gdaui.Action action);
 		public virtual signal void proxy_changed (Gda.DataProxy proxy);
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h", type_id = "gdaui_data_selector_get_type ()")]

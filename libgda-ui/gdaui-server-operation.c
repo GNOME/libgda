@@ -1192,19 +1192,20 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 
 	gtk_widget_set_vexpand (hlayout, TRUE);
 
-	{
-		GtkActionGroup *group;
-		GtkAction *action;
-		group = gdaui_data_proxy_get_actions_group (GDAUI_DATA_PROXY (form_props));
-		action = gtk_action_group_get_action (group, "ActionNew");
-		g_object_set (G_OBJECT (action), "tooltip", _("Add a new field"), NULL);
-		action = gtk_action_group_get_action (group, "ActionDelete");
-		g_object_set (G_OBJECT (action), "tooltip", _("Remove selected field"), NULL);
-		action = gtk_action_group_get_action (group, "ActionCommit");
-		gtk_action_set_visible (action, FALSE);
-		action = gtk_action_group_get_action (group, "ActionReset");
-		gtk_action_set_visible (action, FALSE);
-	}
+	GtkToolItem *item;
+	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_NEW_DATA);
+	if (item)
+		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add a new field"));
+	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_DELETE_SELECTED_DATA);
+	if (item)
+		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Remove selected field"));
+	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_WRITE_MODIFIED_DATA);
+	if (item)
+		gtk_widget_hide (GTK_WIDGET (item));
+	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_RESET_DATA);
+	if (item)
+		gtk_widget_hide (GTK_WIDGET (item));
+	g_print ("==================================================================\n");
 
 	return hlayout;
 }

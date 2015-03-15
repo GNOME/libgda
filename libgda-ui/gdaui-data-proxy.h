@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -60,7 +60,8 @@ struct _GdauiDataProxyIface
 	GdaDataProxy        *(* get_proxy)           (GdauiDataProxy *iface);
 	void                 (* set_column_editable) (GdauiDataProxy *iface, gint column, gboolean editable);
 	void                 (* show_column_actions) (GdauiDataProxy *iface, gint column, gboolean show_actions);
-	GtkActionGroup      *(* get_actions_group)   (GdauiDataProxy *iface);
+	gboolean             (* supports_action)     (GdauiDataProxy *iface, GdauiAction action);
+	void                 (* perform_action)      (GdauiDataProxy *iface, GdauiAction action);
 	gboolean             (* set_write_mode)      (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
 	GdauiDataProxyWriteMode (* get_write_mode)(GdauiDataProxy *iface);
 
@@ -84,8 +85,9 @@ struct _GdauiDataProxyIface
 GType             gdaui_data_proxy_get_type                  (void) G_GNUC_CONST;
 
 GdaDataProxy     *gdaui_data_proxy_get_proxy                 (GdauiDataProxy *iface);
-GtkActionGroup   *gdaui_data_proxy_get_actions_group         (GdauiDataProxy *iface);
-void              gdaui_data_proxy_perform_action            (GdauiDataProxy *iface, GdauiAction action);
+
+gboolean          gdaui_data_proxy_supports_action           (GdauiDataProxy *iface, GdauiAction action);
+void              gdaui_data_proxy_perform_action            (GdauiDataProxy *iface, GdauiAction action); /* FIXME: add an optional row number on which to apply the action, useless for GDAUI_ACTION_MOVE_* actions */
 
 void              gdaui_data_proxy_column_set_editable       (GdauiDataProxy *iface, gint column, gboolean editable);
 void              gdaui_data_proxy_column_show_actions       (GdauiDataProxy *iface, gint column, gboolean show_actions);

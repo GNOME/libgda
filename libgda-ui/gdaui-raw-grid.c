@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -33,7 +33,6 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <gtk/gtk.h>
 #include <libgda/gda-debug-macros.h>
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_raw_grid_class_init (GdauiRawGridClass *klass);
 static void gdaui_raw_grid_init (GdauiRawGrid *wid);
@@ -70,7 +69,8 @@ static void            gdaui_raw_grid_widget_init           (GdauiDataProxyIface
 static GdaDataProxy   *gdaui_raw_grid_get_proxy             (GdauiDataProxy *iface);
 static void            gdaui_raw_grid_set_column_editable   (GdauiDataProxy *iface, gint column, gboolean editable);
 static void            gdaui_raw_grid_show_column_actions   (GdauiDataProxy *iface, gint column, gboolean show_actions);
-static GtkActionGroup *gdaui_raw_grid_get_actions_group     (GdauiDataProxy *iface);
+static gboolean        gdaui_raw_grid_supports_action       (GdauiDataProxy *iface, GdauiAction action);
+static void            gdaui_raw_grid_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_raw_grid_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
 static GdauiDataProxyWriteMode gdaui_raw_grid_widget_get_write_mode (GdauiDataProxy *iface);
 
@@ -135,13 +135,8 @@ struct _GdauiRawGridPriv
 	gboolean                    default_show_info_cell;
 	gboolean                    default_show_global_actions;
 
-	GtkActionGroup             *actions_group;
-
 	gint                        export_type; /* used by the export dialog */
 	GdauiDataProxyWriteMode     write_mode;
-
-	GtkWidget                  *filter;
-	GtkWidget                  *filter_window;
 
 	/* store the position of the mouse for popup menu on button press event */
 	gint                        bin_x;
@@ -167,8 +162,7 @@ enum {
 	PROP_0,
 	PROP_MODEL,
 	PROP_XML_LAYOUT,
-	PROP_INFO_CELL_VISIBLE,
-	PROP_GLOBAL_ACTIONS_VISIBLE
+	PROP_INFO_CELL_VISIBLE
 };
 
 /*
@@ -182,31 +176,6 @@ static gint     tree_view_popup_button_pressed_cb (GtkWidget *widget, GdkEventBu
 static void     tree_view_selection_changed_cb (GtkTreeSelection *selection, GdauiRawGrid *grid);
 static void     tree_view_row_activated_cb     (GtkTreeView *tree_view, GtkTreePath *path,
 						GtkTreeViewColumn *column, GdauiRawGrid *grid);
-
-static void action_new_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_delete_cb (GtkToggleAction *action, GdauiRawGrid *grid);
-static void action_commit_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_reset_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_first_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_prev_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_next_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_last_chunck_cb (GtkAction *action, GdauiRawGrid *grid);
-static void action_filter_cb (GtkAction *action, GdauiRawGrid *grid);
-
-static GtkToggleActionEntry ui_actions_t[] = {
-	{ "ActionDelete", GTK_STOCK_REMOVE, "_Delete", NULL, N_("Delete the current record"), G_CALLBACK (action_delete_cb), FALSE},
-};
-
-static GtkActionEntry ui_actions[] = {
-	{ "ActionNew", GTK_STOCK_ADD, "_New", NULL, N_("Create a new record"), G_CALLBACK (action_new_cb)},
-	{ "ActionCommit", GTK_STOCK_SAVE, "_Commit", NULL, N_("Commit the modifications"), G_CALLBACK (action_commit_cb)},
-	{ "ActionReset", GTK_STOCK_CLEAR, "_Clear", NULL, N_("Clear all the modifications"), G_CALLBACK (action_reset_cb)},
-	{ "ActionFirstChunck", GTK_STOCK_GOTO_FIRST, "_First chunck", NULL, N_("Go to first chunck"), G_CALLBACK (action_first_chunck_cb)},
-	{ "ActionLastChunck", GTK_STOCK_GOTO_LAST, "_Last chunck", NULL, N_("Go to last chunck"), G_CALLBACK (action_last_chunck_cb)},
-	{ "ActionPrevChunck", GTK_STOCK_GO_BACK, "_Previous chunck", NULL, N_("Go to previous chunck"), G_CALLBACK (action_prev_chunck_cb)},
-	{ "ActionNextChunck", GTK_STOCK_GO_FORWARD, "Ne_xt chunck", NULL, N_("Go to next chunck"), G_CALLBACK (action_next_chunck_cb)},
-	{ "ActionFilter", GTK_STOCK_FIND, "Filter", NULL, N_("Filter records"), G_CALLBACK (action_filter_cb)}
-};
 
 GType
 gdaui_raw_grid_get_type (void)
@@ -253,7 +222,8 @@ gdaui_raw_grid_widget_init (GdauiDataProxyIface *iface)
 	iface->get_proxy = gdaui_raw_grid_get_proxy;
 	iface->set_column_editable = gdaui_raw_grid_set_column_editable;
 	iface->show_column_actions = gdaui_raw_grid_show_column_actions;
-	iface->get_actions_group = gdaui_raw_grid_get_actions_group;
+	iface->supports_action = gdaui_raw_grid_supports_action;
+	iface->perform_action = gdaui_raw_grid_perform_action;
 	iface->set_write_mode = gdaui_raw_grid_widget_set_write_mode;
 	iface->get_write_mode = gdaui_raw_grid_widget_get_write_mode;
 }
@@ -323,10 +293,6 @@ gdaui_raw_grid_class_init (GdauiRawGridClass *klass)
 							       G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_INFO_CELL_VISIBLE,
                                          g_param_spec_boolean ("info-cell-visible", NULL, _("Info cell visible"), FALSE,
-                                                               G_PARAM_READABLE | G_PARAM_WRITABLE));
-
-	g_object_class_install_property (object_class, PROP_GLOBAL_ACTIONS_VISIBLE,
-                                         g_param_spec_boolean ("global-actions-visible", NULL, _("Global Actions visible"), FALSE,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
@@ -414,15 +380,6 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	g_signal_connect (grid, "query-tooltip",
 			  G_CALLBACK (gdaui_raw_grid_query_tooltip), NULL);
 
-	/* action group */
-	grid->priv->actions_group = gtk_action_group_new ("Actions");
-	gtk_action_group_set_translation_domain (grid->priv->actions_group, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (grid->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions), grid);
-	gtk_action_group_add_toggle_actions (grid->priv->actions_group, ui_actions_t, G_N_ELEMENTS (ui_actions_t), grid);
-
-	grid->priv->filter = NULL;
-	grid->priv->filter_window = NULL;
-
 	grid->priv->formatting_funcs = NULL;
 }
 
@@ -459,16 +416,6 @@ gdaui_raw_grid_dispose (GObject *object)
 
 	if (grid->priv) {
 		gdaui_raw_grid_clean (grid);
-
-		if (grid->priv->actions_group) {
-			g_object_unref (G_OBJECT (grid->priv->actions_group));
-			grid->priv->actions_group = NULL;
-		}
-
-		if (grid->priv->filter)
-			gtk_widget_destroy (grid->priv->filter);
-		if (grid->priv->filter_window)
-			gtk_widget_destroy (grid->priv->filter_window);
 
 		if (grid->priv->formatting_funcs) {
 			g_slist_foreach (grid->priv->formatting_funcs, (GFunc) formatting_func_destroy,
@@ -589,10 +536,6 @@ gdaui_raw_grid_set_property (GObject *object,
 			break;
 		}
 
-		case PROP_GLOBAL_ACTIONS_VISIBLE:
-			gtk_action_group_set_visible (grid->priv->actions_group, g_value_get_boolean (value));
-			break;
-
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -617,10 +560,6 @@ gdaui_raw_grid_get_property (GObject *object,
 		case PROP_INFO_CELL_VISIBLE:
 			g_value_set_boolean(value, grid->priv->default_show_info_cell);
 			break;
-		case PROP_GLOBAL_ACTIONS_VISIBLE:
-			g_value_set_boolean(value, grid->priv->default_show_global_actions);
-			break;
-
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -1485,307 +1424,6 @@ data_cell_status_changed (GtkCellRenderer *renderer, const gchar *path, GdaValue
 	gda_value_free (attribute);
 }
 
-static void
-action_new_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	GtkTreeIter iter;
-	GtkTreePath *path;
-
-	if (gdaui_data_store_append (grid->priv->store, &iter)) {
-		path = gtk_tree_model_get_path (GTK_TREE_MODEL (grid->priv->store), &iter);
-		gtk_tree_view_set_cursor (GTK_TREE_VIEW (grid), path, NULL, FALSE);
-		gtk_tree_path_free (path);
-	}
-}
-
-static void
-action_delete_cb (GtkToggleAction *action, GdauiRawGrid *grid)
-{
-	if (gtk_toggle_action_get_active (action)) {
-		GtkTreeIter iter;
-		GtkTreeSelection *select;
-		GtkTreeModel *model;
-		GList *sel_rows;
-		GdaDataProxy *proxy;
-		
-		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
-		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
-		proxy = gdaui_data_store_get_proxy (GDAUI_DATA_STORE (model));
-		
-		/* rem: get the list of selected rows after each row deletion because the data model might have changed and
-		 * row numbers might also have changed */
-		while (sel_rows) {
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (sel_rows->data));
-			if (!gda_data_proxy_row_is_deleted (proxy,
-							    gdaui_data_store_get_row_from_iter (GDAUI_DATA_STORE (model),
-												&iter))) {
-				gdaui_data_store_delete (grid->priv->store, &iter);
-				g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-				g_list_free (sel_rows);
-				sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
-			}
-			else
-				sel_rows = sel_rows->next;
-		}
-	}
-	else {
-		GtkTreeIter iter;
-		GtkTreeSelection *select;
-		GtkTreeModel *model;
-		GList *sel_rows, *cur_row;
-		
-		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
-		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
-		cur_row = sel_rows;
-		while (cur_row) {
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (cur_row->data));
-			gdaui_data_store_undelete (grid->priv->store, &iter);
-			cur_row = g_list_next (cur_row);
-		}
-		g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free (sel_rows);
-	}
-}
-
-static void
-action_commit_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gint row;
-	GError *error = NULL;
-	gboolean allok = TRUE;
-	gint mod1, mod2;
-
-	mod1 = gda_data_proxy_get_n_modified_rows (grid->priv->proxy);
-	row = gda_data_model_iter_get_row (grid->priv->iter);
-	if (grid->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
-		gint newrow;
-
-		allok = gda_data_proxy_apply_row_changes (grid->priv->proxy, row, &error);
-		if (allok) {
-			newrow = gda_data_model_iter_get_row (grid->priv->iter);
-			if (row != newrow) /* => current row has changed because the
-					         proxy had to emit a "row_removed" when
-						 actually succeeded the commit
-					      => we need to come back to that row
-					   */
-				gda_data_model_iter_move_to_row (grid->priv->iter, row);
-		}
-	}
-	else
-		allok = gda_data_proxy_apply_all_changes (grid->priv->proxy, &error);
-
-	mod2 = gda_data_proxy_get_n_modified_rows (grid->priv->proxy);
-	if (!allok) {
-		if (mod1 != mod2)
-			/* the data model has changed while doing the writing */
-			_gdaui_utility_display_error ((GdauiDataProxy *) grid, FALSE, error);
-		else
-			_gdaui_utility_display_error ((GdauiDataProxy *) grid, TRUE, error);
-		g_error_free (error);
-	}
-}
-
-static void
-action_reset_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gda_data_proxy_cancel_all_changes (grid->priv->proxy);
-	gda_data_model_send_hint (GDA_DATA_MODEL (grid->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
-}
-
-static void
-action_first_chunck_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gda_data_proxy_set_sample_start (grid->priv->proxy, 0);
-}
-
-static void
-action_prev_chunck_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gint sample_size, sample_start;
-
-	sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
-	if (sample_size > 0) {
-		sample_start = gda_data_proxy_get_sample_start (grid->priv->proxy);
-		sample_start -= sample_size;
-		gda_data_proxy_set_sample_start (grid->priv->proxy, sample_start);
-	}
-}
-
-static void
-action_next_chunck_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gint sample_size, sample_start;
-
-	sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
-	if (sample_size > 0) {
-		sample_start = gda_data_proxy_get_sample_start (grid->priv->proxy);
-		sample_start += sample_size;
-		gda_data_proxy_set_sample_start (grid->priv->proxy, sample_start);
-	}
-}
-
-static void
-action_last_chunck_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	gda_data_proxy_set_sample_start (grid->priv->proxy, G_MAXINT);
-}
-
-static void
-hide_filter_window (GdauiRawGrid *grid)
-{
-	gtk_widget_hide (grid->priv->filter_window);
-	gtk_grab_remove (grid->priv->filter_window);
-}
-
-static gboolean
-filter_event (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventAny *event, GdauiRawGrid *grid)
-{
-	hide_filter_window (grid);
-	return TRUE;
-}
-
-static gboolean
-key_press_filter_event (G_GNUC_UNUSED GtkWidget *widget, GdkEventKey *event, GdauiRawGrid *grid)
-{
-	if (event->keyval == GDK_KEY_Escape ||
-	    event->keyval == GDK_KEY_Tab ||
-            event->keyval == GDK_KEY_KP_Tab ||
-            event->keyval == GDK_KEY_ISO_Left_Tab) {
-		hide_filter_window (grid);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-static void
-filter_position_func (GtkWidget *widget,
-		      GtkWidget *search_dialog,
-		      G_GNUC_UNUSED gpointer   user_data)
-{
-	gint x, y;
-	gint tree_x, tree_y;
-	gint tree_width, tree_height;
-	GdkWindow *window;
-	GdkScreen *screen;
-	GtkRequisition requisition;
-	gint monitor_num;
-	GdkRectangle monitor;
-
-	window = gtk_widget_get_window (widget);
-	screen = gdk_window_get_screen (window);
-
-	monitor_num = gdk_screen_get_monitor_at_window (screen, window);
-	gdk_screen_get_monitor_geometry (screen, monitor_num, &monitor);
-
-	gtk_widget_realize (search_dialog);
-
-	gdk_window_get_origin (window, &tree_x, &tree_y);
-	tree_width = gdk_window_get_width (window);
-	tree_height = gdk_window_get_height (window);
-	gtk_widget_get_preferred_size (search_dialog, NULL, &requisition);
-
-	if (tree_x + tree_width > gdk_screen_get_width (screen))
-		x = gdk_screen_get_width (screen) - requisition.width;
-	else if (tree_x + tree_width - requisition.width < 0)
-		x = 0;
-	else
-		x = tree_x + tree_width - requisition.width;
-
-	if (tree_y + tree_height + requisition.height > gdk_screen_get_height (screen))
-		y = gdk_screen_get_height (screen) - requisition.height;
-	else if (tree_y + tree_height < 0) /* isn't really possible ... */
-		y = 0;
-	else
-		y = tree_y + tree_height;
-
-	gtk_window_move (GTK_WINDOW (search_dialog), x, y);
-}
-
-static gboolean
-popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
-{
-	GdkDeviceManager *manager;
-	GdkDevice *pointer;
-	GdkWindow *window;
-	window = gtk_widget_get_window (widget);
-	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-	pointer = gdk_device_manager_get_client_pointer (manager);
-        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
-                              GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-                              NULL, activate_time) == GDK_GRAB_SUCCESS) {
-		GdkDevice *keyb;
-		keyb = gdk_device_get_associated_device (pointer);
-                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
-				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) == 0)
-                        return TRUE;
-		else {
-                        gdk_device_ungrab (pointer, activate_time);
-                        return FALSE;
-                }
-        }
-        return FALSE;
-}
-
-static void
-action_filter_cb (G_GNUC_UNUSED GtkAction *action, GdauiRawGrid *grid)
-{
-	GtkWidget *toplevel;
-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (grid));
-
-	if (!grid->priv->filter_window) {
-		/* create filter window */
-		GtkWidget *frame, *vbox;
-
-		grid->priv->filter_window = gtk_window_new (GTK_WINDOW_POPUP);
-
-		gtk_widget_set_events (grid->priv->filter_window,
-				       gtk_widget_get_events (grid->priv->filter_window) | GDK_KEY_PRESS_MASK);
-
-		if (gtk_widget_is_toplevel (toplevel) && gtk_window_get_group (GTK_WINDOW (toplevel)))
-			gtk_window_group_add_window (gtk_window_get_group (GTK_WINDOW (toplevel)),
-						     GTK_WINDOW (grid->priv->filter_window));
-
-		g_signal_connect (grid->priv->filter_window, "delete-event",
-				  G_CALLBACK (filter_event), grid);
-		g_signal_connect (grid->priv->filter_window, "button-press-event",
-				  G_CALLBACK (filter_event), grid);
-		g_signal_connect (grid->priv->filter_window, "key-press-event",
-				  G_CALLBACK (key_press_filter_event), grid);
-		frame = gtk_frame_new (NULL);
-		gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
-		gtk_widget_show (frame);
-		gtk_container_add (GTK_CONTAINER (grid->priv->filter_window), frame);
-
-		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-		gtk_widget_show (vbox);
-		gtk_container_add (GTK_CONTAINER (frame), vbox);
-		gtk_container_set_border_width (GTK_CONTAINER (vbox), 3);
-
-		/* add real filter widget */
-		if (! grid->priv->filter) {
-			grid->priv->filter = gdaui_data_filter_new (GDAUI_DATA_PROXY (grid));
-			gtk_widget_show (grid->priv->filter);
-		}
-		gtk_container_add (GTK_CONTAINER (vbox), grid->priv->filter);
-	}
-	else if (gtk_widget_is_toplevel (toplevel)) {
-		if (gtk_window_get_group ((GtkWindow*) toplevel))
-			gtk_window_group_add_window (gtk_window_get_group ((GtkWindow*) toplevel),
-						     GTK_WINDOW (grid->priv->filter_window));
-		else if (gtk_window_get_group (GTK_WINDOW (grid->priv->filter_window)))
-			gtk_window_group_remove_window (gtk_window_get_group (GTK_WINDOW (grid->priv->filter_window)),
-							GTK_WINDOW (grid->priv->filter_window));
-	}
-
-	/* move the filter window to a correct location */
-	/* FIXME: let the user specify the position function like GtkTreeView -> search_position_func() */
-	gtk_widget_show (grid->priv->filter_window);
-	gtk_grab_add (grid->priv->filter_window);
-	filter_position_func (GTK_WIDGET (grid), grid->priv->filter_window, NULL);
-	popup_grab_on_window (grid->priv->filter_window,
-			      gtk_get_current_event_time ());
-}
-
 /*
  * Catch any event in the GtkTreeView widget
  */
@@ -1866,8 +1504,6 @@ static void menu_select_all_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_unselect_all_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_show_columns_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_save_as_cb (GtkWidget *widget, GdauiRawGrid *grid);
-static void menu_set_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
-static void menu_unset_filter_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static void menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid);
 static GtkWidget *new_menu_item (const gchar *label,
 				 GCallback cb_func,
@@ -1896,7 +1532,6 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 	GtkTreeSelection *selection;
 	GtkSelectionMode sel_mode;
 	GSList *list;
-	GtkWidget *mitem;
 
 	if (event->button != 3)
 		return FALSE;
@@ -1922,6 +1557,7 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 			nentries ++;
 	}
 	if (nentries > 1) {
+		GtkWidget *mitem;
 		mitem = gtk_menu_item_new_with_label (_("Shown columns"));
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 		gtk_widget_show (mitem);
@@ -1966,15 +1602,6 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 			       new_check_menu_item (_("Show Column _Titles"),
 						    gtk_tree_view_get_headers_visible (tree_view),
 						    G_CALLBACK (menu_show_columns_cb), grid));
-	
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu),
-			       new_menu_item (_("_Set filter"),
-					      G_CALLBACK (menu_set_filter_cb), grid));
-
-	mitem = new_menu_item (_("_Unset filter"), G_CALLBACK (menu_unset_filter_cb), grid);
-	gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
-	if (!gda_data_proxy_get_filter_expr (grid->priv->proxy))
-		gtk_widget_set_sensitive (mitem, FALSE);
 	
 	if (sel_mode != GTK_SELECTION_NONE) {
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), gtk_separator_menu_item_new ());
@@ -2526,19 +2153,6 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 }
 
 static void
-menu_set_filter_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
-{
-	action_filter_cb (NULL, grid);
-}
-
-static void
-menu_unset_filter_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
-{
-	gda_data_proxy_set_filter_expr (grid->priv->proxy, NULL, NULL);
-}
-
-
-static void
 tree_view_row_activated_cb (G_GNUC_UNUSED GtkTreeView *tree_view, GtkTreePath *path,
 			    G_GNUC_UNUSED GtkTreeViewColumn *column, GdauiRawGrid *grid)
 {
@@ -2876,16 +2490,173 @@ gdaui_raw_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean
 	}
 }
 
-static GtkActionGroup *
-gdaui_raw_grid_get_actions_group (GdauiDataProxy *iface)
+static gboolean
+gdaui_raw_grid_supports_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	GdauiRawGrid *grid;
+	switch (action) {
+	case GDAUI_ACTION_NEW_DATA:
+	case GDAUI_ACTION_WRITE_MODIFIED_DATA:
+	case GDAUI_ACTION_DELETE_SELECTED_DATA:
+	case GDAUI_ACTION_UNDELETE_SELECTED_DATA:
+	case GDAUI_ACTION_RESET_DATA:
+	case GDAUI_ACTION_MOVE_FIRST_CHUNCK:
+        case GDAUI_ACTION_MOVE_PREV_CHUNCK:
+        case GDAUI_ACTION_MOVE_NEXT_CHUNCK:
+        case GDAUI_ACTION_MOVE_LAST_CHUNCK:
+		return TRUE;
+	default:
+		return FALSE;
+	};
+}
 
-	g_return_val_if_fail (GDAUI_IS_RAW_GRID (iface), NULL);
-	grid = GDAUI_RAW_GRID (iface);
-	g_return_val_if_fail (grid->priv, NULL);
+static void
+gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
+{
+	GdauiRawGrid *grid = GDAUI_RAW_GRID (iface);
 
-	return grid->priv->actions_group;
+	switch (action) {
+	case GDAUI_ACTION_NEW_DATA: {
+		GtkTreeIter iter;
+		GtkTreePath *path;
+
+		if (gdaui_data_store_append (grid->priv->store, &iter)) {
+			path = gtk_tree_model_get_path (GTK_TREE_MODEL (grid->priv->store), &iter);
+			gtk_tree_view_set_cursor (GTK_TREE_VIEW (grid), path, NULL, FALSE);
+			gtk_tree_path_free (path);
+		}
+		break;
+	}
+
+	case GDAUI_ACTION_WRITE_MODIFIED_DATA: {
+		gint row;
+		GError *error = NULL;
+		gboolean allok = TRUE;
+		gint mod1, mod2;
+
+		mod1 = gda_data_proxy_get_n_modified_rows (grid->priv->proxy);
+		row = gda_data_model_iter_get_row (grid->priv->iter);
+		if (grid->priv->write_mode >= GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) {
+			gint newrow;
+
+			allok = gda_data_proxy_apply_row_changes (grid->priv->proxy, row, &error);
+			if (allok) {
+				newrow = gda_data_model_iter_get_row (grid->priv->iter);
+				if (row != newrow) /* => current row has changed because the
+						      proxy had to emit a "row_removed" when
+						      actually succeeded the commit
+						      => we need to come back to that row
+						   */
+					gda_data_model_iter_move_to_row (grid->priv->iter, row);
+			}
+		}
+		else
+			allok = gda_data_proxy_apply_all_changes (grid->priv->proxy, &error);
+
+		mod2 = gda_data_proxy_get_n_modified_rows (grid->priv->proxy);
+		if (!allok) {
+			if (mod1 != mod2)
+				/* the data model has changed while doing the writing */
+				_gdaui_utility_display_error ((GdauiDataProxy *) grid, FALSE, error);
+			else
+				_gdaui_utility_display_error ((GdauiDataProxy *) grid, TRUE, error);
+			g_error_free (error);
+		}
+
+		break;
+	}
+
+	case GDAUI_ACTION_DELETE_SELECTED_DATA: {
+		GtkTreeIter iter;
+		GtkTreeSelection *select;
+		GtkTreeModel *model;
+		GList *sel_rows;
+		GdaDataProxy *proxy;
+
+		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+		proxy = gdaui_data_store_get_proxy (GDAUI_DATA_STORE (model));
+
+		/* rem: get the list of selected rows after each row deletion because the data model might have changed and
+		 * row numbers might also have changed */
+		while (sel_rows) {
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (sel_rows->data));
+			if (!gda_data_proxy_row_is_deleted (proxy,
+							    gdaui_data_store_get_row_from_iter (GDAUI_DATA_STORE (model),
+												&iter))) {
+				gdaui_data_store_delete (grid->priv->store, &iter);
+				g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
+				g_list_free (sel_rows);
+				sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+			}
+			else
+				sel_rows = sel_rows->next;
+		}
+
+		break;
+	}
+
+	case GDAUI_ACTION_UNDELETE_SELECTED_DATA: {
+		GtkTreeIter iter;
+		GtkTreeSelection *select;
+		GtkTreeModel *model;
+		GList *sel_rows, *cur_row;
+
+		select = gtk_tree_view_get_selection (GTK_TREE_VIEW (grid));
+		sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
+		cur_row = sel_rows;
+		while (cur_row) {
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (cur_row->data));
+			gdaui_data_store_undelete (grid->priv->store, &iter);
+			cur_row = g_list_next (cur_row);
+		}
+		g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (sel_rows);
+
+		break;
+	}
+
+	case GDAUI_ACTION_RESET_DATA:
+		gda_data_proxy_cancel_all_changes (grid->priv->proxy);
+		gda_data_model_send_hint (GDA_DATA_MODEL (grid->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
+		break;
+
+	case GDAUI_ACTION_MOVE_FIRST_CHUNCK:
+		gda_data_proxy_set_sample_start (grid->priv->proxy, 0);
+		break;
+
+        case GDAUI_ACTION_MOVE_PREV_CHUNCK: {
+		gint sample_size, sample_start;
+
+		sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
+		if (sample_size > 0) {
+			sample_start = gda_data_proxy_get_sample_start (grid->priv->proxy);
+			sample_start -= sample_size;
+			if (sample_start >= 0)
+				gda_data_proxy_set_sample_start (grid->priv->proxy, sample_start);
+		}
+
+		break;
+	}
+
+        case GDAUI_ACTION_MOVE_NEXT_CHUNCK: {
+		gint sample_size, sample_start;
+
+		sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
+		if (sample_size > 0) {
+			sample_start = gda_data_proxy_get_sample_start (grid->priv->proxy);
+			sample_start += sample_size;
+			gda_data_proxy_set_sample_start (grid->priv->proxy, sample_start);
+		}
+		break;
+	}
+
+        case GDAUI_ACTION_MOVE_LAST_CHUNCK:
+		gda_data_proxy_set_sample_start (grid->priv->proxy, G_MAXINT);
+		break;
+
+	default:
+		break;
+	}
 }
 
 static void

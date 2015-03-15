@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include <libgda/gda-decl.h>
 #include <libgda-ui/gdaui-decl.h>
+#include <libgda-ui/gdaui-enums.h>
 
 G_BEGIN_DECLS
 
@@ -59,7 +60,7 @@ typedef enum
 /* struct for the object's data */
 struct _GdauiDataProxyInfo
 {
-	GtkBox                 object;
+	GtkToolbar              object;
 
 	GdauiDataProxyInfoPriv *priv;
 };
@@ -67,7 +68,7 @@ struct _GdauiDataProxyInfo
 /* struct for the object's class */
 struct _GdauiDataProxyInfoClass
 {
-	GtkBoxClass            parent_class;
+	GtkToolbarClass         parent_class;
 };
 
 /**
@@ -87,7 +88,7 @@ struct _GdauiDataProxyInfoClass
 
 GType             gdaui_data_proxy_info_get_type (void) G_GNUC_CONST;
 GtkWidget        *gdaui_data_proxy_info_new      (GdauiDataProxy *data_proxy, GdauiDataProxyInfoFlag flags);
-
+GtkToolItem      *gdaui_data_proxy_info_get_item (GdauiDataProxyInfo *info, GdauiAction action);
 G_END_DECLS
 
 #endif
