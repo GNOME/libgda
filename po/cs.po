@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-04 22:30+0000\n"
-"PO-Revision-Date: 2015-02-04 19:08+0100\n"
+"POT-Creation-Date: 2015-03-17 10:37+0000\n"
+"PO-Revision-Date: 2015-03-17 12:24+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -107,7 +107,7 @@ msgstr "Nelze otevřít připojení"
 
 #: ../control-center/dsn-properties-dialog.c:230
 #: ../control-center/gdaui-dsn-assistant.c:138
-#: ../libgda-ui/gdaui-raw-form.c:632
+#: ../libgda-ui/gdaui-raw-form.c:250
 msgid "Unknown error"
 msgstr "Neznámá chyba"
 
@@ -119,25 +119,25 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../control-center/dsn-properties-dialog.c:267 ../libgda/gda-config.c:399
 #: ../libgda/gda-config.c:549 ../libgda/gda-config.c:1084
 #: ../libgda/gda-config.c:1195 ../libgda/gda-config.c:1253
-#: ../libgda/gda-config.c:1329 ../libgda/gda-connection.c:1463
+#: ../libgda/gda-config.c:1329 ../libgda/gda-connection.c:1471
 #: ../libgda/gda-data-model.c:2472 ../libgda/gda-data-model.c:2480
 #: ../libgda/gda-data-model-dir.c:384 ../libgda/gda-data-model-import.c:1720
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
 #: ../libgda/gda-data-pivot.c:1412 ../libgda/gda-data-pivot.c:1525
-#: ../libgda/gda-data-proxy.c:3121 ../libgda/gda-data-select.c:413
+#: ../libgda/gda-data-proxy.c:3127 ../libgda/gda-data-select.c:413
 #: ../libgda/gda-data-select.c:2342 ../libgda/gda-data-select.c:2352
 #: ../libgda/gda-data-select.c:3793 ../libgda/gda-holder.c:545
 #: ../libgda/gda-holder.c:1956 ../libgda/gda-meta-store.c:1015
 #: ../libgda/gda-server-operation.c:683 ../libgda/gda-server-operation.c:1088
 #: ../libgda/gda-set.c:1184 ../libgda/gda-tree-mgr-select.c:187
 #: ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2671
-#: ../libgda/sqlite/gda-sqlite-provider.c:2683
-#: ../libgda/sqlite/gda-sqlite-provider.c:2705
-#: ../libgda/sqlite/gda-sqlite-provider.c:2895
-#: ../libgda/sqlite/gda-sqlite-provider.c:3226
-#: ../libgda/sqlite/gda-sqlite-provider.c:3238
-#: ../libgda/sqlite/gda-sqlite-provider.c:3369
+#: ../libgda/sqlite/gda-sqlite-provider.c:2668
+#: ../libgda/sqlite/gda-sqlite-provider.c:2680
+#: ../libgda/sqlite/gda-sqlite-provider.c:2702
+#: ../libgda/sqlite/gda-sqlite-provider.c:2892
+#: ../libgda/sqlite/gda-sqlite-provider.c:3223
+#: ../libgda/sqlite/gda-sqlite-provider.c:3235
+#: ../libgda/sqlite/gda-sqlite-provider.c:3366
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:256
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:458
@@ -161,15 +161,15 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/jdbc/gda-jdbc-provider.c:1544
 #: ../providers/jdbc/gda-jdbc-provider.c:1610
 #: ../providers/jdbc/gda-jdbc-util.c:45 ../providers/jdbc/libmain.c:155
-#: ../providers/jdbc/libmain.c:165 ../providers/jdbc/libmain.c:500
+#: ../providers/jdbc/libmain.c:165 ../providers/jdbc/libmain.c:514
 #: ../providers/ldap/gda-ldap-provider.c:937
 #: ../providers/ldap/gda-ldap-provider.c:947
 #: ../providers/ldap/gda-ldap-provider.c:989
 #: ../providers/ldap/gda-ldap-provider.c:1000
 #: ../providers/ldap/gda-ldap-provider.c:1061
-#: ../providers/mdb/gda-mdb-provider.c:375
-#: ../providers/mysql/gda-mysql-provider.c:2004
-#: ../providers/mysql/gda-mysql-provider.c:2019
+#: ../providers/mdb/gda-mdb-provider.c:374
+#: ../providers/mysql/gda-mysql-provider.c:2016
+#: ../providers/mysql/gda-mysql-provider.c:2031
 #: ../providers/mysql/gda-mysql-util.c:69
 #: ../providers/postgres/gda-postgres-provider.c:1806
 #: ../providers/postgres/gda-postgres-provider.c:1821
@@ -442,8 +442,8 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/common-pict.c:368
 #: ../libgda-ui/data-entries/plugins/common-pict.c:495
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:200
-#: ../libgda-ui/gdaui-basic-form.c:2158 ../libgda-ui/gdaui-raw-grid.c:2160
-#: ../libgda-ui/gdaui-raw-grid.c:2513 ../libgda-ui/gdaui-rt-editor.c:693
+#: ../libgda-ui/gdaui-basic-form.c:2158 ../libgda-ui/gdaui-raw-grid.c:1787
+#: ../libgda-ui/gdaui-raw-grid.c:2140 ../libgda-ui/gdaui-rt-editor.c:693
 #: ../libgda-ui/gdaui-server-operation.c:1082
 #: ../tools/browser/auth-dialog.c:192
 #: ../tools/browser/connection-binding-properties.c:171
@@ -594,8 +594,8 @@ msgstr "Neznámý DSN „%s“"
 msgid "Provider '%s' not found"
 msgstr "Poskytovatel „%s“ nebyl nalezen"
 
-#: ../libgda/gda-config.c:1577 ../libgda/gda-connection.c:1013
-#: ../libgda/gda-connection.c:1162
+#: ../libgda/gda-config.c:1577 ../libgda/gda-connection.c:1021
+#: ../libgda/gda-connection.c:1170
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Není nainstalován žádný poskytovatel „%s“"
@@ -721,99 +721,99 @@ msgstr "Není definován žádný DSN pojmenovaný „%s“"
 msgid "Can't set the '%s' property once the connection is opened"
 msgstr "Jakmile je připojení otevřeno, nelze měnit vlastnost „%s“"
 
-#: ../libgda/gda-connection.c:975
+#: ../libgda/gda-connection.c:983
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "Chybná specifikace zdroje dat „%s“"
 
-#: ../libgda/gda-connection.c:983 ../libgda/gda-connection.c:1331
-#: ../libgda/gda-connection.c:1333
+#: ../libgda/gda-connection.c:991 ../libgda/gda-connection.c:1339
+#: ../libgda/gda-connection.c:1341
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Zdroj dat %s nebyl nalezen v nastavení"
 
-#: ../libgda/gda-connection.c:1022
+#: ../libgda/gda-connection.c:1030
 msgid "Datasource configuration error: no provider specified"
 msgstr "Chyba nastavení zdroje dat: není určen žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1125 ../tools/browser/auth-dialog.c:384
+#: ../libgda/gda-connection.c:1133 ../tools/browser/auth-dialog.c:384
 #: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:764
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Chybný připojovací řetězec „%s“"
 
-#: ../libgda/gda-connection.c:1131
+#: ../libgda/gda-connection.c:1139
 msgid "No database driver specified"
 msgstr "Nezadán žádný databázový ovladač"
 
-#: ../libgda/gda-connection.c:1321
+#: ../libgda/gda-connection.c:1329
 msgid "No provider specified"
 msgstr "Není zadán žádný poskytovatel"
 
-#: ../libgda/gda-connection.c:1343 ../libgda/gda-connection.c:1345
+#: ../libgda/gda-connection.c:1351 ../libgda/gda-connection.c:1353
 msgid "No DSN or connection string specified"
 msgstr "Není zadán žádný DSN nebo připojovací řetězec"
 
-#: ../libgda/gda-connection.c:1439
+#: ../libgda/gda-connection.c:1447
 msgid "Connection is already opened"
 msgstr "Připojení je již otevřeno"
 
-#: ../libgda/gda-connection.c:1462
+#: ../libgda/gda-connection.c:1470
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Chyba při snaze udržet metadata v aktuálním stavu: %s"
 
-#: ../libgda/gda-connection.c:1851
+#: ../libgda/gda-connection.c:1859
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "Poskytovatel neposkytuje GdaDataHandler pro data"
 
-#: ../libgda/gda-connection.c:1987 ../libgda/gda-connection.c:2057
-#: ../libgda/gda-connection.c:2169 ../libgda/gda-connection.c:2243
-#: ../libgda/gda-connection.c:2387 ../libgda/gda-connection.c:2824
-#: ../libgda/gda-connection.c:3034 ../libgda/gda-connection.c:3386
-#: ../libgda/gda-connection.c:3407 ../libgda/gda-connection.c:3490
-#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3576
-#: ../libgda/gda-connection.c:3591 ../libgda/gda-connection.c:3677
-#: ../libgda/gda-connection.c:3704 ../libgda/gda-connection.c:3732
-#: ../libgda/gda-connection.c:3757 ../libgda/gda-connection.c:3782
-#: ../libgda/gda-connection.c:3807 ../libgda/gda-connection.c:4747
-#: ../libgda/gda-connection.c:5166 ../libgda/gda-connection.c:5230
-#: ../libgda/gda-connection.c:5985
+#: ../libgda/gda-connection.c:1995 ../libgda/gda-connection.c:2065
+#: ../libgda/gda-connection.c:2177 ../libgda/gda-connection.c:2251
+#: ../libgda/gda-connection.c:2395 ../libgda/gda-connection.c:2832
+#: ../libgda/gda-connection.c:3042 ../libgda/gda-connection.c:3394
+#: ../libgda/gda-connection.c:3415 ../libgda/gda-connection.c:3498
+#: ../libgda/gda-connection.c:3510 ../libgda/gda-connection.c:3584
+#: ../libgda/gda-connection.c:3599 ../libgda/gda-connection.c:3685
+#: ../libgda/gda-connection.c:3712 ../libgda/gda-connection.c:3740
+#: ../libgda/gda-connection.c:3765 ../libgda/gda-connection.c:3790
+#: ../libgda/gda-connection.c:3815 ../libgda/gda-connection.c:4755
+#: ../libgda/gda-connection.c:5174 ../libgda/gda-connection.c:5238
+#: ../libgda/gda-connection.c:5993
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
 #, c-format
 msgid "Connection is closed"
 msgstr "Připojení je uzavřeno"
 
-#: ../libgda/gda-connection.c:3273 ../libgda/gda-connection.c:3288
+#: ../libgda/gda-connection.c:3281 ../libgda/gda-connection.c:3296
 msgid "Statement is a selection statement"
 msgstr "Příkaz je příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:3344 ../libgda/gda-connection.c:3443
-#: ../libgda/gda-connection.c:3531
+#: ../libgda/gda-connection.c:3352 ../libgda/gda-connection.c:3451
+#: ../libgda/gda-connection.c:3539
 msgid "Statement is not a selection statement"
 msgstr "Příkaz není příkazem provádějícím výběr"
 
-#: ../libgda/gda-connection.c:4003
+#: ../libgda/gda-connection.c:4011
 msgid "Invalid argument"
 msgstr "Neplatný parametr"
 
-#: ../libgda/gda-connection.c:4013
+#: ../libgda/gda-connection.c:4021
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Chybějící nebo nesprávné parametry pro tabulku „%s“: %s"
 
-#: ../libgda/gda-connection.c:4679
+#: ../libgda/gda-connection.c:4687
 msgid "Meta update error"
 msgstr "Chyba aktualizace metaúdajů"
 
-#: ../libgda/gda-connection.c:5260
+#: ../libgda/gda-connection.c:5268
 msgid "Wrong filter arguments"
 msgstr "Nesprávné parametry filtru"
 
-#: ../libgda/gda-connection.c:5448 ../libgda/gda-connection.c:5501
-#: ../libgda/gda-connection.c:5545 ../libgda/gda-connection.c:5589
-#: ../libgda/gda-connection.c:5633
+#: ../libgda/gda-connection.c:5456 ../libgda/gda-connection.c:5509
+#: ../libgda/gda-connection.c:5553 ../libgda/gda-connection.c:5597
+#: ../libgda/gda-connection.c:5641
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná transakce"
@@ -825,7 +825,7 @@ msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná tra
 #: ../libgda/gda-data-model-dir.c:770 ../libgda/gda-data-model-dir.c:869
 #: ../libgda/gda-data-model-dir.c:911 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1128
-#: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
+#: ../libgda/gda-data-proxy.c:3565 ../libgda/gda-data-proxy.c:3689
 #: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1938
 #: ../libgda/gda-data-select.c:2894 ../libgda/gda-data-select.c:2961
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
@@ -891,8 +891,8 @@ msgstr "Zda může být datový model upravován"
 #: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
 #: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:781
 #: ../libgda/gda-data-model-dir.c:955 ../libgda/gda-data-model-dir.c:1321
-#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3632
-#: ../libgda/gda-data-proxy.c:3670 ../libgda/gda-data-select.c:1887
+#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3638
+#: ../libgda/gda-data-proxy.c:3676 ../libgda/gda-data-select.c:1887
 #: ../libgda/gda-data-select.c:1948
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -901,8 +901,8 @@ msgstr "Řádek %d je mimo rozsah (0 - %d)"
 #: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
 #: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:784
 #: ../libgda/gda-data-model-dir.c:958 ../libgda/gda-data-model-dir.c:1324
-#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3635
-#: ../libgda/gda-data-proxy.c:3673 ../libgda/gda-data-select.c:1890
+#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3641
+#: ../libgda/gda-data-proxy.c:3679 ../libgda/gda-data-select.c:1890
 #: ../libgda/gda-data-select.c:1951
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1205,7 +1205,7 @@ msgstr "Převod znaků na řádku %d, chyba: %s"
 
 #: ../libgda/gda-data-model-import.c:1045
 #: ../libgda/sqlite/gda-sqlite-provider.c:929
-#: ../providers/bdb/gda-bdb-provider.c:228
+#: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:609
 #: ../tools/browser/gdaui-data-import.c:177
 msgid "no detail"
@@ -1364,7 +1364,7 @@ msgstr "Není definováno žádné řádkové pole"
 msgid "Could not get information from source data model"
 msgstr "Nelze získat informace z modelu zdrojových dat"
 
-#: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3079
+#: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3081
 #: ../tools/common/t-app.c:3114
 msgid "Could not create virtual connection"
 msgstr "Nelze vytvořit virtuální připojení"
@@ -1381,7 +1381,7 @@ msgstr "Neplatný model zdrojových dat (možná má nekompatibilní názvy slou
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "GdaDataProxy neumí obsluhovat datový model s nenáhodným přístupem"
 
-#: ../libgda/gda-data-proxy.c:1675 ../libgda/gda-data-proxy.c:4072
+#: ../libgda/gda-data-proxy.c:1675 ../libgda/gda-data-proxy.c:4078
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "První řádek je uměle předřazený prázdný řádek a nemůže být odstraněn"
@@ -1408,35 +1408,35 @@ msgstr ""
 "příslušné signály „row-inserted“, „row-updated“ nebo „row-removed“. To může "
 "být chyba implementace %s (chybu prosím nahlaste)."
 
-#: ../libgda/gda-data-proxy.c:3121
+#: ../libgda/gda-data-proxy.c:3127
 #, c-format
 msgid "Error in filter expression: %s"
 msgstr "Chyba ve výrazu filtru: %s"
 
-#: ../libgda/gda-data-proxy.c:3135
+#: ../libgda/gda-data-proxy.c:3142
 msgid "Error in filter expression"
 msgstr "Chyba ve výrazu filtru"
 
-#: ../libgda/gda-data-proxy.c:3250 ../libgda/gda-data-select.c:1682
+#: ../libgda/gda-data-proxy.c:3259 ../libgda/gda-data-select.c:1682
 msgid "Incorrect filter expression"
 msgstr "Chybný výraz filtru"
 
-#: ../libgda/gda-data-proxy.c:3807
+#: ../libgda/gda-data-proxy.c:3813
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "První řádek je uměle předřazený prázdný řádek a nemůže být změněn"
 
-#: ../libgda/gda-data-proxy.c:3836 ../libgda/gda-data-proxy.c:3847
+#: ../libgda/gda-data-proxy.c:3842 ../libgda/gda-data-proxy.c:3853
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Nesprávný typ hodnoty: očekáváno „%s“ a obdrženo „%s“"
 
-#: ../libgda/gda-data-proxy.c:3935
+#: ../libgda/gda-data-proxy.c:3941
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Pokus o změnu sloupce pouze ke čtení: %d"
 
-#: ../libgda/gda-data-proxy.c:3972
+#: ../libgda/gda-data-proxy.c:3978
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Typ hodnoty neodpovídá typu %s namísto typu %s"
@@ -2150,8 +2150,8 @@ msgstr "Pozdržuje se provedení příkazu o %u ms\n"
 #: ../libgda/gda-server-provider.c:2787 ../libgda/gda-server-provider.c:2799
 #: ../libgda/gda-server-provider.c:2811 ../libgda/gda-server-provider.c:2823
 #: ../libgda/gda-server-provider.c:2835
-#: ../providers/web/gda-web-provider.c:623
-#: ../providers/web/gda-web-provider.c:652
+#: ../providers/web/gda-web-provider.c:622
+#: ../providers/web/gda-web-provider.c:651
 msgid "Not supported"
 msgstr "Nepodporováno"
 
@@ -2296,11 +2296,11 @@ msgstr "Nesprávný typ parametru pro „%s“: očekáván typ „%s“ a obdr�
 msgid "Missing parameter '%s'"
 msgstr "Schází parametr „%s“"
 
-#: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3070
 #: ../providers/jdbc/gda-jdbc-provider.c:1494
-#: ../providers/mysql/gda-mysql-provider.c:2282
+#: ../providers/mysql/gda-mysql-provider.c:2294
 #: ../providers/postgres/gda-postgres-provider.c:2081
-#: ../providers/web/gda-web-provider.c:1498
+#: ../providers/web/gda-web-provider.c:1497
 #, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "Parametr „%s“ není platný"
@@ -2454,11 +2454,11 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Nelze přepsat příkaz, pokud se nejedná o INSERT nebo UPDATE"
 
 #: ../libgda/gda-util.c:1780 ../libgda/gda-util.c:1837
-#: ../libgda/gda-util.c:1877 ../libgda/sqlite/gda-sqlite-provider.c:3054
+#: ../libgda/gda-util.c:1877 ../libgda/sqlite/gda-sqlite-provider.c:3051
 #: ../providers/jdbc/gda-jdbc-provider.c:1465
-#: ../providers/mysql/gda-mysql-provider.c:2262
+#: ../providers/mysql/gda-mysql-provider.c:2274
 #: ../providers/postgres/gda-postgres-provider.c:2063
-#: ../providers/web/gda-web-provider.c:1480
+#: ../providers/web/gda-web-provider.c:1479
 #, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "K provedení dotazu schází parametr „%s“"
@@ -2679,7 +2679,7 @@ msgid "Can't find libsqlite3."
 msgstr "Nelze najít libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:761
-#: ../providers/mdb/gda-mdb-provider.c:276
+#: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "Připojovací řetězec musí obsahovat hodnoty DB_DIR a DB_NAME"
 
@@ -2695,7 +2695,7 @@ msgstr ""
 "souboru s databází) a DB_NAME (soubor s databází bez „%s“ na konci)."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:809
-#: ../providers/mdb/gda-mdb-provider.c:318
+#: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Část DB_DIR připojovací řetězce musí ukazovat na platnou složku"
@@ -2724,8 +2724,7 @@ msgstr "Nelze registrovat funkci „%s“"
 msgid "Could not define the %s collation"
 msgstr "Nelze definovat porovnávání %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1187
-#: ../libgda/sqlite/gda-sqlite-provider.c:1229
+#: ../libgda/sqlite/gda-sqlite-provider.c:1226
 #: ../libgda-ui/data-entries/plugins/libmain.c:89
 #: ../libgda-ui/data-entries/plugins/libmain.c:126
 #: ../libgda-ui/data-entries/plugins/libmain.c:152
@@ -2733,75 +2732,73 @@ msgstr "Nelze definovat porovnávání %s"
 #: ../libgda-ui/data-entries/plugins/libmain.c:189
 #: ../libgda-ui/data-entries/plugins/libmain.c:282
 #: ../libgda-ui/data-entries/plugins/libmain.c:307
-#: ../providers/mysql/gda-mysql-provider.c:834
-#: ../providers/mysql/gda-mysql-provider.c:876
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Schází soubor spec. „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1356
-#: ../libgda/sqlite/gda-sqlite-provider.c:1367
-#: ../libgda/sqlite/gda-sqlite-provider.c:1381
-#: ../libgda/sqlite/gda-sqlite-provider.c:1392
+#: ../libgda/sqlite/gda-sqlite-provider.c:1353
+#: ../libgda/sqlite/gda-sqlite-provider.c:1364
+#: ../libgda/sqlite/gda-sqlite-provider.c:1378
+#: ../libgda/sqlite/gda-sqlite-provider.c:1389
 msgid "Error initializing database with passphrase"
 msgstr "Chyba při inicializaci databáze heslovou frází"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1434
+#: ../libgda/sqlite/gda-sqlite-provider.c:1431
 msgid "Missing database name or directory"
 msgstr "Schází název databáze nebo složka"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1460
+#: ../libgda/sqlite/gda-sqlite-provider.c:1457
 #: ../providers/postgres/gda-postgres-provider.c:1106
 #: ../providers/postgres/gda-postgres-provider.c:1107
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakce nejsou podporovány v režimu pouze pro čtení"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1855
+#: ../libgda/sqlite/gda-sqlite-provider.c:1852
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr "SQLite nepodporuje zadávání polí pro použití v klauzuli DISTINCT"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1902
-#: ../libgda/sqlite/gda-sqlite-provider.c:1912
+#: ../libgda/sqlite/gda-sqlite-provider.c:1899
+#: ../libgda/sqlite/gda-sqlite-provider.c:1909
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Složený výraz „%s“ není databází SQLite podporován"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2010
+#: ../libgda/sqlite/gda-sqlite-provider.c:2007
 msgid "ILIKE operation not supported"
 msgstr "Operace ILIKE není podporována"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2557
+#: ../libgda/sqlite/gda-sqlite-provider.c:2554
 #: ../providers/jdbc/gda-jdbc-provider.c:1255
 #: ../providers/postgres/gda-postgres-provider.c:1657
-#: ../providers/web/gda-web-provider.c:1252
+#: ../providers/web/gda-web-provider.c:1251
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Nepojmenovaný parametr není v předpřipraveném příkazu dovolen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2670
-#: ../libgda/sqlite/gda-sqlite-provider.c:2682
-#: ../providers/mysql/gda-mysql-provider.c:2003
+#: ../libgda/sqlite/gda-sqlite-provider.c:2667
+#: ../libgda/sqlite/gda-sqlite-provider.c:2679
+#: ../providers/mysql/gda-mysql-provider.c:2015
 #: ../providers/postgres/gda-postgres-provider.c:1805
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "Nelze sestavit příkaz SELECT pro získání posledního vloženého řádku: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2704
-#: ../providers/mysql/gda-mysql-provider.c:2018
+#: ../libgda/sqlite/gda-sqlite-provider.c:2701
+#: ../providers/mysql/gda-mysql-provider.c:2030
 #: ../providers/postgres/gda-postgres-provider.c:1820
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Nelze provést příkaz SELECT pro získání posledního vloženého řádku: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2717
-#: ../providers/mysql/gda-mysql-provider.c:2031
+#: ../libgda/sqlite/gda-sqlite-provider.c:2714
+#: ../providers/mysql/gda-mysql-provider.c:2043
 #: ../providers/postgres/gda-postgres-provider.c:1833
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Příkaz SELECT pro získání posledního vloženého řádku nevrátil žádný řádek"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2721
-#: ../providers/mysql/gda-mysql-provider.c:2035
+#: ../libgda/sqlite/gda-sqlite-provider.c:2718
+#: ../providers/mysql/gda-mysql-provider.c:2047
 #: ../providers/postgres/gda-postgres-provider.c:1837
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
@@ -2809,21 +2806,21 @@ msgstr ""
 "Příkaz SELECT pro získání posledního vloženého řádku vrátil příliš mnoho "
 "(%d) řádků"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2786
+#: ../libgda/sqlite/gda-sqlite-provider.c:2783
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Předpřipravený příkaz nemá odpovídající GdaStatment"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2826
-#: ../libgda/sqlite/gda-sqlite-provider.c:2863
+#: ../libgda/sqlite/gda-sqlite-provider.c:2823
+#: ../libgda/sqlite/gda-sqlite-provider.c:2860
 msgid "Can't create SQLite BLOB handle"
 msgstr "Nelze vytvořit obsluhu rozsáhlého binárního objektu (BLOB) z SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2830
-#: ../libgda/sqlite/gda-sqlite-provider.c:2868
+#: ../libgda/sqlite/gda-sqlite-provider.c:2827
+#: ../libgda/sqlite/gda-sqlite-provider.c:2865
 msgid "Can't write to SQLite's BLOB"
 msgstr "Nelze zapisovat do rozsáhlého binárního objektu (BLOB) databáze SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2853
+#: ../libgda/sqlite/gda-sqlite-provider.c:2850
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2833,86 +2830,86 @@ msgstr ""
 "je „%s“), nahlaste to prosím jako chybu na http://bugzilla.gnome.org/ pro "
 "produkt „libgda“."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2878
+#: ../libgda/sqlite/gda-sqlite-provider.c:2875
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr ""
 "Nelze zjistit ROWID rozsáhlého binárního objektu (BLOB), který se má vyplnit"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2987
+#: ../libgda/sqlite/gda-sqlite-provider.c:2984
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Prázdný příkaz"
 
+#: ../libgda/sqlite/gda-sqlite-provider.c:3026
 #: ../libgda/sqlite/gda-sqlite-provider.c:3029
-#: ../libgda/sqlite/gda-sqlite-provider.c:3032
 #: ../providers/jdbc/gda-jdbc-provider.c:1431
 #: ../providers/jdbc/gda-jdbc-provider.c:1434
-#: ../providers/mysql/gda-mysql-provider.c:2237
-#: ../providers/mysql/gda-mysql-provider.c:2240
+#: ../providers/mysql/gda-mysql-provider.c:2249
+#: ../providers/mysql/gda-mysql-provider.c:2252
 #: ../providers/postgres/gda-postgres-provider.c:2039
 #: ../providers/postgres/gda-postgres-provider.c:2042
-#: ../providers/web/gda-web-provider.c:1454
-#: ../providers/web/gda-web-provider.c:1457
+#: ../providers/web/gda-web-provider.c:1453
+#: ../providers/web/gda-web-provider.c:1456
 msgid "Missing parameter(s) to execute query"
 msgstr "K provedení dotazu schází parametr(y)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3092
+#: ../libgda/sqlite/gda-sqlite-provider.c:3089
 #: ../providers/jdbc/gda-jdbc-provider.c:1513
-#: ../providers/mysql/gda-mysql-provider.c:2301
+#: ../providers/mysql/gda-mysql-provider.c:2313
 #: ../providers/postgres/gda-postgres-provider.c:2100
-#: ../providers/web/gda-web-provider.c:1521
+#: ../providers/web/gda-web-provider.c:1520
 msgid "Can't rewrite statement handle default values"
 msgstr "Nelze přepsat příkaz, aby obsluhoval výchozí hodnoty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3208
-#: ../providers/mysql/gda-mysql-provider.c:2565
+#: ../libgda/sqlite/gda-sqlite-provider.c:3205
+#: ../providers/mysql/gda-mysql-provider.c:2577
 msgid "Can't get BLOB's length"
 msgstr "Nelze zjistit délku rozsáhlého binárního objektu (BLOB)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3210
-#: ../providers/mysql/gda-mysql-provider.c:2567
+#: ../libgda/sqlite/gda-sqlite-provider.c:3207
+#: ../providers/mysql/gda-mysql-provider.c:2579
 msgid "BLOB is too big"
 msgstr "Rozsáhlý binární objekt (BLOB) je příliš velký"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3324
+#: ../libgda/sqlite/gda-sqlite-provider.c:3321
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Neobsluhovaný datový typ „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3391
+#: ../libgda/sqlite/gda-sqlite-provider.c:3388
 msgid "Could not start transaction to create BLOB"
 msgstr ""
 "Nelze začít transakci potřebnou k vytvoření rozsáhlého binárního objektu "
 "(BLOB)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3556
-#: ../libgda/sqlite/gda-sqlite-provider.c:3577
-#: ../libgda/sqlite/gda-sqlite-provider.c:3668
-#: ../libgda/sqlite/gda-sqlite-provider.c:3688
-#: ../libgda/sqlite/gda-sqlite-provider.c:3711
+#: ../libgda/sqlite/gda-sqlite-provider.c:3553
+#: ../libgda/sqlite/gda-sqlite-provider.c:3574
+#: ../libgda/sqlite/gda-sqlite-provider.c:3665
+#: ../libgda/sqlite/gda-sqlite-provider.c:3685
+#: ../libgda/sqlite/gda-sqlite-provider.c:3708
 msgid "Function requires one argument"
 msgstr "Funkce vyžaduje jeden argument"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3609
-#: ../libgda/sqlite/gda-sqlite-provider.c:3743
+#: ../libgda/sqlite/gda-sqlite-provider.c:3606
+#: ../libgda/sqlite/gda-sqlite-provider.c:3740
 msgid "Function requires two arguments"
 msgstr "Funkce vyžaduje dva argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3648
+#: ../libgda/sqlite/gda-sqlite-provider.c:3645
 msgid "Function requires one or two arguments"
 msgstr "Funkce vyžaduje jeden nebo dva argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3783
-#: ../libgda/sqlite/gda-sqlite-provider.c:3890
+#: ../libgda/sqlite/gda-sqlite-provider.c:3780
+#: ../libgda/sqlite/gda-sqlite-provider.c:3887
 msgid "Function requires two or three arguments"
 msgstr "Funkce vyžaduje dva nebo tři argumenty"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3837
+#: ../libgda/sqlite/gda-sqlite-provider.c:3834
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Chyba regulárního výrazu SQLite „%s“:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3838
+#: ../libgda/sqlite/gda-sqlite-provider.c:3835
 msgid "Invalid regular expression"
 msgstr "Neplatný regulární výraz"
 
@@ -3335,39 +3332,39 @@ msgstr ""
 "Možný unik paměti, protože není poskytována žádna destrukční funkce pro "
 "uvolnění hodnot vrácených pracovním vláknem"
 
-#: ../libgda/thread-wrapper/gda-worker.c:581
-#: ../libgda/thread-wrapper/gda-worker.c:647
+#: ../libgda/thread-wrapper/gda-worker.c:583
+#: ../libgda/thread-wrapper/gda-worker.c:649
 #, c-format
 msgid "Unknown requested job %u"
 msgstr "Neznámý požadovaný úkol %u"
 
-#: ../libgda/thread-wrapper/gda-worker.c:589
+#: ../libgda/thread-wrapper/gda-worker.c:591
 #, c-format
 msgid "Job %u has been cancelled"
 msgstr "Úkol %u byl zrušen"
 
-#: ../libgda/thread-wrapper/gda-worker.c:604
-#: ../libgda/thread-wrapper/gda-worker.c:654
+#: ../libgda/thread-wrapper/gda-worker.c:606
+#: ../libgda/thread-wrapper/gda-worker.c:656
 #, c-format
 msgid "Job %u is being processed"
 msgstr "Úkol %u se zpracovává"
 
-#: ../libgda/thread-wrapper/gda-worker.c:607
+#: ../libgda/thread-wrapper/gda-worker.c:609
 #, c-format
 msgid "Job %u has not yet been processed"
 msgstr "Úkol %u zatím nebyl zpracován"
 
-#: ../libgda/thread-wrapper/gda-worker.c:657
+#: ../libgda/thread-wrapper/gda-worker.c:659
 #, c-format
 msgid "Job %u has already been processed"
 msgstr "Úkol %u byl již zpracován"
 
-#: ../libgda/thread-wrapper/gda-worker.c:796
+#: ../libgda/thread-wrapper/gda-worker.c:798
 #, c-format
 msgid "Cannot build inter thread communication device"
 msgstr "Nelze vytvořit zařízení pro interní komunikaci vláken"
 
-#: ../libgda/thread-wrapper/gda-worker.c:805
+#: ../libgda/thread-wrapper/gda-worker.c:807
 #, c-format
 msgid "GdaWorker internal error"
 msgstr "Interní chyba GdaWorker"
@@ -3448,7 +3445,6 @@ msgstr "Neznámo"
 #: ../libgda-ui/data-entries/common-bin.c:326
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:5
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:12
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:9
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
@@ -3468,7 +3464,7 @@ msgstr "Datový typ"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:833 ../libgda-ui/gdaui-basic-form.c:869
-#: ../libgda-ui/gdaui-raw-grid.c:786
+#: ../libgda-ui/gdaui-raw-grid.c:725
 #: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2319
 #: ../tools/common/t-app.c:2388 ../tools/common/t-app.c:3793
 #: ../tools/common/t-app.c:5595 ../tools/common/t-config-info.c:123
@@ -3720,7 +3716,7 @@ msgid "Select a file to save the image to"
 msgstr "Výběr souboru pro uložení obrázku"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:496
-#: ../libgda-ui/gdaui-raw-grid.c:2161
+#: ../libgda-ui/gdaui-raw-grid.c:1788
 msgid "_Save"
 msgstr "_Uložit"
 
@@ -4030,8 +4026,8 @@ msgstr "ZAPNUTO, pokud reaguje rozbalování formuláře svisle"
 msgid "Shown data entries"
 msgstr "Zobrazené datové záznamy"
 
-#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:827
-#: ../libgda-ui/gdaui-raw-grid.c:2915 ../libgda-ui/gdaui-raw-grid.c:2970
+#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:766
+#: ../libgda-ui/gdaui-raw-grid.c:2686 ../libgda-ui/gdaui-raw-grid.c:2741
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut „%s“ by měl být hodnotou G_TYPE_STRING"
@@ -4044,7 +4040,7 @@ msgstr "Nelze najít datový záznam pro GdaHolder"
 msgid "Values to be defined"
 msgstr "Hodnoty, které se mají definovat"
 
-#: ../libgda-ui/gdaui-basic-form.c:2224 ../libgda-ui/gdaui-raw-grid.c:2735
+#: ../libgda-ui/gdaui-basic-form.c:2224 ../libgda-ui/gdaui-raw-grid.c:2349
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument „%s“ nebyl úspěšně zpracován"
@@ -4106,13 +4102,67 @@ msgstr "Nastavit filtr"
 msgid "Clear filter"
 msgstr "Vymazat filtr"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:822
-msgid "Undelete the selected entry"
-msgstr "Zrušit smazání vybraného záznamu"
+#: ../libgda-ui/gdaui-data-proxy.c:201
+msgid "GdauiAction is not supported by this GdauiDataProxy interface"
+msgstr "GdauiAction není tímto rozhraním GdauiDataProxy podporován"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:829
+#: ../libgda-ui/gdaui-data-proxy-info.c:90
+msgid "Insert new data"
+msgstr "Vložit nová data"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:91
+msgid "Commit the changes"
+msgstr "Odeslat změny"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:92
+#: ../libgda-ui/gdaui-data-proxy-info.c:906
 msgid "Delete the selected entry"
 msgstr "Smazat vybraný záznam"
+
+#. undelete: "document-revert"
+#: ../libgda-ui/gdaui-data-proxy-info.c:93
+msgid "Cancel any modification"
+msgstr "Zrušit některou změnu"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:95
+msgid "Move to first entry"
+msgstr "Přesunout se na první záznam"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:96
+msgid "Move to previous entry"
+msgstr "Přesunout se na předchozí záznam"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:97
+msgid "Move to next entry"
+msgstr "Přesunout se na následující záznam"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:98
+msgid "Move to last entry"
+msgstr "Přesunout se na poslední záznam"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:100
+msgid "Show first chunck of data"
+msgstr "Zobrazit první blok dat"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:101
+msgid "Show previous chunck of data"
+msgstr "Zobrazit předchozí blok dat"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:102
+msgid "Show next chunck of data"
+msgstr "Zobrazit následující blok dat"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:103
+msgid "Show last chunck of data"
+msgstr "Zobrazit poslední blok dat"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:601
+msgid "Filter data"
+msgstr "Filtrovat data"
+
+#: ../libgda-ui/gdaui-data-proxy-info.c:899
+msgid "Undelete the selected entry"
+msgstr "Zrušit smazání vybraného záznamu"
 
 #: ../libgda-ui/gdaui-data-selector.c:230
 #, c-format
@@ -4188,68 +4238,16 @@ msgstr "Zdroje dat…"
 msgid "Could not execute the Database access control center"
 msgstr "Nelze spustit Ovládací centrum přístupu k databázím"
 
-#: ../libgda-ui/gdaui-raw-form.c:185 ../libgda-ui/gdaui-raw-grid.c:317
+#: ../libgda-ui/gdaui-raw-form.c:180 ../libgda-ui/gdaui-raw-grid.c:287
 msgid "Data to display"
 msgstr "Data, která se mají zobrazit"
 
-#: ../libgda-ui/gdaui-raw-form.c:201 ../libgda-ui/gdaui-raw-grid.c:197
-msgid "Delete the current record"
-msgstr "Smazat aktuální záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:205 ../libgda-ui/gdaui-raw-grid.c:201
-msgid "Create a new record"
-msgstr "Vytvořit nový záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:206 ../libgda-ui/gdaui-raw-grid.c:202
-msgid "Commit the modifications"
-msgstr "Odeslat změny"
-
-#: ../libgda-ui/gdaui-raw-form.c:207 ../libgda-ui/gdaui-raw-grid.c:203
-msgid "Clear all the modifications"
-msgstr "Zrušit změny"
-
-#: ../libgda-ui/gdaui-raw-form.c:208
-msgid "Go to first record"
-msgstr "Přejít na první záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:209
-msgid "Go to last record"
-msgstr "Přejít na poslední záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:210
-msgid "Go to previous record"
-msgstr "Přejít na předchozí záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:211
-msgid "Go to next record"
-msgstr "Přejít na následující záznam"
-
-#: ../libgda-ui/gdaui-raw-form.c:212 ../libgda-ui/gdaui-raw-grid.c:208
-msgid "Filter records"
-msgstr "Filtrovat záznamy"
-
-#: ../libgda-ui/gdaui-raw-form.c:631
+#: ../libgda-ui/gdaui-raw-form.c:249
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Nelze přidat řádek do modelu dat: %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:204
-msgid "Go to first chunck"
-msgstr "Přejít na první blok"
-
-#: ../libgda-ui/gdaui-raw-grid.c:205
-msgid "Go to last chunck"
-msgstr "Přejít na poslední blok"
-
-#: ../libgda-ui/gdaui-raw-grid.c:206
-msgid "Go to previous chunck"
-msgstr "Přejít na předchozí blok"
-
-#: ../libgda-ui/gdaui-raw-grid.c:207
-msgid "Go to next chunck"
-msgstr "Přejít na následující blok"
-
-#: ../libgda-ui/gdaui-raw-grid.c:322
+#: ../libgda-ui/gdaui-raw-grid.c:292
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
@@ -4257,129 +4255,117 @@ msgstr ""
 "Ukazatel na specifikaci rozvržení v XML (jako ukazatel xmlNodePtr na uzel "
 "<gdaui_grid>)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:325
+#: ../libgda-ui/gdaui-raw-grid.c:295
 msgid "Info cell visible"
 msgstr "Informační buňky viditelné"
 
-#: ../libgda-ui/gdaui-raw-grid.c:329
-msgid "Global Actions visible"
-msgstr "Globální akce viditelné"
-
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:789 ../libgda-ui/gdaui-raw-grid.c:812
+#: ../libgda-ui/gdaui-raw-grid.c:728 ../libgda-ui/gdaui-raw-grid.c:751
 msgid "Can't be NULL"
 msgstr "Nemůže být prázdné (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:820
+#: ../libgda-ui/gdaui-raw-grid.c:759
 msgid "No title"
 msgstr "Bez názvu"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1925
+#: ../libgda-ui/gdaui-raw-grid.c:1561
 msgid "Shown columns"
 msgstr "Zobrazené sloupce"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1952
+#: ../libgda-ui/gdaui-raw-grid.c:1588
 msgid "_Copy"
 msgstr "_Kopírovat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1958
+#: ../libgda-ui/gdaui-raw-grid.c:1594
 msgid "Select _All"
 msgstr "Vybrat _vše"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1963
+#: ../libgda-ui/gdaui-raw-grid.c:1599
 msgid "_Clear Selection"
 msgstr "Zrušit vý_běr"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1966
+#: ../libgda-ui/gdaui-raw-grid.c:1602
 msgid "Show Column _Titles"
 msgstr "Zobrazi_t záhlaví sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1971
-msgid "_Set filter"
-msgstr "Na_stavit filtr"
-
-#: ../libgda-ui/gdaui-raw-grid.c:1974
-msgid "_Unset filter"
-msgstr "Zr_ušit filtr"
-
-#: ../libgda-ui/gdaui-raw-grid.c:1981
+#: ../libgda-ui/gdaui-raw-grid.c:1608
 msgid "Save _As"
 msgstr "Uložit j_ako"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:2158
+#: ../libgda-ui/gdaui-raw-grid.c:1785
 msgid "Saving Data"
 msgstr "Uložení dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2166
+#: ../libgda-ui/gdaui-raw-grid.c:1793
 msgid "Saving data to a file"
 msgstr "Uložení dat do souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2167
+#: ../libgda-ui/gdaui-raw-grid.c:1794
 msgid "The data will be exported to the selected file."
 msgstr "Data budou exportována do vybraného souboru."
 
-#: ../libgda-ui/gdaui-raw-grid.c:2177 ../tools/common/t-config-info.c:427
+#: ../libgda-ui/gdaui-raw-grid.c:1804 ../tools/common/t-config-info.c:427
 msgid "File name"
 msgstr "Název souboru"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:2198
+#: ../libgda-ui/gdaui-raw-grid.c:1825
 #: ../tools/browser/schema-browser/table-columns.c:666
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:2219
+#: ../libgda-ui/gdaui-raw-grid.c:1846
 msgid "File type:"
 msgstr "Typ souboru:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2229
+#: ../libgda-ui/gdaui-raw-grid.c:1856
 msgid "Tab-delimited"
 msgstr "Oddělovaný tabulátory"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2230
+#: ../libgda-ui/gdaui-raw-grid.c:1857
 msgid "Comma-delimited"
 msgstr "Oddělovaný čárkami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2231
+#: ../libgda-ui/gdaui-raw-grid.c:1858
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:2238
+#: ../libgda-ui/gdaui-raw-grid.c:1865
 msgid "Data to save:"
 msgstr "Data k uložení:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2253
+#: ../libgda-ui/gdaui-raw-grid.c:1880
 msgid "All data (without any local modification)"
 msgstr "Všechna data (bez místních změn)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2254
+#: ../libgda-ui/gdaui-raw-grid.c:1881
 msgid "Only displayed data"
 msgstr "Jen zobrazená data"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2256
+#: ../libgda-ui/gdaui-raw-grid.c:1883
 msgid "Only selected data"
 msgstr "Jen vybraná data"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2261
+#: ../libgda-ui/gdaui-raw-grid.c:1888
 msgid "Other options"
 msgstr "Ostatní volby"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2268
+#: ../libgda-ui/gdaui-raw-grid.c:1895
 msgid "Empty string when NULL?"
 msgstr "Prázdný řetězec, když je prázdné?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2271 ../libgda-ui/gdaui-raw-grid.c:2276
+#: ../libgda-ui/gdaui-raw-grid.c:1898 ../libgda-ui/gdaui-raw-grid.c:1903
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Exportovat prázdné hodnoty (NULL) jako prázdný řetězec „“"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2278
+#: ../libgda-ui/gdaui-raw-grid.c:1905
 msgid "Invalid data as NULL?"
 msgstr "Neplatná data jako prázdná?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2281 ../libgda-ui/gdaui-raw-grid.c:2286
+#: ../libgda-ui/gdaui-raw-grid.c:1908 ../libgda-ui/gdaui-raw-grid.c:1913
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4387,28 +4373,28 @@ msgstr ""
 "Neexportovat neplatná data,\n"
 "ale exportovat místo nich prázdnou hodnotu (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2288
+#: ../libgda-ui/gdaui-raw-grid.c:1915
 msgid "Field names on first row?"
 msgstr "Názvy polí na prvním řádku?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2291 ../libgda-ui/gdaui-raw-grid.c:2296
+#: ../libgda-ui/gdaui-raw-grid.c:1918 ../libgda-ui/gdaui-raw-grid.c:1923
 msgid "Add a row at beginning with columns names"
 msgstr "Přidat na začátek řádek s názvy sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2473
+#: ../libgda-ui/gdaui-raw-grid.c:2100
 #, c-format
 msgid "Could not save file %s"
 msgstr "Nelze uložit soubor %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2481
+#: ../libgda-ui/gdaui-raw-grid.c:2108
 msgid "You must specify a file name"
 msgstr "Musíte určit název souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2487
+#: ../libgda-ui/gdaui-raw-grid.c:2114
 msgid "Got empty file while converting the data"
 msgstr "Obdržen prázdný soubor během převodu dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2500
+#: ../libgda-ui/gdaui-raw-grid.c:2127
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4417,7 +4403,7 @@ msgstr ""
 "Soubor „%s“ již existuje.\n"
 "Chcete jej přepsat?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2510
+#: ../libgda-ui/gdaui-raw-grid.c:2137
 msgid "If you choose yes, the contents will be lost."
 msgstr "Pokud zvolíte ano, bude obsah ztracen."
 
@@ -4586,11 +4572,11 @@ msgstr "<b>Vlastnosti pole:</b>"
 msgid "<b>Fields:</b>"
 msgstr "<b>Pole:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1200
+#: ../libgda-ui/gdaui-server-operation.c:1198
 msgid "Add a new field"
 msgstr "Přidat nové pole"
 
-#: ../libgda-ui/gdaui-server-operation.c:1202
+#: ../libgda-ui/gdaui-server-operation.c:1201
 msgid "Remove selected field"
 msgstr "Odstranit vybraná pole"
 
@@ -4741,20 +4727,20 @@ msgstr "Název databáze"
 msgid "Name of the database in the database file to be used"
 msgstr "Název databáze v souboru s databází, kterou používat"
 
-#: ../providers/bdb/gda-bdb-provider.c:189
+#: ../providers/bdb/gda-bdb-provider.c:188
 msgid "The DB_NAME parameter is not defined in the connection string."
 msgstr "V připojovacím řetězci není definován parametr DB_NAME."
 
-#: ../providers/bdb/gda-bdb-provider.c:219
+#: ../providers/bdb/gda-bdb-provider.c:218
 msgid "An error occurred while accessing the BDB database"
 msgstr "Vyskytla se chyba při přístupu k databázi BDB"
 
-#: ../providers/bdb/gda-bdb-provider.c:227
+#: ../providers/bdb/gda-bdb-provider.c:226
 #, c-format
 msgid "Could not add BDB data model to connection: %s"
 msgstr "Nelze přidat datový model BDB do připojení: %s"
 
-#: ../providers/bdb/gda-bdb-provider.c:238
+#: ../providers/bdb/gda-bdb-provider.c:237
 msgid "-"
 msgstr "-"
 
@@ -4799,7 +4785,6 @@ msgstr "Tabulka"
 
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:3
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:3
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:3
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_comment_column.xml.in.h:3
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:3
@@ -4819,7 +4804,6 @@ msgstr "Název tabulky"
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:4
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:10
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:7
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:4
 #: ../providers/mysql/mysql_specs_comment_column.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:13
@@ -4866,7 +4850,6 @@ msgstr "Škála"
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:8
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:18
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:11
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:12
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:11
@@ -4882,7 +4865,6 @@ msgstr "Neprázdné"
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:9
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:26
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:17
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
@@ -4905,7 +4887,6 @@ msgstr "Výchozí hodnota, povinná pokud sloupec není prázdný (NOT NULL)"
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:11
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:30
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:21
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:18
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
@@ -4921,7 +4902,6 @@ msgstr "Kontrola"
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:12
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:32
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:23
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:19
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
@@ -4997,7 +4977,6 @@ msgstr "Typ"
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:3
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:2
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:2
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:2
@@ -5109,7 +5088,6 @@ msgid "Sort type"
 msgstr "Typ řazení"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:1
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:1
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:1
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:1
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:1
@@ -5137,7 +5115,6 @@ msgstr "Vytvořit tabulku, jen když zatím neexistuje"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:5
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
@@ -5160,7 +5137,6 @@ msgstr "Automatické zvyšování"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:22
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:13
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:14
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:25
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:13
@@ -5175,7 +5151,6 @@ msgstr "Jedinečný"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:24
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:15
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:15
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
@@ -5192,7 +5167,6 @@ msgstr "Primární klíč"
 #. list of fields
 #. To translators: "Default value" is a table's column's attribute
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:28
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:19
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
@@ -5222,7 +5196,6 @@ msgstr ""
 
 #. other table constraints
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
-#: ../providers/jdbc/jdbc_specs_create_table.xml.in.h:25
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
@@ -5575,7 +5548,7 @@ msgstr ""
 msgid "Can't get list of installed JDBC drivers: %s"
 msgstr "Nelze získat seznam nainstalovaných ovladačů JDBC: %s"
 
-#: ../providers/jdbc/libmain.c:490
+#: ../providers/jdbc/libmain.c:504
 msgid ""
 "Could not find Libgda's JAR (gdaprovider-6.0.jar), JDBC provider is "
 "unavailable."
@@ -5583,12 +5556,12 @@ msgstr ""
 "Nelze najít JAR patřící k libgda (gdaprovider-6.0.jar), poskytovatel JDBC "
 "není dostupný."
 
-#: ../providers/jdbc/libmain.c:499
+#: ../providers/jdbc/libmain.c:513
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
 msgstr "Nelze vytvořit virtuální stroj JAVA: %s"
 
-#: ../providers/jdbc/libmain.c:509
+#: ../providers/jdbc/libmain.c:523
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
@@ -5796,8 +5769,8 @@ msgstr ""
 "Poskytovatel pro databázi, ve které jsou tabulky založeny na datech "
 "obsažených v adresáři LDAP"
 
-#: ../providers/mdb/gda-mdb-provider.c:303
-#: ../providers/mdb/gda-mdb-provider.c:310
+#: ../providers/mdb/gda-mdb-provider.c:302
+#: ../providers/mdb/gda-mdb-provider.c:309
 #, c-format
 msgid ""
 "The connection string format has changed: replace FILENAME with DB_DIR (the "
@@ -5808,12 +5781,12 @@ msgstr ""
 "za DB_DIR (cesta k databázovému souboru) a DB_NAME (soubor s databází bez "
 "„%s“ na konci)."
 
-#: ../providers/mdb/gda-mdb-provider.c:337
+#: ../providers/mdb/gda-mdb-provider.c:336
 #, c-format
 msgid "Could not open file %s"
 msgstr "Nelze otevřít soubor %s"
 
-#: ../providers/mdb/gda-mdb-provider.c:373
+#: ../providers/mdb/gda-mdb-provider.c:372
 #, c-format
 msgid "Could not map table '%s': %s"
 msgstr "Nelze namapovat tabulku „%s“: %s"
@@ -5868,17 +5841,17 @@ msgstr "Připojovací řetězec musí obsahovat hodnoty DB_NAME (název databáz
 msgid "No description"
 msgstr "Bez popisu"
 
-#: ../providers/mysql/gda-mysql-provider.c:1796
+#: ../providers/mysql/gda-mysql-provider.c:1808
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "V předpřipraveném příkazu není dovolen nepojmenovaný parametr příkazu."
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2559
+#: ../providers/mysql/gda-mysql-provider.c:2571
 msgid "Can't read whole BLOB into memory"
 msgstr "Nelze načíst celý rozsáhlý binární objekt (BLOB) do paměti"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2606
+#: ../providers/mysql/gda-mysql-provider.c:2618
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
@@ -5887,7 +5860,7 @@ msgstr ""
 "Neobsluhovaný datový typ „%s“, nahlaste to prosím jako chybu na http://"
 "bugzilla.gnome.org/ pro produkt „libgda“."
 
-#: ../providers/mysql/gda-mysql-provider.c:2653
+#: ../providers/mysql/gda-mysql-provider.c:2665
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -7523,37 +7496,37 @@ msgstr "Šifrovací heslová fráze"
 msgid "Provider for SQLite databases"
 msgstr "Poskytovatel pro databáze SQLite"
 
-#: ../providers/web/gda-web-provider.c:298 ../providers/web/gda-web-util.c:218
+#: ../providers/web/gda-web-provider.c:297 ../providers/web/gda-web-util.c:218
 #: ../providers/web/gda-web-util.c:336 ../providers/web/gda-web-util.c:480
 #, c-format
 msgid "Invalid HOST/SCRIPT '%s'"
 msgstr "Neplatný POČÍTAČ/SKRIPT „%s“"
 
-#: ../providers/web/gda-web-provider.c:352
-#: ../providers/web/gda-web-provider.c:358
-#: ../providers/web/gda-web-provider.c:364
-#: ../providers/web/gda-web-provider.c:372
+#: ../providers/web/gda-web-provider.c:351
+#: ../providers/web/gda-web-provider.c:357
+#: ../providers/web/gda-web-provider.c:363
+#: ../providers/web/gda-web-provider.c:371
 #, c-format
 msgid "The connection string must contain the %s value"
 msgstr "Připojovací řetězec musí obsahovat hodnotu %s"
 
-#: ../providers/web/gda-web-provider.c:630
-#: ../providers/web/gda-web-provider.c:659
+#: ../providers/web/gda-web-provider.c:629
+#: ../providers/web/gda-web-provider.c:658
 msgid "Server operations not yet implemented"
 msgstr "Serverové operace nejsou zatím implementovány"
 
-#: ../providers/web/gda-web-provider.c:701
-#: ../providers/web/gda-web-provider.c:766
-#: ../providers/web/gda-web-provider.c:826
+#: ../providers/web/gda-web-provider.c:700
+#: ../providers/web/gda-web-provider.c:765
+#: ../providers/web/gda-web-provider.c:825
 msgid "Named transaction is not supported"
 msgstr "Pojmenované transakce nejsou podporovány"
 
-#: ../providers/web/gda-web-provider.c:706
+#: ../providers/web/gda-web-provider.c:705
 msgid "Transaction level is not supported"
 msgstr "Úroveň transakce ní podporována"
 
-#: ../providers/web/gda-web-provider.c:886
-#: ../providers/web/gda-web-provider.c:947
+#: ../providers/web/gda-web-provider.c:885
+#: ../providers/web/gda-web-provider.c:946
 msgid "Unnamed savepoint is not supported"
 msgstr "Nepojmenované body uložení nejsou podporovány"
 
