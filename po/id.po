@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgda master\n"
+"Project-Id-Version: libgda LIBGDA_5.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-09-26 19:34+0000\n"
-"PO-Revision-Date: 2013-09-27 08:32+0700\n"
+"POT-Creation-Date: 2015-03-18 10:41+0000\n"
+"PO-Revision-Date: 2015-03-18 18:17+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id_ID\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.7.5\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -101,9 +101,9 @@ msgstr "Tak bisa mengeksekusi program peramban"
 #: ../control-center/dsn-properties-dialog.c:269 ../libgda/gda-config.c:383
 #: ../libgda/gda-config.c:533 ../libgda/gda-config.c:1068
 #: ../libgda/gda-config.c:1179 ../libgda/gda-config.c:1237
-#: ../libgda/gda-config.c:1314 ../libgda/gda-connection.c:1732
+#: ../libgda/gda-config.c:1314 ../libgda/gda-connection.c:1734
 #: ../libgda/gda-data-model.c:2475 ../libgda/gda-data-model.c:2483
-#: ../libgda/gda-data-model-dir.c:388 ../libgda/gda-data-model-import.c:1681
+#: ../libgda/gda-data-model-dir.c:388 ../libgda/gda-data-model-import.c:1721
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
 #: ../libgda/gda-data-pivot.c:1412 ../libgda/gda-data-pivot.c:1525
 #: ../libgda/gda-data-proxy.c:3123 ../libgda/gda-data-select.c:400
@@ -567,8 +567,8 @@ msgstr "DSN tak dikenal '%s'"
 msgid "Provider '%s' not found"
 msgstr "Penyedia '%s' tak ditemukan"
 
-#: ../libgda/gda-config.c:1561 ../libgda/gda-connection.c:1166
-#: ../libgda/gda-connection.c:1329
+#: ../libgda/gda-config.c:1561 ../libgda/gda-connection.c:1168
+#: ../libgda/gda-connection.c:1331
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Tak ada penyedia '%s' terpasang"
@@ -611,7 +611,7 @@ msgstr "Berkas"
 msgid "List of installed providers"
 msgstr "Daftar penyedia terpasang"
 
-#: ../libgda/gda-config.c:1823 ../libgda/gda-data-model-dsn-list.c:129
+#: ../libgda/gda-config.c:1821 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/gda-sql.c:2982
 msgid "Username"
@@ -622,7 +622,7 @@ msgstr "Nama pengguna"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1825 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1823 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -630,28 +630,28 @@ msgstr "Nama pengguna"
 msgid "Password"
 msgstr "Kata Sandi"
 
-#: ../libgda/gda-config.c:1895
+#: ../libgda/gda-config.c:1893
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Galat saat memuat penyedia '%s': %s"
 
-#: ../libgda/gda-connection.c:339
+#: ../libgda/gda-connection.c:340
 msgid "DSN to use"
 msgstr "DSN untuk dipakai"
 
-#: ../libgda/gda-connection.c:342
+#: ../libgda/gda-connection.c:343
 msgid "Connection string to use"
 msgstr "String koneksi untuk dipakai"
 
-#: ../libgda/gda-connection.c:345
+#: ../libgda/gda-connection.c:346
 msgid "Provider to use"
 msgstr "Penyedia untuk dipakai"
 
-#: ../libgda/gda-connection.c:350
+#: ../libgda/gda-connection.c:351
 msgid "Authentication string to use"
 msgstr "String otentikasi untuk dipakai"
 
-#: ../libgda/gda-connection.c:354 ../libgda-ui/data/server_operation.glade.h:6
+#: ../libgda/gda-connection.c:355 ../libgda-ui/data/server_operation.glade.h:6
 #: ../libgda-ui/gdaui-server-operation.c:778
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
@@ -660,11 +660,11 @@ msgid "Options"
 msgstr "Opsi"
 
 #. To translators: Don't translate "GdaMetaStore", it's a class name
-#: ../libgda/gda-connection.c:359
+#: ../libgda/gda-connection.c:360
 msgid "GdaMetaStore used by the connection"
 msgstr "GdaMetaStore yang dipakai oleh koneksi"
 
-#: ../libgda/gda-connection.c:365
+#: ../libgda/gda-connection.c:366
 msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
@@ -672,7 +672,7 @@ msgstr ""
 "GThread unik tempat koneksi akan tersedia. Ini mestinya hanya diubah oleh "
 "implementasi penyedia basis data."
 
-#: ../libgda/gda-connection.c:383
+#: ../libgda/gda-connection.c:384
 msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
@@ -680,7 +680,7 @@ msgstr ""
 "Menentukan apakah koneksi berperan sebagai pembungkus thread atas koneksi "
 "lain, membuatnya aman thread (thread safe) sepenuhnya."
 
-#: ../libgda/gda-connection.c:399
+#: ../libgda/gda-connection.c:400
 msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
@@ -688,107 +688,107 @@ msgstr ""
 "Membuat koneksi menyiapkan fungsi pemantauan pada loop utama untuk memantau "
 "koneksi yang dibungkus"
 
-#: ../libgda/gda-connection.c:413
+#: ../libgda/gda-connection.c:414
 msgid "Number of history events to keep in memory"
 msgstr "Cacah peristiwa riwayat yang disimpan di dalam memori"
 
-#: ../libgda/gda-connection.c:426
+#: ../libgda/gda-connection.c:427
 msgid "Computes execution delay for each executed statement"
 msgstr "Hitung tundaan eksekusi bagi setiap pernyataan yang dieksekusi"
 
-#: ../libgda/gda-connection.c:440
+#: ../libgda/gda-connection.c:441
 msgid "Artificially slows down the execution of queries"
 msgstr "Secara artifisial memperlambat eksekusi query"
 
-#: ../libgda/gda-connection.c:731 ../libgda/gda-connection.c:760
-#: ../libgda/gda-connection.c:775 ../libgda/gda-connection.c:791
+#: ../libgda/gda-connection.c:733 ../libgda/gda-connection.c:762
+#: ../libgda/gda-connection.c:777 ../libgda/gda-connection.c:793
 #, c-format
 msgid "Could not set the '%s' property when the connection is opened"
 msgstr "Tak bisa menata properti '%s' ketika koneksi dibuka"
 
-#: ../libgda/gda-connection.c:739
+#: ../libgda/gda-connection.c:741
 #, c-format
 msgid "No DSN named '%s' defined"
 msgstr "DSN bernama '%s' tak didefinisikan"
 
-#: ../libgda/gda-connection.c:813
+#: ../libgda/gda-connection.c:815
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
 msgstr "Tak bisa menata properti '%s' begitu koneksi telah dibuka"
 
-#: ../libgda/gda-connection.c:1111 ../libgda/gda-connection.c:1270
+#: ../libgda/gda-connection.c:1113 ../libgda/gda-connection.c:1272
 #: ../libgda/thread-wrapper/gda-thread-provider.c:425
 #: ../libgda/thread-wrapper/gda-thread-provider.c:566
 msgid "Multi threading is not supported or enabled"
 msgstr "Multi threading tak didukung atau diaktifkan"
 
-#: ../libgda/gda-connection.c:1120
+#: ../libgda/gda-connection.c:1122
 #, c-format
 msgid "Malformed data source specification '%s'"
 msgstr "Spesifikasi sumber data '%s' salah bentuk"
 
-#: ../libgda/gda-connection.c:1128 ../libgda/gda-connection.c:1563
-#: ../libgda/gda-connection.c:1565
+#: ../libgda/gda-connection.c:1130 ../libgda/gda-connection.c:1565
+#: ../libgda/gda-connection.c:1567
 #, c-format
 msgid "Data source %s not found in configuration"
 msgstr "Sumber data %s tak ditemukan di konfigurasi"
 
-#: ../libgda/gda-connection.c:1188
+#: ../libgda/gda-connection.c:1190
 msgid "Datasource configuration error: no provider specified"
 msgstr "Galat konfigurasi sumber data: penyedia tak dinyatakan"
 
-#: ../libgda/gda-connection.c:1280 ../tools/browser/auth-dialog.c:448
+#: ../libgda/gda-connection.c:1282 ../tools/browser/auth-dialog.c:448
 #: ../tools/browser/auth-dialog.c:485 ../tools/gda-sql.c:1264
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "String koneksi '%s' salah bentuk"
 
-#: ../libgda/gda-connection.c:1286
+#: ../libgda/gda-connection.c:1288
 msgid "No database driver specified"
 msgstr "Penggerak basis data tak dinyatakan"
 
-#: ../libgda/gda-connection.c:1575 ../libgda/gda-connection.c:1577
+#: ../libgda/gda-connection.c:1577 ../libgda/gda-connection.c:1579
 msgid "No DSN or connection string specified"
 msgstr "String koneksi atau DSN tak dinyatakan"
 
-#: ../libgda/gda-connection.c:1587
+#: ../libgda/gda-connection.c:1589
 msgid "No provider specified"
 msgstr "Penyedia tak dinyatakan"
 
-#: ../libgda/gda-connection.c:1611
+#: ../libgda/gda-connection.c:1613
 msgid "Provider does not allow usage from this thread"
 msgstr "Penyedia tak memperbolehkan pemakaian dari thread ini"
 
-#: ../libgda/gda-connection.c:1618
+#: ../libgda/gda-connection.c:1620
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
-"Galat internal: penyedia tak mengimplementasi metoda virtual open_connection"
-"()"
+"Galat internal: penyedia tak mengimplementasi metoda virtual "
+"open_connection()"
 
-#: ../libgda/gda-connection.c:1731
+#: ../libgda/gda-connection.c:1733
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
 msgstr "Galat ketika memelihara meta data mutakhir: %s"
 
-#: ../libgda/gda-connection.c:1965
+#: ../libgda/gda-connection.c:1967
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "Penyedia tak menyediakan GdaDataHandler untuk tanggal"
 
-#: ../libgda/gda-connection.c:3021
+#: ../libgda/gda-connection.c:3023
 msgid "Provider does not support statement preparation"
 msgstr "Penyedia tak mendukung persiapan pernyataan"
 
-#: ../libgda/gda-connection.c:3270 ../libgda/gda-connection.c:3375
-#: ../libgda/gda-connection.c:3445 ../libgda/gda-meta-store.c:900
+#: ../libgda/gda-connection.c:3272 ../libgda/gda-connection.c:3377
+#: ../libgda/gda-connection.c:3447 ../libgda/gda-meta-store.c:900
 #, c-format
 msgid "Can't obtain connection lock"
 msgstr "Tak bisa mendapat kuncian koneksi"
 
-#: ../libgda/gda-connection.c:3277 ../libgda/gda-connection.c:3516
-#: ../libgda/gda-connection.c:3890 ../libgda/gda-connection.c:3990
-#: ../libgda/gda-connection.c:4086 ../libgda/gda-connection.c:6566
+#: ../libgda/gda-connection.c:3279 ../libgda/gda-connection.c:3518
+#: ../libgda/gda-connection.c:3892 ../libgda/gda-connection.c:3992
+#: ../libgda/gda-connection.c:4088 ../libgda/gda-connection.c:6568
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:169
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:401
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1718
@@ -796,17 +796,17 @@ msgstr "Tak bisa mendapat kuncian koneksi"
 msgid "Connection is closed"
 msgstr "Sambungan tertutup"
 
-#: ../libgda/gda-connection.c:3285
+#: ../libgda/gda-connection.c:3287
 #, c-format
 msgid "Asynchronous execution is not supported"
 msgstr "Eksekusi asinkron tak didukung"
 
-#: ../libgda/gda-connection.c:3390 ../libgda/gda-connection.c:3483
+#: ../libgda/gda-connection.c:3392 ../libgda/gda-connection.c:3485
 #, c-format
 msgid "Can't find task %u"
 msgstr "Tak menemukan tugas %u"
 
-#: ../libgda/gda-connection.c:3468 ../libgda/sqlite/gda-sqlite-provider.c:1315
+#: ../libgda/gda-connection.c:3470 ../libgda/sqlite/gda-sqlite-provider.c:1315
 #: ../libgda/thread-wrapper/gda-thread-provider.c:988
 #: ../providers/jdbc/gda-jdbc-provider.c:715
 #: ../providers/mysql/gda-mysql-provider.c:1004
@@ -815,35 +815,35 @@ msgstr "Tak menemukan tugas %u"
 msgid "Provider does not support asynchronous server operation"
 msgstr "Penyedia tak mendukung operasi server asinkron"
 
-#: ../libgda/gda-connection.c:3761 ../libgda/gda-connection.c:3776
+#: ../libgda/gda-connection.c:3763 ../libgda/gda-connection.c:3778
 msgid "Statement is a selection statement"
 msgstr "Pernyataan adalah pernyataan seleksi"
 
-#: ../libgda/gda-connection.c:3833 ../libgda/gda-connection.c:3938
-#: ../libgda/gda-connection.c:4033
+#: ../libgda/gda-connection.c:3835 ../libgda/gda-connection.c:3940
+#: ../libgda/gda-connection.c:4035
 msgid "Statement is not a selection statement"
 msgstr "Pernyataan bukan pernyataan pemilihan"
 
-#: ../libgda/gda-connection.c:4529
+#: ../libgda/gda-connection.c:4531
 msgid "Invalid argument"
 msgstr "Argumen tidak valid"
 
-#: ../libgda/gda-connection.c:4539
+#: ../libgda/gda-connection.c:4541
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Argumen bagi tabel '%s' kurang atau salah: %s"
 
-#: ../libgda/gda-connection.c:5303
+#: ../libgda/gda-connection.c:5305
 msgid "Meta update error"
 msgstr "Galat pemutakhiran meta"
 
-#: ../libgda/gda-connection.c:5867
+#: ../libgda/gda-connection.c:5869
 msgid "Wrong filter arguments"
 msgstr "Argumen penyaring salah"
 
-#: ../libgda/gda-connection.c:6055 ../libgda/gda-connection.c:6108
-#: ../libgda/gda-connection.c:6152 ../libgda/gda-connection.c:6196
-#: ../libgda/gda-connection.c:6240
+#: ../libgda/gda-connection.c:6057 ../libgda/gda-connection.c:6110
+#: ../libgda/gda-connection.c:6154 ../libgda/gda-connection.c:6198
+#: ../libgda/gda-connection.c:6242
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Pelacakan status transaksi koneksi: tak ada transaksi bagi %s"
@@ -1120,11 +1120,11 @@ msgstr "Tak bisa men-dump atribut model data: %s"
 msgid "Could not dump data model's contents: %s"
 msgstr "Tak bisa men-dump isi model data: %s"
 
-#: ../libgda/gda-data-model.c:2704
+#: ../libgda/gda-data-model.c:2703
 msgid "Data model does not support backward cursor move"
 msgstr "Model data tak mendukung pergerakan kursor mundur"
 
-#: ../libgda/gda-data-model.c:3003
+#: ../libgda/gda-data-model.c:3002
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
@@ -1132,7 +1132,7 @@ msgid "%d row"
 msgid_plural "%d rows"
 msgstr[0] "%d baris"
 
-#: ../libgda/gda-data-model.c:3005
+#: ../libgda/gda-data-model.c:3004
 #, c-format
 msgid "0 row"
 msgstr "0 baris"
@@ -1214,31 +1214,31 @@ msgstr "Global"
 msgid "List of defined data sources"
 msgstr "Daftar dari sumber data yang terdefinisi"
 
-#: ../libgda/gda-data-model-import.c:494
+#: ../libgda/gda-data-model-import.c:504
+msgid "\"options\" property is not a GdaSet object"
+msgstr "Properti \"options\" bukan objek GdaSet"
+
+#: ../libgda/gda-data-model-import.c:718
 #, c-format
 msgid "The '%s' option must hold a string value, ignored."
 msgstr "Opsi '%s' mesti memuat nilai string, diabaikan."
 
-#: ../libgda/gda-data-model-import.c:510
+#: ../libgda/gda-data-model-import.c:734
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
 msgstr "Opsi '%s' mesti memuat nilai bool, diabaikan."
 
-#: ../libgda/gda-data-model-import.c:660
-msgid "\"options\" property is not a GdaSet object"
-msgstr "Properti \"options\" bukan objek GdaSet"
-
-#: ../libgda/gda-data-model-import.c:937
+#: ../libgda/gda-data-model-import.c:977
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
 msgstr "Opsi '%s' mesti memuat nilai GType, diabaikan."
 
-#: ../libgda/gda-data-model-import.c:1003
+#: ../libgda/gda-data-model-import.c:1043
 #, c-format
 msgid "Character conversion at line %d, error: %s"
 msgstr "Konversi karakter pada baris %d, galat: %s"
 
-#: ../libgda/gda-data-model-import.c:1006
+#: ../libgda/gda-data-model-import.c:1046
 #: ../libgda/sqlite/gda-sqlite-provider.c:922
 #: ../providers/bdb/gda-bdb-provider.c:209
 #: ../tools/browser/common/gdaui-data-import.c:177
@@ -1246,87 +1246,87 @@ msgstr "Konversi karakter pada baris %d, galat: %s"
 msgid "no detail"
 msgstr "tak ada rincian"
 
-#: ../libgda/gda-data-model-import.c:1046
+#: ../libgda/gda-data-model-import.c:1086
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
 msgstr "Tak bisa mengonversi string '%s' ke suatu nilai '%s'"
 
-#: ../libgda/gda-data-model-import.c:1102
+#: ../libgda/gda-data-model-import.c:1142
 #, c-format
 msgid "Error while parsing CSV file: %s"
 msgstr "Galat ketika mengurai berkas CSV: %s"
 
 #. error
-#: ../libgda/gda-data-model-import.c:1202
+#: ../libgda/gda-data-model-import.c:1242
 msgid "Failed to read node in XML file"
 msgstr "Gagal membaca node dalam berkas XML"
 
-#: ../libgda/gda-data-model-import.c:1221
+#: ../libgda/gda-data-model-import.c:1261
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
 msgstr "Mengharapkan node <gda_array> dalam berkas XML, mendapat <%s>"
 
-#: ../libgda/gda-data-model-import.c:1267
-#: ../libgda/gda-data-model-import.c:1589
+#: ../libgda/gda-data-model-import.c:1307
+#: ../libgda/gda-data-model-import.c:1629
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
 msgstr "Tak ada atribut \"gdatype\" yang dinyatakan dalam <gda_array_field>"
 
-#: ../libgda/gda-data-model-import.c:1318
+#: ../libgda/gda-data-model-import.c:1358
 msgid "Expected <gda_array_field> in <gda_array>"
 msgstr "Mengharapkan <gda_array_field> dalam <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1349
+#: ../libgda/gda-data-model-import.c:1389
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
 msgstr "Mengharapkan <gda_array_data> dalam <gda_array>, mendapat <%s>"
 
-#: ../libgda/gda-data-model-import.c:1351
+#: ../libgda/gda-data-model-import.c:1391
 msgid "Expected <gda_array_data> in <gda_array>"
 msgstr "Mengharapkan <gda_array_data> dalam <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1363
+#: ../libgda/gda-data-model-import.c:1403
 msgid "Can't read the contents of the <gda_array_data> node"
 msgstr "Tak bisa membaca isi dari node <gda_array_data>"
 
-#: ../libgda/gda-data-model-import.c:1412
+#: ../libgda/gda-data-model-import.c:1452
 #, c-format
 msgid "Expected <gda_array_row> in <gda_array_data>, got <%s>"
 msgstr "Mengharapkan <gda_array_row> dalam <gda_array_data>, mendapat <%s>"
 
-#: ../libgda/gda-data-model-import.c:1436
+#: ../libgda/gda-data-model-import.c:1476
 msgid "Row has too many values (which are ignored)"
 msgstr "Baris memiliki terlalu banyak nilai (yang diabaikan)"
 
-#: ../libgda/gda-data-model-import.c:1483
+#: ../libgda/gda-data-model-import.c:1523
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
 msgstr "Tak bisa mengkonversi '%s' ke nilai bertipe %s"
 
-#: ../libgda/gda-data-model-import.c:1556
+#: ../libgda/gda-data-model-import.c:1596
 #, c-format
 msgid "Expected <gda_array> node but got <%s>"
 msgstr "Mengharapkan node <gda_array> tapi mendapat <%s>"
 
-#: ../libgda/gda-data-model-import.c:1640
+#: ../libgda/gda-data-model-import.c:1680
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "Tak ada <gda_array_field> yang dinyatakan dalam <gda_array>"
 
-#: ../libgda/gda-data-model-import.c:1816 ../libgda/gda-data-select.c:3814
+#: ../libgda/gda-data-model-import.c:1856 ../libgda/gda-data-select.c:3814
 msgid "Data model does not support random access"
 msgstr "Model data tak mendukung akses acak"
 
-#: ../libgda/gda-data-model-import.c:1873
+#: ../libgda/gda-data-model-import.c:1913
 #, c-format
 msgid "Row at line %d does not have enough values"
 msgstr "Baris %d tak punya cukup nilai-nilai"
 
-#: ../libgda/gda-data-model-import.c:1878
+#: ../libgda/gda-data-model-import.c:1918
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
 msgstr ""
 "Baris %d tak punya cukup nilai-nilai, dilengkapkan dengan nilai-nilai NULL"
 
-#: ../libgda/gda-data-model-import.c:1903
+#: ../libgda/gda-data-model-import.c:1943
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
 msgstr "Baris %d tak punya cukup nilai-nilai (sehingga diabaikan)"
@@ -2506,7 +2506,7 @@ msgstr "Representasi biner"
 msgid "Boolean representation"
 msgstr "Representasi boolean"
 
-#: ../libgda/handlers/gda-handler-numerical.c:139
+#: ../libgda/handlers/gda-handler-numerical.c:137
 msgid "Numerical representation"
 msgstr "Representasi numerik"
 
@@ -2518,7 +2518,7 @@ msgstr "InternalString"
 msgid "Strings representation"
 msgstr "Representasi string"
 
-#: ../libgda/handlers/gda-handler-time.c:174
+#: ../libgda/handlers/gda-handler-time.c:175
 msgid "Time, Date and TimeStamp representation"
 msgstr "Representasi Time, Date, dan TimeStamp"
 
@@ -5897,10 +5897,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:989
-#: ../providers/mysql/gda-mysql-recordset.c:1002
-#: ../providers/mysql/gda-mysql-recordset.c:1015
-#: ../providers/mysql/gda-mysql-recordset.c:1034
+#: ../providers/mysql/gda-mysql-recordset.c:984
+#: ../providers/mysql/gda-mysql-recordset.c:997
+#: ../providers/mysql/gda-mysql-recordset.c:1010
+#: ../providers/mysql/gda-mysql-recordset.c:1029
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Tipe data bind kolom tak valid. %d\n"
@@ -5926,7 +5926,7 @@ msgstr "Tipe %s tak dipetakan bagi nilai %d/%d/%d %d:%d:%d.%lu"
 msgid "Type %s not mapped for value %f"
 msgstr "Tipe %s tak dipetakan bagi nilai %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1024
+#: ../providers/mysql/gda-mysql-recordset.c:1019
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Tipe %s tak dipetakan bagi nilai %s"
@@ -6771,7 +6771,7 @@ msgstr "Transaksi tak didukung dalam level isolasi repeatable read"
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:698
+#: ../providers/postgres/gda-postgres-recordset.c:694
 msgid "Internal error"
 msgstr "Galat internal"
 
@@ -6802,12 +6802,12 @@ msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 msgid "Invalid date format '%s'"
 msgstr "Format tanggal '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:692
+#: ../providers/postgres/gda-postgres-recordset.c:688
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Nilai penanda waktu '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:770
+#: ../providers/postgres/gda-postgres-recordset.c:766
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Representasi string biner '%s ...' tak valid"
@@ -8921,6 +8921,28 @@ msgstr "Mengharapkan node akar <%s>"
 #: ../tools/browser/query-exec/query-console-page.c:318
 msgid "SQL code to execute:"
 msgstr "Kode SQL yang akan dieksekusi:"
+
+# typo: exeution -> execution
+#: ../tools/browser/gda-browser-5.0.appdata.xml.in.h:1
+msgid ""
+"Database Browser provides quick access to the data and schema of a database, "
+"and displays it in a intuitive graphical interface. It provides three "
+"perspectives to interact with a database: the schema browser, query "
+"execution, and data manager. The schema browser allows the user to view the "
+"tables of a database, and inspect the table's properties and relations. The "
+"query exeution perspective allows the user to execute SQL queries on the "
+"database. The data manager perspective allows the user to view the data "
+"contained in the database in a tabular form."
+msgstr ""
+"Peramban Basis Data menyediakan akses cepat ke data dan skema dari suatu "
+"basis data, dan menampilkannya dalam suatu antar muka grafis yang intuitif. "
+"Ia menyediakan tiga perspektif untuk berinteraksi dengan sebuah basis data: "
+"peramban skema, eksekusi kuiri, dan manajer data. Peramban skema mengizinkan "
+"pengguna melihat tabel-tabel dari sebuah basis data, dan memeriksa properti "
+"dan relasi tabel. Perspektif eksekusi kuiri mengizinkan pengguna "
+"mengeksekusi kuiri SQL pada basis data. Perspektif manajer data mengizinkan "
+"pengguna melihat data yang dimuat dalam basis data dalam sebuah formulir "
+"berbentuk tabel."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "Browse your database's contents"
