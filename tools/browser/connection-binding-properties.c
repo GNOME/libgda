@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -228,9 +228,9 @@ create_layout (ConnectionBindingProperties *cprop)
 
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
@@ -428,8 +428,8 @@ create_part_for_model (ConnectionBindingProperties *cprop, TVirtualConnectionPar
 	label = gtk_label_new ("");
 	str = g_markup_printf_escaped ("<b>%s</b>", _("Bind a data set as a table:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_widget_set_tooltip_text (label, _("Import a data set and make it appear as a table"));
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	button = ui_make_small_button (FALSE, FALSE, NULL, "list-remove",
@@ -535,8 +535,8 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart 
 	label = gtk_label_new ("");
 	str = g_markup_printf_escaped ("<b>%s</b>", _("Bind all tables of a connection using a schema prefix:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_widget_set_tooltip_text (label, _("Each table in the selected connection will appear "
 					      "as a table in the virtual connection using the specified "
 					      "schema as a prefix"));

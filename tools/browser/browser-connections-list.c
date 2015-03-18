@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -345,7 +345,7 @@ browser_connections_list_show (TConnection *current)
 				       "The connection properties are read-only.");
 		gtk_label_set_markup (GTK_LABEL (wid), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+		gtk_widget_set_halign (wid, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, FALSE, 6);
 
 		/* left column */		
@@ -353,7 +353,7 @@ browser_connections_list_show (TConnection *current)
 		str = g_strdup_printf ("<b>%s:</b>", _("Connections"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		sw = gtk_scrolled_window_new (NULL, NULL);
@@ -369,7 +369,7 @@ browser_connections_list_show (TConnection *current)
 		str = g_strdup_printf ("<b>%s:</b>", _("Connection's properties"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
 
 		/* buttons at the bottom*/

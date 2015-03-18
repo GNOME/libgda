@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -138,7 +138,6 @@ filter_editor_new (TConnection *tcnc)
 	GdaDataModel *model;
 	GList *values;
 	GValue *v1, *v2;
-	gfloat ya;
 
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
@@ -150,20 +149,16 @@ filter_editor_new (TConnection *tcnc)
 	gtk_box_pack_start (GTK_BOX (feditor), grid, TRUE, TRUE, 0);
 	
 	label = gtk_label_new (_("Base DN:"));
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	label = gtk_label_new (_("Filter expression:"));
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	label = gtk_label_new (_("Attributes to fetch:"));
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	label = gtk_label_new (_("Search scope:"));
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
 	entry = gtk_entry_new ();

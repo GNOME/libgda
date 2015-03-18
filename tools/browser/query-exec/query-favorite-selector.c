@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -326,7 +326,6 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 	if (! tsel->priv->popup_properties) {
 		GtkWidget *pcont, *vbox, *hbox, *label, *entry, *text, *grid;
 		gchar *str;
-		gfloat align;
 		
 		pcont = popup_container_new (GTK_WIDGET (mitem));
 		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -336,8 +335,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		str = g_strdup_printf ("<b>%s:</b>", _("Favorite's properties"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 		
 		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
@@ -352,15 +350,14 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 		str = g_strdup_printf ("<b>%s:</b>", _("Name"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 		
 		label = gtk_label_new ("");
 		str = g_strdup_printf ("<b>%s:</b>", _("SQL Code"));
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 		label = gtk_label_new ("");
@@ -371,8 +368,7 @@ properties_activated_cb (GtkMenuItem *mitem, QueryFavoriteSelector *tsel)
 						      "which can be proposed for execution from grids\n"
 						      "containing data. The parameters required to execute\n"
 						      "the query will be defined from the row selected in the grid"));
-		gtk_misc_get_alignment (GTK_MISC (label), NULL, &align);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., align);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 		
 		entry = gtk_entry_new ();

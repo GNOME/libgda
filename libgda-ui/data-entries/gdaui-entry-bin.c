@@ -244,7 +244,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	dbin->priv->button_image = g_object_ref (G_OBJECT (img));
 
         arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-	gtk_misc_set_alignment (GTK_MISC (arrow), 1.0, -1);
+	gtk_widget_set_halign (arrow, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
 
         gtk_widget_show_all (hbox);

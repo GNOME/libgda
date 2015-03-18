@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -122,7 +122,7 @@ vtable_dialog_new (GtkWindow *parent, TConnection *tcnc)
 	gchar *str;
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dlg));
 	label = gtk_label_new (NULL);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	str = g_markup_printf_escaped ("<b>%s:</b>\n<small>%s</small>",
 				       _("Name of the virtual LDAP table to create"),
 				       _("Everytime data is selected from the virtual table which will "
@@ -139,7 +139,7 @@ vtable_dialog_new (GtkWindow *parent, TConnection *tcnc)
 	gtk_box_pack_start (GTK_BOX (dcontents), grid, FALSE, FALSE, SPACING);
 
 	label = gtk_label_new (_("Table name:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_entry_new ();
@@ -147,7 +147,7 @@ vtable_dialog_new (GtkWindow *parent, TConnection *tcnc)
 	dlg->priv->tname_entry = entry;
 
 	label = gtk_label_new (_("Replace if exists:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	button = gtk_check_button_new ();

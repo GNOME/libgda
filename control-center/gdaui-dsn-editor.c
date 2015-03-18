@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -129,9 +129,8 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	str = g_strdup_printf ("%s <span foreground='red' weight='bold'>*</span>", _("Data source _name:"));
 	label = gtk_label_new ("");
 	gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
 	g_free (str);
-        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 
@@ -149,7 +148,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_grid_attach (GTK_GRID (grid), config->priv->wname, 1, 0, 1, 1);
 
 	label = gtk_label_new_with_mnemonic (_("_System wide data source:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
@@ -161,10 +160,9 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 
 	str = g_strdup_printf ("%s <span foreground='red' weight='bold'>*</span>", _("_Provider:"));
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
 	gtk_label_set_markup_with_mnemonic (GTK_LABEL (label), str);
 	g_free (str);
-        gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
@@ -176,7 +174,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_grid_attach (GTK_GRID (grid), config->priv->wprovider, 1, 2, 1, 1);
 
 	label = gtk_label_new_with_mnemonic (_("_Description:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0, -1.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_size_group_add_widget (labels_size_group, label);
 	gtk_widget_show (label);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
@@ -193,7 +191,7 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 	gtk_label_set_markup (GTK_LABEL (config->priv->warning),
 			      _("<span foreground='red'>The database provider used by this data source is not available,\n"
 				"editing the data source's attributes is disabled</span>"));
-	gtk_misc_set_alignment (GTK_MISC (config->priv->warning), 0.5, -1);
+	gtk_widget_set_halign (config->priv->warning, GTK_ALIGN_START);
 	gtk_label_set_justify (GTK_LABEL (config->priv->warning), GTK_JUSTIFY_CENTER);
 	gtk_label_set_line_wrap (GTK_LABEL (config->priv->warning), TRUE);
 	gtk_grid_attach (GTK_GRID (grid), config->priv->warning, 0, 8, 2, 1);

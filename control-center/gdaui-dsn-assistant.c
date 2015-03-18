@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -470,7 +470,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	assistant->priv->general_name = gtk_entry_new ();
@@ -482,7 +482,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 
 	if (gda_config_can_modify_system_config ()) {
 		label = gtk_label_new (_("System wide data source:"));
-		gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 		assistant->priv->general_is_system = gtk_check_button_new ();
@@ -495,14 +495,14 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
 	assistant->priv->general_provider = gdaui_provider_selector_new ();
 	gtk_grid_attach (GTK_GRID (grid), assistant->priv->general_provider, 1, 3, 1, 1);
 
 	label = gtk_label_new (_("Description:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 4, 1, 1);
 	
 	assistant->priv->general_description = gtk_entry_new ();

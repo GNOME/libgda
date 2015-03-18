@@ -498,7 +498,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 				label_entry = gtk_label_new (str);
 			}
 			g_free (str);
-			gtk_misc_set_alignment (GTK_MISC (label_entry), 0., 0.);
+			gtk_widget_set_halign (label_entry, GTK_ALIGN_START);
 
 			gtk_widget_show (label_entry);
 			str = (gchar *) g_object_get_data (G_OBJECT (model), "descr");
@@ -590,7 +590,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		if (size < max) {
 			/* last row is for new entries */
 			wid = gtk_label_new (_("Add"));
-			gtk_misc_set_alignment (GTK_MISC (wid), .0, -1);
+			gtk_widget_set_halign (wid, GTK_ALIGN_START);
 			gtk_grid_attach (GTK_GRID (grid), wid, 0, size, 1, 1);
 			gtk_widget_show (wid);
 
@@ -737,7 +737,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				GtkWidget *lab;
 				label = gtk_label_new ("");
 				gtk_widget_show (label);
-				gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+				gtk_widget_set_halign (label, GTK_ALIGN_START);
 				gtk_label_set_markup (GTK_LABEL (label), section_str);
 				g_free (section_str);
 
@@ -763,7 +763,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 					gchar *str;
 					label = gtk_label_new ("");
 					gtk_widget_show (label);
-					gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+					gtk_widget_set_halign (label, GTK_ALIGN_START);
 					str = g_strdup_printf ("<b>%s:</b>", _("Options"));
 					gtk_label_set_markup (GTK_LABEL (label), str);
 					g_free (str);
@@ -1087,7 +1087,7 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 		GtkWidget *label;
 
 		label = gtk_label_new (NULL);
-		gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_label_set_markup (GTK_LABEL (label), header);
 		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 5);
 
@@ -1131,7 +1131,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 
 	label = gtk_label_new (_("<b>Field properties:</b>"));
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
 
 	form_props = gdaui_raw_form_new (GDA_DATA_MODEL (info_node->model));
@@ -1150,7 +1150,7 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 
 	label = gtk_label_new (_("<b>Fields:</b>"));
 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
 
 	sw = gtk_scrolled_window_new (NULL, NULL);

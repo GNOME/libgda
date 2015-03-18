@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -98,7 +98,7 @@ make_label (gint index, const gchar *text)
 	gchar *tmp;
 	tmp = g_strdup_printf ("#%d: %s", index, text ? text : "");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	
 	return label;
 }
@@ -146,7 +146,7 @@ main (int argc, char* argv[])
 	/* #0 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new (NULL, NULL);
@@ -158,7 +158,7 @@ main (int argc, char* argv[])
 	/* #1 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new ("€ ", NULL);
@@ -171,7 +171,7 @@ main (int argc, char* argv[])
 	/* #2 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new (NULL, " Ê");
@@ -184,7 +184,7 @@ main (int argc, char* argv[])
 	/* #3 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new ("€€ ", " êê");
@@ -210,7 +210,7 @@ main (int argc, char* argv[])
 	/* #4 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("TIME=00:00:00", NULL);
@@ -223,7 +223,7 @@ main (int argc, char* argv[])
 	/* #5 */
 	tmp = g_strdup_printf ("#%d", index);
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("TIME=00€00:00",
@@ -250,7 +250,7 @@ main (int argc, char* argv[])
 	/* #6 */
 	tmp = g_strdup_printf ("#%d: %s", index, "G_TYPE_CHAR");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_CHAR);
@@ -263,7 +263,7 @@ main (int argc, char* argv[])
 	/* #7 */
 	tmp = g_strdup_printf ("#%d: %s", index, "G_TYPE_UINT, thousand sep=','");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_UINT);
@@ -277,7 +277,7 @@ main (int argc, char* argv[])
 	/* #8 */
 	tmp = g_strdup_printf ("#%d: %s", index, "G_TYPE_FLOAT, n_decimals=2");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_FLOAT);
@@ -291,7 +291,7 @@ main (int argc, char* argv[])
 	/* #9 */
 	tmp = g_strdup_printf ("#%d: %s", index, "G_TYPE_DOUBLE");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_DOUBLE);
@@ -304,7 +304,7 @@ main (int argc, char* argv[])
 	/* #10 */
 	tmp = g_strdup_printf ("#%d: %s", index, "G_TYPE_FLOAT, thousand sep=' ', n_decimals=2");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_FLOAT);
@@ -333,7 +333,7 @@ main (int argc, char* argv[])
 	/* #11 */
 	tmp = g_strdup_printf ("#%d: %s", index, "2 decimals with EURO");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_FLOAT);
@@ -347,7 +347,7 @@ main (int argc, char* argv[])
 	/* #12 */
 	tmp = g_strdup_printf ("#%d: %s", index, "3 decimals between markers");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_numeric_entry_new (G_TYPE_FLOAT);
@@ -361,7 +361,7 @@ main (int argc, char* argv[])
 	/* #13 */
 	tmp = g_strdup_printf ("#%d: %s", index, "**.* between markers");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("**.*", NULL);
@@ -375,7 +375,7 @@ main (int argc, char* argv[])
 	/* #14 */
 	tmp = g_strdup_printf ("#%d: %s", index, "900//@@@//^^^/##** between markers");
 	label = gtk_label_new (tmp);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("900//@@@//^^^/##**", NULL);
@@ -391,7 +391,7 @@ main (int argc, char* argv[])
 	/* properties */
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), "<b>Common properties:</b>");
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (top_vbox), label, FALSE, FALSE, 10);
 	grid = gtk_grid_new ();
 	gtk_box_pack_start (GTK_BOX (top_vbox), grid, TRUE, TRUE, 0);

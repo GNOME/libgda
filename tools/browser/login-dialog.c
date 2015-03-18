@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -135,7 +135,7 @@ login_dialog_init (LoginDialog *dialog)
 					    "to open a connection to a \nnon defined data source"));
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 12);
 	gtk_widget_show_all (hbox);
 	

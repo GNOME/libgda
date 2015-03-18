@@ -1794,7 +1794,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 			       _("The data will be exported to the selected file."));
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_free (str);
 
@@ -1804,7 +1804,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	str = g_strdup_printf ("<b>%s:</b>", _("File name"));
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
@@ -1825,7 +1825,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	str = g_strdup_printf ("<b>%s:</b>", _("Details"));
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	g_free (str);
 	gtk_box_pack_start (GTK_BOX (dbox), label, FALSE, TRUE, 2);
 
@@ -1844,7 +1844,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 
 	/* file type */
 	label = gtk_label_new (_("File type:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid1), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
@@ -1863,7 +1863,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 
 	/* data scope */
 	label = gtk_label_new (_("Data to save:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid1), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
@@ -1893,7 +1893,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_container_add (GTK_CONTAINER (exp), grid2);
 	
 	label = gtk_label_new (_("Empty string when NULL?"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid2), label, 0, 0, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Export NULL values as an empty \"\" string"));
 
@@ -1903,7 +1903,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_widget_set_tooltip_text (check, _("Export NULL values as an empty \"\" string"));
 
 	label = gtk_label_new (_("Invalid data as NULL?"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid2), label, 2, 0, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Don't export invalid data,\nbut export a NULL value instead"));
 
@@ -1913,7 +1913,7 @@ menu_save_as_cb (G_GNUC_UNUSED GtkWidget *widget, GdauiRawGrid *grid)
 	gtk_widget_set_tooltip_text (check, _("Don't export invalid data,\nbut export a NULL value instead"));
 
 	label = gtk_label_new (_("Field names on first row?"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid2), label, 0, 1, 1, 1);
 	gtk_widget_set_tooltip_text (label, _("Add a row at beginning with columns names"));
 

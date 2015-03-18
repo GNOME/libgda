@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 - 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -1003,7 +1003,7 @@ create_entry_widget (SingleEntry *sentry)
 		g_free (str);
 		g_object_ref_sink (sentry->label);
 		sentry->label_title = title;
-		gtk_misc_set_alignment (GTK_MISC (sentry->label), 0., 0.);
+		gtk_widget_set_halign (sentry->label, GTK_ALIGN_START);
 		gtk_widget_show (sentry->label);
 			
 		g_object_get (G_OBJECT (param), "description", &title, NULL);
@@ -1049,7 +1049,7 @@ create_entry_widget (SingleEntry *sentry)
 		g_free (str);
 		g_object_ref_sink (sentry->label);
 		sentry->label_title = title;
-		gtk_misc_set_alignment (GTK_MISC (sentry->label), 0., 0.);
+		gtk_widget_set_halign (sentry->label, GTK_ALIGN_START);
 		gtk_widget_show (sentry->label);
 		ss = gda_set_group_get_source (gdaui_set_group_get_group (group));
 		title = g_object_get_data (G_OBJECT (gda_set_source_get_data_model (ss)), "descr");
@@ -1350,7 +1350,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 						}
 						sentry->label = gtk_label_new ((gchar*) label);
 						g_object_ref_sink (sentry->label);
-						gtk_misc_set_alignment (GTK_MISC (sentry->label), 0., 0.);
+						gtk_widget_set_halign (sentry->label, GTK_ALIGN_START);
 
 						xmlFree (label);
 					}
@@ -1413,7 +1413,7 @@ load_xml_layout_section (GdauiBasicForm *form, xmlNodePtr section_node)
 		label = gtk_label_new ("");
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 
 		GtkWidget *vbox;
 		vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -2164,7 +2164,7 @@ gdaui_basic_form_new_in_dialog (GdaSet *data_set, GtkWindow *parent,
 		gchar *str;
 
 		label = gtk_label_new (NULL);
-		gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		str = g_markup_printf_escaped ("<b>%s:</b>", header);
 		gtk_label_set_markup (GTK_LABEL (label), str);
 		g_free (str);

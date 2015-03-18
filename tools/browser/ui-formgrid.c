@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -701,7 +701,7 @@ execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 			label = gtk_label_new ("");
 			gtk_label_set_markup (GTK_LABEL (label), tmp);
 			g_free (tmp);
-			gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+			gtk_widget_set_halign (label, GTK_ALIGN_START);
 			gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 5);
 
 			fg = ui_formgrid_new (GDA_DATA_MODEL (result), TRUE,

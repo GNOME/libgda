@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -329,7 +329,7 @@ data_console_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("Variables' values:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 	
 	sw = gtk_scrolled_window_new (NULL, NULL);
@@ -345,7 +345,7 @@ data_console_new (TConnection *tcnc)
 
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), VARIABLES_HELP);
-	gtk_misc_set_alignment (GTK_MISC (label), -1, 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (dconsole->priv->params_form_box), label);
 	dconsole->priv->params_form = label;
 
@@ -434,7 +434,7 @@ data_console_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("BBB:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 
 	gtk_box_pack_start (GTK_BOX (dconsole->priv->data_box), wid, TRUE, TRUE, 0);
 	dconsole->priv->data = wid;

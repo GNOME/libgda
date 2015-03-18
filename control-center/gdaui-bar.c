@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -144,14 +144,14 @@ gdaui_bar_init (GdauiBar *bar)
 
 	bar->priv->show_icon = FALSE;
 	bar->priv->icon = gtk_image_new ();
-        gtk_misc_set_alignment (GTK_MISC (bar->priv->icon), 1., 0.5);
+	gtk_widget_set_halign (bar->priv->icon, GTK_ALIGN_END);
         gtk_widget_hide (bar->priv->icon);
         gtk_box_pack_end (GTK_BOX (bar->priv->content_area), bar->priv->icon,
 			  FALSE, TRUE, 0);
 
 	bar->priv->label = gtk_label_new ("");
         gtk_label_set_selectable (GTK_LABEL (bar->priv->label), FALSE);
-        gtk_misc_set_alignment (GTK_MISC (bar->priv->label), 0., 0.5);
+	gtk_widget_set_halign (bar->priv->label, GTK_ALIGN_START);
         gtk_box_pack_end (GTK_BOX (bar->priv->content_area), bar->priv->label,
                           TRUE, TRUE, 0);
 	gtk_label_set_line_wrap (GTK_LABEL (bar->priv->label), TRUE);

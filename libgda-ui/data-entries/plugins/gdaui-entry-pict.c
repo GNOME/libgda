@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -241,7 +241,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	/* image */
 	wid = gtk_image_new ();
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., .5);
+	gtk_widget_set_valign (wid, GTK_ALIGN_CENTER);
 	gtk_container_add (GTK_CONTAINER (mgpict->priv->sw), wid);
 	gtk_widget_show (wid);
 	mgpict->priv->pict = wid;

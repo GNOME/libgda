@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -213,7 +213,7 @@ auth_dialog_init (AuthDialog *dialog)
 					  _("Connection opening"));
 	gtk_label_set_markup (GTK_LABEL (label), markup);
 	g_free (markup);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 12);
 	
 	dialog->priv->spinner = gtk_spinner_new ();
@@ -486,8 +486,8 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 				       _("enter authentication information"));
 		g_free (tmp);
 		gtk_label_set_markup (GTK_LABEL (label), str);
-		gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
 		g_free (str);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
 		gtk_widget_show (label);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -112,7 +112,7 @@ data_widget_init (DataWidget *dwid, G_GNUC_UNUSED DataWidgetClass *klass)
 	info = gtk_info_bar_new ();
 	gtk_notebook_append_page (GTK_NOTEBOOK (dwid->priv->top_nb), info, NULL);
 	dwid->priv->info_label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (dwid->priv->info_label), 0., -1);
+	gtk_widget_set_halign (dwid->priv->info_label, GTK_ALIGN_START);
 	gtk_label_set_ellipsize (GTK_LABEL (dwid->priv->info_label), PANGO_ELLIPSIZE_END);
 	gtk_container_add (GTK_CONTAINER (gtk_info_bar_get_content_area (GTK_INFO_BAR (info))),
 			   dwid->priv->info_label);
@@ -230,7 +230,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	}
 	else
 		gtk_label_set_markup (GTK_LABEL (label), "<b><small> </small></b>");
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_widget_set_size_request (label, 150, -1);
 	gtk_label_set_ellipsize (GTK_LABEL (label), PANGO_ELLIPSIZE_END);
 	gtk_box_pack_start (GTK_BOX (header), label, TRUE, TRUE, 0);
@@ -609,7 +609,7 @@ data_part_show_error (DataPart *part, GError *error)
 				       error && error->message ? error->message : _("no detail"));
 	if (! part->error_widget) {
 		part->error_widget = gtk_label_new ("");
-		gtk_misc_set_alignment (GTK_MISC (part->error_widget), 0., 0.);
+		gtk_widget_set_halign (part->error_widget, GTK_ALIGN_START);
 		part->error_widget_page = gtk_notebook_append_page (part->nb, part->error_widget,
 								    NULL);
 		gtk_widget_show (part->error_widget);

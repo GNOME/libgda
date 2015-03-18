@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -260,7 +260,7 @@ query_console_page_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("SQL code to execute:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_widget_set_tooltip_markup (wid, QUERY_EDITOR_TOOLTIP);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
@@ -280,7 +280,7 @@ query_console_page_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("Variables' values:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 	
 	GtkWidget *sw;
@@ -297,7 +297,7 @@ query_console_page_new (TConnection *tcnc)
 
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid), VARIABLES_HELP);
-	gtk_misc_set_alignment (GTK_MISC (wid), -1, 0.);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), wid);
 	tconsole->priv->params_form = wid;
 	
@@ -352,7 +352,7 @@ query_console_page_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("Execution history:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
 	wid = query_editor_new ();
@@ -391,7 +391,7 @@ query_console_page_new (TConnection *tcnc)
 	str = g_strdup_printf ("<b>%s</b>", _("Execution Results:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), wid, FALSE, FALSE, 0);
 
 	wid = query_result_new (tconsole->priv->history);

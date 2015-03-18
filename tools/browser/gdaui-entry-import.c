@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -235,7 +235,6 @@ create_entry (GdauiEntryWrapper *mgwrap)
 {
 	GdauiEntryImport *mgtxt;
 	GtkWidget *hbox;
-	gfloat ya;
 
 	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_IMPORT (mgwrap), NULL);
 	mgtxt = GDAUI_ENTRY_IMPORT (mgwrap);
@@ -244,8 +243,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	mgtxt->priv->label = GTK_LABEL (gtk_label_new (_("No data set")));
-	gtk_misc_get_alignment (GTK_MISC (mgtxt->priv->label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (mgtxt->priv->label), 0., ya);
+	gtk_widget_set_halign (GTK_WIDGET (mgtxt->priv->label), GTK_ALIGN_START);
 	gtk_widget_show ((GtkWidget*) mgtxt->priv->label);
 	gtk_box_pack_start (GTK_BOX (hbox), (GtkWidget*) mgtxt->priv->label, TRUE, TRUE, 0);
 

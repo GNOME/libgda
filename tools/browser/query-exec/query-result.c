@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -423,7 +423,7 @@ make_widget_for_set (GdaSet *set)
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
 	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);
+	gtk_widget_set_halign (img, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 
 	GtkWidget *label;
@@ -469,7 +469,7 @@ make_widget_for_set (GdaSet *set)
 		}
 	}
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	g_string_free (string, TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
@@ -486,7 +486,7 @@ make_widget_for_error (GError *error)
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
 	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
-	gtk_misc_set_alignment (GTK_MISC (img), 0., 0.);
+	gtk_widget_set_halign (img, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 
 	GtkWidget *label;
@@ -505,7 +505,7 @@ make_widget_for_error (GError *error)
 		g_string_append (string, _("No detail"));
 
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	g_string_free (string, TRUE);
 	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);	

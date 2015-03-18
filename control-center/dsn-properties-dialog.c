@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -152,8 +152,8 @@ dsn_properties_dialog (GtkWindow *parent, const gchar *dsn)
 
 	label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), str);
-        gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-        g_free (str);
+	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 
 	GtkWidget *dcontents;
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (dialog));

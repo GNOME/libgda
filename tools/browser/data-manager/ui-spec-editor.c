@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -245,7 +245,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	str = g_strdup_printf ("<b>%s</b>", _("Data sources:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	/* data sources model & view */
@@ -303,7 +303,7 @@ ui_spec_editor_init (UiSpecEditor *sped, G_GNUC_UNUSED UiSpecEditorClass *klass)
 	str = g_strdup_printf ("<b>%s</b>", _("Selected data source's properties:"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *pe;

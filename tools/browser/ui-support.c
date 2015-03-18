@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2014 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -403,7 +403,7 @@ ui_make_small_button (gboolean is_toggle, gboolean with_arrow,
 	if (label) {
 		GtkWidget *wid;
 		wid = gtk_label_new (label);
-		gtk_misc_set_alignment (GTK_MISC (wid), 0., -1);
+		gtk_widget_set_halign (wid, GTK_ALIGN_START);
 		if (hbox)
 			gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, FALSE, 5);
 		else
@@ -414,7 +414,8 @@ ui_make_small_button (gboolean is_toggle, gboolean with_arrow,
 		GtkWidget *arrow;
 		arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
 		gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
-		gtk_misc_set_alignment (GTK_MISC (arrow), 1, .5);
+		gtk_widget_set_halign (arrow, GTK_ALIGN_END);
+		gtk_widget_set_valign (arrow, GTK_ALIGN_CENTER);
 		gtk_widget_show (arrow);
 	}
 
@@ -450,8 +451,8 @@ _make_tab_label (const gchar *label,
 	
         wid = gtk_label_new (label);
         gtk_label_set_single_line_mode (GTK_LABEL (wid), TRUE);
-        gtk_misc_set_alignment (GTK_MISC (wid), 0.0, 0.5);
-        gtk_misc_set_padding (GTK_MISC (wid), 0, 0);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
+	gtk_widget_set_valign (wid, GTK_ALIGN_CENTER);
 	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
 
 	if (with_close) {

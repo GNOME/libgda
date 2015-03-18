@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -121,8 +121,8 @@ gdaui_data_import_init (GdauiDataImport * import)
 	str = g_strdup_printf ("<b>%s:</b>", _("Import specifications"));
         label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), str);
-        gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-        g_free (str);
+	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
         hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
@@ -138,7 +138,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 	/* file to import from */
 	label = gtk_label_new (_("File to import from:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_file_chooser_button_new (_("File to import data from"), GTK_FILE_CHOOSER_ACTION_OPEN);
@@ -163,7 +163,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 	/* Encoding */ 
 	label = gtk_label_new (_("Encoding:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	gchar *fname = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "import_encodings.xml", NULL);
@@ -190,7 +190,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 	/* first line as title */
 	label = gtk_label_new (_("First line as title:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	
 	entry = gtk_check_button_new ();
@@ -202,7 +202,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
 	/* separator */
 	label = gtk_label_new (_("Separator:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 
 	entry = gtk_radio_button_new_with_label (NULL, _("Comma"));
@@ -269,8 +269,8 @@ gdaui_data_import_init (GdauiDataImport * import)
 	str = g_strdup_printf ("<b>%s:</b>", _("Import preview"));
         label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), str);
-        gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
-        g_free (str);
+	g_free (str);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
         gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
         hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
@@ -283,7 +283,7 @@ gdaui_data_import_init (GdauiDataImport * import)
 
         label = gtk_label_new ("");
         gtk_label_set_markup (GTK_LABEL (label), _("No data."));
-        gtk_misc_set_alignment (GTK_MISC (label), 0., 0.);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 	import->priv->no_data_label = label;
 

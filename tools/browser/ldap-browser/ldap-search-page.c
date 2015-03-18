@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -282,13 +282,11 @@ ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
 	/* search filter settings */
 	GtkWidget *hb, *bb, *button, *wid;
 	gchar *tmp;
-	gfloat ya;
 	tmp = g_markup_printf_escaped ("<b>%s:</b>", _("LDAP search settings"));
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), tmp);
 	g_free (tmp);
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (epage), label, FALSE, FALSE, 0);
 
 	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
@@ -325,8 +323,7 @@ ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), tmp);
 	g_free (tmp);
-	gtk_misc_get_alignment (GTK_MISC (label), NULL, &ya);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., ya);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (epage), label, FALSE, FALSE, 5);
 
 	wid = ui_formgrid_new (NULL, TRUE, 0);

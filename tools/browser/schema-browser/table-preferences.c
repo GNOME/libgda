@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -333,7 +333,7 @@ table_preferences_new (TableInfo *tinfo)
 	str = g_strdup_printf ("<b>%s:</b>", _("Table's fields"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	GtkWidget *sw, *treeview;
@@ -377,7 +377,7 @@ table_preferences_new (TableInfo *tinfo)
 	str = g_strdup_printf ("<b>%s:</b>", _("Field's display preferences"));
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 0, 1, 1);
 
 	tpref->priv->field_props = create_column_properties (tpref);
@@ -454,31 +454,31 @@ create_column_properties (TablePreferences *tpref)
 	gtk_widget_set_tooltip_text (label, _("Defines how data for the selected column\n"
 					      "will be displayed in forms. Leave 'Default' to have\n"
 					      "the default display"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	
 	/* plugin options */
 	tpref->priv->options_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_grid_attach (GTK_GRID (grid), tpref->priv->options_vbox, 1, 1, 1, 1);
 	tpref->priv->options_none = gtk_label_new (_("none"));
-	gtk_misc_set_alignment (GTK_MISC (tpref->priv->options_none), 0., -1);
+	gtk_widget_set_halign (tpref->priv->options_none, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (tpref->priv->options_vbox), tpref->priv->options_none, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("Options:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
 	/* plugin preview */
 	tpref->priv->preview_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_grid_attach (GTK_GRID (grid), tpref->priv->preview_vbox, 1, 2, 1, 1);
 	tpref->priv->preview_none = gtk_label_new (_("none"));
-	gtk_misc_set_alignment (GTK_MISC (tpref->priv->preview_none), 0., -1);
+	gtk_widget_set_halign (tpref->priv->preview_none, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (tpref->priv->preview_vbox), tpref->priv->preview_none, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("Preview:"));
 	gtk_widget_set_tooltip_text (label, _("Free form to test the configured\n"
 					      "data entry"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., -1);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 	gtk_widget_show_all (grid);

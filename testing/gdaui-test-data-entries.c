@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -196,7 +196,7 @@ main (int argc, char **argv)
 			      "This test displays GdauiDataEntry widgets and helpers to test "
 			      "them in pages of a notebook. Each page presents the default "
 			      "data entry for the corresponding data type.");
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 5);
 	gtk_widget_show (label);
 
@@ -220,7 +220,7 @@ main (int argc, char **argv)
 			      "This test displays GdauiDataEntry widgets and helpers to test "
 			      "them in pages of a notebook. Each page tests a plugin for a given "
 			      "data type");
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 5);
 	gtk_widget_show (label);
 
@@ -410,27 +410,27 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 		txt = "Plugin ";
 	str = g_strdup_printf ("<b>%sName:</b>", txt);
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (plugin->plugin_name);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 0, 1, 1);
 	gtk_widget_show (label);
 
 	str = g_strdup_printf ("<b>%sDescription:</b>", txt);
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new (plugin->plugin_descr);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 1, 1, 1);
 	gtk_widget_show (label);
 
@@ -438,7 +438,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	string = g_string_new ("");
 	g_string_append_printf (string, "<b>%sOptions:</b>", txt);
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	g_string_free (string, TRUE);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
@@ -472,7 +472,7 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	}
 	else {
 		label = gtk_label_new ("None");
-		gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+		gtk_widget_set_halign (label, GTK_ALIGN_START);
 		gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 1, 1);
 		gtk_widget_show (label);
 	}
@@ -696,7 +696,7 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 		g_string_append_printf (string, "<b>Data handler description:</b> %s\n",
 					"No GdaDataHandler available for this type");
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_markup (GTK_LABEL (label), string->str);
 	g_string_free (string, TRUE);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
@@ -711,23 +711,23 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 
 	/* Other widgets */
 	label = gtk_label_new ("Current flags: ");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 	gtk_widget_show (label);
 
 	label = gtk_label_new ("--");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 2, 2, 1);
 	g_object_set_data (G_OBJECT (wid), "flags", label);
 	gtk_widget_show (label);
 
 	label = gtk_label_new ("Current value: ");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	gtk_widget_show (label);
 	
 	label = gtk_label_new ("");
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 3, 1, 1);
 	g_object_set_data (G_OBJECT (wid), "value", label);
 	g_signal_connect (G_OBJECT (wid), "contents-modified",

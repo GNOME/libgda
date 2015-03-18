@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -242,7 +242,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 	/* zoom control */
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), _("<b>Zoom</b>"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 10);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */
@@ -254,7 +254,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 	gtk_box_pack_start (GTK_BOX (hbox), grid, TRUE, TRUE, 0);
 
 	label = gtk_label_new (_("Number of pages used:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (1., 100., 1.);
@@ -265,7 +265,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 			  G_CALLBACK (print_h_npages_value_changed_cb), cdata);
 
 	label = gtk_label_new (_("horizontally"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 2, 0, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (1., 100., 1.);
@@ -276,11 +276,11 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 			  G_CALLBACK (print_v_npages_value_changed_cb), cdata);
 
 	label = gtk_label_new (_("vertically"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 2, 1, 1, 1);
 
 	label = gtk_label_new (_("Zoom factor:"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 2, 1, 1);
 
 	entry = gtk_spin_button_new_with_range (.1, 10., .05);
@@ -293,7 +293,7 @@ print_create_custom_widget_cb (G_GNUC_UNUSED GtkPrintOperation *operation, Print
 	/* misc options */
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), _("<b>Page numbers</b>"));
-	gtk_misc_set_alignment (GTK_MISC (label), 0., 0.5);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 10);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0); /* HIG */

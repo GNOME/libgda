@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -330,7 +330,6 @@ ldap_classes_page_new (TConnection *tcnc, const gchar *classname)
 
 	/* tree */
 	GtkWidget *vbox, *hview, *sw;
-	gfloat yalign;
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, FALSE);
 	gtk_paned_add1 (GTK_PANED (hp), vbox);
@@ -339,8 +338,7 @@ ldap_classes_page_new (TConnection *tcnc, const gchar *classname)
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-        gtk_misc_get_alignment (GTK_MISC (label), NULL, &yalign);
-        gtk_misc_set_alignment (GTK_MISC (label), 0., yalign);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	hview = classes_view_new (tcnc, NULL);
@@ -366,8 +364,7 @@ ldap_classes_page_new (TConnection *tcnc, const gchar *classname)
 	label = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (label), str);
 	g_free (str);
-        gtk_misc_get_alignment (GTK_MISC (label), NULL, &yalign);
-        gtk_misc_set_alignment (GTK_MISC (label), 0., yalign);
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	GtkWidget *props;
