@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -243,7 +243,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 	dbin->priv->button_image = g_object_ref (G_OBJECT (img));
 
-        arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+	arrow = gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_widget_set_halign (arrow, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
 

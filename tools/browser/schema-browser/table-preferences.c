@@ -351,7 +351,6 @@ table_preferences_new (TableInfo *tinfo)
 	treeview = ui_make_tree_view (GTK_TREE_MODEL (tpref->priv->columns_store));
 	tpref->priv->columns_treeview = GTK_TREE_VIEW (treeview);
 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
 	gtk_container_add (GTK_CONTAINER (sw), treeview);
 
 	/* treeview's columns */

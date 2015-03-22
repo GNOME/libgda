@@ -358,7 +358,6 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	grid->priv->write_mode = GDAUI_DATA_PROXY_WRITE_ON_DEMAND;
 
 	tree_view = GTK_TREE_VIEW (grid);
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (tree_view), TRUE);
 	gtk_tree_view_set_enable_search (GTK_TREE_VIEW (tree_view), TRUE);
 	g_signal_connect (G_OBJECT (tree_view), "event",
 			  G_CALLBACK (tree_view_event_cb), grid);

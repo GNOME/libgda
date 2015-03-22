@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -345,8 +345,7 @@ web_server_new (gint port, const gchar *auth_token)
 	WebServer *server;
 
 	server = (WebServer*) g_object_new (WEB_TYPE_SERVER, NULL);
-	server->priv->server = soup_server_new (SOUP_SERVER_PORT, port,
-						SOUP_SERVER_SERVER_HEADER, "gda-sql-httpd ",
+	server->priv->server = soup_server_new (SOUP_SERVER_SERVER_HEADER, "gda-sql-httpd ",
 						NULL);
 	soup_server_add_handler (server->priv->server, NULL,
                                  (SoupServerCallback) server_callback, server, NULL);
@@ -356,7 +355,12 @@ web_server_new (gint port, const gchar *auth_token)
 		server->priv->token = g_strdup (auth_token);
 	}
 
-	soup_server_run_async (server->priv->server);
+	if (! soup_server_listen_local (server->priv->server, port, SOUP_SERVER_LISTEN_IPV4_ONLY, NULL)) {
+		g_object_unref (server->priv->server);
+		server->priv->server = NULL;
+		g_object_unref (server);
+		return NULL;
+	}
 
 	return server;
 }

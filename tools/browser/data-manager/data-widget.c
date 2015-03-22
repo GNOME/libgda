@@ -255,9 +255,9 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	part->nb = GTK_NOTEBOOK (nb);
 
 	part->spinner = gtk_spinner_new ();
-	page = gtk_alignment_new (0.5, 0.5, 0., 0.);
-	gtk_container_add (GTK_CONTAINER (page), part->spinner);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), page, NULL);
+	gtk_widget_set_halign (part->spinner, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign (part->spinner, GTK_ALIGN_CENTER);
+	gtk_notebook_append_page (GTK_NOTEBOOK (nb), part->spinner, NULL);
 	part->data_widget = NULL;
 
 	gtk_box_pack_start (GTK_BOX (vbox), nb, TRUE, TRUE, 0);

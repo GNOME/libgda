@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -204,7 +204,7 @@ widget_embedder_realize (GtkWidget *widget)
 		attributes.width = allocation.width;
 		attributes.height = allocation.height;
 	}
-	bin->offscreen_window = gdk_window_new (gtk_widget_get_root_window (widget),
+	bin->offscreen_window = gdk_window_new (gdk_screen_get_root_window (gtk_widget_get_screen (widget)),
 						&attributes, attributes_mask);
 	gdk_window_set_user_data (bin->offscreen_window, widget);
 	if (bin->child)

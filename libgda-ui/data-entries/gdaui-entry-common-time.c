@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -606,7 +606,7 @@ create_entry_date (GdauiEntryCommonTime *mgtim)
 	
 	/* button to pop up the calendar */
 	wid = gtk_button_new ();
-	arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+	arrow = gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_container_add (GTK_CONTAINER (wid), arrow);
 	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
 	gtk_widget_show_all (wid);

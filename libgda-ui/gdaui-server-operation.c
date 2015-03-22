@@ -1170,9 +1170,8 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	for (col = name_col + 1; col < nbcols; col++)
 		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE);
 
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), grid_fields);
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (gtk_bin_get_child (GTK_BIN (sw))),
-				      GTK_SHADOW_NONE);
+	gtk_container_add (GTK_CONTAINER (sw), grid_fields);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 	gtk_box_pack_start (GTK_BOX (box), sw, TRUE, TRUE, 0);
 
 	/* buttons to add/remove fields */
