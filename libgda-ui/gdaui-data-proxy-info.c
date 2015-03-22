@@ -867,7 +867,7 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 			gtk_widget_set_sensitive (info->priv->action_items [ACTION_COMMIT], changed ? TRUE : FALSE);
 			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_widget_hide (action_items [ACTION_COMMIT]);
-			else
+			else if (! gtk_widget_get_no_show_all (action_items [ACTION_COMMIT]))
 				gtk_widget_show (action_items [ACTION_COMMIT]);
 		}
 
@@ -875,7 +875,7 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 			gtk_widget_set_sensitive (info->priv->action_items [ACTION_RESET], changed ? TRUE : FALSE);
 			if (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE)
 				gtk_widget_hide (action_items [ACTION_RESET]);
-			else
+			else if (! gtk_widget_get_no_show_all (action_items [ACTION_RESET]))
 				gtk_widget_show (action_items [ACTION_RESET]);
 		}
 
@@ -906,13 +906,6 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 							     _("Delete the selected entry"));
 			}
 			gtk_widget_set_sensitive (info->priv->action_items [ACTION_DELETE], wrows);
-
-			if ((mode == GDAUI_DATA_PROXY_WRITE_ON_ROW_CHANGE) ||
-			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE) ||
-			    (mode == GDAUI_DATA_PROXY_WRITE_ON_VALUE_ACTIVATED))
-				gtk_widget_hide (action_items [ACTION_DELETE]);
-			else
-				gtk_widget_show (action_items [ACTION_DELETE]);
 		}
 	}
 

@@ -48,6 +48,7 @@
   #include <gtksourceview/gtksourcebuffer.h>
   #include <gtksourceview/gtksourcestyleschememanager.h>
   #include <gtksourceview/gtksourcestylescheme.h>
+  #include <gtksourceview/gtksource.h>
 #endif
 
 static GdauiDataEntry *plugin_entry_filesel_create_func (GdaDataHandler *handler, GType type, const gchar *options);

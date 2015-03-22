@@ -61,7 +61,7 @@ timout_cb (GdaTreeNode *node)
 	cvalue = gda_tree_node_get_node_attribute (node, "scale");
 	g_assert (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_DOUBLE));
 	sc = g_value_get_double (cvalue);
-	sc += 0.05;
+	sc += 0.005;
 	if (sc > 1.2)
 		sc = .8;
 	g_value_set_double ((scale = gda_value_new (G_TYPE_DOUBLE)), sc);
@@ -89,7 +89,7 @@ node_func (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_no
 		g_value_set_double ((scale = gda_value_new (G_TYPE_DOUBLE)), 1.);
 		gda_tree_node_set_node_attribute (snode, "scale", scale, NULL);
 		gda_value_free (scale);
-		g_timeout_add (200, (GSourceFunc) timout_cb, g_object_ref (snode));
+		g_timeout_add (50, (GSourceFunc) timout_cb, g_object_ref (snode));
 
 		g_value_set_boolean ((scale = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
 		gda_tree_node_set_node_attribute (snode, "scale-set", scale, NULL);

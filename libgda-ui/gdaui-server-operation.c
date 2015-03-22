@@ -32,7 +32,6 @@
 #include "gdaui-data-selector.h"
 #include "gdaui-data-proxy-info.h"
 #include <libgda/gda-debug-macros.h>
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void gdaui_server_operation_class_init (GdauiServerOperationClass *class);
 static void gdaui_server_operation_init (GdauiServerOperation *wid);
@@ -375,7 +374,7 @@ sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWid
 	gtk_widget_show (wid);
 
 	/* "-" button */
-	image = gtk_image_new_from_icon_name ("list-remove", GTK_ICON_SIZE_MENU);
+	image = gtk_image_new_from_icon_name ("list-remove-symbolic", GTK_ICON_SIZE_MENU);
 	wid = gtk_button_new ();
 	gtk_button_set_image (GTK_BUTTON (wid), image);
 	gtk_grid_attach (GTK_GRID (grid), wid, 1, index, 1, 1);
@@ -469,6 +468,24 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 
 		winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid),
 						   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
+
+		GtkToolItem *item;
+		item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_NEW_DATA);
+		if (item)
+			gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add a new field"));
+		item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_DELETE_SELECTED_DATA);
+		if (item)
+			gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Remove selected field"));
+		item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_WRITE_MODIFIED_DATA);
+		if (item) {
+			gtk_widget_hide (GTK_WIDGET (item));
+			gtk_widget_set_no_show_all (GTK_WIDGET (item), TRUE);
+		}
+		item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_RESET_DATA);
+		if (item) {
+			gtk_widget_hide (GTK_WIDGET (item));
+			gtk_widget_set_no_show_all (GTK_WIDGET (item), TRUE);
+		}
 
 		box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 		gtk_box_pack_start (GTK_BOX (box), plwid, TRUE, TRUE, 0);
@@ -594,7 +611,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			gtk_grid_attach (GTK_GRID (grid), wid, 0, size, 1, 1);
 			gtk_widget_show (wid);
 
-			image = gtk_image_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);
+			image = gtk_image_new_from_icon_name ("list-add-symbolic", GTK_ICON_SIZE_MENU);
 			wid = gtk_button_new ();
 			gtk_button_set_image (GTK_BUTTON (wid), image);
 			gtk_grid_attach (GTK_GRID (grid), wid, 1, size, 1, 1);
@@ -1199,12 +1216,15 @@ create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar
 	if (item)
 		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Remove selected field"));
 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_WRITE_MODIFIED_DATA);
-	if (item)
+	if (item) {
 		gtk_widget_hide (GTK_WIDGET (item));
+		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL);
+	}
 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_RESET_DATA);
-	if (item)
+	if (item) {
 		gtk_widget_hide (GTK_WIDGET (item));
-	g_print ("==================================================================\n");
+		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL);
+	}
 
 	return hlayout;
 }
