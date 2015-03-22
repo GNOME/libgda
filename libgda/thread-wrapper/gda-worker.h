@@ -70,7 +70,7 @@ typedef enum {
 } GdaWorkerError;
 
 GdaWorker *gda_worker_new (void);
-GdaWorker *gda_worker_new_unique (GdaWorker **location, gboolean allow_renew);
+GdaWorker *gda_worker_new_unique (GdaWorker **location, gboolean allow_destroy);
 GdaWorker *gda_worker_ref (GdaWorker *worker);
 void       gda_worker_unref (GdaWorker *worker);
 

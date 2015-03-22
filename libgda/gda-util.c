@@ -6,7 +6,7 @@
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2009 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
@@ -299,7 +299,7 @@ gda_default_unescape_string (const gchar *string)
 }
 
 /**
- * gda_utility_check_data_model_v:
+ * gda_utility_check_data_model_v: (rename-to gda_utility_check_data_model)
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
  * @types: (array length=nbcols): array with @nbcols length of type GType or null (if any data type is accepted)
@@ -309,8 +309,6 @@ gda_default_unescape_string (const gchar *string)
  * Returns: %TRUE if the data model's columns match the provided data types and number
  *
  * Since: 4.2.6
- *
- * Rename to: gda_utility_check_data_model
  */
 gboolean
 gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types)
@@ -353,7 +351,7 @@ gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types)
  * gda_utility_check_data_model: (skip)
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
- * @Varargs: @nbcols arguments of type GType or -1 (if any data type is accepted)
+ * @...: @nbcols arguments of type GType or -1 (if any data type is accepted)
  *
  * Check the column types of a GdaDataModel.
  *

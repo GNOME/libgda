@@ -15,7 +15,7 @@ SCAN_OPTIONS=--deprecated-guards="GDA_DISABLE_DEPRECATED"
 SCANGOBJ_OPTIONS=
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR=../..
+DOC_SOURCE_DIR=../src-files
 
 # Add the builddir to the HTML path so that version.xml is found
 MKHTML_OPTIONS=--path="$(abs_srcdir)"

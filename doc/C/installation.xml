@@ -236,7 +236,7 @@
 	  named "SalesTest". 
 	</para>
       </sect3>
-      <sect3 id="installation-provider-default">
+      <sect3 id="installation-provider-jdbc">
 	<title>JDBC based providers</title>
 	<para>Refer to the <link linkend="provider_notes_jdbc">JDBC notes</link> section for more information.
 	</para>

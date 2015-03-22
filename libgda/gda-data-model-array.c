@@ -325,7 +325,7 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 }
 
 /**
- * gda_data_model_array_new_with_g_types_v:
+ * gda_data_model_array_new_with_g_types_v: (rename-to gda_data_model_array_new_with_g_types)
  * @cols: number of columns for rows in this data model.
  * @types: (array): array of types of the columns of the model to create as #GType, as many as indicated by @cols
  *
@@ -335,8 +335,6 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
  * Returns: (transfer full): a pointer to the newly created #GdaDataModel.
  *
  * Since: 4.2.6
- *
- * Rename to: gda_data_model_array_new_with_g_types
  */
 GdaDataModel *
 gda_data_model_array_new_with_g_types_v (gint cols, GType *types)

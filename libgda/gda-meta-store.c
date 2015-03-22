@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
@@ -2838,7 +2838,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 }
 
 /**
- * gda_meta_store_extract_v:
+ * gda_meta_store_extract_v: (rename-to gda_meta_store_extract)
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
  * @vars: (element-type utf8 GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as
@@ -2857,8 +2857,6 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
  * Returns: (transfer full): a new #GdaDataModel, or %NULL if an error occurred
  *
  * Since: 4.2.6
- *
- * Rename to: gda_meta_store_extract
  */
 GdaDataModel *
 gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTable *vars, GError **error)
@@ -3079,7 +3077,7 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 
 /*#define DEBUG_STORE_MODIFY*/
 /**
- * gda_meta_store_modify_v:
+ * gda_meta_store_modify_v: (rename-to gda_meta_store_modify)
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table to modify within @store
  * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
@@ -3096,8 +3094,6 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
  * Returns: %TRUE if no error occurred
  *
  * Since: 4.2.6
- *
- * Rename to: gda_meta_store_modify
  */
 gboolean
 gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,

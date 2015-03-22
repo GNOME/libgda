@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
@@ -1443,7 +1443,7 @@ find_or_create_row_modif (GdaDataProxy *proxy, gint proxy_row, gint col, RowValu
  * gda_data_proxy_get_values:
  * @proxy: a #GdaDataProxy object
  * @proxy_row: a proxy row
- * @cols_index: (array) (array length=n_cols): array containing the columns for which the values are requested
+ * @cols_index: (array length=n_cols): array containing the columns for which the values are requested
  * @n_cols: size of @cols_index
  *
  * Retrieve a whole list of values from the @proxy data model. This function

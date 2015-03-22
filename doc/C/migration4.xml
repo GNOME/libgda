@@ -102,9 +102,9 @@
 
   <sect1><title>Multi threading and asynchronicity</title>
   <para>
-    Until versions 5.x, multi threading handling, along with the way asynchronous operations were carried was
+    In versions 5.x and before, multi threading handling, along with the way asynchronous operations were carried was
     a complicated piece of engineering and had a lot of caveats. Form version 6.x on, each connection (or, if
-    not supported by the database's C API, each provider) is internally used from a specific thread, always different
+    not supported by the database's C API, then each provider) is internally used from a specific thread, always different
     than from the "user" threads (the threads the user of &LIBGDA; creates). The consequence is that any
     connection can now be used by any thread the user creates.
   </para>

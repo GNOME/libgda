@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -123,6 +123,7 @@ gda_virtual_connection_get_type (void)
 /**
  * gda_virtual_connection_open
  * @virtual_provider: a #GdaVirtualProvider object
+ * @options: some options
  * @error: a place to store errors, or %NULL
  *
  * Creates and opens a new virtual connection using the @virtual_provider provider. The returned value

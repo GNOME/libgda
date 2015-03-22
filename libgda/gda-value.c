@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2002 Holger Thon <holger.thon@gnome-db.org>
- * Copyright (C) 2002 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dschoene@src.gnome.org>
@@ -56,7 +56,7 @@
 
 #  ifdef GSEAL_ENABLE
 /**
- * GdaNumeric:
+ * GdaNumeric: (set-value-func gda_value_set_numeric) (get-value-func gda_value_get_numeric)
  * @number: a string representing a number
  * @precision: precision to use when @number is converted (not implemented jet)
  * @width: not implemented jet
@@ -65,9 +65,6 @@
  *
  * This struct must be considered as opaque. Any access to its members must use its
  * accessors added since version 5.0.2.
- *
- * Set value func: gda_value_set_numeric()
- * Get value func: gda_value_get_numeric()
  */
 struct _GdaNumeric {
 	gchar*   number; /* stored in the "C" locale, never NULL */

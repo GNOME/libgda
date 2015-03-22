@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -997,7 +997,7 @@ GdaLdapEntry **_gda_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar
  * Describes the LDAP entry which DN is @dn. If @dn is %NULL, then the top entry (as specified when 
  * the LDAP connection was opened) is described.
  *
- * Returns: (transfer full) (Free-function: gda_ldap_entry_free): a new #GdaLdapEntry, or %NULL if an error occurred or if the @dn entry does not exist
+ * Returns: (transfer full): a new #GdaLdapEntry, or %NULL if an error occurred or if the @dn entry does not exist
  *
  * Since: 4.2.8
  */
@@ -1021,7 +1021,7 @@ gda_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error
  *
  * If @dn is %NULL, then the top entry (as specified when the LDAP connection was opened) is used.
  *
- * Returns: (transfer full) (element_type GdaLdapEntry) (array zero-terminated=1): a %NULL terminated array of #GdaLdapEntry for each child entry, or %NULL if an error occurred or if the @dn entry does not exist
+ * Returns: (transfer full) (array zero-terminated=1): a %NULL terminated array of #GdaLdapEntry for each child entry, or %NULL if an error occurred or if the @dn entry does not exist
  *
  * Since: 4.2.8
  */
@@ -1042,7 +1042,7 @@ gchar **_gda_ldap_dn_split (const gchar *dn, gboolean all);
  *
  * Splits @dn into its components.
  *
- * Returns: (transfer full) (Free-function: g_strfreev): a %NULL terminated array containing the DN parts (free using g_strfreev()), or %NULL if an error occurred because @dn is not a valid DN expression
+ * Returns: (transfer full): a %NULL terminated array containing the DN parts (free using g_strfreev()), or %NULL if an error occurred because @dn is not a valid DN expression
  *
  * Since: 4.2.8
  */
@@ -1206,7 +1206,7 @@ gda_ldap_add_entry (GdaLdapConnection *cnc, GdaLdapEntry *entry, GError **error)
 /**
  * gda_ldap_remove_entry:
  * @cnc: a #GdaLdapConnection
- * @entry: a #GdaLDapEntry describing the LDAP entry to remove
+ * @dn: the DN of the LDAP entry to remove
  * @error: (allow-none): a place to store an error, or %NULL
  *
  * Delete an LDAP entry.

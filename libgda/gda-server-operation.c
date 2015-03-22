@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2008 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
@@ -2043,7 +2043,7 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
 }
 
 /**
- * gda_server_operation_get_value_at_path:
+ * gda_server_operation_get_value_at_path: (rename-to gda_server_operation_get_value_at)
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
  *
@@ -2052,8 +2052,6 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
  * Returns: (transfer none) (allow-none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
  *
  * Since: 4.2.6
- *
- * Rename to: gda_server_operation_get_value_at
  */
 const GValue *
 gda_server_operation_get_value_at_path (GdaServerOperation *op, const gchar *path)
@@ -2183,7 +2181,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 }
 
 /**
- * gda_server_operation_get_sql_identifier_at_path:
+ * gda_server_operation_get_sql_identifier_at_path: (rename-to gda_server_operation_get_sql_identifier_at)
  * @op: a #GdaServerOperation object
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @prov: (allow-none): a #GdaServerProvider, or %NULL
@@ -2200,8 +2198,6 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  * a valid SQL identifier.
  *
  * Since: 4.2.6
- *
- * Rename to: gda_server_operation_get_sql_identifier_at
  */
 gchar *
 gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
@@ -2237,7 +2233,7 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
 }
 
 /**
- * gda_server_operation_set_value_at_path:
+ * gda_server_operation_set_value_at_path: (rename-to gda_server_operation_set_value_at)
  * @op: a #GdaServerOperation object
  * @value: (allow-none): a string
  * @path: a complete path to a node (starting with "/")
@@ -2276,8 +2272,6 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
  * Returns: %TRUE if no error occurred
  *
  * Since: 4.2.6
- *
- * Rename to: gda_server_operation_set_value_at
  */
 gboolean
 gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *value, 

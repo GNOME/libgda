@@ -20,6 +20,9 @@
       The following arguments are used to connect to an Oracle database:
       <table frame="all">
         <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+	  <colspec colnum="1" colwidth="1.4*"/>
+	  <colspec colnum="2" colwidth="2.8*"/>
+	  <colspec colnum="3" colwidth=".4*"/>
           <thead>
 	    <row>
               <entry>Argument name</entry>
@@ -65,6 +68,9 @@
       The following arguments are used to connect to an SQLite database:
       <table frame="all">
         <tgroup cols="3" colsep="1" rowsep="1" align="justify">
+	  <colspec colnum="1" colwidth="1.4*"/>
+	  <colspec colnum="2" colwidth="2.8*"/>
+	  <colspec colnum="3" colwidth=".4*"/>
           <thead>
 	    <row>
               <entry>Argument name</entry>

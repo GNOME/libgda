@@ -2,7 +2,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2009 Johannes Schmid <jhs@gnome.org>
  * Copyright (C) 2009 - 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
@@ -1671,7 +1671,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 }
 
 /**
- * gda_sql_builder_add_function_v:
+ * gda_sql_builder_add_function_v: (rename-to gda_sql_builder_add_function)
  * @builder: a #GdaSqlBuilder object
  * @func_name: the functions's name
  * @args: (array length=args_size): an array of IDs representing the function's arguments
@@ -1680,8 +1680,6 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
  * Builds a new expression which represents a function applied to some arguments
  *
  * Returns: the ID of the new expression, or %0 if there was an error
- *
- * Rename to: gda_sql_builder_add_function
  *
  * Since: 4.2
  */
@@ -1911,7 +1909,7 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_add_case_v:
+ * gda_sql_builder_add_case_v: (rename-to gda_sql_builder_add_case)
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
  * @else_expr: the expression ID representing the ELSE expression, or %0
@@ -1926,8 +1924,6 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
  * Returns: the ID of the new expression, or %0 if there was an error
  *
  * Since: 4.2
- *
- * Rename to: gda_sql_builder_add_case
  */
 GdaSqlBuilderId
 gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
