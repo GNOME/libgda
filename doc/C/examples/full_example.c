@@ -61,7 +61,7 @@ open_connection ()
 
 	/* create an SQL parser */
 	parser = gda_connection_create_parser (cnc);
-	if (!parser) /* @cnc doe snot provide its own parser => use default one */
+	if (!parser) /* @cnc does not provide its own parser => use default one */
 		parser = gda_sql_parser_new ();
 	/* attach the parser object to the connection */
 	g_object_set_data_full (G_OBJECT (cnc), "parser", parser, g_object_unref);

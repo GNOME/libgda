@@ -1516,7 +1516,7 @@ query_editor_get_current_history_batch (QueryEditor *editor)
  * query_editor_history_is_empty
  * @editor: a #QueryEditor widget.
  *
- * Returns: %TRUE if @editor doe snot have any history item
+ * Returns: %TRUE if @editor does not have any history item
  */
 gboolean
 query_editor_history_is_empty (QueryEditor *editor)

@@ -138,7 +138,7 @@ display_products_contents (GdaConnection *cnc)
 	GdaSqlParser *parser;
 
 	parser = gda_connection_create_parser (cnc);
-        if (!parser) /* @cnc doe snot provide its own parser => use default one */
+        if (!parser) /* @cnc does not provide its own parser => use default one */
                 parser = gda_sql_parser_new ();
 
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
