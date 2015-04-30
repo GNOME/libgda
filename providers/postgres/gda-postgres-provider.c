@@ -245,16 +245,16 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	/* set virtual functions */
-	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+	gda_server_provider_set_impl_functions (provider_class,
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
 						(gpointer) &postgres_base_functions);
 	GdaProviderReuseableOperations *ops;
 	ops = _gda_postgres_reuseable_get_ops ();
-	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+	gda_server_provider_set_impl_functions (provider_class,
 						GDA_SERVER_PROVIDER_FUNCTIONS_META,
 						(gpointer) &(ops->re_meta_funcs));
 
-	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
+	gda_server_provider_set_impl_functions (provider_class,
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						(gpointer) &postgres_xa_functions);
 }
