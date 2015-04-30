@@ -174,7 +174,7 @@ struct _GdaConnectionClass {
  *
  * Note about the @GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag:
  * <itemizedlist>
- *  <listitem><para>Every time a DDL statement is successfully executed, the associated mate data, if
+ *  <listitem><para>Every time a DDL statement is successfully executed, the associated meta data, if
               defined, will be updated, which has a impact on performances</para></listitem>
  *  <listitem><para>If a transaction is started and some DDL statements are executed and the transaction
  *            is not rolled back or committed, then the meta data may end up being wrong</para></listitem>
