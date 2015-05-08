@@ -8009,7 +8009,7 @@ msgid ""
 "'%s' shortcut"
 msgstr ""
 "La perspective actuelle a été modifiée en perspective « %s », vous pouvez "
-"\"\"retourner à la perspective précédente en utilisant le menu « Perspective/"
+"retourner à la perspective précédente en utilisant le menu « Perspective/"
 "%s » ou en utilisant le raccourci « %s »"
 
 #: ../tools/browser/canvas/browser-canvas.c:371
