@@ -270,7 +270,7 @@ ui_show_help (GtkWindow *parent, const gchar *topic)
 		if (strchr (lang, '.'))
 			continue;
 
-		uri = gda_gbr_get_file_path (GDA_DATA_DIR, "gnome", "help", "gda-browser", lang, NULL);
+		uri = gda_gbr_get_file_path (GDA_DATA_DIR, "help", lang, "gda-browser", NULL);
 
 		/*g_print ("TST URI [%s]\n", uri);*/
 		if (g_file_test (uri, G_FILE_TEST_EXISTS)) {
@@ -291,9 +291,10 @@ ui_show_help (GtkWindow *parent, const gchar *topic)
 		uri = NULL;
 	}
 	/*g_print ("URI [%s]\n", uri);*/
-	if (uri == NULL) {
-		ui_show_error (NULL,  _("Unable to display help. Please make sure the "
-					"documentation package is installed."));
+
+	if (!uri) {
+		ui_show_error (parent,  _("Unable to display help. Please make sure the "
+					  "documentation package is installed."));
 		return;
 	}
 
@@ -317,11 +318,6 @@ ui_show_help (GtkWindow *parent, const gchar *topic)
 		
 		g_error_free (error);
 	}
-	else if (BROWSER_IS_WINDOW (parent))
-		browser_window_show_notice (BROWSER_WINDOW (parent), GTK_MESSAGE_INFO,
-					    "show-help", _("Help is being loaded, please wait..."));
-	else
-		ui_show_message (parent, "%s", _("Help is being loaded, please wait..."));
 
 	g_free (uri);	
 }
@@ -412,7 +408,7 @@ ui_make_small_button (gboolean is_toggle, gboolean with_arrow,
 	}
 	if (with_arrow) {
 		GtkWidget *arrow;
-		arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+		arrow = gtk_image_new_from_icon_name ("go-next-symbolic", GTK_ICON_SIZE_MENU);
 		gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
 		gtk_widget_set_halign (arrow, GTK_ALIGN_END);
 		gtk_widget_set_valign (arrow, GTK_ALIGN_CENTER);
@@ -542,7 +538,7 @@ static const gchar *fnames[] = {
 
 	"-non-connected-big.png",
 	"-non-connected.png",
-	".png",
+	"-table.png",
 	"-view.png"
 	*/
 };

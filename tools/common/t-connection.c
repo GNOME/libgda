@@ -104,7 +104,8 @@ static GObjectClass  *parent_class = NULL;
 /* properties */
 enum {
         PROP_0,
-        PROP_GDA_CNC
+        PROP_GDA_CNC,
+	PROP_NAME
 };
 
 GType
@@ -213,6 +214,10 @@ t_connection_class_init (TConnectionClass *klass)
                                                               GDA_TYPE_CONNECTION,
                                                               G_PARAM_WRITABLE |
 							      G_PARAM_CONSTRUCT_ONLY));
+	g_object_class_install_property (object_class, PROP_NAME,
+                                         g_param_spec_string ("name", NULL, "Connection's name",
+                                                              NULL,
+                                                              G_PARAM_WRITABLE | G_PARAM_READABLE));
 
 	object_class->dispose = t_connection_dispose;
 }
@@ -224,7 +229,7 @@ t_connection_init (TConnection *tcnc)
 	tcnc->priv = g_new0 (TConnectionPrivate, 1);
 	tcnc->priv->executed_statements = NULL;
 
-	tcnc->priv->name = g_strdup_printf (_("c%u"), index++);
+	tcnc->priv->name = g_strdup_printf (T_CNC_NAME_PREFIX "%u", index++);
 	tcnc->priv->cnc = NULL;
 	tcnc->priv->parser = NULL;
 	tcnc->priv->variables = NULL;
@@ -411,8 +416,6 @@ t_connection_set_property (GObject *object,
                         if (!tcnc->priv->cnc)
 				return;
 
-			/*g_print ("TConnection %p [%s], wrapper %p, GdaConnection %p\n",
-			  tcnc, tcnc->priv->name, tcnc->priv->wrapper, tcnc->priv->cnc);*/
 			g_object_ref (tcnc->priv->cnc);
 			g_object_set (G_OBJECT (tcnc->priv->cnc), "execution-timer", TRUE, NULL);
 			g_signal_connect (tcnc->priv->cnc, "status-changed",
@@ -439,6 +442,15 @@ t_connection_set_property (GObject *object,
 				g_free (tmp);
 			}
                         break;
+		case PROP_NAME: {
+			const gchar *name;
+			name = g_value_get_string (value);
+			if (name && *name) {
+				g_free (tcnc->priv->name);
+				tcnc->priv->name = g_strdup (name);
+			}
+			break;
+		}
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -462,6 +474,9 @@ t_connection_get_property (GObject *object,
                 case PROP_GDA_CNC:
                         g_value_set_object (value, tcnc->priv->cnc);
                         break;
+		case PROP_NAME:
+			g_value_set_string (value, tcnc->priv->name);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -874,7 +889,6 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 	g_free (real_auth_string);
 
 	if (newcnc) {
-		const gchar *rootname;
 		gint i;
 		g_object_set (G_OBJECT (newcnc), "execution-timer", TRUE, NULL);
 		g_object_set (newcnc, "execution-slowdown", 2000000, NULL);
@@ -882,25 +896,23 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 		tcnc = t_connection_new (newcnc);
 		g_object_unref (newcnc);
 
-		if (cnc_name && *cnc_name)
+		if (cnc_name && *cnc_name) {
+			const gchar *rootname;
 			rootname = cnc_name;
-		else
-			rootname = "c";
-		if (t_connection_get_by_name (rootname)) {
-			for (i = 1; ; i++) {
-				gchar *tmp;
-				tmp = g_strdup_printf ("%s%d", rootname, i);
-				if (t_connection_get_by_name (tmp))
-					g_free (tmp);
-				else {
-					t_connection_set_name (tcnc, tmp);
-					g_free (tmp);
-					break;
+			if (t_connection_get_by_name (rootname)) {
+				for (i = 1; ; i++) {
+					gchar *tmp;
+					tmp = g_strdup_printf ("%s%d", rootname, i);
+					if (t_connection_get_by_name (tmp))
+						g_free (tmp);
+					else {
+						t_connection_set_name (tcnc, tmp);
+						g_free (tmp);
+						break;
+					}
 				}
 			}
 		}
-		else
-			t_connection_set_name (tcnc, rootname);
 
 		/* show date format */
 		GDateDMY order[3];
@@ -1026,9 +1038,7 @@ void
 t_connection_set_name (TConnection *tcnc, const gchar *name)
 {
 	g_return_if_fail (T_IS_CONNECTION (tcnc));
-	g_return_if_fail (name && *name);
-	g_free (tcnc->priv->name);
-	tcnc->priv->name = g_strdup (name);
+	g_object_set (tcnc, "name", name, NULL);
 }
 
 /**
@@ -1045,10 +1055,35 @@ t_connection_get_name (TConnection *tcnc)
 }
 
 /**
+ * t_connection_get_information:
+ * @tcnc: a #TConnection
+ *
+ * Get the information about @tcnc as a string.
+ *
+ * Returns: a new string
+ */
+const gchar *
+t_connection_get_information (TConnection *tcnc)
+{
+	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
+	GString *title;
+	title = g_string_new ("");
+	const GdaDsnInfo *dsn;
+	dsn = t_connection_get_dsn_information (tcnc);
+	if (dsn) {
+		if (dsn->name)
+			g_string_append_printf (title, "%s '%s'", _("Data source"), dsn->name);
+		if (dsn->provider)
+			g_string_append_printf (title, " (%s)", dsn->provider);
+	}
+	return g_string_free (title, FALSE);
+}
+
+/**
  * t_connection_get_long_name:
  * @tcnc: a #TConnection
  *
- * Get the "long" name of @tcnc
+ * Get the "long" name of @tcnc, in the form "Connection <name>, <data source or provider>"
  *
  * Returns: a new string
  */
@@ -1060,7 +1095,7 @@ t_connection_get_long_name (TConnection *tcnc)
 	const GdaDsnInfo *dsn;
 	GString *title;
 
-	dsn = t_connection_get_information (tcnc);
+	dsn = t_connection_get_dsn_information (tcnc);
 	cncname = t_connection_get_name (tcnc);
 	title = g_string_new (_("Connection"));
 	g_string_append (title, " ");
@@ -1075,7 +1110,7 @@ t_connection_get_long_name (TConnection *tcnc)
 }
 
 /**
- * t_connection_get_information
+ * t_connection_get_dsn_information
  * @tcnc: a #TConnection
  *
  * Get some information about the connection
@@ -1083,7 +1118,7 @@ t_connection_get_long_name (TConnection *tcnc)
  * Returns: a pointer to the associated #GdaDsnInfo
  */
 const GdaDsnInfo *
-t_connection_get_information (TConnection *tcnc)
+t_connection_get_dsn_information (TConnection *tcnc)
 {
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 

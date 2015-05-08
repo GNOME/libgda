@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id='menubar'>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>Dummy 1 option</attribute>
+        <attribute name='action'>win.dummy1</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Dummy 2 action</attribute>
+        <attribute name='action'>win.dummy2</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

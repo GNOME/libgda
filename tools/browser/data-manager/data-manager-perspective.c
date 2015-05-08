@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -26,8 +26,6 @@
 #include "../browser-page.h"
 #include "data-favorite-selector.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 /* 
  * Main static functions 
  */
@@ -38,12 +36,10 @@ static void data_manager_perspective_grab_focus (GtkWidget *widget);
 
 /* BrowserPerspective interface */
 static void                 data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface);
-static BrowserWindow       *data_manager_perspective_get_window (BrowserPerspective *perspective);
-static GtkActionGroup      *data_manager_perspective_get_actions_group (BrowserPerspective *perspective);
-static const gchar         *data_manager_perspective_get_actions_ui (BrowserPerspective *perspective);
-static void                 data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
-										GtkActionGroup **out_agroup,
-										const gchar **out_ui);
+static void                 data_manager_perspective_customize (BrowserPerspective *perspective,
+								GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+static void                 data_manager_perspective_uncustomize (BrowserPerspective *perspective,
+								  GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -54,6 +50,8 @@ struct _DataManagerPerspectivePriv {
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
         TConnection *tcnc;
+
+	GArray *custom_parts;
 };
 
 GType
@@ -115,10 +113,8 @@ data_manager_perspective_grab_focus (GtkWidget *widget)
 static void
 data_manager_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
-	iface->i_get_window = data_manager_perspective_get_window;
-	iface->i_get_actions_group = data_manager_perspective_get_actions_group;
-	iface->i_get_actions_ui = data_manager_perspective_get_actions_ui;
-	iface->i_get_current_customization = data_manager_perspective_get_current_customization;
+	iface->i_customize = data_manager_perspective_customize;
+        iface->i_uncustomize = data_manager_perspective_uncustomize;
 }
 
 
@@ -127,6 +123,7 @@ data_manager_perspective_init (DataManagerPerspective *perspective)
 {
 	perspective->priv = g_new0 (DataManagerPerspectivePriv, 1);
 	perspective->priv->favorites_shown = TRUE;
+	perspective->priv->custom_parts = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
@@ -309,82 +306,105 @@ data_manager_perspective_dispose (GObject *object)
 }
 
 static void
-manager_new_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
+manager_new_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	/* @data is a DataManagerPerspective */
+	BrowserPerspective *bpers;
+	bpers = BROWSER_PERSPECTIVE (data);
 	add_new_data_console (bpers, -1);
 }
 
 static void
-favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+favorites_toggle_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
+	/* @data is a DataManagerPerspective */
 	DataManagerPerspective *perspective;
-	perspective = DATA_MANAGER_PERSPECTIVE (bpers);
+	perspective = DATA_MANAGER_PERSPECTIVE (data);
 
 	if (! perspective->priv->favorites)
 		return;
-	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	perspective->priv->favorites_shown = g_variant_get_boolean (state);
 	if (perspective->priv->favorites_shown)
 		gtk_widget_show (perspective->priv->favorites);
 	else
 		gtk_widget_hide (perspective->priv->favorites);
+	g_simple_action_set_state (action, state);
 }
 
-static const GtkToggleActionEntry ui_toggle_actions [] =
-{
-        { "DataManagerFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE}
+static GActionEntry win_entries[] = {
+        { "show-favorites", NULL, NULL, "true", favorites_toggle_cb },
+        { "data-manager-new", manager_new_cb, NULL, NULL, NULL },
 };
 
-static GtkActionEntry ui_actions[] = {
-        { "DataManagerMenu", NULL, N_("_Manager"), NULL, N_("Manager"), NULL },
-        { "NewDataManager", GTK_STOCK_NEW, N_("_New Data Manager"), "<control>T", N_("New data manager"),
-          G_CALLBACK (manager_new_cb)},
-};
-
-static const gchar *ui_actions_info =
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-        "    <menu name='Display' action='Display'>"
-        "      <menuitem name='DataManagerFavoritesShow' action='DataManagerFavoritesShow'/>"
-        "    </menu>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='Data manager' action='DataManagerMenu'>"
-        "        <menuitem name='NewDataManager' action= 'NewDataManager'/>"
-        "      </menu>"
-	"    </placeholder>"
-        "  </menubar>"
-        "  <toolbar name='ToolBar'>"
-        "    <separator/>"
-        "    <toolitem action='NewDataManager'/>"
-        "  </toolbar>"
-        "</ui>";
-
-static GtkActionGroup *
-data_manager_perspective_get_actions_group (BrowserPerspective *perspective)
+static void
+data_manager_perspective_customize (BrowserPerspective *perspective,
+				    GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	GtkActionGroup *agroup;
-	DataManagerPerspective *bpers;
-	bpers = DATA_MANAGER_PERSPECTIVE (perspective);
-	agroup = gtk_action_group_new ("DataManagerActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions,
-					     G_N_ELEMENTS (ui_toggle_actions), bpers);
+	g_print ("%s ()\n", __FUNCTION__);
+	DataManagerPerspective *persp;
+	persp = DATA_MANAGER_PERSPECTIVE (perspective);
 
-	GtkAction *action;
-	action = gtk_action_group_get_action (agroup, "DataManagerFavoritesShow");
-	if (bpers->priv->favorites)
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-					      bpers->priv->favorites_shown);
-	else
-		gtk_action_set_sensitive (GTK_ACTION (action), FALSE);
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
 
-	return agroup;
+	/* add perspective's actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 perspective);
+
+	g_assert (! persp->priv->custom_parts);
+	persp->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "user-bookmarks-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Show favorites"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.show-favorites");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "tab-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("New data manager tab"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.data-manager-new");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
 }
 
-static const gchar *
-data_manager_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
+static void
+data_manager_perspective_uncustomize (BrowserPerspective *perspective,
+				      GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	return ui_actions_info;
+	g_print ("%s ()\n", __FUNCTION__);
+	DataManagerPerspective *persp;
+	persp = DATA_MANAGER_PERSPECTIVE (perspective);
+
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* remove perspective's actions */
+	guint i;
+	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
+		GActionEntry *entry;
+		entry = &win_entries [i];
+		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
+	}
+
+	/* cleanups, headerbar and toolbar */
+	g_assert (persp->priv->custom_parts);
+	for (i = 0; i < persp->priv->custom_parts->len; i++) {
+		GObject *obj;
+		obj = g_array_index (persp->priv->custom_parts, GObject*, i);
+		if (GTK_IS_WIDGET (obj))
+			gtk_widget_destroy (GTK_WIDGET (obj));
+		else
+			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
+	}
+	g_array_free (persp->priv->custom_parts, TRUE);
+	persp->priv->custom_parts = NULL;
 }
 
 /**
@@ -420,27 +440,3 @@ data_manager_perspective_new_tab (DataManagerPerspective *dmp, const gchar *xml_
 	gtk_widget_grab_focus (page);
 }
 
-static void
-data_manager_perspective_get_current_customization (BrowserPerspective *perspective,
-						    GtkActionGroup **out_agroup,
-						    const gchar **out_ui)
-{
-	DataManagerPerspective *bpers;
-	GtkWidget *page_contents;
-
-	bpers = DATA_MANAGER_PERSPECTIVE (perspective);
-	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
-						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
-	if (IS_BROWSER_PAGE (page_contents)) {
-		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
-	}
-}
-
-static BrowserWindow *
-data_manager_perspective_get_window (BrowserPerspective *perspective)
-{
-	DataManagerPerspective *bpers;
-	bpers = DATA_MANAGER_PERSPECTIVE (perspective);
-	return bpers->priv->bwin;
-}

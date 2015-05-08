@@ -17,9 +17,14 @@ marshal.h: marshal.list $(GLIB_GENMARSHAL)
 marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_ldap_marshal > $@
 
-libperspective_la_SOURCES = \
+GENFILES = \
 	marshal.c \
-	marshal.h \
+	marshal.h
+
+$(libperspective_la_OBJECTS): $(GENFILES)
+
+libperspective_la_SOURCES = \
+        $(GENFILES) \
 	perspective-main.h \
 	perspective-main.c \
 	ldap-browser-perspective.h \
@@ -55,5 +60,4 @@ EXTRA_DIST = \
 	marshal.list
 
 CLEANFILES = \
-	marshal.h \
-	marshal.c
+	$(GENFILES)

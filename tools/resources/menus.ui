@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id='app-menu'>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>_Open Connection</attribute>
+        <attribute name='action'>app.opencnc</attribute>
+        <attribute name='accel'>&lt;Primary&gt;n</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>Bind connections</attribute>
+          <attribute name='action'>app.bind</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>_Connections list</attribute>
+        <attribute name='action'>app.listcnc</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>_New Window</attribute>
+        <attribute name='action'>app.newwin</attribute>
+      </item>
+      <submenu id='win-menu'>
+        <attribute name="label" translatable="yes">New Window for...</attribute>
+      </submenu>
+    </section>
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>_Help</attribute>
+        <attribute name='action'>app.help</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>_About</attribute>
+        <attribute name='action'>app.about</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>_Quit</attribute>
+        <attribute name='action'>app.quit</attribute>
+        <attribute name='accel'>&lt;Primary&gt;q</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id='menubar'>
+    <submenu>
+      <attribute name='label' translatable='yes'>_Connection</attribute>
+      <section>
+        <item>
+          <attribute name='label' translatable='yes'>_Begin transaction</attribute>
+          <attribute name='action'>win.begin</attribute>
+        </item>
+        <item>
+          <attribute name='label' translatable='yes'>_Commit transaction</attribute>
+          <attribute name='action'>win.commit</attribute>
+        </item>
+        <item>
+          <attribute name='label' translatable='yes'>_Rollback transaction</attribute>
+          <attribute name='action'>win.rollback</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name='label' translatable='yes'>_Fetch Meta Data</attribute>
+          <attribute name='action'>win.meta-sync</attribute>
+          <attribute name='accel'>&lt;Primary&gt;f</attribute>
+        </item>
+        <item>
+          <attribute name='label' translatable='yes'>_Connection properties</attribute>
+          <attribute name='action'>win.properties</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+          <attribute name='label' translatable='yes'>_Close connection</attribute>
+          <attribute name='action'>win.cncclose</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu>
+      <attribute name="label" translatable="yes">Display</attribute>
+      <section>
+        <item>
+          <attribute name='label' translatable='yes'>Fullscreen</attribute>
+          <attribute name='action'>win.fullscreen</attribute>
+        </item>
+      </section>
+      <section id='perspectives'>
+      </section>
+    </submenu>
+  </menu>
+</interface>

@@ -3,7 +3,7 @@
  * Copyright (C) 2001 - 2002 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dj@starfire-programming.net>
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,8 +30,9 @@ static BrowserPerspectiveFactory bfact;
 BrowserPerspectiveFactory *
 dummy_perspective_get_factory (void)
 {
+	bfact.id = "DummyP";
 	bfact.perspective_name = "Dummy Perspective";
-	bfact.menu_shortcut = NULL;
+	bfact.menu_shortcut = "<control>z";
 	bfact.perspective_create = dummy_perspective_new;
 
 	return &bfact;

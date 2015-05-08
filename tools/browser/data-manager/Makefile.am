@@ -18,9 +18,14 @@ marshal.h: marshal.list $(GLIB_GENMARSHAL)
 marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_dm_marshal > $@
 
+GENFILES = \
+	marshal.c \
+	marshal.h
+
+$(libperspective_la_OBJECTS): $(GENFILES)
+
 libperspective_la_SOURCES = \
-        marshal.c \
-        marshal.h \
+        $(GENFILES) \
 	analyser.c \
 	analyser.h \
 	data-console.c \
@@ -44,13 +49,9 @@ libperspective_la_SOURCES = \
 	xml-spec-editor.c \
 	xml-spec-editor.h
 
-
-$(OBJECTS): marshal.c marshal.h
-
 EXTRA_DIST= \
 	$(langspec_DATA) \
 	marshal.list
 
 CLEANFILES = \
-	marshal.h \
-	marshal.c
+	$(GENFILES)

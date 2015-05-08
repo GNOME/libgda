@@ -149,7 +149,7 @@ static void cell_name_data_func (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 	const GdaDsnInfo *cncinfo;
 
 	gtk_tree_model_get (tree_model, iter, COLUMN_TCNC, &tcnc, -1);
-	cncinfo = t_connection_get_information (tcnc);
+	cncinfo = t_connection_get_dsn_information (tcnc);
 	if (cncinfo) {
 		if (cncinfo->name)
 			cncstr = g_strdup_printf (_("DSN: %s"), cncinfo->name);
@@ -181,7 +181,7 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 
 	if (gtk_tree_selection_get_selected (select, &model, &iter)) {
 		gtk_tree_model_get (model, &iter, COLUMN_TCNC, &tcnc, -1);
-		cncinfo = t_connection_get_information (tcnc);
+		cncinfo = t_connection_get_dsn_information (tcnc);
 		g_object_unref (tcnc);
 
 		gtk_widget_set_sensitive (_clist->priv->close_cnc_button, TRUE);
@@ -398,7 +398,6 @@ browser_connections_list_show (TConnection *current)
 		treeview = ui_make_tree_view (GTK_TREE_MODEL (store));
 		_clist->priv->treeview = GTK_TREE_VIEW (treeview);
 		gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (treeview), FALSE);
-		gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
 		g_object_unref (G_OBJECT (store));
 		gtk_container_add (GTK_CONTAINER (sw), treeview);
 

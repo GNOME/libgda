@@ -25,7 +25,14 @@ marshal.h: marshal.list $(GLIB_GENMARSHAL)
 marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_sb_marshal > $@
 
+GENFILES = \
+	marshal.c \
+	marshal.h
+
+$(libperspective_la_OBJECTS): $(GENFILES)
+
 libperspective_la_SOURCES = \
+        $(GENFILES) \
 	marshal.c \
 	marshal.h \
 	perspective-main.h \
@@ -59,5 +66,4 @@ EXTRA_DIST = \
 	marshal.list
 
 CLEANFILES = \
-	marshal.h \
-	marshal.c
+	$(GENFILES)

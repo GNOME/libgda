@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -79,103 +79,79 @@ browser_perspective_class_init (G_GNUC_UNUSED gpointer g_class)
 }
 
 /**
- * browser_perspective_get_actions_group
- * @pers: an object implementing the #BrowserPerspective interface
+ * browser_perspective_customize:
+ * @perspective: an object implementing the #BrowserPerspective interface
+ * @toolbar: (allow-none):
+ * @header: (allow-none):
+ * @menu: (allow-none):
  *
- * Get the #GtkActionGroup from a @pers to represent its specific actions.
- *
- * Returns: a new #GtkActionGroup
- */
-GtkActionGroup *
-browser_perspective_get_actions_group (BrowserPerspective *pers)
-{
-	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (pers), NULL);
-	
-	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_group)
-		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_group) (pers);
-	else
-		return NULL;
-}
-
-/**
- * browser_perspective_get_actions_ui
- * @pers: an object implementing the #BrowserPerspective interface
- *
- * Get the UI definition from a perspective to represent how its specific actions (obtained
- * using browser_perspective_get_actions_group()) are to be integrated in a #BrowserWindow's menu
- * and toolbar.
- *
- * Returns: a read-only string
- */
-const gchar *
-browser_perspective_get_actions_ui (BrowserPerspective *pers)
-{
-	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (pers), NULL);
-	
-	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_ui)
-		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_actions_ui) (pers);
-	else
-		return NULL;
-}
-
-/**
- * browser_perspective_get_current_customization
- * @pers: an object implementing the #BrowserPerspective interface
- * @out_agroup: (transfer full): a place to store the returned GtkActionGroup, not %NULL
- * @out_ui: (transfer none): a place to store the returned UI string, not %NULL
- * 
- * Rem: *@out_agroup is a new object and should be unref'ed when not needed anymore
+ * Add optional custom UI elements to @toolbar, @header and @menu. any call to the
+ * browser_perspective_uncustomize() function will undo all the customizations to
+ * these elements
  */
 void
-browser_perspective_get_current_customization (BrowserPerspective *pers,
-					       GtkActionGroup **out_agroup,
-					       const gchar **out_ui)
+browser_perspective_customize (BrowserPerspective *perspective, GtkToolbar *toolbar,
+			       GtkHeaderBar *header, GMenu *menu)
 {
-	g_return_if_fail (IS_BROWSER_PERSPECTIVE (pers));
-	g_return_if_fail (out_agroup);
-	g_return_if_fail (out_ui);
-
-	*out_agroup = NULL;
-	*out_ui = NULL;
-	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_current_customization)
-		(BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_current_customization) (pers,
-										     out_agroup,
-										     out_ui);
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
+	g_print ("%s (%p)\n", __FUNCTION__, perspective);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_customize)
+		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_customize) (perspective, toolbar, header, menu);
 }
 
 /**
- * browser_perspective_page_tab_label_change
- * @pers: an object implementing the #BrowserPerspective interface
+ * browser_perspective_uncustomize:
+ * @perspective: an object implementing the #BrowserPerspective interface
+ * @toolbar: (allow-none):
+ * @header: (allow-none):
+ * @menu: (allow-none):
+ *
+ * Remove any optional custom UI elements to @toolbar, @header and @menu which have been added
+ * when browser_perspective_customize() was called.
+ */
+void
+browser_perspective_uncustomize (BrowserPerspective *perspective, GtkToolbar *toolbar,
+				 GtkHeaderBar *header, GMenu *menu)
+{
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
+	g_print ("%s (%p)\n", __FUNCTION__, perspective);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_uncustomize)
+		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_uncustomize) (perspective, toolbar, header, menu);
+}
+
+/**
+ * browser_perspective_page_tab_label_change:
+ * @perspective: an object implementing the #BrowserPerspective interface
  * @page: an object implementing the #BrowserPage interface
  *
- * When @pers organizes its contents as pages in a notebook, each page may
+ * When @perspective organizes its contents as pages in a notebook, each page may
  * request that the tab's label may be changed, and the purpose of this method
- * is to request that @pers update the tab's label associated to @page.
+ * is to request that @perspective update the tab's label associated to @page.
  */
 void
-browser_perspective_page_tab_label_change (BrowserPerspective *pers, BrowserPage *page)
+browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page)
 {
-	g_return_if_fail (IS_BROWSER_PERSPECTIVE (pers));
+	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
 	g_return_if_fail (IS_BROWSER_PAGE (page));
 
-	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change)
-		(BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_page_tab_label_change) (pers, page);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_page_tab_label_change)
+		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_page_tab_label_change) (perspective, page);
 }
 
 /**
  * browser_perspective_get_window:
- * @pers: an object implementing the #BrowserPerspective interface
+ * @perspective: an object implementing the #BrowserPerspective interface
  *
  * Returns: (transfer none): the #BrowserWindow @perspective is in
  */
 BrowserWindow *
-browser_perspective_get_window (BrowserPerspective *pers)
+browser_perspective_get_window (BrowserPerspective *perspective)
 {
-	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (pers), NULL);
-	if (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window)
-		return (BROWSER_PERSPECTIVE_GET_CLASS (pers)->i_get_window) (pers);
+	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (perspective), NULL);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_window)
+		return (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_window) (perspective);
 	else
-		return (BrowserWindow*) ui_find_parent_widget (GTK_WIDGET (pers), BROWSER_PERSPECTIVE_TYPE);
+		return (BrowserWindow*) ui_find_parent_widget (GTK_WIDGET (perspective), BROWSER_TYPE_WINDOW);
 }
 
 static void nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
@@ -204,6 +180,7 @@ browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebo
 	if (!bwin)
 		return;
 
+	g_print ("REMOVE THIS FUNCTION: %s()\n", __FUNCTION__);
 	GtkNotebook *onb;
 	onb = g_object_get_data (G_OBJECT (perspective), "fullscreen_nb");
 	if (onb) {
@@ -338,22 +315,22 @@ _factories_init (void)
 
 /**
  * browser_get_factory
- * @factory: the name of the requested factory
+ * @factory_id: the ID of the requested factory
  *
  * Get a pointer to a #BrowserPerspectiveFactory, from its name
  *
  * Returns: a pointer to the #BrowserPerspectiveFactory, or %NULL if not found
  */
 BrowserPerspectiveFactory *
-browser_get_factory (const gchar *factory)
+browser_get_factory (const gchar *factory_id)
 {
-        GSList *list;
-        g_return_val_if_fail (factory, NULL);
+        g_return_val_if_fail (factory_id, NULL);
 	_factories_init ();
 
+	GSList *list;
         for (list = factories; list; list = list->next) {
                 BrowserPerspectiveFactory *bpf = BROWSER_PERSPECTIVE_FACTORY (list->data);
-                if (!g_ascii_strcasecmp (bpf->perspective_name, factory))
+                if (!g_ascii_strcasecmp (bpf->id, factory_id))
                         return bpf;
         }
         return NULL;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2014 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -312,10 +312,7 @@ idle_create_window (GApplication *app)
 
 	GtkWidget *bwin;
 	bwin = (GtkWidget*) browser_window_new (tcnc, NULL);
-	gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (bwin), FALSE);
 	gtk_window_set_default_size ((GtkWindow*) bwin, 640, 480);
-#define PRGNAME "Gda Browser"
-	gtk_window_set_title (GTK_WINDOW (bwin), PRGNAME);
 	gtk_widget_show (bwin);
 
 	g_application_release (app); /* release now that the 1st window has been created, cf. t_app_add_feature() where
@@ -537,6 +534,7 @@ t_app_add_tcnc (TConnection *tcnc)
 gboolean
 t_app_open_connections (gint argc, const gchar *argv[], GError **error)
 {
+	g_assert (argc >= 0);
 #ifdef HAVE_GTK_CLASSES
 	if (argc == 0) {
 		LoginDialog *dlg;
@@ -569,8 +567,8 @@ t_app_open_connections (gint argc, const gchar *argv[], GError **error)
 	if (term_console)
 		ostream = t_context_get_output_stream (term_console, NULL);
 
-	gint i;
-	for (i = 0; i < argc; i++) {
+	guint i;
+	for (i = 0; i < (guint) argc; i++) {
 		/* open connection */
 		TConnection *tcnc;
 		GdaDsnInfo *info = NULL;
@@ -581,7 +579,7 @@ t_app_open_connections (gint argc, const gchar *argv[], GError **error)
 		if (info)
 			str = g_strdup (info->name);
 		else
-			str = g_strdup_printf ("c%d", i);
+			str = g_strdup_printf (T_CNC_NAME_PREFIX "%u", i);
 		if (!ostream) {
 			gchar *params, *prov, *user;
 			gda_connection_string_split (argv[i], &params, &prov, &user, NULL);

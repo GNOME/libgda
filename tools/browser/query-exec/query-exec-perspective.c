@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -29,8 +29,6 @@
 #include "query-editor.h"
 #include <libgda/gda-debug-macros.h>
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 /* 
  * Main static functions 
  */
@@ -39,19 +37,14 @@ static void query_exec_perspective_init (QueryExecPerspective *stmt);
 static void query_exec_perspective_dispose (GObject *object);
 
 static void query_exec_perspective_grab_focus (GtkWidget *widget);
-static void query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers);
-
+static void query_exec_new_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data);
 
 /* BrowserPerspective interface */
 static void                 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface);
-static BrowserWindow       *query_exec_perspective_get_window (BrowserPerspective *perspective);
-static GtkActionGroup      *query_exec_perspective_get_actions_group (BrowserPerspective *perspective);
-static const gchar         *query_exec_perspective_get_actions_ui (BrowserPerspective *perspective);
-static void                 query_exec_perspective_get_current_customization (BrowserPerspective *perspective,
-									      GtkActionGroup **out_agroup,
-									      const gchar **out_ui);
-static void                 query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
-
+static void                 query_exec_perspective_customize (BrowserPerspective *perspective,
+							      GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+static void                 query_exec_perspective_uncustomize (BrowserPerspective *perspective,
+								GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -62,6 +55,8 @@ struct _QueryExecPerspectivePrivate {
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
 	TConnection *tcnc;
+
+	GArray *custom_parts;
 };
 
 GType
@@ -122,11 +117,8 @@ query_exec_perspective_grab_focus (GtkWidget *widget)
 static void
 query_exec_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
-	iface->i_get_window = query_exec_perspective_get_window;
-	iface->i_get_actions_group = query_exec_perspective_get_actions_group;
-	iface->i_get_actions_ui = query_exec_perspective_get_actions_ui;
-	iface->i_get_current_customization = query_exec_perspective_get_current_customization;
-	iface->i_page_tab_label_change = query_exec_perspective_page_tab_label_change;
+	iface->i_customize = query_exec_perspective_customize;
+        iface->i_uncustomize = query_exec_perspective_uncustomize;
 }
 
 static void
@@ -221,7 +213,7 @@ fav_selection_changed_cb (G_GNUC_UNUSED GtkWidget *widget, gint fav_id,
 	nb = GTK_NOTEBOOK (perspective->priv->notebook);
 	page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
 	if (!page) {
-		query_exec_add_cb (NULL, BROWSER_PERSPECTIVE (perspective));
+		query_exec_new_cb (NULL, NULL, BROWSER_PERSPECTIVE (perspective));
 		page = gtk_notebook_get_nth_page (nb, gtk_notebook_get_current_page (nb));
 		if (!page)
 			return;
@@ -265,14 +257,15 @@ query_exec_perspective_dispose (GObject *object)
 }
 
 static void
-query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
+query_exec_new_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	/* @data is a QueryExecPerspective */
 	GtkWidget *page, *tlabel, *button;
 	QueryExecPerspective *perspective;
 	TConnection *tcnc;
 	gint i;
 
-	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
+	perspective = QUERY_EXEC_PERSPECTIVE (data);
 	tcnc = perspective->priv->tcnc;
 
 	page = query_console_page_new (tcnc);
@@ -296,121 +289,94 @@ query_exec_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
 }
 
 static void
-favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+favorites_toggle_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
+	/* @data is a QueryExecPerspective */
 	QueryExecPerspective *perspective;
-	perspective = QUERY_EXEC_PERSPECTIVE (bpers);
+	perspective = QUERY_EXEC_PERSPECTIVE (data);
 	if (!perspective->priv->favorites)
 		return;
 
-	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	perspective->priv->favorites_shown = g_variant_get_boolean (state);
 	if (perspective->priv->favorites_shown)
 		gtk_widget_show (perspective->priv->favorites);
 	else
 		gtk_widget_hide (perspective->priv->favorites);
+	g_simple_action_set_state (action, state);
 }
 
-static const GtkToggleActionEntry ui_toggle_actions [] =
-{
-        { "QueryExecFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
+static GActionEntry win_entries[] = {
+        { "show-favorites", NULL, NULL, "true", favorites_toggle_cb },
+        { "query-exec-new", query_exec_new_cb, NULL, NULL, NULL },
 };
 
-static GtkActionEntry ui_actions[] = {
-        { "QueryExecMenu", NULL, N_("_Query"), NULL, N_("Query"), NULL },
-        { "QueryExecItem1", GTK_STOCK_MISSING_IMAGE, N_("_New Editor"), "<control>T", N_("Open a new query editor"),
-          G_CALLBACK (query_exec_add_cb)},
-};
-
-static const gchar *ui_actions_info =
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-	"    <menu name='Display' action='Display'>"
-	"      <menuitem name='QueryExecFavoritesShow' action='QueryExecFavoritesShow'/>"
-        "    </menu>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='QueryExec' action='QueryExecMenu'>"
-        "        <menuitem name='QueryExecItem1' action= 'QueryExecItem1'/>"
-        "      </menu>"
-	"    </placeholder>"
-        "  </menubar>"
-        "  <toolbar name='ToolBar'>"
-        "    <separator/>"
-        "    <toolitem action='QueryExecItem1'/>"
-        "  </toolbar>"
-        "</ui>";
-
-static GtkActionGroup *
-query_exec_perspective_get_actions_group (BrowserPerspective *perspective)
+static void
+query_exec_perspective_customize (BrowserPerspective *perspective,
+				  GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	QueryExecPerspective *bpers;
-	GtkActionGroup *agroup;
-	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
-	agroup = gtk_action_group_new ("QueryExecActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
-	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions,
-					     G_N_ELEMENTS (ui_toggle_actions),
-					     bpers);
-	GtkAction *action;
-	action = gtk_action_group_get_action (agroup, "QueryExecFavoritesShow");
-	if (bpers->priv->favorites)
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-					      bpers->priv->favorites_shown);
-	else
-		gtk_action_set_sensitive (GTK_ACTION (action), FALSE);
-	
-	return agroup;
-}
+	g_print ("%s ()\n", __FUNCTION__);
+	QueryExecPerspective *persp;
+	persp = QUERY_EXEC_PERSPECTIVE (perspective);
 
-static const gchar *
-query_exec_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *perspective)
-{
-	return ui_actions_info;
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* add perspective's actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 perspective);
+
+	g_assert (! persp->priv->custom_parts);
+	persp->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "user-bookmarks-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Show favorites"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.show-favorites");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "tab-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("New query execution tab"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.query-exec-new");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
 }
 
 static void
-query_exec_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page)
+query_exec_perspective_uncustomize (BrowserPerspective *perspective,
+				      GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	QueryExecPerspective *bpers;
-	GtkWidget *tab_label;
-	GtkWidget *close_btn;
-	
-	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
-	tab_label = browser_page_get_tab_label (page, &close_btn);
-	if (tab_label) {
-		gtk_notebook_set_tab_label (GTK_NOTEBOOK (bpers->priv->notebook),
-					    GTK_WIDGET (page), tab_label);
-		g_signal_connect (close_btn, "clicked",
-				  G_CALLBACK (close_button_clicked_cb), page);
-		
-		tab_label = browser_page_get_tab_label (page, NULL);
-		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook),
-					     GTK_WIDGET (page), tab_label);
+	g_print ("%s ()\n", __FUNCTION__);
+	QueryExecPerspective *persp;
+	persp = QUERY_EXEC_PERSPECTIVE (perspective);
+
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* remove perspective's actions */
+	guint i;
+	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
+		GActionEntry *entry;
+		entry = &win_entries [i];
+		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
 	}
-}
 
-static void
-query_exec_perspective_get_current_customization (BrowserPerspective *perspective,
-						  GtkActionGroup **out_agroup,
-						  const gchar **out_ui)
-{
-	QueryExecPerspective *bpers;
-	GtkWidget *page_contents;
-
-	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
-	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
-						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
-	if (IS_BROWSER_PAGE (page_contents)) {
-		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
+	/* cleanups, headerbar and toolbar */
+	g_assert (persp->priv->custom_parts);
+	for (i = 0; i < persp->priv->custom_parts->len; i++) {
+		GObject *obj;
+		obj = g_array_index (persp->priv->custom_parts, GObject*, i);
+		if (GTK_IS_WIDGET (obj))
+			gtk_widget_destroy (GTK_WIDGET (obj));
+		else
+			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
 	}
-}
-
-static BrowserWindow *
-query_exec_perspective_get_window (BrowserPerspective *perspective)
-{
-	QueryExecPerspective *bpers;
-	bpers = QUERY_EXEC_PERSPECTIVE (perspective);
-	return bpers->priv->bwin;
+	g_array_free (persp->priv->custom_parts, TRUE);
+	persp->priv->custom_parts = NULL;
 }

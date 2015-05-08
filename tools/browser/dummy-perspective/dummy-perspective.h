@@ -33,17 +33,19 @@ G_BEGIN_DECLS
 
 typedef struct _DummyPerspective DummyPerspective;
 typedef struct _DummyPerspectiveClass DummyPerspectiveClass;
+typedef struct _DummyPerspectivePriv DummyPerspectivePriv;
 
 /* struct for the object's data */
 struct _DummyPerspective
 {
-	GtkBox              object;
+	GtkBox                object;
+	DummyPerspectivePriv *priv;
 };
 
 /* struct for the object's class */
 struct _DummyPerspectiveClass
 {
-	GtkBoxClass         parent_class;
+	GtkBoxClass           parent_class;
 };
 
 GType                dummy_perspective_get_type               (void) G_GNUC_CONST;

@@ -30,12 +30,9 @@
 #include "widget-overlay.h"
 #include <libgda/gda-data-model-extra.h>
 #include "../common/t-favorites-actions.h"
-#undef HAVE_LDAP /* FIXME */
 #ifdef HAVE_LDAP
-  #include "../ldap-browser/ldap-browser-perspective.h" FIXME
+  #include "ldap-browser/ldap-browser-perspective.h"
 #endif
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void ui_formgrid_class_init (UiFormGridClass * class);
 static void ui_formgrid_init (UiFormGrid *wid);
@@ -65,26 +62,31 @@ typedef enum {
 
 struct _UiFormGridPriv
 {
-	GtkWidget   *nb;
-	GtkWidget   *raw_form;
-	GtkWidget   *raw_grid;
-	GtkWidget   *info;
-	GtkWidget   *overlay_form;
-	GtkWidget   *overlay_grid;
-	GtkWidget   *autoupdate_toggle;
-	gboolean     autoupdate;
-	gboolean     autoupdate_possible;
+	GtkWidget    *nb;
+	GtkWidget    *raw_form;
+	GtkWidget    *raw_grid;
+	GtkWidget    *info;
+	GtkWidget    *overlay_form;
+	GtkWidget    *overlay_grid;
+	GtkWidget    *autoupdate_toggle;
+	gboolean      autoupdate;
+	gboolean      autoupdate_possible;
 	GdauiDataProxyInfoFlag flags;
 	
-	TConnection *tcnc;
-	gboolean     scroll_form;
+	TConnection  *tcnc;
+	gboolean      scroll_form;
+
+	/* refresh handling */
+	GCallback     refresh_callback;
+	gpointer      refresh_user_data;
+	GtkWidget    *refresh_button;
 
 	/* modifications to the data */
-	gboolean           compute_mod_stmt; /* if %TRUE, then the INSERT, UPDATE and DELETE
-					       * statements are automatically computed, see the PROP_AUTOMOD property */
-	gboolean           mod_stmt_auto_computed; /* %TRUE if mod_stmt[*] have automatically
-						    * been computed */
-	GdaStatement      *mod_stmt[MOD_LAST];
+	gboolean      compute_mod_stmt; /* if %TRUE, then the INSERT, UPDATE and DELETE
+					 * statements are automatically computed, see the PROP_AUTOMOD property */
+	gboolean      mod_stmt_auto_computed; /* %TRUE if mod_stmt[*] have automatically
+					       * been computed */
+	GdaStatement *mod_stmt[MOD_LAST];
 };
 
 /* get a pointer to the parents to be able to call their destructor */
@@ -288,7 +290,7 @@ ui_formgrid_show (GtkWidget *widget)
 }
 
 static void form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid);
-static void form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid);
+static void form_grid_toggled_cb (GtkToggleToolButton *button, UiFormGrid *formgrid);
 static void form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid);
 static void selection_changed_cb (GdauiDataSelector *sel, UiFormGrid *formgrid);
 
@@ -307,6 +309,9 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->autoupdate_possible = FALSE;
 	formgrid->priv->scroll_form = FALSE;
 	formgrid->priv->compute_mod_stmt = FALSE;
+
+	formgrid->priv->refresh_callback = NULL;
+	formgrid->priv->refresh_user_data = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (formgrid), GTK_ORIENTATION_VERTICAL);
 
@@ -352,61 +357,26 @@ ui_formgrid_init (UiFormGrid *formgrid)
 							  GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 							  GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS);
 
-	GtkUIManager *uimanager;
-	GtkActionGroup *agroup;
-	GtkAction *action;
-	guint mid;
-	
-	g_object_get (G_OBJECT (formgrid->priv->info), "ui-manager", &uimanager, NULL);
-	agroup = gtk_action_group_new ("FormGrid");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-
-	action = GTK_ACTION (gtk_toggle_action_new ("FGToggle", "FGToggle",
-						    _("Toggle between grid and form presentations"),
-						    GTK_STOCK_MISSING_IMAGE));
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
-	gtk_action_group_add_action (agroup, action);
-	g_signal_connect (G_OBJECT (action), "toggled",
+	button = GTK_WIDGET (gtk_toggle_tool_button_new ());
+	gtk_widget_set_tooltip_text (button, _("Toggle between grid and form presentations"));
+	gtk_toggle_tool_button_set_active (GTK_TOGGLE_TOOL_BUTTON (button), TRUE);
+	gtk_toolbar_insert (GTK_TOOLBAR (formgrid->priv->info), GTK_TOOL_ITEM (button), 0);
+	gtk_widget_show (button);
+	g_signal_connect (button, "toggled",
 			  G_CALLBACK (form_grid_toggled_cb), formgrid);
-	g_object_unref (action);
-	gtk_ui_manager_insert_action_group (uimanager, agroup, 0);
-	g_object_unref (agroup);
 
-	mid = gtk_ui_manager_new_merge_id (uimanager);
-	gtk_ui_manager_add_ui (uimanager, mid, "/ToolBar", "FGToggle", "FGToggle",
-			       GTK_UI_MANAGER_AUTO, TRUE);
-	gtk_ui_manager_ensure_update (uimanager);
-	gtk_box_pack_start (GTK_BOX (hbox), formgrid->priv->info, TRUE, TRUE, 0);
-	gtk_widget_show (formgrid->priv->info);
-	g_object_unref (G_OBJECT (uimanager));
-
-
-	/*gchar *tmp;
-	g_object_get (uimanager, "ui", &tmp, NULL);
-	g_print ("==>[%s]\n", tmp);
-	g_free (tmp);
-	*/
+	/* refresh button, don't show it yet */
+	button = GTK_WIDGET (gtk_tool_button_new (NULL, NULL));
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (button), "view-refresh-symbolic");
+	gtk_widget_set_tooltip_text (button, _("Refresh data"));
+	gtk_toolbar_insert (GTK_TOOLBAR (formgrid->priv->info), GTK_TOOL_ITEM (button), 0);
+	formgrid->priv->refresh_button = button;
 
 	/* keep data in sync */
 	g_signal_connect (formgrid->priv->raw_grid, "selection-changed",
 			  G_CALLBACK (selection_changed_cb), formgrid);
 	g_signal_connect (formgrid->priv->raw_form, "selection-changed",
 			  G_CALLBACK (selection_changed_cb), formgrid);
-}
-
-/**
- * ui_formgrid_get_ui_manager:
- *
- * Returns: (transfer none): the #GtkUIManager
- */
-GtkUIManager *
-ui_formgrid_get_ui_manager (UiFormGrid *formgrid)
-{
-	GtkUIManager *uimanager;
-	g_return_val_if_fail (UI_IS_FORMGRID (formgrid), NULL);
-	g_object_get (G_OBJECT (formgrid->priv->info), "ui-manager", &uimanager, NULL);
-	g_object_unref (uimanager);
-	return uimanager;
 }
 
 static void
@@ -439,16 +409,14 @@ form_grid_autoupdate_cb (GtkToggleButton *button, UiFormGrid *formgrid)
 }
 
 static void
-form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid)
+form_grid_toggled_cb (GtkToggleToolButton *button, UiFormGrid *formgrid)
 {
-	if (!gtk_toggle_action_get_active (action)) {
+	if (!gtk_toggle_tool_button_get_active (button)) {
 		/* switch to form  view */
 		gtk_notebook_set_current_page (GTK_NOTEBOOK (formgrid->priv->nb), 1);
 		g_object_set (G_OBJECT (formgrid->priv->info),
 			      "data-proxy", formgrid->priv->raw_form,
 			      "flags", formgrid->priv->flags | FORM_FLAGS, NULL);
-
-		g_object_set (G_OBJECT (action), "stock-id", GTK_STOCK_MISSING_IMAGE, NULL);
 	}
 	else {
 		/* switch to grid view */
@@ -456,8 +424,6 @@ form_grid_toggled_cb (GtkToggleAction *action, UiFormGrid *formgrid)
 		g_object_set (G_OBJECT (formgrid->priv->info),
 			      "data-proxy", formgrid->priv->raw_grid,
 			      "flags", formgrid->priv->flags | GRID_FLAGS, NULL);
-
-		g_object_set (G_OBJECT (action), "stock-id", GTK_STOCK_MISSING_IMAGE, NULL);
 	}
 }
 
@@ -1141,4 +1107,36 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 			g_print ("STMT[%d] = ---\n", mod);
 	}
 	*/
+}
+
+/**
+ * ui_formgrid_set_refresh_func:
+ * @formgrid: a #UiFormGrid widget
+ * @callback: (allow-none): a callback, or %NULL
+ * @user_data: (allow-none): a pointer passed to the @callback function, or %NULL
+ *
+ * If @callback is not %NULL, then a "Refresh" button is added to @formgrid which, when clicked,
+ * calls @callback.
+ *
+ * If @callback is %NULL, then the "Refresh" button (if there was any) is removed.
+ */
+void
+ui_formgrid_set_refresh_func (UiFormGrid *formgrid, GCallback callback, gpointer user_data)
+{
+	g_return_if_fail (UI_IS_FORMGRID (formgrid));
+
+	if (formgrid->priv->refresh_callback)
+		g_signal_handlers_disconnect_by_func (formgrid->priv->refresh_button,
+						      formgrid->priv->refresh_callback,
+						      formgrid->priv->refresh_user_data);
+
+	formgrid->priv->refresh_user_data = user_data;
+	formgrid->priv->refresh_callback = callback;
+	if (formgrid->priv->refresh_callback) {
+		g_signal_connect (formgrid->priv->refresh_button, "clicked",
+				  formgrid->priv->refresh_callback, formgrid->priv->refresh_user_data);
+		gtk_widget_show (formgrid->priv->refresh_button);
+	}
+	else
+		gtk_widget_hide (formgrid->priv->refresh_button);
 }

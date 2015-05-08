@@ -3,7 +3,7 @@
  * Copyright (C) 2001 - 2002 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dj@starfire-programming.net>
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
- * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +30,7 @@ static BrowserPerspectiveFactory bfact;
 BrowserPerspectiveFactory *
 query_exec_perspective_get_factory (void)
 {
+	bfact.id = "QueryExecP";
 	bfact.perspective_name = _("Query execution (SQL)");
 	bfact.menu_shortcut = "<control>S";
 	bfact.perspective_create = query_exec_perspective_new;

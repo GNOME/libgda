@@ -27,8 +27,6 @@
 #include "../ui-formgrid.h"
 #include "marshal.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 struct _QueryResultPrivate {
 	QueryEditor *history;
 
@@ -389,28 +387,7 @@ make_widget_for_data_model (GdaDataModel *model, QueryResult *qres, const gchar 
 		ui_formgrid_handle_user_prefs (UI_FORMGRID (grid), tcnc, stmt);
 		g_object_unref (stmt);
 
-		GtkUIManager *uimanager;
-		GtkActionGroup *agroup;
-		GtkAction *action;
-		guint mid;
-
-		agroup = gtk_action_group_new ("QueryResultGroup");
-		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-		action = gtk_action_new ("Refresh", "Refresh",
-					 _("Re-execute query"),
-					 GTK_STOCK_EXECUTE);
-		gtk_action_group_add_action (agroup, action);
-		g_signal_connect (G_OBJECT (action), "activate",
-				  G_CALLBACK (action_refresh_cb), qres);
-		g_object_unref (action);
-		uimanager = ui_formgrid_get_ui_manager (UI_FORMGRID (grid));
-		gtk_ui_manager_insert_action_group (uimanager, agroup, 0);
-		g_object_unref (agroup);
-
-		mid = gtk_ui_manager_new_merge_id (uimanager);
-		gtk_ui_manager_add_ui (uimanager, mid, "/ToolBar/RowModifExtension", "Refresh", "Refresh",
-				       GTK_UI_MANAGER_AUTO, TRUE);
-		gtk_ui_manager_ensure_update (uimanager);
+		ui_formgrid_set_refresh_func (UI_FORMGRID (grid), G_CALLBACK (action_refresh_cb), qres);
 	}
  out:
 	return grid;

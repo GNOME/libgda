@@ -21,14 +21,13 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "browser-window.h"
-#include "login-dialog.h"
 #include <common/t-app.h>
 #include <common/t-connection.h>
 #include "ui-support.h"
-#include "browser-connections-list.h"
 #include "connection-binding-properties.h"
 #include <gdk/gdkkeysyms.h>
 #include <thread-wrapper/gda-connect.h>
+#include "browser-connections-list.h"
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
@@ -41,12 +40,7 @@
 typedef struct {
         BrowserWindow             *bwin; /* pointer to window the tab is in, no ref held here */
         BrowserPerspectiveFactory *factory;
-        gint                       page_number; /* in reference to bwin->perspectives_nb */
         BrowserPerspective        *perspective_widget;
-
-	GtkActionGroup            *customized_actions;
-	guint                      customized_merge_id;
-	gchar                     *customized_ui;
 } PerspectiveData;
 #define PERSPECTIVE_DATA(x) ((PerspectiveData*)(x))
 static PerspectiveData *perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory);
@@ -59,11 +53,7 @@ static void browser_window_class_init (BrowserWindowClass *klass);
 static void browser_window_init (BrowserWindow *bwin);
 static void browser_window_dispose (GObject *object);
 
-static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event);
 static gboolean key_press_event (GtkWidget *widget, GdkEventKey *event);
-
-static void connection_added_cb (TApp *tapp, TConnection *tcnc, BrowserWindow *bwin);
-static void connection_removed_cb (TApp *tapp, TConnection *tcnc, BrowserWindow *bwin);
 
 static void transaction_status_changed_cb (TConnection *tcnc, BrowserWindow *bwin);
 static void cnc_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, BrowserWindow *bwin);
@@ -82,25 +72,15 @@ static GObjectClass  *parent_class = NULL;
 
 struct _BrowserWindowPrivate {
 	TConnection       *tcnc;
-	GtkNotebook       *perspectives_nb; /* notebook used to switch between tabs, for the selector part */
-        GSList            *perspectives; /* list of PerspectiveData pointers, owned here */
+	GtkStack          *pers_stack; /* notebook used to switch between tabs */
+        GSList            *pers_list; /* list of PerspectiveData pointers, owned here */
 	PerspectiveData   *current_perspective;
 	guint              ui_manager_merge_id; /* for current perspective */
 
-	GtkWidget         *menubar;
-	GtkWidget         *toolbar;
-	gboolean           toolbar_shown;
-	gboolean           cursor_in_toolbar;
 	GtkWidget         *spinner;
-	GtkUIManager      *ui_manager;
-	GtkActionGroup    *agroup;
-	GtkActionGroup    *perspectives_actions;
 	gboolean           updating_transaction_status;
 
 	GtkToolbarStyle    toolbar_style;
-	GtkActionGroup    *cnc_agroup; /* one GtkAction for each TConnection */
-	gulong             cnc_added_sigid;
-	gulong             cnc_removed_sigid;
 
 	GtkWidget         *notif_box;
 	GSList            *notif_widgets;
@@ -109,11 +89,12 @@ struct _BrowserWindowPrivate {
 	guint              cnc_statusbar_context;
 
 	gboolean           fullscreen;
-	gulong             fullscreen_motion_sig_id;
-	guint              fullscreen_timer_id;
 
 	gulong             cnc_status_sigid;
 	gulong             trans_status_sigid;
+
+	GtkToolbar        *toolbar;
+	GtkHeaderBar      *header;
 };
 
 GType
@@ -151,12 +132,11 @@ browser_window_class_init (BrowserWindowClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-	widget_class->window_state_event = window_state_event;
 	widget_class->key_press_event = key_press_event;
 	parent_class = g_type_class_peek_parent (klass);
 
 	browser_window_signals[FULLSCREEN_CHANGED] =
-                g_signal_new ("fullscreen_changed",
+                g_signal_new ("fullscreen-changed",
                               G_TYPE_FROM_CLASS (object_class),
                               G_SIGNAL_RUN_LAST,
                               G_STRUCT_OFFSET (BrowserWindowClass, fullscreen_changed),
@@ -165,7 +145,6 @@ browser_window_class_init (BrowserWindowClass *klass)
                               G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
 
 	object_class->dispose = browser_window_dispose;
-	klass->fullscreen_changed = NULL;
 }
 
 static void
@@ -173,15 +152,10 @@ browser_window_init (BrowserWindow *bwin)
 {
 	bwin->priv = g_new0 (BrowserWindowPrivate, 1);
 	bwin->priv->tcnc = NULL;
-	bwin->priv->perspectives_nb = NULL;
-	bwin->priv->perspectives = NULL;
-	bwin->priv->cnc_agroup = NULL;
-	bwin->priv->cnc_added_sigid = 0;
-	bwin->priv->cnc_removed_sigid = 0;
+	bwin->priv->pers_stack = NULL;
+	bwin->priv->pers_list = NULL;
 	bwin->priv->updating_transaction_status = FALSE;
 	bwin->priv->fullscreen = FALSE;
-	bwin->priv->fullscreen_motion_sig_id = 0;
-	bwin->priv->fullscreen_timer_id = 0;
 }
 
 static void
@@ -195,35 +169,17 @@ browser_window_dispose (GObject *object)
 	if (bwin->priv) {
 		GSList *connections;
 
-		for (connections = t_app_get_all_connections (); connections; connections = connections->next)
-			connection_removed_cb (t_app_get(), T_CONNECTION (connections->data), bwin);
-
-		if (bwin->priv->fullscreen_timer_id)
-			g_source_remove (bwin->priv->fullscreen_timer_id);
-
-		if (bwin->priv->fullscreen_motion_sig_id)
-			g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
-
-		if (bwin->priv->cnc_added_sigid > 0)
-			gda_signal_handler_disconnect (t_app_get (), bwin->priv->cnc_added_sigid);
-		if (bwin->priv->cnc_removed_sigid > 0)
-			gda_signal_handler_disconnect (t_app_get (), bwin->priv->cnc_removed_sigid);
-		if (bwin->priv->ui_manager)
-			g_object_unref (bwin->priv->ui_manager);
-		if (bwin->priv->cnc_agroup)
-			g_object_unref (bwin->priv->cnc_agroup);
-
 		if (bwin->priv->tcnc) {
 			gda_signal_handler_disconnect (bwin->priv->tcnc, bwin->priv->cnc_status_sigid);
 			gda_signal_handler_disconnect (bwin->priv->tcnc, bwin->priv->trans_status_sigid);
 			g_object_unref (bwin->priv->tcnc);
 		}
-		if (bwin->priv->perspectives) {
-			g_slist_foreach (bwin->priv->perspectives, (GFunc) perspective_data_free, NULL);
-			g_slist_free (bwin->priv->perspectives);
+		if (bwin->priv->pers_list) {
+			g_slist_foreach (bwin->priv->pers_list, (GFunc) perspective_data_free, NULL);
+			g_slist_free (bwin->priv->pers_list);
 		}
-		if (bwin->priv->perspectives_nb)
-			g_object_unref (bwin->priv->perspectives_nb);
+		if (bwin->priv->pers_stack)
+			g_object_unref (bwin->priv->pers_stack);
 
 		if (bwin->priv->notif_widgets)
 			g_slist_free (bwin->priv->notif_widgets);
@@ -235,114 +191,28 @@ browser_window_dispose (GObject *object)
 	parent_class->dispose (object);
 }
 
-static void transaction_begin_cb (GtkAction *action, BrowserWindow *bwin);
-static void transaction_commit_cb (GtkAction *action, BrowserWindow *bwin);
-static void transaction_rollback_cb (GtkAction *action, BrowserWindow *bwin);
-static void quit_cb (GtkAction *action, BrowserWindow *bwin);
-static void about_cb (GtkAction *action, BrowserWindow *bwin);
-#ifdef HAVE_GDU
-static void manual_cb (GtkAction *action, BrowserWindow *bwin);
-#endif
-static void window_close_cb (GtkAction *action, BrowserWindow *bwin);
-static void window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin);
-static void window_new_cb (GtkAction *action, BrowserWindow *bwin);
-static void window_new_with_cnc_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_properties_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_close_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_open_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_bind_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_list_cb (GtkAction *action, BrowserWindow *bwin);
-static void connection_meta_update_cb (GtkAction *action, BrowserWindow *bwin);
-static void perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserWindow *bwin);
+static void connection_meta_update_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void transaction_begin_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void transaction_commit_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void transaction_rollback_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void connection_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void connection_close_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void fullscreen_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data);
+static void change_perspective_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data);
+static GActionEntry win_entries[] = {
+	{ "change-perspective", NULL, "s", NULL, change_perspective_cb },
 
-static const GtkToggleActionEntry ui_toggle_actions [] =
-{
-        { "WindowFullScreen", GTK_STOCK_FULLSCREEN, N_("_Fullscreen"), "F11", N_("Use the whole screen"), G_CALLBACK (window_fullscreen_cb), FALSE}
+	{ "meta-sync", connection_meta_update_cb, NULL, NULL, NULL },
+
+	{ "begin", transaction_begin_cb, NULL, NULL, NULL },
+	{ "commit", transaction_commit_cb, NULL, NULL, NULL },
+	{ "rollback", transaction_rollback_cb, NULL, NULL, NULL },
+
+	{ "properties", connection_properties_cb, NULL, NULL, NULL },
+	{ "cncclose", connection_close_cb, NULL, NULL, NULL },
+
+	{ "fullscreen", NULL, NULL, "false", fullscreen_cb },
 };
-
-static const GtkActionEntry ui_actions[] = {
-        { "Connection", NULL, N_("_Connection"), NULL, N_("Connection"), NULL },
-        { "ConnectionOpen", GTK_STOCK_CONNECT, N_("_Connect"), NULL, N_("Open a connection"), G_CALLBACK (connection_open_cb)},
-        { "ConnectionBind", NULL, N_("_Bind Connection"), "<control>I", N_("Use connection to create\n"
-						    "a new binding connection to access data\n"
-						    "from multiple databases at once"), G_CALLBACK (connection_bind_cb)},
-        { "ConnectionProps", GTK_STOCK_PROPERTIES, N_("_Properties"), NULL, N_("Connection properties"), G_CALLBACK (connection_properties_cb)},
-        { "ConnectionList", NULL, N_("_Connections List"), NULL, N_("Connections list"), G_CALLBACK (connection_list_cb)},
-        { "ConnectionMetaSync", GTK_STOCK_REFRESH, N_("_Fetch Meta Data"), NULL, N_("Fetch meta data"), G_CALLBACK (connection_meta_update_cb)},
-        { "ConnectionClose", GTK_STOCK_CLOSE, N_("_Close Connection"), NULL, N_("Close this connection"), G_CALLBACK (connection_close_cb)},
-        { "Quit", GTK_STOCK_QUIT, N_("_Quit"), NULL, N_("Quit"), G_CALLBACK (quit_cb)},
-        { "Edit", NULL, N_("_Edit"), NULL, N_("Edit"), NULL },
-        { "Display", NULL, N_("_Display"), NULL, N_("Display"), NULL },
-        { "Perspective", NULL, N_("_Perspective"), NULL, N_("Perspective"), NULL },
-        { "Window", NULL, N_("_Window"), NULL, N_("Window"), NULL },
-        { "WindowNew", GTK_STOCK_MISSING_IMAGE /*STOCK_NEW_WINDOW*/, N_("_New Window"), "<control>N", N_("Open a new window for current connection"), G_CALLBACK (window_new_cb)},
-        { "WindowNewOthers", NULL, N_("New Window for _Connection"), NULL, N_("Open a new window for a connection"), NULL},
-        { "WindowClose", GTK_STOCK_CLOSE, N_("_Close"), NULL, N_("Close this window"), G_CALLBACK (window_close_cb)},
-        { "Help", NULL, N_("_Help"), NULL, N_("Help"), NULL },
-        { "HelpAbout", GTK_STOCK_ABOUT, N_("_About"), NULL, N_("About"), G_CALLBACK (about_cb) },
-#ifdef HAVE_GDU
-        { "HelpManual", GTK_STOCK_HELP, N_("_Manual"), "F1", N_("Manual"), G_CALLBACK (manual_cb) },
-#endif
-	{ "TransactionBegin", GTK_STOCK_MISSING_IMAGE /*BROWSER_STOCK_BEGIN*/, N_("Begin transaction"), NULL, N_("Begin a new transaction"),
-          G_CALLBACK (transaction_begin_cb)},
-        { "TransactionCommit", GTK_STOCK_MISSING_IMAGE /*BROWSER_STOCK_COMMIT*/, N_("Commit transaction"), NULL, N_("Commit current transaction"),
-          G_CALLBACK (transaction_commit_cb)},
-        { "TransactionRollback", GTK_STOCK_MISSING_IMAGE /*BROWSER_STOCK_ROLLBACK*/, N_("Rollback transaction"), NULL, N_("Rollback current transaction"),
-          G_CALLBACK (transaction_rollback_cb)},
-};
-
-static const gchar *ui_actions_info =
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-        "    <menu name='Connection' action='Connection'>"
-        "      <menuitem name='ConnectionOpen' action= 'ConnectionOpen'/>"
-        "      <menuitem name='ConnectionList' action= 'ConnectionList'/>"
-        "      <menuitem name='ConnectionMetaSync' action= 'ConnectionMetaSync'/>"
-        "      <separator/>"
-        "      <menuitem name='ConnectionProps' action= 'ConnectionProps'/>"
-        "      <menuitem name='ConnectionBind' action= 'ConnectionBind'/>"
-        "      <menuitem name='ConnectionClose' action= 'ConnectionClose'/>"
-        "      <separator/>"
-	"      <menuitem name='TransactionBegin' action= 'TransactionBegin'/>"
-        "      <menuitem name='TransactionCommit' action= 'TransactionCommit'/>"
-        "      <menuitem name='TransactionRollback' action= 'TransactionRollback'/>"
-        "      <separator/>"
-        "      <menuitem name='Quit' action= 'Quit'/>"
-        "      <separator/>"
-        "    </menu>"
-        "    <menu name='Edit' action='Edit'>"
-        "    </menu>"
-        "    <menu name='Display' action='Display'>"
-        "    </menu>"
-        "    <menu name='Perspective' action='Perspective'>"
-        "      <placeholder name='PersList'/>"
-        "    </menu>"
-        "    <menu name='Window' action='Window'>"
-        "      <menuitem name='WindowFullScreen' action= 'WindowFullScreen'/>"
-        "      <separator/>"
-        "      <menuitem name='WindowNew' action= 'WindowNew'/>"
-        "      <menu name='WindowNewOthers' action='WindowNewOthers'>"
-        "          <placeholder name='CncList'/>"
-        "      </menu>"
-        "      <separator/>"
-        "      <menuitem name='WindowClose' action= 'WindowClose'/>"
-        "    </menu>"
-	"    <placeholder name='MenuExtension'/>"
-        "    <menu name='Help' action='Help'>"
-#ifdef HAVE_GDU
-        "      <menuitem name='HelpManual' action= 'HelpManual'/>"
-#endif
-        "      <menuitem name='HelpAbout' action= 'HelpAbout'/>"
-        "    </menu>"
-        "  </menubar>"
-        "  <toolbar name='ToolBar'>"
-        "    <toolitem action='WindowClose'/>"
-        "    <toolitem action='WindowFullScreen'/>"
-        "    <toolitem action='TransactionBegin'/>"
-        "    <toolitem action='TransactionCommit'/>"
-        "    <toolitem action='TransactionRollback'/>"
-        "  </toolbar>"
-        "</ui>";
 
 /**
  * browser_window_new
@@ -363,8 +233,11 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
 
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
-	bwin = BROWSER_WINDOW (g_object_new (BROWSER_TYPE_WINDOW, "application", t_app_get(), NULL));
+	bwin = BROWSER_WINDOW (g_object_new (BROWSER_TYPE_WINDOW, "application", t_app_get(),
+					     "show-menubar", TRUE, NULL));
 	gtk_application_add_window (GTK_APPLICATION (t_app_get ()), GTK_WINDOW (bwin));
+	gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (bwin), FALSE);
+
 	bwin->priv->tcnc = g_object_ref (tcnc);
 	bwin->priv->trans_status_sigid = gda_signal_connect (tcnc, "transaction-status-changed",
 							     G_CALLBACK (transaction_status_changed_cb), bwin,
@@ -374,9 +247,6 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
 							   NULL, 0, NULL);
 
 	gchar *tmp;
-	tmp = t_connection_get_long_name (tcnc);
-	gtk_window_set_title (GTK_WINDOW (bwin), tmp);
-	g_free (tmp);
 
 	gtk_window_set_default_size ((GtkWindow*) bwin, 900, 650);
 
@@ -388,279 +258,239 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
                 g_object_unref (icon);
         }
 
+	/* Obtain a valid Perspective factory */
+	if (! factory && t_connection_is_ldap (tcnc))
+		factory = browser_get_factory (_("LDAP browser"));
+	if (!factory)
+		factory = browser_get_default_factory ();
+	tmp = g_strdup_printf ("'%s'", factory->id);
+	win_entries [0].state = tmp;
+
+	/* menu */
+	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 bwin);
+	win_entries [0].state = NULL;
+	g_free (tmp);
+
 	/* main VBox */
 	GtkWidget *vbox;
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
         gtk_container_add (GTK_CONTAINER (bwin), vbox);
         gtk_widget_show (vbox);
 
-	/* menu */
-	GtkWidget *menubar;
-        GtkWidget *toolbar;
-        GtkUIManager *ui;
-	GtkActionGroup *group;
+	/* header */
+	GtkWidget *header;
+	header = gtk_header_bar_new ();
+	bwin->priv->header = GTK_HEADER_BAR (header);
+	gtk_window_set_titlebar (GTK_WINDOW (bwin), header);
+	tmp = t_connection_get_long_name (tcnc);
+	gtk_header_bar_set_title (GTK_HEADER_BAR (header), t_connection_get_name (tcnc));
+	gtk_header_bar_set_subtitle (GTK_HEADER_BAR (header), t_connection_get_information (tcnc));
+	g_free (tmp);
 
-        group = gtk_action_group_new ("Actions");
-	gtk_action_group_set_translation_domain (group, GETTEXT_PACKAGE);
+	gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (header), TRUE);
+	gtk_header_bar_set_has_subtitle (GTK_HEADER_BAR (header), FALSE);
+	gtk_widget_show (header);
 
-	bwin->priv->agroup = group;
-        gtk_action_group_add_actions (group, ui_actions, G_N_ELEMENTS (ui_actions), bwin);
-	gtk_action_group_add_toggle_actions (group, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions), bwin);
-	if (t_connection_is_virtual (bwin->priv->tcnc)) {
-		GtkAction *action;
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
-		gtk_action_set_visible (action, FALSE);
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
-		gtk_action_set_visible (action, FALSE);
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
-		gtk_action_set_visible (action, FALSE);
-	}
-	transaction_status_changed_cb (bwin->priv->tcnc, bwin);
+	/* Main menu button */
+	GtkWidget *img, *button;
+	button = gtk_menu_button_new ();
+	img = gtk_image_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
+	gtk_button_set_image (GTK_BUTTON (button), img);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (header), button);
+	gtk_widget_show_all (button);
+	GMenu *menu;
+	menu = g_menu_new ();
+	gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), G_MENU_MODEL (menu));
 
-        ui = gtk_ui_manager_new ();
-        gtk_ui_manager_insert_action_group (ui, group, 0);
-        gtk_ui_manager_add_ui_from_string (ui, ui_actions_info, -1, NULL);
-	bwin->priv->ui_manager = ui;
+	GMenu *smenu;
+	smenu = g_menu_new ();
+	GMenuItem *msection;
+	msection = g_menu_item_new_section (NULL, G_MENU_MODEL (smenu));
+	g_menu_insert_item (menu, -1, msection);
 
-	GtkAccelGroup *accel_group;
-        accel_group = gtk_ui_manager_get_accel_group (ui);
-	gtk_window_add_accel_group (GTK_WINDOW (bwin), accel_group);
+	GMenuItem *menu_item;
+	menu_item = g_menu_item_new (_("Fetch Meta Data"), "win.meta-sync");
+	g_menu_insert_item (smenu, -1, menu_item);
+	g_object_unref (menu_item);
+	menu_item = g_menu_item_new (_("Connection properties"), "win.properties");
+	g_menu_insert_item (smenu, -1, menu_item);
+	g_object_unref (menu_item);
 
-        menubar = gtk_ui_manager_get_widget (ui, "/MenuBar");
-	bwin->priv->menubar = menubar;
-#ifdef HAVE_MAC_INTEGRATION
-	gtk_osxapplication_set_menu_bar (theApp, GTK_MENU_SHELL (menubar));
-#else
-        gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
-        gtk_widget_show (menubar);
-#endif
+	smenu = g_menu_new ();
+	msection = g_menu_item_new_section (NULL, G_MENU_MODEL (smenu));
+	g_menu_insert_item (menu, -1, msection);
+	menu_item = g_menu_item_new (_("Close connection"), "win.cncclose");
+	g_menu_insert_item (smenu, -1, menu_item);
+	g_object_unref (menu_item);
 
-        toolbar = gtk_ui_manager_get_widget (ui, "/ToolBar");
-	bwin->priv->toolbar = toolbar;
-	bwin->priv->toolbar_shown = TRUE;
-        gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, TRUE, 0);
-	gtk_toolbar_set_show_arrow (GTK_TOOLBAR (toolbar), TRUE);
-        gtk_widget_show (toolbar);
-	bwin->priv->toolbar_style = gtk_toolbar_get_style (GTK_TOOLBAR (toolbar));
+	/* Display options button */
+	GtkWidget *menu_button;
+	button = gtk_menu_button_new ();
+	gtk_widget_set_tooltip_text (button, _("Display options"));
+	img = gtk_image_new_from_icon_name ("document-properties-symbolic", GTK_ICON_SIZE_MENU);
+	gtk_button_set_image (GTK_BUTTON (button), img);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (header), button);
+	gtk_widget_show_all (button);
+	menu_button = button;
 
+	/* toolbar */
+	GtkWidget *toolbar;
+	toolbar = gtk_toolbar_new ();
+	bwin->priv->toolbar = GTK_TOOLBAR (toolbar);
+	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+        gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Rollback transaction"));
+	img = gtk_image_new_from_resource ("/images/transaction-rollback-symbolic.png");
+	gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (titem), img);
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, 0);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.rollback");
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Commit transaction"));
+	img = gtk_image_new_from_resource ("/images/transaction-commit-symbolic.png");
+	gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (titem), img);	
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, 0);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.commit");
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Begin transaction"));
+	img = gtk_image_new_from_resource ("/images/transaction-start-symbolic.png");
+	gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (titem), img);
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, 0);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.begin");
+
+	titem = gtk_separator_tool_item_new ();
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+
+	gtk_widget_show_all (toolbar);
+
+	/* notification area */
 	bwin->priv->notif_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
+        gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->notif_box, FALSE, FALSE, 0);
         gtk_widget_show (bwin->priv->notif_box);
-	bwin->priv->notif_widgets = NULL;
-
-	GtkToolItem *ti;
-	GtkWidget *spinner, *svbox, *align;
-
-	ti = gtk_separator_tool_item_new ();
-	gtk_separator_tool_item_set_draw (GTK_SEPARATOR_TOOL_ITEM (ti), FALSE);
-	gtk_tool_item_set_expand (ti, TRUE);
-	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), ti, -1);
-        gtk_widget_show (GTK_WIDGET (ti));
-
-	spinner = gtk_spinner_new ();
-
-	svbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-	gtk_container_add (GTK_CONTAINER (align), spinner);
-	gtk_box_pack_start (GTK_BOX (svbox), align, TRUE, TRUE, 0);
-
-	ti = gtk_tool_item_new  ();
-	gtk_container_add (GTK_CONTAINER (ti), svbox);
-	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), ti, -1);
-        gtk_widget_show_all (GTK_WIDGET (ti));
-	gtk_widget_hide (GTK_WIDGET (spinner));
-	bwin->priv->spinner = spinner;
-
-	/* statusbar */
-	bwin->priv->statusbar = gtk_statusbar_new ();
-
-	GSList *list;
-	bwin->priv->cnc_agroup = gtk_action_group_new ("CncActions");
-	gtk_action_group_set_translation_domain (bwin->priv->cnc_agroup, GETTEXT_PACKAGE);
-
-	for (list = t_app_get_all_connections (); list; list = list->next)
-		connection_added_cb (t_app_get(), T_CONNECTION (list->data), bwin);
-
-	gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, bwin->priv->cnc_agroup, 0);
-	bwin->priv->cnc_added_sigid = gda_signal_connect (t_app_get (), "connection-added",
-							  G_CALLBACK (connection_added_cb), bwin,
-							  NULL, 0, NULL);
-	bwin->priv->cnc_removed_sigid = gda_signal_connect (t_app_get (), "connection-removed",
-							    G_CALLBACK (connection_removed_cb), bwin,
-							    NULL, 0, NULL);
+        bwin->priv->notif_widgets = NULL;
 
 	/* create a PerspectiveData */
 	PerspectiveData *pers;
-	if (! factory && t_connection_is_ldap (tcnc))
-		factory = browser_get_factory (_("LDAP browser"));
 	pers = perspective_data_new (bwin, factory);
-	bwin->priv->perspectives = g_slist_prepend (bwin->priv->perspectives, pers);
-	GtkActionGroup *actions;
-	actions = browser_perspective_get_actions_group (BROWSER_PERSPECTIVE (pers->perspective_widget));
-	if (actions) {
-		gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
-		gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions, 0);
-		g_object_unref (actions);
-	}
-	const gchar *ui_info;
-	ui_info = browser_perspective_get_actions_ui (BROWSER_PERSPECTIVE (pers->perspective_widget));
-	if (ui_info)
-		bwin->priv->ui_manager_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
-										     ui_info, -1, NULL);
+	bwin->priv->pers_list = g_slist_prepend (bwin->priv->pers_list, pers);
 	bwin->priv->current_perspective = pers;
-	browser_perspective_get_current_customization (BROWSER_PERSPECTIVE (pers->perspective_widget),
-						       &actions, &ui_info);
-	browser_window_customize_perspective_ui (bwin, BROWSER_PERSPECTIVE (pers->perspective_widget),
-						 actions, ui_info);
-	if (actions)
-		g_object_unref (actions);
 	
 	/* insert perspective into window */
-        bwin->priv->perspectives_nb = (GtkNotebook*) gtk_notebook_new ();
-        g_object_ref (bwin->priv->perspectives_nb);
-        gtk_notebook_set_show_tabs (bwin->priv->perspectives_nb, FALSE);
-	gtk_box_pack_start (GTK_BOX (vbox), (GtkWidget*) bwin->priv->perspectives_nb,
+        bwin->priv->pers_stack = (GtkStack*) gtk_stack_new ();
+        g_object_ref (bwin->priv->pers_stack);
+	gtk_box_pack_start (GTK_BOX (vbox), (GtkWidget*) bwin->priv->pers_stack,
 			    TRUE, TRUE, 0);
 
-	pers->page_number = gtk_notebook_append_page (bwin->priv->perspectives_nb,
-						      GTK_WIDGET (pers->perspective_widget), NULL);
-        gtk_widget_show_all ((GtkWidget*) bwin->priv->perspectives_nb);
+	gtk_stack_add_named (bwin->priv->pers_stack, GTK_WIDGET (pers->perspective_widget),
+			     pers->factory->id);
+        gtk_widget_show_all ((GtkWidget*) bwin->priv->pers_stack);
 	gtk_widget_grab_focus (GTK_WIDGET (pers->perspective_widget));
 
 	/* build the perspectives menu */
-	GtkActionGroup *agroup;
+	GMenuModel *menumodel;
+	menumodel = (GMenuModel*) g_object_get_data (G_OBJECT (t_app_get ()), "perspectives");
+	g_assert (menumodel);
+	menu = G_MENU (menumodel);
+	g_menu_remove_all (menu);
+
+	GMenu *bmenu;
+	bmenu = g_menu_new ();
+	gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (menu_button), G_MENU_MODEL (bmenu));
+
+	GMenuItem *mitem;
+	mitem = g_menu_item_new (_("Fullscreen"), "win.fullscreen");
+	g_menu_insert_item (bmenu, -1, mitem);
+
+	smenu = g_menu_new ();
+	msection = g_menu_item_new_section (_("Perspectives"), G_MENU_MODEL (smenu));
+	g_menu_insert_item (bmenu, -1, msection);
+
 	const GSList *plist;
-	GSList *radio_group = NULL;
-	guint mid;
-
-	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
-	agroup = gtk_action_group_new ("Perspectives");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-
-	gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, agroup, 0);
-	bwin->priv->perspectives_actions = agroup;
-	g_object_unref (agroup);
-
-	GtkAction *active_action = NULL;
 	for (plist = browser_get_factories (); plist; plist = plist->next) {
-		GtkAction *action;
-		const gchar *name;
+		const gchar *name, *id;
 
 		name = BROWSER_PERSPECTIVE_FACTORY (plist->data)->perspective_name;
+		id = BROWSER_PERSPECTIVE_FACTORY (plist->data)->id;
 		if (!strcmp (name, _("LDAP browser")) && !t_connection_is_ldap (tcnc))
 			continue;
 
-		action = GTK_ACTION (gtk_radio_action_new (name, name, NULL, NULL, FALSE));
+		gchar *tmp;
+		tmp = g_strdup_printf ("win.change-perspective::%s", id);
 
-		if (!active_action && 
-		    ((factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == factory)) ||
-		     (!factory && (BROWSER_PERSPECTIVE_FACTORY (plist->data) == browser_get_default_factory ()))))
-			active_action = action;
-		if (BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut)
-			gtk_action_group_add_action_with_accel (agroup, action,
-								BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut);
-		else
-			gtk_action_group_add_action (agroup, action);
+		menu_item = g_menu_item_new (name, tmp);
+		g_menu_insert_item (menu, -1, menu_item);
+		g_object_unref (menu_item);
+
+		menu_item = g_menu_item_new (name, tmp);
+		g_menu_insert_item (smenu, -1, menu_item);
+		g_object_unref (menu_item);
 		
-		gtk_radio_action_set_group (GTK_RADIO_ACTION (action), radio_group);
-		radio_group = gtk_radio_action_get_group (GTK_RADIO_ACTION (action));
+		/* accelerators */
+		const gchar *accels[2];
+		accels [0] = BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut;
+		accels [1] = NULL;
+		gtk_application_set_accels_for_action (GTK_APPLICATION (t_app_get ()), tmp, accels);
 
-		g_object_set_data (G_OBJECT (action), "pers", plist->data);
-		g_signal_connect (action, "changed",
-				  G_CALLBACK (perspective_toggle_cb), bwin);
-
-		g_object_unref (action);
-
-		gtk_ui_manager_add_ui (bwin->priv->ui_manager, mid,  "/MenuBar/Perspective/PersList",
-				       name, name,
-				       GTK_UI_MANAGER_AUTO, FALSE);
+		g_print ("ADDED perspective %s (%s) to menu with action [%s], accel [%s]\n", name, id, tmp,
+			 BROWSER_PERSPECTIVE_FACTORY (plist->data)->menu_shortcut);
+		g_free (tmp);
 	}
-	
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (active_action), TRUE);
 
-	gtk_box_pack_start (GTK_BOX (vbox), bwin->priv->statusbar, FALSE, FALSE, 0);
-        gtk_widget_show (bwin->priv->statusbar);
+	/* statusbar and spinner */
+	bwin->priv->statusbar = gtk_statusbar_new ();
 	bwin->priv->cnc_statusbar_context = gtk_statusbar_get_context_id (GTK_STATUSBAR (bwin->priv->statusbar),
 									  "cncbusy");
+	GtkWidget *lbox;
+	lbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), lbox, FALSE, FALSE, 0);
+	bwin->priv->spinner = gtk_spinner_new (); /* don't show spinner now */
+	gtk_box_pack_start (GTK_BOX (lbox), bwin->priv->statusbar, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (lbox), bwin->priv->spinner, FALSE, FALSE, 0);
+        gtk_widget_show_all (lbox);
 
+	/* accels */
+	const gchar *accels[2];
+	accels [0] = "F11";
+	accels [1] = NULL;
+	gtk_application_set_accels_for_action (GTK_APPLICATION (t_app_get ()), "win.fullscreen", accels);
+
+	cnc_status_changed_cb (tcnc, gda_connection_get_status (t_connection_get_cnc (tcnc)), bwin);
         gtk_widget_show (GTK_WIDGET (bwin));
 
 	gtk_widget_set_can_focus ((GtkWidget* )pers->perspective_widget, TRUE);
 	gtk_widget_grab_focus ((GtkWidget* )pers->perspective_widget);
 
+	/* customize currect perspective */
+	browser_perspective_customize (bwin->priv->current_perspective->perspective_widget,
+				       bwin->priv->toolbar, bwin->priv->header,
+				       G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+
 	return bwin;
 }
 
 static void
-perspective_toggle_cb (GtkRadioAction *action, GtkRadioAction *current, BrowserWindow *bwin)
+fullscreen_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
 {
-	BrowserPerspectiveFactory *pf;
-	GSList *list;
-	PerspectiveData *pers;
-	if (action != current)
-		return;
-
-	pf = BROWSER_PERSPECTIVE_FACTORY (g_object_get_data (G_OBJECT (action), "pers"));
-	g_assert (pf);
-
-	/* current perspective's cleanups */
-	if (bwin->priv->current_perspective) {
-		pers = bwin->priv->current_perspective;
-		if (pers->customized_merge_id) {
-			gtk_ui_manager_remove_ui (bwin->priv->ui_manager, pers->customized_merge_id);
-			pers->customized_merge_id = 0;
-		}
-		bwin->priv->current_perspective = NULL;
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
+	if (g_variant_get_boolean (state)) {
+		gtk_window_fullscreen (GTK_WINDOW (bwin));
+		bwin->priv->fullscreen = TRUE;
+		gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (bwin), TRUE);
+		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
+						   "fullscreen-esc",
+						   "%s", _("Hit the F11 key to leave the fullscreen mode"));
 	}
-
-	/* check if perspective already exists */
-	for (list = bwin->priv->perspectives, pers = NULL; list; list = list->next) {
-		if (PERSPECTIVE_DATA (list->data)->factory == pf) {
-			pers = PERSPECTIVE_DATA (list->data);
-			break;
-		}
+	else {
+		gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (bwin), FALSE);
+		gtk_window_unfullscreen (GTK_WINDOW (bwin));
+		bwin->priv->fullscreen = FALSE;
 	}
-
-	if (!pers) {
-		pers = perspective_data_new (bwin, pf);
-		bwin->priv->perspectives = g_slist_prepend (bwin->priv->perspectives, pers);
-		pers->page_number = gtk_notebook_append_page (bwin->priv->perspectives_nb,
-							      GTK_WIDGET (pers->perspective_widget), NULL);
-		gtk_widget_show (GTK_WIDGET (pers->perspective_widget));
-
-		GtkActionGroup *actions;
-		actions = browser_perspective_get_actions_group (BROWSER_PERSPECTIVE (pers->perspective_widget));
-		if (actions) {
-			gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);
-			gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions, 0);
-			g_object_unref (actions);
-		}
-	}
-
-	gtk_notebook_set_current_page (bwin->priv->perspectives_nb, pers->page_number);
-
-	/* menus and toolbar handling */
-	if (bwin->priv->ui_manager_merge_id > 0) {
-		gtk_ui_manager_remove_ui (bwin->priv->ui_manager, bwin->priv->ui_manager_merge_id);
-		bwin->priv->ui_manager_merge_id = 0;
-	}
-
-	const gchar *ui_info;
-	ui_info = browser_perspective_get_actions_ui (BROWSER_PERSPECTIVE (pers->perspective_widget));
-	if (ui_info)
-		bwin->priv->ui_manager_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
-										     ui_info, -1, NULL);
-
-	/* current perspective's customizations */
-	bwin->priv->current_perspective = pers;
-
-	GtkActionGroup *actions;
-	browser_perspective_get_current_customization (BROWSER_PERSPECTIVE (pers->perspective_widget),
-						       &actions, &ui_info);
-	browser_window_customize_perspective_ui (bwin, BROWSER_PERSPECTIVE (pers->perspective_widget),
-						 actions, ui_info);
-	if (actions)
-		g_object_unref (actions);
+	g_simple_action_set_state (action, state);
 }
 
 static void
@@ -672,104 +502,39 @@ cnc_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, BrowserWin
 	is_busy = (status == GDA_CONNECTION_STATUS_IDLE) ? FALSE : TRUE;
 
 	if (tcnc == bwin->priv->tcnc) {
-		/* @bcbc is @bwin's own connection */
-		if (! is_busy) {
-			gtk_spinner_stop (GTK_SPINNER (bwin->priv->spinner));
-			gtk_widget_hide (GTK_WIDGET (bwin->priv->spinner));
-			gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
-			gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
-					   bwin->priv->cnc_statusbar_context);
-		}
-		else {
+		if (is_busy) {
 			gtk_widget_show (GTK_WIDGET (bwin->priv->spinner));
 			gtk_spinner_start (GTK_SPINNER (bwin->priv->spinner));
 			gtk_widget_set_tooltip_text (bwin->priv->spinner, reason);
 			gtk_statusbar_push (GTK_STATUSBAR (bwin->priv->statusbar),
 					    bwin->priv->cnc_statusbar_context,
 					    reason);
-		}
 
-		gboolean bsens = FALSE, csens = FALSE;
-		if (! is_busy) {
-			if (t_connection_get_transaction_status (tcnc))
-				csens = TRUE;
-			else
-				bsens = TRUE;
+			GAction *action;
+			action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "begin");
+			g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+			action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "commit");
+			g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+			action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "rollback");
+			g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+			action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "meta-sync");
+			g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
 		}
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
-		gtk_action_set_sensitive (action, bsens);
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
-		gtk_action_set_sensitive (action, csens);
-		action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
-		gtk_action_set_sensitive (action, csens);
-
-		action = gtk_action_group_get_action (bwin->priv->agroup, "WindowNew");
-		gtk_action_set_sensitive (action, !is_busy);
-		action = gtk_action_group_get_action (bwin->priv->agroup, "ConnectionMetaSync");
-		gtk_action_set_sensitive (action, !is_busy);
+		else {
+			gtk_spinner_stop (GTK_SPINNER (bwin->priv->spinner));
+			gtk_widget_hide (GTK_WIDGET (bwin->priv->spinner));
+			gtk_widget_set_tooltip_text (bwin->priv->spinner, NULL);
+			gtk_statusbar_pop (GTK_STATUSBAR (bwin->priv->statusbar),
+					   bwin->priv->cnc_statusbar_context);
+			transaction_status_changed_cb (tcnc, bwin);
+		}
 	}
-
-	gchar *cncname;
-	cncname = t_connection_get_long_name (tcnc);
-	action = gtk_action_group_get_action (bwin->priv->cnc_agroup, cncname);
-	g_free (cncname);
-	if (action)
-		gtk_action_set_sensitive (action, !is_busy);
-}
-
-/* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
-static void
-connection_added_cb (G_GNUC_UNUSED TApp *tapp, TConnection *tcnc, BrowserWindow *bwin)
-{
-	GtkAction *action;
-	gchar *cncname;
-	guint mid;
-
-	mid = gtk_ui_manager_new_merge_id (bwin->priv->ui_manager);
-	cncname = t_connection_get_long_name (tcnc);
-	action = gtk_action_new (cncname, cncname, NULL, NULL);
-	gtk_action_group_add_action (bwin->priv->cnc_agroup, action);
-	guint *amid = g_new (guint, 1);
-	*amid = mid;
-	g_object_set_data_full (G_OBJECT (action), "mid", amid, g_free);
-	
-	gtk_ui_manager_add_ui (bwin->priv->ui_manager, mid, "/MenuBar/Window/WindowNewOthers/CncList",
-			       cncname, cncname,
-			       GTK_UI_MANAGER_AUTO, FALSE);
-	g_free (cncname);
-	g_signal_connect (action, "activate",
-			  G_CALLBACK (window_new_with_cnc_cb), bwin);
-	g_object_set_data (G_OBJECT (action), "tcnc", tcnc);
-	gtk_action_set_sensitive (action, ! t_connection_is_busy (tcnc, NULL));
-	g_object_unref (action);
-}
-
-/* update @bwin->priv->cnc_agroup and @bwin->priv->ui_manager */
-static void
-connection_removed_cb (G_GNUC_UNUSED TApp *tapp, TConnection *tcnc, BrowserWindow *bwin)
-{
-	GtkAction *action;
-	gchar *path;
-	gchar *cncname;
-	guint *mid;
-
-	cncname = t_connection_get_long_name (tcnc);
-	path = g_strdup_printf ("/MenuBar/Window/WindowNewOthers/CncList/%s", cncname);
-	g_free (cncname);
-	action = gtk_ui_manager_get_action (bwin->priv->ui_manager, path);
-	g_free (path);
-	g_assert (action);
-
-	mid = g_object_get_data (G_OBJECT (action), "mid");
-	g_assert (mid);
-	
-	gtk_ui_manager_remove_ui (bwin->priv->ui_manager, *mid);
-	gtk_action_group_remove_action (bwin->priv->cnc_agroup, action);
 }
 
 static void
-connection_close_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+connection_close_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	/* confirmation dialog */
 	GtkWidget *dialog;
 	char *str;
@@ -794,63 +559,31 @@ connection_close_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-quit_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
-	/* confirmation dialog */
-	GtkWidget *dialog;
-	GSList *connections;
-
-	connections = t_app_get_all_connections ();
-	if (connections && connections->next)
-		dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (bwin), GTK_DIALOG_MODAL,
-							     GTK_MESSAGE_QUESTION,
-							     GTK_BUTTONS_YES_NO,
-							     "<b>%s</b>\n<small>%s</small>",
-							     _("Do you want to quit the application?"),
-							     _("all the connections will be closed."));
-	else
-		dialog = gtk_message_dialog_new_with_markup (GTK_WINDOW (bwin), GTK_DIALOG_MODAL,
-							     GTK_MESSAGE_QUESTION,
-							     GTK_BUTTONS_YES_NO,
-							     "<b>%s</b>\n<small>%s</small>",
-							     _("Do you want to quit the application?"),
-							     _("the connection will be closed."));
-	
-
-	gboolean doquit;
-	doquit = (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES) ? TRUE : FALSE;
-	gtk_widget_destroy (dialog);
-	if (doquit)
-		t_app_request_quit ();
-}
-
-static void
 transaction_status_changed_cb (TConnection *tcnc, BrowserWindow *bwin)
 {
-	if (!bwin->priv->agroup)
-		return;
-
-	GtkAction *action;
 	gboolean trans_started;
 
 	trans_started = t_connection_get_transaction_status (tcnc) ? TRUE : FALSE;
 	bwin->priv->updating_transaction_status = TRUE;
 
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionBegin");
-	gtk_action_set_sensitive (action, !trans_started);
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "begin");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !trans_started);
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "commit");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), trans_started);
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "rollback");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), trans_started);
 
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionCommit");
-	gtk_action_set_sensitive (action, trans_started);
-
-	action = gtk_action_group_get_action (bwin->priv->agroup, "TransactionRollback");
-	gtk_action_set_sensitive (action, trans_started);
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "meta-sync");
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !trans_started);
 				      
 	bwin->priv->updating_transaction_status = FALSE;
 }
 
 static void
-transaction_begin_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+transaction_begin_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! t_connection_begin (bwin->priv->tcnc, &error)) {
@@ -863,8 +596,9 @@ transaction_begin_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-transaction_commit_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+transaction_commit_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! t_connection_commit (bwin->priv->tcnc, &error)) {
@@ -877,8 +611,9 @@ transaction_commit_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-transaction_rollback_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+transaction_rollback_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	if (!bwin->priv->updating_transaction_status) {
 		GError *error = NULL;
 		if (! t_connection_rollback (bwin->priv->tcnc, &error)) {
@@ -890,117 +625,15 @@ transaction_rollback_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 	}
 }
 
-
 static void
-window_close_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+change_perspective_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
 {
-	gtk_window_close (GTK_WINDOW (bwin));
-}
-
-static gboolean
-toolbar_hide_timeout_cb (BrowserWindow *bwin)
-{
-	if (!bwin->priv->cursor_in_toolbar) {
-		gtk_widget_hide (bwin->priv->toolbar);
-		gtk_widget_hide (bwin->priv->menubar);
-		bwin->priv->toolbar_shown = FALSE;
-		
-		/* remove timer */
-		bwin->priv->fullscreen_timer_id = 0;
-		return FALSE;
-	}
-	else
-		/* keep timer */
-		return TRUE;
-}
-
-#define BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD 15
-#define BWIN_WINDOW_FULLSCREEN_POPUP_TIMER 5
-
-static gboolean
-fullscreen_motion_notify_cb (GtkWidget *widget, GdkEventMotion *event, G_GNUC_UNUSED gpointer user_data)
-{
-	BrowserWindow *bwin = BROWSER_WINDOW (widget);
-	if (gtk_widget_get_window (widget) != event->window)
-		return FALSE;
-
-	if (event->y < BWIN_WINDOW_FULLSCREEN_POPUP_THRESHOLD) {
-		gtk_widget_show (bwin->priv->toolbar);
-		gtk_widget_show (bwin->priv->menubar);
-		bwin->priv->toolbar_shown = TRUE;
-	}
-
-	if (bwin->priv->toolbar_shown) {
-		/* reset toolbar hiding timer */
-		if (bwin->priv->fullscreen_timer_id)
-			g_source_remove (bwin->priv->fullscreen_timer_id);
-		bwin->priv->fullscreen_timer_id = g_timeout_add_seconds (BWIN_WINDOW_FULLSCREEN_POPUP_TIMER,
-									 (GSourceFunc) toolbar_hide_timeout_cb,
-									 bwin);
-	}
-	return FALSE;
-}
-
-gboolean
-toolbar_enter_notify_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event,
-			 BrowserWindow *bwin)
-{
-	bwin->priv->cursor_in_toolbar = TRUE;
-	return FALSE;
-}
-
-gboolean
-toolbar_leave_notify_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkEventCrossing *event, BrowserWindow *bwin)
-{
-	bwin->priv->cursor_in_toolbar = FALSE;
-	return FALSE;
-}
-
-static void
-window_fullscreen_cb (GtkToggleAction *action, BrowserWindow *bwin)
-{
-	if (gtk_toggle_action_get_active (action)) {
-		gtk_window_fullscreen (GTK_WINDOW (bwin));
-		browser_window_show_notice_printf (bwin, GTK_MESSAGE_INFO,
-						   "fullscreen-esc",
-						   "%s", _("Hit the Escape key to leave the fullscreen mode"));
-		gtk_widget_hide (bwin->priv->toolbar);
-		gtk_widget_hide (bwin->priv->menubar);
-		bwin->priv->toolbar_shown = FALSE;
-		bwin->priv->fullscreen_motion_sig_id = g_signal_connect (bwin, "motion-notify-event",
-									 G_CALLBACK (fullscreen_motion_notify_cb),
-									 NULL);
-		g_signal_connect (bwin->priv->toolbar, "enter-notify-event",
-				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
-		g_signal_connect (bwin->priv->toolbar, "leave-notify-event",
-				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
-		g_signal_connect (bwin->priv->menubar, "enter-notify-event",
-				  G_CALLBACK (toolbar_enter_notify_cb), bwin);
-		g_signal_connect (bwin->priv->menubar, "leave-notify-event",
-				  G_CALLBACK (toolbar_leave_notify_cb), bwin);
-	}
-	else {
-		gtk_window_unfullscreen (GTK_WINDOW (bwin));
-		g_signal_handler_disconnect (bwin, bwin->priv->fullscreen_motion_sig_id);
-		bwin->priv->fullscreen_motion_sig_id = 0;
-		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
-						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
-		g_signal_handlers_disconnect_by_func (bwin->priv->toolbar,
-						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
-		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
-						      G_CALLBACK (toolbar_enter_notify_cb), bwin);
-		g_signal_handlers_disconnect_by_func (bwin->priv->menubar,
-						      G_CALLBACK (toolbar_leave_notify_cb), bwin);
-
-		gtk_widget_show (bwin->priv->toolbar);
-		gtk_widget_show (bwin->priv->menubar);
-		bwin->priv->toolbar_shown = TRUE;
-
-		if (bwin->priv->fullscreen_timer_id) {
-			g_source_remove (bwin->priv->fullscreen_timer_id);
-			bwin->priv->fullscreen_timer_id = 0;
-		}
-	}
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
+	const gchar *pname;
+	pname = g_variant_get_string (state, NULL);
+	g_print ("Switching to perspective [%s]\n", pname);
+	browser_window_change_perspective (bwin, pname);
+	g_simple_action_set_state (action, state);
 }
 
 static gboolean
@@ -1016,76 +649,10 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 	return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
 }
 
-static gboolean
-window_state_event (GtkWidget *widget, GdkEventWindowState *event)
-{
-	BrowserWindow *bwin = BROWSER_WINDOW (widget);
-	gboolean (* window_state_event) (GtkWidget *, GdkEventWindowState *);
-	window_state_event = GTK_WIDGET_CLASS (parent_class)->window_state_event;
-
-	/* calling parent's method */
-	if (window_state_event)
-                window_state_event (widget, event);
-
-	if (event->changed_mask & GDK_WINDOW_STATE_FULLSCREEN) {
-                gboolean fullscreen;
-		GtkWidget *wid;
-
-		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/ToolBar");
-
-                fullscreen = event->new_window_state & GDK_WINDOW_STATE_FULLSCREEN;
-		bwin->priv->fullscreen = fullscreen;
-		if (fullscreen)
-			gtk_toolbar_set_style (GTK_TOOLBAR (wid), GTK_TOOLBAR_ICONS);
-		else
-			gtk_toolbar_set_style (GTK_TOOLBAR (wid), bwin->priv->toolbar_style);
-
-		wid = gtk_ui_manager_get_widget (bwin->priv->ui_manager, "/MenuBar");
-		if (fullscreen)
-			gtk_widget_hide (wid);
-		else
-			gtk_widget_show (wid);
-		
-		g_signal_emit (G_OBJECT (bwin), browser_window_signals[FULLSCREEN_CHANGED], 0, fullscreen);
-        }
-	return FALSE;
-}
-
 static void
-window_new_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+connection_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	BrowserWindow *nbwin;
-	TConnection *tcnc;
-	tcnc = browser_window_get_connection (bwin);
-	nbwin = browser_window_new (tcnc, NULL);
-	gtk_widget_show (GTK_WIDGET (nbwin));
-}
-
-static void
-window_new_with_cnc_cb (GtkAction *action, G_GNUC_UNUSED BrowserWindow *bwin)
-{
-	BrowserWindow *nbwin;
-	TConnection *tcnc;
-
-	tcnc = g_object_get_data (G_OBJECT (action), "tcnc");
-	g_return_if_fail (T_IS_CONNECTION (tcnc));	
-	nbwin = browser_window_new (tcnc, NULL);
-	gtk_widget_show (GTK_WIDGET (nbwin));
-}
-
-static void
-connection_open_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserWindow *bwin)
-{
-	LoginDialog *dialog;
-        dialog = login_dialog_new (NULL);
-
-	login_dialog_run_open_connection (dialog, TRUE, NULL);
-	gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-static void
-connection_properties_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	if (T_IS_VIRTUAL_CONNECTION (bwin->priv->tcnc)) {
 		GtkWidget *win;
 		TVirtualConnectionSpecs *specs;
@@ -1119,91 +686,12 @@ connection_properties_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
 }
 
 static void
-connection_bind_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
+connection_meta_update_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
-	GtkWidget *win;
-	gint res;
-
-	win = connection_binding_properties_new_create (bwin->priv->tcnc);
-	gtk_window_set_transient_for (GTK_WINDOW (win), GTK_WINDOW (bwin));
-	gtk_widget_show (win);
-
-	res = gtk_dialog_run (GTK_DIALOG (win));
-	gtk_widget_hide (win);
-	if (res == GTK_RESPONSE_OK) {
-		TConnection *tcnc;
-		GError *error = NULL;
-		tcnc = t_virtual_connection_new (connection_binding_properties_get_specs
-						 (CONNECTION_BINDING_PROPERTIES (win)), &error);
-		if (tcnc) {
-			BrowserWindow *bwin;
-			bwin = browser_window_new (tcnc, NULL);
-			gtk_widget_show (GTK_WIDGET (bwin));
-		}
-		else {
-			ui_show_error ((GtkWindow*) bwin,
-				       _("Could not open binding connection: %s"),
-				       error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-	gtk_widget_destroy (win);
-}
-
-static void
-connection_list_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
-	browser_connections_list_show (bwin->priv->tcnc);
-}
-
-static void
-connection_meta_update_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
+	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	t_connection_update_meta_data (bwin->priv->tcnc);
+	//gtk_widget_insert_action_group (GTK_WIDGET (bwin), "win", NULL);
 }
-
-static void
-about_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
-	GdkPixbuf *icon;
-        GtkWidget *dialog;
-        const gchar *authors[] = {
-                "Vivien Malerba <malerba@gnome-db.org> (current maintainer)",
-                NULL
-        };
-        const gchar *documenters[] = {
-                NULL
-        };
-        const gchar *translator_credits = "";
-
-	icon = gdk_pixbuf_new_from_resource ("/images/gda-browser.png", NULL);
-
-        dialog = gtk_about_dialog_new ();
-	gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database browser"));
-        gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
-        gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 2009 - 2014 GNOME Foundation");
-	gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
-        gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU General Public License");
-        gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
-        gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialog), authors);
-        gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialog), documenters);
-        gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialog), translator_credits);
-        gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialog), icon);
-        g_signal_connect (G_OBJECT (dialog), "response",
-                          G_CALLBACK (gtk_widget_destroy),
-                          dialog);
-        gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (bwin));
-        gtk_widget_show (dialog);
-	g_object_unref (icon);
-}
-
-#ifdef HAVE_GDU
-void
-manual_cb (G_GNUC_UNUSED GtkAction *action, BrowserWindow *bwin)
-{
-	ui_show_help (GTK_WINDOW (bwin), NULL);
-}
-#endif
 
 
 /**
@@ -1239,7 +727,6 @@ perspective_data_new (BrowserWindow *bwin, BrowserPerspectiveFactory *factory)
         pers->factory = factory;
         if (!pers->factory)
                 pers->factory = browser_get_default_factory ();
-        pers->page_number = -1;
         g_assert (pers->factory);
 	pers->perspective_widget = g_object_ref (pers->factory->perspective_create (bwin));
 
@@ -1254,9 +741,6 @@ perspective_data_free (PerspectiveData *pers)
 {
         if (pers->perspective_widget)
                 g_object_unref (pers->perspective_widget);
-	if (pers->customized_actions)
-		g_object_unref (pers->customized_actions);
-	g_free (pers->customized_ui);
         g_free (pers);
 }
 
@@ -1585,83 +1069,80 @@ browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective
 	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
 	g_return_if_fail (IS_BROWSER_PERSPECTIVE (bpers));
 
-	for (list = bwin->priv->perspectives; list; list = list->next) {
+	for (list = bwin->priv->pers_list; list; list = list->next) {
 		if (PERSPECTIVE_DATA (list->data)->perspective_widget == bpers) {
 			pdata = PERSPECTIVE_DATA (list->data);
 			break;
 		}
-	}
-	if (! pdata)
-		return;
-
-	/* cleanups */
-	if (pdata->customized_merge_id) {
-		gtk_ui_manager_remove_ui (bwin->priv->ui_manager, pdata->customized_merge_id);
-		pdata->customized_merge_id = 0;
-	}
-	if (pdata->customized_actions) {
-		gtk_ui_manager_remove_action_group (bwin->priv->ui_manager, pdata->customized_actions);
-		g_object_unref (pdata->customized_actions);
-		pdata->customized_actions = NULL;
-	}
-	g_free (pdata->customized_ui);
-	pdata->customized_ui = NULL;
-	gtk_ui_manager_ensure_update (bwin->priv->ui_manager);
-
-	if (actions_group) {
-		g_return_if_fail (GTK_IS_ACTION_GROUP (actions_group));
-		gtk_action_group_set_translation_domain (actions_group, GETTEXT_PACKAGE);
-		gtk_ui_manager_insert_action_group (bwin->priv->ui_manager, actions_group, 0);
-		pdata->customized_actions = g_object_ref (actions_group);
-	}
-	if (ui_info) {
-		pdata->customized_ui = g_strdup (ui_info);
-		pdata->customized_merge_id = gtk_ui_manager_add_ui_from_string (bwin->priv->ui_manager,
-										pdata->customized_ui,
-										-1, NULL);
 	}
 }
 
 /**
  * browser_window_change_perspective
  * @bwin: a #BrowserWindow
- * @perspective: the name of the perspective to change to
+ * @perspective_id: the ID of the perspective to change to
  *
  * Make @bwin switch to the perspective named @perspective
  *
  * Returns: a pointer to the #BrowserPerspective, or %NULL if not found
  */
 BrowserPerspective *
-browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective)
+browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective_id)
 {
 	BrowserPerspectiveFactory *bpf;
 	BrowserPerspective *bpers = NULL;
 	PerspectiveData *current_pdata;
 
 	g_return_val_if_fail (BROWSER_IS_WINDOW (bwin), NULL);
-	g_return_val_if_fail (perspective, NULL);
+	g_return_val_if_fail (perspective_id, NULL);
 
 	current_pdata = bwin->priv->current_perspective;
+	if (current_pdata) {
+		if (!strcmp (current_pdata->factory->id, perspective_id))
+			/* nothing to do, keep same perspective shown */
+			return current_pdata->perspective_widget;
 
-	bpf = browser_get_factory (perspective);
-	if (!bpf)
+		/* clean ups for current perspective */
+		browser_perspective_uncustomize (bwin->priv->current_perspective->perspective_widget,
+						 bwin->priv->toolbar, bwin->priv->header,
+						 G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+	}
+
+	/* find factory */
+	bpf = browser_get_factory (perspective_id);
+	if (!bpf) {
+		g_warning ("Could not identify perspective %s", perspective_id);
 		return NULL;
-	GList *actions, *list;
-	actions = gtk_action_group_list_actions (bwin->priv->perspectives_actions);
-	for (list = actions; list; list = list->next) {
-		GtkAction *action = (GtkAction *) list->data;
-		BrowserPerspectiveFactory *pf;
-		pf = BROWSER_PERSPECTIVE_FACTORY (g_object_get_data (G_OBJECT (action), "pers"));
-		if (pf == bpf) {
-			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
-			PerspectiveData *pdata = bwin->priv->current_perspective;
-			if (pdata && ! g_ascii_strcasecmp (pdata->factory->perspective_name, perspective))
-				bpers = pdata->perspective_widget;
-			break;
+	}
+
+	/* check if perspective already exists */
+	PerspectiveData *pdata = NULL;
+	bpers = (BrowserPerspective*) gtk_stack_get_child_by_name (bwin->priv->pers_stack, perspective_id);
+	if (! bpers) {
+		pdata = perspective_data_new (bwin, bpf);
+                bwin->priv->pers_list = g_slist_prepend (bwin->priv->pers_list, pdata);
+                gtk_stack_add_named (bwin->priv->pers_stack, GTK_WIDGET (pdata->perspective_widget),
+				     bpf->id);
+		bpers = pdata->perspective_widget;
+		gtk_widget_show_all (GTK_WIDGET (pdata->perspective_widget));
+	}
+	else {
+		GSList *list;
+		for (list = bwin->priv->pers_list; list; list = list->next) {
+			if (PERSPECTIVE_DATA (list->data)->factory == bpf) {
+				pdata = PERSPECTIVE_DATA (list->data);
+				break;
+			}
 		}
 	}
-	g_list_free (actions);
+	gtk_stack_set_visible_child (bwin->priv->pers_stack, GTK_WIDGET (bpers));
+	browser_perspective_customize (bpers,
+				       bwin->priv->toolbar, bwin->priv->header,
+				       G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+	bwin->priv->current_perspective = pdata;
 
+	/* setup for the new perspective */
+	/* TODO */
 	gchar *tmp;
 	tmp = g_markup_printf_escaped (_("The current perspective has changed to the '%s' perspective, you "
 					 "can switch back to previous perspective through the "
@@ -1700,9 +1181,12 @@ browser_window_is_fullscreen (BrowserWindow *bwin)
 void
 browser_window_set_fullscreen (BrowserWindow *bwin, gboolean fullscreen)
 {
-	GtkAction *action;
 	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
-	
-	action = gtk_action_group_get_action (bwin->priv->agroup, "WindowFullScreen");
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), fullscreen);
+
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "fullscreen");
+
+	GVariant *value;
+	value = g_variant_new_boolean (fullscreen);
+	g_action_change_state (action, value);
 }

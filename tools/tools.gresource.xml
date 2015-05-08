@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
+  <gresource prefix="/ui">
+    <file compressed="yes">menus.ui</file>
+  </gresource>
   <gresource prefix="/images">
     <file compressed="no">gda-browser-action.png</file>
   </gresource>
@@ -86,5 +89,14 @@
   </gresource>
   <gresource prefix="/images">
     <file compressed="no">gda-browser-view.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">transaction-start-symbolic.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">transaction-commit-symbolic.png</file>
+  </gresource>
+  <gresource prefix="/images">
+    <file compressed="no">transaction-rollback-symbolic.png</file>
   </gresource>
 </gresources>

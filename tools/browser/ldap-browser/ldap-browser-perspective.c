@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,8 +28,6 @@
 #include "../browser-page.h"
 #include "ldap-favorite-selector.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 /* 
  * Main static functions 
  */
@@ -39,13 +37,10 @@ static void ldap_browser_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 ldap_browser_perspective_perspective_init (BrowserPerspectiveIface *iface);
-static BrowserWindow       *ldap_browser_perspective_get_window (BrowserPerspective *perspective);
-static GtkActionGroup      *ldap_browser_perspective_get_actions_group (BrowserPerspective *perspective);
-static const gchar         *ldap_browser_perspective_get_actions_ui (BrowserPerspective *perspective);
-static void                 ldap_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page);
-static void                 ldap_browser_perspective_get_current_customization (BrowserPerspective *perspective,
-										GtkActionGroup **out_agroup,
-										const gchar **out_ui);
+static void                 ldap_browser_perspective_customize (BrowserPerspective *perspective,
+								GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+static void                 ldap_browser_perspective_uncustomize (BrowserPerspective *perspective,
+								  GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -55,6 +50,8 @@ struct _LdapBrowserPerspectivePrivate {
 	GtkWidget *favorites;
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
+
+	GArray *custom_parts;
 };
 
 GType
@@ -105,11 +102,8 @@ ldap_browser_perspective_class_init (LdapBrowserPerspectiveClass * klass)
 static void
 ldap_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
-	iface->i_get_window = ldap_browser_perspective_get_window;
-	iface->i_get_actions_group = ldap_browser_perspective_get_actions_group;
-	iface->i_get_actions_ui = ldap_browser_perspective_get_actions_ui;
-	iface->i_page_tab_label_change = ldap_browser_perspective_page_tab_label_change;
-	iface->i_get_current_customization = ldap_browser_perspective_get_current_customization;
+	iface->i_customize = ldap_browser_perspective_customize;
+        iface->i_uncustomize = ldap_browser_perspective_uncustomize;
 }
 
 
@@ -118,6 +112,7 @@ ldap_browser_perspective_init (LdapBrowserPerspective *perspective)
 {
 	perspective->priv = g_new0 (LdapBrowserPerspectivePrivate, 1);
 	perspective->priv->favorites_shown = TRUE;
+	perspective->priv->custom_parts = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
@@ -220,26 +215,29 @@ ldap_browser_perspective_dispose (GObject *object)
 }
 
 static void
-favorites_toggle_cb (GtkToggleAction *action, BrowserPerspective *bpers)
+favorites_toggle_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
+	/* @data is a LdapBrowserPerspective */
 	LdapBrowserPerspective *perspective;
-	perspective = LDAP_BROWSER_PERSPECTIVE (bpers);
-	perspective->priv->favorites_shown = gtk_toggle_action_get_active (action);
+	perspective = LDAP_BROWSER_PERSPECTIVE (data);
+	perspective->priv->favorites_shown = g_variant_get_boolean (state);
 	if (perspective->priv->favorites_shown)
 		gtk_widget_show (perspective->priv->favorites);
 	else
 		gtk_widget_hide (perspective->priv->favorites);
+	g_simple_action_set_state (action, state);
 }
 
 static void
-ldab_ldap_entries_page_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
+ldab_ldap_entries_page_add_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	/* @data is a LdapBrowserPerspective */
         GtkWidget *page, *tlabel, *button;
         LdapBrowserPerspective *perspective;
         TConnection *tcnc;
         gint i;
 
-        perspective = LDAP_BROWSER_PERSPECTIVE (bpers);
+        perspective = LDAP_BROWSER_PERSPECTIVE (data);
         tcnc = browser_window_get_connection (perspective->priv->bwin);
 
         page = ldap_entries_page_new (tcnc, NULL);
@@ -262,14 +260,15 @@ ldab_ldap_entries_page_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspecti
 }
 
 static void
-ldab_ldap_classes_page_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
+ldab_ldap_classes_page_add_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	/* @data is a LdapBrowserPerspective */
         GtkWidget *page, *tlabel, *button;
         LdapBrowserPerspective *perspective;
         TConnection *tcnc;
         gint i;
 
-        perspective = LDAP_BROWSER_PERSPECTIVE (bpers);
+        perspective = LDAP_BROWSER_PERSPECTIVE (data);
         tcnc = browser_window_get_connection (perspective->priv->bwin);
 
         page = ldap_classes_page_new (tcnc, NULL);
@@ -292,14 +291,15 @@ ldab_ldap_classes_page_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspecti
 }
 
 static void
-ldab_search_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
+ldab_search_add_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	/* @data is a LdapBrowserPerspective */
         GtkWidget *page, *tlabel, *button;
         LdapBrowserPerspective *perspective;
         TConnection *tcnc;
         gint i;
 
-        perspective = LDAP_BROWSER_PERSPECTIVE (bpers);
+        perspective = LDAP_BROWSER_PERSPECTIVE (data);
         tcnc = browser_window_get_connection (perspective->priv->bwin);
 
 	i = gtk_notebook_get_current_page (GTK_NOTEBOOK (perspective->priv->notebook));
@@ -328,86 +328,108 @@ ldab_search_add_cb (G_GNUC_UNUSED GtkAction *action, BrowserPerspective *bpers)
         gtk_widget_grab_focus (page);
 }
 
-static const GtkToggleActionEntry ui_toggle_actions [] =
-	{
-		{ "LdapTFavoritesShow", NULL, N_("_Show Favorites"), "F9", N_("Show or hide favorites"), G_CALLBACK (favorites_toggle_cb), FALSE }
-	};
-
-static GtkActionEntry ui_actions[] = {
-	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-        { "LdapLdapEntriesPageNew", /*BROWSER_STOCK_LDAP_ENTRIES*/ NULL, N_("_New LDAP Entries Browser"), "<control>T", N_("Open a new LDAP entries browser"),
-          G_CALLBACK (ldab_ldap_entries_page_add_cb)},
-        { "LdapLdapClassesPageNew", NULL, N_("_New LDAP Classes Browser"), "<control>C", N_("Open a new LDAP classes browser"),
-	  G_CALLBACK (ldab_ldap_classes_page_add_cb)},
-        { "LdapSearchNew", GTK_STOCK_FIND, N_("_New LDAP Search"), "<control>G", N_("Open a new LDAP search form"),
-	  G_CALLBACK (ldab_search_add_cb)},
+static GActionEntry win_entries[] = {
+        { "show-favorites", NULL, NULL, "true", favorites_toggle_cb },
+        { "entries-page-new", ldab_ldap_entries_page_add_cb, NULL, NULL, NULL },
+	{ "classes-page-new", ldab_ldap_classes_page_add_cb, NULL, NULL, NULL },
+	{ "search-page-new", ldab_search_add_cb, NULL, NULL, NULL },
 };
 
-static const gchar *ui_actions_info =
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-	"    <menu name='Display' action='Display'>"
-	"      <menuitem name='LdapTFavoritesShow' action='LdapTFavoritesShow'/>"
-        "    </menu>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='LDAP' action='LDAP'>"
-        "        <menuitem name='LdapSearchNew' action= 'LdapSearchNew'/>"
-        "        <menuitem name='LdapLdapEntriesPageNew' action= 'LdapLdapEntriesPageNew'/>"
-        "        <menuitem name='LdapLdapClassesPageNew' action= 'LdapLdapClassesPageNew'/>"
-        "      </menu>"
-        "    </placeholder>"
-        "  </menubar>"
-	"  <toolbar name='ToolBar'>"
-        "    <separator/>"
-        "    <toolitem action='LdapSearchNew'/>"
-        "    <toolitem action='LdapLdapEntriesPageNew'/>"
-        "  </toolbar>"
-        "</ui>";
-
-static GtkActionGroup *
-ldap_browser_perspective_get_actions_group (BrowserPerspective *bpers)
+static void
+ldap_browser_perspective_customize (BrowserPerspective *perspective,
+				    GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("LdapBrowserActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
+	g_print ("%s ()\n", __FUNCTION__);
+	LdapBrowserPerspective *persp;
+	persp = LDAP_BROWSER_PERSPECTIVE (perspective);
 
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	gtk_action_group_add_toggle_actions (agroup, ui_toggle_actions, G_N_ELEMENTS (ui_toggle_actions),
-					     bpers);
-	GtkAction *action;
-	action = gtk_action_group_get_action (agroup, "LdapTFavoritesShow");
-	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
-				      LDAP_BROWSER_PERSPECTIVE (bpers)->priv->favorites_shown);	
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
 
-	return agroup;
-}
+	/* add perspective's actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 perspective);
 
-static const gchar *
-ldap_browser_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
-{
-	return ui_actions_info;
+	g_assert (! persp->priv->custom_parts);
+	persp->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "user-bookmarks-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Show favorites"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.show-favorites");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
+
+	GdkPixbuf *pix;
+	GtkWidget *img;
+	pix = ui_get_pixbuf_icon (UI_ICON_LDAP_ORGANIZATION);
+	img = gtk_image_new_from_pixbuf (pix);
+	gtk_widget_show (img);
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (titem), img);
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("New LDAP entries tab"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.entries-page-new");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
+
+	pix = ui_get_pixbuf_icon (UI_ICON_LDAP_CLASS_STRUCTURAL);
+	img = gtk_image_new_from_pixbuf (pix);
+	gtk_widget_show (img);
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (titem), img);
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("New LDAP classes tab"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.classes-page-new");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "edit-find");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("New LDAP search tab"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.search-page-new");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (persp->priv->custom_parts, titem);
 }
 
 static void
-ldap_browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page)
+ldap_browser_perspective_uncustomize (BrowserPerspective *perspective,
+				      GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	LdapBrowserPerspective *bpers;
-	GtkWidget *tab_label;
-	GtkWidget *close_btn;
-	
-	bpers = LDAP_BROWSER_PERSPECTIVE (perspective);
-	tab_label = browser_page_get_tab_label (page, &close_btn);
-	if (tab_label) {
-		gtk_notebook_set_tab_label (GTK_NOTEBOOK (bpers->priv->notebook),
-					    GTK_WIDGET (page), tab_label);
-		g_signal_connect (close_btn, "clicked",
-				  G_CALLBACK (close_button_clicked_cb), page);
-		
-		tab_label = browser_page_get_tab_label (page, NULL);
-		gtk_notebook_set_menu_label (GTK_NOTEBOOK (bpers->priv->notebook),
-					     GTK_WIDGET (page), tab_label);
+	g_print ("%s ()\n", __FUNCTION__);
+	LdapBrowserPerspective *persp;
+	persp = LDAP_BROWSER_PERSPECTIVE (perspective);
+
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* remove perspective's actions */
+	guint i;
+	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
+		GActionEntry *entry;
+		entry = &win_entries [i];
+		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
 	}
+
+	/* cleanups, headerbar and toolbar */
+	g_assert (persp->priv->custom_parts);
+	for (i = 0; i < persp->priv->custom_parts->len; i++) {
+		GObject *obj;
+		obj = g_array_index (persp->priv->custom_parts, GObject*, i);
+		if (GTK_IS_WIDGET (obj))
+			gtk_widget_destroy (GTK_WIDGET (obj));
+		else
+			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
+	}
+	g_array_free (persp->priv->custom_parts, TRUE);
+	persp->priv->custom_parts = NULL;
 }
+
 
 /**
  * ldap_browser_perspective_display_ldap_entry
@@ -505,29 +527,4 @@ ldap_browser_perspective_display_ldap_class (LdapBrowserPerspective *bpers, cons
 		gtk_notebook_set_tab_detachable (GTK_NOTEBOOK (bpers->priv->notebook), ti,
 						 TRUE);
 	}
-}
-
-static void
-ldap_browser_perspective_get_current_customization (BrowserPerspective *perspective,
-						    GtkActionGroup **out_agroup,
-						    const gchar **out_ui)
-{
-	LdapBrowserPerspective *bpers;
-	GtkWidget *page_contents;
-
-	bpers = LDAP_BROWSER_PERSPECTIVE (perspective);
-	page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK (bpers->priv->notebook),
-						   gtk_notebook_get_current_page (GTK_NOTEBOOK (bpers->priv->notebook)));
-	if (IS_BROWSER_PAGE (page_contents)) {
-		*out_agroup = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		*out_ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
-	}
-}
-
-static BrowserWindow *
-ldap_browser_perspective_get_window (BrowserPerspective *perspective)
-{
-	LdapBrowserPerspective *bpers;
-	bpers = LDAP_BROWSER_PERSPECTIVE (perspective);
-	return bpers->priv->bwin;
 }

@@ -289,7 +289,7 @@ update_display (ConnectionBindingProperties *cprop)
 	button = gtk_button_new ();
 	label = ui_make_tab_label_with_icon (_("Add binding"), "list-add", FALSE, NULL);
 	gtk_container_add (GTK_CONTAINER (button), label);
-	arrow = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_NONE);
+	arrow = gtk_image_new_from_icon_name ("go-next-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_box_pack_start (GTK_BOX (label), arrow, FALSE, FALSE, 0);
 	g_object_set (G_OBJECT (button), "relief", GTK_RELIEF_NONE, NULL);
 	gtk_grid_attach (cprop->priv->layout_grid, button, 0, top, 2, 1);

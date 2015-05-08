@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@ struct _UiFormGrid
 struct _UiFormGridClass
 {
 	GtkBoxClass       parent_class;
+
 	/* signals */
 	void             (*data_set_changed) (UiFormGrid *fg);
 };
@@ -76,7 +77,7 @@ void              ui_formgrid_set_sample_size     (UiFormGrid *formgrid, gint sa
 GdauiRawGrid     *ui_formgrid_get_grid_widget     (UiFormGrid *formgrid);
 
 void              ui_formgrid_set_connection      (UiFormGrid *formgrid, TConnection *bcnc);
-GtkUIManager     *ui_formgrid_get_ui_manager      (UiFormGrid *formgrid);
+void              ui_formgrid_set_refresh_func    (UiFormGrid *formgrid, GCallback callback, gpointer user_data);
 
 G_END_DECLS
 

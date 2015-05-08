@@ -69,6 +69,10 @@
 #ifdef IS_BROWSER
   #include <libgda-ui/libgda-ui.h>
   #include <browser/browser-window.h>
+  #include <browser/login-dialog.h>
+  #include <browser/browser-connections-list.h>
+  #include <browser/ui-support.h>
+  #include <browser/connection-binding-properties.h>
 #endif
 
 /* options */
@@ -172,13 +176,80 @@ free_strings_array (GArray *array)
 	g_array_free (array, TRUE);
 }
 
+#ifdef IS_BROWSER
+static gchar *
+double_first_underscore (const gchar *label)
+{
+	gchar *str, *dptr;
+	const gchar *sptr;
+	gboolean first = TRUE;
+	str = g_new (gchar, strlen (label) + 2);
+	for (sptr = label, dptr = str;
+	     *sptr;
+	     sptr++, dptr++) {
+		*dptr = *sptr;
+		if ((*sptr == '_') && first) {
+			dptr ++;
+			*dptr = '_';
+			first = FALSE;
+		}
+	}
+	*dptr = 0;
+	return str;
+}
+
+static void
+update_newwin_for_opened_cnc (void)
+{
+	GMenuModel *menumodel;
+	menumodel = (GMenuModel*) g_object_get_data (G_OBJECT (t_app_get ()), "win-menu");
+	if (menumodel) {
+		GMenu *menu;
+		menu = G_MENU (menumodel);
+		g_menu_remove_all (menu);
+
+		GSList *cnclist;
+		for (cnclist = t_app_get_all_connections (); cnclist; cnclist = cnclist->next) {
+			TConnection *tcnc = T_CONNECTION (cnclist->data);
+			gchar *dble, *tmp, *tmpname;
+			dble = double_first_underscore (t_connection_get_name (tcnc));
+			tmpname = g_strdup_printf (_("Connection '%s'"), dble);
+			g_free (dble);
+			tmp = g_strdup_printf ("app.newwin_cnc::%s", t_connection_get_name (tcnc));
+			g_menu_append (menu, tmpname, tmp);
+			g_free (tmpname);
+			g_free (tmp);
+		}
+	}
+}
+
+static void
+cnc_name_changed_cb (G_GNUC_UNUSED TConnection *tcnc, G_GNUC_UNUSED GParamSpec *pspec, G_GNUC_UNUSED gpointer data)
+{
+	update_newwin_for_opened_cnc ();
+}
+#endif /* IS_BROWSER */
+
 static void
 cnc_added_cb (TApp *app, TConnection *tcnc)
 {
 	gda_signal_connect (tcnc, "status-changed",
 			    G_CALLBACK (cnc_status_changed_cb), NULL,
 			    NULL, 0, NULL);
+#ifdef IS_BROWSER
+	gda_signal_connect (tcnc, "notify::name",
+			    G_CALLBACK (cnc_name_changed_cb), NULL,
+			    NULL, 0, NULL);
+	update_newwin_for_opened_cnc ();
+#endif
+}
 
+static void
+cnc_removed_cb (TApp *app, TConnection *tcnc)
+{
+#ifdef IS_BROWSER
+	update_newwin_for_opened_cnc ();
+#endif
 }
 
 GThread *term_console_thread = NULL;
@@ -421,6 +492,9 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	gda_signal_connect (application, "connection-added",
 			    G_CALLBACK (cnc_added_cb), NULL,
 			    NULL, 0, NULL);
+	gda_signal_connect (application, "connection-removed",
+			    G_CALLBACK (cnc_removed_cb), NULL,
+			    NULL, 0, NULL);
 
 	/* open connections if specified */
 	if (! nocnc) {
@@ -482,46 +556,29 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	if (ui) {
 		GtkBuilder *builder;
 		builder = gtk_builder_new ();
-		gtk_builder_add_from_string (builder,
-					     "<interface>"
-					     "  <menu id='app-menu'>"
-					     "    <section>"
-					     "      <item>"
-					     "        <attribute name='label' translatable='yes'>_New Window</attribute>"
-					     "        <attribute name='action'>app.new</attribute>"
-					     "        <attribute name='accel'>&lt;Primary&gt;n</attribute>"
-					     "      </item>"
-					     "    </section>"
-					     "    <section>"
-					     "      <item>"
-					     "        <attribute name='label' translatable='yes'>_About Bloatpad</attribute>"
-					     "        <attribute name='action'>app.about</attribute>"
-					     "      </item>"
-					     "    </section>"
-					     "    <section>"
-					     "      <item>"
-					     "        <attribute name='label' translatable='yes'>_Quit</attribute>"
-					     "        <attribute name='action'>app.quit</attribute>"
-					     "        <attribute name='accel'>&lt;Primary&gt;q</attribute>"
-					     "      </item>"
-					     "    </section>"
-					     "  </menu>"
-					     "  <menu id='menubar'>"
-					     "    <submenu label='_Edit'>"
-					     "      <item label='_Copy' action='win.copy'/>"
-					     "      <item label='_Paste' action='win.paste'/>"
-					     "    </submenu>"
-					     "  </menu>"
-					     "</interface>", -1, NULL);
+		gtk_builder_add_from_resource (builder, "/ui/menus.ui", NULL);
 		gtk_application_set_app_menu (GTK_APPLICATION (t_app_get ()),
 					      G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
 		gtk_application_set_menubar (GTK_APPLICATION (t_app_get ()),
 					     G_MENU_MODEL (gtk_builder_get_object (builder, "menubar")));
+		g_object_set_data_full (G_OBJECT (t_app_get ()), "win-menu",
+					gtk_builder_get_object (builder, "win-menu"), g_object_unref);
+		g_object_set_data_full (G_OBJECT (t_app_get ()), "perspectives",
+					gtk_builder_get_object (builder, "perspectives"), g_object_unref);
 		g_object_unref (builder);
+
+		update_newwin_for_opened_cnc ();
 
 		t_app_add_feature (T_APP_BROWSER);
 		if (!is_interactive)
 			t_app_remove_feature (T_APP_TERM_CONSOLE);
+
+		/* hack */
+		TConnection *tcnc = T_CONNECTION (t_app_get_all_connections ()->data);
+		gchar *tmp;
+		tmp = g_strdup_printf ("%s_AAA_B", t_connection_get_name (tcnc));
+		t_connection_set_name (tcnc, tmp);
+		g_free (tmp);
 	}
 #endif
 
@@ -529,6 +586,33 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 	g_strfreev (argv);
 	return exit_status;
 }
+
+#ifdef IS_BROWSER
+
+static void about_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+#ifdef HAVE_GDU
+static void manual_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+#endif
+static void quit_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void connection_open_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void connection_bind_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void connection_list_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void window_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+static void window_new_cnc_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
+
+static GActionEntry app_entries[] = {
+	{ "opencnc", connection_open_cb, NULL, NULL, NULL },
+	{ "bind", connection_bind_cb, NULL, NULL, NULL },
+	{ "newwin", window_new_cb, NULL, NULL, NULL },
+	{ "newwin_cnc", window_new_cnc_cb, "s", NULL, NULL },
+	{ "listcnc", connection_list_cb, NULL, NULL, NULL },
+	{ "about", about_cb, NULL, NULL, NULL },
+  #ifdef HAVE_GDU
+	{ "help", manual_cb, NULL, NULL, NULL },
+  #endif
+	{ "quit", quit_cb, NULL, NULL, NULL },
+};
+#endif
 
 int
 main (int argc, char *argv[])
@@ -552,7 +636,7 @@ main (int argc, char *argv[])
   #endif
 #endif
 
-	 g_set_application_name ("Bloatpad");
+	 g_set_application_name ("GdaBrowser");
 
 	/* TApp initialization */
 	GApplication *app;
@@ -561,6 +645,11 @@ main (int argc, char *argv[])
 
 	g_application_set_inactivity_timeout (app, 0);
 	g_signal_connect (app, "command-line", G_CALLBACK (command_line), NULL);
+#ifdef IS_BROWSER
+	g_action_map_add_action_entries (G_ACTION_MAP (app),
+					 app_entries, G_N_ELEMENTS (app_entries),
+					 app);
+#endif
 
 	g_application_run (app, argc, argv);
 
@@ -593,3 +682,180 @@ output_data_model (GdaDataModel *model)
 	g_free (str);
 	t_app_store_data_model (model, T_LAST_DATA_MODEL_NAME);
 }
+
+#ifdef IS_BROWSER
+static GtkWindow *
+get_window (GtkApplication *app)
+{
+	GList *appwinlist;
+	appwinlist = gtk_application_get_windows (app);
+	if (appwinlist)
+		return GTK_WINDOW (appwinlist->data);
+	else
+		return NULL;
+}
+
+static void
+about_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	static GtkWidget *dialog = NULL;
+	if (dialog)
+		gtk_window_present (GTK_WINDOW (dialog));
+	else {
+		GdkPixbuf *icon;
+		const gchar *authors[] = {
+			"Vivien Malerba <malerba@gnome-db.org> (current maintainer)",
+			NULL
+		};
+		const gchar *documenters[] = {
+			NULL
+		};
+		const gchar *translator_credits = "";
+
+		icon = gdk_pixbuf_new_from_resource ("/images/gda-browser.png", NULL);
+
+		dialog = gtk_about_dialog_new ();
+		gtk_about_dialog_set_program_name (GTK_ABOUT_DIALOG (dialog), _("Database browser"));
+		gtk_about_dialog_set_version (GTK_ABOUT_DIALOG (dialog), PACKAGE_VERSION);
+		gtk_about_dialog_set_copyright (GTK_ABOUT_DIALOG (dialog), "(C) 2009 - 2015 GNOME Foundation");
+		gtk_about_dialog_set_comments (GTK_ABOUT_DIALOG (dialog), _("Database access services for the GNOME Desktop"));
+		gtk_about_dialog_set_license (GTK_ABOUT_DIALOG (dialog), "GNU General Public License");
+		gtk_about_dialog_set_website (GTK_ABOUT_DIALOG (dialog), "http://www.gnome-db.org");
+		gtk_about_dialog_set_authors (GTK_ABOUT_DIALOG (dialog), authors);
+		gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (dialog), documenters);
+		gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (dialog), translator_credits);
+		gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (dialog), icon);
+		g_signal_connect (G_OBJECT (dialog), "response",
+				  G_CALLBACK (gtk_widget_destroy),
+				  dialog);
+		g_object_add_weak_pointer ((GObject*) dialog, (gpointer) &dialog);
+		gtk_window_set_transient_for (GTK_WINDOW (dialog), get_window (GTK_APPLICATION (data)));
+		gtk_widget_show (dialog);
+		g_object_unref (icon);
+	}
+}
+
+#ifdef HAVE_GDU
+static void
+manual_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	ui_show_help (get_window (GTK_APPLICATION (data)), NULL);
+}
+#endif
+
+static void
+quit_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	/* confirmation dialog */
+	GtkWidget *dialog;
+	GSList *connections;
+	GtkWindow *win;
+	win = get_window (GTK_APPLICATION (data));
+
+	connections = t_app_get_all_connections ();
+	if (connections && connections->next)
+		dialog = gtk_message_dialog_new_with_markup (win, GTK_DIALOG_MODAL,
+							     GTK_MESSAGE_QUESTION,
+							     GTK_BUTTONS_YES_NO,
+							     "<b>%s</b>\n<small>%s</small>",
+							     _("Do you want to quit the application?"),
+							     _("all the connections will be closed."));
+	else
+		dialog = gtk_message_dialog_new_with_markup (win, GTK_DIALOG_MODAL,
+							     GTK_MESSAGE_QUESTION,
+							     GTK_BUTTONS_YES_NO,
+							     "<b>%s</b>\n<small>%s</small>",
+							     _("Do you want to quit the application?"),
+							     _("the connection will be closed."));
+	
+
+	gboolean doquit;
+	doquit = (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES) ? TRUE : FALSE;
+	gtk_widget_destroy (dialog);
+	if (doquit)
+		t_app_request_quit ();
+}
+
+static void
+connection_open_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	LoginDialog *dialog;
+        dialog = login_dialog_new (NULL);
+
+	login_dialog_run_open_connection (dialog, TRUE, NULL);
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+static void
+connection_bind_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	BrowserWindow *bwin;
+	bwin = BROWSER_WINDOW (gtk_application_get_active_window (GTK_APPLICATION (data)));
+	TConnection *tcnc;
+	tcnc = browser_window_get_connection (bwin);
+
+	GtkWidget *win;
+	win = connection_binding_properties_new_create (tcnc);
+	gtk_window_set_transient_for (GTK_WINDOW (win), GTK_WINDOW (bwin));
+	gtk_widget_show (win);
+
+	gint res;
+	res = gtk_dialog_run (GTK_DIALOG (win));
+	gtk_widget_hide (win);
+	if (res == GTK_RESPONSE_OK) {
+		TConnection *tcnc;
+		GError *error = NULL;
+		tcnc = t_virtual_connection_new (connection_binding_properties_get_specs
+						 (CONNECTION_BINDING_PROPERTIES (win)), &error);
+		if (tcnc) {
+			BrowserWindow *bwin;
+			bwin = browser_window_new (tcnc, NULL);
+			gtk_widget_show (GTK_WIDGET (bwin));
+		}
+		else {
+			ui_show_error ((GtkWindow*) bwin,
+				       _("Could not open binding connection: %s"),
+				       error && error->message ? error->message : _("No detail"));
+			g_clear_error (&error);
+		}
+	}
+	gtk_widget_destroy (win);
+}
+
+static void
+connection_list_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	BrowserWindow *bwin;
+	bwin = BROWSER_WINDOW (gtk_application_get_active_window (GTK_APPLICATION (data)));
+	browser_connections_list_show (browser_window_get_connection (bwin));
+}
+
+static void
+window_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	BrowserWindow *nbwin;
+	TConnection *tcnc;
+	BrowserWindow *bwin;
+	bwin = BROWSER_WINDOW (gtk_application_get_active_window (GTK_APPLICATION (data)));
+	tcnc = browser_window_get_connection (bwin);
+	nbwin = browser_window_new (tcnc, NULL);
+	gtk_widget_show (GTK_WIDGET (nbwin));
+}
+
+static void
+window_new_cnc_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
+{
+	const gchar *cncname;
+	cncname = g_variant_get_string (parameter, NULL);
+
+	TConnection *tcnc = t_connection_get_by_name (cncname);
+	if (tcnc) {
+		BrowserWindow *nbwin;
+		nbwin = browser_window_new (tcnc, NULL);
+		gtk_widget_show (GTK_WIDGET (nbwin));
+	}
+	else
+		g_print ("ERROR for cnc named %s\n", cncname);
+}
+
+#endif /* IS_BROWSER */

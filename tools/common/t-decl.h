@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2014 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +22,7 @@
 typedef struct _TApp TApp;
 typedef struct _TContext TContext;
 
+#define T_CNC_NAME_PREFIX "cnc"
 #define T_DEFAULT_LDAP_ATTRIBUTES "cn"
 #define T_LAST_DATA_MODEL_NAME "_"
 

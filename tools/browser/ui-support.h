@@ -60,7 +60,7 @@ GtkWidget           *ui_make_tab_label_with_pixbuf (const gchar *label,
 						    GtkWidget **out_close_button);
 
 /*
- * icons, see browser_get_pixbuf_icon() for the associated icons
+ * icons, use with ui_get_pixbuf_icon() for the associated icons
  */
 typedef enum {
         UI_ICON_BOOKMARK,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +38,10 @@ struct _BrowserPerspectiveIface {
 
 	/* virtual table */
 	BrowserWindow       *(* i_get_window) (BrowserPerspective *perspective);
+	void                 (* i_customize) (BrowserPerspective *perspective, GtkToolbar *toolbar,
+					      GtkHeaderBar *header, GMenu *menu);
+	void                 (* i_uncustomize) (BrowserPerspective *perspective, GtkToolbar *toolbar,
+						GtkHeaderBar *header, GMenu *menu);
 	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
 	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
 	void                 (* i_get_current_customization) (BrowserPerspective *perspective,
@@ -59,11 +63,11 @@ struct _BrowserPerspectiveIface {
 
 GType           browser_perspective_get_type          (void) G_GNUC_CONST;
 
-GtkActionGroup *browser_perspective_get_actions_group (BrowserPerspective *perspective);
-const gchar    *browser_perspective_get_actions_ui    (BrowserPerspective *perspective);
-void            browser_perspective_get_current_customization (BrowserPerspective *perspective,
-							       GtkActionGroup **out_agroup,
-							       const gchar **out_ui);
+void            browser_perspective_customize             (BrowserPerspective *perspective,
+							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+void            browser_perspective_uncustomize           (BrowserPerspective *perspective,
+							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+
 void            browser_perspective_page_tab_label_change (BrowserPerspective *perspective,
 							   BrowserPage *page);
 
@@ -74,6 +78,7 @@ void            browser_perspective_declare_notebook (BrowserPerspective *perspe
  * All perspectives information
  */
 typedef struct {
+	const gchar          *id;
 	const gchar          *perspective_name;
 	const gchar          *menu_shortcut;
 	BrowserPerspective *(*perspective_create) (BrowserWindow *);

@@ -82,6 +82,11 @@ void           t_app_setup               (TAppFeatures features);
 void           t_app_add_feature         (TAppFeatures feature);
 void           t_app_remove_feature      (TAppFeatures feature);
 
+#ifdef HAVE_GTK_CLASSES
+GMenu         *t_app_get_app_menu        (void);
+GMenu         *t_app_get_win_menu        (void);
+#endif
+
 void           t_app_cleanup             (void);
 TApp          *t_app_get                 (void);
 void           t_app_request_quit        (void);

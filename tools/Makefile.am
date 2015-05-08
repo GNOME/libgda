@@ -103,6 +103,7 @@ endif
 # resources
 RESOURCES=\
 	tools.gresource.xml \
+	resources/menus.ui \
 	resources/gda-browser-action.png \
 	resources/gda-browser-auth-big.png \
 	resources/gda-browser-auth.png \

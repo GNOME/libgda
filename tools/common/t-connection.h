@@ -85,8 +85,9 @@ TConnection        *t_connection_get_by_name            (const gchar *name);
 GdaConnection      *t_connection_get_cnc                (TConnection *tcnc);
 void                t_connection_set_name               (TConnection *tcnc, const gchar *name);
 const gchar        *t_connection_get_name               (TConnection *tcnc);
+const gchar        *t_connection_get_information        (TConnection *tcnc);
 gchar              *t_connection_get_long_name          (TConnection *tcnc);
-const GdaDsnInfo   *t_connection_get_information        (TConnection *tcnc);
+const GdaDsnInfo   *t_connection_get_dsn_information    (TConnection *tcnc);
 
 gboolean            t_connection_is_busy                (TConnection *tcnc, gchar **out_reason);
 gboolean            t_connection_is_virtual             (TConnection *tcnc);

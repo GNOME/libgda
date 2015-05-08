@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -21,9 +21,12 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include "dummy-perspective.h"
+#include "dummy-perspective.gresources.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
+struct _DummyPerspectivePriv {
+	GArray *custom_parts;
+	gint    custom_menu_pos;
+};
 /* 
  * Main static functions 
  */
@@ -33,9 +36,10 @@ static void dummy_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface);
-static BrowserWindow       *dummy_perspective_get_window (BrowserPerspective *perspective);
-static GtkActionGroup      *dummy_perspective_get_actions_group (BrowserPerspective *perspective);
-static const gchar         *dummy_perspective_get_actions_ui (BrowserPerspective *perspective);
+static void                 dummy_perspective_customize (BrowserPerspective *perspective,
+							 GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+static void                 dummy_perspective_uncustomize (BrowserPerspective *perspective,
+							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -83,14 +87,16 @@ dummy_perspective_class_init (DummyPerspectiveClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = dummy_perspective_dispose;
+
+	/* force loading of rerources */
+	dummy_perspective_get_resource ();
 }
 
 static void
 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
-	iface->i_get_window = dummy_perspective_get_window;
-	iface->i_get_actions_group = dummy_perspective_get_actions_group;
-	iface->i_get_actions_ui = dummy_perspective_get_actions_ui;
+	iface->i_customize = dummy_perspective_customize;
+	iface->i_uncustomize = dummy_perspective_uncustomize;
 }
 
 
@@ -98,6 +104,10 @@ static void
 dummy_perspective_init (DummyPerspective *perspective)
 {
 	GtkWidget *wid;
+
+	perspective->priv = g_new0 (DummyPerspectivePriv, 1);
+	perspective->priv->custom_parts = NULL;
+	perspective->priv->custom_menu_pos = -1;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 	
@@ -115,10 +125,12 @@ dummy_perspective_init (DummyPerspective *perspective)
  * Creates new #BrowserPerspective widget which 
  */
 BrowserPerspective *
-dummy_perspective_new (G_GNUC_UNUSED BrowserWindow *bwin)
+dummy_perspective_new (BrowserWindow *bwin)
 {
 	BrowserPerspective *bpers;
 	bpers = (BrowserPerspective*) g_object_new (TYPE_DUMMY_PERSPECTIVE, NULL);
+	DummyPerspective *dpers;
+	dpers = (DummyPerspective *) bpers;
 
 	/* if there is a notebook to store pages, use: 
 	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
@@ -138,69 +150,141 @@ dummy_perspective_dispose (GObject *object)
 
 	perspective = DUMMY_PERSPECTIVE (object);
 	browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
+	if (perspective->priv) {
+		g_free (perspective->priv);
+		perspective->priv = NULL;
+	}
 
 	/* parent class */
 	parent_class->dispose (object);
 }
 
 static void
-dummy_add_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserPerspective *bpers)
+dummy1_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
-	g_print ("Add something...\n");
+	/* @data is a DummyPerspective */
+	if (g_variant_get_boolean (state))
+		g_print ("%s () called, checked\n", __FUNCTION__);
+	else
+		g_print ("%s () called, not checked\n", __FUNCTION__);
+	g_simple_action_set_state (action, state);
 }
 
 static void
-dummy_list_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED BrowserPerspective *bpers)
+dummy2_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
 {
-	g_print ("List something...\n");
+	/* @data is a DummyPerspective */
+	g_print ("%s () called\n", __FUNCTION__);
 }
 
-static GtkActionEntry ui_actions[] = {
-        { "DummyMenu", NULL, "_Dummy", NULL, "DummyMenu", NULL },
-        { "DummyItem1", GTK_STOCK_ADD, "_Dummy Add", NULL, "Add something",
-          G_CALLBACK (dummy_add_cb)},
-        { "DummyItem2", GTK_STOCK_REMOVE, "_Dummy List", NULL, "List something",
-          G_CALLBACK (dummy_list_cb)},
+static GActionEntry win_entries[] = {
+	{ "dummy1", NULL, NULL, "false", dummy1_cb },
+	{ "dummy2", dummy2_cb, NULL, NULL, NULL },
 };
 
-static const gchar *ui_actions_info =
-        "<ui>"
-        "  <menubar name='MenuBar'>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='Dummy' action='DummyMenu'>"
-        "        <menuitem name='DummyItem1' action= 'DummyItem1'/>"
-        "        <menuitem name='DummyItem2' action= 'DummyItem2'/>"
-        "      </menu>"
-	"    </placeholder>"
-        "  </menubar>"
-        "  <toolbar name='ToolBar'>"
-        "    <separator/>"
-        "    <toolitem action='DummyItem1'/>"
-        "    <toolitem action='DummyItem2'/>"
-        "  </toolbar>"
-        "</ui>";
-
-static GtkActionGroup *
-dummy_perspective_get_actions_group (BrowserPerspective *bpers)
+static void
+dummy_perspective_customize (BrowserPerspective *perspective,
+			     GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("DummyActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), bpers);
-	
-	return agroup;
+	g_print ("%s ()\n", __FUNCTION__);
+	DummyPerspective *dpers;
+	dpers = DUMMY_PERSPECTIVE (perspective);
+
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* add perspective's actions */
+	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
+					 win_entries, G_N_ELEMENTS (win_entries),
+					 dpers);
+
+	g_assert (! dpers->priv->custom_parts);
+	dpers->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
+	g_assert (dpers->priv->custom_menu_pos == -1);
+
+	/* add menu */
+	GtkBuilder *builder;
+	builder = gtk_builder_new ();
+	gtk_builder_add_from_resource (builder, "/dummy-perspective/perspective-menus.ui", NULL);
+	GMenuModel *menumodel;
+	menumodel = G_MENU_MODEL (gtk_builder_get_object (builder, "menubar"));
+	dpers->priv->custom_menu_pos = g_menu_model_get_n_items (G_MENU_MODEL (menu));
+	g_menu_append_submenu (menu, "Dummy", menumodel);
+	g_object_unref (builder);
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "send-to-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), "Dummy 1 option");
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.dummy1");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (dpers->priv->custom_parts, titem);
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "process-stop-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), "Dummy 2 action");
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.dummy2");
+	gtk_widget_show (GTK_WIDGET (titem));
+	g_array_append_val (dpers->priv->custom_parts, titem);
+
+	/* add to header bar */
+	GtkWidget *img, *button;
+	button = gtk_menu_button_new ();
+	g_array_append_val (dpers->priv->custom_parts, button);
+	img = gtk_image_new_from_icon_name ("start-here-symbolic", GTK_ICON_SIZE_MENU);
+	gtk_button_set_image (GTK_BUTTON (button), img);
+	gtk_header_bar_pack_end (GTK_HEADER_BAR (header), button);
+	gtk_widget_show_all (button);
+
+	GMenu *smenu;
+	smenu = g_menu_new ();
+	gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (button), G_MENU_MODEL (smenu));
+
+	GMenuItem *mitem;
+	mitem = g_menu_item_new ("Dummy 1", "win.dummy1");
+	g_menu_insert_item (smenu, -1, mitem);
+	mitem = g_menu_item_new ("Dummy 2", "win.dummy2");
+	g_menu_insert_item (smenu, -1, mitem);
 }
 
-static const gchar *
-dummy_perspective_get_actions_ui (G_GNUC_UNUSED BrowserPerspective *bpers)
+static void
+dummy_perspective_uncustomize (BrowserPerspective *perspective,
+			       GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
 {
-	return ui_actions_info;
-}
+	g_print ("%s ()\n", __FUNCTION__);
+	DummyPerspective *dpers;
+	dpers = DUMMY_PERSPECTIVE (perspective);
 
-static BrowserWindow *
-dummy_perspective_get_window (BrowserPerspective *perspective)
-{
-	DummyPerspective *bpers;
-	bpers = DUMMY_PERSPECTIVE (perspective);
-	return NULL;/*bpers->priv->bwin;*/
+	BrowserWindow *bwin;
+	bwin = browser_perspective_get_window (perspective);
+
+	/* remove perspective's actions */
+	guint i;
+	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
+		GActionEntry *entry;
+		entry = &win_entries [i];
+		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
+	}
+
+	/* cleanups, headerbar and toolbar */
+	g_assert (dpers->priv->custom_parts);
+	for (i = 0; i < dpers->priv->custom_parts->len; i++) {
+		GObject *obj;
+		obj = g_array_index (dpers->priv->custom_parts, GObject*, i);
+		if (GTK_IS_WIDGET (obj))
+			gtk_widget_destroy (GTK_WIDGET (obj));
+		else
+			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
+	}
+	g_array_free (dpers->priv->custom_parts, TRUE);
+	dpers->priv->custom_parts = NULL;
+
+	/* cleanups, menu */
+	if (dpers->priv->custom_menu_pos >= 0) {
+		g_menu_remove (menu, dpers->priv->custom_menu_pos);
+		dpers->priv->custom_menu_pos = -1;
+	}
 }

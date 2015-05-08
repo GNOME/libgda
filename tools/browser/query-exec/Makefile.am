@@ -21,9 +21,14 @@ marshal.h: marshal.list $(GLIB_GENMARSHAL)
 marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_qe_marshal > $@
 
+GENFILES = \
+	marshal.c \
+	marshal.h
+
+$(libperspective_la_OBJECTS): $(GENFILES)
+
 libperspective_la_SOURCES = \
-        marshal.c \
-        marshal.h \
+        $(GENFILES) \
 	query-console-page.c \
 	query-console-page.h \
 	query-editor.c \
@@ -44,5 +49,4 @@ EXTRA_DIST= \
 	marshal.list
 
 CLEANFILES = \
-	marshal.h \
-	marshal.c
+	$(GENFILES)
