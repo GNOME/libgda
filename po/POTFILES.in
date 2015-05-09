@@ -335,3 +335,4 @@ tools/common/t-utils.c
 tools/common/t-virtual-connection.c
 tools/common/web-server.c
 tools/misc/gda-list-server-op.c
+[type: gettext/glade]tools/resources/menus.ui
