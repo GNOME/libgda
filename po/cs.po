@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-03-17 10:37+0000\n"
-"PO-Revision-Date: 2015-03-17 12:24+0100\n"
+"POT-Creation-Date: 2015-05-11 10:07+0000\n"
+"PO-Revision-Date: 2015-05-11 17:10+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -23,13 +23,13 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../control-center/dsn-config.c:85
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:383
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:380
 msgid "_Delete"
 msgstr "O_dstranit"
 
-#: ../control-center/dsn-config.c:88 ../tools/browser/browser-window.c:269
+#: ../control-center/dsn-config.c:88
 #: ../tools/browser/data-manager/data-favorite-selector.c:400
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:377
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:374
 msgid "_Properties"
 msgstr "_Vlastnosti"
 
@@ -120,7 +120,7 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../libgda/gda-config.c:549 ../libgda/gda-config.c:1084
 #: ../libgda/gda-config.c:1195 ../libgda/gda-config.c:1253
 #: ../libgda/gda-config.c:1329 ../libgda/gda-connection.c:1471
-#: ../libgda/gda-data-model.c:2472 ../libgda/gda-data-model.c:2480
+#: ../libgda/gda-data-model.c:2429 ../libgda/gda-data-model.c:2437
 #: ../libgda/gda-data-model-dir.c:384 ../libgda/gda-data-model-import.c:1720
 #: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
 #: ../libgda/gda-data-pivot.c:1412 ../libgda/gda-data-pivot.c:1525
@@ -176,11 +176,9 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
-#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:859
-#: ../tools/browser/browser-window.c:873 ../tools/browser/browser-window.c:887
-#: ../tools/browser/browser-window.c:1108
-#: ../tools/browser/browser-window.c:1146
-#: ../tools/browser/browser-window.c:1412
+#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:592
+#: ../tools/browser/browser-window.c:607 ../tools/browser/browser-window.c:622
+#: ../tools/browser/browser-window.c:675 ../tools/browser/browser-window.c:896
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:424
 #: ../tools/browser/canvas/browser-canvas-fkey.c:474
 #: ../tools/browser/data-manager/analyser.c:278
@@ -190,12 +188,12 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/data-manager/data-favorite-selector.c:621
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/ldap-browser/entry-properties.c:247
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:433
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:439
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:430
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:436
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:190
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:600
-#: ../tools/browser/ldap-browser/ldap-search-page.c:373
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:597
+#: ../tools/browser/ldap-browser/ldap-search-page.c:370
 #: ../tools/browser/login-dialog.c:230
 #: ../tools/browser/query-exec/query-console-page.c:762
 #: ../tools/browser/query-exec/query-console-page.c:792
@@ -204,9 +202,9 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:266
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
-#: ../tools/browser/query-exec/query-favorite-selector.c:712
-#: ../tools/browser/query-exec/query-result.c:288
-#: ../tools/browser/query-exec/query-result.c:505
+#: ../tools/browser/query-exec/query-favorite-selector.c:708
+#: ../tools/browser/query-exec/query-result.c:286
+#: ../tools/browser/query-exec/query-result.c:482
 #: ../tools/browser/schema-browser/favorite-selector.c:170
 #: ../tools/browser/schema-browser/favorite-selector.c:352
 #: ../tools/browser/schema-browser/relations-diagram.c:244
@@ -215,12 +213,12 @@ msgstr "Nelze spustit prohlížecí program"
 #: ../tools/browser/schema-browser/table-info.c:539
 #: ../tools/browser/schema-browser/table-info.c:841
 #: ../tools/browser/schema-browser/table-info.c:958
-#: ../tools/browser/schema-browser/table-preferences.c:693
-#: ../tools/browser/schema-browser/table-preferences.c:766
-#: ../tools/browser/ui-formgrid.c:650 ../tools/browser/ui-formgrid.c:762
-#: ../tools/common/t-app.c:2897 ../tools/common/t-connection.c:294
-#: ../tools/common/t-connection.c:436 ../tools/common/t-connection.c:1177
-#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1995
+#: ../tools/browser/schema-browser/table-preferences.c:692
+#: ../tools/browser/schema-browser/table-preferences.c:765
+#: ../tools/browser/ui-formgrid.c:616 ../tools/browser/ui-formgrid.c:728
+#: ../tools/common/t-app.c:2895 ../tools/common/t-connection.c:299
+#: ../tools/common/t-connection.c:439 ../tools/common/t-connection.c:1212
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1999
 #: ../tools/misc/gda-list-server-op.c:68
 #: ../tools/misc/gda-list-server-op.c:126
 #, c-format
@@ -352,7 +350,7 @@ msgstr ""
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:608
-#: ../control-center/gdaui-dsn-editor.c:202
+#: ../control-center/gdaui-dsn-editor.c:200
 msgid "Connection's parameters"
 msgstr "Parametry připojení"
 
@@ -385,19 +383,19 @@ msgstr "Připraveno na přidání nového zdroje dat"
 msgid "Data source _name:"
 msgstr "_Název zdroje dat:"
 
-#: ../control-center/gdaui-dsn-editor.c:151
+#: ../control-center/gdaui-dsn-editor.c:150
 msgid "_System wide data source:"
 msgstr "Celo_systémový zdroj dat:"
 
-#: ../control-center/gdaui-dsn-editor.c:162
+#: ../control-center/gdaui-dsn-editor.c:161
 msgid "_Provider:"
 msgstr "_Poskytovatel:"
 
-#: ../control-center/gdaui-dsn-editor.c:178
+#: ../control-center/gdaui-dsn-editor.c:176
 msgid "_Description:"
 msgstr "Pop_is:"
 
-#: ../control-center/gdaui-dsn-editor.c:194
+#: ../control-center/gdaui-dsn-editor.c:192
 msgid ""
 "<span foreground='red'>The database provider used by this data source is not "
 "available,\n"
@@ -408,7 +406,7 @@ msgstr ""
 "úprava atributů zdroje dat je zakázána.</span>"
 
 #. connection's authentication
-#: ../control-center/gdaui-dsn-editor.c:216 ../libgda/gda-config.c:1662
+#: ../control-center/gdaui-dsn-editor.c:214 ../libgda/gda-config.c:1662
 #: ../tools/browser/auth-dialog.c:265 ../tools/common/t-config-info.c:206
 #: ../tools/common/t-config-info.c:366
 msgid "Authentication"
@@ -442,9 +440,9 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/common-pict.c:368
 #: ../libgda-ui/data-entries/plugins/common-pict.c:495
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:200
-#: ../libgda-ui/gdaui-basic-form.c:2158 ../libgda-ui/gdaui-raw-grid.c:1787
-#: ../libgda-ui/gdaui-raw-grid.c:2140 ../libgda-ui/gdaui-rt-editor.c:693
-#: ../libgda-ui/gdaui-server-operation.c:1082
+#: ../libgda-ui/gdaui-basic-form.c:2158 ../libgda-ui/gdaui-raw-grid.c:1786
+#: ../libgda-ui/gdaui-raw-grid.c:2139 ../libgda-ui/gdaui-rt-editor.c:693
+#: ../libgda-ui/gdaui-server-operation.c:1099
 #: ../tools/browser/auth-dialog.c:192
 #: ../tools/browser/connection-binding-properties.c:171
 #: ../tools/browser/connection-binding-properties.c:207
@@ -464,7 +462,7 @@ msgid "Error:"
 msgstr "Chyba:"
 
 #: ../control-center/main.c:63 ../libgda-ui/gdaui-basic-form.c:2159
-#: ../libgda-ui/gdaui-server-operation.c:1081
+#: ../libgda-ui/gdaui-server-operation.c:1098
 msgid "_Ok"
 msgstr "_Budiž"
 
@@ -480,7 +478,7 @@ msgstr "Nebyly vytvořeny žádné platné informace zdroje dat"
 msgid "Database sources control center"
 msgstr "Ovládací centrum databázových zdrojů"
 
-#: ../control-center/main.c:208 ../tools/browser/browser-window.c:1185
+#: ../control-center/main.c:208
 msgid "Database access services for the GNOME Desktop"
 msgstr "Služby pro přístupu k databázím pro pracovní prostředí GNOME"
 
@@ -488,11 +486,11 @@ msgstr "Služby pro přístupu k databázím pro pracovní prostředí GNOME"
 msgid "Datasource access control center"
 msgstr "Ovládací centrum přístupu ke zdrojům dat"
 
-#: ../control-center/menus.ui.h:1 ../tools/browser/browser-window.c:273
+#: ../control-center/menus.ui.h:1
 msgid "_Quit"
 msgstr "U_končit"
 
-#: ../control-center/menus.ui.h:2 ../tools/browser/browser-window.c:282
+#: ../control-center/menus.ui.h:2
 msgid "_About"
 msgstr "O _aplikaci"
 
@@ -611,8 +609,8 @@ msgid "Can't instantiate provider '%s'"
 msgstr "Nelze vytvořit instanci poskytovatele „%s“"
 
 #: ../libgda/gda-config.c:1659 ../libgda/gda-data-model-dsn-list.c:109
-#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2593
-#: ../tools/common/t-app.c:2961 ../tools/common/t-config-info.c:70
+#: ../libgda/gda-data-model-dsn-list.c:110 ../tools/common/t-app.c:2591
+#: ../tools/common/t-app.c:2959 ../tools/common/t-config-info.c:70
 #: ../tools/common/t-config-info.c:131 ../tools/common/t-config-info.c:314
 #: ../tools/common/t-config-info.c:430
 msgid "Provider"
@@ -621,9 +619,9 @@ msgstr "Poskytovatel"
 #: ../libgda/gda-config.c:1660 ../libgda/gda-data-model-dsn-list.c:115
 #: ../libgda/gda-data-model-dsn-list.c:116
 #: ../tools/browser/data-manager/data-source-editor.c:166
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:307
-#: ../tools/common/t-app.c:2320 ../tools/common/t-app.c:2389
-#: ../tools/common/t-app.c:2592 ../tools/common/t-config-info.c:71
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:304
+#: ../tools/common/t-app.c:2318 ../tools/common/t-app.c:2387
+#: ../tools/common/t-app.c:2590 ../tools/common/t-config-info.c:71
 #: ../tools/common/t-config-info.c:145 ../tools/common/t-config-info.c:328
 msgid "Description"
 msgstr "Popis"
@@ -642,7 +640,7 @@ msgstr "Seznam nainstalovaných poskytovatelů"
 
 #: ../libgda/gda-config.c:1839 ../libgda/gda-data-model-dsn-list.c:129
 #: ../libgda/gda-data-model-dsn-list.c:130
-#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2963
+#: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2961
 msgid "Username"
 msgstr "Uživatelské jméno"
 
@@ -681,7 +679,7 @@ msgid "Authentication string to use"
 msgstr "Ověřovací řetězec, který se má použít"
 
 #: ../libgda/gda-connection.c:328 ../libgda-ui/data/server_operation.xml.h:5
-#: ../libgda-ui/gdaui-server-operation.c:767
+#: ../libgda-ui/gdaui-server-operation.c:784
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
@@ -737,7 +735,7 @@ msgid "Datasource configuration error: no provider specified"
 msgstr "Chyba nastavení zdroje dat: není určen žádný poskytovatel"
 
 #: ../libgda/gda-connection.c:1133 ../tools/browser/auth-dialog.c:384
-#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:764
+#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:779
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "Chybný připojovací řetězec „%s“"
@@ -819,8 +817,8 @@ msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Sledování stavu transakcí připojení: pro %s neexistuje žádná transakce"
 
 #: ../libgda/gda-data-access-wrapper.c:636
-#: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:439
-#: ../libgda/gda-data-model-array.c:670 ../libgda/gda-data-model-bdb.c:657
+#: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:437
+#: ../libgda/gda-data-model-array.c:668 ../libgda/gda-data-model-bdb.c:657
 #: ../libgda/gda-data-model-bdb.c:761 ../libgda/gda-data-model-bdb.c:790
 #: ../libgda/gda-data-model-dir.c:770 ../libgda/gda-data-model-dir.c:869
 #: ../libgda/gda-data-model-dir.c:911 ../libgda/gda-data-model-dsn-list.c:311
@@ -888,8 +886,8 @@ msgstr "Výpočet rozdílů přerušen na základě signálu"
 msgid "Whether data model can be modified"
 msgstr "Zda může být datový model upravován"
 
-#: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
-#: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:781
+#: ../libgda/gda-data-model-array.c:507 ../libgda/gda-data-model-array.c:659
+#: ../libgda/gda-data-model-array.c:746 ../libgda/gda-data-model-dir.c:781
 #: ../libgda/gda-data-model-dir.c:955 ../libgda/gda-data-model-dir.c:1321
 #: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3638
 #: ../libgda/gda-data-proxy.c:3676 ../libgda/gda-data-select.c:1887
@@ -898,8 +896,8 @@ msgstr "Zda může být datový model upravován"
 msgid "Row %d out of range (0-%d)"
 msgstr "Řádek %d je mimo rozsah (0 - %d)"
 
-#: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
-#: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:784
+#: ../libgda/gda-data-model-array.c:511 ../libgda/gda-data-model-array.c:662
+#: ../libgda/gda-data-model-array.c:749 ../libgda/gda-data-model-dir.c:784
 #: ../libgda/gda-data-model-dir.c:958 ../libgda/gda-data-model-dir.c:1324
 #: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3641
 #: ../libgda/gda-data-proxy.c:3679 ../libgda/gda-data-select.c:1890
@@ -908,25 +906,25 @@ msgstr "Řádek %d je mimo rozsah (0 - %d)"
 msgid "Row %d not found (empty data model)"
 msgstr "Řádek %d nebyl nalezen (prázdný datový model)"
 
-#: ../libgda/gda-data-model-array.c:654
+#: ../libgda/gda-data-model-array.c:652
 msgid "No row in data model"
 msgstr "V datovém modelu není žádný řádek"
 
-#: ../libgda/gda-data-model-array.c:686
+#: ../libgda/gda-data-model-array.c:684
 msgid "Data model has no data"
 msgstr "Datový model nemá žádná data"
 
-#: ../libgda/gda-data-model-array.c:741 ../libgda/gda-data-model-array.c:785
-#: ../libgda/gda-data-model-array.c:824 ../libgda/gda-data-model-array.c:859
+#: ../libgda/gda-data-model-array.c:739 ../libgda/gda-data-model-array.c:783
+#: ../libgda/gda-data-model-array.c:822 ../libgda/gda-data-model-array.c:857
 msgid "Attempting to modify a read-only data model"
 msgstr "Pokus o úpravu datového module pouze ke čtení"
 
-#: ../libgda/gda-data-model-array.c:791 ../libgda/gda-data-model-array.c:830
-#: ../libgda/gda-data-model.c:864
+#: ../libgda/gda-data-model-array.c:789 ../libgda/gda-data-model-array.c:828
+#: ../libgda/gda-data-model.c:843
 msgid "Too many values in list"
 msgstr "Příliš mnoho hodnot v seznamu"
 
-#: ../libgda/gda-data-model-array.c:884
+#: ../libgda/gda-data-model-array.c:882
 msgid "Row not found in data model"
 msgstr "Řádek nebyl v datovém modelu nalezen"
 
@@ -960,98 +958,98 @@ msgstr "Očekávána hodnota GdaBinary, obdržena %s"
 msgid "Key modification is not supported"
 msgstr "Úprava klíčů není podporována"
 
-#: ../libgda/gda-data-model.c:705
+#: ../libgda/gda-data-model.c:690
 msgid "Data model does not support getting individual value"
 msgstr "Datový model nepodporuje získávání samostatných hodnot"
 
-#: ../libgda/gda-data-model.c:748 ../libgda/gda-data-model.c:758
+#: ../libgda/gda-data-model.c:733 ../libgda/gda-data-model.c:743
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Hodnota vrácená datovým modelem je neplatného typu „%s“"
 
-#: ../libgda/gda-data-model.c:755
+#: ../libgda/gda-data-model.c:740
 msgid "Data model returned invalid NULL value"
 msgstr "Datový model vrátil neplatnou prázdnou (NULL) hodnotu"
 
-#: ../libgda/gda-data-model.c:825
+#: ../libgda/gda-data-model.c:806
 msgid "Data model does not support setting individual value"
 msgstr "Datový model nepodporuje nastavování samostatných hodnot"
 
-#: ../libgda/gda-data-model.c:883
+#: ../libgda/gda-data-model.c:862
 msgid "Data model does not support setting values"
 msgstr "Datový model nepodporuje nastavování hodnot"
 
-#: ../libgda/gda-data-model.c:1047 ../libgda/gda-data-model.c:1083
+#: ../libgda/gda-data-model.c:1014 ../libgda/gda-data-model.c:1048
 msgid "Data model does not support row append"
 msgstr "Datový model nepodporuje přidávání řádků"
 
-#: ../libgda/gda-data-model.c:1074
+#: ../libgda/gda-data-model.c:1039
 msgid "Model does not allow row insertion"
 msgstr "Model neumožňuje vkládání řádků"
 
-#: ../libgda/gda-data-model.c:1111
+#: ../libgda/gda-data-model.c:1074
 msgid "Model does not allow row deletion"
 msgstr "Model neumožňuje mazání řádků"
 
-#: ../libgda/gda-data-model.c:1120
+#: ../libgda/gda-data-model.c:1083
 msgid "Data model does not support row removal"
 msgstr "Datový model nepodporuje odstraňování řádků"
 
-#: ../libgda/gda-data-model.c:1299 ../libgda/gda-data-model.c:1338
-#: ../libgda/gda-data-model.c:1352
+#: ../libgda/gda-data-model.c:1256 ../libgda/gda-data-model.c:1295
+#: ../libgda/gda-data-model.c:1309
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr "Parametr „%s“ musí obsahovat řetězcovou hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model.c:1361 ../libgda/gda-data-model.c:1371
-#: ../libgda/gda-data-model.c:1381 ../libgda/gda-data-model.c:1423
-#: ../libgda/gda-data-model.c:1468 ../libgda/gda-data-model.c:1478
-#: ../libgda/gda-data-model.c:1488 ../libgda/gda-data-model.c:1498
-#: ../libgda/gda-data-model.c:1526 ../libgda/gda-data-model.c:1536
-#: ../libgda/gda-data-model.c:1637
+#: ../libgda/gda-data-model.c:1318 ../libgda/gda-data-model.c:1328
+#: ../libgda/gda-data-model.c:1338 ../libgda/gda-data-model.c:1380
+#: ../libgda/gda-data-model.c:1425 ../libgda/gda-data-model.c:1435
+#: ../libgda/gda-data-model.c:1445 ../libgda/gda-data-model.c:1455
+#: ../libgda/gda-data-model.c:1483 ../libgda/gda-data-model.c:1493
+#: ../libgda/gda-data-model.c:1594
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr "Parametr „%s“ musí obsahovat pravdivostní hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model.c:1516
+#: ../libgda/gda-data-model.c:1473
 #, c-format
 msgid "The '%s' parameter must hold an integer value, ignored."
 msgstr "Parametr „%s“ musí obsahovat celočíselnou hodnotu, ignorováno."
 
-#: ../libgda/gda-data-model.c:1558
+#: ../libgda/gda-data-model.c:1515
 #, c-format
 msgid "Unknown GdaDataModelIOFormat %d value"
 msgstr "Neznámá hodnota %d pro GdaDataModelIOFormat"
 
-#: ../libgda/gda-data-model.c:1644
+#: ../libgda/gda-data-model.c:1601
 #, c-format
 msgid "File '%s' already exists"
 msgstr "Soubor „%s“ již existuje"
 
-#: ../libgda/gda-data-model.c:1821
+#: ../libgda/gda-data-model.c:1778
 msgid "Exported Data"
 msgstr "Exportovaná data"
 
-#: ../libgda/gda-data-model.c:1969
+#: ../libgda/gda-data-model.c:1926
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Nelze získat datový typ sloupce (typ je UNKNOWN - neznámý nebo není určen)"
 
-#: ../libgda/gda-data-model.c:2055
+#: ../libgda/gda-data-model.c:2012
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "Očekávána značka <gda_array_data>, obdržena <%s>"
 
-#: ../libgda/gda-data-model.c:2127
+#: ../libgda/gda-data-model.c:2084
 msgid "Could not get an iterator for source data model"
 msgstr "Nelze získat iterátor pro model zdrojových dat"
 
-#: ../libgda/gda-data-model.c:2144
+#: ../libgda/gda-data-model.c:2101
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Neexistující sloupec v modelu zdrojových dat: %d"
 
-#: ../libgda/gda-data-model.c:2158
+#: ../libgda/gda-data-model.c:2115
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -1060,7 +1058,7 @@ msgstr ""
 "Cílový sloupec %d nemůže být prázdný (NULL), což ale neodpovídá modelu "
 "zdrojových dat"
 
-#: ../libgda/gda-data-model.c:2168
+#: ../libgda/gda-data-model.c:2125
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -1069,27 +1067,27 @@ msgstr ""
 "Cílový sloupec %d má typ gda (%s) nekompatibilní s typem zdrojového sloupce "
 "%d (%s)"
 
-#: ../libgda/gda-data-model.c:2264
+#: ../libgda/gda-data-model.c:2221
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr "Nelze převést „%s“ z typu GDA %s na typ GDA %s"
 
-#: ../libgda/gda-data-model.c:2471
+#: ../libgda/gda-data-model.c:2428
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Nelze vypsat atributy datového modelu: %s"
 
-#: ../libgda/gda-data-model.c:2479
+#: ../libgda/gda-data-model.c:2436
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Nelze vypsat obsah datového modelu: %s"
 
-#: ../libgda/gda-data-model.c:2700
+#: ../libgda/gda-data-model.c:2657
 msgid "Data model does not support backward cursor move"
 msgstr "Datový model nepodporuje zpětný posun kurzoru"
 
-#: ../libgda/gda-data-model.c:2999 ../tools/browser/gdaui-entry-import.c:212
-#: ../tools/browser/query-exec/query-result.c:231
+#: ../libgda/gda-data-model.c:2956 ../tools/browser/gdaui-entry-import.c:212
+#: ../tools/browser/query-exec/query-result.c:229
 #, c-format
 msgid "%d row"
 msgid_plural "%d rows"
@@ -1097,7 +1095,7 @@ msgstr[0] "%d řádek"
 msgstr[1] "%d řádky"
 msgstr[2] "%d řádků"
 
-#: ../libgda/gda-data-model.c:3001
+#: ../libgda/gda-data-model.c:2958
 #, c-format
 msgid "0 row"
 msgstr "0 řádků"
@@ -1158,7 +1156,7 @@ msgid "Cannot remove file '%s'"
 msgstr "Nelze odstranit soubor „%s“"
 
 #: ../libgda/gda-data-model-dsn-list.c:103
-#: ../libgda/gda-data-model-dsn-list.c:104 ../tools/common/t-app.c:2591
+#: ../libgda/gda-data-model-dsn-list.c:104 ../tools/common/t-app.c:2589
 #: ../tools/common/t-config-info.c:428
 msgid "DSN"
 msgstr "DSN"
@@ -1365,7 +1363,7 @@ msgid "Could not get information from source data model"
 msgstr "Nelze získat informace z modelu zdrojových dat"
 
 #: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3081
-#: ../tools/common/t-app.c:3114
+#: ../tools/common/t-app.c:3112
 msgid "Could not create virtual connection"
 msgstr "Nelze vytvořit virtuální připojení"
 
@@ -1809,54 +1807,54 @@ msgstr "Nelze najít popis pro sloupec s názvem „%s“"
 msgid "Could not get the internal schema's version"
 msgstr "Nelze získat verzi interního schématu"
 
-#: ../libgda/gda-meta-store.c:2778 ../libgda/gda-meta-store.c:2900
+#: ../libgda/gda-meta-store.c:2778 ../libgda/gda-meta-store.c:2898
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Více než jeden příkaz SQL"
 
-#: ../libgda/gda-meta-store.c:2807 ../libgda/gda-meta-store.c:2928
+#: ../libgda/gda-meta-store.c:2807 ../libgda/gda-meta-store.c:2926
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parametr „%s“ se v příkazu nevyskytuje"
 
-#: ../libgda/gda-meta-store.c:2824 ../libgda/gda-meta-store.c:2942
+#: ../libgda/gda-meta-store.c:2824 ../libgda/gda-meta-store.c:2940
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Pro parametr „%s“ není nastavená žádná hodnota"
 
-#: ../libgda/gda-meta-store.c:3531
+#: ../libgda/gda-meta-store.c:3527
 msgid "Data models should have the same number of columns"
 msgstr "Datový model by měl mít stejný počet sloupců"
 
-#: ../libgda/gda-meta-store.c:3594 ../libgda/gda-meta-store.c:4647
-#: ../libgda/gda-meta-store.c:4750
+#: ../libgda/gda-meta-store.c:3590 ../libgda/gda-meta-store.c:4643
+#: ../libgda/gda-meta-store.c:4746
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Neznámý databázový objekt „%s“"
 
-#: ../libgda/gda-meta-store.c:3610
+#: ../libgda/gda-meta-store.c:3606
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Nelze nastavit hodnotu pro parametr „%s“"
 
-#: ../libgda/gda-meta-store.c:3639
+#: ../libgda/gda-meta-store.c:3635
 msgid "Could not create SELECT statement"
 msgstr "Nelze vytvořit příkaz SELECT"
 
-#: ../libgda/gda-meta-store.c:3654
+#: ../libgda/gda-meta-store.c:3650
 msgid "Could not create DELETE statement"
 msgstr "Nelze vytvořit příkaz DELETE"
 
-#: ../libgda/gda-meta-store.c:3704
+#: ../libgda/gda-meta-store.c:3700
 msgid "A transaction has already been started"
 msgstr "Transakce již byla spuštěna"
 
-#: ../libgda/gda-meta-store.c:4091
+#: ../libgda/gda-meta-store.c:4087
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Atribut „%s“ nebyl nalezen"
 
-#: ../libgda/gda-meta-store.c:4094
+#: ../libgda/gda-meta-store.c:4090
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
@@ -1864,12 +1862,12 @@ msgstr[0] "Atribut „%s“ má %d hodnotu"
 msgstr[1] "Atribut „%s“ má %d hodnoty"
 msgstr[2] "Atribut „%s“ má %d hodnot"
 
-#: ../libgda/gda-meta-store.c:4141
+#: ../libgda/gda-meta-store.c:4137
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Atributy s názvem začínajícím na „_“ jsou rezervované pro interní použití"
 
-#: ../libgda/gda-meta-store.c:4171
+#: ../libgda/gda-meta-store.c:4167
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1877,16 +1875,16 @@ msgstr ""
 "Nelze začít transakci, protože je již spuštěná jiná, což by mohlo vést k "
 "problémům s atributy GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:4290
+#: ../libgda/gda-meta-store.c:4286
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Nelze analyzovat popis XML vlastního databázového objektu, který se má přidat"
 
-#: ../libgda/gda-meta-store.c:4304
+#: ../libgda/gda-meta-store.c:4300
 msgid "Missing custom database object name"
 msgstr "Schází název vlastního databázového objektu"
 
-#: ../libgda/gda-meta-store.c:4309
+#: ../libgda/gda-meta-store.c:4305
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1894,46 +1892,46 @@ msgstr ""
 "Vlastní databázové objekty s názvem začínajícím „_“ jsou rezervované pro "
 "interní použití"
 
-#: ../libgda/gda-meta-store.c:4407
+#: ../libgda/gda-meta-store.c:4403
 msgid "Another object with the same name already exists"
 msgstr "Již existuje jiný objekt se shodným názvem"
 
-#: ../libgda/gda-meta-store.c:4509
+#: ../libgda/gda-meta-store.c:4505
 msgid "Missing table name in meta data context"
 msgstr "Schází název tabulky v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4536
+#: ../libgda/gda-meta-store.c:4532
 msgid "Missing column name in meta data context"
 msgstr "Schází název sloupce v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4552
+#: ../libgda/gda-meta-store.c:4548
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Schází podmínka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4577
+#: ../libgda/gda-meta-store.c:4573
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Chybná podmínka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4594
+#: ../libgda/gda-meta-store.c:4590
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Neznámý název sloupce „%s“ v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4616
+#: ../libgda/gda-meta-store.c:4612
 msgid "Unknown table in meta data context"
 msgstr "Neznámá tabulka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4889 ../libgda/gda-meta-store.c:4919
-#: ../libgda/gda-meta-store.c:5108 ../libgda/gda-meta-store.c:5137
+#: ../libgda/gda-meta-store.c:4885 ../libgda/gda-meta-store.c:4915
+#: ../libgda/gda-meta-store.c:5104 ../libgda/gda-meta-store.c:5133
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Nelze najít objekt pojmenovaný „%s“"
 
-#: ../libgda/gda-meta-store.c:4987 ../libgda/gda-meta-store.c:5006
+#: ../libgda/gda-meta-store.c:4983 ../libgda/gda-meta-store.c:5002
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Nelze najít sloupec „%s“ v tabulce „%s“"
@@ -2083,7 +2081,7 @@ msgstr ""
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Očekávána značka <%s>, obdržena <%s>"
 
-#: ../libgda/gda-server-operation.c:1600 ../libgda/gda-server-operation.c:2333
+#: ../libgda/gda-server-operation.c:1600 ../libgda/gda-server-operation.c:2327
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
@@ -2094,25 +2092,25 @@ msgstr ""
 msgid "Missing attribute named 'path'"
 msgstr "Schází atribut s názvem „path“"
 
-#: ../libgda/gda-server-operation.c:2219 ../libgda/gda-server-operation.c:2229
+#: ../libgda/gda-server-operation.c:2215 ../libgda/gda-server-operation.c:2225
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Nesprávný identifikátor hodnoty SQL"
 
-#: ../libgda/gda-server-operation.c:2527
+#: ../libgda/gda-server-operation.c:2521
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Schází vyžadovaná hodnota pro „%s“"
 
-#: ../libgda/gda-server-operation.c:2804
+#: ../libgda/gda-server-operation.c:2798
 msgid "Unspecified table name"
 msgstr "Neurčený název tabulky"
 
-#: ../libgda/gda-server-operation.c:2844
+#: ../libgda/gda-server-operation.c:2838
 msgid "Invalid type"
 msgstr "Neplatný typ"
 
-#: ../libgda/gda-server-operation.c:2949
+#: ../libgda/gda-server-operation.c:2943
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Operace CREATE TABLE není databázovým serverem podporována"
 
@@ -2243,8 +2241,8 @@ msgstr "SqlBuilder je prázdný"
 #: ../libgda/gda-sql-builder.c:1379 ../libgda/gda-sql-builder.c:1430
 #: ../libgda/gda-sql-builder.c:1472 ../libgda/gda-sql-builder.c:1519
 #: ../libgda/gda-sql-builder.c:1569 ../libgda/gda-sql-builder.c:1605
-#: ../libgda/gda-sql-builder.c:1773 ../libgda/gda-sql-builder.c:1799
-#: ../libgda/gda-sql-builder.c:1834
+#: ../libgda/gda-sql-builder.c:1771 ../libgda/gda-sql-builder.c:1797
+#: ../libgda/gda-sql-builder.c:1832
 msgid "Wrong statement type"
 msgstr "Nesprávný typ příkazu"
 
@@ -2378,9 +2376,9 @@ msgstr ""
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:614
 #: ../libgda-report/engine/gda-report-engine.c:641
-#: ../tools/common/t-app.c:3035 ../tools/common/t-app.c:4728
-#: ../tools/common/t-app.c:5245 ../tools/common/t-app.c:5346
-#: ../tools/common/t-app.c:5443 ../tools/common/t-app.c:5541
+#: ../tools/common/t-app.c:3033 ../tools/common/t-app.c:4726
+#: ../tools/common/t-app.c:5243 ../tools/common/t-app.c:5344
+#: ../tools/common/t-app.c:5441 ../tools/common/t-app.c:5539
 #: ../tools/common/t-context.c:267 ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
@@ -2403,58 +2401,58 @@ msgstr "Nelze získat hodnotu iterátoru"
 msgid "Unable to get table name"
 msgstr "Nelze získat název tabulky"
 
-#: ../libgda/gda-util.c:701
+#: ../libgda/gda-util.c:699
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Číslo pole %d nebylo nalezeno ve zdroji s názvem „%s“"
 
-#: ../libgda/gda-util.c:886
+#: ../libgda/gda-util.c:884
 msgid "SELECT statement has no FROM part"
 msgstr "Příkaz SELECT nemá část FROM"
 
-#: ../libgda/gda-util.c:891 ../libgda/gda-util.c:898
+#: ../libgda/gda-util.c:889 ../libgda/gda-util.c:896
 msgid "SELECT statement involves more than one table or expression"
 msgstr "Příkaz SELECT zahrnuje více než jednu tabulku nebo výraz"
 
-#: ../libgda/gda-util.c:908
+#: ../libgda/gda-util.c:906
 msgid "Can only build modification statement for tables"
 msgstr "Je možné sestavit jen příkaz pro změnu tabulek"
 
-#: ../libgda/gda-util.c:948
+#: ../libgda/gda-util.c:946
 msgid "Table does not have any primary key"
 msgstr "Tabulka nemá žádný primární klíč"
 
-#: ../libgda/gda-util.c:977
+#: ../libgda/gda-util.c:975
 msgid "Table's primary key is not part of SELECT"
 msgstr "Primární klíč tabulky není součástí příkazu SELECT"
 
-#: ../libgda/gda-util.c:1028
+#: ../libgda/gda-util.c:1026
 msgid "Table does not have any column"
 msgstr "Tabulka nemá žádný sloupec"
 
-#: ../libgda/gda-util.c:1054
+#: ../libgda/gda-util.c:1052
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
 msgstr "Sloupec „%s“ tabulky není součástí příkazu SELECT"
 
-#: ../libgda/gda-util.c:1310
+#: ../libgda/gda-util.c:1308
 msgid "Could not compute any field to insert into"
 msgstr "Nelze vypočítat některé pole, které se má vkládat"
 
-#: ../libgda/gda-util.c:1373
+#: ../libgda/gda-util.c:1371
 msgid "Missing table name in UPDATE statement"
 msgstr "Schází název tabulky v příkazu UPDATE"
 
-#: ../libgda/gda-util.c:1728
+#: ../libgda/gda-util.c:1726
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr "Nelze přepsat příkaz UPDATE, aby obsluhoval výchozí hodnoty"
 
-#: ../libgda/gda-util.c:1736
+#: ../libgda/gda-util.c:1734
 msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Nelze přepsat příkaz, pokud se nejedná o INSERT nebo UPDATE"
 
-#: ../libgda/gda-util.c:1780 ../libgda/gda-util.c:1837
-#: ../libgda/gda-util.c:1877 ../libgda/sqlite/gda-sqlite-provider.c:3051
+#: ../libgda/gda-util.c:1778 ../libgda/gda-util.c:1835
+#: ../libgda/gda-util.c:1875 ../libgda/sqlite/gda-sqlite-provider.c:3051
 #: ../providers/jdbc/gda-jdbc-provider.c:1465
 #: ../providers/mysql/gda-mysql-provider.c:2274
 #: ../providers/postgres/gda-postgres-provider.c:2063
@@ -2463,21 +2461,21 @@ msgstr "Nelze přepsat příkaz, pokud se nejedná o INSERT nebo UPDATE"
 msgid "Missing parameter '%s' to execute query"
 msgstr "K provedení dotazu schází parametr „%s“"
 
-#: ../libgda/gda-util.c:3067
+#: ../libgda/gda-util.c:3065
 msgid "The 'first', 'second' and 'third' arguments must be different"
 msgstr "Argumenty „první“, „druhý“ a „třetí“ musí být rozdílné"
 
-#: ../libgda/gda-util.c:3072
+#: ../libgda/gda-util.c:3070
 #, c-format
 msgid "Invalid separator '%c'"
 msgstr "Oddělovač „%c“ je neplatný"
 
-#: ../libgda/gda-util.c:3074
+#: ../libgda/gda-util.c:3072
 msgid "Invalid null separator"
 msgstr "Prázdný oddělovač je neplatný"
 
-#: ../libgda/gda-util.c:3112 ../libgda/gda-util.c:3127
-#: ../libgda/gda-util.c:3142
+#: ../libgda/gda-util.c:3110 ../libgda/gda-util.c:3125
+#: ../libgda/gda-util.c:3140
 #, c-format
 msgid "Unknown GDateDMY value %u"
 msgstr "Neznámá hodnota %u pro GDateDMY"
@@ -2571,7 +2569,7 @@ msgstr "Neznámý dotaz „%s“"
 
 #: ../libgda-report/engine/gda-report-engine.c:609
 #: ../libgda-report/engine/gda-report-engine.c:636
-#: ../tools/common/t-app.c:2839 ../tools/common/t-app.c:3049
+#: ../tools/common/t-app.c:2837 ../tools/common/t-app.c:3047
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Nenalezeno žádné připojení pojmenované „%s“"
@@ -2725,13 +2723,13 @@ msgid "Could not define the %s collation"
 msgstr "Nelze definovat porovnávání %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1226
-#: ../libgda-ui/data-entries/plugins/libmain.c:89
-#: ../libgda-ui/data-entries/plugins/libmain.c:126
-#: ../libgda-ui/data-entries/plugins/libmain.c:152
-#: ../libgda-ui/data-entries/plugins/libmain.c:181
-#: ../libgda-ui/data-entries/plugins/libmain.c:189
-#: ../libgda-ui/data-entries/plugins/libmain.c:282
-#: ../libgda-ui/data-entries/plugins/libmain.c:307
+#: ../libgda-ui/data-entries/plugins/libmain.c:90
+#: ../libgda-ui/data-entries/plugins/libmain.c:127
+#: ../libgda-ui/data-entries/plugins/libmain.c:153
+#: ../libgda-ui/data-entries/plugins/libmain.c:182
+#: ../libgda-ui/data-entries/plugins/libmain.c:190
+#: ../libgda-ui/data-entries/plugins/libmain.c:283
+#: ../libgda-ui/data-entries/plugins/libmain.c:308
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Schází soubor spec. „%s“"
@@ -3028,7 +3026,7 @@ msgstr ""
 "Omezení rozsáhlých binárních objektů (BLOB) není v podmínkách virtuální "
 "tabulky kontrolováno"
 
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:150
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:151
 msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
@@ -3036,7 +3034,7 @@ msgstr ""
 "Interní chyba: virtuální poskytovatel neimplementuje virtuální metodu "
 "create_operation()"
 
-#: ../libgda/sqlite/virtual/gda-virtual-connection.c:186
+#: ../libgda/sqlite/virtual/gda-virtual-connection.c:187
 msgid "Internal error: invalid provider handle"
 msgstr "Interní chyba: neplatný ovladač poskytovatele"
 
@@ -3151,7 +3149,7 @@ msgstr "Tabulka „%s“ nebyla nalezena"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:796
 #: ../libgda/sql-parser/gda-statement-struct.c:811
-#: ../tools/common/t-connection.c:1872 ../tools/common/t-connection.c:1926
+#: ../tools/common/t-connection.c:1907 ../tools/common/t-connection.c:1961
 #, c-format
 msgid "Could not identify table for field '%s'"
 msgstr "Nelze zjistit tabulku pro pole „%s“"
@@ -3464,10 +3462,10 @@ msgstr "Datový typ"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:833 ../libgda-ui/gdaui-basic-form.c:869
-#: ../libgda-ui/gdaui-raw-grid.c:725
-#: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2319
-#: ../tools/common/t-app.c:2388 ../tools/common/t-app.c:3793
-#: ../tools/common/t-app.c:5595 ../tools/common/t-config-info.c:123
+#: ../libgda-ui/gdaui-raw-grid.c:724
+#: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2317
+#: ../tools/common/t-app.c:2386 ../tools/common/t-app.c:3791
+#: ../tools/common/t-app.c:5593 ../tools/common/t-config-info.c:123
 #: ../tools/common/t-config-info.c:292
 msgid "Value"
 msgstr "Hodnota"
@@ -3716,7 +3714,7 @@ msgid "Select a file to save the image to"
 msgstr "Výběr souboru pro uložení obrázku"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:496
-#: ../libgda-ui/gdaui-raw-grid.c:1788
+#: ../libgda-ui/gdaui-raw-grid.c:1787
 msgid "_Save"
 msgstr "_Uložit"
 
@@ -3927,16 +3925,16 @@ msgstr "Zalamovat řádky mezi slovy"
 msgid "Break lines in between words or graphemes"
 msgstr "Zalamovat řádky mezi slovy nebo grafémy"
 
-#: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:943
-#: ../tools/common/t-app.c:1047 ../tools/common/t-app.c:1060
-#: ../tools/common/t-app.c:1071 ../tools/common/t-app.c:1158
-#: ../tools/common/t-app.c:1166 ../tools/common/t-app.c:1174
-#: ../tools/common/t-app.c:1185 ../tools/common/t-app.c:1196
+#: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:941
+#: ../tools/common/t-app.c:1045 ../tools/common/t-app.c:1058
+#: ../tools/common/t-app.c:1069 ../tools/common/t-app.c:1156
+#: ../tools/common/t-app.c:1164 ../tools/common/t-app.c:1172
+#: ../tools/common/t-app.c:1183 ../tools/common/t-app.c:1194
 msgid "General"
 msgstr "Obecné"
 
 #: ../libgda-ui/data/server_operation.xml.h:2
-#: ../tools/browser/fk-declare.c:252
+#: ../tools/browser/fk-declare.c:249
 #: ../tools/browser/schema-browser/table-info.c:380
 msgid "Columns"
 msgstr "Sloupce"
@@ -4026,8 +4024,8 @@ msgstr "ZAPNUTO, pokud reaguje rozbalování formuláře svisle"
 msgid "Shown data entries"
 msgstr "Zobrazené datové záznamy"
 
-#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:766
-#: ../libgda-ui/gdaui-raw-grid.c:2686 ../libgda-ui/gdaui-raw-grid.c:2741
+#: ../libgda-ui/gdaui-basic-form.c:957 ../libgda-ui/gdaui-raw-grid.c:765
+#: ../libgda-ui/gdaui-raw-grid.c:2685 ../libgda-ui/gdaui-raw-grid.c:2740
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "Atribut „%s“ by měl být hodnotou G_TYPE_STRING"
@@ -4040,7 +4038,7 @@ msgstr "Nelze najít datový záznam pro GdaHolder"
 msgid "Values to be defined"
 msgstr "Hodnoty, které se mají definovat"
 
-#: ../libgda-ui/gdaui-basic-form.c:2224 ../libgda-ui/gdaui-raw-grid.c:2349
+#: ../libgda-ui/gdaui-basic-form.c:2224 ../libgda-ui/gdaui-raw-grid.c:2348
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Dokument „%s“ nebyl úspěšně zpracován"
@@ -4204,8 +4202,8 @@ msgstr ""
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/data-widget.c:388
 #: ../tools/browser/data-manager/xml-spec-editor.c:233
-#: ../tools/browser/query-exec/query-result.c:286
-#: ../tools/common/web-server.c:1994
+#: ../tools/browser/query-exec/query-result.c:284
+#: ../tools/common/web-server.c:1998
 #, c-format
 msgid "Error: %s"
 msgstr "Chyba: %s"
@@ -4260,112 +4258,112 @@ msgid "Info cell visible"
 msgstr "Informační buňky viditelné"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:728 ../libgda-ui/gdaui-raw-grid.c:751
+#: ../libgda-ui/gdaui-raw-grid.c:727 ../libgda-ui/gdaui-raw-grid.c:750
 msgid "Can't be NULL"
 msgstr "Nemůže být prázdné (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:759
+#: ../libgda-ui/gdaui-raw-grid.c:758
 msgid "No title"
 msgstr "Bez názvu"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1561
+#: ../libgda-ui/gdaui-raw-grid.c:1560
 msgid "Shown columns"
 msgstr "Zobrazené sloupce"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1588
+#: ../libgda-ui/gdaui-raw-grid.c:1587
 msgid "_Copy"
 msgstr "_Kopírovat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1594
+#: ../libgda-ui/gdaui-raw-grid.c:1593
 msgid "Select _All"
 msgstr "Vybrat _vše"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1599
+#: ../libgda-ui/gdaui-raw-grid.c:1598
 msgid "_Clear Selection"
 msgstr "Zrušit vý_běr"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1602
+#: ../libgda-ui/gdaui-raw-grid.c:1601
 msgid "Show Column _Titles"
 msgstr "Zobrazi_t záhlaví sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1608
+#: ../libgda-ui/gdaui-raw-grid.c:1607
 msgid "Save _As"
 msgstr "Uložit j_ako"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:1785
+#: ../libgda-ui/gdaui-raw-grid.c:1784
 msgid "Saving Data"
 msgstr "Uložení dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1793
+#: ../libgda-ui/gdaui-raw-grid.c:1792
 msgid "Saving data to a file"
 msgstr "Uložení dat do souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1794
+#: ../libgda-ui/gdaui-raw-grid.c:1793
 msgid "The data will be exported to the selected file."
 msgstr "Data budou exportována do vybraného souboru."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1804 ../tools/common/t-config-info.c:427
+#: ../libgda-ui/gdaui-raw-grid.c:1803 ../tools/common/t-config-info.c:427
 msgid "File name"
 msgstr "Název souboru"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:1825
+#: ../libgda-ui/gdaui-raw-grid.c:1824
 #: ../tools/browser/schema-browser/table-columns.c:666
 msgid "Details"
 msgstr "Podrobnosti"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:1846
+#: ../libgda-ui/gdaui-raw-grid.c:1845
 msgid "File type:"
 msgstr "Typ souboru:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1856
+#: ../libgda-ui/gdaui-raw-grid.c:1855
 msgid "Tab-delimited"
 msgstr "Oddělovaný tabulátory"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1857
+#: ../libgda-ui/gdaui-raw-grid.c:1856
 msgid "Comma-delimited"
 msgstr "Oddělovaný čárkami"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1858
+#: ../libgda-ui/gdaui-raw-grid.c:1857
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:1865
+#: ../libgda-ui/gdaui-raw-grid.c:1864
 msgid "Data to save:"
 msgstr "Data k uložení:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1880
+#: ../libgda-ui/gdaui-raw-grid.c:1879
 msgid "All data (without any local modification)"
 msgstr "Všechna data (bez místních změn)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1881
+#: ../libgda-ui/gdaui-raw-grid.c:1880
 msgid "Only displayed data"
 msgstr "Jen zobrazená data"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1883
+#: ../libgda-ui/gdaui-raw-grid.c:1882
 msgid "Only selected data"
 msgstr "Jen vybraná data"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1888
+#: ../libgda-ui/gdaui-raw-grid.c:1887
 msgid "Other options"
 msgstr "Ostatní volby"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1895
+#: ../libgda-ui/gdaui-raw-grid.c:1894
 msgid "Empty string when NULL?"
 msgstr "Prázdný řetězec, když je prázdné?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1898 ../libgda-ui/gdaui-raw-grid.c:1903
+#: ../libgda-ui/gdaui-raw-grid.c:1897 ../libgda-ui/gdaui-raw-grid.c:1902
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Exportovat prázdné hodnoty (NULL) jako prázdný řetězec „“"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1905
+#: ../libgda-ui/gdaui-raw-grid.c:1904
 msgid "Invalid data as NULL?"
 msgstr "Neplatná data jako prázdná?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1908 ../libgda-ui/gdaui-raw-grid.c:1913
+#: ../libgda-ui/gdaui-raw-grid.c:1907 ../libgda-ui/gdaui-raw-grid.c:1912
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4373,28 +4371,28 @@ msgstr ""
 "Neexportovat neplatná data,\n"
 "ale exportovat místo nich prázdnou hodnotu (NULL)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1915
+#: ../libgda-ui/gdaui-raw-grid.c:1914
 msgid "Field names on first row?"
 msgstr "Názvy polí na prvním řádku?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1918 ../libgda-ui/gdaui-raw-grid.c:1923
+#: ../libgda-ui/gdaui-raw-grid.c:1917 ../libgda-ui/gdaui-raw-grid.c:1922
 msgid "Add a row at beginning with columns names"
 msgstr "Přidat na začátek řádek s názvy sloupců"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2100
+#: ../libgda-ui/gdaui-raw-grid.c:2099
 #, c-format
 msgid "Could not save file %s"
 msgstr "Nelze uložit soubor %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2108
+#: ../libgda-ui/gdaui-raw-grid.c:2107
 msgid "You must specify a file name"
 msgstr "Musíte určit název souboru"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2114
+#: ../libgda-ui/gdaui-raw-grid.c:2113
 msgid "Got empty file while converting the data"
 msgstr "Obdržen prázdný soubor během převodu dat"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2127
+#: ../libgda-ui/gdaui-raw-grid.c:2126
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4403,7 +4401,7 @@ msgstr ""
 "Soubor „%s“ již existuje.\n"
 "Chcete jej přepsat?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2137
+#: ../libgda-ui/gdaui-raw-grid.c:2136
 msgid "If you choose yes, the contents will be lost."
 msgstr "Pokud zvolíte ano, bude obsah ztracen."
 
@@ -4546,39 +4544,41 @@ msgstr "Zvětšit velikost písma"
 msgid "Show source markup"
 msgstr "Zobrazit zdrojové značky"
 
-#: ../libgda-ui/gdaui-server-operation.c:198
+#: ../libgda-ui/gdaui-server-operation.c:197
 msgid "The specification of the operation to implement"
 msgstr "Specifikace operace, která se má implementovat"
 
-#: ../libgda-ui/gdaui-server-operation.c:204
+#: ../libgda-ui/gdaui-server-operation.c:203
 msgid "Request section header to be hidden if there is only one section"
 msgstr "Záhlaví oddílu požadavku se skryje, pokud je jen jeden oddíl"
 
+#: ../libgda-ui/gdaui-server-operation.c:475
+#: ../libgda-ui/gdaui-server-operation.c:1214
+msgid "Add a new field"
+msgstr "Přidat nové pole"
+
+#: ../libgda-ui/gdaui-server-operation.c:478
+#: ../libgda-ui/gdaui-server-operation.c:1217
+msgid "Remove selected field"
+msgstr "Odstranit vybraná pole"
+
 #. last row is for new entries
-#: ../libgda-ui/gdaui-server-operation.c:592
+#: ../libgda-ui/gdaui-server-operation.c:609
 #: ../tools/browser/data-manager/data-console.c:394
 msgid "Add"
 msgstr "Přidat"
 
-#: ../libgda-ui/gdaui-server-operation.c:1077
+#: ../libgda-ui/gdaui-server-operation.c:1094
 msgid "Server operation specification"
 msgstr "Specifikace serverové operace"
 
-#: ../libgda-ui/gdaui-server-operation.c:1132
+#: ../libgda-ui/gdaui-server-operation.c:1149
 msgid "<b>Field properties:</b>"
 msgstr "<b>Vlastnosti pole:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1151
+#: ../libgda-ui/gdaui-server-operation.c:1168
 msgid "<b>Fields:</b>"
 msgstr "<b>Pole:</b>"
-
-#: ../libgda-ui/gdaui-server-operation.c:1198
-msgid "Add a new field"
-msgstr "Přidat nové pole"
-
-#: ../libgda-ui/gdaui-server-operation.c:1201
-msgid "Remove selected field"
-msgstr "Odstranit vybraná pole"
 
 #: ../libgda-ui/gdaui-tree-store.c:272
 msgid "GdaTree to use"
@@ -4719,7 +4719,7 @@ msgstr "Složka, ve které je soubor s databází uchován"
 #: ../providers/sqlite/sqlite_specs_drop_db.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:1
 #: ../providers/web/web_specs_dsn.xml.in.h:8
-#: ../tools/common/t-connection.c:2451
+#: ../tools/common/t-connection.c:2486
 msgid "Database name"
 msgstr "Název databáze"
 
@@ -4874,7 +4874,7 @@ msgstr "Neprázdné"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
-#: ../tools/common/t-app.c:1898 ../tools/common/web-server.c:863
+#: ../tools/common/t-app.c:1896 ../tools/common/web-server.c:867
 msgid "Default"
 msgstr "Výchozí"
 
@@ -4965,8 +4965,8 @@ msgstr "Popis indexu"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:2
 #: ../tools/browser/schema-browser/table-columns.c:645
-#: ../tools/common/t-app.c:1820 ../tools/common/t-app.c:1896
-#: ../tools/common/web-server.c:861
+#: ../tools/common/t-app.c:1818 ../tools/common/t-app.c:1894
+#: ../tools/common/web-server.c:865
 msgid "Type"
 msgstr "Typ"
 
@@ -4995,11 +4995,11 @@ msgstr "Typ"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:2
 #: ../tools/browser/data-manager/data-favorite-selector.c:306
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:299
-#: ../tools/browser/query-exec/query-favorite-selector.c:352
-#: ../tools/common/t-app.c:1819 ../tools/common/t-app.c:2318
-#: ../tools/common/t-app.c:2387 ../tools/common/t-app.c:2960
-#: ../tools/common/t-app.c:3792 ../tools/common/t-app.c:3874
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:297
+#: ../tools/browser/query-exec/query-favorite-selector.c:350
+#: ../tools/common/t-app.c:1817 ../tools/common/t-app.c:2316
+#: ../tools/common/t-app.c:2385 ../tools/common/t-app.c:2958
+#: ../tools/common/t-app.c:3790 ../tools/common/t-app.c:3872
 msgid "Name"
 msgstr "Název"
 
@@ -5130,8 +5130,8 @@ msgstr "Sloupce tabulky"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
-#: ../tools/common/t-app.c:1747 ../tools/common/t-app.c:1750
-#: ../tools/common/web-server.c:833 ../tools/common/web-server.c:836
+#: ../tools/common/t-app.c:1745 ../tools/common/t-app.c:1748
+#: ../tools/common/web-server.c:837 ../tools/common/web-server.c:840
 msgid "Auto increment"
 msgstr "Automatické zvyšování"
 
@@ -5145,7 +5145,7 @@ msgstr "Automatické zvyšování"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
-#: ../tools/common/t-app.c:2054
+#: ../tools/common/t-app.c:2052
 msgid "Unique"
 msgstr "Jedinečný"
 
@@ -5160,7 +5160,7 @@ msgstr "Jedinečný"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
 #: ../tools/browser/schema-browser/table-columns.c:231
-#: ../tools/common/t-app.c:2007
+#: ../tools/common/t-app.c:2005
 msgid "Primary key"
 msgstr "Primární klíč"
 
@@ -5254,8 +5254,8 @@ msgstr "Definice pohledu"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:1
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:169
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:174
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:179
 msgid "Index"
 msgstr "Index"
 
@@ -5576,8 +5576,8 @@ msgstr "Připojovací řetězec musí obsahovat hodnotu DB_NAME (název databáz
 msgid "Invalid value for 'TLS_REQCERT'"
 msgstr "Neplatná hodnota pro „TLS_REQCERT“"
 
-#: ../providers/ldap/gda-ldap-provider.c:973 ../tools/common/t-app.c:2808
-#: ../tools/common/t-app.c:4536 ../tools/common/t-app.c:4652
+#: ../providers/ldap/gda-ldap-provider.c:973 ../tools/common/t-app.c:2806
+#: ../tools/common/t-app.c:4534 ../tools/common/t-app.c:4650
 #, c-format
 msgid "Too many arguments"
 msgstr "Příliš mnoho parametrů"
@@ -6328,7 +6328,7 @@ msgstr "Komentář tabulky"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/browser/schema-browser/mgr-columns.c:385
-#: ../tools/common/t-app.c:2114
+#: ../tools/common/t-app.c:2112
 msgid "Foreign key"
 msgstr "Cizí klíč"
 
@@ -6854,7 +6854,7 @@ msgid "Whether to require SSL or not when connecting"
 msgstr "Zda vyžadovat, nebo ne, SSL při připojování"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:22
-#: ../tools/common/t-app.c:1821
+#: ../tools/common/t-app.c:1819
 msgid "Owner"
 msgstr "Vlastník"
 
@@ -7654,9 +7654,9 @@ msgstr "Nelze uložit soubor s historií do „%s“: %s"
 
 #: ../tools/base/base-tool-output.c:93 ../tools/base/base-tool-output.c:499
 #: ../tools/base/base-tool-output.c:581
-#: ../tools/browser/query-exec/query-result.c:242
-#: ../tools/browser/query-exec/query-result.c:270
-#: ../tools/browser/query-exec/query-result.c:456
+#: ../tools/browser/query-exec/query-result.c:240
+#: ../tools/browser/query-exec/query-result.c:268
+#: ../tools/browser/query-exec/query-result.c:433
 #, c-format
 msgid "Execution delay"
 msgstr "Odložení zpracování"
@@ -7670,8 +7670,8 @@ msgstr[1] "(%d řádky)"
 msgstr[2] "(%d řádků)"
 
 #: ../tools/base/base-tool-output.c:492 ../tools/base/base-tool-output.c:574
-#: ../tools/browser/query-exec/query-result.c:262
-#: ../tools/browser/query-exec/query-result.c:449
+#: ../tools/browser/query-exec/query-result.c:260
+#: ../tools/browser/query-exec/query-result.c:426
 msgid "Number of rows impacted"
 msgstr "Počet řádku vložených mezi"
 
@@ -7703,7 +7703,7 @@ msgid "Provider: %s"
 msgstr "Poskytovatel: %s"
 
 #: ../tools/browser/browser-connections-list.c:203
-#: ../tools/common/t-connection.c:2441
+#: ../tools/common/t-connection.c:2476
 msgid "Database provider"
 msgstr "Databázový poskytovatel"
 
@@ -7728,12 +7728,12 @@ msgid "Opened connections"
 msgstr "Otevřená připojení"
 
 #: ../tools/browser/browser-connections-list.c:344
-#: ../tools/common/t-app.c:2964
+#: ../tools/common/t-app.c:2962
 msgid "List of opened connections"
 msgstr "Seznam otevřených připojení"
 
 #: ../tools/browser/browser-connections-list.c:353
-#: ../tools/common/web-server.c:642
+#: ../tools/common/web-server.c:646
 msgid "Connections"
 msgstr "Připojení"
 
@@ -7742,6 +7742,7 @@ msgid "Connection's properties"
 msgstr "Vlastnosti připojení"
 
 #: ../tools/browser/browser-connections-list.c:380
+#: ../tools/browser/browser-window.c:324
 msgid "Close connection"
 msgstr "Uzavřít připojení"
 
@@ -7757,245 +7758,79 @@ msgstr "Připojit"
 msgid "Open a new connection"
 msgstr "Otevřít nové připojení"
 
-#: ../tools/browser/browser-window.c:260
-msgid "_Fullscreen"
-msgstr "_Celá obrazovka"
-
-#: ../tools/browser/browser-window.c:260
-msgid "Use the whole screen"
-msgstr "Použít celou obrazovku"
-
-#: ../tools/browser/browser-window.c:264
-msgid "_Connection"
-msgstr "_Připojení"
-
-#: ../tools/browser/browser-window.c:264 ../tools/common/t-connection.c:1065
-msgid "Connection"
-msgstr "Připojení"
-
-#: ../tools/browser/browser-window.c:265
-msgid "_Connect"
-msgstr "_Připojit"
-
-#: ../tools/browser/browser-window.c:265
-msgid "Open a connection"
-msgstr "Otevřít připojení"
-
-#: ../tools/browser/browser-window.c:266
-msgid "_Bind Connection"
-msgstr "S_vázat připojení"
-
-#: ../tools/browser/browser-window.c:266
-msgid ""
-"Use connection to create\n"
-"a new binding connection to access data\n"
-"from multiple databases at once"
-msgstr ""
-"Použijte připojení k vytvoření\n"
-"nového svazku připojení na přístup\n"
-"k datům z více databází naráz"
-
-#: ../tools/browser/browser-window.c:269
-msgid "Connection properties"
-msgstr "Vlastnosti připojení"
-
-#: ../tools/browser/browser-window.c:270
-msgid "_Connections List"
-msgstr "_Seznam připojení"
-
-#: ../tools/browser/browser-window.c:270
-msgid "Connections list"
-msgstr "Seznam připojení"
-
-#: ../tools/browser/browser-window.c:271
-msgid "_Fetch Meta Data"
-msgstr "Získa_t metadata"
-
-#: ../tools/browser/browser-window.c:271
-msgid "Fetch meta data"
-msgstr "Získat metadata"
-
-#: ../tools/browser/browser-window.c:272
-msgid "_Close Connection"
-msgstr "U_zavřít připojení"
-
-#: ../tools/browser/browser-window.c:272
-msgid "Close this connection"
-msgstr "Uzavřít toto připojení"
-
-#: ../tools/browser/browser-window.c:273 ../tools/common/t-app.c:1161
-msgid "Quit"
-msgstr "Ukončit"
-
-#: ../tools/browser/browser-window.c:274
-msgid "_Edit"
-msgstr "_Upravit"
-
-#: ../tools/browser/browser-window.c:274
-msgid "Edit"
-msgstr "Upravit"
-
-#: ../tools/browser/browser-window.c:275
-msgid "_Display"
-msgstr "_Zobrazit"
-
-#: ../tools/browser/browser-window.c:275
-msgid "Display"
-msgstr "Zobrazit"
-
-#: ../tools/browser/browser-window.c:276
-msgid "_Perspective"
-msgstr "_Hledisko"
-
-#: ../tools/browser/browser-window.c:276
-msgid "Perspective"
-msgstr "Hledisko"
-
-#: ../tools/browser/browser-window.c:277
-msgid "_Window"
-msgstr "_Okno"
-
-#: ../tools/browser/browser-window.c:277
-msgid "Window"
-msgstr "Okno"
-
-#. STOCK_NEW_WINDOW
-#: ../tools/browser/browser-window.c:278
-msgid "_New Window"
-msgstr "_Nové okno"
-
-#: ../tools/browser/browser-window.c:278
-msgid "Open a new window for current connection"
-msgstr "Otevřít nové okno pro současné připojení"
-
-#: ../tools/browser/browser-window.c:279
-msgid "New Window for _Connection"
-msgstr "Nové okno pro _připojení"
-
-#: ../tools/browser/browser-window.c:279
-msgid "Open a new window for a connection"
-msgstr "Otevřít nové okno pro připojení"
-
-#: ../tools/browser/browser-window.c:280 ../tools/browser/ui-formgrid.c:695
-msgid "_Close"
-msgstr "_Zavřít"
-
-#: ../tools/browser/browser-window.c:280
-msgid "Close this window"
-msgstr "Zavřít toto okno"
-
-#: ../tools/browser/browser-window.c:281
-#: ../tools/browser/connection-binding-properties.c:174
-msgid "_Help"
-msgstr "_Nápověda"
-
-#: ../tools/browser/browser-window.c:281
-#: ../tools/browser/data-manager/data-console.c:421
-msgid "Help"
-msgstr "Nápověda"
-
-#: ../tools/browser/browser-window.c:282
-msgid "About"
-msgstr "O aplikaci"
-
-#: ../tools/browser/browser-window.c:284
-msgid "_Manual"
-msgstr "_Příručka"
-
-#: ../tools/browser/browser-window.c:284
-msgid "Manual"
-msgstr "Příručka"
-
-#. BROWSER_STOCK_BEGIN
-#: ../tools/browser/browser-window.c:286
-msgid "Begin transaction"
-msgstr "Začít transakci"
-
-#: ../tools/browser/browser-window.c:286
-msgid "Begin a new transaction"
-msgstr "Začít novou transakci"
-
-#. BROWSER_STOCK_COMMIT
-#: ../tools/browser/browser-window.c:288
-msgid "Commit transaction"
-msgstr "Schválit transakci"
-
-#: ../tools/browser/browser-window.c:288
-msgid "Commit current transaction"
-msgstr "Schválit současnou transakci"
-
-#. BROWSER_STOCK_ROLLBACK
-#: ../tools/browser/browser-window.c:290
-msgid "Rollback transaction"
-msgstr "Vrátit zpět transakci"
-
-#: ../tools/browser/browser-window.c:290
-msgid "Rollback current transaction"
-msgstr "Vrátit zpět současnou transakci"
-
-#: ../tools/browser/browser-window.c:495 ../tools/browser/browser-window.c:550
-#: ../tools/browser/ldap-browser/perspective-main.c:33
+#: ../tools/browser/browser-window.c:263 ../tools/browser/browser-window.c:419
+#: ../tools/browser/ldap-browser/perspective-main.c:34
 #: ../tools/browser/schema-browser/table-columns.c:975
-#: ../tools/browser/ui-formgrid.c:777
+#: ../tools/browser/ui-formgrid.c:743
 msgid "LDAP browser"
 msgstr "Prohlížeč adresáře LDAP"
 
-#: ../tools/browser/browser-window.c:779
+#: ../tools/browser/browser-window.c:314
+msgid "Fetch Meta Data"
+msgstr "Získat metadata"
+
+#: ../tools/browser/browser-window.c:317
+msgid "Connection properties"
+msgstr "Vlastnosti připojení"
+
+#: ../tools/browser/browser-window.c:331
+msgid "Display options"
+msgstr "Zobrazit volby"
+
+#: ../tools/browser/browser-window.c:346
+msgid "Rollback transaction"
+msgstr "Vrátit zpět transakci"
+
+#: ../tools/browser/browser-window.c:353
+msgid "Commit transaction"
+msgstr "Schválit transakci"
+
+#: ../tools/browser/browser-window.c:360
+msgid "Begin transaction"
+msgstr "Začít transakci"
+
+#: ../tools/browser/browser-window.c:406
+msgid "Fullscreen"
+msgstr "Celá obrazovka"
+
+#: ../tools/browser/browser-window.c:410
+msgid "Perspectives"
+msgstr "Hlediska"
+
+#: ../tools/browser/browser-window.c:486
+msgid "Hit the F11 key to leave the fullscreen mode"
+msgstr "Režim celé obrazovky opustíte zmáčknutím klávesy F11"
+
+#: ../tools/browser/browser-window.c:544
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Chcete uzavřít připojení „%s“?"
 
-#: ../tools/browser/browser-window.c:809 ../tools/browser/browser-window.c:816
-msgid "Do you want to quit the application?"
-msgstr "Chcete aplikaci ukončit?"
-
-#: ../tools/browser/browser-window.c:810
-msgid "all the connections will be closed."
-msgstr "všechna připojení budou uzavřena"
-
-#: ../tools/browser/browser-window.c:817
-msgid "the connection will be closed."
-msgstr "připojení bude uzavřeno"
-
-#: ../tools/browser/browser-window.c:858
+#: ../tools/browser/browser-window.c:591
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Chyba zahájení transakce: %s"
 
-#: ../tools/browser/browser-window.c:872
+#: ../tools/browser/browser-window.c:606
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Chyba schvalování transakce: %s"
 
-#: ../tools/browser/browser-window.c:886
+#: ../tools/browser/browser-window.c:621
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Chyba při vracení transakce zpět: %s"
 
-#: ../tools/browser/browser-window.c:966
-msgid "Hit the Escape key to leave the fullscreen mode"
-msgstr "Režim celé obrazovky opustíte zmáčknutím klávesy Escape"
-
-#: ../tools/browser/browser-window.c:1107
+#: ../tools/browser/browser-window.c:674
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Chyba aktualizace svázaného připojení: %s"
 
-#: ../tools/browser/browser-window.c:1145
-#, c-format
-msgid "Could not open binding connection: %s"
-msgstr "Nelze otevřít svázaná připojení: %s"
-
-#: ../tools/browser/browser-window.c:1182
-#: ../tools/browser/gda-browser-6.0.desktop.in.in.h:1
-msgid "Database browser"
-msgstr "Prohlížeč databáze"
-
-#: ../tools/browser/browser-window.c:1519
+#: ../tools/browser/browser-window.c:1003
 msgid "Don't show this message again"
 msgstr "Tuto zprávu již příště nezobrazovat"
 
-#: ../tools/browser/browser-window.c:1666
+#: ../tools/browser/browser-window.c:1147
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -8095,21 +7930,21 @@ msgid "Select tables to add to diagram"
 msgstr "Výběr tabulek pro přidání do diagramu"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
-#: ../tools/common/t-app.c:2112
+#: ../tools/common/t-app.c:2110
 msgid "Declared foreign key"
 msgstr "Deklarovaný cizí klíč"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
 #: ../tools/browser/schema-browser/table-columns.c:357
-#: ../tools/common/t-app.c:2144
+#: ../tools/common/t-app.c:2142
 msgid "Policy on UPDATE"
 msgstr "Strategie při AKTUALIZACI"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
 #: ../tools/browser/schema-browser/table-columns.c:367
-#: ../tools/common/t-app.c:2148
+#: ../tools/common/t-app.c:2146
 msgid "Policy on DELETE"
 msgstr "Strategie při MAZÁNÍ"
 
@@ -8178,6 +8013,10 @@ msgstr "Nové virtuální připojení"
 #: ../tools/browser/connection-binding-properties.c:170
 msgid "Create connection"
 msgstr "Vytvořit připojení"
+
+#: ../tools/browser/connection-binding-properties.c:174
+msgid "_Help"
+msgstr "_Nápověda"
 
 #: ../tools/browser/connection-binding-properties.c:201
 #: ../tools/browser/connection-binding-properties.c:223
@@ -8299,7 +8138,7 @@ msgid "Show variables needed"
 msgstr "Zobrazit potřebné proměnné"
 
 #: ../tools/browser/data-manager/data-console.c:407
-#: ../tools/browser/ldap-browser/ldap-search-page.c:317
+#: ../tools/browser/ldap-browser/ldap-search-page.c:315
 #: ../tools/browser/query-exec/query-console-page.c:321
 msgid "Execute"
 msgstr "Spustit"
@@ -8324,6 +8163,10 @@ msgstr ""
 "Zobrazit specifikaci\n"
 "jako XML (pokročilé)"
 
+#: ../tools/browser/data-manager/data-console.c:421
+msgid "Help"
+msgstr "Nápověda"
+
 #: ../tools/browser/data-manager/data-console.c:434
 msgid "BBB:"
 msgstr "BBB:"
@@ -8337,7 +8180,7 @@ msgstr "Správce dat „%s“"
 #: ../tools/browser/data-manager/data-console.c:518
 #: ../tools/browser/data-manager/data-console.c:551
 #: ../tools/browser/data-manager/data-console.c:967
-#: ../tools/browser/data-manager/perspective-main.c:33
+#: ../tools/browser/data-manager/perspective-main.c:34
 #: ../tools/browser/schema-browser/relations-diagram.c:509
 #: ../tools/browser/schema-browser/table-info.c:487
 msgid "Data manager"
@@ -8404,14 +8247,14 @@ msgstr "Nelze odstranit oblíbenou: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:260
 #: ../tools/browser/data-manager/data-favorite-selector.c:620
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:432
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:438
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:429
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:435
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:599
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:596
 #: ../tools/browser/query-exec/query-console-page.c:761
 #: ../tools/browser/query-exec/query-console-page.c:791
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
-#: ../tools/browser/query-exec/query-favorite-selector.c:711
+#: ../tools/browser/query-exec/query-favorite-selector.c:707
 #: ../tools/browser/schema-browser/favorite-selector.c:351
 #: ../tools/browser/schema-browser/table-info.c:470
 #, c-format
@@ -8419,8 +8262,8 @@ msgid "Could not add favorite: %s"
 msgstr "Nelze přidat oblíbenou: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:291
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:283
-#: ../tools/browser/query-exec/query-favorite-selector.c:336
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:282
+#: ../tools/browser/query-exec/query-favorite-selector.c:335
 msgid "Favorite's properties"
 msgstr "Vlastnosti oblíbené"
 
@@ -8436,104 +8279,81 @@ msgstr "Uloženo"
 msgid "Unnamed data manager"
 msgstr "Nepojmenovaný správce dat"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:334
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:333
-#: ../tools/browser/query-exec/query-exec-perspective.c:315
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:309
-msgid "_Show Favorites"
-msgstr "_Zobrazit oblíbené"
+#: ../tools/browser/data-manager/data-manager-perspective.c:362
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:361
+#: ../tools/browser/query-exec/query-exec-perspective.c:336
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:337
+msgid "Show favorites"
+msgstr "Zobrazit oblíbené"
 
-#: ../tools/browser/data-manager/data-manager-perspective.c:334
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:333
-#: ../tools/browser/query-exec/query-exec-perspective.c:315
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:309
-msgid "Show or hide favorites"
-msgstr "Zobrazit nebo skrýt oblíbené"
-
-#: ../tools/browser/data-manager/data-manager-perspective.c:338
-msgid "_Manager"
-msgstr "Sp_rávce"
-
-#: ../tools/browser/data-manager/data-manager-perspective.c:338
-msgid "Manager"
-msgstr "Správce"
-
-#: ../tools/browser/data-manager/data-manager-perspective.c:339
-msgid "_New Data Manager"
-msgstr "_Nový správce dat"
-
-#: ../tools/browser/data-manager/data-manager-perspective.c:339
-msgid "New data manager"
-msgstr "Nový správce dat"
+#: ../tools/browser/data-manager/data-manager-perspective.c:370
+msgid "New data manager tab"
+msgstr "Nová karta správce dat"
 
 #. Translators: Do not translate "table" nor "query"
-#: ../tools/browser/data-manager/data-source.c:406
+#: ../tools/browser/data-manager/data-source.c:404
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
 msgstr "Uzel musí být „table“ nebo „query“ a je „%s“"
 
-#: ../tools/browser/data-manager/data-source.c:439
+#: ../tools/browser/data-manager/data-source.c:437
 #: ../tools/browser/schema-browser/mgr-columns.c:278
 msgid "Not ready"
 msgstr "Nepřipraveno"
 
-#: ../tools/browser/data-manager/data-source.c:446
+#: ../tools/browser/data-manager/data-source.c:444
 #, c-format
 msgid "Malformed table name \"%s\""
 msgstr "Chybný název tabulky „%s“"
 
-#: ../tools/browser/data-manager/data-source.c:463
+#: ../tools/browser/data-manager/data-source.c:461
 #, c-format
 msgid "Could not find the \"%s\" table"
 msgstr "Nelze najít tabulku „%s“"
 
-#: ../tools/browser/data-manager/data-source.c:468
+#: ../tools/browser/data-manager/data-source.c:466
 #, c-format
 msgid "The \"%s\" object is not a table"
 msgstr "Objekt „%s“ není tabulka"
 
 #. Translators: Do not translate "name"
-#: ../tools/browser/data-manager/data-source.c:487
+#: ../tools/browser/data-manager/data-source.c:485
 msgid "Missing attribute \"name\" for table"
 msgstr "Schází atribut „název“ pro tabulku"
 
-#: ../tools/browser/data-manager/data-source.c:627
+#: ../tools/browser/data-manager/data-source.c:625
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
 msgstr "Nelze najít žádný cizí klíč k „%s“"
 
-#: ../tools/browser/data-manager/data-source.c:632
+#: ../tools/browser/data-manager/data-source.c:630
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
 msgstr "Pole zapojená do cizího klíče směřujícího na „%s“ nejsou známá"
 
-#: ../tools/browser/data-manager/data-source.c:896
+#: ../tools/browser/data-manager/data-source.c:894
 msgid "No SELECT statement to execute"
 msgstr "Žádný příkaz SELECT ke spuštění"
 
-#: ../tools/browser/data-manager/data-source.c:930
+#: ../tools/browser/data-manager/data-source.c:928
 msgid "Statement to execute is not a selection statement"
 msgstr "Příkaz ke spuštění není příkazem pro výběr"
 
-#: ../tools/browser/data-manager/data-source.c:978
-msgid "Refresh data"
-msgstr "Občerstvit data"
-
-#: ../tools/browser/data-manager/data-source.c:1165
+#: ../tools/browser/data-manager/data-source.c:1142
 #, c-format
 msgid "Contents of '%s'"
 msgstr "Obsah z „%s“"
 
-#: ../tools/browser/data-manager/data-source.c:1176
+#: ../tools/browser/data-manager/data-source.c:1153
 msgid "Could not build SELECT statement"
 msgstr "Nelze sestavit příkaz SELECT"
 
-#: ../tools/browser/data-manager/data-source.c:1243
+#: ../tools/browser/data-manager/data-source.c:1220
 msgid "Multiple statements detected, only the first will be used"
 msgstr "Zjištěno více příkazů, bude použit jen první"
 
 #: ../tools/browser/data-manager/data-source-editor.c:112
-#: ../tools/browser/ui-formgrid.c:569 ../tools/browser/ui-formgrid.c:580
+#: ../tools/browser/ui-formgrid.c:535 ../tools/browser/ui-formgrid.c:546
 msgid "Zoom..."
 msgstr "Lupa…"
 
@@ -8647,7 +8467,7 @@ msgstr "Kód SQL ke spuštění:"
 msgid "_Add"
 msgstr "Přid_at"
 
-#: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:395
+#: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:392
 #, c-format
 msgid "Declare a foreign key for table '%s'"
 msgstr "Deklarace cizího klíče pro tabulku „%s“"
@@ -8660,24 +8480,25 @@ msgstr ""
 "definuje, na kterou tabulku je odkazováno, které sloupce jsou součástí "
 "cizího klíče a který ze sloupců je ten odkazující"
 
-#: ../tools/browser/fk-declare.c:205
+#. FK name
+#: ../tools/browser/fk-declare.c:204
 msgid "Foreign key name:"
 msgstr "Název cizího klíče:"
 
 #. table to reference
-#: ../tools/browser/fk-declare.c:216
+#: ../tools/browser/fk-declare.c:214
 msgid "Referenced table:"
 msgstr "Odkazovaná tabulka:"
 
-#: ../tools/browser/fk-declare.c:259
+#: ../tools/browser/fk-declare.c:256
 msgid "Referenced column"
 msgstr "Odkazovaný sloupec"
 
-#: ../tools/browser/fk-declare.c:557
+#: ../tools/browser/fk-declare.c:554
 msgid "Missing information to declare foreign key"
 msgstr "Schází informace pro deklaraci cizího klíče"
 
-#: ../tools/browser/fk-declare.c:639
+#: ../tools/browser/fk-declare.c:636
 msgid "Missing information to undeclare foreign key"
 msgstr "Schází informace pro zrušení deklarace cizího klíče"
 
@@ -8699,6 +8520,10 @@ msgstr ""
 "jejich vlastnosti a vzájemné vztahy. V hledisku provádění dotazů může "
 "spouštět dotazy SQL vůči databázi. Ve správě dat si může zobrazit data "
 "obsažená v databázi v podobě tabulek."
+
+#: ../tools/browser/gda-browser-6.0.desktop.in.in.h:1
+msgid "Database browser"
+msgstr "Prohlížeč databáze"
 
 #: ../tools/browser/gda-browser-6.0.desktop.in.in.h:2
 msgid "Browse database's contents"
@@ -8789,7 +8614,7 @@ msgid "_OK"
 msgstr "_Budiž"
 
 #: ../tools/browser/gdaui-entry-import.c:213
-#: ../tools/browser/query-exec/query-result.c:232
+#: ../tools/browser/query-exec/query-result.c:230
 #, c-format
 msgid "%d column"
 msgid_plural "%d columns"
@@ -8798,7 +8623,7 @@ msgstr[1] "%d sloupce"
 msgstr[2] "%d sloupců"
 
 #: ../tools/browser/gdaui-entry-import.c:214
-#: ../tools/browser/query-exec/query-result.c:234
+#: ../tools/browser/query-exec/query-result.c:232
 #, c-format
 msgid "Data set with %s and %s"
 msgstr "Datová sada s %s a %s"
@@ -8808,12 +8633,12 @@ msgid "Modify"
 msgstr "Změnit"
 
 #: ../tools/browser/gdaui-entry-import.c:222
-#: ../tools/browser/gdaui-entry-import.c:252
+#: ../tools/browser/gdaui-entry-import.c:250
 msgid "Import"
 msgstr "Import"
 
 #: ../tools/browser/gdaui-entry-import.c:223
-#: ../tools/browser/gdaui-entry-import.c:246
+#: ../tools/browser/gdaui-entry-import.c:245
 msgid "No data set"
 msgstr "Žádná datová sada"
 
@@ -8899,19 +8724,19 @@ msgstr "Nelze zobrazit hodnotu atributu"
 msgid "Could not get information about LDAP entry"
 msgstr "Nelze získat informaci o záznamu LDAP"
 
-#: ../tools/browser/ldap-browser/filter-editor.c:152
+#: ../tools/browser/ldap-browser/filter-editor.c:151
 msgid "Base DN:"
 msgstr "Základní DN:"
 
-#: ../tools/browser/ldap-browser/filter-editor.c:156
+#: ../tools/browser/ldap-browser/filter-editor.c:154
 msgid "Filter expression:"
 msgstr "Výraz filtru:"
 
-#: ../tools/browser/ldap-browser/filter-editor.c:160
+#: ../tools/browser/ldap-browser/filter-editor.c:157
 msgid "Attributes to fetch:"
 msgstr "Atributy, které se mají získat:"
 
-#: ../tools/browser/ldap-browser/filter-editor.c:164
+#: ../tools/browser/ldap-browser/filter-editor.c:160
 msgid "Search scope:"
 msgstr "Rozsah hledání:"
 
@@ -8920,84 +8745,69 @@ msgstr "Rozsah hledání:"
 msgid "Could not find LDAP entry with DN '%s'"
 msgstr "Nelze najít záznam LDAP s DN „%s“"
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:508
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:514
-#: ../tools/browser/ldap-browser/ldap-search-page.c:453
-msgid "_LDAP"
-msgstr "_LDAP"
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:374
+msgid "New LDAP entries tab"
+msgstr "Nová karta se záznamy LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:508
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:514
-#: ../tools/browser/ldap-browser/ldap-search-page.c:453
-#: ../tools/common/t-app.c:1401 ../tools/common/t-app.c:1409
-#: ../tools/common/t-app.c:1421 ../tools/common/t-app.c:1429
-msgid "LDAP"
-msgstr "LDAP"
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:385
+msgid "New LDAP classes tab"
+msgstr "Nová karta s třídami LDAP"
 
-#. BROWSER_STOCK_LDAP_ENTRIES
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:338
-msgid "_New LDAP Entries Browser"
-msgstr "_Nový prohlížeč záznamů LDAP"
-
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:338
-msgid "Open a new LDAP entries browser"
-msgstr "Otevřít nový prohlížeč záznamů LDAP"
-
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:340
-msgid "_New LDAP Classes Browser"
-msgstr "_Nový prohlížeč tříd LDAP"
-
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:340
-msgid "Open a new LDAP classes browser"
-msgstr "Otevřít nový prohlížeč tříd LDAP"
-
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:342
-msgid "_New LDAP Search"
-msgstr "_Nové hledání v adresáři LDAP"
-
-#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:342
-msgid "Open a new LDAP search form"
-msgstr "Otevřít nový formulář hledání v adresáři LDAP"
+#: ../tools/browser/ldap-browser/ldap-browser-perspective.c:393
+msgid "New LDAP search tab"
+msgstr "Nová karta hledání v adresáři LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:318
 msgid "LDAP classes browser"
 msgstr "Prohlížeč tříd LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:338
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:574
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:337
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:571
 msgid "LDAP classes"
 msgstr "Třídy LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:365
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:363
 msgid "LDAP class's properties"
 msgstr "Vlastnosti třídy LDAP"
 
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:505
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:511
+#: ../tools/browser/ldap-browser/ldap-search-page.c:450
+msgid "_LDAP"
+msgstr "_LDAP"
+
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:505
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:511
+#: ../tools/browser/ldap-browser/ldap-search-page.c:450
+#: ../tools/common/t-app.c:1399 ../tools/common/t-app.c:1407
+#: ../tools/common/t-app.c:1419 ../tools/common/t-app.c:1427
+msgid "LDAP"
+msgstr "LDAP"
+
 #. STOCK_ADD_BOOKMARK
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:509
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:515
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:506
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:512
 #: ../tools/browser/schema-browser/table-info.c:975
 msgid "Add to _Favorites"
 msgstr "Přidat do o_blíbených"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:509
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:506
 msgid "Add class to favorites"
 msgstr "Přidat třídu do oblíbených"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:511
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 msgid "Previous Class"
 msgstr "Předchozí třída"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:511
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 msgid "Move back to previous LDAP class"
 msgstr "Přesunout se zpět na předchozí třídu LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:513
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:510
 msgid "Next Class"
 msgstr "Následující třída"
 
-#: ../tools/browser/ldap-browser/ldap-classes-page.c:513
+#: ../tools/browser/ldap-browser/ldap-classes-page.c:510
 msgid "Move to next LDAP class"
 msgstr "Přesunout se na následující třídu LDAP"
 
@@ -9005,40 +8815,40 @@ msgstr "Přesunout se na následující třídu LDAP"
 msgid "LDAP entries browser"
 msgstr "Prohlížeč záznamů LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:344
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:343
 msgid "LDAP hierarchy"
 msgstr "Hierarchie LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:371
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:369
 msgid "LDAP entry's details"
 msgstr "Podrobnosti záznamu LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:515
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:512
 msgid "Add entry to favorites"
 msgstr "Přidat záznam do oblíbených"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:517
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:514
 msgid "Previous Entry"
 msgstr "Předchozí záznam"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:517
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:514
 msgid "Move back to previous LDAP entry"
 msgstr "Přesunout se zpět na předchozí záznam LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:519
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:516
 msgid "Next Entry"
 msgstr "Následující záznam"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:519
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:516
 msgid "Move to next LDAP entry"
 msgstr "Přesunout se na následující záznam LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-entries-page.c:580
+#: ../tools/browser/ldap-browser/ldap-entries-page.c:577
 msgid "LDAP entries"
 msgstr "Záznamy LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:477
-#: ../tools/browser/query-exec/query-favorite-selector.c:568
+#: ../tools/browser/ldap-browser/ldap-favorite-selector.c:474
+#: ../tools/browser/query-exec/query-favorite-selector.c:564
 #: ../tools/browser/schema-browser/favorite-selector.c:245
 msgid "Favorites"
 msgstr "Oblíbené"
@@ -9047,50 +8857,50 @@ msgstr "Oblíbené"
 msgid "LDAP search page"
 msgstr "Stránka hledání LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:286
+#: ../tools/browser/ldap-browser/ldap-search-page.c:285
 msgid "LDAP search settings"
 msgstr "Nastavení hledání LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:311
+#: ../tools/browser/ldap-browser/ldap-search-page.c:309
 #: ../tools/browser/query-exec/query-console-page.c:308
 #: ../tools/browser/query-exec/query-console-page.c:378
 msgid "Clear"
 msgstr "Vymazat"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:312
+#: ../tools/browser/ldap-browser/ldap-search-page.c:310
 msgid "Clear the search settings"
 msgstr "Vymazat nastavení hledání"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:318
+#: ../tools/browser/ldap-browser/ldap-search-page.c:316
 msgid "Execute LDAP search"
 msgstr "Provést hledání v adresáři LDAP"
 
 #. results
-#: ../tools/browser/ldap-browser/ldap-search-page.c:324
+#: ../tools/browser/ldap-browser/ldap-search-page.c:322
 msgid "Results"
 msgstr "Výsledky"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:372
+#: ../tools/browser/ldap-browser/ldap-search-page.c:369
 #, c-format
 msgid "Could not define virtual table for this LDAP search: %s"
 msgstr "Nelze definovat virtuální tabulku pro toto hledání v adresáři LDAP: %s"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:378
+#: ../tools/browser/ldap-browser/ldap-search-page.c:375
 #, c-format
 msgid "Virtual table '%s' for this LDAP search has been defined"
 msgstr ""
 "Virtuální tabulka „%s“ pro toto hledání v adresáři LDAP byla definována"
 
 #. BROWSER_STOCK_TABLE_ADD
-#: ../tools/browser/ldap-browser/ldap-search-page.c:454
+#: ../tools/browser/ldap-browser/ldap-search-page.c:451
 msgid "Define as Table"
 msgstr "Definovat jako tabulku"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:454
+#: ../tools/browser/ldap-browser/ldap-search-page.c:451
 msgid "Define search as a virtual table"
 msgstr "Definovat hledání jako virtuální tabulku"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:528
+#: ../tools/browser/ldap-browser/ldap-search-page.c:525
 msgid "LDAP search"
 msgstr "Hledání LDAP"
 
@@ -9227,11 +9037,11 @@ msgstr[1] "%d tabulky ve schématu „%s“:"
 msgstr[2] "%d tabulek ve schématu „%s“:"
 
 #. no connection at all or not authenticated
-#: ../tools/browser/objects-cloud.c:268 ../tools/common/web-server.c:647
+#: ../tools/browser/objects-cloud.c:268 ../tools/common/web-server.c:651
 msgid "None"
 msgstr "Žádné"
 
-#: ../tools/browser/query-exec/perspective-main.c:33
+#: ../tools/browser/query-exec/perspective-main.c:34
 msgid "Query execution (SQL)"
 msgstr "Provádění dotazu (SQL)"
 
@@ -9324,7 +9134,7 @@ msgid "Favorite's name"
 msgstr "Název oblíbeného"
 
 #: ../tools/browser/query-exec/query-console-page.c:735
-#: ../tools/browser/query-exec/query-favorite-selector.c:701
+#: ../tools/browser/query-exec/query-favorite-selector.c:697
 msgid "Unnamed query"
 msgstr "Nepojmenovaný dotaz"
 
@@ -9378,7 +9188,7 @@ msgid "Statement executed"
 msgstr "Příkaz proveden"
 
 #: ../tools/browser/query-exec/query-console-page.c:1020
-#: ../tools/browser/ui-formgrid.c:650
+#: ../tools/browser/ui-formgrid.c:616
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -9396,7 +9206,7 @@ msgstr ""
 "produkt „libgda“"
 
 #: ../tools/browser/query-exec/query-console-page.c:1079
-#: ../tools/browser/ui-formgrid.c:339
+#: ../tools/browser/ui-formgrid.c:344
 msgid "_Execute"
 msgstr "_Provést"
 
@@ -9450,36 +9260,24 @@ msgstr[0] "před %lu dnem\n"
 msgstr[1] "před %lu dny\n"
 msgstr[2] "před %lu dny\n"
 
-#: ../tools/browser/query-exec/query-exec-perspective.c:319
-msgid "_Query"
-msgstr "_Dotaz"
-
-#: ../tools/browser/query-exec/query-exec-perspective.c:319
-msgid "Query"
-msgstr "Dotaz"
-
-#: ../tools/browser/query-exec/query-exec-perspective.c:320
-msgid "_New Editor"
-msgstr "_Nový editor"
-
-#: ../tools/browser/query-exec/query-exec-perspective.c:320
-msgid "Open a new query editor"
-msgstr "Otevřít nový editor dotazů"
+#: ../tools/browser/query-exec/query-exec-perspective.c:344
+msgid "New query execution tab"
+msgstr "Nová karta k provádění dotazů"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:286
 #, c-format
 msgid "Could not add action: %s"
 msgstr "Nelze přidat akci: %s"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:360
+#: ../tools/browser/query-exec/query-favorite-selector.c:357
 msgid "SQL Code"
 msgstr "Kód SQL"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:367
+#: ../tools/browser/query-exec/query-favorite-selector.c:364
 msgid "Is action"
 msgstr "Jde o akci"
 
-#: ../tools/browser/query-exec/query-favorite-selector.c:370
+#: ../tools/browser/query-exec/query-favorite-selector.c:367
 msgid ""
 "Check this option to make this favorite an action\n"
 "which can be proposed for execution from grids\n"
@@ -9491,23 +9289,19 @@ msgstr ""
 "obsahující data. Parametry požadované k provedení dotazu\n"
 "budou definovány z vybraného řádku v mřížce."
 
-#: ../tools/browser/query-exec/query-result.c:221
+#: ../tools/browser/query-exec/query-result.c:219
 msgid "Statement:"
 msgstr "Příkaz:"
 
-#: ../tools/browser/query-exec/query-result.c:295
+#: ../tools/browser/query-exec/query-result.c:293
 msgid "Execution Parameters"
 msgstr "Parametry provádění"
 
-#: ../tools/browser/query-exec/query-result.c:357
+#: ../tools/browser/query-exec/query-result.c:355
 msgid "No result selected"
 msgstr "Není vybrán žádný výsledek"
 
-#: ../tools/browser/query-exec/query-result.c:400
-msgid "Re-execute query"
-msgstr "Znovu provést dotaz"
-
-#: ../tools/browser/query-exec/query-result.c:498
+#: ../tools/browser/query-exec/query-result.c:475
 msgid "Execution error:\n"
 msgstr "Chyba zpracování:\n"
 
@@ -9527,7 +9321,7 @@ msgstr "Automaticky zvýšováno"
 msgid "Tables' index"
 msgstr "Index tabulky"
 
-#: ../tools/browser/schema-browser/perspective-main.c:33
+#: ../tools/browser/schema-browser/perspective-main.c:34
 msgid "Schema browser"
 msgstr "Prohlížeč schématu"
 
@@ -9574,20 +9368,7 @@ msgstr "_Obsah"
 msgid "View contents"
 msgstr "Zobrazit obsah"
 
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:314
-msgid "_Schema"
-msgstr "_Schéma"
-
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:314
-#: ../tools/common/t-app.c:1818
-msgid "Schema"
-msgstr "Schéma"
-
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:315
-msgid "_New Diagram"
-msgstr "_Nový diagram"
-
-#: ../tools/browser/schema-browser/schema-browser-perspective.c:315
+#: ../tools/browser/schema-browser/schema-browser-perspective.c:346
 msgid "Create a new diagram"
 msgstr "Vytvořit nový diagram"
 
@@ -9676,7 +9457,7 @@ msgid "Data successfully inserted"
 msgstr "Data úspěšně vložena"
 
 #: ../tools/browser/schema-browser/table-info.c:538
-#: ../tools/browser/ui-formgrid.c:761
+#: ../tools/browser/ui-formgrid.c:727
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Chyba při provádění dotazu: %s"
@@ -9753,15 +9534,15 @@ msgstr "výchozí"
 msgid "Table's fields"
 msgstr "Pole tabulky"
 
-#: ../tools/browser/schema-browser/table-preferences.c:377
+#: ../tools/browser/schema-browser/table-preferences.c:376
 msgid "Field's display preferences"
 msgstr "Předvolby zobrazení pole"
 
-#: ../tools/browser/schema-browser/table-preferences.c:453
+#: ../tools/browser/schema-browser/table-preferences.c:452
 msgid "Data entry type:"
 msgstr "Typ datového záznamu:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:454
+#: ../tools/browser/schema-browser/table-preferences.c:453
 msgid ""
 "Defines how data for the selected column\n"
 "will be displayed in forms. Leave 'Default' to have\n"
@@ -9771,20 +9552,20 @@ msgstr ""
 "zobrazovat ve formuláři. Pokud chcete výchozí\n"
 "zobrazení, ponechejte „Výchozí“."
 
-#: ../tools/browser/schema-browser/table-preferences.c:463
-#: ../tools/browser/schema-browser/table-preferences.c:474
+#: ../tools/browser/schema-browser/table-preferences.c:462
+#: ../tools/browser/schema-browser/table-preferences.c:473
 msgid "none"
 msgstr "žádná"
 
-#: ../tools/browser/schema-browser/table-preferences.c:467
+#: ../tools/browser/schema-browser/table-preferences.c:466
 msgid "Options:"
 msgstr "Možnosti:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:478
+#: ../tools/browser/schema-browser/table-preferences.c:477
 msgid "Preview:"
 msgstr "Náhled:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:479
+#: ../tools/browser/schema-browser/table-preferences.c:478
 msgid ""
 "Free form to test the configured\n"
 "data entry"
@@ -9804,23 +9585,27 @@ msgstr "Hledat:"
 msgid "Case sensitive"
 msgstr "Rozlišovat velikost písmen"
 
-#: ../tools/browser/ui-formgrid.c:347
+#: ../tools/browser/ui-formgrid.c:352
 msgid "Enable or disable auto update of data"
 msgstr "Zapnout nebo vypnout automatické aktualizace dat"
 
-#: ../tools/browser/ui-formgrid.c:365
+#: ../tools/browser/ui-formgrid.c:361
 msgid "Toggle between grid and form presentations"
 msgstr "Přepíná mezi zobrazením v podobě mřížky a formuláře"
 
-#: ../tools/browser/ui-formgrid.c:506
+#: ../tools/browser/ui-formgrid.c:371
+msgid "Refresh data"
+msgstr "Občerstvit data"
+
+#: ../tools/browser/ui-formgrid.c:472
 msgid "Execute action"
 msgstr "Provést akci"
 
-#: ../tools/browser/ui-formgrid.c:554
+#: ../tools/browser/ui-formgrid.c:520
 msgid "View LDAP entry's details"
 msgstr "Zobrazit podrobnosti záznamu LDAP"
 
-#: ../tools/browser/ui-formgrid.c:671
+#: ../tools/browser/ui-formgrid.c:637
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -9829,11 +9614,15 @@ msgstr ""
 "Nastavte nebo potvrďte parametry pro spuštění\n"
 "akce „%s“"
 
-#: ../tools/browser/ui-formgrid.c:675
+#: ../tools/browser/ui-formgrid.c:641
 msgid "Execution of action"
 msgstr "Provádění akce"
 
-#: ../tools/browser/ui-formgrid.c:752 ../tools/browser/ui-formgrid.c:756
+#: ../tools/browser/ui-formgrid.c:661
+msgid "_Close"
+msgstr "_Zavřít"
+
+#: ../tools/browser/ui-formgrid.c:718 ../tools/browser/ui-formgrid.c:722
 msgid "Action successfully executed"
 msgstr "Akce úspěšně provedena"
 
@@ -9853,7 +9642,7 @@ msgstr "Pomocná"
 msgid "Information:"
 msgstr "Informace:"
 
-#: ../tools/browser/ui-support.c:295
+#: ../tools/browser/ui-support.c:296
 msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
@@ -9861,15 +9650,11 @@ msgstr ""
 "Nelze zobrazit nápovědu. Ujistěte se prosím, že je nainstalován balíček s "
 "dokumentací."
 
-#: ../tools/browser/ui-support.c:312
+#: ../tools/browser/ui-support.c:313
 msgid "Unable to open help file"
 msgstr "Nelze otevřít soubor s nápovědou"
 
-#: ../tools/browser/ui-support.c:322 ../tools/browser/ui-support.c:324
-msgid "Help is being loaded, please wait..."
-msgstr "Nápověda se načítá, čekejte prosím…"
-
-#: ../tools/browser/ui-support.c:466
+#: ../tools/browser/ui-support.c:463
 msgid "Close tab"
 msgstr "Zavřít kartu"
 
@@ -9906,46 +9691,46 @@ msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
 msgstr "Definuje atributy LDAP, které jsou jako výchozí získávány příkazy LDAP"
 
-#: ../tools/common/t-app.c:588
+#: ../tools/common/t-app.c:586
 #, c-format
 msgid "Opening connection '%s' for: "
 msgstr "Otevírá se připojení „%s“ pro: "
 
-#: ../tools/common/t-app.c:945 ../tools/common/t-app.c:1136
-#: ../tools/common/t-app.c:1209 ../tools/common/t-app.c:1217
+#: ../tools/common/t-app.c:943 ../tools/common/t-app.c:1134
+#: ../tools/common/t-app.c:1207 ../tools/common/t-app.c:1215
 #, c-format
 msgid "%s [<FILE>]"
 msgstr "%s [<SOUBOR>]"
 
-#: ../tools/common/t-app.c:946
+#: ../tools/common/t-app.c:944
 msgid "Show commands history, or save it to file"
 msgstr "Zobrazit historii příkazů nebo ji uložit do souboru"
 
-#: ../tools/common/t-app.c:951 ../tools/common/t-app.c:962
-#: ../tools/common/t-app.c:973 ../tools/common/t-app.c:984
-#: ../tools/common/t-app.c:995 ../tools/common/t-app.c:1006
-#: ../tools/common/t-app.c:1017 ../tools/common/t-app.c:1028
-#: ../tools/common/t-app.c:1037
+#: ../tools/common/t-app.c:949 ../tools/common/t-app.c:960
+#: ../tools/common/t-app.c:971 ../tools/common/t-app.c:982
+#: ../tools/common/t-app.c:993 ../tools/common/t-app.c:1004
+#: ../tools/common/t-app.c:1015 ../tools/common/t-app.c:1026
+#: ../tools/common/t-app.c:1035
 msgid "Information"
 msgstr "Informace"
 
-#: ../tools/common/t-app.c:953
+#: ../tools/common/t-app.c:951
 #, c-format
 msgid "%s [<META DATA TYPE>]"
 msgstr "%s [<TYP METADAT>]"
 
-#: ../tools/common/t-app.c:954
+#: ../tools/common/t-app.c:952
 msgid ""
 "Force reading the database meta data (or part of the meta data, ex:\"tables"
 "\")"
 msgstr "Vynucené čtení metadat databáze (nebo části metadat, např. \"tables\")"
 
-#: ../tools/common/t-app.c:964
+#: ../tools/common/t-app.c:962
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
 msgstr "%s <název_ck> <tabulkaA>(<sloupecA>,…) <tabulkaB>(<sloupecB>,…)"
 
-#: ../tools/common/t-app.c:965
+#: ../tools/common/t-app.c:963
 msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
@@ -9953,95 +9738,95 @@ msgstr ""
 "Deklarovat nový cizí klíč (ne skutečně v databázi): tabulkaA odkazuje na "
 "tabulkaB"
 
-#: ../tools/common/t-app.c:975
+#: ../tools/common/t-app.c:973
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
 msgstr "%s <název_ck> <tabulkaA> <tabulkaB>"
 
-#: ../tools/common/t-app.c:976
+#: ../tools/common/t-app.c:974
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Zrušit deklaraci cizího klíče (ne skutečně v databázi)"
 
-#: ../tools/common/t-app.c:986
+#: ../tools/common/t-app.c:984
 #, c-format
 msgid "%s [<TABLE>]"
 msgstr "%s [<TABULKA>]"
 
-#: ../tools/common/t-app.c:987
+#: ../tools/common/t-app.c:985
 msgid "List all tables (or named table)"
 msgstr "Vypsat všechny tabulky (nebo tabulku zadanou názvem)"
 
-#: ../tools/common/t-app.c:997
+#: ../tools/common/t-app.c:995
 #, c-format
 msgid "%s [<VIEW>]"
 msgstr "%s [<POHLED>]"
 
-#: ../tools/common/t-app.c:998
+#: ../tools/common/t-app.c:996
 msgid "List all views (or named view)"
 msgstr "Vypsat všechny pohledy (nebo pohled zadaný názvem)"
 
-#: ../tools/common/t-app.c:1008
+#: ../tools/common/t-app.c:1006
 #, c-format
 msgid "%s [<SCHEMA>]"
 msgstr "%s [<SCHÉMA>]"
 
-#: ../tools/common/t-app.c:1009
+#: ../tools/common/t-app.c:1007
 msgid "List all schemas (or named schema)"
 msgstr "Vypsat všechna schémata (nebo schéma zadané názvem)"
 
-#: ../tools/common/t-app.c:1019
+#: ../tools/common/t-app.c:1017
 #, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
 msgstr "%s [<NÁZEV OBJ>|<SCHÉMA>.*]"
 
-#: ../tools/common/t-app.c:1020
+#: ../tools/common/t-app.c:1018
 msgid "Describe object or full list of objects"
 msgstr "Popsat objekt nebo vypsat úplný seznam objektů"
 
-#: ../tools/common/t-app.c:1030
+#: ../tools/common/t-app.c:1028
 #, c-format
 msgid "%s [<TABLE1> [<TABLE2>...]]"
 msgstr "%s [<TABULKA1> [<TABULKA2>…]]"
 
-#: ../tools/common/t-app.c:1031
+#: ../tools/common/t-app.c:1029
 msgid "Create a graph of all or the listed tables"
 msgstr "Vytvořit graf všech nebo uvedených tabulek"
 
-#: ../tools/common/t-app.c:1039
+#: ../tools/common/t-app.c:1037
 #, c-format
 msgid "%s [<port> [<authentication token>]]"
 msgstr "%s [<port> [<ověřovací pešek>]]"
 
-#: ../tools/common/t-app.c:1040
+#: ../tools/common/t-app.c:1038
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
 "Spustit/zastavit zabudovaný server HTTP (na zadaném portu nebo výchozím "
 "portu 12345)"
 
-#: ../tools/common/t-app.c:1049
+#: ../tools/common/t-app.c:1047
 #, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
 msgstr "%s [[<NÁZEV PŘIPJ>] [<DSN>|<PŘIPOJOVACÍ ŘETĚZEC>]]"
 
-#: ../tools/common/t-app.c:1050
+#: ../tools/common/t-app.c:1048
 msgid "Opens a new connection or lists opened connections"
 msgstr "Otevře nové připojení nebo vypíše otevřená připojení"
 
-#: ../tools/common/t-app.c:1062
+#: ../tools/common/t-app.c:1060
 #, c-format
 msgid "%s [<CNC_NAME>]"
 msgstr "%s [<NÁZEV PŘIPJ>]"
 
-#: ../tools/common/t-app.c:1063
+#: ../tools/common/t-app.c:1061
 msgid "Close a connection"
 msgstr "Zavřít připojení"
 
-#: ../tools/common/t-app.c:1073
+#: ../tools/common/t-app.c:1071
 #, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
 msgstr "%s <NÁZEV PŘIPJ> <NÁZEV OBJ> [<NÁZEV OBJ> …]"
 
-#: ../tools/common/t-app.c:1074
+#: ../tools/common/t-app.c:1072
 msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing "
 "SQL commands to be executed across multiple connections and/or datasets)"
@@ -10050,213 +9835,217 @@ msgstr ""
 "umožňuje provádět příkazy SQL napříč různými připojeními a/nebo datovými "
 "sadami)"
 
-#: ../tools/common/t-app.c:1082 ../tools/common/t-app.c:1093
-#: ../tools/common/t-app.c:1104 ../tools/common/t-app.c:1115
+#: ../tools/common/t-app.c:1080 ../tools/common/t-app.c:1091
+#: ../tools/common/t-app.c:1102 ../tools/common/t-app.c:1113
 msgid "DSN (data sources) management"
 msgstr "Správa DSN (zdrojů dat)"
 
-#: ../tools/common/t-app.c:1084
+#: ../tools/common/t-app.c:1082
 #, c-format
 msgid "%s [<DSN>]"
 msgstr "%s [<DSN>]"
 
-#: ../tools/common/t-app.c:1085
+#: ../tools/common/t-app.c:1083
 msgid "List all DSN (or specified DSN's attributes)"
 msgstr "Vypsat všechny DSN (nebo atributy určeného DSN)"
 
-#: ../tools/common/t-app.c:1095
+#: ../tools/common/t-app.c:1093
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
 msgstr "%s <NÁZEV_DSN> <DEFINICE_DSN> [<POPIS>]"
 
-#: ../tools/common/t-app.c:1096
+#: ../tools/common/t-app.c:1094
 msgid "Create (or modify) a DSN"
 msgstr "Vytvořit (nebo změnit) DSN"
 
-#: ../tools/common/t-app.c:1106
+#: ../tools/common/t-app.c:1104
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
 msgstr "%s <NÁZEV_DSN> [<NÁZEV_DSN>…]"
 
-#: ../tools/common/t-app.c:1107
+#: ../tools/common/t-app.c:1105
 msgid "Remove a DSN"
 msgstr "Odstranit DSN"
 
-#: ../tools/common/t-app.c:1117
+#: ../tools/common/t-app.c:1115
 #, c-format
 msgid "%s [<PROVIDER>]"
 msgstr "%s [<POSKYTOVATEL>]"
 
-#: ../tools/common/t-app.c:1118
+#: ../tools/common/t-app.c:1116
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
 "Vypsat všechny instalované databázové poskytovatele (nebo atributy zadaného "
 "názvem)"
 
-#: ../tools/common/t-app.c:1126 ../tools/common/t-app.c:1134
-#: ../tools/common/t-app.c:1142 ../tools/common/t-app.c:1150
-#: ../tools/common/t-app.c:1279
+#: ../tools/common/t-app.c:1124 ../tools/common/t-app.c:1132
+#: ../tools/common/t-app.c:1140 ../tools/common/t-app.c:1148
+#: ../tools/common/t-app.c:1277
 msgid "Input/Output"
 msgstr "Vstup/výstup"
 
-#: ../tools/common/t-app.c:1128 ../tools/common/t-app.c:1241
+#: ../tools/common/t-app.c:1126 ../tools/common/t-app.c:1239
 #, c-format
 msgid "%s <FILE>"
 msgstr "%s <SOUBOR>"
 
-#: ../tools/common/t-app.c:1129
+#: ../tools/common/t-app.c:1127
 msgid "Execute commands from file"
 msgstr "Provést příkazy ze souboru"
 
-#: ../tools/common/t-app.c:1137
+#: ../tools/common/t-app.c:1135
 msgid "Send output to a file or |pipe"
 msgstr "Poslat výstup do souboru nebo |roury"
 
-#: ../tools/common/t-app.c:1144 ../tools/common/t-app.c:1152
+#: ../tools/common/t-app.c:1142 ../tools/common/t-app.c:1150
 #, c-format
 msgid "%s [<TEXT>]"
 msgstr "%s [<TEXT>]"
 
-#: ../tools/common/t-app.c:1145
+#: ../tools/common/t-app.c:1143
 msgid "Print TEXT or an empty line to standard output"
 msgstr "Vypsat TEXT nebo prázdný řádek na standardní výstup"
 
-#: ../tools/common/t-app.c:1153
+#: ../tools/common/t-app.c:1151
 msgid "Send TEXT or an empty line to current output stream"
 msgstr "Poslat TEXT nebo prázdný řádek do aktuálního výstupního proudu"
 
-#: ../tools/common/t-app.c:1168
+#: ../tools/common/t-app.c:1159
+msgid "Quit"
+msgstr "Ukončit"
+
+#: ../tools/common/t-app.c:1166
 #, c-format
 msgid "%s [<DIR>]"
 msgstr "%s [<SLOŽKA>]"
 
-#: ../tools/common/t-app.c:1169
+#: ../tools/common/t-app.c:1167
 msgid "Change the current working directory"
 msgstr "Změnit současnou pracovní složku"
 
-#: ../tools/common/t-app.c:1177
+#: ../tools/common/t-app.c:1175
 msgid "Show usage and distribution terms"
 msgstr "Zobrazit podmínky používání a šíření"
 
-#: ../tools/common/t-app.c:1187
+#: ../tools/common/t-app.c:1185
 #, c-format
 msgid "%s [<NAME> [<VALUE>]]"
 msgstr "%s [<NÁZEV> [<HODNOTA>]]"
 
-#: ../tools/common/t-app.c:1188
+#: ../tools/common/t-app.c:1186
 msgid "Set or show an option, or list all options "
 msgstr "Nastavit nebo zobrazit přepínač nebo vypsat všechny přepínače"
 
-#: ../tools/common/t-app.c:1198 ../tools/common/t-app.c:1308
+#: ../tools/common/t-app.c:1196 ../tools/common/t-app.c:1306
 #, c-format
 msgid "%s [<NAME>]"
 msgstr "%s [<NÁZEV>]"
 
-#: ../tools/common/t-app.c:1199
+#: ../tools/common/t-app.c:1197
 msgid "Show a piece of information, or all information about the connection"
 msgstr "Zobrazit některé, nebo případně všechny, informace o připojení"
 
-#: ../tools/common/t-app.c:1207 ../tools/common/t-app.c:1215
-#: ../tools/common/t-app.c:1223 ../tools/common/t-app.c:1231
-#: ../tools/common/t-app.c:1239 ../tools/common/t-app.c:1247
-#: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1263
-#: ../tools/common/t-app.c:1271 ../tools/common/t-app.c:1287
+#: ../tools/common/t-app.c:1205 ../tools/common/t-app.c:1213
+#: ../tools/common/t-app.c:1221 ../tools/common/t-app.c:1229
+#: ../tools/common/t-app.c:1237 ../tools/common/t-app.c:1245
+#: ../tools/common/t-app.c:1253 ../tools/common/t-app.c:1261
+#: ../tools/common/t-app.c:1269 ../tools/common/t-app.c:1285
 msgid "Query buffer & query favorites"
 msgstr "Paměť dotazů a oblíbené dotazy"
 
-#: ../tools/common/t-app.c:1210
+#: ../tools/common/t-app.c:1208
 msgid "Edit the query buffer (or file) with external editor"
 msgstr "Upravit paměť dotazů (nebo soubor) v externím editoru"
 
-#: ../tools/common/t-app.c:1218
+#: ../tools/common/t-app.c:1216
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr "Vynulovat paměť dotazů (nebo načíst soubor do paměti dotazů)"
 
-#: ../tools/common/t-app.c:1226
+#: ../tools/common/t-app.c:1224
 msgid "Show the contents of the query buffer"
 msgstr "Zobrazit obsah paměti dotazů"
 
-#: ../tools/common/t-app.c:1233
+#: ../tools/common/t-app.c:1231
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
 msgstr "%s [<NÁZEV_OBLÍBENÉHO>]"
 
-#: ../tools/common/t-app.c:1234
+#: ../tools/common/t-app.c:1232
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr "Provést obsah paměti dotazů nebo provést určený oblíbený dotaz"
 
-#: ../tools/common/t-app.c:1242
+#: ../tools/common/t-app.c:1240
 msgid "Write query buffer to file"
 msgstr "Zapsat paměť dotazů do souboru"
 
-#: ../tools/common/t-app.c:1249 ../tools/common/t-app.c:1257
-#: ../tools/common/t-app.c:1265
+#: ../tools/common/t-app.c:1247 ../tools/common/t-app.c:1255
+#: ../tools/common/t-app.c:1263
 #, c-format
 msgid "%s <FAVORITE_NAME>"
 msgstr "%s [<NÁZEV_OBLÍBENÉHO>]"
 
-#: ../tools/common/t-app.c:1250
+#: ../tools/common/t-app.c:1248
 msgid "Save query buffer as favorite"
 msgstr "Uložit paměť dotazů jako oblíbené"
 
-#: ../tools/common/t-app.c:1258
+#: ../tools/common/t-app.c:1256
 msgid "Load a query favorite into query buffer"
 msgstr "Načíst oblíbené dotazy do paměti dotazů"
 
-#: ../tools/common/t-app.c:1266
+#: ../tools/common/t-app.c:1264
 msgid "Delete a query favorite"
 msgstr "Smazat oblíbený dotaz"
 
-#: ../tools/common/t-app.c:1273 ../tools/common/t-app.c:1336
+#: ../tools/common/t-app.c:1271 ../tools/common/t-app.c:1334
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: ../tools/common/t-app.c:1274
+#: ../tools/common/t-app.c:1272
 msgid "List all query favorites"
 msgstr "Vypsat všechny oblíbené dotazy"
 
-#: ../tools/common/t-app.c:1282
+#: ../tools/common/t-app.c:1280
 msgid "Set output format"
 msgstr "Nastavit výstupní formát"
 
-#: ../tools/common/t-app.c:1289
+#: ../tools/common/t-app.c:1287
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
 msgstr "%s [<NÁZEV>|<TABULKA> <SLOUPEC> <PODMÍNKA_ŘÁDKU>] <SOUBOR>"
 
-#: ../tools/common/t-app.c:1290
+#: ../tools/common/t-app.c:1288
 msgid "Export internal parameter or table's value to the FILE file"
 msgstr "Exportovat interní parametr nebo hodnotu tabulky do souboru SOUBOR"
 
-#: ../tools/common/t-app.c:1295 ../tools/common/t-app.c:1306
-#: ../tools/common/t-app.c:1317 ../tools/common/t-app.c:1325
+#: ../tools/common/t-app.c:1293 ../tools/common/t-app.c:1304
+#: ../tools/common/t-app.c:1315 ../tools/common/t-app.c:1323
 msgid "Execution context"
 msgstr "Kontext provádění"
 
-#: ../tools/common/t-app.c:1297
+#: ../tools/common/t-app.c:1295
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
 msgstr "%s [<NÁZEV> [<HODNOTA>|_null_]]"
 
-#: ../tools/common/t-app.c:1298
+#: ../tools/common/t-app.c:1296
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
 "Nastavit nebo zobrazit interní parametr a nebo je všechny vypsat, pokud není "
 "žádný určen"
 
-#: ../tools/common/t-app.c:1309
+#: ../tools/common/t-app.c:1307
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr ""
 "Zrušit nastavení (smazat) interní pojmenovaný parametr (nebo všechny "
 "parametry)"
 
-#: ../tools/common/t-app.c:1319
+#: ../tools/common/t-app.c:1317
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
 msgstr "%s <NÁZEV> [<SOUBOR>|<TABULKA> <SLOUPEC> <PODMÍNKA_ŘÁDKU>]"
 
-#: ../tools/common/t-app.c:1320
+#: ../tools/common/t-app.c:1318
 msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
@@ -10264,12 +10053,12 @@ msgstr ""
 "Nastavit interní parametr na obsah souboru SOUBOR nebo existující hodnotu "
 "tabulky"
 
-#: ../tools/common/t-app.c:1327
+#: ../tools/common/t-app.c:1325
 #, c-format
 msgid "%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"
 msgstr "%s <SELECT> <ŘÁDKOVÁ_POLE> [<SLOUPCOVÁ_POLE> [<DATOVÁ_POLE>…]]"
 
-#: ../tools/common/t-app.c:1328
+#: ../tools/common/t-app.c:1326
 msgid ""
 "Performs a statistical analysis on the data from SELECT, using ROW_FIELDS "
 "and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
@@ -10277,31 +10066,31 @@ msgstr ""
 "Provést statistickou analýzu na datech z příkazu SELECT za použití kritérií "
 "ŘÁDKOVÁ_POLE a SLOUPCOVÁ_POLE a volitelně pro data DATOVÁ_POLE"
 
-#: ../tools/common/t-app.c:1334 ../tools/common/t-app.c:1345
-#: ../tools/common/t-app.c:1356 ../tools/common/t-app.c:1367
-#: ../tools/common/t-app.c:1378 ../tools/common/t-app.c:1389
+#: ../tools/common/t-app.c:1332 ../tools/common/t-app.c:1343
+#: ../tools/common/t-app.c:1354 ../tools/common/t-app.c:1365
+#: ../tools/common/t-app.c:1376 ../tools/common/t-app.c:1387
 msgid "Datasets' manipulations"
 msgstr "Práce s datovými sadami"
 
-#: ../tools/common/t-app.c:1337
+#: ../tools/common/t-app.c:1335
 msgid "Lists all the datasets kept in memory for reference"
 msgstr "Vypsat všechny datové sady přechovávané v paměti k nahlédnutí"
 
-#: ../tools/common/t-app.c:1347
+#: ../tools/common/t-app.c:1345
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
 msgstr "%s <NÁZEV DATOVÉ SADY> <VZOR>"
 
-#: ../tools/common/t-app.c:1348
+#: ../tools/common/t-app.c:1346
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr "Zobrazit obsah datové sady, kde řádky odpovídají regulárnímu výrazu"
 
-#: ../tools/common/t-app.c:1358
+#: ../tools/common/t-app.c:1356
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgstr "%s <NÁZEV DATOVÉ SADY> [<SLOUPEC> [<SLOUPEC> …]]"
 
-#: ../tools/common/t-app.c:1359
+#: ../tools/common/t-app.c:1357
 msgid ""
 "Show a dataset's contents, showing only the specified columns if any "
 "specified"
@@ -10309,50 +10098,50 @@ msgstr ""
 "Zobrazit obsah datové sady, zobrazují se jen určené sloupce, pokud nějaké "
 "určené jsou"
 
-#: ../tools/common/t-app.c:1369
+#: ../tools/common/t-app.c:1367
 #, c-format
 msgid "%s <DATASET NAME> [<DATASET NAME> ...]"
 msgstr "%s <NÁZEV DATOVÉ SADY> [<NÁZEV DATOVÉ SADY>…]"
 
-#: ../tools/common/t-app.c:1370
+#: ../tools/common/t-app.c:1368
 msgid "Remove one or more datasets"
 msgstr "Odebrat jednu nebo více datových sad"
 
-#: ../tools/common/t-app.c:1380
+#: ../tools/common/t-app.c:1378
 #, c-format
 msgid "%s <DATASET NAME> <DATASET NAME>"
 msgstr "%s <NÁZEV DATOVÉ SADY> <NÁZEV DATOVÉ SADY>"
 
-#: ../tools/common/t-app.c:1381
+#: ../tools/common/t-app.c:1379
 msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr ""
 "Přejmenovat datovou sadu, užitečné je přejmenovat datovou sadu „_“, aby "
 "zůstala zachována"
 
-#: ../tools/common/t-app.c:1391
+#: ../tools/common/t-app.c:1389
 #, c-format
 msgid "%s CSV <FILE NAME>"
 msgstr "%s CSV <NÁZEV SOUBORU>"
 
-#: ../tools/common/t-app.c:1392
+#: ../tools/common/t-app.c:1390
 msgid "Import a dataset from a file"
 msgstr "Importovat datovou sadu ze souboru"
 
-#: ../tools/common/t-app.c:1403
+#: ../tools/common/t-app.c:1401
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
 msgstr "%s <filtr> [<base|onelevel|subtree> [<základní DN>]]"
 
-#: ../tools/common/t-app.c:1404
+#: ../tools/common/t-app.c:1402
 msgid "Search LDAP entries"
 msgstr "Hledat záznamy LDAP"
 
-#: ../tools/common/t-app.c:1411
+#: ../tools/common/t-app.c:1409
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [„all“|„set“|„unset“]"
 
-#: ../tools/common/t-app.c:1412
+#: ../tools/common/t-app.c:1410
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
 "parameter is passed, then all set attributes are shown, if the \"all\" 2nd "
@@ -10364,21 +10153,21 @@ msgstr ""
 "„all“, jsou zobrazeny i nenastavené, a pokud je jím „unset“, jsou zobrazeny "
 "jen nenastavené atributy."
 
-#: ../tools/common/t-app.c:1423
+#: ../tools/common/t-app.c:1421
 #, c-format
 msgid "%s <DN> <new DN>"
 msgstr "%s <DN> <nové DN>"
 
-#: ../tools/common/t-app.c:1424
+#: ../tools/common/t-app.c:1422
 msgid "Renames an LDAP entry"
 msgstr "Přejmenovat záznam LDAP"
 
-#: ../tools/common/t-app.c:1431
+#: ../tools/common/t-app.c:1429
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
 msgstr "%s <DN> <OPERACE> [<ATRIB>[=<HODNOTA>]] [<ATRIB>=<HODNOTA>…]"
 
-#: ../tools/common/t-app.c:1432
+#: ../tools/common/t-app.c:1430
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
@@ -10386,75 +10175,79 @@ msgstr ""
 "Změnit atributy záznamu LDAP; <OPERACE> může být DELETE (smazat), REPLACE "
 "(nahradit) nebo ADD (přidat)"
 
-#: ../tools/common/t-app.c:1469
+#: ../tools/common/t-app.c:1467
 msgid "History is not supported"
 msgstr "Historie není podporována"
 
-#: ../tools/common/t-app.c:1487 ../tools/common/t-app.c:1528
-#: ../tools/common/t-app.c:1578 ../tools/common/t-app.c:1627
-#: ../tools/common/t-app.c:1766 ../tools/common/t-app.c:2848
-#: ../tools/common/t-app.c:3716 ../tools/common/t-app.c:4352
-#: ../tools/common/t-app.c:4520 ../tools/common/t-app.c:4638
+#: ../tools/common/t-app.c:1485 ../tools/common/t-app.c:1526
+#: ../tools/common/t-app.c:1576 ../tools/common/t-app.c:1625
+#: ../tools/common/t-app.c:1764 ../tools/common/t-app.c:2846
+#: ../tools/common/t-app.c:3714 ../tools/common/t-app.c:4350
+#: ../tools/common/t-app.c:4518 ../tools/common/t-app.c:4636
 msgid "No current connection"
 msgstr "Žádné aktuální připojení"
 
-#: ../tools/common/t-app.c:1557
+#: ../tools/common/t-app.c:1555
 msgid "List of tables"
 msgstr "Seznam tabulek"
 
-#: ../tools/common/t-app.c:1606
+#: ../tools/common/t-app.c:1604
 msgid "List of views"
 msgstr "Seznam pohledů"
 
-#: ../tools/common/t-app.c:1653
+#: ../tools/common/t-app.c:1651
 msgid "List of schemas"
 msgstr "Seznam schémat"
 
-#: ../tools/common/t-app.c:1727 ../tools/common/t-app.c:1865
+#: ../tools/common/t-app.c:1725 ../tools/common/t-app.c:1863
 msgid "No object found"
 msgstr "Nebyl nalezen žádný objekt"
 
-#: ../tools/common/t-app.c:1895 ../tools/common/web-server.c:860
+#: ../tools/common/t-app.c:1816
+msgid "Schema"
+msgstr "Schéma"
+
+#: ../tools/common/t-app.c:1893 ../tools/common/web-server.c:864
 msgid "Column"
 msgstr "Sloupec"
 
-#: ../tools/common/t-app.c:1897 ../tools/common/web-server.c:862
+#: ../tools/common/t-app.c:1895 ../tools/common/web-server.c:866
 msgid "Nullable"
 msgstr "Možno prázdný"
 
-#: ../tools/common/t-app.c:1899 ../tools/common/web-server.c:864
+#: ../tools/common/t-app.c:1897 ../tools/common/web-server.c:868
 msgid "Extra"
 msgstr "Doplňující"
 
-#: ../tools/common/t-app.c:1902
+#: ../tools/common/t-app.c:1900
 #, c-format
 msgid "List of columns for view '%s'"
 msgstr "Seznam sloupců pro pohled „%s“"
 
-#: ../tools/common/t-app.c:1906
+#: ../tools/common/t-app.c:1904
 #, c-format
 msgid "List of columns for table '%s'"
 msgstr "Seznam sloupců pro tabulku „%s“"
 
-#: ../tools/common/t-app.c:1918 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1916 ../tools/common/web-server.c:879
 msgid "yes"
 msgstr "ano"
 
-#: ../tools/common/t-app.c:1918 ../tools/common/web-server.c:875
+#: ../tools/common/t-app.c:1916 ../tools/common/web-server.c:879
 msgid "no"
 msgstr "ne"
 
-#: ../tools/common/t-app.c:1949
+#: ../tools/common/t-app.c:1947
 #, c-format
 msgid "Could not determine columns of view '%s'"
 msgstr "Nelze určit sloupce pohledu „%s“"
 
-#: ../tools/common/t-app.c:1953
+#: ../tools/common/t-app.c:1951
 #, c-format
 msgid "Could not determine columns of table '%s'"
 msgstr "Nelze určit sloupce tabulky „%s“"
 
-#: ../tools/common/t-app.c:1966
+#: ../tools/common/t-app.c:1964
 #, c-format
 msgid "View definition: %s"
 msgstr "Definice pohledu: %s"
@@ -10462,7 +10255,7 @@ msgstr "Definice pohledu: %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2126
+#: ../tools/common/t-app.c:2124
 #, c-format
 msgid "references %s"
 msgstr "odkazuje na %s"
@@ -10470,226 +10263,226 @@ msgstr "odkazuje na %s"
 #. To translators: the term "references" is the verb
 #. * "to reference" in the context of foreign keys where
 #. * "table A REFERENCES table B"
-#: ../tools/common/t-app.c:2132
+#: ../tools/common/t-app.c:2130
 #, c-format
 msgid "references %s.%s"
 msgstr "odkazuje na %s.%s"
 
-#: ../tools/common/t-app.c:2215
+#: ../tools/common/t-app.c:2213
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
 msgstr "Neznámý výstupní formát: „%s“, nastavuje se na výchozí"
 
-#: ../tools/common/t-app.c:2309 ../tools/common/t-app.c:2378
+#: ../tools/common/t-app.c:2307 ../tools/common/t-app.c:2376
 #, c-format
 msgid "No option named '%s'"
 msgstr "Nenalezen žádný přepínač s názvem „%s“"
 
-#: ../tools/common/t-app.c:2321
+#: ../tools/common/t-app.c:2319
 msgid "List of options"
 msgstr "Vypsat přepínače"
 
-#: ../tools/common/t-app.c:2390
+#: ../tools/common/t-app.c:2388
 msgid "Current connection's information"
 msgstr "Informace o současném připojení"
 
-#: ../tools/common/t-app.c:2467
+#: ../tools/common/t-app.c:2465
 #, c-format
 msgid "Could not get home directory: %s"
 msgstr "Nelze získat domovskou složku: %s"
 
-#: ../tools/common/t-app.c:2493
+#: ../tools/common/t-app.c:2491
 #, c-format
 msgid "Working directory is now: %s"
 msgstr "Pracovní složka je nyní: %s"
 
-#: ../tools/common/t-app.c:2498
+#: ../tools/common/t-app.c:2496
 #, c-format
 msgid "Could not change working directory to '%s': %s"
 msgstr "Nelze změnit pracovní složku na „%s“: %s"
 
-#: ../tools/common/t-app.c:2594
+#: ../tools/common/t-app.c:2592
 msgid "DSN list"
 msgstr "Seznam DSN"
 
-#: ../tools/common/t-app.c:2649
+#: ../tools/common/t-app.c:2647
 msgid "Missing arguments"
 msgstr "Schází parametry"
 
-#: ../tools/common/t-app.c:2685
+#: ../tools/common/t-app.c:2683
 msgid "Missing provider name"
 msgstr "Schází název poskytovatele"
 
-#: ../tools/common/t-app.c:2711
+#: ../tools/common/t-app.c:2709
 msgid "Missing DSN name"
 msgstr "Schází název DSN"
 
-#: ../tools/common/t-app.c:2889
+#: ../tools/common/t-app.c:2887
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
 "Získávají se informace o databázovém schématu, to může nějakou chvíli trvat…"
 
-#: ../tools/common/t-app.c:2896
+#: ../tools/common/t-app.c:2894
 #, c-format
 msgid "error: %s\n"
 msgstr "chyba: %s\n"
 
-#: ../tools/common/t-app.c:2903
+#: ../tools/common/t-app.c:2901
 #, c-format
 msgid "Done.\n"
 msgstr "Hotovo.\n"
 
-#: ../tools/common/t-app.c:2923 ../tools/common/t-app.c:3085
+#: ../tools/common/t-app.c:2921 ../tools/common/t-app.c:3083
 #, c-format
 msgid "A connection named '%s' already exists"
 msgstr "Připojení s názvem „%s“ již existuje"
 
-#: ../tools/common/t-app.c:2951
+#: ../tools/common/t-app.c:2949
 msgid "No opened connection"
 msgstr "Žádné otevřené připojení"
 
-#: ../tools/common/t-app.c:2962
+#: ../tools/common/t-app.c:2960
 msgid "DSN or connection string"
 msgstr "DSN nebo připojovací řetězec"
 
-#: ../tools/common/t-app.c:3077
+#: ../tools/common/t-app.c:3075
 msgid "Missing required connection names"
 msgstr "Schází názvy požadovaného připojení"
 
-#: ../tools/common/t-app.c:3090 ../tools/common/t-connection.c:715
+#: ../tools/common/t-app.c:3088 ../tools/common/t-connection.c:730
 #, c-format
 msgid "Connection name '%s' is invalid"
 msgstr "Název připojení „%s“ je neplatný"
 
-#: ../tools/common/t-app.c:3100
+#: ../tools/common/t-app.c:3098
 #, c-format
 msgid "No connection or dataset named '%s' found"
 msgstr "Nenalezeno žádné připojení nebo datová sada pojmenované „%s“"
 
 #. force create of meta store
 #. add existing connections to virtual connection
-#: ../tools/common/t-app.c:3121
+#: ../tools/common/t-app.c:3119
 msgid "Bound connections are as:"
 msgstr "Návazná připojení jsou:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
-#: ../tools/common/t-app.c:3134
+#: ../tools/common/t-app.c:3132
 #, c-format
 msgid "%s in the '%s' namespace"
 msgstr "%s ve jmenném prostoru „%s“"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
-#: ../tools/common/t-app.c:3148
+#: ../tools/common/t-app.c:3146
 #, c-format
 msgid "%s mapped to the %s table"
 msgstr "%s mapovaná do tabulky %s"
 
-#: ../tools/common/t-app.c:3181 ../tools/common/t-app.c:3284
-#: ../tools/common/t-app.c:3318 ../tools/common/t-app.c:3341
-#: ../tools/common/t-app.c:3379 ../tools/common/t-app.c:3418
-#: ../tools/common/t-app.c:3519 ../tools/common/t-app.c:3572
-#: ../tools/common/t-app.c:3648 ../tools/common/t-app.c:5075
-#: ../tools/common/t-app.c:5164
+#: ../tools/common/t-app.c:3179 ../tools/common/t-app.c:3282
+#: ../tools/common/t-app.c:3316 ../tools/common/t-app.c:3339
+#: ../tools/common/t-app.c:3377 ../tools/common/t-app.c:3416
+#: ../tools/common/t-app.c:3517 ../tools/common/t-app.c:3570
+#: ../tools/common/t-app.c:3646 ../tools/common/t-app.c:5073
+#: ../tools/common/t-app.c:5162
 msgid "No connection opened"
 msgstr "Není otevřeno žádné připojení"
 
-#: ../tools/common/t-app.c:3201
+#: ../tools/common/t-app.c:3199
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Nelze zapsat do dočasného souboru „%s“: %s"
 
-#: ../tools/common/t-app.c:3238
+#: ../tools/common/t-app.c:3236
 #, c-format
 msgid "could not start editor '%s'"
 msgstr "nelze spustit editor „%s“"
 
-#: ../tools/common/t-app.c:3243
+#: ../tools/common/t-app.c:3241
 msgid "Could not start /bin/sh"
 msgstr "Nelze spustit /bin/sh"
 
-#: ../tools/common/t-app.c:3385
+#: ../tools/common/t-app.c:3383
 msgid "Missing FILE to write to"
 msgstr "Schází SOUBOR, do kterého se má zapisovat"
 
-#: ../tools/common/t-app.c:3424
+#: ../tools/common/t-app.c:3422
 msgid "Favorite name"
 msgstr "Název oblíbeného"
 
-#: ../tools/common/t-app.c:3425
+#: ../tools/common/t-app.c:3423
 msgid "Comments"
 msgstr "Komentáře"
 
-#: ../tools/common/t-app.c:3426
+#: ../tools/common/t-app.c:3424
 msgid "SQL"
 msgstr "SQL"
 
-#: ../tools/common/t-app.c:3532 ../tools/common/t-app.c:3632
-#: ../tools/common/t-app.c:3697
+#: ../tools/common/t-app.c:3530 ../tools/common/t-app.c:3630
+#: ../tools/common/t-app.c:3695
 msgid "Missing query buffer name"
 msgstr "Schází název paměti dotazů"
 
-#: ../tools/common/t-app.c:3556
+#: ../tools/common/t-app.c:3554
 msgid "Query buffer is empty"
 msgstr "Paměť dotazů je prázdná"
 
-#: ../tools/common/t-app.c:3600 ../tools/common/t-favorites.c:1091
+#: ../tools/common/t-app.c:3598 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
 msgstr "Nelze přidat oblíbenou"
 
-#: ../tools/common/t-app.c:3782 ../tools/common/t-app.c:3847
-#: ../tools/common/t-app.c:4563
+#: ../tools/common/t-app.c:3780 ../tools/common/t-app.c:3845
+#: ../tools/common/t-app.c:4561
 #, c-format
 msgid "No parameter named '%s' defined"
 msgstr "Není definován žádný parametr s názvem „%s“"
 
-#: ../tools/common/t-app.c:3794
+#: ../tools/common/t-app.c:3792
 msgid "List of defined parameters"
 msgstr "Seznam definovaných parametrů"
 
-#: ../tools/common/t-app.c:3875
+#: ../tools/common/t-app.c:3873
 msgid "dimensions (columns x rows)"
 msgstr "rozměry (sloupců × řádků)"
 
-#: ../tools/common/t-app.c:3876
+#: ../tools/common/t-app.c:3874
 msgid "List of kept data"
 msgstr "Vypsat přechovávaná data"
 
-#: ../tools/common/t-app.c:3925 ../tools/common/t-app.c:3966
-#: ../tools/common/t-app.c:4089 ../tools/common/t-app.c:4158
-#: ../tools/common/t-app.c:4230
+#: ../tools/common/t-app.c:3923 ../tools/common/t-app.c:3964
+#: ../tools/common/t-app.c:4087 ../tools/common/t-app.c:4156
+#: ../tools/common/t-app.c:4228
 msgid "Missing argument"
 msgstr "Schází argument"
 
-#: ../tools/common/t-app.c:3934 ../tools/common/t-app.c:3976
-#: ../tools/common/t-app.c:4097 ../tools/common/t-app.c:4166
+#: ../tools/common/t-app.c:3932 ../tools/common/t-app.c:3974
+#: ../tools/common/t-app.c:4095 ../tools/common/t-app.c:4164
 #, c-format
 msgid "Could not find dataset named '%s'"
 msgstr "Nelze najít datovou sadu pojmenovanou „%s“"
 
-#: ../tools/common/t-app.c:4118
+#: ../tools/common/t-app.c:4116
 #, c-format
 msgid "Could not identify column '%s'"
 msgstr "Nelze zjistit sloupec „%s“"
 
-#: ../tools/common/t-app.c:4221
+#: ../tools/common/t-app.c:4219
 #, c-format
 msgid "Unknown import format '%s'"
 msgstr "Neznámý importní formát „%s“"
 
-#: ../tools/common/t-app.c:4242
+#: ../tools/common/t-app.c:4240
 #, c-format
 msgid "Could not import file '%s'"
 msgstr "Nelze importovat soubor „%s“"
 
-#: ../tools/common/t-app.c:4326
+#: ../tools/common/t-app.c:4324
 #, c-format
 msgid "Graph written to '%s'\n"
 msgstr "Graf zapsán do „%s“\n"
 
-#: ../tools/common/t-app.c:4329
+#: ../tools/common/t-app.c:4327
 #, c-format
 msgid ""
 "Graph written to '%s'\n"
@@ -10704,131 +10497,131 @@ msgstr ""
 "Poznámka: pro zobrazení grafu nastavte proměnnou prostředí "
 "GDA_SQL_VIEWER_PNG nebo GDA_SQL_VIEWER_PDF\n"
 
-#: ../tools/common/t-app.c:4385
+#: ../tools/common/t-app.c:4383
 msgid "Could not start HTTPD server"
 msgstr "Nelze spustit server HTTPD"
 
-#: ../tools/common/t-app.c:4407
+#: ../tools/common/t-app.c:4405
 msgid "HTTPD server stopped"
 msgstr "Server HTTPD zastaven"
 
-#: ../tools/common/t-app.c:4426
+#: ../tools/common/t-app.c:4424
 msgid "HTTPD server started"
 msgstr "Server HTTPD spuštěn"
 
-#: ../tools/common/t-app.c:4431
+#: ../tools/common/t-app.c:4429
 msgid "Invalid port specification"
 msgstr "Neplatné zadání portu"
 
-#: ../tools/common/t-app.c:4468
+#: ../tools/common/t-app.c:4466
 msgid "Wrong row condition"
 msgstr "Nesprávná podmínka řádku"
 
-#: ../tools/common/t-app.c:4497
+#: ../tools/common/t-app.c:4495
 msgid "No unique row identified"
 msgstr "Nebyl zjištěn žádný jedinečný řádek"
 
-#: ../tools/common/t-app.c:4569 ../tools/common/t-app.c:4710
+#: ../tools/common/t-app.c:4567 ../tools/common/t-app.c:4708
 msgid "Wrong number of arguments"
 msgstr "Nesprávný počet parametrů"
 
-#: ../tools/common/t-app.c:4581 ../tools/common/t-app.c:4595
+#: ../tools/common/t-app.c:4579 ../tools/common/t-app.c:4593
 msgid "Could not write file"
 msgstr "Nelze zapsat soubor"
 
-#: ../tools/common/t-app.c:4747
+#: ../tools/common/t-app.c:4745
 msgid "Missing data on which to operate"
 msgstr "Schází data, se kterými se má operovat"
 
-#: ../tools/common/t-app.c:4752
+#: ../tools/common/t-app.c:4750
 msgid "Missing row fields specifications"
 msgstr "Schází specifikace řádkových polí"
 
-#: ../tools/common/t-app.c:4770
+#: ../tools/common/t-app.c:4768
 msgid "Wrong SELECT argument"
 msgstr "Nesprávné argument příkazu SELECT"
 
-#: ../tools/common/t-app.c:4808 ../tools/common/t-app.c:4836
+#: ../tools/common/t-app.c:4806 ../tools/common/t-app.c:4834
 msgid "Wrong data field argument"
 msgstr "Nesprávný argument datového pole"
 
-#: ../tools/common/t-app.c:4908
+#: ../tools/common/t-app.c:4906
 msgid "Missing foreign key declaration specification"
 msgstr "Schází specifikace deklarace cizího klíče"
 
-#: ../tools/common/t-app.c:5025
+#: ../tools/common/t-app.c:5023
 msgid "Malformed foreign key declaration specification"
 msgstr "Chybná specifikace deklarace cizího klíče"
 
-#: ../tools/common/t-app.c:5057
+#: ../tools/common/t-app.c:5055
 #, c-format
 msgid "Malformed table name specification '%s'"
 msgstr "Chybná specifikace názvu tabulky „%s“"
 
-#: ../tools/common/t-app.c:5149 ../tools/common/t-app.c:5226
+#: ../tools/common/t-app.c:5147 ../tools/common/t-app.c:5224
 msgid "Missing foreign key name argument"
 msgstr "Schází argument s názvem cizího klíče"
 
-#: ../tools/common/t-app.c:5251 ../tools/common/t-app.c:5352
-#: ../tools/common/t-app.c:5449 ../tools/common/t-app.c:5547
+#: ../tools/common/t-app.c:5249 ../tools/common/t-app.c:5350
+#: ../tools/common/t-app.c:5447 ../tools/common/t-app.c:5545
 msgid "Connection is not an LDAP connection"
 msgstr "Připojení není připojení LDAP"
 
-#: ../tools/common/t-app.c:5273
+#: ../tools/common/t-app.c:5271
 #, c-format
 msgid "Unknown search scope '%s'"
 msgstr "Neznámý rozsah hledání „%s“"
 
-#: ../tools/common/t-app.c:5283
+#: ../tools/common/t-app.c:5281
 msgid "Missing filter which to operate"
 msgstr "Schází filtr, se kterými se má operovat"
 
-#: ../tools/common/t-app.c:5367
+#: ../tools/common/t-app.c:5365
 msgid "Missing current DN or new DN specification"
 msgstr "Schází určení současného DN nebo nového DN"
 
-#: ../tools/common/t-app.c:5464
+#: ../tools/common/t-app.c:5462
 msgid "Missing DN of LDAP entry"
 msgstr "Schází DN záznamu LDAP"
 
-#: ../tools/common/t-app.c:5469
+#: ../tools/common/t-app.c:5467
 msgid "Missing operation to perform on LDAP entry's attributes"
 msgstr "Schází operace, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/common/t-app.c:5481
+#: ../tools/common/t-app.c:5479
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr "Neznámá operace „%s“, která se má provést s atributy záznamu LDAP"
 
-#: ../tools/common/t-app.c:5502
+#: ../tools/common/t-app.c:5500
 #, c-format
 msgid "Wrong attribute value specification '%s'"
 msgstr "Zadána nesprávná hodnota atributu „%s“"
 
-#: ../tools/common/t-app.c:5561
+#: ../tools/common/t-app.c:5559
 msgid "Missing DN (Distinguished name) argument"
 msgstr "Schází argument s DN (rozlišovacím názvem)"
 
-#: ../tools/common/t-app.c:5574
+#: ../tools/common/t-app.c:5572
 #, c-format
 msgid "Unknown '%s' argument"
 msgstr "Neznámý argument „%s“"
 
-#: ../tools/common/t-app.c:5585
+#: ../tools/common/t-app.c:5583
 #, c-format
 msgid "Could not find entry with DN '%s'"
 msgstr "Nelze najít záznam s DN „%s“"
 
-#: ../tools/common/t-app.c:5593 ../tools/common/t-config-info.c:122
+#: ../tools/common/t-app.c:5591 ../tools/common/t-config-info.c:122
 #: ../tools/common/t-config-info.c:291
 msgid "Attribute"
 msgstr "Atribut"
 
-#: ../tools/common/t-app.c:5594
+#: ../tools/common/t-app.c:5592
 msgid "Required?"
 msgstr "Vyžadováno?"
 
-#: ../tools/common/t-app.c:5596
+#: ../tools/common/t-app.c:5594
 msgid "LDAP entry's Attributes"
 msgstr "Atributy záznamu LDAP"
 
@@ -10899,46 +10692,41 @@ msgstr "Selhalo odstranění: "
 msgid "No file to purge!"
 msgstr "Žádný soubor k vyčištění!"
 
-#: ../tools/common/t-connection.c:227
-#, c-format
-msgid "c%u"
-msgstr "p%u"
-
-#: ../tools/common/t-connection.c:266
+#: ../tools/common/t-connection.c:271
 msgid "Analysing database schema"
 msgstr "Analyzuje se databázové schéma"
 
-#: ../tools/common/t-connection.c:293 ../tools/common/t-connection.c:435
-#: ../tools/common/t-connection.c:1176
+#: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
+#: ../tools/common/t-connection.c:1211
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr "Chyba při získávání metadat z připojení: %s"
 
-#: ../tools/common/t-connection.c:345
+#: ../tools/common/t-connection.c:350
 msgid "File containing the meta data associated to the connection"
 msgstr "Soubor obsahující metadata patřící k připojení"
 
-#: ../tools/common/t-connection.c:788
+#: ../tools/common/t-connection.c:803
 #, c-format
 msgid "\tUsername for '%s': "
 msgstr "\tUživatelské jméno pro „%s“:"
 
-#: ../tools/common/t-connection.c:795 ../tools/common/t-connection.c:810
+#: ../tools/common/t-connection.c:810 ../tools/common/t-connection.c:825
 #, c-format
 msgid "No username for '%s'"
 msgstr "Žádné jméno uživatele pro „%s“"
 
-#: ../tools/common/t-connection.c:819
+#: ../tools/common/t-connection.c:834
 #, c-format
 msgid "\tPassword for '%s': "
 msgstr "\tHeslo pro „%s“:"
 
-#: ../tools/common/t-connection.c:828 ../tools/common/t-connection.c:837
+#: ../tools/common/t-connection.c:843 ../tools/common/t-connection.c:852
 #, c-format
 msgid "No password for '%s'"
 msgstr "Pro „%s“ není žádné heslo"
 
-#: ../tools/common/t-connection.c:923
+#: ../tools/common/t-connection.c:935
 #, c-format
 msgid ""
 "Date format for this connection will be: %s, where YYYY is the year, MM the "
@@ -10947,7 +10735,7 @@ msgstr ""
 "Formát data pro toto připojení bude %s, kde YYYY je rok, MM je měsíc a DD je "
 "den\n"
 
-#: ../tools/common/t-connection.c:931
+#: ../tools/common/t-connection.c:943
 msgid ""
 "Format of the date used for by connection, where YYYY is the year, MM the "
 "month and DD the day"
@@ -10955,39 +10743,47 @@ msgstr ""
 "Formát data používaný tímto připojením, kde YYYY je rok, MM je měsíc a DD je "
 "den"
 
-#: ../tools/common/t-connection.c:1067
+#: ../tools/common/t-connection.c:1075
+msgid "Data source"
+msgstr "Zdroj dat"
+
+#: ../tools/common/t-connection.c:1100
+msgid "Connection"
+msgstr "Připojení"
+
+#: ../tools/common/t-connection.c:1102
 msgid "unnamed"
 msgstr "nepojmenováno"
 
-#: ../tools/common/t-connection.c:1070
+#: ../tools/common/t-connection.c:1105
 msgid "data source"
 msgstr "zdroj dat"
 
-#: ../tools/common/t-connection.c:1165
+#: ../tools/common/t-connection.c:1200
 msgid "Getting database schema information"
 msgstr "Získávají se informace o databázovém schématu"
 
-#: ../tools/common/t-connection.c:1521
+#: ../tools/common/t-connection.c:1556
 msgid "Connection not yet opened"
 msgstr "Připojení není zatím otevřeno"
 
-#: ../tools/common/t-connection.c:1527
+#: ../tools/common/t-connection.c:1562
 msgid "Can't initialize dictionary to store table preferences"
 msgstr "Nelze inicializovat slovník pro uchování předvoleb tabulek"
 
-#: ../tools/common/t-connection.c:1573 ../tools/common/t-connection.c:1579
-#: ../tools/common/t-connection.c:1715 ../tools/common/t-favorites.c:628
+#: ../tools/common/t-connection.c:1608 ../tools/common/t-connection.c:1614
+#: ../tools/common/t-connection.c:1750 ../tools/common/t-favorites.c:628
 #: ../tools/common/t-favorites.c:634 ../tools/common/t-favorites.c:1061
 #: ../tools/common/t-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
 msgstr "Nelez inicializovat transakci pro přístup k oblíbeným"
 
-#: ../tools/common/t-connection.c:1660 ../tools/common/t-favorites.c:807
+#: ../tools/common/t-connection.c:1695 ../tools/common/t-favorites.c:807
 #: ../tools/common/t-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
 msgstr "Nelze schválit transakci pro přístup k oblíbeným"
 
-#: ../tools/common/t-connection.c:2219
+#: ../tools/common/t-connection.c:2254
 msgid "Could not execute LDAP search"
 msgstr "Nelze provést hledání v adresáři LDAP"
 
@@ -11061,11 +10857,11 @@ msgstr "Je použit svázané připojení"
 msgid "Virtual connection using this connection is busy"
 msgstr "Virtuální připojení používající toto připojení je zaneprázdněno"
 
-#: ../tools/common/web-server.c:501 ../tools/common/web-server.c:502
+#: ../tools/common/web-server.c:505 ../tools/common/web-server.c:506
 msgid "Authentication required"
 msgstr "Vyžadováno ověření"
 
-#: ../tools/common/web-server.c:504
+#: ../tools/common/web-server.c:508
 msgid ""
 "Enter authentification token as set from console, or leave empty if none "
 "required"
@@ -11073,109 +10869,109 @@ msgstr ""
 "Zadejte ověřovacího peška, jak je nastaven z konzoly, nebo, pokud není "
 "požadován, ponechte prázdné"
 
-#: ../tools/common/web-server.c:566
+#: ../tools/common/web-server.c:570
 msgid "Token:"
 msgstr "Pešek:"
 
-#: ../tools/common/web-server.c:707
+#: ../tools/common/web-server.c:711
 msgid "SQL console:"
 msgstr "Konzola SQL:"
 
-#: ../tools/common/web-server.c:787 ../tools/common/web-server.c:1807
+#: ../tools/common/web-server.c:791 ../tools/common/web-server.c:1811
 msgid "Tables"
 msgstr "Tabulky"
 
-#: ../tools/common/web-server.c:787
+#: ../tools/common/web-server.c:791
 #, c-format
 msgid "Tables in the '%s' schema"
 msgstr "Tabulky ve schématu „%s“"
 
-#: ../tools/common/web-server.c:793 ../tools/common/web-server.c:1812
+#: ../tools/common/web-server.c:797 ../tools/common/web-server.c:1816
 msgid "Views"
 msgstr "Pohledy"
 
-#: ../tools/common/web-server.c:793
+#: ../tools/common/web-server.c:797
 #, c-format
 msgid "Views in the '%s' schema"
 msgstr "Pohledy ve schématu „%s“"
 
-#: ../tools/common/web-server.c:852
+#: ../tools/common/web-server.c:856
 #, c-format
 msgid "Columns for the '%s' table:"
 msgstr "Sloupce pro tabulku „%s“:"
 
-#: ../tools/common/web-server.c:898
+#: ../tools/common/web-server.c:902
 msgid "Primary key:"
 msgstr "Primární klíč:"
 
-#: ../tools/common/web-server.c:1003
+#: ../tools/common/web-server.c:1007
 msgid "Relations:"
 msgstr "Relace:"
 
-#: ../tools/common/web-server.c:1020
+#: ../tools/common/web-server.c:1024
 msgid "Foreign keys:"
 msgstr "Cizí klíče:"
 
-#: ../tools/common/web-server.c:1032
+#: ../tools/common/web-server.c:1036
 #, c-format
 msgid "To '%s':"
 msgstr "K „%s“:"
 
-#: ../tools/common/web-server.c:1207
+#: ../tools/common/web-server.c:1211
 msgid "View definition:"
 msgstr "Definice pohledu:"
 
-#: ../tools/common/web-server.c:1282
+#: ../tools/common/web-server.c:1286
 #, c-format
 msgid "Trigger '%s' for the '%s.%s' table:"
 msgstr "Trigger „%s“ pro tabulku „%s.%s“:"
 
-#: ../tools/common/web-server.c:1302
+#: ../tools/common/web-server.c:1306
 #, c-format
 msgid "Trigger fired for: %s"
 msgstr "Trigger spuštěn pro: %s"
 
-#: ../tools/common/web-server.c:1306
+#: ../tools/common/web-server.c:1310
 #, c-format
 msgid "Time at which the trigger is fired: %s"
 msgstr "Čas, kdy je trigger spouštěn: %s"
 
-#: ../tools/common/web-server.c:1310
+#: ../tools/common/web-server.c:1314
 msgid "Action:"
 msgstr "Akce:"
 
-#: ../tools/common/web-server.c:1539
+#: ../tools/common/web-server.c:1543
 msgid "Triggers:"
 msgstr "Triggery:"
 
-#: ../tools/common/web-server.c:1571 ../tools/common/web-server.c:1665
+#: ../tools/common/web-server.c:1575 ../tools/common/web-server.c:1669
 #, c-format
 msgid "For the '%s.%s' table:"
 msgstr "Pro tabulku „%s.%s“:"
 
-#: ../tools/common/web-server.c:1637
+#: ../tools/common/web-server.c:1641
 #, c-format
 msgid "Triggers in the '%s' schema:"
 msgstr "Triggery ve schématu „%s“:"
 
-#: ../tools/common/web-server.c:1791
+#: ../tools/common/web-server.c:1795
 #, c-format
 msgid "Database information for '%s'"
 msgstr "Databázová informace pro „%s“"
 
-#: ../tools/common/web-server.c:1796
+#: ../tools/common/web-server.c:1800
 msgid "Database information"
 msgstr "Databázová informace"
 
-#: ../tools/common/web-server.c:1805
+#: ../tools/common/web-server.c:1809
 msgid "Objects"
 msgstr "Objekty"
 
-#: ../tools/common/web-server.c:1817
+#: ../tools/common/web-server.c:1821
 msgid "Triggers"
 msgstr "Triggery"
 
-#: ../tools/common/web-server.c:1887
+#: ../tools/common/web-server.c:1891
 msgid "Command is incomplete"
 msgstr "Příkaz je neúplný"
 
@@ -11222,3 +11018,11 @@ msgstr "Chyba: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Nelze zpracovat soubor „%s“, ignoruje se"
+
+#: ../tools/resources/menus.ui.h:1
+msgid "New Window for..."
+msgstr "Nové okno pro…"
+
+#: ../tools/resources/menus.ui.h:2
+msgid "Display"
+msgstr "Zobrazit"
