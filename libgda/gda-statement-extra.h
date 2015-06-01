@@ -86,7 +86,7 @@ typedef gchar *(*GdaSqlRenderingValue)     (const GValue *value, GdaSqlRendering
  * GdaSqlRenderingContext:
  * @flags: Global rendering options
  * @params: Parameters to be used while doing the rendering
- * @params_used: When rendering is complete, contains the ordered list of parameters which have been used while doing the rendering
+ * @params_used: (element-type GdaHolder): When rendering is complete, contains the ordered list of parameters which have been used while doing the rendering
  * @provider: Pointer to the server provider to be used
  * @cnc: Pointer to the connection to be used
  * @render_value: function to render a #GValue

@@ -1294,7 +1294,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
  *
  * Get the value of the #GdaHolder which ID is @holder_id
  *
- * Returns: (transfer none): the requested GValue, or %NULL (see gda_holder_get_value())
+ * Returns: (allow-none) (transfer none): the requested GValue, or %NULL (see gda_holder_get_value())
  */
 const GValue *
 gda_set_get_holder_value (GdaSet *set, const gchar *holder_id)
