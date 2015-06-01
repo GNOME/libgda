@@ -150,7 +150,7 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 /**
  * gda_data_handler_get_value_from_sql:
  * @dh: an object which implements the #GdaDataHandler interface
- * @sql: (allow-none): an SQL string, or %NULL
+ * @sql: (allow-none) (transfer none): an SQL string, or %NULL
  * @type: a GType
  *
  * Creates a new GValue which represents the SQL value given as argument. This is
@@ -182,7 +182,7 @@ gda_data_handler_get_value_from_sql (GdaDataHandler *dh, const gchar *sql, GType
 /**
  * gda_data_handler_get_value_from_str:
  * @dh: an object which implements the #GdaDataHandler interface
- * @str: (allow-none): a string or %NULL
+ * @str: (allow-none) (transfer none): a string or %NULL
  * @type: a GType
  *
  * Creates a new GValue which represents the @str value given as argument. This is
@@ -227,7 +227,7 @@ gda_data_handler_get_value_from_str (GdaDataHandler *dh, const gchar *str, GType
  * Creates a new GValue which holds a sane initial value to be used if no value is specifically
  * provided. For example for a simple string, this would return a new value containing the "" string.
  *
- * Returns: (transfer full): the new #GValue, or %NULL if no such value can be created.
+ * Returns: (allow-none) (transfer full): the new #GValue, or %NULL if no such value can be created.
  */
 GValue *
 gda_data_handler_get_sane_init_value (GdaDataHandler *dh, GType type)

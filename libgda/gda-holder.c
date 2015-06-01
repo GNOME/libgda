@@ -456,7 +456,7 @@ gda_holder_copy (GdaHolder *orig)
 }
 
 /**
- * gda_holder_new_inline: (skip)
+ * gda_holder_new_inline:
  * @type: a valid GLib type
  * @id: (allow-none): the id of the holder to create, or %NULL
  * @...: value to set

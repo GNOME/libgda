@@ -4227,7 +4227,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
           column NMTOKEN #IMPLIED
           ref_column NMTOKEN #IMPLIED>
 
-<!ELEMENT unique (column*)>
+<!ELEMENT unique (column)>
 
 <!ELEMENT view (definition)>
 <!ATTLIST view

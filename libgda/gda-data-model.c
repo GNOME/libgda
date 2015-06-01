@@ -728,7 +728,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
  * Upon errors %NULL will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
- * Returns: a #GValue containing the value stored in the given
+ * Returns: (allow-none) (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, wrong data type, etc).
  */
 const GValue *
