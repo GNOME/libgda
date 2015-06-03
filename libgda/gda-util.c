@@ -5,7 +5,7 @@
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
- * Copyright (C) 2004 - 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2004 - 2013 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2009 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>

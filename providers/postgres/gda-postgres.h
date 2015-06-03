@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2001 - 2002 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  *
  * This library is free software; you can redistribute it and/or

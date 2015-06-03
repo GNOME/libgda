@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Andrew Hill <andru@src.gnome.org>
- * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2008 Johannes Schmid <johannes.schmid@openismus.com>

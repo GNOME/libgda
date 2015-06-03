@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
- * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Christopher Taylor <christophth@tiscali.it>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>

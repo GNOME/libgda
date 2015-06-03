@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2014 Anders Jonsson <anders.jonsson@norsjovallen.se>
  * Copyright (C) 2014 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or

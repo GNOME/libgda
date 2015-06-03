@@ -2,7 +2,7 @@
  * Copyright (C) 2000 Akira Tagoh <tagoh@src.gnome.org>
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
@@ -15,6 +15,8 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

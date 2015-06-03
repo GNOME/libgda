@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2009 Og B. Maciel <ogmaciel@gnome.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

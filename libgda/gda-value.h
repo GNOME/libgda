@@ -9,7 +9,7 @@
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

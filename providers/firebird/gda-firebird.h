@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2005 Cygwin Ports Maintainer <yselkowitz@users.sourceforge.net>
  *

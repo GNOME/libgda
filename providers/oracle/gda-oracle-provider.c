@@ -6,7 +6,7 @@
  * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 Magnus Bergman <magnus.bergman@observer.net>
- * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2006 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  *

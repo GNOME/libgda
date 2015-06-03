@@ -3,7 +3,7 @@
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2002 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
- * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>

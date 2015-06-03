@@ -4,7 +4,10 @@
  * Copyright (C) 2008 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013 Carl-Anton Ingmarsson <ca.ingmarsson@gmail.com>
+ * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
+ * Copyright (C) 2015 Corentin Noël <corentin@elementary.io>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -4223,7 +4226,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
  *
  * The partial DTD for this XML description of the object to add is the following (the top node must be
  * a &lt;table&gt; or a &lt;view&gt;):
- * <programlisting><![CDATA[<!ELEMENT table (column*,check*,fkey*,unique*)>
+ * <programlisting><![CDATA[<!ELEMENT table (column*,check*,fkey*)>
 <!ATTLIST table
           name NMTOKEN #REQUIRED>
 
@@ -4245,8 +4248,6 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 <!ATTLIST part
           column NMTOKEN #IMPLIED
           ref_column NMTOKEN #IMPLIED>
-
-<!ELEMENT unique (column)>
 
 <!ELEMENT view (definition)>
 <!ATTLIST view

@@ -21,6 +21,8 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
+ * Copyright (C) 2014 Anders Jonsson <anders.jonsson@norsjovallen.se>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

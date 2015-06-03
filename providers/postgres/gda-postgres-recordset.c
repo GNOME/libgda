@@ -7,7 +7,7 @@
  * Copyright (C) 2004 Andrew Hill <andru@src.gnome.org>
  * Copyright (C) 2004 - 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2004 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alex <alex@igalia.com>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>

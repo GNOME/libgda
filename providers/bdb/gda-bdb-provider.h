@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
- * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2012 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

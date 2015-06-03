@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 Reinhard Müller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2001 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Cleber Rodrigues <cleberrrjr@bol.com.br>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2003 Filip Van Raemdonck <mechanix@debian.org>
@@ -11,6 +11,7 @@
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2015 Gergely Polonkai <gergely@polonkai.eu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
  *

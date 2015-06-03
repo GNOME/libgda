@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2006 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>

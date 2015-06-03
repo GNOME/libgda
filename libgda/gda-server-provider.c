@@ -10,7 +10,7 @@
  * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
- * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2008 - 2014 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2008 PrzemysÅ‚aw Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
