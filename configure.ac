@@ -537,6 +537,8 @@ AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "x
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
+AC_ARG_VAR(VALA_API_VERSION,[Vala API version to generate bingdings and compile against. Install versioned bidings.])
+
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
 then
 	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
@@ -565,10 +567,18 @@ then
 	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
 fi
 
+vala_api="No Vala bindings will be generated"
 if test "x$enable_vala" = "xyes"
 then
-	AM_PROG_VALAC([0.17.7])
-	VAPIGEN_CHECK([0.17.7],[0.26],,no)
+	AM_PROG_VALAC([0.26.0])
+	if test "x$VALA_API_VERSION" = "x"
+	then
+		VAPIGEN_CHECK([0.26.0],[0.26],,no)
+		vala_api="0.26 (Default)"
+	else
+		VAPIGEN_CHECK([0.26.0],$VALA_API_VERSION,,no)
+		vala_api=$VALA_API_VERSION
+	fi
 else
 	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
 fi
@@ -1089,6 +1099,7 @@ echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi !=
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings (--enable-vala): `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
+echo "     Vala API version to use: $vala_api"
 echo "   Building GDA-UI Vala Bindings: `if test x$enable_gdaui_vala != xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
