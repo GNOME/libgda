@@ -247,7 +247,6 @@ _gda_firebird_provider_meta_init (GdaServerProvider *provider)
 					    "constraint_name", G_TYPE_STRING, "",
 					    "field_name", G_TYPE_STRING, ""
 					    , "char_set_name", G_TYPE_STRING, "");
-		g_mutex_unlock (&init_mutex);
 	
 		/* initialize static values here */
 		/*
