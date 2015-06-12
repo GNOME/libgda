@@ -250,6 +250,26 @@ namespace Gda {
 		[NoAccessorMethod]
 		public bool read_only { get; set; }
 	}
+	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_model_bdb_get_type ()")]
+	public class DataModelBdb : GLib.Object, Gda.DataModel {
+		[CCode (has_construct_function = false)]
+		protected DataModelBdb ();
+		public void clean_errors ();
+		[NoWrapper]
+		public virtual GLib.Value? get_data_part (void* data, int length, int part);
+		public unowned GLib.SList<GLib.Error> get_errors ();
+		[NoWrapper]
+		public virtual GLib.Value? get_key_part (void* data, int length, int part);
+		public static Gda.DataModel @new (string filename, string? db_name);
+		[NoWrapper]
+		public virtual bool update_data_part (void* data, int length, int part, GLib.Value value) throws GLib.Error;
+		[NoWrapper]
+		public virtual bool update_key_part (void* data, int length, int part, GLib.Value value) throws GLib.Error;
+		[NoAccessorMethod]
+		public string db_name { owned get; construct; }
+		[NoAccessorMethod]
+		public string filename { owned get; construct; }
+	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_model_dir_get_type ()")]
 	public class DataModelDir : GLib.Object, Gda.DataModel {
 		[CCode (has_construct_function = false)]
@@ -324,11 +344,11 @@ namespace Gda {
 		[NoAccessorMethod]
 		public string @base { owned get; construct; }
 		[NoAccessorMethod]
-		public Gda.Connection cnc { owned get; construct; }
-		[NoAccessorMethod]
 		public string filter { owned get; construct; }
 		[NoAccessorMethod]
 		public int scope { get; construct; }
+		[NoAccessorMethod]
+		public bool use_rdn { get; set; }
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_data_pivot_get_type ()")]
 	public class DataPivot : GLib.Object, Gda.DataModel {
@@ -600,9 +620,9 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_meta_context_get_type ()")]
 	[Compact]
 	public class MetaContext {
-		[CCode (array_length_cname = "size")]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak string[] column_names;
-		[CCode (array_length_cname = "size")]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public weak GLib.Value[] column_values;
 		public weak GLib.HashTable<string,GLib.Value?> columns;
 		public int size;
@@ -738,7 +758,7 @@ namespace Gda {
 		[CCode (has_construct_function = false)]
 		public Row (int count);
 		public int get_length ();
-		public GLib.Value? get_value (int num);
+		public unowned GLib.Value? get_value (int num);
 		public void invalidate_value (GLib.Value value);
 		public void invalidate_value_e (GLib.Value value, owned GLib.Error? error);
 		public bool value_is_valid (GLib.Value value);
@@ -858,9 +878,9 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_set_get_type ()")]
 	public class Set : GLib.Object {
-		public GLib.List<Gda.SetGroup> groups_list;
-		public GLib.List<Gda.SetNode> nodes_list;
-		public GLib.List<Gda.SetSource> sources_list;
+		public weak GLib.SList<Gda.SetGroup> groups_list;
+		public weak GLib.SList<Gda.SetNode> nodes_list;
+		public weak GLib.SList<Gda.SetSource> sources_list;
 		[CCode (has_construct_function = false)]
 		public Set (GLib.SList<Gda.Holder> holders);
 		public bool add_holder (Gda.Holder holder);
@@ -903,7 +923,7 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_set_group_get_type ()")]
 	[Compact]
 	public class SetGroup {
-		public GLib.List<Gda.SetNode> nodes;
+		public weak GLib.SList<Gda.SetNode> nodes;
 		public weak Gda.SetSource nodes_source;
 		[CCode (has_construct_function = false)]
 		public SetGroup (Gda.SetNode node);
@@ -937,7 +957,7 @@ namespace Gda {
 	[Compact]
 	public class SetSource {
 		public weak Gda.DataModel data_model;
-		public GLib.List<Gda.SetNode> nodes;
+		public weak GLib.SList<Gda.SetNode> nodes;
 		[CCode (has_construct_function = false)]
 		public SetSource (Gda.DataModel model);
 		public void add_node (Gda.SetNode node);
@@ -995,6 +1015,8 @@ namespace Gda {
 		public void set_syntax_error ();
 		[NoAccessorMethod]
 		public int column_error { get; }
+		[NoAccessorMethod]
+		public bool debug { set; }
 		[NoAccessorMethod]
 		public int line_error { get; }
 		[NoAccessorMethod]
@@ -1099,7 +1121,7 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", type_id = "gda_transaction_status_get_type ()")]
 	public class TransactionStatus : GLib.Object {
-		public GLib.List<Gda.TransactionStatusEvent> events;
+		public weak GLib.List<Gda.TransactionStatusEvent> events;
 		public Gda.TransactionIsolation isolation_level;
 		public weak string name;
 		public Gda.TransactionStatusState state;
@@ -1387,7 +1409,7 @@ namespace Gda {
 		public weak string obj_short_name;
 		public weak string obj_full_name;
 		public weak string obj_owner;
-		public GLib.List<Gda.MetaDbObject> depend_list;
+		public weak GLib.SList<Gda.MetaDbObject> depend_list;
 		[CCode (cname = "extra.meta_table")]
 		public Gda.MetaTable extra_meta_table;
 		[CCode (cname = "extra.meta_view")]
@@ -1401,11 +1423,11 @@ namespace Gda {
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTable {
-		public GLib.List<Gda.MetaTableColumn> columns;
+		public weak GLib.SList<Gda.MetaTableColumn> columns;
 		public int pk_cols_array;
 		public int pk_cols_nb;
-		public GLib.List<Gda.MetaTableForeignKey> reverse_fk_list;
-		public GLib.List<Gda.MetaTableForeignKey> fk_list;
+		public weak GLib.SList<Gda.MetaTableForeignKey> reverse_fk_list;
+		public weak GLib.SList<Gda.MetaTableForeignKey> fk_list;
 	}
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	public struct MetaTableColumn {
@@ -1479,7 +1501,7 @@ namespace Gda {
 	public struct SqlRenderingContext {
 		public Gda.StatementSqlFlag flags;
 		public weak Gda.Set @params;
-		public GLib.List<Gda.Holder> params_used;
+		public weak GLib.SList<Gda.Holder> params_used;
 		public weak Gda.ServerProvider provider;
 		public weak Gda.Connection cnc;
 		public weak Gda.SqlRenderingValue render_value;

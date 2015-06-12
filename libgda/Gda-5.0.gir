@@ -4845,7 +4845,7 @@ GDA_CONNECTION_OPTIONS_THREAD_SAFE or GDA_CONNECTION_OPTIONS_THREAD_ISOLATED fla
 
 Note about the @GDA_CONNECTION_OPTIONS_AUTO_META_DATA flag:
 &lt;itemizedlist&gt;
- &lt;listitem&gt;&lt;para&gt;Every time a DDL statement is successfully executed, the associated mate data, if
+ &lt;listitem&gt;&lt;para&gt;Every time a DDL statement is successfully executed, the associated meta data, if
               defined, will be updated, which has a impact on performances&lt;/para&gt;&lt;/listitem&gt;
  &lt;listitem&gt;&lt;para&gt;If a transaction is started and some DDL statements are executed and the transaction
            is not rolled back or committed, then the meta data may end up being wrong&lt;/para&gt;&lt;/listitem&gt;
@@ -7752,6 +7752,345 @@ Also clears @model's contents.</doc>
             c:type="GdaDataModelArrayPrivate"
             disguised="1">
     </record>
+    <class name="DataModelBdb"
+           c:symbol-prefix="data_model_bdb"
+           c:type="GdaDataModelBdb"
+           parent="GObject.Object"
+           glib:type-name="GdaDataModelBdb"
+           glib:get-type="gda_data_model_bdb_get_type"
+           glib:type-struct="DataModelBdbClass">
+      <implements name="DataModel"/>
+      <function name="new" c:identifier="gda_data_model_bdb_new">
+        <doc xml:space="preserve">Creates a new #GdaDataModel object to access the contents of the Berkeley DB file @file,
+for the database @db_name if not %NULL</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">a new #GdaDataModel</doc>
+          <type name="DataModel" c:type="GdaDataModel*"/>
+        </return-value>
+        <parameters>
+          <parameter name="filename" transfer-ownership="none">
+            <doc xml:space="preserve">name of the file containing the database</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+          <parameter name="db_name"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
+            <doc xml:space="preserve">the name of the database within @filename, or %NULL</doc>
+            <type name="utf8" c:type="const gchar*"/>
+          </parameter>
+        </parameters>
+      </function>
+      <virtual-method name="create_data_columns" introspectable="0">
+        <return-value>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="gpointer" c:type="gpointer"/>
+          </type>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="create_key_columns" introspectable="0">
+        <return-value>
+          <type name="GLib.SList" c:type="GSList*">
+            <type name="gpointer" c:type="gpointer"/>
+          </type>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="get_data_part">
+        <return-value transfer-ownership="full">
+          <type name="GObject.Value" c:type="GValue*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+          <parameter name="data" transfer-ownership="none">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="length" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="part" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="get_key_part">
+        <return-value transfer-ownership="full">
+          <type name="GObject.Value" c:type="GValue*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+          <parameter name="data" transfer-ownership="none">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="length" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="part" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="update_data_part" throws="1">
+        <return-value transfer-ownership="none">
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+          <parameter name="data" transfer-ownership="none">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="length" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="part" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <virtual-method name="update_key_part" throws="1">
+        <return-value transfer-ownership="none">
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+          <parameter name="data" transfer-ownership="none">
+            <type name="gpointer" c:type="gpointer"/>
+          </parameter>
+          <parameter name="length" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="part" transfer-ownership="none">
+            <type name="gint" c:type="gint"/>
+          </parameter>
+          <parameter name="value" transfer-ownership="none">
+            <type name="GObject.Value" c:type="const GValue*"/>
+          </parameter>
+        </parameters>
+      </virtual-method>
+      <method name="clean_errors"
+              c:identifier="gda_data_model_bdb_clean_errors">
+        <doc xml:space="preserve">Reset the list of errors which have occurred while using @model</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <doc xml:space="preserve">a #GdaDataModelBdb object</doc>
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_errors" c:identifier="gda_data_model_bdb_get_errors">
+        <doc xml:space="preserve">Get the list of errors which have occurred while using @model</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">a read-only list of #GError pointers, or %NULL if no error has occurred</doc>
+          <type name="GLib.SList" c:type="const GSList*">
+            <type name="GLib.Error"/>
+          </type>
+        </return-value>
+        <parameters>
+          <instance-parameter name="model" transfer-ownership="none">
+            <doc xml:space="preserve">a #GdaDataModelBdb object</doc>
+            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <property name="db-name"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="utf8" c:type="gchar*"/>
+      </property>
+      <property name="filename"
+                writable="1"
+                construct-only="1"
+                transfer-ownership="none">
+        <type name="utf8" c:type="gchar*"/>
+      </property>
+      <field name="object">
+        <type name="GObject.Object" c:type="GObject"/>
+      </field>
+      <field name="priv">
+        <type name="DataModelBdbPrivate" c:type="GdaDataModelBdbPrivate*"/>
+      </field>
+    </class>
+    <record name="DataModelBdbClass"
+            c:type="GdaDataModelBdbClass"
+            glib:is-gtype-struct-for="DataModelBdb">
+      <field name="parent_class">
+        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
+      </field>
+      <field name="create_key_columns" introspectable="0">
+        <callback name="create_key_columns" introspectable="0">
+          <return-value>
+            <type name="GLib.SList" c:type="GSList*">
+              <type name="gpointer" c:type="gpointer"/>
+            </type>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="create_data_columns" introspectable="0">
+        <callback name="create_data_columns" introspectable="0">
+          <return-value>
+            <type name="GLib.SList" c:type="GSList*">
+              <type name="gpointer" c:type="gpointer"/>
+            </type>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="get_key_part">
+        <callback name="get_key_part">
+          <return-value transfer-ownership="full">
+            <type name="GObject.Value" c:type="GValue*"/>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+            <parameter name="data" transfer-ownership="none">
+              <type name="gpointer" c:type="gpointer"/>
+            </parameter>
+            <parameter name="length" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="part" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="get_data_part">
+        <callback name="get_data_part">
+          <return-value transfer-ownership="full">
+            <type name="GObject.Value" c:type="GValue*"/>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+            <parameter name="data" transfer-ownership="none">
+              <type name="gpointer" c:type="gpointer"/>
+            </parameter>
+            <parameter name="length" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="part" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="update_key_part">
+        <callback name="update_key_part" throws="1">
+          <return-value transfer-ownership="none">
+            <type name="gboolean" c:type="gboolean"/>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+            <parameter name="data" transfer-ownership="none">
+              <type name="gpointer" c:type="gpointer"/>
+            </parameter>
+            <parameter name="length" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="part" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="value" transfer-ownership="none">
+              <type name="GObject.Value" c:type="const GValue*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="update_data_part">
+        <callback name="update_data_part" throws="1">
+          <return-value transfer-ownership="none">
+            <type name="gboolean" c:type="gboolean"/>
+          </return-value>
+          <parameters>
+            <parameter name="model" transfer-ownership="none">
+              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
+            </parameter>
+            <parameter name="data" transfer-ownership="none">
+              <type name="gpointer" c:type="gpointer"/>
+            </parameter>
+            <parameter name="length" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="part" transfer-ownership="none">
+              <type name="gint" c:type="gint"/>
+            </parameter>
+            <parameter name="value" transfer-ownership="none">
+              <type name="GObject.Value" c:type="const GValue*"/>
+            </parameter>
+          </parameters>
+        </callback>
+      </field>
+      <field name="_gda_reserved1" introspectable="0">
+        <callback name="_gda_reserved1">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved2" introspectable="0">
+        <callback name="_gda_reserved2">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved3" introspectable="0">
+        <callback name="_gda_reserved3">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+      <field name="_gda_reserved4" introspectable="0">
+        <callback name="_gda_reserved4">
+          <return-value transfer-ownership="none">
+            <type name="none" c:type="void"/>
+          </return-value>
+        </callback>
+      </field>
+    </record>
+    <record name="DataModelBdbPrivate"
+            c:type="GdaDataModelBdbPrivate"
+            disguised="1">
+    </record>
     <class name="DataModelDir"
            c:symbol-prefix="data_model_dir"
            c:type="GdaDataModelDir"
@@ -9215,10 +9554,11 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
         <type name="utf8" c:type="gchar*"/>
       </property>
       <property name="cnc"
+                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
-        <type name="Connection"/>
+        <type/>
       </property>
       <property name="filter"
                 writable="1"
@@ -9231,6 +9571,9 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 construct-only="1"
                 transfer-ownership="none">
         <type name="gint" c:type="gint"/>
+      </property>
+      <property name="use-rdn" writable="1" transfer-ownership="none">
+        <type name="gboolean" c:type="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -13517,7 +13860,7 @@ a &amp;lt;table&amp;gt; or a &amp;lt;view&amp;gt;):
           column NMTOKEN #IMPLIED
           ref_column NMTOKEN #IMPLIED&gt;
 
-)&gt;
+&lt;!ELEMENT unique (column)&gt;
 
 &lt;!ELEMENT view (definition)&gt;
 &lt;!ATTLIST view
@@ -15364,7 +15707,7 @@ Use this object with gda_repetitive_statement_append_set().</doc>
 
 This is a pointer to the internal array of values. Don't try to free
 or modify it (modifying is reserved to database provider's implementations).</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="none">
           <doc xml:space="preserve">a pointer to the #GValue in the position @num of @row.</doc>
           <type name="GObject.Value" c:type="GValue*"/>
         </return-value>
@@ -23540,6 +23883,12 @@ To include variables in the @sql string, see the
       <property name="column-error" transfer-ownership="none">
         <type name="gint" c:type="gint"/>
       </property>
+      <property name="debug"
+                readable="0"
+                writable="1"
+                transfer-ownership="none">
+        <type name="gboolean" c:type="gboolean"/>
+      </property>
       <property name="line-error" transfer-ownership="none">
         <type name="gint" c:type="gint"/>
       </property>
@@ -23798,7 +24147,7 @@ To include variables in the @sql string, see the
       <field name="params_used" writable="1">
         <doc xml:space="preserve">When rendering is complete, contains the ordered list of parameters which have been used while doing the rendering</doc>
         <type name="GLib.SList" c:type="GSList*">
-          <type name="gpointer" c:type="gpointer"/>
+          <type name="Holder"/>
         </type>
       </field>
       <field name="provider" writable="1">
