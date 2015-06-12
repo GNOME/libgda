@@ -1,3 +1,18 @@
+libgda 5.2.3, 2015-06-12
+ - Improved Vala and introspection
+ - Bugs corrected: #722531, #722773, #730813, #742312, #750191 and others
+ - Translations:
+	- zh_CN (Wylmer Wang)
+	- el (Dimitris Spingos)
+	- sr (Мирослав Николић)
+	- bs (Samir Ribic)
+	- pl (Piotr Drąg)
+	- cs (Marek Černocký)
+	- es (Daniel Mustieles)
+	- id (Andika Triwidada)
+	- eu (Inaki Larranaga Murgoitio)
+	- pt (Pedro Albuquerque)
+
 libgda 5.2.2, 2013-12-23
 
  - Avoid using setlocale() in libraries
