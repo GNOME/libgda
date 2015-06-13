@@ -198,7 +198,8 @@ EXTRA_DIST = \
 	marshal.list \
 	browser-res.rc \
 	gda-browser.ico \
-	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA)
+	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA) \
+	$(appdata_in_files)
 
 DISTCLEANFILES = $(desktop_DATA)
 
