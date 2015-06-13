@@ -1,4 +1,9 @@
+libgda 5.2.4, 2015-06-13
+
+ - Added missing file in distributed tarball, bug #750891
+
 libgda 5.2.3, 2015-06-12
+
  - Improved Vala and introspection
  - Bugs corrected: #722531, #722773, #730813, #742312, #750191 and others
  - Translations:
