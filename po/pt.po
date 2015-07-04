@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: 2.26\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-21 20:09+0000\n"
-"PO-Revision-Date: 2015-06-03 08:16+0100\n"
+"POT-Creation-Date: 2015-07-03 22:10+0000\n"
+"PO-Revision-Date: 2015-07-04 06:30+0100\n"
 "Last-Translator: Pedro Albuquerque <palbuquerque73@openmailbox.com>\n"
 "Language-Team: Português <palbuquerque73@openmailbox.com>\n"
 "Language: pt\n"
@@ -254,12 +254,6 @@ msgid "New data source definition"
 msgstr "Nova definição de fonte de dados"
 
 #: ../control-center/gdaui-dsn-assistant.c:436
-#| msgid ""
-#| "This assistant will guide you through the process of\n"
-#| "creating a new data source, and optionally will allow you to\n"
-#| "create a new database.\n"
-#| "\n"
-#| "Just follow the steps!"
 msgid ""
 "This assistant will guide you through the process of creating a new data "
 "source, and optionally will allow you to create a new database.\n"
@@ -276,11 +270,6 @@ msgid "Add a new data source..."
 msgstr "Adicionar uma nova fonte de dados..."
 
 #: ../control-center/gdaui-dsn-assistant.c:461
-#| msgid ""
-#| "The following fields represent the basic information items for your new "
-#| "data source. Mandatory fields are marked with a star.\n"
-#| "To create a local database in a file, select the 'SQLite' type of "
-#| "database.\n"
 msgid ""
 "The following fields represent the basic information items for your new data "
 "source. Mandatory fields are marked with a star. To create a local database "
@@ -313,9 +302,6 @@ msgid "General Information"
 msgstr "Informação geral"
 
 #: ../control-center/gdaui-dsn-assistant.c:533
-#| msgid ""
-#| "This page lets you choose between using an existing database or to create "
-#| "a new database to use with this new data source\n"
 msgid ""
 "This page lets you choose between using an existing database or to create a "
 "new database to use with this new data source"
@@ -332,10 +318,6 @@ msgid "Create a new database?"
 msgstr "Criar uma nova base de dados?"
 
 #: ../control-center/gdaui-dsn-assistant.c:559
-#| msgid ""
-#| "The following fields represent the information needed to create a new "
-#| "database (mandatory fields are marked with a star).This information is "
-#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to create a new "
 "database (mandatory fields are marked with a star).This information is "
@@ -351,10 +333,6 @@ msgid "New database definition"
 msgstr "Nova definição da base de dados"
 
 #: ../control-center/gdaui-dsn-assistant.c:595
-#| msgid ""
-#| "The following fields represent the information needed to open a "
-#| "connection (mandatory fields are marked with a star). This information is "
-#| "database-specific, so check the manual for more information.\n"
 msgid ""
 "The following fields represent the information needed to open a connection "
 "(mandatory fields are marked with a star). This information is database-"
@@ -383,10 +361,6 @@ msgid "Authentication parameters"
 msgstr "Parâmetros de autenticação"
 
 #: ../control-center/gdaui-dsn-assistant.c:643
-#| msgid ""
-#| "All information needed to create a new data source\n"
-#| "has been retrieved. Now, press 'Apply' to close\n"
-#| "this dialog."
 msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
@@ -710,9 +684,6 @@ msgstr ""
 "modificado pela implementação dos fornecedores da base de dados"
 
 #: ../libgda/gda-connection.c:384
-#| msgid ""
-#| "Tells if the connection acts as a thread wrapper around another "
-#| "connection, making it completely thread safe"
 msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
@@ -784,7 +755,6 @@ msgid "Malformed connection string '%s'"
 msgstr "Cadeia de ligação mal formada \"%s\""
 
 #: ../libgda/gda-connection.c:1288
-#| msgid "No table specified"
 msgid "No database driver specified"
 msgstr "Nenhum controlador de base de dados especificado"
 
@@ -838,7 +808,6 @@ msgstr "A ligação está fechada"
 
 #: ../libgda/gda-connection.c:3287
 #, c-format
-#| msgid "Named transaction is not supported"
 msgid "Asynchronous execution is not supported"
 msgstr "Execução assíncrona não é suportada"
 
@@ -897,7 +866,7 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:786 ../libgda/gda-data-model-dir.c:885
 #: ../libgda/gda-data-model-dir.c:927 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1123
-#: ../libgda/gda-data-proxy.c:3561 ../libgda/gda-data-proxy.c:3685
+#: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1320 ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860 ../libgda/gda-data-select.c:2927
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:918
@@ -962,8 +931,8 @@ msgstr "Se o modelo de dados pode ser modificado"
 #: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
 #: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:797
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1337
-#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3634
-#: ../libgda/gda-data-proxy.c:3672 ../libgda/gda-data-select.c:1853
+#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3632
+#: ../libgda/gda-data-proxy.c:3670 ../libgda/gda-data-select.c:1853
 #: ../libgda/gda-data-select.c:1914
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -972,8 +941,8 @@ msgstr "Linha %d fora do intervalo (0-%d)"
 #: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
 #: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:800
 #: ../libgda/gda-data-model-dir.c:974 ../libgda/gda-data-model-dir.c:1340
-#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3637
-#: ../libgda/gda-data-proxy.c:3675 ../libgda/gda-data-select.c:1856
+#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3635
+#: ../libgda/gda-data-proxy.c:3673 ../libgda/gda-data-select.c:1856
 #: ../libgda/gda-data-select.c:1917
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1088,7 +1057,6 @@ msgstr "O parâmetro \"%s\" tem de conter um valor lógico, ignorado."
 
 #: ../libgda/gda-data-model.c:1516
 #, c-format
-#| msgid "The '%s' parameter must hold a string value, ignored."
 msgid "The '%s' parameter must hold an integer value, ignored."
 msgstr "O parâmetro \"%s\" tem de conter um valor inteiro, ignorado."
 
@@ -1167,8 +1135,6 @@ msgid "Could not dump data model's contents: %s"
 msgstr "Impossível despejar o conteúdo do modelo de dados: %s"
 
 #: ../libgda/gda-data-model.c:2703
-#| msgid ""
-#| "Data model does not support backward cursor move, not displaying data"
 msgid "Data model does not support backward cursor move"
 msgstr "Modelo de dados não suporta mover o cursor para trás"
 
@@ -1465,7 +1431,7 @@ msgstr ""
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "GdaDataProxy não suporta modelos de dados com acesso não aleatório"
 
-#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4074
+#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4072
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
@@ -1498,7 +1464,6 @@ msgstr ""
 
 #: ../libgda/gda-data-proxy.c:3123
 #, c-format
-#| msgid "Error in filter expression"
 msgid "Error in filter expression: %s"
 msgstr "Erro na expressão do filtro: %s"
 
@@ -1510,24 +1475,24 @@ msgstr "Erro na expressão do filtro"
 msgid "Incorrect filter expression"
 msgstr "Expressão de filtro incorreta"
 
-#: ../libgda/gda-data-proxy.c:3809
+#: ../libgda/gda-data-proxy.c:3807
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 "A primeira linha é uma linha vazia artificialmente adicionada e não pode ser "
 "alterada"
 
-#: ../libgda/gda-data-proxy.c:3838 ../libgda/gda-data-proxy.c:3849
+#: ../libgda/gda-data-proxy.c:3836 ../libgda/gda-data-proxy.c:3847
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Tipo de valor inválido: esperado \"%s\", obtido \"%s\""
 
-#: ../libgda/gda-data-proxy.c:3937
+#: ../libgda/gda-data-proxy.c:3935
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "A tentar modificar uma coluna só de leitura: %d"
 
-#: ../libgda/gda-data-proxy.c:3974
+#: ../libgda/gda-data-proxy.c:3972
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Tipo de valor trocado, %s em vez de %s"
@@ -1707,7 +1672,6 @@ msgstr ""
 "errado: %s"
 
 #: ../libgda/gda-data-select.c:3819
-#| msgid "Whether data model can be modified"
 msgid "Data model has been modified"
 msgstr "Modelo de dados foi modificado"
 
@@ -1716,7 +1680,6 @@ msgid "Data model contains BLOBs"
 msgstr "Modelo de dados contém BLOBs"
 
 #: ../libgda/gda-data-select.c:3839
-#| msgid "Can't append row to data model: %s"
 msgid "Can't get the number of rows of data model"
 msgstr "Impossível obter o nº de linhas do modelo de dados"
 
@@ -1873,7 +1836,7 @@ msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
 "Nome de tabela referenciada por chave externa (para a tabela \"%s\") em falta"
 
-#: ../libgda/gda-meta-store.c:1974
+#: ../libgda/gda-meta-store.c:1957
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Nome da coluna da chave externa (para tabela \"%s\") em falta"
@@ -2525,7 +2488,6 @@ msgstr "Separador nulo inválido"
 #: ../libgda/gda-util.c:3110 ../libgda/gda-util.c:3125
 #: ../libgda/gda-util.c:3140
 #, c-format
-#| msgid "Unknown part ID %u"
 msgid "Unknown GDateDMY value %u"
 msgstr "Valor GDateDMY %u desconhecido"
 
@@ -2706,7 +2668,6 @@ msgid "Table to create must have at least one row"
 msgstr "Tabela a criar tem de ter pelo menos uma linha"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
-#| msgid "SQlite binary representation"
 msgid "SQLite binary representation"
 msgstr "Representação binária SQlite"
 
@@ -2842,7 +2803,6 @@ msgid "'%s' compound not supported by SQLite"
 msgstr "Componente \"%s\" não suportado pelo SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2042
-#| msgid "Operation not supported\n"
 msgid "ILIKE operation not supported"
 msgstr "Operação ILIKE não suportada"
 
@@ -2858,7 +2818,6 @@ msgstr "Parâmetro sem nome não é permitido em declarações preparadas"
 #: ../providers/mysql/gda-mysql-provider.c:2068
 #: ../providers/postgres/gda-postgres-provider.c:1865
 #, c-format
-#| msgid "Can't build SELECT statement to get last inserted row: %s)"
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "Impossível construir uma declaração SELECT para obter a última linha "
@@ -4020,18 +3979,28 @@ msgstr "Demos de código libgda-ui "
 
 #: ../libgda-ui/demos/main.c:855
 #, c-format
+#| msgid ""
+#| "<b><big>Note:\n"
+#| "</big></b>Many of the demonstrated items use an opened connection to the "
+#| "SQLite using the '%s' file.\n"
+#| "\n"
+#| "In the source code shown here, the <i>demo_cnc</i> and \n"
+#| "<i>demo_parser</i> objects are created by the framework and\n"
+#| "made available to all the demonstrated items."
 msgid ""
 "<b><big>Note:\n"
-"</big></b>Many of the demonstrated items use an opened connection to the "
-"SQLite using the '%s' file.\n"
+"</big></b>Many of the demonstrated items use an\n"
+"opened connection to the SQLite using the\n"
+"'%s' file.\n"
 "\n"
 "In the source code shown here, the <i>demo_cnc</i> and \n"
 "<i>demo_parser</i> objects are created by the framework and\n"
 "made available to all the demonstrated items."
 msgstr ""
 "<b><big>Nota:\n"
-"</big></b>Muitos dos ítens demonstrados usam uma ligação aberta à SQLite "
-"usando o ficheiro \"%s\".\n"
+"</big></b>Muitos dos ítens demonstrados usam uma\n"
+"ligação aberta à SQLite usando o\n"
+"ficheiro \"%s\".\n"
 "\n"
 "No código fonte mostrado aqui, os objetos <u>demo_cnc</i> e \n"
 "<i>demo_parser</i>  são criados pela estrutura e\n"
@@ -4173,7 +4142,6 @@ msgstr "Modelo de dados GdaDataProxy interno"
 
 #: ../libgda-ui/gdaui-data-store.c:387 ../libgda-ui/gdaui-data-store.c:454
 #: ../libgda-ui/gdaui-data-store.c:484 ../libgda-ui/gdaui-data-store.c:514
-#| msgid "Can't append row to data model: %s"
 msgid "Can't modify row while data model is being reset"
 msgstr "Impossível modificar linha durante a reposição do modelo de dados"
 
@@ -4182,7 +4150,6 @@ msgid "Trying to modify a read-only row"
 msgstr "A tentar modificar uma linha só de leitura"
 
 #: ../libgda-ui/gdaui-data-store.c:597
-#| msgid "Can't append row to data model: %s"
 msgid "Can't access row while data model is being reset"
 msgstr "Impossível aceder a linha durante a reposição do modelo de dados"
 
@@ -5250,7 +5217,6 @@ msgstr "Conflito"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-#| msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 msgstr ""
 "Método de resolução de conflito (REVERTER|ABORTAR|FALHAR|IGNORAR|SUBSTITUIR)"
@@ -5529,7 +5495,6 @@ msgid "Can't read BLOB"
 msgstr "Impossível ler BLOB"
 
 #: ../providers/jdbc/gda-jdbc-provider.c:494
-#| msgid "Missing parameter(s) to execute query"
 msgid "Missing parameters to open database connection"
 msgstr "Faltam parâmetros para abrir ligação à base de dados"
 
@@ -5549,7 +5514,6 @@ msgid "The name of a database to connect to"
 msgstr "Nome da base de dados à qual se ligar"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:3
-#| msgid "Inheritance"
 msgid "Instance"
 msgstr "Instância"
 
@@ -5574,7 +5538,6 @@ msgid "Database server"
 msgstr "Servidor de base de dados"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:6
-#| msgid "Host on which the database server is running"
 msgid "Host on which the database server is running or leave this field empty"
 msgstr ""
 "Máquina onde o servidor de base de dados se encontra em execução ou deixe em "
@@ -5593,7 +5556,6 @@ msgid "Port"
 msgstr "Porta"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:8
-#| msgid "Database server port"
 msgid "Database server port, 1433 by default"
 msgstr "Porta do servidor de base de dados, predefinição 1433"
 
@@ -5620,7 +5582,6 @@ msgid "Can't create JAVA virtual machine: %s"
 msgstr "Impossível criar uma máquina virtual JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:487
-#| msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
@@ -5905,7 +5866,6 @@ msgstr "Número de porta inválido"
 
 #: ../providers/mysql/gda-mysql-provider.c:548
 #, c-format
-#| msgid "Unknown provider '%s'"
 msgid "Unknown MySQL protocol '%s'"
 msgstr "Protocolo MySQL \"%s\" desconhecido"
 
@@ -5941,9 +5901,6 @@ msgstr "Impossível ler todo o BLOB para a memória"
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2684
 #, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
@@ -6688,7 +6645,6 @@ msgstr "Compacto"
 
 # BUG in original (it --> if)
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
-#| msgid "Replace it already exists"
 msgid "Replace if it already exists"
 msgstr "Substituir se já existir"
 
@@ -6814,7 +6770,6 @@ msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Memória insuficiente para converter cadeia para buffer binário"
 
 #: ../providers/postgres/gda-postgres-provider.c:524
-#| msgid "could not determine the indexed columns for index"
 msgid "Could not determine the default date format"
 msgstr "Impossível determinar formato de data predefinido"
 
@@ -6887,13 +6842,11 @@ msgstr "Número de partes de linhas lidas desde a criação do objeto"
 
 #: ../providers/postgres/gda-postgres-recordset.c:624
 #, c-format
-#| msgid "Invalid UTF-8 format!"
 msgid "Invalid date format '%s'"
 msgstr "Formato de data \"%s\" inválido"
 
 #: ../providers/postgres/gda-postgres-recordset.c:688
 #, c-format
-#| msgid "Invalid referenced table name '%s'"
 msgid "Invalid timestamp value '%s'"
 msgstr "Valor de carimbo \"%s\" inválido"
 
@@ -7969,7 +7922,6 @@ msgid "Open a connection"
 msgstr "Abrir uma ligação"
 
 #: ../tools/browser/browser-window.c:282
-#| msgid "_Bind connection"
 msgid "_Bind Connection"
 msgstr "Ass_Ociar ligação"
 
@@ -8414,7 +8366,6 @@ msgid "Comma"
 msgstr "Vírgula"
 
 #: ../tools/browser/common/gdaui-data-import.c:215
-#| msgid "Semi column"
 msgid "Semi colon"
 msgstr "Ponto e vírgula"
 
@@ -9680,7 +9631,6 @@ msgid "Query"
 msgstr "Consulta"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:319
-#| msgid "_New editor"
 msgid "_New Editor"
 msgstr "_Novo editor"
 
@@ -10061,21 +10011,6 @@ msgid "Auxilliary"
 msgstr "Auxiliar"
 
 #: ../tools/browser/support.h:117
-#| msgid ""
-#| "<small>This area allows to give values to\n"
-#| "variables defined in the SQL code\n"
-#| "using the following syntax:\n"
-#| "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
-#| "For example:\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-#| "      defines <b>id</b> as a non NULL integer\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-#| "      defines <b>age</b> as a a string\n"
-#| "\n"
-#| "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-#| "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-#| "<tt>blob</tt> and\n"
-#| "<tt>binary</tt></small>"
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -10130,7 +10065,6 @@ msgstr "Comando \"%s\" não encontrado"
 
 #: ../tools/cmdtool/tool-command.c:313
 #, c-format
-#| msgid "Syntax error at line %d, column %d"
 msgid "Syntax error after '\\'"
 msgstr "Erro de sintaxe após \"\\\""
 
@@ -10304,7 +10238,6 @@ msgstr "(%s)"
 
 #: ../tools/config-info.c:555
 #, c-format
-#| msgid "Unknown provider '%s'"
 msgid "Unknown criteria '%s'"
 msgstr "Critério \"%s\" desconhecido"
 
@@ -10410,7 +10343,6 @@ msgstr ""
 
 #: ../tools/gda-sql.c:413
 #, c-format
-#| msgid "Opening connection '%s' for: %s\n"
 msgid "Opening connection '%s' for: "
 msgstr "A abrir ligação \"%s\" para: "
 
@@ -10421,7 +10353,6 @@ msgstr "Impossível abrir ligação %d: %s\n"
 
 #: ../tools/gda-sql.c:444
 #, c-format
-#| msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
 msgid "Opening connection '%s' (GDA_SQL_CNC environment variable): "
 msgstr "A abrir ligação \"%s\" (variável de ambiente GDA_SQL_CNC)"
 
@@ -10456,7 +10387,6 @@ msgstr "Impossível abrir ficheiro \"%s\" para escrita: %s\n"
 
 #: ../tools/gda-sql.c:1103 ../tools/gda-sql.c:1112
 #, c-format
-#| msgid "Can't open pipe '%s': %s\n"
 msgid "Can't open pipe '%s': %s"
 msgstr "Impossível abrir canal \"%s\": %s"
 
@@ -10970,9 +10900,15 @@ msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [\"todos\"|\"definido\"|\"naodefinido\"]"
 
 #: ../tools/gda-sql.c:2426
+#| msgid ""
+#| "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
+#| "parameter is passed, then all set attributes are shown, if the \"all\" "
+#| "2nd parameter is passed, then the unset attributes are also shown, and if "
+#| "the \"unset\" 2nd parameter is passed, then only non set attributes are "
+#| "shown."
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
-"parameter is passed, then all set attributes are shown, if the \"all\" 2nd "
+"parameter is passed, then all set attributes are show, if the \"all\" 2nd "
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
@@ -11110,8 +11046,13 @@ msgstr "Nenhuma ligação aberta"
 msgid "Could not write to temporary file '%s': %s"
 msgstr "Impossível escrever no ficheiro temporário \"%s\": %s"
 
-#: ../tools/gda-sql.c:3450 ../tools/gda-sql.c:3455
+#: ../tools/gda-sql.c:3450
 #, c-format
+#| msgid "Could not create directory '%s'"
+msgid "could not start editor '%s'"
+msgstr "Impossível iniciar o editor \"%s\""
+
+#: ../tools/gda-sql.c:3455
 msgid "Could not start /bin/sh"
 msgstr "Impossível iniciar /bin/sh"
 
