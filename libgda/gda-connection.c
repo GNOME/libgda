@@ -3195,8 +3195,8 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
  *        </itemizedlist></para></listitem>
  * </itemizedlist>
  *
- * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain (if the
- * provider used by @cnc supports it) a new #GdaSet object composed of value holders named "+&lt;column number&gt;"
+ * If @last_insert_row is not %NULL and @stmt is an INSERT statement, then it will contain a new #GdaSet
+ * object composed of value holders named "+&lt;column number&gt;"
  * starting at column 0 which contain the actual inserted values. For example if a table is composed of an 'id' column
  * which is auto incremented and a 'name' column then the execution of a "INSERT INTO mytable (name) VALUES ('joe')"
  * query will return a #GdaSet with two holders:
@@ -3204,6 +3204,9 @@ gda_connection_execute_non_select_command (GdaConnection *cnc, const gchar *sql,
  *   <listitem><para>one with the '+0' ID which may for example contain 1 (note that its "name" property should be "id")</para></listitem>
  *   <listitem><para>one with the '+1' ID which will contain 'joe' (note that its "name" property should be "name")</para></listitem>
  * </itemizedlist>
+ * Note that the value pointer by @last_insert_row may be %NULL after the function call if either the database provider
+ * does not support it, or if the last interted row could not be determined (for example with SQLite if the table
+ * in which the data is inserted has the WITHOUT ROWID optimization).
  *
  * This method may fail with a %GDA_SERVER_PROVIDER_ERROR domain error (see the #GdaServerProviderError error codes).
  *

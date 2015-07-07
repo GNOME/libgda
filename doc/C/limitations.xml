@@ -123,7 +123,7 @@
     </para>
     <sect2><title>Last inserted row's values</title>
       <para>
-	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute uses the hidden "_ROWID_" column for each table, but it may fail if the table has a column with the same name.
+	The <link linkend="gda-connection-statement-execute-non-select">gda_connection_statement_execute_non_select()</link>'s last_insert_row attribute uses the hidden "_ROWID_" column for each table, but it may fail if the table has a column with the same name, or if the table is defined with the <ulink url="https://www.sqlite.org/withoutrowid.html">WITHOUT ROWID</ulink> Optimization.
       </para>
     </sect2>
 
