@@ -354,6 +354,7 @@ t_context_execute_sql_command (TContext *console, const gchar *command,
 	res->cnc = g_object_ref (t_connection_get_cnc (tcnc));
 	obj = gda_connection_statement_execute (t_connection_get_cnc (tcnc), stmt, params, usage, NULL, error);
 	if (!obj) {
+		g_object_unref (res->cnc);
 		g_free (res);
 		res = NULL;
 	}
