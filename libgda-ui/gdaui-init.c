@@ -906,7 +906,7 @@ gdaui_get_icon_for_db_engine (const gchar *engine)
 								g_hash_table_remove (icons_hash, key);
 								break;
 							}
-							g_print ("Inserted '%s'\n", key);
+							/*g_print ("Inserted '%s'\n", key);*/
 							g_hash_table_insert (icons_hash, g_strdup (key), g_object_ref (pix));
 						}
 						g_free (key);
