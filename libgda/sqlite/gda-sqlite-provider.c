@@ -2697,12 +2697,11 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 	params = g_object_get_data ((GObject*) stmt, MAKE_LAST_INSERTED_SET_ID "P");
 	g_assert (params);
 	g_assert (gda_set_set_holder_value (params, NULL, "lid", last_id));
-        model = gda_connection_statement_execute_select (cnc, statement, params, &lerror);
+        model = gda_connection_statement_execute_select (cnc, statement, params, NULL);
         if (!model) {
-                g_warning (_("Can't execute SELECT statement to get last inserted row: %s"),
-			   lerror && lerror->message ? lerror->message : _("No detail"));
-		if (lerror)
-			g_error_free (lerror);
+		/* may have failed if the table has the WITHOUT ROWID optimization
+		 * see: https://www.sqlite.org/withoutrowid.html
+		 */
 		return NULL;
         }
 	else {
