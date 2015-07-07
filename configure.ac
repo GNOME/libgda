@@ -183,6 +183,7 @@ dnl ******************************
 
 PKG_CHECK_MODULES(COREDEPS, [
 	glib-2.0	>= req_ver_glib
+	gio-2.0		>= req_ver_glib
 	gobject-2.0	>= req_ver_glib
 	gthread-2.0	>= req_ver_glib
 	gmodule-no-export-2.0	>= req_ver_glib
@@ -645,7 +646,7 @@ if test x$platform_win32 != xyes; then
 		if test VERSION_TO_NUMBER(echo $LIBGCRYPT_VERSION) -lt VERSION_TO_NUMBER(echo "1.1.42") ; then
 			LIBGCRYPT_CFLAGS=""
 			LIBGCRYPT_LIBS=""
-			AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
+			AM_CONDITIONAL(HAVE_LIBGCRYPT, false)
 			echo "Password entry plugin will not be compiled, install libgcrypt >= 1.1.42 and reconfigure to make available."
       		else
 			LIBGCRYPT_CFLAGS=`$LIBGCRYPT_CONFIG $libgcrypt_config_args --cflags`
@@ -655,7 +656,7 @@ if test x$platform_win32 != xyes; then
 	else
 	LIBGCRYPT_CFLAGS=""
       	LIBGCRYPT_LIBS=""
-      	AM_CONDITIONAL(HAVE_LIBGCRYPT, 0)
+	AM_CONDITIONAL(HAVE_LIBGCRYPT, false)
       	echo "Password entry plugin will not be compiled, install libgcrypt and reconfigure to make available."
 	fi
 else
