@@ -84,8 +84,9 @@ struct _GdaDsnInfo {
 
 GType            gda_dsn_info_get_type  (void) G_GNUC_CONST;
 GdaDsnInfo*      gda_dsn_info_new       (void);
-GdaDsnInfo*      gda_dsn_info_copy      (GdaDsnInfo *source);
+GdaDsnInfo*      gda_dsn_info_copy      (const GdaDsnInfo *source);
 void             gda_dsn_info_free      (GdaDsnInfo *dsn);
+gboolean         gda_dsn_info_equal     (const GdaDsnInfo *dsn1, const GdaDsnInfo *dsn2);
 
 /**
  * GdaProviderInfo:

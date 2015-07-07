@@ -104,7 +104,7 @@ gda_dsn_info_get_type (void)
 /**
  * gda_dsn_info_new:
  *
- * Creates a new #GdaDsnInfo struct.
+ * Creates a new empty #GdaDsnInfo struct.
  *
  * Returns: (transfer full): a new #GdaDsnInfo struct.
  *
@@ -134,17 +134,17 @@ gda_dsn_info_new (void)
  * Since: 5.2
  */
 GdaDsnInfo *
-gda_dsn_info_copy (GdaDsnInfo *source)
+gda_dsn_info_copy (const GdaDsnInfo *source)
 {
 	GdaDsnInfo *n;
 	g_return_val_if_fail (source, NULL);
 	n = gda_dsn_info_new ();
-	n->name = source->name;
-	n->provider = source->provider;
-	n->description = source->description;
-	n->cnc_string = source->cnc_string;
-	n->auth_string = source->auth_string;
-	n->is_system = source->is_system;;
+	n->name = source->name ? g_strdup (source->name) : NULL;
+	n->provider = source->provider ? g_strdup (source->provider) : NULL;
+	n->description = source->description ? g_strdup (source->description) : NULL;
+	n->cnc_string = source->cnc_string ? g_strdup (source->cnc_string) : NULL;
+	n->auth_string = source->auth_string ? g_strdup (source->auth_string) : NULL;
+	n->is_system = source->is_system;
 	return n;
 }
 
@@ -159,10 +159,106 @@ gda_dsn_info_copy (GdaDsnInfo *source)
 void
 gda_dsn_info_free (GdaDsnInfo *dsn)
 {
-	g_return_if_fail(dsn);
-	g_free (dsn);
+	if (dsn) {
+		g_free (dsn->name);
+		g_free (dsn->provider);
+		g_free (dsn->description);
+		g_free (dsn->cnc_string);
+		g_free (dsn->auth_string);
+		g_free (dsn);
+	}
 }
 
+static
+gboolean string_equal (const gchar *s1, const gchar *s2)
+{
+	if (s1) {
+		if (s2)
+			return !strcmp (s1, s2);
+		else
+			return FALSE;
+	}
+	else
+		return s2 ? FALSE : TRUE;
+}
+
+static gchar *
+make_cmp_string (const gchar *key_values_string)
+{
+	if (!key_values_string)
+		return NULL;
+
+	GdaQuarkList *ql;
+	GSList *list, *sorted_list = NULL;
+	GString *string = NULL;
+	ql = gda_quark_list_new_from_string (key_values_string);
+	for (list = sorted_list; list; list = list->next) {
+		const gchar *value;
+		gchar *evalue;
+
+		if (!string)
+			string = g_string_new ("");
+		else
+			g_string_append_c (string, ',');
+
+		value = gda_quark_list_find (ql, (gchar *) list->data);
+		evalue = gda_rfc1738_encode (value);
+		g_string_append_printf (string, ",%s=%s", (gchar *) list->data, evalue);
+		g_free (evalue);
+	}
+	gda_quark_list_free (ql);
+	if (string)
+		return g_string_free (string, FALSE);
+	else
+		return NULL;
+}
+
+/**
+ * gda_dsn_info_equal:
+ * @dsn1: (allow-none): a #GdaDsnInfo
+ * @dsn2: (allow-none): a #GdaDsnInfo
+ *
+ * Compares @dsn1 and @dsn2.
+ *
+ * If both @dsn1 and @dsn2 are %NULL, then the function returns %TRUE.
+ * If only one of @dsn1 or @dsn2 is %NULL, then the function return %FALSE.
+ *
+ * Returns: %TRUE if they are equal.
+ */
+gboolean
+gda_dsn_info_equal (const GdaDsnInfo *dsn1, const GdaDsnInfo *dsn2)
+{
+	if (dsn1) {
+		if (dsn2) {
+			if ((dsn1->is_system == dsn2->is_system) &&
+			    string_equal (dsn1->name, dsn2->name) &&
+			    string_equal (dsn1->provider, dsn2->provider) &&
+			    string_equal (dsn1->description, dsn2->description)) {
+				gboolean eq;
+				gchar *s1, *s2;
+				s1 = make_cmp_string (dsn1->cnc_string);
+				s2 = make_cmp_string (dsn2->cnc_string);
+				eq = string_equal (s1, s2);
+				g_free (s1);
+				g_free (s2);
+				if (eq) {
+					s1 = make_cmp_string (dsn1->auth_string);
+					s2 = make_cmp_string (dsn2->auth_string);
+					eq = string_equal (s1, s2);
+					g_free (s1);
+					g_free (s2);
+				}
+				return eq;
+			}
+			else
+				return FALSE;
+		}
+		else
+			return FALSE;
+	}
+	else
+		return dsn2 ? FALSE : TRUE;
+}
 
 typedef struct {
 	GdaProviderInfo    pinfo;

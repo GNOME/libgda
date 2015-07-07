@@ -348,6 +348,7 @@
 	gda_default_unescape_string
 	gda_signal_handler_disconnect
 	gda_dsn_info_copy
+	gda_dsn_info_equal
 	gda_dsn_info_free
 	gda_dsn_info_get_type
 	gda_dsn_info_new

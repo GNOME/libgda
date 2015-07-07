@@ -64,6 +64,11 @@ gda_config_get_dsn_info_index
 gda_config_get_dsn_info_at_index
 gda_config_can_modify_system_config
 <SUBSECTION>
+gda_dsn_info_new
+gda_dsn_info_copy
+gda_dsn_info_free
+gda_dsn_info_equal
+<SUBSECTION>
 GdaProviderInfo
 gda_config_get_provider_info
 gda_config_get_provider
