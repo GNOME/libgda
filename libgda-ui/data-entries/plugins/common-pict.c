@@ -420,15 +420,16 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 		}
 		else {
 			GtkWidget *msg;
-
-			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)), 
+			gchar *tmp;
+			tmp = g_strdup_printf (_("Could not load the contents of '%s'"), filename);
+			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)),
 								  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
 								  GTK_BUTTONS_CLOSE,
-								  _("Could not load the contents of '%s':\n %s"), 
-								  filename, 
+								  "<b>%s:</b>\n%s: %s",
+								  _("Error"), tmp,
 								  error && error->message ? error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
+			g_free (tmp);
+			g_clear_error (&error);
 			gtk_widget_destroy (dlg);
 			dlg = NULL;
 
@@ -532,15 +533,16 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 
 		if (!allok) {
 			GtkWidget *msg;
-				
-			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)), 
+			gchar *tmp;
+			tmp = g_strdup_printf (_("Could not save the image to '%s'"), filename);
+			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)),
 								  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
 								  GTK_BUTTONS_CLOSE,
-								  _("Could not save the image to '%s':\n %s"), 
-								  filename, 
+								  "<b>%s:</b>\n%s: %s",
+								  _("Error"), tmp,
 								  error && error->message ? error->message : _("No detail"));
-			if (error)
-				g_error_free (error);
+			g_free (tmp);
+			g_clear_error (&error);
 			gtk_widget_destroy (dlg);
 			dlg = NULL;
 			

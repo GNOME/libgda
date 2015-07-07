@@ -2132,7 +2132,7 @@ confirm_file_overwrite (GtkWindow *parent, const gchar *path)
 						     GTK_DIALOG_DESTROY_WITH_PARENT |
 						     GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION,
 						     GTK_BUTTONS_YES_NO,
-						     "<span weight=\"bold\">%s</span>\n%s\n",
+						     "<b>%s</b>\n%s",
 						     msg,
 						     _("If you choose yes, the contents will be lost."));
 	g_free (msg);

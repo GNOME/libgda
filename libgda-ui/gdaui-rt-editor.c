@@ -724,13 +724,15 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
 		}
 		else {
 			GtkWidget *msg;
-
-                        msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) rte)),
-                                                                  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                                  GTK_BUTTONS_CLOSE,
-                                                                  _("Could not load the contents of '%s':\n %s"),
-                                                                  filename,
-                                                                  error && error->message ? error->message : _("No detail"));
+			gchar *tmp;
+			tmp = g_strdup_printf (_("Could not load the contents of '%s'"), filename);
+			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (dlg)),
+								  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+								  GTK_BUTTONS_CLOSE,
+								  "<b>%s:</b>\n%s: %s",
+								  _("Error"), tmp,
+								  error && error->message ? error->message : _("No detail"));
+			g_free (tmp);
 			g_clear_error (&error);
                         gtk_widget_destroy (dlg);
                         dlg = NULL;

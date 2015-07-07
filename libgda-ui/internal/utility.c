@@ -394,7 +394,7 @@ create_data_error_dialog (GdauiDataProxy *form, gboolean with_question, gboolean
 						  GTK_DIALOG_MODAL,
 						  GTK_MESSAGE_ERROR, 
 						  with_question ? GTK_BUTTONS_NONE : GTK_BUTTONS_CLOSE,
-						  "<b>%s:</b>\n\n%s", msg1, msg2);
+						  "<b>%s:</b>\n%s", msg1, msg2);
 
 	if (filled_error && filled_error->message) {
 		GtkWidget *label;
@@ -478,14 +478,23 @@ _gdaui_utility_show_error (GtkWindow *parent, const gchar *format, ...)
         vsnprintf (sz, sizeof sz, format, args);
         va_end (args);
 
+	/* find a parent if none provided */
+	if (parent && !GTK_IS_WINDOW (parent))
+		parent = (GtkWindow*) gtk_widget_get_toplevel ((GtkWidget*) parent);
+
+	if (!parent) {
+		GApplication *app;
+		app = g_application_get_default ();
+		if (app && GTK_IS_APPLICATION (app))
+			parent = gtk_application_get_active_window (GTK_APPLICATION (app));
+	}
 	/* create the error message dialog */
-	gchar *str;
-	str = g_strdup_printf ("<span weight=\"bold\">%s</span>%s\n", _("Error:"), sz);
 	dialog = gtk_message_dialog_new_with_markup (parent,
-                                                     GTK_DIALOG_DESTROY_WITH_PARENT |
-                                                     GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, "%s", str);
-	g_free (str);
+						     GTK_DIALOG_DESTROY_WITH_PARENT |
+						     GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+						     GTK_BUTTONS_CLOSE,
+						     "<b>%s:</b>\n%s",
+						     _("Error"), sz);
 	gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
 				      gtk_button_new_with_label (_("Ok")),
 				      GTK_RESPONSE_OK);

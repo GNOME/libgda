@@ -22,18 +22,6 @@ GdauiCombo.gdaui-combo-normal {
     -GtkComboBox-appears-as-list : false;
 }
 
-GdauiCombo, GdauiCombo GtkButton, GdauiCombo GtkArrow, GdauiCombo GtkBox {
-    -GtkArrow-arrow-scaling: 0.4;
-    -GtkComboBox-arrow-size : 4;
-    border-style: none;
-    border-width: 0px;
-    margin: 0px;
-    padding: 0px;
-    -GtkButton-default-border: 0px;
-    -GtkButton-default-outside-border: 0px;
-    -GtkButton-inner-border: 0px;
-}
-
 GdauiDataProxyInfo * {
     -GtkToolbar-shadow-type : none;
     -GtkSpinButton-shadow-type : none;
