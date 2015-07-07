@@ -597,6 +597,12 @@ then
   AC_SUBST(GEE_CFLAGS)
   AC_SUBST(GEE_LIBS)
   enable_vala_ext=yes
+  AC_ARG_WITH(vapi-dir,
+    AS_HELP_STRING([--with-vapi-dir[=@<:@<dir. name>@:>@]],
+                   [Speficy the directory in which VAPI files will be installer, the default depends on the VALAC installation]),
+                   [VAPIDIR=$withval
+		   AC_SUBST([VAPIDIR])],
+		   )
 fi
 
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
