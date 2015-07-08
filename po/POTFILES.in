@@ -1,5 +1,4 @@
 control-center/dsn-config.c
-control-center/dsn-properties-dialog.c
 control-center/gda-control-center-6.0.appdata.xml.in
 control-center/gda-control-center-6.0.desktop.in.in
 control-center/gdaui-dsn-assistant.c
