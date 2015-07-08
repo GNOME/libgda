@@ -4,6 +4,7 @@
 gdaui_init
 gdaui_get_default_path
 gdaui_set_default_path
+gdaui_get_icon_for_db_engine
 <SUBSECTION Standard>
 </SECTION>
 
