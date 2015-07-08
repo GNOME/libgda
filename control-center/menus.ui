@@ -16,16 +16,23 @@
   </menu>
   <menu id="menubar">
     <section>
-      <attribute name="display-hint">horizontal-buttons</attribute>
+      <attribute name="display-hint">vertical-buttons</attribute>
       <item>
         <attribute name="label" translatable="yes">_Data sources</attribute>
         <attribute name="action">win.ShowDatasources</attribute>
         <attribute name="accel">&lt;Primary&gt;D</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_Providers</attribute>
+        <attribute name="label" translatable="yes">_Databases' providers</attribute>
         <attribute name="action">win.ShowProviders</attribute>
         <attribute name="accel">&lt;Primary&gt;P</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">New data source</attribute>
+        <attribute name="action">win.DatasourceNew</attribute>
+        <attribute name="accel">&lt;Primary&gt;N</attribute>
       </item>
     </section>
   </menu>

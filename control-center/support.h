@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,11 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef __DSN_PROPERTIES_DIALOG_H__
-#define __DSN_PROPERTIES_DIALOG_H__
+#ifndef __SUPPORT_H__
+#define __SUPPORT_H__
 
 #include <gtk/gtk.h>
+#include <libgda/libgda.h>
 
-void dsn_properties_dialog (GtkWindow *parent, const gchar *dsn);
+G_BEGIN_DECLS
+
+#define SUPPORT_ICON_SIZE 48
+GdkPixbuf *support_create_pixbuf_for_provider (GdaProviderInfo *pinfo);
+
+G_END_DECLS
 
 #endif

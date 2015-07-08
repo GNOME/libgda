@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 
 GtkWidget *dsn_config_new             (void);
-void       dsn_config_edit_properties (GtkWidget *dsn);
 void       dsn_config_delete          (GtkWidget *dsn);
 
 #endif

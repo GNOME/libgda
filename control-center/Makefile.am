@@ -27,11 +27,11 @@ gda_control_center_6_0_SOURCES=\
 	gdaui-dsn-assistant.h \
 	gdaui-dsn-editor.c \
 	gdaui-dsn-editor.h \
-	dsn-properties-dialog.c \
-	dsn-properties-dialog.h \
 	main.c \
 	provider-config.c \
 	provider-config.h \
+	support.h \
+	support.c \
 	control-center.gresources.c
 
 # resources

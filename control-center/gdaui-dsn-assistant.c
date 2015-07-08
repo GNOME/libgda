@@ -83,16 +83,6 @@ enum {
 static guint config_assistant_signals[LAST_SIGNAL] = { 0, };
 static GObjectClass *parent_class = NULL;
 
-static void 
-data_source_info_free (GdaDsnInfo *info)
-{
-	g_free (info->provider); 
-	g_free (info->cnc_string); 
-	g_free (info->description);
-	g_free (info->auth_string);
-	g_free (info);
-}
-
 /*
  * Callbacks
  */
@@ -116,7 +106,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 
 	/* clear the internal dsn_info */
 	if (assistant->priv->dsn_info) {
-		data_source_info_free (assistant->priv->dsn_info);
+		gda_dsn_info_free (assistant->priv->dsn_info);
 		assistant->priv->dsn_info = NULL;
 	}
 
@@ -177,7 +167,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 
 	/* Data source declaration */
 	if (allok) {
-		assistant->priv->dsn_info = g_new0 (GdaDsnInfo, 1);
+		assistant->priv->dsn_info = gda_dsn_info_new ();
 		assistant->priv->dsn_info->name = g_strdup (gtk_entry_get_text (GTK_ENTRY (assistant->priv->general_name)));
 		assistant->priv->dsn_info->provider = g_strdup (
 					 gdaui_provider_selector_get_provider (
@@ -669,8 +659,7 @@ gdaui_dsn_assistant_finalize (GObject *object)
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 
 	/* free memory */
-	if (assistant->priv->dsn_info)
-		data_source_info_free (assistant->priv->dsn_info);
+	gda_dsn_info_free (assistant->priv->dsn_info);
 
 	if (assistant->priv->create_db_op)
 		g_object_unref (assistant->priv->create_db_op);

@@ -26,6 +26,7 @@
 #include "dsn-config.h"
 #include "provider-config.h"
 #include "gdaui-dsn-assistant.h"
+#include <libgda-ui/internal/utility.h>
 
 GtkApplication *app;
 GtkWindow *main_window;
@@ -36,38 +37,6 @@ GtkWindow *main_window;
 static GtkWidget *create_main_stack (GtkApplicationWindow *app_window);
 
 static void
-show_error (GtkWindow *parent, const gchar *format, ...)
-{
-        va_list args;
-        gchar sz[2048];
-        GtkWidget *dialog;
-
-        /* build the message string */
-        va_start (args, format);
-        vsnprintf (sz, sizeof sz, format, args);
-        va_end (args);
-
-        /* create the error message dialog */
-	gchar *str;
-	str = g_strconcat ("<span weight=\"bold\">",
-                           _("Error:"),
-                           "</span>\n",
-                           sz,
-                           NULL);
-
-	dialog = gtk_message_dialog_new_with_markup (parent,
-                                                     GTK_DIALOG_DESTROY_WITH_PARENT |
-                                                     GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                                     GTK_BUTTONS_CLOSE, "%s", str);
-        gtk_dialog_add_action_widget (GTK_DIALOG (dialog),
-                                      gtk_button_new_with_mnemonic (_("_Ok")),
-                                      GTK_RESPONSE_OK);
-        gtk_widget_show_all (dialog);
-        gtk_dialog_run (GTK_DIALOG (dialog));
-        gtk_widget_destroy (dialog);
-}
-
-static void
 assistant_finished_cb (GdauiDsnAssistant *assistant, gboolean error, G_GNUC_UNUSED gpointer user_data)
 {
 	const GdaDsnInfo *dsn_info;
@@ -76,10 +45,10 @@ assistant_finished_cb (GdauiDsnAssistant *assistant, gboolean error, G_GNUC_UNUS
 		dsn_info = gdaui_dsn_assistant_get_dsn (assistant);
 		if (dsn_info) {
 			if (! gda_config_define_dsn (dsn_info, NULL)) 
-				show_error (NULL, _("Could not declare new data source"));
+				_gdaui_utility_show_error (NULL, _("Could not declare new data source"));
 		}
 		else
-			show_error (NULL, _("No valid data source info was created"));
+			_gdaui_utility_show_error (NULL, _("No valid data source info was created"));
 	}
 }
 
@@ -103,41 +72,19 @@ file_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UN
 }
 
 static void
-file_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
-{
-	GtkWidget *app_window = GTK_WIDGET (user_data);
-	GtkWidget *nb, *dsn, *current_widget;
-	gint current;
-
-	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
-	nb = g_object_get_data (G_OBJECT (app_window), STACK);
-
-	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
-	if (current == -1)
-		return;
-
-	current_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (nb), current);
-	if (current_widget == dsn)
-		dsn_config_edit_properties (dsn);
-}
-
-static void
 file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	GtkWidget *app_window = GTK_WIDGET (user_data);
-	GtkWidget *nb, *dsn, *current_widget;
+	GtkWidget *stack, *dsn, *current_widget;
 	gint current;
 
 	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
-	nb = g_object_get_data (G_OBJECT (app_window), STACK);
+	stack = g_object_get_data (G_OBJECT (app_window), STACK);
 
-	current = gtk_notebook_get_current_page (GTK_NOTEBOOK (nb));
-	if (current == -1)
-		return;
-
-	current_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (nb), current);
-	if (current_widget == dsn)
-		dsn_config_delete (dsn);
+	const gchar *visible;
+	visible = gtk_stack_get_visible_child_name (GTK_STACK (stack));
+	if (visible && !strcmp (visible, DSN_PAGE))
+		dsn_config_delete (dsn);	
 }
 
 static void
@@ -230,7 +177,6 @@ static GActionEntry app_entries[] = {
 static GActionEntry win_entries[] = {
 	{ "DatasourceNew", file_new_cb, NULL, NULL, NULL },
 	{ "DatasourceDelete", file_delete_cb, NULL, NULL, NULL },
-	{ "DatasourceProperties", file_properties_cb, NULL, NULL, NULL },
 	{ "ShowDatasources", show_datasources_cb, NULL, NULL, NULL },
 	{ "ShowProviders", show_providers_cb, NULL, NULL, NULL },
 };
@@ -279,7 +225,7 @@ activate (GApplication *app)
 
 	gtk_window_set_titlebar (GTK_WINDOW (window), header);
 	gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-	gtk_window_set_default_size (GTK_WINDOW (window), 780, 500);
+	gtk_window_set_default_size (GTK_WINDOW (window), 780, 600);
 
 	GtkWidget *menu_button;
 	menu_button = gtk_menu_button_new ();
@@ -313,6 +259,8 @@ activate (GApplication *app)
 	g_action_map_add_action_entries (G_ACTION_MAP (window),
 					 win_entries, G_N_ELEMENTS (win_entries),
 					 window);
+	g_simple_action_set_enabled (G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (window),
+										  "DatasourceDelete")), FALSE);
 
 	GtkBuilder *builder;
 	GMenuModel *menubar;
@@ -356,9 +304,6 @@ dsn_selection_changed_cb (GdauiRawGrid *dbrawgrid, GtkApplicationWindow *main_wi
 	selection = gdaui_data_selector_get_selected_rows (GDAUI_DATA_SELECTOR (dbrawgrid));
 
 	GAction *action;
-	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceProperties");
-	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), selection ? TRUE : FALSE);
-
 	action = g_action_map_lookup_action (G_ACTION_MAP (main_window), "DatasourceDelete");
 	g_simple_action_set_enabled (G_SIMPLE_ACTION (action), selection ? TRUE : FALSE);
 	if (selection)
@@ -376,7 +321,7 @@ create_main_stack (GtkApplicationWindow *app_window)
 	stack = gtk_stack_new ();
 	g_object_set_data (G_OBJECT (app_window), STACK, stack);
         gtk_widget_show (stack);
-	gtk_stack_set_transition_type (GTK_STACK (stack), GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT);
+	gtk_stack_set_transition_type (GTK_STACK (stack), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
 
 	/* data source configuration page */
 	dsn = dsn_config_new ();

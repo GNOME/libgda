@@ -161,7 +161,7 @@ gdaui_bar_init (GdauiBar *bar)
 	GtkStyleContext *context;
 	if (!css_provider) {
 #define CSS ".gdauibar {\n"				\
-			"background-color: #b3b3b3;\n"	\
+			"border-radius: 3px;\n"		\
 			"padding: 5px;\n"		\
 			"}"				\
 			".gdauibar_button {\n"			\
@@ -181,7 +181,7 @@ gdaui_bar_init (GdauiBar *bar)
 			"-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
 			"-GtkButtonBox-child-min-width : 0px;\n"	\
 			"border-style: solid;\n"			\
-			"border-radius: 5px;\n"				\
+			"border-radius: 3px;\n"				\
 			"}"
 		css_provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
 		gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (css_provider), CSS, -1, NULL);
@@ -189,6 +189,7 @@ gdaui_bar_init (GdauiBar *bar)
 	context = gtk_widget_get_style_context (GTK_WIDGET (bar));
 	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar");
+	gtk_style_context_add_class (context, "inline-toolbar");
 }
 
 static void

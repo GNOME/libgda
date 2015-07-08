@@ -25,6 +25,7 @@
 #include <libgda-ui/libgda-ui.h>
 #include "provider-config.h"
 #include "gdaui-bar.h"
+#include "support.h"
 
 #define PROVIDER_CONFIG_DATA "Provider_ConfigData"
 
@@ -46,15 +47,13 @@ provider_selection_changed_cb (GtkTreeSelection *selection, ProviderConfigPrivat
 	GdaDataModelIter *sel_iter;
 	sel_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (priv->provider_list));
 	GdkPixbuf *pix = NULL;
-	if (sel_iter) {
-		const GValue *cvalue;
+	const GValue *cvalue = NULL;
+	if (sel_iter)
 		cvalue = gda_data_model_iter_get_value_at (sel_iter, 0);
-		g_print ("Provider: %s\n", gda_value_stringify (cvalue));
-
+	if (cvalue) {
 		GdaProviderInfo *pinfo;
 		pinfo = gda_config_get_provider_info (g_value_get_string (cvalue));
-		g_assert (pinfo);
-		pix = gdaui_get_icon_for_db_engine (pinfo->icon_id);
+		pix = support_create_pixbuf_for_provider (pinfo);
 
 		gchar *tmp, *tmp1, *tmp2;
 		tmp1 = g_markup_printf_escaped ("%s", pinfo->id);
@@ -144,7 +143,12 @@ provider_selection_changed_cb (GtkTreeSelection *selection, ProviderConfigPrivat
 		gtk_label_set_markup (GTK_LABEL (priv->prov_loc), string->str);
 		g_string_free (string, TRUE);
 	}
-	gtk_image_set_from_pixbuf (GTK_IMAGE (priv->prov_image), pix);
+	if (pix) {
+		gtk_image_set_from_pixbuf (GTK_IMAGE (priv->prov_image), pix);
+		g_object_unref (pix);
+	}
+	else
+		gtk_image_clear (GTK_IMAGE (priv->prov_image));
 	gtk_widget_grab_focus (priv->provider_list);
 }
 
@@ -216,7 +220,6 @@ provider_config_new (void)
 
 	GtkWidget *grid;
 	grid = gtk_grid_new ();
-	gtk_paned_add2 (GTK_PANED (paned), grid);
 	g_object_set (grid, "margin-top", 20, NULL);
 	gtk_container_add (GTK_CONTAINER (sw), grid);
 	gtk_widget_show (sw);

@@ -46,12 +46,21 @@ struct _GdauiDsnEditorClass {
 	void (* changed) (GdauiDsnEditor *config);
 };
 
+typedef enum {
+	GDAUI_DSN_EDITOR_PANE_DEFINITION,
+	GDAUI_DSN_EDITOR_PANE_PARAMS,
+	GDAUI_DSN_EDITOR_PANE_AUTH
+} GdauiDsnEditorPaneType;
+
 GType                    gdaui_dsn_editor_get_type (void) G_GNUC_CONST;
 GtkWidget               *gdaui_dsn_editor_new (void);
+gboolean                 gdaui_dsn_editor_has_been_changed (GdauiDsnEditor *config);
 
 const GdaDsnInfo        *gdaui_dsn_editor_get_dsn (GdauiDsnEditor *config);
-void                     gdaui_dsn_editor_set_dsn (GdauiDsnEditor *config,
-						   const GdaDsnInfo *dsn_info);
+void                     gdaui_dsn_editor_set_dsn (GdauiDsnEditor *config, const GdaDsnInfo *dsn_info);
+
+void                     gdaui_dsn_editor_show_pane (GdauiDsnEditor *config, GdauiDsnEditorPaneType type);
+gboolean                 gdaui_dsn_editor_need_authentication (GdauiDsnEditor *config);
 
 G_END_DECLS
 
