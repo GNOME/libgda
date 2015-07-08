@@ -27,7 +27,6 @@
 #include "browser-canvas-print.h"
 #include <libgda/libgda.h>
 #include <libgda-ui/libgda-ui.h>
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #define DEFAULT_SCALE .8
 #ifdef HAVE_GRAPHVIZ
@@ -334,15 +333,15 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 					gtk_widget_show (mitem);
 					gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				}
-				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_IN, NULL);
+				mitem = gtk_menu_item_new_with_label (_("Zoom in"));
 				gtk_widget_show (mitem);
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_in_cb), canvas);
-				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_OUT, NULL);
+				mitem = gtk_menu_item_new_with_label (_("Zoom out"));
 				gtk_widget_show (mitem);
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_out_cb), canvas);
-				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_ZOOM_FIT, NULL);
+				mitem = gtk_menu_item_new_with_label (_("Adjusted zoom"));
 				gtk_widget_show (mitem);
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_zoom_fit_cb), canvas);
@@ -367,12 +366,12 @@ canvas_event_cb (BrowserCanvas *canvas, GdkEvent *event, GooCanvas *gcanvas)
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 #endif
 				
-				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, NULL);
+				mitem = gtk_menu_item_new_with_label (_("Save as"));
 				gtk_widget_show (mitem);
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_export_cb), canvas);
 
-				mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PRINT, NULL);
+				mitem = gtk_menu_item_new_with_label (_("Print"));
 				gtk_widget_show (mitem);
 				g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (popup_print_cb), canvas);
 				gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
@@ -466,8 +465,8 @@ popup_export_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvas *canvas)
 
 	dlg = gtk_file_chooser_dialog_new (_("Save diagram as"), (GtkWindow*) toplevel,
 					   GTK_FILE_CHOOSER_ACTION_SAVE, 
-					   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					   GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+					   _("_Cancel"), GTK_RESPONSE_CANCEL,
+					   _("_Save"), GTK_RESPONSE_ACCEPT,
 					   NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());

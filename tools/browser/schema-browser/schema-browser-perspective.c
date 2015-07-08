@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
+5 4* Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -26,6 +26,7 @@
 #include "../browser-window.h"
 #include "table-info.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../browser-page.h"
 #ifdef HAVE_GOOCANVAS
 #include "relations-diagram.h"
@@ -41,10 +42,10 @@ static void schema_browser_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface);
+static GtkWidget           *schema_browser_perspective_get_notebook (BrowserPerspective *perspective);
 static void                 schema_browser_perspective_customize (BrowserPerspective *perspective,
-								  GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
-static void                 schema_browser_perspective_uncustomize (BrowserPerspective *perspective,
-								    GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+								  GtkToolbar *toolbar, GtkHeaderBar *header);
+
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
@@ -54,8 +55,6 @@ struct _SchemaBrowserPerspectivePrivate {
 	GtkWidget *favorites;
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
-
-	GArray *custom_parts;
 };
 
 GType
@@ -106,8 +105,9 @@ schema_browser_perspective_class_init (SchemaBrowserPerspectiveClass * klass)
 static void
 schema_browser_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
+	iface->i_get_notebook = schema_browser_perspective_get_notebook;
 	iface->i_customize = schema_browser_perspective_customize;
-        iface->i_uncustomize = schema_browser_perspective_uncustomize;
+        iface->i_uncustomize = NULL;
 }
 
 
@@ -116,7 +116,6 @@ schema_browser_perspective_init (SchemaBrowserPerspective *perspective)
 {
 	perspective->priv = g_new0 (SchemaBrowserPerspectivePrivate, 1);
 	perspective->priv->favorites_shown = TRUE;
-	perspective->priv->custom_parts = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
 }
@@ -156,11 +155,9 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 		perspective->priv->favorites = wid;
 	}
 
-	nb = gtk_notebook_new ();
+	nb = browser_perspective_create_notebook (bpers);
 	perspective->priv->notebook = nb;
 	gtk_paned_add2 (GTK_PANED (paned), nb);
-	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
-	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
 
 	wid = objects_index_new (tcnc);
 	g_signal_connect (wid, "selection-changed",
@@ -177,8 +174,6 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 
 	if (perspective->priv->favorites && !perspective->priv->favorites_shown)
 		gtk_widget_hide (perspective->priv->favorites);
-
-	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
 
 	return bpers;
 }
@@ -267,7 +262,9 @@ schema_browser_perspective_dispose (GObject *object)
 
 	perspective = SCHEMA_BROWSER_PERSPECTIVE (object);
 	if (perspective->priv) {
-		browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
+		if (customization_data_exists (object))
+			customization_data_release (object);
+
 		g_free (perspective->priv);
 		perspective->priv = NULL;
 	}
@@ -304,6 +301,13 @@ favorites_toggle_cb (GSimpleAction *action, GVariant *state, gpointer data)
 	g_simple_action_set_state (action, state);
 }
 
+static GtkWidget *
+schema_browser_perspective_get_notebook (BrowserPerspective *perspective)
+{
+	g_return_val_if_fail (IS_SCHEMA_BROWSER_PERSPECTIVE (perspective), NULL);
+	return SCHEMA_BROWSER_PERSPECTIVE (perspective)->priv->notebook;
+}
+
 static GActionEntry win_entries[] = {
         { "show-favorites", NULL, NULL, "true", favorites_toggle_cb },
 #ifdef HAVE_GOOCANVAS
@@ -312,23 +316,14 @@ static GActionEntry win_entries[] = {
 };
 
 static void
-schema_browser_perspective_customize (BrowserPerspective *perspective,
-				    GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
+schema_browser_perspective_customize (BrowserPerspective *perspective, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
 	g_print ("%s ()\n", __FUNCTION__);
-	SchemaBrowserPerspective *persp;
-	persp = SCHEMA_BROWSER_PERSPECTIVE (perspective);
 
-	BrowserWindow *bwin;
-	bwin = browser_perspective_get_window (perspective);
+	customization_data_init (G_OBJECT (perspective), toolbar, header);
 
 	/* add perspective's actions */
-	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
-					 win_entries, G_N_ELEMENTS (win_entries),
-					 perspective);
-
-	g_assert (! persp->priv->custom_parts);
-	persp->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
+	customization_data_add_actions (G_OBJECT (perspective), win_entries, G_N_ELEMENTS (win_entries));
 
 	/* add to toolbar */
 	GtkToolItem *titem;
@@ -338,7 +333,7 @@ schema_browser_perspective_customize (BrowserPerspective *perspective,
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.show-favorites");
 	gtk_widget_show (GTK_WIDGET (titem));
-	g_array_append_val (persp->priv->custom_parts, titem);
+	customization_data_add_part (G_OBJECT (perspective), G_OBJECT (titem));
 
 #ifdef HAVE_GOOCANVAS
 	titem = gtk_tool_button_new (NULL, NULL);
@@ -347,43 +342,9 @@ schema_browser_perspective_customize (BrowserPerspective *perspective,
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.action-diagram-new");
 	gtk_widget_show (GTK_WIDGET (titem));
-	g_array_append_val (persp->priv->custom_parts, titem);
+	customization_data_add_part (G_OBJECT (perspective), G_OBJECT (titem));
 #endif
 }
-
-static void
-schema_browser_perspective_uncustomize (BrowserPerspective *perspective,
-				      GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
-{
-	g_print ("%s ()\n", __FUNCTION__);
-	SchemaBrowserPerspective *persp;
-	persp = SCHEMA_BROWSER_PERSPECTIVE (perspective);
-
-	BrowserWindow *bwin;
-	bwin = browser_perspective_get_window (perspective);
-
-	/* remove perspective's actions */
-	guint i;
-	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
-		GActionEntry *entry;
-		entry = &win_entries [i];
-		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
-	}
-
-	/* cleanups, headerbar and toolbar */
-	g_assert (persp->priv->custom_parts);
-	for (i = 0; i < persp->priv->custom_parts->len; i++) {
-		GObject *obj;
-		obj = g_array_index (persp->priv->custom_parts, GObject*, i);
-		if (GTK_IS_WIDGET (obj))
-			gtk_widget_destroy (GTK_WIDGET (obj));
-		else
-			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
-	}
-	g_array_free (persp->priv->custom_parts, TRUE);
-	persp->priv->custom_parts = NULL;
-}
-
 
 #ifdef HAVE_GOOCANVAS
 /**

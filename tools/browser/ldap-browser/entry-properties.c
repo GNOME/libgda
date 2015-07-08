@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,6 @@
 #include <libgda-ui/libgda-ui.h>
 #include "../ui-support.h"
 #include "../text-search.h"
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _EntryPropertiesPrivate {
 	TConnection *tcnc;
@@ -225,8 +223,8 @@ data_save_cb (GtkWidget *mitem, EntryProperties *eprop)
 	dialog = gtk_file_chooser_dialog_new (_("Select the file to save data to"),
 					      (GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (eprop)),
 					      GTK_FILE_CHOOSER_ACTION_SAVE,
-					      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-					      GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+					      _("_Cancel"), GTK_RESPONSE_CANCEL,
+					      _("_Save"), GTK_RESPONSE_ACCEPT,
 					      NULL);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog),
 					     gdaui_get_default_path ());

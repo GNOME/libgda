@@ -29,8 +29,6 @@
 #include <thread-wrapper/gda-connect.h>
 #include "browser-connections-list.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 /*
  * structure representing a 'tab' in a window
  *
@@ -467,8 +465,7 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
 
 	/* customize currect perspective */
 	browser_perspective_customize (bwin->priv->current_perspective->perspective_widget,
-				       bwin->priv->toolbar, bwin->priv->header,
-				       G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+				       bwin->priv->toolbar, bwin->priv->header);
 
 	return bwin;
 }
@@ -496,7 +493,6 @@ fullscreen_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer da
 static void
 cnc_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, BrowserWindow *bwin)
 {
-	GtkAction *action;
 	gchar *reason = "AAAA";
 	gboolean is_busy;
 	is_busy = (status == GDA_CONNECTION_STATUS_IDLE) ? FALSE : TRUE;
@@ -1009,7 +1005,7 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 		/* use a GtkInfoBar */
 		GtkWidget *ibar, *content_area, *label;
 		
-		ibar = gtk_info_bar_new_with_buttons (GTK_STOCK_CLOSE, 1, NULL);
+		ibar = gtk_info_bar_new_with_buttons (_("_Close"), 1, NULL);
 		if (context)
 			g_object_set_data_full (G_OBJECT (ibar), "context", g_strdup (context), g_free);
 		if (text)
@@ -1045,38 +1041,6 @@ browser_window_show_notice (BrowserWindow *bwin, GtkMessageType type, const gcha
 	}
 }
 
-
-/**
- * browser_window_customize_perspective_ui
- * @bwin: a #BrowserWindow
- * @bpers: the #BrowserPerspective concerned
- * @actions_group: (allow-none): a #GtkActionGroup object, or %NULL
- * @ui_info: (allow-none): a merge UI string, or %NULL. See gtk_ui_manager_add_ui_from_string()
- *
- * Customizes a UI specific to the @bpers perspective. Any
- * previous customization is removed, replaced by the new requested one.
- *
- * If @actions_group is %NULL then any it simply removes the customization.
- */
-void
-browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective *bpers,
-					 GtkActionGroup *actions_group,
-					 const gchar *ui_info)
-{
-	PerspectiveData *pdata = NULL;
-	GSList *list;
-
-	g_return_if_fail (BROWSER_IS_WINDOW (bwin));
-	g_return_if_fail (IS_BROWSER_PERSPECTIVE (bpers));
-
-	for (list = bwin->priv->pers_list; list; list = list->next) {
-		if (PERSPECTIVE_DATA (list->data)->perspective_widget == bpers) {
-			pdata = PERSPECTIVE_DATA (list->data);
-			break;
-		}
-	}
-}
-
 /**
  * browser_window_change_perspective
  * @bwin: a #BrowserWindow
@@ -1103,9 +1067,7 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 			return current_pdata->perspective_widget;
 
 		/* clean ups for current perspective */
-		browser_perspective_uncustomize (bwin->priv->current_perspective->perspective_widget,
-						 bwin->priv->toolbar, bwin->priv->header,
-						 G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+		browser_perspective_uncustomize (bwin->priv->current_perspective->perspective_widget);
 	}
 
 	/* find factory */
@@ -1137,8 +1099,7 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 	}
 	gtk_stack_set_visible_child (bwin->priv->pers_stack, GTK_WIDGET (bpers));
 	browser_perspective_customize (bpers,
-				       bwin->priv->toolbar, bwin->priv->header,
-				       G_MENU (gtk_application_get_menubar (GTK_APPLICATION (t_app_get ()))));
+				       bwin->priv->toolbar, bwin->priv->header);
 	bwin->priv->current_perspective = pdata;
 
 	/* setup for the new perspective */

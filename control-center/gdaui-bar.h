@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,6 +59,7 @@ void         gdaui_bar_set_text                  (GdauiBar *bar, const gchar *te
 void         gdaui_bar_set_icon_from_file        (GdauiBar *bar, const gchar *file);
 void         gdaui_bar_set_icon_from_resource    (GdauiBar *bar, const gchar *resource_name);
 void         gdaui_bar_set_icon_from_pixbuf      (GdauiBar *bar, GdkPixbuf *pixbuf);
+void         gdaui_bar_set_icon_from_icon_name   (GdauiBar *bar, const gchar *icon_name);
 void         gdaui_bar_set_show_icon             (GdauiBar *bar, gboolean show);
 gboolean     gdaui_bar_get_show_icon             (GdauiBar *bar);
 

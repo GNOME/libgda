@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -23,6 +23,7 @@
 #include "table-info.h"
 #include "../dnd.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../gdaui-bar.h"
 #include "table-columns.h"
 #include "table-preferences.h"
@@ -39,8 +40,6 @@
 #include <libgda/gda-data-model-extra.h>
 #include "../fk-declare.h"
 #include <libgda/gda-debug-macros.h>
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _TableInfoPrivate {
 	TConnection *tcnc;
@@ -72,9 +71,8 @@ static void table_info_get_property (GObject *object,
 				     GParamSpec *pspec);
 /* BrowserPage interface */
 static void                 table_info_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *table_info_page_get_actions_group (BrowserPage *page);
-static const gchar         *table_info_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 table_info_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+static GtkWidget           *table_info_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, TableInfo *tinfo);
 
@@ -107,9 +105,9 @@ table_info_class_init (TableInfoClass *klass)
 static void
 table_info_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = table_info_page_get_actions_group;
-	iface->i_get_actions_ui = table_info_page_get_actions_ui;
-	iface->i_get_tab_label = table_info_page_get_tab_label;
+	iface->i_customize = table_info_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = table_info_get_tab_label;
 }
 
 static void
@@ -451,8 +449,11 @@ table_info_get_connection (TableInfo *tinfo)
  * UI actions
  */
 static void
-action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
+action_add_to_fav_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	TableInfo *tinfo;
+	tinfo = TABLE_INFO (data);
+
 	TFavorites *bfav;
         TFavoritesAttributes fav;
         GError *error = NULL;
@@ -476,8 +477,10 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 }
 
 static void
-action_view_contents_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
+action_view_contents_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	TableInfo *tinfo;
+	tinfo = TABLE_INFO (data);
 	if (! tinfo->priv->table_short_name)
 		return;
 
@@ -630,8 +633,11 @@ fkdata_list_free (GSList *fkdata_list)
 }
 
 static void
-action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
+action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	TableInfo *tinfo;
+	tinfo = TABLE_INFO (data);
+
 	/* init */
 	if (! tinfo->priv->table_short_name)
 		return;
@@ -884,10 +890,10 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	popup = gtk_dialog_new_with_buttons (_("Values to insert into table"), GTK_WINDOW (bwin),
 					     0,
 #ifdef HAVE_GDU
-					     GTK_STOCK_HELP, GTK_RESPONSE_HELP,
+					     _("Help"), GTK_RESPONSE_HELP,
 #endif
-					     GTK_STOCK_EXECUTE, GTK_RESPONSE_ACCEPT,
-					     GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					     _("Execute"), GTK_RESPONSE_ACCEPT,
+					     _("Cancel"), GTK_RESPONSE_REJECT,
 					     NULL);
 	tinfo->priv->insert_popup = popup;
 	g_object_set_data_full (G_OBJECT (popup), "stmt", stmt, g_object_unref);
@@ -926,8 +932,11 @@ action_insert_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 }
 
 static void
-action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
+action_declarefk_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	TableInfo *tinfo;
+	tinfo = TABLE_INFO (data);
+
 	GtkWidget *dlg, *parent;
 	GdaMetaStruct *mstruct;
 	GdaMetaDbObject *dbo;
@@ -970,57 +979,60 @@ action_declarefk_cb (G_GNUC_UNUSED GtkAction *action, TableInfo *tinfo)
 	gtk_widget_destroy (dlg);
 }
 
-static GtkActionEntry ui_actions[] = {
-	{ "Table", NULL, N_("_Table"), NULL, N_("Table"), NULL },
-	{ "AddToFav", NULL, N_("Add to _Favorites"), NULL, N_("Add table to favorites"),
-	  G_CALLBACK (action_add_to_fav_cb)},
-	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View table's contents"),
-	  G_CALLBACK (action_view_contents_cb)},
-	{ "InsertData", GTK_STOCK_ADD, N_("_Insert Data"), NULL, N_("Insert data into table"),
-	  G_CALLBACK (action_insert_cb)},
-	{ "KfDeclare", NULL, N_("_Declare Foreign Key"), NULL, N_("Declare a foreign key for table"),
-	  G_CALLBACK (action_declarefk_cb)},
+static GActionEntry win_entries[] = {
+        { "AddToFav", action_add_to_fav_cb, NULL, NULL, NULL },
+	{ "ViewContents", action_view_contents_cb, NULL, NULL, NULL },
+	{ "InsertData", action_insert_cb, NULL, NULL, NULL },
+	{ "KfDeclare", action_declarefk_cb, NULL, NULL, NULL }
 };
-static const gchar *ui_actions_info =
-	"<ui>"
-	"  <menubar name='MenuBar'>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='Table' action='Table'>"
-        "        <menuitem name='AddToFav' action= 'AddToFav'/>"
-        "        <menuitem name='InsertData' action= 'InsertData'/>"
-        "        <menuitem name='ViewContents' action= 'ViewContents'/>"
-        "        <separator/>"
-        "        <menuitem name='KfDeclare' action= 'KfDeclare'/>"
-        "      </menu>"
-        "    </placeholder>"
-	"  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='AddToFav'/>"
-	"    <toolitem action='ViewContents'/>"
-	"    <toolitem action='InsertData'/>"
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-table_info_page_get_actions_group (BrowserPage *page)
+static void
+table_info_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("SchemaBrowserTableInfoActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
-	
-	return agroup;
-}
+	g_print ("%s ()\n", __FUNCTION__);
 
-static const gchar *
-table_info_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_info;
+	customization_data_init (G_OBJECT (page), toolbar, header);
+
+	/* add perspective's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "bookmark-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Add to Favorites"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.AddToFav");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "go-jump-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("View table's contents"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ViewContents");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "document-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Insert data into table"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.InsertData");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "insert-link-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Declare Foreign Key"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.KfDeclare");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 }
 
 static GtkWidget *
-table_info_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+table_info_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	TableInfo *tinfo;
 	const gchar *tab_name;

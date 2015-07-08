@@ -44,8 +44,6 @@
   #include <gtksourceview/gtksourcestylescheme.h>
 #endif
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 struct _DataFavoriteSelectorPrivate {
 	TConnection *tcnc;
 	GdaTree *tree;

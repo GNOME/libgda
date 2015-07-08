@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -22,6 +22,7 @@
 #include <string.h>
 #include "t-app.h"
 #include "relations-diagram.h"
+#include "../ui-customize.h"
 #include "../gdaui-bar.h"
 #include "../canvas/browser-canvas-db-relations.h"
 #include <gdk/gdkkeysyms.h>
@@ -31,7 +32,6 @@
 #include "../browser-window.h"
 #include "../data-manager/data-manager-perspective.h"
 #include "../ui-support.h"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _RelationsDiagramPrivate {
 	TConnection *tcnc;
@@ -60,9 +60,9 @@ static void relations_diagram_get_property (GObject *object,
 
 /* BrowserPage interface */
 static void                 relations_diagram_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *relations_diagram_page_get_actions_group (BrowserPage *page);
-static const gchar         *relations_diagram_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 relations_diagram_customize (BrowserPage *page, GtkToolbar *toolbar,
+							 GtkHeaderBar *header);
+static GtkWidget           *relations_diagram_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static void meta_changed_cb (TConnection *tcnc, GdaMetaStruct *mstruct, RelationsDiagram *diagram);
 static void favorites_changed_cb (TConnection *tcnc, RelationsDiagram *diagram);
@@ -97,9 +97,9 @@ relations_diagram_class_init (RelationsDiagramClass *klass)
 static void
 relations_diagram_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = relations_diagram_page_get_actions_group;
-	iface->i_get_actions_ui = relations_diagram_page_get_actions_ui;
-	iface->i_get_tab_label = relations_diagram_page_get_tab_label;
+	iface->i_customize = relations_diagram_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = relations_diagram_get_tab_label;
 }
 
 static void
@@ -476,12 +476,6 @@ relations_diagram_set_fav_id (RelationsDiagram *diagram, gint fav_id, GError **e
 		g_free (str);
 		diagram->priv->fav_id = -1;
 	}
-
-	/* update notebook's tab label */
-	BrowserPerspective *pers;
-	pers = browser_page_get_perspective (BROWSER_PAGE (diagram));
-	if (pers)
-		browser_perspective_page_tab_label_change (pers, BROWSER_PAGE (diagram));
 }
 
 /**
@@ -496,8 +490,11 @@ relations_diagram_get_fav_id (RelationsDiagram *diagram)
 }
 
 static void
-action_view_contents_cb  (G_GNUC_UNUSED GtkAction *action, RelationsDiagram *diagram)
+action_view_contents_cb  (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	RelationsDiagram *diagram;
+	diagram = RELATIONS_DIAGRAM (data);
+
 	gchar *str;
 	str = browser_canvas_db_relations_items_to_data_manager (BROWSER_CANVAS_DB_RELATIONS (diagram->priv->canvas));
 	g_print ("%s\n", str);
@@ -513,41 +510,33 @@ action_view_contents_cb  (G_GNUC_UNUSED GtkAction *action, RelationsDiagram *dia
 	}
 }
 
-
-static GtkActionEntry ui_actions[] = {
-	{ "ViewContents", GTK_STOCK_EDIT, N_("_Contents"), NULL, N_("View contents"),
-	  G_CALLBACK (action_view_contents_cb)},
+static GActionEntry win_entries[] = {
+	{ "ViewContents", action_view_contents_cb, NULL, NULL, NULL },
 };
-static const gchar *ui_actions_info =
-	"<ui>"
-	"  <menubar name='MenuBar'>"
-	"  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='ViewContents'/>"
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-relations_diagram_page_get_actions_group (BrowserPage *page)
+static void
+relations_diagram_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	GtkActionGroup *agroup;
-	agroup = gtk_action_group_new ("SchemaBrowserRelationsDiagramActions");
-	gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-	gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
-	
-	return agroup;
-}
+	g_print ("%s ()\n", __FUNCTION__);
 
-static const gchar *
-relations_diagram_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_info;
-}
+	customization_data_init (G_OBJECT (page), toolbar, header);
 
+	/* add perspective's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "go-jump-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Manage data in selected tables"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ViewContents");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
+}
 
 static GtkWidget *
-relations_diagram_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+relations_diagram_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	GtkWidget *wid;
 	RelationsDiagram *diagram;

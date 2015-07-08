@@ -453,7 +453,7 @@ _make_tab_label (const gchar *label,
 	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
 
 	if (with_close) {
-		image = gtk_image_new_from_icon_name ("window-close", GTK_ICON_SIZE_MENU);
+		image = gtk_image_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_MENU);
 		close_button = gtk_button_new ();
 		gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
 		gtk_button_set_focus_on_click (GTK_BUTTON (close_button), FALSE);

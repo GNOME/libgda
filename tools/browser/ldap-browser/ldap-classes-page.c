@@ -24,6 +24,7 @@
 #include "class-properties.h"
 #include "../dnd.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../gdaui-bar.h"
 #include "../browser-page.h"
 #include "../browser-window.h"
@@ -32,8 +33,6 @@
 #include "mgr-ldap-classes.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda/gda-debug-macros.h>
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 typedef struct {
 	gchar *classname;
@@ -54,7 +53,6 @@ struct _LdapClassesPagePrivate {
 	GtkWidget *classes_view;
 	GtkWidget *entry_props;
 
-	GtkActionGroup *agroup;
 	GArray *history_items; /* array of @HistoryItem */
 	guint history_max_len; /* max allowed length of @history_items */
 	gint current_hitem; /* index in @history_items, or -1 */
@@ -67,9 +65,8 @@ static void ldap_classes_page_dispose   (GObject *object);
 
 /* BrowserPage interface */
 static void                 ldap_classes_page_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *ldap_classes_page_page_get_actions_group (BrowserPage *page);
-static const gchar         *ldap_classes_page_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *ldap_classes_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 ldap_classes_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+static GtkWidget           *ldap_classes_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static GObjectClass *parent_class = NULL;
 
@@ -91,9 +88,9 @@ ldap_classes_page_class_init (LdapClassesPageClass *klass)
 static void
 ldap_classes_page_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = ldap_classes_page_page_get_actions_group;
-	iface->i_get_actions_ui = ldap_classes_page_page_get_actions_ui;
-	iface->i_get_tab_label = ldap_classes_page_page_get_tab_label;
+	iface->i_customize = ldap_classes_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = ldap_classes_page_get_tab_label;
 }
 
 static void
@@ -116,8 +113,6 @@ ldap_classes_page_dispose (GObject *object)
 	if (ebrowser->priv) {
 		if (ebrowser->priv->tcnc)
 			g_object_unref (ebrowser->priv->tcnc);
-		if (ebrowser->priv->agroup)
-			g_object_unref (ebrowser->priv->agroup);
 		if (ebrowser->priv->history_items) {
 			guint i;
 			for (i = 0; i < ebrowser->priv->history_items->len; i++) {
@@ -205,7 +200,7 @@ source_drag_data_get_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkDragC
 static void
 update_history_actions (LdapClassesPage *ebrowser)
 {
-	if (!ebrowser->priv->agroup)
+	if (!customization_data_exists (G_OBJECT (ebrowser)))
 		return;
 
 	gboolean is_first = TRUE;
@@ -229,11 +224,13 @@ update_history_actions (LdapClassesPage *ebrowser)
 		}
 	}
 
-	GtkAction *action;
-	action = gtk_action_group_get_action (ebrowser->priv->agroup, "DnBack");
-	gtk_action_set_sensitive (action, !is_first);
-	action = gtk_action_group_get_action (ebrowser->priv->agroup, "DnForward");
-	gtk_action_set_sensitive (action, !is_last);
+	GAction *action;
+        action = customization_data_get_action (G_OBJECT (ebrowser), "ClassBack");
+        if (action)
+                g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !is_first);
+	action = customization_data_get_action (G_OBJECT (ebrowser), "ClassForward");
+        if (action)
+                g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !is_last);
 }
 
 static void
@@ -246,11 +243,12 @@ selection_changed_cb (GtkTreeSelection *sel, LdapClassesPage *ebrowser)
 	if (!current_classname)
 		return;
 
-	if (ebrowser->priv->agroup) {
-		GtkAction *action;
-		action = gtk_action_group_get_action (ebrowser->priv->agroup, "AddToFav");
+	GAction *action;
+	action = customization_data_get_action (G_OBJECT (ebrowser), "AddToFav");
+	if (action) {
 		current_classname = ldap_classes_page_get_current_class (ebrowser);
-		gtk_action_set_sensitive (action, (current_classname && *current_classname) ? TRUE : FALSE);
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+					     (current_classname && *current_classname) ? TRUE : FALSE);
 	}
 
 	GtkTreeModel *model;
@@ -409,8 +407,11 @@ ldap_classes_page_set_current_class (LdapClassesPage *ldap_classes_page, const g
  * UI actions
  */
 static void
-action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser)
+action_add_to_fav_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	LdapClassesPage *ebrowser;
+	ebrowser = LDAP_CLASSES_PAGE (data);
+
 	TFavorites *bfav;
         TFavoritesAttributes fav;
         GError *error = NULL;
@@ -435,8 +436,11 @@ action_add_to_fav_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser
 }
 
 static void
-action_class_back_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser)
+action_class_back_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	LdapClassesPage *ebrowser;
+	ebrowser = LDAP_CLASSES_PAGE (data);
+
 	ebrowser->priv->add_hist_item = FALSE;
 	if (ebrowser->priv->current_hitem > 0) {
 		HistoryItem *hitem = NULL;
@@ -468,8 +472,11 @@ action_class_back_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser
 }
 
 static void
-action_class_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrowser)
+action_class_forward_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	LdapClassesPage *ebrowser;
+	ebrowser = LDAP_CLASSES_PAGE (data);
+
 	ebrowser->priv->add_hist_item = FALSE;
 	if ((ebrowser->priv->current_hitem >=0) &&
 	    ((guint) ebrowser->priv->current_hitem < ebrowser->priv->history_items->len)) {
@@ -501,68 +508,51 @@ action_class_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapClassesPage *ebrow
 	ebrowser->priv->add_hist_item = TRUE;
 }
 
-static GtkActionEntry ui_actions[] = {
-	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-	{ "AddToFav", /*STOCK_ADD_BOOKMARK*/ NULL, N_("Add to _Favorites"), NULL, N_("Add class to favorites"),
-	  G_CALLBACK (action_add_to_fav_cb)},
-	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous Class"), NULL, N_("Move back to previous LDAP class"),
-	  G_CALLBACK (action_class_back_cb)},
-	{ "DnForward", GTK_STOCK_GO_FORWARD, N_("Next Class"), NULL, N_("Move to next LDAP class"),
-	  G_CALLBACK (action_class_forward_cb)},
+static GActionEntry win_entries[] = {
+        { "AddToFav", action_add_to_fav_cb, NULL, NULL, NULL },
+	{ "ClassBack", action_class_back_cb, NULL, NULL, NULL },
+	{ "ClassForward", action_class_forward_cb, NULL, NULL, NULL },
 };
-static const gchar *ui_actions_browser =
-	"<ui>"
-	"  <menubar name='MenuBar'>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='LDAP' action='LDAP'>"
-        "        <menuitem name='AddToFav' action= 'AddToFav'/>"
-	"        <separator/>"
-        "        <menuitem name='DnBack' action= 'DnBack'/>"
-        "        <menuitem name='DnForward' action= 'DnForward'/>"
-        "      </menu>"
-        "    </placeholder>"
-	"  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='AddToFav'/>"
-	"    <toolitem action='DnBack'/>"
-	"    <toolitem action='DnForward'/>"
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-ldap_classes_page_page_get_actions_group (BrowserPage *page)
+static void
+ldap_classes_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	LdapClassesPage *ebrowser;
+	g_print ("%s ()\n", __FUNCTION__);
 
-	ebrowser = LDAP_CLASSES_PAGE (page);
-	if (! ebrowser->priv->agroup) {
-		GtkActionGroup *agroup;
-		agroup = gtk_action_group_new ("LdapLdapClassesPageActions");
-		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
-		ebrowser->priv->agroup = agroup;
+	customization_data_init (G_OBJECT (page), toolbar, header);
 
-		GtkAction *action;
-		const gchar *current_classname;
-		action = gtk_action_group_get_action (agroup, "AddToFav");
-		current_classname = ldap_classes_page_get_current_class (ebrowser);
-		gtk_action_set_sensitive (action, (current_classname && *current_classname) ? TRUE : FALSE);
+	/* add perspective's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
 
-		update_history_actions (ebrowser);
-	}
-	
-	return g_object_ref (ebrowser->priv->agroup);
-}
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "bookmark-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Add class Favorites"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.AddToFav");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 
-static const gchar *
-ldap_classes_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_browser;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "go-previous-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Move back to previous LDAP class"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ClassBack");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
+
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "go-next-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Move to next LDAP class"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ClassForward");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 }
 
 static GtkWidget *
-ldap_classes_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+ldap_classes_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	const gchar *tab_name;
 	GdkPixbuf *classes_pixbuf;

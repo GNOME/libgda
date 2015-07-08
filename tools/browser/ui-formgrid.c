@@ -1116,7 +1116,8 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
  * @user_data: (allow-none): a pointer passed to the @callback function, or %NULL
  *
  * If @callback is not %NULL, then a "Refresh" button is added to @formgrid which, when clicked,
- * calls @callback.
+ * calls @callback. The callback function will have a first argument which is a button, and a second argument
+ * which is @user_data
  *
  * If @callback is %NULL, then the "Refresh" button (if there was any) is removed.
  */

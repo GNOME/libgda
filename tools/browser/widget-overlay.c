@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,8 +18,6 @@
 #include "widget-overlay.h"
 #include <stdarg.h>
 #include <glib/gi18n-lib.h>
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #define SCALE_MIN .6
 #define SCALE_MAX 1.
@@ -253,7 +251,7 @@ widget_overlay_set_property (GObject *object,
 				gtk_box_pack_start (GTK_BOX (box), wid, TRUE, TRUE, 0);
 
 				button = gtk_button_new ();
-				image = gtk_image_new_from_stock (GTK_STOCK_CLOSE,
+				image = gtk_image_new_from_icon_name ("window-close-symbolic",
 								  GTK_ICON_SIZE_MENU);
 				gtk_container_add (GTK_CONTAINER (button), image);
 				gtk_container_add (GTK_CONTAINER (box), button);
@@ -636,8 +634,7 @@ widget_overlay_realize (GtkWidget *widget)
 			attributes.height = allocation.height;
 		}
 
-		cd->offscreen_window = gdk_window_new (gtk_widget_get_root_window (widget),
-						       &attributes, attributes_mask);
+		cd->offscreen_window = gdk_window_new (NULL, &attributes, attributes_mask);
 		gdk_window_set_user_data (cd->offscreen_window, widget);
 		gtk_widget_set_parent_window (cd->child, cd->offscreen_window);
 		gdk_offscreen_window_set_embedder (cd->offscreen_window, win);

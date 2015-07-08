@@ -20,12 +20,12 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include "../ui-customize.h"
 #include "dummy-perspective.h"
 #include "dummy-perspective.gresources.h"
 
 struct _DummyPerspectivePriv {
-	GArray *custom_parts;
-	gint    custom_menu_pos;
+	GtkWidget *notebook;
 };
 /* 
  * Main static functions 
@@ -36,10 +36,9 @@ static void dummy_perspective_dispose (GObject *object);
 
 /* BrowserPerspective interface */
 static void                 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface);
+static GtkWidget           *dummy_perspective_get_notebook (BrowserPerspective *perspective);
 static void                 dummy_perspective_customize (BrowserPerspective *perspective,
-							 GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
-static void                 dummy_perspective_uncustomize (BrowserPerspective *perspective,
-							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+							 GtkToolbar *toolbar, GtkHeaderBar *header);
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -95,28 +94,32 @@ dummy_perspective_class_init (DummyPerspectiveClass * klass)
 static void
 dummy_perspective_perspective_init (BrowserPerspectiveIface *iface)
 {
+	iface->i_get_notebook = dummy_perspective_get_notebook;
 	iface->i_customize = dummy_perspective_customize;
-	iface->i_uncustomize = dummy_perspective_uncustomize;
+	iface->i_uncustomize = NULL;
 }
 
 
 static void
 dummy_perspective_init (DummyPerspective *perspective)
 {
-	GtkWidget *wid;
+	GtkWidget *wid, *nb;
 
 	perspective->priv = g_new0 (DummyPerspectivePriv, 1);
-	perspective->priv->custom_parts = NULL;
-	perspective->priv->custom_menu_pos = -1;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (perspective), GTK_ORIENTATION_VERTICAL);
+
+	nb = browser_perspective_create_notebook (BROWSER_PERSPECTIVE (perspective));
+	perspective->priv->notebook = nb;
+	gtk_box_pack_start (GTK_BOX (perspective), nb, TRUE, TRUE, 0);
 	
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid),
 			      "<big><b>Dummy perspective</b></big>\n"
 			      "Use this as a starting point for your own perspective...");
-	gtk_box_pack_start (GTK_BOX (perspective), wid, TRUE, TRUE, 0);
-	gtk_widget_show (wid);
+	gtk_notebook_append_page (GTK_NOTEBOOK (nb), wid, NULL);
+
+	gtk_widget_show_all (nb);
 }
 
 /**
@@ -129,12 +132,6 @@ dummy_perspective_new (BrowserWindow *bwin)
 {
 	BrowserPerspective *bpers;
 	bpers = (BrowserPerspective*) g_object_new (TYPE_DUMMY_PERSPECTIVE, NULL);
-	DummyPerspective *dpers;
-	dpers = (DummyPerspective *) bpers;
-
-	/* if there is a notebook to store pages, use: 
-	browser_perspective_declare_notebook (bpers, GTK_NOTEBOOK (perspective->priv->notebook));
-	*/
 
 	return bpers;
 }
@@ -149,14 +146,23 @@ dummy_perspective_dispose (GObject *object)
 	g_return_if_fail (IS_DUMMY_PERSPECTIVE (object));
 
 	perspective = DUMMY_PERSPECTIVE (object);
-	browser_perspective_declare_notebook ((BrowserPerspective*) perspective, NULL);
 	if (perspective->priv) {
+		if (customization_data_exists (object))
+			customization_data_release (object);
+
 		g_free (perspective->priv);
 		perspective->priv = NULL;
 	}
 
 	/* parent class */
 	parent_class->dispose (object);
+}
+
+static GtkWidget *
+dummy_perspective_get_notebook (BrowserPerspective *perspective)
+{
+	g_return_val_if_fail (IS_DUMMY_PERSPECTIVE (perspective), NULL);
+	return DUMMY_PERSPECTIVE (perspective)->priv->notebook;
 }
 
 static void
@@ -183,34 +189,14 @@ static GActionEntry win_entries[] = {
 };
 
 static void
-dummy_perspective_customize (BrowserPerspective *perspective,
-			     GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
+dummy_perspective_customize (BrowserPerspective *perspective, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
 	g_print ("%s ()\n", __FUNCTION__);
-	DummyPerspective *dpers;
-	dpers = DUMMY_PERSPECTIVE (perspective);
 
-	BrowserWindow *bwin;
-	bwin = browser_perspective_get_window (perspective);
+	customization_data_init (G_OBJECT (perspective), toolbar, header);
 
 	/* add perspective's actions */
-	g_action_map_add_action_entries (G_ACTION_MAP (bwin),
-					 win_entries, G_N_ELEMENTS (win_entries),
-					 dpers);
-
-	g_assert (! dpers->priv->custom_parts);
-	dpers->priv->custom_parts = g_array_new (FALSE, FALSE, sizeof (gpointer));
-	g_assert (dpers->priv->custom_menu_pos == -1);
-
-	/* add menu */
-	GtkBuilder *builder;
-	builder = gtk_builder_new ();
-	gtk_builder_add_from_resource (builder, "/dummy-perspective/perspective-menus.ui", NULL);
-	GMenuModel *menumodel;
-	menumodel = G_MENU_MODEL (gtk_builder_get_object (builder, "menubar"));
-	dpers->priv->custom_menu_pos = g_menu_model_get_n_items (G_MENU_MODEL (menu));
-	g_menu_append_submenu (menu, "Dummy", menumodel);
-	g_object_unref (builder);
+	customization_data_add_actions (G_OBJECT (perspective), win_entries, G_N_ELEMENTS (win_entries));
 
 	/* add to toolbar */
 	GtkToolItem *titem;
@@ -220,7 +206,7 @@ dummy_perspective_customize (BrowserPerspective *perspective,
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.dummy1");
 	gtk_widget_show (GTK_WIDGET (titem));
-	g_array_append_val (dpers->priv->custom_parts, titem);
+	customization_data_add_part (G_OBJECT (perspective), G_OBJECT (titem));
 
 	titem = gtk_tool_button_new (NULL, NULL);
 	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "process-stop-symbolic");
@@ -228,12 +214,12 @@ dummy_perspective_customize (BrowserPerspective *perspective,
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.dummy2");
 	gtk_widget_show (GTK_WIDGET (titem));
-	g_array_append_val (dpers->priv->custom_parts, titem);
+	customization_data_add_part (G_OBJECT (perspective), G_OBJECT (titem));
 
 	/* add to header bar */
 	GtkWidget *img, *button;
 	button = gtk_menu_button_new ();
-	g_array_append_val (dpers->priv->custom_parts, button);
+	customization_data_add_part (G_OBJECT (perspective), G_OBJECT (button));
 	img = gtk_image_new_from_icon_name ("start-here-symbolic", GTK_ICON_SIZE_MENU);
 	gtk_button_set_image (GTK_BUTTON (button), img);
 	gtk_header_bar_pack_end (GTK_HEADER_BAR (header), button);
@@ -248,43 +234,4 @@ dummy_perspective_customize (BrowserPerspective *perspective,
 	g_menu_insert_item (smenu, -1, mitem);
 	mitem = g_menu_item_new ("Dummy 2", "win.dummy2");
 	g_menu_insert_item (smenu, -1, mitem);
-}
-
-static void
-dummy_perspective_uncustomize (BrowserPerspective *perspective,
-			       GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu)
-{
-	g_print ("%s ()\n", __FUNCTION__);
-	DummyPerspective *dpers;
-	dpers = DUMMY_PERSPECTIVE (perspective);
-
-	BrowserWindow *bwin;
-	bwin = browser_perspective_get_window (perspective);
-
-	/* remove perspective's actions */
-	guint i;
-	for (i = 0; i < G_N_ELEMENTS (win_entries); i++) {
-		GActionEntry *entry;
-		entry = &win_entries [i];
-		g_action_map_remove_action (G_ACTION_MAP (bwin), entry->name);
-	}
-
-	/* cleanups, headerbar and toolbar */
-	g_assert (dpers->priv->custom_parts);
-	for (i = 0; i < dpers->priv->custom_parts->len; i++) {
-		GObject *obj;
-		obj = g_array_index (dpers->priv->custom_parts, GObject*, i);
-		if (GTK_IS_WIDGET (obj))
-			gtk_widget_destroy (GTK_WIDGET (obj));
-		else
-			g_warning ("Unknown type to uncustomize: %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (obj)));
-	}
-	g_array_free (dpers->priv->custom_parts, TRUE);
-	dpers->priv->custom_parts = NULL;
-
-	/* cleanups, menu */
-	if (dpers->priv->custom_menu_pos >= 0) {
-		g_menu_remove (menu, dpers->priv->custom_menu_pos);
-		dpers->priv->custom_menu_pos = -1;
-	}
 }

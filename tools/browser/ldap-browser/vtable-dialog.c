@@ -21,8 +21,6 @@
 #include <gtk/gtk.h>
 #include "vtable-dialog.h"
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 #define SPACING 3
 
 struct _VtableDialogPrivate {
@@ -156,8 +154,8 @@ vtable_dialog_new (GtkWindow *parent, TConnection *tcnc)
 
 	gtk_widget_show_all (dcontents);
 	gtk_dialog_add_buttons (GTK_DIALOG (dlg),
-				GTK_STOCK_OK, GTK_RESPONSE_OK,
-				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+				_("_Ok"), GTK_RESPONSE_OK,
+				_("_Cancel"), GTK_RESPONSE_CANCEL, NULL);
 
 	return (GtkWidget*) dlg;
 }

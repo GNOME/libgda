@@ -357,7 +357,7 @@ make_widget_for_notice (void)
 }
 
 static void
-action_refresh_cb (GtkAction *action, QueryResult *qres)
+action_refresh_cb (G_GNUC_UNUSED GtkWidget *button, QueryResult *qres)
 {
 	QueryEditorHistoryBatch *batch;
 	QueryEditorHistoryItem *item;
@@ -399,7 +399,7 @@ make_widget_for_set (GdaSet *set)
 	GtkWidget *hbox, *img;
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
-	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	img = gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG);
 	gtk_widget_set_halign (img, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 
@@ -462,7 +462,7 @@ make_widget_for_error (GError *error)
 	GtkWidget *hbox, *img;
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
 	
-	img = gtk_image_new_from_stock (GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
+	img = gtk_image_new_from_icon_name ("dialog-error", GTK_ICON_SIZE_DIALOG);
 	gtk_widget_set_halign (img, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
 

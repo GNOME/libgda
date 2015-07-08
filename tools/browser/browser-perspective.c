@@ -22,6 +22,7 @@
 #include "browser-page.h"
 #include "browser-window.h"
 #include "ui-support.h"
+#include "ui-customize.h"
 #include <string.h>
 
 #include "schema-browser/perspective-main.h"
@@ -83,59 +84,67 @@ browser_perspective_class_init (G_GNUC_UNUSED gpointer g_class)
  * @perspective: an object implementing the #BrowserPerspective interface
  * @toolbar: (allow-none):
  * @header: (allow-none):
- * @menu: (allow-none):
  *
  * Add optional custom UI elements to @toolbar, @header and @menu. any call to the
  * browser_perspective_uncustomize() function will undo all the customizations to
  * these elements
  */
 void
-browser_perspective_customize (BrowserPerspective *perspective, GtkToolbar *toolbar,
-			       GtkHeaderBar *header, GMenu *menu)
+browser_perspective_customize (BrowserPerspective *perspective, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
 	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
-	g_print ("%s (%p)\n", __FUNCTION__, perspective);
 	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_customize)
-		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_customize) (perspective, toolbar, header, menu);
+		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_customize) (perspective, toolbar, header);
+
+	/* Current BrowserPage */
+	GtkNotebook *nb;
+	nb = (GtkNotebook*) browser_perspective_get_notebook (perspective);
+	if (nb) {
+		gint current_index;
+		current_index = gtk_notebook_get_current_page (nb);
+		if (current_index >= 0) {
+			GtkWidget *current_page;
+			current_page = gtk_notebook_get_nth_page (nb, current_index);
+			if (current_page && IS_BROWSER_PAGE (current_page))
+				browser_page_customize (BROWSER_PAGE (current_page), toolbar, header);
+		}
+	}
 }
 
 /**
  * browser_perspective_uncustomize:
  * @perspective: an object implementing the #BrowserPerspective interface
- * @toolbar: (allow-none):
- * @header: (allow-none):
- * @menu: (allow-none):
  *
- * Remove any optional custom UI elements to @toolbar, @header and @menu which have been added
+ * Remove any optional custom UI elements  which have been added
  * when browser_perspective_customize() was called.
  */
 void
-browser_perspective_uncustomize (BrowserPerspective *perspective, GtkToolbar *toolbar,
-				 GtkHeaderBar *header, GMenu *menu)
+browser_perspective_uncustomize (BrowserPerspective *perspective)
 {
 	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
-	g_print ("%s (%p)\n", __FUNCTION__, perspective);
+
+	/* Current BrowserPage */
+	GtkNotebook *nb;
+	nb = (GtkNotebook*) browser_perspective_get_notebook (perspective);
+	if (nb) {
+		gint current_index;
+		current_index = gtk_notebook_get_current_page (nb);
+		if (current_index >= 0) {
+			GtkWidget *current_page;
+			current_page = gtk_notebook_get_nth_page (nb, current_index);
+			if (current_page && IS_BROWSER_PAGE (current_page))
+				browser_page_uncustomize (BROWSER_PAGE (current_page));
+		}
+	}
+
 	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_uncustomize)
-		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_uncustomize) (perspective, toolbar, header, menu);
-}
-
-/**
- * browser_perspective_page_tab_label_change:
- * @perspective: an object implementing the #BrowserPerspective interface
- * @page: an object implementing the #BrowserPage interface
- *
- * When @perspective organizes its contents as pages in a notebook, each page may
- * request that the tab's label may be changed, and the purpose of this method
- * is to request that @perspective update the tab's label associated to @page.
- */
-void
-browser_perspective_page_tab_label_change (BrowserPerspective *perspective, BrowserPage *page)
-{
-	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
-	g_return_if_fail (IS_BROWSER_PAGE (page));
-
-	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_page_tab_label_change)
-		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_page_tab_label_change) (perspective, page);
+		(BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_uncustomize) (perspective);
+	else {
+		g_print ("Default browser_perspective_uncustomize for %s\n",
+			 G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (perspective)));
+		if (customization_data_exists (G_OBJECT (perspective)))
+			customization_data_release (G_OBJECT (perspective));
+	}
 }
 
 /**
@@ -148,131 +157,108 @@ BrowserWindow *
 browser_perspective_get_window (BrowserPerspective *perspective)
 {
 	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (perspective), NULL);
-	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_window)
-		return (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_window) (perspective);
-	else
-		return (BrowserWindow*) ui_find_parent_widget (GTK_WIDGET (perspective), BROWSER_TYPE_WINDOW);
+	return (BrowserWindow*) ui_find_parent_widget (GTK_WIDGET (perspective), BROWSER_TYPE_WINDOW);
 }
-
-static void nb_page_added_or_removed_cb (GtkNotebook *nb, GtkWidget *child, guint page_num,
-					 BrowserPerspective *perspective);
-static void nb_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint page_num,
-			       BrowserPerspective *perspective);
-static void adapt_notebook_for_fullscreen (BrowserPerspective *perspective);;
-static void fullscreen_changed_cb (BrowserWindow *bwin, gboolean fullscreen, BrowserPerspective *perspective);
 
 /**
- * browser_perspective_declare_notebook:
- * @pers: an object implementing the #BrowserPerspective interface
- * @nb: a #GtkNotebook
+ * browser_perspective_get_notebook:
+ * @perspective: an object implementing the #BrowserPerspective interface
  *
- * Internally used by browser's perspectives to declare they internally use a notebook
- * which state is modified when switching to and from fullscreen
+ * Returns: (transfer none): the #GtkWidget which acts a a notebook for #BrowserPage widgets
  */
-void
-browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebook *nb)
+GtkWidget *
+browser_perspective_get_notebook (BrowserPerspective *perspective)
 {
-	BrowserWindow *bwin;
-	g_return_if_fail (IS_BROWSER_PERSPECTIVE (perspective));
-	g_return_if_fail (! nb || GTK_IS_NOTEBOOK (nb));
-	
-	bwin = browser_perspective_get_window (perspective);
-	if (!bwin)
-		return;
+	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (perspective), NULL);
+	if (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_notebook)
+		return (BROWSER_PERSPECTIVE_GET_CLASS (perspective)->i_get_notebook) (perspective);
+	else
+		return NULL;
+}
 
-	g_print ("REMOVE THIS FUNCTION: %s()\n", __FUNCTION__);
-	GtkNotebook *onb;
-	onb = g_object_get_data (G_OBJECT (perspective), "fullscreen_nb");
-	if (onb) {
-		g_signal_handlers_disconnect_by_func (onb,
-						      G_CALLBACK (nb_page_added_or_removed_cb),
-						      perspective);
-		g_signal_handlers_disconnect_by_func (onb,
-						      G_CALLBACK (nb_switch_page_cb),
-						      perspective);
-		g_signal_handlers_disconnect_by_func (bwin,
-						      G_CALLBACK (fullscreen_changed_cb), perspective);
+static void notebook_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint pagenb, BrowserPerspective *bpers);
+static void notebook_remove_page_cb (GtkNotebook *nb, GtkWidget *page, gint pagenb, BrowserPerspective *bpers);
+static void notebook_destroy_cb (GtkNotebook *nb, BrowserPerspective *bpers);
 
-	}
+/**
+ * browser_perspective_create_notebook:
+ * @perspective: an object implementing the #BrowserPerspective interface
+ *
+ * Creates a #GtkNotebook to hold #BrowserPage widgets in each page. It handles the customization (header and tool bars)
+ * when pages are toggles.
+ *
+ * Returns: (transfer full):  a new #GtkNotebook
+ */
+GtkWidget *
+browser_perspective_create_notebook (BrowserPerspective *perspective)
+{
+	g_return_val_if_fail (IS_BROWSER_PERSPECTIVE (perspective), NULL);
 
-	g_object_set_data (G_OBJECT (perspective), "fullscreen_nb", nb);
-	if (nb) {
-		g_signal_connect (bwin, "fullscreen-changed",
-				  G_CALLBACK (fullscreen_changed_cb), perspective);
-		g_signal_connect (nb, "page-added",
-				  G_CALLBACK (nb_page_added_or_removed_cb), perspective);
-		g_signal_connect (nb, "page-removed",
-				  G_CALLBACK (nb_page_added_or_removed_cb), perspective);
-		g_signal_connect (nb, "switch-page",
-				  G_CALLBACK (nb_switch_page_cb), perspective);
-		adapt_notebook_for_fullscreen (perspective);
+	GtkWidget *nb;
+	nb = gtk_notebook_new ();
+	gtk_notebook_set_scrollable (GTK_NOTEBOOK (nb), TRUE);
+	gtk_notebook_popup_enable (GTK_NOTEBOOK (nb));
+
+	g_signal_connect (nb, "destroy",
+			  G_CALLBACK (notebook_destroy_cb), perspective);
+	g_signal_connect (nb, "switch-page",
+			  G_CALLBACK (notebook_switch_page_cb), perspective);
+	g_signal_connect (nb, "page-removed",
+			  G_CALLBACK (notebook_remove_page_cb), perspective);
+
+	return nb;
+}
+
+static void
+notebook_destroy_cb (GtkNotebook *nb, BrowserPerspective *bpers)
+{
+	g_signal_handlers_disconnect_by_func (nb,
+					      G_CALLBACK (notebook_switch_page_cb), bpers);
+	g_signal_handlers_disconnect_by_func (nb,
+					      G_CALLBACK (notebook_remove_page_cb), bpers);
+	g_print ("==== %s\n", __FUNCTION__);
+}
+
+static void
+notebook_switch_page_cb (GtkNotebook *nb, GtkWidget *page, gint pagenb, BrowserPerspective *bpers)
+{
+	if (customization_data_exists (G_OBJECT (bpers))) {
+		gint current_index;
+		current_index = gtk_notebook_get_current_page (nb);
+		g_print ("\tNotebook, current page %d switching to %d\n", current_index, pagenb);
+		if (current_index >= 0) {
+			GtkWidget *current_page;
+			current_page = gtk_notebook_get_nth_page (nb, current_index);
+			if (current_page && IS_BROWSER_PAGE (current_page))
+				browser_page_uncustomize (BROWSER_PAGE (current_page));
+		}
+		if (pagenb >= 0) {
+			GtkWidget *next_page;
+			next_page = gtk_notebook_get_nth_page (nb, pagenb);
+			if (next_page && IS_BROWSER_PAGE (next_page))
+				browser_page_customize (BROWSER_PAGE (next_page),
+							customization_data_get_toolbar (G_OBJECT (bpers)),
+							customization_data_get_header_bar (G_OBJECT (bpers)));
+		}
 	}
 }
 
 static void
-nb_switch_page_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *page, gint page_num, BrowserPerspective *perspective)
+notebook_remove_page_cb (GtkNotebook *nb, GtkWidget *page, gint pagenb, BrowserPerspective *bpers)
 {
-	GtkWidget *page_contents;
-	GtkActionGroup *actions = NULL;
-	const gchar *ui = NULL;
-	BrowserWindow *bwin;
-
-	page_contents = gtk_notebook_get_nth_page (nb, page_num);
-	if (IS_BROWSER_PAGE (page_contents)) {
-		actions = browser_page_get_actions_group (BROWSER_PAGE (page_contents));
-		ui = browser_page_get_actions_ui (BROWSER_PAGE (page_contents));
-	}
-
-	bwin = browser_perspective_get_window (perspective);
-	if (bwin)
-		browser_window_customize_perspective_ui (bwin, perspective, actions, ui);
-	if (actions)
-		g_object_unref (actions);
-}
-
-static void
-nb_page_added_or_removed_cb (GtkNotebook *nb, G_GNUC_UNUSED GtkWidget *child, G_GNUC_UNUSED guint page_num,
-			     BrowserPerspective *perspective)
-{
-	adapt_notebook_for_fullscreen (perspective);
-	if (gtk_notebook_get_n_pages (nb) == 0) {
-		BrowserWindow *bwin;
-		bwin = browser_perspective_get_window (perspective);
-		if (!bwin)
-			return;
-		browser_window_customize_perspective_ui (bwin,
-							 BROWSER_PERSPECTIVE (perspective),
-							 NULL, NULL);
+	if (customization_data_exists (G_OBJECT (bpers))) {
+		g_print ("\tNotebook, removing page %d\n", pagenb);
+		if (pagenb >= 0) {
+			GtkWidget *current_page;
+			current_page = gtk_notebook_get_nth_page (nb, pagenb);
+			if (current_page && IS_BROWSER_PAGE (current_page))
+				browser_page_uncustomize (BROWSER_PAGE (current_page));
+		}
 	}
 }
 
-static void
-fullscreen_changed_cb (G_GNUC_UNUSED BrowserWindow *bwin, G_GNUC_UNUSED gboolean fullscreen,
-		       BrowserPerspective *perspective)
-{
-	adapt_notebook_for_fullscreen (perspective);
-}
 
-static void
-adapt_notebook_for_fullscreen (BrowserPerspective *perspective)
-{
-	gboolean showtabs = TRUE;
-	gboolean fullscreen;
-	BrowserWindow *bwin;
-	GtkNotebook *nb;
 
-	bwin = browser_perspective_get_window (perspective);
-	if (!bwin)
-		return;
-	nb = g_object_get_data (G_OBJECT (perspective), "fullscreen_nb");
-	if (!nb)
-		return;
-
-	fullscreen = browser_window_is_fullscreen (bwin);
-	if (fullscreen && gtk_notebook_get_n_pages (nb) == 1)
-		showtabs = FALSE;
-	gtk_notebook_set_show_tabs (nb, showtabs);
-}
 
 /*
  * All perspectives information

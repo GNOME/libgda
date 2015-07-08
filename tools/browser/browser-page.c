@@ -19,6 +19,8 @@
 
 #include "browser-page.h"
 #include "browser-perspective.h"
+#include "ui-customize.h"
+
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
@@ -66,43 +68,41 @@ browser_page_class_init (G_GNUC_UNUSED gpointer g_class)
 }
 
 /**
- * browser_page_get_actions_group
+ * browser_page_customize:
  * @page: an object implementing the #BrowserPage interface
+ * @toolbar: (allow-none):
+ * @header: (allow-none):
  *
- * Get the #GtkActionGroup from a @page to represent its specific actions.
- *
- * Returns: a new #GtkActionGroup
+ * Add optional custom UI elements to @toolbar, @header and @menu. any call to the
+ * browser_page_uncustomize() function will undo all the customizations to
+ * these elements.
  */
-GtkActionGroup *
-browser_page_get_actions_group (BrowserPage *page)
+void
+browser_page_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	g_return_val_if_fail (IS_BROWSER_PAGE (page), NULL);
-	
-	if (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_group)
-		return (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_group) (page);
-	else
-		return NULL;
+	g_return_if_fail (IS_BROWSER_PAGE (page));
+	if (BROWSER_PAGE_GET_CLASS (page)->i_customize)
+		(BROWSER_PAGE_GET_CLASS (page)->i_customize) (page, toolbar, header);
 }
 
 /**
- * browser_page_get_actions_ui
+ * browser_page_uncustomize:
  * @page: an object implementing the #BrowserPage interface
  *
- * Get the UI definition from @page to represent how its specific actions (obtained
- * using browser_page_get_actions_group()) are to be integrated in a #BrowserWindow's menu
- * and toolbar.
- *
- * Returns: a read-only string
+ * Remove any optional custom UI elements which have been added
+ * when browser_page_customize() was called.
  */
-const gchar *
-browser_page_get_actions_ui (BrowserPage *page)
+void
+browser_page_uncustomize (BrowserPage *page)
 {
-	g_return_val_if_fail (IS_BROWSER_PAGE (page), NULL);
-	
-	if (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_ui)
-		return (BROWSER_PAGE_GET_CLASS (page)->i_get_actions_ui) (page);
-	else
-		return NULL;
+	g_return_if_fail (IS_BROWSER_PAGE (page));
+	if (BROWSER_PAGE_GET_CLASS (page)->i_uncustomize)
+		(BROWSER_PAGE_GET_CLASS (page)->i_uncustomize) (page);
+	else {
+		g_print ("Default browser_page_uncustomize for %s\n", G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (page)));
+		if (customization_data_exists (G_OBJECT (page)))
+			customization_data_release (G_OBJECT (page));
+	}
 }
 
 /**

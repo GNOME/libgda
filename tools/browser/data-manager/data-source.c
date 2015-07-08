@@ -942,7 +942,7 @@ data_source_execute (DataSource *source, GError **error)
 }
 
 static void
-action_refresh_cb (GtkAction *action, DataSource *source)
+action_refresh_cb (GtkButton *button, DataSource *source)
 {
 	source->priv->need_rerun = TRUE;
 	data_source_execute (source, NULL);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -31,7 +31,6 @@
 #include <libgda-ui/internal/popup-container.h>
 #include "../browser-window.h"
 #include "../ui-support.h"
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 static void browser_canvas_db_relations_class_init (BrowserCanvasDbRelationsClass *class);
 static void browser_canvas_db_relations_init       (BrowserCanvasDbRelations *canvas);
@@ -651,7 +650,6 @@ build_context_menu (BrowserCanvas *canvas)
 
 	for (list = all_dbo; list; list = list->next) {
 		GdaMetaDbObject *dbo = GDA_META_DB_OBJECT (list->data);
-		GtkWidget *img;
 		if (dbo->obj_type != GDA_META_DB_TABLE)
 			continue;
 		if (g_hash_table_lookup (dbrel->priv->hash_tables, dbo))
@@ -659,9 +657,7 @@ build_context_menu (BrowserCanvas *canvas)
 			continue;
 		
 		if (strcmp (dbo->obj_short_name, dbo->obj_full_name)) {
-			mitem = gtk_image_menu_item_new_with_label (dbo->obj_short_name);
-			img = gtk_image_new_from_pixbuf (ui_get_pixbuf_icon (UI_ICON_TABLE));
-			gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+			mitem = gtk_menu_item_new_with_label (dbo->obj_short_name);
 			g_object_set_data (G_OBJECT (mitem), "dbtable", GDA_META_TABLE (dbo));
 			gtk_menu_shell_prepend (GTK_MENU_SHELL (submenu), mitem);
 			g_signal_connect (mitem, "activate",
@@ -671,9 +667,7 @@ build_context_menu (BrowserCanvas *canvas)
 		GtkWidget *schema_menu;
 		schema_menu = g_hash_table_lookup (schemas, dbo->obj_schema);
 		if (!schema_menu) {
-			mitem = gtk_image_menu_item_new_with_label (dbo->obj_schema);
-			img = gtk_image_new_from_pixbuf (ui_get_pixbuf_icon (UI_ICON_SCHEMA));
-			gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+			mitem = gtk_menu_item_new_with_label (dbo->obj_schema);
 			gtk_menu_shell_append (GTK_MENU_SHELL (submenu), mitem);
 
 			schema_menu = gtk_menu_new ();
@@ -683,9 +677,7 @@ build_context_menu (BrowserCanvas *canvas)
 			added_schemas = g_slist_prepend (added_schemas, schema_menu);
 		}
 		
-		mitem = gtk_image_menu_item_new_with_label (dbo->obj_short_name);
-		img = gtk_image_new_from_pixbuf (ui_get_pixbuf_icon (UI_ICON_TABLE));
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), img);
+		mitem = gtk_menu_item_new_with_label (dbo->obj_short_name);
 		g_object_set_data (G_OBJECT (mitem), "dbtable", GDA_META_TABLE (dbo));
 		gtk_menu_shell_prepend (GTK_MENU_SHELL (schema_menu), mitem);
 		g_signal_connect (mitem, "activate",

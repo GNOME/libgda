@@ -413,6 +413,19 @@ gdaui_bar_set_icon_from_pixbuf (GdauiBar *bar, GdkPixbuf *pixbuf)
 }
 
 /**
+ * gdaui_bar_set_icon_from_icon_name:
+ */
+void
+gdaui_bar_set_icon_from_icon_name (GdauiBar *bar, const gchar *icon_name)
+{
+	g_return_if_fail (GDAUI_IS_BAR (bar));
+	g_return_if_fail (icon_name);
+
+	gtk_image_set_from_icon_name (GTK_IMAGE (bar->priv->icon), icon_name, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gdaui_bar_set_show_icon (bar, TRUE);
+}
+
+/**
  * gdaui_bar_set_show_icon
  * @bar: a #GdauiBar widget.
  * @show: whether to show the icon or not.

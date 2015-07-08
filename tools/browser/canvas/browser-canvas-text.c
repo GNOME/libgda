@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2012 Murray Cumming <murrayc@murrayc.com>
  *
@@ -449,7 +449,7 @@ void
 browser_canvas_text_set_highlight (BrowserCanvasText *ct, gboolean highlight)
 {
 	gchar *str_color;
-	GdkColor gdk_color;
+	GdkRGBA gdk_rgba;
 
 	g_return_if_fail (ct && IS_BROWSER_CANVAS_TEXT (ct));
 	g_return_if_fail (ct->priv);
@@ -463,14 +463,14 @@ browser_canvas_text_set_highlight (BrowserCanvasText *ct, gboolean highlight)
 	}
 
 	str_color = highlight ? ct->priv->highlight_color : BROWSER_CANVAS_OBJ_BG_COLOR;
-	if (gdk_color_parse (str_color, &gdk_color)) {
+	if (gdk_rgba_parse (&gdk_rgba, str_color)) {
 		guint col;
 
-		col = ((guint) (gdk_color.red * 255. / 65535.0));
+		col = ((guint) (gdk_rgba.red * 255.));
 		ct->priv->end_anim_rgba = col << 24;
-		col = ((guint) (gdk_color.green * 255. / 65535.0));
+		col = ((guint) (gdk_rgba.green * 255.));
 		ct->priv->end_anim_rgba += col << 16;
-		col = ((guint) (gdk_color.blue * 255. / 65535.0));
+		col = ((guint) (gdk_rgba.blue * 255.));
 		ct->priv->end_anim_rgba += col << 8;
 		if (!ct->priv->current_anim_rgba)
 			ct->priv->current_anim_rgba = ct->priv->end_anim_rgba;

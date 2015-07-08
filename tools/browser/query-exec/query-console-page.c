@@ -23,6 +23,7 @@
 #include "query-console-page.h"
 #include "../dnd.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../gdaui-bar.h"
 #include "query-exec-perspective.h"
 #include "../browser-window.h"
@@ -34,13 +35,9 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/gda-debug-macros.h>
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-
 struct _QueryConsolePagePrivate {
 	TConnection *tcnc;
 	GdaSqlParser *parser;
-
-	GtkActionGroup *agroup;
 
 	GdauiBar *header;
 	GtkWidget *vpaned; /* top=>query editor, bottom=>results */
@@ -77,9 +74,8 @@ static void query_console_page_grab_focus (GtkWidget *widget);
 
 /* BrowserPage interface */
 static void                 query_console_page_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *query_console_page_page_get_actions_group (BrowserPage *page);
-static const gchar         *query_console_page_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *query_console_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 query_console_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+static GtkWidget           *query_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static GObjectClass *parent_class = NULL;
 
@@ -114,9 +110,9 @@ query_console_page_show_all (GtkWidget *widget)
 static void
 query_console_page_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = query_console_page_page_get_actions_group;
-	iface->i_get_actions_ui = query_console_page_page_get_actions_ui;
-	iface->i_get_tab_label = query_console_page_page_get_tab_label;
+	iface->i_customize = query_console_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = query_console_page_get_tab_label;
 }
 
 static void
@@ -127,14 +123,12 @@ query_console_page_init (QueryConsolePage *tconsole, G_GNUC_UNUSED QueryConsoleP
 	tconsole->priv->params_compute_id = 0;
 	tconsole->priv->params = NULL;
 	tconsole->priv->params_popup = NULL;
-	tconsole->priv->agroup = NULL;
 	tconsole->priv->fav_id = -1;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (tconsole), GTK_ORIENTATION_VERTICAL);
 }
 
-static void connection_busy_cb (TConnection *tcnc, gboolean is_busy,
-				gchar *reason, QueryConsolePage *tconsole);
+static void connection_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, QueryConsolePage *tconsole);
 static void
 query_console_page_dispose (GObject *object)
 {
@@ -144,7 +138,7 @@ query_console_page_dispose (GObject *object)
 	if (tconsole->priv) {
 		if (tconsole->priv->tcnc) {
 			g_signal_handlers_disconnect_by_func (tconsole->priv->tcnc,
-							      G_CALLBACK (connection_busy_cb), tconsole);
+							      G_CALLBACK (connection_status_changed_cb), tconsole);
 			g_object_unref (tconsole->priv->tcnc);
 		}
 		if (tconsole->priv->parser)
@@ -155,8 +149,6 @@ query_console_page_dispose (GObject *object)
 			g_source_remove (tconsole->priv->params_compute_id);
 		if (tconsole->priv->params_popup)
 			gtk_widget_destroy (tconsole->priv->params_popup);
-		if (tconsole->priv->agroup)
-			g_object_unref (tconsole->priv->agroup);
 		if (tconsole->priv->favorites_menu)
 			gtk_widget_destroy (tconsole->priv->favorites_menu);
 
@@ -405,28 +397,29 @@ query_console_page_new (TConnection *tcnc)
 	gtk_widget_hide (tconsole->priv->params_top);
 
 	/* busy connection handling */
-	gchar *reason = NULL;
-	if (t_connection_is_busy (tconsole->priv->tcnc, &reason)) {
-		connection_busy_cb (tconsole->priv->tcnc, TRUE, reason, tconsole);
-		g_free (reason);
-	}
-	g_signal_connect (tconsole->priv->tcnc, "busy",
-			  G_CALLBACK (connection_busy_cb), tconsole);
+	connection_status_changed_cb (tconsole->priv->tcnc,
+				      gda_connection_get_status (t_connection_get_cnc (tconsole->priv->tcnc)),
+				      tconsole);
+
+	g_signal_connect (tconsole->priv->tcnc, "status-changed",
+			  G_CALLBACK (connection_status_changed_cb), tconsole);
 
 	return (GtkWidget*) tconsole;
 }
 
 static void
-connection_busy_cb (G_GNUC_UNUSED TConnection *tcnc, gboolean is_busy, G_GNUC_UNUSED gchar *reason, QueryConsolePage *tconsole)
+connection_status_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaConnectionStatus status, QueryConsolePage *tconsole)
 {
+	gboolean is_busy;
+	is_busy = (status == GDA_CONNECTION_STATUS_IDLE) ? FALSE : TRUE;
+
 	gtk_widget_set_sensitive (tconsole->priv->exec_button, !is_busy);
 	gtk_widget_set_sensitive (tconsole->priv->indent_button, !is_busy);
 
-	if (tconsole->priv->agroup) {
-		GtkAction *action;
-		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
-		gtk_action_set_sensitive (action, !is_busy);
-	}
+	GAction *action;
+	action = customization_data_get_action (G_OBJECT (tconsole), "ExecuteQuery");
+	if (action)
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !is_busy);
 }
 
 static void
@@ -881,7 +874,7 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 				gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 10);
 				gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
 				
-				button = gtk_button_new_from_stock (GTK_STOCK_EXECUTE);
+				button = gtk_button_new_from_icon_name ("system-run-symbolic", GTK_ICON_SIZE_BUTTON);
 				gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
 				g_signal_connect_swapped (button, "clicked",
 							  G_CALLBACK (gtk_widget_hide), tconsole->priv->params_popup);
@@ -890,7 +883,7 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcons
 				gtk_widget_set_sensitive (button, FALSE);
 				g_object_set_data (G_OBJECT (tconsole->priv->params_popup), "exec", button);
 
-				button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+				button = gtk_button_new_with_mnemonic (_("_Cancel"));
 				gtk_box_pack_start (GTK_BOX (bbox), button, TRUE, TRUE, 0);
 				g_signal_connect_swapped (button, "clicked",
 							  G_CALLBACK (gtk_widget_hide), tconsole->priv->params_popup);
@@ -1062,66 +1055,41 @@ query_console_page_set_text (QueryConsolePage *console, const gchar *text, gint 
  * UI actions
  */
 static void
-query_execute_cb (G_GNUC_UNUSED GtkAction *action, QueryConsolePage *tconsole)
+query_execute_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	QueryConsolePage *tconsole;
+	tconsole = QUERY_CONSOLE_PAGE (data);
+
 	sql_execute_clicked_cb (NULL, tconsole);
 }
 
-#ifdef HAVE_GTKSOURCEVIEW
-static void
-editor_undo_cb (G_GNUC_UNUSED GtkAction *action, G_GNUC_UNUSED QueryConsolePage *tconsole)
-{
-	TO_IMPLEMENT;
-}
-#endif
-
-static GtkActionEntry ui_actions[] = {
-	{ "ExecuteQuery", GTK_STOCK_EXECUTE, N_("_Execute"), NULL, N_("Execute query"),
-	  G_CALLBACK (query_execute_cb)},
-#ifdef HAVE_GTKSOURCEVIEW
-	{ "EditorUndo", GTK_STOCK_UNDO, N_("_Undo"), NULL, N_("Undo last change"),
-	  G_CALLBACK (editor_undo_cb)},
-#endif
+static GActionEntry win_entries[] = {
+        { "ExecuteQuery", query_execute_cb, NULL, NULL, NULL },
 };
-static const gchar *ui_actions_console =
-	"<ui>"
-	"  <menubar name='MenuBar'>"
-	"      <menu name='Edit' action='Edit'>"
-        "        <menuitem name='EditorUndo' action= 'EditorUndo'/>"
-        "      </menu>"
-	"  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='ExecuteQuery'/>"
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-query_console_page_page_get_actions_group (BrowserPage *page)
+static void
+query_console_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	QueryConsolePage *tconsole;
-	tconsole = QUERY_CONSOLE_PAGE (page);
-	if (! tconsole->priv->agroup) {
-		tconsole->priv->agroup = gtk_action_group_new ("QueryExecConsoleActions");
-		gtk_action_group_set_translation_domain (tconsole->priv->agroup, GETTEXT_PACKAGE);
-		gtk_action_group_add_actions (tconsole->priv->agroup,
-					      ui_actions, G_N_ELEMENTS (ui_actions), page);
+	g_print ("%s ()\n", __FUNCTION__);
 
-		GtkAction *action;
-		action = gtk_action_group_get_action (tconsole->priv->agroup, "ExecuteQuery");
-		gtk_action_set_sensitive (action, !t_connection_is_busy (tconsole->priv->tcnc, NULL));
-	}
-	return g_object_ref (tconsole->priv->agroup);
-}
+	customization_data_init (G_OBJECT (page), toolbar, header);
 
-static const gchar *
-query_console_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_console;
+	/* add perspective's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "system-run-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Execute query"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ExecuteQuery");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 }
 
 static GtkWidget *
-query_console_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+query_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	const gchar *tab_name;
 

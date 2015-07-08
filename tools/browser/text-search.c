@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,8 +21,6 @@
 #include <string.h>
 #include "text-search.h"
 #include "ui-support.h"
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 struct _TextSearchPrivate {
 	GtkTextView *view;
@@ -263,7 +261,7 @@ text_search_new (GtkTextView *view)
 	gtk_text_buffer_create_tag (tsearch->priv->text, "search",
                                     "background", "yellow", NULL);
 
-	wid = ui_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_CLOSE,
+	wid = ui_make_small_button (FALSE, FALSE, NULL, "window-close-symbolic",
 				    _("Hide search toolbar"));
 	gtk_box_pack_start (GTK_BOX (tsearch), wid, FALSE, FALSE, 0);
 	g_signal_connect_swapped (wid, "clicked",
@@ -279,12 +277,12 @@ text_search_new (GtkTextView *view)
 	g_signal_connect (wid, "changed",
 			  G_CALLBACK (search_text_changed_cb), tsearch);
 	
-	wid = ui_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_GO_BACK, NULL);
+	wid = ui_make_small_button (FALSE, FALSE, NULL, "go-previous-symbolic", NULL);
 	gtk_box_pack_start (GTK_BOX (tsearch), wid, FALSE, FALSE, 0);
 	g_signal_connect (wid, "clicked",
 			  G_CALLBACK (go_back_search_cb), tsearch);
 	
-	wid = ui_make_small_button (FALSE, FALSE, NULL, GTK_STOCK_GO_FORWARD, NULL);
+	wid = ui_make_small_button (FALSE, FALSE, NULL, "go-next-symbolic", NULL);
 	gtk_box_pack_start (GTK_BOX (tsearch), wid, FALSE, FALSE, 0);
 	g_signal_connect (wid, "clicked",
 			  G_CALLBACK (go_forward_search_cb), tsearch);

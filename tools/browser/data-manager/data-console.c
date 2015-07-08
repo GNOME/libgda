@@ -26,6 +26,7 @@
 #include "ui-spec-editor.h"
 #include "../dnd.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../gdaui-bar.h"
 #include "../browser-window.h"
 #include "../browser-page.h"
@@ -36,8 +37,7 @@
 #include "data-source-manager.h"
 #include <gdk/gdkkeysyms.h>
 #include "analyser.h"
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <libgda/gda-debug-macros.h>
 
 #define MAIN_PAGE_EDITORS 0
 #define MAIN_PAGE_DATA 1
@@ -65,8 +65,6 @@ struct _DataConsolePrivate {
 
 	GtkWidget *xml_sped; /* in editors_notebook */
 	GtkWidget *ui_sped; /* in editors_notebook */
-
-	GtkActionGroup *agroup;
 
 	gboolean toggling;
 	GtkToggleButton *params_toggle;
@@ -100,9 +98,8 @@ static void data_source_source_changed_cb (DataSourceManager *mgr, DataSource *s
 
 /* BrowserPage interface */
 static void                 data_console_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *data_console_page_get_actions_group (BrowserPage *page);
-static const gchar         *data_console_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 data_console_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+static GtkWidget           *data_console_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static GObjectClass *parent_class = NULL;
 
@@ -149,12 +146,14 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 	dconsole = DATA_CONSOLE (widget);
 	if ((event->keyval == GDK_KEY_Escape) &&
 	    (gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook)) == MAIN_PAGE_DATA)) {
-		if (dconsole->priv->agroup) {
-			GtkAction *action;
-			action = gtk_action_group_get_action (dconsole->priv->agroup, "ComposeMode");
-			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), TRUE);
-			return TRUE;
+		GAction *action;
+		action = customization_data_get_action (G_OBJECT (dconsole), "ComposeMode");
+		if (action) {
+			GVariant *value;
+			value = g_variant_new_boolean (TRUE);
+			g_simple_action_set_state (G_SIMPLE_ACTION (action), value);
 		}
+		return TRUE;
 	}
 
 	/* parent class */
@@ -164,9 +163,9 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 static void
 data_console_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = data_console_page_get_actions_group;
-	iface->i_get_actions_ui = data_console_page_get_actions_ui;
-	iface->i_get_tab_label = data_console_page_get_tab_label;
+	iface->i_customize = data_console_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = data_console_get_tab_label;
 }
 
 static void
@@ -197,8 +196,6 @@ data_console_dispose (GObject *object)
                         gtk_widget_destroy (dconsole->priv->popup_container);
 		if (dconsole->priv->tcnc)
 			g_object_unref (dconsole->priv->tcnc);
-		if (dconsole->priv->agroup)
-			g_object_unref (dconsole->priv->agroup);
 		if (dconsole->priv->mgr) {
 			g_signal_handlers_disconnect_by_func (dconsole->priv->mgr,
 							      G_CALLBACK (data_source_mgr_changed_cb),
@@ -520,12 +517,6 @@ data_console_set_fav_id (DataConsole *dconsole, gint fav_id, GError **error)
 		g_free (str);
 		dconsole->priv->fav_id = -1;
 	}
-
-	/* update notebook's tab label */
-	BrowserPerspective *pers;
-	pers = browser_page_get_perspective (BROWSER_PAGE (dconsole));
-	if (pers)
-		browser_perspective_page_tab_label_change (pers, BROWSER_PAGE (dconsole));
 }
 
 /*
@@ -860,20 +851,23 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
  * UI actions
  */
 static void
-compose_mode_toggled_cb (G_GNUC_UNUSED GtkToggleAction *action, DataConsole *dconsole)
+compose_mode_toggled_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
-	gint pagenb;
+	DataConsole *dconsole;
+	dconsole = DATA_CONSOLE (data);
 
 	/* show variables if necessary */
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dconsole->priv->params_toggle),
 				      dconsole->priv->params_form &&
 				      GDAUI_IS_BASIC_FORM (dconsole->priv->params_form) ? TRUE : FALSE);
 
+	g_simple_action_set_state (action, state);
 	if (dconsole->priv->toggling) {
 		dconsole->priv->toggling = FALSE;
 		return;
 	}
 
+	gint pagenb;
 	pagenb = gtk_notebook_get_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook));
 	if (pagenb == MAIN_PAGE_EDITORS) {
 		/* Get Data sources */
@@ -920,47 +914,33 @@ compose_mode_toggled_cb (G_GNUC_UNUSED GtkToggleAction *action, DataConsole *dco
 	gtk_notebook_set_current_page (GTK_NOTEBOOK (dconsole->priv->main_notebook), pagenb);
 }
 
-static GtkToggleActionEntry ui_actions[] = {
-	{ "ComposeMode", NULL /*BROWSER_STOCK_BUILDER*/, N_("_Toggle mode"), NULL, N_("Switch between compose and execute modes"),
-	  G_CALLBACK (compose_mode_toggled_cb), TRUE},
+static GActionEntry win_entries[] = {
+	{ "ComposeMode", NULL, NULL, "false",  compose_mode_toggled_cb},
 };
-static const gchar *ui_actions_console =
-	"<ui>"
-        "  <menubar name='MenuBar'>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='Data manager' action='DataManagerMenu'>"
-        "        <menuitem name='ComposeMode' action= 'ComposeMode'/>"
-        "      </menu>"
-	"    </placeholder>"
-        "  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='ComposeMode'/>"
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-data_console_page_get_actions_group (BrowserPage *page)
+static void
+data_console_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	DataConsole *dconsole;
-	dconsole = DATA_CONSOLE (page);
-	if (! dconsole->priv->agroup) {
-		dconsole->priv->agroup = gtk_action_group_new ("DataManagerConsoleActions");
-		gtk_action_group_set_translation_domain (dconsole->priv->agroup, GETTEXT_PACKAGE);
-		gtk_action_group_add_toggle_actions (dconsole->priv->agroup,
-						     ui_actions, G_N_ELEMENTS (ui_actions), page);
-	}
-	return g_object_ref (dconsole->priv->agroup);
-}
+	g_print ("%s ()\n", __FUNCTION__);
 
-static const gchar *
-data_console_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_console;
+	customization_data_init (G_OBJECT (page), toolbar, header);
+
+	/* add page's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
+
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "applications-engineering-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Switch between compose and execute modes"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.ComposeMode");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 }
 
 static GtkWidget *
-data_console_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+data_console_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	const gchar *tab_name;
 
@@ -1023,9 +1003,11 @@ void
 data_console_execute (DataConsole *console)
 {
 	g_return_if_fail (IS_DATA_CONSOLE (console));
-	if (console->priv->agroup) {
-		GtkAction *action;
-		action = gtk_action_group_get_action (console->priv->agroup, "ComposeMode");
-		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), FALSE);
+	GAction *action;
+	action = customization_data_get_action (G_OBJECT (console), "ComposeMode");
+	if (action) {
+		GVariant *value;
+		value = g_variant_new_boolean (FALSE);
+		g_simple_action_set_state (G_SIMPLE_ACTION (action), value);
 	}
 }

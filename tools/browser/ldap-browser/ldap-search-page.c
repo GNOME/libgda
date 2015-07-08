@@ -23,6 +23,7 @@
 #include "filter-editor.h"
 #include "../gdaui-bar.h"
 #include "../ui-support.h"
+#include "../ui-customize.h"
 #include "../browser-page.h"
 #include "../browser-window.h"
 #include "common/t-connection.h"
@@ -30,8 +31,6 @@
 #include "../ui-formgrid.h"
 #include "vtable-dialog.h"
 #include <libgda/gda-debug-macros.h>
-
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 typedef struct {
 	gchar              *base_dn;
@@ -58,7 +57,6 @@ struct _LdapSearchPagePrivate {
 	GtkWidget *search_entry;
 	GtkWidget *result_view;
 
-	GtkActionGroup *agroup;
 	GArray *history_items; /* array of @HistoryItem */
 	guint history_max_len; /* max allowed length of @history_items */
 	gint current_hitem; /* index in @history_items, or -1 */
@@ -71,9 +69,8 @@ static void ldap_search_page_dispose   (GObject *object);
 
 /* BrowserPage interface */
 static void                 ldap_search_page_page_init (BrowserPageIface *iface);
-static GtkActionGroup      *ldap_search_page_page_get_actions_group (BrowserPage *page);
-static const gchar         *ldap_search_page_page_get_actions_ui (BrowserPage *page);
-static GtkWidget           *ldap_search_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
+static void                 ldap_search_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+static GtkWidget           *ldap_search_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button);
 
 static GObjectClass *parent_class = NULL;
 
@@ -95,9 +92,9 @@ ldap_search_page_class_init (LdapSearchPageClass *klass)
 static void
 ldap_search_page_page_init (BrowserPageIface *iface)
 {
-	iface->i_get_actions_group = ldap_search_page_page_get_actions_group;
-	iface->i_get_actions_ui = ldap_search_page_page_get_actions_ui;
-	iface->i_get_tab_label = ldap_search_page_page_get_tab_label;
+	iface->i_customize = ldap_search_customize;
+	iface->i_uncustomize = NULL;
+	iface->i_get_tab_label = ldap_search_page_get_tab_label;
 }
 
 static void
@@ -120,8 +117,6 @@ ldap_search_page_dispose (GObject *object)
 	if (epage->priv) {
 		if (epage->priv->tcnc)
 			g_object_unref (epage->priv->tcnc);
-		if (epage->priv->agroup)
-			g_object_unref (epage->priv->agroup);
 		if (epage->priv->history_items) {
 			guint i;
 			for (i = 0; i < epage->priv->history_items->len; i++) {
@@ -167,41 +162,6 @@ ldap_search_page_get_type (void)
 		g_type_add_interface_static (type, BROWSER_PAGE_TYPE, &page_info);
 	}
 	return type;
-}
-
-static void
-update_history_actions (LdapSearchPage *epage)
-{
-	if (!epage->priv->agroup)
-		return;
-	/*
-	gboolean is_first = TRUE;
-	gboolean is_last = TRUE;
-	const gchar *current_classname;
-	epage->priv->current_hitem = -1;
-	current_classname = ldap_search_page_get_current_class (epage);
-	if (current_classname) {
-		guint i;
-		for (i = 0; i < epage->priv->history_items->len; i++) {
-			HistoryItem *hitem;
-			hitem = g_array_index (epage->priv->history_items, HistoryItem*, i);
-			if (!strcmp (hitem->classname, current_classname)) {
-				if (i != 0)
-					is_first = FALSE;
-				if (i+1 < epage->priv->history_items->len)
-					is_last = FALSE;
-				epage->priv->current_hitem = (gint) i;
-				break;
-			}
-		}
-	}
-
-	GtkAction *action;
-	action = gtk_action_group_get_action (epage->priv->agroup, "DnBack");
-	gtk_action_set_sensitive (action, !is_first);
-	action = gtk_action_group_get_action (epage->priv->agroup, "DnForward");
-	gtk_action_set_sensitive (action, !is_last);
-	*/
 }
 
 static void
@@ -307,13 +267,13 @@ ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
 	gtk_box_pack_start (GTK_BOX (hb), bb, FALSE, FALSE, 5);
 
 	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
-				       GTK_STOCK_CLEAR, _("Clear the search settings"));
+				       "edit-clear-symbolic", _("Clear the search settings"));
 	gtk_box_pack_start (GTK_BOX (bb), button, TRUE, TRUE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (filter_clear_clicked_cb), epage);
 
 	button = ui_make_small_button (FALSE, FALSE, _("Execute"),
-				       GTK_STOCK_EXECUTE, _("Execute LDAP search"));
+				       "system-run-symbolic", _("Execute LDAP search"));
 	gtk_box_pack_start (GTK_BOX (bb), button, TRUE, TRUE, 0);
 	g_signal_connect (button, "clicked",
 			  G_CALLBACK (filter_exec_clicked_cb), epage);
@@ -340,8 +300,11 @@ ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
  * UI actions
  */
 static void
-action_define_as_table_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epage)
+action_define_as_table_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *state, gpointer data)
 {
+	LdapSearchPage *epage;
+	epage = LDAP_SEARCH_PAGE (data);
+
 	GtkWidget *dlg;
 	gint res;
 	GtkWindow *parent;
@@ -377,153 +340,39 @@ action_define_as_table_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epag
 	}
 	gtk_widget_destroy (dlg);
 }
-/*
-static void
-action_class_back_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epage)
-{
-	epage->priv->add_hist_item = FALSE;
-	if (epage->priv->current_hitem > 0) {
-		HistoryItem *hitem = NULL;
-		gboolean use_dn = TRUE;
-		hitem = g_array_index (epage->priv->history_items, HistoryItem*,
-				       epage->priv->current_hitem - 1);
-		if (hitem->reference) {
-			if (gtk_tree_row_reference_valid (hitem->reference)) {
-				GtkTreeSelection *sel;
-				GtkTreePath *path;
-				path = gtk_tree_row_reference_get_path (hitem->reference);
-				sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (epage->priv->search_view));
-				gtk_tree_selection_select_path (sel, path);
-				gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (epage->priv->search_view),
-							      path, NULL, TRUE, 0.5, 0.5);
-				gtk_tree_path_free (path);
-				use_dn = FALSE;
-			}
-			else {
-				gtk_tree_row_reference_free (hitem->reference);
-				hitem->reference = NULL;
-			}
-		}
-		if (use_dn)
-			search_view_set_current_class (SEARCH_VIEW (epage->priv->search_view),
-						       hitem->classname);
-	}
-	epage->priv->add_hist_item = TRUE;
-}
 
-static void
-action_class_forward_cb (G_GNUC_UNUSED GtkAction *action, LdapSearchPage *epage)
-{
-	epage->priv->add_hist_item = FALSE;
-	if ((epage->priv->current_hitem >=0) &&
-	    ((guint) epage->priv->current_hitem < epage->priv->history_items->len)) {
-		HistoryItem *hitem = NULL;
-		gboolean use_dn = TRUE;
-		hitem = g_array_index (epage->priv->history_items, HistoryItem*,
-				       epage->priv->current_hitem + 1);
-		if (hitem->reference) {
-			if (gtk_tree_row_reference_valid (hitem->reference)) {
-				GtkTreeSelection *sel;
-				GtkTreePath *path;
-				path = gtk_tree_row_reference_get_path (hitem->reference);
-				sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (epage->priv->search_view));
-				gtk_tree_selection_select_path (sel, path);
-				gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (epage->priv->search_view),
-							      path, NULL, TRUE, 0.5, 0.5);
-				gtk_tree_path_free (path);
-				use_dn = FALSE;
-			}
-			else {
-				gtk_tree_row_reference_free (hitem->reference);
-				hitem->reference = NULL;
-			}
-		}
-		if (use_dn)
-			search_view_set_current_class (SEARCH_VIEW (epage->priv->search_view),
-						       hitem->classname);
-	}
-	epage->priv->add_hist_item = TRUE;
-}
-
-*/
-static GtkActionEntry ui_actions[] = {
-	{ "LDAP", NULL, N_("_LDAP"), NULL, N_("LDAP"), NULL },
-	{ "DefineAsTable", /*BROWSER_STOCK_TABLE_ADD*/ NULL, N_("Define as Table"), NULL, N_("Define search as a virtual table"),
-	  G_CALLBACK (action_define_as_table_cb)},
-	/*
-	{ "DnBack", GTK_STOCK_GO_BACK, N_("Previous class"), NULL, N_("Move back to previous LDAP class"),
-	  G_CALLBACK (action_class_back_cb)},
-	{ "DnForward", GTK_STOCK_GO_FORWARD, N_("Next class"), NULL, N_("Move to next LDAP class"),
-	  G_CALLBACK (action_class_forward_cb)},
-	*/
+static GActionEntry win_entries[] = {
+        { "DefineAsTable", action_define_as_table_cb, NULL, NULL, NULL },
 };
-static const gchar *ui_actions_page =
-	"<ui>"
-	"  <menubar name='MenuBar'>"
-	"    <placeholder name='MenuExtension'>"
-        "      <menu name='LDAP' action='LDAP'>"
-        "        <menuitem name='DefineAsTable' action= 'DefineAsTable'/>"
-	/*"        <separator/>"
-        "        <menuitem name='DnBack' action= 'DnBack'/>"
-	  "        <menuitem name='DnForward' action= 'DnForward'/>"*/
-        "      </menu>"
-        "    </placeholder>"
-	"  </menubar>"
-	"  <toolbar name='ToolBar'>"
-	"    <separator/>"
-	"    <toolitem action='DefineAsTable'/>"
-	/*"    <toolitem action='DnBack'/>"
-	  "    <toolitem action='DnForward'/>"*/
-	"  </toolbar>"
-	"</ui>";
 
-static GtkActionGroup *
-ldap_search_page_page_get_actions_group (BrowserPage *page)
+static void
+ldap_search_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	LdapSearchPage *epage;
+	g_print ("%s ()\n", __FUNCTION__);
 
-	epage = LDAP_SEARCH_PAGE (page);
-	if (! epage->priv->agroup) {
-		GtkActionGroup *agroup;
-		agroup = gtk_action_group_new ("LdapLdapSearchPageActions");
-		gtk_action_group_set_translation_domain (agroup, GETTEXT_PACKAGE);
-		gtk_action_group_add_actions (agroup, ui_actions, G_N_ELEMENTS (ui_actions), page);
-		epage->priv->agroup = agroup;
+	customization_data_init (G_OBJECT (page), toolbar, header);
 
-		GtkAction *action;
-		gchar *base_dn, *filter, *attributes;
-		gboolean act = FALSE;
-		action = gtk_action_group_get_action (agroup, "DefineAsTable");
-		filter_editor_get_settings (FILTER_EDITOR (epage->priv->search_entry),
-					    &base_dn, &filter, &attributes, NULL);
-		if ((base_dn && *base_dn) || (filter && *filter) || (attributes && *attributes))
-			act = TRUE;
-		g_free (base_dn);
-		g_free (filter);
-		g_free (attributes);
-		gtk_action_set_sensitive (action, act);
+	/* add perspective's actions */
+	customization_data_add_actions (G_OBJECT (page), win_entries, G_N_ELEMENTS (win_entries));
 
-		update_history_actions (epage);
-	}
-	
-	return g_object_ref (epage->priv->agroup);
-}
-
-static const gchar *
-ldap_search_page_page_get_actions_ui (G_GNUC_UNUSED BrowserPage *page)
-{
-	return ui_actions_page;
+	/* add to toolbar */
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "star-new-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Define search as a virtual table"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.DefineAsTable");
+	gtk_widget_show (GTK_WIDGET (titem));
+	customization_data_add_part (G_OBJECT (page), G_OBJECT (titem));
 }
 
 static GtkWidget *
-ldap_search_page_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
+ldap_search_page_get_tab_label (BrowserPage *page, GtkWidget **out_close_button)
 {
 	const gchar *tab_name;
-	GdkPixbuf *search_pixbuf;
 
-	search_pixbuf = gtk_widget_render_icon_pixbuf (GTK_WIDGET (page), GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
 	tab_name = _("LDAP search");
-	return ui_make_tab_label_with_pixbuf (tab_name,
-						   search_pixbuf,
-						   out_close_button ? TRUE : FALSE, out_close_button);
+	return ui_make_tab_label_with_icon (tab_name,
+					    "edit-find-symbolic",
+					    out_close_button ? TRUE : FALSE, out_close_button);
 }

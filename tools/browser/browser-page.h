@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,8 +34,9 @@ struct _BrowserPageIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	GtkActionGroup      *(* i_get_actions_group) (BrowserPage *page);
-	const gchar         *(* i_get_actions_ui) (BrowserPage *page);
+	void                 (* i_customize) (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+        void                 (* i_uncustomize) (BrowserPage *page);
+
 	GtkWidget           *(* i_get_tab_label) (BrowserPage *page, GtkWidget **out_close_button);
 };
 
@@ -54,8 +55,9 @@ struct _BrowserPageIface {
 
 GType               browser_page_get_type          (void) G_GNUC_CONST;
 
-GtkActionGroup     *browser_page_get_actions_group (BrowserPage *page);
-const gchar        *browser_page_get_actions_ui    (BrowserPage *page);
+void                browser_page_customize         (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *header);
+void                browser_page_uncustomize       (BrowserPage *page);
+
 
 BrowserPerspective *browser_page_get_perspective   (BrowserPage *page);
 GtkWidget          *browser_page_get_tab_label     (BrowserPage *page, GtkWidget **out_close_button);

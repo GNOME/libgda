@@ -75,7 +75,9 @@ libbrowsercore_la_SOURCES=\
 	ui-formgrid.h \
 	ui-formgrid.c \
 	text-search.h \
-	text-search.c
+	text-search.c \
+	ui-customize.h \
+	ui-customize.c
 
 $(OBJECTS): marshal.c marshal.h
 

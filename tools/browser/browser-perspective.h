@@ -34,20 +34,13 @@ typedef struct _BrowserPerspective        BrowserPerspective;
 
 /* struct for the interface */
 struct _BrowserPerspectiveIface {
-	GTypeInterface           g_iface;
+	GTypeInterface          g_iface;
 
 	/* virtual table */
-	BrowserWindow       *(* i_get_window) (BrowserPerspective *perspective);
-	void                 (* i_customize) (BrowserPerspective *perspective, GtkToolbar *toolbar,
-					      GtkHeaderBar *header, GMenu *menu);
-	void                 (* i_uncustomize) (BrowserPerspective *perspective, GtkToolbar *toolbar,
-						GtkHeaderBar *header, GMenu *menu);
-	GtkActionGroup      *(* i_get_actions_group) (BrowserPerspective *perspective);
-	const gchar         *(* i_get_actions_ui) (BrowserPerspective *perspective);
-	void                 (* i_get_current_customization) (BrowserPerspective *perspective,
-							      GtkActionGroup **out_agroup,
-							      const gchar **out_ui);
-	void                 (* i_page_tab_label_change) (BrowserPerspective *perspective, BrowserPage *page);
+	GtkWidget           *(* i_get_notebook) (BrowserPerspective *perspective);
+
+	void                 (* i_customize) (BrowserPerspective *perspective, GtkToolbar *toolbar, GtkHeaderBar *header);
+	void                 (* i_uncustomize) (BrowserPerspective *perspective);
 };
 
 /**
@@ -63,16 +56,15 @@ struct _BrowserPerspectiveIface {
 
 GType           browser_perspective_get_type          (void) G_GNUC_CONST;
 
-void            browser_perspective_customize             (BrowserPerspective *perspective,
-							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
-void            browser_perspective_uncustomize           (BrowserPerspective *perspective,
-							   GtkToolbar *toolbar, GtkHeaderBar *header, GMenu *menu);
+void            browser_perspective_customize         (BrowserPerspective *perspective,
+						       GtkToolbar *toolbar, GtkHeaderBar *header);
+void            browser_perspective_uncustomize       (BrowserPerspective *perspective);
 
-void            browser_perspective_page_tab_label_change (BrowserPerspective *perspective,
-							   BrowserPage *page);
+BrowserWindow  *browser_perspective_get_window        (BrowserPerspective *perspective);
+GtkWidget      *browser_perspective_get_notebook      (BrowserPerspective *perspective);
 
-BrowserWindow  *browser_perspective_get_window (BrowserPerspective *perspective);
-void            browser_perspective_declare_notebook (BrowserPerspective *perspective, GtkNotebook *nb);
+/* reserved for BrowserPerspective implementations */
+GtkWidget      *browser_perspective_create_notebook   (BrowserPerspective *perspective);
 
 /*
  * All perspectives information

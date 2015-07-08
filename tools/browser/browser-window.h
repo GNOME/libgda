@@ -75,10 +75,6 @@ void                browser_window_show_notice            (BrowserWindow *bwin, 
 void                browser_window_show_notice_printf     (BrowserWindow *bwin, GtkMessageType type,
 							   const gchar *context, const gchar *format, ...);
 
-void                browser_window_customize_perspective_ui (BrowserWindow *bwin, BrowserPerspective *bpers,
-							     GtkActionGroup *actions_group,
-							     const gchar *ui_info);
-
 BrowserPerspective *browser_window_change_perspective     (BrowserWindow *bwin, const gchar *perspective);
 
 void                browser_window_set_fullscreen         (BrowserWindow *bwin, gboolean fullscreen);
