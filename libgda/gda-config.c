@@ -301,7 +301,6 @@ static gboolean sync_keyring = FALSE;
 #endif
 
 static gint data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob);
-static void data_source_info_free (GdaDsnInfo *info);
 static void internal_provider_free (InternalProvider *ip);
 static void load_config_file (const gchar *file, gboolean is_system);
 static void save_config_file (gboolean is_system);
@@ -982,7 +981,7 @@ gda_config_dispose (GObject *object)
 		g_free (conf->priv->system_file);
 
 		if (conf->priv->dsn_list) {
-			g_slist_foreach (conf->priv->dsn_list, (GFunc) data_source_info_free, NULL);
+			g_slist_foreach (conf->priv->dsn_list, (GFunc) gda_dsn_info_free, NULL);
 			g_slist_free (conf->priv->dsn_list);
 		}
 		if (conf->priv->prov_list) {
@@ -1456,7 +1455,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	}
   #endif
 #endif
-	data_source_info_free (info);
+	gda_dsn_info_free (info);
 
 	if (save_system)
 		save_config_file (TRUE);
@@ -2118,16 +2117,6 @@ data_source_info_compare (GdaDsnInfo *infoa, GdaDsnInfo *infob)
 		return -1;
 }
 
-static void 
-data_source_info_free (GdaDsnInfo *info)
-{
-	g_free (info->provider); 
-	g_free (info->cnc_string); 
-	g_free (info->description);
-	g_free (info->auth_string);
-	g_free (info);
-}
-
 static void
 internal_provider_free (InternalProvider *ip)
 {
@@ -2221,7 +2210,7 @@ reload_dsn_configuration (void)
 #endif
 			    (oinfo->is_system == ninfo->is_system)) {
 				/* no change for this DSN */
-				data_source_info_free (ninfo);
+				gda_dsn_info_free (ninfo);
 			}
 			else {
 				GdaDsnInfo tmp;
@@ -2230,7 +2219,7 @@ reload_dsn_configuration (void)
 				*ninfo = tmp;
 				if (unique_instance->priv->emit_signals)
 					g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, oinfo);
-				data_source_info_free (ninfo);
+				gda_dsn_info_free (ninfo);
 			}
 			g_hash_table_insert (hash, oinfo->name, (gpointer) 0x1);
 		}
@@ -2250,7 +2239,7 @@ reload_dsn_configuration (void)
 		unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
 		if (unique_instance->priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
-		data_source_info_free (info);
+		gda_dsn_info_free (info);
 	}
 	g_hash_table_destroy (hash);
 
