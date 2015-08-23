@@ -2091,7 +2091,8 @@ cmp_func (gconstpointer a, gconstpointer b)
 /**
  * gda_completion_list_get:
  * @cnc: a #GdaConnection object
- * @sql: a partial SQL statement which is the context of the completion proposal
+ * @sql: a partial SQL statement which is the context of the completion proposal, may also start with a "." for
+ *       Gda's tools which use internal commands
  * @start: starting position within @sql of the "token" to complete (starts at 0)
  * @end: ending position within @sql of the "token" to complete
  *
@@ -2192,33 +2193,6 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 						str = concat_ident (obj_schema, tname);
 					else
 						str = g_strdup (tname);
-					g_array_append_val (compl, str);
-				}
-			}
-		}
-		g_object_unref (model);
-	}
-	
-	/*
-	 * complete with "table.column"
-	 */
-	model = NULL;
-	if (!schema_value)
-		model = gda_meta_store_extract (store, 
-						"SELECT column_name FROM _columns", NULL);
-	if (model) {
-		gint i, nrows;
-		gint len = strlen (obj_name);
-		
-		nrows = gda_data_model_get_n_rows (model);
-		for (i = 0; i < nrows; i++) {
-			cvalue = gda_data_model_get_value_at (model, 0, i, NULL);
-			if (cvalue) {
-				const gchar *cname;
-				cname = g_value_get_string (cvalue);
-				if (!strncmp (cname, obj_name, len)) {
-					gchar *str;
-					str = g_strdup (cname);
 					g_array_append_val (compl, str);
 				}
 			}
