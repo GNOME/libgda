@@ -3168,6 +3168,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		if (gda_connection_statement_execute_non_select (store->priv->cnc,
 								 schema_set->delete_all, NULL,
 								 NULL, error) == -1) {
+			/*g_print ("may be error: %s\n", error && *error && (*error)->message ? (*error)->message : "Nope");*/
 			g_rec_mutex_unlock (& (store->priv->mutex));
 			return FALSE;
 		}

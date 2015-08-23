@@ -7,7 +7,7 @@
  * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 - 2006 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2008 - 2014 Murray Cumming <murrayc@murrayc.com>
@@ -2908,11 +2908,41 @@ get_meta_nb_values_args (GdaServerProviderMetaType type)
 	}
 }
 
+/*
+ * @call_error: (allow-none)
+ * @loc_error: (allow-none)
+ */
+static gboolean
+meta_finalize_result (gpointer retval, GError **call_error, GError **loc_error)
+{
+	if (retval) {
+		if (loc_error)
+			g_clear_error (loc_error);
+		return TRUE;
+	}
+	else {
+		if (loc_error && *loc_error && (*loc_error)->message)
+			g_set_error (call_error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     _("Internal error please report bug to "
+				       "http://bugzilla.gnome.org/ for the \"libgda\" product. "
+				       "Reported error is: %s"),
+				     (*loc_error)->message);
+		else
+			g_set_error (call_error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+				     _("Internal error please report bug to "
+				       "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+		if (loc_error)
+			g_clear_error (loc_error);
+		return FALSE;
+	}
+}
+
 gboolean
 _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaMetaStore *meta, GdaMetaContext *ctx,
 				GdaServerProviderMetaType type, GError **error)
 {
+	gpointer retval = NULL;
 	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
@@ -2923,7 +2953,7 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	/* check that function at index @type has 0 value argument */
 	if (get_meta_nb_values_args (type) != 0) {
 		g_warning ("Internal error: function %s() is only for meta data with no value argument", __FUNCTION__);
-		return FALSE;
+		goto out;
 	}
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -2932,7 +2962,7 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
-		return FALSE;
+		goto out;
 	}
 
 	worker = gda_worker_ref (cdata->worker);
@@ -2953,11 +2983,11 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
+	GError *lerror = NULL;
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
-	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, error);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
 	if (context)
 		g_main_context_unref (context);
 
@@ -2968,7 +2998,8 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	gda_worker_unref (worker);
 
-	return retval ? TRUE : FALSE;
+ out:
+	return meta_finalize_result (retval, error, &lerror);
 }
 
 gboolean
@@ -2976,6 +3007,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaMetaStore *meta, GdaMetaContext *ctx,
 				GdaServerProviderMetaType type, const GValue *value0, GError **error)
 {
+	gpointer retval = NULL;
 	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
@@ -2986,7 +3018,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	/* check that function at index @type has 1 value argument */
 	if (get_meta_nb_values_args (type) != 1) {
 		g_warning ("Internal error: function %s() is only for meta data with 1 value argument", __FUNCTION__);
-		return FALSE;
+		goto out;
 	}
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -2995,7 +3027,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
-		return FALSE;
+		goto out;
 	}
 
 	worker = gda_worker_ref (cdata->worker);
@@ -3018,7 +3050,6 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
-	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
@@ -3031,7 +3062,8 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	gda_worker_unref (worker);
 
-	return retval ? TRUE : FALSE;
+ out:
+	return meta_finalize_result (retval, error, NULL);
 }
 
 gboolean
@@ -3039,6 +3071,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaMetaStore *meta, GdaMetaContext *ctx,
 				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1, GError **error)
 {
+	gpointer retval = NULL;
 	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
@@ -3049,7 +3082,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	/* check that function at index @type has 2 values arguments */
 	if (get_meta_nb_values_args (type) != 2) {
 		g_warning ("Internal error: function %s() is only for meta data with 2 values arguments", __FUNCTION__);
-		return FALSE;
+		goto out;
 	}
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -3058,7 +3091,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
-		return FALSE;
+		goto out;
 	}
 
 	worker = gda_worker_ref (cdata->worker);
@@ -3081,7 +3114,6 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE -- */
-	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
@@ -3094,7 +3126,8 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	gda_worker_unref (worker);
 
-	return retval ? TRUE : FALSE;
+ out:
+	return meta_finalize_result (retval, error, NULL);
 }
 
 gboolean
@@ -3103,6 +3136,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1,
 				const GValue *value2, GError **error)
 {
+	gpointer retval = NULL;
 	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
@@ -3113,7 +3147,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	/* check that function at index @type has 3 values arguments */
 	if (get_meta_nb_values_args (type) != 3) {
 		g_warning ("Internal error: function %s() is only for meta data with 3 values arguments", __FUNCTION__);
-		return FALSE;
+		goto out;
 	}
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -3122,7 +3156,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
-		return FALSE;
+		goto out;
 	}
 
 	worker = gda_worker_ref (cdata->worker);
@@ -3145,7 +3179,6 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
-	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
@@ -3157,8 +3190,8 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	}
 
 	gda_worker_unref (worker);
-
-	return retval ? TRUE : FALSE;
+ out:
+	return meta_finalize_result (retval, error, NULL);
 }
 
 gboolean
@@ -3167,6 +3200,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1,
 				const GValue *value2, const GValue *value3, GError **error)
 {
+	gpointer retval = NULL;
 	GdaWorker *worker;
 	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 
@@ -3177,7 +3211,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	/* check that function at index @type has 4 values arguments */
 	if (get_meta_nb_values_args (type) != 4) {
 		g_warning ("Internal error: function %s() is only for meta data with 4 values arguments", __FUNCTION__);
-		return FALSE;
+		goto out;
 	}
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -3186,7 +3220,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
 		g_warning ("Internal error: connection reported as opened, yet no provider data set");
-		return FALSE;
+		goto out;
 	}
 
 	worker = gda_worker_ref (cdata->worker);
@@ -3209,7 +3243,6 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
-	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
 			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
 	if (context)
@@ -3222,7 +3255,8 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	gda_worker_unref (worker);
 
-	return retval ? TRUE : FALSE;
+ out:
+	return meta_finalize_result (retval, error, NULL);
 }
 
 /***********************************************************************************************************/
