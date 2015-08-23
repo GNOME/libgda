@@ -147,10 +147,10 @@ static gchar *internal_sql[] = {
 	"SELECT " CATALOG_NAME " AS constraint_catalog, constraint_schema, constraint_name, " CATALOG_NAME " AS table_catalog, table_schema, table_name, constraint_type, NULL, FALSE, FALSE FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
 
         /* I_STMT_REF_CONSTRAINTS */
-	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
+	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints WHERE constraint_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string AND unique_constraint_name IS NOT NULL",
 
         /* I_STMT_REF_CONSTRAINTS_ALL */
-	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints",
+	"select " CATALOG_NAME " AS constraint_catalog, constraint_schema, table_name, constraint_name, " CATALOG_NAME " AS ref_table_cat, constraint_schema, referenced_table_name, unique_constraint_name, match_option, update_rule, delete_rule from information_schema.referential_constraints WHERE unique_constraint_name IS NOT NULL",
 
         /* I_STMT_KEY_COLUMN_USAGE */
 	"SELECT " CATALOG_NAME " AS table_catalog, table_schema, table_name, constraint_name, column_name, ordinal_position FROM INFORMATION_SCHEMA.key_column_usage WHERE table_schema = BINARY ##schema::string AND table_name = BINARY ##name::string AND constraint_name = BINARY ##name2::string",
