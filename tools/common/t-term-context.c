@@ -420,20 +420,53 @@ compute_prompt (TTermContext *console, GString *string, gboolean in_command, gbo
 	g_free (tmp);
 }
 
+/*
+ * This function tries to provide good completion options.
+ */
 static char **
-completion_func (G_GNUC_UNUSED const char *text, const gchar *line, int start, int end, gpointer data)
+completion_func (G_GNUC_UNUSED const char *text, const gchar *line, int start, int end, G_GNUC_UNUSED gpointer data)
 {
 	TConnection *tcnc;
 	char **array;
 	gchar **gda_compl;
 	gint i, nb_compl;
+	gboolean internal_cmd = FALSE;
+	if ((*line == '.') || (*line == '\\'))
+		internal_cmd = TRUE;
 
 	tcnc = t_context_get_connection (t_app_get_term_console ());
 	if (!tcnc)
 		return NULL;
 	gda_compl = gda_completion_list_get (t_connection_get_cnc (tcnc), line, start, end);
-	if (!gda_compl)
-		return NULL;
+	if (!gda_compl) {
+		if (line[start] == '\"')
+			return NULL;
+		else {
+			/* no completion function and it appears we don't have double quotes to enclose our
+			 * completion query, so we try to add those double quotes and see if wa have a better
+			 * chance at completion options */
+			gchar *tmp1, *tmp2;
+			tmp1 = g_strdup (line);
+			tmp1[start] = 0;
+			tmp2 = g_strdup_printf ("%s\\\"%s", tmp1, line+start);
+			g_free (tmp1);
+			array = completion_func (NULL, tmp2, start+1, end+2, NULL);
+			if (array) {
+				g_free (tmp2);
+				for (i= 0; ;i++) {
+					gchar *tmp;
+					tmp = array[i];
+					if (!tmp || !*tmp)
+						break;
+					if (internal_cmd) {
+						array[i] = g_strdup_printf ("\\%s", tmp);
+						g_free (tmp);
+					}
+				}
+			}
+			return array;
+		}
+	}
 
 	for (nb_compl = 0; gda_compl[nb_compl]; nb_compl++);
 
@@ -445,8 +478,16 @@ completion_func (G_GNUC_UNUSED const char *text, const gchar *line, int start, i
 
 		gstr = gda_compl[i];
 		l = strlen (gstr) + 1;
-		str = malloc (sizeof (char) * l);
+		if (gstr[l-2] == '"')
+			str = malloc (sizeof (char) * (l+1));
+		else
+			str = malloc (sizeof (char) * l);
 		memcpy (str, gstr, l);
+		if (internal_cmd && (str[l-2] == '"')) {
+			str[l-2] = '\\';
+			str[l-1] = '"';
+			str[l] = 0;
+		}
 		array[i] = str;
 	}
 	array[i] = NULL;
