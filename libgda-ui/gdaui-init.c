@@ -54,9 +54,7 @@ GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin
  * <itemizedlist>
  * <listitem><para>Note 1: gtk_init() is not called by this function and should also
  *   be called (see Note 2 about the importance of the calling order)</para></listitem>
- * <listitem><para>Note 2: unless you call setlocale() first in your program, calling gtk_init()
- *    before gdaui_init() will ensure that all information loaded from config files will
- *    be loaded in the correct locale (as gtk_init() calls setlocale()).</para></listitem>
+ * <listitem><para>Note 2: you should always call gtk_init() before gdaui_init().</para></listitem>
  * <listitem><para>Note 3: this funtion also calls gda_init() so it should not be called
  *    again</para></listitem>
  * </itemizedlist>
