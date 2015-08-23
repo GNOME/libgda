@@ -100,7 +100,7 @@ static const gchar        *gda_oracle_provider_get_version (GdaServerProvider *p
 static gboolean            gda_oracle_provider_supports_feature (GdaServerProvider *provider, GdaConnection *cnc,
 								 GdaConnectionFeature feature);
 
-static GdaWorker          *gda_oracle_provider_create_worker (GdaServerProvider *provider);
+static GdaWorker          *gda_oracle_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc);
 static const gchar        *gda_oracle_provider_get_name (GdaServerProvider *provider);
 
 static GdaDataHandler     *gda_oracle_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
@@ -361,7 +361,7 @@ gda_oracle_provider_get_type (void)
 }
 
 static GdaWorker *
-gda_oracle_provider_create_worker (GdaServerProvider *provider)
+gda_oracle_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
 {
 	/* See http://docs.oracle.com/cd/B10501_01/appdev.920/a96584/oci09adv.htm */
 	static GdaWorker *unique_worker = NULL;

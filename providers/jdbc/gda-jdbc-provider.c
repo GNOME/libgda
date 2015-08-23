@@ -179,7 +179,6 @@ GdaServerProviderBase jdbc_base_functions = {
 	gda_jdbc_provider_close_connection,
 	NULL,
 	NULL,
-	NULL,
 	gda_jdbc_provider_perform_operation,
 	gda_jdbc_provider_begin_transaction,
 	gda_jdbc_provider_commit_transaction,

@@ -160,15 +160,6 @@ static void gda_firebird_free_cnc_data (FirebirdConnectionData *cdata);
 static gchar	*fb_server_get_version (FirebirdConnectionData *fcnc);
 
 
-static gchar * firebird_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, GError **error);
-
-static gchar * firebird_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *context, GError **error);
-
-static gchar * firebird_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *is_default, gboolean *is_null, GError **error);
-
-
-
-
 /*
  * Prepared internal statements
  * TO_ADD: any prepared statement to be used internally by the provider should be
@@ -1083,13 +1074,6 @@ gda_firebird_provider_statement_to_sql (GdaServerProvider *provider, GdaConnecti
 	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
 }
 
-
-/*
- * Statement prepare request
- */
-static GdaFirebirdPStmt *real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stmt, GError **error);
-
-
 /*
  * Statement prepare request
  *
@@ -1544,7 +1528,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (gdouble, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_double (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (gdouble);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
@@ -1557,7 +1541,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (gfloat, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_float (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (gfloat);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
@@ -1570,7 +1554,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (gchar, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_schar (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (gchar);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
@@ -1583,7 +1567,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (gshort, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = gda_value_get_short (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (gshort);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
@@ -1596,7 +1580,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (glong, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_long (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (glong);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
@@ -1609,7 +1593,7 @@ gda_firebird_provider_statement_execute (GdaServerProvider *provider,
 			pv = g_new (gint64, 1);
 			mem_to_free = g_slist_prepend (mem_to_free, pv);
 			*pv = g_value_get_long (value);
-			fbvar->sqldata = pv;
+			fbvar->sqldata = (char*) pv;
 			fbvar->sqllen = sizeof (gint64);
 			fbvar->sqlind = flag0;
 			*flag0 = 0;
