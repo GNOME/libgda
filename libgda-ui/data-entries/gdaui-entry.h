@@ -52,7 +52,7 @@ struct _GdauiEntryClass
 	 * If defined, sould return a text suitable to display EMPTY value, it will be called when
 	 * entry was set to NULL and is becomming not NULL
 	 *
-	 * Returs: a newt string, or %NULL
+	 * Returns: a new string, or %NULL
 	 */
 	gchar                  *(*get_empty_text) (GdauiEntry *entry);
 
