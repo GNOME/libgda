@@ -654,7 +654,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 		xmlFree (str);
 	}
 	else
-		gda_holder_set_not_null (holder, FALSE);
+		gda_holder_set_not_null (holder, TRUE);
 	
 	str = xmlGetProp (node, BAD_CAST "plugin");
 	if (str) {

@@ -1656,7 +1656,7 @@ init_node_import (GdaDataModelImport *model)
 				xmlFree (str);
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"nullok");
-			spec->nullok = TRUE;
+			spec->nullok = FALSE;
 			if (str) {
 				spec->nullok = ((*str == 't') || (*str == 'T')) ? TRUE : FALSE;
 				xmlFree (str);
