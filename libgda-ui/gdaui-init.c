@@ -460,18 +460,6 @@ init_plugins_hash (void)
                            "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
-	plugin->plugin_name = "textual";
-	plugin->plugin_descr = "Textual entry";
-	plugin->plugin_file = NULL;
-	plugin->nb_g_types = 1;
-	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
-	plugin->valid_g_types [0] = G_TYPE_STRING;
-	plugin->options_xml_spec = NULL;
-	plugin->entry_create_func = entry_string_create_func;
-	plugin->cell_create_func = cell_textual_create_func;
-	g_hash_table_insert (hash, plugin->plugin_name, plugin);
-
-	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "time";
 	plugin->plugin_descr = "Time (HH:MM:SS) entry";
 	plugin->plugin_file = NULL;
