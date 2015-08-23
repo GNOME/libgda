@@ -1045,9 +1045,6 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 					if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT))
 						gda_attributes_manager_set (att_mgr, tcol, GDA_ATTRIBUTE_AUTO_INCREMENT, 
 									    true_value);
-					else
-						g_message ("Unknown EXTRA attribute '%s', please report this bug to "
-							   "http://bugzilla.gnome.org/ for the \"libgda\" product.", tmp);
 				}
 				gda_value_free (true_value);
 				g_strfreev (array);

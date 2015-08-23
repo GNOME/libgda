@@ -434,7 +434,7 @@ t_connection_set_property (GObject *object,
 			if (! have_meta_store_ready (tcnc, &lerror)) {
 				gchar *tmp;
 				tmp = g_strdup_printf (_("Error while fetching meta data from the connection: %s"),
-						       lerror->message ? lerror->message : _("No detail"));
+						       lerror && lerror->message ? lerror->message : _("No detail"));
 				g_clear_error (&lerror);
 				g_signal_emit (tcnc, t_connection_signals [NOTICE], 0, tmp);
 				g_free (tmp);

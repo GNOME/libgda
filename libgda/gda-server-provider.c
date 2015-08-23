@@ -2957,7 +2957,7 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
 	gpointer retval;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 

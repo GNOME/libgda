@@ -34,7 +34,7 @@ G_BEGIN_DECLS
  */
 #ifdef GDA_DEBUG
 #define ASSERT_TABLE_NAME(x,y) g_assert (!strcmp ((x), (y)))
-#define WARN_META_UPDATE_FAILURE(x,method) if (!(x)) g_print ("%s (meta method => %s) ERROR: %s\n", __FUNCTION__, (method), error && *error && (*error)->message ? (*error)->message : "???")
+#define WARN_META_UPDATE_FAILURE(x,method) if (!(x)) g_print ("%s:%d %s (meta method => %s) ERROR: %s\n", __FILE__, __LINE__, __FUNCTION__, (method), error && *error && (*error)->message ? (*error)->message : "???")
 #else
 #define ASSERT_TABLE_NAME(x,y)
 #define WARN_META_UPDATE_FAILURE(x,method)
