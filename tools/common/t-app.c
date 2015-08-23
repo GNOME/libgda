@@ -945,7 +945,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "s");
 	c->description = _("Show commands history, or save it to file");
 	c->command_func = (ToolCommandFunc) gda_internal_command_history; /* only for term console */
@@ -953,7 +952,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<META DATA TYPE>]"), "meta");
 	c->description = _("Force reading the database meta data (or part of the meta data, ex:\"tables\")");
 	c->command_func = (ToolCommandFunc) gda_internal_command_dict_sync;
@@ -964,7 +962,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"), "fkdeclare");
 	c->description = _("Declare a new foreign key (not actually in database): tableA references tableB");
 	c->command_func = (ToolCommandFunc) extra_command_declare_fk;
@@ -975,7 +972,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <fkname> <tableA> <tableB>"), "fkundeclare");
 	c->description = _("Un-declare a foreign key (not actually in database)");
 	c->command_func = (ToolCommandFunc) extra_command_undeclare_fk;
@@ -986,7 +982,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TABLE>]"), "dt");
 	c->description = _("List all tables (or named table)");
 	c->command_func = (ToolCommandFunc) gda_internal_command_list_tables;
@@ -997,7 +992,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<VIEW>]"), "dv");
 	c->description = _("List all views (or named view)");
 	c->command_func = (ToolCommandFunc) gda_internal_command_list_views;
@@ -1008,7 +1002,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<SCHEMA>]"), "dn");
 	c->description = _("List all schemas (or named schema)");
 	c->command_func = (ToolCommandFunc) gda_internal_command_list_schemas;
@@ -1019,7 +1012,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<OBJ_NAME>|<SCHEMA>.*]"), "d");
 	c->description = _("Describe object or full list of objects");
 	c->command_func = (ToolCommandFunc) gda_internal_command_detail;
@@ -1030,7 +1022,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TABLE1> [<TABLE2>...]]"), "graph");
 	c->description = _("Create a graph of all or the listed tables");
 	c->command_func = (ToolCommandFunc) extra_command_graph; /* only for term console */
@@ -1039,7 +1030,6 @@ build_commands (TApp *self, TAppFeatures features)
 #ifdef HAVE_LIBSOUP
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Information");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<port> [<authentication token>]]"), "http");
 	c->description = _("Start/stop embedded HTTP server (on given port or on 12345 by default)");
 	c->command_func = (ToolCommandFunc) extra_command_httpd;
@@ -1049,7 +1039,6 @@ build_commands (TApp *self, TAppFeatures features)
 	/* specific commands */
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"), "c");
 	c->description = _("Opens a new connection or lists opened connections");
 	c->command_func = (ToolCommandFunc) extra_command_manage_cnc;
@@ -1062,7 +1051,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<CNC_NAME>]"), "close");
 	c->description = _("Close a connection");
 	c->command_func = (ToolCommandFunc) extra_command_close_cnc;
@@ -1073,7 +1061,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"), "bind");
 	c->description = _("Bind connections or datasets (<OBJ NAME>) into a single new one (allowing SQL commands to be executed across multiple connections and/or datasets)");
 	c->command_func = (ToolCommandFunc) extra_command_bind_cnc;
@@ -1084,7 +1071,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<DSN>]"), "l");
 	c->description = _("List all DSN (or specified DSN's attributes)");
 	c->command_func = (ToolCommandFunc) extra_command_list_dsn;
@@ -1095,7 +1081,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"), "lc");
 	c->description = _("Create (or modify) a DSN");
 	c->command_func = (ToolCommandFunc) extra_command_create_dsn;
@@ -1106,7 +1091,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <DSN_NAME> [<DSN_NAME>...]"), "lr");
 	c->description = _("Remove a DSN");
 	c->command_func = (ToolCommandFunc) extra_command_remove_dsn;
@@ -1117,7 +1101,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("DSN (data sources) management");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<PROVIDER>]"), "L");
 	c->description = _("List all installed database providers (or named one's attributes)");
 	c->command_func = (ToolCommandFunc) extra_command_list_providers;
@@ -1128,7 +1111,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Input/Output");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FILE>"), "i");
 	c->description = _("Execute commands from file");
 	c->command_func = (ToolCommandFunc) extra_command_set_input; /* only for term console */
@@ -1136,7 +1118,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Input/Output");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "o");
 	c->description = _("Send output to a file or |pipe");
 	c->command_func = (ToolCommandFunc) extra_command_set_output; /* only for term console */
@@ -1144,7 +1125,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Input/Output");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TEXT>]"), "echo");
 	c->description = _("Print TEXT or an empty line to standard output");
 	c->command_func = (ToolCommandFunc) extra_command_echo;
@@ -1152,7 +1132,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Input/Output");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<TEXT>]"), "qecho");
 	c->description = _("Send TEXT or an empty line to current output stream");
 	c->command_func = (ToolCommandFunc) extra_command_qecho;
@@ -1160,7 +1139,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = "q";
 	c->description = _("Quit");
 	c->command_func = (ToolCommandFunc) extra_command_quit; /* only for term console */
@@ -1168,7 +1146,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<DIR>]"), "cd");
 	c->description = _("Change the current working directory");
 	c->command_func = (ToolCommandFunc) extra_command_cd;
@@ -1176,7 +1153,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = "copyright";
 	c->description = _("Show usage and distribution terms");
 	c->command_func = (ToolCommandFunc) extra_command_copyright;
@@ -1187,7 +1163,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>]]"), "option");
 	c->description = _("Set or show an option, or list all options ");
 	c->command_func = (ToolCommandFunc) extra_command_option;
@@ -1198,7 +1173,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("General");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME>]"), "info");
 	c->description = _("Show a piece of information, or all information about the connection");
 	c->command_func = (ToolCommandFunc) extra_command_info;
@@ -1209,7 +1183,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "e");
 	c->description = _("Edit the query buffer (or file) with external editor");
 	c->command_func = (ToolCommandFunc) extra_command_edit_buffer; /* only for term console */
@@ -1217,7 +1190,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FILE>]"), "qr");
 	c->description = _("Reset the query buffer (or load file into query buffer)");
 	c->command_func = (ToolCommandFunc) extra_command_reset_buffer; /* only for term console */
@@ -1225,7 +1197,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = "qp";
 	c->description = _("Show the contents of the query buffer");
 	c->command_func = (ToolCommandFunc) extra_command_show_buffer; /* only for term console */
@@ -1233,7 +1204,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<FAVORITE_NAME>]"), "g");
 	c->description = _("Execute contents of query buffer, or execute specified query favorite");
 	c->command_func = (ToolCommandFunc) extra_command_exec_buffer; /* only for term console */
@@ -1241,7 +1211,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FILE>"), "qw");
 	c->description = _("Write query buffer to file");
 	c->command_func = (ToolCommandFunc) extra_command_write_buffer; /* only for term console */
@@ -1249,7 +1218,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qs");
 	c->description = _("Save query buffer as favorite");
 	c->command_func = (ToolCommandFunc) extra_command_query_buffer_to_dict;
@@ -1257,7 +1225,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "ql");
 	c->description = _("Load a query favorite into query buffer");
 	c->command_func = (ToolCommandFunc) extra_command_query_buffer_from_dict;
@@ -1265,7 +1232,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <FAVORITE_NAME>"), "qd");
 	c->description = _("Delete a query favorite");
 	c->command_func = (ToolCommandFunc) extra_command_query_buffer_delete_dict;
@@ -1273,7 +1239,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s"), "qa");
 	c->description = _("List all query favorites");
 	c->command_func = (ToolCommandFunc) extra_command_query_buffer_list_dict;
@@ -1281,7 +1246,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Input/Output");
-	c->group_id = NULL;
 	c->name = "H [HTML|XML|CSV|DEFAULT]";
 	c->description = _("Set output format");
 	c->command_func = (ToolCommandFunc) extra_command_set_output_format;
@@ -1289,7 +1253,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Query buffer & query favorites");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"), "export");
 	c->description = _("Export internal parameter or table's value to the FILE file");
 	c->command_func = (ToolCommandFunc) extra_command_export;
@@ -1297,7 +1260,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Execution context");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME> [<VALUE>|_null_]]"), "set");
 	c->description = _("Set or show internal parameter, or list all if no parameter specified ");
 	c->command_func = (ToolCommandFunc) extra_command_set;
@@ -1308,7 +1270,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Execution context");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s [<NAME>]"), "unset");
 	c->description = _("Unset (delete) internal named parameter (or all parameters)");
 	c->command_func = (ToolCommandFunc) extra_command_unset;
@@ -1319,7 +1280,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Execution context");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"), "setex");
 	c->description = _("Set internal parameter as the contents of the FILE file or from an existing table's value");
 	c->command_func = (ToolCommandFunc) extra_command_set2;
@@ -1327,7 +1287,6 @@ build_commands (TApp *self, TAppFeatures features)
 
 	c = g_new0 (ToolCommand, 1);
 	c->group = _("Execution context");
-	c->group_id = NULL;
 	c->name = g_strdup_printf (_("%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"), "pivot");
 	c->description = _("Performs a statistical analysis on the data from SELECT, "
 			   "using ROW_FIELDS and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data");

@@ -284,6 +284,14 @@ base_tool_command_group_find (ToolCommandGroup *group, const gchar *name, GError
 	return cmd;
 }
 
+/*
+ * Splits the arguments, separated by:
+ *   - space characters (g_ascii_isspace())
+ *   - or enclosed between double quotes
+ *   - separators or double quotes precedeed by a \ are not considered as such
+ *
+ * Any backslashed char is converted to only the char in the end
+ */
 static gchar **
 split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 {
@@ -292,6 +300,7 @@ split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 	g_assert (cmde && *cmde);
 	g_assert (out_n_args);
 
+	/* split things up */
 	*out_n_args = 0;
 	str = g_strdup (cmde);
 	args = g_array_new (TRUE, FALSE, sizeof (gchar*));
@@ -300,6 +309,7 @@ split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 		gboolean inquotes = FALSE;
 		
 		for (tmp = ptr; *tmp && g_ascii_isspace (*tmp); tmp++); /* ignore spaces */
+		ptr = tmp;
 
 		for (; *tmp; tmp++) {
 			if (*tmp == '"')
@@ -327,8 +337,12 @@ split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 				}
 				else
 					dup = g_strdup (ptr);
-				g_array_append_val (args, dup);
-				*out_n_args += 1;
+				if (*dup) {
+					g_array_append_val (args, dup);
+					*out_n_args += 1;
+				}
+				else
+					g_free (dup);
 				ptr = tmp;
 				*tmp = hold;
 				break;
@@ -354,26 +368,45 @@ split_command_string (const gchar *cmde, guint *out_n_args, GError **error)
 				}
 				else
 					dup = g_strdup (ptr);
-				g_array_append_val (args, dup);
-				*out_n_args += 1;
+
+				if (*dup) {
+					g_array_append_val (args, dup);
+					*out_n_args += 1;
+				}
+				else
+					g_free (dup);
 				break;
 			}
 		}
 	}
-
 	g_free (str);
-	if (0) {
-		/* debug */
-		guint i;
-		g_print ("split [%s] => %d parts\n", cmde, *out_n_args);
-		for (i = 0; ; i++) {
-			gchar *tmp;
-			tmp = g_array_index (args, gchar*, i);
-			if (!tmp)
-				break;
-			g_print ("\t[%s]\n", tmp);
+
+	/* remove backslashes from each part */
+	guint i;
+	for (i = 0; ; i++) {
+		gchar *tmp;
+		tmp = g_array_index (args, gchar*, i);
+		if (!tmp)
+			break;
+		gchar *tptr;
+		for (ptr = tmp, tptr = tmp; *ptr; ptr++, tptr++) {
+			if (*ptr == '\\')
+				ptr++;
+			*tptr = *ptr;
 		}
+		*tptr = *ptr;
 	}
+
+#ifdef DEBUG
+	g_print ("split [%s] => %d parts\n", cmde, *out_n_args);
+	for (i = 0; ; i++) {
+		gchar *tmp;
+		tmp = g_array_index (args, gchar*, i);
+		if (!tmp)
+			break;
+		g_print ("\t[%s]\n", tmp);
+	}
+#endif
 	return (gchar **) g_array_free (args, FALSE);
 
  onerror:
