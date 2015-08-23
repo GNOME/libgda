@@ -1073,7 +1073,7 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
 }
 
 /**
- * gda_sql_builder_add_cond_v: (skip)
+ * gda_sql_builder_add_cond_v:
  * @builder: a #GdaSqlBuilder object
  * @op: type of condition
  * @op_ids: (array length=op_ids_size): an array of ID for the arguments (not %0)
