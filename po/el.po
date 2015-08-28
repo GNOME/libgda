@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: gnome-db 0.0.91\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-05 07:56+0000\n"
-"PO-Revision-Date: 2014-01-06 08:49+0300\n"
-"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"POT-Creation-Date: 2015-08-28 10:21+0000\n"
+"PO-Revision-Date: 2015-08-28 23:16+0300\n"
+"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: www.gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 1.8.4\n"
 "X-Project-Style: gnome\n"
 
 #
@@ -148,8 +148,7 @@ msgstr "Αδυναμία εκτέλεσης του προγράμματος πε
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:106 ../libgda-ui/gdaui-init.c:114
 #: ../libgda-ui/gdaui-init.c:545 ../libgda-ui/gdaui-login.c:448
-#: ../libgda-ui/gdaui-rt-editor.c:732
-#: ../providers/jdbc/gda-jdbc-provider.c:520
+#: ../libgda-ui/gdaui-rt-editor.c:732 ../providers/jdbc/gda-jdbc-provider.c:520
 #: ../providers/jdbc/gda-jdbc-provider.c:1467
 #: ../providers/jdbc/gda-jdbc-provider.c:1496
 #: ../providers/jdbc/gda-jdbc-provider.c:1558
@@ -178,8 +177,7 @@ msgstr "Αδυναμία εκτέλεσης του προγράμματος πε
 #: ../tools/browser/browser-connection.c:1145
 #: ../tools/browser/browser-connection.c:1361
 #: ../tools/browser/browser-window.c:920 ../tools/browser/browser-window.c:934
-#: ../tools/browser/browser-window.c:948
-#: ../tools/browser/browser-window.c:1173
+#: ../tools/browser/browser-window.c:948 ../tools/browser/browser-window.c:1173
 #: ../tools/browser/browser-window.c:1214
 #: ../tools/browser/browser-window.c:1482
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
@@ -430,8 +428,8 @@ msgstr "Πιστοποίηση"
 
 #
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84
-#: ../tools/browser/auth-dialog.c:232 ../tools/browser/login-dialog.c:193
+#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:232
+#: ../tools/browser/login-dialog.c:193
 msgid "Connection opening"
 msgstr "Άνοιγμα σύνδεσης"
 
@@ -939,7 +937,7 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:786 ../libgda/gda-data-model-dir.c:885
 #: ../libgda/gda-data-model-dir.c:927 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1123
-#: ../libgda/gda-data-proxy.c:3561 ../libgda/gda-data-proxy.c:3685
+#: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1320 ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860 ../libgda/gda-data-select.c:2927
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:918
@@ -1011,8 +1009,8 @@ msgstr "Εάν το πρότυπο δεδομένων μπορεί να τροπ
 #: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
 #: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:797
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1337
-#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3634
-#: ../libgda/gda-data-proxy.c:3672 ../libgda/gda-data-select.c:1853
+#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3632
+#: ../libgda/gda-data-proxy.c:3670 ../libgda/gda-data-select.c:1853
 #: ../libgda/gda-data-select.c:1914
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -1022,8 +1020,8 @@ msgstr "Η γραμμή %d είναι εκτός εύρους (0-%d)"
 #: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
 #: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:800
 #: ../libgda/gda-data-model-dir.c:974 ../libgda/gda-data-model-dir.c:1340
-#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3637
-#: ../libgda/gda-data-proxy.c:3675 ../libgda/gda-data-select.c:1856
+#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3635
+#: ../libgda/gda-data-proxy.c:3673 ../libgda/gda-data-select.c:1856
 #: ../libgda/gda-data-select.c:1917
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1546,7 +1544,7 @@ msgid "GdaDataProxy can't handle non random access data models"
 msgstr ""
 "Το GdaDataProxy δεν μπορεί να χειριστεί μη τυχαία πρόσβαση προτύπων δεδομένων"
 
-#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4074
+#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4072
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
@@ -1590,24 +1588,24 @@ msgstr "Σφάλμα σε έκφραση φίλτρου"
 msgid "Incorrect filter expression"
 msgstr "Λανθασμένη έκφραση φίλτρου"
 
-#: ../libgda/gda-data-proxy.c:3809
+#: ../libgda/gda-data-proxy.c:3807
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 "Η πρώτη σειρά είναι μία κενή γραμμή που προστέθηκε τεχνητά και δεν μπορεί να "
 "τροποποιηθεί"
 
-#: ../libgda/gda-data-proxy.c:3838 ../libgda/gda-data-proxy.c:3849
+#: ../libgda/gda-data-proxy.c:3836 ../libgda/gda-data-proxy.c:3847
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Λάθος τύπος τιμής: αναμενόταν '%s' και ελήφθη '%s'"
 
-#: ../libgda/gda-data-proxy.c:3937
+#: ../libgda/gda-data-proxy.c:3935
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "Προσπάθεια αλλαγής στήλης μόνο για ανάγνωση: %d"
 
-#: ../libgda/gda-data-proxy.c:3974
+#: ../libgda/gda-data-proxy.c:3972
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Ασυμφωνία τύπου τιμής %s αντί του %s"
@@ -3756,10 +3754,9 @@ msgstr "Τύπος δεδομένων"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1017 ../tools/config-info.c:122
-#: ../tools/config-info.c:291 ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995
-#: ../tools/gda-sql.c:5375
+#: ../libgda-ui/gdaui-raw-grid.c:785 ../providers/ldap/gda-ldap-provider.c:1017
+#: ../tools/config-info.c:122 ../tools/config-info.c:291
+#: ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995 ../tools/gda-sql.c:5375
 msgid "Value"
 msgstr "Τιμή"
 
@@ -5876,16 +5873,14 @@ msgstr "Πάροχος για βάσεις δεδομένων Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Πάροχος για ενσωματωμένες βάσεις δεδομένων Firebird"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
-#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
-#: ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
+#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "Άκυρο όρισμα: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68
-#: ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "Αδυναμία ανάγνωσης BLOB"
 
@@ -8030,8 +8025,7 @@ msgstr "Απαιτείται τουλάχιστον η έκδοση 5.0 του M
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-meta.c:105
-#: ../providers/web/gda-web-recordset.c:310
+#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "Αδυναμία εισαγωγής δεδομένων από εξυπηρετητή ιστού"
 
@@ -9655,6 +9649,27 @@ msgstr "Αναμένεται ριζικός κόμβος <%s>"
 msgid "SQL code to execute:"
 msgstr "Κώδικας SQL για εκτέλεση:"
 
+#: ../tools/browser/gda-browser-5.0.appdata.xml.in.h:1
+msgid ""
+"Database Browser provides quick access to the data and schema of a database, "
+"and displays it in a intuitive graphical interface. It provides three "
+"perspectives to interact with a database: the schema browser, query "
+"execution, and data manager. The schema browser allows the user to view the "
+"tables of a database, and inspect the table's properties and relations. The "
+"query exeution perspective allows the user to execute SQL queries on the "
+"database. The data manager perspective allows the user to view the data "
+"contained in the database in a tabular form."
+msgstr ""
+"Ο περιηγητής βάσης δεδομένων παρέχει γρήγορη πρόσβαση στα δεδομένα και στο "
+"σχήμα μιας βάσης δεδομένων, εμφανίζοντας το σε μια γραφική διεπαφή. Παρέχει "
+"τρεις λειτουργίες για αλληλεπίδραση με την βάση δεδομένων: ο περιηγητής "
+"σχήματος, εκτέλεση ερωτημάτων, και διαχειριστής δεδομένων. Ο περιηγητής "
+"σχήματος επιτρέπει τον χρήστη να δει τους πίνακες της βάσης, και να "
+"επιθεωρήσει τις ιδιότητες και της συσχετίσεις των πινάκων. Η λειτουργία της "
+"εκτέλεσης ερωτημάτων επιτρέπει τον χρήση να εκτελεί ερωτήματα SQL στη βάση "
+"δεδομένων. Ο διαχειριστής δεδομένων επιτρέπει τον χρήστη να δει τα δεδομένα "
+"που υπάρχουν στην βάση δεδομένων υπό τη μορφή πίνακα."
+
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "Browse your database's contents"
 msgstr "Περιήγηση των περιεχομένων της βάσης δεδομένων σας"
@@ -9779,9 +9794,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:507
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:513
-#: ../tools/browser/ldap-browser/ldap-search-page.c:465
-#: ../tools/gda-sql.c:2415 ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435
-#: ../tools/gda-sql.c:2443
+#: ../tools/browser/ldap-browser/ldap-search-page.c:465 ../tools/gda-sql.c:2415
+#: ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435 ../tools/gda-sql.c:2443
 msgid "LDAP"
 msgstr "LDAP"
 
