@@ -133,8 +133,8 @@ typedef struct {
 
 /**
  * GdaBinary:
- * @data:
- * @binary_length:
+ * @data: (array): the actual data as an array
+ * @binary_length: length of @data
  */
 typedef struct {
 	guchar *data;
