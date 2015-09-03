@@ -1,5 +1,6 @@
 [Desktop Entry]
-_Name=Database browser
+_GenricName=Database browser
+_Name=GdaBrowser
 _Comment=Browse your database's contents
 Icon=gda-browser-5.0
 Exec=gda-browser-5.0
