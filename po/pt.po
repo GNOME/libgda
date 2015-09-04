@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: 2.26\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-24 22:22+0000\n"
-"PO-Revision-Date: 2015-08-25 07:27+0100\n"
+"POT-Creation-Date: 2015-09-03 22:21+0000\n"
+"PO-Revision-Date: 2015-09-04 10:54+0100\n"
 "Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
 "Language-Team: Português <palbuquerque73@gmail.com>\n"
 "Language: pt\n"
@@ -212,10 +212,14 @@ msgid "Database access control center"
 msgstr "Centro de controlo de acesso à base de dados"
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:2
+msgid "Gda Control Center"
+msgstr "Centro de controlo Gda"
+
+#: ../control-center/gda-control-center-6.0.desktop.in.in.h:3
 msgid "Configure your database access environment"
 msgstr "Configurar o seu ambiente de acesso à base de dados"
 
-#: ../control-center/gda-control-center-6.0.desktop.in.in.h:3
+#: ../control-center/gda-control-center-6.0.desktop.in.in.h:4
 msgid "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
 msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
 
@@ -2178,9 +2182,6 @@ msgstr "Não suportado"
 
 #: ../libgda/gda-server-provider.c:2926
 #, c-format
-#| msgid ""
-#| "Internal error, please report error to http://bugzilla.gnome.org/ for the "
-#| "\"libgda\" product"
 msgid ""
 "Internal error please report bug to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product. Reported error is: %s"
@@ -2190,9 +2191,6 @@ msgstr ""
 
 #: ../libgda/gda-server-provider.c:2932
 #, c-format
-#| msgid ""
-#| "Internal error, please report error to http://bugzilla.gnome.org/ for the "
-#| "\"libgda\" product"
 msgid ""
 "Internal error please report bug to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product"
@@ -8611,10 +8609,15 @@ msgid "Database browser"
 msgstr "Navegador da base de dados"
 
 #: ../tools/browser/gda-browser-6.0.desktop.in.in.h:2
+#| msgid "Browse"
+msgid "GdaBrowser"
+msgstr "Navegador Gda"
+
+#: ../tools/browser/gda-browser-6.0.desktop.in.in.h:3
 msgid "Browse database's contents"
 msgstr "Navegar pelo conteúdo da base de dados"
 
-#: ../tools/browser/gda-browser-6.0.desktop.in.in.h:3
+#: ../tools/browser/gda-browser-6.0.desktop.in.in.h:4
 msgid "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
 msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
 
@@ -11056,9 +11059,6 @@ msgstr "Mostrar"
 
 #~ msgid "Test"
 #~ msgstr "Teste"
-
-#~ msgid "Browse"
-#~ msgstr "Navegar"
 
 #~ msgid "_Revert"
 #~ msgstr "_Reverter"
