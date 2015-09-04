@@ -4,17 +4,17 @@
 # Nuno Ferreira <nmrf@rnl.ist.utl.pt>, 1999.
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003, 2004, 2005, 2006.
 # Nicolau Gonçalves <excentriko@gmail.com>, 2007, 2008, 2009, 2010.
-# Pedro Albuquerque <palbuquerque73@openmailbox.com>, 2015.
+# Pedro Albuquerque <palbuquerque73@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.26\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-03 22:10+0000\n"
-"PO-Revision-Date: 2015-07-04 06:30+0100\n"
-"Last-Translator: Pedro Albuquerque <palbuquerque73@openmailbox.com>\n"
-"Language-Team: Português <palbuquerque73@openmailbox.com>\n"
+"POT-Creation-Date: 2015-09-03 20:45+0000\n"
+"PO-Revision-Date: 2015-09-04 10:52+0100\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
+"Language-Team: Português <palbuquerque73@gmail.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,11 +122,10 @@ msgstr "Impossível executar o programa de navegação"
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
 #: ../libgda/sqlite/gda-sqlite-provider.c:2703
 #: ../libgda/sqlite/gda-sqlite-provider.c:2715
-#: ../libgda/sqlite/gda-sqlite-provider.c:2737
-#: ../libgda/sqlite/gda-sqlite-provider.c:2927
-#: ../libgda/sqlite/gda-sqlite-provider.c:3270
-#: ../libgda/sqlite/gda-sqlite-provider.c:3282
-#: ../libgda/sqlite/gda-sqlite-provider.c:3413
+#: ../libgda/sqlite/gda-sqlite-provider.c:2926
+#: ../libgda/sqlite/gda-sqlite-provider.c:3269
+#: ../libgda/sqlite/gda-sqlite-provider.c:3281
+#: ../libgda/sqlite/gda-sqlite-provider.c:3412
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
@@ -237,6 +236,10 @@ msgid "Database access control center"
 msgstr "Centro de controlo de acesso à base de dados"
 
 #: ../control-center/gda-control-center-5.0.desktop.in.h:2
+msgid "Gda Control Center"
+msgstr "Centro de controlo Gda"
+
+#: ../control-center/gda-control-center-5.0.desktop.in.h:3
 msgid "Configure your database access environment"
 msgstr "Configurar o seu ambiente de acesso à base de dados"
 
@@ -2303,7 +2306,7 @@ msgstr "Tipo de parâmetro errado para \"%s\": esperado \"%s\", obtido \"%s\""
 msgid "Missing parameter '%s'"
 msgstr "Parâmetro \"%s\" em falta"
 
-#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3113
+#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3112
 #: ../providers/jdbc/gda-jdbc-provider.c:1506
 #: ../providers/mysql/gda-mysql-provider.c:2356
 #: ../providers/postgres/gda-postgres-provider.c:2150
@@ -2462,7 +2465,7 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Impossível reescrever declaração que não seja INSERT ou UPDATE"
 
 #: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
-#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3094
+#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3093
 #: ../providers/jdbc/gda-jdbc-provider.c:1477
 #: ../providers/mysql/gda-mysql-provider.c:2336
 #: ../providers/postgres/gda-postgres-provider.c:2132
@@ -2823,23 +2826,14 @@ msgstr ""
 "Impossível construir uma declaração SELECT para obter a última linha "
 "inserida: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2736
-#: ../providers/mysql/gda-mysql-provider.c:2083
-#: ../providers/postgres/gda-postgres-provider.c:1880
-#, c-format
-msgid "Can't execute SELECT statement to get last inserted row: %s"
-msgstr ""
-"Impossível executar uma declaração SELECT para obter a última linha "
-"inserida: %s"
-
-#: ../libgda/sqlite/gda-sqlite-provider.c:2749
+#: ../libgda/sqlite/gda-sqlite-provider.c:2748
 #: ../providers/mysql/gda-mysql-provider.c:2096
 #: ../providers/postgres/gda-postgres-provider.c:1893
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Declaração SELECT para obter última linha inserida não devolveu nenhuma linha"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2753
+#: ../libgda/sqlite/gda-sqlite-provider.c:2752
 #: ../providers/mysql/gda-mysql-provider.c:2100
 #: ../providers/postgres/gda-postgres-provider.c:1897
 #, c-format
@@ -2848,21 +2842,21 @@ msgstr ""
 "Declaração SELECT para obter última linha inserida devolveu demasiadas (%d) "
 "linhas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2818
+#: ../libgda/sqlite/gda-sqlite-provider.c:2817
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Declaração preparada não tem nenhum GdaStatement associado"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2858
-#: ../libgda/sqlite/gda-sqlite-provider.c:2895
+#: ../libgda/sqlite/gda-sqlite-provider.c:2857
+#: ../libgda/sqlite/gda-sqlite-provider.c:2894
 msgid "Can't create SQLite BLOB handle"
 msgstr "Impossível criar gestor BLOB SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2862
-#: ../libgda/sqlite/gda-sqlite-provider.c:2900
+#: ../libgda/sqlite/gda-sqlite-provider.c:2861
+#: ../libgda/sqlite/gda-sqlite-provider.c:2899
 msgid "Can't write to SQLite's BLOB"
 msgstr "Impossível escrever para BLOB do SQLite "
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2885
+#: ../libgda/sqlite/gda-sqlite-provider.c:2884
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2872,11 +2866,11 @@ msgstr ""
 "reporte um erro em http://bugzilla.gnome.org/ no produto \"libgda\" (em "
 "inglês)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2910
+#: ../libgda/sqlite/gda-sqlite-provider.c:2909
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Impossível identificar a ROWID do blob a preencher"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2958
+#: ../libgda/sqlite/gda-sqlite-provider.c:2957
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:448
 #: ../providers/jdbc/gda-jdbc-provider.c:1356
 #: ../providers/ldap/gda-ldap-provider.c:801
@@ -2886,13 +2880,13 @@ msgstr "Impossível identificar a ROWID do blob a preencher"
 msgid "Provider does not support asynchronous statement execution"
 msgstr "Fornecedor não suporta execuções assíncronas de declarações"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3027
+#: ../libgda/sqlite/gda-sqlite-provider.c:3026
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Declaração vazia"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3069
-#: ../libgda/sqlite/gda-sqlite-provider.c:3072
+#: ../libgda/sqlite/gda-sqlite-provider.c:3068
+#: ../libgda/sqlite/gda-sqlite-provider.c:3071
 #: ../providers/jdbc/gda-jdbc-provider.c:1443
 #: ../providers/jdbc/gda-jdbc-provider.c:1446
 #: ../providers/mysql/gda-mysql-provider.c:2311
@@ -2904,7 +2898,7 @@ msgstr "Declaração vazia"
 msgid "Missing parameter(s) to execute query"
 msgstr "Parâmetro(s) para executar a consulta em falta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3132
+#: ../libgda/sqlite/gda-sqlite-provider.c:3131
 #: ../providers/jdbc/gda-jdbc-provider.c:1525
 #: ../providers/mysql/gda-mysql-provider.c:2375
 #: ../providers/postgres/gda-postgres-provider.c:2169
@@ -2912,53 +2906,53 @@ msgstr "Parâmetro(s) para executar a consulta em falta"
 msgid "Can't rewrite statement handle default values"
 msgstr "Impossível reescrever valores predefinidos da gestão de declaração"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3252
+#: ../libgda/sqlite/gda-sqlite-provider.c:3251
 #: ../providers/mysql/gda-mysql-provider.c:2643
 msgid "Can't get BLOB's length"
 msgstr "Impossível obter comprimento do BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3254
+#: ../libgda/sqlite/gda-sqlite-provider.c:3253
 #: ../providers/mysql/gda-mysql-provider.c:2645
 msgid "BLOB is too big"
 msgstr "BLOB é demasiado grande."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3368
+#: ../libgda/sqlite/gda-sqlite-provider.c:3367
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Tipo de dados não gerido \"%s\""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3435
+#: ../libgda/sqlite/gda-sqlite-provider.c:3434
 msgid "Could not start transaction to create BLOB"
 msgstr "Impossível iniciar transação para criar BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3600
-#: ../libgda/sqlite/gda-sqlite-provider.c:3621
-#: ../libgda/sqlite/gda-sqlite-provider.c:3712
-#: ../libgda/sqlite/gda-sqlite-provider.c:3732
-#: ../libgda/sqlite/gda-sqlite-provider.c:3755
+#: ../libgda/sqlite/gda-sqlite-provider.c:3599
+#: ../libgda/sqlite/gda-sqlite-provider.c:3620
+#: ../libgda/sqlite/gda-sqlite-provider.c:3711
+#: ../libgda/sqlite/gda-sqlite-provider.c:3731
+#: ../libgda/sqlite/gda-sqlite-provider.c:3754
 msgid "Function requires one argument"
 msgstr "Função requer um argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3653
-#: ../libgda/sqlite/gda-sqlite-provider.c:3787
+#: ../libgda/sqlite/gda-sqlite-provider.c:3652
+#: ../libgda/sqlite/gda-sqlite-provider.c:3786
 msgid "Function requires two arguments"
 msgstr "Função requer dois argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3692
+#: ../libgda/sqlite/gda-sqlite-provider.c:3691
 msgid "Function requires one or two arguments"
 msgstr "Função requer um ou dois argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3827
-#: ../libgda/sqlite/gda-sqlite-provider.c:3934
+#: ../libgda/sqlite/gda-sqlite-provider.c:3826
+#: ../libgda/sqlite/gda-sqlite-provider.c:3933
 msgid "Function requires two or three arguments"
 msgstr "Função requer dois ou três argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3881
+#: ../libgda/sqlite/gda-sqlite-provider.c:3880
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Erro de expressão regular SQLite \"%s\":"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3882
+#: ../libgda/sqlite/gda-sqlite-provider.c:3881
 msgid "Invalid regular expression"
 msgstr "Expressão regular inválida"
 
@@ -3979,14 +3973,6 @@ msgstr "Demos de código libgda-ui "
 
 #: ../libgda-ui/demos/main.c:855
 #, c-format
-#| msgid ""
-#| "<b><big>Note:\n"
-#| "</big></b>Many of the demonstrated items use an opened connection to the "
-#| "SQLite using the '%s' file.\n"
-#| "\n"
-#| "In the source code shown here, the <i>demo_cnc</i> and \n"
-#| "<i>demo_parser</i> objects are created by the framework and\n"
-#| "made available to all the demonstrated items."
 msgid ""
 "<b><big>Note:\n"
 "</big></b>Many of the demonstrated items use an\n"
@@ -5892,6 +5878,14 @@ msgstr "Sem descrição"
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
 "Parâmetro de declaração sem nome não é permitido em declaração preparada"
+
+#: ../providers/mysql/gda-mysql-provider.c:2083
+#: ../providers/postgres/gda-postgres-provider.c:1880
+#, c-format
+msgid "Can't execute SELECT statement to get last inserted row: %s"
+msgstr ""
+"Impossível executar uma declaração SELECT para obter a última linha "
+"inserida: %s"
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2637
@@ -8998,6 +8992,11 @@ msgstr ""
 "os dados contidos na base de dados em forma de tabela."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
+#| msgid "Browse"
+msgid "GdaBrowser"
+msgstr "Navegador Gda"
+
+#: ../tools/browser/gda-browser-5.0.desktop.in.h:3
 msgid "Browse your database's contents"
 msgstr "Navegar pelo conteúdo da base de dados"
 
@@ -10900,12 +10899,6 @@ msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr "%s <DN> [\"todos\"|\"definido\"|\"naodefinido\"]"
 
 #: ../tools/gda-sql.c:2426
-#| msgid ""
-#| "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
-#| "parameter is passed, then all set attributes are shown, if the \"all\" "
-#| "2nd parameter is passed, then the unset attributes are also shown, and if "
-#| "the \"unset\" 2nd parameter is passed, then only non set attributes are "
-#| "shown."
 msgid ""
 "Shows attributes for the entry identified by its DN. If the \"set\" 2nd "
 "parameter is passed, then all set attributes are show, if the \"all\" 2nd "
@@ -11048,7 +11041,6 @@ msgstr "Impossível escrever no ficheiro temporário \"%s\": %s"
 
 #: ../tools/gda-sql.c:3450
 #, c-format
-#| msgid "Could not create directory '%s'"
 msgid "could not start editor '%s'"
 msgstr "Impossível iniciar o editor \"%s\""
 
