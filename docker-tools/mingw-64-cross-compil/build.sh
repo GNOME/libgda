@@ -1,20 +1,11 @@
-#!/bin/sh
-
-#docker_cmd="sudo docker"
-docker_cmd="docker"
-image_name="libgda-mingw64"
-
-# test docker install
-$docker_cmd version > /dev/null 2>&1 || {
-    echo "Can't find or execute docker"
-    exit 1
-}
+#!/bin/bash
 
 # download Win64 binaries if necessary
-if [ ! -d Win64 ]
+if [ ! -d setup-data/Win64 ]
 then
     echo "Missing Win64/ directory, downloading archive (about 1Mb)..."
     tarball="https://people.gnome.org/~vivien/Win64_docker_02.txz"
+    pushd setup-data > /dev/null 2>&1
     wget -q $tarball > /dev/null 2>&1 || {
 	echo "Unable to get $tarball, check with Libgda's maintainer!"
 	exit 1
@@ -26,13 +17,8 @@ then
 	exit 1
     }
     rm -f $file
+    popd > /dev/null 2>&1
 fi
 
-# build image
-echo "Now building Docker image, this will take a few minutes (or maybe half an hour, depending on you setup)..."
-$docker_cmd build --force-rm -q -t "$image_name" . || {
-    echo "Failed to build image."
-    exit 1
-}
-echo "Image '$image_name' is now ready, you can use the start.sh script"
-
+# actual build
+exec ../docker-tools.sh build MinGW64

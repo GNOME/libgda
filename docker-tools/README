@@ -1,0 +1,5 @@
+This directory contains Docker (https://www.docker.com/) images to test databases and do some cross compilation
+of Libgda for Win32 and Win64 targets.
+
+The main script 'docker-tools.sh' can be used directly, or indirectly by using the build.sh, start.sh
+and stop.sh scripts in the various sub directories to manage the corresponding containers.

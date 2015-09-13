@@ -1,10 +1,10 @@
 Use the scripts contained here to create an OpenLDAP server docker image which can be used
 to test Libgda's LDAP provider.
 
-* build.sh builds the docker image (named "libgda-test-ldap"). It uses the names.csv file to create the
+* ./build.sh builds the docker image (named "libgda-test-ldap"). It uses the names.csv file to create the
   initial contents of the LDAP directory (fake Gnome-DB directory), using the gen_names_ldif.pl script.
-
-* start.sh starts a docker container from the built image, stop it using CTRL-C
+* ./start.sh starts a docker container in background
+* ./stop.sh stops a running docker container
 
 
 

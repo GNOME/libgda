@@ -2,10 +2,9 @@ Use the scripts contained here to create a MinGW docker image from which you can
 cross compile Libgda. The source files are "mounted" into the container in /srv/libgda and the compiled files
 are installed (when running "make install") in the path provided as the 1st argument to the start.sh script.
 
-* build.sh builds the docker image (named "libgda-mingw32"), and first checks and if necessary download the
+* ./build.sh builds the docker image (named "libgda-mingw32"), and first checks and if necessary download the
   missing binary files (Win32/). Run without any argument.
-
-* start.sh starts a docker container from the built image, the 1st argument being the installation directory (where
+* ./start.sh starts a docker container from the built image, the 1st argument being the installation directory (where
   the files are copied when running "make install"). It opens a shell where you
   can run (as root inside the container):
   # ./configure

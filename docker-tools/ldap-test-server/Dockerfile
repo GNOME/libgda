@@ -1,10 +1,10 @@
 FROM fedora:21
 
 MAINTAINER Vivien Malerba "vmalerba@gmail.com"
-ENV REFRESHED_AT 2014-12-13
+ENV REFRESHED_AT 2015-09-12
 
-COPY install.sh run.sh /
-COPY ldif-data /ldif-data/
+COPY setup-scripts/install.sh setup-scripts/run.sh /
+COPY setup-data/ldif-data /ldif-data/
 RUN /install.sh
 
 EXPOSE 389

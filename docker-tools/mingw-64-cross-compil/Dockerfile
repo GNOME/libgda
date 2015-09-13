@@ -1,9 +1,9 @@
-FROM fedora:21
+FROM fedora:22
 
 MAINTAINER Vivien Malerba "vmalerba@gmail.com"
-ENV REFRESHED_AT 2014-12-13
+ENV REFRESHED_AT 2015-09-12
 
-COPY install.sh /
+COPY setup-scripts/install.sh /
 RUN /install.sh
 RUN rm -f /install.sh
 
@@ -12,7 +12,7 @@ ENV SRC /src
 
 # files installed outside of YUM
 ENV DEPEND /dependencies
-COPY Win64 /dependencies/
+COPY setup-data/Win64 /dependencies/
 
 # destination of the compiled files
 RUN mkdir /install
@@ -22,8 +22,8 @@ ENV PREFIX /install
 RUN mkdir -p /compilation/libgda
 WORKDIR /compilation/libgda
 
-COPY run_configure.sh /compilation/libgda/configure
-COPY mingw-configure /compilation/libgda/.mingw-configure
-COPY do_packages /compilation/libgda/
+COPY setup-scripts/run_configure.sh /compilation/libgda/configure
+COPY setup-scripts/mingw-configure /compilation/libgda/.mingw-configure
+COPY setup-scripts/do_packages /compilation/libgda/
 
 CMD [ "/bin/bash" ]

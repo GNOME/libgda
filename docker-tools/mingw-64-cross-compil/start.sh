@@ -1,28 +1,7 @@
-#!/bin/sh
-
-image_name="libgda-mingw64"
-
-# test docker install
-docker version > /dev/null 2>&1 || {
-    echo "Can't find or execute docker"
-    exit 1
-}
-
-# test docker image 
-img=`docker images -q "$image_name"`
-if test "x$img" == "x"
-then
-    echo "The docker image '$image_name' is not present, use the ./build.sh script first"
-    exit 1
-fi
+#!/bin/bash
 
 # determine destination DIR
-if test "$#" -eq 1
-then
-    destdir=$1
-else
-    destdir=/home/vivien/Devel/VMShared/bin-win64
-fi
+destdir="`pwd`/compilation-results"
 if [ ! -e $destdir ]
 then
     echo "Destination directory '$destdir' does not exist"
@@ -33,13 +12,17 @@ pushd $destdir > /dev/null 2>& 1 || {
     exit 1
 }
 destdir=`pwd`
+rm -rf libgda 2>& 1 || {
+    echo "Can't clean any previous build!"
+    exit 1
+}
 popd > /dev/null 2>& 1 || {
     echo "Can't get back to working directory!"
     exit 1
 }
 echo "Destination files will be in $destdir/libgda"
 
-# get Libgda's sources dir
+# determine Libgda's sources dir
 pushd ../.. > /dev/null 2>& 1 || {
     echo "Can't go to directory ../.."
     exit 1
@@ -49,16 +32,14 @@ popd > /dev/null 2>& 1 || {
     echo "Can't get back to working directory!"
     exit 1
 }
-
-# get user and group ID
-if test "x$SUDO_UID" == "x"
+if [ -e $gda_src/Makefile ]
 then
-    uid=`id -u`
-    gid=`id -g`
-else
-    uid=$SUDO_UID
-    gid=$SUDO_GID
+    echo "Source directory already configured; run \"make distclean\" there first"
+    exit 1
 fi
+
+export gda_src
+export destdir
 
 echo "Using libgda's source files in:  ${gda_src}"
 echo "Win64 compiled files will be in: ${destdir}"
@@ -68,4 +49,4 @@ echo "# make"
 echo "# make install"
 echo "# ./do_packages"
 echo ""
-docker run -t -i -v ${gda_src}:/src/libgda:ro -v ${destdir}:/install -e UID=$uid -e GID=$gid --rm "$image_name"
+exec ../docker-tools.sh start MinGW64
