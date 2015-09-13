@@ -1,0 +1,33 @@
+<?php
+/*
+ * This file should be put outside the server's ROOT directory to avoid
+ * malicious accessing, for example in /etc.
+ *
+ * It is read only by the gda-config.php script.
+ */
+
+/*
+ * initial shared secret: will have to be passed as the SECRET argument when opening
+ * the connection from Libgda
+ */
+$init_shared = "GdaSecret";
+
+/*
+ * declared connections: for each connection which can be opened by Libgda, the
+ * the connection's password and the real connection's DSN need to be added respectively
+ * to the $cnc and $dsn arrays, using the connection name as a key. The connection name
+ * and password have no significance outside of the Libgda's context and be arbitrary.
+ * However the real connection's DSN need to be valid for the PEAR's MDB2 module, as
+ * per http://pear.php.net/manual/en/package.database.mdb2.intro-dsn.php
+ *
+ */
+
+/* PostgreSQL connection */
+$cnc["docker_postgresql"] = "gdawebuser";
+$dsn["docker_postgresql"] = "pgsql://gdauser:gdauser@HOSTIP/gda";
+
+/* MySQL connection */
+$cnc["docker_mysql"] = "gdawebuser";
+$dsn["docker_mysql"] = "mysql://gdauser:gdauser@HOSTIP/gda";
+
+?>

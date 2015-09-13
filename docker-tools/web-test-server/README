@@ -1,0 +1,19 @@
+Use the scripts contained here to create a Web server docker image which can be used
+to test Libgda's Web provider.
+
+* ./build.sh builds the docker image (named "libgda-test-web"). It does not create any database,
+  but declare connections to PostgreSQL and MySQL on the host (meant to connect to the corresponding
+  Docker containers)
+* ./start.sh starts a docker container in background
+* ./stop.sh stops a running docker container
+
+
+Parameters:
+-----------
+* master password: GdaSecret
+* connections' passwords: gdawebuser
+
+
+Web provider test:
+------------------
+Open Web page http://127.0.0.1, or direclty http://127.0.0.1/php/gda-tester.php

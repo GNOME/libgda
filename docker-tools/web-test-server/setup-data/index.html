@@ -1,0 +1,58 @@
+<html>
+  <style media="screen" type="text/css">
+    body {
+    margin-top: 100px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    }
+  </style>
+  <header>
+    <title>Libgda's Web test server</title>
+  </header>
+  <body>
+    <h1>Libgda's Web provider test server</h1>
+    <p>
+      This server is a test server for Libgda's "Web" provider, which provides access to databases
+      through a HTTP(S) connection.
+    </p>
+    <p>
+      <u>NB:</u>This server does not provide any security, it only serves testing purposes: it implements
+      HTTP only (HTTPS would require a certificate which is not easily automated);
+      for production environment, <b>NEVER</b> rely on a simple HTTP connection.
+    </p>
+    <div>
+      <h2>Server information</h2>
+      <p>
+	This instance of the Web provider is configured to allow connections to all of the other database servers
+	for which there is a Docker images (ATM: PostgreSQL and MySQL):
+	<ul>
+	  <li>The global secret is "GdaSecret"</li>
+	  <li>Each connection's password is "gdawebuser".</li>
+	</ul>
+	The <a href="php/gda-tester.php">gda-tester.php</a> page shows all the available connections.
+      </p>
+      <p>
+	<u>NB:</u> if you can't get any connection to work, make sure you have started the corresponding Docker
+	containers, and that the host's firewall does not prevent connections.
+      </p>
+      <p>Also check the <a href="phpinfo.php">phpinfo.php</a> script to see the server's PHP configuration</p>
+    </div>
+
+    <div>
+      <h2>README for the GDA Web provider</h2>
+      <p>Unlike most other provider, this provider does not link to a database
+	specific library but rather acts as a web client for a web server
+	running some PHP scripts which acutally make the web server connect
+	to a database.</p>
+      
+      <p>This provider enables a Libgda application to connect to a database
+	which is accessible only behind a web server (as many hosting databases
+	are) which can execute some PHP scripts and can connect to the
+	database. It is necessary to install some specific PHP scripts on the
+	web server which handle the connection and implement the protocol
+	described hereafter. Also the PHP interpreter need to be compiled with
+	the SimpleXML extension.</p>
+    </div>
+  </body>
+</html>
