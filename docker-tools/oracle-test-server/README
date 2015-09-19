@@ -1,0 +1,33 @@
+Use the scripts contained here to create an Oracle server docker image which can be used
+to test Libgda's Oracle provider.
+
+* ./build.sh builds the docker image (named "libgda-test-oracle"). It creates a database populated with
+  data from the NorthWind database (http://www.geeksengine.com/article/northwind-oracle.html).
+  NB: Oracle XE's DEB file must already have been downloaded before building the container
+* ./start.sh starts a docker container in background
+* ./stop.sh stops a running docker container
+
+
+Parameters:
+-----------
+* created database name: XE
+* created user name/pass: gdauser/gdauser (along with SYS/gdauser and SYSTEM/gdauser)
+* database listener port: 1521
+* HTTP port used for Oracle Application Express: 8080
+  workspace: internal
+  username: ADMIN
+  password: oracle
+
+
+
+Oracle test:
+------------
+If SQLPLUS is installed in the host system:
+$ sqlplus gdauser/gdauser@127.0.0.1/XE
+
+If not, SQLPLUS is part of the Docker Oracle image, you can run it from a new instance:
+$ docker run -ti --rm -e ORAIP=`../docker-tools.sh info Oracle | grep IP | grep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*'` libgda-test-oracle /bin/bash
+# rlwrap sqlplus gdauser/gdauser@$ORAIP/XE
+
+
+$ gda-sql-6.0 "Oracle://gdauser:gdauser@HOST=127.0.0.1;DB_NAME=XE"

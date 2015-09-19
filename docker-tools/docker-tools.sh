@@ -10,6 +10,7 @@ function HELP {
 	echo "                (MUST be called from the docker image's specific directory)"
 	echo "       start:   starts a docker container for the provider specified as option"
 	echo "       stop:    stops the docker container for the provider specified as option"
+	echo "       info:    get information about the container running the provider specified as option"
 	echo "       started: tests if the docker container for the provider specified as option is started"
 	echo "                returns: 0 is started, and 1 otherwise"
 	echo "   ex: $0 start MySQL"
@@ -105,6 +106,9 @@ function get_port_for_provider {
 	web)
 	    echo 80
 	    ;;
+	oracle)
+	    echo 1521
+	    ;;
 	mingw*)
 	    echo mingw
 	    ;;
@@ -142,12 +146,21 @@ case $1 in
 	    }
 	else
 	    # background
-	    echo "Running $provider_name server in the background, on port $port use 'stop.sh' to stop it"
+	    echo "Running $provider_name server in the background, listening on port $port use 'stop.sh' to stop it"
 	    $docker_cmd run -d -p $port:$port --name "$container_name" "$image_name" > /dev/null 2>&1 || {
 		echo "Failed"
 		exit 1
 	    }
+	    ipaddr=`$docker_cmd inspect --format='{{.NetworkSettings.IPAddress}}' "$container_name"`
+	    echo "IP address of container is $ipaddr"
 	fi
+	;;
+    info)
+	parse_provider_arg $2
+	ensure_image_exists "$image_name"
+	ensure_container_running "$container_name"
+	ipaddr=`$docker_cmd inspect --format='{{.NetworkSettings.IPAddress}}' "$container_name"`
+	echo "IP address of container is $ipaddr"
 	;;
     stop)
 	parse_provider_arg $2
