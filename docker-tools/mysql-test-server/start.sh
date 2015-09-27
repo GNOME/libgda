@@ -1,3 +1,4 @@
 #!/bin/bash
-exec ../docker-tools.sh start MySQL
+dir=`dirname $0`/../
+$dir/docker-tools.sh start MySQL
 

@@ -1,3 +1,4 @@
 #!/bin/bash
-exec ../docker-tools.sh start Oracle
+dir=`dirname $0`/../
+$dir/docker-tools.sh start Oracle
 

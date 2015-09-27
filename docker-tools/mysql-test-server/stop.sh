@@ -1,2 +1,3 @@
 #!/bin/bash
-exec ../docker-tools.sh stop MySQL
+dir=`dirname $0`/../
+$dir/docker-tools.sh stop MySQL

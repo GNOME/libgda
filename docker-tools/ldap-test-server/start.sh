@@ -1,2 +1,3 @@
 #!/bin/bash
-exec ../docker-tools.sh start LDAP
+dir=`dirname $0`/../
+$dir/docker-tools.sh start LDAP
