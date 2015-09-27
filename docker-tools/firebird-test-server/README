@@ -1,0 +1,28 @@
+Use the scripts contained here to create an Firebird server docker image which can be used
+to test Libgda's Firebird provider.
+
+* ./build.sh builds the docker image (named "libgda-test-firebird"). It creates a database populated with
+  data from the NorthWind database.
+* ./start.sh starts a docker container in background
+* ./stop.sh stops a running docker container
+
+
+Parameters:
+-----------
+* created database name: gda (along with the example employee databse)
+* created user name/pass: gdauser/gdauser (along with the default SYSDBA/masterkey account)
+* database listener port: 3050
+
+
+Firebird test:
+--------------
+If the 'isql-fb' tool is installed in the host system:
+$ isql-fb -u gdauser -p gdauser gda
+$ isql-fb -u SYSDBA -p masterkey employee
+
+If not, SQLPLUS is part of the Docker Firebird image, you can run it from a new instance:
+$ docker run -ti --rm -e FBIP=`../docker-tools.sh info Firebird | grep IP | grep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*'` libgda-test-firebird /bin/bash
+# isql-fb -u gdauser -p gdauser $FBIP:gda
+# isql-fb -u SYSDBA -p masterkey $FBIP:employee
+
+$ gda-sql-6.0 "Firebird://gdauser:gdauser@HOST=127.0.0.1;DB_NAME=gda"

@@ -109,6 +109,9 @@ function get_port_for_provider {
 	oracle)
 	    echo 1521
 	    ;;
+	firebird)
+	    echo 3050
+	    ;;
 	mingw*)
 	    echo mingw
 	    ;;
