@@ -55,7 +55,6 @@
 #define bcmp(s1, s2, n) memcmp ((s1), (s2), (n))
 #endif
 
-#  ifdef GSEAL_ENABLE
 /**
  * GdaNumeric: (set-value-func gda_value_set_numeric) (get-value-func gda_value_get_numeric)
  * @number: a string representing a number
@@ -75,8 +74,6 @@ struct _GdaNumeric {
 	/*< private >*/
 	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
 };
-#  else
-#endif
 
 
 

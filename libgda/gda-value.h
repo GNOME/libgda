@@ -75,19 +75,21 @@ typedef struct {
 	gdouble y;
 } GdaGeometricPoint;
 
-
+/* GdaNumeric */
 typedef struct _GdaNumeric GdaNumeric;
-# ifdef GSEAL_ENABLE
-# else
-struct _GdaNumeric {
-	gchar*   GSEAL(number);
-	glong    GSEAL(precision);
-	glong    GSEAL(width);
-	
-	/*< private >*/
-	gpointer reserved; /* reserved for future usage with GMP (http://gmplib.org/) */
-};
-#endif
+
+GType                             gda_numeric_get_type (void) G_GNUC_CONST;
+GdaNumeric*                       gda_numeric_new (void);
+GdaNumeric*                       gda_numeric_copy (GdaNumeric *src);
+void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
+void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
+gdouble                           gda_numeric_get_double (const GdaNumeric *numeric);
+void                              gda_numeric_set_precision (GdaNumeric *numeric, glong precision);
+glong                             gda_numeric_get_precision (const GdaNumeric *numeric);
+void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
+glong                             gda_numeric_get_width (const GdaNumeric *numeric);
+gchar*                            gda_numeric_get_string (const GdaNumeric *numeric);
+void                              gda_numeric_free (GdaNumeric *numeric);
 
 /**
  * GdaTime:
@@ -133,7 +135,7 @@ typedef struct {
 
 /**
  * GdaBinary:
- * @data: (array): the actual data as an array
+ * @data: (array length=binary_length): the actual data as an array
  * @binary_length: length of @data
  */
 typedef struct {
@@ -258,18 +260,7 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 
 GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
-GType                             gda_numeric_get_type (void) G_GNUC_CONST;
-GdaNumeric*                       gda_numeric_new (void);
-GdaNumeric*                       gda_numeric_copy (GdaNumeric *src);
-void                              gda_numeric_set_from_string (GdaNumeric *numeric, const gchar* str);
-void                              gda_numeric_set_double (GdaNumeric *numeric, gdouble number);
-gdouble                           gda_numeric_get_double (const GdaNumeric *numeric);
-void                              gda_numeric_set_precision (GdaNumeric *numeric, glong precision);
-glong                             gda_numeric_get_precision (const GdaNumeric *numeric);
-void                              gda_numeric_set_width (GdaNumeric *numeric, glong width);
-glong                             gda_numeric_get_width (const GdaNumeric *numeric);
-gchar*                            gda_numeric_get_string (const GdaNumeric *numeric);
-void                              gda_numeric_free (GdaNumeric *numeric);
+
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 gpointer                          gda_time_copy (gpointer boxed);
