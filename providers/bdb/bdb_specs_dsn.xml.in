@@ -3,6 +3,6 @@
   <parameters>
     <parameter id="DB_NAME" _name="Database file" _descr="Berkeley DB database filename to be used" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="DB_DIR" _name="Directory" _descr="Directory where the database file is stored" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
-    <parameter id="DB_PART" _name="Database name" _descr="Name of the database in the database file to be used" gdatype="gchararray"/>
+    <parameter id="DB_PART" _name="Database name" _descr="Name of the database in the database file to be used" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
 </data-set-spec>

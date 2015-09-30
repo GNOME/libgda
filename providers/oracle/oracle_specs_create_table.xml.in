@@ -10,16 +10,16 @@
   <gda_array id="FIELDS_A" _name="Table's columns">
     <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
     <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
-    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
-    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
   </gda_array>
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
-    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray" nullok="FALSE">
       <gda_value>CHECK (column &gt; 0)</gda_value>
     </parameter>
   </sequence>

@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <serv_op>
   <parameters id="INDEX_DEF_P" _name="Index description">
-    <parameter id="INDEX_TYPE" _name="Type" gdatype="gchararray" source="types:0">
+    <parameter id="INDEX_TYPE" _name="Type" gdatype="gchararray" source="types:0" nullok="TRUE">
       <gda_value>UNIQUE</gda_value>
     </parameter>
     <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="INDEX_METHOD" _name="Method" _descr="Index type (depending on table storage engine)" gdatype="gchararray" source="method:0"/>
+    <parameter id="INDEX_METHOD" _name="Method" _descr="Index type (depending on table storage engine)" gdatype="gchararray" source="method:0" nullok="TRUE"/>
   </parameters>
 
   <!-- Index fields -->
@@ -14,15 +14,15 @@
     <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_">
       <gda_value>indexed_field</gda_value>
     </parameter>
-    <parameter id="INDEX_LENGTH" _name="Length" _descr="The number of characters the index is on for columns of type CHAR or VARCHAR" gdatype="gint"/>
-    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" source="sort:0"/>
+    <parameter id="INDEX_LENGTH" _name="Length" _descr="The number of characters the index is on for columns of type CHAR or VARCHAR" gdatype="gint" nullok="TRUE"/>
+    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" source="sort:0" nullok="TRUE"/>
   </sequence>
 
   <!-- Sources -->
   <sources>
     <gda_array name="sort">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>ASC</gda_value>
@@ -36,8 +36,8 @@
     </gda_array>
 
     <gda_array name="types">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>UNIQUE</gda_value>
@@ -55,8 +55,8 @@
     </gda_array>
 
     <gda_array name="method">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>btree</gda_value>

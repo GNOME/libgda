@@ -8,10 +8,10 @@
     <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE">
       <gda_value>integer</gda_value>
     </parameter>
-    <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
-    <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
-    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
-    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value, mandatory if column is NOT NULL" gdatype="gchararray"/>
-    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value, mandatory if column is NOT NULL" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
 </serv_op>

@@ -2,7 +2,7 @@
 <serv_op>
   <parameters id="COLUMN_DEF_P" _name="Column's description">
     <parameter id="TABLE_NAME" _name="Table" _descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="TABLE_ONLY" _name="Ignore descendants" _descr="Don't add the column to descendants of the table" gdatype="gboolean">
+    <parameter id="TABLE_ONLY" _name="Ignore descendants" _descr="Don't add the column to descendants of the table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
     <parameter id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE">
@@ -11,18 +11,18 @@
     <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE">
       <gda_value>integer</gda_value>
     </parameter>
-    <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
-    <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
-    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean">
+    <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean">
+    <parameter id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean">
+    <parameter id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
-    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <parameter id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
 </serv_op>

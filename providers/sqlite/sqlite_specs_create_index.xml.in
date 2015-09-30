@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <serv_op>
   <parameters id="INDEX_DEF_P" _name="Index description">
-    <parameter id="INDEX_TYPE" _name="Type" gdatype="gchararray" source="types:0">
+    <parameter id="INDEX_TYPE" _name="Type" gdatype="gchararray" nullok="TRUE" source="types:0">
       <gda_value>UNIQUE</gda_value>
     </parameter>
     <parameter id="INDEX_NAME" _name="Name" _descr="Index name" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="INDEX_ON_TABLE" _name="On table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="INDEX_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create index only if it does not yet exist" gdatype="gboolean">
+    <parameter id="INDEX_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create index only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
   </parameters>
@@ -17,15 +17,15 @@
       <gda_value>indexed_field</gda_value>
     </parameter>
     <!-- To translators: "Compare method" refers to the method SQLite has to compare values -->
-    <parameter id="INDEX_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray"/>
-    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" source="sort:0"/>
+    <parameter id="INDEX_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" nullok="TRUE" source="sort:0"/>
   </sequence>
 
   <!-- Sources -->
   <sources>
     <gda_array name="sort">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>ASC</gda_value>
@@ -39,8 +39,8 @@
     </gda_array>
 
     <gda_array name="types">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>UNIQUE</gda_value>

@@ -2,6 +2,6 @@
 <serv_op>
   <parameters id="USER_DESC_P" _name="Role's definition">
     <parameter id="USER_NAME" _name="Name" _descr="Role's name" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="USER_IFEXISTS" _name="If exists" _descr="Drop role only if it exists" gdatype="gboolean"/>
+    <parameter id="USER_IFEXISTS" _name="If exists" _descr="Drop role only if it exists" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </serv_op>

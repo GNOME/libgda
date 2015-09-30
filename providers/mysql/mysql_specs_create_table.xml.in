@@ -4,28 +4,28 @@
     <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE">
       <gda_value>table_name</gda_value>
     </parameter>
-    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean">
+    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="TABLE_COMMENT" _name="Comment" _descr="Table's comment" gdatype="gchararray"/>
+    <parameter id="TABLE_COMMENT" _name="Comment" _descr="Table's comment" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
 
   <!-- list of fields -->
   <gda_array id="FIELDS_A" _name="Table's columns">
     <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
     <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
-    <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
-    <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
-    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
-    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
-    <gda_array_field id="COLUMN_COMMENT" _name="Comment" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_COMMENT" _name="Comment" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
   </gda_array>
 
   <!-- foreign key spec -->
@@ -43,54 +43,54 @@
         </gda_array_row>
       </gda_array_data>
     </gda_array>
-    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" source="match_types:0">
+    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" nullok="TRUE" source="match_types:0">
       <gda_value>MATCH SIMPLE</gda_value>
     </parameter>
-    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" source="action_cb:0">
+    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" nullok="TRUE" source="action_cb:0">
       <gda_value>NO ACTION</gda_value>
     </parameter>
-    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" source="action_cb:0">
+    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" nullok="TRUE" source="action_cb:0">
       <gda_value>NO ACTION</gda_value>
     </parameter>
   </sequence>
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
-    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray" nullok="TRUE">
       <gda_value>CHECK (column &gt; 0)</gda_value>
     </parameter>
   </sequence>
 
   <!-- other table options -->
   <parameters id="TABLE_OPTIONS_P" _name="Table's options">
-    <parameter id="TABLE_ENGINE" _name="Engine" _descr="Table's engine (or type)" gdatype="gchararray" source="engines:0">
+    <parameter id="TABLE_ENGINE" _name="Engine" _descr="Table's engine (or type)" gdatype="gchararray" nullok="TRUE" source="engines:0">
       <gda_value>MyISAM</gda_value>
     </parameter>
-    <parameter id="TABLE_AUTOINC_VALUE" _name="Auto increment value" _descr="Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)" gdatype="gint"/>
-    <parameter id="TABLE_AVG_ROW_LENGTH" _name="Average row length" _descr="An approximation of the average row length for your table" gdatype="gint"/>
-    <parameter id="TABLE_CSET" _name="Character set" gdatype="gchararray" source="csets:0">
+    <parameter id="TABLE_AUTOINC_VALUE" _name="Auto increment value" _descr="Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)" gdatype="gint" nullok="TRUE"/>
+    <parameter id="TABLE_AVG_ROW_LENGTH" _name="Average row length" _descr="An approximation of the average row length for your table" gdatype="gint" nullok="TRUE"/>
+    <parameter id="TABLE_CSET" _name="Character set" gdatype="gchararray" nullok="TRUE" source="csets:0">
       <gda_value>utf8</gda_value>
     </parameter>
-    <parameter id="TABLE_COLLATION" _name="Collation" gdatype="gchararray"/>
-    <parameter id="TABLE_CHECKSUM" _name="Checksum" gdatype="gboolean"/>
-    <parameter id="TABLE_MIN_ROWS" _name="Min rows" gdatype="gint"/>
-    <parameter id="TABLE_MAX_ROWS" _name="Max rows" gdatype="gint"/>
-    <parameter id="TABLE_PACK_KEYS" _name="Pack keys" gdatype="gchararray" source="pack_keys"/>
-    <parameter id="TABLE_DELAY_KEY_WRITE" _name="Delay key write" gdatype="gboolean"/>
-    <parameter id="TABLE_PASSWORD" _name="Password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
-    <parameter id="TABLE_ROW_FORMAT" _name="Row format" gdatype="gchararray" source="row_format:0"/>
-    <parameter id="TABLE_UNION" _name="Union" _descr="tbl_name[,tbl_name]...: only with MERGE engine" gdatype="gchararray"/>
-    <parameter id="TABLE_INSERT_METHOD" _name="Insert method" _descr="FIRST, LAST or NO: only with MERGE engine" gdatype="gchararray"/>
-    <parameter id="TABLE_DATA_DIR" _name="Data directory" _descr="" gdatype="gchararray"/>
-    <parameter id="TABLE_INDEX_DIR" _name="Index directory" _descr="" gdatype="gchararray"/>
+    <parameter id="TABLE_COLLATION" _name="Collation" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="TABLE_CHECKSUM" _name="Checksum" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="TABLE_MIN_ROWS" _name="Min rows" gdatype="gint" nullok="TRUE"/>
+    <parameter id="TABLE_MAX_ROWS" _name="Max rows" gdatype="gint" nullok="TRUE"/>
+    <parameter id="TABLE_PACK_KEYS" _name="Pack keys" gdatype="gchararray" nullok="TRUE" source="pack_keys"/>
+    <parameter id="TABLE_DELAY_KEY_WRITE" _name="Delay key write" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="TABLE_PASSWORD" _name="Password" gdatype="gchararray" nullok="TRUE" plugin="string:HIDDEN=true"/>
+    <parameter id="TABLE_ROW_FORMAT" _name="Row format" gdatype="gchararray" nullok="TRUE" source="row_format:0"/>
+    <parameter id="TABLE_UNION" _name="Union" _descr="tbl_name[,tbl_name]...: only with MERGE engine" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="TABLE_INSERT_METHOD" _name="Insert method" _descr="FIRST, LAST or NO: only with MERGE engine" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="TABLE_DATA_DIR" _name="Data directory" _descr="" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="TABLE_INDEX_DIR" _name="Index directory" _descr="" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
   
 
   <!-- Sources -->
   <sources>
     <gda_array name="match_types">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>MATCH SIMPLE</gda_value>
@@ -108,8 +108,8 @@
     </gda_array>
 
     <gda_array name="action_cb">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>NO ACTION</gda_value>
@@ -132,8 +132,8 @@
     </gda_array>
 
     <gda_array name="pack_keys">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>0</gda_value>
@@ -151,8 +151,8 @@
     </gda_array>
 
     <gda_array name="engines">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>MyISAM</gda_value>
@@ -202,8 +202,8 @@
     </gda_array>
 
     <gda_array name="row_format">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>DEFAULT</gda_value>
@@ -234,8 +234,8 @@
     </gda_array>
 
     <gda_array name="csets">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>utf8</gda_value>

@@ -2,25 +2,25 @@
 <serv_op>
   <parameters id="SERVER_CNX_P" _name="Server access parameters">
     <!-- Connection parameters -->
-    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running" gdatype="gchararray"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint"/>
-    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use when connecting locally" gdatype="gchararray"/>
-    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
-    <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
-    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
-    <parameter id="PROTOCOL" _name="Connection protocol" _descr="Explicitly specifies a connection protocol to use. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want" gdatype="string" source="proto:0"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port" gdatype="gint" nullok="TRUE"/>
+    <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use when connecting locally" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" nullok="TRUE" plugin="string:HIDDEN=true"/>
+    <parameter id="PROTOCOL" _name="Connection protocol" _descr="Explicitly specifies a connection protocol to use. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want" gdatype="string" nullok="TRUE" source="proto:0"/>
   </parameters>
 
     <!-- DSN parameters -->
   <parameters id="DB_DESC_P" _name="Database's description">
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="DB_IFEXISTS" _name="Only if existing" _descr="Drop database only if it exists" gdatype="gboolean"/>
+    <parameter id="DB_IFEXISTS" _name="Only if existing" _descr="Drop database only if it exists" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 
   <sources>
     <gda_array name="proto">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>DEFAULT</gda_value>

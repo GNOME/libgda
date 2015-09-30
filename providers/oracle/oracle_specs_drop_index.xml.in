@@ -31,8 +31,8 @@
   <!-- Sources -->
   <sources>
     <gda_array name="action_cb">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>FORCE</gda_value>

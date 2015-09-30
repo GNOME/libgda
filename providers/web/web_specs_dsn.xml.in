@@ -2,10 +2,10 @@
 <data-set-spec>
   <parameters>
     <parameter id="HOST" _name="Web server name" _descr="The name of the web server which proxies connections" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="PORT" _name="Port" _descr="Web server port (leave this field empty for default)" gdatype="gint"/>
-    <parameter id="PATH" _name="Path to PHP script" _descr="The path of the script to use if service is not at the web server's root" gdatype="gchararray"/>
+    <parameter id="PORT" _name="Port" _descr="Web server port (leave this field empty for default)" gdatype="gint" nullok="TRUE"/>
+    <parameter id="PATH" _name="Path to PHP script" _descr="The path of the script to use if service is not at the web server's root" gdatype="gchararray" nullok="TRUE"/>
     <parameter id="SECRET" _name="Server secret" _descr="Server secret" gdatype="gchararray" nullok="FALSE"/>
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to use" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </data-set-spec>

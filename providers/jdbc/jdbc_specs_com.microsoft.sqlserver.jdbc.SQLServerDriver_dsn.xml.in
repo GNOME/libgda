@@ -2,8 +2,8 @@
 <data-set-spec>
   <parameters>
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to connect to" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="INSTANCE" _name="Instance" _descr="The instance to connect to, if not specified, a connection to the default instance is made" gdatype="gchararray"/>
-    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running or leave this field empty" gdatype="gchararray"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port, 1433 by default" gdatype="gint"/>
+    <parameter id="INSTANCE" _name="Instance" _descr="The instance to connect to, if not specified, a connection to the default instance is made" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running or leave this field empty" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port, 1433 by default" gdatype="gint" nullok="TRUE"/>
   </parameters>
 </data-set-spec>

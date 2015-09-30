@@ -2,26 +2,26 @@
 <serv_op>
   <parameters id="SERVER_CNX_P" _name="Server access parameters">
     <!-- Connection parameters -->
-    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty)" gdatype="gchararray"/>
-    <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)" gdatype="gint"/>
-    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray"/>
-    <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray"/>
-    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" plugin="string:HIDDEN=true"/>
-    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to require SSL or not when connecting" gdatype="gboolean"/>
+    <parameter id="HOST" _name="Database server" _descr="Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty)" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="PORT" _name="Port" _descr="Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty)" gdatype="gint" nullok="TRUE"/>
+    <parameter id="OPTIONS" _name="Options" _descr="Extra connection options" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="ADM_LOGIN" _name="Administrator login" _descr="Login name (which has the rights to create databases)" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="ADM_PASSWORD" _name="Administrator password" gdatype="gchararray" nullok="TRUE" plugin="string:HIDDEN=true"/>
+    <parameter id="USE_SSL" _name="Require SSL" _descr="Whether to require SSL or not when connecting" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 
   <parameters id="DB_DEF_P" _name="Database's description">
     <!-- DSN parameters -->
     <parameter id="DB_NAME" _name="Database name" _descr="The name of a database to create" gdatype="gchararray" nullok="FALSE"/>
-    <parameter id="DB_CSET" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray" source="csets:0"/>
-    <parameter id="DB_OWNER" _name="Owner" _descr="The name of the database user who will own the new database" gdatype="gchararray"/>
-    <parameter id="TEMPLATE" _name="Template" _descr="The name of the template from which to create the new database" gdatype="gchararray"/>
-    <parameter id="DB_TABLESPACE" _name="Tablespace" _descr="The name of the tablespace that will be associated with the new database" gdatype="gchararray"/>
+    <parameter id="DB_CSET" _name="Encoding" _descr="Character set encoding to use in the new database" gdatype="gchararray" nullok="TRUE" source="csets:0"/>
+    <parameter id="DB_OWNER" _name="Owner" _descr="The name of the database user who will own the new database" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="TEMPLATE" _name="Template" _descr="The name of the template from which to create the new database" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="DB_TABLESPACE" _name="Tablespace" _descr="The name of the tablespace that will be associated with the new database" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
   <sources>
     <gda_array name="csets">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
 	  <gda_value>UNICODE</gda_value>

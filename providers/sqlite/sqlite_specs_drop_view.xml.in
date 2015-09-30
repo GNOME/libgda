@@ -2,6 +2,6 @@
 <serv_op>
   <parameters id="VIEW_DESC_P">
     <parameter id="VIEW_NAME" _name="View" _descr="View to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_VIEWS_"/>
-    <parameter id="VIEW_IFEXISTS" _name="If exists" _descr="Drop view only if it exists" gdatype="gboolean"/>
+    <parameter id="VIEW_IFEXISTS" _name="If exists" _descr="Drop view only if it exists" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </serv_op>

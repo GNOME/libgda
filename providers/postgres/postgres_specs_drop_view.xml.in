@@ -2,7 +2,7 @@
 <serv_op>
   <parameters id="VIEW_DESC_P">
     <parameter id="VIEW_NAME" _name="View" _descr="View to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_VIEWS_"/>
-    <parameter id="VIEW_IFEXISTS" _name="If exists" _descr="Drop view only if it exists" gdatype="gboolean"/>
+    <parameter id="VIEW_IFEXISTS" _name="If exists" _descr="Drop view only if it exists" gdatype="gboolean" nullok="TRUE"/>
     <parameter id="REFERENCED_ACTION" _name="References" _descr="What to do with objects referencing the view" gdatype="gchararray" nullok="FALSE" source="action_cb:0">
       <gda_value>RESTRICT</gda_value>
     </parameter>
@@ -11,8 +11,8 @@
   <!-- Sources -->
   <sources>
     <gda_array name="action_cb">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
         <gda_array_row>
           <gda_value>CASCADE</gda_value>

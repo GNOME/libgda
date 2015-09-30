@@ -4,10 +4,10 @@
     <parameter id="TABLE_NAME" _name="Name" _descr="Table's name" gdatype="gchararray" nullok="FALSE">
       <gda_value>table_name</gda_value>
     </parameter>
-    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean">
+    <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean">
+    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
   </parameters>
@@ -16,24 +16,24 @@
   <gda_array id="FIELDS_A" _name="Table's columns">
     <gda_array_field id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE"/>
     <gda_array_field id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE"/>
-    <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint"/>
-    <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint"/>
-    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean"/>
-    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray"/>
-    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_SIZE" _name="Size" gdatype="guint" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_SCALE" _name="Scale" gdatype="guint" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_NNUL" _name="Not NULL" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_AUTOINC" _name="Auto increment" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_UNIQUE" _name="Unique" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_PKEY" _name="Primary key" gdatype="gboolean" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_DEFAULT" _name="Default" _descr="Default value" gdatype="gchararray" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_CHECK" _name="Check" _descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
     <!-- To translators: "Compare method" refers to the method SQLite has to compare values -->
-    <gda_array_field id="COLUMN_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray"/>
-    <gda_array_field id="COLUMN_CONFLICT" _name="Conflict" _descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" gdatype="gchararray"/>
+    <gda_array_field id="COLUMN_COLLATE" _name="Compare method" _descr="Collation name (BINARY|NOCASE)" gdatype="gchararray" nullok="TRUE"/>
+    <gda_array_field id="COLUMN_CONFLICT" _name="Conflict" _descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" gdatype="gchararray" nullok="TRUE"/>
   </gda_array>
 
   <!-- foreign key spec: not supported by SQLite -->
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
-    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray">
+    <parameter id="CONSTRAINT_STRING" name="Constraint" gdatype="gchararray" nullok="FALSE">
       <gda_value>CHECK (column &gt; 0)</gda_value>
     </parameter>
   </sequence>

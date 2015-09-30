@@ -4,7 +4,7 @@
     <parameter id="VIEW_NAME" _name="Name" _descr="View's name" gdatype="gchararray" nullok="FALSE">
       <gda_value>table_name</gda_value>
     </parameter>
-    <parameter id="VIEW_OR_REPLACE" _name="Replace if it already exists" _descr="Replace view definition if it already exists" gdatype="gboolean">
+    <parameter id="VIEW_OR_REPLACE" _name="Replace if it already exists" _descr="Replace view definition if it already exists" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
     <parameter id="VIEW_DEF" _name="Definition" _descr="View's definition" gdatype="gchararray" nullok="FALSE"/>

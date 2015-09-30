@@ -2,8 +2,8 @@
 <serv_op>
   <parameters id="TABLE_DESC_P">
     <parameter id="TABLE_NAME" _name="Table" _descr="Table to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="TABLE_TEMP" _name="Temporary table" _descr="Drop table only if it is temporary" gdatype="gboolean"/>
-    <parameter id="TABLE_IFEXISTS" _name="If exists" _descr="Drop table only if it exists" gdatype="gboolean"/>
+    <parameter id="TABLE_TEMP" _name="Temporary table" _descr="Drop table only if it is temporary" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="TABLE_IFEXISTS" _name="If exists" _descr="Drop table only if it exists" gdatype="gboolean" nullok="TRUE"/>
     <parameter id="REFERENCED_ACTION" _name="References" _descr="What to do with references" gdatype="gchararray" nullok="FALSE" source="action_cb:0">
       <gda_value>RESTRICT</gda_value>
     </parameter>
@@ -12,8 +12,8 @@
   <!-- Sources -->
   <sources>
     <gda_array name="action_cb">
-      <gda_array_field name="id" gdatype="gchararray"/>
-      <gda_array_field name="text" gdatype="gchararray"/>
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
       <gda_array_data>
 	<gda_array_row>
           <gda_value>CASCADE</gda_value>

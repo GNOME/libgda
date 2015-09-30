@@ -2,6 +2,6 @@
 <serv_op>
   <parameters id="INDEX_DESC_P">
     <parameter id="INDEX_NAME" _name="Index" _descr="Index to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_INDEXES_"/>
-    <parameter id="INDEX_IFEXISTS" _name="If exists" _descr="Drop index only if it exists" gdatype="gboolean"/>
+    <parameter id="INDEX_IFEXISTS" _name="If exists" _descr="Drop index only if it exists" gdatype="gboolean" nullok="TRUE"/>
   </parameters>
 </serv_op>
