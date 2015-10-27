@@ -1141,12 +1141,12 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 				       GdaServerOperation *op, GError **error)
 {
 	GdaWorker *worker;
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-		g_return_val_if_fail (gda_connection_is_opened (cnc), NULL);
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
 
 		gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -1242,11 +1242,11 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 				      GdaConnectionFeature feature)
 {
 	GdaWorker *worker;
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
 	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-		g_return_val_if_fail (gda_connection_is_opened (cnc), NULL);
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+		g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
 
 		gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
@@ -2408,12 +2408,12 @@ _gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnecti
 					GdaStatement *stmt, GError **error)
 {
 	GdaWorker *worker;
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
-	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
-	g_return_val_if_fail (gda_connection_is_opened (cnc), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
 
 	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
 
