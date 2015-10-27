@@ -1087,7 +1087,7 @@ gda_worker_wait_job (GdaWorker *worker, GdaWorkerFunc func, gpointer data, GDest
 gboolean
 gda_worker_thread_is_worker (GdaWorker *worker)
 {
-	g_return_val_if_fail (worker, NULL);
+	g_return_val_if_fail (worker, FALSE);
 	return worker->worker_thread == g_thread_self () ? TRUE : FALSE;
 }
 
