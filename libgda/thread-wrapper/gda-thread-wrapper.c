@@ -756,8 +756,6 @@ gda_thread_wrapper_get_property (GObject *object,
 GdaThreadWrapper *
 gda_thread_wrapper_new (void)
 {
-	if (! g_thread_supported ())
-		return NULL;
 	return (GdaThreadWrapper *) g_object_new (GDA_TYPE_THREAD_WRAPPER, NULL);
 }
 
