@@ -506,7 +506,7 @@ gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
 		     mptr++) {
 			if ((*mptr == '-') && (*tptr == '_')) {
 				/* remove that char */
-				g_memmove (tptr, tptr+1, len - (tptr - text));
+				memmove (tptr, tptr+1, len - (tptr - text));
 			}
 			else
 				tptr = g_utf8_next_char (tptr);

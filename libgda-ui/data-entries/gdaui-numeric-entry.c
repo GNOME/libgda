@@ -353,14 +353,14 @@ text_unformat (GdauiNumericEntry *entry, gchar *str, gint *pos)
 	     *ptr;
 	     i++) {
 		if (*ptr == entry->priv->thousands_sep) {
-			g_memmove (ptr, ptr+1, len - (ptr - str));
+			memmove (ptr, ptr+1, len - (ptr - str));
 			len--;
 			if (*pos >= i)
 				*pos = *pos - 1;
 		}
 		else if ((*ptr == entry->priv->decimal_sep) &&
 			 (ptr[1] == entry->priv->decimal_sep)) {
-			g_memmove (ptr, ptr+1, len - (ptr - str));
+			memmove (ptr, ptr+1, len - (ptr - str));
 			len--;
 			/*if (*pos > i)
 			 *pos = *pos - 1;*/
@@ -705,7 +705,7 @@ gdaui_numeric_entry_get_value (GdauiNumericEntry *entry)
 		len = strlen (text);
 		for (ptr = text; *ptr; ) {
 			if (*ptr == entry->priv->thousands_sep)
-				g_memmove (ptr, ptr+1, len - (ptr - text));
+				memmove (ptr, ptr+1, len - (ptr - text));
 			else {
 				if (*ptr == entry->priv->decimal_sep)
 					*ptr = '.';

@@ -2707,12 +2707,12 @@ pg_remove_quotes (gchar *str)
         total = strlen (str);
         if (str[total-1] == delim) {
 		/* string is correctly terminated */
-		g_memmove (str, str+1, total-2);
+		memmove (str, str+1, total-2);
 		total -=2;
 	}
 	else {
 		/* string is _not_ correctly terminated */
-		g_memmove (str, str+1, total-1);
+		memmove (str, str+1, total-1);
 		total -=1;
 	}
         str[total] = 0;
@@ -2722,7 +2722,7 @@ pg_remove_quotes (gchar *str)
                 /* we accept the "''" as a synonym of "\'" */
                 if (*ptr == delim) {
                         if (*(ptr+1) == delim) {
-                                g_memmove (ptr+1, ptr+2, total - offset);
+                                memmove (ptr+1, ptr+2, total - offset);
                                 offset += 2;
                         }
                         else {
@@ -2732,7 +2732,7 @@ pg_remove_quotes (gchar *str)
                 }
                 else if (*ptr == '"') {
                         if (*(ptr+1) == '"') {
-                                g_memmove (ptr+1, ptr+2, total - offset);
+                                memmove (ptr+1, ptr+2, total - offset);
                                 offset += 2;
                         }
                         else {
@@ -2742,13 +2742,13 @@ pg_remove_quotes (gchar *str)
                 }
 		else if (*ptr == '\\') {
                         if (*(ptr+1) == '\\') {
-                                g_memmove (ptr+1, ptr+2, total - offset);
+                                memmove (ptr+1, ptr+2, total - offset);
                                 offset += 2;
                         }
                         else {
                                 if (*(ptr+1) == delim) {
                                         *ptr = delim;
-                                        g_memmove (ptr+1, ptr+2, total - offset);
+                                        memmove (ptr+1, ptr+2, total - offset);
                                         offset += 2;
                                 }
                                 else {

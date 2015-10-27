@@ -787,7 +787,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		my_bool is_null = FALSE;
 		unsigned long length;
 		
-		g_memmove (&is_null, mysql_bind_result[i].is_null, sizeof (my_bool));
+		memmove (&is_null, mysql_bind_result[i].is_null, sizeof (my_bool));
 		if (is_null) {
 			gda_value_set_null (value);
 			continue;
@@ -798,13 +798,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		switch (mysql_bind_result[i].buffer_type) {
 		case MYSQL_TYPE_SHORT: {
 			short int bvalue = 0;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 			g_value_set_int (value, bvalue);
 			break;
 		}
 		case MYSQL_TYPE_TINY: {
 			signed char bvalue = 0;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 			g_value_set_int (value, bvalue);
 			break;
 		}
@@ -812,7 +812,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		case MYSQL_TYPE_LONG:
 		case MYSQL_TYPE_YEAR: {
 			int bvalue = 0;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 			
 			if (type == G_TYPE_INT)
 				g_value_set_int (value, bvalue);
@@ -831,7 +831,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		}
 		case MYSQL_TYPE_LONGLONG: {
 			long long bvalue = 0;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 
 			if (type == G_TYPE_BOOLEAN)
 				g_value_set_boolean (value, bvalue ? TRUE : FALSE);
@@ -856,7 +856,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		case MYSQL_TYPE_DATETIME:
 		case MYSQL_TYPE_TIMESTAMP: {
 			MYSQL_TIME bvalue = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 
 			if (type == GDA_TYPE_TIME) {
 				GdaTime time = {
@@ -901,7 +901,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		}
 		case MYSQL_TYPE_FLOAT: {
 			float bvalue = 0.;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 			
 			if (type == G_TYPE_FLOAT)
 				g_value_set_float (value, (float) bvalue);
@@ -916,7 +916,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		}
 		case MYSQL_TYPE_DOUBLE: {
 			double bvalue = 0.0;
-			g_memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
+			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 			
 			if (type == G_TYPE_DOUBLE)
 				g_value_set_double (value, bvalue);
@@ -939,7 +939,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		case MYSQL_TYPE_DECIMAL:
 		case MYSQL_TYPE_BIT: {
 			char *bvalue = NULL;
-			g_memmove (&length, mysql_bind_result[i].length, sizeof (unsigned long));
+			memmove (&length, mysql_bind_result[i].length, sizeof (unsigned long));
 			if (length > 0) {
 				bvalue = g_malloc (length + 1);
 				memcpy (bvalue, mysql_bind_result[i].buffer, length);

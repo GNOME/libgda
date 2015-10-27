@@ -4019,7 +4019,7 @@ gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, 
 	while (offset < total) {
 		if (*ptr == '\'') {
 			if (*(ptr+1) == '\'') {
-				g_memmove (ptr+1, ptr+2, total - offset);
+				memmove (ptr+1, ptr+2, total - offset);
 				offset += 2;
 			}
 			else {
