@@ -43,7 +43,7 @@ MdbHandle *mdb = entry->mdb;
 		tmp = mdb_pg_get_int16(mdb,pos); /* length of string */
 		pos += 2;
 		cplen = tmp > MDB_MAX_OBJ_NAME ? MDB_MAX_OBJ_NAME : tmp;
-		g_memmove(prop.name,&mdb->pg_buf[pos],cplen);
+		memmove(prop.name,&mdb->pg_buf[pos],cplen);
 		prop.name[cplen]='\0';
 		pos += tmp; 
 		g_array_append_val(entry->props, prop.name);

@@ -264,7 +264,7 @@ gda_default_unescape_string (const gchar *string)
 		/* we accept the "''" as a synonym of "\'" */
 		if (*ptr == '\'') {
 			if (*(ptr+1) == '\'') {
-				g_memmove (ptr+1, ptr+2, total - offset);
+				memmove (ptr+1, ptr+2, total - offset);
 				offset += 2;
 			}
 			else {
@@ -274,13 +274,13 @@ gda_default_unescape_string (const gchar *string)
 		}
 		if (*ptr == '\\') {
 			if (*(ptr+1) == '\\') {
-				g_memmove (ptr+1, ptr+2, total - offset);
+				memmove (ptr+1, ptr+2, total - offset);
 				offset += 2;
 			}
 			else {
 				if (*(ptr+1) == '\'') {
 					*ptr = '\'';
-					g_memmove (ptr+1, ptr+2, total - offset);
+					memmove (ptr+1, ptr+2, total - offset);
 					offset += 2;
 				}
 				else {
@@ -2970,7 +2970,7 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 					*out_username = g_strndup (pos + 9, ptr - (pos + 9));
 				
 				if (*ptr)
-					g_memmove (pos, ptr + 1, strlen (ptr));
+					memmove (pos, ptr + 1, strlen (ptr));
 				else
 					*pos = 0;
 				gchar *tmp;
@@ -2995,7 +2995,7 @@ gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar 
 				}
 				
 				if (*ptr)
-					g_memmove (pos, ptr + 1, strlen (ptr));
+					memmove (pos, ptr + 1, strlen (ptr));
 				else
 					*pos = 0;
 				gchar *tmp;

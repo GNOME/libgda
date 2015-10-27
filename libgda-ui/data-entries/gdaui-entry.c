@@ -397,7 +397,7 @@ gdaui_entry_get_text (GdauiEntry *entry)
 			text = g_strdup (ctext);
 			if (entry->priv->prefix) {
 				len -= entry->priv->prefix_len;
-				g_memmove (text, text + entry->priv->prefix_len, len+1);
+				memmove (text, text + entry->priv->prefix_len, len+1);
 			}
 			if (entry->priv->suffix) {
 				len -= entry->priv->suffix_len;
