@@ -5,25 +5,23 @@
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003, 2004, 2005, 2006.
 # Nicolau Gonçalves <excentriko@gmail.com>, 2007, 2008, 2009, 2010.
 # Pedro Albuquerque <palbuquerque73@gmail.com>, 2015.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.26\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-09-03 22:21+0000\n"
-"PO-Revision-Date: 2015-09-04 10:54+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
+"&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-10-19 11:05+0000\n"
+"PO-Revision-Date: 2015-11-18 07:50+0100\n"
 "Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
-"Language-Team: Português <palbuquerque73@gmail.com>\n"
+"Language-Team: Pedro Albuquerque\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Language: Portuguese\n"
-"X-Poedit-Country: PORTUGAL\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Poedit-Basepath: /Volumes/DiscoD/Documents/TRANSLATIONS/pt\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Project-Style: gnome\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:380
@@ -116,8 +114,7 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../libgda-ui/demos/main.c:779 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:96 ../libgda-ui/gdaui-init.c:104
 #: ../libgda-ui/gdaui-init.c:552 ../libgda-ui/gdaui-login.c:449
-#: ../libgda-ui/gdaui-rt-editor.c:734
-#: ../providers/jdbc/gda-jdbc-provider.c:525
+#: ../libgda-ui/gdaui-rt-editor.c:734 ../providers/jdbc/gda-jdbc-provider.c:525
 #: ../providers/jdbc/gda-jdbc-provider.c:1454
 #: ../providers/jdbc/gda-jdbc-provider.c:1483
 #: ../providers/jdbc/gda-jdbc-provider.c:1543
@@ -181,8 +178,7 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../tools/common/t-app.c:2860 ../tools/common/t-connection.c:297
 #: ../tools/common/t-connection.c:437 ../tools/common/t-connection.c:1210
 #: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1999
-#: ../tools/misc/gda-list-server-op.c:68
-#: ../tools/misc/gda-list-server-op.c:126
+#: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
 msgstr "Sem detalhe"
@@ -440,8 +436,8 @@ msgid "Could not create data source: %s"
 msgstr "Impossível criar origem de dados: %s"
 
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84
-#: ../tools/browser/auth-dialog.c:213 ../tools/browser/login-dialog.c:184
+#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:213
+#: ../tools/browser/login-dialog.c:184
 msgid "Connection opening"
 msgstr "A abrir ligação"
 
@@ -486,11 +482,11 @@ msgstr "Serviços de acesso a base de dados para o ambiente GNOME"
 msgid "Datasource access control center"
 msgstr "Centro de controlo de acesso à fonte de dados"
 
-#: ../control-center/menus.ui.h:1
+#: ../control-center/menus.ui.h:1 ../tools/resources/menus.ui.h:8
 msgid "_Quit"
 msgstr "_Sair"
 
-#: ../control-center/menus.ui.h:2
+#: ../control-center/menus.ui.h:2 ../tools/resources/menus.ui.h:7
 msgid "_About"
 msgstr "_Sobre"
 
@@ -2174,8 +2170,7 @@ msgstr "A atrasar a execução da declaração em %u ms\n"
 
 #: ../libgda/gda-server-provider.c:2787 ../libgda/gda-server-provider.c:2799
 #: ../libgda/gda-server-provider.c:2811 ../libgda/gda-server-provider.c:2823
-#: ../libgda/gda-server-provider.c:2835
-#: ../providers/web/gda-web-provider.c:622
+#: ../libgda/gda-server-provider.c:2835 ../providers/web/gda-web-provider.c:622
 #: ../providers/web/gda-web-provider.c:651
 msgid "Not supported"
 msgstr "Não suportado"
@@ -2422,11 +2417,11 @@ msgstr ""
 
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:614
-#: ../libgda-report/engine/gda-report-engine.c:641
-#: ../tools/common/t-app.c:2998 ../tools/common/t-app.c:4691
-#: ../tools/common/t-app.c:5208 ../tools/common/t-app.c:5309
-#: ../tools/common/t-app.c:5406 ../tools/common/t-app.c:5504
-#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:422
+#: ../libgda-report/engine/gda-report-engine.c:641 ../tools/common/t-app.c:2998
+#: ../tools/common/t-app.c:4691 ../tools/common/t-app.c:5208
+#: ../tools/common/t-app.c:5309 ../tools/common/t-app.c:5406
+#: ../tools/common/t-app.c:5504 ../tools/common/t-context.c:267
+#: ../tools/common/t-context.c:422
 #, c-format
 msgid "No connection specified"
 msgstr "Nenhuma ligação especificada"
@@ -2618,8 +2613,8 @@ msgid "Unknown query '%s'"
 msgstr "Consulta desconhecida \"%s\""
 
 #: ../libgda-report/engine/gda-report-engine.c:609
-#: ../libgda-report/engine/gda-report-engine.c:636
-#: ../tools/common/t-app.c:2802 ../tools/common/t-app.c:3012
+#: ../libgda-report/engine/gda-report-engine.c:636 ../tools/common/t-app.c:2802
+#: ../tools/common/t-app.c:3012
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Não foi encontrada nenhuma ligação com o nome \"%s\""
@@ -3506,11 +3501,10 @@ msgstr "Tipo de dados"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:725
-#: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2282
-#: ../tools/common/t-app.c:2351 ../tools/common/t-app.c:3756
-#: ../tools/common/t-app.c:5558 ../tools/common/t-config-info.c:123
-#: ../tools/common/t-config-info.c:292
+#: ../libgda-ui/gdaui-raw-grid.c:725 ../providers/ldap/gda-ldap-provider.c:1130
+#: ../tools/common/t-app.c:2282 ../tools/common/t-app.c:2351
+#: ../tools/common/t-app.c:3756 ../tools/common/t-app.c:5558
+#: ../tools/common/t-config-info.c:123 ../tools/common/t-config-info.c:292
 msgid "Value"
 msgstr "Valor"
 
@@ -3979,8 +3973,7 @@ msgstr "Quebrar linhas entre palavras ou grafemas"
 msgid "General"
 msgstr "Geral"
 
-#: ../libgda-ui/data/server_operation.xml.h:2
-#: ../tools/browser/fk-declare.c:249
+#: ../libgda-ui/data/server_operation.xml.h:2 ../tools/browser/fk-declare.c:249
 #: ../tools/browser/schema-browser/table-info.c:378
 msgid "Columns"
 msgstr "Colunas"
@@ -5493,16 +5486,14 @@ msgstr "Fornecedor para bases de dados Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Fornecedor para bases de dados Firebird embutidas"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
-#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
-#: ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
+#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "Argumento inválido: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68
-#: ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "Impossível ler BLOB"
 
@@ -7526,8 +7517,7 @@ msgstr "É necessário pelo menos a versão 5.0 de MySQL"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-meta.c:105
-#: ../providers/web/gda-web-recordset.c:310
+#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "Impossível importar dados do servidor"
 
@@ -7783,8 +7773,7 @@ msgstr ""
 msgid "Opened connections"
 msgstr "Ligações abertas"
 
-#: ../tools/browser/browser-connections-list.c:344
-#: ../tools/common/t-app.c:2927
+#: ../tools/browser/browser-connections-list.c:344 ../tools/common/t-app.c:2927
 msgid "List of opened connections"
 msgstr "Lista de ligações abertas"
 
@@ -7845,7 +7834,7 @@ msgstr "Submeter transação"
 msgid "Begin transaction"
 msgstr "Iniciar transação"
 
-#: ../tools/browser/browser-window.c:404
+#: ../tools/browser/browser-window.c:404 ../tools/resources/menus.ui.h:17
 msgid "Fullscreen"
 msgstr "_Ecrã completo"
 
@@ -8094,6 +8083,7 @@ msgid "Create connection"
 msgstr "Criar ligação"
 
 #: ../tools/browser/connection-binding-properties.c:174
+#: ../tools/resources/menus.ui.h:6
 msgid "_Help"
 msgstr "A_Juda"
 
@@ -8609,7 +8599,6 @@ msgid "Database browser"
 msgstr "Navegador da base de dados"
 
 #: ../tools/browser/gda-browser-6.0.desktop.in.in.h:2
-#| msgid "Browse"
 msgid "GdaBrowser"
 msgstr "Navegador Gda"
 
@@ -11047,10 +11036,54 @@ msgid "Can't parse file '%s', ignoring it"
 msgstr "Impossível processar o ficheiro \"%s\", a ignorá-lo"
 
 #: ../tools/resources/menus.ui.h:1
+msgid "_Open Connection"
+msgstr "_Abrir ligação"
+
+#: ../tools/resources/menus.ui.h:2
+msgid "Bind connections"
+msgstr "Associar ligações"
+
+#: ../tools/resources/menus.ui.h:3
+msgid "_Connections list"
+msgstr "_Lista de ligações"
+
+#: ../tools/resources/menus.ui.h:4
+msgid "_New Window"
+msgstr "_Nova janela"
+
+#: ../tools/resources/menus.ui.h:5
 msgid "New Window for..."
 msgstr "Nova janela para..."
 
-#: ../tools/resources/menus.ui.h:2
+#: ../tools/resources/menus.ui.h:9
+msgid "_Connection"
+msgstr "_Ligação"
+
+#: ../tools/resources/menus.ui.h:10
+msgid "_Begin transaction"
+msgstr "_Iniciar transação"
+
+#: ../tools/resources/menus.ui.h:11
+msgid "_Commit transaction"
+msgstr "_Submeter transação"
+
+#: ../tools/resources/menus.ui.h:12
+msgid "_Rollback transaction"
+msgstr "_Reverter transação"
+
+#: ../tools/resources/menus.ui.h:13
+msgid "_Fetch Meta Data"
+msgstr "_Obter metadados"
+
+#: ../tools/resources/menus.ui.h:14
+msgid "_Connection properties"
+msgstr "_Propriedades da ligação"
+
+#: ../tools/resources/menus.ui.h:15
+msgid "_Close connection"
+msgstr "_Fechar ligação"
+
+#: ../tools/resources/menus.ui.h:16
 msgid "Display"
 msgstr "Mostrar"
 
@@ -11358,19 +11391,8 @@ msgstr "Mostrar"
 #~ msgstr "Usar o ecrã inteiro"
 
 #, fuzzy
-#~ msgid "_Connection"
-#~ msgstr "Ligações"
-
-#, fuzzy
 #~ msgid "_Connect"
 #~ msgstr "Ligar"
-
-#, fuzzy
-#~ msgid "Open a connection"
-#~ msgstr "Abrir uma nova ligação"
-
-#~ msgid "_Bind connection"
-#~ msgstr "Ass_ociar ligação"
 
 #~ msgid ""
 #~ "Use connection to create\n"
@@ -11380,14 +11402,6 @@ msgstr "Mostrar"
 #~ "Usar ligação para criar\n"
 #~ "uma nova ligação de conexão para aceder dados\n"
 #~ "de várias bases de dados ao mesmo tempo"
-
-#, fuzzy
-#~ msgid "_Connections list"
-#~ msgstr "Ligações"
-
-#, fuzzy
-#~ msgid "_Close connection"
-#~ msgstr "Fechar a ligação"
 
 #, fuzzy
 #~ msgid "Close this connection"
@@ -11404,10 +11418,6 @@ msgstr "Mostrar"
 #, fuzzy
 #~ msgid "_Display"
 #~ msgstr "Dados a mostrar"
-
-#, fuzzy
-#~ msgid "_Window"
-#~ msgstr "Windows CP866"
 
 #, fuzzy
 #~ msgid "Window"
