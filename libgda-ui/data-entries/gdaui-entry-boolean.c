@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -43,8 +43,7 @@ static GObjectClass  *parent_class = NULL;
 /* private structure */
 struct _GdauiEntryBooleanPrivate
 {
-	GtkWidget *hbox;
-	GtkWidget *check;
+	GtkWidget *switchw;
 };
 
 
@@ -94,8 +93,7 @@ static void
 gdaui_entry_boolean_init (GdauiEntryBoolean * gdaui_entry_boolean)
 {
 	gdaui_entry_boolean->priv = g_new0 (GdauiEntryBooleanPrivate, 1);
-	gdaui_entry_boolean->priv->hbox = NULL;
-	gdaui_entry_boolean->priv->check = NULL;
+	gdaui_entry_boolean->priv->switchw = NULL;
 }
 
 /**
@@ -160,25 +158,31 @@ gdaui_entry_boolean_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
+static void
+event_after_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	g_signal_emit_by_name (widget, "event-after", event);
+}
+
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
-	GtkWidget *hbox, *cb;
 	GdauiEntryBoolean *mgbool;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap), NULL);
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
 	g_return_val_if_fail (mgbool->priv, NULL);
 
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
-	mgbool->priv->hbox = hbox;
+	GtkWidget *wid, *box;
+	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+	wid = gtk_switch_new ();
+	gtk_box_pack_start (GTK_BOX (box), wid, FALSE, FALSE, 0);
+	gtk_widget_show (wid);
+	mgbool->priv->switchw = wid;
+	g_signal_connect_swapped (wid, "event-after",
+				  G_CALLBACK (event_after_cb), box);
 
-	cb = gtk_check_button_new ();
-	mgbool->priv->check = cb;
-	gtk_box_pack_start (GTK_BOX (hbox), cb, FALSE, FALSE, 0);
-	gtk_widget_show (cb);
-
-	return hbox;
+	return box;
 }
 
 static void
@@ -191,22 +195,13 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	g_return_if_fail (mgbool->priv);
 
 	if (value) {
-		if (gda_value_is_null ((GValue *) value)) {
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mgbool->priv->check), FALSE);
-			gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (mgbool->priv->check), TRUE);
-		}
-		else {
-			gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (mgbool->priv->check), FALSE);
-			if (g_value_get_boolean ((GValue *) value)) 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mgbool->priv->check), TRUE);
-			else 
-				gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mgbool->priv->check), FALSE);
-		}
+		if (gda_value_is_null ((GValue *) value))
+			gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), FALSE);
+		else
+			gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), g_value_get_boolean ((GValue *) value));
 	}
-	else {
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (mgbool->priv->check), FALSE);
-		gtk_toggle_button_set_inconsistent (GTK_TOGGLE_BUTTON (mgbool->priv->check), TRUE);
-	}
+	else
+		gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), FALSE);
 }
 
 static GValue *
@@ -222,7 +217,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	g_return_val_if_fail (mgbool->priv, NULL);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (mgbool->priv->check)))
+	if (gtk_switch_get_active (GTK_SWITCH (mgbool->priv->switchw)))
 		str = "TRUE";
 	else
 		str = "FALSE";
@@ -231,7 +226,6 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	return value;
 }
 
-static void check_toggled_cb (GtkToggleButton *toggle, GdauiEntryBoolean *mgbool);
 static void
 connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
 {
@@ -241,18 +235,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
 	g_return_if_fail (mgbool->priv);
 
-	g_signal_connect (G_OBJECT (mgbool->priv->check), "toggled",
-			  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgbool->priv->check), "toggled",
-			  activate_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgbool->priv->check), "toggled",
-                          G_CALLBACK (check_toggled_cb), mgwrap);
-}
-
-static void
-check_toggled_cb (GtkToggleButton *toggle, G_GNUC_UNUSED GdauiEntryBoolean *mgbool)
-{
-	gtk_toggle_button_set_inconsistent (toggle, FALSE);
+	g_signal_connect_swapped (G_OBJECT (mgbool->priv->switchw), "notify::active",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgbool->priv->switchw), "notify::active",
+				  activate_cb, mgwrap);
 }
 
 static void
@@ -264,7 +250,7 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
 	g_return_if_fail (mgbool->priv);
 
-	gtk_widget_set_sensitive (mgbool->priv->check, editable);
+	gtk_widget_set_sensitive (mgbool->priv->switchw, editable);
 }
 
 static void
@@ -276,5 +262,5 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
 	g_return_if_fail (mgbool->priv);
 
-	gtk_widget_grab_focus (mgbool->priv->check);
+	gtk_widget_grab_focus (mgbool->priv->switchw);
 }

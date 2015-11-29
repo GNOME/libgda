@@ -144,10 +144,11 @@ main (int argc, char **argv)
 	gdaui_init ();
 
 	/* init main conf */
-	GType tested_gtypes [] = {G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB,
+	GType tested_gtypes [] = {G_TYPE_STRING,
+				  G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB,
 				  G_TYPE_DATE, G_TYPE_DOUBLE,
 				  GDA_TYPE_GEOMETRIC_POINT, G_TYPE_OBJECT, G_TYPE_INT, 
-				  GDA_TYPE_NUMERIC, G_TYPE_FLOAT, GDA_TYPE_SHORT, GDA_TYPE_USHORT, G_TYPE_STRING, 
+				  GDA_TYPE_NUMERIC, G_TYPE_FLOAT, GDA_TYPE_SHORT, GDA_TYPE_USHORT,
 				  GDA_TYPE_TIME, GDA_TYPE_TIMESTAMP, G_TYPE_CHAR, G_TYPE_UCHAR, G_TYPE_UINT};
 	mainconf.test_type = TESTED_BASIC;
 	if (test_type) {
@@ -197,6 +198,8 @@ main (int argc, char **argv)
 			      "them in pages of a notebook. Each page presents the default "
 			      "data entry for the corresponding data type.");
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_widget_set_margin_start (label, 10);
+	gtk_widget_set_margin_end (label, 10);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 5);
 	gtk_widget_show (label);
 
@@ -221,6 +224,8 @@ main (int argc, char **argv)
 			      "them in pages of a notebook. Each page tests a plugin for a given "
 			      "data type");
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_widget_set_margin_start (label, 10);
+	gtk_widget_set_margin_end (label, 10);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, 5);
 	gtk_widget_show (label);
 
@@ -404,6 +409,8 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 	g_assert (plugin);
 
 	grid = gtk_grid_new ();
+	gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+	gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
 
 	/* explain top label */
 	if (plugin->plugin_file)
@@ -459,12 +466,17 @@ build_test_for_plugin_struct (GdauiPlugin *plugin)
 			g_error_free (error);
 		}
 		else {
-			GtkWidget *form;
-
+			GtkWidget *form, *frame;
+			frame = gtk_frame_new ("");
 			form = gdaui_basic_form_new (plist);
 			g_object_unref (plist);
-			gtk_grid_attach (GTK_GRID (grid), form, 1, 2, 1, 1);
-			gtk_widget_show (form);
+			gtk_widget_set_margin_top (form, 10);
+			gtk_widget_set_margin_bottom (form, 10);
+			gtk_widget_set_margin_start (form, 10);
+			gtk_widget_set_margin_end (form, 10);
+			gtk_grid_attach (GTK_GRID (grid), frame, 1, 2, 1, 1);
+			gtk_container_add (GTK_CONTAINER (frame), form);
+			gtk_widget_show_all (frame);
 			g_object_set_data (G_OBJECT (grid), "options", form);
 			g_signal_connect (G_OBJECT (form), "holder-changed",
 					  G_CALLBACK (options_form_holder_changed_cb), grid);
@@ -494,9 +506,14 @@ create_plugin_nb (GtkWidget *grid, GdauiPlugin *plugin)
 	GType type;
 	GdaDataHandler *dh;
 
+	label = gtk_label_new ("");
+	gtk_label_set_markup (GTK_LABEL (label), "<b>Handled GTypes:</b>");
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
+	gtk_widget_show (label);
+
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (nb), GTK_POS_LEFT);
-	gtk_grid_attach (GTK_GRID (grid), nb, 0, 1, 2, 1);
+	gtk_grid_attach (GTK_GRID (grid), nb, 1, 3, 1, 1);
 	gtk_widget_show (nb);
 	g_signal_connect (G_OBJECT (nb), "switch-page",
 			  G_CALLBACK (plugin_nb_page_changed_cb), grid);
@@ -667,7 +684,7 @@ options_form_holder_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSE
 /*
  * Basic test (individual GdauiDataEntry widget being tested)
  */
-void entry_contents_modified (GtkWidget *entry, gpointer data);
+void entry_contents_or_attrs_changed (GtkWidget *entry, gpointer data);
 void null_toggled_cb (GtkToggleButton *button, GtkWidget *entry);
 void default_toggled_cb (GtkToggleButton *button, GtkWidget *entry);
 void actions_toggled_cb (GtkToggleButton *button, GtkWidget *entry);
@@ -703,11 +720,22 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	gtk_widget_show (label);
 
 	/* widget being tested */
-	wid = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
-	g_object_set (G_OBJECT (wid), "handler", dh, NULL);
+	label = gtk_label_new ("Data entry widget: ");
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
+	gtk_widget_show (label);
 
-	gtk_grid_attach (GTK_GRID (grid), wid, 0, 1, 3, 1);
-	gtk_widget_show (wid);
+	GtkWidget *frame;
+	frame = gtk_frame_new ("");
+	gtk_grid_attach (GTK_GRID (grid), frame, 1, 1, 2, 1);
+	wid = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
+	gtk_widget_set_margin_top (wid, 10);
+	gtk_widget_set_margin_bottom (wid, 10);
+	gtk_widget_set_margin_start (wid, 10);
+	gtk_widget_set_margin_end (wid, 10);
+	g_object_set (G_OBJECT (wid), "handler", dh, NULL);
+	gtk_container_add (GTK_CONTAINER (frame), wid);
+	gtk_widget_show_all (frame);
 
 	/* Other widgets */
 	label = gtk_label_new ("Current flags: ");
@@ -731,13 +759,15 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	gtk_grid_attach (GTK_GRID (grid), label, 1, 3, 1, 1);
 	g_object_set_data (G_OBJECT (wid), "value", label);
 	g_signal_connect (G_OBJECT (wid), "contents-modified",
-			  G_CALLBACK (entry_contents_modified), NULL);
+			  G_CALLBACK (entry_contents_or_attrs_changed), NULL);
+	g_signal_connect (G_OBJECT (wid), "status-changed",
+			  G_CALLBACK (entry_contents_or_attrs_changed), NULL);
+	entry_contents_or_attrs_changed (wid, GTK_LABEL (label));
 	gtk_widget_show (label);
 
-	entry_contents_modified (wid, GTK_LABEL (label));
-
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_grid_attach (GTK_GRID (grid), bbox, 0, 4, 3, 1);
+	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_START);
+	gtk_grid_attach (GTK_GRID (grid), bbox, 0, 4, 2, 1);
 		
 	button = gtk_toggle_button_new_with_label ("NULL ok");
 	g_signal_connect (G_OBJECT (button), "toggled",
@@ -755,31 +785,28 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wid)) & 
 				      GDA_VALUE_ATTR_CAN_BE_DEFAULT);
 
-	button = gtk_toggle_button_new_with_label ("Actions?");
-	g_signal_connect (G_OBJECT (button), "toggled",
-			  G_CALLBACK (actions_toggled_cb), wid);
-	gtk_container_add (GTK_CONTAINER (bbox), button);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button),
-				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (wid)) & 
-				      GDA_VALUE_ATTR_ACTIONS_SHOWN);
-
 	button = gtk_toggle_button_new_with_label ("Editable?");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
 	g_signal_connect (G_OBJECT (button), "toggled",
 			  G_CALLBACK (editable_toggled_cb), wid);
 	gtk_container_add (GTK_CONTAINER (bbox), button);
-			      
+
+	entry = gtk_entry_new ();
+	gtk_entry_set_placeholder_text (GTK_ENTRY (entry), "Grab focus here!");
+	gtk_widget_set_can_focus (entry, TRUE);
+	gtk_container_add (GTK_CONTAINER (bbox), entry);
+
 	gtk_widget_show_all (bbox);
 
 	/* to set the original value */
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	gtk_grid_attach (GTK_GRID (grid), entry, 0, 5, 2, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 5, 1, 1);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label ("Set as original");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
-	gtk_grid_attach (GTK_GRID (grid), button, 2, 5, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 5, 1, 1);
 	gtk_widget_show (button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK (orig_clicked_cb), wid);
@@ -788,11 +815,11 @@ build_basic_test_for_gtype (GdaDataHandler *dh, GType type, const gchar *plugin_
 	entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin_name));
 	g_object_set (G_OBJECT (entry), "handler", dh, NULL);
 
-	gtk_grid_attach (GTK_GRID (grid), entry, 0, 6, 2, 1);
+	gtk_grid_attach (GTK_GRID (grid), entry, 1, 6, 1, 1);
 	gtk_widget_show (entry);
 	button = gtk_button_new_with_label ("Set as default");
 	g_object_set_data (G_OBJECT (button), "entry", entry);
-	gtk_grid_attach (GTK_GRID (grid), button, 2, 6, 1, 1);
+	gtk_grid_attach (GTK_GRID (grid), button, 0, 6, 1, 1);
 	gtk_widget_show (button);
 	g_signal_connect (G_OBJECT (button), "clicked",
 			  G_CALLBACK (default_clicked_cb), wid);
@@ -832,20 +859,6 @@ default_toggled_cb (GtkToggleButton *button, GtkWidget *entry)
 }
 
 void
-actions_toggled_cb (GtkToggleButton *button, GtkWidget *entry)
-{
-	guint action = 0;
-	if (gtk_toggle_button_get_active (button))
-		action = GDA_VALUE_ATTR_ACTIONS_SHOWN;
-
-	gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry),
-				      action, GDA_VALUE_ATTR_ACTIONS_SHOWN);
-	gtk_toggle_button_set_active (button,
-				      gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (entry)) & 
-				      GDA_VALUE_ATTR_ACTIONS_SHOWN);
-}
-
-void
 editable_toggled_cb (GtkToggleButton *button, GtkWidget *entry)
 {
 	gboolean editable;
@@ -855,27 +868,51 @@ editable_toggled_cb (GtkToggleButton *button, GtkWidget *entry)
 }
 
 void 
-entry_contents_modified (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
+entry_contents_or_attrs_changed (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
 {
 	guint attrs;
 	GtkLabel *label;
-	GString *str = g_string_new ("");
+	GString *str = NULL;
 	GValue *value;
 	GdaDataHandler *dh;
 
 	/* flags */
 	label = g_object_get_data (G_OBJECT (entry), "flags");
 	attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (entry));
-	if (attrs & GDA_VALUE_ATTR_IS_NULL)
-		g_string_append (str, "N ");
-	if (attrs & GDA_VALUE_ATTR_IS_DEFAULT)
-		g_string_append (str, "D ");
-	if (!(attrs & GDA_VALUE_ATTR_IS_UNCHANGED))
-		g_string_append (str, "M ");
-	if (attrs & GDA_VALUE_ATTR_DATA_NON_VALID)
-		g_string_append (str, "U ");
+	if (attrs & GDA_VALUE_ATTR_IS_NULL) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "IS_NULL");
+	}
+	if (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "CAN_BE_NULL");
+	}
+	if (attrs & GDA_VALUE_ATTR_IS_DEFAULT) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "IS_DEFAULT");
+	}
+	if (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "CAN_BE_DEFAULT");
+	}
+	if (attrs & GDA_VALUE_ATTR_IS_UNCHANGED) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "IS_UNCHANGED");
+	}
+	if (attrs & GDA_VALUE_ATTR_DATA_NON_VALID) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "NON_VALID");
+	}
+	if (attrs & GDA_VALUE_ATTR_READ_ONLY) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "READ_ONLY");
+	}
+	if (attrs & GDA_VALUE_ATTR_HAS_VALUE_ORIG) {
+		if (!str) str = g_string_new (""); else	g_string_append (str, ", ");
+		g_string_append (str, "HAS_VALUE_ORIG");
+	}
 
-	gtk_label_set_text (label, str->str);
+	gtk_label_set_text (label, str ? str->str : "");
 	g_string_free (str, TRUE);
 
 	/* value */
@@ -894,7 +931,6 @@ entry_contents_modified (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
 			blob = gda_value_get_blob (value);
 			strval = g_strdup_printf ("Blob data, size=%ld", ((GdaBinary*) blob)->binary_length);
 		}
-
 		else
 			strval = gda_data_handler_get_sql_from_value (dh, value);
 		gda_value_free (value);
@@ -924,7 +960,6 @@ orig_clicked_cb (GtkButton *button, GtkWidget *entry)
 	
 	gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 	gda_value_free (value);
-	entry_contents_modified (entry, NULL);
 }
 
 void

@@ -68,7 +68,7 @@ struct _GdauiDataEntryIface
 	void            (*set_attributes)        (GdauiDataEntry *de, GdaValueAttribute attrs, GdaValueAttribute mask);
 	GdaValueAttribute (*get_attributes)      (GdauiDataEntry *de);
 	GdaDataHandler *(*get_handler)           (GdauiDataEntry *de);
-	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz); /* not used anymore */
+	gboolean        (*can_expand)            (GdauiDataEntry *de, gboolean horiz); /* FIXME: not used anymore */
 	void            (*set_editable)          (GdauiDataEntry *de, gboolean editable);
 	gboolean        (*get_editable)          (GdauiDataEntry *de);
 	void            (*grab_focus)            (GdauiDataEntry *de);
@@ -126,7 +126,7 @@ GType           gdaui_data_entry_get_value_type         (GdauiDataEntry *de);
 void            gdaui_data_entry_set_value              (GdauiDataEntry *de, const GValue *value);
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
 gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
-gboolean        gdaui_data_entry_validate				        (GdauiDataEntry *de, GError **error);
+gboolean        gdaui_data_entry_validate		(GdauiDataEntry *de, GError **error);
 void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
 const GValue   *gdaui_data_entry_get_reference_value    (GdauiDataEntry *de);
 void            gdaui_data_entry_set_reference_current  (GdauiDataEntry *de);

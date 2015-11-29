@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2012 - 2015 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -250,6 +250,6 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 	mgformat = GDAUI_ENTRY_FORMAT (mgwrap);
 	g_return_if_fail (mgformat->priv);
 
-	g_signal_connect (G_OBJECT (mgformat->priv->entry), "changed", modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgformat->priv->entry), "activate", activate_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgformat->priv->entry), "changed", modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgformat->priv->entry), "activate", activate_cb, mgwrap);
 }

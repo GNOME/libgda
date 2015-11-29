@@ -123,8 +123,7 @@
 	gdaui_entry_set_width_chars
 	gdaui_entry_shell_get_type
 	gdaui_entry_shell_pack_entry
-	gdaui_entry_shell_refresh
-	gdaui_entry_shell_set_ucolor
+	gdaui_entry_shell_set_invalid_color
 	gdaui_entry_string_get_type
 	gdaui_entry_string_new
 	gdaui_entry_time_get_type

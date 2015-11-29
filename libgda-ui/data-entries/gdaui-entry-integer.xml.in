@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="THOUSAND_SEP" _name="Use 1000s separators" _descr="Use thousands separator as specified by current locale" gdatype="gboolean">
+    <parameter id="THOUSAND_SEP" _name="Use 1000s separators" _descr="Use thousands separator as specified by current locale" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
-    <parameter id="CURRENCY" _name="Currency symbol" _descr="A currency symbol" source="currencies:0" gdatype="gchararray"/>
+    <parameter id="CURRENCY" _name="Currency symbol" _descr="A currency symbol" source="currencies:0" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
   <sources>
     <gda_array name="currencies">

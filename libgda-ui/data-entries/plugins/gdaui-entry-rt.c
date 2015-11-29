@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -274,10 +274,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	g_return_if_fail (mgtxt->priv);
 
 	g_object_set_data (G_OBJECT (mgtxt->priv->view), "_activate_cb", activate_cb);
-	g_signal_connect (G_OBJECT (GDAUI_RT_EDITOR (mgtxt->priv->view)), "changed",
-			  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgtxt->priv->view), "focus-out-event",
-			  G_CALLBACK (focus_out_cb), mgtxt);
+	g_signal_connect_swapped (G_OBJECT (GDAUI_RT_EDITOR (mgtxt->priv->view)), "changed",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgtxt->priv->view), "focus-out-event",
+				  G_CALLBACK (focus_out_cb), mgtxt);
 	/* FIXME: how does the user "activates" the GtkRtView widget ? */
 }
 

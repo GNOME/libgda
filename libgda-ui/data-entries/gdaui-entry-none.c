@@ -156,23 +156,24 @@ gdaui_entry_none_finalize (GObject   * object)
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
-	GtkWidget *frame, *label;
+	GtkWidget *evbox, *label;
 	GdauiEntryNone *entry;
 
 	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap), NULL);
 	entry = GDAUI_ENTRY_NONE (mgwrap);
 	g_return_val_if_fail (entry->priv, NULL);
 
-	frame = gtk_frame_new (NULL);
-	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_NONE);
-	
+	evbox = gtk_event_box_new ();
+	gtk_widget_add_events (evbox, GDK_FOCUS_CHANGE_MASK);
+	gtk_widget_set_can_focus (evbox, TRUE);
 	label = gtk_label_new ("");
+	gtk_widget_set_name (label, "invalid-label");
 	gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_CENTER);
 
-	gtk_container_add (GTK_CONTAINER (frame), label);
+	gtk_container_add (GTK_CONTAINER (evbox), label);
 	gtk_widget_show (label);
 
-	return frame;
+	return evbox;
 }
 
 static void

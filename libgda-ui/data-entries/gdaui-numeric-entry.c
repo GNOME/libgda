@@ -37,6 +37,7 @@ typedef struct {
         gdouble   fmax;
         gboolean  is_int;
         gboolean  is_signed;
+	guint8    max_nchars;
 } NumAttr;
 
 struct _GdauiNumericEntryPrivate {
@@ -142,6 +143,7 @@ compute_numeric_attributes (GType type, NumAttr *attr)
         attr->is_int = FALSE;
         attr->is_signed = TRUE;
         attr->is_numerical = TRUE;
+	attr->max_nchars = 0;
 
         if (type == G_TYPE_INT64) {
                 attr->imax = G_MAXINT64;
@@ -189,6 +191,7 @@ compute_numeric_attributes (GType type, NumAttr *attr)
                 attr->fmax = G_MAXDOUBLE;
         }
         else if (type == GDA_TYPE_NUMERIC) {
+		attr->max_nchars = 30;
         }
         else if (type == GDA_TYPE_SHORT) {
                 attr->imax = G_MAXSHORT;
@@ -203,6 +206,21 @@ compute_numeric_attributes (GType type, NumAttr *attr)
         else {
                 attr->is_numerical = FALSE;
         }
+
+	if (attr->is_numerical && attr->is_int) {
+		guint64 number;
+		if (attr->is_signed) {
+			number = (guint64) attr->imax;
+			attr->max_nchars = 1; /* for the sign */
+		}
+		else
+			number = attr->uimax;
+
+		do {
+			number /= 10;
+			attr->max_nchars ++;
+		} while (number != 0);
+	}
 }
 
 static gchar
@@ -227,7 +245,6 @@ gdaui_numeric_entry_init (GdauiNumericEntry *entry)
 	entry->priv->decimal_sep = get_default_decimal_sep ();
 	entry->priv->thousands_sep = 0;
 	entry->priv->nb_decimals = G_MAXUINT16;
-	gtk_entry_set_width_chars (GTK_ENTRY (entry), 3);
 }
 
 static void 
@@ -302,6 +319,21 @@ gdaui_numeric_entry_set_property (GObject *object,
         }
 	gdaui_entry_set_text (GDAUI_ENTRY (entry), otext);
 	g_free (otext);
+
+	gint msize;
+	if (entry->priv->num_attr.max_nchars == 0)
+		msize = -1;
+	else {
+		msize = (gint) entry->priv->num_attr.max_nchars;
+		if (entry->priv->thousands_sep)
+			msize += entry->priv->num_attr.max_nchars / 3;
+		if (! entry->priv->num_attr.is_int)
+			msize += 1;
+		if (entry->priv->nb_decimals != G_MAXUINT16)
+			msize += entry->priv->nb_decimals;
+	}
+	/*g_print ("GdauiNumericEntry: type %s => msize = %d\n", g_type_name (entry->priv->type), msize);*/
+	gdaui_entry_set_width_chars (GDAUI_ENTRY (entry), msize);
 }
 
 static void

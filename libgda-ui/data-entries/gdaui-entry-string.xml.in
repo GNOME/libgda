@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <data-set-spec>
   <parameters>
-    <parameter id="MAX_SIZE" _name="Maximum length" _descr="Maximum acceptable length of the text" gdatype="gint"/>
-    <parameter id="MULTILINE" _name="Multiline" _descr="Display only one line, or a complete text editor" gdatype="gboolean"/>
-    <parameter id="HIDDEN" _name="Hidden" _descr="If set to TRUE, characters are all displayed using a single 'invisible' character, suitable to enter passwords" gdatype="gboolean"/>
+    <parameter id="MAX_SIZE" _name="Maximum length" _descr="Maximum acceptable length of the text" gdatype="gint" nullok="TRUE"/>
+    <parameter id="MULTILINE" _name="Multiline" _descr="Display only one line, or a complete text editor" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="HIDDEN" _name="Hidden" _descr="If set to TRUE, characters are all displayed using a single 'invisible' character, suitable to enter passwords" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
   </parameters>
 </data-set-spec>

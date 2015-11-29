@@ -9,8 +9,8 @@
   <gresource prefix="/gdaui/images">
     <file compressed="no">data/gdaui-generic.png</file>
   </gresource>
-  <gresource prefix="/gdaui/images">
-    <file compressed="no">data/bin-attachment-16x16.png</file>
+  <gresource prefix="/gdaui">
+    <file compressed="true">data/mime-types-extensions</file>
   </gresource>
   <gresource prefix="/gdaui">
     <file compressed="true">data-entries/gdaui-entry-string.xml</file>

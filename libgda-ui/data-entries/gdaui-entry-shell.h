@@ -42,7 +42,7 @@ typedef struct _GdauiEntryShellPriv  GdauiEntryShellPriv;
 /* struct for the object's data */
 struct _GdauiEntryShell
 {
-	GtkViewport         object;
+	GtkBox                object;
 
 	GdauiEntryShellPriv  *priv;
 };
@@ -50,17 +50,18 @@ struct _GdauiEntryShell
 /* struct for the object's class */
 struct _GdauiEntryShellClass
 {
-	GtkViewportClass    parent_class;
+	GtkBoxClass           parent_class;
 };
 
 
-GType           gdaui_entry_shell_get_type      (void) G_GNUC_CONST;
-void            gdaui_entry_shell_pack_entry    (GdauiEntryShell *shell, GtkWidget *main_widget);
-void            gdaui_entry_shell_refresh       (GdauiEntryShell *shell);
-void            gdaui_entry_shell_set_unknown   (GdauiEntryShell *shell, gboolean unknown);
-void            gdaui_entry_shell_set_ucolor    (GdauiEntryShell *shell, gdouble red, gdouble green,
-						 gdouble blue, gdouble alpha);
+GType           gdaui_entry_shell_get_type          (void) G_GNUC_CONST;
+void            gdaui_entry_shell_pack_entry        (GdauiEntryShell *shell, GtkWidget *entry);
+void            gdaui_entry_shell_set_invalid_color (GdauiEntryShell *shell, gdouble red, gdouble green,
+						     gdouble blue, gdouble alpha);
 
+/* private */
+void           _gdaui_entry_shell_mark_editable     (GdauiEntryShell *shell, gboolean editable);
+void           _gdaui_entry_shell_attrs_changed     (GdauiEntryShell *shell, GdaValueAttribute attr);
 
 G_END_DECLS
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -310,10 +310,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
 	g_return_if_fail (filesel->priv);
 
-	g_signal_connect (G_OBJECT (filesel->priv->entry), "changed",
-			  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (filesel->priv->entry), "activate",
-			  activate_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (filesel->priv->entry), "changed",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (filesel->priv->entry), "activate",
+				  activate_cb, mgwrap);
 }
 
 static void

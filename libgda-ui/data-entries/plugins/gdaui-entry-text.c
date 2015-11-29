@@ -114,6 +114,7 @@ gdaui_entry_text_init (GdauiEntryText *gdaui_entry_text)
 	gdaui_entry_text->priv->view = NULL;
 	gdaui_entry_text->priv->wrapmode = GTK_WRAP_NONE;
 	gtk_widget_set_vexpand (GTK_WIDGET (gdaui_entry_text), TRUE);
+	gtk_widget_set_hexpand (GTK_WIDGET (gdaui_entry_text), TRUE);
 }
 
 /**
@@ -402,10 +403,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	g_return_if_fail (mgtxt->priv);
 
 	g_object_set_data (G_OBJECT (mgtxt->priv->view), "_activate_cb", activate_cb);
-	g_signal_connect (G_OBJECT (mgtxt->priv->buffer), "changed",
-			  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgtxt->priv->view), "focus-out-event",
-			  G_CALLBACK (focus_out_cb), mgtxt);
+	g_signal_connect_swapped (G_OBJECT (mgtxt->priv->buffer), "changed",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgtxt->priv->view), "focus-out-event",
+				  G_CALLBACK (focus_out_cb), mgtxt);
 	/* FIXME: how does the user "activates" the GtkTextView widget ? */
 }
 

@@ -144,9 +144,8 @@ main (int argc, char* argv[])
 #define HAVE_NORMAL
 #ifdef HAVE_NORMAL
 	/* #0 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L0 "NULL, NULL"
+	label = make_label (0, L0);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new (NULL, NULL);
@@ -154,11 +153,11 @@ main (int argc, char* argv[])
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L0);
+
 	/* #1 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L1 "\"€ \", NULL"
+	label = make_label (1, L1);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new ("€ ", NULL);
@@ -166,12 +165,11 @@ main (int argc, char* argv[])
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L1);
 
 	/* #2 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L2 "NULL, \"  Ê\""
+	label = make_label (2, L2);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new (NULL, " Ê");
@@ -179,12 +177,11 @@ main (int argc, char* argv[])
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L2);
 
 	/* #3 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L3 "\"€€ \", \" êê\""
+	label = make_label (3, L3);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_entry_new ("€€ ", " êê");
@@ -192,7 +189,7 @@ main (int argc, char* argv[])
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L3);
 #endif
 
 #define HAVE_FORMATTED
@@ -208,9 +205,8 @@ main (int argc, char* argv[])
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	/* #4 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L4 "\"TIME=00:00:00\", NULL"
+	label = make_label (4, L4);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("TIME=00:00:00", NULL);
@@ -218,21 +214,20 @@ main (int argc, char* argv[])
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L4);
 
 	/* #5 */
-	tmp = g_strdup_printf ("#%d", index);
-	label = gtk_label_new (tmp);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
+#define L5 "\"TIME=00€00:00\", \"------- --   \""
+	label = make_label (5, L5);
 	gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 	entry = gdaui_formatted_entry_new ("TIME=00€00:00",
-					   "------- --   ");
+		"------- --   ");
 	entries[index] = entry;
 	index++;
 	gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 	g_signal_connect (entry, "changed",
-			  G_CALLBACK (entry_changed_cb), tmp);
+			  G_CALLBACK (entry_changed_cb), L5);
 #endif
 
 #define HAVE_NUMERIC

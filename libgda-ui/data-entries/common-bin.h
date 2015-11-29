@@ -25,15 +25,20 @@
 #define __COMMON_BIN_H__
 
 #include <gtk/gtk.h>
-#include "../internal/popup-container.h"
 
 typedef void (*BinCallback) (gpointer, GValue *);
 typedef struct {
-        GtkWidget    *popup; /* PopupContainer popup window */
+        GtkWidget    *popover; /* GtkPopover popup window */
         GtkWidget    *load_button;
         GtkWidget    *save_button;
+	GtkWidget    *clear_button;
+#ifdef HAVE_GIO
+	GtkWidget    *open_button;
+	gchar        *ctype;
+	GtkWidget    *open_menu;
+#endif
+
 	gchar        *current_folder;
-	GtkWidget    *props_label;
 
 	GType         entry_type;
 	GValue       *tmpvalue;
@@ -43,9 +48,11 @@ typedef struct {
 } BinMenu;
 
 
-void         common_bin_create_menu (BinMenu *binmenu, PopupContainerPositionFunc pos_func, GType entry_type,
-				     BinCallback loaded_value_cb, gpointer loaded_value_cb_data);
-void         common_bin_adjust_menu (BinMenu *binmenu, gboolean editable, const GValue *value);
+void         common_bin_init (BinMenu *binmenu);
 void         common_bin_reset (BinMenu *binmenu);
+gchar       *common_bin_get_description (BinMenu *binmenu);
+void         common_bin_create_menu (GtkWidget *relative_to, BinMenu *binmenu, GType entry_type,
+				     BinCallback loaded_value_cb, gpointer loaded_value_cb_data);
+void         common_bin_adjust (BinMenu *binmenu, gboolean editable, const GValue *value);
 
 #endif

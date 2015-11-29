@@ -74,6 +74,8 @@ void            gda_handler_time_set_str_spec  (GdaHandlerTime *dh, GDateDMY fir
 gchar          *gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue *value);
 
 gchar          *gda_handler_time_get_format    (GdaHandlerTime *dh, GType type);
+gchar          *gda_handler_time_get_hint      (GdaHandlerTime *dh, GType type);
+
 G_END_DECLS
 
 #endif

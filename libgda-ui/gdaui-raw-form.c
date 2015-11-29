@@ -453,9 +453,6 @@ gdaui_raw_form_init (GdauiRawForm *wid)
 			  G_CALLBACK (form_activated_cb), NULL);
 	g_signal_connect (G_OBJECT (wid), "holder-changed",
 			  G_CALLBACK (form_holder_changed_cb), NULL);
-
-	/* raw forms' default unknown color */
-	gdaui_basic_form_set_unknown_color ((GdauiBasicForm*) wid, -1., -1., -1., -1.);
 }
 
 /**
@@ -560,17 +557,6 @@ gdaui_raw_form_set_property (GObject *object,
 
 				/* we don't want chuncking */
 				gda_data_proxy_set_sample_size (form->priv->proxy, 0);
-
-				/* handle invalid iterators' GdaHolder */
-				GSList *list;
-				for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
-					GtkWidget *entry;
-					entry = gdaui_basic_form_get_entry_widget (GDAUI_BASIC_FORM (form),
-										   (GdaHolder*) list->data);
-					if (entry)
-						gdaui_entry_shell_set_unknown ((GdauiEntryShell*) entry,
-									       !gda_holder_is_valid ((GdaHolder*) list->data));
-				}
 
 				iter_row_changed_cb (form->priv->iter,
 						     gda_data_model_iter_get_row (form->priv->iter), form);

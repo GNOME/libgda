@@ -39,24 +39,17 @@ static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
-static void       show (GtkWidget *widget);
-
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
-static GdkPixbuf *attach_pixbuf = NULL;
 
 /* private structure */
 struct _GdauiEntryBinPrivate
 {
-	GtkWidget *button;
-	GtkWidget *button_hbox;
-	GtkWidget *button_label; /* ref held! */
-	GtkWidget *button_image; /* ref held! */
+	GtkWidget *label;
 
-	BinMenu    menu;
+	BinMenu    commonbin;
+	GtkWidget *entry_widget;
 	gboolean   editable;
-
-	GValue    *current_data;
 };
 
 
@@ -100,45 +93,15 @@ gdaui_entry_bin_class_init (GdauiEntryBinClass *class)
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->grab_focus = grab_focus;
-
-	GTK_WIDGET_CLASS (class)->show = show;
-
-	if (! attach_pixbuf) {
-		#define ICON_FILE "/gdaui/images/data/bin-attachment-16x16.png"
-		attach_pixbuf = gdk_pixbuf_new_from_resource (ICON_FILE, NULL);
-		if (!attach_pixbuf)
-			g_warning ("Could not find icon file %s in resources please report error to "
-				   "http://bugzilla.gnome.org/ for the \"libgda\" product", ICON_FILE);
-	}
 }
 
 static void
 gdaui_entry_bin_init (GdauiEntryBin * gdaui_entry_bin)
 {
 	gdaui_entry_bin->priv = g_new0 (GdauiEntryBinPrivate, 1);
-	gdaui_entry_bin->priv->button = NULL;
-	gdaui_entry_bin->priv->current_data = NULL;
+	gdaui_entry_bin->priv->label = NULL;
 	gdaui_entry_bin->priv->editable = TRUE;
-}
-
-static void
-show (GtkWidget *widget)
-{
-	GValue *value;
-	GdauiEntryBin *dbin;
-
-	((GtkWidgetClass *)parent_class)->show (widget);
-
-	dbin = GDAUI_ENTRY_BIN (widget);
-	value = dbin->priv->current_data;
-	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-		gtk_widget_show (dbin->priv->button_image);
-		gtk_widget_hide (dbin->priv->button_label);
-	}
-	else {
-		gtk_widget_hide (dbin->priv->button_image);
-		gtk_widget_show (dbin->priv->button_label);
-	}
+	common_bin_init (&(gdaui_entry_bin->priv->commonbin));
 }
 
 /**
@@ -176,23 +139,8 @@ gdaui_entry_bin_dispose (GObject   * object)
 	g_return_if_fail (GDAUI_IS_ENTRY_BIN (object));
 
 	gdaui_entry_bin = GDAUI_ENTRY_BIN (object);
-	if (gdaui_entry_bin->priv) {
-		if (gdaui_entry_bin->priv->current_data) {
-			gda_value_free (gdaui_entry_bin->priv->current_data);
-			gdaui_entry_bin->priv->current_data = NULL;
-		}
-		common_bin_reset (&(gdaui_entry_bin->priv->menu));
-
-		if (gdaui_entry_bin->priv->button_label) {
-			g_object_unref (gdaui_entry_bin->priv->button_label);
-			gdaui_entry_bin->priv->button_label = NULL;
-		}
-
-		if (gdaui_entry_bin->priv->button_image) {
-			g_object_unref (gdaui_entry_bin->priv->button_image);
-			gdaui_entry_bin->priv->button_image = NULL;
-		}
-	}
+	if (gdaui_entry_bin->priv)
+		common_bin_reset (&(gdaui_entry_bin->priv->commonbin));
 
 	/* parent class */
 	parent_class->dispose (object);
@@ -208,7 +156,6 @@ gdaui_entry_bin_finalize (GObject   * object)
 
 	gdaui_entry_bin = GDAUI_ENTRY_BIN (object);
 	if (gdaui_entry_bin->priv) {
-
 		g_free (gdaui_entry_bin->priv);
 		gdaui_entry_bin->priv = NULL;
 	}
@@ -217,10 +164,42 @@ gdaui_entry_bin_finalize (GObject   * object)
 	parent_class->finalize (object);
 }
 
+/*
+ * Steals @value
+ *
+ * WARNING:
+ * Does NOT emit any signal 
+ */
+static void
+take_as_current_value (GdauiEntryBin *dbin, GValue *value)
+{
+	common_bin_adjust (&(dbin->priv->commonbin), dbin->priv->editable, value);
+
+	gchar *str;
+	str = common_bin_get_description (&(dbin->priv->commonbin));
+	gchar *markup;
+	if (str) {
+		markup = g_markup_printf_escaped ("<a href=''>%s</a>", str);
+		g_free (str);
+	}
+	else
+		markup = g_markup_printf_escaped ("<a href=''><i>%s</i></a>", _("No data"));
+	gtk_label_set_markup (GTK_LABEL (dbin->priv->label), markup);
+	g_free (markup);
+}
+
+static void
+event_after_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryBin *dbin)
+{
+	/* don't "forward" event if popover is shown */ 
+	if (!dbin->priv->commonbin.popover || !gtk_widget_is_visible (dbin->priv->commonbin.popover))
+		g_signal_emit_by_name (dbin->priv->entry_widget, "event-after", event);
+}
+
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
-	GtkWidget *button, *arrow, *label, *img;
+	GtkWidget *label;
 	GdauiEntryBin *dbin;
 	GtkWidget *hbox;
 
@@ -228,56 +207,21 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	dbin = GDAUI_ENTRY_BIN (mgwrap);
 	g_return_val_if_fail (dbin->priv, NULL);
 
-	button = gtk_button_new ();
-	dbin->priv->button = button;
-
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-        gtk_container_add (GTK_CONTAINER (button), hbox);
-	dbin->priv->button_hbox = hbox;
+	dbin->priv->entry_widget = hbox;
 
 	label = gtk_label_new ("");
-	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	dbin->priv->button_label = g_object_ref (G_OBJECT (label));
+	gtk_widget_set_halign (label, GTK_ALIGN_START);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+	gtk_widget_show (label);
+	dbin->priv->label = label;
 
-	img = gtk_image_new_from_pixbuf (attach_pixbuf);
-	gtk_box_pack_start (GTK_BOX (hbox), img, FALSE, FALSE, 0);
-	dbin->priv->button_image = g_object_ref (G_OBJECT (img));
+	g_signal_connect (label, "event-after",
+			  G_CALLBACK (event_after_cb), dbin);
 
-	arrow = gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
-	gtk_widget_set_halign (arrow, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
+	take_as_current_value (dbin, NULL);
 
-        gtk_widget_show_all (hbox);
-	gtk_widget_hide (dbin->priv->button_label);
-
-	return button;
-}
-
-/*
- * WARNING:
- * Does NOT emit any signal 
- */
-static void
-take_current_value (GdauiEntryBin *dbin, GValue *value)
-{
-	/* clear previous situation */
-	if (dbin->priv->current_data) {
-		gda_value_free (dbin->priv->current_data);
-		dbin->priv->current_data = NULL;
-	}
-
-	/* new situation */
-	dbin->priv->current_data = value;
-	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-		gtk_widget_show (dbin->priv->button_image);
-		gtk_widget_hide (dbin->priv->button_label);
-	}
-	else {
-		gtk_widget_hide (dbin->priv->button_image);
-		gtk_widget_show (dbin->priv->button_label);
-	}
-
-	common_bin_adjust_menu (&(dbin->priv->menu), dbin->priv->editable, value);
+	return hbox;
 }
 
 static void
@@ -289,7 +233,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	dbin = GDAUI_ENTRY_BIN (mgwrap);
 	g_return_if_fail (dbin->priv);
 
-	take_current_value (dbin, value ? gda_value_copy (value) : NULL);
+	take_as_current_value (dbin, value ? gda_value_copy (value) : NULL);
 }
 
 static GValue *
@@ -301,8 +245,8 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	dbin = GDAUI_ENTRY_BIN (mgwrap);
 	g_return_val_if_fail (dbin->priv, NULL);
 
-	if (dbin->priv->current_data)
-		return gda_value_copy (dbin->priv->current_data);
+	if (dbin->priv->commonbin.tmpvalue)
+		return gda_value_copy (dbin->priv->commonbin.tmpvalue);
 	else
 		return gda_value_new_null ();
 }
@@ -311,7 +255,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 static void
 value_loaded_cb (GdauiEntryBin *dbin, GValue *new_value)
 {
-	take_current_value (dbin, new_value);
+	take_as_current_value (dbin, new_value);
 
 	/* signal changes */
 	gdaui_entry_wrapper_contents_changed (GDAUI_ENTRY_WRAPPER (dbin));
@@ -319,41 +263,15 @@ value_loaded_cb (GdauiEntryBin *dbin, GValue *new_value)
 }
 
 static void
-popup_position (PopupContainer *container, gint *out_x, gint *out_y)
+link_activated_cb (GdauiEntryBin *dbin, const gchar *uri, GtkWidget *label)
 {
-	GtkWidget *poswidget;
-	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
-
-	gint x, y;
-        gdk_window_get_origin (gtk_widget_get_window (poswidget), &x, &y);
-	GtkAllocation alloc;
-	gtk_widget_get_allocation (poswidget, &alloc);
-        x += alloc.x;
-        y += alloc.y;
-        y += alloc.height;
-
-        if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-
-	*out_x = x;
-	*out_y = y;
-}
-
-static void
-button_clicked_cb (GtkWidget *button, GdauiEntryBin *dbin)
-{
-	if (!dbin->priv->menu.popup) {
-		common_bin_create_menu (&(dbin->priv->menu), popup_position,
+	if (!dbin->priv->commonbin.popover)
+		common_bin_create_menu (GTK_WIDGET (label), &(dbin->priv->commonbin),
 					gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (dbin)),
 					(BinCallback) value_loaded_cb, dbin);
-		g_object_set_data (G_OBJECT (dbin->priv->menu.popup), "__poswidget", button);
-	}
 
-	common_bin_adjust_menu (&(dbin->priv->menu), dbin->priv->editable, dbin->priv->current_data);
-	gtk_widget_show (dbin->priv->menu.popup);
+	common_bin_adjust (&(dbin->priv->commonbin), dbin->priv->editable, dbin->priv->commonbin.tmpvalue);
+	gtk_widget_show (dbin->priv->commonbin.popover);
 }
 
 static void
@@ -366,8 +284,9 @@ connect_signals (GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED GCallback modify_cb,
 	dbin = GDAUI_ENTRY_BIN (mgwrap);
 	g_return_if_fail (dbin->priv);
 
-	g_signal_connect (G_OBJECT (dbin->priv->button), "clicked",
-			  G_CALLBACK (button_clicked_cb), dbin);
+	g_assert (dbin->priv->label);
+	g_signal_connect_swapped (G_OBJECT (dbin->priv->label), "activate-link",
+				  G_CALLBACK (link_activated_cb), dbin);
 }
 
 static void
@@ -380,7 +299,7 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 	g_return_if_fail (dbin->priv);
 
 	dbin->priv->editable = editable;
-	common_bin_adjust_menu (&(dbin->priv->menu), editable, dbin->priv->current_data);
+	common_bin_adjust (&(dbin->priv->commonbin), editable, dbin->priv->commonbin.tmpvalue);
 }
 
 static void
@@ -392,5 +311,5 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 	dbin = GDAUI_ENTRY_BIN (mgwrap);
 	g_return_if_fail (dbin->priv);
 
-	gtk_widget_grab_focus (dbin->priv->button);
+	gtk_widget_grab_focus (dbin->priv->label);
 }

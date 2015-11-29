@@ -180,9 +180,9 @@ gchar *
 _gdaui_utility_markup_title (const gchar *title, gboolean optional)
 {
 	if (!optional)
-		return g_strdup_printf ("%s <span foreground='red' weight='bold'>*</span>:", title);
+		return g_markup_printf_escaped ("%s <span foreground='red' weight='bold'>*</span>:", title);
 	else
-		return g_strdup_printf ("%s:", title);
+		return g_markup_printf_escaped ("%s:", title);
 }
 
 /*

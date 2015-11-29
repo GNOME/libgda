@@ -1,8 +1,7 @@
 # icons
 iconsdir=$(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/pixmaps
 icons_DATA= \
-	gdaui-generic.png \
-	bin-attachment-16x16.png
+	gdaui-generic.png
 
 # other
 xmldir = $(datadir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)

@@ -87,8 +87,6 @@ struct _GdauiEntryStringPrivate
 	GtkWidget     *view;
 
 	gint           maxsize;
-
-	gulong         entry_change_sig;
 };
 
 static void
@@ -182,8 +180,6 @@ gdaui_entry_string_init (GdauiEntryString *mgstr)
 
 	mgstr->priv->maxsize = 65535; /* eg. unlimited for GtkEntry */
 
-	mgstr->priv->entry_change_sig = 0;
-
 	g_signal_connect (mgstr, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
 }
@@ -192,8 +188,9 @@ gdaui_entry_string_init (GdauiEntryString *mgstr)
  * gdaui_entry_string_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
+ * @options: (allow-none): some options formatting the new entry, or %NULL
  *
- * Creates a new data entry widget
+ * Creates a new data entry widget. Known options are: MAX_SIZE, MULTILINE, and HIDDEN
  *
  * Returns: (transfer full): the new widget
  */
@@ -320,6 +317,13 @@ gdaui_entry_string_get_property (GObject *object,
 }
 
 static void widget_shown_cb (GtkWidget *wid, GdauiEntryString *mgstr);
+static void
+ev_cb (GtkWidget *wid, GdkEvent *event, GObject *obj)
+{
+	/* see /usr/include/gtk-3.0/gdk/gdkevents.h */
+        if ((event->type == GDK_FOCUS_CHANGE) && !((GdkEventFocus*)event)->in)
+		g_signal_emit_by_name (obj, "event-after", event);
+}
 
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
@@ -332,7 +336,9 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	g_return_val_if_fail (mgstr->priv, NULL);
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_hexpand (GTK_WIDGET (mgwrap), TRUE);
 	mgstr->priv->vbox = vbox;
+	gtk_widget_add_events (vbox, GDK_FOCUS_CHANGE_MASK);
 
 	/* one line entry */
 	mgstr->priv->entry = gdaui_entry_new (NULL, NULL);
@@ -343,6 +349,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	/* multiline entry */
 	mgstr->priv->view = gtk_text_view_new ();
+	gtk_widget_set_vexpand (mgstr->priv->view, TRUE);
 	mgstr->priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgstr->priv->view));
 	mgstr->priv->sw = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (mgstr->priv->sw), GTK_SHADOW_IN);
@@ -355,11 +362,14 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	g_signal_connect_after (G_OBJECT (mgstr->priv->sw), "show", 
 				G_CALLBACK (widget_shown_cb), mgstr);
 
-
-	/* show widgets if they need to be shown */
+	/* mark both widgets to be shown */
 	gtk_widget_show (mgstr->priv->entry);
 	gtk_widget_show (mgstr->priv->sw);
 
+	g_signal_connect (mgstr->priv->entry, "event-after",
+                          G_CALLBACK (ev_cb), vbox);
+	g_signal_connect (mgstr->priv->view, "event-after",
+                          G_CALLBACK (ev_cb), vbox);
 	return vbox;
 }
 
@@ -465,13 +475,13 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
 	g_return_if_fail (mgstr->priv);
 
-	mgstr->priv->entry_change_sig = g_signal_connect (G_OBJECT (mgstr->priv->entry), "changed",
-							  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "activate",
-			  activate_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "changed",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "activate",
+				  activate_cb, mgwrap);
 
-	g_signal_connect (G_OBJECT (mgstr->priv->buffer), "changed",
-			  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgstr->priv->buffer), "changed",
+				  modify_cb, mgwrap);
 	/* FIXME: how does the user "activates" the GtkTextView widget ? */
 }
 
@@ -541,7 +551,6 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
 	g_signal_connect (mgstr->priv->entry, "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
-	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgstr));
 	
 	gtk_widget_grab_focus (mgstr->priv->entry);
 	gtk_widget_queue_draw (GTK_WIDGET (mgstr));

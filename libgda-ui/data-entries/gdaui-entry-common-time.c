@@ -25,9 +25,15 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include "gdaui-formatted-entry.h"
+#include "gdaui-numeric-entry.h"
 #include <libgda/gda-debug-macros.h>
 
-/* 
+/*
+ * REM:
+ * Times are displayed relative to localtime
+ */
+
+/*
  * Main static functions 
  */
 static void gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class);
@@ -71,21 +77,14 @@ static GObjectClass  *parent_class = NULL;
 /* private structure */
 struct _GdauiEntryCommonTimePrivate
 {
-	/* for date */
-	GtkWidget *entry_date;
-	GtkWidget *date;
-        GtkWidget *window;
-        GtkWidget *date_button;
+	GtkWidget *entry;
+	GtkWidget *cal_popover;
+	GtkWidget *calendar;
+	gulong     displayed_tz;
+	gulong     value_tz;
+	gulong     value_fraction;
+
 	gboolean   editing_canceled;
-
-	/* for time */
-	GtkWidget *entry_time;
-
-	/* for timestamp */
-	GtkWidget *hbox;
-
-	/* Last value set */
-	GValue    *last_value_set;
 };
 
 static void
@@ -162,19 +161,82 @@ key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, G_GNUC_
 	return FALSE;
 }
 
-static void
-gdaui_entry_common_time_init (GdauiEntryCommonTime *gdaui_entry_common_time)
+static glong
+compute_tz_offset (struct tm *gmttm, struct tm *loctm)
 {
-	gdaui_entry_common_time->priv = g_new0 (GdauiEntryCommonTimePrivate, 1);
-	gdaui_entry_common_time->priv->entry_date = NULL;
-	gdaui_entry_common_time->priv->entry_time = NULL;
-	gdaui_entry_common_time->priv->date = NULL;
-	gdaui_entry_common_time->priv->window = NULL;
-	gdaui_entry_common_time->priv->date_button = NULL;
-	gdaui_entry_common_time->priv->hbox = NULL;
-	gdaui_entry_common_time->priv->last_value_set = NULL;
-	gdaui_entry_common_time->priv->editing_canceled = FALSE;
-	g_signal_connect (gdaui_entry_common_time, "key-press-event",
+        if (! gmttm || !loctm)
+                return G_MAXLONG;
+
+        struct tm cgmttm, cloctm;
+        cgmttm = *gmttm;
+        cloctm = *loctm;
+
+        time_t lt, gt;
+        cgmttm.tm_isdst = 0;
+        cloctm.tm_isdst = 0;
+
+        lt = mktime (&cloctm);
+        if (lt == -1)
+                return G_MAXLONG;
+        gt = mktime (&cgmttm);
+        if (gt == -1)
+                return G_MAXLONG;
+        glong off;
+        off = lt - gt;
+
+        if ((off >= 24 * 3600) || (off <= - 24 * 3600))
+                return G_MAXLONG;
+        else
+                return off;
+}
+
+static gulong
+compute_localtime_tz (void)
+{
+	time_t val;
+	val = time (NULL);
+	glong tz = 0;
+
+#ifdef HAVE_LOCALTIME_R
+        struct tm gmttm, loctm;
+        tzset ();
+	localtime_r ((const time_t *) &val, &loctm);
+        tz = compute_tz_offset (gmtime_r ((const time_t *) &val, &gmttm), &loctm);
+#elif HAVE_LOCALTIME_S
+        struct tm gmttm, loctm;
+        if ((localtime_s (&loctm, (const time_t *) &val) == 0) &&
+            (gmtime_s (&gmttm, (const time_t *) &val) == 0)) {
+                tz = compute_tz_offset (&gmttm, &loctm);
+        }
+#else
+        struct tm gmttm, loctm;
+	struct tm *ltm;
+        ltm = gmtime ((const time_t *) &val);
+        if (ltm) {
+                gmttm = *ltm;
+                ltm = localtime ((const time_t *) &val);
+                if (ltm) {
+                        loctm = *ltm;
+                        tz = compute_tz_offset (&gmttm, &loctm);
+                }
+        }
+#endif
+	if (tz == G_MAXLONG)
+		tz = 0;
+	return tz;
+}
+
+static void
+gdaui_entry_common_time_init (GdauiEntryCommonTime *mgtim)
+{
+	mgtim->priv = g_new0 (GdauiEntryCommonTimePrivate, 1);
+	mgtim->priv->entry = NULL;
+	mgtim->priv->calendar = NULL;
+	mgtim->priv->editing_canceled = FALSE;
+	mgtim->priv->value_tz = 0; /* safe init value */
+	mgtim->priv->value_fraction = 0; /* safe init value */
+	mgtim->priv->displayed_tz = compute_localtime_tz ();
+	g_signal_connect (mgtim, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
 }
 
@@ -214,10 +276,6 @@ gdaui_entry_common_time_dispose (GObject   * object)
 
 	gdaui_entry_common_time = GDAUI_ENTRY_COMMON_TIME (object);
 	if (gdaui_entry_common_time->priv) {
-		if (gdaui_entry_common_time->priv->window) {
-			gtk_widget_destroy (gdaui_entry_common_time->priv->window);
-			gdaui_entry_common_time->priv->window = NULL;
-		}
 	}
 
 	/* parent class */
@@ -234,9 +292,6 @@ gdaui_entry_common_time_finalize (GObject   * object)
 
 	gdaui_entry_common_time = GDAUI_ENTRY_COMMON_TIME (object);
 	if (gdaui_entry_common_time->priv) {
-		if (gdaui_entry_common_time->priv->last_value_set) 
-			gda_value_free (gdaui_entry_common_time->priv->last_value_set);
-
 		g_free (gdaui_entry_common_time->priv);
 		gdaui_entry_common_time->priv = NULL;
 	}
@@ -293,33 +348,278 @@ gdaui_entry_common_time_get_property (GObject *object,
 	}
 }
 
-static GtkWidget *create_entry_date (GdauiEntryCommonTime *mgtim);
-static GtkWidget *create_entry_time (GdauiEntryCommonTime *mgtim);
-static GtkWidget *create_entry_ts (GdauiEntryCommonTime *mgtim);
+static void date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
+static void date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
+
+static void
+icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, GdauiEntryCommonTime *mgtim)
+{
+	if (icon_pos == GTK_ENTRY_ICON_PRIMARY) {
+		if (! mgtim->priv->cal_popover) {
+			/* calendar */
+			GtkWidget *wid;
+			wid = gtk_calendar_new ();
+			mgtim->priv->calendar = wid;
+			gtk_widget_show (wid);
+			g_signal_connect (G_OBJECT (wid), "day-selected",
+					  G_CALLBACK (date_day_selected), mgtim);
+			g_signal_connect (G_OBJECT (wid), "day-selected-double-click",
+					  G_CALLBACK (date_day_selected_double_click), mgtim);
+
+			/* popover */
+			GtkWidget *popover;
+			popover = gtk_popover_new (mgtim->priv->entry);
+			gtk_container_add (GTK_CONTAINER (popover), mgtim->priv->calendar);
+			mgtim->priv->cal_popover = popover;
+		}
+
+		/* set calendar to current value */
+		GValue *value;
+		guint year=0, month=0, day=0;
+		gboolean unset = TRUE;
+
+		/* setting the calendar to the displayed date */
+		value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (mgtim));
+
+		if (value && !gda_value_is_null (value)) {
+			GType type;
+			type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
+			if (type == G_TYPE_DATE) {
+				const GDate *date;
+				date = (GDate*) g_value_get_boxed (value);
+				if (date) {
+					month = g_date_get_month (date);
+					year = g_date_get_year (date);
+					day = g_date_get_day (date);
+					if ((month != G_DATE_BAD_MONTH) && 
+					    (day != G_DATE_BAD_DAY) &&
+					    (year != G_DATE_BAD_YEAR)) {
+						month -= 1;
+						unset = FALSE;
+					}
+				}
+			}
+			else if (type == GDA_TYPE_TIMESTAMP) {
+				const GdaTimestamp *ts;
+				ts = gda_value_get_timestamp (value);
+				if (ts) {
+					year = ts->year;
+					month = ts->month - 1;
+					day = ts->day;
+					unset = FALSE;
+				}
+			}
+			else
+				g_assert_not_reached ();
+		}
+
+		if (unset) {
+			time_t now;
+			struct tm *stm;
+
+			now = time (NULL);
+#ifdef HAVE_LOCALTIME_R
+			struct tm tmpstm;
+			stm = localtime_r (&now, &tmpstm);
+#elif HAVE_LOCALTIME_S
+			struct tm tmpstm;
+			g_assert (localtime_s (&tmpstm, &now) == 0);
+			stm = &tmpstm;
+#else
+			stm = localtime (&now);
+#endif
+			year = stm->tm_year + 1900;
+			month = stm->tm_mon;
+			day = stm->tm_mday;
+		}
+
+		if (! unset) {
+			g_signal_handlers_block_by_func (G_OBJECT (mgtim->priv->calendar),
+							 G_CALLBACK (date_day_selected), mgtim);
+			g_signal_handlers_block_by_func (G_OBJECT (mgtim->priv->calendar),
+							 G_CALLBACK (date_day_selected_double_click), mgtim);
+		}
+		gtk_calendar_select_month (GTK_CALENDAR (mgtim->priv->calendar), month, year);
+		gtk_calendar_select_day (GTK_CALENDAR (mgtim->priv->calendar), day);
+		if (! unset) {
+			g_signal_handlers_unblock_by_func (G_OBJECT (mgtim->priv->calendar),
+							   G_CALLBACK (date_day_selected), mgtim);
+			g_signal_handlers_unblock_by_func (G_OBJECT (mgtim->priv->calendar),
+							   G_CALLBACK (date_day_selected_double_click), mgtim);
+		}
+
+		gtk_widget_show (mgtim->priv->cal_popover);
+	}
+}
+
+static void
+date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
+{
+	char buffer [256];
+        guint year, month, day;
+        struct tm mtm = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	GType type;
+	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
+
+        gtk_calendar_get_date (calendar, &year, &month, &day);
+
+        mtm.tm_mday = day;
+        mtm.tm_mon = month;
+        if (year > 1900)
+                mtm.tm_year = year - 1900;
+        else
+                mtm.tm_year = year;
+
+	if (type == GDA_TYPE_TIMESTAMP) {
+		/* get the time part back from current value */
+		GValue *value = NULL;
+		gchar *tmpstr;
+		GdaDataHandler *dh;
+		dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
+		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
+		if (tmpstr) {
+			value = gda_data_handler_get_value_from_str (dh, tmpstr, type);
+			g_free (tmpstr);
+		}
+
+		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+			/* copy the 'fraction' and 'timezone' parts, we have not modified */
+			const GdaTimestamp *ets = gda_value_get_timestamp (value);
+			mtm.tm_hour = ets->hour;
+			mtm.tm_min = ets->minute;
+			mtm.tm_sec = ets->second;
+		}
+		gda_value_free (value);
+	}
+
+	guint bufsize;
+	bufsize = sizeof (buffer) / sizeof (char);
+	if (strftime (buffer, bufsize, "%x", &mtm) == 0)
+		buffer [0] = 0;
+	else if (type == GDA_TYPE_TIMESTAMP) {
+		char buffer2 [128];
+		if (strftime (buffer2, bufsize, "%X", &mtm) == 0)
+			buffer [0] = 0;
+		else {
+			gchar *tmp;
+			tmp = g_strdup_printf ("%s %s", buffer, buffer2);
+			if (strlen (tmp) < bufsize)
+				strcpy (buffer, tmp);
+			else
+				buffer [0] = 0;
+			g_free (tmp);
+		}
+	}
+
+	g_print ("BUFFER:[%s]\n", buffer);
+
+	if (buffer [0]) {
+		char *str_utf8;
+		str_utf8 = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
+		gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str_utf8);
+		g_free (str_utf8);
+	}
+	else
+		gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), "");
+}
+
+static void
+date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
+{
+	gtk_widget_hide (mgtim->priv->cal_popover);
+}
+
+static glong
+fit_tz (glong tz)
+{
+	tz = tz % 86400;
+	if (tz > 43200)
+		tz -= 86400;
+	else if (tz < -43200)
+		tz += 86400;
+	return tz;
+}
+
+static void entry_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
+
+static void
+event_after_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+	g_signal_emit_by_name (widget, "event-after", event);
+}
+
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
 	GdauiEntryCommonTime *mgtim;
-	GtkWidget *entry = NULL;
-	GType type;
-
-	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_COMMON_TIME (mgwrap), NULL);
+	g_return_val_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (mgwrap), NULL);
 	mgtim = GDAUI_ENTRY_COMMON_TIME (mgwrap);
-	g_return_val_if_fail (mgtim->priv, NULL);
 
+	GtkWidget *wid, *hb;
+	GdaDataHandler *dh;
+	GType type;
 	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
-	if (type == G_TYPE_DATE)
-		entry = create_entry_date (mgtim);
-	else if (type == GDA_TYPE_TIME)
-		entry = create_entry_time (mgtim);
-	else if (type == GDA_TYPE_TIMESTAMP)
-		entry = create_entry_ts (mgtim);
+	
+	/* top widget */
+	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
+
+	/* text entry */
+	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
+	if (GDA_IS_HANDLER_TIME (dh)) {
+		gchar *str, *mask, *ptr;
+		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), type);
+		mask = g_strdup (str);
+		for (ptr = mask; *ptr; ptr++) {
+			if (*ptr == '0')
+				*ptr = '-';
+		}
+		wid = gdaui_formatted_entry_new (str, mask);
+		gdaui_entry_set_suffix (GDAUI_ENTRY (wid), "");
+		g_free (str);
+		g_free (mask);
+
+		gchar *tmp;
+		gulong tz;
+		tz = mgtim->priv->displayed_tz;
+		if (tz == 0)
+			tmp = g_strdup ("GMT");
+		else if ((tz % 3600) == 0)
+			tmp = g_strdup_printf ("GMT %+03d", (gint) tz / 3600);
+		else if ((tz % 60) == 0)
+			tmp = g_strdup_printf ("GMT %+02d min", (gint) tz / 60);
+		else
+			tmp = g_strdup_printf ("GMT %+02d sec", (gint) tz);
+
+		gchar *hint;
+		gdaui_formatted_entry_set_insert_func (GDAUI_FORMATTED_ENTRY (wid), entry_insert_func, mgtim);
+		str = gda_handler_time_get_hint (GDA_HANDLER_TIME (dh), type);
+		hint = g_strdup_printf (_("Expected format is %s\nTime is relative to local time (%s)"), str, tmp);
+		g_free (str);
+		g_free (tmp);
+		gtk_widget_set_tooltip_text (wid, hint);
+		g_free (hint);
+	}
 	else
-		g_assert_not_reached ();
-		
-	return entry;
+		wid = gdaui_entry_new (NULL, NULL);
+	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
+	gtk_widget_show (wid);
+	mgtim->priv->entry = wid;
+	g_signal_connect_swapped (wid, "event-after",
+				  G_CALLBACK (event_after_cb), hb);
+
+	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP))
+		gtk_entry_set_icon_from_icon_name (GTK_ENTRY (wid),
+						   GTK_ENTRY_ICON_PRIMARY, "x-office-calendar-symbolic");
+
+	g_signal_connect (wid, "icon-press",
+			  G_CALLBACK (icon_press_cb), mgtim);
+
+	return hb;
 }
 
+/*
+ * NB: the displayed value is relative to mgtim->priv->displayed_tz
+ */
 static void
 real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 {
@@ -327,7 +627,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	GType type;
 	GdaDataHandler *dh;
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
 	mgtim = GDAUI_ENTRY_COMMON_TIME (mgwrap);
 	g_return_if_fail (mgtim->priv);
 
@@ -337,65 +637,84 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	if (type == G_TYPE_DATE) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value))
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
 			else {
 				gchar *str;
 				
 				str = gda_data_handler_get_str_from_value (dh, value);
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), str);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
 			}
 		}
 		else 
-			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
 	}
 	else if (type == GDA_TYPE_TIME) {
 		if (value) {
-			if (gda_value_is_null ((GValue *) value))
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
+			if (gda_value_is_null ((GValue *) value)) {
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
+				mgtim->priv->value_tz = mgtim->priv->displayed_tz;
+				mgtim->priv->value_fraction = 0;
+			}
 			else {
+				const GdaTime *gtim;
+				GdaTime copy;
+				gtim = gda_value_get_time (value);
+				mgtim->priv->value_tz = fit_tz (gtim->timezone);
+				mgtim->priv->value_fraction = gtim->fraction;
+
+				copy = *gtim;
+				gda_time_change_timezone (&copy, mgtim->priv->displayed_tz);
+
+				GValue *copy_value;
+				copy_value = g_new0 (GValue, 1);
+				gda_value_set_time (copy_value, &copy);
+
 				gchar *str;
-				
-				str = gda_data_handler_get_str_from_value (dh, value);
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), str);
+				str = gda_data_handler_get_str_from_value (dh, copy_value);
+				gda_value_free (copy_value);
+
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
 			}
 		}
 		else 
-			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value)) {
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
+				mgtim->priv->value_tz = mgtim->priv->displayed_tz;
+				mgtim->priv->value_fraction = 0;
 			}
 			else {
-				gchar *str, *ptr;
-				
-				str = gda_data_handler_get_str_from_value (dh, value);
-				ptr = strtok (str, " ");
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), ptr);
-				ptr = strtok (NULL, " ");
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), ptr);
+				const GdaTimestamp *gts;
+				GdaTimestamp copy;
+				gts = gda_value_get_timestamp (value);
+				mgtim->priv->value_tz = fit_tz (gts->timezone);
+				mgtim->priv->value_fraction = gts->fraction;
+
+				copy = *gts;
+				gda_timestamp_change_timezone (&copy, mgtim->priv->displayed_tz);
+
+				GValue *copy_value;
+				copy_value = g_new0 (GValue, 1);
+				gda_value_set_timestamp (copy_value, &copy);
+
+				gchar *str;
+				str = gda_data_handler_get_str_from_value (dh, copy_value);
+				gda_value_free (copy_value);
+
+				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
 			}
 		}
-		else {
-			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), NULL);
-			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), NULL);
-		}
+		else
+			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
 	}
 	else
 		g_assert_not_reached ();
-
-	/* keep track of the last value set */
-	if (mgtim->priv->last_value_set) {
-		gda_value_free (mgtim->priv->last_value_set);
-		mgtim->priv->last_value_set = NULL;
-	}
-	if (value)
-		mgtim->priv->last_value_set = gda_value_copy ((GValue *) value);
 }
 
 static GValue *
@@ -415,52 +734,44 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
 	if (type == G_TYPE_DATE) {
-		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
+		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
 		if (str2) {
 			value = gda_data_handler_get_value_from_str (dh, str2, type);
 			g_free (str2);
 		}
 	}
 	else if (type == GDA_TYPE_TIME) {
-		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
+		str2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
 		if (str2) {
 			value = gda_data_handler_get_value_from_str (dh, str2, type);
 			g_free (str2);
 		}
 
-		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
-		    mgtim->priv->last_value_set && 
-		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIME)) {
-			/* copy the 'timezone' part, we we have not modified */
-			const GdaTime *dgatime_set = gda_value_get_time (mgtim->priv->last_value_set);
+		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			GdaTime *gdatime = g_new (GdaTime, 1);
 			*gdatime = *(gda_value_get_time (value));
-			gdatime->timezone = dgatime_set->timezone;
+			gdatime->timezone = mgtim->priv->displayed_tz;
+			gda_time_change_timezone (gdatime, mgtim->priv->value_tz);
 			gda_value_set_time (value, gdatime);
 			g_free (gdatime);
 		}
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
-		gchar *tmpstr, *tmpstr2;
+		gchar *tmpstr;
 
-		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
-		tmpstr2 = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_date));
-		if (tmpstr && tmpstr2) {
-			str2 = g_strdup_printf ("%s %s", tmpstr2, tmpstr);
-			value = gda_data_handler_get_value_from_str (dh, str2, type);
-			g_free (str2);
+		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
+		if (tmpstr) {
+			value = gda_data_handler_get_value_from_str (dh, tmpstr, type);
+			g_free (tmpstr);
 		}
-		g_free (tmpstr);
-		g_free (tmpstr2);
-		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL) &&
-		    mgtim->priv->last_value_set && 
-		    gda_value_isa (mgtim->priv->last_value_set, GDA_TYPE_TIMESTAMP)) {
-			/* copy the 'fraction' and 'timezone' parts, we have not modified */
-			const GdaTimestamp *dgatime_set = gda_value_get_timestamp (mgtim->priv->last_value_set);
+
+		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+			/* copy the 'fraction' part, we have not modified */
 			GdaTimestamp *gdatime = g_new (GdaTimestamp, 1);
 			*gdatime = *(gda_value_get_timestamp (value));
-			gdatime->fraction = dgatime_set->fraction;
-			gdatime->timezone = dgatime_set->timezone;
+			gdatime->fraction = mgtim->priv->value_fraction;
+			gdatime->timezone = mgtim->priv->displayed_tz;
+			gda_timestamp_change_timezone (gdatime, mgtim->priv->value_tz);
 			gda_value_set_timestamp (value, gdatime);
 			g_free (gdatime);
 		}
@@ -481,27 +792,13 @@ static void
 connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb)
 {
 	GdauiEntryCommonTime *mgtim;
-	GType type;
-
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
 	mgtim = GDAUI_ENTRY_COMMON_TIME (mgwrap);
-	g_return_if_fail (mgtim->priv);
 
-	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
-
-	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP)) {
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "changed",
+	g_signal_connect_swapped (G_OBJECT (mgtim->priv->entry), "changed",
 				  modify_cb, mgwrap);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "activate",
+	g_signal_connect_swapped (G_OBJECT (mgtim->priv->entry), "activate",
 				  activate_cb, mgwrap);
-	}
-
-	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP)) {
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "changed",
-				  modify_cb, mgwrap);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "activate",
-				  activate_cb, mgwrap);
-	}
 }
 
 static void
@@ -509,16 +806,14 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 {
 	GdauiEntryCommonTime *mgtim;
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
 	mgtim = GDAUI_ENTRY_COMMON_TIME (mgwrap);
-	g_return_if_fail (mgtim->priv);
 
-	if (mgtim->priv->entry_date)
-		gtk_editable_set_editable (GTK_EDITABLE (mgtim->priv->entry_date), editable);
-	if (mgtim->priv->entry_time)
-		gtk_editable_set_editable (GTK_EDITABLE (mgtim->priv->entry_time), editable);
-	if (mgtim->priv->date_button)
-		gtk_widget_set_sensitive (mgtim->priv->date_button, editable);
+	if (mgtim->priv->entry)
+		gtk_editable_set_editable (GTK_EDITABLE (mgtim->priv->entry), editable);
+
+	gtk_entry_set_icon_sensitive (GTK_ENTRY (mgtim->priv->entry), GTK_ENTRY_ICON_PRIMARY, editable);
+	gtk_entry_set_icon_sensitive (GTK_ENTRY (mgtim->priv->entry), GTK_ENTRY_ICON_SECONDARY, editable);
 }
 
 static void
@@ -526,105 +821,15 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 {
 	GdauiEntryCommonTime *mgtim;
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
+	g_return_if_fail (GDAUI_IS_ENTRY_COMMON_TIME (mgwrap));
 	mgtim = GDAUI_ENTRY_COMMON_TIME (mgwrap);
-	g_return_if_fail (mgtim->priv);
 
-	if (mgtim->priv->entry_date)
-		gtk_widget_grab_focus (mgtim->priv->entry_date);
-	if (mgtim->priv->entry_time)
-		gtk_widget_grab_focus (mgtim->priv->entry_time);
-}
-
-
-
-/*
- * callbacks for the date 
- */
-static gint date_delete_popup (GtkWidget *widget, GdauiEntryCommonTime *mgtim);
-static gint date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTime *mgtim);
-static gint date_button_press_popup (GtkWidget *widget, GdkEventButton *event, GdauiEntryCommonTime *mgtim);
-static void date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
-static void date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim);
-static void date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim);
-
-static void entry_date_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
-
-static GtkWidget *
-create_entry_date (GdauiEntryCommonTime *mgtim)
-{
-	GtkWidget *wid, *hb, *window, *arrow;
-	GdaDataHandler *dh;
-
-	/* top widget */
-	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
-
-	/* text entry */
-	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-	if (GDA_IS_HANDLER_TIME (dh)) {
-		gchar *str, *mask, *ptr;
-		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), G_TYPE_DATE);
-		mask = g_strdup (str);
-		for (ptr = mask; *ptr; ptr++) {
-			if (*ptr == '0')
-				*ptr = '-';
-		}
-		wid = gdaui_formatted_entry_new (str, mask);
-		g_free (str);
-		g_free (mask);
-
-		gdaui_formatted_entry_set_insert_func (GDAUI_FORMATTED_ENTRY (wid), entry_date_insert_func,
-						       mgtim);
-	}
-	else
-		wid = gdaui_entry_new (NULL, NULL);
-	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
-	gtk_widget_show (wid);
-	mgtim->priv->entry_date = wid;
-	
-	/* window to hold the calendar popup */
-	window = gtk_window_new (GTK_WINDOW_POPUP);
-	gtk_widget_set_events (window, gtk_widget_get_events (window) | GDK_KEY_PRESS_MASK);
-	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);
-	g_signal_connect (G_OBJECT (window), "delete-event",
-			  G_CALLBACK (date_delete_popup), mgtim);
-	g_signal_connect (G_OBJECT (window), "key-press-event",
-			  G_CALLBACK (date_key_press_popup), mgtim);
-	g_signal_connect (G_OBJECT (window), "button-press-event",
-			  G_CALLBACK (date_button_press_popup), mgtim);
-	mgtim->priv->window = window;
-	
-	/* calendar */
-	wid = gtk_calendar_new ();
-	mgtim->priv->date = wid;
-	gtk_container_add (GTK_CONTAINER (window), wid);
-	gtk_widget_show (wid);
-	g_signal_connect (G_OBJECT (wid), "day-selected",
-			  G_CALLBACK (date_day_selected), mgtim);
-	g_signal_connect (G_OBJECT (wid), "day-selected-double-click",
-			  G_CALLBACK (date_day_selected_double_click), mgtim);
-	
-	/* button to pop up the calendar */
-	wid = gtk_button_new ();
-	arrow = gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
-	gtk_container_add (GTK_CONTAINER (wid), arrow);
-	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
-	gtk_widget_show_all (wid);
-	g_signal_connect (G_OBJECT (wid), "clicked",
-			  G_CALLBACK (date_calendar_choose_cb), mgtim);
-	mgtim->priv->date_button = wid;
-
-	/* padding */
-	wid = gtk_label_new ("");
-	gtk_box_pack_start (GTK_BOX (hb), wid, TRUE, TRUE, 0);
-	gtk_widget_show (wid);
-
-	return hb;
+	gtk_widget_grab_focus (mgtim->priv->entry);
 }
 
 static void
-entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_char,
-			G_GNUC_UNUSED gint virt_pos, gpointer data)
+entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_char,
+		   G_GNUC_UNUSED gint virt_pos, gpointer data)
 {
 	GValue *value;
 	GType type;
@@ -634,31 +839,42 @@ entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 	if (!value)
 		return;
 
-	if (G_VALUE_TYPE (value) == GDA_TYPE_NULL) {
+	 /* current value is NULL and we are not entering a digit */
+	if ((G_VALUE_TYPE (value) == GDA_TYPE_NULL) && (insert_char == g_utf8_get_char (" "))) {
+		gda_value_reset_with_type (value, type);
 		if (type == G_TYPE_DATE) {
-			/* set current date, whatever @insert_char is */
+			/* set current date */
 			GDate *ndate;
 			ndate = g_new0 (GDate, 1);
 			g_date_set_time_t (ndate, time (NULL));
 
-			gda_value_reset_with_type (value, type);
 			g_value_take_boxed (value, ndate);
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
 		}
-		else if (type == GDA_TYPE_TIMESTAMP) {
-			GValue *tsvalue;
-			gchar *str;
+		else if (type == GDA_TYPE_TIME) {
+			/* set current time */
+			GValue *timvalue;
 			GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
-			str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry_time));
+			timvalue = gda_value_new_time_from_timet (time (NULL));
+			real_set_value (GDAUI_ENTRY_WRAPPER (data), timvalue);
+			gda_value_free (timvalue);
+		}
+		else if (type == GDA_TYPE_TIMESTAMP) {
+			/* set current date and time */
+			GValue *tsvalue;
+			//gchar *str;
+			GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
+			//str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
 			tsvalue = gda_value_new_timestamp_from_timet (time (NULL));
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), tsvalue);
 			gda_value_free (tsvalue);
-			if (str && g_ascii_isdigit (*str))
-				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_time), str);
-			g_free (str);
+			//if (str && g_ascii_isdigit (*str))
+			//	gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
+			//g_free (str);
 		}
 	}
-	else {
+	else if ((G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+		/* REM: if (type == GDA_TYPE_TIME) we have nothing to do  */
 		GDate *date = NULL;
 		if (type == G_TYPE_DATE) {
 			date = (GDate*) g_value_get_boxed (value);
@@ -708,399 +924,6 @@ entry_date_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar inse
 	gda_value_free (value);
 }
 
-static void
-hide_popup (GdauiEntryCommonTime *mgtim)
-{
-        gtk_widget_hide (mgtim->priv->window);
-        gtk_grab_remove (mgtim->priv->window);
-}
-
-static gint
-date_delete_popup (G_GNUC_UNUSED GtkWidget *widget, GdauiEntryCommonTime *mgtim)
-{
-	hide_popup (mgtim);
-	return TRUE;
-}
-
-static gint
-date_key_press_popup (GtkWidget *widget, GdkEventKey *event, GdauiEntryCommonTime *mgtim)
-{
-	if (event->keyval != GDK_KEY_Escape)
-                return FALSE;
-
-        g_signal_stop_emission_by_name (widget, "key-press-event");
-        hide_popup (mgtim);
-
-        return TRUE;
-}
-
-static gint
-date_button_press_popup (GtkWidget *widget, GdkEventButton *event, GdauiEntryCommonTime *mgtim)
-{
-	GtkWidget *child;
-
-        child = gtk_get_event_widget ((GdkEvent *) event);
-
-        /* We don't ask for button press events on the grab widget, so
-         *  if an event is reported directly to the grab widget, it must
-         *  be on a window outside the application (and thus we remove
-         *  the popup window). Otherwise, we check if the widget is a child
-         *  of the grab widget, and only remove the popup window if it
-         *  is not.
-         */
-        if (child != widget) {
-                while (child) {
-                        if (child == widget)
-                                return FALSE;
-                        child = gtk_widget_get_parent (child);
-                }
-        }
-
-        hide_popup (mgtim);
-
-        return TRUE;
-}
-
-static void
-date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
-{
-	char buffer [256];
-        guint year, month, day;
-        struct tm mtm = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        char *str_utf8;
-
-        gtk_calendar_get_date (calendar, &year, &month, &day);
-
-        mtm.tm_mday = day;
-        mtm.tm_mon = month;
-        if (year > 1900)
-                mtm.tm_year = year - 1900;
-        else
-                mtm.tm_year = year;
-
-        if (strftime (buffer, sizeof (buffer), "%x", &mtm) == 0)
-                strcpy (buffer, "???");
-        buffer[sizeof(buffer)-1] = '\0';
-
-        str_utf8 = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-        gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry_date), str_utf8);
-        g_free (str_utf8);
-}
-
-static void
-date_day_selected_double_click (G_GNUC_UNUSED GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
-{
-	hide_popup (mgtim);
-}
-
-
-static gboolean popup_grab_on_window (GtkWidget *widget, guint32 activate_time);
-static void position_popup (GdauiEntryCommonTime *mgtim);
-static void
-date_calendar_choose_cb (GtkWidget *button, GdauiEntryCommonTime *mgtim)
-{
-	GValue *value;
-        guint year=0, month=0, day=0;
-	gboolean unset = TRUE;
-
-        /* setting the calendar to the latest displayed date */
-	value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (mgtim));
-	
-        if (value && !gda_value_is_null (value)) {
-		const GDate *date;
-		const GdaTimestamp *ts;
-		GType type;
-
-		type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgtim));
-		if (type == G_TYPE_DATE) {
-			date = (GDate*) g_value_get_boxed (value);
-			if (date) {
-				month = g_date_get_month (date);
-				year = g_date_get_year (date);
-				day = g_date_get_day (date);
-				if ((month != G_DATE_BAD_MONTH) && 
-				    (day != G_DATE_BAD_DAY) &&
-				    (year != G_DATE_BAD_YEAR)) {
-					month -= 1;
-					unset = FALSE;
-				}
-			}
-		}
-		else if (type == GDA_TYPE_TIMESTAMP) {
-			ts = gda_value_get_timestamp (value);
-			if (ts) {
-				year = ts->year;
-				month = ts->month - 1;
-				day = ts->day;
-				unset = FALSE;
-			}
-		}
-		else
-			g_assert_not_reached ();
-        }
-
-	if (unset) {
-                time_t now;
-                struct tm *stm;
-
-                now = time (NULL);
-#ifdef HAVE_LOCALTIME_R
-		struct tm tmpstm;
-		stm = localtime_r (&now, &tmpstm);
-#elif HAVE_LOCALTIME_S
-		struct tm tmpstm;
-		g_assert (localtime_s (&tmpstm, &now) == 0);
-		stm = &tmpstm;
-#else
-                stm = localtime (&now);
-#endif
-                year = stm->tm_year + 1900;
-                month = stm->tm_mon;
-                day = stm->tm_mday;
-        }
-
-        gtk_calendar_select_month (GTK_CALENDAR (mgtim->priv->date), month, year);
-        gtk_calendar_select_day (GTK_CALENDAR (mgtim->priv->date), day);
-
-        /* popup window */
-        /* Temporarily grab pointer and keyboard, copied from GnomeDateEdit */
-        if (!popup_grab_on_window (button, gtk_get_current_event_time ()))
-                return;
-
-        position_popup (mgtim);
-        gtk_widget_show (mgtim->priv->window);
-        gtk_grab_add (mgtim->priv->window);
-
-	GdkScreen *screen;
-	gint swidth, sheight;
-	gint root_x, root_y;
-	gint wwidth, wheight;
-	gboolean do_move = FALSE;
-	screen = gtk_window_get_screen (GTK_WINDOW (mgtim->priv->window));
-	if (screen) {
-		swidth = gdk_screen_get_width (screen);
-		sheight = gdk_screen_get_height (screen);
-	}
-	else {
-		swidth = gdk_screen_width ();
-		sheight = gdk_screen_height ();
-	}
-	gtk_window_get_position (GTK_WINDOW (mgtim->priv->window), &root_x, &root_y);
-	gtk_window_get_size (GTK_WINDOW (mgtim->priv->window), &wwidth, &wheight);
-	if (root_x + wwidth > swidth) {
-		do_move = TRUE;
-		root_x = swidth - wwidth;
-	}
-	else if (root_x < 0) {
-		do_move = TRUE;
-		root_x = 0;
-	}
-	if (root_y + wheight > sheight) {
-		do_move = TRUE;
-		root_y = sheight - wheight;
-	}
-	else if (root_y < 0) {
-		do_move = TRUE;
-		root_y = 0;
-	}
-	if (do_move)
-		gtk_window_move (GTK_WINDOW (mgtim->priv->window), root_x, root_y);
-
-        gtk_widget_grab_focus (mgtim->priv->date);
-        popup_grab_on_window (mgtim->priv->window,
-                              gtk_get_current_event_time ());
-}
-
-static gboolean
-popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
-{
-	GdkDeviceManager *manager;
-	GdkDevice *pointer;
-	GdkWindow *window;
-	window = gtk_widget_get_window (widget);
-	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-	pointer = gdk_device_manager_get_client_pointer (manager);
-        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
-			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-			     GDK_POINTER_MOTION_MASK,
-			     NULL, activate_time) == GDK_GRAB_SUCCESS) {
-		GdkDevice *keyb;
-		keyb = gdk_device_get_associated_device (pointer);
-                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
-				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) ==
-		    GDK_GRAB_SUCCESS)
-                        return TRUE;
-                else {
-                        gdk_device_ungrab (pointer, activate_time);
-                        return FALSE;
-                }
-        }
-        return FALSE;
-}
-
-static void
-position_popup (GdauiEntryCommonTime *mgtim)
-{
-        gint x, y;
-        gint bwidth, bheight;
-        GtkRequisition req_minimum, req_natural;
-
-        gtk_widget_get_preferred_size (mgtim->priv->window, &req_minimum,
-				       &req_natural);
-
-        gdk_window_get_origin (gtk_widget_get_window (mgtim->priv->date_button), &x, &y);
-	GtkAllocation alloc;
-	gtk_widget_get_allocation (mgtim->priv->date_button, &alloc);
-        x += alloc.x;
-        y += alloc.y;
-        bwidth = alloc.width;
-        bheight = alloc.height;
-
-        x += bwidth - req_natural.width;
-        y += bheight;
-
-        if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-
-        gtk_window_move (GTK_WINDOW (mgtim->priv->window), x, y);
-}
-
-
-
-
-/*
- * callbacks for the time
- */
-static void entry_time_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
-
-static GtkWidget *
-create_entry_time (GdauiEntryCommonTime *mgtim)
-{
-	GtkWidget *wid;
-	GdaDataHandler *dh;
-
-	/* text entry */
-	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgtim));
-	if (GDA_IS_HANDLER_TIME (dh)) {
-		gchar *str, *mask, *ptr;
-		str = gda_handler_time_get_format (GDA_HANDLER_TIME (dh), GDA_TYPE_TIME);
-		mask = g_strdup (str);
-		for (ptr = mask; *ptr; ptr++) {
-			if (*ptr == '0')
-				*ptr = '-';
-		}
-		wid = gdaui_formatted_entry_new (str, mask);
-		g_free (str);
-		g_free (mask);
-
-		gdaui_formatted_entry_set_insert_func (GDAUI_FORMATTED_ENTRY (wid), entry_time_insert_func,
-						       mgtim);
-	}
-	else
-		wid = gdaui_entry_new (NULL, NULL);
-        mgtim->priv->entry_time = wid;
-
-        /* format tooltip */
-	gtk_widget_set_tooltip_text (wid, _("Format is hh:mm:ss"));
-
-        return wid;
-}
-
-static void
-entry_time_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_char,
-			G_GNUC_UNUSED gint virt_pos, gpointer data)
-{
-	GValue *value;
-	GType type;
-
-	type = gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (data));
-	value = real_get_value (GDAUI_ENTRY_WRAPPER (data));
-	if (!value)
-		return;
-
-	if (insert_char != g_utf8_get_char (" "))
-		return;
-
-	if (type == GDA_TYPE_TIME) {
-		/* set current time */
-		gda_value_reset_with_type (value, type);
-		struct tm *ltm;
-		time_t val;
-		
-		val = time (NULL);
-		ltm = localtime ((const time_t *) &val);
-		if (ltm) {
-			GdaTime tim;
-			memset (&tim, 0, sizeof (GdaTime));
-			tim.hour = ltm->tm_hour;
-			tim.minute = ltm->tm_min;
-			tim.second = ltm->tm_sec;
-			tim.fraction = 0;
-			tim.timezone = GDA_TIMEZONE_INVALID;
-			gda_value_set_time (value, (const GdaTime *) &tim);
-			real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
-		}
-	}
-	else if (type == GDA_TYPE_TIMESTAMP && (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP)) {
-		const GdaTimestamp *ts;
-		ts = gda_value_get_timestamp (value);
-		if (ts) {
-			struct tm *ltm;
-			time_t val;
-		
-			val = time (NULL);
-			ltm = localtime ((const time_t *) &val);
-			if (ltm) {
-				GdaTimestamp tim;
-				tim = *ts;
-				tim.hour = ltm->tm_hour;
-				tim.minute = ltm->tm_min;
-				tim.second = ltm->tm_sec;
-				tim.fraction = 0;
-				tim.timezone = GDA_TIMEZONE_INVALID;
-				gda_value_set_timestamp (value, (const GdaTimestamp *) &tim);
-				real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
-			}
-		}
-	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		/* value is GDA_TYPE_NULL */
-		entry_date_insert_func (NULL, insert_char, 0, data);
-	}
-	
-	gda_value_free (value);
-}
-
-/*
- * callbacks for the timestamp
- */
-static GtkWidget *
-create_entry_ts (GdauiEntryCommonTime *mgtim)
-{
-	GtkWidget *hb, *wid;
-
-	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	
-	/* date part */
-	wid = create_entry_date (mgtim);
-	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
-	gtk_widget_show (wid);
-
-	/* time part */
-	wid = create_entry_time (mgtim);
-	gtk_box_pack_start (GTK_BOX (hb), wid, FALSE, FALSE, 0);
-	gtk_widget_show (wid);
-
-	mgtim->priv->hbox = hb;
-	
-	return hb;
-}
-
-
-
 /*
  * GtkCellEditable interface
  */
@@ -1126,39 +949,16 @@ gdaui_entry_common_time_start_editing (GtkCellEditable *iface, GdkEvent *event)
 	g_return_if_fail (mgtim->priv);
 
 	mgtim->priv->editing_canceled = FALSE;
-	if (mgtim->priv->date_button) {
-		gtk_widget_destroy (mgtim->priv->date_button);
-		mgtim->priv->date_button = NULL;
-	}
 
-	if (mgtim->priv->hbox) {
-		gtk_box_set_spacing (GTK_BOX (mgtim->priv->hbox), 0);
-		gtk_container_set_border_width (GTK_CONTAINER (mgtim->priv->hbox), 0);
-	}
-
-	if (mgtim->priv->entry_date) {
-		g_object_set (G_OBJECT (mgtim->priv->entry_date), "has-frame", FALSE, NULL);
-		gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgtim->priv->entry_date), event);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "editing-done",
+	if (mgtim->priv->entry) {
+		g_object_set (G_OBJECT (mgtim->priv->entry), "has-frame", FALSE, NULL);
+		gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgtim->priv->entry), event);
+		g_signal_connect (G_OBJECT (mgtim->priv->entry), "editing-done",
 				  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgtim);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_date), "remove-widget",
+		g_signal_connect (G_OBJECT (mgtim->priv->entry), "remove-widget",
 				  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgtim);
 	}
 
-	if (mgtim->priv->entry_time) {
-		g_object_set (G_OBJECT (mgtim->priv->entry_time), "has-frame", FALSE, NULL);
-		gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgtim->priv->entry_time), event);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "editing-done",
-				  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgtim);
-		g_signal_connect (G_OBJECT (mgtim->priv->entry_time), "remove-widget",
-				  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgtim);
-	}
-
-	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgtim));
-
-	if (mgtim->priv->entry_date)
-		gtk_widget_grab_focus (mgtim->priv->entry_date);
-	else
-		gtk_widget_grab_focus (mgtim->priv->entry_time);
-	gtk_widget_queue_draw (GTK_WIDGET (mgtim));
+	gtk_widget_grab_focus (mgtim->priv->entry);
+	//gtk_widget_queue_draw (GTK_WIDGET (mgtim)); useful ?
 }

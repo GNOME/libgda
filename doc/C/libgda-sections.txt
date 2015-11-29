@@ -943,6 +943,7 @@ gda_time_valid
 gda_time_change_timezone
 gda_value_get_time
 gda_value_set_time
+gda_value_new_time_from_timet
 <SUBSECTION>
 GdaTimestamp
 gda_timestamp_copy

@@ -41,7 +41,20 @@ typedef enum {
 
 #define GDA_TRANSACTION_ISOLATION_UNKNOWN GDA_TRANSACTION_ISOLATION_SERVER_DEFAULT
 
-/* status of a value */
+/**
+ * GdaValueAttribute:
+ * @GDA_VALUE_ATTR_NONE: no specific attribute
+ * @GDA_VALUE_ATTR_IS_NULL: value is NULL (in the SQL sense)
+ * @GDA_VALUE_ATTR_CAN_BE_NULL: value can be set to NULL (in the SQL sense)
+ * @GDA_VALUE_ATTR_IS_DEFAULT: value is defined as the default value (the value itself is not specified)
+ * @GDA_VALUE_ATTR_CAN_BE_DEFAULT: a default value (not specified) exists for the value
+ * @GDA_VALUE_ATTR_IS_UNCHANGED: the value has not been changed (in the context of the attribute usage)
+ * @GDA_VALUE_ATTR_DATA_NON_VALID: the value is not valid (with regards to the context)
+ * @GDA_VALUE_ATTR_HAS_VALUE_ORIG: the value can be resetted to its "original" value (i.e. before it was modified)
+ * @GDA_VALUE_ATTR_READ_ONLY: the value can't be modified
+ *
+ * Attributes of a value, used internally by Libgda in different contexts. Values can be OR'ed.
+ */
 typedef enum  {
 	GDA_VALUE_ATTR_NONE           = 0,
         GDA_VALUE_ATTR_IS_NULL        = 1 << 0,
@@ -49,10 +62,10 @@ typedef enum  {
         GDA_VALUE_ATTR_IS_DEFAULT     = 1 << 2,
         GDA_VALUE_ATTR_CAN_BE_DEFAULT = 1 << 3,
         GDA_VALUE_ATTR_IS_UNCHANGED   = 1 << 4,
-        GDA_VALUE_ATTR_ACTIONS_SHOWN  = 1 << 5,
         GDA_VALUE_ATTR_DATA_NON_VALID = 1 << 6,
         GDA_VALUE_ATTR_HAS_VALUE_ORIG = 1 << 7,
 	GDA_VALUE_ATTR_NO_MODIF       = 1 << 8,
+	GDA_VALUE_ATTR_READ_ONLY      = 1 << 8, /* same as GDA_VALUE_ATTR_NO_MODIF */
 } GdaValueAttribute;
 
 /* how SQL identifiers are represented */

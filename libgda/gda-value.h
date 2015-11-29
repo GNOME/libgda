@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
- * Copyright (C) 2002 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dschoene@src.gnome.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
@@ -203,6 +203,7 @@ GValue                           *gda_value_new_default (const gchar *default_va
 GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
+GValue                           *gda_value_new_time_from_timet (time_t val);
 GValue                           *gda_value_new_timestamp_from_timet (time_t val);
 
 GValue                           *gda_value_new_from_string (const gchar *as_string, GType type);

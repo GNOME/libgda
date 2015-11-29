@@ -27,14 +27,21 @@ static void destroy (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED gpointer dat
 
 static gboolean change_unknow_color (GdauiBasicForm *form)
 {
+	static gdouble sign = 1.;
 	static gdouble red = .3;
 	static gdouble green = .1;
 	static gdouble blue = .1;
 	static gdouble alpha = .5;
 
-	red += .075;
-	if (red >= 1.)
+	red += .075 * sign;
+	if (red >= 1.) {
+		sign = -1.;
+		red = 1.;
+	}
+	else if (red <= .3) {
+		sign = 1.;
 		red = .3;
+	}
 	gdaui_basic_form_set_unknown_color (form, red, green, blue, alpha);
 	return TRUE; /* keep timer */
 }

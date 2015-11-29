@@ -394,7 +394,7 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
 #endif
 
 	g_assert (virt_end_pos <= fentry->priv->format_clen);
-	
+
 	/* move fptr to the @virt_start_pos in fentry->priv->format */
 	for (fptr = fentry->priv->format, i = 0;
 	     (i < virt_start_pos) && *fptr;

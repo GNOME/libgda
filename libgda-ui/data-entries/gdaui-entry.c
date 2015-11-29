@@ -35,6 +35,7 @@ struct _GdauiEntryPrivate {
 	gint     maxlen; /* UTF8 len */
 	gboolean isnull;
 	guchar   internal_changes;
+	gint     max_width;
 };
 
 #define ENTER_INTERNAL_CHANGES(entry) (entry)->priv->internal_changes ++
@@ -83,6 +84,8 @@ static void signal_handlers_unblock (GdauiEntry *entry);
 static void changed_cb (GtkEditable *editable, gpointer data);
 static void delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, gpointer data);
 static void insert_text_cb (GtkEditable *editable, const gchar *text, gint length, gint *position, gpointer data);
+static void internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
+				  gboolean handle_default_insert);
 
 
 static GObjectClass *parent_class = NULL;
@@ -146,6 +149,7 @@ gdaui_entry_init (GdauiEntry *entry)
 	entry->priv->maxlen = 65535; /* eg. unlimited for GtkEntry */
 	entry->priv->isnull = TRUE;
 	entry->priv->internal_changes = 0;
+	entry->priv->max_width = -1;
 
 	g_signal_connect (G_OBJECT (entry), "delete-text",
 			  G_CALLBACK (delete_text_cb), NULL);
@@ -208,6 +212,7 @@ gdaui_entry_set_property (GObject *object,
 			}
 			adjust_display (entry, otext);
 			g_free (otext);
+			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
                         break;
                 case PROP_SUFFIX:
 			otext = gdaui_entry_get_text (entry);
@@ -227,18 +232,20 @@ gdaui_entry_set_property (GObject *object,
 			}
 			adjust_display (entry, otext);
 			g_free (otext);
+			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
                         break;
 		case PROP_MAXLEN:
 			entry->priv->maxlen = g_value_get_int (value);
 			otext = gdaui_entry_get_text (entry);
 			adjust_display (entry, otext);
 			g_free (otext);
+			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
 			break;
                 default:
                         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
                         break;
                 }
-        }	
+        }
 }
 
 static void
@@ -435,18 +442,28 @@ gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 		gtk_entry_set_text (GTK_ENTRY (entry), "");
 		signal_handlers_unblock (entry);
 		ENTER_INTERNAL_CHANGES(entry);
-		gtk_entry_set_text (GTK_ENTRY (entry), text); /* emits the "insert-text" signal which is treated */
+
+		if (entry->priv->internal_changes ==  1) {
+			/* function has been called by "external" programmer,
+			 * emits the "insert-text" signal which is treated */
+			gtk_entry_set_text (GTK_ENTRY (entry), text);
+		}
+		else {
+			/* function has been called by a subsequent call of one of
+			 * the descendant's implementation */
+			gint pos = 0;
+			internal_insert_text (GTK_EDITABLE (entry), text, g_utf8_strlen (text, -1), &pos, TRUE);
+		}
 		entry->priv->isnull = FALSE; /* in case it has not been set */
 		LEAVE_INTERNAL_CHANGES(entry);
-		g_signal_emit_by_name (entry, "changed");
 	}
 	else {
 		entry->priv->isnull = TRUE;
 		signal_handlers_block (entry);
 		gtk_entry_set_text (GTK_ENTRY (entry), "");
 		signal_handlers_unblock (entry);
-		g_signal_emit_by_name (entry, "changed");
 	}
+	g_signal_emit_by_name (entry, "changed");
 }
 
 /**
@@ -487,7 +504,7 @@ gdaui_entry_set_suffix (GdauiEntry *entry, const gchar *suffix)
  * @entry: a #GdauiEntry widget
  * @max_width: maximum width, or -1
  *
- * Sets @entry's maximum width in characters, without taking into account
+ * Sets @entry's width in characters, without taking into account
  * any prefix or suffix (which will automatically be handled). If you want to take
  * a prefix or suffix into account direclty, then use gtk_entry_set_width_chars()
  */
@@ -495,12 +512,17 @@ void
 gdaui_entry_set_width_chars (GdauiEntry *entry, gint max_width)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
-	if (max_width < 0)
+	entry->priv->max_width = max_width;
+	if (max_width < 0) {
 		gtk_entry_set_width_chars (GTK_ENTRY (entry), -1);
+		gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
+	}
 	else {
-		max_width += entry->priv->prefix_clen;
-		max_width += entry->priv->suffix_clen;
+		max_width += (entry->priv->prefix_clen > 0 ? entry->priv->prefix_clen + 1 : 0);
+		max_width += (entry->priv->suffix_clen > 0 ? entry->priv->suffix_clen + 1 : 0);
 		gtk_entry_set_width_chars (GTK_ENTRY (entry), max_width);
+		gtk_entry_set_max_width_chars (GTK_ENTRY (entry), max_width);
+		gtk_widget_set_hexpand (GTK_WIDGET (entry), FALSE);
 	}
 }
 
@@ -578,11 +600,11 @@ delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUS
 	g_signal_emit_by_name (entry, "changed");
 }
 
-
 static void
-insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
-		G_GNUC_UNUSED gpointer data)
+internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
+		      gboolean handle_default_insert)
 {
+	/*g_print ("%s ([%s] @ %d)\n", __FUNCTION__, text, *position);*/
 	const gchar *otext;
 	gint clen;
 	GdauiEntry *entry = GDAUI_ENTRY (editable);
@@ -618,7 +640,19 @@ insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint
 
 	/* test if the whole insertion is Ok */
 	text_clen = g_utf8_strlen (text, text_length);
-	if (clen - entry->priv->prefix_clen - entry->priv->suffix_clen + text_clen > entry->priv->maxlen) {
+	if (GDAUI_ENTRY_GET_CLASS (editable)->assume_insert) {
+		/* Subclass assumes text insert */
+		gint pos = *position - entry->priv->prefix_clen;
+		GDAUI_ENTRY_GET_CLASS (editable)->assume_insert (entry, text, text_length,
+								 &pos, entry->priv->prefix_clen);
+		*position = pos + entry->priv->prefix_clen;
+
+		g_signal_stop_emission_by_name (editable, "insert-text");
+		signal_handlers_unblock (entry);
+		g_signal_emit_by_name (entry, "changed");
+	}
+	else if (clen - entry->priv->prefix_clen - entry->priv->suffix_clen + text_clen > entry->priv->maxlen) {
+		/* text to insert is too long and needs to be truncated */
 		gchar *itext;
 		gint nallowed;
 		nallowed = entry->priv->maxlen - (clen - entry->priv->prefix_clen - entry->priv->suffix_clen);
@@ -633,17 +667,22 @@ insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint
 		signal_handlers_unblock (entry);
 		g_signal_emit_by_name (entry, "changed");
 	}
-	else if (GDAUI_ENTRY_GET_CLASS (editable)->assume_insert) {
-		g_signal_stop_emission_by_name (editable, "insert-text");
-		//g_print ("Subclass assumes text insert\n");
-		gint pos = *position - entry->priv->prefix_clen;
-		GDAUI_ENTRY_GET_CLASS (editable)->assume_insert (entry, text, text_length,
-								 &pos, entry->priv->prefix_clen);
-		*position = pos + entry->priv->prefix_clen;
-
-		signal_handlers_unblock (entry);
-		g_signal_emit_by_name (entry, "changed");
+	else {
+		if (handle_default_insert) {
+			ENTER_INTERNAL_CHANGES(entry);
+			gtk_editable_insert_text (editable, text, text_length, position);
+			LEAVE_INTERNAL_CHANGES(entry);
+			signal_handlers_unblock (entry);
+			g_signal_emit_by_name (entry, "changed");
+		}
+		else
+			signal_handlers_unblock (entry);
 	}
-	else
-		signal_handlers_unblock (entry);
+}
+
+static void
+insert_text_cb (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
+		G_GNUC_UNUSED gpointer data)
+{
+	internal_insert_text (editable, text, text_length, position, FALSE);
 }

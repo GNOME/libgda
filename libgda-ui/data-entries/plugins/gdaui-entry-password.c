@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -289,10 +289,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
         g_signal_connect (G_OBJECT (mgstr->priv->entry), "insert-text",
                           G_CALLBACK (entry_insert_text_cb), mgwrap);
 
-        g_signal_connect (G_OBJECT (mgstr->priv->entry), "changed",
-                          modify_cb, mgwrap);
-        g_signal_connect (G_OBJECT (mgstr->priv->entry), "activate",
-                          activate_cb, mgwrap);
+        g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "changed",
+				modify_cb, mgwrap);
+        g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "activate",
+				  activate_cb, mgwrap);
 }
 
 static void 

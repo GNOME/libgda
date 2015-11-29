@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -391,41 +391,6 @@ bin_data_changed_cb (GdauiDataCellRendererBin *bincell, GValue *value)
         gda_value_free (value);
 }
 
-static void
-popup_position (PopupContainer *container, gint *out_x, gint *out_y)
-{
-	GtkWidget *poswidget;
-	GdkEvent *event;
-	GdkRectangle *rect;
-	gint x, y;
-
-	poswidget = g_object_get_data (G_OBJECT (container), "__poswidget");
-	event = g_object_get_data (G_OBJECT (container), "__event");
-	rect = g_object_get_data (G_OBJECT (container), "__rect");
-
-	if (event && (event->type == GDK_BUTTON_PRESS)) {
-		GdkEventButton *rev = (GdkEventButton*) event;
-		gdk_window_get_origin (rev->window, &x, &y);
-		x += (gint) rev->x;
-		y += (gint) rev->y;
-	}
-	else {
-		g_assert (rect);
-		gdk_window_get_origin (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (poswidget)), &x, &y);
-		x += rect->x;
-		y += rect->y;
-	}
-
-	if (x < 0)
-                x = 0;
-
-        if (y < 0)
-                y = 0;
-
-	*out_x = x;
-	*out_y = y;
-}
-
 static gboolean
 gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 					GdkEvent                   *event,
@@ -443,11 +408,9 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
         bincell = GDAUI_DATA_CELL_RENDERER_BIN (cell);
 	
 	g_object_set_data_full (G_OBJECT (bincell), "last-path", g_strdup (path), g_free);
-	if (!bincell->priv->menu.popup) {
-		common_bin_create_menu (&(bincell->priv->menu), popup_position, bincell->priv->type,
+	if (!bincell->priv->menu.popover)
+		common_bin_create_menu (widget, &(bincell->priv->menu), bincell->priv->type,
 					(BinCallback) bin_data_changed_cb, bincell);
-		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__poswidget", widget);
-	}
 	
 	model = gtk_tree_view_get_model (GTK_TREE_VIEW (widget));
 	tpath = gtk_tree_path_new_from_string (path);
@@ -459,11 +422,9 @@ gdaui_data_cell_renderer_bin_activate  (GtkCellRenderer            *cell,
 
 		gtk_tree_model_get (model, &iter, 
 				    model_col, &value, -1);
-		common_bin_adjust_menu (&(bincell->priv->menu), bincell->priv->editable,
-					value);
-		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__event", event);
-		g_object_set_data (G_OBJECT (bincell->priv->menu.popup), "__rect", (GdkRectangle*)cell_area);
-		gtk_widget_show (bincell->priv->menu.popup);
+		common_bin_adjust (&(bincell->priv->menu), bincell->priv->editable,
+				   value);
+		gtk_widget_show (bincell->priv->menu.popover);
 	}
 	gtk_tree_path_free (tpath);
 

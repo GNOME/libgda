@@ -58,6 +58,14 @@ typedef enum {
 /* possible predefined attribute names for gda_holder_get_attribute() or gda_column_get_attribute() */
 #define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin" /* G_TYPE_STRING expected */
 
+/* issued from HIG 3 */
+#define GDAUI_HIG_FORM_HBORDER 18
+#define GDAUI_HIG_FORM_HSPACE 12
+
+#define GDAUI_HIG_FORM_VBORDER 18
+#define GDAUI_HIG_FORM_VSPACE 6
+#define GDAUI_HIG_FORM_VSEP 18
+
 #endif
 
 

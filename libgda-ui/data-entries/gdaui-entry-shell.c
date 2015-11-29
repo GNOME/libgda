@@ -19,13 +19,16 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 #include "gdaui-entry-shell.h"
 #include "gdaui-entry-none.h"
 #include <libgda/gda-data-handler.h>
 #include <libgda-ui/internal/utility.h>
 #include <glib/gi18n-lib.h>
-#include "widget-embedder.h"
+#include <libgda/gda-debug-macros.h>
+
+/*#define DEBUG*/
+
 static void gdaui_entry_shell_class_init (GdauiEntryShellClass *class);
 static void gdaui_entry_shell_init (GdauiEntryShell *wid);
 static void gdaui_entry_shell_dispose (GObject *object);
@@ -38,35 +41,71 @@ static void gdaui_entry_shell_get_property (GObject *object,
 					    guint param_id,
 					    GValue *value,
 					    GParamSpec *pspec);
+/*
+ * This widget displays a GValue and its attributes (GValueAttribute) in the following way:
+ * - if GDA_VALUE_ATTR_DATA_NON_VALID, then:
+ *      - if GDA_VALUE_ATTR_READ_ONLY: then a "Invalid" label is shown, and no action is possible
+ *    else
+ *      - an entry widget is shown
+ *      NB: in both cases, the widget is outlined (or colored) in the "invalid color", which can be changed
+ *          using gdaui_entry_shell_set_invalid_color()
+ * else
+ * - if GDA_VALUE_ATTR_IS_NULL or GDA_VALUE_ATTR_IS_DEFAULT then
+ *      - a "value is NULL" or "value is default" or "Value is default (NULL)" is shown.
+ *        If not GDA_VALUE_ATTR_READ_ONLY, then an "edit" action is possible, which (at least up to when
+ *        the focus is lost), displays an entry widget
+ *    else
+ *      - an entry widget is shown. If not GDA_VALUE_ATTR_READ_ONLY then, depending on
+ *        GDA_VALUE_ATTR_CAN_BE_NULL, GDA_VALUE_ATTR_CAN_BE_DEFAULT, or GDA_VALUE_ATTR_HAS_VALUE_ORIG, the
+ *        following respective actions are possible: "set to NULL", "set to default" and "reset" (this last one
+ *        if not GDA_VALUE_ATTR_IS_UNCHANGED)
+ */
 
+#define PAGE_LABEL "L"
+#define PAGE_ENTRY "E"
 
-static gint event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell);
-static void show_all (GtkWidget *widget);
-static void contents_modified_cb (GdauiEntryShell *shell, gpointer unused);
-static void gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell);
+typedef enum {
+	MESSAGE_NONE,
+	MESSAGE_NULL,
+	MESSAGE_DEFAULT,
+	MESSAGE_DEFAULT_AND_NULL,
+	MESSAGE_INVALID
+} MessageType;
+
+static const gchar *raw_messages[] = {
+	"",
+	N_("NULL value"),
+	N_("Default value"),
+	N_("Default value (NULL)"),
+	N_("Invalid value"),
+};
+
+static gchar **messages = NULL;
 
 /* properties */
 enum {
 	PROP_0,
 	PROP_HANDLER,
-	PROP_ACTIONS,
 	PROP_IS_CELL_RENDERER
 };
 
+#define value_is_null(attr) ((attr) & GDA_VALUE_ATTR_IS_NULL)
+#define value_is_modified(attr) (!((attr) & GDA_VALUE_ATTR_IS_UNCHANGED))
+#define value_is_default(attr) ((attr) & GDA_VALUE_ATTR_IS_DEFAULT)
+#define value_is_valid(attr) (!((attr) & GDA_VALUE_ATTR_DATA_NON_VALID))
 struct  _GdauiEntryShellPriv {
-        GtkWidget           *embedder;
-	GtkWidget           *hbox;
-        GtkWidget           *button;
-        GdaDataHandler      *data_handler;
+	GtkWidget           *stack;
+	GtkWidget           *button; /* "..." button */
+	GtkWidget           *label;
+        GdaDataHandler      *data_handler; /* FIXME: to remove if unused elsewhere */
 	gboolean             show_actions;
-
-	gboolean             value_is_null;
-	gboolean             value_is_modified;
-	gboolean             value_is_default;
-	gboolean             value_is_non_valid;
-
 	gboolean             is_cell_renderer;
+	gboolean             editable;
+	gboolean             being_edited;
 };
+
+static void show_or_hide_actions_button (GdauiEntryShell *shell, GdaValueAttribute attr);
+static guint compute_nb_possible_actions (GdauiEntryShell *shell, GdaValueAttribute attr);
 
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass *parent_class = NULL;
@@ -97,7 +136,7 @@ gdaui_entry_shell_get_type (void)
 			0
 		};
 
-		type = g_type_register_static (GTK_TYPE_VIEWPORT, "GdauiEntryShell", &info, 0);
+		type = g_type_register_static (GTK_TYPE_BOX, "GdauiEntryShell", &info, 0);
 	}
 	return type;
 }
@@ -112,7 +151,6 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gdaui_entry_shell_dispose;
-	widget_class->show_all = show_all;
 
 	/* Properties */
 	object_class->set_property = gdaui_entry_shell_set_property;
@@ -120,9 +158,6 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 	g_object_class_install_property (object_class, PROP_HANDLER,
 					 g_param_spec_object ("handler", NULL, NULL, GDA_TYPE_DATA_HANDLER,
 							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	g_object_class_install_property (object_class, PROP_ACTIONS,
-					 g_param_spec_boolean ("actions", NULL, NULL, TRUE,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	g_object_class_install_property (object_class, PROP_IS_CELL_RENDERER,
 					 g_param_spec_boolean ("is-cell-renderer", NULL, NULL, TRUE,
@@ -130,65 +165,233 @@ gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 }
 
 static void
-show_all (GtkWidget *widget)
+destroy_popover (GtkWidget *child)
 {
-	if (((GdauiEntryShell*) widget)->priv->show_actions)
-		gtk_widget_show (((GdauiEntryShell*) widget)->priv->button);
+	/* destroy GtkPopover in which @child is */
+	GtkWidget *pop;
+	pop = gtk_widget_get_ancestor (GTK_WIDGET (child), GTK_TYPE_POPOVER);
+	if (pop)
+		gtk_widget_destroy (pop);
+}
+
+static void
+action_edit_value_cb (GtkButton *button, GdauiEntryShell *shell)
+{
+	GdaValueAttribute attr;
+	attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+	if (! (attr & GDA_VALUE_ATTR_READ_ONLY)) {
+		gtk_stack_set_visible_child_name (GTK_STACK (shell->priv->stack), PAGE_ENTRY);
+		gdaui_data_entry_grab_focus (GDAUI_DATA_ENTRY (shell));
+		show_or_hide_actions_button (shell, attr);
+		shell->priv->being_edited = TRUE;
+	}
+	if (button)
+		destroy_popover (GTK_WIDGET (button));
+}
+
+static void
+action_set_value_to_null_cb (GtkButton *button, GdauiEntryShell *shell)
+{
+	GdaValueAttribute attr;
+	attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+	if (attr & GDA_VALUE_ATTR_CAN_BE_NULL) {
+		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (shell),
+						 GDA_VALUE_ATTR_IS_NULL, GDA_VALUE_ATTR_IS_NULL);
+		show_or_hide_actions_button (shell, attr);
+		shell->priv->being_edited = FALSE;
+	}
+	destroy_popover (GTK_WIDGET (button));
+}
+
+static void
+action_set_value_to_default_cb (GtkButton *button, GdauiEntryShell *shell)
+{
+	GdaValueAttribute attr;
+	attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+	if (attr & GDA_VALUE_ATTR_CAN_BE_DEFAULT) {
+		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (shell),
+						 GDA_VALUE_ATTR_IS_DEFAULT, GDA_VALUE_ATTR_IS_DEFAULT);
+		show_or_hide_actions_button (shell, attr);
+		shell->priv->being_edited = FALSE;
+	}
+	destroy_popover (GTK_WIDGET (button));
+}
+
+static void
+action_reset_value_cb (GtkButton *button, GdauiEntryShell *shell)
+{
+	GdaValueAttribute attr;
+	attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+	if (attr & GDA_VALUE_ATTR_HAS_VALUE_ORIG) {
+		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (shell),
+						 GDA_VALUE_ATTR_IS_UNCHANGED, GDA_VALUE_ATTR_IS_UNCHANGED);
+		shell->priv->being_edited = FALSE;
+	}
+	destroy_popover (GTK_WIDGET (button));
+}
+
+static void
+show_or_hide_actions_button (GdauiEntryShell *shell, GdaValueAttribute attr)
+{
+	gboolean visible = FALSE;
+	if (shell->priv->editable) {
+		guint nb;
+		nb = compute_nb_possible_actions (shell, attr);
+		if (nb > 0)
+			visible = TRUE;
+	}
+	gtk_widget_set_visible (shell->priv->button, visible);
+}
+
+static guint
+compute_nb_possible_actions (GdauiEntryShell *shell, GdaValueAttribute attr)
+{
+	guint nb = 0;
+
+	if (attr & GDA_VALUE_ATTR_READ_ONLY)
+		return 0; /* no action possible */
+
+	if (!strcmp (gtk_stack_get_visible_child_name (GTK_STACK (shell->priv->stack)), PAGE_LABEL))
+		nb ++; /* "edit value" action */
+
+	if ((attr & GDA_VALUE_ATTR_CAN_BE_NULL) && !(attr & GDA_VALUE_ATTR_IS_NULL))
+		nb++;
+	if ((attr & GDA_VALUE_ATTR_CAN_BE_DEFAULT) && !(attr & GDA_VALUE_ATTR_IS_DEFAULT))
+		nb++;
+	if ((attr & GDA_VALUE_ATTR_HAS_VALUE_ORIG) && ! (attr & GDA_VALUE_ATTR_IS_UNCHANGED))
+		nb ++;
+	return nb;
+}
+
+static void
+actions_button_clicked_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntryShell *shell)
+{
+	GdaValueAttribute attr;
+	attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+
+	if (attr & GDA_VALUE_ATTR_READ_ONLY)
+		g_assert_not_reached ();
+
+	shell->priv->being_edited = FALSE;
+	g_assert (compute_nb_possible_actions (shell, attr) != 0);
+
+	GtkWidget *pop;
+	pop = gtk_popover_new (GTK_WIDGET (button));
+	GtkWidget *box;
+	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_container_add (GTK_CONTAINER (pop), box);
+
+	GtkWidget *action_button;
+	if (!strcmp (gtk_stack_get_visible_child_name (GTK_STACK (shell->priv->stack)), PAGE_LABEL)) {
+		action_button = gtk_button_new_with_label (_("Edit value"));
+		g_signal_connect (action_button, "clicked",
+				  G_CALLBACK (action_edit_value_cb), shell);
+		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
+	}
+
+	if ((attr & GDA_VALUE_ATTR_CAN_BE_NULL) && !(attr & GDA_VALUE_ATTR_IS_NULL)) {
+		action_button = gtk_button_new_with_label (_("Set value to NULL"));
+		g_signal_connect (action_button, "clicked",
+				  G_CALLBACK (action_set_value_to_null_cb), shell);
+		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
+	}
+
+	if ((attr & GDA_VALUE_ATTR_CAN_BE_DEFAULT) && !(attr & GDA_VALUE_ATTR_IS_DEFAULT)) {
+		action_button = gtk_button_new_with_label (_("Set value to default"));
+		g_signal_connect (action_button, "clicked",
+				  G_CALLBACK (action_set_value_to_default_cb), shell);
+		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
+	}
+
+	if ((attr & GDA_VALUE_ATTR_HAS_VALUE_ORIG) && ! (attr & GDA_VALUE_ATTR_IS_UNCHANGED)) {
+		action_button = gtk_button_new_with_label (_("Reset value"));
+		g_signal_connect (action_button, "clicked",
+				  G_CALLBACK (action_reset_value_cb), shell);
+			gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
+	}
+
+	g_signal_connect (pop, "closed", G_CALLBACK (gtk_widget_destroy), NULL);
+	gtk_widget_show_all (pop);
+}
+
+static void
+event_after_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
+{
+	if (((event->type == GDK_KEY_RELEASE) && (((GdkEventKey*) event)->keyval == GDK_KEY_Escape)) ||
+	    ((event->type == GDK_FOCUS_CHANGE) && (((GdkEventFocus*) event)->in == FALSE))) {
+		shell->priv->being_edited = FALSE;
+#ifdef DEBUG
+		g_print ("EVENT AFTER: %s!\n", event->type == GDK_FOCUS_CHANGE ? "FOCUS" : "KEY RELEASE");
+#endif
+		if (!strcmp (gtk_stack_get_visible_child_name (GTK_STACK (shell->priv->stack)), PAGE_ENTRY)) {
+			GdaValueAttribute attr;
+			attr = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
+			_gdaui_entry_shell_attrs_changed (shell, attr);
+		}
+	}
+}
+
+static gboolean
+label_event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
+{
+	action_edit_value_cb (NULL, shell);
+	return FALSE;
 }
 
 static void
 gdaui_entry_shell_init (GdauiEntryShell *shell)
 {
-	GtkWidget *button, *hbox, *arrow;
 	GValue *gval;
+
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (shell), GTK_ORIENTATION_HORIZONTAL);
 
 	/* Private structure */
 	shell->priv = g_new0 (GdauiEntryShellPriv, 1);
-	shell->priv->embedder = NULL;
-	shell->priv->button = NULL;
 	shell->priv->show_actions = TRUE;
 	shell->priv->data_handler = NULL;
-
-	shell->priv->value_is_null = FALSE;
-	shell->priv->value_is_modified = FALSE;
-	shell->priv->value_is_default = FALSE;
-	shell->priv->value_is_non_valid = FALSE;
+	shell->priv->editable = TRUE;
+	shell->priv->being_edited = FALSE;
 
 	shell->priv->is_cell_renderer = FALSE;
 
 	/* Setting the initial layout */
-	gtk_viewport_set_shadow_type (GTK_VIEWPORT (shell), GTK_SHADOW_NONE);
+	shell->priv->stack = gtk_stack_new ();
+	gtk_box_pack_start (GTK_BOX (shell), shell->priv->stack, TRUE, TRUE, 0);
+	gtk_widget_show (shell->priv->stack);
 	gtk_container_set_border_width (GTK_CONTAINER (shell), 0);
 
-	/* hbox */
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_container_add (GTK_CONTAINER (shell), hbox);
-	gtk_widget_show (hbox);
-	shell->priv->hbox = hbox;
+	/* button */
+	shell->priv->button = gtk_button_new_with_label ("...");
+	gtk_button_set_relief (GTK_BUTTON (shell->priv->button), GTK_RELIEF_NONE);
+	gtk_style_context_add_class (gtk_widget_get_style_context (shell->priv->button), "action-entry");
+	g_object_set (G_OBJECT (shell->priv->button), "no-show-all", TRUE, NULL);
+	gtk_box_pack_start (GTK_BOX (shell), shell->priv->button, FALSE, FALSE, 0);
+	gtk_widget_show (shell->priv->button);
+	g_signal_connect (shell->priv->button, "clicked",
+			  G_CALLBACK (actions_button_clicked_cb), shell);
 
-	/* vbox to insert the real widget to edit data */
-	shell->priv->embedder = widget_embedder_new ();
-	gtk_box_pack_start (GTK_BOX (hbox), shell->priv->embedder, TRUE, TRUE, 0);
-	gtk_widget_show (shell->priv->embedder);
+	/* label */
+	if (!messages) {
+		guint size, i;
+		size = G_N_ELEMENTS (raw_messages);
+		messages = g_new (gchar *, size);
+		for (i = 0; i < size; i++)
+			messages[i] = g_markup_printf_escaped ("<i>%s</i>", raw_messages[i]);
+	}
+	shell->priv->label = gtk_label_new ("");
+	gtk_widget_set_name (shell->priv->label, "invalid-label");
+	gtk_label_set_markup (GTK_LABEL (shell->priv->label), messages[MESSAGE_INVALID]);
+	gtk_widget_set_halign (shell->priv->label, GTK_ALIGN_START);
+	GtkWidget *evbox;
+	evbox = gtk_event_box_new ();
+	gtk_container_add (GTK_CONTAINER (evbox), shell->priv->label);
+	gtk_widget_show_all (evbox);
+	gtk_stack_add_named (GTK_STACK (shell->priv->stack), evbox, PAGE_LABEL);
 
-	/* button to change the entry's state and to display that state */
-	arrow = gtk_image_new_from_icon_name ("go-down-symbolic", GTK_ICON_SIZE_MENU);
-	button = gtk_button_new ();
-	gtk_style_context_add_class (gtk_widget_get_style_context (button), "action-entry");
-	gtk_container_add (GTK_CONTAINER (button), arrow);
-	gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
-	shell->priv->button = button;
-	gtk_widget_show_all (button);
+	gdaui_entry_shell_set_invalid_color (shell, 1.0, 0., 0., 0.9);
 
-	g_signal_connect (G_OBJECT (button), "event",
-			  G_CALLBACK (event_cb), shell);
-
-	/* focus */
-	gval = g_new0 (GValue, 1);
-	g_value_init (gval, G_TYPE_BOOLEAN);
-	g_value_set_boolean (gval, TRUE);
-	g_object_set_property (G_OBJECT (button), "can-focus", gval);
-	g_free (gval);
+	g_signal_connect (evbox, "button-press-event",
+			  G_CALLBACK (label_event_cb), shell);
 }
 
 static void
@@ -240,13 +443,6 @@ gdaui_entry_shell_set_property (GObject *object,
 					     "(to be set using the 'handler' property) expect some mis-behaviours"),
 					   G_OBJECT_TYPE_NAME (object));
 			break;
-		case PROP_ACTIONS:
-			shell->priv->show_actions = g_value_get_boolean (value);
-			if (shell->priv->show_actions)
-				gtk_widget_show (shell->priv->button);
-			else
-				gtk_widget_hide (shell->priv->button);
-			break;
 		case PROP_IS_CELL_RENDERER:
 			if (GTK_IS_CELL_EDITABLE (shell) &&
 			    (g_value_get_boolean (value) != shell->priv->is_cell_renderer)) {
@@ -274,9 +470,6 @@ gdaui_entry_shell_get_property (GObject *object,
 		case PROP_HANDLER:
 			g_value_set_object (value, shell->priv->data_handler);
 			break;
-		case PROP_ACTIONS:
-			g_value_set_boolean (value, shell->priv->show_actions);
-			break;
 		case PROP_IS_CELL_RENDERER:
 			g_value_set_boolean (value, shell->priv->is_cell_renderer);
 			break;
@@ -287,177 +480,34 @@ gdaui_entry_shell_get_property (GObject *object,
 	}
 }
 
-
 /**
  * gdaui_entry_shell_pack_entry:
  * @shell: a #GdauiEntryShell object
- * @main_widget: a #GtkWidget to pack into @shell
+ * @entry: a #GtkWidget to pack into @shell
  *
- * Packs a #GTkWidget widget into the GdauiEntryShell.
+ * Packs a #GtkWidget widget into the @shell.
  */
 void
-gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *main_widget)
+gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *entry)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
-	g_return_if_fail (main_widget && GTK_IS_WIDGET (main_widget));
-	gtk_container_add (GTK_CONTAINER (shell->priv->embedder), main_widget);
+	g_return_if_fail (GTK_IS_WIDGET (entry));
+
+	/* real packing */
+	if (gtk_stack_get_child_by_name (GTK_STACK (shell->priv->stack), PAGE_ENTRY)) {
+		g_warning ("Implementation error: %s() has already been called for this GdauiEntryShell.",
+			   __FUNCTION__);
+		return;
+	}
+	gtk_stack_add_named (GTK_STACK (shell->priv->stack), entry, PAGE_ENTRY);
 
 	/* signals */
-	g_signal_connect (G_OBJECT (shell), "contents-modified",
-			  G_CALLBACK (contents_modified_cb), NULL);
-
-	g_signal_connect (G_OBJECT (shell), "status-changed",
-			  G_CALLBACK (contents_modified_cb), NULL);
-}
-
-static void
-contents_modified_cb (GdauiEntryShell *shell, G_GNUC_UNUSED gpointer unused)
-{
-	gdaui_entry_shell_refresh (shell);
-}
-
-static void mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell);
-static GdaValueAttribute gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell);
-static gint
-event_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
-{
-	gboolean done = FALSE;
-
-	if (!shell->priv->show_actions)
-		return done;
-
-	if (event->type == GDK_BUTTON_PRESS) {
-		GdkEventButton *bevent = (GdkEventButton *) event;
-		if ((bevent->button == 1) || (bevent->button == 3)) {
-			GtkWidget *menu;
-			guint attributes;
-
-			attributes = gdaui_entry_shell_refresh_attributes (shell);
-			menu = _gdaui_utility_entry_build_actions_menu (G_OBJECT (shell), attributes,
-									G_CALLBACK (mitem_activated_cb));
-			gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-					bevent->button, bevent->time);
-			done = TRUE;
-		}
-	}
-
-	if (event->type == GDK_KEY_PRESS) {
-		GtkWidget *menu;
-		GdkEventKey *kevent = (GdkEventKey *) event;
-
-		if (kevent->keyval == GDK_KEY_space) {
-			guint attributes;
-
-			attributes = gdaui_entry_shell_refresh_attributes (shell);
-			menu = _gdaui_utility_entry_build_actions_menu (G_OBJECT (shell), attributes,
-									G_CALLBACK (mitem_activated_cb));
-
-			gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-					0, kevent->time);
-			done = TRUE;
-		}
-		else {
-			if (kevent->keyval == GDK_KEY_Tab)
-				done = FALSE;
-			else
-				done = TRUE;
-		}
-	}
-
-	return done;
-}
-
-static void
-mitem_activated_cb (GtkWidget *mitem, GdauiEntryShell *shell)
-{
-	guint action;
-
-	action = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (mitem), "action"));
-	gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (shell), action, action);
-}
-
-static void
-gdaui_entry_shell_refresh_status_display (GdauiEntryShell *shell)
-{
-	static GdkRGBA **colors = NULL;
-	GdkRGBA *normal = NULL, *prelight = NULL;
-
-	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
-
-	if (!colors)
-		colors = _gdaui_utility_entry_build_info_colors_array_a ();
-
-	gtk_widget_set_tooltip_text (shell->priv->button, NULL);
-
-	if (shell->priv->value_is_null) {
-		normal = colors[0];
-		prelight = colors[1];
-		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is NULL"));
-	}
-
-	if (shell->priv->value_is_default) {
-		normal = colors[2];
-		prelight = colors[3];
-		gtk_widget_set_tooltip_text (shell->priv->button, _("Value will be determined by default"));
-	}
-
-	if (shell->priv->value_is_non_valid) {
-		normal = colors[4];
-		prelight = colors[5];
-		gtk_widget_set_tooltip_text (shell->priv->button, _("Value is invalid"));
-	}
-
-	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_NORMAL, normal);
-	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_ACTIVE, normal);
-	gtk_widget_override_background_color (shell->priv->button, GTK_STATE_FLAG_PRELIGHT, prelight);
-}
-
-static GdaValueAttribute
-gdaui_entry_shell_refresh_attributes (GdauiEntryShell *shell)
-{
-	GdaValueAttribute attrs;
-
-	attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell));
-	shell->priv->value_is_null = attrs & GDA_VALUE_ATTR_IS_NULL;
-	shell->priv->value_is_modified = ! (attrs & GDA_VALUE_ATTR_IS_UNCHANGED);
-	shell->priv->value_is_default = attrs & GDA_VALUE_ATTR_IS_DEFAULT;
-	shell->priv->value_is_non_valid = attrs & GDA_VALUE_ATTR_DATA_NON_VALID;
-
-	return attrs;
+	g_signal_connect_after (G_OBJECT (entry), "event-after",
+				G_CALLBACK (event_after_cb), shell);
 }
 
 /**
- * gdaui_entry_shell_refresh:
- * @shell: the GdauiEntryShell widget to refresh
- *
- * Forces the shell to refresh its display (mainly the color of the
- * button).
- */
-void
-gdaui_entry_shell_refresh (GdauiEntryShell *shell)
-{
-	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
-	gdaui_entry_shell_refresh_attributes (shell);
-	gdaui_entry_shell_refresh_status_display (shell);
-}
-
-/**
- * gdaui_entry_shell_set_unknown:
- * @shell: the #GdauiEntryShell widget to refresh
- * @unknown: set to %TRUE if @shell's contents is unavailable and should not be modified
- *
- * Defines if @shell's contents is in an undefined state (shows or hides @shell's contents)
- */
-void
-gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
-{
-	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
-
-	widget_embedder_set_valid ((WidgetEmbedder*) shell->priv->embedder, !unknown);
-}
-
-/**
- * gdaui_entry_shell_set_ucolor:
+ * gdaui_entry_shell_set_invalid_color:
  * @shell: a #GdauiEntryShell
  * @red: the red component of a color
  * @green: the green component of a color
@@ -470,9 +520,96 @@ gdaui_entry_shell_set_unknown (GdauiEntryShell *shell, gboolean unknown)
  * Since: 5.0.3
  */
 void
-gdaui_entry_shell_set_ucolor (GdauiEntryShell *shell, gdouble red, gdouble green,
-			      gdouble blue, gdouble alpha)
+gdaui_entry_shell_set_invalid_color (GdauiEntryShell *shell, gdouble red, gdouble green,
+				     gdouble blue, gdouble alpha)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY_SHELL (shell));
-	widget_embedder_set_ucolor ((WidgetEmbedder*) shell->priv->embedder, red, green, blue, alpha);
+	g_return_if_fail ((red >= 0.) && (red <= 1.));
+	g_return_if_fail ((green >= 0.) && (green <= 1.));
+	g_return_if_fail ((blue >= 0.) && (blue <= 1.));
+	g_return_if_fail ((alpha >= 0.) && (alpha <= 1.));
+
+	static GtkCssProvider *prov = NULL;
+	if (!prov) {
+		prov = gtk_css_provider_new ();
+		gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+							   GTK_STYLE_PROVIDER (prov),
+							   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	}
+
+#define BASE_CSS_FORMAT "@define-color gdaui_inv_color lighter (rgba (%u,%u,%u,0.%d));" \
+		".invalid-entry #invalid-label {"			\
+		"color: darker (@selected_fg_color);"			\
+		"background-color: @gdaui_inv_color;"			\
+		"border-width:1px;"					\
+		"border-style:solid;"					\
+		"border-radius:3px;"					\
+		"border-color: @gdaui_inv_color;"			\
+		"}"							\
+		".invalid-entry GtkEntry, .invalid-entry GtkButton, .invalid-entry GtkScrolledWindow, .invalid-entry GtkSwitch {"	\
+		"border-radius:3px;"					\
+		"border-color: @gdaui_inv_color;"			\
+		"border-width:1px;"					\
+		"border-style:solid;"					\
+		"}"							\
+		".invalid-entry GtkLabel {"				\
+		"color: @gdaui_inv_color;"							\
+		"}"
+
+	gchar *css;
+	css = g_strdup_printf (BASE_CSS_FORMAT, (guint) (red * 255), (guint) (green * 255),
+			       (guint) (blue * 255), (gint) (alpha * 100));
+	gtk_css_provider_load_from_data (prov, css, -1, NULL);
+	g_free (css);
+}
+
+void
+_gdaui_entry_shell_mark_editable (GdauiEntryShell *shell, gboolean editable)
+{
+	
+	if (editable != shell->priv->editable) {
+		shell->priv->editable = editable;
+		_gdaui_entry_shell_attrs_changed (shell,
+						  gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (shell)));
+	}
+}
+
+/*
+ * Call this function to inform @shell that it may need to refresh its UI settings.
+ */
+void
+_gdaui_entry_shell_attrs_changed (GdauiEntryShell *shell, GdaValueAttribute attr)
+{
+
+	MessageType msg = MESSAGE_NONE;
+	if (value_is_valid (attr)) {
+		if (value_is_null (attr)) {
+			if (value_is_default (attr))
+				msg = MESSAGE_DEFAULT_AND_NULL;
+			else
+				msg = MESSAGE_NULL;
+		}
+		else if (value_is_default (attr))
+			msg = MESSAGE_DEFAULT;
+	}
+	else
+		msg = MESSAGE_INVALID;
+
+	if (! shell->priv->being_edited) {
+		gtk_label_set_markup (GTK_LABEL (shell->priv->label), messages[msg]);
+		if ((msg == MESSAGE_NONE) ||
+		    ((msg == MESSAGE_INVALID) && ! (attr & GDA_VALUE_ATTR_READ_ONLY)))
+			gtk_stack_set_visible_child_name (GTK_STACK (shell->priv->stack), PAGE_ENTRY);
+		else
+			gtk_stack_set_visible_child_name (GTK_STACK (shell->priv->stack), PAGE_LABEL);
+	}
+
+	if (msg == MESSAGE_INVALID)
+		gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (shell)),
+					     "invalid-entry");
+	else
+		gtk_style_context_remove_class (gtk_widget_get_style_context (GTK_WIDGET (shell)),
+						"invalid-entry");
+
+	show_or_hide_actions_button (shell, attr);
 }

@@ -78,8 +78,6 @@ struct _GdauiEntryNumberPrivate
 	guchar         thousand_sep;
 	guint16        nb_decimals;
 	gchar         *currency;
-
-	gulong         entry_change_sig;
 };
 
 static void
@@ -165,8 +163,6 @@ gdaui_entry_number_init (GdauiEntryNumber *mgstr)
 	mgstr->priv->nb_decimals = G_MAXUINT16; /* unlimited number of decimals */
 	mgstr->priv->currency = NULL;
 
-	mgstr->priv->entry_change_sig = 0;
-
 	g_signal_connect (mgstr, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
 }
@@ -187,8 +183,9 @@ gdaui_entry_number_is_type_numeric (GType type)
  * gdaui_entry_number_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
+ * @options: (allow-none): some options formatting the new entry, or %NULL
  *
- * Creates a new data entry widget
+ * Creates a new data entry widget. Known options are: THOUSAND_SEP, NB_DECIMALS and CURRENCY
  *
  * Returns: (transfer full): the new widget
  */
@@ -293,18 +290,30 @@ gdaui_entry_number_get_property (GObject *object,
 	}
 }
 
+static void
+event_after_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+        g_signal_emit_by_name (widget, "event-after", event);
+}
+
 static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
+	GtkWidget *hb;
 	GdauiEntryNumber *mgstr;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap), NULL);
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
 
+	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	mgstr->priv->entry = gdaui_numeric_entry_new (gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 	sync_entry_options (mgstr);
 
-	return mgstr->priv->entry;
+	gtk_container_add (GTK_CONTAINER (hb), mgstr->priv->entry);
+	gtk_widget_show (mgstr->priv->entry);
+	g_signal_connect_swapped (mgstr->priv->entry, "event-after",
+                                  G_CALLBACK (event_after_cb), hb);
+	return hb;
 }
 
 static void
@@ -361,10 +370,10 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
 	g_return_if_fail (mgstr->priv);
 
-	mgstr->priv->entry_change_sig = g_signal_connect (G_OBJECT (mgstr->priv->entry), "changed",
-							  modify_cb, mgwrap);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "activate",
-			  activate_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "changed",
+				  modify_cb, mgwrap);
+	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "activate",
+				  activate_cb, mgwrap);
 }
 
 static void
@@ -420,7 +429,6 @@ gdaui_entry_number_start_editing (GtkCellEditable *iface, GdkEvent *event)
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
 	g_signal_connect (G_OBJECT (mgstr->priv->entry), "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
-	gdaui_entry_shell_refresh (GDAUI_ENTRY_SHELL (mgstr));
 
 	gtk_widget_grab_focus (mgstr->priv->entry);
 	gtk_widget_queue_draw (GTK_WIDGET (mgstr));

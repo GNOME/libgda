@@ -1628,29 +1628,35 @@ gda_value_new_blob_from_file (const gchar *filename)
 }
 
 /*
- * Warning: modifies @gmttm and loctm
+ * Warning: DOES NOT modify @gmttm and loctm
  *
  * Returns: the offset, or G_MAXLONG in case of error
  */
 static glong
 compute_tz_offset (struct tm *gmttm, struct tm *loctm)
 {
-	time_t lt, gt;
 	if (! gmttm || !loctm)
 		return G_MAXLONG;
 
-	gmttm->tm_isdst = 0;
-	loctm->tm_isdst = 0;
+	struct tm cgmttm, cloctm;
+	cgmttm = *gmttm;
+	cloctm = *loctm;
 
-	lt = mktime (loctm);
+	time_t lt, gt;
+	cgmttm.tm_isdst = 0;
+	cloctm.tm_isdst = 0;
+
+	lt = mktime (&cloctm);
 	if (lt == -1)
 		return G_MAXLONG;
-	gt = mktime (gmttm);
+	gt = mktime (&cgmttm);
 	if (gt == -1)
 		return G_MAXLONG;
-
 	glong off;
 	off = lt - gt;
+	g_print ("%s(): %02d:%02d:%02d %d\n", __FUNCTION__,
+		 loctm->tm_hour, loctm->tm_min, loctm->tm_sec, (gint) (off / 3600));
+
 	if ((off >= 24 * 3600) || (off <= - 24 * 3600))
 		return G_MAXLONG;
 	else
@@ -1658,7 +1664,7 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
 }
 
 /**
- * gda_value_new_timestamp_from_timet: (skip)
+ * gda_value_new_timestamp_from_timet:
  * @val: value to set for the new #GValue.
  *
  * Makes a new #GValue of type #GDA_TYPE_TIMESTAMP with value @val
@@ -1726,6 +1732,79 @@ gda_value_new_timestamp_from_timet (time_t val)
 
 		value = g_new0 (GValue, 1);
                 gda_value_set_timestamp (value, (const GdaTimestamp *) &tstamp);
+        }
+
+        return value;
+}
+
+/**
+ * gda_value_new_time_from_timet:
+ * @val: value to set for the new #GValue.
+ *
+ * Makes a new #GValue of type #GDA_TYPE_TIME with value @val
+ * (of type time_t). The returned times's value is relative to the current
+ * timezone (i.e. is localtime).
+ *
+ * For example, to get a time representing the current time, use:
+ *
+ * <code>
+ * ts = gda_value_new_time_from_timet (time (NULL));
+ * </code>
+ *
+ * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
+ *
+ * Free-function: gda_value_free
+ *
+ * Since: 6.0
+ */
+GValue *
+gda_value_new_time_from_timet (time_t val)
+{
+	GValue *value = NULL;
+	struct tm *ltm = NULL;
+	glong tz = 0;
+
+#ifdef HAVE_LOCALTIME_R
+	struct tm gmttm, loctm;
+	tzset ();
+	ltm = localtime_r ((const time_t *) &val, &loctm);
+	tz = compute_tz_offset (gmtime_r ((const time_t *) &val, &gmttm), &loctm);
+	if (tz == G_MAXLONG)
+		ltm = NULL;
+#elif HAVE_LOCALTIME_S
+	struct tm gmttm, loctm;
+	if ((localtime_s (&loctm, (const time_t *) &val) == 0) &&
+	    (gmtime_s (&gmttm, (const time_t *) &val) == 0)) {
+		tz = compute_tz_offset (&gmttm, &loctm);
+		if (tz != G_MAXLONG)
+			ltm = &loctm;
+	}
+#else
+	struct tm gmttm, loctm;
+	ltm = gmtime ((const time_t *) &val);
+	if (ltm) {
+		gmttm = *ltm;
+		ltm = localtime ((const time_t *) &val);
+		if (ltm) {
+			loctm = *ltm;
+			tz = compute_tz_offset (&gmttm, &loctm);
+			if (tz == G_MAXLONG)
+				ltm = NULL;
+		}
+	}
+	
+#endif
+
+        if (ltm) {
+                GdaTime tim;
+                tim.hour = ltm->tm_hour;
+                tim.minute = ltm->tm_min;
+                tim.second = ltm->tm_sec;
+                tim.fraction = 0;
+                tim.timezone = tz;
+
+		value = g_new0 (GValue, 1);
+                gda_value_set_time (value, (const GdaTime *) &tim);
         }
 
         return value;

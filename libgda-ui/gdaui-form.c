@@ -202,12 +202,11 @@ gdaui_form_init (GdauiForm *form)
 	GtkWidget *frame;
 	frame = gtk_frame_new (NULL);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-	gtk_box_pack_start (GTK_BOX (form), frame, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (form), frame, TRUE, TRUE, 0);
 	gtk_widget_show (frame);
 
 	form->priv->raw_form = gdaui_raw_form_new (NULL);
 	gtk_container_add (GTK_CONTAINER (frame), form->priv->raw_form);
-	gtk_container_set_border_width (GTK_CONTAINER (form->priv->raw_form), 6);
 
 	gtk_widget_show (form->priv->raw_form);
 	g_signal_connect (form->priv->raw_form, "layout-changed",

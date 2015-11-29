@@ -372,6 +372,7 @@
 	gda_handler_string_new_with_provider
 	gda_handler_time_get_format
 	gda_handler_time_get_no_locale_str_from_value
+	gda_handler_time_get_hint
 	gda_handler_time_get_type
 	gda_handler_time_new
 	gda_handler_time_new_no_locale
@@ -949,6 +950,7 @@
 	gda_value_new_from_string
 	gda_value_new_from_xml
 	gda_value_new_null
+	gda_value_new_time_from_timet
 	gda_value_new_timestamp_from_timet
 	gda_value_reset_with_type
 	gda_value_set_binary

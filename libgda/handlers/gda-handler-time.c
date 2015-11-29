@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
@@ -591,6 +591,66 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 
 	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME))
 		g_string_append (string, "00:00:00");
+
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
+/**
+ * gda_handler_time_get_hint:
+ * @dh: a #GdaHandlerTime object
+ * @type: the type of data being handled
+ *
+ * Get a string giving the user a hint about the locale-dependent requested format.
+ *
+ * Returns: a new string
+ *
+ * Since: 6.0
+ */
+gchar *
+gda_handler_time_get_hint (GdaHandlerTime *dh, GType type)
+{
+	gchar *str;
+	GString *string;
+	gint i;
+
+	g_return_val_if_fail (GDA_IS_HANDLER_TIME (dh), NULL);
+
+	string = g_string_new ("");
+	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME)) {
+		for (i=0; i<3; i++) {
+			if (i > 0)
+				g_string_append_c (string, dh->priv->str_locale->separator);
+			switch (dh->priv->str_locale->dmy_order[i]) {
+			case G_DATE_DAY:
+				/* To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number */
+				g_string_append (string, _("DD"));
+				break;
+			case G_DATE_MONTH:
+				/* To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number */
+				g_string_append (string, _("MM"));
+				break;
+			case G_DATE_YEAR:
+				if (dh->priv->str_locale->twodigit_years)
+					/* To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits */
+					g_string_append (string, _("YY"));
+				else
+					/* To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits */
+					g_string_append (string, _("YYYY"));
+				break;
+			default:
+				g_assert_not_reached ();
+				break;
+			}
+		}
+	}
+	if (type == GDA_TYPE_TIMESTAMP)
+		g_string_append_c (string, ' ');
+
+	if ((type == GDA_TYPE_TIME) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME))
+		/* To translators: HH:MM:SS represents a time format. For example in the "HH:MM:SS" format, one knows that she has to replace HH by a number of hours, and so on */
+		g_string_append (string, "HH:MM:SS");
 
 	str = string->str;
 	g_string_free (string, FALSE);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
@@ -91,10 +91,10 @@ struct  _GdauiEntryComboPriv {
 	gboolean                data_valid;
 	gboolean                null_forced;
 	gboolean                default_forced;
+	gboolean                invalid;
 	gboolean                null_possible;
 	gboolean                default_possible;
-	
-	gboolean                show_actions;
+
 	gboolean                set_default_if_invalid; /* use first entry when provided value is not found ? */
 };
 
@@ -185,13 +185,7 @@ real_combo_unblock_signals (GdauiEntryCombo *wid)
 static void
 gdaui_entry_combo_emit_signal (GdauiEntryCombo *combo)
 {
-#ifdef debug_signal
-	g_print (">> 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
-#endif
 	g_signal_emit_by_name (G_OBJECT (combo), "contents-modified");
-#ifdef debug_signal
-	g_print ("<< 'CONTENTS_MODIFIED' from %s\n", __FUNCTION__);
-#endif
 }
 
 static void
@@ -203,11 +197,11 @@ gdaui_entry_combo_init (GdauiEntryCombo *combo)
 	combo->priv->set_default_if_invalid = FALSE;
 	combo->priv->combo_entry = NULL;
 	combo->priv->data_valid = FALSE;
+	combo->priv->invalid = FALSE;
 	combo->priv->null_forced = FALSE;
 	combo->priv->default_forced = FALSE;
 	combo->priv->null_possible = TRUE;
 	combo->priv->default_possible = FALSE;
-	combo->priv->show_actions = TRUE;
 
 	combo->priv->paramlist = NULL;
 	combo->priv->source = NULL;
@@ -909,22 +903,11 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 		}
 	}
 
-	/* Actions buttons ? */
-	if (mask & GDA_VALUE_ATTR_ACTIONS_SHOWN) {
-		GValue *gval;
-		combo->priv->show_actions = (attrs & GDA_VALUE_ATTR_ACTIONS_SHOWN) ? TRUE : FALSE;
-		
-		gval = g_new0 (GValue, 1);
-		g_value_init (gval, G_TYPE_BOOLEAN);
-		g_value_set_boolean (gval, combo->priv->show_actions);
-		g_object_set_property (G_OBJECT (combo), "actions", gval);
-		g_free (gval);
-	}
+	/* invalid data */
+	if (mask & GDA_VALUE_ATTR_DATA_NON_VALID)
+		combo->priv->invalid = attrs & GDA_VALUE_ATTR_DATA_NON_VALID;
 
 	/* NON WRITABLE attributes */
-	if (mask & GDA_VALUE_ATTR_DATA_NON_VALID) 
-		g_warning ("Can't force a GdauiDataEntry to be invalid!");
-
 	if (mask & GDA_VALUE_ATTR_HAS_VALUE_ORIG)
 		g_warning ("Having an original value is not a write attribute on GdauiDataEntry!");
 
@@ -980,31 +963,26 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	}
 
 	if (isunchanged)
-		retval = retval | GDA_VALUE_ATTR_IS_UNCHANGED;
+		retval |= GDA_VALUE_ATTR_IS_UNCHANGED;
 
 	if (isnull || combo->priv->null_forced)
-		retval = retval | GDA_VALUE_ATTR_IS_NULL;
+		retval |= GDA_VALUE_ATTR_IS_NULL;
 
 	/* can be NULL? */
 	if (combo->priv->null_possible) 
-		retval = retval | GDA_VALUE_ATTR_CAN_BE_NULL;
+		retval |= GDA_VALUE_ATTR_CAN_BE_NULL;
 	
 	/* is default */
 	if (combo->priv->default_forced)
-		retval = retval | GDA_VALUE_ATTR_IS_DEFAULT;
+		retval |= GDA_VALUE_ATTR_IS_DEFAULT;
 	
 	/* can be default? */
 	if (combo->priv->default_possible)
-		retval = retval | GDA_VALUE_ATTR_CAN_BE_DEFAULT;
+		retval |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 	
-
-	/* actions shown */
-	if (combo->priv->show_actions)
-		retval = retval | GDA_VALUE_ATTR_ACTIONS_SHOWN;
-
 	/* data valid? */
-	if (! combo->priv->data_valid)
-		retval = retval | GDA_VALUE_ATTR_DATA_NON_VALID;
+	if ((! combo->priv->data_valid) || combo->priv->invalid)
+		retval |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	else {
 		GSList *nodes;
 		gboolean allnull = TRUE;
@@ -1021,13 +999,13 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 
 		if ((allnull && !combo->priv->null_possible) ||
 		    (combo->priv->null_forced && !combo->priv->null_possible))
-			retval = retval | GDA_VALUE_ATTR_DATA_NON_VALID;
+			retval |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	}
 
 	/* has original value? */
 	list2 = gdaui_entry_combo_get_reference_values (combo);
 	if (list2) {
-		retval = retval | GDA_VALUE_ATTR_HAS_VALUE_ORIG;
+		retval |= GDA_VALUE_ATTR_HAS_VALUE_ORIG;
 		g_slist_free (list2);
 	}
 
@@ -1051,5 +1029,5 @@ static void
 gdaui_entry_combo_set_unknown_color (GdauiDataEntry *de, gdouble red, gdouble green,
 				     gdouble blue, gdouble alpha)
 {
-	gdaui_entry_shell_set_ucolor (GDAUI_ENTRY_SHELL (de), red, green, blue, alpha);
+	gdaui_entry_shell_set_invalid_color (GDAUI_ENTRY_SHELL (de), red, green, blue, alpha);
 }
