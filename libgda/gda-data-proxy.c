@@ -791,7 +791,7 @@ gda_data_proxy_init (GdaDataProxy *proxy)
 	do_init (proxy);
 
 	proxy->priv->add_null_entry = FALSE;
-	proxy->priv->defer_sync = TRUE;
+	proxy->priv->defer_sync = FALSE;
 	proxy->priv->cache_changes = FALSE;
 }
 
@@ -2523,7 +2523,8 @@ static gboolean
 chunk_sync_idle (GdaDataProxy *proxy)
 {
 #define IDLE_STEP 50
-	g_rec_mutex_lock (& (proxy->priv->mutex));
+	if (! g_rec_mutex_trylock (& (proxy->priv->mutex)))
+		return TRUE; /* we have not finished yet */
 
 	gboolean finished = FALSE;
 	guint index, max_steps, step;
