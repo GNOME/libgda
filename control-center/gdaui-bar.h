@@ -64,6 +64,7 @@ void         gdaui_bar_set_show_icon             (GdauiBar *bar, gboolean show);
 gboolean     gdaui_bar_get_show_icon             (GdauiBar *bar);
 
 GtkWidget   *gdaui_bar_add_search_entry          (GdauiBar *bar);
+void         gdaui_bar_add_widget                (GdauiBar *bar, GtkWidget *widget);
 GtkWidget   *gdaui_bar_add_button_from_icon_name (GdauiBar *bar, const gchar *icon_name);
 
 G_END_DECLS

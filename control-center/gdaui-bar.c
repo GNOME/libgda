@@ -126,9 +126,15 @@ gdaui_bar_init (GdauiBar *bar)
 	gtk_widget_show (content_area);
 	gtk_box_pack_start (GTK_BOX (bar), content_area, TRUE, TRUE, 0);
 
+	GtkWidget *tmp;
+	tmp = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_show (tmp);
+	gtk_widget_set_valign (tmp, GTK_ALIGN_CENTER);
+	gtk_box_pack_start (GTK_BOX (bar), tmp, FALSE, TRUE, 0);
+
 	action_area = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_widget_show (action_area);
-	gtk_box_pack_start (GTK_BOX (bar), action_area, FALSE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (tmp), action_area, FALSE, TRUE, 0);
 
 	gtk_widget_set_app_paintable (widget, TRUE);
 	gtk_widget_set_redraw_on_allocate (widget, TRUE);
@@ -483,10 +489,8 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
 
 	GtkWidget *vb, *entry;
-
 	vb = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
 	gtk_button_box_set_layout (GTK_BUTTON_BOX (vb), GTK_BUTTONBOX_CENTER);
-	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), vb, FALSE, FALSE, 0);
 
 	entry = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (vb), entry, FALSE, FALSE, 0);
@@ -508,7 +512,25 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 			  G_CALLBACK (find_icon_pressed_cb), NULL);
 
 	gtk_widget_show_all (vb);
+	gdaui_bar_add_widget (bar, vb);
+
 	return entry;
+}
+
+/**
+ * gdaui_bar_add_widget:
+ * @bar: a #GdauiBar
+ * @widget: a widget to add to @bar.
+ *
+ * Adds @widget to @bar.
+ */
+void
+gdaui_bar_add_widget (GdauiBar *bar, GtkWidget *widget)
+{
+	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
+	g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), widget, FALSE, FALSE, 0);
 }
 
 /**
