@@ -133,26 +133,6 @@ gdaui_data_proxy_column_set_editable (GdauiDataProxy *iface, gint column, gboole
 }
 
 /**
- * gdaui_data_proxy_column_show_actions:
- * @iface: an object which implements the #GdauiDataProxy interface
- * @column: column number of the data, or -1 to apply the setting to all the columns
- * @show_actions: set to %TRUE if the actions menu must be shown
- * 
- * Sets if the data entry in the @iface widget at @column (in the data model @iface operates on) must show its
- * actions menu or not.
- *
- * Since: 4.2
- */
-void
-gdaui_data_proxy_column_show_actions (GdauiDataProxy *iface, gint column, gboolean show_actions)
-{
-	g_return_if_fail (GDAUI_IS_DATA_PROXY (iface));
-
-	if (GDAUI_DATA_PROXY_GET_IFACE (iface)->show_column_actions)
-		(GDAUI_DATA_PROXY_GET_IFACE (iface)->show_column_actions) (iface, column, show_actions);
-}
-
-/**
  * gdaui_data_proxy_supports_action:
  * @iface: an object which implements the #GdauiDataProxy interface
  * @action: a #GdauiAction action

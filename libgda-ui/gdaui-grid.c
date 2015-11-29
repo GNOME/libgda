@@ -46,7 +46,6 @@ static void gdaui_grid_get_property (GObject *object,
 static void            gdaui_grid_widget_init         (GdauiDataProxyIface *iface);
 static GdaDataProxy   *gdaui_grid_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_grid_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
-static void            gdaui_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions);
 static gboolean        gdaui_grid_supports_action       (GdauiDataProxy *iface, GdauiAction action);
 static void            gdaui_grid_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_grid_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
@@ -125,7 +124,6 @@ gdaui_grid_widget_init (GdauiDataProxyIface *iface)
 {
 	iface->get_proxy = gdaui_grid_get_proxy;
 	iface->set_column_editable = gdaui_grid_set_column_editable;
-	iface->show_column_actions = gdaui_grid_show_column_actions;
 	iface->supports_action = gdaui_grid_supports_action;
 	iface->perform_action = gdaui_grid_perform_action;
 	iface->set_write_mode = gdaui_grid_widget_set_write_mode;
@@ -347,13 +345,6 @@ gdaui_grid_set_column_editable (GdauiDataProxy *iface, gint column, gboolean edi
 {
 	gdaui_data_proxy_column_set_editable ((GdauiDataProxy*) GDAUI_GRID (iface)->priv->raw_grid,
 					      column, editable);
-}
-
-static void
-gdaui_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions)
-{
-	gdaui_data_proxy_column_show_actions ((GdauiDataProxy*) GDAUI_GRID (iface)->priv->raw_grid,
-					      column, show_actions);
 }
 
 static gboolean

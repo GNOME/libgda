@@ -63,7 +63,6 @@
 	gdaui_data_filter_get_type
 	gdaui_data_filter_new
 	gdaui_data_proxy_column_set_editable
-	gdaui_data_proxy_column_show_actions
 	gdaui_data_proxy_get_proxy
 	gdaui_data_proxy_get_type
 	gdaui_data_proxy_get_write_mode

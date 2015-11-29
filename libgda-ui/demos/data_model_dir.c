@@ -92,7 +92,6 @@ do_data_model_dir (GtkWidget *do_widget)
 
 		value = gda_value_new_from_string ("picture", G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
-		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (grid), -1, TRUE);
 		gda_value_free (value);
 	}
 

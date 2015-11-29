@@ -417,7 +417,6 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 		gtk_widget_hide (import->priv->no_data_label);
 		import->priv->preview_grid = gdaui_grid_new (import->priv->model);
 
-		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (import->priv->preview_grid), -1, FALSE);
 		gdaui_grid_set_sample_size (GDAUI_GRID (import->priv->preview_grid), 50);
 		g_object_set (G_OBJECT (import->priv->preview_grid), "info-flags",
 			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 

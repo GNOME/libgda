@@ -324,13 +324,11 @@ ui_formgrid_init (UiFormGrid *formgrid)
 
 	/* grid on 1st page of notebook, not added there */
 	formgrid->priv->raw_grid = gdaui_raw_grid_new (NULL);
-	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), -1, FALSE);
 	g_signal_connect (formgrid->priv->raw_grid, "populate-popup",
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 
 	/* form on the 2nd page of the notebook, not added there */
 	formgrid->priv->raw_form = gdaui_raw_form_new (NULL);
-	gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (formgrid->priv->raw_form), -1, FALSE);
 	g_signal_connect (formgrid->priv->raw_form, "populate-popup",
 			  G_CALLBACK (form_grid_populate_popup_cb), formgrid);
 

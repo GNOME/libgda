@@ -69,7 +69,6 @@ static void reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_nod
 static void            gdaui_raw_grid_widget_init           (GdauiDataProxyIface *iface);
 static GdaDataProxy   *gdaui_raw_grid_get_proxy             (GdauiDataProxy *iface);
 static void            gdaui_raw_grid_set_column_editable   (GdauiDataProxy *iface, gint column, gboolean editable);
-static void            gdaui_raw_grid_show_column_actions   (GdauiDataProxy *iface, gint column, gboolean show_actions);
 static gboolean        gdaui_raw_grid_supports_action       (GdauiDataProxy *iface, GdauiAction action);
 static void            gdaui_raw_grid_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_raw_grid_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
@@ -134,7 +133,6 @@ struct _GdauiRawGridPriv
 	GSList                     *reordered_indexes;  /* Indexes of the reordered columns. */
 
 	gboolean                    default_show_info_cell;
-	gboolean                    default_show_global_actions;
 
 	gint                        export_type; /* used by the export dialog */
 	GdauiDataProxyWriteMode     write_mode;
@@ -222,7 +220,6 @@ gdaui_raw_grid_widget_init (GdauiDataProxyIface *iface)
 {
 	iface->get_proxy = gdaui_raw_grid_get_proxy;
 	iface->set_column_editable = gdaui_raw_grid_set_column_editable;
-	iface->show_column_actions = gdaui_raw_grid_show_column_actions;
 	iface->supports_action = gdaui_raw_grid_supports_action;
 	iface->perform_action = gdaui_raw_grid_perform_action;
 	iface->set_write_mode = gdaui_raw_grid_widget_set_write_mode;
@@ -352,7 +349,6 @@ gdaui_raw_grid_init (GdauiRawGrid *grid)
 	grid->priv->iter_row = -1;
 	grid->priv->proxy = NULL;
 	grid->priv->default_show_info_cell = FALSE;
-	grid->priv->default_show_global_actions = TRUE;
 	grid->priv->columns_data = NULL;
 	grid->priv->columns_hash = g_hash_table_new (NULL, NULL);
 	grid->priv->export_type = 1;
@@ -2440,49 +2436,6 @@ gdaui_raw_grid_set_column_editable (GdauiDataProxy *iface, gint column, gboolean
 			cdata->data_locked = FALSE;
 		else
 			cdata->data_locked = TRUE;
-	}
-}
-
-static void
-gdaui_raw_grid_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions)
-{
-	GdauiRawGrid *grid;
-
-	g_return_if_fail (GDAUI_IS_RAW_GRID (iface));
-	grid = GDAUI_RAW_GRID (iface);
-	g_return_if_fail (grid->priv);
-
-	if (column >= 0) {
-		GdaHolder *param;
-		GdauiSetGroup *group;
-		ColumnData *cdata;
-
-		/* setting applies only to the @column column */
-		param = gda_data_model_iter_get_holder_for_field (grid->priv->iter, column);
-		g_return_if_fail (param);
-
-		group = _gdaui_set_get_group (grid->priv->iter_info, param);
-		g_return_if_fail (group);
-
-		cdata = get_column_data_for_group (grid, group);
-		g_return_if_fail (cdata);
-
-		if (show_actions != cdata->info_shown) {
-			cdata->info_shown = show_actions;
-			g_object_set (G_OBJECT (cdata->info_cell), "visible", cdata->info_shown, NULL);
-		}
-	}
-	else {
-		/* setting applies to all columns */
-		GSList *list;
-		for (list = grid->priv->columns_data; list; list = list->next) {
-			ColumnData *cdata = (ColumnData*)(list->data);
-			if (show_actions != cdata->info_shown) {
-				cdata->info_shown = show_actions;
-				g_object_set (G_OBJECT (cdata->info_cell), "visible", cdata->info_shown, NULL);
-			}
-		}
-		grid->priv->default_show_info_cell = show_actions;
 	}
 }
 

@@ -96,6 +96,7 @@
     <link linkend="migration-4-cnc-api-changes">GdaConnection's API changes</link>.
     <itemizedlist>
       <listitem><para>GdaMutex has been removed, being redundant with GRecMutex</para></listitem>
+      <listitem><para>gdaui_data_proxy_column_show_actions() has been removed, as it is no longer necessary.</para></listitem>
     </itemizedlist>
     </para>
   </sect1>

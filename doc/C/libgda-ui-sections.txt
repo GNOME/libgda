@@ -149,7 +149,6 @@ gdaui_data_proxy_get_actions_group
 GdauiAction
 gdaui_data_proxy_perform_action
 gdaui_data_proxy_column_set_editable
-gdaui_data_proxy_column_show_actions
 GdauiDataProxyWriteMode
 gdaui_data_proxy_set_write_mode
 gdaui_data_proxy_get_write_mode

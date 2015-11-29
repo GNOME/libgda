@@ -57,7 +57,6 @@ static void proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, Gda
 static void            gdaui_raw_form_widget_init         (GdauiDataProxyIface *iface);
 static GdaDataProxy   *gdaui_raw_form_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
-static void            gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, gint column, gboolean show_actions);
 static gboolean        gdaui_raw_form_supports_action       (GdauiDataProxy *iface, GdauiAction action);
 static void            gdaui_raw_form_perform_action        (GdauiDataProxy *iface, GdauiAction action);
 static gboolean        gdaui_raw_form_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
@@ -138,7 +137,6 @@ gdaui_raw_form_widget_init (GdauiDataProxyIface *iface)
 {
 	iface->get_proxy = gdaui_raw_form_get_proxy;
 	iface->set_column_editable = gdaui_raw_form_set_column_editable;
-	iface->show_column_actions = gdaui_raw_form_show_column_actions;
 	iface->supports_action = gdaui_raw_form_supports_action;
 	iface->perform_action = gdaui_raw_form_perform_action;
 	iface->set_write_mode = gdaui_raw_form_widget_set_write_mode;
@@ -561,10 +559,6 @@ gdaui_raw_form_set_property (GObject *object,
 				iter_row_changed_cb (form->priv->iter,
 						     gda_data_model_iter_get_row (form->priv->iter), form);
 
-				/* actions */
-				if (gda_data_proxy_is_read_only (form->priv->proxy))
-					g_object_set ((GObject*) form, "show-actions", FALSE, NULL);
-
 				/* data display update */
 				proxy_changed_cb (form->priv->proxy, form);
 
@@ -773,19 +767,6 @@ gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, G_GNUC_UNUSED gint co
 	 *   by setting that new property
 	 * - implement the new property in GdauiEntryWrapper and GdauiEntryCombo.
 	 */
-}
-
-static void
-gdaui_raw_form_show_column_actions (GdauiDataProxy *iface, G_GNUC_UNUSED gint column, gboolean show_actions)
-{
-	GdauiRawForm *form;
-
-	g_return_if_fail (GDAUI_IS_RAW_FORM (iface));
-	form = GDAUI_RAW_FORM (iface);
-	g_return_if_fail (form->priv);
-
-	/* REM: don't take care of the @column argument */
-	g_object_set ((GObject*) form, "show-actions", show_actions, NULL);
 }
 
 static gboolean

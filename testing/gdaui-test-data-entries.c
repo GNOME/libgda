@@ -988,7 +988,6 @@ build_form_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const g
 
 		wid = gdaui_form_new (model);
 		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
-		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (wid), -1, TRUE);
 		param = plist->holders->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);
@@ -1021,7 +1020,6 @@ build_grid_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const g
 		
 		wid = gdaui_grid_new (model);
 		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
-		gdaui_data_proxy_column_show_actions (GDAUI_DATA_PROXY (wid), -1, TRUE);
 		param = plist->holders->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);

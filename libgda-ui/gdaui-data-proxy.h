@@ -59,7 +59,6 @@ struct _GdauiDataProxyIface
 	/* virtual table */
 	GdaDataProxy        *(* get_proxy)           (GdauiDataProxy *iface);
 	void                 (* set_column_editable) (GdauiDataProxy *iface, gint column, gboolean editable);
-	void                 (* show_column_actions) (GdauiDataProxy *iface, gint column, gboolean show_actions);
 	gboolean             (* supports_action)     (GdauiDataProxy *iface, GdauiAction action);
 	void                 (* perform_action)      (GdauiDataProxy *iface, GdauiAction action);
 	gboolean             (* set_write_mode)      (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
@@ -90,7 +89,6 @@ gboolean          gdaui_data_proxy_supports_action           (GdauiDataProxy *if
 void              gdaui_data_proxy_perform_action            (GdauiDataProxy *iface, GdauiAction action); /* FIXME: add an optional row number on which to apply the action, useless for GDAUI_ACTION_MOVE_* actions */
 
 void              gdaui_data_proxy_column_set_editable       (GdauiDataProxy *iface, gint column, gboolean editable);
-void              gdaui_data_proxy_column_show_actions       (GdauiDataProxy *iface, gint column, gboolean show_actions);
 
 gboolean          gdaui_data_proxy_set_write_mode            (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode);
 GdauiDataProxyWriteMode gdaui_data_proxy_get_write_mode   (GdauiDataProxy *iface);

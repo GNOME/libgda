@@ -327,4 +327,5 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 
 	gtk_editable_set_editable (GTK_EDITABLE (filesel->priv->entry), editable);
 	gtk_widget_set_sensitive (filesel->priv->button, editable);
+	gtk_widget_set_visible (filesel->priv->button, editable);
 }
