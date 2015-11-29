@@ -19,6 +19,7 @@ dpkg --install $debfile && rm $debfile
 cp /u01/app/oracle/product/$version/xe/network/admin/listener.ora /u01/app/oracle/product/$version/xe/network/admin/listener.ora.tmpl
 
 mv /setup-data/init.ora /u01/app/oracle/product/$version/xe/config/scripts
+mv /setup-data/init2.ora ./u01/app/oracle/product/11.2.0/xe/dbs/init.ora
 mv /setup-data/initXETemp.ora /u01/app/oracle/product/$version/xe/config/scripts
 
 printf 8080\\n1521\\ngdauser\\ngdauser\\ny\\n | /etc/init.d/oracle-xe configure

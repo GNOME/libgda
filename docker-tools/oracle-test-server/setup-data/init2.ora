@@ -1,0 +1,66 @@
+#
+# $Header: rdbms/admin/init.ora /main/23 2009/05/15 13:35:38 ysarig Exp $
+#
+# Copyright (c) 1991, 1997, 1998 by Oracle Corporation
+# NAME
+#   init.ora
+# FUNCTION
+# NOTES
+# MODIFIED
+#     ysarig     05/14/09  - Updating compatible to 11.2
+#     ysarig     08/13/07  - Fixing the sample for 11g
+#     atsukerm   08/06/98 -  fix for 8.1.
+#     hpiao      06/05/97 -  fix for 803
+#     glavash    05/12/97 -  add oracle_trace_enable comment
+#     hpiao      04/22/97 -  remove ifile=, events=, etc.
+#     alingelb   09/19/94 -  remove vms-specific stuff
+#     dpawson    07/07/93 -  add more comments regarded archive start
+#     maporter   10/29/92 -  Add vms_sga_use_gblpagfile=TRUE
+#     jloaiza    03/07/92 -  change ALPHA to BETA
+#     danderso   02/26/92 -  change db_block_cache_protect to _db_block_cache_p
+#     ghallmar   02/03/92 -  db_directory -> db_domain
+#     maporter   01/12/92 -  merge changes from branch 1.8.308.1
+#     maporter   12/21/91 -  bug 76493: Add control_files parameter
+#     wbridge    12/03/91 -  use of %c in archive format is discouraged
+#     ghallmar   12/02/91 -  add global_names=true, db_directory=us.acme.com
+#     thayes     11/27/91 -  Change default for cache_clone
+#     jloaiza    08/13/91 -         merge changes from branch 1.7.100.1
+#     jloaiza    07/31/91 -         add debug stuff
+#     rlim       04/29/91 -         removal of char_is_varchar2
+#   Bridge     03/12/91 - log_allocation no longer exists
+#   Wijaya     02/05/91 - remove obsolete parameters
+#
+##############################################################################
+# Example INIT.ORA file
+#
+# This file is provided by Oracle Corporation to help you start by providing
+# a starting point to customize your RDBMS installation for your site.
+#
+# NOTE: The values that are used in this file are only intended to be used
+# as a starting point. You may want to adjust/tune those values to your
+# specific hardware and needs. You may also consider using Database
+# Configuration Assistant tool (DBCA) to create INIT file and to size your
+# initial set of tablespaces based on the user input.
+###############################################################################
+
+# Change '<ORACLE_BASE>' to point to the oracle base (the one you specify at
+# install time)
+
+db_name='ORCL'
+#memory_target=1G
+processes = 150
+audit_file_dest='<ORACLE_BASE>/admin/orcl/adump'
+audit_trail ='db'
+db_block_size=8192
+db_domain=''
+db_recovery_file_dest='<ORACLE_BASE>/flash_recovery_area'
+db_recovery_file_dest_size=2G
+diagnostic_dest='<ORACLE_BASE>'
+dispatchers='(PROTOCOL=TCP) (SERVICE=ORCLXDB)'
+open_cursors=300
+remote_login_passwordfile='EXCLUSIVE'
+undo_tablespace='UNDOTBS1'
+# You may want to ensure that control files are created on separate physical
+# devices
+control_files = (ora_control1, ora_control2)
+compatible ='11.2.0'
