@@ -22,7 +22,6 @@
 #include <glib/gi18n-lib.h>
 #include "../ui-customize.h"
 #include "dummy-perspective.h"
-#include "dummy-perspective.gresources.h"
 
 struct _DummyPerspectivePriv {
 	GtkWidget *notebook;
@@ -86,9 +85,6 @@ dummy_perspective_class_init (DummyPerspectiveClass * klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = dummy_perspective_dispose;
-
-	/* force loading of rerources */
-	dummy_perspective_get_resource ();
 }
 
 static void

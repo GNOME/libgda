@@ -29,7 +29,6 @@
 #include "../gdaui-bar.h"
 #include "marshal.h"
 #include <gdk/gdkkeysyms.h>
-#include <libgda-ui/internal/popup-container.h>
 #include "../objects-cloud.h"
 
 struct _ObjectsIndexPrivate {

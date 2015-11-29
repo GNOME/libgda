@@ -15,10 +15,6 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
-GENFILES = \
-	dummy-perspective.gresources.c \
-	dummy-perspective.gresources.h
-
 $(libperspective_la_OBJECTS): $(GENFILES)
 
 libperspective_la_SOURCES = \
@@ -27,20 +23,6 @@ libperspective_la_SOURCES = \
 	perspective-main.h \
 	dummy-perspective.h \
 	dummy-perspective.c
-
-# resources
-RESOURCES=\
-        dummy-perspective.gresource.xml \
-	perspective-menus.ui
-
-dummy-perspective.gresources.c: $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=. --generate-source $(srcdir)/dummy-perspective.gresource.xml
-
-dummy-perspective.gresources.h: $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=. --generate-header $(srcdir)/dummy-perspective.gresource.xml
-
-EXTRA_DIST= \
-	$(RESOURCES)
 
 CLEANFILES = \
 	$(GENFILES)

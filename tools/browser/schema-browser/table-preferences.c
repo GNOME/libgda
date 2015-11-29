@@ -844,8 +844,6 @@ set_preview_widget (TablePreferences *tpref)
 		if (prev_value &&
 		    (G_VALUE_TYPE (prev_value) == gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (preview))))
 			gdaui_data_entry_set_value (GDAUI_DATA_ENTRY (preview), prev_value);
-		gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (preview),
-						 0, GDA_VALUE_ATTR_ACTIONS_SHOWN);
 		tpref->priv->preview_wid = preview;
 		gtk_box_pack_start (GTK_BOX (tpref->priv->preview_vbox), preview, TRUE, TRUE, 0);
 		gtk_widget_hide (tpref->priv->preview_none);

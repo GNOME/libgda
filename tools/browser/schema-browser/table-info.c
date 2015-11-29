@@ -36,7 +36,6 @@
 #include "../data-manager/data-manager-perspective.h"
 #include <libgda-ui/gdaui-enums.h>
 #include <libgda-ui/gdaui-basic-form.h>
-#include <libgda-ui/internal/popup-container.h>
 #include <libgda/gda-data-model-extra.h>
 #include "../fk-declare.h"
 #include <libgda/gda-debug-macros.h>
