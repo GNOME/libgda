@@ -205,6 +205,9 @@ gdaui_grid_init (GdauiGrid *grid)
 
 	grid->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (grid->priv->raw_grid),
 						      GDAUI_DATA_PROXY_INFO_CURRENT_ROW);
+	gtk_widget_set_halign (grid->priv->info, GTK_ALIGN_START);
+	gtk_style_context_add_class (gtk_widget_get_style_context (grid->priv->info), "inline-toolbar");
+
 	gtk_box_pack_start (GTK_BOX (grid), grid->priv->info, FALSE, TRUE, 0);
 	gtk_widget_show (grid->priv->info);
 }

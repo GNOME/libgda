@@ -632,6 +632,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		else {
 			GtkToolItem *ti;
 			ti = gtk_tool_item_new  ();
+			gtk_container_set_border_width (GTK_CONTAINER (ti), 4);
 			gtk_toolbar_insert (GTK_TOOLBAR (info), ti, -1);
 			action_items[ACTION_CURRENT_ROW] = GTK_WIDGET (g_object_ref (G_OBJECT (ti)));
 		}
@@ -668,7 +669,7 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		}
 		else {
 			/* read-only counter (mainly for grids) */
-			wid = gtk_label_new ("? - ? /?");
+			wid = gtk_label_new (" ? - ? /?");
 			gtk_widget_override_font (wid, fdc);
 			info->priv->current_sample = wid;
 			toolwid = wid;
@@ -763,7 +764,7 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 				gtk_label_set_text (GTK_LABEL (info->priv->current_sample), " /?");
 			}
 			else
-				gtk_label_set_text (GTK_LABEL (info->priv->current_sample), "? - ? /?");
+				gtk_label_set_text (GTK_LABEL (info->priv->current_sample), " ? - ? /?");
 		}
 		else {
 			gchar *str;
@@ -790,16 +791,16 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 			}
 			else {
 				if (total <= 0)
-					str = g_strdup_printf ("0 - 0 / 0");
+					str = g_strdup_printf (" 0 - 0 / 0");
 				else {
 					if (all_rows < 0)
-						str = g_strdup_printf ("%d - %d /?", sample_first_row + 1, total);
+						str = g_strdup_printf (" %d - %d /?", sample_first_row + 1, total);
 					else {
 						if (filtered_proxy)
-							str = g_strdup_printf ("%d - %d / (%d)",
+							str = g_strdup_printf (" %d - %d / (%d)",
 									       sample_first_row + 1, total, all_rows);
 						else
-							str = g_strdup_printf ("%d - %d / %d",
+							str = g_strdup_printf (" %d - %d / %d",
 									       sample_first_row + 1, total, all_rows);
 					}
 				}

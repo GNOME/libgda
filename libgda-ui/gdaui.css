@@ -40,3 +40,7 @@ GdauiRtEditor GtkToolbar {
 GtkPaned.paned-no-border {
     -GtkPaned-handle-size: 0;
 }
+
+.action-entry {
+    padding : 0;
+}

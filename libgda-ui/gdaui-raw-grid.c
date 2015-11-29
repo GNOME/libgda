@@ -1066,7 +1066,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 									grid->priv->iter, iter,
 									TRUE);
 		if (values) {
-
 			g_object_set (G_OBJECT (cell),
 				      "values-display", values,
 				      "value-attributes", attributes,
@@ -1078,7 +1077,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				      "cell_background-set",
 				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
 				      "to-be-deleted", to_be_deleted,
-				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 				      NULL);
 		}
 		else {
@@ -1095,7 +1093,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 				      "cell_background-set",
 				      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
 				      "to-be-deleted", to_be_deleted,
-				      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 				      NULL);
 		}
 
@@ -1126,7 +1123,6 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 			      "cell_background-set",
 			      ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
 			      "to-be-deleted", to_be_deleted,
-			      "visible", !(attributes & GDA_VALUE_ATTR_UNUSED),
 			      NULL);
 	}
 
@@ -1179,7 +1175,7 @@ cell_info_set_attributes (GtkTreeViewColumn *tree_column,
 			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 			      "cell_background-set", ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
 			      "to-be-deleted", to_be_deleted,
-			      "visible", cdata->info_shown && !(attributes & GDA_VALUE_ATTR_UNUSED),
+			      "visible", cdata->info_shown,
 			      NULL);
 	}
 	else {
@@ -1203,7 +1199,7 @@ cell_info_set_attributes (GtkTreeViewColumn *tree_column,
 			      "cell-background", GDAUI_COLOR_NORMAL_MODIF,
 			      "cell_background-set", ! (attributes & GDA_VALUE_ATTR_IS_UNCHANGED) || to_be_deleted,
 			      "to-be-deleted", to_be_deleted,
-			      "visible", cdata->info_shown && !(attributes & GDA_VALUE_ATTR_UNUSED),
+			      "visible", cdata->info_shown,
 			      NULL);
 	}
 }

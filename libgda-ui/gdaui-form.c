@@ -199,8 +199,16 @@ gdaui_form_init (GdauiForm *form)
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (form), GTK_ORIENTATION_VERTICAL);
 
+	GtkWidget *frame;
+	frame = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
+	gtk_box_pack_start (GTK_BOX (form), frame, FALSE, FALSE, 0);
+	gtk_widget_show (frame);
+
 	form->priv->raw_form = gdaui_raw_form_new (NULL);
-	gtk_box_pack_start (GTK_BOX (form), form->priv->raw_form, FALSE, FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (frame), form->priv->raw_form);
+	gtk_container_set_border_width (GTK_CONTAINER (form->priv->raw_form), 6);
+
 	gtk_widget_show (form->priv->raw_form);
 	g_signal_connect (form->priv->raw_form, "layout-changed",
 			  G_CALLBACK (form_layout_changed_cb), form);
@@ -210,6 +218,9 @@ gdaui_form_init (GdauiForm *form)
 	form->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form->priv->raw_form),
 						      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 						      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS);
+	gtk_widget_set_halign (form->priv->info, GTK_ALIGN_START);
+	gtk_style_context_add_class (gtk_widget_get_style_context (form->priv->info), "inline-toolbar");
+
 	gtk_box_pack_start (GTK_BOX (form), form->priv->info, FALSE, FALSE, 0);
 	gtk_widget_show (form->priv->info);
 

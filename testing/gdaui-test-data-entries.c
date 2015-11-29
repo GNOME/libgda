@@ -140,8 +140,8 @@ main (int argc, char **argv)
         g_option_context_free (context);
 	
 	/* Initialize the widget set */
-	gdaui_init ();
 	gtk_init (&argc, &argv);
+	gdaui_init ();
 
 	/* init main conf */
 	GType tested_gtypes [] = {G_TYPE_INT64, G_TYPE_UINT64, GDA_TYPE_BINARY, G_TYPE_BOOLEAN, GDA_TYPE_BLOB,

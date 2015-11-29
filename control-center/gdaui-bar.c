@@ -125,6 +125,7 @@ gdaui_bar_init (GdauiBar *bar)
 	content_area = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	gtk_widget_show (content_area);
 	gtk_box_pack_start (GTK_BOX (bar), content_area, TRUE, TRUE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (content_area), 6);
 
 	GtkWidget *tmp;
 	tmp = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -163,39 +164,7 @@ gdaui_bar_init (GdauiBar *bar)
 	gtk_label_set_line_wrap (GTK_LABEL (bar->priv->label), TRUE);
         gtk_widget_show (bar->priv->label);
 
-	/* CSS theming */
-	GtkStyleContext *context;
-	if (!css_provider) {
-#define CSS ".gdauibar {\n"				\
-			"border-radius: 3px;\n"		\
-			"padding: 5px;\n"		\
-			"}"				\
-			".gdauibar_button {\n"			\
-			"-GtkButton-default-border : 0px;\n"	\
-			"-GtkButton-default-outside-border : 0px;\n"	\
-			"-GtkWidget-focus-line-width : 0px;\n"		\
-			"-GtkWidget-focus-padding : 0px;\n"		\
-			"padding: 0px;\n"				\
-			"-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
-			"-GtkButtonBox-child-min-width : 0px;\n"	\
-			"border-style: none;\n"				\
-			"}"						\
-			".gdauibar_entry {\n"				\
-			"-GtkWidget-focus-line-width : 0px;\n"		\
-			"-GtkWidget-focus-padding : 0px;\n"		\
-			"padding: 1px;\n"				\
-			"-GtkButtonBox-child-internal-pad-x : 1px;\n"	\
-			"-GtkButtonBox-child-min-width : 0px;\n"	\
-			"border-style: solid;\n"			\
-			"border-radius: 3px;\n"				\
-			"}"
-		css_provider = GTK_STYLE_PROVIDER (gtk_css_provider_new ());
-		gtk_css_provider_load_from_data (GTK_CSS_PROVIDER (css_provider), CSS, -1, NULL);
-	}
-	context = gtk_widget_get_style_context (GTK_WIDGET (bar));
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
-	gtk_style_context_add_class (context, "gdauibar");
-	gtk_style_context_add_class (context, "inline-toolbar");
+	gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (bar)), "inline-toolbar");
 }
 
 static void
