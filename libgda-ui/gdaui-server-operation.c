@@ -416,7 +416,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		plist = info_node->plist;
 		plwid = gdaui_basic_form_new (plist);
 		gdaui_basic_form_set_unknown_color (GDAUI_BASIC_FORM (plwid), 0., 0., 0., 0.);
-		g_object_set ((GObject*) plwid, "show-actions", FALSE, NULL);
 
 		if (section_str) {
 			const gchar *name;
@@ -539,7 +538,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		g_slist_free (list);
 		plwid = gdaui_basic_form_new (plist);
 		gdaui_basic_form_set_unknown_color (GDAUI_BASIC_FORM (plwid), 0., 0., 0., 0.);
-		g_object_set ((GObject*) plwid, "show-actions", FALSE, NULL);
+
 		/* we don't need plist anymore */
 		g_object_unref (plist);
 

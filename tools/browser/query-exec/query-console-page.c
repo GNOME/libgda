@@ -529,8 +529,6 @@ compute_params (QueryConsolePage *tconsole)
 									  tconsole->priv->params);
 				show_variables = TRUE;
 				tconsole->priv->params_form = gdaui_basic_form_new (tconsole->priv->params);
-				g_object_set ((GObject*) tconsole->priv->params_form,
-					      "show-actions", TRUE, NULL);
 				g_signal_connect (tconsole->priv->params_form, "activated",
 						  G_CALLBACK (params_form_activated_cb), tconsole);
 			}
@@ -903,7 +901,6 @@ sql_execute_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *t
 
 			cont = g_object_get_data (G_OBJECT (tconsole->priv->params_popup), "cont");
 			form = gdaui_basic_form_new (tconsole->priv->params);
-			g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
 			g_signal_connect (form, "holder-changed",
 					  G_CALLBACK (params_form_changed_cb), tconsole);
 			g_signal_connect (form, "activated",

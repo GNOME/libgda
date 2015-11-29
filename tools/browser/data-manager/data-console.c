@@ -681,8 +681,6 @@ data_source_mgr_changed_cb (DataSourceManager *mgr, DataConsole *dconsole)
 	params = data_source_manager_get_params (mgr);
 	if (params) {
 		dconsole->priv->params_form = gdaui_basic_form_new (params);
-		g_object_set ((GObject*) dconsole->priv->params_form,
-			      "show-actions", TRUE, NULL);
 		g_signal_connect (dconsole->priv->params_form, "activated",
 				  G_CALLBACK (param_activated_cb), dconsole);
 	}

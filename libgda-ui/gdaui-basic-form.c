@@ -1424,14 +1424,14 @@ mark_not_null_entry_labels (GdauiBasicForm *form, gboolean show_mark)
 
 	for (list = form->priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
-		gchar *str;
-
-		str = _gdaui_utility_markup_title (sentry->label_title, !show_mark || !sentry->not_null);
-		if (show_mark && sentry->not_null)
+		if (show_mark && sentry->not_null) {
+			gchar *str;
+			str = _gdaui_utility_markup_title (sentry->label_title, !show_mark || !sentry->not_null);
 			gtk_label_set_markup (GTK_LABEL (sentry->label), str);
+			g_free (str);
+		}
 		else
-			gtk_label_set_text (GTK_LABEL (sentry->label), str);
-		g_free (str);
+			gtk_label_set_text (GTK_LABEL (sentry->label), sentry->label_title);
 	}
 }
 

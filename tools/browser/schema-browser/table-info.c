@@ -959,7 +959,6 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 			    label, FALSE, FALSE, 0);
 	
 	form = gdaui_basic_form_new (params);
-	g_object_set ((GObject*) form, "show-actions", TRUE, NULL);
 	g_signal_connect (form, "holder-changed",
 			  G_CALLBACK (insert_form_params_changed_cb), popup);
 	gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area (GTK_DIALOG (popup))),

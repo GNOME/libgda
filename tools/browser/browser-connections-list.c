@@ -226,7 +226,6 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 		/* create form */
 		GtkWidget *wid;
 		wid = gdaui_basic_form_new (dset);
-		g_object_set ((GObject*) wid, "show-actions", FALSE, NULL);
 		gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (wid), NULL, FALSE);
 		gtk_grid_attach (clist->priv->layout_grid, wid, 1, 2, 1, 1);
 		gtk_widget_show (wid);

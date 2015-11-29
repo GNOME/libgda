@@ -571,7 +571,7 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 		/* hack */
 		TConnection *tcnc = T_CONNECTION (t_app_get_all_connections ()->data);
 		gchar *tmp;
-		tmp = g_strdup_printf ("%s_AAA_B", t_connection_get_name (tcnc));
+		tmp = g_strdup_printf ("%s", t_connection_get_name (tcnc));
 		t_connection_set_name (tcnc, tmp);
 		g_free (tmp);
 	}

@@ -208,7 +208,6 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 		spec->priv->type = PROVIDER_FORM;
 		
 		wid = gdaui_basic_form_new (dset);
-		g_object_set ((GObject*) wid, "show-actions", FALSE, NULL);
 		g_object_unref (dset);
 		
 		spec->priv->form = wid;

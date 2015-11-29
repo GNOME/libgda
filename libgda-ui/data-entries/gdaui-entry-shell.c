@@ -74,10 +74,10 @@ typedef enum {
 
 static const gchar *raw_messages[] = {
 	"",
-	N_("NULL value"),
-	N_("Default value"),
-	N_("Default value (NULL)"),
-	N_("Invalid value"),
+	N_("Unspecified"),
+	N_("Default"),
+	N_("Default (unspecified)"),
+	N_("Invalid"),
 };
 
 static gchar **messages = NULL;
@@ -283,28 +283,28 @@ actions_button_clicked_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntryShell *she
 
 	GtkWidget *action_button;
 	if (!strcmp (gtk_stack_get_visible_child_name (GTK_STACK (shell->priv->stack)), PAGE_LABEL)) {
-		action_button = gtk_button_new_with_label (_("Edit value"));
+		action_button = gtk_button_new_with_label (_("Edit"));
 		g_signal_connect (action_button, "clicked",
 				  G_CALLBACK (action_edit_value_cb), shell);
 		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
 	}
 
 	if ((attr & GDA_VALUE_ATTR_CAN_BE_NULL) && !(attr & GDA_VALUE_ATTR_IS_NULL)) {
-		action_button = gtk_button_new_with_label (_("Set value to NULL"));
+		action_button = gtk_button_new_with_label (_("Define as unspecified"));
 		g_signal_connect (action_button, "clicked",
 				  G_CALLBACK (action_set_value_to_null_cb), shell);
 		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
 	}
 
 	if ((attr & GDA_VALUE_ATTR_CAN_BE_DEFAULT) && !(attr & GDA_VALUE_ATTR_IS_DEFAULT)) {
-		action_button = gtk_button_new_with_label (_("Set value to default"));
+		action_button = gtk_button_new_with_label (_("Define as default"));
 		g_signal_connect (action_button, "clicked",
 				  G_CALLBACK (action_set_value_to_default_cb), shell);
 		gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
 	}
 
 	if ((attr & GDA_VALUE_ATTR_HAS_VALUE_ORIG) && ! (attr & GDA_VALUE_ATTR_IS_UNCHANGED)) {
-		action_button = gtk_button_new_with_label (_("Reset value"));
+		action_button = gtk_button_new_with_label (_("Reset"));
 		g_signal_connect (action_button, "clicked",
 				  G_CALLBACK (action_reset_value_cb), shell);
 			gtk_box_pack_start (GTK_BOX (box), action_button, FALSE, FALSE, 0);
