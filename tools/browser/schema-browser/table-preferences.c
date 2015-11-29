@@ -50,8 +50,8 @@ struct _TablePreferencesPrivate {
 	gboolean save_plugin_changes;
 	GtkWidget *plugins_combo;
 	GtkWidget *options_vbox;
-	GtkWidget *options_none;
 	GtkWidget *options_wid;
+	GtkWidget *options_label;
 	GtkWidget *preview_vbox;
 	GtkWidget *preview_none;
 	GtkWidget *preview_wid;
@@ -459,11 +459,9 @@ create_column_properties (TablePreferences *tpref)
 	/* plugin options */
 	tpref->priv->options_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_grid_attach (GTK_GRID (grid), tpref->priv->options_vbox, 1, 1, 1, 1);
-	tpref->priv->options_none = gtk_label_new (_("none"));
-	gtk_widget_set_halign (tpref->priv->options_none, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (tpref->priv->options_vbox), tpref->priv->options_none, FALSE, FALSE, 0);
 
 	label = gtk_label_new (_("Options:"));
+	tpref->priv->options_label = label;
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
@@ -639,8 +637,8 @@ plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref)
 
 			if (tpref->priv->options_wid) {
 				plist = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (tpref->priv->options_wid));
-				gtk_widget_hide (tpref->priv->options_none);
 				gtk_widget_show (tpref->priv->options_wid);
+				gtk_widget_show (tpref->priv->options_label);
 
 				if (plist && !tpref->priv->save_plugin_changes) {
 					/* load plugin options */
@@ -700,7 +698,7 @@ plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref)
 		gtk_widget_destroy (old_options);
 
 	if (! tpref->priv->options_wid)
-		gtk_widget_show (tpref->priv->options_none);
+		gtk_widget_hide (tpref->priv->options_label);
 }
 
 static void

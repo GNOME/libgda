@@ -24,13 +24,14 @@
 #include <gmodule.h>
 #include "perspective-main.h"
 #include "data-manager-perspective.h"
+#include "../perspectives-names.h"
 
 static BrowserPerspectiveFactory bfact;
 
 BrowserPerspectiveFactory *
 data_manager_perspective_get_factory (void)
 {
-	bfact.id = "DataManP";
+	bfact.id = DATA_MANAGER_PERSPECTIVE_NAME;
 	bfact.perspective_name = _("Data manager");
 	bfact.menu_shortcut ="<control>D";
 	bfact.perspective_create = data_manager_perspective_new;

@@ -196,7 +196,7 @@ static void transaction_rollback_cb (G_GNUC_UNUSED GSimpleAction *action, GVaria
 static void connection_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
 static void connection_close_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data);
 static void fullscreen_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data);
-static void change_perspective_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data);
+static void change_perspective_cb (GSimpleAction *action, GVariant *state, gpointer data);
 static GActionEntry win_entries[] = {
 	{ "change-perspective", NULL, "s", NULL, change_perspective_cb },
 
@@ -622,14 +622,13 @@ transaction_rollback_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *paramete
 }
 
 static void
-change_perspective_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
+change_perspective_cb (GSimpleAction *action, GVariant *state, gpointer data)
 {
 	BrowserWindow *bwin = BROWSER_WINDOW (data);
 	const gchar *pname;
 	pname = g_variant_get_string (state, NULL);
 	g_print ("Switching to perspective [%s]\n", pname);
 	browser_window_change_perspective (bwin, pname);
-	g_simple_action_set_state (action, state);
 }
 
 static gboolean
@@ -1097,13 +1096,21 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 			}
 		}
 	}
+
+	/* update GAction's state */
+	GAction *action;
+	action = g_action_map_lookup_action (G_ACTION_MAP (bwin), "change-perspective");
+	GVariant *value;
+	value = g_variant_new_string (perspective_id);
+	g_simple_action_set_state (G_SIMPLE_ACTION (action), value);
+
+	/* actually switch displayed page */
 	gtk_stack_set_visible_child (bwin->priv->pers_stack, GTK_WIDGET (bpers));
 	browser_perspective_customize (bpers,
 				       bwin->priv->toolbar, bwin->priv->header);
 	bwin->priv->current_perspective = pdata;
 
-	/* setup for the new perspective */
-	/* TODO */
+	/* notice of perspective change */
 	gchar *tmp;
 	tmp = g_markup_printf_escaped (_("The current perspective has changed to the '%s' perspective, you "
 					 "can switch back to previous perspective through the "
@@ -1111,8 +1118,6 @@ browser_window_change_perspective (BrowserWindow *bwin, const gchar *perspective
 				       bwin->priv->current_perspective->factory->perspective_name,
 				       current_pdata->factory->perspective_name,
 				       current_pdata->factory->menu_shortcut);
-
-			
 	browser_window_show_notice (bwin, GTK_MESSAGE_INFO, "Perspective change", tmp);
 	g_free (tmp);
 

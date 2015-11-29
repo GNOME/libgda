@@ -40,6 +40,11 @@
 #include <libgda/gda-data-model-extra.h>
 #include "../fk-declare.h"
 #include <libgda/gda-debug-macros.h>
+#include "../perspectives-names.h"
+
+#define PAGE_COLUMNS "C"
+#define PAGE_RELATIONS "R"
+#define PAGE_PREFS "P"
 
 struct _TableInfoPrivate {
 	TConnection *tcnc;
@@ -49,9 +54,8 @@ struct _TableInfoPrivate {
 	gchar *table_short_name;
 
 	GdauiBar *header;
-	GtkWidget *contents; /* notebook with pageO <=> @unknown_table_notice, page1 <=> @pages */
+	GtkWidget *contents; /* notebook with pageO <=> @unknown_table_notice, page1 <=> pages stack */
 	GtkWidget *unknown_table_notice;
-	GtkWidget *pages; /* notebook to store individual pages */
 
 	GtkWidget *insert_popup;
 	GHashTable *insert_columns_hash; /* key = column index as a pointer, value = GdaHolder in the
@@ -258,10 +262,46 @@ source_drag_data_get_cb (G_GNUC_UNUSED GtkWidget *widget, G_GNUC_UNUSED GdkDragC
 	}
 }
 
+static GdaMetaDbObject *
+get_table_meta_data (TableInfo *tinfo)
+{
+	gtk_widget_set_sensitive (GTK_WIDGET (tinfo), FALSE);
+	GdaMetaStruct *mstruct;
+	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
+	if (!mstruct) {
+		BrowserWindow *bwin;
+		bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+		gtk_widget_set_sensitive (GTK_WIDGET (tinfo), TRUE);
+		ui_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
+		return NULL;
+	}
+
+	/* get table's information */
+	GdaMetaDbObject *dbo;
+	GValue *v1, *v2;
+	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)),
+			    tinfo->priv->schema);
+	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)),
+			    tinfo->priv->table_name);
+	dbo = gda_meta_struct_complement (mstruct,
+					  GDA_META_DB_TABLE, NULL, v1, v2, NULL);
+	gda_value_free (v1);
+	gda_value_free (v2);
+
+	if (! dbo) {
+		BrowserWindow *bwin;
+		bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+		gtk_widget_set_sensitive (GTK_WIDGET (tinfo), TRUE);
+		ui_show_error (GTK_WINDOW (bwin), _("Can't find information about table"));
+	}
+
+	gtk_widget_set_sensitive (GTK_WIDGET (tinfo), TRUE);
+	return dbo;
+}
+
 static void
 meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
 {
-	GdaMetaDbObject *dbo;
 	GValue *schema_v = NULL, *name_v;
 
 	if (tinfo->priv->insert_columns_hash) {
@@ -273,13 +313,6 @@ meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableI
 		tinfo->priv->insert_popup = NULL;
 	}
 
-	g_value_set_string ((schema_v = gda_value_new (G_TYPE_STRING)), tinfo->priv->schema);
-	g_value_set_string ((name_v = gda_value_new (G_TYPE_STRING)), tinfo->priv->table_name);
-	dbo = gda_meta_struct_get_db_object (mstruct, NULL, schema_v, name_v);
-	if (schema_v)
-		gda_value_free (schema_v);
-	gda_value_free (name_v);
-
 	if (tinfo->priv->table_short_name) {
 		g_free (tinfo->priv->table_short_name);
 		tinfo->priv->table_short_name = NULL;
@@ -288,6 +321,9 @@ meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableI
 		g_signal_handlers_disconnect_by_func (tinfo->priv->header,
 						      G_CALLBACK (source_drag_data_get_cb), tinfo);
 	}
+
+	GdaMetaDbObject *dbo;
+	dbo = get_table_meta_data (tinfo);
 	if (dbo) {
 		tinfo->priv->table_short_name = g_strdup (dbo->obj_short_name);
 		gtk_drag_source_set ((GtkWidget *) tinfo->priv->header, GDK_BUTTON1_MASK | GDK_BUTTON3_MASK,
@@ -323,14 +359,32 @@ table_info_new (TConnection *tcnc,
 			  G_CALLBACK (meta_changed_cb), tinfo);
 	tinfo->priv->schema = g_strdup (schema);
 	tinfo->priv->table_name = g_strdup (table);
-	
+
+	GdaMetaDbObject *dbo;
+	dbo = get_table_meta_data (tinfo);
+
 	/* header */
         GtkWidget *label;
 	gchar *str, *tmp;
 
+	/* To translators: "Object" is used when we can't determine if @table is a table or a view */
+	const gchar *otype = _("Object");
+	if (dbo) {
+		switch (dbo->obj_type) {
+		case GDA_META_DB_TABLE:
+			otype = _("Table");
+			break;
+		case GDA_META_DB_VIEW:
+			otype = _("View");
+			break;
+		default:
+			break;
+		}
+	}
+
 	/* To translators: "In schema" refers to the database schema an object is in */
 	tmp = g_strdup_printf (_("In schema '%s'"), schema);
-	str = g_strdup_printf ("<b>%s</b>\n%s", table, tmp);
+	str = g_markup_printf_escaped ("%s <b>%s</b>\n%s", otype, table, tmp);
 	g_free (tmp);
 	label = gdaui_bar_new (str);
 	g_free (str);
@@ -364,44 +418,39 @@ table_info_new (TConnection *tcnc,
 	tinfo->priv->unknown_table_notice = label;
 
 	/* notebook for the pages */
-	GtkWidget *sub_nb;
-	sub_nb = gtk_notebook_new ();
-	tinfo->priv->pages = sub_nb;
-	gtk_notebook_append_page (GTK_NOTEBOOK (top_nb), sub_nb, NULL);
-	gtk_notebook_set_tab_pos (GTK_NOTEBOOK (sub_nb), GTK_POS_BOTTOM);
+	GtkWidget *sub_stack;
+	sub_stack = gtk_stack_new ();
+	gtk_stack_set_transition_type (GTK_STACK (sub_stack), GTK_STACK_TRANSITION_TYPE_CROSSFADE);
+	GtkWidget *vbox;
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_box_pack_start (GTK_BOX (vbox), sub_stack, TRUE, TRUE, 0);
+	GtkWidget *ss;
+	ss = gtk_stack_switcher_new ();
+	gdaui_bar_add_widget (tinfo->priv->header, ss);
+	gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (ss), GTK_STACK (sub_stack));
+	gtk_widget_show (ss);
+	gtk_notebook_append_page (GTK_NOTEBOOK (top_nb), vbox, NULL);
 
 	/* append pages */
 	GtkWidget *page;
 	page = table_columns_new (tinfo);
 	if (page) {
-		label = gtk_label_new ("");
-		str = g_strdup_printf ("<small>%s</small>", _("Columns"));
-		gtk_label_set_markup (GTK_LABEL (label), str);
-		g_free (str);
 		gtk_widget_show (page);
-		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
+		gtk_stack_add_titled (GTK_STACK (sub_stack), page, PAGE_COLUMNS, _("Columns"));
 	}
 #ifdef HAVE_GOOCANVAS
 	page = table_relations_new (tinfo);
 	if (page) {
-		label = gtk_label_new ("");
-		str = g_strdup_printf ("<small>%s</small>", _("Relations"));
-		gtk_label_set_markup (GTK_LABEL (label), str);
-		g_free (str);
 		gtk_widget_show (page);
-		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
+		gtk_stack_add_titled (GTK_STACK (sub_stack), page, PAGE_RELATIONS, _("Relations"));
 	}
 #endif
 	page = table_preferences_new (tinfo);
 	if (page) {
-		label = gtk_label_new ("");
-		str = g_strdup_printf ("<small>%s</small>", _("Preferences"));
-		gtk_label_set_markup (GTK_LABEL (label), str);
-		g_free (str);
 		gtk_widget_show (page);
-		gtk_notebook_append_page (GTK_NOTEBOOK (sub_nb), page, label);
+		gtk_stack_add_titled (GTK_STACK (sub_stack), page, PAGE_PREFS, _("Preferences"));
 	}
-	gtk_notebook_set_current_page (GTK_NOTEBOOK (sub_nb), 0);
+	gtk_stack_set_visible_child_name (GTK_STACK (sub_stack), PAGE_COLUMNS);
 
 	/* show everything */
         gtk_widget_show_all (top_nb);
@@ -411,6 +460,8 @@ table_info_new (TConnection *tcnc,
 	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
 	if (mstruct)
 		meta_changed_cb (tinfo->priv->tcnc, mstruct, tinfo);
+	else
+		display_table_not_found_error (tinfo, dbo ? FALSE : TRUE);
 
 	return (GtkWidget*) tinfo;
 }
@@ -487,7 +538,7 @@ action_view_contents_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVar
 	BrowserWindow *bwin;
 	BrowserPerspective *pers;
 	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
-	pers = browser_window_change_perspective (bwin, _("Data manager"));
+	pers = browser_window_change_perspective (bwin, DATA_MANAGER_PERSPECTIVE_NAME);
 
 	xmlDocPtr doc;
 	xmlNodePtr node, topnode;
@@ -662,31 +713,11 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 		return;
 	}
 
-	BrowserWindow *bwin;
-	GdaMetaStruct *mstruct;
-	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
-	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
-	if (!mstruct) {
-		ui_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
-		return;
-	}
-
 	/* get table's information */
 	GdaMetaDbObject *dbo;
-	GValue *v1, *v2;
-	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)),
-			    tinfo->priv->schema);
-	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)),
-			    tinfo->priv->table_name);
-	dbo = gda_meta_struct_complement (mstruct,
-					  GDA_META_DB_TABLE, NULL, v1, v2, NULL);
-	gda_value_free (v1);
-	gda_value_free (v2);
-
-	if (! dbo) {
-		ui_show_error (GTK_WINDOW (bwin), _("Can't find information about table"));
+	dbo = get_table_meta_data (tinfo);
+	if (! dbo)
 		return;
-	}
 
 	/* build statement */
 	GdaSqlBuilder *b;
@@ -713,6 +744,16 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 	g_free (sql);
 #endif
 
+	/* common data required further down */
+	BrowserWindow *bwin;
+	GdaMetaStruct *mstruct;
+	bwin = (BrowserWindow*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
+	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
+	if (!mstruct) {
+		ui_show_error (GTK_WINDOW (bwin), _("Meta data not yet available"));
+		return;
+	}
+
 	/* handle user preferences */
 	GdaSet *params;
 	if (! gda_statement_get_parameters (stmt, &params, NULL)) {
@@ -720,7 +761,7 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
 
 		ui_show_error (GTK_WINDOW (bwin),
-				    _("Internal error while building INSERT statement:\n%s"), sql);
+			       _("Internal error while building INSERT statement:\n%s"), sql);
 		g_free (sql);
 		g_object_unref (stmt);
 		return;
@@ -941,15 +982,10 @@ action_declarefk_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant
 	GdaMetaStruct *mstruct;
 	GdaMetaDbObject *dbo;
 	gint response;
-	GValue *v1, *v2;
 
 	parent = (GtkWidget*) gtk_widget_get_toplevel ((GtkWidget*) tinfo);
 	mstruct = t_connection_get_meta_struct (tinfo->priv->tcnc);
-	g_value_set_string ((v1 = gda_value_new (G_TYPE_STRING)), tinfo->priv->schema);
-	g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), tinfo->priv->table_name);
-	dbo = gda_meta_struct_get_db_object (mstruct, NULL, v1, v2);
-	gda_value_free (v1);
-	gda_value_free (v2);
+	dbo = get_table_meta_data (tinfo);
 	if (!dbo || (dbo->obj_type != GDA_META_DB_TABLE)) {
 		ui_show_error ((GtkWindow *) parent, _("Can't find information about table '%s'"),
 				    tinfo->priv->table_short_name);

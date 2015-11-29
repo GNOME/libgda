@@ -24,13 +24,14 @@
 #include <gmodule.h>
 #include "perspective-main.h"
 #include "ldap-browser-perspective.h"
+#include "../perspectives-names.h"
 
 static BrowserPerspectiveFactory bfact;
 
 BrowserPerspectiveFactory *
 ldap_browser_perspective_get_factory (void)
 {
-	bfact.id = "LDAPBrP";
+	bfact.id = LDAP_PERSPECTIVE_NAME;
 	bfact.perspective_name = _("LDAP browser");
 	bfact.menu_shortcut = "<control>P";
 	bfact.perspective_create = ldap_browser_perspective_new;

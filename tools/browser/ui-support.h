@@ -58,6 +58,7 @@ GtkWidget           *ui_make_tab_label_with_icon (const gchar *label,
 GtkWidget           *ui_make_tab_label_with_pixbuf (const gchar *label,
 						    GdkPixbuf *pixbuf, gboolean with_close,
 						    GtkWidget **out_close_button);
+GtkWidget           *ui_widget_add_toolbar (GtkWidget *widget, GtkWidget **out_toolbar);
 
 /*
  * icons, use with ui_get_pixbuf_icon() for the associated icons

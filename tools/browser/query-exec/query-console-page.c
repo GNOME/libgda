@@ -49,7 +49,7 @@ struct _QueryConsolePagePrivate {
 	GdaSet *params; /* execution params */
 	GtkWidget *params_popup; /* popup shown when invalid params are required */
 
-	GtkToggleButton *params_toggle;
+	GtkToggleToolButton *params_toggle;
 	GtkWidget *params_top;
 	GtkWidget *params_form_box;
 	GtkWidget *params_form;
@@ -101,7 +101,7 @@ query_console_page_show_all (GtkWidget *widget)
 	QueryConsolePage *tconsole = (QueryConsolePage *) widget;
 	GTK_WIDGET_CLASS (parent_class)->show_all (widget);
 
-	if (gtk_toggle_button_get_active (tconsole->priv->params_toggle))
+	if (gtk_toggle_tool_button_get_active (tconsole->priv->params_toggle))
 		gtk_widget_show (tconsole->priv->params_top);
 	else
 		gtk_widget_hide (tconsole->priv->params_top);
@@ -192,14 +192,14 @@ query_console_page_get_type (void)
 
 static void editor_changed_cb (QueryEditor *editor, QueryConsolePage *tconsole);
 static void editor_execute_request_cb (QueryEditor *editor, QueryConsolePage *tconsole);
-static void sql_clear_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
-static void sql_variables_clicked_cb (GtkToggleButton *button, QueryConsolePage *tconsole);
-static void sql_execute_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
-static void sql_indent_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
-static void sql_favorite_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
+static void sql_clear_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
+static void sql_variables_clicked_cb (GtkToggleToolButton *button, QueryConsolePage *tconsole);
+static void sql_execute_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
+static void sql_indent_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
+static void sql_favorite_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
 
-static void history_copy_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
-static void history_clear_clicked_cb (GtkButton *button, QueryConsolePage *tconsole);
+static void history_copy_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
+static void history_clear_clicked_cb (GtkToolButton *button, QueryConsolePage *tconsole);
 static void history_changed_cb (QueryEditor *history, QueryConsolePage *tconsole);
 
 static void rerun_requested_cb (QueryResult *qres, QueryEditorHistoryBatch *batch,
@@ -233,17 +233,15 @@ query_console_page_new (TConnection *tcnc)
 	/* main contents */
 	GtkWidget *vpaned;
 	vpaned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
+	gtk_style_context_add_class (gtk_widget_get_style_context (vpaned), "paned-no-border");
 	tconsole->priv->vpaned = NULL;
-	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 6);	
+	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 0);	
 
 	/* top paned for the editor */
-	GtkWidget *wid, *vbox, *hbox, *bbox, *hpaned, *button;
-
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	gtk_paned_pack1 (GTK_PANED (vpaned), hbox, TRUE, FALSE);
+	GtkWidget *wid, *vbox, *bbox, *hpaned;
 
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_box_pack_start (GTK_BOX (hbox), hpaned, TRUE, TRUE, 0);
+	gtk_style_context_add_class (gtk_widget_get_style_context (hpaned), "paned-no-border");
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
@@ -285,61 +283,69 @@ query_console_page_new (TConnection *tcnc)
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (tconsole->priv->params_form_box), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), tconsole->priv->params_form_box);
 	gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
-	gtk_widget_set_size_request (tconsole->priv->params_form_box, 250, -1);
+	gtk_widget_set_size_request (sw, 250, -1);
 
 	wid = gtk_label_new ("");
 	gtk_label_set_markup (GTK_LABEL (wid), VARIABLES_HELP);
 	gtk_widget_set_halign (wid, GTK_ALIGN_START);
 	gtk_container_add (GTK_CONTAINER (tconsole->priv->params_form_box), wid);
 	tconsole->priv->params_form = wid;
-	
-	bbox = gtk_button_box_new (GTK_ORIENTATION_VERTICAL);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
-	gtk_box_pack_start (GTK_BOX (hbox), bbox, FALSE, FALSE, 5);
 
-	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
-				       "_Clear", _("Clear the editor's\ncontents"));
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	GtkWidget *packed;
+	GtkWidget *toolbar;
+	packed = ui_widget_add_toolbar (hpaned, &toolbar);
+	gtk_paned_pack1 (GTK_PANED (vpaned), packed, TRUE, FALSE);
+
+	GtkToolItem *titem;
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "edit-clear-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Clear the editor's\ncontents"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (sql_clear_clicked_cb), tconsole);
 
-	button = ui_make_small_button (TRUE, FALSE, _("Variables"),
-				       NULL, _("Show variables needed\nto execute SQL"));
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	tconsole->priv->params_toggle = GTK_TOGGLE_BUTTON (button);
-	g_signal_connect (button, "toggled",
+	titem = gtk_toggle_tool_button_new ();
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "insert-object-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Show variables needed\nto execute SQL"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	tconsole->priv->params_toggle = GTK_TOGGLE_TOOL_BUTTON (titem);
+	g_signal_connect (titem, "toggled",
 			  G_CALLBACK (sql_variables_clicked_cb), tconsole);
 
-	button = ui_make_small_button (FALSE, FALSE, _("Execute"),
-				       "_Execute", _("Execute SQL in editor"));
-	tconsole->priv->exec_button = button;
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "system-run-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Execute SQL in editor"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	tconsole->priv->exec_button = GTK_WIDGET (titem);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (sql_execute_clicked_cb), tconsole);
+
 	
-	button = ui_make_small_button (FALSE, FALSE, _("Indent"),
-				       NULL, _("Indent SQL in editor\n"
-					       "and make the code more readable\n"
-					       "(removes comments)"));
-	tconsole->priv->indent_button = button;
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "format-indent-more-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Indent SQL in editor\n"
+							   "and make the code more readable\n"
+							   "(removes comments)"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	tconsole->priv->indent_button = GTK_WIDGET (titem);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (sql_indent_clicked_cb), tconsole);
 
-	button = ui_make_small_button (FALSE, TRUE, _("Favorite"),
-				       NULL, _("Add SQL to favorite"));
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "starred-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Add SQL to favorite"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (sql_favorite_clicked_cb), tconsole);
 
 	/* bottom paned for the results and history */
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+	gtk_style_context_add_class (gtk_widget_get_style_context (hpaned), "paned-no-border");
 	gtk_paned_pack2 (GTK_PANED (vpaned), hpaned, TRUE, FALSE);
 
 	/* bottom left */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_paned_pack1 (GTK_PANED (hpaned), vbox, FALSE, FALSE);
-
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Execution history:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
@@ -355,30 +361,31 @@ query_console_page_new (TConnection *tcnc)
 	g_signal_connect (wid, "changed",
 			  G_CALLBACK (history_changed_cb), tconsole);
 
-	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
-	gtk_box_pack_start (GTK_BOX (vbox), bbox, FALSE, FALSE, 0);
-	gtk_button_box_set_layout (GTK_BUTTON_BOX (bbox), GTK_BUTTONBOX_END);
+	packed = ui_widget_add_toolbar (vbox, &toolbar);
+	gtk_paned_pack1 (GTK_PANED (hpaned), packed, FALSE, FALSE);
 
-	button = ui_make_small_button (FALSE, FALSE, _("Copy"),
-				       "_Copy", _("Copy selected history\nto editor"));
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "edit-copy-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Copy selected history\nto editor"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	tconsole->priv->history_copy_button = GTK_WIDGET (titem);
+	gtk_widget_set_sensitive (GTK_WIDGET (titem), FALSE);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (history_copy_clicked_cb), tconsole);
-	tconsole->priv->history_copy_button = button;
-	gtk_widget_set_sensitive (button, FALSE);
 
-	button = ui_make_small_button (FALSE, FALSE, _("Clear"),
-				       "_Clear", _("Clear history"));
-	gtk_box_pack_start (GTK_BOX (bbox), button, FALSE, FALSE, 0);
-	g_signal_connect (button, "clicked",
+	titem = gtk_tool_button_new (NULL, NULL);
+	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "edit-clear-symbolic");
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Clear history"));
+	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
+	tconsole->priv->history_del_button = GTK_WIDGET (titem);
+	gtk_widget_set_sensitive (GTK_WIDGET (titem), FALSE);
+	g_signal_connect (titem, "clicked",
 			  G_CALLBACK (history_clear_clicked_cb), tconsole);
-	tconsole->priv->history_del_button = button;
-	gtk_widget_set_sensitive (button, FALSE);
 
 	/* bottom right */
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
 	gtk_paned_pack2 (GTK_PANED (hpaned), vbox, TRUE, FALSE);
-	
+
 	wid = gtk_label_new ("");
 	str = g_strdup_printf ("<b>%s</b>", _("Execution Results:"));
 	gtk_label_set_markup (GTK_LABEL (wid), str);
@@ -447,13 +454,13 @@ history_changed_cb (G_GNUC_UNUSED QueryEditor *history, QueryConsolePage *tconso
 }
 
 static void
-history_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+history_clear_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	query_editor_del_all_history_items (tconsole->priv->history);
 }
 
 static void
-history_copy_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+history_copy_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	QueryEditorHistoryItem *qih;
 	QueryEditor *qe;
@@ -545,8 +552,8 @@ compute_params (QueryConsolePage *tconsole)
 		if (tconsole->priv->params && show_variables &&
 		    gda_set_is_valid (tconsole->priv->params, NULL))
 			show_variables = FALSE;
-		if (show_variables && !gtk_toggle_button_get_active (tconsole->priv->params_toggle))
-			gtk_toggle_button_set_active (tconsole->priv->params_toggle, TRUE);
+		if (show_variables && !gtk_toggle_tool_button_get_active (tconsole->priv->params_toggle))
+			gtk_toggle_tool_button_set_active (tconsole->priv->params_toggle, TRUE);
 	}
 	else {
 		tconsole->priv->params_form = gtk_label_new ("");
@@ -578,16 +585,16 @@ editor_execute_request_cb (G_GNUC_UNUSED QueryEditor *editor, QueryConsolePage *
 }
 	
 static void
-sql_variables_clicked_cb (GtkToggleButton *button, QueryConsolePage *tconsole)
+sql_variables_clicked_cb (GtkToggleToolButton *button, QueryConsolePage *tconsole)
 {
-	if (gtk_toggle_button_get_active (button))
+	if (gtk_toggle_tool_button_get_active (button))
 		gtk_widget_show (tconsole->priv->params_top);
 	else
 		gtk_widget_hide (tconsole->priv->params_top);
 }
 
 static void
-sql_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+sql_clear_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	query_editor_set_text (tconsole->priv->editor, NULL);
 	tconsole->priv->fav_id = -1;
@@ -595,7 +602,7 @@ sql_clear_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsol
 }
 
 static void
-sql_indent_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+sql_indent_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	gchar *sql;
 	GdaBatch *batch;
@@ -633,7 +640,7 @@ static void sql_favorite_new_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryCo
 static void sql_favorite_modify_mitem_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryConsolePage *tconsole);
 
 static void
-sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+sql_favorite_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	GtkWidget *menu, *mitem;
 	TFavorites *tfav;
@@ -671,7 +678,7 @@ sql_favorite_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tcon
 
 	GSList *allfav;
 	allfav = t_favorites_list (tfav, 0, T_FAVORITES_QUERIES, ORDER_KEY_QUERIES, NULL);
-	if (allfav) {
+	if (allfav && allfav->next) {
 		GtkWidget *submenu;
 		GSList *list;
 
@@ -831,7 +838,7 @@ params_form_changed_cb (GdauiBasicForm *form, G_GNUC_UNUSED GdaHolder *param,
 static void actually_execute (QueryConsolePage *tconsole, const gchar *sql, GdaSet *params,
 			      gboolean add_editor_history);
 static void
-sql_execute_clicked_cb (G_GNUC_UNUSED GtkButton *button, QueryConsolePage *tconsole)
+sql_execute_clicked_cb (G_GNUC_UNUSED GtkToolButton *button, QueryConsolePage *tconsole)
 {
 	gchar *sql;
 

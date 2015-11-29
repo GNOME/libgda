@@ -40,6 +40,7 @@ libbrowsercore_la_SOURCES=\
 	marshal.c \
 	marshal.h \
 	decl.h \
+	perspectives-names.h \
 	dnd.h \
 	dnd.c \
 	ui-support.h \

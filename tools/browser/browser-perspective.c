@@ -247,13 +247,25 @@ static void
 notebook_remove_page_cb (GtkNotebook *nb, GtkWidget *page, gint pagenb, BrowserPerspective *bpers)
 {
 	if (customization_data_exists (G_OBJECT (bpers))) {
-		g_print ("\tNotebook, removing page %d\n", pagenb);
-		if (pagenb >= 0) {
-			GtkWidget *current_page;
-			current_page = gtk_notebook_get_nth_page (nb, pagenb);
-			if (current_page && IS_BROWSER_PAGE (current_page))
-				browser_page_uncustomize (BROWSER_PAGE (current_page));
-		}
+		gint current_index;
+		GtkWidget *current_page = NULL;
+		current_index = gtk_notebook_get_current_page (nb);
+		if (current_index >= 0)
+			current_page = gtk_notebook_get_nth_page (nb, current_index);
+
+		g_print ("\tNotebook, removing page %d, current page is now %d\n", pagenb, current_index);
+
+		/* REM: we need to uncustomize _both_ the removed page and the new page, and customize
+		 * again the new page to avoid discrepancies */
+		if (current_page && IS_BROWSER_PAGE (current_page))
+			browser_page_uncustomize (BROWSER_PAGE (current_page));
+		if (page && IS_BROWSER_PAGE (page))
+			browser_page_uncustomize (BROWSER_PAGE (page));
+
+		if (current_page && IS_BROWSER_PAGE (current_page))
+			browser_page_customize (BROWSER_PAGE (current_page),
+						customization_data_get_toolbar (G_OBJECT (bpers)),
+						customization_data_get_header_bar (G_OBJECT (bpers)));
 	}
 }
 

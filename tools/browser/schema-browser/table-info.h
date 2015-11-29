@@ -50,7 +50,7 @@ GtkWidget               *table_info_new      (TConnection *tcnc,
 					      const gchar *schema, const gchar *table);
 const gchar             *table_info_get_table_schema (TableInfo *table_info);
 const gchar             *table_info_get_table_name (TableInfo *table_info);
-TConnection       *table_info_get_connection (TableInfo *table_info);
+TConnection             *table_info_get_connection (TableInfo *table_info);
 
 G_END_DECLS
 

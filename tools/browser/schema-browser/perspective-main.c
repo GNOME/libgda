@@ -24,13 +24,14 @@
 #include <gmodule.h>
 #include "perspective-main.h"
 #include "schema-browser-perspective.h"
+#include "../perspectives-names.h"
 
 static BrowserPerspectiveFactory bfact;
 
 BrowserPerspectiveFactory *
 schema_browser_perspective_get_factory (void)
 {
-	bfact.id = "SchBrowP";
+	bfact.id = SCHEMA_BROWSER_PERSPECTIVE_NAME;
 	bfact.perspective_name = _("Schema browser");
 	bfact.menu_shortcut = "<control>B";
 	bfact.perspective_create = schema_browser_perspective_new;

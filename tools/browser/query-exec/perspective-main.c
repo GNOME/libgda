@@ -24,13 +24,14 @@
 #include <gmodule.h>
 #include "perspective-main.h"
 #include "query-exec-perspective.h"
+#include "../perspectives-names.h"
 
 static BrowserPerspectiveFactory bfact;
 
 BrowserPerspectiveFactory *
 query_exec_perspective_get_factory (void)
 {
-	bfact.id = "QueryExecP";
+	bfact.id = QUERY_EXEC_PERSPECTIVE_NAME;
 	bfact.perspective_name = _("Query execution (SQL)");
 	bfact.menu_shortcut = "<control>S";
 	bfact.perspective_create = query_exec_perspective_new;

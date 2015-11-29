@@ -172,7 +172,7 @@ objects_index_new (TConnection *tcnc)
 	GtkWidget *label;
 	gchar *str;
 
-	str = g_strdup_printf ("<b>%s</b>", _("Tables' index"));
+	str = g_strdup_printf ("<b>%s</b>\n", _("Index of tables and views"));
 	label = gdaui_bar_new (str);
 	g_free (str);
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);

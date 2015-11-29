@@ -130,7 +130,7 @@ fk_declare_init (FkDeclare *declare)
 				NULL);
 #ifdef HAVE_GDU
 	GtkWidget *help_btn;
-	help_btn = gtk_button_new_from_icon_name ("help-browser", GTK_ICON_SIZE_DIALOG);
+	help_btn = gtk_button_new_from_icon_name ("help-browser", GTK_ICON_SIZE_BUTTON);
 	g_signal_connect (help_btn, "clicked",
 			  G_CALLBACK (help_clicked_cb), declare);
 	gtk_widget_show (help_btn);
@@ -182,17 +182,18 @@ create_internal_layout (FkDeclare *decl)
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	str = g_strdup_printf (_("Declare a foreign key for table '%s'"),
 			       GDA_META_DB_OBJECT (decl->priv->mtable)->obj_short_name);
-	markup = g_markup_printf_escaped ("<big><b>%s:</b></big>\n%s", str,
-					  _("define which table is references, which columns are "
+	markup = g_markup_printf_escaped ("<big><b>%s:</b></big>\n%s\n", str,
+					  _("define which table is referenced, which columns are "
 					    "part of the foreign key, "
 					    "and which column each one references"));
 	g_free (str);
-					  
 	gtk_label_set_markup (GTK_LABEL (label), markup);
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+	gtk_label_set_width_chars (GTK_LABEL (label), 50);
 	g_free (markup);
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
-	gtk_widget_show_all (label);
+	gtk_widget_show (label);
 
 	/* GtkTable to hold contents */
 	grid = gtk_grid_new ();

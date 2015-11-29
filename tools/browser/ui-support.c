@@ -376,12 +376,13 @@ ui_make_small_button (gboolean is_toggle, gboolean with_arrow,
 		      const gchar *label, const gchar *icon_name,
 		      const gchar *tooltip)
 {
-		GtkWidget *button, *hbox = NULL;
+	GtkWidget *button, *hbox = NULL;
 
 	if (is_toggle)
 		button = gtk_toggle_button_new ();
 	else
 		button = gtk_button_new ();
+	gtk_widget_set_halign (button, GTK_ALIGN_CENTER);
 	if ((label && icon_name) || with_arrow) {
 		hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 		gtk_container_add (GTK_CONTAINER (button), hbox);
@@ -410,7 +411,7 @@ ui_make_small_button (gboolean is_toggle, gboolean with_arrow,
 	if (with_arrow) {
 		GtkWidget *arrow;
 		arrow = gtk_image_new_from_icon_name ("go-next-symbolic", GTK_ICON_SIZE_MENU);
-		gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
 		gtk_widget_set_halign (arrow, GTK_ALIGN_END);
 		gtk_widget_set_valign (arrow, GTK_ALIGN_CENTER);
 		gtk_widget_show (arrow);
@@ -573,4 +574,46 @@ ui_get_pixbuf_icon (UiIconType type)
 
 		return pix;
 	}
+}
+
+/**
+ * ui_widget_add_toolbar:
+ * @widget: the widget to wrap
+ * @out_toolbar: a place holder for the new toolbar
+ *
+ * Wraps @widget and add a toolbar. The call is then responsible to add things to the toolbar.
+ *
+ * The returned widget is the one which needs to be incorporated in the UI by the caller, who is also responsible
+ * for calling gtk_widget_show().
+ *
+ * Returns: a new #GtkWidget
+ */
+GtkWidget *
+ui_widget_add_toolbar (GtkWidget *widget, GtkWidget **out_toolbar)
+{
+	g_return_val_if_fail (out_toolbar, NULL);
+	g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+
+	GtkWidget *vbox;
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_set_margin_bottom (vbox, 6);
+
+	GtkWidget *frame;
+	frame = gtk_frame_new (NULL);
+	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
+	gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+
+	gtk_container_add (GTK_CONTAINER (frame), widget);
+	gtk_widget_show (widget);
+
+	GtkWidget *toolbar;
+	toolbar = gtk_toolbar_new ();
+	gtk_widget_set_halign (toolbar, GTK_ALIGN_START);
+	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
+	gtk_style_context_add_class (gtk_widget_get_style_context (toolbar), "inline-toolbar");
+	gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+	gtk_widget_show (toolbar);
+	*out_toolbar = toolbar;
+
+	return vbox;
 }

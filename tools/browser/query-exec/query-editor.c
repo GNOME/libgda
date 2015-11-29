@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2015 Gergely Polonkai <gergely@polonkai.eu>
@@ -94,10 +94,6 @@ struct _QueryEditorPrivate {
 	GtkTreeView *completion_treeview;
 	GtkCellRenderer *completion_renderer;
 	GtkWidget *completion_sw;
-
-	/* tooltip */
-	GtkWidget *ovl;
-	GtkWidget *tooltip_widget;
 };
 
 static void query_editor_class_init (QueryEditorClass *klass);
@@ -693,14 +689,18 @@ copy_all_in_signle_line_cb (GtkMenuItem *mitem, QueryEditor *editor)
 }
 
 static void
-text_view_populate_popup_cb (GtkTextView *entry, GtkMenu *menu, QueryEditor *editor)
+text_view_populate_popup_cb (GtkTextView *entry, GtkWidget *menu, QueryEditor *editor)
 {
-	GtkWidget *mitem;
-	mitem = gtk_menu_item_new_with_label (_("Copy all in a single line"));
-	g_signal_connect (G_OBJECT (mitem), "activate", G_CALLBACK (copy_all_in_signle_line_cb),
-			  editor);
-        gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
-        gtk_widget_show (mitem);
+	if (GTK_IS_MENU (menu)) {
+		if (editor->priv->mode != QUERY_EDITOR_HISTORY) {
+			GtkWidget *mitem;
+			mitem = gtk_menu_item_new_with_label (_("Copy all in a single line"));
+			g_signal_connect (G_OBJECT (mitem), "activate",
+					  G_CALLBACK (copy_all_in_signle_line_cb), editor);
+			gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), mitem);
+			gtk_widget_show (mitem);
+		}
+	}
 }
 
 static void
@@ -709,7 +709,7 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 	int tab = 8;
 	gboolean highlight = TRUE;
 	gboolean showlinesno = FALSE;
-	GtkWidget *ovl, *wid;
+	GtkWidget *wid;
 
 	g_return_if_fail (QUERY_IS_EDITOR (editor));
 
@@ -729,32 +729,12 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 	editor->priv->completion_popup = NULL;
 
 	/* set up widgets */
-	ovl = widget_overlay_new ();
-	editor->priv->ovl = ovl;
-	gtk_box_pack_start (GTK_BOX (editor), ovl, TRUE, TRUE, 2);
-
 	editor->priv->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_box_pack_start (GTK_BOX (editor), editor->priv->scrolled_window, TRUE, TRUE, 2);
         gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
-					     GTK_SHADOW_ETCHED_OUT);
+					     GTK_SHADOW_NONE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (editor->priv->scrolled_window),
 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (ovl), editor->priv->scrolled_window);
-	widget_overlay_set_child_props (WIDGET_OVERLAY (ovl), editor->priv->scrolled_window,
-					WIDGET_OVERLAY_CHILD_HALIGN, WIDGET_OVERLAY_ALIGN_FILL,
-					WIDGET_OVERLAY_CHILD_VALIGN, WIDGET_OVERLAY_ALIGN_FILL,
-					-1);
-
-	wid = gtk_label_new ("");
-	editor->priv->tooltip_widget = wid;
-	gtk_label_set_markup (GTK_LABEL (wid), QUERY_EDITOR_TOOLTIP);
-	gtk_container_add (GTK_CONTAINER (ovl), wid);
-	widget_overlay_set_child_props (WIDGET_OVERLAY (ovl), wid,
-					WIDGET_OVERLAY_CHILD_HALIGN, WIDGET_OVERLAY_ALIGN_CENTER,
-					WIDGET_OVERLAY_CHILD_VALIGN, WIDGET_OVERLAY_ALIGN_CENTER,
-					WIDGET_OVERLAY_CHILD_ALPHA, .8,
-					WIDGET_OVERLAY_CHILD_TOOLTIP, TRUE,
-					-1);
-
 #ifdef HAVE_GTKSOURCEVIEW
 	editor->priv->text = gtk_source_view_new ();
 	gtk_source_buffer_set_highlight_syntax (GTK_SOURCE_BUFFER (gtk_text_view_get_buffer (GTK_TEXT_VIEW (editor->priv->text))),
@@ -764,6 +744,7 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 #else
 	editor->priv->text = gtk_text_view_new ();
 #endif
+	gtk_widget_set_tooltip_markup (editor->priv->text, QUERY_EDITOR_TOOLTIP);
 
 	gtk_container_add (GTK_CONTAINER (editor->priv->scrolled_window), editor->priv->text);
 	g_signal_connect (editor->priv->text, "event", 
@@ -804,10 +785,10 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 
 	create_tags_for_sql (editor, QUERY_EDITOR_LANGUAGE_SQL);
 
-	gtk_widget_show_all (ovl);
-
 	/* timeout function to update timestamps */
 	editor->priv->ts_timeout_id = 0;
+
+	gtk_widget_show_all (GTK_WIDGET (editor));
 }
 
 static void
@@ -1000,8 +981,6 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 		gtk_widget_set_tooltip_markup (editor->priv->text, NULL);
 		gtk_text_view_set_editable (GTK_TEXT_VIEW (editor->priv->text), FALSE);
 		gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (editor->priv->text), FALSE);
-		gtk_widget_destroy (editor->priv->tooltip_widget);
-		editor->priv->tooltip_widget = NULL;
 		break;
 	default:
 		g_assert_not_reached ();

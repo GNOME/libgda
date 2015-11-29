@@ -36,3 +36,7 @@ GdauiRtEditor GtkToolbar {
     margin: 0px;
     padding: 0px;
 }
+
+GtkPaned.paned-no-border {
+    -GtkPaned-handle-size: 0;
+}
