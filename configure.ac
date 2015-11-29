@@ -571,13 +571,13 @@ fi
 vala_api="No Vala bindings will be generated"
 if test "x$enable_vala" = "xyes"
 then
-	AM_PROG_VALAC([0.26.0])
+	AM_PROG_VALAC([0.30.0])
 	if test "x$VALA_API_VERSION" = "x"
 	then
-		VAPIGEN_CHECK([0.26.0],[0.26],,no)
-		vala_api="0.26 (Default)"
+		VAPIGEN_CHECK([0.30.0],[0.30],,no)
+		vala_api="0.30 (Default)"
 	else
-		VAPIGEN_CHECK([0.26.0],$VALA_API_VERSION,,no)
+		VAPIGEN_CHECK([0.30.0],$VALA_API_VERSION,,no)
 		vala_api=$VALA_API_VERSION
 	fi
 else
@@ -625,7 +625,7 @@ then
 	        fi,
 	        if test "$enable_crypto" = "yes"
 	        then
-			AC_MSG_ERROR([libcrypto support requested but not found])
+			AC_MSG_ERROR([libcrypto (part of OpenSSL) support requested but not found])
 	        fi)
 fi
 
