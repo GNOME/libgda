@@ -1654,8 +1654,8 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
 		return G_MAXLONG;
 	glong off;
 	off = lt - gt;
-	g_print ("%s(): %02d:%02d:%02d %d\n", __FUNCTION__,
-		 loctm->tm_hour, loctm->tm_min, loctm->tm_sec, (gint) (off / 3600));
+	/*g_print ("%s(): %02d:%02d:%02d %d\n", __FUNCTION__,
+	  loctm->tm_hour, loctm->tm_min, loctm->tm_sec, (gint) (off / 3600));*/
 
 	if ((off >= 24 * 3600) || (off <= - 24 * 3600))
 		return G_MAXLONG;

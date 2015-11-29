@@ -495,10 +495,6 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 				xmlNodePtr field = NULL;
 
 				value = (GValue*) gda_data_model_iter_get_value_at (iter, rcols[c]);
-				if (!value) {
-					retval = FALSE;
-					break;
-				}
 				if (value && !gda_value_is_null ((GValue *) value)) { 
 					if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
 						str = g_strdup (g_value_get_boolean (value) ? "TRUE" : "FALSE");

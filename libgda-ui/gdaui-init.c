@@ -439,7 +439,7 @@ init_plugins_hash (void)
 	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
 	plugin->valid_g_types [0] = GDA_TYPE_NUMERIC;
 	plugin->valid_g_types [1] = G_TYPE_FLOAT;
-	plugin->valid_g_types [1] = G_TYPE_DOUBLE;
+	plugin->valid_g_types [2] = G_TYPE_DOUBLE;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = entry_number_create_func;
 	plugin->cell_create_func = cell_textual_create_func;
