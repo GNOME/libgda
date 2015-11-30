@@ -63,7 +63,6 @@ libgda_ui_plugins_la_LIBADD = \
 
 xmldir   = $(libdir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/plugins
 xml_in_files = \
-	gdaui-entry-pict-spec.xml.in \
 	gdaui-entry-pict-spec_string.xml.in \
 	gdaui-entry-filesel-spec.xml.in \
 	gdaui-entry-password.xml.in \

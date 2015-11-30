@@ -150,7 +150,6 @@ gdaui_data_cell_renderer_pict_init (GdauiDataCellRendererPict *cell)
 	cell->priv->bindata.data = NULL;
 	cell->priv->bindata.data_length = 0;
 	cell->priv->options.encoding = ENCODING_NONE;
-	cell->priv->options.serialize = FALSE;
 	common_pict_init_cache (&(cell->priv->options));
 
 	gtk_icon_size_lookup (GTK_ICON_SIZE_DIALOG, &(cell->priv->size.width), &(cell->priv->size.height));

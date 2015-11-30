@@ -38,7 +38,6 @@ typedef struct {
 
 typedef struct {
 	PictEncodeType encoding;
-        gboolean       serialize; /* TRUE if must use gdk_pixdata_serialize() */
 	GHashTable    *pixbuf_hash; /* key = GValue pointer, value = a GdkPixbuf */
 } PictOptions;
 

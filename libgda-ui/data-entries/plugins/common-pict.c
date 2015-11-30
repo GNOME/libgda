@@ -201,83 +201,37 @@ common_pict_make_pixbuf (PictOptions *options, PictBinData *bindata, PictAllocat
 	*out_icon_name = NULL;
 
 	if (bindata->data) {
-		if (options->serialize) {
-			GdkPixdata pixdata;
-			GError *loc_error = NULL;
-			
-			if (!gdk_pixdata_deserialize (&pixdata, bindata->data_length, 
-						      bindata->data, &loc_error)) {
-				g_free (bindata->data);
-				bindata->data = NULL;
-				bindata->data_length = 0;
+		GdkPixbufLoader *loader;
+		GError *loc_error = NULL;
 
-				*out_icon_name = "dialog-error";
-				g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
-					     _("Error while deserializing data:\n%s"),
-					     loc_error && loc_error->message ? loc_error->message : _("No detail"));
-
-				g_error_free (loc_error);
+		loader = gdk_pixbuf_loader_new ();
+		if (allocation)
+			g_signal_connect (G_OBJECT (loader), "size-prepared",
+					  G_CALLBACK (loader_size_prepared_cb), allocation);
+		if (gdk_pixbuf_loader_write (loader, bindata->data, bindata->data_length, &loc_error) &&
+		    gdk_pixbuf_loader_close (loader, &loc_error)) {
+			retpixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
+			if (!retpixbuf) {
+				if (loc_error)
+					g_propagate_error (error, loc_error);
+				*out_icon_name = "image-missing";
 			}
-			else {
-				retpixbuf = gdk_pixbuf_from_pixdata (&pixdata, FALSE, &loc_error);
-				if (!retpixbuf) {
-					*out_icon_name = "dialog-error";
-					g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
-						     _("Error while interpreting data as an image:\n%s"),
-						     loc_error && loc_error->message ? loc_error->message : _("No detail"));
-					g_error_free (loc_error);
-				}
-				else {
-					/* scale resulting pixbuf */
-					GdkPixbuf *tmp;
-					gint width, height, w, h;
-					width = gdk_pixbuf_get_width (retpixbuf);
-					height = gdk_pixbuf_get_height (retpixbuf);
-					compute_reduced_size (width, height, allocation, &w, &h);
-					if ((w != width) || (h != height)) {
-						tmp = gdk_pixbuf_scale_simple (retpixbuf, w, h, 
-									       GDK_INTERP_BILINEAR);
-						if (tmp) {
-							g_object_unref (retpixbuf);
-							retpixbuf = tmp;
-						}
-					}
-				}
-			}
+			else
+				g_object_ref (retpixbuf);
 		}
 		else {
-			GdkPixbufLoader *loader;
-			GError *loc_error = NULL;
-			
-			loader = gdk_pixbuf_loader_new ();
-			if (allocation)
-				g_signal_connect (G_OBJECT (loader), "size-prepared",
-						  G_CALLBACK (loader_size_prepared_cb), allocation);
-			if (gdk_pixbuf_loader_write (loader, bindata->data, bindata->data_length, &loc_error) &&
-			    gdk_pixbuf_loader_close (loader, &loc_error)) {
-				retpixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
-				if (!retpixbuf) {
-					if (loc_error)
-						g_propagate_error (error, loc_error);
-					*out_icon_name = "image-missing";
-				}
-				else
-					g_object_ref (retpixbuf);
-			}
-			else {
-				gchar *notice_msg;
-				notice_msg = g_strdup_printf (_("Error while interpreting data as an image:\n%s"),
-							      loc_error && loc_error->message ? loc_error->message : _("No detail"));
-				*out_icon_name = "dialog-warning";
-				g_set_error_literal (error, loc_error ? loc_error->domain : GDAUI_DATA_ENTRY_ERROR,
-						     loc_error ? loc_error->code : GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
-						     notice_msg);
-				g_error_free (loc_error);
-				g_free (notice_msg);
-			}
-			
-			g_object_unref (loader);
+			gchar *notice_msg;
+			notice_msg = g_strdup_printf (_("Error while interpreting data as an image:\n%s"),
+						      loc_error && loc_error->message ? loc_error->message : _("No detail"));
+			*out_icon_name = "dialog-warning";
+			g_set_error_literal (error, loc_error ? loc_error->domain : GDAUI_DATA_ENTRY_ERROR,
+					     loc_error ? loc_error->code : GDAUI_DATA_ENTRY_INVALID_DATA_ERROR,
+					     notice_msg);
+			g_error_free (loc_error);
+			g_free (notice_msg);
 		}
+
+		g_object_unref (loader);
 	}
 
 	return retpixbuf;
@@ -293,11 +247,10 @@ typedef struct {
 	PictCallback  callback;
 	gpointer      data;
 } PictMenuData;
-static void file_load_cb (GtkWidget *button, PictMenuData *menudata);
-static void file_save_cb (GtkWidget *button, PictMenuData *menudata);
-static void copy_cb (GtkWidget *button, PictMenuData *menudata);
+static void file_load_cb (GtkMenuItem *mitem, PictMenuData *menudata);
+static void file_save_cb (GtkMenuItem *mitem, PictMenuData *menudata);
+static void copy_cb (GtkMenuItem *mitem, PictMenuData *menudata);
 
-/* Commented out because it's not used:
 static void
 menudata_free (PictMenuData *menudata)
 {
@@ -307,7 +260,6 @@ menudata_free (PictMenuData *menudata)
 	}
 	g_free (menudata);
 }
-*/
 
 void
 common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *bindata, PictOptions *options,
@@ -325,7 +277,7 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 	menudata->data = data;
 	
 	menu = gtk_menu_new ();
-	g_object_set_data_full (G_OBJECT (menu), "menudata", menudata, g_free);
+	g_object_set_data_full (G_OBJECT (menu), "menudata", menudata, (GDestroyNotify) menudata_free);
 	g_signal_connect (menu, "deactivate", 
 			  G_CALLBACK (gtk_widget_hide), NULL);
 	pictmenu->menu = menu;
@@ -341,6 +293,8 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 	mitem = gtk_menu_item_new_with_mnemonic (_("_Load image from file"));
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menu), mitem);
+	if (attach_to)
+		g_object_set_data_full (G_OBJECT (mitem), "attach-to", g_object_ref (attach_to), g_object_unref);
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (file_load_cb), menudata);
 	pictmenu->load_mitem = mitem;
@@ -348,6 +302,8 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 	mitem = gtk_menu_item_new_with_mnemonic (_("_Save image"));
 	gtk_widget_show (mitem);
 	gtk_container_add (GTK_CONTAINER (menu), mitem);
+	if (attach_to)
+		g_object_set_data_full (G_OBJECT (mitem), "attach-to", g_object_ref (attach_to), g_object_unref);
 	g_signal_connect (mitem, "activate",
 			  G_CALLBACK (file_save_cb), menudata);
 	gtk_widget_set_sensitive (mitem, bindata->data ? TRUE : FALSE);
@@ -357,13 +313,17 @@ common_pict_create_menu (PictMenu *pictmenu, GtkWidget *attach_to, PictBinData *
 }
 
 static void
-file_load_cb (GtkWidget *button, PictMenuData *menudata)
+file_load_cb (GtkMenuItem *mitem, PictMenuData *menudata)
 {
 	GtkWidget *dlg;
 	GtkFileFilter *filter;
 
+	GtkWidget *attach_to;
+	attach_to = g_object_get_data (G_OBJECT (mitem), "attach-to");
+	if (!attach_to)
+		attach_to = GTK_WIDGET (mitem);
 	dlg = gtk_file_chooser_dialog_new (_("Select image to load"), 
-					   GTK_WINDOW (gtk_widget_get_toplevel (button)),
+					   GTK_WINDOW (gtk_widget_get_toplevel (attach_to)),
 					   GTK_FILE_CHOOSER_ACTION_OPEN, 
 					   _("_Cancel"), GTK_RESPONSE_CANCEL,
 					   _("_Open"), GTK_RESPONSE_ACCEPT,
@@ -385,32 +345,8 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 
 		if (g_file_get_contents (filename, &data, &length, &error)) {
 			g_free (menudata->bindata->data);
-			menudata->bindata->data = NULL;
-			menudata->bindata->data_length = 0;
-
-			if (menudata->options->serialize) {
-				GdkPixdata pixdata;
-				GdkPixbuf *pixbuf;
-				guint stream_length;
-
-				pixbuf = gdk_pixbuf_new_from_file (filename, &error);
-				if (pixbuf) {
-					gdk_pixdata_from_pixbuf (&pixdata, pixbuf, TRUE);
-					menudata->bindata->data = gdk_pixdata_serialize (&pixdata, &stream_length);
-					menudata->bindata->data_length = stream_length;
-
-					g_object_unref (pixbuf);
-					g_free (data);
-				}
-				else {
-					menudata->bindata->data = (guchar *) data;
-					menudata->bindata->data_length = length;
-				}
-			}
-			else {
-				menudata->bindata->data = (guchar *) data;
-				menudata->bindata->data_length = length;
-			}
+			menudata->bindata->data = (guchar *) data;
+			menudata->bindata->data_length = length;
 
 			/* call the callback */
 			if (menudata->callback)
@@ -422,7 +358,7 @@ file_load_cb (GtkWidget *button, PictMenuData *menudata)
 			GtkWidget *msg;
 			gchar *tmp;
 			tmp = g_strdup_printf (_("Could not load the contents of '%s'"), filename);
-			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)),
+			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (attach_to)),
 								  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
 								  GTK_BUTTONS_CLOSE,
 								  "<b>%s:</b>\n%s: %s",
@@ -463,12 +399,17 @@ add_if_writable (GdkPixbufFormat *data, PictFormat *format)
 }
 
 static void
-file_save_cb (GtkWidget *button, PictMenuData *menudata)
+file_save_cb (GtkMenuItem *mitem, PictMenuData *menudata)
 {
 	GtkWidget *dlg;
 	GtkWidget *combo, *expander, *hbox, *label;
 	GSList *formats;
 	PictFormat pictformat;
+
+	GtkWidget *attach_to;
+	attach_to = g_object_get_data (G_OBJECT (mitem), "attach-to");
+	if (!attach_to)
+		attach_to = GTK_WIDGET (mitem);
 
 	/* determine writable formats */
 	expander = gtk_expander_new (_("Image format"));
@@ -491,7 +432,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
 	dlg = gtk_file_chooser_dialog_new (_("Select a file to save the image to"), 
-					   GTK_WINDOW (gtk_widget_get_toplevel (button)),
+					   GTK_WINDOW (gtk_widget_get_toplevel (attach_to)),
 					   GTK_FILE_CHOOSER_ACTION_SAVE, 
 					   _("_Cancel"), GTK_RESPONSE_CANCEL,
 					   _("_Save"), GTK_RESPONSE_ACCEPT,
@@ -535,7 +476,7 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 			GtkWidget *msg;
 			gchar *tmp;
 			tmp = g_strdup_printf (_("Could not save the image to '%s'"), filename);
-			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (button)),
+			msg = gtk_message_dialog_new_with_markup (GTK_WINDOW (gtk_widget_get_toplevel (attach_to)),
 								  GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
 								  GTK_BUTTONS_CLOSE,
 								  "<b>%s:</b>\n%s: %s",
@@ -560,10 +501,10 @@ file_save_cb (GtkWidget *button, PictMenuData *menudata)
 }
 
 static void
-copy_cb (G_GNUC_UNUSED GtkWidget *button, PictMenuData *menudata)
+copy_cb (G_GNUC_UNUSED GtkMenuItem *mitem, PictMenuData *menudata)
 {
 	GtkClipboard *cp;
-	cp = gtk_clipboard_get (gdk_atom_intern_static_string ("CLIPBOARD"));
+	cp = gtk_clipboard_get_default (gdk_display_get_default ());
 	if (!cp)
 		return;
 
@@ -728,11 +669,6 @@ common_pict_parse_options (PictOptions *options, const gchar *options_str)
 		if (str) {
 			if (!strcmp (str, "base64")) 
 				options->encoding = ENCODING_BASE64;
-		}
-		str = gda_quark_list_find (params, "SERIALIZE");
-		if (str) {
-			if ((*str == 't') || (*str == 'T'))
-				options->serialize = TRUE;
 		}
 		gda_quark_list_free (params);
 	}

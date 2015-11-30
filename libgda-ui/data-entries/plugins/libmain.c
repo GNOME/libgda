@@ -276,18 +276,6 @@ plugin_init (GError **error)
 	plugin->cell_create_func = plugin_cell_renderer_pict_create_func;
 	retlist = g_slist_append (retlist, plugin);
 
-	file = gda_gbr_get_file_path (GDA_LIB_DIR, LIBGDA_ABI_NAME, "plugins", "gdaui-entry-pict-spec.xml", NULL);
-	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
-		if (error && !*error)
-			g_set_error (error, GDAUI_DATA_ENTRY_ERROR, GDAUI_DATA_ENTRY_FILE_NOT_FOUND_ERROR,
-				     _("Missing spec. file '%s'"), file);
-        }
-	else {
-		gsize len;
-		g_file_get_contents (file, &(plugin->options_xml_spec), &len, error);
-	}
-	g_free (file);
-
 	/* picture - string encoded */
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "picture_as_string";

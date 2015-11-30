@@ -119,7 +119,6 @@ gdaui_entry_pict_init (GdauiEntryPict *gdaui_entry_pict)
 	gdaui_entry_pict->priv->bindata.data = NULL;
 	gdaui_entry_pict->priv->bindata.data_length = 0;
 	gdaui_entry_pict->priv->options.encoding = ENCODING_NONE;
-	gdaui_entry_pict->priv->options.serialize = FALSE;
 	common_pict_init_cache (&gdaui_entry_pict->priv->options);
 	gdaui_entry_pict->priv->editable = TRUE;
 	gdaui_entry_pict->priv->size.width = 0;
@@ -240,10 +239,14 @@ create_entry (GdauiEntryWrapper *mgwrap)
 			  G_CALLBACK (size_allocate_cb), mgpict);
 
 	/* image */
+	GtkWidget *evbox;
+	evbox = gtk_event_box_new ();
+	gtk_container_add (GTK_CONTAINER (mgpict->priv->sw), evbox);
 	wid = gtk_image_new ();
 	gtk_widget_set_valign (wid, GTK_ALIGN_CENTER);
-	gtk_container_add (GTK_CONTAINER (mgpict->priv->sw), wid);
-	gtk_widget_show (wid);
+	gtk_widget_set_halign (wid, GTK_ALIGN_START);
+	gtk_container_add (GTK_CONTAINER (evbox), wid);
+	gtk_widget_show_all (evbox);
 	mgpict->priv->pict = wid;
 
 	wid = gtk_bin_get_child (GTK_BIN (mgpict->priv->sw));
@@ -252,6 +255,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	/* connect signals for popup menu */
 	g_signal_connect (G_OBJECT (mgpict), "popup-menu",
 			  G_CALLBACK (popup_menu_cb), mgpict);
+	gtk_widget_add_events (evbox, GDK_BUTTON_PRESS_MASK);
 	g_signal_connect (G_OBJECT (mgpict), "event",
 			  G_CALLBACK (event_cb), mgpict);
 
@@ -413,7 +417,7 @@ display_image (GdauiEntryPict *mgpict, const GValue *value, const gchar *error_i
 		}
 		else {
 			icon_name = "image-missing";
-			notice_msg = g_strdup (_("Empty data"));
+			notice_msg = g_strdup (_("Unspecified"));
 		}
 	}
 

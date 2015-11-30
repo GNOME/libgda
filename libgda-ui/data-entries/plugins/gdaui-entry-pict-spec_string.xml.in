@@ -4,7 +4,6 @@
     <parameter id="ENCODING" _name="Encoding" _descr="Encoding used to convert binary data to the string" gdatype="gchararray" source="encodings:0" nullok="FALSE">
       <gda_value>base64</gda_value>
     </parameter>
-    <parameter id="SERIALIZE" _name="Serialized picture" _descr="Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)" gdatype="gboolean"/>
   </parameters>
   <sources>
     <gda_array name="encodings">
