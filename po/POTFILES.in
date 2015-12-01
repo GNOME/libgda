@@ -114,7 +114,6 @@ libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-pict.c
 libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in
-libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in
 libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in
 libgda-ui/data-entries/plugins/libmain.c
 [type: gettext/glade]libgda-ui/data/server_operation.xml
