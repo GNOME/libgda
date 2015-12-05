@@ -5,21 +5,22 @@
 # Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003, 2004, 2005, 2006.
 # Nicolau Gonçalves <excentriko@gmail.com>, 2007, 2008, 2009, 2010.
 # Pedro Albuquerque <palbuquerque73@gmail.com>, 2015.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.26\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
-"&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-10-19 11:05+0000\n"
-"PO-Revision-Date: 2015-11-18 07:50+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-12-05 00:48+0000\n"
+"PO-Revision-Date: 2015-12-05 09:00+0000\n"
 "Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
-"Language-Team: Pedro Albuquerque\n"
+"Language-Team: Português <palbuquerque73@gmail.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n\n"
+"X-Generator: Gtranslator 2.91.6\n"
 "X-Poedit-Basepath: /Volumes/DiscoD/Documents/TRANSLATIONS/pt\n"
 "X-Project-Style: gnome\n"
 
@@ -85,7 +86,7 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../libgda/gda-data-model.c:2439 ../libgda/gda-data-model-dir.c:385
 #: ../libgda/gda-data-model-import.c:1722 ../libgda/gda-data-pivot.c:1284
 #: ../libgda/gda-data-pivot.c:1314 ../libgda/gda-data-pivot.c:1412
-#: ../libgda/gda-data-pivot.c:1525 ../libgda/gda-data-proxy.c:3128
+#: ../libgda/gda-data-pivot.c:1525 ../libgda/gda-data-proxy.c:3129
 #: ../libgda/gda-data-select.c:414 ../libgda/gda-data-select.c:2343
 #: ../libgda/gda-data-select.c:2353 ../libgda/gda-data-select.c:3794
 #: ../libgda/gda-holder.c:546 ../libgda/gda-holder.c:1957
@@ -104,17 +105,16 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:857
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1028
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1590
-#: ../libgda-ui/data-entries/common-bin.c:82
-#: ../libgda-ui/data-entries/common-bin.c:161
-#: ../libgda-ui/data-entries/plugins/common-pict.c:217
-#: ../libgda-ui/data-entries/plugins/common-pict.c:227
-#: ../libgda-ui/data-entries/plugins/common-pict.c:270
-#: ../libgda-ui/data-entries/plugins/common-pict.c:430
-#: ../libgda-ui/data-entries/plugins/common-pict.c:543
+#: ../libgda-ui/data-entries/common-bin.c:47
+#: ../libgda-ui/data-entries/common-bin.c:184
+#: ../libgda-ui/data-entries/plugins/common-pict.c:225
+#: ../libgda-ui/data-entries/plugins/common-pict.c:366
+#: ../libgda-ui/data-entries/plugins/common-pict.c:484
 #: ../libgda-ui/demos/main.c:779 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:96 ../libgda-ui/gdaui-init.c:104
 #: ../libgda-ui/gdaui-init.c:552 ../libgda-ui/gdaui-login.c:449
-#: ../libgda-ui/gdaui-rt-editor.c:734 ../providers/jdbc/gda-jdbc-provider.c:525
+#: ../libgda-ui/gdaui-rt-editor.c:734
+#: ../providers/jdbc/gda-jdbc-provider.c:525
 #: ../providers/jdbc/gda-jdbc-provider.c:1454
 #: ../providers/jdbc/gda-jdbc-provider.c:1483
 #: ../providers/jdbc/gda-jdbc-provider.c:1543
@@ -137,7 +137,7 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
 #: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:588
 #: ../tools/browser/browser-window.c:603 ../tools/browser/browser-window.c:618
-#: ../tools/browser/browser-window.c:671 ../tools/browser/browser-window.c:892
+#: ../tools/browser/browser-window.c:670 ../tools/browser/browser-window.c:891
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/canvas/browser-canvas-fkey.c:474
 #: ../tools/browser/data-manager/analyser.c:278
@@ -154,10 +154,10 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:597
 #: ../tools/browser/ldap-browser/ldap-search-page.c:333
 #: ../tools/browser/login-dialog.c:230
-#: ../tools/browser/query-exec/query-console-page.c:755
-#: ../tools/browser/query-exec/query-console-page.c:785
-#: ../tools/browser/query-exec/query-console-page.c:942
-#: ../tools/browser/query-exec/query-console-page.c:1014
+#: ../tools/browser/query-exec/query-console-page.c:760
+#: ../tools/browser/query-exec/query-console-page.c:790
+#: ../tools/browser/query-exec/query-console-page.c:946
+#: ../tools/browser/query-exec/query-console-page.c:1018
 #: ../tools/browser/query-exec/query-favorite-selector.c:191
 #: ../tools/browser/query-exec/query-favorite-selector.c:266
 #: ../tools/browser/query-exec/query-favorite-selector.c:287
@@ -168,17 +168,18 @@ msgstr "Impossível gravar definição DSN: %s"
 #: ../tools/browser/schema-browser/favorite-selector.c:352
 #: ../tools/browser/schema-browser/relations-diagram.c:244
 #: ../tools/browser/schema-browser/table-columns.c:952
-#: ../tools/browser/schema-browser/table-info.c:472
-#: ../tools/browser/schema-browser/table-info.c:542
-#: ../tools/browser/schema-browser/table-info.c:847
-#: ../tools/browser/schema-browser/table-info.c:967
-#: ../tools/browser/schema-browser/table-preferences.c:692
-#: ../tools/browser/schema-browser/table-preferences.c:765
-#: ../tools/browser/ui-formgrid.c:616 ../tools/browser/ui-formgrid.c:728
+#: ../tools/browser/schema-browser/table-info.c:522
+#: ../tools/browser/schema-browser/table-info.c:592
+#: ../tools/browser/schema-browser/table-info.c:887
+#: ../tools/browser/schema-browser/table-info.c:1001
+#: ../tools/browser/schema-browser/table-preferences.c:690
+#: ../tools/browser/schema-browser/table-preferences.c:763
+#: ../tools/browser/ui-formgrid.c:614 ../tools/browser/ui-formgrid.c:726
 #: ../tools/common/t-app.c:2860 ../tools/common/t-connection.c:297
 #: ../tools/common/t-connection.c:437 ../tools/common/t-connection.c:1210
 #: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1999
-#: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
+#: ../tools/misc/gda-list-server-op.c:68
+#: ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
 msgstr "Sem detalhe"
@@ -229,7 +230,7 @@ msgid "Error creating database: %s"
 msgstr "Erro a criar a base de dados: %s"
 
 #: ../control-center/gdaui-dsn-assistant.c:129
-#: ../libgda-ui/gdaui-raw-form.c:250
+#: ../libgda-ui/gdaui-raw-form.c:248
 msgid "Unknown error"
 msgstr "Erro desconhecido"
 
@@ -401,14 +402,14 @@ msgstr "Criar origem de dados"
 
 #: ../control-center/gdaui-dsn-editor.c:402
 #: ../control-center/gdaui-login-dialog.c:105
-#: ../libgda-ui/data-entries/common-bin.c:43
-#: ../libgda-ui/data-entries/common-bin.c:114
-#: ../libgda-ui/data-entries/plugins/common-pict.c:368
-#: ../libgda-ui/data-entries/plugins/common-pict.c:496
+#: ../libgda-ui/data-entries/common-bin.c:62
+#: ../libgda-ui/data-entries/common-bin.c:163
+#: ../libgda-ui/data-entries/plugins/common-pict.c:328
+#: ../libgda-ui/data-entries/plugins/common-pict.c:437
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:200
-#: ../libgda-ui/gdaui-basic-form.c:2163 ../libgda-ui/gdaui-raw-grid.c:1787
-#: ../libgda-ui/gdaui-raw-grid.c:2140 ../libgda-ui/gdaui-rt-editor.c:693
-#: ../libgda-ui/gdaui-server-operation.c:1099
+#: ../libgda-ui/gdaui-basic-form.c:2124 ../libgda-ui/gdaui-raw-grid.c:1779
+#: ../libgda-ui/gdaui-raw-grid.c:2132 ../libgda-ui/gdaui-rt-editor.c:693
+#: ../libgda-ui/gdaui-server-operation.c:1098
 #: ../tools/browser/auth-dialog.c:192
 #: ../tools/browser/canvas/browser-canvas.c:468
 #: ../tools/browser/connection-binding-properties.c:171
@@ -417,7 +418,7 @@ msgstr "Criar origem de dados"
 #: ../tools/browser/ldap-browser/entry-properties.c:226
 #: ../tools/browser/ldap-browser/vtable-dialog.c:158
 #: ../tools/browser/login-dialog.c:113
-#: ../tools/browser/query-exec/query-console-page.c:886
+#: ../tools/browser/query-exec/query-console-page.c:891
 msgid "_Cancel"
 msgstr "_Cancelar"
 
@@ -436,8 +437,8 @@ msgid "Could not create data source: %s"
 msgstr "Impossível criar origem de dados: %s"
 
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:213
-#: ../tools/browser/login-dialog.c:184
+#: ../control-center/gdaui-login-dialog.c:84
+#: ../tools/browser/auth-dialog.c:213 ../tools/browser/login-dialog.c:184
 msgid "Connection opening"
 msgstr "A abrir ligação"
 
@@ -681,7 +682,7 @@ msgid "Authentication string to use"
 msgstr "Cadeia de autenticação a utilizar"
 
 #: ../libgda/gda-connection.c:330 ../libgda-ui/data/server_operation.xml.h:5
-#: ../libgda-ui/gdaui-server-operation.c:784
+#: ../libgda-ui/gdaui-server-operation.c:783
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:8
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:9
@@ -827,7 +828,7 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:771 ../libgda/gda-data-model-dir.c:870
 #: ../libgda/gda-data-model-dir.c:912 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:403 ../libgda/gda-data-model-iter.c:1129
-#: ../libgda/gda-data-proxy.c:3566 ../libgda/gda-data-proxy.c:3690
+#: ../libgda/gda-data-proxy.c:3567 ../libgda/gda-data-proxy.c:3691
 #: ../libgda/gda-data-select.c:1355 ../libgda/gda-data-select.c:1939
 #: ../libgda/gda-data-select.c:2895 ../libgda/gda-data-select.c:2962
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
@@ -892,8 +893,8 @@ msgstr "Se o modelo de dados pode ser modificado"
 #: ../libgda/gda-data-model-array.c:507 ../libgda/gda-data-model-array.c:659
 #: ../libgda/gda-data-model-array.c:746 ../libgda/gda-data-model-dir.c:782
 #: ../libgda/gda-data-model-dir.c:956 ../libgda/gda-data-model-dir.c:1322
-#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3639
-#: ../libgda/gda-data-proxy.c:3677 ../libgda/gda-data-select.c:1888
+#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3640
+#: ../libgda/gda-data-proxy.c:3678 ../libgda/gda-data-select.c:1888
 #: ../libgda/gda-data-select.c:1949
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -902,8 +903,8 @@ msgstr "Linha %d fora do intervalo (0-%d)"
 #: ../libgda/gda-data-model-array.c:511 ../libgda/gda-data-model-array.c:662
 #: ../libgda/gda-data-model-array.c:749 ../libgda/gda-data-model-dir.c:785
 #: ../libgda/gda-data-model-dir.c:959 ../libgda/gda-data-model-dir.c:1325
-#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3642
-#: ../libgda/gda-data-proxy.c:3680 ../libgda/gda-data-select.c:1891
+#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3643
+#: ../libgda/gda-data-proxy.c:3681 ../libgda/gda-data-select.c:1891
 #: ../libgda/gda-data-select.c:1952
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1367,7 +1368,7 @@ msgstr "Sem campo de linha definido"
 msgid "Could not get information from source data model"
 msgstr "Impossível obter informação do modelo de fonte de dados"
 
-#: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3082
+#: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3083
 #: ../tools/common/t-app.c:3077
 msgid "Could not create virtual connection"
 msgstr "Impossível criar ligação virtual"
@@ -1385,7 +1386,7 @@ msgstr ""
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "GdaDataProxy não suporta modelos de dados com acesso não aleatório"
 
-#: ../libgda/gda-data-proxy.c:1676 ../libgda/gda-data-proxy.c:4079
+#: ../libgda/gda-data-proxy.c:1676 ../libgda/gda-data-proxy.c:4080
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
@@ -1416,37 +1417,37 @@ msgstr ""
 "removed\". Isto pode ser um erro da implementação de %s (por favor, preencha "
 "um relatório de erro)."
 
-#: ../libgda/gda-data-proxy.c:3128
+#: ../libgda/gda-data-proxy.c:3129
 #, c-format
 msgid "Error in filter expression: %s"
 msgstr "Erro na expressão do filtro: %s"
 
-#: ../libgda/gda-data-proxy.c:3143
+#: ../libgda/gda-data-proxy.c:3144
 msgid "Error in filter expression"
 msgstr "Erro na expressão do filtro"
 
-#: ../libgda/gda-data-proxy.c:3260 ../libgda/gda-data-select.c:1683
+#: ../libgda/gda-data-proxy.c:3261 ../libgda/gda-data-select.c:1683
 msgid "Incorrect filter expression"
 msgstr "Expressão de filtro incorreta"
 
-#: ../libgda/gda-data-proxy.c:3814
+#: ../libgda/gda-data-proxy.c:3815
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
 "A primeira linha é uma linha vazia artificialmente adicionada e não pode ser "
 "alterada"
 
-#: ../libgda/gda-data-proxy.c:3843 ../libgda/gda-data-proxy.c:3854
+#: ../libgda/gda-data-proxy.c:3844 ../libgda/gda-data-proxy.c:3855
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "Tipo de valor inválido: esperado \"%s\", obtido \"%s\""
 
-#: ../libgda/gda-data-proxy.c:3942
+#: ../libgda/gda-data-proxy.c:3943
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "A tentar modificar uma coluna só de leitura: %d"
 
-#: ../libgda/gda-data-proxy.c:3979
+#: ../libgda/gda-data-proxy.c:3980
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "Tipo de valor não coincide, %s em vez de %s"
@@ -2170,7 +2171,8 @@ msgstr "A atrasar a execução da declaração em %u ms\n"
 
 #: ../libgda/gda-server-provider.c:2787 ../libgda/gda-server-provider.c:2799
 #: ../libgda/gda-server-provider.c:2811 ../libgda/gda-server-provider.c:2823
-#: ../libgda/gda-server-provider.c:2835 ../providers/web/gda-web-provider.c:622
+#: ../libgda/gda-server-provider.c:2835
+#: ../providers/web/gda-web-provider.c:622
 #: ../providers/web/gda-web-provider.c:651
 msgid "Not supported"
 msgstr "Não suportado"
@@ -2417,11 +2419,11 @@ msgstr ""
 
 #: ../libgda/gda-tree-mgr-select.c:300
 #: ../libgda-report/engine/gda-report-engine.c:614
-#: ../libgda-report/engine/gda-report-engine.c:641 ../tools/common/t-app.c:2998
-#: ../tools/common/t-app.c:4691 ../tools/common/t-app.c:5208
-#: ../tools/common/t-app.c:5309 ../tools/common/t-app.c:5406
-#: ../tools/common/t-app.c:5504 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:422
+#: ../libgda-report/engine/gda-report-engine.c:641
+#: ../tools/common/t-app.c:2998 ../tools/common/t-app.c:4691
+#: ../tools/common/t-app.c:5208 ../tools/common/t-app.c:5309
+#: ../tools/common/t-app.c:5406 ../tools/common/t-app.c:5504
+#: ../tools/common/t-context.c:267 ../tools/common/t-context.c:422
 #, c-format
 msgid "No connection specified"
 msgstr "Nenhuma ligação especificada"
@@ -2443,59 +2445,59 @@ msgstr "Impossível obter o valor do iterador"
 msgid "Unable to get table name"
 msgstr "Impossível obter o nome da tabela"
 
-#: ../libgda/gda-util.c:699
+#: ../libgda/gda-util.c:695
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Número de campo %d não encontrado na fonte com o nome \"%s\""
 
-#: ../libgda/gda-util.c:884
+#: ../libgda/gda-util.c:880
 msgid "SELECT statement has no FROM part"
 msgstr "Declaração SELECT não tem parte FROM"
 
-#: ../libgda/gda-util.c:889 ../libgda/gda-util.c:896
+#: ../libgda/gda-util.c:885 ../libgda/gda-util.c:892
 msgid "SELECT statement involves more than one table or expression"
 msgstr "Declaração SELECT envolve mais do que uma tabela ou expressão"
 
-#: ../libgda/gda-util.c:906
+#: ../libgda/gda-util.c:902
 msgid "Can only build modification statement for tables"
 msgstr "Só é possível realizar declarações de modificação para tabelas"
 
-#: ../libgda/gda-util.c:946
+#: ../libgda/gda-util.c:942
 msgid "Table does not have any primary key"
 msgstr "Tabela não tem nenhuma chave primária"
 
-#: ../libgda/gda-util.c:975
+#: ../libgda/gda-util.c:971
 msgid "Table's primary key is not part of SELECT"
 msgstr "Chave primária da tabela não é parte de SELECT"
 
-#: ../libgda/gda-util.c:1026
+#: ../libgda/gda-util.c:1022
 msgid "Table does not have any column"
 msgstr "Tabela não tem nenhuma coluna"
 
-#: ../libgda/gda-util.c:1052
+#: ../libgda/gda-util.c:1048
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
 msgstr "Coluna \"%s\" não é parte de SELECT"
 
-#: ../libgda/gda-util.c:1308
+#: ../libgda/gda-util.c:1304
 msgid "Could not compute any field to insert into"
 msgstr "Impossível calcular nenhum campo para o qual inserir"
 
-#: ../libgda/gda-util.c:1371
+#: ../libgda/gda-util.c:1367
 msgid "Missing table name in UPDATE statement"
 msgstr "Falta nome da tabela na declaração UPDATE"
 
-#: ../libgda/gda-util.c:1726
+#: ../libgda/gda-util.c:1722
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr ""
 "Impossível reescrever declaração UPDATE para gerir valores predefinidos"
 
-#: ../libgda/gda-util.c:1734
+#: ../libgda/gda-util.c:1730
 msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Impossível reescrever declaração que não seja INSERT ou UPDATE"
 
-#: ../libgda/gda-util.c:1778 ../libgda/gda-util.c:1835
-#: ../libgda/gda-util.c:1875 ../libgda/sqlite/gda-sqlite-provider.c:3051
+#: ../libgda/gda-util.c:1774 ../libgda/gda-util.c:1831
+#: ../libgda/gda-util.c:1871 ../libgda/sqlite/gda-sqlite-provider.c:3051
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2274
 #: ../providers/postgres/gda-postgres-provider.c:2063
@@ -2504,22 +2506,22 @@ msgstr "Impossível reescrever declaração que não seja INSERT ou UPDATE"
 msgid "Missing parameter '%s' to execute query"
 msgstr "Parâmetro \"%s\" para executar consulta em falta"
 
-#: ../libgda/gda-util.c:3039
+#: ../libgda/gda-util.c:3035
 msgid "The 'first', 'second' and 'third' arguments must be different"
 msgstr ""
 "Os \"primeiro\", \"segundo\" e terceiro\" argumentos têm de ser diferentes"
 
-#: ../libgda/gda-util.c:3044
+#: ../libgda/gda-util.c:3040
 #, c-format
 msgid "Invalid separator '%c'"
 msgstr "Separador inválido \"%c\""
 
-#: ../libgda/gda-util.c:3046
+#: ../libgda/gda-util.c:3042
 msgid "Invalid null separator"
 msgstr "Separador nulo inválido"
 
-#: ../libgda/gda-util.c:3084 ../libgda/gda-util.c:3099
-#: ../libgda/gda-util.c:3114
+#: ../libgda/gda-util.c:3080 ../libgda/gda-util.c:3095
+#: ../libgda/gda-util.c:3110
 #, c-format
 msgid "Unknown GDateDMY value %u"
 msgstr "Valor GDateDMY %u desconhecido"
@@ -2571,6 +2573,26 @@ msgstr "Representação de cadeias de caracteres"
 msgid "Time, Date and TimeStamp representation"
 msgstr "Representação de hora, data e carimbo"
 
+#. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
+#: ../libgda/handlers/gda-handler-time.c:628
+msgid "DD"
+msgstr "DD"
+
+#. To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number
+#: ../libgda/handlers/gda-handler-time.c:632
+msgid "MM"
+msgstr "MM"
+
+#. To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits
+#: ../libgda/handlers/gda-handler-time.c:637
+msgid "YY"
+msgstr "AA"
+
+#. To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits
+#: ../libgda/handlers/gda-handler-time.c:640
+msgid "YYYY"
+msgstr "AAAA"
+
 #: ../libgda/handlers/gda-handler-type.c:119
 msgid "Gda type representation"
 msgstr "Representação de tipos Gda"
@@ -2613,8 +2635,8 @@ msgid "Unknown query '%s'"
 msgstr "Consulta desconhecida \"%s\""
 
 #: ../libgda-report/engine/gda-report-engine.c:609
-#: ../libgda-report/engine/gda-report-engine.c:636 ../tools/common/t-app.c:2802
-#: ../tools/common/t-app.c:3012
+#: ../libgda-report/engine/gda-report-engine.c:636
+#: ../tools/common/t-app.c:2802 ../tools/common/t-app.c:3012
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "Não foi encontrada nenhuma ligação com o nome \"%s\""
@@ -2774,8 +2796,7 @@ msgstr "Impossível definir comparação \"%s\""
 #: ../libgda-ui/data-entries/plugins/libmain.c:153
 #: ../libgda-ui/data-entries/plugins/libmain.c:182
 #: ../libgda-ui/data-entries/plugins/libmain.c:190
-#: ../libgda-ui/data-entries/plugins/libmain.c:283
-#: ../libgda-ui/data-entries/plugins/libmain.c:308
+#: ../libgda-ui/data-entries/plugins/libmain.c:296
 #, c-format
 msgid "Missing spec. file '%s'"
 msgstr "Ficheiro de especificações \"%s\" em falta"
@@ -3407,104 +3428,103 @@ msgstr "Impossível construir dispositivo de comunicação inter-fios"
 msgid "GdaWorker internal error"
 msgstr "Erro interno do GdaWorker"
 
-#: ../libgda-ui/data-entries/common-bin.c:40
+#: ../libgda-ui/data-entries/common-bin.c:46
+#: ../libgda-ui/data-entries/common-bin.c:183
+#: ../libgda-ui/data-entries/plugins/common-pict.c:365
+#: ../libgda-ui/data-entries/plugins/common-pict.c:483
+#: ../libgda-ui/gdaui-rt-editor.c:733 ../libgda-ui/internal/utility.c:497
+msgid "Error"
+msgstr "Erro"
+
+#: ../libgda-ui/data-entries/common-bin.c:59
 msgid "Select file to load"
 msgstr "Selecione ficheiro a carregar"
 
-#: ../libgda-ui/data-entries/common-bin.c:44
-#: ../libgda-ui/data-entries/common-bin.c:115
-#: ../libgda-ui/data-entries/plugins/common-pict.c:369
+#: ../libgda-ui/data-entries/common-bin.c:63
+#: ../libgda-ui/data-entries/common-bin.c:164
+#: ../libgda-ui/data-entries/plugins/common-pict.c:329
 #: ../libgda-ui/gdaui-rt-editor.c:694
 msgid "_Open"
 msgstr "_Abrir"
 
-#: ../libgda-ui/data-entries/common-bin.c:76
-#: ../libgda-ui/data-entries/plugins/common-pict.c:424
+#: ../libgda-ui/data-entries/common-bin.c:97
+#: ../libgda-ui/data-entries/plugins/common-pict.c:360
 #: ../libgda-ui/gdaui-rt-editor.c:728
 #, c-format
 msgid "Could not load the contents of '%s'"
 msgstr "Impossível carregar os conteúdos de \"%s\""
 
-#: ../libgda-ui/data-entries/common-bin.c:81
 #: ../libgda-ui/data-entries/common-bin.c:160
-#: ../libgda-ui/data-entries/plugins/common-pict.c:429
-#: ../libgda-ui/data-entries/plugins/common-pict.c:542
-#: ../libgda-ui/gdaui-rt-editor.c:733 ../libgda-ui/internal/utility.c:497
-msgid "Error"
-msgstr "Erro"
-
-#: ../libgda-ui/data-entries/common-bin.c:111
 msgid "Select a file to save data to"
 msgstr "Selecione um ficheiro onde gravar dados"
 
-#: ../libgda-ui/data-entries/common-bin.c:155
+#: ../libgda-ui/data-entries/common-bin.c:178
 #, c-format
 msgid "Could not save data to '%s'"
 msgstr "Impossível gravar os dados para \"%s\""
 
-#: ../libgda-ui/data-entries/common-bin.c:199
-msgid "Properties"
-msgstr "Propriedades"
+#: ../libgda-ui/data-entries/common-bin.c:237
+#| msgid "_Load image from file"
+msgid "Load data from file"
+msgstr "Carregar dados de ficheiro"
 
-#: ../libgda-ui/data-entries/common-bin.c:239
+#: ../libgda-ui/data-entries/common-bin.c:244
+#| msgid "Saving data to a file"
+msgid "Save data to file"
+msgstr "Gravar dados num ficheiro"
+
+#: ../libgda-ui/data-entries/common-bin.c:251
+#| msgid "Filter data"
+msgid "Clear data"
+msgstr "Limpar dados"
+
+#: ../libgda-ui/data-entries/common-bin.c:259
+msgid "Open with..."
+msgstr "Abrir com..."
+
+#: ../libgda-ui/data-entries/common-bin.c:273
 #, c-format
 msgid "%lu Byte"
 msgid_plural "%lu Bytes"
 msgstr[0] "%lu Byte"
 msgstr[1] "%lu Bytes"
 
-#: ../libgda-ui/data-entries/common-bin.c:271
-#: ../libgda-ui/data-entries/common-bin.c:320
-#: ../libgda-ui/data-entries/plugins/common-pict.c:46
-#: ../libgda-ui/data-entries/plugins/common-pict.c:78
-msgid "No data"
-msgstr "Sem dados"
+#: ../libgda-ui/data-entries/common-bin.c:318
+#| msgid "Unknown"
+msgid "Unknown size"
+msgstr "Tamanho desconhecido"
 
-#: ../libgda-ui/data-entries/common-bin.c:276
-#: ../libgda-ui/data-entries/common-bin.c:292
-#: ../libgda-ui/data-entries/common-bin.c:305
-#: ../libgda-ui/data-entries/common-bin.c:309
-msgid "Data size"
-msgstr "Tamanho dos dados"
+#: ../libgda-ui/data-entries/common-bin.c:423
+#| msgid "Could not create directory '%s'"
+msgid "Could not create temporary directory"
+msgstr "Impossível criar pasta temporária"
 
-#: ../libgda-ui/data-entries/common-bin.c:305
-#: ../providers/ldap/gda-ldap-provider.c:1116
-#: ../providers/mysql/gda-mysql-provider.c:638
-#: ../providers/mysql/gda-mysql-provider.c:692
-#: ../providers/mysql/gda-mysql-util.c:63
-#: ../tools/browser/ldap-browser/entry-properties.c:587
-#: ../tools/browser/schema-browser/table-columns.c:517
-#: ../tools/browser/ui-support.c:70 ../tools/common/t-utils.c:40
-msgid "Unknown"
-msgstr "Desconhecido"
+#: ../libgda-ui/data-entries/common-bin.c:460
+#| msgid "Could not open connection"
+msgid "Could not run selected application"
+msgstr "Impossível executar a aplicação selecionada"
 
-#. list of fields
-#: ../libgda-ui/data-entries/common-bin.c:329
-#: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:5
-#: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:12
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
-#: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
-#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
-#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
-msgid "Data type"
-msgstr "Tipo de dados"
+#: ../libgda-ui/data-entries/common-bin.c:467
+#| msgid "Could not save data: %s"
+msgid "Could not export data"
+msgstr "Impossível exportar os dados"
+
+#: ../libgda-ui/data-entries/common-bin.c:525
+msgid "Open with"
+msgstr "Abrir com"
 
 #. FIXME: find a better label
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:158
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:155
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:187
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
-#: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:725 ../providers/ldap/gda-ldap-provider.c:1130
-#: ../tools/common/t-app.c:2282 ../tools/common/t-app.c:2351
-#: ../tools/common/t-app.c:3756 ../tools/common/t-app.c:5558
-#: ../tools/common/t-config-info.c:123 ../tools/common/t-config-info.c:292
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
+#: ../libgda-ui/gdaui-basic-form.c:812 ../libgda-ui/gdaui-basic-form.c:848
+#: ../libgda-ui/gdaui-raw-grid.c:721
+#: ../providers/ldap/gda-ldap-provider.c:1130 ../tools/common/t-app.c:2282
+#: ../tools/common/t-app.c:2351 ../tools/common/t-app.c:3756
+#: ../tools/common/t-app.c:5558 ../tools/common/t-config-info.c:123
+#: ../tools/common/t-config-info.c:292
 msgid "Value"
 msgstr "Valor"
 
@@ -3512,19 +3532,19 @@ msgstr "Valor"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:156
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:188
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:169
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:184
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 msgid "GValue to render"
 msgstr "GValue a mostrar"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:171
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:168
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:160
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:195
 msgid "Editable"
 msgstr "Editável"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:169
-#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:197
+#: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
 msgid "The toggle button can be activated"
 msgstr "O botão de alternância pode ser ativado"
 
@@ -3578,16 +3598,26 @@ msgstr ""
 msgid "<non-printable>"
 msgstr "<não imprimível>"
 
-#: ../libgda-ui/data-entries/gdaui-entry.c:202
-#: ../libgda-ui/data-entries/gdaui-entry.c:221
+#: ../libgda-ui/data-entries/gdaui-entry.c:206
+#: ../libgda-ui/data-entries/gdaui-entry.c:226
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:165
 msgid "Invalid UTF-8 format!"
 msgstr "Formato UTF-8 inválido!"
 
-#. format tooltip
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1007
-msgid "Format is hh:mm:ss"
-msgstr "Formato é hh:mm:ss"
+#: ../libgda-ui/data-entries/gdaui-entry-bin.c:186
+#: ../libgda-ui/data-entries/plugins/common-pict.c:46
+#: ../libgda-ui/data-entries/plugins/common-pict.c:78
+msgid "No data"
+msgstr "Sem dados"
+
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:596
+#, c-format
+msgid ""
+"Expected format is %s\n"
+"Time is relative to local time (%s)"
+msgstr ""
+"Formato esperado: %s\n"
+"A hora é relativa à hora local (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-entry-integer.xml.in.h:1
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
@@ -3619,7 +3649,59 @@ msgstr "Decimais"
 msgid "Number of decimals"
 msgstr "Número de decimais"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:238
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:77
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:420
+#| msgid "Unspecified table name"
+msgid "Unspecified"
+msgstr "Não especificado"
+
+#. list of fields
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:78
+#: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:9
+#: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:26
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
+#: ../tools/common/t-app.c:1861 ../tools/common/web-server.c:867
+msgid "Default"
+msgstr "Predefinição"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:79
+#| msgid "Document not specified"
+msgid "Default (unspecified)"
+msgstr "Predefinição (não especificado)"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:80
+#| msgid "Invalid type"
+msgid "Invalid"
+msgstr "Inválido"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:286
+msgid "Edit"
+msgstr "Editar"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:293
+#| msgid "Document not specified"
+msgid "Define as unspecified"
+msgstr "Definir como não especificado"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:300
+#| msgid "Set as default"
+msgid "Define as default"
+msgstr "Definir como predefinição"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:307
+#: ../tools/browser/data-manager/data-console.c:384
+msgid "Reset"
+msgstr "Repor"
+
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:442
 #, c-format
 msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
@@ -3628,18 +3710,6 @@ msgstr ""
 "Widget da classe \"%s\" não tem nenhum GdaDataHandler associado (a ser "
 "definido pela propriedade \"gestor\"), espere alguns comportamentos "
 "incorretos"
-
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:394
-msgid "Value is NULL"
-msgstr "Valor é NULL"
-
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:400
-msgid "Value will be determined by default"
-msgstr "Valor vai ser determinado por predefinição"
-
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:406
-msgid "Value is invalid"
-msgstr "Valor é inválido"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Maximum length"
@@ -3674,24 +3744,23 @@ msgstr ""
 msgid "Unknown format character starting at %s"
 msgstr "Formato de carácter desconhecido a começar em %s"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:268
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:285
 #, c-format
 msgid "Type %s is not numerical"
 msgstr "O tipo %s não é numérico"
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:282
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:299
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
 msgstr "Separador decimal não pode ser o carácter \"%c\""
 
-#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:292
+#: ../libgda-ui/data-entries/gdaui-numeric-entry.c:309
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr "Separador de milhares não pode ser o carácter \"%c\""
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:109
 #: ../libgda-ui/data-entries/plugins/common-pict.c:124
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:416
 msgid "Empty data"
 msgstr "Dados vazios"
 
@@ -3699,17 +3768,7 @@ msgstr "Dados vazios"
 msgid "Unhandled type of data"
 msgstr "Tipo de dados não gerido"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:216
-#, c-format
-msgid ""
-"Error while deserializing data:\n"
-"%s"
-msgstr ""
-"Erro ao reordenar os dados:\n"
-"%s"
-
-#: ../libgda-ui/data-entries/plugins/common-pict.c:226
-#: ../libgda-ui/data-entries/plugins/common-pict.c:269
+#: ../libgda-ui/data-entries/plugins/common-pict.c:224
 #, c-format
 msgid ""
 "Error while interpreting data as an image:\n"
@@ -3718,48 +3777,48 @@ msgstr ""
 "Erro ao interpretar dados como uma imagem:\n"
 "%s"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:333
+#: ../libgda-ui/data-entries/plugins/common-pict.c:285
 msgid "_Copy image"
 msgstr "_Copiar imagem"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:341
+#: ../libgda-ui/data-entries/plugins/common-pict.c:293
 msgid "_Load image from file"
 msgstr "Carregar imagem do _Ficheiro"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:348
+#: ../libgda-ui/data-entries/plugins/common-pict.c:302
 msgid "_Save image"
 msgstr "_Gravar imagem"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:365
+#: ../libgda-ui/data-entries/plugins/common-pict.c:325
 #: ../libgda-ui/gdaui-rt-editor.c:690
 msgid "Select image to load"
 msgstr "Selecione imagem a carregar"
 
 #. determine writable formats
-#: ../libgda-ui/data-entries/plugins/common-pict.c:474
+#: ../libgda-ui/data-entries/plugins/common-pict.c:415
 msgid "Image format"
 msgstr "Formato da imagem"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:478
+#: ../libgda-ui/data-entries/plugins/common-pict.c:419
 msgid "Format image as:"
 msgstr "Formatar imagem como:"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:490
+#: ../libgda-ui/data-entries/plugins/common-pict.c:431
 msgid "Current format"
 msgstr "Formato atual"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:493
+#: ../libgda-ui/data-entries/plugins/common-pict.c:434
 msgid "Select a file to save the image to"
 msgstr "Selecione um ficheiro onde gravar a imagem"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:497
-#: ../libgda-ui/gdaui-raw-grid.c:1788
+#: ../libgda-ui/data-entries/plugins/common-pict.c:438
+#: ../libgda-ui/gdaui-raw-grid.c:1780
 #: ../tools/browser/canvas/browser-canvas.c:469
 #: ../tools/browser/ldap-browser/entry-properties.c:227
 msgid "_Save"
 msgstr "_Gravar"
 
-#: ../libgda-ui/data-entries/plugins/common-pict.c:537
+#: ../libgda-ui/data-entries/plugins/common-pict.c:478
 #, c-format
 msgid "Could not save the image to '%s'"
 msgstr "Impossível gravar a imagem para \"%s\""
@@ -3908,7 +3967,7 @@ msgstr "Soma MD5"
 msgid "No encoding"
 msgstr "Sem codificação"
 
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:258
+#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict.c:262
 msgid "No data to display"
 msgstr "Sem dados para mostrar"
 
@@ -3917,19 +3976,6 @@ msgid "Encoding used to convert binary data to the string"
 msgstr "Codificação usada para converter dados binários para a cadeia"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:3
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:1
-msgid "Serialized picture"
-msgstr "Figura serializada"
-
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:4
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:2
-msgid ""
-"Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)"
-msgstr ""
-"Definida como VERDADEIRO se os dados vêem de um GdkPixbuf serializado (F-"
-"Spot por exemplo)"
-
-#: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:5
 msgid "Base 64"
 msgstr "Base 64"
 
@@ -3973,8 +4019,9 @@ msgstr "Quebrar linhas entre palavras ou grafemas"
 msgid "General"
 msgstr "Geral"
 
-#: ../libgda-ui/data/server_operation.xml.h:2 ../tools/browser/fk-declare.c:249
-#: ../tools/browser/schema-browser/table-info.c:378
+#: ../libgda-ui/data/server_operation.xml.h:2
+#: ../tools/browser/fk-declare.c:250
+#: ../tools/browser/schema-browser/table-info.c:438
 msgid "Columns"
 msgstr "Colunas"
 
@@ -4035,7 +4082,7 @@ msgstr ""
 "deve parar de rodar), e um atraso de 1 segundo foi adicionado sempre que a "
 "ligação é usada."
 
-#: ../libgda-ui/gdaui-basic-form.c:291
+#: ../libgda-ui/gdaui-basic-form.c:288
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
@@ -4043,52 +4090,48 @@ msgstr ""
 "Ponteiro para uma especificação de disposição XML  (como um xmlNodePtr para "
 "um nó <gdaui_form>)"
 
-#: ../libgda-ui/gdaui-basic-form.c:295
+#: ../libgda-ui/gdaui-basic-form.c:292
 msgid "List of parameters to show in the form"
 msgstr "Lista de parâmetros a mostrar no formulário"
 
-#: ../libgda-ui/gdaui-basic-form.c:309
-msgid "Show Entry actions"
-msgstr "Mostrar ações Entry"
-
-#: ../libgda-ui/gdaui-basic-form.c:314
+#: ../libgda-ui/gdaui-basic-form.c:306
 msgid "Entries Auto-default"
 msgstr "Entradas de predefinição automática"
 
-#: ../libgda-ui/gdaui-basic-form.c:319
+#: ../libgda-ui/gdaui-basic-form.c:311
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr "VERDADEIRO se expandir o formulário verticalmente faz sentido"
 
-#: ../libgda-ui/gdaui-basic-form.c:343
+#: ../libgda-ui/gdaui-basic-form.c:335
 msgid "Shown data entries"
 msgstr "Mostrar entradas de dados"
 
-#: ../libgda-ui/gdaui-basic-form.c:958 ../libgda-ui/gdaui-raw-grid.c:766
-#: ../libgda-ui/gdaui-raw-grid.c:2686 ../libgda-ui/gdaui-raw-grid.c:2741
+#: ../libgda-ui/gdaui-basic-form.c:936 ../libgda-ui/gdaui-raw-grid.c:762
+#: ../libgda-ui/gdaui-raw-grid.c:2635 ../libgda-ui/gdaui-raw-grid.c:2690
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr "O atributo \"%s\" deve ser um valor G_TYPE_STRING"
 
-#: ../libgda-ui/gdaui-basic-form.c:1898
+#: ../libgda-ui/gdaui-basic-form.c:1859
 msgid "Can't find data entry for GdaHolder"
 msgstr "Impossível encontrar dados de entrada para GdaHolder"
 
-#: ../libgda-ui/gdaui-basic-form.c:2159
+#: ../libgda-ui/gdaui-basic-form.c:2120
 msgid "Values to be defined"
 msgstr "Valores a definir"
 
-#: ../libgda-ui/gdaui-basic-form.c:2164
-#: ../libgda-ui/gdaui-server-operation.c:1098
+#: ../libgda-ui/gdaui-basic-form.c:2125
+#: ../libgda-ui/gdaui-server-operation.c:1097
 #: ../tools/browser/ldap-browser/vtable-dialog.c:157
 msgid "_Ok"
 msgstr "_Aceitar"
 
-#: ../libgda-ui/gdaui-basic-form.c:2231 ../libgda-ui/gdaui-raw-grid.c:2349
+#: ../libgda-ui/gdaui-basic-form.c:2192 ../libgda-ui/gdaui-raw-grid.c:2341
 #, c-format
 msgid "'%s' document not parsed successfully"
 msgstr "Documento \"%s\" não processado com sucesso"
 
-#: ../libgda-ui/gdaui-basic-form.c:2380
+#: ../libgda-ui/gdaui-basic-form.c:2341
 msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
@@ -4096,12 +4139,12 @@ msgstr ""
 "tamanho do grupo não foi tido em conta ao usar "
 "gdaui_basic_form_add_to_size_group()"
 
-#: ../libgda-ui/gdaui-cloud.c:247 ../libgda-ui/gdaui-cloud.c:981
+#: ../libgda-ui/gdaui-cloud.c:246 ../libgda-ui/gdaui-cloud.c:980
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr "Tipo de coluna inválido para etiqueta: esperada uma cadeia, obtido %s"
 
-#: ../libgda-ui/gdaui-cloud.c:1074 ../tools/browser/objects-cloud.c:459
+#: ../libgda-ui/gdaui-cloud.c:1073 ../tools/browser/objects-cloud.c:459
 msgid "Find:"
 msgstr "Localizar:"
 
@@ -4145,7 +4188,7 @@ msgstr "Definir filtro"
 msgid "Clear filter"
 msgstr "Limpar o filtro"
 
-#: ../libgda-ui/gdaui-data-proxy.c:201
+#: ../libgda-ui/gdaui-data-proxy.c:181
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
 msgstr "GdauiAction não é suportado por este ambiente GdauiDataProxy"
 
@@ -4158,7 +4201,7 @@ msgid "Commit the changes"
 msgstr "Submeter as alterações"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:92
-#: ../libgda-ui/gdaui-data-proxy-info.c:906
+#: ../libgda-ui/gdaui-data-proxy-info.c:907
 msgid "Delete the selected entry"
 msgstr "Eliminar a entrada selecionada"
 
@@ -4203,7 +4246,7 @@ msgstr "Mostrar o último bloco de dados"
 msgid "Filter data"
 msgstr "Filtrar dados"
 
-#: ../libgda-ui/gdaui-data-proxy-info.c:899
+#: ../libgda-ui/gdaui-data-proxy-info.c:900
 msgid "Undelete the selected entry"
 msgstr "Recuperar a entrada selecionada"
 
@@ -4280,16 +4323,16 @@ msgstr "Fontes de dados..."
 msgid "Could not execute the Database access control center"
 msgstr "Impossível executar o centro de controlo de acesso à base de dados"
 
-#: ../libgda-ui/gdaui-raw-form.c:180 ../libgda-ui/gdaui-raw-grid.c:288
+#: ../libgda-ui/gdaui-raw-form.c:178 ../libgda-ui/gdaui-raw-grid.c:285
 msgid "Data to display"
 msgstr "Dados a mostrar"
 
-#: ../libgda-ui/gdaui-raw-form.c:249
+#: ../libgda-ui/gdaui-raw-form.c:247
 #, c-format
 msgid "Can't append row to data model: %s"
 msgstr "Impossível adicionar linha ao modelo de dados: %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:293
+#: ../libgda-ui/gdaui-raw-grid.c:290
 msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
@@ -4297,117 +4340,117 @@ msgstr ""
 "Ponteiro para uma especificação de disposição XML  (como um xmlNodePtr para "
 "um nó <gdaui_grid>)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:296
+#: ../libgda-ui/gdaui-raw-grid.c:293
 msgid "Info cell visible"
 msgstr "Célula de informação vísivel"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
-#: ../libgda-ui/gdaui-raw-grid.c:728 ../libgda-ui/gdaui-raw-grid.c:751
+#: ../libgda-ui/gdaui-raw-grid.c:724 ../libgda-ui/gdaui-raw-grid.c:747
 msgid "Can't be NULL"
 msgstr "Não pode ser NULL"
 
-#: ../libgda-ui/gdaui-raw-grid.c:759
+#: ../libgda-ui/gdaui-raw-grid.c:755
 msgid "No title"
 msgstr "Sem título"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1561
+#: ../libgda-ui/gdaui-raw-grid.c:1553
 msgid "Shown columns"
 msgstr "Mostrar colunas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1588
+#: ../libgda-ui/gdaui-raw-grid.c:1580
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1594
+#: ../libgda-ui/gdaui-raw-grid.c:1586
 msgid "Select _All"
 msgstr "Selecion_Ar tudo"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1599
+#: ../libgda-ui/gdaui-raw-grid.c:1591
 msgid "_Clear Selection"
 msgstr "_Limpar a seleção"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1602
+#: ../libgda-ui/gdaui-raw-grid.c:1594
 msgid "Show Column _Titles"
 msgstr "Mostrar _Títulos das colunas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1608
+#: ../libgda-ui/gdaui-raw-grid.c:1600
 msgid "Save _As"
 msgstr "Gr_Avar como"
 
 #. create dialog box
-#: ../libgda-ui/gdaui-raw-grid.c:1785
+#: ../libgda-ui/gdaui-raw-grid.c:1777
 msgid "Saving Data"
 msgstr "A gravar dados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1793
+#: ../libgda-ui/gdaui-raw-grid.c:1785
 msgid "Saving data to a file"
 msgstr "A gravar dados para um ficheiro"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1794
+#: ../libgda-ui/gdaui-raw-grid.c:1786
 msgid "The data will be exported to the selected file."
 msgstr "Os dados serão exportados para o ficheiro selecionado."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1804 ../tools/common/t-config-info.c:427
+#: ../libgda-ui/gdaui-raw-grid.c:1796 ../tools/common/t-config-info.c:427
 msgid "File name"
 msgstr "Nome do ficheiro"
 
 #. To translators: "Details" is a table's column's attribute
-#: ../libgda-ui/gdaui-raw-grid.c:1825
+#: ../libgda-ui/gdaui-raw-grid.c:1817
 #: ../tools/browser/schema-browser/table-columns.c:666
 msgid "Details"
 msgstr "Detalhes"
 
 #. file type
-#: ../libgda-ui/gdaui-raw-grid.c:1846
+#: ../libgda-ui/gdaui-raw-grid.c:1838
 msgid "File type:"
 msgstr "Tipo de ficheiro:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1856
+#: ../libgda-ui/gdaui-raw-grid.c:1848
 msgid "Tab-delimited"
 msgstr "Separado por tabulação"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1857
+#: ../libgda-ui/gdaui-raw-grid.c:1849
 msgid "Comma-delimited"
 msgstr "Separado por vírgulas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1858
+#: ../libgda-ui/gdaui-raw-grid.c:1850
 msgid "XML"
 msgstr "XML"
 
 #. data scope
-#: ../libgda-ui/gdaui-raw-grid.c:1865
+#: ../libgda-ui/gdaui-raw-grid.c:1857
 msgid "Data to save:"
 msgstr "Dados a gravar:"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1880
+#: ../libgda-ui/gdaui-raw-grid.c:1872
 msgid "All data (without any local modification)"
 msgstr "Todos os dados (sem modificações locais)"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1881
+#: ../libgda-ui/gdaui-raw-grid.c:1873
 msgid "Only displayed data"
 msgstr "Só os dados mostrados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1883
+#: ../libgda-ui/gdaui-raw-grid.c:1875
 msgid "Only selected data"
 msgstr "Só os dados selecionados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1888
+#: ../libgda-ui/gdaui-raw-grid.c:1880
 msgid "Other options"
 msgstr "Outras opções"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1895
+#: ../libgda-ui/gdaui-raw-grid.c:1887
 msgid "Empty string when NULL?"
 msgstr "Cadeia vazia quando NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1898 ../libgda-ui/gdaui-raw-grid.c:1903
+#: ../libgda-ui/gdaui-raw-grid.c:1890 ../libgda-ui/gdaui-raw-grid.c:1895
 msgid "Export NULL values as an empty \"\" string"
 msgstr "Exportar valores NULL como uma cadeia vazia \"\""
 
-#: ../libgda-ui/gdaui-raw-grid.c:1905
+#: ../libgda-ui/gdaui-raw-grid.c:1897
 msgid "Invalid data as NULL?"
 msgstr "Dados inválidos com NULL?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1908 ../libgda-ui/gdaui-raw-grid.c:1913
+#: ../libgda-ui/gdaui-raw-grid.c:1900 ../libgda-ui/gdaui-raw-grid.c:1905
 msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
@@ -4415,28 +4458,28 @@ msgstr ""
 "Não exportar dados inválidos,\n"
 "exportar um valor NULL ao invés."
 
-#: ../libgda-ui/gdaui-raw-grid.c:1915
+#: ../libgda-ui/gdaui-raw-grid.c:1907
 msgid "Field names on first row?"
 msgstr "Nomes de campos na primeira linha?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:1918 ../libgda-ui/gdaui-raw-grid.c:1923
+#: ../libgda-ui/gdaui-raw-grid.c:1910 ../libgda-ui/gdaui-raw-grid.c:1915
 msgid "Add a row at beginning with columns names"
 msgstr "Adicionar uma linha no início com os nomes das colunas"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2100
+#: ../libgda-ui/gdaui-raw-grid.c:2092
 #, c-format
 msgid "Could not save file %s"
 msgstr "Impossível gravar o ficheiro %s"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2108
+#: ../libgda-ui/gdaui-raw-grid.c:2100
 msgid "You must specify a file name"
 msgstr "Tem de especificar o nome do ficheiro"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2114
+#: ../libgda-ui/gdaui-raw-grid.c:2106
 msgid "Got empty file while converting the data"
 msgstr "Obtido ficheiro vazio ao converter os dados"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2127
+#: ../libgda-ui/gdaui-raw-grid.c:2119
 #, c-format
 msgid ""
 "File '%s' already exists.\n"
@@ -4445,7 +4488,7 @@ msgstr ""
 "Ficheiro \"%s\" já existe.\n"
 "Quer sobrescrevê-lo?"
 
-#: ../libgda-ui/gdaui-raw-grid.c:2137
+#: ../libgda-ui/gdaui-raw-grid.c:2129
 msgid "If you choose yes, the contents will be lost."
 msgstr "Se escolher sim, os conteúdos serão perdidos."
 
@@ -4595,31 +4638,31 @@ msgstr "A especificação da operação a ser implementada"
 msgid "Request section header to be hidden if there is only one section"
 msgstr "Pedir que o cabeçalho de secção esteja oculto se houver só uma secção"
 
-#: ../libgda-ui/gdaui-server-operation.c:475
-#: ../libgda-ui/gdaui-server-operation.c:1214
+#: ../libgda-ui/gdaui-server-operation.c:474
+#: ../libgda-ui/gdaui-server-operation.c:1213
 msgid "Add a new field"
 msgstr "Adicionar um novo campo"
 
-#: ../libgda-ui/gdaui-server-operation.c:478
-#: ../libgda-ui/gdaui-server-operation.c:1217
+#: ../libgda-ui/gdaui-server-operation.c:477
+#: ../libgda-ui/gdaui-server-operation.c:1216
 msgid "Remove selected field"
 msgstr "Remover campo selecionado"
 
 #. last row is for new entries
-#: ../libgda-ui/gdaui-server-operation.c:609
+#: ../libgda-ui/gdaui-server-operation.c:608
 #: ../tools/browser/data-manager/data-console.c:391
 msgid "Add"
 msgstr "Adicionar"
 
-#: ../libgda-ui/gdaui-server-operation.c:1094
+#: ../libgda-ui/gdaui-server-operation.c:1093
 msgid "Server operation specification"
 msgstr "Especificação de operação do servidor"
 
-#: ../libgda-ui/gdaui-server-operation.c:1149
+#: ../libgda-ui/gdaui-server-operation.c:1148
 msgid "<b>Field properties:</b>"
 msgstr "<b>Propriedades do campo:</b>"
 
-#: ../libgda-ui/gdaui-server-operation.c:1168
+#: ../libgda-ui/gdaui-server-operation.c:1167
 msgid "<b>Fields:</b>"
 msgstr "<b>Campos:</b>"
 
@@ -4822,6 +4865,7 @@ msgstr "Descrição da coluna"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:170
+#: ../tools/browser/schema-browser/table-info.c:374
 msgid "Table"
 msgstr "Tabela"
 
@@ -4860,6 +4904,21 @@ msgstr "Nome da tabela"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:10
 msgid "Field name"
 msgstr "Nome do campo"
+
+#. list of fields
+#: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:5
+#: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:12
+#: ../providers/mysql/mysql_specs_add_column.xml.in.h:9
+#: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
+#: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
+#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
+#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
+#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:12
+msgid "Data type"
+msgstr "Tipo de dados"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:6
@@ -4903,22 +4962,6 @@ msgstr "Escala"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:18
 msgid "Not NULL"
 msgstr "Não NULL"
-
-#. list of fields
-#: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:9
-#: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:26
-#: ../providers/mysql/mysql_specs_add_column.xml.in.h:16
-#: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
-#: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
-#: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
-#: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
-#: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
-#: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
-#: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:26
-#: ../tools/common/t-app.c:1861 ../tools/common/web-server.c:867
-msgid "Default"
-msgstr "Predefinição"
 
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:10
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:10
@@ -5342,6 +5385,7 @@ msgstr "Descartar tabela só se existir"
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
+#: ../tools/browser/schema-browser/table-info.c:377
 msgid "View"
 msgstr "Vista"
 
@@ -5486,14 +5530,16 @@ msgstr "Fornecedor para bases de dados Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Fornecedor para bases de dados Firebird embutidas"
 
-#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
-#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
-#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48
+#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
+#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
+#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
+#: ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "Argumento inválido: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68
+#: ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "Impossível ler BLOB"
 
@@ -5612,6 +5658,16 @@ msgstr "Valor inválido para 'TLS_REQCERT'"
 #, c-format
 msgid "Too many arguments"
 msgstr "Demasiados argumentos"
+
+#: ../providers/ldap/gda-ldap-provider.c:1116
+#: ../providers/mysql/gda-mysql-provider.c:638
+#: ../providers/mysql/gda-mysql-provider.c:692
+#: ../providers/mysql/gda-mysql-util.c:63
+#: ../tools/browser/ldap-browser/entry-properties.c:587
+#: ../tools/browser/schema-browser/table-columns.c:517
+#: ../tools/browser/ui-support.c:70 ../tools/common/t-utils.c:40
+msgid "Unknown"
+msgstr "Desconhecido"
 
 #: ../providers/ldap/gda-ldap-provider.c:1129
 msgid "Parameter"
@@ -7517,7 +7573,8 @@ msgstr "É necessário pelo menos a versão 5.0 de MySQL"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
+#: ../providers/web/gda-web-meta.c:105
+#: ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "Impossível importar dados do servidor"
 
@@ -7769,44 +7826,45 @@ msgstr ""
 "Ficheiro usado para gravar qualquer informação associada\n"
 "a esta ligação (favoritos, descrições, ...)"
 
-#: ../tools/browser/browser-connections-list.c:317
+#: ../tools/browser/browser-connections-list.c:316
 msgid "Opened connections"
 msgstr "Ligações abertas"
 
-#: ../tools/browser/browser-connections-list.c:344 ../tools/common/t-app.c:2927
+#: ../tools/browser/browser-connections-list.c:343
+#: ../tools/common/t-app.c:2927
 msgid "List of opened connections"
 msgstr "Lista de ligações abertas"
 
-#: ../tools/browser/browser-connections-list.c:353
+#: ../tools/browser/browser-connections-list.c:352
 #: ../tools/common/web-server.c:646
 msgid "Connections"
 msgstr "Ligações"
 
-#: ../tools/browser/browser-connections-list.c:369
+#: ../tools/browser/browser-connections-list.c:368
 msgid "Connection's properties"
 msgstr "Propriedades da ligação"
 
-#: ../tools/browser/browser-connections-list.c:380
+#: ../tools/browser/browser-connections-list.c:379
 #: ../tools/browser/browser-window.c:322
 msgid "Close connection"
 msgstr "Fechar a ligação"
 
-#: ../tools/browser/browser-connections-list.c:384
+#: ../tools/browser/browser-connections-list.c:383
 msgid "Close selected connection"
 msgstr "Fechar a ligação selecionada"
 
-#: ../tools/browser/browser-connections-list.c:387
+#: ../tools/browser/browser-connections-list.c:386
 msgid "Connect"
 msgstr "Ligar"
 
-#: ../tools/browser/browser-connections-list.c:391
+#: ../tools/browser/browser-connections-list.c:390
 msgid "Open a new connection"
 msgstr "Abrir uma nova ligação"
 
 #: ../tools/browser/browser-window.c:261 ../tools/browser/browser-window.c:417
-#: ../tools/browser/ldap-browser/perspective-main.c:34
+#: ../tools/browser/ldap-browser/perspective-main.c:35
 #: ../tools/browser/schema-browser/table-columns.c:975
-#: ../tools/browser/ui-formgrid.c:743
+#: ../tools/browser/ui-formgrid.c:741
 msgid "LDAP browser"
 msgstr "Navegador LDAP"
 
@@ -7866,20 +7924,20 @@ msgstr "Erro ao submeter a transação: %s"
 msgid "Error rolling back transaction: %s"
 msgstr "Erro ao reverter a transação: %s"
 
-#: ../tools/browser/browser-window.c:670
+#: ../tools/browser/browser-window.c:669
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Erro ao atualizar a transação ligada: %s"
 
-#: ../tools/browser/browser-window.c:999
+#: ../tools/browser/browser-window.c:998
 msgid "Don't show this message again"
 msgstr "Não mostrar esta mensagem novamente"
 
-#: ../tools/browser/browser-window.c:1008 ../tools/browser/ui-formgrid.c:661
+#: ../tools/browser/browser-window.c:1007 ../tools/browser/ui-formgrid.c:659
 msgid "_Close"
 msgstr "Fe_Char"
 
-#: ../tools/browser/browser-window.c:1108
+#: ../tools/browser/browser-window.c:1115
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -7963,15 +8021,15 @@ msgid "Declare foreign key for this table"
 msgstr "Declarar chave externa para esta tabela"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
-#: ../tools/browser/schema-browser/table-info.c:966
+#: ../tools/browser/schema-browser/table-info.c:1000
 #, c-format
 msgid "Failed to declare foreign key: %s"
 msgstr "Falha ao declarar chave externa: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:429
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:432
-#: ../tools/browser/schema-browser/table-info.c:973
-#: ../tools/browser/schema-browser/table-info.c:976
+#: ../tools/browser/schema-browser/table-info.c:1007
+#: ../tools/browser/schema-browser/table-info.c:1010
 msgid "Successfully declared foreign key"
 msgstr "Chave externa declarada com sucesso"
 
@@ -8177,13 +8235,9 @@ msgid "Unsaved"
 msgstr "Não gravado"
 
 #: ../tools/browser/data-manager/data-console.c:326
-#: ../tools/browser/query-exec/query-console-page.c:272
+#: ../tools/browser/query-exec/query-console-page.c:270
 msgid "Variables' values:"
 msgstr "Valores das variáveis:"
-
-#: ../tools/browser/data-manager/data-console.c:384
-msgid "Reset"
-msgstr "Repor"
 
 #: ../tools/browser/data-manager/data-console.c:385
 msgid ""
@@ -8198,7 +8252,6 @@ msgid "Add a new data source"
 msgstr "Adicionar uma nova fonte de dados"
 
 #: ../tools/browser/data-manager/data-console.c:398
-#: ../tools/browser/query-exec/query-console-page.c:306
 msgid "Variables"
 msgstr "Variáveis"
 
@@ -8208,8 +8261,7 @@ msgstr "Mostrar variáveis necessárias"
 
 #: ../tools/browser/data-manager/data-console.c:404
 #: ../tools/browser/ldap-browser/ldap-search-page.c:275
-#: ../tools/browser/query-exec/query-console-page.c:313
-#: ../tools/browser/schema-browser/table-info.c:895
+#: ../tools/browser/schema-browser/table-info.c:935
 msgid "Execute"
 msgstr "Executar"
 
@@ -8234,7 +8286,7 @@ msgstr ""
 "como XML (avançado)"
 
 #: ../tools/browser/data-manager/data-console.c:418
-#: ../tools/browser/schema-browser/table-info.c:893
+#: ../tools/browser/schema-browser/table-info.c:933
 msgid "Help"
 msgstr "Ajuda"
 
@@ -8250,10 +8302,9 @@ msgstr "Gestor de dados \"%s\""
 #: ../tools/browser/data-manager/data-console.c:504
 #: ../tools/browser/data-manager/data-console.c:515
 #: ../tools/browser/data-manager/data-console.c:542
-#: ../tools/browser/data-manager/data-console.c:947
-#: ../tools/browser/data-manager/perspective-main.c:34
+#: ../tools/browser/data-manager/data-console.c:945
+#: ../tools/browser/data-manager/perspective-main.c:35
 #: ../tools/browser/schema-browser/relations-diagram.c:506
-#: ../tools/browser/schema-browser/table-info.c:490
 msgid "Data manager"
 msgstr "Gestor de dados"
 
@@ -8271,34 +8322,34 @@ msgstr "Nome do gestor de dados"
 msgid "Save"
 msgstr "Gravar"
 
-#: ../tools/browser/data-manager/data-console.c:717
+#: ../tools/browser/data-manager/data-console.c:715
 #, c-format
 msgid "source%d"
 msgstr "fonte%d"
 
-#: ../tools/browser/data-manager/data-console.c:776
+#: ../tools/browser/data-manager/data-console.c:774
 msgid "Data source from SQL"
 msgstr "Fonte de dados de SQL"
 
 #. To translators: "In schema" refers to the database schema an object is in
-#: ../tools/browser/data-manager/data-console.c:814
-#: ../tools/browser/schema-browser/table-info.c:332
+#: ../tools/browser/data-manager/data-console.c:812
+#: ../tools/browser/schema-browser/table-info.c:385
 #, c-format
 msgid "In schema '%s'"
 msgstr "No esquema \"%s\""
 
-#: ../tools/browser/data-manager/data-console.c:824
+#: ../tools/browser/data-manager/data-console.c:822
 #, c-format
 msgid "For table: %s"
 msgstr "Para a tabela: %s"
 
-#: ../tools/browser/data-manager/data-console.c:912
+#: ../tools/browser/data-manager/data-console.c:910
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
 "Aa trocar para modo de execução. Prima Esc para voltar ao modo de composição."
 
-#: ../tools/browser/data-manager/data-console.c:935
+#: ../tools/browser/data-manager/data-console.c:933
 msgid "Switch between compose and execute modes"
 msgstr "Trocar entre modos de composição e execução"
 
@@ -8316,12 +8367,12 @@ msgstr "Impossível remover favorito: %s"
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:436
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:252
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:596
-#: ../tools/browser/query-exec/query-console-page.c:754
-#: ../tools/browser/query-exec/query-console-page.c:784
+#: ../tools/browser/query-exec/query-console-page.c:759
+#: ../tools/browser/query-exec/query-console-page.c:789
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
 #: ../tools/browser/query-exec/query-favorite-selector.c:707
 #: ../tools/browser/schema-browser/favorite-selector.c:351
-#: ../tools/browser/schema-browser/table-info.c:471
+#: ../tools/browser/schema-browser/table-info.c:521
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "Impossível adicionar favorito: %s"
@@ -8423,7 +8474,7 @@ msgid "Multiple statements detected, only the first will be used"
 msgstr "Declarações múltiplas detetadas, só a primeira irá ser usada"
 
 #: ../tools/browser/data-manager/data-source-editor.c:112
-#: ../tools/browser/ui-formgrid.c:535 ../tools/browser/ui-formgrid.c:546
+#: ../tools/browser/ui-formgrid.c:533 ../tools/browser/ui-formgrid.c:544
 msgid "Zoom..."
 msgstr "Ampliação..."
 
@@ -8531,7 +8582,7 @@ msgid "Expecting <%s> root node"
 msgstr "Esperado nó raíz <%s>"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:318
-#: ../tools/browser/query-exec/query-console-page.c:252
+#: ../tools/browser/query-exec/query-console-page.c:250
 msgid "SQL code to execute:"
 msgstr "Código SQL a executar:"
 
@@ -8539,38 +8590,41 @@ msgstr "Código SQL a executar:"
 msgid "_Add"
 msgstr "_Adicionar"
 
-#: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:392
+#: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:393
 #, c-format
 msgid "Declare a foreign key for table '%s'"
 msgstr "Declarar uma chave externa para a tabela \"%s\""
 
 #: ../tools/browser/fk-declare.c:186
+#| msgid ""
+#| "define which table is references, which columns are part of the foreign "
+#| "key, and which column each one references"
 msgid ""
-"define which table is references, which columns are part of the foreign key, "
+"define which table is referenced, which columns are part of the foreign key, "
 "and which column each one references"
 msgstr ""
 "defina que tabela é referenciada, que colunas são parte da chave externa e "
-"que coluna cada uma referencia"
+"que coluna cada uma delas referencia"
 
 #. FK name
-#: ../tools/browser/fk-declare.c:204
+#: ../tools/browser/fk-declare.c:205
 msgid "Foreign key name:"
 msgstr "Nome da chave externa:"
 
 #. table to reference
-#: ../tools/browser/fk-declare.c:214
+#: ../tools/browser/fk-declare.c:215
 msgid "Referenced table:"
 msgstr "Tabela referenciada:"
 
-#: ../tools/browser/fk-declare.c:256
+#: ../tools/browser/fk-declare.c:257
 msgid "Referenced column"
 msgstr "Coluna referenciada"
 
-#: ../tools/browser/fk-declare.c:554
+#: ../tools/browser/fk-declare.c:555
 msgid "Missing information to declare foreign key"
 msgstr "Informação em falta para declarar a chave externa"
 
-#: ../tools/browser/fk-declare.c:636
+#: ../tools/browser/fk-declare.c:637
 msgid "Missing information to undeclare foreign key"
 msgstr "Informação em falta para remover a declaração da chave externa"
 
@@ -8896,8 +8950,6 @@ msgid "LDAP search settings"
 msgstr "Definições de procura LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:269
-#: ../tools/browser/query-exec/query-console-page.c:300
-#: ../tools/browser/query-exec/query-console-page.c:370
 msgid "Clear"
 msgstr "Limpar"
 
@@ -9068,16 +9120,16 @@ msgstr[1] "%d tabelas no esquema \"%s\":"
 msgid "None"
 msgstr "Nenhum"
 
-#: ../tools/browser/query-exec/perspective-main.c:34
+#: ../tools/browser/query-exec/perspective-main.c:35
 msgid "Query execution (SQL)"
 msgstr "Execução de consulta (SQL)"
 
 #: ../tools/browser/query-exec/query-console-page.c:226
-#: ../tools/browser/query-exec/query-console-page.c:1096
+#: ../tools/browser/query-exec/query-console-page.c:1100
 msgid "Query editor"
 msgstr "Editor de consulta"
 
-#: ../tools/browser/query-exec/query-console-page.c:301
+#: ../tools/browser/query-exec/query-console-page.c:302
 msgid ""
 "Clear the editor's\n"
 "contents"
@@ -9085,7 +9137,7 @@ msgstr ""
 "Limpar o conteúdo\n"
 "do editor"
 
-#: ../tools/browser/query-exec/query-console-page.c:307
+#: ../tools/browser/query-exec/query-console-page.c:309
 msgid ""
 "Show variables needed\n"
 "to execute SQL"
@@ -9093,15 +9145,11 @@ msgstr ""
 "Mostrar variáveis necessárias\n"
 "para executar SQL"
 
-#: ../tools/browser/query-exec/query-console-page.c:314
+#: ../tools/browser/query-exec/query-console-page.c:317
 msgid "Execute SQL in editor"
 msgstr "Executar SQL no editor"
 
-#: ../tools/browser/query-exec/query-console-page.c:320
-msgid "Indent"
-msgstr "Indentação"
-
-#: ../tools/browser/query-exec/query-console-page.c:321
+#: ../tools/browser/query-exec/query-console-page.c:326
 msgid ""
 "Indent SQL in editor\n"
 "and make the code more readable\n"
@@ -9111,23 +9159,15 @@ msgstr ""
 "e tornar o código mais legível\n"
 "(remove comentários)"
 
-#: ../tools/browser/query-exec/query-console-page.c:329
-msgid "Favorite"
-msgstr "Favorito"
-
-#: ../tools/browser/query-exec/query-console-page.c:330
+#: ../tools/browser/query-exec/query-console-page.c:337
 msgid "Add SQL to favorite"
 msgstr "Adicionar SQL a favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:344
+#: ../tools/browser/query-exec/query-console-page.c:350
 msgid "Execution history:"
 msgstr "Histórico de execução:"
 
-#: ../tools/browser/query-exec/query-console-page.c:362
-msgid "Copy"
-msgstr "Copiar"
-
-#: ../tools/browser/query-exec/query-console-page.c:363
+#: ../tools/browser/query-exec/query-console-page.c:369
 msgid ""
 "Copy selected history\n"
 "to editor"
@@ -9135,56 +9175,56 @@ msgstr ""
 "Copiar histórico selecionado\n"
 "para o editor"
 
-#: ../tools/browser/query-exec/query-console-page.c:371
+#: ../tools/browser/query-exec/query-console-page.c:378
 msgid "Clear history"
 msgstr "Limpar histórico"
 
-#: ../tools/browser/query-exec/query-console-page.c:383
+#: ../tools/browser/query-exec/query-console-page.c:390
 msgid "Execution Results:"
 msgstr "Resultados da execução:"
 
-#: ../tools/browser/query-exec/query-console-page.c:646
+#: ../tools/browser/query-exec/query-console-page.c:651
 msgid "New favorite"
 msgstr "Novo favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:657
-#: ../tools/browser/query-exec/query-console-page.c:690
+#: ../tools/browser/query-exec/query-console-page.c:662
+#: ../tools/browser/query-exec/query-console-page.c:695
 #, c-format
 msgid "Modify favorite '%s'"
 msgstr "Modificar favorito \"%s\""
 
-#: ../tools/browser/query-exec/query-console-page.c:678
+#: ../tools/browser/query-exec/query-console-page.c:683
 msgid "Modify a favorite"
 msgstr "Modificar um favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:727
-#: ../tools/browser/query-exec/query-console-page.c:747
+#: ../tools/browser/query-exec/query-console-page.c:732
+#: ../tools/browser/query-exec/query-console-page.c:752
 msgid "Favorite's name"
 msgstr "Nome do favorito"
 
-#: ../tools/browser/query-exec/query-console-page.c:728
+#: ../tools/browser/query-exec/query-console-page.c:733
 #: ../tools/browser/query-exec/query-favorite-selector.c:697
 msgid "Unnamed query"
 msgstr "Consulta sem nome"
 
-#: ../tools/browser/query-exec/query-console-page.c:731
+#: ../tools/browser/query-exec/query-console-page.c:736
 msgid "Name of the favorite to create"
 msgstr "Nome do favorito a criar"
 
-#: ../tools/browser/query-exec/query-console-page.c:732
+#: ../tools/browser/query-exec/query-console-page.c:737
 msgid "Enter the name of the favorite to create"
 msgstr "Insira o nome do favorito a criar"
 
-#: ../tools/browser/query-exec/query-console-page.c:863
+#: ../tools/browser/query-exec/query-console-page.c:868
 msgid "Invalid variable's contents"
 msgstr "Conteúdo da variável inválido"
 
-#: ../tools/browser/query-exec/query-console-page.c:864
-#: ../tools/browser/schema-browser/table-info.c:915
+#: ../tools/browser/query-exec/query-console-page.c:869
+#: ../tools/browser/schema-browser/table-info.c:955
 msgid "assign values to the following variables"
 msgstr "atribuir valores às variáveis seguintes"
 
-#: ../tools/browser/query-exec/query-console-page.c:929
+#: ../tools/browser/query-exec/query-console-page.c:933
 msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
@@ -9192,12 +9232,12 @@ msgstr ""
 "Já está a ser executada uma consulta, para executar outra abra uma nova "
 "ligação"
 
-#: ../tools/browser/query-exec/query-console-page.c:941
+#: ../tools/browser/query-exec/query-console-page.c:945
 #, c-format
 msgid "Error while parsing code: %s"
 msgstr "Erro ao processar código: %s"
 
-#: ../tools/browser/query-exec/query-console-page.c:997
+#: ../tools/browser/query-exec/query-console-page.c:1001
 msgid ""
 "A transaction has automatically been started\n"
 "during this statement's execution, this usually\n"
@@ -9213,12 +9253,12 @@ msgstr ""
 "estão acessíveis, limpe o item correspondente do\n"
 "histórico antes de fechar a transação)."
 
-#: ../tools/browser/query-exec/query-console-page.c:1009
+#: ../tools/browser/query-exec/query-console-page.c:1013
 msgid "Statement executed"
 msgstr "Declaração executada"
 
-#: ../tools/browser/query-exec/query-console-page.c:1013
-#: ../tools/browser/ui-formgrid.c:616
+#: ../tools/browser/query-exec/query-console-page.c:1017
+#: ../tools/browser/ui-formgrid.c:614
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -9227,7 +9267,7 @@ msgstr ""
 "Erro ao executar consulta:\n"
 "%s"
 
-#: ../tools/browser/query-exec/query-console-page.c:1029
+#: ../tools/browser/query-exec/query-console-page.c:1033
 msgid ""
 "Internal error, please report error to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product"
@@ -9235,37 +9275,37 @@ msgstr ""
 "Erro interno, por favor reporte o erro em http://bugzilla.gnome.org/ no "
 "produto \"libgda\""
 
-#: ../tools/browser/query-exec/query-console-page.c:1084
+#: ../tools/browser/query-exec/query-console-page.c:1088
 msgid "Execute query"
 msgstr "Executar consulta"
 
-#: ../tools/browser/query-exec/query-editor.c:699
+#: ../tools/browser/query-exec/query-editor.c:697
 msgid "Copy all in a single line"
 msgstr "Copiar tudo numa linha única"
 
-#: ../tools/browser/query-exec/query-editor.c:1246
+#: ../tools/browser/query-exec/query-editor.c:1225
 msgid "In the future:\n"
 msgstr "No futuro:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1250
+#: ../tools/browser/query-exec/query-editor.c:1229
 msgid "Less than a minute ago:\n"
 msgstr "Há menos de um minuto:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1255
+#: ../tools/browser/query-exec/query-editor.c:1234
 #, c-format
 msgid "%lu minute ago:\n"
 msgid_plural "%lu minutes ago:\n"
 msgstr[0] "%lu minuto atrás:\n"
 msgstr[1] "%lu minutos atrás:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1262
+#: ../tools/browser/query-exec/query-editor.c:1241
 #, c-format
 msgid "%lu hour ago\n"
 msgid_plural "%lu hours ago\n"
 msgstr[0] "%lu hora atrás:\n"
 msgstr[1] "%lu horas atrás:\n"
 
-#: ../tools/browser/query-exec/query-editor.c:1268
+#: ../tools/browser/query-exec/query-editor.c:1247
 #, c-format
 msgid "%lu day ago\n"
 msgid_plural "%lu days ago\n"
@@ -9329,11 +9369,11 @@ msgstr "Objeto pedido não é uma tabela ou vista"
 msgid "Auto incremented"
 msgstr "Incremento automático"
 
-#: ../tools/browser/schema-browser/objects-index.c:175
-msgid "Tables' index"
-msgstr "Índice da tabela"
+#: ../tools/browser/schema-browser/objects-index.c:174
+msgid "Index of tables and views"
+msgstr "Índice de tabelas e vistas"
 
-#: ../tools/browser/schema-browser/perspective-main.c:34
+#: ../tools/browser/schema-browser/perspective-main.c:35
 msgid "Schema browser"
 msgstr "Navegador de esquemas"
 
@@ -9442,7 +9482,22 @@ msgstr "Impossível encontrar tabela \"%s.%s\""
 msgid "Could not find declared foreign key '%s'"
 msgstr "Impossível encontrar chave externa \"%s\" declarada"
 
-#: ../tools/browser/schema-browser/table-info.c:357
+#: ../tools/browser/schema-browser/table-info.c:274
+#: ../tools/browser/schema-browser/table-info.c:752
+msgid "Meta data not yet available"
+msgstr "Meatadados ainda não disponíveis"
+
+#: ../tools/browser/schema-browser/table-info.c:294
+msgid "Can't find information about table"
+msgstr "Impossível encontrar tabela de informação"
+
+#. To translators: "Object" is used when we can't determine if @table is a table or a view
+#: ../tools/browser/schema-browser/table-info.c:370
+#| msgid "Objects"
+msgid "Object"
+msgstr "Objeto"
+
+#: ../tools/browser/schema-browser/table-info.c:410
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -9452,33 +9507,25 @@ msgstr ""
 "por favor atualize os metadados da base de dados\n"
 "(menu Ligação/Obter metadados)."
 
-#: ../tools/browser/schema-browser/table-info.c:388
+#: ../tools/browser/schema-browser/table-info.c:444
 msgid "Relations"
 msgstr "Relações"
 
-#: ../tools/browser/schema-browser/table-info.c:398
+#: ../tools/browser/schema-browser/table-info.c:450
 msgid "Preferences"
 msgstr "Preferências"
 
-#: ../tools/browser/schema-browser/table-info.c:536
+#: ../tools/browser/schema-browser/table-info.c:586
 msgid "Data successfully inserted"
 msgstr "Dados inseridos com sucesso"
 
-#: ../tools/browser/schema-browser/table-info.c:541
-#: ../tools/browser/ui-formgrid.c:727
+#: ../tools/browser/schema-browser/table-info.c:591
+#: ../tools/browser/ui-formgrid.c:725
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Erro ao executar consulta: %s"
 
-#: ../tools/browser/schema-browser/table-info.c:670
-msgid "Meta data not yet available"
-msgstr "Meatadados ainda não disponíveis"
-
-#: ../tools/browser/schema-browser/table-info.c:687
-msgid "Can't find information about table"
-msgstr "Impossível encontrar tabela de informação"
-
-#: ../tools/browser/schema-browser/table-info.c:723
+#: ../tools/browser/schema-browser/table-info.c:763
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -9487,42 +9534,42 @@ msgstr ""
 "Erro interno ao construir declaração INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:769
+#: ../tools/browser/schema-browser/table-info.c:809
 #, c-format
 msgid "Default value: '%s'"
 msgstr "Valor predefinido: \"%s\""
 
-#: ../tools/browser/schema-browser/table-info.c:779
+#: ../tools/browser/schema-browser/table-info.c:819
 msgid "Default value: auto incremented value"
 msgstr "Predefinição: valor de incremento automático"
 
-#: ../tools/browser/schema-browser/table-info.c:890
-#: ../tools/browser/schema-browser/table-info.c:914
+#: ../tools/browser/schema-browser/table-info.c:930
+#: ../tools/browser/schema-browser/table-info.c:954
 msgid "Values to insert into table"
 msgstr "Valores a inserir na tabela"
 
-#: ../tools/browser/schema-browser/table-info.c:896
+#: ../tools/browser/schema-browser/table-info.c:936
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../tools/browser/schema-browser/table-info.c:954
+#: ../tools/browser/schema-browser/table-info.c:988
 #, c-format
 msgid "Can't find information about table '%s'"
 msgstr "Impossível encontrar informação da tabela \"%s\""
 
-#: ../tools/browser/schema-browser/table-info.c:1003
+#: ../tools/browser/schema-browser/table-info.c:1037
 msgid "Add to Favorites"
 msgstr "Adicionar aos Favoritos"
 
-#: ../tools/browser/schema-browser/table-info.c:1011
+#: ../tools/browser/schema-browser/table-info.c:1045
 msgid "View table's contents"
 msgstr "Ver conteúdos da tabela"
 
-#: ../tools/browser/schema-browser/table-info.c:1019
+#: ../tools/browser/schema-browser/table-info.c:1053
 msgid "Insert data into table"
 msgstr "Inserir dados na tabela"
 
-#: ../tools/browser/schema-browser/table-info.c:1027
+#: ../tools/browser/schema-browser/table-info.c:1061
 msgid "Declare Foreign Key"
 msgstr "Declarar chave externa"
 
@@ -9552,20 +9599,19 @@ msgstr ""
 "serão mostrados nos formulários. Deixe 'Predefinição' para ter\n"
 "a vista predefinida."
 
-#: ../tools/browser/schema-browser/table-preferences.c:462
-#: ../tools/browser/schema-browser/table-preferences.c:473
-msgid "none"
-msgstr "nenhum"
-
-#: ../tools/browser/schema-browser/table-preferences.c:466
+#: ../tools/browser/schema-browser/table-preferences.c:463
 msgid "Options:"
 msgstr "Opções:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:477
+#: ../tools/browser/schema-browser/table-preferences.c:471
+msgid "none"
+msgstr "nenhum"
+
+#: ../tools/browser/schema-browser/table-preferences.c:475
 msgid "Preview:"
 msgstr "Antever:"
 
-#: ../tools/browser/schema-browser/table-preferences.c:478
+#: ../tools/browser/schema-browser/table-preferences.c:476
 msgid ""
 "Free form to test the configured\n"
 "data entry"
@@ -9585,31 +9631,31 @@ msgstr "Procurar:"
 msgid "Case sensitive"
 msgstr "Sensível a maiúsculas"
 
-#: ../tools/browser/ui-formgrid.c:344
+#: ../tools/browser/ui-formgrid.c:342
 msgid "_Execute"
 msgstr "_Executar"
 
-#: ../tools/browser/ui-formgrid.c:352
+#: ../tools/browser/ui-formgrid.c:350
 msgid "Enable or disable auto update of data"
 msgstr "Ativar ou desativar atualização automática de dados"
 
-#: ../tools/browser/ui-formgrid.c:361
+#: ../tools/browser/ui-formgrid.c:359
 msgid "Toggle between grid and form presentations"
 msgstr "Alternar entre apresentações de grelha e formulários"
 
-#: ../tools/browser/ui-formgrid.c:371
+#: ../tools/browser/ui-formgrid.c:369
 msgid "Refresh data"
 msgstr "Atualizar dados"
 
-#: ../tools/browser/ui-formgrid.c:472
+#: ../tools/browser/ui-formgrid.c:470
 msgid "Execute action"
 msgstr "Executar ação"
 
-#: ../tools/browser/ui-formgrid.c:520
+#: ../tools/browser/ui-formgrid.c:518
 msgid "View LDAP entry's details"
 msgstr "Ver detalhes das entradas LDAP"
 
-#: ../tools/browser/ui-formgrid.c:637
+#: ../tools/browser/ui-formgrid.c:635
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -9618,11 +9664,11 @@ msgstr ""
 "Definir ou confirmar os parâmetros para\n"
 "executar a ação \"%s\""
 
-#: ../tools/browser/ui-formgrid.c:641
+#: ../tools/browser/ui-formgrid.c:639
 msgid "Execution of action"
 msgstr "Execução da ação"
 
-#: ../tools/browser/ui-formgrid.c:718 ../tools/browser/ui-formgrid.c:722
+#: ../tools/browser/ui-formgrid.c:716 ../tools/browser/ui-formgrid.c:720
 msgid "Action successfully executed"
 msgstr "Ação executada com sucesso"
 
@@ -9658,7 +9704,7 @@ msgstr ""
 msgid "Unable to open help file"
 msgstr "Impossível abrir o ficheiro de ajuda"
 
-#: ../tools/browser/ui-support.c:464
+#: ../tools/browser/ui-support.c:465
 msgid "Close tab"
 msgstr "Fechar separador"
 
@@ -11087,6 +11133,55 @@ msgstr "_Fechar ligação"
 msgid "Display"
 msgstr "Mostrar"
 
+#~ msgid "Properties"
+#~ msgstr "Propriedades"
+
+#~ msgid "Data size"
+#~ msgstr "Tamanho dos dados"
+
+#~ msgid "Format is hh:mm:ss"
+#~ msgstr "Formato é hh:mm:ss"
+
+#~ msgid "Value is NULL"
+#~ msgstr "Valor é NULL"
+
+#~ msgid "Value will be determined by default"
+#~ msgstr "Valor vai ser determinado por predefinição"
+
+#~ msgid "Value is invalid"
+#~ msgstr "Valor é inválido"
+
+#~ msgid ""
+#~ "Error while deserializing data:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Erro ao reordenar os dados:\n"
+#~ "%s"
+
+#~ msgid "Serialized picture"
+#~ msgstr "Figura serializada"
+
+#~ msgid ""
+#~ "Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)"
+#~ msgstr ""
+#~ "Definida como VERDADEIRO se os dados vêem de um GdkPixbuf serializado (F-"
+#~ "Spot por exemplo)"
+
+#~ msgid "Show Entry actions"
+#~ msgstr "Mostrar ações Entry"
+
+#~ msgid "Indent"
+#~ msgstr "Indentação"
+
+#~ msgid "Favorite"
+#~ msgstr "Favorito"
+
+#~ msgid "Copy"
+#~ msgstr "Copiar"
+
+#~ msgid "Tables' index"
+#~ msgstr "Índice da tabela"
+
 #~ msgid "Data Source Properties"
 #~ msgstr "Propriedades da fonte de dados"
 
@@ -11409,10 +11504,6 @@ msgstr "Mostrar"
 
 #, fuzzy
 #~ msgid "_Edit"
-#~ msgstr "Editável"
-
-#, fuzzy
-#~ msgid "Edit"
 #~ msgstr "Editável"
 
 #, fuzzy
@@ -11786,9 +11877,6 @@ msgstr "Mostrar"
 
 #~ msgid "Set as original"
 #~ msgstr "Definir como original"
-
-#~ msgid "Set as default"
-#~ msgstr "Definir por omissão"
 
 #~ msgid "Connection: %s"
 #~ msgstr "Ligação: %s"
