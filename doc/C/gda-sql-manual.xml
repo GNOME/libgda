@@ -100,11 +100,11 @@ Provider       | PostgreSQL
 Description    | Provider for PostgreSQL databases                                                                                                     
 DSN parameters | DB_NAME: Database name. The name of a database to connect to (string),                                                                
                  SEARCHPATH: Search Path. Search path among database's schemas ('search_path' variable) (string),                                      
-                 HOST: Database server. Host on which the database server is running (for servers running on unix domain sockets, enter the socket's pa
-                 PORT: Port. Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), o
+                 HOST: Database server. ost on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty),
+                 PORT: Port. Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty),
                  OPTIONS: Options. Extra connection options (string),                                                                                  
                  USE_SSL: Require SSL. Whether or not to use SSL to establish the connection (boolean),                                                
-                 CONNECT_TIMEOUT: Connection timeout. Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely. It is not
+                 CONNECT_TIMEOUT: Connection timeout. Maximum wait for connection, in seconds. Zero or not specified means wait indefinitely. It is not recommended to use a timeout of less than 2 seconds,
 Authentication | USERNAME (string),                                                                                                                    
                  PASSWORD (string)                                                                                                                     
 File           | /local/extra/lib/libgda-5.0/providers/libgda-postgres.so                                                                              

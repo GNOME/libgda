@@ -253,11 +253,11 @@ Attribute      | Value
 Provider       | PostgreSQL                                              
 Description    | Provider for PostgreSQL databases                       
 DSN parameters | DB_NAME: The name of a database to connect to (string),     
-                 SEARCHPATH: Search path among database's schemas ('search_pa
-                 HOST: Host on which the database server is running (for serv
-                 PORT: Database server port (for servers running on unix doma
+                 SEARCHPATH: Search path among database's schemas ('search_path' variable) (string),
+                 HOST: Host on which the database server is running (for servers running on unix domain sockets, enter the socket's path (usually /tmp), or leave this field empty).
+                 PORT: Database server port (for servers running on unix domain sockets, enter the socket's file name extension (usually 5432), or leave this field empty).
                  OPTIONS: Extra connection options (string),                 
-                 USE_SSL: Whether or not to use SSL to establish the connecti
+                 USE_SSL: Whether or not to use SSL to establish the connection (boolean),
 Authentication | USERNAME (string),                                                         
                  PASSWORD (string)
 File           | /local/lib/libgda-4.0/providers/libgda-postgres.so
