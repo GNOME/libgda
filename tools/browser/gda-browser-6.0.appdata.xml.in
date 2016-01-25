@@ -27,4 +27,5 @@
     <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=dataman-persp.png</screenshot>
   </screenshots>
   <updatecontact>vmalerba_at_gmail.com</updatecontact>
+  <project_group>GNOME</project_group>
 </application>
