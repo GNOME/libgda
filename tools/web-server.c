@@ -624,7 +624,7 @@ get_auth (WebServer *server, SoupMessage *msg, GHashTable *query)
 
 	/* Add javascript */
 	xmlNodePtr form, node;
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/md5.js");
 
@@ -790,27 +790,27 @@ get_for_console (WebServer *server, SoupMessage *msg)
 	xmlSetProp (div, BAD_CAST "id", BAD_CAST "irb_input");
 	xmlSetProp (div, BAD_CAST "autocomplete", BAD_CAST "off");
 	
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/jquery.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/jquery-ui.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseapp_2.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseirb_2.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/irb.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/cnc.js");
 
