@@ -734,7 +734,7 @@ get_for_console (WebServer *server, SoupMessage *msg)
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseapp_2.js");
 
-	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST "");
+	node = xmlNewChild (hdoc->head, NULL, BAD_CAST "script", BAD_CAST " ");
 	xmlSetProp (node, BAD_CAST "type", BAD_CAST "text/javascript");
 	xmlSetProp (node, BAD_CAST "src", BAD_CAST "/mouseirb_2.js");
 
