@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2016 Ting-Wei Lan <lantw44@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +19,7 @@
  */
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>
+#include <locale.h>
 
 /* options */
 gchar *pass = NULL;
@@ -44,6 +46,8 @@ main (int argc, char **argv)
 
 	GdaConnection *cnc;
 	gchar *auth_string = NULL;
+
+	setlocale (LC_ALL, "");
 
 	/* command line parsing */
 	context = g_option_context_new ("Tests opening a connection");
