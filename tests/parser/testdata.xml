@@ -1044,4 +1044,8 @@
     <sql>SELECT foo.abc FROM (select abc from bar) foo</sql>
     <expected>{"statements":[{"statement":{"sql":"SELECT foo.abc FROM (select abc from bar) foo","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"foo.abc"},"field_name":"abc","table_name":"foo"}],"from":{"targets":[{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"abc"},"field_name":"abc"}],"from":{"targets":[{"expr":{"value":"bar"},"table_name":"bar"}]}}}},"as":"foo"}]}}}}]}</expected>
   </test>
+  <test id="bug761560">
+    <sql>UPDATE coupons SET limit = 1 WHERE coupons.id = 1</sql>
+    <expected>{"statements":[{"statement":{"sql":"UPDATE coupons SET limit = 1 WHERE coupons.id = 1","stmt_type":"UPDATE","contents":{"table":"coupons","fields":["limit"],"expressions":[{"value":"1"}],"condition":{"operation":{"operator":"=","operand0":{"value":"coupons.id"},"operand1":{"value":"1"}}}}}}]}</expected>
+  </test>
 </testdata>

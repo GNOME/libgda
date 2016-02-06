@@ -992,6 +992,7 @@ paramspec(P) ::= paramspec(E) PNULLOK(N). {if (!E) P = gda_sql_param_spec_new (N
 nm(A) ::= JOIN(X).       {A = X;}
 nm(A) ::= ID(X).       {A = X;}
 nm(A) ::= TEXTUAL(X). {A = X;}
+nm(A) ::= LIMIT(X). {A = X;}
 
 // Fully qualified name
 fullname(A) ::= nm(X). {A = X;}
