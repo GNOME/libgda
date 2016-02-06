@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2006 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2016 Ting-Wei Lan <lantw44@gmail.com>
  *
@@ -19,7 +19,9 @@
  */
 #include <libgda/libgda.h>
 #include <glib/gi18n-lib.h>
-#include <locale.h>
+#ifdef HAVE_LOCALE_H
+  #include <locale.h>
+#endif
 
 /* options */
 gchar *pass = NULL;
@@ -47,7 +49,9 @@ main (int argc, char **argv)
 	GdaConnection *cnc;
 	gchar *auth_string = NULL;
 
+#ifdef HAVE_LOCALE_H
 	setlocale (LC_ALL, "");
+#endif
 
 	/* command line parsing */
 	context = g_option_context_new ("Tests opening a connection");
