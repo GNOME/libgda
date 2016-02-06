@@ -1038,4 +1038,10 @@
   <sql>SELECT * FROM "table"</sql>
     <expected>{"statements":[{"statement":{"sql":"SELECT * FROM \"table\"","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"\"table\""},"table_name":"\"table\""}]}}}}]}</expected>
   </test>
+
+  <!-- Double quoting table name, works for PostgreSQL as well -->
+  <test id="bug761529">
+    <sql>SELECT foo.abc FROM (select abc from bar) foo</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT foo.abc FROM (select abc from bar) foo","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"foo.abc"},"field_name":"abc","table_name":"foo"}],"from":{"targets":[{"expr":{"select":{"contents":{"distinct":"false","fields":[{"expr":{"value":"abc"},"field_name":"abc"}],"from":{"targets":[{"expr":{"value":"bar"},"table_name":"bar"}]}}}},"as":"foo"}]}}}}]}</expected>
+  </test>
 </testdata>

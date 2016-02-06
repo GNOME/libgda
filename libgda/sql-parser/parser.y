@@ -704,7 +704,10 @@ seltarget(T) ::= LP compound(S) RP as(A). {T = gda_sql_select_target_new (NULL);
 					     gda_sql_select_target_take_alias (T, A);
 					     gda_sql_select_target_take_select (T, S);
 }
-
+seltarget(T) ::= LP compound(S) RP ID(A). {T = gda_sql_select_target_new (NULL);
+					     gda_sql_select_target_take_alias (T, A);
+					     gda_sql_select_target_take_select (T, S);
+}
 %type selcollist {GSList *}
 %destructor selcollist {g_slist_foreach ($$, (GFunc) gda_sql_select_field_free, NULL); g_slist_free ($$);}
 
