@@ -571,13 +571,13 @@ fi
 vala_api="No Vala bindings will be generated"
 if test "x$enable_vala" = "xyes"
 then
-	AM_PROG_VALAC([0.30.0])
+	AM_PROG_VALAC()
 	if test "x$VALA_API_VERSION" = "x"
 	then
-		VAPIGEN_CHECK([0.30.0],[0.30],,no)
-		vala_api="0.30 (Default)"
+		VAPIGEN_CHECK(,,,no)
+		vala_api="`pkg-config --modversion vapigen` (Default)"
 	else
-		VAPIGEN_CHECK([0.30.0],$VALA_API_VERSION,,no)
+		VAPIGEN_CHECK(,$VALA_API_VERSION,,no)
 		vala_api=$VALA_API_VERSION
 	fi
 else
