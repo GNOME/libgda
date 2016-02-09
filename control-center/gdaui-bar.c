@@ -496,8 +496,8 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 void
 gdaui_bar_add_widget (GdauiBar *bar, GtkWidget *widget)
 {
-	g_return_val_if_fail (GDAUI_IS_BAR (bar), NULL);
-	g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
+	g_return_if_fail (GDAUI_IS_BAR (bar));
+	g_return_if_fail (GTK_IS_WIDGET (widget));
 
 	gtk_box_pack_start (GTK_BOX (bar->priv->action_area), widget, FALSE, FALSE, 0);
 }

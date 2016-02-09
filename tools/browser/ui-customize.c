@@ -106,7 +106,7 @@ customization_data_get (GObject *object)
 void
 customization_data_init (GObject *object, GtkToolbar *toolbar, GtkHeaderBar *header)
 {
-	g_return_val_if_fail (G_IS_OBJECT (object), NULL);
+	g_return_if_fail (G_IS_OBJECT (object));
 	if (customization_data_get (object)) {
 		g_warning ("Customization for %p already exists", object);
 		customization_data_release (object);
