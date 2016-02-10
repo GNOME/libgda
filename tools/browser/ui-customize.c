@@ -131,7 +131,7 @@ customization_data_init (GObject *object, GtkToolbar *toolbar, GtkHeaderBar *hea
 gboolean
 customization_data_exists (GObject *object)
 {
-	g_return_val_if_fail (G_IS_OBJECT (object), NULL);
+	g_return_val_if_fail (G_IS_OBJECT (object), FALSE);
 	return customization_data_get (object) ? TRUE : FALSE;
 }
 
