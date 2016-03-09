@@ -1,0 +1,62 @@
+INTRODUCTION
+
+This examples demostrate the use of Vala Extensions. These are to bring GDA with fresh Collection management using
+Gee and to give some new functionality for new paradigms on accessing databases.
+
+All extensions are included in a new library called libgdadata with a new namespace called GdaData. Provides C
+headers to use in any C based programs or libraries, GObject Introspection support for other languages bindings
+like Python, JavaScript and other and of course Vala bindings.
+
+There are two main area of Vala extensions:
+
+a) Database object persistence. The aim of this is to create a set of objects to access to a database by using
+GObject based classes. For now GdaData.Object is provided.
+
+b) Database as Gee.Collection. Gee gives to C and Vala, a set of highlevel Collection interfaces to interact with
+data in list, maps and others. GdaData have implemented an object to interact with GdaDataModel as it is a Gee
+Collection. More interfaces will be developed in order to make more easy to access to a DataBase objects using
+collection paradigms.
+
+EXAMPLES
+
+EXAMPLE 1: GdaData.Object
+
+examples/vala/SampleDataObject: 
+
+This shows how to create a GdaData.Object derived class and how to use its methods for get, update and save values.
+
+The next step will be a why to add new objects to the database.
+
+The example implement a DbRecord class that derives from GdaData.Object abstract class and implements 
+GdaData.Object.table property to define the table name where the registers are located in the database.
+
+Add GObject properties that access to known fields in the table. And includes how to access any other field
+not wrapped as a property.
+
+Add a convenient function called 'open' to set the register you want to manipulate with DbRecord, it wraps
+GdaData.Object.set_id ().
+
+Make sure to create the object, set the connection property and set the id in order to load the register.
+
+OUTPUT
+
+You'll see an initial and post modification contents of each register used in the example. Because GdaData.Object
+uses a Gda.DataProxy object to manage any modification, the output shows original and modified (before to save)
+fields' values.
+
+In simulate_external_modifications (), you'll find how to update GdaData.Object when any other program outside
+your program (maybe a different thread or process accessing the database) modify the record it points to.
+
+EXAMPLE 2: GdaData.DataModelIterable
+
+examples/vala/SampleDataModelIterable: This shows how to use Gee
+
+This shows how to create a GdaData.DataModelIterable object using a Gda.DataModel. Now you can use any Gee
+Collection interfaces for Traversable, Iterable and Collection, along with all Gda.DataModel API, because it
+implements all these interfaces.
+
+The example show how using its Collection capabilities to iterate, chop, filter and stream all GValue
+in a datamodel. 
+
+The next step is to create a Per-Row iteration.
+

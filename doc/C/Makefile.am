@@ -27,7 +27,7 @@ CFILE_GLOB=
 # Header files to ignore when scanning
 IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h \
 	jni-wrapper.h gda-jdbc-recordset.h gda-jdbc-blob-op.h gda-jdbc-provider.h gda-jdbc-pstmt.h \
-	popup-container.h providers tools control-center tests samples plugins tmp
+	popup-container.h providers tools control-center tests examples plugins tmp
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -51,7 +51,7 @@ GTKDOC_LIBS += $(GTK_LIBS) \
 endif
 
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests tmp samples plugins"
+MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests tmp examples plugins"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = fdl-appendix.sgml version.xml builddate.xml

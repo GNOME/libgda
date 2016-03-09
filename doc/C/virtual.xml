@@ -34,9 +34,9 @@ cnc = gda_virtual_connection_open (provider, NULL);
   <para>
     Some examples of virtual connections usage can be found in the source distribution of Libgda in:
     <itemizedlist>
-      <listitem><para><filename class="directory">samples/Virtual</filename></para></listitem>
-      <listitem><para><filename class="directory">samples/DirDataModel</filename></para></listitem>
-      <listitem><para><filename class="directory">samples/F-Spot</filename></para></listitem>
+      <listitem><para><filename class="directory">examples/Virtual</filename></para></listitem>
+      <listitem><para><filename class="directory">examples/DirDataModel</filename></para></listitem>
+      <listitem><para><filename class="directory">examples/F-Spot</filename></para></listitem>
       <listitem><para><filename class="directory">testing/virtual-test.c</filename></para></listitem>
       <listitem><para><filename class="directory">testing/virtual-test-2.c</filename></para></listitem>
     </itemizedlist>

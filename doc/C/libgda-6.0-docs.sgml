@@ -1560,7 +1560,7 @@ g_object_unref (eng);
     </sect1>
   </gda_report_section>
 </article>]]></programlisting>
-	For a more detailed example, have a look at the <filename class="directory">samples/Report</filename> of &LIBGDA;'s
+	For a more detailed example, have a look at the <filename class="directory">examples/Report</filename> of &LIBGDA;'s
 	sources.
 	</para>
     </chapter>

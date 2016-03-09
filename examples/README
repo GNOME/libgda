@@ -1,0 +1,30 @@
+libgda's examples
+-----------------
+
+The objective here is to give to the
+developer using libgda quick examples in order she
+could use as soon as possible the technology.
+
+Currently the contents are:
+* in SimpleExample/: a very simple example to start with
+* in BDB/: using the GdaDataModelBdb data model and how to subclass it
+* in DirDataModel/: using the GdaDataModelDir object
+* in F-Spot/: and example of F-Spot database repair tool (using virtual connections)
+* in TableCopy/: examples of how to copy table data
+* in Virtual/: virtual connection usage example
+* in Report/: reports examples
+* in XSLT/: example using Libgda's extension to libxslt
+* in DDL/: example using the GdaServerOperation object to perform a CREATE TABLE query
+* in SqlParserConsole/: simple console to test how the GdaSqlParser object parses strings
+* in MetaStore/: simple example to show how to use and update a GdaMetaStore
+* in Tree/: simple example to show how to use the GdaTree object
+* in SqlBuilder: simple example to show how to use GdaSqlBuilder object to build various statements
+* in AsyncExec: simple example illustrating how to perform asynchronous statement execution
+* in WritableSelect/: example to show how to modify a GdaDataModel returned after
+  the execution of a SELECT statement
+* in Git/: JavaScript example to use the GObject introspection with Libgda
+
+And using the UI extension:
+* in SimpleUIForm/: a very simple form, with read-only and read-write versions
+
+Good luck and happy hacking!

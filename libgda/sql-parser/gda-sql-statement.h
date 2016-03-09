@@ -50,7 +50,7 @@ G_BEGIN_DECLS
  *  </caption>
  *</mediaobject>
  *
- * The samples/SqlParserConsole directory of &LIBGDA;'s sources contains a small utility
+ * The examples/SqlParserConsole directory of &LIBGDA;'s sources contains a small utility
  * to display statements' structures as a graph (using the GraphViz language). It has been used to
  * provide the examples in this section of the documentation.
  */

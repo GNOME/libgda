@@ -337,7 +337,7 @@ show_data_model (GdaDataModel *dm)
       SQLite database in the current
       directory, creates a "products" table,add a few rows to it, and then displays its contents. The example uses
       an SQLite database as it does not require any server setup and can thus be run as-is. 
-      That example can be found in the <filename>samples/SimpleExample/example.c</filename>.
+      That example can be found in the <filename>examples/SimpleExample/example.c</filename>.
     </para>
     <para>
       To compile it, run:
@@ -457,7 +457,7 @@ create_table (GdaConnection *cnc)
   <sect1 id="blobs_example">
     <title>Binary large objects (BLOBs) example</title>
     <para>
-       The following example is available in the <filename>samples/Blobs</filename> source directory
+       The following example is available in the <filename>examples/Blobs</filename> source directory
        and illustrate how to manipulate BLOBs. This test program offers 2 operations which are to
        store the contents of a file to the database (which returns the ID of the stored data), and to
        fetch a stored data from the database from its ID (which creates a fetched_&lt;ID&gt; file).
@@ -473,7 +473,7 @@ create_table (GdaConnection *cnc)
     <para>
       There are other sources of examples in &LIBGDA;'s source code:
       <itemizedlist>
-	<listitem><para>in the <filename>samples/</filename> directory with complete examples</para></listitem>
+	<listitem><para>in the <filename>examples/</filename> directory with complete examples</para></listitem>
 	<listitem><para>in the <filename>tools/</filename> directory where &LIBGDA;'s tools exist and are
 	    also a good starting point</para></listitem>
       </itemizedlist>
