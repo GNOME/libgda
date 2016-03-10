@@ -9894,7 +9894,7 @@ msgstr "Vypsat TEXT nebo prázdný řádek na standardní výstup"
 
 #: ../tools/common/t-app.c:1136
 msgid "Send TEXT or an empty line to current output stream"
-msgstr "Poslat TEXT nebo prázdný řádek do aktuálního výstupního datového toku"
+msgstr "Poslat TEXT nebo prázdný řádek do aktuálního výstupního datového proudu"
 
 #: ../tools/common/t-app.c:1143
 msgid "Quit"
