@@ -363,7 +363,7 @@ msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
 msgstr ""
-"Ja s'ha obtingut tota la informació necessària per crear una fonts de dades "
+"Ja s'ha obtingut tota la informació necessària per crear una font de dades "
 "nova. Premeu «Aplica» per tancar aquest diàleg."
 
 #: ../control-center/gdaui-dsn-assistant.c:652
@@ -7678,7 +7678,7 @@ msgstr "Proveïdor: %s"
 
 #: ../tools/browser/browser-connections-list.c:205
 msgid "Database provider"
-msgstr "Proveïdor de la bases de dades"
+msgstr "Proveïdor de la base de dades"
 
 #: ../tools/browser/browser-connections-list.c:212
 msgid "In memory"
