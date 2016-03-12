@@ -6236,7 +6236,7 @@ msgstr "ISO 8859-13 / baltické"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
 msgid "Windows Cyrillic"
-msgstr "Windows / cyrilice"
+msgstr "Windows / azbuka"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
@@ -6906,31 +6906,31 @@ msgstr "ASCII"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
 msgid "Japanese EUC"
-msgstr "EUC / japonština"
+msgstr "EUC/japonština"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
 msgid "Chinese EUC"
-msgstr "EUC / čínština"
+msgstr "EUC/čínština"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
 msgid "Korean EUC"
-msgstr "EUC / korejština"
+msgstr "EUC/korejština"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
 msgid "Korean EUC (Hangle base)"
-msgstr "EUC / korejština (založeno na hangle)"
+msgstr "EUC/korejština (založeno na hangle)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
 msgid "Taiwan EUC"
-msgstr "EUC / tajwanština"
+msgstr "EUC/tajwanština"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
@@ -6996,7 +6996,7 @@ msgstr "ISO 8859-1/ECMA 94 (latinská abeceda č. 10)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:63
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
 msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
-msgstr "ISO 8859-5/ECMA 113 (latinka/cyrilice)"
+msgstr "ISO 8859-5/ECMA 113 (latinka/azbuka)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:65
