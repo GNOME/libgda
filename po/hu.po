@@ -10,15 +10,15 @@ msgstr ""
 "Project-Id-Version: libgda 5.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-04 12:53+0000\n"
-"PO-Revision-Date: 2016-03-06 19:16+0100\n"
-"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
+"POT-Creation-Date: 2016-03-11 12:52+0000\n"
+"PO-Revision-Date: 2016-03-12 09:11+0000\n"
+"Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
 "Language-Team: Hungarian <fsf@gnome.hu>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. title
@@ -66,13 +66,15 @@ msgstr "Böngészés"
 
 #: ../control-center/dsn-properties-dialog.c:148
 msgid "Change the data source properties (the name can't be modified)."
-msgstr ""
+msgstr "Az adatforrás tulajdonságainak módosítása (a név nem módosítható)."
 
 #: ../control-center/dsn-properties-dialog.c:152
 msgid ""
 "For information only, this data source is a system wide data source\n"
 "and you don't have the permission change it."
 msgstr ""
+"Csak tájékoztató jelleggel, ez az adatforrás rendszerszintű,\n"
+"és nincs joga a módosítására."
 
 #: ../control-center/dsn-properties-dialog.c:202
 #, c-format
@@ -95,7 +97,7 @@ msgstr "Ismeretlen hiba"
 
 #: ../control-center/dsn-properties-dialog.c:268
 msgid "Could not execute browser program"
-msgstr ""
+msgstr "A böngészőprogram nem hajtható végre"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:269 ../libgda/gda-config.c:383
@@ -316,6 +318,9 @@ msgid ""
 "database (mandatory fields are marked with a star).This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
+"A következő mezők az új adatbázis létrehozásához szükséges információkat "
+"ábrázolják (a kötelező mezők csillaggal jelöltek). Ezek az információk "
+"adatbázis-függőek, így további információkért ellenőrizze a leírást."
 
 #: ../control-center/gdaui-dsn-assistant.c:583
 msgid "New database definition"
@@ -471,7 +476,7 @@ msgstr "_Tulajdonságok"
 
 #: ../control-center/main.c:200
 msgid "Edit properties for selected data source"
-msgstr ""
+msgstr "A kiválasztott adatforrás tulajdonságainak szerkesztése"
 
 #: ../control-center/main.c:201 ../control-center/main.c:202
 #: ../tools/browser/browser-window.c:298
@@ -549,7 +554,7 @@ msgstr "A rendszerszintű konfiguráció nem kezelhető"
 #: ../libgda/gda-config.c:1167 ../libgda/gda-config.c:1199
 #, c-format
 msgid "Authentication for the '%s' DSN"
-msgstr ""
+msgstr "Hitelesítés a(z) „%s” DSN-hez"
 
 #: ../libgda/gda-config.c:1236 ../libgda/gda-config.c:1248
 #: ../libgda/gda-config.c:1312
@@ -669,18 +674,24 @@ msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
 msgstr ""
+"Egyedi GThread, ahonnan a kapcsolat elérhető lesz. Ezt csak az adatbázis-"
+"szolgáltató implementáció kellene módosítsa."
 
 #: ../libgda/gda-connection.c:384
 msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
 msgstr ""
+"Meghatározza, hogy a kapcsolat szálszintű csomagolóként működik-e egy másik "
+"kapcsolat körül, teljesen szálbiztossá téve azt."
 
 #: ../libgda/gda-connection.c:400
 msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
 msgstr ""
+"A kapcsolat beállítása, hogy állítson be egy monitorozó függvényt a "
+"főciklusban, hogy monitorozza a csomagolt kapcsolatot"
 
 #: ../libgda/gda-connection.c:414
 msgid "Number of history events to keep in memory"
@@ -716,7 +727,7 @@ msgstr "Nem lehet álltani a(z) „%s” tulajdonságot, ha a kapcsolat már nyi
 #: ../libgda/thread-wrapper/gda-thread-provider.c:425
 #: ../libgda/thread-wrapper/gda-thread-provider.c:566
 msgid "Multi threading is not supported or enabled"
-msgstr ""
+msgstr "A többszálas működés nem támogatott vagy nem érhető el"
 
 #: ../libgda/gda-connection.c:1122
 #, c-format
@@ -753,13 +764,15 @@ msgstr "Nincs szolgáltató megadva"
 
 #: ../libgda/gda-connection.c:1613
 msgid "Provider does not allow usage from this thread"
-msgstr ""
+msgstr "A szolgáltató nem támogatja a használatát ebből a szálból"
 
 #: ../libgda/gda-connection.c:1620
 msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
+"Belső hiba: a szolgáltató nem valósítja meg az open_connection() virtuális "
+"metódust"
 
 #: ../libgda/gda-connection.c:1733
 #, c-format
@@ -772,7 +785,7 @@ msgstr "A szolgáltató nem biztosít GdaDataHandler-tt a dátumokhoz"
 
 #: ../libgda/gda-connection.c:3023
 msgid "Provider does not support statement preparation"
-msgstr ""
+msgstr "A szolgáltató nem támogatja az utasítás-előkészítést"
 
 #: ../libgda/gda-connection.c:3272 ../libgda/gda-connection.c:3377
 #: ../libgda/gda-connection.c:3447 ../libgda/gda-meta-store.c:900
@@ -793,12 +806,12 @@ msgstr "A kapcsolat lezárt"
 #: ../libgda/gda-connection.c:3287
 #, c-format
 msgid "Asynchronous execution is not supported"
-msgstr ""
+msgstr "Az aszinkron végrehajtás nem támogatott"
 
 #: ../libgda/gda-connection.c:3392 ../libgda/gda-connection.c:3485
 #, c-format
 msgid "Can't find task %u"
-msgstr ""
+msgstr "A(z) %u. feladat nem található"
 
 #: ../libgda/gda-connection.c:3470 ../libgda/sqlite/gda-sqlite-provider.c:1315
 #: ../libgda/thread-wrapper/gda-thread-provider.c:988
@@ -807,7 +820,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1034
 #: ../providers/web/gda-web-provider.c:686
 msgid "Provider does not support asynchronous server operation"
-msgstr ""
+msgstr "A szolgáltató nem támogatja az aszinkron kiszolgálóműveletet"
 
 #: ../libgda/gda-connection.c:3763 ../libgda/gda-connection.c:3778
 msgid "Statement is a selection statement"
@@ -1067,6 +1080,8 @@ msgstr "Exportált adatok"
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
+"<gda_value> vagy <gda_array_value> tag várt, kapott: <%s>, figyelmen kívül "
+"hagyva"
 
 #: ../libgda/gda-data-model.c:1972
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
@@ -2184,6 +2199,9 @@ msgid ""
 "implement the %s one, please report this bug to http://bugzilla.gnome.org/ "
 "for the \"libgda\" product."
 msgstr ""
+"A GdaServerProvider objektum valósítja meg a(z) %s virtuális metódust, de nem "
+"valósítja meg a(z) %s metódust, kérjük jelentse ezt a hibát a "
+"http://bugzilla.gnome.org/ oldalon, a „libgda” terméknél."
 
 #: ../libgda/gda-set.c:1175 ../libgda/gda-set.c:1280
 #, c-format
@@ -2520,6 +2538,7 @@ msgstr ""
 #, c-format
 msgid "Provider error: %s method not implemented for provider %s"
 msgstr ""
+"Szolgáltató hiba: a(z) %s metódus nincs megvalósítva a(z) %s szolgáltatónál"
 
 #: ../libgda/handlers/gda-handler-bin.c:127
 msgid "Binary representation"
@@ -2703,7 +2722,7 @@ msgstr "Nem található a libsqlite3."
 #: ../providers/postgres/gda-postgres-provider.c:554
 #: ../providers/web/gda-web-provider.c:343
 msgid "Provider does not support asynchronous connection open"
-msgstr ""
+msgstr "A kiszolgáló nem támogatja az aszinkron kapcsolatmegnyitást"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:769
 #: ../providers/mdb/gda-mdb-provider.c:252
@@ -2871,7 +2890,7 @@ msgstr "Nem azonosítható a feltöltendő blob ROWID-ja"
 #: ../providers/postgres/gda-postgres-provider.c:1992
 #: ../providers/web/gda-web-provider.c:1404
 msgid "Provider does not support asynchronous statement execution"
-msgstr ""
+msgstr "A szolgáltató nem támogatja az aszinkron utasítás végrehajtást"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3026
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
@@ -3071,7 +3090,7 @@ msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
 msgstr ""
-"Belső hiba: a virtuális szolgáltató nem implementálja a create_operation() "
+"Belső hiba: a virtuális szolgáltató nem valósítja meg a create_operation() "
 "virtuális metódust"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:235
@@ -3104,7 +3123,7 @@ msgstr "Nem kérhető le az adatmodell oszloptípusa a(z) %d. oszlophoz"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:703
 #, c-format
 msgid "Can't declare virtual table (%s)"
-msgstr ""
+msgstr "A virtuális tábla nem deklarálható (%s)"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:840
 msgid "Internal SQLite error: no data to iterate on"
@@ -3367,22 +3386,22 @@ msgstr "Az UPDATE utasításnak nincs egyetlen módosítandó céloszlopa sem"
 #: ../libgda/thread-wrapper/gda-thread-provider.c:2055
 #: ../libgda/thread-wrapper/gda-thread-provider.c:2106
 msgid "A connection is required"
-msgstr ""
+msgstr "Egy kapcsolat szükséges"
 
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1447
 msgid "Signal does not exist\n"
-msgstr ""
+msgstr "A szignál nem létezik\n"
 
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1456
 msgid "Signal to connect to must not have a return value\n"
-msgstr ""
+msgstr "A csatlakoztatandó szignálnak nem lehet visszatérési értéke\n"
 
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1529
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1542
 #: ../libgda/thread-wrapper/gda-thread-wrapper.c:1597
 #, c-format
 msgid "Signal %lu does not exist"
-msgstr ""
+msgstr "A(z) %lu szignál nem létezik"
 
 #: ../libgda-ui/data-entries/common-bin.c:40
 msgid "Select file to load"
@@ -3396,6 +3415,8 @@ msgid ""
 "Could not load the contents of '%s':\n"
 " %s"
 msgstr ""
+"A(z) „%s” tartalma nem tölthető be:\n"
+" %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:110
 msgid "Select a file to save data to"
@@ -3407,6 +3428,8 @@ msgid ""
 "Could not save data to '%s':\n"
 " %s"
 msgstr ""
+"Az adatok nem menthetőek ide: „%s”:\n"
+" %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:196
 msgid "Properties"
@@ -3553,7 +3576,7 @@ msgstr "Érvénytelen UTF-8 formátum!"
 #. format tooltip
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:1007
 msgid "Format is hh:mm:ss"
-msgstr ""
+msgstr "A formátum hh:mm:ss"
 
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
 msgid "Use 1000s separators"
@@ -3594,11 +3617,11 @@ msgstr "Az érték NULL"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:400
 msgid "Value will be determined by default"
-msgstr ""
+msgstr "Az értéket az alapértelmezés határozza meg"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:406
 msgid "Value is invalid"
-msgstr ""
+msgstr "Az érték érvénytelen"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Maximum length"
@@ -3664,6 +3687,8 @@ msgid ""
 "Error while deserializing data:\n"
 "%s"
 msgstr ""
+"Hiba az adatok deszerializációja során:\n"
+"%s"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:221
 #: ../libgda-ui/data-entries/plugins/common-pict.c:264
@@ -3715,6 +3740,8 @@ msgid ""
 "Could not save the image to '%s':\n"
 " %s"
 msgstr ""
+"Nem menthető a kép ide: „%s”:\n"
+" %s"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:1
 msgid "Sources"
@@ -3864,13 +3891,15 @@ msgstr "Kódolás a bináris adat karakterlánccá alakításához"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:3
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:1
 msgid "Serialized picture"
-msgstr ""
+msgstr "Szerializált kép"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:4
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:2
 msgid ""
 "Set to TRUE if data comes from a serialized GdkPixbuf (F-Spot for example)"
 msgstr ""
+"Állítsa igazra, ha az adat egy szerializált GdkPixbuf-ból származik (például "
+"F-Spot)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:5
 msgid "Base 64"
@@ -3917,7 +3946,7 @@ msgstr "Általános"
 
 #: ../libgda-ui/data/server_operation.glade.h:2
 msgid "hello"
-msgstr ""
+msgstr "helló"
 
 #: ../libgda-ui/data/server_operation.glade.h:3
 #: ../tools/browser/common/fk-declare.c:255
@@ -3963,6 +3992,14 @@ msgid ""
 "<i>demo_parser</i> objects are created by the framework and\n"
 "made available to all the demonstrated items."
 msgstr ""
+"<b><big>Megjegyzés:\n"
+"</big></b>Az itt bemutatottak közül sok egy\n"
+"nyitott SQLite kapcsolatot használ, a(z)\n"
+"„%s” fájl használatával.\n"
+"\n"
+"Az itt bemutatott forráskódban, a <i>demo_cnc</i> és a \n"
+"<i>demo_parser</i> objektumokat a keretrendszer hozza létre,\n"
+"és minden bemutatott elem számára elérhető."
 
 #: ../libgda-ui/gdaui-basic-form.c:291
 msgid ""
@@ -3978,7 +4015,7 @@ msgstr "Az űrlapban megjelenítendő paraméterek listája"
 
 #: ../libgda-ui/gdaui-basic-form.c:309
 msgid "Show Entry actions"
-msgstr ""
+msgstr "Bejegyzés műveletek megjelenítése"
 
 #: ../libgda-ui/gdaui-basic-form.c:314
 msgid "Entries Auto-default"
@@ -4017,6 +4054,8 @@ msgid ""
 "'%s' DTD not parsed successfully. XML data layout validation will not be "
 "performed (some errors may occur)"
 msgstr ""
+"A(z) „%s” DTD feldolgozása sikertelen. Az XML adatelrendezés ellenőrzés nem "
+"lesz végrehajtva (néhány hiba történhet)"
 
 #: ../libgda-ui/gdaui-basic-form.c:2369
 msgid ""
@@ -4206,19 +4245,19 @@ msgstr "Nem fűzhető sor hozzá az adatmodellhez: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:203
 msgid "Go to first chunck"
-msgstr ""
+msgstr "Ugrás az első adatdarabhoz"
 
 #: ../libgda-ui/gdaui-raw-grid.c:204
 msgid "Go to last chunck"
-msgstr ""
+msgstr "Ugrás az utolsó adatdarabhoz"
 
 #: ../libgda-ui/gdaui-raw-grid.c:205
 msgid "Go to previous chunck"
-msgstr ""
+msgstr "Ugrás az előző adatdarabhoz"
 
 #: ../libgda-ui/gdaui-raw-grid.c:206
 msgid "Go to next chunck"
-msgstr ""
+msgstr "Ugrás a következő adatdarabhoz"
 
 #: ../libgda-ui/gdaui-raw-grid.c:321
 msgid ""
@@ -4234,7 +4273,7 @@ msgstr "Információs cella látható"
 
 #: ../libgda-ui/gdaui-raw-grid.c:328
 msgid "Global Actions visible"
-msgstr ""
+msgstr "Látható globális műveletek"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
 #: ../libgda-ui/gdaui-raw-grid.c:788 ../libgda-ui/gdaui-raw-grid.c:811
@@ -4259,15 +4298,15 @@ msgstr "Kijelölés _törlése"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1956
 msgid "Show Column _Titles"
-msgstr "Oszlop_fejlécek mutatása"
+msgstr "Oszlop_fejlécek megjelenítése"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1961
 msgid "_Set filter"
-msgstr ""
+msgstr "Szűrő _beállítása"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1964
 msgid "_Unset filter"
-msgstr ""
+msgstr "Szűrő _eltávolítása"
 
 #. create dialog box
 #: ../libgda-ui/gdaui-raw-grid.c:2152
@@ -4707,7 +4746,7 @@ msgstr "Hiba történt a BDB adatbázis elérése során"
 #: ../providers/ldap/gda-ldap-provider.c:604
 #: ../providers/mdb/gda-mdb-provider.c:321
 msgid "Can't open virtual connection"
-msgstr ""
+msgstr "A virtuális kapcsolat nem nyitható meg"
 
 #: ../providers/bdb/gda-bdb-provider.c:208
 #, c-format
@@ -5426,7 +5465,7 @@ msgstr "Nem található a libdb_sql-5."
 
 #: ../providers/bdbsql/libmain.c:89
 msgid "Provider for BDB SQL databases"
-msgstr ""
+msgstr "Szolgáltató a BDB SQL adatbázisokhoz"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
 msgid "The name of a database to connect to (without the .fdb)"
@@ -5612,15 +5651,17 @@ msgstr "Nincs GdaLdapEntry megadva"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1596
 msgid "No GdaLdapEntry specified to define attributes to add"
-msgstr ""
+msgstr "Nincs GdaLdapEntry megadva a hozzáadandó attribútumok meghatározásához"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1602
 msgid "No GdaLdapEntry specified to define attributes to remove"
 msgstr ""
+"Nincs GdaLdapEntry megadva az eltávolítandó attribútumok meghatározásához"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1608
 msgid "No GdaLdapEntry specified to define attributes to replace"
 msgstr ""
+"Nincs GdaLdapEntry megadva a lecserélendő attribútumok meghatározásához"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1614
 msgid "No GdaLdapEntry specified to compare attributes"
@@ -5795,21 +5836,21 @@ msgstr "Nincs mező megadva az idegen kulcs megszorításban"
 #: ../providers/mysql/gda-mysql-ddl.c:280
 #: ../providers/postgres/gda-postgres-ddl.c:295
 msgid "Empty field specified in foreign key constraint"
-msgstr ""
+msgstr "Üres mező megadva az idegen kulcs megszorításban"
 
 #: ../providers/mysql/gda-mysql-ddl.c:295
 #: ../providers/postgres/gda-postgres-ddl.c:312
 msgid "No referenced table specified in foreign key constraint"
-msgstr ""
+msgstr "Nincs hivatkozott tábla megadva az idegen kulcs megszorításban"
 
 #: ../providers/mysql/gda-mysql-ddl.c:313
 #: ../providers/postgres/gda-postgres-ddl.c:330
 msgid "Empty referenced field specified in foreign key constraint"
-msgstr ""
+msgstr "Üres hivatkozott tábla van megadva az idegen kulcs megszorításban"
 
 #: ../providers/mysql/gda-mysql-ddl.c:930
 msgid "Incorrect specified column name"
-msgstr ""
+msgstr "Helytelen megadott oszlopnév"
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:117
 msgid "MySQL boolean representation"
@@ -7453,7 +7494,6 @@ msgid "Search path among database's schemas ('search_path' variable)"
 msgstr "Keresési útvonal az adatbázis sémái közt („search_path” változó)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
-#| msgid "Connect Timeout"
 msgid "Connection timeout"
 msgstr "Kapcsolat időkorlátja"
 
@@ -7535,7 +7575,7 @@ msgstr "Nem támogatott"
 #: ../providers/web/gda-web-provider.c:639
 #: ../providers/web/gda-web-provider.c:668
 msgid "Server operations not yet implemented"
-msgstr "A kiszolgáló műveletek még nem implementáltak"
+msgstr "A kiszolgáló műveletek még nincsenek megvalósítva"
 
 #: ../providers/web/gda-web-provider.c:719
 #: ../providers/web/gda-web-provider.c:784
@@ -7580,7 +7620,7 @@ msgstr ""
 
 #: ../providers/web/gda-web-util.c:607
 msgid "Non detailled error"
-msgstr ""
+msgstr "Nem részletezett hiba"
 
 #: ../providers/web/libmain.c:75
 msgid "Provider for web server proxies"
@@ -7660,7 +7700,7 @@ msgstr ""
 #: ../tools/browser/browser-connection.c:383
 #, c-format
 msgid "c%u"
-msgstr ""
+msgstr "c%u"
 
 #: ../tools/browser/browser-connection.c:494
 msgid "Analysing database schema"
@@ -7678,7 +7718,7 @@ msgstr "Hiba a metaadatok kapcsolatból történő lekérése közben: %s"
 #: ../tools/browser/browser-connection.c:875
 #, c-format
 msgid "Error while analysing database schema: %s"
-msgstr ""
+msgstr "Hiba az adatbázisséma elemzése során: %s"
 
 #: ../tools/browser/browser-connection.c:1008
 #: ../tools/browser/browser-window.c:280
@@ -7702,6 +7742,8 @@ msgid ""
 "Execution reported an undefined error, please report error to http://"
 "bugzilla.gnome.org/ for the \"libgda\" product"
 msgstr ""
+"A végrehajtás nem meghatározott hibát jelentett, kérjük jelentse a hibát a "
+"http://bugzilla.gnome.org oldaon, a „libgda” terméknél"
 
 #: ../tools/browser/browser-connection.c:1409
 #: ../tools/browser/browser-connection.c:1459
@@ -7739,11 +7781,11 @@ msgstr "LDAP keresés végrehajtása"
 
 #: ../tools/browser/browser-connection.c:2563
 msgid "Fetching LDAP entry's attributes"
-msgstr ""
+msgstr "Az LDAP bejegyzés attribútumainak lekérése"
 
 #: ../tools/browser/browser-connection.c:2623
 msgid "Fetching LDAP entry's children"
-msgstr ""
+msgstr "Az LDAP bejegyzés gyermekeinek lekérése"
 
 #: ../tools/browser/browser-connections-list.c:157
 #, c-format
@@ -7818,7 +7860,7 @@ msgstr "Könyvjelzők"
 #: ../tools/browser/browser-stock-icons.c:46
 #: ../tools/browser/browser-window.c:302
 msgid "Begin"
-msgstr ""
+msgstr "Kezdés"
 
 #: ../tools/browser/browser-stock-icons.c:47
 #: ../tools/browser/browser-window.c:304
@@ -7832,7 +7874,7 @@ msgstr "Visszaállítás"
 
 #: ../tools/browser/browser-stock-icons.c:49
 msgid "Builder"
-msgstr ""
+msgstr "Építő"
 
 #: ../tools/browser/browser-stock-icons.c:50
 msgid "Ldap entries"
@@ -7880,7 +7922,7 @@ msgstr "Kapcsolat megnyitása"
 
 #: ../tools/browser/browser-window.c:282
 msgid "_Bind Connection"
-msgstr ""
+msgstr "Kapcsolat kö_tése"
 
 #: ../tools/browser/browser-window.c:282
 msgid ""
@@ -7888,6 +7930,9 @@ msgid ""
 "a new binding connection to access data\n"
 "from multiple databases at once"
 msgstr ""
+"A kapcsolat használata egy új kötött\n"
+"kapcsolat létrehozására, az adatok több\n"
+"adatbázisból egyszerre történő eléréséhez"
 
 #: ../tools/browser/browser-window.c:285
 msgid "Connection properties"
@@ -8053,7 +8098,7 @@ msgstr "Hiba a kötött kapcsolat módosításakor: %s"
 #: ../tools/browser/browser-window.c:1213
 #, c-format
 msgid "Could not open binding connection: %s"
-msgstr ""
+msgstr "A kötött kapcsolat nem nyitható meg: %s"
 
 #: ../tools/browser/browser-window.c:1253
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:1
@@ -8251,6 +8296,8 @@ msgid ""
 "define which table is references, which columns are part of the foreign key, "
 "and which column each one references"
 msgstr ""
+"határozza meg hogy melyik tábla hivatkozott, mely oszlopok részei az idegen "
+"kulcsnak, és melyik oszlop mire hivatkozik"
 
 #: ../tools/browser/common/fk-declare.c:208
 msgid "Foreign key name:"
@@ -8682,7 +8729,7 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-console.c:923
 msgid "_Toggle mode"
-msgstr ""
+msgstr "Mód_váltás"
 
 #: ../tools/browser/data-manager/data-console.c:923
 msgid "Switch between compose and execute modes"
@@ -8939,15 +8986,23 @@ msgid ""
 "database. The data manager perspective allows the user to view the data "
 "contained in the database in a tabular form."
 msgstr ""
+"Az adatbázis-böngésző gyors hozzáférést biztosít az adatokhoz és az "
+"adatbázis sémájához, és ezeket egy intuitív grafikus felületen jeleníti meg. "
+"Három perspektívát kínál az adatbázishoz: a sémaböngészőt, a lekérdezés-"
+"futtatót és az adatkezelőt. A sémaböngésző segítségével a felhasználó "
+"megtekintheti az adatbázis tábláit és megvizsgálhatja a táblák "
+"tulajdonságait és kapcsolatait. A lekérdezés-futtató perspektívával a "
+"felhasználó SQL utasításokat hajthat végre az adatbázison. Az adatkezelő "
+"perspektívával a felhasználó táblázatos formában tekintheti meg az "
+"adatbázisban található adatokat."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
-#| msgid "Browser"
 msgid "GdaBrowser"
 msgstr "GDA böngésző"
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:3
 msgid "Browse your database's contents"
-msgstr ""
+msgstr "Az adatbázis tartalmának böngészése"
 
 #: ../tools/browser/ldap-browser/class-properties.c:407
 msgid "Could not get information about LDAP class"
@@ -9143,7 +9198,6 @@ msgid "Add entry to favorites"
 msgstr "Bejegyzés hozzáadása a kedvencekhez"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:516
-#| msgid "Log Entry"
 msgid "Previous Entry"
 msgstr "Előző bejegyzés"
 
@@ -9152,7 +9206,6 @@ msgid "Move back to previous LDAP entry"
 msgstr "Vissza az előző LDAP bejegyzéshez"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:518
-#| msgid "Log Entry"
 msgid "Next Entry"
 msgstr "Következő bejegyzés"
 
@@ -9283,6 +9336,7 @@ msgid ""
 "Can't get the list of files used to store information about each connection: "
 "%s\n"
 msgstr ""
+"Az egyes kapcsolatok információit tároló fájlok listája nem kérhető le: %s\n"
 
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:319
 #, c-format
@@ -9290,6 +9344,7 @@ msgid ""
 "Error while purging files used to store information about each connection: "
 "%s\n"
 msgstr ""
+"Hiba az egyes kapcsolatok információit tároló fájlok törlése során: %s\n"
 
 #: ../tools/browser/mgr-favorites.c:251
 msgid "Multiple statements"
@@ -9809,7 +9864,7 @@ msgstr "Adat sikeresen beszúrva"
 
 #: ../tools/browser/schema-browser/table-info.c:676
 msgid "Meta data not yet available"
-msgstr "A metaadatok még nem elérhetőek"
+msgstr "A metaadatok még nem érhetők el"
 
 #: ../tools/browser/schema-browser/table-info.c:693
 msgid "Can't find information about table"
@@ -9952,7 +10007,7 @@ msgstr "Szerkezeti"
 
 #: ../tools/browser/support.c:444
 msgid "Auxilliary"
-msgstr ""
+msgstr "Kiegészítő"
 
 #: ../tools/browser/support.h:117
 msgid ""
@@ -9971,6 +10026,20 @@ msgid ""
 "tt> and\n"
 "<tt>binary</tt></small>"
 msgstr ""
+"<small>Ez a terület arra szolgál, hogy értéket\n"
+"adjon az SQL kódban definiált változóknak\n"
+"a következő szintaxis használatával:\n"
+"<b><tt>##&lt;változónév&gt;::&lt;típus&gt;[::null]</tt></b>\n"
+"Például:\n"
+"<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+"      definiálja az <b>id</b> változót, mint egy nem NULL egész\n"
+"<span foreground=\"#4e9a06\"><b><tt>##kor::string::null</tt></b></span>\n"
+"      definiálja a <b>kor</b> változót, mint egy karakterlánc\n"
+"\n"
+"Az érvényes típusok: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> és\n"
+"<tt>binary</tt></small>"
 
 #: ../tools/browser/text-search.c:265
 msgid "Hide search toolbar"
@@ -10222,7 +10291,7 @@ msgstr "A(z) „%s” fájl nem értelmezhető, figyelmen kívül hagyva"
 #: ../tools/gda-sql.c:196
 #, c-format
 msgid "GDA SQL console version "
-msgstr ""
+msgstr "GDA SQL konzol verzió"
 
 #: ../tools/gda-sql.c:214
 msgid ""
@@ -10253,7 +10322,7 @@ msgstr "Elválasztó karakter a CSV formátumhoz"
 
 #: ../tools/gda-sql.c:352
 msgid "Welcome to the GDA SQL console, version "
-msgstr ""
+msgstr "Üdvözüljük a GDA SQL konzolban, verzió: "
 
 #: ../tools/gda-sql.c:358
 #, c-format
@@ -10264,6 +10333,11 @@ msgid ""
 "      or any SQL query terminated by a semicolon\n"
 "\n"
 msgstr ""
+"Típus: %s a használati és terljesztési feltételekhez\n"
+"       %s vagy %s súgóért a belső parancsokhoz\n"
+"       %s (vagy CTRL-D) a kilépéshez (a '.' lecserélhető erre: '\\')\n"
+"       vagy bármilyen SQL lekérdezés, pontosvesszővel zárva\n"
+"\n"
 
 #: ../tools/gda-sql.c:413
 #, c-format
@@ -10351,6 +10425,8 @@ msgid ""
 "Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
 "MM the month and DD the day\n"
 msgstr ""
+"A dátumformátum ehhez a kapcsolathoz ez lesz: %s%c%s%c%s, ahol YYYY az év, "
+"MM a hónap és DD a nap\n"
 
 #: ../tools/gda-sql.c:1423
 #, c-format
@@ -10358,11 +10434,13 @@ msgid ""
 "All the information related to the '%s' connection will be stored in the "
 "'%s' file\n"
 msgstr ""
+"A(z) „%s” kapcsolathoz kapcsolódó összes információ a(z) „%s” fájlban lesz "
+"tárolva\n"
 
 #: ../tools/gda-sql.c:1453
 #, c-format
 msgid "Error getting meta data in background: %s\n"
-msgstr ""
+msgstr "Hiba a metaadatok háttérben történő lekérdezése során: %s\n"
 
 #: ../tools/gda-sql.c:1461 ../tools/gda-sql.c:1614
 #, c-format
@@ -10370,6 +10448,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
+"Adatbázisséma információk lekérése a(z) „%s” kapcsolathoz, ez eltarthat egy "
+"ideig…"
 
 #: ../tools/gda-sql.c:1468 ../tools/gda-sql.c:1621 ../tools/gda-sql.c:2917
 #, c-format
@@ -10531,7 +10611,7 @@ msgstr "%s [<DSN>]"
 
 #: ../tools/gda-sql.c:2128
 msgid "List all DSN (or named DSN's attributes)"
-msgstr ""
+msgstr "Minden DSN (vagy a megadott DSN attribútumainak) listázása"
 
 #: ../tools/gda-sql.c:2136
 #, c-format
@@ -10825,6 +10905,11 @@ msgid ""
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
+"Megjeleníti a DN-nel azonosított bejegyzés attribútumait. Ha a „set” 2. "
+"paraméter kerül átadásra, akkor minden beállított attribútum megjelenik, ha "
+"az „all” második paraméter kerül átadásra, akkor a nem beállított "
+"attribútumok is megjelennek, és ha az „unset” 2. paraméter kerül átadásra, "
+"akkor csak a nem beállított attribútumok jelennek meg."
 
 #: ../tools/gda-sql.c:2437
 #, c-format
