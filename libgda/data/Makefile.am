@@ -62,7 +62,7 @@ $(include_headers): DataBase.c
 vapi: gdadata-6.0.vapi
 
 vapidir = $(VAPIDIR)
-vapi_DATA = gdadata-6.0.vapi
+vapi_DATA = gdadata-6.0.vapi gdadata-6.0.deps
 
 gdadata-6.0.vapi GdaData-6.0.gir: libgdadata-6.0.la
 

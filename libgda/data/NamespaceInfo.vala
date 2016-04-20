@@ -19,6 +19,6 @@
 
 using Gda;
 
-[CCode (gir_namespace = "GdaData", gir_version = "5.0", cheader_filename="libgda/data/libgdadata.h")]
+[CCode (gir_namespace = "GdaData", gir_version = "6.0", cheader_filename="libgda/data/libgdadata.h")]
 namespace GdaData {
 }
