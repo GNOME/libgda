@@ -64,18 +64,23 @@ typedef enum {
 } GdaMetaStoreChangeType;
 
 /**
- * GdaMetaStoreChange:
- * @c_type:
- * @table_name:
- * @keys: (element-type utf8 GObject.Value):
+ * GdaMetaStoreChange: (ref-func gda_meta_store_change_new) (unref-func gda_meta_store_change_free) (get-value-func gda_value_get_meta_store_change) (set-value-func gda_value_set_meta_store_change)
  */
-typedef struct {
-	/* change general information */
-	GdaMetaStoreChangeType  c_type;
-	gchar                  *table_name;
-	GHashTable             *keys; /* key = ('+' or '-') and a column position in @table (string) starting at 0, 
-	                               * value = a GValue pointer */
-} GdaMetaStoreChange;
+typedef struct _GdaMetaStoreChange GdaMetaStoreChange;
+
+#define GDA_TYPE_META_STORE_CHANGE (gda_meta_store_change_get_type ())
+
+GType                   gda_meta_store_change_get_type (void) G_GNUC_CONST;
+GdaMetaStoreChange*     gda_meta_store_change_new (void);
+void                    gda_meta_store_change_set_change_type (GdaMetaStoreChange *change, GdaMetaStoreChangeType ctype);
+GdaMetaStoreChangeType  gda_meta_store_change_get_change_type (GdaMetaStoreChange *change);
+void                    gda_meta_store_change_set_table_name (GdaMetaStoreChange *change, const gchar *table_name);
+gchar*                  gda_meta_store_change_get_table_name (GdaMetaStoreChange *change);
+GHashTable*              gda_meta_store_change_get_keys (GdaMetaStoreChange *change);
+GdaMetaStoreChange*     gda_meta_store_change_copy (GdaMetaStoreChange *src);
+void                    gda_meta_store_change_free (GdaMetaStoreChange *change);
+void                    gda_value_set_meta_store_change (GValue *value, GdaMetaStoreChange *change);
+GdaMetaStoreChange*     gda_value_get_meta_store_change (GValue *value);
 
 
 /* Pointer type for GdaMetaContext */

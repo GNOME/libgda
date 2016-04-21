@@ -585,7 +585,6 @@ gda_binary_get_size (GdaBinary *binary)
 
  * Returns: (transfer full): a newly allocated #GdaBinary which contains a copy of information in @boxed.
  *
- * Free-function: gda_binary_free
  */
 GdaBinary*
 gda_binary_copy (GdaBinary *src)
@@ -2171,8 +2170,7 @@ gda_value_set_binary (GValue *value, const GdaBinary *binary)
 	if (binary)
 		g_value_set_boxed (value, binary);
 	else {
-		GdaBinary bin = {NULL, 0};
-		g_value_set_boxed (value, &bin);
+		g_value_set_boxed (value, gda_binary_new ());
 	}
 }
 

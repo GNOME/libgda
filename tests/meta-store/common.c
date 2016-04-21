@@ -20,16 +20,6 @@
 #include "common.h"
 #include <sql-parser/gda-sql-parser.h>
 
-/* copied from gda-meta-store.c */
-static void
-gda_meta_store_change_free (GdaMetaStoreChange *change) {
-	if (!change) return;
-	
-	g_free (change->table_name);
-	g_hash_table_destroy (change->keys);
-	g_free (change);
-}
-
 /* list of changes expected during a modify operation */
 GSList *expected_changes;
 
@@ -74,15 +64,15 @@ stringify_a_change (GdaMetaStoreChange *ac)
 	gchar *str;
 	GString *string;
 
-	string = g_string_new (ac->table_name);
-	if (ac->c_type == GDA_META_STORE_ADD)
+	string = g_string_new (gda_meta_store_change_get_table_name (ac));
+	if (gda_meta_store_change_get_change_type (ac) == GDA_META_STORE_ADD)
 		g_string_append (string, " (ADD)");
-	else if (ac->c_type == GDA_META_STORE_MODIFY)
+	else if (gda_meta_store_change_get_change_type (ac) == GDA_META_STORE_MODIFY)
 		g_string_append (string, " (MOD)");
 	else
 		g_string_append (string, " (DEL)");
 	g_string_append_c (string, '\n');
-	g_hash_table_foreach (ac->keys, (GHFunc) change_key_func, &hlist);
+	g_hash_table_foreach (gda_meta_store_change_get_keys (ac), (GHFunc) change_key_func, &hlist);
 	
 	GSList *list;
 	for (list = hlist; list; list = list->next) {
@@ -241,10 +231,9 @@ common_declare_expected_change (const gchar *table_name, GdaMetaStoreChangeType 
 	}
 	else {
 		GdaMetaStoreChange *ac;
-		ac = g_new0 (GdaMetaStoreChange, 1);
-		ac->c_type = type;
-		ac->table_name = g_strdup (table_name);
-		ac->keys = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) gda_value_free);
+		ac = gda_meta_store_change_new ();
+		gda_meta_store_change_set_change_type (ac, type);
+		gda_meta_store_change_set_table_name (ac, table_name);
 
 		/* use args */
 		va_list args;
@@ -253,7 +242,7 @@ common_declare_expected_change (const gchar *table_name, GdaMetaStoreChangeType 
 		for (pname = va_arg (args, gchar*); pname; pname = va_arg (args, gchar*)) {
 			GValue *v;
 			g_value_set_string ((v = gda_value_new (G_TYPE_STRING)), va_arg (args, gchar*));
-			g_hash_table_insert (ac->keys, g_strdup (pname), v);
+			g_hash_table_insert (gda_meta_store_change_get_keys (ac), g_strdup (pname), v);
 		}
 		va_end (args);
 
@@ -272,10 +261,9 @@ common_declare_expected_insertions_from_model (const gchar *table_name, GdaDataM
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		GdaMetaStoreChange *ac;
-		ac = g_new0 (GdaMetaStoreChange, 1);
-		ac->c_type = GDA_META_STORE_ADD;
-		ac->table_name = g_strdup (table_name);
-		ac->keys = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) gda_value_free);
+		ac = gda_meta_store_change_new ();
+		gda_meta_store_change_set_change_type (ac, GDA_META_STORE_ADD);
+		gda_meta_store_change_set_table_name (ac, table_name);
 
 		for (j = 0; j < ncols; j++) {
 			gchar *str;
@@ -288,7 +276,7 @@ common_declare_expected_insertions_from_model (const gchar *table_name, GdaDataM
 					 lerror && lerror->message ? lerror->message : "No detail");
 				exit (1);
 			}
-			g_hash_table_insert (ac->keys, str, gda_value_copy (value));
+			g_hash_table_insert (gda_meta_store_change_get_keys (ac), str, gda_value_copy (value));
 		}
 
 		gchar *str;

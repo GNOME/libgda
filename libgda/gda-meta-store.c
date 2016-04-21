@@ -68,6 +68,179 @@
 #include "gda-data-meta-wrapper.h"
 #include <libgda/gda-debug-macros.h>
 
+// This is a copy of the macro located at gda-value.h
+#define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
+
+// GdaMetaStoreChange
+
+typedef struct _GdaMetaStoreChange {
+	/* change general information */
+	GdaMetaStoreChangeType  c_type;
+	gchar                  *table_name;
+	GHashTable             *keys; /* key = ('+' or '-') and a column position in @table (string) starting at 0, 
+	                               * value = a GValue pointer */
+};
+
+GType
+gda_meta_store_change_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GMutex registering;
+		g_mutex_lock (&registering);
+                if (type == 0)
+			type = g_boxed_type_register_static ("GdaMetaStoreChange",
+							     (GBoxedCopyFunc) gda_meta_store_change_copy,
+							     (GBoxedFreeFunc) gda_meta_store_change_free);
+		g_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+/**
+ * gda_meta_store_change_new:
+ *
+ * Creates a new #GdaMetaStoreChange
+ */
+GdaMetaStoreChange*
+gda_meta_store_change_new (void)
+{
+  GdaMetaStoreChange* change = g_new0 (GdaMetaStoreChange, 1);
+  change->table_name = NULL;
+  change->c_type = GDA_META_STORE_MODIFY;
+  change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
+								      g_free, (GDestroyNotify) gda_value_free);
+}
+
+void
+gda_meta_store_change_set_change_type (GdaMetaStoreChange *change, GdaMetaStoreChangeType ctype)
+{
+  g_return_if_fail (change != NULL);
+  change->c_type = ctype;
+}
+
+GdaMetaStoreChangeType
+gda_meta_store_change_get_change_type (GdaMetaStoreChange *change)
+{
+  g_return_val_if_fail (change != NULL, GDA_META_STORE_MODIFY);
+  return change->c_type;
+}
+/**
+ * gda_meta_store_change_set_table_name:
+ * @change: a #GdaMetaStoreChange
+ * @table_name: name of the table
+ *
+ */
+void
+gda_meta_store_change_set_table_name (GdaMetaStoreChange *change, const gchar *table_name)
+{
+  g_return_if_fail (change != NULL);
+  change->table_name = g_strdup (table_name);
+}
+/**
+ * gda_meta_store_change_get_table_name:
+ * @change: a #GdaMetaStoreChange
+ *
+ * Returns: (transfer full): a string with the table name
+ */
+gchar*
+gda_meta_store_change_get_table_name (GdaMetaStoreChange *change)
+{
+  g_return_val_if_fail (change != NULL, NULL);
+  return g_strdup (change->table_name);
+}
+/**
+ * gda_meta_store_change_get_table_name:
+ * @change: a #GdaMetaStoreChange
+ *
+ * Returns: (element-type utf8 GValue) (transfer none): hash table with string key key = ('+' or '-') and a column position in @table (string) starting at 0 and value as #GValue pointer
+ */
+GHashTable*
+gda_meta_store_change_get_keys (GdaMetaStoreChange *change)
+{
+  g_return_val_if_fail (change != NULL, NULL);
+  return change->keys;
+}
+
+/**
+ * gda_meta_store_change_copy:
+ * @src: a #GdaMetaStoreChange
+ *
+ * Returns: a new #GdaMetaStoreChange
+ */
+GdaMetaStoreChange*
+gda_meta_store_change_copy (GdaMetaStoreChange *src)
+{
+  GdaMetaStoreChange* copy;
+  g_return_val_if_fail (src != NULL, NULL);
+  copy = gda_meta_store_change_new ();
+  gda_meta_store_change_set_change_type (copy, gda_meta_store_change_get_change_type (src));
+  gda_meta_store_change_set_table_name (copy, gda_meta_store_change_get_table_name (src));
+  GList *keys = g_hash_table_get_keys (src->keys);
+  while (keys) {
+    g_hash_table_insert (copy->keys, keys->data, g_hash_table_lookup (src->keys, keys->data));
+    keys = keys->next;
+  }
+}
+
+/**
+ * gda_meta_store_change_free:
+ * @src: a #GdaMetaStoreChange to be freed
+ *
+ */
+void
+gda_meta_store_change_free (GdaMetaStoreChange *change)
+{
+  g_return_if_fail (change != NULL);
+  if (change->table_name != NULL)
+    g_free (change->table_name);
+  g_hash_table_unref (change->keys);
+}
+
+/**
+ * gda_value_set_meta_store_change:
+ * @value: a #GValue to set value to
+ * @src: a #GdaMetaStoreChange to be set
+ *
+ */
+void
+gda_value_set_meta_store_change (GValue *value, GdaMetaStoreChange *change)
+{
+  g_return_if_fail (value != NULL);
+  g_return_if_fail (change != NULL);
+
+	l_g_value_unset (value);
+	g_value_init (value, GDA_TYPE_META_STORE_CHANGE);
+	if (change)
+		g_value_set_boxed (value, change);
+	else {
+		g_value_set_boxed (value, gda_meta_store_change_new ());
+	}
+}
+
+/**
+ * gda_value_get_meta_store_change:
+ * @value: a #GValue to get value from
+ * 
+ * Returns: (transfer none): a #GdaMetaStoreChange
+ *
+ */
+GdaMetaStoreChange*
+gda_value_get_meta_store_change (GValue *value)
+{
+  GdaMetaStoreChange *val;
+
+	g_return_val_if_fail (value, NULL);
+	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_META_STORE_CHANGE), NULL);
+
+	val = (GdaMetaStoreChange*) g_value_get_boxed (value);
+
+	return val;
+}
+
+
+
 /*
    Register GdaMetaContext type
 */
@@ -302,8 +475,6 @@ static void gda_meta_store_get_property (GObject *object,
 					 GParamSpec *pspec);
 
 static gboolean initialize_cnc_struct (GdaMetaStore *store, GError **error);
-static void gda_meta_store_change_free (GdaMetaStoreChange *change);
-
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
@@ -3781,21 +3952,6 @@ _gda_meta_store_finish_data_reset (GdaMetaStore *store, GError **error)
 }
 
 
-
-/*
- * gda_meta_store_change_free
- * @change: a #GdaMetaStoreChange structure
- *
- * Free the memory associated to @change
- */
-static void
-gda_meta_store_change_free (GdaMetaStoreChange *change) {
-	if (!change) return;
-
-	g_free (change->table_name);
-	g_hash_table_destroy (change->keys);
-	g_free (change);
-}
 
 /**
  * gda_meta_store_create_modify_data_model:

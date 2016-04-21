@@ -884,39 +884,39 @@ meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, HubConnecti
 		GValue *tsn, *tn;
 
 		/* we are only interested in changes occurring in the "_tables" table */
-		if (!strcmp (ch->table_name, "_tables")) {
-			switch (ch->c_type) {
+		if (!strcmp (gda_meta_store_change_get_table_name (ch), "_tables")) {
+			switch (gda_meta_store_change_get_change_type (ch)) {
 			case GDA_META_STORE_ADD: {
 				/* we only want tables where table_short_name = table_name */
-				tsn = g_hash_table_lookup (ch->keys, "+6");
-				tn = g_hash_table_lookup (ch->keys, "+2");
+				tsn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "+6");
+				tn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "+2");
 				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_add (hc, tn, NULL);
 				break;
 			}
 			case GDA_META_STORE_REMOVE: {
 				/* we only want tables where table_short_name = table_name */
-				tsn = g_hash_table_lookup (ch->keys, "-6");
-				tn = g_hash_table_lookup (ch->keys, "-2");
+				tsn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "-6");
+				tn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "-2");
 				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_remove (hc, tn);
 				break;
 			}
 			case GDA_META_STORE_MODIFY: {
 				/* we only want tables where table_short_name = table_name */
-				tsn = g_hash_table_lookup (ch->keys, "-6");
-				tn = g_hash_table_lookup (ch->keys, "-2");
+				tsn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "-6");
+				tn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "-2");
 				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_remove (hc, tn);
-				tsn = g_hash_table_lookup (ch->keys, "+6");
-				tn = g_hash_table_lookup (ch->keys, "+2");
+				tsn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "+6");
+				tn = g_hash_table_lookup (gda_meta_store_change_get_keys (ch), "+2");
 				if (tn && tsn && !gda_value_compare (tsn, tn))
 					table_add (hc, tn, NULL);
 				break;
 			}
 			}
 		}
-		else if (!strcmp (ch->table_name, "_columns")) {
+		else if (!strcmp (gda_meta_store_change_get_table_name (ch), "_columns")) {
 			/* TODO */
 		}
 	}

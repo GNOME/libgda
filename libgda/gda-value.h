@@ -43,10 +43,8 @@ G_BEGIN_DECLS
 /* Definition of the GType's values used in GValue*/
 #define GDA_TYPE_NULL (gda_null_get_type())
 #define GDA_TYPE_DEFAULT (gda_default_get_type())
-#define	GDA_TYPE_BINARY (gda_binary_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
 #define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
-#define	GDA_TYPE_NUMERIC (gda_numeric_get_type())
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
 #define GDA_TYPE_TIME (gda_time_get_type())
@@ -56,10 +54,8 @@ G_BEGIN_DECLS
 /* Definition of the GDA_VALUE_HOLDS macros */
 #define GDA_VALUE_HOLDS_NULL(value)            G_VALUE_HOLDS(value, GDA_TYPE_NULL)
 #define GDA_VALUE_HOLDS_DEFAULT(value)         G_VALUE_HOLDS(value, GDA_TYPE_DEFAULT)
-#define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 #define GDA_VALUE_HOLDS_BLOB(value)            G_VALUE_HOLDS(value, GDA_TYPE_BLOB)
 #define GDA_VALUE_HOLDS_GEOMETRIC_POINT(value) G_VALUE_HOLDS(value, GDA_TYPE_GEOMETRIC_POINT)
-#define GDA_VALUE_HOLDS_NUMERIC(value)         G_VALUE_HOLDS(value, GDA_TYPE_NUMERIC)
 #define GDA_VALUE_HOLDS_SHORT(value)           G_VALUE_HOLDS(value, GDA_TYPE_SHORT)
 #define GDA_VALUE_HOLDS_USHORT(value)          G_VALUE_HOLDS(value, GDA_TYPE_USHORT)
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
@@ -77,6 +73,9 @@ typedef struct {
 
 /* GdaNumeric */
 typedef struct _GdaNumeric GdaNumeric;
+
+#define	GDA_TYPE_NUMERIC (gda_numeric_get_type())
+#define GDA_VALUE_HOLDS_NUMERIC(value)         G_VALUE_HOLDS(value, GDA_TYPE_NUMERIC)
 
 GType                             gda_numeric_get_type (void) G_GNUC_CONST;
 GdaNumeric*                       gda_numeric_new (void);
@@ -134,11 +133,12 @@ typedef struct {
 } GdaTimestamp;
 
 /**
- * GdaBinary:
- * @data: (array length=binary_length): the actual data as an array
- * @binary_length: length of @data
+ * GdaBinary: (ref-func gda_binary_new) (unref-func gda_binary_free) (get-value-func gda_value_get_binary) (set-value-func gda_value_set_binary)
  */
 typedef struct _GdaBinary GdaBinary;
+
+#define GDA_TYPE_BINARY (gda_binary_get_type ())
+#define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 
 GValue*                           gda_value_new_binary (const guchar *val, glong size);
 const GdaBinary*									gda_value_get_binary (const GValue *value);
