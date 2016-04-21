@@ -1042,15 +1042,17 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		GdaBinary *bin;
 		blob = (GdaBlob *) gda_value_get_blob (value);
 		bin = (GdaBinary *) blob;
-		if (blob->op &&
-		    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-			gda_blob_op_read_all (blob->op, blob);
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, blob->data.data, blob->data.binary_length, SQLITE_TRANSIENT);
+		if (gda_blob_get_op (blob) &&
+		    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op(blob))))
+			gda_blob_op_read_all (gda_blob_get_op (blob), blob);
+		SQLITE3_CALL (sqlite3_result_blob) (ctx, gda_binary_get_data (gda_blob_get_binary (blob)),
+		                                    gda_binary_get_size (gda_blob_get_binary (blob)),
+		                                    SQLITE_TRANSIENT);
 	}
 	else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 		const GdaBinary *bin;
 		bin = gda_value_get_binary (value);
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, bin->data, bin->binary_length, SQLITE_TRANSIENT);
+		SQLITE3_CALL (sqlite3_result_blob) (ctx, gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 	}
 	else {
 		gchar *str = gda_value_stringify (value);
@@ -1091,15 +1093,12 @@ create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
 	case SQLITE_BLOB: {
 		GdaBinary *bin;
 		g_value_init (value, GDA_TYPE_BINARY);
-		bin = g_new0 (GdaBinary, 1);
-		bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (svalue);
-		if (bin->binary_length > 0) {
-			bin->data = g_new (guchar, bin->binary_length);
-			memcpy (bin->data, SQLITE3_CALL (sqlite3_value_blob) (svalue),
-				bin->binary_length);
+		bin = gda_binary_new ();
+		glong length = SQLITE3_CALL (sqlite3_value_bytes) (svalue);
+		if (length > 0) {
+			gpointer data = g_new (guchar, length);
+			gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_value_blob) (svalue), length);
 		}
-		else
-			bin->binary_length = 0;
 		gda_value_take_binary (value, bin);
 		break;
 	}

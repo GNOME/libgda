@@ -1703,16 +1703,16 @@ menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid)
 			GdaBlob *blob;
 			blob = (GdaBlob *) gda_value_get_blob ((GValue *) cvalue);
 			g_assert (blob);
-			bin = (GdaBinary *) blob;
-			if (blob->op &&
-			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-				gda_blob_op_read_all (blob->op, blob);
+			bin = gda_blob_get_binary (blob);
+			if (gda_blob_get_op (blob) &&
+			    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
+				gda_blob_op_read_all (gda_blob_get_op (blob), blob);
 		}
 		if (bin) {
 			GdkPixbufLoader *loader;
 			GdkPixbuf *pixbuf = NULL;
 			loader = gdk_pixbuf_loader_new ();
-			if (gdk_pixbuf_loader_write (loader, bin->data, bin->binary_length, NULL)) {
+			if (gdk_pixbuf_loader_write (loader, gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 				if (gdk_pixbuf_loader_close (loader, NULL)) {
 					pixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
 					g_object_ref (pixbuf);

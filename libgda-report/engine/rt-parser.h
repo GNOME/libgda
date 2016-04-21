@@ -56,7 +56,7 @@ struct _RtNode {
 	RtMarkup   markup;
 	gint       offset;
 	gchar     *text;
-	GdaBinary  binary;
+	GdaBinary *binary;
 };
 
 RtNode *rt_parse_text (const gchar *text);

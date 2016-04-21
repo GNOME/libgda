@@ -194,8 +194,8 @@ gda_postgres_handler_bin_get_sql_from_value (GdaDataHandler *iface, const GValue
 			/*tmp = PQescapeByteaConn (cdata->pconn, data, length, &retlength);*/
 		}
 		else
-			tmp = (gchar *) PQescapeBytea (data->data, 
-						       data->binary_length, &retlength);
+			tmp = (gchar *) PQescapeBytea (gda_binary_get_data (data), 
+						       gda_binary_get_size (data), &retlength);
 		if (tmp) {
 			retval = g_strdup_printf ("'%s'", tmp);
 			PQfreemem (tmp);

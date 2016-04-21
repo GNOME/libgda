@@ -351,6 +351,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	GdaSqlitePStmt *ps;
 	GdaRow *prow = NULL;
 	GdaConnection *cnc;
+	glong length;
 
 	cnc = gda_data_select_get_connection ((GdaDataSelect*) model);
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
@@ -466,16 +467,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else if (type == GDA_TYPE_BINARY) {
 					GdaBinary *bin;
 					
-					bin = g_new0 (GdaBinary, 1);
-					bin->binary_length = SQLITE3_CALL (sqlite3_column_bytes) (ps->sqlite_stmt, real_col);
-					if (bin->binary_length > 0) {
-						bin->data = g_new (guchar, bin->binary_length);
-						memcpy (bin->data, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, /* Flawfinder: ignore */
-												       real_col),
-							bin->binary_length);
+					bin = gda_binary_new ();
+					length = SQLITE3_CALL (sqlite3_column_bytes) (ps->sqlite_stmt, real_col);
+					if (length > 0) {
+						gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, /* Flawfinder: ignore */
+												       real_col), length);
 					}
-					else
-						bin->binary_length = 0;
 					gda_value_take_binary (value, bin);
 				}
 				else if (type == GDA_TYPE_BLOB) {
@@ -517,7 +514,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					else {
 						GdaBlob *blob;
-						blob = g_new0 (GdaBlob, 1);
+						blob = gda_blob_new ();
 						gda_blob_set_op (blob, bop);
 						g_object_unref (bop);
 						gda_value_take_blob (value, blob);

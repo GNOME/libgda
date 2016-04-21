@@ -924,12 +924,12 @@ entry_contents_or_attrs_changed (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
 		if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			const GdaBinary *bin;
 			bin = gda_value_get_binary (value);
-			strval = g_strdup_printf ("Binary data, size=%ld", bin->binary_length);
+			strval = g_strdup_printf ("Binary data, size=%ld", gda_binary_get_size (bin));
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			const GdaBlob *blob;
 			blob = gda_value_get_blob (value);
-			strval = g_strdup_printf ("Blob data, size=%ld", ((GdaBinary*) blob)->binary_length);
+			strval = g_strdup_printf ("Blob data, size=%ld", gda_binary_get_size (gda_blob_get_binary (blob)));
 		}
 		else
 			strval = gda_data_handler_get_sql_from_value (dh, value);

@@ -2208,8 +2208,8 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			/* directly bin binary data */
 			GdaBinary *bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-			param_values [i] = (gchar*) bin->data;
-			param_lengths [i] = bin->binary_length;
+			param_values [i] = (gchar*) gda_binary_get_data (bin);
+			param_lengths [i] = gda_binary_get_size (bin);
 			param_formats [i] = 1; /* binary format */
 			param_mem [i] = TRUE; /* don't free later */
 		}

@@ -320,22 +320,22 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				const GdaBlob *blob;
 				GdaBinary *bin;
 				blob = gda_value_get_blob (value);
-				bin = (GdaBinary *) blob;
-				if (blob->op &&
-				    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-                                        gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
-				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
-					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) bin->data, 
-								  bin->binary_length);
+				bin = gda_blob_get_binary (blob);
+				if (gda_blob_get_op (blob) &&
+				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
+                                        gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
+				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
+					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) gda_binary_get_data (bin), 
+								  gda_binary_get_size (bin));
 					done = TRUE;
 				}
 			}
 			else  if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 				const GdaBinary *bin;
 				bin = gda_value_get_binary (value);
-				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
-					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) bin->data, 
-								  bin->binary_length);
+				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
+					gtk_text_buffer_set_text (mgtxt->priv->buffer, (gchar*) gda_binary_get_data (bin), 
+								  gda_binary_get_size (bin));
 					done = TRUE;
 				}
 			}

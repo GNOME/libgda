@@ -737,9 +737,8 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 					}
 					if (! *ptr) {
 						GdaBinary *bin;
-						bin = g_new (GdaBinary, 1);
-						bin->data = unescaped;
-						bin->binary_length = pqlength;
+						bin = gda_binary_new ();
+						gda_binary_set_data (bin, unescaped, pqlength);
 						gda_value_take_binary (value, bin);
 						valueset = TRUE;
 					}
@@ -748,10 +747,9 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 			else {
 				unescaped = PQunescapeBytea ((guchar*) thevalue, &pqlength);
 				if (unescaped) {
-					GdaBinary bin;
-					bin.data = unescaped;
-					bin.binary_length = pqlength;
-					gda_value_set_binary (value, &bin);
+					GdaBinary* bin = gda_binary_new ();
+					gda_binary_set_data (bin, unescaped, pqlength);
+					gda_value_take_binary (value, bin);
 					PQfreemem (unescaped);
 					valueset = TRUE;
 				}
@@ -771,7 +769,7 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 	else if (type == GDA_TYPE_BLOB) {
 		GdaBlob *blob;
 		GdaBlobOp *op;
-		blob = g_new0 (GdaBlob, 1);
+		blob = gda_blob_new ();
 		op = gda_postgres_blob_op_new_with_id (cnc, thevalue);
 		gda_blob_set_op (blob, op);
 		g_object_unref (op);

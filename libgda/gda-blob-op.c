@@ -332,9 +332,9 @@ gda_blob_op_read_all (GdaBlobOp *op, GdaBlob *blob)
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), FALSE);
 	g_return_val_if_fail (blob, FALSE);
 
-	len = gda_blob_op_get_length (blob->op);
+	len = gda_blob_op_get_length (gda_blob_get_op (blob));
 	if (len >= 0)
-		return (gda_blob_op_read (blob->op, blob, 0, len) < 0) ? FALSE : TRUE;
+		return (gda_blob_op_read (gda_blob_get_op (blob), blob, 0, len) < 0) ? FALSE : TRUE;
 	else
 		return FALSE;
 }

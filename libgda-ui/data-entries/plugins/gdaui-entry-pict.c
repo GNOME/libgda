@@ -483,12 +483,12 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 			blob = (GdaBlob*) gda_value_get_blob ((GValue *) value);
 			g_assert (blob);
-			bin = (GdaBinary *) blob;
-			if (blob->op &&
-			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-				gda_blob_op_read_all (blob->op, blob);
+			bin = gda_blob_get_binary (blob);
+			if (gda_blob_get_op (blob) &&
+			    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
+				gda_blob_op_read_all (gda_blob_get_op (blob), blob);
 			if (mgpict->priv->bindata.data)
-				return !memcmp (bin->data, mgpict->priv->bindata.data, MIN (mgpict->priv->bindata.data_length, bin->binary_length));
+				return !memcmp (gda_binary_get_data (bin), mgpict->priv->bindata.data, MIN (mgpict->priv->bindata.data_length, gda_binary_get_size (bin)));
 			else
 				return FALSE;
 		}
@@ -497,7 +497,7 @@ value_is_equal_to (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 			bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
 			if (bin && mgpict->priv->bindata.data)
-				return !memcmp (bin->data, mgpict->priv->bindata.data, MIN (mgpict->priv->bindata.data_length, bin->binary_length));
+				return !memcmp (gda_binary_get_data (bin), mgpict->priv->bindata.data, MIN (mgpict->priv->bindata.data_length, gda_binary_get_size (bin)));
 			else
 				return FALSE;
 		}

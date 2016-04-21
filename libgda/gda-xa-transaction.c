@@ -293,9 +293,8 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 
 	const GdaBinary *ebranch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 	if (ebranch) {
-		bin = g_new0 (GdaBinary, 1);
-		bin->data = (guchar*) g_strdup (branch);
-		bin->binary_length = strlen (branch) + 1;
+		bin = gda_binary_new ();
+		gda_binary_set_data (bin, branch, strlen (branch) + 1);
 		g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
 		return TRUE;
 	}
@@ -325,9 +324,8 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 			xa_trans->priv->non_xa_cnc = cnc;
 	}
 
-	bin = g_new0 (GdaBinary, 1);
-	bin->data = (guchar*) g_strdup (branch);
-	bin->binary_length = strlen (branch) + 1;
+	bin = gda_binary_new ();
+	gda_binary_set_data (bin, branch, strlen (branch) + 1);
 	xa_trans->priv->cnc_list = g_list_prepend (xa_trans->priv->cnc_list, cnc);
 	g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
 	g_object_ref (cnc);
@@ -388,7 +386,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			const GdaBinary *branch;
 			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-				branch->data, branch->binary_length);
+				gda_binary_get_data (branch), gda_binary_get_size (branch));
 			if (! _gda_server_provider_xa_start (prov, cnc, &(xa_trans->priv->xid), error))
 				break;
 		}
@@ -412,7 +410,7 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 				const GdaBinary *branch;
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-					branch->data, branch->binary_length);
+					gda_binary_get_data (branch), gda_binary_get_size (branch));
 				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 			else {
@@ -469,7 +467,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-			branch->data, branch->binary_length);
+			gda_binary_get_data (branch), gda_binary_get_size (branch));
 
 		if (!_gda_server_provider_xa_end (prov, cnc, &(xa_trans->priv->xid), error))
 			break;
@@ -491,7 +489,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-					branch->data, branch->binary_length);
+					gda_binary_get_data (branch), gda_binary_get_size (branch));
 				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 		}
@@ -516,7 +514,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 				prov = gda_connection_get_provider (cnc);
 				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-					branch->data, branch->binary_length);
+					gda_binary_get_data (branch), gda_binary_get_size (branch));
 				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
 			}
 		}
@@ -535,7 +533,7 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		prov = gda_connection_get_provider (cnc);
 		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-			branch->data, branch->binary_length);
+			gda_binary_get_data (branch), gda_binary_get_size (branch));
 		if (! _gda_server_provider_xa_commit (prov, cnc, &(xa_trans->priv->xid), error) &&
 		    cnc_to_recover)
 			*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);
@@ -572,7 +570,7 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 			const GdaBinary *branch;
 			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-				branch->data, branch->binary_length);
+				gda_binary_get_data (branch), gda_binary_get_size (branch));
 			GError *lerror = NULL;
 			_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), &lerror);
 			if (error && !*error)
@@ -628,7 +626,7 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 
 			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
-				branch->data, branch->binary_length);
+				gda_binary_get_data (branch), gda_binary_get_size (branch));
 			for (xlist = recov_xid_list; xlist; xlist = xlist->next) {
 				GdaXaTransactionId *xid = (GdaXaTransactionId*) xlist->data;
 				if (!xid)

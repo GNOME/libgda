@@ -334,17 +334,17 @@ gda_postgres_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 		goto out_error;
 	}
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = lo_read (pconn, pgop->priv->fd, (char *) (bin->data), size);
+	bin = gda_blob_get_binary (blob);
+	gda_binary_reset_data (bin);
+	guchar *buffer = g_new0 (guchar, size);
+	glong l = lo_read (pconn, pgop->priv->fd, (char *) (buffer), size);
+	gda_binary_set_data (bin, buffer, l);
 
 	blob_op_close (pgop);
 	if (transaction_started)
 		gda_connection_rollback_transaction (pgop->priv->cnc, NULL, NULL);
 
-	return bin->binary_length;
+	return gda_binary_get_size (bin);
 
  out_error:
 	blob_op_close (pgop);
@@ -380,25 +380,25 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		goto out_error;
 	}
 
-	if (blob->op && (blob->op != op)) {
+	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
 		/* use data through blob->op */
 		#define buf_size 16384
 		gint nread = 0;
-		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		GdaBlob *tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, gda_blob_get_op (blob));
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, 0, buf_size);
+		for (nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, 0, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
-			GdaBinary *bin = (GdaBinary *) tmpblob;
+		     nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size)) {
+			GdaBinary *bin = gda_blob_get_binary (tmpblob);
 			glong tmp_written;
-			tmp_written = lo_write (pconn, pgop->priv->fd, (char*) bin->data, 
-						bin->binary_length);
-			if (tmp_written < bin->binary_length) {
+			tmp_written = lo_write (pconn, pgop->priv->fd, (char*) gda_binary_get_data (bin), 
+						gda_binary_get_size (bin));
+			if (tmp_written < gda_binary_get_size (bin)) {
 				_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
-				gda_blob_free ((gpointer) tmpblob);
+				gda_blob_free (tmpblob);
 				goto out_error;
 			}
 			nbwritten += tmp_written;
@@ -406,12 +406,12 @@ gda_postgres_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 				/* nothing more to read */
 				break;
 		}
-		gda_blob_free ((gpointer) tmpblob);
+		gda_blob_free (tmpblob);
 	}
 	else {
 		/* use data in (GdaBinary *) blob */
-		GdaBinary *bin = (GdaBinary *) blob;
-		nbwritten = lo_write (pconn, pgop->priv->fd, (char*) bin->data, bin->binary_length);
+		GdaBinary *bin = gda_blob_get_binary (blob);
+		nbwritten = lo_write (pconn, pgop->priv->fd, (char*) gda_binary_get_data (bin), gda_binary_get_size (bin));
 		if (nbwritten == -1) {
 			_gda_postgres_make_error (pgop->priv->cnc, pconn, NULL, NULL);
 			goto out_error;

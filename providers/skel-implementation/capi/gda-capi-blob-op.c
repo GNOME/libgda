@@ -164,16 +164,18 @@ gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = 0;
+	bin = gda_blob_get_binary (blob);
+	if (gda_binary_get_data (bin))
+	  gda_binary_reset_data (bin); 
+		g_free (gda_binary_get_data (bin));
+	guchar* buffer = g_new0 (guchar, size);
+	gda_binary_set_data (bin, buffer, size);
+	g_free (buffer);
 
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */
 	TO_IMPLEMENT;
 
-	return bin->binary_length;
+	return gda_binary_get_size (bin);
 }
 
 /*
@@ -192,25 +194,25 @@ gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset
 	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
-	if (blob->op && (blob->op != op)) {
+	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
 		/* use data through blob->op */
 		#define buf_size 16384
 		gint nread = 0;
-		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		GdaBlob *tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, gda_blob_get_op (blob));
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		for (nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+		     nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size)) {
 			glong tmp_written;
 
 			tmp_written = -1; TO_IMPLEMENT;
 			
 			if (tmp_written < 0) {
 				/* treat error */
-				gda_blob_free ((gpointer) tmpblob);
+				gda_blob_free (tmpblob);
 				return -1;
 			}
 			nbwritten += tmp_written;
@@ -218,12 +220,12 @@ gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset
 				/* nothing more to read */
 				break;
 		}
-		gda_blob_free ((gpointer) tmpblob);
+		gda_blob_free (tmpblob);
 	}
 	else {
 		/* write blob using bin->data and bin->binary_length */
-		bin = (GdaBinary *) blob;
-    		g_warning("bin not used. length=%ld", bin->binary_length); /* Avoids a compiler warning. */        
+		bin = gda_blob_get_binary (blob);
+    		g_warning("bin not used. length=%ld", gda_binary_get_size (bin)); /* Avoids a compiler warning. */        
 		nbwritten = -1; TO_IMPLEMENT;
 	}
 

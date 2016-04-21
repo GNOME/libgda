@@ -53,24 +53,24 @@ common_pict_load_data (PictOptions *options, const GValue *value, PictBinData *b
 
 				blob = (GdaBlob *) gda_value_get_blob ((GValue *) value);
 				g_assert (blob);
-				bin = (GdaBinary *) blob;
-				if (blob->op &&
-				    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-					gda_blob_op_read_all (blob->op, blob);
-				if (bin->binary_length > 0) {
-					bindata->data = g_new (guchar, bin->binary_length);
-					bindata->data_length = bin->binary_length;
-					memcpy (bindata->data, bin->data, bin->binary_length);
+				bin = gda_blob_get_binary (blob);
+				if (gda_blob_get_op (blob) &&
+				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
+					gda_blob_op_read_all (gda_blob_get_op (blob), blob);
+				if (gda_binary_get_size (bin) > 0) {
+					bindata->data = g_new (guchar, gda_binary_get_size (bin));
+					bindata->data_length = gda_binary_get_size (bin);
+					memcpy (bindata->data, gda_binary_get_data (bin), gda_binary_get_size (bin));
 				}
 			}
 			else if (G_VALUE_TYPE ((GValue *) value) == GDA_TYPE_BINARY) {
 				GdaBinary *bin;
 
 				bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-				if (bin && bin->binary_length > 0) {
-					bindata->data = g_new (guchar, bin->binary_length);
-					bindata->data_length = bin->binary_length;
-					memcpy (bindata->data, bin->data, bin->binary_length);
+				if (bin && gda_binary_get_size (bin) > 0) {
+					bindata->data = g_new (guchar, gda_binary_get_size (bin));
+					bindata->data_length = gda_binary_get_size (bin);
+					memcpy (bindata->data, gda_binary_get_data (bin), gda_binary_get_size (bin));
 				}
 				else {
 					*out_icon_name = "dialog-error";
@@ -588,19 +588,19 @@ common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPix
 		const GdaBinary *bin;
 		bin = gda_value_get_binary (value);
 		hash = g_new (gint, 1);
-		*hash = compute_hash (bin->data, bin->binary_length);
+		*hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 		g_hash_table_insert (options->pixbuf_hash, hash, g_object_ref (pixbuf));
 	}
 	else if (GDA_VALUE_HOLDS_BLOB (value)) {
 		const GdaBinary *bin;
 		const GdaBlob *blob;
 		blob = gda_value_get_blob (value);
-		bin = (GdaBinary *) blob;
+		bin = gda_binary_get_binary (blob);
 		if (bin) {
-			if (!bin->data && blob->op)
-				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
+			if (!gda_binary_get_data (bin) && gda_blob_get_op (blob))
+				gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
 			hash = g_new (gint, 1);
-			*hash = compute_hash (bin->data, bin->binary_length);
+			*hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 			g_hash_table_insert (options->pixbuf_hash, hash, g_object_ref (pixbuf));
 		}
 	}
@@ -623,7 +623,7 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 		const GdaBinary *bin;
 		bin = gda_value_get_binary (value);
 		if (bin) {
-			hash = compute_hash (bin->data, bin->binary_length);
+			hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 			pixbuf = g_hash_table_lookup (options->pixbuf_hash, &hash);
 		}
 	}
@@ -631,11 +631,11 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 		const GdaBinary *bin;
 		const GdaBlob *blob;
 		blob = gda_value_get_blob (value);
-		bin = (GdaBinary *) blob;
+		bin = gda_blob_get_binary (blob);
 		if (bin) {
-			if (!bin->data && blob->op)
-				gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
-			hash = compute_hash (bin->data, bin->binary_length);
+			if (!gda_binary_get_data (bin) && gda_blob_get_op (blob))
+				gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
+			hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 			pixbuf = g_hash_table_lookup (options->pixbuf_hash, &hash);
 		}
 	}

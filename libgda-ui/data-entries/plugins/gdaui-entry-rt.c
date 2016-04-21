@@ -1,4 +1,4 @@
-/*
+  /*
  * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  *
@@ -191,24 +191,24 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				const GdaBlob *blob;
 				GdaBinary *bin;
 				blob = gda_value_get_blob (value);
-				bin = (GdaBinary *) blob;
-				if (blob->op &&
-				    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-                                        gda_blob_op_read_all (blob->op, (GdaBlob*) blob);
-				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
+				bin = gda_blob_get_binary (blob);
+				if (gda_blob_get_op (blob) &&
+				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_op (blob))))
+                                        gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
+				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 					gdaui_rt_editor_set_contents (GDAUI_RT_EDITOR (mgtxt->priv->view),
-								      (gchar*) bin->data,
-								      bin->binary_length);
+								      (gchar*) gda_binary_get_data (bin),
+								      gda_binary_get_size (bin));
 					done = TRUE;
 				}
 			}
 			else  if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 				const GdaBinary *bin;
 				bin = gda_value_get_binary (value);
-				if (g_utf8_validate ((gchar*) bin->data, bin->binary_length, NULL)) {
+				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 					gdaui_rt_editor_set_contents (GDAUI_RT_EDITOR (mgtxt->priv->view),
-								      (gchar*) bin->data, 
-								      bin->binary_length);
+								      (gchar*) gda_binary_get_data (bin), 
+								      gda_binary_get_size (bin));
 					done = TRUE;
 				}
 			}

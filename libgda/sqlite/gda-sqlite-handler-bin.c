@@ -165,13 +165,13 @@ gda_sqlite_handler_bin_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, 
 	gint i;
 
 	bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-	retval = g_new0 (gchar, bin->binary_length * 2 + 4);
+	retval = g_new0 (gchar, gda_binary_get_size (bin) * 2 + 4);
 	retval [0] = 'x';
 	retval [1] = '\'';
-	for (i = 0; i < bin->binary_length; i++) {
+	for (i = 0; i < gda_binary_get_size (bin); i++) {
 		guchar *ptr;
 
-		ptr = bin->data + i;
+		ptr = gda_binary_get_data (bin) + i;
 		if ((*ptr >> 4) <= 9)
 			retval [2*i + 2] = (*ptr >> 4) + '0';
 		else
@@ -181,7 +181,7 @@ gda_sqlite_handler_bin_get_sql_from_value (G_GNUC_UNUSED GdaDataHandler *iface, 
 		else
 			retval [2*i + 3] = (*ptr & 0xF) + 'A' - 10;
 	}
-	retval [bin->binary_length * 2 + 2] = '\'';
+	retval [gda_binary_get_size (bin) * 2 + 2] = '\'';
 
 	return retval;
 }
@@ -196,11 +196,11 @@ gda_sqlite_handler_bin_get_str_from_value (G_GNUC_UNUSED GdaDataHandler *iface, 
 	gint i;
 
 	bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
-	retval = g_new0 (gchar, bin->binary_length * 2 + 1);
-	for (i = 0; i < bin->binary_length; i++) {
+	retval = g_new0 (gchar, gda_binary_get_size (bin) * 2 + 1);
+	for (i = 0; i < gda_binary_get_size (bin); i++) {
 		guchar *ptr;
 
-		ptr = bin->data + i;
+		ptr = gda_binary_get_data (bin) + i;
 		if ((*ptr >> 4) <= 9)
 			retval [2*i] = (*ptr >> 4) + '0';
 		else
@@ -242,13 +242,14 @@ gda_sqlite_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, 
 		    (sql[n] == '\'')) {
 			GdaBinary *bin;
 			
-			bin = g_new0 (GdaBinary, 1);
+			bin = gda_binary_new ();
 			if (n > 3) {
 				gint i;
-				bin->data = g_new0 (guchar, (n-3)/2);
+				guchar* buffer = g_new0 (guchar, (n-3)/2);
 				for (i = 2; i < n-1; i += 2)
-					bin->data [i/2 - 1] = (hex_to_int (sql[i]) << 4) | hex_to_int (sql [i+1]);
-				bin->binary_length = n-3;
+					buffer [i/2 - 1] = (hex_to_int (sql[i]) << 4) | hex_to_int (sql [i+1]);
+				gda_binary_set_data (bin, buffer, n-3);
+				g_free (buffer);
 			}
 
 			value = gda_value_new (GDA_TYPE_BINARY);
@@ -271,15 +272,15 @@ gda_sqlite_handler_bin_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, 
 		if (! (n % 2)) {
 			GdaBinary *bin;
 
-			bin = g_new0 (GdaBinary, 1);
+			bin = gda_binary_new ();
+			guchar* buffer = NULL;
 			if (n > 0) {
 				gint i;
-				bin->data = g_new0 (guchar, n/2);
+				buffer = g_new0 (guchar, n/2);
 				for (i = 0; i < n; i += 2)
-					bin->data [i/2] = (hex_to_int (str[i]) << 4) | hex_to_int (str [i+1]);
-				bin->binary_length = n;
+					buffer [i/2] = (hex_to_int (str[i]) << 4) | hex_to_int (str [i+1]);
 			}
-
+      gda_binary_set_data (bin, buffer, n);
 			value = gda_value_new (GDA_TYPE_BINARY);
 			gda_value_take_binary (value, bin);
 		}

@@ -180,6 +180,7 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	GdaBinary *bin;
 	FILE *file;
 	size_t nread;
+	guchar *buffer;
 
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (op), -1);
 	dirop = GDA_DIR_BLOB_OP (op);
@@ -199,14 +200,11 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		return -1;
 	}
 	
-	bin = (GdaBinary *) blob;
-	if (bin->data) {
-		g_free (bin->data);
-		bin->data = NULL;
-	}
-	bin->data = g_new0 (guchar, size);
-	nread = fread ((char *) (bin->data), 1, size, file);
-	bin->binary_length = nread;
+	bin = gda_blob_get_binary (blob);
+	gda_binary_reset_data (bin);
+	buffer = g_new0 (guchar, size);
+	nread = fread ((char *) (buffer), 1, size, file);
+	gda_binary_set_data (bin, buffer, nread);
 	fclose (file);
 
 	return nread;
@@ -240,25 +238,26 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		}
 	}
 
-	if (blob->op && (blob->op != op)) {
+	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
 		/* use data through blob->op */
 #define buf_size 16384
 		gint nread = 0;
-		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		GdaBlob *tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, gda_blob_get_op (blob));
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, 0, buf_size);
+		for (nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, 0, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
-			GdaBinary *bin = (GdaBinary *) tmpblob;
+		     nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size)) {
+			GdaBinary *bin = gda_blob_get_binary (tmpblob);
 			glong tmp_written;
-			tmp_written = fwrite ((char *) (bin->data), sizeof (guchar), bin->binary_length, file);
-			if (tmp_written < bin->binary_length) {
+			guchar *buffer;
+			tmp_written = fwrite ((char *) (buffer), sizeof (guchar), gda_binary_get_size (bin), file);
+			if (tmp_written < gda_binary_get_size (bin)) {
 				/* error writing stream */
 				fclose (file);
-				gda_blob_free ((gpointer) tmpblob);
+				gda_blob_free (tmpblob);
 				return -1;
 			}
 			nbwritten += tmp_written;
@@ -267,11 +266,11 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 				break;
 		}
 		fclose (file);
-		gda_blob_free ((gpointer) tmpblob);
+		gda_blob_free (tmpblob);
 	}
 	else {
 		bin = (GdaBinary *) blob;
-		nbwritten = fwrite ((char *) (bin->data), 1, bin->binary_length, file);
+		nbwritten = fwrite ((char *) (gda_binary_get_data (bin)), 1, gda_binary_get_size (bin), file);
 		fclose (file);
 	}
 

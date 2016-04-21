@@ -3197,10 +3197,10 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			const gchar *str = NULL;
 
 			/* force reading the complete BLOB into memory */
-			if (blob->op)
-				blob_len = gda_blob_op_get_length (blob->op);
+			if (gda_blob_get_op (blob))
+				blob_len = gda_blob_op_get_length (gda_blob_get_op (blob));
 			else
-				blob_len = ((GdaBinary*) blob)->binary_length;
+				blob_len = gda_binary_get_size (gda_blob_get_binary (blob));
 			if (blob_len < 0)
 				str = _("Can't get BLOB's length");
 			else if (blob_len >= G_MAXINT)
@@ -3241,7 +3241,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			GdaBinary *bin = (GdaBinary *) gda_value_get_binary (value);
 			SQLITE3_CALL (sqlite3_bind_blob) (ps->sqlite_stmt, i,
-							  bin->data, bin->binary_length, SQLITE_TRANSIENT);
+							  gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
 			GString *string;
@@ -3575,20 +3575,20 @@ scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **a
 		return;
 	}
 
-	bin = g_new0 (GdaBinary, 1);
-	bin->data = (guchar*) SQLITE3_CALL (sqlite3_value_blob) (argv [0]);
-	if (!bin->data) {
-		g_free (bin);
+	bin = gda_binary_new ();
+	guchar* buffer = (guchar*) SQLITE3_CALL (sqlite3_value_blob) (argv [0]);
+	if (!buffer) {
+		gda_binary_free (bin);
 		SQLITE3_CALL (sqlite3_result_null) (context);
 		return;
 	}
-	bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
+	glong length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
+	gda_binary_set_data (bin, buffer, length);
+	g_free (free);
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
 	dh = gda_data_handler_get_default (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
 
-	bin->data = NULL;
-	bin->binary_length = 0;
 	gda_value_free (value);
 	SQLITE3_CALL (sqlite3_result_text) (context, str, -1, g_free);
 }
@@ -3607,20 +3607,19 @@ scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **
 		return;
 	}
 
-	bin = g_new0 (GdaBinary, 1);
-	bin->data = (guchar*) SQLITE3_CALL (sqlite3_value_blob) (argv [0]);
-	if (!bin->data) {
-		g_free (bin);
+	bin = gda_binary_new ();
+	guchar* buffer = (guchar*) SQLITE3_CALL (sqlite3_value_blob) (argv [0]);
+	if (!buffer) {
+		gda_binary_free (bin);
 		SQLITE3_CALL (sqlite3_result_null) (context);
 		return;
 	}
-	bin->binary_length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
+	glong length = SQLITE3_CALL (sqlite3_value_bytes) (argv [0]);
+	gda_binary_set_data (bin, buffer, length);
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
 	dh = gda_data_handler_get_default (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
 
-	bin->data = NULL;
-	bin->binary_length = 0;
 	gda_value_free (value);
 
 	size = SQLITE3_CALL (sqlite3_value_int) (argv [1]);

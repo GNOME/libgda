@@ -2035,17 +2035,19 @@ _gda_value_hash (gconstpointer key)
 		if (vt == GDA_TYPE_BLOB) {
 			GdaBlob *blob;
 			blob = (GdaBlob*) gda_value_get_blob ((GValue *) v);
-			bin = (GdaBinary *) blob;
-			if (blob->op &&
-			    (bin->binary_length != gda_blob_op_get_length (blob->op)))
-				gda_blob_op_read_all (blob->op, blob);
+			bin = gda_blob_get_binary (blob);
+			if (gda_blob_get_op (blob) &&
+			    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
+				gda_blob_op_read_all (gda_blob_get_op (blob), blob);
 		}
 		else
 			bin = gda_value_get_binary ((GValue *) v);
 		if (bin) {
 			glong l;
-			for (l = 0; l < bin->binary_length; l++)
-				res += (guint) bin->data [l];
+			for (l = 0; l < gda_binary_get_size (bin); l++) {
+			  guchar* p = gda_binary_get_data (bin);
+				res += (guint) p[l];
+			}
 		}
 	}
 	else {

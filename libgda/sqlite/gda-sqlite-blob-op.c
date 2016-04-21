@@ -198,6 +198,7 @@ gda_sqlite_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
 	GdaSqliteBlobOp *bop;
 	GdaBinary *bin;
+	gpointer buffer = NULL;
 	int rc;
 
 	g_return_val_if_fail (GDA_IS_SQLITE_BLOB_OP (op), -1);
@@ -213,11 +214,8 @@ gda_sqlite_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	if (size > G_MAXINT)
 		return -1;
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = 0;
+	bin = gda_blob_get_binary (blob);
+	gda_binary_set_data (bin, (guchar*) "", 0);
 
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */
 	int rsize;
@@ -235,16 +233,15 @@ gda_sqlite_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 
 	if (len - offset < rsize)
 		rsize = len - offset;
-
-	rc = SQLITE3_CALL (sqlite3_blob_read) (bop->priv->sblob, bin->data, rsize, offset);
+  
+	rc = SQLITE3_CALL (sqlite3_blob_read) (bop->priv->sblob, buffer, rsize, offset);
 	if (rc != SQLITE_OK) {
-		g_free (bin->data);
-		bin->data = NULL;
+		gda_binary_reset_data (bin);
 		return -1;
 	}
-	bin->binary_length = rsize;
+	gda_binary_set_data (bin, buffer, rsize);
 
-	return bin->binary_length;
+	return gda_binary_get_size (bin);
 }
 
 /*
@@ -268,18 +265,18 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	if (len < 0)
 		return -1;
 
-	if (blob->op && (blob->op != op)) {
+	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
 		/* use data through blob->op */
 		#define buf_size 16384
 		gint nread = 0;
-		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		GdaBlob *tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, gda_blob_get_op (blob));
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		for (nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+		     nread = gda_blob_op_read (gda_blob_get_op (tmpblob), tmpblob, nbwritten, buf_size)) {
 			int tmp_written;
 			int rc;
 			int wlen;
@@ -290,7 +287,7 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 				wlen = nread;
 
 			rc = SQLITE3_CALL (sqlite3_blob_write) (bop->priv->sblob,
-								((GdaBinary *)tmpblob)->data, wlen, offset + nbwritten);
+								gda_binary_get_data (gda_blob_get_binary (tmpblob)), wlen, offset + nbwritten);
 			if (rc != SQLITE_OK)
 				tmp_written = -1;
 			else
@@ -312,13 +309,13 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		/* write blob using bin->data and bin->binary_length */
 		int rc;
 		int wlen;
-		bin = (GdaBinary *) blob;
-		if (bin->binary_length + offset > len)
+		bin = gda_blob_get_binary (blob);
+		if (gda_binary_get_size (bin) + offset > len)
 			wlen = 	len - offset;
 		else
-			wlen = bin->binary_length;
+			wlen = gda_binary_get_size (bin);
 
-		rc = SQLITE3_CALL (sqlite3_blob_write) (bop->priv->sblob, bin->data, wlen, offset);
+		rc = SQLITE3_CALL (sqlite3_blob_write) (bop->priv->sblob, gda_binary_get_data (bin), wlen, offset);
 		if (rc != SQLITE_OK)
 			nbwritten = -1;
 		else

@@ -427,7 +427,7 @@ rt_dump_tree_offset (RtNode *tree, gint offset)
 		g_free (copy);
 		g_print ("]\n");
 	}
-	else if (tree->binary.data) {
+	else if (gda_binary_get_data (tree->binary)) {
 		g_print ("BINARY\n");
 	}
 	else
@@ -472,7 +472,7 @@ rt_dump_tree_to_string (RtNode *tree, GString *string)
 		}
 		g_string_append (string, "]|");
 	}
-	else if (tree->binary.data)
+	else if (gda_binary_get_data (tree->binary))
 		g_string_append (string, "BINARY|");
 	else
 		g_string_append_c (string, '|');
@@ -500,8 +500,7 @@ rt_free_node (RtNode *node)
 	if (node->next)
 		rt_free_node (node->next);
 	g_free (node->text);
-	if (node->binary.data)
-		g_free (node->binary.data);
+	gda_binary_free (node->binary);
 	g_free (node);
 }
 
@@ -520,8 +519,8 @@ merge_text_node_child (RtNode *tree)
 	if (! child)
 		return FALSE;
 
-	if ((tree->markup == RT_MARKUP_NONE) && !tree->binary.data &&
-	    (child->markup == RT_MARKUP_NONE) &&  ! child->child && child->text && !child->binary.data) {
+	if ((tree->markup == RT_MARKUP_NONE) && !gda_binary_get_data (tree->binary) &&
+	    (child->markup == RT_MARKUP_NONE) &&  ! child->child && child->text && !gda_binary_get_data (child->binary)) {
 		if (tree->text) {
 			gchar *tmp;
 			tmp = tree->text;
@@ -551,8 +550,8 @@ merge_text_node_siblings (RtNode *tree)
 		if (! tree->next)
 			break;
 		RtNode *next = tree->next;
-		if ((tree->markup == RT_MARKUP_NONE) && !tree->binary.data &&
-		    (next->markup == RT_MARKUP_NONE) && !next->binary.data &&
+		if ((tree->markup == RT_MARKUP_NONE) && !gda_binary_get_data (tree->binary) &&
+		    (next->markup == RT_MARKUP_NONE) && !gda_binary_get_data (next->binary) &&
 		    ! next->child && next->text) {
 			if (tree->text) {
 				gchar *tmp;
@@ -581,17 +580,15 @@ merge_text_node_siblings (RtNode *tree)
 static gboolean
 merge_single_child_text (RtNode *tree)
 {
-	if (! (tree->text || tree->binary.data) &&
+	if (! (tree->text || gda_binary_get_data (tree->binary)) &&
 	    tree->child && !tree->child->next &&
 	    ! tree->child->child &&
-	    (tree->child->text || tree->child->binary.data) &&
+	    (tree->child->text || gda_binary_get_data (tree->child->binary)) &&
 	    (tree->child->markup == RT_MARKUP_NONE)) {
 		tree->text = tree->child->text;
 		tree->child->text = NULL;
-		tree->binary.data = tree->child->binary.data;
-		tree->child->binary.data = NULL;
-		tree->binary.binary_length = tree->child->binary.binary_length;
-		tree->child->binary.binary_length = 0;
+		gda_binary_set_data (tree->binary, gda_binary_get_data (tree->child->binary), gda_binary_get_size (tree->child->binary));
+		gda_binary_reset_data (tree->child->binary);
 		rt_free_node (tree->child);
 		tree->child = NULL;
 		return TRUE;
@@ -855,6 +852,7 @@ rt_parse_text (const gchar *text)
 	TextTag *current = NULL;
 
 	retnode = g_new0 (RtNode, 1);
+	retnode->binary = gda_binary_new ();
 	contextnode = retnode;
 
 	ptr = text;
@@ -878,6 +876,7 @@ rt_parse_text (const gchar *text)
 			gchar *part;
 			RtNode *node;
 			node = g_new0 (RtNode, 1);
+			node->binary = gda_binary_new ();
 			node->parent = contextnode;
 			node->markup = RT_MARKUP_NONE;
 			if (prev == text)
@@ -906,6 +905,7 @@ rt_parse_text (const gchar *text)
 					else {
 						RtNode *n;
 						n = g_new0 (RtNode, 1);
+						n->binary = gda_binary_new ();
 						n->parent = contextnode;
 						n->markup = RT_MARKUP_PARA;
 						n->text = array [i];
@@ -919,7 +919,9 @@ rt_parse_text (const gchar *text)
 			else {
 				gchar *tmp;
 				tmp = remove_newlines_from_base64 (part);
-				node->binary.data = g_base64_decode_inplace (tmp, (gsize*) & node->binary.binary_length);
+				gsize size;
+				guchar *buffer = g_base64_decode_inplace (tmp, & size);
+				gda_binary_set_data (node->binary, buffer, size);
 			}
 		}
 		else {
@@ -961,7 +963,7 @@ rt_parse_text (const gchar *text)
 												   tmp, NULL);
 									g_free (tmp);
 								}
-								else if (lnode->binary.data) {
+								else if (gda_binary_get_data (lnode->binary)) {
 									TO_IMPLEMENT;
 								}
 								else
@@ -985,6 +987,7 @@ rt_parse_text (const gchar *text)
 			if (! tag_matched) {
 				RtNode *node;
 				node = g_new0 (RtNode, 1);
+				node->binary = gda_binary_new ();
 				node->parent = contextnode;
 				node->offset = ssol;
 				node->markup = internal_markup_to_external (mt, &(node->offset));
@@ -1001,6 +1004,7 @@ rt_parse_text (const gchar *text)
                                                 for (; i < node->offset; i++) {
                                                         RtNode *tmpn;
                                                         tmpn = g_new0 (RtNode, 1);
+                                                        tmpn->binary = gda_binary_new ();
                                                         tmpn->parent = contextnode;
                                                         tmpn->markup = RT_MARKUP_LIST;
                                                         tmpn->offset = i;
@@ -1018,6 +1022,7 @@ rt_parse_text (const gchar *text)
 						for (i = 0; i < node->offset; i++) {
                                                         RtNode *tmpn;
                                                         tmpn = g_new0 (RtNode, 1);
+                                                        tmpn->binary = gda_binary_new ();
                                                         tmpn->parent = contextnode;
                                                         tmpn->markup = RT_MARKUP_LIST;
                                                         tmpn->offset = i;
@@ -1169,9 +1174,9 @@ rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtN
 
 #ifdef HAVE_GDKPIXBUF
 		GdkPixdata pixdata;
-		if (rtnode->binary.data &&
-		    gdk_pixdata_deserialize (&pixdata, rtnode->binary.binary_length,
-					     (guint8*) rtnode->binary.data, NULL)) {
+		if (gda_binary_get_data (rtnode->binary) &&
+		    gdk_pixdata_deserialize (&pixdata, gda_binary_get_size (rtnode->binary),
+					     (guint8*) gda_binary_get_data (rtnode->binary), NULL)) {
                         GdkPixbuf *pixbuf;
                         pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);
                         if (pixbuf) {
@@ -1189,9 +1194,9 @@ rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtN
 #endif
 
 		if (!saved) {
-			if (rtnode->binary.data &&
-			    g_file_set_contents (file, (gchar*) rtnode->binary.data,
-						 rtnode->binary.binary_length, NULL)) {
+			if (gda_binary_get_data (rtnode->binary) &&
+			    g_file_set_contents (file, (gchar*) gda_binary_get_data (rtnode->binary),
+						 gda_binary_get_size (rtnode->binary), NULL)) {
 				g_print ("Writen BIN file '%s'\n", file);
 				saved = TRUE;
 				type = 2;
@@ -1381,9 +1386,9 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 
 #ifdef HAVE_GDKPIXBUF
 		GdkPixdata pixdata;
-		if (rtnode->binary.data &&
-		    gdk_pixdata_deserialize (&pixdata, rtnode->binary.binary_length,
-					     (guint8*) rtnode->binary.data, NULL)) {
+		if (gda_binary_get_data (rtnode->binary) &&
+		    gdk_pixdata_deserialize (&pixdata, gda_binary_get_size (rtnode->binary),
+					     (guint8*) gda_binary_get_data (rtnode->binary), NULL)) {
                         GdkPixbuf *pixbuf;
                         pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);
                         if (pixbuf) {
@@ -1401,9 +1406,9 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 #endif
 
 		if (!saved) {
-			if (rtnode->binary.data &&
-			    g_file_set_contents (file, (gchar*) rtnode->binary.data,
-						 rtnode->binary.binary_length, NULL)) {
+			if (gda_binary_get_data (rtnode->binary) &&
+			    g_file_set_contents (file, (gchar*) gda_binary_get_data (rtnode->binary),
+						 gda_binary_get_size (rtnode->binary), NULL)) {
 				g_print ("Writen BIN file '%s'\n", file);
 				saved = TRUE;
 				type = 2;

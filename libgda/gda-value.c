@@ -394,6 +394,13 @@ gda_default_get_type (void)
 }
 
 
+// GdaBinary
+
+struct _GdaBinary {
+	guchar *data;
+	glong   binary_length;
+};
+
 /*
  * Register the GdaBinary type in the GType system
  */
@@ -450,47 +457,6 @@ gda_binary_get_type (void)
 	return type;
 }
 
-/**
- * gda_binary_copy:
- * @boxed: source to get a copy from.
- *
- * Creates a new #GdaBinary structure from an existing one.
-
- * Returns: (transfer full): a newly allocated #GdaBinary which contains a copy of information in @boxed.
- *
- * Free-function: gda_binary_free
- */
-gpointer
-gda_binary_copy (gpointer boxed)
-{
-	GdaBinary *src = (GdaBinary*) boxed;
-	GdaBinary *copy = NULL;
-
-	g_return_val_if_fail (src, NULL);
-
-	copy = g_new0 (GdaBinary, 1);
-	copy->data = g_memdup (src->data, src->binary_length);
-	copy->binary_length = src->binary_length;
-
-	return copy;
-}
-
-/**
- * gda_binary_free:
- * @boxed: (transfer full): #GdaBinary to free.
- *
- * Deallocates all memory associated to the given #GdaBinary.
- */
-void
-gda_binary_free (gpointer boxed)
-{
-	GdaBinary *binary = (GdaBinary*) boxed;
-
-	g_return_if_fail (binary);
-
-	g_free (binary->data);
-	g_free (binary);
-}
 
 /*
  * Register the GdaBlob type in the GType system
@@ -525,6 +491,171 @@ blob_to_string (const GValue *src, GValue *dest)
 	g_value_take_string (dest, str);
 }
 
+/**
+ * gda_binary_new:
+ *
+ * Creates a new #GdaBinary coping data.
+ *
+ * Returns: (transfer full): the newly created #GdaBinary.
+ */
+GdaBinary*
+gda_binary_new (void)
+{
+	GdaBinary *binary = g_new0 (GdaBinary, 1);
+
+  binary->data = NULL;
+  binary->binary_length = 0;
+
+  return (GdaBinary*) binary;
+}
+
+/**
+ * gda_binary_set_data:
+ * @val: (array length=size): value to be copied by #GdaBinary.
+ * @size: the size of the memory pool pointer to by @val.
+ *
+ * Set binary data to a #GdaBinary, holding a copy of the data.
+ *
+ * Returns: (transfer full): the newly created #GdaBinary.
+ */
+void
+gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size)
+{
+	g_return_if_fail (binary);
+	g_return_if_fail (val);
+  if (binary->data != NULL)
+    g_free (binary->data);
+  binary->data = g_memdup (val, size);
+  binary->binary_length = size;
+}
+
+
+/**
+ * gda_binary_get_data:
+ *
+ * Returns: (transfer none): associated data to #GdaBinary.
+ */
+gpointer
+gda_binary_get_data (GdaBinary *binary)
+{
+	g_return_val_if_fail (binary, NULL);
+
+  return binary->data;
+}
+
+
+
+/**
+ * gda_binary_reset_data:
+ *
+ * Frees data referenced by #GdaBinary
+ *
+ */
+void
+gda_binary_reset_data (GdaBinary *binary)
+{
+	g_return_if_fail (binary);
+
+  if (binary->data != NULL)
+    g_free (binary->data);
+  binary->data = NULL;
+  binary->binary_length = 0;
+}
+
+
+/**
+ * gda_binary_get_size:
+ *
+ * Returns: size of associated data to #GdaBinary or -1 in case of error.
+ */
+glong
+gda_binary_get_size (GdaBinary *binary)
+{
+	g_return_val_if_fail (binary, -1);
+
+  return binary->binary_length;
+}
+
+
+/**
+ * gda_binary_copy:
+ * @boxed: source to get a copy from.
+ *
+ * Creates a new #GdaBinary structure from an existing one.
+
+ * Returns: (transfer full): a newly allocated #GdaBinary which contains a copy of information in @boxed.
+ *
+ * Free-function: gda_binary_free
+ */
+GdaBinary*
+gda_binary_copy (GdaBinary *src)
+{
+	GdaBinary *copy = NULL;
+
+	g_return_val_if_fail (src, NULL);
+
+	copy = g_new0 (GdaBinary, 1);
+	copy->data = g_memdup (src->data, src->binary_length);
+	copy->binary_length = src->binary_length;
+
+	return copy;
+}
+
+/**
+ * gda_binary_free:
+ * @boxed: (transfer full): #GdaBinary to free.
+ *
+ * Deallocates all memory associated to the given #GdaBinary.
+ */
+void
+gda_binary_free (GdaBinary *binary)
+{
+	g_return_if_fail (binary);
+
+	if (binary->data)
+	  g_free (binary->data);
+	g_free (binary);
+}
+
+/**
+ * gda_value_new_binary: (skip)
+ * @val: value to set for the new #GValue.
+ * @size: the size of the memory pool pointer to by @val.
+ *
+ * Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
+ *
+ * Returns: (transfer full): the newly created #GValue.
+ *
+ * Free-function: gda_value_free
+ */
+GValue *
+gda_value_new_binary (const guchar *val, glong size)
+{
+	GValue *value;
+	GdaBinary binary;
+
+	/* We use the const on the function parameter to make this clearer,
+	 * but it would be awkward to keep the const in the struct.
+         */
+        binary.data = (guchar*)val;
+        binary.binary_length = size;
+
+        value = g_new0 (GValue, 1);
+        gda_value_set_binary (value, &binary);
+
+        return value;
+}
+
+
+
+// GdaBlob
+
+struct _GdaBlob {
+	GdaBinary *data;
+	GdaBlobOp *op;
+};
+
+
 GType
 gda_blob_get_type (void)
 {
@@ -548,31 +679,74 @@ gda_blob_get_type (void)
 }
 
 /**
+ * gda_blob_new:
+ *
+ * Creates a new #GdaBlob.
+
+ * Returns: (transfer full): a newly allocated #GdaBlob.
+ */
+GdaBlob*
+gda_blob_new (void)
+{
+	GdaBlob* blob = g_new0 (GdaBlob, 1);
+	blob->data = gda_binary_new ();
+
+	return (GdaBlob*) blob;
+}
+
+/**
+ * gda_blob_get_binary:
+ *
+ * Returns: (transfer none): associated #GdaBinary.
+ */
+GdaBinary*
+gda_blob_get_binary (GdaBlob *blob)
+{
+	g_return_val_if_fail (blob, NULL);
+
+	return blob->data;
+}
+
+/**
+ * gda_blob_get_op:
+ *
+ * Returns: (transfer none): associated #GdaBlobOp.
+ */
+GdaBlobOp*
+gda_blob_get_op (GdaBlob *blob)
+{
+	g_return_val_if_fail (blob, NULL);
+
+	return blob->op;
+}
+
+
+/**
  * gda_blob_copy:
- * @boxed: source to get a copy from.
+ * @src: source to get a copy from.
  *
  * Creates a new #GdaBlob structure from an existing one.
 
  * Returns: (transfer full): a newly allocated #GdaBlob which contains a copy of information in @boxed.
  *
- * Free-function: gda_blob_free
  */
-gpointer
-gda_blob_copy (gpointer boxed)
+GdaBlob*
+gda_blob_copy (GdaBlob *src)
 {
-	GdaBlob *src = (GdaBlob*) boxed;
 	GdaBlob *copy = NULL;
 
-	g_return_val_if_fail (src, NULL);
+	g_return_val_if_fail (src != NULL, NULL);
 
 	copy = g_new0 (GdaBlob, 1);
-	if (((GdaBinary *)src)->data) {
-		((GdaBinary *)copy)->data = g_memdup (((GdaBinary *)src)->data, ((GdaBinary *)src)->binary_length);
-		((GdaBinary *)copy)->binary_length = ((GdaBinary *)src)->binary_length;
-	}
+	copy->data = gda_binary_new ();
+	if (src->data == NULL) return copy;
+	if (src->data->data)
+	  gda_binary_set_data (copy->data,
+	                      gda_binary_get_data (src->data),
+	                      gda_binary_get_size (src->data));
 	gda_blob_set_op (copy, src->op);
 
-	return copy;
+	return (GdaBlob*) copy;
 }
 
 /**
@@ -582,17 +756,16 @@ gda_blob_copy (gpointer boxed)
  * Deallocates all memory associated to the given #GdaBlob.
  */
 void
-gda_blob_free (gpointer boxed)
+gda_blob_free (GdaBlob *blob)
 {
-	GdaBlob *blob = (GdaBlob*) boxed;
-
 	g_return_if_fail (blob);
 
 	if (blob->op) {
 		g_object_unref (blob->op);
 		blob->op = NULL;
 	}
-	gda_binary_free ((GdaBinary *) blob);
+	gda_binary_free (blob->data);
+	g_free (blob);
 }
 
 /**
@@ -605,6 +778,8 @@ gda_blob_free (gpointer boxed)
 void
 gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 {
+	g_return_if_fail (blob);
+
 	if (blob->op) {
 		g_object_unref (blob->op);
 		blob->op = NULL;
@@ -1539,34 +1714,7 @@ gda_value_new_default (const gchar *default_val)
 	return value;
 }
 
-/**
- * gda_value_new_binary: (skip)
- * @val: value to set for the new #GValue.
- * @size: the size of the memory pool pointer to by @val.
- *
- * Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
- *
- * Returns: (transfer full): the newly created #GValue.
- *
- * Free-function: gda_value_free
- */
-GValue *
-gda_value_new_binary (const guchar *val, glong size)
-{
-	GValue *value;
-	GdaBinary binary;
 
-	/* We use the const on the function parameter to make this clearer,
-	 * but it would be awkward to keep the const in the struct.
-         */
-        binary.data = (guchar*)val;
-        binary.binary_length = size;
-
-        value = g_new0 (GValue, 1);
-        gda_value_set_binary (value, &binary);
-
-        return value;
-}
 
 /**
  * gda_value_new_blob: (skip)
@@ -1586,18 +1734,14 @@ gda_value_new_blob (const guchar *val, glong size)
 	GdaBlob *blob;
 	GdaBinary *bin;
 
-	blob = g_new0 (GdaBlob, 1);
-	bin = (GdaBinary*)(blob);
-	bin->data = g_new (guchar, size);
-        memcpy ((gpointer) bin->data, (gpointer) val, size); /* Flawfinder: ignore */
-        bin->binary_length = size;
-	blob->op = NULL;
-
-        value = g_new0 (GValue, 1);
+	blob = gda_blob_new ();
+	bin = gda_blob_get_binary (blob);
+	gda_binary_set_data (bin, val, size);
+  value = g_new0 (GValue, 1);
 	g_value_init (value, GDA_TYPE_BLOB);
-        g_value_take_boxed (value, blob);
+  g_value_take_boxed (value, blob);
 
-        return value;
+  return value;
 }
 
 /**

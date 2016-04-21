@@ -832,7 +832,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 				GdaBlobOp *op;
 				gchar *filename;
 
-				blob = g_new0 (GdaBlob, 1);
+				blob = gda_blob_new ();
 
 				/* file mapping in mem */
 				filename = compute_filename (imodel, frow);
@@ -1029,8 +1029,8 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 						if (frow->data_value) {
 							GdaBlob *blob;
 							blob = (GdaBlob *) gda_value_get_blob (frow->data_value);
-							if (blob && blob->op)
-								_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
+							if (blob && gda_blob_get_op (blob))
+								_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (gda_blob_get_op (blob)),
 											   new_filename);
 						}
 					}
@@ -1105,8 +1105,8 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				if (frow->data_value) {
 					GdaBlob *blob;
 					blob = (GdaBlob *) gda_value_get_blob (frow->data_value);
-					if (blob && blob->op)
-						_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (blob->op),
+					if (blob && gda_blob_get_op (blob))
+						_gda_dir_blob_set_filename (GDA_DIR_BLOB_OP (gda_blob_get_op (blob)),
 									   new_filename);
 				}
 			}
@@ -1125,7 +1125,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			}
 			else if (gda_value_is_null (value)) {
 				/* create a new empty blob */
-				blob = g_new0 (GdaBlob, 1);
+				blob = gda_blob_new ();
 			}
 
 			if (blob) {
@@ -1239,11 +1239,11 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 			gboolean bin_to_free = FALSE;
 			complete_filename = g_build_filename (dirname, filename, NULL);
 			if (!bin_data) {
-				bin_data = g_new0 (GdaBinary, 1);
+				bin_data = gda_binary_new ();
 				bin_to_free = TRUE;
 			}
-			if (g_file_set_contents (complete_filename, (gchar *) bin_data->data,
-						 bin_data->binary_length, NULL)) {
+			if (g_file_set_contents (complete_filename, (gchar *) gda_binary_get_data (bin_data),
+						 gda_binary_get_size (bin_data), NULL)) {
 				FileRow *row;
 
 				row = file_row_new ();

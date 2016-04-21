@@ -138,10 +138,22 @@ typedef struct {
  * @data: (array length=binary_length): the actual data as an array
  * @binary_length: length of @data
  */
-typedef struct {
-	guchar *data;
-	glong   binary_length;
-} GdaBinary;
+typedef struct _GdaBinary GdaBinary;
+
+GValue*                           gda_value_new_binary (const guchar *val, glong size);
+const GdaBinary*									gda_value_get_binary (const GValue *value);
+void                              gda_value_set_binary (GValue *value, const GdaBinary *binary);
+void                              gda_value_take_binary (GValue *value, GdaBinary *binary);
+
+
+GType                             gda_binary_get_type (void) G_GNUC_CONST;
+GdaBinary*                        gda_binary_new (void);
+glong                             gda_binary_get_size (GdaBinary* binary);
+gpointer                          gda_binary_get_data (GdaBinary* binary);
+void                              gda_binary_reset_data (GdaBinary* binary);
+void                              gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size);
+GdaBinary*                        gda_binary_copy (GdaBinary *src);
+void                              gda_binary_free (GdaBinary *binary);
 
 /**
  * GdaBlob:
@@ -152,10 +164,17 @@ typedef struct {
  * @op is generally set up by database providers when giving access to an existing BLOB in
  * a database, but can be modified if needed using gda_blob_set_op().
  */
-typedef struct {
-	GdaBinary  data;
-	GdaBlobOp *op;
-} GdaBlob;
+typedef struct _GdaBlob GdaBlob;
+
+
+GType                             gda_blob_get_type (void) G_GNUC_CONST;
+GdaBlob*                          gda_blob_new (void);
+GdaBinary*                        gda_blob_get_binary (GdaBlob *blob);
+GdaBlobOp*                        gda_blob_get_op (GdaBlob *blob);
+GdaBlob*                          gda_blob_copy (GdaBlob *src);
+void                              gda_blob_free (GdaBlob *blob);
+void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op);
+
 
 #define gda_value_isa(value, type) (G_VALUE_HOLDS(value, type))
 
@@ -200,7 +219,6 @@ GValue                           *gda_value_new (GType type);
 
 GValue                           *gda_value_new_null (void);
 GValue                           *gda_value_new_default (const gchar *default_val);
-GValue                           *gda_value_new_binary (const guchar *val, glong size);
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
 GValue                           *gda_value_new_time_from_timet (time_t val);
@@ -216,9 +234,6 @@ gboolean                          gda_value_is_null (const GValue *value);
 gboolean                          gda_value_is_number (const GValue *value); 
 GValue                           *gda_value_copy (const GValue *value);
 
-const GdaBinary         *gda_value_get_binary (const GValue *value);
-void                              gda_value_set_binary (GValue *value, const GdaBinary *binary);
-void                              gda_value_take_binary (GValue *value, GdaBinary *binary);
 
 const GdaBlob           *gda_value_get_blob (const GValue *value);
 void                              gda_value_set_blob (GValue *value, const GdaBlob *blob);
@@ -279,15 +294,6 @@ void                              gda_timestamp_change_timezone (GdaTimestamp *t
 GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;
 gpointer                          gda_geometricpoint_copy (gpointer boxed);
 void                              gda_geometricpoint_free (gpointer boxed);
-
-GType                             gda_binary_get_type (void) G_GNUC_CONST;
-gpointer                          gda_binary_copy (gpointer boxed);
-void                              gda_binary_free (gpointer boxed);
-
-GType                             gda_blob_get_type (void) G_GNUC_CONST;
-gpointer                          gda_blob_copy (gpointer boxed);
-void                              gda_blob_free (gpointer boxed);
-void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op);
 
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;

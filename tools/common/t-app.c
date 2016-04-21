@@ -4539,7 +4539,7 @@ extra_command_export (ToolCommand *command, guint argc, const gchar **argv,
 			GValue *vblob = gda_value_new_blob_from_file (filename);
 			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
 			const GdaBlob *fblob = gda_value_get_blob (value);
-			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
+			if (gda_blob_op_write (gda_blob_get_op (tblob), (GdaBlob*) fblob, 0) < 0)
 				g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 					     "%s", _("Could not write file"));
 			else
@@ -4549,16 +4549,17 @@ extra_command_export (ToolCommand *command, guint argc, const gchar **argv,
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			GValue *vblob = gda_value_new_blob_from_file (filename);
 			GdaBlob *tblob = (GdaBlob*) gda_value_get_blob (vblob);
-			GdaBlob *fblob = g_new0 (GdaBlob, 1);
+			GdaBlob *fblob = gda_blob_new ();
 			const GdaBinary *fbin = gda_value_get_binary (value);
-			((GdaBinary *) fblob)->data = fbin->data;
-			((GdaBinary *) fblob)->binary_length = fbin->binary_length;
-			if (gda_blob_op_write (tblob->op, (GdaBlob*) fblob, 0) < 0)
+			gda_binary_set_data (gda_blob_get_binary (fblob),
+			                    gda_binary_get_data (fbin),
+			                    gda_binary_get_size (fbin));
+			if (gda_blob_op_write (gda_blob_get_op (tblob), (GdaBlob*) fblob, 0) < 0)
 				g_set_error (error, T_ERROR, T_INTERNAL_COMMAND_ERROR,
 					     "%s", _("Could not write file"));
 			else
 				done = TRUE;
-			g_free (fblob);
+			gda_blob_free (fblob);
 			gda_value_free (vblob);
 		}
 		else {
