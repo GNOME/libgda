@@ -108,9 +108,10 @@ gda_meta_store_change_new (void)
 {
   GdaMetaStoreChange* change = g_new0 (GdaMetaStoreChange, 1);
   change->table_name = NULL;
-  change->c_type = GDA_META_STORE_MODIFY;
+  change->c_type = -1;
   change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
 								      g_free, (GDestroyNotify) gda_value_free);
+	return change;
 }
 
 void
@@ -179,7 +180,7 @@ gda_meta_store_change_copy (GdaMetaStoreChange *src)
   gda_meta_store_change_set_table_name (copy, gda_meta_store_change_get_table_name (src));
   GList *keys = g_hash_table_get_keys (src->keys);
   while (keys) {
-    g_hash_table_insert (copy->keys, keys->data, g_hash_table_lookup (src->keys, keys->data));
+    g_hash_table_insert (copy->keys, keys->data, gda_value_copy (g_hash_table_lookup (src->keys, keys->data)));
     keys = keys->next;
   }
 }
@@ -3394,11 +3395,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				}
 
 				/* prepare change information */
-				change = g_new0 (GdaMetaStoreChange, 1);
-				change->c_type = -1;
-				change->table_name = g_strdup (table_name);
-				change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
-								      g_free, (GDestroyNotify) gda_value_free);
+				change = gda_meta_store_change_new ();
+				gda_meta_store_change_set_table_name (change, table_name);
 				all_changes = g_slist_append (all_changes, change);
 			}
 
@@ -3569,11 +3567,9 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 			if (rows_to_del [i]) {
 				/* prepare change information */
 				GdaMetaStoreChange *change = NULL;
-				change = g_new0 (GdaMetaStoreChange, 1);
-				change->c_type = GDA_META_STORE_REMOVE;
-				change->table_name = g_strdup (table_name);
-				change->keys = g_hash_table_new_full (g_str_hash, g_str_equal,
-								      g_free, (GDestroyNotify) gda_value_free);
+				change = gda_meta_store_change_new ();
+				gda_meta_store_change_set_change_type (change, GDA_META_STORE_REMOVE);
+				gda_meta_store_change_set_table_name (change, table_name);
 				all_changes = g_slist_append (all_changes, change);
 
 				/* DELETE */
