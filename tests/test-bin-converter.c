@@ -23,7 +23,7 @@ int
 main (int argc, char** argv)
 {
 	gchar *file;
-	GdaBinary bin;
+	GdaBinary* bin;
 	gchar *bin_data;
 	gsize bin_length;
 	GError *error = NULL;
@@ -35,35 +35,37 @@ main (int argc, char** argv)
 		return EXIT_FAILURE;
 	}		
 	g_free (file);
-	bin.data = (guchar*) bin_data;
-	bin.binary_length = bin_length;
+	bin = gda_binary_new ();
+	gda_binary_set_data (bin, (guchar*) bin_data, bin_length);
 
 	/* convert to string */
 	gchar *conv1;
-	conv1 = gda_binary_to_string (&bin, 0);
+	conv1 = gda_binary_to_string (bin, 0);
 	
 	/* convert back to binary */
 	GdaBinary *bin2;
 	bin2 = gda_string_to_binary (conv1);
 	
 	/* compare bin */
-	if (bin.binary_length != bin2->binary_length) {
+	if (gda_binary_get_size (bin) != gda_binary_get_size (bin2)) {
 		g_print ("Error: binary length differ: from %ld to %ld\n",
-			 bin.binary_length, bin2->binary_length);
+			 gda_binary_get_size (bin), gda_binary_get_size (bin2));
 		return EXIT_FAILURE;
 	}
 	gint i;
-	for (i = 0; i < bin.binary_length; i++) {
-		if (bin.data[i] != bin2->data[i]) {
+	for (i = 0; i < gda_binary_get_size (bin); i++) {
+	  guchar *buffer = gda_binary_get_data (bin);
+	  guchar *buffer2 = gda_binary_get_data (bin2);
+		if (buffer[i] != buffer2[i]) {
 			g_print ("Error: binary differ orig[%d]=%d and copy[%d]=%d\n",
-				 i, bin.data[i], i, bin2->data[i]);
+				 i, buffer[i], i, buffer2[i]);
 			return EXIT_FAILURE;
 		}
 	}
 	
 	g_free (conv1);
+	gda_binary_free (bin);
 	gda_binary_free (bin2);
-	g_free (bin_data);
 
 	g_print ("Ok (file size: %d)\n", bin_length);
 	return EXIT_SUCCESS;
