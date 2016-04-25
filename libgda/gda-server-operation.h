@@ -251,7 +251,54 @@ gboolean            gda_server_operation_perform_drop_database         (GdaServe
 /*
  * Tables creation and destruction
  */
-GdaServerOperation *gda_server_operation_prepare_create_table	      (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+
+typedef struct _GdaServerOperationCreateTableArg GdaServerOperationCreateTableArg;
+
+#define GDA_TYPE_SERVER_OPERATION_CREATE_TABLE_ARG (gda_server_operation_create_table_arg_get_type ())
+
+GType   gda_server_operation_create_table_arg_get_type        (void) G_GNUC_CONST;
+GdaServerOperationCreateTableArg*
+        gda_server_operation_create_table_arg_new  (void);
+GdaServerOperationCreateTableArg*
+        gda_server_operation_create_table_arg_copy (GdaServerOperationCreateTableArg* src);
+void    gda_server_operation_create_table_arg_free            (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_column_name (GdaServerOperationCreateTableArg *arg,
+                                                                       const gchar *name);
+gchar*  gda_server_operation_create_table_arg_get_column_name (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_column_type (GdaServerOperationCreateTableArg *arg,
+                                                                       GType ctype);
+GType   gda_server_operation_create_table_arg_get_column_type (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_flags (GdaServerOperationCreateTableArg *arg,
+                                                                 GdaServerOperationCreateTableFlag flags);
+GdaServerOperationCreateTableFlag
+        gda_server_operation_create_table_arg_get_flags (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_fkey_table (GdaServerOperationCreateTableArg *arg, const gchar *name);
+gchar*  gda_server_operation_create_table_arg_get_fkey_table (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_fkey_ondelete (GdaServerOperationCreateTableArg *arg, const gchar *action);
+gchar*  gda_server_operation_create_table_arg_get_fkey_ondelete (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_fkey_ondupdate (GdaServerOperationCreateTableArg *arg, const gchar *action);
+gchar*  gda_server_operation_create_table_arg_get_fkey_onupdate (GdaServerOperationCreateTableArg *arg);
+void    gda_server_operation_create_table_arg_set_fkey_refs (GdaServerOperationCreateTableArg *arg, GList *refs);
+GList*  gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTableArg *arg);
+
+typedef struct _GdaServerOperationCreateTableArgFKeyRefField GdaServerOperationCreateTableArgFKeyRefField;
+
+#define GDA_TYPE_SERVER_OPERATION_CREATE_TABLE_ARG_FKEY_REF_FIELD (gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ())
+
+GType   gda_server_operation_create_table_arg_get_fkey_ref_field_get_type (void) G_GNUC_CONST;
+GdaServerOperationCreateTableArgFKeyRefField*
+        gda_server_operation_create_table_arg_fkey_ref_field_new (void);
+GdaServerOperationCreateTableArgFKeyRefField*
+        gda_server_operation_create_table_arg_fkey_ref_field_copy (GdaServerOperationCreateTableArgFKeyRefField *src);
+void    gda_server_operation_create_table_arg_fkey_ref_field_free (GdaServerOperationCreateTableArgFKeyRefField *ref);
+void    gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref, const gchar *name);
+gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArg *ref);
+void    gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref, const gchar *name);
+gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArg *ref);
+
+
+GdaServerOperation *gda_server_operation_prepare_create_table          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+GdaServerOperation* gda_server_operation_prepare_create_table_v        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
 gboolean            gda_server_operation_perform_create_table          (GdaServerOperation *op, GError **error);
 GdaServerOperation *gda_server_operation_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
 gboolean            gda_server_operation_perform_drop_table            (GdaServerOperation *op, GError **error);

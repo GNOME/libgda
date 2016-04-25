@@ -644,7 +644,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 {
 	GdaDataModelBdb *imodel;
 	DBT key, data;
-	GdaBinary bin;
+	GdaBinary *bin;
 	GValue *value;
 	int ret;
 
