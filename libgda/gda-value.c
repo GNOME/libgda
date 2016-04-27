@@ -2134,13 +2134,13 @@ gda_value_copy (const GValue *value)
 }
 
 /**
- * gda_value_get_binary: (skip)
+ * gda_value_get_binary:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: (transfer none): the value stored in @value.
  */
-const GdaBinary *
-gda_value_get_binary (const GValue *value)
+GdaBinary *
+gda_value_get_binary (GValue *value)
 {
 	GdaBinary *val;
 
@@ -2154,14 +2154,14 @@ gda_value_get_binary (const GValue *value)
 
 
 /**
- * gda_value_set_binary: (skip)
+ * gda_value_set_binary:
  * @value: a #GValue that will store @val.
  * @binary: a #GdaBinary structure with the data and its size to be stored in @value.
  *
  * Stores @val into @value.
  */
 void
-gda_value_set_binary (GValue *value, const GdaBinary *binary)
+gda_value_set_binary (GValue *value, GdaBinary *binary)
 {
 	g_return_if_fail (value);
 

@@ -2569,8 +2569,6 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 gboolean
 gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar *resource, GError **error)
 {
-	GSList *list;
-
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
 	g_return_val_if_fail (op->priv, FALSE);
 
@@ -2763,8 +2761,8 @@ gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ()
 
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaServerOperationCreateTableArgFKeyRefField",
-						     (GBoxedCopyFunc) gda_server_operation_create_table_arg_get_fkey_ref_field_copy,
-						     (GBoxedFreeFunc) gda_server_operation_create_table_arg_get_fkey_ref_field_free);
+						     (GBoxedCopyFunc) gda_server_operation_create_table_arg_fkey_ref_field_copy,
+						     (GBoxedFreeFunc) gda_server_operation_create_table_arg_fkey_ref_field_free);
 	}
 
 	return type;
@@ -2772,12 +2770,12 @@ gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ()
 
 
 	/**
-	 * gda_server_operation_create_table_arg_get_fkey_ref_field_new:
+	 * gda_server_operation_create_table_arg_fkey_ref_field_new:
 	 *
 	 * Returns: a new #GdaServerOperationCreateTableArg
 	 */
 GdaServerOperationCreateTableArgFKeyRefField*
-gda_server_operation_create_table_arg_get_fkey_ref_field_new ()
+gda_server_operation_create_table_arg_fkey_ref_field_new ()
 {
 	GdaServerOperationCreateTableArgFKeyRefField* ref = g_new0 (GdaServerOperationCreateTableArgFKeyRefField, 1);
 	ref->local_field = NULL;
@@ -2825,7 +2823,7 @@ void
 gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref,
                                                                           const gchar *name)
 {
-	g_return_if_fail (arg != NULL);
+	g_return_if_fail (ref != NULL);
 	ref->local_field = g_strdup (name);
 }
 
@@ -2836,17 +2834,17 @@ gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (GdaServerO
 	 * Returns: (transfer full): a new string with field name in the table
 	 */
 gchar*
-gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArg *ref)
+gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref)
 {
-	g_return_val_if_fail (arg != NULL, NULL);
+	g_return_val_if_fail (ref != NULL, NULL);
 	return g_strdup (ref->local_field);
 }
 
 
 	/**
-	 * gda_server_operation_create_table_arg_get_fkey_ref_field_get_local_field:
+	 * gda_server_operation_create_table_arg_get_fkey_ref_field_set_referenced_field:
 	 * @arg: a #GdaServerOperationCreateTableArgFKeyRefField
-	 * @name: the local table's column's name.
+	 * @name: the referenced table's column's name.
 	 *
 	 * Sets column name to be referenced in a given field o the new table.
 	 */
@@ -2854,20 +2852,20 @@ void
 gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref,
                                                                           const gchar *name)
 {
-	g_return_if_fail (arg != NULL);
+	g_return_if_fail (ref != NULL);
 	ref->referenced_field = g_strdup (name);
 }
 
 	/**
-	 * gda_server_operation_create_table_arg_get_fkey_ref_field_get_local_field:
+	 * gda_server_operation_create_table_arg_get_fkey_ref_field_get_referenced_field:
 	 * @arg: a #GdaServerOperationCreateTableArgFKeyRefField
 	 *
 	 * Returns: (transfer full): a new string with referenced field name in the referenced table
 	 */
 gchar*
-gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArg *ref)
+gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref)
 {
-	g_return_val_if_fail (arg != NULL, NULL);
+	g_return_val_if_fail (ref != NULL, NULL);
 	return g_strdup (ref->referenced_field);
 }
 
@@ -2956,7 +2954,7 @@ gda_server_operation_create_table_arg_copy (GdaServerOperationCreateTableArg* sr
 
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_set_column_name:
+	 * gda_server_operation_create_table_arg_set_column_name:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 * @name: the table's column's name.
 	 *
@@ -2971,7 +2969,7 @@ gda_server_operation_create_table_arg_set_column_name (GdaServerOperationCreateT
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_get_column_name:
+	 * gda_server_operation_create_table_arg_get_column_name:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 *
 	 * Returns: (transfer full): a new string with argument's column name
@@ -2984,7 +2982,7 @@ gda_server_operation_create_table_arg_get_column_name (GdaServerOperationCreateT
 }
 
 /**
- * gda_server_operation_perform_create_table_arg_set_flags:
+ * gda_server_operation_create_table_arg_set_column_type:
  * @arg: a #GdaServerOperationCreateTableArg
  * @flags: column type to be added by this operation as #GType
  *
@@ -2998,7 +2996,7 @@ gda_server_operation_create_table_arg_set_column_type (GdaServerOperationCreateT
 }
 
 /**
- * gda_server_operation_perform_create_table_arg_get_column_type:
+ * gda_server_operation_create_table_arg_get_column_type:
  * @arg: a #GdaServerOperationCreateTableArg
  *
  * Returns: type as #GType of the column to be created with this operation
@@ -3010,39 +3008,39 @@ gda_server_operation_create_table_arg_get_column_type (GdaServerOperationCreateT
 }
 
 /**
- * gda_server_operation_perform_create_table_arg_set_flags:
+ * gda_server_operation_create_table_arg_set_flags:
  * @arg: a #GdaServerOperationCreateTableArg
  * @flags: flags to used in this argument as #GdaServerOperationCreateTableFlag
  *
  * Sets flags for new column to create with the table.
  */
 void
-gda_server_operation_perform_create_table_arg_set_flags (GdaServerOperationCreateTableArg *arg,
+gda_server_operation_create_table_arg_set_flags (GdaServerOperationCreateTableArg *arg,
                                                          GdaServerOperationCreateTableFlag flags)
 {
 	arg->flags = flags;
 }
 /**
- * gda_server_operation_perform_create_table_arg_get_flags:
+ * gda_server_operation_create_table_arg_get_flags:
  * @arg: a #GdaServerOperationCreateTableArg
  *
  * Returns: flags as #GdaServerOperationCreateTableFlag
  */
 GdaServerOperationCreateTableFlag
-gda_server_operation_perform_create_table_arg_get_flags (GdaServerOperationCreateTableArg *arg)
+gda_server_operation_create_table_arg_get_flags (GdaServerOperationCreateTableArg *arg)
 {
 	return arg->flags;
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_set_fkey_table:
+	 * gda_server_operation_create_table_arg_set_fkey_table:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 * @name: the table's name of reference.
 	 *
 	 * You should set this if you use a #GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG flag.
 	 */
 void
-gda_server_operation_perform_create_table_arg_set_fkey_table (GdaServerOperationCreateTableArg *arg,
+gda_server_operation_create_table_arg_set_fkey_table (GdaServerOperationCreateTableArg *arg,
                                                                const gchar *name)
 {
 	g_return_if_fail (arg != NULL);
@@ -3050,40 +3048,40 @@ gda_server_operation_perform_create_table_arg_set_fkey_table (GdaServerOperation
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_get_fkey_table:
+	 * gda_server_operation_create_table_arg_get_fkey_table:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 *
 	 * Returns: (transfer full): a new string with argument's referenced table's name.
 	 */
 gchar*
-gda_server_operation_perform_create_table_arg_get_fkey_table (GdaServerOperationCreateTableArg *arg)
+gda_server_operation_create_table_arg_get_fkey_table (GdaServerOperationCreateTableArg *arg)
 {
 	g_return_val_if_fail (arg != NULL, NULL);
 	return g_strdup (arg->fkey_table);
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_set_fkey_ondelete:
+	 * gda_server_operation_create_table_arg_set_fkey_ondelete:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 * @action: action to perform on delete action of the referenced field.
 	 *
 	 * You should set this if you use a #GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG flag.
 	 */
 void
-gda_server_operation_perform_create_table_arg_set_fkey_ondelete (GdaServerOperationCreateTableArg *arg, const gchar *action)
+gda_server_operation_create_table_arg_set_fkey_ondelete (GdaServerOperationCreateTableArg *arg, const gchar *action)
 {
 	g_return_if_fail (arg != NULL);
 	arg->fkey_ondelete = g_strdup (action);
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_get_fkey_ondelete:
+	 * gda_server_operation_create_table_arg_get_fkey_ondelete:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 *
 	 * Returns: (transfer full): a new string with action to take on delete.
 	 */
 gchar*
-gda_server_operation_perform_create_table_arg_get_fkey_ondelete (GdaServerOperationCreateTableArg *arg)
+gda_server_operation_create_table_arg_get_fkey_ondelete (GdaServerOperationCreateTableArg *arg)
 {
 	g_return_val_if_fail (arg != NULL, NULL);
 	return g_strdup (arg->fkey_ondelete);
@@ -3091,27 +3089,27 @@ gda_server_operation_perform_create_table_arg_get_fkey_ondelete (GdaServerOperat
 
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_set_fkey_onupdate:
+	 * gda_server_operation_create_table_arg_set_fkey_onupdate:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 * @action: action to perform on delete action of the referenced field.
 	 *
 	 * You should set this if you use a #GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG flag.
 	 */
 void
-gda_server_operation_perform_create_table_arg_set_fkey_ondupdate (GdaServerOperationCreateTableArg *arg, const gchar *action)
+gda_server_operation_create_table_arg_set_fkey_ondupdate (GdaServerOperationCreateTableArg *arg, const gchar *action)
 {
 	g_return_if_fail (arg != NULL);
 	arg->fkey_onupdate = g_strdup (action);
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_get_fkey_ondelete:
+	 * gda_server_operation_create_table_arg_get_fkey_onupdate:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 *
 	 * Returns: (transfer full): a new string with action to take on delete.
 	 */
 gchar*
-gda_server_operation_perform_create_table_arg_get_fkey_onupdate (GdaServerOperationCreateTableArg *arg)
+gda_server_operation_create_table_arg_get_fkey_onupdate (GdaServerOperationCreateTableArg *arg)
 {
 	g_return_val_if_fail (arg != NULL, NULL);
 	return g_strdup (arg->fkey_onupdate);
@@ -3119,7 +3117,7 @@ gda_server_operation_perform_create_table_arg_get_fkey_onupdate (GdaServerOperat
 
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_set_fkey_refs:
+	 * gda_server_operation_create_table_arg_set_fkey_refs:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 * @refs: (element-type GdaServerOperationCreateTableArgFKeyRefField): list of references from local to foreign fields.
 	 * This list is owned by @arg, then you should not free it.
@@ -3127,21 +3125,21 @@ gda_server_operation_perform_create_table_arg_get_fkey_onupdate (GdaServerOperat
 	 * You should set this if you use a #GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG flag.
 	 */
 void
-gda_server_operation_perform_create_table_arg_set_fkey_refs (GdaServerOperationCreateTableArg *arg, const GList *refs)
+gda_server_operation_create_table_arg_set_fkey_refs (GdaServerOperationCreateTableArg *arg, GList *refs)
 {
 	g_return_if_fail (arg != NULL);
 	arg->fkey_fields = refs;
 }
 
 	/**
-	 * gda_server_operation_perform_create_table_arg_get_fkey_refs:
+	 * gda_server_operation_create_table_arg_get_fkey_refs:
 	 * @arg: a #GdaServerOperationCreateTableArg
 	 *
 	 * Returns: (transfer none) (element-type GdaServerOperationCreateTableArgFKeyRefField): a list
 	 * of references from local to foreign fields type #GdaServerOperationCreateTableArgFKeyRefField.
 	 */
 GList*
-gda_server_operation_perform_create_table_arg_get_fkey_refs (GdaServerOperationCreateTableArg *arg)
+gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTableArg *arg)
 {
 	g_return_val_if_fail (arg != NULL, NULL);
 	return arg->fkey_fields;
@@ -3175,7 +3173,6 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 	va_list  args;
 	gchar   *arg;
 	GType    type;
-	gchar   *dbms_type;
 	GdaServerOperationCreateTableFlag flag;
 	gint i;
 	gint refs;
@@ -3199,7 +3196,7 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 
 		/* Third for column's flags */
 		flag = va_arg (args, GdaServerOperationCreateTableFlag);
-		gda_server_operation_perform_create_table_arg_set_flags (argument, flag);
+		gda_server_operation_create_table_arg_set_flags (argument, flag);
 		if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG) {
 			gint j;
 			gint fields;
@@ -3211,7 +3208,7 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 			GList *lfields = NULL;
 
 			fkey_table = va_arg (args, gchar*);
-			gda_server_operation_perform_create_table_arg_set_fkey_table (argument, fkey_table);
+			gda_server_operation_create_table_arg_set_fkey_table (argument, fkey_table);
 			/* Get number of referenced fields */
 			fields = va_arg (args, gint);
 
@@ -3231,10 +3228,10 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 
 			/* ON DELETE and ON UPDATE events constraints */
 			fkey_ondelete = va_arg (args, gchar*);
-			gda_server_operation_perform_create_table_arg_set_fkey_ondelete (argument, fkey_ondelete);
+			gda_server_operation_create_table_arg_set_fkey_ondelete (argument, fkey_ondelete);
 
 			fkey_onupdate = va_arg (args, gchar*);
-			gda_server_operation_perform_create_table_arg_set_fkey_ondupdate (argument, fkey_onupdate);
+			gda_server_operation_create_table_arg_set_fkey_ondupdate (argument, fkey_onupdate);
 		}
 
 		arguments = g_list_append (arguments, argument);
@@ -3244,10 +3241,11 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 
 	op = gda_server_operation_prepare_create_table_v (cnc, table_name, arguments, error);
 	g_list_free_full (arguments, (GDestroyNotify) gda_server_operation_create_table_arg_free);
+	return op;
 }
 
 /**
- * gda_server_operation_prepare_create_table_v: (rename: server_operation_create_table):
+ * gda_server_operation_prepare_create_table_v: (rename server_operation_create_table):
  * @cnc: an opened connection
  * @table_name: name of the table to create
  * @arguments: list of arguments as #GdaServerOperationPrepareCreateTableArg containing column's name,
@@ -3337,7 +3335,6 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 				g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
 					     "%s", _("Invalid type"));
 				g_object_unref (op);
-				va_end (args);
 				return NULL;
 			}
 			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server,
@@ -3348,34 +3345,29 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 			}
 
 			/* Third for column's flags */
-			flag = gda_server_operation_perform_create_table_arg_get_flags (argument);
+			flag = gda_server_operation_create_table_arg_get_flags (argument);
 			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG)
 				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG)
 				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG)
 				if (!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG)
 				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_UNIQUE/%d", i)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG) {
 				gint j;
-				gint fields;
 				gchar *fkey_table;
 				gchar *fkey_ondelete;
 				gchar *fkey_onupdate;
@@ -3387,12 +3379,12 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 				if (!gda_server_operation_set_value_at (op, fkey_table, error,
 								   "/FKEY_S/%d/FKEY_REF_TABLE", refs)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 
 				refs++;
 				GList* lr = gda_server_operation_create_table_arg_get_fkey_refs (argument);
+				j = 0;
 
 				while (lr) {
 					gchar *field, *rfield;
@@ -3412,6 +3404,7 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 						g_object_unref (op);
 						return NULL;
 					}
+					j++;
 					lr = g_list_next (lr);
 				}
 
@@ -3419,7 +3412,6 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 				if (!gda_server_operation_set_value_at (op, fkey_ondelete, error,
 								   "/FKEY_S/%d/FKEY_ONDELETE", refs)){
 					g_object_unref (op);
-					va_end (args);
 					return NULL;
 				}
 				fkey_onupdate = gda_server_operation_create_table_arg_get_fkey_onupdate (argument);
@@ -3433,8 +3425,6 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 			l = g_list_next (l);
 			i++;
 		}
-
-		va_end (args);
 
 		g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
 

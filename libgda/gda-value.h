@@ -141,8 +141,8 @@ typedef struct _GdaBinary GdaBinary;
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 
 GValue*                           gda_value_new_binary (const guchar *val, glong size);
-const GdaBinary*									gda_value_get_binary (const GValue *value);
-void                              gda_value_set_binary (GValue *value, const GdaBinary *binary);
+GdaBinary*                        gda_value_get_binary (GValue *value);
+void                              gda_value_set_binary (GValue *value, GdaBinary *binary);
 void                              gda_value_take_binary (GValue *value, GdaBinary *binary);
 
 

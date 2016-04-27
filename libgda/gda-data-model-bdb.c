@@ -644,7 +644,7 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 {
 	GdaDataModelBdb *imodel;
 	DBT key, data;
-	GdaBinary *bin;
+	GdaBinary *bin = NULL;
 	GValue *value;
 	int ret;
 
@@ -705,9 +705,8 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	}
 	else {
 		value = gda_value_new (GDA_TYPE_BINARY);
-		bin.data = key.data;
-		bin.binary_length = key.size;
-		gda_value_set_binary (value, &bin);
+		gda_binary_set_data (bin, key.data, key.size);
+		gda_value_set_binary (value, bin);
 		imodel->priv->cursor_values = g_slist_append (imodel->priv->cursor_values, value);
 	}
 
@@ -738,9 +737,8 @@ gda_data_model_bdb_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	}
 	else {
 		value = gda_value_new (GDA_TYPE_BINARY);
-		bin.data = data.data;
-		bin.binary_length = data.size;
-		gda_value_set_binary (value, &bin);
+		gda_binary_set_data (bin, data.data, data.size);
+		gda_value_set_binary (value, bin);
 		imodel->priv->cursor_values = g_slist_append (imodel->priv->cursor_values, value);
 	}
 
@@ -852,8 +850,8 @@ alter_key_value (GdaDataModelBdb *model, DBT *key, GList **values, gboolean *has
 				bin = (GdaBinary *) gda_value_get_binary ((GValue *) (*values)->data);
 				
 				memset (&key, 0, sizeof key);
-				key->size = bin->binary_length;
-				key->data = bin->data;
+				key->size = gda_binary_get_size (bin);
+				key->data = gda_binary_get_data (bin);
 				if (has_modifications)
 					*has_modifications = TRUE;
 			}
@@ -943,8 +941,8 @@ gda_data_model_bdb_set_values (GdaDataModel *model, gint row, GList *values, GEr
 				bin = (GdaBinary *) gda_value_get_binary ((GValue *) ptr->data);
 				
 				memset (&data, 0, sizeof data);
-				data.size = bin->binary_length;
-				data.data = bin->data;
+				data.size = gda_binary_get_size (bin);
+				data.data = gda_binary_get_data (bin);
 			}
 			else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,

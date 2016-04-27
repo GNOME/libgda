@@ -7,7 +7,7 @@
  * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Carl-Anton Ingmarsson <ca.ingmarsson@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
- * Copyright (C) 2015 Corentin Noël <corentin@elementary.io>
+ * Copyright (C) 2015 Corentin NoÃ«l <corentin@elementary.io>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -152,7 +152,7 @@ gda_meta_store_change_get_table_name (GdaMetaStoreChange *change)
   return g_strdup (change->table_name);
 }
 /**
- * gda_meta_store_change_get_table_name:
+ * gda_meta_store_change_get_table_keys:
  * @change: a #GdaMetaStoreChange
  *
  * Returns: (element-type utf8 GValue) (transfer none): hash table with string key key = ('+' or '-') and a column position in @table (string) starting at 0 and value as #GValue pointer
@@ -183,6 +183,7 @@ gda_meta_store_change_copy (GdaMetaStoreChange *src)
     g_hash_table_insert (copy->keys, keys->data, gda_value_copy (g_hash_table_lookup (src->keys, keys->data)));
     keys = keys->next;
   }
+  return copy;
 }
 
 /**

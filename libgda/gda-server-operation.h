@@ -292,9 +292,9 @@ GdaServerOperationCreateTableArgFKeyRefField*
         gda_server_operation_create_table_arg_fkey_ref_field_copy (GdaServerOperationCreateTableArgFKeyRefField *src);
 void    gda_server_operation_create_table_arg_fkey_ref_field_free (GdaServerOperationCreateTableArgFKeyRefField *ref);
 void    gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref, const gchar *name);
-gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArg *ref);
+gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref);
 void    gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref, const gchar *name);
-gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArg *ref);
+gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref);
 
 
 GdaServerOperation *gda_server_operation_prepare_create_table          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
