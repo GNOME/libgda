@@ -3147,7 +3147,7 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
 
 
 /**
- * gda_server_operation_prepare_create_table:
+ * gda_server_operation_prepare_create_table_v:
  * @cnc: an opened connection
  * @table_name: name of the table to create
  * @error: a place to store errors, or %NULL
@@ -3160,11 +3160,11 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
  *
  * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
  *
- * Since: 6.0
+ * Since: 4.2.3
  */
 G_GNUC_NULL_TERMINATED
 GdaServerOperation*
-gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
+gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
 {
 	GdaServerOperation *op;
 
@@ -3239,16 +3239,16 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 
 	va_end (args);
 
-	op = gda_server_operation_prepare_create_table_v (cnc, table_name, arguments, error);
+	op = gda_server_operation_prepare_create_table (cnc, table_name, arguments, error);
 	g_list_free_full (arguments, (GDestroyNotify) gda_server_operation_create_table_arg_free);
 	return op;
 }
 
 /**
- * gda_server_operation_prepare_create_table_v: (rename server_operation_create_table):
+ * gda_server_operation_prepare_create_table:
  * @cnc: an opened connection
  * @table_name: name of the table to create
- * @arguments: list of arguments as #GdaServerOperationPrepareCreateTableArg containing column's name,
+ * @arguments: (element-type GdaServerOperationCreateTableArg): list of arguments as #GdaServerOperationPrepareCreateTableArg containing column's name,
  * column's #GType and a #GdaServerOperationCreateTableFlag flag
  * @error: a place to store errors, or %NULL
  *
@@ -3277,10 +3277,10 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
  *
  * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
  *
- * Since: 4.2.3
+ * Since: 6.0.0
  */
 GdaServerOperation*
-gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error)
+gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error)
 {
 	GdaServerOperation *op;
 	GdaServerProvider *server;

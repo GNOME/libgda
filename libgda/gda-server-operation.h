@@ -297,8 +297,8 @@ void    gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_fiel
 gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref);
 
 
-GdaServerOperation *gda_server_operation_prepare_create_table          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
-GdaServerOperation* gda_server_operation_prepare_create_table_v        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
+GdaServerOperation *gda_server_operation_prepare_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+GdaServerOperation* gda_server_operation_prepare_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
 gboolean            gda_server_operation_perform_create_table          (GdaServerOperation *op, GError **error);
 GdaServerOperation *gda_server_operation_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
 gboolean            gda_server_operation_perform_drop_table            (GdaServerOperation *op, GError **error);

@@ -13,4 +13,5 @@ Numeric.get_string nullable=true
 MetaStore.extract_v name="extract"
 ServerOperation.set_value_at_path name="set_value_at"
 ServerOperation.get_value_at_path name="get_value_at"
+ServerOperation.prepare_create_table_v skip=false
 
