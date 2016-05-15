@@ -71,10 +71,8 @@
 // This is a copy of the macro located at gda-value.h
 #define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
 
-// GdaMetaStoreChange
-
+/* change general information */
 typedef struct _GdaMetaStoreChange {
-	/* change general information */
 	GdaMetaStoreChangeType  c_type;
 	gchar                  *table_name;
 	GHashTable             *keys; /* key = ('+' or '-') and a column position in @table (string) starting at 0, 

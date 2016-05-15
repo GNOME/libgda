@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2016 Vivien Malerba <malerba@gnome-db.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -232,14 +232,14 @@ data_save_cb (GtkWidget *mitem, EntryProperties *eprop)
 		char *filename;
 		GValue *binvalue;
 		GError *lerror = NULL;
-		const GdaBinary *bin = NULL;
+		GdaBinary *bin = NULL;
 
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 		binvalue = g_object_get_data (G_OBJECT (mitem), "binvalue");
 		if (binvalue)
 			bin = gda_value_get_binary (binvalue);
-		if (!bin || !g_file_set_contents (filename, (gchar*) bin->data,
-						  bin->binary_length, &lerror)) {
+		if (!bin || !g_file_set_contents (filename, (gchar*) gda_binary_get_data (bin),
+						  gda_binary_get_size (bin), &lerror)) {
 			ui_show_error ((GtkWindow*) gtk_widget_get_toplevel (GTK_WIDGET (eprop)),
 					    _("Could not save data: %s"),
 					    lerror && lerror->message ? lerror->message : _("No detail"));
@@ -487,15 +487,15 @@ data_to_pixbuf (const GValue *cvalue)
 	GdkPixbuf *retpixbuf = NULL;
 
 	if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) {
-		const GdaBinary *bin;
+		GdaBinary *bin;
 		GdkPixbufLoader *loader;
-
-		bin = gda_value_get_binary (cvalue);
-		if (!bin->data)
+		
+		bin = gda_value_get_binary ((GValue*) cvalue);
+		if (!gda_binary_get_data (bin))
 			goto out;
 
 		loader = gdk_pixbuf_loader_new ();
-		if (gdk_pixbuf_loader_write (loader, bin->data, bin->binary_length, NULL)) {
+		if (gdk_pixbuf_loader_write (loader, gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 			if (gdk_pixbuf_loader_close (loader, NULL)) {
 				retpixbuf = gdk_pixbuf_loader_get_pixbuf (loader);
 				g_object_ref (retpixbuf);

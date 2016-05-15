@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
@@ -1050,7 +1050,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		                                    SQLITE_TRANSIENT);
 	}
 	else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
-		const GdaBinary *bin;
+		GdaBinary *bin;
 		bin = gda_value_get_binary (value);
 		SQLITE3_CALL (sqlite3_result_blob) (ctx, gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 	}

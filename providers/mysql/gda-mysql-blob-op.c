@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 - 2014 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -154,7 +154,6 @@ gda_mysql_blob_op_read (GdaBlobOp  *op,
 			glong       size)
 {
 	GdaMysqlBlobOp *pgop;
-	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
 	pgop = GDA_MYSQL_BLOB_OP (op);
@@ -164,16 +163,10 @@ gda_mysql_blob_op_read (GdaBlobOp  *op,
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = 0;
-
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */
 	TO_IMPLEMENT;
 
-	return bin->binary_length;
+	return -1;
 }
 
 /*

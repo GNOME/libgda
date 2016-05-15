@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2011 - 2016 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1016,15 +1016,10 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 		}
 	}
 	else if (type == GDA_TYPE_BINARY) {
-		GdaBinary *bin;
-		bin = g_new (GdaBinary, 1);
-		bin->data = g_new (guchar, bv->bv_len);
-
-		bin->binary_length = bv->bv_len;
-		memcpy (bin->data, bv->bv_val,
-			sizeof (gchar) * bin->binary_length);
-		value = gda_value_new (GDA_TYPE_BINARY);
-		gda_value_take_binary (value, bin);
+		guchar *data;
+		data = g_new (guchar, bv->bv_len);
+		memcpy (data, bv->bv_val, sizeof (guchar) * bv->bv_len);
+		value = gda_value_new_binary (data, bv->bv_len);
 	}
 	else
 		value = gda_value_new_from_string (bv->bv_val, type);

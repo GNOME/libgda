@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -216,18 +216,18 @@ gda_jdbc_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	}
 
 	/* copy data */
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
+	bin = gda_blob_get_binary (blob);
 	bytes = (jbyteArray) gda_value_get_jni_object (jexec_res);
-	bin->binary_length = (*jenv)->GetArrayLength (jenv, bytes);
-	bin->data = g_new (guchar, bin->binary_length);
-	(*jenv)->GetByteArrayRegion(jenv, bytes, 0, bin->binary_length, (jbyte *) bin->data);
-
+	guchar *data;
+	glong length;
+	length = (*jenv)->GetArrayLength (jenv, bytes);
+	data = g_new (guchar, length);
+	(*jenv)->GetByteArrayRegion(jenv, bytes, 0, length, (jbyte *) data);
+	gda_binary_take_data (bin, data, length);
 	_gda_jdbc_release_jenv (jni_detach);
 	gda_value_free (jexec_res);
 
-	return bin->binary_length;
+	return length;
 }
 
 /*
@@ -258,19 +258,21 @@ gda_jdbc_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	if (!jenv)
 		return -1;
 
-	if (blob->op && (blob->op != op)) {
+	GdaBlobOp *blob_op;
+	blob_op = gda_blob_get_op (blob);
+	if (blob_op && (blob_op != op)) {
 		/* use data through blob->op */
 		#define buf_size 16384
 		gint nread = 0;
 		GdaBlob *tmpblob;
 
 		nbwritten = 0;
-		tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, blob_op);
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, 0, buf_size);
+		for (nread = gda_blob_op_read (blob_op, tmpblob, 0, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+		     nread = gda_blob_op_read (blob_op, tmpblob, nbwritten, buf_size)) {
 			GdaBinary *bin = (GdaBinary *) tmpblob;
 			glong tmp_written;
 
@@ -282,7 +284,7 @@ gda_jdbc_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 				return -1;
 			}
 
-			(*jenv)->SetByteArrayRegion (jenv, bytes, 0, nread, (jbyte*) bin->data);
+			(*jenv)->SetByteArrayRegion (jenv, bytes, 0, nread, (jbyte*) gda_binary_get_data (bin));
 			if (jni_wrapper_handle_exception (jenv, &error_code, &sql_state, &error)) {
 				_gda_jdbc_make_error (bop->priv->cnc, error_code, sql_state, error);
 				(*jenv)->DeleteLocalRef (jenv, bytes);
@@ -318,14 +320,14 @@ gda_jdbc_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	else {
 		/* prepare data to be written using bin->data and bin->binary_length */
 		bin = (GdaBinary *) blob;
-		bytes = (*jenv)->NewByteArray (jenv, bin->binary_length);
+		bytes = (*jenv)->NewByteArray (jenv, gda_binary_get_size (bin));
 		if (jni_wrapper_handle_exception (jenv, &error_code, &sql_state, &error)) {
 			_gda_jdbc_make_error (bop->priv->cnc, error_code, sql_state, error);
 			_gda_jdbc_release_jenv (jni_detach);
 			return -1;
 		}
 		
-		(*jenv)->SetByteArrayRegion (jenv, bytes, 0, bin->binary_length, (jbyte*) bin->data);
+		(*jenv)->SetByteArrayRegion (jenv, bytes, 0, gda_binary_get_size (bin), (jbyte*) gda_binary_get_data (bin));
 		if (jni_wrapper_handle_exception (jenv, &error_code, &sql_state, &error)) {
 			_gda_jdbc_make_error (bop->priv->cnc, error_code, sql_state, error);
 			(*jenv)->DeleteLocalRef (jenv, bytes);

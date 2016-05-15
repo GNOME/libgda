@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2009 - 2016 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -434,8 +434,8 @@ _gda_value_to_oracle_value (const GValue *value)
 		bin = (GdaBinary *) gda_value_get_blob ((GValue *) value);
 		if (bin) {
 			ora_value->sql_type = SQLT_LNG;
-			ora_value->value = bin->data;
-			ora_value->defined_size = bin->binary_length;
+			ora_value->value = gda_binary_get_data (bin);
+			ora_value->defined_size = gda_binary_get_size (bin);
 		}
 		else {
 			ora_value->sql_type = SQLT_CHR;
@@ -449,8 +449,8 @@ _gda_value_to_oracle_value (const GValue *value)
 		bin = (GdaBinary *) gda_value_get_binary ((GValue *) value);
 		if (bin) {
 			ora_value->sql_type = SQLT_LNG;
-			ora_value->value = bin->data;
-			ora_value->defined_size = bin->binary_length;
+			ora_value->value = gda_binary_get_data (bin);
+			ora_value->defined_size = gda_binary_get_size (bin);
 		}
 		else {
 			ora_value->sql_type = SQLT_CHR;
@@ -600,16 +600,15 @@ _gda_oracle_set_value (GValue *value,
 	case GDA_STYPE_BINARY: {
 		GdaBinary *bin;
 
-		bin = g_new0 (GdaBinary, 1);
-		if (ora_value->use_callback) {		
-			bin->data = ora_value->value;
+		bin = gda_binary_new ();
+		if (ora_value->use_callback) {
+			gda_binary_take_data (bin, ora_value->value, ora_value->rlen);
 			ora_value->value = NULL;
+			ora_value->rlen = 0;
 		}
 		else {
-			bin->data = g_new (guchar, ora_value->rlen);
-			memcpy (bin->data, ora_value->value, ora_value->rlen);
+			gda_binary_set_data (bin, ora_value->value, ora_value->rlen);
 		}
-		bin->binary_length = ora_value->rlen;
 		gda_value_take_binary (value, bin);
 		break;
 	}
@@ -643,7 +642,7 @@ _gda_oracle_set_value (GValue *value,
 			return;
 		}
 
-		blob = g_new0 (GdaBlob, 1);
+		blob = gda_blob_new ();
 		op = gda_oracle_blob_op_new (cnc, lobloc);
 		gda_blob_set_op (blob, op);
 		g_object_unref (op);

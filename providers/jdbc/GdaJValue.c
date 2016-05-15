@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -317,21 +317,22 @@ JNICALL Java_GdaJValue_setCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlon
 	GValue *value;
 	
 	len = (*jenv)->GetArrayLength (jenv, bytes);
-	
-	bin = g_new0 (GdaBinary, 1);
-	bin->binary_length = len;
-	bin->data = g_new (guchar, len);
-	(*jenv)->GetByteArrayRegion(jenv, bytes, 0, len, (jbyte *) bin->data);
+
+	guchar *data;
+	data = g_new (guchar, len);
+	(*jenv)->GetByteArrayRegion(jenv, bytes, 0, len, (jbyte *) data);
 
 	value = gda_row_get_value (GDA_ROW (jni_jlong_to_cpointer (c_pointer)), col);
+	bin = gda_binary_new ();
+	gda_binary_take_data (bin, data, len);
 	gda_value_reset_with_type (value, GDA_TYPE_BINARY);
-	g_value_take_boxed (value, bin);
+	gda_value_take_binary (value, bin);
 }
 
 JNIEXPORT jbyteArray
 JNICALL Java_GdaJValue_getCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
-	const GdaBinary *bin;
+	GdaBinary *bin;
 	jbyteArray jbytes;
 
 	bin = g_value_get_boxed ((GValue *) jni_jlong_to_cpointer (c_pointer));
@@ -346,11 +347,11 @@ JNICALL Java_GdaJValue_getCBinary (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlon
 		return NULL;
 	}
 
-	jbytes = (*jenv)->NewByteArray (jenv, bin->binary_length);
+	jbytes = (*jenv)->NewByteArray (jenv, gda_binary_get_size (bin));
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 
-	(*jenv)->SetByteArrayRegion (jenv, jbytes, 0, bin->binary_length, (jbyte*) bin->data);
+	(*jenv)->SetByteArrayRegion (jenv, jbytes, 0, gda_binary_get_size (bin), (jbyte*) gda_binary_get_data (bin));
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 
@@ -362,22 +363,25 @@ JNICALL Java_GdaJValue_setCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 				 jlong cnc_c_pointer, jobject blobop)
 {
 	GdaBlob *blob;
+	GdaBlobOp *op;
 	GValue *value;
 
-	blob = g_new0 (GdaBlob, 1);
-	blob->op = gda_jdbc_blob_op_new_with_jblob (GDA_CONNECTION (jni_jlong_to_cpointer (cnc_c_pointer)), jenv, blobop);
+	blob = gda_blob_new ();
+	op = gda_jdbc_blob_op_new_with_jblob (GDA_CONNECTION (jni_jlong_to_cpointer (cnc_c_pointer)), jenv, blobop);
+	gda_blob_set_op (blob, op);
+	g_object_unref (op);
 
 	value = gda_row_get_value (GDA_ROW (jni_jlong_to_cpointer (c_pointer)), col);
 	gda_value_reset_with_type (value, GDA_TYPE_BLOB);
-	g_value_take_boxed (value, blob);
+	gda_value_take_blob (value, blob);
 }
 
 JNIEXPORT jobject
 JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong c_pointer)
 {
-	const GdaBlob *blob;
+	GdaBlob *blob;
 
-	blob = g_value_get_boxed ((GValue *) jni_jlong_to_cpointer (c_pointer));
+	blob = gda_value_get_blob ((GValue *) jni_jlong_to_cpointer (c_pointer));
 	if (!blob) {
 		jclass cls;
 		cls = (*jenv)->FindClass (jenv, "java/lang/IllegalArgumentException");
@@ -390,14 +394,16 @@ JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 	}
 
 	/* create a GdaInputStream */
-	if (blob->op) {
+	GdaBlobOp *op;
+	op = gda_blob_get_op (blob);
+	if (op) {
 		jobject retobj;
 		jmethodID mid;
 		mid = (*jenv)->GetMethodID (jenv, GdaInputStream__class, "<init>", "(JJ)V");
 		if ((*jenv)->ExceptionCheck (jenv))
 			return NULL;
 
-		glong size = gda_blob_op_get_length (blob->op);
+		glong size = gda_blob_op_get_length (op);
 		if (size < 0) {
 			/* throw an exception */
 			jclass cls;
@@ -425,11 +431,11 @@ JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 		if ((*jenv)->ExceptionCheck (jenv))
 			return NULL;
 
-		jbytes = (*jenv)->NewByteArray (jenv, bin->binary_length);
+		jbytes = (*jenv)->NewByteArray (jenv, gda_binary_get_size (bin));
 		if ((*jenv)->ExceptionCheck (jenv))
 			return NULL;
 		
-		(*jenv)->SetByteArrayRegion (jenv, jbytes, 0, bin->binary_length, (jbyte *) bin->data);
+		(*jenv)->SetByteArrayRegion (jenv, jbytes, 0, gda_binary_get_size (bin), (jbyte *) gda_binary_get_data (bin));
 		if ((*jenv)->ExceptionCheck (jenv))
 			return NULL;
 		

@@ -12,7 +12,7 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 - 2014 Murray Cumming <murrayc@murrayc.com>
@@ -2552,7 +2552,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			mysql_bind_param[i].length = NULL;
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			const GdaBinary *bin = NULL;
+			GdaBinary *bin = NULL;
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
 
 			bin = ((GdaBinary*) blob);
@@ -2563,16 +2563,18 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			else {
 				gchar *str = NULL;
 				glong blob_len;
-				if (blob->op) {
-					blob_len = gda_blob_op_get_length (blob->op);
-					if ((blob_len != bin->binary_length) &&
-					    ! gda_blob_op_read_all (blob->op, blob)) {
+				GdaBlobOp *op;
+				op = gda_blob_get_op (blob);
+				if (op) {
+					blob_len = gda_blob_op_get_length (op);
+					if ((blob_len != gda_binary_get_size (bin)) &&
+					    ! gda_blob_op_read_all (op, blob)) {
 						/* force reading the complete BLOB into memory */
 						str = _("Can't read whole BLOB into memory");
 					}
 				}
 				else
-					blob_len = bin->binary_length;
+					blob_len = gda_binary_get_size (bin);
 				if (blob_len < 0)
 					str = _("Can't get BLOB's length");
 				else if (blob_len >= G_MAXINT)
@@ -2587,24 +2589,24 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				}
 				
 				else {
-					mysql_bind_param[i].buffer_type= MYSQL_TYPE_BLOB;
-					mysql_bind_param[i].buffer= (char *) bin->data;
-					mysql_bind_param[i].buffer_length = bin->binary_length;
+					mysql_bind_param[i].buffer_type = MYSQL_TYPE_BLOB;
+					mysql_bind_param[i].buffer = (char *) gda_binary_get_data (bin);
+					mysql_bind_param[i].buffer_length = gda_binary_get_size (bin);
 					mysql_bind_param[i].length = NULL;
 				}
 			}
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
-			const GdaBinary *bin;
-			bin = gda_value_get_binary (value);
+			GdaBinary *bin;
+			bin = gda_value_get_binary ((GValue*) value);
 			if (!bin) {
 				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 				mysql_bind_param[i].is_null = (my_bool*)1;
 			}
 			else {
-				mysql_bind_param[i].buffer_type= MYSQL_TYPE_BLOB;
-				mysql_bind_param[i].buffer= (char *) bin->data;
-				mysql_bind_param[i].buffer_length = bin->binary_length;
+				mysql_bind_param[i].buffer_type = MYSQL_TYPE_BLOB;
+				mysql_bind_param[i].buffer = (char *) gda_binary_get_data (bin);
+				mysql_bind_param[i].buffer_length = gda_binary_get_size (bin);
 				mysql_bind_param[i].length = NULL;
 			}
 		}

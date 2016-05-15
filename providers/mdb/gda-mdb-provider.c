@@ -5,7 +5,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
- * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2005 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 yselkowitz <yselkowitz@users.sourceforge.net>
@@ -518,17 +518,16 @@ table_create_model_func (LocalSpec *spec)
 		for (c = 0; c < mdb_table->num_cols; c++) {
 			mdb_col = g_ptr_array_index (mdb_table->columns, c);
 			if (mdb_col->col_type == MDB_OLE) {
-				GdaBinary bin;
-				
-				bin.binary_length = mdb_ole_read (spec->cdata->mdb, mdb_col, bound_values[c], MDB_BIND_SIZE);
-				bin.data = (guchar*) bound_values[c];
-				gda_value_set_binary ((tmpval = gda_value_new (coltypes [c])), &bin);
-				
+				tmpval = gda_value_new_binary ((guchar*) bound_values[c],
+							       mdb_ole_read (spec->cdata->mdb, mdb_col, bound_values[c],
+									     MDB_BIND_SIZE));
 #ifdef DUMP_BINARY
 				{
 					static int index = 0;
 					gchar *file = g_strdup_printf ("OLE_%d.bin", index++);
-					g_file_set_contents (file, bin.data, bin.binary_length, NULL);
+					GdaBinary *bin;
+					bin = gda_value_get_binary (tmpval);
+					g_file_set_contents (file, gda_binary_get_data (bin), gda_binary_get_size (bin), NULL);
 					g_free (file);
 				}
 #endif

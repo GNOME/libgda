@@ -2,7 +2,7 @@
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2002 Holger Thon <holger.thon@gnome-db.org>
- * Copyright (C) 2002 - 2015 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2002 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2003 Danilo Schoeneberg <dschoene@src.gnome.org>
@@ -430,7 +430,7 @@ binary_to_string (const GValue *src, GValue *dest)
 	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
 			  GDA_VALUE_HOLDS_BINARY (src));
 
-	str = gda_binary_to_string (gda_value_get_binary ((GValue *) src), 0);
+	str = gda_binary_to_string (gda_value_get_binary (src), 0);
 
 	g_value_take_string (dest, str);
 }
@@ -497,69 +497,99 @@ blob_to_string (const GValue *src, GValue *dest)
  * Creates a new #GdaBinary coping data.
  *
  * Returns: (transfer full): the newly created #GdaBinary.
+ *
+ * Since: 6.0
  */
 GdaBinary*
 gda_binary_new (void)
 {
 	GdaBinary *binary = g_new0 (GdaBinary, 1);
 
-  binary->data = NULL;
-  binary->binary_length = 0;
+	binary->data = NULL;
+	binary->binary_length = 0;
 
-  return (GdaBinary*) binary;
+	return (GdaBinary*) binary;
 }
 
 /**
  * gda_binary_set_data:
+ * @binary: a #GdaBinay pointer
  * @val: (array length=size): value to be copied by #GdaBinary.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Set binary data to a #GdaBinary, holding a copy of the data.
  *
  * Returns: (transfer full): the newly created #GdaBinary.
+ *
+ * Since: 6.0
  */
 void
 gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size)
 {
 	g_return_if_fail (binary);
 	g_return_if_fail (val);
-  if (binary->data != NULL)
-    g_free (binary->data);
-  binary->data = g_memdup (val, size);
-  binary->binary_length = size;
+	if (binary->data)
+		g_free (binary->data);
+	binary->data = g_memdup (val, size);
+	binary->binary_length = size;
+}
+
+/**
+ * gda_binary_take_data:
+ * @val: (array length=size): value to be taken by #GdaBinary.
+ * @size: the size of the memory pool pointer to by @val.
+ *
+ * Set binary data to a #GdaBinary, directly holding @val (no copy made).
+ *
+ * Returns: (transfer full): the newly created #GdaBinary.
+ */
+void
+gda_binary_take_data (GdaBinary *binary, guchar *val, glong size)
+{
+	g_return_if_fail (binary);
+	g_return_if_fail (val);
+	if (binary->data)
+		g_free (binary->data);
+	binary->data = val;
+	binary->binary_length = size;
 }
 
 
 /**
  * gda_binary_get_data:
+ * @binary: a #GdaBinay pointer
  *
  * Returns: (transfer none): associated data to #GdaBinary.
+ *
+ * Since: 6.0
  */
 gpointer
 gda_binary_get_data (GdaBinary *binary)
 {
 	g_return_val_if_fail (binary, NULL);
 
-  return binary->data;
+	return binary->data;
 }
 
 
 
 /**
  * gda_binary_reset_data:
+ * @binary: a #GdaBinay pointer
  *
  * Frees data referenced by #GdaBinary
  *
+ * Since: 6.0
  */
 void
 gda_binary_reset_data (GdaBinary *binary)
 {
 	g_return_if_fail (binary);
 
-  if (binary->data != NULL)
-    g_free (binary->data);
-  binary->data = NULL;
-  binary->binary_length = 0;
+	if (binary->data != NULL)
+		g_free (binary->data);
+	binary->data = NULL;
+	binary->binary_length = 0;
 }
 
 
@@ -567,13 +597,15 @@ gda_binary_reset_data (GdaBinary *binary)
  * gda_binary_get_size:
  *
  * Returns: size of associated data to #GdaBinary or -1 in case of error.
+ *
+ * Since: 6.0
  */
 glong
 gda_binary_get_size (GdaBinary *binary)
 {
 	g_return_val_if_fail (binary, -1);
 
-  return binary->binary_length;
+	return binary->binary_length;
 }
 
 
@@ -612,13 +644,13 @@ gda_binary_free (GdaBinary *binary)
 	g_return_if_fail (binary);
 
 	if (binary->data)
-	  g_free (binary->data);
+		g_free (binary->data);
 	g_free (binary);
 }
 
 /**
  * gda_value_new_binary: (skip)
- * @val: value to set for the new #GValue.
+ * @val: (transfert full): value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
@@ -636,7 +668,7 @@ gda_value_new_binary (const guchar *val, glong size)
 	/* We use the const on the function parameter to make this clearer,
 	 * but it would be awkward to keep the const in the struct.
          */
-        binary.data = (guchar*)val;
+        binary.data = (guchar*) val;
         binary.binary_length = size;
 
         value = g_new0 (GValue, 1);
@@ -681,8 +713,10 @@ gda_blob_get_type (void)
  * gda_blob_new:
  *
  * Creates a new #GdaBlob.
-
+ *
  * Returns: (transfer full): a newly allocated #GdaBlob.
+ *
+ * Since: 6.0
  */
 GdaBlob*
 gda_blob_new (void)
@@ -695,8 +729,11 @@ gda_blob_new (void)
 
 /**
  * gda_blob_get_binary:
+ * @blob: a #GdaBlob pointer
  *
  * Returns: (transfer none): associated #GdaBinary.
+ *
+ * Since: 6.0
  */
 GdaBinary*
 gda_blob_get_binary (GdaBlob *blob)
@@ -708,8 +745,11 @@ gda_blob_get_binary (GdaBlob *blob)
 
 /**
  * gda_blob_get_op:
+ * @blob: a #GdaBlob pointer
  *
  * Returns: (transfer none): associated #GdaBlobOp.
+ *
+ * Since: 6.0
  */
 GdaBlobOp*
 gda_blob_get_op (GdaBlob *blob)
@@ -738,11 +778,13 @@ gda_blob_copy (GdaBlob *src)
 
 	copy = g_new0 (GdaBlob, 1);
 	copy->data = gda_binary_new ();
-	if (src->data == NULL) return copy;
+	if (! src->data)
+		return copy;
+
 	if (src->data->data)
-	  gda_binary_set_data (copy->data,
-	                      gda_binary_get_data (src->data),
-	                      gda_binary_get_size (src->data));
+		gda_binary_set_data (copy->data,
+				     gda_binary_get_data (src->data),
+				     gda_binary_get_size (src->data));
 	gda_blob_set_op (copy, src->op);
 
 	return (GdaBlob*) copy;
@@ -772,7 +814,7 @@ gda_blob_free (GdaBlob *blob)
  * @blob: a #GdaBlob value
  * @op: (allow-none): a #GdaBlobOp object, or %NULL
  *
- * correctly assigns @op to @blob
+ * Correctly assigns @op to @blob (increases @op's reference count)
  */
 void
 gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
@@ -1736,11 +1778,11 @@ gda_value_new_blob (const guchar *val, glong size)
 	blob = gda_blob_new ();
 	bin = gda_blob_get_binary (blob);
 	gda_binary_set_data (bin, val, size);
-  value = g_new0 (GValue, 1);
+	value = g_new0 (GValue, 1);
 	g_value_init (value, GDA_TYPE_BLOB);
-  g_value_take_boxed (value, blob);
+	g_value_take_boxed (value, blob);
 
-  return value;
+	return value;
 }
 
 /**
@@ -2140,7 +2182,7 @@ gda_value_copy (const GValue *value)
  * Returns: (transfer none): the value stored in @value.
  */
 GdaBinary *
-gda_value_get_binary (GValue *value)
+gda_value_get_binary (const GValue *value)
 {
 	GdaBinary *val;
 
@@ -2169,9 +2211,8 @@ gda_value_set_binary (GValue *value, GdaBinary *binary)
 	g_value_init (value, GDA_TYPE_BINARY);
 	if (binary)
 		g_value_set_boxed (value, binary);
-	else {
+	else
 		g_value_set_boxed (value, gda_binary_new ());
-	}
 }
 
 /**
@@ -2641,8 +2682,8 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 
 	/* general case */
 	if (type == GDA_TYPE_BINARY) {
-		const GdaBinary *binary1 = gda_value_get_binary (value1);
-		const GdaBinary *binary2 = gda_value_get_binary (value2);
+		const GdaBinary *binary1 = gda_value_get_binary ((GValue*) value1);
+		const GdaBinary *binary2 = gda_value_get_binary ((GValue*) value2);
 		if (binary1 && binary2 && (binary1->binary_length == binary2->binary_length))
 			return bcmp (binary1->data, binary2->data, binary1->binary_length);
 		else

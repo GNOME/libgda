@@ -7,7 +7,7 @@
  * Copyright (C) 2003 Chris Silles <csilles@src.gnome.org>
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
- * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2004 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alan Knowles <alan@akbkhome.com>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Mike Fisk <mfisk@woozle.org>
@@ -949,18 +949,19 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 			if (type == G_TYPE_STRING)
 				g_value_set_string (value, bvalue);
 			else if (type == GDA_TYPE_BINARY) {
-				GdaBinary binary = {
-					.data = (guchar*) bvalue,
-					.binary_length = length
-				};
-				gda_value_set_binary (value, &binary);
+				GdaBinary *bin;
+				bin = gda_binary_new ();
+				gda_binary_set_data (bin, (guchar*) bvalue, length);
+				gda_value_take_binary (value, bin);
 			}
 			else if (type == GDA_TYPE_BLOB) {
 				/* we don't use GdaMysqlBlobOp because it looks like the MySQL
 				 * API does not support BLOBs accessed in a random way,
 				 * so we return the whole BLOB at once */
-				GdaBlob blob = { {(guchar*) bvalue, length}, NULL };
-				gda_value_set_blob (value, &blob);
+				GdaBlob *blob = gda_blob_new ();
+				GdaBinary *bin = gda_blob_get_binary (blob);
+				gda_binary_set_data (bin, (guchar*) bvalue, length);
+				gda_value_take_blob (value, blob);
 			}
 			else if (type == GDA_TYPE_NUMERIC) {
 				if (length > 0) {

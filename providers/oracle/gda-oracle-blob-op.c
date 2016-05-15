@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2016 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -150,7 +150,6 @@ static glong
 gda_oracle_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
 	GdaOracleBlobOp *bop;
-	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_ORACLE_BLOB_OP (op), -1);
 	bop = GDA_ORACLE_BLOB_OP (op);
@@ -160,16 +159,10 @@ gda_oracle_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = 0;
-
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */
 	TO_IMPLEMENT;
 
-	return bin->binary_length;
+	return -1;
 }
 
 /*
@@ -187,25 +180,27 @@ gda_oracle_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
-	if (blob->op && (blob->op != op)) {
+	GdaBlobOp *blob_op;
+	blob_op = gda_blob_get_op (blob);
+	if (blob_op && (blob_op != op)) {
 		/* use data through blob->op */
 		#define buf_size 16384
 		gint nread = 0;
-		GdaBlob *tmpblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (tmpblob, blob->op);
+		GdaBlob *tmpblob = gda_blob_new ();
+		gda_blob_set_op (tmpblob, blob_op);
 
 		nbwritten = 0;
 
-		for (nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size);
+		for (nread = gda_blob_op_read (blob_op, tmpblob, nbwritten, buf_size);
 		     nread > 0;
-		     nread = gda_blob_op_read (tmpblob->op, tmpblob, nbwritten, buf_size)) {
+		     nread = gda_blob_op_read (blob_op, tmpblob, nbwritten, buf_size)) {
 			glong tmp_written;
 
 			tmp_written = -1; TO_IMPLEMENT;
 			
 			if (tmp_written < 0) {
 				/* treat error */
-				gda_blob_free ((gpointer) tmpblob);
+				gda_blob_free (tmpblob);
 				return -1;
 			}
 			nbwritten += tmp_written;
@@ -213,7 +208,7 @@ gda_oracle_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 				/* nothing more to read */
 				break;
 		}
-		gda_blob_free ((gpointer) tmpblob);
+		gda_blob_free (tmpblob);
 	}
 	else {
 		/* write blob using bin->data and bin->binary_length */

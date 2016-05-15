@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -53,10 +53,12 @@ JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 	jint *data;
 	GdaBlob *nblob = NULL;
 	gint real_size;
-	if (blob->op) {
-		nblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (nblob, blob->op);
-		real_size =  gda_blob_op_read (nblob->op, nblob, offset, size);
+	GdaBlobOp *op;
+	op = gda_blob_get_op (blob);
+	if (op) {
+		nblob = gda_blob_new ();
+		gda_blob_set_op (nblob, op);
+		real_size =  gda_blob_op_read (op, nblob, offset, size);
 		if (real_size < 0) {
 			/* throw an exception */
 			jclass cls;
@@ -68,15 +70,15 @@ JNICALL Java_GdaInputStream_readData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 			(*jenv)->ThrowNew (jenv, cls, _("Can't read BLOB"));
 			return NULL;
 		}
-		raw_data = ((GdaBinary*) nblob)->data;
+		raw_data = gda_binary_get_data ((GdaBinary*) nblob);
 	}
 	else {
 		GdaBinary *bin = (GdaBinary *) blob;
-		if (offset + size > bin->binary_length)
-			real_size = bin->binary_length - offset;
+		if (offset + size > gda_binary_get_size (bin))
+			real_size = gda_binary_get_size (bin) - offset;
 		else
 			real_size = size;
-		raw_data = bin->data + offset;
+		raw_data = gda_binary_get_data (bin) + offset;
 	}
 
 	/* convert bin->data to a jintArray */
@@ -126,10 +128,12 @@ Java_GdaInputStream_readByteData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 	guchar *raw_data;
 	GdaBlob *nblob = NULL;
 	gint real_size;
-	if (blob->op) {
-		nblob = g_new0 (GdaBlob, 1);
-		gda_blob_set_op (nblob, blob->op);
-		real_size =  gda_blob_op_read (nblob->op, nblob, offset, size);
+	GdaBlobOp *op;
+	op = gda_blob_get_op (blob);
+	if (op) {
+		nblob = gda_blob_new ();
+		gda_blob_set_op (nblob, op);
+		real_size =  gda_blob_op_read (op, nblob, offset, size);
 		if (real_size < 0) {
 			/* throw an exception */
 			jclass cls;
@@ -141,15 +145,15 @@ Java_GdaInputStream_readByteData (JNIEnv *jenv, G_GNUC_UNUSED jobject obj,
 			(*jenv)->ThrowNew (jenv, cls, _("Can't read BLOB"));
 			return NULL;
 		}
-		raw_data = ((GdaBinary*) nblob)->data;
+		raw_data = gda_binary_get_data ((GdaBinary*) nblob);
 	}
 	else {
 		GdaBinary *bin = (GdaBinary *) blob;
-		if (offset + size > bin->binary_length)
-			real_size = bin->binary_length - offset;
+		if (offset + size > gda_binary_get_size (bin))
+			real_size = gda_binary_get_size (bin) - offset;
 		else
 			real_size = size;
-		raw_data = bin->data + offset;
+		raw_data = gda_binary_get_data (bin) + offset;
 	}
 
 	/* convert bin->data to a jintArray */

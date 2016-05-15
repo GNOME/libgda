@@ -141,7 +141,7 @@ typedef struct _GdaBinary GdaBinary;
 #define GDA_VALUE_HOLDS_BINARY(value)          G_VALUE_HOLDS(value, GDA_TYPE_BINARY)
 
 GValue*                           gda_value_new_binary (const guchar *val, glong size);
-GdaBinary*                        gda_value_get_binary (GValue *value);
+GdaBinary*                        gda_value_get_binary (const GValue *value);
 void                              gda_value_set_binary (GValue *value, GdaBinary *binary);
 void                              gda_value_take_binary (GValue *value, GdaBinary *binary);
 
@@ -152,6 +152,7 @@ glong                             gda_binary_get_size (GdaBinary* binary);
 gpointer                          gda_binary_get_data (GdaBinary* binary);
 void                              gda_binary_reset_data (GdaBinary* binary);
 void                              gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size);
+void                              gda_binary_take_data (GdaBinary *binary, guchar *val, glong size);
 GdaBinary*                        gda_binary_copy (GdaBinary *src);
 void                              gda_binary_free (GdaBinary *binary);
 
@@ -235,22 +236,22 @@ gboolean                          gda_value_is_number (const GValue *value);
 GValue                           *gda_value_copy (const GValue *value);
 
 
-const GdaBlob           *gda_value_get_blob (const GValue *value);
+const GdaBlob                    *gda_value_get_blob (const GValue *value);
 void                              gda_value_set_blob (GValue *value, const GdaBlob *blob);
 void                              gda_value_take_blob (GValue *value, GdaBlob *blob);
 
-const GdaGeometricPoint *gda_value_get_geometric_point (const GValue *value);
+const GdaGeometricPoint          *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
 void                              gda_value_set_null (GValue *value);
-const GdaNumeric        *gda_value_get_numeric (const GValue *value);
+const GdaNumeric                 *gda_value_get_numeric (const GValue *value);
 void                              gda_value_set_numeric (GValue *value, const GdaNumeric *val);
 gshort                            gda_value_get_short (const GValue *value);
 void                              gda_value_set_short (GValue *value, const gshort val);
 gushort                           gda_value_get_ushort (const GValue *value);
 void                              gda_value_set_ushort (GValue *value, const gushort val);
-const GdaTime           *gda_value_get_time (const GValue *value);
+const GdaTime                    *gda_value_get_time (const GValue *value);
 void                              gda_value_set_time (GValue *value, const GdaTime *val);
-const GdaTimestamp      *gda_value_get_timestamp (const GValue *value);
+const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
 void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
 
 

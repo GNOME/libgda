@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2007 - 2016 Vivien Malerba <malerba@gnome-db.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -154,7 +154,6 @@ static glong
 gda_firebird_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
 	GdaFirebirdBlobOp *pgop;
-	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_BLOB_OP (op), -1);
 	pgop = GDA_FIREBIRD_BLOB_OP (op);
@@ -164,16 +163,10 @@ gda_firebird_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong siz
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
-	bin = (GdaBinary *) blob;
-	if (bin->data) 
-		g_free (bin->data);
-	bin->data = g_new0 (guchar, size);
-	bin->binary_length = 0;
-
 	/* fetch blob data using C API into bin->data, and set bin->binary_length */
 	TO_IMPLEMENT;
 
-	return bin->binary_length;
+	return -1;
 }
 
 /*
@@ -183,7 +176,6 @@ static glong
 gda_firebird_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
 	GdaFirebirdBlobOp *pgop;
-	GdaBinary *bin;
 
 	g_return_val_if_fail (GDA_IS_FIREBIRD_BLOB_OP (op), -1);
 	pgop = GDA_FIREBIRD_BLOB_OP (op);
@@ -192,7 +184,6 @@ gda_firebird_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	g_return_val_if_fail (blob, -1);
 
 	/* write blob using bin->data and bin->binary_length */
-	bin = (GdaBinary *) blob;
 	TO_IMPLEMENT;
 
 	return -1;
