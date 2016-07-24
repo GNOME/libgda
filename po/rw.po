@@ -24,7 +24,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"ULL NAME <EMAIL@ADDRESS>\n"
 
 #. title
 #: ../control-center/dsn-config.c:116 ../control-center/main.c:379
