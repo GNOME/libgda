@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-05-05 12:43+0000\n"
-"PO-Revision-Date: 2016-07-08 01:49+0700\n"
+"POT-Creation-Date: 2016-07-07 18:51+0000\n"
+"PO-Revision-Date: 2016-07-25 17:22+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -84,7 +84,7 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../libgda/gda-data-select.c:414 ../libgda/gda-data-select.c:2343
 #: ../libgda/gda-data-select.c:2353 ../libgda/gda-data-select.c:3794
 #: ../libgda/gda-holder.c:546 ../libgda/gda-holder.c:1957
-#: ../libgda/gda-meta-store.c:1191 ../libgda/gda-server-operation.c:683
+#: ../libgda/gda-meta-store.c:1189 ../libgda/gda-server-operation.c:683
 #: ../libgda/gda-server-operation.c:1088 ../libgda/gda-set.c:1185
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
 #: ../libgda/sqlite/gda-sqlite-provider.c:2669
@@ -1711,157 +1711,157 @@ msgstr ""
 "Tak bisa mengurai '%s': Validasi atas berkas XML bagi operasi server tak "
 "akan dilangsungkan (mungkin terjadi beberapa galat aneh)"
 
-#: ../libgda/gda-meta-store.c:829
+#: ../libgda/gda-meta-store.c:827
 msgid "Connection string for the internal connection to use"
 msgstr "String koneksi untuk dipakai bagi koneksi internal"
 
-#: ../libgda/gda-meta-store.c:832
+#: ../libgda/gda-meta-store.c:830
 msgid "Connection object internally used"
 msgstr "Objek koneksi yang dipakai secara internal"
 
-#: ../libgda/gda-meta-store.c:835
+#: ../libgda/gda-meta-store.c:833
 msgid "Catalog in which the database objects will be created"
 msgstr "Katalog tempat objek basis data akan dibuat"
 
-#: ../libgda/gda-meta-store.c:838
+#: ../libgda/gda-meta-store.c:836
 msgid "Schema in which the database objects will be created"
 msgstr "Skema tempat objek basis data akan dibuat"
 
-#: ../libgda/gda-meta-store.c:992
+#: ../libgda/gda-meta-store.c:990
 msgid "Catalog specified but no schema specified, store will not be usable"
 msgstr ""
 "Katalog dinyatakan tapi skema tidak, penyimpanan tak akan dapat dipakai"
 
-#: ../libgda/gda-meta-store.c:1080
+#: ../libgda/gda-meta-store.c:1078
 msgid "Can't obtain connection lock"
 msgstr "Tak bisa mendapat kuncian koneksi"
 
-#: ../libgda/gda-meta-store.c:1339 ../libgda/gda-meta-store.c:1348
-#: ../libgda/gda-meta-store.c:2542 ../libgda/gda-meta-store.c:2551
+#: ../libgda/gda-meta-store.c:1337 ../libgda/gda-meta-store.c:1346
+#: ../libgda/gda-meta-store.c:2540 ../libgda/gda-meta-store.c:2549
 msgid "Could not set the internal schema's version"
 msgstr "Tak bisa menata versi skema internal"
 
-#: ../libgda/gda-meta-store.c:1717
+#: ../libgda/gda-meta-store.c:1715
 msgid "Missing view name from <view> node"
 msgstr "Kurang nama view dari node <view>"
 
-#: ../libgda/gda-meta-store.c:1757
+#: ../libgda/gda-meta-store.c:1755
 msgid "Missing view definition from <view> node"
 msgstr "Kurang definisi view dari node <view>"
 
-#: ../libgda/gda-meta-store.c:1771
+#: ../libgda/gda-meta-store.c:1769
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr "Definisi view memuat lebih dari satu pernyataan (bagi view '%s')"
 
-#: ../libgda/gda-meta-store.c:1798
+#: ../libgda/gda-meta-store.c:1796
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Definisi view bukan pernyataan pemilihan (bagi view '%s')"
 
-#: ../libgda/gda-meta-store.c:1825 ../libgda/gda-meta-struct-io.c:179
+#: ../libgda/gda-meta-store.c:1823 ../libgda/gda-meta-struct-io.c:179
 msgid "Missing table name from <table> node"
 msgstr "Kurang nama tabel dari node <table>"
 
-#: ../libgda/gda-meta-store.c:2061
+#: ../libgda/gda-meta-store.c:2059
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
 msgstr "Kolom '%s' telah ada dan punya karakteristik yang berbeda"
 
-#: ../libgda/gda-meta-store.c:2096
+#: ../libgda/gda-meta-store.c:2094
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr "Kurang foreign key yang diacu oleh nama tabel (bagi tabel '%s')"
 
-#: ../libgda/gda-meta-store.c:2150
+#: ../libgda/gda-meta-store.c:2148
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Kurang nama kolom foreign key (bagi tabel '%s')"
 
-#: ../libgda/gda-meta-store.c:2162
+#: ../libgda/gda-meta-store.c:2160
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "Kolom '%s' tak ditemukan di tabel '%s'"
 
-#: ../libgda/gda-meta-store.c:2417 ../libgda/gda-meta-struct.c:1333
+#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1333
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Kolom kunci foreign '%s' tak ditemukan di tabel '%s'"
 
-#: ../libgda/gda-meta-store.c:2599 ../libgda/gda-meta-store.c:2631
+#: ../libgda/gda-meta-store.c:2597 ../libgda/gda-meta-store.c:2629
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr "Deskripsi skema tak memuat objek '%s', periksa instalasi"
 
-#: ../libgda/gda-meta-store.c:2670
+#: ../libgda/gda-meta-store.c:2668
 #, c-format
 msgid "Could not find description for column named '%s'"
 msgstr "Tak bisa temukan deskripsi untuk kolom bernama '%s'"
 
-#: ../libgda/gda-meta-store.c:2785 ../libgda/gda-meta-store.c:2796
-#: ../libgda/gda-meta-store.c:2830
+#: ../libgda/gda-meta-store.c:2783 ../libgda/gda-meta-store.c:2794
+#: ../libgda/gda-meta-store.c:2828
 msgid "Could not get the internal schema's version"
 msgstr "Tak bisa mendapat versi skema internal"
 
-#: ../libgda/gda-meta-store.c:2954 ../libgda/gda-meta-store.c:3074
+#: ../libgda/gda-meta-store.c:2952 ../libgda/gda-meta-store.c:3072
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Lebih dari satu statement SQL"
 
-#: ../libgda/gda-meta-store.c:2983 ../libgda/gda-meta-store.c:3102
+#: ../libgda/gda-meta-store.c:2981 ../libgda/gda-meta-store.c:3100
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parameter '%s' tak ada dalam statement"
 
-#: ../libgda/gda-meta-store.c:3000 ../libgda/gda-meta-store.c:3116
+#: ../libgda/gda-meta-store.c:2998 ../libgda/gda-meta-store.c:3114
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Nilai bagi parameter '%s' tak ditata"
 
-#: ../libgda/gda-meta-store.c:3699
+#: ../libgda/gda-meta-store.c:3697
 msgid "Data models should have the same number of columns"
 msgstr "Model data mesti memiliki cacah kolom yang sama"
 
-#: ../libgda/gda-meta-store.c:3762 ../libgda/gda-meta-store.c:4798
-#: ../libgda/gda-meta-store.c:4901
+#: ../libgda/gda-meta-store.c:3760 ../libgda/gda-meta-store.c:4796
+#: ../libgda/gda-meta-store.c:4899
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Objek basis data '%s' yang tak dikenal"
 
-#: ../libgda/gda-meta-store.c:3778
+#: ../libgda/gda-meta-store.c:3776
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Tak bisa menata nilai bagi parameter '%s'"
 
-#: ../libgda/gda-meta-store.c:3807
+#: ../libgda/gda-meta-store.c:3805
 msgid "Could not create SELECT statement"
 msgstr "Tak bisa membuat statement SELECT"
 
-#: ../libgda/gda-meta-store.c:3822
+#: ../libgda/gda-meta-store.c:3820
 msgid "Could not create DELETE statement"
 msgstr "Tak bisa membuat statement DELETE"
 
-#: ../libgda/gda-meta-store.c:3872
+#: ../libgda/gda-meta-store.c:3870
 msgid "A transaction has already been started"
 msgstr "Sebuah transaksi telah dimulai"
 
-#: ../libgda/gda-meta-store.c:4244
+#: ../libgda/gda-meta-store.c:4242
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Atribut '%s' tak ditemukan"
 
-#: ../libgda/gda-meta-store.c:4247
+#: ../libgda/gda-meta-store.c:4245
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "Atribut '%s' punya %d nilai"
 
-#: ../libgda/gda-meta-store.c:4294
+#: ../libgda/gda-meta-store.c:4292
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Nama atribut yang diawali dengan '_' dicadangkan untuk keperluan internal"
 
-#: ../libgda/gda-meta-store.c:4324
+#: ../libgda/gda-meta-store.c:4322
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1869,16 +1869,16 @@ msgstr ""
 "Tak bisa memulai transaksi karena sudah ada yang dimulai, ini bisa menjurus "
 "ke masalah atribut GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:4441
+#: ../libgda/gda-meta-store.c:4439
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Tak bisa mengurai deskripsi XML dari objek basis data ubahan untuk ditambah"
 
-#: ../libgda/gda-meta-store.c:4455
+#: ../libgda/gda-meta-store.c:4453
 msgid "Missing custom database object name"
 msgstr "Kurang nama objek basis data ubahan"
 
-#: ../libgda/gda-meta-store.c:4460
+#: ../libgda/gda-meta-store.c:4458
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1886,46 +1886,46 @@ msgstr ""
 "Nama objek basis data ubahan yang diawali dengan '_' dicadangkan untuk "
 "keperluan internal"
 
-#: ../libgda/gda-meta-store.c:4558
+#: ../libgda/gda-meta-store.c:4556
 msgid "Another object with the same name already exists"
 msgstr "Sudah ada objek lain dengan nama yang sama"
 
-#: ../libgda/gda-meta-store.c:4660
+#: ../libgda/gda-meta-store.c:4658
 msgid "Missing table name in meta data context"
 msgstr "Kurang nama tabel dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4687
+#: ../libgda/gda-meta-store.c:4685
 msgid "Missing column name in meta data context"
 msgstr "Kurang nama kolom dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4703
+#: ../libgda/gda-meta-store.c:4701
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Kurang kondisi dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4728
+#: ../libgda/gda-meta-store.c:4726
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Kondisi yang salah bentuk dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4745
+#: ../libgda/gda-meta-store.c:4743
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Nama kolom '%s' tak dikenal dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4767
+#: ../libgda/gda-meta-store.c:4765
 msgid "Unknown table in meta data context"
 msgstr "Nama tabel tak dikenal dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:5040 ../libgda/gda-meta-store.c:5070
-#: ../libgda/gda-meta-store.c:5259 ../libgda/gda-meta-store.c:5288
+#: ../libgda/gda-meta-store.c:5038 ../libgda/gda-meta-store.c:5068
+#: ../libgda/gda-meta-store.c:5257 ../libgda/gda-meta-store.c:5286
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Tak bisa temukan objek bernama '%s'"
 
-#: ../libgda/gda-meta-store.c:5138 ../libgda/gda-meta-store.c:5157
+#: ../libgda/gda-meta-store.c:5136 ../libgda/gda-meta-store.c:5155
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Tak bisa temukan kolom '%s' dalam tabel '%s'"
@@ -2886,12 +2886,12 @@ msgid "Can't rewrite statement handle default values"
 msgstr "Tak bisa menulis ulang nilai baku handle pernyataan"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3205
-#: ../providers/mysql/gda-mysql-provider.c:2577
+#: ../providers/mysql/gda-mysql-provider.c:2579
 msgid "Can't get BLOB's length"
 msgstr "Tak bisa mendapat panjang BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3207
-#: ../providers/mysql/gda-mysql-provider.c:2579
+#: ../providers/mysql/gda-mysql-provider.c:2581
 msgid "BLOB is too big"
 msgstr "BLOB terlalu besar"
 
@@ -3242,7 +3242,7 @@ msgstr "Ruas seleksi tidak ada dalam pernyataan SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:234
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
-msgstr "Pernyataan COMPOUND memuat pernyataan COMPUND yang tak didefinisikan"
+msgstr "Pernyataan COMPOUND memuat pernyataan COMPOUND yang tak didefinisikan"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:243
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:282
@@ -3269,7 +3269,7 @@ msgstr "Pernyataan COMPOUND memuat pernyataan SELECT kosong"
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:308
 msgid "All statements in a COMPOUND must have the same number of columns"
 msgstr ""
-"Semua pernyataan dalam suatu COMPUND mesti memiliki cacah kolom yang sama"
+"Semua pernyataan dalam suatu COMPOUND mesti memiliki cacah kolom yang sama"
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
@@ -5478,14 +5478,14 @@ msgstr "Penyedia bagi basis data Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Penyedia bagi basis data Firebird tertanam"
 
-#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
-#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:346
+#: ../providers/jdbc/GdaJValue.c:392 ../providers/jdbc/GdaJValue.c:521
 msgid "Invalid argument: NULL"
 msgstr "Argumen tidak valid: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:70 ../providers/jdbc/GdaInputStream.c:145
 msgid "Can't read BLOB"
 msgstr "Tak bisa membaca BLOB"
 
@@ -5498,7 +5498,7 @@ msgstr "Kurang parameter untuk membuka koneksi basis data"
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr "Tanggal tak valid: tahun %d, bulan %d, dan hari %d"
 
-#: ../providers/jdbc/GdaJValue.c:409
+#: ../providers/jdbc/GdaJValue.c:415
 msgid "Can't get BLOB's size"
 msgstr "Tak bisa mendapat ukuran BLOB"
 
@@ -5620,17 +5620,17 @@ msgstr "Parameter"
 msgid "near \"%s\": syntax error"
 msgstr "dekat \"%s\": galat sintaks"
 
-#: ../providers/ldap/gda-ldap-util.c:1346
+#: ../providers/ldap/gda-ldap-util.c:1341
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "Server LDAP mengembalikan lebih dari satu entri dengan DN '%s'"
 
-#: ../providers/ldap/gda-ldap-util.c:1532
+#: ../providers/ldap/gda-ldap-util.c:1527
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr ""
 "Tak bisa mengurai 'distinguised name' yang dikembalikan oleh server LDAP"
 
-#: ../providers/ldap/gda-ldap-util.c:1825
+#: ../providers/ldap/gda-ldap-util.c:1820
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Tipe data '%s' yang tak diharapkan bagi atribut objectClass!"
@@ -5885,12 +5885,12 @@ msgstr ""
 "disisipkan: %s"
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2571
+#: ../providers/mysql/gda-mysql-provider.c:2573
 msgid "Can't read whole BLOB into memory"
 msgstr "Tak bisa membaca seluruh BLOB ke dalam memori"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2618
+#: ../providers/mysql/gda-mysql-provider.c:2620
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
@@ -5899,7 +5899,7 @@ msgstr ""
 "Tipe data '%s' tak ditangani, mohon laporkan kutu ini ke http://bugzilla."
 "gnome.org/ bagi produk \"libgda\"."
 
-#: ../providers/mysql/gda-mysql-provider.c:2665
+#: ../providers/mysql/gda-mysql-provider.c:2667
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -5925,10 +5925,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:984
-#: ../providers/mysql/gda-mysql-recordset.c:997
-#: ../providers/mysql/gda-mysql-recordset.c:1010
-#: ../providers/mysql/gda-mysql-recordset.c:1029
+#: ../providers/mysql/gda-mysql-recordset.c:985
+#: ../providers/mysql/gda-mysql-recordset.c:998
+#: ../providers/mysql/gda-mysql-recordset.c:1011
+#: ../providers/mysql/gda-mysql-recordset.c:1030
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Tipe data bind kolom tak valid. %d\n"
@@ -5954,7 +5954,7 @@ msgstr "Tipe %s tak dipetakan bagi nilai %d/%d/%d %d:%d:%d.%lu"
 msgid "Type %s not mapped for value %f"
 msgstr "Tipe %s tak dipetakan bagi nilai %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1019
+#: ../providers/mysql/gda-mysql-recordset.c:1020
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Tipe %s tak dipetakan bagi nilai %s"
@@ -6728,15 +6728,15 @@ msgstr "Tak bisa mendapat atribut"
 msgid "NO DESCRIPTION"
 msgstr "TANPA KETERANGAN"
 
-#: ../providers/oracle/gda-oracle-util.c:626
+#: ../providers/oracle/gda-oracle-util.c:625
 msgid "Invalid Oracle handle"
 msgstr "Handle Oracle tak valid"
 
-#: ../providers/oracle/gda-oracle-util.c:634
+#: ../providers/oracle/gda-oracle-util.c:633
 msgid "Could not allocate Lob locator"
 msgstr "Tak bisa mengalokasikan Lob locator"
 
-#: ../providers/oracle/gda-oracle-util.c:641
+#: ../providers/oracle/gda-oracle-util.c:640
 msgid "Could not copy Lob locator"
 msgstr "Tak bisa menyalin Lob locator"
 
