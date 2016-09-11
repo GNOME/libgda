@@ -433,7 +433,7 @@ gint*
 gdaui_set_source_get_ref_columns  (GdauiSetSource *s)
 {
 	g_return_val_if_fail (s, NULL);
-	return s->shown_cols_index;
+	return s->ref_cols_index;
 }
 
 /**
