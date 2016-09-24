@@ -1,3 +1,5 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
 control-center/dsn-config.c
 control-center/gda-control-center-6.0.appdata.xml.in
 control-center/gda-control-center-6.0.desktop.in.in
@@ -91,8 +93,8 @@ libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-info.c
 libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c
-libgda-ui/data-entries/gdaui-entry.c
 libgda-ui/data-entries/gdaui-entry-bin.c
+libgda-ui/data-entries/gdaui-entry.c
 libgda-ui/data-entries/gdaui-entry-combo.c
 libgda-ui/data-entries/gdaui-entry-common-time.c
 libgda-ui/data-entries/gdaui-entry-integer.xml.in
