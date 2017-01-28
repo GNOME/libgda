@@ -128,9 +128,9 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
         object_class->set_property = gda_meta_struct_set_property;
         object_class->get_property = gda_meta_struct_get_property;
 	g_object_class_install_property (object_class, PROP_STORE,
-					 /* To translators: GdaMetaStore is an object holding meta data information
-					  * which will be used as an information source */
 					 g_param_spec_object ("meta-store", NULL,
+							      /* To translators: GdaMetaStore is an object holding meta data information
+							       * which will be used as an information source */
 							      _ ("GdaMetaStore object to fetch information from"),  
 							      GDA_TYPE_META_STORE, 
 							      (G_PARAM_WRITABLE | G_PARAM_READABLE | 
