@@ -135,7 +135,7 @@ RESOURCES=\
 	resources/gda-browser-view.png
 
 tools.gresources.c: $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=resources --generate-source $(srcdir)/tools.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/tools/resources --generate-source $(top_srcdir)/tools/tools.gresource.xml
 
 # setenv() is in libiberty in mingw
 if PLATFORM_WIN32
