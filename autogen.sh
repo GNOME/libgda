@@ -17,8 +17,12 @@ which gnome-autogen.sh || {
     exit 1git g
 }
 
+olddir=`pwd`
+cd "$srcdir"
+
 # Work around usage of gettext macros (AM_ICONV) without calling gettextize.
 # intltoolize is used intead. https://bugzilla.gnome.org/show_bug.cgi?id=660537
 touch config.rpath
 
-gnome-autogen.sh
+cd "$olddir"
+. gnome-autogen.sh "$@"
