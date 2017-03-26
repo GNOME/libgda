@@ -31,6 +31,7 @@ GLOBAL_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir)/libgda/sqlite \
+	-I$(top_builddir)/libgda \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(COREDEPS_CFLAGS) \
 	$(BDB_CFLAGS) \
@@ -341,7 +342,6 @@ handlers = \
 	handlers/gda-handler-type.c
 
 introspection_sources = $(gda_sources) \
-	$(gda_built_sources) \
 	$(gda_headers) \
 	$(psupport) \
 	$(threadwrapper) \
@@ -352,7 +352,7 @@ Gda_6_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
 Gda_6_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 
 Gda_6_0_gir_LIBS = $(lib_LTLIBRARIES)
-Gda_6_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+Gda_6_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources)) $(gda_built_sources)
 INTROSPECTION_GIRS += Gda-6.0.gir
 
 if ENABLE_GI_SYSTEM_INSTALL
