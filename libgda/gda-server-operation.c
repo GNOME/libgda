@@ -3174,7 +3174,6 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 	gchar   *arg;
 	GType    type;
 	GdaServerOperationCreateTableFlag flag;
-	gint i;
 	gint refs;
 	GList *arguments;
 	GdaServerOperationCreateTableArg* argument;
@@ -3182,7 +3181,6 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 	va_start (args, error);
 	type = 0;
 	arg = NULL;
-	i = 0;
 	refs = -1;
 
 	while ((arg = va_arg (args, gchar*))) {
@@ -3213,12 +3211,11 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 			fields = va_arg (args, gint);
 
 			for (j = 0; j < fields; j++) {
-				gchar *field, *rfield;
+				gchar *field;
 				GdaServerOperationCreateTableArgFKeyRefField *rfields;
 
 				/* First pair arguments give local field and referenced field */
 				field = va_arg (args, gchar*);
-				rfield = va_arg (args, gchar*);
 				rfields = gda_server_operation_create_table_arg_fkey_ref_field_new ();
 				gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (rfields, field);
 				gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (rfields, field);
@@ -3371,10 +3368,7 @@ gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *tabl
 				gchar *fkey_table;
 				gchar *fkey_ondelete;
 				gchar *fkey_onupdate;
-				GList *rfields = NULL;
 
-
-				rfields = gda_server_operation_create_table_arg_get_fkey_refs (argument);
 				fkey_table = gda_server_operation_create_table_arg_get_column_name (argument);
 				if (!gda_server_operation_set_value_at (op, fkey_table, error,
 								   "/FKEY_S/%d/FKEY_REF_TABLE", refs)){
