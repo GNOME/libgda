@@ -72,7 +72,7 @@
 #define l_g_value_unset(val) G_STMT_START{ if (G_IS_VALUE (val)) g_value_unset (val); }G_STMT_END
 
 /* change general information */
-typedef struct _GdaMetaStoreChange {
+struct _GdaMetaStoreChange {
 	GdaMetaStoreChangeType  c_type;
 	gchar                  *table_name;
 	GHashTable             *keys; /* key = ('+' or '-') and a column position in @table (string) starting at 0, 
