@@ -146,7 +146,6 @@ static void
 gdaui_entry_shell_class_init (GdauiEntryShellClass * class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
 
@@ -341,8 +340,6 @@ label_event_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 static void
 gdaui_entry_shell_init (GdauiEntryShell *shell)
 {
-	GValue *gval;
-
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (shell), GTK_ORIENTATION_HORIZONTAL);
 
 	/* Private structure */

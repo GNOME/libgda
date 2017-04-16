@@ -336,7 +336,6 @@ init_plugins_hash (void)
 {
 	GHashTable *hash;
 	GdauiPlugin *plugin;
-	gchar *file;
 
 	hash = g_hash_table_new (g_str_hash, g_str_equal); /* key strings are not handled in the hash table */
 

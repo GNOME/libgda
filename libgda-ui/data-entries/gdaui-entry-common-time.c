@@ -854,7 +854,6 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 		else if (type == GDA_TYPE_TIME) {
 			/* set current time */
 			GValue *timvalue;
-			GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
 			timvalue = gda_value_new_time_from_timet (time (NULL));
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), timvalue);
 			gda_value_free (timvalue);
@@ -863,7 +862,7 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 			/* set current date and time */
 			GValue *tsvalue;
 			//gchar *str;
-			GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
+			//GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
 			//str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
 			tsvalue = gda_value_new_timestamp_from_timet (time (NULL));
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), tsvalue);

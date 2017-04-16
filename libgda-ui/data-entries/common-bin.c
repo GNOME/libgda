@@ -219,8 +219,7 @@ void
 common_bin_create_menu (GtkWidget *relative_to, BinMenu *binmenu, GType entry_type,
 			BinCallback loaded_value_cb, gpointer loaded_value_cb_data)
 {
-	GtkWidget *vbox, *hbox, *bbox, *button, *label;
-	gchar *str;
+	GtkWidget *bbox, *button;
 
 	binmenu->entry_type = entry_type;
 	binmenu->loaded_value_cb = loaded_value_cb;
@@ -543,9 +542,6 @@ adjust_ctype (BinMenu *binmenu)
 void
 common_bin_adjust (BinMenu *binmenu, gboolean editable, const GValue *value)
 {
-	gchar *size;
-	GString *string;
-
 	if (!binmenu || !binmenu->popover)
 		return;
 
