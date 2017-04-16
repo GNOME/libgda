@@ -148,7 +148,7 @@ void                              gda_value_take_binary (GValue *value, GdaBinar
 
 GType                             gda_binary_get_type (void) G_GNUC_CONST;
 GdaBinary*                        gda_binary_new (void);
-glong                             gda_binary_get_size (GdaBinary* binary);
+glong                             gda_binary_get_size (const GdaBinary* binary);
 gpointer                          gda_binary_get_data (GdaBinary* binary);
 void                              gda_binary_reset_data (GdaBinary* binary);
 void                              gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size);

@@ -601,7 +601,7 @@ gda_binary_reset_data (GdaBinary *binary)
  * Since: 6.0
  */
 glong
-gda_binary_get_size (GdaBinary *binary)
+gda_binary_get_size (const GdaBinary *binary)
 {
 	g_return_val_if_fail (binary, -1);
 
