@@ -95,7 +95,6 @@ test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **e
 	const gchar *cnc_params;
 	GdaProviderInfo *prov_info;
 	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
-	gboolean db_created = FALSE;
 
 	g_return_val_if_fail (dbname && *dbname, NULL);
 
@@ -207,9 +206,9 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 {
 	GdaConnection *cnc = NULL;
 	gchar *str, *upname;
-	const gchar *db_params, *cnc_params;
+	const gchar *db_params;
 	GdaProviderInfo *prov_info;
-	GdaQuarkList *db_quark_list = NULL, *cnc_quark_list = NULL;
+	GdaQuarkList *db_quark_list = NULL;
 	gboolean db_created = FALSE;
 
 	g_return_val_if_fail (dbname && *dbname, NULL);
