@@ -399,9 +399,6 @@ t_context_command_execute (TContext *console, const gchar *command,
 	g_return_val_if_fail (T_IS_CONTEXT (console), NULL);
 	tcnc = console->priv->current;
 
-	gchar **parts;
-	parts = t_utils_split_text_into_single_commands (console, command, error);
-
 	if (!command || !(*command))
                 return NULL;
 

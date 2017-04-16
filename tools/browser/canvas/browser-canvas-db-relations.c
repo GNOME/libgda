@@ -817,7 +817,7 @@ static void
 popup_add_table_cb (G_GNUC_UNUSED GtkMenuItem *mitem, BrowserCanvasDbRelations *dbrels)
 {
 	if (! dbrels->priv->add_dialog) {
-		GtkWidget *vbox, *cloud, *find, *dcontents;
+		GtkWidget *vbox, *cloud, *find;
 		dbrels->priv->add_dialog = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_title (GTK_WINDOW (dbrels->priv->add_dialog),
 				      _("Select tables to add to diagram"));

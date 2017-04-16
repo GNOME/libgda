@@ -165,8 +165,6 @@ browser_window_dispose (GObject *object)
 
 	bwin = BROWSER_WINDOW (object);
 	if (bwin->priv) {
-		GSList *connections;
-
 		if (bwin->priv->tcnc) {
 			gda_signal_handler_disconnect (bwin->priv->tcnc, bwin->priv->cnc_status_sigid);
 			gda_signal_handler_disconnect (bwin->priv->tcnc, bwin->priv->trans_status_sigid);

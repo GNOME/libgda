@@ -277,7 +277,6 @@ real_connection_open (AuthDialog *dialog, AuthData *ad)
 	return;
 #endif
 
-	TConnection *tcnc;
 	GdaDsnInfo *cncinfo = &(ad->cncinfo);
 	if (cncinfo->name)
 		ad->tcnc = t_connection_open (NULL, cncinfo->name, ad->auth_string ? ad->auth_string->str : NULL, FALSE, &(ad->cnc_open_error));

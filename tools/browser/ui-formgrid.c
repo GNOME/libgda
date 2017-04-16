@@ -214,7 +214,7 @@ ui_formgrid_show (GtkWidget *widget)
 
 	if (! formgrid->priv->overlay_grid) {
 		/* finalize packing */
-		GtkWidget *sw, *vp;
+		GtkWidget *sw;
 		sw = gtk_scrolled_window_new (NULL, NULL);
 		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 						GTK_POLICY_AUTOMATIC,
@@ -297,7 +297,6 @@ static void selection_changed_cb (GdauiDataSelector *sel, UiFormGrid *formgrid);
 static void
 ui_formgrid_init (UiFormGrid *formgrid)
 {
-	GtkWidget *sw;
 	GtkWidget *hbox, *button;
 	
 	formgrid->priv = g_new0 (UiFormGridPriv, 1);

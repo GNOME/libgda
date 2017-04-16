@@ -167,7 +167,6 @@ ldap_search_page_get_type (void)
 static void
 filter_exec_clicked_cb (G_GNUC_UNUSED GtkWidget *button, LdapSearchPage *epage)
 {
-	guint id;
 	gchar *base_dn, *filter, *attributes;
 	GdaLdapSearchScope scope;
 	GError *lerror = NULL;

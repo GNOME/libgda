@@ -238,7 +238,7 @@ query_console_page_new (TConnection *tcnc)
 	gtk_box_pack_start (GTK_BOX (tconsole), vpaned, TRUE, TRUE, 0);	
 
 	/* top paned for the editor */
-	GtkWidget *wid, *vbox, *bbox, *hpaned;
+	GtkWidget *wid, *vbox, *hpaned;
 
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_style_context_add_class (gtk_widget_get_style_context (hpaned), "paned-no-border");

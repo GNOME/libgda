@@ -135,7 +135,6 @@ base_tool_command_group_free (ToolCommandGroup *group)
 static gint
 commands_compare_name (ToolCommand *a, ToolCommand *b)
 {
-	gint cmp, alength, blength;
 	if (!a->name || !b->name) {
 		g_warning (_("Invalid unnamed command"));
 		if (!a->name) {
@@ -153,7 +152,6 @@ commands_compare_name (ToolCommand *a, ToolCommand *b)
 static gint
 commands_compare_group (ToolCommand *a, ToolCommand *b)
 {
-	gint cmp, alength, blength;
 	if (!a->group || !b->group) {
 		g_warning (_("Invalid unnamed command"));
 		if (!a->group) {

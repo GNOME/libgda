@@ -301,8 +301,6 @@ get_table_meta_data (TableInfo *tinfo)
 static void
 meta_changed_cb (G_GNUC_UNUSED TConnection *tcnc, GdaMetaStruct *mstruct, TableInfo *tinfo)
 {
-	GValue *schema_v = NULL, *name_v;
-
 	if (tinfo->priv->insert_columns_hash) {
 		g_hash_table_destroy (tinfo->priv->insert_columns_hash);
 		tinfo->priv->insert_columns_hash = NULL;
@@ -900,7 +898,6 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 #endif
 
 				FKBindData *fkdata;
-				guint eid;
 				fkdata = g_new0 (FKBindData, 1);
 				fkdata->cols_nb = fk->cols_nb;
 				fkdata->fk_cols_array = g_new (gint, fk->cols_nb);
