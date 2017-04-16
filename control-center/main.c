@@ -75,8 +75,7 @@ static void
 file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
 	GtkWidget *app_window = GTK_WIDGET (user_data);
-	GtkWidget *stack, *dsn, *current_widget;
-	gint current;
+	GtkWidget *stack, *dsn;
 
 	dsn = g_object_get_data (G_OBJECT (app_window), DSN_PAGE);
 	stack = g_object_get_data (G_OBJECT (app_window), STACK);

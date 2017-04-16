@@ -155,7 +155,6 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 {
 	GtkWidget *grid;
 	GtkWidget *label;
-	GtkWidget *exp;
 	gchar *str;
 
 	g_return_if_fail (GDAUI_IS_DSN_EDITOR (config));

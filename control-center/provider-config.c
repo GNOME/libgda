@@ -157,9 +157,7 @@ provider_config_new (void)
 {
 	ProviderConfigPrivate *priv;
 	GtkWidget *provider;
-	GtkWidget *box, *paned;
-	GtkWidget *image;
-	GtkWidget *label;
+	GtkWidget *paned;
 	GtkWidget *sw;
 	gchar *title;
 	GdaDataModel *model;

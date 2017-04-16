@@ -98,7 +98,6 @@ list_selection_changed_cb (GdauiRawGrid *grid, gpointer user_data)
 	GArray *selection;
 	gchar *str;
 	const GValue *cvalue;
-	GApplication *app;
 	GtkWidget *win = gtk_widget_get_toplevel (GTK_WIDGET (grid));
 	if (gtk_widget_is_toplevel (win)) {
 		g_simple_action_set_enabled (G_SIMPLE_ACTION (g_action_map_lookup_action (G_ACTION_MAP (win),
@@ -166,7 +165,6 @@ dsn_config_new (void)
 {
 	DsnConfigPrivate *priv;
 	GtkWidget *dsn;
-	GtkWidget *image;
 	GtkWidget *label;
 	GtkWidget *sw;
 	gchar *title;
