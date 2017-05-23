@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 - 2016 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -995,16 +996,17 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 				return NULL;
 
 			if (type == GDA_TYPE_TIMESTAMP) {
-				GdaTimestamp ts;
-				ts.year = ptm->tm_year + 1900;
-				ts.month = ptm->tm_mon + 1;
-				ts.day = ptm->tm_mday;
-				ts.hour = ptm->tm_hour;
-				ts.minute = ptm->tm_min;
-				ts.second = ptm->tm_sec;
-				ts.timezone = GDA_TIMEZONE_INVALID;
+				GdaTimestamp *ts = gda_timestamp_new ();
+				gda_timestamp_set_year (ts, ptm->tm_year + 1900);
+				gda_timestamp_set_month (ts, ptm->tm_mon + 1);
+				gda_timestamp_set_day (ts, ptm->tm_mday);
+				gda_timestamp_set_hour (ts, ptm->tm_hour);
+				gda_timestamp_set_minute (ts, ptm->tm_min);
+				gda_timestamp_set_second (ts, ptm->tm_sec);
+				gda_timestamp_set_timezone (ts, GDA_TIMEZONE_INVALID);
 				value = gda_value_new (type);
-				gda_value_set_timestamp (value, &ts);
+				gda_value_set_timestamp (value, ts);
+				gda_timestamp_free (ts);
 			}
 			else {
 				GDate *date;
@@ -1044,28 +1046,48 @@ gda_ldap_attr_g_value_to_value (LdapConnectionData *cdata, const GValue *cvalue)
 		bv->bv_len = strlen (cstr);
 	}
 	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_TIMESTAMP) {
-		const GdaTimestamp *ts;
+		GdaTimestamp *ts;
 		gchar *str;
-		ts = gda_value_get_timestamp (cvalue);
-		if (ts->fraction == 0) {
-			if (ts->timezone == GDA_TIMEZONE_INVALID)
-				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d", ts->year, ts->month,
-						       ts->day, ts->hour, ts->minute, ts->second);
+		ts = (GdaTimestamp*) gda_value_get_timestamp (cvalue);
+		if (gda_timestamp_get_fraction (ts) == 0) {
+			if (gda_timestamp_get_timezone (ts) == GDA_TIMEZONE_INVALID)
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d",
+															 gda_timestamp_get_year (ts),
+															 gda_timestamp_get_month (ts),
+															 gda_timestamp_get_day (ts),
+															 gda_timestamp_get_hour (ts),
+															 gda_timestamp_get_minute (ts),
+															 gda_timestamp_get_second (ts));
 			else {
-				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d", ts->year, ts->month,
-						       ts->day, ts->hour, ts->minute, ts->second);
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d",
+															 gda_timestamp_get_year (ts),
+															 gda_timestamp_get_month (ts),
+															 gda_timestamp_get_day (ts),
+															 gda_timestamp_get_hour (ts),
+															 gda_timestamp_get_minute (ts),
+															 gda_timestamp_get_second (ts));
 				TO_IMPLEMENT;
 			}
 		}
 		else {
-			if (ts->timezone == GDA_TIMEZONE_INVALID)
-				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu", ts->year, ts->month,
-						       ts->day, ts->hour, ts->minute, ts->second,
-						       ts->fraction);
+			if (gda_timestamp_get_timezone (ts) == GDA_TIMEZONE_INVALID)
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu",
+															 gda_timestamp_get_year (ts),
+															 gda_timestamp_get_month (ts),
+															 gda_timestamp_get_day (ts),
+															 gda_timestamp_get_hour (ts),
+															 gda_timestamp_get_minute (ts),
+															 gda_timestamp_get_second (ts),
+															 gda_timestamp_get_fraction (ts));
 			else {
-				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu", ts->year, ts->month,
-						       ts->day, ts->hour, ts->minute, ts->second,
-						       ts->fraction);
+				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu",
+															 gda_timestamp_get_year (ts),
+															 gda_timestamp_get_month (ts),
+															 gda_timestamp_get_day (ts),
+															 gda_timestamp_get_hour (ts),
+															 gda_timestamp_get_minute (ts),
+															 gda_timestamp_get_second (ts),
+															 gda_timestamp_get_fraction (ts));
 				TO_IMPLEMENT;
 			}
 		}

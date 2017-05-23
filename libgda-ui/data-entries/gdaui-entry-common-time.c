@@ -2,6 +2,7 @@
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -400,12 +401,12 @@ icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, 
 				}
 			}
 			else if (type == GDA_TYPE_TIMESTAMP) {
-				const GdaTimestamp *ts;
-				ts = gda_value_get_timestamp (value);
+				GdaTimestamp *ts;
+				ts = (GdaTimestamp*) gda_value_get_timestamp (value);
 				if (ts) {
-					year = ts->year;
-					month = ts->month - 1;
-					day = ts->day;
+					year = gda_timestamp_get_year (ts);
+					month = gda_timestamp_get_month (ts) - 1;
+					day = gda_timestamp_get_day (ts);
 					unset = FALSE;
 				}
 			}
@@ -484,10 +485,10 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* copy the 'fraction' and 'timezone' parts, we have not modified */
-			const GdaTimestamp *ets = gda_value_get_timestamp (value);
-			mtm.tm_hour = ets->hour;
-			mtm.tm_min = ets->minute;
-			mtm.tm_sec = ets->second;
+			GdaTimestamp *ets = (GdaTimestamp*) gda_value_get_timestamp (value);
+			mtm.tm_hour = gda_timestamp_get_hour (ets);
+			mtm.tm_min = gda_timestamp_get_minute (ets);
+			mtm.tm_sec = gda_timestamp_get_second (ets);
 		}
 		gda_value_free (value);
 	}
@@ -689,18 +690,18 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				mgtim->priv->value_fraction = 0;
 			}
 			else {
-				const GdaTimestamp *gts;
-				GdaTimestamp copy;
-				gts = gda_value_get_timestamp (value);
-				mgtim->priv->value_tz = fit_tz (gts->timezone);
-				mgtim->priv->value_fraction = gts->fraction;
+				GdaTimestamp *gts;
+				GdaTimestamp *copy;
+				gts = (GdaTimestamp*) gda_value_get_timestamp (value);
+				mgtim->priv->value_tz = fit_tz (gda_timestamp_get_timezone (gts));
+				mgtim->priv->value_fraction = gda_timestamp_get_fraction (gts);
 
-				copy = *gts;
-				gda_timestamp_change_timezone (&copy, mgtim->priv->displayed_tz);
+				copy = gda_timestamp_copy (gts);
+				gda_timestamp_change_timezone (copy, mgtim->priv->displayed_tz);
 
 				GValue *copy_value;
 				copy_value = g_new0 (GValue, 1);
-				gda_value_set_timestamp (copy_value, &copy);
+				gda_value_set_timestamp (copy_value, copy);
 
 				gchar *str;
 				str = gda_data_handler_get_str_from_value (dh, copy_value);
@@ -708,6 +709,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
+				gda_timestamp_free (copy);
 			}
 		}
 		else
@@ -767,10 +769,10 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* copy the 'fraction' part, we have not modified */
-			GdaTimestamp *gdatime = g_new (GdaTimestamp, 1);
-			*gdatime = *(gda_value_get_timestamp (value));
-			gdatime->fraction = mgtim->priv->value_fraction;
-			gdatime->timezone = mgtim->priv->displayed_tz;
+			GdaTimestamp *gdatime;
+			gdatime = (GdaTimestamp*) gda_value_get_timestamp (value);
+			gda_timestamp_set_fraction (gdatime, mgtim->priv->value_fraction);
+			gda_timestamp_set_timezone (gdatime, mgtim->priv->displayed_tz);
 			gda_timestamp_change_timezone (gdatime, mgtim->priv->value_tz);
 			gda_value_set_timestamp (value, gdatime);
 			g_free (gdatime);
@@ -879,9 +881,9 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 			date = (GDate*) g_value_get_boxed (value);
 		}
 		else if (type == GDA_TYPE_TIMESTAMP) {
-			const GdaTimestamp *ts;
-			ts = gda_value_get_timestamp (value);
-			date = g_date_new_dmy (ts->day, ts->month, ts->year);
+			GdaTimestamp *ts;
+			ts = (GdaTimestamp*) gda_value_get_timestamp (value);
+			date = g_date_new_dmy (gda_timestamp_get_day (ts), gda_timestamp_get_month (ts), gda_timestamp_get_year (ts));
 		}
 
 		if (date) {
@@ -908,9 +910,9 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 				else if (type == GDA_TYPE_TIMESTAMP) {
 					GdaTimestamp *ts;
 					ts = (GdaTimestamp*) gda_timestamp_copy ((gpointer) gda_value_get_timestamp (value));
-					ts->day = g_date_get_day (ndate);
-					ts->month = g_date_get_month (ndate);
-					ts->year = g_date_get_year (ndate);
+					gda_timestamp_set_day (ts, g_date_get_day (ndate));
+					gda_timestamp_set_month (ts, g_date_get_month (ndate));
+					gda_timestamp_set_year (ts, g_date_get_year (ndate));
 					g_date_free (date);
 					g_date_free (ndate);
 					gda_value_set_timestamp (value, ts);

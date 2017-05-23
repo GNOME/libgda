@@ -6,13 +6,14 @@
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
  * Copyright (C) 2004 Denis Loginov <dloginov@crl.nmsu.edu>
- * Copyright (C) 2004 JosÈ MarÌa Casanova Crespo <jmcasanova@igalia.com>
+ * Copyright (C) 2004 Jos√© Mar√≠a Casanova Crespo <jmcasanova@igalia.com>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2015 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2228,7 +2229,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 			GdaTimestamp *timestamp;
 			timestamp = (GdaTimestamp *) gda_value_get_timestamp (value);
-			if (timestamp->timezone != GDA_TIMEZONE_INVALID) {
+			if (gda_timestamp_get_timezone (timestamp) != GDA_TIMEZONE_INVALID) {
 				/* PostgreSQL does not store timezone information, so if timezone information is
 				 * provided, we do our best and convert it to GMT */
 				timestamp = gda_timestamp_copy (timestamp);

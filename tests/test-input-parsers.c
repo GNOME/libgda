@@ -2,6 +2,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -198,36 +199,38 @@ test_parse_iso8601_timestamp (void)
 			gchar *str;
 			str = g_strdup_printf ("%s %s", td.in_string, tt.in_string);
 
-			GdaTimestamp timestamp;
+			GdaTimestamp* timestamp = gda_timestamp_new ();
 			gboolean exp_result = td.exp_retval && tt.exp_retval;
 			/*g_print ("[%s]\n", str);*/
-			if (gda_parse_iso8601_timestamp (&timestamp, str) != exp_result) {
+			if (gda_parse_iso8601_timestamp (timestamp, str) != exp_result) {
 				g_print ("Wrong result for gda_parse_iso8601_timestamp (\"%s\"): got %s\n",
 					 td.in_string, exp_result ? "FALSE" : "TRUE");
 				return FALSE;
 			}
 
 			if ((td.exp_retval &&
-			     ((timestamp.year != td.exp_year) ||
-			      (timestamp.month != td.exp_month) ||
-			      (timestamp.day != td.exp_day))) &&
-			    (((timestamp.hour != tt.exp_time.hour) ||
-			      (timestamp.minute != tt.exp_time.minute) ||
-			      (timestamp.second != tt.exp_time.second) ||
-			      (timestamp.fraction != tt.exp_time.fraction) ||
-			      (timestamp.timezone != tt.exp_time.timezone)))) {
+			     ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
+			      (gda_timestamp_get_month (timestamp) != td.exp_month) ||
+			      (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
+			    (((gda_timestamp_get_hour (timestamp) != tt.exp_time.hour) ||
+			      (gda_timestamp_get_minute (timestamp) != tt.exp_time.minute) ||
+			      (gda_timestamp_get_second (timestamp) != tt.exp_time.second) ||
+			      (gda_timestamp_get_fraction (timestamp) != tt.exp_time.fraction) ||
+			      (gda_timestamp_get_timezone (timestamp) != tt.exp_time.timezone)))) {
 				g_print ("Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
 					 tt.exp_time.hour, tt.exp_time.minute, tt.exp_time.second, tt.exp_time.fraction, tt.exp_time.timezone,
-					 timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute,
-					 timestamp.second, timestamp.fraction, timestamp.timezone);
+					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp),
+					 gda_timestamp_get_day (timestamp), gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
+					 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
 					 
 				g_free (str);
 				return FALSE;
 			}
 			g_free (str);
+			gda_timestamp_free (timestamp);
 		}
 	}
 	g_print ("All %d iso8601 timestamp parsing tests passed\n", idate * itime);
@@ -432,35 +435,37 @@ test_timestamp_handler (void)
 				g_free (str);
 				continue;
 			}
-			const GdaTimestamp *ptimestamp;
-			GdaTimestamp timestamp;
-			ptimestamp = gda_value_get_timestamp (value);
-			timestamp = *ptimestamp;
+			GdaTimestamp *ptimestamp;
+			GdaTimestamp *timestamp;
+			ptimestamp = (GdaTimestamp*) gda_value_get_timestamp (value);
+			timestamp = gda_timestamp_copy (ptimestamp);
 			gda_value_free (value);
-			
+
 			if ((td.exp_retval &&
-			     ((timestamp.year != td.exp_year) ||
-			      (timestamp.month != td.exp_month) ||
-			      (timestamp.day != td.exp_day))) &&
+			     ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
+			      (gda_timestamp_get_month (timestamp) != td.exp_month) ||
+			      (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
 			    ((tt.exp_retval) &&
-			     ((timestamp.hour != tt.exp_time.hour) ||
-			      (timestamp.minute != tt.exp_time.minute) ||
-			      (timestamp.second != tt.exp_time.second) ||
-			      (timestamp.fraction != tt.exp_time.fraction) ||
-			      (timestamp.timezone != tt.exp_time.timezone)))) {
+			     ((gda_timestamp_get_hour (timestamp) != tt.exp_time.hour) ||
+			      (gda_timestamp_get_minute (timestamp) != tt.exp_time.minute) ||
+			      (gda_timestamp_get_second (timestamp) != tt.exp_time.second) ||
+			      (gda_timestamp_get_fraction (timestamp) != tt.exp_time.fraction) ||
+			      (gda_timestamp_get_timezone (timestamp) != tt.exp_time.timezone)))) {
 				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
 					 tt.exp_time.hour, tt.exp_time.minute, tt.exp_time.second, tt.exp_time.fraction, tt.exp_time.timezone,
-					 timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute,
-					 timestamp.second, timestamp.fraction, timestamp.timezone);
+					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp), gda_timestamp_get_day (timestamp),
+					 gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
+					 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
 					 
 				g_object_unref (dh);
 				g_free (str);
 				return FALSE;
 			}
 			g_free (str);
+			gda_timestamp_free (timestamp);
 		}
 	}
 
@@ -488,33 +493,36 @@ test_timestamp_handler (void)
 				g_free (str);
 				continue;
 			}
-			const GdaTimestamp *ptimestamp;
-			GdaTimestamp timestamp;
-			ptimestamp = gda_value_get_timestamp (value);
-			timestamp = *ptimestamp;
+			GdaTimestamp *ptimestamp;
+			GdaTimestamp *timestamp;
+			ptimestamp = (GdaTimestamp*) gda_value_get_timestamp (value);
+			timestamp = gda_timestamp_copy (ptimestamp);
 			gda_value_free (value);
-			
-			if ((timestamp.year != td.exp_year) ||
-			    (timestamp.month != td.exp_month) ||
-			    (timestamp.day != td.exp_day) ||
-			    (timestamp.hour != tt.exp_time.hour) ||
-			    (timestamp.minute != tt.exp_time.minute) ||
-			    (timestamp.second != tt.exp_time.second) ||
-			    (timestamp.fraction != tt.exp_time.fraction) ||
-			    (timestamp.timezone != tt.exp_time.timezone)) {
+
+			if ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
+			    (gda_timestamp_get_month (timestamp) != td.exp_month) ||
+			    (gda_timestamp_get_day (timestamp) != td.exp_day) ||
+			    (gda_timestamp_get_hour (timestamp) != tt.exp_time.hour) ||
+			    (gda_timestamp_get_minute (timestamp) != tt.exp_time.minute) ||
+			    (gda_timestamp_get_second (timestamp) != tt.exp_time.second) ||
+			    (gda_timestamp_get_fraction (timestamp) != tt.exp_time.fraction) ||
+			    (gda_timestamp_get_timezone (timestamp) != tt.exp_time.timezone)) {
 				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
 					 tt.exp_time.hour, tt.exp_time.minute, tt.exp_time.second, tt.exp_time.fraction, tt.exp_time.timezone,
-					 timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute,
-					 timestamp.second, timestamp.fraction, timestamp.timezone);
+					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp),
+					 gda_timestamp_get_day (timestamp), gda_timestamp_get_hour (timestamp),
+					 gda_timestamp_get_minute (timestamp), gda_timestamp_get_second (timestamp),
+					 gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
 					 
 				g_object_unref (dh);
 				g_free (str);
 				return FALSE;
 			}
 			g_free (str);
+			gda_timestamp_free (timestamp);
 		}
 	}
 	

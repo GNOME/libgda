@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -581,7 +582,15 @@ check_date (GdaConnection *virtual)
 {
 	g_print ("*** insert dates into 'misc' table...\n");
 	GdaSet *set;
-	GdaTimestamp ts = {2011, 01, 31, 12, 34, 56, 0, 0};
+	GdaTimestamp *ts = gda_timestamp_new ();
+	gda_timestamp_set_year (ts, 2011);
+	gda_timestamp_set_month (ts, 01);
+	gda_timestamp_set_day (ts, 31);
+	gda_timestamp_set_hour (ts, 12);
+	gda_timestamp_set_minute (ts, 34);
+	gda_timestamp_set_second (ts, 56);
+	gda_timestamp_set_fraction (ts, 0);
+	gda_timestamp_set_timezone (ts, 0);
 	GdaTime atime = {13, 45, 59, 0, 0};
 	GDate *adate;
 	GdaDataModel *model;
@@ -589,7 +598,7 @@ check_date (GdaConnection *virtual)
 
 	adate = g_date_new_dmy (23, G_DATE_FEBRUARY, 2010);
 	set = gda_set_new_inline (3,
-				  "ts", GDA_TYPE_TIMESTAMP, &ts,
+				  "ts", GDA_TYPE_TIMESTAMP, ts,
 				  "adate", G_TYPE_DATE, adate,
 				  "atime", GDA_TYPE_TIME, &atime);
 	g_date_free (adate);
@@ -641,4 +650,5 @@ check_date (GdaConnection *virtual)
 	}
 
 	g_object_unref (set);
+	gda_timestamp_free (ts);
 }

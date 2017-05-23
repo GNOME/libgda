@@ -9,7 +9,7 @@
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011 - 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -107,30 +107,6 @@ typedef struct {
 	gulong  fraction;
 	glong   timezone;
 } GdaTime;
-
-/**
- * GdaTimestamp:
- * @year: year representation of the time stamp
- * @month: month representation of the time stamp, as a number between 1 and 12
- * @day: day representation of the time stamp, as a number between 1 and 31
- * @hour: hour representation of the time stamp, as a number between 0 and 23
- * @minute: minute representation of the time stamp, as a number between 0 and 59
- * @second: second representation of the time stamp, as a number between 0 and 59
- * @fraction: fractionnal part of the seconds, in millionth' of second
- * @timezone: number of seconds added to the GMT timezone
- *
- * Represents an instant (a time stamp)
- */
-typedef struct {
-	gshort  year;
-	gushort month;
-	gushort day;
-	gushort hour;
-	gushort minute;
-	gushort second;
-	gulong  fraction;
-	glong   timezone;
-} GdaTimestamp;
 
 /**
  * GdaBinary: (ref-func gda_binary_new) (unref-func gda_binary_free) (get-value-func gda_value_get_binary) (set-value-func gda_value_set_binary)
@@ -251,8 +227,6 @@ gushort                           gda_value_get_ushort (const GValue *value);
 void                              gda_value_set_ushort (GValue *value, const gushort val);
 const GdaTime                    *gda_value_get_time (const GValue *value);
 void                              gda_value_set_time (GValue *value, const GdaTime *val);
-const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
-void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
 
 
 
@@ -285,11 +259,32 @@ void                              gda_time_free (gpointer boxed);
 gboolean                          gda_time_valid (const GdaTime *time);
 void                              gda_time_change_timezone (GdaTime *time, glong ntz);
 
+
+typedef struct _GdaTimestamp GdaTimestamp;
 GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
+GdaTimestamp                     *gda_timestamp_new (void);
+gshort                            gda_timestamp_get_year (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_year (GdaTimestamp* timestamp, gshort year);
+gushort                           gda_timestamp_get_month (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_month (GdaTimestamp* timestamp, gushort month);
+gushort                           gda_timestamp_get_day (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_day (GdaTimestamp* timestamp, gushort day);
+gushort                           gda_timestamp_get_hour (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_hour (GdaTimestamp* timestamp, gushort hour);
+gushort                           gda_timestamp_get_minute (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_minute (GdaTimestamp* timestamp, gushort minute);
+gushort                           gda_timestamp_get_second (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second);
+gulong                            gda_timestamp_get_fraction (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_fraction (GdaTimestamp* timestamp, glong fraction);
+glong                             gda_timestamp_get_timezone (GdaTimestamp* timestamp);
+void                              gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone);
 gpointer                          gda_timestamp_copy (gpointer boxed);
 void                              gda_timestamp_free (gpointer boxed);
 gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
 void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
+const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
+void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
 
 
 GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;

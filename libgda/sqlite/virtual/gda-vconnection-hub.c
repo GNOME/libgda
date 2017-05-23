@@ -3,6 +3,7 @@
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -698,8 +699,8 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
 			allok = FALSE;
 		else {
-			GdaTimestamp timestamp;
-			if (!gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (svalue))) {
+			GdaTimestamp* timestamp = gda_timestamp_new ();
+			if (!gda_parse_iso8601_timestamp (timestamp, g_value_get_string (svalue))) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
 					     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"),
@@ -707,7 +708,8 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 				allok = FALSE;
 			}
 			else
-				gda_value_set_timestamp (value, &timestamp);
+				gda_value_set_timestamp (value, timestamp);
+			gda_timestamp_free (timestamp);
 		}
 	}
 	else

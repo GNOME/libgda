@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,15 +41,18 @@ string_equal_to_template (const gchar *str, const gchar *tmpl)
 		return TRUE;
 }
 
-GdaTimestamp ts = {
-	.year = 2013,
-	.month = 8,
-	.day = 28,
-	.hour = 17,
-	.minute = 10,
-	.second = 23,
-	.timezone = 3600 * 2
-};
+GdaTimestamp* create_timestamp (void) {
+	GdaTimestamp *ts = gda_timestamp_new ();
+	gda_timestamp_set_year (ts, 2013);
+	gda_timestamp_set_month (ts, 8);
+	gda_timestamp_set_day (ts, 28);
+	gda_timestamp_set_hour (ts, 17);
+	gda_timestamp_set_minute (ts, 10);
+	gda_timestamp_set_second (ts, 23);
+	gda_timestamp_set_timezone (ts, 3600*2);
+	return ts;
+}
+
 GdaTime gt = {
 	.hour = 16,
 	.minute = 9,
@@ -87,8 +91,8 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		nfailed ++;
 		goto endtest;
 	}
-
-	if (! gda_set_set_holder_value (params, &error, "ts", &ts)) {
+	GdaTimestamp *ts = create_timestamp ();
+	if (! gda_set_set_holder_value (params, &error, "ts", ts)) {
 		g_print ("Failed to bind 'ts' parameter: %s\n", error && error->message ? error->message : "No detail");
 		g_clear_error (&error);
 		g_object_unref (stmt);
@@ -185,8 +189,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		nfailed ++;
 		goto endtest;
 	}
-
-	if (! gda_set_set_holder_value (params, &error, "ts", &ts)) {
+	if (! gda_set_set_holder_value (params, &error, "ts", ts)) {
 		g_print ("Failed to bind 'ts' parameter: %s\n", error && error->message ? error->message : "No detail");
 		g_clear_error (&error);
 		g_object_unref (stmt);
@@ -194,6 +197,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		nfailed ++;
 		goto endtest;
 	}
+	gda_timestamp_free (ts);
 
 	if (! gda_set_set_holder_value (params, &error, "time", &gt)) {
 		g_print ("Failed to bind 'time' parameter: %s\n", error && error->message ? error->message : "No detail");

@@ -4,7 +4,7 @@
  * Copyright (C) 2003 - 2004 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
- * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 JÃ¼rg Billeter <j@bitron.ch>
  * Copyright (C) 2004 - 2013 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2009 Armin Burgmeier <armin@openismus.com>
@@ -3408,7 +3408,6 @@ gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
 	GDate gdate;
 	GdaTime timegda;
 
-	memset (timestamp, 0, sizeof (GdaTimestamp));
 	memset (&timegda, 0, sizeof (GdaTime));
 	timegda.timezone = GDA_TIMEZONE_INVALID;
 
@@ -3420,9 +3419,9 @@ gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
 		retval = FALSE;
 		goto out;
 	}
-	timestamp->year = g_date_get_year (&gdate);
-	timestamp->month = g_date_get_month (&gdate);
-	timestamp->day = g_date_get_day (&gdate);
+	gda_timestamp_set_year (timestamp, g_date_get_year (&gdate));
+	gda_timestamp_set_month (timestamp, g_date_get_month (&gdate));
+	gda_timestamp_set_day (timestamp, g_date_get_day (&gdate));
 
 	/* separator */
 	if (!*endptr)
@@ -3441,11 +3440,11 @@ gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
 	    *endptr) 
 		retval = FALSE;
  out:
-	timestamp->hour = timegda.hour;
-	timestamp->minute = timegda.minute;
-	timestamp->second = timegda.second;
-	timestamp->fraction = timegda.fraction;
-	timestamp->timezone = timegda.timezone;
+	gda_timestamp_set_hour (timestamp, timegda.hour);
+	gda_timestamp_set_minute (timestamp, timegda.minute);
+	gda_timestamp_set_second (timestamp, timegda.second);
+	gda_timestamp_set_fraction (timestamp, timegda.fraction);
+	gda_timestamp_set_timezone (timestamp, timegda.timezone);
 
-	return retval;	
+	return retval;
 }

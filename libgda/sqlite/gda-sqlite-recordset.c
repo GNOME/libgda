@@ -1,15 +1,16 @@
 /*
- * Copyright (C) 2001 - 2002 Carlos PerellÛ MarÌn <carlos@gnome-db.org>
+ * Copyright (C) 2001 - 2002 Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2002 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
  * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Marco Ciampa <ciampix@libero.it>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -556,8 +557,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 				}
 				else if (type == GDA_TYPE_TIMESTAMP) {
-					GdaTimestamp timestamp;
-					if (!gda_parse_iso8601_timestamp (&timestamp, 
+					GdaTimestamp* timestamp = gda_timestamp_new ();
+					if (!gda_parse_iso8601_timestamp (timestamp,
 									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 													 real_col))) {
 						GError *lerror = NULL;
@@ -568,10 +569,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						if (timestamp.timezone == GDA_TIMEZONE_INVALID)
-							timestamp.timezone = 0; /* set to GMT */
-						gda_value_set_timestamp (value, &timestamp);
+						if (gda_timestamp_get_timezone (timestamp) == GDA_TIMEZONE_INVALID)
+							gda_timestamp_set_timezone (timestamp, 0); /* set to GMT */
+						gda_value_set_timestamp (value, timestamp);
 					}
+					gda_timestamp_free (timestamp);
 				}
 				else if (type == G_TYPE_CHAR) {
 					gint64 i;

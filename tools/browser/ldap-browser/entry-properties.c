@@ -597,7 +597,7 @@ ad_1601_timestamp_to_string (const gchar *value, const gchar *attname)
 	GdaDataHandler *dh;
 	struct tm *stm;
 	GValue tvalue;
-	GdaTimestamp ts;
+	GdaTimestamp *ts;
 	time_t nsec = (time_t) i64;
 	gchar *str;
 #ifdef HAVE_LOCALTIME_R
@@ -616,20 +616,20 @@ ad_1601_timestamp_to_string (const gchar *value, const gchar *attname)
 	if (!stm)
 		return NULL;
 
-	memset (&ts, 0, sizeof (GdaTimestamp));
-	ts.year = stm->tm_year + 1900;
-	ts.month = stm->tm_mon + 1;
-	ts.day = stm->tm_mday;
-	ts.hour = stm->tm_hour;
-	ts.minute = stm->tm_min;
-	ts.second = stm->tm_sec;
-	ts.timezone = GDA_TIMEZONE_INVALID;
+	ts = gda_timestamp_new ();
+	gda_timestamp_set_year (ts, stm->tm_year + 1900);
+	gda_timestamp_set_month(ts, stm->tm_mon + 1);
+	gda_timestamp_set_day (ts, stm->tm_mday);
+	gda_timestamp_set_hour (ts, stm->tm_hour);
+	gda_timestamp_set_minute (ts, stm->tm_min);
+	gda_timestamp_set_second (ts, stm->tm_sec);
+	gda_timestamp_set_timezone (ts, GDA_TIMEZONE_INVALID);
 	memset (&tvalue, 0, sizeof (GValue));
-	gda_value_set_timestamp (&tvalue, &ts);
+	gda_value_set_timestamp (&tvalue, ts);
 	dh = gda_data_handler_get_default (GDA_TYPE_TIMESTAMP);
 	str = gda_data_handler_get_str_from_value (dh, &tvalue);
 	g_value_reset (&tvalue);
-
+	gda_timestamp_free (ts);
 	return str;
 }
 

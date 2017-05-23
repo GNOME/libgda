@@ -4,6 +4,7 @@
  * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -819,10 +820,10 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
 				GdaTimestamp *nts;
 				nts = (GdaTimestamp*) gda_value_get_timestamp (value);
-				if (nts && (nts->timezone != GDA_TIMEZONE_INVALID)) {
+				if (nts && (gda_timestamp_get_timezone (nts) != GDA_TIMEZONE_INVALID)) {
 					nts = gda_timestamp_copy (nts);
 					gda_timestamp_change_timezone (nts, 0);
-					nts->timezone = GDA_TIMEZONE_INVALID;
+					gda_timestamp_set_timezone (nts, GDA_TIMEZONE_INVALID);
 					GValue v = {0};
 					g_value_init (&v, GDA_TYPE_TIMESTAMP);
 					gda_value_set_timestamp (&v, nts);

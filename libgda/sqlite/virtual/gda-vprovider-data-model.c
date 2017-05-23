@@ -2,6 +2,7 @@
  * Copyright (C) 2007 - 2016 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1096,7 +1097,7 @@ create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
 		bin = gda_binary_new ();
 		glong length = SQLITE3_CALL (sqlite3_value_bytes) (svalue);
 		if (length > 0) {
-			gpointer data = g_new (guchar, length);
+			//gpointer data = g_new (guchar, length);
 			gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_value_blob) (svalue), length);
 		}
 		gda_value_take_binary (value, bin);

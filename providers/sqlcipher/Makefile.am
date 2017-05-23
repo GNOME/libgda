@@ -15,6 +15,8 @@ AM_CPPFLAGS = \
 	$(sqliteinc) \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1
 
+#sqlcipher.patch:
+#	cp $(srcdir)/sqlcipher-3.3.patch $(srcdir)/sqlcipher.patch
 
 sqlite_sources = sqlite3.c sqlite3.h
 sqlite3.c: $(srcdir)/sqlcipher.patch $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c

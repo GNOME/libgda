@@ -1,15 +1,15 @@
 /*
- * Copyright (C) 2001 - 2002 Carlos PerellÛ MarÌn <carlos@gnome-db.org>
+ * Copyright (C) 2001 - 2002 Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2004 Benjamin Otte <in7y118@public.uni-hamburg.de>
  * Copyright (C) 2004 J.H.M. Dassen (Ray) <jdassen@debian.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 J¸rg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 J√ºrg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
  * Copyright (C) 2005 - 2015 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2014 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Armin Burgmeier <armin@openismus.com>
@@ -17,6 +17,7 @@
  * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2011 Marek ƒåernock√Ω <marek@manet.cz>
  * Copyright (C) 2012 Marco Ciampa <ciampix@libero.it>
+ * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3287,7 +3288,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			timestamp = (GdaTimestamp *) gda_value_get_timestamp (value);
 
 			string = g_string_new ("");
-			if (timestamp->timezone != GDA_TIMEZONE_INVALID) {
+			if (gda_timestamp_get_timezone (timestamp) != GDA_TIMEZONE_INVALID) {
 				/* SQLite cant' store timezone information, so if timezone information is
 				 * provided, we do our best and convert it to GMT */
 				timestamp = gda_timestamp_copy (timestamp);
@@ -3296,14 +3297,14 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
-						timestamp->year,
-						timestamp->month,
-						timestamp->day,
-						timestamp->hour,
-						timestamp->minute,
-						timestamp->second);
-			if (timestamp->fraction > 0)
-				g_string_append_printf (string, ".%lu", timestamp->fraction);
+						gda_timestamp_get_year (timestamp),
+						gda_timestamp_get_month (timestamp),
+						gda_timestamp_get_day (timestamp),
+						gda_timestamp_get_hour (timestamp),
+						gda_timestamp_get_minute (timestamp),
+						gda_timestamp_get_second (timestamp));
+			if (gda_timestamp_get_fraction (timestamp) > 0)
+				g_string_append_printf (string, ".%lu", gda_timestamp_get_fraction (timestamp));
 
 			if (tofree)
 				gda_timestamp_free (timestamp);

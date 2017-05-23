@@ -19,7 +19,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2017 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -216,11 +216,12 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
-		GdaTimestamp timestamp;
-		if (gda_parse_iso8601_timestamp (&timestamp, as_string)) {
-			gda_value_set_timestamp (value, &timestamp);
+		GdaTimestamp* timestamp = gda_timestamp_new ();
+		if (gda_parse_iso8601_timestamp (timestamp, as_string)) {
+			gda_value_set_timestamp (value, timestamp);
 			retval = TRUE;
 		}
+		gda_timestamp_free (timestamp);
 	}
 	else if (type == GDA_TYPE_NULL) {
 		gda_value_set_null (value);
@@ -1511,6 +1512,31 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 	time->timezone = ntz;
 }
 
+
+/**
+ * GdaTimestamp:
+ * @year: year representation of the time stamp
+ * @month: month representation of the time stamp, as a number between 1 and 12
+ * @day: day representation of the time stamp, as a number between 1 and 31
+ * @hour: hour representation of the time stamp, as a number between 0 and 23
+ * @minute: minute representation of the time stamp, as a number between 0 and 59
+ * @second: second representation of the time stamp, as a number between 0 and 59
+ * @fraction: fractionnal part of the seconds, in millionth' of second
+ * @timezone: number of seconds added to the GMT timezone
+ *
+ * Represents an instant (a time stamp)
+ */
+struct _GdaTimestamp {
+	gshort  year;
+	gushort month;
+	gushort day;
+	gushort hour;
+	gushort minute;
+	gushort second;
+	gulong  fraction;
+	glong   timezone;
+};
+
 /*
  * Register the GdaTimestamp type in the GType system
  */
@@ -1518,13 +1544,14 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 static void
 string_to_timestamp (const GValue *src, GValue *dest)
 {
-	GdaTimestamp timestamp;
+	GdaTimestamp* timestamp = gda_timestamp_new ();
 
 	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
 			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
 
-	gda_parse_iso8601_timestamp (&timestamp, g_value_get_string (src));
-	gda_value_set_timestamp (dest, &timestamp);
+	gda_parse_iso8601_timestamp (timestamp, g_value_get_string (src));
+	gda_value_set_timestamp (dest, timestamp);
+	gda_timestamp_free (timestamp);
 }
 
 static void
@@ -1540,17 +1567,17 @@ timestamp_to_string (const GValue *src, GValue *dest)
 		GString *string;
 		string = g_string_new ("");
 		g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
-					timestamp->year,
-					timestamp->month,
-					timestamp->day,
-					timestamp->hour,
-					timestamp->minute,
-					timestamp->second);
-		if (timestamp->fraction > 0)
-			g_string_append_printf (string, ".%lu", timestamp->fraction);
-		if (timestamp->timezone != GDA_TIMEZONE_INVALID)
+					gda_timestamp_get_year (timestamp),
+					gda_timestamp_get_month (timestamp),
+					gda_timestamp_get_day (timestamp),
+					gda_timestamp_get_hour (timestamp),
+					gda_timestamp_get_minute (timestamp),
+					gda_timestamp_get_second (timestamp));
+		if (gda_timestamp_get_fraction (timestamp) > 0)
+			g_string_append_printf (string, ".%lu", gda_timestamp_get_fraction (timestamp));
+		if (gda_timestamp_get_timezone (timestamp) != GDA_TIMEZONE_INVALID)
 			g_string_append_printf (string, "%+02d",
-						(int) timestamp->timezone/3600);
+						(int) gda_timestamp_get_timezone (timestamp)/3600);
 		g_value_take_string (dest, string->str);
 		g_string_free (string, FALSE);
 	}
@@ -1575,6 +1602,17 @@ gda_timestamp_get_type (void)
 	return type;
 }
 
+
+/**
+ * gda_timestamp_new:
+ *
+ * Returns: (transfer full):
+ */
+GdaTimestamp*
+gda_timestamp_new (void)
+{
+	return g_new0 (GdaTimestamp, 1);
+}
 /**
  * gda_timestamp_copy:
  *
@@ -1588,7 +1626,7 @@ gda_timestamp_copy (gpointer boxed)
 
 	g_return_val_if_fail(src, NULL);
 
-	copy = g_new0 (GdaTimestamp, 1);
+	copy = gda_timestamp_new ();
 	copy->year = src->year;
 	copy->month = src->month;
 	copy->day = src->day;
@@ -1699,6 +1737,104 @@ gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz)
 	}
 
 	ts->timezone = ntz;
+}
+
+
+gshort
+gda_timestamp_get_year (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->year;
+}
+void
+gda_timestamp_set_year (GdaTimestamp* timestamp, gshort year)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->year = year;
+}
+gushort
+gda_timestamp_get_month (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->month;
+}
+void
+gda_timestamp_set_month (GdaTimestamp* timestamp, gushort month)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->month = month;
+}
+gushort
+gda_timestamp_get_day (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->day;
+}
+void
+gda_timestamp_set_day (GdaTimestamp* timestamp, gushort day)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->day = day;
+}
+gushort
+gda_timestamp_get_hour (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->hour;
+}
+void
+gda_timestamp_set_hour (GdaTimestamp* timestamp, gushort hour)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->hour = hour;
+}
+gushort
+gda_timestamp_get_minute (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->minute;
+}
+void
+gda_timestamp_set_minute (GdaTimestamp* timestamp, gushort minute)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->minute = minute;
+}
+gushort
+gda_timestamp_get_second (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->second;
+}
+void
+gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->second = second;
+}
+gulong
+gda_timestamp_get_fraction (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->fraction;
+}
+void
+gda_timestamp_set_fraction (GdaTimestamp* timestamp, glong fraction)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->fraction = fraction;
+}
+glong
+gda_timestamp_get_timezone (GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return timestamp->timezone;
+}
+void
+gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone)
+{
+	g_return_if_fail (timestamp != NULL);
+	timestamp->timezone = timezone;
 }
 
 /**
@@ -1905,18 +2041,19 @@ gda_value_new_timestamp_from_timet (time_t val)
 #endif
 
         if (ltm) {
-                GdaTimestamp tstamp;
-                tstamp.year = ltm->tm_year + 1900;
-                tstamp.month = ltm->tm_mon + 1;
-                tstamp.day = ltm->tm_mday;
-                tstamp.hour = ltm->tm_hour;
-                tstamp.minute = ltm->tm_min;
-                tstamp.second = ltm->tm_sec;
-                tstamp.fraction = 0;
-                tstamp.timezone = tz;
+                GdaTimestamp* tstamp = gda_timestamp_new ();
+                gda_timestamp_set_year (tstamp, ltm->tm_year + 1900);
+                gda_timestamp_set_month (tstamp, ltm->tm_mon + 1);
+                gda_timestamp_set_day (tstamp, ltm->tm_mday);
+                gda_timestamp_set_hour (tstamp, ltm->tm_hour);
+                gda_timestamp_set_minute (tstamp, ltm->tm_min);
+                gda_timestamp_set_second (tstamp, ltm->tm_sec);
+                gda_timestamp_set_fraction (tstamp, 0);
+                gda_timestamp_set_timezone (tstamp, tz);
 
 		value = g_new0 (GValue, 1);
-                gda_value_set_timestamp (value, (const GdaTimestamp *) &tstamp);
+                gda_value_set_timestamp (value, (const GdaTimestamp *) tstamp);
+		gda_timestamp_free (tstamp);
         }
 
         return value;

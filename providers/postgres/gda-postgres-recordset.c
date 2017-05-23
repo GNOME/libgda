@@ -9,11 +9,11 @@
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2004 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Alex <alex@igalia.com>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011-2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -674,12 +674,12 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		PostgresConnectionData *cdata;
 		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 		if (cdata) {
-			GdaTimestamp timestamp;
-			if (gda_parse_formatted_timestamp (&timestamp, thevalue, cdata->date_first, cdata->date_second,
+			GdaTimestamp* timestamp = gda_timestamp_new ();
+			if (gda_parse_formatted_timestamp (timestamp, thevalue, cdata->date_first, cdata->date_second,
 							   cdata->date_third, cdata->date_sep)) {
-				if (timestamp.timezone == GDA_TIMEZONE_INVALID)
-					timestamp.timezone = 0; /* set to GMT */
-				gda_value_set_timestamp (value, &timestamp);
+				if (gda_timestamp_get_timezone (timestamp) == GDA_TIMEZONE_INVALID)
+					gda_timestamp_set_timezone (timestamp, 0); /* set to GMT */
+				gda_value_set_timestamp (value, timestamp);
 			}
 			else {
 				gda_row_invalidate_value (row, value);
@@ -687,6 +687,7 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
 					     _("Invalid timestamp value '%s'"), thevalue);
 			}
+			gda_timestamp_free (timestamp);
 		}
 		else
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,

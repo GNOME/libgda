@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2012-2017 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -719,17 +719,24 @@ timestamp_equal (const GValue *cv1, const GValue *cv2)
 {
 	g_assert (G_VALUE_TYPE (cv1) == GDA_TYPE_TIMESTAMP);
 	g_assert (G_VALUE_TYPE (cv2) == GDA_TYPE_TIMESTAMP);
-	const GdaTimestamp *ts1, *ts2;
-	ts1 = gda_value_get_timestamp (cv1);
-	ts2 = gda_value_get_timestamp (cv2);
-	if (ts1->timezone == ts2->timezone)
+	GdaTimestamp *ts1, *ts2;
+	ts1 = (GdaTimestamp*) gda_value_get_timestamp (cv1);
+	ts2 = (GdaTimestamp*) gda_value_get_timestamp (cv2);
+	if (gda_timestamp_get_timezone (ts1) == gda_timestamp_get_timezone (ts2))
 		return gda_value_differ (cv1, cv2) ? FALSE : TRUE;
 
 	GdaTimestamp *ts;
-	ts = gda_timestamp_copy ((GdaTimestamp*) ts1);
-	gda_timestamp_change_timezone (ts, ts2->timezone);
-	gboolean res;
-	res = memcmp (ts2, ts, sizeof (GdaTimestamp)) ? FALSE : TRUE;
+	ts = gda_timestamp_copy (ts1);
+	gda_timestamp_change_timezone (ts, gda_timestamp_get_timezone (ts2));
+	gboolean res = TRUE;
+	if (gda_timestamp_get_year (ts1) != gda_timestamp_get_year (ts2)) res = FALSE;
+	if (gda_timestamp_get_month (ts1) != gda_timestamp_get_month (ts2)) res = FALSE;
+	if (gda_timestamp_get_day (ts1) != gda_timestamp_get_day (ts2)) res = FALSE;
+	if (gda_timestamp_get_hour (ts1) != gda_timestamp_get_hour (ts2)) res = FALSE;
+	if (gda_timestamp_get_minute (ts1) != gda_timestamp_get_minute (ts2)) res = FALSE;
+	if (gda_timestamp_get_second (ts1) != gda_timestamp_get_second (ts2)) res = FALSE;
+	if (gda_timestamp_get_fraction (ts1) != gda_timestamp_get_fraction (ts2)) res = FALSE;
+	if (gda_timestamp_get_timezone (ts1) != gda_timestamp_get_timezone (ts2)) res = FALSE;
 	gda_timestamp_free (ts);
 	return res;
 }
