@@ -363,9 +363,14 @@
 	gda_dsn_split
 	gda_gbr_get_file_path
 	gda_gbr_init
-	gda_geometricpoint_copy
-	gda_geometricpoint_free
-	gda_geometricpoint_get_type
+	gda_geometric_point_copy
+	gda_geometric_point_free
+	gda_geometric_point_get_type
+	gda_geometric_point_get_x
+	gda_geometric_point_set_x
+	gda_geometric_point_get_y
+	gda_geometric_point_set_y
+	gda_geometric_point_new
 	gda_get_application_exec_path
 	gda_g_type_from_string
 	gda_g_type_to_string

@@ -651,7 +651,7 @@ gda_binary_free (GdaBinary *binary)
 
 /**
  * gda_value_new_binary: (skip)
- * @val: (transfert full): value to set for the new #GValue.
+ * @val: (transfer full): value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Makes a new #GValue of type #GDA_TYPE_BINARY with value @val.
@@ -832,6 +832,16 @@ gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 	}
 }
 
+/**
+ * GdaGeometricPoint:
+ * @x:
+ * @y:
+ */
+struct _GdaGeometricPoint {
+	gdouble x;
+	gdouble y;
+};
+
 /*
  * Register the GdaGeometricPoint type in the GType system
  */
@@ -856,7 +866,7 @@ geometric_point_to_string (const GValue *src, GValue *dest)
 
 /* Transform a String GValue to a GdaGeometricPoint from a string like "(3.2,5.6)" */
 static void
-string_to_geometricpoint (const GValue *src, GValue *dest)
+string_to_geometric_point (const GValue *src, GValue *dest)
 {
 	GdaGeometricPoint *point;
 	const gchar *as_string;
@@ -878,18 +888,18 @@ string_to_geometricpoint (const GValue *src, GValue *dest)
 }
 
 GType
-gda_geometricpoint_get_type (void)
+gda_geometric_point_get_type (void)
 {
 	static GType type = 0;
 
 	if (G_UNLIKELY (type == 0)) {
 		type = g_boxed_type_register_static ("GdaGeometricPoint",
-						     (GBoxedCopyFunc) gda_geometricpoint_copy,
-						     (GBoxedFreeFunc) gda_geometricpoint_free);
+						     (GBoxedCopyFunc) gda_geometric_point_copy,
+						     (GBoxedFreeFunc) gda_geometric_point_free);
 
 		g_value_register_transform_func (G_TYPE_STRING,
 						 type,
-						 string_to_geometricpoint);
+						 string_to_geometric_point);
 
 		g_value_register_transform_func (type,
 						 G_TYPE_STRING,
@@ -900,12 +910,12 @@ gda_geometricpoint_get_type (void)
 }
 
 /**
- * gda_geometricpoint_copy:
+ * gda_geometric_point_copy:
  *
  * Returns: (transfer full):
  */
 gpointer
-gda_geometricpoint_copy (gpointer boxed)
+gda_geometric_point_copy (gpointer boxed)
 {
 	GdaGeometricPoint *val = (GdaGeometricPoint*) boxed;
 	GdaGeometricPoint *copy;
@@ -920,9 +930,61 @@ gda_geometricpoint_copy (gpointer boxed)
 }
 
 void
-gda_geometricpoint_free (gpointer boxed)
+gda_geometric_point_free (gpointer boxed)
 {
 	g_free (boxed);
+}
+
+
+/**
+ * gda_geometric_point_new:
+ *
+ * Returns: (transfer full): a new #GdaGeometricPoint
+ */
+GdaGeometricPoint*
+gda_geometric_point_new (void)
+{
+	return g_new0 (GdaGeometricPoint, 1);
+}
+/**
+ * gda_geometric_point_get_x:
+ *
+ */
+gdouble
+gda_geometric_point_get_x (GdaGeometricPoint* gp)
+{
+	g_return_val_if_fail (gp != NULL, 0);
+	return gp->x;
+}
+/**
+ * gda_geometric_point_set_x:
+ *
+ */
+void
+gda_geometric_point_set_x (GdaGeometricPoint* gp, double x)
+{
+	g_return_if_fail (gp != NULL);
+	gp->x = x;
+}
+/**
+ * gda_geometric_point_get_y:
+ *
+ */
+gdouble
+gda_geometric_point_get_y (GdaGeometricPoint* gp)
+{
+	g_return_val_if_fail (gp != NULL, 0);
+	return gp->y;
+}
+/**
+ * gda_geometric_point_set_y:
+ *
+ */
+void
+gda_geometric_point_set_y (GdaGeometricPoint* gp, double y)
+{
+	g_return_if_fail (gp != NULL);
+	gp->y = y;
 }
 
 
@@ -2428,7 +2490,7 @@ gda_value_take_blob (GValue *value, GdaBlob *blob)
 }
 
 /**
- * gda_value_get_geometric_point: (skip)
+ * gda_value_get_geometric_point:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: (transfer none): the value stored in @value.

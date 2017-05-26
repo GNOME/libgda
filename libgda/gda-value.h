@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 #define GDA_TYPE_NULL (gda_null_get_type())
 #define GDA_TYPE_DEFAULT (gda_default_get_type())
 #define GDA_TYPE_BLOB (gda_blob_get_type())
-#define	GDA_TYPE_GEOMETRIC_POINT (gda_geometricpoint_get_type())
+#define	GDA_TYPE_GEOMETRIC_POINT (gda_geometric_point_get_type())
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
 #define GDA_TYPE_TIME (gda_time_get_type())
@@ -61,15 +61,6 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
 #define GDA_VALUE_HOLDS_TIMESTAMP(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
 
-/**
- * GdaGeometricPoint:
- * @x:
- * @y:
- */
-typedef struct {
-	gdouble x;
-	gdouble y;
-} GdaGeometricPoint;
 
 /* GdaNumeric */
 typedef struct _GdaNumeric GdaNumeric;
@@ -216,9 +207,20 @@ const GdaBlob                    *gda_value_get_blob (const GValue *value);
 void                              gda_value_set_blob (GValue *value, const GdaBlob *blob);
 void                              gda_value_take_blob (GValue *value, GdaBlob *blob);
 
+typedef struct _GdaGeometricPoint GdaGeometricPoint;
+GType                             gda_geometric_point_get_type (void) G_GNUC_CONST;
+GdaGeometricPoint                *gda_geometric_point_new (void);
+gdouble                           gda_geometric_point_get_x (GdaGeometricPoint* gp);
+void                              gda_geometric_point_set_x (GdaGeometricPoint* gp, double x);
+gdouble                           gda_geometric_point_get_y (GdaGeometricPoint* gp);
+void                              gda_geometric_point_set_y (GdaGeometricPoint* gp, double y);
+gpointer                          gda_geometric_point_copy (gpointer boxed);
+void                              gda_geometric_point_free (gpointer boxed);
 const GdaGeometricPoint          *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
+
 void                              gda_value_set_null (GValue *value);
+
 const GdaNumeric                 *gda_value_get_numeric (const GValue *value);
 void                              gda_value_set_numeric (GValue *value, const GdaNumeric *val);
 gshort                            gda_value_get_short (const GValue *value);
@@ -285,11 +287,6 @@ gboolean                          gda_timestamp_valid (const GdaTimestamp *times
 void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
 const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
 void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
-
-
-GType                             gda_geometricpoint_get_type (void) G_GNUC_CONST;
-gpointer                          gda_geometricpoint_copy (gpointer boxed);
-void                              gda_geometricpoint_free (gpointer boxed);
 
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;

@@ -589,10 +589,10 @@ static void
 make_point (GdaGeometricPoint *point, const gchar *value)
 {
 	value++;
-	point->x = g_ascii_strtod (value, NULL);
+	gda_geometricpoint_set_x (point, g_ascii_strtod (value, NULL));
 	value = strchr (value, ',');
 	value++;
-	point->y = g_ascii_strtod (value, NULL);
+	gda_geometricpoint_set_y (point, g_ascii_strtod (value, NULL));
 }
 
 static void
@@ -666,9 +666,10 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		gda_numeric_free (numeric);
 	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
-		GdaGeometricPoint point;
+		GdaGeometricPoint* point = gda_geometric_point_new ();
 		make_point (&point, thevalue);
 		gda_value_set_geometric_point (value, &point);
+		gda_geometric_point_free (point);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {
 		PostgresConnectionData *cdata;

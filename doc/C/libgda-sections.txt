@@ -972,7 +972,7 @@ gda_value_get_ushort
 gda_value_set_ushort
 <SUBSECTION Standard>
 gda_binary_get_type
-gda_geometricpoint_get_type
+gda_geometric_point_get_type
 gda_numeric_get_type
 gda_time_get_type
 gda_timestamp_get_type
