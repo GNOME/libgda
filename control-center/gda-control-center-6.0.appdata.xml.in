@@ -7,8 +7,8 @@
   <summary></summary>
   <description>
     <_p>
-      From the database control center, you can manage the defined named data sources (database connections), and
-      check which database providers are installed (and useable to connect to different databases).
+      From the database control center, you can manage the defined data sources (database connections), and
+      check which database providers are installed (and usable to connect to different databases).
     </_p>
   </description>
   <url type="homepage">http://www.gnome-db.org/</url>

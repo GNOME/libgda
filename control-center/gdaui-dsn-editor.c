@@ -412,7 +412,7 @@ dsn_copy_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data
         gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
 	gchar *str;
-	str = g_strdup_printf (_("Define the named of the new data source which will be created as a copy "
+	str = g_strdup_printf (_("Define the name of the new data source which will be created as a copy "
 				 "of '%s':"), editor->priv->name); 
         label = gtk_label_new (str);
 	g_free (str);	    

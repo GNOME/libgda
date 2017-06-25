@@ -938,7 +938,7 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 			if (!h) {
 				h = gda_holder_new (G_TYPE_STRING);
 				g_object_set (h, "id", "date_format",
-					      "description", _("Format of the date used for by connection, where "
+					      "description", _("Format of the date used for the connection, where "
 							       "YYYY is the year, MM the month and DD the day"), NULL);
 				gda_set_add_holder (tcnc->priv->infos, h);
 			}

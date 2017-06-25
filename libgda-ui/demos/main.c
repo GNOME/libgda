@@ -868,7 +868,7 @@ main (int argc, char **argv)
 							  GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
 							  _("<b><big>Note:\n</big></b>Many of the demonstrated items use an opened connection to the SQLite using the '%s' file.\n\n"
 							    "In the source code shown here, the <i>demo_cnc</i> and <i>demo_parser</i> objects are created by the framework and made available to all the demonstrated items.\n\n"
-							    "To illustrate that calls are non blocking, there is a spinner at the top (which must never stop spinning), and a 1 second delay has been added whenever the connection is used."), full_filename);
+							    "To illustrate that calls are non blocking, there is a spinner at the top (which must never stop spinning), and a 1 second delay is added whenever the connection is used."), full_filename);
 		g_free (full_filename);
 		g_signal_connect_swapped (msg, "response",
 					  G_CALLBACK (gtk_widget_destroy), msg);
