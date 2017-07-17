@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
  * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2007 - 2009 Murray Cumming <murrayc@murrayc.com>
  *
  * This library is free software; you can redistribute it and/or

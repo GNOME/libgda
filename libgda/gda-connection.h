@@ -6,7 +6,7 @@
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2003 Filip Van Raemdonck <mechanix@debian.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
- * Copyright (C) 2004 José María Casanova Crespo <jmcasanova@igalia.com>
+ * Copyright (C) 2004 JosÃ© MarÃ­a Casanova Crespo <jmcasanova@igalia.com>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
