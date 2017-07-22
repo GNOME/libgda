@@ -1,23 +1,23 @@
 # Indonesian translation for libgda.
 # Copyright (C) 2010 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
-# Andika Triwidada <andika@gmail.com>, 2010, 2012-2015.
+# Andika Triwidada <andika@gmail.com>, 2010, 2012-2015, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-07-07 18:51+0000\n"
-"PO-Revision-Date: 2016-07-25 17:22+0700\n"
-"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"POT-Creation-Date: 2017-06-25 22:27+0000\n"
+"PO-Revision-Date: 2017-07-22 13:22+0700\n"
+"Last-Translator: Andika Triwidada <atriwidada@gnome.org>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:380
@@ -25,11 +25,11 @@ msgid "_Delete"
 msgstr "_Hapus"
 
 #. title
-#: ../control-center/dsn-config.c:183
+#: ../control-center/dsn-config.c:181
 msgid "Data Sources"
 msgstr "Sumber Data"
 
-#: ../control-center/dsn-config.c:184
+#: ../control-center/dsn-config.c:182
 msgid ""
 "Data sources are the means by which database connections are identified: all "
 "the information needed to open a connection to a specific database using a "
@@ -39,11 +39,11 @@ msgstr ""
 "informasi yang diperlukan untuk membuka suatu koneksi ke suatu basis data "
 "spesifik memakai suatu penyedia diacu memakai suatu nama yang unik."
 
-#: ../control-center/dsn-config.c:258
+#: ../control-center/dsn-config.c:256
 msgid "No data source selected."
 msgstr "Tak ada sumber data yang dipilih."
 
-#: ../control-center/dsn-config.c:283
+#: ../control-center/dsn-config.c:281
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:7
@@ -52,27 +52,27 @@ msgstr "Tak ada sumber data yang dipilih."
 msgid "Definition"
 msgstr "Definisi"
 
-#: ../control-center/dsn-config.c:289 ../tools/common/t-config-info.c:342
+#: ../control-center/dsn-config.c:287 ../tools/common/t-config-info.c:342
 msgid "Parameters"
 msgstr "Parameter"
 
-#: ../control-center/dsn-config.c:295 ../libgda/gda-config.c:1759
+#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1759
 #: ../tools/browser/auth-dialog.c:265 ../tools/common/t-config-info.c:206
 #: ../tools/common/t-config-info.c:366
 msgid "Authentication"
 msgstr "Otentikasi"
 
-#: ../control-center/dsn-config.c:305
+#: ../control-center/dsn-config.c:303
 msgid "Write changes made to the DSN"
 msgstr "Tulis perubahan yang dibuat ke DSN"
 
-#: ../control-center/dsn-config.c:368
+#: ../control-center/dsn-config.c:366
 #, c-format
 msgid "Could not save DSN definition: %s"
 msgstr "Tak bisa menyimpan definisi DSN: %s"
 
 #. FIXME: add a notice somewhere in the UI
-#: ../control-center/dsn-config.c:368 ../control-center/gdaui-dsn-editor.c:353
+#: ../control-center/dsn-config.c:366 ../control-center/gdaui-dsn-editor.c:352
 #: ../libgda/gda-config.c:496 ../libgda/gda-config.c:646
 #: ../libgda/gda-config.c:1181 ../libgda/gda-config.c:1292
 #: ../libgda/gda-config.c:1350 ../libgda/gda-config.c:1426
@@ -87,18 +87,18 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../libgda/gda-meta-store.c:1189 ../libgda/gda-server-operation.c:683
 #: ../libgda/gda-server-operation.c:1088 ../libgda/gda-set.c:1185
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2669
-#: ../libgda/sqlite/gda-sqlite-provider.c:2681
-#: ../libgda/sqlite/gda-sqlite-provider.c:2892
-#: ../libgda/sqlite/gda-sqlite-provider.c:3223
-#: ../libgda/sqlite/gda-sqlite-provider.c:3235
-#: ../libgda/sqlite/gda-sqlite-provider.c:3366
+#: ../libgda/sqlite/gda-sqlite-provider.c:2670
+#: ../libgda/sqlite/gda-sqlite-provider.c:2682
+#: ../libgda/sqlite/gda-sqlite-provider.c:2893
+#: ../libgda/sqlite/gda-sqlite-provider.c:3224
+#: ../libgda/sqlite/gda-sqlite-provider.c:3236
+#: ../libgda/sqlite/gda-sqlite-provider.c:3367
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:256
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:458
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:857
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1028
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1589
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:459
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:858
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1029
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1590
 #: ../libgda-ui/data-entries/common-bin.c:47
 #: ../libgda-ui/data-entries/common-bin.c:183
 #: ../libgda-ui/data-entries/plugins/common-pict.c:225
@@ -106,7 +106,7 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:484
 #: ../libgda-ui/demos/main.c:779 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:96 ../libgda-ui/gdaui-init.c:104
-#: ../libgda-ui/gdaui-init.c:552 ../libgda-ui/gdaui-login.c:449
+#: ../libgda-ui/gdaui-init.c:551 ../libgda-ui/gdaui-login.c:449
 #: ../libgda-ui/gdaui-rt-editor.c:734 ../providers/jdbc/gda-jdbc-provider.c:525
 #: ../providers/jdbc/gda-jdbc-provider.c:1454
 #: ../providers/jdbc/gda-jdbc-provider.c:1483
@@ -123,14 +123,14 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../providers/mysql/gda-mysql-provider.c:2016
 #: ../providers/mysql/gda-mysql-provider.c:2031
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1806
-#: ../providers/postgres/gda-postgres-provider.c:1821
+#: ../providers/postgres/gda-postgres-provider.c:1807
+#: ../providers/postgres/gda-postgres-provider.c:1822
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
-#: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:618
-#: ../tools/browser/auth-dialog.c:621 ../tools/browser/browser-window.c:588
-#: ../tools/browser/browser-window.c:603 ../tools/browser/browser-window.c:618
-#: ../tools/browser/browser-window.c:670 ../tools/browser/browser-window.c:891
+#: ../tools/base/base-tool-input.c:107 ../tools/browser/auth-dialog.c:617
+#: ../tools/browser/auth-dialog.c:620 ../tools/browser/browser-window.c:586
+#: ../tools/browser/browser-window.c:601 ../tools/browser/browser-window.c:616
+#: ../tools/browser/browser-window.c:668 ../tools/browser/browser-window.c:889
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
 #: ../tools/browser/canvas/browser-canvas-fkey.c:474
 #: ../tools/browser/data-manager/analyser.c:278
@@ -145,7 +145,7 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:190
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:253
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:597
-#: ../tools/browser/ldap-browser/ldap-search-page.c:333
+#: ../tools/browser/ldap-browser/ldap-search-page.c:332
 #: ../tools/browser/login-dialog.c:230
 #: ../tools/browser/query-exec/query-console-page.c:760
 #: ../tools/browser/query-exec/query-console-page.c:790
@@ -161,13 +161,13 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../tools/browser/schema-browser/favorite-selector.c:352
 #: ../tools/browser/schema-browser/relations-diagram.c:244
 #: ../tools/browser/schema-browser/table-columns.c:952
-#: ../tools/browser/schema-browser/table-info.c:522
-#: ../tools/browser/schema-browser/table-info.c:592
-#: ../tools/browser/schema-browser/table-info.c:887
-#: ../tools/browser/schema-browser/table-info.c:1001
+#: ../tools/browser/schema-browser/table-info.c:520
+#: ../tools/browser/schema-browser/table-info.c:590
+#: ../tools/browser/schema-browser/table-info.c:885
+#: ../tools/browser/schema-browser/table-info.c:998
 #: ../tools/browser/schema-browser/table-preferences.c:690
 #: ../tools/browser/schema-browser/table-preferences.c:763
-#: ../tools/browser/ui-formgrid.c:614 ../tools/browser/ui-formgrid.c:726
+#: ../tools/browser/ui-formgrid.c:613 ../tools/browser/ui-formgrid.c:725
 #: ../tools/common/t-app.c:2860 ../tools/common/t-connection.c:297
 #: ../tools/common/t-connection.c:437 ../tools/common/t-connection.c:1210
 #: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1999
@@ -176,25 +176,25 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 msgid "No detail"
 msgstr "Tak ada rincian"
 
-#: ../control-center/dsn-config.c:416
+#: ../control-center/dsn-config.c:414
 #, c-format
 msgid "Are you sure you want to remove the data source '%s'?"
 msgstr "Anda yakin ingin menghapus sumber data '%s'?"
 
-#: ../control-center/dsn-config.c:421
+#: ../control-center/dsn-config.c:419
 msgid "Data source removal confirmation"
 msgstr "Konfirmasi penghapusan sumber data"
 
 #: ../control-center/gda-control-center-6.0.appdata.xml.in.h:1
 msgid ""
-"From the database control center, you can manage the defined named data "
-"sources (database connections), and check which database providers are "
-"installed (and useable to connect to different databases)."
+"From the database control center, you can manage the defined data sources "
+"(database connections), and check which database providers are installed "
+"(and usable to connect to different databases)."
 msgstr ""
 "Dari pusat kendali basis data, Anda dapat mengelola sumber-sumber data "
-"bernama (koneksi basis data) yang didefinisikan, dan memeriksa penyedia "
-"basis data mana yang terpasang (dan dapat dipakai untuk menyambung ke basis "
-"data yang berbeda)."
+"(koneksi basis data) yang didefinisikan, dan memeriksa penyedia basis data "
+"mana yang terpasang (dan dapat dipakai untuk menyambung ke basis data yang "
+"berbeda)."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
 msgid "Database access control center"
@@ -257,7 +257,7 @@ msgstr ""
 "basis data lokal dalam suatu berkas, pilih jenis basisdata 'SQLite'."
 
 #: ../control-center/gdaui-dsn-assistant.c:460
-#: ../control-center/gdaui-dsn-editor.c:423
+#: ../control-center/gdaui-dsn-editor.c:422
 msgid "Data source name"
 msgstr "Nama sumber data"
 
@@ -348,19 +348,19 @@ msgstr ""
 msgid "Ready to add a new data source"
 msgstr "Siap menambah sumber data baru"
 
-#: ../control-center/gdaui-dsn-editor.c:222
+#: ../control-center/gdaui-dsn-editor.c:221
 msgid "_System wide data source:"
 msgstr "_Sumber data seluruh sistem:"
 
-#: ../control-center/gdaui-dsn-editor.c:234
+#: ../control-center/gdaui-dsn-editor.c:233
 msgid "_Provider:"
 msgstr "_Penyedia:"
 
-#: ../control-center/gdaui-dsn-editor.c:251
+#: ../control-center/gdaui-dsn-editor.c:250
 msgid "_Description:"
 msgstr "Ke_terangan:"
 
-#: ../control-center/gdaui-dsn-editor.c:272
+#: ../control-center/gdaui-dsn-editor.c:271
 msgid ""
 "<span foreground='red'>The database provider used by this data source is not "
 "available,\n"
@@ -370,28 +370,28 @@ msgstr ""
 "tak tersedia,\n"
 "penyuntingan atribut sumber data dimatikan</span>"
 
-#: ../control-center/gdaui-dsn-editor.c:319
+#: ../control-center/gdaui-dsn-editor.c:318
 #, c-format
 msgid "Login for %s"
 msgstr "Log masuk bagi %s"
 
-#: ../control-center/gdaui-dsn-editor.c:344
+#: ../control-center/gdaui-dsn-editor.c:343
 msgid "Connection successfully opened!"
 msgstr "Koneksi sukses dibuka!"
 
-#: ../control-center/gdaui-dsn-editor.c:352
+#: ../control-center/gdaui-dsn-editor.c:351
 msgid "Could not open connection"
 msgstr "Tak bisa membuka koneksi"
 
-#: ../control-center/gdaui-dsn-editor.c:399
+#: ../control-center/gdaui-dsn-editor.c:398
 msgid "Data source copy"
 msgstr "Salinan sumber data"
 
-#: ../control-center/gdaui-dsn-editor.c:401
+#: ../control-center/gdaui-dsn-editor.c:400
 msgid "Create data source"
 msgstr "Buat sumber data"
 
-#: ../control-center/gdaui-dsn-editor.c:402
+#: ../control-center/gdaui-dsn-editor.c:401
 #: ../control-center/gdaui-login-dialog.c:105
 #: ../libgda-ui/data-entries/common-bin.c:62
 #: ../libgda-ui/data-entries/common-bin.c:162
@@ -413,15 +413,15 @@ msgstr "Buat sumber data"
 msgid "_Cancel"
 msgstr "_Batal"
 
-#: ../control-center/gdaui-dsn-editor.c:416
+#: ../control-center/gdaui-dsn-editor.c:415
 #, c-format
 msgid ""
-"Define the named of the new data source which will be created as a copy of "
+"Define the name of the new data source which will be created as a copy of "
 "'%s':"
 msgstr ""
 "Tentukan nama sumber data baru yang akan dibuat sebagai salinan dari '%s':"
 
-#: ../control-center/gdaui-dsn-editor.c:467
+#: ../control-center/gdaui-dsn-editor.c:466
 #, c-format
 msgid "Could not create data source: %s"
 msgstr "Tidak dapat membuat sumber data: %s"
@@ -461,15 +461,15 @@ msgstr "Tidak dapat mendeklarasikan sumber data baru"
 msgid "No valid data source info was created"
 msgstr "Tak ada info sumber data yang valid yang dibuat"
 
-#: ../control-center/main.c:152
+#: ../control-center/main.c:151
 msgid "Database sources control center"
 msgstr "Pusat kendali sumber basis data"
 
-#: ../control-center/main.c:155
+#: ../control-center/main.c:154
 msgid "Database access services for the GNOME Desktop"
 msgstr "Layanan akses basis data bagi Desktop GNOME"
 
-#: ../control-center/main.c:223
+#: ../control-center/main.c:222
 msgid "Datasource access control center"
 msgstr "Pusat kendali akses sumber data"
 
@@ -509,11 +509,11 @@ msgid "Shared object file"
 msgstr "Berkas objek bersama"
 
 #. title
-#: ../control-center/provider-config.c:175
+#: ../control-center/provider-config.c:173
 msgid "Providers"
 msgstr "Penyedia"
 
-#: ../control-center/provider-config.c:176
+#: ../control-center/provider-config.c:174
 msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
@@ -725,8 +725,8 @@ msgstr "Sumber data %s tak ditemukan di konfigurasi"
 msgid "Datasource configuration error: no provider specified"
 msgstr "Galat konfigurasi sumber data: penyedia tak dinyatakan"
 
-#: ../libgda/gda-connection.c:1135 ../tools/browser/auth-dialog.c:384
-#: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:777
+#: ../libgda/gda-connection.c:1135 ../tools/browser/auth-dialog.c:383
+#: ../tools/browser/auth-dialog.c:418 ../tools/common/t-connection.c:777
 #, c-format
 msgid "Malformed connection string '%s'"
 msgstr "String koneksi '%s' salah bentuk"
@@ -768,8 +768,8 @@ msgstr "Penyedia tak menyediakan GdaDataHandler untuk tanggal"
 #: ../libgda/gda-connection.c:3820 ../libgda/gda-connection.c:4760
 #: ../libgda/gda-connection.c:5179 ../libgda/gda-connection.c:5243
 #: ../libgda/gda-connection.c:5998
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:170
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:171
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:421
 #, c-format
 msgid "Connection is closed"
 msgstr "Sambungan tertutup"
@@ -817,7 +817,7 @@ msgstr "Pelacakan status transaksi koneksi: tak ada transaksi bagi %s"
 #: ../libgda/gda-data-proxy.c:3567 ../libgda/gda-data-proxy.c:3691
 #: ../libgda/gda-data-select.c:1355 ../libgda/gda-data-select.c:1939
 #: ../libgda/gda-data-select.c:2895 ../libgda/gda-data-select.c:2962
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:956
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:957
 #: ../libgda-ui/gdaui-combo.c:826
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -1190,7 +1190,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Konversi karakter pada baris %d, galat: %s"
 
 #: ../libgda/gda-data-model-import.c:1047
-#: ../libgda/sqlite/gda-sqlite-provider.c:930
+#: ../libgda/sqlite/gda-sqlite-provider.c:931
 #: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:609
 #: ../tools/browser/gdaui-data-import.c:177
@@ -1930,6 +1930,8 @@ msgstr "Tak bisa temukan objek bernama '%s'"
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Tak bisa temukan kolom '%s' dalam tabel '%s'"
 
+#. To translators: GdaMetaStore is an object holding meta data information
+#. * which will be used as an information source
 #: ../libgda/gda-meta-struct.c:134
 msgid "GdaMetaStore object to fetch information from"
 msgstr "Objek GdaMetaStore tempat mengambil informasi"
@@ -2096,15 +2098,15 @@ msgstr "Nilai identifier SQL salah"
 msgid "Missing required value for '%s'"
 msgstr "Kurang nilai yang diperlukan bagi '%s'"
 
-#: ../libgda/gda-server-operation.c:3294
+#: ../libgda/gda-server-operation.c:3291
 msgid "Unspecified table name"
 msgstr "Nama tabel tak dinyatakan"
 
-#: ../libgda/gda-server-operation.c:3336
+#: ../libgda/gda-server-operation.c:3333
 msgid "Invalid type"
 msgstr "Jenis tak valid"
 
-#: ../libgda/gda-server-operation.c:3435
+#: ../libgda/gda-server-operation.c:3429
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Operasi CREATE TABLE tak didukung oleh server basis data"
 
@@ -2274,61 +2276,61 @@ msgstr "ID %u target bagian kiri tak diketahui"
 msgid "Unknown right part target ID %u"
 msgstr "ID %u target bagian kanan tak diketahui"
 
-#: ../libgda/gda-statement.c:499
+#: ../libgda/gda-statement.c:500
 #, c-format
 msgid "Could not determine GType for parameter '%s'"
 msgstr "Tak bisa menentukan GType bagi parameter '%s'"
 
-#: ../libgda/gda-statement.c:500
+#: ../libgda/gda-statement.c:501
 msgid "Unnamed"
 msgstr "Tanpa nama"
 
-#: ../libgda/gda-statement.c:519
+#: ../libgda/gda-statement.c:520
 #, c-format
 msgid "Can't handle default value of type '%s'"
 msgstr "Tak bisa menangani nilai baku bertipe '%s'"
 
-#: ../libgda/gda-statement.c:776
+#: ../libgda/gda-statement.c:777
 msgid "Missing SQL code"
 msgstr "Kurang kode SQL"
 
-#: ../libgda/gda-statement.c:796
+#: ../libgda/gda-statement.c:797
 #, c-format
 msgid "No data handler for type '%s'"
 msgstr "Tak ada penangan data bagi tipe '%s'"
 
-#: ../libgda/gda-statement.c:1377
+#: ../libgda/gda-statement.c:1378
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr "Tipe parameter salah bagi '%s': tipe diharapkan '%s' dan mendapat '%s'"
 
-#: ../libgda/gda-statement.c:1389
+#: ../libgda/gda-statement.c:1390
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "Kurang parameter '%s'"
 
-#: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3070
+#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3071
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2294
-#: ../providers/postgres/gda-postgres-provider.c:2081
+#: ../providers/postgres/gda-postgres-provider.c:2082
 #: ../providers/web/gda-web-provider.c:1497
 #, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "Parameter '%s' tak valid"
 
-#: ../libgda/gda-statement.c:1447
+#: ../libgda/gda-statement.c:1448
 msgid "Unnamed parameter"
 msgstr "Parameter tanpa nama"
 
-#: ../libgda/gda-statement.c:1723
+#: ../libgda/gda-statement.c:1724
 msgid "Malformed table name"
 msgstr "Nama tabel salah bentuk"
 
-#: ../libgda/gda-statement.c:2221
+#: ../libgda/gda-statement.c:2222
 msgid "Join is not in a FROM statement"
 msgstr "Join bukan dalam pernyataan FROM"
 
-#: ../libgda/gda-statement.c:2228
+#: ../libgda/gda-statement.c:2229
 msgid "Could not find target the join is for"
 msgstr "Tak bisa temukan target tujuan join"
 
@@ -2393,7 +2395,7 @@ msgstr ""
 #: ../tools/common/t-app.c:4692 ../tools/common/t-app.c:5209
 #: ../tools/common/t-app.c:5310 ../tools/common/t-app.c:5407
 #: ../tools/common/t-app.c:5505 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:422
+#: ../tools/common/t-context.c:419
 #, c-format
 msgid "No connection specified"
 msgstr "Sambungan tak dinyatakan"
@@ -2449,6 +2451,8 @@ msgstr "Tabel tak memiliki kolom apapun"
 msgid "Table's column '%s' is not part of SELECT"
 msgstr "Kolom '%s' tabel bukan bagian dari SELECT"
 
+#. To translators: this error message occurs when no "INSERT INTO <table> (field1, ...)..."
+#. * SQL statement can be computed because no table field can be used
 #: ../libgda/gda-util.c:1304
 msgid "Could not compute any field to insert into"
 msgstr "Tak bisa mengkomputasi ruas manapun sebagai tujuan penyisipan"
@@ -2466,10 +2470,10 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Tak bisa menulis ulang pernyataan yang bukan INSERT atau UPDATE"
 
 #: ../libgda/gda-util.c:1774 ../libgda/gda-util.c:1831
-#: ../libgda/gda-util.c:1871 ../libgda/sqlite/gda-sqlite-provider.c:3051
+#: ../libgda/gda-util.c:1871 ../libgda/sqlite/gda-sqlite-provider.c:3052
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2274
-#: ../providers/postgres/gda-postgres-provider.c:2063
+#: ../providers/postgres/gda-postgres-provider.c:2064
 #: ../providers/web/gda-web-provider.c:1479
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -2686,35 +2690,35 @@ msgstr "Representasi biner SQLite"
 msgid "Sqlite boolean representation"
 msgstr "Representasi boolean SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:120
-#: ../libgda/sqlite/gda-sqlite-provider.c:178
+#: ../libgda/sqlite/gda-sqlite-provider.c:121
+#: ../libgda/sqlite/gda-sqlite-provider.c:179
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "Parameter '%s' tak ditemukan dalam statement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:134
-#: ../libgda/sqlite/gda-sqlite-provider.c:150
-#: ../libgda/sqlite/gda-sqlite-provider.c:192
-#: ../libgda/sqlite/gda-sqlite-provider.c:208
+#: ../libgda/sqlite/gda-sqlite-provider.c:135
+#: ../libgda/sqlite/gda-sqlite-provider.c:151
+#: ../libgda/sqlite/gda-sqlite-provider.c:193
+#: ../libgda/sqlite/gda-sqlite-provider.c:209
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "Tak ada nama kolom untuk diasosiasikan ke parameter '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:218
+#: ../libgda/sqlite/gda-sqlite-provider.c:219
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "Mengikat BLOB bagi pernyataan tipe ini tak didukung"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:628
+#: ../libgda/sqlite/gda-sqlite-provider.c:629
 msgid "Can't find libsqlite3."
 msgstr "Tak bisa menemukan libsqlite3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:762
+#: ../libgda/sqlite/gda-sqlite-provider.c:763
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "String koneksi mesti memuat nilai DB_DIR dan DB_NAME"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:788
-#: ../libgda/sqlite/gda-sqlite-provider.c:795
+#: ../libgda/sqlite/gda-sqlite-provider.c:789
+#: ../libgda/sqlite/gda-sqlite-provider.c:796
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -2724,38 +2728,38 @@ msgstr ""
 "Format string koneksi telah berubah: gantikan URI dengan DB_DIR (path ke "
 "berkas basis data) dan DB_NAME (berkas basis data tanpa '%s' di akhir)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:810
+#: ../libgda/sqlite/gda-sqlite-provider.c:811
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
 "Bagian DB_DIR dari string koneksi mesti menunjuk ke direktori yang valid."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:870
+#: ../libgda/sqlite/gda-sqlite-provider.c:871
 msgid "Wrong encryption passphrase"
 msgstr "Frasa sandi enkripsi salah"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:910
+#: ../libgda/sqlite/gda-sqlite-provider.c:911
 msgid "Extension loading is not supported"
 msgstr "Pemuatan ekstensi tak didukung"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:929
+#: ../libgda/sqlite/gda-sqlite-provider.c:930
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Tak bisa menata opsi SQLite empty_result_callbacks: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1017
-#: ../libgda/sqlite/gda-sqlite-provider.c:1036
+#: ../libgda/sqlite/gda-sqlite-provider.c:1018
+#: ../libgda/sqlite/gda-sqlite-provider.c:1037
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "Tak dapat mendaftarkan fungsi '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1054
+#: ../libgda/sqlite/gda-sqlite-provider.c:1055
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "Tak bisa mendefinisikan kolasi %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1227
+#: ../libgda/sqlite/gda-sqlite-provider.c:1228
 #: ../libgda-ui/data-entries/plugins/libmain.c:90
 #: ../libgda-ui/data-entries/plugins/libmain.c:127
 #: ../libgda-ui/data-entries/plugins/libmain.c:153
@@ -2766,87 +2770,87 @@ msgstr "Tak bisa mendefinisikan kolasi %s"
 msgid "Missing spec. file '%s'"
 msgstr "Kehilangan berkas spec. '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1354
-#: ../libgda/sqlite/gda-sqlite-provider.c:1365
-#: ../libgda/sqlite/gda-sqlite-provider.c:1379
-#: ../libgda/sqlite/gda-sqlite-provider.c:1390
+#: ../libgda/sqlite/gda-sqlite-provider.c:1355
+#: ../libgda/sqlite/gda-sqlite-provider.c:1366
+#: ../libgda/sqlite/gda-sqlite-provider.c:1380
+#: ../libgda/sqlite/gda-sqlite-provider.c:1391
 msgid "Error initializing database with passphrase"
 msgstr "Galat saat menginisialisasi basis data dengan frasa sandi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1432
+#: ../libgda/sqlite/gda-sqlite-provider.c:1433
 msgid "Missing database name or directory"
 msgstr "Kurang direktori atau nama basis data"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1458
-#: ../providers/postgres/gda-postgres-provider.c:1106
+#: ../libgda/sqlite/gda-sqlite-provider.c:1459
 #: ../providers/postgres/gda-postgres-provider.c:1107
+#: ../providers/postgres/gda-postgres-provider.c:1108
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaksi tak didukung dalam mode hanya-baca"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1853
+#: ../libgda/sqlite/gda-sqlite-provider.c:1854
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
 "SQLite tak mendukung menyatakan ruas tempat menerapkan klausul DISTINCT"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1900
-#: ../libgda/sqlite/gda-sqlite-provider.c:1910
+#: ../libgda/sqlite/gda-sqlite-provider.c:1901
+#: ../libgda/sqlite/gda-sqlite-provider.c:1911
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Kompon '%s' tak didukung oleh SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2008
+#: ../libgda/sqlite/gda-sqlite-provider.c:2009
 msgid "ILIKE operation not supported"
 msgstr "Operasi ILIKE tak didukung"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2555
+#: ../libgda/sqlite/gda-sqlite-provider.c:2556
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1657
+#: ../providers/postgres/gda-postgres-provider.c:1658
 #: ../providers/web/gda-web-provider.c:1251
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Parameter tanpa nama tak diijinkan dalam prepared statement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2668
-#: ../libgda/sqlite/gda-sqlite-provider.c:2680
+#: ../libgda/sqlite/gda-sqlite-provider.c:2669
+#: ../libgda/sqlite/gda-sqlite-provider.c:2681
 #: ../providers/mysql/gda-mysql-provider.c:2015
-#: ../providers/postgres/gda-postgres-provider.c:1805
+#: ../providers/postgres/gda-postgres-provider.c:1806
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "Tak bisa membangun pernyataan SELECT untuk mendapat baris terakhir yang "
 "disisipkan: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2714
+#: ../libgda/sqlite/gda-sqlite-provider.c:2715
 #: ../providers/mysql/gda-mysql-provider.c:2043
-#: ../providers/postgres/gda-postgres-provider.c:1833
+#: ../providers/postgres/gda-postgres-provider.c:1834
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Pernyataan SELECT untuk mendapat baris terakhir yang disisipkan tak "
 "mengembalikan baris apapun"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2718
+#: ../libgda/sqlite/gda-sqlite-provider.c:2719
 #: ../providers/mysql/gda-mysql-provider.c:2047
-#: ../providers/postgres/gda-postgres-provider.c:1837
+#: ../providers/postgres/gda-postgres-provider.c:1838
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 "Pernyataan SELECT untuk mendapat baris terakhir yang disisipkan "
 "mengembalikan terlalu banyak (%d) baris"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2783
+#: ../libgda/sqlite/gda-sqlite-provider.c:2784
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Prepared statement tak memiliki GdaStatement yang terkait"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2823
-#: ../libgda/sqlite/gda-sqlite-provider.c:2860
+#: ../libgda/sqlite/gda-sqlite-provider.c:2824
+#: ../libgda/sqlite/gda-sqlite-provider.c:2861
 msgid "Can't create SQLite BLOB handle"
 msgstr "Tak bisa membuat handle BLOB SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2827
-#: ../libgda/sqlite/gda-sqlite-provider.c:2865
+#: ../libgda/sqlite/gda-sqlite-provider.c:2828
+#: ../libgda/sqlite/gda-sqlite-provider.c:2866
 msgid "Can't write to SQLite's BLOB"
 msgstr "Tak bisa menulis ke BLOB SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2850
+#: ../libgda/sqlite/gda-sqlite-provider.c:2851
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2855,87 +2859,87 @@ msgstr ""
 "Tak bisa mendapat handle BLOB SQLite (tipe yang dilaporkan adalah '%s'), "
 "mohon laporkan kutu ini ke http://bugzilla.gnome.org/ bagi produk \"libgda\"."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2875
+#: ../libgda/sqlite/gda-sqlite-provider.c:2876
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Tak bisa mengidentifikasi ROWID dari blob yang akan dipenuhi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2984
+#: ../libgda/sqlite/gda-sqlite-provider.c:2985
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Statement kosong"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3026
-#: ../libgda/sqlite/gda-sqlite-provider.c:3029
+#: ../libgda/sqlite/gda-sqlite-provider.c:3027
+#: ../libgda/sqlite/gda-sqlite-provider.c:3030
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2249
 #: ../providers/mysql/gda-mysql-provider.c:2252
-#: ../providers/postgres/gda-postgres-provider.c:2039
-#: ../providers/postgres/gda-postgres-provider.c:2042
+#: ../providers/postgres/gda-postgres-provider.c:2040
+#: ../providers/postgres/gda-postgres-provider.c:2043
 #: ../providers/web/gda-web-provider.c:1453
 #: ../providers/web/gda-web-provider.c:1456
 msgid "Missing parameter(s) to execute query"
 msgstr "Kurang parameter untuk mengeksekusi query"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3089
+#: ../libgda/sqlite/gda-sqlite-provider.c:3090
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2313
-#: ../providers/postgres/gda-postgres-provider.c:2100
+#: ../providers/postgres/gda-postgres-provider.c:2101
 #: ../providers/web/gda-web-provider.c:1520
 msgid "Can't rewrite statement handle default values"
 msgstr "Tak bisa menulis ulang nilai baku handle pernyataan"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3205
+#: ../libgda/sqlite/gda-sqlite-provider.c:3206
 #: ../providers/mysql/gda-mysql-provider.c:2579
 msgid "Can't get BLOB's length"
 msgstr "Tak bisa mendapat panjang BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3207
+#: ../libgda/sqlite/gda-sqlite-provider.c:3208
 #: ../providers/mysql/gda-mysql-provider.c:2581
 msgid "BLOB is too big"
 msgstr "BLOB terlalu besar"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3321
+#: ../libgda/sqlite/gda-sqlite-provider.c:3322
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Data tak tertangani bertipe '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3388
+#: ../libgda/sqlite/gda-sqlite-provider.c:3389
 msgid "Could not start transaction to create BLOB"
 msgstr "Tak bisa memulai transaksi untuk membuat BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3553
-#: ../libgda/sqlite/gda-sqlite-provider.c:3574
-#: ../libgda/sqlite/gda-sqlite-provider.c:3664
-#: ../libgda/sqlite/gda-sqlite-provider.c:3684
-#: ../libgda/sqlite/gda-sqlite-provider.c:3707
+#: ../libgda/sqlite/gda-sqlite-provider.c:3554
+#: ../libgda/sqlite/gda-sqlite-provider.c:3575
+#: ../libgda/sqlite/gda-sqlite-provider.c:3665
+#: ../libgda/sqlite/gda-sqlite-provider.c:3685
+#: ../libgda/sqlite/gda-sqlite-provider.c:3708
 msgid "Function requires one argument"
 msgstr "Fungsi memerlukan satu argumen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3606
-#: ../libgda/sqlite/gda-sqlite-provider.c:3739
+#: ../libgda/sqlite/gda-sqlite-provider.c:3607
+#: ../libgda/sqlite/gda-sqlite-provider.c:3740
 msgid "Function requires two arguments"
 msgstr "Fungsi memerlukan dua argumen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3644
+#: ../libgda/sqlite/gda-sqlite-provider.c:3645
 msgid "Function requires one or two arguments"
 msgstr "Fungsi memerlukan satu atau dua argumen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3779
-#: ../libgda/sqlite/gda-sqlite-provider.c:3886
+#: ../libgda/sqlite/gda-sqlite-provider.c:3780
+#: ../libgda/sqlite/gda-sqlite-provider.c:3887
 msgid "Function requires two or three arguments"
 msgstr "Fungsi memerlukan dua atau tiga argumen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3833
+#: ../libgda/sqlite/gda-sqlite-provider.c:3834
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Galat regexp '%s' SQLite:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3834
+#: ../libgda/sqlite/gda-sqlite-provider.c:3835
 msgid "Invalid regular expression"
 msgstr "Ekspresi reguler tak valid"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:256
+#: ../libgda/sqlite/gda-sqlite-recordset.c:257
 #: ../providers/jdbc/gda-jdbc-recordset.c:297
 #: ../providers/mysql/gda-mysql-recordset.c:444
 #: ../providers/mysql/gda-mysql-recordset.c:580
@@ -2945,53 +2949,53 @@ msgstr "Ekspresi reguler tak valid"
 msgid "Column %d out of range (0-%d), ignoring its specified type"
 msgstr "Kolom %d di luar batas (0-%d), mengabaikan tipe yang dinyatakan"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:437
-#: ../libgda/sqlite/gda-sqlite-recordset.c:450
-#: ../libgda/sqlite/gda-sqlite-recordset.c:583
-#: ../libgda/sqlite/gda-sqlite-recordset.c:596
-#: ../libgda/sqlite/gda-sqlite-recordset.c:609
-#: ../libgda/sqlite/gda-sqlite-recordset.c:622
+#: ../libgda/sqlite/gda-sqlite-recordset.c:438
+#: ../libgda/sqlite/gda-sqlite-recordset.c:451
+#: ../libgda/sqlite/gda-sqlite-recordset.c:585
+#: ../libgda/sqlite/gda-sqlite-recordset.c:598
+#: ../libgda/sqlite/gda-sqlite-recordset.c:611
+#: ../libgda/sqlite/gda-sqlite-recordset.c:624
 msgid "Integer value is too big"
 msgstr "Nilai bilangan bulat terlalu besar"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:512
+#: ../libgda/sqlite/gda-sqlite-recordset.c:513
 msgid "Unable to open BLOB"
 msgstr "Tak dapat membuka BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:533
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:673
+#: ../libgda/sqlite/gda-sqlite-recordset.c:534
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:674
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Tanggal '%s' tak valid (format tanggal seharusnya TTTT-BB-HH)"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:548
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:689
+#: ../libgda/sqlite/gda-sqlite-recordset.c:549
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:690
 #: ../providers/postgres/gda-postgres-recordset.c:638
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Waktu '%s' tak valid (format waktu seharusnya JJ:MM:DD[.md])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:566
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:705
+#: ../libgda/sqlite/gda-sqlite-recordset.c:567
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:706
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 "Stempel waktu '%s' tak valid (format seharusnya TTTT-BB-HH JJ:MM:DD[.md])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:657
+#: ../libgda/sqlite/gda-sqlite-recordset.c:659
 msgid "SQLite provider fatal internal error"
 msgstr "Galat internal fatal penyedia SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:665
+#: ../libgda/sqlite/gda-sqlite-recordset.c:667
 msgid "Truncated data"
 msgstr "Data terpotong"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:718
+#: ../libgda/sqlite/gda-sqlite-recordset.c:720
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "Baris yang diminta tak dapat ditemukan"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:749
+#: ../libgda/sqlite/gda-sqlite-recordset.c:751
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "Tak bisa menata iterator pada baris yang diminta"
@@ -3026,25 +3030,25 @@ msgstr "Jenis tabel virtual LDAP tak dikenal"
 msgid "Table to remove not found"
 msgstr "Tabel yang akan dihilangkan tak ditemukan"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:160
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:161
 msgid "Namespace must be specified"
 msgstr "Namespace mesti dinyatakan"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:212
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:213
 msgid "Connection was not represented in hub"
 msgstr "Koneksi tak terwakili dalam hub"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:374
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:375
 #, c-format
 msgid "Unable to get information about table '%s'"
 msgstr "Tak bisa mendapat informasi tentang tabel '%s'"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:600
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:616
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:601
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:617
 msgid "Integer value is out of bounds"
 msgstr "Nilai bilangan bulat di luar batas"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:656
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:657
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr "Kendala blob tak ditangani dalam kondisi tabel virtual"
 
@@ -3061,66 +3065,66 @@ msgid "Internal error: invalid provider handle"
 msgstr "Galat internal: handle penyedia tak valid"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:576
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:577
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "Pemakaian tabel virtual Libgda yang salah"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:584
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:585
 msgid "Data model must have at least one column"
 msgstr "Model data mesti memiliki paling tidak satu kolom"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:601
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:602
 msgid "Could not compute virtual table's columns"
 msgstr "Tak bisa mengkomputasi kolom tabel virtual"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:624
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:625
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Tak bisa mendapat deskripsi model data bagi kolom %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:676
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:677
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Tak bisa mendapat tipe kolo model data bagi kolom %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:738
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:739
 #, c-format
 msgid "Can't declare virtual table (\"%s\"): %s"
 msgstr "Tak bisa mendeklarasikan tabel virtual (\"%s\"): %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:878
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:879
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Galat internal SQLite: kolom %s tak ditemukan"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:985
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:986
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "Tak bisa temukan nilai yang diminta pada brs %d dan kol %d"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1008
 msgid "Column not found"
 msgstr "Kolom tak ditemukan"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1484
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1485
 msgid "No statement specified to modify the data"
 msgstr "Tak diberikan pernyataan untuk mengubah data"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1491
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1492
 msgid "Invalid statement specified to modify the data"
 msgstr "Pernyataan yang diberikan untuk mengubah data tak valid"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1511
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1548
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1556
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1512
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1549
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1557
 msgid "Invalid parameter in statement to modify the data"
 msgstr "Parameter tak valid dalam pernyataan untuk mengubah data"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1588
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1589
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Gagal mengubah data: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1670
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1671
 msgid "Data model representing the table is read only"
 msgstr "Model data yang mewakili tabel hanya-baca"
 
@@ -3429,45 +3433,45 @@ msgstr "Pilih berkas untuk tempat menyimpan data"
 msgid "Could not save data to '%s'"
 msgstr "Tak bisa menyimpan data ke '%s'"
 
-#: ../libgda-ui/data-entries/common-bin.c:236
+#: ../libgda-ui/data-entries/common-bin.c:235
 msgid "Load data from file"
 msgstr "Muat data dari berkas"
 
-#: ../libgda-ui/data-entries/common-bin.c:243
+#: ../libgda-ui/data-entries/common-bin.c:242
 msgid "Save data to file"
 msgstr "Simpan data ke berkas"
 
-#: ../libgda-ui/data-entries/common-bin.c:250
+#: ../libgda-ui/data-entries/common-bin.c:249
 msgid "Clear data"
 msgstr "Bersihkan data"
 
-#: ../libgda-ui/data-entries/common-bin.c:258
+#: ../libgda-ui/data-entries/common-bin.c:257
 msgid "Open with..."
 msgstr "Buka dengan…"
 
-#: ../libgda-ui/data-entries/common-bin.c:272
+#: ../libgda-ui/data-entries/common-bin.c:271
 #, c-format
 msgid "%lu Byte"
 msgid_plural "%lu Bytes"
 msgstr[0] "%lu Byte"
 
-#: ../libgda-ui/data-entries/common-bin.c:317
+#: ../libgda-ui/data-entries/common-bin.c:316
 msgid "Unknown size"
 msgstr "Ukuran tak diketahui"
 
-#: ../libgda-ui/data-entries/common-bin.c:422
+#: ../libgda-ui/data-entries/common-bin.c:421
 msgid "Could not create temporary directory"
 msgstr "Tidak bisa membuat direktori temporer"
 
-#: ../libgda-ui/data-entries/common-bin.c:459
+#: ../libgda-ui/data-entries/common-bin.c:458
 msgid "Could not run selected application"
 msgstr "Tidak bisa menjalankan aplikasi yang dipilih"
 
-#: ../libgda-ui/data-entries/common-bin.c:466
+#: ../libgda-ui/data-entries/common-bin.c:465
 msgid "Could not export data"
 msgstr "Tak bisa mengekspor data"
 
-#: ../libgda-ui/data-entries/common-bin.c:524
+#: ../libgda-ui/data-entries/common-bin.c:523
 msgid "Open with"
 msgstr "Buka dengan"
 
@@ -3555,19 +3559,19 @@ msgstr ""
 msgid "<non-printable>"
 msgstr "<tak-bisa-dicetak>"
 
-#: ../libgda-ui/data-entries/gdaui-entry.c:206
-#: ../libgda-ui/data-entries/gdaui-entry.c:226
-#: ../libgda-ui/data-entries/gdaui-formatted-entry.c:165
-msgid "Invalid UTF-8 format!"
-msgstr "Format UTF-8 tak valid!"
-
 #: ../libgda-ui/data-entries/gdaui-entry-bin.c:186
 #: ../libgda-ui/data-entries/plugins/common-pict.c:46
 #: ../libgda-ui/data-entries/plugins/common-pict.c:78
 msgid "No data"
 msgstr "Tak ada data"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:596
+#: ../libgda-ui/data-entries/gdaui-entry.c:206
+#: ../libgda-ui/data-entries/gdaui-entry.c:226
+#: ../libgda-ui/data-entries/gdaui-formatted-entry.c:165
+msgid "Invalid UTF-8 format!"
+msgstr "Format UTF-8 tak valid!"
+
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:597
 #, c-format
 msgid ""
 "Expected format is %s\n"
@@ -3634,24 +3638,24 @@ msgstr "Baku (tidak dinyatakan)"
 msgid "Invalid"
 msgstr "Tak valid"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:286
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:285
 msgid "Edit"
 msgstr "Sunting"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:293
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:292
 msgid "Define as unspecified"
 msgstr "Definisikan sebagai tidak dinyatakan"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:300
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:299
 msgid "Define as default"
 msgstr "Definisikan sebagai baku"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:307
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:306
 #: ../tools/browser/data-manager/data-console.c:384
 msgid "Reset"
 msgstr "Reset"
 
-#: ../libgda-ui/data-entries/gdaui-entry-shell.c:442
+#: ../libgda-ui/data-entries/gdaui-entry-shell.c:439
 #, c-format
 msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
@@ -3968,7 +3972,7 @@ msgid "General"
 msgstr "Umum"
 
 #: ../libgda-ui/data/server_operation.xml.h:2 ../tools/browser/fk-declare.c:250
-#: ../tools/browser/schema-browser/table-info.c:438
+#: ../tools/browser/schema-browser/table-info.c:436
 msgid "Columns"
 msgstr "Kolom"
 
@@ -4014,8 +4018,8 @@ msgid ""
 "demonstrated items.\n"
 "\n"
 "To illustrate that calls are non blocking, there is a spinner at the top "
-"(which must never stop spinning), and a 1 second delay has been added "
-"whenever the connection is used."
+"(which must never stop spinning), and a 1 second delay is added whenever the "
+"connection is used."
 msgstr ""
 "<b><big>Catatan:\n"
 "</big></b>Banyak dari butir yang didemonstrasikan menggunakan koneksi ke "
@@ -4227,11 +4231,11 @@ msgstr "Tak bisa mengakses baris ketika model data sedang direset"
 msgid "Attempt to initialize an already initialized library"
 msgstr "Mencoba menginisialisasi pustaka yang telah diinisialisasi"
 
-#: ../libgda-ui/gdaui-init.c:519
+#: ../libgda-ui/gdaui-init.c:518
 msgid "Could not open plugins directory, no plugin loaded."
 msgstr "Tak bisa membuka direktori plugin, tak ada plugin yang dimuat."
 
-#: ../libgda-ui/gdaui-init.c:539
+#: ../libgda-ui/gdaui-init.c:538
 #: ../tools/browser/data-manager/data-widget.c:381
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/data-widget.c:388
@@ -4242,12 +4246,12 @@ msgstr "Tak bisa membuka direktori plugin, tak ada plugin yang dimuat."
 msgid "Error: %s"
 msgstr "Galat: %s"
 
-#: ../libgda-ui/gdaui-init.c:547
+#: ../libgda-ui/gdaui-init.c:546
 #, c-format
 msgid "Loading file %s...\n"
 msgstr "Memuat berkas %s...\n"
 
-#: ../libgda-ui/gdaui-init.c:551
+#: ../libgda-ui/gdaui-init.c:550
 #, c-format
 msgid "Plugins load warning: %s"
 msgstr "Peringatan memuat plugin: %s"
@@ -4815,7 +4819,7 @@ msgstr "Keterangan kolom"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:170
-#: ../tools/browser/schema-browser/table-info.c:374
+#: ../tools/browser/schema-browser/table-info.c:372
 msgid "Table"
 msgstr "Tabel"
 
@@ -5335,7 +5339,7 @@ msgstr "Drop tabel hanya bila ada"
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:1
-#: ../tools/browser/schema-browser/table-info.c:377
+#: ../tools/browser/schema-browser/table-info.c:375
 msgid "View"
 msgstr "View"
 
@@ -5620,17 +5624,17 @@ msgstr "Parameter"
 msgid "near \"%s\": syntax error"
 msgstr "dekat \"%s\": galat sintaks"
 
-#: ../providers/ldap/gda-ldap-util.c:1341
+#: ../providers/ldap/gda-ldap-util.c:1363
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "Server LDAP mengembalikan lebih dari satu entri dengan DN '%s'"
 
-#: ../providers/ldap/gda-ldap-util.c:1527
+#: ../providers/ldap/gda-ldap-util.c:1549
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr ""
 "Tak bisa mengurai 'distinguised name' yang dikembalikan oleh server LDAP"
 
-#: ../providers/ldap/gda-ldap-util.c:1820
+#: ../providers/ldap/gda-ldap-util.c:1842
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Tipe data '%s' yang tak diharapkan bagi atribut objectClass!"
@@ -5877,7 +5881,7 @@ msgstr ""
 "Parameter pernyataan tanpa nama tak diijinkan dalam prepared statement."
 
 #: ../providers/mysql/gda-mysql-provider.c:2030
-#: ../providers/postgres/gda-postgres-provider.c:1820
+#: ../providers/postgres/gda-postgres-provider.c:1821
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -6756,15 +6760,15 @@ msgstr "Tak cukup memori untuk mengonversi penyangga biner ke string"
 msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Tak cukup memori untuk mengonversi string ke penyangga biner"
 
-#: ../providers/postgres/gda-postgres-provider.c:500
+#: ../providers/postgres/gda-postgres-provider.c:501
 msgid "Could not determine the default date format"
 msgstr "Tak bisa menentukan format tanggal baku"
 
-#: ../providers/postgres/gda-postgres-provider.c:547
+#: ../providers/postgres/gda-postgres-provider.c:548
 msgid "The connection string must contain a DB_NAME value"
 msgstr "String koneksi mesti memuat suatu nilai DB_NAME"
 
-#: ../providers/postgres/gda-postgres-provider.c:551
+#: ../providers/postgres/gda-postgres-provider.c:552
 msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
@@ -6772,52 +6776,52 @@ msgstr ""
 "Format string koneksi telah berubah: ganti DATABASE dengan DB_NAME dan isi "
 "yang sama"
 
-#: ../providers/postgres/gda-postgres-provider.c:700
+#: ../providers/postgres/gda-postgres-provider.c:701
 #, c-format
 msgid "Could not set search_path to %s"
 msgstr "Tak bisa menata search_path ke %s"
 
-#: ../providers/postgres/gda-postgres-provider.c:708
+#: ../providers/postgres/gda-postgres-provider.c:709
 #, c-format
 msgid "Search path %s is invalid"
 msgstr "Path pencarian %s tak valid"
 
-#: ../providers/postgres/gda-postgres-provider.c:1117
-#: ../providers/postgres/gda-postgres-provider.c:1119
+#: ../providers/postgres/gda-postgres-provider.c:1118
+#: ../providers/postgres/gda-postgres-provider.c:1120
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Transaksi tak didukung dalam level isolasi read uncommitted"
 
-#: ../providers/postgres/gda-postgres-provider.c:1123
-#: ../providers/postgres/gda-postgres-provider.c:1125
+#: ../providers/postgres/gda-postgres-provider.c:1124
+#: ../providers/postgres/gda-postgres-provider.c:1126
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Transaksi tak didukung dalam level isolasi repeatable read"
 
-#: ../providers/postgres/gda-postgres-provider.c:1142
-#: ../providers/postgres/gda-postgres-provider.c:1240
-#: ../providers/postgres/gda-postgres-provider.c:1290
-#: ../providers/postgres/gda-postgres-provider.c:1340
+#: ../providers/postgres/gda-postgres-provider.c:1143
+#: ../providers/postgres/gda-postgres-provider.c:1241
+#: ../providers/postgres/gda-postgres-provider.c:1291
+#: ../providers/postgres/gda-postgres-provider.c:1341
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:694
+#: ../providers/postgres/gda-postgres-recordset.c:696
 msgid "Internal error"
 msgstr "Galat internal"
 
-#: ../providers/postgres/gda-postgres-provider.c:1246
-#: ../providers/postgres/gda-postgres-provider.c:1296
-#: ../providers/postgres/gda-postgres-provider.c:1346
+#: ../providers/postgres/gda-postgres-provider.c:1247
+#: ../providers/postgres/gda-postgres-provider.c:1297
+#: ../providers/postgres/gda-postgres-provider.c:1347
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "Nama titik-simpan '%s' salah"
 
-#: ../providers/postgres/gda-postgres-provider.c:2191
-#: ../providers/postgres/gda-postgres-provider.c:2193
+#: ../providers/postgres/gda-postgres-provider.c:2192
+#: ../providers/postgres/gda-postgres-provider.c:2194
 msgid "Cannot start transaction"
 msgstr "Tak bisa memulai transaksi"
 
-#: ../providers/postgres/gda-postgres-provider.c:2452
-#: ../providers/postgres/gda-postgres-provider.c:2488
-#: ../providers/postgres/gda-postgres-provider.c:2523
+#: ../providers/postgres/gda-postgres-provider.c:2453
+#: ../providers/postgres/gda-postgres-provider.c:2489
+#: ../providers/postgres/gda-postgres-provider.c:2524
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Tak bisa menata parameter ID transaksi XA"
 
@@ -6830,12 +6834,12 @@ msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 msgid "Invalid date format '%s'"
 msgstr "Format tanggal '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:688
+#: ../providers/postgres/gda-postgres-recordset.c:689
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Nilai penanda waktu '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:764
+#: ../providers/postgres/gda-postgres-recordset.c:766
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Representasi string biner '%s ...' tak valid"
@@ -7658,21 +7662,21 @@ msgstr "Koneksi sukses dibuka!\n"
 msgid "Can't close connection: %s\n"
 msgstr "Tak bisa menutup koneksi: %s\n"
 
-#: ../tools/base/base-tool-command.c:140 ../tools/base/base-tool-command.c:158
+#: ../tools/base/base-tool-command.c:139 ../tools/base/base-tool-command.c:156
 msgid "Invalid unnamed command"
 msgstr "Perintah tanpa nama yang tak valid"
 
-#: ../tools/base/base-tool-command.c:281
+#: ../tools/base/base-tool-command.c:279
 #, c-format
 msgid "Command '%s' not found"
 msgstr "Perintah '%s' tak ditemukan"
 
-#: ../tools/base/base-tool-command.c:322
+#: ../tools/base/base-tool-command.c:320
 #, c-format
 msgid "Syntax error after '\\'"
 msgstr "Galat sintaks setelah '\\'"
 
-#: ../tools/base/base-tool-command.c:356
+#: ../tools/base/base-tool-command.c:354
 #, c-format
 msgid "Unbalanced usage of quotes"
 msgstr "Pemakaian kutip yang tak imbang"
@@ -7707,15 +7711,15 @@ msgstr[0] "(%d baris)"
 msgid "Number of rows impacted"
 msgstr "Cacah baris yang terpengaruh"
 
-#: ../tools/browser/auth-dialog.c:485
+#: ../tools/browser/auth-dialog.c:484
 msgid "For connection"
 msgstr "Untuk koneksi"
 
-#: ../tools/browser/auth-dialog.c:486
+#: ../tools/browser/auth-dialog.c:485
 msgid "enter authentication information"
 msgstr "masukkan informasi otentikasi"
 
-#: ../tools/browser/auth-dialog.c:619 ../tools/browser/login-dialog.c:229
+#: ../tools/browser/auth-dialog.c:618 ../tools/browser/login-dialog.c:229
 #, c-format
 msgid ""
 "Could not open connection:\n"
@@ -7773,7 +7777,7 @@ msgid "Connection's properties"
 msgstr "Properti koneksi"
 
 #: ../tools/browser/browser-connections-list.c:379
-#: ../tools/browser/browser-window.c:322
+#: ../tools/browser/browser-window.c:320
 msgid "Close connection"
 msgstr "Tutup koneksi"
 
@@ -7789,83 +7793,83 @@ msgstr "Sambung"
 msgid "Open a new connection"
 msgstr "Buka koneksi baru"
 
-#: ../tools/browser/browser-window.c:261 ../tools/browser/browser-window.c:417
+#: ../tools/browser/browser-window.c:259 ../tools/browser/browser-window.c:415
 #: ../tools/browser/ldap-browser/perspective-main.c:35
 #: ../tools/browser/schema-browser/table-columns.c:975
-#: ../tools/browser/ui-formgrid.c:741
+#: ../tools/browser/ui-formgrid.c:740
 msgid "LDAP browser"
 msgstr "Peramban LDAP"
 
-#: ../tools/browser/browser-window.c:312
+#: ../tools/browser/browser-window.c:310
 msgid "Fetch Meta Data"
 msgstr "Ambil Meta Data"
 
-#: ../tools/browser/browser-window.c:315
+#: ../tools/browser/browser-window.c:313
 msgid "Connection properties"
 msgstr "Properti koneksi"
 
-#: ../tools/browser/browser-window.c:329
+#: ../tools/browser/browser-window.c:327
 msgid "Display options"
 msgstr "Opsi tampilan"
 
-#: ../tools/browser/browser-window.c:344
+#: ../tools/browser/browser-window.c:342
 msgid "Rollback transaction"
 msgstr "Rollback transaksi"
 
-#: ../tools/browser/browser-window.c:351
+#: ../tools/browser/browser-window.c:349
 msgid "Commit transaction"
 msgstr "Commit transaksi"
 
-#: ../tools/browser/browser-window.c:358
+#: ../tools/browser/browser-window.c:356
 msgid "Begin transaction"
 msgstr "Mulai transaksi"
 
-#: ../tools/browser/browser-window.c:404 ../tools/resources/menus.ui.h:17
+#: ../tools/browser/browser-window.c:402 ../tools/resources/menus.ui.h:17
 msgid "Fullscreen"
 msgstr "Layar penuh"
 
-#: ../tools/browser/browser-window.c:408
+#: ../tools/browser/browser-window.c:406
 msgid "Perspectives"
 msgstr "Perspektif"
 
-#: ../tools/browser/browser-window.c:483
+#: ../tools/browser/browser-window.c:481
 msgid "Hit the F11 key to leave the fullscreen mode"
 msgstr "Tekan tombol F11 untuk meninggalkan mode layar penuh"
 
-#: ../tools/browser/browser-window.c:540
+#: ../tools/browser/browser-window.c:538
 #, c-format
 msgid "Do you want to close the '%s' connection?"
 msgstr "Apakah Anda ingin menutup koneksi '%s'?"
 
-#: ../tools/browser/browser-window.c:587
+#: ../tools/browser/browser-window.c:585
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr "Galat memulai transaksi: %s"
 
-#: ../tools/browser/browser-window.c:602
+#: ../tools/browser/browser-window.c:600
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr "Galat saat mengkomit transaksi: %s"
 
-#: ../tools/browser/browser-window.c:617
+#: ../tools/browser/browser-window.c:615
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr "Galat saat me-rollback transaksi: %s"
 
-#: ../tools/browser/browser-window.c:669
+#: ../tools/browser/browser-window.c:667
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr "Galat saat memperbarui koneksi terikat: %s"
 
-#: ../tools/browser/browser-window.c:998
+#: ../tools/browser/browser-window.c:996
 msgid "Don't show this message again"
 msgstr "Jangan tunjukkan pesan ini lagi"
 
-#: ../tools/browser/browser-window.c:1007 ../tools/browser/ui-formgrid.c:659
+#: ../tools/browser/browser-window.c:1005 ../tools/browser/ui-formgrid.c:658
 msgid "_Close"
 msgstr "_Tutup"
 
-#: ../tools/browser/browser-window.c:1115
+#: ../tools/browser/browser-window.c:1113
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
@@ -7950,15 +7954,15 @@ msgid "Declare foreign key for this table"
 msgstr "Mendeklarasikan foreign key bagi tabel ini"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
-#: ../tools/browser/schema-browser/table-info.c:1000
+#: ../tools/browser/schema-browser/table-info.c:997
 #, c-format
 msgid "Failed to declare foreign key: %s"
 msgstr "Gagal mendeklarasikan foreign key: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:429
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:432
+#: ../tools/browser/schema-browser/table-info.c:1004
 #: ../tools/browser/schema-browser/table-info.c:1007
-#: ../tools/browser/schema-browser/table-info.c:1010
 msgid "Successfully declared foreign key"
 msgstr "Sukses mendeklarasikan foreign key"
 
@@ -8187,8 +8191,8 @@ msgid "Show variables needed"
 msgstr "Tunjukkan variabel yang diperlukan"
 
 #: ../tools/browser/data-manager/data-console.c:404
-#: ../tools/browser/ldap-browser/ldap-search-page.c:275
-#: ../tools/browser/schema-browser/table-info.c:935
+#: ../tools/browser/ldap-browser/ldap-search-page.c:274
+#: ../tools/browser/schema-browser/table-info.c:932
 msgid "Execute"
 msgstr "Jalankan"
 
@@ -8213,7 +8217,7 @@ msgstr ""
 "sebagai XML (tingkat lanjut)"
 
 #: ../tools/browser/data-manager/data-console.c:418
-#: ../tools/browser/schema-browser/table-info.c:933
+#: ../tools/browser/schema-browser/table-info.c:930
 msgid "Help"
 msgstr "Bantuan"
 
@@ -8260,7 +8264,7 @@ msgstr "Sumber data dari SQL"
 
 #. To translators: "In schema" refers to the database schema an object is in
 #: ../tools/browser/data-manager/data-console.c:812
-#: ../tools/browser/schema-browser/table-info.c:385
+#: ../tools/browser/schema-browser/table-info.c:383
 #, c-format
 msgid "In schema '%s'"
 msgstr "Dalam skema '%s'"
@@ -8300,7 +8304,7 @@ msgstr "Tak dapat menghapus favorit: %s"
 #: ../tools/browser/query-exec/query-favorite-selector.c:265
 #: ../tools/browser/query-exec/query-favorite-selector.c:707
 #: ../tools/browser/schema-browser/favorite-selector.c:351
-#: ../tools/browser/schema-browser/table-info.c:521
+#: ../tools/browser/schema-browser/table-info.c:519
 #, c-format
 msgid "Could not add favorite: %s"
 msgstr "Tak dapat menambah favorit: %s"
@@ -8402,7 +8406,7 @@ msgid "Multiple statements detected, only the first will be used"
 msgstr "Pernyataan berganda terdeteksi, hanya yang pertama yang akan dipakai"
 
 #: ../tools/browser/data-manager/data-source-editor.c:112
-#: ../tools/browser/ui-formgrid.c:533 ../tools/browser/ui-formgrid.c:544
+#: ../tools/browser/ui-formgrid.c:532 ../tools/browser/ui-formgrid.c:543
 msgid "Zoom..."
 msgstr "Zum..."
 
@@ -8860,46 +8864,46 @@ msgstr "Entri LDAP"
 msgid "Favorites"
 msgstr "Favorit"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:236
+#: ../tools/browser/ldap-browser/ldap-search-page.c:235
 msgid "LDAP search page"
 msgstr "Halaman pencarian LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:245
+#: ../tools/browser/ldap-browser/ldap-search-page.c:244
 msgid "LDAP search settings"
 msgstr "Pengaturan pencarian LDAP"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:269
+#: ../tools/browser/ldap-browser/ldap-search-page.c:268
 msgid "Clear"
 msgstr "Bersihkan"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:270
+#: ../tools/browser/ldap-browser/ldap-search-page.c:269
 msgid "Clear the search settings"
 msgstr "Bersihkan pengaturan pencarian"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:276
+#: ../tools/browser/ldap-browser/ldap-search-page.c:275
 msgid "Execute LDAP search"
 msgstr "Eksekusi pencarian LDAP"
 
 #. results
-#: ../tools/browser/ldap-browser/ldap-search-page.c:282
+#: ../tools/browser/ldap-browser/ldap-search-page.c:281
 msgid "Results"
 msgstr "Hasil"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:332
+#: ../tools/browser/ldap-browser/ldap-search-page.c:331
 #, c-format
 msgid "Could not define virtual table for this LDAP search: %s"
 msgstr "Tak bisa mendefinisikan tabel virtual bagi pencarian LDAP ini: %s"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:338
+#: ../tools/browser/ldap-browser/ldap-search-page.c:337
 #, c-format
 msgid "Virtual table '%s' for this LDAP search has been defined"
 msgstr "Tabel virtual '%s' untuk pencarian LDAP ini telah didefinisikan"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:362
+#: ../tools/browser/ldap-browser/ldap-search-page.c:361
 msgid "Define search as a virtual table"
 msgstr "Definisikan pencarian sebagai tabel virtual"
 
-#: ../tools/browser/ldap-browser/ldap-search-page.c:374
+#: ../tools/browser/ldap-browser/ldap-search-page.c:373
 msgid "LDAP search"
 msgstr "Pencarian LDAP"
 
@@ -9136,7 +9140,7 @@ msgid "Invalid variable's contents"
 msgstr "Isi variabel tak valid"
 
 #: ../tools/browser/query-exec/query-console-page.c:869
-#: ../tools/browser/schema-browser/table-info.c:955
+#: ../tools/browser/schema-browser/table-info.c:952
 msgid "assign values to the following variables"
 msgstr "isikan nilai ke variabel berikut"
 
@@ -9174,7 +9178,7 @@ msgid "Statement executed"
 msgstr "Statement dieksekusi"
 
 #: ../tools/browser/query-exec/query-console-page.c:1017
-#: ../tools/browser/ui-formgrid.c:614
+#: ../tools/browser/ui-formgrid.c:613
 #, c-format
 msgid ""
 "Error executing query:\n"
@@ -9396,7 +9400,7 @@ msgid "Could not find declared foreign key '%s'"
 msgstr "Tak bisa temukan foreign key yang dideklarasikan '%s'"
 
 #: ../tools/browser/schema-browser/table-info.c:274
-#: ../tools/browser/schema-browser/table-info.c:752
+#: ../tools/browser/schema-browser/table-info.c:750
 msgid "Meta data not yet available"
 msgstr "Meta data belum tersedia"
 
@@ -9405,11 +9409,11 @@ msgid "Can't find information about table"
 msgstr "Tak bisa temukan informasi tentang tabel"
 
 #. To translators: "Object" is used when we can't determine if @table is a table or a view
-#: ../tools/browser/schema-browser/table-info.c:370
+#: ../tools/browser/schema-browser/table-info.c:368
 msgid "Object"
 msgstr "Objek"
 
-#: ../tools/browser/schema-browser/table-info.c:410
+#: ../tools/browser/schema-browser/table-info.c:408
 msgid ""
 "Table not found. If you think this is an error,\n"
 "please refresh the meta data from the database\n"
@@ -9419,25 +9423,25 @@ msgstr ""
 "silakan segarkan meta data dari basis data\n"
 "(menu Koneksi/Ambil meta data)."
 
-#: ../tools/browser/schema-browser/table-info.c:444
+#: ../tools/browser/schema-browser/table-info.c:442
 msgid "Relations"
 msgstr "Relasi"
 
-#: ../tools/browser/schema-browser/table-info.c:450
+#: ../tools/browser/schema-browser/table-info.c:448
 msgid "Preferences"
 msgstr "Preferensi"
 
-#: ../tools/browser/schema-browser/table-info.c:586
+#: ../tools/browser/schema-browser/table-info.c:584
 msgid "Data successfully inserted"
 msgstr "Data berhasil disisipkan"
 
-#: ../tools/browser/schema-browser/table-info.c:591
-#: ../tools/browser/ui-formgrid.c:725
+#: ../tools/browser/schema-browser/table-info.c:589
+#: ../tools/browser/ui-formgrid.c:724
 #, c-format
 msgid "Error executing query: %s"
 msgstr "Galat saat mengeksekusi query: %s"
 
-#: ../tools/browser/schema-browser/table-info.c:763
+#: ../tools/browser/schema-browser/table-info.c:761
 #, c-format
 msgid ""
 "Internal error while building INSERT statement:\n"
@@ -9446,42 +9450,42 @@ msgstr ""
 "Galat internal ketika membangun pernyataan INSERT:\n"
 "%s"
 
-#: ../tools/browser/schema-browser/table-info.c:809
+#: ../tools/browser/schema-browser/table-info.c:807
 #, c-format
 msgid "Default value: '%s'"
 msgstr "Nilai baku: '%s'"
 
-#: ../tools/browser/schema-browser/table-info.c:819
+#: ../tools/browser/schema-browser/table-info.c:817
 msgid "Default value: auto incremented value"
 msgstr "Nilai baku: nilai terinkremen otomatis"
 
-#: ../tools/browser/schema-browser/table-info.c:930
-#: ../tools/browser/schema-browser/table-info.c:954
+#: ../tools/browser/schema-browser/table-info.c:927
+#: ../tools/browser/schema-browser/table-info.c:951
 msgid "Values to insert into table"
 msgstr "Nilai yang akan disisipkan ke tabel"
 
-#: ../tools/browser/schema-browser/table-info.c:936
+#: ../tools/browser/schema-browser/table-info.c:933
 msgid "Cancel"
 msgstr "Batal"
 
-#: ../tools/browser/schema-browser/table-info.c:988
+#: ../tools/browser/schema-browser/table-info.c:985
 #, c-format
 msgid "Can't find information about table '%s'"
 msgstr "Tak bisa temukan informasi tentang tabel '%s'"
 
-#: ../tools/browser/schema-browser/table-info.c:1037
+#: ../tools/browser/schema-browser/table-info.c:1034
 msgid "Add to Favorites"
 msgstr "Tambah ke Favorit"
 
-#: ../tools/browser/schema-browser/table-info.c:1045
+#: ../tools/browser/schema-browser/table-info.c:1042
 msgid "View table's contents"
 msgstr "Tilik isi tabel"
 
-#: ../tools/browser/schema-browser/table-info.c:1053
+#: ../tools/browser/schema-browser/table-info.c:1050
 msgid "Insert data into table"
 msgstr "Sisipkan data ke dalam tabel"
 
-#: ../tools/browser/schema-browser/table-info.c:1061
+#: ../tools/browser/schema-browser/table-info.c:1058
 msgid "Declare Foreign Key"
 msgstr "Deklarasikan Foreign Key"
 
@@ -9543,31 +9547,31 @@ msgstr "Cari:"
 msgid "Case sensitive"
 msgstr "Peka huruf besar kecil"
 
-#: ../tools/browser/ui-formgrid.c:342
+#: ../tools/browser/ui-formgrid.c:341
 msgid "_Execute"
 msgstr "_Jalankan"
 
-#: ../tools/browser/ui-formgrid.c:350
+#: ../tools/browser/ui-formgrid.c:349
 msgid "Enable or disable auto update of data"
 msgstr "Aktifkan atau nonaktifkan pemutakhiran data otomatis"
 
-#: ../tools/browser/ui-formgrid.c:359
+#: ../tools/browser/ui-formgrid.c:358
 msgid "Toggle between grid and form presentations"
 msgstr "Jungkitkan antara presentasi kisi dan form"
 
-#: ../tools/browser/ui-formgrid.c:369
+#: ../tools/browser/ui-formgrid.c:368
 msgid "Refresh data"
 msgstr "Segarkan data"
 
-#: ../tools/browser/ui-formgrid.c:470
+#: ../tools/browser/ui-formgrid.c:469
 msgid "Execute action"
 msgstr "Laksanakan aksi"
 
-#: ../tools/browser/ui-formgrid.c:518
+#: ../tools/browser/ui-formgrid.c:517
 msgid "View LDAP entry's details"
 msgstr "Tilik rincian entri LDAP"
 
-#: ../tools/browser/ui-formgrid.c:635
+#: ../tools/browser/ui-formgrid.c:634
 #, c-format
 msgid ""
 "Set or confirm the parameters to execute\n"
@@ -9576,11 +9580,11 @@ msgstr ""
 "Atur atau konfirmasikan parameter yang akan dieksekusi\n"
 "aksi '%s'"
 
-#: ../tools/browser/ui-formgrid.c:639
+#: ../tools/browser/ui-formgrid.c:638
 msgid "Execution of action"
 msgstr "Pelaksanaan aksi"
 
-#: ../tools/browser/ui-formgrid.c:716 ../tools/browser/ui-formgrid.c:720
+#: ../tools/browser/ui-formgrid.c:715 ../tools/browser/ui-formgrid.c:719
 msgid "Action successfully executed"
 msgstr "Aksi sukses dieksekusi"
 
@@ -10697,11 +10701,11 @@ msgstr ""
 
 #: ../tools/common/t-connection.c:941
 msgid ""
-"Format of the date used for by connection, where YYYY is the year, MM the "
+"Format of the date used for the connection, where YYYY is the year, MM the "
 "month and DD the day"
 msgstr ""
-"Format tanggal untuk koneksi, dimana YYYY adalah tahun, MM bulan, dan DD "
-"tanggal"
+"Format tanggal yang dipakai untuk koneksi, dimana YYYY adalah tahun, MM "
+"bulan, dan DD tanggal"
 
 #: ../tools/common/t-connection.c:1073
 msgid "Data source"
@@ -10757,16 +10761,16 @@ msgstr "Tak bisa menginterpretasi nilai bagi parameter '%s'"
 msgid "No internal parameter named '%s' required by query"
 msgstr "Tak ada parameter internal bernama '%s' yang diperlukan oleh query"
 
-#: ../tools/common/t-context.c:427
+#: ../tools/common/t-context.c:424
 msgid "Connection closed"
 msgstr "Koneksi ditutup"
 
-#: ../tools/common/t-context.c:558
+#: ../tools/common/t-context.c:555
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Tak bisa membuka berkas '%s' untuk ditulisi: %s\n"
 
-#: ../tools/common/t-context.c:572 ../tools/common/t-context.c:581
+#: ../tools/common/t-context.c:569 ../tools/common/t-context.c:578
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Tak bisa membuka pipa '%s': %s"
