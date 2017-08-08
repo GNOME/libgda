@@ -3570,7 +3570,7 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:3
 msgid "Multiline"
-msgstr "Multílinia"
+msgstr "Multilínia"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Display only one line, or a complete text editor"
