@@ -4,7 +4,7 @@
 <application>
   <id type="desktop">gda-browser-6.0.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
-  <summary>View the schema and data of databases</summary>
+  <_summary>View the schema and data of databases</_summary>
   <description>
     <_p>
       Database Browser provides quick access to the data and schema of a database,
