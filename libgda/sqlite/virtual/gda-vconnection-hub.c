@@ -683,8 +683,8 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
 			allok = FALSE;
 		else {
-			GdaTime timegda;
-			if (!gda_parse_iso8601_time (&timegda, g_value_get_string (svalue))) {
+			GdaTime* timegda = gda_time_new ();
+			if (!gda_parse_iso8601_time (timegda, g_value_get_string (svalue))) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
 					     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"),
@@ -692,7 +692,8 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 				allok = FALSE;
 			}
 			else
-				gda_value_set_time (value, &timegda);
+				gda_value_set_time (value, timegda);
+			gda_time_free (timegda);
 		}
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {

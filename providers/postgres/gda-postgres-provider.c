@@ -2252,7 +2252,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 			GdaTime *gdatime;
 			gdatime = (GdaTime*) gda_value_get_time (value);
-			if (gdatime->timezone != GDA_TIMEZONE_INVALID) {
+			if (gda_time_get_timezone (gdatime) != GDA_TIMEZONE_INVALID) {
 				/* PostgreSQL does not store timezone information, so if timezone information is
 				 * provided, we do our best and convert it to GMT */
 				gdatime = gda_time_copy (gdatime);

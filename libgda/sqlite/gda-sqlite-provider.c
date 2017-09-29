@@ -3252,7 +3252,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gtime = (GdaTime *) gda_value_get_time (value);
 
 			string = g_string_new ("");
-			if (gtime->timezone != GDA_TIMEZONE_INVALID) {
+			if (gda_time_get_timezone (gtime) != GDA_TIMEZONE_INVALID) {
 				/* SQLite cant' store timezone information, so if timezone information is
 				 * provided, we do our best and convert it to GMT */
 				gtime = gda_time_copy (gtime);
@@ -3261,11 +3261,11 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			g_string_append_printf (string, "%02u:%02u:%02u",
-						gtime->hour,
-						gtime->minute,
-						gtime->second);
-			if (gtime->fraction > 0)
-				g_string_append_printf (string, ".%lu", gtime->fraction);
+						gda_time_get_hour (gtime),
+						gda_time_get_minute (gtime),
+						gda_time_get_second (gtime));
+			if (gda_time_get_fraction (gtime) > 0)
+				g_string_append_printf (string, ".%lu", gda_time_get_fraction (gtime));
 
 			if (tofree)
 				gda_time_free (gtime);

@@ -22,6 +22,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <glib/gi18n-lib.h>
 #include <string.h>
+#include <libgda/gda-connection-private.h>
 
 /* options */
 gchar *pass = NULL;

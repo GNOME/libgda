@@ -2769,11 +2769,11 @@ gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ()
 }
 
 
-	/**
-	 * gda_server_operation_create_table_arg_fkey_ref_field_new:
-	 *
-	 * Returns: a new #GdaServerOperationCreateTableArg
-	 */
+/**
+ * gda_server_operation_create_table_arg_fkey_ref_field_new:
+ *
+ * Returns: a new #GdaServerOperationCreateTableArg
+ */
 GdaServerOperationCreateTableArgFKeyRefField*
 gda_server_operation_create_table_arg_fkey_ref_field_new ()
 {

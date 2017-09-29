@@ -589,10 +589,10 @@ static void
 make_point (GdaGeometricPoint *point, const gchar *value)
 {
 	value++;
-	gda_geometricpoint_set_x (point, g_ascii_strtod (value, NULL));
+	gda_geometric_point_set_x (point, g_ascii_strtod (value, NULL));
 	value = strchr (value, ',');
 	value++;
-	gda_geometricpoint_set_y (point, g_ascii_strtod (value, NULL));
+	gda_geometric_point_set_y (point, g_ascii_strtod (value, NULL));
 }
 
 static void
@@ -630,18 +630,19 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 				     "%s", _("Internal error"));
 	}
 	else if (type == GDA_TYPE_TIME) {
-		GdaTime timegda;
-		if (!gda_parse_iso8601_time (&timegda, thevalue)) {
+		GdaTime* timegda = gda_time_new ();
+		if (!gda_parse_iso8601_time (timegda, thevalue)) {
 			gda_row_invalidate_value (row, value); 
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_DATA_ERROR,
 				     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
 		}
 		else {
-			if (timegda.timezone == GDA_TIMEZONE_INVALID)
-				timegda.timezone = 0; /* set to GMT */
-			gda_value_set_time (value, &timegda);
+			if (gda_time_get_timezone (timegda) == GDA_TIMEZONE_INVALID)
+				gda_time_set_timezone (timegda, 0); /* set to GMT */
+			gda_value_set_time (value, timegda);
 		}
+		gda_time_free (timegda);
 	}
 	else if (type == G_TYPE_INT64)
 		g_value_set_int64 (value, atoll (thevalue));
@@ -667,8 +668,8 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
 		GdaGeometricPoint* point = gda_geometric_point_new ();
-		make_point (&point, thevalue);
-		gda_value_set_geometric_point (value, &point);
+		make_point (point, thevalue);
+		gda_value_set_geometric_point (value, point);
 		gda_geometric_point_free (point);
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {

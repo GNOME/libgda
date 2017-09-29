@@ -659,17 +659,17 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 			}
 			else {
 				const GdaTime *gtim;
-				GdaTime copy;
+				GdaTime* copy;
 				gtim = gda_value_get_time (value);
-				mgtim->priv->value_tz = fit_tz (gtim->timezone);
-				mgtim->priv->value_fraction = gtim->fraction;
+				mgtim->priv->value_tz = fit_tz (gda_time_get_timezone (gtim));
+				mgtim->priv->value_fraction = gda_time_get_fraction (gtim);
 
-				copy = *gtim;
-				gda_time_change_timezone (&copy, mgtim->priv->displayed_tz);
+				copy = gda_time_copy (gtim);
+				gda_time_change_timezone (copy, mgtim->priv->displayed_tz);
 
 				GValue *copy_value;
 				copy_value = g_new0 (GValue, 1);
-				gda_value_set_time (copy_value, &copy);
+				gda_value_set_time (copy_value, copy);
 
 				gchar *str;
 				str = gda_data_handler_get_str_from_value (dh, copy_value);
@@ -677,6 +677,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
+				gda_time_free (copy);
 			}
 		}
 		else 
@@ -750,12 +751,13 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 		}
 
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-			GdaTime *gdatime = g_new (GdaTime, 1);
-			*gdatime = *(gda_value_get_time (value));
-			gdatime->timezone = mgtim->priv->displayed_tz;
-			gda_time_change_timezone (gdatime, mgtim->priv->value_tz);
-			gda_value_set_time (value, gdatime);
-			g_free (gdatime);
+			const GdaTime *gdatime;
+			gdatime = gda_value_get_time (value);
+			GdaTime *time_copy = gda_time_copy (gdatime);
+			gda_time_set_timezone (time_copy, mgtim->priv->displayed_tz);
+			gda_time_change_timezone (time_copy, mgtim->priv->value_tz);
+			gda_value_set_time (value, time_copy);
+			gda_time_free (time_copy);
 		}
 	}
 	else if (type == GDA_TYPE_TIMESTAMP) {

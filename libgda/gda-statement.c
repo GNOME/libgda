@@ -803,10 +803,10 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
 				GdaTime *nts;
 				nts = (GdaTime*) gda_value_get_time (value);
-				if (nts && (nts->timezone != GDA_TIMEZONE_INVALID)) {
+				if (nts && (gda_time_get_timezone (nts) != GDA_TIMEZONE_INVALID)) {
 					nts = gda_time_copy (nts);
 					gda_time_change_timezone (nts, 0);
-					nts->timezone = GDA_TIMEZONE_INVALID;
+					gda_time_set_timezone (nts, GDA_TIMEZONE_INVALID);
 					GValue v = {0};
 					g_value_init (&v, GDA_TYPE_TIME);
 					gda_value_set_time (&v, nts);

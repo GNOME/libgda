@@ -53,13 +53,6 @@ GdaTimestamp* create_timestamp (void) {
 	return ts;
 }
 
-GdaTime gt = {
-	.hour = 16,
-	.minute = 9,
-	.second = 22,
-	.timezone = - 3600 * 3
-};
-
 
 /*
  * @prov may be NULL
@@ -72,6 +65,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	GdaSet *params;
 	gchar *sql;
 	GError *error = NULL;
+	GdaTime* gt = gda_time_new_from_values (16, 9, 22, 0, -3600*3);
 
 	/* SQL parsed as an INSERT statement */
 	sql = "INSERT INTO tstest VALUES (##ts::timestamp, ##time::time)";
@@ -101,7 +95,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		goto endtest;
 	}
 
-	if (! gda_set_set_holder_value (params, &error, "time", &gt)) {
+	if (! gda_set_set_holder_value (params, &error, "time", gt)) {
 		g_print ("Failed to bind 'time' parameter: %s\n", error && error->message ? error->message : "No detail");
 		g_clear_error (&error);
 		g_object_unref (stmt);
@@ -199,7 +193,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 	gda_timestamp_free (ts);
 
-	if (! gda_set_set_holder_value (params, &error, "time", &gt)) {
+	if (! gda_set_set_holder_value (params, &error, "time", gt)) {
 		g_print ("Failed to bind 'time' parameter: %s\n", error && error->message ? error->message : "No detail");
 		g_clear_error (&error);
 		g_object_unref (stmt);
@@ -255,6 +249,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	g_free (sql);
 
  endtest:
+	gda_time_free (gt);
 	return nfailed;
 }
 

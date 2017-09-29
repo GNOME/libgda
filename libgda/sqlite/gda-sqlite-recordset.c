@@ -539,8 +539,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						g_value_set_boxed (value, &date);
 				}
 				else if (type == GDA_TYPE_TIME) {
-					GdaTime timegda;
-					if (!gda_parse_iso8601_time (&timegda, 
+					GdaTime* timegda = gda_time_new ();
+					if (!gda_parse_iso8601_time (timegda,
 								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
 												    real_col))) {
 						GError *lerror = NULL;
@@ -551,10 +551,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						if (timegda.timezone == GDA_TIMEZONE_INVALID)
-							timegda.timezone = 0; /* set to GMT */
-						gda_value_set_time (value, &timegda);
+						if (gda_time_get_timezone (timegda) == GDA_TIMEZONE_INVALID)
+							gda_time_set_timezone (timegda, 0); /* set to GMT */
+						gda_value_set_time (value, timegda);
 					}
+					gda_time_free (timegda);
 				}
 				else if (type == GDA_TYPE_TIMESTAMP) {
 					GdaTimestamp* timestamp = gda_timestamp_new ();

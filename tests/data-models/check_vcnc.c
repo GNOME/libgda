@@ -591,7 +591,7 @@ check_date (GdaConnection *virtual)
 	gda_timestamp_set_second (ts, 56);
 	gda_timestamp_set_fraction (ts, 0);
 	gda_timestamp_set_timezone (ts, 0);
-	GdaTime atime = {13, 45, 59, 0, 0};
+	GdaTime* atime = gda_time_new_from_values (13, 45, 59, 0, 0);
 	GDate *adate;
 	GdaDataModel *model;
 	GError *error = NULL;
@@ -600,7 +600,7 @@ check_date (GdaConnection *virtual)
 	set = gda_set_new_inline (3,
 				  "ts", GDA_TYPE_TIMESTAMP, ts,
 				  "adate", G_TYPE_DATE, adate,
-				  "atime", GDA_TYPE_TIME, &atime);
+				  "atime", GDA_TYPE_TIME, atime);
 	g_date_free (adate);
 
 	assert_run_sql_non_select (virtual, "INSERT INTO out.misc VALUES (##ts::timestamp, "
