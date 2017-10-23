@@ -1878,6 +1878,34 @@ gda_timestamp_new (void)
 {
 	return g_new0 (GdaTimestamp, 1);
 }
+
+/**
+ * gda_timestamp_new_from_values:
+ * @year: year
+ * @month: month
+ * @hour: hours
+ * @minute: minutes
+ * @second: seconds
+ * @fraction: fraction of seconds
+ * @timezone: timezone used
+ *
+ * Returns: (transfer full): a new value storing a timestamp
+ */
+GdaTimestamp*
+gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone)
+{
+	GdaTimestamp* timestamp = g_new0 (GdaTimestamp, 1);
+	timestamp->year = year;
+	timestamp->month = month;
+	timestamp->day = day;
+	timestamp->hour = hour;
+	timestamp->minute = minute;
+	timestamp->second = second;
+	timestamp->fraction = fraction;
+	timestamp->timezone = timezone;
+	return timestamp;
+}
+
 /**
  * gda_timestamp_copy:
  *

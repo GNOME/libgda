@@ -859,14 +859,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 			memmove (&bvalue, mysql_bind_result[i].buffer, sizeof (bvalue));
 
 			if (type == GDA_TYPE_TIME) {
-				GdaTime time = {
-					.hour = bvalue.hour,
-					.minute = bvalue.minute,
-					.second = bvalue.second,
-					.fraction = bvalue.second_part,
-					.timezone = 0 /* GMT */
-				};
-				gda_value_set_time (value, &time);
+				GdaTime *time = gda_time_new_from_values (bvalue.hour,
+					                                      bvalue.minute,
+					                                      bvalue.second,
+					                                      bvalue.second_part,
+					                                      0); /* GMT */
+				gda_value_set_time (value, time);
+                gda_time_free (time);
 			}
 			else if (type == G_TYPE_DATE) {
 				GDate *date = g_date_new_dmy
@@ -876,17 +875,16 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				g_value_take_boxed (value, date);
 			}
 			else if (type == GDA_TYPE_TIMESTAMP) {
-				GdaTimestamp timestamp = {
-					.year = bvalue.year,
-					.month = bvalue.month,
-					.day = bvalue.day,
-					.hour = bvalue.hour,
-					.minute = bvalue.minute,
-					.second = bvalue.second,
-					.fraction = bvalue.second_part,
-					.timezone = 0 /* GMT */
-				};
-				gda_value_set_timestamp (value, &timestamp);
+				GdaTimestamp *timestamp = gda_timestamp_new_from_values (bvalue.year,
+					                                                     bvalue.month,
+					                                                     bvalue.day,
+					                                                     bvalue.hour,
+					                                                     bvalue.minute,
+					                                                     bvalue.second,
+					                                                     bvalue.second_part,
+					                                                     0); /* GMT */
+				gda_value_set_timestamp (value, timestamp);
+                gda_timestamp_free (timestamp);
 			}
 			else {
 				gda_row_invalidate_value (row, value);

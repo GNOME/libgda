@@ -266,6 +266,7 @@ GType                             gda_default_get_type (void) G_GNUC_CONST;
 typedef struct _GdaTimestamp GdaTimestamp;
 GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
 GdaTimestamp                     *gda_timestamp_new (void);
+GdaTimestamp                     *gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
 gshort                            gda_timestamp_get_year (const GdaTimestamp* timestamp);
 void                              gda_timestamp_set_year (GdaTimestamp* timestamp, gshort year);
 gushort                           gda_timestamp_get_month (const GdaTimestamp* timestamp);

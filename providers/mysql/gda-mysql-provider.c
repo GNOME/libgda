@@ -2397,7 +2397,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 			else {
 				gboolean tofree = FALSE;
-				if (ts->timezone != GDA_TIMEZONE_INVALID) {
+				if (gda_timestamp_get_timezone (ts) != GDA_TIMEZONE_INVALID) {
 					/* MySQL does not store timezone information, so if timezone information is
 					 * provided, we do our best and convert it to GMT */
 					ts = gda_timestamp_copy (ts);
@@ -2408,13 +2408,13 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
-				mtime->year = ts->year;
-				mtime->month = ts->month;
-				mtime->day = ts->day;
-				mtime->hour = ts->hour;
-				mtime->minute = ts->minute;
-				mtime->second = ts->second;
-				mtime->second_part = ts->fraction;
+				mtime->year = gda_timestamp_get_year (ts);
+				mtime->month = gda_timestamp_get_month (ts);
+				mtime->day = gda_timestamp_get_day (ts);
+				mtime->hour = gda_timestamp_get_hour (ts);
+				mtime->minute = gda_timestamp_get_minute (ts);
+				mtime->second = gda_timestamp_get_second (ts);
+				mtime->second_part = gda_timestamp_get_fraction (ts);
 				if (tofree)
 					gda_timestamp_free (ts);
 
@@ -2433,7 +2433,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			}
 			else {
 				gboolean tofree = FALSE;
-				if (ts->timezone != GDA_TIMEZONE_INVALID) {
+				if (gda_time_get_timezone (ts) != GDA_TIMEZONE_INVALID) {
 					/* MySQL does not store timezone information, so if timezone information is
 					 * provided, we do our best and convert it to GMT */
 					ts = gda_time_copy (ts);
@@ -2444,10 +2444,10 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
-				mtime->hour = ts->hour;
-				mtime->minute = ts->minute;
-				mtime->second = ts->second;
-				mtime->second_part = ts->fraction;
+				mtime->hour = gda_time_get_hour (ts);
+				mtime->minute = gda_time_get_minute (ts);
+				mtime->second = gda_time_get_second (ts);
+				mtime->second_part = gda_time_get_fraction (ts);
 				if (tofree)
 					gda_time_free (ts);
 
