@@ -71,7 +71,7 @@ AC_CHECK_FUNCS(localtime_r localtime_s)
 AC_CHECK_HEADER(sys/mman.h,
     AC_CHECK_FUNC(mlock, [AC_DEFINE(USE_MLOCK, 1, [Use POSIX memory locking])]))
 
-GDA_BUILDDATE=`date '+%F'`
+GDA_BUILDDATE=`date -u -r ChangeLog '+%F'`
 AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)
 
 dnl **********************
