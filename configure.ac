@@ -78,7 +78,7 @@ CHECK_FD_CLOEXEC([AC_DEFINE(
                   [Whether FD_CLOEXEC is defined.])
                   ])
 
-GDA_BUILDDATE=`date '+%F'`
+GDA_BUILDDATE=`date -u -r ChangeLog '+%F'`
 AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)
 
 dnl **********************
