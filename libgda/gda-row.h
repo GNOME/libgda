@@ -3,10 +3,10 @@
  * Copyright (C) 2001 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
- * Copyright (C) 2003 Xabier RodrÌguez Calvar <xrcalvar@igalia.com>
+ * Copyright (C) 2003 Xabier Rodr√≠guez Calvar <xrcalvar@igalia.com>
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe≈Ña <alvaropg@telefonica.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

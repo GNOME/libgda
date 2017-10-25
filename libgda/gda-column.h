@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 �lvaro Pe�a <alvaropg@telefonica.net>
- * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
+ * Copyright (C) 2005 Álvaro Peńa <alvaropg@telefonica.net>
+ * Copyright (C) 2008 PrzemysĆaw Grzegorczyk <pgrzegorczyk@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

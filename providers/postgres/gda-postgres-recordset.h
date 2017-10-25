@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2000 Reinhard MÃ¼ller <reinhard@src.gnome.org>
  * Copyright (C) 2000 - 2004 Rodrigo Moya <rodrigo@ximian.com>
- * Copyright (C) 2001 Carlos Perelló Marín <carlos@gnome-db.org>
+ * Copyright (C) 2001 Carlos PerellÃ³ MarÃ­n <carlos@gnome-db.org>
  * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  *
