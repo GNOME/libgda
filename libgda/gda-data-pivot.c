@@ -2031,7 +2031,7 @@ _gda_value_hash (gconstpointer key)
 			res += g_str_hash (tmp);
 	}
 	else if ((vt == GDA_TYPE_BINARY) || (vt == GDA_TYPE_BLOB)) {
-		const GdaBinary *bin;
+		GdaBinary *bin;
 		if (vt == GDA_TYPE_BLOB) {
 			GdaBlob *blob;
 			blob = (GdaBlob*) gda_value_get_blob ((GValue *) v);
