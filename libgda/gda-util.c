@@ -504,9 +504,9 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
 					}
 					else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 						/* force reading the whole blob */
-						const GdaBlob *blob = gda_value_get_blob (value);
+						GdaBlob *blob = (GdaBlob*)gda_value_get_blob (value);
 						if (blob) {
-							const GdaBinary *bin = gda_blob_get_binary (blob);
+							GdaBinary *bin = gda_blob_get_binary (blob);
 							if (gda_blob_get_op (blob) && 
 							    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
 								gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
