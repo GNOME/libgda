@@ -2802,10 +2802,13 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			switch (store->priv->version) {
 			case 1:
 				migrate_schema_from_v1_to_v2 (store, error);
+                                /* fallthrough */
 			case 2:
 				migrate_schema_from_v2_to_v3 (store, error);
+                                /* fallthrough */
 			case 3:
 				migrate_schema_from_v3_to_v4 (store, error);
+                                /* fallthrough */
 			case 4:
 				/* function call for migration from V4 will be here */
 				break;
