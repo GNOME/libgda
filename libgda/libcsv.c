@@ -160,6 +160,7 @@ csv_fini(struct csv_parser *p, void (*cb1)(char *, size_t, void *), void (*cb2)(
   switch (p->pstate) {
     case FIELD_MIGHT_HAVE_ENDED:
       p->entry_pos -= p->spaces + 1;  /* get rid of spaces and original quote */
+      /* fallthrough */
     case FIELD_NOT_BEGUN:
     case FIELD_BEGUN:
       quoted = p->quoted, pstate = p->pstate;
