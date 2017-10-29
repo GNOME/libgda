@@ -283,8 +283,8 @@ gulong                            gda_timestamp_get_fraction (const GdaTimestamp
 void                              gda_timestamp_set_fraction (GdaTimestamp* timestamp, glong fraction);
 glong                             gda_timestamp_get_timezone (const GdaTimestamp* timestamp);
 void                              gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone);
-gpointer                          gda_timestamp_copy (gpointer boxed);
-void                              gda_timestamp_free (gpointer boxed);
+GdaTimestamp                     *gda_timestamp_copy (GdaTimestamp *ts);
+void                              gda_timestamp_free (GdaTimestamp *ts);
 gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
 void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
 const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);

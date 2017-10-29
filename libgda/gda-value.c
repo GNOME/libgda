@@ -1910,31 +1910,30 @@ gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort
  *
  * Returns: (transfer full):
  */
-gpointer
-gda_timestamp_copy (gpointer boxed)
+GdaTimestamp*
+gda_timestamp_copy (GdaTimestamp *ts)
 {
-	GdaTimestamp *src = (GdaTimestamp*) boxed;
 	GdaTimestamp *copy;
 
-	g_return_val_if_fail(src, NULL);
+	g_return_val_if_fail(ts, NULL);
 
 	copy = gda_timestamp_new ();
-	copy->year = src->year;
-	copy->month = src->month;
-	copy->day = src->day;
-	copy->hour = src->hour;
-	copy->minute = src->minute;
-	copy->second = src->second;
-	copy->fraction = src->fraction;
-	copy->timezone = src->timezone;
+	copy->year = ts->year;
+	copy->month = ts->month;
+	copy->day = ts->day;
+	copy->hour = ts->hour;
+	copy->minute = ts->minute;
+	copy->second = ts->second;
+	copy->fraction = ts->fraction;
+	copy->timezone = ts->timezone;
 
 	return copy;
 }
 
 void
-gda_timestamp_free (gpointer boxed)
+gda_timestamp_free (GdaTimestamp *ts)
 {
-	g_free (boxed);
+	g_free (ts);
 }
 
 /**
