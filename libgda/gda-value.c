@@ -515,7 +515,7 @@ gda_binary_new (void)
 
 /**
  * gda_binary_set_data:
- * @binary: a #GdaBinay pointer
+ * @binary: a #GdaBinary pointer
  * @val: (array length=size): value to be copied by #GdaBinary.
  * @size: the size of the memory pool pointer to by @val.
  *
@@ -559,7 +559,7 @@ gda_binary_take_data (GdaBinary *binary, guchar *val, glong size)
 
 /**
  * gda_binary_get_data:
- * @binary: a #GdaBinay pointer
+ * @binary: a #GdaBinary pointer
  *
  * Returns: (transfer none): associated data to #GdaBinary.
  *
@@ -577,7 +577,7 @@ gda_binary_get_data (GdaBinary *binary)
 
 /**
  * gda_binary_reset_data:
- * @binary: a #GdaBinay pointer
+ * @binary: a #GdaBinary pointer
  *
  * Frees data referenced by #GdaBinary
  *
