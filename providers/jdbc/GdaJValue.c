@@ -372,7 +372,7 @@ JNICALL Java_GdaJValue_getCBlob (JNIEnv *jenv, G_GNUC_UNUSED jobject obj, jlong 
 {
 	GdaBlob *blob;
 
-	blob = gda_value_get_blob ((GValue *) jni_jlong_to_cpointer (c_pointer));
+	blob = (GdaBlob*)gda_value_get_blob ((GValue *) jni_jlong_to_cpointer (c_pointer));
 	if (!blob) {
 		jclass cls;
 		cls = (*jenv)->FindClass (jenv, "java/lang/IllegalArgumentException");
