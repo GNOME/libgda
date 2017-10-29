@@ -915,25 +915,24 @@ gda_geometric_point_get_type (void)
  *
  * Returns: (transfer full):
  */
-gpointer
-gda_geometric_point_copy (gpointer boxed)
+GdaGeometricPoint*
+gda_geometric_point_copy (GdaGeometricPoint *gp)
 {
-	GdaGeometricPoint *val = (GdaGeometricPoint*) boxed;
 	GdaGeometricPoint *copy;
 
-	g_return_val_if_fail( val, NULL);
+	g_return_val_if_fail (gp, NULL);
 
 	copy = g_new0 (GdaGeometricPoint, 1);
-	copy->x = val->x;
-	copy->y = val->y;
+	copy->x = gp->x;
+	copy->y = gp->y;
 
 	return copy;
 }
 
 void
-gda_geometric_point_free (gpointer boxed)
+gda_geometric_point_free (GdaGeometricPoint *gp)
 {
-	g_free (boxed);
+	g_free (gp);
 }
 
 

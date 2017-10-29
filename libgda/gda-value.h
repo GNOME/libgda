@@ -223,8 +223,8 @@ gdouble                           gda_geometric_point_get_x (GdaGeometricPoint* 
 void                              gda_geometric_point_set_x (GdaGeometricPoint* gp, double x);
 gdouble                           gda_geometric_point_get_y (GdaGeometricPoint* gp);
 void                              gda_geometric_point_set_y (GdaGeometricPoint* gp, double y);
-gpointer                          gda_geometric_point_copy (gpointer boxed);
-void                              gda_geometric_point_free (gpointer boxed);
+GdaGeometricPoint                *gda_geometric_point_copy (GdaGeometricPoint *gp);
+void                              gda_geometric_point_free (GdaGeometricPoint *gp);
 const GdaGeometricPoint          *gda_value_get_geometric_point (const GValue *value);
 void                              gda_value_set_geometric_point (GValue *value, const GdaGeometricPoint *val);
 
