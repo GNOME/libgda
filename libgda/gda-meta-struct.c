@@ -932,6 +932,7 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 #endif
 			}
 		}
+        	break;
 	}
 	case GDA_META_DB_TABLE: {
 		/* columns */
