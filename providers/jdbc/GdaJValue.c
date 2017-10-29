@@ -265,13 +265,7 @@ JNICALL Java_GdaJValue_setCTimestamp (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED 
 	GdaTimestamp *ts;
 	GValue *value;
 
-	ts = g_new0 (GdaTimestamp, 1);
-	ts->year = year;
-	ts->month = month;
-	ts->day = day;
-	ts->hour = hour;
-	ts->minute = min;
-	ts->second = sec;
+	ts = gda_timestamp_new_from_values (year, month, day, hour, min, sec, 0, 0);
 
 	value = gda_row_get_value (GDA_ROW (jni_jlong_to_cpointer (c_pointer)), col);
 	gda_value_reset_with_type (value, GDA_TYPE_TIMESTAMP);
@@ -296,9 +290,9 @@ JNICALL Java_GdaJValue_getCTimestamp (JNIEnv *jenv, jobject obj, jlong c_pointer
 		return NULL;
 	}
 
-	jobj = (*jenv)->CallObjectMethod (jenv, obj, GdaJValue__createTimestamp->mid, 
-					  ts->year, ts->month, ts->day,
-					  ts->hour, ts->minute, ts->second);
+	jobj = (*jenv)->CallObjectMethod (jenv, obj, GdaJValue__createTimestamp->mid,
+					  gda_timestamp_get_year (ts), gda_timestamp_get_month (ts), gda_timestamp_get_day (ts),
+					  gda_timestamp_get_hour (ts), gda_timestamp_get_minute (ts), gda_timestamp_get_second (ts));
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 	else
