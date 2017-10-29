@@ -116,7 +116,7 @@ export_data (BinMenu *menu, const gchar *filename, GError **error)
 {
 	gboolean allok;
 	if (menu->entry_type == GDA_TYPE_BINARY) {
-		const GdaBinary *bin;
+		GdaBinary *bin;
 		bin = gda_value_get_binary (menu->tmpvalue);
 		allok = g_file_set_contents (filename, (gchar *) gda_binary_get_data (bin),
 					     gda_binary_get_size (bin), error);
@@ -300,9 +300,9 @@ common_bin_get_description (BinMenu *binmenu)
 			g_free (size);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			const GdaBlob *blob;
+			GdaBlob *blob;
 			GdaBinary *bin;
-			blob = gda_value_get_blob (value);
+			blob = (GdaBlob*)gda_value_get_blob (value);
 			bin = gda_blob_get_binary (blob);
 			if (gda_blob_get_op (blob)) {
 				glong len;
@@ -482,14 +482,14 @@ adjust_ctype (BinMenu *binmenu)
 	const GValue *value = binmenu->tmpvalue;
 	if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 		if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
-			const GdaBinary *bin;
+			GdaBinary *bin;
 			bin = gda_value_get_binary (value);
 			binmenu->ctype = g_content_type_guess (NULL, gda_binary_get_data (bin), (gsize) gda_binary_get_size (bin), NULL);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			const GdaBlob *blob;
+			GdaBlob *blob;
 			GdaBinary *bin;
-			blob = gda_value_get_blob (value);
+			blob = (GdaBlob*)gda_value_get_blob (value);
 			bin = gda_blob_get_binary (blob);
 			if (gda_blob_get_op (blob)) {
 				glong len;
