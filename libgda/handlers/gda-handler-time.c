@@ -373,6 +373,8 @@ handler_compute_locale (GdaHandlerTime *hdl)
 				break;
 			case 76:
 				hdl->priv->str_locale->twodigit_years = TRUE;
+				hdl->priv->str_locale->dmy_order[i] = G_DATE_YEAR;
+                                break;
 			case 1976:
 				hdl->priv->str_locale->dmy_order[i] = G_DATE_YEAR;
 				break;
