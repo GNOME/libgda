@@ -223,10 +223,7 @@ JNICALL Java_GdaJValue_setCTime (G_GNUC_UNUSED JNIEnv *jenv, G_GNUC_UNUSED jobje
 	GdaTime *tim;
 	GValue *value;
 
-	tim = g_new0 (GdaTime, 1);
-	tim->hour = hour;
-	tim->minute = min;
-	tim->second = sec;
+	tim = gda_time_new_from_values (hour, min, sec, 0, 0);
 
 	value = gda_row_get_value (GDA_ROW (jni_jlong_to_cpointer (c_pointer)), col);
 	gda_value_reset_with_type (value, GDA_TYPE_TIME);
@@ -251,8 +248,8 @@ JNICALL Java_GdaJValue_getCTime (JNIEnv *jenv, jobject obj, jlong c_pointer)
 		return NULL;
 	}
 
-	jobj = (*jenv)->CallObjectMethod (jenv, obj, GdaJValue__createTime->mid, 
-					  tim->hour, tim->minute, tim->second);
+	jobj = (*jenv)->CallObjectMethod (jenv, obj, GdaJValue__createTime->mid,
+					  gda_time_get_hour (tim), gda_time_get_minute (tim), gda_time_get_second (tim));
 	if ((*jenv)->ExceptionCheck (jenv))
 		return NULL;
 	else
