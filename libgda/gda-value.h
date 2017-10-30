@@ -280,7 +280,7 @@ void                              gda_timestamp_set_minute (GdaTimestamp* timest
 gushort                           gda_timestamp_get_second (const GdaTimestamp* timestamp);
 void                              gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second);
 gulong                            gda_timestamp_get_fraction (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_fraction (GdaTimestamp* timestamp, glong fraction);
+void                              gda_timestamp_set_fraction (GdaTimestamp* timestamp, gulong fraction);
 glong                             gda_timestamp_get_timezone (const GdaTimestamp* timestamp);
 void                              gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone);
 GdaTimestamp                     *gda_timestamp_copy (GdaTimestamp *ts);

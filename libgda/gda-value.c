@@ -2110,7 +2110,7 @@ gda_timestamp_get_fraction (const GdaTimestamp* timestamp)
 	return timestamp->fraction;
 }
 void
-gda_timestamp_set_fraction (GdaTimestamp* timestamp, glong fraction)
+gda_timestamp_set_fraction (GdaTimestamp* timestamp, gulong fraction)
 {
 	g_return_if_fail (timestamp != NULL);
 	timestamp->fraction = fraction;
