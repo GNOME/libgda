@@ -2448,10 +2448,10 @@ gdaui_raw_grid_supports_action (GdauiDataProxy *iface, GdauiAction action)
 	case GDAUI_ACTION_DELETE_SELECTED_DATA:
 	case GDAUI_ACTION_UNDELETE_SELECTED_DATA:
 	case GDAUI_ACTION_RESET_DATA:
-	case GDAUI_ACTION_MOVE_FIRST_CHUNCK:
-        case GDAUI_ACTION_MOVE_PREV_CHUNCK:
-        case GDAUI_ACTION_MOVE_NEXT_CHUNCK:
-        case GDAUI_ACTION_MOVE_LAST_CHUNCK:
+	case GDAUI_ACTION_MOVE_FIRST_CHUNK:
+        case GDAUI_ACTION_MOVE_PREV_CHUNK:
+        case GDAUI_ACTION_MOVE_NEXT_CHUNK:
+        case GDAUI_ACTION_MOVE_LAST_CHUNK:
 		return TRUE;
 	default:
 		return FALSE;
@@ -2569,11 +2569,11 @@ gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		gda_data_model_send_hint (GDA_DATA_MODEL (grid->priv->proxy), GDA_DATA_MODEL_HINT_REFRESH, NULL);
 		break;
 
-	case GDAUI_ACTION_MOVE_FIRST_CHUNCK:
+	case GDAUI_ACTION_MOVE_FIRST_CHUNK:
 		gda_data_proxy_set_sample_start (grid->priv->proxy, 0);
 		break;
 
-        case GDAUI_ACTION_MOVE_PREV_CHUNCK: {
+        case GDAUI_ACTION_MOVE_PREV_CHUNK: {
 		gint sample_size, sample_start;
 
 		sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
@@ -2587,7 +2587,7 @@ gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		break;
 	}
 
-        case GDAUI_ACTION_MOVE_NEXT_CHUNCK: {
+        case GDAUI_ACTION_MOVE_NEXT_CHUNK: {
 		gint sample_size, sample_start;
 
 		sample_size = gda_data_proxy_get_sample_size (grid->priv->proxy);
@@ -2599,7 +2599,7 @@ gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		break;
 	}
 
-        case GDAUI_ACTION_MOVE_LAST_CHUNCK:
+        case GDAUI_ACTION_MOVE_LAST_CHUNK:
 		gda_data_proxy_set_sample_start (grid->priv->proxy, G_MAXINT);
 		break;
 

@@ -68,10 +68,10 @@ typedef enum {
 	ACTION_LASTRECORD,
 
 	/* chunk changes actions */
-	ACTION_FIRSTCHUNCK,
-	ACTION_PREVCHUNCK,
-	ACTION_NEXTCHUNCK,
-	ACTION_LASTCHUNCK,
+	ACTION_FIRSTCHUNK,
+	ACTION_PREVCHUNK,
+	ACTION_NEXTCHUNK,
+	ACTION_LASTCHUNK,
 
 	ACTION_FILTER, /* button to display a search GdaUiDataFilter */
 	ACTION_CURRENT_ROW, /* indicates current row */
@@ -97,10 +97,10 @@ UIAction uiactions[] = {
 	{GDAUI_ACTION_MOVE_NEXT_RECORD, GDAUI_ACTION_MOVE_NEXT_RECORD, "go-next-symbolic", N_("Move to next entry")},
 	{GDAUI_ACTION_MOVE_LAST_RECORD, GDAUI_ACTION_MOVE_LAST_RECORD, "go-last-symbolic", N_("Move to last entry")},
 
-	{GDAUI_ACTION_MOVE_FIRST_CHUNCK, GDAUI_ACTION_MOVE_FIRST_CHUNCK, "go-first-symbolic", N_("Show first chunck of data")},
-	{GDAUI_ACTION_MOVE_PREV_CHUNCK, GDAUI_ACTION_MOVE_PREV_CHUNCK, "go-previous-symbolic", N_("Show previous chunck of data")},
-	{GDAUI_ACTION_MOVE_NEXT_CHUNCK, GDAUI_ACTION_MOVE_NEXT_CHUNCK, "go-next-symbolic", N_("Show next chunck of data")},
-	{GDAUI_ACTION_MOVE_LAST_CHUNCK, GDAUI_ACTION_MOVE_LAST_CHUNCK, "go-last-symbolic", N_("Show last chunck of data")},
+	{GDAUI_ACTION_MOVE_FIRST_CHUNK, GDAUI_ACTION_MOVE_FIRST_CHUNK, "go-first-symbolic", N_("Show first chunk of data")},
+	{GDAUI_ACTION_MOVE_PREV_CHUNK, GDAUI_ACTION_MOVE_PREV_CHUNK, "go-previous-symbolic", N_("Show previous chunk of data")},
+	{GDAUI_ACTION_MOVE_NEXT_CHUNK, GDAUI_ACTION_MOVE_NEXT_CHUNK, "go-next-symbolic", N_("Show next chunk of data")},
+	{GDAUI_ACTION_MOVE_LAST_CHUNK, GDAUI_ACTION_MOVE_LAST_CHUNK, "go-last-symbolic", N_("Show last chunk of data")},
 };
 
 struct _GdauiDataProxyInfoPriv
@@ -553,9 +553,9 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 	}
 
 	/* chunk changes actions */
-	if ((flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) && !action_items[ACTION_FIRSTCHUNCK]) {
+	if ((flags & GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS) && !action_items[ACTION_FIRSTCHUNK]) {
 		ActionType atype;
-		for (atype = ACTION_FIRSTCHUNCK; atype <= ACTION_LASTCHUNCK; atype++) {
+		for (atype = ACTION_FIRSTCHUNK; atype <= ACTION_LASTCHUNK; atype++) {
 			UIAction *uiaction = &(uiactions[atype]);
 
 			if (! gdaui_data_proxy_supports_action (info->priv->data_proxy, uiaction->action))
@@ -582,9 +582,9 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 						  G_CALLBACK (action_stateless_clicked_cb), info);
 		}
 	}
-	else if (! (flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) && action_items[ACTION_FIRSTCHUNCK]) {
+	else if (! (flags & GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS) && action_items[ACTION_FIRSTCHUNK]) {
 		ActionType atype;
-		for (atype = ACTION_FIRSTCHUNCK; atype <= ACTION_LASTCHUNCK; atype++) {
+		for (atype = ACTION_FIRSTCHUNK; atype <= ACTION_LASTCHUNK; atype++) {
 			if (action_items[atype]) {
 				gtk_widget_destroy (action_items[atype]);
 				action_items[atype] = NULL;
@@ -924,22 +924,22 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
 						  (row == proxy_rows -1) || (row < 0) ? FALSE : TRUE);
 	}
 
-	/* chunck indications */
-	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS) {
+	/* chunk indications */
+	if (info->priv->flags & GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS) {
 		gboolean abool;
 		wrows = (sample_size > 0) ? TRUE : FALSE;
-		if (info->priv->action_items [ACTION_FIRSTCHUNCK])
-			gtk_widget_set_sensitive (info->priv->action_items [ACTION_FIRSTCHUNCK],
+		if (info->priv->action_items [ACTION_FIRSTCHUNK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_FIRSTCHUNK],
 						  wrows && (sample_first_row > 0) ? TRUE : FALSE);
-		if (info->priv->action_items [ACTION_PREVCHUNCK])
-			gtk_widget_set_sensitive (info->priv->action_items [ACTION_PREVCHUNCK],
+		if (info->priv->action_items [ACTION_PREVCHUNK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_PREVCHUNK],
 						  wrows && (sample_first_row > 0) ? TRUE : FALSE);
 
 		abool = (proxied_rows != -1) ? (wrows && (sample_last_row < proxied_rows - 1)) : TRUE;
-		if (info->priv->action_items [ACTION_NEXTCHUNCK])
-			gtk_widget_set_sensitive (info->priv->action_items [ACTION_NEXTCHUNCK], abool);
-		if (info->priv->action_items [ACTION_LASTCHUNCK])
-			gtk_widget_set_sensitive (info->priv->action_items [ACTION_LASTCHUNCK],
+		if (info->priv->action_items [ACTION_NEXTCHUNK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_NEXTCHUNK], abool);
+		if (info->priv->action_items [ACTION_LASTCHUNK])
+			gtk_widget_set_sensitive (info->priv->action_items [ACTION_LASTCHUNK],
 						  wrows && (sample_last_row < proxied_rows - 1));
 	}
 
@@ -963,7 +963,7 @@ GtkToolItem *
 gdaui_data_proxy_info_get_item (GdauiDataProxyInfo *info, GdauiAction action)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_PROXY_INFO (info), NULL);
-	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK), NULL);
+	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNK), NULL);
 
 	ActionType type;
 	for (type = ACTION_NEW; type < ACTION_COUNT; type++) {

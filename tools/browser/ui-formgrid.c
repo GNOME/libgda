@@ -50,7 +50,7 @@ static void ui_formgrid_show (GtkWidget *widget);
 static TConnection *get_t_connection (UiFormGrid *formgrid);
 static void compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model);
 
-#define GRID_FLAGS (GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS)
+#define GRID_FLAGS (GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS)
 #define FORM_FLAGS (GDAUI_DATA_PROXY_INFO_CURRENT_ROW | GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS)
 
 typedef enum {
@@ -352,7 +352,7 @@ ui_formgrid_init (UiFormGrid *formgrid)
 	formgrid->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (formgrid->priv->raw_grid), 
 							  formgrid->priv->flags |
 							  GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
-							  GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS);
+							  GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS);
 
 	button = GTK_WIDGET (gtk_toggle_tool_button_new ());
 	gtk_widget_set_tooltip_text (button, _("Toggle between grid and form presentations"));

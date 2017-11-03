@@ -652,10 +652,10 @@ namespace Gdaui {
 		MOVE_PREV_RECORD,
 		MOVE_NEXT_RECORD,
 		MOVE_LAST_RECORD,
-		MOVE_FIRST_CHUNCK,
-		MOVE_PREV_CHUNCK,
-		MOVE_NEXT_CHUNCK,
-		MOVE_LAST_CHUNCK
+		MOVE_FIRST_CHUNK,
+		MOVE_PREV_CHUNK,
+		MOVE_NEXT_CHUNK,
+		MOVE_LAST_CHUNK
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h", cprefix = "GDAUI_ACTION_", has_type_id = false)]
 	[Flags]
@@ -681,7 +681,7 @@ namespace Gdaui {
 		CURRENT_ROW,
 		ROW_MODIFY_BUTTONS,
 		ROW_MOVE_BUTTONS,
-		CHUNCK_CHANGE_BUTTONS,
+		CHUNK_CHANGE_BUTTONS,
 		NO_FILTER
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h", cprefix = "GDAUI_DATA_PROXY_WRITE_ON_", has_type_id = false)]

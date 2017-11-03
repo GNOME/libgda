@@ -553,7 +553,7 @@ gdaui_raw_form_set_property (GObject *object,
 
 				g_object_set (object, "paramlist", form->priv->iter, NULL);
 
-				/* we don't want chuncking */
+				/* we don't want chunking */
 				gda_data_proxy_set_sample_size (form->priv->proxy, 0);
 
 				iter_row_changed_cb (form->priv->iter,

@@ -147,7 +147,7 @@ gboolean
 gdaui_data_proxy_supports_action (GdauiDataProxy *iface, GdauiAction action)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_PROXY (iface), FALSE);
-	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK), FALSE);
+	g_return_val_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNK), FALSE);
 
 	if (GDAUI_DATA_PROXY_GET_IFACE (iface)->supports_action)
 		return (GDAUI_DATA_PROXY_GET_IFACE (iface)->supports_action) (iface, action);
@@ -171,7 +171,7 @@ void
 gdaui_data_proxy_perform_action (GdauiDataProxy *iface, GdauiAction action)
 {
 	g_return_if_fail (GDAUI_IS_DATA_PROXY (iface));
-	g_return_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNCK));
+	g_return_if_fail ((action >= GDAUI_ACTION_NEW_DATA) && (action <= GDAUI_ACTION_MOVE_LAST_CHUNK));
 
 	if (gdaui_data_proxy_supports_action (iface, action)) {
 		if (GDAUI_DATA_PROXY_GET_IFACE (iface)->perform_action)
