@@ -14,7 +14,7 @@ test -z "$srcdir" && srcdir=.
 
 which gnome-autogen.sh || {
     echo "You need to install the 'gnome-autogen.sh' script (usually part of the gnome-common package)"
-    exit 1git g
+    exit 1
 }
 
 olddir=`pwd`
