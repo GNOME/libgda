@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-19 15:24+0000\n"
-"PO-Revision-Date: 2017-08-24 16:06+0200\n"
+"POT-Creation-Date: 2017-11-05 11:45+0000\n"
+"PO-Revision-Date: 2017-11-05 22:28+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:380
@@ -1788,7 +1788,7 @@ msgstr "Saknar främmande nyckels kolumnnamn (för tabellen ”%s”)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Kolumnen ”%s” hittades inte i tabellen ”%s”"
 
-#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1333
+#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1334
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Främmande nyckels kolumn ”%s” hittades inte i tabellen ”%s”"
@@ -1805,69 +1805,69 @@ msgid "Could not find description for column named '%s'"
 msgstr "Kunde inte hitta beskrivning för kolumnen med namnet ”%s”"
 
 #: ../libgda/gda-meta-store.c:2783 ../libgda/gda-meta-store.c:2794
-#: ../libgda/gda-meta-store.c:2828
+#: ../libgda/gda-meta-store.c:2831
 msgid "Could not get the internal schema's version"
 msgstr "Kunde inte hämta det interna schemats version"
 
-#: ../libgda/gda-meta-store.c:2952 ../libgda/gda-meta-store.c:3072
+#: ../libgda/gda-meta-store.c:2955 ../libgda/gda-meta-store.c:3075
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Mer än en SQL-sats"
 
-#: ../libgda/gda-meta-store.c:2981 ../libgda/gda-meta-store.c:3100
+#: ../libgda/gda-meta-store.c:2984 ../libgda/gda-meta-store.c:3103
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parametern ”%s” finns inte i sats"
 
-#: ../libgda/gda-meta-store.c:2998 ../libgda/gda-meta-store.c:3114
+#: ../libgda/gda-meta-store.c:3001 ../libgda/gda-meta-store.c:3117
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Inget värde inställt för parametern ”%s”"
 
-#: ../libgda/gda-meta-store.c:3697
+#: ../libgda/gda-meta-store.c:3700
 msgid "Data models should have the same number of columns"
 msgstr "Datamodeller bör ha samma antal kolumner"
 
-#: ../libgda/gda-meta-store.c:3760 ../libgda/gda-meta-store.c:4796
-#: ../libgda/gda-meta-store.c:4899
+#: ../libgda/gda-meta-store.c:3763 ../libgda/gda-meta-store.c:4799
+#: ../libgda/gda-meta-store.c:4902
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Okänt databasobjekt ”%s”"
 
-#: ../libgda/gda-meta-store.c:3776
+#: ../libgda/gda-meta-store.c:3779
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Kunde inte ställa in värde för parametern ”%s”"
 
-#: ../libgda/gda-meta-store.c:3805
+#: ../libgda/gda-meta-store.c:3808
 msgid "Could not create SELECT statement"
 msgstr "Kunde inte skapa SELECT-sats"
 
-#: ../libgda/gda-meta-store.c:3820
+#: ../libgda/gda-meta-store.c:3823
 msgid "Could not create DELETE statement"
 msgstr "Kunde inte skapa DELETE-sats"
 
-#: ../libgda/gda-meta-store.c:3870
+#: ../libgda/gda-meta-store.c:3873
 msgid "A transaction has already been started"
 msgstr "En transaktion har redan startats"
 
-#: ../libgda/gda-meta-store.c:4242
+#: ../libgda/gda-meta-store.c:4245
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Attributet ”%s” kunde inte hittas"
 
-#: ../libgda/gda-meta-store.c:4245
+#: ../libgda/gda-meta-store.c:4248
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "Attributet ”%s” har %d värde"
 msgstr[1] "Attributet ”%s” har %d värden"
 
-#: ../libgda/gda-meta-store.c:4292
+#: ../libgda/gda-meta-store.c:4295
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Attributnamn som startar med ”_” är reserverade för intern användning"
 
-#: ../libgda/gda-meta-store.c:4322
+#: ../libgda/gda-meta-store.c:4325
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1875,16 +1875,16 @@ msgstr ""
 "Kunde inte starta en transaktion eftersom en redan startats, detta kan leda "
 "till problem GdaMetaStore-attribut"
 
-#: ../libgda/gda-meta-store.c:4439
+#: ../libgda/gda-meta-store.c:4442
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Kunde inte tolka XML-beskrivning för anpassat databasobjekt att lägga till"
 
-#: ../libgda/gda-meta-store.c:4453
+#: ../libgda/gda-meta-store.c:4456
 msgid "Missing custom database object name"
 msgstr "Saknar namn för anpassat databasobjekt"
 
-#: ../libgda/gda-meta-store.c:4458
+#: ../libgda/gda-meta-store.c:4461
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1892,46 +1892,46 @@ msgstr ""
 "Namn på anpassade databasobjekt som startar med ”_” är reserverade för "
 "intern användning"
 
-#: ../libgda/gda-meta-store.c:4556
+#: ../libgda/gda-meta-store.c:4559
 msgid "Another object with the same name already exists"
 msgstr "Det finns redan ett annat objekt med samma namn"
 
-#: ../libgda/gda-meta-store.c:4658
+#: ../libgda/gda-meta-store.c:4661
 msgid "Missing table name in meta data context"
 msgstr "Saknar tabellnamn i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:4685
+#: ../libgda/gda-meta-store.c:4688
 msgid "Missing column name in meta data context"
 msgstr "Saknar kolumnnamn i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:4701
+#: ../libgda/gda-meta-store.c:4704
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Saknar villkor i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:4726
+#: ../libgda/gda-meta-store.c:4729
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Felaktigt utformat villkor i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:4743
+#: ../libgda/gda-meta-store.c:4746
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Okänt kolumnnamn ”%s” i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:4765
+#: ../libgda/gda-meta-store.c:4768
 msgid "Unknown table in meta data context"
 msgstr "Okänd tabell i metadatakontext"
 
-#: ../libgda/gda-meta-store.c:5038 ../libgda/gda-meta-store.c:5068
-#: ../libgda/gda-meta-store.c:5257 ../libgda/gda-meta-store.c:5286
+#: ../libgda/gda-meta-store.c:5041 ../libgda/gda-meta-store.c:5071
+#: ../libgda/gda-meta-store.c:5260 ../libgda/gda-meta-store.c:5289
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Kunde inte hitta objekt med namnet ”%s”"
 
-#: ../libgda/gda-meta-store.c:5136 ../libgda/gda-meta-store.c:5155
+#: ../libgda/gda-meta-store.c:5139 ../libgda/gda-meta-store.c:5158
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Kunde inte hitta kolumnen ”%s” i tabellen ”%s”"
@@ -1961,17 +1961,17 @@ msgstr "Objekt %s.%s.%s finns redan i GdaMetaStruct och har en annan objekttyp"
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Vyn %s.%s.%s hittades inte i metalagringsobjekt"
 
-#: ../libgda/gda-meta-struct.c:952
+#: ../libgda/gda-meta-struct.c:953
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabell %s.%s.%s hittades inte (eller saknar kolumninformation)"
 
-#: ../libgda/gda-meta-struct.c:1096
+#: ../libgda/gda-meta-struct.c:1097
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Internt GdaMetaStore-fel: kolumn %s hittades inte"
 
-#: ../libgda/gda-meta-struct.c:1248
+#: ../libgda/gda-meta-struct.c:1249
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1980,11 +1980,11 @@ msgstr ""
 "Metadatainkonsekvens i begränsning för främmande nyckel för tabellen %s.%s."
 "%s som refererar tabellen %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2571
+#: ../libgda/gda-meta-struct.c:2572
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Saknar objektnamn i GdaMetaDbObject-struktur"
 
-#: ../libgda/gda-meta-struct.c:2596
+#: ../libgda/gda-meta-struct.c:2597
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Databasobjektet ”%s” finns redan"
@@ -2551,22 +2551,22 @@ msgid "Time, Date and TimeStamp representation"
 msgstr "Tids-, datum- och tidsstämpel-representation"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
-#: ../libgda/handlers/gda-handler-time.c:628
+#: ../libgda/handlers/gda-handler-time.c:630
 msgid "DD"
 msgstr "DD"
 
 #. To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number
-#: ../libgda/handlers/gda-handler-time.c:632
+#: ../libgda/handlers/gda-handler-time.c:634
 msgid "MM"
 msgstr "MM"
 
 #. To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits
-#: ../libgda/handlers/gda-handler-time.c:637
+#: ../libgda/handlers/gda-handler-time.c:639
 msgid "YY"
 msgstr "ÅÅ"
 
 #. To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits
-#: ../libgda/handlers/gda-handler-time.c:640
+#: ../libgda/handlers/gda-handler-time.c:642
 msgid "YYYY"
 msgstr "ÅÅÅÅ"
 
@@ -2951,10 +2951,10 @@ msgstr "Kolumn %d utanför intervallet (0-%d), ignorerar dess angivna typ"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:438
 #: ../libgda/sqlite/gda-sqlite-recordset.c:451
-#: ../libgda/sqlite/gda-sqlite-recordset.c:585
-#: ../libgda/sqlite/gda-sqlite-recordset.c:598
-#: ../libgda/sqlite/gda-sqlite-recordset.c:611
-#: ../libgda/sqlite/gda-sqlite-recordset.c:624
+#: ../libgda/sqlite/gda-sqlite-recordset.c:586
+#: ../libgda/sqlite/gda-sqlite-recordset.c:599
+#: ../libgda/sqlite/gda-sqlite-recordset.c:612
+#: ../libgda/sqlite/gda-sqlite-recordset.c:625
 msgid "Integer value is too big"
 msgstr "Heltalsvärdet är för stort"
 
@@ -2975,26 +2975,26 @@ msgstr "Ogiltigt datum ”%s” (datumformatet ska vara ÅÅÅÅ-MM-DD)"
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Ogiltig tid ”%s” (tidsformatet ska vara HH:MM:SS[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:567
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:706
+#: ../libgda/sqlite/gda-sqlite-recordset.c:568
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:707
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr "Ogiltig tidsstämpel ”%s” (formatet ska vara ÅÅÅÅ-MM-DD HH:MM:SS[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:659
+#: ../libgda/sqlite/gda-sqlite-recordset.c:660
 msgid "SQLite provider fatal internal error"
 msgstr "Ödesdigert internt fel för SQLite-leverantör"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:667
+#: ../libgda/sqlite/gda-sqlite-recordset.c:668
 msgid "Truncated data"
 msgstr "Trunkerade data"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:720
+#: ../libgda/sqlite/gda-sqlite-recordset.c:721
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "Begärd rad kunde inte hittas"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:751
+#: ../libgda/sqlite/gda-sqlite-recordset.c:752
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "Det går inte att ställa in iterator på begärd rad"
@@ -4170,21 +4170,20 @@ msgstr "Gå till nästa post"
 msgid "Move to last entry"
 msgstr "Gå till sista posten"
 
-# TODO: chunck -> chunk
 #: ../libgda-ui/gdaui-data-proxy-info.c:100
-msgid "Show first chunck of data"
+msgid "Show first chunk of data"
 msgstr "Visa första datastycke"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:101
-msgid "Show previous chunck of data"
+msgid "Show previous chunk of data"
 msgstr "Visa föregående datastycke"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:102
-msgid "Show next chunck of data"
+msgid "Show next chunk of data"
 msgstr "Visa nästa datastycke"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:103
-msgid "Show last chunck of data"
+msgid "Show last chunk of data"
 msgstr "Visa sista datastycke"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:601
@@ -5478,9 +5477,9 @@ msgid "Provider for embedded Firebird databases"
 msgstr "Leverantör för inbäddade Firebird-databaser"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
-#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:346
-#: ../providers/jdbc/GdaJValue.c:392 ../providers/jdbc/GdaJValue.c:521
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
+#: ../providers/jdbc/GdaJValue.c:289 ../providers/jdbc/GdaJValue.c:337
+#: ../providers/jdbc/GdaJValue.c:383 ../providers/jdbc/GdaJValue.c:512
 msgid "Invalid argument: NULL"
 msgstr "Ogiltigt argument: NULL"
 
@@ -5497,7 +5496,7 @@ msgstr "Saknar parametrar för att öppna databasanslutning"
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr "Ogiltigt datum: år %d, månad %d och dag %d"
 
-#: ../providers/jdbc/GdaJValue.c:415
+#: ../providers/jdbc/GdaJValue.c:406
 msgid "Can't get BLOB's size"
 msgstr "Det går inte att läsa storlek på BLOB"
 
@@ -5921,10 +5920,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Antal radstycken lästa sedan objektet skapades"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:985
-#: ../providers/mysql/gda-mysql-recordset.c:998
-#: ../providers/mysql/gda-mysql-recordset.c:1011
-#: ../providers/mysql/gda-mysql-recordset.c:1030
+#: ../providers/mysql/gda-mysql-recordset.c:983
+#: ../providers/mysql/gda-mysql-recordset.c:996
+#: ../providers/mysql/gda-mysql-recordset.c:1009
+#: ../providers/mysql/gda-mysql-recordset.c:1028
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Ogiltig kolumnbindningsdatatyp. %d\n"
@@ -5939,18 +5938,18 @@ msgstr "Typ %s inte mappad för värde %d"
 msgid "Type %s not mapped for value %lld"
 msgstr "Typ %s inte mappad för värde %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:895
+#: ../providers/mysql/gda-mysql-recordset.c:893
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Typ %s inte mappad för värde %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:912
-#: ../providers/mysql/gda-mysql-recordset.c:927
+#: ../providers/mysql/gda-mysql-recordset.c:910
+#: ../providers/mysql/gda-mysql-recordset.c:925
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Typ %s inte mappad för värde %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1020
+#: ../providers/mysql/gda-mysql-recordset.c:1018
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Typ %s inte mappad för värde %s"
@@ -6796,7 +6795,7 @@ msgstr "Transaktioner stöds inte i isoleringsnivån upprepningsbar läsning"
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:696
+#: ../providers/postgres/gda-postgres-recordset.c:697
 msgid "Internal error"
 msgstr "Internt fel"
 
@@ -6827,12 +6826,12 @@ msgstr "Antal radstycken lästa sedan objektet skapades"
 msgid "Invalid date format '%s'"
 msgstr "Ogiltigt datumformat ”%s”"
 
-#: ../providers/postgres/gda-postgres-recordset.c:689
+#: ../providers/postgres/gda-postgres-recordset.c:690
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Ogiltigt tidsstämpelvärde ”%s”"
 
-#: ../providers/postgres/gda-postgres-recordset.c:766
+#: ../providers/postgres/gda-postgres-recordset.c:767
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Ogiltig binär strängrepresentation ”%s …”"
@@ -7630,22 +7629,22 @@ msgstr "Serverhemlighet"
 msgid "The name of a database to use"
 msgstr "Namnet på en databas att använda"
 
-#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:93
+#: ../testing/gda-test-blob.c:99 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN ”%s” är inte deklarerad"
 
-#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:98
+#: ../testing/gda-test-blob.c:104 ../testing/gda-test-connection.c:98
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Det går inte att öppna anslutning till DSN %s: %s\n"
 
-#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:108
+#: ../testing/gda-test-blob.c:115 ../testing/gda-test-connection.c:108
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Det går inte att öppna angiven anslutning: %s\n"
 
-#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:115
+#: ../testing/gda-test-blob.c:122 ../testing/gda-test-connection.c:115
 #, c-format
 msgid "Connection successfully opened!\n"
 msgstr "Öppning av anslutningen lyckades!\n"
