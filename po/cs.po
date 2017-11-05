@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-19 15:24+0000\n"
-"PO-Revision-Date: 2017-08-25 19:41+0200\n"
+"POT-Creation-Date: 2017-11-03 18:45+0000\n"
+"PO-Revision-Date: 2017-11-05 12:43+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -1779,7 +1779,7 @@ msgstr "Schází název sloupce cizího klíče (pro tabulku „%s“)"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Sloupec „%s“ nebyl v tabulce „%s“ nelezen"
 
-#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1333
+#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1334
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Sloupec cizího klíče „%s“ nebyl nalezen v tabulce „%s“"
@@ -1795,58 +1795,58 @@ msgid "Could not find description for column named '%s'"
 msgstr "Nelze najít popis pro sloupec s názvem „%s“"
 
 #: ../libgda/gda-meta-store.c:2783 ../libgda/gda-meta-store.c:2794
-#: ../libgda/gda-meta-store.c:2828
+#: ../libgda/gda-meta-store.c:2831
 msgid "Could not get the internal schema's version"
 msgstr "Nelze získat verzi interního schématu"
 
-#: ../libgda/gda-meta-store.c:2952 ../libgda/gda-meta-store.c:3072
+#: ../libgda/gda-meta-store.c:2955 ../libgda/gda-meta-store.c:3075
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Více než jeden příkaz SQL"
 
-#: ../libgda/gda-meta-store.c:2981 ../libgda/gda-meta-store.c:3100
+#: ../libgda/gda-meta-store.c:2984 ../libgda/gda-meta-store.c:3103
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parametr „%s“ se v příkazu nevyskytuje"
 
-#: ../libgda/gda-meta-store.c:2998 ../libgda/gda-meta-store.c:3114
+#: ../libgda/gda-meta-store.c:3001 ../libgda/gda-meta-store.c:3117
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Pro parametr „%s“ není nastavená žádná hodnota"
 
-#: ../libgda/gda-meta-store.c:3697
+#: ../libgda/gda-meta-store.c:3700
 msgid "Data models should have the same number of columns"
 msgstr "Datový model by měl mít stejný počet sloupců"
 
-#: ../libgda/gda-meta-store.c:3760 ../libgda/gda-meta-store.c:4796
-#: ../libgda/gda-meta-store.c:4899
+#: ../libgda/gda-meta-store.c:3763 ../libgda/gda-meta-store.c:4799
+#: ../libgda/gda-meta-store.c:4902
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Neznámý databázový objekt „%s“"
 
-#: ../libgda/gda-meta-store.c:3776
+#: ../libgda/gda-meta-store.c:3779
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Nelze nastavit hodnotu pro parametr „%s“"
 
-#: ../libgda/gda-meta-store.c:3805
+#: ../libgda/gda-meta-store.c:3808
 msgid "Could not create SELECT statement"
 msgstr "Nelze vytvořit příkaz SELECT"
 
-#: ../libgda/gda-meta-store.c:3820
+#: ../libgda/gda-meta-store.c:3823
 msgid "Could not create DELETE statement"
 msgstr "Nelze vytvořit příkaz DELETE"
 
-#: ../libgda/gda-meta-store.c:3870
+#: ../libgda/gda-meta-store.c:3873
 msgid "A transaction has already been started"
 msgstr "Transakce již byla spuštěna"
 
-#: ../libgda/gda-meta-store.c:4242
+#: ../libgda/gda-meta-store.c:4245
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Atribut „%s“ nebyl nalezen"
 
-#: ../libgda/gda-meta-store.c:4245
+#: ../libgda/gda-meta-store.c:4248
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
@@ -1854,12 +1854,12 @@ msgstr[0] "Atribut „%s“ má %d hodnotu"
 msgstr[1] "Atribut „%s“ má %d hodnoty"
 msgstr[2] "Atribut „%s“ má %d hodnot"
 
-#: ../libgda/gda-meta-store.c:4292
+#: ../libgda/gda-meta-store.c:4295
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Atributy s názvem začínajícím na „_“ jsou rezervované pro interní použití"
 
-#: ../libgda/gda-meta-store.c:4322
+#: ../libgda/gda-meta-store.c:4325
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1867,16 +1867,16 @@ msgstr ""
 "Nelze začít transakci, protože je již spuštěná jiná, což by mohlo vést k "
 "problémům s atributy GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:4439
+#: ../libgda/gda-meta-store.c:4442
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Nelze analyzovat popis XML vlastního databázového objektu, který se má přidat"
 
-#: ../libgda/gda-meta-store.c:4453
+#: ../libgda/gda-meta-store.c:4456
 msgid "Missing custom database object name"
 msgstr "Schází název vlastního databázového objektu"
 
-#: ../libgda/gda-meta-store.c:4458
+#: ../libgda/gda-meta-store.c:4461
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1884,46 +1884,46 @@ msgstr ""
 "Vlastní databázové objekty s názvem začínajícím „_“ jsou rezervované pro "
 "interní použití"
 
-#: ../libgda/gda-meta-store.c:4556
+#: ../libgda/gda-meta-store.c:4559
 msgid "Another object with the same name already exists"
 msgstr "Již existuje jiný objekt se shodným názvem"
 
-#: ../libgda/gda-meta-store.c:4658
+#: ../libgda/gda-meta-store.c:4661
 msgid "Missing table name in meta data context"
 msgstr "Schází název tabulky v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4685
+#: ../libgda/gda-meta-store.c:4688
 msgid "Missing column name in meta data context"
 msgstr "Schází název sloupce v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4701
+#: ../libgda/gda-meta-store.c:4704
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Schází podmínka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4726
+#: ../libgda/gda-meta-store.c:4729
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Chybná podmínka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4743
+#: ../libgda/gda-meta-store.c:4746
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Neznámý název sloupce „%s“ v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:4765
+#: ../libgda/gda-meta-store.c:4768
 msgid "Unknown table in meta data context"
 msgstr "Neznámá tabulka v kontextu metadat"
 
-#: ../libgda/gda-meta-store.c:5038 ../libgda/gda-meta-store.c:5068
-#: ../libgda/gda-meta-store.c:5257 ../libgda/gda-meta-store.c:5286
+#: ../libgda/gda-meta-store.c:5041 ../libgda/gda-meta-store.c:5071
+#: ../libgda/gda-meta-store.c:5260 ../libgda/gda-meta-store.c:5289
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Nelze najít objekt pojmenovaný „%s“"
 
-#: ../libgda/gda-meta-store.c:5136 ../libgda/gda-meta-store.c:5155
+#: ../libgda/gda-meta-store.c:5139 ../libgda/gda-meta-store.c:5158
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Nelze najít sloupec „%s“ v tabulce „%s“"
@@ -1953,17 +1953,17 @@ msgstr "Objekt %s.%s.%s již existuje v GdaMetaStruct a má jiný typ objektu"
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Pohled %s.%s.%s nebyl nalezen v objektu uchovaných metaúdajů"
 
-#: ../libgda/gda-meta-struct.c:952
+#: ../libgda/gda-meta-struct.c:953
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabulka %s.%s.%s nebyla nalezena (nebo schází informace o sloupcích)"
 
-#: ../libgda/gda-meta-struct.c:1096
+#: ../libgda/gda-meta-struct.c:1097
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Interní chyba GdaMetaStore: sloupec %s nebyl nalezen"
 
-#: ../libgda/gda-meta-struct.c:1248
+#: ../libgda/gda-meta-struct.c:1249
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1972,11 +1972,11 @@ msgstr ""
 "Nesouvislost metadat v omezení cizím klíčem pro tabulku %s.%s.%s odkazující "
 "na tabulku %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2571
+#: ../libgda/gda-meta-struct.c:2572
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Schází název objektu ve struktuře GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2596
+#: ../libgda/gda-meta-struct.c:2597
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Databázový objekt „%s“ již existuje"
@@ -2541,22 +2541,22 @@ msgid "Time, Date and TimeStamp representation"
 msgstr "Podoba času, data a časového razítka"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
-#: ../libgda/handlers/gda-handler-time.c:628
+#: ../libgda/handlers/gda-handler-time.c:630
 msgid "DD"
 msgstr "DD"
 
 #. To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number
-#: ../libgda/handlers/gda-handler-time.c:632
+#: ../libgda/handlers/gda-handler-time.c:634
 msgid "MM"
 msgstr "MM"
 
 #. To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits
-#: ../libgda/handlers/gda-handler-time.c:637
+#: ../libgda/handlers/gda-handler-time.c:639
 msgid "YY"
 msgstr "RR"
 
 #. To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits
-#: ../libgda/handlers/gda-handler-time.c:640
+#: ../libgda/handlers/gda-handler-time.c:642
 msgid "YYYY"
 msgstr "RRRR"
 
@@ -2948,10 +2948,10 @@ msgstr "Sloupec %d je mimo rozsah (0 - %d), ignoruje se pro něj určený typ"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:438
 #: ../libgda/sqlite/gda-sqlite-recordset.c:451
-#: ../libgda/sqlite/gda-sqlite-recordset.c:585
-#: ../libgda/sqlite/gda-sqlite-recordset.c:598
-#: ../libgda/sqlite/gda-sqlite-recordset.c:611
-#: ../libgda/sqlite/gda-sqlite-recordset.c:624
+#: ../libgda/sqlite/gda-sqlite-recordset.c:586
+#: ../libgda/sqlite/gda-sqlite-recordset.c:599
+#: ../libgda/sqlite/gda-sqlite-recordset.c:612
+#: ../libgda/sqlite/gda-sqlite-recordset.c:625
 msgid "Integer value is too big"
 msgstr "Hodnota celého čísla je příliš velká"
 
@@ -2972,27 +2972,27 @@ msgstr "Neplatné datum „%s“ (datum by mělo mít formát RRRR-MM-DD)"
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Neplatný čas „%s“ (čas by měl mít formát HH:MM:SS[,ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:567
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:706
+#: ../libgda/sqlite/gda-sqlite-recordset.c:568
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:707
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 "Neplatné časové razítko „%s“ (formát by měl být RRRR-MM-DD HH:MM:SS[,ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:659
+#: ../libgda/sqlite/gda-sqlite-recordset.c:660
 msgid "SQLite provider fatal internal error"
 msgstr "Kritická interní chyba poskytovatele SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:667
+#: ../libgda/sqlite/gda-sqlite-recordset.c:668
 msgid "Truncated data"
 msgstr "Zkrácená data"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:720
+#: ../libgda/sqlite/gda-sqlite-recordset.c:721
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "Požadovaný řádek nebyl nalezen"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:751
+#: ../libgda/sqlite/gda-sqlite-recordset.c:752
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "Nelze nastavit iterátor na požadovaný řádek"
@@ -4174,19 +4174,19 @@ msgid "Move to last entry"
 msgstr "Přesunout se na poslední záznam"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:100
-msgid "Show first chunck of data"
+msgid "Show first chunk of data"
 msgstr "Zobrazit první blok dat"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:101
-msgid "Show previous chunck of data"
+msgid "Show previous chunk of data"
 msgstr "Zobrazit předchozí blok dat"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:102
-msgid "Show next chunck of data"
+msgid "Show next chunk of data"
 msgstr "Zobrazit následující blok dat"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:103
-msgid "Show last chunck of data"
+msgid "Show last chunk of data"
 msgstr "Zobrazit poslední blok dat"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:601
@@ -5482,9 +5482,9 @@ msgid "Provider for embedded Firebird databases"
 msgstr "Poskytovatel pro zabudované databáze Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
-#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:346
-#: ../providers/jdbc/GdaJValue.c:392 ../providers/jdbc/GdaJValue.c:521
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
+#: ../providers/jdbc/GdaJValue.c:289 ../providers/jdbc/GdaJValue.c:337
+#: ../providers/jdbc/GdaJValue.c:383 ../providers/jdbc/GdaJValue.c:512
 msgid "Invalid argument: NULL"
 msgstr "Neplatný parametr: NULL"
 
@@ -5501,7 +5501,7 @@ msgstr "K otevření databázového spojení schází parametry"
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr "Neplatné datum: rok %d, měsíc %d a den %d"
 
-#: ../providers/jdbc/GdaJValue.c:415
+#: ../providers/jdbc/GdaJValue.c:406
 msgid "Can't get BLOB's size"
 msgstr "Nelze zjistit velikost rozsáhlého binárního objektu (BLOB)"
 
@@ -5927,10 +5927,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Počet bloků řádků přečtených od vytvoření objektu"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:985
-#: ../providers/mysql/gda-mysql-recordset.c:998
-#: ../providers/mysql/gda-mysql-recordset.c:1011
-#: ../providers/mysql/gda-mysql-recordset.c:1030
+#: ../providers/mysql/gda-mysql-recordset.c:983
+#: ../providers/mysql/gda-mysql-recordset.c:996
+#: ../providers/mysql/gda-mysql-recordset.c:1009
+#: ../providers/mysql/gda-mysql-recordset.c:1028
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Neplatný datový typ navázaný na sloupec. %d\n"
@@ -5945,18 +5945,18 @@ msgstr "Typ %s není mapován pro hodnotu %d"
 msgid "Type %s not mapped for value %lld"
 msgstr "Typ %s není mapován pro hodnotu %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:895
+#: ../providers/mysql/gda-mysql-recordset.c:893
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Typ %s není mapován pro hodnotu %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:912
-#: ../providers/mysql/gda-mysql-recordset.c:927
+#: ../providers/mysql/gda-mysql-recordset.c:910
+#: ../providers/mysql/gda-mysql-recordset.c:925
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Typ %s není mapován pro hodnotu %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1020
+#: ../providers/mysql/gda-mysql-recordset.c:1018
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Typ %s není mapován pro hodnotu %s"
@@ -6807,7 +6807,7 @@ msgstr "Transakce nejsou podporovány v izolované úrovni opakovatelného čten
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:696
+#: ../providers/postgres/gda-postgres-recordset.c:697
 msgid "Internal error"
 msgstr "Interní chyba"
 
@@ -6838,12 +6838,12 @@ msgstr "Počet bloků řádků přečtených od vytvoření objektu"
 msgid "Invalid date format '%s'"
 msgstr "Neplatný formát data „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:689
+#: ../providers/postgres/gda-postgres-recordset.c:690
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Neplatná hodnota časového razítka „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:766
+#: ../providers/postgres/gda-postgres-recordset.c:767
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Neplatná binární podoba řetězce „%s…“"
@@ -7639,22 +7639,22 @@ msgstr "Klíč k serveru"
 msgid "The name of a database to use"
 msgstr "Název databáze, která se má použít"
 
-#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:93
+#: ../testing/gda-test-blob.c:99 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN „%s“ není deklarováno"
 
-#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:98
+#: ../testing/gda-test-blob.c:104 ../testing/gda-test-connection.c:98
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Nelze otevřít připojení k DSN %s: %s\n"
 
-#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:108
+#: ../testing/gda-test-blob.c:115 ../testing/gda-test-connection.c:108
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Nelze otevřít zadané připojení: %s\n"
 
-#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:115
+#: ../testing/gda-test-blob.c:122 ../testing/gda-test-connection.c:115
 #, c-format
 msgid "Connection successfully opened!\n"
 msgstr "Připojení bylo úspěšně otevřeno!\n"
