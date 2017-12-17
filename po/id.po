@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
 "product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-19 15:24+0000\n"
-"PO-Revision-Date: 2017-09-01 15:35+0700\n"
-"Last-Translator: Andika Triwidada <atriwidada@gnome.org>\n"
+"POT-Creation-Date: 2017-12-12 08:25+0000\n"
+"PO-Revision-Date: 2017-12-17 15:38+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.5\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:380
@@ -1783,7 +1783,7 @@ msgstr "Kurang nama kolom foreign key (bagi tabel '%s')"
 msgid "Column '%s' not found in table '%s'"
 msgstr "Kolom '%s' tak ditemukan di tabel '%s'"
 
-#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1333
+#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1334
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Kolom kunci foreign '%s' tak ditemukan di tabel '%s'"
@@ -1799,69 +1799,69 @@ msgid "Could not find description for column named '%s'"
 msgstr "Tak bisa temukan deskripsi untuk kolom bernama '%s'"
 
 #: ../libgda/gda-meta-store.c:2783 ../libgda/gda-meta-store.c:2794
-#: ../libgda/gda-meta-store.c:2828
+#: ../libgda/gda-meta-store.c:2831
 msgid "Could not get the internal schema's version"
 msgstr "Tak bisa mendapat versi skema internal"
 
-#: ../libgda/gda-meta-store.c:2952 ../libgda/gda-meta-store.c:3072
+#: ../libgda/gda-meta-store.c:2955 ../libgda/gda-meta-store.c:3075
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Lebih dari satu statement SQL"
 
-#: ../libgda/gda-meta-store.c:2981 ../libgda/gda-meta-store.c:3100
+#: ../libgda/gda-meta-store.c:2984 ../libgda/gda-meta-store.c:3103
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Parameter '%s' tak ada dalam statement"
 
-#: ../libgda/gda-meta-store.c:2998 ../libgda/gda-meta-store.c:3114
+#: ../libgda/gda-meta-store.c:3001 ../libgda/gda-meta-store.c:3117
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Nilai bagi parameter '%s' tak ditata"
 
-#: ../libgda/gda-meta-store.c:3697
+#: ../libgda/gda-meta-store.c:3700
 msgid "Data models should have the same number of columns"
 msgstr "Model data mesti memiliki cacah kolom yang sama"
 
-#: ../libgda/gda-meta-store.c:3760 ../libgda/gda-meta-store.c:4796
-#: ../libgda/gda-meta-store.c:4899
+#: ../libgda/gda-meta-store.c:3763 ../libgda/gda-meta-store.c:4799
+#: ../libgda/gda-meta-store.c:4902
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Objek basis data '%s' yang tak dikenal"
 
-#: ../libgda/gda-meta-store.c:3776
+#: ../libgda/gda-meta-store.c:3779
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Tak bisa menata nilai bagi parameter '%s'"
 
-#: ../libgda/gda-meta-store.c:3805
+#: ../libgda/gda-meta-store.c:3808
 msgid "Could not create SELECT statement"
 msgstr "Tak bisa membuat statement SELECT"
 
-#: ../libgda/gda-meta-store.c:3820
+#: ../libgda/gda-meta-store.c:3823
 msgid "Could not create DELETE statement"
 msgstr "Tak bisa membuat statement DELETE"
 
-#: ../libgda/gda-meta-store.c:3870
+#: ../libgda/gda-meta-store.c:3873
 msgid "A transaction has already been started"
 msgstr "Sebuah transaksi telah dimulai"
 
-#: ../libgda/gda-meta-store.c:4242
+#: ../libgda/gda-meta-store.c:4245
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Atribut '%s' tak ditemukan"
 
-#: ../libgda/gda-meta-store.c:4245
+#: ../libgda/gda-meta-store.c:4248
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "Atribut '%s' punya %d nilai"
 
-#: ../libgda/gda-meta-store.c:4292
+#: ../libgda/gda-meta-store.c:4295
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
 "Nama atribut yang diawali dengan '_' dicadangkan untuk keperluan internal"
 
-#: ../libgda/gda-meta-store.c:4322
+#: ../libgda/gda-meta-store.c:4325
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1869,16 +1869,16 @@ msgstr ""
 "Tak bisa memulai transaksi karena sudah ada yang dimulai, ini bisa menjurus "
 "ke masalah atribut GdaMetaStore"
 
-#: ../libgda/gda-meta-store.c:4439
+#: ../libgda/gda-meta-store.c:4442
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Tak bisa mengurai deskripsi XML dari objek basis data ubahan untuk ditambah"
 
-#: ../libgda/gda-meta-store.c:4453
+#: ../libgda/gda-meta-store.c:4456
 msgid "Missing custom database object name"
 msgstr "Kurang nama objek basis data ubahan"
 
-#: ../libgda/gda-meta-store.c:4458
+#: ../libgda/gda-meta-store.c:4461
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1886,46 +1886,46 @@ msgstr ""
 "Nama objek basis data ubahan yang diawali dengan '_' dicadangkan untuk "
 "keperluan internal"
 
-#: ../libgda/gda-meta-store.c:4556
+#: ../libgda/gda-meta-store.c:4559
 msgid "Another object with the same name already exists"
 msgstr "Sudah ada objek lain dengan nama yang sama"
 
-#: ../libgda/gda-meta-store.c:4658
+#: ../libgda/gda-meta-store.c:4661
 msgid "Missing table name in meta data context"
 msgstr "Kurang nama tabel dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4685
+#: ../libgda/gda-meta-store.c:4688
 msgid "Missing column name in meta data context"
 msgstr "Kurang nama kolom dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4701
+#: ../libgda/gda-meta-store.c:4704
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Kurang kondisi dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4726
+#: ../libgda/gda-meta-store.c:4729
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Kondisi yang salah bentuk dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4743
+#: ../libgda/gda-meta-store.c:4746
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Nama kolom '%s' tak dikenal dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:4765
+#: ../libgda/gda-meta-store.c:4768
 msgid "Unknown table in meta data context"
 msgstr "Nama tabel tak dikenal dalam konteks data meta"
 
-#: ../libgda/gda-meta-store.c:5038 ../libgda/gda-meta-store.c:5068
-#: ../libgda/gda-meta-store.c:5257 ../libgda/gda-meta-store.c:5286
+#: ../libgda/gda-meta-store.c:5041 ../libgda/gda-meta-store.c:5071
+#: ../libgda/gda-meta-store.c:5260 ../libgda/gda-meta-store.c:5289
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Tak bisa temukan objek bernama '%s'"
 
-#: ../libgda/gda-meta-store.c:5136 ../libgda/gda-meta-store.c:5155
+#: ../libgda/gda-meta-store.c:5139 ../libgda/gda-meta-store.c:5158
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Tak bisa temukan kolom '%s' dalam tabel '%s'"
@@ -1956,17 +1956,17 @@ msgstr ""
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "View %s.%s.%s tak ditemukan di objek penyimpanan meta"
 
-#: ../libgda/gda-meta-struct.c:952
+#: ../libgda/gda-meta-struct.c:953
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Tabel %s.%s.%s tak ditemukan (atau kurang informasi kolom)"
 
-#: ../libgda/gda-meta-struct.c:1096
+#: ../libgda/gda-meta-struct.c:1097
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Galat internal GdaMetaStore: kolom %s tak ditemukan"
 
-#: ../libgda/gda-meta-struct.c:1248
+#: ../libgda/gda-meta-struct.c:1249
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1975,11 +1975,11 @@ msgstr ""
 "Ketidakkoherenan meta data dalam konstrain foreign key bagi tabel %s.%s.%s "
 "yang mengacu tabel %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2571
+#: ../libgda/gda-meta-struct.c:2572
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Kurang nama objek dalam struktur GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2596
+#: ../libgda/gda-meta-struct.c:2597
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Objek basis data '%s' sudah ada"
@@ -2407,7 +2407,7 @@ msgstr "Tak ada pernyataan SELECT yang dinyatakan"
 #: ../libgda/gda-tree-mgr-select.c:330
 #, c-format
 msgid "No value specified for parameter '%s'"
-msgstr "Nilai bagi parameter '%s' tak dinyatakan"
+msgstr "Tidak ada nilai yang dinyatakan bagi parameter '%s'"
 
 #: ../libgda/gda-tree-mgr-select.c:364
 msgid "Unable to get iterator's value"
@@ -2546,22 +2546,22 @@ msgid "Time, Date and TimeStamp representation"
 msgstr "Representasi Time, Date, dan TimeStamp"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
-#: ../libgda/handlers/gda-handler-time.c:628
+#: ../libgda/handlers/gda-handler-time.c:630
 msgid "DD"
 msgstr "DD"
 
 #. To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number
-#: ../libgda/handlers/gda-handler-time.c:632
+#: ../libgda/handlers/gda-handler-time.c:634
 msgid "MM"
 msgstr "MM"
 
 #. To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits
-#: ../libgda/handlers/gda-handler-time.c:637
+#: ../libgda/handlers/gda-handler-time.c:639
 msgid "YY"
 msgstr "YY"
 
 #. To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits
-#: ../libgda/handlers/gda-handler-time.c:640
+#: ../libgda/handlers/gda-handler-time.c:642
 msgid "YYYY"
 msgstr "YYYY"
 
@@ -2951,10 +2951,10 @@ msgstr "Kolom %d di luar batas (0-%d), mengabaikan tipe yang dinyatakan"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:438
 #: ../libgda/sqlite/gda-sqlite-recordset.c:451
-#: ../libgda/sqlite/gda-sqlite-recordset.c:585
-#: ../libgda/sqlite/gda-sqlite-recordset.c:598
-#: ../libgda/sqlite/gda-sqlite-recordset.c:611
-#: ../libgda/sqlite/gda-sqlite-recordset.c:624
+#: ../libgda/sqlite/gda-sqlite-recordset.c:586
+#: ../libgda/sqlite/gda-sqlite-recordset.c:599
+#: ../libgda/sqlite/gda-sqlite-recordset.c:612
+#: ../libgda/sqlite/gda-sqlite-recordset.c:625
 msgid "Integer value is too big"
 msgstr "Nilai bilangan bulat terlalu besar"
 
@@ -2975,27 +2975,27 @@ msgstr "Tanggal '%s' tak valid (format tanggal seharusnya TTTT-BB-HH)"
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Waktu '%s' tak valid (format waktu seharusnya JJ:MM:DD[.md])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:567
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:706
+#: ../libgda/sqlite/gda-sqlite-recordset.c:568
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:707
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 "Stempel waktu '%s' tak valid (format seharusnya TTTT-BB-HH JJ:MM:DD[.md])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:659
+#: ../libgda/sqlite/gda-sqlite-recordset.c:660
 msgid "SQLite provider fatal internal error"
 msgstr "Galat internal fatal penyedia SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:667
+#: ../libgda/sqlite/gda-sqlite-recordset.c:668
 msgid "Truncated data"
 msgstr "Data terpotong"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:720
+#: ../libgda/sqlite/gda-sqlite-recordset.c:721
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "Baris yang diminta tak dapat ditemukan"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:751
+#: ../libgda/sqlite/gda-sqlite-recordset.c:752
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "Tak bisa menata iterator pada baris yang diminta"
@@ -3754,7 +3754,7 @@ msgstr "Format gambar"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:419
 msgid "Format image as:"
-msgstr "Format gambar sebagai"
+msgstr "Format gambar sebagai:"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:431
 msgid "Current format"
@@ -4129,7 +4129,7 @@ msgstr ""
 "Kolom dapat diacu melalui nama mereka atau secara lebih mudah memakai "
 "<b><tt>_&lt;nomor kolom&gt;</tt></b>. Sebagai contoh, ekspresi yang valid "
 "bisa berupa: <b><tt>_2 like 'doe%'</tt></b> untuk menyaring baris yang kolom "
-"ke-2 nya dimulai dengan <tt>doe</tt>"
+"ke-2 nya dimulai dengan <tt>doe</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:231
 msgid "Set filter"
@@ -4178,19 +4178,19 @@ msgid "Move to last entry"
 msgstr "Pindah ke entri terakhir"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:100
-msgid "Show first chunck of data"
+msgid "Show first chunk of data"
 msgstr "Tampilkan penggalan data pertama"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:101
-msgid "Show previous chunck of data"
+msgid "Show previous chunk of data"
 msgstr "Tampilkan penggalan data sebelumnya"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:102
-msgid "Show next chunck of data"
+msgid "Show next chunk of data"
 msgstr "Tampilkan penggalan data selanjutnya"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:103
-msgid "Show last chunck of data"
+msgid "Show last chunk of data"
 msgstr "Tampilkan penggalan data terakhir"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:601
@@ -5276,7 +5276,7 @@ msgstr "Buat view hanya bila belum ada"
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:8
 msgid "View's definition"
-msgstr "Definisi view:"
+msgstr "Definisi view"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_index.xml.in.h:1
@@ -5483,9 +5483,9 @@ msgid "Provider for embedded Firebird databases"
 msgstr "Penyedia bagi basis data Firebird tertanam"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
-#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:346
-#: ../providers/jdbc/GdaJValue.c:392 ../providers/jdbc/GdaJValue.c:521
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
+#: ../providers/jdbc/GdaJValue.c:289 ../providers/jdbc/GdaJValue.c:337
+#: ../providers/jdbc/GdaJValue.c:383 ../providers/jdbc/GdaJValue.c:512
 msgid "Invalid argument: NULL"
 msgstr "Argumen tidak valid: NULL"
 
@@ -5502,7 +5502,7 @@ msgstr "Kurang parameter untuk membuka koneksi basis data"
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr "Tanggal tak valid: tahun %d, bulan %d, dan hari %d"
 
-#: ../providers/jdbc/GdaJValue.c:415
+#: ../providers/jdbc/GdaJValue.c:406
 msgid "Can't get BLOB's size"
 msgstr "Tak bisa mendapat ukuran BLOB"
 
@@ -5929,10 +5929,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:985
-#: ../providers/mysql/gda-mysql-recordset.c:998
-#: ../providers/mysql/gda-mysql-recordset.c:1011
-#: ../providers/mysql/gda-mysql-recordset.c:1030
+#: ../providers/mysql/gda-mysql-recordset.c:983
+#: ../providers/mysql/gda-mysql-recordset.c:996
+#: ../providers/mysql/gda-mysql-recordset.c:1009
+#: ../providers/mysql/gda-mysql-recordset.c:1028
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Tipe data bind kolom tak valid. %d\n"
@@ -5947,18 +5947,18 @@ msgstr "Tipe %s tak dipetakan bagi nilai %d"
 msgid "Type %s not mapped for value %lld"
 msgstr "Tipe %s tak dipetakan bagi nilai %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:895
+#: ../providers/mysql/gda-mysql-recordset.c:893
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Tipe %s tak dipetakan bagi nilai %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:912
-#: ../providers/mysql/gda-mysql-recordset.c:927
+#: ../providers/mysql/gda-mysql-recordset.c:910
+#: ../providers/mysql/gda-mysql-recordset.c:925
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Tipe %s tak dipetakan bagi nilai %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1020
+#: ../providers/mysql/gda-mysql-recordset.c:1018
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Tipe %s tak dipetakan bagi nilai %s"
@@ -6803,7 +6803,7 @@ msgstr "Transaksi tak didukung dalam level isolasi repeatable read"
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:696
+#: ../providers/postgres/gda-postgres-recordset.c:697
 msgid "Internal error"
 msgstr "Galat internal"
 
@@ -6834,12 +6834,12 @@ msgstr "Cacah baris chunk yang dibaca sejak pembuatan objek"
 msgid "Invalid date format '%s'"
 msgstr "Format tanggal '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:689
+#: ../providers/postgres/gda-postgres-recordset.c:690
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Nilai penanda waktu '%s' tak valid"
 
-#: ../providers/postgres/gda-postgres-recordset.c:766
+#: ../providers/postgres/gda-postgres-recordset.c:767
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Representasi string biner '%s ...' tak valid"
@@ -7637,22 +7637,22 @@ msgstr "Rahasia server"
 msgid "The name of a database to use"
 msgstr "Nama basis data untuk dipakai"
 
-#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:93
+#: ../testing/gda-test-blob.c:99 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' tak dideklarasikan"
 
-#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:98
+#: ../testing/gda-test-blob.c:104 ../testing/gda-test-connection.c:98
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Tak bisa membuka koneksi ke DSN %s: %s\n"
 
-#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:108
+#: ../testing/gda-test-blob.c:115 ../testing/gda-test-connection.c:108
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Tak bisa membuka koneksi yang dinyatakan: %s\n"
 
-#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:115
+#: ../testing/gda-test-blob.c:122 ../testing/gda-test-connection.c:115
 #, c-format
 msgid "Connection successfully opened!\n"
 msgstr "Koneksi sukses dibuka!\n"
@@ -9213,7 +9213,7 @@ msgstr "Di masa mendatang:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1229
 msgid "Less than a minute ago:\n"
-msgstr "kurang dari 1 menit yang lalu:\n"
+msgstr "Kurang dari 1 menit yang lalu:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1234
 #, c-format
@@ -9664,7 +9664,7 @@ msgstr "Menentukan atribut LDAP yang diambil secara baku oleh perintah LDAP"
 #: ../tools/common/t-app.c:592
 #, c-format
 msgid "Opening connection '%s' for: "
-msgstr "Membuka koneksi '%s' bagi:"
+msgstr "Membuka koneksi '%s' bagi: "
 
 #: ../tools/common/t-app.c:948 ../tools/common/t-app.c:1121
 #: ../tools/common/t-app.c:1186 ../tools/common/t-app.c:1193
@@ -9805,7 +9805,7 @@ msgid ""
 msgstr ""
 "Ikat koneksi-koneksi atau dataset-dataset (<NAMA OBJ>) menjadi satu yang "
 "baru (memungkinkan perintah SQL dieksekusi sekaligus pada beberapa koneksi "
-"dan/atau dataset) "
+"dan/atau dataset)"
 
 #: ../tools/common/t-app.c:1073 ../tools/common/t-app.c:1083
 #: ../tools/common/t-app.c:1093 ../tools/common/t-app.c:1103
@@ -10843,7 +10843,7 @@ msgstr "Token:"
 
 #: ../tools/common/web-server.c:711
 msgid "SQL console:"
-msgstr "Konsol SQL"
+msgstr "Konsol SQL:"
 
 #: ../tools/common/web-server.c:791 ../tools/common/web-server.c:1811
 msgid "Tables"
