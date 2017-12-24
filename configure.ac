@@ -1073,6 +1073,8 @@ doc/mallard/Makefile
 doc/mallard/gda-vala/Makefile
 doc/mallard/gda-vala/C/Makefile
 data/Makefile
+examples/Makefile
+examples/DDL/Makefile
 stamp.h
 ])
 AC_OUTPUT

@@ -29,7 +29,8 @@ SUBDIRS = \
 	tests \
 	testing \
 	data \
-	doc
+	doc \
+	examples
 
 example_files = \
 	examples/SimpleExample/Makefile \
