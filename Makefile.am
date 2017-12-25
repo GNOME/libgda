@@ -17,6 +17,10 @@ UI_TOOLS_DIR=control-center
 endif
 endif
 
+if ENABLE_EXAMPLES
+EXAMPLES_DIR=examples
+endif
+
 SUBDIRS = \
 	po \
 	libgda \
@@ -30,7 +34,7 @@ SUBDIRS = \
 	testing \
 	data \
 	doc \
-	examples
+	$(EXAMPLES_DIR)
 
 example_files = \
 	examples/SimpleExample/Makefile \
