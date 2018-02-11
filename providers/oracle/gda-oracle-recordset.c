@@ -6,7 +6,7 @@
  * Copyright (C) 2003 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Steve Fosdick <fozzy@src.gnome.org>
  * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc-desktop>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *

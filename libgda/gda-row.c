@@ -4,7 +4,7 @@
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
- * Copyright (C) 2003 Xabier Rodríguez Calvar <xrcalvar@igalia.com>
+ * Copyright (C) 2003 Xabier RodrÃ­guez Calvar <xrcalvar@igalia.com>
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2001 - 2002 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2001 - 2004 Rodrigo Moya <rodrigo@gnome-db.org>
- * Copyright (C) 2002 Carlos Perelló Marín <carlos@gnome-db.org>
+ * Copyright (C) 2002 Carlos PerellÃ³ MarÃ­n <carlos@gnome-db.org>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
  * Copyright (C) 2005 - 2011 Vivien Malerba <malerba@gnome-db.org>

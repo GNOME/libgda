@@ -6,10 +6,10 @@
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
  * Copyright (C) 2004 Denis Loginov <dloginov@crl.nmsu.edu>
- * Copyright (C) 2004 JosÈ MarÌa Casanova Crespo <jmcasanova@igalia.com>
+ * Copyright (C) 2004 Jos√© Mar√≠a Casanova Crespo <jmcasanova@igalia.com>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2010 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>

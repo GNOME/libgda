@@ -7,7 +7,7 @@
  * Copyright (C) 2003 Philippe CHARLIER <p.charlier@chello.be>
  * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2004 - 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2004 - 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>

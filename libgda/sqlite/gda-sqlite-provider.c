@@ -1,15 +1,15 @@
 /*
- * Copyright (C) 2001 - 2002 Carlos PerellÛ MarÌn <carlos@gnome-db.org>
+ * Copyright (C) 2001 - 2002 Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
  * Copyright (C) 2001 - 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2004 Benjamin Otte <in7y118@public.uni-hamburg.de>
  * Copyright (C) 2004 J.H.M. Dassen (Ray) <jdassen@debian.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 J¸rg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 J√ºrg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Nikolai Weibull <ruby-gnome2-devel-en-list@pcppopper.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
  * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2008 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Armin Burgmeier <armin@openismus.com>

@@ -1,10 +1,10 @@
 /*
- * Copyright (C) 2001 - 2002 Carlos PerellÛ MarÌn <carlos@gnome-db.org>
+ * Copyright (C) 2001 - 2002 Carlos Perell√≥ Mar√≠n <carlos@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2002 - 2005 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
  * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <arminb@src.gnome.org>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>

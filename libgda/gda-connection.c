@@ -10,10 +10,10 @@
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 - 2005 Alan Knowles <alank@src.gnome.org>
  * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
- * Copyright (C) 2004 JosÈ MarÌa Casanova Crespo <jmcasanova@igalia.com>
+ * Copyright (C) 2004 Jos√© Mar√≠a Casanova Crespo <jmcasanova@igalia.com>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2012 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>

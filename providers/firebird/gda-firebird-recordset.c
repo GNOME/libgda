@@ -4,7 +4,7 @@
  * Copyright (C) 2004 Jeronimo Albi <jeronimoalbi@yahoo.com.ar>
  * Copyright (C) 2004 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Christopher Taylor <christophth@tiscali.it>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  *
  * This library is free software; you can redistribute it and/or

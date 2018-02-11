@@ -4,7 +4,7 @@
  * Copyright (C) 2003 - 2004 Laurent Sansonetti <lrz@gnome.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
- * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 JÃ¼rg Billeter <j@bitron.ch>
  * Copyright (C) 2004 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2005 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 - 2009 Armin Burgmeier <armin@openismus.com>

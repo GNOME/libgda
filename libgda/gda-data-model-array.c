@@ -6,7 +6,7 @@
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 - 2012 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
  * Copyright (C) 2008 Przemys≈Çaw Grzegorczyk <pgrzegorczyk@gmail.com>
