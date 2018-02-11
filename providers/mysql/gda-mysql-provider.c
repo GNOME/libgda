@@ -3,17 +3,17 @@
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2002 Holger Thon <holger.thon@gnome-db.org>
  * Copyright (C) 2002 Zbigniew Chyla <cyba@gnome.pl>
- * Copyright (C) 2002 † Cleber Rodrigues <cleber@gnome-db.org>
+ * Copyright (C) 2002 Cleber Rodrigues <cleber@gnome-db.org>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2003 Paisa Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2004 - 2005 Alan Knowles <alan@akbkhome.com>
  * Copyright (C) 2004 Caolan McNamara <caolanm@redhat.com>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 J¸rg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 J√ºrg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 - 2016 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 - 2014 Murray Cumming <murrayc@murrayc.com>
  *

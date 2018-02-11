@@ -4,7 +4,7 @@
  * Copyright (C) 2001 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 Gonzalo Paniagua Javier <gonzalo@src.gnome.org>
  * Copyright (C) 2005 Denis Fortin <denis.fortin@free.fr>
- * Copyright (C) 2008 PrzemysĆaw Grzegorczyk <pgrzegorczyk@gmail.com>
+ * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

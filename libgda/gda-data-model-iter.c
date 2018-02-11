@@ -3,7 +3,7 @@
  * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2015 Corentin Noël <corentin@elementary.io>
+ * Copyright (C) 2015 Corentin NoÃ«l <corentin@elementary.io>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

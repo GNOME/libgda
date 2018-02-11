@@ -4,9 +4,9 @@
  * Copyright (C) 2003 Filip Van Raemdonck <mechanix@debian.org>
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 J¸rg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 J√ºrg Billeter <j@bitron.ch>
  * Copyright (C) 2005 - 2016 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2006 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 yselkowitz <yselkowitz@users.sourceforge.net>
  *

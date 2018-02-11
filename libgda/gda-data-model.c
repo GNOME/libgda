@@ -7,7 +7,7 @@
  * Copyright (C) 2003 Philippe CHARLIER <p.charlier@chello.be>
  * Copyright (C) 2004 Dani Baeyens <daniel.baeyens@hispalinux.es>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
- * Copyright (C) 2004 - 2005 ¡lvaro PeÒa <alvaropg@telefonica.net>
+ * Copyright (C) 2004 - 2005 √Ålvaro Pe√±a <alvaropg@telefonica.net>
  * Copyright (C) 2005 - 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Dan Winship <danw@src.gnome.org>
  * Copyright (C) 2005 Stanislav Brabec <sbrabec@suse.de>
@@ -19,7 +19,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
- * Copyright (C) 2015 Corentin NoÎl <corentin@elementary.io>
+ * Copyright (C) 2015 Corentin No√´l <corentin@elementary.io>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

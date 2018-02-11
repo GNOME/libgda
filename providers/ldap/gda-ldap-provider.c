@@ -4,7 +4,7 @@
  * Copyright (C) 2003 Gonzalo Paniagua Javier <gonzalo@gnome-db.org>
  * Copyright (C) 2003 Rodrigo Moya <rodrigo@gnome-db.org>
  * Copyright (C) 2004 Julio M. Merino Vidal <jmmv@menta.net>
- * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2004 JÃ¼rg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  *
