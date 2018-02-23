@@ -5,7 +5,7 @@
 # Jorge González <jorgegonz@svn.gnome.org>, 2010.
 # 
 # 
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011., 2013.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010, 2011, 2013.
 #
 msgid ""
 msgstr ""
