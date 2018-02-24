@@ -1,16 +1,16 @@
 # Serbian translation of libgda.
-# Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003—2017.
+# Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003—2018.
 # This file is distributed under the same license as the libgda package.
 # Translators:
 # Дејан Матијевић <dejan@ns.sympatico.ca>
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2017.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
 "&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-19 15:24+0000\n"
-"PO-Revision-Date: 2017-08-19 19:21+0200\n"
+"POT-Creation-Date: 2018-02-12 13:58+0000\n"
+"PO-Revision-Date: 2018-02-24 08:46+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: српски <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -1788,7 +1788,7 @@ msgstr "Недостаје назив колоне страног кључа (з
 msgid "Column '%s' not found in table '%s'"
 msgstr "Нисам пронашао колону „%s“ у табели „%s“"
 
-#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1333
+#: ../libgda/gda-meta-store.c:2415 ../libgda/gda-meta-struct.c:1334
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Нисам пронашао колону „%s“ страног кључа у табели „%s“"
@@ -1804,58 +1804,58 @@ msgid "Could not find description for column named '%s'"
 msgstr "Не могу да пронађем опис за колону под називом „%s“"
 
 #: ../libgda/gda-meta-store.c:2783 ../libgda/gda-meta-store.c:2794
-#: ../libgda/gda-meta-store.c:2828
+#: ../libgda/gda-meta-store.c:2831
 msgid "Could not get the internal schema's version"
 msgstr "Не могу да добавим издање унутрашње шеме"
 
-#: ../libgda/gda-meta-store.c:2952 ../libgda/gda-meta-store.c:3072
+#: ../libgda/gda-meta-store.c:2955 ../libgda/gda-meta-store.c:3075
 #: ../tools/common/t-context.c:287
 msgid "More than one SQL statement"
 msgstr "Више од једне тврдње СКуЛа"
 
-#: ../libgda/gda-meta-store.c:2981 ../libgda/gda-meta-store.c:3100
+#: ../libgda/gda-meta-store.c:2984 ../libgda/gda-meta-store.c:3103
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "Параметар „%s“ није присутан у тврдњи"
 
-#: ../libgda/gda-meta-store.c:2998 ../libgda/gda-meta-store.c:3114
+#: ../libgda/gda-meta-store.c:3001 ../libgda/gda-meta-store.c:3117
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Није подешена вредност за параметар „%s“"
 
-#: ../libgda/gda-meta-store.c:3697
+#: ../libgda/gda-meta-store.c:3700
 msgid "Data models should have the same number of columns"
 msgstr "Обрасци података треба да имају исти број колона"
 
-#: ../libgda/gda-meta-store.c:3760 ../libgda/gda-meta-store.c:4796
-#: ../libgda/gda-meta-store.c:4899
+#: ../libgda/gda-meta-store.c:3763 ../libgda/gda-meta-store.c:4799
+#: ../libgda/gda-meta-store.c:4902
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Непознат предмет базе података „%s“"
 
-#: ../libgda/gda-meta-store.c:3776
+#: ../libgda/gda-meta-store.c:3779
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Не могу да подесим вредност за параметар „%s“"
 
-#: ../libgda/gda-meta-store.c:3805
+#: ../libgda/gda-meta-store.c:3808
 msgid "Could not create SELECT statement"
 msgstr "Не могу да направим тврдњу ИЗАБЕРИ"
 
-#: ../libgda/gda-meta-store.c:3820
+#: ../libgda/gda-meta-store.c:3823
 msgid "Could not create DELETE statement"
 msgstr "Не могу да направим тврдњу ОБРИШИ"
 
-#: ../libgda/gda-meta-store.c:3870
+#: ../libgda/gda-meta-store.c:3873
 msgid "A transaction has already been started"
 msgstr "Пренос је већ покренут"
 
-#: ../libgda/gda-meta-store.c:4242
+#: ../libgda/gda-meta-store.c:4245
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "Нисам пронашао особину „%s“"
 
-#: ../libgda/gda-meta-store.c:4245
+#: ../libgda/gda-meta-store.c:4248
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
@@ -1864,11 +1864,11 @@ msgstr[1] "Атрибут „%s“ има %d вредности"
 msgstr[2] "Атрибут „%s“ има %d вредности"
 msgstr[3] "Атрибут „%s“ има %d вредност"
 
-#: ../libgda/gda-meta-store.c:4292
+#: ../libgda/gda-meta-store.c:4295
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Називи атрибута који почињу на „_“ су обезбеђени за унутрашњу употребу"
 
-#: ../libgda/gda-meta-store.c:4322
+#: ../libgda/gda-meta-store.c:4325
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1876,16 +1876,16 @@ msgstr ""
 "Не могу да започнем пренос јер је један већ започет, ово може довести до "
 "проблема атрибута Гда мета складишта"
 
-#: ../libgda/gda-meta-store.c:4439
+#: ../libgda/gda-meta-store.c:4442
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Не могу да обрадим ИксМЛ опис предмета произвољне базе података за додавање"
 
-#: ../libgda/gda-meta-store.c:4453
+#: ../libgda/gda-meta-store.c:4456
 msgid "Missing custom database object name"
 msgstr "Недостаје произвољни назив предмета базе података"
 
-#: ../libgda/gda-meta-store.c:4458
+#: ../libgda/gda-meta-store.c:4461
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1893,46 +1893,46 @@ msgstr ""
 "Произвољни називи предмета базе података који почињу на „_“ су обезбеђени за "
 "унутрашњу употребу"
 
-#: ../libgda/gda-meta-store.c:4556
+#: ../libgda/gda-meta-store.c:4559
 msgid "Another object with the same name already exists"
 msgstr "Још један предмет са истим називом већ постоји"
 
-#: ../libgda/gda-meta-store.c:4658
+#: ../libgda/gda-meta-store.c:4661
 msgid "Missing table name in meta data context"
 msgstr "Недостаје назив табеле у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:4685
+#: ../libgda/gda-meta-store.c:4688
 msgid "Missing column name in meta data context"
 msgstr "Недостаје назив колоне у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:4701
+#: ../libgda/gda-meta-store.c:4704
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Недостаје услов у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:4726
+#: ../libgda/gda-meta-store.c:4729
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Лош услов у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:4743
+#: ../libgda/gda-meta-store.c:4746
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Непознат назив колоне „%s“ у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:4765
+#: ../libgda/gda-meta-store.c:4768
 msgid "Unknown table in meta data context"
 msgstr "Непозната табела у садржају мета података"
 
-#: ../libgda/gda-meta-store.c:5038 ../libgda/gda-meta-store.c:5068
-#: ../libgda/gda-meta-store.c:5257 ../libgda/gda-meta-store.c:5286
+#: ../libgda/gda-meta-store.c:5041 ../libgda/gda-meta-store.c:5071
+#: ../libgda/gda-meta-store.c:5260 ../libgda/gda-meta-store.c:5289
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Не могу да нађем предмет под називом „%s“"
 
-#: ../libgda/gda-meta-store.c:5136 ../libgda/gda-meta-store.c:5155
+#: ../libgda/gda-meta-store.c:5139 ../libgda/gda-meta-store.c:5158
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Не могу да пронађем колону „%s“ у табели „%s“"
@@ -1964,17 +1964,17 @@ msgstr ""
 msgid "View %s.%s.%s not found in meta store object"
 msgstr "Нисам пронашао преглед %s.%s.%s у предмету мета складишта"
 
-#: ../libgda/gda-meta-struct.c:952
+#: ../libgda/gda-meta-struct.c:953
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr "Нисам пронашао табелу %s.%s.%s (или недостају подаци о колонама)"
 
-#: ../libgda/gda-meta-struct.c:1096
+#: ../libgda/gda-meta-struct.c:1097
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
 msgstr "Унутрашња грешка Гда мета складишта: нисам пронашао колону %s"
 
-#: ../libgda/gda-meta-struct.c:1248
+#: ../libgda/gda-meta-struct.c:1249
 #, c-format
 msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
@@ -1983,11 +1983,11 @@ msgstr ""
 "Неповезаност мета података у ограничењу страног кључа за табелу %s.%s.%s "
 "која упућује на табелу %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2571
+#: ../libgda/gda-meta-struct.c:2572
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Недостаје назив предмета у структури предмета Гда мета базе података"
 
-#: ../libgda/gda-meta-struct.c:2596
+#: ../libgda/gda-meta-struct.c:2597
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "Предмет базе података „%s“ већ постоји"
@@ -2555,22 +2555,22 @@ msgid "Time, Date and TimeStamp representation"
 msgstr "Представљање времена, датума и временске ознаке"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
-#: ../libgda/handlers/gda-handler-time.c:628
+#: ../libgda/handlers/gda-handler-time.c:630
 msgid "DD"
 msgstr "ДД"
 
 #. To translators: MM represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace MM by a month number
-#: ../libgda/handlers/gda-handler-time.c:632
+#: ../libgda/handlers/gda-handler-time.c:634
 msgid "MM"
 msgstr "ММ"
 
 #. To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits
-#: ../libgda/handlers/gda-handler-time.c:637
+#: ../libgda/handlers/gda-handler-time.c:639
 msgid "YY"
 msgstr "ГГ"
 
 #. To translators: YYYY represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace YYYY by a year number, on 4 digits
-#: ../libgda/handlers/gda-handler-time.c:640
+#: ../libgda/handlers/gda-handler-time.c:642
 msgid "YYYY"
 msgstr "ГГГГ"
 
@@ -2960,10 +2960,10 @@ msgstr "Колона бр. %d је ван опсега (0-%d), занемару�
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:438
 #: ../libgda/sqlite/gda-sqlite-recordset.c:451
-#: ../libgda/sqlite/gda-sqlite-recordset.c:585
-#: ../libgda/sqlite/gda-sqlite-recordset.c:598
-#: ../libgda/sqlite/gda-sqlite-recordset.c:611
-#: ../libgda/sqlite/gda-sqlite-recordset.c:624
+#: ../libgda/sqlite/gda-sqlite-recordset.c:586
+#: ../libgda/sqlite/gda-sqlite-recordset.c:599
+#: ../libgda/sqlite/gda-sqlite-recordset.c:612
+#: ../libgda/sqlite/gda-sqlite-recordset.c:625
 msgid "Integer value is too big"
 msgstr "Вредност целог броја је превелика"
 
@@ -2984,28 +2984,28 @@ msgstr "Неисправан датум „%s“ (запис датума тре
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Неисправно време „%s“ (запис времена треба да буде ЧЧ:ММ:СС[.ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:567
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:706
+#: ../libgda/sqlite/gda-sqlite-recordset.c:568
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:707
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgstr ""
 "Неисправна временска ознака „%s“ (запис треба да буде ГГГГ-ММ-ДД ЧЧ:ММ:СС[."
 "ms])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:659
+#: ../libgda/sqlite/gda-sqlite-recordset.c:660
 msgid "SQLite provider fatal internal error"
 msgstr "Кобна унутрашња грешка достављача СКуЛајта"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:667
+#: ../libgda/sqlite/gda-sqlite-recordset.c:668
 msgid "Truncated data"
 msgstr "Скраћени подаци"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:720
+#: ../libgda/sqlite/gda-sqlite-recordset.c:721
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "Не могу да пронађем затражени ред"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:751
+#: ../libgda/sqlite/gda-sqlite-recordset.c:752
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "Не могу да подесим приступника на захтеваном реду"
@@ -4186,19 +4186,23 @@ msgid "Move to last entry"
 msgstr "Пређи на последњи унос"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:100
-msgid "Show first chunck of data"
+#| msgid "Show first chunck of data"
+msgid "Show first chunk of data"
 msgstr "Прикажи први део података"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:101
-msgid "Show previous chunck of data"
+#| msgid "Show previous chunck of data"
+msgid "Show previous chunk of data"
 msgstr "Прикажи претходни део података"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:102
-msgid "Show next chunck of data"
+#| msgid "Show next chunck of data"
+msgid "Show next chunk of data"
 msgstr "Прикажи следећи део података"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:103
-msgid "Show last chunck of data"
+#| msgid "Show last chunck of data"
+msgid "Show last chunk of data"
 msgstr "Прикажи последњи део података"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:601
@@ -5493,9 +5497,9 @@ msgid "Provider for embedded Firebird databases"
 msgstr "Достављач за угњеждене Фајербирд базе података"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
-#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
-#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:346
-#: ../providers/jdbc/GdaJValue.c:392 ../providers/jdbc/GdaJValue.c:521
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
+#: ../providers/jdbc/GdaJValue.c:289 ../providers/jdbc/GdaJValue.c:337
+#: ../providers/jdbc/GdaJValue.c:383 ../providers/jdbc/GdaJValue.c:512
 msgid "Invalid argument: NULL"
 msgstr "Неисправан аргумент: НИШТА"
 
@@ -5512,7 +5516,7 @@ msgstr "Недостају параметари за отварање везе �
 msgid "Invalid date: year %d, month %d and day %d"
 msgstr "Неисправан датум: година %d, месец %d и дан %d"
 
-#: ../providers/jdbc/GdaJValue.c:415
+#: ../providers/jdbc/GdaJValue.c:406
 msgid "Can't get BLOB's size"
 msgstr "Не могу да добавим величину БЛОБ-а"
 
@@ -5939,10 +5943,10 @@ msgid "Number of row chunks read since the object creation"
 msgstr "Број делова реда је прочитан још од стварања предмета"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
-#: ../providers/mysql/gda-mysql-recordset.c:985
-#: ../providers/mysql/gda-mysql-recordset.c:998
-#: ../providers/mysql/gda-mysql-recordset.c:1011
-#: ../providers/mysql/gda-mysql-recordset.c:1030
+#: ../providers/mysql/gda-mysql-recordset.c:983
+#: ../providers/mysql/gda-mysql-recordset.c:996
+#: ../providers/mysql/gda-mysql-recordset.c:1009
+#: ../providers/mysql/gda-mysql-recordset.c:1028
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Неисправна врста података свезе колоне. %d\n"
@@ -5957,18 +5961,18 @@ msgstr "Врста „%s“ није мапирана за вредност %d"
 msgid "Type %s not mapped for value %lld"
 msgstr "Врста „%s“ није мапирана за вредност %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:895
+#: ../providers/mysql/gda-mysql-recordset.c:893
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Врста „%s“ није мапирана за вредност %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:912
-#: ../providers/mysql/gda-mysql-recordset.c:927
+#: ../providers/mysql/gda-mysql-recordset.c:910
+#: ../providers/mysql/gda-mysql-recordset.c:925
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Врста „%s“ није мапирана за вредност %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:1020
+#: ../providers/mysql/gda-mysql-recordset.c:1018
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Врста „%s“ није мапирана за вредност %s"
@@ -6814,7 +6818,7 @@ msgstr "Преноси нису подржани у поновљивом чит�
 #: ../providers/postgres/gda-postgres-recordset.c:446
 #: ../providers/postgres/gda-postgres-recordset.c:474
 #: ../providers/postgres/gda-postgres-recordset.c:630
-#: ../providers/postgres/gda-postgres-recordset.c:696
+#: ../providers/postgres/gda-postgres-recordset.c:697
 msgid "Internal error"
 msgstr "Унутрашња грешка"
 
@@ -6845,12 +6849,12 @@ msgstr "Број делова редова је прочитан још од с�
 msgid "Invalid date format '%s'"
 msgstr "Неисправан запис датума „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:689
+#: ../providers/postgres/gda-postgres-recordset.c:690
 #, c-format
 msgid "Invalid timestamp value '%s'"
 msgstr "Неисправна вредност временске ознаке „%s“"
 
-#: ../providers/postgres/gda-postgres-recordset.c:766
+#: ../providers/postgres/gda-postgres-recordset.c:767
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr "Неисправно представљање бинарне ниске „%s ...“"
@@ -7642,22 +7646,22 @@ msgstr "Тајна сервера"
 msgid "The name of a database to use"
 msgstr "Назив базе података за коришћење"
 
-#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:93
+#: ../testing/gda-test-blob.c:99 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "ДСН „%s“ није објављен"
 
-#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:98
+#: ../testing/gda-test-blob.c:104 ../testing/gda-test-connection.c:98
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "Не могу да отворим везу на ДСН %s: %s\n"
 
-#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:108
+#: ../testing/gda-test-blob.c:115 ../testing/gda-test-connection.c:108
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "Не могу да отворим наведену везу: %s\n"
 
-#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:115
+#: ../testing/gda-test-blob.c:122 ../testing/gda-test-connection.c:115
 #, c-format
 msgid "Connection successfully opened!\n"
 msgstr "Веза је успешно отворена!\n"
