@@ -419,7 +419,7 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 
 		gdaui_grid_set_sample_size (GDAUI_GRID (import->priv->preview_grid), 50);
 		g_object_set (G_OBJECT (import->priv->preview_grid), "info-flags",
-			      GDAUI_DATA_PROXY_INFO_CHUNCK_CHANGE_BUTTONS | 
+			      GDAUI_DATA_PROXY_INFO_CHUNK_CHANGE_BUTTONS | 
 			      GDAUI_DATA_PROXY_INFO_CURRENT_ROW, NULL);
 		gtk_box_pack_start (GTK_BOX (import->priv->preview_box), import->priv->preview_grid, TRUE, TRUE, 0);
 		gtk_widget_show (import->priv->preview_grid);
