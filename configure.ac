@@ -335,6 +335,11 @@ AC_SUBST(GLADE_CATALOG)
 AC_SUBST(GLADE_PIXMAP)
 
 
+AC_ARG_ENABLE([glade-system-install],
+    AS_HELP_STRING([--enable-glade-system-install[=@<:@no/auto/yes@:>@]], [Install Glade files along with system installed files [default=yes]]),
+    [enable_glade_system_install=$enableval],[enable_glade_system_install=yes])
+AM_CONDITIONAL(ENABLE_GLADE_SYSTEM_INSTALL, [test x"$enable_glade_system_install" = "xyes"])
+
 dnl ******************************
 dnl Checks for iso codes
 dnl ******************************
