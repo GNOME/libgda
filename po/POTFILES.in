@@ -310,6 +310,7 @@ tools/browser/objects-cloud.c
 tools/browser/query-exec/perspective-main.c
 tools/browser/query-exec/query-console-page.c
 tools/browser/query-exec/query-editor.c
+tools/browser/query-exec/query-editor.h
 tools/browser/query-exec/query-exec-perspective.c
 tools/browser/query-exec/query-favorite-selector.c
 tools/browser/query-exec/query-result.c
@@ -325,6 +326,7 @@ tools/browser/schema-browser/table-preferences.c
 tools/browser/text-search.c
 tools/browser/ui-formgrid.c
 tools/browser/ui-support.c
+tools/browser/ui-support.h
 tools/common/html-doc.c
 tools/common/t-app.c
 tools/common/t-config-info.c
