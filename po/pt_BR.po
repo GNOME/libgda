@@ -1,18 +1,18 @@
 # Brazilian Portuguese translation of libgda.
-# Copyright (C) 2002-2017 Free Software Foundation, Inc.
+# Copyright (C) 2002-2018 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 # Alexandre Folle de Menezes <afmenez@terra.com.br>, 2002-2004, 2006.
 # Afonso Celso Medina <medina@maua.br>, 2004, 2005, 2009.
 # Rodolfo Ribeiro Gomes <rodolforg@gmail.com>, 2009, 2011.
 # Enrico Nicoletto <liverig@gmail.com>, 2013.
-# Rafael Fontenelle <rafaelff@gnome.org>, 2017.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2017, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=libgda"
-"&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-11-05 11:45+0000\n"
-"PO-Revision-Date: 2017-12-12 06:24-0200\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?"
+"product=libgda&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2018-03-18 00:19+0000\n"
+"PO-Revision-Date: 2018-03-24 16:44-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -4246,22 +4246,18 @@ msgid "Move to last entry"
 msgstr "Mover para a última entrada"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:100
-#| msgid "Show first chunck of data"
 msgid "Show first chunk of data"
 msgstr "Mostrar o primeiro pedaço de dados"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:101
-#| msgid "Show previous chunck of data"
 msgid "Show previous chunk of data"
 msgstr "Mostrar o pedaço de dados anterior"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:102
-#| msgid "Show next chunck of data"
 msgid "Show next chunk of data"
 msgstr "Mostrar o próximo pedaço de dados"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:103
-#| msgid "Show last chunck of data"
 msgid "Show last chunk of data"
 msgstr "Mostrar o último pedaço de dados"
 
@@ -9343,6 +9339,32 @@ msgid_plural "%lu days ago\n"
 msgstr[0] "Há %lu dia\n"
 msgstr[1] "Há %lu dias\n"
 
+#: ../tools/browser/query-exec/query-editor.h:34
+msgid ""
+"Enter SQL code to execute\n"
+"(must be understood by the database to\n"
+"which the connection is opened, except for the variables definition)\n"
+"The following shortcuts are allowed:\n"
+"   <small><b>CTRL - l</b></small> to clear the editor\n"
+"   <small><b>CTRL - ENTER</b></small> to execute SQL\n"
+"   <small><b>CTRL - Up</b></small> to move to previous executed SQL in "
+"history\n"
+"   <small><b>CTRL - Down</b></small> to move to next executed SQL in "
+"history\n"
+"   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
+msgstr ""
+"Insira um código SQL para executar\n"
+"(deve ser entendido pelo banco de dados para\n"
+"o qual a conexão está aberta, exceto para definição de variáveis)\n"
+"Os seguintes atalhos são permitidos:\n"
+"   <small><b>CTRL - l</b></small> para limpar o editor\n"
+"   <small><b>CTRL - ENTER</b></small> para executar SQL\n"
+"   <small><b>CTRL - Cima</b></small> para mover para SQL executado "
+"anteriormente no histórico\n"
+"   <small><b>CTRL - Baixo</b></small> para mover para próximo SQL executado "
+"no histórico\n"
+"   <small><b>CTRL - ESPAÇO</b></small> para obter uma lista de completamento"
+
 #: ../tools/browser/query-exec/query-exec-perspective.c:339
 msgid "New query execution tab"
 msgstr "Aba de nova execução de consulta"
@@ -9738,6 +9760,38 @@ msgstr "Não é possível abrir o arquivo de ajuda"
 #: ../tools/browser/ui-support.c:465
 msgid "Close tab"
 msgstr "Fechar aba"
+
+#: ../tools/browser/ui-support.h:96
+msgid ""
+"<small>This area allows to give values to\n"
+"variables defined in the SQL code\n"
+"using the following syntax:\n"
+"<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
+"For example:\n"
+"<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+"      defines <b>id</b> as a non NULL integer\n"
+"<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
+"      defines <b>age</b> as a string\n"
+"\n"
+"Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> and\n"
+"<tt>binary</tt></small>"
+msgstr ""
+"<small>Esta área permite fornecer valores para\n"
+"variáveis definidas no código SQL\n"
+"usando a seguinte sintaxe:\n"
+"<b><tt>##&lt;nome da variável&gt;::&lt;tipo&gt;[::null]</tt></b>\n"
+"Exemplos:\n"
+"<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
+"      define <b>id</b> como um número inteiro não nulo\n"
+"<span foreground=\"#4e9a06\"><b><tt>##idade::string::null</tt></b></span>\n"
+"      define <b>idade</b> como um texto\n"
+"\n"
+"São tipos válidos: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> e\n"
+"<tt>binary</tt></small>"
 
 #: ../tools/common/html-doc.c:86
 msgid "Generated by the GDA SQL console"
@@ -11651,38 +11705,6 @@ msgstr "Exibe"
 
 #~ msgid "Help is being loaded, please wait..."
 #~ msgstr "A ajuda está sendo carregada. Por favor, aguarde…"
-
-#~ msgid ""
-#~ "<small>This area allows to give values to\n"
-#~ "variables defined in the SQL code\n"
-#~ "using the following syntax:\n"
-#~ "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
-#~ "For example:\n"
-#~ "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-#~ "      defines <b>id</b> as a non NULL integer\n"
-#~ "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-#~ "      defines <b>age</b> as a string\n"
-#~ "\n"
-#~ "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-#~ "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-#~ "<tt>blob</tt> and\n"
-#~ "<tt>binary</tt></small>"
-#~ msgstr ""
-#~ "<small>Esta área permite fornecer valores para\n"
-#~ "variáveis definidas no código SQL\n"
-#~ "usando a seguinte sintaxe:\n"
-#~ "<b><tt>##&lt;nome da variável&gt;::&lt;tipo&gt;[::null]</tt></b>\n"
-#~ "Exemplos:\n"
-#~ "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-#~ "      define <b>id</b> como um número inteiro não nulo\n"
-#~ "<span foreground=\"#4e9a06\"><b><tt>##idade::string::null</tt></b></"
-#~ "span>\n"
-#~ "      define <b>idade</b> como um texto\n"
-#~ "\n"
-#~ "São tipos válidos: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-#~ "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-#~ "<tt>blob</tt> e\n"
-#~ "<tt>binary</tt></small>"
 
 #~ msgid "GDA SQL console version "
 #~ msgstr "console GDA SQL versão "
