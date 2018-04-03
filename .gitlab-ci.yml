@@ -1,0 +1,50 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: normal
+
+stages:
+- test
+- cross_distro
+
+.test_template: &distro_test
+  script:
+    - ./autogen.sh
+    - make
+    - make distcheck
+
+fedora:rawhide:
+    image: fedora:rawhide
+    stage: cross_distro
+    before_script:
+    - dnf install -y 'dnf-command(builddep)' redhat-rpm-config
+    - dnf builddep -y libgda
+    <<: *distro_test
+    only:
+    - schedules
+    - web
+    - tags
+
+ubuntu:devel:
+    image: ubuntu:devel
+    stage: cross_distro
+    before_script:
+    # Ubuntu requires running update to fetch metadata and find packges
+    - apt update
+    - apt install -y gcc gettext itstool git libgtk-3-dev
+                     gobject-introspection libxml2-dev
+    <<: *distro_test
+    only:
+    - schedules
+    - web
+    - tags
+
+opensuse:tumbleweed:
+    image: opensuse:tumbleweed
+    stage: cross_distro
+    before_script:
+    - zypper install -y gcc gettext-runtime gettext-tools itstool git
+                        gtk3-devel gobject-introspection-devel libxml2-devel
+    <<: *distro_test
+    only:
+    - schedules
+    - web
+    - tags
