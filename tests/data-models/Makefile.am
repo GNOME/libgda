@@ -23,6 +23,7 @@ check_model_import_LDADD = \
 check_virtual_SOURCES = $(common_sources) check_virtual.c
 check_virtual_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda/sqlite/virtual
 check_virtual_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
@@ -53,6 +54,7 @@ check_empty_rs_LDADD = \
 
 check_model_errors_SOURCES = $(common_sources) check_model_errors.c
 check_model_errors_CFLAGS = \
+	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda/sqlite
 check_model_errors_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
@@ -62,6 +64,7 @@ check_model_errors_LDADD = \
 check_vcnc_SOURCES = $(common_sources) check_vcnc.c
 check_vcnc_CFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_srcdir)/libgda/sqlite/vcnc
 check_vcnc_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
