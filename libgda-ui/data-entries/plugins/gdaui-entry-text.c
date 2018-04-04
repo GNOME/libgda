@@ -25,15 +25,7 @@
 #include <libgda/gda-blob-op.h>
 
 #ifdef HAVE_GTKSOURCEVIEW
-  #ifdef GTK_DISABLE_SINGLE_INCLUDES
-    #undef GTK_DISABLE_SINGLE_INCLUDES
-  #endif
-
-  #include <gtksourceview/gtksourceview.h>
-  #include <gtksourceview/gtksourcelanguagemanager.h>
-  #include <gtksourceview/gtksourcebuffer.h>
-  #include <gtksourceview/gtksourcestyleschememanager.h>
-  #include <gtksourceview/gtksourcestylescheme.h>
+  #include <gtksourceview/gtksource.h>
 #endif
 #define LANGUAGE_SQL "gda-sql"
 

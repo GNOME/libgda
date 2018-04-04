@@ -23,15 +23,7 @@
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 #ifdef HAVE_GTKSOURCEVIEW
-  #ifdef GTK_DISABLE_SINGLE_INCLUDES
-    #undef GTK_DISABLE_SINGLE_INCLUDES
-  #endif
-
-  #include <gtksourceview/gtksourceview.h>
-  #include <gtksourceview/gtksourcelanguagemanager.h>
-  #include <gtksourceview/gtksourcebuffer.h>
-  #include <gtksourceview/gtksourcestyleschememanager.h>
-  #include <gtksourceview/gtksourcestylescheme.h>
+  #include <gtksourceview/gtksource.h>
 #endif
 #include "query-editor.h"
 #include <binreloc/gda-binreloc.h>
@@ -414,7 +406,7 @@ display_completions (QueryEditor *editor)
 		
 		/* fill in the model */
 		GtkTreeIter iter;
-		gint w, width = 0, h, height = 0;
+		gint width = 0, height = 0;
 		gint i;
 		
 		for (i = 0; ; i++) {
@@ -709,7 +701,6 @@ query_editor_init (QueryEditor *editor, G_GNUC_UNUSED QueryEditorClass *klass)
 	int tab = 8;
 	gboolean highlight = TRUE;
 	gboolean showlinesno = FALSE;
-	GtkWidget *wid;
 
 	g_return_if_fail (QUERY_IS_EDITOR (editor));
 
