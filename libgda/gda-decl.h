@@ -121,7 +121,6 @@ typedef struct _GdaTreePrivate GdaTreePrivate;
 
 typedef struct _GdaTreeManager GdaTreeManager;
 typedef struct _GdaTreeManagerClass GdaTreeManagerClass;
-typedef struct _GdaTreeManagerPrivate GdaTreeManagerPrivate;
 
 typedef struct _GdaTreeNode GdaTreeNode;
 typedef struct _GdaTreeNodeClass GdaTreeNodeClass;
