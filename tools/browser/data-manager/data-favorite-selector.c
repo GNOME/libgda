@@ -33,15 +33,7 @@
 #include <libgda-ui/internal/popup-container.h>
 
 #ifdef HAVE_GTKSOURCEVIEW
-  #ifdef GTK_DISABLE_SINGLE_INCLUDES
-    #undef GTK_DISABLE_SINGLE_INCLUDES
-  #endif
-
-  #include <gtksourceview/gtksourceview.h>
-  #include <gtksourceview/gtksourcelanguagemanager.h>
-  #include <gtksourceview/gtksourcebuffer.h>
-  #include <gtksourceview/gtksourcestyleschememanager.h>
-  #include <gtksourceview/gtksourcestylescheme.h>
+  #include <gtksourceview/gtksource.h>
 #endif
 
 struct _DataFavoriteSelectorPrivate {
