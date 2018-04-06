@@ -26,12 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_TREE_MANAGER            (gda_tree_manager_get_type())
-#define GDA_TREE_MANAGER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_MANAGER, GdaTreeManager))
-#define GDA_TREE_MANAGER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MANAGER, GdaTreeManagerClass))
-#define GDA_IS_TREE_MANAGER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MANAGER))
-#define GDA_IS_TREE_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MANAGER))
-#define GDA_TREE_MANAGER_GET_CLASS(o)	 (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MANAGER, GdaTreeManagerClass))
+#define GDA_TYPE_TREE_MANAGER (gda_tree_manager_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaTreeManager, gda_tree_manager, GDA, TREE_MANAGER, GObject)
 
 typedef GSList *(*GdaTreeManagerNodesFunc) (GdaTreeManager *manager, GdaTreeNode *node,
 					    const GSList *children_nodes,
@@ -46,17 +42,12 @@ typedef enum {
 	GDA_TREE_MANAGER_UNKNOWN_ERROR
 } GdaTreeManagerError;
 
-struct _GdaTreeManager {
-	GObject            object;
-	GdaTreeManagerPrivate *priv;
-};
-
 struct _GdaTreeManagerClass {
-	GObjectClass       object_class;
+	GObjectClass       parent_class;
 
 	/* virtual methods */
 	/**
-	 * update_children:
+	 * GdaTreeManager::update_children:
 	 *
 	 * Returns: NULL if an error occurred, and @out_error is set to TRUE
 	 */
@@ -91,8 +82,6 @@ struct _GdaTreeManagerClass {
  * The #GdaTreeManager itself is an abstract type (which can't be instantiated). Use an existing sub class or subclass
  * it yourself.
  */
-
-GType                  gda_tree_manager_get_type                 (void) G_GNUC_CONST;
 
 GdaTreeManager        *gda_tree_manager_new_with_func            (GdaTreeManagerNodesFunc update_func);
 void                   gda_tree_manager_add_manager              (GdaTreeManager *manager, GdaTreeManager *sub);

@@ -46,7 +46,7 @@ m4_undefine([minor])
 m4_undefine([micro])
 
 dnl required versions of other tools.
-m4_define([req_ver_glib],[2.32.0])
+m4_define([req_ver_glib],[2.38.0])
 
 #
 # Making releases:
