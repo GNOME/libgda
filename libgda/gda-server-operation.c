@@ -48,11 +48,25 @@
 
 extern gchar *gda_lang_locale;
 
-#define CLASS(operation) (GDA_SERVER_OPERATION_CLASS (G_OBJECT_GET_CLASS (operation)))
+struct _GdaServerOperationPrivate {
+	GdaServerOperationType  op_type;
+	gboolean                cnc_set;
+	GdaConnection          *cnc;
+	gboolean                prov_set;
+	GdaServerProvider      *prov;
+
+	xmlDocPtr               xml_spec_doc;
+	GSList                 *sources; /* list of GdaDataModel as sources for the parameters */
+
+	GSList                 *allnodes; /* list of all the Node structures, referenced here only */
+	GSList                 *topnodes; /* list of the "/(*)" named nodes, not referenced here  */
+	GHashTable             *info_hash; /* key = path, value = a GdaServerOperationNode */
+};
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaServerOperation, gda_server_operation, G_TYPE_OBJECT)
 
 static void gda_server_operation_class_init (GdaServerOperationClass *klass);
-static void gda_server_operation_init       (GdaServerOperation *operation,
-					    GdaServerOperationClass *klass);
+static void gda_server_operation_init       (GdaServerOperation *operation);
 static void gda_server_operation_dispose   (GObject *object);
 
 static void gda_server_operation_set_property (GObject *object,
@@ -104,7 +118,7 @@ typedef struct _Node {
 			GSList       *seq_items; /* list of Node of type GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM */
 			gchar        *name;
 			gchar        *descr;
-			xmlNodePtr    xml_spec; /* references a op->priv->xml_spec_doc node,
+			xmlNodePtr    xml_spec; /* references a priv->xml_spec_doc node,
 						   for future instantiation of nodes */
 		}                     seq;
 		GSList               *seq_item_nodes; /* list of Node structures composing the item */
@@ -119,20 +133,6 @@ static Node  *node_find (GdaServerOperation *op, const gchar *path);
 static Node  *node_find_or_create (GdaServerOperation *op, const gchar *path);
 static gchar *node_get_complete_path (GdaServerOperation *op, Node *node);
 static void   clean_nodes_info_cache (GdaServerOperation *operation); 
-struct _GdaServerOperationPrivate {
-	GdaServerOperationType  op_type;
-	gboolean                cnc_set;
-	GdaConnection          *cnc;
-	gboolean                prov_set;
-	GdaServerProvider      *prov;
-
-	xmlDocPtr               xml_spec_doc;
-	GSList                 *sources; /* list of GdaDataModel as sources for the parameters */
-
-	GSList                 *allnodes; /* list of all the Node structures, referenced here only */
-	GSList                 *topnodes; /* list of the "/(*)" named nodes, not referenced here  */
-	GHashTable             *info_hash; /* key = path, value = a GdaServerOperationNode */
-};
 
 
 
@@ -148,7 +148,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 
 	/* signals */
 	/**
-	 * GdaServerOperation::sequence-item-added:
+	 * GdaServerOperation::sequence-item-added: (virtual seq_item_added)
 	 * @op: the #GdaServerOperation
 	 * @seq_path: the path to the new sequence item
 	 * @item_index: the index (starting from 0) of the new sequence item in the sequence
@@ -164,7 +164,7 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 			      _gda_marshal_VOID__STRING_INT, G_TYPE_NONE,
 			      2, G_TYPE_STRING, G_TYPE_INT);
 	/**
-	 * GdaServerOperation::sequence-item-remove:
+	 * GdaServerOperation::sequence-item-remove: (virtual seq_item_remove)
 	 * @op: the #GdaServerOperation
 	 * @seq_path: the path to the sequence item to be removed
 	 * @item_index: the index (starting from 0) of the sequence item in the sequence
@@ -213,60 +213,58 @@ gda_server_operation_class_init (GdaServerOperationClass *klass)
 }
 
 static void
-gda_server_operation_init (GdaServerOperation *operation,
-			  G_GNUC_UNUSED GdaServerOperationClass *klass)
+gda_server_operation_init (GdaServerOperation *operation)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (operation);
+
 	g_return_if_fail (GDA_IS_SERVER_OPERATION (operation));
 
-	operation->priv = g_new0 (GdaServerOperationPrivate, 1);
-	operation->priv->allnodes = NULL;
-	operation->priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+	priv = g_new0 (GdaServerOperationPrivate, 1);
+	priv->allnodes = NULL;
+	priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 }
 
 static void
 clean_nodes_info_cache (GdaServerOperation *operation)
 {
-	if (operation->priv->info_hash)
-		g_hash_table_destroy (operation->priv->info_hash);
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (operation);
 
-	operation->priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+	if (priv->info_hash)
+		g_hash_table_destroy (priv->info_hash);
+
+	priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 }
 
 
 static void
 gda_server_operation_dispose (GObject *object)
 {
-	GdaServerOperation *operation = (GdaServerOperation *) object;
+	GdaServerOperation *operation = (GdaServerOperation *)object;
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (operation);
 
 	g_return_if_fail (GDA_IS_SERVER_OPERATION (operation));
 
-	/* free memory */
-	if (operation->priv) {
-		if (operation->priv->info_hash)
-			g_hash_table_destroy (operation->priv->info_hash);
+	if (priv->info_hash)
+		g_clear_pointer(&priv->info_hash, g_hash_table_destroy);
 
-		if (operation->priv->cnc)
-			g_object_unref (operation->priv->cnc);
-		if (operation->priv->prov)
-			g_object_unref (operation->priv->prov);
+	if (priv->cnc)
+		g_clear_object (&priv->cnc);
+	if (priv->prov)
+		g_clear_object (&priv->prov);
 
-		while (operation->priv->topnodes)
-			node_destroy (operation, NODE (operation->priv->topnodes->data));
-		g_assert (!operation->priv->allnodes);
+	while (priv->topnodes)
+		node_destroy (operation, NODE (priv->topnodes->data));
+	g_assert (!priv->allnodes);
 
-		/* don't free operation->priv->xml_spec_doc */
+	/* don't free priv->xml_spec_doc */
 
-		if (operation->priv->sources) {
-			g_slist_foreach (operation->priv->sources, (GFunc) g_object_unref, NULL);
-			g_slist_free (operation->priv->sources);
-		}
-
-		g_free (operation->priv);
-		operation->priv = NULL;
+	if (priv->sources) {
+		g_slist_foreach (priv->sources, (GFunc) g_object_unref, NULL);
+		g_clear_pointer(&priv->sources, g_slist_free);
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_server_operation_parent_class)->dispose (object);
 }
 
 /* module error */
@@ -277,35 +275,6 @@ gda_server_operation_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_server_operation_error");
         return quark;
-}
-
-GType
-gda_server_operation_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-
-		static const GTypeInfo info = {
-			sizeof (GdaServerOperationClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_server_operation_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaServerOperation),
-			0,
-			(GInstanceInitFunc) gda_server_operation_init,
-			0
-		};
-
-		g_mutex_lock (&registering);
-		if (!type)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaServerOperation", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
 }
 
 /* create a new Node structure */
@@ -327,29 +296,30 @@ node_new (Node *parent, GdaServerOperationNodeType type, const gchar *path)
 static void
 node_destroy (GdaServerOperation *op, Node *node)
 {
+
 	switch (node->type) {
 	case GDA_SERVER_OPERATION_NODE_PARAMLIST:
-		g_object_unref (G_OBJECT (node->d.plist));
+		g_clear_object(&node->d.plist);
 		break;
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL:
-		g_object_unref (G_OBJECT (node->d.model));
+		g_clear_object (&node->d.model);
 		break;
 	case GDA_SERVER_OPERATION_NODE_PARAM:
-		g_object_unref (G_OBJECT (node->d.param));
+		g_clear_object (&node->d.param);
 		break;
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
 		GSList *list;
 
 		for (list = node->d.seq.seq_tmpl; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-		g_slist_free (node->d.seq.seq_tmpl);
+		g_clear_pointer(&node->d.seq.seq_tmpl, g_slist_free);
 
 		for (list = node->d.seq.seq_items; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-		g_slist_free (node->d.seq.seq_items);
+		g_clear_pointer(&node->d.seq.seq_items, g_slist_free);
 
-		g_free (node->d.seq.name);
-		g_free (node->d.seq.descr);
+		g_clear_pointer(&node->d.seq.name, g_free);
+		g_clear_pointer(&node->d.seq.descr, g_free);
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM: {
@@ -357,7 +327,7 @@ node_destroy (GdaServerOperation *op, Node *node)
 
 		for (list = node->d.seq_item_nodes; list; list = list->next)
 			node_destroy (op, NODE (list->data));
-		g_slist_free (node->d.seq_item_nodes);
+		g_clear_pointer(&node->d.seq_item_nodes, g_slist_free);
 		break;
 	}
 	default:
@@ -365,10 +335,12 @@ node_destroy (GdaServerOperation *op, Node *node)
 		break;
 	}
 
-	g_free (node->path_name);
+	g_clear_pointer(&node->path_name, g_free);
 	if (op) {
-		op->priv->topnodes = g_slist_remove (op->priv->topnodes, node);
-		op->priv->allnodes = g_slist_remove (op->priv->allnodes, node);
+		GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
+
+		priv->topnodes = g_slist_remove (priv->topnodes, node);
+		priv->allnodes = g_slist_remove (priv->allnodes, node);
 	}
 
 	g_free (node);
@@ -380,13 +352,14 @@ node_destroy (GdaServerOperation *op, Node *node)
 static Node *
 node_find (GdaServerOperation *op, const gchar *path)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	Node *node = NULL;
 	GSList *list;
 
 	if (!path || !*path || (*path != '/'))
 		return NULL;
 
-	for (list = op->priv->allnodes; list; list = list->next) {
+	for (list = priv->allnodes; list; list = list->next) {
 		gchar *str;
 		str = node_get_complete_path (op, NODE (list->data));
 		if (!strcmp (str, path)) {
@@ -508,6 +481,7 @@ sequence_add_item (GdaServerOperation *op, Node *node)
 	gchar *path, *seq_path;
 	Node *new_node;
 	GSList *seq_item_nodes, *list;
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 
 	g_assert (node);
 	g_assert (node->type == GDA_SERVER_OPERATION_NODE_SEQUENCE);
@@ -519,7 +493,7 @@ sequence_add_item (GdaServerOperation *op, Node *node)
 	g_assert (seq_item_nodes);
 
 	new_node = node_new (node, GDA_SERVER_OPERATION_NODE_SEQUENCE_ITEM, NULL);
-	op->priv->allnodes = g_slist_append (op->priv->allnodes, new_node);
+	priv->allnodes = g_slist_append (priv->allnodes, new_node);
 	new_node->d.seq_item_nodes = NULL;
 	new_node->status = node->status;
 	node->d.seq.seq_items = g_slist_append (node->d.seq.seq_items, new_node);
@@ -551,134 +525,131 @@ gda_server_operation_set_property (GObject *object,
 				   const GValue *value,
 				   GParamSpec *pspec)
 {
+	GdaServerOperation *op = GDA_SERVER_OPERATION (object);
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	static GHashTable *doc_hash = NULL; /* key = file name, value = xmlDocPtr */
-	GdaServerOperation *op;
 
-	op = GDA_SERVER_OPERATION (object);
-	if (op->priv) {
-		switch (param_id) {
-		case PROP_CNC:
-			if (op->priv->cnc)
-				g_object_unref (op->priv->cnc);
+	switch (param_id) {
+	case PROP_CNC:
+		if (priv->cnc)
+			g_object_unref (priv->cnc);
 
-			op->priv->cnc = GDA_CONNECTION (g_value_get_object (value));
-			op->priv->cnc_set = TRUE;
+		priv->cnc = GDA_CONNECTION (g_value_get_object (value));
+		priv->cnc_set = TRUE;
 
-			if (op->priv->cnc) {
-				g_object_ref (op->priv->cnc);
+		if (priv->cnc) {
+			g_object_ref (priv->cnc);
 
-				if (gda_connection_get_provider (op->priv->cnc)) {
-					if (op->priv->prov)
-						g_object_unref (op->priv->prov);
-					op->priv->prov = gda_connection_get_provider (op->priv->cnc);
-					g_object_ref (op->priv->prov);
-					op->priv->prov_set = TRUE;
-				}
+			if (gda_connection_get_provider (priv->cnc)) {
+				if (priv->prov)
+					g_object_unref (priv->prov);
+				priv->prov = g_object_ref (gda_connection_get_provider (priv->cnc));
+				priv->prov_set = TRUE;
 			}
-			break;
-		case PROP_PROV:
-			if (g_value_get_object (value)) {
-				if (op->priv->prov)
-					g_object_unref (op->priv->prov);
-				op->priv->prov = g_value_get_object(value);
-				g_object_ref (op->priv->prov);
-			}
-			op->priv->prov_set = TRUE;
-			break;
-		case PROP_OP_TYPE:
-			op->priv->op_type = g_value_get_int (value);
-			break;
-		case PROP_SPEC_FILE: {
-			xmlDocPtr doc;
-			const gchar *xmlfile;
+		}
+		break;
+	case PROP_PROV:
+		if (g_value_get_object (value)) {
+			if (priv->prov)
+				g_object_unref (priv->prov);
+			priv->prov = g_value_get_object(value);
+			g_object_ref (priv->prov);
+		}
+		priv->prov_set = TRUE;
+		break;
+	case PROP_OP_TYPE:
+		priv->op_type = g_value_get_int (value);
+		break;
+	case PROP_SPEC_FILE: {
+		xmlDocPtr doc;
+		const gchar *xmlfile;
 
-			xmlfile = g_value_get_string (value);
-			if (!xmlfile)
-				return;
+		xmlfile = g_value_get_string (value);
+		if (!xmlfile)
+			return;
 
-			if (doc_hash) {
-				doc = g_hash_table_lookup (doc_hash, xmlfile);
-				if (doc) {
-					op->priv->xml_spec_doc = doc;
-					break;
-				}
-			}
-
-			if (! g_file_test (xmlfile, G_FILE_TEST_EXISTS)) {
-				g_warning (_("GdaServerOperation: could not find file '%s'"), xmlfile);
-				return;
-			}
-			
-			doc = xmlParseFile (xmlfile);
+		if (doc_hash) {
+			doc = g_hash_table_lookup (doc_hash, xmlfile);
 			if (doc) {
-				if (!use_xml_spec (op, doc, xmlfile))
-					return;
-				if (!doc_hash)
-					doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
-									  g_free, (GDestroyNotify) xmlFreeDoc);
-				g_hash_table_insert (doc_hash, g_strdup (xmlfile), doc);
+				priv->xml_spec_doc = doc;
+				break;
 			}
-			else {
-				g_warning (_("GdaServerOperation: could not load file '%s'"), xmlfile);
-				return;	
-			}
-			break;
 		}
-		case PROP_SPEC_RESOURCE: {
-			const gchar *resource_name;
-			resource_name = g_value_get_string (value);
 
-			if (! resource_name)
+		if (! g_file_test (xmlfile, G_FILE_TEST_EXISTS)) {
+			g_warning (_("GdaServerOperation: could not find file '%s'"), xmlfile);
+			return;
+		}
+		
+		doc = xmlParseFile (xmlfile);
+		if (doc) {
+			if (!use_xml_spec (op, doc, xmlfile))
 				return;
+			if (!doc_hash)
+				doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+								  g_free, (GDestroyNotify) xmlFreeDoc);
+			g_hash_table_insert (doc_hash, g_strdup (xmlfile), doc);
+		}
+		else {
+			g_warning (_("GdaServerOperation: could not load file '%s'"), xmlfile);
+			return;	
+		}
+		break;
+	}
+	case PROP_SPEC_RESOURCE: {
+		const gchar *resource_name;
+		resource_name = g_value_get_string (value);
 
-			xmlDocPtr doc = NULL;
-			if (doc_hash) {
-				doc = g_hash_table_lookup (doc_hash, resource_name);
-				if (doc) {
-					op->priv->xml_spec_doc = doc;
-					break;
-				}
-			}
+		if (! resource_name)
+			return;
 
-			GBytes *bytes = NULL;
-			if (resource_name) {
-				bytes = g_resources_lookup_data (resource_name, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
-				if (!bytes) {
-					g_warning ("Resource %s not found", resource_name);
-					return;
-				}
-			}
-
-			const gchar *xmldata;
-			xmldata = (const gchar*) g_bytes_get_data (bytes, NULL);
-
-			doc = xmlParseMemory (xmldata, strlen (xmldata));
-			g_bytes_unref (bytes);
+		xmlDocPtr doc = NULL;
+		if (doc_hash) {
+			doc = g_hash_table_lookup (doc_hash, resource_name);
 			if (doc) {
-				if (!use_xml_spec (op, doc, NULL))
-					return;
-				if (!doc_hash)
-					doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
-									  g_free, (GDestroyNotify) xmlFreeDoc);
-				g_hash_table_insert (doc_hash, g_strdup (resource_name), doc);
+				priv->xml_spec_doc = doc;
+				break;
 			}
-			else {
-				g_warning (_("GdaServerOperation: could not load specified contents"));
+		}
+
+		GBytes *bytes = NULL;
+		if (resource_name) {
+			bytes = g_resources_lookup_data (resource_name, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+			if (!bytes) {
+				g_warning ("Resource %s not found", resource_name);
 				return;
 			}
-			break;
 		}
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+
+		const gchar *xmldata;
+		xmldata = (const gchar*) g_bytes_get_data (bytes, NULL);
+
+		doc = xmlParseMemory (xmldata, strlen (xmldata));
+		g_bytes_unref (bytes);
+		if (doc) {
+			if (!use_xml_spec (op, doc, NULL))
+				return;
+			if (!doc_hash)
+				doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+								  g_free, (GDestroyNotify) xmlFreeDoc);
+			g_hash_table_insert (doc_hash, g_strdup (resource_name), doc);
 		}
+		else {
+			g_warning (_("GdaServerOperation: could not load specified contents"));
+			return;
+		}
+		break;
+	}
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 
-	if (!op->priv->topnodes && op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
+	if (!priv->topnodes && priv->xml_spec_doc && priv->cnc_set && priv->prov_set) {
 		/* load XML file */
 		GError *lerror = NULL;
-		op->priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (op->priv->xml_spec_doc), NULL, &lerror);
-		if (!op->priv->topnodes) {
+		priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (priv->xml_spec_doc), NULL, &lerror);
+		if (!priv->topnodes) {
 			g_warning (_("Could not load XML specifications: %s"),
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 			if (lerror)
@@ -693,24 +664,22 @@ gda_server_operation_get_property (GObject *object,
 				   GValue *value,
 				   GParamSpec *pspec)
 {
-	GdaServerOperation *op;
+	GdaServerOperation *op = GDA_SERVER_OPERATION (object);
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 
-	op = GDA_SERVER_OPERATION (object);
-	if (op->priv) {
-		switch (param_id) {
-		case PROP_CNC:
-			g_value_set_object (value, op->priv->cnc);
-			break;
-		case PROP_PROV:
-			g_value_set_object (value, op->priv->prov);
-			break;
-		case PROP_OP_TYPE:
-			g_value_set_int (value, op->priv->op_type);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	switch (param_id) {
+	case PROP_CNC:
+		g_value_set_object (value, priv->cnc);
+		break;
+	case PROP_PROV:
+		g_value_set_object (value, priv->prov);
+		break;
+	case PROP_OP_TYPE:
+		g_value_set_int (value, priv->op_type);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -721,6 +690,7 @@ gda_server_operation_get_property (GObject *object,
 static gboolean
 use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	/* doc validation */
 	xmlValidCtxtPtr validc;
 	int xmlcheck;
@@ -775,7 +745,7 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	g_free (validc);
 	if (_gda_server_op_dtd)
 		doc->intSubset = old_dtd;
-	op->priv->xml_spec_doc = doc;
+	priv->xml_spec_doc = doc;
 
 	return TRUE;
 }
@@ -787,11 +757,10 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 static void
 xml_validity_error_func (void *ctx, const char *msg, ...)
 {
+        GdaServerOperation *op = GDA_SERVER_OPERATION (ctx);
         va_list args;
         gchar *str, *str2, *newerr;
-        GdaServerOperation *op;
 
-        op = GDA_SERVER_OPERATION (ctx);
         str2 = g_object_get_data (G_OBJECT (op), "xmlerror");
 
         va_start (args, msg);
@@ -814,6 +783,7 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 static GSList *
 load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, GError **error)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	xmlNodePtr node;
 	const gchar *lang = gda_lang_locale;
 	GSList *retlist = NULL;
@@ -824,8 +794,8 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 	
 	g_assert (specnode);
 
-	/* Parameters' sources, not mandatory: makes the op->priv->sources list */
-	if (!op->priv->sources) {
+	/* Parameters' sources, not mandatory: makes the priv->sources list */
+	if (!priv->sources) {
 		GSList *sources = NULL;
 	
 		node = specnode->children;
@@ -860,7 +830,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 				}
 			}
 		}
-		op->priv->sources = sources;
+		priv->sources = sources;
 	}
 	
 	/* actual objects loading */
@@ -1007,7 +977,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 				xmlFree (gdatype);
 			
 			/* set parameter's attributes */
-			if (gda_utility_holder_load_attributes (param, node, op->priv->sources, error)) {
+			if (gda_utility_holder_load_attributes (param, node, priv->sources, error)) {
 				opnode = node_new (parent, GDA_SERVER_OPERATION_NODE_PARAM, path_name);
 				opnode->d.param = param;
 			}
@@ -1023,7 +993,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 			xmlChar *status;
 
 			/* insert */
-			op->priv->allnodes = g_slist_append (op->priv->allnodes, opnode);
+			priv->allnodes = g_slist_append (priv->allnodes, opnode);
 			retlist = g_slist_append (retlist, opnode);
 			/*g_print ("+ %s (node's path = %s) %p\n", complete_path, opnode->path_name, opnode);*/
 
@@ -1070,6 +1040,7 @@ _gda_server_operation_new_from_string (GdaServerOperationType op_type,
 	GObject *obj;
 	xmlDocPtr doc;
 	GdaServerOperation *op;
+	GdaServerOperationPrivate *priv;
 
 	doc = xmlParseMemory (xml_spec, strlen (xml_spec) + 1);
 	if (!doc)
@@ -1079,11 +1050,12 @@ _gda_server_operation_new_from_string (GdaServerOperationType op_type,
 	if (use_xml_spec (op, doc, NULL))
 		xmlFreeDoc (doc);
 
-	if (!op->priv->topnodes && op->priv->xml_spec_doc && op->priv->cnc_set && op->priv->prov_set) {
+	priv = gda_server_operation_get_instance_private (op);
+	if (!priv->topnodes && priv->xml_spec_doc && priv->cnc_set && priv->prov_set) {
 		/* load XML file */
 		GError *lerror = NULL;
-		op->priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (op->priv->xml_spec_doc), NULL, &lerror);
-		if (!op->priv->topnodes) {
+		priv->topnodes = load_xml_spec (op, xmlDocGetRootElement (priv->xml_spec_doc), NULL, &lerror);
+		if (!priv->topnodes) {
 			g_warning (_("Could not load XML specifications: %s"),
 				   lerror && lerror->message ? lerror->message : _("No detail"));
 			if (lerror)
@@ -1147,13 +1119,13 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 GdaServerOperationNode *
 gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_format, ...)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	GdaServerOperationNode *info_node;
 	Node *node;
 	gchar *path;
 	va_list args;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 
 	/* build path */
 	va_start (args, path_format);
@@ -1161,7 +1133,7 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 	va_end (args);
 
 	/* use path */
-	info_node = g_hash_table_lookup (op->priv->info_hash, path);
+	info_node = g_hash_table_lookup (priv->info_hash, path);
 	if (info_node) {
 		g_free (path);
 		return info_node;
@@ -1245,7 +1217,7 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 	}
 
 	if (info_node)
-		g_hash_table_insert (op->priv->info_hash, g_strdup (path), info_node);
+		g_hash_table_insert (priv->info_hash, g_strdup (path), info_node);
 
 	g_free (path);
 	return info_node;
@@ -1262,10 +1234,11 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 GdaServerOperationType
 gda_server_operation_get_op_type (GdaServerOperation *op)
 {
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
-	g_return_val_if_fail (op->priv, 0);
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 
-	return op->priv->op_type;
+	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
+
+	return priv->op_type;
 }
 
 /**
@@ -1388,17 +1361,17 @@ static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr pare
 xmlNodePtr
 gda_server_operation_save_data_to_xml (GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	xmlNodePtr topnode = NULL;
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 
 	topnode = xmlNewNode (NULL, BAD_CAST "serv_op_data");
 	xmlSetProp (topnode, BAD_CAST "type", 
 		    BAD_CAST gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
 
-	for (list = op->priv->topnodes; list; list = list->next) {
+	for (list = priv->topnodes; list; list = list->next) {
 		if (!node_save (op, NODE (list->data), topnode)) {
 			xmlFreeNode (topnode);
 			topnode = NULL;
@@ -1509,16 +1482,16 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 gboolean
 gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node, GError **error)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	xmlNodePtr cur;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 	if (!node)
 		return FALSE;
 
 	/* remove any sequence items */
 	GSList *list;
-	list = op->priv->allnodes;
+	list = priv->allnodes;
 	while (list) {
 		Node *node = NODE (list->data);
 		if ((node->type == GDA_SERVER_OPERATION_NODE_SEQUENCE) && node->d.seq.seq_items) {
@@ -1538,7 +1511,7 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 				node->d.seq.seq_items = g_slist_delete_link (node->d.seq.seq_items, node->d.seq.seq_items);
 			}
 			g_free (seq_path);
-			list = op->priv->allnodes;
+			list = priv->allnodes;
 		}
 		else
 			list = list->next;
@@ -1676,15 +1649,15 @@ gda_server_operation_load_data_from_xml (GdaServerOperation *op, xmlNodePtr node
 gchar**
 gda_server_operation_get_root_nodes (GdaServerOperation *op)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	gchar **retval;
 	GSList *list;
 	gint i = 0;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);	
 
-	retval = g_new0 (gchar *, g_slist_length (op->priv->topnodes) + 1);
-	for (list = op->priv->topnodes; list; list = list->next)
+	retval = g_new0 (gchar *, g_slist_length (priv->topnodes) + 1);
+	for (list = priv->topnodes; list; list = list->next)
 		retval [i++] = node_get_complete_path (op, NODE (list->data));
 
 	return retval;
@@ -1707,7 +1680,6 @@ gda_server_operation_get_node_type (GdaServerOperation *op, const gchar *path,
 	GdaServerOperationNode *node_info;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), GDA_SERVER_OPERATION_NODE_UNKNOWN);
-	g_return_val_if_fail (op->priv, GDA_SERVER_OPERATION_NODE_UNKNOWN);
 
 	node_info = gda_server_operation_get_node_info (op, path);
 	if (node_info) {
@@ -1733,7 +1705,6 @@ gda_server_operation_get_node_parent (GdaServerOperation *op, const gchar *path)
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 	g_return_val_if_fail (path && (*path == '/'), NULL);
 
 	node = node_find (op, path);
@@ -1774,7 +1745,6 @@ gda_server_operation_get_node_path_portion (GdaServerOperation *op, const gchar 
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 	g_return_val_if_fail (path && (*path == '/'), NULL);
 
 	node = node_find (op, path);
@@ -1819,7 +1789,6 @@ gda_server_operation_get_sequence_item_names (GdaServerOperation *op, const gcha
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 
 	node = node_find (op, path);
 	if (!node || ((node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE) && 
@@ -1851,7 +1820,6 @@ gda_server_operation_get_sequence_name (GdaServerOperation *op, const gchar *pat
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 
 	node = node_find (op, path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
@@ -1873,7 +1841,6 @@ gda_server_operation_get_sequence_size (GdaServerOperation *op, const gchar *pat
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
-	g_return_val_if_fail (op->priv, 0);
 
 	node = node_find (op, path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
@@ -1895,7 +1862,6 @@ gda_server_operation_get_sequence_max_size (GdaServerOperation *op, const gchar 
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
-	g_return_val_if_fail (op->priv, 0);
 
 	node = node_find (op, path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
@@ -1917,7 +1883,6 @@ gda_server_operation_get_sequence_min_size (GdaServerOperation *op, const gchar 
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
-	g_return_val_if_fail (op->priv, 0);
 
 	node = node_find (op, path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE))
@@ -1965,7 +1930,6 @@ gda_server_operation_add_item_to_sequence (GdaServerOperation *op, const gchar *
 	Node *node;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), 0);
-	g_return_val_if_fail (op->priv, 0);
 	
 	node = node_find (op, seq_path);
 	if (!node || (node->type != GDA_SERVER_OPERATION_NODE_SEQUENCE)) 
@@ -1997,7 +1961,6 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
 	gchar *seq_path, *ptr;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 	
 	seq_path = g_strdup (item_path);
 	ptr = seq_path + strlen (seq_path) - 1;
@@ -2060,7 +2023,6 @@ gda_server_operation_get_value_at_path (GdaServerOperation *op, const gchar *pat
 	GdaServerOperationNode *node_info;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 	g_return_val_if_fail (path && *path, NULL);
 
 	/* use path */
@@ -2127,7 +2089,6 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 	va_list args;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
-	g_return_val_if_fail (op->priv, NULL);
 
 	/* build path */
 	va_start (args, path_format);
@@ -2283,7 +2244,6 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 	gboolean allok = TRUE;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 
 	/* set the value */
 	opnode = node_find_or_create (op, path);
@@ -2463,7 +2423,6 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 	gboolean ret;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 
 	/* build path */
 	va_start (args, path_format);
@@ -2494,15 +2453,15 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 gboolean
 gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GError **error)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	gboolean valid = TRUE;
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 
 	if (!xml_file) {
 		/* basic validity test */
-		for (list = op->priv->allnodes; list; list = list->next) {
+		for (list = priv->allnodes; list; list = list->next) {
 			Node *node;
 			
 			node = NODE (list->data);
@@ -2538,7 +2497,7 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 		save = gda_server_operation_save_data_to_xml (op, error);
 		if (save) {
 			GdaServerOperation *op2;
-			op2 = gda_server_operation_new (op->priv->op_type, xml_file);
+			op2 = gda_server_operation_new (priv->op_type, xml_file);
 			if (gda_server_operation_load_data_from_xml (op2, save, error))
 				valid = gda_server_operation_is_valid (op2, NULL, error);
 			else 
@@ -2569,8 +2528,9 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 gboolean
 gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar *resource, GError **error)
 {
+	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
+
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (op->priv, FALSE);
 
 	if (resource) {
 		xmlNodePtr save;
@@ -2580,7 +2540,7 @@ gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar
 		if (save) {
 			GdaServerOperation *op2;
 			op2 = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION,
-								  "op-type", op->priv->op_type,
+								  "op-type", priv->op_type,
 								  "spec-resource", resource, NULL));
 			if (gda_server_operation_load_data_from_xml (op2, save, error))
 				valid = gda_server_operation_is_valid (op2, NULL, error);
@@ -2753,19 +2713,12 @@ struct _GdaServerOperationCreateTableArgFKeyRefField {
 	gchar *referenced_field;
 };
 
+G_DEFINE_BOXED_TYPE(GdaServerOperationCreateTableArgFKeyRefField, gda_server_operation_create_table_arg_fkey_ref_field, gda_server_operation_create_table_arg_fkey_ref_field_copy, gda_server_operation_create_table_arg_fkey_ref_field_free)
 
 GType
 gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ()
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GdaServerOperationCreateTableArgFKeyRefField",
-						     (GBoxedCopyFunc) gda_server_operation_create_table_arg_fkey_ref_field_copy,
-						     (GBoxedFreeFunc) gda_server_operation_create_table_arg_fkey_ref_field_free);
-	}
-
-	return type;
+	return gda_server_operation_create_table_arg_fkey_ref_field_get_type ();
 }
 
 
@@ -2881,21 +2834,7 @@ struct _GdaServerOperationCreateTableArg {
 	GList *fkey_fields;
 };
 
-
-GType
-gda_server_operation_create_table_arg_get_type ()
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GdaServerOperationCreateTableArg",
-						     (GBoxedCopyFunc) gda_server_operation_create_table_arg_copy,
-						     (GBoxedFreeFunc) gda_server_operation_create_table_arg_free);
-	}
-
-	return type;
-}
-
+G_DEFINE_BOXED_TYPE (GdaServerOperationCreateTableArg, gda_server_operation_create_table_arg, gda_server_operation_create_table_arg_copy, gda_server_operation_create_table_arg_free)
 
 	/**
 	 * gda_server_operation_create_table_arg_new:
@@ -2984,9 +2923,8 @@ gda_server_operation_create_table_arg_get_column_name (GdaServerOperationCreateT
 /**
  * gda_server_operation_create_table_arg_set_column_type:
  * @arg: a #GdaServerOperationCreateTableArg
- * @flags: column type to be added by this operation as #GType
+ * @ctype: column type to be added by this operation as #GType
  *
- * Returns: flags as #GdaServerOperationCreateTableFlag
  */
 void
 gda_server_operation_create_table_arg_set_column_type (GdaServerOperationCreateTableArg *arg,

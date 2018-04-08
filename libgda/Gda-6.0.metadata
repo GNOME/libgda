@@ -14,4 +14,5 @@ MetaStore.extract_v name="extract"
 ServerOperation.set_value_at_path name="set_value_at"
 ServerOperation.get_value_at_path name="get_value_at"
 ServerOperation.prepare_create_table_v skip=false
-
+ServerOperation.op_type_to_string parent="Gda.ServerOperationType" name="to_string"
+ServerOperation.string_to_op_type parent="Gda.ServerOperationType" name="from_string"
