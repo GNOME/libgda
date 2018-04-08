@@ -27,32 +27,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_BIN          (gda_handler_bin_get_type())
-#define GDA_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_handler_bin_get_type(), GdaHandlerBin)
-#define GDA_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_bin_get_type (), GdaHandlerBinClass)
-#define GDA_IS_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_bin_get_type ())
-
-typedef struct _GdaHandlerBin      GdaHandlerBin;
-typedef struct _GdaHandlerBinClass GdaHandlerBinClass;
-typedef struct _GdaHandlerBinPriv  GdaHandlerBinPriv;
-
-/* struct for the object's data */
-struct _GdaHandlerBin
-{
-	GObject             object;
-	GdaHandlerBinPriv  *priv;
-};
-
-/* struct for the object's class */
-struct _GdaHandlerBinClass
-{
-	GObjectClass        parent_class;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+#define GDA_TYPE_HANDLER_BIN (gda_handler_bin_get_type())
+G_DECLARE_FINAL_TYPE (GdaHandlerBin, gda_handler_bin, GDA, HANDLER_BIN, GObject)
 
 /**
  * SECTION:gda-handler-bin
@@ -65,7 +41,6 @@ struct _GdaHandlerBinClass
  * interface documentation for more information.
  */
 
-GType           gda_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_bin_new           (void);
 
 G_END_DECLS

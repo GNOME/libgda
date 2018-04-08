@@ -26,33 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_NUMERICAL          (gda_handler_numerical_get_type())
-#define GDA_HANDLER_NUMERICAL(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_handler_numerical_get_type(), GdaHandlerNumerical)
-#define GDA_HANDLER_NUMERICAL_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_numerical_get_type (), GdaHandlerNumericalClass)
-#define GDA_IS_HANDLER_NUMERICAL(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_numerical_get_type ())
-
-typedef struct _GdaHandlerNumerical      GdaHandlerNumerical;
-typedef struct _GdaHandlerNumericalClass GdaHandlerNumericalClass;
-typedef struct _GdaHandlerNumericalPriv  GdaHandlerNumericalPriv;
-
-
-/* struct for the object's data */
-struct _GdaHandlerNumerical
-{
-	GObject                   object;
-	GdaHandlerNumericalPriv  *priv;
-};
-
-/* struct for the object's class */
-struct _GdaHandlerNumericalClass
-{
-	GObjectClass              parent_class;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+#define GDA_TYPE_HANDLER_NUMERICAL (gda_handler_numerical_get_type())
+G_DECLARE_FINAL_TYPE (GdaHandlerNumerical, gda_handler_numerical, GDA, HANDLER_NUMERICAL, GObject)
 
 /**
  * SECTION:gda-handler-numerical
@@ -65,7 +40,6 @@ struct _GdaHandlerNumericalClass
  * interface documentation for more information.
  */
 
-GType           gda_handler_numerical_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_numerical_new           (void);
 
 G_END_DECLS

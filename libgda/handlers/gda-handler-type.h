@@ -26,32 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_TYPE          (gda_handler_type_get_type())
-#define GDA_HANDLER_TYPE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_handler_type_get_type(), GdaHandlerType)
-#define GDA_HANDLER_TYPE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_type_get_type (), GdaHandlerTypeClass)
-#define GDA_IS_HANDLER_TYPE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_type_get_type ())
-
-typedef struct _GdaHandlerType      GdaHandlerType;
-typedef struct _GdaHandlerTypeClass GdaHandlerTypeClass;
-typedef struct _GdaHandlerTypePriv  GdaHandlerTypePriv;
-
-/* struct for the object's data */
-struct _GdaHandlerType
-{
-	GObject             object;
-	GdaHandlerTypePriv *priv;
-};
-
-/* struct for the object's class */
-struct _GdaHandlerTypeClass
-{
-	GObjectClass        parent_class;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+#define GDA_TYPE_HANDLER_TYPE (gda_handler_type_get_type())
+G_DECLARE_FINAL_TYPE (GdaHandlerType, gda_handler_type, GDA, HANDLER_TYPE, GObject)
 
 /**
  * SECTION:gda-handler-type
@@ -64,7 +40,6 @@ struct _GdaHandlerTypeClass
  * interface documentation for more information.
  */
 
-GType           gda_handler_type_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_type_new           (void);
 
 G_END_DECLS
