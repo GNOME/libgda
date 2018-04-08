@@ -561,6 +561,7 @@ gdaui_set_class_init (GdauiSetClass *class)
 	/**
          * GdauiSet::source-model-changed:
          * @set: the #GdauiSet
+         * @source: (type GdauiSetSource): the #GdauiSetSource
          * 
          * Gets emitted when the data model used in @set's #GdauiSetSource has changed
 	 *

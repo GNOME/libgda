@@ -387,8 +387,6 @@ sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWid
 		gtk_widget_set_sensitive (wid, FALSE);
 }
 
-static GtkWidget *create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
-							   gchar **section_str, GSList **label_widgets);
 static GtkWidget *
 fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **section_str, GSList **label_widgets)
 {
@@ -402,11 +400,6 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		*label_widgets = NULL;
 	if (section_str)
 		*section_str = NULL;
-
-	/* very custom widget rendering goes here */
-	/*if ((gda_server_operation_get_op_type (form->priv->op) == GDA_SERVER_OPERATION_CREATE_TABLE) &&
-	    !strcmp (path, "/FIELDS_A"))
-	    return create_table_fields_array_create_widget (form, path, section_str, label_widgets);*/
 
 	/* generic widget rendering */
 	switch (info_node->type) {

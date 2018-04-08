@@ -847,7 +847,6 @@ itsignaler_create_source (ITSignaler *its)
 static gboolean
 its_source_prepare (GSource *source, gint *timeout_)
 {
-	ITSSource *isource = (ITSSource*) source;
 	*timeout_ = -1;
 	return FALSE;
 }

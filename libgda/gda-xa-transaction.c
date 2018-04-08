@@ -294,7 +294,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	const GdaBinary *ebranch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
 	if (ebranch) {
 		bin = gda_binary_new ();
-		gda_binary_set_data (bin, branch, strlen (branch) + 1);
+		gda_binary_set_data (bin, (const guchar *)branch, strlen (branch) + 1);
 		g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
 		return TRUE;
 	}
@@ -325,7 +325,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	}
 
 	bin = gda_binary_new ();
-	gda_binary_set_data (bin, branch, strlen (branch) + 1);
+	gda_binary_set_data (bin, (const guchar *)branch, strlen (branch) + 1);
 	xa_trans->priv->cnc_list = g_list_prepend (xa_trans->priv->cnc_list, cnc);
 	g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
 	g_object_ref (cnc);

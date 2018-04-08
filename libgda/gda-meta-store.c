@@ -150,7 +150,7 @@ gda_meta_store_change_get_table_name (GdaMetaStoreChange *change)
   return g_strdup (change->table_name);
 }
 /**
- * gda_meta_store_change_get_table_keys:
+ * gda_meta_store_change_get_keys:
  * @change: a #GdaMetaStoreChange
  *
  * Returns: (element-type utf8 GValue) (transfer none): hash table with string key key = ('+' or '-') and a column position in @table (string) starting at 0 and value as #GValue pointer
@@ -186,7 +186,7 @@ gda_meta_store_change_copy (GdaMetaStoreChange *src)
 
 /**
  * gda_meta_store_change_free:
- * @src: a #GdaMetaStoreChange to be freed
+ * @change: a #GdaMetaStoreChange to be freed
  *
  */
 void
@@ -201,7 +201,7 @@ gda_meta_store_change_free (GdaMetaStoreChange *change)
 /**
  * gda_value_set_meta_store_change:
  * @value: a #GValue to set value to
- * @src: a #GdaMetaStoreChange to be set
+ * @change: a #GdaMetaStoreChange to be set
  *
  */
 void

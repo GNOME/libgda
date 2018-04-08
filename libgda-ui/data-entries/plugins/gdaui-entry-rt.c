@@ -193,7 +193,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				blob = gda_value_get_blob (value);
 				bin = gda_blob_get_binary (blob);
 				if (gda_blob_get_op (blob) &&
-				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_op (blob))))
+				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
                                         gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
 				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 					gdaui_rt_editor_set_contents (GDAUI_RT_EDITOR (mgtxt->priv->view),
