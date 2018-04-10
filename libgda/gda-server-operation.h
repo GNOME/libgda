@@ -30,10 +30,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_SERVER_OPERATION            (gda_server_operation_get_type())
-#define GDA_SERVER_OPERATION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_OPERATION, GdaServerOperation))
-#define GDA_SERVER_OPERATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_OPERATION, GdaServerOperationClass))
-#define GDA_IS_SERVER_OPERATION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_OPERATION))
-#define GDA_IS_SERVER_OPERATION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_OPERATION))
+G_DECLARE_DERIVABLE_TYPE (GdaServerOperation, gda_server_operation, GDA, SERVER_OPERATION, GObject)
 
 /*
  * Types of identified operations
@@ -148,11 +145,6 @@ typedef struct _GdaServerOperationNode {
 	gpointer                      priv;
 } GdaServerOperationNode;
 
-struct _GdaServerOperation {
-	GObject                    object;
-	GdaServerOperationPrivate *priv;
-};
-
 struct _GdaServerOperationClass {
 	GObjectClass               parent_class;
 
@@ -197,7 +189,6 @@ struct _GdaServerOperationClass {
  * which internally manipulate #GdaServerOperation objects.
  */
 
-GType                      gda_server_operation_get_type                (void) G_GNUC_CONST;
 GdaServerOperation        *gda_server_operation_new                     (GdaServerOperationType op_type, const gchar *xml_file);
 GdaServerOperationType     gda_server_operation_get_op_type             (GdaServerOperation *op);
 const gchar               *gda_server_operation_op_type_to_string       (GdaServerOperationType type);
@@ -283,9 +274,9 @@ GList*  gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationC
 
 typedef struct _GdaServerOperationCreateTableArgFKeyRefField GdaServerOperationCreateTableArgFKeyRefField;
 
-#define GDA_TYPE_SERVER_OPERATION_CREATE_TABLE_ARG_FKEY_REF_FIELD (gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ())
+#define GDA_TYPE_SERVER_OPERATION_CREATE_TABLE_ARG_FKEY_REF_FIELD (gda_server_operation_create_table_arg_fkey_ref_field_get_type ())
 
-GType   gda_server_operation_create_table_arg_get_fkey_ref_field_get_type (void) G_GNUC_CONST;
+GType   gda_server_operation_create_table_arg_fkey_ref_field_get_type (void) G_GNUC_CONST;
 GdaServerOperationCreateTableArgFKeyRefField*
         gda_server_operation_create_table_arg_fkey_ref_field_new (void);
 GdaServerOperationCreateTableArgFKeyRefField*
@@ -295,6 +286,9 @@ void    gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (Gd
 gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (GdaServerOperationCreateTableArgFKeyRefField *ref);
 void    gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref, const gchar *name);
 gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (GdaServerOperationCreateTableArgFKeyRefField *ref);
+
+G_DEPRECATED_FOR(gda_server_operation_create_table_arg_fkey_ref_field_get_type)
+GType   gda_server_operation_create_table_arg_get_fkey_ref_field_get_type (void) G_GNUC_CONST;
 
 
 GdaServerOperation *gda_server_operation_prepare_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
