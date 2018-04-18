@@ -28,17 +28,6 @@ typedef struct
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlBase, gda_ddl_base, G_TYPE_OBJECT)
 
-enum {
-	PROP_0,
-	PROP_CATALOG,
-	PROP_SCHEMA,
-	PROP_NAME,
-	/*<private>*/
-	N_PROPS
-};
-
-static GParamSpec *properties [N_PROPS] = {NULL};
-
 /**
  * gda_ddl_base_new:
  *
@@ -152,6 +141,7 @@ gda_ddl_base_init (GdaDdlBase *self)
  *
  * Since: 6.0
  * */
+<<<<<<< HEAD
 void
 gda_ddl_base_set_names (GdaDdlBase *self,
 			const gchar* catalog,
