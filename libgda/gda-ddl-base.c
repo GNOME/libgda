@@ -145,6 +145,7 @@ void
 gda_ddl_base_set_names (GdaDdlBase *self,
 			const gchar* catalog,
 			const gchar* schema,
+<<<<<<< HEAD
 			const gchar* name)
 {
 	g_return_if_fail (self);
@@ -213,6 +214,10 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 	else
 		return NULL;
 
+	priv->m_fullname = g_strdup (fullnamestr->str);
+	g_string_free (fullnamestr, TRUE);
+
+	/* In this block  catalog is NULL */
 	priv->m_fullname = g_strdup (fullnamestr->str);
 	g_string_free (fullnamestr, TRUE);
 
