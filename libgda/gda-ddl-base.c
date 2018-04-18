@@ -262,7 +262,6 @@ gda_ddl_base_get_schema (GdaDdlBase  *self)
  * gda_ddl_base_get_name:
  *
  * @self: GdaDdlBase object
- * @error: an error holder
  *
  * Returns current object name. The returned string should not be freed.
  *
