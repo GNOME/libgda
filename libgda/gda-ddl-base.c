@@ -150,9 +150,9 @@ gda_ddl_base_init (GdaDdlBase *self)
  * */
 gboolean
 gda_ddl_base_set_names (GdaDdlBase *self,
-			const char* catalog,
-			const char* schema,
-			const char* name,
+			const gchar* catalog,
+			const gchar* schema,
+			const gchar* name,
 			GError **error)
 {
 	g_return_val_if_fail (self,FALSE);
@@ -165,7 +165,7 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 	}
 
 	/* Check if catalog NULL but schema is not NULL */
-	if (!catalog && schema) {
+	if (catalog && !schema) {
 		g_set_error (error,GDA_DDL_BASE_ERROR,
 			     GDA_DDL_BASE_NAME_MISSMATCH,
 			     _("Schema name is not set while catalog name is set\n"));
@@ -227,12 +227,33 @@ gda_ddl_base_get_full_name (GdaDdlBase *self,
 
 	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
-	if (!priv->m_fullname) {
+	/* if (!priv->m_fullname) { */
+	/* 	g_set_error (error,GDA_DDL_BASE_ERROR, */
+	/* 		     GDA_DDL_BASE_NAME_IS_NULL, */
+	/* 		     _("Name is NULL. It should be set before use.\n")); */
+	/* 	return NULL; */
+	/* } */
+
+	GString *fullnamestr = NULL;
+
+	fullnamestr = g_string_new (NULL);
+
+	if (priv->m_catalog && priv->m_schema && priv->m_name)
+		g_string_printf (fullnamestr,"%s.%s.%s",priv->m_catalog,priv->m_schema,priv->m_name);
+	else if (priv->m_schema && priv->m_name)
+		g_string_printf (fullnamestr,"%s.%s",priv->m_schema,priv->m_name);
+	else if (priv->m_name)
+		g_string_printf (fullnamestr,"%s",priv->m_name);
+	else {
 		g_set_error (error,GDA_DDL_BASE_ERROR,
 			     GDA_DDL_BASE_NAME_IS_NULL,
 			     _("Name is NULL. It should be set before use.\n"));
 		return NULL;
 	}
+
+	/* In this block  catalog is NULL */
+	priv->m_fullname = g_strdup (fullnamestr->str);
+	g_string_free (fullnamestr, TRUE);
 
 	return priv->m_fullname;
 }
@@ -331,5 +352,39 @@ gda_ddl_base_free (GdaDdlBase *self)
 	g_clear_object (&self);
 }
 
+void
+gda_ddl_base_set_catalog (GdaDdlBase  *self,
+			  const gchar *catalog)
+{
+	g_return_if_fail (self);
 
+	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+
+	g_free (priv->m_catalog);
+	priv->m_catalog = g_strdup (catalog);
+}
+
+void
+gda_ddl_base_set_schema (GdaDdlBase  *self,
+			 const gchar *schema)
+{
+	g_return_if_fail (self);
+
+	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+
+	g_free (priv->m_schema);
+	priv->m_schema = g_strdup (schema);
+}
+
+void
+gda_ddl_base_set_name (GdaDdlBase  *self,
+		       const gchar *name)
+{
+	g_return_if_fail (self);
+
+	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+
+	g_free (priv->m_name);
+	priv->m_name = g_strdup (name);
+}
 
