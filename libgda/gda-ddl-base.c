@@ -156,7 +156,6 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 			GError **error)
 {
 	g_return_val_if_fail (self,FALSE);
-	g_return_val_if_fail (!*error,FALSE);
 
 	if (!name) {
 		g_set_error (error,GDA_DDL_BASE_ERROR,
@@ -225,7 +224,6 @@ gda_ddl_base_get_full_name (GdaDdlBase *self,
 			    GError **error)
 {
 	g_return_val_if_fail (self,NULL);
-	g_return_val_if_fail (!*error,NULL);
 
 	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
@@ -255,7 +253,6 @@ gda_ddl_base_get_catalog (GdaDdlBase  *self,
 			  GError     **error)
 {
 	g_return_val_if_fail (self,NULL);
-	g_return_val_if_fail (!*error,NULL);
 
 	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
@@ -285,7 +282,6 @@ gda_ddl_base_get_schema (GdaDdlBase  *self,
 			 GError     **error)
 {
 	g_return_val_if_fail (self,NULL);
-	g_return_val_if_fail (!*error,NULL);
 
 	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
@@ -315,7 +311,6 @@ gda_ddl_base_get_name (GdaDdlBase  *self,
 		       GError     **error)
 {
 	g_return_val_if_fail (self,NULL);
-	g_return_val_if_fail (!*error,NULL);
 
 	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
