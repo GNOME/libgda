@@ -164,8 +164,12 @@ gda_sources= \
 	gda-value.c \
 	gda-xa-transaction.c \
 	gda-data-pivot.c \
+<<<<<<< HEAD
 	gda-ddl-base.c \
 	gda-ddl-fkey.c
+=======
+	gda-ddl-base.c
+>>>>>>> Introduce a base object for all database objects
 
 libgda_sources =  \
 	csv.h \
