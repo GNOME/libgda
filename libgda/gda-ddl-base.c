@@ -141,7 +141,6 @@ gda_ddl_base_init (GdaDdlBase *self)
  *
  * Since: 6.0
  * */
-<<<<<<< HEAD
 void
 gda_ddl_base_set_names (GdaDdlBase *self,
 			const gchar* catalog,
