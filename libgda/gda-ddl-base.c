@@ -175,13 +175,16 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 	priv->m_fullname = g_strdup (fullnamestr->str);
 	g_string_free (fullnamestr, TRUE);
 
+	/* In this block  catalog is NULL */
+	priv->m_fullname = g_strdup (fullnamestr->str);
+	g_string_free (fullnamestr, TRUE);
+
 	return priv->m_fullname;
 }
 
 /**
  * gda_ddl_base_get_catalog:
- *
- * @self: GdaDdlBase object
+ * * @self: GdaDdlBase object
  *
  * Returns current catalog name. The returned string should not be freed.
  * In case of error, the @error is set appropriatly and %NULL is returned.
