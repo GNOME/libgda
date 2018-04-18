@@ -27,3 +27,4 @@ check_ddl_column_SOURCES = check-ddl-column.c
 check_ddl_column_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
+
