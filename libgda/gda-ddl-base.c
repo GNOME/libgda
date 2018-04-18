@@ -132,7 +132,7 @@ gda_ddl_base_set_names (GdaDdlBase *self,
   g_string_free (fullnamestr, TRUE);
 }
 
-/**
+ /**
  * gda_ddl_base_get_full_name:
  * @self: an instance of #GdaDdlBase
  *
