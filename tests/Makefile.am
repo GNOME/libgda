@@ -8,7 +8,7 @@ if HAVE_UI
 UI_EXTENSION = ui
 endif
 
-SUBDIRS = providers parser value-holders meta-store data-models multi-threading $(UI_EXTENSION) $(VALA_EXTENSIONS)
+SUBDIRS = providers parser value-holders meta-store data-models multi-threading ddl $(UI_EXTENSION) $(VALA_EXTENSIONS)
 
 AM_CPPFLAGS = \
         -I$(top_builddir) \
