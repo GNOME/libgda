@@ -216,10 +216,6 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 	priv->m_fullname = g_strdup (fullnamestr->str);
 	g_string_free (fullnamestr, TRUE);
 
-	/* In this block  catalog is NULL */
-	priv->m_fullname = g_strdup (fullnamestr->str);
-	g_string_free (fullnamestr, TRUE);
-
 	return priv->m_fullname;
 }
 
