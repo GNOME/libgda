@@ -53,28 +53,21 @@ test_ddl_base_run1 (BaseFixture *self,
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       catalog,
-					       schema,
-					       name,
-					       NULL);
+	gda_ddl_base_set_names (self->obj,catalog,schema,name);
 
-	g_assert_true (res);
-
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
+	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
 
 	g_assert_cmpstr (ret_catalog, ==, catalog);
 
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
+	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
 
 	g_assert_cmpstr (ret_schema, ==, schema);
 
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
@@ -89,23 +82,23 @@ test_ddl_base_run2 (BaseFixture *self,
 
 	gda_ddl_base_set_catalog (self->obj,catalog);
 
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
+	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
 
 	g_assert_cmpstr (ret_catalog, ==, catalog);
 
 	gda_ddl_base_set_schema (self->obj,schema);
 
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
+	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
 
 	g_assert_cmpstr (ret_schema, ==, schema);
 
 	gda_ddl_base_set_name (self->obj,name);
 
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
@@ -114,32 +107,24 @@ static void
 test_ddl_base_run3 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-	const gchar *catalog = "First";
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       NULL,
-					       schema,
-					       name,
-					       NULL);
+	gda_ddl_base_set_names (self->obj,NULL,schema,name);
 
-	g_assert_true (res);
-
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
+	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
 
 	g_assert_cmpstr (ret_catalog, ==, NULL);
 
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
+	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
 
 	g_assert_cmpstr (ret_schema, ==, schema);
 
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "Second.Third");
 
@@ -149,17 +134,25 @@ static void
 test_ddl_base_run4 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-	const gchar *catalog = "First";
-	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       catalog,
-					       NULL,
-					       name,
-					       NULL);
+	gda_ddl_base_set_names (self->obj,NULL,NULL,name);
 
-	g_assert_false (res);
+	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
+
+	g_assert_cmpstr (ret_catalog, ==, NULL);
+
+	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
+
+	g_assert_cmpstr (ret_schema, ==, NULL);
+
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
+
+	g_assert_cmpstr (ret_name, ==, name);
+
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
+
+	g_assert_cmpstr (full_name, ==, "Third");
 }
 
 static void
@@ -167,35 +160,27 @@ test_ddl_base_run5 (BaseFixture *self,
 		   gconstpointer user_data)
 {
 	const gchar *catalog = "First";
-	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       NULL,
-					       NULL,
-					       name,
-					       NULL);
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
-	g_assert_true (res);
+	g_assert_null (full_name);
 
+	gda_ddl_base_set_name (self->obj,name);
 
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
-
-	g_assert_cmpstr (ret_catalog, ==, NULL);
-
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
-
-	g_assert_cmpstr (ret_schema, ==, NULL);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
+	gda_ddl_base_set_catalog (self->obj,catalog);
 
-	g_assert_cmpstr (full_name, ==, "Third");
+	const gchar *full_name2 = gda_ddl_base_get_full_name (self->obj);
+
+	 /* Only catalog and name are set.
+	  * In this case only name should be returned.
+	  */
+	g_assert_cmpstr (full_name2, ==, name);
 }
-
 
 gint
 main (gint   argc,
@@ -227,14 +212,14 @@ main (gint   argc,
 		    test_ddl_base_run3,
 		    test_ddl_base_finish);
 
-	g_test_add ("/test-ddl/base-catalog-name",
+	g_test_add ("/test-ddl/base-name",
 		    BaseFixture,
 		    NULL,
 		    test_ddl_base_start,
 		    test_ddl_base_run4,
 		    test_ddl_base_finish);
 
-	g_test_add ("/test-ddl/base-name",
+	g_test_add ("/test-ddl/base-one",
 		    BaseFixture,
 		    NULL,
 		    test_ddl_base_start,
