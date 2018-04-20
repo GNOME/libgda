@@ -128,17 +128,6 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 	priv->m_fullname = g_strdup (fullnamestr->str);
 	g_string_free (fullnamestr, TRUE);
 
-        if (priv->m_catalog && priv->m_schema) {
-		g_string_printf (fullnamestr,"%s.%s.%s",priv->m_catalog,priv->m_schema,priv->m_name);
-	} else {
-	/* In this block  catalog is NULL */
-		if (priv->m_schema)
-			g_string_printf (fullnamestr,"%s.%s",priv->m_schema,priv->m_name);
-		else
-			g_string_printf (fullnamestr,"%s",priv->m_name);
-	}
-
-	priv->m_fullname = g_strdup (fullnamestr->str);
 }
 
  /**
@@ -175,16 +164,12 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 	priv->m_fullname = g_strdup (fullnamestr->str);
 	g_string_free (fullnamestr, TRUE);
 
-	/* In this block  catalog is NULL */
-	priv->m_fullname = g_strdup (fullnamestr->str);
-	g_string_free (fullnamestr, TRUE);
-
 	return priv->m_fullname;
 }
 
 /**
  * gda_ddl_base_get_catalog:
- * * @self: GdaDdlBase object
+ * @self: GdaDdlBase object
  *
  * Returns current catalog name. The returned string should not be freed.
  * In case of error, the @error is set appropriatly and %NULL is returned.
