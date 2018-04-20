@@ -53,7 +53,6 @@ test_ddl_base_run1 (BaseFixture *self,
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
-<<<<<<< HEAD
 	gda_ddl_base_set_names (self->obj,catalog,schema,name);
 
 	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
@@ -69,30 +68,22 @@ test_ddl_base_run1 (BaseFixture *self,
 	g_assert_cmpstr (ret_name, ==, name);
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
-=======
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       catalog,
-					       schema,
-					       name,
-					       NULL);
 
-	g_assert_true (res);
+        gda_ddl_base_set_names (self->obj,catalog,schema,name);
 
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
+	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
 
 	g_assert_cmpstr (ret_catalog, ==, catalog);
 
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
+	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
 
 	g_assert_cmpstr (ret_schema, ==, schema);
 
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
@@ -107,39 +98,29 @@ test_ddl_base_run2 (BaseFixture *self,
 
 	gda_ddl_base_set_catalog (self->obj,catalog);
 
-<<<<<<< HEAD
 	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
-=======
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
 
 	g_assert_cmpstr (ret_catalog, ==, catalog);
 
 	gda_ddl_base_set_schema (self->obj,schema);
 
-<<<<<<< HEAD
 	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
-=======
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
 
 	g_assert_cmpstr (ret_schema, ==, schema);
 
 	gda_ddl_base_set_name (self->obj,name);
 
-<<<<<<< HEAD
 	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
-=======
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
+
+	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
 	g_assert_cmpstr (ret_name, ==, name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
+	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
@@ -167,35 +148,6 @@ test_ddl_base_run3 (BaseFixture *self,
 	g_assert_cmpstr (ret_name, ==, name);
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
-=======
-	const gchar *catalog = "First";
-	const gchar *schema = "Second";
-	const gchar *name = "Third";
-
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       NULL,
-					       schema,
-					       name,
-					       NULL);
-
-	g_assert_true (res);
-
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
-
-	g_assert_cmpstr (ret_catalog, ==, NULL);
-
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
-
-	g_assert_cmpstr (ret_schema, ==, schema);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
-
-	g_assert_cmpstr (ret_name, ==, name);
-
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
-
 	g_assert_cmpstr (full_name, ==, "Second.Third");
 }
 
@@ -203,7 +155,6 @@ static void
 test_ddl_base_run4 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-<<<<<<< HEAD
 	const gchar *name = "Third";
 
 	gda_ddl_base_set_names (self->obj,NULL,NULL,name);
@@ -223,19 +174,10 @@ test_ddl_base_run4 (BaseFixture *self,
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "Third");
-=======
-	const gchar *catalog = "First";
-	const gchar *schema = "Second";
-	const gchar *name = "Third";
 
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       catalog,
-					       NULL,
-					       name,
-					       NULL);
+        g_assert_false (res);
 
-	g_assert_false (res);
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
+        g_assert_cmpstr (full_name, ==, "Third");
 }
 
 static void
@@ -243,7 +185,6 @@ test_ddl_base_run5 (BaseFixture *self,
 		   gconstpointer user_data)
 {
 	const gchar *catalog = "First";
-<<<<<<< HEAD
 	const gchar *name = "Third";
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
@@ -266,38 +207,6 @@ test_ddl_base_run5 (BaseFixture *self,
 	g_assert_cmpstr (full_name2, ==, name);
 }
 
-=======
-	const gchar *schema = "Second";
-	const gchar *name = "Third";
-
-	gboolean res = gda_ddl_base_set_names (self->obj,
-					       NULL,
-					       NULL,
-					       name,
-					       NULL);
-
-	g_assert_true (res);
-
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj,NULL);
-
-	g_assert_cmpstr (ret_catalog, ==, NULL);
-
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj,NULL);
-
-	g_assert_cmpstr (ret_schema, ==, NULL);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj,NULL);
-
-	g_assert_cmpstr (ret_name, ==, name);
-
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj,NULL);
-
-	g_assert_cmpstr (full_name, ==, "Third");
-}
-
-
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
 gint
 main (gint   argc,
       gchar *argv[])
@@ -328,22 +237,14 @@ main (gint   argc,
 		    test_ddl_base_run3,
 		    test_ddl_base_finish);
 
-<<<<<<< HEAD
 	g_test_add ("/test-ddl/base-name",
-=======
-	g_test_add ("/test-ddl/base-catalog-name",
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
 		    BaseFixture,
 		    NULL,
 		    test_ddl_base_start,
 		    test_ddl_base_run4,
 		    test_ddl_base_finish);
 
-<<<<<<< HEAD
 	g_test_add ("/test-ddl/base-one",
-=======
-	g_test_add ("/test-ddl/base-name",
->>>>>>> Test for GdaDdlBase was written. Bug Fix.
 		    BaseFixture,
 		    NULL,
 		    test_ddl_base_start,
