@@ -33,34 +33,23 @@ struct _GdaDdlBaseClass
 	GObjectClass parent;
 };
 
-typedef enum {
-	GDA_DDL_BASE_UNVALID_NAME,
-	GDA_DDL_BASE_NAME_MISSMATCH,
-	GDA_DDL_BASE_FULLNAME,
-	GDA_DDL_BASE_NAME_IS_NULL
-}GdaDdlBaseError;
-
-#define GDA_DDL_BASE_ERROR gda_ddl_base_error_quark()
-GQuark 			gda_ddl_base_error_quark(void);
-
 GdaDdlBase*		gda_ddl_base_new (void);
 
-gboolean		gda_ddl_base_set_names (GdaDdlBase *self,
+void			gda_ddl_base_set_names (GdaDdlBase *self,
 										const gchar *catalog,
 										const gchar *schema,
-										const gchar *name,
-										GError **error);
+										const gchar *name);
 
-const gchar*	gda_ddl_base_get_full_name	(GdaDdlBase *self, GError **error);
-const gchar*	gda_ddl_base_get_name		(GdaDdlBase *self, GError **error);
+const gchar*	gda_ddl_base_get_full_name	(GdaDdlBase *self);
+const gchar*	gda_ddl_base_get_name		(GdaDdlBase *self);
 void			gda_ddl_base_set_name		(GdaDdlBase *self,
 											 const gchar *name);
 
-const gchar*	gda_ddl_base_get_catalog	(GdaDdlBase *self, GError **error);
+const gchar*	gda_ddl_base_get_catalog	(GdaDdlBase *self);
 void			gda_ddl_base_set_catalog	(GdaDdlBase  *self,
 											 const gchar *catalog);
 
-const gchar*	gda_ddl_base_get_schema		(GdaDdlBase *self, GError **error);
+const gchar*	gda_ddl_base_get_schema		(GdaDdlBase *self);
 void			gda_ddl_base_set_schema		(GdaDdlBase  *self,
 											 const gchar *name);
 
