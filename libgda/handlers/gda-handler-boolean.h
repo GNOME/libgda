@@ -26,32 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_BOOLEAN          (gda_handler_boolean_get_type())
-#define GDA_HANDLER_BOOLEAN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_handler_boolean_get_type(), GdaHandlerBoolean)
-#define GDA_HANDLER_BOOLEAN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_boolean_get_type (), GdaHandlerBooleanClass)
-#define GDA_IS_HANDLER_BOOLEAN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_boolean_get_type ())
-
-typedef struct _GdaHandlerBoolean      GdaHandlerBoolean;
-typedef struct _GdaHandlerBooleanClass GdaHandlerBooleanClass;
-typedef struct _GdaHandlerBooleanPriv  GdaHandlerBooleanPriv;
-
-/* struct for the object's data */
-struct _GdaHandlerBoolean
-{
-	GObject                 object;
-	GdaHandlerBooleanPriv  *priv;
-};
-
-/* struct for the object's class */
-struct _GdaHandlerBooleanClass
-{
-	GObjectClass           parent_class;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+#define GDA_TYPE_HANDLER_BOOLEAN (gda_handler_boolean_get_type())
+G_DECLARE_FINAL_TYPE (GdaHandlerBoolean, gda_handler_boolean, GDA, HANDLER_BOOLEAN, GObject)
 
 /**
  * SECTION:gda-handler-boolean
@@ -64,7 +40,6 @@ struct _GdaHandlerBooleanClass
  * interface documentation for more information.
  */
 
-GType           gda_handler_boolean_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_boolean_new           (void);
 
 G_END_DECLS

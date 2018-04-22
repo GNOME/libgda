@@ -26,32 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HANDLER_TIME          (gda_handler_time_get_type())
-#define GDA_HANDLER_TIME(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_handler_time_get_type(), GdaHandlerTime)
-#define GDA_HANDLER_TIME_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_handler_time_get_type (), GdaHandlerTimeClass)
-#define GDA_IS_HANDLER_TIME(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_handler_time_get_type ())
-
-typedef struct _GdaHandlerTime      GdaHandlerTime;
-typedef struct _GdaHandlerTimeClass GdaHandlerTimeClass;
-typedef struct _GdaHandlerTimePriv  GdaHandlerTimePriv;
-
-/* struct for the object's data */
-struct _GdaHandlerTime
-{
-	GObject              object;
-	GdaHandlerTimePriv  *priv;
-};
-
-/* struct for the object's class */
-struct _GdaHandlerTimeClass
-{
-	GObjectClass         parent_class;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+#define GDA_TYPE_HANDLER_TIME (gda_handler_time_get_type())
+G_DECLARE_FINAL_TYPE (GdaHandlerTime, gda_handler_time, GDA, HANDLER_TIME, GObject)
 
 /**
  * SECTION:gda-handler-time
@@ -64,7 +40,6 @@ struct _GdaHandlerTimeClass
  * interface documentation for more information.
  */
 
-GType           gda_handler_time_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *gda_handler_time_new           (void);
 GdaDataHandler *gda_handler_time_new_no_locale (void);
 void            gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec,

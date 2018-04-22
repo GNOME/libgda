@@ -29,10 +29,24 @@
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-debug-macros.h>
 
-static void gda_handler_time_class_init (GdaHandlerTimeClass *class);
-static void gda_handler_time_init (GdaHandlerTime *hdl);
-static void gda_handler_time_dispose (GObject *object);
-static void handler_compute_locale (GdaHandlerTime *hdl);
+typedef struct _LocaleSetting {
+	GDateDMY        dmy_order[3];
+	gboolean        twodigit_years;
+	gint            current_offset; /* 1900, 2000, etc... */
+	gchar           separator;	
+} LocaleSetting;
+
+struct _GdaHandlerTime
+{
+	GObject   parent_instance;
+
+	guint   nb_g_types;
+	GType  *valid_g_types;
+
+	/* for locale setting */
+	LocaleSetting  *sql_locale;
+	LocaleSetting  *str_locale;
+};
 
 /* General notes:
  * about months representations:
@@ -47,165 +61,19 @@ static void handler_compute_locale (GdaHandlerTime *hdl);
  * in file gdate.c
  */
 
-/* GdaDataHandler interface */
-static void         gda_handler_time_data_handler_init      (GdaDataHandlerIface *iface);
-static gchar       *gda_handler_time_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
-static gchar       *gda_handler_time_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
-static GValue      *gda_handler_time_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql,
-							     GType type);
-static GValue      *gda_handler_time_get_value_from_str     (GdaDataHandler *dh, const gchar *sql,
-							     GType type);
+static void   data_handler_iface_init (GdaDataHandlerIface *iface);
+static gchar *render_date_locale      (const GDate *date, LocaleSetting *locale);
+static void   handler_compute_locale  (GdaHandlerTime *hdl);
 
-static GValue      *gda_handler_time_get_sane_init_value    (GdaDataHandler * dh, GType type);
-
-static gboolean     gda_handler_time_accepts_g_type       (GdaDataHandler * dh, GType type);
-
-static const gchar *gda_handler_time_get_descr              (GdaDataHandler *dh);
-
-typedef struct _LocaleSetting {
-	GDateDMY        dmy_order[3];
-	gboolean        twodigit_years;
-	gint            current_offset; /* 1900, 2000, etc... */
-	gchar           separator;	
-} LocaleSetting;
-
-static gchar *render_date_locale (const GDate *date, LocaleSetting *locale);
-
-struct  _GdaHandlerTimePriv {
-	guint           nb_g_types;
-	GType          *valid_g_types;
-
-	/* for locale setting */
-	LocaleSetting  *sql_locale;
-	LocaleSetting  *str_locale;
-};
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-gda_handler_time_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaHandlerTimeClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_handler_time_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaHandlerTime),
-			0,
-			(GInstanceInitFunc) gda_handler_time_init,
-			NULL
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gda_handler_time_data_handler_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaHandlerTime", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
-static void
-gda_handler_time_data_handler_init (GdaDataHandlerIface *iface)
-{
-	iface->get_sql_from_value = gda_handler_time_get_sql_from_value;
-	iface->get_str_from_value = gda_handler_time_get_str_from_value;
-	iface->get_value_from_sql = gda_handler_time_get_value_from_sql;
-	iface->get_value_from_str = gda_handler_time_get_value_from_str;
-	iface->get_sane_init_value = gda_handler_time_get_sane_init_value;
-	iface->accepts_g_type = gda_handler_time_accepts_g_type;
-	iface->get_descr = gda_handler_time_get_descr;
-}
-
-
-static void
-gda_handler_time_class_init (GdaHandlerTimeClass * class)
-{
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-	
-	parent_class = g_type_class_peek_parent (class);
-
-	object_class->dispose = gda_handler_time_dispose;
-}
-
-static void
-gda_handler_time_init (GdaHandlerTime *hdl)
-{
-	/* Private structure */
-	hdl->priv = g_new0 (GdaHandlerTimePriv, 1);
-	hdl->priv->nb_g_types = 4;
-	hdl->priv->valid_g_types = g_new0 (GType, 7);
-	hdl->priv->valid_g_types[0] = G_TYPE_DATE;
-	hdl->priv->valid_g_types[1] = GDA_TYPE_TIME;
-	hdl->priv->valid_g_types[2] = GDA_TYPE_TIMESTAMP;
-	hdl->priv->valid_g_types[3] = G_TYPE_DATE_TIME;
-
-	/* taking into accout the locale */
-	hdl->priv->sql_locale = g_new0 (LocaleSetting, 1);
-	hdl->priv->sql_locale->dmy_order[0] = G_DATE_MONTH;
-	hdl->priv->sql_locale->dmy_order[1] = G_DATE_DAY;
-	hdl->priv->sql_locale->dmy_order[2] = G_DATE_YEAR;
-	hdl->priv->sql_locale->twodigit_years = FALSE;
-	hdl->priv->sql_locale->current_offset = 0;
-	hdl->priv->sql_locale->separator = '-';
-
-	hdl->priv->str_locale = g_new0 (LocaleSetting, 1);
-	hdl->priv->str_locale->dmy_order[0] = G_DATE_MONTH;
-	hdl->priv->str_locale->dmy_order[1] = G_DATE_DAY;
-	hdl->priv->str_locale->dmy_order[2] = G_DATE_YEAR;
-	hdl->priv->str_locale->twodigit_years = FALSE;
-	hdl->priv->str_locale->current_offset = 0;
-	hdl->priv->str_locale->separator = '-';
-
-	g_object_set_data (G_OBJECT (hdl), "name", "InternalTime");
-	g_object_set_data (G_OBJECT (hdl), "descr", _("Time, Date and TimeStamp representation"));
-}
-
-static void
-gda_handler_time_dispose (GObject *object)
-{
-	GdaHandlerTime *hdl;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_HANDLER_TIME (object));
-
-	hdl = GDA_HANDLER_TIME (object);
-
-	if (hdl->priv) {
-		g_free (hdl->priv->valid_g_types);
-		hdl->priv->valid_g_types = NULL;
-
-		g_free (hdl->priv->str_locale);
-		g_free (hdl->priv->sql_locale);
-
-		g_free (hdl->priv);
-		hdl->priv = NULL;
-	}
-
-	/* for the parent class */
-	parent_class->dispose (object);
-}
+G_DEFINE_TYPE_EXTENDED (GdaHandlerTime, gda_handler_time, G_TYPE_OBJECT, 0,
+                        G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, data_handler_iface_init))
 
 /**
  * gda_handler_time_new:
  *
  * Creates a data handler for time values
  *
- * Returns: (transfer full): the new object
+ * Returns: (type GdaHandlerTime) (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_time_new (void)
@@ -224,7 +92,7 @@ gda_handler_time_new (void)
  * Creates a data handler for time values, but using the default C locale
  * instead of the current user locale.
  *
- * Returns: (transfer full): the new object
+ * Returns: (type GdaHandlerTime) (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_time_new_no_locale (void)
@@ -257,16 +125,15 @@ gda_handler_time_set_sql_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec
 				GDateDMY third, gchar separator, gboolean twodigits_years)
 {
 	g_return_if_fail (GDA_IS_HANDLER_TIME (dh));
-	g_return_if_fail (dh->priv);
 	g_return_if_fail (first != sec);
 	g_return_if_fail (sec != third);
 	g_return_if_fail (first != third);
 
-	dh->priv->sql_locale->dmy_order[0] = first;
-	dh->priv->sql_locale->dmy_order[1] = sec;
-	dh->priv->sql_locale->dmy_order[2] = third;
-	dh->priv->sql_locale->twodigit_years = twodigits_years;
-	dh->priv->sql_locale->separator = separator;
+	dh->sql_locale->dmy_order[0] = first;
+	dh->sql_locale->dmy_order[1] = sec;
+	dh->sql_locale->dmy_order[2] = third;
+	dh->sql_locale->twodigit_years = twodigits_years;
+	dh->sql_locale->separator = separator;
 }
 
 /**
@@ -293,16 +160,15 @@ gda_handler_time_set_str_spec  (GdaHandlerTime *dh, GDateDMY first, GDateDMY sec
 				GDateDMY third, gchar separator, gboolean twodigits_years)
 {
 	g_return_if_fail (GDA_IS_HANDLER_TIME (dh));
-	g_return_if_fail (dh->priv);
 	g_return_if_fail (first != sec);
 	g_return_if_fail (sec != third);
 	g_return_if_fail (first != third);
 
-	dh->priv->str_locale->dmy_order[0] = first;
-	dh->priv->str_locale->dmy_order[1] = sec;
-	dh->priv->str_locale->dmy_order[2] = third;
-	dh->priv->str_locale->twodigit_years = twodigits_years;
-	dh->priv->str_locale->separator = separator;
+	dh->str_locale->dmy_order[0] = first;
+	dh->str_locale->dmy_order[1] = sec;
+	dh->str_locale->dmy_order[2] = third;
+	dh->str_locale->twodigit_years = twodigits_years;
+	dh->str_locale->separator = separator;
 }
 
 static void
@@ -323,7 +189,7 @@ handler_compute_locale (GdaHandlerTime *hdl)
 	while (*ptr && g_ascii_isdigit (*ptr))
 		ptr++;
 	if (*ptr) {
-		hdl->priv->str_locale->separator = *ptr;
+		hdl->str_locale->separator = *ptr;
 		*ptr = 0;
 		nums[0] = atoi (numstart); /* Flawfinder: ignore */
 	}
@@ -366,17 +232,17 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		for (i=0; i < 3; i++) {
 			switch (nums[i]) {
 			case 7:
-				hdl->priv->str_locale->dmy_order[i] = G_DATE_MONTH;
+				hdl->str_locale->dmy_order[i] = G_DATE_MONTH;
 				break;
 			case 4:
-				hdl->priv->str_locale->dmy_order[i] = G_DATE_DAY;
+				hdl->str_locale->dmy_order[i] = G_DATE_DAY;
 				break;
 			case 76:
-				hdl->priv->str_locale->twodigit_years = TRUE;
-				hdl->priv->str_locale->dmy_order[i] = G_DATE_YEAR;
+				hdl->str_locale->twodigit_years = TRUE;
+				hdl->str_locale->dmy_order[i] = G_DATE_YEAR;
                                 break;
 			case 1976:
-				hdl->priv->str_locale->dmy_order[i] = G_DATE_YEAR;
+				hdl->str_locale->dmy_order[i] = G_DATE_YEAR;
 				break;
 			default:
 				break;
@@ -394,11 +260,11 @@ handler_compute_locale (GdaHandlerTime *hdl)
 #else
                 now_tm = localtime (&now);
 #endif
-		hdl->priv->str_locale->current_offset = ((now_tm->tm_year + 1900) / 100) * 100;
+		hdl->str_locale->current_offset = ((now_tm->tm_year + 1900) / 100) * 100;
 
 #ifdef GDA_DEBUG_NO		
 		for (i=0; i<3; i++) {
-			switch (hdl->priv->str_locale->dmy_order[i]) {
+			switch (hdl->str_locale->dmy_order[i]) {
 			case G_DATE_MONTH:
 				strings[i] = "Month";
 				break;
@@ -415,9 +281,9 @@ handler_compute_locale (GdaHandlerTime *hdl)
 		}
 		g_print ("GdaHandlerTime %p\n", hdl);
 		g_print ("\tlocale order = %s %s %s, separator = %c\n", 
-			 strings[0], strings[1], strings[2], hdl->priv->str_locale->separator);
-		if (hdl->priv->str_locale->twodigit_years)
-			g_print ("\tlocale has 2 digits year, using %d as offset\n", hdl->priv->str_locale->current_offset);
+			 strings[0], strings[1], strings[2], hdl->str_locale->separator);
+		if (hdl->str_locale->twodigit_years)
+			g_print ("\tlocale has 2 digits year, using %d as offset\n", hdl->str_locale->current_offset);
 		else
 			g_print ("\tlocale has 4 digits year\n");
 #endif
@@ -448,7 +314,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 		const GDate *date;
 
 		date = (GDate *) g_value_get_boxed (value);
-		str = render_date_locale (date, dh->priv->sql_locale);
+		str = render_date_locale (date, dh->sql_locale);
 		if (!str)
 			retval = g_strdup ("NULL");
 		else 
@@ -476,7 +342,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gda_timestamp_get_day (gdats), gda_timestamp_get_month (gdats), gda_timestamp_get_year (gdats));
-		str = render_date_locale (vdate, dh->priv->sql_locale);
+		str = render_date_locale (vdate, dh->sql_locale);
 		g_date_free (vdate);
 
 		if (str) {
@@ -509,7 +375,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 			gint y, m, d;
 			g_date_time_get_ymd (ts, &y, &m, &d);
 			vdate = g_date_new_dmy (d, m, y);
-			str = render_date_locale (vdate, dh->priv->sql_locale);
+			str = render_date_locale (vdate, dh->sql_locale);
 			g_date_free (vdate);
 
 			if (str) {
@@ -570,14 +436,14 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME)) {
 		for (i=0; i<3; i++) {
 			if (i > 0)
-				g_string_append_c (string, dh->priv->str_locale->separator);
-			switch (dh->priv->str_locale->dmy_order[i]) {
+				g_string_append_c (string, dh->str_locale->separator);
+			switch (dh->str_locale->dmy_order[i]) {
 			case G_DATE_DAY:
 			case G_DATE_MONTH:
 				g_string_append (string, "00");
 				break;
 			case G_DATE_YEAR:
-				if (dh->priv->str_locale->twodigit_years)
+				if (dh->str_locale->twodigit_years)
 					g_string_append (string, "00");
 				else
 					g_string_append (string, "0000");
@@ -623,8 +489,8 @@ gda_handler_time_get_hint (GdaHandlerTime *dh, GType type)
 	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP) || (type == G_TYPE_DATE_TIME)) {
 		for (i=0; i<3; i++) {
 			if (i > 0)
-				g_string_append_c (string, dh->priv->str_locale->separator);
-			switch (dh->priv->str_locale->dmy_order[i]) {
+				g_string_append_c (string, dh->str_locale->separator);
+			switch (dh->str_locale->dmy_order[i]) {
 			case G_DATE_DAY:
 				/* To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number */
 				g_string_append (string, _("DD"));
@@ -634,7 +500,7 @@ gda_handler_time_get_hint (GdaHandlerTime *dh, GType type)
 				g_string_append (string, _("MM"));
 				break;
 			case G_DATE_YEAR:
-				if (dh->priv->str_locale->twodigit_years)
+				if (dh->str_locale->twodigit_years)
 					/* To translators: YY represents a place holder in a date string. For example in the "YY-MM-DD" format, one knows that she has to replace YY by a year number, on 2 digits */
 					g_string_append (string, _("YY"));
 				else
@@ -681,7 +547,7 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		const GDate *date;
 
 		date = (GDate *) g_value_get_boxed (value);
-		str = render_date_locale (date, hdl->priv->sql_locale);
+		str = render_date_locale (date, hdl->sql_locale);
 		if (!str)
 			retval = g_strdup ("NULL");
 		else {
@@ -711,7 +577,7 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gda_timestamp_get_day(gdats), gda_timestamp_get_month (gdats), gda_timestamp_get_year (gdats));
-		str = render_date_locale (vdate, hdl->priv->sql_locale);
+		str = render_date_locale (vdate, hdl->sql_locale);
 		g_date_free (vdate);
 
 		if (str) {
@@ -744,7 +610,7 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 			gint y, m, d;
 			g_date_time_get_ymd (ts, &y, &m, &d);
 			vdate = g_date_new_dmy (d, m, y);
-			str = render_date_locale (vdate, hdl->priv->sql_locale);
+			str = render_date_locale (vdate, hdl->sql_locale);
 			g_date_free (vdate);
 
 			if (str) {
@@ -800,7 +666,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 		const GDate *date;
 
 		date = (GDate *) g_value_get_boxed (value);
-		retval = render_date_locale (date, hdl->priv->str_locale);
+		retval = render_date_locale (date, hdl->str_locale);
 		if (!retval)
 			retval = g_strdup ("");
 	}
@@ -815,7 +681,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 
 		gdats = gda_value_get_timestamp ((GValue *) value);
 		vdate = g_date_new_dmy (gda_timestamp_get_day (gdats), gda_timestamp_get_month (gdats), gda_timestamp_get_year (gdats));
-		str = render_date_locale (vdate, hdl->priv->str_locale);
+		str = render_date_locale (vdate, hdl->str_locale);
 		g_date_free (vdate);
 
 		if (str) {
@@ -848,7 +714,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 			gint y, m, d;
 			g_date_time_get_ymd (ts, &y, &m, &d);
 			vdate = g_date_new_dmy (d, m, y);
-			str = render_date_locale (vdate, hdl->priv->str_locale);
+			str = render_date_locale (vdate, hdl->str_locale);
 			g_date_free (vdate);
 
 			if (str) {
@@ -965,7 +831,7 @@ gda_handler_time_get_value_from_sql (GdaDataHandler *iface, const gchar *sql, GT
 		if ((i>=2) && (*sql=='\'') && (sql[i-1]=='\'')) {
 			gchar *str = g_strdup (sql);
 			str[i-1] = 0;
-			value = gda_handler_time_get_value_from_locale (iface, str+1, type, hdl->priv->sql_locale);
+			value = gda_handler_time_get_value_from_locale (iface, str+1, type, hdl->sql_locale);
 			g_free (str);
 		}
 	}
@@ -987,7 +853,7 @@ gda_handler_time_get_value_from_str (GdaDataHandler *iface, const gchar *str, GT
 	if (*str == '\'')
 		return NULL;
 	else
-		return gda_handler_time_get_value_from_locale (iface, str, type, hdl->priv->str_locale);
+		return gda_handler_time_get_value_from_locale (iface, str, type, hdl->str_locale);
 }
 
 
@@ -1360,8 +1226,8 @@ gda_handler_time_accepts_g_type (GdaDataHandler *iface, GType type)
 	g_assert (iface);
 	hdl = (GdaHandlerTime*) (iface);
 
-	for (i = 0; i < hdl->priv->nb_g_types; i++) {
-		if (hdl->priv->valid_g_types [i] == type)
+	for (i = 0; i < hdl->nb_g_types; i++) {
+		if (hdl->valid_g_types [i] == type)
 			return TRUE;
 	}
 
@@ -1373,4 +1239,74 @@ gda_handler_time_get_descr (GdaDataHandler *iface)
 {
 	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
 	return g_object_get_data (G_OBJECT (iface), "descr");
+}
+
+static void
+data_handler_iface_init (GdaDataHandlerIface *iface)
+{
+	iface->get_sql_from_value = gda_handler_time_get_sql_from_value;
+	iface->get_str_from_value = gda_handler_time_get_str_from_value;
+	iface->get_value_from_sql = gda_handler_time_get_value_from_sql;
+	iface->get_value_from_str = gda_handler_time_get_value_from_str;
+	iface->get_sane_init_value = gda_handler_time_get_sane_init_value;
+	iface->accepts_g_type = gda_handler_time_accepts_g_type;
+	iface->get_descr = gda_handler_time_get_descr;
+}
+
+static void
+gda_handler_time_init (GdaHandlerTime *hdl)
+{
+	/* Private structure */
+	hdl->nb_g_types = 4;
+	hdl->valid_g_types = g_new0 (GType, 7);
+	hdl->valid_g_types[0] = G_TYPE_DATE;
+	hdl->valid_g_types[1] = GDA_TYPE_TIME;
+	hdl->valid_g_types[2] = GDA_TYPE_TIMESTAMP;
+	hdl->valid_g_types[3] = G_TYPE_DATE_TIME;
+
+	/* taking into accout the locale */
+	hdl->sql_locale = g_new0 (LocaleSetting, 1);
+	hdl->sql_locale->dmy_order[0] = G_DATE_MONTH;
+	hdl->sql_locale->dmy_order[1] = G_DATE_DAY;
+	hdl->sql_locale->dmy_order[2] = G_DATE_YEAR;
+	hdl->sql_locale->twodigit_years = FALSE;
+	hdl->sql_locale->current_offset = 0;
+	hdl->sql_locale->separator = '-';
+
+	hdl->str_locale = g_new0 (LocaleSetting, 1);
+	hdl->str_locale->dmy_order[0] = G_DATE_MONTH;
+	hdl->str_locale->dmy_order[1] = G_DATE_DAY;
+	hdl->str_locale->dmy_order[2] = G_DATE_YEAR;
+	hdl->str_locale->twodigit_years = FALSE;
+	hdl->str_locale->current_offset = 0;
+	hdl->str_locale->separator = '-';
+
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalTime");
+	g_object_set_data (G_OBJECT (hdl), "descr", _("Time, Date and TimeStamp representation"));
+}
+
+static void
+gda_handler_time_dispose (GObject *object)
+{
+	GdaHandlerTime *hdl;
+
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GDA_IS_HANDLER_TIME (object));
+
+	hdl = GDA_HANDLER_TIME (object);
+
+	g_clear_pointer(&hdl->valid_g_types, g_free);
+	g_clear_pointer(&hdl->str_locale, g_free);
+	g_clear_pointer(&hdl->sql_locale, g_free);
+
+	/* for the parent class */
+	G_OBJECT_CLASS (gda_handler_time_parent_class)->dispose (object);
+}
+
+static void
+gda_handler_time_class_init (GdaHandlerTimeClass * class)
+{
+	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+
+	object_class->dispose = gda_handler_time_dispose;
 }

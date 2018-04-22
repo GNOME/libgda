@@ -26,124 +26,22 @@
 #include <glib/gi18n-lib.h>
 #include <gda-util.h>
 
-static void gda_handler_type_class_init (GdaHandlerTypeClass * class);
-static void gda_handler_type_init (GdaHandlerType * wid);
-static void gda_handler_type_dispose (GObject   * object);
-
-
-/* GdaDataHandler interface */
-static void         gda_handler_type_data_handler_init      (GdaDataHandlerIface *iface);
-static gchar       *gda_handler_type_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
-static gchar       *gda_handler_type_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
-static GValue      *gda_handler_type_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql, 
-							     GType type);
-static GValue      *gda_handler_type_get_value_from_str     (GdaDataHandler *dh, const gchar *sql, 
-							     GType type);
-static gboolean     gda_handler_type_accepts_g_type       (GdaDataHandler * dh, GType type);
-
-static const gchar *gda_handler_type_get_descr              (GdaDataHandler *dh);
-
-struct  _GdaHandlerTypePriv {
-	gchar dummy;
+struct _GdaHandlerType
+{
+	GObject   parent_instance;
 };
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
+static void data_handler_iface_init (GdaDataHandlerIface *iface);
 
-GType
-gda_handler_type_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaHandlerTypeClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_handler_type_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaHandlerType),
-			0,
-			(GInstanceInitFunc) gda_handler_type_init,
-			NULL
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gda_handler_type_data_handler_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaHandlerType", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
-static void
-gda_handler_type_data_handler_init (GdaDataHandlerIface *iface)
-{
-	iface->get_sql_from_value = gda_handler_type_get_sql_from_value;
-	iface->get_str_from_value = gda_handler_type_get_str_from_value;
-	iface->get_value_from_sql = gda_handler_type_get_value_from_sql;
-	iface->get_value_from_str = gda_handler_type_get_value_from_str;
-	iface->get_sane_init_value = NULL;
-	iface->accepts_g_type = gda_handler_type_accepts_g_type;
-	iface->get_descr = gda_handler_type_get_descr;
-}
-
-
-static void
-gda_handler_type_class_init (GdaHandlerTypeClass * class)
-{
-	GObjectClass *object_class = G_OBJECT_CLASS (class);
-	
-	parent_class = g_type_class_peek_parent (class);
-
-	object_class->dispose = gda_handler_type_dispose;
-}
-
-static void
-gda_handler_type_init (GdaHandlerType * hdl)
-{
-	/* Private structure */
-	hdl->priv = g_new0 (GdaHandlerTypePriv, 1);
-
-	g_object_set_data (G_OBJECT (hdl), "descr", "InternalType");
-	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
-}
-
-static void
-gda_handler_type_dispose (GObject   * object)
-{
-	GdaHandlerType *hdl;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_HANDLER_TYPE (object));
-
-	hdl = GDA_HANDLER_TYPE (object);
-
-	if (hdl->priv) {
-		g_free (hdl->priv);
-		hdl->priv = NULL;
-	}
-
-	/* for the parent class */
-	parent_class->dispose (object);
-}
+G_DEFINE_TYPE_EXTENDED (GdaHandlerType, gda_handler_type, G_TYPE_OBJECT, 0,
+                        G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, data_handler_iface_init))
 
 /**
  * gda_handler_type_new:
  *
  * Creates a data handler for Gda types
  *
- * Returns: (transfer full): the new object
+ * Returns: (type GdaHandlerType) (transfer full): the new object
  */
 GdaDataHandler *
 gda_handler_type_new (void)
@@ -245,4 +143,30 @@ gda_handler_type_get_descr (GdaDataHandler *iface)
 {
 	g_return_val_if_fail (GDA_IS_HANDLER_TYPE (iface), NULL);
 	return g_object_get_data (G_OBJECT (iface), "descr");
+}
+
+static void
+gda_handler_type_init (GdaHandlerType * hdl)
+{
+	g_object_set_data (G_OBJECT (hdl), "descr", "InternalType");
+	g_object_set_data (G_OBJECT (hdl), "descr", _("Gda type representation"));
+}
+
+static void
+data_handler_iface_init (GdaDataHandlerIface *iface)
+{
+	iface->get_sql_from_value = gda_handler_type_get_sql_from_value;
+	iface->get_str_from_value = gda_handler_type_get_str_from_value;
+	iface->get_value_from_sql = gda_handler_type_get_value_from_sql;
+	iface->get_value_from_str = gda_handler_type_get_value_from_str;
+	iface->get_sane_init_value = NULL;
+	iface->accepts_g_type = gda_handler_type_accepts_g_type;
+	iface->get_descr = gda_handler_type_get_descr;
+}
+
+
+static void
+gda_handler_type_class_init (GdaHandlerTypeClass * class)
+{
+	
 }
