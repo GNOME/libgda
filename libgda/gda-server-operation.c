@@ -2725,7 +2725,7 @@ gda_server_operation_create_table_arg_get_fkey_ref_field_get_type ()
 /**
  * gda_server_operation_create_table_arg_fkey_ref_field_new:
  *
- * Returns: a new #GdaServerOperationCreateTableArg
+ * Returns: a new #GdaServerOperationCreateTableArgFKeyRefField
  */
 GdaServerOperationCreateTableArgFKeyRefField*
 gda_server_operation_create_table_arg_fkey_ref_field_new ()
@@ -3113,7 +3113,7 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
 	GType    type;
 	GdaServerOperationCreateTableFlag flag;
 	gint refs;
-	GList *arguments;
+	GList *arguments = NULL;
 	GdaServerOperationCreateTableArg* argument;
 
 	va_start (args, error);

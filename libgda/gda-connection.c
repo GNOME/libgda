@@ -291,7 +291,7 @@ gda_connection_class_init (GdaConnectionClass *klass)
 	/**
 	 * GdaConnection::status-changed:
 	 * @cnc: the #GdaConnection
-	 * @status: the new connection status
+	 * @status: (type GdaConnectionStatus): the new connection status
 	 *
 	 * Gets emitted when the @cnc's status has changed (usually when a the connection is being used to execute
 	 * a statement)

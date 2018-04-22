@@ -2153,7 +2153,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	 * - a GValue of type GDA_VALYE_TYPE_NULL if a null value must be inserted in the dest data model
 	 * - a GValue of a different type if the value must be converted from the src data model
 	 */
-	append_types = g_new0 (GType, to_nb_cols);
+	append_types = g_new0 (GType, (guint)to_nb_cols);
 	for (plist = copy_params, i = to_nb_cols - 1; plist; plist = plist->next, i--) {
 		GdaColumn *column;
 

@@ -117,7 +117,9 @@ table_columns_dispose (GObject *object)
 static void
 table_columns_show_all (GtkWidget *widget)
 {
+#ifdef HAVE_LDAP
 	TableColumns *tcolumns = (TableColumns *) widget;
+#endif
         GTK_WIDGET_CLASS (parent_class)->show_all (widget);
 #ifdef HAVE_LDAP
 	if (t_connection_is_ldap (tcolumns->priv->tcnc)) {
@@ -894,14 +896,18 @@ follow_if_link (G_GNUC_UNUSED GtkWidget *text_view, GtkTextIter *iter, TableColu
 		const gchar *table_schema;
 		const gchar *table_short_name;
 		const gchar *fk_name;
+#ifdef HAVE_LDAP
 		const gchar *dn;
+#endif
 		SchemaBrowserPerspective *bpers;
 		
 		table_schema = g_object_get_data (G_OBJECT (tag), "table_schema");
 		table_name = g_object_get_data (G_OBJECT (tag), "table_name");
 		table_short_name = g_object_get_data (G_OBJECT (tag), "table_short_name");
 		fk_name = g_object_get_data (G_OBJECT (tag), "fk_name");
+#ifdef HAVE_LDAP
 		dn = g_object_get_data (G_OBJECT (tag), "dn");
+#endif
 
 		bpers = SCHEMA_BROWSER_PERSPECTIVE (ui_find_parent_widget (GTK_WIDGET (tcolumns),
 						    TYPE_SCHEMA_BROWSER_PERSPECTIVE));

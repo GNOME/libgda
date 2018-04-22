@@ -516,12 +516,10 @@ gda_binary_new (void)
 /**
  * gda_binary_set_data:
  * @binary: a #GdaBinary pointer
- * @val: (array length=size): value to be copied by #GdaBinary.
+ * @val: (array length=size) (element-type guint8): value to be copied by #GdaBinary.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Set binary data to a #GdaBinary, holding a copy of the data.
- *
- * Returns: (transfer full): the newly created #GdaBinary.
  *
  * Since: 6.0
  */
@@ -538,12 +536,10 @@ gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size)
 
 /**
  * gda_binary_take_data:
- * @val: (array length=size): value to be taken by #GdaBinary.
+ * @val: (array length=size) (element-type guint8): value to be taken by #GdaBinary.
  * @size: the size of the memory pool pointer to by @val.
  *
  * Set binary data to a #GdaBinary, directly holding @val (no copy made).
- *
- * Returns: (transfer full): the newly created #GdaBinary.
  */
 void
 gda_binary_take_data (GdaBinary *binary, guchar *val, glong size)
@@ -613,7 +609,7 @@ gda_binary_get_size (const GdaBinary *binary)
 
 /**
  * gda_binary_copy:
- * @boxed: source to get a copy from.
+ * @src: source to get a copy from.
  *
  * Creates a new #GdaBinary structure from an existing one.
 
@@ -636,7 +632,7 @@ gda_binary_copy (GdaBinary *src)
 
 /**
  * gda_binary_free:
- * @boxed: (transfer full): #GdaBinary to free.
+ * @binary: (transfer full): #GdaBinary to free.
  *
  * Deallocates all memory associated to the given #GdaBinary.
  */
@@ -794,7 +790,7 @@ gda_blob_copy (GdaBlob *src)
 
 /**
  * gda_blob_free:
- * @boxed: (transfer full): #GdaBlob to free.
+ * @blob: (transfer full): #GdaBlob to free.
  *
  * Deallocates all memory associated to the given #GdaBlob.
  */

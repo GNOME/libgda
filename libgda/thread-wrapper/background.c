@@ -177,7 +177,6 @@ background_main (gpointer data)
 
 	while (1) {
 		/* honor delayed operations */
-		GSList *list;
 		g_mutex_lock (&bg_mutex);
 		guint i;
 		for (i = 0; i < spare_workers->len; ) {

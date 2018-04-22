@@ -955,7 +955,7 @@ idle_modif_buttons_update (GdauiDataProxyInfo *info)
  *
  * Get the #GtkToolItem corresponding to the @action action
  *
- * Returns: the #GtkToolItem, or %NULL on error
+ * Returns: (transfer none): the #GtkToolItem, or %NULL on error
  *
  * Since: 6.0
  */

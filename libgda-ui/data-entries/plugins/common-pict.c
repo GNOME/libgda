@@ -595,7 +595,7 @@ common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPix
 		const GdaBinary *bin;
 		const GdaBlob *blob;
 		blob = gda_value_get_blob (value);
-		bin = gda_binary_get_binary (blob);
+		bin = gda_blob_get_binary (blob);
 		if (bin) {
 			if (!gda_binary_get_data (bin) && gda_blob_get_op (blob))
 				gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);

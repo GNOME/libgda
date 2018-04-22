@@ -373,7 +373,7 @@ gda_holder_init (GdaHolder *holder)
 
 /**
  * gda_holder_new:
- * @type: (transfer none): the #GType requested
+ * @type: the #GType requested
  *
  * Creates a new holder of type @type
  *
@@ -751,7 +751,7 @@ gda_holder_get_property (GObject *object,
  * 
  * Get @holder's type
  *
- * Returns: (transfer none): the data type
+ * Returns: the data type
  */
 GType
 gda_holder_get_g_type (GdaHolder *holder)
