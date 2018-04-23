@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
+    <fk_field name="column_namefk1" reffield="column_name1"/>
+    <fk_field name="column_namefk2" reffield="column_name2"/>
+    <fk_field name="column_namefk3" reffield="column_name3"/>
+</fkey>
+
