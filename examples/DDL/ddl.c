@@ -29,12 +29,21 @@ main (int argc, char *argv[])
         gda_init ();
 
         GdaConnection *cnc;
+	GError *error = NULL;
+	gboolean closeresults = FALSE;
 
 	/* open connections */
 	cnc = open_connection ();
 	create_table (cnc);
 	display_products_contents (cnc);
-        gda_connection_close (cnc);
+	closeresults = gda_connection_close (cnc,&error);
+
+	if (!closeresults) {
+		g_print("Connection close reported an error: %s\n",
+				error && error->message ? error->message : "No detail");
+		g_object_unref (cnc);
+		exit (-1);
+	}
 
         return 0;
 }
