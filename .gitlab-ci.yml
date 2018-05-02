@@ -2,14 +2,18 @@
 # use the official gcc image, based on debian
 # can use verions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: ubuntu
+image: ubuntu:18.0
 
 stages:
      - build
      - test
 
+variables:
+  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf 
+                ibgtk-3-dev libxml2-dev gnome-common gobject-introspection
+
 before_script:
-     - apt update && apt -y install make autoconf libgtk-3-dev libxml2-dev gnome-common
+     - apt update && apt -y install $DEPENDENCIES
 job_normal:
   stage: build
   script: 
