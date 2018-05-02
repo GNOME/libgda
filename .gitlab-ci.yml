@@ -4,6 +4,10 @@
 # see https://hub.docker.com/_/gcc/
 image: gcc
 
+stages:
+     - build
+     - tes
+
 build:
   stage: build
   # instead of calling g++ directly you can also use some build toolkit like make
@@ -11,7 +15,7 @@ build:
   # before_script: 
      - apt update && apt -y install make autoconf libgtk-3-dev libxml2-dev
   script: 
-    - ./autogen.sh && make && make install 
+    - ./autogen.sh ; make  make install 
   artifacts:
     paths:
       - mybinary
