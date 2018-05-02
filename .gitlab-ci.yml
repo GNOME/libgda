@@ -10,13 +10,15 @@ stages:
 
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf 
-                libgtk-3-dev libxml2-dev gnome-common gobject-introspection
-before_script:
+                libgtk-3-dev libxml2-dev gnome-common 
+                gobject-introspection libgcrypt20-dev 
+                
+before_scrip:
      - apt update && apt -y install $DEPENDENCIES
 job_normal:
   stage: build
   script: 
-    - ./autogen.sh;make;make install 
+    - ./autogensh;make;make install 
   only:
     - master
 
