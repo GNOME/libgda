@@ -9,8 +9,7 @@ stages:
      - test
 
 before_script:
-     - apt update && apt -y install make autoconf libgtk-3-dev libxml2-devgnome-common
-
+     - apt update && apt -y install make autoconf libgtk-3-dev libxml2-dev gnome-common
 job_normal:
   stage: build
   script: 
