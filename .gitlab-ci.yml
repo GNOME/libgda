@@ -13,8 +13,9 @@ variables:
                 libgtk-3-dev libxml2-dev gnome-common 
                 gobject-introspection libgcrypt20-dev 
                 
-before_scrip:
+before_script:
      - apt update && apt -y install $DEPENDENCIES
+
 job_normal:
   stage: build
   script: 
@@ -22,8 +23,6 @@ job_normal:
   only:
     - master
 
-# run tests using the binary built before
-job_test:
-  stage: test
+job_test:  stage: test
   script:
     - ./autogen.sh && make chec
