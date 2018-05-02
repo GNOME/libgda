@@ -25,5 +25,7 @@ job_normal:
 
 job_test:
   stage: test
+
+job_test:  stage: test
   script:
     - ./autogen.sh && make check
