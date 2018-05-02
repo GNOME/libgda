@@ -9,21 +9,21 @@ stages:
      - test
 
 variables:
-  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf 
-                libgtk-3-dev libxml2-dev gnome-common 
-                gobject-introspection libgcrypt20-dev 
-                
-before_scrip:
+  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
+                libgtk-3-dev libxml2-dev gnome-common
+                gobject-introspection libgcrypt20-dev
+
+before_script:
      - apt update && apt -y install $DEPENDENCIES
+
 job_normal:
   stage: build
-  script: 
-    - ./autogensh;make;make install 
+  script:
+    - ./autogen.sh; make; make install
   only:
     - master
 
-# run tests using the binary built before
 job_test:
   stage: test
   script:
-    - ./autogen.sh && make chec
+    - ./autogen.sh && make check
