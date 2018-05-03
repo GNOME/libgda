@@ -2,7 +2,7 @@
 # use the official gcc image, based on debian
 # can use verions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: ubuntu:latest
+image: ubuntu:devel
 
 stages:
      - build
@@ -12,21 +12,22 @@ variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 libgtk-3-dev libxml2-dev gnome-common
                 gobject-introspection libssl-dev
+  GIT_SUBMODULE_STRATEGY: normal
 
 before_script:
-     - apt update && apt -y install $DEPENDENCIES
+  - apt update && apt -y install $DEPENDENCIES
 
 job_normal:
   stage: build
   script:
-    - ./autogen.sh; make; make install
+  - ./autogen.sh
+  - make
+  - make distcheck
   only:
-    - master
-
-job_test:
-  stage: test
+  - master
 
 job_test:
   stage: test
   script:
-    - ./autogen.sh && make check
+  - ./autogen.sh
+  -  make check
