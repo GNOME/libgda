@@ -11,7 +11,8 @@ stages:
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 libgtk-3-dev libxml2-dev gnome-common
-                gobject-introspection libssl-dev
+                gobject-introspection libssl-dev libmysqlclient-dev
+                libmysql-dev libldap2-dev libpq-dev
   GIT_SUBMODULE_STRATEGY: normal
 
 before_script:
