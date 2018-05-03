@@ -22,12 +22,12 @@ job_normal:
   script:
   - ./autogen.sh --disable-tools
   - make
-  - make distcheck
+  - make install
   only:
   - master
 
 job_test:
   stage: test
   script:
-  - ./autogen.sh
+  - ./autogen.sh --disable-tools
   -  make check
