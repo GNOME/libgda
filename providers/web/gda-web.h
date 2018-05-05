@@ -51,7 +51,7 @@ typedef struct {
 	gchar *worker_url;
 
 	gchar *server_secret;
-	gchar *key;
+	guchar *key;
 	gchar *next_challenge;
 
 	gchar *session_id; /* as defined by the server */
