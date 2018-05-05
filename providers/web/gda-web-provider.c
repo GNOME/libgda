@@ -383,8 +383,8 @@ gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	g_rec_mutex_init (& (cdata->mutex));
 	cdata->server_id = NULL;
 	cdata->forced_closing = FALSE;
-	cdata->worker_session = soup_session_sync_new ();
-	cdata->front_session = soup_session_sync_new_with_options ("max-conns-per-host", 1, NULL);
+	cdata->worker_session = soup_session_new ();
+	cdata->front_session = soup_session_new_with_options ("max-conns-per-host", 1, NULL);
 	if (use_ssl) {
 		server_url = g_string_new ("https://");
 		g_print ("USING SSL\n");
