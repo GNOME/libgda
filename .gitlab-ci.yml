@@ -6,6 +6,7 @@ image: ubuntu:devel
 
 stages:
      - build
+     - check
 
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
@@ -34,4 +35,12 @@ job_normal:
   script:
   - ./autogen.sh
   - make
+  - make install
+
+job_check:
+  stage: check
+  script:
+  - ./autogen.sh
+  - make
+  - make check
   - make install
