@@ -9,9 +9,16 @@ AM_CPPFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 test_programs = \
-    check_ddl_base
+    check_ddl_base \
+    check_ddl_fkey
 
 check_ddl_base_SOURCES = check-ddl-base.c
 check_ddl_base_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
+
+check_ddl_fkey_SOURCES = check-ddl-fkey.c
+check_ddl_fkey_LDADD = \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(COREDEPS_LIBS)
+
