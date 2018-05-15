@@ -1,0 +1,46 @@
+# This file is a template, and might need editing before it works on your project.
+# use the official gcc image, based on debian
+# can use verions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+image: ubuntu:devel
+
+stages:
+     - build
+     - check
+
+variables:
+  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
+                libgtk-3-dev libxml2-dev gnome-common
+                gobject-introspection libssl-dev libmysqlclient-dev
+                default-libmysqld-dev libldap2-dev libpq-dev
+                libgtksourceview-3.0-dev
+                libgdk-pixbuf2.0-dev
+                libgraphviz-dev
+                libisocodes-dev
+                libxslt1-dev
+                libjson-glib-dev
+                libgcrypt20-dev
+                libldap2-dev
+                libgoocanvas-2.0-dev
+                libhsqldb1.8.0-java
+                yelp-tools
+
+  GIT_SUBMODULE_STRATEGY: normal
+
+before_script:
+  - apt update && apt -y install $DEPENDENCIES
+
+job_normal:
+  stage: build
+  script:
+  - ./autogen.sh --without-ui
+  - make
+  - make install
+
+job_check:
+  stage: check
+  script:
+  - ./autogen.sh
+  - make
+  - make check
+  - make install
