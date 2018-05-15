@@ -36,7 +36,7 @@ before_script:
 job_normal:
   stage: build
   script:
-  - ./autogen.sh --without-ui
+  - ./autogen.sh
   - make
   - make install
 
