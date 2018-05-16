@@ -44,3 +44,7 @@ job_check:
   - make
   - make check
   - make install
+  artifacts:
+    paths:
+    - tests/test-suite.log
+    expire_in: 1 week
