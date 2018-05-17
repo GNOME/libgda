@@ -515,8 +515,8 @@ fi
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],
-    AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=no]]),
-    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=no])
+    AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
+    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=yes])
 
 if test "x$enable_gda_gi" != "xyes" -a "$enable_gdaui_gi" = "xyes"
 then
@@ -535,15 +535,26 @@ AC_ARG_ENABLE([gi-system-install],
     [enable_gi_system_install=$enableval],[enable_gi_system_install=yes])
 AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "xyes"])
 
-dnl ******************************
-dnl Check for Vala Compiler
-dnl ******************************
-AC_ARG_VAR(VALA_API_VERSION,[Vala API version to generate bingdings and compile against. Install versioned bidings.])
-
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
 then
 	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
 fi
+
+dnl ******************************
+dnl Check for Vala Compiler
+dnl ******************************
+AM_PROG_VALAC()
+enable_vala="no"
+if test "x$VALAC" != "xno"; then
+    enable_vala="yes"
+fi
+AC_PATH_PROG([VAPIGEN],[vapigen],[no])
+AC_SUBST([VAPIGEN])
+enable_vapigen="no"
+if test "x$VAPIGEN" != "xno"; then
+    enable_vapigen="yes"
+fi
+AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$enable_vapigen" = "xyes")
 
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
 then
@@ -551,46 +562,28 @@ then
 fi
 
 AC_ARG_ENABLE([gdaui-vala],
-    AS_HELP_STRING([--enable-gdaui-vala[=@<:@no/yes@:>@]], [Enable Vala bindings for GDA-UI [default=no]]),
-    [enable_gdaui_vala=$enableval],[enable_gdaui_vala=no])
-if test "x$enable_vala" != "xyes" -a "x$enable_gdaui_vala" = "xyes"
+    AS_HELP_STRING([--enable-gdaui-vala[=@<:@yes/no@:>@]], [Enable Vala bindings for GDA-UI [default=auto]]),
+    [enable_gdaui_vala=$enableval],[enable_gdaui_vala=auto])
+if test "x$enable_vapigen" != "xyes" -a "x$enable_gdaui_vala" = "xyes"
 then
 	AC_MSG_ERROR([Vala bindings for GDA-UI is requested but GDA Vala bindings is disable. Use --enable-vala])
 fi
-AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
+AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" != "xno" -a "x$enable_vapigen" = "xyes")
 
+dnl ******************************
+dnl Check for Vala Classes build
+dnl ******************************
 AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
-    [enable_vala_ext=$enableval],[enable_vala_ext=no])
+    AS_HELP_STRING([--enable-vala-extensions[=@<:@yes/no@:>@]], [Enable utility GObject based extensions written in Vala [default=auto]]),
+    [enable_vala_ext=$enableval],[enable_vala_ext=auto])
 
 if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes"
 then
-	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
+	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala compiler is not available])
 fi
 
-vala_api="No Vala bindings will be generated"
-if test "x$enable_vala" = "xyes"
-then
-	AM_PROG_VALAC()
-	if test "x$VALA_API_VERSION" = "x"
-	then
-		VAPIGEN_CHECK(,,,no)
-		vala_api="`pkg-config --modversion vapigen` (Default)"
-	else
-		VAPIGEN_CHECK(,$VALA_API_VERSION,,no)
-		vala_api=$VALA_API_VERSION
-	fi
-else
-	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
-fi
 
-if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
-then
-	AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
-	enable_vala_ext=no
-fi
-
-if test "x$enable_vala_ext" = "xyes"
+if test "x$enable_vala_ext" != "xno" -a "x$enable_vala_ext" = "xyes"
 then
   dnl Check for libgee
   GEE_REQUIRED="0.8.0"
@@ -675,6 +668,13 @@ GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
 dnl ******************************
 dnl Vala documentation
 dnl ******************************
+AC_PATH_PROG(VALADOC,[valadoc],[no])
+enable_vala_doc_ext="no"
+if test "x$VALADOC" != "xno"
+then
+    enable_vala_doc_ext="yes"
+fi
+AM_CONDITIONAL(ENABLE_VALA_DOC_EXT, [test "$VALADOC" != "no"])
 enable_vala_doc="no"
 if test "x$enable_gtk_doc" = "xyes"
 then
@@ -1117,11 +1117,12 @@ echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi !=
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Examples: `if test x$enable_examples = xyes; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
-echo "   Building GDA Vala Bindings (--enable-vala): `if test x$vapigen_pkg_found != xyes; then echo no; else echo yes; fi`"
-echo "     Vala API version to use: $vala_api"
-echo "   Building GDA-UI Vala Bindings: `if test x$enable_gdaui_vala != xyes; then echo no; else echo yes; fi`"
+echo "   Building GDA Vala Bindings: `if test x$enable_vala != xyes; then echo no; else echo yes; fi`"
+echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" != "xno" -a "x$enable_vapigen" = "xyes"; then echo yes; else echo no; fi`"
 echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
-echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
+echo "   Building Vala Documentation:"
+echo "      Building GDA Vala Docs: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
+echo "      Building GDA Vala Extensions Docs: `if test x$enable_vala_doc_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
