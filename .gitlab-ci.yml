@@ -40,7 +40,6 @@ autotools_build:
   script:
   - ./autogen.sh
   - make
-  - make install
 
 autotools_check:
   stage: check
