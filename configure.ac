@@ -522,7 +522,7 @@ if test "x$enable_gdaui_gi" != "xno" -a "$enable_gda_gi" = "xyes"
 then
 	enable_gdaui_gi="yes"
 else
-	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
+	enable_gdaui_gi="no"
 fi
 
 if test "x$enable_gdaui_gi" = "xyes" -a "x$have_ui" != "xyes"
@@ -556,36 +556,35 @@ enable_vapigen="no"
 if test "x$VAPIGEN" != "xno"; then
     enable_vapigen="yes"
 fi
-AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$enable_vapigen" = "xyes")
 
-if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
+AC_ARG_ENABLE([gda-vala],
+    AS_HELP_STRING([--enable-gda-vala[=@<:@auto/yes/no@:>@]], [Enable Vala bindings generation [default=auto]]),
+    [enable_vala_bindings=$enableval],[enable_vala_bindings=auto])
+
+if test "x$enable_vapigen" = "xyes" -a "x$enable_vala_bindings" != "xno" -a "x$found_introspection" = "xyes"
 then
-	AC_MSG_ERROR([GDA Vala bindings is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
+	enable_vala_bindings="yes"
 fi
+AM_CONDITIONAL(ENABLE_VALA_BINDINGS, test "x$enable_vala_bindings" = "xyes")
 
+enable_gdaui_vala="auto"
 AC_ARG_ENABLE([gdaui-vala],
-    AS_HELP_STRING([--enable-gdaui-vala[=@<:@yes/no@:>@]], [Enable Vala bindings for GDA-UI [default=auto]]),
+    AS_HELP_STRING([--enable-gdaui-vala[=@<:@auto/yes/no@:>@]], [Enable Vala bindings for GDA-UI [default=auto]]),
     [enable_gdaui_vala=$enableval],[enable_gdaui_vala=auto])
-if test "x$enable_vapigen" != "xyes" -a "x$enable_gdaui_vala" = "xyes"
+if test "x$enable_vapigen" = "xyes" -a "x$enable_gdaui_vala" != "xno" -a "x$enable_vala_bindings" = "xyes"
 then
-	AC_MSG_ERROR([Vala bindings for GDA-UI is requested but GDA Vala bindings is disable. Use --enable-vala])
+	enable_gdaui_vala="yes"
 fi
-AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" != "xno" -a "x$enable_vapigen" = "xyes")
+AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
 
 dnl ******************************
 dnl Check for Vala Classes build
 dnl ******************************
 AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions[=@<:@yes/no@:>@]], [Enable utility GObject based extensions written in Vala [default=auto]]),
+    AS_HELP_STRING([--enable-vala-extensions[=@<:@auto/yes/no@:>@]], [Enable utility GObject based extensions written in Vala [default=auto]]),
     [enable_vala_ext=$enableval],[enable_vala_ext=auto])
 
-if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes"
-then
-	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala compiler is not available])
-fi
-
-
-if test "x$enable_vala_ext" != "xno" -a "x$enable_vala_ext" = "xyes"
+if test "x$enable_vala_ext" != "xno" -a "x$enable_vala_bindings" = "xyes"
 then
   dnl Check for libgee
   GEE_REQUIRED="0.8.0"
@@ -672,7 +671,7 @@ dnl Vala documentation
 dnl ******************************
 AC_PATH_PROG(VALADOC,[valadoc],[no])
 enable_vala_doc_ext="no"
-if test "x$VALADOC" != "xno"
+if test "x$VALADOC" != "xno" -a "x$enable_vala_ext" = "xyes"
 then
     enable_vala_doc_ext="yes"
 fi
@@ -1108,9 +1107,9 @@ echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes;
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
-echo "   Building GDA Vala Bindings: `if test x$enable_vala != xyes; then echo no; else echo yes; fi`"
-echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" != "xno" -a "x$enable_vapigen" = "xyes"; then echo yes; else echo no; fi`"
-echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
+echo "   Building GDA Vala Bindings: `if test x$enable_vala_bindings != xyes; then echo no; else echo yes; fi`"
+echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" = "xyes"; then echo yes; else echo no; fi`"
+echo "   Building Vala Extensions: `if test x$enable_vala_ext = xyes; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation:"
 echo "      Building GDA Vala Docs: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "      Building GDA Vala Extensions Docs: `if test x$enable_vala_doc_ext != xno; then echo yes; else echo no; fi`"

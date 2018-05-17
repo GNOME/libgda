@@ -373,7 +373,7 @@ typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 CLEANFILES += $(typelibs_DATA)
 endif
 
-if ENABLE_VAPIGEN
+if ENABLE_VALA_BINDINGS
 
 vapi: libgda-6.0.vapi
 
