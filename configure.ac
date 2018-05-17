@@ -518,7 +518,7 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi[=@<:@nauto/yes/no@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
 
-if test "x$enable_gdaui_gi" != "xno" -a "$enable_gda_gi" = "xyes"
+if test "x$enable_gdaui_gi" != "xno" -a "x$enable_gda_gi" = "xyes"
 then
 	enable_gdaui_gi="yes"
 else
