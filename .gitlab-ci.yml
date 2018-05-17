@@ -38,7 +38,6 @@ job_normal:
   script:
   - ./autogen.sh
   - make
-  - make install
 
 job_check:
   stage: check
