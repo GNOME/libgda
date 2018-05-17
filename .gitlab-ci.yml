@@ -35,11 +35,12 @@ job_normal:
   script:
   - ./autogen.sh
   - make
+  - make install
 
 job_check:
   stage: check
   script:
-  - ./configure --without-ui
+  - ./autogen.sh --without-ui
   - make
   - make check
   - make install
