@@ -500,7 +500,7 @@ dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
-    [enable_gda_gi=$enableval],[enable_gda_gi=no])
+    [enable_gda_gi=$enableval],[enable_gda_gi=auto])
 
 if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
 then
@@ -515,11 +515,13 @@ fi
 AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
 
 AC_ARG_ENABLE([gdaui-gi],
-    AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
-    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=yes])
+    AS_HELP_STRING([--enable-gdaui-gi[=@<:@nauto/yes/no@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
+    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
 
-if test "x$enable_gda_gi" != "xyes" -a "$enable_gdaui_gi" = "xyes"
+if test "x$enable_gda_gi" != "xno" -a "$enable_gdaui_gi" = "xyes"
 then
+	enable_gdaui_gi="yes"
+else
 	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
 fi
 
