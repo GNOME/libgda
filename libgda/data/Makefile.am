@@ -17,7 +17,7 @@ AM_CFLAGS =\
 
 lib_LTLIBRARIES = libgdadata-6.0.la
 
-VALAFLAGS = \
+AM_VALAFLAGS = \
     --vapidir=$(top_srcdir)/libgda \
     --vapidir=$(VAPIDIR) \
     --includedir=$(top_srcdir)/libgda \
