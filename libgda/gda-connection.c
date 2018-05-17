@@ -1962,7 +1962,7 @@ gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
 }
 
 /**
- * gda_connection_insert_row_into_table: (skip)
+ * gda_connection_insert_row_into_table:
  * @cnc: an opened connection
  * @table: table's name to insert into
  * @error: a place to store errors, or %NULL
@@ -2140,7 +2140,7 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 }
 
 /**
- * gda_connection_update_row_in_table: (skip)
+ * gda_connection_update_row_in_table:
  * @cnc: an opened connection
  * @table: the table's name with the row's values to be updated
  * @condition_column_name: the name of the column to used in the WHERE condition clause
@@ -2639,7 +2639,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 }
 
 /**
- * gda_connection_add_event_string: (skip)
+ * gda_connection_add_event_string:
  * @cnc: a #GdaConnection object.
  * @str: a format string (see the printf(3) documentation).
  * @...: the arguments to insert in the error message.
@@ -3362,7 +3362,7 @@ gda_connection_statement_execute_select (GdaConnection *cnc, GdaStatement *stmt,
 }
 
 /**
- * gda_connection_statement_execute_select_fullv: (skip)
+ * gda_connection_statement_execute_select_fullv:
  * @cnc: a #GdaConnection object.
  * @stmt: a #GdaStatement object.
  * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
@@ -5133,7 +5133,7 @@ prepare_meta_statements_hash (void)
 }
 
 /**
- * gda_connection_get_meta_store_data: (skip)
+ * gda_connection_get_meta_store_data:
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
