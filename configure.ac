@@ -518,7 +518,7 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=yes])
 
-if test "x$enable_gda_gi" != "xyes" -a "$enable_gdaui_gi" = "xyes"
+if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
 then
 	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
 fi
