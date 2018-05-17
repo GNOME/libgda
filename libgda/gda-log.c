@@ -96,7 +96,7 @@ gda_log_is_enabled (void)
 }
 
 /**
- * gda_log_message: (skip)
+ * gda_log_message:
  * @format: format string (see the printf(3) documentation).
  * @...: arguments to insert in the message.
  *
