@@ -87,7 +87,7 @@ gda_ddl_base_init (GdaDdlBase *self)
  * %NULL @catalog also should be %NULL.
  *
  * Since: 6.0
- * */
+ */
 void
 gda_ddl_base_set_names (GdaDdlBase *self,
 			const gchar* catalog,
@@ -169,10 +169,9 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 
 /**
  * gda_ddl_base_get_catalog:
- * @self: GdaDdlBase object
+ * @self: a #GdaDdlBase object
  *
  * Returns current catalog name. The returned string should not be freed.
- * In case of error, the @error is set appropriatly and %NULL is returned.
  *
  * Returns: Current catalog or %NULL
  */
