@@ -55,12 +55,12 @@ GdaDdlColumn*   gda_ddl_column_new                      (void);
 void            gda_ddl_column_free             (GdaDdlColumn *self);
 gboolean        gda_ddl_column_parse_node       (GdaDdlColumn  *self,
                                                  xmlNodePtr     node,
-                                                 GError **error); 
-const gchar*    gda_ddl_column_get_name         (GdaDdlColumn *self); 
+                                                 GError **error);
+const gchar*    gda_ddl_column_get_name         (GdaDdlColumn *self);
 void            gda_ddl_column_set_name         (GdaDdlColumn *self, const gchar *name);
 
 GType           gda_ddl_column_get_gtype        (GdaDdlColumn *self);
-const gchar*    gda_ddl_column_get_ctype        (GdaDdlColumn *self); 
+const gchar*    gda_ddl_column_get_ctype        (GdaDdlColumn *self);
 void            gda_ddl_column_set_type         (GdaDdlColumn *self, GType type);
 
 guint                   gda_ddl_column_get_scale        (GdaDdlColumn *self);
