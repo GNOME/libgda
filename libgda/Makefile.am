@@ -114,7 +114,8 @@ gda_headers = \
 	libgda-global-variables.h \
 	gda-data-pivot.h \
 	gda-ddl-base.h \
-	gda-ddl-fkey.h
+	gda-ddl-fkey.h \
+	gda-ddl-column.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h
@@ -169,7 +170,8 @@ gda_sources= \
 	gda-xa-transaction.c \
 	gda-data-pivot.c \
 	gda-ddl-base.c \
-	gda-ddl-fkey.c
+	gda-ddl-fkey.c \
+	gda-ddl-column.c
 
 libgda_sources =  \
 	csv.h \
