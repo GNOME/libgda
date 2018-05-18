@@ -502,9 +502,11 @@ AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])
 
-if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
+if test "x$enable_introspection" != "xno" -a "x$found_introspection" = "xyes"
 then
-  enable_gda_gi=yes
+        enable_gda_gi="yes"
+else
+        enable_gda_gi="no"
 fi
 
 if test "x$enable_gda_gi" = "xyes" -a "x$found_introspection" != "xyes"
