@@ -24,6 +24,9 @@ variables:
                 libgoocanvas-2.0-dev
                 libhsqldb1.8.0-java
                 yelp-tools
+                iso-codes
+                libgirepository1.0-dev
+                libgee-0.8-dev
 
   GIT_SUBMODULE_STRATEGY: normal
 
@@ -40,7 +43,7 @@ job_normal:
 job_check:
   stage: check
   script:
-  - ./autogen.sh --without-ui
+  - ./autogen.sh --without-ui --enable-gdaui-gi=no
   - make
   - make check
   - make install

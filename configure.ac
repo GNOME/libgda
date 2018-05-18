@@ -502,9 +502,11 @@ AC_ARG_ENABLE([gda-gi],
     AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
     [enable_gda_gi=$enableval],[enable_gda_gi=auto])
 
-if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
+if test "x$enable_introspection" != "xno" -a "x$found_introspection" = "xyes"
 then
-  enable_gda_gi=yes
+        enable_gda_gi="yes"
+else
+        enable_gda_gi="no"
 fi
 
 if test "x$enable_gda_gi" = "xyes" -a "x$found_introspection" != "xyes"
@@ -518,7 +520,7 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi[=@<:@nauto/yes/no@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
 
-if test "x$enable_gdaui_gi" != "xno" -a "$enable_gda_gi" = "xyes"
+if test "x$enable_gdaui_gi" != "xno" -a "x$enable_gda_gi" = "xyes"
 then
 	enable_gdaui_gi="yes"
 else
