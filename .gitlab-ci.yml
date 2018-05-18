@@ -26,6 +26,7 @@ variables:
                 yelp-tools
                 iso-codes
                 libgirepository1.0-dev
+                libgee-0.8-dev
 
   GIT_SUBMODULE_STRATEGY: normal
 
