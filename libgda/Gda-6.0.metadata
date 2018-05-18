@@ -16,3 +16,18 @@ ServerOperation.get_value_at_path name="get_value_at"
 ServerOperation.prepare_create_table_v skip=false
 ServerOperation.op_type_to_string parent="Gda.ServerOperationType" name="to_string"
 ServerOperation.string_to_op_type parent="Gda.ServerOperationType" name="from_string"
+
+// Avoid endless null
+
+SqlBuilder
+	.add_field_id.table_name default=null
+	.select_add_*.alias default=null
+	.select_add_field.table_name default=null
+	.select_order_by.collation_name default=null
+
+Connection
+	.parse_sql_string.params default=null
+	.statement_execute_select.params default=null
+	.statement_execute_non_select.params default=null
+	.statement_execute*.last_insert_row default=null
+	.statement_execute_select_full.col_types default=null
