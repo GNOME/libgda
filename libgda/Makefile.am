@@ -294,7 +294,7 @@ dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers)
 
 xmldir   = $(datadir)/libgda-6.0
-xml_DATA = information_schema.xml
+xml_DATA = $(srcdir)/information_schema.xml
 
 DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
 dtddir=$(LIBGDA_DTDDIR)
