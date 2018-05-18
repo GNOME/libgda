@@ -27,6 +27,8 @@ libgda/gda-data-model-ldap.c
 libgda/gda-data-pivot.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
+libgda/gda-ddl-column.c
+libgda/gda-ddl-fkey.c
 libgda/gda-holder.c
 libgda/gda-init.c
 libgda/gda-log.c
