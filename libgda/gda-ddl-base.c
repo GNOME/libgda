@@ -56,64 +56,11 @@ gda_ddl_base_finalize (GObject *object)
 }
 
 static void
-gda_ddl_base_get_property (GObject    *object,
-                           guint       prop_id,
-                           GValue     *value,
-                           GParamSpec *pspec)
-{
-	GdaDdlBase *self = GDA_DDL_BASE (object);
-	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
-
-	switch (prop_id) {
-		case PROP_CATALOG:
-			g_value_set_string (value,priv->m_catalog);
-			break;
-		case PROP_SCHEMA:
-			g_value_set_string (value,priv->m_schema);
-			break;
-		case PROP_NAME:
-			g_value_set_string (value,priv->m_name);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-	}
-}
-
-static void
-gda_ddl_base_set_property (GObject      *object,
-                           guint         prop_id,
-                           const GValue *value,
-                           GParamSpec   *pspec)
-{
-	GdaDdlBase *self = GDA_DDL_BASE (object);
-	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
-
-	switch (prop_id) {
-		case PROP_CATALOG:
-			g_free (priv->m_catalog);
-			priv->m_catalog = g_value_dup_string (value);
-			break;
-		case PROP_SCHEMA:
-			g_free (priv->m_schema);
-			priv->m_schema = g_value_dup_string (value);
-			break;
-		case PROP_NAME:
-			g_free (priv->m_name);
-			priv->m_name = g_value_dup_string (value);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-	}
-}
-
-static void
 gda_ddl_base_class_init (GdaDdlBaseClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	object_class->finalize = gda_ddl_base_finalize;
-	object_class->get_property = gda_ddl_base_get_property;
-	object_class->set_property = gda_ddl_base_set_property;
 }
 
 static void
