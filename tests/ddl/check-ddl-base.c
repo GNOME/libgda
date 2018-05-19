@@ -69,22 +69,6 @@ test_ddl_base_run1 (BaseFixture *self,
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
-        gda_ddl_base_set_names (self->obj,catalog,schema,name);
-
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
-
-	g_assert_cmpstr (ret_catalog, ==, catalog);
-
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
-
-	g_assert_cmpstr (ret_schema, ==, schema);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
-
-	g_assert_cmpstr (ret_name, ==, name);
-
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
-
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
 
@@ -123,7 +107,6 @@ static void
 test_ddl_base_run3 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-	const gchar *catalog = "First";
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
@@ -151,8 +134,6 @@ static void
 test_ddl_base_run4 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-	const gchar *catalog = "First";
-	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
 	gda_ddl_base_set_names (self->obj,NULL,NULL,name);
@@ -179,7 +160,6 @@ test_ddl_base_run5 (BaseFixture *self,
 		   gconstpointer user_data)
 {
 	const gchar *catalog = "First";
-	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
@@ -239,7 +219,6 @@ main (gint   argc,
 		    test_ddl_base_run4,
 		    test_ddl_base_finish);
 
-	g_test_add ("/test-ddl/base-one",
 	g_test_add ("/test-ddl/base-one",
 		    BaseFixture,
 		    NULL,
