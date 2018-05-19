@@ -127,7 +127,6 @@ test_ddl_base_run3 (BaseFixture *self,
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "Second.Third");
-
 }
 
 static void

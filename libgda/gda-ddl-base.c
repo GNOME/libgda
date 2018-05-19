@@ -87,7 +87,7 @@ gda_ddl_base_init (GdaDdlBase *self)
  * %NULL @catalog also should be %NULL.
  *
  * Since: 6.0
- * */
+ */
 void
 gda_ddl_base_set_names (GdaDdlBase *self,
 			const gchar* catalog,
@@ -97,7 +97,7 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 	g_return_if_fail (self);
 	g_return_if_fail (name);
 
-	GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+        GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
 	g_free (priv->m_name);
 	g_free (priv->m_schema);
@@ -129,7 +129,7 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 	g_string_free (fullnamestr, TRUE);
 }
 
-/**
+ /**
  * gda_ddl_base_get_full_name:
  * @self: an instance of #GdaDdlBase
  *
@@ -168,11 +168,9 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 
 /**
  * gda_ddl_base_get_catalog:
- *
- * @self: GdaDdlBase object
+ * @self: a #GdaDdlBase object
  *
  * Returns current catalog name. The returned string should not be freed.
- * In case of error, the @error is set appropriatly and %NULL is returned.
  *
  * Returns: Current catalog or %NULL
  */
