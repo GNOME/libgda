@@ -70,6 +70,8 @@ static GParamSpec *properties [N_PROPS] = {NULL};
  *
  * Returns: New instance of #GdaDdlColumn
  *
+ * Since: 6.0
+ *
  */
 GdaDdlColumn *
 gda_ddl_column_new (void)
@@ -280,6 +282,7 @@ gda_ddl_column_init (GdaDdlColumn *self)
 /**
  * gda_ddl_column_free:
  * @self: a #GdaDdlColumn object
+ *
  * Convenient function to free the object
  *
  * Since: 6.0
@@ -291,9 +294,9 @@ void gda_ddl_column_free (GdaDdlColumn *self)
 
 /**
  * gda_ddl_column_parse_node:
- * @self: @GdaDdlColumn object to store parsed data
- * @node: instance of @xmlNodePtr to parse
- * @error: @GError to handle an error
+ * @self: #GdaDdlColumn object to store parsed data
+ * @node: instance of #xmlNodePtr to parse
+ * @error: #GError to handle an error
  *
  * Parse #xmlNodePtr wich should point to <column> node
  *
@@ -302,9 +305,9 @@ void gda_ddl_column_free (GdaDdlColumn *self)
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_parse_node (GdaDdlColumn  *self,
-                           xmlNode		*node,
-                           GError      **error)
+gda_ddl_column_parse_node (GdaDdlColumn *self,
+                           xmlNodePtr   node,
+                           GError       **error)
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (node,FALSE);
@@ -345,7 +348,9 @@ gda_ddl_column_parse_node (GdaDdlColumn  *self,
           g_object_set (G_OBJECT(self),"unique",FALSE,NULL);
       }
       else {
-
+          /*
+           * FIXME: this step should never happend
+           */
       }
 
       xmlFree (cprop);
@@ -446,7 +451,7 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
  * gda_ddl_column_get_name:
  * @self: a #GdaDdlColumn object
  *
- * Returns: Column name as a string.
+ * Returns: Column name as a string or %NULL.
  *
  * Since: 6.0
  */
@@ -499,7 +504,7 @@ gda_ddl_column_get_gtype (GdaDdlColumn *self)
  * gda_ddl_column_get_ctype:
  * @self: a #GdaDdlColumn object
  *
- * Returns: column type as a string
+ * Returns: column type as a string or %NULL
  *
  * Since: 6.0
  */
@@ -588,6 +593,7 @@ gda_ddl_column_set_pkey (GdaDdlColumn *self,
 
   priv->m_pkey = pkey;
 }
+
 /**
  * gda_ddl_column_get_nnul:
  * @self: a @GdaDdlColumn object
@@ -601,6 +607,13 @@ gda_ddl_column_get_nnul (GdaDdlColumn *self)
   return priv->m_nnul;
 }
 
+/**
+ * gda_ddl_column_set_nnul:
+ * @self: a GdaDdlColumn object
+ * @nnul: value to set for nnul
+ *
+ * Since: 6.0
+ */
 void
 gda_ddl_column_set_nnul (GdaDdlColumn *self,
                          gboolean nnul)
@@ -609,6 +622,14 @@ gda_ddl_column_set_nnul (GdaDdlColumn *self,
   priv->m_nnul = nnul;
 }
 
+/**
+ * gda_ddl_column_get_autoinc:
+ * @self: a #GdaDdlColumn object
+ *
+ * Get value for autoinc key
+ *
+ * Since: 6.0
+ */
 gboolean
 gda_ddl_column_get_autoinc (GdaDdlColumn *self)
 {
