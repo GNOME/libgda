@@ -71,18 +71,6 @@ test_ddl_base_run1 (BaseFixture *self,
 
         gda_ddl_base_set_names (self->obj,catalog,schema,name);
 
-	const gchar *ret_catalog = gda_ddl_base_get_catalog (self->obj);
-
-	g_assert_cmpstr (ret_catalog, ==, catalog);
-
-	const gchar *ret_schema = gda_ddl_base_get_schema (self->obj);
-
-	g_assert_cmpstr (ret_schema, ==, schema);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
-
-	g_assert_cmpstr (ret_name, ==, name);
-
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
