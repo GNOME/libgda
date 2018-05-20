@@ -117,7 +117,6 @@ static void
 test_ddl_base_run3 (BaseFixture *self,
 		   gconstpointer user_data)
 {
-<<<<<<< HEAD
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
 
@@ -162,10 +161,6 @@ test_ddl_base_run4 (BaseFixture *self,
 	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	g_assert_cmpstr (full_name, ==, "Third");
-
-        g_assert_false (res);
-
-        g_assert_cmpstr (full_name, ==, "Third");
 }
 
 static void
