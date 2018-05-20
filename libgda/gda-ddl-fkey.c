@@ -46,6 +46,13 @@ static const gchar *OnAction[] = {
     "CASCADE"
 };
 
+/**
+ * gda_ddl_fkey_new:
+ *
+ * Create a new #GdaDdlFkey object.
+ *
+ * Since: 6.0
+ */
 GdaDdlFkey *
 gda_ddl_fkey_new (void)
 {
@@ -91,7 +98,8 @@ gda_ddl_fkey_init (GdaDdlFkey *self)
  * gda_ddl_fkey_get_ondelete:
  * @self: An object #GdaDdlFkey
  *
- * Return: ON DELETE action as a string
+ * Return: ON DELETE action as a string or %NULL
+ * if the action hasn't been set
  *
  * Since: 6.0
  */
@@ -107,6 +115,7 @@ gda_ddl_fkey_get_ondelete (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_get_ondelete_id:
+ * @self: a #GdaDdlFkey object
  *
  * Return: ON DELETE action as a #GdaDdlFkeyReferenceAction
  *
@@ -123,10 +132,11 @@ gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
 /**
  * gda_ddl_fkey_set_onupdate:
  * @sefl: An object #GdaDdlFkey
- * @id: Action to set
+ * @id: #GdaDdlFkeyReferenceAction action to set
  *
  * Set action for ON UPDATE
  *
+ * Since: 6.0
  */
 void
 gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
@@ -142,10 +152,11 @@ gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
 /**
  * gda_ddl_fkey_set_ondelete:
  * @sefl: An object #GdaDdlFkey
- * @id: Action to set
+ * @id: #GdaDdlFkeyReferenceAction action to set
  *
  * Set action for ON DELETE
  *
+ * Since: 6.0
  */
 void
 gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
@@ -161,7 +172,7 @@ gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
 /**
  * gda_ddl_fkey_get_onupdate:
  *
- * Return: ON UPDATE action as a string
+ * Return: ON UPDATE action as a string. Never %NULL
  *
  * Since: 6.0
  */
@@ -192,8 +203,10 @@ gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_get_ref_table:
+ * @self: a #GdaDdlFkey object
  *
- * Return: Returns reference table name as a string
+ * Return: Returns reference table name as a string or %NULL if table name
+ * hasn't been set.
  *
  * Since: 6.0
  */
@@ -230,8 +243,10 @@ gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
 
 /**
  * gda_ddl_fkey_get_field_name:
+ * @self: a #GdaDdlFkey object
  *
- * Returns: A list of strings where each string corresponds to a foregin key field.
+ * Returns: A list of strings where each string corresponds
+ * to a foregin key field or %NULL.
  *
  * Since: 6.0
  */
@@ -247,9 +262,10 @@ gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_get_ref_field:
+ * @self: a #GdaDdlFkey object
  *
- * Returns: A list of strings where each string corresponds to a foregin key 
- * reference field.
+ * Returns: A list of strings where each string corresponds to a foregin key
+ * reference field or %NULL.
  *
  * Since: 6.0
  */
@@ -265,7 +281,6 @@ gda_ddl_fkey_get_ref_field (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_parse_node:
- *
  * @self: #GdaDdlFkey object
  * @node: xml node to parse as #xmlNodePtr
  * @error: #GError object to store error
@@ -366,6 +381,7 @@ gda_ddl_fkey_parse_node (GdaDdlFkey	*self,
 
 /**
  * gda_ddl_fkey_free:
+ * @self: a #GdaDdlFkey object
  *
  * Convenient method to free the object. It is a wrap around g_clear_object()
  *
@@ -380,11 +396,11 @@ gda_ddl_fkey_free (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_set_field:
- *
  * @self: An object #GdaDdlFkey
  * @field: Field name as a string
  * @reffield: A reference field name as a string
  *
+ * All arguments should be valid strings.
  * Returns:
  */
 void
