@@ -71,8 +71,6 @@ test_ddl_base_run1 (BaseFixture *self,
 
         gda_ddl_base_set_names (self->obj,catalog,schema,name);
 
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
-
 	g_assert_cmpstr (full_name, ==, "First.Second.Third");
 }
 
@@ -97,12 +95,6 @@ test_ddl_base_run2 (BaseFixture *self,
 	g_assert_cmpstr (ret_schema, ==, schema);
 
 	gda_ddl_base_set_name (self->obj,name);
-
-	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
-
-	g_assert_cmpstr (ret_name, ==, name);
-
-	const gchar *full_name = gda_ddl_base_get_full_name (self->obj);
 
 	const gchar *ret_name = gda_ddl_base_get_name (self->obj);
 
