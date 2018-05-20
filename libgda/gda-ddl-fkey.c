@@ -1,20 +1,20 @@
 /* gda-ddl-fkey.c
-*
-* Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include "gda-ddl-fkey.h"
 #include <glib/gi18n-lib.h>
 #include <glib.h>
@@ -23,63 +23,68 @@ G_DEFINE_QUARK (gda-ddl-fkey-error, gda_ddl_fkey_error)
 
 typedef struct
 {
-	/* /FKEY_S/%d/FKEY_REF_TABLE */
-	gchar *mp_ref_table;
-	/* /FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD */
+  /* /FKEY_S/%d/FKEY_REF_TABLE */
+  gchar *mp_ref_table;
+  /* /FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD */
 
-	GList  *mp_field;
-	/* /FKEY_S/FKEY_FIELDS_A/@FK_REF_PK_FIELD */
-	GList  *mp_ref_field;
-	/* /FKEY_S/FKEY_ONUPDATE This action is reserved for ONUPDATE */
-	GdaDdlFkeyReferenceAction m_onupdate;
-	/* /FKEY_S/FKEY_ONDELETE This action is reserved for ONDELETE */
-	GdaDdlFkeyReferenceAction m_ondelete;
+  GList  *mp_field;
+  /* /FKEY_S/FKEY_FIELDS_A/@FK_REF_PK_FIELD */
+  GList  *mp_ref_field;
+  /* /FKEY_S/FKEY_ONUPDATE This action is reserved for ONUPDATE */
+  GdaDdlFkeyReferenceAction m_onupdate;
+  /* /FKEY_S/FKEY_ONDELETE This action is reserved for ONDELETE */
+  GdaDdlFkeyReferenceAction m_ondelete;
 }GdaDdlFkeyPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlFkey, gda_ddl_fkey, G_TYPE_OBJECT)
 
-static const gchar *OnAction[] = {"NO ACTION", "SET NULL", "RESTRICT",
-	"SET DEFAULT", "CASCADE"};
+static const gchar *OnAction[] = {
+    "NO ACTION",
+    "SET NULL",
+    "RESTRICT",
+    "SET DEFAULT",
+    "CASCADE"
+};
 
 GdaDdlFkey *
 gda_ddl_fkey_new (void)
 {
-    return g_object_new (GDA_TYPE_DDL_FKEY, NULL);
+  return g_object_new (GDA_TYPE_DDL_FKEY, NULL);
 }
 
 static void
 gda_ddl_fkey_finalize (GObject *object)
 {
-    GdaDdlFkey *self = GDA_DDL_FKEY(object);
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkey *self = GDA_DDL_FKEY(object);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    if (priv->mp_field)     g_list_free_full (priv->mp_field,     g_free);
-    if (priv->mp_ref_field) g_list_free_full (priv->mp_ref_field, g_free);
+  if (priv->mp_field)     g_list_free_full (priv->mp_field,     g_free);
+  if (priv->mp_ref_field) g_list_free_full (priv->mp_ref_field, g_free);
 
-    g_free(priv->mp_ref_table);
+  g_free(priv->mp_ref_table);
 
-    G_OBJECT_CLASS (gda_ddl_fkey_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_ddl_fkey_parent_class)->finalize (object);
 }
 
 static void
 gda_ddl_fkey_class_init (GdaDdlFkeyClass *klass)
 {
-    GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-    object_class->finalize = gda_ddl_fkey_finalize;
+  object_class->finalize = gda_ddl_fkey_finalize;
 }
 
 static void
 gda_ddl_fkey_init (GdaDdlFkey *self)
 {
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-	priv->mp_field = NULL;
-	priv->mp_ref_field = NULL;
-	priv->mp_ref_table = NULL;
+  priv->mp_field = NULL;
+  priv->mp_ref_field = NULL;
+  priv->mp_ref_table = NULL;
 
-	priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
-	priv->m_ondelete = GDA_DDL_FKEY_NO_ACTION;
+  priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
+  priv->m_ondelete = GDA_DDL_FKEY_NO_ACTION;
 }
 
 /**
@@ -93,11 +98,11 @@ gda_ddl_fkey_init (GdaDdlFkey *self)
 const gchar *
 gda_ddl_fkey_get_ondelete (GdaDdlFkey *self)
 {
-    g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self,NULL);
 
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return OnAction[priv->m_ondelete];
+  return OnAction[priv->m_ondelete];
 }
 
 /**
@@ -110,9 +115,9 @@ gda_ddl_fkey_get_ondelete (GdaDdlFkey *self)
 GdaDdlFkeyReferenceAction
 gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
 {
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return priv->m_ondelete;
+  return priv->m_ondelete;
 }
 
 /**
@@ -125,13 +130,13 @@ gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
  */
 void
 gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
-			   GdaDdlFkeyReferenceAction id)
+                           GdaDdlFkeyReferenceAction id)
 {
-	g_return_if_fail (self);
+  g_return_if_fail (self);
 
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-	priv->m_onupdate = id;
+  priv->m_onupdate = id;
 }
 
 /**
@@ -144,15 +149,14 @@ gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
  */
 void
 gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
-			   GdaDdlFkeyReferenceAction id)
+                           GdaDdlFkeyReferenceAction id)
 {
-	g_return_if_fail (self);
+  g_return_if_fail (self);
 
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-	priv->m_ondelete = id;
+  priv->m_ondelete = id;
 }
-
 
 /**
  * gda_ddl_fkey_get_onupdate:
@@ -164,11 +168,11 @@ gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
 const gchar *
 gda_ddl_fkey_get_onupdate (GdaDdlFkey *self)
 {
-    g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self,NULL);
 
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return OnAction[priv->m_onupdate];
+  return OnAction[priv->m_onupdate];
 }
 
 /**
@@ -181,11 +185,10 @@ gda_ddl_fkey_get_onupdate (GdaDdlFkey *self)
 GdaDdlFkeyReferenceAction
 gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self)
 {
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return priv->m_onupdate;
+  return priv->m_onupdate;
 }
-
 
 /**
  * gda_ddl_fkey_get_ref_table:
@@ -197,11 +200,11 @@ gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self)
 const gchar *
 gda_ddl_fkey_get_ref_table (GdaDdlFkey *self)
 {
-    g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (self, NULL);
 
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return priv->mp_ref_table;
+  return priv->mp_ref_table;
 }
 
 /**
@@ -215,14 +218,14 @@ gda_ddl_fkey_get_ref_table (GdaDdlFkey *self)
  */
 void
 gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
-			    const gchar *rtable)
+                            const gchar *rtable)
 {
-	g_return_if_fail (self);
+  g_return_if_fail (self);
 
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
-	g_free (priv->mp_ref_table);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  g_free (priv->mp_ref_table);
 
-	priv->mp_ref_table = g_strdup (rtable);
+  priv->mp_ref_table = g_strdup (rtable);
 }
 
 /**
@@ -235,28 +238,29 @@ gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
 const GList *
 gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
 {
-    g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (self, NULL);
 
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return priv->mp_field;
+  return priv->mp_field;
 }
 
 /**
  * gda_ddl_fkey_get_ref_field:
  *
- * Returns: A list of strings where each string corresponds to a foregin key reference field.
+ * Returns: A list of strings where each string corresponds to a foregin key 
+ * reference field.
  *
  * Since: 6.0
  */
 const GList *
 gda_ddl_fkey_get_ref_field (GdaDdlFkey *self)
 {
-    g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self,NULL);
 
-    GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-    return priv->mp_ref_field;
+  return priv->mp_ref_field;
 }
 
 /**
@@ -292,72 +296,72 @@ gda_ddl_fkey_parse_node (GdaDdlFkey	*self,
                          xmlNodePtr	node,
                          GError     **error)
 {
-	g_return_val_if_fail (self, FALSE);
-	g_return_val_if_fail (node, FALSE);
-//    g_return_val_if_fail(!*error, FALSE);
- /*
-	*	<fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
-	*	    <fk_field name="column_name" reffield="column_name"/>
-	*	    <fk_field name="column_id" reffield="column_"/>
-	*	</fkey>
-	* */
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
-	xmlChar *prop = NULL;
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (node, FALSE);
+  //    g_return_val_if_fail(!*error, FALSE);
+  /*
+   *	<fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
+   *	    <fk_field name="column_name" reffield="column_name"/>
+   *	    <fk_field name="column_id" reffield="column_"/>
+   *	</fkey>
+   */
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  xmlChar *prop = NULL;
 
-	prop = xmlGetProp (node,(xmlChar *)"reftable");
+  prop = xmlGetProp (node,(xmlChar *)"reftable");
 
-	g_assert (prop); /* Bug with xml valdation */
+  g_assert (prop); /* Bug with xml valdation */
 
-	priv->mp_ref_table = g_strdup ((gchar *)prop);
-	xmlFree (prop);
-	prop = NULL;
+  priv->mp_ref_table = g_strdup ((gchar *)prop);
+  xmlFree (prop);
+  prop = NULL;
 
-	prop = xmlGetProp (node,(xmlChar *)"onupdate");
+  prop = xmlGetProp (node,(xmlChar *)"onupdate");
 
-	g_assert(prop);
+  g_assert(prop);
 
-	priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
+  priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
 
-	for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
-		if (!g_strcmp0 (prop,OnAction[i]))
-			priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
-	}
+  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
+      if (!g_strcmp0 (prop,OnAction[i]))
+        priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
+  }
 
-	xmlFree (prop);
-	prop = NULL;
+  xmlFree (prop);
+  prop = NULL;
 
-	prop = xmlGetProp (node,(xmlChar *)"ondelete");
+  prop = xmlGetProp (node,(xmlChar *)"ondelete");
 
-	g_assert(prop);
+  g_assert(prop);
 
-	for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
-		if (!g_strcmp0 (prop,OnAction[i]))
-			priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
-	}
+  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
+      if (!g_strcmp0 (prop,OnAction[i]))
+        priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
+  }
 
-	xmlFree (prop);
-	prop = NULL;
+  xmlFree (prop);
+  prop = NULL;
 
-	xmlChar *name = NULL;
-	xmlChar *reffield = NULL;
+  xmlChar *name = NULL;
+  xmlChar *reffield = NULL;
 
-	for (xmlNodePtr it = node->children; it; it = it->next) {
-		if (!g_strcmp0 ((gchar *)it->name, "fk_field")) {
-			name = xmlGetProp (it,(xmlChar *)"name");
+  for (xmlNodePtr it = node->children; it; it = it->next) {
+      if (!g_strcmp0 ((gchar *)it->name, "fk_field")) {
+          name = xmlGetProp (it,(xmlChar *)"name");
 
-			g_assert(name);
-			priv->mp_field = g_list_append (priv->mp_field,
-							g_strdup ((const gchar *)name));
-			xmlFree (name);
+          g_assert(name);
+          priv->mp_field = g_list_append (priv->mp_field,
+                                          g_strdup ((const gchar *)name));
+          xmlFree (name);
 
-			reffield = xmlGetProp (it, (xmlChar *)"reffield");
-			g_assert(reffield);
-			priv->mp_ref_field = g_list_append (priv->mp_ref_field,
-							    g_strdup ((const gchar *)reffield));
-			xmlFree (reffield);
-			} /* end of if */
-									} /* end of for loop */
-	return TRUE;
+          reffield = xmlGetProp (it, (xmlChar *)"reffield");
+          g_assert(reffield);
+          priv->mp_ref_field = g_list_append (priv->mp_ref_field,
+                                              g_strdup ((const gchar *)reffield));
+          xmlFree (reffield);
+      } /* end of if */
+  } /* end of for loop */
+  return TRUE;
 }
 
 /**
@@ -370,7 +374,7 @@ gda_ddl_fkey_parse_node (GdaDdlFkey	*self,
 void
 gda_ddl_fkey_free (GdaDdlFkey *self)
 {
-    g_clear_object (&self);
+  g_clear_object (&self);
 }
 
 
@@ -385,17 +389,17 @@ gda_ddl_fkey_free (GdaDdlFkey *self)
  */
 void
 gda_ddl_fkey_set_field (GdaDdlFkey  *self,
-			const gchar *field,
-			const gchar *reffield)
+                        const gchar *field,
+                        const gchar *reffield)
 {
-	g_return_if_fail (self);
-	g_return_if_fail (field);
-	g_return_if_fail (reffield);
+  g_return_if_fail (self);
+  g_return_if_fail (field);
+  g_return_if_fail (reffield);
 
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-	priv->mp_field = g_list_append (priv->mp_field,(gpointer)field);
-	priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
+  priv->mp_field = g_list_append (priv->mp_field,(gpointer)field);
+  priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
 }
 
 /**
@@ -419,110 +423,113 @@ gda_ddl_fkey_set_field (GdaDdlFkey  *self,
  */
 gboolean
 gda_ddl_fkey_write_xml (GdaDdlFkey  *self,
-			xmlTextWriterPtr writer,
-			GError     **error)
+                        xmlTextWriterPtr writer,
+                        GError     **error)
 {
-	g_return_val_if_fail (self, FALSE);
-	g_return_val_if_fail (writer, FALSE);
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (writer, FALSE);
 
-	GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-	int res = 0;
+  int res = 0;
 
-	res = xmlTextWriterStartElement(writer, BAD_CAST "fkey");
-    	if (res < 0) {
-		g_set_error (error,
-			     GDA_DDL_FKEY_ERROR,
-			     GDA_DDL_FKEY_ERROR_START_ELEMENT,
-			     _("Can't set start element <fkey> in xml tree\n"));
-		return FALSE;
-	}
+  res = xmlTextWriterStartElement(writer, BAD_CAST "fkey");
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_FKEY_ERROR,
+                   GDA_DDL_FKEY_ERROR_START_ELEMENT,
+                   _("Can't set start element <fkey> in xml tree\n"));
+      return FALSE;
+  }
 
-	res = xmlTextWriterWriteAttribute (writer,"reftable",(xmlChar*)priv->mp_ref_table);
+  res = xmlTextWriterWriteAttribute (writer,"reftable",
+                                     (xmlChar*)priv->mp_ref_table);
 
-	if (res < 0) {
-		g_set_error (error,
-			     GDA_DDL_FKEY_ERROR,
-			     GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-			     _("Can't set reftable attribute to element <fkey>\n"));
-		return FALSE;
-	}
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_FKEY_ERROR,
+                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   _("Can't set reftable attribute to element <fkey>\n"));
+      return FALSE;
+  }
 
-	res = xmlTextWriterWriteAttribute (writer,"onupdate",(xmlChar*)OnAction[priv->m_onupdate]);
+  res = xmlTextWriterWriteAttribute (writer,"onupdate",
+                                     (xmlChar*)OnAction[priv->m_onupdate]);
 
-	if (res < 0) {
-		g_set_error (error,
-			     GDA_DDL_FKEY_ERROR,
-			     GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-			     _("Can't set onupdate attribute to element <fkey>\n"));
-		return FALSE;
-	}
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_FKEY_ERROR,
+                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   _("Can't set onupdate attribute to element <fkey>\n"));
+      return FALSE;
+  }
 
-	res = xmlTextWriterWriteAttribute (writer,"ondelete",(xmlChar*)OnAction[priv->m_ondelete]);
+  res = xmlTextWriterWriteAttribute (writer,"ondelete",
+                                     (xmlChar*)OnAction[priv->m_ondelete]);
 
-	if (res < 0) {
-		g_set_error (error,
-			     GDA_DDL_FKEY_ERROR,
-			     GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-			     _("Can't set ondelete attribute to element <fkey>\n"));
-		return FALSE;
-	}
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_FKEY_ERROR,
+                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   _("Can't set ondelete attribute to element <fkey>\n"));
+      return FALSE;
+  }
 
-	GList *it = priv->mp_field;
-	GList *jt = priv->mp_ref_field;
+  GList *it = priv->mp_field;
+  GList *jt = priv->mp_ref_field;
 
-	for (; it && jt; it = it->next, jt=jt->next ) {
-		res = xmlTextWriterStartElement(writer, BAD_CAST "fk_field");
-    		if (res < 0) {
-			g_set_error (error,
-				     GDA_DDL_FKEY_ERROR,
-				     GDA_DDL_FKEY_ERROR_START_ELEMENT,
-				     _("Can't set start element <fk_field> in xml tree\n"));
-			return FALSE;
-		}
+  for (; it && jt; it = it->next, jt=jt->next ) {
+      res = xmlTextWriterStartElement(writer, BAD_CAST "fk_field");
+      if (res < 0) {
+          g_set_error (error,
+                       GDA_DDL_FKEY_ERROR,
+                       GDA_DDL_FKEY_ERROR_START_ELEMENT,
+                       _("Can't set start element <fk_field> in xml tree\n"));
+          return FALSE;
+      }
 
-		res = xmlTextWriterWriteAttribute (writer,"name",(xmlChar*)it->data);
+      res = xmlTextWriterWriteAttribute (writer,"name",(xmlChar*)it->data);
 
-		if (res < 0) {
-			g_set_error (error,
-				     GDA_DDL_FKEY_ERROR,
-				     GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-				     _("Can't set ondelete attribute to element <fk_field>\n"));
-			return FALSE;
-		}
+      if (res < 0) {
+          g_set_error (error,
+                       GDA_DDL_FKEY_ERROR,
+                       GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                       _("Can't set ondelete attribute to element <fk_field>\n"));
+          return FALSE;
+      }
 
-		res = xmlTextWriterWriteAttribute (writer,"reffield",(xmlChar*)jt->data);
+      res = xmlTextWriterWriteAttribute (writer,"reffield",(xmlChar*)jt->data);
 
-		if (res < 0) {
-			g_set_error (error,
-				     GDA_DDL_FKEY_ERROR,
-				     GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-				     _("Can't set ondelete attribute to element <fk_field>\n"));
-			return FALSE;
-		}
+      if (res < 0) {
+          g_set_error (error,
+                       GDA_DDL_FKEY_ERROR,
+                       GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                       _("Can't set ondelete attribute to element <fk_field>\n"));
+          return FALSE;
+      }
 
-		res = xmlTextWriterEndElement (writer);
+      res = xmlTextWriterEndElement (writer);
 
-		if (res < 0) {
-			g_set_error (error,
-				     GDA_DDL_FKEY_ERROR,
-				     GDA_DDL_FKEY_ERROR_END_ELEMENT,
-				     _("Can't close element <fk_field>\n"));
-			return FALSE;
-		}
-	}
+      if (res < 0) {
+          g_set_error (error,
+                       GDA_DDL_FKEY_ERROR,
+                       GDA_DDL_FKEY_ERROR_END_ELEMENT,
+                       _("Can't close element <fk_field>\n"));
+          return FALSE;
+      }
+  }
 
-	res = xmlTextWriterEndElement (writer);
+  res = xmlTextWriterEndElement (writer);
 
-	if (res < 0) {
-		g_set_error (error,
-			     GDA_DDL_FKEY_ERROR,
-			     GDA_DDL_FKEY_ERROR_END_ELEMENT,
-			     _("Can't close element <fkey>\n"));
-		return FALSE;
-	}
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_FKEY_ERROR,
+                   GDA_DDL_FKEY_ERROR_END_ELEMENT,
+                   _("Can't close element <fkey>\n"));
+      return FALSE;
+  }
 
-	return TRUE;
+  return TRUE;
 }
 
 
