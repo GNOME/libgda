@@ -1,4 +1,4 @@
-/* check-ddl-creator.c
+/* check-ddl-fkey.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
