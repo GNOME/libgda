@@ -942,6 +942,15 @@ AC_ARG_ENABLE(default-binary,
 
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
+#
+# Control if Examples should be built.
+#
+AC_ARG_ENABLE([examples],
+	AS_HELP_STRING([--enable-examples], [Enable examples compilation [default=no]]),
+	[enable_examples=$enableval],
+	[enable_examples="no"])
+
+AM_CONDITIONAL(ENABLE_EXAMPLES, [test "$enable_examples" = "yes"])
 # We use -Wno-address because SQLITE3_CALL() has an ifdefed definition that 
 #   makes it hard to always avoid the warning.
 # We use -Wno-unused-variable because the lemon parser generator (in libgda's sources),
@@ -1071,6 +1080,8 @@ doc/mallard/Makefile
 doc/mallard/gda-vala/Makefile
 doc/mallard/gda-vala/C/Makefile
 data/Makefile
+examples/Makefile
+examples/DDL/Makefile
 stamp.h
 ])
 AC_OUTPUT
@@ -1107,6 +1118,7 @@ echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes;
 echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes; then echo yes; else echo no; fi`"
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
+echo "   Building Examples: `if test x$enable_examples = xyes; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings: `if test x$enable_vala_bindings != xyes; then echo no; else echo yes; fi`"
 echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" = "xyes"; then echo yes; else echo no; fi`"
