@@ -28,7 +28,7 @@ G_BEGIN_DECLS
 
 G_DECLARE_DERIVABLE_TYPE (GdaDdlColumn, gda_ddl_column, GDA, DDL_COLUMN, GObject)
 
-     struct _GdaDdlColumnClass
+struct _GdaDdlColumnClass
 {
   GObjectClass parent;
 };
@@ -63,32 +63,41 @@ GType           gda_ddl_column_get_gtype        (GdaDdlColumn *self);
 const gchar*    gda_ddl_column_get_ctype        (GdaDdlColumn *self);
 void            gda_ddl_column_set_type         (GdaDdlColumn *self, GType type);
 
-guint                   gda_ddl_column_get_scale        (GdaDdlColumn *self);
-void                    gda_ddl_column_set_scale        (GdaDdlColumn *self, guint scale);
+guint           gda_ddl_column_get_scale        (GdaDdlColumn *self);
+void            gda_ddl_column_set_scale        (GdaDdlColumn *self,
+                                                 guint scale);
 
-gboolean                gda_ddl_column_get_pkey         (GdaDdlColumn *self);
-void                    gda_ddl_column_set_pkey         (GdaDdlColumn *self, gboolean pkey);
+gboolean        gda_ddl_column_get_pkey         (GdaDdlColumn *self);
+void            gda_ddl_column_set_pkey         (GdaDdlColumn *self,
+                                                 gboolean pkey);
 
-gboolean                gda_ddl_column_get_nnul         (GdaDdlColumn *self);
-void                    gda_ddl_column_set_nnul         (GdaDdlColumn *self, gboolean nnul);
+gboolean        gda_ddl_column_get_nnul         (GdaDdlColumn *self);
+void            gda_ddl_column_set_nnul         (GdaDdlColumn *self,
+                                                 gboolean nnul);
 
-gboolean                gda_ddl_column_get_autoinc      (GdaDdlColumn *self);
-void                    gda_ddl_column_set_autoinc      (GdaDdlColumn *self, gboolean autoinc);
+gboolean        gda_ddl_column_get_autoinc      (GdaDdlColumn *self);
+void            gda_ddl_column_set_autoinc      (GdaDdlColumn *self,
+                                                 gboolean autoinc);
 
-gboolean                gda_ddl_column_get_unique       (GdaDdlColumn *self);
-void                    gda_ddl_column_set_unique       (GdaDdlColumn *self, gboolean unique);
+gboolean        gda_ddl_column_get_unique       (GdaDdlColumn *self);
+void            gda_ddl_column_set_unique       (GdaDdlColumn *self,
+                                                 gboolean unique);
 
 const gchar*    gda_ddl_column_get_comment      (GdaDdlColumn *self);
-void                    gda_ddl_column_set_comment      (GdaDdlColumn *self, const gchar *comnt);
+void            gda_ddl_column_set_comment      (GdaDdlColumn *self,
+                                                 const gchar *comnt);
 
-guint                   gda_ddl_column_get_size         (GdaDdlColumn *self);
-void                    gda_ddl_column_set_size         (GdaDdlColumn *self, guint size);
+guint           gda_ddl_column_get_size         (GdaDdlColumn *self);
+void            gda_ddl_column_set_size         (GdaDdlColumn *self,
+                                                 guint size);
 
 const gchar*    gda_ddl_column_get_default      (GdaDdlColumn *self);
-void                    gda_ddl_column_set_default      (GdaDdlColumn *self, const gchar *value);
+void            gda_ddl_column_set_default      (GdaDdlColumn *self,
+                                                 const gchar *value);
 
 const gchar*    gda_ddl_column_get_check        (GdaDdlColumn *self);
-void                    gda_ddl_column_set_check        (GdaDdlColumn *self, const gchar *value);
+void            gda_ddl_column_set_check        (GdaDdlColumn *self,
+                                                 const gchar *value);
 
 
 G_END_DECLS
