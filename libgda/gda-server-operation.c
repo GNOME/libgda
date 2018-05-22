@@ -1114,7 +1114,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
  * Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be 
  * copied but not modified; it may change or cease to exist if @op changes
  *
- * Returns: (transfer none) (allow-none): a #GdaServerOperationNode structure, or %NULL if the node was not found
+ * Returns: (transfer none) (nullable): a #GdaServerOperationNode structure, or %NULL if the node was not found
  */
 GdaServerOperationNode *
 gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_format, ...)
@@ -1133,6 +1133,9 @@ gda_server_operation_get_node_info (GdaServerOperation *op, const gchar *path_fo
 	va_end (args);
 
 	/* use path */
+  if (priv->info_hash == NULL) {
+    priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+  }
 	info_node = g_hash_table_lookup (priv->info_hash, path);
 	if (info_node) {
 		g_free (path);

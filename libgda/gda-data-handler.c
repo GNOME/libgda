@@ -151,7 +151,7 @@ gda_data_handler_get_str_from_value (GdaDataHandler *dh, const GValue *value)
 /**
  * gda_data_handler_get_value_from_sql:
  * @dh: an object which implements the #GdaDataHandler interface
- * @sql: (allow-none) (transfer none): an SQL string, or %NULL
+ * @sql: (nullable) (transfer none): an SQL string, or %NULL
  * @type: a GType
  *
  * Creates a new GValue which represents the SQL value given as argument. This is
