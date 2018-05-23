@@ -551,7 +551,7 @@ gda_ddl_column_get_scale (GdaDdlColumn *self)
 }
 
 /**
- * gda_ddl_column_set scale:
+ * gda_ddl_column_set_scale:
  * @self: a #GdaDdlColumn
  * @scale: Column order number
  *
