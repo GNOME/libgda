@@ -522,7 +522,6 @@ gda_ddl_fkey_get_ref_field (GdaDdlFkey *self)
   return priv->mp_ref_field;
 }
 
-
 /**
  * gda_ddl_fkey_free:
  * @self: a #GdaDdlFkey object
@@ -561,6 +560,5 @@ gda_ddl_fkey_set_field (GdaDdlFkey  *self,
   priv->mp_field = g_list_append (priv->mp_field,(gpointer)field);
   priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
 }
-
 
 
