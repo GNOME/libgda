@@ -25,6 +25,7 @@
 #include <glib.h>
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "gda-ddl-buildable.h"
 
 G_BEGIN_DECLS
 
@@ -33,21 +34,21 @@ G_BEGIN_DECLS
 G_DECLARE_DERIVABLE_TYPE (GdaDdlFkey, gda_ddl_fkey, GDA, DDL_FKEY, GObject)
 
 struct _GdaDdlFkeyClass {
-	GObjectClass parent_class;
+    GObjectClass parent_class;
 };
 
 typedef enum {
-	GDA_DDL_FKEY_NO_ACTION,
-	GDA_DDL_FKEY_SET_NULL,
-	GDA_DDL_FKEY_RESTRICT,
-	GDA_DDL_FKEY_SET_DEFAULT,
-	GDA_DDL_FKEY_CASCADE
+    GDA_DDL_FKEY_NO_ACTION,
+    GDA_DDL_FKEY_SET_NULL,
+    GDA_DDL_FKEY_RESTRICT,
+    GDA_DDL_FKEY_SET_DEFAULT,
+    GDA_DDL_FKEY_CASCADE
 } GdaDdlFkeyReferenceAction;
 
 typedef enum {
-	GDA_DDL_FKEY_ERROR_START_ELEMENT,
-	GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-	GDA_DDL_FKEY_ERROR_END_ELEMENT
+    GDA_DDL_FKEY_ERROR_START_ELEMENT,
+    GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+    GDA_DDL_FKEY_ERROR_END_ELEMENT
 }GdaDdlFkeyError;
 
 #define GDA_DDL_FKEY_ERROR gda_ddl_fkey_error_quark()
@@ -64,37 +65,43 @@ GQuark gda_ddl_fkey_error_quark (void);
  * foregn keys with a convenient set of methods to manipulate them.
  */
 
-GdaDdlFkey*		gda_ddl_fkey_new 				(void);
+GdaDdlFkey*       gda_ddl_fkey_new             (void);
 
-const GList*	gda_ddl_fkey_get_field_name 	(GdaDdlFkey *self);
-const GList*	gda_ddl_fkey_get_ref_field  	(GdaDdlFkey *self);
+const GList*      gda_ddl_fkey_get_field_name  (GdaDdlFkey *self);
+const GList*      gda_ddl_fkey_get_ref_field   (GdaDdlFkey *self);
 
-void			gda_ddl_fkey_set_field			(GdaDdlFkey  *self,
-												 const gchar *field,
-												 const gchar *reffield);
+void              gda_ddl_fkey_set_field       (GdaDdlFkey  *self,
+                                                const gchar *field,
+                                                const gchar *reffield);
 
-const gchar*	gda_ddl_fkey_get_ref_table  	(GdaDdlFkey *self);
-void			gda_ddl_fkey_set_ref_table		(GdaDdlFkey  *self,
-												 const gchar *rtable);
+const gchar*      gda_ddl_fkey_get_ref_table   (GdaDdlFkey *self);
+void              gda_ddl_fkey_set_ref_table   (GdaDdlFkey  *self,
+                                                const gchar *rtable);
 
-const gchar*	gda_ddl_fkey_get_ondelete   	(GdaDdlFkey *self);
-GdaDdlFkeyReferenceAction gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self);
-void			gda_ddl_fkey_set_ondelete		(GdaDdlFkey *self,
-												 GdaDdlFkeyReferenceAction id);
+const gchar*      gda_ddl_fkey_get_ondelete    (GdaDdlFkey *self);
 
-const gchar*	gda_ddl_fkey_get_onupdate   	(GdaDdlFkey *self);
-GdaDdlFkeyReferenceAction gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self);
-void			gda_ddl_fkey_set_onupdate		(GdaDdlFkey *self,
-												 GdaDdlFkeyReferenceAction id);
-gboolean		gda_ddl_fkey_parse_node     	(GdaDdlFkey  *self,
-												 xmlNodePtr node,
-												 GError **error);
+GdaDdlFkeyReferenceAction
+                  gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self);
 
-gboolean		gda_ddl_fkey_write_xml			(GdaDdlFkey  *self,
-												 xmlTextWriterPtr writer,
-												 GError     **error);
+void              gda_ddl_fkey_set_ondelete    (GdaDdlFkey *self,
+                                                GdaDdlFkeyReferenceAction id);
 
-void			gda_ddl_fkey_free         		(GdaDdlFkey *self);
+const gchar*      gda_ddl_fkey_get_onupdate    (GdaDdlFkey *self);
+
+GdaDdlFkeyReferenceAction
+                  gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self);
+
+void              gda_ddl_fkey_set_onupdate    (GdaDdlFkey *self,
+                                                GdaDdlFkeyReferenceAction id);
+/*gboolean          gda_ddl_fkey_parse_node      (GdaDdlFkey  *self,
+                                                xmlNodePtr node,
+                                                GError **error);*/
+
+/*gboolean          gda_ddl_fkey_write_xml       (GdaDdlFkey  *self,
+                                                xmlTextWriterPtr writer,
+                                                GError     **error);*/
+
+void              gda_ddl_fkey_free            (GdaDdlFkey *self);
 
 G_END_DECLS
 
