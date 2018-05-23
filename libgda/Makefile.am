@@ -116,7 +116,8 @@ gda_headers = \
 	gda-ddl-base.h \
 	gda-ddl-fkey.h \
 	gda-ddl-column.h \
-	gda-ddl-table.h
+	gda-ddl-table.h \
+	gda-ddl-buildable.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h
@@ -173,7 +174,8 @@ gda_sources= \
 	gda-ddl-base.c \
 	gda-ddl-fkey.c \
 	gda-ddl-column.c \
-	gda-ddl-table.c
+	gda-ddl-table.c \
+	gda-ddl-buildable.c
 
 libgda_sources =  \
 	csv.h \

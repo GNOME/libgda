@@ -231,6 +231,8 @@ gda_ddl_table_is_valid (GdaDdlTable *self)
  * */
   if (!self || !priv->mp_columns)
     return FALSE;
+  else
+    return TRUE;
 }
 
 /**
@@ -282,7 +284,7 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
  * Returns: %TRUE if no error, %FALSE otherwise
  *
  * Since: 6.0
- * */
+ */
 gboolean
 gda_ddl_table_parse_node (GdaDdlTable  *self,
                           xmlNodePtr	node,
@@ -327,7 +329,7 @@ gda_ddl_table_parse_node (GdaDdlTable  *self,
           GdaDdlFkey *fkey;
           fkey = gda_ddl_fkey_new ();
 
-          if (!gda_ddl_fkey_parse_node (fkey, it, error)) {
+          if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(fkey), it, error)) {
               gda_ddl_fkey_free (fkey);
               return FALSE;
           } else
