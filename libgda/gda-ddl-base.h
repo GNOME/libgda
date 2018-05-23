@@ -51,7 +51,7 @@ void			gda_ddl_base_set_catalog	(GdaDdlBase  *self,
 
 const gchar*	gda_ddl_base_get_schema		(GdaDdlBase *self);
 void			gda_ddl_base_set_schema		(GdaDdlBase  *self,
-											 const gchar *name);
+											 const gchar *schema);
 
 void			gda_ddl_base_free			(GdaDdlBase *self);
 G_END_DECLS
