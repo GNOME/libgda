@@ -374,7 +374,7 @@ gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_set_onupdate:
- * @sefl: An object #GdaDdlFkey
+ * @self: An object #GdaDdlFkey
  * @id: #GdaDdlFkeyReferenceAction action to set
  *
  * Set action for ON UPDATE
@@ -394,7 +394,7 @@ gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
 
 /**
  * gda_ddl_fkey_set_ondelete:
- * @sefl: An object #GdaDdlFkey
+ * @self: An object #GdaDdlFkey
  * @id: #GdaDdlFkeyReferenceAction action to set
  *
  * Set action for ON DELETE
@@ -488,12 +488,12 @@ gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
  * gda_ddl_fkey_get_field_name:
  * @self: a #GdaDdlFkey object
  *
- * Returns: A list of strings where each string corresponds
- * to a foregin key field or %NULL.
+ * Returns: (transfer none): A const #GList of strings where each string
+ * corresponds to a foregin key field or %NULL.
  *
  * Since: 6.0
  */
-const GList *
+const GList*
 gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -507,8 +507,8 @@ gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
  * gda_ddl_fkey_get_ref_field:
  * @self: a #GdaDdlFkey object
  *
- * Returns: A list of strings where each string corresponds to a foregin key
- * reference field or %NULL.
+ * Returns: (transfer none): A #GList of strings where each string corresponds
+ * to a foregin key reference field or %NULL.
  *
  * Since: 6.0
  */
@@ -544,7 +544,8 @@ gda_ddl_fkey_free (GdaDdlFkey *self)
  * @reffield: A reference field name as a string
  *
  * All arguments should be valid strings.
- * Returns:
+ *
+ * Since: 6.0
  */
 void
 gda_ddl_fkey_set_field (GdaDdlFkey  *self,
