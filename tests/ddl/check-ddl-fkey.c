@@ -87,16 +87,19 @@ test_ddl_fkey_run2 (CheckDdlObject *self,
 static void
 test_ddl_fkey_run1 (void)
 {
+  g_print ("Run 1 start\n");
   GdaDdlFkey *self = gda_ddl_fkey_new ();
 
   gda_ddl_fkey_free (self);
+  g_print ("Run 1 end\n");
 }
 
 static void
 test_ddl_fkey_run3 (CheckDdlObject *self,
                     gconstpointer user_data)
 {
-  int res = gda_ddl_fkey_write_xml (self->fkey,self->writer,NULL);
+  int res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->fkey),
+                                         self->writer,NULL);
 
   g_assert_true (res >= 0);
 
@@ -154,10 +157,10 @@ test_ddl_fkey_start (CheckDdlObject *self,
   self->fkey = gda_ddl_fkey_new ();
 
   g_assert_nonnull(self->fkey);
-
-  gboolean res = gda_ddl_fkey_parse_node (self->fkey,
-                                          node,
-                                          NULL);
+  g_print("Before parse node\n");
+  gboolean res = gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE(self->fkey),
+                                              node,NULL);
+  g_print("After parse node\n");
   g_assert_true (res);
 
   self->buffer = xmlBufferCreate ();
