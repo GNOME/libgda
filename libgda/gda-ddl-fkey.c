@@ -42,6 +42,7 @@ typedef struct
 static void gda_ddl_fkey_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDdlFkey, gda_ddl_fkey, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDdlFkey)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
                                                 gda_ddl_fkey_buildable_interface_init))
 
@@ -330,6 +331,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   return TRUE;
 }
+
 static void
 gda_ddl_fkey_buildable_interface_init (GdaDdlBuildableInterface *iface)
 {
