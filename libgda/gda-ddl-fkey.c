@@ -161,7 +161,7 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
   priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
 
   for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
-      if (!g_strcmp0 (prop,OnAction[i]))
+      if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
         priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
   }
 
@@ -173,7 +173,7 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
   g_assert(prop);
 
   for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
-      if (!g_strcmp0 (prop,OnAction[i]))
+      if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
         priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
   }
 
@@ -242,7 +242,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
       return FALSE;
   }
 
-  res = xmlTextWriterWriteAttribute (writer,"reftable",
+  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"reftable",
                                      (xmlChar*)priv->mp_ref_table);
 
   if (res < 0) {
@@ -253,7 +253,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
       return FALSE;
   }
 
-  res = xmlTextWriterWriteAttribute (writer,"onupdate",
+  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"onupdate",
                                      (xmlChar*)OnAction[priv->m_onupdate]);
 
   if (res < 0) {
@@ -264,7 +264,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
       return FALSE;
   }
 
-  res = xmlTextWriterWriteAttribute (writer,"ondelete",
+  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"ondelete",
                                      (xmlChar*)OnAction[priv->m_ondelete]);
 
   if (res < 0) {
@@ -288,7 +288,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
           return FALSE;
       }
 
-      res = xmlTextWriterWriteAttribute (writer,"name",(xmlChar*)it->data);
+      res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"name",
+                                         (xmlChar*)it->data);
 
       if (res < 0) {
           g_set_error (error,
@@ -298,7 +299,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
           return FALSE;
       }
 
-      res = xmlTextWriterWriteAttribute (writer,"reffield",(xmlChar*)jt->data);
+      res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"reffield",
+                                         (xmlChar*)jt->data);
 
       if (res < 0) {
           g_set_error (error,
