@@ -237,9 +237,8 @@ test_ddl_column_startup (CheckDdlObject *self,
   self->column = gda_ddl_column_new ();
   g_assert_nonnull(self->column);
 
-  gboolean res = gda_ddl_column_parse_node (self->column,
-                                            node,
-                                            NULL);
+  gboolean res = gda_ddl_buildable_parse_node (self->column,
+                                               node,NULL);
   g_assert_true (res);
 }
 
