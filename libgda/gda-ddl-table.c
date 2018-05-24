@@ -320,7 +320,8 @@ gda_ddl_table_parse_node (GdaDdlTable  *self,
           GdaDdlColumn *column;
           column = gda_ddl_column_new ();
 
-          if (!gda_ddl_column_parse_node (column, it, error)) {
+          if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
+                                            it, error)) {
               gda_ddl_column_free (column);
               return FALSE;
           } else
