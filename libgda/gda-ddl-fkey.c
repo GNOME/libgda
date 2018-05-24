@@ -295,7 +295,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
           g_set_error (error,
                        GDA_DDL_FKEY_ERROR,
                        GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-                       _("Can't set ondelete attribute to element <fk_field>\n"));
+                       _("Can't set attribute name to element <fk_field>\n"));
           return FALSE;
       }
 
@@ -306,7 +306,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
           g_set_error (error,
                        GDA_DDL_FKEY_ERROR,
                        GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-                       _("Can't set ondelete attribute to element <fk_field>\n"));
+                       _("Can't set reffield attribute to element <fk_field>\n"));
           return FALSE;
       }
 
