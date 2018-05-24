@@ -21,6 +21,7 @@
 #include "gda-ddl-column.h"
 #include <glib/gi18n-lib.h>
 #include "gda-util.h"
+#include "gda-ddl-buildable.h"
 
 G_DEFINE_QUARK (gda-ddl-column-error, gda_ddl_column_error)
 
@@ -43,8 +44,13 @@ typedef struct
   gboolean m_pkey; /* property */
 }GdaDdlColumnPrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlColumn, gda_ddl_column, G_TYPE_OBJECT)
+static void
+gda_ddl_column_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
+G_DEFINE_TYPE_WITH_CODE (GdaDdlColumn, gda_ddl_column, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDdlColumn)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
+                                                gda_ddl_column_buildable_interface_init))
 enum {
     PROP_0,
     PROP_COLUMN_NAME,
@@ -306,13 +312,15 @@ void gda_ddl_column_free (GdaDdlColumn *self)
  *
  * Since: 6.0
  */
-gboolean
-gda_ddl_column_parse_node (GdaDdlColumn *self,
+static gboolean
+gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
                            xmlNodePtr   node,
                            GError       **error)
 {
-  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node,FALSE);
+
+  GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
 
   xmlChar *name = xmlGetProp (node,(xmlChar *)"name");
   g_assert (name); /* If here bug with xml validation */
@@ -425,6 +433,26 @@ gda_ddl_column_parse_node (GdaDdlColumn *self,
   } /* End of for loop */
   return TRUE;
 } /* End of gda_ddl_column_parse_node */
+
+static gboolean
+gda_ddl_column_write_node (GdaDdlBuildable *buildable,
+                           xmlTextWriterPtr node,
+                           GError       **error)
+{
+  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (node,FALSE);
+
+  GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
+/* TODO: Implement */
+  return TRUE;
+}
+
+static void
+gda_ddl_column_buildable_interface_init (GdaDdlBuildableInterface *iface)
+{
+    iface->parse_node = gda_ddl_column_parse_node;
+    iface->write_node = gda_ddl_column_write_node;
+}
 
 static void
 _gda_ddl_column_set_type (GdaDdlColumn *self,
