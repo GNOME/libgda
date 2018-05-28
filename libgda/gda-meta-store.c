@@ -3100,7 +3100,7 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 			GdaHolder *h;
 			h = gda_set_get_holder (params, pname);
 			if (!h)
-				g_warning (_("Parameter '%s' is not present in statement"), pname);
+				g_message (_("Parameter '%s' is not present in statement"), pname);
 			else {
 				if (!gda_holder_set_value (h, value, error)) {
 					g_object_unref (stmt);
@@ -3114,7 +3114,7 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 
 		for (list = params->holders; list; list = list->next) {
 			if (!g_slist_find (params_set, list->data))
-				g_warning (_("No value set for parameter '%s'"),
+				g_message (_("No value set for parameter '%s'"),
 					   gda_holder_get_id (GDA_HOLDER (list->data)));
 		}
 		g_slist_free (params_set);
