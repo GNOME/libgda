@@ -51,10 +51,6 @@ gboolean        gda_ddl_table_is_temp           (GdaDdlTable *self);
 void            gda_ddl_table_set_temp          (GdaDdlTable *self,
                                                  gboolean status);
 
-gboolean        gda_ddl_table_parse_node        (GdaDdlTable  *self,
-                                                 xmlNodePtr node,
-                                                 GError **error);
-
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DDL-TABLE_H */
