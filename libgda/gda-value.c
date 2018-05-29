@@ -1774,30 +1774,6 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 }
 
 
-/**
- * GdaTimestamp:
- * @year: year representation of the time stamp
- * @month: month representation of the time stamp, as a number between 1 and 12
- * @day: day representation of the time stamp, as a number between 1 and 31
- * @hour: hour representation of the time stamp, as a number between 0 and 23
- * @minute: minute representation of the time stamp, as a number between 0 and 59
- * @second: second representation of the time stamp, as a number between 0 and 59
- * @fraction: fractionnal part of the seconds, in millionth' of second
- * @timezone: number of seconds added to the GMT timezone
- *
- * Represents an instant (a time stamp)
- */
-struct _GdaTimestamp {
-	gshort  year;
-	gushort month;
-	gushort day;
-	gushort hour;
-	gushort minute;
-	gushort second;
-	gulong  fraction;
-	glong   timezone;
-};
-
 /*
  * Register the GdaTimestamp type in the GType system
  */
