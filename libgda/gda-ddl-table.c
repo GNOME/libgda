@@ -32,10 +32,14 @@ typedef struct
   gchar *mp_name;
   GList *mp_columns; /* Type GdaDdlColumn*/
   GList *mp_fkeys; /* List of all fkeys, GdaDdlFkey */
-
 } GdaDdlTablePrivate;
 
-G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlTable, gda_ddl_table, GDA_TYPE_DDL_BASE)
+static void gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GdaDdlTable, gda_ddl_table, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDdlTable)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
+                                                gda_ddl_table_buildable_interface_init))
 
 enum {
     PROP_0,
@@ -145,6 +149,90 @@ gda_ddl_table_init (GdaDdlTable *self)
   priv->m_istemp = FALSE;
   priv->mp_comment = NULL;
   priv->mp_fkeys = NULL;
+}
+
+/**
+ * gda_ddl_table_parse_node:
+ * @self: a #GdaDdlTable object
+ * @node: instance of #xmlNodePtr to parse
+ * @error: #GError to handle an error
+ *
+ * Parse #xmlNodePtr wich should point to the <table> node
+ *
+ * Returns: %TRUE if no error, %FALSE otherwise
+ *
+ * Since: 6.0
+ */
+static gboolean
+gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
+                          xmlNodePtr	node,
+                          GError      **error)
+{
+  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (node, FALSE);
+  g_return_val_if_fail (error != NULL && *error == NULL,FALSE);
+
+  GdaDdlTable *self = GDA_DDL_TABLE (buildable);
+
+  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+
+  xmlChar *name = NULL;
+  name = xmlGetProp (node,(xmlChar *)"name");
+  g_assert (name); /* If here bug with xml validation */
+  g_object_set (GDA_DDL_BASE(priv->mp_name),"name",(char*)name,NULL);
+
+  xmlChar *tempt = xmlGetProp (node,(xmlChar*)"temptable");
+
+  if (tempt && (*tempt == 't' || *tempt == 't')) {
+      g_object_set (G_OBJECT(self),"istemp",TRUE,NULL);
+      xmlFree (tempt);
+  }
+
+  for (xmlNodePtr it = node->children; it ; it = it->next) {
+      if (!g_strcmp0 ((gchar *) it->name, "comment")) {
+          xmlChar *comment = xmlNodeGetContent (it);
+
+          if (comment) {
+              g_object_set (G_OBJECT(self),"comment", (char *)comment,NULL);
+              xmlFree (comment);
+          }
+      } else if (!g_strcmp0 ((gchar *) it->name, "column")) {
+          GdaDdlColumn *column;
+          column = gda_ddl_column_new ();
+
+          if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
+                                            it, error)) {
+              gda_ddl_column_free (column);
+              return FALSE;
+          } else
+            priv->mp_columns = g_list_append (priv->mp_columns,column);
+      } else if (!g_strcmp0 ((gchar *) it->name, "fkey")) {
+          GdaDdlFkey *fkey;
+          fkey = gda_ddl_fkey_new ();
+
+          if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(fkey), it, error)) {
+              gda_ddl_fkey_free (fkey);
+              return FALSE;
+          } else
+            priv->mp_fkeys = g_list_append (priv->mp_fkeys,fkey);
+      } /* end of else if */
+  } /* End of for loop */
+  return TRUE;
+} /* End of gda_ddl_column_parse_node */
+
+static gboolean
+gda_ddl_table_write_node (GdaDdlBuildable *buildable,
+                          xmlTextWriterPtr  writer,
+                          GError          **error)
+{
+  return TRUE;
+}
+
+static void
+gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface)
+{
+  iface->parse_node = gda_ddl_table_parse_node;
+  iface->write_node = gda_ddl_table_write_node;
 }
 
 /**
@@ -273,72 +361,6 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
   return priv->mp_fkeys;
 }
 
-/**
- * gda_ddl_table_parse_node:
- * @self: a #GdaDdlTable object
- * @node: instance of #xmlNodePtr to parse
- * @error: #GError to handle an error
- *
- * Parse #xmlNodePtr wich should point to the <table> node
- *
- * Returns: %TRUE if no error, %FALSE otherwise
- *
- * Since: 6.0
- */
-gboolean
-gda_ddl_table_parse_node (GdaDdlTable  *self,
-                          xmlNodePtr	node,
-                          GError      **error)
-{
-  g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (node,FALSE);
-  g_return_val_if_fail (error != NULL && *error == NULL,FALSE);
-
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
-
-  xmlChar *name = NULL;
-  name = xmlGetProp (node,(xmlChar *)"name");
-  g_assert (name); /* If here bug with xml validation */
-  g_object_set (GDA_DDL_BASE(priv->mp_name),"name",(char*)name,NULL);
-
-  xmlChar *tempt = xmlGetProp (node,(xmlChar*)"temptable");
-
-  if (tempt && (*tempt == 't' || *tempt == 't')) {
-      g_object_set (G_OBJECT(self),"istemp",TRUE,NULL);
-      xmlFree (tempt);
-  }
-
-  for (xmlNodePtr it = node->children; it ; it = it->next) {
-      if (!g_strcmp0 ((gchar *) it->name, "comment")) {
-          xmlChar *comment = xmlNodeGetContent (it);
-
-          if (comment) {
-              g_object_set (G_OBJECT(self),"comment", (char *)comment,NULL);
-              xmlFree (comment);
-          }
-      } else if (!g_strcmp0 ((gchar *) it->name, "column")) {
-          GdaDdlColumn *column;
-          column = gda_ddl_column_new ();
-
-          if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
-                                            it, error)) {
-              gda_ddl_column_free (column);
-              return FALSE;
-          } else
-            priv->mp_columns = g_list_append (priv->mp_columns,column);
-      } else if (!g_strcmp0 ((gchar *) it->name, "fkey")) {
-          GdaDdlFkey *fkey;
-          fkey = gda_ddl_fkey_new ();
-
-          if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(fkey), it, error)) {
-              gda_ddl_fkey_free (fkey);
-              return FALSE;
-          } else
-            priv->mp_fkeys = g_list_append (priv->mp_fkeys,fkey);
-      } /* end of else if */
-  } /* End of for loop */
-  return TRUE;
-} /* End of gda_ddl_column_parse_node */
 
 /**
  * gda_ddl_table_free:
