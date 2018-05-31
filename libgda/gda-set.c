@@ -1266,8 +1266,8 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 		gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
 	else if (g_type_is_a (type, G_TYPE_DATE))
 		g_value_set_boxed (value, va_arg (ap, GDate *));
-	else if (g_type_is_a (type, GDA_TYPE_TIMESTAMP))
-		gda_value_set_timestamp (value, va_arg (ap, GdaTimestamp*));
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
+		g_value_set_boxed (value, va_arg (ap, GdaTimestamp*));
 	else if (g_type_is_a (type, GDA_TYPE_TIME))
 		gda_value_set_time (value, va_arg (ap, GdaTime*));
 	else if (g_type_is_a (type, G_TYPE_LONG))

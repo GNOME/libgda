@@ -790,7 +790,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 
 		if (!dh) {
-			if (G_VALUE_TYPE (value) == GDA_TYPE_DEFAULT)
+			if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_DEFAULT))
 				return g_strdup ("DEFAULT");
 			else {
 				g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
@@ -800,7 +800,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			}
 		}
 		if (context->flags & GDA_STATEMENT_SQL_TIMEZONE_TO_GMT) {
-			if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
+			if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_TIME)) {
 				GdaTime *nts;
 				nts = (GdaTime*) gda_value_get_time (value);
 				if (nts && (gda_time_get_timezone (nts) != GDA_TIMEZONE_INVALID)) {
@@ -817,21 +817,20 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 					return tmp;
 				}
 			}
-			else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
+			else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
 				GdaTimestamp *nts;
-				nts = (GdaTimestamp*) gda_value_get_timestamp (value);
-				if (nts && (gda_timestamp_get_timezone (nts) != GDA_TIMEZONE_INVALID)) {
-					nts = gda_timestamp_copy (nts);
-					gda_timestamp_change_timezone (nts, 0);
-					gda_timestamp_set_timezone (nts, GDA_TIMEZONE_INVALID);
-					GValue v = {0};
-					g_value_init (&v, GDA_TYPE_TIMESTAMP);
-					gda_value_set_timestamp (&v, nts);
-					gda_timestamp_free (nts);
-					gchar *tmp;
-					tmp = gda_data_handler_get_sql_from_value (dh, &v);
-					g_value_reset (&v);
-					return tmp;
+				nts = (GdaTimestamp*) g_value_get_boxed (value);
+				if (nts != NULL) {
+					nts = (GdaTimestamp*) g_date_time_to_utc ((GDateTime*) nts);
+          if (nts != NULL) {
+					  GValue v = {0};
+					  g_value_init (&v, G_TYPE_DATE_TIME);
+					  g_value_set_boxed (&v, nts);
+					  gchar *tmp;
+					  tmp = gda_data_handler_get_sql_from_value (dh, &v);
+					  g_value_reset (&v);
+					  return tmp;
+          }
 				}
 			}
 		}

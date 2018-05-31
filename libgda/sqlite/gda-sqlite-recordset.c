@@ -557,24 +557,22 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					gda_time_free (timegda);
 				}
-				else if (type == GDA_TYPE_TIMESTAMP) {
-					GdaTimestamp* timestamp = gda_timestamp_new ();
-					if (!gda_parse_iso8601_timestamp (timestamp,
+				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+					GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (
 									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
-													 real_col))) {
+										real_col));
+					if (timestamp == NULL) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
-							     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"), 
+							     _("Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"),
 							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						if (gda_timestamp_get_timezone (timestamp) == GDA_TIMEZONE_INVALID)
-							gda_timestamp_set_timezone (timestamp, 0); /* set to GMT */
-						gda_value_set_timestamp (value, timestamp);
+						g_value_set_boxed (value, timestamp);
+					  gda_timestamp_free (timestamp);
 					}
-					gda_timestamp_free (timestamp);
 				}
 				else if (type == G_TYPE_CHAR) {
 					gint64 i;

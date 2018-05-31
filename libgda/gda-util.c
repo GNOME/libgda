@@ -90,7 +90,7 @@ gda_g_type_to_string (GType type)
 		return "date";			
 	else if (type == GDA_TYPE_TIME)
 		return "time";
-	else if (type == GDA_TYPE_TIMESTAMP)
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
 		return "timestamp";
 	else if (type == G_TYPE_BOOLEAN)
 		return "boolean";
@@ -122,7 +122,7 @@ gda_g_type_to_string (GType type)
  *   <listitem><para>"string" for G_TYPE_STRING</para></listitem>
  *   <listitem><para>"date" for G_TYPE_DATE</para></listitem>
  *   <listitem><para>"time" for GDA_TYPE_TIME</para></listitem>
- *   <listitem><para>"timestamp" for GDA_TYPE_TIMESTAMP</para></listitem>
+ *   <listitem><para>"timestamp" for G_TYPE_DATE_TIME</para></listitem>
  *   <listitem><para>"boolean" for G_TYPE_BOOLEAN</para></listitem>
  *   <listitem><para>"blob" for GDA_TYPE_BLOB</para></listitem>
  *   <listitem><para>"binary" for GDA_TYPE_BINARY</para></listitem>
@@ -150,7 +150,7 @@ gda_g_type_from_string (const gchar *str)
 		else if (!g_ascii_strcasecmp (str, "time"))
 			type = GDA_TYPE_TIME;
 		else if (!g_ascii_strcasecmp (str, "timestamp"))
-			type = GDA_TYPE_TIMESTAMP;
+			type = G_TYPE_DATE_TIME;
 		else if (!strcmp (str, "boolean"))
                         type = G_TYPE_BOOLEAN;
 		else if (!strcmp (str, "blob"))
@@ -3369,24 +3369,22 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
 
 /**
  * gda_parse_iso8601_timestamp:
- * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
  * @value: a string
  *
  * Extracts date and time parts from @value, and sets @timestamp's contents
  *
- * Accepted date format is "YYYY-MM-DD HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
+ * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: %TRUE if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
+ * Returns: a new #GdaTimestamp if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
  */
-gboolean
-gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
+GdaTimestamp*
+gda_parse_iso8601_timestamp (const gchar *value)
 {
-	return gda_parse_formatted_timestamp (timestamp, value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
+	return gda_parse_formatted_timestamp (value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
 }
 
 /**
  * gda_parse_formatted_timestamp:
- * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
  * @value: a string to be parsed
  * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
  * @second: a #GDateDMY specifying which of year, month or day appears second (in the first bytes) in @value
@@ -3396,39 +3394,34 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
  * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
- * Returns: %TRUE if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ * Returns: (nullable): a new #GdaTimestamp if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
  * 
  * Since: 5.2
  */
-gboolean
-gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
+GdaTimestamp*
+gda_parse_formatted_timestamp (const gchar *value,
 			       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
 {
-	g_return_val_if_fail (timestamp, FALSE);
+	g_return_val_if_fail (value != NULL, NULL);
 
-	gboolean retval = TRUE;
 	const char *endptr;
 	GDate gdate;
 	GdaTime* timegda = gda_time_new ();
 
 	if (!value)
-		return FALSE;
+		return NULL;
 
 	/* date part */
 	if (! _parse_formatted_date (&gdate, value, first, second, third, sep, &endptr)) {
-		retval = FALSE;
+		return NULL;
 		goto out;
 	}
-	gda_timestamp_set_year (timestamp, g_date_get_year (&gdate));
-	gda_timestamp_set_month (timestamp, g_date_get_month (&gdate));
-	gda_timestamp_set_day (timestamp, g_date_get_day (&gdate));
-
 	/* separator */
 	if (!*endptr)
 		goto out;
 
-	if (*endptr != ' ') {
-		retval = FALSE;
+	if (*endptr != 'T' && *endptr != ' ') {
+		return NULL;
 		goto out;
 	}
 	value = endptr + 1;
@@ -3436,15 +3429,16 @@ gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
 		goto out;
 
 	/* time part */
-	if (! _parse_iso8601_time (timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) ||
-	    *endptr) 
-		retval = FALSE;
- out:
-	gda_timestamp_set_hour (timestamp, gda_time_get_hour (timegda));
-	gda_timestamp_set_minute (timestamp, gda_time_get_minute (timegda));
-	gda_timestamp_set_second (timestamp, gda_time_get_second (timegda));
-	gda_timestamp_set_fraction (timestamp, gda_time_get_fraction (timegda));
-	gda_timestamp_set_timezone (timestamp, gda_time_get_timezone (timegda));
+	if (! _parse_iso8601_time (timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) || *endptr)
+		return NULL;
+	out:
+	return gda_timestamp_new_from_values (g_date_get_year (&gdate),
+																				g_date_get_month (&gdate),
+																				g_date_get_day (&gdate),
+																				gda_time_get_hour (timegda),
+																				gda_time_get_minute (timegda),
+																				gda_time_get_second (timegda),
+																				gda_time_get_fraction (timegda),
+																				gda_time_get_timezone (timegda));
 
-	return retval;
 }

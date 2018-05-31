@@ -3421,11 +3421,11 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					if ((j == schema_set->gtype_column) &&
 					    (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 						GType gtype;
-						g_assert (G_VALUE_TYPE (value) == G_TYPE_STRING);
+						g_assert (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_STRING));
 						gtype = gda_g_type_from_string (g_value_get_string (value));
-						if ((gtype == G_TYPE_INVALID) || (gtype == GDA_TYPE_NULL)) {
-							g_warning ("Unknown reported type '%s', please report this bug to "
-								   "http://bugzilla.gnome.org/ for the \"libgda\" product.", g_value_get_string (value));
+						if (g_type_is_a (gtype, G_TYPE_INVALID) || g_type_is_a (gtype, GDA_TYPE_NULL)) {
+							g_warning (" Unknown reported type '%s', please report this bug to "
+								   "https://gitlab.gnome.org/GNOME/libgda/issues", g_value_get_string (value));
 						}
 					}
 

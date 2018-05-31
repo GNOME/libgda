@@ -201,10 +201,9 @@ test_parse_iso8601_timestamp (void)
 			gchar *str;
 			str = g_strdup_printf ("%s %s", td.in_string, tt.in_string);
 
-			GdaTimestamp* timestamp = gda_timestamp_new ();
+			GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (str);
 			gboolean exp_result = td.exp_retval && tt.exp_retval;
-			/*g_print ("[%s]\n", str);*/
-			if (gda_parse_iso8601_timestamp (timestamp, str) != exp_result) {
+			if ((timestamp != NULL) != exp_result) {
 				g_print ("Wrong result for gda_parse_iso8601_timestamp (\"%s\"): got %s\n",
 					 td.in_string, exp_result ? "FALSE" : "TRUE");
 				return FALSE;
@@ -421,10 +420,10 @@ test_timestamp_handler (void)
 			gboolean exp_result = td.exp_retval && tt.exp_retval;
 			/*g_print ("[%s]\n", str);*/
 
-			value = gda_data_handler_get_value_from_str (dh, str, GDA_TYPE_TIMESTAMP);
+			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
 			if ((!value && exp_result) ||
 			    (value && !exp_result)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP): got %s\n",
+				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME): got %s\n",
 					 str, exp_result ? "FALSE" : "TRUE");
 				g_object_unref (dh);
 				return FALSE;
@@ -450,7 +449,7 @@ test_timestamp_handler (void)
 			      (gda_timestamp_get_second (timestamp) != tt.second) ||
 			      (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
 			      (gda_timestamp_get_timezone (timestamp) != tt.timezone)))) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
+				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
@@ -479,10 +478,10 @@ test_timestamp_handler (void)
 			gboolean exp_result = td.exp_retval && tt.exp_retval;
 			/*g_print ("[%s]\n", str);*/
 
-			value = gda_data_handler_get_value_from_str (dh, str, GDA_TYPE_TIMESTAMP);
+			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
 			if ((!value && exp_result) ||
 			    (value && !exp_result)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP): got %s\n",
+				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME): got %s\n",
 					 str, exp_result ? "FALSE" : "TRUE");
 				g_object_unref (dh);
 				return FALSE;
@@ -506,7 +505,7 @@ test_timestamp_handler (void)
 			    (gda_timestamp_get_second (timestamp) != tt.second) ||
 			    (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
 			    (gda_timestamp_get_timezone (timestamp) != tt.timezone)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
+				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
@@ -525,7 +524,7 @@ test_timestamp_handler (void)
 		}
 	}
 	
-	g_print ("All %d GdaDataHandler (GDA_TYPE_TIMESTAMP) parsing tests passed\n", idate * (itime + itime2));
+	g_print ("All %d GdaDataHandler (G_TYPE_DATE_TIME) parsing tests passed\n", idate * (itime + itime2));
 	g_object_unref (dh);
 	return TRUE;
 }

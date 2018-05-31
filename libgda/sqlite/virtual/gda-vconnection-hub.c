@@ -696,21 +696,22 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 			gda_time_free (timegda);
 		}
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		if (G_VALUE_TYPE (svalue) != G_TYPE_STRING)
+	else if (g_type_is_a (type, GDA_TYPE_TIMESTAMP)) {
+		if (!g_type_is_a (G_VALUE_TYPE (svalue), G_TYPE_STRING))
 			allok = FALSE;
 		else {
-			GdaTimestamp* timestamp = gda_timestamp_new ();
-			if (!gda_parse_iso8601_timestamp (timestamp, g_value_get_string (svalue))) {
+			GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (g_value_get_string (svalue));
+			if (timestamp == NULL) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
-					     _("Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"),
+					     _("Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"),
 					     g_value_get_string (svalue));
 				allok = FALSE;
 			}
-			else
-				gda_value_set_timestamp (value, timestamp);
-			gda_timestamp_free (timestamp);
+			else {
+        g_value_set_boxed (value, timestamp);
+			  gda_timestamp_free (timestamp);
+      }
 		}
 	}
 	else

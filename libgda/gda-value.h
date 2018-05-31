@@ -48,7 +48,6 @@ G_BEGIN_DECLS
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
 #define GDA_TYPE_TIME (gda_time_get_type())
-#define GDA_TYPE_TIMESTAMP (gda_timestamp_get_type())
 
 
 /* Definition of the GDA_VALUE_HOLDS macros */
@@ -271,15 +270,9 @@ GType                             gda_default_get_type (void) G_GNUC_CONST;
 
 
 /* Timestamp based on GDateTime */
-#define GDA_TYPE_TIMESTAMP (gda_timestamp_get_type())
-#define GDA_VALUE_HOLDS_TIMESTAMP(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
-
-/* GLIb types */
-#define G_TYPE_DATE_TIME (g_date_time_get_type())
-#define G_VALUE_HOLDS_DATE_TIME(value)       G_VALUE_HOLDS(value, G_TYPE_DATE_TIME)
+#define GDA_TYPE_TIMESTAMP (G_TYPE_DATE_TIME)
 
 typedef struct GDateTime GdaTimestamp;
-GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
 GdaTimestamp                     *gda_timestamp_new (void);
 GdaTimestamp                     *gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
 gshort                            gda_timestamp_get_year (const GdaTimestamp* timestamp);

@@ -346,7 +346,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 		{ "BOOLEAN", "gboolean", "These types are synonyms for TINYINT(1). A value of zero is considered false. Non-zero values are considered true", "" },
 		{ "CHAR", "gchararray", "A fixed-length string that is always right-padded with spaces to the specified length when stored. M represents the column length in characters. The range of M is 0 to 255. If M is omitted, the length is 1.", "" },
 		{ "DATE", "GDate", "A date. The supported range is '1000-01-01' to '9999-12-31'. MySQL displays DATE values in 'YYYY-MM-DD' format, but allows assignment of values to DATE columns using either strings or numbers.", "" },
-		{ "DATETIME", "GdaTimestamp", "A date and time combination. The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'. MySQL displays DATETIME values in 'YYYY-MM-DD HH:MM:SS' format, but allows assignment of values to DATETIME columns using either strings or numbers.", "" },
+		{ "DATETIME", "GDateTime", "A date and time combination. The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'. MySQL displays DATETIME values in 'YYYY-MM-DD HH:MM:SS' format, but allows assignment of values to DATETIME columns using either strings or numbers.", "" },
 		{ "DECIMAL", "GdaNumeric", "A packed \"exact\" fixed-point number. M is the total number of digits (the precision) and D is the number of digits after the decimal point (the scale). The decimal point and (for negative numbers) the \"-\" sign are not counted in M. If D is 0, values have no decimal point or fractional part. The maximum number of digits (M) for DECIMAL is 65 (64 from 5.0.3 to 5.0.5). The maximum number of supported decimals (D) is 30. If D is omitted, the default is 0. If M is omitted, the default is 10.", "DEC" },
 		{ "DOUBLE", "gdouble", "A normal-size (double-precision) floating-point number. Allowable values are -1.7976931348623157E+308 to -2.2250738585072014E-308, 0, and 2.2250738585072014E-308 to 1.7976931348623157E+308. These are the theoretical limits, based on the IEEE standard. The actual range might be slightly smaller depending on your hardware or operating system.", "DOUBLE PRECISION" },
 		{ "ENUM", "gchararray", "An enumeration. A string object that can have only one value, chosen from the list of values 'value1', 'value2', ..., NULL or the special '' error value. An ENUM column can have a maximum of 65,535 distinct values. ENUM values are represented internally as integers.", "" },
@@ -361,7 +361,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 		{ "SMALLINT", "gshort", "A small integer. The signed range is -32768 to 32767. The unsigned range is 0 to 65535.", "" },
 		{ "TEXT", "GdaBinary", "A TEXT column with a maximum length of 65,535 (216 - 1) characters. The effective maximum length is less if the value contains multi-byte characters. Each TEXT value is stored using a two-byte length prefix that indicates the number of bytes in the value.", "" },
 		{ "TIME", "GdaTime", "A time. The range is '-838:59:59' to '838:59:59'. MySQL displays TIME values in 'HH:MM:SS' format, but allows assignment of values to TIME columns using either strings or numbers.", "" },
-		{ "TIMESTAMP", "GdaTimestamp", "A timestamp. The range is '1970-01-01 00:00:01' UTC to partway through the year 2038. TIMESTAMP values are stored as the number of seconds since the epoch ('1970-01-01 00:00:00' UTC). A TIMESTAMP cannot represent the value '1970-01-01 00:00:00' because that is equivalent to 0 seconds from the epoch and the value 0 is reserved for representing '0000-00-00 00:00:00', the \"zero\" TIMESTAMP value.", "" },
+		{ "TIMESTAMP", "GDateTime", "A timestamp. The range is '1970-01-01 00:00:01' UTC to partway through the year 2038. TIMESTAMP values are stored as the number of seconds since the epoch ('1970-01-01 00:00:00' UTC). A TIMESTAMP cannot represent the value '1970-01-01 00:00:00' because that is equivalent to 0 seconds from the epoch and the value 0 is reserved for representing '0000-00-00 00:00:00', the \"zero\" TIMESTAMP value.", "" },
 		{ "TINYBLOB", "GdaBinary", "A BLOB column with a maximum length of 255 (28 - 1) bytes. Each TINYBLOB value is stored using a one-byte length prefix that indicates the number of bytes in the value.", "" },
 		{ "TINYINT", "gchar", "A very small integer. The signed range is -128 to 127. The unsigned range is 0 to 255.", "" },
 		{ "TINYTEXT", "GdaBinary", "A TEXT column with a maximum length of 255 (28 - 1) characters. The effective maximum length is less if the value contains multi-byte characters. Each TINYTEXT value is stored using a one-byte length prefix that indicates the number of bytes in the value.", "" },
@@ -973,7 +973,7 @@ map_mysql_type_to_gda (const GValue *value, const gchar *vlength)
 	else if (!strcmp (string, "date"))
 		newstring = "GDate";
 	else if (!strcmp (string, "datetime"))
-		newstring = "GdaTimestamp";
+		newstring = "GDateTime";
 	else if (!strcmp (string, "decimal"))
 		newstring = "GdaNumeric";
 	else if (!strcmp (string, "double"))
@@ -1023,7 +1023,7 @@ map_mysql_type_to_gda (const GValue *value, const gchar *vlength)
 	else if (!strcmp (string, "time"))
 		newstring = "GdaTime";
 	else if (!strcmp (string, "timestamp"))
-		newstring = "GdaTimestamp";
+		newstring = "GDateTime";
 	else if (!strcmp (string, "varchar"))
 		newstring = "gchararray";
 	else if (!strcmp (string, "year"))

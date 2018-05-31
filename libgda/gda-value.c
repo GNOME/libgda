@@ -217,10 +217,10 @@ set_from_string (GValue *value, const gchar *as_string)
 		}
 		gda_time_free (timegda);
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		GdaTimestamp* timestamp = gda_timestamp_new ();
-		if (gda_parse_iso8601_timestamp (timestamp, as_string)) {
-			gda_value_set_timestamp (value, timestamp);
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+		GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (as_string);
+		if (timestamp) {
+			g_value_set_boxed (value, timestamp);
 			retval = TRUE;
 		}
 		gda_timestamp_free (timestamp);
@@ -1773,90 +1773,6 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 	time->timezone = ntz;
 }
 
-
-/*
- * Register the GdaTimestamp type in the GType system
- */
-/* Transform a String GValue to a GdaTimestamp from a string like "2003-12-13 13:12:01.12+01" */
-static void
-string_to_timestamp (const GValue *src, GValue *dest)
-{
-	GdaTimestamp* timestamp = gda_timestamp_new ();
-
-	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
-			  GDA_VALUE_HOLDS_TIMESTAMP (dest));
-
-	gda_parse_iso8601_timestamp (timestamp, g_value_get_string (src));
-	gda_value_set_timestamp (dest, timestamp);
-	gda_timestamp_free (timestamp);
-}
-
-static void
-timestamp_to_string (const GValue *src, GValue *dest)
-{
-	GdaTimestamp *timestamp;
-
-	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
-			  GDA_VALUE_HOLDS_TIMESTAMP (src));
-
-	timestamp = (GdaTimestamp *) gda_value_get_timestamp ((GValue *) src);
-	if (timestamp) {
-		GString *string;
-		string = g_string_new ("");
-		g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
-					gda_timestamp_get_year (timestamp),
-					gda_timestamp_get_month (timestamp),
-					gda_timestamp_get_day (timestamp),
-					gda_timestamp_get_hour (timestamp),
-					gda_timestamp_get_minute (timestamp),
-					gda_timestamp_get_second (timestamp));
-		if (gda_timestamp_get_fraction (timestamp) > 0)
-			g_string_append_printf (string, ".%lu", gda_timestamp_get_fraction (timestamp));
-		if (gda_timestamp_get_timezone (timestamp) != GDA_TIMEZONE_INVALID)
-			g_string_append_printf (string, "%+02d",
-						(int) gda_timestamp_get_timezone (timestamp)/3600);
-		g_value_take_string (dest, string->str);
-		g_string_free (string, FALSE);
-	}
-	else
-		g_value_set_string (dest, "0000-00-00 00:00:00");
-}
-
-GType
-gda_timestamp_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GdaTimestamp",
-						     (GBoxedCopyFunc) gda_timestamp_copy,
-						     (GBoxedFreeFunc) gda_timestamp_free);
-
-		g_value_register_transform_func (G_TYPE_STRING, type, string_to_timestamp);
-		g_value_register_transform_func (type, G_TYPE_STRING, timestamp_to_string);
-	}
-
-	return type;
-}
-
-GType
-g_date_time_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GDateTime",
-						     (GBoxedCopyFunc) gda_time_copy,
-						     (GBoxedFreeFunc) gda_timestamp_free);
-
-		g_value_register_transform_func (G_TYPE_STRING, type, string_to_timestamp);
-		g_value_register_transform_func (type, G_TYPE_STRING, timestamp_to_string);
-	}
-
-	return type;
-}
-
-
 /**
  * gda_timestamp_new:
  *
@@ -2075,7 +1991,7 @@ gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone)
 }
 
 /**
- * gda_value_new: (skip)
+ * gda_value_new:
  * @type: the new value type.
  *
  * Creates a new #GValue of type @type, left in the same state as when g_value_init() is called.
@@ -2096,7 +2012,7 @@ gda_value_new (GType type)
 }
 
 /**
- * gda_value_new_null: (skip)
+ * gda_value_new_null:
  *
  * Creates a new #GValue initiated to a #GdaNull structure with a #GDA_TYPE_NULL, to
  * represent a NULL in the database.
@@ -2110,7 +2026,7 @@ gda_value_new_null (void)
 }
 
 /**
- * gda_value_new_default: (skip)
+ * gda_value_new_default:
  * @default_val: (allow-none): the default value as a string, or %NULL
  *
  * Creates a new default value.
@@ -2131,7 +2047,7 @@ gda_value_new_default (const gchar *default_val)
 
 
 /**
- * gda_value_new_blob: (skip)
+ * gda_value_new_blob:
  * @val: value to set for the new #GValue.
  * @size: the size of the memory pool pointer to by @val.
  *
@@ -2159,7 +2075,7 @@ gda_value_new_blob (const guchar *val, glong size)
 }
 
 /**
- * gda_value_new_blob_from_file: (skip)
+ * gda_value_new_blob_from_file:
  * @filename: name of the file to manipulate
  *
  * Makes a new #GValue of type #GDA_TYPE_BLOB interfacing with the contents of the file
@@ -2278,15 +2194,14 @@ gda_value_new_timestamp_from_timet (time_t val)
 #endif
 
         if (ltm) {
-                GdaTimestamp* tstamp = gda_timestamp_new ();
-                gda_timestamp_set_year (tstamp, ltm->tm_year + 1900);
-                gda_timestamp_set_month (tstamp, ltm->tm_mon + 1);
-                gda_timestamp_set_day (tstamp, ltm->tm_mday);
-                gda_timestamp_set_hour (tstamp, ltm->tm_hour);
-                gda_timestamp_set_minute (tstamp, ltm->tm_min);
-                gda_timestamp_set_second (tstamp, ltm->tm_sec);
-                gda_timestamp_set_fraction (tstamp, 0);
-                gda_timestamp_set_timezone (tstamp, tz);
+                GdaTimestamp* tstamp = gda_timestamp_new_from_values (ltm->tm_year + 1900,
+                                                                      ltm->tm_mon + 1,
+                                                                      ltm->tm_mday,
+                                                                      ltm->tm_hour,
+                                                                      ltm->tm_min,
+                                                                      ltm->tm_sec,
+                                                                      0,
+                                                                      tz);
 
 		value = g_new0 (GValue, 1);
                 gda_value_set_timestamp (value, (const GdaTimestamp *) tstamp);
@@ -2370,7 +2285,7 @@ gda_value_new_time_from_timet (time_t val)
 }
 
 /**
- * gda_value_new_from_string: (skip)
+ * gda_value_new_from_string:
  * @as_string: stringified representation of the value.
  * @type: the new value type.
  *
@@ -2445,7 +2360,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 }
 
 /**
- * gda_value_free: (skip)
+ * gda_value_free:
  * @value: (transfer full) (allow-none): the resource to free (or %NULL)
  *
  * Deallocates all memory associated to a #GValue.
@@ -2460,7 +2375,7 @@ gda_value_free (GValue *value)
 }
 
 /**
- * gda_value_reset_with_type: (skip)
+ * gda_value_reset_with_type:
  * @value: the #GValue to be reseted
  * @type:  the #GType to set to
  *
@@ -2485,7 +2400,7 @@ gda_value_reset_with_type (GValue *value, GType type)
 
 
 /**
- * gda_value_is_null: (skip)
+ * gda_value_is_null:
  * @value: value to test.
  *
  * Tests if a given @value is of type #GDA_TYPE_NULL.
@@ -2500,7 +2415,7 @@ gda_value_is_null (const GValue *value)
 }
 
 /**
- * gda_value_is_number: (skip)
+ * gda_value_is_number:
  * @value: a #GValue.
  *
  * Gets whether the value stored in the given #GValue is of numeric type or not.
@@ -2523,7 +2438,7 @@ gda_value_is_number (const GValue *value)
 }
 
 /**
- * gda_value_copy: (skip)
+ * gda_value_copy:
  * @value: value to get a copy from.
  *
  * Creates a new #GValue from an existing one.
@@ -2590,7 +2505,7 @@ gda_value_set_binary (GValue *value, GdaBinary *binary)
 }
 
 /**
- * gda_value_take_binary: (skip)
+ * gda_value_take_binary:
  * @value: a #GValue that will store @val.
  * @binary: (transfer full): a #GdaBinary structure with the data and its size to be stored in @value.
  *
@@ -2609,7 +2524,7 @@ gda_value_take_binary (GValue *value, GdaBinary *binary)
 }
 
 /**
- * gda_value_set_blob: (skip)
+ * gda_value_set_blob:
  * @value: a #GValue that will store @val.
  * @blob: a #GdaBlob structure with the data and its size to be stored in @value.
  *
@@ -2627,7 +2542,7 @@ gda_value_set_blob (GValue *value, const GdaBlob *blob)
 }
 
 /**
- * gda_value_get_blob: (skip)
+ * gda_value_get_blob:
  * @value: a #GValue whose value we want to get.
  *
  * Returns: (transfer none): the value stored in @value.
@@ -2646,7 +2561,7 @@ gda_value_get_blob (const GValue *value)
 }
 
 /**
- * gda_value_take_blob: (skip)
+ * gda_value_take_blob:
  * @value: a #GValue that will store @val.
  * @blob: (transfer full): a #GdaBlob structure with the data and its size to be stored in @value.
  *
@@ -2992,6 +2907,11 @@ gda_value_stringify (const GValue *value)
 		else
 			return g_strdup ("0000-00-00");
 	}
+  else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+    GDateTime *ts;
+    ts = (GDateTime*) g_value_get_boxed (value);
+    return g_date_time_format (ts, "%FT%T%:::z");
+  }
 	else if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
 		GValue *string;
 		gchar *str;
@@ -3128,12 +3048,12 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		return 1;
 	}
 
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		const GdaTimestamp *ts1, *ts2;
-		ts1 = gda_value_get_timestamp (value1);
-		ts2 = gda_value_get_timestamp (value2);
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+		GDateTime *ts1, *ts2;
+		ts1 = (GDateTime*) g_value_get_boxed (value1);
+		ts2 = (GDateTime*) g_value_get_boxed (value2);
 		if (ts1 && ts2)
-			return (gint) g_date_time_difference ((GDateTime*) ts1,(GDateTime*) ts2);
+			return (gint) g_date_time_difference (ts1, ts2);
 		return 1;
 	}
 

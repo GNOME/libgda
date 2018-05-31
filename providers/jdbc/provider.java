@@ -696,7 +696,7 @@ abstract class GdaJValue {
 		case java.sql.Types.TIME:
 			return "GdaTime";
 		case java.sql.Types.TIMESTAMP:
-			return "GdaTimestamp";
+			return "GDateTime";
 		case java.sql.Types.TINYINT:
 			return "gchar";
 		case java.sql.Types.VARBINARY:
