@@ -20,7 +20,6 @@
 #include "gda-ddl-table.h"
 #include "gda-ddl-fkey.h"
 #include "gda-ddl-column.h"
-#include <glib/gi18n.h>
 
 G_DEFINE_QUARK (gda_ddl_table_error,gda_ddl_table_error)
 
@@ -36,7 +35,7 @@ typedef struct
 
 static void gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GdaDdlTable, gda_ddl_table, G_TYPE_OBJECT,
+G_DEFINE_TYPE_WITH_CODE (GdaDdlTable, gda_ddl_table, GDA_TYPE_DDL_BASE,
                          G_ADD_PRIVATE (GdaDdlTable)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
                                                 gda_ddl_table_buildable_interface_init))
