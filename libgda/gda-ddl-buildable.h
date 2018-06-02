@@ -52,6 +52,14 @@ gboolean gda_ddl_buildable_write_node (GdaDdlBuildable *self,
                                        xmlTextWriterPtr writer,
                                        GError **error);
 
+typedef enum {
+    GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
+    GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+    GDA_DDL_BUILDABLE_ERROR_END_ELEMENT
+}GdaDdlBuildableError;
+
+#define GDA_DDL_BUILDABLE_ERROR gda_ddl_buildable_error_quark()
+GQuark gda_ddl_buildable_error_quark (void);
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DDL-BUILDABLE_H */
