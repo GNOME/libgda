@@ -19,10 +19,7 @@
  */
 #include "gda-ddl-fkey.h"
 #include <glib/gi18n-lib.h>
-#include <glib.h>
 #include "gda-ddl-buildable.h"
-
-G_DEFINE_QUARK (gda-ddl-fkey-error, gda_ddl_fkey_error)
 
 typedef struct
 {
@@ -236,8 +233,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
   res = xmlTextWriterStartElement(writer, BAD_CAST "fkey");
   if (res < 0) {
       g_set_error (error,
-                   GDA_DDL_FKEY_ERROR,
-                   GDA_DDL_FKEY_ERROR_START_ELEMENT,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
                    _("Can't set start element <fkey> in xml tree\n"));
       return FALSE;
   }
@@ -247,8 +244,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   if (res < 0) {
       g_set_error (error,
-                   GDA_DDL_FKEY_ERROR,
-                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
                    _("Can't set reftable attribute to element <fkey>\n"));
       return FALSE;
   }
@@ -258,8 +255,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   if (res < 0) {
       g_set_error (error,
-                   GDA_DDL_FKEY_ERROR,
-                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
                    _("Can't set onupdate attribute to element <fkey>\n"));
       return FALSE;
   }
@@ -269,8 +266,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   if (res < 0) {
       g_set_error (error,
-                   GDA_DDL_FKEY_ERROR,
-                   GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
                    _("Can't set ondelete attribute to element <fkey>\n"));
       return FALSE;
   }
@@ -282,8 +279,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
       res = xmlTextWriterStartElement(writer, BAD_CAST "fk_field");
       if (res < 0) {
           g_set_error (error,
-                       GDA_DDL_FKEY_ERROR,
-                       GDA_DDL_FKEY_ERROR_START_ELEMENT,
+                       GDA_DDL_BUILDABLE_ERROR,
+                       GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
                        _("Can't set start element <fk_field> in xml tree\n"));
           return FALSE;
       }
@@ -293,8 +290,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
       if (res < 0) {
           g_set_error (error,
-                       GDA_DDL_FKEY_ERROR,
-                       GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                       GDA_DDL_BUILDABLE_ERROR,
+                       GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
                        _("Can't set attribute name to element <fk_field>\n"));
           return FALSE;
       }
@@ -304,8 +301,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
       if (res < 0) {
           g_set_error (error,
-                       GDA_DDL_FKEY_ERROR,
-                       GDA_DDL_FKEY_ERROR_ATTRIBUTE,
+                       GDA_DDL_BUILDABLE_ERROR,
+                       GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
                        _("Can't set reffield attribute to element <fk_field>\n"));
           return FALSE;
       }
@@ -314,8 +311,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
       if (res < 0) {
           g_set_error (error,
-                       GDA_DDL_FKEY_ERROR,
-                       GDA_DDL_FKEY_ERROR_END_ELEMENT,
+                       GDA_DDL_BUILDABLE_ERROR,
+                       GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
                        _("Can't close element <fk_field>\n"));
           return FALSE;
       }
@@ -325,8 +322,8 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   if (res < 0) {
       g_set_error (error,
-                   GDA_DDL_FKEY_ERROR,
-                   GDA_DDL_FKEY_ERROR_END_ELEMENT,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
                    _("Can't close element <fkey>\n"));
       return FALSE;
   }
