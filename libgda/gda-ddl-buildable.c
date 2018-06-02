@@ -21,6 +21,8 @@
 
 #include "gda-ddl-buildable.h"
 
+G_DEFINE_QUARK (gda-ddl-buildable-error, gda_ddl_buildable_error)
+
 G_DEFINE_INTERFACE (GdaDdlBuildable, gda_ddl_buildable, G_TYPE_OBJECT)
 
 static void
