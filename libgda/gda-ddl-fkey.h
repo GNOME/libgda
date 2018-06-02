@@ -45,15 +45,6 @@ typedef enum {
     GDA_DDL_FKEY_CASCADE
 } GdaDdlFkeyReferenceAction;
 
-typedef enum {
-    GDA_DDL_FKEY_ERROR_START_ELEMENT,
-    GDA_DDL_FKEY_ERROR_ATTRIBUTE,
-    GDA_DDL_FKEY_ERROR_END_ELEMENT
-}GdaDdlFkeyError;
-
-#define GDA_DDL_FKEY_ERROR gda_ddl_fkey_error_quark()
-GQuark gda_ddl_fkey_error_quark (void);
-
 /**
  * SECTION:gda-ddl-fkey
  * @short_description: Object to hold information for foregn key.
@@ -93,13 +84,6 @@ GdaDdlFkeyReferenceAction
 
 void              gda_ddl_fkey_set_onupdate    (GdaDdlFkey *self,
                                                 GdaDdlFkeyReferenceAction id);
-/*gboolean          gda_ddl_fkey_parse_node      (GdaDdlFkey  *self,
-                                                xmlNodePtr node,
-                                                GError **error);*/
-
-/*gboolean          gda_ddl_fkey_write_xml       (GdaDdlFkey  *self,
-                                                xmlTextWriterPtr writer,
-                                                GError     **error);*/
 
 void              gda_ddl_fkey_free            (GdaDdlFkey *self);
 
