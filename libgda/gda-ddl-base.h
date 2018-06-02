@@ -54,6 +54,8 @@ void			gda_ddl_base_set_schema		(GdaDdlBase  *self,
 											 const gchar *schema);
 
 void			gda_ddl_base_free			(GdaDdlBase *self);
+
+#define GDA_BOOL_TO_STR(x) (x ? "TRUE" : "FALSE")
 G_END_DECLS
 
 #endif /* GDA_DDL_BASE_H */
