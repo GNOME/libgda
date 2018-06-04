@@ -894,15 +894,7 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 		if (timestamp != NULL) {
 			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
 			g_value_set_boxed (value, timestamp);
-		  gda_timestamp_free (timestamp);
-		}
-	}
-	else if (type == G_TYPE_DATE_TIME) {
-		GDateTime *ts;
-		ts = make_ts (hdl, sql, locale);
-		if (ts) {
-			value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
-			g_value_take_boxed (value, ts);
+			gda_timestamp_free (timestamp);
 		}
 	}
 	else
@@ -924,7 +916,7 @@ make_ts (GdaHandlerTime *hdl, const gchar *value, LocaleSetting *locale)
 	gboolean retval;
 	retval = make_date (hdl, &vdate, value, locale, &end_ptr);
 	if (retval) {
-		if (*end_ptr != ' ')
+		if (*end_ptr != ' ' && *end_ptr != 'T')
 			retval = FALSE;
 		else
 			retval = make_time (hdl, vtime, end_ptr + 1);
@@ -969,7 +961,7 @@ make_timestamp (GdaHandlerTime *hdl, const gchar *value, LocaleSetting *locale)
 	retval = make_date (hdl, &vdate, value, locale, &end_ptr);
 
 	if (retval) {
-		if (*end_ptr != ' ')
+		if (*end_ptr != ' ' && *end_ptr != 'T')
 			return NULL;
 		else
 			if (!make_time (hdl, vtime, end_ptr + 1))

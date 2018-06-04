@@ -1838,23 +1838,22 @@ gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort
 GdaTimestamp*
 gda_timestamp_copy (GdaTimestamp *ts)
 {
-	GdaTimestamp *copy;
-  GDateTime *dts = (GDateTime*) ts;
-  GTimeZone *tz;
-	g_return_val_if_fail(ts, NULL);
+	g_return_val_if_fail(ts != NULL, NULL);
 
-  tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (dts));
+	GDateTime *dts = (GDateTime*) ts;
+	GTimeZone *tz;
 
-	copy = (GdaTimestamp*) g_date_time_new (tz,
-                                          g_date_time_get_year (dts),
-                                          g_date_time_get_month (dts),
-                                          g_date_time_get_day_of_month (dts),
-                                          g_date_time_get_hour (dts),
-                                          g_date_time_get_minute (dts),
-                                          g_date_time_get_second (dts));
+	tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (dts));
+
+	return (GdaTimestamp*) g_date_time_new (tz,
+																					g_date_time_get_year (dts),
+																					g_date_time_get_month (dts),
+																					g_date_time_get_day_of_month (dts),
+																					g_date_time_get_hour (dts),
+																					g_date_time_get_minute (dts),
+																					g_date_time_get_second (dts));
 
 
-	return copy;
 }
 
 void
@@ -3043,7 +3042,34 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		const GdaTime *t1, *t2;
 		t1 = gda_value_get_time (value1);
 		t2 = gda_value_get_time (value2);
-		if (t1 && t2)
+		if (t1 && t2) {
+			gchar *stz = g_strdup_printf ("%ld", gda_time_get_timezone (t1));
+			gchar *sec = g_strdup_printf ("%u.%ld", gda_time_get_minute (t1), gda_time_get_fraction (t1));
+			gdouble seconds = g_strtod (sec, NULL);
+			GTimeZone *tz = g_time_zone_new (stz);
+			GDateTime *dt1 = g_date_time_new (tz, 1970, 1, 1,
+																				gda_time_get_hour (t1),
+																				gda_time_get_minute (t1),
+																				seconds);
+			g_free (stz);
+			g_free (sec);
+			g_time_zone_unref (tz);
+			stz = g_strdup_printf ("%ld", gda_time_get_timezone (t1));
+			sec = g_strdup_printf ("%u.%ld", gda_time_get_minute (t1), gda_time_get_fraction (t1));
+			seconds = g_strtod (sec, NULL);
+			tz = g_time_zone_new (stz);
+			GDateTime *dt2 = g_date_time_new (tz, 1970, 1, 1,
+																				gda_time_get_hour (t1),
+																				gda_time_get_minute (t1),
+																				seconds);
+			g_free (stz);
+			g_free (sec);
+			g_time_zone_unref (tz);
+			gint res = (gint) g_date_time_difference (dt1, dt2);
+			g_date_time_unref (dt1);
+			g_date_time_unref (dt2);
+			return res;
+    }
 			return bcmp (t1, t2, sizeof (GdaTime));
 		return 1;
 	}

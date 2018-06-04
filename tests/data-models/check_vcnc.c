@@ -584,7 +584,7 @@ check_date (GdaConnection *virtual)
 	GdaSet *set;
 	GdaTimestamp *ts = (GdaTimestamp*) g_date_time_new_utc (2011, 01, 31, 12, 34, 56.0);
   gchar* tss = g_date_time_format ((GDateTime*) ts, "%FT%T");
-  g_print ("Created Timestamp: %s", tss);
+  g_print ("Created Timestamp: %s\n", tss);
   g_free (tss);
 	GdaTime* atime = gda_time_new_from_values (13, 45, 59, 0, 0);
 	GDate *adate;
@@ -593,7 +593,7 @@ check_date (GdaConnection *virtual)
 
 	adate = g_date_new_dmy (23, G_DATE_FEBRUARY, 2010);
 	set = gda_set_new_inline (3,
-				  "ts", GDA_TYPE_TIMESTAMP, ts,
+				  "ts", G_TYPE_DATE_TIME, ts,
 				  "adate", G_TYPE_DATE, adate,
 				  "atime", GDA_TYPE_TIME, atime);
 	g_date_free (adate);
