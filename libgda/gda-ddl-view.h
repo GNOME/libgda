@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <gmodule.h>
 #include "gda-ddl-base.h"
+#include "gda-ddl-buildable.h"
 
 G_BEGIN_DECLS
 
@@ -36,11 +37,25 @@ struct _GdaDdlViewClass
   GdaDdlBaseClass parent_class;
 };
 
+/**
+ * SECTION: GdaDdlView
+ * @short_description: Object to handle information about view 
+ * @title: GdaDdlView 
+ * @section_id:
+ * @see_also: #GdaDdlTable #GdaDdlCreator
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ * @image: 
+ *
+ * #GdaDdlView object represents a representtaion of the view from the
+ * database. It implements #GdaDdlBuildbale interface and allows one to
+ * read/write information about view structure from/to an xml file. See
+ * #GdaDdlBuildable for more information.
+ */
+
+
 GdaDdlView*  gda_ddl_view_new           (void);
 void         gda_ddl_view_free          (GdaDdlView *self);
-
-const gchar* gda_ddl_view_get_name      (GdaDdlView *self);
-void         gda_ddl_view_set_name      (GdaDdlView *self, const gchar *name);
 
 gboolean     gda_ddl_view_get_istemp    (GdaDdlView *self);
 void         gda_ddl_view_set_istemp    (GdaDdlView *self,gboolean temp);
