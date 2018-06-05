@@ -22,6 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include "gda-util.h"
 #include "gda-ddl-buildable.h"
+#include "gda-ddl-base.h"
 
 G_DEFINE_QUARK (gda-ddl-column-error, gda_ddl_column_error)
 
@@ -43,6 +44,34 @@ typedef struct
   gboolean m_unique; /* property */
   gboolean m_pkey; /* property */
 }GdaDdlColumnPrivate;
+
+enum {
+  GDA_DDL_COLUMN_NODE,
+  GDA_DDL_COLUMN_NAME,
+  GDA_DDL_COLUMN_ATYPE,
+  GDA_DDL_COLUMN_PKEY,
+  GDA_DDL_COLUMN_UNIQUE,
+  GDA_DDL_COLUMN_AUTOINC,
+  GDA_DDL_COLUMN_NNUL,
+  GDA_DDL_COLUMN_COMMENT,
+  GDA_DDL_COLUMN_SIZE,
+  GDA_DDL_COLUMN_DEFAULT,
+  GDA_DDL_COLUMN_CHECK,
+  GDA_DDL_COLUMN_N_NODES
+};
+
+const gchar *gdaddlvolumnnode[GDA_DDL_COLUMN_N_NODES] = {
+  "column",
+  "name",
+  "type",
+  "pkey",
+  "unique",
+  "autoinc",
+  "nnul",
+  "comment",
+  "size",
+  "check"
+};
 
 static void
 gda_ddl_column_buildable_interface_init (GdaDdlBuildableInterface *iface);
@@ -436,14 +465,146 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
 
 static gboolean
 gda_ddl_column_write_node (GdaDdlBuildable *buildable,
-                           xmlTextWriterPtr node,
+                           xmlTextWriterPtr writer,
                            GError       **error)
 {
   g_return_val_if_fail (buildable,FALSE);
-  g_return_val_if_fail (node,FALSE);
+  g_return_val_if_fail (writer,FALSE);
 
   GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
-/* TODO: Implement */
+
+  /*GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);*/
+
+  int res = 0;
+
+  res = xmlTextWriterStartElement(writer, 
+                             BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_NODE]);
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
+                   _("Can't set start element in xml tree\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                       (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_NAME],
+                       (xmlChar*)gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set name attribute to element \n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                       (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_ATYPE],
+                       (xmlChar*)gda_ddl_column_get_ctype (self));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set type attribute to element \n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                    (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_PKEY],
+                    (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_pkey(self)));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set pkey attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                  (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_UNIQUE],
+                  (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_unique(self)));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set unique attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                 (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_AUTOINC],
+                 (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_autoinc(self)));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set autoinc attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteAttribute (writer,
+                 (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_NNUL],
+                 (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_nnul(self)));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't set nnul attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteElement (writer,
+                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_COMMENT],
+                 (xmlChar*)gda_ddl_column_get_comment(self));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't start element comment attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteElement (writer,
+                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_DEFAULT],
+                 (xmlChar*)gda_ddl_column_get_default(self));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't start element default attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterWriteElement (writer,
+                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_CHECK],
+                 (xmlChar*)gda_ddl_column_get_check(self));
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
+                   _("Can't start element check attribute to element\n"));
+      return FALSE;
+  }
+
+  res = xmlTextWriterEndElement (writer);
+
+  if (res < 0) {
+      g_set_error (error,
+                   GDA_DDL_BUILDABLE_ERROR,
+                   GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
+                   _("Can't close element \n"));
+      return FALSE;
+  }
+
   return TRUE;
 }
 
