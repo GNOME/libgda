@@ -632,7 +632,7 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
   else {
       g_set_error (error,
                    GDA_DDL_COLUMN_ERROR,
-                   GDA_DDL_COLUMN_TYPE,
+                   GDA_DDL_COLUMN_ERROR_TYPE,
                    _("Invalid column type %s. See API for gda_g_type_from_string ().\n"),
                    type);
   }
