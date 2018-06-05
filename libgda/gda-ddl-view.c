@@ -25,7 +25,6 @@
 
 typedef struct
 {
-  gchar *mp_name;
   gchar *mp_defstring;
   gboolean m_istemp;
   gboolean m_ifnoexist;
@@ -52,13 +51,23 @@ enum {
 
 const gchar *gdaddlviewnodes[GDA_DDL_VIEW_N_NODES] = {
   "view",
-  "ifnotexists",
+  "ifnoexist",
   "temp",
   "replace",
   "name",
   "definition"
 };
 
+enum {
+  PROP_0,
+  PROP_VIEW_TEMP,
+  PROP_VIEW_REPLACE,
+  PROP_VIEW_IFNOEXIST,
+  PROP_VIEW_DEFSTR,
+  N_PROPS 
+};
+
+static GParamSpec *properties [N_PROPS] = {NULL};
 
 GdaDdlView*
 gda_ddl_view_new (void)
@@ -73,11 +82,66 @@ gda_ddl_view_finalize (GObject *object)
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
   g_free (priv->mp_defstring);
-  g_free (priv->mp_name);
 
   G_OBJECT_CLASS (gda_ddl_view_parent_class)->finalize (object);
 }
 
+static void
+gda_ddl_view_get_property (GObject    *object,
+                           guint       prop_id,
+                           GValue     *value,
+                           GParamSpec *pspec)
+{
+  GdaDdlView *self = GDA_DDL_VIEW (object);
+  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+
+  switch (prop_id) {
+    case PROP_VIEW_TEMP:
+      g_value_set_boolean (value,priv->m_istemp);
+      break;
+    case PROP_VIEW_REPLACE:
+      g_value_set_boolean (value,priv->m_replace);
+      break;
+    case PROP_VIEW_IFNOEXIST:
+      g_value_set_boolean (value,priv->m_ifnoexist);
+      break;
+    case PROP_VIEW_DEFSTR:
+      g_value_set_string (value,priv->mp_defstring);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+  }
+}
+
+static void
+gda_ddl_view_set_property (GObject      *object,
+                           guint         prop_id,
+                           const GValue *value,
+                           GParamSpec   *pspec)
+{
+  GdaDdlView *self = GDA_DDL_VIEW (object);
+  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+
+  switch (prop_id){
+    case PROP_VIEW_TEMP:
+      priv->m_istemp = g_value_get_boolean (value);
+      break;
+    case PROP_VIEW_REPLACE:
+      priv->m_replace = g_value_get_boolean (value);
+      break;
+    case PROP_VIEW_IFNOEXIST:
+      priv->m_ifnoexist = g_value_get_boolean (value);
+      break;
+    case PROP_VIEW_DEFSTR:
+      g_free (priv->mp_defstring);
+      priv->mp_defstring = g_value_dup_string (value);
+      break;
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+      break;
+  }
+}
 
 static void
 gda_ddl_view_class_init (GdaDdlViewClass *klass)
@@ -85,6 +149,33 @@ gda_ddl_view_class_init (GdaDdlViewClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gda_ddl_view_finalize;
+  object_class->get_property = gda_ddl_view_get_property;
+  object_class->set_property = gda_ddl_view_set_property;
+
+  properties[PROP_VIEW_TEMP] =
+    g_param_spec_boolean ("istemp",
+                          "IsTemp",
+                          "Set if view is temp",
+                          FALSE,
+                          G_PARAM_READWRITE);
+  properties[PROP_VIEW_REPLACE] =
+    g_param_spec_boolean ("replace",
+                          "Replace",
+                          "Set if view should be repalced",
+                          TRUE,
+                          G_PARAM_READWRITE);
+  properties[PROP_VIEW_IFNOEXIST] =
+    g_param_spec_boolean ("ifnoexist",
+                          "IfNoExist",
+                          "Create view if it doesn't exist",
+                          FALSE,
+                          G_PARAM_READWRITE);
+  properties[PROP_VIEW_DEFSTR] =
+    g_param_spec_string ("defstring",
+                          "Definition",
+                          "Define view",
+                          FALSE,
+                          G_PARAM_READWRITE);
 }
 
 static void
@@ -93,7 +184,6 @@ gda_ddl_view_init (GdaDdlView *self)
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
   priv->mp_defstring = NULL;
-  priv->mp_name = NULL;
   priv->mp_defstring = NULL;
   priv->m_istemp = TRUE;
 }
@@ -115,10 +205,9 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
   xmlChar *prop = NULL;
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_NAME]);
-
   g_assert (prop); /* Bug with xml valdation */
 
-  gda_ddl_view_set_name(self,(gchar*)prop);
+  gda_ddl_base_set_name(GDA_DDL_BASE(self),(gchar*)prop);
   xmlFree (prop);
   prop = NULL;
 
@@ -228,7 +317,7 @@ gda_ddl_view_write_node (GdaDdlBuildable *buildable,
 
   res = xmlTextWriterWriteAttribute (writer,
                     (const xmlChar*)gdaddlviewnodes[GDA_DDL_VIEW_NAME],
-                    (xmlChar*)gda_ddl_view_get_name(self));
+                    (xmlChar*)gda_ddl_base_get_name(GDA_DDL_BASE(self)));
 
   if (res < 0)
     {
@@ -330,38 +419,6 @@ gda_ddl_view_free (GdaDdlView *self)
 }
 
 /**
- * gda_ddl_view_get_name:
- * @self: a #GdaDdlView object
- *
- * Returns: Name of the view
- * Since: 6.0
- */
-const gchar*
-gda_ddl_view_get_name (GdaDdlView *self)
-{
-  g_return_val_if_fail (self, NULL);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
-  return priv->mp_name;
-}
-
-/**
- * gda_ddl_view_set_name:
- * @self: a #GdaDdlView object
- * @name: name to set
- *
- * Since: 6.0
- */
-void
-gda_ddl_view_set_name (GdaDdlView *self,
-                       const gchar *name)
-{
-  g_return_if_fail (self);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
-  g_free (priv->mp_name);
-  priv->mp_name = g_strdup (name);
-}
-
-/**
  * gda_ddl_view_get_istemp:
  * @self: a #GdaDdlView object
  *
@@ -451,8 +508,8 @@ gda_ddl_view_set_defstring (GdaDdlView *self,
 {
   g_return_if_fail (self);
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
-  g_free (priv->mp_name);
-  priv->mp_name = g_strdup (str);
+  g_free (priv->mp_defstring);
+  priv->mp_defstring = g_strdup (str);
 }
 
 /**

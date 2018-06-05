@@ -11,7 +11,8 @@ AM_CPPFLAGS = \
 test_programs = \
     check_ddl_base \
     check_ddl_fkey \
-    check_ddl_column
+    check_ddl_column \
+    check_ddl_view
 
 check_ddl_base_SOURCES = check-ddl-base.c
 check_ddl_base_LDADD = \
@@ -28,3 +29,7 @@ check_ddl_column_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
+check_ddl_view_SOURCES = check-ddl-view.c
+check_ddl_view_LDADD = \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(COREDEPS_LIBS)
