@@ -1,4 +1,4 @@
-/* check-ddl-fkey.c
+/* check-ddl-column.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -33,6 +33,7 @@ typedef struct {
     GdaDdlColumn *column;
     gchar *xmlfile;
     xmlDocPtr doc;
+    xmlBufferPtr buffer;
 } CheckDdlObject;
 
 static void
