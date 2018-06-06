@@ -489,7 +489,7 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
 
   res = xmlTextWriterWriteAttribute (writer,
                        (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_NAME],
-                       (xmlChar*)gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+                       (xmlChar*)gda_ddl_column_get_name (self));
 
   if (res < 0) {
       g_set_error (error,
