@@ -126,7 +126,7 @@ typedef struct {
 	gushort minute;
 	gushort second;
 	gulong fraction;
-	glong timezone;
+	GTimeSpan timezone;
 } TestTime;
 
 TestTime timedata[] = {
@@ -146,12 +146,12 @@ TestTime timedata[] = {
        {"12:1:2 Z",TRUE, 12, 1, 2, 0, 0},
        {"12:1:2.Z",TRUE, 12, 1, 2, 0, 0},
        {"12:1:2:Z",TRUE, 12, 1, 2, 0, 0},
-       {"12:1:2.123Z",TRUE, 12, 1, 2, 123, 0},
-       {"12:1:2-2",TRUE, 12, 1, 2, 0, -2*60*60},
-       {"12:1:2+11",TRUE, 12, 1, 2, 0, 11*60*60},
-       {"12:1:2.1234+11",TRUE, 12, 1, 2, 1234, 11*60*60},
-       {"12:1:2.12345678-3",TRUE, 12, 1, 2, 12345678, -3*60*60},
-       {"12:1:2.12345678 UTC", TRUE, 12, 1, 2, 12345678, 0},
+       {"12:1:2.123Z",TRUE, 12, 1, 2, 123000, 0},
+       {"12:1:2-2",TRUE, 12, 1, 2, 0, -2l*60*60},
+       {"12:1:2+11",TRUE, 12, 1, 2, 0, 11l*60*60},
+       {"12:1:2.1234+11",TRUE, 12, 1, 2, 123400, 11l*60*60},
+       {"12:1:2.123456-3",TRUE, 12, 1, 2, 123456, -3l*60*60},
+       {"12:1:2.123456 UTC", TRUE, 12, 1, 2, 123456, 0},
 };
 
 static gboolean
@@ -301,14 +301,14 @@ TestTime timedata2[] = {
 	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
 	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
 	{"1201 00Z",FALSE, 12, 1, 0, 0, 0},
-	{"120102 Z",FALSE, 12, 1, 2, 0, 0},
-	{"120102.Z",FALSE, 12, 1, 2, 0, 0},
-	{"120102:Z",FALSE, 12, 1, 2, 0, 0},
-	{"120102.123Z",TRUE, 12, 1, 2, 123, 0},
-	{"120102-2Z",TRUE, 12, 1, 2, 0, -2*60*60},
-	{"120102+11Z",TRUE, 12, 1, 2, 0, 11*60*60},
-	{"120102.1234+11Z",TRUE, 12, 1, 2, 1234, 11*60*60},
-	{"120102.12345678-3Z",TRUE, 12, 1, 2, 12345678, -3*60*60},
+	{"120102 Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102.Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102:Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102.123Z",TRUE, 12, 1, 2, 123000, 0},
+	{"120102-2",TRUE, 12, 1, 2, 0, -2l*60*60},
+	{"120102+11",TRUE, 12, 1, 2, 0, 11l*60*60},
+	{"120102.1234+11",TRUE, 12, 1, 2, 123400, 11l*60*60},
+	{"120102.123456-3",TRUE, 12, 1, 2, 123456, -3l*60*60},
 };
 
 static gboolean
@@ -322,16 +322,12 @@ test_time_handler (void)
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
 		TestTime td = timedata[i];
 		GValue *value;
-		/*g_print ("[%s]\n", td.in_string);*/
+		g_print ("Time to parse: [%s]. Is Valid? %s\n", td.in_string, td.exp_retval ? "TRUE" : "FALSE");
 
 		value = gda_data_handler_get_value_from_str (dh, td.in_string, GDA_TYPE_TIME);
-		if ((!value && td.exp_retval) ||
-		    (value && !td.exp_retval)) {
-			g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
-				 td.in_string, td.exp_retval ? "FALSE" : "TRUE");
-			g_object_unref (dh);
-			return FALSE;
-		}
+		if (value != NULL)
+			g_print ("Returned Value: %s\n", gda_value_stringify (value));
+		g_assert ((value != NULL && td.exp_retval) || (value == NULL && !td.exp_retval));
 
 		if (! td.exp_retval)
 			continue;
@@ -359,16 +355,13 @@ test_time_handler (void)
 	for (j = 0; j < sizeof (timedata2) / sizeof (TestTime); j++) {
 		TestTime td = timedata2[j];
 		GValue *value;
-		/*g_print ("[%s]\n", td.in_string);*/
+		g_print ("Time Simplified format, to parse: [%s]\n", td.in_string);
 
 		value = gda_data_handler_get_value_from_str (dh, td.in_string, GDA_TYPE_TIME);
-		if ((!value && td.exp_retval) ||
-		    (value && !td.exp_retval)) {
-			g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
-				 td.in_string, td.exp_retval ? "FALSE" : "TRUE");
-			g_object_unref (dh);
-			return FALSE;
-		}
+		if (value != NULL)
+			g_print ("Result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
+				 td.in_string, gda_value_stringify (value));
+		g_assert ((value != NULL && td.exp_retval) || (value == NULL && !td.exp_retval));
 
 		if (! td.exp_retval)
 			continue;
@@ -413,15 +406,15 @@ test_timestamp_handler (void)
 			TestTime tt = timedata[itime];
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
+			g_print ("Timestamp to parse: %s\n", str);
 
 			GValue *value;
 			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
-			if (value == NULL && td.exp_retval && tt.exp_retval) {
-				g_print ("test_timestamp_handler: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME): got NULL, DateValid %d, TimeValid %d\n",
-					 str, td.exp_retval, tt.exp_retval);
-				g_object_unref (dh);
-				return FALSE;
-			}
+			if (value != NULL)
+				g_print ("Result with DateValid %d, TimeValid %d, Res= %s\n",
+								 td.exp_retval, tt.exp_retval, gda_value_stringify (value));
+			g_assert ((value != NULL && td.exp_retval && tt.exp_retval)
+								|| (value == NULL && (!td.exp_retval || !tt.exp_retval)));
 			if (value == NULL) {
 				g_free (str);
 				continue;
@@ -434,34 +427,26 @@ test_timestamp_handler (void)
 				timestamp = gda_timestamp_copy (ptimestamp);
 				gda_value_free (value);
 
-				if ((td.exp_retval &&
-					   ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-					    (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-					    (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
-					  ((tt.exp_retval) &&
-					   ((gda_timestamp_get_hour (timestamp) != tt.hour) ||
-					    (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-					    (gda_timestamp_get_second (timestamp) != tt.second) ||
-					    (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-					    (gda_timestamp_get_timezone (timestamp) != tt.timezone)))) {
-					g_print ("test_timestamp_handler: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
+				g_print ("test_timestamp_handler: Result for gda_data_handler_get_value_from_str ():\n"
 						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
-						 str, td.exp_day, td.exp_month, td.exp_year,
+						 td.exp_day, td.exp_month, td.exp_year,
 						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
 						 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp), gda_timestamp_get_day (timestamp),
 						 gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
 						 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
 
-					g_object_unref (dh);
-					g_free (str);
-					return FALSE;
-				}
-				g_free (str);
+				g_assert (gda_timestamp_get_year (timestamp) == td.exp_year);
+				g_assert (gda_timestamp_get_month (timestamp) == td.exp_month);
+				g_assert (gda_timestamp_get_day (timestamp) == td.exp_day);
+				g_assert (gda_timestamp_get_hour (timestamp) == tt.hour);
+				g_assert (gda_timestamp_get_minute (timestamp) == tt.minute);
+				g_assert (gda_timestamp_get_second (timestamp) == tt.second);
+				g_assert (gda_timestamp_get_fraction (timestamp) == tt.fraction);
+				g_assert (gda_timestamp_get_timezone (timestamp) == tt.timezone);
 				gda_timestamp_free (timestamp);
-			} else {
-				return FALSE;
 			}
+			g_free (str);
 		}
 	}
 
@@ -471,16 +456,14 @@ test_timestamp_handler (void)
 			TestTime tt = timedata2[itime2];
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
+			g_print ("Time to Parse: %s\n", str);
 
 			GValue *value;
 			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
-			if (value == NULL && td.exp_retval && tt.exp_retval) {
-				g_print ("test_timestamp_handler: Compact Time Format: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME): got NULL, DateValid %d, TimeValid %d\n",
-					 str, td.exp_retval, tt.exp_retval);
-				g_object_unref (dh);
-        g_free (str);
-				return FALSE;
-			}
+			if (value != NULL)
+				g_print ("Result to parse compact time format: %s\n", gda_value_stringify (value));
+			g_assert ((value != NULL && td.exp_retval && tt.exp_retval)
+								|| (value == NULL && (!td.exp_retval || !tt.exp_retval)));
 			if (value == NULL) {
 				g_free (str);
 				continue;

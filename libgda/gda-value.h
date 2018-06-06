@@ -280,6 +280,7 @@ gushort                           gda_timestamp_get_month (const GdaTimestamp* t
 gushort                           gda_timestamp_get_day (const GdaTimestamp* timestamp);
 gushort                           gda_timestamp_get_hour (const GdaTimestamp* timestamp);
 gushort                           gda_timestamp_get_minute (const GdaTimestamp* timestamp);
+gdouble                           gda_timestamp_get_seconds (const GdaTimestamp* timestamp);
 gushort                           gda_timestamp_get_second (const GdaTimestamp* timestamp);
 gulong                            gda_timestamp_get_fraction (const GdaTimestamp* timestamp);
 glong                             gda_timestamp_get_timezone (const GdaTimestamp* timestamp);

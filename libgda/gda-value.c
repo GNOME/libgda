@@ -1460,11 +1460,11 @@ string_to_time (const GValue *src, GValue *dest)
  * @timezone: number of seconds added to the GMT timezone
  */
 struct _GdaTime {
-	gushort hour;
-	gushort minute;
-	gushort second;
-	gulong  fraction;
-	glong   timezone;
+	gushort   hour;
+	gushort   minute;
+	gushort   second;
+	gulong    fraction;
+	GTimeSpan timezone;
 };
 
 GType
@@ -1678,6 +1678,8 @@ gda_time_set_fraction (GdaTime* time, gulong fraction)
  * gda_time_get_timezone:
  * @time: a #GdaTime value to get time zone from
  *
+ * Returns number of seconds to be added to UTC time.
+ *
  * Since: 6.0
  */
 glong
@@ -1851,7 +1853,7 @@ gda_timestamp_copy (GdaTimestamp *ts)
 																					g_date_time_get_day_of_month (dts),
 																					g_date_time_get_hour (dts),
 																					g_date_time_get_minute (dts),
-																					g_date_time_get_second (dts));
+																					g_date_time_get_seconds (dts));
 
 
 }
@@ -1955,6 +1957,12 @@ gda_timestamp_set_minute (GdaTimestamp* timestamp, gushort minute)
 {
 	g_return_if_fail (timestamp != NULL);
 }
+gdouble
+gda_timestamp_get_seconds (const GdaTimestamp* timestamp)
+{
+	g_return_val_if_fail (timestamp != NULL, 0);
+	return (gushort) g_date_time_get_seconds ((GDateTime*) timestamp);
+}
 gushort
 gda_timestamp_get_second (const GdaTimestamp* timestamp)
 {
@@ -1966,22 +1974,33 @@ gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second)
 {
 	g_return_if_fail (timestamp != NULL);
 }
+/**
+ * gda_timestamp_get_fraction:
+ *
+ * Microseconds.
+ */
 gulong
 gda_timestamp_get_fraction (const GdaTimestamp* timestamp)
 {
 	g_return_val_if_fail (timestamp != NULL, 0);
-	return (gulong) ((int) g_date_time_get_second ((GDateTime*) timestamp) - g_date_time_get_second ((GDateTime*) timestamp));
+	return (gulong) ((g_date_time_get_seconds ((GDateTime*) timestamp)
+		- g_date_time_get_second ((GDateTime*) timestamp)) * 1000000.0);
 }
 void
 gda_timestamp_set_fraction (GdaTimestamp* timestamp, gulong fraction)
 {
 	g_return_if_fail (timestamp != NULL);
 }
+/**
+ * gda_timestamp_get_timezone:
+ *
+ * Seconds from UTC.
+ */
 glong
 gda_timestamp_get_timezone (const GdaTimestamp* timestamp)
 {
 	g_return_val_if_fail (timestamp != NULL, 0);
-	return (glong) g_date_time_get_utc_offset ((GDateTime*) timestamp);
+	return (glong) (g_date_time_get_utc_offset ((GDateTime*) timestamp) / 1000000);
 }
 void
 gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone)

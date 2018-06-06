@@ -965,15 +965,39 @@ make_timestamp (GdaHandlerTime *hdl, const gchar *value, LocaleSetting *locale)
 			return NULL;
 		else
 			if (!make_time (hdl, vtime, end_ptr + 1))
-        return NULL;
+				return NULL;
 	}
-
-  return gda_timestamp_new_from_values (vdate.year, vdate.month, vdate.day,
-                                        gda_time_get_hour (vtime),
-                                        gda_time_get_minute (vtime),
-                                        gda_time_get_second (vtime),
-                                        gda_time_get_fraction (vtime),
-                                        gda_time_get_timezone (vtime));
+	gchar *stz;
+	gint ts = gda_time_get_timezone (vtime);
+	if (ts < 0) ts *= -1;
+	gint h = ts/60/60;
+	gint m = ts/60 - h * 60;
+	gint s = ts - h * 60 * 60 - m * 60;
+	stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																gda_time_get_timezone (vtime) >= 0 ? "+" : "-",
+																h, m, s);
+  g_print ("STR for TZ: %s\n" , stz);
+	GTimeZone* tz = g_time_zone_new (stz);
+	g_free (stz);
+	if (tz == NULL)
+		return NULL;
+	gdouble seconds;
+	seconds = (gdouble) (gda_time_get_second (vtime) + gda_time_get_fraction (vtime) / 1000000.0);
+	g_print ("Fraction: %ld, %f\n", gda_time_get_fraction (vtime), gda_time_get_fraction (vtime) / 1000000.0);
+	g_print ("Seconds to set %lf\n", seconds);
+	g_print ("TZ: %d\n", g_time_zone_get_offset (tz, 0));
+	GDateTime *dt = g_date_time_new (tz,
+																	g_date_get_year (&vdate),
+																	g_date_get_month (&vdate),
+																	g_date_get_day (&vdate),
+																	gda_time_get_hour (vtime),
+																	gda_time_get_minute (vtime),
+																	seconds);
+	g_print ("Fraction: %f - %ld\n", g_date_time_get_seconds (dt), gda_timestamp_get_fraction ((GdaTimestamp*) dt));
+	gchar *tss = g_date_time_format (dt, "%FT%H%:%M:%S:::z");
+	g_print ("String: %s\n", tss);
+	g_free (tss);
+	return (GdaTimestamp*) dt;
 }
 
 static gboolean
@@ -1014,8 +1038,7 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value,
 		return FALSE;
 
 	g_date_clear (date, 1);
-	g_date_set_dmy (date, 1, 1, 1);
-	
+
 	/* 1st number */
 	ptr = g_strdup (value);
 	tofree = ptr;
@@ -1075,35 +1098,31 @@ make_date (G_GNUC_UNUSED GdaHandlerTime *hdl, GDate *date, const gchar *value,
 		else if (value [ptr-tofree])
 			error = TRUE;
 	}
+	GDateDay day;
+	GDateMonth month;
+	GDateYear year;
 
 	/* analyse what's parsed */
 	if (!error) {
 		for (i=0; i<3; i++) {
 			switch (locale->dmy_order[i]) {
 			case G_DATE_DAY:
-				if ((nums[i] <= G_MAXUINT8) && g_date_valid_day ((GDateDay) nums[i]))
-					g_date_set_day (date, nums[i]);
-				else
-					retval = FALSE;
+					day = nums[i];
 				break;
 			case G_DATE_MONTH:
-				if ((nums[i] <= 12) && g_date_valid_month ((GDateMonth) nums[i]))
-					g_date_set_month (date, nums[i]);
-				else
-					retval = FALSE;
+				month = nums[i];
 				break;
 			case G_DATE_YEAR:
-				if (g_date_valid_year (nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]))
-					g_date_set_year (date, nums[i] < 100 ? nums[i] + locale->current_offset : nums[i]);
-				else
-					retval = FALSE;
+				year = nums[i] < 100 ? nums[i] + locale->current_offset : nums[i];
 				break;
 			}
 		}
-
-		/* checks */
-		if (retval)
-			retval = g_date_valid (date);
+		if (!g_date_valid_dmy (day, month, year)) {
+			retval = FALSE;
+		} else {
+			g_date_set_dmy (date, day, month, year);
+			retval = TRUE;
+		}
 	}
 	else
 		retval = FALSE;

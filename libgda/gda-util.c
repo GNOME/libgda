@@ -3245,21 +3245,19 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	/* seconds */
 	if (sep)
 		endptr++;
+	if (sep == 0 && (*endptr == ' ' || *endptr == ':'))
+		return FALSE;
+	g_print ("Seconds string to parse: %s\n", endptr);
 	seconds = g_strtod ((const gchar*) endptr, &stz);
+	g_print ("Parsed seconds: %f\n", seconds);
 	if (seconds >= 60.0) {
 		*out_endptr = stz;
 		return FALSE;
 	}
 	gda_time_set_second (timegda, (gint) seconds);
 	/* Strip fraction */
-	fs = g_strdup_printf ("%.12lg", seconds - (gint) seconds);
-	for (fsp = fs + 2; *fsp; fsp++) {
-		if (*fsp == '0' && (*fsp + 1 == '0' || *(fsp+1) != NULL)) {
-			*fsp = ' ';
-		}
-	}
-	fraction = (glong) g_strtod (fs + 2, NULL);
-	g_print ("Parsed Fractions of Seconds: %s\n", fs + 2);
+	fraction = (glong) ((seconds - (gint) seconds) * 1000000);
+	g_print ("Parsed Fractions of Seconds: %ld\n", fraction);
 	g_free (fs);
 	gda_time_set_fraction (timegda, fraction);
 	g_print ("check for TZ\n");
@@ -3373,31 +3371,42 @@ gda_parse_formatted_timestamp (const gchar *value,
 	/* date part */
 	if (! _parse_formatted_date (&gdate, value, first, second, third, sep, &endptr)) {
 		return NULL;
-		goto out;
 	}
-	/* separator */
-	if (!*endptr)
-		goto out;
-
-	if (*endptr != 'T' && *endptr != ' ') {
-		return NULL;
-		goto out;
+	if (endptr != NULL) {
+		/* separator */
+		if (*endptr != 'T' && *endptr != ' ') {
+			return NULL;
+		}
+		value = endptr + 1;
+		if (value != NULL) {
+			/* time part */
+			if (! _parse_iso8601_time (timegda, value, ':', 0, &endptr) || *endptr)
+				return NULL;
+		}
 	}
-	value = endptr + 1;
-	if (!*value)
-		goto out;
 
-	/* time part */
-	if (! _parse_iso8601_time (timegda, value, ':', 0, &endptr) || *endptr)
+	gchar *stz;
+	gint ts = gda_time_get_timezone (timegda);
+	if (ts < 0) ts *= -1;
+	gint h = ts/60/60;
+	gint m = ts - h * 60;
+	gint s = ts - h * 60 * 60 - m * 60;
+	stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																gda_time_get_timezone (timegda) >= 0 ? "+" : "-",
+																h, m, s);
+  GTimeZone* tz = g_time_zone_new (stz);
+	g_free (stz);
+	if (tz == NULL)
 		return NULL;
-	out:
-	return gda_timestamp_new_from_values (g_date_get_year (&gdate),
-																				g_date_get_month (&gdate),
-																				g_date_get_day (&gdate),
-																				gda_time_get_hour (timegda),
-																				gda_time_get_minute (timegda),
-																				gda_time_get_second (timegda),
-																				gda_time_get_fraction (timegda),
-																				gda_time_get_timezone (timegda));
+	g_print ("Time Zone: %d", g_time_zone_get_offset (tz, 0));
+	gdouble seconds;
+	seconds = (gdouble) gda_time_get_second (timegda) + gda_time_get_fraction (timegda) / 1000000;
+	return (GdaTimestamp*) g_date_time_new (tz,
+																					g_date_get_year (&gdate),
+																					g_date_get_month (&gdate),
+																					g_date_get_day (&gdate),
+																					gda_time_get_hour (timegda),
+																					gda_time_get_minute (timegda),
+																					seconds);
 
 }
