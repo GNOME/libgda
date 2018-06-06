@@ -109,10 +109,10 @@ static void
 test_ddl_view_write_node (CheckDdlObject *self,
                           gconstpointer user_data)
 {
-  int res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->view),
-                                         self->writer,NULL);
+  gboolean res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->view),
+                                              self->writer,NULL);
 
-  g_assert_true (res >= 0);
+  g_assert_true (res);
 
   //	res = xmlTextWriterEndDocument (self->writer);
 
