@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <libxml/parser.h>
+#include "gda-ddl-buildable.h"
 
 G_BEGIN_DECLS
 
