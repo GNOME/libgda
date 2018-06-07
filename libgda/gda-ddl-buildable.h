@@ -40,7 +40,7 @@ struct _GdaDdlBuildableInterface
                          GError **error);
 
   gboolean (*write_node)(GdaDdlBuildable *self,
-                         xmlTextWriterPtr writer,
+                         xmlNodePtr node,
                          GError **error);
 };
 
@@ -49,7 +49,7 @@ gboolean gda_ddl_buildable_parse_node (GdaDdlBuildable *self,
                                        GError **error);
 
 gboolean gda_ddl_buildable_write_node (GdaDdlBuildable *self,
-                                       xmlTextWriterPtr writer,
+                                       xmlNodePtr node,
                                        GError **error);
 
 typedef enum {
