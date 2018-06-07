@@ -48,7 +48,7 @@ gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
 
 gboolean
 gda_ddl_buildable_write_node (GdaDdlBuildable *self,
-                              xmlTextWriterPtr writer,
+                              xmlNodePtr node,
                               GError **error)
 {
   GdaDdlBuildableInterface *iface;
@@ -58,7 +58,7 @@ gda_ddl_buildable_write_node (GdaDdlBuildable *self,
 
   iface = GDA_DDL_BUILDABLE_GET_IFACE (self);
   g_return_val_if_fail (iface->write_node != NULL,FALSE);
-  return iface->write_node (self, writer, error);
+  return iface->write_node (self, node, error);
 }
 
 
