@@ -42,15 +42,8 @@ string_equal_to_template (const gchar *str, const gchar *tmpl)
 }
 
 GdaTimestamp* create_timestamp (void) {
-	GdaTimestamp *ts = gda_timestamp_new ();
-	gda_timestamp_set_year (ts, 2013);
-	gda_timestamp_set_month (ts, 8);
-	gda_timestamp_set_day (ts, 28);
-	gda_timestamp_set_hour (ts, 17);
-	gda_timestamp_set_minute (ts, 10);
-	gda_timestamp_set_second (ts, 23);
-	gda_timestamp_set_timezone (ts, 3600*2);
-	return ts;
+	GTimeZone *tz = g_time_zone_new ("+02");
+	return (GdaTimestamp*) g_date_time_new (tz, 2013, 8, 28, 17, 10, 23.0);
 }
 
 
@@ -119,7 +112,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		}
 	}
 	gchar *expected;
-	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+2', '16:09:22-3')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -142,7 +135,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+0', '19:09:22')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
@@ -202,7 +195,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		goto endtest;
 	}
 
-	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+2', '16:09:22-3')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -225,7 +218,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+0', '19:09:22')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else

@@ -2928,7 +2928,7 @@ gda_value_stringify (const GValue *value)
   else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
     GDateTime *ts;
     ts = (GDateTime*) g_value_get_boxed (value);
-    return g_date_time_format (ts, "%FT%T%:::z");
+    return g_date_time_format (ts, "%FT%H:%M:%S%:::z");
   }
 	else if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
 		GValue *string;
