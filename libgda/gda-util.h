@@ -119,11 +119,11 @@ void         gda_connection_string_split (const gchar *string, gchar **out_cnc_p
  */
 gboolean     gda_parse_iso8601_date (GDate *gdate, const gchar *value);
 gboolean     gda_parse_iso8601_time (GdaTime *timegda, const gchar *value);
-gboolean     gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value);
+GDateTime    *gda_parse_iso8601_timestamp (const gchar *value);
 gboolean     gda_parse_formatted_date (GDate *gdate, const gchar *value,
 				       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
 gboolean     gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep);
-gboolean     gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
+GDateTime   *gda_parse_formatted_timestamp (const gchar *value,
 					    GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
 
 G_END_DECLS

@@ -1280,7 +1280,7 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
                 }
 	}
 	else if ((type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE_TIME) ||
 		 (type == G_TYPE_DATE)) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
                 if (!dh) {
@@ -1289,7 +1289,7 @@ gda_mysql_provider_get_data_handler (GdaServerProvider  *provider,
                                                        G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
                         gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
                         gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
-                        gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
+                        gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE_TIME, NULL);
                         g_object_unref (dh);
                 }
 	}
@@ -1356,7 +1356,7 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 		return "varchar";
 	if (type == GDA_TYPE_TIME)
 		return "time";
-	if (type == GDA_TYPE_TIMESTAMP)
+	if (type == G_TYPE_DATE_TIME)
 		return "timestamp";
 	if (type == G_TYPE_CHAR)
 		return "tinyint";
@@ -2387,36 +2387,35 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				return obj;
 			}
 		}
-		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
-			GdaTimestamp *ts;
+		else if (G_VALUE_TYPE (value) == G_TYPE_DATE_TIME) {
+			GDateTime *ts;
 
-			ts = (GdaTimestamp*) gda_value_get_timestamp (value);
+			ts = (GDateTime*) g_value_get_boxed (value);
 			if (!ts) {
 				mysql_bind_param[i].buffer_type = MYSQL_TYPE_NULL;
 				mysql_bind_param[i].is_null = (my_bool*)1;
 			}
 			else {
 				gboolean tofree = FALSE;
-				if (gda_timestamp_get_timezone (ts) != GDA_TIMEZONE_INVALID) {
+				if (g_date_time_get_utc_offset (ts) != 0) {
 					/* MySQL does not store timezone information, so if timezone information is
 					 * provided, we do our best and convert it to GMT */
-					ts = gda_timestamp_copy (ts);
+					ts = g_date_time_to_utc (ts);
 					tofree = TRUE;
-					gda_timestamp_change_timezone (ts, 0);
 				}
 
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
-				mtime->year = gda_timestamp_get_year (ts);
-				mtime->month = gda_timestamp_get_month (ts);
-				mtime->day = gda_timestamp_get_day (ts);
-				mtime->hour = gda_timestamp_get_hour (ts);
-				mtime->minute = gda_timestamp_get_minute (ts);
-				mtime->second = gda_timestamp_get_second (ts);
-				mtime->second_part = gda_timestamp_get_fraction (ts);
+				mtime->year = g_date_time_get_year (ts);
+				mtime->month = g_date_time_get_month (ts);
+				mtime->day = g_date_time_get_day_of_month (ts);
+				mtime->hour = g_date_time_get_hour (ts);
+				mtime->minute = g_date_time_get_minute (ts);
+				mtime->second = g_date_time_get_second (ts);
+				mtime->second_part = (glong) ((g_date_time_get_seconds (ts) - g_date_time_get_second (ts)) * 1000000.0);
 				if (tofree)
-					gda_timestamp_free (ts);
+					g_date_time_unref (ts);
 
 				mysql_bind_param[i].buffer_type= MYSQL_TYPE_TIMESTAMP;
 				mysql_bind_param[i].buffer= (char *)mtime;

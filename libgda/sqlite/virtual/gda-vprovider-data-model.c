@@ -698,7 +698,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			type = "date";
 		else if (gtype == GDA_TYPE_TIME)
 			type = "time";
-		else if (gtype == GDA_TYPE_TIMESTAMP)
+		else if (gtype == G_TYPE_DATE_TIME)
 			type = "timestamp";
 		else if (gtype == GDA_TYPE_SHORT)
 			type = "short";

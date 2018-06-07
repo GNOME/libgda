@@ -169,7 +169,7 @@ gda_init (void)
 	g_assert (type);
 	type = G_TYPE_DATE;
 	g_assert (type);
-	type = GDA_TYPE_TIMESTAMP;
+	type = G_TYPE_DATE_TIME;
 	g_assert (type);
 	type = G_TYPE_ERROR;
 	g_assert (type);

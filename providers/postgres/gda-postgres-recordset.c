@@ -672,16 +672,15 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		gda_value_set_geometric_point (value, point);
 		gda_geometric_point_free (point);
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	else if (type == G_TYPE_DATE_TIME) {
 		PostgresConnectionData *cdata;
 		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 		if (cdata) {
-			GdaTimestamp* timestamp = gda_timestamp_new ();
-			if (gda_parse_formatted_timestamp (timestamp, thevalue, cdata->date_first, cdata->date_second,
-							   cdata->date_third, cdata->date_sep)) {
-				if (gda_timestamp_get_timezone (timestamp) == GDA_TIMEZONE_INVALID)
-					gda_timestamp_set_timezone (timestamp, 0); /* set to GMT */
-				gda_value_set_timestamp (value, timestamp);
+			GDateTime* timestamp = gda_parse_formatted_timestamp (thevalue, cdata->date_first, cdata->date_second,
+							   cdata->date_third, cdata->date_sep);
+			if (timestamp != NULL) {
+				g_value_set_boxed (value, timestamp);
+			  g_date_time_unref (timestamp);
 			}
 			else {
 				gda_row_invalidate_value (row, value);
@@ -689,7 +688,6 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
 					     _("Invalid timestamp value '%s'"), thevalue);
 			}
-			gda_timestamp_free (timestamp);
 		}
 		else
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,

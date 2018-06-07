@@ -13,7 +13,7 @@
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011-2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -90,7 +90,7 @@ gda_g_type_to_string (GType type)
 		return "date";			
 	else if (type == GDA_TYPE_TIME)
 		return "time";
-	else if (type == GDA_TYPE_TIMESTAMP)
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
 		return "timestamp";
 	else if (type == G_TYPE_BOOLEAN)
 		return "boolean";
@@ -122,7 +122,7 @@ gda_g_type_to_string (GType type)
  *   <listitem><para>"string" for G_TYPE_STRING</para></listitem>
  *   <listitem><para>"date" for G_TYPE_DATE</para></listitem>
  *   <listitem><para>"time" for GDA_TYPE_TIME</para></listitem>
- *   <listitem><para>"timestamp" for GDA_TYPE_TIMESTAMP</para></listitem>
+ *   <listitem><para>"timestamp" for G_TYPE_DATE_TIME</para></listitem>
  *   <listitem><para>"boolean" for G_TYPE_BOOLEAN</para></listitem>
  *   <listitem><para>"blob" for GDA_TYPE_BLOB</para></listitem>
  *   <listitem><para>"binary" for GDA_TYPE_BINARY</para></listitem>
@@ -150,7 +150,7 @@ gda_g_type_from_string (const gchar *str)
 		else if (!g_ascii_strcasecmp (str, "time"))
 			type = GDA_TYPE_TIME;
 		else if (!g_ascii_strcasecmp (str, "timestamp"))
-			type = GDA_TYPE_TIMESTAMP;
+			type = G_TYPE_DATE_TIME;
 		else if (!strcmp (str, "boolean"))
                         type = G_TYPE_BOOLEAN;
 		else if (!strcmp (str, "blob"))
@@ -3201,12 +3201,19 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 {
 	unsigned long int tmp;
 	const char *endptr;
+	gchar *stz = NULL;
+	gchar *fs = NULL;
+	gdouble seconds = 0.0;
+	glong fraction = 0.0;
+	/* https://en.wikipedia.org/wiki/ISO_8601 */
+	/* Any invalid Time Zone designator set time zone to local*/
+	GTimeZone *tz = g_time_zone_new_local ();
+	gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
 
 	gda_time_set_hour (timegda, 0);
 	gda_time_set_minute (timegda, 0);
 	gda_time_set_second (timegda, 0);
-	gda_time_set_timezone (timegda, GDA_TIMEZONE_INVALID);
-	gda_time_set_timezone (timegda, timezone);
+	gda_time_set_fraction (timegda, 0);
 
 	if ((*value < '0') || (*value > '9'))
 		return FALSE;
@@ -3237,82 +3244,35 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	/* seconds */
 	if (sep)
 		endptr++;
-	for (tmp = 0, iter = 0 ; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter++, endptr++) {
-		tmp = tmp * 10 + *endptr - '0';
-		if (tmp > 59)
-			return FALSE;
+	if (sep == 0 && (*endptr == ' ' || *endptr == ':'))
+		return FALSE;
+	g_print ("Seconds string to parse: %s\n", endptr);
+	seconds = g_strtod ((const gchar*) endptr, &stz);
+	g_print ("Parsed seconds: %f\n", seconds);
+	if (seconds >= 60.0) {
+		*out_endptr = stz;
+		return FALSE;
 	}
-	gda_time_set_second (timegda, tmp);
-	if (*endptr && (*endptr != '.') && (*endptr != '+') && (*endptr != '-')) {
-		*out_endptr = endptr;
-		return TRUE; /* end of the parsing */
-	}
-
-	if (*endptr == '.') {
-		endptr++;
-		if (!*endptr)
-			return FALSE;
-		for (tmp = 0 ; (*endptr >= '0') && (*endptr <= '9'); endptr++) {
-			if (tmp > G_MAXULONG / 10)
-				return FALSE;
-			tmp = tmp * 10 + *endptr - '0';
+	gda_time_set_second (timegda, (gint) seconds);
+	/* Strip fraction */
+	fraction = (glong) ((seconds - (gint) seconds) * 1000000);
+	g_print ("Parsed Fractions of Seconds: %ld\n", fraction);
+	g_free (fs);
+	gda_time_set_fraction (timegda, fraction);
+	g_print ("check for TZ\n");
+	if (stz != NULL) {
+		g_print ("TZ to parse: %s\n", stz);
+		g_time_zone_unref (tz);
+		tz = g_time_zone_new (stz);
+		if (tz != NULL) {
+			g_print ("Parsed TZ: %d\n", g_time_zone_get_offset (tz, 0));
+			gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
 		}
-		gda_time_set_fraction (timegda, tmp);
-	}
-	if ((*endptr == '+') || (*endptr == '-')) {
-		gint8 mult = 1;
-		if (*endptr == '-')
-			mult = -1;
-		for (tmp = 0,endptr++ ; (*endptr >= '0') && (*endptr <= '9'); endptr++) {
-			tmp = tmp * 10 + *endptr - '0';
-			if (tmp >= 24)
-				return FALSE;
-		}
-		gda_time_set_timezone (timegda, tmp * 60 * 60 * mult);
-	}
-	else if (*endptr) {
-		for (; g_ascii_isspace (*endptr); endptr++);
-		if (((*endptr == 'G') || (*endptr == 'g')) &&
-		    ((endptr[1] == 'M') || (endptr[1] == 'm')) &&
-		    ((endptr[2] == 'T') || (endptr[2] == 't')) && !endptr[3]) {
-			gda_time_set_timezone (timegda, 0);
-			endptr += 3;
-		}
-		else if (((*endptr == 'U') || (*endptr == 'u')) &&
-			 ((endptr[1] == 'T') || (endptr[1] == 't')) &&
-			 ((endptr[2] == 'C') || (endptr[2] == 'c')) && !endptr[3]) {
-			gda_time_set_timezone (timegda, 0);
-			endptr += 3;
-		}
-		else if (((*endptr == 'T') || (*endptr == 'u')) &&
-			 ((endptr[1] == 'U') || (endptr[1] == 'u')) && !endptr[2]) {
-			gda_time_set_timezone (timegda, 0);
-			endptr += 2;
-		}
-		else if (((*endptr == 'Z') || (*endptr == 'z')) && !endptr[1]) {
-			gda_time_set_timezone (timegda, 0);
-			endptr += 1;
-		}
-		else {
-			/* http://en.wikipedia.org/wiki/List_of_time_zone_abbreviations */
-			GTimeZone *tz;
-			tz = g_time_zone_new (endptr);
-			if (tz) {
-				if (g_time_zone_get_offset (tz, 0) == 0) {
-					g_time_zone_unref (tz);
-					return FALSE;
-				}
-				else {
-					gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
-					g_time_zone_unref (tz);
-					for (; *endptr; endptr++);
-				}
-			}
-			else
-				return FALSE;
-		}
+		for (; *endptr; endptr++);
 	}
 
+	if (tz != NULL)
+		g_time_zone_unref (tz);
 	*out_endptr = endptr;
 	return TRUE;
 }
@@ -3333,14 +3293,10 @@ gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
 {
 	g_return_val_if_fail (timegda, FALSE);
 
-	if (!value)
-		return FALSE;
+	g_return_val_if_fail (value != NULL, FALSE);
 
 	const char *endptr;
-	if (! _parse_iso8601_time (timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) || *endptr)
-		return FALSE;
-	else
-		return TRUE;
+	return _parse_iso8601_time (timegda, value, ':', 0, &endptr);
 }
 
 /**
@@ -3361,7 +3317,7 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
 	if (!value)
 		return FALSE;
 	const char *endptr;
-	if (! _parse_iso8601_time (timegda, value, sep, GDA_TIMEZONE_INVALID, &endptr) || *endptr)
+	if (! _parse_iso8601_time (timegda, value, sep, 0, &endptr) || *endptr)
 		return FALSE;
 	else
 		return TRUE;
@@ -3369,24 +3325,22 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
 
 /**
  * gda_parse_iso8601_timestamp:
- * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
  * @value: a string
  *
  * Extracts date and time parts from @value, and sets @timestamp's contents
  *
- * Accepted date format is "YYYY-MM-DD HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
+ * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: %TRUE if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
+ * Returns: a new #GDateTime if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
  */
-gboolean
-gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
+GDateTime*
+gda_parse_iso8601_timestamp (const gchar *value)
 {
-	return gda_parse_formatted_timestamp (timestamp, value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
+	return gda_parse_formatted_timestamp (value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
 }
 
 /**
  * gda_parse_formatted_timestamp:
- * @timestamp: a pointer to a #GdaTimeStamp structure which will be filled
  * @value: a string to be parsed
  * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
  * @second: a #GDateDMY specifying which of year, month or day appears second (in the first bytes) in @value
@@ -3396,55 +3350,62 @@ gda_parse_iso8601_timestamp (GdaTimestamp *timestamp, const gchar *value)
  * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
- * Returns: %TRUE if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ * Returns: (nullable): a new #GDateTime if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
  * 
  * Since: 5.2
  */
-gboolean
-gda_parse_formatted_timestamp (GdaTimestamp *timestamp, const gchar *value,
+GDateTime*
+gda_parse_formatted_timestamp (const gchar *value,
 			       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
 {
-	g_return_val_if_fail (timestamp, FALSE);
+	g_return_val_if_fail (value != NULL, NULL);
 
-	gboolean retval = TRUE;
 	const char *endptr;
 	GDate gdate;
 	GdaTime* timegda = gda_time_new ();
 
 	if (!value)
-		return FALSE;
+		return NULL;
 
 	/* date part */
 	if (! _parse_formatted_date (&gdate, value, first, second, third, sep, &endptr)) {
-		retval = FALSE;
-		goto out;
+		return NULL;
 	}
-	gda_timestamp_set_year (timestamp, g_date_get_year (&gdate));
-	gda_timestamp_set_month (timestamp, g_date_get_month (&gdate));
-	gda_timestamp_set_day (timestamp, g_date_get_day (&gdate));
-
-	/* separator */
-	if (!*endptr)
-		goto out;
-
-	if (*endptr != ' ') {
-		retval = FALSE;
-		goto out;
+	if (endptr != NULL) {
+		/* separator */
+		if (*endptr != 'T' && *endptr != ' ') {
+			return NULL;
+		}
+		value = endptr + 1;
+		if (value != NULL) {
+			/* time part */
+			if (! _parse_iso8601_time (timegda, value, ':', 0, &endptr) || *endptr)
+				return NULL;
+		}
 	}
-	value = endptr + 1;
-	if (!*value)
-		goto out;
 
-	/* time part */
-	if (! _parse_iso8601_time (timegda, value, ':', GDA_TIMEZONE_INVALID, &endptr) ||
-	    *endptr) 
-		retval = FALSE;
- out:
-	gda_timestamp_set_hour (timestamp, gda_time_get_hour (timegda));
-	gda_timestamp_set_minute (timestamp, gda_time_get_minute (timegda));
-	gda_timestamp_set_second (timestamp, gda_time_get_second (timegda));
-	gda_timestamp_set_fraction (timestamp, gda_time_get_fraction (timegda));
-	gda_timestamp_set_timezone (timestamp, gda_time_get_timezone (timegda));
+	gchar *stz;
+	gint ts = gda_time_get_timezone (timegda);
+	if (ts < 0) ts *= -1;
+	gint h = ts/60/60;
+	gint m = ts - h * 60;
+	gint s = ts - h * 60 * 60 - m * 60;
+	stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																gda_time_get_timezone (timegda) >= 0 ? "+" : "-",
+																h, m, s);
+  GTimeZone* tz = g_time_zone_new (stz);
+	g_free (stz);
+	if (tz == NULL)
+		return NULL;
+	g_print ("Time Zone: %d", g_time_zone_get_offset (tz, 0));
+	gdouble seconds;
+	seconds = (gdouble) gda_time_get_second (timegda) + gda_time_get_fraction (timegda) / 1000000;
+	return g_date_time_new (tz,
+													g_date_get_year (&gdate),
+													g_date_get_month (&gdate),
+													g_date_get_day (&gdate),
+													gda_time_get_hour (timegda),
+													gda_time_get_minute (timegda),
+													seconds);
 
-	return retval;
 }

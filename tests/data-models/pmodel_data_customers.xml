@@ -10,7 +10,7 @@
     <gda_array_row>
       <gda_value>2</gda_value>
       <gda_value>Ed Lamton</gda_value>
-      <gda_value>2008-08-12 00:00:00+0</gda_value>
+      <gda_value>2008-08-12T00:00:00+00</gda_value>
       <gda_value>4</gda_value>
       <gda_value>SP</gda_value>
       <gda_value>MDR</gda_value>
@@ -18,7 +18,7 @@
     <gda_array_row>
       <gda_value>3</gda_value>
       <gda_value>Lew Bonito</gda_value>
-      <gda_value>2008-08-13 00:00:00+0</gda_value>
+      <gda_value>2008-08-13T00:00:00+00</gda_value>
       <gda_value>1</gda_value>
       <gda_value>FR</gda_value>
       <gda_value>TLS</gda_value>
@@ -26,7 +26,7 @@
     <gda_array_row>
       <gda_value>4</gda_value>
       <gda_value>Mark Lawrencep</gda_value>
-      <gda_value>2007-12-25 00:00:00+0</gda_value>
+      <gda_value>2007-12-25T00:00:00+00</gda_value>
       <gda_value isnull="t"/>
       <gda_value>SP</gda_value>
       <gda_value>MDR</gda_value>
@@ -34,7 +34,7 @@
     <gda_array_row>
       <gda_value>9</gda_value>
       <gda_value>Greg Popoff</gda_value>
-      <gda_value>2007-12-25 00:00:00+0</gda_value>
+      <gda_value>2007-12-25T00:00:00+00</gda_value>
       <gda_value>2</gda_value>
       <gda_value>SP</gda_value>
       <gda_value>MDR</gda_value>
@@ -42,7 +42,7 @@
     <gda_array_row>
       <gda_value>10</gda_value>
       <gda_value>Vladimir Zirkov</gda_value>
-      <gda_value>2001-01-31 00:00:00+0</gda_value>
+      <gda_value>2001-01-31T00:00:00+00</gda_value>
       <gda_value>4</gda_value>
       <gda_value isnull="t"/>
       <gda_value isnull="t"/>

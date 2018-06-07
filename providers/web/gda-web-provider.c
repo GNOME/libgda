@@ -1175,7 +1175,7 @@ gtype_to_webtype (GType type)
                 return "text";
         if (type == GDA_TYPE_TIME)
                 return "time";
-        if (type == GDA_TYPE_TIMESTAMP)
+        if (type == G_TYPE_DATE_TIME)
                 return "timestamp";
         if (type == G_TYPE_CHAR)
                 return "integer";

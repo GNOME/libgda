@@ -48,7 +48,6 @@ G_BEGIN_DECLS
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
 #define GDA_TYPE_TIME (gda_time_get_type())
-#define GDA_TYPE_TIMESTAMP (gda_timestamp_get_type())
 
 
 /* Definition of the GDA_VALUE_HOLDS macros */
@@ -60,6 +59,9 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_USHORT(value)          G_VALUE_HOLDS(value, GDA_TYPE_USHORT)
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
 #define GDA_VALUE_HOLDS_TIMESTAMP(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
+
+/* GLIb types */
+#define G_VALUE_HOLDS_DATETIME(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
 
 
 /* GdaNumeric */
@@ -263,32 +265,13 @@ GdaBlob                          *gda_string_to_blob (const gchar *str);
 GType                             gda_null_get_type (void) G_GNUC_CONST;
 GType                             gda_default_get_type (void) G_GNUC_CONST;
 
-typedef struct _GdaTimestamp GdaTimestamp;
-GType                             gda_timestamp_get_type (void) G_GNUC_CONST;
-GdaTimestamp                     *gda_timestamp_new (void);
-GdaTimestamp                     *gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
-gshort                            gda_timestamp_get_year (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_year (GdaTimestamp* timestamp, gshort year);
-gushort                           gda_timestamp_get_month (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_month (GdaTimestamp* timestamp, gushort month);
-gushort                           gda_timestamp_get_day (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_day (GdaTimestamp* timestamp, gushort day);
-gushort                           gda_timestamp_get_hour (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_hour (GdaTimestamp* timestamp, gushort hour);
-gushort                           gda_timestamp_get_minute (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_minute (GdaTimestamp* timestamp, gushort minute);
-gushort                           gda_timestamp_get_second (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second);
-gulong                            gda_timestamp_get_fraction (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_fraction (GdaTimestamp* timestamp, gulong fraction);
-glong                             gda_timestamp_get_timezone (const GdaTimestamp* timestamp);
-void                              gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone);
-GdaTimestamp                     *gda_timestamp_copy (GdaTimestamp *ts);
-void                              gda_timestamp_free (GdaTimestamp *ts);
-gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
-void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
-const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
-void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
+
+
+
+
+/* Timestamp based on GDateTime */
+
+GDateTime                        *gda_date_time_copy (GDateTime *ts);
 
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;

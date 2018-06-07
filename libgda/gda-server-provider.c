@@ -1584,7 +1584,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider, GdaConnection 
 				 G_TYPE_BOOLEAN,
 				 GDA_TYPE_TIME,
 				 G_TYPE_DATE,
-				 GDA_TYPE_TIMESTAMP,
+				 G_TYPE_DATE_TIME,
 				 GDA_TYPE_GEOMETRIC_POINT,
 				 G_TYPE_STRING,
 				 GDA_TYPE_BINARY};

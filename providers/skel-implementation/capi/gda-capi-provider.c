@@ -885,7 +885,7 @@ gda_capi_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *
 		dh = NULL;
 	}
 	else if ((type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE_TIME) ||
 		 (type == G_TYPE_DATE)) {
 		TO_IMPLEMENT; /* define data handlers for these types */
 		dh = NULL;
@@ -934,7 +934,7 @@ gda_capi_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 	    (type == G_TYPE_OBJECT) ||
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TIME) ||
-	    (type == GDA_TYPE_TIMESTAMP) ||
+	    (type == G_TYPE_DATE_TIME) ||
 	    (type == G_TYPE_GTYPE))
 		return "string";
 
@@ -945,7 +945,7 @@ gda_capi_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnect
 	
 	if (type == GDA_TYPE_TIME)
 		return "time";
-	if (type == GDA_TYPE_TIMESTAMP)
+	if (type == G_TYPE_DATE_TIME)
 		return "timestamp";
 	if (type == G_TYPE_DATE)
 		return "date";

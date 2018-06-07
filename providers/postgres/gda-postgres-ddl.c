@@ -1041,16 +1041,16 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 	}
 	
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/VALIDITY");
-	if (value && G_VALUE_HOLDS (value, GDA_TYPE_TIMESTAMP)) {
+	if (value && G_VALUE_HOLDS (value, G_TYPE_DATE_TIME)) {
 		if (value) {
 			GdaDataHandler *dh;
 			if (!with) {
 				g_string_append (string, " WITH");
 				with = TRUE;
 			}
-			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, GDA_TYPE_TIMESTAMP);
+			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_DATE_TIME);
 			if (!dh)
-				dh = gda_data_handler_get_default (GDA_TYPE_TIMESTAMP);
+				dh = gda_data_handler_get_default (G_TYPE_DATE_TIME);
 			
 			g_string_append (string, " VALID UNTIL ");
 			tmp = gda_data_handler_get_sql_from_value (dh, value);

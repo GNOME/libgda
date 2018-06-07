@@ -41,16 +41,9 @@ string_equal_to_template (const gchar *str, const gchar *tmpl)
 		return TRUE;
 }
 
-GdaTimestamp* create_timestamp (void) {
-	GdaTimestamp *ts = gda_timestamp_new ();
-	gda_timestamp_set_year (ts, 2013);
-	gda_timestamp_set_month (ts, 8);
-	gda_timestamp_set_day (ts, 28);
-	gda_timestamp_set_hour (ts, 17);
-	gda_timestamp_set_minute (ts, 10);
-	gda_timestamp_set_second (ts, 23);
-	gda_timestamp_set_timezone (ts, 3600*2);
-	return ts;
+GDateTime* create_timestamp (void) {
+	GTimeZone *tz = g_time_zone_new ("+02");
+	return g_date_time_new (tz, 2013, 8, 28, 17, 10, 23.0);
 }
 
 
@@ -85,7 +78,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		nfailed ++;
 		goto endtest;
 	}
-	GdaTimestamp *ts = create_timestamp ();
+	GDateTime *ts = create_timestamp ();
 	if (! gda_set_set_holder_value (params, &error, "ts", ts)) {
 		g_print ("Failed to bind 'ts' parameter: %s\n", error && error->message ? error->message : "No detail");
 		g_clear_error (&error);
@@ -119,7 +112,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		}
 	}
 	gchar *expected;
-	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+02', '16:09:22-3')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -138,11 +131,12 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		g_object_unref (params);
 		g_free (sql);
 		nfailed ++;
+		g_assert_not_reached ();
 		goto endtest;
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
@@ -153,6 +147,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		g_object_unref (stmt);
 		g_object_unref (params);
 		nfailed ++;
+		g_assert_not_reached ();
 		goto endtest;
 	}
 	if (!string_equal_to_template (sql, expected)) {
@@ -161,6 +156,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		g_object_unref (params);
 		g_free (sql);
 		nfailed ++;
+		g_assert_not_reached ();
 		goto endtest;
 	}
 	g_free (sql);
@@ -191,7 +187,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		nfailed ++;
 		goto endtest;
 	}
-	gda_timestamp_free (ts);
+	g_date_time_unref (ts);
 
 	if (! gda_set_set_holder_value (params, &error, "time", gt)) {
 		g_print ("Failed to bind 'time' parameter: %s\n", error && error->message ? error->message : "No detail");
@@ -202,7 +198,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		goto endtest;
 	}
 
-	expected = "('@@@@@@@@@@ 17:10:23+2', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+02', '16:09:22-3')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -221,11 +217,12 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		g_object_unref (params);
 		g_free (sql);
 		nfailed ++;
+		g_assert_not_reached ();
 		goto endtest;
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@ 15:10:23', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
@@ -244,6 +241,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		g_object_unref (params);
 		g_free (sql);
 		nfailed ++;
+		g_assert_not_reached ();
 		goto endtest;
 	}
 	g_free (sql);
@@ -256,8 +254,6 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 int
 main (int argc, char** argv)
 {
-	gchar *file;
-	GError *error = NULL;
 	GdaDataModel *model;
 	guint i, nrows;
 	guint nfailed = 0;

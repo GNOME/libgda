@@ -126,33 +126,32 @@ typedef struct {
 	gushort minute;
 	gushort second;
 	gulong fraction;
-	glong timezone;
+	GTimeSpan timezone;
 } TestTime;
 
 TestTime timedata[] = {
-       {"11:22:56", TRUE, 11, 22, 56, 0, GDA_TIMEZONE_INVALID},
-       {"1:22:56", TRUE, 1, 22, 56, 0, GDA_TIMEZONE_INVALID},
-       {"1:22:60", FALSE, 1, 22, 0, 0, GDA_TIMEZONE_INVALID},
-       {"1:60:45", FALSE, 1, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"24:23:45", FALSE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"23:59:59", TRUE, 23, 59, 59, 0, GDA_TIMEZONE_INVALID},
-       {"0:0:00", TRUE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12:1:0", TRUE, 12, 1, 0, 0, GDA_TIMEZONE_INVALID},
-       {" 12:00:00", FALSE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12 :00:00", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12: 00:00", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12: 00:00", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12:1 :00", FALSE, 12, 1, 0, 0, GDA_TIMEZONE_INVALID},
-       {"12:1:2 ", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-       {"12:1:2.", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-       {"12:1:2:", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-       {"12:1:2.123", TRUE, 12, 1, 2, 123, GDA_TIMEZONE_INVALID},
-       {"12:1:2-2", TRUE, 12, 1, 2, 0, -2*60*60},
-       {"12:1:2+11", TRUE, 12, 1, 2, 0, 11*60*60},
-       {"12:1:2.1234+11", TRUE, 12, 1, 2, 1234, 11*60*60},
-       {"12:1:2.12345678-3", TRUE, 12, 1, 2, 12345678, -3*60*60},
-       {"12:1:2.12345678 UTC", TRUE, 12, 1, 2, 12345678, 0},
-       {"12:1:2.12345678 INVALID", FALSE, 12, 1, 2, 12345678, GDA_TIMEZONE_INVALID},
+       {"11:22:56Z",TRUE, 11, 22, 56, 0, 0},
+       {"1:22:56Z",TRUE, 1, 22, 56, 0, 0},
+       {"1:22:60Z",FALSE, 1, 22, 0, 0, 0},
+       {"1:60:45Z",FALSE, 1, 0, 0, 0, 0},
+       {"24:23:45Z",FALSE, 0, 0, 0, 0, 0},
+       {"23:59:59Z",TRUE, 23, 59, 59, 0, 0},
+       {"0:0:00Z",TRUE, 0, 0, 0, 0, 0},
+       {"12:1:0Z",TRUE, 12, 1, 0, 0, 0},
+       {" 12:00:00Z",FALSE, 0, 0, 0, 0, 0},
+       {"12 :00:00Z",FALSE, 12, 0, 0, 0, 0},
+       {"12: 00:00Z",FALSE, 12, 0, 0, 0, 0},
+       {"12: 00:00Z",FALSE, 12, 0, 0, 0, 0},
+       {"12:1 :00Z",FALSE, 12, 1, 0, 0, 0},
+       {"12:1:2 Z",TRUE, 12, 1, 2, 0, 0},
+       {"12:1:2.Z",TRUE, 12, 1, 2, 0, 0},
+       {"12:1:2:Z",TRUE, 12, 1, 2, 0, 0},
+       {"12:1:2.123Z",TRUE, 12, 1, 2, 123000, 0},
+       {"12:1:2-2",TRUE, 12, 1, 2, 0, -2l*60*60},
+       {"12:1:2+11",TRUE, 12, 1, 2, 0, 11l*60*60},
+       {"12:1:2.1234+11",TRUE, 12, 1, 2, 123400, 11l*60*60},
+       {"12:1:2.123456-3",TRUE, 12, 1, 2, 123456, -3l*60*60},
+       {"12:1:2.123456 UTC", TRUE, 12, 1, 2, 123456, 0},
 };
 
 static gboolean
@@ -163,18 +162,11 @@ test_parse_iso8601_time (void)
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
 		TestTime td = timedata[i];
 		GdaTime* time = gda_time_new ();
-		/*g_print ("[%s]\n", td.in_string);*/
-		if (gda_parse_iso8601_time (time, td.in_string) != td.exp_retval) {
-			g_print ("Wrong result for gda_parse_iso8601_time (\"%s\"): got %s\n",
-				 td.in_string, td.exp_retval ? "FALSE" : "TRUE");
-			return FALSE;
-		}
-		if ((gda_time_get_hour (time) != td.hour) ||
-		    (gda_time_get_minute (time) != td.minute) ||
-		    (gda_time_get_second (time) != td.second) ||
-		    (gda_time_get_fraction (time) != td.fraction) ||
-		    (gda_time_get_timezone (time) != td.timezone)) {
-			g_print ("Wrong result for gda_parse_iso8601_time (\"%s\"):\n"
+    g_print ("Time to parse: %s\n", td.in_string);
+    g_assert (gda_parse_iso8601_time (time, td.in_string) == td.exp_retval);
+    if (!td.exp_retval)
+      continue;
+		g_print ("test_parse_iso8601_time: result for gda_parse_iso8601_time (\"%s\"):\n"
 				 "   exp: HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 				 "   got: HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 				 td.in_string,
@@ -182,8 +174,11 @@ test_parse_iso8601_time (void)
 				 td.fraction, td.timezone,
 				 gda_time_get_hour (time), gda_time_get_minute (time), gda_time_get_second (time),
 				 gda_time_get_fraction (time), gda_time_get_timezone (time));
-			return FALSE;
-		}
+		g_assert (gda_time_get_hour (time) == td.hour);
+    g_assert (gda_time_get_minute (time) == td.minute);
+    g_assert (gda_time_get_second (time) == td.second);
+    g_assert (gda_time_get_fraction (time) == td.fraction);
+    g_assert (gda_time_get_timezone (time) == td.timezone);
 	}
 	g_print ("All %d iso8601 time parsing tests passed\n", i);
 
@@ -199,41 +194,45 @@ test_parse_iso8601_timestamp (void)
 		for (itime = 0; itime < sizeof (timedata) / sizeof (TestTime); itime++) {
 			TestTime tt = timedata[itime];
 			gchar *str;
-			str = g_strdup_printf ("%s %s", td.in_string, tt.in_string);
+			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
 
-			GdaTimestamp* timestamp = gda_timestamp_new ();
-			gboolean exp_result = td.exp_retval && tt.exp_retval;
-			/*g_print ("[%s]\n", str);*/
-			if (gda_parse_iso8601_timestamp (timestamp, str) != exp_result) {
-				g_print ("Wrong result for gda_parse_iso8601_timestamp (\"%s\"): got %s\n",
-					 td.in_string, exp_result ? "FALSE" : "TRUE");
+			GDateTime* timestamp = gda_parse_iso8601_timestamp (str);
+			if (timestamp == NULL && td.exp_retval && tt.exp_retval) {
+				g_print ("test_parse_iso8601: Wrong result for gda_parse_iso8601_timestamp (\"%s\"): for valid timestamp\n",
+					 str);
 				return FALSE;
+			}
+			if (timestamp == NULL) {
+				g_free (str);
+				continue;
 			}
 
 			if ((td.exp_retval &&
-			     ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-			      (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-			      (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
-			    (((gda_timestamp_get_hour (timestamp) != tt.hour) ||
-			      (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-			      (gda_timestamp_get_second (timestamp) != tt.second) ||
-			      (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-			      (gda_timestamp_get_timezone (timestamp) != tt.timezone)))) {
-				g_print ("Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
+			     ((g_date_time_get_year (timestamp) != td.exp_year) ||
+			      (g_date_time_get_month (timestamp) != td.exp_month) ||
+			      (g_date_time_get_day_of_month (timestamp) != td.exp_day))) &&
+			    (((g_date_time_get_hour (timestamp) != tt.hour) ||
+			      (g_date_time_get_minute (timestamp) != tt.minute) ||
+			      (g_date_time_get_second (timestamp) != tt.second) ||
+			      (((gint) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0))
+											!= tt.fraction) ||
+			      ((g_date_time_get_utc_offset (timestamp) / 1000000) != tt.timezone)))) {
+				g_print ("test_parse_iso8601_timestamp: Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
 					 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp),
-					 gda_timestamp_get_day (timestamp), gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
-					 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp),
-					 gda_timestamp_get_timezone (timestamp));
+					 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+					 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+					 g_date_time_get_second (timestamp),
+					 (glong) (g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) / 1000000l,
+					 g_date_time_get_utc_offset (timestamp)/1000000);
 					 
 				g_free (str);
 				return FALSE;
 			}
 			g_free (str);
-			gda_timestamp_free (timestamp);
+			g_date_time_unref (timestamp);
 		}
 	}
 	g_print ("All %d iso8601 timestamp parsing tests passed\n", idate * itime);
@@ -291,27 +290,27 @@ test_date_handler (void)
 }
 
 TestTime timedata2[] = {
-	{"112256", TRUE, 11, 22, 56, 0, GDA_TIMEZONE_INVALID},
-	{"012256", TRUE, 1, 22, 56, 0, GDA_TIMEZONE_INVALID},
-	{"012260", FALSE, 1, 22, 0, 0, GDA_TIMEZONE_INVALID},
-	{"016045", FALSE, 1, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"242345", FALSE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"235959", TRUE, 23, 59, 59, 0, GDA_TIMEZONE_INVALID},
-	{"000000", TRUE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"120100", TRUE, 12, 1, 0, 0, GDA_TIMEZONE_INVALID},
-	{" 120000", FALSE, 0, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"12 0000", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"12 0000", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"12 0000", FALSE, 12, 0, 0, 0, GDA_TIMEZONE_INVALID},
-	{"1201 00", FALSE, 12, 1, 0, 0, GDA_TIMEZONE_INVALID},
-	{"120102 ", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-	{"120102.", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-	{"120102:", FALSE, 12, 1, 2, 0, GDA_TIMEZONE_INVALID},
-	{"120102.123", TRUE, 12, 1, 2, 123, GDA_TIMEZONE_INVALID},
-	{"120102-2", TRUE, 12, 1, 2, 0, -2*60*60},
-	{"120102+11", TRUE, 12, 1, 2, 0, 11*60*60},
-	{"120102.1234+11", TRUE, 12, 1, 2, 1234, 11*60*60},
-	{"120102.12345678-3", TRUE, 12, 1, 2, 12345678, -3*60*60},
+	{"112256Z",TRUE, 11, 22, 56, 0, 0},
+	{"012256Z",TRUE, 1, 22, 56, 0, 0},
+	{"012260Z",FALSE, 1, 22, 0, 0, 0},
+	{"016045Z",FALSE, 1, 0, 0, 0, 0},
+	{"242345Z",FALSE, 0, 0, 0, 0, 0},
+	{"235959Z",TRUE, 23, 59, 59, 0, 0},
+	{"000000Z",TRUE, 0, 0, 0, 0, 0},
+	{"120100Z",TRUE, 12, 1, 0, 0, 0},
+	{" 120000Z",FALSE, 0, 0, 0, 0, 0},
+	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
+	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
+	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
+	{"1201 00Z",FALSE, 12, 1, 0, 0, 0},
+	{"120102 Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102.Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102:Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102.123Z",TRUE, 12, 1, 2, 123000, 0},
+	{"120102-2",TRUE, 12, 1, 2, 0, -2l*60*60},
+	{"120102+11",TRUE, 12, 1, 2, 0, 11l*60*60},
+	{"120102.1234+11",TRUE, 12, 1, 2, 123400, 11l*60*60},
+	{"120102.123456-3",TRUE, 12, 1, 2, 123456, -3l*60*60},
 };
 
 static gboolean
@@ -325,16 +324,12 @@ test_time_handler (void)
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
 		TestTime td = timedata[i];
 		GValue *value;
-		/*g_print ("[%s]\n", td.in_string);*/
+		g_print ("Time to parse: [%s]. Is Valid? %s\n", td.in_string, td.exp_retval ? "TRUE" : "FALSE");
 
 		value = gda_data_handler_get_value_from_str (dh, td.in_string, GDA_TYPE_TIME);
-		if ((!value && td.exp_retval) ||
-		    (value && !td.exp_retval)) {
-			g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
-				 td.in_string, td.exp_retval ? "FALSE" : "TRUE");
-			g_object_unref (dh);
-			return FALSE;
-		}
+		if (value != NULL)
+			g_print ("Returned Value: %s\n", gda_value_stringify (value));
+		g_assert ((value != NULL && td.exp_retval) || (value == NULL && !td.exp_retval));
 
 		if (! td.exp_retval)
 			continue;
@@ -362,16 +357,13 @@ test_time_handler (void)
 	for (j = 0; j < sizeof (timedata2) / sizeof (TestTime); j++) {
 		TestTime td = timedata2[j];
 		GValue *value;
-		/*g_print ("[%s]\n", td.in_string);*/
+		g_print ("Time Simplified format, to parse: [%s]\n", td.in_string);
 
 		value = gda_data_handler_get_value_from_str (dh, td.in_string, GDA_TYPE_TIME);
-		if ((!value && td.exp_retval) ||
-		    (value && !td.exp_retval)) {
-			g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
-				 td.in_string, td.exp_retval ? "FALSE" : "TRUE");
-			g_object_unref (dh);
-			return FALSE;
-		}
+		if (value != NULL)
+			g_print ("Result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIME): got %s\n",
+				 td.in_string, gda_value_stringify (value));
+		g_assert ((value != NULL && td.exp_retval) || (value == NULL && !td.exp_retval));
 
 		if (! td.exp_retval)
 			continue;
@@ -415,56 +407,51 @@ test_timestamp_handler (void)
 		for (itime = 0; itime < sizeof (timedata) / sizeof (TestTime); itime++) {
 			TestTime tt = timedata[itime];
 			gchar *str;
-			str = g_strdup_printf ("%s %s", td.in_string, tt.in_string);
+			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
+			g_print ("Timestamp to parse: %s\n", str);
 
 			GValue *value;
-			gboolean exp_result = td.exp_retval && tt.exp_retval;
-			/*g_print ("[%s]\n", str);*/
-
-			value = gda_data_handler_get_value_from_str (dh, str, GDA_TYPE_TIMESTAMP);
-			if ((!value && exp_result) ||
-			    (value && !exp_result)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP): got %s\n",
-					 str, exp_result ? "FALSE" : "TRUE");
-				g_object_unref (dh);
-				return FALSE;
-			}
-
-			if (! exp_result) {
+			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
+			if (value != NULL)
+				g_print ("Result with DateValid %d, TimeValid %d, Res= %s\n",
+								 td.exp_retval, tt.exp_retval, gda_value_stringify (value));
+			g_assert ((value != NULL && td.exp_retval && tt.exp_retval)
+								|| (value == NULL && (!td.exp_retval || !tt.exp_retval)));
+			if (value == NULL) {
 				g_free (str);
 				continue;
 			}
-			GdaTimestamp *ptimestamp;
-			GdaTimestamp *timestamp;
-			ptimestamp = (GdaTimestamp*) gda_value_get_timestamp (value);
-			timestamp = gda_timestamp_copy (ptimestamp);
-			gda_value_free (value);
 
-			if ((td.exp_retval &&
-			     ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-			      (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-			      (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
-			    ((tt.exp_retval) &&
-			     ((gda_timestamp_get_hour (timestamp) != tt.hour) ||
-			      (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-			      (gda_timestamp_get_second (timestamp) != tt.second) ||
-			      (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-			      (gda_timestamp_get_timezone (timestamp) != tt.timezone)))) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
-					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
-					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
-					 str, td.exp_day, td.exp_month, td.exp_year,
-					 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp), gda_timestamp_get_day (timestamp),
-					 gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
-					 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
-					 
-				g_object_unref (dh);
-				g_free (str);
-				return FALSE;
+			GDateTime *ptimestamp;
+			GDateTime *timestamp;
+			ptimestamp = g_value_get_boxed (value);
+			if (ptimestamp != NULL) {
+				timestamp = gda_date_time_copy (ptimestamp);
+				gda_value_free (value);
+
+				g_print ("test_timestamp_handler: Result for gda_data_handler_get_value_from_str ():\n"
+						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
+						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld (SF=%f) TZ=%ld\\n",
+						 td.exp_day, td.exp_month, td.exp_year,
+						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
+						 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+					 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+					 g_date_time_get_second (timestamp),
+					 (glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0),
+					 g_date_time_get_seconds (timestamp),
+					 g_date_time_get_utc_offset (timestamp)/1000000);
+
+				g_assert (g_date_time_get_year (timestamp) == td.exp_year);
+				g_assert (g_date_time_get_month (timestamp) == td.exp_month);
+				g_assert (g_date_time_get_day_of_month (timestamp) == td.exp_day);
+				g_assert (g_date_time_get_hour (timestamp) == tt.hour);
+				g_assert (g_date_time_get_minute (timestamp) == tt.minute);
+				g_assert (g_date_time_get_second (timestamp) == tt.second);
+				g_assert ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) == tt.fraction);
+				g_assert (g_date_time_get_utc_offset (timestamp)/1000000 == tt.timezone);
+				g_date_time_unref (timestamp);
 			}
 			g_free (str);
-			gda_timestamp_free (timestamp);
 		}
 	}
 
@@ -473,59 +460,58 @@ test_timestamp_handler (void)
 		for (itime2 = 0; itime2 < sizeof (timedata2) / sizeof (TestTime); itime2++) {
 			TestTime tt = timedata2[itime2];
 			gchar *str;
-			str = g_strdup_printf ("%s %s", td.in_string, tt.in_string);
+			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
+			g_print ("Time to Parse: %s\n", str);
 
 			GValue *value;
-			gboolean exp_result = td.exp_retval && tt.exp_retval;
-			/*g_print ("[%s]\n", str);*/
-
-			value = gda_data_handler_get_value_from_str (dh, str, GDA_TYPE_TIMESTAMP);
-			if ((!value && exp_result) ||
-			    (value && !exp_result)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP): got %s\n",
-					 str, exp_result ? "FALSE" : "TRUE");
-				g_object_unref (dh);
-				return FALSE;
-			}
-
-			if (! exp_result) {
+			value = gda_data_handler_get_value_from_str (dh, str, G_TYPE_DATE_TIME);
+			if (value != NULL)
+				g_print ("Result to parse compact time format: %s\n", gda_value_stringify (value));
+			g_assert ((value != NULL && td.exp_retval && tt.exp_retval)
+								|| (value == NULL && (!td.exp_retval || !tt.exp_retval)));
+			if (value == NULL) {
 				g_free (str);
 				continue;
 			}
-			GdaTimestamp *ptimestamp;
-			GdaTimestamp *timestamp;
-			ptimestamp = (GdaTimestamp*) gda_value_get_timestamp (value);
-			timestamp = gda_timestamp_copy (ptimestamp);
-			gda_value_free (value);
 
-			if ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-			    (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-			    (gda_timestamp_get_day (timestamp) != td.exp_day) ||
-			    (gda_timestamp_get_hour (timestamp) != tt.hour) ||
-			    (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-			    (gda_timestamp_get_second (timestamp) != tt.second) ||
-			    (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-			    (gda_timestamp_get_timezone (timestamp) != tt.timezone)) {
-				g_print ("Wrong result for gda_data_handler_get_value_from_str (\"%s\", GDA_TYPE_TIMESTAMP):\n"
-					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
-					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
-					 str, td.exp_day, td.exp_month, td.exp_year,
-					 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp),
-					 gda_timestamp_get_day (timestamp), gda_timestamp_get_hour (timestamp),
-					 gda_timestamp_get_minute (timestamp), gda_timestamp_get_second (timestamp),
-					 gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
-					 
-				g_object_unref (dh);
+			GDateTime *ptimestamp;
+			GDateTime *timestamp;
+			ptimestamp = g_value_get_boxed (value);
+			if (ptimestamp != NULL) {
+				timestamp = gda_date_time_copy (ptimestamp);
+				gda_value_free (value);
+				if ((g_date_time_get_year (timestamp) != td.exp_year) ||
+			    (g_date_time_get_month (timestamp) != td.exp_month) ||
+			    (g_date_time_get_day_of_month (timestamp) != td.exp_day) ||
+			    (g_date_time_get_hour (timestamp) != tt.hour) ||
+			    (g_date_time_get_minute (timestamp) != tt.minute) ||
+			    (g_date_time_get_second (timestamp) != tt.second) ||
+			    ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) != tt.fraction) ||
+			    (g_date_time_get_utc_offset (timestamp)/1000000 != tt.timezone)) {
+					g_print ("test_timestamp_handler: Compact Time Format: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
+						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
+						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
+						 str, td.exp_day, td.exp_month, td.exp_year,
+						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
+						 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+						 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+						 g_date_time_get_second (timestamp),
+						 (glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0),
+						 g_date_time_get_utc_offset (timestamp)/1000000);
+
+					g_object_unref (dh);
+					g_free (str);
+					return FALSE;
+				}
+				g_date_time_unref (timestamp);
 				g_free (str);
+			} else {
 				return FALSE;
 			}
-			g_free (str);
-			gda_timestamp_free (timestamp);
 		}
 	}
 	
-	g_print ("All %d GdaDataHandler (GDA_TYPE_TIMESTAMP) parsing tests passed\n", idate * (itime + itime2));
+	g_print ("All %d GdaDataHandler (G_TYPE_DATE_TIME) parsing tests passed\n", idate * (itime + itime2));
 	g_object_unref (dh);
 	return TRUE;
 }

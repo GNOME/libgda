@@ -98,7 +98,7 @@ function mdb2_type_to_gtype ($mdb2type)
 	case "time":
 		return "GdaTime";
 	case "timestamp":
-		return "GdaTimestamp";
+		return "GDateTime";
 	case "blob":
 		return "GdaBinary";
 	}

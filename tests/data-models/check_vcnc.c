@@ -582,15 +582,10 @@ check_date (GdaConnection *virtual)
 {
 	g_print ("*** insert dates into 'misc' table...\n");
 	GdaSet *set;
-	GdaTimestamp *ts = gda_timestamp_new ();
-	gda_timestamp_set_year (ts, 2011);
-	gda_timestamp_set_month (ts, 01);
-	gda_timestamp_set_day (ts, 31);
-	gda_timestamp_set_hour (ts, 12);
-	gda_timestamp_set_minute (ts, 34);
-	gda_timestamp_set_second (ts, 56);
-	gda_timestamp_set_fraction (ts, 0);
-	gda_timestamp_set_timezone (ts, 0);
+	GDateTime *ts = g_date_time_new_utc (2011, 01, 31, 12, 34, 56.0);
+  gchar* tss = g_date_time_format ((GDateTime*) ts, "%FT%T");
+  g_print ("Created Timestamp: %s\n", tss);
+  g_free (tss);
 	GdaTime* atime = gda_time_new_from_values (13, 45, 59, 0, 0);
 	GDate *adate;
 	GdaDataModel *model;
@@ -598,7 +593,7 @@ check_date (GdaConnection *virtual)
 
 	adate = g_date_new_dmy (23, G_DATE_FEBRUARY, 2010);
 	set = gda_set_new_inline (3,
-				  "ts", GDA_TYPE_TIMESTAMP, ts,
+				  "ts", G_TYPE_DATE_TIME, ts,
 				  "adate", G_TYPE_DATE, adate,
 				  "atime", GDA_TYPE_TIME, atime);
 	g_date_free (adate);
@@ -650,5 +645,5 @@ check_date (GdaConnection *virtual)
 	}
 
 	g_object_unref (set);
-	gda_timestamp_free (ts);
+	g_date_time_unref (ts);
 }

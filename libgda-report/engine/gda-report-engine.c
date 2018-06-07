@@ -1236,7 +1236,7 @@ value_to_node (GdaReportEngine *engine, G_GNUC_UNUSED RunContext *context, const
 			g_hash_table_insert (data_handlers, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
 			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
 			g_hash_table_insert (data_handlers, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
-			g_hash_table_insert (data_handlers, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
+			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_DATE_TIME, gda_handler_time_new ());
 			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
 			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
 			g_hash_table_insert (data_handlers, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());

@@ -280,7 +280,7 @@ _gda_sqlite_meta__btypes (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED G
 		{"real", "gdouble",  "Floating point value, stored as an 8-byte IEEE floating point number", NULL},
 		{"text", "string", "Text string, stored using the database encoding", "string"},
 		{"blob", "GdaBlob", "Blob of data, stored exactly as it was input", NULL},
-		{"timestamp", "GdaTimestamp", "Time stamp, stored as 'YYYY-MM-DD HH:MM:SS.SSS'", NULL},
+		{"timestamp", "GDateTime", "Time stamp, stored as 'YYYY-MM-DDTHH:MM:SS.SSS[TZ]'", NULL},
 		{"time", "GdaTime", "Time, stored as 'HH:MM:SS.SSS'", NULL},
 		{"date", "GDate", "Date, stored as 'YYYY-MM-DD'", NULL},
 		{"boolean", "gboolean", "Boolean value", "bool"}

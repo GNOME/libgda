@@ -1093,7 +1093,7 @@ gda_set_copy (GdaSet *set)
 }
 
 /**
- * gda_set_new_inline: (skip)
+ * gda_set_new_inline:
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value
  *
@@ -1130,47 +1130,47 @@ gda_set_new_inline (gint nb, ...)
 		holder = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, "g-type", type, "id", id, NULL);
 
 		value = gda_value_new (type);
-		if (type == G_TYPE_BOOLEAN) 
+		if (g_type_is_a (type, G_TYPE_BOOLEAN))
 			g_value_set_boolean (value, va_arg (ap, int));
-                else if (type == G_TYPE_STRING)
+                else if (g_type_is_a (type, G_TYPE_STRING))
 			g_value_set_string (value, va_arg (ap, gchar *));
-                else if (type == G_TYPE_OBJECT)
+                else if (g_type_is_a (type, G_TYPE_OBJECT))
 			g_value_set_object (value, va_arg (ap, gpointer));
-		else if (type == G_TYPE_INT)
+		else if (g_type_is_a (type, G_TYPE_INT))
 			g_value_set_int (value, va_arg (ap, gint));
-		else if (type == G_TYPE_UINT)
+		else if (g_type_is_a (type, G_TYPE_UINT))
 			g_value_set_uint (value, va_arg (ap, guint));
-		else if (type == GDA_TYPE_BINARY)
+		else if (g_type_is_a (type, GDA_TYPE_BINARY))
 			gda_value_set_binary (value, va_arg (ap, GdaBinary *));
-		else if (type == G_TYPE_INT64)
+		else if (g_type_is_a (type, G_TYPE_INT64))
 			g_value_set_int64 (value, va_arg (ap, gint64));
-		else if (type == G_TYPE_UINT64)
+		else if (g_type_is_a (type, G_TYPE_UINT64))
 			g_value_set_uint64 (value, va_arg (ap, guint64));
-		else if (type == GDA_TYPE_SHORT)
+		else if (g_type_is_a (type, GDA_TYPE_SHORT))
 			gda_value_set_short (value, va_arg (ap, int));
-		else if (type == GDA_TYPE_USHORT)
+		else if (g_type_is_a (type, GDA_TYPE_USHORT))
 			gda_value_set_ushort (value, va_arg (ap, guint));
-		else if (type == G_TYPE_CHAR)
+		else if (g_type_is_a (type, G_TYPE_CHAR))
 			g_value_set_schar (value, va_arg (ap, gint));
-		else if (type == G_TYPE_UCHAR)
+		else if (g_type_is_a (type, G_TYPE_UCHAR))
 			g_value_set_uchar (value, va_arg (ap, guint));
-		else if (type == G_TYPE_FLOAT)
+		else if (g_type_is_a (type, G_TYPE_FLOAT))
 			g_value_set_float (value, va_arg (ap, double));
-		else if (type == G_TYPE_DOUBLE)
+		else if (g_type_is_a (type, G_TYPE_DOUBLE))
 			g_value_set_double (value, va_arg (ap, gdouble));
-		else if (type == GDA_TYPE_NUMERIC)
+		else if (g_type_is_a (type, GDA_TYPE_NUMERIC))
 			gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
-		else if (type == G_TYPE_DATE)
+		else if (g_type_is_a (type, G_TYPE_DATE))
 			g_value_set_boxed (value, va_arg (ap, GDate *));
-		else if (type == G_TYPE_LONG)
+		else if (g_type_is_a (type, G_TYPE_LONG))
 			g_value_set_long (value, va_arg (ap, glong));
-		else if (type == G_TYPE_ULONG)
+		else if (g_type_is_a (type, G_TYPE_ULONG))
 			g_value_set_ulong (value, va_arg (ap, gulong));
-		else if (type == G_TYPE_GTYPE)
+		else if (g_type_is_a (type, G_TYPE_GTYPE))
 			g_value_set_gtype (value, va_arg(ap, GType));
-		else if (type == GDA_TYPE_TIMESTAMP)
-			gda_value_set_timestamp (value, va_arg(ap, GdaTimestamp *));
-		else if (type == GDA_TYPE_TIME)
+		else if (g_type_is_a (type, G_TYPE_DATE_TIME))
+			g_value_set_boxed (value, va_arg(ap, GDateTime *));
+		else if (g_type_is_a (type, GDA_TYPE_TIME))
 			gda_value_set_time (value, va_arg(ap, GdaTime *));
 		else {
 			g_warning (_("%s() does not handle values of type '%s'."),
@@ -1234,47 +1234,47 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 	type = gda_holder_get_g_type (holder);
 	va_start (ap, holder_id);
 	value = gda_value_new (type);
-	if (type == G_TYPE_BOOLEAN) 
+	if (g_type_is_a (type, G_TYPE_BOOLEAN))
 		g_value_set_boolean (value, va_arg (ap, int));
-	else if (type == G_TYPE_STRING)
+	else if (g_type_is_a (type, G_TYPE_STRING))
 		g_value_set_string (value, va_arg (ap, gchar *));
-	else if (type == G_TYPE_OBJECT)
+	else if (g_type_is_a (type, G_TYPE_OBJECT))
 		g_value_set_object (value, va_arg (ap, gpointer));
-	else if (type == G_TYPE_INT)
+	else if (g_type_is_a (type, G_TYPE_INT))
 		g_value_set_int (value, va_arg (ap, gint));
-	else if (type == G_TYPE_UINT)
+	else if (g_type_is_a (type, G_TYPE_UINT))
 		g_value_set_uint (value, va_arg (ap, guint));
-	else if (type == GDA_TYPE_BINARY)
+	else if (g_type_is_a (type, GDA_TYPE_BINARY))
 		gda_value_set_binary (value, va_arg (ap, GdaBinary *));
-	else if (type == G_TYPE_INT64)
+	else if (g_type_is_a (type, G_TYPE_INT64))
 		g_value_set_int64 (value, va_arg (ap, gint64));
-	else if (type == G_TYPE_UINT64)
+	else if (g_type_is_a (type, G_TYPE_UINT64))
 		g_value_set_uint64 (value, va_arg (ap, guint64));
-	else if (type == GDA_TYPE_SHORT)
+	else if (g_type_is_a (type, GDA_TYPE_SHORT))
 		gda_value_set_short (value, va_arg (ap, int));
-	else if (type == GDA_TYPE_USHORT)
+	else if (g_type_is_a (type, GDA_TYPE_USHORT))
 		gda_value_set_ushort (value, va_arg (ap, guint));
-	else if (type == G_TYPE_CHAR)
+	else if (g_type_is_a (type, G_TYPE_CHAR))
 		g_value_set_schar (value, va_arg (ap, gint));
-	else if (type == G_TYPE_UCHAR)
+	else if (g_type_is_a (type, G_TYPE_UCHAR))
 		g_value_set_uchar (value, va_arg (ap, guint));
-	else if (type == G_TYPE_FLOAT)
+	else if (g_type_is_a (type, G_TYPE_FLOAT))
 		g_value_set_float (value, va_arg (ap, double));
-	else if (type == G_TYPE_DOUBLE)
+	else if (g_type_is_a (type, G_TYPE_DOUBLE))
 		g_value_set_double (value, va_arg (ap, gdouble));
-	else if (type == GDA_TYPE_NUMERIC)
+	else if (g_type_is_a (type, GDA_TYPE_NUMERIC))
 		gda_value_set_numeric (value, va_arg (ap, GdaNumeric *));
-	else if (type == G_TYPE_DATE)
+	else if (g_type_is_a (type, G_TYPE_DATE))
 		g_value_set_boxed (value, va_arg (ap, GDate *));
-	else if (type == GDA_TYPE_TIMESTAMP)
-		gda_value_set_timestamp (value, va_arg (ap, GdaTimestamp*));
-	else if (type == GDA_TYPE_TIME)
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
+		g_value_set_boxed (value, va_arg (ap, GDateTime*));
+	else if (g_type_is_a (type, GDA_TYPE_TIME))
 		gda_value_set_time (value, va_arg (ap, GdaTime*));
-	else if (type == G_TYPE_LONG)
+	else if (g_type_is_a (type, G_TYPE_LONG))
 		g_value_set_long (value, va_arg (ap, glong));
-	else if (type == G_TYPE_ULONG)
+	else if (g_type_is_a (type, G_TYPE_ULONG))
 		g_value_set_ulong (value, va_arg (ap, gulong));
-	else if (type == G_TYPE_GTYPE)
+	else if (g_type_is_a (type, G_TYPE_GTYPE))
 		g_value_set_gtype (value, va_arg (ap, GType));	
 	else {
 		g_set_error (error, GDA_SET_ERROR, GDA_SET_IMPLEMENTATION_ERROR,

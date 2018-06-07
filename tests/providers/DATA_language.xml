@@ -7,32 +7,32 @@
     <gda_array_row>
       <gda_value>1</gda_value>
       <gda_value>English             </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>2</gda_value>
       <gda_value>Italian             </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>3</gda_value>
       <gda_value>Japanese            </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>4</gda_value>
       <gda_value>Mandarin            </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>5</gda_value>
       <gda_value>French              </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
     <gda_array_row>
       <gda_value>6</gda_value>
       <gda_value>German              </gda_value>
-      <gda_value>2006-02-15 10:02:19+0</gda_value>
+      <gda_value>2006-02-15T10:02:19+00</gda_value>
     </gda_array_row>
   </gda_array_data>
 </gda_array>

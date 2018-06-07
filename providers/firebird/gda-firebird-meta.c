@@ -316,7 +316,7 @@ _gda_firebird_meta__btypes (GdaServerProvider *prov, GdaConnection *cnc,
 			, "" }
 			
 		, { "TIMESTAMP"
-			, "GdaTimestamp"
+			, "GDateTime"
 			, "A timestamp. The range is '1970-01-01 00:00:01' UTC to partway through the year 2038. TIMESTAMP values are stored as the number of seconds since the epoch ('1970-01-01 00:00:00' UTC). A TIMESTAMP cannot represent the value '1970-01-01 00:00:00' because that is equivalent to 0 seconds from the epoch and the value 0 is reserved for representing '0000-00-00 00:00:00', the \"zero\" TIMESTAMP value."
 			, "" }
 
@@ -892,7 +892,7 @@ map_firebird_type_to_gda (const GValue  *value)
 		newstring = "GdaTime";
 	else
 	if (strcmp (string, "timestamp") == 0)
-		newstring = "GdaTimestamp";
+		newstring = "GDateTime";
 	else
 	if (strcmp (string, "varchar") == 0)
 		newstring = "gchararray";

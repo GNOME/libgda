@@ -81,9 +81,9 @@ gdaui_entry_timestamp_new (GdaDataHandler *dh)
 	GObject *obj;
 
 	g_return_val_if_fail (dh && GDA_IS_DATA_HANDLER (dh), NULL);
-	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, GDA_TYPE_TIMESTAMP), NULL);
+	g_return_val_if_fail (gda_data_handler_accepts_g_type (dh, G_TYPE_DATE_TIME), NULL);
 
-	obj = g_object_new (GDAUI_TYPE_ENTRY_TIMESTAMP, "handler", dh, "type", GDA_TYPE_TIMESTAMP, NULL);
+	obj = g_object_new (GDAUI_TYPE_ENTRY_TIMESTAMP, "handler", dh, "type", G_TYPE_DATE_TIME, NULL);
 
 	return GTK_WIDGET (obj);
 }

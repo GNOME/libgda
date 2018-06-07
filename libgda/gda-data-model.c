@@ -1658,19 +1658,19 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
 
 			value = (GValue*) gda_data_model_iter_get_value_at (iter, cols[c]);
 			if (value && invalid_as_null) {
-				if ((G_VALUE_TYPE (value) == G_TYPE_DATE)) {
+				if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE)) {
 					GDate *date = (GDate*) g_value_get_boxed (value);
 					if (!g_date_valid (date))
 						value = NULL;
 				}
-				else if ((G_VALUE_TYPE (value) == GDA_TYPE_TIME)) {
+				else if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_TIME)) {
 					const GdaTime *tim = gda_value_get_time (value);
 					if (! gda_time_valid (tim))
 						value = NULL;					
 				}
-				else if ((G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP)) {
-					const GdaTimestamp *ts = gda_value_get_timestamp (value);
-					if (! gda_timestamp_valid (ts))
+				else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
+					GDateTime *ts = g_value_get_boxed (value);
+					if (ts == NULL)
 						value = NULL;
 				}
 			}
