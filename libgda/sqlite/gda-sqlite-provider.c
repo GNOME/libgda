@@ -3293,7 +3293,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				timestamp = g_date_time_to_timezone (timestamp, tz);
 				tofree = TRUE;
 			}
-			gchar *string = g_date_time_format (timestamp, "%FT%H%M%S");
+			gchar *string = g_date_time_format (timestamp, "%F %H:%M:%S");
 
 			if (tofree)
 				g_date_time_unref (timestamp);

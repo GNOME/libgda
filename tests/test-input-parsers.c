@@ -196,7 +196,7 @@ test_parse_iso8601_timestamp (void)
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
 
-			GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (str);
+			GDateTime* timestamp = gda_parse_iso8601_timestamp (str);
 			if (timestamp == NULL && td.exp_retval && tt.exp_retval) {
 				g_print ("test_parse_iso8601: Wrong result for gda_parse_iso8601_timestamp (\"%s\"): for valid timestamp\n",
 					 str);
@@ -208,29 +208,31 @@ test_parse_iso8601_timestamp (void)
 			}
 
 			if ((td.exp_retval &&
-			     ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-			      (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-			      (gda_timestamp_get_day (timestamp) != td.exp_day))) &&
-			    (((gda_timestamp_get_hour (timestamp) != tt.hour) ||
-			      (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-			      (gda_timestamp_get_second (timestamp) != tt.second) ||
-			      (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-			      (gda_timestamp_get_timezone (timestamp) != tt.timezone)))) {
+			     ((g_date_time_get_year (timestamp) != td.exp_year) ||
+			      (g_date_time_get_month (timestamp) != td.exp_month) ||
+			      (g_date_time_get_day_of_month (timestamp) != td.exp_day))) &&
+			    (((g_date_time_get_hour (timestamp) != tt.hour) ||
+			      (g_date_time_get_minute (timestamp) != tt.minute) ||
+			      (g_date_time_get_second (timestamp) != tt.second) ||
+			      (((gint) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0))
+											!= tt.fraction) ||
+			      ((g_date_time_get_utc_offset (timestamp) / 1000000) != tt.timezone)))) {
 				g_print ("test_parse_iso8601_timestamp: Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
 					 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-					 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp),
-					 gda_timestamp_get_day (timestamp), gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
-					 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp),
-					 gda_timestamp_get_timezone (timestamp));
+					 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+					 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+					 g_date_time_get_second (timestamp),
+					 (glong) (g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) / 1000000l,
+					 g_date_time_get_utc_offset (timestamp)/1000000);
 					 
 				g_free (str);
 				return FALSE;
 			}
 			g_free (str);
-			gda_timestamp_free (timestamp);
+			g_date_time_unref (timestamp);
 		}
 	}
 	g_print ("All %d iso8601 timestamp parsing tests passed\n", idate * itime);
@@ -420,31 +422,34 @@ test_timestamp_handler (void)
 				continue;
 			}
 
-			GdaTimestamp *ptimestamp;
-			GdaTimestamp *timestamp;
-			ptimestamp = (GdaTimestamp*) g_value_get_boxed (value);
+			GDateTime *ptimestamp;
+			GDateTime *timestamp;
+			ptimestamp = g_value_get_boxed (value);
 			if (ptimestamp != NULL) {
-				timestamp = gda_timestamp_copy (ptimestamp);
+				timestamp = gda_date_time_copy (ptimestamp);
 				gda_value_free (value);
 
 				g_print ("test_timestamp_handler: Result for gda_data_handler_get_value_from_str ():\n"
 						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
-						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
+						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld (SF=%f) TZ=%ld\\n",
 						 td.exp_day, td.exp_month, td.exp_year,
 						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-						 gda_timestamp_get_year (timestamp), gda_timestamp_get_month (timestamp), gda_timestamp_get_day (timestamp),
-						 gda_timestamp_get_hour (timestamp), gda_timestamp_get_minute (timestamp),
-						 gda_timestamp_get_second (timestamp), gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
+						 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+					 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+					 g_date_time_get_second (timestamp),
+					 (glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0),
+					 g_date_time_get_seconds (timestamp),
+					 g_date_time_get_utc_offset (timestamp)/1000000);
 
-				g_assert (gda_timestamp_get_year (timestamp) == td.exp_year);
-				g_assert (gda_timestamp_get_month (timestamp) == td.exp_month);
-				g_assert (gda_timestamp_get_day (timestamp) == td.exp_day);
-				g_assert (gda_timestamp_get_hour (timestamp) == tt.hour);
-				g_assert (gda_timestamp_get_minute (timestamp) == tt.minute);
-				g_assert (gda_timestamp_get_second (timestamp) == tt.second);
-				g_assert (gda_timestamp_get_fraction (timestamp) == tt.fraction);
-				g_assert (gda_timestamp_get_timezone (timestamp) == tt.timezone);
-				gda_timestamp_free (timestamp);
+				g_assert (g_date_time_get_year (timestamp) == td.exp_year);
+				g_assert (g_date_time_get_month (timestamp) == td.exp_month);
+				g_assert (g_date_time_get_day_of_month (timestamp) == td.exp_day);
+				g_assert (g_date_time_get_hour (timestamp) == tt.hour);
+				g_assert (g_date_time_get_minute (timestamp) == tt.minute);
+				g_assert (g_date_time_get_second (timestamp) == tt.second);
+				g_assert ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) == tt.fraction);
+				g_assert (g_date_time_get_utc_offset (timestamp)/1000000 == tt.timezone);
+				g_date_time_unref (timestamp);
 			}
 			g_free (str);
 		}
@@ -469,35 +474,36 @@ test_timestamp_handler (void)
 				continue;
 			}
 
-			GdaTimestamp *ptimestamp;
-			GdaTimestamp *timestamp;
-			ptimestamp = (GdaTimestamp*) g_value_get_boxed (value);
+			GDateTime *ptimestamp;
+			GDateTime *timestamp;
+			ptimestamp = g_value_get_boxed (value);
 			if (ptimestamp != NULL) {
-				timestamp = gda_timestamp_copy (ptimestamp);
+				timestamp = gda_date_time_copy (ptimestamp);
 				gda_value_free (value);
-				if ((gda_timestamp_get_year (timestamp) != td.exp_year) ||
-			    (gda_timestamp_get_month (timestamp) != td.exp_month) ||
-			    (gda_timestamp_get_day (timestamp) != td.exp_day) ||
-			    (gda_timestamp_get_hour (timestamp) != tt.hour) ||
-			    (gda_timestamp_get_minute (timestamp) != tt.minute) ||
-			    (gda_timestamp_get_second (timestamp) != tt.second) ||
-			    (gda_timestamp_get_fraction (timestamp) != tt.fraction) ||
-			    (gda_timestamp_get_timezone (timestamp) != tt.timezone)) {
+				if ((g_date_time_get_year (timestamp) != td.exp_year) ||
+			    (g_date_time_get_month (timestamp) != td.exp_month) ||
+			    (g_date_time_get_day_of_month (timestamp) != td.exp_day) ||
+			    (g_date_time_get_hour (timestamp) != tt.hour) ||
+			    (g_date_time_get_minute (timestamp) != tt.minute) ||
+			    (g_date_time_get_second (timestamp) != tt.second) ||
+			    ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) != tt.fraction) ||
+			    (g_date_time_get_utc_offset (timestamp)/1000000 != tt.timezone)) {
 					g_print ("test_timestamp_handler: Compact Time Format: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
 						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
 						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n",
 						 str, td.exp_day, td.exp_month, td.exp_year,
 						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-						 gda_timestamp_get_day (timestamp), gda_timestamp_get_month (timestamp),
-						 gda_timestamp_get_year (timestamp), gda_timestamp_get_hour (timestamp),
-						 gda_timestamp_get_minute (timestamp), gda_timestamp_get_second (timestamp),
-						 gda_timestamp_get_fraction (timestamp), gda_timestamp_get_timezone (timestamp));
+						 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
+						 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+						 g_date_time_get_second (timestamp),
+						 (glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0),
+						 g_date_time_get_utc_offset (timestamp)/1000000);
 
 					g_object_unref (dh);
 					g_free (str);
 					return FALSE;
 				}
-				gda_timestamp_free (timestamp);
+				g_date_time_unref (timestamp);
 				g_free (str);
 			} else {
 				return FALSE;

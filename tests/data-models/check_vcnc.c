@@ -582,7 +582,7 @@ check_date (GdaConnection *virtual)
 {
 	g_print ("*** insert dates into 'misc' table...\n");
 	GdaSet *set;
-	GdaTimestamp *ts = (GdaTimestamp*) g_date_time_new_utc (2011, 01, 31, 12, 34, 56.0);
+	GDateTime *ts = g_date_time_new_utc (2011, 01, 31, 12, 34, 56.0);
   gchar* tss = g_date_time_format ((GDateTime*) ts, "%FT%T");
   g_print ("Created Timestamp: %s\n", tss);
   g_free (tss);
@@ -645,5 +645,5 @@ check_date (GdaConnection *virtual)
 	}
 
 	g_object_unref (set);
-	gda_timestamp_free (ts);
+	g_date_time_unref (ts);
 }

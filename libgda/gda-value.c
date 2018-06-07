@@ -1775,6 +1775,28 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 	time->timezone = ntz;
 }
 
+/**
+ * gda_timestamp_copy:
+ *
+ * Returns: (transfer full):
+ */
+GDateTime*
+gda_date_time_copy (GDateTime *ts)
+{
+	g_return_val_if_fail(ts != NULL, NULL);
+
+	GTimeZone *tz;
+
+	tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (ts));
+
+	return g_date_time_new (tz,
+													g_date_time_get_year (ts),
+													g_date_time_get_month (ts),
+													g_date_time_get_day_of_month (ts),
+													g_date_time_get_hour (ts),
+													g_date_time_get_minute (ts),
+													g_date_time_get_seconds (ts));
+}
 
 /**
  * gda_value_new:

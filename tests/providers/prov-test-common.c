@@ -717,28 +717,12 @@ prov_test_common_check_data_select (void)
 static gboolean
 timestamp_equal (const GValue *cv1, const GValue *cv2)
 {
-	g_assert (G_VALUE_TYPE (cv1) == GDA_TYPE_TIMESTAMP);
-	g_assert (G_VALUE_TYPE (cv2) == GDA_TYPE_TIMESTAMP);
-	GdaTimestamp *ts1, *ts2;
-	ts1 = (GdaTimestamp*) gda_value_get_timestamp (cv1);
-	ts2 = (GdaTimestamp*) gda_value_get_timestamp (cv2);
-	if (gda_timestamp_get_timezone (ts1) == gda_timestamp_get_timezone (ts2))
-		return gda_value_differ (cv1, cv2) ? FALSE : TRUE;
-
-	GdaTimestamp *ts;
-	ts = gda_timestamp_copy (ts1);
-	gda_timestamp_change_timezone (ts, gda_timestamp_get_timezone (ts2));
-	gboolean res = TRUE;
-	if (gda_timestamp_get_year (ts1) != gda_timestamp_get_year (ts2)) res = FALSE;
-	if (gda_timestamp_get_month (ts1) != gda_timestamp_get_month (ts2)) res = FALSE;
-	if (gda_timestamp_get_day (ts1) != gda_timestamp_get_day (ts2)) res = FALSE;
-	if (gda_timestamp_get_hour (ts1) != gda_timestamp_get_hour (ts2)) res = FALSE;
-	if (gda_timestamp_get_minute (ts1) != gda_timestamp_get_minute (ts2)) res = FALSE;
-	if (gda_timestamp_get_second (ts1) != gda_timestamp_get_second (ts2)) res = FALSE;
-	if (gda_timestamp_get_fraction (ts1) != gda_timestamp_get_fraction (ts2)) res = FALSE;
-	if (gda_timestamp_get_timezone (ts1) != gda_timestamp_get_timezone (ts2)) res = FALSE;
-	gda_timestamp_free (ts);
-	return res;
+	g_assert (G_VALUE_TYPE (cv1) == G_TYPE_DATE_TIME);
+	g_assert (G_VALUE_TYPE (cv2) == G_TYPE_DATE_TIME);
+	GDateTime *ts1, *ts2;
+	ts1 = g_value_get_boxed (cv1);
+	ts2 = g_value_get_boxed (cv2);
+	return g_date_time_compare (ts1, ts2) == 0 ? TRUE : FALSE;
 }
 
 int
@@ -766,7 +750,7 @@ prov_test_common_check_timestamp (void)
 	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO tstest (ts) VALUES (##ts::timestamp)", NULL, &error);
 	if (!stmt ||
 	    ! gda_statement_get_parameters (stmt, &params, &error) ||
-	    ! gda_set_set_holder_value (params, &error, "ts", gda_value_get_timestamp (tso)) ||
+	    ! gda_set_set_holder_value (params, &error, "ts", g_value_get_boxed (tso)) ||
 	    (gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, &error) == -1)) {
 		number_failed ++;
 		goto out;
@@ -795,7 +779,7 @@ prov_test_common_check_timestamp (void)
 	}
 
 	const GValue *cvalue;
-	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, GDA_TYPE_TIMESTAMP, FALSE, &error);
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_DATE_TIME, FALSE, &error);
 	if (!cvalue) {
 		number_failed ++;
 		goto out;
@@ -815,7 +799,7 @@ prov_test_common_check_timestamp (void)
 	/* check that data handler is correctly configured: compare the same timestamp rendered by a data handler for
 	 * timestamps with the date rendered as a string by the server (by appending a string to the timestamp field) */
 	GdaDataHandler *dh;
-	dh = gda_server_provider_get_data_handler_g_type (gda_connection_get_provider (cnc), cnc, GDA_TYPE_TIMESTAMP);
+	dh = gda_server_provider_get_data_handler_g_type (gda_connection_get_provider (cnc), cnc, G_TYPE_DATE_TIME);
 	gchar *str;
 	str = gda_data_handler_get_str_from_value (dh, cvalue);
 	g_object_unref (model);

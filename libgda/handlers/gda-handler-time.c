@@ -341,7 +341,7 @@ gda_handler_time_get_no_locale_str_from_value (GdaHandlerTime *dh, const GValue 
 
 		gdats = (GDateTime*) g_value_get_boxed ((GValue *) value);
 		if (gdats != NULL)
-			retval = g_date_time_format (gdats, "%c");
+			retval = g_date_time_format (gdats, "%FT%H:%M:%S%:::z");
 		else
 			retval = g_strdup ("NULL");
 	}
@@ -550,16 +550,16 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		g_string_append_c (string, '\'');
 		retval = g_string_free (string, FALSE);
 	}
-	else if (type == G_TYPE_DATE_TIME) {
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 		GDateTime *gdats;
 
 		gdats = (GDateTime*) g_value_get_boxed ((GValue *) value);
 		if (gdats != NULL)
-			retval = g_date_time_format (gdats, "%c");
+			retval = g_date_time_format (gdats, "'%FT%H:%M:%S%:::z'");
 		else
 			retval = g_strdup ("NULL");	
 	}
-	else if (type == G_TYPE_DATE_TIME) {
+	else if (type == G_TYPE_DATE_TIME) { // FIXME: Remove
 		GDateTime *ts;
 		GDate *vdate;
 
@@ -638,7 +638,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 
 		gdats = (GDateTime*) g_value_get_boxed ((GValue *) value);
 		if (gdats != NULL)
-			retval = g_date_time_format (gdats, "%c");
+			retval = g_date_time_format (gdats, "%xT%H:%M:%S%:::z");
 		else
 			retval = g_strdup ("");
 	}
