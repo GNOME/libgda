@@ -558,7 +558,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					gda_time_free (timegda);
 				}
 				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-					GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (
+					GDateTime* timestamp = gda_parse_iso8601_timestamp (
 									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 										real_col));
 					if (timestamp == NULL) {
@@ -571,7 +571,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 					else {
 						g_value_set_boxed (value, timestamp);
-					  gda_timestamp_free (timestamp);
+					  g_date_time_unref (timestamp);
 					}
 				}
 				else if (type == G_TYPE_CHAR) {

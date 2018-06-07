@@ -574,10 +574,10 @@ create_typed_value (GType type, va_list *ap)
 		timegda = va_arg (*ap, GdaTime *);
 		gda_value_set_time ((v = gda_value_new (GDA_TYPE_TIME)), timegda);
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		GdaTimestamp *timestamp;
-		timestamp = va_arg (*ap, GdaTimestamp *);
-		gda_value_set_timestamp ((v = gda_value_new (GDA_TYPE_TIMESTAMP)), timestamp);
+	else if (type == G_TYPE_DATE_TIME) {
+		GDateTime *timestamp;
+		timestamp = va_arg (*ap, GDateTime *);
+		g_value_set_boxed ((v = gda_value_new (G_TYPE_DATE_TIME)), timestamp);
 	}
 	else if (type == GDA_TYPE_NULL)
 		v = gda_value_new_null ();

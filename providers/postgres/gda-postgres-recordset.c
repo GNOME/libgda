@@ -672,15 +672,15 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 		gda_value_set_geometric_point (value, point);
 		gda_geometric_point_free (point);
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	else if (type == G_TYPE_DATE_TIME) {
 		PostgresConnectionData *cdata;
 		cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 		if (cdata) {
-			GdaTimestamp* timestamp = gda_parse_formatted_timestamp (thevalue, cdata->date_first, cdata->date_second,
+			GDateTime* timestamp = gda_parse_formatted_timestamp (thevalue, cdata->date_first, cdata->date_second,
 							   cdata->date_third, cdata->date_sep);
 			if (timestamp != NULL) {
 				g_value_set_boxed (value, timestamp);
-			  gda_timestamp_free (timestamp);
+			  g_date_time_unref (timestamp);
 			}
 			else {
 				gda_row_invalidate_value (row, value);

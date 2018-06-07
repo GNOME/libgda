@@ -638,7 +638,7 @@ value_to_xmlchar (const GValue * value)
 				     (gpointer) GDA_TYPE_TIME,
 				     gda_handler_time_new ());
 		g_hash_table_insert (data_handlers,
-				     (gpointer) GDA_TYPE_TIMESTAMP,
+				     (gpointer) G_TYPE_DATE_TIME,
 				     gda_handler_time_new ());
 		g_hash_table_insert (data_handlers, (gpointer) G_TYPE_CHAR,
 				     gda_handler_numerical_new ());

@@ -400,13 +400,13 @@ icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, 
 					}
 				}
 			}
-			else if (type == GDA_TYPE_TIMESTAMP) {
-				GdaTimestamp *ts;
-				ts = (GdaTimestamp*) gda_value_get_timestamp (value);
+			else if (type == G_TYPE_DATE_TIME) {
+				GDateTime *ts;
+				ts = g_value_get_boxed (value);
 				if (ts) {
-					year = gda_timestamp_get_year (ts);
-					month = gda_timestamp_get_month (ts) - 1;
-					day = gda_timestamp_get_day (ts);
+					year = g_date_time_get_year (ts);
+					month = g_date_time_get_month (ts) - 1;
+					day = g_date_time_get_day_of_month (ts);
 					unset = FALSE;
 				}
 			}
@@ -471,7 +471,7 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
         else
                 mtm.tm_year = year;
 
-	if (type == GDA_TYPE_TIMESTAMP) {
+	if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 		/* get the time part back from current value */
 		GValue *value = NULL;
 		gchar *tmpstr;
@@ -485,10 +485,10 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* copy the 'fraction' and 'timezone' parts, we have not modified */
-			GdaTimestamp *ets = (GdaTimestamp*) gda_value_get_timestamp (value);
-			mtm.tm_hour = gda_timestamp_get_hour (ets);
-			mtm.tm_min = gda_timestamp_get_minute (ets);
-			mtm.tm_sec = gda_timestamp_get_second (ets);
+			GDateTime *ets = g_value_get_boxed (value);
+			mtm.tm_hour = g_date_time_get_hour (ets);
+			mtm.tm_min = g_date_time_get_minute (ets);
+			mtm.tm_sec = g_date_time_get_second (ets);
 		}
 		gda_value_free (value);
 	}
@@ -497,7 +497,7 @@ date_day_selected (GtkCalendar *calendar, GdauiEntryCommonTime *mgtim)
 	bufsize = sizeof (buffer) / sizeof (char);
 	if (strftime (buffer, bufsize, "%x", &mtm) == 0)
 		buffer [0] = 0;
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	else if (type == G_TYPE_DATE_TIME) {
 		char buffer2 [128];
 		if (strftime (buffer2, bufsize, "%X", &mtm) == 0)
 			buffer [0] = 0;
@@ -608,7 +608,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 	g_signal_connect_swapped (wid, "event-after",
 				  G_CALLBACK (event_after_cb), hb);
 
-	if ((type == G_TYPE_DATE) || (type == GDA_TYPE_TIMESTAMP))
+	if ((type == G_TYPE_DATE) || (type == G_TYPE_DATE_TIME))
 		gtk_entry_set_icon_from_icon_name (GTK_ENTRY (wid),
 						   GTK_ENTRY_ICON_PRIMARY, "x-office-calendar-symbolic");
 
@@ -683,7 +683,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 		else 
 			gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	else if (type == G_TYPE_DATE_TIME) {
 		if (value) {
 			if (gda_value_is_null ((GValue *) value)) {
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), NULL);
@@ -691,18 +691,28 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				mgtim->priv->value_fraction = 0;
 			}
 			else {
-				GdaTimestamp *gts;
-				GdaTimestamp *copy;
-				gts = (GdaTimestamp*) gda_value_get_timestamp (value);
-				mgtim->priv->value_tz = fit_tz (gda_timestamp_get_timezone (gts));
-				mgtim->priv->value_fraction = gda_timestamp_get_fraction (gts);
+				GDateTime *gts;
+				GDateTime *copy;
+				gts = g_value_get_boxed (value);
+				mgtim->priv->value_tz = fit_tz (g_date_time_get_utc_offset (gts) / 1000000);
+				mgtim->priv->value_fraction = (glong) ((g_date_time_get_seconds (gts) - g_date_time_get_second (gts)) * 1000000);
 
-				copy = gda_timestamp_copy (gts);
-				gda_timestamp_change_timezone (copy, mgtim->priv->displayed_tz);
+				gint itz = mgtim->priv->displayed_tz; // FIXME: This time zone is always positive
+				if (itz < 0)
+					itz *= -1;
+				gint h = itz/60/60;
+				gint m = itz/60 - h*60;
+				gint s = itz - h*60*60 - m*60;
+				gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																			mgtim->priv->displayed_tz < 0 ? "-" : "+",
+																			h, m, s);
+				GTimeZone *tz = g_time_zone_new (stz);
+				g_free (stz);
+				copy = g_date_time_to_timezone (gts, tz);
 
 				GValue *copy_value;
-				copy_value = g_new0 (GValue, 1);
-				gda_value_set_timestamp (copy_value, copy);
+				copy_value = gda_value_new (G_TYPE_DATE_TIME);
+				g_value_set_boxed (copy_value, copy);
 
 				gchar *str;
 				str = gda_data_handler_get_str_from_value (dh, copy_value);
@@ -710,7 +720,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 				gdaui_entry_set_text (GDAUI_ENTRY (mgtim->priv->entry), str);
 				g_free (str);
-				gda_timestamp_free (copy);
+				g_date_time_unref (copy);
 			}
 		}
 		else
@@ -760,7 +770,7 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 			gda_time_free (time_copy);
 		}
 	}
-	else if (type == GDA_TYPE_TIMESTAMP) {
+	else if (type == G_TYPE_DATE_TIME) {
 		gchar *tmpstr;
 
 		tmpstr = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
@@ -771,13 +781,34 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 			/* copy the 'fraction' part, we have not modified */
-			GdaTimestamp *gdatime;
-			gdatime = (GdaTimestamp*) gda_value_get_timestamp (value);
-			gda_timestamp_set_fraction (gdatime, mgtim->priv->value_fraction);
-			gda_timestamp_set_timezone (gdatime, mgtim->priv->displayed_tz);
+			GDateTime *gdatime = NULL;
+			GDateTime *copy;
+			g_value_take_boxed (value, gdatime);
+			gint tzi = mgtim->priv->displayed_tz; // FIXME: This is always positive
+			if (tzi < 0)
+				tzi *= -1;
+			gint h = tzi/60/60;
+			gint m = tzi/60 - h*60;
+			gint s = tzi - h*60*60 - m*60;
+			gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																		mgtim->priv->displayed_tz < 0 ? "-" : "+",
+																		h, m, s);
+			GTimeZone *tz = g_time_zone_new (stz);
+			g_free (stz);
+			gdouble seconds = g_date_time_get_second (gdatime) + mgtim->priv->value_fraction / 1000000.0;
+			copy = g_date_time_new (tz,
+															g_date_time_get_year (gdatime),
+															g_date_time_get_month (gdatime),
+															g_date_time_get_day_of_month (gdatime),
+															g_date_time_get_hour (gdatime),
+															g_date_time_get_minute (gdatime),
+															seconds);
+			g_time_zone_unref (tz);
+			g_date_time_unref (gdatime);
+			g_value_set_boxed (value, copy);
+			/* FIXME: Original code change timezone, but before set a displayed one, so inconsistency
 			gda_timestamp_change_timezone (gdatime, mgtim->priv->value_tz);
-			gda_value_set_timestamp (value, gdatime);
-			g_free (gdatime);
+			 */
 		}
 	}
 	else
@@ -862,7 +893,7 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), timvalue);
 			gda_value_free (timvalue);
 		}
-		else if (type == GDA_TYPE_TIMESTAMP) {
+		else if (type == G_TYPE_DATE_TIME) {
 			/* set current date and time */
 			GValue *tsvalue;
 			//gchar *str;
@@ -882,10 +913,12 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 		if (type == G_TYPE_DATE) {
 			date = (GDate*) g_value_get_boxed (value);
 		}
-		else if (type == GDA_TYPE_TIMESTAMP) {
-			GdaTimestamp *ts;
-			ts = (GdaTimestamp*) gda_value_get_timestamp (value);
-			date = g_date_new_dmy (gda_timestamp_get_day (ts), gda_timestamp_get_month (ts), gda_timestamp_get_year (ts));
+		else if (type == G_TYPE_DATE_TIME) {
+			GDateTime *ts;
+			ts = g_value_get_boxed (value);
+			date = g_date_new_dmy (g_date_time_get_day_of_month (ts),
+														 g_date_time_get_month (ts),
+														 g_date_time_get_year (ts));
 		}
 
 		if (date) {
@@ -909,16 +942,22 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 				if (type == G_TYPE_DATE) {
 					g_value_take_boxed (value, ndate);
 				}
-				else if (type == GDA_TYPE_TIMESTAMP) {
-					GdaTimestamp *ts;
-					ts = (GdaTimestamp*) gda_timestamp_copy ((gpointer) gda_value_get_timestamp (value));
-					gda_timestamp_set_day (ts, g_date_get_day (ndate));
-					gda_timestamp_set_month (ts, g_date_get_month (ndate));
-					gda_timestamp_set_year (ts, g_date_get_year (ndate));
+				else if (type == G_TYPE_DATE_TIME) {
+					GDateTime *dt = g_value_get_boxed (value);
+					GDateTime *ts;
+					GTimeZone *tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (dt));
+					ts = g_date_time_new (tz,
+																g_date_get_year (ndate),
+																g_date_get_month (ndate),
+																g_date_get_day (ndate),
+																g_date_time_get_hour (dt),
+																g_date_time_get_minute (dt),
+																g_date_time_get_seconds (dt));
+
 					g_date_free (date);
 					g_date_free (ndate);
-					gda_value_set_timestamp (value, ts);
-					gda_timestamp_free (ts);
+					g_value_set_boxed (value, ts);
+					g_date_time_unref (ts);
 				}
 				real_set_value (GDAUI_ENTRY_WRAPPER (data), value);
 			}

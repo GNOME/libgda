@@ -91,7 +91,7 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 		array [i] = type;
 		g_hash_table_insert (hash, "time", array + i);
 
-		type = GDA_TYPE_TIMESTAMP;
+		type = G_TYPE_DATE_TIME;
 		i++;
 		array [i] = type;
 		g_hash_table_insert (hash, "timestamp", array + i);

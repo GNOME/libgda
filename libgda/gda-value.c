@@ -218,12 +218,12 @@ set_from_string (GValue *value, const gchar *as_string)
 		gda_time_free (timegda);
 	}
 	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-		GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (as_string);
+		GDateTime* timestamp = gda_parse_iso8601_timestamp (as_string);
 		if (timestamp) {
 			g_value_set_boxed (value, timestamp);
 			retval = TRUE;
 		}
-		gda_timestamp_free (timestamp);
+		g_date_time_unref (timestamp);
 	}
 	else if (type == GDA_TYPE_NULL) {
 		gda_value_set_null (value);
@@ -1775,238 +1775,6 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 	time->timezone = ntz;
 }
 
-/**
- * gda_timestamp_new:
- *
- * A new timestamp initialized to the instantace of creation at UTC zone.
- *
- * Returns: (transfer full):
- */
-GdaTimestamp*
-gda_timestamp_new (void)
-{
-	return (GdaTimestamp*) g_date_time_new_now_utc ();
-}
-
-/**
- * gda_timestamp_new_from_values:
- * @year: year
- * @month: month
- * @hour: hours
- * @minute: minutes
- * @second: seconds
- * @fraction: fraction of seconds
- * @timezone: timezone used
- *
- * Returns: (transfer full): a new value storing a timestamp
- */
-GdaTimestamp*
-gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone)
-{
-  GString* tzd;
-  GString* sec;
-  GTimeZone* tz;
-  gchar* sign;
-  gdouble seconds;
-
-  tzd = g_string_new ("");
-  sign = "+";
-  if (timezone < 0)
-    sign = "-";
-  g_string_printf (tzd,"%s%ul", sign, (uint) timezone);
-	tz = g_time_zone_new (tzd->str);
-
-  sec = g_string_new ("");
-  g_string_printf (sec,"%d.%lu", second, fraction);
-  seconds = g_strtod (sec->str, NULL);
-
-  GdaTimestamp* timestamp = (GdaTimestamp*) g_date_time_new (tz,
-                                            (gint) year,
-                                            (gint) month,
-                                            (gint) day,
-                                            (gint) hour,
-                                            (gint) minute,
-                                            (gint) seconds);
-  g_string_free (tzd, TRUE);
-  g_string_free (sec, TRUE);
-	return timestamp;
-}
-
-/**
- * gda_timestamp_copy:
- *
- * Returns: (transfer full):
- */
-GdaTimestamp*
-gda_timestamp_copy (GdaTimestamp *ts)
-{
-	g_return_val_if_fail(ts != NULL, NULL);
-
-	GDateTime *dts = (GDateTime*) ts;
-	GTimeZone *tz;
-
-	tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (dts));
-
-	return (GdaTimestamp*) g_date_time_new (tz,
-																					g_date_time_get_year (dts),
-																					g_date_time_get_month (dts),
-																					g_date_time_get_day_of_month (dts),
-																					g_date_time_get_hour (dts),
-																					g_date_time_get_minute (dts),
-																					g_date_time_get_seconds (dts));
-
-
-}
-
-void
-gda_timestamp_free (GdaTimestamp *ts)
-{
-	g_date_time_unref ((GDateTime*) ts);
-}
-
-/**
- * gda_timestamp_valid:
- * @timestamp: a #GdaTimestamp value to check if it is valid
- *
- * Returns: #TRUE if #GdaTimestamp is valid; %FALSE otherwise.
- *
- * Since: 4.2
- */
-gboolean
-gda_timestamp_valid (const GdaTimestamp *timestamp)
-{
-	g_return_val_if_fail (timestamp, FALSE);
-
-	GdaTimestamp *copy = gda_timestamp_copy ((GdaTimestamp*) timestamp);
-  return copy != NULL ? TRUE : FALSE;
-}
-
-/**
- * gda_timestamp_change_timezone:
- * @ts: a valid #GdaTimestamp
- * @ntz: a new timezone to use, in seconds added to GMT
- *
- * This function is similar to gda_time_change_timezone() but operates on time stamps.
- *
- * Note: this method is no longer valid use gda_timestamp_new() to create a new
- * object with the required time zone.
- *
- * Deprecated: 6.0
- * Since: 5.2
- */
-void
-gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz)
-{
-	g_return_if_fail (ts);
-	g_return_if_fail ((ntz > - 12 * 3600) && (ntz < 12 * 3600));
-}
-
-
-gshort
-gda_timestamp_get_year (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return g_date_time_get_year ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_year (GdaTimestamp* timestamp, gshort year)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-gushort
-gda_timestamp_get_month (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return g_date_time_get_month ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_month (GdaTimestamp* timestamp, gushort month)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-gushort
-gda_timestamp_get_day (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return g_date_time_get_day_of_month ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_day (GdaTimestamp* timestamp, gushort day)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-gushort
-gda_timestamp_get_hour (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return g_date_time_get_hour ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_hour (GdaTimestamp* timestamp, gushort hour)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-gushort
-gda_timestamp_get_minute (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return g_date_time_get_minute ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_minute (GdaTimestamp* timestamp, gushort minute)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-gdouble
-gda_timestamp_get_seconds (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return (gushort) g_date_time_get_seconds ((GDateTime*) timestamp);
-}
-gushort
-gda_timestamp_get_second (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return (gushort) g_date_time_get_second ((GDateTime*) timestamp);
-}
-void
-gda_timestamp_set_second (GdaTimestamp* timestamp, gushort second)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-/**
- * gda_timestamp_get_fraction:
- *
- * Microseconds.
- */
-gulong
-gda_timestamp_get_fraction (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return (gulong) ((g_date_time_get_seconds ((GDateTime*) timestamp)
-		- g_date_time_get_second ((GDateTime*) timestamp)) * 1000000.0);
-}
-void
-gda_timestamp_set_fraction (GdaTimestamp* timestamp, gulong fraction)
-{
-	g_return_if_fail (timestamp != NULL);
-}
-/**
- * gda_timestamp_get_timezone:
- *
- * Seconds from UTC.
- */
-glong
-gda_timestamp_get_timezone (const GdaTimestamp* timestamp)
-{
-	g_return_val_if_fail (timestamp != NULL, 0);
-	return (glong) (g_date_time_get_utc_offset ((GDateTime*) timestamp) / 1000000);
-}
-void
-gda_timestamp_set_timezone (GdaTimestamp* timestamp, glong timezone)
-{
-	g_return_if_fail (timestamp != NULL);
-}
 
 /**
  * gda_value_new:
@@ -2211,22 +1979,34 @@ gda_value_new_timestamp_from_timet (time_t val)
 	
 #endif
 
-        if (ltm) {
-                GdaTimestamp* tstamp = gda_timestamp_new_from_values (ltm->tm_year + 1900,
-                                                                      ltm->tm_mon + 1,
-                                                                      ltm->tm_mday,
-                                                                      ltm->tm_hour,
-                                                                      ltm->tm_min,
-                                                                      ltm->tm_sec,
-                                                                      0,
-                                                                      tz);
+	if (ltm) {
+		gint tzi = tz;
+		if (tzi < 0)
+			tzi *= -1;
+		gint h = tzi/60/60;
+		gint m = tzi/60 - h*60;
+		gint s = tzi - h*60*60 - m*60;
+		gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																	tz < 0 ? "-" : "+",
+																	h, m, s);
+		GTimeZone *tzo = g_time_zone_new (stz);
+		g_free (stz);
+		GDateTime* tstamp = g_date_time_new (tzo,
+																ltm->tm_year + 1900,
+																ltm->tm_mon + 1,
+																ltm->tm_mday,
+																ltm->tm_hour,
+																ltm->tm_min,
+																ltm->tm_sec);
 
+		g_time_zone_unref (tzo);
 		value = g_new0 (GValue, 1);
-                gda_value_set_timestamp (value, (const GdaTimestamp *) tstamp);
-		gda_timestamp_free (tstamp);
-        }
+		g_value_init (value, G_TYPE_DATE_TIME);
+		g_value_set_boxed (value, tstamp);
+		g_date_time_unref (tstamp);
+	}
 
-        return value;
+	return value;
 }
 
 /**
@@ -2775,12 +2555,12 @@ gda_value_set_time (GValue *value, const GdaTime *val)
  *
  * Returns: (transfer none): the value stored in @value.
  */
-const GdaTimestamp *
+const GDateTime *
 gda_value_get_timestamp (const GValue *value)
 {
 	g_return_val_if_fail (value, NULL);
-	g_return_val_if_fail (gda_value_isa (value, GDA_TYPE_TIMESTAMP), NULL);
-	return (const GdaTimestamp *) g_value_get_boxed(value);
+	g_return_val_if_fail (gda_value_isa (value, G_TYPE_DATE_TIME), NULL);
+	return (const GDateTime *) g_value_get_boxed(value);
 }
 
 /**
@@ -2791,13 +2571,13 @@ gda_value_get_timestamp (const GValue *value)
  * Stores @val into @value.
  */
 void
-gda_value_set_timestamp (GValue *value, const GdaTimestamp *val)
+gda_value_set_timestamp (GValue *value, const GDateTime *val)
 {
 	g_return_if_fail (value);
 	g_return_if_fail (val);
 
 	l_g_value_unset (value);
-	g_value_init (value, GDA_TYPE_TIMESTAMP);
+	g_value_init (value, G_TYPE_DATE_TIME);
 	g_value_set_boxed (value, val);
 }
 
@@ -3349,10 +3129,10 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 			return 0;
 	}
 
-	else if (type == GDA_TYPE_TIMESTAMP) {
-		const GdaTimestamp *ts1, *ts2;
-		ts1 = gda_value_get_timestamp (value1);
-		ts2 = gda_value_get_timestamp (value2);
+	else if (type == G_TYPE_DATE_TIME) {
+		const GDateTime *ts1, *ts2;
+		ts1 = g_value_get_boxed (value1);
+		ts2 = g_value_get_boxed (value2);
 		if (ts1 && ts2)
 			return g_date_time_compare ((GDateTime*) ts1, (GDateTime*) ts2);
 		else if (ts1)

@@ -270,26 +270,8 @@ GType                             gda_default_get_type (void) G_GNUC_CONST;
 
 
 /* Timestamp based on GDateTime */
-#define GDA_TYPE_TIMESTAMP (G_TYPE_DATE_TIME)
 
-typedef struct GDateTime GdaTimestamp;
-GdaTimestamp                     *gda_timestamp_new (void);
-GdaTimestamp                     *gda_timestamp_new_from_values (gushort year, gushort month, gushort day, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
-gshort                            gda_timestamp_get_year (const GdaTimestamp* timestamp);
-gushort                           gda_timestamp_get_month (const GdaTimestamp* timestamp);
-gushort                           gda_timestamp_get_day (const GdaTimestamp* timestamp);
-gushort                           gda_timestamp_get_hour (const GdaTimestamp* timestamp);
-gushort                           gda_timestamp_get_minute (const GdaTimestamp* timestamp);
-gdouble                           gda_timestamp_get_seconds (const GdaTimestamp* timestamp);
-gushort                           gda_timestamp_get_second (const GdaTimestamp* timestamp);
-gulong                            gda_timestamp_get_fraction (const GdaTimestamp* timestamp);
-glong                             gda_timestamp_get_timezone (const GdaTimestamp* timestamp);
-GdaTimestamp                     *gda_timestamp_copy (GdaTimestamp *ts);
-void                              gda_timestamp_free (GdaTimestamp *ts);
-gboolean                          gda_timestamp_valid (const GdaTimestamp *timestamp);
-void                              gda_timestamp_change_timezone (GdaTimestamp *ts, glong ntz);
-const GdaTimestamp               *gda_value_get_timestamp (const GValue *value);
-void                              gda_value_set_timestamp (GValue *value, const GdaTimestamp *val);
+GDateTime                        *gda_date_time_copy (GDateTime *ts);
 
 GType                             gda_short_get_type (void) G_GNUC_CONST;
 GType                             gda_ushort_get_type (void) G_GNUC_CONST;

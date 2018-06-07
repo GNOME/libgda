@@ -696,11 +696,11 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 			gda_time_free (timegda);
 		}
 	}
-	else if (g_type_is_a (type, GDA_TYPE_TIMESTAMP)) {
+	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 		if (!g_type_is_a (G_VALUE_TYPE (svalue), G_TYPE_STRING))
 			allok = FALSE;
 		else {
-			GdaTimestamp* timestamp = gda_parse_iso8601_timestamp (g_value_get_string (svalue));
+			GDateTime* timestamp = gda_parse_iso8601_timestamp (g_value_get_string (svalue));
 			if (timestamp == NULL) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,
@@ -710,7 +710,7 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 			}
 			else {
         g_value_set_boxed (value, timestamp);
-			  gda_timestamp_free (timestamp);
+			  g_date_time_unref (timestamp);
       }
 		}
 	}

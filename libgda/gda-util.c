@@ -3203,7 +3203,6 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	const char *endptr;
 	gchar *stz = NULL;
 	gchar *fs = NULL;
-	gchar *fsp = NULL;
 	gdouble seconds = 0.0;
 	glong fraction = 0.0;
 	/* https://en.wikipedia.org/wiki/ISO_8601 */
@@ -3332,9 +3331,9 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
  *
  * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: a new #GdaTimestamp if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
+ * Returns: a new #GDateTime if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
  */
-GdaTimestamp*
+GDateTime*
 gda_parse_iso8601_timestamp (const gchar *value)
 {
 	return gda_parse_formatted_timestamp (value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
@@ -3351,11 +3350,11 @@ gda_parse_iso8601_timestamp (const gchar *value)
  * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
- * Returns: (nullable): a new #GdaTimestamp if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ * Returns: (nullable): a new #GDateTime if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
  * 
  * Since: 5.2
  */
-GdaTimestamp*
+GDateTime*
 gda_parse_formatted_timestamp (const gchar *value,
 			       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
 {
@@ -3401,12 +3400,12 @@ gda_parse_formatted_timestamp (const gchar *value,
 	g_print ("Time Zone: %d", g_time_zone_get_offset (tz, 0));
 	gdouble seconds;
 	seconds = (gdouble) gda_time_get_second (timegda) + gda_time_get_fraction (timegda) / 1000000;
-	return (GdaTimestamp*) g_date_time_new (tz,
-																					g_date_get_year (&gdate),
-																					g_date_get_month (&gdate),
-																					g_date_get_day (&gdate),
-																					gda_time_get_hour (timegda),
-																					gda_time_get_minute (timegda),
-																					seconds);
+	return g_date_time_new (tz,
+													g_date_get_year (&gdate),
+													g_date_get_month (&gdate),
+													g_date_get_day (&gdate),
+													gda_time_get_hour (timegda),
+													gda_time_get_minute (timegda),
+													seconds);
 
 }

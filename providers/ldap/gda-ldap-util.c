@@ -151,7 +151,7 @@ static LdapAttrType ldap_types [] = {
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.24",
 	  "Generalized Time",
-	  -4 /*GDA_TYPE_TIMESTAMP*/
+	  -4 /*G_TYPE_DATE_TIME*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.25",
 	  "Guide",
@@ -323,7 +323,7 @@ gda_ldap_get_type_info (const gchar *oid)
 			else if (type->gtype == -3)
 				type->gtype = GDA_TYPE_NUMERIC;
 			else if (type->gtype == -4)
-				type->gtype = GDA_TYPE_TIMESTAMP;
+				type->gtype = G_TYPE_DATE_TIME;
 			g_hash_table_insert (hash, type->oid, type);
 		}
 		if (oid)
@@ -951,7 +951,7 @@ GValue *
 gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue *bv)
 {
 	GValue *value = NULL;
-	if ((type == GDA_TYPE_TIMESTAMP) ||
+	if ((type == G_TYPE_DATE_TIME) ||
 	    (type == G_TYPE_DATE)) {
 		/* see ftp://ftp.rfc-editor.org/in-notes/rfc4517.txt,
 		 * section 3.3.13: Generalized Time
@@ -995,18 +995,18 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 			if (!ptm)
 				return NULL;
 
-			if (type == GDA_TYPE_TIMESTAMP) {
-				GdaTimestamp *ts = gda_timestamp_new ();
-				gda_timestamp_set_year (ts, ptm->tm_year + 1900);
-				gda_timestamp_set_month (ts, ptm->tm_mon + 1);
-				gda_timestamp_set_day (ts, ptm->tm_mday);
-				gda_timestamp_set_hour (ts, ptm->tm_hour);
-				gda_timestamp_set_minute (ts, ptm->tm_min);
-				gda_timestamp_set_second (ts, ptm->tm_sec);
-				gda_timestamp_set_timezone (ts, GDA_TIMEZONE_INVALID);
-				value = gda_value_new (type);
-				gda_value_set_timestamp (value, ts);
-				gda_timestamp_free (ts);
+			if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+				GTimeZone *tz = g_time_zone_new ("Z"); // UTC
+				GDateTime *ts = g_date_time_new (tz,
+																				 ptm->tm_year + 1900,
+																				 ptm->tm_mon + 1,
+																				 ptm->tm_mday,
+																				 ptm->tm_hour,
+																				 ptm->tm_min,
+																				 ptm->tm_sec);
+				value = gda_value_new (G_TYPE_DATE_TIME);
+				g_value_set_boxed (value, ts);
+				g_date_time_unref (ts);
 			}
 			else {
 				GDate *date;
@@ -1045,49 +1045,49 @@ gda_ldap_attr_g_value_to_value (LdapConnectionData *cdata, const GValue *cvalue)
 		bv->bv_val = g_strdup (cstr);
 		bv->bv_len = strlen (cstr);
 	}
-	else if (G_VALUE_TYPE (cvalue) == GDA_TYPE_TIMESTAMP) {
-		GdaTimestamp *ts;
+	else if (G_VALUE_TYPE (cvalue) == G_TYPE_DATE_TIME) {
+		GDateTime *ts;
 		gchar *str;
-		ts = (GdaTimestamp*) gda_value_get_timestamp (cvalue);
-		if (gda_timestamp_get_fraction (ts) == 0) {
-			if (gda_timestamp_get_timezone (ts) == GDA_TIMEZONE_INVALID)
+		ts = g_value_get_boxed (cvalue);
+		if (g_date_time_get_second (ts) == (gint) g_date_time_get_seconds (ts)) {
+			if (g_date_time_get_utc_offset (ts) == 0)
 				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d",
-															 gda_timestamp_get_year (ts),
-															 gda_timestamp_get_month (ts),
-															 gda_timestamp_get_day (ts),
-															 gda_timestamp_get_hour (ts),
-															 gda_timestamp_get_minute (ts),
-															 gda_timestamp_get_second (ts));
+															 g_date_time_get_year (ts),
+															 g_date_time_get_month (ts),
+															 g_date_time_get_day_of_month (ts),
+															 g_date_time_get_hour (ts),
+															 g_date_time_get_minute (ts),
+															 g_date_time_get_second (ts));
 			else {
 				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d",
-															 gda_timestamp_get_year (ts),
-															 gda_timestamp_get_month (ts),
-															 gda_timestamp_get_day (ts),
-															 gda_timestamp_get_hour (ts),
-															 gda_timestamp_get_minute (ts),
-															 gda_timestamp_get_second (ts));
+															 g_date_time_get_year (ts),
+															 g_date_time_get_month (ts),
+															 g_date_time_get_day_of_month (ts),
+															 g_date_time_get_hour (ts),
+															 g_date_time_get_minute (ts),
+															 g_date_time_get_second (ts));
 				TO_IMPLEMENT;
 			}
 		}
 		else {
-			if (gda_timestamp_get_timezone (ts) == GDA_TIMEZONE_INVALID)
+			if (g_date_time_get_utc_offset (ts) == 0)
 				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu",
-															 gda_timestamp_get_year (ts),
-															 gda_timestamp_get_month (ts),
-															 gda_timestamp_get_day (ts),
-															 gda_timestamp_get_hour (ts),
-															 gda_timestamp_get_minute (ts),
-															 gda_timestamp_get_second (ts),
-															 gda_timestamp_get_fraction (ts));
+															 g_date_time_get_year (ts),
+															 g_date_time_get_month (ts),
+															 g_date_time_get_day_of_month (ts),
+															 g_date_time_get_hour (ts),
+															 g_date_time_get_minute (ts),
+															 g_date_time_get_second (ts),
+															 (gulong) ((g_date_time_get_seconds (ts) - g_date_time_get_second (ts)) * 1000000.0));
 			else {
 				str = g_strdup_printf ("%04d-%02d-%02dT%02d:%02d:%02d,%lu",
-															 gda_timestamp_get_year (ts),
-															 gda_timestamp_get_month (ts),
-															 gda_timestamp_get_day (ts),
-															 gda_timestamp_get_hour (ts),
-															 gda_timestamp_get_minute (ts),
-															 gda_timestamp_get_second (ts),
-															 gda_timestamp_get_fraction (ts));
+															 g_date_time_get_year (ts),
+															 g_date_time_get_month (ts),
+															 g_date_time_get_day_of_month (ts),
+															 g_date_time_get_hour (ts),
+															 g_date_time_get_minute (ts),
+															 g_date_time_get_second (ts),
+															 (gulong) ((g_date_time_get_seconds (ts) - g_date_time_get_second (ts)) * 1000000.0));
 				TO_IMPLEMENT;
 			}
 		}

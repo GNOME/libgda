@@ -166,7 +166,7 @@ gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type
 		}
 	}
 	else if ((type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE_TIME) ||
 		 (type == G_TYPE_DATE)) {
 		/* no default time related data handler, it's too database specific */
 		dh = NULL;

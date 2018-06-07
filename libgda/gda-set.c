@@ -1168,8 +1168,8 @@ gda_set_new_inline (gint nb, ...)
 			g_value_set_ulong (value, va_arg (ap, gulong));
 		else if (g_type_is_a (type, G_TYPE_GTYPE))
 			g_value_set_gtype (value, va_arg(ap, GType));
-		else if (g_type_is_a (type, GDA_TYPE_TIMESTAMP))
-			g_value_set_boxed (value, va_arg(ap, GdaTimestamp *));
+		else if (g_type_is_a (type, G_TYPE_DATE_TIME))
+			g_value_set_boxed (value, va_arg(ap, GDateTime *));
 		else if (g_type_is_a (type, GDA_TYPE_TIME))
 			gda_value_set_time (value, va_arg(ap, GdaTime *));
 		else {
@@ -1267,7 +1267,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
 	else if (g_type_is_a (type, G_TYPE_DATE))
 		g_value_set_boxed (value, va_arg (ap, GDate *));
 	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
-		g_value_set_boxed (value, va_arg (ap, GdaTimestamp*));
+		g_value_set_boxed (value, va_arg (ap, GDateTime*));
 	else if (g_type_is_a (type, GDA_TYPE_TIME))
 		gda_value_set_time (value, va_arg (ap, GdaTime*));
 	else if (g_type_is_a (type, G_TYPE_LONG))

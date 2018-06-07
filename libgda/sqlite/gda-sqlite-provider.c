@@ -1698,7 +1698,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 		}
 	}
 	else if ((type == GDA_TYPE_TIME) ||
-		 (type == GDA_TYPE_TIMESTAMP) ||
+		 (type == G_TYPE_DATE_TIME) ||
 		 (type == G_TYPE_DATE)) {
 		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
 		if (!dh) {
@@ -1709,7 +1709,7 @@ gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection
 			gda_handler_time_set_str_spec (GDA_HANDLER_TIME (dh), G_DATE_YEAR, G_DATE_MONTH,
 						       G_DATE_DAY, '-', FALSE);
 			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIME, NULL);
-			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TIMESTAMP, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE_TIME, NULL);
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DATE, NULL);
 			g_object_unref (dh);
 		}
@@ -1767,7 +1767,7 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 
 	if (type == GDA_TYPE_TIME)
 		return "time";
-	if (type == GDA_TYPE_TIMESTAMP)
+	if (type == G_TYPE_DATE_TIME)
 		return "timestamp";
 	if (type == G_TYPE_DATE)
 		return "date";
@@ -3280,36 +3280,25 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 					       g_date_get_month (ts), g_date_get_day (ts));
 			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, str, -1, g_free);
 		}
-		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIMESTAMP) {
-			GString *string;
-			GdaTimestamp *timestamp;
+		else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
+			GDateTime *timestamp;
 			gboolean tofree = FALSE;
 
-			timestamp = (GdaTimestamp *) gda_value_get_timestamp (value);
+			timestamp = (GDateTime *) g_value_get_boxed (value);
 
-			string = g_string_new ("");
-			if (gda_timestamp_get_timezone (timestamp) != GDA_TIMEZONE_INVALID) {
+			if (g_date_time_get_utc_offset (timestamp) != 0) { // FIXME: This should be supported now
 				/* SQLite cant' store timezone information, so if timezone information is
-				 * provided, we do our best and convert it to GMT */
-				timestamp = gda_timestamp_copy (timestamp);
+				 * provided, we do our best and convert it to UTC */
+				GTimeZone *tz = g_time_zone_new ("Z");
+				timestamp = g_date_time_to_timezone (timestamp, tz);
 				tofree = TRUE;
-				gda_timestamp_change_timezone (timestamp, 0);
 			}
-
-			g_string_append_printf (string, "%04u-%02u-%02u %02u:%02u:%02u",
-						gda_timestamp_get_year (timestamp),
-						gda_timestamp_get_month (timestamp),
-						gda_timestamp_get_day (timestamp),
-						gda_timestamp_get_hour (timestamp),
-						gda_timestamp_get_minute (timestamp),
-						gda_timestamp_get_second (timestamp));
-			if (gda_timestamp_get_fraction (timestamp) > 0)
-				g_string_append_printf (string, ".%lu", gda_timestamp_get_fraction (timestamp));
+			gchar *string = g_date_time_format (timestamp, "%FT%H%M%S");
 
 			if (tofree)
-				gda_timestamp_free (timestamp);
+				g_date_time_unref (timestamp);
 
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, g_string_free (string, FALSE), -1, g_free);
+			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, string, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_NUMERIC) {
 			const GdaNumeric *gdan;

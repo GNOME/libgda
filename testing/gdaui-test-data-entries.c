@@ -102,7 +102,7 @@ get_handler (GType for_type)
 		g_hash_table_insert (hash, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
 		g_hash_table_insert (hash, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
 		g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
-		g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIMESTAMP, gda_handler_time_new ());
+		g_hash_table_insert (hash, (gpointer) G_TYPE_DATE_TIME, gda_handler_time_new ());
 		g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_type_new ());
 	}
 
@@ -149,7 +149,7 @@ main (int argc, char **argv)
 				  G_TYPE_DATE, G_TYPE_DOUBLE,
 				  GDA_TYPE_GEOMETRIC_POINT, G_TYPE_OBJECT, G_TYPE_INT, 
 				  GDA_TYPE_NUMERIC, G_TYPE_FLOAT, GDA_TYPE_SHORT, GDA_TYPE_USHORT,
-				  GDA_TYPE_TIME, GDA_TYPE_TIMESTAMP, G_TYPE_CHAR, G_TYPE_UCHAR, G_TYPE_UINT};
+				  GDA_TYPE_TIME, G_TYPE_DATE_TIME, G_TYPE_CHAR, G_TYPE_UCHAR, G_TYPE_UINT};
 	mainconf.test_type = TESTED_BASIC;
 	if (test_type) {
 		if (*test_type == 'f')

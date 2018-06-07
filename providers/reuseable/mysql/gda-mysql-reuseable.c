@@ -245,7 +245,7 @@ mysql_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 	else if (!strcmp (name, "numeric"))
 		return GDA_TYPE_NUMERIC;
 	else if (!strncmp (name, "timestamp", 9))
-		return GDA_TYPE_TIMESTAMP;
+		return G_TYPE_DATE_TIME;
 	else if (!strcmp (name, "date"))
 		return G_TYPE_DATE;
 	else if (!strncmp (name, "time", 4))
@@ -272,7 +272,7 @@ mysql_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 	if (!strncmp (conv_func_name, "float8", 6))
 		return G_TYPE_DOUBLE;
 	if (!strncmp (conv_func_name, "timestamp", 9))
-		return GDA_TYPE_TIMESTAMP;
+		return G_TYPE_DATE_TIME;
 	if (!strncmp (conv_func_name, "time", 4))
 		return GDA_TYPE_TIME;
 	if (!strncmp (conv_func_name, "date", 4))

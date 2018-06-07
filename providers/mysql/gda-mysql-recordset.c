@@ -339,7 +339,7 @@ _gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
 		break;
 	case MYSQL_TYPE_TIMESTAMP:
 	case MYSQL_TYPE_DATETIME:
-		gtype = GDA_TYPE_TIMESTAMP;
+		gtype = G_TYPE_DATE_TIME;
 		break;
 	case MYSQL_TYPE_DATE:
 		gtype = G_TYPE_DATE;
@@ -874,17 +874,17 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 					 (bvalue.year != 0) ? bvalue.year : 1970);
 				g_value_take_boxed (value, date);
 			}
-			else if (type == GDA_TYPE_TIMESTAMP) {
-				GdaTimestamp *timestamp = gda_timestamp_new_from_values (bvalue.year,
-					                                                     bvalue.month,
-					                                                     bvalue.day,
-					                                                     bvalue.hour,
-					                                                     bvalue.minute,
-					                                                     bvalue.second,
-					                                                     bvalue.second_part,
-					                                                     0); /* GMT */
-				gda_value_set_timestamp (value, timestamp);
-                gda_timestamp_free (timestamp);
+			else if (type == G_TYPE_DATE_TIME) {
+				GTimeZone *tz = g_time_zone_new ("Z"); /* UTC */
+				GDateTime *timestamp = g_date_time_new (tz,
+																								bvalue.year,
+																								bvalue.month,
+																								bvalue.day,
+																								bvalue.hour,
+																								bvalue.minute,
+																								(gdouble) bvalue.second + bvalue.second_part / 1000000.0);
+				g_value_set_boxed (value, timestamp);
+				g_date_time_unref (timestamp);
 			}
 			else {
 				gda_row_invalidate_value (row, value);

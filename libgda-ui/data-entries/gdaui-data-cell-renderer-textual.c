@@ -707,7 +707,7 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 		entry = gdaui_entry_date_new (datacell->priv->dh);
 	else if (datacell->priv->type == GDA_TYPE_TIME)
 		entry = gdaui_entry_time_new (datacell->priv->dh);
-	else if (datacell->priv->type == GDA_TYPE_TIMESTAMP)
+	else if (datacell->priv->type == G_TYPE_DATE_TIME)
 		entry = gdaui_entry_timestamp_new (datacell->priv->dh);
 	else if (gdaui_entry_number_is_type_numeric (datacell->priv->type))
 		entry = gdaui_entry_number_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);

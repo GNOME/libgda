@@ -195,7 +195,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 			entry = (GdauiDataEntry *) gdaui_entry_none_new (type);
 		else if	(type == GDA_TYPE_TIME)
 			entry = (GdauiDataEntry *) gdaui_entry_time_new (dh);
-		else if (type == GDA_TYPE_TIMESTAMP)
+		else if (type == G_TYPE_DATE_TIME)
 			entry = (GdauiDataEntry *) gdaui_entry_timestamp_new (dh);
 		else if (type == G_TYPE_DATE)
 			entry = (GdauiDataEntry *) gdaui_entry_date_new (dh);
@@ -476,7 +476,7 @@ init_plugins_hash (void)
 	plugin->plugin_file = NULL;
 	plugin->nb_g_types = 1;
 	plugin->valid_g_types = g_new (GType, plugin->nb_g_types);
-	plugin->valid_g_types [0] = GDA_TYPE_TIMESTAMP;	
+	plugin->valid_g_types [0] = G_TYPE_DATE_TIME;
 	plugin->options_xml_spec = NULL;
 	plugin->entry_create_func = entry_timestamp_create_func;
 	plugin->cell_create_func = NULL;

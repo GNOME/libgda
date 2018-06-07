@@ -818,10 +818,10 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 				}
 			}
 			else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
-				GdaTimestamp *nts;
-				nts = (GdaTimestamp*) g_value_get_boxed (value);
+				GDateTime *nts;
+				nts = (GDateTime*) g_value_get_boxed (value);
 				if (nts != NULL) {
-					nts = (GdaTimestamp*) g_date_time_to_utc ((GDateTime*) nts);
+					nts = (GDateTime*) g_date_time_to_utc ((GDateTime*) nts);
           if (nts != NULL) {
 					  GValue v = {0};
 					  g_value_init (&v, G_TYPE_DATE_TIME);
