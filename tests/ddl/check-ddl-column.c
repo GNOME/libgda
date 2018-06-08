@@ -267,6 +267,23 @@ test_ddl_column_cleanup (CheckDdlObject *self,
   xmlFreeDoc (self->doc);
 }
 
+static void
+test_ddl_column_write_node (CheckDdlObject *self,
+                            gconstpointer user_data)
+{
+  gboolean res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->column),
+                                         self->writer,NULL);
+
+  g_assert_true (res);
+
+  //	res = xmlTextWriterEndDocument (self->writer);
+
+  //	g_assert_true (res >= 0);
+  xmlFreeTextWriter (self->writer);
+
+  g_print ("%s\n",(gchar*)self->buffer->content);
+}
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -346,5 +363,11 @@ main (gint   argc,
               test_ddl_column_check_check,
               test_ddl_column_cleanup);
 
+  g_test_add ("/test-ddl/column-write",
+              CheckDdlObject,
+              NULL,
+              test_ddl_column_startup,
+              test_ddl_column_write_node,
+              test_ddl_column_cleanup);
   return g_test_run();
 }
