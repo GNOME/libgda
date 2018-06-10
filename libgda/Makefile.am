@@ -6,10 +6,6 @@ TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs
 check_PROGRAMS = test-cnc-open test-cnc-exec test-cnc-meta
 TESTS = test-cnc-open test-cnc-exec test-cnc-meta
 
-if ENABLE_VALA_EXTENSIONS
-    VALA_EXTENSIONS= . data
-endif
-
 SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper $(VALA_EXTENSIONS)
 
 DEF_FLAGS=

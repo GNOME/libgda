@@ -580,31 +580,6 @@ fi
 AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
 
 dnl ******************************
-dnl Check for Vala Classes build
-dnl ******************************
-AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions[=@<:@auto/yes/no@:>@]], [Enable utility GObject based extensions written in Vala [default=auto]]),
-    [enable_vala_ext=$enableval],[enable_vala_ext=auto])
-
-if test "x$enable_vala_ext" != "xno" -a "x$enable_vala_bindings" = "xyes"
-then
-  dnl Check for libgee
-  GEE_REQUIRED="0.8.0"
-  PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-  AC_SUBST(GEE_CFLAGS)
-  AC_SUBST(GEE_LIBS)
-  enable_vala_ext=yes
-  AC_ARG_WITH(vapi-dir,
-    AS_HELP_STRING([--with-vapi-dir[=@<:@<dir. name>@:>@]],
-                   [Speficy the directory in which VAPI files will be installer, the default depends on the VALAC installation]),
-                   [VAPIDIR=$withval
-		   AC_SUBST([VAPIDIR])],
-		   )
-fi
-
-AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
-
-dnl ******************************
 dnl Checks for libcrypto
 dnl ******************************
 AC_ARG_ENABLE([crypto],
@@ -990,8 +965,6 @@ libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
-libgda/data/Makefile
-libgda/data/libgdadata-6.0.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
@@ -1070,7 +1043,6 @@ tests/value-holders/Makefile
 tests/meta-store/Makefile
 tests/multi-threading/Makefile
 tests/ui/Makefile
-tests/vala/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda.types
@@ -1122,10 +1094,8 @@ echo "   Building Examples: `if test x$enable_examples = xyes; then echo yes; el
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings: `if test x$enable_vala_bindings != xyes; then echo no; else echo yes; fi`"
 echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" = "xyes"; then echo yes; else echo no; fi`"
-echo "   Building Vala Extensions: `if test x$enable_vala_ext = xyes; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation:"
 echo "      Building GDA Vala Docs: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
-echo "      Building GDA Vala Extensions Docs: `if test x$enable_vala_doc_ext != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"
 echo "      Berkeley DB = $bdb_found"
