@@ -1,1 +1,1 @@
-SUBDIRS = gda-vala
+SUBDIRS =

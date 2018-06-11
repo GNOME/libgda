@@ -1049,8 +1049,6 @@ doc/C/libgda.types
 doc/C/version.xml
 doc/C/builddate.xml
 doc/mallard/Makefile
-doc/mallard/gda-vala/Makefile
-doc/mallard/gda-vala/C/Makefile
 data/Makefile
 examples/Makefile
 examples/DDL/Makefile
