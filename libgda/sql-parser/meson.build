@@ -128,11 +128,17 @@ libgda_sql_parser_sources += [
 libgda_sql_parser = library(
 	'gda_sql_parser',
 	[libgda_sql_parser_sources],
-	dependencies: [glib_dep, inc_rooth_dep, inc_sqliteh_dep],
+	dependencies: [
+		glib_dep,
+		libxml_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_libgdah_dep],
 	c_args : [
 		'-include',
 		meson.build_root() + '/config.h',
 	],
+	link_with: libgda,
 	install: false
 	)
 

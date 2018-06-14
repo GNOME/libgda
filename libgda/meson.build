@@ -173,10 +173,13 @@ libgda_source_all += [
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
 
-libgda_dep = [glib_dep, gio_dep, inc_rooth_dep, inc_libgdah_dep, libxml_dep]
-
-# Build sql-parser library
-subdir('sql-parser')
+libgda_dep = [
+	glib_dep,
+	gobject_dep,
+	gio_dep,
+	libxml_dep,
+	inc_rooth_dep,
+	inc_libgdah_dep]
 
 libgda = library(
 	'gda-'+project_api_version,
@@ -192,9 +195,12 @@ libgda = library(
 		'-DABI_VERSION='+project_abi_version,
 		'-DABI_NAME='+project_abi_name,
 	],
-	link_with: [libgda_sql_parser],
-	install : true)
+	install : true
+	)
 
+
+# Build sql-parser library
+subdir('sql-parser')
 
 # Build auxiliary executables and libraries
 subdir('sqlite')
