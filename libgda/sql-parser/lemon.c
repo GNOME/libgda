@@ -1557,7 +1557,8 @@ int main(int argc, char **argv)
     free (output_dir);
 
   /* return 0 on success, 1 on failure. */
-  exitcode = ((lem.errorcnt > 0) || (lem.nconflict > 0)) ? 1 : 0;
+  /* Remove conficts output as exit code:  || (lem.nconflict > 0) */
+  exitcode = ((lem.errorcnt > 0)) ? 1 : 0;
   successful_exit = (exitcode == 0);
   exit(exitcode);
   return (exitcode);
