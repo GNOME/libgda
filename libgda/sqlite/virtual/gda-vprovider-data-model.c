@@ -30,7 +30,7 @@
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-blob-op.h>
-#include "../gda-sqlite.h"
+#include <gda-sqlite.h>
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-impl.h>

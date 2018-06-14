@@ -34,7 +34,7 @@
 extern const unsigned char UpperToLower[];
 #define charMap(X) UpperToLower[(unsigned char)(X)]
 extern int casecmp(const char *zLeft, const char *zRight, int N);
-#include "keywords_hash.c" /* this one is dynamically generated */
+#include "keywords_hash.code" /* this one is dynamically generated */
 
 /*
  * Each value in @values may be %NULL, a valid pointer, or 0x1

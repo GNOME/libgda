@@ -1,7 +1,7 @@
 project('libgda', 'c',
-        license: 'GPL2+',
+        license: 'LGPL2+',
         version : '5.99.0',
-        meson_version: '>= 0.45.0',
+        meson_version: '>= 0.44.1',
         default_options: [
                         'c_std=gnu11',
                         'warning_level=2',
@@ -10,10 +10,14 @@ project('libgda', 'c',
 
 project_version = meson.project_version()
 version_split = project_version.split('.')
-
 MAJOR_VERSION = version_split[0]
 MINOR_VERSION = version_split[1]
 MICRO_VERSION = version_split[2]
+project_api_version = '6.0'
+project_abi_version = MAJOR_VERSION+'.'+MINOR_VERSION
+project_abi_name = '"' + meson.project_name() + '-' + project_abi_version + '"'
+project_package = meson.project_name() + '-' + project_api_version
+
 
 gda_current = '5'
 gda_revision ='1'
@@ -21,7 +25,13 @@ gda_age = '1'
 
 conf = configuration_data()
 # Surround the version in quotes to make it a C string
-conf.set_quoted('VERSION', project_version)
+conf.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
+conf.set_quoted('GETTEXT_PACKAGE', project_package)
+
+
+if meson.get_compiler('c').has_header('locale.h')
+	conf.set ('HAVE_LOCALE_H', '1')
+endif
 
 glib_genmarshal = find_program('glib-genmarshal', required : true)
 if glib_genmarshal.found()
@@ -37,8 +47,8 @@ else
   error ('glib-mkenums not found')
 endif
 
-configure_file(output : 'config.h',
-               configuration : conf)
+configh = configure_file(output : 'config.h',
+			configuration : conf)
 
 req_ver_glib = '>= 2.38.0'
 glib_dep = dependency('glib-2.0', version : req_ver_glib)
@@ -57,7 +67,18 @@ glade_dep = dependency('gladeui-2.0', required : false)
 libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 soup_dep = dependency('libsoup-2.4', required : false)
-c_args = ''
+sqlite = dependency ('sqlite3', version: '>= 3.6.11')
+
+c_args = ['-Wall',
+	'-Wextra',
+	'-Wformat-security',
+	'-Wno-address',
+	'-Wno-unused-variable',
+	'-Wno-unused-parameter',
+	'-Wno-pointer-sign',
+	'-Wno-missing-field-initializers',
+	'-DGSEAL_ENABLE',
+	'-DLIBGDA_ABI_NAME='+project_abi_name]
 
 glade_catalog = ''
 glade_pixmap = ''
@@ -144,6 +165,11 @@ endif
 
 add_global_arguments(c_args, language : 'c')
 
+
+inc_rooth = include_directories ('.')
+inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
+
+subdir('po')
 subdir('libgda')
 #subdir('libgda-ui')
 

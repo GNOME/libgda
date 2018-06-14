@@ -62,6 +62,8 @@ main (int argc,char** argv)
 	HashEntry *illegal_entry;
 	HashEntry *rawstring_entry;
 	char *file_imposed;
+	char *file_parser;
+	char *file_delimiter;
 
 	memset (entries, 0, sizeof (entries));
 #ifdef SRCDIR
@@ -73,19 +75,31 @@ main (int argc,char** argv)
 #else
 	file_imposed = IMPOSED_HEADER;
 #endif
+#ifdef BUILDDIR
+  #ifdef __WIN32__
+	file_parser = BUILDDIR "\\" PARSER_HEADER;
+	file_delimiter = BUILDDIR "\\" DELIM_HEADER;
+  #else
+	file_parser = BUILDDIR "/" PARSER_HEADER;
+	file_delimiter = BUILDDIR "/" DELIM_HEADER;
+  #endif
+#else
+	file_parser = PARSER_HEADER;
+	file_delimiter = DELIM_HEADER;
+#endif
 	fd_imposed = fopen (file_imposed, "r");
 	if (!fd_imposed) {
 		printf ("Can't open '%s':%s\n", file_imposed, strerror (errno));
 		return 1;
 	}
-	fd_parser = fopen (PARSER_HEADER, "r");
+	fd_parser = fopen (file_parser, "r");
 	if (!fd_parser) {
-		printf ("Can't open '%s':%s\n", PARSER_HEADER, strerror (errno));
+		printf ("Can't open '%s':%s\n", file_parser, strerror (errno));
 		return 1;
 	}
-	fd_delim = fopen (DELIM_HEADER, "r");
+	fd_delim = fopen (file_delimiter, "r");
 	if (!fd_delim) {
-		printf ("Can't open '%s':%s\n", DELIM_HEADER, strerror (errno));
+		printf ("Can't open '%s':%s\n", file_delimiter, strerror (errno));
 		return 1;
 	}
 
@@ -162,8 +176,8 @@ parse_line (char *line, SourceType type)
 	
 	z = line;
 	if (strncmp (z, "#define ", 8)) {
-		printf ("Expected '#define', not found");
-		exit (1);
+		printf ("Expected '#define', not found: '%s'\n", line);
+		exit (0);
 	}
 	z += 8;
 	token = z + 2;
