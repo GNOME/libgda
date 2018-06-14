@@ -1395,6 +1395,8 @@ static void handle_T_option(char *z){
 }
 
 int local_out_dir = 0;
+int disable_header = 0;
+int disable_c = 0;
 
 /* The main program.  Parse the command line and do it... */
 int main(int argc, char **argv)
@@ -1424,6 +1426,8 @@ int main(int argc, char **argv)
     {OPT_FLAG, "s", (char*)&statistics,
                                    "Print parser stats to standard output."},
     {OPT_FLAG, "x", (char*)&version, "Print the version number."},
+    {OPT_FLAG, "h", (char*)&disable_header, "Disable header file generation"},
+    {OPT_FLAG, "z", (char*)&disable_c, "Disable C source code file generation"},
     {OPT_FLAG,0,0,0}
   };
   int i;
@@ -1514,13 +1518,17 @@ int main(int argc, char **argv)
     /* Generate a report of the parser generated.  (the "y.output" file) */
     if( !quiet ) ReportOutput(&lem);
 
-    /* Generate the source code for the parser */
-    ReportTable(&lem, mhflag);
+    if (!disable_c) {
+      /* Generate the source code for the parser */
+      ReportTable(&lem, mhflag);
+    }
 
     /* Produce a header file for use by the scanner.  (This step is
     ** omitted if the "-m" option is used because makeheaders will
     ** generate the file for us.) */
-    if( !mhflag ) ReportHeader(&lem);
+    if( !mhflag && !disable_header) {
+      ReportHeader(&lem);
+    }
   }
   if( statistics ){
     printf("Parser statistics: %d terminals, %d nonterminals, %d rules\n",
@@ -3627,6 +3635,7 @@ void ReportTable(
 
   in = tplt_open(lemp);
   if( in==0 ) return;
+
   out = file_open(lemp,".c","wb");
   if( out==0 ){
     fclose(in);
@@ -3643,7 +3652,6 @@ void ReportTable(
     free(name);
   }
   tplt_xfer(lemp->name,in,out,&lineno);
-
   /* Generate #defines for all tokens */
   if( mhflag ){
     const char *prefix;

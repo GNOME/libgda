@@ -2,7 +2,11 @@ lemonf = files([
 	'lemon.c'
 	])
 
-lemon_exe = executable('lemon', lemonf, install: false)
+lemon_exe = executable('lemon',
+	lemonf,
+	dependencies: [gio_dep],
+	install: false
+)
 
 libgda_sql_parser_headers = [
 	'gda-statement-struct-decl.h',
@@ -30,7 +34,7 @@ gendef_exe = executable('gen_def', 'gen_def.c',
 	)
 
 lemon_parserc = custom_target('lemon-parser_c',
-	command : [lemon_exe, '-o'+meson.current_build_dir(),
+	command : [lemon_exe, '-d', '-h',
 	'-T'+'@INPUT0@', '@INPUT1@'],
 	input : ['lempar.c', 'parser.y'],
 	output : ['parser.c'],
@@ -39,7 +43,7 @@ lemon_parserc = custom_target('lemon-parser_c',
 
 
 lemon_parserh = custom_target('lemon-parser_h',
-	command : [lemon_exe, '-o'+meson.current_build_dir(), '-h',
+	command : [lemon_exe, '-d', '-z',
 	'-T'+'@INPUT0@', '@INPUT1@'],
 	input : ['lempar.c', 'parser.y'],
 	output : ['parser.h'],
@@ -47,7 +51,7 @@ lemon_parserh = custom_target('lemon-parser_h',
 	)
 
 lemon_delimiterc = custom_target('lemon-delimiter_c',
-	command : [lemon_exe, '-q',
+	command : [lemon_exe, '-q', '-d', '-h',
 	'-T'+'@INPUT0@', '@INPUT1@'],
 	input : ['lempar.c', 'delimiter.y'],
 	output : ['delimiter.c'],
@@ -55,7 +59,7 @@ lemon_delimiterc = custom_target('lemon-delimiter_c',
 	)
 
 lemon_delimiterh = custom_target('lemon-delimiter_h',
-	command : [lemon_exe, '-q',
+	command : [lemon_exe, '-q', '-d', '-z',
 	'-T'+'@INPUT0@', '@INPUT1@'],
 	input : ['lempar.c', 'delimiter.y'],
 	output : ['delimiter.h'],
