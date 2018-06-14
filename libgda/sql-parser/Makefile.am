@@ -1,5 +1,5 @@
 noinst_LTLIBRARIES = libgda_sql_parser-6.0.la
-noinst_PROGRAMS = 
+noinst_PROGRAMS = lemon
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) -I$(srcdir)/.. \
@@ -7,8 +7,8 @@ AM_CPPFLAGS = \
         $(COREDEPS_CFLAGS) \
 	$(LIBGDA_WFLAGDS)
 
-lemon$(EXEEXT_FOR_BUILD): lemon.c
-	$(CC_FOR_BUILD) -o lemon$(EXEEXT_FOR_BUILD) $(srcdir)/lemon.c
+lemon_SOURCES= lemon.c
+lemon_LDADD= $(COREDEPS_LIBS)
 
 gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 	 $(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DSRCDIR=\"$(srcdir)\" $(srcdir)/gen_def.c
