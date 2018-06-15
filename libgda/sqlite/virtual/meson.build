@@ -26,9 +26,15 @@ libgda_virtual_sources = files(
 	)
 libgda_virtual_sources += virtual_headers
 
-libgda_virtual = library(
+libsqlite_virtual = library(
 	'gda_virtual', [libgda_virtual_sources],
-	dependencies : [glib_dep, sqlite, libxml_dep, inc_rooth_dep, inc_libgdah_dep, inc_sqliteh_dep],
+	dependencies : [
+		glib_dep,
+		sqlite_dep,
+		libxml_dep,
+		inc_rooth_dep,
+		inc_libgdah_dep,
+		inc_sqliteh_dep ],
 	c_args : [
 		'-include',
 		meson.build_root() + '/config.h',

@@ -26,6 +26,7 @@ conf = configuration_data()
 # Surround the version in quotes to make it a C string
 conf.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
 conf.set_quoted('GETTEXT_PACKAGE', project_package)
+conf.set_quoted('PACKAGE_VERSION', project_version)
 
 
 if meson.get_compiler('c').has_header('locale.h')
@@ -66,7 +67,7 @@ glade_dep = dependency('gladeui-2.0', required : false)
 libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 soup_dep = dependency('libsoup-2.4', required : false)
-sqlite = dependency ('sqlite3', version: '>= 3.6.11')
+sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11')
 
 c_args = ['-Wall',
 	'-Wextra',
