@@ -39,17 +39,3 @@ if sqlite_dep.found ()
 endif
 
 sqlite_cargs += ['-DSEARCH_LIB_PATH="'+sqlite_path+'"']
-
-libsqlite = library(
-	'libgda_sqlite', sqlitesources,
-	dependencies: [
-		glib_dep,
-		gobject_dep,
-		sqlite_dep,
-		libxml_dep,
-		inc_rooth_dep,
-		inc_libgdah_dep ],
-	c_args : sqlite_cargs,
-	link_with: libgda,
-	install : false
-	)

@@ -1,6 +1,11 @@
 inc_libgdah = include_directories ('.')
 inc_libgdah_dep = declare_dependency (include_directories : inc_libgdah)
 
+
+# Build auxiliary executables and libraries
+subdir('sqlite')
+subdir('sql-parser')
+
 conf = configuration_data()
 # FIXME: Set this variables
 # conf.set_quoted('LIBGDA_BDB_INC','')
@@ -167,8 +172,12 @@ libgda_source_all += [
 	libgda_sources,
 	libgda_headers,
 	gda_enums,
-	gda_marshalls
+	gda_marshalls,
+	sqlitesources
 	]
+libgda_source_all += sqlitesources
+libgda_source_all += libgda_virtual_sources
+libgda_source_all += libgda_sql_parser_sources
 
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
@@ -179,7 +188,17 @@ libgda_dep = [
 	gio_dep,
 	libxml_dep,
 	inc_rooth_dep,
-	inc_libgdah_dep]
+	inc_libgdah_dep
+	]
+
+libgda_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DABI_VERSION='+project_abi_version,
+		'-DABI_NAME='+project_abi_name,
+	]
+
+libgda_cargs += sqlite_cargs
 
 libgda = library(
 	'gda-'+project_api_version,
@@ -188,40 +207,8 @@ libgda = library(
 	version : gda_revision,
 	dependencies : [libgda_dep,
 			gda_keywordshash_dep,
-			inc_sqliteh_dep],
-	c_args : [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DABI_VERSION='+project_abi_version,
-		'-DABI_NAME='+project_abi_name,
-	],
-	objects: [
-		libsqlite.extract_objects(),
-		libsqlite_virtual.extract_objects(),
-		],
+			inc_sqliteh_dep,
+			inc_libsql_parserh_dep],
+	c_args : libgda_cargs,
 	install : true
 	)
-
-
-# Build sql-parser library
-subdir('sql-parser')
-
-# Build auxiliary executables and libraries
-subdir('sqlite')
-
-# subdir('sql-parser')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

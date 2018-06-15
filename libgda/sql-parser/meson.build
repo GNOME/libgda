@@ -1,3 +1,6 @@
+inc_libsql_parserh = include_directories ('.')
+inc_libsql_parserh_dep = declare_dependency (include_directories : inc_libsql_parserh)
+
 lemonf = files([
 	'lemon.c'
 	])
@@ -8,7 +11,7 @@ lemon_exe = executable('lemon',
 	install: false
 )
 
-libgda_sql_parser_headers = [
+libgda_sql_parser_headers = files([
 	'gda-statement-struct-decl.h',
 	'gda-sql-statement.h',
 	'gda-sql-parser.h',
@@ -22,7 +25,7 @@ libgda_sql_parser_headers = [
 	'gda-statement-struct-select.h',
 	'gda-statement-struct-trans.h',
 	'gda-statement-struct-unknown.h',
-	'gda-statement-struct-util.h']
+	'gda-statement-struct-util.h'])
 
 gda_sql_parser_enums = gnome_module.mkenums_simple('gda-sql-parser-enum-types', sources: libgda_sql_parser_headers)
 
@@ -125,20 +128,4 @@ libgda_sql_parser_sources += [
 			lemon_delimiterh,
 			token_types
 			]
-libgda_sql_parser = library(
-	'gda_sql_parser',
-	[libgda_sql_parser_sources],
-	dependencies: [
-		glib_dep,
-		libxml_dep,
-		inc_rooth_dep,
-		inc_sqliteh_dep,
-		inc_libgdah_dep],
-	c_args : [
-		'-include',
-		meson.build_root() + '/config.h',
-	],
-	link_with: libgda,
-	install: false
-	)
 
