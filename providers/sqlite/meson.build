@@ -73,7 +73,7 @@ libgda_sqlite_providerpc = configure_file(output : 'libgda-sqlite-'+project_api_
 			configuration : conf,
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
 			)
-libgda_sqlite_provider = library ('gda-sqlite',
+libgda_sqlite_provider = library ('gda-sqlite-'+project_api_version,
 	libgda_sqlite_sources,
 	dependencies: [
 		libgda_dep,

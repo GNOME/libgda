@@ -68,6 +68,7 @@ libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 soup_dep = dependency('libsoup-2.4', required : false)
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11')
+postgres_dep = dependency ('libpq', required: false)
 
 c_args = ['-Wall',
 	'-Wextra',

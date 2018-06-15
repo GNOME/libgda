@@ -1,3 +1,6 @@
+inc_postgresh = include_directories ('.')
+inc_postgresh_dep = declare_dependency (include_directories : inc_postgresh)
+
 
 pg_keywordshash_82 = custom_target('keywords_hash_82',
 		command: [
@@ -59,7 +62,7 @@ pg_token_types = custom_target('pg_token_types',
 	install: false
 	)
 
-libgda_postgres_sources = files([
+libgda_pg_sources = files([
 	'gda-postgres-reuseable.c',
 	'gda-postgres-reuseable.h',
 	'gda-postgres-parser.c',
@@ -67,3 +70,13 @@ libgda_postgres_sources = files([
 	'gda-postgres-meta.c',
 	'gda-postgres-meta.h',
 	])
+
+libgda_pg_sources += pg_token_types
+libgda_pg_sources += pg_token_types
+libgda_pg_sources += pg_lemon_parserc
+libgda_pg_sources += pg_lemon_parserh
+
+pg_reusable_dep = []
+pg_reusable_dep += pg_keywordshash_82_dep
+pg_reusable_dep += pg_keywordshash_83_dep
+pg_reusable_dep += pg_keywordshash_84_dep
