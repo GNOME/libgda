@@ -73,6 +73,5 @@ libgda_models_provider = library ('libgda-models',
 		meson.build_root() + '/config.h',
 		],
 	link_with: libgda,
-	install: true,
-	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
+	install: false,
 	)

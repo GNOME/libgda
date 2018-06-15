@@ -36,7 +36,7 @@ pg_lemon_parserc = custom_target('pg_lemon-parser_c',
 	command : [lemon_exe, '-d', '-h',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'parser.y'],
+	input : [lemon_templatef, 'parser.y'],
 	output : ['parser.c'],
 	install : false
 	)
@@ -46,7 +46,7 @@ pg_lemon_parserh = custom_target('pg_lemon-parser_h',
 	command : [lemon_exe, '-d', '-z',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'parser.y'],
+	input : [lemon_templatef, 'parser.y'],
 	output : ['parser.h'],
 	install : false
 	)
