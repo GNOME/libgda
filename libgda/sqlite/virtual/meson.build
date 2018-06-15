@@ -17,11 +17,11 @@ virtual_headers = files([
 
 libgda_virtual_sources = files(
 	'gda-vconnection-data-model.c',
-	# 'gda-vconnection-data-model-private.h',
-	# 'gda-vconnection-hub.c',
-	# 'gda-vprovider-data-model.c',
-	# 'gda-vprovider-hub.c',
-	# 'gda-virtual-connection.c',
-	# 'gda-virtual-provider.c'
+	'gda-vconnection-data-model-private.h',
+	'gda-vconnection-hub.c',
+	'gda-vprovider-data-model.c',
+	'gda-vprovider-hub.c',
+	'gda-virtual-connection.c',
+	'gda-virtual-provider.c'
 	)
 libgda_virtual_sources += virtual_headers

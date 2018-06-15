@@ -7,6 +7,8 @@ subdir('sqlite')
 subdir('sql-parser')
 subdir('providers-support')
 subdir('handlers')
+subdir('thread-wrapper')
+subdir('binreloc')
 
 conf = configuration_data()
 # FIXME: Set this variables
@@ -182,6 +184,8 @@ libgda_source_all += libgda_virtual_sources
 libgda_source_all += libgda_sql_parser_sources
 libgda_source_all += libgda_psupport_sources
 libgda_source_all += libgda_handlers_sources
+libgda_source_all += libgda_threadwrapper_sources
+libgda_source_all += libgda_binreloc_sources
 
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
@@ -196,6 +200,10 @@ libgda_dep = [
 	inc_libgdah_dep
 	]
 
+if sqlite_dep.found ()
+	libgda_dep += sqlite_dep
+endif
+
 libgda_cargs = [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -204,6 +212,7 @@ libgda_cargs = [
 	]
 
 libgda_cargs += sqlite_cargs
+libgda_cargs += binreloc_cargs
 
 libgda = library(
 	'gda-'+project_api_version,
