@@ -28,7 +28,11 @@ gda_enum_headers = files ('gda-connection.h', 'gda-enums.h')
 
 gda_enums = gnome_module.mkenums_simple('gda-enum-types', sources: gda_enum_headers)
 
-mkkeywordhash = executable ('mkkeywordhash', 'sqlite/mkkeywordhash.c')
+mkkeywordhashf = files([
+	'sqlite/mkkeywordhash.c'
+])
+
+mkkeywordhash = executable ('mkkeywordhash', mkkeywordhashf)
 
 gda_keywordshash = custom_target('keywords_hash',
 		command: [

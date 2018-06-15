@@ -25,7 +25,9 @@
 #include "gda-postgres-parser.h"
 
 #include <libgda/sqlite/keywords_hash.h>
-#include "keywords_hash.c" /* this one is dynamically generated */
+#include "keywords_hash-82.code" /* this one is dynamically generated */
+#include "keywords_hash-83.code" /* this one is dynamically generated */
+#include "keywords_hash-84.code" /* this one is dynamically generated */
 
 /*
  * Reuseable interface entry point
