@@ -36,11 +36,13 @@ gendef_exe = executable('gen_def', 'gen_def.c',
 		]
 	)
 
+lemon_templatef = files([ 'lempar.c' ])
+
 lemon_parserc = custom_target('lemon-parser_c',
 	command : [lemon_exe, '-d', '-h',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'parser.y'],
+	input : [lemon_templatef, 'parser.y'],
 	output : ['parser.c'],
 	install : false
 	)
@@ -50,7 +52,7 @@ lemon_parserh = custom_target('lemon-parser_h',
 	command : [lemon_exe, '-d', '-z',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'parser.y'],
+	input : [lemon_templatef, 'parser.y'],
 	output : ['parser.h'],
 	install : false
 	)
@@ -59,7 +61,7 @@ lemon_delimiterc = custom_target('lemon-delimiter_c',
 	command : [lemon_exe, '-q', '-d', '-h',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'delimiter.y'],
+	input : [lemon_templatef, 'delimiter.y'],
 	output : ['delimiter.c'],
 	install : false
 	)
@@ -68,7 +70,7 @@ lemon_delimiterh = custom_target('lemon-delimiter_h',
 	command : [lemon_exe, '-q', '-d', '-z',
 	'-o'+meson.current_build_dir(),
 	'-T'+'@INPUT0@', '@INPUT1@'],
-	input : ['lempar.c', 'delimiter.y'],
+	input : [lemon_templatef, 'delimiter.y'],
 	output : ['delimiter.h'],
 	install : false
 	)
