@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<serv_op>
-  <parameters id="TABLE_DESC_P">
-    <parameter id="TABLE_NAME" name="Table" descr="Table to rename" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="TABLE_NEW_NAME" name="New name" descr="New table name" gdatype="gchararray" nullok="FALSE"/>
-  </parameters>
-</serv_op>

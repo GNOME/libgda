@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<serv_op>
-  <parameters id="VIEW_DESC_P">
-    <parameter id="VIEW_NAME" name="View" descr="View to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_VIEWS_"/>
-    <parameter id="VIEW_IFEXISTS" name="If exists" descr="Drop view only if it exists" gdatype="gboolean" nullok="TRUE"/>
-  </parameters>
-</serv_op>

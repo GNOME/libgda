@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<serv_op>
-  <parameters id="TABLE_DESC_P">
-    <parameter id="TABLE_NAME" name="Table" descr="Table to delete" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
-    <parameter id="TABLE_IFEXISTS" name="If exists" descr="Drop table only if it exists" gdatype="gboolean" nullok="TRUE"/>
-  </parameters>
-</serv_op>
