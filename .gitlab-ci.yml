@@ -10,6 +10,7 @@ stages:
 
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
+                meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
                 gobject-introspection libssl-dev libmysqlclient-dev
                 default-libmysqld-dev libldap2-dev libpq-dev
