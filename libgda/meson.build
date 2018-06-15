@@ -5,6 +5,7 @@ inc_libgdah_dep = declare_dependency (include_directories : inc_libgdah)
 # Build auxiliary executables and libraries
 subdir('sqlite')
 subdir('sql-parser')
+subdir('providers-support')
 
 conf = configuration_data()
 # FIXME: Set this variables
@@ -178,6 +179,7 @@ libgda_source_all += [
 libgda_source_all += sqlitesources
 libgda_source_all += libgda_virtual_sources
 libgda_source_all += libgda_sql_parser_sources
+libgda_source_all += libgda_psupport_sources
 
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
@@ -186,6 +188,7 @@ libgda_dep = [
 	glib_dep,
 	gobject_dep,
 	gio_dep,
+	gmodule_no_export_dep,
 	libxml_dep,
 	inc_rooth_dep,
 	inc_libgdah_dep
