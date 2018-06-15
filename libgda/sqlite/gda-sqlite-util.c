@@ -32,7 +32,7 @@
 #include "gda-sqlite-recordset.h"
 
 #include <libgda/sqlite/keywords_hash.h>
-#include "keywords_hash.c" /* this one is dynamically generated */
+#include "keywords_hash.code" /* this one is dynamically generated */
 
 static guint
 nocase_str_hash (gconstpointer v)

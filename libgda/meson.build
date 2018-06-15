@@ -195,6 +195,10 @@ libgda = library(
 		'-DABI_VERSION='+project_abi_version,
 		'-DABI_NAME='+project_abi_name,
 	],
+	objects: [
+		libsqlite.extract_objects(),
+		libsqlite_virtual.extract_objects(),
+		],
 	install : true
 	)
 
