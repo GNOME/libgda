@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="COLUMN_DEF_P" name="Column's description">
+    <parameter id="TABLE_NAME" name="Table" descr="Table's name" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="COLUMN_NAME" name="Field name" gdatype="gchararray" nullok="FALSE">
+      <gda_value>column_name</gda_value>
+    </parameter>
+    <parameter id="COLUMN_TYPE" name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE">
+      <gda_value>integer</gda_value>
+    </parameter>
+    <parameter id="COLUMN_SIZE" name="Size" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_SCALE" name="Scale" gdatype="guint" nullok="TRUE"/>
+    <parameter id="COLUMN_NNUL" name="Not NULL" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="COLUMN_DEFAULT" name="Default" descr="Default value, mandatory if column is NOT NULL" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="COLUMN_CHECK" name="Check" descr="Check constraint" gdatype="gchararray" nullok="TRUE"/>
+  </parameters>
+</serv_op>

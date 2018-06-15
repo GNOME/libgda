@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<data-set-spec>
+  <parameters>
+    <parameter id="DB_NAME" name="Database name" descr="The name of a database to use (without the .db)" gdatype="gchararray" nullok="FALSE"/>
+    <parameter id="APPEND_DB_EXTENSION" name="Append '.db'" descr="Defines if the '.db' extension need to be appended to the DB_NAME argument" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="DB_DIR" name="Directory" descr="Directory where the database file is stored" gdatype="gchararray" nullok="FALSE" plugin="filesel:MODE=PICKFOLDER"/>
+    <parameter id="EXTRA_FUNCTIONS" name="Extra functions" descr="Enable usage of extra functions (gda_upper, ...)" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="REGEXP" name="Define REGEXP" descr="Define the REGEXP function" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="EXTRA_COLLATIONS" name="Localized comparisons" descr="Enable usage of extra collation methods (LOCALE and DCASE)" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="FK" name="With foreign keys" descr="Enforce foreign keys" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+    <parameter id="EXTENSIONS" name="Allow extensions" descr="Allow SQLite to load extensions using the load_extension() function" gdatype="gboolean" nullok="TRUE">
+      <gda_value>TRUE</gda_value>
+    </parameter>
+  </parameters>
+</data-set-spec>

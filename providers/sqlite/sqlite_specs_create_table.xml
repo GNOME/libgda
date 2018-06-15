@@ -1,0 +1,1716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serv_op>
+  <parameters id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ar" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name" xml:lang="ar">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ar">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ar">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="az" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name" xml:lang="az">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="az">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="az">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="bs" id="TABLE_DEF_P" name="Opis tabele">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Ime" descr="Ime tabele" xml:lang="bs">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Privremena tabela" xml:lang="bs">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Jedino ako već ne postoji" descr="Kreiraj tabelu samo ukoliko već ne postoji" xml:lang="bs">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ca" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nom" descr="Table's name" xml:lang="ca">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ca">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ca">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ca@valencia" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nom" descr="Table's name" xml:lang="ca@valencia">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ca@valencia">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ca@valencia">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="cs" id="TABLE_DEF_P" name="Popis tabulky">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Název" descr="Název tabulky" xml:lang="cs">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Dočasná tabulka" xml:lang="cs">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Jen když zatím neexistuje" descr="Vytvořit tabulku, jen když zatím neexistuje" xml:lang="cs">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="da" id="TABLE_DEF_P" name="Tabellens beskrivelse">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Navn" descr="Tabellens navn" xml:lang="da">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Midlertidig tabel" xml:lang="da">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Kun hvis den endnu ikke findes" descr="Opret kun tabel hvis den endnu ikke findes" xml:lang="da">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="de" id="TABLE_DEF_P" name="Beschreibung der Tabelle">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Tabellenname" xml:lang="de">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporäre Tabelle" xml:lang="de">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Nur wenn noch nicht vorhanden" descr="Tabelle nur erstellen, wenn noch nicht vorhanden" xml:lang="de">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="dz" id="TABLE_DEF_P" name="ཐིག་ཁྲམ་གྱི་འགྲེལ་བཤད།">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="མིང་།" descr="ཐིག་ཁྲམ་གྱི་མིང་།" xml:lang="dz">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="གནས་སྐབས་ཀྱི་ཐིག་ཁྲམ།" xml:lang="dz">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="ད་ལྟོ་ཚུན་ཚོད་གནས་མེད་པ་ཅིན་རྐྱངམ་ཅིག" descr="ད་ལྟོ་ཚུན་ཚོད་གནས་མེད་པ་ཅིག་རྐྱང་མིག་ཐིག་ཁྲམ་གསར་བསྐྲུན་འབད།" xml:lang="dz">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="el" id="TABLE_DEF_P" name="Περιγραφή του πίνακα">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Όνομα" descr="Όνομα πίνακα" xml:lang="el">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Προσωρινός πίνακας" xml:lang="el">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Μόνο εάν δεν υπάρχει ακόμα" descr="Δημιουργία πίνακα μόνο εάν δεν υπάρχει ακόμα" xml:lang="el">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="en_CA" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name" xml:lang="en_CA">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="en_CA">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="en_CA">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="en_GB" id="TABLE_DEF_P" name="Table&apos;s description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table&apos;s name" xml:lang="en_GB">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="en_GB">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="en_GB">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="eo" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nomo" descr="Table's name" xml:lang="eo">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="eo">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="eo">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="es" id="TABLE_DEF_P" name="Descripción de la tabla">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nombre" descr="Nombre de la tabla" xml:lang="es">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabla temporal" xml:lang="es">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Sólo si aún no existe" descr="Crear la tabla sólo si no existe aún" xml:lang="es">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="eu" id="TABLE_DEF_P" name="Taularen azalpena">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Izena" descr="Taularen izena" xml:lang="eu">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Aldi baterako taula" xml:lang="eu">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Soilik oraindik ez bada existitzen" descr="Sortu taula aurrez existitzen ez bada soilik" xml:lang="eu">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="fa" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="نام" descr="Table's name" xml:lang="fa">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="fa">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="fa">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="fi" id="TABLE_DEF_P" name="Taulun kuvaus">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nimi" descr="Taulun nimi" xml:lang="fi">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Väliaikaistaulu" xml:lang="fi">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Vain jos se ei ole vielä olemassa" descr="Luo taulu vain, jos se ei ole vielä olemassa" xml:lang="fi">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="fr" id="TABLE_DEF_P" name="Description de la table">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nom" descr="Nom de la base" xml:lang="fr">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Table temporaire" xml:lang="fr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Seulement si non existant" descr="Créer la table seulement si elle n&apos;existe pas encore" xml:lang="fr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ga" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Ainm" descr="Table's name" xml:lang="ga">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ga">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ga">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="gl" id="TABLE_DEF_P" name="Descrición da táboa">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nome" descr="Nome da táboa" xml:lang="gl">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Táboa temporal" xml:lang="gl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Só se aínda non existe" descr="Crear a táboa só se aínda non existe" xml:lang="gl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="hr" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Ime" descr="Table's name" xml:lang="hr">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="hr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="hr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="hu" id="TABLE_DEF_P" name="Tábla leírása">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Név" descr="Táblanév" xml:lang="hu">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Ideiglenes tábla" xml:lang="hu">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Csak akkor, ha még nem létezik" descr="Csak akkor hozza létre a táblát, ha még nem létezik" xml:lang="hu">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="id" id="TABLE_DEF_P" name="Deskripsi tabel">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nama" descr="Nama tabel" xml:lang="id">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabel sementara" xml:lang="id">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Hanya bila belum ada" descr="Buat tabel hanya bila belum ada" xml:lang="id">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="it" id="TABLE_DEF_P" name="Descrizione tabella">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nome" descr="Nome tabella" xml:lang="it">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabella temporanea" xml:lang="it">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Solo se non esiste già" descr="Crea la tabella solo se non esiste già" xml:lang="it">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ja" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="名前" descr="テーブル名" xml:lang="ja">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ja">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ja">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ko" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="이름" descr="Table's name" xml:lang="ko">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ko">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ko">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="lt" id="TABLE_DEF_P" name="Lentelės aprašymas">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Pavadinimas" descr="Lentelės vardas" xml:lang="lt">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Laikina lentelė" xml:lang="lt">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="lt">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="lv" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name" xml:lang="lv">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="lv">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="lv">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="mk" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Name" descr="Table's name" xml:lang="mk">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="mk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="mk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ml" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="പേര‍്" descr="Table's name" xml:lang="ml">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ml">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ml">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ms" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nama" descr="Table's name" xml:lang="ms">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="ms">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="ms">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="nb" id="TABLE_DEF_P" name="Beskrivelse av tabell">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Navn" descr="Navn på tabell" xml:lang="nb">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Midlertidig tabell" xml:lang="nb">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="nb">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ne" id="TABLE_DEF_P" name="तालिकाको वर्णन">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="नाम" descr="तालिको नाम" xml:lang="ne">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="अस्थायी तालिका" xml:lang="ne">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="यदि यो अहिले अवस्थित छैन भने मात्र" descr="यदि यो अहिले अवस्थित छैन भने तालिका मात्र सिर्जना गर्नुहोस्" xml:lang="ne">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="nl" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Naam" descr="Table's name" xml:lang="nl">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="nl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="nl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="oc" id="TABLE_DEF_P" name="Descripcion de la taula">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nom" descr="Nom de la base" xml:lang="oc">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Taula temporaire" xml:lang="oc">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Solament se non existent" descr="Crear la taula solament se existís pas encara" xml:lang="oc">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="pa" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="ਨਾਮ" descr="Table's name" xml:lang="pa">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="pa">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="pa">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="pt" id="TABLE_DEF_P" name="Descrição da tabela">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nome" descr="Nome da tabela" xml:lang="pt">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabela temporária" xml:lang="pt">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Só se ainda não existe" descr="Criar tabela só se ainda não existir" xml:lang="pt">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="pt_BR" id="TABLE_DEF_P" name="Descrição da tabela">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nome" descr="Nome da tabela" xml:lang="pt_BR">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabela temporária" xml:lang="pt_BR">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Somente se ainda não existir" descr="Cria uma tabela somente se ainda não existir uma" xml:lang="pt_BR">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ro" id="TABLE_DEF_P" name="Descrierea tabelei">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Nume" descr="Numele tabelei" xml:lang="ro">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Tabelă temporară" xml:lang="ro">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Doar dacă nu există încă" descr="Creează tabelă doar dacă nu există încă" xml:lang="ro">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="ru" id="TABLE_DEF_P" name="Описание таблицы">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Наименование" descr="Название таблицы" xml:lang="ru">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Временная таблица" xml:lang="ru">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Только если ещё не существует" descr="Создать таблицу, только в том случае, если она до сих пор не существует" xml:lang="ru">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="rw" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Izina" descr="Table's name" xml:lang="rw">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="rw">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="rw">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sk" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Meno" descr="Table's name" xml:lang="sk">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="sk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="sk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sl" id="TABLE_DEF_P" name="Opis razpredelnice">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Ime" descr="Ime razpredelnice" xml:lang="sl">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Začasna razpredelnica" xml:lang="sl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Le v kolikor še ne obstaja" descr="Ustvari razpredelnico le v primeru, da še ne obstaja" xml:lang="sl">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sq" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Emri" descr="Table's name" xml:lang="sq">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="sq">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="sq">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sr" id="TABLE_DEF_P" name="Опис табеле">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Назив" descr="Назив табеле" xml:lang="sr">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Привремена табела" xml:lang="sr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Само ако још увек не постоји" descr="Направите табелу само ако још увек не постоји" xml:lang="sr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sr@latin" id="TABLE_DEF_P" name="Opis tabele">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Naziv" descr="Naziv tabele" xml:lang="sr@latin">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Privremena tabela" xml:lang="sr@latin">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Samo ako još uvek ne postoji" descr="Napravite tabelu samo ako još uvek ne postoji" xml:lang="sr@latin">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="sv" id="TABLE_DEF_P" name="Tabellens beskrivning">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Namn" descr="Tabellnamn" xml:lang="sv">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporärtabell" xml:lang="sv">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Endast om den inte redan finns" descr="Skapa tabell endast om den inte redan finns" xml:lang="sv">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="tg" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Ном" descr="Table's name" xml:lang="tg">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="tg">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="tg">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="tr" id="TABLE_DEF_P" name="Tablonun tanımlaması">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="İsim" descr="Tablo adı" xml:lang="tr">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Geçici tablo" xml:lang="tr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Yalnızca henüz mevcut değilse" descr="Yalnızca henüz mevcut değilse tablo oluştur" xml:lang="tr">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="uk" id="TABLE_DEF_P" name="Table's description">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Назва" descr="Table's name" xml:lang="uk">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Temporary table" xml:lang="uk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="uk">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="vi" id="TABLE_DEF_P" name="Mô tả của bảng">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="Tên" descr="Tên của bảng" xml:lang="vi">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="Bảng tạm thời" xml:lang="vi">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Chỉ nếu nó chưa tồn tại" descr="Tạo bảng chỉ nếu nó chưa tồn tại" xml:lang="vi">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="zh_CN" id="TABLE_DEF_P" name="表的描述">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="名称" descr="表名" xml:lang="zh_CN">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="临时表" xml:lang="zh_CN">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="只在尚未存在时" descr="只创建尚不存在的表" xml:lang="zh_CN">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="zh_HK" id="TABLE_DEF_P" name="表格的說明">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="名稱" descr="表格的名稱" xml:lang="zh_HK">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="臨時表格" xml:lang="zh_HK">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="zh_HK">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+  <parameters xml:lang="zh_TW" id="TABLE_DEF_P" name="表格的說明">
+    <parameter nullok="FALSE" id="TABLE_NAME" gdatype="gchararray" name="名稱" descr="表格的名稱" xml:lang="zh_TW">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_TEMP" gdatype="gboolean" name="臨時表格" xml:lang="zh_TW">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter nullok="TRUE" id="TABLE_IFNOTEXISTS" gdatype="gboolean" name="Only if it does not yet exist" descr="Create table only if it does not yet exist" xml:lang="zh_TW">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+  </parameters>
+
+  
+  <gda_array id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ar" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ar"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ar"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="تضارب" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ar"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="az" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="az"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="az"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="az"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="bs" id="FIELDS_A" name="Kolone u tabeli">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Naziv polja" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tip podatka" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Veličina" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Razmjer" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Nije NULL" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Automatsko inkrementiranje" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Jedinstveni" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primarni ključ" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Uobičajeno" descr="Uobičajena vrijednost" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Provjeri" descr="Provjeri ograničenje" xml:lang="bs"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Metoda poređenja" descr="Ime za uspoređivanje (BINARY|NOCASE)" xml:lang="bs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Konflikt metode rješavanja (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="bs"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ca" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nom del camp" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipus de dada" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Mida" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Únic" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Valor per defecte" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Marca" descr="Check constraint" xml:lang="ca"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ca"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflicte" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ca"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ca@valencia" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nom del camp" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipus de dada" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Mida" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Únic" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Valor per defecte" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Marca" descr="Check constraint" xml:lang="ca@valencia"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ca@valencia"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflicte" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ca@valencia"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="cs" id="FIELDS_A" name="Sloupce tabulky">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Název pole" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datový typ" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Velikost" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Škála" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Neprázdné" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Automatické zvyšování" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Jedinečný" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primární klíč" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Výchozí" descr="Výchozí hodnota" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Kontrola" descr="Omezení kontrolou" xml:lang="cs"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Srovnávací metoda" descr="Název porovnávání (BINARY|NOCASE)" xml:lang="cs"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Metoda řešení konfliktu (ROLLBACK – vrátit zpět|ABORT – zrušit|FAIL – nechat selhat|IGNORE – ignorovat|REPLACE – nahradit)" xml:lang="cs"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="da" id="FIELDS_A" name="Tabellens kolonner">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Feltnavn" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datatype" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Størrelse" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skalering" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Ikke NULL" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Autoforøge" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unik" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primær nøgle" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Standard" descr="Standardværdi" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Tjek" descr="Tjek begrænsning" xml:lang="da"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Sammenligningsmetode" descr="Kollationsnavn (BINARY|NOCASE)" xml:lang="da"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Løsningsmetode for konflikt (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="da"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="de" id="FIELDS_A" name="Tabellenspalten">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Feldname" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Daten-Typ" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Größe" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skalierung" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Nicht NULL" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Automatisch erhöhen" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Eindeutig" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primärschlüssel" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Vorgabe" descr="Vorgabe-Wert" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Überprüfen" descr="Beschränkungen überprüfen" xml:lang="de"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Vergleichsmethode" descr="Name der Sortierung (BINARY|NOCASE)" xml:lang="de"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Methode der Konfliktauflösung (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="de"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="dz" id="FIELDS_A" name="ཐིག་ཁྲམ་གྱི་ཀེར་ཐིག་ཚུ།">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="ས་སྒོའི་མིང་" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="གནས་སྡུད་དབྱེ་བ།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="ཚད།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="ཐིག་ཤིང་།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="སྟོང་ཆ་མེདཔ།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="རང་བཞིན་ཡར་འཕར།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="མཐུན་མོང་མ་ཡིད་པ།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="གཞི་རིམ་ལྡེ་མིག" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="སྔོན་སྒྲིག" descr="སྔོན་སྒྲིག་གནས་གོང་།" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="བལྟ་ཞིབ།" descr="བར་ཆད་བལྟ་ཞིབ་འབད།" xml:lang="dz"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="ཐབས་ལམ་ག་བསྡུར་འབད།" descr="གོ་སྒྲིག་མིང་(ཟུང་ལྡན|ཡི་གུ་མེད)" xml:lang="dz"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="མི་མཐུན་པ།" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="dz"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="el" id="FIELDS_A" name="Στήλες του πίνακα">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Όνομα πεδίου" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Τύπος δεδομένων" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Μέγεθος" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Κλίμακα" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Μη NULL" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Αυτόματη αύξηση" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Μοναδική" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Πρωτεύον κλειδί" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Προεπιλογή" descr="Προεπιλεγμένη τιμή" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Έλεγχος" descr="Περιορισμός ελέγχου" xml:lang="el"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Σύγκριση μεθόδου" descr="Όνομα ταξινόμησης (BINARY|NOCASE)" xml:lang="el"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Σύγκρουση" descr="Μέθοδος ανάλυσης σύγκρουσης (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="el"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="en_CA" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="en_CA"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="en_CA"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="en_CA"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="en_GB" id="FIELDS_A" name="Table&apos;s columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="en_GB"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="en_GB"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="en_GB"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="eo" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Kamponomo" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datumtipo" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Grando" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skalo" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Ĉefŝlosilo" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Defaŭlte" descr="Defaŭlta valoro" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="eo"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="eo"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikto" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="eo"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="es" id="FIELDS_A" name="Columnas de la tabla">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nombre del campo" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipo de dato" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Tamaño" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="No nulo" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Autoincrementar" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Único" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Clave primaria" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Predeterminado" descr="Valor predeterminado" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Comprobar" descr="Comprobar restricción" xml:lang="es"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Método de comparación" descr="Nombre del cotejamiento (BINARY|NOCASE)" xml:lang="es"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflicto" descr="Método de resolución de conflictos (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="es"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="eu" id="FIELDS_A" name="Taularen zutabeak">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Eremu-izena" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datu mota" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Tamaina" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Eskala" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Ez NULL" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto-inkrementala" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Bakarra" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Lehen mailako gakoa" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Lehenetsia" descr="Balio lehenetsia" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Egiaztatu" descr="Egiaztatu murriztapena" xml:lang="eu"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Konparazio metodoa" descr="Erkatze-izena (BINARY|NOCASE)" xml:lang="eu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Gatazka" descr="Gatazka konpontzeko metodoa (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="eu"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="fa" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="نام فیلد" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="نوع داده" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="اندازه" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="مقیاس" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="پیش‌فرض" descr="مقدار پیش‌فرض" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="fa"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="fa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="fa"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="fi" id="FIELDS_A" name="Taulun sarakkeet">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Kentän nimi" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tietotyyppi" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Koko" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Asteikko" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Ei NULL" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Kasvata automaattisesti" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Yksikäsitteinen" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Pääavain" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Oletus" descr="Oletusarvo" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Tarkista" descr="Tarkista rajoite" xml:lang="fi"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Vertailumenetelmä" descr="Vertailunimi (BINARY|NOCASE)" xml:lang="fi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Ristiriita" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="fi"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="fr" id="FIELDS_A" name="Colonnes de la table">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nom du champ" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Type de donnée" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Taille" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Échelle" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Non nul" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Incrément automatique" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Clé primaire" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Valeur par défaut" descr="Valeur par défaut" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Vérification" descr="Vérification de contrainte" xml:lang="fr"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Méthode de comparaison" descr="Nom de collation (BINARY|NOCASE)" xml:lang="fr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflit" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="fr"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ga" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Méid" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ga"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ga"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ga"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="gl" id="FIELDS_A" name="Columnas da táboa">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nome do campo" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipo de datos" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Tamaño" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escalado" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="non NULL" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Incremento automático" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Única" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Clave primaria" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Predefinido" descr="Valor predefinido" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Comprobar" descr="Comprobar a restrición" xml:lang="gl"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Método de comparación" descr="Nome de cotexo (BINARY|NOCASE)" xml:lang="gl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflito" descr="Método de resolución de conflitos (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="gl"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="hr" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Naziv polja" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Vrsta podataka" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Veličina" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Razmjer" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Uobičajena vrijednost" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="hr"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="hr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="hr"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="hu" id="FIELDS_A" name="Tábla oszlopai">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Mezőnév" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Adattípus" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Méret" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Arány" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Nem NULL" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Automatikus növelés" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Egyedi" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Elsődleges kulcs" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Alapértelmezett" descr="Alapértelmezett érték" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Ellenőrzés" descr="Ellenőrzött megszorítás" xml:lang="hu"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Összehasonlítási metódus" descr="Összevetés neve (BINARY|NOCASE)" xml:lang="hu"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konfliktus" descr="Konfliktus feloldási módszer (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="hu"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="id" id="FIELDS_A" name="Kolom tabel">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nama ruas" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Jenis data" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Ukuran" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skala" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Bukan NULL" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Naik otomatis" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unik" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Kunci primer" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Baku" descr="Nilai baku" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Centang" descr="Periksa kendala" xml:lang="id"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Metoda pembandingan" descr="Nama kolasi (BINARY|NOCASE)" xml:lang="id"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflik" descr="Metoda resolusi konflik (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="id"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="it" id="FIELDS_A" name="Colonne tabella">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nome campo" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipo dati" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Dimensione" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scala" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Non NULL" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Autoincremento" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Univoco" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Chiave primaria" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Predefinito" descr="Valore predefinito" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Controllo" descr="Controllo vincoli" xml:lang="it"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Metodo di comparazione" descr="Nome collation (BINARY|NOCASE)" xml:lang="it"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflitto" descr="Metodo di risoluzione del conflitto (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="it"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ja" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="フィールド名" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="データ型" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="サイズ" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="数" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="NULL でない" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="主キー" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="デフォルト値" descr="デフォルトの値" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ja"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ja"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ja"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ko" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="필드 이름" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="데이터 형식" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="크기" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="규모" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ko"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ko"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ko"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="lt" id="FIELDS_A" name="Lentelės stulpeliai">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Lauko vardas" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Duomenų tipas" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Dydis" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Mastelis" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Ne NULL" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unikalus" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Pirminis raktas" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Standartinė reikšmė" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="lt"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="lt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konfliktas" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="lt"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="lv" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="lv"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="lv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="lv"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="mk" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="mk"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="mk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="mk"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ml" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="വലിപ്പം" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="തോത്" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="സ്വതേ" descr="Default value" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ml"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ml"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ml"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ms" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nama Medan" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Jenis data" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Saiz" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skala" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Nilai Default" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="ms"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="ms"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ms"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="nb" id="FIELDS_A" name="Tabellens kolonner">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Feltnavn" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datatype" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Størrelse" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skala" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Ikke NULL" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unik" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primærnøkkel" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Forvalg" descr="Forvalgt verdi" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Sjekk" descr="Sjekk begrensning" xml:lang="nb"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Sammenligningsmetode" descr="Collation name (BINARY|NOCASE)" xml:lang="nb"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="nb"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ne" id="FIELDS_A" name="तालिकाको सूचि">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="क्षेत्रको नाम" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="डेटा प्रकार" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="साइज" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="मापन" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="शून्य होइन" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="स्वत: बढोत्तरी" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="अद्वितीय" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="प्राथमिक कुञ्जी" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="पूर्वनिर्धारित" descr="पूर्वनिर्धारित मान" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="जाँच गर्नुहोस्" descr="अवरोध जाँच गर्नुहोस्" xml:lang="ne"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="विधि तुलना गर्नुहोस्" descr="मिलान नाम (BINARY|NOCASE)" xml:lang="ne"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="प्रतिकूल" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ne"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="nl" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Veld naam" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Gegevens type" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Grootte" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Schalen" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Standaardwaarde" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="nl"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="nl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="nl"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="oc" id="FIELDS_A" name="Colomnas de la taula">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nom del camp" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipe de donada" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Talha" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Non nul" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Increment automatique" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unic" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Clau primària" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Valor per defaut" descr="Valor per defaut" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Verificacion" descr="Verificacion de constrencha" xml:lang="oc"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Metòde de comparason" descr="Nom de collacion (BINARY|NOCASE)" xml:lang="oc"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflicte" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="oc"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="pa" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="ਖੇਤਰ ਨਾਉ" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="ਡਾਟਾ ਕਿਸਮ" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="ਅਕਾਰ" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="ਪੈਮਾਨਾ" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="ਮੂਲ ਮੁੱਲ" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="pa"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="pa"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="pa"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="pt" id="FIELDS_A" name="Colunas da tabela">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nome do campo" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipo de dados" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Tamanho" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Não NULL" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Incremento automático" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Único" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Chave primária" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Predefinição" descr="Valor predefinido" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Verificar" descr="Verificar restrição" xml:lang="pt"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Método de comparação" descr="Nome de grupo (BINARY|NOCASE)" xml:lang="pt"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflito" descr="Método de resolução de conflito (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="pt"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="pt_BR" id="FIELDS_A" name="Colunas da tabela">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nome do campo" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tipo de dados" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Tamanho" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Escala" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Não nulo" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Incremento automático" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Único" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Chave primária" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Padrão" descr="Valor padrão" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Conferir" descr="Confere as restrições" xml:lang="pt_BR"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Método de comparação" descr="Nome da colação (BINARY|NOCASE)" xml:lang="pt_BR"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflito" descr="Método de resolução de conflito (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="pt_BR"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ro" id="FIELDS_A" name="Coloanele tabelei">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Nume de câmp" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Tip de date" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Dimensiune" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scală" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Nu este NULL" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Mărire automată" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unic" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Cheie primară" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Implicit" descr="Valoare implicită" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Verifică" descr="Verifică restricția" xml:lang="ro"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Metodă de comparare" descr="Numele tipului de ordonare alfabetică (BINARY|NOCASE)" xml:lang="ro"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ro"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="ru" id="FIELDS_A" name="Столбцы таблицы">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Имя поля" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Тип данных" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Размер" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Масштаб" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Не NULL" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Автоинкремент" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Уникальный" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Первичный ключ" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Исходное значение" descr="Исходное значение" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Проверить" descr="Проверить ограничения" xml:lang="ru"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Метод сравнения" descr="Наименование сравнения (BINARY|NOCASE)" xml:lang="ru"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Конфликт" descr="Метод решения конфликта (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="ru"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="rw" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Izina ry&apos;umwanya" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Ingano" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Gupima" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Agaciro mburabuzi" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="rw"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="rw"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="rw"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sk" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Meno poľa" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Typ dát" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Veľkosť" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Škála" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Štandardná hodnota" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="sk"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="sk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sk"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sl" id="FIELDS_A" name="Stolpci razpredelnice">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Ime polja" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Podatkovna vrsta" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Velikost" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Merilo" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Vrednost ni NULL" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Samodejno povečevanje" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Enoznačno" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Osnovni ključ" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Privzeto" descr="Privzeta vrednost" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Preveri" descr="Preveri omejitev" xml:lang="sl"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Način primerjave" descr="Ime zbiranja (BINARY|NOCASE)" xml:lang="sl"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Spor" descr="Način razreševanja sporov (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sl"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sq" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Data type" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Size" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Scale" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Default value" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="sq"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="sq"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sq"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sr" id="FIELDS_A" name="Колоне табеле">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Назив поља" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Врста податка" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Величина" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Размера" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Није НИШТА" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Самостално повећавање" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Јединствено" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Основни кључ" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Основно" descr="Основна вредност" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Провери" descr="Провери ограничење" xml:lang="sr"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Начин поређења" descr="Назив сравњивања (БИНАРНИ|БЕЗВЕЛИЧИНЕСЛОВА)" xml:lang="sr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Сукоб" descr="Начин решавања сукоба (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sr"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sr@latin" id="FIELDS_A" name="Kolone tabele">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Naziv polja" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Vrsta podatka" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Veličina" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Razmera" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Nije NIŠTA" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Samostalno povećavanje" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Jedinstveno" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Osnovni ključ" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Osnovno" descr="Osnovna vrednost" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Proveri" descr="Proveri ograničenje" xml:lang="sr@latin"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Način poređenja" descr="Naziv sravnjivanja (BINARNI|BEZVELIČINESLOVA)" xml:lang="sr@latin"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Sukob" descr="Način rešavanja sukoba (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sr@latin"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="sv" id="FIELDS_A" name="Tabellens kolumner">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Fältnamn" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Datatyp" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Storlek" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Skala" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Inte NULL" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Automatisk ökning" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unik" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primärnyckel" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Standard" descr="Standardvärde" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Kontroll" descr="Kontrollera begränsning" xml:lang="sv"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Jämförelsemetod" descr="Sorteringsnamn (BINARY|NOCASE)" xml:lang="sv"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Konflikt" descr="Konfliktlösningsmetod (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="sv"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="tg" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Field name" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Намуди иттилоот" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Андоза" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Миқёсбандӣ" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Ягона" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Пешфарз" descr="Default value" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Санҷидан" descr="Check constraint" xml:lang="tg"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="tg"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="tg"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="tr" id="FIELDS_A" name="Tablonun sütunları">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Alan adı" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Veri türü" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Boyut" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Ölçekle" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="NULL değil" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Otomatik artış" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Eşsiz" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Birincil anahtar" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Öntanımlı" descr="Öntanımlı değer" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Denetle" descr="Kısıtları denetle" xml:lang="tr"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Yöntemi karşılaştır" descr="Karşılaştırma adı (BINARY|NOCASE)" xml:lang="tr"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Çakışma" descr="Çakışma çözme yöntemi (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="tr"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="uk" id="FIELDS_A" name="Table's columns">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Назва поля" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Тип даних" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Розмір" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Масштаб" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Not NULL" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Auto increment" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Unique" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Primary key" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Default" descr="Значення без обумовлення" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Check" descr="Check constraint" xml:lang="uk"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Compare method" descr="Collation name (BINARY|NOCASE)" xml:lang="uk"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Conflict" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="uk"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="vi" id="FIELDS_A" name="Các cột của bảng">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="Tên trường" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="Kiểu dữ liệu" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="Cỡ" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="Tỷ lệ" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="Khác NULL (vô giá trị)" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="Tăng dần tự động" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="Duy nhất" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="Khóa chính" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="Mặc định" descr="Giá trị mặc định" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="Kiểm tra" descr="Ràng buộc kiểm tra" xml:lang="vi"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="Phương pháp so sánh" descr="Tên đối chiếu :
+ BINARY		nhị phân
+ NOCASE		không phân biết chữ hoa/thường" xml:lang="vi"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="Xung đột" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="vi"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="zh_CN" id="FIELDS_A" name="表列">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="字段名" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="数据类型" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="大小" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="范围" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="非 NULL" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="自动增量" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="唯一" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="主键" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="默认" descr="默认值" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="检查" descr="检查约束" xml:lang="zh_CN"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="比较方法" descr="排序规则名称(BINARY|NOCASE)" xml:lang="zh_CN"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="冲突" descr="冲突解决方法(ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="zh_CN"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="zh_HK" id="FIELDS_A" name="表格的直行">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="欄位名稱" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="資料類型" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="大小" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="比例" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="非 NULL" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="自動增加" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="唯一" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="主鍵" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="預設" descr="預設值" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="檢查" descr="檢查限制" xml:lang="zh_HK"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="比較方法" descr="Collation name (BINARY|NOCASE)" xml:lang="zh_HK"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="衝突" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="zh_HK"></gda_array_field>
+  </gda_array>
+  <gda_array xml:lang="zh_TW" id="FIELDS_A" name="表格的直行">
+    <gda_array_field nullok="FALSE" id="COLUMN_NAME" gdatype="gchararray" name="欄位名稱" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="FALSE" id="COLUMN_TYPE" hint="datatype" gdatype="gchararray" name="資料類型" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SIZE" gdatype="guint" name="大小" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_SCALE" gdatype="guint" name="比例" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_NNUL" gdatype="gboolean" name="非 NULL" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_AUTOINC" gdatype="gboolean" name="自動增加" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_UNIQUE" gdatype="gboolean" name="唯一" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_PKEY" gdatype="gboolean" name="主鍵" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_DEFAULT" gdatype="gchararray" name="預設" descr="預設值" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CHECK" gdatype="gchararray" name="檢查" descr="檢查限制" xml:lang="zh_TW"></gda_array_field>
+    
+    <gda_array_field nullok="TRUE" id="COLUMN_COLLATE" gdatype="gchararray" name="比較方法" descr="Collation name (BINARY|NOCASE)" xml:lang="zh_TW"></gda_array_field>
+    <gda_array_field nullok="TRUE" id="COLUMN_CONFLICT" gdatype="gchararray" name="衝突" descr="Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)" xml:lang="zh_TW"></gda_array_field>
+  </gda_array>
+
+  
+
+  
+  <sequence id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ar" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="az" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="bs" id="TABLE_CONSTRAINTS_S" name="Opća ograničenja">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ca" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ca@valencia" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="cs" id="TABLE_CONSTRAINTS_S" name="Globální omezení">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="da" id="TABLE_CONSTRAINTS_S" name="Globale begrænsninger">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="de" id="TABLE_CONSTRAINTS_S" name="Globale Einschränkungen">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="dz" id="TABLE_CONSTRAINTS_S" name="སྤྱི་ཁྱབ་བར་ཆད་ཚུ།">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="el" id="TABLE_CONSTRAINTS_S" name="Καθολικοί περιορισμοί">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="en_CA" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="en_GB" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="eo" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="es" id="TABLE_CONSTRAINTS_S" name="Restricciones globales">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="eu" id="TABLE_CONSTRAINTS_S" name="Murriztapen globalak">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="fa" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="fi" id="TABLE_CONSTRAINTS_S" name="Yleiset rajoitteet">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="fr" id="TABLE_CONSTRAINTS_S" name="Contraintes globales">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ga" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="gl" id="TABLE_CONSTRAINTS_S" name="Restricións globais">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="hr" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="hu" id="TABLE_CONSTRAINTS_S" name="Globális megszorítások">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="id" id="TABLE_CONSTRAINTS_S" name="Kendala global">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="it" id="TABLE_CONSTRAINTS_S" name="Vincoli globali">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ja" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ko" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="lt" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="lv" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="mk" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ml" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ms" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="nb" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ne" id="TABLE_CONSTRAINTS_S" name="विश्वव्यापि अवरोध">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="nl" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="oc" id="TABLE_CONSTRAINTS_S" name="Constrenchas globales">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="pa" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="pt" id="TABLE_CONSTRAINTS_S" name="Restrições globais">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="pt_BR" id="TABLE_CONSTRAINTS_S" name="Restrições globais">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ro" id="TABLE_CONSTRAINTS_S" name="Restricții globale">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="ru" id="TABLE_CONSTRAINTS_S" name="Глобальные ограничения">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="rw" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sk" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sl" id="TABLE_CONSTRAINTS_S" name="Splošne omejitve">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sq" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sr" id="TABLE_CONSTRAINTS_S" name="Општа ограничења">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sr@latin" id="TABLE_CONSTRAINTS_S" name="Opšta ograničenja">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="sv" id="TABLE_CONSTRAINTS_S" name="Globala begränsningar">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="tg" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="tr" id="TABLE_CONSTRAINTS_S" name="Evrensel kısıtlamalar">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="uk" id="TABLE_CONSTRAINTS_S" name="Global constraints">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="vi" id="TABLE_CONSTRAINTS_S" name="Ràng buộc toàn cục">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="zh_CN" id="TABLE_CONSTRAINTS_S" name="全局限制">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="zh_HK" id="TABLE_CONSTRAINTS_S" name="全域限制">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+  <sequence xml:lang="zh_TW" id="TABLE_CONSTRAINTS_S" name="全域限制">
+    <parameter nullok="FALSE" name="Constraint" id="CONSTRAINT_STRING" gdatype="gchararray">
+      <gda_value>CHECK (column &gt; 0)</gda_value>
+    </parameter>
+  </sequence>
+</serv_op>

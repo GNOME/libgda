@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serv_op>
+  
+  <parameters id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be"></parameter>
+  </parameters>
+  <parameters xml:lang="ar" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="ar"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="دليل" descr="Directory where the database file will be" xml:lang="ar"></parameter>
+  </parameters>
+  <parameters xml:lang="az" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="az"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="az"></parameter>
+  </parameters>
+  <parameters xml:lang="bs" id="DB_DEF_P" name="Opis baze podataka">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Ime baze podataka" descr="Ime baze podataka koju ćete kreirati" xml:lang="bs"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Direktorij" descr="Direktorij gdje će biti datoteka baze podataka" xml:lang="bs"></parameter>
+  </parameters>
+  <parameters xml:lang="ca" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nom de la base de dades" descr="The name of a database to create" xml:lang="ca"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directori" descr="Directory where the database file will be" xml:lang="ca"></parameter>
+  </parameters>
+  <parameters xml:lang="ca@valencia" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nom de la base de dades" descr="The name of a database to create" xml:lang="ca@valencia"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directori" descr="Directory where the database file will be" xml:lang="ca@valencia"></parameter>
+  </parameters>
+  <parameters xml:lang="cs" id="DB_DEF_P" name="Popis databáze">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Název databáze" descr="Název databáze, která se má vytvořit" xml:lang="cs"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Složka" descr="Složka, ve které bude soubor s databází" xml:lang="cs"></parameter>
+  </parameters>
+  <parameters xml:lang="da" id="DB_DEF_P" name="Databasebeskrivelse">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Databasenavn" descr="Navn på en database til oprettelse" xml:lang="da"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Mappe" descr="Mappe hvor databasefilen vil befinde sig" xml:lang="da"></parameter>
+  </parameters>
+  <parameters xml:lang="de" id="DB_DEF_P" name="Datenbankbeschreibung">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Datenbankname" descr="Name der zu erstellenden Datenbank" xml:lang="de"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Ordner" descr="Ordner für die Datenbankdatei" xml:lang="de"></parameter>
+  </parameters>
+  <parameters xml:lang="dz" id="DB_DEF_P" name="གནས་སྡུད་གཞི་རྟེན་གྱི་འགྲེལ་བཤད།">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="གནས་སྡུད་གཞི་རྟེན་མིང་།" descr="གསར་བསྐྲུན་འབད་ནི་གནས་སྡུད་གཞི་རྟེན་ཅིག་གི་མིང་འདི།" xml:lang="dz"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="སྣོད་ཐོ།" descr="གནས་སྡུད་གཞི་རྟེན་ཡིག་སྣོད་ཡོད་སའི་སྣོད་ཐོ།" xml:lang="dz"></parameter>
+  </parameters>
+  <parameters xml:lang="el" id="DB_DEF_P" name="Περιγραφή της βάσης δεδομένων">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Όνομα βάσης δεδομένων" descr="Το όνομα της δημιουργούμενης βάσης δεδομένων" xml:lang="el"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Κατάλογος" descr="Ο κατάλογος του αρχείου της βάσης δεδομένων" xml:lang="el"></parameter>
+  </parameters>
+  <parameters xml:lang="en_CA" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="en_CA"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="en_CA"></parameter>
+  </parameters>
+  <parameters xml:lang="en_GB" id="DB_DEF_P" name="Database&apos;s description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="en_GB"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="en_GB"></parameter>
+  </parameters>
+  <parameters xml:lang="eo" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Datumbaznomo" descr="The name of a database to create" xml:lang="eo"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Dosierujo" descr="Directory where the database file will be" xml:lang="eo"></parameter>
+  </parameters>
+  <parameters xml:lang="es" id="DB_DEF_P" name="Descripción de la base de datos">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nombre de la base de datos" descr="El nombre de la base de datos que crear" xml:lang="es"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Carpeta" descr="Carpeta donde estará el archivo con la base de datos" xml:lang="es"></parameter>
+  </parameters>
+  <parameters xml:lang="eu" id="DB_DEF_P" name="Datu-basearen azalpena">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Datu-basearen izena" descr="Datu-basearen izena sortzeko" xml:lang="eu"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Direktorioa" descr="Direktorioa (datu-basearen fitxategia edukiko duena)" xml:lang="eu"></parameter>
+  </parameters>
+  <parameters xml:lang="fa" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="fa"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="fa"></parameter>
+  </parameters>
+  <parameters xml:lang="fi" id="DB_DEF_P" name="Tietokannan kuvaus">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Tietokannan nimi" descr="Luotavan tietokannan nimi" xml:lang="fi"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Hakemisto" descr="Kansio, jossa tietokantatiedosto tallennetaan" xml:lang="fi"></parameter>
+  </parameters>
+  <parameters xml:lang="fr" id="DB_DEF_P" name="Description de la base de données">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nom de la base de données" descr="Nom d&apos;une base de données à créer" xml:lang="fr"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Répertoire" descr="Répertoire contenant le fichier de base de données" xml:lang="fr"></parameter>
+  </parameters>
+  <parameters xml:lang="ga" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="ga"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Fillteán" descr="Directory where the database file will be" xml:lang="ga"></parameter>
+  </parameters>
+  <parameters xml:lang="gl" id="DB_DEF_P" name="Descrición da base de datos">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nome da base de datos" descr="O nome da base de datos a crear" xml:lang="gl"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directorio" descr="Directorio onde estará o ficheiro da base de datos" xml:lang="gl"></parameter>
+  </parameters>
+  <parameters xml:lang="hr" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="hr"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="hr"></parameter>
+  </parameters>
+  <parameters xml:lang="hu" id="DB_DEF_P" name="Adatbázis leírása">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Adatbázisnév" descr="A létrehozandó adatbázis neve" xml:lang="hu"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Könyvtár" descr="A könyvtár ahol az adatbázisfájl lesz" xml:lang="hu"></parameter>
+  </parameters>
+  <parameters xml:lang="id" id="DB_DEF_P" name="Deskripsi basis data">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nama basis data" descr="Nama basis data untuk dibuat" xml:lang="id"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Direktori" descr="Direktori tempat berkas basis data nanti" xml:lang="id"></parameter>
+  </parameters>
+  <parameters xml:lang="it" id="DB_DEF_P" name="Descrizione database">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nome database" descr="Nome di un database da creare" xml:lang="it"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Cartella" descr="Cartella dove verrà collocato il database" xml:lang="it"></parameter>
+  </parameters>
+  <parameters xml:lang="ja" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="データベース名" descr="作成するデータベースの名前" xml:lang="ja"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="ディレクトリ" descr="Directory where the database file will be" xml:lang="ja"></parameter>
+  </parameters>
+  <parameters xml:lang="ko" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="ko"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="ko"></parameter>
+  </parameters>
+  <parameters xml:lang="lt" id="DB_DEF_P" name="Duomenų bazės aprašymas">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Duomenų bazės vardas" descr="Sukuriamos duomenų bazės vardas" xml:lang="lt"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Katalogas" descr="Katalogas, kuriame bus duomenų bazės byla" xml:lang="lt"></parameter>
+  </parameters>
+  <parameters xml:lang="lv" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="lv"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="lv"></parameter>
+  </parameters>
+  <parameters xml:lang="mk" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="mk"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="mk"></parameter>
+  </parameters>
+  <parameters xml:lang="ml" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="ml"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="ml"></parameter>
+  </parameters>
+  <parameters xml:lang="ms" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="ms"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="ms"></parameter>
+  </parameters>
+  <parameters xml:lang="nb" id="DB_DEF_P" name="Beskrivelse av database">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Databasenavn" descr="Navn på databasen som skal opprettes" xml:lang="nb"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Katalog" descr="Directory where the database file will be" xml:lang="nb"></parameter>
+  </parameters>
+  <parameters xml:lang="ne" id="DB_DEF_P" name="डाटावेशको वर्णन">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="डाटाबेस नाम" descr="सिर्जना गर्न डाटाबेसको नाम" xml:lang="ne"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="डाइरेक्टरी" descr="डाटाबेस हुने स्थानमा डाइरेक्टरी" xml:lang="ne"></parameter>
+  </parameters>
+  <parameters xml:lang="nl" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database naam" descr="The name of a database to create" xml:lang="nl"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Map" descr="Directory where the database file will be" xml:lang="nl"></parameter>
+  </parameters>
+  <parameters xml:lang="oc" id="DB_DEF_P" name="Descripcion de la banca de donadas">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nom de la banca de donadas" descr="Nom d&apos;una banca de donadas a crear" xml:lang="oc"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Repertòri" descr="Repertòri contenant lo fichièr de banca de donadas" xml:lang="oc"></parameter>
+  </parameters>
+  <parameters xml:lang="pa" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="pa"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="pa"></parameter>
+  </parameters>
+  <parameters xml:lang="pt" id="DB_DEF_P" name="Descrição da base de dados">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nome da base de dados" descr="Nome da base de dados a criar" xml:lang="pt"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Pasta" descr="Pasta onde o ficheiro da base dados estará" xml:lang="pt"></parameter>
+  </parameters>
+  <parameters xml:lang="pt_BR" id="DB_DEF_P" name="Descrição do banco de dados">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Nome do banco de dados" descr="O nome do banco de dados a ser criado" xml:lang="pt_BR"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Diretório" descr="Diretório em que o arquivo de banco de dados estará" xml:lang="pt_BR"></parameter>
+  </parameters>
+  <parameters xml:lang="ro" id="DB_DEF_P" name="Descrierea bazei de date">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Numele bazei de date" descr="Numele unei baze de date de creat" xml:lang="ro"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Dosar" descr="Dosar în care se va afla fișierul bazei de date" xml:lang="ro"></parameter>
+  </parameters>
+  <parameters xml:lang="ru" id="DB_DEF_P" name="Описание базы данных">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Имя базы данных" descr="Имя создаваемой базы данных" xml:lang="ru"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Каталог" descr="Каталог, в котором будет хранится база данных" xml:lang="ru"></parameter>
+  </parameters>
+  <parameters xml:lang="rw" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="rw"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Ububiko" descr="Directory where the database file will be" xml:lang="rw"></parameter>
+  </parameters>
+  <parameters xml:lang="sk" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="sk"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="sk"></parameter>
+  </parameters>
+  <parameters xml:lang="sl" id="DB_DEF_P" name="Opis podatkovne zbirke">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Ime podatkovne zbirke" descr="Ime podatkovne zbirke za ustvarjanje" xml:lang="sl"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Mapa" descr="Mapa kjer bo datoteka podatkovne zbirke" xml:lang="sl"></parameter>
+  </parameters>
+  <parameters xml:lang="sq" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="sq"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Directory" descr="Directory where the database file will be" xml:lang="sq"></parameter>
+  </parameters>
+  <parameters xml:lang="sr" id="DB_DEF_P" name="Опис базе података">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Назив базе података" descr="Назив базе података за стварање" xml:lang="sr"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Директоријум" descr="Директоријум у коме ће бити датотека базе података" xml:lang="sr"></parameter>
+  </parameters>
+  <parameters xml:lang="sr@latin" id="DB_DEF_P" name="Opis baze podataka">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Naziv baze podataka" descr="Naziv baze podataka za stvaranje" xml:lang="sr@latin"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Direktorijum" descr="Direktorijum u kome će biti datoteka baze podataka" xml:lang="sr@latin"></parameter>
+  </parameters>
+  <parameters xml:lang="sv" id="DB_DEF_P" name="Databasens beskrivning">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Databasnamn" descr="Namnet på en databas att skapa" xml:lang="sv"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Katalog" descr="Katalog där databasfilen kommer att vara" xml:lang="sv"></parameter>
+  </parameters>
+  <parameters xml:lang="tg" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Database name" descr="The name of a database to create" xml:lang="tg"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Директория" descr="Directory where the database file will be" xml:lang="tg"></parameter>
+  </parameters>
+  <parameters xml:lang="tr" id="DB_DEF_P" name="Veri tabanı açıklaması">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Veri tabanı adı" descr="Oluşturulacak veri tabanının adı" xml:lang="tr"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Dizin" descr="Veri tabanı dosyasının duracağı dizin" xml:lang="tr"></parameter>
+  </parameters>
+  <parameters xml:lang="uk" id="DB_DEF_P" name="Database's description">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Назва бази даних" descr="The name of a database to create" xml:lang="uk"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Каталог" descr="Directory where the database file will be" xml:lang="uk"></parameter>
+  </parameters>
+  <parameters xml:lang="vi" id="DB_DEF_P" name="Mô tả co sở dữ liệu">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="Tên cơ sở dữ liệu" descr="Tên của cơ sở dữ liệu cần tạo" xml:lang="vi"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="Thư mục" descr="Thư mục sẽ chứa tập tin co sở dữ liệu" xml:lang="vi"></parameter>
+  </parameters>
+  <parameters xml:lang="zh_CN" id="DB_DEF_P" name="数据库描述">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="数据库名" descr="要创建的数据库的名称" xml:lang="zh_CN"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="目录" descr="数据库文件将位于的目录" xml:lang="zh_CN"></parameter>
+  </parameters>
+  <parameters xml:lang="zh_HK" id="DB_DEF_P" name="資料庫的說明">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="資料庫名稱" descr="要建立的資料庫的名稱" xml:lang="zh_HK"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="目錄" descr="資料庫檔案目錄" xml:lang="zh_HK"></parameter>
+  </parameters>
+  <parameters xml:lang="zh_TW" id="DB_DEF_P" name="資料庫的說明">
+    <parameter nullok="FALSE" id="DB_NAME" gdatype="gchararray" name="資料庫名稱" descr="要建立的資料庫的名稱" xml:lang="zh_TW"></parameter>
+    <parameter plugin="filesel:MODE=PICKFOLDER" nullok="FALSE" id="DB_DIR" gdatype="gchararray" name="目錄" descr="資料庫檔案目錄" xml:lang="zh_TW"></parameter>
+  </parameters>
+</serv_op>

@@ -66,7 +66,4 @@ libgda_postgres_sources = files([
 	'gda-postgres-parser.h',
 	'gda-postgres-meta.c',
 	'gda-postgres-meta.h',
-	'parser.h',
-	'parser.c',
-	'postgres_token_types.h'
 	])

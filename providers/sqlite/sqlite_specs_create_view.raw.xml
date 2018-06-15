@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="VIEW_DEF_P" name="View's description">
+    <parameter id="VIEW_NAME" name="Name" descr="View's name" gdatype="gchararray" nullok="FALSE">
+      <gda_value>table_name</gda_value>
+    </parameter>
+    <parameter id="VIEW_TEMP" name="Temporary view" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="VIEW_IFNOTEXISTS" name="Only if it does not yet exist" descr="Create view only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
+    <parameter id="VIEW_DEF" name="Definition" descr="View's definition" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</serv_op>
