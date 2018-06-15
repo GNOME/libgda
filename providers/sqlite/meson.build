@@ -46,7 +46,6 @@ foreach xt : xml_fnames
 		)
 endforeach
 
-cp = find_program('cp')
 foreach xr : xml_fnames
 	tc = configuration_data()
 	configure_file(
@@ -64,8 +63,6 @@ sqlite_resources = gnome_module.compile_resources('sqlite_resources', 'sqlite.gr
 libgda_sqlite_sources = files([
 	'libmain.c'
 	])
-
-libgda_sqlite_sources += libgda_sqlite_sources
 
 conf = configuration_data()
 conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
