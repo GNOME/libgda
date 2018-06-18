@@ -45,7 +45,6 @@ libgda_models_sources = files([
 	'gda-models-provider.c',
 	'gda-models-provider.h',
 	'gda-models.h',
-	'models.gresources.c',
 	'libmain.c'
 	])
 
