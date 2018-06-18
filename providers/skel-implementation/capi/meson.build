@@ -109,7 +109,8 @@ capi_lemon_parserh = custom_target('capi_lemon-parser_h',
 
 capi_gendef = executable('gen_def', 'gen_def.c',
 	c_args: [
-		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"'
+		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
+		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'
 		],
 	install: false
 	)
