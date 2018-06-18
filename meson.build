@@ -50,6 +50,10 @@ endif
 configh = configure_file(output : 'config.h',
 			configuration : conf)
 
+
+inc_rooth = include_directories ('.')
+inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
+
 req_ver_glib = '>= 2.38.0'
 glib_dep = dependency('glib-2.0', version : req_ver_glib)
 gio_dep = dependency('gio-2.0', version : '>=2.16')
@@ -58,17 +62,23 @@ gthread_dep = dependency('gthread-2.0', version : req_ver_glib)
 gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version : req_ver_glib)
 libxml_dep = dependency('libxml-2.0')
 
-gtk_dep = dependency('gtk+-3.0', required : false)
-gdkpixbuf_dep = dependency('gdk-pixbuf-2.0', required : false)
-gtksourceview_dep = dependency('gtksourceview-3.0', required : false) 
 goocanvas_dep = dependency('goocanvas-2.0', required : false)
 graphviz_dep = dependency('libgvc', required : false)
 glade_dep = dependency('gladeui-2.0', required : false)
 libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
-soup_dep = dependency('libsoup-2.4', required : false)
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11')
 postgres_dep = dependency ('libpq', required: false)
+
+
+libgda_dep = [
+	glib_dep,
+	gobject_dep,
+	gio_dep,
+	gmodule_no_export_dep,
+	libxml_dep,
+	inc_rooth_dep
+	]
 
 c_args = ['-Wall',
 	'-Wextra',
@@ -158,6 +168,7 @@ endif
 
 if get_option('with-libsoup')
   soup_dep = dependency('libsoup-2.4')
+  libgda_dep += [soup_dep]
 endif
 
 if get_option('enable-debug')
@@ -165,10 +176,6 @@ if get_option('enable-debug')
 endif
 
 add_global_arguments(c_args, language : 'c')
-
-
-inc_rooth = include_directories ('.')
-inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
 
 subdir('po')
 subdir('libgda')

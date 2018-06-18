@@ -194,15 +194,8 @@ libgda_source_all += libgda_binreloc_sources
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
 
-libgda_dep = [
-	glib_dep,
-	gobject_dep,
-	gio_dep,
-	gmodule_no_export_dep,
-	libxml_dep,
-	inc_rooth_dep,
-	inc_libgdah_dep
-	]
+
+libgda_dep += [inc_libgdah_dep]
 
 if sqlite_dep.found ()
 	libgda_dep += sqlite_dep
