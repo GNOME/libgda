@@ -54,8 +54,15 @@ pg_lemon_parserh = custom_target('pg_lemon-parser_h',
 	install : false
 	)
 
+postgres_gendef = executable('gen_def', 'gen_def.c',
+	c_args: [
+		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"'
+		],
+	install: false
+	)
+
 pg_token_types = custom_target('pg_token_types',
-	command: [gendef_exe],
+	command: [postgres_gendef],
 	capture: true,
 	input: [pg_lemon_parserh],
 	output: 'postgres_token_types.h',
