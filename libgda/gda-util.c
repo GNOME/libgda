@@ -58,7 +58,7 @@
 
 #define KEYWORDS_HASH_NO_STATIC
 #include <libgda/sqlite/keywords_hash.h>
-#include "keywords_hash.c" /* this one is dynamically generated */
+#include "keywords_hash.code" /* this one is dynamically generated */
 
 extern gchar *gda_lang_locale;
 extern GdaAttributesManager *gda_holder_attributes_manager;

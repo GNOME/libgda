@@ -48,8 +48,8 @@ gda-marshal.c: gda-marshal.list $(GLIB_GENMARSHAL)
 mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
 	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
 
-keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list
-	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list > keywords_hash.c
+keywords_hash.code: mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/keywords.list > keywords_hash.code
 
 gda_headers = \
 	gda-attributes-manager.h \
@@ -227,7 +227,7 @@ s-enum-types-c: @REBUILD@ $(gda_enum_header_files) Makefile
 libgda_built_headers = gda-marshal.h gda-enum-types.h
 
 # Don't build the library until we have built the headers that it needs:
-$(OBJECTS) $(libgda_6_0_la_OBJECTS): gda-marshal.c gda-marshal.h gda-enum-types.h gda-enum-types.c keywords_hash.c
+$(OBJECTS) $(libgda_6_0_la_OBJECTS): gda-marshal.c gda-marshal.h gda-enum-types.h gda-enum-types.c keywords_hash.code
 
 libgda_6_0_la_SOURCES = \
 	$(libgda_sources)
@@ -280,7 +280,7 @@ CLEANFILES = $(libgda_built_headers) \
 	s-enum-types-c \
 	libgda.def \
 	libgda-$(GDA_ABI_VERSION).lib \
-	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c
+	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.code
 
 dist-hook:
 	cd $(distdir); rm -f $(libgda_built_headers)

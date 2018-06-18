@@ -18,12 +18,12 @@ pkeyword_files=$(addprefix $(top_srcdir)/providers/skel-implementation/capi/,$(k
 mkkeywordhash$(EXEEXT_FOR_BUILD): $(top_srcdir)/libgda/sqlite/mkkeywordhash.c
 	$(CC_FOR_BUILD) -g -o mkkeywordhash$(EXEEXT_FOR_BUILD) $(GDA_DEBUG_FLAGS) $<
 
-keywords_hash.c: mkkeywordhash$(EXEEXT_FOR_BUILD) $(pkeyword_files)
-	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/skel-implementation/capi/keywords.list > keywords_hash.c
+keywords_hash.code: mkkeywordhash$(EXEEXT_FOR_BUILD) $(pkeyword_files)
+	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/skel-implementation/capi/keywords.list > keywords_hash.code
 
 # parser generation
 parser.c parser.h: parser.y $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD)
-	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d -T$(top_srcdir)/libgda/sql-parser/lempar.c $(srcdir)/parser.y
+	- $(top_builddir)/libgda/sql-parser/lemon$(EXEEXT_FOR_BUILD) -q -d -o$(builddir) -T$(top_srcdir)/libgda/sql-parser/lempar.c $(srcdir)/parser.y
 
 gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 	$(CC_FOR_BUILD) -o gen_def$(EXEEXT_FOR_BUILD) -DIMPOSED_HEADER=\""$(top_builddir)/libgda/sql-parser/token_types.h"\" $(srcdir)/gen_def.c
@@ -31,7 +31,7 @@ gen_def$(EXEEXT_FOR_BUILD): gen_def.c
 capi_token_types.h: gen_def$(EXEEXT_FOR_BUILD) parser.h
 	./gen_def$(EXEEXT_FOR_BUILD) > capi_token_types.h
 
-$(OBJECTS) $(libgda_capi_la_OBJECTS): capi_token_types.h keywords_hash.c
+$(OBJECTS) $(libgda_capi_la_OBJECTS): capi_token_types.h keywords_hash.code
 
 libgda_capi_la_SOURCES = \
 	gda-capi-blob-op.c \
@@ -88,5 +88,5 @@ DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
 	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c \
-	capi.gresources.c \
+	capi.gresources.code \
 	$(RESOURCES)

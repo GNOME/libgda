@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <gio/gio.h>
 
 #ifndef __WIN32__
 #   if defined(_WIN32) || defined(WIN32)
@@ -1394,7 +1395,19 @@ static void handle_T_option(char *z){
   strcpy(user_templatename, z);
 }
 
+
+static char *output_dir = NULL;
+static void handle_o_option(char *z){
+  output_dir = (char *) malloc( lemonStrlen(z)+1 );
+  if( output_dir==0 ){
+    memory_error();
+  }
+  strcpy(output_dir, z);
+}
+
 int local_out_dir = 0;
+int disable_header = 0;
+int disable_c = 0;
 
 /* The main program.  Parse the command line and do it... */
 int main(int argc, char **argv)
@@ -1424,6 +1437,9 @@ int main(int argc, char **argv)
     {OPT_FLAG, "s", (char*)&statistics,
                                    "Print parser stats to standard output."},
     {OPT_FLAG, "x", (char*)&version, "Print the version number."},
+    {OPT_FLAG, "h", (char*)&disable_header, "Disable header file generation"},
+    {OPT_FLAG, "z", (char*)&disable_c, "Disable C source code file generation"},
+    {OPT_FSTR, "o", (char*)handle_o_option, "Specify output directory."},
     {OPT_FLAG,0,0,0}
   };
   int i;
@@ -1514,13 +1530,17 @@ int main(int argc, char **argv)
     /* Generate a report of the parser generated.  (the "y.output" file) */
     if( !quiet ) ReportOutput(&lem);
 
-    /* Generate the source code for the parser */
-    ReportTable(&lem, mhflag);
+    if (!disable_c) {
+      /* Generate the source code for the parser */
+      ReportTable(&lem, mhflag);
+    }
 
     /* Produce a header file for use by the scanner.  (This step is
     ** omitted if the "-m" option is used because makeheaders will
     ** generate the file for us.) */
-    if( !mhflag ) ReportHeader(&lem);
+    if( !mhflag && !disable_header) {
+      ReportHeader(&lem);
+    }
   }
   if( statistics ){
     printf("Parser statistics: %d terminals, %d nonterminals, %d rules\n",
@@ -1531,9 +1551,14 @@ int main(int argc, char **argv)
   if( lem.nconflict > 0 ){
     fprintf(stderr,"%d parsing conflicts.\n",lem.nconflict);
   }
+  if (user_templatename != NULL)
+    free (user_templatename);
+  if (output_dir != NULL)
+    free (output_dir);
 
   /* return 0 on success, 1 on failure. */
-  exitcode = ((lem.errorcnt > 0) || (lem.nconflict > 0)) ? 1 : 0;
+  /* Remove conficts output as exit code:  || (lem.nconflict > 0) */
+  exitcode = ((lem.errorcnt > 0)) ? 1 : 0;
   successful_exit = (exitcode == 0);
   exit(exitcode);
   return (exitcode);
@@ -2728,7 +2753,62 @@ PRIVATE char *file_makename(struct lemon *lemp, const char *suffix)
   char *name;
   char *cp;
   char *filename;
+  GFile *gf;
+  GFile *pg;
+  gchar *dpn = NULL;
 
+  gf = g_file_new_for_path (lemp->filename);
+  if (!g_file_query_exists (gf, NULL)) {
+    g_object_unref (gf);
+    fprintf(stderr,"template file doesn's exists'.\n");
+    exit (1);
+  }
+  if (output_dir != NULL) {
+    pg = g_file_new_for_path (output_dir);
+    dpn = g_file_get_uri (pg);
+  } else {
+    pg = g_file_new_for_path (lemp->argv0);
+    GFile *dp = g_file_get_parent (pg);
+    dpn = g_file_get_uri (dp);
+    g_object_unref (dp);
+  }
+  if (!g_file_query_exists (pg, NULL)) {
+    g_object_unref (gf);
+    g_object_unref (pg);
+    fprintf(stderr,"output directory doesn's exists'.\n");
+    exit (1);
+  }
+  gchar *fn = g_file_get_basename (gf);
+  g_strdelimit (fn, ".y", '\0');
+  if (fn == NULL) {
+    g_object_unref (gf);
+    g_object_unref (pg);
+    fprintf(stderr,"template file's name error'.\n");
+    exit (1);
+  }
+  if (dpn == NULL) {
+    g_object_unref (gf);
+    g_object_unref (pg);
+    fprintf(stderr,"Excuction path error'.\n");
+    exit (1);
+  }
+  GString *str = g_string_new (dpn);
+  g_string_append (str, "/");
+  g_string_append (str, fn);
+  g_free (dpn);
+  g_free (fn);
+  g_object_unref (pg);
+  g_object_unref (gf);
+  gchar *file = g_string_free (str, FALSE);
+  gchar *rn = g_strconcat (file, suffix, NULL);
+  g_free (file);
+  GFile *nf = g_file_new_for_uri (rn);
+  g_free (rn);
+  gchar *path = g_file_get_path (nf);
+  g_object_unref (nf);
+  return path;
+
+/* FIXME: To remove */
   filename = lemp->filename;
   if (local_out_dir) {
     char *ptr;
@@ -3627,6 +3707,7 @@ void ReportTable(
 
   in = tplt_open(lemp);
   if( in==0 ) return;
+
   out = file_open(lemp,".c","wb");
   if( out==0 ){
     fclose(in);
@@ -3643,7 +3724,6 @@ void ReportTable(
     free(name);
   }
   tplt_xfer(lemp->name,in,out,&lineno);
-
   /* Generate #defines for all tokens */
   if( mhflag ){
     const char *prefix;

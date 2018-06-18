@@ -25,7 +25,10 @@
 #include "gda-mysql-parser.h"
 
 #include <libgda/sqlite/keywords_hash.h>
-#include "keywords_hash.c" /* this one is dynamically generated */
+#include "keywords_hash_V50.code" /* this one is dynamically generated */
+#include "keywords_hash_V51.code" /* this one is dynamically generated */
+#include "keywords_hash_V54.code" /* this one is dynamically generated */
+#include "keywords_hash_V60.code" /* this one is dynamically generated */
 
 /*
  * Reuseable interface entry point

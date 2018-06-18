@@ -1,0 +1,149 @@
+
+inc_libgda_capih = include_directories ('.')
+inc_libgda_capih_dep = declare_dependency (include_directories : inc_libgda_capih)
+
+capi_xml_fnames = [
+	'capi_specs_dsn',
+	'capi_specs_create_table',
+	]
+capi_xml_fnamesext = []
+foreach fn : capi_xml_fnames
+	capi_xml_fnamesext += [fn+'.xml.in']
+endforeach
+
+capi_xml_inf = files(capi_xml_fnamesext)
+
+foreach xf : capi_xml_fnames
+	install_data(xf+'.xml.in',
+		rename: [
+			xf+'.xml'
+			],
+		install_dir: join_paths(get_option('datadir'), project_package)
+		)
+endforeach
+
+foreach xt : capi_xml_fnames
+	i18n.merge_file(
+		input: xt+'.xml.in',
+		output: xt+'.xml.in.h',
+		type: 'xml',
+		po_dir: join_paths(meson.build_root(),'po')
+		)
+endforeach
+
+foreach xr : capi_xml_fnames
+	tc = configuration_data()
+	configure_file(
+		copy: true,
+		input: xr+'.xml.in',
+		output: xr+'.raw.xml',
+		configuration: tc
+		)
+endforeach
+
+capi_resources = gnome_module.compile_resources('capi_resources', 'capi.gresource.xml',
+	source_dir: meson.current_build_dir()
+	)
+
+libgda_capi_sources = files([
+	'gda-capi-blob-op.c',
+	'gda-capi-blob-op.h',
+	'gda-capi-ddl.c',
+	'gda-capi-ddl.h',
+	'gda-capi-parser.c',
+	'gda-capi-parser.h',
+	'gda-capi-provider.c',
+	'gda-capi-provider.h',
+	'gda-capi-pstmt.h',
+	'gda-capi-pstmt.c',
+	'gda-capi-meta.c',
+	'gda-capi-meta.h',
+	'gda-capi-recordset.c',
+	'gda-capi-recordset.h',
+	'gda-capi.h',
+	'libmain.c',
+	])
+
+conf = configuration_data()
+conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
+conf.set_quoted('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
+conf.set_quoted('VERSION', project_version)
+
+libgda_sqlite_providerpc = configure_file(
+			input:  'libgda-capi-'+project_api_version+'.pc.in',
+			output: 'libgda-capi-'+project_api_version+'.pc',
+			configuration : conf,
+			install_dir: join_paths(get_option('libdir'),'pkgconfig')
+			)
+
+capi_keywordshash = custom_target('keywords_hash_capi',
+		command: [
+			mkkeywordhash,
+			'@INPUT@'
+			],
+		capture: true,
+		input: 'keywords.list',
+		output: 'keywords_hash.code'
+		)
+
+capi_keywordshash_dep = declare_dependency (sources: capi_keywordshash)
+
+capi_lemon_parserc = custom_target('capi_lemon-parser_c',
+	command : [lemon_exe, '-d', '-h',
+	'-o'+meson.current_build_dir(),
+	'-T'+'@INPUT0@', '@INPUT1@'],
+	input : [lemon_templatef, 'parser.y'],
+	output : ['parser.c'],
+	install : false
+	)
+
+
+capi_lemon_parserh = custom_target('capi_lemon-parser_h',
+	command : [lemon_exe, '-d', '-z',
+	'-o'+meson.current_build_dir(),
+	'-T'+'@INPUT0@', '@INPUT1@'],
+	input : [lemon_templatef, 'parser.y'],
+	output : ['parser.h'],
+	install : false
+	)
+
+capi_gendef = executable('gen_def', 'gen_def.c',
+	c_args: [
+		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
+		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'
+		],
+	install: false
+	)
+
+capi_token_types = custom_target('capi_token_types',
+	command: [capi_gendef],
+	capture: true,
+	output: 'capi_token_types.h',
+	depends: capi_lemon_parserh,
+	install: false,
+	)
+
+
+libgda_capi_sources += capi_lemon_parserc
+libgda_capi_sources += capi_lemon_parserh
+libgda_capi_sources += capi_token_types
+
+libgda_capi_provider = library ('gda-capi',
+	libgda_capi_sources,
+	dependencies: [
+		libgda_dep,
+		sqlite_dep,
+		capi_keywordshash_dep,
+		inc_libgda_capih_dep,
+		inc_sqliteh_dep,
+		],
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		],
+	link_args: [
+		'-export-dynamic',
+		],
+	link_with: libgda,
+	install: false,
+	)
