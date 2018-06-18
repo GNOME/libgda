@@ -54,11 +54,14 @@ pg_lemon_parserh = custom_target('pg_lemon-parser_h',
 	install : false
 	)
 
+pg_lemon_parserh_dep = declare_dependency(sources: pg_lemon_parserh)
+
 postgres_gendef = executable('gen_def', 'gen_def.c',
 	c_args: [
 		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
 		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'
 		],
+	dependencies: [pg_lemon_parserh_dep],
 	install: false
 	)
 
@@ -67,7 +70,7 @@ pg_token_types = custom_target('pg_token_types',
 	capture: true,
 	input: [pg_lemon_parserh],
 	output: 'postgres_token_types.h',
-	install: false
+	install: false,
 	)
 
 libgda_pg_sources = files([
@@ -79,10 +82,9 @@ libgda_pg_sources = files([
 	'gda-postgres-meta.h',
 	])
 
-libgda_pg_sources += pg_token_types
-libgda_pg_sources += pg_token_types
 libgda_pg_sources += pg_lemon_parserc
 libgda_pg_sources += pg_lemon_parserh
+libgda_pg_sources += pg_token_types
 
 pg_reusable_dep = []
 pg_reusable_dep += pg_keywordshash_82_dep
