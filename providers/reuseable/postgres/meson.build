@@ -5,7 +5,7 @@ inc_postgresh_dep = declare_dependency (include_directories : inc_postgresh)
 pg_keywordshash_82 = custom_target('keywords_hash_82',
 		command: [
 			mkkeywordhash,
-			'@INPUT@'
+			'@INPUT@', 'V82'
 			],
 		capture: true,
 		input: 'keywords_82.list',
@@ -16,7 +16,7 @@ pg_keywordshash_82_dep = declare_dependency (sources: pg_keywordshash_82)
 pg_keywordshash_83 = custom_target('keywords_hash_83',
 		command: [
 			mkkeywordhash,
-			'@INPUT@'
+			'@INPUT@', 'V83'
 			],
 		capture: true,
 		input: 'keywords_83.list',
@@ -27,7 +27,7 @@ pg_keywordshash_83_dep = declare_dependency (sources: pg_keywordshash_83)
 pg_keywordshash_84 = custom_target('keywords_hash_84',
 		command: [
 			mkkeywordhash,
-			'@INPUT@'
+			'@INPUT@', 'V84'
 			],
 		capture: true,
 		input: 'keywords_84.list',
