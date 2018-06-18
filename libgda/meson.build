@@ -223,3 +223,19 @@ libgda = library(
 	c_args : libgda_cargs,
 	install : true
 	)
+
+# Tests
+tco = executable('test_cnc_open', 'test-cnc-open.c',
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep
+		],
+	link_with: libgda,
+	install: false
+	)
+test('OpenConnection', tco,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
