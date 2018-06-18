@@ -1,27 +1,7 @@
 inc_libgda_sqliteh = include_directories ('.')
 inc_libgda_sqliteh_dep = declare_dependency (include_directories : inc_libgda_sqliteh)
 
-xml_fnames = [
-	'sqlite_specs_dsn',
-	'sqlite_specs_create_db',
-	'sqlite_specs_drop_db',
-	'sqlite_specs_create_table',
-	'sqlite_specs_drop_table',
-	'sqlite_specs_create_index',
-	'sqlite_specs_drop_index',
-	'sqlite_specs_rename_table',
-	'sqlite_specs_add_column',
-	'sqlite_specs_create_view',
-	'sqlite_specs_drop_view'
-	]
-xml_fnamesext = []
-foreach fn : xml_fnames
-	xml_fnamesext += [fn+'.xml.in']
-endforeach
-
-xml_inf = files(xml_fnamesext)
-
-install_data(xml_fnamesext,
+install_data(sqlite_xml_fnamesext,
 	rename: [
 		'sqlite_specs_dsn.xml',
 		'sqlite_specs_create_db.xml',
@@ -37,7 +17,7 @@ install_data(xml_fnamesext,
 		],
 	install_dir: join_paths(get_option('datadir'), project_package)
 	)
-foreach xt : xml_fnames
+foreach xt : sqlite_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
 		output: xt+'.xml.in.h',
@@ -46,7 +26,7 @@ foreach xt : xml_fnames
 		)
 endforeach
 
-foreach xr : xml_fnames
+foreach xr : sqlite_xml_fnames
 	tc = configuration_data()
 	configure_file(
 		copy: true,

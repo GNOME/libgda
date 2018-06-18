@@ -1,6 +1,16 @@
 
 subdir('virtual')
 
+gen_emb_string = executable('gen_emb_string', 'gen_emb_string.c')
+
+xml_embeddedh = custom_target('xml_embeddedh',
+	command: [gen_emb_string, '@INPUT@'],
+	input: sqlite_xml_inf,
+	output: 'xml_embedded.h',
+	install: false,
+	capture: true
+	)
+
 sqliteheaders = files(['gda-sqlite-provider.h'])
 sqlitesources = files([
 	'gda-sqlite-blob-op.c',
@@ -25,7 +35,8 @@ sqlitesources = files([
 	'gda-symbols-util.h',
 	'gda-symbols-util.c'
 	])
-sqlitesources += (sqliteheaders)
+sqlitesources += sqliteheaders
+sqlitesources += xml_embeddedh
 
 sqlite_cargs = [
 		'-include',

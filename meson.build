@@ -177,6 +177,27 @@ endif
 
 add_global_arguments(c_args, language : 'c')
 
+# Files references by sqlite embedded and provider
+sqlite_xml_fnames = [
+	'sqlite_specs_dsn',
+	'sqlite_specs_create_db',
+	'sqlite_specs_drop_db',
+	'sqlite_specs_create_table',
+	'sqlite_specs_drop_table',
+	'sqlite_specs_create_index',
+	'sqlite_specs_drop_index',
+	'sqlite_specs_rename_table',
+	'sqlite_specs_add_column',
+	'sqlite_specs_create_view',
+	'sqlite_specs_drop_view'
+	]
+sqlite_xml_fnamesext = []
+foreach fn : sqlite_xml_fnames
+	sqlite_xml_fnamesext += [join_paths(meson.source_root(), 'providers','sqlite',fn+'.xml.in')]
+endforeach
+
+sqlite_xml_inf = files(sqlite_xml_fnamesext)
+
 subdir('po')
 subdir('libgda')
 subdir('providers')
