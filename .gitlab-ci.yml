@@ -54,6 +54,11 @@ autotools_check:
     paths:
     - tests/test-suite.log
     - libgda/test-suite.log
+    - tests/data-models/test-suite.log
+    - tests/meta-store/test-suite.log
+    - tests/value-holders/test-suite.log
+    - tests/parser/test-suite.log
+    - tests/providers/test-suite.log
     expire_in: 1 week
 
 meson_build:
