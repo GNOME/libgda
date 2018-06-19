@@ -53,6 +53,7 @@ autotools_check:
     when: on_failure
     paths:
     - tests/test-suite.log
+    - libgda/test-suite.log
     expire_in: 1 week
 
 meson_build:
