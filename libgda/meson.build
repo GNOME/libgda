@@ -197,10 +197,6 @@ inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
 
 libgda_dep += [inc_libgdah_dep]
 
-if sqlite_dep.found ()
-	libgda_dep += sqlite_dep
-endif
-
 libgda_cargs = [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -210,6 +206,8 @@ libgda_cargs = [
 
 libgda_cargs += sqlite_cargs
 libgda_cargs += binreloc_cargs
+
+libgda_dep += sqlite_deps
 
 libgda = library(
 	'gda-'+project_api_version,

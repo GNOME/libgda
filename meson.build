@@ -67,9 +67,23 @@ graphviz_dep = dependency('libgvc', required : false)
 glade_dep = dependency('gladeui-2.0', required : false)
 libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
-sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11')
 postgres_dep = dependency ('libpq', required: false)
 
+
+sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
+sqlite_internal = true
+if sqlite_dep.found()
+	sqlite3_table_column_metadata = meson.get_compiler('c').find_library('sqlite3_table_column_metadata',
+																	required: false
+																	)
+	if sqlite3_table_column_metadata.found()
+		sqlite_internal = false
+	endif
+endif
+
+if sqlite_internal
+	ldl = meson.get_compiler('c').find_library('dl')
+endif
 
 libgda_dep = [
 	glib_dep,

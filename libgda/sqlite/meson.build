@@ -1,4 +1,6 @@
-
+if sqlite_internal
+	subdir('sqlite-src')
+endif
 subdir('virtual')
 
 gen_emb_string = executable('gen_emb_string', 'gen_emb_string.c')
@@ -44,9 +46,20 @@ sqlite_cargs = [
 		'-DPNAME="SQLite"', '-DCLASS_PREFIX="GdaSqlite"'
 	]
 sqlite_path = ''
-if sqlite_dep.found ()
+
+sqlite_deps = []
+
+if sqlite_internal
+	sqlite_cargs += sqlite_src_c_args
+	sqlitesources += sqlite_src
+	inc_sqlite_srch = include_directories ('sqlite-src')
+	inc_sqlite_srch_dep = declare_dependency (include_directories : inc_sqlite_srch)
+	sqlite_deps += inc_sqlite_srch_dep
+	sqlite_deps += sqlite_src_deps
+else
 	sqlite_path = sqlite_dep.get_pkgconfig_variable('libdir')
 	sqlite_cargs += ['-DHAVE_SQLITE']
+	sqlite_deps += sqlite_dep
 endif
 
 sqlite_cargs += ['-DSEARCH_LIB_PATH="'+sqlite_path+'"']
