@@ -35,14 +35,14 @@ variables:
 before_script:
   - apt update && apt -y install $DEPENDENCIES
 
-job_normal:
+autotools_build:
   stage: build
   script:
   - ./autogen.sh
   - make
   - make install
 
-job_check:
+autotools_check:
   stage: check
   script:
   - ./autogen.sh --without-ui --enable-gdaui-gi=no
@@ -55,12 +55,26 @@ job_check:
     - tests/test-suite.log
     expire_in: 1 week
 
-job_meson_normal:
+meson_build:
   stage: build
   script:
   - meson _build
   - cd _build
   - ninja
+  - cd ..
+  artifacts:
+    when: on_failure
+    paths:
+    - meson-logs/meson-log.txt
+    expire_in: 1 week
+
+meson_check:
+  stage: check
+  script:
+  -  meson _build
+  - cd _build
+  - ninja
+  - meson test
   - cd ..
   artifacts:
     when: on_failure
