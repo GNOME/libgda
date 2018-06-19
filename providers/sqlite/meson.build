@@ -43,6 +43,7 @@ sqlite_resources = gnome_module.compile_resources('sqlite_resources', 'sqlite.gr
 libgda_sqlite_sources = files([
 	'libmain.c'
 	])
+libgda_sqlite_sources += sqlite_resources
 
 conf = configuration_data()
 conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)

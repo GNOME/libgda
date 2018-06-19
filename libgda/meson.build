@@ -257,3 +257,21 @@ test('OpenConnectionExecute', tce,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+
+tcm = executable('test_cnc_meta', 'test-cnc-meta.c',
+	c_args: [
+		'-DROOT_DIR="'+meson.source_root()+'"'
+		],
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep
+		],
+	link_with: libgda,
+	install: false
+	)
+test('OpenConnectionMeta', tcm,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
