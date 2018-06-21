@@ -25,6 +25,8 @@
 #include <gmodule.h>
 #include "gda-ddl-base.h"
 #include "gda-ddl-buildable.h"
+#include "gda-connection.h"
+
 
 G_BEGIN_DECLS
 
@@ -68,6 +70,14 @@ void         gda_ddl_view_set_defstring (GdaDdlView *self, const gchar *str);
 
 gboolean     gda_ddl_view_get_replace   (GdaDdlView *self);
 void         gda_ddl_view_set_replace   (GdaDdlView *self,gboolean replace);
+
+gboolean     gda_ddl_view_create        (GdaDdlView *self,
+                                         GdaConnection *cnc,
+                                         GError **error);
+
+gboolean     gda_ddl_view_prepare_create (GdaDdlView *self,
+                                          GdaServerOperation *op,
+                                          GError **error);
 
 G_END_DECLS
 

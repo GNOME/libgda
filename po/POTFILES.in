@@ -28,6 +28,7 @@ libgda/gda-data-pivot.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
 libgda/gda-ddl-column.c
+libgda/gda-ddl-creator.c
 libgda/gda-ddl-fkey.c
 libgda/gda-ddl-view.c
 libgda/gda-holder.c

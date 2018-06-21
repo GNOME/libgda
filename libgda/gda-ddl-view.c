@@ -22,6 +22,8 @@
 #include "gda-ddl-view.h"
 #include "gda-ddl-buildable.h"
 #include "gda-ddl-base.h"
+#include "gda-lockable.h"
+#include "gda-server-provider.h"
 
 typedef struct
 {
@@ -545,4 +547,101 @@ gda_ddl_view_set_replace (GdaDdlView *self,
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
   priv->m_replace = replace;
+}
+
+
+gboolean
+gda_ddl_view_create (GdaDdlView *self,
+                     GdaConnection *cnc,
+                     GError **error)
+{
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (cnc,FALSE);
+
+  if (!gda_connection_is_opened(cnc))
+    return FALSE;
+
+  gda_lockable_lock((GdaLockable*)cnc);
+
+  GdaServerProvider *provider = NULL;
+  GdaServerOperation *op = NULL;
+ 
+  provider = gda_connection_get_provider (cnc);
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  op = gda_server_provider_create_operation(provider,
+                                            cnc,
+                                            GDA_SERVER_OPERATION_CREATE_VIEW,
+                                            NULL,
+                                            error);
+  if (!op)
+    goto on_error;
+
+  if (!gda_ddl_view_prepare_create(self,op,error))
+    goto on_error;
+
+  gchar *sqlstr = NULL;
+  sqlstr = gda_server_provider_render_operation (provider,
+                                                 cnc,
+                                                 op,
+                                                 error);
+
+  g_print ("SQL STRING:%s\n",sqlstr);
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_provider_perform_operation(provider,cnc,op,error))
+    goto on_error;
+
+
+
+
+  gda_lockable_unlock((GdaLockable*)cnc);
+  return TRUE;
+
+on_error:
+  gda_lockable_unlock((GdaLockable*)cnc);
+  return FALSE; 
+}
+
+
+gboolean
+gda_ddl_view_prepare_create (GdaDdlView *self,
+                             GdaServerOperation *op,
+                             GError **error)
+{
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (op,FALSE);
+
+  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+
+  if (!gda_server_operation_set_value_at(op,
+                                         gda_ddl_base_get_full_name(GDA_DDL_BASE(self)),
+                                         error,
+                                         "/VIEW_DEF_P/VIEW_NAME"))
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at(op,
+                                         GDA_BOOL_TO_STR(priv->m_replace),
+                                         error,
+                                         "/VIEW_DEF_P/VIEW_OR_REPLACE"))
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at(op,
+                                         GDA_BOOL_TO_STR(priv->m_ifnoexist),
+                                         error,
+                                         "/VIEW_DEF_P/VIEW_IFNOTEXISTS"))
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at(op,
+                                         GDA_BOOL_TO_STR(priv->m_istemp),
+                                         error,
+                                         "/VIEW_DEF_P/VIEW_TEMP"))
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at(op,
+                                         priv->mp_defstring,
+                                         error,
+                                         "/VIEW_DEF_P/VIEW_DEF"))
+    return FALSE;
+
+  return  TRUE;
 }
