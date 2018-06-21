@@ -301,3 +301,28 @@ gda_ddl_base_set_name (GdaDdlBase  *self,
   priv->m_name = g_strdup (name);
 }
 
+gint
+gda_ddl_base_compare (GdaDdlBase *a, GdaDdlBase *b)
+{
+  if (!a && !b)
+    return 0;
+  else if (!a && b)
+    return -1;
+  else if (a && !b)
+    return 1;
+ 
+  gint res = g_strcmp0 (gda_ddl_base_get_name(a),gda_ddl_base_get_name(b));
+
+  if (!res)
+    {
+      res = g_strcmp0 (gda_ddl_base_get_catalog(a),gda_ddl_base_get_catalog(b));
+      
+      if (!res)
+        return g_strcmp0(gda_ddl_base_get_schema(a),gda_ddl_base_get_schema(b));  
+      else
+        return res;
+    }
+  else
+    return res;
+
+}

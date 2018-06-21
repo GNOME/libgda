@@ -564,5 +564,63 @@ gda_ddl_fkey_set_field (GdaDdlFkey  *self,
   priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
 }
 
+gboolean
+gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
+                              GdaServerOperation *op,
+                              GError **error)
+{
+  GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
+  if (!gda_server_operation_set_value_at(op,
+                                         priv->mp_ref_table,
+                                         error,
+                                         "/FKEY_S/FKEY_REF_TABLE"))
+    return FALSE;
 
+  if (!gda_server_operation_set_value_at(op,
+                                         OnAction[priv->m_ondelete],
+                                         error,
+                                         "/FKEY_S/FKEY_ONDELETE"))
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at(op,
+                                         OnAction[priv->m_onupdate],
+                                         error,
+                                         "/FKEY_S/FKEY_ONUPDATE"))
+    return FALSE;
+
+  GList *itfield = NULL;
+  GList *itreffield = NULL;
+  gint fkeycount = 0;
+
+  itreffield = priv->mp_ref_field;
+  itfield = priv->mp_field;
+
+  for (;itfield && itreffield;)
+    {
+      if (!gda_server_operation_set_value_at(op,
+                                             itfield->data,
+                                             error,
+                                             "/FKEY_S/FKEY_FIELDS_A/@FK_FIELD/%d",
+                                             fkeycount))
+        return FALSE;
+
+      if (!gda_server_operation_set_value_at(op,
+                                             itreffield->data,
+                                             error,
+                                             "/FKEY_S/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
+                                             fkeycount))
+        return FALSE;
+   
+      fkeycount++;
+      
+      /* It will amke for loop overloaded and hard to read. Therefore, 
+       * advancemnet to the next element will be performed here. It is
+       * only one reason. 
+       */
+      itfield = itfield->next;
+      itreffield = itreffield->next;
+    }
+
+  return TRUE;
+}

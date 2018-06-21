@@ -26,6 +26,7 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 #include "gda-ddl-buildable.h"
+#include "gda-server-operation.h"
 
 G_BEGIN_DECLS
 
@@ -86,6 +87,10 @@ void              gda_ddl_fkey_set_onupdate    (GdaDdlFkey *self,
                                                 GdaDdlFkeyReferenceAction id);
 
 void              gda_ddl_fkey_free            (GdaDdlFkey *self);
+
+gboolean          gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
+                                                GdaServerOperation *op,
+                                                GError **error);
 
 G_END_DECLS
 
