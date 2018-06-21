@@ -19,6 +19,7 @@
 #include <libgda/libgda.h>
 #include <glib/gstdio.h>
 
+static guint test1a (void);
 static guint test1 (void);
 static guint test2 (void);
 static guint test3 (void);
@@ -30,6 +31,7 @@ int main(int argc, const char *argv[])
 	gda_init ();
 	guint nfailed = 0;
 
+	nfailed += test1a ();
 	nfailed += test1 ();
 	nfailed += test2 ();
 	nfailed += test3 ();
@@ -68,6 +70,33 @@ setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 	g_main_context_unref (context);	
 }
 
+/*
+ * Test 1: gda_connection_open() when there is no error
+ */
+static guint
+test1a (void)
+{
+	g_print ("============= %s started =============\n", __FUNCTION__);
+	GdaDataModel *provs;
+	GdaServerProvider *sqlite;
+	GError *error = NULL;
+
+	provs = gda_config_list_providers ();
+	g_assert (provs != NULL);
+	g_assert (gda_data_model_get_n_rows (provs) >= 1);
+	g_print ("Providers:\n%s\n", gda_data_model_dump_as_string (provs));
+
+	sqlite = gda_config_get_provider ("SQLite", &error);
+	if (error != NULL) {
+		g_warning ("Error getting SQLite provider: %s", error->message);
+		g_error_free (error);
+	}
+	g_assert (sqlite != NULL);
+
+	g_object_unref (provs);
+
+	return 0;
+}
 
 /*
  * Test 1: gda_connection_open() when there is no error
@@ -81,10 +110,10 @@ test1 (void)
 	cnc = gda_connection_new_from_string ("SQLite", "DB_NAME=test-cnc-opendb", NULL,
 					      GDA_CONNECTION_OPTIONS_AUTO_META_DATA, &error);
 
-	if (!cnc) {
-		g_print ("gda_connection_new_from_string() failed: %s\n", error && error->message ? error->message : "No detail");
-		return 1;
+	if (error != NULL) {
+		g_print ("Error on: gda_connection_new_from_string() failed: %s\n ", error->message);
 	}
+	g_assert (cnc != NULL);
 
 	guint counter = 0;
 	setup_main_context (cnc, &counter);

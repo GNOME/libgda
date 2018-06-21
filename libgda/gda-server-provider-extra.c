@@ -466,8 +466,10 @@ gda_server_provider_load_resource_contents (const gchar *prov_name, const gchar 
 	GBytes *bytes;
 	bytes = g_resources_lookup_data (rname, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
 	g_free (rname);
-	if (!bytes)
+	if (!bytes) {
+		g_warning ("Resource: /spec/%s/%s, not found for provider", prov_name, resource);
 		return NULL;
+	}
 
 	gchar *retval;
 	retval = g_strdup ((const gchar*) g_bytes_get_data (bytes, NULL));

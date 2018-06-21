@@ -1888,10 +1888,13 @@ create_internal_provider (const gchar *path,
 		GError *error = NULL;
 		info->dsn_params = gda_set_new_from_spec_string (dsn_spec, &error);
 		if (!info->dsn_params) {
-			gda_log_message ("Invalid format for provider '%s' DSN spec : %s",
+			g_warning ("Invalid format for provider '%s' DSN spec : %s",
 					 info->id,
 					 error ? error->message : "Unknown error");
 			g_clear_error (&error);
+#ifdef GDA_DEBUG
+			g_print ("Dump DSN spec:\n%s\n", dsn_spec);
+#endif
 
 			/* there may be traces of the provider installed but some parts are missing,
 			   forget about that provider... */
@@ -1911,7 +1914,7 @@ create_internal_provider (const gchar *path,
 
 		info->auth_params = gda_set_new_from_spec_string (auth_spec, &error);
 		if (!info->auth_params) {
-			gda_log_message ("Invalid format for provider '%s' AUTH spec : %s",
+			g_warning ("Invalid format for provider '%s' AUTH spec : %s",
 					 info->id,
 				   error ? error->message : "Unknown error");
 			if (error)
@@ -1957,7 +1960,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 	const gchar *name;
 
 	/* read the plugin directory */
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 	g_print ("Loading providers in %s\n", dirname);
 #endif
 	dir = g_dir_open (dirname, 0, &err);
@@ -1995,7 +1998,6 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				load_providers_from_dir (cname, TRUE);
 			g_free (cname);
 		}
-
 		if (!g_str_has_suffix (name, "." G_MODULE_SUFFIX))
 			continue;
 #ifdef G_WITH_CYGWIN
@@ -2005,11 +2007,17 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 #endif
 			continue;
 
+#ifdef GDA_DEBUG
+		g_print ("File's name checking for provider: %s\n", name);
+#endif
 		path = g_build_path (G_DIR_SEPARATOR_S, dirname, name, NULL);
 		handle = g_module_open (path, G_MODULE_BIND_LAZY);
 		if (!handle) {
 			if (g_getenv ("GDA_SHOW_PROVIDER_LOADING_ERROR"))
 				gda_log_message (_("Error loading provider '%s': %s"), path, g_module_error ());
+#ifdef GDA_DEBUG
+		g_print ("Error loading provider's module: %s : %s\n", path, g_module_error ());
+#endif
 			g_free (path);
 			continue;
 		}
@@ -2061,10 +2069,15 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 				if (ip) {
 					unique_instance->priv->prov_list =
 						g_slist_prepend (unique_instance->priv->prov_list, ip);
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 					g_print ("Loaded '%s' sub-provider\n", ((GdaProviderInfo*) ip)->id);
 #endif
 				}
+#ifdef GDA_DEBUG
+				else {
+					g_print ("Error Loading sub-provider\n");
+				}
+#endif
 			}
 		}
 		else {
@@ -2078,10 +2091,15 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 			if (ip) {
 				unique_instance->priv->prov_list =
 					g_slist_prepend (unique_instance->priv->prov_list, ip);
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 				g_print ("Loaded '%s' provider\n", ((GdaProviderInfo*) ip)->id);
 #endif
 			}
+#ifdef GDA_DEBUG
+				else {
+					g_print ("Error Loading provider\n");
+				}
+#endif
 		}
 		g_free (path);
 		g_module_close (handle);

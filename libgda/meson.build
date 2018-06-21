@@ -10,6 +10,16 @@ subdir('handlers')
 subdir('thread-wrapper')
 subdir('binreloc')
 
+dtdf = files([
+	'libgda-array.dtd',
+	'libgda-paramlist.dtd',
+	'libgda-server-operation.dtd'
+	])
+
+install_data(dtdf,
+	install_dir: join_paths(get_option('datadir'),project_package,'dtd')
+	)
+
 conf = configuration_data()
 # FIXME: Set this variables
 # conf.set_quoted('LIBGDA_BDB_INC','')
@@ -181,7 +191,6 @@ libgda_source_all += [
 	libgda_headers,
 	gda_enums,
 	gda_marshalls,
-	sqlitesources
 	]
 libgda_source_all += sqlitesources
 libgda_source_all += libgda_virtual_sources
@@ -234,7 +243,8 @@ tco = executable('test_cnc_open', 'test-cnc-open.c',
 test('OpenConnection', tco,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_BUILD_DIR='+meson.build_root(),
+		'GDA_SHOW_PROVIDER_LOADING_ERROR=1'
 		]
 	)
 

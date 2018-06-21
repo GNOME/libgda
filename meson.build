@@ -85,6 +85,9 @@ if sqlite_internal
 	ldl = meson.get_compiler('c').find_library('dl')
 endif
 
+sed = find_program('sed')
+compile_resources = find_program('glib-compile-resources')
+
 libgda_dep = [
 	glib_dep,
 	gobject_dep,

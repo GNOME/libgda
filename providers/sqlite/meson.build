@@ -1,7 +1,12 @@
 inc_libgda_sqliteh = include_directories ('.')
 inc_libgda_sqliteh_dep = declare_dependency (include_directories : inc_libgda_sqliteh)
 
-install_data(sqlite_xml_fnamesext,
+sqlite_xml_fnamesextf = []
+foreach fn : sqlite_xml_fnames
+	sqlite_xml_fnamesextf += [fn+'.xml.in']
+endforeach
+
+install_data(sqlite_xml_fnamesextf,
 	rename: [
 		'sqlite_specs_dsn.xml',
 		'sqlite_specs_create_db.xml',
@@ -26,19 +31,51 @@ foreach xt : sqlite_xml_fnames
 		)
 endforeach
 
+xml_res = []
+str='@0@'.format('\\\\')
+single_quote = 'contains a \' character'
 foreach xr : sqlite_xml_fnames
-	tc = configuration_data()
-	configure_file(
-		copy: true,
+# sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'>
+	xml_res += custom_target(xr+'.raw.xml',
+		command: [sed,
+			'-e', 's/_([a-zA-Z0-9]*)=/1=/g',
+			],
 		input: xr+'.xml.in',
 		output: xr+'.raw.xml',
-		configuration: tc
+		capture: true,
 		)
 endforeach
 
-sqlite_resources = gnome_module.compile_resources('sqlite_resources', 'sqlite.gresource.xml',
-	source_dir: meson.current_build_dir()
+sqlite_resourcesc = custom_target('sqlite_resourcesc',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--generate-source',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'sqlite.gresource.xml',
+	output: 'sqlite_resource.c',
+	depends: xml_res,
+	install: false
 	)
+
+sqlite_resourcesh = custom_target('sqlite_resourcesh',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--generate-header',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'sqlite.gresource.xml',
+	output: 'sqlite_resource.h',
+	depends: xml_res,
+	install: false
+	)
+sqlite_resources = []
+sqlite_resources += sqlite_resourcesc
+sqlite_resources += sqlite_resourcesh
 
 libgda_sqlite_sources = files([
 	'libmain.c'
