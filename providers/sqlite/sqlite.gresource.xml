@@ -10,7 +10,7 @@
     <file compressed="true">sqlite_specs_drop_index.raw.xml</file>
     <file compressed="true">sqlite_specs_drop_table.raw.xml</file>
     <file compressed="true">sqlite_specs_drop_view.raw.xml</file>
-    <file compressed="true">sqlite_specs_dsn.raw.xml</file>
+    <file compressed="true">sqlite_specs_dsn.xml</file>
     <file compressed="true">sqlite_specs_rename_table.raw.xml</file>
   </gresource>
 </gresources>
