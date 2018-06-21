@@ -914,3 +914,217 @@ gda_ddl_column_set_check (GdaDdlColumn *self,
   priv->mp_check = g_strdup(value);
 }
 
+gboolean
+gda_ddl_column_prepare_create  (GdaDdlColumn *self,
+                                GdaServerOperation *op,
+                                GError **error)
+{
+  g_return_val_if_fail(self,FALSE);
+  g_return_val_if_fail(op,FALSE);
+
+  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+
+  g_print ("Column scale = %d\n",priv->m_scale);
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_name,
+                                        error,
+                                        "/FIELDS_A/@COLUMN_NAME/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_type,
+                                        error,
+                                        "/FIELDS_A/@COLUMN_TYPE/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  gchar *sizestr = NULL;
+  sizestr = g_strdup_printf ("%d",priv->m_size);
+
+  if(!gda_server_operation_set_value_at(op,
+                                        sizestr,
+                                        error,
+                                        "/FIELDS_A/@COLUMN_SIZE/%d",
+                                        priv->m_scale))
+    {
+      g_free (sizestr);
+      return FALSE;
+    }
+  else
+    g_free (sizestr);
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_nnul),
+                                        error,
+                                        "/FIELDS_A/@COLUMN_NNUL/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op, GDA_BOOL_TO_STR (priv->m_autoinc),
+                                        error,
+                                        "/FIELDS_A/@COLUMN_AUTOINC/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_unique),
+                                        error,
+                                        "/FIELDS_A/@COLUMN_UNIQUE/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_pkey),
+                                        error,
+                                        "/FIELDS_A/@COLUMN_PKEY/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_default,
+                                        error,
+                                        "/FIELDS_A/@COLUMN_DEFAULT/%d",
+                                        priv->m_scale))
+    return FALSE;
+  
+  g_print ("%s:%d\n",__FILE__,__LINE__);
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_check,
+                                        error,
+                                        "/FIELDS_A/@COLUMN_CHECK/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  return TRUE;
+}
+
+/**
+ * gda_ddl_column_prepare_add:
+ * @self: a #GdaDdlColumn instance
+ * @op: #GdaServerOperation to add information
+ * @error: error storage container
+ *
+ * Populate @op with information stored in @self. This method is used to
+ * prepare @op for %GDA_SERVER_OPERATION_ADD_COLUMN operation. 
+ *
+ * Returns: %TRUE if success, %FALSE otherwise. 
+ */
+gboolean
+gda_ddl_column_prepare_add  (GdaDdlColumn *self,
+                             GdaServerOperation *op,
+                             GError **error)
+{
+  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_name,
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_NAME/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_type,
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_TYPE/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  gchar *sizestr = NULL;
+  sizestr = g_strdup_printf ("%d",priv->m_size);
+
+  if(!gda_server_operation_set_value_at(op,
+                                        sizestr,
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_SIZE/%d",
+                                        priv->m_scale))
+    {
+      g_free (sizestr);
+      return FALSE;
+    }
+  else
+    g_free (sizestr);
+
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_nnul),
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_NNUL/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_autoinc),
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_AUTOINC/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_unique),
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_UNIQUE/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  if(!gda_server_operation_set_value_at(op,
+                                        GDA_BOOL_TO_STR (priv->m_pkey),
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_PKEY/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_default,
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_DEFAULT/%d",
+                                        priv->m_scale))
+    return FALSE;
+  
+  if(!gda_server_operation_set_value_at(op,
+                                        priv->mp_check,
+                                        error,
+                                        "/COLUMN_DEF_P/COLUMN_CHECK/%d",
+                                        priv->m_scale))
+    return FALSE;
+
+  return TRUE;
+}
+
+/**
+ * gda_ddl_column_new_from_meta:
+ * @column: a #GdaMetaTableColumn instance
+ *
+ * Create new #GdaDdlColumn instance from the corresponding #GdaMetaTableColumn
+ * object. If %NULL is passed this function works exactly as
+ * gda_ddl_column_new()
+ *
+ * Returns: New object that should be freed with gda_ddl_column_free()
+ */
+GdaDdlColumn*   
+gda_ddl_column_new_from_meta (GdaMetaTableColumn *column)
+{
+  if (!column)
+    return gda_ddl_column_new();
+
+  GdaDdlColumn *gdacolumn = gda_ddl_column_new();
+ 
+  g_object_set (gdacolumn,
+                "name",column->column_name,
+                "pkey",column->pkey,
+                "nnul",column->nullok,
+                "default",column->default_value,
+                NULL);
+                 
+  gda_ddl_column_set_type (gdacolumn, column->gtype);
+  return gdacolumn; 
+}
+
+
