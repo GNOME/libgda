@@ -41,6 +41,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
+#include <gio/gio.h>
 #include <libgda/gda-data-model-array.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-util.h>
@@ -62,7 +63,6 @@
 #include <libgda/gda-statement-extra.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <stdio.h>
-#include "xml_embedded.h" /* this one is dynamically generated */
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 #include <libgda/gda-debug-macros.h>
 
@@ -1220,16 +1220,18 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	g_free (dir);
 
         if (! file) {
-		const gchar *contents;
-		contents = emb_get_file (str);
-		if (!contents) {
-			g_set_error (error, GDA_SERVER_OPERATION_ERROR,
-				     GDA_SERVER_OPERATION_XML_ERROR,
-				     _("Missing spec. file '%s'"), str);
+		gchar *res = g_strconcat ("/spec/" PNAME, str);
+		GBytes *contents;
+		contents = g_resources_lookup_data (res,
+						    G_RESOURCE_LOOKUP_FLAGS_NONE,
+						    error);
+		g_free (res);
+		if (error != NULL) {
 			g_free (str);
 			return NULL;
 		}
 		/* else: TO_IMPLEMENT */
+		g_bytes_unref (contents);
         }
 	else {
 		g_free (str);

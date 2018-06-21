@@ -30,12 +30,6 @@ mkkeywordhash$(EXEEXT_FOR_BUILD): mkkeywordhash.c
 keywords_hash.code: mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/sqlite/keywords.list
 	./mkkeywordhash$(EXEEXT_FOR_BUILD) $(top_srcdir)/libgda/sqlite/keywords.list > keywords_hash.code
 
-gen_emb_string$(EXEEXT_FOR_BUILD): gen_emb_string.c
-	$(CC_FOR_BUILD) -o gen_emb_string$(EXEEXT_FOR_BUILD) $<
-
-xml_embedded.h: gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in
-	./gen_emb_string$(EXEEXT_FOR_BUILD) $(top_srcdir)/providers/sqlite/*.xml.in > xml_embedded.h
-
 sqliteheaders = gda-sqlite-provider.h
 sqlitesources = \
 	$(sqliteheaders) \
@@ -61,7 +55,7 @@ sqlitesources = \
 	gda-symbols-util.h \
 	gda-symbols-util.c
 
-BUILT_SOURCES = xml_embedded.h keywords_hash.code
+BUILT_SOURCES = keywords_hash.code
 
 libgda_sqlite_la_SOURCES = $(sqlitesources)
 libgda_sqlite_la_CFLAGS = -DPNAME=\""SQLite"\" -DCLASS_PREFIX=\""GdaSqlite"\" -DSEARCH_LIB_PATH=\""$(SQLITE_PATH)"\"
