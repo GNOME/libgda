@@ -302,7 +302,11 @@ dist-hook:
 xmldir   = $(datadir)/libgda-6.0
 xml_DATA = $(srcdir)/information_schema.xml
 
-DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
+DTD_FILES = libgda-array.dtd \
+	    libgda-paramlist.dtd  \
+	    libgda-server-operation.dtd \
+	    libgda-ddl-creator.dtd
+
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
