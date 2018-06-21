@@ -21,8 +21,11 @@
 #define __GDA_DDL_TABLE_H__
 
 #include "gda-ddl-base.h"
+#include "gda-ddl-column.h" 
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "gda-server-operation.h"
+#include <libgda/sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 
@@ -47,17 +50,30 @@ gboolean        gda_ddl_table_is_valid          (GdaDdlTable *self);
 const GList*    gda_ddl_table_get_columns       (GdaDdlTable *self);
 const GList*    gda_ddl_table_get_fkeys         (GdaDdlTable *self);
 
+void            gda_ddl_table_append_column     (GdaDdlTable *self,
+                                                 GdaDdlColumn *column);
+
 gboolean        gda_ddl_table_is_temp           (GdaDdlTable *self);
 void            gda_ddl_table_set_temp          (GdaDdlTable *self,
                                                  gboolean status);
 
+gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
+                                              GdaServerOperation *op,
+                                              GError **error);
+
+gboolean        gda_ddl_table_update          (GdaDdlTable *self,
+                                               GdaMetaTable *obj,
+                                               GdaConnection *cnc,
+                                               GError **error);
+
+gboolean        gda_ddl_table_create          (GdaDdlTable *self,
+                                               GdaConnection *cnc,
+                                               GError **error);
+
+GdaDdlTable    *gda_ddl_table_new_from_meta    (GdaMetaDbObject *obj);
+
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DDL-TABLE_H */
-
-
-
-
-
 
 
