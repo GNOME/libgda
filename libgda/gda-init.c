@@ -47,7 +47,7 @@
  *     __declspec(dllimport) extern gchar *gda_numeric_locale;
  *
  * Better yet is to define the IMPORT macro as:
- * 
+ *
  *     #ifdef G_OS_WIN32
  *       #define IMPORT __declspec(dllimport)
  *     #else
@@ -58,6 +58,7 @@
 xmlDtdPtr       _gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       _gda_server_op_dtd = NULL;
+xmlDtdPtr		_gda_ddl_creator_dtd = NULL;
 
 static gboolean numeric_locale_dyn = FALSE;
 gchar          *gda_numeric_locale = "";
@@ -112,7 +113,7 @@ gda_locale_changed (void)
 
 /**
  * gda_init:
- * 
+ *
  * Initializes the GDA library, must be called prior to any Libgda usage.
  *
  * Please note that if you call setlocale() to modify the current locale, you should also
@@ -188,7 +189,7 @@ gda_init (void)
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
 		_gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-	
+
 	if (!_gda_array_dtd) {
 		if (g_getenv ("GDA_TOP_SRC_DIR")) {
 			g_free (file);
@@ -247,7 +248,33 @@ gda_init (void)
 		_gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	g_free (file);
 
-	initialized = TRUE;
+  /* GdaDdlCreator DTD */
+  _gda_ddl_creator_dtd = NULL;
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd",
+                                "libgda-ddl-creator.dtd", NULL);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		_gda_ddl_creator_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+  else
+    {
+	    if (g_getenv ("GDA_TOP_SRC_DIR"))
+        {
+          g_free (file);
+          file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda",
+                                   "libgda-ddl-creator.dtd", NULL);
+          _gda_ddl_creator_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+		    }
+	  }
+
+  if (!_gda_ddl_creator_dtd)
+	  g_message (_("Could not parse '%s': "
+                 "Validation for XML files for GdaDdlCreator will not be performed (some weird errors may occur)"),
+               file);
+  else
+		_gda_ddl_creator_dtd->name = xmlStrdup((xmlChar*) "ddl-creator");
+
+	g_free (file);
+
+  initialized = TRUE;
 	g_mutex_unlock (&init_mutex);
 }
 
