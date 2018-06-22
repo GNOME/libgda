@@ -328,5 +328,19 @@ ttwbs = executable('test-blocking-itsignaler',
 		],
 	install: false
 	)
-test('ItSignaler', ttwbs)
-#   test-worker test-connect
+test('BlokingItSignaler', ttwbs)
+
+ttww = executable('test-worker test-connect',
+	test_worker_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		],
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('Worker', ttww)

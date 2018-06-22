@@ -30,3 +30,9 @@ test_block_itsignaler_sources = files([
 	'test-blocking-itsignaler.c'
 	])
 test_block_itsignaler_sources += libgda_threadwrapper_sources
+
+
+test_worker_sources = files([
+	'test-worker.c'
+	])
+test_worker_sources += libgda_threadwrapper_sources
