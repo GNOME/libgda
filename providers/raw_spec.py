@@ -27,7 +27,7 @@ for c in root.iter():
     rename_attr(c, '_descr', 'descr')
 
 n=os.path.basename(dargs['source'])
-nfile=n.replace('.xml.in', '.xml')
+nfile=n.replace('.xml.in', '.raw.xml')
 ofile=os.path.join(dargs['output'],nfile)
 print ofile
 spec.write(ofile)

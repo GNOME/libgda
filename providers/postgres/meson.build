@@ -46,14 +46,14 @@ foreach xt : postgres_xml_fnames
 endforeach
 
 xml_res = []
-foreach xr : postgres_xml_fnames
-	xml_res += custom_target(xr+'.raw.xml',
+foreach xrp : postgres_xml_fnames
+	xml_res += custom_target(xrp+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
-		input: xr+'.xml.in',
-		output: xr+'.raw.xml',
+		input: xrp+'.xml.in',
+		output: xrp+'.raw.xml',
 		)
 endforeach
 
