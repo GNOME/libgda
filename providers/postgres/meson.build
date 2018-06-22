@@ -45,9 +45,9 @@ foreach xt : postgres_xml_fnames
 		)
 endforeach
 
-xml_res = []
+postgres_xml_res = []
 foreach xrp : postgres_xml_fnames
-	xml_res += custom_target(xrp+'.raw.xml',
+	postgres_xml_res += custom_target(xrp+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
@@ -60,7 +60,6 @@ endforeach
 postgres_resourcesc = custom_target('postgres_resourcesc',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','postgres'),
 		'--generate-source',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -68,14 +67,13 @@ postgres_resourcesc = custom_target('postgres_resourcesc',
 		],
 	input: 'postgres.gresource.xml',
 	output: 'postgres_resource.c',
-	depends: xml_res,
+	depends: postgres_xml_res,
 	install: false
 	)
 
 postgres_resourcesh = custom_target('postgres_resourcesh',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','postgres'),
 		'--generate-header',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -83,7 +81,7 @@ postgres_resourcesh = custom_target('postgres_resourcesh',
 		],
 	input: 'postgres.gresource.xml',
 	output: 'postgres_resource.h',
-	depends: xml_res,
+	depends: postgres_xml_res,
 	install: false
 	)
 postgres_resources = []

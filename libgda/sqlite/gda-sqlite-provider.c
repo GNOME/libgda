@@ -1220,7 +1220,7 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	g_free (dir);
 
         if (! file) {
-		gchar *res = g_strconcat ("/spec/" PNAME, str);
+		gchar *res = g_strconcat ("/spec/" PNAME, str, NULL);
 		GBytes *contents;
 		contents = g_resources_lookup_data (res,
 						    G_RESOURCE_LOOKUP_FLAGS_NONE,

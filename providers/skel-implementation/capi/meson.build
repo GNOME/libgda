@@ -31,19 +31,52 @@ foreach xt : capi_xml_fnames
 		)
 endforeach
 
-foreach xr : capi_xml_fnames
-	tc = configuration_data()
-	configure_file(
-		copy: true,
-		input: xr+'.xml.in',
-		output: xr+'.raw.xml',
-		configuration: tc
+capi_xml_res = []
+foreach xrc : capi_xml_fnames
+	capi_xml_res += custom_target(xrc+'.raw.xml',
+		command: [raw_spec,
+			'-o', meson.current_build_dir(),
+			'@INPUT@'
+			],
+		input: xrc+'.xml.in',
+		output: xrc+'.raw.xml',
 		)
 endforeach
 
-capi_resources = gnome_module.compile_resources('capi_resources', 'capi.gresource.xml',
-	source_dir: meson.current_build_dir()
+
+capi_resourcesc = custom_target('capi_resourcesc',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--sourcedir='+join_paths(meson.source_root(),'providers','capi'),
+		'--generate-source',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'capi.gresource.xml',
+	output: 'capi_resource.c',
+	depends: capi_xml_res,
+	install: false
 	)
+
+capi_resourcesh = custom_target('capi_resourcesh',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--sourcedir='+join_paths(meson.source_root(),'providers','capi'),
+		'--generate-header',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'capi.gresource.xml',
+	output: 'capi_resource.h',
+	depends: capi_xml_res,
+	install: false
+	)
+capi_resources = []
+capi_resources += capi_resourcesc
+capi_resources += capi_resourcesh
+
 
 libgda_capi_sources = files([
 	'gda-capi-blob-op.c',
@@ -63,6 +96,7 @@ libgda_capi_sources = files([
 	'gda-capi.h',
 	'libmain.c',
 	])
+libgda_capi_sources += capi_resources
 
 conf = configuration_data()
 conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
