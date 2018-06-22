@@ -45,19 +45,50 @@ foreach xt : postgres_xml_fnames
 		)
 endforeach
 
+xml_res = []
 foreach xr : postgres_xml_fnames
-	tc = configuration_data()
-	configure_file(
-		copy: true,
+	xml_res += custom_target(xr+'.raw.xml',
+		command: [raw_spec,
+			'-o', meson.current_build_dir(),
+			'@INPUT@'
+			],
 		input: xr+'.xml.in',
 		output: xr+'.raw.xml',
-		configuration: tc
 		)
 endforeach
 
-postgres_resources = gnome_module.compile_resources('postgres_resources', 'postgres.gresource.xml',
-	source_dir: meson.current_build_dir()
+postgres_resourcesc = custom_target('postgres_resourcesc',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--sourcedir='+join_paths(meson.source_root(),'providers','postgres'),
+		'--generate-source',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'postgres.gresource.xml',
+	output: 'postgres_resource.c',
+	depends: xml_res,
+	install: false
 	)
+
+postgres_resourcesh = custom_target('postgres_resourcesh',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_build_dir(),
+		'--sourcedir='+join_paths(meson.source_root(),'providers','postgres'),
+		'--generate-header',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'postgres.gresource.xml',
+	output: 'postgres_resource.h',
+	depends: xml_res,
+	install: false
+	)
+postgres_resources = []
+postgres_resources += postgres_resourcesc
+postgres_resources += postgres_resourcesh
 
 libgda_postgres_sources = files([
 	'gda-postgres-blob-op.c',
@@ -77,13 +108,14 @@ libgda_postgres_sources = files([
 	'gda-postgres.h',
 	'libmain.c'
 	])
+libgda_postgres_sources += postgres_resources
 
 conf = configuration_data()
 conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
 conf.set_quoted('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
 conf.set_quoted('VERSION', project_version)
 
-libgda_sqlite_providerpc = configure_file(
+libgda_postgres_providerpc = configure_file(
 			input:  'libgda-postgres-'+project_api_version+'.pc.in',
 			output: 'libgda-postgres-'+project_api_version+'.pc',
 			configuration : conf,
