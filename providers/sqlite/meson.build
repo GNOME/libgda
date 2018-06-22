@@ -32,17 +32,14 @@ foreach xt : sqlite_xml_fnames
 endforeach
 
 xml_res = []
-str='@0@'.format('\\\\')
-single_quote = 'contains a \' character'
 foreach xr : sqlite_xml_fnames
-# sed -e 's/_\([a-zA-Z0-9]*\)=/\1=/g' -e 's/<_\([a-zA-Z0-9_]*\)>/<\1>/g' -e 's/<\/_\([a-zA-Z0-9_]*\)>/<\/\1>/g' -e 's/<!-- .* -->//'>
 	xml_res += custom_target(xr+'.raw.xml',
-		command: [sed,
-			'-e', 's/_([a-zA-Z0-9]*)=/1=/g',
+		command: [raw_spec,
+			'-o', meson.current_build_dir(),
+			'@INPUT@'
 			],
 		input: xr+'.xml.in',
 		output: xr+'.raw.xml',
-		capture: true,
 		)
 endforeach
 
