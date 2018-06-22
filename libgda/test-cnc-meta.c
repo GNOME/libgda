@@ -18,6 +18,7 @@
 
 #include <libgda/libgda.h>
 #include <glib/gstdio.h>
+#include <glib-object.h>
 
 static guint test1 (void);
 
@@ -43,6 +44,16 @@ idle_incr (guint *ptr)
 	return TRUE;
 }
 
+static gboolean connected = FALSE;
+static void
+connection_opened (void) {
+	connected = TRUE;
+}
+static void
+connection_closed (void) {
+	connected = FALSE;
+}
+
 static void
 setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 {
@@ -56,6 +67,8 @@ setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
 	gda_connection_set_main_context (cnc, NULL, context);
+	g_signal_connect(cnc, "opened", connection_opened, NULL);
+	g_signal_connect(cnc, "closed", connection_closed, NULL);
 	g_main_context_unref (context);	
 }
 
@@ -95,7 +108,7 @@ test1 (void)
 	}
 	g_free (cnc_string);
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -112,7 +125,7 @@ test1 (void)
 		return 1;
 	}
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_update_meta_store() failed: did not make GMainContext 'run'\n");
 		g_object_unref (cnc);
 		return 1;
@@ -130,7 +143,7 @@ test1 (void)
 		return 1;
 	}
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_get_meta_store_data() failed: did not make GMainContext 'run'\n");
 		g_object_unref (cnc);
 		return 1;

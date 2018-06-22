@@ -18,7 +18,9 @@
 
 #include <libgda/libgda.h>
 #include <glib/gstdio.h>
+#include <glib-object.h>
 
+static gboolean connected = FALSE;
 static guint test1 (void);
 static guint test2 (void);
 
@@ -45,6 +47,11 @@ idle_incr (guint *ptr)
 	return TRUE;
 }
 
+static void
+connection_opened (void) {
+	connected = TRUE;
+}
+
 /*
  * Pass %0 as interval to use an idle function
  */
@@ -64,7 +71,8 @@ setup_main_context (GdaConnection *cnc, guint interval, guint *ptr_to_incr)
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
 	gda_connection_set_main_context (cnc, NULL, context);
-	g_main_context_unref (context);	
+	g_signal_connect(cnc, "opened", connection_opened, NULL);
+	g_main_context_unref (context);
 }
 
 
@@ -103,7 +111,7 @@ test1 (void)
 	}
 	g_free (cnc_string);
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -135,7 +143,7 @@ test1 (void)
 		return 1;
 	}
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		g_object_unref (cnc);
 		return 1;
@@ -231,7 +239,7 @@ test2 (void)
 	for (i = 0; i < NB_THREADS; i++) {
 		guint *counter;
 		counter = g_thread_join (ths[i]);
-		if (*counter == 0) {
+		if (*counter == 0 && !connected) {
 			g_print ("Thread %u: gda_connection_lock() failed: did not make GMainContext 'run'\n", i);
 			return 1;
 		}

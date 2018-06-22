@@ -185,16 +185,20 @@ dump_exec_params (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 		gchar *sql;
 		sql = gda_statement_to_sql_extended (stmt, cnc, params, GDA_STATEMENT_SQL_PARAMS_SHORT,
 						     NULL, NULL);
+#ifdef GDA_DEBUG
 		g_print ("EVENT> COMMAND: parameters (on cnx %p) for statement [%s]\n", cnc, sql);
+#endif
 		for (list = params->holders; list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gchar *str;
 			const GValue *value;
 			value = gda_holder_get_value (holder);
 			str = value ? gda_value_stringify (value) : "NULL";
+#ifdef GDA_DEBUG
 			g_print ("\t%s: type=>%s, value=>%s\n", gda_holder_get_id (holder),
 				 gda_g_type_to_string (gda_holder_get_g_type (holder)),
 				 str);
+#endif
 			if (value)
 				g_free (str);
 		}

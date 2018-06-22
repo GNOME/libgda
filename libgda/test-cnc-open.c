@@ -18,6 +18,9 @@
 
 #include <libgda/libgda.h>
 #include <glib/gstdio.h>
+#include <glib-object.h>
+
+static gboolean connected = FALSE;
 
 static guint test1a (void);
 static guint test1 (void);
@@ -55,6 +58,15 @@ idle_incr (guint *ptr)
 }
 
 static void
+connection_opened (void) {
+	connected = TRUE;
+}
+static void
+connection_closed (void) {
+	connected = FALSE;
+}
+
+static void
 setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 {
 	GMainContext *context;
@@ -67,6 +79,8 @@ setup_main_context (GdaConnection *cnc, guint *ptr_to_incr)
 	g_source_set_callback (idle, (GSourceFunc) idle_incr, ptr_to_incr, NULL);
 	g_source_unref (idle);
 	gda_connection_set_main_context (cnc, NULL, context);
+	g_signal_connect(cnc, "opened", connection_opened, NULL);
+	g_signal_connect(cnc, "closed", connection_closed, NULL);
 	g_main_context_unref (context);	
 }
 
@@ -123,7 +137,7 @@ test1 (void)
 		return 1;
 	}
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -181,7 +195,7 @@ test2 (void)
 
 	g_main_loop_run (loop);
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -219,7 +233,7 @@ test3 (void)
 		g_print ("gda_connection_open() failed: %s\n", error && error->message ? error->message : "No detail");
 		g_object_unref (cnc);
 
-		if (counter == 0) {
+		if (counter == 0 && !connected) {
 			g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 			return 1;
 		}
@@ -285,7 +299,7 @@ test4 (void)
 	opened = gda_connection_is_opened (cnc);
 	g_object_unref (cnc);
 
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -338,7 +352,7 @@ test5 (void)
 		g_print ("gda_connection_open() 1 failed: %s\n", error && error->message ? error->message : "No detail");
 		return 1;
 	}
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() 1 failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -351,7 +365,7 @@ test5 (void)
 		g_print ("gda_connection_close() failed: %s\n", error && error->message ? error->message : "No detail");
 		return 1;
 	}
-	if (counter == 0) {
+	if (counter == 0 && connected && nsignals == 0) {
 		g_print ("gda_connection_close() failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
@@ -364,7 +378,7 @@ test5 (void)
 		g_print ("gda_connection_open() 2 failed: %s\n", error && error->message ? error->message : "No detail");
 		return 1;
 	}
-	if (counter == 0) {
+	if (counter == 0 && !connected) {
 		g_print ("gda_connection_open() 2 failed: did not make GMainContext 'run'\n");
 		return 1;
 	}
