@@ -25,9 +25,9 @@ install_data(sqlite_xml_fnamesextf,
 foreach xt : sqlite_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
-		output: xt+'.xml.in.h',
+		output: xt+'.xml',
 		type: 'xml',
-		po_dir: join_paths(meson.build_root(),'po')
+		po_dir: 'po'
 		)
 endforeach
 
