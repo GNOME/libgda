@@ -20,9 +20,13 @@ test_raw_itsignaler_sources = files([
 test_raw_itsignaler_sources += libgda_threadwrapper_sources
 
 
-
-
 test_itsignaler_sources = files([
 	'test-itsignaler.c'
 	])
 test_itsignaler_sources += libgda_threadwrapper_sources
+
+
+test_block_itsignaler_sources = files([
+	'test-blocking-itsignaler.c'
+	])
+test_block_itsignaler_sources += libgda_threadwrapper_sources
