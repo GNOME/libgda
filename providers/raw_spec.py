@@ -8,24 +8,26 @@ parser = argparse.ArgumentParser(description='Create a raw xml for providers spe
 parser.add_argument('source', help='file path to create raw from')
 parser.add_argument('-o', '--output', help='file output dir')
 
-parser.parse_args()
+args=parser.parse_args()
+dargs=vars(args)
 
-spec = E.parse(source)
+spec = E.parse(dargs['source'])
 
 def rename_attr (e, src, dest):
     val = e.get(src)
+    if val is None:
+        return
     e.set(dest, val)
-    e.set(src, None)
-
-def rename_element_attr(e, src, dst):
-    rename_attr(e,src,dst)
-    for c in e.iter():
-        rename_name_attr(c,src,dst)
+    del e.attrib[src]
 
 root = spec.getroot()
-rename_element_attr(root, '_name', 'name')
-rename_element_attr(root, '_descr', 'descr')
 
-n=path.basename(source)
-nfile = n.replace('.xml.in', '.xml')
-spec.write(path.join(output,nfile))
+for c in root.iter():
+    rename_attr(c, '_name', 'name')
+    rename_attr(c, '_descr', 'descr')
+
+n=os.path.basename(dargs['source'])
+nfile=n.replace('.xml.in', '.xml')
+ofile=os.path.join(dargs['output'],nfile)
+print ofile
+spec.write(ofile)
