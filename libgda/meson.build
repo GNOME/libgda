@@ -283,3 +283,20 @@ test('OpenConnectionMeta', tcm,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+
+# Thread Wrapper tests
+ttw = executable('test-raw-itsignaler',
+	test_raw_itsignaler_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		],
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('RawItSignaler', ttw)
+# test-itsignaler test-blocking-itsignaler test-worker test-connect

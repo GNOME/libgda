@@ -13,3 +13,8 @@ libgda_threadwrapper_sources = files([
 	])
 
 libgda_threadwrapper_sources += libgda_threadwrapper_headers
+
+test_raw_itsignaler_sources = files([
+	'test-raw-itsignaler.c'
+	])
+test_raw_itsignaler_sources += libgda_threadwrapper_sources
