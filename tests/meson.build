@@ -1,0 +1,40 @@
+# -bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
+
+test_headers = files([
+	'gda-ddl-creator.h'
+	])
+
+tests_sources = files([
+	'test-errors.h',
+	'test-errors.c',
+	'gda-ddl-creator.c',
+	'test-cnc-utils.h',
+	'test-cnc-utils.c',
+	'data-model-errors.h',
+	'data-model-errors.c'
+	])
+
+tests_sources += test_headers
+
+tddlc = executable('test-ddl-creator test',
+	['test-ddl-creator.c'] + tests_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('DDLCreator', tddlc,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)

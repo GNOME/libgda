@@ -219,6 +219,7 @@ subdir('po')
 subdir('libgda')
 subdir('providers')
 #subdir('libgda-ui')
+subdir('tests')
 
 
 
