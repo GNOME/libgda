@@ -1,4 +1,4 @@
-# test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
+# test-input-parsers test-quark-list test-sql-renderer
 
 test_headers = files([
 	'gda-ddl-creator.h'
@@ -126,6 +126,29 @@ tsqlb = executable('test-sql-builder',
 	install: false
 	)
 test('SqlBuilder', tsqlb,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tcstrs = executable('test-connection-string-split',
+	['test-connection-string-split.c'] + tests_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ConnectionStringSplit', tcstrs,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
