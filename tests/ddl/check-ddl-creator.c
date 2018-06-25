@@ -104,12 +104,14 @@ test_ddl_creato_create_db (CheckDdlObject *self,
                            gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
-                                           self->xmlfile,
-                                           NULL);
+                                                      self->xmlfile,
+                                                      NULL);
 
   g_assert_true (res);
   
-  gboolean resop = gda_ddl_creator_perform_operation(self->creator,self->cnc,NULL);  
+  gboolean resop = gda_ddl_creator_perform_operation(self->creator,
+                                                     self->cnc,
+                                                     NULL);  
 
   g_assert_true (resop);
 
@@ -124,6 +126,9 @@ test_ddl_creato_parse_cnc (CheckDdlObject *self,
   gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL);
 
   g_assert_true (res);
+
+  
+
 }
 gint
 main (gint   argc,
