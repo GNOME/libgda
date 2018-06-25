@@ -3137,8 +3137,8 @@ apply_filter_statement (GdaDataProxy *proxy, GError **error)
 	/* copy filtered_rows and remove virtual table */
 	GdaDataModel *copy;
 	copy = (GdaDataModel*) gda_data_model_array_copy_model (filtered_rows, NULL);
-	g_object_unref (filtered_rows);
 	gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (vcnc), "proxy", NULL);
+	g_object_unref (filtered_rows);
 	if (!copy) {
 		g_set_error (error, GDA_DATA_PROXY_ERROR, GDA_DATA_PROXY_FILTER_ERROR,
 			      "%s", _("Error in filter expression"));
