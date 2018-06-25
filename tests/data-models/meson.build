@@ -14,7 +14,7 @@ testsf = files([
 	'pivot.db'
 	])
 
-#  check_empty_rs check_model_errors check_vcnc check_pivot
+# check_vcnc check_pivot
 
 
 tchki = executable('check_model_import',
@@ -152,6 +152,30 @@ tchkemrs = executable('check_empty_rs',
 	install: false
 	)
 test('EmptyRS', tchkemrs,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tchkmerr = executable('check_model_errors',
+	['check_model_errors.c'] + tests_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+test('ModelErrors', tchkmerr,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
