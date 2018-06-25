@@ -564,8 +564,8 @@ threads_select_random_start_thread (ThData *data)
 	g_free (str);
 
 	g_object_unref (iter);
-	g_object_unref (model);
 	g_object_unref (ref);
+	g_object_unref (model);
 	g_print ("thread %p finished\n", self);
 
 	return NULL;

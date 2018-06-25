@@ -179,30 +179,29 @@ test('ModelErrors', tchkmerr,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
-# One in 100 success
-# tchkvcnc = executable('check_vcnc',
-# 	['check_vcnc.c'] + tests_sources,
-# 	c_args: [
-# 		'-include',
-# 		meson.build_root() + '/config.h',
-# 		'-DCHECK_FILES="'+meson.source_root()+'"',
-# 		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-# 		],
-# 	link_with: libgda,
-# 	dependencies: [
-# 		libgda_dep,
-# 		inc_rooth_dep,
-# 		inc_sqliteh_dep,
-# 		inc_testsh_dep
-# 		],
-# 	install: false
-# 	)
-# test('VirtualConnection', tchkvcnc,
-# 	env: [
-# 		'GDA_TOP_SRC_DIR='+meson.source_root(),
-# 		'GDA_TOP_BUILD_DIR='+meson.build_root()
-# 		]
-# 	)
+tchkvcnc = executable('check_vcnc',
+	['check_vcnc.c'] + tests_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+test('VirtualConnection', tchkvcnc,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
 
 # tchkpivot = executable('check_pivot',
 # 	['check_pivot.c'] + tests_sources,
