@@ -310,9 +310,6 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 
 	g_mutex_unlock (&init_mutex);
 
-#ifdef GDA_DEBUG
-	_gda_postgres_test_keywords ();
-#endif
 }
 
 typedef struct {

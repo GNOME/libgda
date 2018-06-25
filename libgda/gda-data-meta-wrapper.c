@@ -170,9 +170,6 @@ gda_data_meta_wrapper_class_init (GdaDataMetaWrapperClass *klass)
 	object_class->dispose = gda_data_meta_wrapper_dispose;
 	object_class->finalize = gda_data_meta_wrapper_finalize;
 
-#ifdef GDA_DEBUG
-	test_keywords ();
-#endif
 }
 
 static void

@@ -125,7 +125,7 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 	if (! gda_meta_struct_sort_db_objects (mstruct, GDA_META_SORT_DEPENDENCIES, error)) 
 		return FALSE;
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 	GSList *objlist, *list;
 	objlist = gda_meta_struct_get_all_db_objects (mstruct);
 
@@ -140,7 +140,7 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 #endif
 
 	/* dump as a graph */
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 	gchar *graph;
 	GError *lerror = NULL;
 	graph = gda_meta_struct_dump_as_graph (mstruct, GDA_META_GRAPH_COLUMNS, &lerror);
@@ -396,6 +396,10 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 				dot->reverse_fk_list = g_slist_prepend (dot->reverse_fk_list, mfkey);
 			}
 			dbobj->depend_list = g_slist_append (dbobj->depend_list, mfkey->depend_on);
+		}
+		/* FIXME: Add support for unique node */
+		if (!strcmp ((gchar *) cnode->name, "unique")) {
+			TO_IMPLEMENT;
 		}
 	}
 	mtable->pk_cols_array = (gint*) pk_cols_array->data;

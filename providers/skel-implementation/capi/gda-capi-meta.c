@@ -90,10 +90,6 @@ _gda_capi_provider_meta_init (GdaServerProvider *provider)
 
 	g_mutex_unlock (&init_mutex);
 
-#ifdef GDA_DEBUG
-	/* make sure the reserved keywords hash works correctly */
-        test_keywords ();
-#endif
 }
 
 gboolean

@@ -53,11 +53,13 @@ main (int argc, char** argv)
 
 	/* get SQL */
 	str = gda_ddl_creator_get_sql (ddl, &error);
-	if (!str) {
+	if (error != NULL) {
 		g_print ("Error getting SQL: %s\n", error && error->message ? error->message : "No detail");
 		g_error_free (error);
-		return EXIT_FAILURE;
+	} else {
+		g_print ("Error getting SQL without error set\n");
 	}
+	g_assert (str != NULL);
 	g_print ("%s\n", str);
 	g_free (str);
 

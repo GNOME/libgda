@@ -29,6 +29,11 @@ gchar *
 _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
 				 GdaServerOperation *op, GError **error)
 {
+	g_return_val_if_fail (provider, NULL);
+	g_return_val_if_fail (cnc, NULL);
+	g_return_val_if_fail (op, NULL);
+	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_CREATE_TABLE, NULL);
+
 	GString *string;
 	const GValue *value;
 	gboolean allok = TRUE;
@@ -56,6 +61,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME", error);
 	if (!tmp) {
 		g_string_free (string, TRUE);
+		g_assert (*error != NULL);
 		return NULL;
 	}
 	g_string_append (string, tmp);
@@ -67,7 +73,11 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 		GdaServerOperationNode *node;
 
 		node = gda_server_operation_get_node_info (op, "/FIELDS_A");
-		g_assert (node);
+		if (node == NULL) {
+			g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+			     "%s", _("No fields are defined for CREATE TABLE operation"));
+			return NULL;
+		}
 
 		/* finding if there is a composed primary key */
 		nrows = gda_data_model_get_n_rows (node->model);
@@ -79,6 +89,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 										  i);
 				if (!tmp) {
 					g_string_free (string, TRUE);
+					g_assert (*error != NULL);
 					return NULL;
 				}
 				pkfields = g_slist_append (pkfields, tmp);
@@ -100,6 +111,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 									  "/FIELDS_A/@COLUMN_NAME/%d", error, i);
 			if (!tmp) {
 				g_string_free (string, TRUE);
+				g_assert (*error != NULL);
 				return NULL;
 			}
 			g_string_append (string, tmp);
@@ -233,12 +245,16 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 		allok = FALSE;
 		g_set_error (error, GDA_SERVER_OPERATION_ERROR,
 			     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
-			     "%s", _("Table to create must have at least one row"));
+			     "%s", _("Table to create must have at least one field"));
+		g_string_free (string, TRUE);
+		return NULL;
 	}
 
 	sql = string->str;
 	g_string_free (string, FALSE);
-
+#ifdef GDA_DEBUG
+	g_print ("Renderer SQL for SQLite: %s\n", sql);
+#endif
 	return sql;
 }
 

@@ -619,7 +619,7 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 		}
 	}
 
-#ifdef GDA_DEBUG_NO
+#ifdef GDA_DEBUG
 	{
 		xmlNodePtr node;
 		xmlBufferPtr buffer;
@@ -629,6 +629,7 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 		xmlFreeNode (node);
 		xmlBufferDump (stdout, buffer);
 		xmlBufferFree (buffer);
+		g_print ("\n");
 	}
 #endif
 
@@ -707,6 +708,7 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 		op = prepare_dbo_server_operation (ddlc, prov, NULL, GDA_META_DB_OBJECT (list->data), error);
 		if (!op) {
 			g_string_free (string, TRUE);
+			g_assert (*error != NULL);
 			return NULL;
 		}
 		else {
@@ -727,6 +729,7 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 	}
 
 	sql = string->str;
+	g_print ("SQL: %s\n", sql);
 	g_string_free (string, FALSE);
 	return sql;
 }

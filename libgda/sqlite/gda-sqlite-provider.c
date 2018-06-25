@@ -1218,24 +1218,32 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
 	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
         file = gda_server_provider_find_file (provider, dir, str);
 	g_free (dir);
-
+	g_free (str);
         if (! file) {
-		gchar *res = g_strconcat ("/spec/" PNAME, str, NULL);
+		str = g_strdup_printf ("/spec/" PNAME "/" PNAME "_specs_%s.raw.xml",
+				gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
+		gchar *res = g_utf8_strdown (str, -1);
+		g_free (str);
 		GBytes *contents;
 		contents = g_resources_lookup_data (res,
 						    G_RESOURCE_LOOKUP_FLAGS_NONE,
 						    error);
-		g_free (res);
-		if (error != NULL) {
+		if (contents == NULL) {
+			g_assert (*error != NULL);
+#ifdef GDA_DEBUG
+			g_print ("Error at getting specs '%s': %s\n", res, (*error)->message);
+#endif
 			g_free (str);
+			g_free (res);
 			return NULL;
 		}
+		g_free (res);
 		/* else: TO_IMPLEMENT */
 		g_bytes_unref (contents);
         }
 	else {
-		g_free (str);
 		if (!gda_server_operation_is_valid (op, file, error)) {
+			g_assert (*error != NULL);
 			g_free (file);
 			return NULL;
 		}
@@ -1970,7 +1978,10 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	 *  - op->operands == NULL
 	 *  - incorrect number of operands
 	 */
-	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (op), error)) return NULL;
+	if (!gda_sql_any_part_check_structure (GDA_SQL_ANY_PART (op), error)) {
+		g_assert (*error != NULL);
+		return NULL;
+	}
 
 	/* render operands */
 	for (list = op->operands, sql_list = NULL; list; list = list->next) {
@@ -1979,6 +1990,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 		str = context->render_expr (expr, context, &(sqlop->is_default), &(sqlop->is_null), error);
 		if (!str) {
 			g_free (sqlop);
+			g_assert (*error != NULL);
 			goto out;
 		}
 		sqlop->sql = str;
@@ -1989,6 +2001,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	sql_list = g_slist_reverse (sql_list);
 
 	str = NULL;
+	string = g_string_new ("");
 	switch (op->operator_type) {
 	case GDA_SQL_OPERATOR_TYPE_EQ:
 		if (SQL_OPERAND (sql_list->next->data)->is_null)
@@ -2038,6 +2051,9 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 				       SQL_OPERAND (sql_list->data)->sql);
 	case GDA_SQL_OPERATOR_TYPE_SIMILAR:
 		/* does not exist in SQLite => error */
+		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
+			     "%s", _("SIMILAR operation not supported"));
+		goto out;
 		break;
 	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP:
 		str = g_strdup_printf ("NOT regexp (%s, %s)", SQL_OPERAND (sql_list->next->data)->sql,
@@ -2079,7 +2095,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 		    *(SQL_OPERAND (sql_list->next->data)->sql)=='(')
 			add_p = FALSE;
 
-		string = g_string_new (SQL_OPERAND (sql_list->data)->sql);
+		string = g_string_append (string, SQL_OPERAND (sql_list->data)->sql);
 		if (op->operator_type == GDA_SQL_OPERATOR_TYPE_IN)
 			g_string_append (string, " IN ");
 		else
@@ -2157,6 +2173,10 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	}
 	g_slist_free (sql_list);
 
+	if (str == NULL && *error == NULL)
+		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
+			     "%s", _("Operator type not supported"));
+	g_assert (str != NULL);
 	return str;
 }
 

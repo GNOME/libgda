@@ -115,16 +115,6 @@ gda_postgres_type_oid_free (GdaPostgresTypeOid *typedata)
 	g_free (typedata);
 }
 
-#ifdef GDA_DEBUG
-void
-_gda_postgres_test_keywords (void)
-{
-        V82test_keywords();
-        V83test_keywords();
-        V84test_keywords();
-}
-#endif
-
 GdaProviderReuseable *
 _gda_postgres_reuseable_new_data (void)
 {

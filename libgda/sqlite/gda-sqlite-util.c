@@ -165,14 +165,6 @@ _gda_sqlite_compute_g_type (int sqlite_type)
 
 
 
-#ifdef GDA_DEBUG
-void
-_gda_sqlite_test_keywords (void)
-{
-        test_keywords();
-}
-#endif
-
 GdaSqlReservedKeywordsFunc
 _gda_sqlite_get_reserved_keyword_func (void)
 {

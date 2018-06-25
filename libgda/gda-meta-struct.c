@@ -1772,7 +1772,11 @@ gda_meta_struct_sort_db_objects (GdaMetaStruct *mstruct, GdaMetaSortType sort_ty
 		ordered_list = mstruct->priv->db_objects;
 		break;
 	case GDA_META_SORT_DEPENDENCIES:
-		g_return_val_if_fail (mstruct, FALSE);
+		if (mstruct == NULL) {
+			g_set_error (error, GDA_META_STRUCT_ERROR, GDA_META_STORE_INTERNAL_ERROR,
+			     _("No meta struct was provided for object sorting"));
+			return FALSE;
+		}
 		for (pass_list = build_pass (mstruct->priv->db_objects, ordered_list); 
 		     pass_list; 
 		     pass_list = build_pass (mstruct->priv->db_objects, ordered_list)) 
