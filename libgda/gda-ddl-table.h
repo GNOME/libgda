@@ -26,6 +26,7 @@
 #include <libxml/xmlwriter.h>
 #include "gda-server-operation.h"
 #include <libgda/sql-parser/gda-sql-statement.h>
+#include "gda-meta-struct.h"
 
 G_BEGIN_DECLS
 

@@ -645,3 +645,28 @@ gda_ddl_view_prepare_create (GdaDdlView *self,
 
   return  TRUE;
 }
+
+/**
+ * gda_ddl_view_new_from_meta:
+ * @view: a #GdaMetaView instance
+ *
+ * Create new #GdaDdlView object from the corresponding #GdaMetaView object
+ *
+ * Returns: New instance of #GdaDdlView 
+ */
+GdaDdlView*
+gda_ddl_view_new_from_meta (GdaMetaView *view)
+{
+  if (!view)
+    return gda_ddl_view_new();
+
+  GdaDdlView *ddlview = gda_ddl_view_new();
+
+  gda_ddl_view_set_defstring (ddlview,view->view_def);
+  gda_ddl_view_set_replace (ddlview,view->is_updatable);
+
+  return ddlview;
+}
+
+
+

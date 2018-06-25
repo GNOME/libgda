@@ -22,8 +22,8 @@
 #include "gda-ddl-column.h"
 #include <libgda/sql-parser/gda-sql-statement.h>
 #include <libgda/gda-lockable.h>
+#include "gda-server-provider.h"
 #include "gda-connection.h"
-#include <virtual/gda-ldap-connection.h>
 
 G_DEFINE_QUARK (gda_ddl_table_error,gda_ddl_table_error)
 
@@ -32,7 +32,7 @@ typedef struct
   gchar *mp_comment;
 
   gboolean m_istemp;
-  gchar *mp_name;
+//  gchar *mp_name;
   GList *mp_columns; /* Type GdaDdlColumn*/
   GList *mp_fkeys; /* List of all fkeys, GdaDdlFkey */
 } GdaDdlTablePrivate;
@@ -186,30 +186,44 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
 
   xmlChar *tempt = xmlGetProp (node,(xmlChar*)"temptable");
 
-  if (tempt && (*tempt == 't' || *tempt == 't')) {
+  if (tempt && (*tempt == 't' || *tempt == 't'))
+    {
       g_object_set (G_OBJECT(self),"istemp",TRUE,NULL);
       xmlFree (tempt);
-  }
+    }
 
-  for (xmlNodePtr it = node->children; it ; it = it->next) {
-      if (!g_strcmp0 ((gchar *) it->name, "comment")) {
+  gint columnscale = 0;
+
+  for (xmlNodePtr it = node->children; it ; it = it->next)
+    {
+      g_print ("Table node name is : %s\n",it->name);
+      if (!g_strcmp0 ((gchar *) it->name, "comment"))
+        {
           xmlChar *comment = xmlNodeGetContent (it);
 
-          if (comment) {
+          if (comment)
+            {
               g_object_set (G_OBJECT(self),"comment", (char *)comment,NULL);
               xmlFree (comment);
-          }
-      } else if (!g_strcmp0 ((gchar *) it->name, "column")) {
-          GdaDdlColumn *column;
-          column = gda_ddl_column_new ();
+            }
+        } 
+      else if (!g_strcmp0 ((gchar *) it->name, "column"))
+        {
+          GdaDdlColumn *column = gda_ddl_column_new ();
+          gda_ddl_column_set_scale (column,columnscale++);
 
           if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
-                                            it, error)) {
+                                            it, error))
+            {
+              g_print ("Error parsing column node\n");
               gda_ddl_column_free (column);
               return FALSE;
-          } else
+            }
+          else
             priv->mp_columns = g_list_append (priv->mp_columns,column);
-      } else if (!g_strcmp0 ((gchar *) it->name, "fkey")) {
+        }
+      else if (!g_strcmp0 ((gchar *) it->name, "fkey"))
+        {
           GdaDdlFkey *fkey;
           fkey = gda_ddl_fkey_new ();
 
@@ -218,17 +232,42 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
               return FALSE;
           } else
             priv->mp_fkeys = g_list_append (priv->mp_fkeys,fkey);
-      } /* end of else if */
-  } /* End of for loop */
+        } /* end of else if */
+    } /* End of for loop */
   return TRUE;
 } /* End of gda_ddl_column_parse_node */
 
 static gboolean
 gda_ddl_table_write_node (GdaDdlBuildable *buildable,
-                          xmlNodePtr  writer,
-                          GError          **error)
+                          xmlNodePtr       rootnode,
+                          GError         **error)
 {
+  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (rootnode,FALSE);
+
+  GdaDdlTable *self = GDA_DDL_TABLE (buildable);
+  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+
+  xmlNodePtr node = NULL;
+  node  = xmlNewChild (rootnode,NULL,(xmlChar*)"table",NULL);
+  xmlNewProp (node,BAD_CAST "name",
+              BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+
+  xmlNewProp (node,BAD_CAST "temptable",
+              BAD_CAST GDA_BOOL_TO_STR (priv->m_istemp)); 
+
+  xmlNewChild (node,NULL,(xmlChar*)"comment",(xmlChar*)priv->mp_comment);
+
+  GList *it = NULL;
+
+  for (it = priv->mp_columns; it; it=it->next)
+    if(!gda_ddl_buildable_write_node (GDA_DDL_BUILDABLE(GDA_DDL_COLUMN(it->data)),
+                                      node,error))
+      goto on_error;
+
   return TRUE;
+on_error:
+  return FALSE;
 }
 
 static void
