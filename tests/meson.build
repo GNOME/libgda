@@ -3,8 +3,6 @@ test_headers = files([
 	])
 
 tests_sources = files([
-	'test-errors.h',
-	'test-errors.c',
 	'gda-ddl-creator.c',
 	'test-cnc-utils.h',
 	'test-cnc-utils.c',
@@ -12,7 +10,13 @@ tests_sources = files([
 	'data-model-errors.c'
 	])
 
+common_sources = files([
+	'test-errors.h',
+	'test-errors.c'
+	])
+
 tests_sources += test_headers
+tests_sources += common_sources
 
 tddlc = executable('test-ddl-creator test',
 	['test-ddl-creator.c'] + tests_sources,
@@ -221,3 +225,5 @@ test('SqlRenderer', tsqlr,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+
+subdir('data-models')
