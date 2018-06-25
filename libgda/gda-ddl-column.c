@@ -362,30 +362,29 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
 
   xmlChar *cprop = NULL;
   cprop = xmlGetProp (node,(xmlChar *)"pkey");
-  if (cprop) {
-      if (*cprop == 't' || *cprop == 'T') {
-          g_object_set (G_OBJECT(self),"pkey",TRUE,NULL);
-      }
-      else if (*cprop == 'f' || *cprop == 'F') {
-          g_object_set (G_OBJECT(self),"pkey",FALSE,NULL);
-      }
-      else {
+  if (cprop)
+    {
+      if (*cprop == 't' || *cprop == 'T')
+        g_object_set (G_OBJECT(self),"pkey",TRUE,NULL);
+      else if (*cprop == 'f' || *cprop == 'F')
+        g_object_set (G_OBJECT(self),"pkey",FALSE,NULL);
+      else
+        {
           /*
            * FIXME: this step should never happend
            */
-      }
+        }
 
       xmlFree (cprop);
-  }
+    }
   cprop = xmlGetProp (node,(xmlChar *)"unique");
 
-  if (cprop) {
-      if (*cprop == 't' || *cprop == 'T') {
-          g_object_set (G_OBJECT(self),"unique",TRUE,NULL);
-      }
-      else if (*cprop == 'f' || *cprop == 'F') {
-          g_object_set (G_OBJECT(self),"unique",FALSE,NULL);
-      }
+  if (cprop)
+    {
+      if (*cprop == 't' || *cprop == 'T')
+        g_object_set (G_OBJECT(self),"unique",TRUE,NULL);
+      else if (*cprop == 'f' || *cprop == 'F')
+        g_object_set (G_OBJECT(self),"unique",FALSE,NULL);
       else {
           /*
            * FIXME: this step should never happend
@@ -393,217 +392,147 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
       }
 
       xmlFree (cprop);
-  }
+    }
 
   cprop = xmlGetProp (node,(xmlChar *)"autoinc");
 
-  if (cprop) {
-      if (*cprop == 't' || *cprop == 'T') {
-          g_object_set (G_OBJECT(self),"autoinc",TRUE,NULL);
-      }
-      else if (*cprop == 'f' || *cprop == 'F') {
-          g_object_set (G_OBJECT(self),"autoinc",FALSE,NULL);
-      }
+  if (cprop)
+    {
+      if (*cprop == 't' || *cprop == 'T')
+        g_object_set (G_OBJECT(self),"autoinc",TRUE,NULL);
+      else if (*cprop == 'f' || *cprop == 'F')
+        g_object_set (G_OBJECT(self),"autoinc",FALSE,NULL);
       else {
 
       }
 
       xmlFree (cprop);
-  }
+    }
 
   cprop = xmlGetProp (node,(xmlChar *)"nnul");
 
-  if (cprop) {
-      if (*cprop == 't' || *cprop == 'T') {
-          g_object_set (G_OBJECT(self),"nnul",TRUE,NULL);
-      }
-      else if (*cprop == 'f' || *cprop == 'F') {
-          g_object_set (G_OBJECT(self),"nnul",FALSE,NULL);
-      }
+  if (cprop)
+    {
+      if (*cprop == 't' || *cprop == 'T')
+        g_object_set (G_OBJECT(self),"nnul",TRUE,NULL);
+      else if (*cprop == 'f' || *cprop == 'F')
+        g_object_set (G_OBJECT(self),"nnul",FALSE,NULL);
       else {
 
       }
 
       xmlFree (cprop);
-  }
+    }
 
-  for (xmlNodePtr it = node->children; it ; it = it->next) {
-      if (!g_strcmp0 ((char *)it->name,"size")) {
+  for (xmlNodePtr it = node->children; it ; it = it->next)
+    {
+      if (!g_strcmp0 ((char *)it->name,"size"))
+        {
           xmlChar *size = xmlNodeGetContent (it);
           guint64 tint = g_ascii_strtoull ((gchar*)size,NULL,10);
 
           g_object_set (G_OBJECT (self),"size",(guint)tint,NULL);
           xmlFree (size);
-      }
+        }
 
-      if (!g_strcmp0 ((char *)it->name,"pkey")) {
+      if (!g_strcmp0 ((char *)it->name,"pkey"))
+        {
           xmlChar *pkey = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"pkey",pkey,NULL);
           xmlFree (pkey);
-      }
+        }
 
-      if (!g_strcmp0 ((char *)it->name,"default")) {
+      if (!g_strcmp0 ((char *)it->name,"default"))
+        {
           xmlChar *def = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"default",def,NULL);
           xmlFree (def);
-      }
+        }
 
-      if (!g_strcmp0 ((char *)it->name,"check")) {
+      if (!g_strcmp0 ((char *)it->name,"check"))
+        {
           xmlChar *check = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"check",check,NULL);
           xmlFree (check);
-      }
+        }
 
-      if (!g_strcmp0 ((char *)it->name,"comment")) {
+      if (!g_strcmp0 ((char *)it->name,"comment"))
+        {
           xmlChar *comment = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"comment",comment,NULL);
           xmlFree (comment);
-      }
-  } /* End of for loop */
+        }
+    } /* End of for loop */
   return TRUE;
 } /* End of gda_ddl_column_parse_node */
 
 static gboolean
 gda_ddl_column_write_node (GdaDdlBuildable *buildable,
-                           xmlTextWriterPtr writer,
+                           xmlNodePtr rootnode,
                            GError       **error)
 {
   g_return_val_if_fail (buildable,FALSE);
-  g_return_val_if_fail (writer,FALSE);
+  g_return_val_if_fail (rootnode,FALSE);
 
   GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
 
-  /*GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);*/
+  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+ 
+  xmlNodePtr node = NULL;
+  node  = xmlNewChild (rootnode,
+                       NULL,
+                       BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_NODE],
+                       NULL);
 
-  int res = 0;
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_NAME],
+              BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+  
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_ATYPE],
+              BAD_CAST priv->mp_type);
 
-  res = xmlTextWriterStartElement(writer, 
-                             BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_NODE]);
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
-                   _("Can't set start element in xml tree\n"));
-      return FALSE;
-  }
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_PKEY],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_pkey));
 
-  res = xmlTextWriterWriteAttribute (writer,
-                       (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_NAME],
-                       (xmlChar*)gda_ddl_column_get_name (self));
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_UNIQUE],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_unique));
 
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set name attribute to element \n"));
-      return FALSE;
-  }
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_AUTOINC],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_autoinc));
 
-  res = xmlTextWriterWriteAttribute (writer,
-                       (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_ATYPE],
-                       (xmlChar*)gda_ddl_column_get_ctype (self));
+  xmlNewProp (node,
+              BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_NNUL],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_nnul));
 
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set type attribute to element \n"));
-      return FALSE;
-  }
+  xmlNewChild (node,
+               NULL,
+               BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_COMMENT],
+               BAD_CAST priv->mp_comment);
 
-  res = xmlTextWriterWriteAttribute (writer,
-                    (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_PKEY],
-                    (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_pkey(self)));
+  /* temp string to convert gint to gchar* */
+  GString *sizestr = g_string_new (NULL);
+  g_string_printf (sizestr,"%d",priv->m_size); 
 
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set pkey attribute to element\n"));
-      return FALSE;
-  }
+  xmlNewChild (node,
+               NULL,
+               BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_SIZE],
+               BAD_CAST sizestr->str);
+  
+  g_string_free (sizestr,TRUE);
 
-  res = xmlTextWriterWriteAttribute (writer,
-                  (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_UNIQUE],
-                  (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_unique(self)));
+  xmlNewChild (node,
+               NULL,
+               BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_DEFAULT],
+               BAD_CAST priv->mp_default);
 
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set unique attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteAttribute (writer,
-                 (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_AUTOINC],
-                 (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_autoinc(self)));
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set autoinc attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteAttribute (writer,
-                 (const xmlChar*)gdaddlvolumnnode[GDA_DDL_COLUMN_NNUL],
-                 (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_column_get_nnul(self)));
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set nnul attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteElement (writer,
-                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_COMMENT],
-                 (xmlChar*)gda_ddl_column_get_comment(self));
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't start element comment attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteElement (writer,
-                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_DEFAULT],
-                 (xmlChar*)gda_ddl_column_get_default(self));
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't start element default attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteElement (writer,
-                 BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_CHECK],
-                 (xmlChar*)gda_ddl_column_get_check(self));
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't start element check attribute to element\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterEndElement (writer);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
-                   _("Can't close element \n"));
-      return FALSE;
-  }
+  xmlNewChild (node,
+               NULL,
+               BAD_CAST gdaddlvolumnnode[GDA_DDL_COLUMN_CHECK],
+               BAD_CAST priv->mp_check);
 
   return TRUE;
 }
