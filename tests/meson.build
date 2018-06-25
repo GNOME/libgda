@@ -1,4 +1,4 @@
-# test-quark-list test-sql-renderer
+# test-sql-renderer
 
 test_headers = files([
 	'gda-ddl-creator.h'
@@ -172,6 +172,29 @@ tipar = executable('test-input-parsers',
 	install: false
 	)
 test('InputParsers', tipar,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tqkl = executable('test-quark-list',
+	['test-quark-list.c'] + tests_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('QuarkList', tqkl,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
