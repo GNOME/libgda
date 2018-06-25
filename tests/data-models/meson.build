@@ -14,7 +14,7 @@ testsf = files([
 	'pivot.db'
 	])
 
-# check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
+# check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
 
 
 tchki = executable('check_model_import',
@@ -57,6 +57,53 @@ tchkv = executable('check_virtual',
 	install: false
 	)
 test('Virtual', tchkv,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+# tchkdp = executable('check_data_proxy',
+# 	['check_data_proxy.c'] + common_sources,
+# 	c_args: [
+# 		'-include',
+# 		meson.build_root() + '/config.h',
+# 		'-DCHECK_FILES="'+meson.source_root()+'"',
+# 		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+# 		],
+# 	link_with: libgda,
+# 	dependencies: [
+# 		libgda_dep,
+# 		inc_rooth_dep,
+# 		inc_sqliteh_dep
+# 		],
+# 	install: false
+# 	)
+# test('DataProxy', tchkdp,
+# 	timeout: 100,
+# 	env: [
+# 		'GDA_TOP_SRC_DIR='+meson.source_root(),
+# 		'GDA_TOP_BUILD_DIR='+meson.build_root()
+# 		]
+# 	)
+
+tchkmc = executable('check_model_copy',
+	['check_model_copy.c'] + common_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ModelCopy', tchkmc,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
