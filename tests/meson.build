@@ -2,6 +2,9 @@ test_headers = files([
 	'gda-ddl-creator.h'
 	])
 
+inc_testsh = include_directories ('.')
+inc_testsh_dep = declare_dependency (include_directories : inc_testsh)
+
 tests_sources = files([
 	'gda-ddl-creator.c',
 	'test-cnc-utils.h',
