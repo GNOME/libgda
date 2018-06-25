@@ -3,6 +3,9 @@
 <schema name="libgda">
   <table name="products" temptable="TRUE">
     <comment>Some comment about table goes here</comment>
+    <column name="product_id" type="int" pkey="TRUE" 
+            unique="TRUE" nnul="TRUE">
+    </column>
     <column name="column_name" type="string" pkey="TRUE" 
             unique="TRUE" autoinc="FALSE" nnul="FALSE">
         <comment>Some column description</comment>
@@ -10,7 +13,7 @@
         <default>0</default>
     </column>
     <fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
-      <fk_field name="column_name" reffield="column_name"/>
+      <fk_field name="column_name" reffield="product_id"/>
     </fkey>
   </table>
   <view name="MyView" replace="TRUE" temp="FALSE" ifnotexists="TRUE">

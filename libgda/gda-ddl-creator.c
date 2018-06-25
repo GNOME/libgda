@@ -1,19 +1,21 @@
 /* gda-ddl-creator.c
  *
- * Copyright © 2018
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 
 #include "gda-ddl-creator.h"
@@ -36,10 +38,8 @@ typedef struct
 {
   GList *mp_tables; /* List of all tables that should be create, GdaDdlTable  */
   GList *mp_views; /* List of all views that should be created, GdaDdlView */
-
-//  gchar *dtd_file_path; /* path to DTD file for xml schema validation */
   gchar *mp_schemaname;
-}GdaDdlCreatorPrivate;
+} GdaDdlCreatorPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlCreator, gda_ddl_creator, G_TYPE_OBJECT)
 
@@ -78,6 +78,7 @@ gda_ddl_creator_finalize (GObject *object)
 
   if (priv->mp_tables)
     g_list_free_full (priv->mp_tables, (GDestroyNotify)gda_ddl_table_free);
+
   if (priv->mp_views)
     g_list_free_full (priv->mp_views, (GDestroyNotify)gda_ddl_view_free);
 
@@ -281,6 +282,7 @@ gda_ddl_creator_parse_file_from_path (GdaDdlCreator *self,
 
   if (!_gda_ddl_creator_validate_file_from_path(xmlfile,doc,error))
     return FALSE;
+
   node = xmlDocGetRootElement (doc);
 
   if (!node || g_strcmp0 ((gchar *)node->name, "schema") != 0)
@@ -462,12 +464,13 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
 
 /** 
  * gda_ddl_creator_parse_cnc:
- * @self:
- * @cnc:
- * @error:
+ * @self: a #GdaDdlCreator instance 
+ * @cnc: Connection to parse
+ * @error: error storage object
  *
+ * Parse cnc to populate @self object. 
  *
- *
+ * Returns: Returm %TRUE if succeded, %FALSE otherwise.
  */
 gboolean
 gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
@@ -508,9 +511,19 @@ gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_TABLE)
         {
           GdaDdlTable *table = gda_ddl_table_new_from_meta(it->data);
+          if (!table)
+            continue;
+
           priv->mp_tables = g_list_append (priv->mp_tables,table);
+          continue;
         }
-      g_print ("Object is: %s\n",GDA_META_DB_OBJECT (it->data)->obj_full_name);
+
+      if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_VIEW)
+        {
+          GdaDdlView *view = gda_ddl_view_new_from_meta(it->data);
+          priv->mp_views = g_list_append (priv->mp_views,view);
+          continue;
+        }
     }
 
   g_slist_free (dblist);
@@ -697,3 +710,68 @@ on_error:
   return FALSE;
 }
 
+/**
+ * 
+ *
+ */
+gboolean
+gda_ddl_creator_write_to_file (GdaDdlCreator *self,
+                               GFile *path,
+                               GError **error)
+{
+
+  return FALSE;
+}
+
+
+/**
+ * gda_ddl_creator_write_to_path:
+ * @self: a #GdaDdlCreator instance
+ * @path: path to xml file to save #GdaDdlCreator
+ * @error: container to hold an error
+ *
+ * Save content of #GdaDdlCreator object to a user friendly xml file
+ *
+ * Returns: %TRUE is no error, %FLASE otherwise. 
+ *
+ * Since: 6.0
+ *
+ */
+gboolean
+gda_ddl_creator_write_to_path (GdaDdlCreator *self,
+                               const gchar *path,
+                               GError **error)
+{
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (path,FALSE);
+ 
+  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
+
+  xmlDocPtr doc = NULL;
+  xmlNodePtr node_root = NULL;
+
+  doc = xmlNewDoc (BAD_CAST "1.0");
+  node_root = xmlNewNode (NULL, BAD_CAST "schema");
+  
+  if (priv->mp_schemaname)
+    xmlNewProp (node_root,(xmlChar*)"name",(xmlChar*)priv->mp_schemaname);
+
+  xmlDocSetRootElement (doc,node_root);
+
+  GList *it = NULL;
+  
+  for (it = priv->mp_tables; it; it=it->next)
+    if (!gda_ddl_buildable_write_node (GDA_DDL_BUILDABLE(GDA_DDL_TABLE(it->data)),
+                                       node_root,error))
+      goto on_error;
+
+  for (it = priv->mp_views; it; it=it->next)
+    if (!gda_ddl_buildable_write_node (GDA_DDL_BUILDABLE(GDA_DDL_VIEW(it->data)),
+                                       node_root,error))
+      goto on_error;
+
+  return TRUE;
+
+on_error:
+  return FALSE;
+}
