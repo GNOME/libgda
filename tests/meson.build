@@ -230,3 +230,4 @@ test('SqlRenderer', tsqlr,
 	)
 
 subdir('data-models')
+subdir('meta-store')
