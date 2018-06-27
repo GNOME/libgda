@@ -130,9 +130,7 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 /* FIXME: public members of GdaSet must be SEALED! */
 /**
  * GdaSet:
- * @holders: (element-type Gda.Holder): list of GdaHolder objects
- * @nodes_list: (element-type Gda.SetNode): list of GdaSetNode
- * @sources_list: (element-type Gda.SetSource): list of GdaSetSource 
+ * @sources_list: (element-type Gda.SetSource): list of GdaSetSource
  * @groups_list: (element-type Gda.SetGroup): list of GdaSetGroup
  *
  */
@@ -142,7 +140,6 @@ struct _GdaSet
 	GdaSetPrivate  *priv;
 
 	/*< public >*/
-        GSList         *sources_list; /* list of GdaSetSource */
 	GSList         *groups_list;  /* list of GdaSetGroup */
 };
 
@@ -208,6 +205,7 @@ void          gda_set_replace_source_model     (GdaSet *set, GdaSetSource *sourc
 /* public data lookup functions */
 GSList       *gda_set_get_nodes                (GdaSet *set);
 GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);
+GSList       *gda_set_get_sources              (GdaSet *set);
 GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model);
 GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *holder);
 GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);

@@ -691,6 +691,7 @@ struct _GdaSetPrivate
 
 	GSList         *holders;   /* list of GdaHolder objects */
 	GSList         *nodes_list;   /* list of GdaSetNode */
+	GSList         *sources_list; /* list of GdaSetSource */
 };
 
 static void 
@@ -1012,7 +1013,7 @@ gda_set_init (GdaSet *set)
 	set->priv = g_new0 (GdaSetPrivate, 1);
 	set->priv->holders = NULL;
 	set->priv->nodes_list = NULL;
-	set->sources_list = NULL;
+	set->priv->sources_list = NULL;
 	set->groups_list = NULL;
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	set->priv->holders_array = NULL;
@@ -1747,8 +1748,8 @@ gda_set_dispose (GObject *object)
 	/* free the nodes if there are some */
 	while (set->priv->nodes_list)
 		set_remove_node (set, GDA_SET_NODE (set->priv->nodes_list->data));
-	while (set->sources_list)
-		set_remove_source (set, GDA_SET_SOURCE (set->sources_list->data));
+	while (set->priv->sources_list)
+		set_remove_source (set, GDA_SET_SOURCE (set->priv->sources_list->data));
 
 	g_slist_foreach (set->groups_list, (GFunc) group_free, NULL);
 	g_slist_free (set->groups_list);
@@ -1796,8 +1797,8 @@ compute_public_data (GdaSet *set)
 	 */
 	while (set->priv->nodes_list)
 		set_remove_node (set, GDA_SET_NODE (set->priv->nodes_list->data));
-	while (set->sources_list)
-		set_remove_source (set, GDA_SET_SOURCE (set->sources_list->data));
+	while (set->priv->sources_list)
+		set_remove_source (set, GDA_SET_SOURCE (set->priv->sources_list->data));
 
 	g_slist_foreach (set->groups_list, (GFunc) group_free, NULL);
 	g_slist_free (set->groups_list);
@@ -1831,7 +1832,7 @@ compute_public_data (GdaSet *set)
 			else {
 				source = gda_set_source_new (gda_set_node_get_data_model (node));
 				gda_set_source_add_node (source, node);
-				set->sources_list = g_slist_prepend (set->sources_list, source);
+				set->priv->sources_list = g_slist_prepend (set->priv->sources_list, source);
 			}
 		}
 
@@ -2013,9 +2014,9 @@ set_remove_node (GdaSet *set, GdaSetNode *node)
 static void
 set_remove_source (GdaSet *set, GdaSetSource *source)
 {
-	g_return_if_fail (g_slist_find (set->sources_list, source));
+	g_return_if_fail (g_slist_find (set->priv->sources_list, source));
 	gda_set_source_free (source);
-	set->sources_list = g_slist_remove (set->sources_list, source);
+	set->priv->sources_list = g_slist_remove (set->priv->sources_list, source);
 }
 
 /**
@@ -2129,7 +2130,7 @@ gda_set_get_holders (GdaSet *set) {
 	return set->priv->holders;
 }
 /**
- * gda_set_get_node_list:
+ * gda_set_get_nodes:
  *
  * Returns: (element-type SetNode): a list of #GdaSetNode objects in the set
  */
@@ -2137,6 +2138,17 @@ GSList*
 gda_set_get_nodes (GdaSet *set) {
 	g_return_val_if_fail (GDA_IS_SET(set), NULL);
 	return set->priv->nodes_list;
+}
+
+/**
+ * gda_set_get_sources:
+ *
+ * Returns: (element-type SetSource): a list of #GdaSetSource objects in the set
+ */
+GSList*
+gda_set_get_sources (GdaSet *set) {
+	g_return_val_if_fail (GDA_IS_SET(set), NULL);
+	return set->priv->sources_list;
 }
 /**
  * gda_set_get_node:
@@ -2257,7 +2269,7 @@ gda_set_get_source_for_model (GdaSet *set, GdaDataModel *model)
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	list = set->sources_list;
+	list = set->priv->sources_list;
 	while (list && !retval) {
 		retval = GDA_SET_SOURCE (list->data);
 		source_model = gda_set_source_get_data_model (retval);
@@ -2295,7 +2307,7 @@ gda_set_replace_source_model (GdaSet *set, GdaSetSource *source, GdaDataModel *m
 	
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (source);
-	g_return_if_fail (g_slist_find (set->sources_list, source));
+	g_return_if_fail (g_slist_find (set->priv->sources_list, source));
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
 	/* compare models */
@@ -2402,7 +2414,7 @@ gda_set_dump (GdaSet *set)
 	g_print ("=== GdaSet %p ===\n", set);
 	g_slist_foreach (set->priv->holders, (GFunc) holder_dump, NULL);
 	g_slist_foreach (set->priv->nodes_list, (GFunc) set_node_dump, NULL);
-	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
+	g_slist_foreach (set->priv->sources_list, (GFunc) set_source_dump, NULL);
 	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
 	g_print ("=== GdaSet %p END ===\n", set);
 }

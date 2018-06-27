@@ -184,11 +184,11 @@ tests_common_set_serialize (GdaSet *set)
 		g_string_append_c (string, ']');
 	}
 
-	if (set->sources_list) {
+	if (gda_set_get_sources (set)) {
 		g_string_append (string, ",\"sources\":[");
-		for (list = set->sources_list; list; list = list->next) {
+		for (list = gda_set_get_sources (set); list; list = list->next) {
 			GdaSetSource *source = (GdaSetSource*) list->data;
-			if (list != set->sources_list)
+			if (list != gda_set_get_sources (set))
 				g_string_append_c (string, ',');
 			g_string_append_c (string, '{');
 			g_string_append (string, "\"model\":");
