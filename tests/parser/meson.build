@@ -1,4 +1,4 @@
-# check_dml_comp check_script check_rewrite_for_default
+# check_script check_rewrite_for_default
 
 
 
@@ -65,6 +65,29 @@ tchkval = executable('check_normalization',
 	install: false
 	)
 test('Normalization', tchkval,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tchkdlmc = executable('check_dml_comp',
+	['check_dml_comp.c'],
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DROOT_DIR="'+meson.source_root()+'"',
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+test('DlmComp', tchkdlmc,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
