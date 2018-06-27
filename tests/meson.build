@@ -232,3 +232,4 @@ test('SqlRenderer', tsqlr,
 subdir('data-models')
 subdir('meta-store')
 subdir('multi-threading')
+subdir('parser')
