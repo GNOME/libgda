@@ -38,6 +38,7 @@ main (int argc, char **argv)
 	GdaDataPivot *pivot;
 	gchar *fname;
 	GdaConnection *cnc;
+	GError *error = NULL;
 
         gda_init ();
 
@@ -47,12 +48,12 @@ main (int argc, char **argv)
         cnc_string = g_strdup_printf ("DB_DIR=%s;DB_NAME=pivot", fname);
         g_free (fname);
         cnc = gda_connection_open_from_string ("SQLite", cnc_string, NULL,
-                                               GDA_CONNECTION_OPTIONS_READ_ONLY, NULL);
+                                               GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
+	g_free (cnc_string);
         if (!cnc) {
-                g_print ("Failed to open connection, cnc_string = %s\n", cnc_string);
-                exit (1);
+		g_print ("Failed to open connection, cnc_string = %s; Error: %s\n", cnc_string, error->message);
         }
-        g_free (cnc_string);
+	g_assert (cnc != NULL);
 
 	source = get_source_model (cnc);
 	pivot = GDA_DATA_PIVOT (gda_data_pivot_new (source));
@@ -78,13 +79,23 @@ get_source_model (GdaConnection *cnc)
 {
 	GdaDataModel *model;
 	GdaStatement *stmt;
+	GError *error = NULL;
 	stmt = gda_connection_parse_sql_string (cnc,
 						"select * from food",
-						NULL, NULL);
+						NULL, &error);
+	if (stmt == NULL) {
+		g_print ("Error parsing statement: %s\n", error->message);
+		g_error_free (error);
+	}
 	g_assert (stmt);
 
-	model = gda_connection_statement_execute_select (cnc, stmt, NULL, NULL);
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	g_object_unref (stmt);
+	if (model == NULL) {
+		g_print ("Error executing statement: %s\n", error->message);
+		g_error_free (error);
+	}
+	g_assert (model != NULL);
 	g_print ("==== Source data:\n");
 	gda_data_model_dump (model, NULL);
 	return model;
