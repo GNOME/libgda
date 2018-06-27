@@ -722,7 +722,7 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 	g_object_set (G_OBJECT (data->iter), "update-model", FALSE, NULL);
 		
 	/* column 0 is the DN */
-	holder = GDA_HOLDER (GDA_SET (data->iter)->holders->data);
+	holder = GDA_HOLDER (gda_set_get_holders (GDA_SET (data->iter))->data);
 	attr = ldap_get_dn (data->cdata->handle, data->imodel->priv->current_exec->ldap_row);
 	if (attr) {
 		gchar *userdn;
@@ -750,7 +750,7 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 		gda_holder_force_invalid (holder);
 
 	GSList *list;
-	for (list = GDA_SET (data->iter)->holders->next; list; list = list->next)
+	for (list = gda_set_get_holders (GDA_SET (data->iter))->next; list; list = list->next)
 		gda_holder_set_value (GDA_HOLDER (list->data), NULL, NULL);
 
 	if (data->imodel->priv->row_mult)
@@ -766,7 +766,7 @@ worker_update_iter_from_ldap_row (WorkerIterData *data, GError **error)
 		if (!holder)
 			continue;
 
-		j = g_slist_index (((GdaSet*) data->iter)->holders, holder);
+		j = g_slist_index (gda_set_get_holders ((GdaSet*) data->iter), holder);
 
 		bvals = ldap_get_values_len (data->cdata->handle,
 					     data->imodel->priv->current_exec->ldap_row, attr);
