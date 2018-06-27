@@ -688,6 +688,8 @@ struct _GdaSetPrivate
 	GArray          *holders_array;
 	gboolean         read_only;
 	gboolean         validate_changes;
+
+	GSList         *holders;   /* list of GdaHolder objects */
 };
 
 static void 
@@ -724,7 +726,7 @@ gda_set_set_property (GObject *object,
 		if (set->priv->validate_changes != g_value_get_boolean (value)) {
 			GSList *list;
 			set->priv->validate_changes = g_value_get_boolean (value);
-			for (list = set->holders; list; list = list->next) {
+			for (list = set->priv->holders; list; list = list->next) {
 				GdaHolder *holder = (GdaHolder*) list->data;
 				g_object_set ((GObject*) holder, "validate-changes",
 					      set->priv->validate_changes, NULL);
@@ -1007,7 +1009,7 @@ static void
 gda_set_init (GdaSet *set)
 {
 	set->priv = g_new0 (GdaSetPrivate, 1);
-	set->holders = NULL;
+	set->priv->holders = NULL;
 	set->nodes_list = NULL;
 	set->sources_list = NULL;
 	set->groups_list = NULL;
@@ -1081,7 +1083,7 @@ gda_set_copy (GdaSet *set)
 	GSList *list, *holders = NULL;
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	
-	for (list = set->holders; list; list = list->next) 
+	for (list = set->priv->holders; list; list = list->next)
 		holders = g_slist_prepend (holders, gda_holder_copy (GDA_HOLDER (list->data)));
 	holders = g_slist_reverse (holders);
 
@@ -1606,7 +1608,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (set->priv);
-	g_return_if_fail (g_slist_find (set->holders, holder));
+	g_return_if_fail (g_slist_find (set->priv->holders, holder));
 
 	if (set->priv->validate_changes)
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
@@ -1639,7 +1641,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	}
 	set_remove_node (set, node);
 
-	set->holders = g_slist_remove (set->holders, holder);
+	set->priv->holders = g_slist_remove (set->priv->holders, holder);
 	g_hash_table_remove (set->priv->holders_hash, gda_holder_get_id (holder));
 	if (set->priv->holders_array) {
 		g_array_free (set->priv->holders_array, TRUE);
@@ -1715,8 +1717,8 @@ gda_set_dispose (GObject *object)
 
 	set = GDA_SET (object);
 	/* free the holders list */
-	if (set->holders) {
-		for (list = set->holders; list; list = list->next) {
+	if (set->priv->holders) {
+		for (list = set->priv->holders; list; list = list->next) {
 			if (set->priv->validate_changes)
 				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 								      G_CALLBACK (validate_change_holder_cb), set);
@@ -1730,7 +1732,7 @@ gda_set_dispose (GObject *object)
 			}
 			g_object_unref (list->data);
 		}
-		g_slist_free (set->holders);
+		g_slist_free (set->priv->holders);
 	}
 	if (set->priv->holders_hash) {
 		g_hash_table_destroy (set->priv->holders_hash);
@@ -1803,7 +1805,7 @@ compute_public_data (GdaSet *set)
 	/*
 	 * Creation of the GdaSetNode structures
 	 */
-	for (list = set->holders; list; list = list->next) {
+	for (list = set->priv->holders; list; list = list->next) {
 		GdaHolder *holder = GDA_HOLDER (list->data);
 		gint col;
 		node = gda_set_node_new (holder);
@@ -1928,7 +1930,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	const gchar *hid;
 
 	/* 
-	 * try to find a similar holder in the set->holders:
+	 * try to find a similar holder in the set->priv->holders:
 	 * a holder B is similar to a holder A if it has the same ID
 	 */
 	hid = gda_holder_get_id (holder);
@@ -1940,7 +1942,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	similar = (GdaHolder*) g_hash_table_lookup (set->priv->holders_hash, hid);
 	if (!similar) {
 		/* really add @holder to the set */
-		set->holders = g_slist_append (set->holders, holder);
+		set->priv->holders = g_slist_append (set->priv->holders, holder);
 		g_hash_table_insert (set->priv->holders_hash, (gchar*) hid, holder);
 		if (set->priv->holders_array) {
 			g_array_free (set->priv->holders_array, TRUE);
@@ -1994,7 +1996,7 @@ gda_set_merge_with_set (GdaSet *set, GdaSet *set_to_merge)
 	g_return_if_fail (GDA_IS_SET (set));
 	g_return_if_fail (set_to_merge && GDA_IS_SET (set_to_merge));
 
-	for (holders = set_to_merge->holders; holders; holders = holders->next)
+	for (holders = set_to_merge->priv->holders; holders; holders = holders->next)
 		gda_set_real_add_holder (set, GDA_HOLDER (holders->data));
 	compute_public_data (set);
 }
@@ -2036,7 +2038,7 @@ gda_set_is_valid (GdaSet *set, GError **error)
 	g_return_val_if_fail (GDA_IS_SET (set), FALSE);
 	g_return_val_if_fail (set->priv, FALSE);
 
-	for (holders = set->holders; holders; holders = holders->next) {
+	for (holders = set->priv->holders; holders; holders = holders->next) {
 		if (!gda_holder_is_valid (GDA_HOLDER (holders->data))) {
 			g_set_error (error, GDA_SET_ERROR, GDA_SET_INVALID_ERROR,
 				     "%s", _("One or more values are invalid"));
@@ -2105,8 +2107,8 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 	if (! set->priv->holders_array) {
 		GSList *list;
 		set->priv->holders_array = g_array_sized_new (FALSE, FALSE, sizeof (GdaHolder*),
-							      g_slist_length (set->holders));
-		for (list = set->holders; list; list = list->next)
+							      g_slist_length (set->priv->holders));
+		for (list = set->priv->holders; list; list = list->next)
 			g_array_append_val (set->priv->holders_array, list->data);
 	}
 	if ((guint)pos >= set->priv->holders_array->len)
@@ -2115,6 +2117,16 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 		return g_array_index (set->priv->holders_array, GdaHolder*, pos);
 }
 
+/**
+ * gda_set_get_holders:
+ *
+ * Returns: (element-type Holder): a list of #GdaHolder objects in the set
+ */
+GSList*
+gda_set_get_holders (GdaSet *set) {
+	g_return_val_if_fail (GDA_IS_SET(set), NULL);
+	return set->priv->holders;
+}
 /**
  * gda_set_get_node:
  * @set: a #GdaSet object
@@ -2134,7 +2146,7 @@ gda_set_get_node (GdaSet *set, GdaHolder *holder)
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	/* FIXME: May is better to use holder's hash for better performance */
-	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
+	g_return_val_if_fail (g_slist_find (set->priv->holders, holder), NULL);
 
 	for (list = set->nodes_list; list && !retval; list = list->next) {
 		GdaHolder *node_holder;
@@ -2192,7 +2204,7 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
 	g_return_val_if_fail (GDA_IS_SET (set), NULL);
 	g_return_val_if_fail (set->priv, NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (g_slist_find (set->holders, holder), NULL);
+	g_return_val_if_fail (g_slist_find (set->priv->holders, holder), NULL);
 
 	for (list = set->groups_list; list; list = list->next) {
 		retval = GDA_SET_GROUP (list->data);
@@ -2377,7 +2389,7 @@ void
 gda_set_dump (GdaSet *set)
 {
 	g_print ("=== GdaSet %p ===\n", set);
-	g_slist_foreach (set->holders, (GFunc) holder_dump, NULL);
+	g_slist_foreach (set->priv->holders, (GFunc) holder_dump, NULL);
 	g_slist_foreach (set->nodes_list, (GFunc) set_node_dump, NULL);
 	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
 	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);

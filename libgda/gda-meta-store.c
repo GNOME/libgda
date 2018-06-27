@@ -2996,7 +2996,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 		}
 		va_end (ap);
 
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			if (!g_slist_find (params_set, list->data))
 				g_warning (_("No value set for parameter '%s'"),
 					   gda_holder_get_id (GDA_HOLDER (list->data)));
@@ -3112,7 +3112,7 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 			}
 		}
 
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			if (!g_slist_find (params_set, list->data))
 				g_message (_("No value set for parameter '%s'"),
 					   gda_holder_get_id (GDA_HOLDER (list->data)));

@@ -1661,7 +1661,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		GdaColumn *column;
 		GdaHolder *holder;
 		column = gda_column_new ();
-		holder = GDA_HOLDER (g_slist_nth_data (GDA_SET (iter)->holders, col));
+		holder = GDA_HOLDER (g_slist_nth_data (gda_set_get_holders (GDA_SET (iter)), col));
 		
 		gda_column_set_name (column, gda_holder_get_id (holder));
 		gda_column_set_description (column, gda_holder_get_id (holder));

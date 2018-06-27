@@ -427,7 +427,7 @@ gda_batch_get_parameters (GdaBatch *batch, GdaSet **out_params, GError **error)
 			return FALSE;
 		}
 
-		if (tmpset && tmpset->holders) {
+		if (tmpset && gda_set_get_holders (tmpset)) {
 			if (!set) {
 				set = tmpset;
 				tmpset = NULL;
@@ -435,7 +435,7 @@ gda_batch_get_parameters (GdaBatch *batch, GdaSet **out_params, GError **error)
 			else {
 				/* merge @set and @tmp_set */
 				GSList *holders;
-				for (holders = tmpset->holders; holders; holders = holders->next) {
+				for (holders = gda_set_get_holders (tmpset); holders; holders = holders->next) {
 					GdaHolder *holder = (GdaHolder *) holders->data;
 					if (! gda_set_add_holder (set, holder)) {
 						GdaHolder *eholder = gda_set_get_holder (set, gda_holder_get_id (holder));

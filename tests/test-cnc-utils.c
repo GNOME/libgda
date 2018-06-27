@@ -133,7 +133,7 @@ test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **e
 		g_print ("Open connection string: %s\n", data.string->str);
 
 		gchar *auth_string = NULL;
-		GSList *current = prov_info->auth_params->holders;
+		GSList *current = gda_set_get_holders (prov_info->auth_params);
 		while (current) {
 			GdaHolder *holder = (GdaHolder *) current->data;
 
@@ -457,7 +457,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 	for (i = 0; i < nrows; i++) {
 		gint j;
 		GSList *list;
-		for (list = params->holders, j = 0; list && (j < ncols); list = list->next, j++) {
+		for (list = gda_set_get_holders (params), j = 0; list && (j < ncols); list = list->next, j++) {
 			const GValue *cvalue = gda_data_model_get_value_at (import, j, i, error);
 			if (!cvalue) {
 				gda_connection_rollback_transaction (cnc, NULL, NULL);

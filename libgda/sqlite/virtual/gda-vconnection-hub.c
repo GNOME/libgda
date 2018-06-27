@@ -742,8 +742,8 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED i
 		if (! gda_statement_get_parameters (stmt, &params, NULL))
 			return NULL;
 		if (argc > 0) {
-			g_assert (params && ((guint)argc == g_slist_length (params->holders)));
-			for (i = 0, list = params->holders; i < argc; i++, list = list->next) {
+			g_assert (params && ((guint)argc == g_slist_length (gda_set_get_holders (params))));
+			for (i = 0, list = gda_set_get_holders (params); i < argc; i++, list = list->next) {
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				GValue *value;
 				value = create_value_from_sqlite3_gvalue (gda_holder_get_g_type (holder),

@@ -991,7 +991,7 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 		gda_set_merge_with_set (model->priv->sh->modif_internals->modif_set, set);
 
 		GSList *list;
-		for (list = set->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (set); list; list = list->next) {
 			GdaHolder *holder;
 			holder = gda_set_get_holder (model->priv->sh->modif_internals->modif_set,
 						     gda_holder_get_id ((GdaHolder*) list->data));
@@ -1330,7 +1330,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 				model->priv->sh->modif_internals->modif_set = gda_set_new (NULL);
 		}
 
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			GdaHolder *eholder;
 			eholder = gda_set_get_holder (model->priv->sh->modif_internals->modif_set,
@@ -1376,7 +1376,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 		}
 
 		/* update GdaDataSelect's column attributes with GdaHolder's attributes */
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gint num;
 			gboolean is_old;
@@ -2320,7 +2320,7 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	if (update_model)
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
 
-	for (i = 0, plist = GDA_SET (iter)->holders;
+	for (i = 0, plist = gda_set_get_holders (GDA_SET (iter));
 	     plist;
 	     i++, plist = plist->next) {
 		GValue *value;
@@ -2805,7 +2805,7 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 			gboolean allok = TRUE;
 
 			/* overwrite old values with new values if some have been provided */
-			for (list = imodel->priv->sh->modif_internals->modif_set->holders; list;
+			for (list = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); list;
 			     list = list->next) {
 				GdaHolder *h = (GdaHolder*) list->data;
 				gint res;
@@ -2825,7 +2825,7 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 				}
 			}
 
-			for (list = dstmt->params->holders; list && allok; list = list->next) {
+			for (list = gda_set_get_holders (dstmt->params); list && allok; list = list->next) {
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				GdaHolder *eholder;
 				eholder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set,
@@ -2898,7 +2898,7 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 
 	/* invalidate all the imodel->priv->sh->modif_internals->modif_set's value holders */
 	GSList *list;
-	for (list = imodel->priv->sh->modif_internals->modif_set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); list; list = list->next) {
 		GdaHolder *h = (GdaHolder*) list->data;
 		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
 			gda_holder_force_invalid ((GdaHolder*) list->data);
@@ -2965,7 +2965,7 @@ gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gi
 
 	/* invalidate all the imodel->priv->sh->modif_internals->modif_set's value holders */
 	GSList *list;
-	for (list = imodel->priv->sh->modif_internals->modif_set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); list; list = list->next) {
 		GdaHolder *h = (GdaHolder*) list->data;
 		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
 			gda_holder_force_invalid ((GdaHolder*) list->data);
@@ -3071,7 +3071,7 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 
 	/* invalidate all the imodel->priv->sh->modif_internals->modif_set's value holders */
 	GSList *slist;
-	for (slist = imodel->priv->sh->modif_internals->modif_set->holders; slist; slist = slist->next) {
+	for (slist = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); slist; slist = slist->next) {
 		GdaHolder *h = (GdaHolder*) slist->data;
 		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
 			gda_holder_force_invalid ((GdaHolder*) slist->data);
@@ -3256,14 +3256,14 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 					compute_insert_select_params_mapping (dstmt->params, last_insert,
 									      imodel->priv->sh->modif_internals->unique_row_condition);
 			if (imodel->priv->sh->modif_internals->insert_to_select_mapping) {
-				for (list = dstmt->params->holders; list; list = list->next) {
+				for (list = gda_set_get_holders (dstmt->params); list; list = list->next) {
 					GdaHolder *holder = GDA_HOLDER (list->data);
 					GdaHolder *eholder;
 					gint pos;
 
 					g_assert (param_name_to_int (gda_holder_get_id (holder), &pos, NULL));
 
-					eholder = g_slist_nth_data (last_insert->holders,
+					eholder = g_slist_nth_data (gda_set_get_holders (last_insert),
 								    imodel->priv->sh->modif_internals->insert_to_select_mapping[pos]);
 					if (!eholder ||
 					    ! gda_holder_set_value (holder, gda_holder_get_value (eholder), error)) {
@@ -3454,7 +3454,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 	GSList *sel_list;
 
 	array = g_array_new (FALSE, TRUE, sizeof (gint));
-	for (sel_list = sel_params->holders; sel_list; sel_list = sel_list->next) {
+	for (sel_list = gda_set_get_holders (sel_params); sel_list; sel_list = sel_list->next) {
 		CorrespData cdata;
 		const gchar *pid = gda_holder_get_id (GDA_HOLDER (sel_list->data));
 		cdata.hid = pid;
@@ -3478,7 +3478,7 @@ compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, Gd
 
 		GSList *ins_list;
 		cdata.hid = NULL;
-		for (ins_list = ins_values->holders; ins_list; ins_list = ins_list->next) {
+		for (ins_list = gda_set_get_holders (ins_values); ins_list; ins_list = ins_list->next) {
 			gchar *name;
 			g_object_get (G_OBJECT (ins_list->data), "name", &name, NULL);
 			if (!name) {
@@ -3779,7 +3779,7 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	   to model->priv->sh->modif_internals->exec_set */
 	GSList *list;
 	if (model->priv->sh->ext_params) {
-		for (list = model->priv->sh->ext_params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (model->priv->sh->ext_params); list; list = list->next) {
 			GdaHolder *h;
 			h = gda_set_get_holder (model->priv->sh->modif_internals->exec_set,
 						gda_holder_get_id (list->data));

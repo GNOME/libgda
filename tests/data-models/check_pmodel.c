@@ -1768,7 +1768,7 @@ test16 (GdaConnection *cnc)
         g_object_unref (rerun);
 
 	/**/
-	gda_holder_force_invalid (GDA_HOLDER (params->holders->data));
+	gda_holder_force_invalid (GDA_HOLDER (gda_set_get_holders (params)->data));
 	check_expected_signal (model, 'R', -1);
 	dump_data_model (model);
 
@@ -1809,7 +1809,7 @@ test17 (GdaConnection *cnc)
 	gint i, nullcol = -1;
 	GdaColumn *column;
 	GSList *list;
-	for (i = 0, list = ((GdaSet*) iter)->holders;
+	for (i = 0, list = gda_set_get_holders ((GdaSet*) iter);
 	     list;
 	     i++, list = list->next) {
 		if (gda_holder_get_g_type ((GdaHolder *) list->data) == GDA_TYPE_NULL) 
@@ -1845,13 +1845,13 @@ test17 (GdaConnection *cnc)
         }
 
 	column = gda_data_model_describe_column (model, nullcol);
-	if (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (((GdaSet*) iter)->holders, nullcol)) !=
+	if (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet*) iter), nullcol)) !=
 	    gda_column_get_g_type (column)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
                 g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
 			 nullcol, 
-			 g_type_name (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (((GdaSet*) iter)->holders, 
+			 g_type_name (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet*) iter),
 											     nullcol))),
 			 g_type_name (gda_column_get_g_type (column)));
 #endif

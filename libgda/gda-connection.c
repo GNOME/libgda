@@ -188,7 +188,7 @@ dump_exec_params (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params)
 #ifdef GDA_DEBUG
 		g_print ("EVENT> COMMAND: parameters (on cnx %p) for statement [%s]\n", cnc, sql);
 #endif
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			gchar *str;
 			const GValue *value;

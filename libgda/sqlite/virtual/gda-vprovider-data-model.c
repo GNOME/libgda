@@ -892,7 +892,7 @@ virtualNext (sqlite3_vtab_cursor *cur)
 			/* load data for row */
 			GSList *list;
 			gint count;
-			for (count = 0, list = ((GdaSet*) data->iter)->holders; list;
+			for (count = 0, list = gda_set_get_holders ((GdaSet*) data->iter); list;
 			     count++, list = list->next) {
 				GdaHolder *h = (GdaHolder*) list->data;
 				GError *lerror = NULL;
@@ -1501,7 +1501,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, int nData, sqlite3_val
 	/* bind parameters */
 	GSList *list;
 
-	for (list = vtable->td->modif_params [ptype]->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (vtable->td->modif_params [ptype]); list; list = list->next) {
 		const gchar *id;
 		GdaHolder *holder = GDA_HOLDER (list->data);
 		gboolean holder_value_set = FALSE;

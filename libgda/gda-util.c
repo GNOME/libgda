@@ -1543,7 +1543,7 @@ gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *p
 	if (!params)
 		return sqlst;
 	GSList *list;
-	for (list = params->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (params); list; list = list->next) {
 		const GValue *cvalue;
 		cvalue = gda_holder_get_value ((GdaHolder*) list->data);
 		if (cvalue && (G_VALUE_TYPE (cvalue) == GDA_TYPE_NULL))

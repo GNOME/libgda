@@ -2012,7 +2012,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-		for (plist = ((GdaSet *) iter)->holders, vlist = next_values;
+		for (plist = gda_set_get_holders (((GdaSet *) iter)), vlist = next_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
@@ -2083,7 +2083,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-		for (plist = ((GdaSet *) iter)->holders, vlist = imodel->priv->cursor_values;
+		for (plist = gda_set_get_holders (((GdaSet *) iter)), vlist = imodel->priv->cursor_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;

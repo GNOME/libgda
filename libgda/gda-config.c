@@ -1489,7 +1489,7 @@ gda_config_dsn_needs_authentication (const gchar *dsn_name)
 		gda_log_message (_("Provider '%s' not found"), info->provider);
 		return FALSE;
 	}
-	if (pinfo->auth_params && pinfo->auth_params->holders)
+	if (pinfo->auth_params && gda_set_get_holders (pinfo->auth_params))
 		return TRUE;
 	else
 		return FALSE;
@@ -1781,12 +1781,12 @@ gda_config_list_providers (void)
 		if (info->dsn_params) {
 			GSList *params;
 			GString *string = g_string_new ("");
-			for (params = info->dsn_params->holders;
+			for (params = gda_set_get_holders (info->dsn_params);
 			     params; params = params->next) {
 				const gchar *id;
 
 				id = gda_holder_get_id (GDA_HOLDER (params->data));
-				if (params != info->dsn_params->holders)
+				if (params != gda_set_get_holders (info->dsn_params))
 					g_string_append (string, ",\n");
 				g_string_append (string, id);
 			}
@@ -1799,12 +1799,12 @@ gda_config_list_providers (void)
 		if (info->auth_params) {
 			GSList *params;
 			GString *string = g_string_new ("");
-			for (params = info->auth_params->holders;
+			for (params = gda_set_get_holders (info->auth_params);
 			     params; params = params->next) {
 				const gchar *id;
 
 				id = gda_holder_get_id (GDA_HOLDER (params->data));
-				if (params != info->auth_params->holders)
+				if (params != gda_set_get_holders (info->auth_params))
 					g_string_append (string, ",\n");
 				g_string_append (string, id);
 			}

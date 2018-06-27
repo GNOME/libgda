@@ -188,8 +188,8 @@ gda_tree_mgr_select_set_property (GObject *object,
 					if (lerror)
 						g_error_free (lerror);
 				}
-				if (mgr->priv->priv_params && mgr->priv->priv_params->holders)
-					mgr->priv->non_bound_params = g_slist_copy (mgr->priv->priv_params->holders);
+				if (mgr->priv->priv_params && gda_set_get_holders (mgr->priv->priv_params))
+					mgr->priv->non_bound_params = g_slist_copy (gda_set_get_holders (mgr->priv->priv_params));
 			}
 			break;
 		case PROP_PARAMS:
@@ -210,7 +210,7 @@ gda_tree_mgr_select_set_property (GObject *object,
 		GSList *non_bound_params = NULL;
 
 		g_slist_free (mgr->priv->non_bound_params);
-		for (params = mgr->priv->priv_params->holders; params; params = params->next) {
+		for (params = gda_set_get_holders (mgr->priv->priv_params); params; params = params->next) {
 			GdaHolder *frh = GDA_HOLDER (params->data);
 			GdaHolder *toh = gda_set_get_holder (mgr->priv->params, gda_holder_get_id (frh));
 			if (toh) {
@@ -349,7 +349,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 		const GValue *cvalue;
 		GSList *iholders;
 
-		for (iholders = GDA_SET (iter)->holders; iholders; iholders = iholders->next) {
+		for (iholders = gda_set_get_holders (GDA_SET (iter)); iholders; iholders = iholders->next) {
 			GdaHolder *holder = (GdaHolder*) iholders->data;
 
 			if (!gda_holder_is_valid (holder) || !(cvalue = gda_holder_get_value (holder))) {

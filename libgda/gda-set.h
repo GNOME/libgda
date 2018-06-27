@@ -141,8 +141,7 @@ struct _GdaSet
 	GObject         object;
 	GdaSetPrivate  *priv;
 
-	/*< public >*/ 
-	GSList         *holders;   /* list of GdaHolder objects */
+	/*< public >*/
 	GSList         *nodes_list;   /* list of GdaSetNode */
         GSList         *sources_list; /* list of GdaSetSource */
 	GSList         *groups_list;  /* list of GdaSetGroup */
@@ -196,6 +195,7 @@ GdaSet       *gda_set_new_from_spec_node       (xmlNodePtr xml_spec, GError **er
 
 gboolean      gda_set_set_holder_value         (GdaSet *set, GError **error, const gchar *holder_id, ...);
 const GValue *gda_set_get_holder_value         (GdaSet *set, const gchar *holder_id);
+GSList       *gda_set_get_holders              (GdaSet *set);
 GdaHolder    *gda_set_get_holder               (GdaSet *set, const gchar *holder_id);
 GdaHolder    *gda_set_get_nth_holder           (GdaSet *set, gint pos);
 gboolean      gda_set_add_holder               (GdaSet *set, GdaHolder *holder);

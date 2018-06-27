@@ -1397,7 +1397,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
 	complete_path = node_get_complete_path (op, opnode);
 	switch (opnode->type) {
 	case GDA_SERVER_OPERATION_NODE_PARAMLIST:
-		for (list = opnode->d.plist->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (opnode->d.plist); list; list = list->next) {
 			gchar *path;
 			const GValue *value;
 			gchar *str;

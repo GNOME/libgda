@@ -308,13 +308,13 @@ iter_is_correct (GdaDataModelIter *iter, GdaDataModel *ref_model)
         g_object_get (G_OBJECT (iter), "current-row", &rownum, NULL);
 
         cols = gda_data_model_get_n_columns (ref_model);
-        if (cols != (gint)g_slist_length (GDA_SET (iter)->holders)) {
+        if (cols != (gint)g_slist_length (gda_set_get_holders (GDA_SET (iter)))) {
 #ifdef CHECK_EXTRA_INFO
                 g_warning ("Number of columns in iter is not the same as for the referenced data model\n");
 #endif
                 return FALSE;
         }
-        for (i = 0, list = GDA_SET (iter)->holders; i < cols; i++, list = list->next) {
+        for (i = 0, list = gda_set_get_holders (GDA_SET (iter)); i < cols; i++, list = list->next) {
                 const GValue *v1, *v2;
 		GError *lerror = NULL;
                 v1 = gda_holder_get_value (GDA_HOLDER (list->data));

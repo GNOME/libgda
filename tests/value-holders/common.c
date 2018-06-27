@@ -108,10 +108,10 @@ tests_common_set_serialize (GdaSet *set)
 	string = g_string_new ("{");
 
 	/* holders */
-	if (set->holders) {
+	if (gda_set_get_holders (set)) {
 		g_string_append (string, "\"holders\":[");
-		for (list = set->holders; list; list = list->next) {
-			if (list != set->holders)
+		for (list = gda_set_get_holders (set); list; list = list->next) {
+			if (list != gda_set_get_holders (set))
 				g_string_append_c (string, ',');
 			str = tests_common_holder_serialize (GDA_HOLDER (list->data));
 			g_string_append (string, str);
@@ -157,7 +157,7 @@ tests_common_set_serialize (GdaSet *set)
 				g_string_append_c (string, ',');
 
 			g_string_append_c (string, '{');
-			g_string_append_printf (string, "\"holder\":%d", g_slist_index (set->holders, gda_set_node_get_holder (node)));
+			g_string_append_printf (string, "\"holder\":%d", g_slist_index (gda_set_get_holders (set), gda_set_node_get_holder (node)));
 
 			GdaDataModel *source_model;
 			source_model = gda_set_node_get_data_model (node);

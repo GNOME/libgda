@@ -333,7 +333,7 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 	if (GDA_IS_DATA_PROXY (model))
 		nbcols = nbcols / 2;
 
-	for (i = 0, list = ((GdaSet*) iter)->holders;
+	for (i = 0, list = gda_set_get_holders (((GdaSet*) iter));
 	     (i < nbcols) && list;
 	     i++, list = list->next) {
 		GdaColumn *col;
@@ -400,7 +400,7 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
 		if (col < 0) 
 			g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-				     _("Column %d out of range (0-%d)"), col, g_slist_length (paramlist->holders) - 1);
+				     _("Column %d out of range (0-%d)"), col, g_slist_length (gda_set_get_holders (paramlist)) - 1);
 		else if (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) {
 			if (! (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) iter->priv->data_model)->i_iter_set_value) 
 			    ((GdaDataModel *) iter->priv->data_model, iter, col, nvalue, &error)) {
@@ -732,7 +732,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+	for (col = 0, list = gda_set_get_holders ((GdaSet *) iter); list; col++, list = list->next) {
 		const GValue *cvalue;
 		GError *lerror = NULL;
 		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
@@ -830,7 +830,7 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+	for (col = 0, list = gda_set_get_holders ((GdaSet *) iter); list; col++, list = list->next) {
 		const GValue *cvalue;
 		GError *lerror = NULL;
 		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
@@ -929,7 +929,7 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	/* actual sync. */
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-	for (col = 0, list = ((GdaSet *) iter)->holders; list; col++, list = list->next) {
+	for (col = 0, list = gda_set_get_holders ((GdaSet *) iter); list; col++, list = list->next) {
 		const GValue *cvalue;
 		GError *lerror = NULL;
 		cvalue = gda_data_model_get_value_at (model, col, row, &lerror);
@@ -980,7 +980,7 @@ gda_data_model_iter_invalidate_contents (GdaDataModelIter *iter)
 	g_return_if_fail (iter->priv);
 
 	iter->priv->keep_param_changes = TRUE;
-	for (list = GDA_SET (iter)->holders; list; list = list->next)
+	for (list = gda_set_get_holders (GDA_SET (iter)); list; list = list->next)
 		gda_holder_force_invalid (GDA_HOLDER (list->data));
 	iter->priv->keep_param_changes = FALSE;
 }
@@ -1020,9 +1020,9 @@ gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *par
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), -1);
 	g_return_val_if_fail (iter->priv, -1);
 	g_return_val_if_fail (GDA_IS_HOLDER (param), -1);
-	g_return_val_if_fail (g_slist_find (((GdaSet *) iter)->holders, param), -1);
+	g_return_val_if_fail (g_slist_find (gda_set_get_holders ((GdaSet *) iter), param), -1);
 
-	return g_slist_index (((GdaSet *) iter)->holders, param);
+	return g_slist_index (gda_set_get_holders ((GdaSet *) iter), param);
 }
 
 /**
@@ -1061,7 +1061,7 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);
 
-	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
+	param = (GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet *) iter), col);
 	if (param) {
 		if (gda_holder_is_valid (param))
 			return gda_holder_get_value (param);
@@ -1092,7 +1092,7 @@ gda_data_model_iter_get_value_at_e (GdaDataModelIter *iter, gint col, GError **e
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), NULL);
 	g_return_val_if_fail (iter->priv, NULL);
 
-	param = (GdaHolder *) g_slist_nth_data (((GdaSet *) iter)->holders, col);
+	param = (GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet *) iter), col);
 	if (param) {
 		if (gda_holder_is_valid_e (param, error))
 			return gda_holder_get_value (param);
@@ -1127,7 +1127,7 @@ gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue
 	if (!holder) {
 		g_set_error (error, GDA_DATA_MODEL_ITER_ERROR, GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_ERROR,
 			     _("Column %d out of range (0-%d)"), col, 
-			     g_slist_length (((GdaSet *) iter)->holders) - 1);
+			     g_slist_length (gda_set_get_holders ((GdaSet *) iter)) - 1);
 		return FALSE;
 	}
 	return gda_holder_set_value (holder, value, error);

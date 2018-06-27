@@ -995,7 +995,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 			xmlNodePtr top, node;
 
 			top =  xmlNewNode (NULL, BAD_CAST "serv_op_data");
-			for (list = options->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (options); list; list = list->next) {
 				const gchar *id;
 				gchar *str = NULL;
 				const GValue *value;
