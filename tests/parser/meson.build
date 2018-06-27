@@ -1,4 +1,4 @@
-# check_parser check_validation check_normalization check_dml_comp check_script check_rewrite_for_default
+# check_normalization check_dml_comp check_script check_rewrite_for_default
 
 
 
@@ -19,6 +19,29 @@ tchkpr = executable('check_parsercheck_parser',
 	install: false
 	)
 test('Parser', tchkpr,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tchkval = executable('check_validation',
+	['check_validation.c'],
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DROOT_DIR="'+meson.source_root()+'"',
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+test('Validation', tchkval,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
