@@ -51,7 +51,7 @@ dump_iter (GdaDataModelIter *iter)
 	GSList *list;
 	set = GDA_SET (iter);
 	g_print ("Dump of GdaDataModelIter %p, @row %d\n", set, gda_data_model_iter_get_row (iter));
-	for (list = set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (set); list; list = list->next) {
 		GdaHolder *h = GDA_HOLDER (list->data);
 		gchar *str;
 		const GValue *cvalue;
@@ -82,7 +82,7 @@ compare_iter (GdaDataModelIter *iter, gint exp_row, const gchar **col_ids, const
 	if (!col_ids)
 		return TRUE;
 
-	for (i = 0, list = set->holders;
+	for (i = 0, list = gda_set_get_holders (set);
 	     col_ids[i] && list;
 	     i++, list = list->next) {
 		GdaHolder *h = GDA_HOLDER (list->data);
