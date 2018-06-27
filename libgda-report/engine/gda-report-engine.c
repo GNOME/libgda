@@ -1045,7 +1045,7 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 {
 	if (plist) {
 		GSList *list;
-		for (list = plist->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (plist); list; list = list->next) {
 			GdaHolder *source_param;
 			source_param = run_context_find_param (engine, context, 
 							       BAD_CAST gda_holder_get_id (GDA_HOLDER (list->data)));
@@ -1309,7 +1309,7 @@ run_context_find_param (GdaReportEngine *engine, RunContext *context, const xmlC
 					retval = gda_set_get_holder (GDA_SET (ctx->iter), col_name + 1);
 				else if (*col_name == '#') {
 					gint nth = atoi (col_name + 1);
-					retval = g_slist_nth_data (GDA_SET (ctx->iter)->holders, nth);
+					retval = g_slist_nth_data (gda_set_get_holders (GDA_SET (ctx->iter)), nth);
 				}
 				else 
 					retval = g_object_get_data (G_OBJECT (ctx->model), (gchar*) name);
