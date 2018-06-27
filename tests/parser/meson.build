@@ -1,6 +1,3 @@
-# check_rewrite_for_default
-
-
 
 tchkpr = executable('check_parsercheck_parser',
 	['check_parser.c'],
@@ -111,6 +108,29 @@ tchkscript = executable('check_script',
 	install: false
 	)
 test('Script', tchkscript,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
+tchkrwd = executable('check_rewrite_for_default',
+	['check_rewrite_for_default.c'],
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DROOT_DIR="'+meson.source_root()+'"',
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+test('RewriteDefault', tchkrwd,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
