@@ -690,6 +690,7 @@ struct _GdaSetPrivate
 	gboolean         validate_changes;
 
 	GSList         *holders;   /* list of GdaHolder objects */
+	GSList         *nodes_list;   /* list of GdaSetNode */
 };
 
 static void 
@@ -1010,7 +1011,7 @@ gda_set_init (GdaSet *set)
 {
 	set->priv = g_new0 (GdaSetPrivate, 1);
 	set->priv->holders = NULL;
-	set->nodes_list = NULL;
+	set->priv->nodes_list = NULL;
 	set->sources_list = NULL;
 	set->groups_list = NULL;
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
@@ -1744,8 +1745,8 @@ gda_set_dispose (GObject *object)
 	}
 
 	/* free the nodes if there are some */
-	while (set->nodes_list)
-		set_remove_node (set, GDA_SET_NODE (set->nodes_list->data));
+	while (set->priv->nodes_list)
+		set_remove_node (set, GDA_SET_NODE (set->priv->nodes_list->data));
 	while (set->sources_list)
 		set_remove_source (set, GDA_SET_SOURCE (set->sources_list->data));
 
@@ -1793,8 +1794,8 @@ compute_public_data (GdaSet *set)
 	/*
 	 * Get rid of all the previous structures
 	 */
-	while (set->nodes_list)
-		set_remove_node (set, GDA_SET_NODE (set->nodes_list->data));
+	while (set->priv->nodes_list)
+		set_remove_node (set, GDA_SET_NODE (set->priv->nodes_list->data));
 	while (set->sources_list)
 		set_remove_source (set, GDA_SET_SOURCE (set->sources_list->data));
 
@@ -1811,14 +1812,14 @@ compute_public_data (GdaSet *set)
 		node = gda_set_node_new (holder);
 		gda_set_node_set_data_model (node, gda_holder_get_source_model (holder, &col));
 		gda_set_node_set_source_column (node, col);
-		set->nodes_list = g_slist_prepend (set->nodes_list, node);
+		set->priv->nodes_list = g_slist_prepend (set->priv->nodes_list, node);
 	}
-	set->nodes_list = g_slist_reverse (set->nodes_list);
+	set->priv->nodes_list = g_slist_reverse (set->priv->nodes_list);
 
 	/*
 	 * Creation of the GdaSetSource and GdaSetGroup structures 
 	 */
-	for (list = set->nodes_list; list;list = list->next) {
+	for (list = set->priv->nodes_list; list;list = list->next) {
 		node = GDA_SET_NODE (list->data);
 		
 		/* source */
@@ -2004,9 +2005,9 @@ gda_set_merge_with_set (GdaSet *set, GdaSet *set_to_merge)
 static void
 set_remove_node (GdaSet *set, GdaSetNode *node)
 {
-	g_return_if_fail (g_slist_find (set->nodes_list, node));
+	g_return_if_fail (g_slist_find (set->priv->nodes_list, node));
 	gda_set_node_free (node);
-	set->nodes_list = g_slist_remove (set->nodes_list, node);
+	set->priv->nodes_list = g_slist_remove (set->priv->nodes_list, node);
 }
 
 static void
@@ -2128,6 +2129,16 @@ gda_set_get_holders (GdaSet *set) {
 	return set->priv->holders;
 }
 /**
+ * gda_set_get_node_list:
+ *
+ * Returns: (element-type SetNode): a list of #GdaSetNode objects in the set
+ */
+GSList*
+gda_set_get_nodes (GdaSet *set) {
+	g_return_val_if_fail (GDA_IS_SET(set), NULL);
+	return set->priv->nodes_list;
+}
+/**
  * gda_set_get_node:
  * @set: a #GdaSet object
  * @holder: a #GdaHolder object
@@ -2148,7 +2159,7 @@ gda_set_get_node (GdaSet *set, GdaHolder *holder)
 	/* FIXME: May is better to use holder's hash for better performance */
 	g_return_val_if_fail (g_slist_find (set->priv->holders, holder), NULL);
 
-	for (list = set->nodes_list; list && !retval; list = list->next) {
+	for (list = set->priv->nodes_list; list && !retval; list = list->next) {
 		GdaHolder *node_holder;
 		retval = GDA_SET_NODE (list->data);
 		node_holder = gda_set_node_get_holder (retval);
@@ -2390,7 +2401,7 @@ gda_set_dump (GdaSet *set)
 {
 	g_print ("=== GdaSet %p ===\n", set);
 	g_slist_foreach (set->priv->holders, (GFunc) holder_dump, NULL);
-	g_slist_foreach (set->nodes_list, (GFunc) set_node_dump, NULL);
+	g_slist_foreach (set->priv->nodes_list, (GFunc) set_node_dump, NULL);
 	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
 	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
 	g_print ("=== GdaSet %p END ===\n", set);

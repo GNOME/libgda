@@ -142,7 +142,6 @@ struct _GdaSet
 	GdaSetPrivate  *priv;
 
 	/*< public >*/
-	GSList         *nodes_list;   /* list of GdaSetNode */
         GSList         *sources_list; /* list of GdaSetSource */
 	GSList         *groups_list;  /* list of GdaSetGroup */
 };
@@ -207,6 +206,7 @@ void          gda_set_replace_source_model     (GdaSet *set, GdaSetSource *sourc
 						GdaDataModel *model);
 
 /* public data lookup functions */
+GSList       *gda_set_get_nodes                (GdaSet *set);
 GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);
 GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model);
 GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *holder);

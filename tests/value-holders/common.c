@@ -149,11 +149,11 @@ tests_common_set_serialize (GdaSet *set)
 	}
 
 	/* public data */
-	if (set->nodes_list) {
+	if (gda_set_get_nodes (set)) {
 		g_string_append (string, ",\"nodes\":[");
-		for (list = set->nodes_list; list; list = list->next) {
+		for (list = gda_set_get_nodes (set); list; list = list->next) {
 			GdaSetNode *node = (GdaSetNode*) list->data;
-			if (list != set->nodes_list)
+			if (list != gda_set_get_nodes (set))
 				g_string_append_c (string, ',');
 
 			g_string_append_c (string, '{');
@@ -211,7 +211,7 @@ tests_common_set_serialize (GdaSet *set)
 			for (nodes = gda_set_source_get_nodes (source); nodes; nodes = nodes->next) {
 				if (nodes != gda_set_source_get_nodes (source))
 					g_string_append_c (string, ',');
-				g_string_append_printf (string, "%d", g_slist_index (set->nodes_list, nodes->data));
+				g_string_append_printf (string, "%d", g_slist_index (gda_set_get_nodes (set), nodes->data));
 			}
 			g_string_append_c (string, ']');
 

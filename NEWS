@@ -1,3 +1,8 @@
+libgda 5.90
+ - Removing public fields in GdaSet, adding API for GObject Introspection
+ - GdaTimestamp, replaced by GDateTime
+libgda 5.2.4
+libgda 5.2.3
 libgda 5.2.2, 2013-12-23
 
  - Avoid using setlocale() in libraries
