@@ -138,9 +138,6 @@ struct _GdaSet
 {
 	GObject         object;
 	GdaSetPrivate  *priv;
-
-	/*< public >*/
-	GSList         *groups_list;  /* list of GdaSetGroup */
 };
 
 /* struct for the object's class */
@@ -208,6 +205,7 @@ GdaSetNode   *gda_set_get_node                 (GdaSet *set, GdaHolder *holder);
 GSList       *gda_set_get_sources              (GdaSet *set);
 GdaSetSource *gda_set_get_source_for_model     (GdaSet *set, GdaDataModel *model);
 GdaSetSource *gda_set_get_source               (GdaSet *set, GdaHolder *holder);
+GSList       *gda_set_get_groups               (GdaSet *set);
 GdaSetGroup  *gda_set_get_group                (GdaSet *set, GdaHolder *holder);
 
 /* private */

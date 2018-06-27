@@ -692,6 +692,7 @@ struct _GdaSetPrivate
 	GSList         *holders;   /* list of GdaHolder objects */
 	GSList         *nodes_list;   /* list of GdaSetNode */
 	GSList         *sources_list; /* list of GdaSetSource */
+	GSList         *groups_list;  /* list of GdaSetGroup */
 };
 
 static void 
@@ -1014,7 +1015,7 @@ gda_set_init (GdaSet *set)
 	set->priv->holders = NULL;
 	set->priv->nodes_list = NULL;
 	set->priv->sources_list = NULL;
-	set->groups_list = NULL;
+	set->priv->groups_list = NULL;
 	set->priv->holders_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	set->priv->holders_array = NULL;
 	set->priv->read_only = FALSE;
@@ -1751,9 +1752,9 @@ gda_set_dispose (GObject *object)
 	while (set->priv->sources_list)
 		set_remove_source (set, GDA_SET_SOURCE (set->priv->sources_list->data));
 
-	g_slist_foreach (set->groups_list, (GFunc) group_free, NULL);
-	g_slist_free (set->groups_list);
-	set->groups_list = NULL;
+	g_slist_foreach (set->priv->groups_list, (GFunc) group_free, NULL);
+	g_slist_free (set->priv->groups_list);
+	set->priv->groups_list = NULL;
 
 	/* parent class */
 	parent_class->dispose (object);
@@ -1800,9 +1801,9 @@ compute_public_data (GdaSet *set)
 	while (set->priv->sources_list)
 		set_remove_source (set, GDA_SET_SOURCE (set->priv->sources_list->data));
 
-	g_slist_foreach (set->groups_list, (GFunc) group_free, NULL);
-	g_slist_free (set->groups_list);
-	set->groups_list = NULL;
+	g_slist_foreach (set->priv->groups_list, (GFunc) group_free, NULL);
+	g_slist_free (set->priv->groups_list);
+	set->priv->groups_list = NULL;
 
 	/*
 	 * Creation of the GdaSetNode structures
@@ -1845,7 +1846,7 @@ compute_public_data (GdaSet *set)
 		else {
 			group = gda_set_group_new (node);
 			gda_set_group_set_source (group, source);
-			set->groups_list = g_slist_prepend (set->groups_list, group);
+			set->priv->groups_list = g_slist_prepend (set->priv->groups_list, group);
 			if (gda_set_node_get_data_model (node)) {
 				if (!groups)
 					groups = g_hash_table_new (NULL, NULL); /* key = source model, 
@@ -1854,7 +1855,7 @@ compute_public_data (GdaSet *set)
 			}
 		}		
 	}
-	set->groups_list = g_slist_reverse (set->groups_list);
+	set->priv->groups_list = g_slist_reverse (set->priv->groups_list);
 	if (groups)
 		g_hash_table_destroy (groups);
 
@@ -2150,6 +2151,17 @@ gda_set_get_sources (GdaSet *set) {
 	g_return_val_if_fail (GDA_IS_SET(set), NULL);
 	return set->priv->sources_list;
 }
+
+/**
+ * gda_set_get_groups:
+ *
+ * Returns: (element-type SetGroup): a list of #GdaSetGroup objects in the set
+ */
+GSList*
+gda_set_get_groups (GdaSet *set) {
+	g_return_val_if_fail (GDA_IS_SET(set), NULL);
+	return set->priv->groups_list;
+}
 /**
  * gda_set_get_node:
  * @set: a #GdaSet object
@@ -2229,7 +2241,7 @@ gda_set_get_group (GdaSet *set, GdaHolder *holder)
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	g_return_val_if_fail (g_slist_find (set->priv->holders, holder), NULL);
 
-	for (list = set->groups_list; list; list = list->next) {
+	for (list = set->priv->groups_list; list; list = list->next) {
 		retval = GDA_SET_GROUP (list->data);
 		GSList *sublist;
 		for (sublist = gda_set_group_get_nodes (retval); sublist; sublist = sublist->next) {
@@ -2415,7 +2427,7 @@ gda_set_dump (GdaSet *set)
 	g_slist_foreach (set->priv->holders, (GFunc) holder_dump, NULL);
 	g_slist_foreach (set->priv->nodes_list, (GFunc) set_node_dump, NULL);
 	g_slist_foreach (set->priv->sources_list, (GFunc) set_source_dump, NULL);
-	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
+	g_slist_foreach (set->priv->groups_list, (GFunc) set_group_dump, NULL);
 	g_print ("=== GdaSet %p END ===\n", set);
 }
 #endif
