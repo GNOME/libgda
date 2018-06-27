@@ -269,7 +269,7 @@ _gdaui_provider_auth_editor_set_provider (GdauiProviderAuthEditor *auth, const g
 		auth->priv->pinfo = gda_config_get_provider_info (provider);
 		if (auth->priv->pinfo) {
 			auth->priv->provider = g_strdup (auth->priv->pinfo->id);
-			if (auth->priv->pinfo->auth_params && auth->priv->pinfo->auth_params->holders)
+			if (auth->priv->pinfo->auth_params && gda_set_get_holders (auth->priv->pinfo->auth_params))
 				auth->priv->auth_needed = TRUE;
 		}
 	}
@@ -341,7 +341,7 @@ params_to_string (GdauiProviderAuthEditor *auth)
 		return NULL;
 
 	dset = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (auth->priv->auth_widget));
-	for (list = dset->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (dset); list; list = list->next) {
 		GdaHolder *param = GDA_HOLDER (list->data);
 		if (gda_holder_is_valid (param)) {
 			const GValue *value;

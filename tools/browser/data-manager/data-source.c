@@ -830,7 +830,7 @@ data_source_set_params (DataSource *source, GdaSet *params)
 
 	if (source->priv->params) {
 		GSList *list;
-		for (list = source->priv->params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (source->priv->params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			GdaHolder *bind = NULL;
 			if (params)
@@ -1271,7 +1271,7 @@ compute_import_params (DataSource *source)
 				      &source->priv->init_error);
 	if (source->priv->params) {
 		GSList *list;
-		for (list = source->priv->params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (source->priv->params); list; list = list->next) {
 			gda_holder_set_not_null (GDA_HOLDER (list->data), FALSE);
 #ifdef DEBUG_SOURCE
 			g_print ("\tIMPORT [%s]\n", gda_holder_get_id (GDA_HOLDER (list->data)));

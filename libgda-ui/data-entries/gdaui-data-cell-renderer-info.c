@@ -467,7 +467,7 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 			proxied_model = gda_data_proxy_get_proxied_model (proxy);
 			sg = gdaui_set_group_get_group (cellinfo->priv->group);
 			g_assert (gda_set_group_get_n_nodes (sg) == 1);
-			col = g_slist_index (GDA_SET (cellinfo->priv->iter)->holders,
+			col = g_slist_index (gda_set_get_holders (GDA_SET (cellinfo->priv->iter)),
 					     gda_set_node_get_holder (  gda_set_group_get_node (sg)));
 
 			gtk_tree_model_get (GTK_TREE_MODEL (cellinfo->priv->store), &iter, 

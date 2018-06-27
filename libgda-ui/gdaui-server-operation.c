@@ -421,7 +421,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		if (label_widgets) {
 			GSList *params;
 
-			params = plist->holders;
+			params = gda_set_get_holders (plist);
 			while (params) {
 				GtkWidget *label_entry;
 

@@ -857,7 +857,7 @@ compute_sources_dependencies (DataPart *part, GError **error)
 		return TRUE;
 
 	GSList *holders;
-	for (holders = import->holders; holders; holders = holders->next) {
+	for (holders = gda_set_get_holders (import); holders; holders = holders->next) {
 		GdaHolder *holder = (GdaHolder*) holders->data;
 		const gchar *hid = gda_holder_get_id (holder);
 		GSList *list;

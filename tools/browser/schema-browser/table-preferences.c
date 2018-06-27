@@ -659,7 +659,7 @@ plugins_combo_changed_cb (GtkComboBox *combo, TablePreferences *tpref)
 							for (tmp = plugin_str; *tmp && (*tmp != ':'); tmp++);
 							if (*tmp == ':') {
 								ql = gda_quark_list_new_from_string (tmp+1);
-								for (list = plist->holders; list; list = list->next) {
+								for (list = gda_set_get_holders (plist); list; list = list->next) {
 									GdaHolder *holder = GDA_HOLDER (list->data);
 									const gchar *cstr;
 									cstr = gda_quark_list_find (ql, gda_holder_get_id (holder));
@@ -721,7 +721,7 @@ options_form_param_changed_cb (G_GNUC_UNUSED GdauiBasicForm *form, G_GNUC_UNUSED
 				GSList *list;
 				gboolean first = TRUE;
 				plist = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (tpref->priv->options_wid));
-				for (list = plist->holders; list; list = list->next) {
+				for (list = gda_set_get_holders (plist); list; list = list->next) {
 					GdaHolder *holder;
 					const GValue *cvalue;
 					gchar *str, *r1, *r2;
@@ -797,7 +797,7 @@ set_preview_widget (TablePreferences *tpref)
 				GSList *list;
 				
 				plist = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (tpref->priv->options_wid));
-				for (list = plist->holders; list; list = list->next) {
+				for (list = gda_set_get_holders (plist); list; list = list->next) {
 					GdaHolder *holder;
 					holder = GDA_HOLDER (list->data);
 					if (gda_holder_is_valid (holder)) {

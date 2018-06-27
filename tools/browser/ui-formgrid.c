@@ -498,7 +498,7 @@ form_grid_populate_popup_cb (GtkWidget *wid, GtkMenu *menu, UiFormGrid *formgrid
 		}
 		if (!dnh) {
 			GSList *list;
-			for (list = GDA_SET (iter)->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (GDA_SET (iter)); list; list = list->next) {
 				const GValue *cvalue;
 				cvalue = gda_holder_get_value (GDA_HOLDER (list->data));
 				if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING) &&

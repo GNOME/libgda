@@ -242,9 +242,9 @@ update_dependencies_display (DataSourceEditor *editor)
 		GdaSet *import;
 		import = data_source_get_import ( editor->priv->source);
 		g_string_append_printf (string, "**%s**\n", _("Requires:"));
-		if (import && import->holders) {
+		if (import && gda_set_get_holders (import)) {
 			GSList *list;
-			for (list = import->holders; list; list = list->next)
+			for (list = gda_set_get_holders (import); list; list = list->next)
 				g_string_append_printf (string, "%s\n",
 							gda_holder_get_id (GDA_HOLDER (list->data)));
 		}

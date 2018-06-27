@@ -768,7 +768,7 @@ create_columns_data (GdauiRawGrid *grid)
 			g_free (cdata->title);
 			cdata->title = title;
 
-			model_col = g_slist_index (((GdaSet *)grid->priv->iter)->holders, param);
+			model_col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter), param);
 			g_object_set_data (G_OBJECT (renderer), "model_col", GINT_TO_POINTER (model_col));
 
 			g_signal_connect (G_OBJECT (renderer), "changed",
@@ -1104,7 +1104,7 @@ cell_value_set_attributes (G_GNUC_UNUSED GtkTreeViewColumn *tree_column,
 		offset = gda_data_model_get_n_columns (gda_data_proxy_get_proxied_model (grid->priv->proxy));
 
 		g_assert (gda_set_group_get_n_nodes (sg) == 1);
-		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+		col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 				     gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
 				    GDAUI_DATA_STORE_COL_TO_DELETE, &to_be_deleted,
@@ -1183,7 +1183,7 @@ cell_info_set_attributes (GtkTreeViewColumn *tree_column,
 		offset = gda_data_model_get_n_columns (gda_data_proxy_get_proxied_model (grid->priv->proxy));
 
 		g_assert (gda_set_group_get_n_nodes (sg) == 1);
-		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+		col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 				     gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		gtk_tree_model_get (GTK_TREE_MODEL (grid->priv->store), iter,
 				    GDAUI_DATA_STORE_COL_TO_DELETE, &to_be_deleted,
@@ -1221,7 +1221,7 @@ data_cell_value_changed (GtkCellRenderer *renderer, const gchar *path, const GVa
 
 	if (set_iter_from_path (grid, path, &iter)) {
 		gint col;
-		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+		col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 				     gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		gdaui_data_store_set_value (grid->priv->store, &iter, col, new_value);
 	}
@@ -1262,7 +1262,7 @@ data_cell_values_changed (GtkCellRenderer *renderer, const gchar *path,
 		for (params = gda_set_group_get_nodes (sg), list = new_values;
 		     list;
 		     params = params->next, list = list->next) {
-			col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+			col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 					     gda_set_node_get_holder (GDA_SET_NODE (params->data)));
 			gdaui_data_store_set_value (grid->priv->store, &iter, col, (GValue *)(list->data));
 		}
@@ -1320,7 +1320,7 @@ treeview_column_clicked_cb (GtkTreeViewColumn *tree_column, GdauiRawGrid *grid)
 		gint pos;
 		g_assert (param);
 
-		pos = g_slist_index (GDA_SET (grid->priv->iter)->holders, param);
+		pos = g_slist_index (gda_set_get_holders (GDA_SET (grid->priv->iter)), param);
 		if (pos >= 0) {
 			gda_data_proxy_set_ordering_column (grid->priv->proxy, pos, NULL);
 			break;
@@ -1368,7 +1368,7 @@ data_cell_status_changed (GtkCellRenderer *renderer, const gchar *path, GdaValue
 		GSList *list;
 
 		for (list = gda_set_group_get_nodes (sg); list; list = list->next) {
-			col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+			col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 					     gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			gdaui_data_store_set_value (grid->priv->store, &iter, offset + col, attribute);
 		}
@@ -1409,7 +1409,7 @@ data_cell_status_changed (GtkCellRenderer *renderer, const gchar *path, GdaValue
 		gint col;
 
 		g_assert (gda_set_group_get_n_nodes (sg) == 1);
-		col = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+		col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 				     gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		gdaui_data_store_set_value (grid->priv->store, &iter, offset + col, attribute);
 	}
@@ -1990,7 +1990,7 @@ save_as_response_cb (GtkDialog *dialog, gint response_id, GdauiRawGrid *grid)
 				group = g_object_get_data (G_OBJECT (list->data), "__gdaui_group");
 				for (params = gda_set_group_get_nodes (gdaui_set_group_get_group (group))
 				     ; params; nb_cols ++, params = params->next)
-					cols [nb_cols] = g_slist_index (((GdaSet *)grid->priv->iter)->holders,
+					cols [nb_cols] = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter),
 									gda_set_node_get_holder (GDA_SET_NODE (params->data)));
 			}
 		}
@@ -2651,7 +2651,7 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 		cdata->data_cell = GTK_CELL_RENDERER (g_object_ref_sink ((GObject*) renderer));
 		g_hash_table_insert (grid->priv->columns_hash, renderer, cdata);
 
-		model_col = g_slist_index (((GdaSet *)grid->priv->iter)->holders, param);
+		model_col = g_slist_index (gda_set_get_holders ((GdaSet *)grid->priv->iter), param);
 		g_object_set_data (G_OBJECT (renderer), "model_col", GINT_TO_POINTER (model_col));
 
 		g_object_set (G_OBJECT (renderer), "editable", !cdata->data_locked, NULL);		
@@ -3040,7 +3040,7 @@ gdaui_raw_grid_selector_set_column_visible (GdauiDataSelector *iface, gint colum
 	g_return_if_fail (param);
 
 	group = gda_set_get_group ((GdaSet *)grid->priv->iter, param);
-	pos = g_slist_index (((GdaSet *)grid->priv->iter)->groups_list, group);
+	pos = g_slist_index (gda_set_get_groups ((GdaSet *)grid->priv->iter), group);
 	g_assert (pos >= 0);
 
 	viewcol = gtk_tree_view_get_column (GTK_TREE_VIEW (grid), pos);

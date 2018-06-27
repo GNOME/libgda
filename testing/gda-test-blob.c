@@ -362,7 +362,7 @@ exec_statement (GdaConnection *cnc, GdaStatement *stmt, GdaSet *plist, GError **
 			GSList *list;
 
 			g_print ("Query returned a GdaSet:\n");
-			for (list = GDA_SET (exec_res)->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (GDA_SET (exec_res)); list; list = list->next) {
 				gchar *str;
 				str = gda_holder_get_value_str (GDA_HOLDER (list->data), NULL);
 				g_print (" %s => %s\n", gda_holder_get_id (GDA_HOLDER (list->data)), str);

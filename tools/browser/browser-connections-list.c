@@ -199,7 +199,7 @@ selection_changed_cb (GtkTreeSelection *select, BrowserConnectionsList *clist)
 		GdaSet *dset;
 		GdaHolder *holder;
 		dset = gda_set_new_inline (1, "PROVIDER_NAME", G_TYPE_STRING, cncinfo->provider);
-		holder = GDA_HOLDER (dset->holders->data);
+		holder = GDA_HOLDER (gda_set_get_holders (dset)->data);
 		g_object_set (G_OBJECT (holder), "name", _("Database provider"), NULL);
 
 		GdaProviderInfo *pinfo;

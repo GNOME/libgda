@@ -24,7 +24,7 @@ restrict_default_served_by_field (GdauiDataSelector *selector, GdaDataModel *res
 	GdaHolder *param;
 
 	iter = gdaui_data_selector_get_data_set (selector);
-	param = GDA_HOLDER (g_slist_nth_data (GDA_SET (iter)->holders, 2));
+	param = GDA_HOLDER (g_slist_nth_data (gda_set_get_holders (GDA_SET (iter)), 2));
 
 	g_assert (gda_holder_set_source_model (param, restrict_with, restrict_col, NULL));
 }

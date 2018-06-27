@@ -1894,7 +1894,7 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *holder)
 
 	if (!entry && form->priv->set) {
 		GSList *list;
-		for (list = form->priv->set->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (form->priv->set); list; list = list->next) {
 			GdaHolder *holder;
 			holder = GDA_HOLDER (list->data);
 			if (!gda_holder_is_valid (holder)) {

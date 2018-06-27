@@ -299,9 +299,9 @@ t_context_execute_sql_command (TContext *console, const gchar *command,
 	}
 
 	/* fill parameters with some defined parameters */
-	if (params && params->holders) {
+	if (params && gda_set_get_holders (params)) {
 		GSList *list;
-		for (list = params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (params); list; list = list->next) {
 			GdaHolder *h = GDA_HOLDER (list->data);
 			GValue *value;
 			value = t_app_get_parameter_value (gda_holder_get_id (h));

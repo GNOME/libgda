@@ -223,7 +223,7 @@ gdaui_data_selector_set_column_visible (GdauiDataSelector *iface, gint column, g
 		iter = gdaui_data_selector_get_data_set (iface);
 		if (!iter)
 			return;
-		ncols = g_slist_length (GDA_SET (iter)->holders);
+		ncols = g_slist_length (gda_set_get_holders (GDA_SET (iter)));
 		for (i = 0; i < ncols; i++)
 			(GDAUI_DATA_SELECTOR_GET_IFACE (iface)->set_column_visible) (iface, i, visible);
 	}

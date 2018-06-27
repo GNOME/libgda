@@ -447,7 +447,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	gboolean auth_needed = FALSE;
 	GdaProviderInfo *pinfo;
 	pinfo = gda_config_get_provider_info (ad->cncinfo.provider);
-	if (pinfo && pinfo->auth_params && pinfo->auth_params->holders)
+	if (pinfo && gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))
 		auth_needed = TRUE;
 	if (auth_needed) {
 		GdaSet *set;
@@ -576,7 +576,7 @@ auth_dialog_run (AuthDialog *dialog)
 						g_string_free (ad->auth_string, TRUE);
 						ad->auth_string = NULL;
 					}
-					for (plist = set ? set->holders : NULL;
+					for (plist = set ? gda_set_get_holders (set) : NULL;
 					     plist; plist = plist->next) {
 						GdaHolder *holder = GDA_HOLDER (plist->data);
 						const GValue *cvalue = NULL;

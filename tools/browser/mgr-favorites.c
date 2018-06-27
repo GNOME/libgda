@@ -298,7 +298,7 @@ create_summary_for_statement (TConnection *tcnc, const gchar *sql)
 		if (gda_batch_get_parameters (batch, &params, NULL) && params) {
 			GSList *list;
 			GdaHolder *holder;
-			for (list = params->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (params); list; list = list->next) {
 				holder = GDA_HOLDER (list->data);
 				g_string_append_c (string, '\n');
 				g_string_append (string, gda_holder_get_id (holder));

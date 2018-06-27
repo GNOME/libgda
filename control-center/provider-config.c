@@ -75,7 +75,7 @@ provider_selection_changed_cb (GtkTreeSelection *selection, ProviderConfigPrivat
 			g_free (tmp1);
 
 			GSList *list;
-			for (list = set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (set); list; list = list->next) {
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				tmp1 = g_markup_printf_escaped ("%s", gda_holder_get_id (holder));
 				gchar *descr;
@@ -102,13 +102,13 @@ provider_selection_changed_cb (GtkTreeSelection *selection, ProviderConfigPrivat
 		}
 
 		set = pinfo->auth_params;
-		if (set && set->holders) {
+		if (set && gda_set_get_holders (set)) {
 			tmp1 = g_markup_printf_escaped ("%s", _("Authentication parameters"));
 			g_string_append_printf (string, "\n<b><u>%s</u></b>:\n", tmp1);
 			g_free (tmp1);
 
 			GSList *list;
-			for (list = set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (set); list; list = list->next) {
 				GdaHolder *holder = GDA_HOLDER (list->data);
 				tmp1 = g_markup_printf_escaped ("%s", gda_holder_get_id (holder));
 				gchar *descr;

@@ -215,7 +215,7 @@ _gdaui_utility_proxy_compute_attributes_for_group (GdauiSetGroup *group, GdauiDa
         /* list the values in proxy_model for each param in GDA_SET_NODE (group->group->nodes->data)->params */
 	attributes = 0;
         for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)); list; list = list->next) {
-		col = g_slist_index (((GdaSet*)model_iter)->holders, gda_set_node_get_holder (GDA_SET_NODE (list->data)));
+		col = g_slist_index (gda_set_get_holders ((GdaSet*)model_iter), gda_set_node_get_holder (GDA_SET_NODE (list->data)));
                 gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter,
                                     GDAUI_DATA_STORE_COL_TO_DELETE, &local_to_del,
                                     offset + col, &localattr, -1);
@@ -264,7 +264,7 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 		for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)); list; list = list->next) {
 			gint col;
 
-			col = g_slist_index (((GdaSet*)model_iter)->holders, gda_set_node_get_holder (GDA_SET_NODE (list->data)));
+			col = g_slist_index (gda_set_get_holders ((GdaSet*)model_iter), gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter, col, &value, -1);
 			retval = g_list_append (retval, value);
 		}
@@ -310,7 +310,7 @@ _gdaui_utility_proxy_compute_values_for_group (GdauiSetGroup *group, GdauiDataSt
 				cols_index = g_new0 (gint, gda_set_group_get_n_nodes (gdaui_set_group_get_group (group)));
 				for (list = gda_set_group_get_nodes (gdaui_set_group_get_group (group)), j = 0; list; list = list->next, j++) {
 					gint colno;
-					colno = g_slist_index (((GdaSet*)model_iter)->holders, 
+					colno = g_slist_index (gda_set_get_holders ((GdaSet*)model_iter),
 							       gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 					cols_index [j] = gda_set_node_get_source_column (GDA_SET_NODE (list->data));
 					gtk_tree_model_get (GTK_TREE_MODEL (store), tree_iter,
@@ -514,7 +514,7 @@ _gdaui_utility_iter_differ (GdaDataModelIter *iter1, GdaDataModelIter *iter2)
 	GSList *list1, *list2;
         gboolean retval = TRUE;
 
-	for (list1 = GDA_SET (iter1)->holders, list2 = GDA_SET (iter2)->holders;
+	for (list1 = gda_set_get_holders (GDA_SET (iter1)), list2 = gda_set_get_holders (GDA_SET (iter2));
              list1 && list2;
              list1 = list1->next, list2 = list2->next) {
                 GdaHolder *oh, *nh;

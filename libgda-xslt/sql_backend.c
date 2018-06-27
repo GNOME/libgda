@@ -545,7 +545,7 @@ gda_xslt_bk_internal_query (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		return -1;
 
 	if (params != NULL) {
-		plist = params->holders;
+		plist = gda_set_get_holders (params);
 		while (plist && ret == 0) {
 			ret = _gda_xslt_holder_set_value (GDA_HOLDER (plist->data), ctxt);
 			plist = g_slist_next (plist);

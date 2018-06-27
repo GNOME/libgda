@@ -2282,7 +2282,7 @@ extra_command_option (ToolCommand *command, guint argc, const gchar **argv,
 		gda_data_model_set_column_title (model, 1, _("Value"));
 		gda_data_model_set_column_title (model, 2, _("Description"));
 		g_object_set_data (G_OBJECT (model), "name", _("List of options"));
-		for (list = global_t_app->priv->options->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (global_t_app->priv->options); list; list = list->next) {
 			gint row;
 			gchar *str;
 			GValue *value;
@@ -2351,7 +2351,7 @@ extra_command_info (ToolCommand *command, guint argc, const gchar **argv,
 		gda_data_model_set_column_title (model, 1, _("Value"));
 		gda_data_model_set_column_title (model, 2, _("Description"));
 		g_object_set_data (G_OBJECT (model), "name", _("Current connection's information"));
-		for (list = t_connection_get_all_infos (t_context_get_connection (console))->holders;
+		for (list = gda_set_get_holders (t_connection_get_all_infos (t_context_get_connection (console)));
 		     list;
 		     list = list->next) {
 			gint row;
@@ -4145,7 +4145,7 @@ make_options_set_from_gdasql_options (const gchar *context)
 {
 	GdaSet *expopt = NULL;
 	GSList *list, *nlist = NULL;
-	for (list = global_t_app->priv->options->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (global_t_app->priv->options); list; list = list->next) {
 		GdaHolder *param = GDA_HOLDER (list->data);
 		const GValue *cvalue;
 		cvalue = gda_holder_get_attribute (param, context);

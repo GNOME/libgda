@@ -609,7 +609,7 @@ build_test_widget (TestWidgetData *tdata)
 			
 			plist = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (tdata->options));
 			g_assert (plist);
-			for (list = plist->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (plist); list; list = list->next) {
 				GdaHolder *param = GDA_HOLDER (list->data);
 				const GValue *value;
 				value = gda_holder_get_value (param);
@@ -988,7 +988,7 @@ build_form_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const g
 
 		wid = gdaui_form_new (model);
 		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
-		param = plist->holders->data;
+		param = gda_set_get_holders (plist)->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
@@ -1020,7 +1020,7 @@ build_grid_test_for_gtype (G_GNUC_UNUSED GdaDataHandler *dh, GType type, const g
 		
 		wid = gdaui_grid_new (model);
 		plist = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (wid)));
-		param = plist->holders->data;
+		param = gda_set_get_holders (plist)->data;
 
 		value = gda_value_new_from_string (plugin_name, G_TYPE_STRING);
 		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);

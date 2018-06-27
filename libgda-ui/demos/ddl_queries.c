@@ -307,7 +307,7 @@ extract_named_parameters (GdaServerOperation *op, const gchar *root_path, GtkTex
 		gtk_text_buffer_insert (tbuffer, &iter, str, -1);
 		g_free (str);
 		
-		for (params = node->plist->holders; params; params = params->next) {
+		for (params = gda_set_get_holders (node->plist); params; params = params->next) {
 			gchar *npath;
 			npath = g_strdup_printf ("%s/%s", root_path, gda_holder_get_id (GDA_HOLDER (params->data)));
 			extract_named_parameters (op, npath, tbuffer);

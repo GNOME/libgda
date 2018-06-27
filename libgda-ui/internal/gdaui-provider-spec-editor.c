@@ -149,7 +149,7 @@ update_form_contents (GdauiProviderSpecEditor *spec)
 			}
 		}
 
-		list = dset->holders;
+		list = gda_set_get_holders (dset);
 		while (0 && list) {
 			if (!params_set || !g_slist_find (params_set, list->data)) {
 				/* empty parameter */
@@ -378,7 +378,7 @@ params_to_string (GdauiProviderSpecEditor *spec)
 		return NULL;
 
 	dset = gdaui_basic_form_get_data_set (GDAUI_BASIC_FORM (spec->priv->form));
-	for (list = dset->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (dset); list; list = list->next) {
 		GdaHolder *param = GDA_HOLDER (list->data);
 		if (gda_holder_is_valid (param)) {
 			const GValue *value;

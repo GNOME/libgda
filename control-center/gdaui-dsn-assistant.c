@@ -138,7 +138,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 			prov_info = gda_config_get_provider_info (gdaui_provider_selector_get_provider 
 								  (GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider)));
 			g_return_if_fail (prov_info);
-			for (dsn_params = prov_info->dsn_params->holders; dsn_params; dsn_params = dsn_params->next) {
+			for (dsn_params = gda_set_get_holders (prov_info->dsn_params); dsn_params; dsn_params = dsn_params->next) {
 				GdaHolder *param = GDA_HOLDER (dsn_params->data);
 				const GValue *value;
 				
@@ -153,7 +153,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 				if (value && !gda_value_is_null ((GValue *) value)) {
 					gchar *str;
 
-					if (dsn_params == prov_info->dsn_params->holders)
+					if (dsn_params == gda_set_get_holders (prov_info->dsn_params))
 						cnc_string = g_string_new ("");
 					else
 						g_string_append (cnc_string, ";");
@@ -379,7 +379,7 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
 		g_assert (provider);
 		pinfo = gda_config_get_provider_info (provider);
 		g_assert (pinfo);
-		if (pinfo->auth_params && pinfo->auth_params->holders) 
+		if (gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))
 			return PAGE_AUTH_INFO;
 		else
 			return PAGE_LAST;

@@ -99,7 +99,7 @@ t_favorites_actions_get (TFavorites *bfav, TConnection *tcnc, GdaSet *set)
 			}
 			t_connection_define_ui_plugins_for_stmt (tcnc, stmt, params);
 			
-			for (plist = params->holders; plist; plist = plist->next) {
+			for (plist = gda_set_get_holders (params); plist; plist = plist->next) {
 				/* try to find holder in @set */
 				GdaHolder *req_holder, *in_holder;
 				req_holder = GDA_HOLDER (plist->data);

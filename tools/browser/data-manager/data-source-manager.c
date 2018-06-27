@@ -259,7 +259,7 @@ source_depends_on (DataSource *source1, DataSource *source2)
 	if (!export_columns)
 		return FALSE;
 
-	for (holders = import->holders; holders; holders = holders->next) {
+	for (holders = gda_set_get_holders (import); holders; holders = holders->next) {
 		GdaHolder *holder = (GdaHolder*) holders->data;
 		if (GPOINTER_TO_INT (g_hash_table_lookup (export_columns, gda_holder_get_id (holder))) >= 1) {
 #ifdef DEBUG_SOURCES_SORT
@@ -440,7 +440,7 @@ compute_params (DataSourceManager *mgr)
 
 			GSList *holders;
 			gboolean found;
-			for (found = FALSE, holders = set->holders; holders; holders = holders->next) {
+			for (found = FALSE, holders = gda_set_get_holders (set); holders; holders = holders->next) {
 				GSList *list2;
 				for (list2 = mgr->priv->sources_list; list2; list2 = list2->next) {
 					if (list2 == list)

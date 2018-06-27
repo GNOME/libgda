@@ -737,7 +737,7 @@ compute_public_data (GdauiSet *set)
 	
 	/* scan GdaSetSource list */
 	hash = g_hash_table_new (NULL, NULL);
-	for (list = aset->sources_list; list; list = list->next) {
+	for (list = gda_set_get_sources (aset); list; list = list->next) {
 		GdauiSetSource *dsource;
 		dsource = gdaui_set_source_new (GDA_SET_SOURCE (list->data));
 		set->sources_list = g_slist_prepend (set->sources_list, dsource);
@@ -749,7 +749,7 @@ compute_public_data (GdauiSet *set)
 	set->sources_list = g_slist_reverse (set->sources_list);
 
 	/* scan GdaSetGroup list */
-	for (list = aset->groups_list; list; list = list->next) {
+	for (list = gda_set_get_groups (aset); list; list = list->next) {
 		GdauiSetGroup *dgroup;
 		g_assert (list->data);
 		dgroup = gdaui_set_group_new (GDA_SET_GROUP (list->data));
@@ -781,7 +781,7 @@ update_public_data (GdauiSet *set)
 	/* scan GdaSetSource list */
 	elist = set->sources_list;
 	set->sources_list = NULL;
-	for (list = aset->sources_list; list; list = list->next) {
+	for (list = gda_set_get_sources (aset); list; list = list->next) {
 		GdauiSetSource *dsource;
 		dsource = g_hash_table_lookup (shash, list->data);
 		if (dsource) {
@@ -817,7 +817,7 @@ update_public_data (GdauiSet *set)
 	/* scan GdaSetGroup list */
 	elist = set->groups_list;
 	set->groups_list = NULL;
-	for (list = aset->groups_list; list; list = list->next) {
+	for (list = gda_set_get_groups (aset); list; list = list->next) {
 		GdauiSetGroup *dgroup;
 		dgroup = g_hash_table_lookup (ghash, list->data);
 		if (dgroup) {

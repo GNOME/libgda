@@ -2140,7 +2140,7 @@ t_connection_keep_variables (TConnection *tcnc, GdaSet *set)
 	}
 
 	GSList *list;
-	for (list = set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (set); list; list = list->next) {
 		GdaHolder *nh, *eh;
 		nh = GDA_HOLDER (list->data);
 		eh = gda_set_get_holder (tcnc->priv->variables, gda_holder_get_id (nh));
@@ -2184,7 +2184,7 @@ t_connection_load_variables (TConnection *tcnc, GdaSet *set)
 		return;
 
 	GSList *list;
-	for (list = set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (set); list; list = list->next) {
 		GdaHolder *nh, *eh;
 		nh = GDA_HOLDER (list->data);
 		eh = gda_set_get_holder (tcnc->priv->variables, gda_holder_get_id (nh));

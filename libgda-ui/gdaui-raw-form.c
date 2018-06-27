@@ -258,7 +258,7 @@ gdaui_raw_form_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		}
 
 		/* set parameters to their default values */
-		for (list = GDA_SET (form->priv->iter)->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (GDA_SET (form->priv->iter)); list; list = list->next) {
 			GdaHolder *param;
 			const GValue *value;
 
@@ -276,10 +276,10 @@ gdaui_raw_form_perform_action (GdauiDataProxy *iface, GdauiAction action)
 		form_holder_changed_cb (form, NULL);
 
 		/* make the first entry grab the focus */
-		if (form->priv->iter && GDA_SET (form->priv->iter)->holders)
+		if (form->priv->iter && gda_set_get_holders (GDA_SET (form->priv->iter)))
 			gdaui_basic_form_entry_grab_focus (GDAUI_BASIC_FORM (form),
 							   (GdaHolder *)
-							   GDA_SET (form->priv->iter)->holders->data);
+							   gda_set_get_holders (GDA_SET (form->priv->iter))->data);
 		break;
 	}
 	case GDAUI_ACTION_WRITE_MODIFIED_DATA: {
@@ -634,7 +634,7 @@ iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdauiRawForm *form)
 		GdaHolder *param;
 		gint i;
 
-		for (i = 0, params = ((GdaSet *) iter)->holders; params; i++, params = params->next) {
+		for (i = 0, params = gda_set_get_holders (((GdaSet *) iter)); params; i++, params = params->next) {
 			param = (GdaHolder *) params->data;
 			attributes = gda_data_proxy_get_value_attributes (form->priv->proxy, row, i);
 			gdaui_basic_form_entry_set_editable ((GdauiBasicForm *) form,

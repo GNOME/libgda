@@ -244,14 +244,14 @@ query_result_show_history_batch (QueryResult *qres, QueryEditorHistoryBatch *hba
 				GdaSet *set;
 				GSList *list;
 				set = GDA_SET (hitem->result);
-				for (list = set->holders; list; list = list->next) {
+				for (list = gda_set_get_holders (set); list; list = list->next) {
 					GdaHolder *h;
 					const GValue *value;
 					const gchar *cstr;
 					gchar *tmp;
 					h = GDA_HOLDER (list->data);
 					
-					if (list != set->holders)
+					if (list != gda_set_get_holders (set))
 						g_string_append_c (string, '\n');
 					
 					cstr = gda_holder_get_id (h);
@@ -409,14 +409,14 @@ make_widget_for_set (GdaSet *set)
 
 	label = gtk_label_new ("");
 	string = g_string_new ("");
-	for (list = set->holders; list; list = list->next) {
+	for (list = gda_set_get_holders (set); list; list = list->next) {
 		GdaHolder *h;
 		const GValue *value;
 		gchar *tmp;
 		const gchar *cstr;
 		h = GDA_HOLDER (list->data);
 
-		if (list != set->holders)
+		if (list != gda_set_get_holders (set))
 			g_string_append_c (string, '\n');
 		
 		cstr = gda_holder_get_id (h);

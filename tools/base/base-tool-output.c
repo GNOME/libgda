@@ -38,7 +38,7 @@ make_options_set_from_string (const gchar *context, GdaSet *options)
         GdaSet *expopt = NULL;
         GSList *list, *nlist = NULL;
 	if (options) {
-		for (list = options->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (options); list; list = list->next) {
 			GdaHolder *param = GDA_HOLDER (list->data);
 			const GValue *cvalue;
 			cvalue = gda_holder_get_attribute (param, context);
@@ -478,7 +478,7 @@ base_tool_output_result_to_string (ToolCommandResult *res, ToolOutputFormat form
 
 		if (format & BASE_TOOL_OUTPUT_FORMAT_DEFAULT) {
 			string = g_string_new ("");
-			for (list = res->u.set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (res->u.set); list; list = list->next) {
 				const GValue *value;
 				gchar *tmp;
 				const gchar *cstr;
@@ -519,7 +519,7 @@ base_tool_output_result_to_string (ToolCommandResult *res, ToolOutputFormat form
 		else if (format & BASE_TOOL_OUTPUT_FORMAT_XML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "parameters");
-			for (list = res->u.set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (res->u.set); list; list = list->next) {
 				const GValue *value;
 				xmlNodePtr pnode, vnode;
 								
@@ -540,7 +540,7 @@ base_tool_output_result_to_string (ToolCommandResult *res, ToolOutputFormat form
 		else if (format & BASE_TOOL_OUTPUT_FORMAT_HTML) {
 			buffer = xmlBufferCreate ();
 			node = xmlNewNode (NULL, BAD_CAST "ul");
-			for (list = res->u.set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (res->u.set); list; list = list->next) {
 				const GValue *value;
 				xmlNodePtr pnode, vnode;
 								
@@ -560,7 +560,7 @@ base_tool_output_result_to_string (ToolCommandResult *res, ToolOutputFormat form
 		}
 		else if (format & BASE_TOOL_OUTPUT_FORMAT_CSV) {
 			string = g_string_new ("");
-			for (list = res->u.set->holders; list; list = list->next) {
+			for (list = gda_set_get_holders (res->u.set); list; list = list->next) {
 				const GValue *value;
 				gchar *tmp;
 				const gchar *cstr;

@@ -164,7 +164,7 @@ t_config_info_detail_provider (const gchar *provider, GError **error)
 	if (pinfo->dsn_params) {
 		GSList *list;
 		GString *string = NULL;
-		for (list = pinfo->dsn_params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (pinfo->dsn_params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			if (string) {
 				g_string_append (string, ",\n");
@@ -211,7 +211,7 @@ t_config_info_detail_provider (const gchar *provider, GError **error)
 	if (pinfo->auth_params) {
 		GSList *list;
 		GString *string = NULL;
-		for (list = pinfo->auth_params->holders; list; list = list->next) {
+		for (list = gda_set_get_holders (pinfo->auth_params); list; list = list->next) {
 			GdaHolder *holder = GDA_HOLDER (list->data);
 			if (string) {
 				g_string_append (string, ",\n");
