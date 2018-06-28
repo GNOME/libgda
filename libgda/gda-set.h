@@ -40,19 +40,7 @@ typedef enum
 	GDA_SET_IMPLEMENTATION_ERROR
 } GdaSetError;
 
-#ifdef GSEAL_ENABLE
-#else
-struct _GdaSetNode {
-	GdaHolder*    GSEAL(holder);
-	GdaDataModel* GSEAL(source_model);
-	gint          GSEAL(source_column);
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer      GSEAL(_gda_reserved1);
-	gpointer      GSEAL(_gda_reserved2);
-};
-#endif
+typedef struct _GdaSetNode GdaSetNode;
 
 #define GDA_TYPE_SET_NODE (gda_set_node_get_type ())
 #define GDA_SET_NODE(x) ((GdaSetNode *)(x))
@@ -67,18 +55,7 @@ void          gda_set_node_set_data_model    (GdaSetNode *node, GdaDataModel *mo
 gint          gda_set_node_get_source_column (GdaSetNode *node);
 void          gda_set_node_set_source_column (GdaSetNode *node, gint column);
 
-#ifdef GSEAL_ENABLE
-#else
-struct _GdaSetGroup {
-	GSList*       GSEAL(nodes);       /* list of GdaSetNode, at least one entry */
-	GdaSetSource* GSEAL(nodes_source); /* if NULL, then @nodes contains exactly one entry */
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer      GSEAL(_gda_reserved1);
-	gpointer      GSEAL(_gda_reserved2);
-};
-#endif
+typedef struct _GdaSetGroup GdaSetGroup;
 
 #define GDA_TYPE_SET_GROUP (gda_set_group_get_type ())
 #define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
@@ -93,20 +70,7 @@ gint          gda_set_group_get_n_nodes     (GdaSetGroup *sg);
 void          gda_set_group_set_source      (GdaSetGroup *sg, GdaSetSource *source);
 GdaSetSource *gda_set_group_get_source      (GdaSetGroup *sg);
 
-#ifdef GSEAL_ENABLE
-#else
-struct _GdaSetSource {
-	GdaDataModel*   GSEAL(data_model);   /* Can't be NULL */
-	GSList*         GSEAL(nodes);        /* list of #GdaSetNode for which source_model == @data_model */
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer        GSEAL(_gda_reserved1);
-	gpointer        GSEAL(_gda_reserved2);
-	gpointer        GSEAL(_gda_reserved3);
-	gpointer        GSEAL(_gda_reserved4);
-};
-#endif
+typedef struct _GdaSetSource GdaSetSource;
 
 #define GDA_TYPE_SET_SOURCE (gda_set_source_get_type ())
 #define GDA_SET_SOURCE(x) ((GdaSetSource *)(x))
@@ -127,7 +91,6 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 #define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
 #define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
 
-/* FIXME: public members of GdaSet must be SEALED! */
 /**
  * GdaSet:
  * @sources_list: (element-type Gda.SetSource): list of GdaSetSource

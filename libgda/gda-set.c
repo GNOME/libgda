@@ -45,7 +45,6 @@
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
 
-#ifdef GSEAL_ENABLE
 /**
  * GdaSetGroup:
  * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
@@ -63,8 +62,6 @@ struct _GdaSetGroup {
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
 };
-#else
-#endif
 /*
    Register GdaSetGroup type
 */
@@ -242,7 +239,6 @@ gda_set_group_get_n_nodes (GdaSetGroup *sg)
 	return g_slist_length (sg->nodes);
 }
 
-#ifdef GSEAL_ENABLE
 /**
  * GdaSetSource:
  * @data_model: Can't be NULL
@@ -262,8 +258,6 @@ struct _GdaSetSource {
 	gpointer        _gda_reserved3;
 	gpointer        _gda_reserved4;
 };
-#else
-#endif
 
 /*
    Register GdaSetSource type
@@ -422,7 +416,6 @@ gda_set_source_get_n_nodes (GdaSetSource *s)
 	g_return_val_if_fail (s, -1);
 	return g_slist_length (s->nodes);
 }
-#ifdef GSEAL_ENABLE
 /**
  * GdaSetNode:
  * @holder: a #GdaHolder. It can't be NULL
@@ -442,7 +435,6 @@ struct _GdaSetNode {
 	gpointer      _gda_reserved1;
 	gpointer      _gda_reserved2;
 };
-#endif
 /*
    Register GdaSetNode type
 */
