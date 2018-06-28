@@ -64,11 +64,9 @@ libxml_dep = dependency('libxml-2.0')
 
 goocanvas_dep = dependency('goocanvas-2.0', required : false)
 graphviz_dep = dependency('libgvc', required : false)
-glade_dep = dependency('gladeui-2.0', required : false)
 libxslt_dep = dependency('libxslt')
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
-
 
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
 sqlite_internal = true
@@ -114,43 +112,20 @@ glade_pixmap = ''
 pkg_module = import('pkgconfig')
 gnome_module = import('gnome')
 
-if get_option('with-ui')
-  gtk_dep = dependency('gtk+-3.0')
-  gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
-
-  if get_option('with-goocanvas')
-    goocanvas_dep = dependency('goocanvas-2.0')
-  endif
-  
-  if get_option('with-gtksourceview')
-    gtksourceview_dep = dependency('gtksourceview-3.0')
-  endif
-
-  if get_option('with-graphviz')
-    graphviz_dep = dependency('libgvc')
-    graph_new_api_code = '''#include <gvc.h>
-int main() {
-    Agraph_t *graph;
-    graph = agopen ("BrowserCanvasLayout", Agdirected, NULL);
-    return 0;
-}    
-'''
-    graph_new_api_code_results = compiler.compiles(graph_new_api_code)
-    if graph_new_api_code_results
-      conf.set('HAVE_GRAPHVIZ_NEW_API',1)
-    endif
-  endif
-  
-  if glade_dep
-    glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'catalogdir')
-    glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'pixmapdir')    
-  endif  
-endif
-
 if get_option('enable-json')
   jsonglib_dep = dependency('json-glib-1.0')
 endif
 
+
+iso_codes_dep = dependency('iso-codes')
+icodes = iso_codes_dep.get_pkgconfig_variable('domains')
+iso_codes_prefix = ''
+if icodes.contains('4217')
+iso_codes_prefix = iso_codes_dep.get_pkgconfig_variable('prefix')
+endif
+iso_codes_cargs = [
+	'-DISO_CODES_PREFIX="'+iso_codes_prefix+'"'
+	]
 
 # ******************************
 # Checks for iso codes
@@ -218,7 +193,38 @@ sqlite_xml_inf = files(sqlite_xml_fnamesext)
 subdir('po')
 subdir('libgda')
 subdir('providers')
-#subdir('libgda-ui')
+
+gtk_dep = dependency('gtk+-3.0', required: false)
+if get_option('with-ui') and gtk_dep.found()
+	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
+	glade_dep = dependency('gladeui-2.0', required : false)
+	goocanvas_dep = dependency('goocanvas-2.0', required: false)
+	gtksourceview_dep = dependency('gtksourceview-3.0', required: false)
+	graphviz_dep = dependency('libgvc', required: false)
+	graphviz_cargs = []
+	if get_option('with-graphviz') and graphviz_dep.found()
+		graph_new_api_code = '''#include <gvc.h>
+int main() {
+	Agraph_t *graph;
+	graph = agopen ("BrowserCanvasLayout", Agdirected, NULL);
+	return 0;
+}
+'''
+		graph_new_api_code_results = compiler.compiles(graph_new_api_code)
+		if graph_new_api_code_results
+			graphviz_cargs += [
+				'-DHAVE_GRAPHVIZ_NEW_API="1"'
+				]
+		endif
+	endif
+
+	if glade_dep.found()
+		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'catalogdir')
+		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'pixmapdir')
+	endif
+	subdir('libgda-ui')
+endif
+
 subdir('tests')
 subdir('testing')
 

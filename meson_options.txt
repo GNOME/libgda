@@ -1,4 +1,4 @@
-option('with-ui', type : 'boolean', value : false, description : 'Enable GTK+ extension and tools')
+option('with-ui', type : 'boolean', value : true, description : 'Enable GTK+ extension and tools')
 option('with-gtksourceview', type : 'boolean', value : false, description : 'Enable using GtkSourceView')
 option('with-help', type : 'boolean', value : true, description : 'Enable building help (GdaBrowser)')
 option('with-goocanvas', type : 'boolean', value : false, description : 'Enable using GooCanvas')
