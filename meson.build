@@ -127,32 +127,6 @@ iso_codes_cargs = [
 	'-DISO_CODES_PREFIX="'+iso_codes_prefix+'"'
 	]
 
-# ******************************
-# Checks for iso codes
-# ******************************
-#isocodes_prefix = ''
-
-#iso_codes = pkg_module.generate(libraries: 'iso-codes', variables : 'domains')
-#if (iso_codes.find('4217'))
-#  isocodes_prefix = pkg_module.generate(libraries: 'iso-codes', variables : 'prefix') 
-#endif
-### This is original code from configure.ac. It should be converted to meson.
-#ISO_CODES_MODULES="iso-codes"
-#PKG_CHECK_MODULES(ISO_CODES, $ISO_CODES_MODULES, have_iso_codes=yes, have_iso_codes=no)
-#if test x"$have_iso_codes" = "xyes"
-#then
-#        AC_MSG_CHECKING([whether iso-codes has iso-4217 domain])
-#        if $PKG_CONFIG --variable=domains iso-codes | grep -q 4217 ; then
-#                AC_MSG_RESULT([yes])
-#                AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],["`$PKG_CONFIG --variable=prefix iso-codes`"],[ISO codes prefix])
-#        else
-#                AC_MSG_RESULT([no])
-#                AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],"")
-#        fi
-#else
-#        AC_DEFINE_UNQUOTED([ISO_CODES_PREFIX],"")
-#fi
-
 libcryp_config = find_program('libcryp-config', required : false)
 if libcryp_config.found()
   conf.set('HAVE_LIBCRYPT_CONFIG', 1)
@@ -195,7 +169,8 @@ subdir('libgda')
 subdir('providers')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
-if get_option('with-ui') and gtk_dep.found()
+enable_ui = get_option('with-ui') and gtk_dep.found()
+if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : false)
 	goocanvas_dep = dependency('goocanvas-2.0', required: false)
