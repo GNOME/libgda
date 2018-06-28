@@ -7,15 +7,22 @@ DataModel.add_data_from_xml_node.node type="Xml.Node*"
 utility_data_model_dump_data_to_xml.parent type="Xml.Node*"
 utility_holder_load_attributes.node type="Xml.Node*"
 DataModelImport.new_xml_node.node type="Xml.Node*"
+value_new_from_xml.node type="Xml.Node"
 ServerOperation.load_data_from_xml.node type="Xml.Node*"
 
+// Rename methods
 Numeric.get_string nullable=true
 MetaStore.extract_v name="extract"
 ServerOperation.set_value_at_path name="set_value_at"
 ServerOperation.get_value_at_path name="get_value_at"
-ServerOperation.prepare_create_table_v skip=false
 ServerOperation.op_type_to_string parent="Gda.ServerOperationType" name="to_string"
 ServerOperation.string_to_op_type parent="Gda.ServerOperationType" name="from_string"
+
+// Enable skiped objects
+ServerOperation.prepare_create_table_v skip=false
+
+// Set type
+ServerProvider.set_impl_functions skip=true // FIXME:
 
 // Avoid endless null
 
@@ -31,3 +38,4 @@ Connection
 	.statement_execute_non_select.params default=null
 	.statement_execute*.last_insert_row default=null
 	.statement_execute_select_full.col_types default=null
+

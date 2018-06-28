@@ -683,6 +683,25 @@ gda_server_operation_get_property (GObject *object,
 	}
 }
 
+G_DEFINE_BOXED_TYPE(GdaServerOperationNode, gda_server_operation_node, gda_server_operation_node_copy, gda_server_operation_node_free)
+
+GdaServerOperationNode*
+gda_server_operation_node_copy (GdaServerOperationNode *src) {
+	GdaServerOperationNode* cp = g_new0 (GdaServerOperationNode, 1);
+	cp->type = src->type;
+	cp->status = src->status;
+	cp->plist = src->plist;
+	cp->model = src->model;
+	cp->column = src->column;
+	cp->param = src->param;
+	cp->priv = src->priv;
+	return cp;
+}
+void
+gda_server_operation_node_free (GdaServerOperationNode *node) {
+	g_free (node);
+}
+
 /*
  * if %FALSE is returned, then @doc is freed, otherwise it's not stolen.
  * @xmlfile may be %NULL

@@ -3,6 +3,7 @@
  * Copyright (C) 2006 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -144,6 +145,13 @@ typedef struct _GdaServerOperationNode {
 	GdaHolder                    *param; 
 	gpointer                      priv;
 } GdaServerOperationNode;
+
+#define GDA_TYPE_SERVER_OPERATION_NODE gda_server_operation_node_get_type ()
+
+GType    gda_server_operation_node_get_type (void) G_GNUC_CONST;
+GdaServerOperationNode*
+         gda_server_operation_node_copy (GdaServerOperationNode *src);
+void     gda_server_operation_node_free (GdaServerOperationNode *src);
 
 struct _GdaServerOperationClass {
 	GObjectClass               parent_class;
