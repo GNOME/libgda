@@ -1481,3 +1481,20 @@ foreach_normalize (GdaSqlAnyPart *node, G_GNUC_UNUSED GdaConnection *cnc, GError
 
 	return TRUE;
 }
+
+/* GdaSql* definitions */
+
+
+GdaSqlAnyPart*
+gda_sql_any_part_copy (GdaSqlAnyPart *src) {
+	GdaSqlAnyPart *cp = g_new0(GdaSqlAnyPart, 1);
+	cp->type = src->type;
+	cp->parent = src->parent;
+}
+void
+gda_sql_any_part_free (GdaSqlAnyPart *anyp) {
+	g_free (anyp);
+}
+
+G_DEFINE_BOXED_TYPE(GdaSqlAnyPart, gda_sql_any_part, gda_sql_any_part_copy, gda_sql_any_part_free)
+

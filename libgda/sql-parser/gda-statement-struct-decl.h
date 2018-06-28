@@ -214,6 +214,9 @@ struct _GdaSqlAnyPart {
 };
 
 #define GDA_SQL_ANY_PART(x) ((GdaSqlAnyPart*)(x))
+#define GDA_TYPE_SQL_ANY_PART gda_sql_any_part_get_type
+GType    gda_sql_any_part_get_type (void) G_GNUC_CONST;
+
 #define gda_sql_any_part_set_parent(a,p) \
 	if (a) GDA_SQL_ANY_PART(a)->parent = GDA_SQL_ANY_PART(p)
 
