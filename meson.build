@@ -220,6 +220,7 @@ subdir('libgda')
 subdir('providers')
 #subdir('libgda-ui')
 subdir('tests')
+subdir('testing')
 
 
 
