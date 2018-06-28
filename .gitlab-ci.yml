@@ -71,7 +71,7 @@ meson_build:
   artifacts:
     when: on_failure
     paths:
-    - meson-logs/meson-log.txt
+    - _build/meson-logs/meson-log.txt
     expire_in: 1 week
 
 meson_check:
@@ -85,5 +85,5 @@ meson_check:
   artifacts:
     when: on_failure
     paths:
-    - meson-logs/meson-log.txt
+    - _build/meson-logs/meson-log.txt
     expire_in: 1 week
