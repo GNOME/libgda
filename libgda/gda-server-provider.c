@@ -348,7 +348,7 @@ gda_server_provider_get_property (GObject *object,
 }
 
 /**
- * gda_server_provider_set_impl_functions: (skip)
+ * gda_server_provider_set_impl_functions:
  * @klass: a #GdaServerProviderClass object
  * @type: a #GdaServerProviderFunctionsType type
  * @functions_set: (allow-none): a pointer to the function set, or %NULL
@@ -420,7 +420,7 @@ gda_server_provider_set_impl_functions (GdaServerProviderClass *klass,
 }
 
 /**
- * _gda_server_provider_get_impl_functions: (skip)
+ * _gda_server_provider_get_impl_functions:
  * @provider: a #GdaServerProvider object
  * @worker: a #GdaWorker
  * @type: a #GdaServerProviderFunctionsType type
@@ -496,7 +496,7 @@ _gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cn
 }
 
 /**
- * gda_server_provider_get_real_main_context: (skip)
+ * gda_server_provider_get_real_main_context:
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  *
  * Obtain a #GMainContext on which to iterate. This function is reserved to database provider's implementations.

@@ -348,7 +348,7 @@ gda_utility_check_data_model_v (GdaDataModel *model, gint nbcols, GType* types)
 
 
 /**
- * gda_utility_check_data_model: (skip)
+ * gda_utility_check_data_model:
  * @model: a #GdaDataModel object
  * @nbcols: the minimum requested number of columns
  * @...: @nbcols arguments of type GType or -1 (if any data type is accepted)
@@ -907,7 +907,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 }
 
 /**
- * gda_compute_unique_table_row_condition_with_cnc: (skip)
+ * gda_compute_unique_table_row_condition_with_cnc:
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
@@ -1092,7 +1092,7 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
 }
 
 /**
- * gda_compute_unique_table_row_condition: (skip)
+ * gda_compute_unique_table_row_condition:
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to TRUE if a primary key ir required
@@ -1333,7 +1333,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 }
 
 /**
- * gda_compute_select_statement_from_update: (skip)
+ * gda_compute_select_statement_from_update:
  * @update_stmt: an UPDATE statement
  * @error: a place to store errors, or %NULL
  *
@@ -1510,7 +1510,7 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **e
 }
 
 /**
- * gda_rewrite_sql_statement_for_null_parameters: (skip)
+ * gda_rewrite_sql_statement_for_null_parameters:
  * @sqlst: (transfer full): a #GdaSqlStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
  * @out_modified: (allow-none): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
@@ -1667,7 +1667,7 @@ static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd,
 
 
 /**
- * gda_statement_rewrite_for_default_values: (skip)
+ * gda_statement_rewrite_for_default_values:
  * @stmt: a #GdaStatement object
  * @params: a #GdaSet containing the variable's values to be bound when executing @stmt
  * @remove: set to %TRUE if DEFAULT fields are removed, of %FALSE if the "DEFAULT" keyword is used

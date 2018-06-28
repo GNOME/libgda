@@ -27,7 +27,7 @@ G_BEGIN_DECLS
 
 /* main struct */
 /**
- * GdaAttributesManager: (skip)
+ * GdaAttributesManager:
  */
 typedef struct _GdaAttributesManager GdaAttributesManager;
 typedef void (*GdaAttributesManagerFunc) (const gchar *att_name, const GValue *value, gpointer data);

@@ -1921,7 +1921,7 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
 }
 
 /**
- * gda_meta_struct_get_table_column: (skip)
+ * gda_meta_struct_get_table_column:
  * @mstruct: a #GdaMetaStruct object
  * @table: the #GdaMetaTable structure to find the column for
  * @col_name: the name of the column to find (as a G_TYPE_STRING GValue)

@@ -1583,7 +1583,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointe
 }
 
 /**
- * gda_data_select_set_row_selection_condition: (skip)
+ * gda_data_select_set_row_selection_condition:
  * @model: a #GdaDataSelect data model
  * @expr: (transfer none): a #GdaSqlExpr expression
  * @error: (allow-none): a place to store errors, or %NULL

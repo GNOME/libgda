@@ -2898,7 +2898,7 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
 }
 
 /**
- * gda_meta_store_extract: (skip)
+ * gda_meta_store_extract:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
  * @error: (allow-none): a place to store errors, or %NULL
@@ -3137,7 +3137,7 @@ static gboolean prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table
 static gint find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint row,
 			       gint *pk_cols, gint pk_cols_nb, gboolean *out_has_changed, GError **error);
 /**
- * gda_meta_store_modify: (skip)
+ * gda_meta_store_modify:
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table to modify within @store
  * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model

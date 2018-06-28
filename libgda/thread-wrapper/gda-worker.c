@@ -229,7 +229,7 @@ worker_thread_main (GdaWorker *worker)
 }
 
 /**
- * gda_worker_new: (skip)
+ * gda_worker_new:
  *
  * Creates a new #GdaWorker object.
  *
@@ -291,7 +291,7 @@ gda_worker_new (void)
 static GMutex unique_worker_mutex;
 
 /**
- * gda_worker_new_unique: (skip)
+ * gda_worker_new_unique:
  * @location: a place to store and test for existence, not %NULL
  * @allow_destroy: defines if the created @GdaWorker (see case 1 below) will allow its reference to drop to 0 and be destroyed
  *
@@ -330,7 +330,7 @@ gda_worker_new_unique (GdaWorker **location, gboolean allow_destroy)
 }
 
 /**
- * gda_worker_ref: (skip)
+ * gda_worker_ref:
  * @worker: a #GdaWorker
  *
  * Increases @worker's reference count.
@@ -421,7 +421,7 @@ _gda_worker_bg_unref (GdaWorker *worker)
 }
 
 /**
- * gda_worker_unref: (skip)
+ * gda_worker_unref:
  * @worker: (allow-none): a #GdaWorker, or %NULL
  *
  * Decreases @worker's reference count. When reference count reaches %0, then the
@@ -476,7 +476,7 @@ _gda_worker_submit_job_with_its (GdaWorker *worker, ITSignaler *reply_its, GdaWo
 }
 
 /**
- * gda_worker_submit_job: (skip)
+ * gda_worker_submit_job:
  * @worker: a #GdaWorker object
  * @callback_context: (allow-none): a #GMainContext, or %NULL (ignored if no setting has been defined with gda_worker_set_callback())
  * @func: the function to call from the worker thread
@@ -541,7 +541,7 @@ gda_worker_submit_job (GdaWorker *worker, GMainContext *callback_context, GdaWor
 }
 
 /**
- * gda_worker_fetch_job_result: (skip)
+ * gda_worker_fetch_job_result:
  * @worker: a #GdaWorker object
  * @job_id: the ID of the job, as returned by gda_worker_submit_job()
  * @out_result: (allow-none): a place to store the value returned by the execution of the requested function within the worker thread, or %NULL
@@ -615,7 +615,7 @@ gda_worker_fetch_job_result (GdaWorker *worker, guint job_id, gpointer *out_resu
 }
 
 /**
- * gda_worker_cancel_job: (skip)
+ * gda_worker_cancel_job:
  * @worker: a #GdaWorker object
  * @job_id: the ID of the job, as returned by gda_worker_submit_job()
  * @error: (allow-none): a place to store errors, or %NULL
@@ -668,7 +668,7 @@ gda_worker_cancel_job (GdaWorker *worker, guint job_id, GError **error)
 }
 
 /**
- * gda_worker_forget_job: (skip)
+ * gda_worker_forget_job:
  * @worker: a #GdaWorker object
  * @job_id: the ID of the job, as returned by gda_worker_submit_job()
  *
@@ -721,7 +721,7 @@ dc_callback (ITSignaler *its, DeclaredCallback *dc)
 }
 
 /**
- * gda_worker_set_callback: (skip)
+ * gda_worker_set_callback:
  * @worker: a #GdaWorker object
  * @context: (allow-none): a #GMainContext, or %NULL
  * @callback: (allow-none): the function to call when a job submitted from within the calling thread using gda_worker_submit_job() has finished being processed.
@@ -838,7 +838,7 @@ do_itsignaler_cb (ITSignaler *its, GMainLoop *loop)
 }
 
 /**
- * gda_worker_do_job: (skip)
+ * gda_worker_do_job:
  * @worker: a #GdaWorker object
  * @context: (allow-none): a #GMainContext to execute a main loop in (while waiting), or %NULL
  * @timeout_ms: the maximum number of milisecons to wait before returning, or %0 for unlimited wait
@@ -1012,7 +1012,7 @@ gda_worker_do_job (GdaWorker *worker, GMainContext *context, gint timeout_ms,
 }
 
 /**
- * gda_worker_wait_job: (skip)
+ * gda_worker_wait_job:
  * @worker: a #GdaWorker object
  * @func: the function to call from the worker thread
  * @data: (allow-none): the data to pass to @func, or %NULL
@@ -1075,7 +1075,7 @@ gda_worker_wait_job (GdaWorker *worker, GdaWorkerFunc func, gpointer data, GDest
 }
 
 /**
- * gda_worker_thread_is_worker: (skip)
+ * gda_worker_thread_is_worker:
  * @worker: a #GdaWorker
  *
  * Tells if the thread from which this function is called is @worker's worker thread.

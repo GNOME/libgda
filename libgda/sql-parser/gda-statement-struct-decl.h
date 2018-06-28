@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 extern GQuark gda_sql_error_quark (void);
 #define GDA_SQL_ERROR gda_sql_error_quark ()
 /*
- * GdaSqlError: (skip)
+ * GdaSqlError:
  *
  **/
 typedef enum {
@@ -44,7 +44,7 @@ typedef enum {
 	GDA_SQL_VALIDATION_ERROR
 } GdaSqlError;
 /*
- * GdaSqlErrorType: (skip)
+ * GdaSqlErrorType:
  *
  **/
 typedef GdaSqlError GdaSqlErrorType;
@@ -53,47 +53,47 @@ typedef GdaSqlError GdaSqlErrorType;
  * Struct declarations
  */
 /*
- * GdaSqlAnyPart: (skip)
+ * GdaSqlAnyPart:
  *
  **/
 typedef struct _GdaSqlAnyPart   GdaSqlAnyPart;
 /*
- * GdaSqlStatement: (skip)
+ * GdaSqlStatement:
  *
  **/
 typedef struct _GdaSqlStatement GdaSqlStatement;
 /*
- * GdaSqlStatementUnknown: (skip)
+ * GdaSqlStatementUnknown:
  *
  **/
 typedef struct _GdaSqlStatementUnknown GdaSqlStatementUnknown;
 /*
- * GdaSqlStatementTransaction: (skip)
+ * GdaSqlStatementTransaction:
  *
  **/
 typedef struct _GdaSqlStatementTransaction GdaSqlStatementTransaction;
 /*
- * GdaSqlStatementSelect: (skip)
+ * GdaSqlStatementSelect:
  *
  **/
 typedef struct _GdaSqlStatementSelect GdaSqlStatementSelect;
 /*
- * GdaSqlStatementInsert: (skip)
+ * GdaSqlStatementInsert:
  *
  **/
 typedef struct _GdaSqlStatementInsert GdaSqlStatementInsert;
 /*
- * GdaSqlStatementDelete: (skip)
+ * GdaSqlStatementDelete:
  *
  **/
 typedef struct _GdaSqlStatementDelete GdaSqlStatementDelete;
 /*
- * GdaSqlStatementUpdate: (skip)
+ * GdaSqlStatementUpdate:
  *
  **/
 typedef struct _GdaSqlStatementUpdate GdaSqlStatementUpdate;
 /*
- * GdaSqlStatementCompound: (skip)
+ * GdaSqlStatementCompound:
  *
  **/
 typedef struct _GdaSqlStatementCompound GdaSqlStatementCompound;
@@ -143,7 +143,7 @@ typedef enum {
  * Structures identification
  */
 /**
- * GdaSqlAnyPartType: (skip)
+ * GdaSqlAnyPartType:
  * @GDA_SQL_ANY_STMT_SELECT: structure is a #GdaSqlStatementSelect
  * @GDA_SQL_ANY_STMT_INSERT: structure is a #GdaSqlStatementInsert
  * @GDA_SQL_ANY_STMT_UPDATE: structure is a #GdaSqlStatementUpdate
@@ -201,7 +201,7 @@ typedef enum {
 
 
 /**
- * GdaSqlAnyPart: (skip)
+ * GdaSqlAnyPart:
  * @type: type of structure, as a #GdaSqlAnyPartType enum.
  * @parent: pointer to the parent #GdaSqlAnyPart structure
  *
@@ -223,7 +223,7 @@ struct _GdaSqlAnyPart {
 
 /* returns FALSE if a recursive walking should be stopped (mandatory is @error is set) */
 /**
- * GdaSqlForeachFunc: (skip)
+ * GdaSqlForeachFunc:
  * @part: the current #GdaSqlAnyPart node
  * @data: user data passed to gda_sql_any_part_foreach().
  * @error: pointer to a place to store errors
@@ -241,7 +241,7 @@ gboolean gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, 
 gboolean gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error);
 
 /**
- * GdaSqlStatementContentsInfo: (skip)
+ * GdaSqlStatementContentsInfo:
  *
  * Contents' infos
  */
@@ -266,7 +266,7 @@ typedef struct {
 } GdaSqlStatementContentsInfo;
 
 /**
- * GdaSqlStatementCheckValidityData: (skip)
+ * GdaSqlStatementCheckValidityData:
  *
  * Validation against a dictionary
  */

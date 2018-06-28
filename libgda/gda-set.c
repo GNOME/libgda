@@ -1201,7 +1201,7 @@ gda_set_new_inline (gint nb, ...)
 }
 
 /**
- * gda_set_set_holder_value: (skip)
+ * gda_set_set_holder_value:
  * @set: a #GdaSet object
  * @error: (allow-none): a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value

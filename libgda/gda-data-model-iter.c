@@ -691,7 +691,7 @@ set_param_attributes (GdaHolder *holder, GdaValueAttribute flags)
 }
 
 /**
- * gda_data_model_iter_move_to_row_default: (skip)
+ * gda_data_model_iter_move_to_row_default:
  * @model: a #GdaDataModel
  * @iter: a #GdaDataModelIter iterating in @model
  * @row: the requested row
@@ -789,7 +789,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_move_next_default: (skip)
+ * gda_data_model_iter_move_next_default:
  * @model: a #GdaDataModel
  * @iter: a #GdaDataModelIter iterating in @model
  * 
@@ -888,7 +888,7 @@ gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_move_prev_default: (skip)
+ * gda_data_model_iter_move_prev_default:
  * @model: a #GdaDataModel
  * @iter: a #GdaDataModelIter iterating in @model
  * 

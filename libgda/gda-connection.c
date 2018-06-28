@@ -5370,7 +5370,7 @@ gda_connection_value_to_sql_string (GdaConnection *cnc, GValue *from)
 }
 
 /**
- * gda_connection_internal_transaction_started: (skip)
+ * gda_connection_internal_transaction_started:
  * @cnc: a #GdaConnection
  * @parent_trans: (allow-none): name of the parent transaction, or %NULL
  * @trans_name: transaction's name, or %NULL
@@ -5420,7 +5420,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 }
 
 /**
- * gda_connection_internal_transaction_rolledback: (skip)
+ * gda_connection_internal_transaction_rolledback:
  * @cnc: a #GdaConnection
  * @trans_name: (allow-none): transaction's name, or %NULL
  *
@@ -5473,7 +5473,7 @@ gda_connection_internal_transaction_rolledback (GdaConnection *cnc, const gchar 
 }
 
 /**
- * gda_connection_internal_transaction_committed: (skip)
+ * gda_connection_internal_transaction_committed:
  * @cnc: a #GdaConnection
  * @trans_name: (allow-none): transaction's name, or %NULL
  *
@@ -5526,7 +5526,7 @@ gda_connection_internal_transaction_committed (GdaConnection *cnc, const gchar *
 }
 
 /**
- * gda_connection_internal_savepoint_added: (skip)
+ * gda_connection_internal_savepoint_added:
  * @cnc: a #GdaConnection
  * @parent_trans: (allow-none): name of the parent transaction, or %NULL
  * @svp_name: savepoint's name, or %NULL
@@ -5570,7 +5570,7 @@ gda_connection_internal_savepoint_added (GdaConnection *cnc, const gchar *parent
 }
 
 /**
- * gda_connection_internal_savepoint_rolledback: (skip)
+ * gda_connection_internal_savepoint_rolledback:
  * @cnc: a #GdaConnection
  * @svp_name: (allow-none): savepoint's name, or %NULL
  *
@@ -5614,7 +5614,7 @@ gda_connection_internal_savepoint_rolledback (GdaConnection *cnc, const gchar *s
 }
 
 /**
- * gda_connection_internal_savepoint_removed: (skip)
+ * gda_connection_internal_savepoint_removed:
  * @cnc: a #GdaConnection
  * @svp_name: (allow-none): savepoint's name, or %NULL
  *
@@ -5658,7 +5658,7 @@ gda_connection_internal_savepoint_removed (GdaConnection *cnc, const gchar *svp_
 }
 
 /**
- * gda_connection_internal_statement_executed: (skip)
+ * gda_connection_internal_statement_executed:
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement which has been executed
  * @params: (allow-none): execution's parameters
@@ -5736,7 +5736,7 @@ gda_connection_internal_statement_executed (GdaConnection *cnc, GdaStatement *st
 }
 
 /**
- * gda_connection_internal_change_transaction_state: (skip)
+ * gda_connection_internal_change_transaction_state:
  * @cnc: a #GdaConnection
  * @newstate: the new state
  *
@@ -5768,7 +5768,7 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_internal_reset_transaction_status: (skip)
+ * gda_connection_internal_reset_transaction_status:
  * @cnc: a #GdaConnection
  *
  * Internal function to be called by database providers to reset the transaction status.
@@ -5917,7 +5917,7 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
  */
 
 /**
- * gda_connection_internal_set_provider_data: (skip)
+ * gda_connection_internal_set_provider_data:
  * @cnc: a #GdaConnection object
  * @data: a #GdaServerProviderConnectionData, which can be extended as needed by the provider for which @cnc is opened
  * @destroy_func: function to call when the connection closes and @data needs to be destroyed
@@ -5961,7 +5961,7 @@ _gda_connection_internal_set_worker_thread (GdaConnection *cnc, GThread *thread)
 }
 
 /**
- * gda_connection_internal_get_worker: (skip)
+ * gda_connection_internal_get_worker:
  * @data: (allow-none): a #GdaServerProviderConnectionData, or %NULL
  *
  * Retreive a pointer to the #GdaWorker used internally by the connection. This function is reserved to
@@ -5979,7 +5979,7 @@ gda_connection_internal_get_worker (GdaServerProviderConnectionData *data)
 }
 
 /**
- * gda_connection_internal_get_provider_data_error: (skip)
+ * gda_connection_internal_get_provider_data_error:
  * @cnc: a #GdaConnection object
  * @error: (allow-none): a place to store errors, or %NULL
  *

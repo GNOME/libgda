@@ -104,7 +104,7 @@ gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaC
 }
 
 /**
- * gda_server_provider_handler_use_default: (skip)
+ * gda_server_provider_handler_use_default:
  * @provider: a server provider
  * @type: a #GType
  *

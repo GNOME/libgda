@@ -358,7 +358,7 @@ static void cell_layout_data_func (GtkCellLayout *cell_layout, GtkCellRenderer *
 				   GtkTreeModel *tree_model, GtkTreeIter *iter, GdauiCombo *combo);
 
 /**
- * gdaui_combo_set_model: (skip)
+ * gdaui_combo_set_model:
  * @combo: a #GdauiCombo widget.
  * @model: a #GdaDataModel object.
  * @n_cols: number of columns in the model to be shown

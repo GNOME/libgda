@@ -391,7 +391,7 @@ gdaui_tree_store_get_property (GObject *object,
 }
 
 /**
- * gdaui_tree_store_new: (skip)
+ * gdaui_tree_store_new:
  * @tree: a #GdaTree object
  * @n_columns: number of columns in the tree store
  * @...: couples of (GType, attribute name) for each column, from first to last
@@ -521,7 +521,7 @@ gdaui_tree_store_get_node (GdauiTreeStore *store, GtkTreeIter *iter)
 }
 
 /**
- * gdaui_tree_store_get_iter: (skip)
+ * gdaui_tree_store_get_iter:
  * @store: a #GdauiTreeStore object
  * @iter: a pointer to a #GtkTreeIter
  * @node: a #GdaTreeNode in @store

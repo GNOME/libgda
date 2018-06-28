@@ -54,7 +54,7 @@ typedef enum {
  * Structure definition
  */
 /**
- * GdaSqlStatementCompound: (skip)
+ * GdaSqlStatementCompound:
  * @any: 
  * @compound_type: 
  * @stmt_list:

@@ -1106,7 +1106,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 }
 
 /**
- * gda_server_operation_get_node_info: (skip)
+ * gda_server_operation_get_node_info:
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
  * @...: the arguments to insert into the format string
@@ -1351,7 +1351,7 @@ gda_server_operation_string_to_op_type (const gchar *str)
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**
- * gda_server_operation_save_data_to_xml: (skip)
+ * gda_server_operation_save_data_to_xml:
  * @op: a #GdaServerOperation object
  * @error: (allow-none): a place to store errors or %NULL
  * 
@@ -2073,7 +2073,7 @@ gda_server_operation_get_value_at_path (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_value_at: (skip)
+ * gda_server_operation_get_value_at:
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
@@ -2105,7 +2105,7 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 }
 
 /**
- * gda_server_operation_get_sql_identifier_at: (skip)
+ * gda_server_operation_get_sql_identifier_at:
  * @op: a #GdaServerOperation object
  * @cnc: (allow-none): a #GdaConnection, or %NULL
  * @prov: (allow-none): a #GdaServerProvider, or %NULL
@@ -2378,7 +2378,7 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 }
 
 /**
- * gda_server_operation_set_value_at: (skip)
+ * gda_server_operation_set_value_at:
  * @op: a #GdaServerOperation object
  * @value: (allow-none): a string
  * @error: a place to store errors or %NULL

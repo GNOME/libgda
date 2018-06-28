@@ -122,7 +122,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 		/**
-		 * GdauiDataEntry::contents-valid: (skip)
+		 * GdauiDataEntry::contents-valid:
 		 * @model: the #GdauiDataEntry
 		 * @error: a #GError to set erros to or NULL
 		 *
@@ -245,7 +245,7 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_content_is_valid: (skip)
+ * gdaui_data_entry_content_is_valid:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @error: (allow-none): a place to store an error, or %NULL
  *

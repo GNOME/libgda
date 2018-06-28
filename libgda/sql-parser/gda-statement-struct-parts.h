@@ -32,57 +32,57 @@
 
 G_BEGIN_DECLS
 /*
- * GdaSqlExpr: (skip)
+ * GdaSqlExpr:
  *
  **/
 typedef struct _GdaSqlExpr      GdaSqlExpr;
 /*
- * GdaSqlField: (skip)
+ * GdaSqlField:
  *
  **/
 typedef struct _GdaSqlField     GdaSqlField;
 /*
- * GdaSqlTable: (skip)
+ * GdaSqlTable:
  *
  **/
 typedef struct _GdaSqlTable     GdaSqlTable;
 /*
- * GdaSqlFunction: (skip)
+ * GdaSqlFunction:
  *
  **/
 typedef struct _GdaSqlFunction  GdaSqlFunction;
 /*
- * GdaSqlOperation: (skip)
+ * GdaSqlOperation:
  *
  **/
 typedef struct _GdaSqlOperation GdaSqlOperation;
 /*
- * GdaSqlCase: (skip)
+ * GdaSqlCase:
  *
  **/
 typedef struct _GdaSqlCase GdaSqlCase;
 /*
- * GdaSqlSelectField: (skip)
+ * GdaSqlSelectField:
  *
  **/
 typedef struct _GdaSqlSelectField GdaSqlSelectField;
 /*
- * GdaSqlSelectTarget: (skip)
+ * GdaSqlSelectTarget:
  *
  **/
 typedef struct _GdaSqlSelectTarget GdaSqlSelectTarget;
 /*
- * GdaSqlSelectJoin: (skip)
+ * GdaSqlSelectJoin:
  *
  **/
 typedef struct _GdaSqlSelectJoin GdaSqlSelectJoin;
 /*
- * GdaSqlSelectFrom: (skip)
+ * GdaSqlSelectFrom:
  *
  **/
 typedef struct _GdaSqlSelectFrom GdaSqlSelectFrom;
 /*
- * GdaSqlSelectOrder: (skip)
+ * GdaSqlSelectOrder:
  *
  **/
 typedef struct _GdaSqlSelectOrder GdaSqlSelectOrder;
@@ -91,7 +91,7 @@ typedef struct _GdaSqlSelectOrder GdaSqlSelectOrder;
  * Any Expression
  */
 /**
- * GdaSqlExpr: (skip)
+ * GdaSqlExpr:
  * @any: inheritance structure
  * @value: (allow-none): a #GValue, or %NULL. Please see specific note about this field. 
  * @param_spec: (allow-none): a #GdaSqlParamSpec, or %NULL if this is not a variable
@@ -150,7 +150,7 @@ void             gda_sql_expr_take_select    (GdaSqlExpr *expr, GdaSqlStatement 
  * Any Table's field
  */
 /**
- * GdaSqlField: (skip)
+ * GdaSqlField:
  * any: 
  * @field_name: 
  * @validity_meta_table_column: 
@@ -182,7 +182,7 @@ void             gda_sql_field_take_name      (GdaSqlField *field, GValue *value
  * Any table
  */
 /**
- * GdaSqlTable: (skip)
+ * GdaSqlTable:
  * @any: 
  * @table_name: 
  * @validity_meta_object: 
@@ -215,7 +215,7 @@ void             gda_sql_table_take_name      (GdaSqlTable *table, GValue *value
  * A function with any number of arguments
  */
 /**
- * GdaSqlFunction: (skip)
+ * GdaSqlFunction:
  * @any: inheritance structure
  * @function_name: name of the function , in the form [[catalog.]schema.]function_name
  * @args_list: list of #GdaSqlExpr expressions, one for each argument
@@ -319,7 +319,7 @@ typedef enum {
 } GdaSqlOperatorType;
 
 /**
- * GdaSqlOperation: (skip)
+ * GdaSqlOperation:
  * @any: inheritance structure
  * @operator_type: 
  * @operands: list of #GdaSqlExpr operands
@@ -348,7 +348,7 @@ GdaSqlOperatorType    gda_sql_operation_operator_from_string (const gchar *op);
  * A CASE expression
  */
 /**
- * GdaSqlCase: (skip)
+ * GdaSqlCase:
  * @any: inheritance structure
  * @base_expr: expression to test
  * @when_expr_list: list of #GdaSqlExpr, one for each WHEN clause
@@ -380,7 +380,7 @@ gchar             *gda_sql_case_serialize      (GdaSqlCase *sc);
  * Any expression in a SELECT ... before the FROM clause
  */
 /**
- * GdaSqlSelectField: (skip)
+ * GdaSqlSelectField:
  * @any: inheritance structure
  * @expr: expression
  * @field_name: field name part of @expr if @expr represents a field
@@ -426,7 +426,7 @@ void               gda_sql_select_field_take_alias     (GdaSqlSelectField *field
  * Any TARGET ... in a SELECT statement
  */
 /**
- * GdaSqlSelectTarget: (skip)
+ * GdaSqlSelectTarget:
  * @any: inheritance structure
  * @expr: expression
  * @table_name: table name part of @expr if @expr represents a table
@@ -486,7 +486,7 @@ typedef enum {
 } GdaSqlSelectJoinType;
 
 /**
- * GdaSqlSelectJoin: (skip)
+ * GdaSqlSelectJoin:
  * @any: inheritance structure
  * @type: type of join
  * @position: represents a join between a target at (pos &lt; @position) and the one at @position
@@ -521,7 +521,7 @@ const gchar       *gda_sql_select_join_type_to_string (GdaSqlSelectJoinType type
  * Any FROM ... in a SELECT statement
  */
 /**
- * GdaSqlSelectFrom: (skip)
+ * GdaSqlSelectFrom:
  * @any: inheritance structure
  * @targets: (element-type Gda.SqlSelectTarget): list of #GdaSqlSelectTarget
  * @joins: (element-type Gda.SqlSelectJoin): list of #GdaSqlSelectJoin
@@ -552,7 +552,7 @@ void               gda_sql_select_from_take_new_join  (GdaSqlSelectFrom *from, G
  * Any expression in a SELECT ... after the ORDER BY
  */
 /**
- * GdaSqlSelectOrder: (skip)
+ * GdaSqlSelectOrder:
  * @any: inheritance structure
  * @expr: expression to order on
  * @asc: TRUE is ordering is ascending

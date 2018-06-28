@@ -704,7 +704,7 @@ gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid)
 }
 
 /**
- * gda_xa_transaction_string_to_id: (skip)
+ * gda_xa_transaction_string_to_id:
  * @str: a string representation of a #GdaXaTransactionId, in the "gtrid,bqual,formatID" format
  *
  * Creates a new #GdaXaTransactionId structure from its string representation, it's the opposite

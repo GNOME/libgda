@@ -39,7 +39,7 @@
 G_BEGIN_DECLS
 
 /**
- * GdaServerProviderFunctionsType: (skip)
+ * GdaServerProviderFunctionsType:
  *
  * Represents the different types of sets of virtual functions which can be implemented for each provider
  */
@@ -59,7 +59,7 @@ void gda_server_provider_set_impl_functions (GdaServerProviderClass *klass,
 gpointer gda_server_provider_get_impl_functions_for_class (GObjectClass *klass, GdaServerProviderFunctionsType type);
 
 /**
- * GdaServerProviderBase: (skip)
+ * GdaServerProviderBase:
  * @get_name:
  * @get_version:
  *
@@ -174,7 +174,7 @@ typedef struct {
 
 
 /**
- * GdaServerProviderMeta: (skip)
+ * GdaServerProviderMeta:
  * @_info: 
  * @_btypes: 
  * @_udt: 
@@ -463,7 +463,7 @@ typedef enum {
 
 
 /**
- * GdaServerProviderXa: (skip)
+ * GdaServerProviderXa:
  * @xa_start:
  * @xa_end:
  * @xa_prepare:

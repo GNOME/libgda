@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 
 
 /**
- * GdaBlobOpFunctions: (skip)
+ * GdaBlobOpFunctions:
  */
 typedef struct {
 	/* Virtual methods */
