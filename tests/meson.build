@@ -234,5 +234,7 @@ subdir('meta-store')
 subdir('multi-threading')
 subdir('parser')
 subdir('providers')
-#subdir('ui')
 subdir('value-holders')
+if enable_ui
+subdir('ui')
+endif
