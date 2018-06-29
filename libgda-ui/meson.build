@@ -73,6 +73,7 @@ libgda_ui_sources += libgda_ui_internal_sources
 libgda_ui_resourcesc = custom_target('libgdaui_resourcesc',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
+		'--sourcedir='+join_paths(meson.build_root(),'libgda-ui'),
 		'--sourcedir='+join_paths(meson.source_root(),'libgda-ui'),
 		'--generate-source',
 		'--target', '@OUTPUT@',
@@ -82,7 +83,7 @@ libgda_ui_resourcesc = custom_target('libgdaui_resourcesc',
 		],
 	input: 'gdaui.gresource.xml',
 	output: 'gdaui-resources.c',
-	depends: xml_res,
+	depends: int_xmlf,
 	install: false
 	)
 
@@ -97,7 +98,7 @@ libgda_ui_resourcesh = custom_target('libgdaui_resourcesh',
 		],
 	input: 'gdaui.gresource.xml',
 	output: 'gdaui-resources.h',
-	depends: xml_res,
+	depends: int_xmlf,
 	install: false
 	)
 libgda_ui_resources = []

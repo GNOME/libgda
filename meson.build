@@ -164,6 +164,9 @@ endforeach
 
 sqlite_xml_inf = files(sqlite_xml_fnamesext)
 
+
+intlmerge = find_program('intltool-merge')
+
 subdir('po')
 subdir('libgda')
 subdir('providers')

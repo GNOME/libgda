@@ -90,14 +90,17 @@ foreach xf : data_entries_xmlin_names
 		)
 endforeach
 
-
-
+int_xmlf = []
 foreach xt : data_entries_xmlin_names
-	i18n.merge_file(
+	int_xmlf += custom_target(xt+'.xml',
+		command: [intlmerge,
+			'-u', '-x',
+			join_paths(meson.source_root(),'po'),
+			'@INPUT@', '@OUTPUT@'
+			],
 		input: xt+'.xml.in',
-		output: xt+'.xml.in.h',
-		type: 'xml',
-		po_dir: join_paths(meson.build_root(),'po')
+		output: xt+'.xml',
+		install: false
 		)
 endforeach
 
