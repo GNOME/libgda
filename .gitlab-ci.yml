@@ -80,6 +80,7 @@ meson_check:
   -  meson _build
   - cd _build
   - ninja
+  - broadway &
   - meson test
   - cd ..
   artifacts:

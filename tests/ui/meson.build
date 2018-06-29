@@ -23,7 +23,8 @@ tckuis = executable('check_sets',
 test('UISets', tckuis,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_BUILD_DIR='+meson.build_root(),
+		'GDK_BACKEND=broadway'
 		]
 	)
 
@@ -47,6 +48,7 @@ tckuirgm = executable('check_raw_grid_model',
 test('UIRawGridModel', tckuirgm,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_BUILD_DIR='+meson.build_root(),
+		'GDK_BACKEND=broadway'
 		]
 	)
