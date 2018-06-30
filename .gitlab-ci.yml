@@ -6,7 +6,6 @@ image: ubuntu:devel
 
 stages:
      - build
-     - check
 
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
@@ -40,14 +39,8 @@ autotools_build:
   script:
   - ./autogen.sh
   - make
-  - make install
-
-autotools_check:
-  stage: check
-  script:
-  - ./autogen.sh --without-ui --enable-gdaui-gi=no
-  - make
-  - make check
+  - broadwayd &
+  - GDK_BACKEND=broadway make check
   - make install
   artifacts:
     when: on_failure
@@ -65,19 +58,6 @@ meson_build:
   stage: build
   script:
   - meson _build
-  - cd _build
-  - ninja
-  - cd ..
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/meson-logs/meson-log.txt
-    expire_in: 1 week
-
-meson_check:
-  stage: check
-  script:
-  -  meson _build
   - cd _build
   - ninja
   - broadwayd &
