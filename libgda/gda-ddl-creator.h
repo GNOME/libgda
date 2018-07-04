@@ -43,17 +43,16 @@ typedef  enum {
     GDA_DDL_CREATOR_DOC_NULL,
     GDA_DDL_CREATOR_UNVALID_XML,
     GDA_DDL_CREATOR_UNVALID_SCHEMA,
-    GDA_DDL_CREATOR_SERVER_OPERATION
+    GDA_DDL_CREATOR_SERVER_OPERATION,
+    GDA_DDL_CREATOR_FILE_READ,
+    GDA_DDL_CREATOR_PARSE_CONTEXT,
+    GDA_DDL_CREATOR_PARSE,
+    GDA_DDL_CREATOR_PARSE_CHUNK,
+    GDA_DDL_CREATOR_CONNECTION_CLOSED
 } GdaDdlCreatorError;
 
 #define GDA_DDL_CREATOR_ERROR gda_ddl_creator_error_quark()
 GQuark gda_ddl_creator_error_quark (void);
-
-typedef enum {
-    GDA_DDL_CREATOR_UPDATE,
-    GDA_DDL_CREATOR_REPLACE
-}GdaDdlCreatorMode;
-
 
 GdaDdlCreator		*gda_ddl_creator_new        (void);
 void             gda_ddl_creator_free       (GdaDdlCreator *self);
@@ -61,6 +60,10 @@ void             gda_ddl_creator_free       (GdaDdlCreator *self);
 gboolean		     gda_ddl_creator_parse_file_from_path	(GdaDdlCreator *self,
                                                        const gchar *xmlfile,
                                                        GError **error);
+
+gboolean         gda_ddl_creator_parse_file (GdaDdlCreator *self,
+                                             GFile *xmlfile,
+                                             GError **error);
 
 const GList     *gda_ddl_creator_get_tables	(GdaDdlCreator *self);
 const GList     *gda_ddl_creator_get_views	(GdaDdlCreator *self);
@@ -80,7 +83,7 @@ gboolean         gda_ddl_creator_perform_operation (GdaDdlCreator *self,
                                                     GError **error);
 
 gboolean         gda_ddl_creator_write_to_file (GdaDdlCreator *self,
-                                                GFile *path,
+                                                GFile *file,
                                                 GError **error);
 
 gboolean         gda_ddl_creator_write_to_path (GdaDdlCreator *self,

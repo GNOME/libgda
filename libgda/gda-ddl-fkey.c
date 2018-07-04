@@ -20,6 +20,7 @@
 #include "gda-ddl-fkey.h"
 #include <glib/gi18n-lib.h>
 #include "gda-ddl-buildable.h"
+#include "gda-meta-struct.h"
 
 typedef struct
 {
@@ -51,6 +52,28 @@ static const gchar *OnAction[] = {
     "CASCADE"
 };
 
+/* This is convenient way to name all nodes from xml file */
+enum {
+  GDA_DDL_FKEY_NODE,
+  GDA_DDL_FKEY_REFTABLE,
+  GDA_DDL_FKEY_ONUPDATE,
+  GDA_DDL_FKEY_ONDELETE,
+  GDA_DDL_FKEY_FKFIELD,
+  GDA_DDL_FKEY_FKFIELD_NAME,
+  GDA_DDL_FKEY_FKFIELD_REFIELD,
+  GDA_DDL_FKEY_N_NODES
+};
+
+const gchar *gdaddlfkeynodes[GDA_DDL_FKEY_N_NODES] = {
+  "fkey",
+  "reftable",
+  "onupdate",
+  "ondelete",
+  "fk_field",
+  "name",
+  "reffield"
+};
+
 /**
  * gda_ddl_fkey_new:
  *
@@ -62,6 +85,73 @@ GdaDdlFkey *
 gda_ddl_fkey_new (void)
 {
   return g_object_new (GDA_TYPE_DDL_FKEY, NULL);
+}
+
+/**
+ * gda_ddl_fkey_new_from_meta:
+ * @metafkey: a #GdaMetaTableForeignKey instance
+ * 
+ * Create a new instance from the corresponding meta object. If @metafkey is %NULL, 
+ * this function is identical to gda_ddl_fkey_new()
+ *
+ */
+GdaDdlFkey*
+gda_ddl_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
+{
+  if (!metafkey)
+    return gda_ddl_fkey_new();
+
+  GdaMetaDbObject *refobject = GDA_META_DB_OBJECT (metafkey->meta_table);
+
+  GdaDdlFkey *fkey = gda_ddl_fkey_new ();
+  
+  gda_ddl_fkey_set_ref_table (fkey,refobject->obj_full_name);
+
+  for (gint i = 0; i < metafkey->cols_nb; i++)
+      gda_ddl_fkey_set_field (fkey,
+                              metafkey->fk_names_array[i],
+                              metafkey->ref_pk_names_array[i]);
+
+  GdaMetaForeignKeyPolicy policy = GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY(metafkey);
+
+  switch (policy)
+    {
+    case GDA_META_FOREIGN_KEY_NONE:
+      gda_ddl_fkey_set_onupdate (fkey,GDA_DDL_FKEY_NO_ACTION);
+      break;
+    case GDA_META_FOREIGN_KEY_CASCADE:
+      gda_ddl_fkey_set_onupdate (fkey,GDA_DDL_FKEY_CASCADE);
+      break;
+    case GDA_META_FOREIGN_KEY_RESTRICT:
+      gda_ddl_fkey_set_onupdate (fkey,GDA_DDL_FKEY_RESTRICT);
+      break;
+    case GDA_META_FOREIGN_KEY_SET_DEFAULT:
+      gda_ddl_fkey_set_onupdate (fkey,GDA_DDL_FKEY_SET_DEFAULT);
+      break;
+    default:
+      break;
+    }
+  
+  policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(metafkey);
+  switch (policy)
+    {
+    case GDA_META_FOREIGN_KEY_NONE:
+      gda_ddl_fkey_set_ondelete (fkey,GDA_DDL_FKEY_NO_ACTION);
+      break;
+    case GDA_META_FOREIGN_KEY_CASCADE:
+      gda_ddl_fkey_set_ondelete (fkey,GDA_DDL_FKEY_CASCADE);
+      break;
+    case GDA_META_FOREIGN_KEY_RESTRICT:
+      gda_ddl_fkey_set_ondelete (fkey,GDA_DDL_FKEY_RESTRICT);
+      break;
+    case GDA_META_FOREIGN_KEY_SET_DEFAULT:
+      gda_ddl_fkey_set_ondelete (fkey,GDA_DDL_FKEY_SET_DEFAULT);
+      break;
+    default:
+      break;
+    }
+
+  return fkey;
 }
 
 static void
@@ -106,7 +196,7 @@ gda_ddl_fkey_init (GdaDdlFkey *self)
  * @error: #GError object to store error
  *
  * Use this method to populate corresponding #GdaDdlFkey object from xml node. Usually,
- * this method is called from #GdaDdlCreator suring parsing the imput xml file.
+ * this method is called from #GdaDdlCreator during parsing the input xml file.
  *
  * The corresponding DTD section suitable for parsing by this method should correspond
  * th the following code:
@@ -122,7 +212,7 @@ gda_ddl_fkey_init (GdaDdlFkey *self)
  * <!ATTLIST fk_field reffield  IDREF #REQUIRED>
  * ]|
  *
- * Returns: %FALSE if an error occures, %TRUE otherwise
+ * Returns: %FALSE if an error occurs, %TRUE otherwise
  *
  * Since: 6.0
  */
@@ -131,19 +221,25 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
                          xmlNodePtr       node,
                          GError         **error)
 {
-  GdaDdlFkey *self = GDA_DDL_FKEY (buildable);
+  g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node, FALSE);
-  //    g_return_val_if_fail(!*error, FALSE);
+  
   /*
    *    <fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
    *        <fk_field name="column_name" reffield="column_name"/>
    *        <fk_field name="column_id" reffield="column_"/>
    *    </fkey>
    */
+  xmlChar *name = NULL;
+  if (g_strcmp0 ((gchar*)node->name,gdaddlfkeynodes[GDA_DDL_FKEY_NODE]))
+    return FALSE;
+
+  GdaDdlFkey *self = GDA_DDL_FKEY (buildable);
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
+
   xmlChar *prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)"reftable");
+  prop = xmlGetProp (node,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_REFTABLE]);
 
   g_assert (prop); /* Bug with xml valdation */
 
@@ -151,56 +247,59 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)"onupdate");
+  prop = xmlGetProp (node,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_ONUPDATE]);
 
   g_assert(prop);
 
   priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
 
-  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
+  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+    {
       if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
         priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
-  }
+    }
 
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)"ondelete");
+  prop = xmlGetProp (node,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_ONDELETE]);
 
   g_assert(prop);
 
-  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++) {
+  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+    {
       if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
         priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
-  }
+    }
 
   xmlFree (prop);
   prop = NULL;
 
-  xmlChar *name = NULL;
+  name = NULL;
   xmlChar *reffield = NULL;
 
-  for (xmlNodePtr it = node->children; it; it = it->next) {
-      if (!g_strcmp0 ((gchar *)it->name, "fk_field")) {
-          name = xmlGetProp (it,(xmlChar *)"name");
+  for (xmlNodePtr it = node->children; it; it = it->next)
+    {
+      if (!g_strcmp0 ((gchar *)it->name,gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD]))
+        {
+          name = xmlGetProp (it,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD_NAME]);
 
           g_assert(name);
-          priv->mp_field = g_list_append (priv->mp_field,
-                                          g_strdup ((const gchar *)name));
+          priv->mp_field = g_list_append (priv->mp_field,g_strdup ((const gchar *)name));
           xmlFree (name);
 
-          reffield = xmlGetProp (it, (xmlChar *)"reffield");
+          reffield = xmlGetProp (it,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD_REFIELD]);
           g_assert(reffield);
           priv->mp_ref_field = g_list_append (priv->mp_ref_field,
                                               g_strdup ((const gchar *)reffield));
           xmlFree (reffield);
-      } /* end of if */
-  } /* end of for loop */
+        } /* end of if */
+    } /* end of for loop */
   return TRUE;
 }
 
 /**
- * gda_ddl_fkey_write_xml:
+ * gda_ddl_fkey_write_node:
  * @self: An object #GdaDdlFkey
  * @writer: An object to #xmlTextWriterPtr instance
  * @error: A place to store error
@@ -220,113 +319,41 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
  */
 static gboolean
 gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
-                         xmlTextWriterPtr  writer,
-                         GError          **error)
+                         xmlNodePtr rootnode,
+                         GError **error)
 {
-  GdaDdlFkey *self = GDA_DDL_FKEY (buildable);
-  g_return_val_if_fail (writer, FALSE);
+  g_return_val_if_fail (buildable, FALSE);
+  g_return_val_if_fail (rootnode,FALSE);
 
+  GdaDdlFkey *self = GDA_DDL_FKEY (buildable);
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-  int res = 0;
+  xmlNodePtr node = NULL;
+  node  = xmlNewChild (rootnode,NULL,(xmlChar*)gdaddlfkeynodes[GDA_DDL_FKEY_NODE],NULL);
 
-  res = xmlTextWriterStartElement(writer, BAD_CAST "fkey");
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
-                   _("Can't set start element <fkey> in xml tree\n"));
-      return FALSE;
-  }
+  xmlNewProp (node,BAD_CAST gdaddlfkeynodes[GDA_DDL_FKEY_REFTABLE],
+              BAD_CAST priv->mp_ref_table);
+  
+  xmlNewProp (node,BAD_CAST gdaddlfkeynodes[GDA_DDL_FKEY_ONUPDATE],
+              BAD_CAST priv->m_onupdate);
 
-  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"reftable",
-                                     (xmlChar*)priv->mp_ref_table);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set reftable attribute to element <fkey>\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"onupdate",
-                                     (xmlChar*)OnAction[priv->m_onupdate]);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set onupdate attribute to element <fkey>\n"));
-      return FALSE;
-  }
-
-  res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"ondelete",
-                                     (xmlChar*)OnAction[priv->m_ondelete]);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set ondelete attribute to element <fkey>\n"));
-      return FALSE;
-  }
+  xmlNewProp (node,BAD_CAST gdaddlfkeynodes[GDA_DDL_FKEY_ONDELETE],
+              BAD_CAST priv->m_ondelete);
 
   GList *it = priv->mp_field;
   GList *jt = priv->mp_ref_field;
 
-  for (; it && jt; it = it->next, jt=jt->next ) {
-      res = xmlTextWriterStartElement(writer, BAD_CAST "fk_field");
-      if (res < 0) {
-          g_set_error (error,
-                       GDA_DDL_BUILDABLE_ERROR,
-                       GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
-                       _("Can't set start element <fk_field> in xml tree\n"));
-          return FALSE;
-      }
+  for (; it && jt; it = it->next, jt=jt->next )
+    {
+      xmlNodePtr tnode = NULL;
+      tnode = xmlNewChild (node,NULL,(xmlChar*)gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD],NULL);
 
-      res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"name",
-                                         (xmlChar*)it->data);
+      xmlNewProp (tnode,(xmlChar*)gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD_NAME],
+                  BAD_CAST it->data);
 
-      if (res < 0) {
-          g_set_error (error,
-                       GDA_DDL_BUILDABLE_ERROR,
-                       GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                       _("Can't set attribute name to element <fk_field>\n"));
-          return FALSE;
-      }
-
-      res = xmlTextWriterWriteAttribute (writer,(const xmlChar*)"reffield",
-                                         (xmlChar*)jt->data);
-
-      if (res < 0) {
-          g_set_error (error,
-                       GDA_DDL_BUILDABLE_ERROR,
-                       GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                       _("Can't set reffield attribute to element <fk_field>\n"));
-          return FALSE;
-      }
-
-      res = xmlTextWriterEndElement (writer);
-
-      if (res < 0) {
-          g_set_error (error,
-                       GDA_DDL_BUILDABLE_ERROR,
-                       GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
-                       _("Can't close element <fk_field>\n"));
-          return FALSE;
-      }
-  }
-
-  res = xmlTextWriterEndElement (writer);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
-                   _("Can't close element <fkey>\n"));
-      return FALSE;
-  }
+      xmlNewProp (tnode,(xmlChar*)gdaddlfkeynodes[GDA_DDL_FKEY_FKFIELD_REFIELD],
+                  BAD_CAST jt->data);
+    }
 
   return TRUE;
 }
@@ -342,8 +369,8 @@ gda_ddl_fkey_buildable_interface_init (GdaDdlBuildableInterface *iface)
  * gda_ddl_fkey_get_ondelete:
  * @self: An object #GdaDdlFkey
  *
- * Return: ON DELETE action as a string or %NULL
- * if the action hasn't been set
+ * Return: ON DELETE action as a string. If the action is not set then the string corresponding to
+ * NO_ACTION is returned. 
  *
  * Since: 6.0
  */
@@ -360,8 +387,10 @@ gda_ddl_fkey_get_ondelete (GdaDdlFkey *self)
 /**
  * gda_ddl_fkey_get_ondelete_id:
  * @self: a #GdaDdlFkey object
+ * 
+ * The default value is %NO_ACTION
  *
- * Return: ON DELETE action as a #GdaDdlFkeyReferenceAction
+ * Return: ON DELETE action as a #GdaDdlFkeyReferenceAction.
  *
  * Since: 6.0
  */
@@ -378,7 +407,7 @@ gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
  * @self: An object #GdaDdlFkey
  * @id: #GdaDdlFkeyReferenceAction action to set
  *
- * Set action for ON UPDATE
+ * Set action for ON_UPDATE
  *
  * Since: 6.0
  */
@@ -398,7 +427,7 @@ gda_ddl_fkey_set_onupdate (GdaDdlFkey *self,
  * @self: An object #GdaDdlFkey
  * @id: #GdaDdlFkeyReferenceAction action to set
  *
- * Set action for ON DELETE
+ * Set action for ON_DELETE
  *
  * Since: 6.0
  */
@@ -416,7 +445,7 @@ gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
 /**
  * gda_ddl_fkey_get_onupdate:
  *
- * Return: ON UPDATE action as a string. Never %NULL
+ * Return: ON_UPDATE action as a string. Never %NULL
  *
  * Since: 6.0
  */
@@ -433,7 +462,7 @@ gda_ddl_fkey_get_onupdate (GdaDdlFkey *self)
 /**
  * gda_ddl_fkey_get_onupdate_id:
  *
- * Return: ON UPDATE action as a #GdaDdlFkeyReferenceAction
+ * Return: ON_UPDATE action as a #GdaDdlFkeyReferenceAction
  *
  * Since: 6.0
  */
@@ -489,8 +518,8 @@ gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
  * gda_ddl_fkey_get_field_name:
  * @self: a #GdaDdlFkey object
  *
- * Returns: (transfer none): A const #GList of strings where each string
- * corresponds to a foregin key field or %NULL.
+ * Returns: A const #GList of strings where each string
+ * corresponds to a foreign key field or %NULL.
  *
  * Since: 6.0
  */
@@ -509,7 +538,7 @@ gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
  * @self: a #GdaDdlFkey object
  *
  * Returns: (transfer none): A #GList of strings where each string corresponds
- * to a foregin key reference field or %NULL.
+ * to a foreign key reference field or %NULL.
  *
  * Since: 6.0
  */
@@ -522,7 +551,6 @@ gda_ddl_fkey_get_ref_field (GdaDdlFkey *self)
 
   return priv->mp_ref_field;
 }
-
 
 /**
  * gda_ddl_fkey_free:
@@ -537,7 +565,6 @@ gda_ddl_fkey_free (GdaDdlFkey *self)
 {
   g_clear_object (&self);
 }
-
 
 /**
  * gda_ddl_fkey_set_field:
@@ -564,6 +591,18 @@ gda_ddl_fkey_set_field (GdaDdlFkey  *self,
   priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
 }
 
+/**
+ * gda_ddl_fkey_prepare_create:
+ * @self: a #GdaDdlFkey instance
+ * @op: a #GdaServerOperation to populate
+ * @error: error container
+ *
+ * Prepare @op object for execution by populating with information stored in @self. 
+ *
+ * Returns: %TRUE if no error or %FALSE otherwise.
+ *
+ * Since: 6.0
+ */
 gboolean
 gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                               GdaServerOperation *op,
@@ -611,12 +650,12 @@ gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                                              "/FKEY_S/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
                                              fkeycount))
         return FALSE;
-   
+
       fkeycount++;
-      
-      /* It will amke for loop overloaded and hard to read. Therefore, 
-       * advancemnet to the next element will be performed here. It is
-       * only one reason. 
+
+      /* It will make for loop overloaded and hard to read. Therefore,
+       * advancement to the next element will be performed here. It is
+       * only one reason.
        */
       itfield = itfield->next;
       itreffield = itreffield->next;

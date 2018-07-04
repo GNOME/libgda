@@ -24,7 +24,8 @@
 #include <glib.h>
 #include <libxml/parser.h>
 #include "gda-ddl-buildable.h"
-#include <libgda/sql-parser/gda-sql-statement.h>
+#include "gda-server-operation.h"
+#include "gda-meta-struct.h"
 
 G_BEGIN_DECLS
 
@@ -38,7 +39,7 @@ struct _GdaDdlColumnClass
 };
 
 typedef  enum {
-    GDA_DDL_COLUMN_ERROR_TYPE
+  GDA_DDL_COLUMN_ERROR_TYPE
 }GdaDdlColumnError;
 
 #define GDA_DDL_COLUMN_ERROR gda_ddl_column_error_quark()
@@ -93,11 +94,12 @@ void            gda_ddl_column_set_check        (GdaDdlColumn *self,
 
 gboolean        gda_ddl_column_prepare_create   (GdaDdlColumn *self,
                                                  GdaServerOperation *op,
+                                                 guint order,
                                                  GError **error);
 
-gboolean        gda_ddl_column_prepare_add   (GdaDdlColumn *self,
-                                              GdaServerOperation *op,
-                                              GError **error);
+gboolean        gda_ddl_column_prepare_add      (GdaDdlColumn *self,
+                                                 GdaServerOperation *op,
+                                                 GError **error);
 G_END_DECLS
 
 #endif /* GDA_DDL_COLUMN_H */
