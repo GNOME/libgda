@@ -56,3 +56,4 @@ test_rt_parser = executable('test-rt-parser',
 	link_with: [libgda, libgda_report],
 	install: false
 	)
+test('RtParser', test_rt_parser)

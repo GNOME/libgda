@@ -64,7 +64,7 @@ libxml_dep = dependency('libxml-2.0')
 
 goocanvas_dep = dependency('goocanvas-2.0', required : false)
 graphviz_dep = dependency('libgvc', required : false)
-libxslt_dep = dependency('libxslt')
+libxslt_dep = dependency('libxslt', required: false)
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
 
@@ -202,6 +202,10 @@ int main() {
 	endif
 	subdir('libgda-ui')
 	subdir('libgda-report')
+endif
+
+if libxslt_dep.found()
+	subdir('libgda-xslt')
 endif
 
 subdir('tests')
