@@ -1,14 +1,14 @@
 test_headers = files([
-	'gda-ddl-creator.h'
+#	'gda-ddl-creator.h'
 	])
 
 inc_testsh = include_directories ('.')
 inc_testsh_dep = declare_dependency (include_directories : inc_testsh)
 
 tests_sources = files([
-	'gda-ddl-creator.c',
-	'test-cnc-utils.h',
-	'test-cnc-utils.c',
+#	'gda-ddl-creator.c',
+#	'test-cnc-utils.h',
+#	'test-cnc-utils.c',
 	'data-model-errors.h',
 	'data-model-errors.c'
 	])
@@ -21,28 +21,28 @@ common_sources = files([
 tests_sources += test_headers
 tests_sources += common_sources
 
-tddlc = executable('test-ddl-creator test',
-	['test-ddl-creator.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
-	link_with: libgda,
-	dependencies: [
-		libgda_dep,
-		inc_rooth_dep,
-		inc_sqliteh_dep
-		],
-	install: false
-	)
-test('DDLCreator', tddlc,
-	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
-		]
-	)
+# tddlc = executable('test-ddl-creator test',
+# 	['test-ddl-creator.c'] + tests_sources,
+# 	c_args: [
+# 		'-include',
+# 		meson.build_root() + '/config.h',
+# 		'-DCHECK_FILES="'+meson.source_root()+'"',
+# 		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+# 		],
+# 	link_with: libgda,
+# 	dependencies: [
+# 		libgda_dep,
+# 		inc_rooth_dep,
+# 		inc_sqliteh_dep
+# 		],
+# 	install: false
+# 	)
+# test('DDLCreator', tddlc,
+# 	env: [
+# 		'GDA_TOP_SRC_DIR='+meson.source_root(),
+# 		'GDA_TOP_BUILD_DIR='+meson.build_root()
+# 		]
+# 	)
 
 
 tbc = executable('test-bin-converter',
@@ -235,6 +235,7 @@ subdir('multi-threading')
 subdir('parser')
 subdir('providers')
 subdir('value-holders')
+subdir('ddl')
 if enable_ui
 subdir('ui')
 endif
