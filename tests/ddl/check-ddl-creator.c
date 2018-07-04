@@ -32,6 +32,7 @@ typedef struct {
     GdaDdlCreator *creator;
     gchar *xmlfile;
     GdaConnection *cnc;
+    GFile *file;
 } CheckDdlObject;
 
 static void
@@ -42,6 +43,7 @@ test_ddl_creato_start (CheckDdlObject *self,
   self->xmlfile = NULL;
   self->creator = NULL;
   self->cnc = NULL;
+  self->file = NULL;
 
   const gchar *topsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
 
@@ -68,35 +70,38 @@ test_ddl_creato_start (CheckDdlObject *self,
   gboolean openres = gda_connection_open(self->cnc,NULL);
   g_assert_true (openres);
 
+  self->file = g_file_new_for_path (self->xmlfile); 
+  g_print ("GFile is %s\n",g_file_get_path(self->file));
 }
 
 static void
 test_ddl_creato_finish (CheckDdlObject *self,
                       gconstpointer user_data)
 {
-  g_free (self->xmlfile);
-  gda_ddl_creator_free (self->creator);
   gda_connection_close(self->cnc,NULL);
+  g_free (self->xmlfile);
+  g_object_unref (self->file);
+  gda_ddl_creator_free (self->creator);
   g_object_unref (self->cnc);
 }
 
 static void
-test_ddl_creato_parse_xml (CheckDdlObject *self,
-                         gconstpointer user_data)
+test_ddl_creato_parse_xml_path (CheckDdlObject *self,
+                                gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
-                                                       self->xmlfile,
-                                                       NULL);
+                                                      self->xmlfile,
+                                                      NULL);
 
   g_assert_true (res);
-  
-  const GList *tables = NULL;
-  tables = gda_ddl_creator_get_tables(self->creator);
-  g_assert_nonnull (tables);
+}
 
-  const gchar *name = gda_ddl_base_get_name(GDA_DDL_BASE(tables->data));
-  g_assert_nonnull(name);
-  g_assert_cmpstr (name, ==, "products");
+static void
+test_ddl_creato_parse_xml_file (CheckDdlObject *self,
+                                gconstpointer user_data)
+{
+  gboolean res = gda_ddl_creator_parse_file (self->creator,self->file,NULL);
+  g_assert_true (res);
 }
 
 static void
@@ -108,15 +113,22 @@ test_ddl_creato_create_db (CheckDdlObject *self,
                                                       NULL);
 
   g_assert_true (res);
-  
+ 
+  res = gda_ddl_creator_write_to_path (self->creator,
+                                       "ddl-test-out.xml",
+                                             NULL);
+
+  g_assert_true (res);
+
+  GError *error = NULL;
   gboolean resop = gda_ddl_creator_perform_operation(self->creator,
                                                      self->cnc,
-                                                     NULL);  
+                                                     &error);  
+
+  if (!resop)
+    g_print ("myerr: %s\n",error && error->message ? error->message : "No default");
 
   g_assert_true (resop);
-
-  
-
 }
 
 static void
@@ -126,9 +138,6 @@ test_ddl_creato_parse_cnc (CheckDdlObject *self,
   gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL);
 
   g_assert_true (res);
-
-  
-
 }
 gint
 main (gint   argc,
@@ -138,11 +147,18 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add ("/test-ddl/creator-name",
+  g_test_add ("/test-ddl/creator-parse-file",
               CheckDdlObject,
               NULL,
               test_ddl_creato_start,
-              test_ddl_creato_parse_xml,
+              test_ddl_creato_parse_xml_file,
+              test_ddl_creato_finish);
+
+  g_test_add ("/test-ddl/creator-parse-path",
+              CheckDdlObject,
+              NULL,
+              test_ddl_creato_start,
+              test_ddl_creato_parse_xml_path,
               test_ddl_creato_finish);
 
   g_test_add ("/test-ddl/creator-create-db",
@@ -152,11 +168,12 @@ main (gint   argc,
               test_ddl_creato_create_db,
               test_ddl_creato_finish);
 
-  g_test_add ("/test-ddl/creator-parse-cnc",
+  /*g_test_add ("/test-ddl/creator-parse-cnc",
               CheckDdlObject,
               NULL,
               test_ddl_creato_start,
               test_ddl_creato_parse_cnc,
-              test_ddl_creato_finish);
+              test_ddl_creato_finish);*/
+ 
   return g_test_run();
 }
