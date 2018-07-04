@@ -26,6 +26,7 @@
 #include "gda-ddl-base.h"
 #include "gda-ddl-buildable.h"
 #include "gda-connection.h"
+#include "gda-meta-struct.h"
 
 
 G_BEGIN_DECLS
