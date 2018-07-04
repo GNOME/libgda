@@ -1,6 +1,6 @@
 /* gda-ddl-fkey.h
  *
- * Copyright © 2018 Pavlo Solntsev <pavlo.solntsev@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <pavlo.solntsev@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,6 +27,7 @@
 #include <libxml/xmlwriter.h>
 #include "gda-ddl-buildable.h"
 #include "gda-server-operation.h"
+#include "gda-meta-struct.h"
 
 G_BEGIN_DECLS
 
@@ -91,6 +92,7 @@ void              gda_ddl_fkey_free            (GdaDdlFkey *self);
 gboolean          gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                                                 GdaServerOperation *op,
                                                 GError **error);
+GdaDdlFkey       *gda_ddl_fkey_new_from_meta   (GdaMetaTableForeignKey *metafkey);
 
 G_END_DECLS
 
