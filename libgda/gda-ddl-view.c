@@ -71,6 +71,14 @@ enum {
 
 static GParamSpec *properties [N_PROPS] = {NULL};
 
+/**
+ * gda_ddl_view_new:
+ *
+ * Returns: A new instance of #GdaDdlView. Use gda_ddl_view_free() to delete the object and free
+ * the memory.
+ *
+ * Since: 6.0
+ */
 GdaDdlView*
 gda_ddl_view_new (void)
 {
@@ -215,60 +223,21 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_REPLACE]);
   if (prop)
-    {
-      gboolean tres = FALSE;
-      if (*prop == 't' || *prop == 'T')
-        tres = TRUE;
-      else if (*prop == 'f' || *prop == 'F')
-        tres = FALSE;
-      else
-        {
-          /*
-           * FIXME: this step should never happend
-           */
-        }
-      gda_ddl_view_set_replace (self,tres);
-    }
+    g_object_set (G_OBJECT(self),"replace",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_TEMP]);
   if (prop)
-    {
-      gboolean tres = FALSE;
-      if (*prop == 't' || *prop == 'T')
-        tres = TRUE;
-      else if (*prop == 'f' || *prop == 'F')
-        tres = FALSE;
-      else
-        {
-          /*
-           * FIXME: this step should never happend
-           */
-        }
-      gda_ddl_view_set_istemp(self,tres);
-    }
+    g_object_set (G_OBJECT(self),"istemp",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST]);
   if (prop)
-    {
-      gboolean tres = FALSE;
-      if (*prop == 't' || *prop == 'T')
-        tres = TRUE;
-      else if (*prop == 'f' || *prop == 'F')
-        tres = FALSE;
-      else
-        {
-          /*
-           * FIXME: this step should never happend
-           */
-        }
-      gda_ddl_view_set_ifnoexist(self,tres);
-    }
+    g_object_set (G_OBJECT(self),"ifnotexist",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;
@@ -290,111 +259,41 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
 
 static gboolean
 gda_ddl_view_write_node (GdaDdlBuildable *buildable,
-                         xmlTextWriterPtr writer,
+                         xmlNodePtr rootnode,
                          GError **error)
 {
-/* We should get something like this: 
- *
- * <view name="Total" replace="TRUE" temp="TRUE" ifnotexists="TRUE">
- *   <definition>SELECT id,name FROM CUSTOMER</definition>
- * </view>
- */
-  GdaDdlView *self = GDA_DDL_VIEW (buildable);
-  g_return_val_if_fail (writer, FALSE);
+  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (rootnode,FALSE);
 
+  GdaDdlView *self = GDA_DDL_VIEW (buildable);
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
-  int res = 0;
+  xmlNodePtr node = NULL;
+  node  = xmlNewChild (rootnode,
+                       NULL,
+                       BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_NODE],
+                       NULL);
+  
+  xmlNewProp (node,
+              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_NODE],
+              BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
 
-  res = xmlTextWriterStartElement(writer, 
-                                  BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_NODE]);
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
-                   _("Can't set start element in xml tree\n"));
-      return FALSE;
-    }
+  xmlNewProp (node,
+              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_REPLACE],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_replace));
 
-  res = xmlTextWriterWriteAttribute (writer,
-                    (const xmlChar*)gdaddlviewnodes[GDA_DDL_VIEW_NAME],
-                    (xmlChar*)gda_ddl_base_get_name(GDA_DDL_BASE(self)));
+  xmlNewProp (node,
+              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_TEMP],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_istemp));
 
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set reftable attribute to element\n"));
-      return FALSE;
-    }
+  xmlNewProp (node,
+              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST],
+              BAD_CAST GDA_BOOL_TO_STR(priv->m_ifnoexist));
 
-  res = xmlTextWriterWriteAttribute (writer,
-                (const xmlChar*)gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST],
-                (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_view_get_ifnoexist(self)));
-
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set onupdate attribute to element %s\n"),
-                   gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST]);
-      return FALSE;
-    }
-
-  res = xmlTextWriterWriteAttribute (writer,
-                    (const xmlChar*)gdaddlviewnodes[GDA_DDL_VIEW_TEMP],
-                    (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_view_get_istemp(self)));
-
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set ondelete attribute to element %s\n"),
-                   gdaddlviewnodes[GDA_DDL_VIEW_TEMP]);
-      return FALSE;
-    }
-
-  res = xmlTextWriterWriteAttribute (writer,
-                   (const xmlChar*)gdaddlviewnodes[GDA_DDL_VIEW_REPLACE],
-                   (xmlChar*)GDA_BOOL_TO_STR(gda_ddl_view_get_replace(self)));
-
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_ATTRIBUTE,
-                   _("Can't set ondelete attribute to element %s\n"),
-                   gdaddlviewnodes[GDA_DDL_VIEW_REPLACE]);
-      return FALSE;
-    }
-
-  res = xmlTextWriterWriteElement(writer, 
-                                BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_DEFSTR],
-                                (xmlChar*)gda_ddl_view_get_defstring(self));
-  if (res < 0)
-    {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_START_ELEMENT,
-                   _("Can't set start element %s in xml tree\n"),
-                   gdaddlviewnodes[GDA_DDL_VIEW_DEFSTR]);
-      return FALSE;
-    }
-
-  res = xmlTextWriterEndElement (writer);
-
-  if (res < 0) {
-      g_set_error (error,
-                   GDA_DDL_BUILDABLE_ERROR,
-                   GDA_DDL_BUILDABLE_ERROR_END_ELEMENT,
-                   _("Can't close element %s\n"),
-                   gdaddlviewnodes[GDA_DDL_VIEW_NODE]);
-      return FALSE;
-  }
+  xmlNewChild (node,
+               NULL,
+               BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_DEFSTR],
+               BAD_CAST priv->mp_defstring);
 
   return TRUE;
 }
@@ -500,7 +399,7 @@ gda_ddl_view_get_defstring (GdaDdlView *self)
 /**
  * gda_ddl_view_set_defstring:
  * @self: a #GdaDdlView object
- * @str: view definition string to set. Should be valis SQL string
+ * @str: view definition string to set. Should be valid SQL string
  *
  * Since: 6.0
  */
@@ -518,8 +417,8 @@ gda_ddl_view_set_defstring (GdaDdlView *self,
  * gda_ddl_view_get_replace:
  * @self: a #GdaDdlView object
  *
- * Returns: %TRUE if the current view should dreplace the existing one in the
- * databse, %FALSE otherwise.
+ * Returns: %TRUE if the current view should replace the existing one in the
+ * database, %FALSE otherwise.
  *
  * Since: 6.0
  */
@@ -549,7 +448,20 @@ gda_ddl_view_set_replace (GdaDdlView *self,
   priv->m_replace = replace;
 }
 
-
+/**
+ * gda_ddl_view_create:
+ * @self: a #GdaDdlView instance
+ * @cnc: open connection for the operation
+ * @error: error container
+ *
+ * This method performs CREATE_VIEW operation over @cnc using data stored in @self
+ * It is a convenient method to perform operation. See gda_ddl_view_prepare_create() if better
+ * flexibility is needed. 
+ *
+ * Returns: %TRUE if no error, %FASLE otherwise
+ *
+ * Since: 6.0
+ */
 gboolean
 gda_ddl_view_create (GdaDdlView *self,
                      GdaConnection *cnc,
@@ -557,9 +469,7 @@ gda_ddl_view_create (GdaDdlView *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
-
-  if (!gda_connection_is_opened(cnc))
-    return FALSE;
+  g_return_val_if_fail (gda_connection_is_opened(cnc),FALSE); 
 
   gda_lockable_lock((GdaLockable*)cnc);
 
@@ -568,7 +478,6 @@ gda_ddl_view_create (GdaDdlView *self,
  
   provider = gda_connection_get_provider (cnc);
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   op = gda_server_provider_create_operation(provider,
                                             cnc,
                                             GDA_SERVER_OPERATION_CREATE_VIEW,
@@ -580,29 +489,29 @@ gda_ddl_view_create (GdaDdlView *self,
   if (!gda_ddl_view_prepare_create(self,op,error))
     goto on_error;
 
-  gchar *sqlstr = NULL;
-  sqlstr = gda_server_provider_render_operation (provider,
-                                                 cnc,
-                                                 op,
-                                                 error);
-
-  g_print ("SQL STRING:%s\n",sqlstr);
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if(!gda_server_provider_perform_operation(provider,cnc,op,error))
     goto on_error;
 
-
-
-
+  g_object_unref (op);
   gda_lockable_unlock((GdaLockable*)cnc);
   return TRUE;
 
 on_error:
+  if (op) g_object_unref (op);
   gda_lockable_unlock((GdaLockable*)cnc);
   return FALSE; 
 }
 
-
+/**
+ * gda_ddl_view_prepare_create:
+ * @self: a #GdaDdlView instance
+ * @op: #GdaServerOperation instance to populate
+ * @error: error container
+ *
+ * Populate @op with information needed to perform CREATE_VIEW operation.
+ *
+ * Returns: %TRUE if succeeded and %FALSE otherwise. 
+ */
 gboolean
 gda_ddl_view_prepare_create (GdaDdlView *self,
                              GdaServerOperation *op,
@@ -614,7 +523,7 @@ gda_ddl_view_prepare_create (GdaDdlView *self,
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at(op,
-                                         gda_ddl_base_get_full_name(GDA_DDL_BASE(self)),
+                                         gda_ddl_base_get_name(GDA_DDL_BASE(self)),
                                          error,
                                          "/VIEW_DEF_P/VIEW_NAME"))
     return FALSE;
