@@ -22,6 +22,7 @@
 
 #include "gda-ddl-base.h"
 #include "gda-ddl-column.h" 
+#include "gda-ddl-fkey.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 #include "gda-server-operation.h"
@@ -39,7 +40,7 @@ struct _GdaDdlTableClass {
 };
 
 typedef enum {
-    GDA_DDL_TABLE_SOME,
+    GDA_DDL_TABLE_COLUMN_EMPTY,
 }GdaDdlTableError;
 
 #define GDA_DDL_TABLE_ERROR gda_ddl_table_error_quark()
@@ -73,6 +74,8 @@ gboolean        gda_ddl_table_create          (GdaDdlTable *self,
 
 GdaDdlTable    *gda_ddl_table_new_from_meta    (GdaMetaDbObject *obj);
 
+void            gda_ddl_table_append_fkey (GdaDdlTable *self,
+                                           GdaDdlFkey *fkey);
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DDL-TABLE_H */

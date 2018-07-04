@@ -1,4 +1,5 @@
-/*
+/* gda-ddl-table.c
+ *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -24,6 +25,8 @@
 #include <libgda/gda-lockable.h>
 #include "gda-server-provider.h"
 #include "gda-connection.h"
+#include "gda-meta-struct.h"
+#include <glib/gi18n-lib.h>
 
 G_DEFINE_QUARK (gda_ddl_table_error,gda_ddl_table_error)
 
@@ -32,7 +35,6 @@ typedef struct
   gchar *mp_comment;
 
   gboolean m_istemp;
-//  gchar *mp_name;
   GList *mp_columns; /* Type GdaDdlColumn*/
   GList *mp_fkeys; /* List of all fkeys, GdaDdlFkey */
 } GdaDdlTablePrivate;
@@ -54,6 +56,31 @@ enum {
 
 static GParamSpec *properties [N_PROPS] = {NULL};
 
+/* This is a convenient way to name all nodes from xml file */
+enum {
+  GDA_DDL_TABLE_NODE,
+  GDA_DDL_TABLE_NAME,
+  GDA_DDL_TABLE_TEMP,
+  GDA_DDL_TABLE_SPACE,
+  GDA_DDL_TABLE_COMMENT,
+
+  GDA_DDL_TABLE_N_NODES
+};
+
+const gchar *gdaddltablenodes[GDA_DDL_TABLE_N_NODES] = {
+  "table",
+  "name",
+  "temptable",
+  "space",
+  "comment"
+};
+
+/**
+ * gda_ddl_table_new:
+ *
+ * Returns: New instance of #GdaDdlTable. Use gda_ddl_table_free() to delete the object and free
+ * the memory.
+ */
 GdaDdlTable *
 gda_ddl_table_new (void)
 {
@@ -160,7 +187,7 @@ gda_ddl_table_init (GdaDdlTable *self)
  * @node: instance of #xmlNodePtr to parse
  * @error: #GError to handle an error
  *
- * Parse #xmlNodePtr wich should point to the <table> node
+ * Parse @node wich should point to the <table> node
  *
  * Returns: %TRUE if no error, %FALSE otherwise
  *
@@ -173,18 +200,17 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node, FALSE);
-//  g_return_val_if_fail (error != NULL && *error == NULL,FALSE);
 
   GdaDdlTable *self = GDA_DDL_TABLE (buildable);
 
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   xmlChar *name = NULL;
-  name = xmlGetProp (node,(xmlChar *)"name");
+  name = xmlGetProp (node,(xmlChar *)gdaddltablenodes[GDA_DDL_TABLE_NAME]);
   g_assert (name); /* If here bug with xml validation */
   gda_ddl_base_set_name(GDA_DDL_BASE(self),(gchar *)name);
 
-  xmlChar *tempt = xmlGetProp (node,(xmlChar*)"temptable");
+  xmlChar *tempt = xmlGetProp (node,(xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_TEMP]);
 
   if (tempt && (*tempt == 't' || *tempt == 't'))
     {
@@ -192,12 +218,9 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
       xmlFree (tempt);
     }
 
-  gint columnscale = 0;
-
   for (xmlNodePtr it = node->children; it ; it = it->next)
     {
-      g_print ("Table node name is : %s\n",it->name);
-      if (!g_strcmp0 ((gchar *) it->name, "comment"))
+      if (!g_strcmp0 ((gchar *) it->name,gdaddltablenodes[GDA_DDL_TABLE_COMMENT]))
         {
           xmlChar *comment = xmlNodeGetContent (it);
 
@@ -210,12 +233,10 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
       else if (!g_strcmp0 ((gchar *) it->name, "column"))
         {
           GdaDdlColumn *column = gda_ddl_column_new ();
-          gda_ddl_column_set_scale (column,columnscale++);
 
           if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
                                             it, error))
             {
-              g_print ("Error parsing column node\n");
               gda_ddl_column_free (column);
               return FALSE;
             }
@@ -249,25 +270,25 @@ gda_ddl_table_write_node (GdaDdlBuildable *buildable,
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   xmlNodePtr node = NULL;
-  node  = xmlNewChild (rootnode,NULL,(xmlChar*)"table",NULL);
-  xmlNewProp (node,BAD_CAST "name",
+  node  = xmlNewChild (rootnode,NULL,(xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_NODE],NULL);
+  xmlNewProp (node,BAD_CAST gdaddltablenodes[GDA_DDL_TABLE_NAME],
               BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
 
-  xmlNewProp (node,BAD_CAST "temptable",
+  xmlNewProp (node,BAD_CAST gdaddltablenodes[GDA_DDL_TABLE_TEMP], 
               BAD_CAST GDA_BOOL_TO_STR (priv->m_istemp)); 
 
-  xmlNewChild (node,NULL,(xmlChar*)"comment",(xmlChar*)priv->mp_comment);
+  xmlNewChild (node,NULL,
+               (xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_COMMENT],
+               (xmlChar*)priv->mp_comment);
 
   GList *it = NULL;
 
   for (it = priv->mp_columns; it; it=it->next)
     if(!gda_ddl_buildable_write_node (GDA_DDL_BUILDABLE(GDA_DDL_COLUMN(it->data)),
                                       node,error))
-      goto on_error;
+      return FALSE;
 
   return TRUE;
-on_error:
-  return FALSE;
 }
 
 static void
@@ -282,7 +303,7 @@ gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface)
  * @self: an #GdaDdlTable object
  * @tablecomment: Comment to set as a string
  *
- * If @tablecomment is %NULL nothing is happaning. tablecomment will not be set
+ * If @tablecomment is %NULL nothing is happened. @tablecomment will not be set
  * to %NULL.
  *
  * Since: 6.0
@@ -322,9 +343,9 @@ gda_ddl_table_set_temp (GdaDdlTable *self,
  * gda_ddl_table_get_comment:
  * @self: a #GdaDdlTable object
  *
- * Returns: A comment string or%NULL if comment wasn't set.
+ * Returns: A comment string or %NULL if comment wasn't set.
  */
-const char *
+const char*
 gda_ddl_table_get_comment (GdaDdlTable *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -345,7 +366,7 @@ gda_ddl_table_get_comment (GdaDdlTable *self)
 gboolean
 gda_ddl_table_get_temp (GdaDdlTable *self)
 {
-  g_assert (self);
+  g_return_val_if_fail (self,FALSE);
 
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
   return priv->m_istemp;
@@ -354,15 +375,17 @@ gda_ddl_table_get_temp (GdaDdlTable *self)
 gboolean
 gda_ddl_table_is_valid (GdaDdlTable *self)
 {
+  g_return_val_if_fail (self,FALSE);
+
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
-/* TODO: It may be worthwile to have the save method for all children elements and
+/* TODO: It may be worthwhile to have the same method for all children elements and
  * call this method on each children member to make sure whole table is valid
  * */
-  if (!self || !priv->mp_columns)
-    return FALSE;
-  else
+  if (priv->mp_columns)
     return TRUE;
+  else
+    return FALSE;
 }
 
 /**
@@ -374,6 +397,8 @@ gda_ddl_table_is_valid (GdaDdlTable *self)
  *
  * Returns: A list of #GdaDdlColumn objects or %NULL if the internal list is
  * not set or if %NULL is passed.
+ *
+ * Since: 6.0
  */
 const GList*
 gda_ddl_table_get_columns (GdaDdlTable *self)
@@ -393,6 +418,8 @@ gda_ddl_table_get_columns (GdaDdlTable *self)
  *
  * Returns: A list of #GdaDdlFkey objects or %NULL if the internal list is not
  * set or %NULL is passed
+ *
+ * Since: 6.0
  */
 const GList*
 gda_ddl_table_get_fkeys (GdaDdlTable *self)
@@ -402,7 +429,6 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
 
   return priv->mp_fkeys;
 }
-
 
 /**
  * gda_ddl_table_free:
@@ -437,6 +463,17 @@ gda_ddl_table_is_temp (GdaDdlTable *self)
   return priv->m_istemp;
 }
 
+/**
+ * gda_ddl_table_prepare_create:
+ * @self: a #GdaDdlTable instance
+ * @op: an instance of #GdaServerOperation to populate.
+ * @error: error container 
+ *
+ * Populate @op with information stored in @self. This method sets @op to execute CREATE_TABLE
+ * operation.
+ *
+ * Since: 6.0
+ */
 gboolean
 gda_ddl_table_prepare_create (GdaDdlTable *self,
                               GdaServerOperation *op,
@@ -445,52 +482,40 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at(op,
-                                         gda_ddl_base_get_full_name(GDA_DDL_BASE(self)),
+                                         gda_ddl_base_get_name(GDA_DDL_BASE(self)),
                                          error,
                                          "/TABLE_DEF_P/TABLE_NAME"))
     return FALSE;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_server_operation_set_value_at(op,
                                          GDA_BOOL_TO_STR(priv->m_istemp),
                                          error,
                                          "/TABLE_DEF_P/TABLE_TEMP"))
     return FALSE;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_server_operation_set_value_at(op,
                                          priv->mp_comment,
                                          error,
                                          "/TABLE_DEF_P/TABLE_COMMENT"))
     return FALSE;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_server_operation_set_value_at(op,
                                          priv->mp_comment,
                                          error,
                                          "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
     return FALSE;
   
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   GList *it = NULL;
+  gint i = 0; /* column order counter */
 
   for (it = priv->mp_columns;it;it=it->next)
-    {
-      if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN(it->data),op,error))
-        return FALSE;
-      
-      g_print ("%s:%d\n",__FILE__,__LINE__);
-    }
+    if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN(it->data),op,i++,error))
+      return FALSE;
 
   for (it = priv->mp_fkeys;it;it=it->next)
-    {
-      if(!gda_ddl_fkey_prepare_create (it->data,op,error))
-        return FALSE;
-      
-      g_print ("%s:%d\n",__FILE__,__LINE__);
-    }
+    if(!gda_ddl_fkey_prepare_create (it->data,op,error))
+      return FALSE;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   return TRUE;
 }
 
@@ -510,28 +535,39 @@ _gda_ddl_compare_column_meta(GdaMetaTableColumn *a,GdaDdlColumn *b)
   return g_strcmp0(namea,nameb);
 }
 
+/**
+ * gda_ddl_table_update:
+ * @self: a #GdaDdlTable instance
+ * @obj: The corresponding meta object to take data from
+ * @cnc: opened connection
+ * @error: error container 
+ *
+ * With this method object @obj in the database available through @cnc will be updated using
+ * ADD_COLUMN operation with information stored in @self. 
+ * 
+ * Returns: %TRUE if no error and %FALSE otherwise
+ */
 gboolean        
 gda_ddl_table_update (GdaDdlTable *self,
                       GdaMetaTable *obj,
                       GdaConnection *cnc,
                       GError **error)
 {
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (obj,FALSE);
   g_return_val_if_fail (cnc,FALSE);
  
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_connection_is_opened(cnc))
     return FALSE;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
   
   if (!obj->columns)
-    return FALSE;
+    {
+      g_set_error (error,GDA_DDL_TABLE_ERROR,GDA_DDL_TABLE_COLUMN_EMPTY,_("Empty column list"));
+      return FALSE;
+    }
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   GSList *dbcolumns = NULL;
   GList *it = NULL;
 
@@ -549,11 +585,9 @@ gda_ddl_table_update (GdaDdlTable *self,
                                             GDA_SERVER_OPERATION_ADD_COLUMN,
                                             NULL,
                                             error);
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!op)
     goto on_error;
  
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if(!gda_server_operation_set_value_at(op,
                                         gda_ddl_base_get_full_name(GDA_DDL_BASE(self)),
                                         error,
@@ -567,28 +601,22 @@ gda_ddl_table_update (GdaDdlTable *self,
                                          it->data,
                                          (GCompareFunc)_gda_ddl_compare_column_meta);
 
-      g_print ("%s:%d\n",__FILE__,__LINE__);
       if (res) /* If object is present we need go to next element */
         continue;
       else
         newcolumncount++; /* We need to count new column. See below */ 
           
-      g_print ("%s:%d\n",__FILE__,__LINE__);
       if(!gda_ddl_column_prepare_add(it->data,op,error))
         {
-          g_print ("%s:%d\n",__FILE__,__LINE__);
           g_slist_free (res);
           goto on_error;
         }
-      g_print ("%s:%d\n",__FILE__,__LINE__);
     }
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
-  if (newcolumncount != 0) /* Run operation only if at least on column presents*/
+  if (newcolumncount != 0) /* Run operation only if at least on column is present*/
     if(!gda_server_provider_perform_operation(provider,cnc,op,error))
       goto on_error;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   g_object_unref(op);
   gda_lockable_unlock((GdaLockable*)cnc);
   return TRUE;
@@ -598,6 +626,7 @@ on_error:
   gda_lockable_unlock((GdaLockable*)cnc);
   return FALSE;
 }
+
 /**
  * gda_ddl_table_create:
  * @self: a #GdaDdlTable object
@@ -607,9 +636,9 @@ on_error:
  * Execute a full set of steps to create tabe in the database.
  * This method is called with "IFNOTEXISTS" option. 
  *
- * Returns: %TRUE if succesful, %FALSE otherwise
+ * Returns: %TRUE if successful, %FALSE otherwise
  *
- * Sicne: 6.0
+ * Since: 6.0
  */
 gboolean
 gda_ddl_table_create (GdaDdlTable *self,
@@ -619,20 +648,16 @@ gda_ddl_table_create (GdaDdlTable *self,
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_connection_is_opened(cnc))
     return FALSE;
   
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   gda_lockable_lock(GDA_LOCKABLE(cnc));
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
  
   provider = gda_connection_get_provider (cnc);
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   op = gda_server_provider_create_operation(provider,
                                             cnc,
                                             GDA_SERVER_OPERATION_CREATE_TABLE,
@@ -641,22 +666,12 @@ gda_ddl_table_create (GdaDdlTable *self,
   if (!op)
     goto on_error;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if (!gda_ddl_table_prepare_create(self,op,error))
     goto on_error;
 
-  gchar *sqlstr = NULL;
-  sqlstr = gda_server_provider_render_operation (provider,
-                                                 cnc,
-                                                 op,
-                                                 error);
-
-  g_print ("SQL STRING:%s\n",sqlstr);
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   if(!gda_server_provider_perform_operation(provider,cnc,op,error))
     goto on_error;
 
-  g_print ("%s:%d\n",__FILE__,__LINE__);
   g_object_unref (op);
   gda_lockable_unlock(GDA_LOCKABLE(cnc));
 
@@ -666,27 +681,6 @@ on_error:
   g_object_unref (op);
   gda_lockable_unlock(GDA_LOCKABLE(cnc));
   return FALSE;
-}
-
-/**
- * _gda_ddl_table_align_columns: (skip)
- * @self: a #GdaDdlTable object
- * 
- * This method asign new scale values to all columns to make  sure they are
- * ordered properly. 
- *
- */
-static void
-_gda_ddl_table_align_columns (GdaDdlTable *self)
-{
-  g_return_if_fail (self);
-
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
-  
-  gint ncolumn = 0;
-
-  for (GList *it = priv->mp_columns; it; it = it->next)
-    gda_ddl_column_set_scale(it->data,ncolumn++); 
 }
 
 /**
@@ -698,6 +692,8 @@ _gda_ddl_table_align_columns (GdaDdlTable *self)
  * gda_ddl_table_new()
  *
  * Returns: New object that should be freed with gda_ddl_table_free()
+ *
+ * Since: 6.0
  */
 GdaDdlTable*
 gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
@@ -724,10 +720,30 @@ gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
       gda_ddl_table_append_column(table,column);
     }
 
-  _gda_ddl_table_align_columns (table);
+  it = NULL;
+  for (it = metatable->fk_list;it;it = it->next)
+    {
+      if (!GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(GDA_META_TABLE_FOREIGN_KEY(it->data)))
+        continue;
+
+      GdaDdlFkey *fkey = gda_ddl_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
+      
+      gda_ddl_table_append_fkey (table,fkey);
+
+    } 
+
   return table;
 }
 
+/**
+ * gda_ddl_table_append_column:
+ * @self: a #GdaDdlTable instance
+ * @column: column to add
+ *
+ * Append @column to the internal list of columns
+ *
+ * Since: 6.0
+ */
 void
 gda_ddl_table_append_column (GdaDdlTable *self,
                              GdaDdlColumn *column)
@@ -738,3 +754,24 @@ gda_ddl_table_append_column (GdaDdlTable *self,
 
   priv->mp_columns = g_list_append (priv->mp_columns,column);
 }
+
+/**
+ * gda_ddl_table_append_fkey:
+ * @self: a #GdaDdlTable instance
+ * @fkey: fkry to add
+ *
+ * Append @fkey to the internal list of columns
+ *
+ * Since: 6.0
+ */
+void
+gda_ddl_table_append_fkey (GdaDdlTable *self,
+                           GdaDdlFkey *fkey)
+{
+  g_return_if_fail (self);
+
+  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+
+  priv->mp_fkeys = g_list_append (priv->mp_fkeys,fkey);
+}
+
