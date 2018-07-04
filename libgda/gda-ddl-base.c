@@ -1,19 +1,21 @@
 /* gda-ddl-base.c
  *
- * Copyright © 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
  */
 #include "gda-ddl-base.h"
 #include <glib/gi18n.h>
@@ -33,9 +35,9 @@ G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlBase, gda_ddl_base, G_TYPE_OBJECT)
  *
  * Create a new #GdaDdlBase instance
  *
- * Returns: #GdaDdlBase instance
+ * Returns: a new #GdaDdlBase instance 
  */
-GdaDdlBase *
+GdaDdlBase*
 gda_ddl_base_new (void)
 {
   return g_object_new (GDA_TYPE_DDL_BASE, NULL);
@@ -77,11 +79,11 @@ gda_ddl_base_init (GdaDdlBase *self)
 /**
  * gda_ddl_base_set_names:
  * @self: a #GdaDdlBase object
- * @catalog: a catalog associated with table
- * @schema: a schema associated with table
- * @name: a table name associated with table
+ * @catalog: a catalog name associated with the table
+ * @schema: a schema name associated with the table
+ * @name: a table name associated with the table
  *
- * Sets database object name. @catalog and @schema can be %NULL but
+ * Sets database object names. @catalog and @schema can be %NULL but
  * @name always should be a valid, not %NULL string. The @name must be always
  * set. If @catalog is %NULL @schema may not be %NULL but if @schema is
  * %NULL @catalog also should be %NULL.
@@ -134,7 +136,7 @@ gda_ddl_base_set_names (GdaDdlBase *self,
  * gda_ddl_base_get_full_name:
  * @self: an instance of #GdaDdlBase
  *
- * This method returns full name in the format catalog.schema.name.
+ * This method returns a full name in the format catalog.schema.name.
  * If schema is %NULL but catalog and name are not, then only name is
  * returned. If catalog is %NULL then full name will be in the format:
  * schema.name. If all three components are not set, then %NULL is returned.
@@ -232,7 +234,8 @@ gda_ddl_base_get_name (GdaDdlBase  *self)
 
 /**
  * gda_ddl_base_free:
- * @self: an instance of #GdaDdlBase to free.
+ * @self: a #GdaDdlBase instance to free.
+ *
  * A convenient method to free the memory.
  * It is a wrapper around g_clear_object().
  *
@@ -301,6 +304,17 @@ gda_ddl_base_set_name (GdaDdlBase  *self,
   priv->m_name = g_strdup (name);
 }
 
+/**
+ * gda_ddl_base_compare:
+ * @a: first #GdaDdlBase object
+ * @b: second #GdaDdlBase object
+ *
+ * Compares two objects similar to g_strcmp(). 
+ *
+ * Returns: 0 if catalog, schema and name are the same
+ *
+ * Since: 6.0
+ */
 gint
 gda_ddl_base_compare (GdaDdlBase *a, GdaDdlBase *b)
 {
