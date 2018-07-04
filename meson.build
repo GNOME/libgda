@@ -201,15 +201,9 @@ int main() {
 		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'pixmapdir')
 	endif
 	subdir('libgda-ui')
+	subdir('libgda-report')
 endif
 
 subdir('tests')
 subdir('testing')
-
-
-
-
-
-
-
 
