@@ -22,6 +22,7 @@ browser_deps = [
 
 if goocanvas_dep.found()
 	browser_deps += goocanvas_dep
+	browser_deps += math_dep
 endif
 
 browser_resourcesc = custom_target('browser_resourcesc',
@@ -96,3 +97,39 @@ executable('gda-browser-'+project_api_version,
 
 
 endif
+
+tsplitter_deps = [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_browserh_dep,
+		inc_browserdirh_dep,
+		inc_commonh_dep,
+		inc_browser_baseh_dep
+		]
+if soup_dep.found()
+	tsplitter_deps += soup_dep
+endif
+
+tsplitter_sources = files(['test-splitter.c'])
+
+tsplitter_sources += tools_nonuisources
+tsplitter_sources += basetool_sources
+
+tsplitter = executable('test-splitter',
+	tsplitter_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DROOT_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: tsplitter_deps,
+	install: false
+	)
+test('Splitter', tsplitter,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)

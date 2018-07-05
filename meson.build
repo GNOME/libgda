@@ -177,6 +177,9 @@ if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : false)
 	goocanvas_dep = dependency('goocanvas-2.0', required: false)
+	if goocanvas_dep.found()
+		math_dep = meson.get_compiler('c').find_library('m')
+	endif
 	gtksourceview_dep = dependency('gtksourceview-3.0')
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
