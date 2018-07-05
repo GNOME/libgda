@@ -39,6 +39,15 @@ gda_sql = executable('gda-sql-'+project_api_version,
 	install: true,
 	)
 
+manconf = configuration_data()
+gda_sql_man = configure_file(
+	input: 'gda-sql.1.in',
+	output: 'gda-sql.1',
+	configuration: manconf
+	)
+install_man(gda_sql_man)
+
+
 if enable_ui
 
 browser_deps = [
