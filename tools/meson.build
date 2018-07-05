@@ -6,6 +6,39 @@ subdir('common')
 subdir('base')
 subdir('help')
 
+gda_sql_sources = files([
+	'tools-main.c'
+	])
+gda_sql_sources += tools_nonuisources
+gda_sql_sources += basetool_sources
+
+gda_sql_deps = [
+	libgda_dep,
+	inc_sqliteh_dep,
+	inc_commonh_dep,
+	inc_tools_baseh_dep
+	]
+
+gda_sql_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		]
+if soup_dep.found()
+	gda_sql_cargs += [
+		'-DLIBSOUP=1'
+		]
+
+endif
+
+
+gda_sql = executable('gda-sql-'+project_api_version,
+	gda_sql_sources,
+	link_with: libgda,
+	dependencies: gda_sql_deps,
+	c_args: gda_sql_cargs,
+	install: true,
+	)
+
 if enable_ui
 
 browser_deps = [
@@ -17,7 +50,7 @@ browser_deps = [
 	inc_sqliteh_dep,
 	inc_browserh_dep,
 	inc_commonh_dep,
-	inc_browser_baseh_dep
+	inc_tools_baseh_dep
 	]
 
 if goocanvas_dep.found()
@@ -102,7 +135,7 @@ tsplitter_deps = [
 		inc_browserh_dep,
 		inc_browserdirh_dep,
 		inc_commonh_dep,
-		inc_browser_baseh_dep
+		inc_tools_baseh_dep
 		]
 if soup_dep.found()
 	tsplitter_deps += soup_dep

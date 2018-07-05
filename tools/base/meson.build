@@ -1,5 +1,5 @@
-inc_browser_baseh = include_directories ('.')
-inc_browser_baseh_dep = declare_dependency (include_directories : inc_browser_baseh)
+inc_tools_baseh = include_directories ('.')
+inc_tools_baseh_dep = declare_dependency (include_directories : inc_tools_baseh)
 
 basetool_sources = files([
 	'base-tool.h',
