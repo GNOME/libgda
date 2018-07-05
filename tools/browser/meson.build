@@ -26,7 +26,7 @@ gda_browser_link_args += [
 
 
 gda_browser_marshalls = gnome_module.genmarshal('browser-marshal',prefix : '_common_marshal',
-					sources : 'marshal.list')
+					sources : 'browser-marshal.list')
 
 
 gda_browser_sources += gda_browser_marshalls
@@ -78,11 +78,19 @@ gda_browser_sources += gda_browser_sourcesf
 
 subdir('data')
 
+desktopf = files(['gda-browser.desktop.in.in'])
+desktopconf = configuration_data()
+desktopfin = configure_file(
+	input: 'gda-browser.desktop.in.in',
+	output: 'gda-browser-'+project_api_version+'.desktop.in',
+	configuration: desktopconf
+	)
+
 i18n.merge_file('browser_desktop',
 	po_dir: join_paths(meson.source_root(),'po'),
 	type: 'desktop',
-	input: 'gda-browser-6.0.desktop.in',
-	output: 'gda-browser-6.0.desktop',
+	input: desktopfin,
+	output: 'gda-browser-'+project_api_version+'.desktop',
 	install: true,
 	install_dir: join_paths(get_option('datadir'),'applications')
 	)

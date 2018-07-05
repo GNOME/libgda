@@ -18,7 +18,7 @@ query_exec_sources = files([
 
 
 gda_browser_query_exec_marshalls = gnome_module.genmarshal('query-marshal',prefix : '_qe_marshal',
-					sources : 'marshal.list')
+					sources : 'query-marshal.list')
 
 query_exec_sources += gda_browser_query_exec_marshalls
 

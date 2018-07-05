@@ -38,6 +38,10 @@ LIBGDA_ABI_VERSION=$GDA_ABI_MAJOR_VERSION.$GDA_ABI_MINOR_VERSION
 AC_SUBST(GDA_ABI_VERSION, $LIBGDA_ABI_VERSION)
 LIBGDA_ABI_NAME="\\\"libgda-$LIBGDA_ABI_VERSION\\\""
 
+
+AC_SUBST(GDA_API_VERSION, 6.0)
+AC_SUBST(GDA_ABI_MINOR_VERSION, 0)
+
 gdasysconfdir="$sysconfdir"
 AC_SUBST(gdasysconfdir)
 
@@ -1016,13 +1020,13 @@ libgda-ui/demos/Makefile
 libgda-ui/demos/geninclude.pl
 libgda-ui/glade/Makefile
 control-center/Makefile
-control-center/gda-control-center-6.0.desktop.in
+control-center/gda-control-center-$(API).desktop.in:
 control-center/data/Makefile
 tools/Makefile
 tools/gda-sql-6.0.1:tools/gda-sql.1.in
 tools/base/Makefile
 tools/browser/Makefile
-tools/browser/gda-browser-6.0.desktop.in
+tools/browser/gda-browser-$(GDA_API_VERSION).desktop.in:gda-browser.desktop.in.in
 tools/browser/canvas/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/schema-browser/Makefile

@@ -28,7 +28,7 @@ data_manager_sources = files([
 
 
 gda_browser_data_manager_marshalls = gnome_module.genmarshal('data-manager-marshal',prefix : '_dm_marshal',
-					sources : 'marshal.list')
+					sources : 'data-manager-marshal.list')
 
 data_manager_sources += gda_browser_data_manager_marshalls
 
