@@ -13,7 +13,9 @@ version_split = project_version.split('.')
 MAJOR_VERSION = version_split[0]
 MINOR_VERSION = version_split[1]
 MICRO_VERSION = version_split[2]
-project_api_version = '6.0'
+API_MAJOR_VERSION = '6'
+API_MINOR_VERSION = '0'
+project_api_version = API_MAJOR_VERSION+'.'+API_MINOR_VERSION
 project_abi_version = MAJOR_VERSION+'.'+MINOR_VERSION
 project_abi_name = '"' + meson.project_name() + '-' + project_abi_version + '"'
 project_package = meson.project_name() + '-' + project_api_version
@@ -217,6 +219,51 @@ if windows
 win = import('windows')
 endif
 
+# PC files
+pcconf = configuration_data()
+pcconf.set('prefix', get_option('prefix'))
+pcconf.set('exec_prefix', get_option('libexecdir'))
+pcconf.set('libdir', get_option('libdir'))
+pcconf.set('includedir', get_option('includedir'))
+pcconf.set('GDA_ABI_MAJOR_VERSION', API_MAJOR_VERSION)
+pcconf.set('GDA_ABI_MINOR_VERSION', API_MINOR_VERSION)
+pcconf.set('VERSION', project_version)
+pcconf.set('GDA_DEBUG_FLAGS', '')
+
+libgda_pc = configure_file(
+	input: 'libgda-'+project_api_version+'.pc.in',
+	output: 'libgda-'+project_api_version+'.pc',
+	configuration: pcconf,
+	install: true,
+	install_dir: join_paths(get_option('libdir'),'pkgconfig')
+	)
+
+if libxslt_dep.found()
+	libgda_xslt_pc = configure_file(
+		input: 'libgda-xslt-'+project_api_version+'.pc.in',
+		output: 'libgda-xslt-'+project_api_version+'.pc',
+		configuration: pcconf,
+		install: true,
+		install_dir: join_paths(get_option('libdir'),'pkgconfig')
+		)
+endif
+
+if enable_ui
+libgdaui_pc = configure_file(
+	input: 'libgda-ui-'+project_api_version+'.pc.in',
+	output: 'libgda-ui-'+project_api_version+'.pc',
+	configuration: pcconf,
+	install: true,
+	install_dir: join_paths(get_option('libdir'),'pkgconfig')
+	)
+libgda_report_pc = configure_file(
+	input: 'libgda-report-'+project_api_version+'.pc.in',
+	output: 'libgda-report-'+project_api_version+'.pc',
+	configuration: pcconf,
+	install: true,
+	install_dir: join_paths(get_option('libdir'),'pkgconfig')
+	)
+endif
 
 subdir('tools')
 subdir('tests')
