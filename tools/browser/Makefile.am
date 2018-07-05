@@ -31,14 +31,14 @@ AM_CPPFLAGS = \
         -DLIBDIR=\""$(libdir)"\" \
 	$(ldap_flags)
 
-browser-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+browser-marshal.h: browser-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_common_marshal > $@
-browser-marshal.c: marshal.list $(GLIB_GENMARSHAL) browser-marshal.h
+browser-marshal.c: browser-marshal.list $(GLIB_GENMARSHAL) browser-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_common_marshal > $@
 
 libbrowsercore_la_SOURCES=\
-	marshal.c \
-	marshal.h \
+	browser-marshal.c \
+	browser-marshal.h \
 	decl.h \
 	perspectives-names.h \
 	dnd.h \
@@ -98,7 +98,7 @@ Desktop_in_files = gda-browser-6.0.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \
-	marshal.list \
+	browser-marshal.list \
 	$(Desktop_in_files) \
 	$(appdata_in_files) \
 	$(appicons_DATA)

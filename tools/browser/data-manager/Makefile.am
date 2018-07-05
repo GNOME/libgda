@@ -13,9 +13,9 @@ AM_CPPFLAGS = \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
-data-manager-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+data-manager-marshal.h: data-manager-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_dm_marshal > $@
-data-manager-marshal.c: marshal.list $(GLIB_GENMARSHAL) data-manager-marshal.h
+data-manager-marshal.c: data-manager-marshal.list $(GLIB_GENMARSHAL) data-manager-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_dm_marshal > $@
 
 GENFILES = \
@@ -51,7 +51,7 @@ libperspective_la_SOURCES = \
 
 EXTRA_DIST= \
 	$(langspec_DATA) \
-	marshal.list
+	data-manager-marshal.list
 
 CLEANFILES = \
 	$(GENFILES)

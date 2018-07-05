@@ -16,9 +16,9 @@ AM_CPPFLAGS = \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
-query-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+query-marshal.h: query-marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_qe_marshal > $@
-query-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+query-marshal.c: query-marshal.list $(GLIB_GENMARSHAL) query-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_qe_marshal > $@
 
 GENFILES = \
@@ -46,7 +46,7 @@ $(OBJECTS): query-marshal.c query-marshal.h
 
 EXTRA_DIST= \
 	$(langspec_DATA) \
-	marshal.list
+	query-marshal.list
 
 CLEANFILES = \
 	$(GENFILES)
