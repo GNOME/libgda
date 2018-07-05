@@ -37,16 +37,13 @@ SUBDIRS = \
 	doc
 
 example_files = \
-	examples/SimpleExample/Makefile \
 	examples/SimpleExample/example.c \
 	examples/SimpleExample/README \
 	examples/TableCopy/common.h \
 	examples/TableCopy/common.c \
-	examples/TableCopy/Makefile \
 	examples/TableCopy/table-copy.c \
 	examples/TableCopy/table-copy-easier.c \
 	examples/TableCopy/README \
-	examples/BDB/Makefile \
 	examples/BDB/README \
 	examples/BDB/access-custom.c \
 	examples/BDB/access-raw.c \
@@ -54,13 +51,10 @@ example_files = \
 	examples/BDB/custom-bdb-model.c \
 	examples/BDB/custom-bdb-model.h \
 	examples/BDB/fill.c \
-	examples/DirDataModel/Makefile \
 	examples/DirDataModel/README \
 	examples/DirDataModel/find-duplicates.c \
-	examples/DDL/Makefile \
 	examples/DDL/README \
 	examples/DDL/ddl.c \
-	examples/F-Spot/Makefile \
 	examples/F-Spot/README \
 	examples/F-Spot/VirtualConnectionSetup.dia \
 	examples/F-Spot/repair-path.c \
@@ -72,50 +66,38 @@ example_files = \
 	examples/Report/customers-report-spec.xml \
 	examples/Report/schema-report.c \
 	examples/Report/schema-report-spec.xml \
-	examples/Report/Makefile \
 	examples/Report/README \
-	examples/Virtual/Makefile \
 	examples/Virtual/README \
 	examples/Virtual/city.csv \
 	examples/Virtual/country.csv \
 	examples/Virtual/virtual-test.c \
-	examples/XSLT/Makefile \
 	examples/XSLT/README \
 	examples/XSLT/data.xml \
 	examples/XSLT/data2.xml \
 	examples/XSLT/test.xsl \
 	examples/XSLT/transform.c \
-	examples/MetaStore/Makefile \
 	examples/MetaStore/README \
 	examples/MetaStore/background.c \
 	examples/MetaStore/example.c \
-	examples/Tree/Makefile \
 	examples/Tree/README \
 	examples/Tree/example.c \
-	examples/SqlBuilder/Makefile \
 	examples/SqlBuilder/README \
 	examples/SqlBuilder/example.c \
-	examples/AsyncExec/Makefile \
 	examples/AsyncExec/README \
 	examples/AsyncExec/example.c \
 	examples/WritableSelect/README \
 	examples/WritableSelect/example.c \
-	examples/WritableSelect/Makefile \
 	examples/SimpleUIForm/README \
 	examples/SimpleUIForm/example.c \
-	examples/SimpleUIForm/Makefile \
 	examples/SimpleUIForm/ScreenShot.png \
 	examples/Blobs/blobtest.c \
-	examples/Blobs/Makefile \
+	examples/Blobs/Makefile.cross.win32
 	examples/Blobs/README \
 	examples/Blobs/testblob.db \
-	examples/Gir/Makefile \
 	examples/Gir/README \
 	examples/Gir/libgda.js \
-	examples/LdapBrowser/Makefile \
 	examples/LdapBrowser/README \
 	examples/LdapBrowser/ldap-browser.c \
-	examples/CustomUIPlugin/Makefile \
 	examples/CustomUIPlugin/README \
 	examples/CustomUIPlugin/custom-entry-password.c \
 	examples/CustomUIPlugin/custom-entry-password.h \
@@ -128,7 +110,6 @@ EXTRA_DIST = \
 	intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in \
-	mkinstalldirs \
 	$(example_files) \
 	getsp.class \
 	getsp.java
