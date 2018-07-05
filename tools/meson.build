@@ -95,9 +95,6 @@ executable('gda-browser-'+project_api_version,
 	link_args: gda_browser_link_args
 	)
 
-
-endif
-
 tsplitter_deps = [
 		libgda_dep,
 		inc_rooth_dep,
@@ -133,3 +130,4 @@ test('Splitter', tsplitter,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+endif
