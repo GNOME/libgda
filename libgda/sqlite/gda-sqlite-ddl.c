@@ -36,6 +36,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 
 	GString *string;
 	const GValue *value;
+	const GValue *value1;
 	gboolean allok = TRUE;
 	gboolean hasfields = FALSE;
 	gint nrows;
@@ -133,8 +134,8 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 			}
 
 			if (!pkautoinc) {
-				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
-				g_string_append (string, g_value_get_string (value));
+				value1 = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
+				g_string_append (string, g_value_get_string (value1));
 				
 				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SIZE/%d", i);
 				if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
@@ -152,7 +153,16 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 					const gchar *str = g_value_get_string (value);
 					if (str && *str) {
 						g_string_append (string, " DEFAULT ");
-						g_string_append (string, str);
+            const gchar* valtmp = g_value_get_string (value1);
+            if (!g_ascii_strcasecmp (valtmp,"string") ||
+                !g_ascii_strcasecmp (valtmp,"gchararray")) {
+              g_string_append_c (string,'\'');
+              g_string_append (string, str);
+              g_string_append_c (string,'\'');
+            }
+            else {
+              g_string_append (string, str);
+            }
 					}
 				}
 				
