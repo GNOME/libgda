@@ -31,9 +31,9 @@ AM_CPPFLAGS = \
         -DLIBDIR=\""$(libdir)"\" \
 	$(ldap_flags)
 
-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+browser-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_common_marshal > $@
-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+browser-marshal.c: marshal.list $(GLIB_GENMARSHAL) browser-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_common_marshal > $@
 
 libbrowsercore_la_SOURCES=\

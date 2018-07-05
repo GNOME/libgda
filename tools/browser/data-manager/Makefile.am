@@ -13,14 +13,14 @@ AM_CPPFLAGS = \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+data-manager-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_dm_marshal > $@
-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+data-manager-marshal.c: marshal.list $(GLIB_GENMARSHAL) data-manager-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_dm_marshal > $@
 
 GENFILES = \
-	marshal.c \
-	marshal.h
+	data-manager-marshal.c \
+	data-manager-marshal.h
 
 $(libperspective_la_OBJECTS): $(GENFILES)
 

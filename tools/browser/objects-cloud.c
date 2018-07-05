@@ -27,7 +27,7 @@
 #include "dnd.h"
 #include "ui-support.h"
 #include "gdaui-bar.h"
-#include "marshal.h"
+#include "browser-marshal.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>
 

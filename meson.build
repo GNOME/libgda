@@ -132,8 +132,8 @@ if libcryp_config.found()
   conf.set('HAVE_LIBCRYPT_CONFIG', 1)
 endif
 
-if get_option('with-libsoup')
-  soup_dep = dependency('libsoup-2.4')
+soup_dep = dependency('libsoup-2.4', required: false)
+if soup_dep.found() and get_option('with-libsoup')
   libgda_dep += [soup_dep]
 endif
 
@@ -177,7 +177,7 @@ if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : false)
 	goocanvas_dep = dependency('goocanvas-2.0', required: false)
-	gtksourceview_dep = dependency('gtksourceview-3.0', required: false)
+	gtksourceview_dep = dependency('gtksourceview-3.0')
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
 	if get_option('with-graphviz') and graphviz_dep.found()
@@ -208,6 +208,14 @@ if libxslt_dep.found()
 	subdir('libgda-xslt')
 endif
 
+# Platform data
+windows = build_machine.system().contains('windows')
+if windows
+win = import('windows')
+endif
+
+
+subdir('tools')
 subdir('tests')
 subdir('testing')
 

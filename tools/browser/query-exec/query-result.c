@@ -25,7 +25,7 @@
 #include <libgda-ui/libgda-ui.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include "../ui-formgrid.h"
-#include "marshal.h"
+#include "query-marshal.h"
 
 struct _QueryResultPrivate {
 	QueryEditor *history;

@@ -22,7 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include "common/t-connection.h"
 #include "../ui-support.h"
-#include "marshal.h"
+#include "data-manager-marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-sql-builder.h>

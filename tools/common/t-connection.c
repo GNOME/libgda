@@ -22,7 +22,7 @@
 #include "t-connection.h"
 #include "t-app.h"
 #include "t-context.h"
-#include "marshal.h"
+#include "common-marshal.h"
 #include <sql-parser/gda-sql-parser.h>
 #include <libgda/gda-sql-builder.h>
 #include <libgda-ui/gdaui-enums.h>

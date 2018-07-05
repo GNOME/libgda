@@ -12,14 +12,14 @@ AM_CPPFLAGS = \
         $(COREDEPS_CFLAGS) \
         $(COREDEPS_WFLAGS)
 
-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+common-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_marshal > $@
-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+common-marshal.c: marshal.list $(GLIB_GENMARSHAL) common-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_marshal > $@
 
 nonuisources = \
-	marshal.h \
-	marshal.c \
+	common-marshal.h \
+	common-marshal.c \
 	t-decl.h \
 	t-app.h \
 	t-app.c \

@@ -16,14 +16,14 @@ AM_CPPFLAGS = \
 	$(GTKSOURCEVIEW_CFLAGS) \
 	$(MAC_INTEGRATION_CFLAGS)
 
-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+query-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_qe_marshal > $@
-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+query-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_qe_marshal > $@
 
 GENFILES = \
-	marshal.c \
-	marshal.h
+	query-marshal.c \
+	query-marshal.h
 
 $(libperspective_la_OBJECTS): $(GENFILES)
 
@@ -42,7 +42,7 @@ libperspective_la_SOURCES = \
 	query-exec-perspective.h \
 	query-exec-perspective.c
 
-$(OBJECTS): marshal.c marshal.h
+$(OBJECTS): query-marshal.c query-marshal.h
 
 EXTRA_DIST= \
 	$(langspec_DATA) \
