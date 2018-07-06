@@ -231,6 +231,29 @@ libgda = library(
 	install : true
 	)
 
+# GObject Introspection
+gi_sources = []
+gi_sources += psupport_gi_sources
+gi_sources += threadwrapper_gi_sources
+gi_sources += sql_parser_gi_sources
+gi_sources += libgda_handlers_sources
+
+gnome_module.generate_gir(libgda,
+	sources: gi_sources,
+	namespace: 'Gda',
+	identifier_prefix: 'Gda',
+	nsversion: project_api_version,
+	header: 'libgda.h',
+	includes: [
+		'GObject-2.0',
+		'libxml2-2.0'
+		],
+	dependencies: libgda_dep,
+	install: true,
+	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
+	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
+	)
+
 # Tests
 tco = executable('test_cnc_open', 'test-cnc-open.c',
 	dependencies: [
