@@ -1,18 +1,30 @@
-libgda_threadwrapper_headers = files([
+threadwrapper_headers = files([
 	'gda-worker.h',
+	])
+threadwrapper_headers_priv = files([
 	'gda-connect.h'
 	])
 
-libgda_threadwrapper_sources = files([
+threadwrapper_sources = files([
+	'gda-worker.c',
+	])
+
+threadwrapper_sources_priv = files([
 	'background.h',
 	'background.c',
 	'itsignaler.h',
 	'itsignaler.c',
-	'gda-worker.c',
 	'gda-connect.c'
 	])
+libgda_threadwrapper_sources = []
+libgda_threadwrapper_sources += threadwrapper_sources
+libgda_threadwrapper_sources += threadwrapper_sources_priv
+libgda_threadwrapper_sources += threadwrapper_headers
+libgda_threadwrapper_sources += threadwrapper_headers_priv
 
-libgda_threadwrapper_sources += libgda_threadwrapper_headers
+threadwrapper_gi_sources = []
+threadwrapper_gi_sources += threadwrapper_sources
+threadwrapper_gi_sources += threadwrapper_headers
 
 test_raw_itsignaler_sources = files([
 	'test-raw-itsignaler.c'
