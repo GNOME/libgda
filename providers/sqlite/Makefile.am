@@ -42,7 +42,10 @@ xml_DATA = $(xml_in_files:.xml.in=.xml)
 # resources
 RESOURCES=$(xml_in_files:.xml.in=.raw.xml)
 sqlite.gresources.c: sqlite.gresource.xml $(RESOURCES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --generate-source $(srcdir)/sqlite.gresource.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) \
+	--sourcedir=$(top_srcdir)/providers/sqlite \
+	--sourcedir=$(top_builddir)/providers/sqlite \
+	 --target=$@ --generate-source $(srcdir)/sqlite.gresource.xml
 
 %.raw.xml:%.xml.in
 	@echo "  GEN      $@"
