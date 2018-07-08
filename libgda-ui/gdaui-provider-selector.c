@@ -48,7 +48,7 @@ show_providers (GdauiProviderSelector *selector)
 	GdaDataModel *model;
 
 	model = gda_config_list_providers ();
-	gdaui_combo_set_model (GDAUI_COMBO (selector), model, 1, cols);
+	gdaui_combo_set_data (GDAUI_COMBO (selector), model, 1, cols);
 	g_object_unref (model);
 }
 

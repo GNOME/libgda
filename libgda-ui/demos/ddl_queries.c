@@ -175,7 +175,7 @@ update_possible_operations (DemoData *data)
 	if (!model) {
 		gint columns[] = {1};
 		model = gda_data_model_array_new_with_g_types (2, G_TYPE_INT, G_TYPE_STRING);
-		gdaui_combo_set_model (GDAUI_COMBO (data->op_combo), model, 1, columns);
+		gdaui_combo_set_data (GDAUI_COMBO (data->op_combo), model, 1, columns);
 	}
 	else
 		gda_data_model_array_clear (GDA_DATA_MODEL_ARRAY (model));

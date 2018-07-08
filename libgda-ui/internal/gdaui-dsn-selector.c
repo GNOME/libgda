@@ -83,7 +83,7 @@ gdaui_dsn_selector_init (GdauiDsnSelector *selector,
 	selector->priv = g_new0 (GdauiDsnSelectorPrivate, 1);
 
 	model = gda_config_list_dsn ();
-	gdaui_combo_set_model (GDAUI_COMBO (selector), model, 1, cols_index);
+	gdaui_combo_set_data (GDAUI_COMBO (selector), model, 1, cols_index);
 	g_object_unref (model);
 }
 

@@ -244,7 +244,7 @@ uiset_source_model_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiSetSource
 			cvalue = gda_holder_get_value (gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			values = g_slist_append (values, (GValue *) cvalue);
 		}
-		gdaui_combo_set_model (GDAUI_COMBO (combo->priv->combo_entry),
+		gdaui_combo_set_data (GDAUI_COMBO (combo->priv->combo_entry),
 				       gda_set_source_get_data_model (s),
 				       gdaui_set_source_get_shown_n_cols (combo->priv->source), 
 				       gdaui_set_source_get_shown_columns (combo->priv->source));

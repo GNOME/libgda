@@ -207,7 +207,7 @@ gdaui_combo_set_property (GObject *object,
 
 	switch (param_id) {
 	case PROP_MODEL :
-		gdaui_combo_set_model (combo,
+		gdaui_combo_set_data (combo,
 				       GDA_DATA_MODEL (g_value_get_object (value)),
 				       0, NULL);
 		break;
@@ -334,7 +334,7 @@ gdaui_combo_new ()
  * @n_cols: number of columns in the model to be shown
  * @cols_index: an array of columns to be shown, its size must be @n_cols
  *
- * Create a new GdauiCombo widget with a model. See gdaui_combo_set_model() for
+ * Create a new GdauiCombo widget with a model. See gdaui_combo_set_data() for
  * more information about the @n_cols and @cols_index usage.
  *
  * Returns: (transfer full): the newly-created widget.
@@ -349,37 +349,13 @@ gdaui_combo_new_with_model (GdaDataModel *model, gint n_cols, gint *cols_index)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
 	combo = GDAUI_COMBO (gdaui_combo_new ()); 
-	gdaui_combo_set_model (GDAUI_COMBO (combo), GDA_DATA_MODEL (model), n_cols, cols_index);
+	gdaui_combo_set_data (GDAUI_COMBO (combo), GDA_DATA_MODEL (model), n_cols, cols_index);
 
 	return GTK_WIDGET (combo);
 }
 
 static void cell_layout_data_func (GtkCellLayout *cell_layout, GtkCellRenderer *cell,
 				   GtkTreeModel *tree_model, GtkTreeIter *iter, GdauiCombo *combo);
-
-/**
- * gdaui_combo_set_model:
- * @combo: a #GdauiCombo widget.
- * @model: a #GdaDataModel object.
- * @n_cols: number of columns in the model to be shown
- * @cols_index: (array length=n_cols): an array of columns to be shown, its size must be @n_cols
- *
- * Makes @combo display data stored in @model (makes the
- * combo widget refresh its list of values and display the values contained
- * in the model). A NULL @model will make the combo empty
- * and disassociate the previous model, if any.
- *
- * if @n_cols is %0, then all the columns of @model will be displayed in @combo.
- *
- * Since: 4.2
- *
- * Deprecated: 5.2
- */
-void
-gdaui_combo_set_model (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint *cols_index)
-{
-	gdaui_combo_set_data (combo, model, n_cols, cols_index);
-}
 
 /**
  * gdaui_combo_set_data:
