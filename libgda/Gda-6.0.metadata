@@ -39,3 +39,7 @@ Connection
 	.statement_execute*.last_insert_row default=null
 	.statement_execute_select_full.col_types default=null
 
+// skipping
+BlobOpFunctions skip=true
+ServerProviderBase skip=true
+SqlStatementContentsInfo skip=true
