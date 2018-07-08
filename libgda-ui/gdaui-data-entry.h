@@ -55,7 +55,6 @@ struct _GdauiDataEntryIface
 	void            (* contents_modified)    (GdauiDataEntry *de);
 	void            (* contents_activated)   (GdauiDataEntry *de);
 	void            (* status_changed)       (GdauiDataEntry *de);
-	gboolean        (* contents_valid)       (GdauiDataEntry *de, GError **error);
 
 	/* virtual table */
 	void            (*set_value_type)        (GdauiDataEntry *de, GType type);

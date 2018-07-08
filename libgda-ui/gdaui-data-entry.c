@@ -85,12 +85,6 @@ contents_valid_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
         return thisvalue; /* stop signal if 'thisvalue' is FALSE */
 }
 
-static gboolean
-m_class_contents_valid (G_GNUC_UNUSED GdauiDataEntry *de, G_GNUC_UNUSED GError **error)
-{
-	return TRUE;
-}
-
 static void
 gdaui_data_entry_iface_init (gpointer g_class)
 {
@@ -121,27 +115,6 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
-		/**
-		 * GdauiDataEntry::contents-valid:
-		 * @model: the #GdauiDataEntry
-		 * @error: a #GError to set erros to or NULL
-		 *
-		 * Gets emitted when data entered to the #GdaDataEntry widget must be validated.
-		 *
-		 * For bindings use #gdaui_data_entry_validate function.
-		 *
-		 * Returns: TRUE when the data was successfull validated, FALSE otherwise.
-		 *
-		 * Deprecated: 5.2.0
-		 */
-		gdaui_data_entry_signals[CONTENTS_VALID] =
-			g_signal_new ("contents-valid",
-				      GDAUI_TYPE_DATA_ENTRY,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_valid),
-				      contents_valid_accumulator, NULL,
-				      _gdaui_marshal_BOOLEAN__POINTER,
-				      G_TYPE_BOOLEAN, 1, G_TYPE_POINTER);
 		gdaui_data_entry_signals[EXPAND_CHANGED] =
 			g_signal_new ("expand-changed",
 				      GDAUI_TYPE_DATA_ENTRY,
@@ -151,7 +124,6 @@ gdaui_data_entry_iface_init (gpointer g_class)
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 
-		((GdauiDataEntryIface*) g_class)->contents_valid = m_class_contents_valid;
 		initialized = TRUE;
 	}
 }

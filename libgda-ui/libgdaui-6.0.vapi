@@ -669,8 +669,8 @@ namespace Gdaui {
 	public interface DataEntry : Gtk.Widget {
 		[Version (deprecated = true, deprecated_since = "5.2", since = "4.2")]
 		public abstract bool can_expand (bool horiz);
-		[NoWrapper]
-		public abstract bool contents_valid () throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "5.2", since = "4.2")]
+		public bool content_is_valid () throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		[Version (since = "4.2")]
 		public abstract Gda.ValueAttribute get_attributes ();
