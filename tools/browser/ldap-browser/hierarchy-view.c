@@ -382,7 +382,7 @@ ldap_update_tree_part (IdleData *data)
 	gda_tree_update_children (data->tree, data->node, NULL);
 
 	GtkTreeIter iter;
-	if (gdaui_tree_store_get_iter (data->store, &iter, data->node)) {
+	if (gdaui_tree_store_get_iter_from_node (data->store, &iter, data->node)) {
 		if (gda_tree_node_get_child_index (data->node, 0)) {
 			/* actually expand the row */
 			GtkTreePath *path;

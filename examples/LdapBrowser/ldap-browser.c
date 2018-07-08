@@ -165,7 +165,7 @@ ldap_update_tree_part (IdleData *data)
         gda_tree_update_children (data->tree, data->node, NULL);
 
 	GtkTreeIter iter;
-	if (gdaui_tree_store_get_iter (data->store, &iter, data->node) &&
+	if (gdaui_tree_store_get_iter_from_node (data->store, &iter, data->node) &&
 	    gda_tree_node_get_child_index (data->node, 0)) {
 		GtkTreePath *path;
 		path = gtk_tree_model_get_path (GTK_TREE_MODEL (data->store), &iter);
