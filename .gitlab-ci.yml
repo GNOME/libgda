@@ -41,7 +41,6 @@ autotools_build:
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
-  - make distclean
   - make distcheck
   artifacts:
     when: on_failure
