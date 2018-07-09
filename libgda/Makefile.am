@@ -344,6 +344,7 @@ introspection_sources = $(gda_sources) \
 	$(sqlparser) \
 	$(handlers)
 Gda-6.0.gir: $(lib_LTLIBRARIES)
+Gda-6.0.typelib: $(lib_LTLIBRARIES)
 Gda_6_0_gir_INCLUDES = GObject-2.0 libxml2-2.0
 Gda_6_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 
