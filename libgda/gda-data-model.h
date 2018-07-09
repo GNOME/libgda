@@ -207,7 +207,6 @@ GdaValueAttribute   gda_data_model_get_attributes_at      (GdaDataModel *model, 
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
 gboolean            gda_data_model_iter_at_row            (GdaDataModel *model, GdaDataModelIter *iter, 
                                gint row);
-gboolean            gda_data_model_iter_next              (GdaDataModel *model, GdaDataModelIter *iter); 
 gboolean            gda_data_model_iter_prev              (GdaDataModel *model, GdaDataModelIter *iter);
 gboolean            gda_data_model_iter_set_value         (GdaDataModel *model, GdaDataModelIter *iter, gint col,
 						       const GValue *value, GError **error);

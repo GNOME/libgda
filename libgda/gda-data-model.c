@@ -910,23 +910,6 @@ gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint ro
 	return gda_data_model_iter_move_to_row (iter, row);
 }
 
-/**
- * gda_data_model_iter_next: (virtual i_iter_next)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- *
- * Moves @iter to the next row in @model.
- * 
- * Deprecated: 5.2: use gda_data_model_iter_move_next() instead
- */
-gboolean
-gda_data_model_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-
-	return gda_data_model_iter_move_next (iter);
-}
 
 /**
  * gda_data_model_iter_prev: (virtual i_iter_prev)
