@@ -217,33 +217,6 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_content_is_valid:
- * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @error: (allow-none): a place to store an error, or %NULL
- *
- * Tests the validity of @de's contents. The validity is a determined from:
- * <itemizedlist>
- *   <listitem><para>the @de widget itself if it is capable of doing it (depending on the implementation)</para></listitem>
- *   <listitem><para>the results of the "contents-valid" signal which can be connected from </para></listitem>
- * </itemizedlist>
- *
- * Returns: TRUE if @de's contents is valid
- *
- * Since: 4.2
- *
- * Deprecated: 5.2
- */
-gboolean
-gdaui_data_entry_content_is_valid (GdauiDataEntry *de, GError **error)
-{
-	gboolean is_valid;
-	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
-
-	g_signal_emit (de, gdaui_data_entry_signals [CONTENTS_VALID], 0, error, &is_valid);
-	return is_valid;
-}
-
-/**
  * gdaui_data_entry_validate:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @error: (allow-none): a place to store an erro, or %NULL

@@ -124,7 +124,6 @@ GType           gdaui_data_entry_get_value_type         (GdauiDataEntry *de);
 
 void            gdaui_data_entry_set_value              (GdauiDataEntry *de, const GValue *value);
 GValue         *gdaui_data_entry_get_value              (GdauiDataEntry *de);
-gboolean        gdaui_data_entry_content_is_valid       (GdauiDataEntry *de, GError **error);
 gboolean        gdaui_data_entry_validate		(GdauiDataEntry *de, GError **error);
 void            gdaui_data_entry_set_reference_value    (GdauiDataEntry *de, const GValue *value);
 const GValue   *gdaui_data_entry_get_reference_value    (GdauiDataEntry *de);
