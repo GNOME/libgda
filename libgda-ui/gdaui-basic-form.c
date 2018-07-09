@@ -642,7 +642,7 @@ gdaui_basic_form_set_property (GObject *object,
 				g_return_if_fail (GDA_IS_SET (form->priv->set));
 
 				g_object_ref (form->priv->set);
-				form->priv->set_info = _gdaui_set_new (GDA_SET (form->priv->set));
+				form->priv->set_info = gdaui_set_new (GDA_SET (form->priv->set));
 
 				g_signal_connect (form->priv->set_info, "public-data-changed",
 						  G_CALLBACK (paramlist_public_data_changed_cb), form);

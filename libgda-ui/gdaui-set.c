@@ -506,11 +506,6 @@ enum {
 static gint gdaui_set_signals[LAST_SIGNAL] = { 0, 0 };
 
 GType
-_gdaui_set_get_type (void) {
-	return gdaui_set_get_type ();
-}
-
-GType
 gdaui_set_get_type (void)
 {
 	static GType type = 0;
@@ -593,22 +588,6 @@ gdaui_set_init (GdauiSet *set)
 {
 	set->priv = g_new0 (GdauiSetPriv, 1);
 	set->priv->set = NULL;
-}
-
-/*
- * _gdaui_set_new
- * @set: a #GdaSet
- *
- * Creates a new #GdauiSet which wraps @set's properties
- *
- * Returns: the new widget
- * 
- * Deprecated: Since 5.2
- */
-GdauiSet *
-_gdaui_set_new (GdaSet *set)
-{
-	return gdaui_set_new (set);
 }
 
 /**
@@ -956,20 +935,6 @@ gdaui_set_get_property (GObject *object,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}	
-}
-
-/**
- * _gdaui_set_get_group:
- * @dbset:
- * @holder:
- * 
- * Returns: A new #GdauiSetGroup struct
- * Deprecated: Since 5.2
- **/
-GdauiSetGroup  *
-_gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder) 
-{
-	return gdaui_set_get_group (dbset, holder);
 }
 
 /**

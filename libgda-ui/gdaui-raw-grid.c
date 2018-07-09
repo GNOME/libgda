@@ -2426,7 +2426,7 @@ gdaui_raw_grid_set_column_editable (GdauiDataProxy *iface, gint column, gboolean
 		param = gda_data_model_iter_get_holder_for_field (grid->priv->iter, column);
 		g_return_if_fail (param);
 
-		group = _gdaui_set_get_group (grid->priv->iter_info, param);
+		group = gdaui_set_get_group (grid->priv->iter_info, param);
 		g_return_if_fail (group);
 
 		cdata = get_column_data_for_group (grid, group);
