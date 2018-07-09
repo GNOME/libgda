@@ -54,8 +54,6 @@ gboolean gda_server_provider_perform_operation_default (GdaServerProvider *provi
 
 /* default data handler method */
 GdaDataHandler *gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type);
-GdaDataHandler *gda_server_provider_get_data_handler_default (GdaServerProvider *provider, GdaConnection *cnc,
-							      GType type, const gchar *dbms_type);
 
 /* Convert a SELECT statement with potentially some parameters to another SELECT statement
  * where all the parameters are removed and where the WHERE condition is set to "0 = 1"
