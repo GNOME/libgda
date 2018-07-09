@@ -142,7 +142,6 @@ void              gda_data_model_iter_invalidate_contents  (GdaDataModelIter *it
 gboolean          gda_data_model_iter_is_valid             (GdaDataModelIter *iter);
 
 GdaHolder        *gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col);
-gint              gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *param);
 
 #define gda_data_model_iter_move_at_row gda_data_model_iter_move_to_row
 
