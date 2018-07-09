@@ -391,34 +391,6 @@ gdaui_data_entry_get_handler (GdauiDataEntry *de)
 }
 
 /**
- * gdaui_data_entry_can_expand:
- * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @horiz: %TRUE to query horizontal expansion requirements, or %FALSE for vertical
- *
- * Used for the layout of #GdaDataEntry widgets in containers: queries if @de requires
- * horizontal or vertical expansion, depending on @horiz
- *
- * Returns: %TRUE if the widget requires expansion
- *
- * Since: 4.2
- *
- * Deprecated: 5.2: use the GtkWidget::hexpand, GtkWidget::wexpand or GtkWidget::expand properties
- */
-gboolean
-gdaui_data_entry_can_expand (GdauiDataEntry *de, gboolean horiz)
-{
-	g_return_val_if_fail (GDAUI_IS_DATA_ENTRY (de), FALSE);
-
-	if (GDAUI_DATA_ENTRY_GET_IFACE (de)->can_expand)
-		g_warning ("The GdauiDataEntry::can_expand virtual method is not used anymore, "
-			   "please clean your code");
-	if (horiz)
-		return gtk_widget_get_hexpand ((GtkWidget*) de);
-	else
-		return gtk_widget_get_vexpand ((GtkWidget*) de);
-}
-
-/**
  * gdaui_data_entry_set_editable:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
  * @editable: set to %TRUE to have an editable data entry

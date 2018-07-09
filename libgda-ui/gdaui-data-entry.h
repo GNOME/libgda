@@ -135,7 +135,6 @@ void            gdaui_data_entry_set_attributes         (GdauiDataEntry *de, Gda
 GdaValueAttribute gdaui_data_entry_get_attributes       (GdauiDataEntry *de);
 
 GdaDataHandler *gdaui_data_entry_get_handler            (GdauiDataEntry *de);
-gboolean        gdaui_data_entry_can_expand             (GdauiDataEntry *de, gboolean horiz);
 void            gdaui_data_entry_set_editable           (GdauiDataEntry *de, gboolean editable);
 gboolean        gdaui_data_entry_get_editable           (GdauiDataEntry *de);
 void            gdaui_data_entry_grab_focus             (GdauiDataEntry *de);
