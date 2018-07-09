@@ -38,10 +38,13 @@ autotools_build:
   stage: build
   script:
   - ./autogen.sh
+  - make distclean
+  - mkdir _build
+  - cd _build
+  - ../configure
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
-  - make distcheck
   artifacts:
     when: on_failure
     paths:
