@@ -79,9 +79,6 @@ typedef enum {
  */
 
 GType             gda_data_model_ldap_get_type        (void) G_GNUC_CONST;
-GdaDataModel     *gda_data_model_ldap_new             (GdaConnection *cnc,
-							const gchar *base_dn, const gchar *filter,
-							const gchar *attributes, GdaLdapSearchScope scope);
 GdaDataModelLdap *gda_data_model_ldap_new_with_config  (GdaConnection *cnc,
 							const gchar *base_dn, const gchar *filter,
 							const gchar *attributes, GdaLdapSearchScope scope);

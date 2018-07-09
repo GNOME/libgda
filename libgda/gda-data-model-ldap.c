@@ -166,57 +166,6 @@ gda_data_model_ldap_get_type (void)
 }
 
 /**
- * gda_data_model_ldap_new:
- * @cnc: an LDAP opened connection (must be a balid #GdaLdapConnection)
- * @base_dn: (allow-none): the base DN to search on, or %NULL
- * @filter: (allow-none): an LDAP filter, for example "(objectClass=*)"
- * @attributes: (allow-none): the list (CSV format) of attributes to fetch, each in the format &lt;attname&gt;[::&lt;GType&gt;]
- * @scope: the search scope
- *
- * Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
- * contain one row for each LDAP entry returned by the search, and will
- * always return the DN (Distinguished Name) of the LDAP entry as first column. Other atttibutes
- * may be mapped to other columns, see the @attributes argument.
- *
- * Note that the actual LDAP search command is not executed until necessary (when using the returned
- * data model).
- *
- * The @base_dn is the point in the LDAP's DIT (Directory Information Tree) from where the search will
- * occur, for example "dc=gda,dc=org". A %NULL value indicates that the starting point for the
- * search will be the one specified when opening the LDAP connection.
- *
- * The @filter argument is a valid LDAP filter string, for example "(uidNumber=1001)". If %NULL, then
- * a default search filter of "(objectClass=*)" will be used.
- *
- * @attributes specifies which LDAP attributes the search must return. It is a comma separated list
- * of attribute names, for example "uidNumber, mail, uid, jpegPhoto" (spaces between attribute names
- * are ignored). If %NULL, then no attribute will be fetched. See gda_ldap_connection_declare_table()
- * for more information about this argument.
- *
- * @scope is the scope of search specified when the LDAP search is actually executed.
- *
- * In case of multi valued attributes, an error will be returned when trying to read the attribute:
- * gda_data_model_iter_get_value_at() will return %NULL when using an iterator.
- *
- * Returns: (transfer full): a new #GdaDataModel
- * 
- * Deprecated: 5.2: use #gda_data_model_ldap_new_with_config
- * 
- * Since: 4.2.8
- */
-GdaDataModel *
-gda_data_model_ldap_new (GdaConnection *cnc,
-			 const gchar *base_dn, const gchar *filter,
-			 const gchar *attributes, GdaLdapSearchScope scope)
-{
-	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), NULL);
-	return (GdaDataModel*) g_object_new (GDA_TYPE_DATA_MODEL_LDAP,
-					     "cnc", cnc, "base", base_dn,
-					     "filter", filter, "attributes", attributes,
-					     "scope", scope, NULL);
-}
-
-/**
  * gda_data_model_ldap_new_with_config:
  * @cnc: an LDAP opened connection (must be a balid #GdaLdapConnection)
  * @base_dn: (allow-none): the base DN to search on, or %NULL
