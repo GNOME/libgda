@@ -47,8 +47,6 @@ namespace Gdaui {
 		[NoAccessorMethod]
 		public bool entries_auto_default { get; set; }
 		[NoAccessorMethod]
-		public bool headers_sensitive { get; set; }
-		[NoAccessorMethod]
 		public void* paramlist { get; set; }
 		[NoAccessorMethod]
 		public void* xml_layout { set; }
@@ -667,10 +665,8 @@ namespace Gdaui {
 	}
 	[CCode (cheader_filename = "libgda-ui/libgda-ui.h", type_id = "gdaui_data_entry_get_type ()")]
 	public interface DataEntry : Gtk.Widget {
-		[Version (deprecated = true, deprecated_since = "5.2", since = "4.2")]
+		[NoWrapper]
 		public abstract bool can_expand (bool horiz);
-		[Version (deprecated = true, deprecated_since = "5.2", since = "4.2")]
-		public bool content_is_valid () throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		[Version (since = "4.2")]
 		public abstract Gda.ValueAttribute get_attributes ();

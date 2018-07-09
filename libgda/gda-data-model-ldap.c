@@ -222,7 +222,7 @@ gda_data_model_ldap_new_with_config (GdaConnection *cnc,
  * @attributes: (allow-none): a string describing which LDAP attributes to retreive, or %NULL
  *
  * Computes the #GdaColumn of the data model which would be created using @attributes when calling
- * gda_data_model_ldap_new().
+ * gda_data_model_ldap_new_with_config().
  *
  * Returns: (transfer full) (element-type GdaColumn): a list of #GdaColumn objects
  *
