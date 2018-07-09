@@ -1490,6 +1490,7 @@ gda_sql_any_part_copy (GdaSqlAnyPart *src) {
 	GdaSqlAnyPart *cp = g_new0(GdaSqlAnyPart, 1);
 	cp->type = src->type;
 	cp->parent = src->parent;
+	return cp;
 }
 void
 gda_sql_any_part_free (GdaSqlAnyPart *anyp) {

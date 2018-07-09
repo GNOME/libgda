@@ -39,19 +39,6 @@ static int showPrecedenceConflict = 0;
 static const char **made_files = NULL;
 static int made_files_count = 0;
 static int successful_exit = 0;
-static void LemonAtExit(void)
-{
-    /* if we failed, delete (most) files we made, to unconfuse build tools. */
-    int i;
-    for (i = 0; i < made_files_count; i++) {
-        if (!successful_exit) {
-            remove(made_files[i]);
-        }
-    }
-    free(made_files);
-    made_files_count = 0;
-    made_files = NULL;
-}
 
 static char *msort(char*,char**,int(*)(const char*,const char*));
 
@@ -2566,7 +2553,7 @@ void Parse(struct lemon *gp)
     gp->errorcnt++;
     return;
   }
-  if( fread(filebuf,1,filesize,fp)!=filesize ){
+  if( fread(filebuf,1,filesize,fp)!= (uint) filesize ){
     ErrorMsg(ps.filename,0,"Can't read in all %d bytes of this file.",
       filesize);
     free(filebuf);
@@ -3359,7 +3346,7 @@ PRIVATE char *append_str(const char *zText, int n, int p1, int p2){
     }
     n = lemonStrlen(zText);
   }
-  if( n+sizeof(zInt)*2+used >= alloced ){
+  if( n+sizeof(zInt)*2+used >= (uint) alloced ){
     alloced = n + sizeof(zInt)*2 + used + 200;
     z = (char *) realloc(z,  alloced);
   }
