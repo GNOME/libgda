@@ -892,29 +892,6 @@ gda_data_model_create_iter (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_iter_set_value: (virtual i_iter_set_value)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- * @col: the number of column to set value to
- * @value: the to use to set on
- * @error: a place to set errors
- *
- * Set @value to the given @column and row pointed by @iter in the given @model.
- * 
- * Deprecated: 5.2: use gda_data_model_iter_set_value_at() instead
- */
-gboolean 
-gda_data_model_iter_set_value (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-			       const GValue *value, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	
-	return gda_data_model_iter_set_value_at (iter, col, value, error);
-}
-
-
-/**
  * gda_data_model_append_values: (virtual i_append_values)
  * @model: a #GdaDataModel object.
  * @values: (element-type GObject.Value) (allow-none): #GList of #GValue* representing the row to add.  The
