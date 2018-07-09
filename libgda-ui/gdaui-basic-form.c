@@ -133,7 +133,6 @@ enum {
 	PROP_0,
 	PROP_XML_LAYOUT,
 	PROP_PARAMLIST,
-	PROP_HEADERS_SENSITIVE,
 	PROP_ENTRIES_AUTO_DEFAULT,
 	PROP_CAN_VEXPAND
 };
@@ -291,16 +290,6 @@ gdaui_basic_form_class_init (GdauiBasicFormClass *klass)
 					 g_param_spec_pointer ("paramlist",
 							       _("List of parameters to show in the form"), NULL,
                                                                G_PARAM_READABLE | G_PARAM_WRITABLE));
-	/**
-	 * GdauiBasicForm:headers-sensitive:
-	 *
-	 * Deprecated
-	 */
-	g_object_class_install_property (object_class, PROP_HEADERS_SENSITIVE,
-					 g_param_spec_boolean ("headers-sensitive",
-							       "",
-							       NULL, FALSE,
-							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_ENTRIES_AUTO_DEFAULT,
 					 g_param_spec_boolean ("entries-auto-default",
 							       _("Entries Auto-default"),
@@ -667,8 +656,6 @@ gdaui_basic_form_set_property (GObject *object,
 				g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[LAYOUT_CHANGED], 0);
 			}
 			break;
-		case PROP_HEADERS_SENSITIVE:
-			break;
 		case PROP_ENTRIES_AUTO_DEFAULT:
 			gdaui_basic_form_set_entries_auto_default (form, g_value_get_boolean (value));
 			break;
@@ -692,8 +679,6 @@ gdaui_basic_form_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_PARAMLIST:
 			g_value_set_pointer (value, form->priv->set);
-			break;
-		case PROP_HEADERS_SENSITIVE:
 			break;
 		case PROP_ENTRIES_AUTO_DEFAULT:
 			g_value_set_boolean (value, form->priv->entries_auto_default);
