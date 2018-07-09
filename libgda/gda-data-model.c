@@ -401,23 +401,6 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_set_notify: (virtual i_set_notify)
- * @model: a #GdaDataModel object.
- * @do_notify_changes: Set to TRUE if you require notifications.
- *
- * Enable or disable notifications changes on the given data model.
- * 
- * Deprecated: 5.2: use gda_data_model_freeze() and gda_data_model_thaw() instead
- */
-void
-gda_data_model_set_notify (GdaDataModel *model, gboolean do_notify_changes)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, do_notify_changes);
-}
-
-/**
  * gda_data_model_get_notify: (virtual i_get_notify)
  * @model: a #GdaDataModel object.
  *

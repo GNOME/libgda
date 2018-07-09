@@ -213,7 +213,6 @@ gboolean            gda_data_model_iter_set_value         (GdaDataModel *model, 
 						       const GValue *value, GError **error);
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);
-void                gda_data_model_set_notify             (GdaDataModel *model, gboolean do_notify_changes);
 gboolean            gda_data_model_get_notify             (GdaDataModel *model);
 gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 
 							   const GValue *value, GError **error);
