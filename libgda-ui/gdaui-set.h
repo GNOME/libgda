@@ -134,10 +134,6 @@ GType             gdaui_set_get_type            (void) G_GNUC_CONST;
 GdauiSet         *gdaui_set_new                 (GdaSet *set);
 GdauiSetGroup    *gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 
-/* Deprecated functions */
-GType             _gdaui_set_get_type            (void);
-GdauiSet         *_gdaui_set_new                 (GdaSet *set);
-GdauiSetGroup    *_gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 G_END_DECLS
 
 #endif

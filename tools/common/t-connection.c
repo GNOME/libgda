@@ -2231,7 +2231,7 @@ t_connection_is_ldap (TConnection *tcnc)
 /**
  * t_connection_ldap_search:
  *
- * Executes an LDAP search. Wrapper around gda_data_model_ldap_new()
+ * Executes an LDAP search. Wrapper around gda_data_model_ldap_new_with_config()
  *
  * Returns: (transfer full): a new #GdaDataModel, or %NULL on error
  */

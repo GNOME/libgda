@@ -652,7 +652,7 @@ _ldap_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED 
 		/*g_print ("FILTER to use: LDAPFilter=> [%s] LDAPDn => [%s] SCOPE => [%d]\n",
 			 real_filter ? real_filter->str : NULL,
 			 real_dn ? real_dn : map->base_dn, real_scope);*/
-		model = gda_data_model_ldap_new (map->ldap_cnc,
+		model = gda_data_model_ldap_new_with_config (map->ldap_cnc,
 						 real_dn ? real_dn : map->base_dn,
 						 real_filter ? real_filter->str : NULL,
 						 map->attributes, real_scope);
@@ -661,7 +661,7 @@ _ldap_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED 
 		g_free (real_dn);
 	}
 	else
-		model = gda_data_model_ldap_new (map->ldap_cnc, map->base_dn, map->filter,
+		model = gda_data_model_ldap_new_with_config (map->ldap_cnc, map->base_dn, map->filter,
 						 map->attributes, map->scope);
 
 	return model;

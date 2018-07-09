@@ -205,15 +205,8 @@ const GValue       *gda_data_model_get_typed_value_at     (GdaDataModel *model, 
 							   GType expected_type, gboolean nullok, GError **error);
 GdaValueAttribute   gda_data_model_get_attributes_at      (GdaDataModel *model, gint col, gint row);
 GdaDataModelIter   *gda_data_model_create_iter            (GdaDataModel *model);
-gboolean            gda_data_model_iter_at_row            (GdaDataModel *model, GdaDataModelIter *iter, 
-                               gint row);
-gboolean            gda_data_model_iter_next              (GdaDataModel *model, GdaDataModelIter *iter); 
-gboolean            gda_data_model_iter_prev              (GdaDataModel *model, GdaDataModelIter *iter);
-gboolean            gda_data_model_iter_set_value         (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-						       const GValue *value, GError **error);
 void                gda_data_model_freeze                 (GdaDataModel *model);
 void                gda_data_model_thaw                   (GdaDataModel *model);
-void                gda_data_model_set_notify             (GdaDataModel *model, gboolean do_notify_changes);
 gboolean            gda_data_model_get_notify             (GdaDataModel *model);
 gboolean            gda_data_model_set_value_at           (GdaDataModel *model, gint col, gint row, 
 							   const GValue *value, GError **error);

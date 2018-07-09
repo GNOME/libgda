@@ -1003,29 +1003,6 @@ gda_data_model_iter_is_valid (GdaDataModelIter *iter)
 }
 
 /**
- * gda_data_model_iter_get_column_for_param:
- * @iter: a #GdaDataModelIter object
- * @param: a #GdaHolder object, listed in @iter
- *
- * Get the column number in the #GdaDataModel for which @iter is an iterator as
- * represented by the @param parameter
- *
- * Returns: the column number, or @param is not valid
- *
- * Deprecated: 5.2: not very useful
- */
-gint
-gda_data_model_iter_get_column_for_param (GdaDataModelIter *iter, GdaHolder *param)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), -1);
-	g_return_val_if_fail (iter->priv, -1);
-	g_return_val_if_fail (GDA_IS_HOLDER (param), -1);
-	g_return_val_if_fail (g_slist_find (gda_set_get_holders ((GdaSet *) iter), param), -1);
-
-	return g_slist_index (gda_set_get_holders ((GdaSet *) iter), param);
-}
-
-/**
  * gda_data_model_iter_get_holder_for_field:
  * @iter: a #GdaDataModelIter object
  * @col: the requested column

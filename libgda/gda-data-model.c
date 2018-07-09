@@ -401,23 +401,6 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_set_notify: (virtual i_set_notify)
- * @model: a #GdaDataModel object.
- * @do_notify_changes: Set to TRUE if you require notifications.
- *
- * Enable or disable notifications changes on the given data model.
- * 
- * Deprecated: 5.2: use gda_data_model_freeze() and gda_data_model_thaw() instead
- */
-void
-gda_data_model_set_notify (GdaDataModel *model, gboolean do_notify_changes)
-{
-	g_return_if_fail (GDA_IS_DATA_MODEL (model));
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, do_notify_changes);
-}
-
-/**
  * gda_data_model_get_notify: (virtual i_get_notify)
  * @model: a #GdaDataModel object.
  *
@@ -907,85 +890,6 @@ gda_data_model_create_iter (GdaDataModel *model)
 		return  g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
 				      "data-model", model, NULL);
 }
-
-/**
- * gda_data_model_iter_at_row: (virtual i_iter_at_row)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- * @row: a row to point to with @iter
- *
- * Moves @iter to the row number given by @row.
- * 
- * Deprecated: 5.2: use gda_data_model_iter_move_to_row() instead
- */
-gboolean
-gda_data_model_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint row)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-
-	return gda_data_model_iter_move_to_row (iter, row);
-}
-
-/**
- * gda_data_model_iter_next: (virtual i_iter_next)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- *
- * Moves @iter to the next row in @model.
- * 
- * Deprecated: 5.2: use gda_data_model_iter_move_next() instead
- */
-gboolean
-gda_data_model_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-
-	return gda_data_model_iter_move_next (iter);
-}
-
-/**
- * gda_data_model_iter_prev: (virtual i_iter_prev)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- *
- * Moves @iter to the next row in @model.
- *
- * Deprecated: 5.2: use gda_data_model_iter_move_prev() instead
- */
-gboolean 
-gda_data_model_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-
-	return gda_data_model_iter_move_prev (iter);
-}
-
-
-/**
- * gda_data_model_iter_set_value: (virtual i_iter_set_value)
- * @model: a #GdaDataModel object.
- * @iter: a #GdaDataModelIter object.
- * @col: the number of column to set value to
- * @value: the to use to set on
- * @error: a place to set errors
- *
- * Set @value to the given @column and row pointed by @iter in the given @model.
- * 
- * Deprecated: 5.2: use gda_data_model_iter_set_value_at() instead
- */
-gboolean 
-gda_data_model_iter_set_value (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-			       const GValue *value, GError **error)
-{
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (model), FALSE);
-	
-	return gda_data_model_iter_set_value_at (iter, col, value, error);
-}
-
 
 /**
  * gda_data_model_append_values: (virtual i_append_values)

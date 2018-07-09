@@ -191,26 +191,6 @@ gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type
 	return dh;
 }
 
-/**
- * gda_server_provider_get_data_handler_default:
- * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
- * @type: a #GType
- * @dbms_type: a DBMS type definition
- *
- * Provides the implementation when the default Libgda's data handlers must be used
- * 
- * Returns: (transfer none): a #GdaDataHandler, or %NULL
- *
- * Deprecated: 5.2: use gda_server_provider_handler_use_default() instead
- */
-GdaDataHandler *
-gda_server_provider_get_data_handler_default (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
-					      GType type, G_GNUC_UNUSED const gchar *dbms_type)
-{
-	return gda_server_provider_handler_use_default (provider, type);
-}
-
 static gboolean
 param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {

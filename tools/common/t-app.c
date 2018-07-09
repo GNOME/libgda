@@ -5254,7 +5254,7 @@ extra_command_ldap_search (ToolCommand *command, guint argc, const gchar **argv,
 	GdaHolder *param;
 	const gchar *ldap_attributes;
 	ldap_attributes = g_value_get_string (gda_set_get_holder_value (global_t_app->priv->options, "ldap_attributes"));
-	model = gda_data_model_ldap_new (t_connection_get_cnc (tcnc), base_dn, lfilter ? lfilter : filter,
+	model = gda_data_model_ldap_new_with_config (t_connection_get_cnc (tcnc), base_dn, lfilter ? lfilter : filter,
 					 ldap_attributes ? ldap_attributes : T_DEFAULT_LDAP_ATTRIBUTES,
 					 lscope);
 	g_free (lfilter);
