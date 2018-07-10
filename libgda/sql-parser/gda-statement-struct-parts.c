@@ -1604,6 +1604,9 @@ gda_sql_select_from_copy (GdaSqlSelectFrom *from)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlSelectFrom, gda_sql_select_from, gda_sql_select_from_copy, gda_sql_select_from_free)
+
+
 /**
  * gda_sql_select_from_serialize
  * @from: a #GdaSqlSelectFrom structure

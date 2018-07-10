@@ -533,7 +533,6 @@ struct _GdaSqlSelectJoin
 #define GDA_TYPE_SQL_SELECT_JOIN (gda_sql_select_join_get_type())
 
 GType             gda_sql_select_join_get_type  (void) G_GNUC_CONST;
-
 GdaSqlSelectJoin  *gda_sql_select_join_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_join_free           (GdaSqlSelectJoin *join);
 GdaSqlSelectJoin  *gda_sql_select_join_copy           (GdaSqlSelectJoin *join);
@@ -564,7 +563,9 @@ struct _GdaSqlSelectFrom
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_FROM (gda_sql_select_from_get_type())
 
+GType              gda_sql_select_from_get_type  (void) G_GNUC_CONST;
 GdaSqlSelectFrom  *gda_sql_select_from_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_from_free           (GdaSqlSelectFrom *from);
 GdaSqlSelectFrom  *gda_sql_select_from_copy           (GdaSqlSelectFrom *from);
