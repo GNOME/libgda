@@ -233,6 +233,7 @@ libgda = library(
 
 # GObject Introspection
 gi_sources = []
+gi_sources += libgda_sources
 gi_sources += psupport_gi_sources
 gi_sources += threadwrapper_gi_sources
 gi_sources += sql_parser_gi_sources

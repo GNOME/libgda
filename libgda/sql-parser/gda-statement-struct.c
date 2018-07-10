@@ -49,6 +49,26 @@ gda_sql_error_quark (void)
         return quark;
 }
 
+GdaSqlStatementContentsInfo *
+gda_sql_statement_get_contents_info_copy (GdaSqlStatementContentsInfo *src) {
+	GdaSqlStatementContentsInfo *cp = g_new0(GdaSqlStatementContentsInfo, 1);
+	cp->name = src->name;
+	cp->construct = src->construct;
+	cp->free = src->free;
+	cp->copy = src->copy;
+	cp->serialize = src->serialize;
+
+	/* augmenting information precision using a dictionary */
+	cp->check_structure_func = src->check_structure_func;
+	cp->check_validity_func = src->check_validity_func;
+	return cp;
+}
+void
+gda_sql_statement_get_contents_info_free (GdaSqlStatementContentsInfo *cinfo) {
+	g_free (cinfo);
+}
+
+G_DEFINE_BOXED_TYPE(GdaSqlStatementContentsInfo, gda_sql_statement_get_contents_info, gda_sql_statement_get_contents_info_copy, gda_sql_statement_get_contents_info_free)
 /*
  * statement's infos retrieval
  */

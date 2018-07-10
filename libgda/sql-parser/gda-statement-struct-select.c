@@ -266,7 +266,7 @@ gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct
 /**
  * gda_sql_statement_select_take_expr_list:
  * @stmt: a #GdaSqlStatement pointer
- * @expr_list: (element-type GdaSqlSelectField): a list of #GdaSqlSelectField pointers
+ * @expr_list: (element-type SqlSelectField): a list of #GdaSqlSelectField pointers
  *
  * Sets list of expressions selected by @stmt
  *
