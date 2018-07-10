@@ -398,13 +398,13 @@ gda_sql_table_copy (GdaSqlTable *table)
 }
 
 /**
- * gda_sql_table_serialize
- * @field: a #GdaSqlTable structure
+ * gda_sql_table_serialize:
+ * @table: a #GdaSqlTable structure
  *
  * Creates a new string representing a table. You need to free the returned string
  * using g_free();
  *
- * Returns: a new string with the name of the field or "null" in case @table is invalid.
+ * Returns: (transfer full): a new string with the name of the field or "null" in case @table is invalid.
  */
 gchar *
 gda_sql_table_serialize (GdaSqlTable *table)
@@ -416,8 +416,8 @@ gda_sql_table_serialize (GdaSqlTable *table)
 }
 
 /**
- * gda_sql_table_take_name
- * @field: a #GdaSqlTable structure
+ * gda_sql_table_take_name:
+ * @table: a #GdaSqlTable structure
  * @value: a #GValue holding a string to take from
  *
  * Sets the table's name using the string held by @value. When call, @value is freed using
@@ -1294,7 +1294,7 @@ gda_sql_select_target_serialize (GdaSqlSelectTarget *target)
 }
 
 /**
- * gda_sql_select_target_take_table_name
+ * gda_sql_select_target_take_table_name:
  * @target: a #GdaSqlSelectTarget structure
  * @value: a #GValue to take from
  *
@@ -1313,7 +1313,7 @@ gda_sql_select_target_take_table_name (GdaSqlSelectTarget *target, GValue *value
 }
 
 /**
- * gda_sql_select_target_take_table_name
+ * gda_sql_select_target_take_select:
  * @target: a #GdaSqlSelectTarget structure
  * @stmt: a #GValue to take from
  *

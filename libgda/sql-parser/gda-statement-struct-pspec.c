@@ -127,7 +127,7 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
  *
  * @value is destroyed by this function.
  *
- * Returns: a new #GdaSqlParamSpec
+ * Returns: (transfer full): a new #GdaSqlParamSpec
  */
 GdaSqlParamSpec *
 gda_sql_param_spec_new (GValue *value)

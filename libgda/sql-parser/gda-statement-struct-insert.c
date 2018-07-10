@@ -282,7 +282,7 @@ gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
 }
 
 /**
- * gda_sql_statement_insert_take_1_values_list
+ * gda_sql_statement_insert_take_1_values_list:
  * @stmt: a #GdaSqlStatement pointer
  * @list: a list of #GdaSqlExpr pointers
  *
@@ -302,9 +302,9 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
 }
 
 /**
- * gda_sql_statement_insert_take_1_values_list
+ * gda_sql_statement_insert_take_extra_values_list:
  * @stmt: a #GdaSqlStatement pointer
- * @list: a list of #GSList of #GdaSqlExpr pointers
+ * @list: (element-type GdaSqlExpr): a list of #GSList of #GdaSqlExpr pointers
  *
  * Sets a list of list of values to be inserted by @stmt. @list's 
  * ownership is transferred to
