@@ -481,7 +481,7 @@ gda_sql_function_free (GdaSqlFunction *function)
  *
  * Creates a new #GdaSqlFunction structure initiated with the values stored in @function.
  *
- * Returns: a new #GdaSqlFunction structure.
+ * Returns: (transfer-full): a new #GdaSqlFunction structure.
  */
 GdaSqlFunction *
 gda_sql_function_copy (GdaSqlFunction *function)
@@ -506,6 +506,9 @@ gda_sql_function_copy (GdaSqlFunction *function)
 
 	return copy;
 }
+
+
+G_DEFINE_BOXED_TYPE(GdaSqlFunction, gda_sql_function, gda_sql_function_copy, gda_sql_function_free)
 
 /**
  * gda_sql_function_serialize

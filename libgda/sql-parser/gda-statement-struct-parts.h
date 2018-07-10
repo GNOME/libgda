@@ -239,6 +239,9 @@ struct _GdaSqlFunction {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_FUNCTION (gda_sql_function_get_type())
+
+GType            gda_sql_function_get_type  (void) G_GNUC_CONST;
 GdaSqlFunction  *gda_sql_function_new            (GdaSqlAnyPart *parent);
 void             gda_sql_function_free           (GdaSqlFunction *function);
 GdaSqlFunction  *gda_sql_function_copy           (GdaSqlFunction *function);
