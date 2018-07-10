@@ -416,9 +416,7 @@ button_press_event_cb (BrowserCanvasTable *ce, G_GNUC_UNUSED GooCanvasItem  *tar
 	if ((event->button == 3) && ce->priv->popup_menu_func) {
 		GtkWidget *menu;
 		menu = ce->priv->popup_menu_func (ce);
-		gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-				NULL, NULL, ((GdkEventButton *)event)->button,
-				((GdkEventButton *)event)->time);
+		gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
 		return TRUE;
 	}
 

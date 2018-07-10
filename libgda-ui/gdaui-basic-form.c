@@ -316,7 +316,6 @@ hidden_entry_mitem_toggled_cb (GtkCheckMenuItem *check, GdauiBasicForm *form)
 static void
 do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 {
-	int button, event_time;
 	GtkWidget *menu, *submenu, *mitem;
 	GSList *list;
 	
@@ -343,20 +342,10 @@ do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 				  G_CALLBACK (hidden_entry_mitem_toggled_cb), form);
 	}
 		
-	if (event) {
-		button = event->button;
-		event_time = event->time;
-	}
-	else {
-		button = 0;
-		event_time = gtk_get_current_event_time ();
-	}
-
 	/* allow listeners to add their custom menu items */
 	g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals [POPULATE_POPUP], 0, GTK_MENU (menu));
 
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 
-			button, event_time);
+	gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
 }
 
 static gboolean

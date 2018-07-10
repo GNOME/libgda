@@ -179,8 +179,7 @@ do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, UiSpecEdi
                 event_time = gtk_get_current_event_time ();
         }
 
-        gtk_menu_popup (GTK_MENU (uied->priv->popup_menu), NULL, NULL, NULL, NULL,
-                        button, event_time);
+        gtk_menu_popup_at_pointer (GTK_MENU (uied->priv->popup_menu), NULL);
 }
 
 static gboolean
