@@ -472,6 +472,9 @@ struct _GdaSqlSelectTarget
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_TARGET (gda_sql_select_target_get_type())
+
+GType             gda_sql_select_target_get_type  (void) G_GNUC_CONST;
 
 GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent);
 void                gda_sql_select_target_free           (GdaSqlSelectTarget *target);
@@ -527,6 +530,9 @@ struct _GdaSqlSelectJoin
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_JOIN (gda_sql_select_join_get_type())
+
+GType             gda_sql_select_join_get_type  (void) G_GNUC_CONST;
 
 GdaSqlSelectJoin  *gda_sql_select_join_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_join_free           (GdaSqlSelectJoin *join);

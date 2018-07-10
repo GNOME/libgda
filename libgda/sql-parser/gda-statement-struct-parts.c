@@ -1263,6 +1263,8 @@ gda_sql_select_target_copy (GdaSqlSelectTarget *target)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlSelectTarget, gda_sql_select_target, gda_sql_select_target_copy, gda_sql_select_target_free)
+
 /**
  * gda_sql_select_target_serialize
  * @target: a #GdaSqlSelectTarget structure
@@ -1433,6 +1435,8 @@ gda_sql_select_join_copy (GdaSqlSelectJoin *join)
 
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlSelectJoin, gda_sql_select_join, gda_sql_select_join_copy, gda_sql_select_join_free)
 
 /**
  * gda_sql_select_join_type_to_string
