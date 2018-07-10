@@ -238,6 +238,7 @@ libgda = library(
 gi_sources = []
 gi_sources += libgda_sources
 gi_sources += libgda_headers
+gi_sources += gda_enum_headers
 gi_sources += psupport_gi_sources
 gi_sources += threadwrapper_gi_sources
 gi_sources += sql_parser_gi_sources

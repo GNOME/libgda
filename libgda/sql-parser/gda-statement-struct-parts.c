@@ -577,7 +577,7 @@ gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
 /**
  * gda_sql_function_take_args_list
  * @function: a #GdaSqlFunction structure
- * @args: a #GSList to take from
+ * @args: (element-type Gda.SqlExpr): a #GSList to take from
  *
  * Sets the function's arguments to point to @args, then sets the
  * list's data elements' parent to @function.
