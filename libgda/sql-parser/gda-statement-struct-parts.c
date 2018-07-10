@@ -384,7 +384,7 @@ gda_sql_table_free (GdaSqlTable *table)
  *
  * Creates a new #GdaSqlTable structure initiated with the values stored in @table.
  *
- * Returns: a new #GdaSqlTable structure.
+ * Returns: (transfer-full): a new #GdaSqlTable structure.
  */
 GdaSqlTable *
 gda_sql_table_copy (GdaSqlTable *table)
@@ -399,6 +399,8 @@ gda_sql_table_copy (GdaSqlTable *table)
 
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlTable, gda_sql_table, gda_sql_table_copy, gda_sql_table_free)
 
 /**
  * gda_sql_table_serialize:

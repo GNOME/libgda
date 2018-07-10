@@ -206,6 +206,9 @@ struct _GdaSqlTable
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_TABLE (gda_sql_table_get_type())
+
+GType            gda_sql_table_get_type  (void) G_GNUC_CONST;
 GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
 void             gda_sql_table_free           (GdaSqlTable *table);
 GdaSqlTable     *gda_sql_table_copy           (GdaSqlTable *table);
