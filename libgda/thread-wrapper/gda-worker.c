@@ -94,6 +94,17 @@ struct _GdaWorker {
 	GdaWorker **location;
 };
 
+GdaWorker *
+gda_worker_copy (GdaWorker *src) {
+	return gda_worker_ref (src);
+}
+void
+gda_worker_free (GdaWorker *w) {
+	gda_worker_unref (w);
+}
+
+G_DEFINE_BOXED_TYPE(GdaWorker, gda_worker, gda_worker_copy, gda_worker_free)
+
 
 /* module error */
 GQuark gda_worker_error_quark (void)

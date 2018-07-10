@@ -22,6 +22,7 @@
 #define __GDA_WORKER_H__
 
 #include <glib.h>
+#include <glib-object.h>
 
 G_BEGIN_DECLS
 
@@ -70,6 +71,8 @@ typedef enum {
 	GDA_WORKER_THREAD_KILLED
 } GdaWorkerError;
 
+#define GDA_TYPE_WORKER gda_worker_get_type()
+GType gda_worker_get_type(void) G_GNUC_CONST;
 GdaWorker *gda_worker_new (void);
 GdaWorker *gda_worker_new_unique (GdaWorker **location, gboolean allow_destroy);
 GdaWorker *gda_worker_ref (GdaWorker *worker);
