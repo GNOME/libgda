@@ -331,7 +331,8 @@ typedef enum {
  * GdaSqlOperation:
  * @any: inheritance structure
  * @operator_type: 
- * @operands: list of #GdaSqlExpr operands
+ * @operands: (element-type Gda.SqlExpr)
+ * : list of #GdaSqlExpr operands
  *
  * This structure represents an operation between one or more operands.
  */
@@ -382,6 +383,9 @@ struct _GdaSqlCase
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_CASE (gda_sql_case_get_type())
+
+GType             gda_sql_case_get_type  (void) G_GNUC_CONST;
 
 GdaSqlCase        *gda_sql_case_new            (GdaSqlAnyPart *parent);
 void               gda_sql_case_free           (GdaSqlCase *sc);
@@ -423,6 +427,9 @@ struct _GdaSqlSelectField
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_FIELD (gda_sql_select_field_get_type())
+
+GType             gda_sql_select_field_get_type  (void) G_GNUC_CONST;
 
 GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_field_free           (GdaSqlSelectField *field);

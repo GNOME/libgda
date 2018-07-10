@@ -954,6 +954,8 @@ gda_sql_case_copy (GdaSqlCase *sc)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlCase, gda_sql_case, gda_sql_case_copy, gda_sql_case_free)
+
 /**
  * gda_sql_case_serialize
  * @sc: a #GdaSqlCase structure
@@ -1056,7 +1058,7 @@ gda_sql_select_field_free (GdaSqlSelectField *field)
  *
  * Creates a new #GdaSqlSelectField structure initiated with the values stored in @field.
  *
- * Returns: a new #GdaSqlSelectField structure.
+ * Returns: (transfer full): a new #GdaSqlSelectField structure.
  */
 GdaSqlSelectField *
 gda_sql_select_field_copy (GdaSqlSelectField *field)
@@ -1081,6 +1083,8 @@ gda_sql_select_field_copy (GdaSqlSelectField *field)
 
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlSelectField, gda_sql_select_field, gda_sql_select_field_copy, gda_sql_select_field_free)
 
 /**
  * gda_sql_select_field_serialize
