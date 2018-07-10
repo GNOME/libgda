@@ -7,14 +7,15 @@
 # Enrico Nicoletto <liverig@gmail.com>, 2013.
 # Rafael Fontenelle <rafaelff@gnome.org>, 2017, 2018.
 # Isaac Ferreira Filho <isaacmob@riseup.net>, 2018.
+# Bruno Lopes da Silva <brunolopesbldsb@gmail.com>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2018-06-22 18:47+0000\n"
-"PO-Revision-Date: 2018-06-14 08:59-0300\n"
-"Last-Translator: Isaac Ferreira Filho <isaacmob@riseup.net>\n"
-"Language-Team: pt_BR\n"
+"POT-Creation-Date: 2018-06-25 02:06+0000\n"
+"PO-Revision-Date: 2018-07-09 15:10-0300\n"
+"Last-Translator: Bruno Lopes da Silva <brunolopesbldsb@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,12 +93,12 @@ msgstr "Não foi possível salvar a definição de DSN: %s"
 #: ../libgda/gda-meta-store.c:1189 ../libgda/gda-server-operation.c:654
 #: ../libgda/gda-server-operation.c:1060 ../libgda/gda-set.c:1185
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
-#: ../libgda/sqlite/gda-sqlite-provider.c:2672
-#: ../libgda/sqlite/gda-sqlite-provider.c:2684
-#: ../libgda/sqlite/gda-sqlite-provider.c:2895
-#: ../libgda/sqlite/gda-sqlite-provider.c:3226
-#: ../libgda/sqlite/gda-sqlite-provider.c:3238
-#: ../libgda/sqlite/gda-sqlite-provider.c:3358
+#: ../libgda/sqlite/gda-sqlite-provider.c:2692
+#: ../libgda/sqlite/gda-sqlite-provider.c:2704
+#: ../libgda/sqlite/gda-sqlite-provider.c:2915
+#: ../libgda/sqlite/gda-sqlite-provider.c:3246
+#: ../libgda/sqlite/gda-sqlite-provider.c:3258
+#: ../libgda/sqlite/gda-sqlite-provider.c:3378
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:256
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:459
@@ -824,7 +825,7 @@ msgstr ""
 "Rastreamento do status da transação da conexão: não existe transações para %s"
 
 #: ../libgda/gda-data-access-wrapper.c:636
-#: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:437
+#: ../libgda/gda-data-meta-wrapper.c:575 ../libgda/gda-data-model-array.c:437
 #: ../libgda/gda-data-model-array.c:668 ../libgda/gda-data-model-bdb.c:657
 #: ../libgda/gda-data-model-bdb.c:759 ../libgda/gda-data-model-bdb.c:788
 #: ../libgda/gda-data-model-dir.c:771 ../libgda/gda-data-model-dir.c:870
@@ -2022,11 +2023,17 @@ msgstr ""
 "Incoerência de metadados na definição de chave estrangeira para a tabela %s."
 "%s.%s referenciado a tabela %s.%s.%s"
 
-#: ../libgda/gda-meta-struct.c:2572
+#: ../libgda/gda-meta-struct.c:1777
+#, c-format
+msgid "No meta struct was provided for object sorting"
+msgstr ""
+"Não foi fornecida uma estrutura de meta dados para a classificação de objetos"
+
+#: ../libgda/gda-meta-struct.c:2576
 msgid "Missing object name in GdaMetaDbObject structure"
 msgstr "Falta o nome do objeto na estrutura GdaMetaDbObject"
 
-#: ../libgda/gda-meta-struct.c:2597
+#: ../libgda/gda-meta-struct.c:2601
 #, c-format
 msgid "Database object '%s' already exists"
 msgstr "O objeto de banco de dados “%s” já existe"
@@ -2361,7 +2368,7 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Falta o parâmetro “%s”"
 
-#: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/gda-statement.c:1401 ../libgda/sqlite/gda-sqlite-provider.c:3093
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2294
 #: ../providers/postgres/gda-postgres-provider.c:2082
@@ -2524,7 +2531,7 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Não é possível rescrever a instrução que não é INSERT nem UPDATE"
 
 #: ../libgda/gda-util.c:1774 ../libgda/gda-util.c:1831
-#: ../libgda/gda-util.c:1871 ../libgda/sqlite/gda-sqlite-provider.c:3054
+#: ../libgda/gda-util.c:1871 ../libgda/sqlite/gda-sqlite-provider.c:3074
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2274
 #: ../providers/postgres/gda-postgres-provider.c:2064
@@ -2735,13 +2742,14 @@ msgstr "A execução do programa %s falhou: %s"
 msgid "This report document does not handle %s output"
 msgstr "Este documento de relatório não manipula a saída %s"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:236 ../providers/jdbc/gda-jdbc-ddl.c:157
-#: ../providers/mysql/gda-mysql-ddl.c:353
-#: ../providers/oracle/gda-oracle-ddl.c:157
-#: ../providers/postgres/gda-postgres-ddl.c:398
-#: ../providers/web/gda-web-ddl.c:157
-msgid "Table to create must have at least one row"
-msgstr "A tabela a ser criada deve ter pelo menos uma linha"
+#: ../libgda/sqlite/gda-sqlite-ddl.c:78
+msgid "No fields are defined for CREATE TABLE operation"
+msgstr "Não foi definido nenhum campo para a opção CREATE TABLE"
+
+#: ../libgda/sqlite/gda-sqlite-ddl.c:248
+#| msgid "Table to create must have at least one row"
+msgid "Table to create must have at least one field"
+msgstr "A tabela a ser criada deve ter pelo menos um campo"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
 msgid "SQLite binary representation"
@@ -2820,48 +2828,58 @@ msgstr "Não foi possível registrar a função “%s”"
 msgid "Could not define the %s collation"
 msgstr "Não foi possível definir a colação %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1357
-#: ../libgda/sqlite/gda-sqlite-provider.c:1368
-#: ../libgda/sqlite/gda-sqlite-provider.c:1382
-#: ../libgda/sqlite/gda-sqlite-provider.c:1393
+#: ../libgda/sqlite/gda-sqlite-provider.c:1365
+#: ../libgda/sqlite/gda-sqlite-provider.c:1376
+#: ../libgda/sqlite/gda-sqlite-provider.c:1390
+#: ../libgda/sqlite/gda-sqlite-provider.c:1401
 msgid "Error initializing database with passphrase"
 msgstr "Erro ao iniciar o banco de dados com senha"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1435
+#: ../libgda/sqlite/gda-sqlite-provider.c:1443
 msgid "Missing database name or directory"
 msgstr "Falta o nome ou o diretório do banco de dados"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1461
+#: ../libgda/sqlite/gda-sqlite-provider.c:1469
 #: ../providers/postgres/gda-postgres-provider.c:1107
 #: ../providers/postgres/gda-postgres-provider.c:1108
 msgid "Transactions are not supported in read-only mode"
 msgstr "Não há suporte para transações no modo de apenas leitura"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1856
+#: ../libgda/sqlite/gda-sqlite-provider.c:1864
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
 "SQLite não oferece suporte a especificação de campos para neles aplicar "
 "cláusula DISTINCT"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1903
-#: ../libgda/sqlite/gda-sqlite-provider.c:1913
+#: ../libgda/sqlite/gda-sqlite-provider.c:1911
+#: ../libgda/sqlite/gda-sqlite-provider.c:1921
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Componente “%s” sem suporte no SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2011
+#: ../libgda/sqlite/gda-sqlite-provider.c:2024
 msgid "ILIKE operation not supported"
 msgstr "Não há suporte à operação ILIKE"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2558
+#: ../libgda/sqlite/gda-sqlite-provider.c:2055
+#| msgid "ILIKE operation not supported"
+msgid "SIMILAR operation not supported"
+msgstr "Não há suporte à operação SIMILAR"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:2178
+#| msgid "Operation not supported\n"
+msgid "Operator type not supported"
+msgstr "Não há suporte para o esse tipo de operador"
+
+#: ../libgda/sqlite/gda-sqlite-provider.c:2578
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1658
 #: ../providers/web/gda-web-provider.c:1251
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Não são permitidos parâmetros anônimos em instruções preparadas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2671
-#: ../libgda/sqlite/gda-sqlite-provider.c:2683
+#: ../libgda/sqlite/gda-sqlite-provider.c:2691
+#: ../libgda/sqlite/gda-sqlite-provider.c:2703
 #: ../providers/mysql/gda-mysql-provider.c:2015
 #: ../providers/postgres/gda-postgres-provider.c:1806
 #, c-format
@@ -2870,7 +2888,7 @@ msgstr ""
 "Não é possível construir a instrução SELECT para obter a última linha "
 "inserida: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2717
+#: ../libgda/sqlite/gda-sqlite-provider.c:2737
 #: ../providers/mysql/gda-mysql-provider.c:2043
 #: ../providers/postgres/gda-postgres-provider.c:1834
 msgid "SELECT statement to get last inserted row did not return any row"
@@ -2878,7 +2896,7 @@ msgstr ""
 "A instrução SELECT para obter a última linha inserida não retornou linha "
 "alguma"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2721
+#: ../libgda/sqlite/gda-sqlite-provider.c:2741
 #: ../providers/mysql/gda-mysql-provider.c:2047
 #: ../providers/postgres/gda-postgres-provider.c:1838
 #, c-format
@@ -2887,21 +2905,21 @@ msgstr ""
 "A instrução SELECT para obter a última linha inserida retornou muitas (%d) "
 "linhas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2786
+#: ../libgda/sqlite/gda-sqlite-provider.c:2806
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "A instrução preparada não está associada a uma GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2826
-#: ../libgda/sqlite/gda-sqlite-provider.c:2863
+#: ../libgda/sqlite/gda-sqlite-provider.c:2846
+#: ../libgda/sqlite/gda-sqlite-provider.c:2883
 msgid "Can't create SQLite BLOB handle"
 msgstr "Não é possível criar o manipulador BLOB do SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2830
-#: ../libgda/sqlite/gda-sqlite-provider.c:2868
+#: ../libgda/sqlite/gda-sqlite-provider.c:2850
+#: ../libgda/sqlite/gda-sqlite-provider.c:2888
 msgid "Can't write to SQLite's BLOB"
 msgstr "Não é possível escrever no BLOB do SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2853
+#: ../libgda/sqlite/gda-sqlite-provider.c:2873
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2911,19 +2929,19 @@ msgstr ""
 "Por favor, relate este erro em http://bugzilla.gnome.org/ para o produto "
 "“libgda”."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2878
+#: ../libgda/sqlite/gda-sqlite-provider.c:2898
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr ""
 "Não é possível identificar o identificador de linha (ROWID) do blob a "
 "preencher"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2987
+#: ../libgda/sqlite/gda-sqlite-provider.c:3007
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Instrução vazia"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3029
-#: ../libgda/sqlite/gda-sqlite-provider.c:3032
+#: ../libgda/sqlite/gda-sqlite-provider.c:3049
+#: ../libgda/sqlite/gda-sqlite-provider.c:3052
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2249
@@ -2935,7 +2953,7 @@ msgstr "Instrução vazia"
 msgid "Missing parameter(s) to execute query"
 msgstr "Falta(m) parâmetro(s) para realizar a consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3092
+#: ../libgda/sqlite/gda-sqlite-provider.c:3112
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2313
 #: ../providers/postgres/gda-postgres-provider.c:2101
@@ -2944,53 +2962,53 @@ msgid "Can't rewrite statement handle default values"
 msgstr ""
 "Não é possível reescrever a instrução para manipular os valores padrões"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3208
+#: ../libgda/sqlite/gda-sqlite-provider.c:3228
 #: ../providers/mysql/gda-mysql-provider.c:2578
 msgid "Can't get BLOB's length"
 msgstr "Não é possível obter o comprimento do BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3210
+#: ../libgda/sqlite/gda-sqlite-provider.c:3230
 #: ../providers/mysql/gda-mysql-provider.c:2580
 msgid "BLOB is too big"
 msgstr "O BLOB é muito grande"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3313
+#: ../libgda/sqlite/gda-sqlite-provider.c:3333
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Nenhum manipulador de dados para o tipo “%s”"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3380
+#: ../libgda/sqlite/gda-sqlite-provider.c:3400
 msgid "Could not start transaction to create BLOB"
 msgstr "Não foi possível iniciar a transação para criar o BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3545
-#: ../libgda/sqlite/gda-sqlite-provider.c:3566
-#: ../libgda/sqlite/gda-sqlite-provider.c:3656
+#: ../libgda/sqlite/gda-sqlite-provider.c:3565
+#: ../libgda/sqlite/gda-sqlite-provider.c:3586
 #: ../libgda/sqlite/gda-sqlite-provider.c:3676
-#: ../libgda/sqlite/gda-sqlite-provider.c:3699
+#: ../libgda/sqlite/gda-sqlite-provider.c:3696
+#: ../libgda/sqlite/gda-sqlite-provider.c:3719
 msgid "Function requires one argument"
 msgstr "A função exige um argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3598
-#: ../libgda/sqlite/gda-sqlite-provider.c:3731
+#: ../libgda/sqlite/gda-sqlite-provider.c:3618
+#: ../libgda/sqlite/gda-sqlite-provider.c:3751
 msgid "Function requires two arguments"
 msgstr "A função exige dois argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3636
+#: ../libgda/sqlite/gda-sqlite-provider.c:3656
 msgid "Function requires one or two arguments"
 msgstr "A função exige um ou dois argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3771
-#: ../libgda/sqlite/gda-sqlite-provider.c:3878
+#: ../libgda/sqlite/gda-sqlite-provider.c:3791
+#: ../libgda/sqlite/gda-sqlite-provider.c:3898
 msgid "Function requires two or three arguments"
 msgstr "A função exige dois ou três argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3825
+#: ../libgda/sqlite/gda-sqlite-provider.c:3845
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Erro na expressão regular do SQLite “%s”:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3826
+#: ../libgda/sqlite/gda-sqlite-provider.c:3846
 msgid "Invalid regular expression"
 msgstr "A expressão regular é inválida"
 
@@ -5571,6 +5589,13 @@ msgstr "Argumento inválido: NULO"
 msgid "Can't read BLOB"
 msgstr "Não é possível ler BLOB"
 
+#: ../providers/jdbc/gda-jdbc-ddl.c:157 ../providers/mysql/gda-mysql-ddl.c:353
+#: ../providers/oracle/gda-oracle-ddl.c:157
+#: ../providers/postgres/gda-postgres-ddl.c:398
+#: ../providers/web/gda-web-ddl.c:157
+msgid "Table to create must have at least one row"
+msgstr "A tabela a ser criada deve ter pelo menos uma linha"
+
 #: ../providers/jdbc/gda-jdbc-provider.c:499
 msgid "Missing parameters to open database connection"
 msgstr "Faltam parâmetros para abrir a conexão de banco de dados"
@@ -7603,12 +7628,12 @@ msgstr "É necessária a versão 5.0 do Mysql, no mínimo"
 
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:177
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:219
-#: ../providers/reuseable/postgres/gda-postgres-reuseable.c:202
+#: ../providers/reuseable/postgres/gda-postgres-reuseable.c:192
 #: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "Não é possível importar dados do servidor web"
 
-#: ../providers/reuseable/postgres/gda-postgres-meta.c:2127
+#: ../providers/reuseable/postgres/gda-postgres-meta.c:2124
 msgid "could not determine the indexed columns for index"
 msgstr "não foi possível determinar as colunas indexadas pelo índice"
 
