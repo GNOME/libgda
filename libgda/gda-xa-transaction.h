@@ -32,6 +32,7 @@ G_BEGIN_DECLS
 #define GDA_XA_TRANSACTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XA_TRANSACTION, GdaXaTransactionClass))
 #define GDA_IS_XA_TRANSACTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_XA_TRANSACTION))
 #define GDA_IS_XA_TRANSACTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_XA_TRANSACTION))
+#define GDA_TYPE_XA_TRANSACTION_ID            (gda_xa_transaction_id_get_type())
 
 typedef struct _GdaXaTransaction        GdaXaTransaction;
 typedef struct _GdaXaTransactionClass   GdaXaTransactionClass;
@@ -127,6 +128,7 @@ gboolean                  gda_xa_transaction_commit_recovered (GdaXaTransaction 
 							       GError **error);
 
 /* utility functions */
+GType                     gda_xa_transaction_id_get_type             (void) G_GNUC_CONST;
 gchar                    *gda_xa_transaction_id_to_string (const GdaXaTransactionId *xid);
 GdaXaTransactionId       *gda_xa_transaction_string_to_id (const gchar *str);
 
