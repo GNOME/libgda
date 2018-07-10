@@ -105,8 +105,12 @@ token_types = custom_target('token_types',
 #     sources : libgda_sql_parser_headers
 #     )
 
-sql_parser_sources = files ([
+sql_parser_private_sources = files ([
 	'gda-sql-parser-private.h',
+	])
+
+
+sql_parser_sources = files ([
 	'gda-sql-parser.c',
 	'gda-statement-struct.c',
 	'gda-statement-struct-compound.c',
@@ -129,6 +133,7 @@ sql_parser_gi_sources += [
 
 libgda_sql_parser_sources = []
 libgda_sql_parser_sources += [
+			sql_parser_private_sources,
 			sql_parser_sources,
 			libgda_sql_parser_headers,
 			gda_sql_parser_enums,

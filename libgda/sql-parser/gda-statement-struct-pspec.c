@@ -25,6 +25,8 @@
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-util.h>
 
+G_DEFINE_BOXED_TYPE(GdaSqlParamSpec, gda_sql_param_spec, gda_sql_param_spec_copy, gda_sql_param_spec_free);
+
 /**
  * gda_sql_param_spec_take_name:
  * @pspec: a #GdaSqlParamSpec pointer
