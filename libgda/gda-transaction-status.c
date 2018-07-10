@@ -128,6 +128,26 @@ gda_transaction_status_get_type (void)
 	return type;
 }
 
+
+GdaTransactionStatusEvent *
+gda_transaction_status_event_copy (GdaTransactionStatusEvent *src) {
+	GdaTransactionStatusEvent *cp = g_new0(GdaTransactionStatusEvent, 1);
+	cp->trans = src->trans;
+	cp->type = src->type;
+	cp->pl.svp_name = g_strdup (src->pl.svp_name);
+	cp->pl.sql = g_strdup (src->pl.sql);
+	cp->pl.sub_trans = src->pl.sub_trans;
+	cp->conn_event = src->conn_event;
+}
+void
+gda_transaction_status_event_free (GdaTransactionStatusEvent *te) {
+	g_free (te->pl.svp_name);
+	g_free (te->pl.sql);
+	g_free (te);
+}
+
+G_DEFINE_BOXED_TYPE(GdaTransactionStatusEvent, gda_transaction_status_event, gda_transaction_status_event_copy, gda_transaction_status_event_free)
+
 /**
  * gda_transaction_status_new:
  * @name: name for the transaction

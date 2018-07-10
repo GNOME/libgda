@@ -33,6 +33,7 @@ G_BEGIN_DECLS
 #define GDA_TRANSACTION_STATUS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TRANSACTION_STATUS, GdaTransactionStatusClass))
 #define GDA_IS_TRANSACTION_STATUS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TRANSACTION_STATUS))
 #define GDA_IS_TRANSACTION_STATUS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TRANSACTION_STATUS))
+#define GDA_TYPE_TRANSACTION_STATUS_EVENT      (gda_transaction_status_event_get_type())
 
 typedef struct _GdaTransactionStatus        GdaTransactionStatus;
 typedef struct _GdaTransactionStatusClass   GdaTransactionStatusClass;
@@ -137,6 +138,8 @@ struct _GdaTransactionStatusClass {
 GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;
 GdaTransactionStatus *gda_transaction_status_new      (const gchar *name);
 
+
+GType                 gda_transaction_status_event_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
