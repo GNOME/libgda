@@ -305,6 +305,9 @@ gda_sql_field_copy (GdaSqlField *field)
 	return copy;
 }
 
+
+G_DEFINE_BOXED_TYPE(GdaSqlField, gda_sql_field, gda_sql_field_copy, gda_sql_field_free)
+
 /**
  * gda_sql_field_serialize
  * @field: a #GdaSqlField structure

@@ -170,6 +170,9 @@ struct _GdaSqlField {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_FIELD (gda_sql_field_get_type())
+
+GType            gda_sql_field_get_type  (void) G_GNUC_CONST;
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
 GdaSqlField     *gda_sql_field_copy           (GdaSqlField *field);
