@@ -364,6 +364,19 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 	g_rec_mutex_unlock (& (from_mgr->mutex));
 }
 
+static GdaAttributesManager*
+att_mgr_copy (GdaAttributesManager* src) {
+	GdaAttributesManager *cp = g_new0 (GdaAttributesManager, 1);
+	g_rec_mutex_init (& (cp->mutex));
+	cp->obj_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
+					       (GDestroyNotify) objattrs_unref);
+	cp->for_objects = src->for_objects;
+	cp->signal_func = src->signal_func;
+	cp->signal_data = src->signal_data;
+}
+
+G_DEFINE_BOXED_TYPE(GdaAttributesManager, gda_attributes_manager, att_mgr_copy, gda_attributes_manager_free)
+
 static void
 foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)
 {

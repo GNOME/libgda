@@ -384,7 +384,7 @@ gda_sql_table_free (GdaSqlTable *table)
  *
  * Creates a new #GdaSqlTable structure initiated with the values stored in @table.
  *
- * Returns: (transfer-full): a new #GdaSqlTable structure.
+ * Returns: (transfer full): a new #GdaSqlTable structure.
  */
 GdaSqlTable *
 gda_sql_table_copy (GdaSqlTable *table)
@@ -481,7 +481,7 @@ gda_sql_function_free (GdaSqlFunction *function)
  *
  * Creates a new #GdaSqlFunction structure initiated with the values stored in @function.
  *
- * Returns: (transfer-full): a new #GdaSqlFunction structure.
+ * Returns: (transfer full): a new #GdaSqlFunction structure.
  */
 GdaSqlFunction *
 gda_sql_function_copy (GdaSqlFunction *function)

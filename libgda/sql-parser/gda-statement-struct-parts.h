@@ -598,7 +598,7 @@ struct _GdaSqlSelectOrder
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
-#define GDA_TYPE_SQL_SELECT_FROM (gda_sql_select_order_get_type())
+#define GDA_TYPE_SQL_SELECT_ORDER (gda_sql_select_order_get_type())
 
 GType              gda_sql_select_order_get_type  (void) G_GNUC_CONST;
 GdaSqlSelectOrder *gda_sql_select_order_new            (GdaSqlAnyPart *parent);

@@ -110,8 +110,11 @@ libgda_headers = files([
 	'libgda-global-variables.h',
 	'gda-data-pivot.h'
 ])
-
-libgda_headers += gda_enum_headers
+libgda_headers_all = []
+libgda_headers_all += [
+	libgda_headers,
+	gda_enum_headers
+	]
 
 libgda_sources= files([
 	'gda-batch.c',
@@ -188,7 +191,7 @@ libgda_source_all = files([
 
 libgda_source_all += [
 	libgda_sources,
-	libgda_headers,
+	libgda_headers_all,
 	gda_enums,
 	gda_marshalls,
 	]
@@ -234,6 +237,7 @@ libgda = library(
 # GObject Introspection
 gi_sources = []
 gi_sources += libgda_sources
+gi_sources += libgda_headers
 gi_sources += psupport_gi_sources
 gi_sources += threadwrapper_gi_sources
 gi_sources += sql_parser_gi_sources

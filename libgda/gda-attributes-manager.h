@@ -33,6 +33,10 @@ typedef struct _GdaAttributesManager GdaAttributesManager;
 typedef void (*GdaAttributesManagerFunc) (const gchar *att_name, const GValue *value, gpointer data);
 typedef void (*GdaAttributesManagerSignal) (GObject *obj, const gchar *att_name, const GValue *value, gpointer data);
 
+
+#define GDA_TYPE_ATTRIBUTES_MANAGER (gda_attributes_manager_get_type())
+
+GType                 gda_attributes_manager_get_type  (void) G_GNUC_CONST;
 GdaAttributesManager *gda_attributes_manager_new         (gboolean for_objects, 
 							  GdaAttributesManagerSignal signal_func, gpointer signal_data);
 void                  gda_attributes_manager_free        (GdaAttributesManager *mgr);
