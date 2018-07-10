@@ -346,6 +346,9 @@ struct _GdaSqlOperation {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_OPERATION (gda_sql_operation_get_type())
+
+GType             gda_sql_operation_get_type  (void) G_GNUC_CONST;
 GdaSqlOperation  *gda_sql_operation_new            (GdaSqlAnyPart *parent);
 void              gda_sql_operation_free           (GdaSqlOperation *operation);
 GdaSqlOperation  *gda_sql_operation_copy           (GdaSqlOperation *operation);

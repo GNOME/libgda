@@ -658,6 +658,9 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
 	return copy;
 }
 
+
+G_DEFINE_BOXED_TYPE(GdaSqlOperation, gda_sql_operation, gda_sql_operation_copy, gda_sql_operation_free)
+
 /**
  * gda_sql_operation_serialize
  * @operation: a #GdaSqlOperation structure
