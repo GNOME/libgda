@@ -1757,6 +1757,8 @@ gda_sql_select_order_copy (GdaSqlSelectOrder *order)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlSelectOrder, gda_sql_select_order, gda_sql_select_order_copy, gda_sql_select_order_free)
+
 /**
  * gda_sql_select_order_serialize
  * @order: a #GdaSqlSelectOrder structure
