@@ -3254,6 +3254,31 @@ gda_value_to_xml (const GValue *value)
 	return retval;
 }
 
+/**
+ * gda_value_to_xml_string:
+ * @value: a #GValue to convert to string
+ *
+ * This methods creates an XML string representation of a #GValue
+ *
+ * Returns: (transfer full): an string representing a #GValue in XML format
+ */
+gchar*
+gda_value_to_xml_string (const GValue *value) {
+	g_return_val_if_fail (value != NULL, NULL);
+
+	xmlNodePtr node;
+	xmlBufferPtr buff;
+	gchar *str = NULL;
+
+	node = gda_value_to_xml (value);
+	buff = xmlBufferCreate ();
+	xmlNodeDump (buff, node->doc, node, 0, 0);
+	str = g_strdup (buff->content);
+	xmlBufferFree (buff);
+	xmlFreeNode (node);
+	return str;
+}
+
 
 /* Register the GDA Types */
 
