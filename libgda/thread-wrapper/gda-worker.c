@@ -94,6 +94,17 @@ struct _GdaWorker {
 	GdaWorker **location;
 };
 
+GdaWorker *
+gda_worker_copy (GdaWorker *src) {
+	return gda_worker_ref (src);
+}
+void
+gda_worker_free (GdaWorker *w) {
+	gda_worker_unref (w);
+}
+
+G_DEFINE_BOXED_TYPE(GdaWorker, gda_worker, gda_worker_copy, gda_worker_free)
+
 
 /* module error */
 GQuark gda_worker_error_quark (void)
@@ -422,7 +433,7 @@ _gda_worker_bg_unref (GdaWorker *worker)
 
 /**
  * gda_worker_unref:
- * @worker: (allow-none): a #GdaWorker, or %NULL
+ * @worker: (nullable): a #GdaWorker, or %NULL
  *
  * Decreases @worker's reference count. When reference count reaches %0, then the
  * object is destroyed, note that in this case this function only returns when the
@@ -478,12 +489,12 @@ _gda_worker_submit_job_with_its (GdaWorker *worker, ITSignaler *reply_its, GdaWo
 /**
  * gda_worker_submit_job:
  * @worker: a #GdaWorker object
- * @callback_context: (allow-none): a #GMainContext, or %NULL (ignored if no setting has been defined with gda_worker_set_callback())
+ * @callback_context: (nullable): a #GMainContext, or %NULL (ignored if no setting has been defined with gda_worker_set_callback())
  * @func: the function to call from the worker thread
- * @data: (allow-none): the data to pass to @func, or %NULL
- * @data_destroy_func: (allow-none): a function to destroy @data, or %NULL
- * @result_destroy_func: (allow-none): a function to destroy the result, if any, of the execution of @func, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL.
+ * @data: (nullable): the data to pass to @func, or %NULL
+ * @data_destroy_func: (nullable): a function to destroy @data, or %NULL
+ * @result_destroy_func: (nullable): a function to destroy the result, if any, of the execution of @func, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL.
  *
  * Request that the worker thread call @func with the @data argument.
  *
@@ -544,8 +555,8 @@ gda_worker_submit_job (GdaWorker *worker, GMainContext *callback_context, GdaWor
  * gda_worker_fetch_job_result:
  * @worker: a #GdaWorker object
  * @job_id: the ID of the job, as returned by gda_worker_submit_job()
- * @out_result: (allow-none): a place to store the value returned by the execution of the requested function within the worker thread, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL
+ * @out_result: (nullable): a place to store the value returned by the execution of the requested function within the worker thread, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Fetch the value returned by execution the @job_id job.
  *
@@ -618,7 +629,7 @@ gda_worker_fetch_job_result (GdaWorker *worker, guint job_id, gpointer *out_resu
  * gda_worker_cancel_job:
  * @worker: a #GdaWorker object
  * @job_id: the ID of the job, as returned by gda_worker_submit_job()
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Cancels a job which has not yet been processed. If the job cannot be found, is being processed or has already been processed,
  * then this function returns %FALSE.
@@ -723,10 +734,10 @@ dc_callback (ITSignaler *its, DeclaredCallback *dc)
 /**
  * gda_worker_set_callback:
  * @worker: a #GdaWorker object
- * @context: (allow-none): a #GMainContext, or %NULL
- * @callback: (allow-none): the function to call when a job submitted from within the calling thread using gda_worker_submit_job() has finished being processed.
+ * @context: (nullable): a #GMainContext, or %NULL
+ * @callback: (nullable) (scope call): the function to call when a job submitted from within the calling thread using gda_worker_submit_job() has finished being processed.
  * @user_data: argument passed to @callback
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Declare a callback function to be called when a job has been processed. If @callback is %NULL, then any previously
  * effect of this function is removed. If the same function is called with a different @callback value, then the previous one
@@ -840,15 +851,15 @@ do_itsignaler_cb (ITSignaler *its, GMainLoop *loop)
 /**
  * gda_worker_do_job:
  * @worker: a #GdaWorker object
- * @context: (allow-none): a #GMainContext to execute a main loop in (while waiting), or %NULL
+ * @context: (nullable): a #GMainContext to execute a main loop in (while waiting), or %NULL
  * @timeout_ms: the maximum number of milisecons to wait before returning, or %0 for unlimited wait
- * @out_result: (allow-none): a place to store the result, if any, of @func's execution, or %NULL
- * @out_job_id: (allow-none): a place to store the ID of the job having been submitted, or %NULL
+ * @out_result: (nullable): a place to store the result, if any, of @func's execution, or %NULL
+ * @out_job_id: (nullable): a place to store the ID of the job having been submitted, or %NULL
  * @func: the function to call from the worker thread
- * @data: (allow-none): the data to pass to @func, or %NULL
- * @data_destroy_func: (allow-none): a function to destroy @data, or %NULL
- * @result_destroy_func: (allow-none): a function to destroy the result, if any, of @func's execution, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL.
+ * @data: (nullable): the data to pass to @func, or %NULL
+ * @data_destroy_func: (nullable): a function to destroy @data, or %NULL
+ * @result_destroy_func: (nullable): a function to destroy the result, if any, of @func's execution, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL.
  *
  * Request that the worker thread call @func with the @data argument, much like gda_worker_submit_job(),
  * but waits (starting a #GMainLoop) for a maximum of @timeout_ms miliseconds for @func to be executed.
@@ -1015,9 +1026,9 @@ gda_worker_do_job (GdaWorker *worker, GMainContext *context, gint timeout_ms,
  * gda_worker_wait_job:
  * @worker: a #GdaWorker object
  * @func: the function to call from the worker thread
- * @data: (allow-none): the data to pass to @func, or %NULL
- * @data_destroy_func: (allow-none): a function to destroy @data, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL.
+ * @data: (nullable): the data to pass to @func, or %NULL
+ * @data_destroy_func: (nullable): a function to destroy @data, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL.
  *
  * Request that the worker thread call @func with the @data argument, much like gda_worker_submit_job(),
  * but waits (blocks) until @func has been executed.

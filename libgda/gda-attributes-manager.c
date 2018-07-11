@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 /**
  * gda_attributes_manager_new:
  * @for_objects: set to TRUE if attributes will be set on objects.
- * @signal_func: (allow-none): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
+ * @signal_func: (allow-none) (scope call): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
@@ -293,7 +293,7 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
  *
  * Retrieves the value of an attribute previously set using gda_attributes_manager_set().
  *
- * Returns: (tranfer none): the attribute's value, or %NULL if the attribute is not set.
+ * Returns: (transfer none): the attribute's value, or %NULL if the attribute is not set.
  */
 const GValue *
 gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name)
@@ -363,6 +363,19 @@ gda_attributes_manager_copy (GdaAttributesManager *from_mgr, gpointer *from,
 	g_rec_mutex_unlock (& (to_mgr->mutex));
 	g_rec_mutex_unlock (& (from_mgr->mutex));
 }
+
+static GdaAttributesManager*
+att_mgr_copy (GdaAttributesManager* src) {
+	GdaAttributesManager *cp = g_new0 (GdaAttributesManager, 1);
+	g_rec_mutex_init (& (cp->mutex));
+	cp->obj_hash = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
+					       (GDestroyNotify) objattrs_unref);
+	cp->for_objects = src->for_objects;
+	cp->signal_func = src->signal_func;
+	cp->signal_data = src->signal_data;
+}
+
+G_DEFINE_BOXED_TYPE(GdaAttributesManager, gda_attributes_manager, att_mgr_copy, gda_attributes_manager_free)
 
 static void
 foreach_copy_func (AttName *attname, const GValue *value, CopyData *cdata)

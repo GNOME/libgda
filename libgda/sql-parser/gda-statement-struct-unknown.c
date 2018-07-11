@@ -112,9 +112,9 @@ gda_sql_statement_unknown_serialize (gpointer stmt)
 }
 
 /**
- * gda_sql_statement_unknown_take_expressions
+ * gda_sql_statement_unknown_take_expressions:
  * @stmt: a #GdaSqlStatement pointer
- * @expressions: a list of #GdaSqlExpr pointers
+ * @expressions: (element-type Gda.SqlExpr): a list of #GdaSqlExpr pointers
  *
  * Sets @stmt's list of expressions
  *

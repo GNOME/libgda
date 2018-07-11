@@ -293,8 +293,6 @@ pict_data_changed_cb (PictBinData *bindata, GdauiEntryPict *mgpict)
 static void
 do_popup_menu (GtkWidget *widget, GdkEventButton *event, GdauiEntryPict *mgpict)
 {
-	int button, event_time;
-	
 	if (mgpict->priv->popup_menu.menu) {
 		gtk_widget_destroy (mgpict->priv->popup_menu.menu);
 		mgpict->priv->popup_menu.menu = NULL;
@@ -305,17 +303,8 @@ do_popup_menu (GtkWidget *widget, GdkEventButton *event, GdauiEntryPict *mgpict)
 
 	common_pict_adjust_menu_sensitiveness (&(mgpict->priv->popup_menu), mgpict->priv->editable, 
 						       &(mgpict->priv->bindata));
-	if (event) {
-		button = event->button;
-		event_time = event->time;
-	}
-	else {
-		button = 0;
-		event_time = gtk_get_current_event_time ();
-	}
-	
-	gtk_menu_popup (GTK_MENU (mgpict->priv->popup_menu.menu), NULL, NULL, NULL, NULL, 
-			button, event_time);
+
+		gtk_menu_popup_at_pointer (GTK_MENU (mgpict->priv->popup_menu.menu), NULL);
 }
 
 static gboolean

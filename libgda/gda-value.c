@@ -19,7 +19,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011 - 2018 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -3228,7 +3228,7 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml:
+ * gda_value_to_xml: (skip)
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.
@@ -3252,6 +3252,31 @@ gda_value_to_xml (const GValue *value)
 	g_free (valstr);
 
 	return retval;
+}
+
+/**
+ * gda_value_to_xml_string:
+ * @value: a #GValue to convert to string
+ *
+ * This methods creates an XML string representation of a #GValue
+ *
+ * Returns: (transfer full): an string representing a #GValue in XML format
+ */
+gchar*
+gda_value_to_xml_string (const GValue *value) {
+	g_return_val_if_fail (value != NULL, NULL);
+
+	xmlNodePtr node;
+	xmlBufferPtr buff;
+	gchar *str = NULL;
+
+	node = gda_value_to_xml (value);
+	buff = xmlBufferCreate ();
+	xmlNodeDump (buff, node->doc, node, 0, 0);
+	str = g_strdup (buff->content);
+	xmlBufferFree (buff);
+	xmlFreeNode (node);
+	return str;
 }
 
 
@@ -3571,3 +3596,4 @@ gda_string_to_blob (const gchar *str)
 	else
 		return NULL;
 }
+

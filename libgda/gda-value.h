@@ -253,6 +253,7 @@ gint                              gda_value_differ (const GValue *value1, const 
 gint                              gda_value_compare (const GValue *value1, const GValue *value2);
 gchar                            *gda_value_stringify (const GValue *value);
 xmlNodePtr                        gda_value_to_xml (const GValue *value);
+gchar*                            gda_value_to_xml_string (const GValue *value);
 
 gchar                            *gda_binary_to_string (const GdaBinary *bin, guint maxlen);
 GdaBinary                        *gda_string_to_binary (const gchar *str);

@@ -1,12 +1,12 @@
 test_headers = files([
-	'gda-ddl-creator.h'
+	'raw-ddl-creator.h'
 	])
 
 inc_testsh = include_directories ('.')
 inc_testsh_dep = declare_dependency (include_directories : inc_testsh)
 
 tests_sources = files([
-	'gda-ddl-creator.c',
+	'raw-ddl-creator.c',
 	'test-cnc-utils.h',
 	'test-cnc-utils.c',
 	'data-model-errors.h',
@@ -21,7 +21,7 @@ common_sources = files([
 tests_sources += test_headers
 tests_sources += common_sources
 
-tddlc = executable('test-ddl-creator test',
+trddlc = executable('test-ddl-creator test',
 	['test-ddl-creator.c'] + tests_sources,
 	c_args: [
 		'-include',
@@ -37,7 +37,7 @@ tddlc = executable('test-ddl-creator test',
 		],
 	install: false
 	)
-test('DDLCreator', tddlc,
+test('RawDdlCreator', trddlc,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -235,6 +235,7 @@ subdir('multi-threading')
 subdir('parser')
 subdir('providers')
 subdir('value-holders')
+subdir('ddl')
 if enable_ui
 subdir('ui')
 endif

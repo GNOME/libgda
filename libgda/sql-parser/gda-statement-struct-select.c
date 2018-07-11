@@ -244,7 +244,7 @@ _gda_sql_statement_select_serialize (gpointer stmt)
 }
 
 /**
- * gda_sql_statement_select_take_distinct
+ * gda_sql_statement_select_take_distinct:
  * @stmt: a #GdaSqlStatement pointer
  * @distinct: a TRUE/FALSE value
  * @distinct_expr: (allow-none): a #GdaSqlExpr pointer representing what the DISTINCT is on, or %NULL
@@ -264,9 +264,9 @@ gda_sql_statement_select_take_distinct (GdaSqlStatement *stmt, gboolean distinct
 }
 
 /**
- * gda_sql_statement_select_take_expr_list
+ * gda_sql_statement_select_take_expr_list:
  * @stmt: a #GdaSqlStatement pointer
- * @expr_list: a list of #GdaSqlSelectField pointers
+ * @expr_list: (element-type Gda.SqlSelectField): a list of #GdaSqlSelectField pointers
  *
  * Sets list of expressions selected by @stmt
  *
@@ -284,7 +284,7 @@ gda_sql_statement_select_take_expr_list (GdaSqlStatement *stmt, GSList *expr_lis
 }
 
 /**
- * gda_sql_statement_select_take_from
+ * gda_sql_statement_select_take_from:
  * @stmt: a #GdaSqlStatement pointer
  * @from: a #GdaSqlSelectFrom pointer
  *
@@ -302,7 +302,7 @@ gda_sql_statement_select_take_from (GdaSqlStatement *stmt, GdaSqlSelectFrom *fro
 }
 
 /**
- * gda_sql_statement_select_take_where_cond
+ * gda_sql_statement_select_take_where_cond:
  * @stmt: a #GdaSqlStatement pointer
  * @expr: a #GdaSqlExpr pointer
  *
@@ -320,9 +320,9 @@ gda_sql_statement_select_take_where_cond (GdaSqlStatement *stmt, GdaSqlExpr *exp
 }
 
 /**
- * gda_sql_statement_select_take_group_by
+ * gda_sql_statement_select_take_group_by:
  * @stmt: a #GdaSqlStatement pointer
- * @group_by: a list of #GdaSqlExpr pointer
+ * @group_by: (element-type GdaSqlExpr): a list of #GdaSqlExpr pointer
  *
  * Sets the GROUP BY clause of @stmt
  *
@@ -340,7 +340,7 @@ gda_sql_statement_select_take_group_by (GdaSqlStatement *stmt, GSList *group_by)
 }
 
 /**
- * gda_sql_statement_select_take_having_cond
+ * gda_sql_statement_select_take_having_cond:
  * @stmt: a #GdaSqlStatement pointer
  * @expr: a #GdaSqlExpr pointer
  *
@@ -358,9 +358,9 @@ gda_sql_statement_select_take_having_cond (GdaSqlStatement *stmt, GdaSqlExpr *ex
 }
 
 /**
- * gda_sql_statement_select_take_order_by
+ * gda_sql_statement_select_take_order_by:
  * @stmt: a #GdaSqlStatement pointer
- * @order_by: a list of #GdaSqlSelectOrder pointer
+ * @order_by: (element-type GdaSqlSelectOrder): a list of #GdaSqlSelectOrder pointer
  *
  * Sets the ORDER BY clause of @stmt
  *
@@ -378,7 +378,7 @@ gda_sql_statement_select_take_order_by (GdaSqlStatement *stmt, GSList *order_by)
 }
 
 /**
- * gda_sql_statement_select_take_limits
+ * gda_sql_statement_select_take_limits:
  * @stmt: a #GdaSqlStatement pointer
  * @count: a #GdaSqlExpr pointer
  * @offset: a #GdaSqlExpr pointer

@@ -359,9 +359,7 @@ data_source_menu_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataPart *part)
 			g_slist_free (added_list);
 	}
 
-	gtk_menu_popup (GTK_MENU (part->menu), NULL, NULL,
-                        NULL, NULL, 0,
-                        gtk_get_current_event_time ());
+	gtk_menu_popup_at_pointer (GTK_MENU (part->menu), NULL);
 }
 
 static void

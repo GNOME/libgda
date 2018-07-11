@@ -23,7 +23,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-row.h>
-#include <data-model-errors.h>
+#include "data-model-errors.h"
 #include <libgda/gda-debug-macros.h>
 #include "test-errors.h"
 

@@ -8,7 +8,7 @@ if HAVE_UI
 UI_EXTENSION = ui
 endif
 
-SUBDIRS = providers parser value-holders meta-store data-models multi-threading $(UI_EXTENSION) $(VALA_EXTENSIONS)
+SUBDIRS = providers parser value-holders meta-store data-models multi-threading ddl $(UI_EXTENSION) $(VALA_EXTENSIONS)
 
 AM_CPPFLAGS = \
         -I$(top_builddir) \
@@ -20,13 +20,13 @@ AM_CPPFLAGS = \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
 test_headers = \
-        gda-ddl-creator.h
+        raw-ddl-creator.h
 
 libgda_test_6_0_la_SOURCES = \
         $(test_headers) \
 	test-errors.h \
 	test-errors.c \
-        gda-ddl-creator.c \
+        raw-ddl-creator.c \
 	test-cnc-utils.h \
 	test-cnc-utils.c \
 	data-model-errors.h \

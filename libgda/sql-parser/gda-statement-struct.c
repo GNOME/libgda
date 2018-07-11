@@ -49,6 +49,26 @@ gda_sql_error_quark (void)
         return quark;
 }
 
+GdaSqlStatementContentsInfo *
+gda_sql_statement_get_contents_info_copy (GdaSqlStatementContentsInfo *src) {
+	GdaSqlStatementContentsInfo *cp = g_new0(GdaSqlStatementContentsInfo, 1);
+	cp->name = src->name;
+	cp->construct = src->construct;
+	cp->free = src->free;
+	cp->copy = src->copy;
+	cp->serialize = src->serialize;
+
+	/* augmenting information precision using a dictionary */
+	cp->check_structure_func = src->check_structure_func;
+	cp->check_validity_func = src->check_validity_func;
+	return cp;
+}
+void
+gda_sql_statement_get_contents_info_free (GdaSqlStatementContentsInfo *cinfo) {
+	g_free (cinfo);
+}
+
+G_DEFINE_BOXED_TYPE(GdaSqlStatementContentsInfo, gda_sql_statement_get_contents_info, gda_sql_statement_get_contents_info_copy, gda_sql_statement_get_contents_info_free)
 /*
  * statement's infos retrieval
  */
@@ -308,9 +328,9 @@ static gboolean gda_sql_select_field_check_validity (GdaSqlSelectField *field, G
 static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target, GdaSqlStatementCheckValidityData *data, GError **error);
 
 /**
- * gda_sql_statement_check_validity
+ * gda_sql_statement_check_validity:
  * @stmt: a #GdaSqlStatement pointer
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @cnc is not %NULL, then checks that all the database objects referenced in the statement actually
@@ -360,7 +380,7 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 /**
  * gda_sql_statement_check_validity_m
  * @stmt: a #GdaSqlStatement pointer
- * @mstruct: (allow-none): a #GdaMetaStruct object, or %NULL
+ * @mstruct: (nullable): a #GdaMetaStruct object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @mstruct is not %NULL, then checks that all the database objects referenced in the statement i
@@ -1390,9 +1410,9 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 static gboolean foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error);
 
 /**
- * gda_sql_statement_normalize
+ * gda_sql_statement_normalize:
  * @stmt: a pointer to a #GdaSqlStatement structure
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * "Normalizes" (in place) some parts of @stmt, which means @stmt may be modified.
@@ -1490,6 +1510,7 @@ gda_sql_any_part_copy (GdaSqlAnyPart *src) {
 	GdaSqlAnyPart *cp = g_new0(GdaSqlAnyPart, 1);
 	cp->type = src->type;
 	cp->parent = src->parent;
+	return cp;
 }
 void
 gda_sql_any_part_free (GdaSqlAnyPart *anyp) {

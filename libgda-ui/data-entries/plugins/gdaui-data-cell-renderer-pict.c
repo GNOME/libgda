@@ -445,8 +445,6 @@ gdaui_data_cell_renderer_pict_activate  (GtkCellRenderer            *cell,
 
 	pictcell = GDAUI_DATA_CELL_RENDERER_PICT (cell);
 	if (pictcell->priv->editable) {
-		int event_time;
-
 		g_object_set_data_full (G_OBJECT (pictcell), "last-path", g_strdup (path), g_free);
 		if (pictcell->priv->popup_menu.menu) {
 			gtk_widget_destroy (pictcell->priv->popup_menu.menu);
@@ -458,9 +456,7 @@ gdaui_data_cell_renderer_pict_activate  (GtkCellRenderer            *cell,
 
 		common_pict_adjust_menu_sensitiveness (&(pictcell->priv->popup_menu), pictcell->priv->editable,
 						       &(pictcell->priv->bindata));
-		event_time = gtk_get_current_event_time ();
-		gtk_menu_popup (GTK_MENU (pictcell->priv->popup_menu.menu), NULL, NULL, NULL, NULL,
-				0, event_time);
+		gtk_menu_popup_at_pointer (GTK_MENU (pictcell->priv->popup_menu.menu), NULL);
 	}
 
 	return FALSE;

@@ -305,6 +305,9 @@ gda_sql_field_copy (GdaSqlField *field)
 	return copy;
 }
 
+
+G_DEFINE_BOXED_TYPE(GdaSqlField, gda_sql_field, gda_sql_field_copy, gda_sql_field_free)
+
 /**
  * gda_sql_field_serialize
  * @field: a #GdaSqlField structure
@@ -381,7 +384,7 @@ gda_sql_table_free (GdaSqlTable *table)
  *
  * Creates a new #GdaSqlTable structure initiated with the values stored in @table.
  *
- * Returns: a new #GdaSqlTable structure.
+ * Returns: (transfer full): a new #GdaSqlTable structure.
  */
 GdaSqlTable *
 gda_sql_table_copy (GdaSqlTable *table)
@@ -397,14 +400,16 @@ gda_sql_table_copy (GdaSqlTable *table)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlTable, gda_sql_table, gda_sql_table_copy, gda_sql_table_free)
+
 /**
- * gda_sql_table_serialize
- * @field: a #GdaSqlTable structure
+ * gda_sql_table_serialize:
+ * @table: a #GdaSqlTable structure
  *
  * Creates a new string representing a table. You need to free the returned string
  * using g_free();
  *
- * Returns: a new string with the name of the field or "null" in case @table is invalid.
+ * Returns: (transfer full): a new string with the name of the field or "null" in case @table is invalid.
  */
 gchar *
 gda_sql_table_serialize (GdaSqlTable *table)
@@ -416,8 +421,8 @@ gda_sql_table_serialize (GdaSqlTable *table)
 }
 
 /**
- * gda_sql_table_take_name
- * @field: a #GdaSqlTable structure
+ * gda_sql_table_take_name:
+ * @table: a #GdaSqlTable structure
  * @value: a #GValue holding a string to take from
  *
  * Sets the table's name using the string held by @value. When call, @value is freed using
@@ -476,7 +481,7 @@ gda_sql_function_free (GdaSqlFunction *function)
  *
  * Creates a new #GdaSqlFunction structure initiated with the values stored in @function.
  *
- * Returns: a new #GdaSqlFunction structure.
+ * Returns: (transfer full): a new #GdaSqlFunction structure.
  */
 GdaSqlFunction *
 gda_sql_function_copy (GdaSqlFunction *function)
@@ -501,6 +506,9 @@ gda_sql_function_copy (GdaSqlFunction *function)
 
 	return copy;
 }
+
+
+G_DEFINE_BOXED_TYPE(GdaSqlFunction, gda_sql_function, gda_sql_function_copy, gda_sql_function_free)
 
 /**
  * gda_sql_function_serialize
@@ -569,7 +577,7 @@ gda_sql_function_take_name (GdaSqlFunction *function, GValue *value)
 /**
  * gda_sql_function_take_args_list
  * @function: a #GdaSqlFunction structure
- * @args: a #GSList to take from
+ * @args: (element-type Gda.SqlExpr): a #GSList to take from
  *
  * Sets the function's arguments to point to @args, then sets the
  * list's data elements' parent to @function.
@@ -649,6 +657,9 @@ gda_sql_operation_copy (GdaSqlOperation *operation)
 
 	return copy;
 }
+
+
+G_DEFINE_BOXED_TYPE(GdaSqlOperation, gda_sql_operation, gda_sql_operation_copy, gda_sql_operation_free)
 
 /**
  * gda_sql_operation_serialize
@@ -943,6 +954,8 @@ gda_sql_case_copy (GdaSqlCase *sc)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlCase, gda_sql_case, gda_sql_case_copy, gda_sql_case_free)
+
 /**
  * gda_sql_case_serialize
  * @sc: a #GdaSqlCase structure
@@ -1045,7 +1058,7 @@ gda_sql_select_field_free (GdaSqlSelectField *field)
  *
  * Creates a new #GdaSqlSelectField structure initiated with the values stored in @field.
  *
- * Returns: a new #GdaSqlSelectField structure.
+ * Returns: (transfer full): a new #GdaSqlSelectField structure.
  */
 GdaSqlSelectField *
 gda_sql_select_field_copy (GdaSqlSelectField *field)
@@ -1070,6 +1083,8 @@ gda_sql_select_field_copy (GdaSqlSelectField *field)
 
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlSelectField, gda_sql_select_field, gda_sql_select_field_copy, gda_sql_select_field_free)
 
 /**
  * gda_sql_select_field_serialize
@@ -1248,6 +1263,8 @@ gda_sql_select_target_copy (GdaSqlSelectTarget *target)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlSelectTarget, gda_sql_select_target, gda_sql_select_target_copy, gda_sql_select_target_free)
+
 /**
  * gda_sql_select_target_serialize
  * @target: a #GdaSqlSelectTarget structure
@@ -1294,7 +1311,7 @@ gda_sql_select_target_serialize (GdaSqlSelectTarget *target)
 }
 
 /**
- * gda_sql_select_target_take_table_name
+ * gda_sql_select_target_take_table_name:
  * @target: a #GdaSqlSelectTarget structure
  * @value: a #GValue to take from
  *
@@ -1313,7 +1330,7 @@ gda_sql_select_target_take_table_name (GdaSqlSelectTarget *target, GValue *value
 }
 
 /**
- * gda_sql_select_target_take_table_name
+ * gda_sql_select_target_take_select:
  * @target: a #GdaSqlSelectTarget structure
  * @stmt: a #GValue to take from
  *
@@ -1418,6 +1435,8 @@ gda_sql_select_join_copy (GdaSqlSelectJoin *join)
 
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlSelectJoin, gda_sql_select_join, gda_sql_select_join_copy, gda_sql_select_join_free)
 
 /**
  * gda_sql_select_join_type_to_string
@@ -1585,6 +1604,9 @@ gda_sql_select_from_copy (GdaSqlSelectFrom *from)
 	return copy;
 }
 
+G_DEFINE_BOXED_TYPE(GdaSqlSelectFrom, gda_sql_select_from, gda_sql_select_from_copy, gda_sql_select_from_free)
+
+
 /**
  * gda_sql_select_from_serialize
  * @from: a #GdaSqlSelectFrom structure
@@ -1734,6 +1756,8 @@ gda_sql_select_order_copy (GdaSqlSelectOrder *order)
 	copy->asc = order->asc;
 	return copy;
 }
+
+G_DEFINE_BOXED_TYPE(GdaSqlSelectOrder, gda_sql_select_order, gda_sql_select_order_copy, gda_sql_select_order_free)
 
 /**
  * gda_sql_select_order_serialize

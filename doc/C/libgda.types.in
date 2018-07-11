@@ -7,6 +7,9 @@
 #include <gda-report-document.h>
 #include <RML/gda-report-rml-document.h>
 #include <DocBook/gda-report-docbook-document.h>
+#include <libgda/gda-ddl-fkey.h>
+#include <libgda/gda-ddl-base.h>
+#include <libgda/gda-ddl-view.h>
 gda_blob_op_get_type
 gda_column_get_type
 gda_config_get_type
@@ -67,3 +70,6 @@ gda_tree_mgr_select_get_type
 gda_tree_mgr_tables_get_type
 gda_tree_node_get_type
 gda_sql_builder_get_type
+gda_ddl_fkey_get_type
+gda_ddl_base_get_type
+gda_ddl_view_get_type

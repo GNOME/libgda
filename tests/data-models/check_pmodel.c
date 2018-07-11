@@ -23,7 +23,7 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
-#include <tests/gda-ddl-creator.h>
+#include <tests/raw-ddl-creator.h>
 #include <glib/gstdio.h>
 #include "../test-cnc-utils.h"
 #include "../test-errors.h"
@@ -133,7 +133,7 @@ main (int argc, char **argv)
 static GdaConnection *
 setup_connection (void)
 {
-	GdaDDLCreator *ddl;
+	RawDDLCreator *ddl;
         GError *error = NULL;
         GdaConnection *cnc;
         gchar *str;
@@ -147,18 +147,18 @@ setup_connection (void)
         }
 
 	/* Setup structure */
-        ddl = gda_ddl_creator_new ();
-        gda_ddl_creator_set_connection (ddl, cnc);
+        ddl = raw_ddl_creator_new ();
+        raw_ddl_creator_set_connection (ddl, cnc);
 	str = g_build_filename (CHECK_FILES, "tests", "data-models", "pmodel_dbstruct.xml", NULL);
-        if (!gda_ddl_creator_set_dest_from_file (ddl, str, &error)) {
-                g_print ("Error creating GdaDDLCreator: %s\n", error && error->message ? error->message : "No detail");
+        if (!raw_ddl_creator_set_dest_from_file (ddl, str, &error)) {
+                g_print ("Error creating RawDDLCreator: %s\n", error && error->message ? error->message : "No detail");
                 g_error_free (error);
                 exit (EXIT_FAILURE);
         }
 	g_free (str);
 
 #ifdef SHOW_SQL
-        str = gda_ddl_creator_get_sql (ddl, &error);
+        str = raw_ddl_creator_get_sql (ddl, &error);
         if (!str) {
                 g_print ("Error getting SQL: %s\n", error && error->message ? error->message : "No detail");
                 g_error_free (error);
@@ -168,7 +168,7 @@ setup_connection (void)
         g_free (str);
 #endif
 
-        if (!gda_ddl_creator_execute (ddl, &error)) {
+        if (!raw_ddl_creator_execute (ddl, &error)) {
                 g_print ("Error creating database objects: %s\n", error && error->message ? error->message : "No detail");
                 g_error_free (error);
                 exit (EXIT_FAILURE);

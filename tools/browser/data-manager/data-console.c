@@ -763,9 +763,7 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 				data_manager_add_proposals_to_menu (dconsole->priv->add_source_menu,
 								    dconsole->priv->mgr,
 								    current_source, GTK_WIDGET (dconsole));
-		gtk_menu_popup (GTK_MENU (dconsole->priv->add_source_menu), NULL, NULL,
-				NULL, NULL, 0,
-				gtk_get_current_event_time ());
+		gtk_menu_popup_at_pointer (GTK_MENU (dconsole->priv->add_source_menu), NULL);
 		return;
 	}
 
@@ -840,9 +838,7 @@ add_source_clicked_cb (G_GNUC_UNUSED GtkButton *button, DataConsole *dconsole)
 							    dconsole->priv->mgr,
 							    current_source, GTK_WIDGET (dconsole));
 
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			NULL, NULL, 0,
-			gtk_get_current_event_time ());
+	gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
 }
 
 /*

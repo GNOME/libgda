@@ -484,8 +484,7 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 		menu = _gdaui_utility_entry_build_actions_menu (G_OBJECT (cellinfo), attributes, 
 								G_CALLBACK (mitem_activated_cb));
 		g_object_set_data (G_OBJECT (cellinfo), "path", g_strdup (path));
-		gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-				0, gtk_get_current_event_time ());
+		gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
 		return TRUE;		
 	}
 

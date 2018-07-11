@@ -218,6 +218,8 @@ gboolean                   gda_server_operation_set_value_at_path       (GdaServ
 									 const gchar *path, GError **error);
 
 xmlNodePtr                 gda_server_operation_save_data_to_xml        (GdaServerOperation *op, GError **error);
+gchar*                     gda_server_operation_save_data_to_xml_string (GdaServerOperation *op,
+                   G_GNUC_UNUSED GError **error);
 gboolean                   gda_server_operation_load_data_from_xml      (GdaServerOperation *op, 
 									 xmlNodePtr node, GError **error);
 

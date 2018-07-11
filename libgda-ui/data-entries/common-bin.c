@@ -210,8 +210,7 @@ static void
 open_data_cb (GtkWidget *button, BinMenu *menu)
 {
 	g_return_if_fail (menu->open_menu);
-	gtk_menu_popup (GTK_MENU (menu->open_menu), NULL, NULL, NULL, NULL,
-			0, gtk_get_current_event_time ());
+	gtk_menu_popup_at_pointer (GTK_MENU (menu->open_menu), NULL);
 }
 #endif
 

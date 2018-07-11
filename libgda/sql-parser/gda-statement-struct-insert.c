@@ -264,7 +264,7 @@ gda_sql_statement_insert_take_on_conflict (GdaSqlStatement *stmt, GValue *value)
 /**
  * gda_sql_statement_insert_take_fields_list
  * @stmt: a #GdaSqlStatement pointer
- * @list: a list of #GdaSqlField pointers
+ * @list: (element-type Gda.SqlField): a list of #GdaSqlField pointers
  *
  * Sets the list of fields for which values will be specified in @stmt. @list's 
  * ownership is transferred to
@@ -282,9 +282,9 @@ gda_sql_statement_insert_take_fields_list (GdaSqlStatement *stmt, GSList *list)
 }
 
 /**
- * gda_sql_statement_insert_take_1_values_list
+ * gda_sql_statement_insert_take_1_values_list:
  * @stmt: a #GdaSqlStatement pointer
- * @list: a list of #GdaSqlExpr pointers
+ * @list: (element-type Gda.SqlExpr): a list of #GdaSqlExpr pointers
  *
  * Sets a list of values to be inserted by @stmt. @list's 
  * ownership is transferred to
@@ -302,9 +302,9 @@ gda_sql_statement_insert_take_1_values_list (GdaSqlStatement *stmt, GSList *list
 }
 
 /**
- * gda_sql_statement_insert_take_1_values_list
+ * gda_sql_statement_insert_take_extra_values_list:
  * @stmt: a #GdaSqlStatement pointer
- * @list: a list of #GSList of #GdaSqlExpr pointers
+ * @list: (element-type GdaSqlExpr): a list of #GSList of #GdaSqlExpr pointers
  *
  * Sets a list of list of values to be inserted by @stmt. @list's 
  * ownership is transferred to

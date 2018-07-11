@@ -1604,7 +1604,7 @@ tree_view_popup_button_pressed_cb (G_GNUC_UNUSED GtkWidget *widget, GdkEventButt
 
 	/* allow listeners to add their custom menu items */
 	g_signal_emit (G_OBJECT (grid), gdaui_raw_grid_signals [POPULATE_POPUP], 0, GTK_MENU (menu));
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, event->button, event->time);
+	gtk_menu_popup_at_pointer (GTK_MENU (menu), NULL);
 	gtk_widget_show_all (menu);
 
 	return TRUE;

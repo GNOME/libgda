@@ -25,6 +25,8 @@
 #include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-util.h>
 
+G_DEFINE_BOXED_TYPE(GdaSqlParamSpec, gda_sql_param_spec, gda_sql_param_spec_copy, gda_sql_param_spec_free)
+
 /**
  * gda_sql_param_spec_take_name:
  * @pspec: a #GdaSqlParamSpec pointer
@@ -120,17 +122,17 @@ gda_sql_param_spec_take_type (GdaSqlParamSpec *pspec, GValue *value)
 
 /**
  * gda_sql_param_spec_new:
- * @value: (transfer full): a G_TYPE_STRING #GValue
+ * @simple_spec: (transfer full): a G_TYPE_STRING #GValue
  *
  * @value must contain a string representing a variable, see the documentation associated to the
  * #GdaSqlParser object.
  *
  * @value is destroyed by this function.
  *
- * Returns: a new #GdaSqlParamSpec
+ * Returns: (transfer full): a new #GdaSqlParamSpec
  */
 GdaSqlParamSpec *
-gda_sql_param_spec_new (GValue *value)
+gda_sql_param_spec_new (GValue *simple_spec)
 {
 	GdaSqlParamSpec *pspec;
 
@@ -139,8 +141,8 @@ gda_sql_param_spec_new (GValue *value)
 	pspec->nullok = FALSE;
 	pspec->g_type = GDA_TYPE_NULL;
 
-	if (value) {
-		gchar *str = (gchar *) g_value_get_string (value);
+	if (simple_spec) {
+		gchar *str = (gchar *) g_value_get_string (simple_spec);
 		gchar *ptr;
 		gint part; /* 0 for name, 1 for type and 2 for NULL */
 		ptr = str;
@@ -169,7 +171,7 @@ gda_sql_param_spec_new (GValue *value)
 				str = ptr;
 			}
 		}
-		gda_value_free (value);
+		gda_value_free (simple_spec);
 	}
 
 	return pspec;

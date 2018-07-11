@@ -170,6 +170,9 @@ struct _GdaSqlField {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_FIELD (gda_sql_field_get_type())
+
+GType            gda_sql_field_get_type  (void) G_GNUC_CONST;
 GdaSqlField     *gda_sql_field_new            (GdaSqlAnyPart *parent);
 void             gda_sql_field_free           (GdaSqlField *field);
 GdaSqlField     *gda_sql_field_copy           (GdaSqlField *field);
@@ -203,6 +206,9 @@ struct _GdaSqlTable
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_TABLE (gda_sql_table_get_type())
+
+GType            gda_sql_table_get_type  (void) G_GNUC_CONST;
 GdaSqlTable     *gda_sql_table_new            (GdaSqlAnyPart *parent);
 void             gda_sql_table_free           (GdaSqlTable *table);
 GdaSqlTable     *gda_sql_table_copy           (GdaSqlTable *table);
@@ -233,6 +239,9 @@ struct _GdaSqlFunction {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_FUNCTION (gda_sql_function_get_type())
+
+GType            gda_sql_function_get_type  (void) G_GNUC_CONST;
 GdaSqlFunction  *gda_sql_function_new            (GdaSqlAnyPart *parent);
 void             gda_sql_function_free           (GdaSqlFunction *function);
 GdaSqlFunction  *gda_sql_function_copy           (GdaSqlFunction *function);
@@ -322,7 +331,8 @@ typedef enum {
  * GdaSqlOperation:
  * @any: inheritance structure
  * @operator_type: 
- * @operands: list of #GdaSqlExpr operands
+ * @operands: (element-type Gda.SqlExpr)
+ * : list of #GdaSqlExpr operands
  *
  * This structure represents an operation between one or more operands.
  */
@@ -337,6 +347,9 @@ struct _GdaSqlOperation {
 	gpointer         _gda_reserved2;
 };
 
+#define GDA_TYPE_SQL_OPERATION (gda_sql_operation_get_type())
+
+GType             gda_sql_operation_get_type  (void) G_GNUC_CONST;
 GdaSqlOperation  *gda_sql_operation_new            (GdaSqlAnyPart *parent);
 void              gda_sql_operation_free           (GdaSqlOperation *operation);
 GdaSqlOperation  *gda_sql_operation_copy           (GdaSqlOperation *operation);
@@ -370,6 +383,9 @@ struct _GdaSqlCase
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_CASE (gda_sql_case_get_type())
+
+GType             gda_sql_case_get_type  (void) G_GNUC_CONST;
 
 GdaSqlCase        *gda_sql_case_new            (GdaSqlAnyPart *parent);
 void               gda_sql_case_free           (GdaSqlCase *sc);
@@ -411,6 +427,9 @@ struct _GdaSqlSelectField
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_FIELD (gda_sql_select_field_get_type())
+
+GType             gda_sql_select_field_get_type  (void) G_GNUC_CONST;
 
 GdaSqlSelectField *gda_sql_select_field_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_field_free           (GdaSqlSelectField *field);
@@ -453,6 +472,9 @@ struct _GdaSqlSelectTarget
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_TARGET (gda_sql_select_target_get_type())
+
+GType             gda_sql_select_target_get_type  (void) G_GNUC_CONST;
 
 GdaSqlSelectTarget *gda_sql_select_target_new            (GdaSqlAnyPart *parent);
 void                gda_sql_select_target_free           (GdaSqlSelectTarget *target);
@@ -508,7 +530,9 @@ struct _GdaSqlSelectJoin
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_JOIN (gda_sql_select_join_get_type())
 
+GType             gda_sql_select_join_get_type  (void) G_GNUC_CONST;
 GdaSqlSelectJoin  *gda_sql_select_join_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_join_free           (GdaSqlSelectJoin *join);
 GdaSqlSelectJoin  *gda_sql_select_join_copy           (GdaSqlSelectJoin *join);
@@ -539,7 +563,9 @@ struct _GdaSqlSelectFrom
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_FROM (gda_sql_select_from_get_type())
 
+GType              gda_sql_select_from_get_type  (void) G_GNUC_CONST;
 GdaSqlSelectFrom  *gda_sql_select_from_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_from_free           (GdaSqlSelectFrom *from);
 GdaSqlSelectFrom  *gda_sql_select_from_copy           (GdaSqlSelectFrom *from);
@@ -572,7 +598,9 @@ struct _GdaSqlSelectOrder
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_SELECT_ORDER (gda_sql_select_order_get_type())
 
+GType              gda_sql_select_order_get_type  (void) G_GNUC_CONST;
 GdaSqlSelectOrder *gda_sql_select_order_new            (GdaSqlAnyPart *parent);
 void               gda_sql_select_order_free           (GdaSqlSelectOrder *order);
 GdaSqlSelectOrder *gda_sql_select_order_copy           (GdaSqlSelectOrder *order);

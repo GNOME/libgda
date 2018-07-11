@@ -2115,7 +2115,7 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 /**
  * gda_set_get_holders:
  *
- * Returns: (element-type Holder): a list of #GdaHolder objects in the set
+ * Returns: (transfer none) (element-type Gda.Holder): a list of #GdaHolder objects in the set
  */
 GSList*
 gda_set_get_holders (GdaSet *set) {
@@ -2125,7 +2125,7 @@ gda_set_get_holders (GdaSet *set) {
 /**
  * gda_set_get_nodes:
  *
- * Returns: (element-type SetNode): a list of #GdaSetNode objects in the set
+ * Returns: (transfer none) (element-type Gda.SetNode): a list of #GdaSetNode objects in the set
  */
 GSList*
 gda_set_get_nodes (GdaSet *set) {
@@ -2136,7 +2136,7 @@ gda_set_get_nodes (GdaSet *set) {
 /**
  * gda_set_get_sources:
  *
- * Returns: (element-type SetSource): a list of #GdaSetSource objects in the set
+ * Returns: (transfer none) (element-type Gda.SetSource): a list of #GdaSetSource objects in the set
  */
 GSList*
 gda_set_get_sources (GdaSet *set) {
@@ -2147,7 +2147,7 @@ gda_set_get_sources (GdaSet *set) {
 /**
  * gda_set_get_groups:
  *
- * Returns: (element-type SetGroup): a list of #GdaSetGroup objects in the set
+ * Returns: (transfer none) (element-type Gda.SetGroup): a list of #GdaSetGroup objects in the set
  */
 GSList*
 gda_set_get_groups (GdaSet *set) {

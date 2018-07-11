@@ -86,7 +86,7 @@ plugin_get_dsn_spec (void)
 	if (ret)
 		return ret;
 	else
-		return gda_server_provider_load_resource_contents ("sqlite", "sqlite_specs_dsn.xml");
+		return gda_server_provider_load_resource_contents ("sqlite", "sqlite_specs_dsn.raw.xml");
 }
 
 gchar *

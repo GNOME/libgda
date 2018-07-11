@@ -67,6 +67,6 @@ main (int argc, char** argv)
 	gda_binary_free (bin);
 	gda_binary_free (bin2);
 
-	g_print ("Ok (file size: %d)\n", bin_length);
+	g_print ("Ok (file size: %ld)\n", bin_length);
 	return EXIT_SUCCESS;
 }

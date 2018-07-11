@@ -76,6 +76,13 @@ libgda_headers = files([
 	'gda-data-access-wrapper.h',
 	'gda-data-proxy.h',
 	'gda-data-select.h',
+        'gda-ddl-creator.h',
+        'gda-ddl-table.h',
+        'gda-ddl-view.h',
+        'gda-ddl-column.h',
+        'gda-ddl-fkey.h',
+        'gda-ddl-base.h',
+        'gda-ddl-buildable.h',
 	'gda-decl.h',
 	'gda-holder.h',
 	'gda-lockable.h',
@@ -110,10 +117,14 @@ libgda_headers = files([
 	'libgda-global-variables.h',
 	'gda-data-pivot.h'
 ])
-
-libgda_headers += gda_enum_headers
+libgda_headers_all = []
+libgda_headers_all += [
+	libgda_headers,
+	gda_enum_headers
+	]
 
 libgda_sources= files([
+	'gda-attributes-manager.c',
 	'gda-batch.c',
 	'gda-blob-op.c',
 	'gda-blob-op-impl.h',
@@ -131,6 +142,13 @@ libgda_sources= files([
 	'gda-data-access-wrapper.c',
 	'gda-data-proxy.c',
 	'gda-data-select.c',
+        'gda-ddl-creator.c',
+        'gda-ddl-table.c',
+        'gda-ddl-view.c',
+        'gda-ddl-column.c',
+        'gda-ddl-fkey.c',
+        'gda-ddl-base.c',
+        'gda-ddl-buildable.c',
 	'gda-holder.c',
 	'gda-init.c',
 	'gda-lockable.c',
@@ -167,7 +185,6 @@ libgda_source_all = files([
 	'libcsv.c',
 	'dir-blob-op.h',
 	'dir-blob-op.c',
-	'gda-attributes-manager.c',
 	'gda-debug-macros.h',
 	'gda-connection-internal.h',
 	'gda-connection-sqlite.h',
@@ -188,7 +205,7 @@ libgda_source_all = files([
 
 libgda_source_all += [
 	libgda_sources,
-	libgda_headers,
+	libgda_headers_all,
 	gda_enums,
 	gda_marshalls,
 	]
@@ -233,6 +250,9 @@ libgda = library(
 
 # GObject Introspection
 gi_sources = []
+gi_sources += libgda_sources
+gi_sources += libgda_headers
+gi_sources += gda_enum_headers
 gi_sources += psupport_gi_sources
 gi_sources += threadwrapper_gi_sources
 gi_sources += sql_parser_gi_sources
@@ -245,7 +265,9 @@ gnome_module.generate_gir(libgda,
 	nsversion: project_api_version,
 	header: 'libgda.h',
 	includes: [
+		'GLib-2.0',
 		'GObject-2.0',
+		'Gio-2.0',
 		'libxml2-2.0'
 		],
 	dependencies: libgda_dep,

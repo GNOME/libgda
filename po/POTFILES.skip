@@ -36,6 +36,6 @@ providers/skel-implementation/models/libmain.c
 providers/skel-implementation/models/models_specs_dsn.xml.in
 providers/sqlcipher/sqlite3.c
 testing/html.c
-tests/gda-ddl-creator.c
+tests/raw-ddl-creator.c
 tools/browser/dummy-perspective/perspective-menus.ui
 tools/browser/gda-browser-6.0.desktop.in

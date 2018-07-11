@@ -656,6 +656,25 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 	return retval;	
 }
 
+
+GdaXaTransactionId *
+gda_xa_transaction_id_copy (GdaXaTransactionId *src) {
+	GdaXaTransactionId *cp = g_new0 (GdaXaTransactionId, 1);
+	cp->format = src->format;
+	cp->gtrid_length = src->gtrid_length;
+	cp->bqual_length = src->bqual_length;
+	for(int i = 0; i < 128; i++) {
+		cp->data[i] = src->data[i];
+	}
+	return  cp;
+}
+void
+gda_xa_transaction_id_free (GdaXaTransactionId *tid) {
+	g_free (tid);
+}
+
+G_DEFINE_BOXED_TYPE(GdaXaTransactionId, gda_xa_transaction_id, gda_xa_transaction_id_copy, gda_xa_transaction_id_free)
+
 /**
  * gda_xa_transaction_id_to_string:
  * @xid: a #GdaXaTransactionId pointer

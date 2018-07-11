@@ -22,7 +22,7 @@
 #include <libgda/libgda.h>
 #include <sql-parser/gda-sql-parser.h>
 #include <sql-parser/gda-sql-statement.h>
-#include <tests/gda-ddl-creator.h>
+#include <tests/raw-ddl-creator.h>
 #include <glib/gstdio.h>
 #include "../test-cnc-utils.h"
 #include "../data-model-errors.h"

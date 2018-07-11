@@ -47,6 +47,9 @@ typedef struct {
 	gpointer       GSEAL(pad1);
 	gpointer       GSEAL(pad2);
 } GdaServerProviderConnectionData;
+#define GDA_TYPE_SERVER_PROVIDER_CONNECTION_DATA (gda_server_provider_connection_data_get_type())
+
+GType              gda_server_provider_connection_data_get_type  (void) G_GNUC_CONST;
 
 void                             gda_connection_internal_set_provider_data       (GdaConnection *cnc,
 										  GdaServerProviderConnectionData *data,

@@ -45,6 +45,9 @@ struct _GdaSqlParamSpec
 	gpointer         _gda_reserved1;
 	gpointer         _gda_reserved2;
 };
+#define GDA_TYPE_SQL_PARAM_SPEC gda_sql_param_get_type()
+GType gda_sql_param_spec_get_type(void) G_GNUC_CONST;
+
 GdaSqlParamSpec *gda_sql_param_spec_new        (GValue *simple_spec);
 GdaSqlParamSpec *gda_sql_param_spec_copy       (GdaSqlParamSpec *pspec);
 void             gda_sql_param_spec_take_name  (GdaSqlParamSpec *pspec, GValue *value);

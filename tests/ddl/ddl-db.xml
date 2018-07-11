@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "../../libgda/libgda-ddl-creator.dtd">
+<schema name="main">
+  <table name="employee" temptable="FALSE">
+    <comment>employee table</comment>
+    <column name="id" type="int" pkey="TRUE"
+            unique="TRUE" nnul="TRUE" autoinc="FALSE">
+    </column>
+    <column name="employee_id" type="int" unique="TRUE" 
+            nnul="TRUE" pkey="TRUE">
+    </column>
+    <column name="name" type="string" nnul="TRUE">
+            <comment>Some comments here</comment>
+            <value>Pavlo_S</value>
+    </column>
+    <column name="weight" type="gfloat">
+            <value size="5" scale="2">178.3435</value>
+    </column>
+    <column name="age" type="int">
+            <value>18</value>
+            <check>age &gt; 16</check>
+    </column>
+  </table>
+</schema>
+
