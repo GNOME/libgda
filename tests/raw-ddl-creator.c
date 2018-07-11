@@ -405,14 +405,14 @@ load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **er
 	doc = xmlParseFile (xml_spec_file);
 	if (!doc) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_SPECFILE_NOT_FOUND_ERROR,
-			     _("Could not load file '%s'"), xml_spec_file);
+			     "Could not load file '%s'", xml_spec_file);
 		return FALSE;
 	}
 
 	node = xmlDocGetRootElement (doc);
 	if (!node || strcmp ((gchar *) node->name, "schema")) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
-			     _("Root node of file '%s' should be <schema>."), xml_spec_file);
+			     "Root node of file '%s' should be <schema>.", xml_spec_file);
 		xmlFreeDoc (doc);
 		return FALSE;
 	}
@@ -484,7 +484,7 @@ prepare_dbo_server_operation (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaC
 	switch (dbo->obj_type) {
 	case GDA_META_DB_UNKNOWN:
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
-			     _("Unknown database object '%s'"), dbo->obj_full_name);
+			     "Unknown database object '%s'", dbo->obj_full_name);
 		break;
 
 	case GDA_META_DB_TABLE:
@@ -693,7 +693,7 @@ raw_ddl_creator_get_sql (RawDDLCreator *ddlc, GError **error)
 	g_return_val_if_fail (ddlc->priv, NULL);
 	if (!ddlc->priv->cnc) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     "%s", _("No connection specified"));
+			     "%s", "No connection specified");
 		return NULL;
 	}
 
@@ -748,12 +748,12 @@ raw_ddl_creator_execute (RawDDLCreator *ddlc, GError **error)
 	g_return_val_if_fail (ddlc->priv, FALSE);
 	if (!ddlc->priv->cnc) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     "%s", _("No connection specified"));
+			     "%s", "No connection specified");
 		return FALSE;
 	}
 	if (!ddlc->priv->d_mstruct) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
-			     "%s", _("No destination database objects specified"));
+			     "%s", "No destination database objects specified");
 		return FALSE;
 	}
 
