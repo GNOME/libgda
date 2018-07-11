@@ -429,7 +429,7 @@ on_error:
  * gda_ddl_creator_get_tables:
  * @self: a #GdaDdlCreator object
  *
- * Returns: a list of tables
+ * Returns: (element-type Gda.DdlTable) (transfer none): a list of tables
  *
  * Since: 6.0
  */
@@ -444,7 +444,7 @@ gda_ddl_creator_get_tables (GdaDdlCreator *self)
  * gda_ddl_creator_get_views:
  * @self: a #GdaDdlCreator object
  *
- * Returns: a list of views
+ * Returns: (element-type Gda.DdlView) (transfer none): a list of views
  *
  * Since: 6.0
  */
@@ -658,7 +658,6 @@ gda_ddl_creator_append_view (GdaDdlCreator *self,
  * gda_ddl_creator_perform_operation:
  * @self: a #GdaDdlCreator object
  * @cnc: a connection object to work with
- * @mode: mode of operation
  * @error: object to store error
  *
  * After population @self with all data this method may be

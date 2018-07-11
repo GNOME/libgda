@@ -395,7 +395,7 @@ gda_ddl_table_is_valid (GdaDdlTable *self)
  * Use this method to obtain internal list of all columns. The internal list
  * should not be freed.
  *
- * Returns: A list of #GdaDdlColumn objects or %NULL if the internal list is
+ * Returns: (element-type Gda.DdlColumn) (transfer none): A list of #GdaDdlColumn objects or %NULL if the internal list is
  * not set or if %NULL is passed.
  *
  * Since: 6.0
@@ -416,7 +416,7 @@ gda_ddl_table_get_columns (GdaDdlTable *self)
  * Use this method to obtain internal list of all fkeys. The internal list
  * should not be freed.
  *
- * Returns: A list of #GdaDdlFkey objects or %NULL if the internal list is not
+ * Returns: (element-type Gda.DdlFkey): A list of #GdaDdlFkey objects or %NULL if the internal list is not
  * set or %NULL is passed
  *
  * Since: 6.0

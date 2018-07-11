@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 /**
  * gda_attributes_manager_new:
  * @for_objects: set to TRUE if attributes will be set on objects.
- * @signal_func: (allow-none): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
+ * @signal_func: (allow-none) (scope call): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
@@ -293,7 +293,7 @@ gda_attributes_manager_set_full (GdaAttributesManager *mgr, gpointer ptr,
  *
  * Retrieves the value of an attribute previously set using gda_attributes_manager_set().
  *
- * Returns: (tranfer none): the attribute's value, or %NULL if the attribute is not set.
+ * Returns: (transfer none): the attribute's value, or %NULL if the attribute is not set.
  */
 const GValue *
 gda_attributes_manager_get (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name)

@@ -518,7 +518,7 @@ gda_ddl_fkey_set_ref_table (GdaDdlFkey *self,
  * gda_ddl_fkey_get_field_name:
  * @self: a #GdaDdlFkey object
  *
- * Returns: A const #GList of strings where each string
+ * Returns: (element-type utf8) (transfer none): A const #GList of strings where each string
  * corresponds to a foreign key field or %NULL.
  *
  * Since: 6.0
@@ -537,7 +537,7 @@ gda_ddl_fkey_get_field_name (GdaDdlFkey *self)
  * gda_ddl_fkey_get_ref_field:
  * @self: a #GdaDdlFkey object
  *
- * Returns: (transfer none): A #GList of strings where each string corresponds
+ * Returns: (element-type utf8) (transfer none): A #GList of strings where each string corresponds
  * to a foreign key reference field or %NULL.
  *
  * Since: 6.0

@@ -57,7 +57,7 @@ void            gda_ddl_table_append_column     (GdaDdlTable *self,
 
 gboolean        gda_ddl_table_is_temp           (GdaDdlTable *self);
 void            gda_ddl_table_set_temp          (GdaDdlTable *self,
-                                                 gboolean status);
+                                                 gboolean istemp);
 
 gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
                                               GdaServerOperation *op,

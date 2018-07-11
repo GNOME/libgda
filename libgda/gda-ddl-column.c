@@ -1044,7 +1044,6 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
  * gda_ddl_column_prepare_add:
  * @self: a #GdaDdlColumn instance
  * @op: #GdaServerOperation to add information
- * @order: column order number
  * @error: error storage container
  *
  * Populate @op with information stored in @self. This method is used to

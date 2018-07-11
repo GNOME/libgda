@@ -124,6 +124,7 @@ libgda_headers_all += [
 	]
 
 libgda_sources= files([
+	'gda-attributes-manager.c',
 	'gda-batch.c',
 	'gda-blob-op.c',
 	'gda-blob-op-impl.h',
@@ -184,7 +185,6 @@ libgda_source_all = files([
 	'libcsv.c',
 	'dir-blob-op.h',
 	'dir-blob-op.c',
-	'gda-attributes-manager.c',
 	'gda-debug-macros.h',
 	'gda-connection-internal.h',
 	'gda-connection-sqlite.h',
@@ -265,7 +265,9 @@ gnome_module.generate_gir(libgda,
 	nsversion: project_api_version,
 	header: 'libgda.h',
 	includes: [
+		'GLib-2.0',
 		'GObject-2.0',
+		'Gio-2.0',
 		'libxml2-2.0'
 		],
 	dependencies: libgda_dep,
