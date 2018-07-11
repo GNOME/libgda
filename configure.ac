@@ -1046,6 +1046,7 @@ tests/value-holders/Makefile
 tests/meta-store/Makefile
 tests/multi-threading/Makefile
 tests/ui/Makefile
+tests/ddl/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda.types

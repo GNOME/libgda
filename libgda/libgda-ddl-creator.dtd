@@ -1,0 +1,46 @@
+<!--      libgda-ddl-creator.dtd
+          DTD for libgda's ddl objects
+          Version 1.0
+          Copyright (C) 2018 Pavlo Solntsev
+-->
+
+<!ELEMENT schema (table+, view*)>
+<!ATTLIST schema name           CDATA   #IMPLIED>
+
+<!ELEMENT table (comment?,column+, fkey*)>
+<!ATTLIST table temptable       (TRUE|FALSE)    "FALSE">
+<!ATTLIST table name            CDATA           #REQUIRED>
+<!ATTLIST table space           CDATA           #IMPLIED>
+
+<!ELEMENT column (comment?, value?, check?)>
+<!ATTLIST column name           CDATA           #REQUIRED>
+<!ATTLIST column type           CDATA           #REQUIRED>
+<!ATTLIST column pkey           (TRUE|FALSE)    "FALSE">
+<!ATTLIST column unique         (TRUE|FALSE)    "FALSE">
+<!ATTLIST column autoinc        (TRUE|FALSE)    "FALSE">
+<!ATTLIST column nnul           (TRUE|FALSE)    "FALSE">
+
+<!ELEMENT comment       (#PCDATA)>
+<!ELEMENT value         (#PCDATA)>
+<!ATTLIST value size            CDATA          #IMPLIED>
+<!ATTLIST value scale           CDATA          #IMPLIED>
+
+<!ELEMENT check         (#PCDATA)>
+
+<!ELEMENT fkey (fk_field?)>
+<!ATTLIST fkey reftable CDATA #IMPLIED>
+<!ATTLIST fkey onupdate (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>
+<!ATTLIST fkey ondelete (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>
+
+<!ELEMENT fk_field (#PCDATA)>
+<!ATTLIST fk_field name         CDATA           #REQUIRED>
+<!ATTLIST fk_field reffield     CDATA           #REQUIRED>
+
+<!ELEMENT view (definition)>
+<!ATTLIST view name             CDATA           #REQUIRED>
+<!ATTLIST view replace          (TRUE|FALSE)    "FALSE">
+<!ATTLIST view temp             (TRUE|FALSE)    "FALSE">
+<!ATTLIST view ifnotexists      (TRUE|FALSE)    "TRUE">
+
+<!ELEMENT definition (#PCDATA)>
+

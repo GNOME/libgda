@@ -108,7 +108,14 @@ gda_headers = \
 	gda-value.h \
 	gda-xa-transaction.h \
 	libgda-global-variables.h \
-	gda-data-pivot.h
+	gda-data-pivot.h \
+	gda-ddl-base.h \
+	gda-ddl-fkey.h \
+	gda-ddl-column.h \
+	gda-ddl-table.h \
+	gda-ddl-buildable.h \
+	gda-ddl-view.h \
+	gda-ddl-creator.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h
@@ -161,7 +168,14 @@ gda_sources= \
 	gda-util.c \
 	gda-value.c \
 	gda-xa-transaction.c \
-	gda-data-pivot.c
+	gda-data-pivot.c \
+	gda-ddl-base.c \
+	gda-ddl-fkey.c \
+	gda-ddl-column.c \
+	gda-ddl-table.c \
+	gda-ddl-buildable.c \
+	gda-ddl-view.c \
+	gda-ddl-creator.c
 
 libgda_sources =  \
 	csv.h \
@@ -288,7 +302,11 @@ dist-hook:
 xmldir   = $(datadir)/libgda-6.0
 xml_DATA = $(srcdir)/information_schema.xml
 
-DTD_FILES = libgda-array.dtd libgda-paramlist.dtd  libgda-server-operation.dtd
+DTD_FILES = libgda-array.dtd \
+	    libgda-paramlist.dtd  \
+	    libgda-server-operation.dtd \
+	    libgda-ddl-creator.dtd
+
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
