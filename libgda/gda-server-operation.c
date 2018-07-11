@@ -1370,7 +1370,7 @@ gda_server_operation_string_to_op_type (const gchar *str)
 static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent);
 
 /**
- * gda_server_operation_save_data_to_xml:
+ * gda_server_operation_save_data_to_xml: (skip)
  * @op: a #GdaServerOperation object
  * @error: (allow-none): a place to store errors or %NULL
  * 

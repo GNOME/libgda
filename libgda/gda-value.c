@@ -19,7 +19,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011 - 2018 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -3228,7 +3228,7 @@ to_string (const GValue *value)
 
 
 /**
- * gda_value_to_xml:
+ * gda_value_to_xml: (skip)
  * @value: a #GValue.
  *
  * Serializes the given #GValue to an XML node string.
@@ -3571,3 +3571,4 @@ gda_string_to_blob (const gchar *str)
 	else
 		return NULL;
 }
+
