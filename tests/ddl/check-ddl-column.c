@@ -34,8 +34,7 @@ typedef struct {
     GdaDdlColumn *column;
     gchar *xmlfile;
     xmlDocPtr doc;
-    xmlBufferPtr buffer;
-    xmlTextWriterPtr writer;
+    xmlNodePtr node;
 } CheckDdlObject;
 
 static void
@@ -59,13 +58,13 @@ test_ddl_column_check_default (CheckDdlObject *self,
                                gconstpointer user_data)
 {
   const gchar *cname = gda_ddl_column_get_default (self->column);
-  g_assert_cmpstr (cname, ==,"0");
+  g_assert_cmpstr (cname, ==,"12.34");
 
-  const gchar *inval = "1";
+  const gchar *inval = "default value";
 
-  gda_ddl_column_set_name (self->column,inval);
+  gda_ddl_column_set_default (self->column,inval);
 
-  const gchar *resval = gda_ddl_column_get_name (self->column);
+  const gchar *resval = gda_ddl_column_get_default (self->column);
 
   g_assert_cmpstr (inval, ==, resval);
 }
@@ -218,7 +217,7 @@ test_ddl_column_startup (CheckDdlObject *self,
   self->doc = NULL;
   self->xmlfile = NULL;
   self->column = NULL;
-  self->buffer = NULL;
+  self->node = NULL;
 
   const gchar *topsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
 
@@ -235,27 +234,15 @@ test_ddl_column_startup (CheckDdlObject *self,
   self->doc = xmlParseFile(self->xmlfile);
   g_assert_nonnull (self->doc);
 
-  xmlNodePtr node = xmlDocGetRootElement (self->doc);
-  g_assert_nonnull (node);
+  self->node = xmlDocGetRootElement (self->doc);
+  g_assert_nonnull (self->node);
 
   self->column = gda_ddl_column_new ();
   g_assert_nonnull(self->column);
 
   gboolean res = gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(self->column),
-                                               node,NULL);
+                                               self->node,NULL);
   g_assert_true (res);
-
-  self->buffer = xmlBufferCreate ();
-
-  g_assert_nonnull (self->buffer);
-
-  self->writer = xmlNewTextWriterMemory (self->buffer,0);
-
-  g_assert_nonnull (self->writer);
-
-  res = xmlTextWriterStartDocument (self->writer, NULL, NULL, NULL);
-
-  g_assert_true (res >= 0);
 }
 
 static void
@@ -265,23 +252,6 @@ test_ddl_column_cleanup (CheckDdlObject *self,
   g_free (self->xmlfile);
   gda_ddl_column_free (self->column);
   xmlFreeDoc (self->doc);
-}
-
-static void
-test_ddl_column_write_node (CheckDdlObject *self,
-                            gconstpointer user_data)
-{
-  gboolean res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->column),
-                                         self->writer,NULL);
-
-  g_assert_true (res);
-
-  //	res = xmlTextWriterEndDocument (self->writer);
-
-  //	g_assert_true (res >= 0);
-  xmlFreeTextWriter (self->writer);
-
-  g_print ("%s\n",(gchar*)self->buffer->content);
 }
 
 gint
@@ -363,11 +333,5 @@ main (gint   argc,
               test_ddl_column_check_check,
               test_ddl_column_cleanup);
 
-  g_test_add ("/test-ddl/column-write",
-              CheckDdlObject,
-              NULL,
-              test_ddl_column_startup,
-              test_ddl_column_write_node,
-              test_ddl_column_cleanup);
   return g_test_run();
 }
