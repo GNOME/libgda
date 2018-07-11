@@ -20,13 +20,13 @@ AM_CPPFLAGS = \
 	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
 
 test_headers = \
-        gda-ddl-creator.h
+        raw-ddl-creator.h
 
 libgda_test_6_0_la_SOURCES = \
         $(test_headers) \
 	test-errors.h \
 	test-errors.c \
-        gda-ddl-creator.c \
+        raw-ddl-creator.c \
 	test-cnc-utils.h \
 	test-cnc-utils.c \
 	data-model-errors.h \

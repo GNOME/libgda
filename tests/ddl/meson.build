@@ -1,12 +1,12 @@
 inc_testsh = include_directories ('.')
 inc_testsh_dep = declare_dependency (include_directories : inc_testsh)
 
-tests_sources = files([
+ddl_sources = files([
 	'check-ddl-creator.c'
 	])
 
 tbc = executable('check-ddl-creator',
-	tests_sources,
+	ddl_sources,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',

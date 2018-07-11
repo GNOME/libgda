@@ -20,7 +20,7 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <gda-ddl-creator.h>
+#include "raw-ddl-creator.h"
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-util.h>
@@ -36,22 +36,22 @@
 /*
  * Main static functions
  */
-static void gda_ddl_creator_class_init (GdaDDLCreatorClass *klass);
-static void gda_ddl_creator_init (GdaDDLCreator *creator);
-static void gda_ddl_creator_dispose (GObject *object);
-static void gda_ddl_creator_finalize (GObject *object);
+static void raw_ddl_creator_class_init (RawDDLCreatorClass *klass);
+static void raw_ddl_creator_init (RawDDLCreator *creator);
+static void raw_ddl_creator_dispose (GObject *object);
+static void raw_ddl_creator_finalize (GObject *object);
 
-static void gda_ddl_creator_set_property (GObject *object,
+static void raw_ddl_creator_set_property (GObject *object,
 					 guint param_id,
 					 const GValue *value,
 					 GParamSpec *pspec);
-static void gda_ddl_creator_get_property (GObject *object,
+static void raw_ddl_creator_get_property (GObject *object,
 					 guint param_id,
 					 GValue *value,
 					 GParamSpec *pspec);
 
-static gboolean load_customization (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **error);
-static GdaServerOperation *prepare_dbo_server_operation (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
+static gboolean load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **error);
+static GdaServerOperation *prepare_dbo_server_operation (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 							 GdaMetaDbObject *dbo, GError **error);
 static GRecMutex init_mutex;
 
@@ -70,7 +70,7 @@ static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
 static void ProviderSpecific_key_free (ProviderSpecificKey *key);
 static void ProviderSpecific_value_free (ProviderSpecificValue *value);
 
-struct _GdaDDLCreatorPrivate {
+struct _RawDDLCreatorPrivate {
 	GdaConnection *cnc;
 	GdaMetaStruct *d_mstruct;
 
@@ -94,34 +94,34 @@ enum {
 };
 
 /* module error */
-GQuark gda_ddl_creator_error_quark (void) {
+GQuark raw_ddl_creator_error_quark (void) {
 	static GQuark quark;
 	if (!quark)
-		quark = g_quark_from_static_string ("gda_ddl_creator_error");
+		quark = g_quark_from_static_string ("raw_ddl_creator_error");
 	return quark;
 }
 
 GType
-gda_ddl_creator_get_type (void) {
+raw_ddl_creator_get_type (void) {
 	static GType type = 0;
-	
+
 	if (G_UNLIKELY (type == 0)) {
 		static const GTypeInfo info = {
-			sizeof (GdaDDLCreatorClass),
+			sizeof (RawDDLCreatorClass),
 			(GBaseInitFunc) NULL,
 			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_ddl_creator_class_init,
+			(GClassInitFunc) raw_ddl_creator_class_init,
 			NULL,
 			NULL,
-			sizeof (GdaDDLCreator),
+			sizeof (RawDDLCreator),
 			0,
-			(GInstanceInitFunc) gda_ddl_creator_init,
+			(GInstanceInitFunc) raw_ddl_creator_init,
 			0
 		};
-		
+
 		g_rec_mutex_lock (&init_mutex);
 		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDDLCreator", &info, 0);
+			type = g_type_register_static (G_TYPE_OBJECT, "RawDDLCreator", &info, 0);
 		g_rec_mutex_unlock (&init_mutex);
 	}
 	return type;
@@ -131,7 +131,7 @@ static guint
 ProviderSpecific_hash (gconstpointer key)
 {
 	ProviderSpecificKey *pkey = (ProviderSpecificKey*) key;
-	return g_str_hash (pkey->path) + g_str_hash (pkey->prov) + 
+	return g_str_hash (pkey->path) + g_str_hash (pkey->prov) +
 		(pkey->expr ? g_str_hash (pkey->expr) : 0);
 }
 
@@ -170,16 +170,16 @@ ProviderSpecific_value_free (ProviderSpecificValue *value)
 
 
 static void
-gda_ddl_creator_class_init (GdaDDLCreatorClass *klass) 
+raw_ddl_creator_class_init (RawDDLCreatorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	g_rec_mutex_lock (&init_mutex);
 	parent_class = g_type_class_peek_parent (klass);
-		
+
 	/* Properties */
-	object_class->set_property = gda_ddl_creator_set_property;
-	object_class->get_property = gda_ddl_creator_get_property;
+	object_class->set_property = raw_ddl_creator_set_property;
+	object_class->get_property = raw_ddl_creator_get_property;
 	g_object_class_install_property (object_class, PROP_CNC_OBJECT,
 		g_param_spec_object ("cnc", NULL, _ ("Connection object"), GDA_TYPE_CONNECTION,
 		(G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -189,18 +189,18 @@ gda_ddl_creator_class_init (GdaDDLCreatorClass *klass)
 	g_object_class_install_property (object_class, PROP_SCHEMA,
 		g_param_spec_string ("schema", NULL, _ ("Schema in which the database objects will be created"), NULL,
 		(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
-	
-	object_class->dispose = gda_ddl_creator_dispose;
-	object_class->finalize = gda_ddl_creator_finalize;
-	
+
+	object_class->dispose = raw_ddl_creator_dispose;
+	object_class->finalize = raw_ddl_creator_finalize;
+
 	g_rec_mutex_unlock (&init_mutex);
 }
 
 
 static void
-gda_ddl_creator_init (GdaDDLCreator *creator) 
+raw_ddl_creator_init (RawDDLCreator *creator)
 {
-	creator->priv = g_new0 (GdaDDLCreatorPrivate, 1);
+	creator->priv = g_new0 (RawDDLCreatorPrivate, 1);
 	creator->priv->cnc = NULL;
 	creator->priv->d_mstruct = NULL;
 	creator->priv->provider_specifics = g_hash_table_new_full (ProviderSpecific_hash, ProviderSpecific_equal,
@@ -213,13 +213,13 @@ gda_ddl_creator_init (GdaDDLCreator *creator)
 }
 
 static void
-gda_ddl_creator_dispose (GObject *object) 
+raw_ddl_creator_dispose (GObject *object)
 {
-	GdaDDLCreator *creator;
-	
-	g_return_if_fail (GDA_IS_DDL_CREATOR (object));
-	
-	creator = GDA_DDL_CREATOR (object);
+	RawDDLCreator *creator;
+
+	g_return_if_fail (RAW_IS_DDL_CREATOR (object));
+
+	creator = RAW_DDL_CREATOR (object);
 	if (creator->priv) {
 		if (creator->priv->catalog)
 			gda_value_free (creator->priv->catalog);
@@ -238,40 +238,40 @@ gda_ddl_creator_dispose (GObject *object)
 			creator->priv->d_mstruct = NULL;
 		}
 	}
-	
+
 	/* parent class */
 	parent_class->dispose (object);
 }
 
 static void
-gda_ddl_creator_finalize (GObject *object)
+raw_ddl_creator_finalize (GObject *object)
 {
-	GdaDDLCreator *creator;
-	
+	RawDDLCreator *creator;
+
 	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_DDL_CREATOR (object));
-	
-	creator = GDA_DDL_CREATOR (object);
+	g_return_if_fail (RAW_IS_DDL_CREATOR (object));
+
+	creator = RAW_DDL_CREATOR (object);
 	if (creator->priv) {
 		if (creator->priv->provider_specifics)
 			g_hash_table_destroy (creator->priv->provider_specifics);
 		g_free (creator->priv);
 		creator->priv = NULL;
 	}
-	
+
 	/* parent class */
 	parent_class->finalize (object);
 }
 
 static void
-gda_ddl_creator_set_property (GObject *object,
+raw_ddl_creator_set_property (GObject *object,
 			      guint param_id,
 			      const GValue *value,
 			      GParamSpec *pspec)
 {
-	GdaDDLCreator *creator;
-	
-	creator = GDA_DDL_CREATOR (object);
+	RawDDLCreator *creator;
+
+	creator = RAW_DDL_CREATOR (object);
 	if (creator->priv) {
 		switch (param_id) {
 		case PROP_CNC_OBJECT:
@@ -320,14 +320,14 @@ gda_ddl_creator_set_property (GObject *object,
 }
 
 static void
-gda_ddl_creator_get_property (GObject *object,
+raw_ddl_creator_get_property (GObject *object,
 			     guint param_id,
 			     GValue *value,
 			     GParamSpec *pspec)
 {
-	GdaDDLCreator *creator;
-	creator = GDA_DDL_CREATOR (object);
-	
+	RawDDLCreator *creator;
+	creator = RAW_DDL_CREATOR (object);
+
 	if (creator->priv) {
 		switch (param_id) {
 		case PROP_CNC_OBJECT:
@@ -353,20 +353,20 @@ gda_ddl_creator_get_property (GObject *object,
 }
 
 /**
- * gda_ddl_creator_new
- * Create a new #GdaDDLCreator object
+ * raw_ddl_creator_new
+ * Create a new #RawDDLCreator object
  *
  * Returns: the newly created object
  */
-GdaDDLCreator *
-gda_ddl_creator_new (void) 
+RawDDLCreator *
+raw_ddl_creator_new (void)
 {
-	return (GdaDDLCreator *) g_object_new (GDA_TYPE_DDL_CREATOR, NULL);
+	return (RawDDLCreator *) g_object_new (RAW_TYPE_DDL_CREATOR, NULL);
 }
 
 /**
- * gda_ddl_creator_set_dest_from_file
- * @ddlc: a #GdaDDLCreator object
+ * raw_ddl_creator_set_dest_from_file
+ * @ddlc: a #RawDDLCreator object
  * @xml_spec_file: a file name
  * @error: a place to store errors, or %NULL
  *
@@ -375,9 +375,9 @@ gda_ddl_creator_new (void)
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_ddl_creator_set_dest_from_file (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **error)
+raw_ddl_creator_set_dest_from_file (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **error)
 {
-	g_return_val_if_fail (GDA_IS_DDL_CREATOR (ddlc), FALSE);
+	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), FALSE);
 	g_return_val_if_fail (xml_spec_file && *xml_spec_file, FALSE);
 
 	if (ddlc->priv->d_mstruct)
@@ -396,7 +396,7 @@ gda_ddl_creator_set_dest_from_file (GdaDDLCreator *ddlc, const gchar *xml_spec_f
 }
 
 static gboolean
-load_customization (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **error)
+load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **error)
 {
 	xmlNodePtr node;
 	xmlDocPtr doc;
@@ -404,19 +404,19 @@ load_customization (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **er
 	/* load information schema's structure XML file */
 	doc = xmlParseFile (xml_spec_file);
 	if (!doc) {
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_SPECFILE_NOT_FOUND_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_SPECFILE_NOT_FOUND_ERROR,
 			     _("Could not load file '%s'"), xml_spec_file);
 		return FALSE;
 	}
-	
+
 	node = xmlDocGetRootElement (doc);
 	if (!node || strcmp ((gchar *) node->name, "schema")) {
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
 			     _("Root node of file '%s' should be <schema>."), xml_spec_file);
 		xmlFreeDoc (doc);
 		return FALSE;
 	}
-	
+
 	/* walk through the xmlDoc */
 	for (node = node->children; node; node = node->next) {
 		/* <specifics> tag to allow for provider specific transformations */
@@ -472,18 +472,18 @@ load_customization (GdaDDLCreator *ddlc, const gchar *xml_spec_file, GError **er
 	return TRUE;
 }
 
-static GdaServerOperation *create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
+static GdaServerOperation *create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 							      GdaMetaDbObject *dbobj, GError **error);
-static GdaServerOperation *create_server_operation_for_view (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
+static GdaServerOperation *create_server_operation_for_view (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 							     GdaMetaDbObject *dbobj, GError **error);
 
 static GdaServerOperation *
-prepare_dbo_server_operation (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, GdaMetaDbObject *dbo, GError **error)
+prepare_dbo_server_operation (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, GdaMetaDbObject *dbo, GError **error)
 {
 	GdaServerOperation *op = NULL;
 	switch (dbo->obj_type) {
 	case GDA_META_DB_UNKNOWN:
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_INCORRECT_SCHEMA_ERROR,
 			     _("Unknown database object '%s'"), dbo->obj_full_name);
 		break;
 
@@ -513,7 +513,7 @@ provider_specific_match (GHashTable *specific_hash, GdaServerProvider *prov, con
 	spec.expr = (gchar *) expr;
 	val = g_hash_table_lookup (specific_hash, &spec);
 	/*g_print ("RULESEARCH %s, %s, %s => %s\n", spec.prov, spec.path, spec.expr, val ? val->repl : "-no rule found-");*/
-	if (val) 
+	if (val)
 		return val->repl;
 	else
 		return expr;
@@ -530,17 +530,17 @@ meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *v
 {
 	if (!fdata->allok)
 		return;
-	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) && 
-	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) && 
+	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) &&
+	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) &&
 	    g_value_get_boolean (value)) {
 		fdata->allok = gda_server_operation_set_value_at (fdata->op, "TRUE", fdata->error,
-								  "/FIELDS_A/@COLUMN_AUTOINC/%d", 
+								  "/FIELDS_A/@COLUMN_AUTOINC/%d",
 								  fdata->index);
 	}
 }
 
 static GdaServerOperation *
-create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc, 
+create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 				   GdaMetaDbObject *dbobj, GError **error)
 {
 	GdaServerOperation *op;
@@ -604,16 +604,16 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 	for (fkindex = 0, list = GDA_META_TABLE (dbobj)->fk_list; list; fkindex++, list = list->next) {
 		GdaMetaTableForeignKey *mfkey = GDA_META_TABLE_FOREIGN_KEY (list->data);
 		gint col;
-		if (! gda_server_operation_set_value_at (op, mfkey->depend_on->obj_full_name, error, "/FKEY_S/%d/FKEY_REF_TABLE", 
+		if (! gda_server_operation_set_value_at (op, mfkey->depend_on->obj_full_name, error, "/FKEY_S/%d/FKEY_REF_TABLE",
 							 fkindex))
 			goto onerror;
 		for (col = 0; col < mfkey->cols_nb; col++) {
-			if (! gda_server_operation_set_value_at (op, mfkey->fk_names_array[col], error, 
-								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", 
+			if (! gda_server_operation_set_value_at (op, mfkey->fk_names_array[col], error,
+								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
 								 fkindex, col))
 				goto onerror;
-			if (! gda_server_operation_set_value_at (op, mfkey->ref_pk_names_array[col], error, 
-								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", 
+			if (! gda_server_operation_set_value_at (op, mfkey->ref_pk_names_array[col], error,
+								 "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
 								 fkindex, col))
 				goto onerror;
 		}
@@ -640,7 +640,7 @@ create_server_operation_for_table (GdaDDLCreator *ddlc, GdaServerProvider *prov,
 }
 
 static GdaServerOperation *
-create_server_operation_for_view (G_GNUC_UNUSED GdaDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
+create_server_operation_for_view (G_GNUC_UNUSED RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaDbObject *dbobj, GError **error)
 {
 	GdaServerOperation *op;
@@ -660,24 +660,24 @@ create_server_operation_for_view (G_GNUC_UNUSED GdaDDLCreator *ddlc, GdaServerPr
 }
 
 /**
- * gda_ddl_creator_set_connection
- * @ddlc: a #GdaDDLCreator object
+ * raw_ddl_creator_set_connection
+ * @ddlc: a #RawDDLCreator object
  * @cnc: (allow-none): a #GdaConnection object or %NULL
  *
  *
  */
 void
-gda_ddl_creator_set_connection (GdaDDLCreator *ddlc, GdaConnection *cnc)
+raw_ddl_creator_set_connection (RawDDLCreator *ddlc, GdaConnection *cnc)
 {
-	g_return_if_fail (GDA_IS_DDL_CREATOR (ddlc));
+	g_return_if_fail (RAW_IS_DDL_CREATOR (ddlc));
 	g_return_if_fail (!cnc || GDA_IS_CONNECTION (cnc));
 
 	g_object_set (G_OBJECT (ddlc), "cnc", cnc, NULL);
 }
 
 /**
- * gda_ddl_creator_get_sql
- * @ddlc: a #GdaDDLCreator object
+ * raw_ddl_creator_get_sql
+ * @ddlc: a #RawDDLCreator object
  * @error: a place to store errors, or %NULL
  *
  * Get the SQL code which would be executed to create the database objects
@@ -685,14 +685,14 @@ gda_ddl_creator_set_connection (GdaDDLCreator *ddlc, GdaConnection *cnc)
  * Returns: a new string if no error occurred, or %NULL
  */
 gchar *
-gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
+raw_ddl_creator_get_sql (RawDDLCreator *ddlc, GError **error)
 {
 	GString *string;
 	gchar *sql;
-	g_return_val_if_fail (GDA_IS_DDL_CREATOR (ddlc), NULL);
+	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), NULL);
 	g_return_val_if_fail (ddlc->priv, NULL);
 	if (!ddlc->priv->cnc) {
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", _("No connection specified"));
 		return NULL;
 	}
@@ -718,7 +718,7 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 				return NULL;
 			}
 			else {
-				g_string_append_printf (string, "--\n-- Database object: %s\n--\n", 
+				g_string_append_printf (string, "--\n-- Database object: %s\n--\n",
 							GDA_META_DB_OBJECT (list->data)->obj_full_name);
 				g_string_append (string, sql);
 				g_string_append (string, ";\n\n");
@@ -735,24 +735,24 @@ gda_ddl_creator_get_sql (GdaDDLCreator *ddlc, GError **error)
 }
 
 /**
- * gda_ddl_creator_execute
- * @ddlc: a #GdaDDLCreator object
+ * raw_ddl_creator_execute
+ * @ddlc: a #RawDDLCreator object
  * @error: a place to store errors, or %NULL
  *
- * 
+ *
  */
 gboolean
-gda_ddl_creator_execute (GdaDDLCreator *ddlc, GError **error)
+raw_ddl_creator_execute (RawDDLCreator *ddlc, GError **error)
 {
-	g_return_val_if_fail (GDA_IS_DDL_CREATOR (ddlc), FALSE);
+	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), FALSE);
 	g_return_val_if_fail (ddlc->priv, FALSE);
 	if (!ddlc->priv->cnc) {
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", _("No connection specified"));
 		return FALSE;
 	}
 	if (!ddlc->priv->d_mstruct) {
-		g_set_error (error, GDA_DDL_CREATOR_ERROR, GDA_DDL_CREATOR_NO_CONNECTION_ERROR,
+		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", _("No destination database objects specified"));
 		return FALSE;
 	}
@@ -769,7 +769,7 @@ gda_ddl_creator_execute (GdaDDLCreator *ddlc, GError **error)
 	for (list = objlist; list; list = list->next) {
 		GdaServerOperation *op;
 		op = prepare_dbo_server_operation (ddlc, prov, NULL, GDA_META_DB_OBJECT (list->data), error);
-		if (!op) 
+		if (!op)
 			goto onerror;
 		else {
 			if (!gda_server_provider_perform_operation (prov, ddlc->priv->cnc, op, error)) {

@@ -22,7 +22,7 @@
 #include <string.h>
 #include "test-cnc-utils.h"
 #include "test-errors.h"
-#include "gda-ddl-creator.h"
+#include "raw-ddl-creator.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/sql-parser/gda-sql-statement.h>
@@ -261,17 +261,17 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 gboolean
 test_cnc_setup_db_structure (GdaConnection *cnc, const gchar *schema_file, GError **error)
 {
-	GdaDDLCreator *ddl;
+	RawDDLCreator *ddl;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	
-	ddl = gda_ddl_creator_new ();
-        if (!gda_ddl_creator_set_dest_from_file (ddl, schema_file, error)) {
+	ddl = raw_ddl_creator_new ();
+        if (!raw_ddl_creator_set_dest_from_file (ddl, schema_file, error)) {
 		g_object_unref (ddl);
 		return FALSE;
         }
 
-	gda_ddl_creator_set_connection (ddl, cnc);
-	if (!gda_ddl_creator_execute (ddl, error)) {
+	raw_ddl_creator_set_connection (ddl, cnc);
+	if (!raw_ddl_creator_execute (ddl, error)) {
 		g_object_unref (ddl);
 		return FALSE;
         }
