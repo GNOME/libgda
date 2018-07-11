@@ -1372,7 +1372,7 @@ static gboolean node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr pare
 /**
  * gda_server_operation_save_data_to_xml: (skip)
  * @op: a #GdaServerOperation object
- * @error: (allow-none): a place to store errors or %NULL
+ * @error: (nullable): a place to store errors or %NULL
  * 
  * Creates a new #xmlNodePtr tree which can be used to save the #op object. This
  * XML structure can then be saved to disk if necessary. Use xmlFreeNode to free
@@ -1402,6 +1402,34 @@ gda_server_operation_save_data_to_xml (GdaServerOperation *op, G_GNUC_UNUSED GEr
 	}
 
 	return topnode;
+}
+
+/**
+ * gda_server_operation_save_data_to_xml_string:
+ * @op: a #GdaServerOperation object
+ * @error: (nullable): a place to store errors or %NULL
+ *
+ * Returns: (transfer full): an XML string representation of #GdaServerOperation
+ *
+ */
+gchar*
+gda_server_operation_save_data_to_xml_string (GdaServerOperation *op, G_GNUC_UNUSED GError **error) {
+	g_return_val_if_fail (op != NULL, NULL);
+
+	xmlNodePtr node;
+	xmlBufferPtr buff;
+	gchar *str = NULL;
+
+	node = gda_server_operation_save_data_to_xml (op, error);
+	if (node == NULL) {
+		return NULL;
+	}
+	buff = xmlBufferCreate ();
+	xmlNodeDump (buff, node->doc, node, 0, 0);
+	str = g_strdup (buff->content);
+	xmlBufferFree (buff);
+	xmlFreeNode (node);
+	return str;
 }
 
 static gboolean
@@ -1494,7 +1522,7 @@ node_save (GdaServerOperation *op, Node *opnode, xmlNodePtr parent)
  * gda_server_operation_load_data_from_xml:
  * @op: a #GdaServerOperation object
  * @node: a #xmlNodePtr
- * @error: (allow-none): a place to store errors or %NULL
+ * @error: (nullable): a place to store errors or %NULL
  * 
  * Loads the contents of @node into @op. The XML tree passed through the @node
  * argument must correspond to an XML tree saved using gda_server_operation_save_data_to_xml().
@@ -1689,7 +1717,7 @@ gda_server_operation_get_root_nodes (GdaServerOperation *op)
  * gda_server_operation_get_node_type:
  * @op: a #GdaServerOperation object
  * @path: a complete path to a node (starting with "/")
- * @status: (allow-none): a place to store the status of the node, or %NULL
+ * @status: (nullable): a place to store the status of the node, or %NULL
  *
  * Convenience function to get the type of a node.
  *
@@ -2034,7 +2062,7 @@ gda_server_operation_del_item_from_sequence (GdaServerOperation *op, const gchar
  *
  * Get the value for the node at the @path path
  *
- * Returns: (transfer none) (allow-none): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
+ * Returns: (transfer none) (nullable): a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.
  *
  * Since: 4.2.6
  */
@@ -2126,10 +2154,10 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 /**
  * gda_server_operation_get_sql_identifier_at:
  * @op: a #GdaServerOperation object
- * @cnc: (allow-none): a #GdaConnection, or %NULL
- * @prov: (allow-none): a #GdaServerProvider, or %NULL
+ * @cnc: (nullable): a #GdaConnection, or %NULL
+ * @prov: (nullable): a #GdaServerProvider, or %NULL
  * @path_format: a complete path to a node (starting with "/")
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  * @...: arguments to use with @path_format to make a complete path
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
@@ -2166,10 +2194,10 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 /**
  * gda_server_operation_get_sql_identifier_at_path: (rename-to gda_server_operation_get_sql_identifier_at)
  * @op: a #GdaServerOperation object
- * @cnc: (allow-none): a #GdaConnection, or %NULL
- * @prov: (allow-none): a #GdaServerProvider, or %NULL
+ * @cnc: (nullable): a #GdaConnection, or %NULL
+ * @prov: (nullable): a #GdaServerProvider, or %NULL
  * @path: a complete path to a node (starting with "/")
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
  * is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
@@ -2218,7 +2246,7 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
 /**
  * gda_server_operation_set_value_at_path: (rename-to gda_server_operation_set_value_at)
  * @op: a #GdaServerOperation object
- * @value: (allow-none): a string
+ * @value: (nullable): a string
  * @path: a complete path to a node (starting with "/")
  * @error: a place to store errors or %NULL
  *
@@ -2399,7 +2427,7 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 /**
  * gda_server_operation_set_value_at:
  * @op: a #GdaServerOperation object
- * @value: (allow-none): a string
+ * @value: (nullable): a string
  * @error: a place to store errors or %NULL
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path
@@ -2460,7 +2488,7 @@ gda_server_operation_set_value_at (GdaServerOperation *op, const gchar *value, G
 /**
  * gda_server_operation_is_valid:
  * @op: a #GdaServerOperation widget
- * @xml_file: (allow-none): an XML specification file (see gda_server_operation_new()) or %NULL
+ * @xml_file: (nullable): an XML specification file (see gda_server_operation_new()) or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Tells if all the required values in @op have been defined.
@@ -2537,7 +2565,7 @@ gda_server_operation_is_valid (GdaServerOperation *op, const gchar *xml_file, GE
 /**
  * gda_server_operation_is_valid_from_resource:
  * @op: a #GdaServerOperation widget
- * @resource: (allow-none): the name of a resource containing an XML specification data (see gda_server_operation_new()) or %NULL
+ * @resource: (nullable): the name of a resource containing an XML specification data (see gda_server_operation_new()) or %NULL
  * @error: a place to store an error, or %NULL
  *
  * Tells if all the required values in @op have been defined.
@@ -2584,7 +2612,7 @@ gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar
 /**
  * gda_server_operation_prepare_create_database:
  * @provider: the database provider to use
- * @db_name: (allow-none): the name of the database to create, or %NULL
+ * @db_name: (nullable): the name of the database to create, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
@@ -2594,7 +2622,7 @@ gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar
  * If @db_name is left %NULL, then the name of the database to create will have to be set in the
  * returned #GdaServerOperation using gda_server_operation_set_value_at().
  *
- * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
+ * Returns: (transfer full) (nullable): new #GdaServerOperation object, or %NULL if the provider does not support database
  * creation
  *
  * Since: 4.2.3
@@ -2624,7 +2652,7 @@ gda_server_operation_prepare_create_database (const gchar *provider, const gchar
 
 /**
  * gda_server_operation_perform_create_database:
- * @provider: (allow-none): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
+ * @provider: (nullable): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_create_database()
  * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_create_database()
  * @error: a place to store en error, or %NULL
  *
@@ -2657,7 +2685,7 @@ gda_server_operation_perform_create_database (GdaServerOperation *op, const gcha
 /**
  * gda_server_operation_prepare_drop_database:
  * @provider: the database provider to use
- * @db_name: (allow-none): the name of the database to drop, or %NULL
+ * @db_name: (nullable): the name of the database to drop, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
@@ -2667,7 +2695,7 @@ gda_server_operation_perform_create_database (GdaServerOperation *op, const gcha
  * If @db_name is left %NULL, then the name of the database to drop will have to be set in the
  * returned #GdaServerOperation using gda_server_operation_set_value_at().
  *
- * Returns: (transfer full) (allow-none): new #GdaServerOperation object, or %NULL if the provider does not support database
+ * Returns: (transfer full) (nullable): new #GdaServerOperation object, or %NULL if the provider does not support database
  * destruction
  *
  * Since: 4.2.3
@@ -2697,7 +2725,7 @@ gda_server_operation_prepare_drop_database (const gchar *provider, const gchar *
 
 /**
  * gda_server_operation_perform_drop_database:
- * @provider: (allow-none): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
+ * @provider: (nullable): the database provider to use, or %NULL if @op has been created using gda_server_operation_prepare_drop_database()
  * @op: a #GdaServerOperation object obtained using gda_server_operation_prepare_drop_database()
  * @error: a place to store en error, or %NULL
  *
@@ -3118,7 +3146,7 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
  *
  * For details about arguments see #gda_server_operation_prepare_create_table_v().
  *
- * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
+ * Returns: (transfer full) (nullable): a #GdaServerOperation if no errors; NULL and set @error otherwise
  *
  * Since: 4.2.3
  */
@@ -3232,7 +3260,7 @@ gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *ta
  * or #gda_server_provider_perform_operation
  * in order to execute the operation.
  *
- * Returns: (transfer full) (allow-none): a #GdaServerOperation if no errors; NULL and set @error otherwise
+ * Returns: (transfer full) (nullable): a #GdaServerOperation if no errors; NULL and set @error otherwise
  *
  * Since: 6.0.0
  */
@@ -3432,7 +3460,7 @@ gda_server_operation_perform_create_table (GdaServerOperation *op, GError **erro
  * This is just a convenient function to create a #GdaServerOperation to drop a
  * table in an opened connection.
  *
- * Returns: (transfer full) (allow-none): a new #GdaServerOperation or %NULL if couldn't create the opereration.
+ * Returns: (transfer full) (nullable): a new #GdaServerOperation or %NULL if couldn't create the opereration.
  *
  * Since: 4.2.3
  */
