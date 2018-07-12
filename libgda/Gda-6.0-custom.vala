@@ -1,7 +1,7 @@
 namespace Gda {
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	[Compact]
-	public class BlobOpFunctions {
+	public abstract class BlobOpFunctions {
 		public abstract long get_length (BlobOp op);
 		public abstract long read (BlobOp op, Blob blob, long offset, long size);
 		public abstract long write (BlobOp op, Blob blob, long offset);
@@ -10,7 +10,7 @@ namespace Gda {
 
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	[Compact]
-	public class ServerProviderBase {
+	public abstract class ServerProviderBase {
 		public abstract string get_name (ServerProvider provider);
 		public abstract string get_version (ServerProvider provider);
 		public abstract string get_server_version (ServerProvider provider, Connection cnc);
@@ -20,8 +20,8 @@ namespace Gda {
 		public abstract Connection create_connection (ServerProvider provider);
 		public abstract SqlParser create_parser (ServerProvider provider, Connection cnc);
 		public abstract DataHandler get_data_handler (ServerProvider provider, Connection? cnc,
-								 Type g_type, string dbms_type);
-		public abstract string get_def_dbms_type (ServerProvider provider, Connection cnc, Type  g_type);
+								 GLib.Type g_type, string dbms_type);
+		public abstract string get_def_dbms_type (ServerProvider provider, Connection cnc, GLib.Type  g_type);
 		public abstract bool supports_operation (ServerProvider provider, Connection cnc,
 								 ServerOperationType type, Set options);
 		public abstract ServerOperation create_operation (ServerProvider provider, Connection cnc,
@@ -30,7 +30,7 @@ namespace Gda {
 								 ServerOperation op) throws GLib.Error;
 		public abstract string statement_to_sql (ServerProvider provider, Connection cnc,
 								 Statement stmt, Set params, StatementSqlFlag flags,
-								 ref SList params_used) throws GLib.Error;
+								 ref GLib.SList params_used) throws GLib.Error;
 		public abstract string identifier_quote (ServerProvider provider, Connection? cnc,
 								 string id,
 								 bool for_meta_store, bool force_quotes);
@@ -50,32 +50,32 @@ namespace Gda {
 							 string name, TransactionIsolation level) throws GLib.Error;
 		public abstract bool commit_transaction (ServerProvider provider, Connection cnc,
 							 string name) throws GLib.Error;
-		public abstract bool rollback_transaction) (ServerProvider provider, Connection cnc,
+		public abstract bool rollback_transaction (ServerProvider provider, Connection cnc,
 							 string name) throws GLib.Error;
 		public abstract bool add_savepoint (ServerProvider provider, Connection cnc,
 							 string name) throws GLib.Error;
 		public abstract bool rollback_savepoint (ServerProvider provider, Connection cnc,
 							 string name) throws GLib.Error;
 		public abstract bool delete_savepoint (ServerProvider provider, Connection cnc,
-							 strin gname) throws GLib.Error;
+							 string name) throws GLib.Error;
 		public abstract bool statement_prepare (ServerProvider provider, Connection cnc,
 							 Statement stmt) throws GLib.Error;
-		public abstract Object statement_execute (ServerProvider provider, Connection cnc,
+		public abstract GLib.Object statement_execute (ServerProvider provider, Connection cnc,
 							 Statement stmt, Set params,
 							 StatementModelUsage model_usage,
-							 Type[] col_types, ref Set last_inserted_row) throws GLib.Error;
+							 GLib.Type[] col_types, ref Set last_inserted_row) throws GLib.Error;
 
 		/*< private >*/
 		/* Padding for future expansion */
-		public virtual void _gda_reserved11 () {};
-		public virtual void _gda_reserved12 () {};
-		public virtual void _gda_reserved13 () {};
-		public virtual void _gda_reserved14 () {};
+		public abstract void _gda_reserved11 ();
+		public abstract void _gda_reserved12 ();
+		public abstract void _gda_reserved13 ();
+		public abstract void _gda_reserved14 ();
 	}
-	
+
 	[CCode (cheader_filename = "libgda/libgda.h", has_type_id = false)]
 	[Compact]
-	public class SqlStatementContentsInfo {
+	public abstract class SqlStatementContentsInfo {
 		public Gda.SqlStatementType type;
 		public weak string name;
 		public abstract void* construct ();
@@ -84,10 +84,15 @@ namespace Gda {
 		public abstract string serialize (void* stm);
 		public weak Gda.SqlForeachFunc check_structure_func;
 		public weak Gda.SqlForeachFunc check_validity_func;
-		public virtual void* _gda_reserved1 () {};
-		public virtual void* _gda_reserved2 () {};
-		public virtual void* _gda_reserved3 () {};
-		public virtual void* _gda_reserved4 () {};
+		public abstract void* _gda_reserved1 ();
+		public abstract void* _gda_reserved2 ();
+		public abstract void* _gda_reserved3 ();
+		public abstract void* _gda_reserved4 ();
 	}
-	
+	[CCode (cheader_filename = "libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_sql_statement_get_type ()")]
+	[Compact]
+	public class SqlStatement {
+		public static Gda.SqlStatementContentsInfo get_contents_infos (Gda.SqlStatementType type);
+	}
+
 }

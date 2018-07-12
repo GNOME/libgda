@@ -267,8 +267,8 @@ typedef struct {
 	gpointer         _gda_reserved3;
 	gpointer         _gda_reserved4;
 } GdaSqlStatementContentsInfo;
-#define GDA_TYPE_SQL_STATEMENT_CONTENTS_INFO gda_sql_statement_get_contents_info_get_type()
-GType gda_sql_statement_get_contents_info_get_type (void) G_GNUC_CONST;
+#define GDA_TYPE_SQL_STATEMENT_CONTENTS_INFO gda_sql_statement_contents_info_get_type()
+GType gda_sql_statement_contents_info_get_type (void) G_GNUC_CONST;
 
 /**
  * GdaSqlStatementCheckValidityData:

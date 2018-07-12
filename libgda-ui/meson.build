@@ -56,8 +56,6 @@ libgda_ui_sources = files([
 	'gdaui-provider-selector.c',
 	'gdaui-raw-form.c',
 	'gdaui-raw-grid.c',
-	'bullet.h',
-	'bulleth.h',
 	'gdaui-rt-editor.c',
 	'gdaui-server-operation.c',
 	'gdaui-set.h',
@@ -65,10 +63,23 @@ libgda_ui_sources = files([
 	'gdaui-tree-store.c',
 	'gdaui-init.c'
 	])
-libgda_ui_sources += libgda_ui_headers
-libgda_ui_sources += marshallers_sources
-libgda_ui_sources += libgda_ui_data_entries_sources
-libgda_ui_sources += libgda_ui_internal_sources
+
+libgda_ui_sources_all = files([
+	'bullet.h',
+	'bulleth.h',
+	])
+libgda_ui_sources_all += [
+	libgda_ui_sources,
+	libgda_ui_headers,
+	marshallers_sources,
+	libgda_ui_data_entries_sources_all,
+	libgda_ui_internal_sources
+	]
+libgda_ui_gi_sources = [
+	libgda_ui_sources,
+	libgda_ui_headers,
+	libgda_ui_data_entries_gi_sources,
+	]
 
 libgda_ui_resourcesc = custom_target('libgdaui_resourcesc',
 	command: [compile_resources,
@@ -101,20 +112,21 @@ libgda_ui_resourcesh = custom_target('libgdaui_resourcesh',
 	depends: int_xmlf,
 	install: false
 	)
-libgda_ui_resources = []
-libgda_ui_resources += libgda_ui_resourcesc
-libgda_ui_resources += libgda_ui_resourcesh
+libgda_ui_resources = [
+	libgda_ui_resourcesc,
+	libgda_ui_resourcesh
+	]
 
-libgda_ui_sources += libgda_ui_resources
+libgda_ui_sources_all += libgda_ui_resources
 
 gdaui_enums = gnome_module.mkenums_simple('gdaui-enum-types',
 	sources: libgda_ui_headers
 	)
-libgda_ui_sources += gdaui_enums
+libgda_ui_sources_all += gdaui_enums
 
 
-libgdaui = library('gda-ui-'+project_package,
-	libgda_ui_sources,
+libgdaui = library('gda-ui-'+project_api_version,
+	libgda_ui_sources_all,
 	dependencies: [
 		libgda_ui_deps,
 		inc_rooth_dep
@@ -143,3 +155,46 @@ libgda_ui_plugins = library('gda-ui-plugins-'+project_package,
 	install: true,
 	install_dir: plugindir
 	)
+
+libgdaui_gir = gnome_module.generate_gir(libgdaui,
+	sources: libgda_ui_gi_sources,
+	namespace: 'Gdaui',
+	identifier_prefix: 'Gdaui',
+	nsversion: project_api_version,
+	header: 'libgda-ui/libgda-ui.h',
+	includes: [
+		'GLib-2.0',
+		'GObject-2.0',
+		'Gio-2.0',
+		'libxml2-2.0',
+		'Gtk-3.0',
+		libgda_gir[0],
+		],
+	dependencies: libgda_dep,
+	install: true,
+	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
+	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
+	)
+
+# if vapigen.found()
+# libgdaui_vapi = custom_target('gdaui'+project_api_version,
+# 	command: [vapigen,
+# 		'--girdir='+meson.current_source_dir(),
+# 		'--metadatadir='+meson.current_source_dir(),
+# 		'--library=libgdaui-'+project_api_version,
+# 		'--directory='+meson.current_build_dir(),
+# 		'--vapidir='+join_paths(meson.source_root(),'libgda'),
+# 		'--pkg=libxml-2.0',
+# 		'--pkg=gio-2.0',
+# 		'--pkg=libgda-6.0',
+# 		'@INPUT@'
+# 		],
+# 	input: [
+# 		libgdaui_gir[0]
+# 		],
+# 	output: 'libgdaui-'+project_api_version+'.vapi',
+# 	install: true,
+# 	depends: libgdaui,
+# 	install_dir: join_paths(get_option('datadir'),'vala','vapi')
+# 	)
+# endif

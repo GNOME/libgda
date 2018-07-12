@@ -44,4 +44,6 @@ Connection
 // skipping
 BlobOpFunctions skip=true
 ServerProviderBase skip=true
+sql_statement_get_contents_infos skip=true
 SqlStatementContentsInfo skip=true
+
