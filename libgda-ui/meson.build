@@ -176,25 +176,25 @@ libgdaui_gir = gnome_module.generate_gir(libgdaui,
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
 	)
 
-# if vapigen.found()
-# libgdaui_vapi = custom_target('gdaui'+project_api_version,
-# 	command: [vapigen,
-# 		'--girdir='+meson.current_source_dir(),
-# 		'--metadatadir='+meson.current_source_dir(),
-# 		'--library=libgdaui-'+project_api_version,
-# 		'--directory='+meson.current_build_dir(),
-# 		'--vapidir='+join_paths(meson.source_root(),'libgda'),
-# 		'--pkg=libxml-2.0',
-# 		'--pkg=gio-2.0',
-# 		'--pkg=libgda-6.0',
-# 		'@INPUT@'
-# 		],
-# 	input: [
-# 		libgdaui_gir[0]
-# 		],
-# 	output: 'libgdaui-'+project_api_version+'.vapi',
-# 	install: true,
-# 	depends: libgdaui,
-# 	install_dir: join_paths(get_option('datadir'),'vala','vapi')
-# 	)
-# endif
+if vapigen.found()
+libgdaui_vapi = custom_target('gdaui'+project_api_version,
+	command: [vapigen,
+		'--girdir='+meson.current_source_dir(),
+		'--metadatadir='+meson.current_source_dir(),
+		'--library=libgdaui-'+project_api_version,
+		'--directory='+meson.current_build_dir(),
+		'--vapidir='+join_paths(meson.build_root(),'libgda'),
+		'--pkg=libxml-2.0',
+		'--pkg=gio-2.0',
+		'--pkg=libgda-6.0',
+		'@INPUT@'
+		],
+	input: [
+		libgdaui_gir[0]
+		],
+	output: 'libgdaui-'+project_api_version+'.vapi',
+	install: true,
+	depends: libgdaui,
+	install_dir: join_paths(get_option('datadir'),'vala','vapi')
+	)
+endif

@@ -34,7 +34,10 @@ libgda_virtualh = configure_file(
 gda_marshalls = gnome_module.genmarshal('gda-marshal',prefix : '_gda_marshal',
 					sources : 'gda-marshal.list')
 
-gda_enum_headers = files ('gda-connection.h', 'gda-enums.h')
+gda_enum_headers = files ([
+	'gda-connection.h',
+	'gda-enums.h'
+	])
 
 gda_enums = gnome_module.mkenums_simple('gda-enum-types', sources: gda_enum_headers)
 
@@ -249,14 +252,15 @@ libgda = library(
 	)
 
 # GObject Introspection
-gi_sources = []
-gi_sources += libgda_sources
-gi_sources += libgda_headers
-gi_sources += gda_enum_headers
-gi_sources += psupport_gi_sources
-gi_sources += threadwrapper_gi_sources
-gi_sources += sql_parser_gi_sources
-gi_sources += libgda_handlers_sources
+gi_sources = [
+	libgda_sources,
+	libgda_headers,
+	gda_enum_headers,
+	psupport_gi_sources,
+	threadwrapper_gi_sources,
+	sql_parser_gi_sources,
+	libgda_handlers_sources
+	]
 
 libgda_gir = gnome_module.generate_gir(libgda,
 	sources: gi_sources,
