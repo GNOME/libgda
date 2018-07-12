@@ -168,6 +168,8 @@ sqlite_xml_inf = files(sqlite_xml_fnamesext)
 
 
 intlmerge = find_program('intltool-merge')
+# Vala bindings
+vapigen = find_program('vapigen', required: false)
 
 subdir('po')
 subdir('libgda')

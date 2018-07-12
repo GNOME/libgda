@@ -26,7 +26,7 @@
 
 #include <gtk/gtk.h>
 
-typedef void (*BinCallback) (gpointer, GValue *);
+typedef void (*BinCallback) (gpointer obj, GValue *val);
 typedef struct {
         GtkWidget    *popover; /* GtkPopover popup window */
         GtkWidget    *load_button;

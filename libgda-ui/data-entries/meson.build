@@ -40,8 +40,6 @@ libgda_ui_data_entries_headers = files([
 	])
 
 libgda_ui_data_entries_sources = files([
-	'common-bin.c',
-	'common-bin.h',
 	'gdaui-data-cell-renderer-util.c',
 	'gdaui-data-cell-renderer-bin.c',
 	'gdaui-data-cell-renderer-boolean.c',
@@ -52,8 +50,6 @@ libgda_ui_data_entries_sources = files([
 	'gdaui-entry-boolean.c',
 	'gdaui-entry-combo.c',
 	'gdaui-entry-none.c',
-	'widget-embedder.c',
-	'widget-embedder.h',
 	'gdaui-entry-shell.c',
 	'gdaui-entry-string.c',
 	'gdaui-entry-number.c',
@@ -66,8 +62,22 @@ libgda_ui_data_entries_sources = files([
 	'gdaui-formatted-entry.c',
 	'gdaui-numeric-entry.c'
 	])
-libgda_ui_data_entries_sources += libgda_ui_data_entries_headers
-libgda_ui_data_entries_sources += extra_headers
+libgda_ui_data_entries_sources_all = files([
+	'common-bin.c',
+	'common-bin.h',
+	'widget-embedder.c',
+	'widget-embedder.h',
+	])
+libgda_ui_data_entries_sources_all += [
+	libgda_ui_data_entries_sources,
+	libgda_ui_data_entries_headers,
+	extra_headers
+	]
+
+libgda_ui_data_entries_gi_sources = [
+	libgda_ui_data_entries_sources,
+	libgda_ui_data_entries_headers
+	]
 
 data_entries_xmlin_names = [
 	'gdaui-entry-string',

@@ -263,7 +263,7 @@ libgda_gir = gnome_module.generate_gir(libgda,
 	namespace: 'Gda',
 	identifier_prefix: 'Gda',
 	nsversion: project_api_version,
-	header: 'libgda.h',
+	header: 'libgda/libgda.h',
 	includes: [
 		'GLib-2.0',
 		'GObject-2.0',
@@ -276,7 +276,7 @@ libgda_gir = gnome_module.generate_gir(libgda,
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
 	)
 
-vapigen = find_program('vapigen')
+if vapigen.found()
 libgda_vapi = custom_target(project_package,
 	command: [vapigen,
 		'--girdir='+meson.current_source_dir(),
@@ -292,7 +292,7 @@ libgda_vapi = custom_target(project_package,
 	install: true,
 	install_dir: join_paths(get_option('datadir'),'vala','vapi')
 	)
-
+endif
 # gnome_module.generate_vapi(project_package,
 # 	gir_dirs: meson.current_build_dir(),
 # 	install: true,

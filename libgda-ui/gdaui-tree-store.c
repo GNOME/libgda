@@ -405,7 +405,7 @@ gdaui_tree_store_get_property (GObject *object,
  * Note that the GType has to correspond to the type of value associated with the attribute name (no type
  * conversion is done), and a warning will be displayed in case of type mismatch.
  *
- * Returns: the new object, or %NULL if an attribute's name was NULL or an empty string
+ * Returns: (transfer full): the new object, or %NULL if an attribute's name was NULL or an empty string
  *
  * Since: 4.2
  */
