@@ -373,6 +373,7 @@ att_mgr_copy (GdaAttributesManager* src) {
 	cp->for_objects = src->for_objects;
 	cp->signal_func = src->signal_func;
 	cp->signal_data = src->signal_data;
+	return cp;
 }
 
 G_DEFINE_BOXED_TYPE(GdaAttributesManager, gda_attributes_manager, att_mgr_copy, gda_attributes_manager_free)
