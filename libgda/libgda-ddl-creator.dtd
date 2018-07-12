@@ -40,7 +40,7 @@
 <!ATTLIST view name             CDATA           #REQUIRED>
 <!ATTLIST view replace          (TRUE|FALSE)    "FALSE">
 <!ATTLIST view temp             (TRUE|FALSE)    "FALSE">
-<!ATTLIST view ifnotexists      (TRUE|FALSE)    "TRUE">
+<!ATTLIST view ifnoexists       (TRUE|FALSE)    "TRUE">
 
 <!ELEMENT definition (#PCDATA)>
 
