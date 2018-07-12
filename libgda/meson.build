@@ -258,7 +258,7 @@ gi_sources += threadwrapper_gi_sources
 gi_sources += sql_parser_gi_sources
 gi_sources += libgda_handlers_sources
 
-gnome_module.generate_gir(libgda,
+libgda_gir = gnome_module.generate_gir(libgda,
 	sources: gi_sources,
 	namespace: 'Gda',
 	identifier_prefix: 'Gda',
@@ -275,6 +275,31 @@ gnome_module.generate_gir(libgda,
 	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
 	)
+
+vapigen = find_program('vapigen')
+libgda_vapi = custom_target(project_package,
+	command: [vapigen,
+		'--girdir='+meson.current_source_dir(),
+		'--metadatadir='+meson.current_source_dir(),
+		'--library='+project_package,
+		'--directory='+meson.current_build_dir(),
+		'--pkg=libxml-2.0',
+		'--pkg=gio-2.0',
+		'@INPUT0@', '@INPUT1@'
+		],
+	input: [libgda_gir[0],'Gda-'+project_api_version+'-custom.vala'],
+	output: project_package+'.vapi',
+	install: true,
+	install_dir: join_paths(get_option('datadir'),'vala','vapi')
+	)
+
+# gnome_module.generate_vapi(project_package,
+# 	gir_dirs: meson.current_build_dir(),
+# 	install: true,
+# 	metadata_dirs: join_paths(meson.source_root(),'libgda'),
+# 	packages: ['gio-2.0', 'libxml-2.0'],
+# 	sources: libgda_gir[0]
+# 	)
 
 # Tests
 tco = executable('test_cnc_open', 'test-cnc-open.c',

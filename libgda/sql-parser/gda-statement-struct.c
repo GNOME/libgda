@@ -50,7 +50,7 @@ gda_sql_error_quark (void)
 }
 
 GdaSqlStatementContentsInfo *
-gda_sql_statement_get_contents_info_copy (GdaSqlStatementContentsInfo *src) {
+gda_sql_statement_contents_info_copy (GdaSqlStatementContentsInfo *src) {
 	GdaSqlStatementContentsInfo *cp = g_new0(GdaSqlStatementContentsInfo, 1);
 	cp->name = src->name;
 	cp->construct = src->construct;
@@ -64,11 +64,11 @@ gda_sql_statement_get_contents_info_copy (GdaSqlStatementContentsInfo *src) {
 	return cp;
 }
 void
-gda_sql_statement_get_contents_info_free (GdaSqlStatementContentsInfo *cinfo) {
+gda_sql_statement_contents_info_free (GdaSqlStatementContentsInfo *cinfo) {
 	g_free (cinfo);
 }
 
-G_DEFINE_BOXED_TYPE(GdaSqlStatementContentsInfo, gda_sql_statement_get_contents_info, gda_sql_statement_get_contents_info_copy, gda_sql_statement_get_contents_info_free)
+G_DEFINE_BOXED_TYPE(GdaSqlStatementContentsInfo, gda_sql_statement_contents_info, gda_sql_statement_contents_info_copy, gda_sql_statement_contents_info_free)
 /*
  * statement's infos retrieval
  */
