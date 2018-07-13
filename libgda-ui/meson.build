@@ -177,9 +177,9 @@ libgdaui_gir = gnome_module.generate_gir(libgdaui,
 	)
 
 if vapigen.found()
-libgdaui_vapi = custom_target('gdaui'+project_api_version,
+libgdaui_vapi = custom_target('gdaui'+project_api_version+'_vapi',
 	command: [vapigen,
-		'--girdir='+meson.current_source_dir(),
+		'--girdir='+join_paths(meson.build_root(),'libgda'),
 		'--metadatadir='+meson.current_source_dir(),
 		'--library=libgdaui-'+project_api_version,
 		'--directory='+meson.current_build_dir(),
@@ -187,10 +187,12 @@ libgdaui_vapi = custom_target('gdaui'+project_api_version,
 		'--pkg=libxml-2.0',
 		'--pkg=gio-2.0',
 		'--pkg=libgda-6.0',
-		'@INPUT@'
+		'--pkg=gtk+-3.0',
+		'@INPUT0@', '@INPUT1@'
 		],
 	input: [
-		libgdaui_gir[0]
+		libgdaui_gir[0],
+		'Gda-'+project_api_version+'-custom.vala'
 		],
 	output: 'libgdaui-'+project_api_version+'.vapi',
 	install: true,
