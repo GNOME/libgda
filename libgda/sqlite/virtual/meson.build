@@ -1,5 +1,7 @@
 conf = configuration_data()
-conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
+if ldap_found
+	conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
+endif
 libgda_virtualh = configure_file(
 		input: 'libgda-virtual.h.in',
 		output : 'libgda-virtual.h',
@@ -24,3 +26,12 @@ libgda_virtual_sources = files(
 	'gda-virtual-provider.c'
 	)
 libgda_virtual_sources += virtual_headers
+
+if ldap_found
+ldaph_virtual = files('gda-ldap-connection.h')
+ldapc_virtual= files('gda-ldap-connection.c')
+libgda_virtual_sources += [
+	ldaph_virtual,
+	ldapc_virtual
+	]
+endif

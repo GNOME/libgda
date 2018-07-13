@@ -22,8 +22,10 @@ install_data(dtdf,
 
 conf = configuration_data()
 # conf.set_quoted('LIBGDA_BDB_INC','')
-conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
-conf.set('LIBGDA_LDAP_INC2',LIBGDA_LDAP_INC2)
+if ldap_found
+	conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
+	conf.set('LIBGDA_LDAP_INC2',LIBGDA_LDAP_INC2)
+endif
 libgda_virtualh = configure_file(
 		input: 'libgda.h.in',
 		output : 'libgda.h',
@@ -211,13 +213,32 @@ libgda_source_all += [
 	gda_enums,
 	gda_marshalls,
 	]
-libgda_source_all += sqlitesources
-libgda_source_all += libgda_virtual_sources
-libgda_source_all += libgda_sql_parser_sources
-libgda_source_all += libgda_psupport_sources
-libgda_source_all += libgda_handlers_sources
-libgda_source_all += libgda_threadwrapper_sources
-libgda_source_all += libgda_binreloc_sources
+libgda_source_all += [
+	sqlitesources,
+	libgda_virtual_sources,
+	libgda_sql_parser_sources,
+	libgda_psupport_sources,
+	libgda_handlers_sources,
+	libgda_threadwrapper_sources,
+	libgda_binreloc_sources
+	]
+
+ldap_cargs = []
+if ldap_found
+ldaph_sources = files ([
+	'gda-data-model-ldap.h',
+	'gda-tree-mgr-ldap.h'
+	])
+libgda_headers_all += ldaph_sources
+ldapc_sources = files ([
+	'gda-data-model-ldap.c',
+	'gda-tree-mgr-ldap.c'
+	])
+libgda_source_all += ldapc_sources
+ldap_cargs += [
+	'-DHAVE_LDAP'
+	]
+endif
 
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
@@ -237,16 +258,23 @@ libgda_cargs += binreloc_cargs
 
 libgda_dep += sqlite_deps
 
+
 libgda = library(
 	'gda-'+project_api_version,
 	libgda_source_all,
 	soversion : gda_current,
 	version : gda_revision,
-	dependencies : [libgda_dep,
-			gda_keywordshash_dep,
-			inc_sqliteh_dep,
-			inc_libsql_parserh_dep],
-	c_args : libgda_cargs,
+	dependencies : [
+		libgda_dep,
+		ldap_deps,
+		gda_keywordshash_dep,
+		inc_sqliteh_dep,
+		inc_libsql_parserh_dep
+		],
+	c_args : [
+		libgda_cargs,
+		ldap_cargs
+		],
 	install : true
 	)
 
@@ -261,6 +289,7 @@ gi_sources = [
 	libgda_handlers_sources
 	]
 
+
 libgda_gir = gnome_module.generate_gir(libgda,
 	sources: gi_sources,
 	namespace: 'Gda',
@@ -273,10 +302,9 @@ libgda_gir = gnome_module.generate_gir(libgda,
 		'Gio-2.0',
 		'libxml2-2.0'
 		],
-	dependencies: libgda_dep,
 	install: true,
 	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
-	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
+	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0'),
 	)
 
 if vapigen.found()
@@ -296,13 +324,6 @@ libgda_vapi = custom_target(project_package,
 	install_dir: join_paths(get_option('datadir'),'vala','vapi')
 	)
 endif
-# gnome_module.generate_vapi(project_package,
-# 	gir_dirs: meson.current_build_dir(),
-# 	install: true,
-# 	metadata_dirs: join_paths(meson.source_root(),'libgda'),
-# 	packages: ['gio-2.0', 'libxml-2.0'],
-# 	sources: libgda_gir[0]
-# 	)
 
 # Tests
 tco = executable('test_cnc_open', 'test-cnc-open.c',
