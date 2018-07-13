@@ -30,7 +30,6 @@ endforeach
 foreach xr : models_xml_fnames
 	tc = configuration_data()
 	configure_file(
-		copy: true,
 		input: xr+'.xml.in',
 		output: xr+'.raw.xml',
 		configuration: tc
