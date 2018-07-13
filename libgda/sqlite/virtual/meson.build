@@ -1,6 +1,5 @@
 conf = configuration_data()
-# FIXME: define LIBGDA_LDAP_VINC
-# conf.set_quoted('LIBGDA_LDAP_VINC','')
+conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
 libgda_virtualh = configure_file(
 		input: 'libgda-virtual.h.in',
 		output : 'libgda-virtual.h',

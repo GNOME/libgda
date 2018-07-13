@@ -30,8 +30,9 @@ conf.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_optio
 conf.set_quoted('GETTEXT_PACKAGE', project_package)
 conf.set_quoted('PACKAGE_VERSION', project_version)
 
+compiler = meson.get_compiler('c')
 
-if meson.get_compiler('c').has_header('locale.h')
+if compiler.has_header('locale.h')
 	conf.set ('HAVE_LOCALE_H', '1')
 endif
 
@@ -69,11 +70,28 @@ graphviz_dep = dependency('libgvc', required : false)
 libxslt_dep = dependency('libxslt', required: false)
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
+# LDAP
+ldap_found = false
+ldap_lib_dep = compiler.find_library('ldap', required: false)
+if ldap_lib_dep.found()
+	ldapber_dep = compiler.find_library('lber')
+	if ldapber_dep.found()
+		if compiler.has_header('ldap.h')
+			ldap_found = true
+			LIBGDA_LDAP_INC='#include <libgda/gda-data-model-ldap.h>'
+			LIBGDA_LDAP_INC2='#include <libgda/gda-tree-mgr-ldap.h>'
+			LIBGDA_LDAP_VINC='#include <virtual/gda-ldap-connection.h>'
+			LIBGDA_LDAP_TYPE='gda_data_model_ldap_get_type'
+			LIBGDA_LDAP_TYPE2='gda_ldap_connection_get_type'
+			LIBGDA_LDAP_TYPE3='gda_tree_mgr_ldap_get_type'
+		endif
+	endif
+endif
 
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
 sqlite_internal = true
 if sqlite_dep.found()
-	sqlite3_table_column_metadata = meson.get_compiler('c').find_library('sqlite3_table_column_metadata',
+	sqlite3_table_column_metadata = compiler.find_library('sqlite3_table_column_metadata',
 																	required: false
 																	)
 	if sqlite3_table_column_metadata.found()
@@ -82,7 +100,7 @@ if sqlite_dep.found()
 endif
 
 if sqlite_internal
-	ldl = meson.get_compiler('c').find_library('dl')
+	ldl = compiler.find_library('dl')
 endif
 
 sed = find_program('sed')
@@ -182,7 +200,7 @@ if enable_ui
 	glade_dep = dependency('gladeui-2.0', required : false)
 	goocanvas_dep = dependency('goocanvas-2.0', required: false)
 	if goocanvas_dep.found()
-		math_dep = meson.get_compiler('c').find_library('m')
+		math_dep = compiler.find_library('m')
 	endif
 	gtksourceview_dep = dependency('gtksourceview-3.0')
 	graphviz_dep = dependency('libgvc', required: false)
@@ -267,6 +285,7 @@ libgda_report_pc = configure_file(
 	)
 endif
 
+subdir('doc')
 subdir('tools')
 subdir('tests')
 subdir('testing')

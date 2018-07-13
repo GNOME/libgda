@@ -21,10 +21,9 @@ install_data(dtdf,
 	)
 
 conf = configuration_data()
-# FIXME: Set this variables
 # conf.set_quoted('LIBGDA_BDB_INC','')
-# conf.set_quoted('LIBGDA_LDAP_INC','')
-# conf.set_quoted('LIBGDA_LDAP_INC2','')
+conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
+conf.set('LIBGDA_LDAP_INC2',LIBGDA_LDAP_INC2)
 libgda_virtualh = configure_file(
 		input: 'libgda.h.in',
 		output : 'libgda.h',
