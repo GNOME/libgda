@@ -186,6 +186,8 @@ gda_ddl_view_class_init (GdaDdlViewClass *klass)
                           "Define view",
                           FALSE,
                           G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class,N_PROPS,properties);
 }
 
 static void
@@ -207,7 +209,7 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
   g_return_val_if_fail (node, FALSE);
 
 /*
- * <view name="Total" replace="TRUE" temp="TRUE" ifnotexists="TRUE">
+ * <view name="Total" replace="TRUE" temp="TRUE" ifnoexists="TRUE">
  *   <definition>SELECT id,name FROM CUSTOMER</definition>
  * </view>
  */
@@ -237,7 +239,7 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST]);
   if (prop)
-    g_object_set (G_OBJECT(self),"ifnotexist",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
+    g_object_set (G_OBJECT(self),"ifnoexist",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;

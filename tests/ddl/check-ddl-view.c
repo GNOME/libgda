@@ -38,8 +38,6 @@ typedef struct {
     gboolean replace;
      
     xmlDocPtr doc;
-    xmlTextWriterPtr writer;
-    xmlBufferPtr buffer;
     gchar *xmlfile;
 } CheckDdlObject;
 
@@ -106,23 +104,6 @@ test_ddl_view_general (void)
 }
 
 static void
-test_ddl_view_write_node (CheckDdlObject *self,
-                          gconstpointer user_data)
-{
-  gboolean res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->view),
-                                              self->writer,NULL);
-
-  g_assert_true (res);
-
-  //	res = xmlTextWriterEndDocument (self->writer);
-
-  //	g_assert_true (res >= 0);
-  xmlFreeTextWriter (self->writer);
-
-  g_print ("%s\n",(gchar*)self->buffer->content);
-}
-
-static void
 test_ddl_view_start (CheckDdlObject *self,
                      gconstpointer user_data)
 {
@@ -162,18 +143,6 @@ test_ddl_view_start (CheckDdlObject *self,
                                               node,NULL);
   g_print("After parse node\n");
   g_assert_true (res);
-
-  self->buffer = xmlBufferCreate ();
-
-  g_assert_nonnull (self->buffer);
-
-  self->writer = xmlNewTextWriterMemory (self->buffer,0);
-
-  g_assert_nonnull (self->writer);
-
-  res = xmlTextWriterStartDocument (self->writer, NULL, NULL, NULL);
-
-  g_assert_true (res >= 0);
 }
 
 static void
@@ -185,8 +154,6 @@ test_ddl_view_finish (CheckDdlObject *self,
   xmlFreeDoc (self->doc);
   g_free (self->name);
   g_free (self->defstring);
-
-  xmlBufferFree (self->buffer);
 }
 
 gint
@@ -205,13 +172,6 @@ main (gint   argc,
               NULL,
               test_ddl_view_start,
               test_ddl_view_name,
-              test_ddl_view_finish);
-
-  g_test_add ("/test-ddl/view-write",
-              CheckDdlObject,
-              NULL,
-              test_ddl_view_start,
-              test_ddl_view_write_node,
               test_ddl_view_finish);
 
   g_test_add ("/test-ddl/view-temp",
