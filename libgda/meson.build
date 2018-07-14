@@ -224,21 +224,21 @@ libgda_source_all += [
 	]
 
 ldap_cargs = []
-if ldap_found
-ldaph_sources = files ([
-	'gda-data-model-ldap.h',
-	'gda-tree-mgr-ldap.h'
-	])
-libgda_headers_all += ldaph_sources
-ldapc_sources = files ([
-	'gda-data-model-ldap.c',
-	'gda-tree-mgr-ldap.c'
-	])
-libgda_source_all += ldapc_sources
-ldap_cargs += [
-	'-DHAVE_LDAP'
-	]
-endif
+# if ldap_found
+# ldaph_sources = files ([
+# 	'gda-data-model-ldap.h',
+# 	'gda-tree-mgr-ldap.h'
+# 	])
+# libgda_headers_all += ldaph_sources
+# ldapc_sources = files ([
+# 	'gda-data-model-ldap.c',
+# 	'gda-tree-mgr-ldap.c'
+# 	])
+# libgda_source_all += ldapc_sources
+# ldap_cargs += [
+# 	'-DHAVE_LDAP'
+# 	]
+# endif
 
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
@@ -266,7 +266,7 @@ libgda = library(
 	version : gda_revision,
 	dependencies : [
 		libgda_dep,
-		ldap_deps,
+		#ldap_deps,
 		gda_keywordshash_dep,
 		inc_sqliteh_dep,
 		inc_libsql_parserh_dep
