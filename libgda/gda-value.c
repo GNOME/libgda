@@ -1949,7 +1949,7 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
  * gda_value_new_timestamp_from_timet:
  * @val: value to set for the new #GValue.
  *
- * Makes a new #GValue of type #GDA_TYPE_TIMESTAMP with value @val
+ * Makes a new #GValue of type #G_TYPE_DATE_TIME with value @val
  * (of type time_t). The returned timestamp's value is relative to the current
  * timezone (i.e. is localtime).
  *
@@ -1962,9 +1962,97 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
  * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
  *
  * Free-function: gda_value_free
+ *
+ * Deprecated: 6.0: Use gda_value_new_date_time_from_timet() instead
  */
 GValue *
 gda_value_new_timestamp_from_timet (time_t val)
+{
+	GValue *value = NULL;
+	struct tm *ltm = NULL;
+	glong tz = 0;
+
+#ifdef HAVE_LOCALTIME_R
+	struct tm gmttm, loctm;
+	tzset ();
+	ltm = localtime_r ((const time_t *) &val, &loctm);
+	tz = compute_tz_offset (gmtime_r ((const time_t *) &val, &gmttm), &loctm);
+	if (tz == G_MAXLONG)
+		ltm = NULL;
+#elif HAVE_LOCALTIME_S
+	struct tm gmttm, loctm;
+	if ((localtime_s (&loctm, (const time_t *) &val) == 0) &&
+	    (gmtime_s (&gmttm, (const time_t *) &val) == 0)) {
+		tz = compute_tz_offset (&gmttm, &loctm);
+		if (tz != G_MAXLONG)
+			ltm = &loctm;
+	}
+#else
+	struct tm gmttm, loctm;
+	ltm = gmtime ((const time_t *) &val);
+	if (ltm) {
+		gmttm = *ltm;
+		ltm = localtime ((const time_t *) &val);
+		if (ltm) {
+			loctm = *ltm;
+			tz = compute_tz_offset (&gmttm, &loctm);
+			if (tz == G_MAXLONG)
+				ltm = NULL;
+		}
+	}
+	
+#endif
+
+	if (ltm) {
+		gint tzi = tz;
+		if (tzi < 0)
+			tzi *= -1;
+		gint h = tzi/60/60;
+		gint m = tzi/60 - h*60;
+		gint s = tzi - h*60*60 - m*60;
+		gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d",
+																	tz < 0 ? "-" : "+",
+																	h, m, s);
+		GTimeZone *tzo = g_time_zone_new (stz);
+		g_free (stz);
+		GDateTime* tstamp = g_date_time_new (tzo,
+																ltm->tm_year + 1900,
+																ltm->tm_mon + 1,
+																ltm->tm_mday,
+																ltm->tm_hour,
+																ltm->tm_min,
+																ltm->tm_sec);
+
+		g_time_zone_unref (tzo);
+		value = g_new0 (GValue, 1);
+		g_value_init (value, G_TYPE_DATE_TIME);
+		g_value_set_boxed (value, tstamp);
+		g_date_time_unref (tstamp);
+	}
+
+	return value;
+}
+
+/**
+ * gda_value_new_date_time_from_timet:
+ * @val: value to set for the new #GValue.
+ *
+ * Makes a new #GValue of type #G_TYPE_DATE_TIME with value @val
+ * (of type time_t). The returned timestamp's value is relative to the current
+ * timezone (i.e. is localtime).
+ *
+ * For example, to get a time stamp representing the current date and time, use:
+ *
+ * <code>
+ * ts = gda_value_new_date_time_from_timet (time (NULL));
+ * </code>
+ *
+ * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
+ *
+ * Free-function: gda_value_free
+ */
+GValue *
+gda_value_new_date_time_from_timet (time_t val)
 {
 	GValue *value = NULL;
 	struct tm *ltm = NULL;

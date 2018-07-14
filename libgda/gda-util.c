@@ -3332,6 +3332,8 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
  * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
  * Returns: a new #GDateTime if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
+ *
+ * Deprecated: 6.0: Use g_date_time_new_from_iso8601() instead
  */
 GDateTime*
 gda_parse_iso8601_timestamp (const gchar *value)

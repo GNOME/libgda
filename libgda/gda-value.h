@@ -58,10 +58,6 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_SHORT(value)           G_VALUE_HOLDS(value, GDA_TYPE_SHORT)
 #define GDA_VALUE_HOLDS_USHORT(value)          G_VALUE_HOLDS(value, GDA_TYPE_USHORT)
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
-#define GDA_VALUE_HOLDS_TIMESTAMP(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
-
-/* GLIb types */
-#define G_VALUE_HOLDS_DATETIME(value)       G_VALUE_HOLDS(value, GDA_TYPE_TIMESTAMP)
 
 
 /* GdaNumeric */
@@ -201,7 +197,10 @@ GValue                           *gda_value_new_default (const gchar *default_va
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
 GValue                           *gda_value_new_time_from_timet (time_t val);
+
+GLIB_DEPRECATED_FOR(gda_value_new_date_time_from_timet)
 GValue                           *gda_value_new_timestamp_from_timet (time_t val);
+GValue                           *gda_value_new_date_time_from_timet (time_t val);
 
 GValue                           *gda_value_new_from_string (const gchar *as_string, GType type);
 GValue                           *gda_value_new_from_xml (const xmlNodePtr node);

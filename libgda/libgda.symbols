@@ -876,7 +876,6 @@
 	gda_timestamp_copy
 	gda_timestamp_change_timezone
 	gda_timestamp_free
-	gda_timestamp_get_type
 	gda_timestamp_valid
 	gda_transaction_isolation_get_type
 	gda_transaction_status_add_event_sql
