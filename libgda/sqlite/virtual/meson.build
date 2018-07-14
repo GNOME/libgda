@@ -27,11 +27,11 @@ libgda_virtual_sources = files(
 	)
 libgda_virtual_sources += virtual_headers
 
-# if ldap_found
-# ldaph_virtual = files('gda-ldap-connection.h')
-# ldapc_virtual= files('gda-ldap-connection.c')
-# libgda_virtual_sources += [
-# 	ldaph_virtual,
-# 	ldapc_virtual
-# 	]
-# endif
+if ldap_found
+ldaph_virtual = files('gda-ldap-connection.h')
+ldapc_virtual= files('gda-ldap-connection.c')
+libgda_virtual_sources += [
+	ldaph_virtual,
+	ldapc_virtual
+	]
+endif
