@@ -25,6 +25,8 @@ root = spec.getroot()
 for c in root.iter():
     rename_attr(c, '_name', 'name')
     rename_attr(c, '_descr', 'descr')
+    if c.tag.startswith('_'):
+        c.tag = c.tag[1:]
 
 n=os.path.basename(dargs['source'])
 nfile=n.replace('.xml.in', '.raw.xml')
