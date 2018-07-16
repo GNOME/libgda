@@ -229,6 +229,28 @@ test('SqlRenderer', tsqlr,
 		]
 	)
 
+tso = executable('test-server-operation',
+	['test-server-operation.c'] ,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ServerOperation', tso,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
 subdir('data-models')
 subdir('meta-store')
 subdir('multi-threading')
