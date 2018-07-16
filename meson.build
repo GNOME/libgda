@@ -24,35 +24,11 @@ gda_current = '5'
 gda_revision ='1'
 gda_age = '1'
 
-conf = configuration_data()
-# Surround the version in quotes to make it a C string
-conf.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
-conf.set_quoted('GETTEXT_PACKAGE', project_package)
-conf.set_quoted('PACKAGE_VERSION', project_version)
-
 compiler = meson.get_compiler('c')
 
-if compiler.has_header('locale.h')
-	conf.set ('HAVE_LOCALE_H', '1')
-endif
-
 glib_genmarshal = find_program('glib-genmarshal', required : true)
-if glib_genmarshal.found()
-  conf.set('HAVE_GLIB_GENMARSHAL',1)
-else
-  error ('glib-genmarshal not found')
-endif
 
 glib_mkenums = find_program('glib-mkenums', required : true)
-if glib_mkenums.found()
-  conf.set('HAVE_GLIB_MKENUMS',1)
-else
-  error ('glib-mkenums not found')
-endif
-
-configh = configure_file(output : 'config.h',
-			configuration : conf)
-
 
 inc_rooth = include_directories ('.')
 inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
@@ -119,6 +95,59 @@ if ldap_lib_dep.found()
 	endif
 endif
 
+datec = compiler.run('''
+#include <glib.h>
+
+gint main (void) {
+	GDateTime *dt = g_date_time_new_now_utc ();
+	g_print (g_date_time_format (dt, "%F"));
+}
+''',
+	dependencies: glib_dep
+	)
+
+conf = configuration_data()
+if glib_genmarshal.found()
+  conf.set('HAVE_GLIB_GENMARSHAL',1)
+else
+  error ('glib-genmarshal not found')
+endif
+if glib_mkenums.found()
+  conf.set('HAVE_GLIB_MKENUMS',1)
+else
+  error ('glib-mkenums not found')
+endif
+conf.set('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
+conf.set('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
+conf.set('VERSION', project_version)
+conf.set('GDA_VERSION', project_version)
+conf.set('GDA_ABI_VERSION', project_version)
+conf.set('prefix', get_option('prefix'))
+conf.set('exec_prefix', get_option('libexecdir'))
+conf.set('libdir', get_option('libdir'))
+conf.set('includedir', get_option('includedir'))
+conf.set('GDA_DEBUG_FLAGS', '')
+if ldap_found
+	conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
+	conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
+	conf.set('LIBGDA_LDAP_INC2',LIBGDA_LDAP_INC2)
+	conf.set('LIBGDA_LDAP_TYPE',LIBGDA_LDAP_TYPE)
+	conf.set('LIBGDA_LDAP_TYPE2',LIBGDA_LDAP_TYPE2)
+	conf.set('LIBGDA_LDAP_TYPE3',LIBGDA_LDAP_TYPE3)
+endif
+conf.set('LIBGDA_BDB_INC','')
+conf.set_quoted('LIBGDA_BDB_TYPE','')
+
+confh = configuration_data()
+if compiler.has_header('locale.h')
+	confh.set ('HAVE_LOCALE_H', '1')
+endif
+confh.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
+confh.set_quoted('GETTEXT_PACKAGE', project_package)
+confh.set_quoted('PACKAGE_VERSION', project_version)
+configh = configure_file(output : 'config.h',
+			configuration : confh)
+
 c_args = ['-Wall',
 	'-Wextra',
 	'-Wformat-security',
@@ -133,7 +162,6 @@ c_args = ['-Wall',
 glade_catalog = ''
 glade_pixmap = ''
 
-pkg_module = import('pkgconfig')
 gnome_module = import('gnome')
 
 if get_option('enable-json')
@@ -226,8 +254,8 @@ int main() {
 	endif
 
 	if glade_dep.found()
-		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'catalogdir')
-		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'pixmapdir')
+		glade_catalog = glade_dep.get_pkgconfig_variable('catalogdir')
+		glade_pixmap = glade_dep.get_pkgconfig_variable('pixmapdir')
 	endif
 	subdir('libgda-ui')
 	subdir('libgda-report')
@@ -244,20 +272,10 @@ win = import('windows')
 endif
 
 # PC files
-pcconf = configuration_data()
-pcconf.set('prefix', get_option('prefix'))
-pcconf.set('exec_prefix', get_option('libexecdir'))
-pcconf.set('libdir', get_option('libdir'))
-pcconf.set('includedir', get_option('includedir'))
-pcconf.set('GDA_ABI_MAJOR_VERSION', API_MAJOR_VERSION)
-pcconf.set('GDA_ABI_MINOR_VERSION', API_MINOR_VERSION)
-pcconf.set('VERSION', project_version)
-pcconf.set('GDA_DEBUG_FLAGS', '')
-
 libgda_pc = configure_file(
 	input: 'libgda-'+project_api_version+'.pc.in',
 	output: 'libgda-'+project_api_version+'.pc',
-	configuration: pcconf,
+	configuration: conf,
 	install: true,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
@@ -266,7 +284,7 @@ if libxslt_dep.found()
 	libgda_xslt_pc = configure_file(
 		input: 'libgda-xslt-'+project_api_version+'.pc.in',
 		output: 'libgda-xslt-'+project_api_version+'.pc',
-		configuration: pcconf,
+		configuration: conf,
 		install: true,
 		install_dir: join_paths(get_option('libdir'),'pkgconfig')
 		)
@@ -276,14 +294,14 @@ if enable_ui
 libgdaui_pc = configure_file(
 	input: 'libgda-ui-'+project_api_version+'.pc.in',
 	output: 'libgda-ui-'+project_api_version+'.pc',
-	configuration: pcconf,
+	configuration: conf,
 	install: true,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 libgda_report_pc = configure_file(
 	input: 'libgda-report-'+project_api_version+'.pc.in',
 	output: 'libgda-report-'+project_api_version+'.pc',
-	configuration: pcconf,
+	configuration: conf,
 	install: true,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)

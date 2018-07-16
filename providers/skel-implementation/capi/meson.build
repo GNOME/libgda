@@ -98,11 +98,6 @@ libgda_capi_sources = files([
 	])
 libgda_capi_sources += capi_resources
 
-conf = configuration_data()
-conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
-conf.set_quoted('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
-conf.set_quoted('VERSION', project_version)
-
 libgda_sqlite_providerpc = configure_file(
 			input:  'libgda-capi-'+project_api_version+'.pc.in',
 			output: 'libgda-capi-'+project_api_version+'.pc',

@@ -40,6 +40,11 @@ gda_sql = executable('gda-sql-'+project_api_version,
 	)
 
 manconf = configuration_data()
+manconf.set('GDA_ABI_VERSION', project_api_version)
+manconf.set('PACKAGE_VERSION', project_version)
+manconf.set('gdasysconfdir', get_option('sysconfdir'))
+manconf.set('GDA_BUILDDATE', datec.stdout())
+
 gda_sql_man = configure_file(
 	input: 'gda-sql.1.in',
 	output: 'gda-sql.1',

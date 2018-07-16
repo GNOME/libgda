@@ -64,7 +64,7 @@ meson_build:
   - cd _build
   - ninja
   - broadwayd &
-  - meson test
+  - GDK_BACKEND=broadway meson test
   - cd ..
   artifacts:
     when: on_failure

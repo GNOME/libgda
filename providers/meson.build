@@ -8,6 +8,6 @@ if postgres_dep.found()
 subdir('postgres')
 endif
 
-# if ldap_found
-# subdir('ldap')
-# endif
+if ldap_found
+subdir('ldap')
+endif

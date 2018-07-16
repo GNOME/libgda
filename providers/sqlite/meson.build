@@ -81,11 +81,6 @@ libgda_sqlite_sources = files([
 	])
 libgda_sqlite_sources += sqlite_resources
 
-conf = configuration_data()
-conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
-conf.set_quoted('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
-conf.set_quoted('VERSION', project_version)
-
 libgda_sqlite_providerpc = configure_file(output : 'libgda-sqlite-'+project_api_version+'.pc',
 			configuration : conf,
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
