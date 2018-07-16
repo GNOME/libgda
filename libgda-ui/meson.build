@@ -7,6 +7,9 @@ libgda_ui_deps = [
 subdir('marshallers')
 subdir('data-entries')
 subdir('internal')
+if glade_dep.found()
+	subdir('glade')
+endif
 
 libgda_ui_cargs = [
 	'-include',

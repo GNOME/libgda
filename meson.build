@@ -162,7 +162,6 @@ c_args = ['-Wall',
 glade_catalog = ''
 glade_pixmap = ''
 
-pkg_module = import('pkgconfig')
 gnome_module = import('gnome')
 
 if get_option('enable-json')
@@ -255,8 +254,8 @@ int main() {
 	endif
 
 	if glade_dep.found()
-		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'catalogdir')
-		glade_catalog = pkg_module.generate(libraries: 'gladeui-2.0', variables : 'pixmapdir')
+		glade_catalog = glade_dep.get_pkgconfig_variable('catalogdir')
+		glade_pixmap = glade_dep.get_pkgconfig_variable('pixmapdir')
 	endif
 	subdir('libgda-ui')
 	subdir('libgda-report')
