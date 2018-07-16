@@ -127,4 +127,9 @@
     <column name="thedate" type="date"/>
   </table>
 
+  <!-- testing dates -->
+  <table name="bigint">
+    <column name="thebigint" type="gint64"/>
+  </table>
+
 </schema>

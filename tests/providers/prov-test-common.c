@@ -1018,3 +1018,96 @@ out:
 
 	return number_failed;
 }
+
+int
+prov_test_common_check_bigint (void)
+{
+	GdaSqlParser *parser = NULL;
+	GdaStatement *stmt = NULL;
+	GdaSet *params = NULL;
+	GError *error = NULL;
+	int number_failed = 0;
+	GdaDataModel *model = NULL;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
+	parser = gda_connection_create_parser (cnc);
+	if (!parser)
+		parser = gda_sql_parser_new ();
+
+	GValue *tso;
+	tso = gda_value_new (G_TYPE_INT64);
+	g_value_set_int64 (tso, 4294967296);
+
+	/* insert date */
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO bigint (thebigint) VALUES (##thebigint::gint64)", NULL, &error);
+	if (!stmt ||
+	    ! gda_statement_get_parameters (stmt, &params, &error) ||
+	    ! gda_set_set_holder_value (params, &error, "thebigint", g_value_get_int64 (tso)) ||
+	    (gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, &error) == -1)) {
+		number_failed ++;
+		goto out;
+	}
+
+	g_print ("Inserted int %s\n", gda_value_stringify (tso));
+
+	/* retreive date */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT thebigint FROM bigint", NULL, &error);
+	if (!stmt) {
+		number_failed ++;
+		goto out;
+	}
+
+	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
+	if (!model) {
+		number_failed ++;
+		goto out;
+	}
+	gda_data_model_dump (model, NULL);
+	if (gda_data_model_get_n_rows (model) != 1) {
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Data model should have exactly 1 row");
+		number_failed ++;
+		goto out;
+	}
+
+	const GValue *cvalue;
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_INT64, FALSE, &error);
+	if (!cvalue) {
+		number_failed ++;
+		goto out;
+	}
+	if (g_value_get_int64 (tso) != g_value_get_int64 (cvalue)) {
+		gchar *tmpg, *tmpe;
+		tmpg = gda_value_stringify (cvalue);
+		tmpe = gda_value_stringify (tso);
+		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
+			     "Retreived date differs from expected: got '%s' and expected '%s'", tmpg, tmpe);
+		g_free (tmpg);
+		g_free (tmpe);
+		number_failed ++;
+		goto out;
+	}
+
+
+out:
+	if (stmt)
+		g_object_unref (stmt);
+	if (params)
+		g_object_unref (params);
+	if (model)
+		g_object_unref (model);
+	g_object_unref (parser);
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Date test resulted in %d error(s)\n", number_failed);
+	if (number_failed != 0)
+		g_print ("error: %s\n", error && error->message ? error->message : "No detail");
+	if (error)
+		g_error_free (error);
+#endif
+
+	return number_failed;
+}
