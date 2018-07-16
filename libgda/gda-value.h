@@ -197,9 +197,6 @@ GValue                           *gda_value_new_default (const gchar *default_va
 GValue                           *gda_value_new_blob (const guchar *val, glong size);
 GValue                           *gda_value_new_blob_from_file (const gchar *filename);
 GValue                           *gda_value_new_time_from_timet (time_t val);
-
-GLIB_DEPRECATED_FOR(gda_value_new_date_time_from_timet)
-GValue                           *gda_value_new_timestamp_from_timet (time_t val);
 GValue                           *gda_value_new_date_time_from_timet (time_t val);
 
 GValue                           *gda_value_new_from_string (const gchar *as_string, GType type);

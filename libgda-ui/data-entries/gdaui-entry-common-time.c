@@ -899,7 +899,7 @@ entry_insert_func (G_GNUC_UNUSED GdauiFormattedEntry *fentry, gunichar insert_ch
 			//gchar *str;
 			//GdauiEntryCommonTime *mgtim = GDAUI_ENTRY_COMMON_TIME (data);
 			//str = gdaui_formatted_entry_get_text (GDAUI_FORMATTED_ENTRY (mgtim->priv->entry));
-			tsvalue = gda_value_new_timestamp_from_timet (time (NULL));
+			tsvalue = gda_value_new_date_time_from_timet (time (NULL));
 			real_set_value (GDAUI_ENTRY_WRAPPER (data), tsvalue);
 			gda_value_free (tsvalue);
 			//if (str && g_ascii_isdigit (*str))
