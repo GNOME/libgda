@@ -108,11 +108,6 @@ libgda_postgres_sources = files([
 	])
 libgda_postgres_sources += postgres_resources
 
-conf = configuration_data()
-conf.set_quoted('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
-conf.set_quoted('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
-conf.set_quoted('VERSION', project_version)
-
 libgda_postgres_providerpc = configure_file(
 			input:  'libgda-postgres-'+project_api_version+'.pc.in',
 			output: 'libgda-postgres-'+project_api_version+'.pc',

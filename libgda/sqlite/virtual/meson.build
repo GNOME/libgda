@@ -1,7 +1,3 @@
-conf = configuration_data()
-if ldap_found
-	conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
-endif
 libgda_virtualh = configure_file(
 		input: 'libgda-virtual.h.in',
 		output : 'libgda-virtual.h',

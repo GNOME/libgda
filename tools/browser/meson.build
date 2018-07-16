@@ -80,6 +80,7 @@ subdir('data')
 
 desktopf = files(['gda-browser.desktop.in.in'])
 desktopconf = configuration_data()
+desktopconf.set('GDA_VERSION', project_version)
 desktopfin = configure_file(
 	input: 'gda-browser.desktop.in.in',
 	output: 'gda-browser-'+project_api_version+'.desktop.in',

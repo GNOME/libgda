@@ -20,12 +20,6 @@ install_data(dtdf,
 	install_dir: join_paths(get_option('datadir'),project_package,'dtd')
 	)
 
-conf = configuration_data()
-# conf.set_quoted('LIBGDA_BDB_INC','')
-if ldap_found
-	conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
-	conf.set('LIBGDA_LDAP_INC2',LIBGDA_LDAP_INC2)
-endif
 libgda_virtualh = configure_file(
 		input: 'libgda.h.in',
 		output : 'libgda.h',
