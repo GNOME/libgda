@@ -119,6 +119,8 @@ void         gda_connection_string_split (const gchar *string, gchar **out_cnc_p
  */
 gboolean     gda_parse_iso8601_date (GDate *gdate, const gchar *value);
 gboolean     gda_parse_iso8601_time (GdaTime *timegda, const gchar *value);
+
+GLIB_DEPRECATED_FOR(g_date_time_new_from_iso8601)
 GDateTime    *gda_parse_iso8601_timestamp (const gchar *value);
 gboolean     gda_parse_formatted_date (GDate *gdate, const gchar *value,
 				       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);

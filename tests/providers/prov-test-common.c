@@ -744,7 +744,7 @@ prov_test_common_check_timestamp (void)
 		parser = gda_sql_parser_new ();
 
 	GValue *tso;
-	tso = gda_value_new_timestamp_from_timet (time (NULL));
+	tso = gda_value_new_date_time_from_timet (time (NULL));
 
 	/* insert timestamp */
 	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO tstest (ts) VALUES (##ts::timestamp)", NULL, &error);
