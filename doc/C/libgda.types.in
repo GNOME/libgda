@@ -42,7 +42,6 @@ gda_binary_get_type
 gda_geometric_point_get_type
 gda_numeric_get_type
 gda_time_get_type
-gda_timestamp_get_type
 gda_virtual_provider_get_type
 gda_vprovider_data_model_get_type
 gda_vprovider_hub_get_type

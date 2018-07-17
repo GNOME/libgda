@@ -14,6 +14,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011-2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com> 
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3331,12 +3332,15 @@ gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
  *
  * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: a new #GDateTime if @value has been sucessfuly parsed as a valid timestamp (see g_date_valid())
+ * Returns: a new #GDateTime if @value has been successfully parsed as a valid timestamp (see g_date_valid()). The returned instance should be freed using g_date_time_unref().
  */
 GDateTime*
 gda_parse_iso8601_timestamp (const gchar *value)
 {
-	return gda_parse_formatted_timestamp (value, G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-');
+  GTimeZone *tz = g_time_zone_new_utc ();
+  GDateTime *dt = g_date_time_new_from_iso8601 (value,tz);
+  g_time_zone_unref (tz);
+  return dt;
 }
 
 /**
@@ -3345,12 +3349,12 @@ gda_parse_iso8601_timestamp (const gchar *value)
  * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
  * @second: a #GDateDMY specifying which of year, month or day appears second (in the first bytes) in @value
  * @third: a #GDateDMY specifying which of year, month or day appears third (in the first bytes) in @value
- * @sep: spcifies the expected separator character bewteen year, month and day (for example '-')
+ * @sep: specifies the expected separator character between year, month and day (for example '-')
  *
  * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
- * Returns: (nullable): a new #GDateTime if @value has been sucessfuly parsed as a valid date (see g_date_valid()).
+ * Returns: (nullable): a new #GDateTime if @value has been successfully parsed as a valid date (see g_date_valid()).
  * 
  * Since: 5.2
  */

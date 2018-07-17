@@ -899,8 +899,6 @@ GDA_TYPE_USHORT
 GDA_VALUE_HOLDS_USHORT
 GDA_TYPE_TIME
 GDA_VALUE_HOLDS_TIME
-GDA_TYPE_TIMESTAMP
-GDA_VALUE_HOLDS_TIMESTAMP
 gda_value_new_null
 gda_value_set_null
 gda_value_new_default
@@ -981,15 +979,8 @@ gda_time_change_timezone
 gda_value_get_time
 gda_value_set_time
 gda_value_new_time_from_timet
-<SUBSECTION>
-GdaTimestamp
-gda_timestamp_copy
-gda_timestamp_free
-gda_timestamp_valid
-gda_timestamp_change_timezone
-gda_value_get_timestamp
-gda_value_set_timestamp
 gda_value_new_timestamp_from_timet
+gda_value_new_date_time_from_timet
 <SUBSECTION>
 gda_value_get_short
 gda_value_set_short
@@ -1001,7 +992,6 @@ gda_binary_get_type
 gda_geometric_point_get_type
 gda_numeric_get_type
 gda_time_get_type
-gda_timestamp_get_type
 </SECTION>
 
 <SECTION>
