@@ -1159,7 +1159,7 @@ gda_sqlite_provider_supports_operation (G_GNUC_UNUSED GdaServerProvider *provide
  * Create operation request
  */
 static GdaServerOperation *
-gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
+gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaServerOperationType type,
 				      G_GNUC_UNUSED GdaSet *options, GError **error)
 {
@@ -1178,21 +1178,21 @@ gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED
 	g_free (dir);
 	g_free (tmp);
 
-	if (file) {
-		g_free (str);
-		op = gda_server_operation_new (type, file);
-		g_free (file);
-	}
-	else {
-		gchar *lpname;
-		lpname = g_utf8_strdown (PNAME, -1);
-		file = g_strdup_printf ("/spec/%s/%s.raw.xml", lpname, str);
-		g_free (str);
-		g_free (lpname);
-		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
-							 "spec-resource", file, NULL));
-		g_free (file);
-	}
+  if (!file) {
+    gchar *lpname;
+    lpname = g_utf8_strdown (PNAME, -1);
+    file = g_strdup_printf ("/spec/%s/%s.raw.xml", lpname, str);
+    g_free (lpname);
+  }
+
+  op = GDA_SERVER_OPERATION(g_object_new (GDA_TYPE_SERVER_OPERATION,
+                                          "op-type", type,
+                                          "spec-filename", file,
+                                          "connection",cnc,
+                                          "provider",provider,
+                                          NULL));
+  g_free (str);
+  g_free (file);
 
         return op;
 }
@@ -3156,7 +3156,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
 				prep_param_ids = gtps->param_ids;
 				gtps->param_ids = NULL;
-				
+
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 

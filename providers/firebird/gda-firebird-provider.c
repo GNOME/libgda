@@ -623,17 +623,18 @@ gda_firebird_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	g_free (dir);
         g_free (str);
 
-	if (file) {
-		op = gda_server_operation_new (type, file);
-		g_free (file);
-	}
-	else {
-		file = g_strdup_printf ("/spec/firebird/%s.raw.xml", stype);
-		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
-							 "spec-resource", file, NULL));
-		g_free (file);
-        }
-	g_free (stype);
+  if (!file)
+    file = g_strdup_printf ("/spec/firebird/%s.raw.xml", stype);
+        
+  op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, 
+                                           "op-type", type, 
+                                           "spec-resource", file, 
+                                           "connection",cnc,
+                                           "provider",provider,
+                                           NULL));
+
+  g_free (stype);
+  g_free (file);
 
         return op;
 }

@@ -33,14 +33,16 @@ static void
 test_server_operation_provider (CheckOPObject *self,
                                 gconstpointer user_data)
 {
-  GdaServerProvider *server;
+  GdaServerProvider *server = NULL;
+  GdaConnection *cnc = NULL;
 
-  g_object_get (self->op,"provider",&server,NULL);
+  g_object_get (self->op,"provider",&server,"connection",&cnc,NULL);
 
-/* This is a test to check if "server" is set. 
- * It is not set in version 6.0
- */
-//  g_assert_true (GDA_IS_SERVER_PROVIDER(server));
+  g_assert_nonnull (server);
+  g_assert_nonnull (cnc);
+
+  g_assert_true (GDA_IS_SERVER_PROVIDER(server));
+  g_assert_true (GDA_IS_CONNECTION(cnc));
 }
 
 static void

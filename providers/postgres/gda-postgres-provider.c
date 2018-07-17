@@ -860,19 +860,17 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 	g_free (dir);
 	g_free (tmp);
 
-	if (file) {
-		g_free (str);
-		op = gda_server_operation_new (type, file);
-		g_free (file);
-	}
-	else {
-		file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
-		g_free (str);
-		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
-							 "spec-resource", file, NULL));
-		g_free (file);
-        }
+  if (!file)
+    file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
 
+  op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, 
+                                           "op-type", type, 
+                                           "spec-resource", file,
+                                           "connection",cnc,
+                                           "provider",provider,
+                                           NULL));
+  g_free (str);
+  g_free (file);
         return op;
 }
 
