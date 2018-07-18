@@ -3521,3 +3521,60 @@ gda_server_operation_perform_drop_table (GdaServerOperation *op, GError **error)
 		return FALSE;
 	}
 }
+
+/**
+ * gda_server_operation_perform:
+ * @op: a #GdaServerOperation object
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Performs the operation described by @op. Note that @op is not destroyed by this method
+ * and can be reused.
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+gda_server_operation_perform (GdaServerOperation *op, GError **error)
+{
+  GdaServerProvider *provider;
+  GdaConnection *cnc;
+
+  g_return_val_if_fail (op,FALSE);
+  g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
+
+  g_object_get (op,"provider",&provider,"connection",&cnc,NULL);
+
+  g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+
+  return gda_server_provider_perform_operation (provider,cnc,op,error);
+}
+
+/**
+ * gda_server_operation_render:
+ * @op: a #GdaServerOperation object
+ * @error: (allow-none): a place to store an error, or %NULL
+ *
+ * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
+ * @op operation. Note that the returned string may actually contain more than one SQL statement.
+ *
+ * This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
+ * the operation; to actually perform the operation, use gda_server_operation_perform().
+ *
+ * Returns: (transfer full) (allow-none): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
+ */
+gchar *
+gda_server_operation_render (GdaServerOperation *op, GError **error)
+{
+  GdaServerProvider *provider;
+  GdaConnection *cnc;
+
+  g_return_val_if_fail (op,NULL);
+  g_return_val_if_fail (GDA_IS_SERVER_OPERATION(op),NULL);
+
+  g_object_get (op,"provider",&provider,"connection",&cnc,NULL);
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	g_return_val_if_fail (GDA_IS_CONNECTION(cnc), NULL);
+
+	return (gchar*) gda_server_provider_render_operation(provider,cnc,op,error);
+}
