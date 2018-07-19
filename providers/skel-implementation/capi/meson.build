@@ -14,10 +14,12 @@ endforeach
 capi_xml_inf = files(capi_xml_fnamesext)
 
 foreach xf : capi_xml_fnames
-	install_data(xf+'.xml.in',
-		rename: [
-			xf+'.xml'
-			],
+	oxf = configure_file(
+		input: xf+'.xml.in',
+		output: xf+'.xml',
+		configuration: tconf
+		)
+	install_data(oxf,
 		install_dir: join_paths(get_option('datadir'), project_package)
 		)
 endforeach
@@ -138,7 +140,7 @@ capi_lemon_parserh = custom_target('capi_lemon-parser_h',
 
 capi_lemon_parserh_dep = declare_dependency(sources: capi_lemon_parserh)
 
-capi_gendef = executable('gen_def', 'gen_def.c',
+capi_gendef = executable('capi_gen_def', 'gen_def.c',
 	c_args: [
 		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
 		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'

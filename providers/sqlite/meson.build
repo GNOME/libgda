@@ -6,22 +6,17 @@ foreach fn : sqlite_xml_fnames
 	sqlite_xml_fnamesextf += [fn+'.xml.in']
 endforeach
 
-install_data(sqlite_xml_fnamesextf,
-	rename: [
-		'sqlite_specs_dsn.xml',
-		'sqlite_specs_create_db.xml',
-		'sqlite_specs_drop_db.xml',
-		'sqlite_specs_create_table.xml',
-		'sqlite_specs_drop_table.xml',
-		'sqlite_specs_create_index.xml',
-		'sqlite_specs_drop_index.xml',
-		'sqlite_specs_rename_table.xml',
-		'sqlite_specs_add_column.xml',
-		'sqlite_specs_create_view.xml',
-		'sqlite_specs_drop_view.xml'
-		],
-	install_dir: join_paths(get_option('datadir'), project_package)
-	)
+foreach cfn : sqlite_xml_fnames
+	ocfn = configure_file(
+		input: cfn+'.xml.in',
+		output: cfn+'.xml',
+		configuration: tconf
+		)
+	install_data(ocfn,
+		install_dir: join_paths(get_option('datadir'), project_package)
+		)
+endforeach
+
 foreach xt : sqlite_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',

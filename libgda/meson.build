@@ -273,6 +273,7 @@ libgda = library(
 	)
 
 # GObject Introspection
+if girscanner.found()
 gi_sources = [
 	libgda_sources,
 	libgda_headers,
@@ -303,23 +304,23 @@ libgda_gir = gnome_module.generate_gir(libgda,
 	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0'),
 	)
-
-if vapigen.found()
-libgda_vapi = custom_target(project_package,
-	command: [vapigen,
-		'--girdir='+meson.current_source_dir(),
-		'--metadatadir='+meson.current_source_dir(),
-		'--library='+project_package,
-		'--directory='+meson.current_build_dir(),
-		'--pkg=libxml-2.0',
-		'--pkg=gio-2.0',
-		'@INPUT0@', '@INPUT1@'
-		],
-	input: [libgda_gir[0],'Gda-'+project_api_version+'-custom.vala'],
-	output: project_package+'.vapi',
-	install: true,
-	install_dir: join_paths(get_option('datadir'),'vala','vapi')
-	)
+	if vapigen.found()
+	libgda_vapi = custom_target(project_package,
+		command: [vapigen,
+			'--girdir='+meson.current_source_dir(),
+			'--metadatadir='+meson.current_source_dir(),
+			'--library='+project_package,
+			'--directory='+meson.current_build_dir(),
+			'--pkg=libxml-2.0',
+			'--pkg=gio-2.0',
+			'@INPUT0@', '@INPUT1@'
+			],
+		input: [libgda_gir[0],'Gda-'+project_api_version+'-custom.vala'],
+		output: project_package+'.vapi',
+		install: true,
+		install_dir: join_paths(get_option('datadir'),'vala','vapi')
+		)
+	endif
 endif
 
 # Tests

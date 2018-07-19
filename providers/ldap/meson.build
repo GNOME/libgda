@@ -25,21 +25,20 @@ endforeach
 
 ldap_xml_inf = files(ldap_xml_fnamesext)
 
-foreach xf : ldap_xml_fnames
-	install_data(xf+'.xml.in',
-		rename: [
-			xf+'.xml'
-			],
-		install_dir: join_paths(get_option('datadir'), project_package)
-		)
-endforeach
-
 foreach xt : ldap_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
 		output: xt+'.xml.in.h',
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
+		)
+	osf = configure_file(
+		input: xt+'.xml.in',
+		output: xt+'.xml',
+		configuration: tconf
+		)
+	install_data(osf,
+		install_dir: join_paths(get_option('datadir'), project_package)
 		)
 endforeach
 

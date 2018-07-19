@@ -6,6 +6,19 @@ subdir('common')
 subdir('base')
 subdir('help')
 
+dates = compiler.run('''
+#include<glib.h>
+#include <glib/gprintf.h>
+
+void main (void) {
+  GDateTime *dt;
+  dt = g_date_time_new_now_local ();
+  g_print (g_date_time_format(dt, "%F"));
+}
+''',
+dependencies: glib_dep
+)
+
 gda_sql_sources = files([
 	'tools-main.c'
 	])
@@ -41,10 +54,9 @@ gda_sql = executable('gda-sql-'+project_api_version,
 
 manconf = configuration_data()
 manconf.set('GDA_ABI_VERSION', project_api_version)
-manconf.set('PACKAGE_VERSION', project_version)
+manconf.set('PACKAGE_VERSION', project_package)
 manconf.set('gdasysconfdir', get_option('sysconfdir'))
-manconf.set('GDA_BUILDDATE', datec.stdout())
-
+manconf.set('GDA_BUILDDATE', dates.stdout())
 gda_sql_man = configure_file(
 	input: 'gda-sql.1.in',
 	output: 'gda-sql.1',

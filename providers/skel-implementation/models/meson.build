@@ -5,19 +5,7 @@ inc_libgda_modelsh_dep = declare_dependency (include_directories : inc_libgda_mo
 models_xml_fnames = [
 	'models_specs_dsn',
 	]
-models_xml_fnamesext = []
-foreach fn : models_xml_fnames
-	models_xml_fnamesext += [fn+'.xml.in']
-endforeach
 
-models_xml_inf = files(models_xml_fnamesext)
-
-install_data(models_xml_fnamesext,
-	rename: [
-		'sqlite_specs_dsn.xml',
-		],
-	install_dir: join_paths(get_option('datadir'), project_package)
-	)
 foreach xt : models_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
@@ -25,6 +13,14 @@ foreach xt : models_xml_fnames
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
 		)
+	# osf = configure_file(
+	# 	input: xt+'.xml.in',
+	# 	output: xt+'.xml',
+	# 	configuration: tconf
+	# 	)
+	# install_data(osf,
+	# 	install_dir: join_paths(get_option('datadir'), project_package)
+	# 	)
 endforeach
 
 foreach xr : models_xml_fnames

@@ -30,6 +30,8 @@ glib_genmarshal = find_program('glib-genmarshal', required : true)
 
 glib_mkenums = find_program('glib-mkenums', required : true)
 
+girscanner = find_program('g-ir-scanner', required:false)
+
 inc_rooth = include_directories ('.')
 inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
 
@@ -95,16 +97,7 @@ if ldap_lib_dep.found()
 	endif
 endif
 
-datec = compiler.run('''
-#include <glib.h>
-
-gint main (void) {
-	GDateTime *dt = g_date_time_new_now_utc ();
-	g_print (g_date_time_format (dt, "%F"));
-}
-''',
-	dependencies: glib_dep
-	)
+tconf = configuration_data() # Empty configuration
 
 conf = configuration_data()
 if glib_genmarshal.found()
@@ -120,13 +113,13 @@ endif
 conf.set('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
 conf.set('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
 conf.set('VERSION', project_version)
-conf.set('GDA_VERSION', project_version)
-conf.set('GDA_ABI_VERSION', project_version)
 conf.set('prefix', get_option('prefix'))
 conf.set('exec_prefix', get_option('libexecdir'))
 conf.set('libdir', get_option('libdir'))
 conf.set('includedir', get_option('includedir'))
 conf.set('GDA_DEBUG_FLAGS', '')
+conf.set('LIBGDA_BDB_INC', '')
+conf.set('LIBGDA_BDB_TYPE', '')
 if ldap_found
 	conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
 	conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
@@ -135,16 +128,14 @@ if ldap_found
 	conf.set('LIBGDA_LDAP_TYPE2',LIBGDA_LDAP_TYPE2)
 	conf.set('LIBGDA_LDAP_TYPE3',LIBGDA_LDAP_TYPE3)
 endif
-conf.set('LIBGDA_BDB_INC','')
-conf.set_quoted('LIBGDA_BDB_TYPE','')
 
 confh = configuration_data()
-if compiler.has_header('locale.h')
-	confh.set ('HAVE_LOCALE_H', '1')
-endif
 confh.set_quoted('PACKAGE_LOCALE_DIR', join_paths(get_option('prefix'), get_option('datadir'), 'locale'))
 confh.set_quoted('GETTEXT_PACKAGE', project_package)
 confh.set_quoted('PACKAGE_VERSION', project_version)
+if compiler.has_header('locale.h')
+	confh.set ('HAVE_LOCALE_H', '1')
+endif
 configh = configure_file(output : 'config.h',
 			configuration : confh)
 

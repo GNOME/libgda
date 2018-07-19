@@ -92,10 +92,12 @@ endforeach
 data_entries_xml_inf = files(data_entries_xmlin_namesext)
 
 foreach xf : data_entries_xmlin_names
-	install_data(xf+'.xml.in',
-		rename: [
-			xf+'.xml'
-			],
+	oxf = configure_file(
+		input: xf+'.xml.in',
+		output: xf+'.xml',
+		configuration: tconf
+		)
+	install_data(oxf,
 		install_dir: join_paths(get_option('datadir'), project_package,'ui')
 		)
 endforeach
