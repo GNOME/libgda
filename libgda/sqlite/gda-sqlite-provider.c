@@ -1159,42 +1159,36 @@ gda_sqlite_provider_supports_operation (G_GNUC_UNUSED GdaServerProvider *provide
  * Create operation request
  */
 static GdaServerOperation *
-gda_sqlite_provider_create_operation (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc,
+gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaServerOperationType type,
 				      G_GNUC_UNUSED GdaSet *options, GError **error)
 {
-        gchar *file;
-        GdaServerOperation *op;
-        gchar *str;
-	gchar *dir;
-        file = g_strdup_printf (PNAME "_specs_%s", gda_server_operation_op_type_to_string (type));
-        str = g_utf8_strdown (file, -1);
-        g_free (file);
+  gchar *file;
+  GdaServerOperation *op;
+  gchar *str;
+  
+  file = g_strdup_printf (PNAME "_specs_%s", gda_server_operation_op_type_to_string (type));
+  str = g_utf8_strdown (file, -1);
+ 
+  g_free (file);
+  file = NULL;
 
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
+  gchar *lpname;
+  lpname = g_utf8_strdown (PNAME, -1);
+  file = g_strdup_printf ("/spec/%s/%s.raw.xml", lpname, str);
+  g_free (lpname);
 
-	if (file) {
-		g_free (str);
-		op = gda_server_operation_new (type, file);
-		g_free (file);
-	}
-	else {
-		gchar *lpname;
-		lpname = g_utf8_strdown (PNAME, -1);
-		file = g_strdup_printf ("/spec/%s/%s.raw.xml", lpname, str);
-		g_free (str);
-		g_free (lpname);
-		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
-							 "spec-resource", file, NULL));
-		g_free (file);
-	}
+  op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, 
+                                           "op-type", type, 
+                                           "spec-resource", file, 
+                                           "provider", provider, 
+                                           "connection", cnc,
+                                           NULL));
 
-        return op;
+  g_free (file);
+  g_free (str);
+
+  return op;
 }
 
 /*

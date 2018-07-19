@@ -248,6 +248,8 @@ GdaServerOperation *gda_server_operation_prepare_create_database       (const gc
 gboolean            gda_server_operation_perform_create_database       (GdaServerOperation *op, const gchar *provider, GError **error);
 GdaServerOperation *gda_server_operation_prepare_drop_database         (const gchar *provider, const gchar *db_name, GError **error);
 gboolean            gda_server_operation_perform_drop_database         (GdaServerOperation *op, const gchar *provider, GError **error);
+gboolean            gda_server_operation_perform                       (GdaServerOperation *op, GError **error);
+gchar              *gda_server_operation_render                        (GdaServerOperation *op, GError **error);
 
 /*
  * Tables creation and destruction
