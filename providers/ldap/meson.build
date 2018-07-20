@@ -25,6 +25,7 @@ endforeach
 
 ldap_xml_inf = files(ldap_xml_fnamesext)
 
+ldap_xml_res = []
 foreach xt : ldap_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
@@ -32,25 +33,13 @@ foreach xt : ldap_xml_fnames
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
 		)
-	osf = configure_file(
-		input: xt+'.xml.in',
-		output: xt+'.xml',
-		configuration: tconf
-		)
-	install_data(osf,
-		install_dir: join_paths(get_option('datadir'), project_package)
-		)
-endforeach
-
-ldap_xml_res = []
-foreach xrp : ldap_xml_fnames
-	ldap_xml_res += custom_target(xrp+'.raw.xml',
+	ldap_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
-		input: xrp+'.xml.in',
-		output: xrp+'.raw.xml',
+		input: xt+'.xml.in',
+		output: xt+'.raw.xml',
 		)
 endforeach
 

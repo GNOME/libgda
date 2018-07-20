@@ -20,39 +20,22 @@ postgres_xml_fnames = [
 	'postgres_specs_dsn',
 	'postgres_specs_rename_table'
 	]
-postgres_xml_fnamesext = []
-foreach fn : postgres_xml_fnames
-	postgres_xml_fnamesext += [fn+'.xml.in']
-endforeach
 
-postgres_xml_inf = files(postgres_xml_fnamesext)
-
+postgres_xml_res = []
 foreach xt : postgres_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
-		output: xt+'.xml.in.h',
+		output: xt+'.xml',
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
 		)
-	osf = configure_file(
-		input: xt+'.xml.in',
-		output: xt+'.xml',
-		configuration: tconf
-		)
-	install_data(osf,
-		install_dir: join_paths(get_option('datadir'), project_package)
-		)
-endforeach
-
-postgres_xml_res = []
-foreach xrp : postgres_xml_fnames
-	postgres_xml_res += custom_target(xrp+'.raw.xml',
+	postgres_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
-		input: xrp+'.xml.in',
-		output: xrp+'.raw.xml',
+		input: xt+'.xml.in',
+		output: xt+'.raw.xml',
 		)
 endforeach
 

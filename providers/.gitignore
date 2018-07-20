@@ -1,4 +1,4 @@
-*.xml
+*.raw.xml
 parser.c
 parser.h
 gen_def

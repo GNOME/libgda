@@ -1,40 +1,22 @@
 inc_libgda_sqliteh = include_directories ('.')
 inc_libgda_sqliteh_dep = declare_dependency (include_directories : inc_libgda_sqliteh)
 
-sqlite_xml_fnamesextf = []
-foreach fn : sqlite_xml_fnames
-	sqlite_xml_fnamesextf += [fn+'.xml.in']
-endforeach
-
-foreach cfn : sqlite_xml_fnames
-	ocfn = configure_file(
-		input: cfn+'.xml.in',
-		output: cfn+'.xml',
-		configuration: tconf
-		)
-	install_data(ocfn,
-		install_dir: join_paths(get_option('datadir'), project_package)
-		)
-endforeach
-
+xml_res = []
 foreach xt : sqlite_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
 		output: xt+'.xml',
 		type: 'xml',
-		po_dir: 'po'
+		po_dir: 'po',
+		install_dir: join_paths(get_option('datadir'),project_package)
 		)
-endforeach
-
-xml_res = []
-foreach xr : sqlite_xml_fnames
-	xml_res += custom_target(xr+'.raw.xml',
+	xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
-		input: xr+'.xml.in',
-		output: xr+'.raw.xml',
+		input: xt+'.xml.in',
+		output: xt+'.raw.xml',
 		)
 endforeach
 

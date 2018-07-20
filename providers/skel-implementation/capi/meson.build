@@ -6,45 +6,24 @@ capi_xml_fnames = [
 	'capi_specs_dsn',
 	'capi_specs_create_table',
 	]
-capi_xml_fnamesext = []
-foreach fn : capi_xml_fnames
-	capi_xml_fnamesext += [fn+'.xml.in']
-endforeach
 
-capi_xml_inf = files(capi_xml_fnamesext)
-
-foreach xf : capi_xml_fnames
-	oxf = configure_file(
-		input: xf+'.xml.in',
-		output: xf+'.xml',
-		configuration: tconf
-		)
-	install_data(oxf,
-		install_dir: join_paths(get_option('datadir'), project_package)
-		)
-endforeach
-
+capi_xml_res = []
 foreach xt : capi_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
-		output: xt+'.xml.in.h',
+		output: xt+'.xml',
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
 		)
-endforeach
-
-capi_xml_res = []
-foreach xrc : capi_xml_fnames
-	capi_xml_res += custom_target(xrc+'.raw.xml',
+	capi_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
 			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
-		input: xrc+'.xml.in',
-		output: xrc+'.raw.xml',
+		input: xt+'.xml.in',
+		output: xt+'.raw.xml',
 		)
 endforeach
-
 
 capi_resourcesc = custom_target('capi_resourcesc',
 	command: [compile_resources,
