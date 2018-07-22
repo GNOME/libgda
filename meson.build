@@ -212,9 +212,26 @@ intlmerge = find_program('intltool-merge')
 # Vala bindings
 vapigen = find_program('vapigen', required: false)
 
+found_jdbc = false
+
+
+dates = compiler.run('''
+#include<glib.h>
+#include <glib/gprintf.h>
+
+void main (void) {
+  GDateTime *dt;
+  dt = g_date_time_new_now_local ();
+  g_print (g_date_time_format(dt, "%F"));
+}
+''',
+dependencies: glib_dep
+)
+
 subdir('po')
 subdir('libgda')
 subdir('providers')
+subdir('doc')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
 enable_ui = get_option('with-ui') and gtk_dep.found()
@@ -298,7 +315,6 @@ libgda_report_pc = configure_file(
 	)
 endif
 
-subdir('doc')
 subdir('tools')
 subdir('tests')
 subdir('testing')

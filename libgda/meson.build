@@ -178,8 +178,10 @@ libgda_sources= files([
 	'gda-data-pivot.c'
 	])
 
+libgda_source_csvh = files([
+	'csv.h'
+	])
 libgda_source_all = files([
-	'csv.h',
 	'libcsv.c',
 	'dir-blob-op.h',
 	'dir-blob-op.c',
@@ -206,6 +208,7 @@ libgda_source_all += [
 	libgda_headers_all,
 	gda_enums,
 	gda_marshalls,
+	libgda_source_csvh
 	]
 libgda_source_all += [
 	sqlitesources,

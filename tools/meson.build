@@ -6,19 +6,6 @@ subdir('common')
 subdir('base')
 subdir('help')
 
-dates = compiler.run('''
-#include<glib.h>
-#include <glib/gprintf.h>
-
-void main (void) {
-  GDateTime *dt;
-  dt = g_date_time_new_now_local ();
-  g_print (g_date_time_format(dt, "%F"));
-}
-''',
-dependencies: glib_dep
-)
-
 gda_sql_sources = files([
 	'tools-main.c'
 	])

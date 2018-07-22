@@ -5,8 +5,13 @@ libgda_ui_internal_sources = files([
 	'gdaui-provider-auth-editor.h',
 	'gdaui-provider-spec-editor.c',
 	'gdaui-provider-spec-editor.h',
-	'popup-container.h',
 	'popup-container.c',
 	'utility.h',
 	'utility.c'
 	])
+
+libgda_ui_popup_containerh = files([
+	'popup-container.h',
+	])
+
+libgda_ui_internal_sources += libgda_ui_popup_containerh
