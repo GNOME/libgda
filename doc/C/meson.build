@@ -78,8 +78,17 @@ gnome_module.gtkdoc(project_package,
 	main_sgml: project_package+'-docs.sgml',
 	content_files: contentf,
 	html_assets: html_images,
-	scan_args: '--deprecated-guards="GDA_DISABLE_DEPRECATED"',
-	html_args: '--path="'+meson.current_build_dir()+'"',
+	scan_args: [
+		'--deprecated-guards="GDA_DISABLE_DEPRECATED"',
+		'--ignore_headers',
+		'gda-marshal.h', 'gda-custom-marshal.h', 'gda-enum-types.h', 'sqlite3.h',
+		'csv.h', 'md5.h', 'jni-wrapper.h', 'gda-jdbc-recordset.h',
+		'gda-jdbc-blob-op.h', 'gda-jdbc-provider.h', 'gda-jdbc-pstmt.h',
+		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp'
+		 ],
+	html_args: [
+		'--path="'+meson.current_build_dir()+'"',
+		],
 	src_dir: join_paths(meson.source_root(),'doc','src-files'),
 	mkdb_args: [
 		'--sgml-mode',
@@ -89,12 +98,5 @@ gnome_module.gtkdoc(project_package,
 		'delimiter.c', 'binreloc.c', 'libcsv.c',
 		'md5c.c', 'providers', 'tools', 'control-center',
 		'tests', 'tmp', 'examples','plugins'
-	],
-	scan_args: [
-		'--ignore_headers',
-		'gda-marshal.h', 'gda-custom-marshal.h', 'gda-enum-types.h', 'sqlite3.h',
-		'csv.h', 'md5.h', 'jni-wrapper.h', 'gda-jdbc-recordset.h',
-		'gda-jdbc-blob-op.h', 'gda-jdbc-provider.h', 'gda-jdbc-pstmt.h',
-		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp'
-		 ]
+		],
 	)

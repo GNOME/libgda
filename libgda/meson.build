@@ -321,7 +321,8 @@ libgda_gir = gnome_module.generate_gir(libgda,
 		input: [libgda_gir[0],'Gda-'+project_api_version+'-custom.vala'],
 		output: project_package+'.vapi',
 		install: true,
-		install_dir: join_paths(get_option('datadir'),'vala','vapi')
+		install_dir: join_paths(get_option('datadir'),'vala','vapi'),
+		depends: libgda_gir
 		)
 	endif
 endif

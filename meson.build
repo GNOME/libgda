@@ -32,6 +32,8 @@ glib_mkenums = find_program('glib-mkenums', required : true)
 
 girscanner = find_program('g-ir-scanner', required:false)
 
+valadoc = find_program('valadoc', required: false)
+
 inc_rooth = include_directories ('.')
 inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
 
