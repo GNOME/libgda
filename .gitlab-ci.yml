@@ -61,14 +61,26 @@ autotools_build:
 meson_build:
   stage: build
   script:
-  - meson _build
+  - meson _build --prefix=/usr
   - cd _build
   - ninja
   - broadwayd &
   - GDK_BACKEND=broadway meson test
+  - ninja install
   - cd ..
   artifacts:
     when: on_failure
     paths:
     - _build/meson-logs/meson-log.txt
+    - _build/doc/C
+    - _build/doc/valadoc/libgda-6.0
     expire_in: 1 week
+pages:
+  script:
+  - meson _build
+  - cd _build
+  - ninja
+  - ninja install
+  - mv doc/index.html public/
+  - mv doc/C ../public/C
+  - mv doc/valadoc/libgda-6.0 ../public/vala
