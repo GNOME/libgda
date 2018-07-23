@@ -76,6 +76,7 @@ meson_build:
     - _build/doc/valadoc/libgda-6.0
     expire_in: 1 week
 pages:
+  stage: build
   script:
   - meson _build
   - cd _build
@@ -84,3 +85,6 @@ pages:
   - mv doc/index.html public/
   - mv doc/C ../public/C
   - mv doc/valadoc/libgda-6.0 ../public/vala
+  artifacts:
+    paths:
+    - public
