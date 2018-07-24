@@ -15,7 +15,7 @@ if valadoc.found()
 			'@INPUT@'
 			],
 		input: libgda_vapi,
-		output: 'valadoc',
+		output: '.',
 		build_by_default: true,
 		install: true,
 		install_dir: join_paths (get_option ('datadir'), 'devhelp','books'),
