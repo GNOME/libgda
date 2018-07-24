@@ -12,9 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-05-05 12:42+0000\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
+"POT-Creation-Date: 2018-06-19 15:38+0000\n"
 "PO-Revision-Date: 2016-06-30 10:17+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
@@ -145,8 +144,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:106 ../libgda-ui/gdaui-init.c:114
 #: ../libgda-ui/gdaui-init.c:545 ../libgda-ui/gdaui-login.c:448
-#: ../libgda-ui/gdaui-rt-editor.c:732
-#: ../providers/jdbc/gda-jdbc-provider.c:520
+#: ../libgda-ui/gdaui-rt-editor.c:732 ../providers/jdbc/gda-jdbc-provider.c:520
 #: ../providers/jdbc/gda-jdbc-provider.c:1467
 #: ../providers/jdbc/gda-jdbc-provider.c:1496
 #: ../providers/jdbc/gda-jdbc-provider.c:1558
@@ -175,8 +173,7 @@ msgstr "No se pudo ejecutar el visor"
 #: ../tools/browser/browser-connection.c:1145
 #: ../tools/browser/browser-connection.c:1361
 #: ../tools/browser/browser-window.c:920 ../tools/browser/browser-window.c:934
-#: ../tools/browser/browser-window.c:948
-#: ../tools/browser/browser-window.c:1173
+#: ../tools/browser/browser-window.c:948 ../tools/browser/browser-window.c:1173
 #: ../tools/browser/browser-window.c:1214
 #: ../tools/browser/browser-window.c:1482
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
@@ -413,8 +410,8 @@ msgid "Authentication"
 msgstr "Autenticación"
 
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84
-#: ../tools/browser/auth-dialog.c:232 ../tools/browser/login-dialog.c:193
+#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:232
+#: ../tools/browser/login-dialog.c:193
 msgid "Connection opening"
 msgstr "Abriendo conexión"
 
@@ -3530,10 +3527,9 @@ msgstr "Tipo de dato"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1017 ../tools/config-info.c:122
-#: ../tools/config-info.c:291 ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995
-#: ../tools/gda-sql.c:5375
+#: ../libgda-ui/gdaui-raw-grid.c:785 ../providers/ldap/gda-ldap-provider.c:1017
+#: ../tools/config-info.c:122 ../tools/config-info.c:291
+#: ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995 ../tools/gda-sql.c:5375
 msgid "Value"
 msgstr "Valor"
 
@@ -5532,16 +5528,14 @@ msgstr "Proveedor para bases de datos Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Proveedor para bases datos Firebird empotradas"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
-#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
-#: ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
+#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "Argumento no válido: nulo (NULL)"
 
-#: ../providers/jdbc/GdaInputStream.c:68
-#: ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "No se puede leer el BLOB"
 
@@ -7602,8 +7596,7 @@ msgstr "Se requiere al menos la versión 5.0 de MySQL"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-meta.c:105
-#: ../providers/web/gda-web-recordset.c:310
+#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "No se pueden importar los datos del servidor web"
 
@@ -9080,7 +9073,6 @@ msgstr ""
 "permite al usuario ver los datos de la base de datos en forma de tabla."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
-#| msgid "Browse"
 msgid "GdaBrowser"
 msgstr "GdaBrowser"
 
@@ -9197,9 +9189,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:507
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:513
-#: ../tools/browser/ldap-browser/ldap-search-page.c:465
-#: ../tools/gda-sql.c:2415 ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435
-#: ../tools/gda-sql.c:2443
+#: ../tools/browser/ldap-browser/ldap-search-page.c:465 ../tools/gda-sql.c:2415
+#: ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435 ../tools/gda-sql.c:2443
 msgid "LDAP"
 msgstr "LDAP"
 
