@@ -39,6 +39,11 @@ struct _GdaDdlTableClass {
     GdaDdlBaseClass parent_class;
 };
 
+/**
+ * GdaDdlTableError:
+ * @GDA_DDL_TABLE_COLUMN_EMPTY: Table doesn't contain columns
+ *
+ */
 typedef enum {
     GDA_DDL_TABLE_COLUMN_EMPTY,
 }GdaDdlTableError;

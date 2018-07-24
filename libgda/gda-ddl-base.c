@@ -28,6 +28,17 @@ typedef struct
   gchar *m_fullname;
 } GdaDdlBasePrivate;
 
+/**
+ * SECTION:gda-ddl-base 
+ * @short_description: The basic class for all database objects
+ * @see_also: #GdaDdlTable, #GdaDdlView
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * This is a basic class for database objects, e.g. #GdaDdlTable and #GdaDdlView. It is not common to
+ * use it directly. 
+ */
+
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlBase, gda_ddl_base, G_TYPE_OBJECT)
 
 /**
@@ -251,6 +262,8 @@ gda_ddl_base_free (GdaDdlBase *self)
  * gda_ddl_base_set_catalog:
  * @self: a #GdaDdlBase instance
  * @catalog: Catalog name as a string
+ * 
+ * Set catalog name
  *
  * Since: 6.0
  */
@@ -271,6 +284,8 @@ gda_ddl_base_set_catalog (GdaDdlBase  *self,
  * @self: a #GdaDdlBase instance
  * @schema: Schema name as a string
  *
+ * Set object schema.
+ *
  * Since: 6.0
  */
 void
@@ -289,6 +304,8 @@ gda_ddl_base_set_schema (GdaDdlBase  *self,
  * gda_ddl_base_set_name:
  * @self: a #GdaDdlBase instance
  * @name: Object name as a string
+ * 
+ * Set object name
  *
  * Since: 6.0
  */

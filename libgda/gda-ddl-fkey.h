@@ -1,6 +1,6 @@
 /* gda-ddl-fkey.h
  *
- * Copyright (C) 2018 Pavlo Solntsev <pavlo.solntsev@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,6 +39,16 @@ struct _GdaDdlFkeyClass {
     GObjectClass parent_class;
 };
 
+/**
+ * GdaDdlFkeyReferenceAction:
+ * @GDA_DDL_FKEY_NO_ACTION: Action is not specified. 
+ * @GDA_DDL_FKEY_SET_NULL: Action value is set to %NULL
+ * @GDA_DDL_FKEY_RESTRICT: Value is set to "RESTRICT"
+ * @GDA_DDL_FKEY_SET_DEFAULT: Value is set to default behavior  
+ * @GDA_DDL_FKEY_CASCADE: Value is set to cascade
+ * 
+ * Specify numeric value for the actions, e.g. "ON DELETE" and "ON UPDATE"
+ */
 typedef enum {
     GDA_DDL_FKEY_NO_ACTION,
     GDA_DDL_FKEY_SET_NULL,
@@ -47,16 +57,6 @@ typedef enum {
     GDA_DDL_FKEY_CASCADE
 } GdaDdlFkeyReferenceAction;
 
-/**
- * SECTION:gda-ddl-fkey
- * @short_description: Object to hold information for foregn key.
- * @stability: Stable
- * @include: libgda.h
- *
- * For generating database from xml file or for mapping
- * database to an xml file #GdaDdlFkey holds information about
- * foregn keys with a convenient set of methods to manipulate them.
- */
 
 GdaDdlFkey*       gda_ddl_fkey_new             (void);
 

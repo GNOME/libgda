@@ -37,6 +37,18 @@ typedef struct
   GdaDdlFkeyReferenceAction m_ondelete;
 }GdaDdlFkeyPrivate;
 
+/**
+ * SECTION:gda-ddl-fkey
+ * @short_description: Object to hold information for foregn key.
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * For generating database from xml file or for mapping
+ * database to an xml file #GdaDdlFkey holds information about
+ * foregn keys with a convenient set of methods to manipulate them.
+ * #GdaDdlFkey implements #GdaDdlBuildable interface for parsing xml file.
+ */
+
 static void gda_ddl_fkey_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDdlFkey, gda_ddl_fkey, G_TYPE_OBJECT,
@@ -444,8 +456,9 @@ gda_ddl_fkey_set_ondelete (GdaDdlFkey *self,
 
 /**
  * gda_ddl_fkey_get_onupdate:
+ * @self: a #GdaDdlFkey instance
  *
- * Return: ON_UPDATE action as a string. Never %NULL
+ * Returns: ON_UPDATE action as a string. Never %NULL
  *
  * Since: 6.0
  */
@@ -461,6 +474,7 @@ gda_ddl_fkey_get_onupdate (GdaDdlFkey *self)
 
 /**
  * gda_ddl_fkey_get_onupdate_id:
+ * @self: a #GdaDdlFkey instance
  *
  * Return: ON_UPDATE action as a #GdaDdlFkeyReferenceAction
  *
