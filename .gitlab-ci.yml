@@ -84,7 +84,7 @@ pages:
   - ninja install
   - mv doc/index.html public/
   - mv doc/C ../public/C
-  - mv doc/valadoc/libgda-6.0 ../public/vala
+  - mv doc/libgda-6.0 ../public/vala
   artifacts:
     paths:
     - public

@@ -5,6 +5,7 @@ if valadoc.found()
 		command: [ valadoc,
 			'--pkg=libxml-2.0',
 			'--pkg=gio-2.0',
+			'--force',
 			'--girdir='+join_paths(meson.build_root(),'libgda'),
 			'--metadatadir='+join_paths(meson.source_root(),'libgda'),
 			'--vapidir='+join_paths(meson.build_root(),'libgda'),
