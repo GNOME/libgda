@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+]>
+<sect2 id="DDLCreator">
+  <title>Database generation from file and dumping to file</title>
+  <para>
+    Database can be generated/updated from an xml file and also dunped to an xml file. Is can be 
+    done using <link linkend="GdaDdlCreator">GdaDdlCreator</link>, which provides essential 
+    functionality for database manipulation. The existing database can be expanded. Foreign keys
+    can't be added. This is a current limitation that should be resolved soon. 
+  </para>
+</sect2>

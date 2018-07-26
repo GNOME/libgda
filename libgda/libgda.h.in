@@ -87,6 +87,7 @@
 #include <libgda/gda-sql-builder.h>
 
 #include <libgda/gda-meta-store.h>
+#include <libgda/gda-ddl-creator.h>
 
 G_BEGIN_DECLS
 

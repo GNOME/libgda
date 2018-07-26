@@ -89,6 +89,15 @@
         </contrib>
       </author>
       <author>
+        <firstname>Pavlo</firstname>
+        <surname>Solntsev</surname>
+        <affiliation>
+          <address><email>p.sun.fun@gmail.com</email></address>
+        </affiliation>
+	<contrib>libgda
+        </contrib>
+      </author>
+      <author>
         <firstname>Vivien</firstname>
         <surname>Malerba</surname>
         <affiliation>
@@ -100,7 +109,7 @@
     </authorgroup>
     <date>&builddate;</date>
     <copyright>
-      <year>1999 - 2015</year>
+      <year>1999 - 2018</year>
       <holder>&copy;</holder>
     </copyright>
     <abstract>
@@ -1132,6 +1141,17 @@ g_object_unref (store);
       <xi:include href="xml/gda-server-operation.xml"/>
       <xi:include href="xml/gda-server-operation-nodes.xml"/>
       <xi:include href="xml/gda-server-operation-sequences.xml"/>
+    </chapter>
+
+    <chapter>
+      <title>Database manipulations</title>
+      <xi:include href="ddl-creator.xml"/>
+      <xi:include href="xml/gda-ddl-creator.xml"/>
+      <xi:include href="xml/gda-ddl-table.xml"/>
+      <xi:include href="xml/gda-ddl-view.xml"/>
+      <xi:include href="xml/gda-ddl-fkey.xml"/>
+      <xi:include href="xml/gda-ddl-base.xml"/>
+      <xi:include href="xml/gda-ddl-buildable.xml"/>
     </chapter>
 
     <chapter>

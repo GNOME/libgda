@@ -90,7 +90,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	visual_index.xml prov-notes.xml \
 	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types \
 	examples/blobtest.c \
-	data-model-writing.xml
+	data-model-writing.xml ddl-creator.xml
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
@@ -98,7 +98,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-6.0.types libgda-6.0-sections.txt
 
 DOC_STAMPS += pdf-build.stamp
-CLEANFILES += $(DOC_STAMPS)
+CLEANFILES += $(DOC_STAMPS) libgda-6.0-sections.txt
 
 # Create the PDF
 PDF: pdf-build.stamp
@@ -107,3 +107,26 @@ pdf-build.stamp:
 		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE) -o $(DOC_MODULE)-doc.pdf ; \
 	fi
 	touch pdf-build.stamp
+
+if ENABLE_GTK_DOC
+TESTS_ENVIRONMENT = \
+  DOC_MODULE=$(DOC_MODULE) DOC_MAIN_SGML_FILE=$(DOC_MAIN_SGML_FILE) \
+  SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir)
+TESTS = $(GTKDOC_CHECK)
+endif
+
+libgda-6.0-sections.txt: libgda-sections.txt libgda-ui-sections.txt
+	cp ${srcdir}/libgda-sections.txt ${srcdir}/libgda-6.0-sections.txt
+	echo "" >> ${srcdir}/libgda-6.0-sections.txt
+	cat ${srcdir}/libgda-ui-sections.txt >> ${srcdir}/libgda-6.0-sections.txt
+	cp ${srcdir}/libgda-6.0-sections.txt ${srcdir}/libgda-6.0-sections.txt.tmp
+	mv ${srcdir}/libgda-6.0-sections.txt.tmp ${srcdir}/libgda-6.0-sections.txt
+
+libgda-6.0.types: libgda.types libgda-ui.types
+	cp ${srcdir}/libgda.types ${srcdir}/libgda-6.0.types
+	if test HAVE_UI
+	then
+		echo "" >> ${srcdir}/libgda-6.0.types
+		cat ${srcdir}/doc/C/libgda-ui.types >> ${srcdir}/libgda-6.0.types
+	fi
+

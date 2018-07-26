@@ -1,6 +1,6 @@
 /* gda-ddl-column.h
  *
- * Copyright (C) 2018 Pavlo Solntsev <pavlo.solntsev@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,6 +38,12 @@ struct _GdaDdlColumnClass
   GObjectClass parent;
 };
 
+/**
+ * GdaDdlColumnError:
+ * @GDA_DDL_COLUMN_ERROR_TYPE: Set if wrong column type was given in the xml file.
+ *
+ * Values used to describe the source of the error. 
+ */
 typedef  enum {
   GDA_DDL_COLUMN_ERROR_TYPE
 }GdaDdlColumnError;

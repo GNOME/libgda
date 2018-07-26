@@ -1,6 +1,6 @@
 /* gda-ddl-column.c
  *
- * Copyright (C) 2018 Pavlo Solntsev <pavlo.solntsev@gmail.com>
+ * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,6 +44,18 @@ typedef struct
   gboolean m_unique; /* property */
   gboolean m_pkey; /* property */
 }GdaDdlColumnPrivate;
+
+/**
+ * SECTION:gda-ddl-column
+ * @short_description: Object to represent table column 
+ * @see_also: #GdaDdlTable, #GdaDdlView, #GdaDdlBuildable
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * This object represents a column of a table or a view. The column can be constracted manually
+ * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
+ * #GdaDdlColumn implements #GdaDdlBuildable interface for parsing xml file.
+ */
 
 /* All nodes in xml should be accessed using enum below */
 enum {
@@ -556,6 +568,8 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
  * gda_ddl_column_get_name:
  * @self: a #GdaDdlColumn instance
  *
+ * Returns name of the column 
+ *
  * Returns: Column name as a string or %NULL.
  *
  * Since: 6.0
@@ -608,6 +622,8 @@ gda_ddl_column_get_gtype (GdaDdlColumn *self)
 /**
  * gda_ddl_column_get_ctype:
  * @self: a #GdaDdlColumn object
+ * 
+ * Returns column type as a string derivied from #GType 
  *
  * Returns: column type as a string or %NULL
  *
@@ -680,6 +696,8 @@ gda_ddl_column_set_scale (GdaDdlColumn *self,
  * gda_ddl_column_get_pkey:
  * @self: a #GdaDdlColumn object
  *
+ * Returns a primary key flag
+ *
  * Returns: %TRUE if the column is primary key, %FALSE otherwise
  *
  * Since: 6.0
@@ -711,6 +729,10 @@ gda_ddl_column_set_pkey (GdaDdlColumn *self,
 /**
  * gda_ddl_column_get_nnul:
  * @self: a @GdaDdlColumn object
+ *
+ * Specify if the column's value can be NULL. 
+ *
+ * Returns: %TRUE if value can be %NULL, %FALSE otherwise. 
  *
  * Since: 6.0
  */
@@ -886,6 +908,8 @@ gda_ddl_column_set_size (GdaDdlColumn *self,
 /**
  * gda_ddl_column_get_default:
  * @self: a #GdaDdlColumn instance
+ * 
+ * Returns default value for the column. Can be %NULL if the default value hasn't been set.
  *
  * Returns: Default value for the column as a string.
  *
@@ -919,6 +943,8 @@ gda_ddl_column_set_default (GdaDdlColumn *self,
 /**
  * gda_ddl_column_get_check:
  * @self: a #GdaDdlColumn instance
+ * 
+ * Returns value of the check field.
  *
  * Returns: Column check string
  *

@@ -25,6 +25,7 @@
 #include <gmodule.h>
 #include "gda-connection.h"
 #include "gda-ddl-table.h"
+#include "gda-ddl-view.h"
 #include "gda-server-operation.h"
 #include <gio/gio.h>
 
@@ -38,11 +39,27 @@ struct _GdaDdlCreatorClass {
     GObjectClass parent;
 };
 
+/**
+ * GdaDdlCreatorError:
+ * @GDA_DDL_CREATOR_CONTEXT_NULL: Context is %NULL. Should not be %NULL for normal operation.
+ * @GDA_DDL_CREATOR_DOC_NULL: #xmlDocPtr is %NULL. 
+ * @GDA_DDL_CREATOR_INVALID_XML: Sets if xml check fails. Xml file structure doesn't match with DTD
+ * file
+ * @GDA_DDL_CREATOR_INVALID_SCHEMA: Sets if the used schema is invalid. 
+ * @GDA_DDL_CREATOR_SERVER_OPERATION: Sets if server operation is %NULL. 
+ * @GDA_DDL_CREATOR_FILE_READ: Sets if xml file is not readable
+ * @GDA_DDL_CREATOR_PARSE_CONTEXT: Sets if an error with context during parsing an xml file
+ * @GDA_DDL_CREATOR_PARSE: Sets if parsing reports an error
+ * @GDA_DDL_CREATOR_PARSE_CHUNK: If set, error with parse chunk algorithm.
+ * @GDA_DDL_CREATOR_CONNECTION_CLOSED: Connection is not open.
+ *
+ * These error are primary for developers to troubleshoot the problem rather than for user. 
+ */
 typedef  enum {
     GDA_DDL_CREATOR_CONTEXT_NULL,
     GDA_DDL_CREATOR_DOC_NULL,
-    GDA_DDL_CREATOR_UNVALID_XML,
-    GDA_DDL_CREATOR_UNVALID_SCHEMA,
+    GDA_DDL_CREATOR_INVALID_XML,
+    GDA_DDL_CREATOR_INVALID_SCHEMA,
     GDA_DDL_CREATOR_SERVER_OPERATION,
     GDA_DDL_CREATOR_FILE_READ,
     GDA_DDL_CREATOR_PARSE_CONTEXT,
@@ -76,7 +93,7 @@ void             gda_ddl_creator_append_table (GdaDdlCreator *self,
                                                const GdaDdlTable *table);
 
 void             gda_ddl_creator_append_view (GdaDdlCreator *self,
-                                              const GdaDdlTable *view);
+                                              const GdaDdlView *view);
 
 gboolean         gda_ddl_creator_perform_operation (GdaDdlCreator *self,
                                                     GdaConnection *cnc,

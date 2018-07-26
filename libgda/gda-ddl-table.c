@@ -39,6 +39,19 @@ typedef struct
   GList *mp_fkeys; /* List of all fkeys, GdaDdlFkey */
 } GdaDdlTablePrivate;
 
+/**
+ * SECTION:gda-ddl-table
+ * @title: GdaDdlTable
+ * @short_description: Object to represent table database object
+ * @see_also: #GdaDdlView, #GdaDdlCreator
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * This object represents a table of a database. The table view can be constracted manually
+ * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
+ * #GdaDdlTable implements #GdaDdlBuildable interface for parsing xml file.
+ */
+
 static void gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDdlTable, gda_ddl_table, GDA_TYPE_DDL_BASE,
