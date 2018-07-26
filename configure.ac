@@ -310,8 +310,17 @@ int main() {
 	PKG_CHECK_MODULES(GLADE, "gladeui-2.0", [
 			AC_DEFINE(HAVE_GLADE, [1], [Install Glade Catalog])
 			have_glade=yes
-			GLADE_CATALOG=`$PKG_CONFIG --variable=catalogdir gladeui-2.0`
-			GLADE_PIXMAP=`$PKG_CONFIG --variable=pixmapdir gladeui-2.0`], [have_glade=no])
+                        if test "x$GLADE_CATALOG_SEARCH_PATH" = "x"; then
+                                GLADE_CATALOG=`$PKG_CONFIG --variable=catalogdir gladeui-2.0`
+                        else
+                                GLADE_CATALOG=$GLADE_CATALOG_SEARCH_PATH
+                        fi
+                        if test "x$GLADE_PIXMAP_DIR" = "x"; then
+			        GLADE_PIXMAP=`$PKG_CONFIG --variable=pixmapdir gladeui-2.0`
+                        else
+			        GLADE_PIXMAP=$GLADE_PIXMAP_DIR
+                        fi
+                        ], [have_glade=no])
 fi
 
 AM_CONDITIONAL(HAVE_GDKPIXBUF, test x"$have_gdkpixbuf" = "xyes")
