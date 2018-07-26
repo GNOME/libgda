@@ -29,4 +29,29 @@ if valadoc.found()
 		install: true,
 		install_dir: join_paths (get_option ('datadir'), 'devhelp','books'),
 		)
+	if enable_ui
+	valaui_doc = custom_target('valaui_doc',
+		command: [ valadoc,
+			'--pkg=libxml-2.0',
+			'--pkg=gio-2.0',
+			'--pkg=gtk+-3.0',
+			'--pkg=libgda-6.0',
+			'--force',
+			'--girdir='+join_paths(meson.build_root(),'libgda-ui'),
+			'--metadatadir='+join_paths(meson.source_root(),'libgda-ui'),
+			'--vapidir='+join_paths(meson.build_root(),'libgda'),
+			'--vapidir='+join_paths(meson.build_root(),'libgda-ui'),
+			'--package-version='+project_version,
+			'--package-name='+'libgdaui-'+project_api_version,
+			'--doclet=devhelp',
+			'-o', '@OUTPUT@',
+			'@INPUT@'
+			],
+		input: libgdaui_vapi,
+		output: 'valaui',
+		build_by_default: true,
+		install: true,
+		install_dir: join_paths (get_option ('datadir'), 'devhelp','books'),
+		)
+	endif
 endif

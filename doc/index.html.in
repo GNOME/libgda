@@ -6,5 +6,7 @@
     <p>GDA is written in C, checkout API <a href="C">documentation</a></p>
     <h2>Vala API</h2>
     <p>GDA has GObject Introspection support, <a href="vala/libgda-@GDA_API_VERSION@.vapi">Vala Bindings</a> and <a href="vala/libgda-@GDA_API_VERSION@/index.htm">Vala Bindings Documentation</a></p>
+    <h2>GTK+ Widgets Vala API</h2>
+    <p>GDA provides a set of GTK+ widgets you can use in your application, <a href="vala/libgdaui-@GDA_API_VERSION@.vapi">Vala Bindings</a> and <a href="vala/libgdaui-@GDA_API_VERSION@/index.htm">Vala Bindings Documentation</a></p>
   </body>
 </html>

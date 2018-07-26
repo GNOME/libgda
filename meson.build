@@ -233,7 +233,6 @@ dependencies: glib_dep
 subdir('po')
 subdir('libgda')
 subdir('providers')
-subdir('doc')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
 enable_ui = get_option('with-ui') and gtk_dep.found()
@@ -270,6 +269,8 @@ int main() {
 	subdir('libgda-ui')
 	subdir('libgda-report')
 endif
+
+subdir('doc')
 
 if libxslt_dep.found()
 	subdir('libgda-xslt')
