@@ -138,6 +138,7 @@ gda_transaction_status_event_copy (GdaTransactionStatusEvent *src) {
 	cp->pl.sql = g_strdup (src->pl.sql);
 	cp->pl.sub_trans = src->pl.sub_trans;
 	cp->conn_event = src->conn_event;
+  return cp;
 }
 void
 gda_transaction_status_event_free (GdaTransactionStatusEvent *te) {

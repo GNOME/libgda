@@ -286,7 +286,7 @@ gda_data_model_ldap_dispose (GObject *object)
                 }
 		if (model->priv->attributes) {
 			gint i;
-			for (i = 0; i < model->priv->attributes->len; i++) {
+			for (i = 0; (guint) i < model->priv->attributes->len; i++) {
 				gchar *tmp;
 				tmp = g_array_index (model->priv->attributes, gchar*, i);
 				g_free (tmp);
@@ -313,7 +313,7 @@ gda_data_model_ldap_dispose (GObject *object)
 
 		if (model->priv->exceptions) {
 			gint i;
-			for (i = 0; i < model->priv->exceptions->len; i++) {
+			for (i = 0; (guint) i < model->priv->exceptions->len; i++) {
 				GError *e;
 				e = g_array_index (model->priv->exceptions, GError*, i);
 				g_error_free (e);
@@ -1660,7 +1660,7 @@ static void
 row_multiplier_set_holders (RowMultiplier *rm)
 {
 	gint i;
-	for (i = 0; i < rm->cms->len; i++) {
+	for (i = 0; (guint) i < rm->cms->len; i++) {
 		ColumnMultiplier *cm;
 		GValue *value;
 		cm = g_array_index (rm->cms, ColumnMultiplier*, i);
@@ -1676,11 +1676,11 @@ static void
 row_multiplier_free (RowMultiplier *rm)
 {
 	gint i;
-	for (i = 0; i < rm->cms->len; i++) {
+	for (i = 0; (guint) i < rm->cms->len; i++) {
 		ColumnMultiplier *cm;
 		cm = g_array_index (rm->cms, ColumnMultiplier*, i);
 		gint j;
-		for (j = 0; j < cm->values->len; j++) {
+		for (j = 0; (guint) j < cm->values->len; j++) {
 			GValue *value;
 			value = g_array_index (cm->values, GValue *, j);
 			if (value)
@@ -1713,7 +1713,7 @@ row_multiplier_index_next (RowMultiplier *rm)
 
 	for (i = 0; ; i++) {
 		ColumnMultiplier *cm;
-		if (i == rm->cms->len) {
+		if ((guint) i == rm->cms->len) {
 #ifdef GDA_DEBUG_NO
 			g_print ("RM %p [FALSE]:\n", rm);
 			for (i = 0; i < rm->cms->len; i++) {

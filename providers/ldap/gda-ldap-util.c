@@ -59,235 +59,293 @@ ldap_class_free (GdaLdapClass *lcl)
 static LdapAttrType ldap_types [] = {
 	{ "1.3.6.1.4.1.1466.115.121.1.1",
 	  "ACI Item",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.2",
 	  "Access Point",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.3",
 	  "Attribute Type Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.4",
 	  "Audio",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.5",
 	  "Binary",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.6",
 	  "Bit String",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.7",
 	  "Boolean",
-	  G_TYPE_BOOLEAN
+	  G_TYPE_BOOLEAN,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.8",
 	  "Certificate",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.9",
 	  "Certificate List",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.10",
 	  "Certificate Pair",
-	  -1 /*GDA_TYPE_BINARY*/,
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/,
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.11",
 	  "Country String",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.12",
 	  "DN",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.13",
 	  "Data Quality Syntax",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.14",
 	  "Delivery Method",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.15",
 	  "Directory String",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.16",
 	  "DIT Content Rule Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.17",
 	  "DIT Structure Rule Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.18",
 	  "DL Submit Permission",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.19",
 	  "DSA Quality Syntax",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.20",
 	  "DSE Type",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.21",
 	  "Enhanced Guide",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.22",
 	  "Facsimile Telephone Number",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.23",
 	  "Fax",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.24",
 	  "Generalized Time",
-	  -4 /*G_TYPE_DATE_TIME*/
+	  G_TYPE_NONE,
+    -4 /*G_TYPE_DATE_TIME*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.25",
 	  "Guide",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.26",
 	  "IA5 String",
-	  G_TYPE_STRING /* as ASCII */
+	  G_TYPE_STRING, /* as ASCII */
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.27",
 	  "INTEGER",
-	  G_TYPE_INT
+	  G_TYPE_INT,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.28",
 	  "JPEG",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.29",
 	  "Master And Shadow Access Points",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.30",
 	  "Matching Rule Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.31",
 	  "Matching Rule Use Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.32",
 	  "Mail Preference",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.33",
 	  "MHS OR Address",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.34",
 	  "Name And Optional UID",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.35",
 	  "Name Form Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.36",
 	  "Numeric String",
-	  -3 /*GDA_TYPE_NUMERIC*/
+	  G_TYPE_NONE,
+    -3 /*GDA_TYPE_NUMERIC*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.37",
 	  "Object Class Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.38",
 	  "OID",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.39",
 	  "Other Mailbox",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.40",
 	  "Octet String",
-	  -1 /*GDA_TYPE_BINARY*/
+	  G_TYPE_NONE,
+    -1 /*GDA_TYPE_BINARY*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.41",
 	  "Postal Address",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.42",
 	  "Protocol Information",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.43",
 	  "Presentation Address",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.44",
 	  "Printable String",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.45",
 	  "Subtree Specification",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.46",
 	  "Supplier Information",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.47",
 	  "Supplier Or Consumer",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.48",
 	  "Supplier And Consumer",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.49",
 	  "Supported Algorithm",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.50",
 	  "Telephone Number",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.51",
 	  "Teletex Terminal Identifier",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.52",
 	  "Telex Number",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.53",
 	  "UTC Time",
-	  -2 /*GDA_TYPE_TIME*/
+	  G_TYPE_NONE,
+    -2 /*GDA_TYPE_TIME*/
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.54",
 	  "LDAP Syntax Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.55",
 	  "Modify Rights",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.56",
 	  "LDAP Schema Definition",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.57",
 	  "LDAP Schema Description",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	},
 	{ "1.3.6.1.4.1.1466.115.121.1.58",
 	  "Substring Assertion",
-	  G_TYPE_STRING
+	  G_TYPE_STRING,
+    0
 	}
 };
 
@@ -316,13 +374,13 @@ gda_ldap_get_type_info (const gchar *oid)
 		for (i = 0; i < nb; i++) {
 			LdapAttrType *type;
 			type = & (ldap_types[i]);
-			if (type->gtype == -1)
+			if (g_type_is_a (type->gtype, G_TYPE_NONE) && type->gtype_custom == -1)
 				type->gtype = GDA_TYPE_BINARY;
-			else if (type->gtype == -2)
+			else if (g_type_is_a (type->gtype, G_TYPE_NONE) && type->gtype_custom == -2)
 				type->gtype = GDA_TYPE_TIME;
-			else if (type->gtype == -3)
+			else if (g_type_is_a (type->gtype, G_TYPE_NONE) && type->gtype_custom == -3)
 				type->gtype = GDA_TYPE_NUMERIC;
-			else if (type->gtype == -4)
+			else if (g_type_is_a (type->gtype, G_TYPE_NONE) && type->gtype_custom == -4)
 				type->gtype = G_TYPE_DATE_TIME;
 			g_hash_table_insert (hash, type->oid, type);
 		}

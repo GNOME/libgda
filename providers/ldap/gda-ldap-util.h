@@ -35,6 +35,7 @@ typedef struct {
 	gchar *oid;
 	gchar *descr;
 	GType  gtype;
+  gint  gtype_custom;
 } LdapAttrType;
 
 typedef struct {
