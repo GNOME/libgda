@@ -82,7 +82,7 @@ pages:
   - cd _build
   - ninja
   - ninja install
-  - mv doc/index.html public/
+  - mv ../doc/index.html public/
   - mv doc/C ../public/C
   - mv doc/libgda-6.0 ../public/vala
   artifacts:
