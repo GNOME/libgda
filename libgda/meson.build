@@ -308,6 +308,13 @@ libgda_gir = gnome_module.generate_gir(libgda,
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0'),
 	)
 	if vapigen.found()
+	libgda_vala_deps = configure_file(
+		input: 'libgda.deps.in',
+		output: 'libgda-'+project_api_version+'.deps',
+		configuration: tconf,
+		install: true,
+		install_dir: join_paths(get_option('datadir'),'vala','vapi')
+		)
 	libgda_vapi = custom_target(project_package,
 		command: [vapigen,
 			'--girdir='+meson.current_source_dir(),

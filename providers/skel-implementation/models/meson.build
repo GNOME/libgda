@@ -5,7 +5,7 @@ inc_libgda_modelsh_dep = declare_dependency (include_directories : inc_libgda_mo
 models_xml_fnames = [
 	'models_specs_dsn',
 	]
-
+models_xml_res = []
 foreach xt : models_xml_fnames
 	i18n.merge_file(
 		input: xt+'.xml.in',
@@ -13,6 +13,15 @@ foreach xt : models_xml_fnames
 		type: 'xml',
 		po_dir: join_paths(meson.build_root(),'po')
 		)
+	models_xml_res += custom_target(xt+'.raw.xml',
+		command: [raw_spec,
+			'-o', meson.current_build_dir(),
+			'@INPUT@'
+			],
+		input: xt+'.xml.in',
+		output: xt+'.raw.xml',
+		)
+
 	# osf = configure_file(
 	# 	input: xt+'.xml.in',
 	# 	output: xt+'.xml',
@@ -23,17 +32,9 @@ foreach xt : models_xml_fnames
 	# 	)
 endforeach
 
-foreach xr : models_xml_fnames
-	tc = configuration_data()
-	configure_file(
-		input: xr+'.xml.in',
-		output: xr+'.raw.xml',
-		configuration: tc
-		)
-endforeach
-
 models_resources = gnome_module.compile_resources('models_resources', 'models.gresource.xml',
-	source_dir: meson.current_build_dir()
+	source_dir: meson.current_build_dir(),
+	dependencies: models_xml_res
 	)
 
 libgda_models_sources = files([
