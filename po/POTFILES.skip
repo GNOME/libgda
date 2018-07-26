@@ -34,6 +34,7 @@ providers/skel-implementation/capi/libmain.c
 providers/skel-implementation/models/gda-models-provider.c
 providers/skel-implementation/models/libmain.c
 providers/skel-implementation/models/models_specs_dsn.xml.in
+providers/skel-implementation/models/models_specs_dsn.raw.xml
 providers/sqlcipher/sqlite3.c
 testing/html.c
 tests/raw-ddl-creator.c

@@ -25,6 +25,18 @@ G_DEFINE_QUARK (gda-ddl-buildable-error, gda_ddl_buildable_error)
 
 G_DEFINE_INTERFACE (GdaDdlBuildable, gda_ddl_buildable, G_TYPE_OBJECT)
 
+/**
+ * SECTION:gda-ddl-buildable
+ * @title: GdaDdlBuildable
+ * @short: Represents interface for parsing and writing xml nodes
+ * @see_also: #GdaDdlTable, #GdaDdlView
+ * @stability: Stable
+ * @include: libgda/gda-ddl-buildable.h
+ *
+ * #GdaDdlBuildable represents an interface for writing and reading xml nodes. #GdaDdlTable and
+ * #GdaDdlView implement this interface.  
+ */
+
 static void
 gda_ddl_buildable_default_init (GdaDdlBuildableInterface *iface)
 {

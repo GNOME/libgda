@@ -33,6 +33,18 @@ typedef struct
   gboolean m_replace;
 } GdaDdlViewPrivate;
 
+/**
+ * SECTION:gda-ddl-view
+ * @short_description: Object to represent view database object
+ * @see_also: GdaDdlTable, GdaDdlCreator
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * This object represents a view of a database. The view can be constracted manually
+ * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
+ * #GdaDdlView implements #GdaDdlBuildable interface for parsing xml file.
+ */
+
 static void gda_ddl_view_buildable_interface_init (GdaDdlBuildableInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDdlView, gda_ddl_view, GDA_TYPE_DDL_BASE,

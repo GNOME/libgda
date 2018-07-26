@@ -1061,27 +1061,6 @@ stamp.h
 AC_OUTPUT
 
 
-dnl Dirty work to be able to build documentation
-chmod -R u+w ${srcdir}/doc/C
-cp doc/C/version.xml ${srcdir}/doc/C/version.xml.tmp
-mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
-cp doc/C/builddate.xml ${srcdir}/doc/C/builddate.xml.tmp
-mv ${srcdir}/doc/C/builddate.xml.tmp ${srcdir}/doc/C/builddate.xml
-
-cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-6.0-sections.txt
-echo "" >> doc/C/libgda-6.0-sections.txt
-cat ${srcdir}/doc/C/libgda-ui-sections.txt >> doc/C/libgda-6.0-sections.txt
-cp doc/C/libgda-6.0-sections.txt ${srcdir}/doc/C/libgda-6.0-sections.txt.tmp
-mv ${srcdir}/doc/C/libgda-6.0-sections.txt.tmp ${srcdir}/doc/C/libgda-6.0-sections.txt
-
-cp doc/C/libgda.types doc/C/libgda-6.0.types
-if test x$have_ui != xno
-then
-	echo "" >> doc/C/libgda-6.0.types
-	cat ${srcdir}/doc/C/libgda-ui.types >> doc/C/libgda-6.0.types
-fi
-
-
 dnl Print configuration summary
 echo ""
 echo " Configuration summary for version $GDA_VERSION"

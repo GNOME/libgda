@@ -41,6 +41,22 @@ typedef struct
   gchar *mp_schemaname;
 } GdaDdlCreatorPrivate;
 
+/**
+ * SECTION:gda-ddl-creator
+ * @title: GdaDdlCreator
+ * @short_description: Object to constract database representation from an xml file or by reading the existing datatabase 
+ * @see_also: #GdaDdlTable, #GdaDdlView
+ * @stability: Stable
+ * @include: libgda/libgda.h
+ *
+ * This is a main object that represents overall database. In can be constracted from an xml 
+ * file using gda_ddl_creator_parse_file() or gda_ddl_creator_parse_file_from_path(). It can also
+ * be constracted from an open connection using gda_ddl_creator_parse_cnc(). The database can be
+ * updated using gda_ddl_creator_perform_operation() and dumped to a file using
+ * gda_ddl_creator_write_to_path() and gda_ddl_creator_write_to_file(). 
+ *  
+ */
+
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlCreator, gda_ddl_creator, G_TYPE_OBJECT)
 
 enum {
@@ -181,7 +197,7 @@ _gda_ddl_creator_validate_doc (xmlDocPtr doc,
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
-                   GDA_DDL_CREATOR_UNVALID_XML,
+                   GDA_DDL_CREATOR_INVALID_XML,
                    _("xml file is invalid"));
       goto on_error;
     }
@@ -222,7 +238,7 @@ _gda_ddl_creator_parse_doc (GdaDdlCreator *self,
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
-                   GDA_DDL_CREATOR_UNVALID_SCHEMA,
+                   GDA_DDL_CREATOR_INVALID_SCHEMA,
                    _("Root node should be <schema>."));
       goto on_error;
     }
@@ -364,7 +380,7 @@ gda_ddl_creator_parse_file_from_path (GdaDdlCreator *self,
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
-                   GDA_DDL_CREATOR_UNVALID_XML,
+                   GDA_DDL_CREATOR_INVALID_XML,
                    _("xml file '%s' is not valid\n"), xmlfile);
       goto on_error;
     }
@@ -637,7 +653,7 @@ gda_ddl_creator_append_table (GdaDdlCreator *self,
 /**
  * gda_ddl_creator_append_view:
  * @self: a #GdaDdlCreator instance
- * @view: table to append
+ * @view: view to append
  *
  * This method append @view to the total list of all views stored in @self.
  *
@@ -645,7 +661,7 @@ gda_ddl_creator_append_table (GdaDdlCreator *self,
  */
 void
 gda_ddl_creator_append_view (GdaDdlCreator *self,
-                             const GdaDdlTable *view)
+                             const GdaDdlView *view)
 {
   g_return_if_fail (self);
 
@@ -943,7 +959,7 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
-                   GDA_DDL_CREATOR_UNVALID_XML,
+                   GDA_DDL_CREATOR_INVALID_XML,
                    _("xml file is not valid\n"));
       goto on_error;
     }
