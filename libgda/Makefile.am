@@ -389,9 +389,6 @@ if ENABLE_VALA_BINDINGS
 vapi: libgda-6.0.vapi
 
 
-libgda-6.0.deps:
-	echo "libxml-2.0" > libgda-6.0.deps
-
 libgda-6.0.vapi: Gda-6.0.gir
 	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-6.0 --pkg libxml-2.0 Gda-6.0.gir
 

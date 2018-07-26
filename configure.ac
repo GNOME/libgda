@@ -959,6 +959,7 @@ libgda-xslt-6.0.pc
 po/Makefile.in
 libgda/Makefile
 libgda/libgda.h
+libgda/libgda-$API_VERSION.deps:libgda/libgda.deps.in
 libgda/binreloc/Makefile
 libgda/handlers/Makefile
 libgda/providers-support/Makefile
