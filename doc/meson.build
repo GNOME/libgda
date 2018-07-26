@@ -1,5 +1,13 @@
 subdir('C')
 
+pageconf = configuration_data()
+pageconf.set('GDA_API_VERSION', project_api_version)
+configure_file(
+	input: 'index.html.in',
+	output: 'index.html',
+	configuration: pageconf
+	)
+
 if valadoc.found()
 	vala_doc = custom_target('vala_doc',
 		command: [ valadoc,
@@ -16,7 +24,7 @@ if valadoc.found()
 			'@INPUT@'
 			],
 		input: libgda_vapi,
-		output: '.',
+		output: 'vala',
 		build_by_default: true,
 		install: true,
 		install_dir: join_paths (get_option ('datadir'), 'devhelp','books'),

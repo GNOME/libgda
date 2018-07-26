@@ -83,11 +83,11 @@ pages:
   - ninja
   - ninja install
   - mkdir ../public
-  - mv ../doc/index.html ../public/
+  - mv doc/index.html ../public/
   - mkdir ../public/C
   - mv doc/C/* ../public/C/
   - mkdir ../public/vala
-  - mv doc/libgda-6.0 ../public/vala
+  - mv doc/vala/libgda-6.0 ../public/vala
   artifacts:
     paths:
     - public
