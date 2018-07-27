@@ -421,7 +421,7 @@ t_virtual_connection_part_copy (const TVirtualConnectionPart *part)
 		if (spm->table_name)
 			npm->table_name = g_strdup (spm->table_name);
 		if (spm->model)
-			npm->model = g_object_ref (G_OBJECT (spm->model));
+			npm->model = GDA_DATA_MODEL(g_object_ref (G_OBJECT (spm->model)));
 		break;
 	}
 	case T_VIRTUAL_CONNECTION_PART_CNC: {
@@ -432,7 +432,7 @@ t_virtual_connection_part_copy (const TVirtualConnectionPart *part)
 		if (scnc->table_schema)
 			ncnc->table_schema = g_strdup (scnc->table_schema);
 		if (scnc->source_cnc)
-			ncnc->source_cnc = g_object_ref (G_OBJECT (scnc->source_cnc));
+			ncnc->source_cnc = T_CONNECTION(g_object_ref (G_OBJECT (scnc->source_cnc)));
 		break;
 	}
 	default:

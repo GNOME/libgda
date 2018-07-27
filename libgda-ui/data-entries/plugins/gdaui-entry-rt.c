@@ -188,9 +188,9 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 			gboolean done = FALSE;
 
 			if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-				const GdaBlob *blob;
+				GdaBlob *blob;
 				GdaBinary *bin;
-				blob = gda_value_get_blob (value);
+				blob = g_value_get_boxed (value);
 				bin = gda_blob_get_binary (blob);
 				if (gda_blob_get_op (blob) &&
 				    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op (blob))))
@@ -203,8 +203,8 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				}
 			}
 			else  if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
-				const GdaBinary *bin;
-				bin = gda_value_get_binary (value);
+				GdaBinary *bin;
+				bin = g_value_get_boxed (value);
 				if (g_utf8_validate ((gchar*) gda_binary_get_data (bin), gda_binary_get_size (bin), NULL)) {
 					gdaui_rt_editor_set_contents (GDAUI_RT_EDITOR (mgtxt->priv->view),
 								      (gchar*) gda_binary_get_data (bin), 

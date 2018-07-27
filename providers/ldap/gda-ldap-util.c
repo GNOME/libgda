@@ -1594,7 +1594,7 @@ worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **
 			
 			if (!lentry) {
 				gint i;
-				for (i = 0; i < children->len; i++) {
+				for (i = 0; (guint) i < children->len; i++) {
 					GdaLdapEntry *lentry;
 					lentry = g_array_index (children, GdaLdapEntry*, i);
 					gda_ldap_entry_free (lentry);
@@ -1788,7 +1788,7 @@ gdaprov_ldap_dn_split (const gchar *dn, gboolean all)
 	return (gchar**) g_array_free (array, FALSE);
 
  onerror:
-	for (i = 0; i < array->len; i++) {
+	for (i = 0; (guint) i < array->len; i++) {
 		gchar *tmp;
 		tmp = g_array_index (array, gchar*, i);
 		g_free (tmp);

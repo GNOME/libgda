@@ -1694,14 +1694,14 @@ menu_copy_row_cb (GtkWidget *widget, GdauiRawGrid *grid)
 		gtk_clipboard_set_text (cp, "", -1);
 	else if ((G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY) ||
 		 (G_VALUE_TYPE (cvalue) == GDA_TYPE_BLOB)) {
-		const GdaBinary *bin;
+		GdaBinary *bin;
 		
 		cpset = FALSE;
 		if (G_VALUE_TYPE (cvalue) == GDA_TYPE_BINARY)
-			bin = gda_value_get_binary (cvalue);
+			bin = g_value_get_boxed (cvalue);
 		else {
 			GdaBlob *blob;
-			blob = (GdaBlob *) gda_value_get_blob ((GValue *) cvalue);
+			blob = (GdaBlob *) g_value_get_boxed ((GValue *) cvalue);
 			g_assert (blob);
 			bin = gda_blob_get_binary (blob);
 			if (gda_blob_get_op (blob) &&

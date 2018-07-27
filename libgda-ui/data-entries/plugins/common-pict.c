@@ -585,17 +585,17 @@ common_pict_add_cached_pixbuf (PictOptions *options, const GValue *value, GdkPix
 	if (!options->pixbuf_hash || !value)
 		return;
 	else if (GDA_VALUE_HOLDS_BINARY (value)) {
-		const GdaBinary *bin;
-		bin = gda_value_get_binary (value);
+		GdaBinary *bin;
+		bin = g_value_get_boxed (value);
 		hash = g_new (gint, 1);
 		*hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 		g_hash_table_insert (options->pixbuf_hash, hash, g_object_ref (pixbuf));
 	}
 	else if (GDA_VALUE_HOLDS_BLOB (value)) {
-		const GdaBinary *bin;
-		const GdaBlob *blob;
-		blob = gda_value_get_blob (value);
-		bin = gda_blob_get_binary (blob);
+		GdaBinary *bin;
+		GdaBlob *blob;
+		blob = g_value_get_boxed (value);
+		bin = (GdaBinary*) gda_blob_get_binary (blob);
 		if (bin) {
 			if (!gda_binary_get_data (bin) && gda_blob_get_op (blob))
 				gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
@@ -620,18 +620,18 @@ common_pict_fetch_cached_pixbuf (PictOptions *options, const GValue *value)
 	if (!value)
 		return NULL;
 	else if (GDA_VALUE_HOLDS_BINARY (value)) {
-		const GdaBinary *bin;
-		bin = gda_value_get_binary (value);
+		GdaBinary *bin;
+		bin = g_value_get_boxed (value);
 		if (bin) {
 			hash = compute_hash (gda_binary_get_data (bin), gda_binary_get_size (bin));
 			pixbuf = g_hash_table_lookup (options->pixbuf_hash, &hash);
 		}
 	}
 	else if (GDA_VALUE_HOLDS_BLOB (value)) {
-		const GdaBinary *bin;
-		const GdaBlob *blob;
-		blob = gda_value_get_blob (value);
-		bin = gda_blob_get_binary (blob);
+		GdaBinary *bin;
+		GdaBlob *blob;
+		blob = g_value_get_boxed (value);
+		bin = (GdaBinary*) gda_blob_get_binary (blob);
 		if (bin) {
 			if (!gda_binary_get_data (bin) && gda_blob_get_op (blob))
 				gda_blob_op_read_all (gda_blob_get_op (blob), (GdaBlob*) blob);
