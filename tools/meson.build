@@ -136,9 +136,11 @@ executable('gda-browser-'+project_api_version,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
+		'-DROOT_DIR="'+meson.source_root()+'"',
+		'-DIS_BROWSER'
 		],
-	link_args: gda_browser_link_args
+	link_args: gda_browser_link_args,
+	install: true
 	)
 
 tsplitter_deps = [

@@ -569,11 +569,13 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 			t_app_remove_feature (T_APP_TERM_CONSOLE);
 
 		/* hack */
-		TConnection *tcnc = T_CONNECTION (t_app_get_all_connections ()->data);
-		gchar *tmp;
-		tmp = g_strdup_printf ("%s", t_connection_get_name (tcnc));
-		t_connection_set_name (tcnc, tmp);
-		g_free (tmp);
+    if (cnclist) {
+		  TConnection *tcnc = T_CONNECTION (cnclist->data);
+		  gchar *tmp;
+		  tmp = g_strdup_printf ("%s", t_connection_get_name (tcnc));
+		  t_connection_set_name (tcnc, tmp);
+		  g_free (tmp);
+    }
 	}
 #endif
 

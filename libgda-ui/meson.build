@@ -138,7 +138,8 @@ libgdaui = library('gda-ui-'+project_api_version,
 	link_with: [ libgda ],
 	link_args: [
 		'-export-dynamic'
-		]
+		],
+	install: true
 	)
 
 libgda_ui_plugins = library('gda-ui-plugins-'+project_package,
