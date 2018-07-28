@@ -264,7 +264,20 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
 
 	/* dsn spec for the selected provider */
 	provider = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider));
-	g_assert (provider);
+	if (provider == NULL) {
+    GtkWidget *parent = gtk_widget_get_toplevel(combo);
+    if (!GTK_IS_WINDOW (parent)) {
+      parent = NULL;
+    }
+    GtkWidget *msg = gtk_message_dialog_new (parent,
+                        GTK_DIALOG_MODAL,
+                        GTK_MESSAGE_ERROR,
+                        GTK_BUTTONS_CLOSE,
+                        _("No providers exists"));
+    gtk_dialog_run (GTK_DIALOG (msg));
+    gtk_widget_destroy (msg);
+    return;
+  }
 	if (!assistant->priv->provider_detail) {
 		assistant->priv->provider_detail = _gdaui_provider_spec_editor_new (provider);
 		gtk_box_pack_start (GTK_BOX (assistant->priv->provider_container),
@@ -376,7 +389,20 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
 		GdaProviderInfo *pinfo;
 		const gchar *provider;
 		provider = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider));
-		g_assert (provider);
+		if (provider == NULL) {
+      GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(assistant));
+      if (!GTK_IS_WINDOW (parent)) {
+        parent = NULL;
+      }
+      GtkWidget *msg = gtk_message_dialog_new (parent,
+                          GTK_DIALOG_MODAL,
+                          GTK_MESSAGE_ERROR,
+                          GTK_BUTTONS_CLOSE,
+                          _("No providers exists"));
+      gtk_dialog_run (GTK_DIALOG (msg));
+      gtk_widget_destroy (msg);
+      return;
+    }
 		pinfo = gda_config_get_provider_info (provider);
 		g_assert (pinfo);
 		if (gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))

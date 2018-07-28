@@ -234,6 +234,12 @@ subdir('po')
 subdir('libgda')
 subdir('providers')
 
+# Platform data
+windows = build_machine.system().contains('windows')
+if windows
+win = import('windows')
+endif
+
 gtk_dep = dependency('gtk+-3.0', required: false)
 enable_ui = get_option('with-ui') and gtk_dep.found()
 if enable_ui
@@ -268,18 +274,14 @@ int main() {
 	endif
 	subdir('libgda-ui')
 	subdir('libgda-report')
+	windows_module = import('windows')
+	subdir('control-center')
 endif
 
 subdir('doc')
 
 if libxslt_dep.found()
 	subdir('libgda-xslt')
-endif
-
-# Platform data
-windows = build_machine.system().contains('windows')
-if windows
-win = import('windows')
 endif
 
 # PC files
