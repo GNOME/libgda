@@ -137,7 +137,8 @@ executable('gda-browser-'+project_api_version,
 		'-include',
 		meson.build_root() + '/config.h',
 		'-DROOT_DIR="'+meson.source_root()+'"',
-		'-DIS_BROWSER'
+		'-DIS_BROWSER',
+		'-DHAVE_GTK_CLASSES'
 		],
 	link_args: gda_browser_link_args,
 	install: true
