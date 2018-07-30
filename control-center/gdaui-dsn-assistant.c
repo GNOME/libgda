@@ -404,8 +404,22 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
       return;
     }
 		pinfo = gda_config_get_provider_info (provider);
-		g_assert (pinfo);
-		if (gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))
+    if (pinfo == NULL) {
+      GtkWidget *parent = gtk_widget_get_toplevel(GTK_WIDGET(assistant));
+      if (!GTK_IS_WINDOW (parent)) {
+        parent = NULL;
+      }
+      GtkWidget *msg = gtk_message_dialog_new (parent,
+                          GTK_DIALOG_MODAL,
+                          GTK_MESSAGE_ERROR,
+                          GTK_BUTTONS_CLOSE,
+                          _("No provider's information exists"));
+      gtk_dialog_run (GTK_DIALOG (msg));
+      gtk_widget_destroy (msg);
+      return;
+    }
+
+		if (gda_set_get_holders (pinfo->auth_params))
 			return PAGE_AUTH_INFO;
 		else
 			return PAGE_LAST;
