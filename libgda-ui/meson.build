@@ -15,7 +15,7 @@ libgda_ui_cargs = [
 	'-include',
 	meson.build_root() + '/config.h',
 	'-DPLUGINSDIR="'+join_paths(meson.build_root(),'libgda-ui','plugins')+'"',
-	'-DGDA_ABI_VERSION="'+project_abi_version+'"'
+	'-DGDA_ABI_VERSION="'+project_api_version+'"'
 	]
 libgda_ui_cargs += iso_codes_cargs
 libgda_ui_headers = files([
