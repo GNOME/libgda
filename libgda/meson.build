@@ -13,7 +13,8 @@ subdir('binreloc')
 dtdf = files([
 	'libgda-array.dtd',
 	'libgda-paramlist.dtd',
-	'libgda-server-operation.dtd'
+	'libgda-server-operation.dtd',
+	'libgda-ddl-creator.dtd'
 	])
 
 install_data(dtdf,
