@@ -167,7 +167,7 @@ tsplitter = executable('test-splitter',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.build_root()+'"'
+		'-DROOT_DIR="'+meson.source_root()+'"'
 		],
 	link_with: libgda,
 	dependencies: tsplitter_deps,

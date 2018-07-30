@@ -102,5 +102,6 @@ libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
 		'-export-dynamic',
 		],
 	link_with: libgda,
-	install: false,
+	install: true,
+	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 	)

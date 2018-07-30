@@ -115,5 +115,6 @@ libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 		'-export-dynamic',
 		],
 	link_with: libgda,
-	install: false,
+	install: true,
+	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 	)
