@@ -29,6 +29,7 @@ variables:
                 libgirepository1.0-dev
                 libgee-0.8-dev
                 valadoc
+                libgladeui-dev
 
   GIT_SUBMODULE_STRATEGY: normal
 
