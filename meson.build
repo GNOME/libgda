@@ -18,6 +18,7 @@ API_MINOR_VERSION = '0'
 project_api_version = API_MAJOR_VERSION+'.'+API_MINOR_VERSION
 project_abi_version = MAJOR_VERSION+'.'+MINOR_VERSION
 project_abi_name = '"' + meson.project_name() + '-' + project_abi_version + '"'
+project_api_name = '"' + meson.project_name() + '-' + project_api_version + '"'
 project_package = meson.project_name() + '-' + project_api_version
 
 gda_current = '5'
@@ -150,7 +151,7 @@ c_args = ['-Wall',
 	'-Wno-pointer-sign',
 	'-Wno-missing-field-initializers',
 	'-DGSEAL_ENABLE',
-	'-DLIBGDA_ABI_NAME='+project_abi_name]
+	'-DLIBGDA_ABI_NAME='+project_api_name]
 
 glade_catalog = ''
 glade_pixmap = ''
