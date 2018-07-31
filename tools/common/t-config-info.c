@@ -21,6 +21,7 @@
 #include <glib/gi18n-lib.h>
 #include <glib/gstdio.h>
 #include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
+#include <gio/gio.h>
 
 /*
  * Replace @argvi's contents with the connection name
@@ -409,18 +410,16 @@ t_config_info_detail_dsn (const gchar *dsn, GError **error)
 GdaDataModel *
 t_config_info_list_data_files (GError **error)
 {
-	const gchar *name;
-	gchar *confdir;
+	GFile *confdir;
 	GdaDataModel *model;
-	GDir *dir;
+	GFileEnumerator *dir;
 
 	/* open directory */
 	confdir = t_config_info_compute_dict_directory ();
-	dir = g_dir_open (confdir, 0, error);
-	if (!dir) {
-		g_free (confdir);
-		return NULL;
-	}
+  if (!g_file_query_exists (confdir, NULL)) {
+    g_object_unref (confdir);
+    return NULL;
+  }
 
 	/* create model */
 	model = gda_data_model_array_new (5);
@@ -430,23 +429,36 @@ t_config_info_list_data_files (GError **error)
 	gda_data_model_set_column_name (model, 3, _("Provider"));
 	gda_data_model_set_column_name (model, 4, _("Connection string"));
 
-	while ((name = g_dir_read_name (dir))) {
-		GValue *value;
+  dir = g_file_enumerate_children (confdir,
+                                  "standard::*",
+                                  G_FILE_QUERY_INFO_NONE,
+                                  NULL,
+                                  error);
+  if ((*error) != NULL)
+    return NULL;
+  while (TRUE) {
+    GFileInfo *info;
+    GValue *value;
 		gint row;
-		gchar *copy, *dsn, *fname;
+		gchar *copy, *dsn;
+    const gchar *fname;
 		GdaDsnInfo *dsninfo;
 
-		if (! g_str_has_suffix (name, ".db"))
+    if (!g_file_enumerator_iterate (dir, &info, NULL, NULL, NULL))
+      break;
+    if (!info)
+      break;
+    fname = g_file_info_get_display_name (info);
+    if (! g_str_has_suffix (fname, ".db"))
 			continue;
-		if (! g_str_has_prefix (name, "gda-sql-"))
+		if (! g_str_has_prefix (fname, "gda-sql-"))
 			continue;
 
-		fname = g_build_filename (confdir, name, NULL);
-		copy = g_strdup (name);
+    copy = g_strdup (fname);
 
-		row = gda_data_model_append_row (model, NULL);
+    row = gda_data_model_append_row (model, NULL);
 
-		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), name);
+		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)),fname);
 		gda_data_model_set_value_at (model, 0, row, value, NULL);
 		gda_value_free (value);
 
@@ -474,11 +486,11 @@ t_config_info_list_data_files (GError **error)
 				gda_value_free (value);
 			}
 		}
-
 		/* Open the file */
 		GdaMetaStore *store;
 		gchar *attvalue;
-		store = gda_meta_store_new_with_file (fname);
+    GFile *file = g_file_enumerator_get_child (dir, info);
+		store = gda_meta_store_new_with_file (g_file_get_path (file));
 		if (gda_meta_store_get_attribute_value (store, "last-used", &attvalue, NULL)) {
 			value = gda_value_new_from_string (attvalue, G_TYPE_DATE);
 			g_free (attvalue);
@@ -498,11 +510,9 @@ t_config_info_list_data_files (GError **error)
 		g_object_unref (store);
 
 		g_free (copy);
-		g_free (fname);
 	}
-	
-	g_free (confdir);
-	g_dir_close (dir);
+	g_object_unref (confdir);
+	g_object_unref (dir);
 
 	return model;
 }
@@ -558,38 +568,45 @@ t_config_info_purge_data_files (const gchar *criteria, GError **error)
 	}
 
 	const gchar *name;
-	gchar *confdir;
-	GDir *dir;
-	GString *errstring = NULL;
+	GFile *confdir;
+  GFileEnumerator *ch_files;
 
-	/* open directory */
+	/* check if directory exists */
 	confdir = t_config_info_compute_dict_directory ();
-	dir = g_dir_open (confdir, 0, error);
-	if (!dir) {
-		g_free (confdir);
+	if (!g_file_query_exists (confdir, NULL)) {
+		g_object_unref (confdir);
 		return NULL;
 	}
-	while ((name = g_dir_read_name (dir))) {
-		gchar *copy, *dsn, *fname;
-		gboolean to_remove = FALSE;
-		
-		if (! g_str_has_suffix (name, ".db"))
-			continue;
-		if (! g_str_has_prefix (name, "gda-sql-"))
-			continue;
+  ch_files = g_file_enumerate_children (confdir,
+                                        "standard::*",
+                                        G_FILE_QUERY_INFO_NONE,
+                                        NULL,
+                                        error);
+  if ((*error) != NULL)
+    return "Error. No Files purged";
+  while (TRUE) {
+    GFileInfo *info;
+    gchar *copy, *dsn;
+    gboolean to_remove = FALSE;
 
-		fname = g_build_filename (confdir, name, NULL);
-		copy = g_strdup (name);
+    if (!g_file_enumerator_iterate (ch_files, &info, NULL, NULL, NULL))
+      break;
+    if (!info)
+      break;
+    if (! g_str_has_suffix (g_file_info_get_display_name (info), ".db"))
+      continue;
+		if (! g_str_has_prefix (g_file_info_get_display_name (info), "gda-sql-"))
+      continue;
+    copy = g_strdup (g_file_info_get_display_name (info));
 
 		dsn = copy + 8;
 		dsn [strlen (dsn) - 3] = 0;
-
-		if (cri == PURGE_ALL)
+    if (cri == PURGE_ALL)
 			to_remove = TRUE;
-		else if ((cri == PURGE_NON_DSN) || (cri == PURGE_NON_EXIST_DSN)) {
+    else if ((cri == PURGE_NON_DSN) || (cri == PURGE_NON_EXIST_DSN)) {
 			GdaDsnInfo *dsninfo;
 			dsninfo = gda_config_get_dsn_info (dsn);
-			if (! dsninfo) {
+      if (! dsninfo) {
 				to_remove = TRUE;
 				if (cri == PURGE_NON_DSN) {
 					gchar *ptr;
@@ -604,60 +621,75 @@ t_config_info_purge_data_files (const gchar *criteria, GError **error)
 						to_remove = FALSE;
 				}
 			}
-		}		
-		
-		if (to_remove) {
-			if ((! list_only) && g_unlink (fname)) {
-				if (! errstring)
-					errstring = g_string_new ("");
 
-				g_string_append_c (errstring, '\n');
-				g_string_append (errstring, _("Failed to remove: "));
-				g_string_append (errstring, fname);
-			}
-			else {
-				if (! string)
-					string = g_string_new (fname);
-				else {
-					g_string_append_c (string, '\n');
-					g_string_append (string, fname);
-				}
-			}
-		}
-		
-		g_free (copy);
-		g_free (fname);
-	}
-	g_free (confdir);
-	g_dir_close (dir);
+		  if (to_remove) {
+        GFile *f;
+        f = g_file_enumerator_get_child (ch_files, info);
+			  if ((! list_only) && g_file_delete (f, NULL, error)) {
+				  if (error != NULL) {
+            g_object_unref (ch_files);
+	          g_object_unref (confdir);
+            return NULL;
+          }
+			  }
+			  else {
+				  if (! string)
+					  string = g_string_new (g_file_get_basename (f));
+				  else {
+					  g_string_append_c (string, '\n');
+					  g_string_append (string, g_file_get_basename (f));
+				  }
+			  }
+        g_object_unref (f);
+		  }
 
-	if (errstring) {
-		g_set_error (error, T_ERROR, T_PURGE_ERROR,
-			     "%s", errstring->str);
-		g_string_free (errstring, TRUE);
-	}
+		  g_free (copy);
+    }
+  }
+	g_object_unref (confdir);
 
 	if (string)
 		return g_string_free (string, FALSE);
-	else {
-		if (!errstring)
-			return g_strdup_printf (_("No file to purge!"));
-		else
-			return NULL;
-	}
+	else
+		return NULL;
 }
 
 
-gchar *
+GFile *
 t_config_info_compute_dict_directory (void)
 {
-	gchar *confdir;
+  GFile *dir;
+	GFile *confdir;
+  GString *path;
+  GError *error = NULL;
 
-	confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (), "libgda", NULL);
-	if (!g_file_test (confdir, G_FILE_TEST_EXISTS)) {
-		g_free (confdir);
-		confdir = g_build_path (G_DIR_SEPARATOR_S, g_get_home_dir (), ".libgda", NULL);
-	}
+  dir = g_file_new_for_path (g_get_user_data_dir ());
+  if (!g_file_query_exists (dir, NULL))
+    return NULL;
+  path = g_string_new (g_file_get_uri (dir));
+  g_string_append (path, "/libgda");
+  confdir = g_file_new_for_uri (path->str);
+  g_string_free (path, TRUE);
+  if (!g_file_query_exists (confdir, NULL)) {
+    g_object_unref (dir);
+    dir = g_file_new_for_path (g_get_home_dir ());
+    if (!g_file_query_exists (dir, NULL)) {
+      g_warning (_("No home directory exists. No configuration directory is in use"));
+      return NULL;
+    }
+    path = g_string_new (g_file_get_uri (dir));
+    g_string_append (path, "/.libgda");
+    confdir = g_file_new_for_uri (path->str);
+    g_string_free (path, TRUE);
+    if (!g_file_query_exists (confdir, NULL)) {
+      g_file_make_directory (confdir, NULL, &error);
+      if (error != NULL) {
+        g_warning (_("Was not possible to create configuration directory at: %s"), g_file_get_uri (confdir));
+        return NULL;
+      }
+    }
+  }
+  g_object_unref (dir);
 
 	return confdir;
 }
@@ -671,17 +703,17 @@ compute_dict_file_name_foreach_cb (const gchar *key, G_GNUC_UNUSED const gchar *
 		*list = g_slist_insert_sorted (*list, (gpointer) key, (GCompareFunc) strcmp);
 }
 
-gchar *
+GFile *
 t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
 {
-	gchar *filename = NULL;
-	gchar *confdir;
+	GFile *filename;
+	GFile *confdir;
+  GString *path;
 
 	confdir = t_config_info_compute_dict_directory ();
-	if (info) {		
-		filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-					    confdir, G_DIR_SEPARATOR_S,
-					    info->name);
+  path = g_string_new ("");
+	if (info) {
+    g_string_printf (path, "%s/gda-sql-%s.db", g_file_get_uri (confdir), info->name);
 	}
 	else {
 		GdaQuarkList *ql;
@@ -710,14 +742,14 @@ t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
 			gchar *chname;
 			chname = g_compute_checksum_for_string (G_CHECKSUM_SHA1, string->str, -1);
 			g_string_free (string, TRUE);
-			filename = g_strdup_printf ("%s%sgda-sql-%s.db", 
-					    confdir, G_DIR_SEPARATOR_S,
-					    chname);
+
+      g_string_printf (path, "%s/gda-sql-%s.db", g_file_get_uri (confdir), chname);
 			g_free (chname);
 		}
 	}
-
-	g_free (confdir);
+  filename = g_file_new_for_uri (path->str);
+  g_string_free (path, TRUE);
+	g_object_unref (confdir);
 	return filename;
 }
 

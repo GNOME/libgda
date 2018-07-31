@@ -23,8 +23,8 @@
 
 void          t_config_info_modify_argv (char *argvi);
 
-gchar        *t_config_info_compute_dict_directory (void);
-gchar        *t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string);
+GFile        *t_config_info_compute_dict_directory (void);
+GFile        *t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string);
 void          t_config_info_update_meta_store_properties (GdaMetaStore *mstore, GdaConnection *rel_cnc);
 
 GdaDataModel *t_config_info_list_all_dsn (void);

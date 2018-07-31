@@ -21,6 +21,11 @@ install_data(dtdf,
 	install_dir: join_paths(get_option('datadir'),project_package,'dtd')
 	)
 
+# Internal information schema
+install_data('information_schema.xml',
+	install_dir: join_paths(get_option('datadir'), project_package)
+	)
+
 libgda_virtualh = configure_file(
 		input: 'libgda.h.in',
 		output : 'libgda.h',

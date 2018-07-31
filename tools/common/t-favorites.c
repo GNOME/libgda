@@ -182,7 +182,7 @@ meta_store_addons_init (TFavorites *bfav, GError **error)
 	if (!gda_meta_store_schema_add_custom_object (bfav->priv->store, FAVORITES_TABLE_DESC, &lerror)) {
                 g_set_error (error, T_ERROR, T_STORED_DATA_ERROR,
 			     "%s", _("Can't initialize dictionary to store favorites"));
-		g_warning ("Can't initialize dictionary to store favorites :%s",
+		g_warning (_("Can't initialize dictionary to store favorites :%s"),
 			   lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)
 			g_error_free (lerror);
