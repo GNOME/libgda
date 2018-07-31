@@ -201,14 +201,11 @@ adapt_form_widget (GdauiProviderSpecEditor *spec)
 	}
 
 	/* create new widget */	
-	GdaSet *dset;
-	dset = gda_set_copy (pinfo->dsn_params);
-	if (dset) {
+	if (pinfo->dsn_params) {
 		GtkWidget *wid;	
 		spec->priv->type = PROVIDER_FORM;
 		
-		wid = gdaui_basic_form_new (dset);
-		g_object_unref (dset);
+		wid = gdaui_basic_form_new (pinfo->dsn_params);
 		
 		spec->priv->form = wid;
 		if (spec->priv->labels_size_group)
@@ -447,7 +444,7 @@ _gdaui_provider_spec_editor_set_provider (GdauiProviderSpecEditor *spec, const g
  * Tells if the current information displayed in @spec respects the
  * provider's specifications (about non NULL values for example)
  *
- * Returns:
+ * Returns: TRUE if valid information is provided
  */
 gboolean
 _gdaui_provider_spec_editor_is_valid (GdauiProviderSpecEditor *spec)

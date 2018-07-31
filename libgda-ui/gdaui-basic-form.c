@@ -884,7 +884,10 @@ create_entry_widget (SingleEntry *sentry)
 		const gchar *plugin = NULL;
 		const GValue *plugin_val;
 
-		g_assert (gda_set_group_get_n_nodes (sg) == 1); /* only 1 item in the list */
+		if (gda_set_group_get_n_nodes (sg) != 1) { /* only 1 item in the list */
+      g_warning (_("There are more entries than expected in group. Found %d"), gda_set_group_get_n_nodes (sg));
+      return;
+    }
 
 		param = GDA_HOLDER (gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		sentry->single_param = param;
@@ -898,7 +901,7 @@ create_entry_widget (SingleEntry *sentry)
 		type = gda_holder_get_g_type (param);
 		value = val;
 		if (!value && default_val &&
-		    (G_VALUE_TYPE ((GValue *) default_val) == type))
+		    g_type_is_a (G_VALUE_TYPE ((GValue *) default_val), type))
 			value = default_val;
 
 		/* create entry */
@@ -925,7 +928,7 @@ create_entry_widget (SingleEntry *sentry)
 		}
 		else if (!nnul ||
 			 (nnul && value &&
-			  (G_VALUE_TYPE ((GValue *) value) != GDA_TYPE_NULL)))
+			  !g_type_is_a (G_VALUE_TYPE ((GValue *) value), GDA_TYPE_NULL)))
 			gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), value);
 
 		if (default_val)
@@ -2369,4 +2372,35 @@ gdaui_basic_form_set_unknown_color (GdauiBasicForm *form, gdouble red, gdouble g
 						    form->priv->green, form->priv->blue,
 						    form->priv->alpha);
 	}
+}
+
+/**
+ * gdaui_basic_form_update_data_set:
+ * @form: a #GdauiBasicForm
+ *
+ * Updates values in all #GdaHolder in current #GdaSet
+ */
+void
+gdaui_basic_form_update_data_set (GdauiBasicForm *form, GError **error) {
+  g_return_if_fail (form != NULL);
+  GSList *list;
+  GdaSet *set;
+  set = gdaui_basic_form_get_data_set (form);
+  g_return_if_fail (set != NULL);
+  list = gda_set_get_holders (set);
+  for (; list != NULL; list = list->next) {
+    GtkWidget *widget;
+    GdaHolder *holder;
+    GValue *value;
+    if (list->data == NULL)
+      continue;
+    holder = GDA_HOLDER (list->data);
+    widget = gdaui_basic_form_get_entry_widget (form, holder);
+    if (!GDAUI_IS_DATA_ENTRY (widget)) {
+      g_warning ("No data entry for holder %s", gda_holder_get_id (holder));
+      continue;
+    }
+    value = gdaui_data_entry_get_value (GDAUI_DATA_ENTRY (widget));
+    gda_holder_set_value (holder, value, error);
+  }
 }

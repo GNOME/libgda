@@ -69,6 +69,7 @@ struct _GdauiServerOperationPriv
 	GSList                 *widget_data; /* list of WidgetData structures */
 	GtkBuilder             *builder;
 	gboolean                opt_header;
+	GtkWidget              *widget; /* Widget used to change operation parameters */
 };
 
 WidgetData *widget_data_new (WidgetData *parent, const gchar *path_name);
@@ -213,6 +214,7 @@ gdaui_server_operation_init (GdauiServerOperation * wid)
 	wid->priv->widget_data = NULL;
 	wid->priv->builder = NULL;
 	wid->priv->opt_header = FALSE;
+	wid->priv->widget = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 }
@@ -394,7 +396,10 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 	GtkWidget *plwid = NULL;
 
 	info_node = gda_server_operation_get_node_info (form->priv->op, path);
-	g_assert (info_node);
+	if (info_node == NULL) {
+		g_warning (_("Mal formed Server Operation. No Node at path: '%s'"), path);
+		return NULL;
+	}
 
 	if (label_widgets)
 		*label_widgets = NULL;
@@ -433,6 +438,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			}
 			*label_widgets = g_slist_reverse (*label_widgets);
 		}
+		form->priv->widget = plwid;
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL: {
@@ -544,6 +550,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			label_entry = gdaui_basic_form_get_label_widget (GDAUI_BASIC_FORM (plwid), param);
 			*label_widgets = g_slist_prepend (*label_widgets, label_entry);
 		}
+		form->priv->widget = plwid;
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
@@ -695,16 +702,16 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 	gchar **topnodes;
 
 	/* parameters list management */
-	if (!form->priv->op)
+	if (form->priv->op == NULL)
 		/* nothing to do */
 		return;
 
 	/* load specific GUI */
-	if (!form->priv->builder) {
+	if (form->priv->builder == NULL) {
 		form->priv->builder = gtk_builder_new ();
 		if (! gtk_builder_add_from_resource (form->priv->builder, "/gdaui/glade/data/server_operation.xml", NULL)) {
 			g_message ("Could not load GdaServerOperation UI data, please report error to "
-				   "http://bugzilla.gnome.org/ for the \"libgda\" product");
+				   "https://gitlab.gnome.org/GNOME/libgda/issues");
 			g_object_unref (form->priv->builder);
 			form->priv->builder = NULL;
 		}
@@ -738,7 +745,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 			container = (GtkWidget *) form;
 
 		plwid = fill_create_widget (form, topnodes[i], &section_str, NULL);
-		if (plwid) {
+		if (plwid != NULL) {
 			GdaServerOperationNodeStatus status;
 			GtkWidget *label = NULL, *hbox = NULL;
 
@@ -948,6 +955,8 @@ sequence_item_added_cb (GdaServerOperation *op, const gchar *seq_path, gint item
 	/* add widget corresponding to the new sequence item */
 	str = g_strdup_printf ("%s/%d", seq_path, item_index);
 	wid = fill_create_widget (form, str, NULL, NULL);
+	if (wid == NULL)
+		return;
 	sequence_grid_attach_widget (form, grid, wid, seq_path, item_index);
 	g_free (str);
 }
@@ -1111,115 +1120,129 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 }
 
 
+/**
+ */
+void
+gdaui_server_operation_update_parameters (GdauiServerOperation *op, GError** error) {
+	GdauiBasicForm *form;
+	g_return_if_fail (op != NULL);
+	g_return_if_fail (op->priv->widget != NULL);
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (op->priv->widget));
+	form = GDAUI_BASIC_FORM (op->priv->widget);
+	gdaui_basic_form_update_data_set (form, error);
+}
+
 /*
  * CREATE_TABLE "/FIELDS_A" Custom widgets rendering
  */
 static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row,
 							  GdaDataModelIter *form_iter);
-static void create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form);
-static GtkWidget *
-create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path,
-					 G_GNUC_UNUSED gchar **section_str,
-					 G_GNUC_UNUSED GSList **label_widgets)
-{
-	GdaServerOperationNode *info_node;
-	GtkWidget *hlayout, *sw, *box, *label;
-	GtkWidget *grid_fields, *form_props, *winfo;
-	GdaDataProxy *proxy;
-	gint name_col, col, nbcols;
-	GdaDataModelIter *grid_iter, *form_iter;
+// FIXME: Removed to avoid warning
+//static void create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form);
+// FIXME: Removed to avoid warning
+/* static GtkWidget * */
+/* create_table_fields_array_create_widget (GdauiServerOperation *form, const gchar *path, */
+/* 					 G_GNUC_UNUSED gchar **section_str, */
+/* 					 G_GNUC_UNUSED GSList **label_widgets) */
+/* { */
+/* 	GdaServerOperationNode *info_node; */
+/* 	GtkWidget *hlayout, *sw, *box, *label; */
+/* 	GtkWidget *grid_fields, *form_props, *winfo; */
+/* 	GdaDataProxy *proxy; */
+/* 	gint name_col, col, nbcols; */
+/* 	GdaDataModelIter *grid_iter, *form_iter; */
 
-	info_node = gda_server_operation_get_node_info (form->priv->op, path);
-	g_assert (info_node->type == GDA_SERVER_OPERATION_NODE_DATA_MODEL);
+/* 	info_node = gda_server_operation_get_node_info (form->priv->op, path); */
+/* 	g_assert (info_node->type == GDA_SERVER_OPERATION_NODE_DATA_MODEL); */
 
-	hlayout = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
+/* 	hlayout = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL); */
 
 	/* form for field properties */
-	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_paned_pack2 (GTK_PANED (hlayout), box, TRUE, TRUE);
+/* 	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0); */
+/* 	gtk_paned_pack2 (GTK_PANED (hlayout), box, TRUE, TRUE); */
 
-	label = gtk_label_new (_("<b>Field properties:</b>"));
-	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+/* 	label = gtk_label_new (_("<b>Field properties:</b>")); */
+/* 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE); */
+/* 	gtk_widget_set_halign (label, GTK_ALIGN_START); */
+/* 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0); */
 
-	form_props = gdaui_raw_form_new (GDA_DATA_MODEL (info_node->model));
-	proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (form_props));
-	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (form_props),
-					 GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE);
-	gtk_box_pack_start (GTK_BOX (box), form_props, TRUE, TRUE, 0);
-	g_signal_connect (proxy, "row-inserted",
-			  G_CALLBACK (create_table_proxy_row_inserted_cb), form);
+/* 	form_props = gdaui_raw_form_new (GDA_DATA_MODEL (info_node->model)); */
+/* 	proxy = gdaui_data_proxy_get_proxy (GDAUI_DATA_PROXY (form_props)); */
+/* 	gdaui_data_proxy_set_write_mode (GDAUI_DATA_PROXY (form_props), */
+/* 					 GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE); */
+/* 	gtk_box_pack_start (GTK_BOX (box), form_props, TRUE, TRUE, 0); */
+/* 	g_signal_connect (proxy, "row-inserted", */
+/* 			  G_CALLBACK (create_table_proxy_row_inserted_cb), form); */
 
-	gtk_widget_show_all (box);
+/* 	gtk_widget_show_all (box); */
 
 	/* grid for field names */
-	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-	gtk_paned_pack1 (GTK_PANED (hlayout), box, TRUE, TRUE);
+/* 	box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0); */
+/* 	gtk_paned_pack1 (GTK_PANED (hlayout), box, TRUE, TRUE); */
 
-	label = gtk_label_new (_("<b>Fields:</b>"));
-	gtk_label_set_use_markup (GTK_LABEL (label), TRUE);
-	gtk_widget_set_halign (label, GTK_ALIGN_START);
-	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0);
+/* 	label = gtk_label_new (_("<b>Fields:</b>")); */
+/* 	gtk_label_set_use_markup (GTK_LABEL (label), TRUE); */
+/* 	gtk_widget_set_halign (label, GTK_ALIGN_START); */
+/* 	gtk_box_pack_start (GTK_BOX (box), label, FALSE, FALSE, 0); */
 
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
+/* 	sw = gtk_scrolled_window_new (NULL, NULL); */
+/* 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), */
+/* 					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC); */
+/* 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE); */
 
-	grid_fields = gdaui_raw_grid_new (GDA_DATA_MODEL (proxy));
-	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid_fields), FALSE);
-	g_object_set (G_OBJECT (grid_fields), "info-cell-visible", FALSE, NULL);
+/* 	grid_fields = gdaui_raw_grid_new (GDA_DATA_MODEL (proxy)); */
+/* 	gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (grid_fields), FALSE); */
+/* 	g_object_set (G_OBJECT (grid_fields), "info-cell-visible", FALSE, NULL); */
 
-	name_col = 0;
-	nbcols = gda_data_proxy_get_proxied_model_n_cols (proxy);
-	g_assert (name_col < nbcols);
-	for (col = 0; col < name_col; col++)
-		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE);
-	for (col = name_col + 1; col < nbcols; col++)
-		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE);
+/* 	name_col = 0; */
+/* 	nbcols = gda_data_proxy_get_proxied_model_n_cols (proxy); */
+/* 	g_assert (name_col < nbcols); */
+/* 	for (col = 0; col < name_col; col++) */
+/* 		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE); */
+/* 	for (col = name_col + 1; col < nbcols; col++) */
+/* 		gdaui_data_selector_set_column_visible (GDAUI_DATA_SELECTOR (grid_fields), col, FALSE); */
 
-	gtk_container_add (GTK_CONTAINER (sw), grid_fields);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
-	gtk_box_pack_start (GTK_BOX (box), sw, TRUE, TRUE, 0);
+/* 	gtk_container_add (GTK_CONTAINER (sw), grid_fields); */
+/* 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE); */
+/* 	gtk_box_pack_start (GTK_BOX (box), sw, TRUE, TRUE, 0); */
 
 	/* buttons to add/remove fields */
-	winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form_props),
-					   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS);
-	gtk_box_pack_start (GTK_BOX (box), winfo, FALSE, FALSE, 0);
+/* 	winfo = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form_props), */
+/* 					   GDAUI_DATA_PROXY_INFO_ROW_MODIFY_BUTTONS); */
+/* 	gtk_box_pack_start (GTK_BOX (box), winfo, FALSE, FALSE, 0); */
 
-	gtk_widget_show_all (box);
+/* 	gtk_widget_show_all (box); */
 
 	/* keep the selections in sync */
-	grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid_fields));
-	form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form_props));
-	g_signal_connect (grid_iter, "row-changed",
-			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), form_iter);
-	g_signal_connect (form_iter, "row-changed",
-			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), grid_iter);
+/* 	grid_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid_fields)); */
+/* 	form_iter = gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (form_props)); */
+/* 	g_signal_connect (grid_iter, "row-changed", */
+/* 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), form_iter); */
+/* 	g_signal_connect (form_iter, "row-changed", */
+/* 			  G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), grid_iter); */
 
-	gtk_widget_set_vexpand (hlayout, TRUE);
+/* 	gtk_widget_set_vexpand (hlayout, TRUE); */
 
-	GtkToolItem *item;
-	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_NEW_DATA);
-	if (item)
-		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add a new field"));
-	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_DELETE_SELECTED_DATA);
-	if (item)
-		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Remove selected field"));
-	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_WRITE_MODIFIED_DATA);
-	if (item) {
-		gtk_widget_hide (GTK_WIDGET (item));
-		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL);
-	}
-	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_RESET_DATA);
-	if (item) {
-		gtk_widget_hide (GTK_WIDGET (item));
-		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL);
-	}
+/* 	GtkToolItem *item; */
+/* 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_NEW_DATA); */
+/* 	if (item) */
+/* 		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Add a new field")); */
+/* 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_DELETE_SELECTED_DATA); */
+/* 	if (item) */
+/* 		gtk_widget_set_tooltip_text (GTK_WIDGET (item), _("Remove selected field")); */
+/* 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_WRITE_MODIFIED_DATA); */
+/* 	if (item) { */
+/* 		gtk_widget_hide (GTK_WIDGET (item)); */
+/* 		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL); */
+/* 	} */
+/* 	item = gdaui_data_proxy_info_get_item (GDAUI_DATA_PROXY_INFO (winfo), GDAUI_ACTION_RESET_DATA); */
+/* 	if (item) { */
+/* 		gtk_widget_hide (GTK_WIDGET (item)); */
+/* 		g_object_set ((GObject*) item, "no-show-all", TRUE, NULL); */
+/* 	} */
 
-	return hlayout;
-}
+/* 	return hlayout; */
+/* } */
 
 static void
 create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *iter1, gint row, GdaDataModelIter *iter2)
@@ -1231,27 +1254,28 @@ create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *iter1, gint row,
 					   G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1);
 }
 
-static void
-create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form)
-{
-	GdaDataModelIter *iter;
-	GdaHolder *holder;
-	GdaServerProvider *prov;
-	GdaConnection *cnc;
-	const gchar *type = NULL;
+/* static void */
+/* create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form) */
+/* { */
+/* 	GdaDataModelIter *iter; */
+/* 	GdaHolder *holder; */
+/* 	GdaServerProvider *prov; */
+/* 	GdaConnection *cnc; */
+/* 	const gchar *type = NULL; */
 
-	iter = gda_data_model_create_iter (GDA_DATA_MODEL (proxy));
-	gda_data_model_iter_move_to_row (iter, row);
-	holder = gda_set_get_nth_holder (GDA_SET (iter), 0);
-	gda_holder_set_value_str (holder, NULL, "fieldname", NULL);
+/* 	iter = gda_data_model_create_iter (GDA_DATA_MODEL (proxy)); */
+/* 	gda_data_model_iter_move_to_row (iter, row); */
+/* 	holder = gda_set_get_nth_holder (GDA_SET (iter), 0); */
+/* 	gda_holder_set_value_str (holder, NULL, "fieldname", NULL); */
 
-	g_object_get (form->priv->op, "connection", &cnc, "provider", &prov, NULL);
-	if (prov)
-		type = gda_server_provider_get_default_dbms_type (prov, cnc, G_TYPE_STRING);
-	holder = gda_set_get_nth_holder (GDA_SET (iter), 1);
-	gda_holder_set_value_str (holder, NULL, type ? type : "varchar", NULL);
-	if (cnc)
-		g_object_unref (cnc);
-	if (prov)
-		g_object_unref (prov);
-}
+/* 	g_object_get (form->priv->op, "connection", &cnc, "provider", &prov, NULL); */
+/* 	if (prov) */
+/* 		type = gda_server_provider_get_default_dbms_type (prov, cnc, G_TYPE_STRING); */
+/* 	holder = gda_set_get_nth_holder (GDA_SET (iter), 1); */
+/* 	gda_holder_set_value_str (holder, NULL, type ? type : "varchar", NULL); */
+/* 	if (cnc) */
+/* 		g_object_unref (cnc); */
+/* 	if (prov) */
+/* 		g_object_unref (prov); */
+/* } */
+

@@ -2616,7 +2616,7 @@ gda_server_operation_is_valid_from_resource (GdaServerOperation *op, const gchar
  * @error: a place to store errors, or %NULL
  *
  * Creates a new #GdaServerOperation object which contains the specifications required
- * to create a database. Once these specifications provided, use
+ * to create a database. Once these specifications are provided, use
  * gda_server_operation_perform_create_database() to perform the database creation.
  *
  * If @db_name is left %NULL, then the name of the database to create will have to be set in the

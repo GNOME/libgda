@@ -730,7 +730,10 @@ compute_public_data (GdauiSet *set)
 	/* scan GdaSetGroup list */
 	for (list = gda_set_get_groups (aset); list; list = list->next) {
 		GdauiSetGroup *dgroup;
-		g_assert (list->data);
+		if (list->data == NULL) {
+      g_warning (_("No group exists for Set"));
+      continue;
+    }
 		dgroup = gdaui_set_group_new (GDA_SET_GROUP (list->data));
 		gdaui_set_group_set_source (dgroup, 
 		                            g_hash_table_lookup (hash, 

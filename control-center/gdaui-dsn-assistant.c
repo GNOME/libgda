@@ -101,6 +101,7 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 	gboolean allok = TRUE;
 	GString *cnc_string = NULL;
 	GdauiDsnAssistant *assistant = (GdauiDsnAssistant *) assist;
+  GError *error = NULL;
 
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 
@@ -112,8 +113,27 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 
 	/* New database creation first */
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (assistant->priv->choose_toggle))) {
-		if (!gda_server_operation_is_valid (assistant->priv->create_db_op, NULL, NULL)) {
-			_gdaui_utility_show_error (NULL, _("Missing mandatory information, to create database"));
+    gdaui_server_operation_update_parameters (assistant->priv->newdb_params, &error);
+    gchar *msg = "No error details";
+    if (error != NULL) {
+      if (error->message != NULL) {
+        msg = error->message;
+      }
+			_gdaui_utility_show_error (NULL, _("Error at updating paramenters for CREATE DATABASE operation: '%s'"), msg);
+        g_error_free (error);
+      return;
+    }
+    gchar *xml = gda_server_operation_save_data_to_xml_string (assistant->priv->create_db_op, NULL);
+    g_print ("%s", xml);
+    g_free (xml);
+		if (!gda_server_operation_is_valid (assistant->priv->create_db_op, NULL, &error)) {
+      gchar *msg = "No error details";
+      if (error != NULL && error->message != NULL) {
+        msg = error->message;
+      }
+			_gdaui_utility_show_error (NULL, _("Missing mandatory information, to create database: '%s'"), msg);
+      if (error != NULL)
+        g_error_free (error);
 			gtk_assistant_set_current_page (assist, PAGE_CREATE_DB_INFO);
 			return;
 		}
@@ -273,7 +293,7 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
                         GTK_DIALOG_MODAL,
                         GTK_MESSAGE_ERROR,
                         GTK_BUTTONS_CLOSE,
-                        _("No providers exists"));
+                        _("No provider exists"));
     gtk_dialog_run (GTK_DIALOG (msg));
     gtk_widget_destroy (msg);
     return;

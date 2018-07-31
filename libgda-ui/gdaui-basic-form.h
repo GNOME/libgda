@@ -174,6 +174,7 @@ GtkWidget        *gdaui_basic_form_get_label_widget         (GdauiBasicForm *for
 void              gdaui_basic_form_set_layout_from_file     (GdauiBasicForm *form, const gchar *file_name,
 							     const gchar *form_name);
 GtkWidget        *gdaui_basic_form_get_place_holder         (GdauiBasicForm *form, const gchar *placeholder_id);
+void              gdaui_basic_form_update_data_set            (GdauiBasicForm *form, GError **error);
 
 typedef enum {
 	GDAUI_BASIC_FORM_LABELS,

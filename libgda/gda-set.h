@@ -91,12 +91,6 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 #define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
 #define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
 
-/**
- * GdaSet:
- * @sources_list: (element-type Gda.SetSource): list of GdaSetSource
- * @groups_list: (element-type Gda.SetGroup): list of GdaSetGroup
- *
- */
 struct _GdaSet
 {
 	GObject         object;
@@ -132,8 +126,7 @@ struct _GdaSetClass
  * @stability: Stable
  * @see_also: #GdaHolder
  *
- * The #GdaSet object is a container for several values (as #GdaHolder objects). The list of #GdaHolder objects is
- * publicly accessible (and should not be modified), using the "holders" attribute. Each #GdaSet object also
+ * The #GdaSet object is a container for several values (as #GdaHolder objects). Each #GdaSet object also
  * maintains some publicly accessible information about the #GdaHolder objects, through the #GdaSetNode, #GdaSetSource and
  * #GdaSetGroup structures (see gda_set_get_node(), gda_set_get_source() and gda_set_get_group()).
  *

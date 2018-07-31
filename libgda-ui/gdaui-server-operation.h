@@ -63,10 +63,11 @@ struct _GdauiServerOperationClass
  * SQLite database.
  */
 
-GType             gdaui_server_operation_get_type      (void) G_GNUC_CONST;
-GtkWidget        *gdaui_server_operation_new           (GdaServerOperation *op);
-GtkWidget        *gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
+GType             gdaui_server_operation_get_type         (void) G_GNUC_CONST;
+GtkWidget        *gdaui_server_operation_new              (GdaServerOperation *op);
+GtkWidget        *gdaui_server_operation_new_in_dialog    (GdaServerOperation *op, GtkWindow *parent,
 							   const gchar *title, const gchar *header);
+void              gdaui_server_operation_update_parameters (GdauiServerOperation *op, GError **error);
 
 G_END_DECLS
 
