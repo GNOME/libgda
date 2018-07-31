@@ -321,7 +321,7 @@ static void
 ev_cb (GtkWidget *wid, GdkEvent *event, GObject *obj)
 {
 	/* see /usr/include/gtk-3.0/gdk/gdkevents.h */
-        if ((event->type == GDK_FOCUS_CHANGE) && !((GdkEventFocus*)event)->in)
+  if ((event->type == GDK_FOCUS_CHANGE) && !((GdkEventFocus*)event)->in)
 		g_signal_emit_by_name (obj, "event-after", event);
 }
 

@@ -316,6 +316,8 @@ actions_button_clicked_cb (G_GNUC_UNUSED GtkButton *button, GdauiEntryShell *she
 static void
 event_after_cb (GtkWidget *widget, GdkEvent *event, GdauiEntryShell *shell)
 {
+	g_return_if_fail (shell != NULL);
+	g_return_if_fail (shell->priv != NULL);
 	if (((event->type == GDK_KEY_RELEASE) && (((GdkEventKey*) event)->keyval == GDK_KEY_Escape)) ||
 	    ((event->type == GDK_FOCUS_CHANGE) && (((GdkEventFocus*) event)->in == FALSE))) {
 		shell->priv->being_edited = FALSE;
