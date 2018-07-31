@@ -80,8 +80,8 @@ jdbc-resources.h jdbc-resources.c: $(srcdir)/jdbc.gresource.xml $(RAWRESOURCES) 
 
 CLEANFILES = $(resources) $(RAWRESOURCES)
 
-$(jni_headers): $(jdbcprov_classes)
-	$(JAVAH) -classpath . -d $(builddir) -force `basename $@ | sed -e 's/\.h$$//'`
+$(jni_headers): $(jdbcprov_sources)
+	$(JAVAC) -classpath . -h $(builddir) $^
 
 jdbcprov_jar = gdaprovider-6.0.jar
 jdbcprov_sources = \
@@ -96,7 +96,7 @@ jdbcprovdir = $(providerdir)
 jdbcprov_DATA = $(jdbcprov_jar)
 
 GdaJConnection.class: $(jdbcprov_sources)
-	$(JAVAC) -cp . $(JFLAGS) -d $(top_builddir)/providers/jdbc $^
+	$(JAVAC) -cp . $(JFLAGS) -d $(top_builddir)/providers/jdbc -classpath $(builddir) -h $(builddir) $^
 
 $(jdbcprov_jar): $(jdbcprov_classes)
 	$(JAR) cfm $(jdbcprov_jar) $(top_srcdir)/providers/jdbc/MANIFEST.MF *.class
