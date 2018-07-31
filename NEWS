@@ -1,6 +1,21 @@
-libgda 5.90
+libgda 5.90.0
+ - Removed Deprecated API from 5.x and 4.x series
+ - Added new DDL module, from Pavlo Solntsev <p.sun.fun@gmail.com>
  - Removing public fields in GdaSet, adding API for GObject Introspection
  - GdaTimestamp, replaced by GDateTime
+ - Initial work to port build system from Autotools to Meson
+ - Improved Documentation
+ - Improved GObject Introspection bindings
+ - Improved Vala bindings
+ - Removed Vala classes to a new project https://gitlab.gnome.org/esodan/libvda
+
+libgda-ui 5.90.0
+ - GDA Gtk+ Widgets library is built by default if dependencies met
+ - GdaBrowser is working again
+ - GDA Control Center is working again
+ - Improved GObject Introspection bindings
+ - Improved Vala Bindings
+
 libgda 5.2.4
 libgda 5.2.3
 libgda 5.2.2, 2013-12-23
