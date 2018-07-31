@@ -1,6 +1,6 @@
 project('libgda', 'c',
         license: 'LGPL2+',
-        version : '5.99.0',
+        version : '5.90.0',
         meson_version: '>= 0.44.1',
         default_options: [
                         'c_std=gnu11',
