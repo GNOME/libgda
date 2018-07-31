@@ -670,7 +670,13 @@ connection_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *paramet
 			}
 
 			/* update meta store */
-			t_connection_update_meta_data (bwin->priv->tcnc);
+			t_connection_update_meta_data (bwin->priv->tcnc, &error);
+      if (error != NULL) {
+        ui_show_error ((GtkWindow*) bwin,
+					       _("Error updating meta data for connection: %s"),
+					       error && error->message ? error->message : _("No detail"));
+				g_clear_error (&error);
+      }
 		}
 		gtk_widget_destroy (win);
 	}
@@ -681,8 +687,22 @@ connection_properties_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *paramet
 static void
 connection_meta_update_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer data)
 {
+  GError *error = NULL;
 	BrowserWindow *bwin = BROWSER_WINDOW (data);
-	t_connection_update_meta_data (bwin->priv->tcnc);
+	t_connection_update_meta_data (bwin->priv->tcnc, &error);
+  if (error != NULL) {
+    GtkWidget *msg;
+    msg = gtk_message_dialog_new_with_markup (NULL,
+                                              GTK_DIALOG_MODAL,
+                                              GTK_MESSAGE_WARNING,
+                                              GTK_BUTTONS_CLOSE,
+                                              _("Error Updating Meta Data: %s"),
+                                              error->message ? error->message : _("No detail")
+                                              );
+    gtk_dialog_run (GTK_DIALOG (msg));
+    gtk_widget_destroy (msg);
+    g_clear_error (&error);
+  }
 	//gtk_widget_insert_action_group (GTK_WIDGET (bwin), "win", NULL);
 }
 

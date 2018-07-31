@@ -91,7 +91,7 @@ const GdaDsnInfo   *t_connection_get_dsn_information    (TConnection *tcnc);
 
 gboolean            t_connection_is_busy                (TConnection *tcnc, gchar **out_reason);
 gboolean            t_connection_is_virtual             (TConnection *tcnc);
-void                t_connection_update_meta_data       (TConnection *tcnc);
+void                t_connection_update_meta_data       (TConnection *tcnc, GError **error);
 void                t_connection_meta_data_changed      (TConnection *tcnc);
 GdaMetaStruct      *t_connection_get_meta_struct        (TConnection *tcnc);
 GdaMetaStore       *t_connection_get_meta_store         (TConnection *tcnc);

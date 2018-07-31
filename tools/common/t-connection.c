@@ -1191,7 +1191,7 @@ t_connection_is_busy (TConnection *tcnc, gchar **out_reason)
  * Make @tcnc update its meta store in the background.
  */
 void
-t_connection_update_meta_data (TConnection *tcnc)
+t_connection_update_meta_data (TConnection *tcnc, GError ** error)
 {
 	g_return_if_fail (T_IS_CONNECTION (tcnc));
 
@@ -1199,19 +1199,15 @@ t_connection_update_meta_data (TConnection *tcnc)
 
 	GdaMetaContext context = {"_tables", 0, NULL, NULL};
 	gboolean result;
-	GError *error = NULL;
-	result = gda_connection_update_meta_store (tcnc->priv->cnc, &context, &error);
-
-	t_connection_set_busy_state (tcnc, FALSE, NULL);
-
-	if (!result) {
-		gchar *tmp;
+	result = gda_connection_update_meta_store (tcnc->priv->cnc, &context, error);
+  if (!result) {
+    gchar *tmp;
 		tmp = g_strdup_printf (_("Error while fetching meta data from the connection: %s"),
-				       error->message ? error->message : _("No detail"));
-		g_clear_error (&error);
+				       (*error)->message ? (*error)->message : _("No detail"));
 		g_signal_emit (tcnc, t_connection_signals [NOTICE], 0, tmp);
-		g_free (tmp);
-	}
+    return;
+  }
+	t_connection_set_busy_state (tcnc, FALSE, NULL);
 }
 
 /**
