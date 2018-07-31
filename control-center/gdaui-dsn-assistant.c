@@ -123,9 +123,6 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
         g_error_free (error);
       return;
     }
-    gchar *xml = gda_server_operation_save_data_to_xml_string (assistant->priv->create_db_op, NULL);
-    g_print ("%s", xml);
-    g_free (xml);
 		if (!gda_server_operation_is_valid (assistant->priv->create_db_op, NULL, &error)) {
       gchar *msg = "No error details";
       if (error != NULL && error->message != NULL) {

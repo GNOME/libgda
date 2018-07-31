@@ -2119,6 +2119,7 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
  */
 GSList*
 gda_set_get_holders (GdaSet *set) {
+  g_return_val_if_fail (set != NULL, NULL);
 	g_return_val_if_fail (GDA_IS_SET(set), NULL);
 	return set->priv->holders;
 }

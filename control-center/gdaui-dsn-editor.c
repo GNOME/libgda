@@ -707,7 +707,7 @@ gdaui_dsn_editor_need_authentication (GdauiDsnEditor *config)
 
 	GdaProviderInfo *pinfo;
 	pinfo = gda_config_get_provider_info (dsn_info->provider);
-	if (pinfo && gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))
+	if (pinfo && pinfo->auth_params && gda_set_get_holders (pinfo->auth_params))
 		return TRUE;
 	else
 		return FALSE;
