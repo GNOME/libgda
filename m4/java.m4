@@ -111,7 +111,6 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	AC_MSG_CHECKING([if all java programs are found])
 	AC_PATH_PROGS(JAVA_PROG,java,,${JAVA_PATH})
 	AC_PATH_PROGS(JAVAC,javac,,${JAVA_PATH})
-	AC_PATH_PROGS(JAVAH,javah,,${JAVA_PATH})
 	AC_PATH_PROGS(JAR,jar,,${JAVA_PATH})
 
 	have_all_java=yes
