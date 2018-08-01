@@ -107,6 +107,8 @@ gboolean         gda_ddl_creator_write_to_path (GdaDdlCreator *self,
                                                 const gchar *path,
                                                 GError **error);
 
+gboolean         gda_ddl_creator_validate_file_from_path (const gchar *xmlfile,
+                                                          GError **error);
 G_END_DECLS
 
 #endif /* GDA_DDL_CREATOR_H */

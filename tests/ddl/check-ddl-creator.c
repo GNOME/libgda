@@ -105,6 +105,14 @@ test_ddl_creato_parse_xml_file (CheckDdlObject *self,
 }
 
 static void
+test_ddl_creato_validate_xml (CheckDdlObject *self,
+                              gconstpointer user_data)
+{
+  gboolean res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
+  g_assert_true (res);
+}
+
+static void
 test_ddl_creato_create_db (CheckDdlObject *self,
                            gconstpointer user_data)
 {
@@ -168,6 +176,12 @@ main (gint   argc,
               test_ddl_creato_create_db,
               test_ddl_creato_finish);
 
+  g_test_add ("/test-ddl/creator-validate-xml",
+              CheckDdlObject,
+              NULL,
+              test_ddl_creato_start,
+              test_ddl_creato_validate_xml,
+              test_ddl_creato_finish);
   /*g_test_add ("/test-ddl/creator-parse-cnc",
               CheckDdlObject,
               NULL,
