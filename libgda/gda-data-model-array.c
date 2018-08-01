@@ -311,13 +311,13 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 	va_start (args, cols);
 	i = 0;
 	while (i < cols) {
-		gint argtype;
+		GType argtype;
 
 		argtype = va_arg (args, GType);
 		g_assert (argtype >= 0);
 
 		gda_column_set_g_type (gda_data_model_describe_column (model, i), 
-					 (GType) argtype);
+					 argtype);
 		i++;
 	}
 	va_end (args);

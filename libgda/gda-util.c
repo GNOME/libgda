@@ -81,7 +81,9 @@ extern GdaAttributesManager *gda_holder_attributes_manager;
 const gchar *
 gda_g_type_to_string (GType type)
 {
-	if (type == GDA_TYPE_NULL)
+	if (type == G_TYPE_INVALID)
+    return "null";
+	else if (type == GDA_TYPE_NULL)
 		return "null";
 	else if (type == G_TYPE_INT)
 		return "int";
@@ -99,7 +101,7 @@ gda_g_type_to_string (GType type)
 		return "blob";
 	else if (type == GDA_TYPE_BINARY)
 		return "binary";
-	else 
+  else
 		return g_type_name (type);
 }
 
@@ -181,7 +183,7 @@ gda_g_type_from_string (const gchar *str)
 			type = G_TYPE_INVALID;
 	}
 
-	return type;
+  return type;
 }
 
 /**

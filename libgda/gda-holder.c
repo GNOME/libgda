@@ -1635,8 +1635,9 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
-	if (model)
-		g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+  g_return_val_if_fail (model != NULL, FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	g_return_val_if_fail (col >= 0 && col < gda_data_model_get_n_columns (model), FALSE);
 
 	/* No check is done on the validity of @col or even its existance */
 	/* Note: for internal implementation if @col<0, then it's ignored */
@@ -1650,7 +1651,7 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 		if (gcol) {
 			ctype = gda_column_get_g_type (gcol);
 			if ((htype != GDA_TYPE_NULL) && (ctype != GDA_TYPE_NULL) &&
-			    (htype != ctype)) {
+          (htype != ctype)) {
 				g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 					     _("GdaHolder has a gda type (%s) incompatible with "
                                                "source column %d type (%s)"),
