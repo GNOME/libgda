@@ -6,16 +6,16 @@ AUTOMAKE_OPTIONS = 1.6
 DOC_MODULE=libgda-6.0
 
 # The top-level SGML file.
-DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
+DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.xml
 
 # Extra options to supply to gtkdoc-scan
-SCAN_OPTIONS=--deprecated-guards="GDA_DISABLE_DEPRECATED"
+SCAN_OPTIONS=--rebuild-types --deprecated-guards="GDA_DISABLE_DEPRECATED"
 
 # Extra options to pass to gtkdoc-scangobj
 SCANGOBJ_OPTIONS=
 
 # The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR=$(top_srcdir)/doc/src-files
+DOC_SOURCE_DIR=$(top_srcdir)/libgda
 
 # Add the builddir to the HTML path so that version.xml is found
 MKHTML_OPTIONS=--path="$(abs_srcdir)"
@@ -27,7 +27,13 @@ CFILE_GLOB=
 # Header files to ignore when scanning
 IGNORE_HFILES= gda-marshal.h gda-custom-marshal.h gda-enum-types.h sqlite3.h csv.h md5.h \
 	jni-wrapper.h gda-jdbc-recordset.h gda-jdbc-blob-op.h gda-jdbc-provider.h gda-jdbc-pstmt.h \
-	popup-container.h providers tools control-center tests examples plugins tmp
+	popup-container.h providers tools control-center tests examples plugins tmp \
+	dummy-object.h
+
+if BDB
+else
+IGNORE_HFILES+=gda-data-model-bdb.h
+endif
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -41,17 +47,11 @@ GTKDOC_CFLAGS = -I$(top_srcdir) \
 	-DGETTEXT_PACKAGE=\""$(GETTEXT_PACKAGE)"\"
 
 GTKDOC_LIBS =  $(top_builddir)/libgda/libgda-6.0.la \
-	$(top_builddir)/libgda-report/libgda-report-6.0.la \
+	$(top_builddir)/libgda/thread-wrapper/libgda_threadwrapper-6.0.la \
 	$(COREDEPS_LIBS)
 
-if HAVE_UI
-GTKDOC_CFLAGS += $(GTK_CFLAGS)
-GTKDOC_LIBS += $(GTK_LIBS) \
-	$(top_builddir)/libgda-ui/libgda-ui-6.0.la
-endif
-
 # Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests tmp examples plugins"
+MKDB_OPTIONS=--xml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests tmp examples plugins"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
 content_files = fdl-appendix.sgml version.xml builddate.xml
@@ -88,7 +88,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in builddate.xml.in \
 	visual_index.xml prov-notes.xml \
-	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types \
+	libgda-sections.txt libgda-ui-sections.txt \
 	examples/blobtest.c \
 	data-model-writing.xml ddl-creator.xml
 
@@ -100,33 +100,9 @@ DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-6.0.types libgda-6.0-sections.txt
 DOC_STAMPS += pdf-build.stamp
 CLEANFILES += $(DOC_STAMPS) libgda-6.0-sections.txt
 
-# Create the PDF
-PDF: pdf-build.stamp
-pdf-build.stamp:
-	if test -f $(srcdir)/$(DOC_MAIN_SGML_FILE); then \
-		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE) -o $(DOC_MODULE)-doc.pdf ; \
-	fi
-	touch pdf-build.stamp
-
 if ENABLE_GTK_DOC
 TESTS_ENVIRONMENT = \
   DOC_MODULE=$(DOC_MODULE) DOC_MAIN_SGML_FILE=$(DOC_MAIN_SGML_FILE) \
   SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir)
 TESTS = $(GTKDOC_CHECK)
 endif
-
-libgda-6.0-sections.txt: libgda-sections.txt libgda-ui-sections.txt
-	cp ${srcdir}/libgda-sections.txt ${srcdir}/libgda-6.0-sections.txt
-	echo "" >> ${srcdir}/libgda-6.0-sections.txt
-	cat ${srcdir}/libgda-ui-sections.txt >> ${srcdir}/libgda-6.0-sections.txt
-	cp ${srcdir}/libgda-6.0-sections.txt ${srcdir}/libgda-6.0-sections.txt.tmp
-	mv ${srcdir}/libgda-6.0-sections.txt.tmp ${srcdir}/libgda-6.0-sections.txt
-
-libgda-6.0.types: libgda.types libgda-ui.types
-	cp ${srcdir}/libgda.types ${srcdir}/libgda-6.0.types
-	if test HAVE_UI
-	then
-		echo "" >> ${srcdir}/libgda-6.0.types
-		cat ${srcdir}/doc/C/libgda-ui.types >> ${srcdir}/libgda-6.0.types
-	fi
-

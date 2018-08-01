@@ -1,4 +1,6 @@
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-gda-gi=yes --enable-introspection=yes --enable-gdaui-gi=yes --enable-gi-system-install=no --enable-vala=yes --enable-vala-extensions=yes
+if ENABLE_GTK_DOC
+TESTS=$(GTKDOC_CHECK)
+endif
 
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt
@@ -21,6 +23,10 @@ if ENABLE_EXAMPLES
 EXAMPLES_DIR=examples
 endif
 
+if ENABLE_GTK_DOC
+DOC_DIR=doc
+endif
+
 SUBDIRS = \
 	po \
 	libgda \
@@ -34,7 +40,7 @@ SUBDIRS = \
 	testing \
 	data \
 	$(EXAMPLES_DIR) \
-	doc
+	$(DOC_DIR)
 
 example_files = \
 	examples/SimpleExample/example.c \

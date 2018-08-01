@@ -28,6 +28,7 @@ echo \#buildapi-variable-no-builddir >/dev/null
 
 AC_SUBST(GDA_VERSION, major.minor.micro)
 
+
 # ABI version:
 # Careful. Changing these will break ABI, because it is used for the library name and header install path:
 # This allows us to do a 3.2 version that is ABI-compatible with 3.0, but with API additions.
@@ -652,8 +653,11 @@ AC_SUBST(LIBGCRYPT_LIBS)
 dnl ******************************
 dnl gtk-doc
 dnl ******************************
-
+m4_ifdef([GTK_DOC_CHECK], [
 GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
+],[
+AM_CONDITIONAL([ENABLE_GTK_DOC], false)
+])
 
 dnl ******************************
 dnl Vala documentation
@@ -1059,7 +1063,6 @@ tests/ui/Makefile
 tests/ddl/Makefile
 doc/Makefile
 doc/C/Makefile
-doc/C/libgda.types
 doc/C/version.xml
 doc/C/builddate.xml
 doc/mallard/Makefile
