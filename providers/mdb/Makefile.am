@@ -59,7 +59,7 @@ mdb.gresources.c: mdb.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mdb-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mdb-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-mdb-6.0.pc.in mdb.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = \

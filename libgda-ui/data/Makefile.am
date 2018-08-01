@@ -25,4 +25,6 @@ EXTRA_DIST = \
 	$(icons_DATA) \
 	$(dbicons) \
 	import_encodings.xml \
-	server_operation.xml
+	server_operation.xml \
+	mime-types-extensions \
+	gdaui-generic.png

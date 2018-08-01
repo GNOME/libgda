@@ -80,7 +80,7 @@ mysql.gresources.c: mysql.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-mysql-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-mysql-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-mysql-6.0.pc.in mysql.gresource.xml
 DISTCLEANFILES = $(xml_DATA) $(genfiles)
 
 CLEANFILES = \

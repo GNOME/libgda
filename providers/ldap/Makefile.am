@@ -45,7 +45,7 @@ ldap.gresources.c: ldap.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-ldap-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-ldap-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-ldap-6.0.pc.in ldap.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = \

@@ -84,7 +84,7 @@ oracle.gresources.c: oracle.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-oracle-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-oracle-6.0.pc.in parser.y gen_def.c $(keyword_files)
+EXTRA_DIST = $(xml_in_files) libgda-oracle-6.0.pc.in parser.y gen_def.c $(keyword_files) oracle.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = parser.h parser.c parser.out oracle_token_types.h gen_def$(EXEEXT_FOR_BUILD) \

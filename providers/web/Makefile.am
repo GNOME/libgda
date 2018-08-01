@@ -72,7 +72,8 @@ php_DATA = \
 
 
 EXTRA_DIST = $(xml_in_files) libgda-web-6.0.pc.in \
-	$(php_DATA)
+	$(php_DATA) \
+	web.gresource.xml
 
 DISTCLEANFILES = $(xml_DATA)
 

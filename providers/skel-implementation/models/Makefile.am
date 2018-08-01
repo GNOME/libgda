@@ -43,7 +43,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 #pkgconfig_DATA = libgda-models-6.0.pc
 noinst_DATA += libgda-models-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-models-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-models-6.0.pc.in models.gresource.xml
 DISTCLEANFILES = $(noinst_DATA)
 
 CLEANFILES = \

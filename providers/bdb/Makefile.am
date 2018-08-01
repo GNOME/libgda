@@ -49,7 +49,7 @@ bdb.gresources.c: bdb.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-bdb-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-bdb-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-bdb-6.0.pc.in bdb.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = \

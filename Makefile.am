@@ -118,7 +118,9 @@ EXTRA_DIST = \
 	intltool-update.in \
 	$(example_files) \
 	getsp.class \
-	getsp.java
+	getsp.java \
+	tap-driver.sh \
+	tap-test
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \

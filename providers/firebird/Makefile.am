@@ -86,7 +86,7 @@ firebird.gresources.c: firebird.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-firebird-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-firebird-6.0.pc.in parser.y gen_def.c
+EXTRA_DIST = $(xml_in_files) libgda-firebird-6.0.pc.in parser.y gen_def.c firebird.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = \

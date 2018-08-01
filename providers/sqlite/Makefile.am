@@ -51,7 +51,7 @@ sqlite.gresources.c: sqlite.gresource.xml $(RESOURCES)
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgda-sqlite-6.0.pc
 
-EXTRA_DIST = $(xml_in_files) libgda-sqlite-6.0.pc.in
+EXTRA_DIST = $(xml_in_files) libgda-sqlite-6.0.pc.in sqlite.gresource.xml
 DISTCLEANFILES = $(xml_DATA)
 
 CLEANFILES = \

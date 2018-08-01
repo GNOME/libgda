@@ -74,7 +74,8 @@ pkgconfig_DATA = libgda-sqlcipher-6.0.pc
 EXTRA_DIST = $(xml_in_files) \
 	libgda-sqlcipher-6.0.pc.in \
 	sqlcipher.patch \
-	COPYING.sqlcipher
+	COPYING.sqlcipher \
+	sqlcipher.gresource.xml
 
 CLEANFILES = \
 	$(sqlite_sources) \

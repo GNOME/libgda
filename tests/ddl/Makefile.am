@@ -1,4 +1,3 @@
-include $(top_srcdir)/glib-tap.mk
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
@@ -34,5 +33,10 @@ check_ddl_view_LDADD = \
        $(top_builddir)/libgda/libgda-6.0.la \
        $(COREDEPS_LIBS)
 
-EXTRA_DIST = column_test.xml \
-	     ddl-db.xml
+
+include $(top_srcdir)/glib-tap.mk
+
+EXTRA_DIST += column_test.xml \
+	     ddl-db.xml \
+	     fkey_test.xml \
+	     view_test.xml
