@@ -40,3 +40,5 @@ EXTRA_DIST += column_test.xml \
 	     ddl-db.xml \
 	     fkey_test.xml \
 	     view_test.xml
+
+DISTCLEANFILES=ddl-test-out.xml ddl_test.db

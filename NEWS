@@ -1,3 +1,9 @@
+libgda 5.90.1
+ - Minor Autotools fixes for distribution
+
+libgda-ui 5.90.1
+ - Minor Autotools fixes for distribution
+
 libgda 5.90.0
  - Removed Deprecated API from 5.x and 4.x series
  - Added new DDL module, from Pavlo Solntsev <p.sun.fun@gmail.com>

@@ -2,6 +2,8 @@ if ENABLE_GTK_DOC
 TESTS=$(GTKDOC_CHECK)
 endif
 
+DISTCHECK_CONFIGURE_FLAGS = --enable-gi-system-install=no
+
 if HAVE_LIBXSLT
 XSLT_DIR=libgda-xslt
 XSLT_PC=libgda-xslt-$(GDA_ABI_VERSION).pc

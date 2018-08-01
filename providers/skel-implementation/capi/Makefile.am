@@ -84,7 +84,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 noinst_DATA += libgda-capi-6.0.pc
 
 EXTRA_DIST = $(xml_in_files) libgda-capi-6.0.pc.in parser.y gen_def.c $(keyword_files) capi.gresource.xml
-DISTCLEANFILES = $(noinst_DATA)
+DISTCLEANFILES = $(noinst_DATA) capi.gresources.c keywords_hash.code
 
 CLEANFILES = parser.h parser.c parser.out capi_token_types.h gen_def$(EXEEXT_FOR_BUILD) \
 	mkkeywordhash$(EXEEXT_FOR_BUILD) keywords_hash.c \

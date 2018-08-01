@@ -274,6 +274,8 @@ EXTRA_DIST += \
 	Gdaui-6.0.metadata \
         $(vapi_DATA)
 
+DISTCLEANFILES=libgdaui-6.0.vapi
+
 endif
 
 endif

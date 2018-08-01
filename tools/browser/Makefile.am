@@ -105,5 +105,6 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
+	gda-browser-6.0.desktop.in \
 	$(appdata_DATA)
 

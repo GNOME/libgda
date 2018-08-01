@@ -110,3 +110,7 @@ test_server_operation_LDADD = \
         $(COREDEPS_LIBS)
 
 EXTRA_DIST = dbstruct.xml
+
+DISTCLEANFILES= \
+	ddl_test.db \
+	op_test_db.db
