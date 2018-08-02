@@ -15,3 +15,7 @@ endif
 if found_jdbc
 subdir('jdbc')
 endif
+
+if lbdb_found
+subdir('bdb')
+endif

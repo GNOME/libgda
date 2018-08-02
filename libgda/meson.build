@@ -243,6 +243,18 @@ ldap_cargs += [
 	]
 endif
 
+if lbdb_found
+	lbdbh_sources = files ([
+		'gda-data-model-bdb.h'
+		])
+	libgda_headers_all += lbdbh_sources
+	lbdb_sources = files ([
+		'gda-data-model-bdb.c',
+		])
+	libgda_source_all += lbdb_sources
+	lbdb_cargs += ['-DBDB_LIB="'+lbdb_filename+'"']
+endif
+
 inc_sqliteh = include_directories ('sqlite')
 inc_sqliteh_dep = declare_dependency (include_directories : inc_sqliteh)
 
@@ -276,7 +288,8 @@ libgda = library(
 		],
 	c_args : [
 		libgda_cargs,
-		ldap_cargs
+		ldap_cargs,
+		lbdb_cargs
 		],
 	install : true
 	)

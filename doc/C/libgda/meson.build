@@ -74,7 +74,11 @@ contentf += files([
 	'fdl-appendix.sgml'
 	])
 
-# ignore_bdb = ['gda-data-model-bdb.h']
+# ignore_bdb = []
+# if bdb_found
+# else
+# 	ignore_bdb += ['gda-data-model-bdb.h']
+# endif
 
 # gnome_module.gtkdoc(project_package,
 # 	main_xml: project_package+'-docs.xml',

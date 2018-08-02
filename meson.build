@@ -52,12 +52,44 @@ libxslt_dep = dependency('libxslt', required: false)
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
 
+# Platform data
+windows = build_machine.system().contains('windows')
+if windows
+win = import('windows')
+endif
+
+lbdb_found = false
+lbdb_versions = [
+	'6.0',
+	'5.3',
+	'5.1',
+	'5.0',
+	'4.9',
+	'4.8',
+	'4.7'
+	]
+lbdb_cargs = []
+foreach lbdbv : lbdb_versions
+	bdb_lib = compiler.find_library('db-'+lbdbv, required: false)
+	if bdb_lib.found()
+		if compiler.has_header('db.h')
+			lbdb_found = true
+			if windows
+				lbdb_filename = 'db-'+lbdbv+'.dll'
+			else
+				lbdb_filename = 'db-'+lbdbv+'.so'
+			endif
+			lbdb_cargs += [
+				'-I'+get_option('includedir'),
+				]
+		endif
+	endif
+endforeach
+
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
 sqlite_internal = true
 if sqlite_dep.found()
-	sqlite3_table_column_metadata = compiler.find_library('sqlite3_table_column_metadata',
-																	required: false
-																	)
+	sqlite3_table_column_metadata = compiler.find_library('sqlite3_table_column_metadata', required: false)
 	if sqlite3_table_column_metadata.found()
 		sqlite_internal = false
 	endif
@@ -121,8 +153,13 @@ conf.set('exec_prefix', get_option('libexecdir'))
 conf.set('libdir', get_option('libdir'))
 conf.set('includedir', get_option('includedir'))
 conf.set('GDA_DEBUG_FLAGS', '')
-conf.set('LIBGDA_BDB_INC', '')
-conf.set('LIBGDA_BDB_TYPE', '')
+if lbdb_found
+	conf.set('LIBGDA_BDB_INC', '#include <libgda/gda-data-model-bdb.h>')
+	conf.set('LIBGDA_BDB_TYPE', 'gda_data_model_bdb_get_type')
+else
+	conf.set('LIBGDA_BDB_INC', '')
+	conf.set('LIBGDA_BDB_TYPE', '')
+endif
 if ldap_found
 	conf.set('LIBGDA_LDAP_VINC',LIBGDA_LDAP_VINC)
 	conf.set('LIBGDA_LDAP_INC',LIBGDA_LDAP_INC)
@@ -234,12 +271,6 @@ dependencies: glib_dep
 subdir('po')
 subdir('libgda')
 subdir('providers')
-
-# Platform data
-windows = build_machine.system().contains('windows')
-if windows
-win = import('windows')
-endif
 
 gtk_dep = dependency('gtk+-3.0', required: false)
 enable_ui = get_option('with-ui') and gtk_dep.found()
