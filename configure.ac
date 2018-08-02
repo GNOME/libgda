@@ -1063,8 +1063,11 @@ tests/ui/Makefile
 tests/ddl/Makefile
 doc/Makefile
 doc/C/Makefile
-doc/C/version.xml
-doc/C/builddate.xml
+doc/C/libgda/Makefile
+doc/C/libgdaui/Makefile
+doc/C/libgda/version.xml
+doc/C/libgdaui/version.xml
+doc/C/libgda/builddate.xml
 doc/mallard/Makefile
 data/Makefile
 examples/Makefile
