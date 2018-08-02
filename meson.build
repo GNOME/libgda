@@ -51,6 +51,7 @@ graphviz_dep = dependency('libgvc', required : false)
 libxslt_dep = dependency('libxslt', required: false)
 jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
+mysql_dep = dependency ('mysqlclient', required: false)
 
 # Platform data
 windows = build_machine.system().contains('windows')

@@ -19,3 +19,7 @@ endif
 if lbdb_found
 subdir('bdb')
 endif
+
+if mysql_dep.found()
+subdir('mysql')
+endif

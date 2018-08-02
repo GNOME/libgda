@@ -14,13 +14,17 @@ xml_embeddedh = custom_target('xml_embeddedh',
 	)
 
 sqliteheaders = files(['gda-sqlite-provider.h'])
+sqlitehanderbinc = files([
+	'gda-sqlite-handler-bin.c',
+	])
+sqlitehanderbinh = files([
+	'gda-sqlite-handler-bin.h'
+	])
 sqlitesources = files([
 	'gda-sqlite-blob-op.c',
 	'gda-sqlite-blob-op.h',
 	'gda-sqlite-ddl.c',
 	'gda-sqlite-ddl.h',
-	'gda-sqlite-handler-bin.c',
-	'gda-sqlite-handler-bin.h',
 	'gda-sqlite-handler-boolean.c',
 	'gda-sqlite-handler-boolean.h',
 	'gda-sqlite-meta.c',
@@ -39,6 +43,8 @@ sqlitesources = files([
 	])
 sqlitesources += sqliteheaders
 sqlitesources += xml_embeddedh
+sqlitesources += sqlitehanderbinc
+sqlitesources += sqlitehanderbinh
 
 sqlite_cargs = [
 		'-include',
