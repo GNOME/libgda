@@ -73,8 +73,10 @@ meson_build:
     when: on_failure
     paths:
     - _build/meson-logs/meson-log.txt
-    - _build/doc/C
-    - _build/doc/valadoc/libgda-6.0
+    - _build/doc/C/libgda/html
+    - _build/doc/C/libgdaui/html
+    - _build/doc/Gda-6.0
+    - _build/doc/Gdaui-6.0
     expire_in: 1 week
 pages:
   stage: build

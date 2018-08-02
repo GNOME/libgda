@@ -30,7 +30,7 @@
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE=libgdaui-$(LIBGDA_ABI_VERSION)
+DOC_MODULE=libgdaui-$(GDA_ABI_VERSION)
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
 #DOC_MODULE_VERSION=2
