@@ -181,7 +181,7 @@ base_tool_command_group_add (ToolCommandGroup *group, ToolCommand *cmd)
 {
 	g_return_if_fail (group);
 	g_return_if_fail (cmd);
-	g_return_if_fail (cmd->name && *cmd->name && g_ascii_isalpha (*cmd->name));
+	g_return_if_fail (cmd->name && *cmd->name);
 	g_return_if_fail (cmd->group && *cmd->group);
 	if (cmd->name && !cmd->name_args) {
 		cmd->name_args = cmd->name;
