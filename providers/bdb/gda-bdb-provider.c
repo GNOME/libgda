@@ -53,35 +53,35 @@ static void gda_bdb_free_cnc_data (BdbConnectionData *cdata);
  * GdaBdbProvider class implementation
  */
 GdaServerProviderBase data_model_base_functions = {
-        gda_bdb_provider_get_name,
-        gda_bdb_provider_get_version,
-        gda_bdb_provider_get_server_version,
-        NULL,
-        NULL,
-	NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        gda_bdb_provider_prepare_connection,
-	NULL,
-        NULL,
-        NULL,
-	NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        gda_bdb_provider_get_name, // get_name
+        gda_bdb_provider_get_version,  // get_version
+        gda_bdb_provider_get_server_version, // get_server_version
+        NULL, //supports_feature
+        NULL, // create_worker
+	NULL, // create_connection
+        NULL, // create_parser
+        NULL, // get_data_handler
+        NULL, // get_def_dbms_type
+        NULL, // supports_operation
+        NULL, // create_operation
+        NULL, // render_operation
+        NULL, // statement_to_sql
+        NULL, // identifier_quote
+        NULL, // statement_rewrite
+        NULL, // open_connection
+        gda_bdb_provider_prepare_connection, // prepare_connection
+	NULL, // close_connection
+        NULL, // escape_string
+        NULL, // unescape_string
+	NULL, // perform_operation
+        NULL, // begin_transaction
+        NULL, // commit_transaction
+        NULL, // rollback_transaction
+        NULL, // add_savepoint
+        NULL, // rollback_savepoint
+        NULL, // delete_savepoint
+        NULL, // statement_prepare
+        NULL, // statement_execute
 
         NULL, NULL, NULL, NULL, /* padding */
 };
@@ -222,7 +222,7 @@ gda_bdb_provider_prepare_connection (GdaServerProvider *provider, GdaConnection 
 
 	/* add the BDB data model as table "data" */
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), model, bdb_db ? bdb_db : "data", &error)) {
-		gda_connection_add_event_string (cnc, 
+    gda_connection_add_event_string (cnc,
 						 _("Could not add BDB data model to connection: %s"),
 						 error && error->message ? error->message : _("no detail"));
 		g_error_free (error);

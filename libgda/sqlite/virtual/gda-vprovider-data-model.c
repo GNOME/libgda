@@ -406,11 +406,14 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 
 	GdaServerProviderBase *parent_functions;
 	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
-	
-	if (! parent_functions->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params, auth)) {
-		gda_quark_list_free (m_params);
-		return FALSE;
-	}
+	//g_print ("Open connection for Provider Name %\n", parent_functions->get_name(provider));
+  if (parent_functions->open_connection) {
+	  if (! parent_functions->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params, auth)) {
+		  gda_quark_list_free (m_params);
+		  return FALSE;
+	  }
+
+  }
 
 	gda_quark_list_free (m_params);
 
@@ -440,7 +443,8 @@ gda_vprovider_data_model_prepare_connection (GdaServerProvider *provider, GdaCon
 	/* calling the parent's function first */
 	GdaServerProviderBase *parent_functions;
         parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
-	if (parent_functions->prepare_connection) {
+	//g_print ("Provider Class: %s\n", parent_functions->get_name (GDA_SERVER_PROVIDER (provider)));
+  if (parent_functions->prepare_connection) {
 		if (! parent_functions->prepare_connection (GDA_SERVER_PROVIDER (provider), cnc, params, auth))
 			return FALSE;
 	}
@@ -472,7 +476,12 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 
 	GdaServerProviderBase *parent_functions;
 	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
-	return parent_functions->close_connection (provider, cnc);
+	if (parent_functions->close_connection)
+    return parent_functions->close_connection (provider, cnc);
+  else {
+    g_warning (_("Internal Implementation error: No close connection method is defined"));
+    return FALSE;
+  }
 }
 
 static GObject *
@@ -546,7 +555,12 @@ gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConn
 static const gchar *
 gda_vprovider_data_model_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
-	return "Virtual data model";
+  GdaServerProviderBase *parent_functions;
+	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	if (parent_functions->get_name)
+    return parent_functions->get_name (provider);
+  else
+	  return "Virtual data model";
 }
 
 static int

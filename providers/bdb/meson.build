@@ -92,3 +92,27 @@ libgda_bdb_provider = library ('gda-bdb-'+project_api_version,
 	install: true,
 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 	)
+
+# Tests
+
+gda_bdb_test_sources = files (['gda-bdb-test.c'])
+
+bdbt = executable ('gda_bdb_test',
+	gda_bdb_test_sources,
+	dependencies: [
+		libgda_dep,
+		bdb_lib,
+		inc_libgdah_dep,
+		inc_libgda_bdbh_dep,
+		inc_sqliteh_dep
+		],
+	c_args: [
+		lbdb_cargs,
+		'-DBDB_CURRENT_BUILDDIR="'+meson.current_build_dir()+'"'
+		],
+	link_with: [
+		libgda
+		]
+	)
+
+test('BDB', bdbt)

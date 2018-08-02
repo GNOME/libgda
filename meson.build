@@ -70,22 +70,24 @@ lbdb_versions = [
 	'4.7'
 	]
 lbdb_cargs = []
-foreach lbdbv : lbdb_versions
-	bdb_lib = compiler.find_library('db-'+lbdbv, required: false)
-	if bdb_lib.found()
-		if compiler.has_header('db.h')
-			lbdb_found = true
-			if windows
-				lbdb_filename = 'db-'+lbdbv+'.dll'
-			else
-				lbdb_filename = 'db-'+lbdbv+'.so'
-			endif
-			lbdb_cargs += [
-				'-I'+get_option('includedir'),
-				]
-		endif
-	endif
-endforeach
+# Disabling BDB provider because it is broken
+# foreach lbdbv : lbdb_versions
+# 	bdb_libt = compiler.find_library('db-'+lbdbv, required: false)
+# 	if bdb_libt.found()
+# 		if compiler.has_header('db.h')
+# 			bdb_lib = bdb_libt
+# 			lbdb_found = true
+# 			if windows
+# 				lbdb_filename = 'db-'+lbdbv+'.dll'
+# 			else
+# 				lbdb_filename = 'db-'+lbdbv+'.so'
+# 			endif
+# 			lbdb_cargs += [
+# 				'-I'+get_option('includedir'),
+# 				]
+# 		endif
+# 	endif
+# endforeach
 
 sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
 sqlite_internal = true

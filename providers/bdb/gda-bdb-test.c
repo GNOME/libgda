@@ -21,8 +21,23 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>
 #include <db.h>
+#include <gio/gio.h>
 
 #define DB_FILE	"bdb_test.db"
+
+static void
+print_events (GdaConnection *cnc) {
+  g_return_if_fail (cnc != NULL);
+  GList *events = gda_connection_get_events (cnc);
+  if (g_list_length (events) == 0) {
+    g_print ("No events");
+    return;
+  }
+  for (; events != NULL; events = events->next) {
+    GdaConnectionEvent *ev = GDA_CONNECTION_EVENT(events->data);
+    g_print ("EVENT: %s\n", gda_connection_event_get_description (ev));
+  }
+}
 
 static struct number {
 	gchar *english;
@@ -93,25 +108,31 @@ gda_stuff (gpointer filename)
 	/* connect to the db */
 	cnc = gda_connection_new_from_string ("Berkeley-DB", cncstring, NULL, 0, &error);
 	if (!cnc) {
-		g_print ("Could not create connection; %s\n", error && error->message ? error->message : "no detail");
-		g_clear_error (&error);
+		g_warning ("Could not create connection; %s\n", error && error->message ? error->message : "no detail");
+		print_events (cnc);
+    g_clear_error (&error);
 		exit (1);
 	}
+  g_print ("Connection's provider: %s\n", gda_server_provider_get_name (gda_connection_get_provider (cnc)));
+  g_assert (gda_server_provider_get_name (gda_connection_get_provider (cnc)) == "Berkeley-DB");
 
 	if (! gda_connection_open (cnc, &error)) {
-		g_print ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
+		g_warning ("Could not open connection; %s\n", error && error->message ? error->message : "no detail");
+		print_events (cnc);
 		g_clear_error (&error);
 		g_object_unref (cnc);
 		exit (1);
 	}
 
 	/* get model */
+  g_print ("Runnning a SELECT query\n");
 	parser = gda_connection_create_parser (cnc);
 	stmt = gda_sql_parser_parse_string (parser, "SELECT * from data", NULL, NULL);
 	g_object_unref (parser);
 	model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	if (!model) {
-		g_print ("Could execute command; %s\n", error && error->message ? error->message : "no detail");
+		print_events (cnc);
+		g_warning ("Could not execute command; %s\n", error && error->message ? error->message : "no detail");
 		exit (1);
 	}
 
@@ -156,9 +177,21 @@ gda_stuff (gpointer filename)
 
 int main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
+  GFile *dbp;
+  GFile *dbf;
+  GString* path;
+
 	gda_init ();
-	create_db (DB_FILE);
-	gda_stuff (DB_FILE);
+  dbp = g_file_new_for_path (BDB_CURRENT_BUILDDIR);
+  if (!g_file_query_exists (dbp, NULL))
+    return FALSE;
+  path = g_string_new ("");
+  g_string_printf (path, "%s/%s", g_file_get_uri (dbp), DB_FILE);
+  g_print ("%s\n", path->str);
+  dbf = g_file_new_for_uri (path->str);
+	create_db (g_file_get_path (dbf));
+	gda_stuff (g_file_get_path (dbf));
+  g_string_free (path, TRUE);
 	g_print ("OK\n");
 	return 0;
 }
