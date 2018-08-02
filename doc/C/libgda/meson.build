@@ -74,29 +74,24 @@ contentf += files([
 	'fdl-appendix.sgml'
 	])
 
+# ignore_bdb = ['gda-data-model-bdb.h']
+
 # gnome_module.gtkdoc(project_package,
-# 	main_sgml: project_package+'-docs.sgml',
-# 	content_files: contentf,
-# 	html_assets: html_images,
+# 	main_xml: project_package+'-docs.xml',
 # 	scan_args: [
 # 		'--deprecated-guards="GDA_DISABLE_DEPRECATED"',
+# 		'--rebuild-types',
 # 		'--ignore-headers',
 # 		'gda-marshal.h', 'gda-custom-marshal.h', 'gda-enum-types.h', 'sqlite3.h',
 # 		'csv.h', 'md5.h', 'jni-wrapper.h', 'gda-jdbc-recordset.h',
 # 		'gda-jdbc-blob-op.h', 'gda-jdbc-provider.h', 'gda-jdbc-pstmt.h',
-# 		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp'
+# 		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp',
+# 		ignore_bdb
 # 		 ],
-# 	html_args: [
-# 		'--path="'+meson.current_build_dir()+'"',
-# 		],
-# 	src_dir: join_paths(meson.source_root(),'doc','src-files'),
+# 	src_dir: join_paths(meson.source_root(),'libgda'),
 # 	mkdb_args: [
-# 		'--sgml-mode',
+# 		'--xml-mode',
 # 		'--output-format=xml',
-# 		'--name-space=gda',
-# 		'--ignore-files', 'parser.c',
-# 		'delimiter.c', 'binreloc.c', 'libcsv.c',
-# 		'md5c.c', 'providers', 'tools', 'control-center',
-# 		'tests', 'tmp', 'examples','plugins'
+# 		'--name-space=gda'
 # 		],
 # 	)
