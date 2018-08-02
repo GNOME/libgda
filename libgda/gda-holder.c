@@ -1635,9 +1635,10 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	g_return_val_if_fail (holder->priv, FALSE);
-  g_return_val_if_fail (model != NULL, FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	g_return_val_if_fail (col >= 0 && col < gda_data_model_get_n_columns (model), FALSE);
+  if (model != NULL) {
+	  g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
+	  g_return_val_if_fail (col >= 0 && col < gda_data_model_get_n_columns (model), FALSE);
+  }
 
 	/* No check is done on the validity of @col or even its existance */
 	/* Note: for internal implementation if @col<0, then it's ignored */
