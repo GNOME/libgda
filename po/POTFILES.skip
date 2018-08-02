@@ -1,7 +1,7 @@
 # List of source files that should *not* be translated.
 # Please keep this file sorted alphabetically.
 control-center/gda-control-center-6.0.desktop.in
-doc/C/prov-writing-assembly.xml
+doc/C/libgda/prov-writing-assembly.xml
 libgda/data/Table.c
 libgda/sqlite/sqlite-src/sqlite3.c
 libgda/sqlite/sql-parser.c/lemon.c
