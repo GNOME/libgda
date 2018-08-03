@@ -43,7 +43,7 @@ autotools_build:
   - make distclean
   - mkdir _build
   - cd _build
-  - ../configure
+  - ../configure --enable-gtk-doc
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
