@@ -2,14 +2,6 @@
     background-color : transparent;
 }
 
-GdauiCombo.gdaui-combo-as-list {
-    -GtkComboBox-appears-as-list : true;
-}
-
-GdauiCombo.gdaui-combo-normal {
-    -GtkComboBox-appears-as-list : false;
-}
-
 GdauiDataProxyInfo * {
     border-style: none;
     border-width: 0px;
@@ -40,7 +32,7 @@ GtkPaned.paned-no-border {
   border-radius:3px;
   border-color: @gdaui_inv_color;
 }
-.invalid-entry GtkEntry, .invalid-entry GtkButton, .invalid-entry GtkScrolledWindow, .invalid-entry GtkSwitch {	\
+.invalid-entry GtkEntry, .invalid-entry GtkButton, .invalid-entry GtkScrolledWindow, .invalid-entry GtkSwitch {
   border-radius:3px;
   border-color: @gdaui_inv_color;
   border-width:1px;
