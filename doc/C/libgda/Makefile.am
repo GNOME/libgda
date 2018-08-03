@@ -88,7 +88,6 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
 	version.xml.in builddate.xml.in \
 	visual_index.xml prov-notes.xml \
-	libgda-sections.txt libgda-ui-sections.txt \
 	examples/blobtest.c \
 	data-model-writing.xml ddl-creator.xml
 
