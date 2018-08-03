@@ -2,19 +2,19 @@
     background-color : transparent;
 }
 
-GdauiDataProxyInfo * {
-    border-style: none;
-    border-width: 0px;
+.transparent-background {
+    background-color : transparent;
 }
 
-GdauiRtEditor GtkToolbar {
+toolbar * {
     border-style: none;
     border-width: 0px;
     margin: 0px;
     padding: 0px;
 }
 
-GtkPaned.paned-no-border {
+
+.paned-no-border {
     border-style: none;
 }
 
@@ -40,4 +40,8 @@ GtkPaned.paned-no-border {
 }
 .invalid-entry GtkLabel {
   color: @gdaui_inv_color;
+}
+
+.required-label GtkLabel {
+  font-weight: bold;
 }

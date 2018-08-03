@@ -631,9 +631,10 @@ main (int argc, char *argv[])
   #ifdef HAVE_MAC_INTEGRATION
         theApp = g_object_new (GTK_TYPE_OSX_APPLICATION, NULL);
   #endif
+#else
+	 g_set_application_name ("GdaBrowser");
 #endif
 
-	 g_set_application_name ("GdaBrowser");
 
 	/* TApp initialization */
 	GApplication *app;

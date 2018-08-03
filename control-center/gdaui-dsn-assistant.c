@@ -458,6 +458,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	GtkWidget *label, *vbox, *grid;
 	GtkAssistant *assist;
 	gchar *str;
+  GtkStyleContext *context;
 
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 
@@ -514,10 +515,9 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 
-	str = _gdaui_utility_markup_title (_("Data source name"), FALSE);
-	label = gtk_label_new ("");
-	gtk_label_set_markup (GTK_LABEL (label), str);
-	g_free (str);
+	label = gtk_label_new (_("Data source name"));
+  context = gtk_widget_get_style_context (label);
+  gtk_style_context_add_class (context, "required-label");
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 
@@ -538,11 +538,9 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	}
 	else
 		assistant->priv->general_is_system = NULL;
-
-	str = _gdaui_utility_markup_title (_("Database type"), FALSE);
-	label = gtk_label_new ("");
-	gtk_label_set_markup (GTK_LABEL (label), str);
-	g_free (str);
+	label = gtk_label_new (_("Database type"));
+  context = gtk_widget_get_style_context (label);
+  gtk_style_context_add_class (context, "required-label");
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 3, 1, 1);
 	
@@ -576,14 +574,14 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	gtk_grid_set_row_spacing (GTK_GRID (grid), 3);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);
 
-	label = gtk_label_new (NULL);
-	gtk_label_set_markup (GTK_LABEL (label),
-			      _("This page lets you choose between using an existing database "
+	label = gtk_label_new (_("This page lets you choose between using an existing database "
 				"or to create a new database to use with this new data source"));
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 2, 1);
 
 	label = gtk_label_new (_("Create a new database:"));
+  context = gtk_widget_get_style_context (label);
+  gtk_style_context_add_class (context, "required-label");
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
 	
 	assistant->priv->choose_toggle = gtk_check_button_new ();
@@ -602,9 +600,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	
-	label = gtk_label_new (NULL);
-	gtk_label_set_markup (GTK_LABEL (label),
-			      _("The following fields represent the information needed "
+	label = gtk_label_new (_("The following fields represent the information needed "
 				"to create a new database "
 				"(mandatory fields are marked with a star). "
 				"This information is database-specific, so check "
@@ -618,6 +614,8 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 					GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (sw), GTK_SHADOW_NONE);
 	vp = gtk_viewport_new (NULL, NULL);
+  context = gtk_widget_get_style_context (vp);
+  gtk_style_context_add_class (context, "transparent-background");
 	gtk_widget_set_name (vp, "gdaui-transparent-background");
 	gtk_viewport_set_shadow_type (GTK_VIEWPORT (vp), GTK_SHADOW_NONE);
 	gtk_container_add (GTK_CONTAINER (sw), vp);
@@ -638,9 +636,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
 	
-	label = gtk_label_new (NULL);
-	gtk_label_set_markup (GTK_LABEL (label),
-			      _("The following fields represent the information needed "
+	label = gtk_label_new (("The following fields represent the information needed "
 				"to open a connection (mandatory fields are marked with a star). "
 				"This information is database-specific, so check "
 				"the manual for more information."));

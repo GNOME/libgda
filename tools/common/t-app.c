@@ -244,7 +244,7 @@ static void build_commands (TApp *self, TAppFeatures features);
 void
 t_app_setup (TAppFeatures features)
 {
-	if (!global_t_app) {
+	if (global_t_app == NULL) {
 		global_t_app = g_object_new (T_APP_TYPE, "flags", G_APPLICATION_HANDLES_COMMAND_LINE | G_APPLICATION_NON_UNIQUE, NULL);
 
 		/* options */
