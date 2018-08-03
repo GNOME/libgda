@@ -94,6 +94,8 @@ source_cnc_busy_cb (G_GNUC_UNUSED TConnection *bcnc, gboolean is_busy,
 static void
 m_busy (TConnection *bcnc, gboolean is_busy, const gchar *reason)
 {
+  g_return_if_fail (T_IS_VIRTUAL_CONNECTION (bcnc));
+  g_return_if_fail (T_VIRTUAL_CONNECTION (bcnc)->priv);
 	/*
 	 * declare all the source connections as busy
 	 */
