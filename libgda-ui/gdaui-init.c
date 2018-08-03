@@ -45,6 +45,15 @@ typedef GSList           *(*GdauiPluginInit)     (GError **);
 static GHashTable *init_plugins_hash (void);
 GHashTable *gdaui_plugins_hash = NULL; /* key = plugin name, value = GdauiPlugin structure pointer */
 
+static void
+catch_css_parsing_errors (GtkCssProvider *provider,
+               GtkCssSection  *section,
+               GError         *error,
+               gpointer        user_data)
+{
+  g_return_if_fail (error != NULL);
+  g_warning (_("Error parsing CSS: %s"), error->message);
+}
 
 /**
  * gdaui_init:
@@ -81,30 +90,14 @@ gdaui_init (void)
 	/* initialize CSS */
 	GBytes *css_data;
 	GError *error = NULL;
-	css_data = g_resources_lookup_data ("/gdaui/gdaui.css", G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
-	if (css_data) {
-		GtkCssProvider *css_provider;
-		css_provider = gtk_css_provider_new ();
-		if (gtk_css_provider_load_from_data (css_provider,
-						       (gchar*) g_bytes_get_data (css_data, NULL), -1,
-						       &error))
-			gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+  GtkCssProvider *css_provider;
+  css_provider = gtk_css_provider_new ();
+  g_object_connect (css_provider, "signal::parsing-error", catch_css_parsing_errors, NULL, NULL);
+  gtk_css_provider_load_from_resource (css_provider, "/gdaui/gdaui.css");
+  gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
 								   GTK_STYLE_PROVIDER (css_provider),
-								   G_MAXUINT);
-		else {
-			g_warning ("Could not parse resource CSS data: %s",
-				   error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-		g_object_unref (css_provider);
-		g_bytes_unref (css_data);
-	}
-	else {
-		g_warning ("Could not load resource CSS data: %s",
-			   error && error->message ? error->message : _("No detail"));
-		g_clear_error (&error);
-	}
-
+								   GTK_STYLE_PROVIDER_PRIORITY_FALLBACK);
+  g_object_unref (css_provider);
 	initialized = TRUE;
 }
 

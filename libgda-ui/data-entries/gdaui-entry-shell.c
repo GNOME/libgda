@@ -517,6 +517,7 @@ gdaui_entry_shell_pack_entry (GdauiEntryShell *shell, GtkWidget *entry)
  * between 0. and 1. will result in the default hard coded values to be used (grayish).
  *
  * Since: 5.0.3
+ * Deprecated: 6.0: create your own CSS style and apply to your application
  */
 void
 gdaui_entry_shell_set_invalid_color (GdauiEntryShell *shell, gdouble red, gdouble green,
@@ -527,6 +528,17 @@ gdaui_entry_shell_set_invalid_color (GdauiEntryShell *shell, gdouble red, gdoubl
 	g_return_if_fail ((green >= 0.) && (green <= 1.));
 	g_return_if_fail ((blue >= 0.) && (blue <= 1.));
 	g_return_if_fail ((alpha >= 0.) && (alpha <= 1.));
+
+  /* GtkStyleContext *style; */
+  /* GtkCssProvider *cssdp; */
+  /* gchar *css; */
+
+  /* style = gtk_widget_get_style_context (shell); */
+  /* cssdp = gtk_css_provider_get_default (); */
+  /* cssp = gtk_css_provider_new (); */
+  /* css = gtk_css_provider_to_string (cssdp); */
+  /* gtk_css_provider_load_from_data (cssp, css); */
+  /* g_free (css); */
 
 	static GtkCssProvider *prov = NULL;
 	if (!prov) {

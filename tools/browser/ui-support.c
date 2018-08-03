@@ -428,16 +428,6 @@ _make_tab_label (const gchar *label,
 		 GtkWidget **out_close_button)
 {
         GtkWidget  *hbox, *wid, *close_button, *image = NULL;
-	static GtkCssProvider *css_provider = NULL;
-
-	if (!css_provider) {
-		css_provider = gtk_css_provider_new ();
-		gtk_css_provider_load_from_data (css_provider,
-						 "* {\n"
-						 "-GtkWidget-focus-padding : 0;\n"
-						 "-GtkWidget-focus-line-width : 0}",
-						 -1, NULL);
-	}
 
 	if (out_close_button)
 		*out_close_button = NULL;
@@ -458,9 +448,6 @@ _make_tab_label (const gchar *label,
 		close_button = gtk_button_new ();
 		gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
 		gtk_button_set_focus_on_click (GTK_BUTTON (close_button), FALSE);
-		gtk_style_context_add_provider (gtk_widget_get_style_context ((GtkWidget*) close_button),
-						GTK_STYLE_PROVIDER (css_provider),
-						GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 		gtk_widget_set_tooltip_text (close_button, _("Close tab"));
 		

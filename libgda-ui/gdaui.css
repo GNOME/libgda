@@ -11,14 +11,11 @@ GdauiCombo.gdaui-combo-normal {
 }
 
 GdauiDataProxyInfo * {
-    -GtkToolbar-shadow-type : none;
-    -GtkSpinButton-shadow-type : none;
     border-style: none;
     border-width: 0px;
 }
 
 GdauiRtEditor GtkToolbar {
-    -GtkToolbar-shadow-type : none;
     border-style: none;
     border-width: 0px;
     margin: 0px;
@@ -26,9 +23,29 @@ GdauiRtEditor GtkToolbar {
 }
 
 GtkPaned.paned-no-border {
-    -GtkPaned-handle-size: 0;
+    border-style: none;
 }
 
 .action-entry {
     padding : 0;
+}
+
+@define-color gdaui_inv_color lighter (rgba (233,185,110,1));
+
+.invalid-entry #invalid-label {
+  color: darker (@selected_fg_color);
+  background-color: @gdaui_inv_color;
+  border-width:1px;
+  border-style:solid;
+  border-radius:3px;
+  border-color: @gdaui_inv_color;
+}
+.invalid-entry GtkEntry, .invalid-entry GtkButton, .invalid-entry GtkScrolledWindow, .invalid-entry GtkSwitch {	\
+  border-radius:3px;
+  border-color: @gdaui_inv_color;
+  border-width:1px;
+  border-style:solid;
+}
+.invalid-entry GtkLabel {
+  color: @gdaui_inv_color;
 }

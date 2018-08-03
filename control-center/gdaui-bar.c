@@ -111,6 +111,10 @@ gdaui_bar_class_init (GdauiBarClass *klass)
         g_object_class_install_property (object_class, PROP_SHOW_ICON,
                                          g_param_spec_boolean ("show_icon", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+  if (css_provider == NULL) {
+    css_provider = gtk_css_provider_new ();
+    gtk_css_provider_load_from_resource (css_provider, "/gdaui/gdaui.css");
+  }
 }
 
 static void
