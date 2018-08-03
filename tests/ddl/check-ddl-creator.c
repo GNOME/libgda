@@ -1,4 +1,4 @@
-/* check-ddl-creato.c
+/* check-ddl-creator.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -36,7 +36,7 @@ typedef struct {
 } CheckDdlObject;
 
 static void
-test_ddl_creato_start (CheckDdlObject *self,
+test_ddl_creator_start (CheckDdlObject *self,
                      gconstpointer user_data)
 {
   gda_init();
@@ -75,7 +75,7 @@ test_ddl_creato_start (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_finish (CheckDdlObject *self,
+test_ddl_creator_finish (CheckDdlObject *self,
                       gconstpointer user_data)
 {
   gda_connection_close(self->cnc,NULL);
@@ -86,7 +86,7 @@ test_ddl_creato_finish (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_parse_xml_path (CheckDdlObject *self,
+test_ddl_creator_parse_xml_path (CheckDdlObject *self,
                                 gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
@@ -97,7 +97,7 @@ test_ddl_creato_parse_xml_path (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_parse_xml_file (CheckDdlObject *self,
+test_ddl_creator_parse_xml_file (CheckDdlObject *self,
                                 gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_file (self->creator,self->file,NULL);
@@ -105,7 +105,7 @@ test_ddl_creato_parse_xml_file (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_validate_xml (CheckDdlObject *self,
+test_ddl_creator_validate_xml (CheckDdlObject *self,
                               gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
@@ -113,7 +113,7 @@ test_ddl_creato_validate_xml (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_create_db (CheckDdlObject *self,
+test_ddl_creator_create_db (CheckDdlObject *self,
                            gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
@@ -140,7 +140,7 @@ test_ddl_creato_create_db (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creato_parse_cnc (CheckDdlObject *self,
+test_ddl_creator_parse_cnc (CheckDdlObject *self,
                            gconstpointer user_data)
 {
   gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL);
@@ -158,36 +158,36 @@ main (gint   argc,
   g_test_add ("/test-ddl/creator-parse-file",
               CheckDdlObject,
               NULL,
-              test_ddl_creato_start,
-              test_ddl_creato_parse_xml_file,
-              test_ddl_creato_finish);
+              test_ddl_creator_start,
+              test_ddl_creator_parse_xml_file,
+              test_ddl_creator_finish);
 
   g_test_add ("/test-ddl/creator-parse-path",
               CheckDdlObject,
               NULL,
-              test_ddl_creato_start,
-              test_ddl_creato_parse_xml_path,
-              test_ddl_creato_finish);
+              test_ddl_creator_start,
+              test_ddl_creator_parse_xml_path,
+              test_ddl_creator_finish);
 
   g_test_add ("/test-ddl/creator-create-db",
               CheckDdlObject,
               NULL,
-              test_ddl_creato_start,
-              test_ddl_creato_create_db,
-              test_ddl_creato_finish);
+              test_ddl_creator_start,
+              test_ddl_creator_create_db,
+              test_ddl_creator_finish);
 
   g_test_add ("/test-ddl/creator-validate-xml",
               CheckDdlObject,
               NULL,
-              test_ddl_creato_start,
-              test_ddl_creato_validate_xml,
-              test_ddl_creato_finish);
+              test_ddl_creator_start,
+              test_ddl_creator_validate_xml,
+              test_ddl_creator_finish);
   /*g_test_add ("/test-ddl/creator-parse-cnc",
               CheckDdlObject,
               NULL,
-              test_ddl_creato_start,
-              test_ddl_creato_parse_cnc,
-              test_ddl_creato_finish);*/
+              test_ddl_creator_start,
+              test_ddl_creator_parse_cnc,
+              test_ddl_creator_finish);*/
  
   return g_test_run();
 }
