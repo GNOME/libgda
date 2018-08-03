@@ -5,6 +5,7 @@
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
   <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
   %gtkdocentities;
+  <!ENTITY LIBGDA "libgda-6.0">
 ]>
 <book id="index">
   <bookinfo>
@@ -21,7 +22,6 @@
     <title>API Reference</title>
         <xi:include href="xml/background.xml"/>
     <xi:include href="xml/binreloc.xml"/>
-    <xi:include href="xml/delimiter.xml"/>
     <xi:include href="xml/dir-blob-op.xml"/>
     <xi:include href="xml/gda-attributes-manager.xml"/>
     <xi:include href="xml/gda-batch.xml"/>
