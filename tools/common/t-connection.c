@@ -244,15 +244,16 @@ t_connection_init (TConnection *tcnc)
 	tcnc->priv->variables = NULL;
 	tcnc->priv->query_buffer = NULL;
 	tcnc->priv->infos = gda_set_new (NULL);
+  tcnc->priv->dict_file_name = NULL;
 }
 
-static void
-transaction_status_changed_cb (GdaConnection *cnc, TConnection *tcnc)
-{
-	g_object_ref (tcnc);
-	g_signal_emit (tcnc, t_connection_signals [TRANSACTION_STATUS_CHANGED], 0);
-	g_object_unref (tcnc);
-}
+/* static void */
+/* transaction_status_changed_cb (GdaConnection *cnc, TConnection *tcnc) */
+/* { */
+/* 	g_object_ref (tcnc); */
+/* 	g_signal_emit (tcnc, t_connection_signals [TRANSACTION_STATUS_CHANGED], 0); */
+/* 	g_object_unref (tcnc); */
+/* } */
 
 /*
  * executed in main thread
@@ -321,7 +322,7 @@ t_connection_meta_data_changed (TConnection *tcnc)
 static gboolean
 have_meta_store_ready (TConnection *tcnc, GError **error)
 {
-	gchar *dict_file_name = NULL;
+	GFile *dict_file = NULL;
 	gboolean update_store = FALSE;
 	GdaMetaStore *store;
 	gchar *cnc_string, *cnc_info;
@@ -329,16 +330,14 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 	g_object_get (G_OBJECT (tcnc->priv->cnc),
 		      "dsn", &cnc_info,
 		      "cnc-string", &cnc_string, NULL);
-	dict_file_name = t_config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
+	dict_file = t_config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
 							       cnc_string);
 	g_free (cnc_string);
-	if (dict_file_name) {
+	if (g_file_query_exists (dict_file, NULL)) {
 		if (T_IS_VIRTUAL_CONNECTION (tcnc))
 			/* force meta store update in case of virtual connection */
 			update_store = TRUE;
-		else if (! g_file_test (dict_file_name, G_FILE_TEST_EXISTS))
-			update_store = TRUE;
-		store = gda_meta_store_new_with_file (dict_file_name);
+		store = gda_meta_store_new_with_file (g_file_get_path (dict_file));
 
 		GdaHolder *h;
 		h = gda_set_get_holder (tcnc->priv->infos, "meta_filename");
@@ -348,7 +347,7 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 				      "description", _("File containing the meta data associated to the connection"), NULL);
 			gda_set_add_holder (tcnc->priv->infos, h);
 		}
-		g_assert (gda_holder_set_value_str (h, NULL, dict_file_name, NULL));
+		g_assert (gda_holder_set_value_str (h, NULL, g_file_get_path (dict_file), NULL));
 	}
 	else {
 		store = gda_meta_store_new (NULL);
@@ -357,7 +356,8 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 	}
 	t_config_info_update_meta_store_properties (store, tcnc->priv->cnc);
 
-	tcnc->priv->dict_file_name = dict_file_name;
+	tcnc->priv->dict_file_name = g_file_get_path (dict_file);
+  g_object_unref (dict_file);
 	g_object_set (G_OBJECT (tcnc->priv->cnc), "meta-store", store, NULL);
 	if (update_store) {
 		gboolean retval;
@@ -527,9 +527,10 @@ t_connection_dispose (GObject *object)
 			g_hash_table_destroy (tcnc->priv->executed_statements);
 
 		clear_dsn_info (tcnc);
-
-		g_free (tcnc->priv->dict_file_name);
-		tcnc->priv->dict_file_name = NULL;
+    if (tcnc->priv->dict_file_name != NULL) {
+		  g_free (tcnc->priv->dict_file_name);
+		  tcnc->priv->dict_file_name = NULL;
+    }
 
 		TO_IMPLEMENT;
 		/*
