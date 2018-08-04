@@ -80,22 +80,48 @@ contentf += files([
 # 	ignore_bdb += ['gda-data-model-bdb.h']
 # endif
 
-# gnome_module.gtkdoc(project_package,
-# 	main_xml: project_package+'-docs.xml',
-# 	scan_args: [
-# 		'--deprecated-guards="GDA_DISABLE_DEPRECATED"',
-# 		'--rebuild-types',
-# 		'--ignore-headers',
-# 		'gda-marshal.h', 'gda-custom-marshal.h', 'gda-enum-types.h', 'sqlite3.h',
-# 		'csv.h', 'md5.h', 'jni-wrapper.h', 'gda-jdbc-recordset.h',
-# 		'gda-jdbc-blob-op.h', 'gda-jdbc-provider.h', 'gda-jdbc-pstmt.h',
-# 		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp',
-# 		ignore_bdb
-# 		 ],
-# 	src_dir: join_paths(meson.source_root(),'libgda'),
-# 	mkdb_args: [
-# 		'--xml-mode',
-# 		'--output-format=xml',
-# 		'--name-space=gda'
-# 		],
-# 	)
+docgda_dep = declare_dependency(sources: libgda_sources,
+                                include_directories: join_paths(meson.source_root(),'libgda'),
+                                dependencies: libgda_dep,
+                                link_with: libgda,
+                                link_args: libgda_cargs)
+
+gnome_module.gtkdoc(project_package,
+ 	main_xml: project_package+'-docs.xml',
+        dependencies: [ libgda_dep, docgda_dep],
+        ignore_headers: ['gda-marshal.h',
+                         'gda-custom-marshal.h',
+                         'gda-enum-types.h',
+                         'sqlite3.h',
+                         'csv.h',
+                         'md5.h',
+                         'jni-wrapper.h',
+                         'gda-jdbc-recordset.h',
+                         'gda-jdbc-blob-op.h',
+                         'gda-jdbc-provider.h',
+                         'gda-jdbc-pstmt.h',
+                         'providers',
+                         'tools control-center',
+                         'tests',
+                         'examples',
+                         'plugins',
+                         'dummy-object.h',
+                         'tmp',
+                         'gda-data-model-bdb.h'],
+        content_files: [ 'fdl-appendix.sgml' ],
+        gobject_typesfile: configure_file(
+                input: 'libgda.types.in',
+                output : 'libgda.types',
+                configuration : conf),
+        scan_args: [
+                '--deprecated-guards="GDA_DISABLE_DEPRECATED"',
+                '--rebuild-types'],
+        src_dir: [ join_paths(meson.source_root(),'libgda')],
+        mkdb_args: [
+                '--xml-mode',
+                '--output-format=xml',
+                '--name-space=gda'
+                ],
+        html_assets: gda_html_images,
+        install: true
+        )

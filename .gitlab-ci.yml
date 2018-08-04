@@ -65,6 +65,7 @@ meson_build:
   - meson _build --prefix=/usr
   - cd _build
   - ninja
+  - ninja libgda-6.0-doc
   - broadwayd &
   - GDK_BACKEND=broadway meson test
   - ninja install

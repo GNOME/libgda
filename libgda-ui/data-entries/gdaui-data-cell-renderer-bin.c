@@ -199,13 +199,13 @@ gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
 			      G_TYPE_STRING,
 			      G_TYPE_VALUE);
 
-	if (! attach_pixbuf) {
+	/*if (! attach_pixbuf) {
 		#define ICON_FILE "/gdaui/images/data/bin-attachment-16x16.png"
 		attach_pixbuf = gdk_pixbuf_new_from_resource (ICON_FILE, NULL);
 		if (!attach_pixbuf)
 			g_warning (_("Could not find icon file %s in resources please report error to "
 				   "https://gitlab.gnome.org/GNOME/vala/issues"), ICON_FILE);
-	}
+	}*/
 }
 
 static void
