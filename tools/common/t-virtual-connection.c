@@ -120,8 +120,8 @@ m_busy (TConnection *bcnc, gboolean is_busy, const gchar *reason)
 							   bcnc);			
 		}
 	}
-
-	T_CONNECTION_CLASS (parent_class)->busy (bcnc, is_busy, reason);
+  if (T_CONNECTION_CLASS (parent_class)->busy != NULL)
+    T_CONNECTION_CLASS (parent_class)->busy (bcnc, is_busy, reason);
 }
 
 static void
