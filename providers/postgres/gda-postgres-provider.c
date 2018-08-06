@@ -138,6 +138,8 @@ static GdaSqlStatement     *gda_postgres_provider_statement_rewrite   (GdaServer
 /* string escaping */
 static gchar               *gda_postgres_provider_escape_string (GdaServerProvider *provider, GdaConnection *cnc,
 								 const gchar *string);
+static gchar               *gda_postgres_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc,
+								 const gchar *string);
 
 /* distributed transactions */
 static gboolean gda_postgres_provider_xa_start    (GdaServerProvider *provider, GdaConnection *cnc,
@@ -213,7 +215,7 @@ GdaServerProviderBase postgres_base_functions = {
 	gda_postgres_provider_prepare_connection,
 	gda_postgres_provider_close_connection,
 	gda_postgres_provider_escape_string,
-	NULL,
+	gda_postgres_provider_unescape_string,
 	gda_postgres_provider_perform_operation,
 	gda_postgres_provider_begin_transaction,
 	gda_postgres_provider_commit_transaction,
@@ -2806,5 +2808,38 @@ gda_postgres_provider_escape_string (GdaServerProvider *provider, GdaConnection 
 	tmp = PQescapeLiteral (cdata->pconn, string, strlen (string));
 	retval = g_strdup (tmp);
 	PQfreemem (tmp);
+	return retval;
+}
+gchar *
+gda_postgres_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, const gchar *string)
+{
+	glong total;
+	gchar *ptr;
+	gchar *retval;
+	glong offset = 0;
+
+	if (!string)
+		return NULL;
+
+	total = strlen (string);
+	retval = g_memdup (string, total+1);
+	ptr = (gchar *) retval;
+	while (offset < total) {
+		if (*ptr == '\'') {
+			if (*(ptr+1) == '\'') {
+				memmove (ptr+1, ptr+2, total - offset);
+				offset += 2;
+			}
+			else {
+				g_free (retval);
+				return NULL;
+			}
+		}
+		else
+			offset ++;
+
+		ptr++;
+	}
+
 	return retval;
 }
