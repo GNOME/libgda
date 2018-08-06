@@ -1435,11 +1435,6 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 		value = gdaui_data_entry_get_value (entry);
 		if (attr & GDA_VALUE_ATTR_IS_DEFAULT)
 			gda_holder_set_value_to_default (param);
-		else if (attr & GDA_VALUE_ATTR_DATA_NON_VALID) {
-			gda_holder_force_invalid (param);
-			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
-				       0, param, TRUE);
-		}
 		else if (gda_holder_set_value (param, value, NULL))
 			g_signal_emit (G_OBJECT (sentry->form), gdaui_basic_form_signals[HOLDER_CHANGED],
 				       0, param, TRUE);
