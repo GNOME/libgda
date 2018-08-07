@@ -2043,6 +2043,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	case GDA_SQL_OPERATOR_TYPE_NOT_REGEXP_CI:
 		str = g_strdup_printf ("NOT regexp (%s, %s, 'i')", SQL_OPERAND (sql_list->next->data)->sql,
 				       SQL_OPERAND (sql_list->data)->sql);
+    break;
 	case GDA_SQL_OPERATOR_TYPE_SIMILAR:
 		/* does not exist in SQLite => error */
 		g_set_error (error, GDA_STATEMENT_ERROR, GDA_STATEMENT_SYNTAX_ERROR,
