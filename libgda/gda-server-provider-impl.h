@@ -175,52 +175,52 @@ typedef struct {
 
 /**
  * GdaServerProviderMeta:
- * @_info: 
- * @_btypes: 
- * @_udt: 
- * @udt: 
- * @_udt_cols: 
- * @udt_cols: 
- * @_enums: 
- * @enums: 
- * @_domains: 
- * @domains: 
- * @_constraints_dom: 
- * @constraints_dom: 
- * @_el_types: 
- * @el_types: 
- * @_collations: 
- * @collations: 
- * @_character_sets: 
- * @character_sets: 
- * @_schemata: 
- * @schemata: 
- * @_tables_views: 
- * @tables_views: 
- * @_columns: 
- * @columns: 
- * @_view_cols: 
- * @view_cols: 
- * @_constraints_tab: 
- * @constraints_tab: 
- * @_constraints_ref: 
- * @constraints_ref: 
- * @_key_columns: 
- * @key_columns: 
- * @_check_columns: 
- * @check_columns: 
- * @_triggers: 
- * @triggers: 
- * @_routines: 
- * @routines: 
- * @_routine_col: 
- * @routine_col: 
- * @_routine_par: 
- * @routine_par: 
- * @_indexes_tab: 
- * @indexes_tab: 
- * @_index_cols: 
- * @index_cols:
+ * @_info: information_schema_catalog_name
+ * @_btypes: builtin_data_types
+ * @_udt: user defined types
+ * @udt: user defined types
+ * @_udt_cols: user defined types columns
+ * @udt_cols: user defined columns
+ * @_enums: enumerations
+ * @enums: enumerations
+ * @_domains: domains
+ * @domains: domains
+ * @_constraints_dom: domain's constraints
+ * @constraints_dom: domain's constraints
+ * @_el_types: element_types
+ * @el_types: element_types
+ * @_collations: collations
+ * @collations: collations
+ * @_character_sets: character_sets
+ * @character_sets: character_sets
+ * @_schemata: schemata
+ * @schemata: schemata
+ * @_tables_views: table views
+ * @tables_views: table views
+ * @_columns: columns
+ * @columns: columns
+ * @_view_cols: view's columns
+ * @view_cols: view's columns
+ * @_constraints_tab: table's constrainsts
+ * @constraints_tab: table's constrainsts
+ * @_constraints_ref: table's constrainsts reference
+ * @constraints_ref: table's constrainsts reference
+ * @_key_columns: table's key columns
+ * @key_columns: table's key columns
+ * @_check_columns: table's check columns
+ * @check_columns: table's check columns
+ * @_triggers: table's triggers
+ * @triggers: table's triggers
+ * @_routines: database's routines
+ * @routines: database's routines
+ * @_routine_col: database's routine's columns
+ * @routine_col: database's routine's columns
+ * @_routine_par: database's routine's parameters
+ * @routine_par: database's routine's parameters
+ * @_indexes_tab: table's indexes
+ * @indexes_tab: table's indexes
+ * @_index_cols: index column usage
+ * @index_cols: index column usage
  *
  * These methods must be implemented by providers to update a connection's associated metadata (in a 
  * #GdaMetaStore object), see the <link linkend="prov-metadata">Virtual methods for providers/Methods - metadata</link>
@@ -464,12 +464,12 @@ typedef enum {
 
 /**
  * GdaServerProviderXa:
- * @xa_start:
- * @xa_end:
- * @xa_prepare:
- * @xa_commit:
- * @xa_rollback:
- * @xa_recover:
+ * @xa_start: start transaction
+ * @xa_end: end transaction
+ * @xa_prepare: prepare transaction
+ * @xa_commit: commit transaction
+ * @xa_rollback: rollback transaction
+ * @xa_recover: recover transaction's session
  *
  * Functions implementing distributed transactions.
  */

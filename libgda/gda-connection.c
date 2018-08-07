@@ -4773,7 +4773,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	guint real_slowdown = cnc->priv->exec_slowdown;
 	if (real_slowdown > 0) {
 		/* we don't honor the exec slowdown during meta data updates, it would complicate
-		 * the code quite a lot (slowdown is don in the worker thread) and it's only
+		 * the code quite a lot (slowdown is done in the worker thread) and it's only
 		 * for debug purposes */
 		cnc->priv->exec_slowdown = 0;
 	}

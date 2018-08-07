@@ -323,7 +323,7 @@ static gboolean
 have_meta_store_ready (TConnection *tcnc, GError **error)
 {
 	GFile *dict_file = NULL;
-	gboolean update_store = FALSE;
+	gboolean update_store = TRUE;
 	GdaMetaStore *store;
 	gchar *cnc_string, *cnc_info;
 
@@ -332,13 +332,10 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 		      "cnc-string", &cnc_string, NULL);
 	dict_file = t_config_info_compute_dict_file_name (cnc_info ? gda_config_get_dsn_info (cnc_info) : NULL,
 							       cnc_string);
-	g_free (cnc_string);
-	if (g_file_query_exists (dict_file, NULL)) {
-		if (T_IS_VIRTUAL_CONNECTION (tcnc))
-			/* force meta store update in case of virtual connection */
-			update_store = TRUE;
-		store = gda_meta_store_new_with_file (g_file_get_path (dict_file));
-
+ 	g_free (cnc_string);
+	g_message ("Dictionary File: %s", g_file_get_path (dict_file));
+	store = gda_meta_store_new_with_file (g_file_get_path (dict_file));
+	if (store != NULL) {
 		GdaHolder *h;
 		h = gda_set_get_holder (tcnc->priv->infos, "meta_filename");
 		if (!h) {
@@ -351,16 +348,17 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 	}
 	else {
 		store = gda_meta_store_new (NULL);
-		if (store)
-			update_store = TRUE;
 	}
+
+
 	t_config_info_update_meta_store_properties (store, tcnc->priv->cnc);
 
 	tcnc->priv->dict_file_name = g_file_get_path (dict_file);
-  g_object_unref (dict_file);
+	g_object_unref (dict_file);
 	g_object_set (G_OBJECT (tcnc->priv->cnc), "meta-store", store, NULL);
 	if (update_store) {
 		gboolean retval;
+		g_message ("Updating meta store for connection");
 		GdaMetaContext context = {"_tables", 0, NULL, NULL};
 		retval = gda_connection_update_meta_store (tcnc->priv->cnc, &context, error);
 		if (!retval) {
@@ -372,10 +370,12 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 	gboolean retval = TRUE;
 	GdaMetaStruct *mstruct;
 	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+	if (tcnc->priv->mstruct != NULL)
+		g_object_unref (tcnc->priv->mstruct = mstruct);
 	tcnc->priv->mstruct = mstruct;
 	retval = gda_meta_struct_complement_all (mstruct, error);
 
-#ifdef GDA_DEBUG_NO
+//#ifdef GDA_DEBUG_NO
 	GSList *all, *list;
 	g_print ("%s() %p:\n", __FUNCTION__, tcnc->priv->mstruct);
 	all = gda_meta_struct_get_all_db_objects (tcnc->priv->mstruct);
@@ -385,7 +385,7 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 			 dbo->obj_short_name, dbo->obj_schema, dbo->obj_full_name);
 	}
 	g_slist_free (all);
-#endif
+//#endif
 	g_object_unref (store);
 	return retval;
 }
@@ -429,7 +429,8 @@ t_connection_set_property (GObject *object,
 			*/
 
 
-			/* meta store, open it in a sub thread to avoid locking the GTK thread */
+			/* FIXME: meta store, open it in a sub thread to avoid locking the GTK thread */
+			g_message ("Setting Connection");
 			GError *lerror = NULL;
 			if (! have_meta_store_ready (tcnc, &lerror)) {
 				gchar *tmp;
@@ -966,6 +967,7 @@ t_connection_new (GdaConnection *cnc)
 {
 	TConnection *tcnc;
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+	g_message ("Creating TConnection");
 
 	tcnc = T_CONNECTION (g_object_new (T_TYPE_CONNECTION, "gda-connection", cnc, NULL));
 	t_app_add_tcnc (tcnc);
@@ -1195,6 +1197,10 @@ t_connection_update_meta_data (TConnection *tcnc, GError ** error)
 {
 	g_return_if_fail (T_IS_CONNECTION (tcnc));
 
+  GdaMetaStruct *mstruct;
+
+  g_message ("Updating meta data for: %s", t_connection_get_name (tcnc));
+
 	t_connection_set_busy_state (tcnc, TRUE, _("Getting database schema information"));
 
 	GdaMetaContext context = {"_tables", 0, NULL, NULL};
@@ -1202,11 +1208,14 @@ t_connection_update_meta_data (TConnection *tcnc, GError ** error)
 	result = gda_connection_update_meta_store (tcnc->priv->cnc, &context, error);
   if (!result) {
     gchar *tmp;
+    g_warning (_("Error while fetching meta data from the connection: %s"),
+				       (*error)->message ? (*error)->message : _("No detail"));
 		tmp = g_strdup_printf (_("Error while fetching meta data from the connection: %s"),
 				       (*error)->message ? (*error)->message : _("No detail"));
 		g_signal_emit (tcnc, t_connection_signals [NOTICE], 0, tmp);
     return;
   }
+  t_connection_meta_data_changed (tcnc);
 	t_connection_set_busy_state (tcnc, FALSE, NULL);
 }
 

@@ -921,6 +921,7 @@ gboolean
 _gda_postgres_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
+  g_warning ("Updating Tables Views meta data");
 	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
 
@@ -941,34 +942,29 @@ _gda_postgres_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 								     NULL, 
 								     GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 								     _col_types_tables, error);
-	if (!tables_model)
-		return FALSE;
 	views_model = gda_connection_statement_execute_select_full (cnc,
 								    internal_stmt[I_STMT_VIEWS_ALL],
 								    NULL, 
 								    GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 								    _col_types_views, error);
-	if (!views_model) {
-		g_object_unref (tables_model);
-		return FALSE;
-	}
 
 	GdaMetaContext c2;
 	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
-	if (retval) {
+	if (tables_model != NULL) {
+    g_message ("Updating Tables: %s", gda_data_model_dump_as_string (tables_model));
 		c2.table_name = "_tables";
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
+	  g_object_unref (tables_model);
 	}
-	if (retval) {
+	if (views_model != NULL) {
 		c2.table_name = "_views";
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
 		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
+	  g_object_unref (views_model);
 	}
-	g_object_unref (tables_model);
-	g_object_unref (views_model);
 
 
 	return retval;

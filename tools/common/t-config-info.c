@@ -664,14 +664,13 @@ t_config_info_compute_dict_directory (void)
   GError *error = NULL;
 
   dir = g_file_new_for_path (g_get_user_data_dir ());
-  if (!g_file_query_exists (dir, NULL))
-    return NULL;
   path = g_string_new (g_file_get_uri (dir));
   g_string_append (path, "/libgda");
   confdir = g_file_new_for_uri (path->str);
   g_string_free (path, TRUE);
   if (!g_file_query_exists (confdir, NULL)) {
     g_object_unref (dir);
+    g_object_unref (confdir);
     dir = g_file_new_for_path (g_get_home_dir ());
     if (!g_file_query_exists (dir, NULL)) {
       g_warning (_("No home directory exists. No configuration directory is in use"));
@@ -711,7 +710,7 @@ t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
   GString *path;
 
 	confdir = t_config_info_compute_dict_directory ();
-  path = g_string_new ("");
+  path = g_string_new (g_file_get_uri (confdir));
 	if (info) {
     g_string_printf (path, "%s/gda-sql-%s.db", g_file_get_uri (confdir), info->name);
 	}
@@ -748,6 +747,7 @@ t_config_info_compute_dict_file_name (GdaDsnInfo *info, const gchar *cnc_string)
 		}
 	}
   filename = g_file_new_for_uri (path->str);
+  g_message ("Dictionary calculated File: %s", g_file_get_path (filename));
   g_string_free (path, TRUE);
 	g_object_unref (confdir);
 	return filename;
