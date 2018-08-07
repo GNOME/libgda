@@ -20,6 +20,7 @@
  */
 
 #include <libgda/libgda.h>
+#include <glib.h>
 static gboolean test_parse_iso8601_date (void);
 static gboolean test_parse_iso8601_time (void);
 static gboolean test_parse_iso8601_timestamp (void);
@@ -194,7 +195,7 @@ test_parse_iso8601_timestamp (void)
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
 
-			GDateTime* timestamp = gda_parse_iso8601_timestamp (str);
+			GDateTime* timestamp = g_date_time_new_from_iso8601 (str, NULL);
 			if (timestamp == NULL && td.exp_retval && tt.exp_retval) {
 				g_print ("test_parse_iso8601: Wrong result for gda_parse_iso8601_timestamp (\"%s\"): for valid timestamp\n",
 					 str);
@@ -207,13 +208,13 @@ test_parse_iso8601_timestamp (void)
 
 			if ((td.exp_retval &&
 			     ((g_date_time_get_year (timestamp) != td.exp_year) ||
-			      (g_date_time_get_month (timestamp) != td.exp_month) ||
-			      (g_date_time_get_day_of_month (timestamp) != td.exp_day))) &&
+			      (g_date_time_get_month (timestamp) != (gint) td.exp_month) ||
+			      (g_date_time_get_day_of_month (timestamp) != (gint) td.exp_day))) &&
 			    (((g_date_time_get_hour (timestamp) != tt.hour) ||
 			      (g_date_time_get_minute (timestamp) != tt.minute) ||
 			      (g_date_time_get_second (timestamp) != tt.second) ||
 			      (((gint) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0))
-											!= tt.fraction) ||
+											!= (gint) tt.fraction) ||
 			      ((g_date_time_get_utc_offset (timestamp) / 1000000) != tt.timezone)))) {
 				g_print ("test_parse_iso8601_timestamp: Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
@@ -440,12 +441,12 @@ test_timestamp_handler (void)
 					 g_date_time_get_utc_offset (timestamp)/1000000);
 
 				g_assert (g_date_time_get_year (timestamp) == td.exp_year);
-				g_assert (g_date_time_get_month (timestamp) == td.exp_month);
-				g_assert (g_date_time_get_day_of_month (timestamp) == td.exp_day);
+				g_assert (g_date_time_get_month (timestamp) == (gint) td.exp_month);
+				g_assert (g_date_time_get_day_of_month (timestamp) == (gint) td.exp_day);
 				g_assert (g_date_time_get_hour (timestamp) == tt.hour);
 				g_assert (g_date_time_get_minute (timestamp) == tt.minute);
 				g_assert (g_date_time_get_second (timestamp) == tt.second);
-				g_assert ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) == tt.fraction);
+				g_assert ((gulong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) == tt.fraction);
 				g_assert (g_date_time_get_utc_offset (timestamp)/1000000 == tt.timezone);
 				g_date_time_unref (timestamp);
 			}
@@ -478,13 +479,13 @@ test_timestamp_handler (void)
 			if (ptimestamp != NULL) {
 				timestamp = gda_date_time_copy (ptimestamp);
 				gda_value_free (value);
-				if ((g_date_time_get_year (timestamp) != td.exp_year) ||
-			    (g_date_time_get_month (timestamp) != td.exp_month) ||
-			    (g_date_time_get_day_of_month (timestamp) != td.exp_day) ||
+				if ((g_date_time_get_year (timestamp) != (gint) td.exp_year) ||
+			    (g_date_time_get_month (timestamp) != (gint) td.exp_month) ||
+			    (g_date_time_get_day_of_month (timestamp) != (gint) td.exp_day) ||
 			    (g_date_time_get_hour (timestamp) != tt.hour) ||
 			    (g_date_time_get_minute (timestamp) != tt.minute) ||
-			    (g_date_time_get_second (timestamp) != tt.second) ||
-			    ((glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) != tt.fraction) ||
+			    (g_date_time_get_second (timestamp) != (gint) tt.second) ||
+			    ((gulong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0) != tt.fraction) ||
 			    (g_date_time_get_utc_offset (timestamp)/1000000 != tt.timezone)) {
 					g_print ("test_timestamp_handler: Compact Time Format: Wrong result for gda_data_handler_get_value_from_str (\"%s\", G_TYPE_DATE_TIME):\n"
 						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
