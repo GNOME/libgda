@@ -687,11 +687,11 @@ execute_action_mitem_cb (GtkMenuItem *menuitem, UiFormGrid *formgrid)
 					ui_formgrid_handle_user_prefs (UI_FORMGRID (fg), NULL, stmt);
 					g_object_unref (stmt);
 				}
-				aed->model = g_object_ref (result);
+				aed->model = GDA_DATA_MODEL (g_object_ref (result));
 				g_signal_connect (aed->params, "holder-changed",
 						  G_CALLBACK (action_executed_holder_changed_cb), aed);
 
-				aed->formgrid = g_object_ref (fg);
+				aed->formgrid = (UiFormGrid*) g_object_ref (fg);
 				aed->formgrid->priv->autoupdate_possible = TRUE;
 				gtk_widget_show (aed->formgrid->priv->autoupdate_toggle);
 			}

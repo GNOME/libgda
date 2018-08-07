@@ -23,6 +23,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <glib/gstdio.h>
 #include <errno.h>
+#include <ctype.h>
 
 /**
  * t_utils_fk_policy_to_string
