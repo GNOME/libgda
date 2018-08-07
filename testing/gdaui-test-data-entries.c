@@ -927,8 +927,8 @@ entry_contents_or_attrs_changed (GtkWidget *entry, G_GNUC_UNUSED gpointer data)
 			strval = g_strdup_printf ("Binary data, size=%ld", gda_binary_get_size (bin));
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
-			const GdaBlob *blob;
-			blob = gda_value_get_blob (value);
+			GdaBlob *blob;
+			blob = g_value_get_boxed (value);
 			strval = g_strdup_printf ("Blob data, size=%ld", gda_binary_get_size (gda_blob_get_binary (blob)));
 		}
 		else
