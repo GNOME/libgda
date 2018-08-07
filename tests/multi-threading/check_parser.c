@@ -40,6 +40,29 @@ typedef struct {
 	GdaSqlParserMode   current_tested_mode;
 } ThData;
 
+static GPrivate priv_treads[20] = {
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+  G_PRIVATE_INIT (g_free),
+};
+
 typedef struct {
 	gint ntests;
 	gint nfailures;
@@ -109,7 +132,7 @@ main (int argc, char** argv)
 			GThread *threads[NTHREADS];
 			
 			g_mutex_init (& (data.mutex));
-			data.thread_priv = g_private_new (g_free);
+			data.thread_priv = &priv_treads[j];
 			data.doc = doc;
 			data.node = NULL;
 			data.all_done = FALSE;
@@ -118,7 +141,7 @@ main (int argc, char** argv)
 			
 			for (i = 0; i < NTHREADS; i++) {
 				//g_print ("Starting thread %d\n", i);
-				threads [i] = g_thread_create ((GThreadFunc) start_thread, &data, TRUE, NULL);
+				threads [i] = g_thread_new ("ParserTh", (GThreadFunc) start_thread, &data);
 			}
 			
 			for (i = 0; i < NTHREADS; i++) {
@@ -130,7 +153,6 @@ main (int argc, char** argv)
 				//g_print ("%d tests and %d failures\n", priv->ntests, priv->nfailures);
 				g_free (priv);
 			}
-			
 			g_mutex_clear (& (data.mutex));
 		}
 	}

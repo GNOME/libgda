@@ -90,7 +90,7 @@ main (int argc, char** argv)
 }
 
 typedef struct _ThData {
-	GMutex        *start_lock;
+	GMutex         start_lock;
 	GThread       *thread;
 	GdaConnection *cnc;
 	gint           th_id;
@@ -123,8 +123,8 @@ test_multiple_threads (GThreadFunc func, GError **error)
 	/* prepare threads data */
 	for (i = 0; i < NTHREADS; i++) {
 		ThData *d = &(data[i]);
-		d->start_lock = g_mutex_new ();
-		g_mutex_lock (d->start_lock);
+    g_mutex_init (&(d->start_lock));
+    g_mutex_lock (&(d->start_lock));
 		d->thread = NULL;
 		d->cnc = cnc;
 		d->th_id = i;
@@ -134,10 +134,11 @@ test_multiple_threads (GThreadFunc func, GError **error)
 	/* start all the threads, they will lock on d->start_lock */
 	for (i = 0; i < NTHREADS; i++) {
 		ThData *d = &(data[i]);
+
 #ifdef DEBUG_PRINT
 		g_print ("Running thread %d\n", d->th_id);
 #endif
-		d->thread = g_thread_create (func, d, TRUE, NULL);
+		d->thread = g_thread_new ("th", func, d);
 #ifdef DEBUG_PRINT
 		g_print ("Running thread %d has pointer %p\n", d->th_id, d->thread);
 #endif
@@ -146,7 +147,7 @@ test_multiple_threads (GThreadFunc func, GError **error)
 	/* unlock all the threads */
 	for (i = 0; i < NTHREADS; i++) {
 		ThData *d = &(data[i]);
-		g_mutex_unlock (d->start_lock);
+		g_mutex_unlock (&(d->start_lock));
 	}
 
 	gboolean retval = TRUE;
@@ -156,12 +157,11 @@ test_multiple_threads (GThreadFunc func, GError **error)
 		if (d->error)
 			retval = FALSE;
 	}
-
 	for (i = 0; i < NTHREADS; i++) {
 		ThData *d = &(data[i]);
-		g_mutex_free (d->start_lock);
+    g_mutex_clear (&(d->start_lock));
 	}
-	
+
 	g_object_unref (cnc);
 
 	return retval;
@@ -174,8 +174,8 @@ gpointer
 test1_start_thread (ThData *data)
 {
 	/* initially start locked */
-	g_mutex_lock (data->start_lock);
-	g_mutex_unlock (data->start_lock);
+	g_mutex_lock (&(data->start_lock));
+	g_mutex_unlock (&(data->start_lock));
 
 	/* threads use @cnc */
 	if (gda_lockable_trylock ((GdaLockable*) data->cnc)) {
