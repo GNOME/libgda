@@ -314,9 +314,8 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 		GType argtype;
 
 		argtype = va_arg (args, GType);
-		g_assert (argtype >= 0);
 
-		gda_column_set_g_type (gda_data_model_describe_column (model, i), 
+		gda_column_set_g_type (gda_data_model_describe_column (model, i),
 					 argtype);
 		i++;
 	}
