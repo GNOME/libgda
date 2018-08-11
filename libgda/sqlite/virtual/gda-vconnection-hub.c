@@ -700,7 +700,7 @@ create_value_from_sqlite3_gvalue (GType type, GValue *svalue, GError **error)
 		if (!g_type_is_a (G_VALUE_TYPE (svalue), G_TYPE_STRING))
 			allok = FALSE;
 		else {
-			GDateTime* timestamp = g_date_time_new_from_iso8601 (g_value_get_string (svalue), NULL);
+			GDateTime* timestamp = gda_parse_iso8601_timestamp (g_value_get_string (svalue));
 			if (timestamp == NULL) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 					     GDA_SERVER_PROVIDER_DATA_ERROR,

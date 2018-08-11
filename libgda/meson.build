@@ -264,8 +264,8 @@ libgda_dep += [inc_libgdah_dep]
 libgda_cargs = [
 		'-include',
 		meson.build_root() + '/config.h',
-		'-DABI_VERSION="'+project_api_version+'"',
-		'-DABI_NAME="'+project_api_name+'"',
+		'-DABI_VERSION='+project_api_version,
+		'-DABI_NAME='+project_api_name,
 	]
 
 libgda_cargs += sqlite_cargs

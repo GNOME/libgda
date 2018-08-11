@@ -558,9 +558,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					gda_time_free (timegda);
 				}
 				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-					GDateTime* timestamp = g_date_time_new_from_iso8601 (
+					GDateTime* timestamp = gda_parse_iso8601_timestamp (
 									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
-										real_col), NULL);
+										real_col));
 					if (timestamp == NULL) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
