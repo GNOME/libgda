@@ -448,7 +448,7 @@ gdaui_data_cell_renderer_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 
 	g_return_val_if_fail (GDAUI_IS_SET (paramlist), NULL);
 	g_return_val_if_fail (source, NULL);
-	g_return_val_if_fail (g_slist_find (paramlist->sources_list, source), NULL);
+	g_return_val_if_fail (g_slist_find (gdaui_set_get_sources (paramlist), source), NULL);
 
 	obj = g_object_new (GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, "data-set", paramlist, 
 			    "data-set-source", source, NULL);

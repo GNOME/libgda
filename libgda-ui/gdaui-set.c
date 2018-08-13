@@ -482,13 +482,14 @@ static void update_public_data (GdauiSet *set);
 static void compute_shown_columns_index (GdauiSetSource *dsource);
 static void compute_ref_columns_index (GdauiSetSource *dsource);
 
-struct _GdauiSetPriv
+typedef struct
 {
 	GdaSet *set;
-};
+  GSList *sources_list; /* list of GdauiSetSource */
+} GdauiSetPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiSet, gdaui_set, G_TYPE_OBJECT);
+
 
 /* properties */
 enum {
@@ -505,37 +506,12 @@ enum {
 
 static gint gdaui_set_signals[LAST_SIGNAL] = { 0, 0 };
 
-GType
-gdaui_set_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiSetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_set_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiSet),
-			0,
-			(GInstanceInitFunc) gdaui_set_init,
-			0
-		};		
-
-		type = g_type_register_static (G_TYPE_OBJECT, "GdauiSet", &info, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_set_class_init (GdauiSetClass *class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
-	parent_class = g_type_class_peek_parent (class);
+	gdaui_set_parent_class = g_type_class_peek_parent (class);
 	object_class->dispose = gdaui_set_dispose;
 
 	/**
@@ -586,8 +562,9 @@ gdaui_set_class_init (GdauiSetClass *class)
 static void
 gdaui_set_init (GdauiSet *set)
 {
-	set->priv = g_new0 (GdauiSetPriv, 1);
-	set->priv->set = NULL;
+	GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+	priv->set = NULL;
+  priv->sources_list = NULL;
 }
 
 /**
@@ -615,26 +592,27 @@ gdaui_set_dispose (GObject *object)
         g_return_if_fail (GDAUI_IS_SET (object));
 
         set = GDAUI_SET (object);
+        GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 
-        if (set->priv) {
-                if (set->priv->set) {
-                        g_signal_handlers_disconnect_by_func (G_OBJECT (set->priv->set),
+        if (priv) {
+                if (priv->set) {
+                        g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
                                                               G_CALLBACK (wrapped_set_public_data_changed_cb), set);
-                        g_signal_handlers_disconnect_by_func (G_OBJECT (set->priv->set),
+                        g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
                                                               G_CALLBACK (wrapped_set_source_model_changed_cb), set);
 
-                        g_object_unref (set->priv->set);
-                        set->priv->set = NULL;
+                        g_object_unref (priv->set);
+                        priv->set = NULL;
                 }
 
 		clean_public_data (set);
 
-                g_free (set->priv);
-                set->priv = NULL;
+                g_free (priv);
+                priv = NULL;
         }
 
         /* for the parent class */
-        parent_class->dispose (object);
+        G_OBJECT_CLASS (gdaui_set_parent_class)->dispose (object);
 }
 
 static void
@@ -647,15 +625,17 @@ gdaui_set_set_property (GObject *object,
 	
 	set = GDAUI_SET (object);
 	
+        GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+
 	switch (param_id) {
 	case PROP_SET:
-		set->priv->set = g_value_get_object (value);
-		if (set->priv->set) {
-			g_object_ref (set->priv->set);
+		priv->set = g_value_get_object (value);
+		if (priv->set) {
+			g_object_ref (priv->set);
 			compute_public_data (set);
-			g_signal_connect (set->priv->set, "public-data-changed",
+			g_signal_connect (priv->set, "public-data-changed",
 					  G_CALLBACK (wrapped_set_public_data_changed_cb), set);
-			g_signal_connect (set->priv->set, "source-model-changed",
+			g_signal_connect (priv->set, "source-model-changed",
 					  G_CALLBACK (wrapped_set_source_model_changed_cb), set);
 		}
 		break;
@@ -663,6 +643,18 @@ gdaui_set_set_property (GObject *object,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 		break;
 	}
+}
+
+/**
+ * gdaui_set_get_sources:
+ * @set: a #GdauiSet object
+ *
+ * Returns: (transfer none)(element-type Gdaui.SetSource): list of #GdauiSetSource
+ */
+GSList*
+gdaui_set_get_sources (GdauiSet *set) {
+	GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+	return priv->sources_list;
 }
 
 static void
@@ -676,8 +668,9 @@ static void
 wrapped_set_source_model_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdaSetSource *source, GdauiSet *set)
 {
 	GdauiSetSource *uisource = NULL;
+  GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 	GSList *list;
-	for (list = set->sources_list; list; list = list->next) {
+	for (list = priv->sources_list; list; list = list->next) {
 		if (((GdauiSetSource*) list->data)->source == source) {
 			uisource = (GdauiSetSource*) list->data;
 			break;
@@ -691,13 +684,14 @@ static void
 clean_public_data (GdauiSet *set)
 {
 	GSList *list;
+  GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 	
-	for (list = set->sources_list; list; list = list->next) {
+	for (list = priv->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
 		gdaui_set_source_free (dsource);
 	}
-	g_slist_free (set->sources_list);
-	set->sources_list = NULL;
+	g_slist_free (priv->sources_list);
+	priv->sources_list = NULL;
 
 	for (list = set->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
@@ -711,7 +705,8 @@ static void
 compute_public_data (GdauiSet *set)
 {
 	GSList *list;
-	GdaSet *aset = GDA_SET (set->priv->set);
+        GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+	GdaSet *aset = GDA_SET (priv->set);
 	GHashTable *hash;
 	
 	/* scan GdaSetSource list */
@@ -719,13 +714,13 @@ compute_public_data (GdauiSet *set)
 	for (list = gda_set_get_sources (aset); list; list = list->next) {
 		GdauiSetSource *dsource;
 		dsource = gdaui_set_source_new (GDA_SET_SOURCE (list->data));
-		set->sources_list = g_slist_prepend (set->sources_list, dsource);
+		priv->sources_list = g_slist_prepend (priv->sources_list, dsource);
 		g_hash_table_insert (hash, list->data, dsource);
 
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
-	set->sources_list = g_slist_reverse (set->sources_list);
+	priv->sources_list = g_slist_reverse (priv->sources_list);
 
 	/* scan GdaSetGroup list */
 	for (list = gda_set_get_groups (aset); list; list = list->next) {
@@ -749,39 +744,40 @@ static void
 update_public_data (GdauiSet *set)
 {
 	GSList *list, *elist = NULL;
-	GdaSet *aset = GDA_SET (set->priv->set);
+        GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+	GdaSet *aset = GDA_SET (priv->set);
 	GHashTable *shash; /* key = GdaSetSource, value = GdauiSetSource */
 	GHashTable *ghash; /* key = GdaSetGroup, value = GdauiSetGroup */
 
 	/* build hash with existing sources in GdauiSet */
 	shash = g_hash_table_new (NULL, NULL);
-	for (list = set->sources_list; list; list = list->next) {
+	for (list = priv->sources_list; list; list = list->next) {
 		GdauiSetSource *dsource = (GdauiSetSource*) list->data;
 		g_hash_table_insert (shash, gdaui_set_source_get_source (dsource), dsource);
 	}
 
 	/* scan GdaSetSource list */
-	elist = set->sources_list;
-	set->sources_list = NULL;
+	elist = priv->sources_list;
+	priv->sources_list = NULL;
 	for (list = gda_set_get_sources (aset); list; list = list->next) {
 		GdauiSetSource *dsource;
 		dsource = g_hash_table_lookup (shash, list->data);
 		if (dsource) {
-			set->sources_list = g_slist_prepend (set->sources_list, dsource);
+			priv->sources_list = g_slist_prepend (priv->sources_list, dsource);
 			continue;
 		}
 		dsource = gdaui_set_source_new (GDA_SET_SOURCE (list->data));
-		set->sources_list = g_slist_prepend (set->sources_list, dsource);
+		priv->sources_list = g_slist_prepend (priv->sources_list, dsource);
 		g_hash_table_insert (shash, list->data, dsource);
 
 		compute_shown_columns_index (dsource);
 		compute_ref_columns_index (dsource);
 	}
-	set->sources_list = g_slist_reverse (set->sources_list);
+	priv->sources_list = g_slist_reverse (priv->sources_list);
 
 	if (elist) {
 		for (list = elist; list; list = list->next) {
-			if (!g_slist_find (set->sources_list, list->data)) {
+			if (!g_slist_find (priv->sources_list, list->data)) {
 				GdauiSetSource *dsource = (GdauiSetSource*) list->data;
 				gdaui_set_source_free (dsource);
 			}
@@ -930,9 +926,11 @@ gdaui_set_get_property (GObject *object,
 
 	set = GDAUI_SET (object);
 	
+  GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+
 	switch (param_id) {
 	case PROP_SET:
-		g_value_set_object (value, set->priv->set);
+		g_value_set_object (value, priv->set);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -956,7 +954,10 @@ gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder)
 	g_return_val_if_fail (GDAUI_IS_SET (dbset), NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 
-	agroup = gda_set_get_group (dbset->priv->set, holder);
+
+  GdauiSetPrivate *priv = gdaui_set_get_instance_private (dbset);
+
+	agroup = gda_set_get_group (priv->set, holder);
 	if (!agroup)
 		return NULL;
 	
@@ -1012,9 +1013,10 @@ _gda_set_node_dump (GdaSetNode *node)
 static void
 _gdaui_set_dump (GdauiSet *set)
 {
+  GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 	g_print ("=== GdauiSet %p ===\n", set);
-	gda_set_dump (set->priv->set);
-	g_slist_foreach (set->sources_list, (GFunc) set_source_dump, NULL);
+	gda_set_dump (priv->set);
+	g_slist_foreach (priv->sources_list, (GFunc) set_source_dump, NULL);
 	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
 	g_print ("=== GdauiSet %p END ===\n", set);
 }

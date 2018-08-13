@@ -273,7 +273,7 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 
 	g_return_if_fail (GDAUI_IS_SET (paramlist));
 	g_return_if_fail (source);
-	g_return_if_fail (g_slist_find (paramlist->sources_list, source));
+	g_return_if_fail (g_slist_find (gdaui_set_get_sources (paramlist), source));
   
 	combo->priv->paramlist = paramlist;
 	combo->priv->source = source;
