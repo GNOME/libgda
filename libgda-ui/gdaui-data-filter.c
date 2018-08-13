@@ -117,10 +117,7 @@ set_wait_cursor (GtkWidget *w)
 	
 	parent = gtk_widget_get_toplevel (w);
 	if (parent) {
-		GdkCursor* cursor;
-		cursor = gdk_cursor_new (GDK_WATCH);
-		gdk_window_set_cursor (gtk_widget_get_window (parent), cursor);
-		g_object_unref (cursor);
+    gdk_cursor_new_for_display (gdk_display_get_default (), GDK_WATCH);
 	}
 }
 
