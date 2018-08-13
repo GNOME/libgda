@@ -450,7 +450,7 @@ ttwbs = executable('test-blocking-itsignaler',
 		],
 	install: false
 	)
-test('BlokingItSignaler', ttwbs)
+test('BlockingItSignaler', ttwbs)
 
 ttww = executable('test-worker test-connect',
 	test_worker_sources,
