@@ -90,6 +90,7 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 #define GDA_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_set_get_type(), GdaSet)
 #define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
 #define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GdaSet, g_object_unref)
 
 struct _GdaSet
 {
