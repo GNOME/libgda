@@ -276,7 +276,7 @@ provider_changed_cb (G_GNUC_UNUSED GtkWidget *combo, GdauiDsnAssistant *assistan
     if (!GTK_IS_WINDOW (parent)) {
       parent = NULL;
     }
-    GtkWidget *msg = gtk_message_dialog_new (parent,
+    GtkWidget *msg = gtk_message_dialog_new (GTK_WINDOW (parent),
                         GTK_DIALOG_MODAL,
                         GTK_MESSAGE_ERROR,
                         GTK_BUTTONS_CLOSE,
@@ -401,14 +401,14 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
       if (!GTK_IS_WINDOW (parent)) {
         parent = NULL;
       }
-      GtkWidget *msg = gtk_message_dialog_new (parent,
+      GtkWidget *msg = gtk_message_dialog_new (GTK_WINDOW (parent),
                           GTK_DIALOG_MODAL,
                           GTK_MESSAGE_ERROR,
                           GTK_BUTTONS_CLOSE,
                           _("No providers exists"));
       gtk_dialog_run (GTK_DIALOG (msg));
       gtk_widget_destroy (msg);
-      return;
+      return PAGE_CONNECT_INFO;
     }
 		pinfo = gda_config_get_provider_info (provider);
     if (pinfo == NULL) {
@@ -416,14 +416,14 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
       if (!GTK_IS_WINDOW (parent)) {
         parent = NULL;
       }
-      GtkWidget *msg = gtk_message_dialog_new (parent,
+      GtkWidget *msg = gtk_message_dialog_new (GTK_WINDOW (parent),
                           GTK_DIALOG_MODAL,
                           GTK_MESSAGE_ERROR,
                           GTK_BUTTONS_CLOSE,
                           _("No provider's information exists"));
       gtk_dialog_run (GTK_DIALOG (msg));
       gtk_widget_destroy (msg);
-      return;
+      return PAGE_CONNECT_INFO;
     }
 
 		if (gda_set_get_holders (pinfo->auth_params))
