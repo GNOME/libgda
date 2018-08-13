@@ -498,8 +498,8 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 				/* ignore space */
 				gda_value_free (value);
 				value = NULL;
+				break;
 			}
-      break;
 		default:
 			if (parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
 				if ((parser->priv->context->token_type == L_BEGIN) &&
@@ -1288,11 +1288,11 @@ getToken (GdaSqlParser *parser)
 			if (! isdigit (z[1])) {
 				parser->priv->context->token_type = L_DOT;
 				consumed_chars = 1;
+				break;
 			}
 			/* If the next character is a digit, this is a floating point
 			** number that begins with ".".  Fall thru into the next case */
 		}
-		break;
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9': {
 		parser->priv->context->token_type = L_INTEGER;
@@ -1529,9 +1529,9 @@ getToken (GdaSqlParser *parser)
 	else if (parser->priv->context->token_type == L_IS)
 		handle_composed_2_keywords (parser, retval, L_NULL, L_ISNULL);
 	else if (parser->priv->context->token_type == L_NOT) {
-		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL);
-	  handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE);
-	  handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
+		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL) ||
+			handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE) ||
+			handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
 	}
 	else if (parser->priv->context->token_type == L_SIMILAR)
 		handle_composed_2_keywords (parser, retval, L_TO, L_SIMILAR);
