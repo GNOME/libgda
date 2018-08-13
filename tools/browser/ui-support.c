@@ -447,7 +447,7 @@ _make_tab_label (const gchar *label,
 		image = gtk_image_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_MENU);
 		close_button = gtk_button_new ();
 		gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
-		gtk_button_set_focus_on_click (GTK_BUTTON (close_button), FALSE);
+		gtk_widget_set_focus_on_click (GTK_WIDGET (close_button), FALSE);
 
 		gtk_widget_set_tooltip_text (close_button, _("Close tab"));
 		
