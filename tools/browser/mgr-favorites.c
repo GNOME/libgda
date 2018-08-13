@@ -353,7 +353,7 @@ hash_for_existing_nodes (const GSList *nodes)
 	return hash;
 }
 
-gboolean icons_resol_cb (MgrFavorites *mgr);
+static gboolean icons_resol_cb (MgrFavorites *mgr);
 
 static GSList *
 mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,

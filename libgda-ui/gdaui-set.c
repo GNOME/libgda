@@ -25,7 +25,6 @@
 #include "gdaui-set.h"
 #include "marshallers/gdaui-marshal.h"
 
-#ifdef GSEAL_ENABLE
 /**
  * GdauiSetGroup:
  * @group: 
@@ -49,8 +48,6 @@ struct _GdauiSetGroup {
         gpointer      _gda_reserved1;
         gpointer      _gda_reserved2;
 };
-#else
-#endif
 
 /*
    Register GdauiSetGroup type
@@ -193,7 +190,6 @@ gdaui_set_group_get_group (GdauiSetGroup *sg)
 	return sg->group;
 }
 
-#ifdef GSEAL_ENABLE
 /**
  * GdauiSetSource:
  * @source: a #GdaSetSource
@@ -229,8 +225,6 @@ struct _GdauiSetSource {
         gpointer        _gda_reserved3;
         gpointer        _gda_reserved4;
 };
-#else
-#endif
 
 /*
    Register GdauiSetSource type
