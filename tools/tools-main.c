@@ -69,6 +69,7 @@
   #include <browser/ui-support.h>
   #include <browser/connection-binding-properties.h>
 #endif
+#include <gio/gio.h>
 
 /* options */
 gboolean show_version = FALSE;
@@ -377,12 +378,12 @@ command_line (GApplication *application, GApplicationCommandLine *cmdline)
 		}
 	}
 	if (list_data_files) {
-		gchar *confdir;
+		GFile *confdir;
 		GdaDataModel *model;
 
 		confdir = t_config_info_compute_dict_directory ();
-		g_print (_("All files are in the directory: %s\n"), confdir);
-		g_free (confdir);
+		g_print (_("All files are in the directory: %s\n"), g_file_get_path (confdir));
+		g_object_unref (confdir);
 		model = t_config_info_list_data_files (&error);
 		if (model) {
 			output_data_model (model);
