@@ -140,38 +140,31 @@ popup_container_dispose (GObject *object)
 static void
 default_position_func (G_GNUC_UNUSED PopupContainer *container, gint *out_x, gint *out_y)
 {
-	GdkDeviceManager *manager;
+	GdkSeat *seat;
 	GdkDevice *pointer;
 	GtkWidget *widget;
 	widget = GTK_WIDGET (container);
-	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-	pointer = gdk_device_manager_get_client_pointer (manager);
+	seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
+	pointer = gdk_seat_get_pointer (seat);
 	gdk_device_get_position (pointer, NULL, out_x, out_y);
 }
 
 static gboolean
 popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
 {
-	GdkDeviceManager *manager;
-	GdkDevice *pointer;
+	GdkSeat *seat;
 	GdkWindow *window;
 	window = gtk_widget_get_window (widget);
-	manager = gdk_display_get_device_manager (gtk_widget_get_display (widget));
-	pointer = gdk_device_manager_get_client_pointer (manager);
-        if (gdk_device_grab (pointer, window, GDK_OWNERSHIP_WINDOW, TRUE,
-			     GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-			     GDK_POINTER_MOTION_MASK,
-			     NULL, activate_time) == GDK_GRAB_SUCCESS) {
-		GdkDevice *keyb;
-		keyb = gdk_device_get_associated_device (pointer);
-                if (gdk_device_grab (keyb, window, GDK_OWNERSHIP_WINDOW, TRUE,
-				     GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK, NULL, activate_time) ==
-		    GDK_GRAB_SUCCESS)
-                         return TRUE;
-                 else {
-                        gdk_device_ungrab (pointer, activate_time);
-			return FALSE;
-		 }
+	seat = gdk_display_get_default_seat (gtk_widget_get_display (widget));
+        if (gdk_seat_grab (seat,
+			   window,
+			   GDK_SEAT_CAPABILITY_ALL_POINTING,
+			   TRUE,
+			   NULL,
+			   NULL,
+			   NULL,
+			   NULL) == GDK_GRAB_SUCCESS) {
+        	return TRUE;
         }
         return FALSE;
 }
@@ -192,20 +185,17 @@ popup_container_show (GtkWidget *widget)
 
 	gtk_grab_add (widget);
 
-	GdkScreen *screen;
+	GdkMonitor *monitor;
+	GdkRectangle geometry;
         gint swidth, sheight;
         gint root_x, root_y;
         gint wwidth, wheight;
         gboolean do_move = FALSE;
-        screen = gtk_window_get_screen (GTK_WINDOW (widget));
-        if (screen) {
-                swidth = gdk_screen_get_width (screen);
-                sheight = gdk_screen_get_height (screen);
-        }
-        else {
-                swidth = gdk_screen_width ();
-                sheight = gdk_screen_height ();
-        }
+        monitor = gdk_display_get_monitor_at_window (gtk_widget_get_display (widget), gtk_widget_get_window (widget));
+	gdk_monitor_get_geometry (monitor, &geometry);
+	swidth = geometry.width * gdk_monitor_get_scale_factor (monitor);
+	sheight = geometry.height * gdk_monitor_get_scale_factor (monitor);
+
         gtk_window_get_position (GTK_WINDOW (widget), &root_x, &root_y);
         gtk_window_get_size (GTK_WINDOW (widget), &wwidth, &wheight);
         if (root_x + wwidth > swidth) {
