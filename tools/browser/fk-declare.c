@@ -398,7 +398,7 @@ fk_declare_new (GtkWindow *parent, GdaMetaStruct *mstruct, GdaMetaTable *table)
 	g_free (str);
 
 	decl = FK_DECLARE (wid);
-	decl->priv->mstruct = g_object_ref ((GObject*) mstruct);
+	decl->priv->mstruct = GDA_META_STRUCT (g_object_ref ((GObject*) mstruct));
 	decl->priv->mtable = table;
 
 	create_internal_layout (decl);
