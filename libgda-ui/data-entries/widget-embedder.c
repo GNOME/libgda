@@ -215,11 +215,6 @@ widget_embedder_realize (GtkWidget *widget)
 	g_signal_connect (bin->offscreen_window, "from-embedder",
 			  G_CALLBACK (offscreen_window_from_parent), bin);
 
-	GtkStyleContext *style;
-	style = gtk_widget_get_style_context (widget);
-
-	gtk_style_context_set_background (style, win);
-	gtk_style_context_set_background (style, bin->offscreen_window);
 	gdk_window_show (bin->offscreen_window);
 }
 
