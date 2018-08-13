@@ -125,12 +125,8 @@ gdaui_cloud_get_type (void)
 static void
 cloud_map (GtkWidget *widget)
 {
-        GTK_WIDGET_CLASS (parent_class)->map (widget);
-	GtkStyleContext *style_context;
-	GdkRGBA color;
-	style_context = gtk_widget_get_style_context (widget);
-	gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_NORMAL, &color);
-	gtk_widget_override_background_color (GDAUI_CLOUD (widget)->priv->tview, GTK_STATE_FLAG_NORMAL, &color);
+	if (GTK_WIDGET_CLASS (parent_class)->map)
+        	GTK_WIDGET_CLASS (parent_class)->map (widget);
 }
 
 static void
@@ -704,14 +700,18 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, GdauiCloud *c
 		
 		if (cloud->priv->hovering_over_link) {
 			if (! hand_cursor)
-				hand_cursor = gdk_cursor_new (GDK_HAND2);
+				hand_cursor = gdk_cursor_new_for_display (
+							gtk_widget_get_display (GTK_WIDGET (text_view)),
+							GDK_HAND2);
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
 									 GTK_TEXT_WINDOW_TEXT),
 					       hand_cursor);
 		}
 		else {
 			if (!regular_cursor)
-				regular_cursor = gdk_cursor_new (GDK_XTERM);
+				regular_cursor = gdk_cursor_new_for_display (
+							gtk_widget_get_display (GTK_WIDGET (text_view)),
+							GDK_XTERM);
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view,
 									 GTK_TEXT_WINDOW_TEXT),
 					       regular_cursor);
@@ -730,11 +730,11 @@ static gboolean
 visibility_notify_event (GtkWidget *text_view, G_GNUC_UNUSED GdkEventVisibility *event, GdauiCloud *cloud)
 {
 	gint wx, wy, bx, by;
-	GdkDeviceManager *manager;
+	GdkSeat *seat;
         GdkDevice *pointer;
 
-        manager = gdk_display_get_device_manager (gtk_widget_get_display (text_view));
-        pointer = gdk_device_manager_get_client_pointer (manager);
+        seat = gdk_display_get_default_seat (gtk_widget_get_display (text_view));
+        pointer = gdk_seat_get_pointer (seat);
 	gdk_window_get_device_position (gtk_widget_get_window (text_view), pointer, &wx, &wy, NULL);
 	
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
