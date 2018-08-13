@@ -36,7 +36,7 @@ enum {
 };
 
 static GObjectClass *parent_class = NULL;
-static GtkStyleProvider *css_provider = NULL;
+static GtkCssProvider *css_provider = NULL;
 
 #define ACTION_AREA_DEFAULT_BORDER 2
 #define ACTION_AREA_DEFAULT_SPACING 2
@@ -471,11 +471,11 @@ gdaui_bar_add_search_entry (GdauiBar *bar)
 	/* CSS theming */
 	GtkStyleContext *context;
 	context = gtk_widget_get_style_context (vb);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (css_provider), G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar_entry");
 
 	context = gtk_widget_get_style_context (entry);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (css_provider), G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar_entry");
 
 	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (entry),
@@ -530,11 +530,11 @@ gdaui_bar_add_button_from_icon_name (GdauiBar *bar, const gchar *icon_name)
 	/* CSS theming */
 	GtkStyleContext *context;
 	context = gtk_widget_get_style_context (vb);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (css_provider), G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar_button");
 
 	context = gtk_widget_get_style_context (button);
-	gtk_style_context_add_provider (context, css_provider, G_MAXUINT);
+	gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (css_provider), G_MAXUINT);
 	gtk_style_context_add_class (context, "gdauibar_button");
 
 	gtk_widget_show_all (vb);
