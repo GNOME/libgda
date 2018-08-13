@@ -25,6 +25,7 @@
 #include <libgda/thread-wrapper/gda-worker.h>
 #include <libgda/gda-transaction-status.h>
 #include <libgda/gda-connection-event.h>
+#include <libgda/gda-server-provider-impl.h>
 
 G_BEGIN_DECLS
 
@@ -42,10 +43,10 @@ G_BEGIN_DECLS
  * for example does not support multi-threading at all)
  */
 typedef struct {
-	GdaWorker *    GSEAL(worker);
-	GDestroyNotify GSEAL(provider_data_destroy_func);
-	gpointer       GSEAL(pad1);
-	gpointer       GSEAL(pad2);
+	GdaWorker *    worker;
+	GDestroyNotify provider_data_destroy_func;
+	gpointer       pad1;
+	gpointer       pad2;
 } GdaServerProviderConnectionData;
 #define GDA_TYPE_SERVER_PROVIDER_CONNECTION_DATA (gda_server_provider_connection_data_get_type())
 

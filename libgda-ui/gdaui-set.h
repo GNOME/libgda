@@ -39,19 +39,6 @@ typedef struct _GdauiSetPriv  GdauiSetPriv;
 typedef struct _GdauiSetGroup GdauiSetGroup;
 typedef struct _GdauiSetSource GdauiSetSource;
 
-#ifdef GSEAL_ENABLE
-#else
-struct _GdauiSetGroup {
-        GdaSetGroup*      GSEAL(group);
-        GdauiSetSource*   GSEAL(source); /* if NULL, then @group->nodes contains exactly one entry */
-
-	/*< private >*/
-        /* Padding for future expansion */
-        gpointer      GSEAL(_gda_reserved1);
-        gpointer      GSEAL(_gda_reserved2);
-};
-#endif
-
 #define GDAUI_TYPE_SET_GROUP (gdaui_set_group_get_type ())
 #define GDAUI_SET_GROUP(x) ((GdauiSetGroup*)(x))
 
@@ -64,27 +51,6 @@ GdauiSetSource   *gdaui_set_group_get_source         (GdauiSetGroup *sg);
 void              gdaui_set_group_set_group          (GdauiSetGroup *sg, GdaSetGroup *group);
 GdaSetGroup      *gdaui_set_group_get_group          (GdauiSetGroup *sg);
 
-#ifdef GSEAL_ENABLE
-#else
-struct _GdauiSetSource {
-        GdaSetSource*   GSEAL(source);
-
-	/* displayed columns in 'source->data_model' */
- 	gint  GSEAL(shown_n_cols);
- 	gint* GSEAL(shown_cols_index);
-
- 	/* columns used as a reference (corresponding to PK values) in 'source->data_model' */
- 	gint  GSEAL(ref_n_cols);
- 	gint* GSEAL(ref_cols_index); 
-
-	/*< private >*/
-        /* Padding for future expansion */
-        gpointer        GSEAL(_gda_reserved1);
-        gpointer        GSEAL(_gda_reserved2);
-        gpointer        GSEAL(_gda_reserved3);
-        gpointer        GSEAL(_gda_reserved4);
-};
-#endif
 
 #define GDAUI_TYPE_SET_SOURCE (gdaui_set_source_get_type ())
 #define GDAUI_SET_SOURCE(x) ((GdauiSetSource*)(x))
