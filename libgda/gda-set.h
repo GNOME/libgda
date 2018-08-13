@@ -94,7 +94,6 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 struct _GdaSet
 {
 	GObject         object;
-	GdaSetPrivate  *priv;
 };
 
 /* struct for the object's class */
