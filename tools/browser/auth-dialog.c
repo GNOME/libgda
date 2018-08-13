@@ -22,6 +22,7 @@
 #include <string.h>
 #include "auth-dialog.h"
 #include "ui-support.h"
+#include <gda-config.h>
 
 /* 
  * Main static functions 
@@ -447,7 +448,7 @@ auth_dialog_add_cnc_string (AuthDialog *dialog, const gchar *cnc_string, GError 
 	gboolean auth_needed = FALSE;
 	GdaProviderInfo *pinfo;
 	pinfo = gda_config_get_provider_info (ad->cncinfo.provider);
-	if (pinfo && gda_set_get_holders (pinfo->auth_params && pinfo->auth_params))
+	if (pinfo  && pinfo->auth_params && gda_set_get_holders (pinfo->auth_params))
 		auth_needed = TRUE;
 	if (auth_needed) {
 		GdaSet *set;
