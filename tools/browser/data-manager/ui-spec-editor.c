@@ -152,8 +152,6 @@ popup_func_delete_cb (G_GNUC_UNUSED GtkMenuItem *mitem, UiSpecEditor *uied)
 static void
 do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, UiSpecEditor *uied)
 {
-        int button, event_time;
-
         if (! uied->priv->popup_menu) {
                 GtkWidget *menu, *mitem;
 
@@ -168,15 +166,6 @@ do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, UiSpecEdi
 				  G_CALLBACK (popup_func_delete_cb), uied);
 
                 uied->priv->popup_menu = menu;
-        }
-
-        if (event) {
-                button = event->button;
-                event_time = event->time;
-        }
-        else {
-                button = 0;
-                event_time = gtk_get_current_event_time ();
         }
 
         gtk_menu_popup_at_pointer (GTK_MENU (uied->priv->popup_menu), NULL);
