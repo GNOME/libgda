@@ -139,14 +139,15 @@ test_ddl_creator_create_db (CheckDdlObject *self,
   g_assert_true (resop);
 }
 
-static void
-test_ddl_creator_parse_cnc (CheckDdlObject *self,
-                           gconstpointer user_data)
-{
-  gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL);
+/* static void */
+/* test_ddl_creator_parse_cnc (CheckDdlObject *self, */
+/*                            gconstpointer user_data) */
+/* { */
+/*   gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL); */
 
-  g_assert_true (res);
-}
+/*   g_assert_true (res); */
+/* } */
+
 gint
 main (gint   argc,
       gchar *argv[])
