@@ -589,6 +589,7 @@ gdaui_raw_form_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_MODEL:
 			g_value_set_object(value, form->priv->data_model);
+			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
