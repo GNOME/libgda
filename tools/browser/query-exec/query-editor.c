@@ -788,12 +788,8 @@ query_editor_map (GtkWidget *widget)
 	GTK_WIDGET_CLASS (parent_class)->map (widget);
 	if (QUERY_EDITOR (widget)->priv->mode == QUERY_EDITOR_HISTORY) {
 		GtkStyleContext* style_context = gtk_widget_get_style_context (widget);
-		GdkRGBA color;
-		gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_NORMAL, &color);
-		color.red += (1.0 - color.red) / COLOR_ALTER_FACTOR;
-		color.green += (1.0 - color.green) / COLOR_ALTER_FACTOR;
-		color.blue += (1.0 - color.blue) / COLOR_ALTER_FACTOR;
-		gtk_widget_override_background_color (QUERY_EDITOR (widget)->priv->text, GTK_STATE_FLAG_NORMAL, &color);
+		if (!gtk_style_context_has_class (style_context, "editor-history"))
+      gtk_style_context_add_class (style_context, "editor-history");
 	}
 }
 
@@ -940,6 +936,9 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 {
 	GtkTextBuffer *buffer;
 	gboolean clean = TRUE;
+  GtkStyleContext *style_context;
+
+  style_context = gtk_widget_get_style_context (GTK_WIDGET (editor));
 
 	g_return_if_fail (QUERY_IS_EDITOR (editor));
 	if (editor->priv->mode == mode)
@@ -978,20 +977,14 @@ query_editor_set_mode (QueryEditor *editor, QueryEditorMode mode)
 	}
 
 	if (mode == QUERY_EDITOR_HISTORY) {
-		GtkStyleContext *style_context = gtk_widget_get_style_context (GTK_WIDGET (editor));
-		GdkRGBA color;
-		gtk_style_context_get_background_color (style_context, GTK_STATE_FLAG_NORMAL, &color);
-		color.red += (1.0 - color.red) / COLOR_ALTER_FACTOR;
-		color.green += (1.0 - color.green) / COLOR_ALTER_FACTOR;
-		color.blue += (1.0 - color.blue) / COLOR_ALTER_FACTOR;
-		gtk_widget_override_background_color (editor->priv->text, GTK_STATE_FLAG_NORMAL, &color);
+		if (!gtk_style_context_has_class (style_context, "editor-history"))
+      gtk_style_context_add_class (style_context, "editor-history");
 
 		editor->priv->hash = g_hash_table_new_full (NULL, NULL, NULL,
 							    (GDestroyNotify) hist_item_data_unref);
 	}
 	else {
-		gtk_widget_override_background_color (editor->priv->text,
-					GTK_STATE_FLAG_NORMAL, NULL);
+    gtk_style_context_remove_class (style_context, "editor-history");
 	}
 }
 

@@ -47,15 +47,20 @@ toolbar * {
 }
 
 .non-invalid {
-  background: red;
+  background-color: red;
 }
 .is-default {
-  background: blue;
+  background-color: blue;
 }
 .is-null {
-  background: green;
+  background-color: green;
 }
 
 .small-text {
   font-size: 80%;
+}
+
+/* For SQL query editor */
+.editor-history {
+  background-color: lighter(currentColor);
 }
