@@ -81,8 +81,8 @@ struct _GdauiEntryCommonTimePrivate
 	GtkWidget *entry;
 	GtkWidget *cal_popover;
 	GtkWidget *calendar;
-	gulong     displayed_tz;
-	gulong     value_tz;
+	glong     displayed_tz;
+	glong     value_tz;
 	gulong     value_fraction;
 
 	gboolean   editing_canceled;
@@ -697,7 +697,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				mgtim->priv->value_tz = fit_tz (g_date_time_get_utc_offset (gts) / 1000000);
 				mgtim->priv->value_fraction = (glong) ((g_date_time_get_seconds (gts) - g_date_time_get_second (gts)) * 1000000);
 
-				gint itz = mgtim->priv->displayed_tz; // FIXME: This time zone is always positive
+				gint itz = mgtim->priv->displayed_tz;
 				if (itz < 0)
 					itz *= -1;
 				gint h = itz/60/60;
