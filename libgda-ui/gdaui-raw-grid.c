@@ -669,7 +669,7 @@ create_columns_data (GdauiRawGrid *grid)
 	GSList *list;
 
 	/* Creation of the columns in the treeview, to fit the parameters in grid->priv->iter param list */
-	for (i = 0, list = grid->priv->iter_info->groups_list;
+	for (i = 0, list = gdaui_set_get_groups (grid->priv->iter_info);
 	     list;
 	     i++, list = list->next) {
 		GdaHolder *param;

@@ -1051,12 +1051,12 @@ create_entries (GdauiBasicForm *form)
 	GSList *list;
 
 	/* parameters list management */
-	if (!form->priv->set || !form->priv->set_info->groups_list)
+	if (!form->priv->set || !gdaui_set_get_groups (form->priv->set_info))
 		/* nothing to do */
 		return;
 
 	/* creating all the data entries, and putting them into the form->priv->entries list */
-	for (list = form->priv->set_info->groups_list; list; list = list->next) {
+	for (list = gdaui_set_get_groups (form->priv->set_info); list; list = list->next) {
 		SingleEntry *sentry;
 
 		sentry = g_new0 (SingleEntry, 1);

@@ -69,16 +69,12 @@ void              gdaui_set_source_set_ref_columns    (GdauiSetSource *s, gint *
 
 
 /* struct for the object's data */
-/* FIXME: public members of GdauiSet must be SEALED! */
 /**
  * GdauiSet:
- * @groups_list: (element-type Gdaui.SetGroup): list of #GdauiSetGroup
  */
 struct _GdauiSet
 {
 	GObject         object;
-	/*< public >*/
-        GSList         *groups_list;  /* list of GdauiSetGroup */
 };
 
 /* struct for the object's class */
@@ -96,6 +92,7 @@ GType             gdaui_set_get_type            (void) G_GNUC_CONST;
 GdauiSet         *gdaui_set_new                 (GdaSet *set);
 GdauiSetGroup    *gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 GSList           *gdaui_set_get_sources         (GdauiSet *set);
+GSList           *gdaui_set_get_groups          (GdauiSet *set);
 
 G_END_DECLS
 

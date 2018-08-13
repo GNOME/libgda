@@ -485,7 +485,8 @@ static void compute_ref_columns_index (GdauiSetSource *dsource);
 typedef struct
 {
 	GdaSet *set;
-  GSList *sources_list; /* list of GdauiSetSource */
+	GSList *sources_list; /* list of GdauiSetSource */
+	GSList *groups_list;  /* list of GdauiSetGroup */
 } GdauiSetPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdauiSet, gdaui_set, G_TYPE_OBJECT);
@@ -606,9 +607,6 @@ gdaui_set_dispose (GObject *object)
                 }
 
 		clean_public_data (set);
-
-                g_free (priv);
-                priv = NULL;
         }
 
         /* for the parent class */
@@ -657,6 +655,19 @@ gdaui_set_get_sources (GdauiSet *set) {
 	return priv->sources_list;
 }
 
+
+/**
+ * gdaui_set_get_groups:
+ * @set: a #GdauiSet object
+ *
+ * Returns: (transfer none)(element-type Gdaui.SetGroup): list of #GdauiSetGroup
+ */
+GSList*
+gdaui_set_get_groups (GdauiSet *set) {
+	GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
+	return priv->groups_list;
+}
+
 static void
 wrapped_set_public_data_changed_cb (G_GNUC_UNUSED GdaSet *wset, GdauiSet *set)
 {
@@ -693,12 +704,12 @@ clean_public_data (GdauiSet *set)
 	g_slist_free (priv->sources_list);
 	priv->sources_list = NULL;
 
-	for (list = set->groups_list; list; list = list->next) {
+	for (list = priv->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
 		gdaui_set_group_free (dgroup);
 	}
-	g_slist_free (set->groups_list);
-	set->groups_list = NULL;
+	g_slist_free (priv->groups_list);
+	priv->groups_list = NULL;
 }
 
 static void
@@ -733,9 +744,9 @@ compute_public_data (GdauiSet *set)
 		gdaui_set_group_set_source (dgroup, 
 		                            g_hash_table_lookup (hash, 
 		                                                 gda_set_group_get_source (GDA_SET_GROUP (list->data))));
-		set->groups_list = g_slist_prepend (set->groups_list, dgroup);		
+		priv->groups_list = g_slist_prepend (priv->groups_list, dgroup);
 	}
-	set->groups_list = g_slist_reverse (set->groups_list);
+	priv->groups_list = g_slist_reverse (priv->groups_list);
 
 	g_hash_table_destroy (hash);
 }
@@ -787,31 +798,31 @@ update_public_data (GdauiSet *set)
 
 	/* build hash with existing groups */
 	ghash = g_hash_table_new (NULL, NULL);
-	for (list = set->groups_list; list; list = list->next) {
+	for (list = priv->groups_list; list; list = list->next) {
 		GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
 		g_hash_table_insert (ghash, gdaui_set_group_get_group (dgroup), dgroup);
 	}
 
 	/* scan GdaSetGroup list */
-	elist = set->groups_list;
-	set->groups_list = NULL;
+	elist = priv->groups_list;
+	priv->groups_list = NULL;
 	for (list = gda_set_get_groups (aset); list; list = list->next) {
 		GdauiSetGroup *dgroup;
 		dgroup = g_hash_table_lookup (ghash, list->data);
 		if (dgroup) {
-			set->groups_list = g_slist_prepend (set->groups_list, dgroup);
+			priv->groups_list = g_slist_prepend (priv->groups_list, dgroup);
 			continue;
 		}
 		dgroup = gdaui_set_group_new (GDA_SET_GROUP (list->data));
 		gdaui_set_group_set_source (dgroup, g_hash_table_lookup (shash, 
 		                                           gda_set_group_get_source (gdaui_set_group_get_group (dgroup))));
-		set->groups_list = g_slist_prepend (set->groups_list, dgroup);
+		priv->groups_list = g_slist_prepend (priv->groups_list, dgroup);
 	}
-	set->groups_list = g_slist_reverse (set->groups_list);
+	priv->groups_list = g_slist_reverse (priv->groups_list);
 
 	if (elist) {
 		for (list = elist; list; list = list->next) {
-			if (!g_slist_find (set->groups_list, list->data)) {
+			if (!g_slist_find (priv->groups_list, list->data)) {
 				GdauiSetGroup *dgroup = (GdauiSetGroup*) list->data;
 				gdaui_set_group_free (dgroup);
 			}
@@ -947,21 +958,21 @@ gdaui_set_get_property (GObject *object,
  * Since: 5.2
  **/
 GdauiSetGroup  *
-gdaui_set_get_group (GdauiSet *dbset, GdaHolder *holder)
+gdaui_set_get_group (GdauiSet *set, GdaHolder *holder)
 {
 	GdaSetGroup *agroup;
 	GSList *list;
-	g_return_val_if_fail (GDAUI_IS_SET (dbset), NULL);
+	g_return_val_if_fail (GDAUI_IS_SET (set), NULL);
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 
 
-  GdauiSetPrivate *priv = gdaui_set_get_instance_private (dbset);
+	GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 
 	agroup = gda_set_get_group (priv->set, holder);
 	if (!agroup)
 		return NULL;
 	
-	for (list = dbset->groups_list; list; list = list->next) {
+	for (list = priv->groups_list; list; list = list->next) {
 		if (GDAUI_SET_GROUP (list->data)->group == agroup)
 			return GDAUI_SET_GROUP (list->data);
 	}
@@ -1017,7 +1028,7 @@ _gdaui_set_dump (GdauiSet *set)
 	g_print ("=== GdauiSet %p ===\n", set);
 	gda_set_dump (priv->set);
 	g_slist_foreach (priv->sources_list, (GFunc) set_source_dump, NULL);
-	g_slist_foreach (set->groups_list, (GFunc) set_group_dump, NULL);
+	g_slist_foreach (priv->groups_list, (GFunc) set_group_dump, NULL);
 	g_print ("=== GdauiSet %p END ===\n", set);
 }
 #endif
