@@ -71,19 +71,19 @@ gdaui_data_entry_get_type (void)
 	return type;
 }
 
-static gboolean
-contents_valid_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
-			    GValue *return_accu,
-			    const GValue *handler_return,
-			    G_GNUC_UNUSED gpointer data)
-{
-        gboolean thisvalue;
+/* static gboolean */
+/* contents_valid_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint, */
+/* 			    GValue *return_accu, */
+/* 			    const GValue *handler_return, */
+/* 			    G_GNUC_UNUSED gpointer data) */
+/* { */
+/*         gboolean thisvalue; */
 
-        thisvalue = g_value_get_boolean (handler_return);
-        g_value_set_boolean (return_accu, thisvalue);
+/*         thisvalue = g_value_get_boolean (handler_return); */
+/*         g_value_set_boolean (return_accu, thisvalue); */
 
-        return thisvalue; /* stop signal if 'thisvalue' is FALSE */
-}
+/*         return thisvalue;  */ /* stop signal if 'thisvalue' is FALSE */
+/* } */
 
 static void
 gdaui_data_entry_iface_init (gpointer g_class)
