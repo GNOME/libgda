@@ -373,51 +373,26 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 				      G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererInfo *cellinfo = (GdauiDataCellRendererInfo *) cell;
-	gint width, height;
-	gint x_offset, y_offset;
 
-	static GdkRGBA **colors = NULL;
-	GdkRGBA statenormal, stateprelight;
-	GdkRGBA *normal = NULL;
+  GtkStyleContext *context;
 
-
-	if (!colors)
-		colors = _gdaui_utility_entry_build_info_colors_array_a ();
+  context = gtk_widget_get_style_context (widget);
+	if (gtk_style_context_has_class (context, "is-default"))
+    gtk_style_context_remove_class (context, "is-default");
+	if (gtk_style_context_has_class (context, "is-null"))
+    gtk_style_context_remove_class (context, "is-null");
+	if (gtk_style_context_has_class (context, "is-invalid"))
+    gtk_style_context_remove_class (context, "is-invalid");
 
 	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_DATA_NON_VALID) {
-		normal = colors[4];
+      gtk_style_context_add_class (context, "is-invalid");
 	}
 	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
-		normal = colors[2];
+      gtk_style_context_add_class (context, "is-invalid");
 	}
 	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
-		normal = colors[0];
+      gtk_style_context_add_class (context, "is-invalid");
 	}
-	else {
-		GtkStyleContext *stc;
-		stc = gtk_widget_get_style_context (widget);
-		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &statenormal);
-		gtk_style_context_get_background_color (stc, GTK_STATE_FLAG_NORMAL, &stateprelight);
-		normal = &statenormal;
-	}
-
-	gdaui_data_cell_renderer_info_get_size (cell, widget, cell_area,
-						&x_offset, &y_offset,
-						&width, &height);
-
-	guint xpad, ypad;
-	g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
-	width -= xpad*2;
-	height -= ypad*2;
-
-	if (width <= 0 || height <= 0)
-		return;
-
-	cairo_set_source_rgba (cr, normal->red, normal->green, normal->blue, normal->alpha);
-	cairo_rectangle (cr, cell_area->x + x_offset + xpad,
-			 cell_area->y + y_offset + ypad,
-			 width - 1, height - 1);
-	cairo_fill (cr);
 }
 
 

@@ -45,3 +45,13 @@ toolbar * {
 .required-label GtkLabel {
   font-weight: bold;
 }
+
+.non-invalid {
+  background: red;
+}
+.is-default {
+  background: blue;
+}
+.is-null {
+  background: green;
+}
