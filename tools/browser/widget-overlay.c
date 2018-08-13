@@ -616,10 +616,6 @@ widget_overlay_realize (GtkWidget *widget)
 	g_signal_connect (win, "pick-embedded-child",
 			  G_CALLBACK (pick_offscreen_child), ovl);
 
-	GtkStyleContext *style;
-	style = gtk_widget_get_style_context (widget);
-	gtk_style_context_set_background (style, win);
-	
 	/* offscreen windows */
 	attributes.window_type = GDK_WINDOW_OFFSCREEN;
 
@@ -643,7 +639,6 @@ widget_overlay_realize (GtkWidget *widget)
 		g_signal_connect (cd->offscreen_window, "from-embedder",
 				  G_CALLBACK (offscreen_window_from_parent), ovl);
 
-		gtk_style_context_set_background (style, cd->offscreen_window);
 		gdk_window_show (cd->offscreen_window);
 	}
 }
