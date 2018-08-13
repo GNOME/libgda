@@ -638,21 +638,16 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 		}
 
 		GtkWidget *toolwid;
-		PangoContext *pc;
-		PangoFontDescription *fd, *fdc;
-		pc = gtk_widget_get_pango_context (GTK_WIDGET (info));
-		fd = pango_context_get_font_description (pc);
-		fdc = pango_font_description_copy (fd);
-		pango_font_description_set_size (fdc,
-						 pango_font_description_get_size (fd) * .8);
+    GtkStyleContext *context;
 
 		if (flags & GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS) {
 			toolwid = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 			
 			/* read-write spin counter (mainly for forms) */
 			wid = gtk_spin_button_new_with_range (0, 1, 1);
+      context = gtk_widget_get_style_context (wid);
+      gtk_style_context_add_class (context, "small-text");
 
-			gtk_widget_override_font (wid, fdc);
 			gtk_spin_button_set_digits (GTK_SPIN_BUTTON (wid), 0);
 			gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (wid), TRUE);
 			gtk_box_pack_start (GTK_BOX (toolwid), wid, FALSE, TRUE, 2);
@@ -663,19 +658,19 @@ modif_buttons_make (GdauiDataProxyInfo *info)
 
 			/* rows counter */
 			wid = gtk_label_new (" /?");
-			gtk_widget_override_font (wid, fdc);
+      context = gtk_widget_get_style_context (wid);
+      gtk_style_context_add_class (context, "small-text");
 			info->priv->current_sample = wid;
 			gtk_box_pack_start (GTK_BOX (toolwid), wid, FALSE, FALSE, 2);
 		}
 		else {
 			/* read-only counter (mainly for grids) */
 			wid = gtk_label_new (" ? - ? /?");
-			gtk_widget_override_font (wid, fdc);
+      context = gtk_widget_get_style_context (wid);
+      gtk_style_context_add_class (context, "small-text");
 			info->priv->current_sample = wid;
 			toolwid = wid;
 		}
-
-		pango_font_description_free (fdc);
 
 		gtk_container_add (GTK_CONTAINER (action_items[ACTION_CURRENT_ROW]), toolwid);
 		gtk_widget_show_all (action_items[ACTION_CURRENT_ROW]);
