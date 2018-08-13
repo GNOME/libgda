@@ -458,8 +458,6 @@ delete_activated_cb (G_GNUC_UNUSED GtkMenuItem *mitem, QueryFavoriteSelector *ts
 static void
 do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, QueryFavoriteSelector *tsel)
 {
-	int button, event_time;
-
 	if (! tsel->priv->popup_menu) {
 		GtkWidget *menu, *mitem;
 		
@@ -487,15 +485,6 @@ do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, QueryFavo
 		tsel->priv->popup_menu = menu;
 	}
 		
-	if (event) {
-		button = event->button;
-		event_time = event->time;
-	}
-	else {
-		button = 0;
-		event_time = gtk_get_current_event_time ();
-	}
-
 	gtk_menu_popup_at_pointer (GTK_MENU (tsel->priv->popup_menu), NULL);
 }
 
