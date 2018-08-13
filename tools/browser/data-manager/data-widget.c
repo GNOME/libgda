@@ -238,7 +238,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	image = gtk_image_new_from_pixbuf (ui_get_pixbuf_icon (UI_ICON_MENU_INDICATOR));
 	button = gtk_button_new ();
 	gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-	gtk_button_set_focus_on_click (GTK_BUTTON (button), FALSE);
+	gtk_widget_set_focus_on_click (GTK_WIDGET (button), FALSE);
 	gtk_widget_set_name (button, "browser-tab-close-button");
 	gtk_widget_set_tooltip_text (button, _("Link to other data"));
 	g_signal_connect (button, "clicked",
