@@ -113,16 +113,6 @@ assistant_applied_cb (GtkAssistant *assist, G_GNUC_UNUSED gpointer data)
 
 	/* New database creation first */
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (assistant->priv->choose_toggle))) {
-    gdaui_server_operation_update_parameters (assistant->priv->newdb_params, &error);
-    gchar *msg = "No error details";
-    if (error != NULL) {
-      if (error->message != NULL) {
-        msg = error->message;
-      }
-			_gdaui_utility_show_error (NULL, _("Error at updating paramenters for CREATE DATABASE operation: '%s'"), msg);
-        g_error_free (error);
-      return;
-    }
 		if (!gda_server_operation_is_valid (assistant->priv->create_db_op, NULL, &error)) {
       gchar *msg = "No error details";
       if (error != NULL && error->message != NULL) {
