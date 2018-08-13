@@ -1029,7 +1029,7 @@ rerun_requested_cb (QueryResult *qres, QueryEditorHistoryBatch *batch,
 	if (!batch || !item || !item->sql) {
 		ui_show_error (GTK_WINDOW (gtk_widget_get_toplevel ((GtkWidget*) tconsole)),
 			       _("Internal error, please report error to "
-				 "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+				 "http://gitlab.gnome.org/GNOME/libgda/issues"));
 		return;
 	}
 

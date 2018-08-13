@@ -2867,7 +2867,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 						     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 						     _("Can't obtain SQLite BLOB handle (reported type is '%s'), "
 						       "please report this bug to "
-						       "http://bugzilla.gnome.org/ for the \"libgda\" product."),
+						       "http://gitlab.gnome.org/GNOME/libgda/issues"),
 						       g_type_name (G_VALUE_TYPE (cvalue)));
 					g_object_unref (model);
 					goto blobs_out;

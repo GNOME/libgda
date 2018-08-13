@@ -2182,7 +2182,7 @@ gdaui_basic_form_set_layout_from_file (GdauiBasicForm *form, const gchar *file_n
 
         if (! dtd)
                 g_warning ("DTD not parsed successfully, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product");
+                           "http://gitlab.gnome.org/GNOME/libgda/issues");
 
         /* Get the root element node */
         xmlNodePtr root_node = NULL;

@@ -56,7 +56,7 @@ t_favorites_actions_get (TFavorites *bfav, TConnection *tcnc, GdaSet *set)
 		TFavoritesAttributes qfa;
 		if (! g_str_has_prefix (fa->contents, "QUERY")) {
 			g_warning ("Malformed action contents '%s', please report error to "
-				   "http://bugzilla.gnome.org/ for the \"libgda\" product",
+				   "http://gitlab.gnome.org/GNOME/libgda/issues",
 				   fa->contents);
 			continue;
 		}

@@ -298,7 +298,7 @@ gda_data_model_ldap_dispose (GObject *object)
 
 		if (model->priv->top_exec) {
 			if (!model->priv->cnc)
-				g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
+				g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://gitlab.gnome.org/GNOME/libgda/issues");
 			else
 				ldap_part_free (model->priv->top_exec, GDA_LDAP_CONNECTION (model->priv->cnc));
 		}
@@ -414,7 +414,7 @@ gda_data_model_ldap_set_property (GObject *object,
 				}
 
 				if (!model->priv->cnc)
-					g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
+					g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://gitlab.gnome.org/GNOME/libgda/issues");
 
 				model->priv->columns = _ldap_compute_columns (model->priv->cnc, csv,
 									      &model->priv->attributes,
@@ -1549,7 +1549,7 @@ ldap_part_split (LdapPart *part, GdaDataModelLdap *model, gboolean *out_error)
 	g_assert (!part->children);
 
 	if (!model->priv->cnc)
-		g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://bugzilla.gnome.org/ for the \"libgda\" product.");
+		g_warning ("LDAP connection's cnc private attribute should not be NULL, please report this bug to http://gitlab.gnome.org/GNOME/libgda/issues");
 
 	mparts = _gdaprov_data_model_ldap_new (model->priv->cnc, part->base_dn, NULL, NULL,
 					      GDA_LDAP_SEARCH_ONELEVEL);

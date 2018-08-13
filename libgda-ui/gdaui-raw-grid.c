@@ -2359,7 +2359,7 @@ gdaui_raw_grid_set_layout_from_file (GdauiRawGrid *grid, const gchar *file_name,
 
         if (! dtd)
                 g_warning ("DTD not parsed successfully, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product");
+                           "http://gitlab.gnome.org/GNOME/libgda/issues");
 
         /* Get the root element node */
         xmlNodePtr root_node = NULL;

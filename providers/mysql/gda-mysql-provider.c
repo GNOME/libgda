@@ -2617,7 +2617,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			if (data_handler == NULL) {
 				/* there is an error here */
 				str = g_strdup_printf(_("Unhandled data type '%s', please report this bug to "
-							"http://bugzilla.gnome.org/ for the \"libgda\" product."),
+							"http://gitlab.gnome.org/GNOME/libgda/issues"),
 						      gda_g_type_to_string (G_VALUE_TYPE (value)));
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);

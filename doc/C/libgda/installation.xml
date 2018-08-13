@@ -186,7 +186,7 @@
       <para>
 	To access a database, it must have a database provider (if &LIBGDA; does not
 	support the type of database to access, make a bug report in 
-	<ulink url="http://bugzilla.gnome.org/">bugzilla</ulink>), and that database provider
+	<ulink url="http://gitlab.gnome.org/GNOME/libgda/issues">GDA's issues tracker</ulink>), and that database provider
 	must be compiled an installed: the <command>gda-list-config-6.0</command> or 
 	<command>gda-sql-6.0 -L</command> commands will
 	show a list of the installed and configured database providers.

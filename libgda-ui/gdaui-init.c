@@ -390,7 +390,7 @@ init_plugins_hash (void)
 	}
 	else
 		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
+                           "http://gitlab.gnome.org/GNOME/libgda/issues", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "integer";
@@ -421,7 +421,7 @@ init_plugins_hash (void)
 	}
 	else
 		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
+                           "http://gitlab.gnome.org/GNOME/libgda/issues", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "number";
@@ -449,7 +449,7 @@ init_plugins_hash (void)
 	}
 	else
 		g_message ("Could not load data entry specifications for the '%s' plugin, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product", plugin->plugin_name);
+                           "http://gitlab.gnome.org/GNOME/libgda/issues", plugin->plugin_name);
 
 	plugin = g_new0 (GdauiPlugin, 1);
 	plugin->plugin_name = "time";
@@ -706,7 +706,7 @@ get_spec_with_isocodes (const gchar *data_spec)
 	spec = xmlParseDoc (BAD_CAST data_spec);
 	if (!spec) {
 		g_warning ("Can't parse XML data, please report error to "
-                           "http://bugzilla.gnome.org/ for the \"libgda\" product");
+                           "http://gitlab.gnome.org/GNOME/libgda/issues");
 		goto cleanup;
 	}
 

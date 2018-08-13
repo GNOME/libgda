@@ -376,7 +376,7 @@ _gda_postgres_compute_types (GdaConnection *cnc, GdaPostgresReuseable *rdata)
 	nrows = gda_data_model_get_n_rows (model);
 	ncols = gda_data_model_get_n_columns (model);
 	if (nrows == 0)
-		g_warning ("PostgreSQL provider did not find any data type (expect some mis-behaviours) please report the error to bugzilla.gnome.org");
+		g_warning ("PostgreSQL provider did not find any data type (expect some mis-behaviours) please report the error to http://gitlab.gnome.org/GNOME/libgda/issues");
 	for (i = 0; i < nrows; i++) {
 		const GValue *conv_func_name = NULL;
 		const GValue *values[4];

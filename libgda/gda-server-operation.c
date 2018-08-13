@@ -1309,7 +1309,7 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 		return "ALTER_USER";
 	default:
 		g_error (_("Non handled GdaServerOperationType, please report error to "
-			   "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+			   "http://gitlab.gnome.org/GNOME/libgda/issues"));
 		return "";
 	}
 }

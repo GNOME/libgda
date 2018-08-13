@@ -743,13 +743,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		/* should not happen */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     "%s", "No more data, please report this bug to "
-			     "http://bugzilla.gnome.org/ for the \"libgda\" product and the MySQL provider.");
+			     "http://gitlab.gnome.org/GNOME/libgda/issues");
 	}
 	else if (res == MYSQL_DATA_TRUNCATED) {
 		GString *string;
 
 		string = g_string_new ("Truncated data, please report this bug to "
-				       "http://bugzilla.gnome.org/ for the \"libgda\" product and the MySQL provider.");
+				       "http://gitlab.gnome.org/GNOME/libgda/issues");
 
 		gint col;
 		for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {

@@ -390,8 +390,8 @@ Unset (delete) internal parameter.
 
 \fB.unset <NAME>\fP unsets the internal parameter named \fI<NAME>\fP.
 .SH SUGGESTIONS AND BUG REPORTS
-Any bugs found should be reported to the online bug-tracking system
-available on the web at http://bugzilla.gnome.org/. Before reporting
+Any bugs found should be reported to the online issues-tracking system
+available on the web at http://gitlab.gnome.org/GNOME/libgda/issues. Before reporting
 bugs, please check to see if the bug has already been reported.
 
 When reporting bugs, it is important to include a reliable way to

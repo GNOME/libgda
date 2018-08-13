@@ -16,7 +16,7 @@ m4_include(m4/java.m4)
 m4_include(m4/ldap.m4)
 m4_include(m4/misc.m4)
 
-AC_INIT([GNU Data Access],[major.minor.micro],[https://bugzilla.gnome.org/enter_bug.cgi?product=libgda],[libgda],[http://www.gnome-db.org])
+AC_INIT([GNU Data Access],[major.minor.micro],[https://gitlab.gnome.org/GNOME/libgda/issues],[libgda],[http://www.gnome-db.org])
 AC_PREREQ([2.68])
 AC_CONFIG_SRCDIR(libgda/libgda.h.in)
 AM_INIT_AUTOMAKE([1.11.1 -Wall no-define no-dist-gzip dist-xz])
