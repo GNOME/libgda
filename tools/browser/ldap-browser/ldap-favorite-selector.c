@@ -362,8 +362,6 @@ delete_activated_cb (G_GNUC_UNUSED GtkMenuItem *mitem, LdapFavoriteSelector *fse
 static void
 do_popup_menu (G_GNUC_UNUSED GtkWidget *widget, GdkEventButton *event, LdapFavoriteSelector *fsel)
 {
-	int button, event_time;
-
 	if (! fsel->priv->popup_menu) {
 		GtkWidget *menu, *mitem;
 		
