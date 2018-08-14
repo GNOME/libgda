@@ -217,7 +217,6 @@ define_holder_for_data_model_column (GdaDataModel *model, gint col, GdaDataModel
 	gchar *str;
 	GdaHolder *param;
 	GdaColumn *column;
-	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
 
 	column = gda_data_model_describe_column (model, col);
 	param = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, 
@@ -348,8 +347,8 @@ model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 static GError *
 validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *new_value)
 {
-	g_return_if_fail (paramlist != NULL);
-	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (paramlist));
+	g_return_val_if_fail (paramlist != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (paramlist), NULL);
 
 	GdaDataModelIter *iter;
 	gint col;
@@ -681,8 +680,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 	gint col;
 	GdaDataModel *test;
 	gboolean update_model;
-  GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	
+
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
 	    ! _gda_set_validate ((GdaSet*) iter, NULL))
 		return FALSE;
@@ -782,7 +780,6 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 	gint row;
 	GdaDataModel *test;
 	gboolean update_model;
-  GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
 
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
 	    ! _gda_set_validate ((GdaSet*) iter, NULL))
@@ -886,8 +883,6 @@ gda_data_model_iter_move_prev_default (GdaDataModel *model, GdaDataModelIter *it
 	GdaDataModel *test;
 	gboolean update_model;
 
-  GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	
 	if ((gda_data_model_iter_get_row (iter) >= 0) &&
 	    ! _gda_set_validate ((GdaSet*) iter, NULL))
 		return FALSE;
@@ -1095,8 +1090,6 @@ gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 	g_return_val_if_fail (value, FALSE);
-
-	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
 
 	holder = gda_data_model_iter_get_holder_for_field (iter, col);
 	if (!holder) {

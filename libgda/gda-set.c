@@ -1088,7 +1088,6 @@ gda_set_new_inline (gint nb, ...)
 	gchar *id;
 	gint i;
 	gboolean allok = TRUE;
-  GdaSetPrivate *priv = gda_set_get_instance_private (set);
 
 	/* build the list of holders */
 	va_start (ap, nb);

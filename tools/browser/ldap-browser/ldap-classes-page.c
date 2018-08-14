@@ -307,7 +307,7 @@ ldap_classes_page_new (TConnection *tcnc, const gchar *classname)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	ebrowser = LDAP_CLASSES_PAGE (g_object_new (LDAP_CLASSES_PAGE_TYPE, NULL));
-	ebrowser->priv->tcnc = g_object_ref ((GObject*) tcnc);
+	ebrowser->priv->tcnc = T_CONNECTION (g_object_ref ((GObject*) tcnc));
 
 	/* header */
         GtkWidget *label;

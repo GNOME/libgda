@@ -3223,7 +3223,7 @@ gda_value_to_xml_string (const GValue *value) {
 	node = gda_value_to_xml (value);
 	buff = xmlBufferCreate ();
 	xmlNodeDump (buff, node->doc, node, 0, 0);
-	str = g_strdup (buff->content);
+	str = g_strdup ((gchar*) buff->content);
 	xmlBufferFree (buff);
 	xmlFreeNode (node);
 	return str;

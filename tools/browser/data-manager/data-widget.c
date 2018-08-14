@@ -248,7 +248,7 @@ create_or_reuse_part (DataWidget *dwid, DataSource *source, gboolean *out_reused
 	gtk_container_set_border_width (GTK_CONTAINER (button), 0);
 	gtk_box_pack_start (GTK_BOX (header), button, FALSE, FALSE, 0);
 
-	GtkWidget *nb, *page;
+	GtkWidget *nb;
 	nb = gtk_notebook_new ();
 	gtk_notebook_set_show_border (GTK_NOTEBOOK (nb), FALSE);
 	gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nb), FALSE);

@@ -210,7 +210,7 @@ hierarchy_view_new (TConnection *tcnc, const gchar *dn)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	eview = HIERARCHY_VIEW (g_object_new (HIERARCHY_VIEW_TYPE, NULL));
-	eview->priv->tcnc = g_object_ref ((GObject*) tcnc);
+	eview->priv->tcnc = T_CONNECTION (g_object_ref ((GObject*) tcnc));
 	g_signal_connect (eview, "drag-data-get",
 			  G_CALLBACK (source_drag_data_get_cb), eview);
 
@@ -365,10 +365,10 @@ test_expand_row_cb (GtkTreeView *tree_view, GtkTreeIter *iter,
 	    g_value_get_boolean (cv)) {
 		IdleData *data;
 		data = g_new (IdleData, 1);
-		data->tview = g_object_ref (G_OBJECT (tree_view));
-		data->store = g_object_ref (G_OBJECT (store));
-		data->tree = g_object_ref (G_OBJECT (eview->priv->ldap_tree));
-		data->node = g_object_ref (G_OBJECT (node));
+		data->tview = GTK_TREE_VIEW (g_object_ref (G_OBJECT (tree_view)));
+		data->store = GDAUI_TREE_STORE (g_object_ref (G_OBJECT (store)));
+		data->tree = GDA_TREE (g_object_ref (G_OBJECT (eview->priv->ldap_tree)));
+		data->node = GDA_TREE_NODE (g_object_ref (G_OBJECT (node)));
 
 		g_idle_add_full (G_PRIORITY_HIGH_IDLE, (GSourceFunc) ldap_update_tree_part,
 				 data, (GDestroyNotify) idle_data_free);

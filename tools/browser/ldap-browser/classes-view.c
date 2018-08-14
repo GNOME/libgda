@@ -204,7 +204,7 @@ classes_view_new (TConnection *tcnc, const gchar *classname)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	eview = CLASSES_VIEW (g_object_new (CLASSES_VIEW_TYPE, NULL));
-	eview->priv->tcnc = g_object_ref ((GObject*) tcnc);
+	eview->priv->tcnc = T_CONNECTION (g_object_ref ((GObject*) tcnc));
 	g_signal_connect (eview, "drag-data-get",
 			  G_CALLBACK (source_drag_data_get_cb), eview);
 

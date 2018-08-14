@@ -1426,7 +1426,7 @@ gda_server_operation_save_data_to_xml_string (GdaServerOperation *op, G_GNUC_UNU
 	}
 	buff = xmlBufferCreate ();
 	xmlNodeDump (buff, node->doc, node, 0, 0);
-	str = g_strdup (buff->content);
+	str = g_strdup ((gchar*) buff->content);
 	xmlBufferFree (buff);
 	xmlFreeNode (node);
 	return str;

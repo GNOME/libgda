@@ -226,7 +226,7 @@ ldap_search_page_new (TConnection *tcnc, const gchar *base_dn)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	epage = LDAP_SEARCH_PAGE (g_object_new (LDAP_SEARCH_PAGE_TYPE, NULL));
-	epage->priv->tcnc = g_object_ref ((GObject*) tcnc);
+	epage->priv->tcnc = T_CONNECTION (g_object_ref ((GObject*) tcnc));
 
 	/* header */
         GtkWidget *label;

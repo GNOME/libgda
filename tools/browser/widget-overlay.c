@@ -892,14 +892,14 @@ widget_overlay_draw (GtkWidget *widget, cairo_t *cr)
 				cairo_surface_t *surface;
 				GtkAllocation child_area;
 				double x, y;
-				
+				x = y = 0.0;
 				gtk_widget_get_allocation (cd->child, &child_area);
 				child_area.width *= cd->scale;
 				child_area.height *= cd->scale;
 				switch (cd->halign) {
 				case WIDGET_OVERLAY_ALIGN_FILL:
 				case WIDGET_OVERLAY_ALIGN_START:
-					x = 0;
+					x = 0.0;
 					break;
 				case WIDGET_OVERLAY_ALIGN_END:
 					x = area.width - child_area.width;
@@ -911,7 +911,7 @@ widget_overlay_draw (GtkWidget *widget, cairo_t *cr)
 				switch (cd->valign) {
 				case WIDGET_OVERLAY_ALIGN_FILL:
 				case WIDGET_OVERLAY_ALIGN_START:
-					y = 0;
+					y = 0.0;
 					break;
 				case WIDGET_OVERLAY_ALIGN_END:
 					y = area.height - child_area.height;

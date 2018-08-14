@@ -142,7 +142,7 @@ filter_editor_new (TConnection *tcnc)
 	g_return_val_if_fail (T_IS_CONNECTION (tcnc), NULL);
 
 	feditor = FILTER_EDITOR (g_object_new (FILTER_EDITOR_TYPE, NULL));
-	feditor->priv->tcnc = g_object_ref ((GObject*) tcnc);
+	feditor->priv->tcnc = T_CONNECTION (g_object_ref ((GObject*) tcnc));
 
 	grid = gtk_grid_new ();
 	gtk_grid_set_column_spacing (GTK_GRID (grid), 5);

@@ -447,8 +447,7 @@ gdaui_dsn_assistant_init (GdauiDsnAssistant *assistant,
 {
 	GtkWidget *label, *vbox, *grid;
 	GtkAssistant *assist;
-	gchar *str;
-  GtkStyleContext *context;
+	GtkStyleContext *context;
 
 	g_return_if_fail (GDAUI_IS_DSN_ASSISTANT (assistant));
 

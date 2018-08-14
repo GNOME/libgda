@@ -257,7 +257,6 @@ ui_show_message (GtkWindow *parent, const gchar *format, ...)
 void
 ui_show_help (GtkWindow *parent, const gchar *topic)
 {
-	GdkScreen *screen;
 	GError *error = NULL;
 
 	const gchar *const *langs;
@@ -301,9 +300,8 @@ ui_show_help (GtkWindow *parent, const gchar *topic)
 
 	gchar *ruri;
 
-	screen = gtk_widget_get_screen ((GtkWidget*) parent);
 	ruri = g_strdup_printf ("ghelp:%s", uri);
-	gtk_show_uri (screen, ruri,  gtk_get_current_event_time (), &error);
+	gtk_show_uri_on_window (parent, ruri, gtk_get_current_event_time (), &error);
 	g_free (ruri);
 
 	if (error) {
