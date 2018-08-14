@@ -20,7 +20,7 @@ if valadoc.found()
 			'--package-version='+project_version,
 			'--package-name='+'Gda-'+project_api_version,
 			'--doclet=devhelp',
-			'-o', '@OUTPUT@',
+			'-o', meson.current_build_dir(),
 			'@INPUT@'
 			],
 		input: libgda_vapi,
