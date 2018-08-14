@@ -460,18 +460,15 @@ gda_data_model_iter_finalize (GObject *object)
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (object));
 
-  GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-
 	iter = GDA_DATA_MODEL_ITER (object);
-	if (priv) {
-		if (priv->data_model) {
-			g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [0]);
-			g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [1]);
-			g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [2]);
-			g_object_remove_weak_pointer (G_OBJECT (priv->data_model),
-						      (gpointer*) &(priv->data_model));
-			priv->data_model = NULL;
-		}
+	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	if (priv->data_model) {
+		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [0]);
+		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [1]);
+		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [2]);
+		g_object_remove_weak_pointer (G_OBJECT (priv->data_model),
+					      (gpointer*) &(priv->data_model));
+		priv->data_model = NULL;
 	}
 
 	/* parent class */
