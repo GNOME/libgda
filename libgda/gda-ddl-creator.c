@@ -574,10 +574,10 @@ gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
   mstore = gda_connection_get_meta_store (cnc);
   mstruct = gda_meta_struct_new (mstore,GDA_META_STRUCT_FEATURE_ALL);
 
-  if(!gda_meta_struct_complement_all (mstruct,error))
-    goto on_error;
-
   GSList *dblist = NULL;
+
+  if(!gda_meta_struct_complement_all (mstruct, error))
+    goto on_error;
 
   dblist = gda_meta_struct_get_all_db_objects (mstruct);
 
@@ -611,7 +611,8 @@ gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
   return TRUE;
 
 on_error:
-  g_slist_free (dblist);
+  if (dblist)
+    g_slist_free (dblist);
   g_object_unref (mstruct);
   return FALSE;
 }
@@ -704,7 +705,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
 
-  if (!gda_connection_is_opened(cnc))
+  if (!gda_connection_is_opened (cnc))
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
@@ -713,17 +714,17 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       return FALSE;
     }
 
-  gda_lockable_lock((GdaLockable*)cnc);
+  gda_lockable_lock ((GdaLockable*)cnc);
 // We need to get MetaData
-  if(!gda_connection_update_meta_store(cnc,NULL,error))
-    goto on_error;
+  if(!gda_connection_update_meta_store (cnc, NULL, error))
+    return FALSE;
 
-  GdaMetaStore *mstore = gda_connection_get_meta_store(cnc);
-  GdaMetaStruct *mstruct = gda_meta_struct_new(mstore,GDA_META_STRUCT_FEATURE_ALL);
+  GdaMetaStore *mstore = gda_connection_get_meta_store (cnc);
+  GdaMetaStruct *mstruct = gda_meta_struct_new (mstore, GDA_META_STRUCT_FEATURE_ALL);
 
   // We need information about catalog, schema, name for each object we would
   // like to check
-  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private(self);
+  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
   GdaMetaDbObject *mobj = NULL;
   GValue *catalog = NULL;
@@ -745,7 +746,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       g_value_set_string (schema ,gda_ddl_base_get_schema (it->data));
       g_value_set_string (name   ,gda_ddl_base_get_name   (it->data));
 
-      mobj = gda_meta_struct_complement(mstruct,GDA_META_DB_TABLE,catalog,schema,name,error);
+      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,error);
 
       if (mobj)
         {
@@ -771,7 +772,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
     } /* End of for loop */
 
   g_object_unref (mstruct);
-  gda_lockable_unlock((GdaLockable*)cnc);
+  gda_lockable_unlock ((GdaLockable*)cnc);
 
   return TRUE;
 
@@ -780,7 +781,7 @@ on_error:
   gda_value_free (schema);
   gda_value_free (name);
   g_object_unref (mstruct);
-  gda_lockable_unlock((GdaLockable*)cnc);
+  gda_lockable_unlock ((GdaLockable*)cnc);
 
   return FALSE;
 }
@@ -889,6 +890,7 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
   g_return_val_if_fail (_gda_ddl_creator_dtd,FALSE);
 
   GFileInputStream *istream = NULL;
+  xmlDocPtr doc = NULL;
 
   istream = g_file_read (xmlfile,NULL,error);
 
@@ -932,8 +934,6 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
 
   xmlParseChunk (ctxt,buffer,0,1);
 
-  xmlDocPtr doc = NULL;
-
   doc = ctxt->myDoc;
   ctxt_res = ctxt->wellFormed;
 
@@ -955,7 +955,7 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
       goto on_error;
     }
 
-  if (!_gda_ddl_creator_validate_doc(doc,error))
+  if (!_gda_ddl_creator_validate_doc(doc, error))
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
@@ -964,20 +964,22 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
       goto on_error;
     }
 
-  if (!_gda_ddl_creator_parse_doc (self,doc,error))
+  if (!_gda_ddl_creator_parse_doc (self, doc, error))
     goto on_error;
 
-  g_input_stream_close (G_INPUT_STREAM(istream),NULL,error);
+  g_input_stream_close (G_INPUT_STREAM(istream), NULL, error);
   xmlFreeParserCtxt (ctxt);
   xmlFreeDoc (doc);
   g_object_unref (istream);
   return TRUE;
 
 on_error:
-  g_input_stream_close (G_INPUT_STREAM(istream),NULL,error);
+  g_input_stream_close (G_INPUT_STREAM(istream), NULL, error);
   g_object_unref (istream);
-  if (ctxt) xmlFreeParserCtxt (ctxt);
-  if (doc) xmlFreeDoc (doc);
+  if (ctxt)
+    xmlFreeParserCtxt (ctxt);
+  if (doc)
+    xmlFreeDoc (doc);
 
   return FALSE;
 }
