@@ -28,27 +28,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_MODEL_ITER          (gda_data_model_iter_get_type())
-#define GDA_DATA_MODEL_ITER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_data_model_iter_get_type(), GdaDataModelIter)
-#define GDA_DATA_MODEL_ITER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_data_model_iter_get_type (), GdaDataModelIterClass)
-#define GDA_IS_DATA_MODEL_ITER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_data_model_iter_get_type ())
 
-
-/* error reporting */
-extern GQuark gda_data_model_iter_error_quark (void);
-#define GDA_DATA_MODEL_ITER_ERROR gda_data_model_iter_error_quark ()
-
-typedef enum
-{
-	GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_ERROR
-} GdaDataModelIterError;
-
-
-/* struct for the object's data */
-struct _GdaDataModelIter
-{
-	GdaSet                     object;
-	GdaDataModelIterPrivate   *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaDataModelIter, gda_data_model_iter, GDA, DATA_MODEL_ITER, GdaSet)
 
 /* struct for the object's class */
 struct _GdaDataModelIterClass
@@ -65,6 +46,16 @@ struct _GdaDataModelIterClass
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/* error reporting */
+extern GQuark gda_data_model_iter_error_quark (void);
+#define GDA_DATA_MODEL_ITER_ERROR gda_data_model_iter_error_quark ()
+
+typedef enum
+{
+	GDA_DATA_MODEL_ITER_COLUMN_OUT_OF_RANGE_ERROR
+} GdaDataModelIterError;
+
 
 /**
  * SECTION:gda-data-model-iter
@@ -124,8 +115,6 @@ struct _GdaDataModelIterClass
  *    the iterator's position is reset as if it was just created</para></listitem>
  * </itemizedlist>
  */
-
-GType             gda_data_model_iter_get_type             (void) G_GNUC_CONST;
 
 const GValue     *gda_data_model_iter_get_value_at         (GdaDataModelIter *iter, gint col);
 const GValue     *gda_data_model_iter_get_value_at_e       (GdaDataModelIter *iter, gint col, GError **error);

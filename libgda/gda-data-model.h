@@ -34,6 +34,7 @@
 #include <libgda/gda-column.h>
 #include <libgda/gda-value.h>
 #include <libgda/gda-enums.h>
+#include <libgda/gda-data-model-iter.h>
 
 G_BEGIN_DECLS
 

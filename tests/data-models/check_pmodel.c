@@ -1252,6 +1252,9 @@ test11 (GdaConnection *cnc)
 	return nfailed;
 }
 
+void iter_row_changed (GdaDataModelIter *iter, gint row) {
+	g_print ("Iter row-changed signal emitted for row: %d\n", row);
+}
 /*
  * Modifications using an iterator
  * 
@@ -1289,91 +1292,43 @@ test12 (GdaConnection *cnc)
 
 	/* gda_data_select_compute_modification_statements() */
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
 		g_print ("gda_data_select_compute_modification_statements() should have succeeded, error: %s\n",
 			 error && error->message ? error->message : "No detail");
-#endif
-		goto out;
+		g_assert_not_reached ();
 	}
 
 	/* create an iterator */
 	iter = gda_data_model_create_iter (model);
-	if (! gda_data_model_iter_move_next (iter)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_move_next() failed => can't go to 1st row\n");
-#endif
-		goto out;
-	}
-
-	if (! gda_data_model_iter_move_next (iter)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_move_next() failed => can't go to 2nd row\n");
-#endif
-		goto out;
-	}
+  g_assert (GDA_IS_DATA_MODEL_ITER (iter));
+  g_assert (GDA_IS_SET (iter));
+	g_signal_connect (iter, "row-changed", iter_row_changed, NULL);
+	g_assert (gda_data_model_iter_move_next (iter));
+	g_assert (gda_data_model_iter_move_next (iter));
 
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Nick");
 	if (! gda_set_set_holder_value (GDA_SET (iter), &error, "name", "Nick")) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
 		g_print ("GdaDataModelIter value set failed: %s\n",
 			 error && error->message ? error->message : "No detail");
-#endif
-		goto out;
+		g_assert_not_reached ();
 	}
-	if (! check_expected_signal (model, 'U', 1)) {
-		nfailed++;
-		goto out;
-	}
+	g_assert (check_expected_signal (model, 'U', 1));
+
 	cvalue = gda_data_model_iter_get_value_at (iter, 1);
-	if (!cvalue) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_get_value_at() failed after modification\n");
-#endif
-		goto out;
-	}
-	if (gda_value_differ (cvalue, value)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_get_value_at() and modified value differ\n");
-#endif
-		goto out;
-	}
+	g_assert (cvalue != NULL);
+	g_assert (!gda_value_differ (cvalue, value));
 	gda_value_free (value);
 
 	/**/
 	g_value_set_int ((value = gda_value_new (G_TYPE_INT)), 1);
 	if (! gda_data_model_iter_set_value_at (iter, 0, value, &error)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
 		g_print ("GdaDataModelIter value set failed: %s\n",
 			 error && error->message ? error->message : "No detail");
-#endif
-		goto out;
+		g_assert_not_reached ();
 	}
-	if (! check_expected_signal (model, 'U', 1)) {
-		nfailed++;
-		goto out;
-	}
+	g_assert (check_expected_signal (model, 'U', 1));
 	cvalue = gda_data_model_iter_get_value_at (iter, 0);
-	if (!cvalue) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_get_value_at() failed after modification\n");
-#endif
-		goto out;
-	}
-	if (gda_value_differ (cvalue, value)) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("gda_data_model_iter_get_value_at() and modified value differ\n");
-#endif
-		goto out;
-	}
+	g_assert (cvalue != NULL);
+	g_assert (!gda_value_differ (cvalue, value));
 
 	GdaDataModel *rerun;
 	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
@@ -2184,11 +2139,9 @@ signal_callback (GdaDataModel *model, gint row, gchar *type)
 	se->type = *type;
 	se->row = row;
 	signals = g_slist_append (signals, se);
-#ifdef CHECK_EXTRA_INFO
 	g_print ("Received '%s' signal for row %d from model %p\n",
 		 (*type == 'I') ? "row-inserted" : ((*type == 'D') ? "row-removed" : "row-updated"),
 		 row, model);
-#endif
 }
 
 static void
@@ -2200,11 +2153,9 @@ signal_callback_1 (GdaDataModel *model, gchar *type)
 	se->type = *type;
 	se->row = -1;
 	signals = g_slist_append (signals, se);
-#ifdef CHECK_EXTRA_INFO
 	g_print ("Received '%s' signal from model %p\n",
 		 *type == 'R' ? "reset" : "???",
 		 model);
-#endif
 }
 
 static void
@@ -2242,7 +2193,6 @@ check_expected_signal (GdaDataModel *model, gchar type, gint row)
 		signals = g_slist_remove (signals, se);
 		return TRUE;
 	}
-#ifdef CHECK_EXTRA_INFO
 	else {
 		gchar *exp;
 		switch (type) {
@@ -2289,7 +2239,6 @@ check_expected_signal (GdaDataModel *model, gchar type, gint row)
 		else
 			g_print ("no signal\n");
 	}
-#endif
 
 	return FALSE;
 }

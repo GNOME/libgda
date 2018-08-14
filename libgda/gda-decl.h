@@ -58,10 +58,6 @@ typedef struct _GdaColumn        GdaColumn;
 typedef struct _GdaColumnClass   GdaColumnClass;
 typedef struct _GdaColumnPrivate GdaColumnPrivate;
 
-typedef struct _GdaDataModelIter        GdaDataModelIter;
-typedef struct _GdaDataModelIterClass   GdaDataModelIterClass;
-typedef struct _GdaDataModelIterPrivate GdaDataModelIterPrivate;
-
 typedef struct _GdaHolder GdaHolder;
 typedef struct _GdaHolderClass GdaHolderClass;
 typedef struct _GdaHolderPrivate GdaHolderPrivate;

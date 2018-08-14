@@ -87,15 +87,8 @@ void          gda_set_source_set_data_model (GdaSetSource *s, GdaDataModel *mode
 /* struct for the object's data */
 
 #define GDA_TYPE_SET          (gda_set_get_type())
-#define GDA_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_set_get_type(), GdaSet)
-#define GDA_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_set_get_type (), GdaSetClass)
-#define GDA_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_set_get_type ())
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(GdaSet, g_object_unref)
 
-struct _GdaSet
-{
-	GObject         object;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaSet, gda_set, GDA, SET, GObject)
 
 /* struct for the object's class */
 struct _GdaSetClass
@@ -134,7 +127,6 @@ struct _GdaSetClass
  * <link linkend="GdaSet-before-holder-change">"before-holder-change"</link> signal.
  */
 
-GType         gda_set_get_type                 (void) G_GNUC_CONST;
 GdaSet       *gda_set_new                      (GSList *holders);
 GdaSet       *gda_set_copy                     (GdaSet *set);
 GdaSet       *gda_set_new_inline               (gint nb, ...);

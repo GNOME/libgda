@@ -883,12 +883,16 @@ GdaDataModelIter *
 gda_data_model_create_iter (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+	GdaDataModelIter *iter = NULL;
+
 	if (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter) (model);
-	else 
+		iter = (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter) (model);
+	else
 		/* default method */
-		return  g_object_new (GDA_TYPE_DATA_MODEL_ITER, 
-				      "data-model", model, NULL);
+		iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_MODEL_ITER,
+				      "data-model", model, NULL));
+	return iter;
 }
 
 /**
