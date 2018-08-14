@@ -112,6 +112,78 @@ example_files = \
 	examples/CustomUIPlugin/custom-entry-password.xml \
 	examples/CustomUIPlugin/libmain.c
 
+# Meson build distribution
+meson_build=\
+	meson.build
+	tlibgda-xslt/meson.build
+	tcontrol-center/meson.build
+	tproviders/reuseable/meson.build
+	tproviders/reuseable/postgres/meson.build
+	tproviders/reuseable/mysql/meson.build
+	tproviders/meson.build
+	tproviders/skel-implementation/meson.build
+	tproviders/skel-implementation/models/meson.build
+	tproviders/skel-implementation/capi/meson.build
+	tproviders/sqlite/meson.build
+	tproviders/ldap/meson.build
+	tproviders/postgres/meson.build
+	tproviders/jdbc/meson.build
+	tproviders/bdb/meson.build
+	tproviders/mysql/meson.build
+	ttesting/meson.build
+	tmeson.build
+	tlibgda/binreloc/meson.build
+	tlibgda/thread-wrapper/meson.build
+	tlibgda/providers-support/meson.build
+	tlibgda/meson.build
+	tlibgda/sqlite/virtual/meson.build
+	tlibgda/sqlite/meson.build
+	tlibgda/sqlite/sqlite-src/meson.build
+	tlibgda/handlers/meson.build
+	tlibgda/sql-parser/meson.build
+	tlibgda-ui/glade/meson.build
+	tlibgda-ui/data/meson.build
+	tlibgda-ui/meson.build
+	tlibgda-ui/internal/meson.build
+	tlibgda-ui/data-entries/meson.build
+	tlibgda-ui/data-entries/plugins/meson.build
+	tlibgda-ui/marshallers/meson.build
+	ttools/common/meson.build
+	ttools/meson.build
+	ttools/base/meson.build
+	ttools/browser/dummy-perspective/meson.build
+	ttools/browser/data/meson.build
+	ttools/browser/data/256x256/meson.build
+	ttools/browser/data/48x48/meson.build
+	ttools/browser/schema-browser/meson.build
+	ttools/browser/query-exec/meson.build
+	ttools/browser/data-manager/meson.build
+	ttools/browser/meson.build
+	ttools/browser/canvas/meson.build
+	ttools/misc/meson.build
+	ttools/help/meson.build
+	ttools/help/C/meson.build
+	ttools/webdata/meson.build
+	tdoc/meson.build
+	tdoc/C/meson.build
+	tdoc/C/libgda/meson.build
+	tdoc/C/libgdaui/meson.build
+	tlibgda-report/RML/meson.build
+	tlibgda-report/RML/trml2html/meson.build
+	tlibgda-report/RML/trml2pdf/meson.build
+	tlibgda-report/DocBook/meson.build
+	tlibgda-report/engine/meson.build
+	tlibgda-report/meson.build
+	ttests/ui/meson.build
+	ttests/providers/meson.build
+	ttests/meson.build
+	ttests/multi-threading/meson.build
+	ttests/meta-store/meson.build
+	ttests/data-models/meson.build
+	ttests/parser/meson.build
+	ttests/ddl/meson.build
+	ttests/value-holders/meson.build
+
 EXTRA_DIST = \
 	COPYING \
 	libgda.spec \
@@ -122,7 +194,8 @@ EXTRA_DIST = \
 	getsp.class \
 	getsp.java \
 	tap-driver.sh \
-	tap-test
+	tap-test \
+	$(meson_build)
 
 dist-hook:
 	@if test -d "$(srcdir)/.git"; \
