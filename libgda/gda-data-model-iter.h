@@ -36,6 +36,14 @@ struct _GdaDataModelIterClass
 {
 	GdaSetClass                parent_class;
 
+	/* Virtual methods */
+	gboolean             (* move_to_row)      (GdaDataModelIter *iter, gint row);
+	gboolean             (* move_next)        (GdaDataModelIter *iter);
+	gboolean             (* move_prev)        (GdaDataModelIter *iter);
+	gboolean             (* set_value_at)     (GdaDataModelIter *iter, gint col,
+                      const GValue *value, GError **error);
+
+	/* Signals */
 	void                    (* row_changed)      (GdaDataModelIter *iter, gint row);
 	void                    (* end_of_data)      (GdaDataModelIter *iter);
 

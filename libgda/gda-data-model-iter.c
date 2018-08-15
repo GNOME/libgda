@@ -133,6 +133,10 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
+	class->move_to_row = gda_data_model_iter_move_to_row;
+	class->move_next = gda_data_model_iter_move_next;
+	class->move_prev = gda_data_model_iter_move_prev;
+	class->set_value_at = gda_data_model_iter_set_value_at;
 	class->row_changed = NULL;
 	class->end_of_data = NULL;
 
@@ -574,7 +578,7 @@ gda_data_model_iter_get_property (GObject *object,
 }
 
 /**
- * gda_data_model_iter_move_to_row:
+ * gda_data_model_iter_move_to_row: (virtual move_to_row)
  * @iter: a #GdaDataModelIter object
  * @row: the row to set @iter to
  *
@@ -721,7 +725,7 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 
 
 /**
- * gda_data_model_iter_move_next:
+ * gda_data_model_iter_move_next: (virtual move_next)
  * @iter: a #GdaDataModelIter object
  *
  * Moves @iter one row further than where it already is 
@@ -822,7 +826,7 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
 }
 
 /**
- * gda_data_model_iter_move_prev:
+ * gda_data_model_iter_move_prev: (virtual move_prev)
  * @iter: a #GdaDataModelIter object
  *
  * Moves @iter one row before where it already is (synchronizes the values of the parameters in @iter 
@@ -1073,7 +1077,7 @@ gda_data_model_iter_get_value_at_e (GdaDataModelIter *iter, gint col, GError **e
 }
 
 /**
- * gda_data_model_iter_set_value_at:
+ * gda_data_model_iter_set_value_at: (virtual set_value_at)
  * @iter: a #GdaDataModelIter object
  * @col: the column number
  * @value: a #GValue (not %NULL)

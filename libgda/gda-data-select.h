@@ -178,6 +178,8 @@ GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *m
 gboolean       gda_data_select_rerun                           (GdaDataSelect *model, GError **error);
 gboolean       gda_data_select_prepare_for_offline             (GdaDataSelect *model, GError **error);
 
+#define GDA_TYPE_DATA_SELECT_ITER gda_data_select_iter_get_type()
+
 G_END_DECLS
 
 #endif
