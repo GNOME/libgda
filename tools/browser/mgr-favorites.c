@@ -811,4 +811,10 @@ icons_resol_cb (MgrFavorites *mgr)
         else
                 return TRUE;
 }
+#else
+static gboolean
+icons_resol_cb (MgrFavorites *mgr)
+{
+  return FALSE;
+}
 #endif

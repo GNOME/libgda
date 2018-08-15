@@ -100,7 +100,7 @@ test_ddl_view_general (void)
 {
   GdaDdlView *self = gda_ddl_view_new ();
 
-  gda_ddl_view_free (self);
+  g_object_unref (self);
 }
 
 static void
@@ -150,7 +150,7 @@ test_ddl_view_finish (CheckDdlObject *self,
                       gconstpointer user_data)
 {
   g_free (self->xmlfile);
-  gda_ddl_view_free (self->view);
+  g_object_unref (self->view);
   xmlFreeDoc (self->doc);
   g_free (self->name);
   g_free (self->defstring);

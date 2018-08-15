@@ -1336,13 +1336,7 @@ test12 (GdaConnection *cnc)
 	gda_data_model_dump (rerun, stdout);
 	
 	gda_value_free (value);
-	
-	
-
 	g_object_unref (iter);
-
-
- out:	
 	g_object_unref (model);
 	g_object_unref (stmt);
 	g_object_unref (params);

@@ -567,20 +567,6 @@ gda_ddl_fkey_get_ref_field (GdaDdlFkey *self)
 }
 
 /**
- * gda_ddl_fkey_free:
- * @self: a #GdaDdlFkey object
- *
- * Convenient method to free the object. It is a wrap around g_clear_object()
- *
- * Since: 6.0
- */
-void
-gda_ddl_fkey_free (GdaDdlFkey *self)
-{
-  g_clear_object (&self);
-}
-
-/**
  * gda_ddl_fkey_set_field:
  * @self: An object #GdaDdlFkey
  * @field: Field name as a string

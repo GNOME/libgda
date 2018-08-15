@@ -74,8 +74,7 @@ extern xmlDtdPtr _gda_ddl_creator_dtd;
 /**
  * gda_ddl_creator_new:
  *
- * Create new instance of #GdaDdlCreator. The object can be destroyed using gda_ddl_creator_free()
- * method.
+ * Create new instance of #GdaDdlCreator.
  *
  * Returns: a new instance of #GdaDdlCreator
  *
@@ -94,10 +93,10 @@ gda_ddl_creator_finalize (GObject *object)
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
   if (priv->mp_tables)
-    g_list_free_full (priv->mp_tables, (GDestroyNotify)gda_ddl_table_free);
+    g_list_free_full (priv->mp_tables, (GDestroyNotify) g_object_unref);
 
   if (priv->mp_views)
-    g_list_free_full (priv->mp_views, (GDestroyNotify)gda_ddl_view_free);
+    g_list_free_full (priv->mp_views, (GDestroyNotify) g_object_unref);
 
   g_free (priv->mp_schemaname);
 
@@ -264,7 +263,7 @@ _gda_ddl_creator_parse_doc (GdaDdlCreator *self,
 
         if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(table), node, error))
           {
-            gda_ddl_table_free (table);
+            g_object_unref (table);
             goto on_error;
           }
         else
@@ -278,7 +277,7 @@ _gda_ddl_creator_parse_doc (GdaDdlCreator *self,
 
         if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(view), node, error))
           {
-            gda_ddl_view_free (view);
+            g_object_unref (view);
             goto on_error;
           }
         else
@@ -615,20 +614,6 @@ on_error:
     g_slist_free (dblist);
   g_object_unref (mstruct);
   return FALSE;
-}
-
-/**
- * gda_ddl_creator_free:
- * @self: a #GdaDdlCreator object
- *
- * Convenient method to delete the object and free the memory.
- *
- * Since: 6.0
- */
-void
-gda_ddl_creator_free (GdaDdlCreator *self)
-{
-  g_clear_object (&self);
 }
 
 /**

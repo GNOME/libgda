@@ -52,7 +52,6 @@ typedef enum {
 GQuark gda_ddl_table_error_quark(void);
 
 GdaDdlTable*    gda_ddl_table_new               (void);
-void            gda_ddl_table_free              (GdaDdlTable *self);
 gboolean        gda_ddl_table_is_valid          (GdaDdlTable *self);
 const GList*    gda_ddl_table_get_columns       (GdaDdlTable *self);
 const GList*    gda_ddl_table_get_fkeys         (GdaDdlTable *self);

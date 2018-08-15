@@ -72,7 +72,6 @@ typedef  enum {
 GQuark gda_ddl_creator_error_quark (void);
 
 GdaDdlCreator		*gda_ddl_creator_new        (void);
-void             gda_ddl_creator_free       (GdaDdlCreator *self);
 
 gboolean		     gda_ddl_creator_parse_file_from_path	(GdaDdlCreator *self,
                                                        const gchar *xmlfile,

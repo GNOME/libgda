@@ -60,8 +60,6 @@ struct _GdaDdlViewClass
 GdaDdlView*  gda_ddl_view_new           (void);
 GdaDdlView  *gda_ddl_view_new_from_meta (GdaMetaView *view);
 
-void         gda_ddl_view_free          (GdaDdlView *self);
-
 gboolean     gda_ddl_view_get_istemp    (GdaDdlView *self);
 void         gda_ddl_view_set_istemp    (GdaDdlView *self,gboolean temp);
 

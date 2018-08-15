@@ -86,8 +86,7 @@ static GParamSpec *properties [N_PROPS] = {NULL};
 /**
  * gda_ddl_view_new:
  *
- * Returns: A new instance of #GdaDdlView. Use gda_ddl_view_free() to delete the object and free
- * the memory.
+ * Returns: A new instance of #GdaDdlView.
  *
  * Since: 6.0
  */
@@ -317,20 +316,6 @@ gda_ddl_view_buildable_interface_init (GdaDdlBuildableInterface *iface)
 {
   iface->parse_node = gda_ddl_view_parse_node;
   iface->write_node = gda_ddl_view_write_node;
-}
-
-/**
- * gda_ddl_view_free:
- * @self: a #GdaDdlView object
- *
- * Convenient method to fdelete the object and free the memory.
- *
- * Since: 6.0
- */
-void
-gda_ddl_view_free (GdaDdlView *self)
-{
-  g_clear_object (&self);
 }
 
 /**

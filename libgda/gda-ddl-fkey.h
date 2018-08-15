@@ -87,8 +87,6 @@ GdaDdlFkeyReferenceAction
 void              gda_ddl_fkey_set_onupdate    (GdaDdlFkey *self,
                                                 GdaDdlFkeyReferenceAction id);
 
-void              gda_ddl_fkey_free            (GdaDdlFkey *self);
-
 gboolean          gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                                                 GdaServerOperation *op,
                                                 GError **error);

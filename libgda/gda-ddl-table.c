@@ -91,8 +91,7 @@ const gchar *gdaddltablenodes[GDA_DDL_TABLE_N_NODES] = {
 /**
  * gda_ddl_table_new:
  *
- * Returns: New instance of #GdaDdlTable. Use gda_ddl_table_free() to delete the object and free
- * the memory.
+ * Returns: New instance of #GdaDdlTable.
  */
 GdaDdlTable *
 gda_ddl_table_new (void)
@@ -107,7 +106,7 @@ gda_ddl_table_finalize (GObject *object)
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   if (priv->mp_fkeys)
-    g_list_free_full (priv->mp_fkeys, (GDestroyNotify)gda_ddl_fkey_free);
+    g_list_free_full (priv->mp_fkeys, (GDestroyNotify) g_object_unref);
   if (priv->mp_columns)
     g_list_free_full (priv->mp_columns, (GDestroyNotify)gda_ddl_column_free);
 
@@ -262,7 +261,7 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
           fkey = gda_ddl_fkey_new ();
 
           if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(fkey), it, error)) {
-              gda_ddl_fkey_free (fkey);
+              g_object_unref (fkey);
               return FALSE;
           } else
             priv->mp_fkeys = g_list_append (priv->mp_fkeys,fkey);
@@ -441,20 +440,6 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   return priv->mp_fkeys;
-}
-
-/**
- * gda_ddl_table_free:
- * @self: a #GdaDdlTable object
- *
- * A convenient method to free free the object
- *
- * Since: 6.0
- */
-void
-gda_ddl_table_free (GdaDdlTable *self)
-{
-  g_clear_object (&self);
 }
 
 /**
@@ -703,8 +688,6 @@ on_error:
  * Create new #GdaDdlTable instance from the corresponding #GdaMetaDbObject
  * object. If %NULL is passed this function works exactly as
  * gda_ddl_table_new()
- *
- * Returns: New object that should be freed with gda_ddl_table_free()
  *
  * Since: 6.0
  */

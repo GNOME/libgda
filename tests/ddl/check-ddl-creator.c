@@ -81,7 +81,7 @@ test_ddl_creator_finish (CheckDdlObject *self,
   gda_connection_close(self->cnc,NULL);
   g_free (self->xmlfile);
   g_object_unref (self->file);
-  gda_ddl_creator_free (self->creator);
+  g_object_unref (self->creator);
   g_object_unref (self->cnc);
 }
 
