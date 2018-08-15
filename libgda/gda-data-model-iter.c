@@ -65,6 +65,8 @@ static void gda_data_model_iter_get_property (GObject *object,
 /* Virtual default methods*/
 static gboolean
 real_gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row);
+static gboolean
+real_gda_data_model_iter_move_prev (GdaDataModelIter *iter);
 
 gboolean
 real_gda_data_model_iter_move_next (GdaDataModelIter *iter);
@@ -142,7 +144,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
 
 	class->move_to_row = real_gda_data_model_iter_move_to_row;
 	class->move_next = real_gda_data_model_iter_move_next;
-	class->move_prev = gda_data_model_iter_move_prev;
+	class->move_prev = real_gda_data_model_iter_move_prev;
 	class->set_value_at = gda_data_model_iter_set_value_at;
 	class->row_changed = NULL;
 	class->end_of_data = NULL;
@@ -836,6 +838,17 @@ gda_data_model_iter_move_next_default (GdaDataModel *model, GdaDataModelIter *it
  */
 gboolean
 gda_data_model_iter_move_prev (GdaDataModelIter *iter)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+	GdaDataModelIterClass *klass = GDA_DATA_MODEL_ITER_GET_CLASS (iter);
+	if (klass->move_prev) {
+		return klass->move_prev (iter);
+	}
+	return FALSE;
+}
+static gboolean
+real_gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 {
 	GdaDataModel *model;
 

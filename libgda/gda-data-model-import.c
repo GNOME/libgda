@@ -186,11 +186,13 @@ static GObjectClass *parent_class = NULL;
 G_DEFINE_TYPE(GdaDataModelImportIter, gda_data_model_import_iter, GDA_TYPE_DATA_MODEL_ITER)
 
 static gboolean gda_data_model_import_iter_move_next (GdaDataModelIter *iter);
+static gboolean gda_data_model_import_iter_move_prev (GdaDataModelIter *iter);
 
 static void gda_data_model_import_iter_init (GdaDataModelImportIter *iter) {}
 static void gda_data_model_import_iter_class_init (GdaDataModelImportIterClass *klass) {
 	GdaDataModelIterClass *model_iter_class = GDA_DATA_MODEL_ITER_CLASS (klass);
 	model_iter_class->move_next = gda_data_model_import_iter_move_next;
+	model_iter_class->move_prev = gda_data_model_import_iter_move_prev;
 }
 
 static gboolean
@@ -199,6 +201,14 @@ gda_data_model_import_iter_move_next (GdaDataModelIter *iter) {
 	g_object_get (G_OBJECT (iter), "data-model", &model, NULL);
 	g_return_val_if_fail (model, FALSE);
 	return gda_data_model_import_iter_next (model, iter);
+}
+
+static gboolean
+gda_data_model_import_iter_move_prev (GdaDataModelIter *iter) {
+	GdaDataModel *model;
+	g_object_get (G_OBJECT (iter), "data-model", &model, NULL);
+	g_return_val_if_fail (model, FALSE);
+	return gda_data_model_import_iter_prev (model, iter);
 }
 
 
