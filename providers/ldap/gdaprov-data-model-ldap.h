@@ -34,6 +34,15 @@ GdaDataModel *_gdaprov_data_model_ldap_new       (GdaConnection *cnc,
 						  const gchar *attributes, GdaLdapSearchScope scope);
 GList        *gdaprov_data_model_ldap_compute_columns (GdaConnection *cnc, const gchar *attributes);
 
+
+#define GDAPROV_TYPE_DATA_MODEL_LDAP_ITER gdaprov_data_model_ldap_iter_get_type()
+
+G_DECLARE_DERIVABLE_TYPE(GdaprovDataModelLdapIter, gdaprov_data_model_ldap_iter, GDAPROV, DATA_MODEL_LDAP_ITER, GdaDataModelIter)
+
+struct _GdaprovDataModelLdapIterClass {
+	GdaDataModelIterClass parent_class;
+};
+
 G_END_DECLS
 
 #endif

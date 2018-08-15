@@ -149,6 +149,7 @@ static void                 gda_data_model_ldap_data_model_init (GdaDataModelIfa
 static gint                 gda_data_model_ldap_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_ldap_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_ldap_describe_column (GdaDataModel *model, gint col);
+static GdaDataModelIter    *gda_data_model_ldap_create_iter (GdaDataModel *model);
 static GdaDataModelAccessFlags gda_data_model_ldap_get_access_flags(GdaDataModel *model);
 static gboolean             gda_data_model_ldap_iter_next       (GdaDataModel *model, GdaDataModelIter *iter);
 static GdaValueAttribute    gda_data_model_ldap_get_attributes_at (GdaDataModel *model, gint col, gint row);
@@ -156,6 +157,26 @@ static GError             **gda_data_model_ldap_get_exceptions  (GdaDataModel *m
 
 static GObjectClass *parent_class = NULL;
 #define CLASS(model) (GDA_DATA_MODEL_LDAP_CLASS (G_OBJECT_GET_CLASS (model)))
+
+
+G_DEFINE_TYPE(GdaprovDataModelLdapIter, gdaprov_data_model_ldap_iter, GDA_TYPE_DATA_MODEL_ITER)
+
+static gboolean gdaprov_data_model_ldap_iter_move_next (GdaDataModelIter *iter);
+
+static void gdaprov_data_model_ldap_iter_init (GdaprovDataModelLdapIter *iter) {}
+static void gdaprov_data_model_ldap_iter_class_init (GdaprovDataModelLdapIterClass *klass) {
+	GdaDataModelIterClass *model_iter_class = GDA_DATA_MODEL_ITER_CLASS (klass);
+	model_iter_class->move_next = gdaprov_data_model_ldap_iter_move_next;
+}
+
+static gboolean
+gdaprov_data_model_ldap_iter_move_next (GdaDataModelIter *iter) {
+	GdaDataModel *model;
+	g_object_get (G_OBJECT (iter), "data-model", &model, NULL);
+	g_return_val_if_fail (model, FALSE);
+	return gda_data_model_ldap_iter_next (model, iter);
+}
+
 
 /*
  * Object init and dispose
@@ -170,7 +191,7 @@ gda_data_model_ldap_data_model_init (GdaDataModelIface *iface)
         iface->i_get_value_at = NULL;
         iface->i_get_attributes_at = gda_data_model_ldap_get_attributes_at;
 
-        iface->i_create_iter = NULL;
+        iface->i_create_iter = gda_data_model_ldap_create_iter;
         iface->i_iter_at_row = NULL;
         iface->i_iter_next = gda_data_model_ldap_iter_next;
         iface->i_iter_prev = NULL;
@@ -1363,6 +1384,14 @@ gda_data_model_ldap_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	return retval ? TRUE : FALSE;
 }
 
+
+static GdaDataModelIter
+*gda_data_model_ldap_create_iter (GdaDataModel *model) {
+  g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+
+  return g_object_new (GDAPROV_TYPE_DATA_MODEL_LDAP_ITER,
+                       "data-model", model, NULL);
+}
 static GdaValueAttribute
 gda_data_model_ldap_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {

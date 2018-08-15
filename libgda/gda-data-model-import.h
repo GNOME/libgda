@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <libxml/tree.h>
 #include <libgda/gda-set.h>
+#include <libgda/gda-data-model-iter.h>
 
 G_BEGIN_DECLS
 
@@ -90,6 +91,15 @@ GdaDataModel *gda_data_model_import_new_xml_node (xmlNodePtr node);
 
 GSList       *gda_data_model_import_get_errors   (GdaDataModelImport *model);
 void          gda_data_model_import_clean_errors (GdaDataModelImport *model);
+
+
+#define GDA_TYPE_DATA_MODEL_IMPORT_ITER gda_data_model_import_iter_get_type()
+
+G_DECLARE_DERIVABLE_TYPE(GdaDataModelImportIter, gda_data_model_import_iter, GDA, DATA_MODEL_IMPORT_ITER, GdaDataModelIter)
+
+struct _GdaDataModelImportIterClass {
+	GdaDataModelIterClass parent_class;
+};
 
 G_END_DECLS
 

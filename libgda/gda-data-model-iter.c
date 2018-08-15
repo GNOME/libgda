@@ -66,6 +66,9 @@ static void gda_data_model_iter_get_property (GObject *object,
 static gboolean
 real_gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row);
 
+gboolean
+real_gda_data_model_iter_move_next (GdaDataModelIter *iter);
+
 /* follow model changes */
 static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
@@ -138,7 +141,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 	class->move_to_row = real_gda_data_model_iter_move_to_row;
-	class->move_next = gda_data_model_iter_move_next;
+	class->move_next = real_gda_data_model_iter_move_next;
 	class->move_prev = gda_data_model_iter_move_prev;
 	class->set_value_at = gda_data_model_iter_set_value_at;
 	class->row_changed = NULL;
@@ -726,6 +729,21 @@ gda_data_model_iter_move_to_row_default (GdaDataModel *model, GdaDataModelIter *
 gboolean
 gda_data_model_iter_move_next (GdaDataModelIter *iter)
 {
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+	if ((gda_data_model_iter_get_row (iter) >= 0) &&
+		    ! _gda_set_validate ((GdaSet*) iter, NULL))
+			return FALSE;
+
+	GdaDataModelIterClass *klass = GDA_DATA_MODEL_ITER_GET_CLASS (iter);
+	if (klass->move_next) {
+		return klass->move_next (iter);
+	}
+	return FALSE;
+}
+gboolean
+real_gda_data_model_iter_move_next (GdaDataModelIter *iter)
+{
 	GdaDataModel *model;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 
@@ -735,15 +753,7 @@ gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	g_return_val_if_fail (priv->data_model, FALSE);
 
 	model = priv->data_model;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) {
-		if ((gda_data_model_iter_get_row (iter) >= 0) &&
-		    ! _gda_set_validate ((GdaSet*) iter, NULL))
-			return FALSE;
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_next) (model, iter);
-	}
-	else 
-		/* default method */
-		return gda_data_model_iter_move_next_default (model, iter);
+	return gda_data_model_iter_move_next_default (model, iter);
 }
 
 /**

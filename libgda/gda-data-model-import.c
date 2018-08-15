@@ -183,6 +183,25 @@ static void         add_error (GdaDataModelImport *model, const gchar *err);
 
 static GObjectClass *parent_class = NULL;
 
+G_DEFINE_TYPE(GdaDataModelImportIter, gda_data_model_import_iter, GDA_TYPE_DATA_MODEL_ITER)
+
+static gboolean gda_data_model_import_iter_move_next (GdaDataModelIter *iter);
+
+static void gda_data_model_import_iter_init (GdaDataModelImportIter *iter) {}
+static void gda_data_model_import_iter_class_init (GdaDataModelImportIterClass *klass) {
+	GdaDataModelIterClass *model_iter_class = GDA_DATA_MODEL_ITER_CLASS (klass);
+	model_iter_class->move_next = gda_data_model_import_iter_move_next;
+}
+
+static gboolean
+gda_data_model_import_iter_move_next (GdaDataModelIter *iter) {
+	GdaDataModel *model;
+	g_object_get (G_OBJECT (iter), "data-model", &model, NULL);
+	g_return_val_if_fail (model, FALSE);
+	return gda_data_model_import_iter_next (model, iter);
+}
+
+
 /**
  * gda_data_model_import_get_type:
  *
@@ -1900,7 +1919,7 @@ gda_data_model_import_create_iter (GdaDataModel *model)
 		 */
 	}
 	else
-		iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_ITER,
+		iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_MODEL_IMPORT_ITER,
 							  "data-model", model, NULL);
 	return iter;
 }
