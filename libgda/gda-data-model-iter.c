@@ -601,57 +601,24 @@ gboolean
 gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+	//return real_gda_data_model_iter_move_to_row(iter, row);
+	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	GdaDataModel *model;
+	model = priv->data_model;
 
-  GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	g_return_val_if_fail (model, FALSE);
 
-	g_return_val_if_fail (priv, FALSE);
-
-	if ((gda_data_model_iter_get_row (iter) >= 0) &&
-	    (gda_data_model_iter_get_row (iter) == row)) {
-		/* refresh @iter's contents */
-		GdaDataModel *model;
-		model = priv->data_model;
-		g_return_val_if_fail (model, FALSE);
-
-		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
-			if ((GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
-										  row)) {
-			  g_signal_emit (G_OBJECT (iter),
-				       gda_data_model_iter_signals[ROW_CHANGED],
-				       0, priv->row);
-			}
+	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
+		if ((GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
+									  row)) {
+		  g_signal_emit (G_OBJECT (iter),
+			       gda_data_model_iter_signals[ROW_CHANGED],
+			       0, priv->row);
+			return TRUE;
 		}
-		else
-			return gda_data_model_iter_move_to_row_default (model, iter, row);
 	}
-
-	if (row < 0) {
-		if (gda_data_model_iter_get_row (iter) >= 0) {
-			if (! _gda_set_validate ((GdaSet*) iter, NULL))
-				return FALSE;
-
-			priv->row = -1;
-			g_signal_emit (G_OBJECT (iter),
-				       gda_data_model_iter_signals[ROW_CHANGED],
-				       0, priv->row);
-		}
-		return TRUE;
-	}
-	else {
-		GdaDataModel *model;
-		model = priv->data_model;
-		g_return_val_if_fail (model, FALSE);
-
-		if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
-			if ((gda_data_model_iter_get_row (iter) >= 0) &&
-			    ! _gda_set_validate ((GdaSet*) iter, NULL))
-				return FALSE;
-			return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
-										  row);
-		}
-		else
-			return gda_data_model_iter_move_to_row_default (model, iter, row);
-	}
+	else
+		return gda_data_model_iter_move_to_row_default (model, iter, row);
 }
 
 static void
