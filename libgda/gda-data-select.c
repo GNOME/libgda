@@ -202,24 +202,21 @@ static GError             **gda_data_select_get_exceptions  (GdaDataModel *model
 static GObjectClass *parent_class = NULL;
 
 
-struct _GdaDataSelectIter {
-	GObject parent;
-};
-
 G_DEFINE_TYPE(GdaDataSelectIter, gda_data_select_iter, GDA_TYPE_DATA_MODEL_ITER)
 
-static void gda_data_select_iter_move_to_row (GdaDataModelIter *iter, gint row);
+static gboolean gda_data_select_iter_move_to_row (GdaDataModelIter *iter, gint row);
 
 static void gda_data_select_iter_init (GdaDataSelectIter *iter) {}
 static void gda_data_select_iter_class_init (GdaDataSelectIterClass *klass) {
-	GdaDataModelIterClass *parent_class = GDA_DATA_MODEL_ITER_CLASS(gda_data_select_iter_parent_class);
-	parent_class->move_to_row = gda_data_select_iter_move_to_row;
+	GdaDataModelIterClass *model_iter_class = GDA_DATA_MODEL_ITER_CLASS (klass);
+	model_iter_class->move_to_row = gda_data_select_iter_move_to_row;
 }
 
-static void
+static gboolean
 gda_data_select_iter_move_to_row (GdaDataModelIter *iter, gint row) {
 	GdaDataModel *model;
 	g_object_get (G_OBJECT (iter), "data-model", &model, NULL);
+	g_return_val_if_fail (model, FALSE);
 	return gda_data_select_iter_at_row (model, iter, row);
 }
 
@@ -2155,14 +2152,15 @@ gda_data_select_create_iter (GdaDataModel *model)
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, 0);
 
-	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
-		return (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_SELECT_ITER,
-							  "data-model", model, NULL);
+	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) {
+		return GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_SELECT_ITER,
+							  "data-model", model, NULL));
+	}
 	else {
 		/* Create the iter if necessary, or just return the existing iter: */
 		if (! imodel->priv->iter) {
-			imodel->priv->iter = (GdaDataModelIter *) g_object_new (GDA_TYPE_DATA_SELECT_ITER,
-										"data-model", model, NULL);
+			imodel->priv->iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_SELECT_ITER,
+										"data-model", model, NULL));
 			imodel->priv->sh->iter_row = -1;
 		}
 		g_object_ref (imodel->priv->iter);

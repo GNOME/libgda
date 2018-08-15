@@ -226,4 +226,28 @@ test('Pivot', tchkpivot,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
-	
+
+
+tchkdsi = executable('check_data_select_iter',
+	['check_data_select_iter.c'],
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DBUILD_DIR="'+meson.current_build_dir()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep,
+		inc_testsh_dep
+		],
+	install: false
+	)
+
+test('DataSelectIter', tchkdsi,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)

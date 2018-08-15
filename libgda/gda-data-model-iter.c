@@ -62,6 +62,10 @@ static void gda_data_model_iter_get_property (GObject *object,
 					      GValue *value,
 					      GParamSpec *pspec);
 
+/* Virtual default methods*/
+static gboolean
+real_gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row);
+
 /* follow model changes */
 static void model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
 static void model_row_removed_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter);
@@ -133,7 +137,7 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
-	class->move_to_row = gda_data_model_iter_move_to_row;
+	class->move_to_row = real_gda_data_model_iter_move_to_row;
 	class->move_next = gda_data_model_iter_move_next;
 	class->move_prev = gda_data_model_iter_move_prev;
 	class->set_value_at = gda_data_model_iter_set_value_at;
@@ -601,24 +605,32 @@ gboolean
 gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
-	//return real_gda_data_model_iter_move_to_row(iter, row);
+
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	GdaDataModel *model;
-	model = priv->data_model;
 
-	g_return_val_if_fail (model, FALSE);
-
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) {
-		if ((GDA_DATA_MODEL_GET_CLASS (model)->i_iter_at_row) (model, iter,
-									  row)) {
-		  g_signal_emit (G_OBJECT (iter),
-			       gda_data_model_iter_signals[ROW_CHANGED],
-			       0, priv->row);
+	GdaDataModelIterClass *klass = GDA_DATA_MODEL_ITER_GET_CLASS(iter);
+	if (klass->move_to_row) {
+		if (klass->move_to_row (iter, row)) {
+			g_signal_emit (G_OBJECT (iter),
+			              gda_data_model_iter_signals[ROW_CHANGED],
+			              0, priv->row);
 			return TRUE;
 		}
 	}
-	else
-		return gda_data_model_iter_move_to_row_default (model, iter, row);
+	return FALSE;
+}
+static gboolean
+real_gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
+{
+	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
+
+	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	GdaDataModel *model;
+
+	model = priv->data_model;
+	g_return_val_if_fail (model, FALSE);
+
+	return gda_data_model_iter_move_to_row_default (model, iter, row);
 }
 
 static void

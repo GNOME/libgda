@@ -180,7 +180,11 @@ gboolean       gda_data_select_prepare_for_offline             (GdaDataSelect *m
 
 #define GDA_TYPE_DATA_SELECT_ITER gda_data_select_iter_get_type()
 
-G_DECLARE_FINAL_TYPE(GdaDataSelectIter, gda_data_select_iter, GDA, DATA_SELECT_ITER, GdaDataModelIter)
+G_DECLARE_DERIVABLE_TYPE(GdaDataSelectIter, gda_data_select_iter, GDA, DATA_SELECT_ITER, GdaDataModelIter)
+
+struct _GdaDataSelectIterClass {
+	GdaDataModelIterClass parent_class;
+};
 
 G_END_DECLS
 
