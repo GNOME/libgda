@@ -2902,24 +2902,18 @@ vector_set_value_at (GdaDataSelect *imodel, BVector *bv, GdaDataModelIter *iter,
 }
 
 static gboolean
-gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
+check_data_model_for_updates (GdaDataSelect *imodel,
+                              gint col,
+                              const GValue *value,
+                              GError **error)
 {
-	GdaDataSelect *imodel;
 	gint ncols;
 	GdaHolder *holder;
 	gchar *str;
 
-	imodel = (GdaDataSelect *) model;
-	g_return_val_if_fail (imodel->priv, FALSE);
-
 	if (imodel->priv->sh->modif_internals->safely_locked) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
 			     "%s", _("Modifications are not allowed anymore"));
-		return FALSE;
-	}
-	if (! (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
-		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
-			     "%s", _("Data model does only support random access"));
 		return FALSE;
 	}
 	if (! imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY]) {
@@ -2927,15 +2921,13 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
-
 	/* arguments check */
-	ncols = gda_data_select_get_n_columns (model);
+	ncols = gda_data_select_get_n_columns (imodel);
 	if (col >= ncols) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
 			     _("Column %d out of range (0-%d)"), col, ncols-1);
 		return FALSE;
 	}
-
 	/* invalidate all the imodel->priv->sh->modif_internals->modif_set's value holders */
 	GSList *list;
 	for (list = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); list; list = list->next) {
@@ -2943,7 +2935,6 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
 			gda_holder_force_invalid ((GdaHolder*) list->data);
 	}
-
 	/* give values to params for new value */
 	str = g_strdup_printf ("+%d", col);
 	holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
@@ -2955,11 +2946,26 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 		return FALSE;
 	}
 	if (g_slist_find (imodel->priv->sh->modif_internals->modif_params[UPD_QUERY], holder)) {
-		if (! gda_holder_set_value (holder, value, error))
+		if (!gda_holder_set_value (holder, value, error))
 			return FALSE;
 	}
 	else
 		gda_holder_force_invalid (holder);
+	return TRUE;
+}
+static gboolean
+gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error)
+{
+	GdaDataSelect *imodel;
+
+	imodel = (GdaDataSelect *) model;
+	g_return_val_if_fail (imodel->priv, FALSE);
+	g_return_val_if_fail (check_data_model_for_updates (imodel, col, value, error), FALSE);
+	if (! (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
+		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
+			     "%s", _("Data model does only support random access"));
+		return FALSE;
+	}
 
 	/* BVector */
 	BVector *bv;
@@ -2982,51 +2988,7 @@ gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gi
 
 	imodel = (GdaDataSelect *) model;
 	g_return_val_if_fail (imodel->priv, FALSE);
-
-	if (imodel->priv->sh->modif_internals->safely_locked) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     "%s", _("Modifications are not allowed anymore"));
-		return FALSE;
-	}
-	if (! imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY]) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     "%s", _("No UPDATE statement provided"));
-		return FALSE;
-	}
-
-	/* arguments check */
-	ncols = gda_data_select_get_n_columns (model);
-	if (col >= ncols) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR,
-			     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("Column %d out of range (0-%d)"), col, ncols-1);
-		return FALSE;
-	}
-
-	/* invalidate all the imodel->priv->sh->modif_internals->modif_set's value holders */
-	GSList *list;
-	for (list = gda_set_get_holders (imodel->priv->sh->modif_internals->modif_set); list; list = list->next) {
-		GdaHolder *h = (GdaHolder*) list->data;
-		if (param_name_to_int (gda_holder_get_id (h), NULL, NULL))
-			gda_holder_force_invalid ((GdaHolder*) list->data);
-	}
-
-	/* give values to params for new value */
-	str = g_strdup_printf ("+%d", col);
-	holder = gda_set_get_holder (imodel->priv->sh->modif_internals->modif_set, str);
-	g_free (str);
-	if (! holder) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR,
-			     GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     _("Column %d can't be modified"), col);
-		return FALSE;
-	}
-	if (g_slist_find (imodel->priv->sh->modif_internals->modif_params[UPD_QUERY], holder)) {
-		if (!gda_holder_set_value (holder, value, error))
-			return FALSE;
-	}
-	else
-		gda_holder_force_invalid (holder);
+	g_return_val_if_fail (check_data_model_for_updates (imodel, col, value, error), FALSE);
 
 	/* BVector */
 	BVector *bv;
