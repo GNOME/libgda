@@ -135,6 +135,10 @@
     <xi:include href="xml/gda-worker.xml"/>
     <xi:include href="xml/gda-xa-transaction.xml"/>
     <xi:include href="xml/libgda-global-variables.xml"/>
+    <xi:include href="xml/keywords_hash.xml"/>
+    <xi:include href="xml/gda-symbols-util.xml"/>
+    <xi:include href="xml/itsignaler.xml"/>
+    <xi:include href="xml/parser_tokens.xml"/>
 
   </chapter>
   <chapter id="object-tree">
