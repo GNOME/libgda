@@ -3028,19 +3028,9 @@ gda_data_select_set_values (GdaDataModel *model, gint row, GList *values, GError
 	/* arguments check */
 	g_return_val_if_fail (imodel->priv, FALSE);
 
-	if (imodel->priv->sh->modif_internals->safely_locked) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SAFETY_LOCKED_ERROR,
-			     "%s", _("Modifications are not allowed anymore"));
-		return FALSE;
-	}
 	if (! (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     "%s", _("Data model does only support random access"));
-		return FALSE;
-	}
-	if (! imodel->priv->sh->modif_internals->modif_stmts [UPD_QUERY]) {
-		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-			     "%s", _("No UPDATE statement provided"));
 		return FALSE;
 	}
 
