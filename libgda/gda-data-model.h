@@ -118,10 +118,12 @@ struct _GdaDataModelIface {
 	gboolean             (* remove_row)       (GdaDataModel *model, gint row, GError **error);
 	gint                 (* find_row)         (GdaDataModel *model, GSList *values, gint *cols_index);
 
-	void                 (* freeze)             (GdaDataModel *model);
+	void                 (* freeze)           (GdaDataModel *model);
 	void                 (* thaw)             (GdaDataModel *model);
 	gboolean             (* get_notify)       (GdaDataModel *model);
 	void                 (* send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
+
+	GError             **(* get_exceptions)   (GdaDataModel *model);
 
 	/* signals */
 	void                 (* row_inserted)       (GdaDataModel *model, gint row);
@@ -130,9 +132,6 @@ struct _GdaDataModelIface {
 	void                 (* changed)            (GdaDataModel *model);
 	void                 (* reset)              (GdaDataModel *model);
 	void                 (* access_changed)     (GdaDataModel *model);
-
-	/* getting more information about a data model */
-	GError             **(* get_exceptions)   (GdaDataModel *model);
 };
 
 /**
