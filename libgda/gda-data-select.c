@@ -399,28 +399,28 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 static void
 gda_data_select_data_model_init (GdaDataModelIface *iface)
 {
-	iface->i_get_n_rows = gda_data_select_get_n_rows;
-	iface->i_get_n_columns = gda_data_select_get_n_columns;
-	iface->i_describe_column = gda_data_select_describe_column;
-        iface->i_get_access_flags = gda_data_select_get_access_flags;
-	iface->i_get_value_at = gda_data_select_get_value_at;
-	iface->i_get_attributes_at = gda_data_select_get_attributes_at;
+	iface->get_n_rows = gda_data_select_get_n_rows;
+	iface->get_n_columns = gda_data_select_get_n_columns;
+	iface->describe_column = gda_data_select_describe_column;
+        iface->get_access_flags = gda_data_select_get_access_flags;
+	iface->get_value_at = gda_data_select_get_value_at;
+	iface->get_attributes_at = gda_data_select_get_attributes_at;
 
-	iface->i_create_iter = gda_data_select_create_iter;
+	iface->create_iter = gda_data_select_create_iter;
 
-	iface->i_set_value_at = gda_data_select_set_value_at;
-	iface->i_set_values = gda_data_select_set_values;
-        iface->i_append_values = gda_data_select_append_values;
-	iface->i_append_row = NULL;
-	iface->i_remove_row = gda_data_select_remove_row;
-	iface->i_find_row = NULL;
+	iface->set_value_at = gda_data_select_set_value_at;
+	iface->set_values = gda_data_select_set_values;
+        iface->append_values = gda_data_select_append_values;
+	iface->append_row = NULL;
+	iface->remove_row = gda_data_select_remove_row;
+	iface->find_row = NULL;
 
 	iface->freeze = gda_data_select_freeze;
 	iface->thaw = gda_data_select_thaw;
-	iface->i_get_notify = gda_data_select_get_notify;
-	iface->i_send_hint = NULL;
+	iface->get_notify = gda_data_select_get_notify;
+	iface->send_hint = NULL;
 
-	iface->i_get_exceptions = gda_data_select_get_exceptions;
+	iface->get_exceptions = gda_data_select_get_exceptions;
 }
 
 static void

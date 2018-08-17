@@ -90,7 +90,26 @@ dummy_gda_data_model_ldap_class_init (GdaDataModelLdapClass *klass)
 static void
 dummy_gda_data_model_ldap_data_model_init (GdaDataModelIface *iface)
 {
-	iface->i_get_n_rows = NULL;
+  iface->get_n_rows = NULL;
+  iface->get_n_columns = NULL;
+  iface->describe_column = NULL;
+  iface->get_access_flags = NULL;
+  iface->get_value_at = NULL;
+  iface->get_attributes_at = NULL;
+
+  iface->create_iter = NULL;
+
+  iface->set_value_at = NULL;
+  iface->set_values = NULL;
+  iface->append_values = NULL;
+  iface->append_row = NULL;
+  iface->remove_row = NULL;
+  iface->find_row = NULL;
+
+  iface->freeze = NULL;
+  iface->thaw = NULL;
+  iface->get_notify = NULL;
+  iface->send_hint = NULL;
 }
 
 static GModule *ldap_prov_module = NULL;

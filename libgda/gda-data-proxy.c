@@ -731,26 +731,26 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 static void
 gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 {
-	iface->i_get_n_rows = gda_data_proxy_get_n_rows;
-	iface->i_get_n_columns = gda_data_proxy_get_n_columns;
-	iface->i_describe_column = gda_data_proxy_describe_column;
-	iface->i_get_access_flags = gda_data_proxy_get_access_flags;
-	iface->i_get_value_at = gda_data_proxy_get_value_at;
-	iface->i_get_attributes_at = gda_data_proxy_get_attributes_at;
+	iface->get_n_rows = gda_data_proxy_get_n_rows;
+	iface->get_n_columns = gda_data_proxy_get_n_columns;
+	iface->describe_column = gda_data_proxy_describe_column;
+	iface->get_access_flags = gda_data_proxy_get_access_flags;
+	iface->get_value_at = gda_data_proxy_get_value_at;
+	iface->get_attributes_at = gda_data_proxy_get_attributes_at;
 
-	iface->i_create_iter = NULL;
+	iface->create_iter = NULL;
 
-	iface->i_set_value_at = gda_data_proxy_set_value_at;
-	iface->i_set_values = gda_data_proxy_set_values;
-        iface->i_append_values = gda_data_proxy_append_values;
-	iface->i_append_row = gda_data_proxy_append_row;
-	iface->i_remove_row = gda_data_proxy_remove_row;
-	iface->i_find_row = gda_data_proxy_find_row_from_values;
+	iface->set_value_at = gda_data_proxy_set_value_at;
+	iface->set_values = gda_data_proxy_set_values;
+        iface->append_values = gda_data_proxy_append_values;
+	iface->append_row = gda_data_proxy_append_row;
+	iface->remove_row = gda_data_proxy_remove_row;
+	iface->find_row = gda_data_proxy_find_row_from_values;
 
 	iface->freeze = gda_data_proxy_freeze;
 	iface->freeze = gda_data_proxy_thaw;
-	iface->i_get_notify = gda_data_proxy_get_notify;
-	iface->i_send_hint = gda_data_proxy_send_hint;
+	iface->get_notify = gda_data_proxy_get_notify;
+	iface->send_hint = gda_data_proxy_send_hint;
 
 	iface->row_inserted = NULL;
 	iface->row_updated = NULL;

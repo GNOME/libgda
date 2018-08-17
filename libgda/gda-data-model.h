@@ -99,29 +99,29 @@ struct _GdaDataModelIface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	gint                 (* i_get_n_rows)       (GdaDataModel *model);
-	gint                 (* i_get_n_columns)    (GdaDataModel *model);
+	gint                 (* get_n_rows)       (GdaDataModel *model);
+	gint                 (* get_n_columns)    (GdaDataModel *model);
 
-	GdaColumn           *(* i_describe_column)  (GdaDataModel *model, gint col);
-	GdaDataModelAccessFlags (* i_get_access_flags) (GdaDataModel *model);
+	GdaColumn           *(* describe_column)  (GdaDataModel *model, gint col);
+	GdaDataModelAccessFlags (* get_access_flags) (GdaDataModel *model);
 
-	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row, GError **error);
-	GdaValueAttribute    (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
-	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
+	const GValue        *(* get_value_at)     (GdaDataModel *model, gint col, gint row, GError **error);
+	GdaValueAttribute    (* get_attributes_at)(GdaDataModel *model, gint col, gint row);
+	GdaDataModelIter    *(* create_iter)      (GdaDataModel *model);
 
-	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row,
+	gboolean             (* set_value_at)     (GdaDataModel *model, gint col, gint row,
 						     const GValue *value, GError **error);
-	gboolean             (* i_set_values)       (GdaDataModel *model, gint row, GList *values,
+	gboolean             (* set_values)       (GdaDataModel *model, gint row, GList *values,
 						     GError **error);
-	gint                 (* i_append_values)    (GdaDataModel *model, const GList *values, GError **error);
-	gint                 (* i_append_row)       (GdaDataModel *model, GError **error);
-	gboolean             (* i_remove_row)       (GdaDataModel *model, gint row, GError **error);
-	gint                 (* i_find_row)         (GdaDataModel *model, GSList *values, gint *cols_index);
+	gint                 (* append_values)    (GdaDataModel *model, const GList *values, GError **error);
+	gint                 (* append_row)       (GdaDataModel *model, GError **error);
+	gboolean             (* remove_row)       (GdaDataModel *model, gint row, GError **error);
+	gint                 (* find_row)         (GdaDataModel *model, GSList *values, gint *cols_index);
 
 	void                 (* freeze)             (GdaDataModel *model);
 	void                 (* thaw)             (GdaDataModel *model);
-	gboolean             (* i_get_notify)       (GdaDataModel *model);
-	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
+	gboolean             (* get_notify)       (GdaDataModel *model);
+	void                 (* send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
 
 	/* signals */
 	void                 (* row_inserted)       (GdaDataModel *model, gint row);
@@ -132,7 +132,7 @@ struct _GdaDataModelIface {
 	void                 (* access_changed)     (GdaDataModel *model);
 
 	/* getting more information about a data model */
-	GError             **(* i_get_exceptions)   (GdaDataModel *model);
+	GError             **(* get_exceptions)   (GdaDataModel *model);
 };
 
 /**

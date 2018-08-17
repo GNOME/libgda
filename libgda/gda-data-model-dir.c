@@ -142,26 +142,26 @@ static GObjectClass *parent_class = NULL;
 static void
 gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
 {
-        iface->i_get_n_rows = gda_data_model_dir_get_n_rows;
-        iface->i_get_n_columns = gda_data_model_dir_get_n_columns;
-        iface->i_describe_column = gda_data_model_dir_describe_column;
-        iface->i_get_access_flags = gda_data_model_dir_get_access_flags;
-        iface->i_get_value_at = gda_data_model_dir_get_value_at;
-        iface->i_get_attributes_at = gda_data_model_dir_get_attributes_at;
+        iface->get_n_rows = gda_data_model_dir_get_n_rows;
+        iface->get_n_columns = gda_data_model_dir_get_n_columns;
+        iface->describe_column = gda_data_model_dir_describe_column;
+        iface->get_access_flags = gda_data_model_dir_get_access_flags;
+        iface->get_value_at = gda_data_model_dir_get_value_at;
+        iface->get_attributes_at = gda_data_model_dir_get_attributes_at;
 
-        iface->i_create_iter = NULL;
+        iface->create_iter = NULL;
 
-        iface->i_set_value_at = gda_data_model_dir_set_value_at;
-        iface->i_set_values = gda_data_model_dir_set_values;
-        iface->i_append_values = gda_data_model_dir_append_values;
-        iface->i_append_row = NULL;
-        iface->i_remove_row = gda_data_model_dir_remove_row;
-        iface->i_find_row = NULL;
+        iface->set_value_at = gda_data_model_dir_set_value_at;
+        iface->set_values = gda_data_model_dir_set_values;
+        iface->append_values = gda_data_model_dir_append_values;
+        iface->append_row = NULL;
+        iface->remove_row = gda_data_model_dir_remove_row;
+        iface->find_row = NULL;
 
         iface->freeze = NULL;
         iface->thaw = NULL;
-        iface->i_get_notify = NULL;
-        iface->i_send_hint = NULL;
+        iface->get_notify = NULL;
+        iface->send_hint = NULL;
 }
 
 static void

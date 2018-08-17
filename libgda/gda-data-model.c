@@ -237,8 +237,8 @@ static gboolean
 do_notify_changes (GdaDataModel *model)
 {
 	gboolean notify_changes = TRUE;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify)
-		notify_changes = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_notify)
+		notify_changes = (GDA_DATA_MODEL_GET_CLASS (model)->get_notify) (model);
 	return notify_changes;
 }
 
@@ -401,7 +401,7 @@ gda_data_model_thaw (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_get_notify: (virtual i_get_notify)
+ * gda_data_model_get_notify:
  * @model: a #GdaDataModel object.
  *
  * Returns the status of notifications changes on the given data model.
@@ -410,15 +410,15 @@ gboolean
 gda_data_model_get_notify (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_notify) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_notify)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_notify) (model);
 	else
 		return TRUE;
 }
 
 
 /**
- * gda_data_model_get_access_flags: (virtual i_get_access_flags)
+ * gda_data_model_get_access_flags:
  * @model: a #GdaDataModel object.
  *
  * Get the attributes of @model such as how to access the data it contains if it's modifiable, etc.
@@ -429,8 +429,8 @@ GdaDataModelAccessFlags
 gda_data_model_get_access_flags (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) {
-		GdaDataModelAccessFlags flags = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_access_flags) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_access_flags) {
+		GdaDataModelAccessFlags flags = (GDA_DATA_MODEL_GET_CLASS (model)->get_access_flags) (model);
 		if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 			flags |= GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 		return flags;
@@ -440,7 +440,7 @@ gda_data_model_get_access_flags (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_get_n_rows: (virtual i_get_n_rows)
+ * gda_data_model_get_n_rows:
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of rows in the given data model, or -1 if the number of rows is not known
@@ -450,14 +450,14 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_rows) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_n_rows)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_n_rows) (model);
 	else 
 		return -1;
 }
 
 /**
- * gda_data_model_get_n_columns: (virtual i_get_n_columns)
+ * gda_data_model_get_n_columns:
  * @model: a #GdaDataModel object.
  *
  * Returns: the number of columns in the given data model, or -1 if unknown.
@@ -467,8 +467,8 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_n_columns) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_n_columns)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_n_columns) (model);
 	else {
 		/* method not supported */
 		return -1;
@@ -476,7 +476,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_describe_column: (virtual i_describe_column)
+ * gda_data_model_describe_column:
  * @model: a #GdaDataModel object.
  * @col: column number.
  *
@@ -495,8 +495,8 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_describe_column) (model, col);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->describe_column)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->describe_column) (model, col);
 	else {
 		/* method not supported */
 		return NULL;
@@ -629,7 +629,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
 }
 
 /**
- * gda_data_model_get_value_at: (virtual i_get_value_at)
+ * gda_data_model_get_value_at:
  * @model: a #GdaDataModel object.
  * @col: a valid column number.
  * @row: a valid row number.
@@ -667,8 +667,8 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at) (model, col, row, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at) (model, col, row, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -707,8 +707,8 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 	const GValue *cvalue = NULL;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at)
-		cvalue = (GDA_DATA_MODEL_GET_CLASS (model)->i_get_value_at) (model, col, row, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at)
+		cvalue = (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at) (model, col, row, error);
 
 	if (cvalue) {
 		if (nullok && 
@@ -734,7 +734,7 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 }
 
 /**
- * gda_data_model_get_attributes_at: (virtual i_get_attributes_at)
+ * gda_data_model_get_attributes_at:
  * @model: a #GdaDataModel object
  * @col: a valid column number
  * @row: a valid row number, or -1
@@ -751,8 +751,8 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_attributes_at) (model, col, row);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_attributes_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_attributes_at) (model, col, row);
 	else {
 		GdaDataModelAccessFlags flags;
 		GdaValueAttribute attrs = GDA_VALUE_ATTR_NO_MODIF;
@@ -764,7 +764,7 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 }
 
 /**
- * gda_data_model_set_value_at: (virtual i_set_value_at)
+ * gda_data_model_set_value_at:
  * @model: a #GdaDataModel object.
  * @col: column number.
  * @row: row number.
@@ -783,8 +783,8 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at) (model, col, row, value, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at) (model, col, row, value, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -794,7 +794,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 }
 
 /**
- * gda_data_model_set_values: (virtual i_set_values)
+ * gda_data_model_set_values:
  * @model: a #GdaDataModel object.
  * @row: row number.
  * @values: (element-type GObject.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
@@ -817,9 +817,9 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_set_values) (model, row, values, error);
-	else if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_value_at) {
+	if (GDA_DATA_MODEL_GET_CLASS (model)->set_values)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->set_values) (model, row, values, error);
+	else if (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at) {
 		/* save the values */
 		gint col, ncols;
 		ncols = gda_data_model_get_n_columns (model);
@@ -850,7 +850,7 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 }
 
 /**
- * gda_data_model_create_iter: (virtual i_create_iter)
+ * gda_data_model_create_iter:
  * @model: a #GdaDataModel object.
  *
  * Creates a new iterator object #GdaDataModelIter object which can be used to iterate through
@@ -886,8 +886,8 @@ gda_data_model_create_iter (GdaDataModel *model)
 
 	GdaDataModelIter *iter = NULL;
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter)
-		iter = (GDA_DATA_MODEL_GET_CLASS (model)->i_create_iter) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->create_iter)
+		iter = (GDA_DATA_MODEL_GET_CLASS (model)->create_iter) (model);
 	else
 		/* default method */
 		iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_MODEL_ITER,
@@ -896,7 +896,7 @@ gda_data_model_create_iter (GdaDataModel *model)
 }
 
 /**
- * gda_data_model_append_values: (virtual i_append_values)
+ * gda_data_model_append_values:
  * @model: a #GdaDataModel object.
  * @values: (element-type GObject.Value) (allow-none): #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
@@ -916,8 +916,8 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_values) (model, values, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->append_values)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->append_values) (model, values, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -927,7 +927,7 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 }
 
 /**
- * gda_data_model_append_row: (virtual i_append_row)
+ * gda_data_model_append_row:
  * @model: a #GdaDataModel object.
  * @error: a place to store errors, or %NULL
  * 
@@ -950,8 +950,8 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 		return -1;
 	}
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) 
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_append_row) (model, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->append_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->append_row) (model, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -962,7 +962,7 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 
 
 /**
- * gda_data_model_remove_row: (virtual i_remove_row)
+ * gda_data_model_remove_row:
  * @model: a #GdaDataModel object.
  * @row: the row number to be removed.
  * @error: a place to store errors, or %NULL
@@ -985,8 +985,8 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 		return FALSE;
 	}
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_remove_row) (model, row, error);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->remove_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->remove_row) (model, row, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -996,7 +996,7 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 /**
- * gda_data_model_get_row_from_values: (virtual i_find_row)
+ * gda_data_model_get_row_from_values:
  * @model: a #GdaDataModel object.
  * @values: (element-type GObject.Value): a list of #GValue values (no %NULL is allowed)
  * @cols_index: (array): an array of #gint containing the column number to match each value of @values
@@ -1017,8 +1017,8 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	g_return_val_if_fail (values, -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_find_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_find_row) (model, values, cols_index);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->find_row)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->find_row) (model, values, cols_index);
 
         n_rows = gda_data_model_get_n_rows (model);
         n_cols = gda_data_model_get_n_columns (model);
@@ -1068,7 +1068,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 }
 
 /**
- * gda_data_model_send_hint: (virtual i_send_hint)
+ * gda_data_model_send_hint:
  * @model: a #GdaDataModel
  * @hint: (transfer none): a hint to send to the model
  * @hint_value: (allow-none): an optional value to specify the hint, or %NULL
@@ -1081,12 +1081,12 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint)
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_send_hint) (model, hint, hint_value);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->send_hint)
+		(GDA_DATA_MODEL_GET_CLASS (model)->send_hint) (model, hint, hint_value);
 }
 
 /**
- * gda_data_model_get_exceptions: (virtual i_get_exceptions)
+ * gda_data_model_get_exceptions:
  * @model: a #GdaDataModel
  *
  * Get the global data model exception(s) that occurred when using @model.
@@ -1103,8 +1103,8 @@ gda_data_model_get_exceptions (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_get_exceptions)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_get_exceptions) (model);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->get_exceptions)
+		return (GDA_DATA_MODEL_GET_CLASS (model)->get_exceptions) (model);
 	else
 		return NULL;
 }

@@ -74,26 +74,26 @@ static GObjectClass *parent_class = NULL;
 static void
 data_model_errors_data_model_init (GdaDataModelIface *iface)
 {
-        iface->i_get_n_rows = data_model_errors_get_n_rows;
-        iface->i_get_n_columns = data_model_errors_get_n_columns;
-        iface->i_describe_column = data_model_errors_describe_column;
-        iface->i_get_access_flags = data_model_errors_get_access_flags;
-        iface->i_get_value_at = data_model_errors_get_value_at;
-        iface->i_get_attributes_at = data_model_errors_get_attributes_at;
+        iface->get_n_rows = data_model_errors_get_n_rows;
+        iface->get_n_columns = data_model_errors_get_n_columns;
+        iface->describe_column = data_model_errors_describe_column;
+        iface->get_access_flags = data_model_errors_get_access_flags;
+        iface->get_value_at = data_model_errors_get_value_at;
+        iface->get_attributes_at = data_model_errors_get_attributes_at;
 
-        iface->i_create_iter = NULL;
+        iface->create_iter = NULL;
 
-        iface->i_set_value_at = data_model_errors_set_value_at;
-        iface->i_set_values = NULL;
-        iface->i_append_values = data_model_errors_append_values;
-        iface->i_append_row = NULL;
-        iface->i_remove_row = data_model_errors_remove_row;
-        iface->i_find_row = NULL;
+        iface->set_value_at = data_model_errors_set_value_at;
+        iface->set_values = NULL;
+        iface->append_values = data_model_errors_append_values;
+        iface->append_row = NULL;
+        iface->remove_row = data_model_errors_remove_row;
+        iface->find_row = NULL;
 
         iface->freeze = NULL;
         iface->thaw = NULL;
-        iface->i_get_notify = NULL;
-        iface->i_send_hint = NULL;
+        iface->get_notify = NULL;
+        iface->send_hint = NULL;
 }
 
 static void
