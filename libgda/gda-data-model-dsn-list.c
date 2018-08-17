@@ -69,12 +69,8 @@ gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface)
         iface->i_get_attributes_at = gda_data_model_dsn_list_get_attributes_at;
 
         iface->i_create_iter = NULL;
-        iface->i_iter_at_row = NULL;
-        iface->i_iter_next = NULL;
-        iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = NULL;
-	iface->i_iter_set_value = NULL;
         iface->i_set_values = NULL;
         iface->i_append_values = NULL;
         iface->i_append_row = NULL;

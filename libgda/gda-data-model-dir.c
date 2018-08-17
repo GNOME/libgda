@@ -150,12 +150,8 @@ gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
         iface->i_get_attributes_at = gda_data_model_dir_get_attributes_at;
 
         iface->i_create_iter = NULL;
-        iface->i_iter_at_row = NULL;
-        iface->i_iter_next = NULL;
-        iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = gda_data_model_dir_set_value_at;
-	iface->i_iter_set_value = NULL;
         iface->i_set_values = gda_data_model_dir_set_values;
         iface->i_append_values = gda_data_model_dir_append_values;
         iface->i_append_row = NULL;

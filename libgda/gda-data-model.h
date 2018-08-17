@@ -108,13 +108,8 @@ struct _GdaDataModelIface {
 	const GValue        *(* i_get_value_at)     (GdaDataModel *model, gint col, gint row, GError **error);
 	GdaValueAttribute    (* i_get_attributes_at)(GdaDataModel *model, gint col, gint row);
 	GdaDataModelIter    *(* i_create_iter)      (GdaDataModel *model);
-	gboolean             (* i_iter_at_row)      (GdaDataModel *model, GdaDataModelIter *iter, gint row);
-	gboolean             (* i_iter_next)        (GdaDataModel *model, GdaDataModelIter *iter); 
-	gboolean             (* i_iter_prev)        (GdaDataModel *model, GdaDataModelIter *iter);
 
-	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row, 
-						     const GValue *value, GError **error);
-	gboolean             (* i_iter_set_value)   (GdaDataModel *model, GdaDataModelIter *iter, gint col,
+	gboolean             (* i_set_value_at)     (GdaDataModel *model, gint col, gint row,
 						     const GValue *value, GError **error);
 	gboolean             (* i_set_values)       (GdaDataModel *model, gint row, GList *values,
 						     GError **error);

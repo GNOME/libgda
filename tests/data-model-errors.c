@@ -82,12 +82,8 @@ data_model_errors_data_model_init (GdaDataModelIface *iface)
         iface->i_get_attributes_at = data_model_errors_get_attributes_at;
 
         iface->i_create_iter = NULL;
-        iface->i_iter_at_row = NULL;
-        iface->i_iter_next = NULL;
-        iface->i_iter_prev = NULL;
 
         iface->i_set_value_at = data_model_errors_set_value_at;
-	iface->i_iter_set_value = NULL;
         iface->i_set_values = NULL;
         iface->i_append_values = data_model_errors_append_values;
         iface->i_append_row = NULL;
