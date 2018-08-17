@@ -3016,7 +3016,6 @@ static gboolean
 gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gint col,
 				 const GValue *value, GError **error)
 {
-	g_print ("DataSelect i_iter_set_value implementation");
 	return gda_data_select_iter_set_value_at (iter, col, value, error);
 }
 

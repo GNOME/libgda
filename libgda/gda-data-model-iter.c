@@ -383,21 +383,18 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 
 	iter = (GdaDataModelIter *) paramlist;
 	if (!priv->keep_param_changes && (priv->row >= 0) && (GDA_IS_DATA_MODEL (priv->data_model))) {
-		g_print ("Validating holder change\n");
 		g_signal_handler_block (priv->data_model, priv->model_changes_signals [0]);
 		g_signal_handler_block (priv->data_model, priv->model_changes_signals [1]);
 		
 		/* propagate the value update to the data model */
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
 		if (col < 0) {
-			g_print ("Invalid Column\n");
 			g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
 				     _("Column %d out of range (0-%d)"), col, g_slist_length (gda_set_get_holders (paramlist)) - 1);
 		}
-		else if (GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) priv->data_model)->i_iter_set_value) {
-			g_print ("using Model Class iter_set_value\n");
-			(GDA_DATA_MODEL_GET_CLASS ((GdaDataModel *) priv->data_model)->i_iter_set_value)
-				((GdaDataModel *) priv->data_model, iter, col, nvalue, &error);
+		else if (GDA_DATA_MODEL_ITER_GET_CLASS (iter)->set_value_at) {
+			(GDA_DATA_MODEL_ITER_GET_CLASS (iter)->set_value_at)
+				(iter, col, nvalue, &error);
 		}
 		else {
 			g_print ("using Data Model default set_value_at\n");
