@@ -381,8 +381,8 @@ gda_data_model_freeze (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, FALSE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->freeze)
+		(GDA_DATA_MODEL_GET_CLASS (model)->freeze) (model);
 }
 
 /**
@@ -396,8 +396,8 @@ gda_data_model_thaw (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify)
-		(GDA_DATA_MODEL_GET_CLASS (model)->i_set_notify) (model, TRUE);
+	if (GDA_DATA_MODEL_GET_CLASS (model)->thaw)
+		(GDA_DATA_MODEL_GET_CLASS (model)->thaw) (model);
 }
 
 /**

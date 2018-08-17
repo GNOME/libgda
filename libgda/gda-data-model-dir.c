@@ -158,7 +158,8 @@ gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
         iface->i_remove_row = gda_data_model_dir_remove_row;
         iface->i_find_row = NULL;
 
-        iface->i_set_notify = NULL;
+        iface->freeze = NULL;
+        iface->thaw = NULL;
         iface->i_get_notify = NULL;
         iface->i_send_hint = NULL;
 }

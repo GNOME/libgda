@@ -200,7 +200,8 @@ static gboolean             gda_data_select_set_values      (GdaDataModel *model
 static gint                 gda_data_select_append_values   (GdaDataModel *model, const GList *values, GError **error);
 static gboolean             gda_data_select_remove_row      (GdaDataModel *model, gint row, GError **error);
 
-static void                 gda_data_select_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
+static void                 gda_data_select_freeze          (GdaDataModel *model);
+static void                 gda_data_select_thaw            (GdaDataModel *model);
 static gboolean             gda_data_select_get_notify      (GdaDataModel *model);
 static GError             **gda_data_select_get_exceptions  (GdaDataModel *model);
 
@@ -414,7 +415,8 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 	iface->i_remove_row = gda_data_select_remove_row;
 	iface->i_find_row = NULL;
 
-	iface->i_set_notify = gda_data_select_set_notify;
+	iface->freeze = gda_data_select_freeze;
+	iface->thaw = gda_data_select_thaw;
 	iface->i_get_notify = gda_data_select_get_notify;
 	iface->i_send_hint = NULL;
 
@@ -3380,9 +3382,15 @@ gda_data_select_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 static void
-gda_data_select_set_notify (GdaDataModel *model, gboolean do_notify_changes)
+gda_data_select_freeze (GdaDataModel *model)
 {
-	((GdaDataSelect *) model)->priv->sh->notify_changes = do_notify_changes;
+	((GdaDataSelect *) model)->priv->sh->notify_changes = FALSE;
+}
+
+static void
+gda_data_select_thaw (GdaDataModel *model)
+{
+	((GdaDataSelect *) model)->priv->sh->notify_changes = TRUE;
 }
 
 static gboolean

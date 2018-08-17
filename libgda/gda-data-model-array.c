@@ -83,7 +83,8 @@ static gint                 gda_data_model_array_append_values   (GdaDataModel *
 static gint                 gda_data_model_array_append_row      (GdaDataModel *model, GError **error);
 static gboolean             gda_data_model_array_remove_row      (GdaDataModel *model, gint row, GError **error);
 
-static void                 gda_data_model_array_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
+static void                 gda_data_model_array_freeze          (GdaDataModel *model);
+static void                 gda_data_model_array_thaw            (GdaDataModel *model);
 static gboolean             gda_data_model_array_get_notify      (GdaDataModel *model);
 
 /*
@@ -109,7 +110,8 @@ gda_data_model_array_data_model_init (GdaDataModelIface *iface)
         iface->i_remove_row = gda_data_model_array_remove_row;
         iface->i_find_row = NULL;
 
-        iface->i_set_notify = gda_data_model_array_set_notify;
+        iface->freeze = gda_data_model_array_freeze;
+        iface->thaw = gda_data_model_array_thaw;
         iface->i_get_notify = gda_data_model_array_get_notify;
         iface->i_send_hint = NULL;
 }
@@ -879,9 +881,15 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 static void
-gda_data_model_array_set_notify (GdaDataModel *model, gboolean do_notify_changes)
+gda_data_model_array_freeze (GdaDataModel *model)
 {
-	((GdaDataModelArray *) model)->priv->notify_changes = do_notify_changes;
+	((GdaDataModelArray *) model)->priv->notify_changes = FALSE;
+}
+
+static void
+gda_data_model_array_thaw (GdaDataModel *model)
+{
+	((GdaDataModelArray *) model)->priv->notify_changes = TRUE;
 }
 
 static gboolean

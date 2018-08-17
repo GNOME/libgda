@@ -118,7 +118,8 @@ struct _GdaDataModelIface {
 	gboolean             (* i_remove_row)       (GdaDataModel *model, gint row, GError **error);
 	gint                 (* i_find_row)         (GdaDataModel *model, GSList *values, gint *cols_index);
 
-	void                 (* i_set_notify)       (GdaDataModel *model, gboolean do_notify_changes);
+	void                 (* freeze)             (GdaDataModel *model);
+	void                 (* thaw)             (GdaDataModel *model);
 	gboolean             (* i_get_notify)       (GdaDataModel *model);
 	void                 (* i_send_hint)        (GdaDataModel *model, GdaDataModelHint hint, const GValue *hint_value);
 

@@ -87,7 +87,8 @@ static gint                 gda_data_proxy_append_values   (GdaDataModel *model,
 static gint                 gda_data_proxy_append_row      (GdaDataModel *model, GError **error);
 static gboolean             gda_data_proxy_remove_row      (GdaDataModel *model, gint row, GError **error);
 
-static void                 gda_data_proxy_set_notify      (GdaDataModel *model, gboolean do_notify_changes);
+static void                 gda_data_proxy_freeze          (GdaDataModel *model);
+static void                 gda_data_proxy_thaw            (GdaDataModel *model);
 static gboolean             gda_data_proxy_get_notify      (GdaDataModel *model);
 static void                 gda_data_proxy_send_hint       (GdaDataModel *model, GdaDataModelHint hint,
 							    const GValue *hint_value);
@@ -746,7 +747,8 @@ gda_data_proxy_data_model_init (GdaDataModelIface *iface)
 	iface->i_remove_row = gda_data_proxy_remove_row;
 	iface->i_find_row = gda_data_proxy_find_row_from_values;
 
-	iface->i_set_notify = gda_data_proxy_set_notify;
+	iface->freeze = gda_data_proxy_freeze;
+	iface->freeze = gda_data_proxy_thaw;
 	iface->i_get_notify = gda_data_proxy_get_notify;
 	iface->i_send_hint = gda_data_proxy_send_hint;
 
@@ -4084,7 +4086,7 @@ gda_data_proxy_remove_row (GdaDataModel *model, gint row, GError **error)
 }
 
 static void
-gda_data_proxy_set_notify (GdaDataModel *model, gboolean do_notify_changes)
+gda_data_proxy_freeze (GdaDataModel *model)
 {
 	GdaDataProxy *proxy;
 	g_return_if_fail (GDA_IS_DATA_PROXY (model));
@@ -4092,7 +4094,20 @@ gda_data_proxy_set_notify (GdaDataModel *model, gboolean do_notify_changes)
 	g_return_if_fail (proxy->priv);
 
 	g_rec_mutex_lock (& (proxy->priv->mutex));
-	proxy->priv->notify_changes = do_notify_changes;
+	proxy->priv->notify_changes = FALSE;
+	g_rec_mutex_unlock (& (proxy->priv->mutex));
+}
+
+static void
+gda_data_proxy_thaw (GdaDataModel *model)
+{
+	GdaDataProxy *proxy;
+	g_return_if_fail (GDA_IS_DATA_PROXY (model));
+	proxy = GDA_DATA_PROXY (model);
+	g_return_if_fail (proxy->priv);
+
+	g_rec_mutex_lock (& (proxy->priv->mutex));
+	proxy->priv->notify_changes = TRUE;
 	g_rec_mutex_unlock (& (proxy->priv->mutex));
 }
 
