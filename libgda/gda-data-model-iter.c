@@ -857,15 +857,8 @@ real_gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 	g_return_val_if_fail (priv->data_model, FALSE);
 
 	model = priv->data_model;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) {
-		if ((gda_data_model_iter_get_row (iter) >= 0) &&
-		    ! _gda_set_validate ((GdaSet*) iter, NULL))
-			return FALSE;
-		return (GDA_DATA_MODEL_GET_CLASS (model)->i_iter_prev) (model, iter);
-	}
-	else 
-		/* default method */
-		return gda_data_model_iter_move_prev_default (model, iter);
+	/* default method */
+	return gda_data_model_iter_move_prev_default (model, iter);
 }
 
 /**
