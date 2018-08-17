@@ -82,6 +82,7 @@ gda_headers = \
 	gda-log.h \
 	gda-meta-store.h \
 	gda-meta-struct.h \
+	gda-provider.h \
 	gda-quark-list.h \
 	gda-repetitive-statement.h \
 	gda-row.h \
@@ -147,6 +148,7 @@ gda_sources= \
 	gda-meta-store.c \
 	gda-meta-struct.c \
 	gda-meta-struct-io.c \
+	gda-provider.c \
 	gda-quark-list.c \
 	gda-repetitive-statement.c \
 	gda-row.c \
