@@ -345,8 +345,8 @@ gda_data_model_import_data_model_init (GdaDataModelIface *iface)
 
 	iface->i_create_iter = gda_data_model_import_create_iter;
 	iface->i_iter_at_row = NULL;
-	iface->i_iter_next = gda_data_model_import_iter_next;
-	iface->i_iter_prev = gda_data_model_import_iter_prev;
+	iface->i_iter_next = NULL;
+	iface->i_iter_prev = NULL;
 
 	iface->i_set_value_at = NULL;
 	iface->i_iter_set_value = NULL;
