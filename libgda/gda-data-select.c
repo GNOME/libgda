@@ -195,8 +195,6 @@ static gboolean             gda_data_select_iter_at_row     (GdaDataModel *model
 
 static gboolean             gda_data_select_set_value_at    (GdaDataModel *model, gint col, gint row,
 							     const GValue *value, GError **error);
-static gboolean             gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-							     const GValue *value, GError **error);
 static gboolean             gda_data_select_set_values      (GdaDataModel *model, gint row, GList *values,
 							     GError **error);
 static gint                 gda_data_select_append_values   (GdaDataModel *model, const GList *values, GError **error);
@@ -408,12 +406,12 @@ gda_data_select_data_model_init (GdaDataModelIface *iface)
 	iface->i_get_attributes_at = gda_data_select_get_attributes_at;
 
 	iface->i_create_iter = gda_data_select_create_iter;
-        iface->i_iter_at_row = gda_data_select_iter_at_row;
-        iface->i_iter_next = gda_data_select_iter_next;
-        iface->i_iter_prev = gda_data_select_iter_prev;
+        iface->i_iter_at_row = NULL;
+        iface->i_iter_next = NULL;
+        iface->i_iter_prev = NULL;
 
 	iface->i_set_value_at = gda_data_select_set_value_at;
-	iface->i_iter_set_value = gda_data_select_iter_set_value;
+	iface->i_iter_set_value = NULL;
 	iface->i_set_values = gda_data_select_set_values;
         iface->i_append_values = gda_data_select_append_values;
 	iface->i_append_row = NULL;
@@ -3010,13 +3008,6 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 	bv->data[col] = 1;
 
 	return vector_set_value_at (imodel, bv, NULL, row, error);
-}
-
-static gboolean
-gda_data_select_iter_set_value  (GdaDataModel *model, GdaDataModelIter *iter, gint col,
-				 const GValue *value, GError **error)
-{
-	return gda_data_select_iter_set_value_at (iter, col, value, error);
 }
 
 static void
