@@ -26,7 +26,8 @@
 G_BEGIN_DECLS
 
 typedef enum {
-	GDA_PROVIDER_META_NO_CONNECTION_ERROR
+  GDA_PROVIDER_META_NO_CONNECTION_ERROR,
+  GDA_PROVIDER_META_QUERY_ERROR
 } GdaProviderMetaError;
 
 extern GQuark gda_provider_meta_error_quark (void);
@@ -238,10 +239,12 @@ struct _GdaProviderMetaInterface
 
 GdaDataModel  *gda_provider_meta_execute_query        (GdaProviderMeta *prov,
                                                        const gchar *sql,
+                                                       GdaSet *params,
                                                        GError **error);
 
 GdaRow        *gda_provider_meta_execute_query_row    (GdaProviderMeta *prov,
                                                        const gchar *sql,
+                                                       GdaSet *params,
                                                        GError **error);
 
 GdaConnection *gda_provider_meta_get_connection       (GdaProviderMeta *prov);

@@ -56,6 +56,7 @@ gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
  * gda_provider_meta_execute_query:
  * @prov: a #GdaProviderMeta
  * @sql: a string with the SQL to execute on provider
+ * @params: (nullable): a #GdaSet with all paramaters to use in query
  * @error: place to store errors or %NULL
  *
  * SQL is specific for current provider.
@@ -66,14 +67,15 @@ gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
  */
 GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
                                                 const gchar *sql,
+                                                GdaSet *params,
                                                 GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
   g_return_val_if_fail (sql, NULL);
 
-  GdaDataModel *model = NULL;
   GdaConnection *cnc = NULL;
+  GdaStatement *stmt;
   g_object_get (G_OBJECT (prov), "connection", &cnc, NULL);
   if (cnc == NULL) {
     g_set_error (error, GDA_PROVIDER_META_ERROR, GDA_PROVIDER_META_NO_CONNECTION_ERROR,
@@ -85,8 +87,14 @@ GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
                  _("Connection is no opened"));
     return NULL;
   }
-  model = gda_connection_execute_select_command (cnc, sql, error);
-  return model;
+  stmt = gda_connection_parse_sql_string (cnc, sql, params, error);
+  if (stmt == NULL) {
+    return NULL;
+  }
+  if (!gda_connection_statement_prepare (cnc, stmt, error)) {
+    return NULL;
+  }
+  return gda_connection_statement_execute_select (cnc, stmt, params, error);
 }
 
 /**
@@ -104,10 +112,11 @@ GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
 GdaRow*
 gda_provider_meta_execute_query_row (GdaProviderMeta *prov,
                                      const gchar *sql,
+                                     GdaSet *params,
                                      GError **error)
 {
   GdaDataModel *model = NULL;
-  model = gda_provider_meta_execute_query (prov, sql, error);
+  model = gda_provider_meta_execute_query (prov, sql, params, error);
   if (model == NULL) {
     return NULL;
   }
