@@ -382,6 +382,204 @@ static CollationFunction collation_functions[] = {
 	{"DCASE", dcase_collate_func}
 };
 
+
+/* GdaProviderMeta methods declarations */
+static GdaDataModel *gda_sqlite_provider_meta_btypes                (GdaProviderMeta *prov,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_udts                  (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_udt                   (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_udt_cols              (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_udt_col               (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              const gchar *udt_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_enums_type            (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_enum_type             (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema, const gchar *udt_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_domains               (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_domain                (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_domains_constraints   (GdaProviderMeta *prov,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_domain_constraints    (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, GError **error);
+static GdaRow       *gda_sqlite_provider_meta_domain_constraint     (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, const gchar *contraint_name,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_element_types         (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_element_type          (GdaProviderMeta *prov,
+                              const gchar *specific_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_collations            (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_collation             (GdaProviderMeta *prov,
+                              const gchar *collation_catalog, const gchar *collation_schema,
+                              const gchar *collation_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_character_sets        (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_character_set         (GdaProviderMeta *prov,
+                              const gchar *chset_catalog, const gchar *chset_schema,
+                              const gchar *chset_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_schematas             (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_schemata              (GdaProviderMeta *prov,
+                              const gchar *catalog_name, const gchar *schema_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_tables_views          (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_table_view            (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_columns               (GdaProviderMeta *prov,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_table_columns         (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error);
+static GdaRow       *gda_sqlite_provider_meta_table_column          (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *column_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_views_cols            (GdaProviderMeta *prov,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_view_cols             (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name, GError **error);
+static GdaRow       *gda_sqlite_provider_meta_view_col   (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name,
+                              const gchar *column_name,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_constraints_tables    (GdaProviderMeta *prov, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_constraints_table     (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             GError **error);
+static GdaRow       *gda_sqlite_provider_meta_constraint_table      (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             const gchar *constraint_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_constraints_ref       (GdaProviderMeta *prov,
+                             GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_constraint_ref  (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                             const gchar *constraint_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_key_columns           (GdaProviderMeta *prov,
+                            GError **error);
+static GdaRow       *gda_sqlite_provider_meta_key_column            (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_check_columns         (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_check_column          (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_triggers              (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_trigger               (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_routines              (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_routine               (GdaProviderMeta *prov,
+                              const gchar *routine_catalog, const gchar *routine_schema,
+                              const gchar *routine_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_routines_col          (GdaProviderMeta *prov, GError **error);
+static GdaRow       *gda_sqlite_provider_meta_routine_col           (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_routines_pars         (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_routine_pars          (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_indexes_tables        (GdaProviderMeta *prov,
+                              GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_indexes_table         (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error);
+static GdaRow       *gda_sqlite_provider_meta_index_table (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_index_cols            (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_index_col             (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name, GError **error);
+
+static void
+gda_sqlite_provider_mate_iface_init (GdaProviderMetaInterface *iface) {
+  iface->btypes = gda_sqlite_provider_meta_btypes;
+  iface->udts = gda_sqlite_provider_meta_udts;
+  iface->udt = gda_sqlite_provider_meta_udt;
+  iface->udt_cols = gda_sqlite_provider_meta_udt_cols;
+  iface->udt_col = gda_sqlite_provider_meta_udt_col;
+  iface->enums_type = gda_sqlite_provider_meta_enums_type;
+  iface->enum_type = gda_sqlite_provider_meta_enum_type;
+  iface->domains = gda_sqlite_provider_meta_domains;
+  iface->domain = gda_sqlite_provider_meta_domain;
+  iface->domains_constraints = gda_sqlite_provider_meta_domains_constraints;
+  iface->domain_constraints = gda_sqlite_provider_meta_domain_constraints;
+  iface->domain_constraint = gda_sqlite_provider_meta_domain_constraint;
+  iface->element_types = gda_sqlite_provider_meta_element_types;
+  iface->element_type = gda_sqlite_provider_meta_element_type;
+  iface->collations = gda_sqlite_provider_meta_collations;
+  iface->collation = gda_sqlite_provider_meta_collation;
+  iface->character_sets = gda_sqlite_provider_meta_character_sets;
+  iface->character_set = gda_sqlite_provider_meta_character_set;
+  iface->schematas = gda_sqlite_provider_meta_schematas;
+  iface->schemata = gda_sqlite_provider_meta_schemata;
+  iface->tables_views = gda_sqlite_provider_meta_tables_views;
+  iface->table_view = gda_sqlite_provider_meta_table_view;
+  iface->columns = gda_sqlite_provider_meta_columns;
+  iface->table_columns = gda_sqlite_provider_meta_table_columns;
+  iface->table_column = gda_sqlite_provider_meta_table_column;
+  iface->views_cols = gda_sqlite_provider_meta_views_cols;
+  iface->view_cols = gda_sqlite_provider_meta_view_cols;
+  iface->view_col = gda_sqlite_provider_meta_view_col;
+  iface->constraints_tables = gda_sqlite_provider_meta_constraints_tables;
+  iface->constraints_table = gda_sqlite_provider_meta_constraints_table;
+  iface->constraint_table = gda_sqlite_provider_meta_constraint_table;
+  iface->constraints_ref = gda_sqlite_provider_meta_constraints_ref;
+  iface->constraints_ref_table = gda_sqlite_provider_meta_constraints_ref_table;
+  iface->constraint_ref = gda_sqlite_provider_meta_constraint_ref;
+  iface->key_columns = gda_sqlite_provider_meta_key_columns;
+  iface->key_column = gda_sqlite_provider_meta_key_column;
+  iface->check_columns = gda_sqlite_provider_meta_check_columns;
+  iface->check_column = gda_sqlite_provider_meta_check_column;
+  iface->triggers = gda_sqlite_provider_meta_triggers;
+  iface->trigger = gda_sqlite_provider_meta_trigger;
+  iface->routines = gda_sqlite_provider_meta_routines;
+  iface->routine = gda_sqlite_provider_meta_routine;
+  iface->routines_col = gda_sqlite_provider_meta_routines_col;
+  iface->routine_col = gda_sqlite_provider_meta_routine_col;
+  iface->routines_pars = gda_sqlite_provider_meta_routines_pars;
+  iface->routine_pars = gda_sqlite_provider_meta_routine_pars;
+  iface->indexes_tables = gda_sqlite_provider_meta_indexes_tables;
+  iface->indexes_table = gda_sqlite_provider_meta_indexes_table;
+  iface->index_table = gda_sqlite_provider_meta_index_table;
+  iface->index_cols = gda_sqlite_provider_meta_index_cols;
+  iface->index_col = gda_sqlite_provider_meta_index_col;
+}
+
 /*
  * Prepared internal statements
  */
@@ -3941,4 +4139,481 @@ gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, 
 
 	return retval;
 }
+
+
+/* GdaProviderMeta implementations */
+
+static GdaDataModel*
+gda_sqlite_provider_meta_btypes (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_udts (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_udt (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_udt_cols (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_udt_col (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              const gchar *udt_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_enums_type (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_enum_type (GdaProviderMeta *prov,
+                                    const gchar *udt_catalog,
+                                    const gchar *udt_schema, const gchar *udt_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_domains (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_domain (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_domains_constraints (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_domain_constraints (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_domain_constraint (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, const gchar *contraint_name,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_element_types (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_element_type (GdaProviderMeta *prov,
+                              const gchar *specific_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_collations (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_collation (GdaProviderMeta *prov,
+                              const gchar *collation_catalog, const gchar *collation_schema,
+                              const gchar *collation_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_character_sets (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_character_set (GdaProviderMeta *prov,
+                              const gchar *chset_catalog, const gchar *chset_schema,
+                              const gchar *chset_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_schematas (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_schemata (GdaProviderMeta *prov,
+                              const gchar *catalog_name, const gchar *schema_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_tables_views (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+
+  return gda_provider_meta_execute_query (prov,
+        "SELECT name as 'Table', 'system' as 'Owner',"
+        " ' ' as 'Description', sql as 'Definition' "
+        "FROM (SELECT * FROM sqlite_master "
+        "UNION ALL SELECT * FROM sqlite_temp_master) "
+        "WHERE name not like 'sqlite_%%' ORDER BY name",
+        NULL, error);
+}
+static GdaRow*
+gda_sqlite_provider_meta_table_view (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  GdaRow *row;
+  GdaSet *params;
+
+  params = gda_set_new_inline (1, "name", G_TYPE_STRING, NULL);
+  gda_set_set_holder_value (params, error, "name", table_name_n, NULL);
+  if (*error != NULL) {
+    g_object_unref (params);
+    return NULL;
+  }
+
+  row = gda_provider_meta_execute_query_row (prov,
+          "SELECT name as 'Table', 'system' as 'Owner',"
+          " ' ' as 'Description', sql as 'Definition' "
+          "FROM (SELECT * FROM sqlite_master UNION ALL "
+          "SELECT * FROM sqlite_temp_master) "
+          "WHERE name = ##name::string name not like 'sqlite_%%' ORDER BY name",
+          params, error);
+  g_object_unref (params);
+  return row;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_columns (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_table_columns (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_table_column (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *column_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_views_cols (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_view_cols (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_view_col   (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name,
+                              const gchar *column_name,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_constraints_tables (GdaProviderMeta *prov, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_constraints_table (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_constraint_table (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             const gchar *constraint_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_constraints_ref (GdaProviderMeta *prov,
+                             GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_constraint_ref (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                             const gchar *constraint_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_key_columns (GdaProviderMeta *prov,
+                            GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_key_column (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_check_columns (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_check_column (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_triggers (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_trigger (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_routines (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_routine (GdaProviderMeta *prov,
+                              const gchar *routine_catalog, const gchar *routine_schema,
+                              const gchar *routine_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_routines_col (GdaProviderMeta *prov, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_routine_col (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_routines_pars (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_routine_pars (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_indexes_tables (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_indexes_table (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_index_table (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_index_cols (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaRow*
+gda_sqlite_provider_meta_index_col (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+
 
