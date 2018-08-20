@@ -21,8 +21,6 @@
 
 #include "gda-ddl-buildable.h"
 
-G_DEFINE_QUARK (gda-ddl-buildable-error, gda_ddl_buildable_error)
-
 G_DEFINE_INTERFACE (GdaDdlBuildable, gda_ddl_buildable, G_TYPE_OBJECT)
 
 /**
@@ -43,6 +41,18 @@ gda_ddl_buildable_default_init (GdaDdlBuildableInterface *iface)
   /* add properties and signals to the interface here */
 }
 
+/**
+ * gda_ddl_buildable_parse_node:
+ * @self: an instance of #GdaDdlBuildable where parsed data should be storred
+ * @node: a node to parse
+ * @error: an object to store error
+ *
+ * Parse xml node
+ *
+ * Returns: %TRUE on success, %FALSE if an error occurred
+ * Since: 6.0
+ * Stability: stable
+ */
 gboolean
 gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
                               xmlNodePtr        node,
@@ -58,6 +68,18 @@ gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
   return iface->parse_node (self, node, error);
 }
 
+/**
+ * gda_ddl_buildable_write_node:
+ * @self: an instance of #GdaDdlBuildable where data should be taken 
+ * @node: a node to write data in
+ * @error: an object to store error
+ *
+ * Write content from the @self to the @node 
+ *
+ * Returns: %TRUE on success, %FALSE if an error occurred
+ * Since: 6.0
+ * Stability: stable
+ */
 gboolean
 gda_ddl_buildable_write_node (GdaDdlBuildable *self,
                               xmlNodePtr node,
