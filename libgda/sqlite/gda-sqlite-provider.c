@@ -250,7 +250,18 @@ pending_blobs_free_list (GSList *blist)
 /*
  * GObject methods
  */
-G_DEFINE_TYPE(GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER)
+typedef struct {
+  GWeakRef *connection;
+} GdaSqliteProviderPrivate;
+
+
+static void
+gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
+
+G_DEFINE_TYPE_WITH_CODE(GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER,
+                        G_ADD_PRIVATE(GdaSqliteProvider)
+                        G_IMPLEMENT_INTERFACE(GDA_TYPE_PROVIDER_META,
+                                              gda_sqlite_provider_meta_iface_init))
 
 /*
  * GdaServerProvider's virtual methods
@@ -526,7 +537,7 @@ static GdaRow       *gda_sqlite_provider_meta_index_col             (GdaProvider
                               const gchar *index_name, GError **error);
 
 static void
-gda_sqlite_provider_mate_iface_init (GdaProviderMetaInterface *iface) {
+gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface) {
   iface->btypes = gda_sqlite_provider_meta_btypes;
   iface->udts = gda_sqlite_provider_meta_udts;
   iface->udt = gda_sqlite_provider_meta_udt;
@@ -743,9 +754,65 @@ GdaServerProviderMeta sqlite_meta_functions = {
 	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* padding */
 };
 
+enum {
+  PROP_CONNECTION = 1
+};
+
+
+static void
+gda_sqlite_provider_get_property (GObject    *object,
+                          guint       property_id,
+                          GValue     *value,
+                          GParamSpec *pspec)
+{
+
+  GdaConnection *cnc;
+  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
+  switch (property_id) {
+  case PROP_CONNECTION:
+    cnc = GDA_CONNECTION (g_weak_ref_get (priv->connection));
+    g_value_set_object (value, cnc);
+    g_object_unref (cnc);
+    break;
+  }
+}
+
+static void
+gda_sqlite_provider_set_property (GObject      *object,
+                          guint         property_id,
+                          const GValue *value,
+                          GParamSpec   *pspec)
+{
+
+  GdaConnection *cnc;
+  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
+  switch (property_id) {
+  case PROP_CONNECTION:
+    g_weak_ref_set (priv->connection, g_value_get_object (value));
+    break;
+  }
+}
+
+static void
+gda_sqlite_provider_dispose (GObject *object)
+{
+  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
+  g_weak_ref_clear (priv->connection);
+  g_free (priv->connection);
+  priv->connection = NULL;
+}
+
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  object_class->get_property = gda_sqlite_provider_get_property;
+  object_class->set_property = gda_sqlite_provider_set_property;
+  object_class->dispose = gda_sqlite_provider_dispose;
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
@@ -756,12 +823,18 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						NULL);
+  g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
 }
 
 static void
 gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
 {
 	g_mutex_lock (&init_mutex);
+
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (sqlite_prv);
+
+  priv->connection = g_new0(GWeakRef, 1);
+  g_weak_ref_init (priv->connection, NULL);
 
 	if (!internal_stmt) {
 		/* configure multi threading environment */
@@ -784,6 +857,8 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
 
 	g_mutex_unlock (&init_mutex);
 }
+
+
 
 static GdaWorker *
 gda_sqlite_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)

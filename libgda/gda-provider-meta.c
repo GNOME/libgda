@@ -707,7 +707,7 @@ gda_provider_meta_view_col (GdaProviderMeta *prov,
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
   if (iface->view_col) {
     return iface->view_col (prov, view_catalog,
-                                       view_schema, view_name, error);
+                            view_schema, view_name, column_name, error);
   }
   return NULL;
 }

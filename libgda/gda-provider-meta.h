@@ -143,7 +143,9 @@ struct _GdaProviderMetaInterface
   GdaRow       *(*view_col)             (GdaProviderMeta *prov,
                                          const gchar *view_catalog,
                                          const gchar *view_schema,
-                                         const gchar *view_name, GError **error);
+                                         const gchar *view_name,
+                                         const gchar *column_name,
+                                         GError **error);
 
   /* _table_constraints */
   GdaDataModel *(*constraints_tables)   (GdaProviderMeta *prov, GError **error);
