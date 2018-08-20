@@ -89,7 +89,6 @@
     <xi:include href="xml/gda-set.xml"/>
     <xi:include href="xml/gda-sql-builder.xml"/>
     <xi:include href="xml/gda-sql-parser.xml"/>
-    <xi:include href="xml/gda-sql-parser-enum-types.xml"/>
     <xi:include href="xml/gda-sql-parser-private.xml"/>
     <xi:include href="xml/gda-sqlite.xml"/>
     <xi:include href="xml/gda-sqlite-blob-op.xml"/>
@@ -135,8 +134,11 @@
     <xi:include href="xml/gda-vprovider-hub.xml"/>
     <xi:include href="xml/gda-worker.xml"/>
     <xi:include href="xml/gda-xa-transaction.xml"/>
-    <xi:include href="xml/libgda.xml"/>
     <xi:include href="xml/libgda-global-variables.xml"/>
+    <xi:include href="xml/keywords_hash.xml"/>
+    <xi:include href="xml/gda-symbols-util.xml"/>
+    <xi:include href="xml/itsignaler.xml"/>
+    <xi:include href="xml/parser_tokens.xml"/>
 
   </chapter>
   <chapter id="object-tree">
