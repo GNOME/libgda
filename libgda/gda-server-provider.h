@@ -39,10 +39,14 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_SERVER_PROVIDER            (gda_server_provider_get_type())
-#define GDA_SERVER_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SERVER_PROVIDER, GdaServerProvider))
-#define GDA_SERVER_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SERVER_PROVIDER, GdaServerProviderClass))
-#define GDA_IS_SERVER_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_SERVER_PROVIDER))
-#define GDA_IS_SERVER_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_SERVER_PROVIDER))
+
+G_DECLARE_DERIVABLE_TYPE(GdaServerProvider, gda_server_provider, GDA, SERVER_PROVIDER, GObject)
+
+struct _GdaServerProviderClass {
+	GObjectClass parent_class;
+	gpointer     functions_sets[8];
+};
+
 
 /* error reporting */
 extern GQuark gda_server_provider_error_quark (void);
@@ -66,17 +70,6 @@ typedef enum
 	GDA_SERVER_PROVIDER_FILE_NOT_FOUND_ERROR
 } GdaServerProviderError;
 
-struct _GdaServerProvider {
-	GObject                   object;
-	GdaServerProviderPrivate *priv;
-};
-
-typedef struct _GdaServerProviderClassPrivate GdaServerProviderClassPrivate;
-struct _GdaServerProviderClass {
-	GObjectClass parent_class;
-	gpointer     functions_sets[8];
-};
-
 /**
  * SECTION:gda-server-provider
  * @short_description: Base class for all the DBMS providers
@@ -90,8 +83,6 @@ struct _GdaServerProviderClass {
  * See the <link linkend="libgda-provider-class">Virtual methods for providers</link> section for more information
  * about how to implement the virtual methods.
  */
-
-GType                  gda_server_provider_get_type (void) G_GNUC_CONST;
 
 /* provider information */
 const gchar           *gda_server_provider_get_name           (GdaServerProvider *provider);
