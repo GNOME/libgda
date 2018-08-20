@@ -17,12 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib-object.h>
-#include <libgda/gda-connection.h>
-#include <libgda/gda-quark-list.h>
-
 #ifndef __GDA_PROVIDER_META_H__
 #define __GDA_PROVIDER_META_H__
+
+#include <glib-object.h>
+#include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
 
@@ -34,253 +33,386 @@ struct _GdaProviderMetaInterface
 {
   GTypeInterface g_iface;
 
-  gboolean (*info)             (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-
   /* _builtin_data_types */
-  gboolean (*btypes)           (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
+  GdaDataModel *(*btypes)               (GdaProviderMeta *prov, GError **error);
 
   /* _udt */
-  gboolean (*udt)              (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*udt_full)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *udt_catalog, const GValue *udt_schema, GError **error);
+  GdaDataModel *(*udts)                 (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*udt)                  (GdaProviderMeta *prov,
+                                         const gchar *udt_catalog,
+                                         const gchar *udt_schema,
+                                         GError **error);
 
   /* _udt_columns */
-  gboolean (*udt_cols)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*udt_cols_full)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name, GError **error);
+  GdaDataModel *(*udt_cols)             (GdaProviderMeta *prov, GError **error);
+    GdaRow       *(*udt_col)            (GdaProviderMeta *prov,
+                                         const gchar *udt_catalog,
+                                         const gchar *udt_schema,
+                                         const gchar *udt_name,
+                                         GError **error);
 
   /* _enums */
-  gboolean (*enums)            (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*enums_full)       (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name, GError **error);
+  GdaDataModel *(*enums_type)           (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*enum_type)            (GdaProviderMeta *prov,
+                                         const gchar *udt_catalog,
+                                         const gchar *udt_schema,
+                                         const gchar *udt_name,
+                                         GError **error);
 
   /* _domains */
-  gboolean (*domains)          (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*domains_full)     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *domain_catalog, const GValue *domain_schema, GError **error);
+  GdaDataModel *(*domains)              (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*domain)               (GdaProviderMeta *prov,
+                                         const gchar *domain_catalog,
+                                         const gchar *domain_schema,
+                                         GError **error);
 
   /* _domain_constraints */
-  gboolean (*constraints_dom)  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*constraints_dom_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *domain_catalog, const GValue *domain_schema, const GValue *domain_name, GError **error);
+  GdaDataModel *(*domains_constraints)  (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*domain_constraints)   (GdaProviderMeta *prov,
+                                         const gchar *domain_catalog,
+                                         const gchar *domain_schema,
+                                         const gchar *domain_name,
+                                         GError **error);
+  GdaRow       *(*domain_constraint)    (GdaProviderMeta *prov,
+                                         const gchar *domain_catalog,
+                                         const gchar *domain_schema,
+                                         const gchar *domain_name,
+                                         const gchar *constraint_name,
+                                         GError **error);
 
   /* _element_types */
-  gboolean (*el_types)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*el_types_full)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *specific_name, GError **error);
+  GdaDataModel *(*element_types)        (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*element_type)         (GdaProviderMeta *prov,
+                                         const gchar *specific_name, GError **error);
 
   /* _collations */
-  gboolean (*collations)       (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*collations_full)  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *collation_catalog, const GValue *collation_schema,
-                                const GValue *collation_name_n, GError **error);
+  GdaDataModel *(*collations)           (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*collation)            (GdaProviderMeta *prov,
+                                         const gchar *collation_catalog,
+                                         const gchar *collation_schema,
+                                         const gchar *collation_name_n,
+                                         GError **error);
 
   /* _character_sets */
-  gboolean (*character_sets)   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*character_sets_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *chset_catalog, const GValue *chset_schema, const GValue *chset_name_n, GError **error);
+  GdaDataModel *(*character_sets)       (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*character_set)        (GdaProviderMeta *prov,
+                                         const gchar *chset_catalog, const gchar *chset_schema, const gchar *chset_name_n, GError **error);
 
   /* _schemata */
-  gboolean (*schemata)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*schemata_full)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *catalog_name, const GValue *schema_name_n, GError **error);
+  GdaDataModel *(*schematas)            (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*schemata)             (GdaProviderMeta *prov,
+                                         const gchar *catalog_name,
+                                         const gchar *schema_name_n,
+                                         GError **error);
 
   /* _tables or _views */
-  gboolean (*tables_views)     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*tables_views_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n, GError **error);
+  GdaDataModel *(*tables_views)         (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*table_view)           (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name_n, GError **error);
 
   /* _columns */
-  gboolean (*columns)          (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*columns_full)     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, GError **error);
+  GdaDataModel *(*columns)              (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*table_columns)        (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         GError **error);
+  GdaRow       *(*table_column)         (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *column_name,
+                                         GError **error);
 
   /* _view_column_usage */
-  gboolean (*view_cols)        (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*view_cols_full)   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *view_catalog, const GValue *view_schema, const GValue *view_name, GError **error);
+  GdaDataModel *(*views_cols)           (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*view_cols)            (GdaProviderMeta *prov,
+                                         const gchar *view_catalog,
+                                         const gchar *view_schema,
+                                         const gchar *view_name, GError **error);
+  GdaRow       *(*view_col)             (GdaProviderMeta *prov,
+                                         const gchar *view_catalog,
+                                         const gchar *view_schema,
+                                         const gchar *view_name, GError **error);
 
   /* _table_constraints */
-  gboolean (*constraints_tab)  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*constraints_tab_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                                const GValue *constraint_name_n, GError **error);
+  GdaDataModel *(*constraints_tables)   (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*constraints_table)    (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema, const gchar *table_name,
+                                         GError **error);
+  GdaRow       *(*constraint_table)     (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema, const gchar *table_name,
+                                         const gchar *constraint_name_n, GError **error);
 
   /* _referential_constraints */
-  gboolean (*constraints_ref)  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*constraints_ref_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                                const GValue *constraint_name, GError **error);
+  GdaDataModel *(*constraints_ref)      (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*constraints_ref_table) (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         GError **error);
+  GdaRow       *(*constraint_ref)       (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *constraint_name,
+                                         GError **error);
 
   /* _key_column_usage */
-  gboolean (*key_columns)      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*key_columns_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                                const GValue *constraint_name, GError **error);
+  GdaDataModel *(*key_columns)          (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*key_column)           (GdaProviderMeta *prov,
+                                         const gchar *table_catalog, const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *constraint_name, GError **error);
 
   /* _check_column_usage */
-  gboolean (*check_columns)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*check_columns_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                                const GValue *constraint_name, GError **error);
+  GdaDataModel *(*check_columns)        (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*check_column)         (GdaProviderMeta *prov,
+                                         const gchar *table_catalog, const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *constraint_name, GError **error);
 
   /* _triggers */
-  gboolean (*triggers)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*triggers_full)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, GError **error);
+  GdaDataModel *(*triggers)             (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*trigger)              (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         GError **error);
 
   /* _routines */
-  gboolean (*routines)         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*routines_full)    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *routine_catalog, const GValue *routine_schema,
-                                const GValue *routine_name_n, GError **error);
+  GdaDataModel *(*routines)             (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*routine)              (GdaProviderMeta *prov,
+                                         const gchar *routine_catalog,
+                                         const gchar *routine_schema,
+                                         const gchar *routine_name_n,
+                                         GError **error);
 
   /* _routine_columns */
-  gboolean (*routine_col)      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*routine_col_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name, GError **error);
+  GdaDataModel *(*routines_col)         (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*routine_col)          (GdaProviderMeta *prov,
+                                         const gchar *rout_catalog,
+                                         const gchar *rout_schema,
+                                         const gchar *rout_name, GError **error);
 
   /* _parameters */
-  gboolean (*routine_par)      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*routine_par_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name, GError **error);
+  GdaDataModel *(*routines_pars)        (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*routine_pars)         (GdaProviderMeta *prov,
+                                         const gchar *rout_catalog,
+                                         const gchar *rout_schema,
+                                         const gchar *rout_name, GError **error);
   /* _table_indexes */
-  gboolean (*indexes_tab)      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*indexes_tab_full) (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                                const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                                const GValue *index_name_n, GError **error);
+  GdaDataModel *(*indexes_tables)       (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*indexes_table)        (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name, GError **error);
+  GdaRow       *(*index_table)          (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *index_name_n, GError **error);
 
   /* _index_column_usage */
-  gboolean (*index_cols)       (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-  gboolean (*index_cols_full)  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                               const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                               const GValue *index_name, GError **error);
+  GdaDataModel *(*index_cols)           (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*index_col)            (GdaProviderMeta *prov,
+                                         const gchar *table_catalog,
+                                         const gchar *table_schema,
+                                         const gchar *table_name,
+                                         const gchar *index_name, GError **error);
 
   /* Padding for future expansion */
   gpointer padding[12];
 };
 
-gboolean gda_provider_meta_info              (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-
 /* _builtin_data_types */
-gboolean gda_provider_meta_btypes           (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
+GdaDataModel *gda_provider_meta_btypes                (GdaProviderMeta *prov,
+                              GError **error);
 
 /* _udt */
-gboolean gda_provider_meta_udt              (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_udt_full         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *udt_catalog, const GValue *udt_schema, GError **error);
+GdaDataModel *gda_provider_meta_udts                  (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_udt                   (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              GError **error);
 
 /* _udt_columns */
-gboolean gda_provider_meta_udt_cols         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_udt_cols_full    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name, GError **error);
+GdaDataModel *gda_provider_meta_udt_cols              (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_udt_col               (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema,
+                              const gchar *udt_name, GError **error);
 
 /* _enums */
-gboolean gda_provider_meta_enums            (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_enums_full       (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *udt_catalog, const GValue *udt_schema, const GValue *udt_name, GError **error);
+GdaDataModel *gda_provider_meta_enums_type            (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_enum_type             (GdaProviderMeta *prov,
+                              const gchar *udt_catalog, const gchar *udt_schema, const gchar *udt_name, GError **error);
 
 /* _domains */
-gboolean gda_provider_meta_domains          (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_domains_full     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *domain_catalog, const GValue *domain_schema, GError **error);
+GdaDataModel *gda_provider_meta_domains               (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_domain                (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema, GError **error);
 
 /* _domain_constraints */
-gboolean gda_provider_meta_constraints_dom  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_constraints_dom_full  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *domain_catalog, const GValue *domain_schema, const GValue *domain_name, GError **error);
+GdaDataModel *gda_provider_meta_domains_constraints   (GdaProviderMeta *prov,
+                              GError **error);
+GdaDataModel *gda_provider_meta_domain_constraints    (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, GError **error);
+GdaRow       *gda_provider_meta_domain_constraint     (GdaProviderMeta *prov,
+                              const gchar *domain_catalog, const gchar *domain_schema,
+                              const gchar *domain_name, const gchar *contraint_name,
+                              GError **error);
 
 /* _element_types */
-gboolean gda_provider_meta_el_types         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_el_types_full    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *specific_name, GError **error);
+GdaDataModel *gda_provider_meta_element_types         (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_element_type          (GdaProviderMeta *prov,
+                              const gchar *specific_name, GError **error);
 
 /* _collations */
-gboolean gda_provider_meta_collations       (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_collations_full  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *collation_catalog, const GValue *collation_schema,
-                              const GValue *collation_name_n, GError **error);
+GdaDataModel *gda_provider_meta_collations            (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_collation             (GdaProviderMeta *prov,
+                              const gchar *collation_catalog, const gchar *collation_schema,
+                              const gchar *collation_name_n, GError **error);
 
 /* _character_sets */
-gboolean gda_provider_meta_character_sets   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_character_sets_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *chset_catalog, const GValue *chset_schema, const GValue *chset_name_n, GError **error);
+GdaDataModel *gda_provider_meta_character_sets        (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_character_set         (GdaProviderMeta *prov,
+                              const gchar *chset_catalog, const gchar *chset_schema,
+                              const gchar *chset_name_n, GError **error);
 
 /* _schemata */
-gboolean gda_provider_meta_schemata         (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_schemata_full    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *catalog_name, const GValue *schema_name_n, GError **error);
+GdaDataModel *gda_provider_meta_schematas             (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_schemata              (GdaProviderMeta *prov,
+                              const gchar *catalog_name, const gchar *schema_name_n, GError **error);
 
 /* _tables or _views */
-gboolean gda_provider_meta_tables_views     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_tables_views_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name_n, GError **error);
+GdaDataModel *gda_provider_meta_tables_views          (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_table_view            (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name_n, GError **error);
 
 /* _columns */
-gboolean gda_provider_meta_columns          (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_columns_full     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, GError **error);
+GdaDataModel *gda_provider_meta_columns               (GdaProviderMeta *prov,
+                              GError **error);
+GdaDataModel *gda_provider_meta_table_columns         (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error);
+GdaRow       *gda_provider_meta_table_column          (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *column_name, GError **error);
 
 /* _view_column_usage */
-gboolean gda_provider_meta_view_cols        (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_view_cols_full   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *view_catalog, const GValue *view_schema, const GValue *view_name, GError **error);
+GdaDataModel *gda_provider_meta_views_cols            (GdaProviderMeta *prov,
+                              GError **error);
+GdaDataModel *gda_provider_meta_view_cols             (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name, GError **error);
+GdaRow       *gda_provider_meta_view_col   (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name,
+                              const gchar *column_name,
+                              GError **error);
 
 /* _table_constraints */
-gboolean gda_provider_meta_constraints_tab  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_constraints_tab_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                              const GValue *constraint_name_n, GError **error);
+GdaDataModel *gda_provider_meta_constraints_tables    (GdaProviderMeta *prov, GError **error);
+GdaDataModel *gda_provider_meta_constraints_table     (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             GError **error);
+GdaRow       *gda_provider_meta_constraint_table      (GdaProviderMeta *prov,
+                             const gchar *table_catalog, const gchar *table_schema,
+                             const gchar *table_name,
+                             const gchar *constraint_name_n, GError **error);
 
 /* _referential_constraints */
-gboolean gda_provider_meta_constraints_ref  (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_constraints_ref_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                              const GValue *constraint_name, GError **error);
+GdaDataModel *gda_provider_meta_constraints_ref       (GdaProviderMeta *prov,
+                             GError **error);
+GdaDataModel *gda_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                              GError **error);
+GdaRow       *gda_provider_meta_constraint_ref_table  (GdaProviderMeta *prov,
+                             const gchar *table_catalog,
+                             const gchar *table_schema, const gchar *table_name,
+                             const gchar *constraint_name, GError **error);
 
 /* _key_column_usage */
-gboolean gda_provider_meta_key_columns      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_key_columns_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                              const GValue *constraint_name, GError **error);
+GdaDataModel *gda_provider_meta_key_columns           (GdaProviderMeta *prov,
+                            GError **error);
+GdaRow       *gda_provider_meta_key_column            (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error);
 
 /* _check_column_usage */
-gboolean gda_provider_meta_check_columns    (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_check_columns_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                              const GValue *constraint_name, GError **error);
+GdaDataModel *gda_provider_meta_check_columns         (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_check_column          (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *constraint_name, GError **error);
 
 /* _triggers */
-gboolean gda_provider_meta_triggers        (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_triggers_full   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name, GError **error);
+GdaDataModel *gda_provider_meta_triggers              (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_trigger               (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name, GError **error);
 
 /* _routines */
-gboolean gda_provider_meta_routines        (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_routines_full   (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *routine_catalog, const GValue *routine_schema,
-                              const GValue *routine_name_n, GError **error);
+GdaDataModel *gda_provider_meta_routines              (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_routine               (GdaProviderMeta *prov,
+                              const gchar *routine_catalog, const gchar *routine_schema,
+                              const gchar *routine_name_n, GError **error);
 
 /* _routine_columns */
-gboolean gda_provider_meta_routine_col     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_routine_col_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name, GError **error);
+GdaDataModel *gda_provider_meta_routines_col          (GdaProviderMeta *prov, GError **error);
+GdaRow       *gda_provider_meta_routine_col           (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error);
 
 /* _parameters */
-gboolean gda_provider_meta_routine_par     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_routine_par_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name, GError **error);
+GdaDataModel *gda_provider_meta_routines_pars         (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_routine_pars          (GdaProviderMeta *prov,
+                              const gchar *rout_catalog, const gchar *rout_schema,
+                              const gchar *rout_name, GError **error);
 /* _table_indexes */
-gboolean gda_provider_meta_indexes_tab     (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_indexes_tab_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                              const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                              const GValue *index_name_n, GError **error);
+GdaDataModel *gda_provider_meta_indexes_tables        (GdaProviderMeta *prov,
+                              GError **error);
+GdaDataModel *gda_provider_meta_indexes_table         (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name, GError **error);
+GdaRow       *gda_provider_meta_index_table (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name_n, GError **error);
 
 /* _index_column_usage */
-gboolean gda_provider_meta_index_cols      (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
-gboolean gda_provider_meta_index_cols_full (GdaProviderMeta *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx,
-                             const GValue *table_catalog, const GValue *table_schema, const GValue *table_name,
-                             const GValue *index_name, GError **error);
+GdaDataModel *gda_provider_meta_index_cols            (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_index_col             (GdaProviderMeta *prov,
+                              const gchar *table_catalog,
+                              const gchar *table_schema,
+                              const gchar *table_name,
+                              const gchar *index_name, GError **error);
 
 G_END_DECLS
 
