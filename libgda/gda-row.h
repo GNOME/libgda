@@ -75,6 +75,7 @@ struct _GdaRowClass {
 GType         gda_row_get_type       (void) G_GNUC_CONST;
 
 GdaRow       *gda_row_new            (gint count);
+GdaRow       *gda_row_new_from_data_model (GdaDataModel *model, guint row);
 gint          gda_row_get_length     (GdaRow *row);
 GValue       *gda_row_get_value      (GdaRow *row, gint num);
 
