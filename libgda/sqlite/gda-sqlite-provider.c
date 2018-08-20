@@ -65,6 +65,7 @@
 #include <stdio.h>
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 #include <libgda/gda-debug-macros.h>
+#include <libgda/gda-provider-meta.h>
 
 #define FILE_EXTENSION ".db"
 static gchar *get_table_nth_column_name (GdaConnection *cnc, const gchar *table_name, gint pos);
@@ -3940,3 +3941,4 @@ gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, 
 
 	return retval;
 }
+

@@ -18,6 +18,16 @@
  */
 #include <libgda/gda-provider-meta.h>
 #include <libgda/gda-connection.h>
+#include <glib/gi18n-lib.h>
+
+/* module error */
+GQuark gda_provider_meta_error_quark (void)
+{
+  static GQuark quark;
+  if (!quark)
+          quark = g_quark_from_static_string ("gda_provider_meta_error");
+  return quark;
+}
 
 enum {
   PROP_CONNECTION = 1,
@@ -40,6 +50,73 @@ gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
 
   g_object_interface_install_property (iface,
                                      obj_properties[PROP_CONNECTION]);
+}
+
+/**
+ * gda_provider_meta_execute_query:
+ * @prov: a #GdaProviderMeta
+ * @sql: a string with the SQL to execute on provider
+ * @error: place to store errors or %NULL
+ *
+ * SQL is specific for current provider.
+ *
+ * Returns: (transfer full) (nullable): a new #GdaDataModel with as a result of the query
+ * Since: 6.0
+ * Stability: Unstable
+ */
+GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
+                                                const gchar *sql,
+                                                GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  g_return_val_if_fail (sql, NULL);
+
+  GdaDataModel *model = NULL;
+  GdaConnection *cnc = NULL;
+  g_object_get (G_OBJECT (prov), "connection", &cnc, NULL);
+  if (cnc == NULL) {
+    g_set_error (error, GDA_PROVIDER_META_ERROR, GDA_PROVIDER_META_NO_CONNECTION_ERROR,
+                 _("No connection is set"));
+    return NULL;
+  }
+  if (!gda_connection_is_opened (cnc)) {
+    g_set_error (error, GDA_PROVIDER_META_ERROR, GDA_PROVIDER_META_NO_CONNECTION_ERROR,
+                 _("Connection is no opened"));
+    return NULL;
+  }
+  model = gda_connection_execute_select_command (cnc, sql, error);
+  return model;
+}
+
+/**
+ * gda_provider_meta_execute_query:
+ * @prov: a #GdaProviderMeta
+ * @sql: a string with the SQL to execute on provider
+ * @error: place to store errors or %NULL
+ *
+ * SQL is specific for current provider.
+ *
+ * Returns: (transfer full) (nullable): a new #GdaDataModel with as a result of the query
+ * Since: 6.0
+ * Stability: Unstable
+ */
+GdaRow*
+gda_provider_meta_execute_query_row (GdaProviderMeta *prov,
+                                     const gchar *sql,
+                                     GError **error)
+{
+  GdaDataModel *model = NULL;
+  model = gda_provider_meta_execute_query (prov, sql, error);
+  if (model == NULL) {
+    return NULL;
+  }
+  if (gda_data_model_get_n_rows (model) != 1) {
+    g_set_error (error, GDA_PROVIDER_META_ERROR, GDA_PROVIDER_META_NO_CONNECTION_ERROR,
+                 _("No rows or more than one row was returned from query"));
+    return NULL;
+  }
+  return gda_row_new_from_data_model (model, 0);
 }
 
 /**
