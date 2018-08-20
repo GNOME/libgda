@@ -17,11 +17,45 @@
  * Boston, MA  02110-1301, USA.
  */
 #include <libgda/gda-provider-meta.h>
+#include <libgda/gda-connection.h>
+
+enum {
+  PROP_CONNECTION = 1,
+  N_PROPERTIES
+};
+
+static GParamSpec *obj_properties[N_PROPERTIES] = { NULL, };
 
 G_DEFINE_INTERFACE(GdaProviderMeta, gda_provider_meta, G_TYPE_OBJECT)
 
 static void
-gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {}
+gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
+
+  obj_properties[PROP_CONNECTION] =
+    g_param_spec_object ("connection",
+                         "Connection",
+                         "Connection to database to get metadata from",
+                         GDA_TYPE_CONNECTION,
+                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READABLE);
+
+  g_object_interface_install_property (iface,
+                                     obj_properties[PROP_CONNECTION]);
+}
+
+/**
+ * gda_provider_meta_get_connection:
+ * @prov:
+ *
+ * Returns: (transfer full): a #GdaConnection used by this object.
+ */
+GdaConnection*
+gda_provider_meta_get_connection (GdaProviderMeta *prov) {
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  GdaConnection *cnc = NULL;
+  g_object_get (G_OBJECT(prov), "connection", &cnc, NULL);
+  return cnc;
+}
 
 /* _builtin_data_types */
 /**

@@ -229,6 +229,9 @@ struct _GdaProviderMetaInterface
   gpointer padding[12];
 };
 
+
+GdaConnection *gda_provider_meta_get_connection       (GdaProviderMeta *prov);
+
 /* _builtin_data_types */
 GdaDataModel *gda_provider_meta_btypes                (GdaProviderMeta *prov,
                               GError **error);
