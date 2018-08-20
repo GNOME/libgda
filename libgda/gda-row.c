@@ -38,18 +38,20 @@
 #define PARENT_TYPE G_TYPE_OBJECT
 
 struct _GdaRowPrivate {
-	GdaDataModel *model; /* can be NULL */
+  GdaDataModel *model; /* can be NULL */
+  guint         model_row;
 
-        GValue       *fields; /* GValues */
-	GError      **errors; /* GError for each invalid value at the same position */
-        guint         nfields;
+  GValue       *fields; /* GValues */
+  GError      **errors; /* GError for each invalid value at the same position */
+  guint         nfields;
 };
 
 /* properties */
 enum
 {
-        PROP_0,
-        PROP_NB_VALUES
+  PROP_NB_VALUES = 1,
+  PROP_MODEL,
+  PROP_MODEL_ROW
 };
 
 static void gda_row_class_init (GdaRowClass *klass);
@@ -83,9 +85,19 @@ gda_row_class_init (GdaRowClass *klass)
         object_class->get_property = gda_row_get_property;
 
 	g_object_class_install_property (object_class, PROP_NB_VALUES,
-                                         g_param_spec_int ("nb-values", NULL, "Number of values in the row",
+                                         g_param_spec_int ("nb-values", "NumValues", "Number of values in the row",
 							   1, G_MAXINT, 1, 
-							   G_PARAM_WRITABLE));
+							   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_MODEL,
+                                         g_param_spec_object ("model", "Model", "Data model used to get values from",
+							   GDA_TYPE_DATA_MODEL,
+							   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+	g_object_class_install_property (object_class, PROP_MODEL_ROW,
+                                         g_param_spec_int ("model-row", "ModelRow", "Row number in data model to get data from",
+							   0, G_MAXINT, 0,
+							   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 }
 
 static void
@@ -95,6 +107,7 @@ gda_row_init (GdaRow *row, G_GNUC_UNUSED GdaRowClass *klass)
 	
 	row->priv = g_new0 (GdaRowPrivate, 1);
 	row->priv->model = NULL;
+  row->priv->model_row = 0;
 	row->priv->fields = NULL;
 	row->priv->errors = NULL;
 	row->priv->nfields = 0;
@@ -118,17 +131,22 @@ gda_row_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_ROW (row));
 	
 	if (row->priv) {
-		guint i;
+    if (row->priv->model == NULL) {
+		  guint i;
 
-		for (i = 0; i < row->priv->nfields; i++) {
-			gda_value_set_null (&(row->priv->fields [i]));
-			if (row->priv->errors && row->priv->errors [i])
-				g_error_free (row->priv->errors [i]);
-		}
-		g_free (row->priv->fields);
-		g_free (row->priv->errors);
+		  for (i = 0; i < row->priv->nfields; i++) {
+			  gda_value_set_null (&(row->priv->fields [i]));
+			  if (row->priv->errors && row->priv->errors [i])
+				  g_error_free (row->priv->errors [i]);
+		  }
+		  g_free (row->priv->fields);
+		  g_free (row->priv->errors);
 
-		g_free (row->priv);
+		  g_free (row->priv);
+    } else {
+      g_object_unref (row->priv->model);
+      row->priv->model = NULL;
+    }
 		row->priv = NULL;
 	}
 	
@@ -146,7 +164,11 @@ gda_row_set_property (GObject *object,
         row = GDA_ROW (object);
         if (row->priv) {
                 switch (param_id) {
-		case PROP_NB_VALUES: {
+		case PROP_NB_VALUES:
+      if (row->priv->model != NULL) {
+        g_warning (_("Can't set a number of values, because a data model is in use"));
+        break;
+      }
 			guint i;
 			g_return_if_fail (!row->priv->fields);
 
@@ -155,7 +177,18 @@ gda_row_set_property (GObject *object,
 			for (i = 0; i < row->priv->nfields; i++)
 				gda_value_set_null (& (row->priv->fields [i]));
 			break;
-		}
+    case PROP_MODEL:
+      if (row->priv->nfields != 0) {
+        break;
+      }
+      row->priv->model = GDA_DATA_MODEL(g_object_ref (g_value_get_object (value)));
+      break;
+    case PROP_MODEL_ROW:
+      if (row->priv->nfields != 0) {
+        break;
+      }
+      row->priv->model_row = g_value_get_uint (value);
+      break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
@@ -176,6 +209,12 @@ gda_row_get_property (GObject *object,
                 switch (param_id) {
 		case PROP_NB_VALUES:
 			g_value_set_int (value, row->priv->nfields);
+			break;
+		case PROP_MODEL:
+			g_value_set_object (value, row->priv->model);
+			break;
+		case PROP_MODEL_ROW:
+			g_value_set_uint (value, row->priv->model_row);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -229,6 +268,23 @@ gda_row_new (gint count)
 }
 
 /**
+ * gda_row_new_from_data_model:
+ * @model: a #GdaDataModel to get data from.
+ * @row: row at #GdaDataModel to get data from
+ *
+ * Creates a #GdaRow which represent a row in a #GdaDataModel
+ *
+ * Returns: (transfer full):a newly allocated #GdaRow object.
+ */
+GdaRow *
+gda_row_new_from_data_model (GdaDataModel *model, guint row)
+{
+  g_return_val_if_fail (model, NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
+	return (GdaRow*) g_object_new (GDA_TYPE_ROW, "model", model, "model-row", row, NULL);
+}
+
+/**
  * gda_row_get_value:
  * @row: a #GdaRow
  * @num: field index.
@@ -238,15 +294,26 @@ gda_row_new (gint count)
  * This is a pointer to the internal array of values. Don't try to free
  * or modify it (modifying is reserved to database provider's implementations).
  *
- * Returns: (allow-none) (transfer none): a pointer to the #GValue in the position @num of @row.
+ * Returns: (nullable) (transfer none): a pointer to the #GValue in the position @num of @row.
  */
 GValue *
 gda_row_get_value (GdaRow *row, gint num)
 {
-        g_return_val_if_fail (GDA_IS_ROW (row), NULL);
-        g_return_val_if_fail ((num >= 0) && ((guint) num < row->priv->nfields), NULL);
-
-        return & (row->priv->fields[num]);
+  g_return_val_if_fail (GDA_IS_ROW (row), NULL);
+  if (row->priv->model == NULL) {
+    g_return_val_if_fail ((num >= 0) && ((guint) num < row->priv->nfields), NULL);
+    return & (row->priv->fields[num]);
+  } else {
+    GError *error = NULL;
+    const GValue *value = NULL;
+    g_return_val_if_fail ((num >= 0) && (num < gda_data_model_get_n_columns (row->priv->model)), NULL);
+    value = gda_data_model_get_value_at (row->priv->model, num, row->priv->model_row, &error);
+    if (value == NULL) {
+      g_warning (_("No value can be retrieved from data model's row: %s"),
+                 error ? (error->message ? error->message : _("No Detail")) : _("No error was set"));
+    }
+  }
+  return NULL;
 }
 
 /**
@@ -372,8 +439,9 @@ gda_row_value_is_valid_e (GdaRow *row, GValue *value, GError **error)
 gint
 gda_row_get_length (GdaRow *row)
 {
-        g_return_val_if_fail (GDA_IS_ROW (row), 0);
-	g_return_val_if_fail (row->priv, 0);
-
-        return row->priv->nfields;
+  g_return_val_if_fail (GDA_IS_ROW (row), 0);
+  g_return_val_if_fail (row->priv, 0);
+  if (row->priv->model == NULL)
+    return row->priv->nfields;
+  return gda_data_model_get_n_columns (row->priv->model);
 }
