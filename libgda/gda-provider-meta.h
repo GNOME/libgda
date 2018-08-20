@@ -25,6 +25,13 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+	GDA_PROVIDER_META_NO_CONNECTION_ERROR
+} GdaProviderMetaError;
+
+extern GQuark gda_provider_meta_error_quark (void);
+#define GDA_PROVIDER_META_ERROR gda_provider_meta_error_quark ()
+
 #define GDA_TYPE_PROVIDER_META gda_provider_meta_get_type()
 
 G_DECLARE_INTERFACE(GdaProviderMeta, gda_provider_meta, GDA, PROVIDER_META, GObject)
@@ -229,6 +236,13 @@ struct _GdaProviderMetaInterface
   gpointer padding[12];
 };
 
+GdaDataModel  *gda_provider_meta_execute_query        (GdaProviderMeta *prov,
+                                                       const gchar *sql,
+                                                       GError **error);
+
+GdaRow        *gda_provider_meta_execute_query_row    (GdaProviderMeta *prov,
+                                                       const gchar *sql,
+                                                       GError **error);
 
 GdaConnection *gda_provider_meta_get_connection       (GdaProviderMeta *prov);
 
