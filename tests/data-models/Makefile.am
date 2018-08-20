@@ -78,6 +78,14 @@ check_pivot_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
+check_data_select_iter_SOURCES= \
+	check_data_select_iter.c
+check_data_select_iter_CFLAGS = \
+	-I$(top_srcdir)/libgda/sqlite \
+	-I$(top_srcdir)/libgda/sqlite/pivot
+check_data_select_iter_LDADD = \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(COREDEPS_LIBS)
 
 EXTRA_DIST = \
 	check_virtual.csv \
