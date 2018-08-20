@@ -347,7 +347,7 @@ GdaDataModel *gda_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
                              const gchar *table_catalog,
                              const gchar *table_schema, const gchar *table_name,
                               GError **error);
-GdaRow       *gda_provider_meta_constraint_ref_table  (GdaProviderMeta *prov,
+GdaRow       *gda_provider_meta_constraint_ref  (GdaProviderMeta *prov,
                              const gchar *table_catalog,
                              const gchar *table_schema, const gchar *table_name,
                              const gchar *constraint_name, GError **error);

@@ -36,7 +36,7 @@ gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
                          "Connection",
                          "Connection to database to get metadata from",
                          GDA_TYPE_CONNECTION,
-                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READABLE);
+                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE);
 
   g_object_interface_install_property (iface,
                                      obj_properties[PROP_CONNECTION]);
@@ -47,6 +47,8 @@ gda_provider_meta_default_init (GdaProviderMetaInterface *iface) {
  * @prov:
  *
  * Returns: (transfer full): a #GdaConnection used by this object.
+ * Since: 6.0
+ * Stability: Unstable
  */
 GdaConnection*
 gda_provider_meta_get_connection (GdaProviderMeta *prov) {
@@ -61,6 +63,7 @@ gda_provider_meta_get_connection (GdaProviderMeta *prov) {
 /**
  * gda_provider_meta_btypes:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -79,6 +82,7 @@ gda_provider_meta_btypes (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_udts:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -95,6 +99,7 @@ gda_provider_meta_udts (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_udt:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -115,6 +120,7 @@ gda_provider_meta_udt (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_udt_cols:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -131,6 +137,7 @@ gda_provider_meta_udt_cols (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_udt_col:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -152,6 +159,7 @@ gda_provider_meta_udt_col (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_enums_type:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -168,6 +176,7 @@ gda_provider_meta_enums_type (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_enum_type:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -190,6 +199,7 @@ gda_provider_meta_enum_type (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_domains:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -206,6 +216,7 @@ gda_provider_meta_domains (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_domain:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -227,6 +238,7 @@ gda_provider_meta_domain (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_domains_constraints:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -243,6 +255,7 @@ gda_provider_meta_domains_constraints (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_domain_constraints:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -263,6 +276,7 @@ gda_provider_meta_domain_constraints (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_domain_constraint:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -287,6 +301,7 @@ gda_provider_meta_domain_constraint (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_element_types:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -303,6 +318,7 @@ gda_provider_meta_element_types (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_element_type:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -323,6 +339,7 @@ gda_provider_meta_element_type (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_collations:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -339,6 +356,7 @@ gda_provider_meta_collations (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_collation:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -361,6 +379,7 @@ gda_provider_meta_collation  (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_character_sets:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -377,6 +396,7 @@ gda_provider_meta_character_sets (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_character_set:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -400,6 +420,7 @@ gda_provider_meta_character_set (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_schematas:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -416,6 +437,7 @@ gda_provider_meta_schematas (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_schemata:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -437,6 +459,7 @@ gda_provider_meta_schemata (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_tables_views:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -453,6 +476,7 @@ gda_provider_meta_tables_views (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_table_view:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -476,6 +500,7 @@ gda_provider_meta_table_view (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_columns:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -493,6 +518,7 @@ gda_provider_meta_columns (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_table_columns:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -514,6 +540,7 @@ gda_provider_meta_table_columns (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_table_column:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -539,6 +566,7 @@ gda_provider_meta_table_column (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_views_cols:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -555,6 +583,7 @@ gda_provider_meta_views_cols (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_view_cols:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -576,6 +605,7 @@ gda_provider_meta_view_cols (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_view_col:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -601,6 +631,7 @@ gda_provider_meta_view_col (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_constraints_tables:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -617,6 +648,7 @@ gda_provider_meta_constraints_tables (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_constraints_table:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -639,6 +671,7 @@ gda_provider_meta_constraints_table (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_constraint_table:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -666,6 +699,7 @@ gda_provider_meta_constraint_table (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_constraints_ref:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -682,6 +716,7 @@ gda_provider_meta_constraints_ref (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_constraints_ref_table:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -703,6 +738,7 @@ gda_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_constraint_ref:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -728,6 +764,7 @@ gda_provider_meta_constraint_ref (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_key_columns:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -744,6 +781,7 @@ gda_provider_meta_key_columns (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_key_column:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -770,6 +808,7 @@ gda_provider_meta_key_column (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_check_columns:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -786,6 +825,7 @@ gda_provider_meta_check_columns (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_check_column:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -813,6 +853,7 @@ gda_provider_meta_check_column (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_triggers:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -829,6 +870,7 @@ gda_provider_meta_triggers (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_trigger:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -852,6 +894,7 @@ gda_provider_meta_trigger (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_routines:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -868,6 +911,7 @@ gda_provider_meta_routines (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_routine:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -891,6 +935,7 @@ gda_provider_meta_routine (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_routines_col:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -907,6 +952,7 @@ gda_provider_meta_routines_col (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_routine_col:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -930,6 +976,7 @@ gda_provider_meta_routine_col (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_routines_pars:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -946,6 +993,7 @@ gda_provider_meta_routines_pars (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_routine_pars:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -968,6 +1016,7 @@ gda_provider_meta_routine_pars (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_indexes_tables:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -984,6 +1033,7 @@ gda_provider_meta_indexes_tables (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_indexes_table:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -1006,6 +1056,7 @@ gda_provider_meta_indexes_table (GdaProviderMeta *prov,
 /**
  * gda_provider_meta_index_table:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -1030,8 +1081,9 @@ gda_provider_meta_index_table (GdaProviderMeta *prov,
 
 /* _index_column_usage */
 /**
- * gda_provider_meta_index_colsgda_provider_meta_index_cols:
+ * gda_provider_meta_index_cols:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
@@ -1048,6 +1100,7 @@ gda_provider_meta_index_cols (GdaProviderMeta *prov, GError **error)
 /**
  * gda_provider_meta_index_col:
  *
+ * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
