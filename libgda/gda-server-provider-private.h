@@ -27,17 +27,6 @@
 #include <libgda/gda-server-provider-impl.h>
 
 /*
- * provider's private information
- */
-struct _GdaServerProviderPrivate {
-	GHashTable    *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */
-	GdaSqlParser  *parser;
-
-	GHashTable    *jobs_hash; /* key = a job ID, value = a # */
-};
-
-
-/*
  * Getting the GMainContext to use with the GdaWorker
  */
 GMainContext *gda_server_provider_get_real_main_context (GdaConnection *cnc);

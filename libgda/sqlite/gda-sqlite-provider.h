@@ -37,7 +37,6 @@ typedef struct _GdaSqliteProviderClass GdaSqliteProviderClass;
 struct _GdaSqliteProvider {
 	GdaServerProvider provider;
 };
-
 struct _GdaSqliteProviderClass {
 	GdaServerProviderClass parent_class;
 
@@ -46,10 +45,10 @@ struct _GdaSqliteProviderClass {
 	void (*_gda_reserved2) (void);
 };
 
+
 G_BEGIN_DECLS
 
 GType              gda_sqlite_provider_get_type (void) G_GNUC_CONST;
-
 G_END_DECLS
 
 #endif

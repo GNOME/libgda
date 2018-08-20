@@ -14,7 +14,7 @@
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2012, 2018 Daniel Espinosa <despinosa@src.gnome.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/gda-set.h>
 #include <sql-parser/gda-sql-parser.h>
+#include <gio/gio.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-lockable.h>
@@ -50,13 +51,22 @@
 #include <libgda/gda-debug-macros.h>
 #include "providers-support/gda-data-select-priv.h"
 
+/*
+ * provider's private information
+ */
+struct _GdaServerProviderPrivate {
+	GHashTable    *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */
+	GdaSqlParser  *parser;
+
+	GHashTable    *jobs_hash; /* key = a job ID, value = a # */
+};
+
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(GdaServerProvider, gda_server_provider, G_TYPE_OBJECT)
+
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 #define GDA_DEBUG_VIRTUAL
 #undef GDA_DEBUG_VIRTUAL
 
-static void gda_server_provider_class_init (GdaServerProviderClass *klass);
-static void gda_server_provider_init       (GdaServerProvider *provider,
-					    GdaServerProviderClass *klass);
 static void gda_server_provider_finalize   (GObject *object);
 static void gda_server_provider_constructed (GObject *object);
 
@@ -68,8 +78,6 @@ static void gda_server_provider_get_property (GObject *object,
 					      guint param_id,
 					      GValue *value,
 					      GParamSpec *pspec);
-
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum {
@@ -93,8 +101,6 @@ static void
 gda_server_provider_class_init (GdaServerProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->finalize = gda_server_provider_finalize;
 	object_class->constructed = gda_server_provider_constructed;
@@ -140,17 +146,16 @@ static void worker_data_free (WorkerData *wd);
 
 
 static void
-gda_server_provider_init (GdaServerProvider *provider,
-			  G_GNUC_UNUSED GdaServerProviderClass *klass)
+gda_server_provider_init (GdaServerProvider *provider)
 {
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
 
-	provider->priv = g_new0 (GdaServerProviderPrivate, 1);
-	provider->priv->data_handlers = g_hash_table_new_full ((GHashFunc) gda_server_provider_handler_info_hash_func,
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
+	priv->data_handlers = g_hash_table_new_full ((GHashFunc) gda_server_provider_handler_info_hash_func,
 							       (GEqualFunc) gda_server_provider_handler_info_equal_func,
 							       (GDestroyNotify) gda_server_provider_handler_info_free,
 							       (GDestroyNotify) g_object_unref);
-	provider->priv->jobs_hash = NULL;
+	priv->jobs_hash = NULL;
 }
 
 static void
@@ -158,21 +163,18 @@ gda_server_provider_finalize (GObject *object)
 {
 	GdaServerProvider *provider = (GdaServerProvider *) object;
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
+  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
 
 	/* free memory */
-	if (provider->priv) {
-		g_hash_table_destroy (provider->priv->data_handlers);
-		if (provider->priv->jobs_hash)
-			g_hash_table_destroy (provider->priv->jobs_hash);
-		if (provider->priv->parser)
-			g_object_unref (provider->priv->parser);
+	g_hash_table_destroy (priv->data_handlers);
+	if (priv->jobs_hash)
+		g_hash_table_destroy (priv->jobs_hash);
+	if (priv->parser)
+		g_object_unref (priv->parser);
 
-		g_free (provider->priv);
-		provider->priv = NULL;
-	}
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_server_provider_parent_class)->finalize (object);
 }
 
 /*
@@ -183,10 +185,11 @@ gda_server_provider_constructed (GObject *object)
 {
 	GdaServerProvider *provider = (GdaServerProvider *) object;
 	g_return_if_fail (GDA_IS_SERVER_PROVIDER (provider));
+  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
 	const char* gtype_name = G_OBJECT_TYPE_NAME (object);
 
 	/*g_print ("Provider %p (%s) constructed\n", provider, G_OBJECT_CLASS_NAME (G_OBJECT_GET_CLASS (object)));*/
-	if (!provider->priv)
+	if (!priv)
 		g_warning ("Internal error after creation of %s: provider's private part is missing", gtype_name);
 	else {
 		GdaServerProviderBase *fset;
@@ -247,13 +250,13 @@ gda_server_provider_constructed (GObject *object)
 			}
 		}
 
-		if (GDA_IS_SERVER_PROVIDER_CLASS (parent_class)) {
+		if (GDA_IS_SERVER_PROVIDER_CLASS (gda_server_provider_parent_class)) {
 			if (! CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_META])
 				CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_META] =
-					GDA_SERVER_PROVIDER_CLASS (parent_class)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_META];
+					GDA_SERVER_PROVIDER_CLASS (gda_server_provider_parent_class)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_META];
 			if (! CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_XA])
 				CLASS (provider)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_XA] =
-					GDA_SERVER_PROVIDER_CLASS (parent_class)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_XA];
+					GDA_SERVER_PROVIDER_CLASS (gda_server_provider_parent_class)->functions_sets [GDA_SERVER_PROVIDER_FUNCTIONS_XA];
 		}
 
 		GdaServerProviderXa *xaset;
@@ -282,36 +285,9 @@ gda_server_provider_constructed (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->constructed (object);
+	G_OBJECT_CLASS (gda_server_provider_parent_class)->constructed (object);
 }
 
-GType
-gda_server_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaServerProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_server_provider_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaServerProvider),
-			0,
-			(GInstanceInitFunc) gda_server_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaServerProvider", &info, G_TYPE_FLAG_ABSTRACT);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 static void
 gda_server_provider_set_property (GObject *object,
@@ -321,30 +297,28 @@ gda_server_provider_set_property (GObject *object,
         GdaServerProvider *prov;
 
         prov = GDA_SERVER_PROVIDER (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-	}
+        GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+        switch (param_id) {
+          default:
+            G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+          break;
+        }
 }
 
 static void
 gda_server_provider_get_property (GObject *object,
-				  guint param_id,
-				  G_GNUC_UNUSED GValue *value,
-				  GParamSpec *pspec) {
-        GdaServerProvider *prov;
+  guint param_id,
+  G_GNUC_UNUSED GValue *value,
+  GParamSpec *pspec) {
+  GdaServerProvider *prov;
 
-        prov = GDA_SERVER_PROVIDER (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-	}
+  prov = GDA_SERVER_PROVIDER (object);
+  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+  switch (param_id) {
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+    break;
+  }
 }
 
 /**
@@ -2155,6 +2129,8 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (! gda_connection_is_opened (cnc), TRUE);
 	g_return_val_if_fail (params, FALSE);
 
+  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
+
 	if (out_job_id)
 		*out_job_id = 0;
 	g_return_val_if_fail ((cb_func && out_job_id) || (!cb_func && !out_job_id), FALSE);
@@ -2184,8 +2160,8 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 			return FALSE;
 		}
 
-		if (!provider->priv->jobs_hash)
-			provider->priv->jobs_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
+		if (!priv->jobs_hash)
+			priv->jobs_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
 									   NULL, (GDestroyNotify) worker_data_free);
 	}
 
@@ -2218,7 +2194,7 @@ _gda_server_provider_open_connection (GdaServerProvider *provider, GdaConnection
 			wd->job_type = JOB_OPEN_CONNECTION;
 			wd->job_data = (gpointer) jdata;
 			wd->job_data_destroy_func = (GDestroyNotify) WorkerOpenConnectionData_free;
-			g_hash_table_insert (provider->priv->jobs_hash, & wd->job_id, wd);
+			g_hash_table_insert (priv->jobs_hash, & wd->job_id, wd);
 			*out_job_id = job_id;
 			return TRUE; /* no error, LOCK on CNC is kept */
 		}
@@ -3873,9 +3849,10 @@ _gda_server_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc
 static void
 server_provider_job_done_callback (GdaWorker *worker, guint job_id, gpointer result, GError *error, GdaServerProvider *provider)
 {
+  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
 	WorkerData *wd = NULL;
-	if (provider->priv->jobs_hash)
-		wd = g_hash_table_lookup (provider->priv->jobs_hash, &job_id);
+	if (priv->jobs_hash)
+		wd = g_hash_table_lookup (priv->jobs_hash, &job_id);
 	g_assert (wd);
 
 	switch (wd->job_type) {
@@ -3891,5 +3868,429 @@ server_provider_job_done_callback (GdaWorker *worker, guint job_id, gpointer res
 		g_assert_not_reached ();
 	}
 
-	g_hash_table_remove (provider->priv->jobs_hash, &job_id); /* will call worker_data_free() */
+	g_hash_table_remove (priv->jobs_hash, &job_id); /* will call worker_data_free() */
+}
+
+/* Code from gda-server-provider-extra.c */
+
+/**
+ * gda_server_provider_internal_get_parser:
+ * @prov: a #GdaServerProvider
+ *
+ * This is a factory method to get a unique instance of a #GdaSqlParser object
+ * for each #GdaServerProvider object
+ * Don't unref it.
+ *
+ * Returns: (transfer none): a #GdaSqlParser
+ */
+GdaSqlParser *
+gda_server_provider_internal_get_parser (GdaServerProvider *prov)
+{
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	if (priv->parser)
+		return priv->parser;
+	priv->parser = gda_server_provider_create_parser (prov, NULL);
+	if (!priv->parser)
+		priv->parser = gda_sql_parser_new ();
+	return priv->parser;
+}
+
+/**
+ * gda_server_provider_perform_operation_default:
+ * @provider: a #GdaServerProvider object
+ * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
+ * @op: a #GdaServerOperation object
+ * @error: a place to store an error, or %NULL
+ *
+ * Performs the operation described by @op, using the SQL from the rendering of the operation
+ *
+ * Returns: %TRUE if no error occurred
+ */
+gboolean
+gda_server_provider_perform_operation_default (GdaServerProvider *provider, GdaConnection *cnc,
+					       GdaServerOperation *op, GError **error)
+{
+	gchar *sql;
+	GdaBatch *batch;
+	const GSList *list;
+	gboolean retval = TRUE;
+
+	sql = gda_server_provider_render_operation (provider, cnc, op, error);
+	if (!sql)
+		return FALSE;
+
+	GdaSqlParser *parser;
+	parser = gda_server_provider_internal_get_parser (provider); /* no ref held! */
+	batch = gda_sql_parser_parse_string_as_batch (parser, sql, NULL, error);
+	g_free (sql);
+	if (!batch)
+		return FALSE;
+
+	for (list = gda_batch_get_statements (batch); list; list = list->next) {
+		if (gda_connection_statement_execute_non_select (cnc, GDA_STATEMENT (list->data), NULL, NULL, error) == -1) {
+			retval = FALSE;
+			break;
+		}
+	}
+	g_object_unref (batch);
+
+	return retval;
+}
+
+/**
+ * gda_server_provider_handler_use_default:
+ * @provider: a server provider
+ * @type: a #GType
+ *
+ * Reserved to database provider's implementations. This method defines a default data handler for
+ * @provider, and returns that #GdaDataHandler.
+ *
+ * Returns: (transfer none): a #GdaDataHandler, or %NULL
+ *
+ * Since: 5.2
+ */
+GdaDataHandler *
+gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type)
+{
+	GdaDataHandler *dh = NULL;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), NULL);
+	if ((type == G_TYPE_INT64) ||
+	    (type == G_TYPE_UINT64) ||
+	    (type == G_TYPE_DOUBLE) ||
+	    (type == G_TYPE_INT) ||
+	    (type == GDA_TYPE_NUMERIC) ||
+	    (type == G_TYPE_FLOAT) ||
+	    (type == GDA_TYPE_SHORT) ||
+	    (type == GDA_TYPE_USHORT) ||
+	    (type == G_TYPE_CHAR) ||
+	    (type == G_TYPE_UCHAR) ||
+	    (type == G_TYPE_UINT) ||
+	    (type == G_TYPE_LONG) ||
+	    (type == G_TYPE_ULONG)) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_numerical_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT64, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_DOUBLE, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_INT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_NUMERIC, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_FLOAT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_SHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_USHORT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_CHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UCHAR, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_UINT, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_ULONG, NULL);
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_LONG, NULL);
+			g_object_unref (dh);
+		}
+	}
+        else if ((type == GDA_TYPE_BINARY) ||
+		 (type == GDA_TYPE_BLOB)) {
+		/* no default binary data handler, it's too database specific */
+		dh = NULL;
+	}
+        else if (type == G_TYPE_BOOLEAN) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_boolean_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_BOOLEAN, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if ((type == GDA_TYPE_TIME) ||
+		 (type == G_TYPE_DATE_TIME) ||
+		 (type == G_TYPE_DATE)) {
+		/* no default time related data handler, it's too database specific */
+		dh = NULL;
+	}
+	else if (type == G_TYPE_STRING) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_string_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == G_TYPE_GTYPE) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_type_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_GTYPE, NULL);
+			g_object_unref (dh);
+		}
+	}
+
+	return dh;
+}
+
+static gboolean
+param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
+{
+	if (part->type == GDA_SQL_ANY_EXPR) {
+		GdaSqlExpr *expr = (GdaSqlExpr*) part;
+		if (expr->param_spec) {
+			GType type = expr->param_spec->g_type;
+			gda_sql_param_spec_free (expr->param_spec);
+			expr->param_spec = NULL;
+
+			if (!expr->value) {
+				if (type != GDA_TYPE_NULL)
+					expr->value = gda_value_new_from_string ("0", type);
+				else
+					g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 0);
+			}
+		}
+	}
+	return TRUE;
+}
+
+/**
+ * gda_select_alter_select_for_empty:
+ * @stmt: a SELECT #GdaStatement
+ * @error: (allow-none): a place to store errors, or %NULL
+ *
+ * Creates a new #GdaStatement, selecting the same data as @stmt, but which always returns an
+ * empty (no row) data model. This is use dy database providers' implementations.
+ *
+ * Returns: (transfer full): a new #GdaStatement
+ */
+GdaStatement *
+gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **error)
+{
+	GdaStatement *estmt;
+	GdaSqlStatement *sqlst;
+	GdaSqlStatementSelect *stsel;
+
+	g_assert (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT);
+	g_object_get (G_OBJECT (stmt), "structure", &sqlst, NULL);
+	g_assert (sqlst);
+
+	if (sqlst->sql) {
+		g_free (sqlst->sql);
+		sqlst->sql = NULL;
+	}
+	stsel = (GdaSqlStatementSelect*) sqlst->contents;
+
+	/* set the WHERE condition to "1 = 0" */
+	GdaSqlExpr *expr, *cond = stsel->where_cond;
+	GdaSqlOperation *op;
+	if (cond)
+		gda_sql_expr_free (cond);
+	cond = gda_sql_expr_new (GDA_SQL_ANY_PART (stsel));
+	stsel->where_cond = cond;
+	op = gda_sql_operation_new (GDA_SQL_ANY_PART (cond));
+	cond->cond = op;
+	op->operator_type = GDA_SQL_OPERATOR_TYPE_EQ;
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+	op->operands = g_slist_prepend (NULL, expr);
+	g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 1);
+	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (op));
+	op->operands = g_slist_prepend (op->operands, expr);
+	g_value_set_int ((expr->value = gda_value_new (G_TYPE_INT)), 0);
+
+	/* replace any selected field which has a parameter with NULL */
+	gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stsel), (GdaSqlForeachFunc) param_to_null_foreach,
+				  NULL, NULL);
+
+	/* create new statement */
+	estmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
+	gda_sql_statement_free (sqlst);
+	return estmt;
+}
+
+/**
+ * gda_server_provider_handler_find:
+ * @prov: a #GdaServerProvider
+ * @cnc: (allow-none): a #GdaConnection
+ * @g_type: a #GType
+ * @dbms_type: (allow-none): a database type
+ *
+ * Reserved to database provider's implementations: get the #GdaDataHandler associated to @prov
+ * for connection @cnc. You probably want to use gda_server_provider_get_data_handler_g_type().
+ *
+ * Returns: (transfer none): the requested #GdaDataHandler, or %NULL if none found
+ */
+GdaDataHandler *
+gda_server_provider_handler_find (GdaServerProvider *prov, GdaConnection *cnc,
+				  GType g_type, const gchar *dbms_type)
+{
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+	if (cnc)
+		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+
+	GdaDataHandler *dh;
+	GdaServerProviderHandlerInfo info;
+
+	info.cnc = cnc;
+	info.g_type = g_type;
+	info.dbms_type = (gchar *) dbms_type;
+	dh = g_hash_table_lookup (priv->data_handlers, &info);
+	if (!dh) {
+		/* try without the connection specification */
+		info.cnc = NULL;
+		dh = g_hash_table_lookup (priv->data_handlers, &info);
+	}
+
+	return dh;
+}
+
+void
+gda_server_provider_handler_declare (GdaServerProvider *prov, GdaDataHandler *dh,
+				     GdaConnection *cnc,
+				     GType g_type, const gchar *dbms_type)
+{
+	GdaServerProviderHandlerInfo *info;
+	g_return_if_fail (GDA_IS_SERVER_PROVIDER (prov));
+	g_return_if_fail (GDA_IS_DATA_HANDLER (dh));
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+
+	info = g_new (GdaServerProviderHandlerInfo, 1);
+	info->cnc = cnc;
+	info->g_type = g_type;
+	info->dbms_type = dbms_type ? g_strdup (dbms_type) : NULL;
+
+	g_hash_table_insert (priv->data_handlers, info, dh);
+	g_object_ref (dh);
+}
+
+static gboolean
+handlers_clear_for_cnc_fh (GdaServerProviderHandlerInfo *key, GdaDataHandler *value, GdaConnection *cnc)
+{
+	return (key->cnc == cnc) ? TRUE : FALSE;
+}
+
+/*
+ * Removes any #GdaServerProviderHandlerInfo associated to @cnc */
+void
+_gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *prov, GdaConnection *cnc)
+{
+	g_return_if_fail (GDA_IS_SERVER_PROVIDER (prov));
+	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
+	g_hash_table_foreach_remove (priv->data_handlers, (GHRFunc) handlers_clear_for_cnc_fh, cnc);
+}
+
+/**
+ * gda_server_provider_find_file:
+ * @prov: a #GdaServerProvider
+ * @inst_dir: directory where @prov is installed
+ * @filename: name of the file to find
+ *
+ * Finds the location of a @filename. This function should only be used by database provider's
+ * implementations
+ *
+ * Returns: (transfer full): the complete path to @filename, or %NULL if not found
+ */
+gchar *
+gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
+{
+	gchar *file = NULL;
+	const gchar *dirname;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	dirname = g_object_get_data (G_OBJECT (prov), "GDA_PROVIDER_DIR");
+	if (dirname)
+		file = g_build_filename (dirname, filename, NULL);
+
+	if (!file ||
+	    (file && !g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR))) {
+		g_free (file);
+		file = g_build_filename (inst_dir, filename, NULL);
+		if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+			g_free (file);
+			file = NULL;
+			if (dirname) {
+				/* look in the parent dir, to handle the case where the lib is in a .libs dir */
+				file = g_build_filename (dirname, "..", filename, NULL);
+				if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
+					g_free (file);
+					file = NULL;
+				}
+			}
+		}
+	}
+
+	return file;
+}
+
+/**
+ * gda_server_provider_load_file_contents:
+ * @inst_dir: directory where the database provider has been installed
+ * @data_dir: DATA directory to look for ($prefix/share)
+ * @filename: name of the file to load
+ *
+ * Loads and returns the contents of @filename, which is searched in several places
+ * This function should only be used by database provider's
+ * implementations
+ *
+ * Returns: (transfer full): a new string containing @filename's contents, or %NULL if not found or if an error occurred
+ */
+gchar *
+gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data_dir, const gchar *filename)
+{
+	gchar *contents, *file;
+
+	file = g_build_filename (inst_dir, filename, NULL);
+
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+
+	g_free (file);
+	file = g_build_filename (inst_dir, "..", filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+
+	g_free (file);
+	file = g_build_filename (data_dir, filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+
+	g_free (file);
+	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-6.0", filename, NULL);
+	if (g_file_get_contents (file, &contents, NULL, NULL))
+		goto theend;
+	contents = NULL;
+
+ theend:
+	g_free (file);
+	return contents;
+}
+
+/**
+ * gda_server_provider_load_resource_contents:
+ * @prov_name: the provider's name
+ * @resource: the name of the resource to load
+ *
+ * Loads and returns the contents of the specified resource.
+ * This function should only be used by database provider's implementations
+ *
+ * Returns: (transfer full): a new string containing the resource's contents, or %NULL if not found or if an error occurred
+ *
+ * Since: 6.0
+ */
+gchar *
+gda_server_provider_load_resource_contents (const gchar *prov_name, const gchar *resource)
+{
+	g_return_val_if_fail (prov_name, NULL);
+	g_return_val_if_fail (resource, NULL);
+
+	gchar *rname;
+	rname = g_strdup_printf ("/spec/%s/%s", prov_name, resource);
+
+	GBytes *bytes;
+	bytes = g_resources_lookup_data (rname, G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	g_free (rname);
+	if (!bytes) {
+		g_warning ("Resource: /spec/%s/%s, not found for provider", prov_name, resource);
+		return NULL;
+	}
+
+	gchar *retval;
+	retval = g_strdup ((const gchar*) g_bytes_get_data (bytes, NULL));
+	g_bytes_unref (bytes);
+	return retval;
 }
