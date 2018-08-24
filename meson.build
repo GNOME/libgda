@@ -358,4 +358,5 @@ endif
 subdir('tools')
 subdir('tests')
 subdir('testing')
+subdir('examples')
 
