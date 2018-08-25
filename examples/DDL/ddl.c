@@ -60,7 +60,7 @@ open_connection (void)
 					       GDA_CONNECTION_OPTIONS_NONE,
 					       &error);
         if (!cnc) {
-                g_print ("Could not open connection to SQLite database in example_db.db file: %s\n",
+                g_print ("Could not open connection to SQLite database in ddl_db.db file: %s\n",
                          error && error->message ? error->message : "No detail");
                 exit (1);
         }
