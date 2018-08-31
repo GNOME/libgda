@@ -1964,8 +1964,6 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
  * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
  *
  * Free-function: gda_value_free
- *
- * Deprecated: 6.0: Use gda_value_new_date_time_from_timet() instead
  */
 GValue *
 gda_value_new_date_time_from_timet (time_t val)
