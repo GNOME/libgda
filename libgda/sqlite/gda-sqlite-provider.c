@@ -14,7 +14,7 @@
  * Copyright (C) 2008 - 2014 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011,2018 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2011 Marek Černocký <marek@manet.cz>
  * Copyright (C) 2012 Marco Ciampa <ciampix@libero.it>
  * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
@@ -826,7 +826,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						NULL);
-//g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
+	g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
 }
 
 static void
@@ -902,6 +902,12 @@ gda_sqlite_provider_get_type (void)
     #endif
   #endif
 #endif
+			static GInterfaceInfo ifaceinfo = {
+				(GInterfaceInitFunc) gda_sqlite_provider_meta_iface_init,
+				NULL,
+				NULL
+			};
+			g_type_add_interface_static (type, GDA_TYPE_PROVIDER_META, &ifaceinfo);
 		}
 		g_mutex_unlock (&registering);
 	}
