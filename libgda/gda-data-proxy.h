@@ -32,9 +32,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_PROXY          (gda_data_proxy_get_type())
-#define GDA_DATA_PROXY(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_data_proxy_get_type(), GdaDataProxy)
-#define GDA_DATA_PROXY_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_data_proxy_get_type (), GdaDataProxyClass)
-#define GDA_IS_DATA_PROXY(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_data_proxy_get_type ())
+
+G_DECLARE_DERIVABLE_TYPE(GdaDataProxy, gda_data_proxy, GDA, DATA_PROXY, GObject)
 
 /* error reporting */
 extern GQuark gda_data_proxy_error_quark (void);
@@ -47,14 +46,6 @@ typedef enum {
 	GDA_DATA_PROXY_READ_ONLY_ROW,
 	GDA_DATA_PROXY_FILTER_ERROR
 } GdaDataProxyError;
-
-/* struct for the object's data */
-struct _GdaDataProxy
-{
-	GObject                 object;
-	GdaDataProxyPrivate    *priv;
-};
-
 
 /* struct for the object's class */
 struct _GdaDataProxyClass
@@ -183,7 +174,6 @@ struct _GdaDataProxyClass
  *  any thread at the same time as they implement their own locking mechanisms.
  */
 
-GType             gda_data_proxy_get_type                 (void) G_GNUC_CONST;
 GObject          *gda_data_proxy_new                      (GdaDataModel *model);
 GdaDataProxy     *gda_data_proxy_new_with_data_model      (GdaDataModel *model);
 

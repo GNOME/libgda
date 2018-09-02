@@ -50,10 +50,6 @@ typedef struct _GdaServerOperationPrivate GdaServerOperationPrivate;
 typedef struct _GdaDataModelIface   GdaDataModelIface;
 typedef struct _GdaDataModel        GdaDataModel;
 
-typedef struct _GdaDataProxy GdaDataProxy;
-typedef struct _GdaDataProxyClass GdaDataProxyClass;
-typedef struct _GdaDataProxyPrivate GdaDataProxyPrivate;
-
 typedef struct _GdaColumn        GdaColumn;
 typedef struct _GdaColumnClass   GdaColumnClass;
 typedef struct _GdaColumnPrivate GdaColumnPrivate;
