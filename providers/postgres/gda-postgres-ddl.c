@@ -108,13 +108,14 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	return sql;	
 }
 
+/*FIXME: Add error messages  */
 gchar *
 gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
 				  GdaServerOperation *op, GError **error)
 {
 	GString *string;
 	const GValue *value;
-	const GValue *value1;
+	const GValue *value1 = NULL;
 	gboolean hasfields = FALSE;
 	gint nrows;
 	gint i;
@@ -204,7 +205,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		}
 
 		value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_DEFAULT/%d", i);
-		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && value1 != NULL) {
 			const gchar *str = g_value_get_string (value);
 			if (str && *str) {
 				g_string_append (string, " DEFAULT ");

@@ -77,7 +77,6 @@ test_timestamp_change_format (void)
 	GdaStatement *stmt = NULL;
 	GError *error = NULL;
 	int number_failed = 0;
-	GdaDataModel *model = NULL;
 	GValue *value = NULL;
 
 #ifdef CHECK_EXTRA_INFO

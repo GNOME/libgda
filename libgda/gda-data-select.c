@@ -254,9 +254,6 @@ gda_data_select_iter_set_value_at (GdaDataModelIter *iter, gint col,
                                    const GValue *value, GError **error)
 {
 	GdaDataSelect *imodel;
-	gint ncols;
-	GdaHolder *holder;
-	gchar *str;
 
 	g_object_get (G_OBJECT (iter), "data-model", &imodel, NULL);
 	g_return_val_if_fail (imodel, FALSE);

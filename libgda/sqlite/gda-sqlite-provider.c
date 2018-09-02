@@ -786,7 +786,6 @@ gda_sqlite_provider_set_property (GObject      *object,
                           GParamSpec   *pspec)
 {
 
-  GdaConnection *cnc;
   GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
   GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
   switch (property_id) {

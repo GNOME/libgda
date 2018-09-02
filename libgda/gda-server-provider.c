@@ -294,10 +294,7 @@ gda_server_provider_set_property (GObject *object,
 				  guint param_id,
 				  G_GNUC_UNUSED const GValue *value,
 				  GParamSpec *pspec) {
-        GdaServerProvider *prov;
 
-        prov = GDA_SERVER_PROVIDER (object);
-        GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
         switch (param_id) {
           default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -310,10 +307,7 @@ gda_server_provider_get_property (GObject *object,
   guint param_id,
   G_GNUC_UNUSED GValue *value,
   GParamSpec *pspec) {
-  GdaServerProvider *prov;
 
-  prov = GDA_SERVER_PROVIDER (object);
-  GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (prov);
   switch (param_id) {
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);

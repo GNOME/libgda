@@ -632,7 +632,6 @@ test9 (void)
 	gint nfailed = 0;
 
 	worker = gda_worker_new ();
-	GError *error = NULL;
 
 #define NB_THREADS 2
 	GThread *threads[NB_THREADS];

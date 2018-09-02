@@ -87,7 +87,7 @@ GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
                  _("Connection is no opened"));
     return NULL;
   }
-  stmt = gda_connection_parse_sql_string (cnc, sql, params, error);
+  stmt = gda_connection_parse_sql_string (cnc, sql, NULL, error);
   if (stmt == NULL) {
     return NULL;
   }
