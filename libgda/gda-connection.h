@@ -39,6 +39,7 @@
 #include <libgda/gda-statement.h>
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-server-operation.h>
+#include <libgda/gda-batch.h>
 
 G_BEGIN_DECLS
 

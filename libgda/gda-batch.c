@@ -47,10 +47,10 @@ static void gda_batch_get_property (GObject *object,
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-struct _GdaBatchPrivate {
+typedef struct {
 	GSList *statements; /* list of GdaStatement objects */
-};
-
+} GdaBatchPrivate;
+#define gda_batch_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_BATCH, GdaBatchPrivate)
 /* signals */
 enum
 {
@@ -109,6 +109,7 @@ gda_batch_class_init (GdaBatchClass * klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
+	g_type_class_add_private (object_class, sizeof (GdaBatch));
 
 	/**
 	 * GdaBatch::changed:
@@ -146,8 +147,8 @@ m_changed_cb (G_GNUC_UNUSED GdaBatch *batch, G_GNUC_UNUSED GdaStatement *changed
 static void
 gda_batch_init (GdaBatch * batch)
 {
-	batch->priv = g_new0 (GdaBatchPrivate, 1);
-	batch->priv->statements = NULL;
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
+	priv->statements = NULL;
 }
 
 /**
@@ -183,17 +184,18 @@ gda_batch_copy (GdaBatch *orig)
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_BATCH (orig), NULL);
-	g_return_val_if_fail (orig->priv, NULL);
+	GdaBatchPrivate *opriv = gda_batch_get_instance_private (orig);
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	obj = g_object_new (GDA_TYPE_BATCH, NULL);
 	batch = (GdaBatch *) obj;
-	for (list = orig->priv->statements; list; list = list->next) {
+	for (list = opriv->statements; list; list = list->next) {
 		GdaStatement *copy;
 
 		copy = gda_statement_copy (GDA_STATEMENT (list->data));
-		batch->priv->statements = g_slist_prepend (batch->priv->statements, copy);
+		priv->statements = g_slist_prepend (priv->statements, copy);
 	}
-	batch->priv->statements = g_slist_reverse (batch->priv->statements);
+	priv->statements = g_slist_reverse (priv->statements);
 
 	return batch;
 }
@@ -205,14 +207,13 @@ gda_batch_dispose (GObject *object)
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_BATCH (object));
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	batch = GDA_BATCH (object);
-	if (batch->priv) {
-		if (batch->priv->statements) {
-			g_slist_foreach (batch->priv->statements, (GFunc) g_object_unref, NULL);
-			g_slist_free (batch->priv->statements);
-			batch->priv->statements = NULL;
-		}
+	if (priv->statements) {
+		g_slist_foreach (priv->statements, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->statements);
+		priv->statements = NULL;
 	}
 
 	/* parent class */
@@ -228,11 +229,6 @@ gda_batch_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_BATCH (object));
 
 	batch = GDA_BATCH (object);
-	if (batch->priv) {
-		g_free (batch->priv);
-		batch->priv = NULL;
-	}
-
 	/* parent class */
 	parent_class->finalize (object);
 }
@@ -247,7 +243,8 @@ gda_batch_set_property (GObject *object,
 	GdaBatch *batch;
 
 	batch = GDA_BATCH (object);
-	if (batch->priv) {
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
+	if (priv) {
 		switch (param_id) {
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -264,8 +261,9 @@ gda_batch_get_property (GObject *object,
 {
 	GdaBatch *batch;
 	batch = GDA_BATCH (object);
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 	
-	if (batch->priv) {
+	if (priv) {
 		switch (param_id) {
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -292,13 +290,13 @@ void
 gda_batch_add_statement (GdaBatch *batch, GdaStatement *stmt)
 {
 	g_return_if_fail (GDA_IS_BATCH (batch));
-	g_return_if_fail (batch->priv);
 	g_return_if_fail (GDA_IS_STATEMENT (stmt));
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	g_signal_connect (G_OBJECT (stmt), "reset",
 			  G_CALLBACK (stmt_reset_cb), batch);
 	
-	batch->priv->statements = g_slist_append (batch->priv->statements, stmt);
+	priv->statements = g_slist_append (priv->statements, stmt);
 	g_object_ref (stmt);
 }
 
@@ -314,16 +312,16 @@ void
 gda_batch_remove_statement (GdaBatch *batch, GdaStatement *stmt)
 {
 	g_return_if_fail (GDA_IS_BATCH (batch));
-	g_return_if_fail (batch->priv);
 	g_return_if_fail (GDA_IS_STATEMENT (stmt));
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
-	if (g_slist_index (batch->priv->statements, stmt) < 0) {
+	if (g_slist_index (priv->statements, stmt) < 0) {
 		g_warning (_("Statement could not be found in batch's statements"));
 		return;
 	}
 
-	batch->priv->statements = g_slist_remove (batch->priv->statements, stmt);
-	if (g_slist_index (batch->priv->statements, stmt) < 0) 
+	priv->statements = g_slist_remove (priv->statements, stmt);
+	if (g_slist_index (priv->statements, stmt) < 0)
 		/* @stmt is no more in @batch's list */
 		g_signal_handlers_disconnect_by_func (G_OBJECT (stmt),
 						      G_CALLBACK (stmt_reset_cb), batch);
@@ -347,15 +345,15 @@ gda_batch_serialize (GdaBatch *batch)
 	gchar *str;
 
 	g_return_val_if_fail (GDA_IS_BATCH (batch), NULL);
-	g_return_val_if_fail (batch->priv, NULL);
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	string = g_string_new ("{");
 	g_string_append (string, "\"statements\":");
-	if (batch->priv->statements) {
+	if (priv->statements) {
 		g_string_append_c (string, '[');
-		for (list = batch->priv->statements; list; list = list->next) {
+		for (list = priv->statements; list; list = list->next) {
 			str = gda_statement_serialize (GDA_STATEMENT (list->data));
-			if (list != batch->priv->statements)
+			if (list != priv->statements)
 				g_string_append_c (string, ',');
 			g_string_append (string, str);
 			g_free (str);
@@ -383,9 +381,9 @@ const GSList *
 gda_batch_get_statements (GdaBatch *batch)
 {
 	g_return_val_if_fail (GDA_IS_BATCH (batch), NULL);
-	g_return_val_if_fail (batch->priv, NULL);
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
-	return batch->priv->statements;
+	return priv->statements;
 }
 
 /**
@@ -409,15 +407,16 @@ gda_batch_get_parameters (GdaBatch *batch, GdaSet **out_params, GError **error)
 	GSList *list;
 
 	g_return_val_if_fail (GDA_IS_BATCH (batch), FALSE);
-	g_return_val_if_fail (batch->priv, FALSE);
+
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	if (out_params)
 		*out_params = NULL;	
 
-	if (!batch->priv->statements)
+	if (!priv->statements)
 		return TRUE;
 
-	for (list = batch->priv->statements; list; list = list->next) {
+	for (list = priv->statements; list; list = list->next) {
 		GdaSet *tmpset = NULL;
 		if (!gda_statement_get_parameters (GDA_STATEMENT (list->data), out_params ? &tmpset : NULL, error)) {
 			if (tmpset)

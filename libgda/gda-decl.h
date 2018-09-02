@@ -75,10 +75,6 @@ typedef struct _GdaBlobOpClass GdaBlobOpClass;
  * Statements & parser
  */
 
-typedef struct _GdaBatch GdaBatch;
-typedef struct _GdaBatchClass GdaBatchClass;
-typedef struct _GdaBatchPrivate GdaBatchPrivate;
-
 typedef struct _GdaStatement GdaStatement;
 typedef struct _GdaStatementClass GdaStatementClass;
 typedef struct _GdaStatementPrivate GdaStatementPrivate;

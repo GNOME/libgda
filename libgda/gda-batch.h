@@ -30,9 +30,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_BATCH          (gda_batch_get_type())
-#define GDA_BATCH(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_batch_get_type(), GdaBatch)
-#define GDA_BATCH_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_batch_get_type (), GdaBatchClass)
-#define GDA_IS_BATCH(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_batch_get_type ())
+G_DECLARE_DERIVABLE_TYPE(GdaBatch, gda_batch, GDA, BATCH, GObject)
 
 /* error reporting */
 extern GQuark gda_batch_error_quark (void);
@@ -41,13 +39,6 @@ extern GQuark gda_batch_error_quark (void);
 typedef enum {
 	GDA_BATCH_CONFLICTING_PARAMETER_ERROR
 } GdaBatchError;
-
-/* struct for the object's data */
-struct _GdaBatch
-{
-	GObject          object;
-	GdaBatchPrivate *priv;
-};
 
 /* struct for the object's class */
 struct _GdaBatchClass
@@ -78,7 +69,6 @@ struct _GdaBatchClass
  * or from an SQL string using a #GdaSqlParser object.
  */
 
-GType              gda_batch_get_type               (void) G_GNUC_CONST;
 GdaBatch          *gda_batch_new                    (void);
 GdaBatch          *gda_batch_copy                   (GdaBatch *orig);
 void               gda_batch_add_statement          (GdaBatch *batch, GdaStatement *stmt);
