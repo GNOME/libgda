@@ -1,4 +1,4 @@
-/* check-data-select-iter.c
+/* test-provider-meta.c
  *
  * Copyright 2018 Daniel Espinosa <esodan@gmail.com>
  *
@@ -21,15 +21,15 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
+#include <libgda/gda-provider-meta.h>
 
 typedef struct {
   GdaConnection *cnn;
-  GdaDataModel *model;
-} CheckIter;
+} CheckProviderMeta;
 
-void init_data (CheckIter *data, gconstpointer user_data);
-void finish_data (CheckIter *data, gconstpointer user_data);
-void test_move_to (CheckIter *data, gconstpointer user_data);
+void init_data (CheckProviderMeta *data, gconstpointer user_data);
+void finish_data (CheckProviderMeta *data, gconstpointer user_data);
+void test_iface (CheckProviderMeta *data, gconstpointer user_data);
 
 gint
 main (gint   argc,
@@ -42,21 +42,20 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add ("/gda/iter/move-to",
-              CheckIter,
+  g_test_add ("/gda/provider-meta/iface",
+              CheckProviderMeta,
               NULL,
               init_data,
-              test_move_to,
+              test_iface,
               finish_data);
 
   return g_test_run();
 }
 
 void
-init_data (CheckIter *data, gconstpointer user_data) {
+init_data (CheckProviderMeta *data, gconstpointer user_data) {
   GString *strc, *cstr;
   GdaConnection *cnn;
-  GdaDataModel *model;
   GError *error = NULL;
   GFile *dir, *dbf;
 
@@ -114,35 +113,20 @@ init_data (CheckIter *data, gconstpointer user_data) {
     g_print ("Error inserting data into table users: %s", error->message != NULL ? error->message : "No detail");
     g_assert_not_reached ();
   }
-  model = gda_connection_execute_select_command (cnn, "SELECT * FROM users;", &error);
-  if (error) {
-    g_print ("Error getting data model from table users: %s", error->message != NULL ? error->message : "No detail");
-    g_assert_not_reached ();
-  }
   data->cnn = cnn;
-  data->model = model;
 }
 
 
 void
-finish_data (CheckIter *data, gconstpointer user_data) {
-  g_object_unref (data->model);
+finish_data (CheckProviderMeta *data, gconstpointer user_data) {
   g_object_unref (data->cnn);
 }
 
 
-void test_move_to (CheckIter *data, gconstpointer user_data) {
-  GdaDataModel *model = data->model;
-  GdaDataModelIter *iter;
-  const GValue *value;
+void test_iface (CheckProviderMeta *data, gconstpointer user_data) {
+  GdaConnection *cnn = data->cnn;
+  GdaServerProvider *prov = gda_connection_get_provider (cnn);
 
-  iter = gda_data_model_create_iter (model);
-  g_assert (iter != NULL);
-  g_assert (GDA_IS_DATA_MODEL_ITER (iter));
-  g_assert (GDA_IS_DATA_SELECT_ITER (iter));
-  g_assert (gda_data_model_iter_move_to_row (iter, 2));
-  value = gda_data_model_iter_get_value_at (iter, 1);
-  g_assert (value != NULL);
-  g_assert ( g_value_get_string (value) != NULL);
-  g_assert (g_strcmp0 ("user3", g_value_get_string (value)) == 0);
+  g_assert (prov != NULL);
+  g_assert (GDA_IS_PROVIDER_META (prov));
 }

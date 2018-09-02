@@ -252,6 +252,28 @@ test('ServerOperation', tso,
 		]
 	)
 
+tmp = executable('test-provider-meta',
+	['test-provider-meta.c'] ,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DBUILD_DIR="'+meson.current_build_dir()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ProviderMeta', tso,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
+
 subdir('data-models')
 subdir('meta-store')
 subdir('multi-threading')

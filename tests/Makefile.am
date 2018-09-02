@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES = libgda-test-6.0.la
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation 
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation test-provider-meta
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation test-provider-meta
 
 if HAVE_UI
 UI_EXTENSION = ui
@@ -17,7 +17,8 @@ AM_CPPFLAGS = \
         $(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	-DCHECK_FILES=\""$(top_srcdir)"\" \
-	-DTOP_BUILD_DIR=\""$(top_builddir)"\"
+	-DTOP_BUILD_DIR=\""$(top_builddir)"\" \
+	-DBUILD_DIR=\""$(builddir)"\"
 
 test_headers = \
         raw-ddl-creator.h
@@ -106,6 +107,13 @@ test_server_operation_SOURCES = \
         test-server-operation.c
 
 test_server_operation_LDADD = \
+        $(top_builddir)/libgda/libgda-6.0.la \
+        $(COREDEPS_LIBS)
+
+test_provider_meta_SOURCES = \
+        test-provider-meta.c
+
+test_provider_meta_LDADD = \
         $(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)
 
