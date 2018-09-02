@@ -28,13 +28,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_COMPARATOR          (gda_data_comparator_get_type())
-#define GDA_DATA_COMPARATOR(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_data_comparator_get_type(), GdaDataComparator)
-#define GDA_DATA_COMPARATOR_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_data_comparator_get_type (), GdaDataComparatorClass)
-#define GDA_IS_DATA_COMPARATOR(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_data_comparator_get_type ())
 
-typedef struct _GdaDataComparator GdaDataComparator;
-typedef struct _GdaDataComparatorClass GdaDataComparatorClass;
-typedef struct _GdaDataComparatorPrivate GdaDataComparatorPrivate;
+G_DECLARE_DERIVABLE_TYPE(GdaDataComparator, gda_data_comparator, GDA, DATA_COMPARATOR, GObject)
 
 /* error reporting */
 extern GQuark gda_data_comparator_error_quark (void);
@@ -61,13 +56,6 @@ typedef struct {
 	GHashTable  *values; /* key = ('+' or '-') and a column position starting at 0 (string)
 			      * value = a GValue pointer */
 } GdaDiff;
-
-/* struct for the object's data */
-struct _GdaDataComparator
-{
-	GObject                   object;
-	GdaDataComparatorPrivate *priv;
-};
 
 /* struct for the object's class */
 struct _GdaDataComparatorClass
@@ -104,7 +92,6 @@ struct _GdaDataComparatorClass
  */
 
 
-GType             gda_data_comparator_get_type        (void) G_GNUC_CONST;
 GObject          *gda_data_comparator_new             (GdaDataModel *old_model, GdaDataModel *new_model);
 void              gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_numbers, gint nb_cols);
 gboolean          gda_data_comparator_compute_diff    (GdaDataComparator *comp, GError **error);

@@ -65,14 +65,14 @@ enum
 	PROP_NEW_MODEL
 };
 
-struct _GdaDataComparatorPrivate
-{
+typedef struct {
 	GdaDataModel      *old_model;
 	GdaDataModel      *new_model;
 	gint               nb_key_columns;
 	gint              *key_columns;
 	GArray            *diffs; /* array of GdaDiff pointers */
-};
+} GdaDataComparatorPrivate;
+#define gda_data_comparator_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_COMPARATOR, GdaDataComparatorPrivate)
 
 
 /* module error */
@@ -139,6 +139,8 @@ gda_data_comparator_class_init (GdaDataComparatorClass *class)
 
 	parent_class = g_type_class_peek_parent (class);
 
+	g_type_class_add_private (object_class, sizeof (GdaDataComparatorPrivate));
+
 	/* signals */
 
 	gda_data_comparator_signals [DIFF_COMPUTED] =
@@ -153,7 +155,6 @@ gda_data_comparator_class_init (GdaDataComparatorClass *class)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_comparator_dispose;
-	object_class->finalize = gda_data_comparator_finalize;
 
 	/* Properties */
 	object_class->set_property = gda_data_comparator_set_property;
@@ -172,8 +173,8 @@ gda_data_comparator_class_init (GdaDataComparatorClass *class)
 static void
 gda_data_comparator_init (GdaDataComparator *comparator)
 {
-	comparator->priv = g_new0 (GdaDataComparatorPrivate, 1);
-	comparator->priv->diffs = g_array_new (FALSE, FALSE, sizeof (GdaDiff *));
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comparator);
+	priv->diffs = g_array_new (FALSE, FALSE, sizeof (GdaDiff *));
 }
 
 /**
@@ -203,15 +204,16 @@ gda_data_comparator_new (GdaDataModel *old_model, GdaDataModel *new_model)
 static void
 clean_diff (GdaDataComparator *comparator)
 {
-	if (comparator->priv->diffs) {
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comparator);
+	if (priv->diffs) {
 		gsize i;
-		for (i = 0; i < comparator->priv->diffs->len; i++) {
-			GdaDiff *diff = g_array_index (comparator->priv->diffs, GdaDiff *, i);
+		for (i = 0; i < priv->diffs->len; i++) {
+			GdaDiff *diff = g_array_index (priv->diffs, GdaDiff *, i);
 			gda_diff_free (diff);
 		}
-		g_array_free (comparator->priv->diffs, TRUE);
+		g_array_free (priv->diffs, TRUE);
 	}
-	comparator->priv->diffs = g_array_new (FALSE, FALSE, sizeof (GdaDiff *));
+	priv->diffs = g_array_new (FALSE, FALSE, sizeof (GdaDiff *));
 }
 
 static void
@@ -222,44 +224,24 @@ gda_data_comparator_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_COMPARATOR (object));
 
 	comparator = GDA_DATA_COMPARATOR (object);
-	if (comparator->priv) {
-		if (comparator->priv->old_model) {
-			g_object_unref (comparator->priv->old_model);
-			comparator->priv->old_model = NULL;
-		}
-		if (comparator->priv->new_model) {
-			g_object_unref (comparator->priv->new_model);
-			comparator->priv->new_model = NULL;
-		}
-		clean_diff (comparator);
-		g_free (comparator->priv->key_columns);
-		g_array_free (comparator->priv->diffs, TRUE);
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comparator);
+	if (priv->old_model) {
+		g_object_unref (priv->old_model);
+		priv->old_model = NULL;
 	}
+	if (priv->new_model) {
+		g_object_unref (priv->new_model);
+		priv->new_model = NULL;
+	}
+	clean_diff (comparator);
+	g_free (priv->key_columns);
+	g_array_free (priv->diffs, TRUE);
 
 	/* parent class */
 	parent_class->dispose (object);
 }
 
 static void
-gda_data_comparator_finalize (GObject *object)
-{
-	GdaDataComparator *comparator;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_DATA_COMPARATOR (object));
-
-	comparator = GDA_DATA_COMPARATOR (object);
-	if (comparator->priv) {
-		g_free (comparator->priv);
-		comparator->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
-}
-
-
-static void 
 gda_data_comparator_set_property (GObject *object,
 				  guint param_id,
 				  const GValue *value,
@@ -267,33 +249,34 @@ gda_data_comparator_set_property (GObject *object,
 {
 	GdaDataComparator *comparator;
 	comparator = GDA_DATA_COMPARATOR (object);
-	if (comparator->priv) {
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comparator);
+	if (priv) {
 		GdaDataModel *model;
 
 		switch (param_id) {
 		case PROP_OLD_MODEL:
 			model = (GdaDataModel*) g_value_get_object (value);
-			if (comparator->priv->old_model && (comparator->priv->old_model != model)) {
+			if (priv->old_model && (priv->old_model != model)) {
 				/* re-init */
 				clean_diff (comparator);
-				g_object_unref (comparator->priv->old_model);
-				g_free (comparator->priv->key_columns);
-				comparator->priv->key_columns = NULL;
+				g_object_unref (priv->old_model);
+				g_free (priv->key_columns);
+				priv->key_columns = NULL;
 			}
-			comparator->priv->old_model = model; 
+			priv->old_model = model;
 			if (model)
 				g_object_ref (model);
 			break;
 		case PROP_NEW_MODEL:
 			model = (GdaDataModel*) g_value_get_object (value);
-			if (comparator->priv->new_model && (comparator->priv->new_model != model)) {
+			if (priv->new_model && (priv->new_model != model)) {
 				/* re-init */
 				clean_diff (comparator);
-				g_object_unref (comparator->priv->new_model);
-				g_free (comparator->priv->key_columns);
-				comparator->priv->key_columns = NULL;
+				g_object_unref (priv->new_model);
+				g_free (priv->key_columns);
+				priv->key_columns = NULL;
 			}
-			comparator->priv->new_model = model; 
+			priv->new_model = model;
 			if (model)
 				g_object_ref (model);
 			break;
@@ -313,13 +296,14 @@ gda_data_comparator_get_property (GObject *object,
 	GdaDataComparator *comparator;
 
 	comparator = GDA_DATA_COMPARATOR (object);
-	if (comparator->priv) {
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comparator);
+	if (priv) {
 		switch (param_id) {
 		case PROP_OLD_MODEL:
-			g_value_set_object (value, comparator->priv->old_model);
+			g_value_set_object (value, priv->old_model);
 			break;
 		case PROP_NEW_MODEL:
-			g_value_set_object (value, comparator->priv->new_model);
+			g_value_set_object (value, priv->new_model);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -348,19 +332,19 @@ void
 gda_data_comparator_set_key_columns (GdaDataComparator *comp, const gint *col_numbers, gint nb_cols)
 {
 	g_return_if_fail (GDA_IS_DATA_COMPARATOR (comp));
-	g_return_if_fail (comp->priv);
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comp);
 
-	g_free (comp->priv->key_columns);
-	comp->priv->key_columns = NULL;
+	g_free (priv->key_columns);
+	priv->key_columns = NULL;
 	if (nb_cols > 0) {
-		comp->priv->nb_key_columns = nb_cols;
-		comp->priv->key_columns = g_new (gint, nb_cols);
-		memcpy (comp->priv->key_columns, col_numbers, sizeof (gint) * nb_cols); /* Flawfinder: ignore */
+		priv->nb_key_columns = nb_cols;
+		priv->key_columns = g_new (gint, nb_cols);
+		memcpy (priv->key_columns, col_numbers, sizeof (gint) * nb_cols); /* Flawfinder: ignore */
 	}
 }
 
 /*
- * Find the row in @comp->priv->old_model from the values of @comp->priv->new_model at line @row
+ * Find the row in @priv->old_model from the values of @priv->new_model at line @row
  * It is assumed that both data model have the same number of columns and of "compatible" types.
  *
  * Returns: 
@@ -374,19 +358,20 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
 	gint i, erow;
 	gint ncols;
 	GSList *values = NULL;
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comp);
 	
 	*out_has_changed = FALSE;
-	ncols = gda_data_model_get_n_columns (comp->priv->old_model);
-	if (!comp->priv->key_columns) {
-		comp->priv->nb_key_columns = ncols;
-		comp->priv->key_columns = g_new (gint, ncols);
+	ncols = gda_data_model_get_n_columns (priv->old_model);
+	if (!priv->key_columns) {
+		priv->nb_key_columns = ncols;
+		priv->key_columns = g_new (gint, ncols);
 		for (i = 0; i < ncols; i++)
-			comp->priv->key_columns [i] = i;
+			priv->key_columns [i] = i;
 	}
 
-	for (i = 0; i < comp->priv->nb_key_columns; i++) {
+	for (i = 0; i < priv->nb_key_columns; i++) {
 		const GValue *cvalue;
-		cvalue = gda_data_model_get_value_at (comp->priv->new_model, comp->priv->key_columns[i], row, error);
+		cvalue = gda_data_model_get_value_at (priv->new_model, priv->key_columns[i], row, error);
 		if (!cvalue) {
 			if (values)
 				g_slist_free (values);
@@ -395,17 +380,17 @@ find_row_in_model (GdaDataComparator *comp, gint row, gboolean *out_has_changed,
 		values = g_slist_append (values, (gpointer) cvalue);
 	}
 
-	erow = gda_data_model_get_row_from_values (comp->priv->old_model, values, comp->priv->key_columns);
+	erow = gda_data_model_get_row_from_values (priv->old_model, values, priv->key_columns);
 	g_slist_free (values);
 	
 	if (erow >= 0) {
 		gboolean changed = FALSE;
 		for (i = 0; i < ncols; i++) {
 			const GValue *v1, *v2;
-			v1 = gda_data_model_get_value_at (comp->priv->old_model, i, erow, error);
+			v1 = gda_data_model_get_value_at (priv->old_model, i, erow, error);
 			if (!v1)
 				return -2;
-			v2 = gda_data_model_get_value_at (comp->priv->new_model, i, row, error);
+			v2 = gda_data_model_get_value_at (priv->new_model, i, row, error);
 			if (!v2) 
 				return -2;
 			if (gda_value_compare (v1, v2)) {
@@ -440,31 +425,31 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 	gboolean *rows_to_del = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_COMPARATOR (comp), FALSE);
-	g_return_val_if_fail (comp->priv, FALSE);
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comp);
 
 	clean_diff (comp);
 
 	/* check setup */
-	if (!comp->priv->old_model) {
+	if (!priv->old_model) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
 			      "%s", _("Missing original data model"));
 		return FALSE;
 	}
-	if (!comp->priv->new_model) {
+	if (!priv->new_model) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
 			      "%s", _("Missing new data model"));
 		return FALSE;
 	}
-	if (! (gda_data_model_get_access_flags (comp->priv->old_model) & GDA_DATA_MODEL_ACCESS_RANDOM) ||
-	    ! (gda_data_model_get_access_flags (comp->priv->new_model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {
+	if (! (gda_data_model_get_access_flags (priv->old_model) & GDA_DATA_MODEL_ACCESS_RANDOM) ||
+	    ! (gda_data_model_get_access_flags (priv->new_model) & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
 			      "%s", _("Data models must support random access model"));
 		return FALSE;
 	}
 
 	/* compare columns */
-	oncols = gda_data_model_get_n_columns (comp->priv->old_model);
-	nncols = gda_data_model_get_n_columns (comp->priv->new_model);
+	oncols = gda_data_model_get_n_columns (priv->old_model);
+	nncols = gda_data_model_get_n_columns (priv->new_model);
 	if (oncols != nncols) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MISSING_DATA_MODEL_ERROR,
 			      "%s", _("Data models to compare don't have the same number of columns"));
@@ -473,8 +458,8 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 
 	for (i = 0; i < oncols; i++) {
 		GdaColumn *ocol, *ncol;
-		ocol = gda_data_model_describe_column (comp->priv->old_model, i);
-		ncol = gda_data_model_describe_column (comp->priv->new_model, i);
+		ocol = gda_data_model_describe_column (priv->old_model, i);
+		ncol = gda_data_model_describe_column (priv->new_model, i);
 		if (gda_column_get_g_type (ocol) != gda_column_get_g_type (ncol)) {
 			g_set_error (error, GDA_DATA_COMPARATOR_ERROR, 
 				     GDA_DATA_COMPARATOR_COLUMN_TYPES_MISMATCH_ERROR,
@@ -486,13 +471,13 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 	}
 
 	/* actual differences computations : rows to insert / update */
-	onrows = gda_data_model_get_n_rows (comp->priv->old_model);
+	onrows = gda_data_model_get_n_rows (priv->old_model);
 	if (onrows < 0) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
 			     "%s", _("Can't get the number of rows of data model to compare from"));
 		return FALSE;
 	}
-	nnrows = gda_data_model_get_n_rows (comp->priv->new_model);
+	nnrows = gda_data_model_get_n_rows (priv->new_model);
 	if (nnrows < 0) {
 		g_set_error (error, GDA_DATA_COMPARATOR_ERROR, GDA_DATA_COMPARATOR_MODEL_ACCESS_ERROR,
 			     "%s", _("Can't get the number of rows of data model to compare to"));
@@ -524,7 +509,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 							      (GDestroyNotify) gda_value_free);
 			for (j = 0; j < oncols; j++) {
 				const GValue *cvalue;
-				cvalue = gda_data_model_get_value_at (comp->priv->new_model, j, i, error);
+				cvalue = gda_data_model_get_value_at (priv->new_model, j, i, error);
 				if (!cvalue) {
 					/* an error occurred */
 					g_free (rows_to_del);
@@ -551,7 +536,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 							      (GDestroyNotify) gda_value_free);
 			for (j = 0; j < oncols; j++) {
 				const GValue *cvalue;
-				cvalue = gda_data_model_get_value_at (comp->priv->new_model, j, i, error);
+				cvalue = gda_data_model_get_value_at (priv->new_model, j, i, error);
 				if (!cvalue) {
 					/* an error occurred */
 					g_free (rows_to_del);
@@ -560,7 +545,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 				}
 				g_hash_table_insert (diff->values, g_strdup_printf ("+%d", j),
 						     gda_value_copy (cvalue));
-				cvalue = gda_data_model_get_value_at (comp->priv->old_model, j, i, error);
+				cvalue = gda_data_model_get_value_at (priv->old_model, j, i, error);
 				if (!cvalue) {
 					/* an error occurred */
 					g_free (rows_to_del);
@@ -575,7 +560,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 			rows_to_del [erow] = FALSE; /* row has not been changed */
 
 		if (diff) {
-			g_array_append_val (comp->priv->diffs, diff);
+			g_array_append_val (priv->diffs, diff);
 			g_signal_emit (comp, gda_data_comparator_signals [DIFF_COMPUTED], 0, diff, &stop);
 			if (stop) {
 				g_set_error (error, GDA_DATA_COMPARATOR_ERROR,
@@ -601,7 +586,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 							      (GDestroyNotify) gda_value_free);
 			for (j = 0; j < oncols; j++)  {
 				const GValue *cvalue;
-				cvalue = gda_data_model_get_value_at (comp->priv->old_model, j, i, error);
+				cvalue = gda_data_model_get_value_at (priv->old_model, j, i, error);
 				if (!cvalue) {
 					/* an error occurred */
 					g_free (rows_to_del);
@@ -611,7 +596,7 @@ gda_data_comparator_compute_diff (GdaDataComparator *comp, GError **error)
 				g_hash_table_insert (diff->values, g_strdup_printf ("-%d", j),
 						     gda_value_copy (cvalue));
 			}
-			g_array_append_val (comp->priv->diffs, diff);
+			g_array_append_val (priv->diffs, diff);
 			g_signal_emit (comp, gda_data_comparator_signals [DIFF_COMPUTED], 0, diff, &stop);
 			if (stop) {
 				g_set_error (error, GDA_DATA_COMPARATOR_ERROR,
@@ -639,9 +624,9 @@ gint
 gda_data_comparator_get_n_diffs  (GdaDataComparator *comp)
 {
 	g_return_val_if_fail (GDA_IS_DATA_COMPARATOR (comp), 0);
-	g_return_val_if_fail (comp->priv, 0);
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comp);
 
-	return comp->priv->diffs->len;
+	return priv->diffs->len;
 }
 
 /**
@@ -657,7 +642,7 @@ const GdaDiff *
 gda_data_comparator_get_diff (GdaDataComparator *comp, gint pos)
 {
 	g_return_val_if_fail (GDA_IS_DATA_COMPARATOR (comp), NULL);
-	g_return_val_if_fail (comp->priv, NULL);
+	GdaDataComparatorPrivate *priv = gda_data_comparator_get_instance_private (comp);
 
-	return g_array_index (comp->priv->diffs, GdaDiff*, pos);
+	return g_array_index (priv->diffs, GdaDiff*, pos);
 }
