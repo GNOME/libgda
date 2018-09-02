@@ -254,14 +254,15 @@ typedef struct {
   GWeakRef *connection;
 } GdaSqliteProviderPrivate;
 
+#define gda_sqlite_provider_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProviderPrivate)
 
 static void
 gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE(GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER,
-                        G_ADD_PRIVATE(GdaSqliteProvider)
-                        G_IMPLEMENT_INTERFACE(GDA_TYPE_PROVIDER_META,
-                                              gda_sqlite_provider_meta_iface_init))
+static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
+static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
+					    GdaSqliteProviderClass *klass);
+static GObjectClass *parent_class = NULL;
 
 /*
  * GdaServerProvider's virtual methods
@@ -808,7 +809,9 @@ gda_sqlite_provider_dispose (GObject *object)
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
+  parent_class = g_type_class_peek_parent (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	g_type_class_add_private (object_class, sizeof (GdaSqliteProviderPrivate));
 
   object_class->get_property = gda_sqlite_provider_get_property;
   object_class->set_property = gda_sqlite_provider_set_property;
@@ -823,11 +826,11 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						NULL);
-  g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
+//g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
 }
 
 static void
-gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
+gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
 {
 	g_mutex_lock (&init_mutex);
 
@@ -858,6 +861,53 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
 	g_mutex_unlock (&init_mutex);
 }
 
+GType
+gda_sqlite_provider_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GMutex registering;
+		static GTypeInfo info = {
+			sizeof (GdaSqliteProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_sqlite_provider_class_init,
+			NULL, NULL,
+			sizeof (GdaSqliteProvider),
+			0,
+			(GInstanceInitFunc) gda_sqlite_provider_init,
+			0
+		};
+		g_mutex_lock (&registering);
+		if (type == 0) {
+#ifdef WITH_BDBSQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+#else
+  #ifdef STATIC_SQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+  #else
+    #ifdef HAVE_SQLITE
+			GModule *module2;
+
+			module2 = find_sqlite_library ("libsqlite3");
+			if (module2)
+				load_symbols (module2);
+			if (s3r)
+				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+			else
+				g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
+    #else
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+    #endif
+  #endif
+#endif
+		}
+		g_mutex_unlock (&registering);
+	}
+
+	return type;
+}
 
 
 static GdaWorker *
