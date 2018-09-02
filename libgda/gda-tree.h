@@ -27,12 +27,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE            (gda_tree_get_type())
-#define GDA_TREE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE, GdaTree))
-#define GDA_TREE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE, GdaTreeClass))
-#define GDA_IS_TREE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE))
-#define GDA_IS_TREE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE))
-#define GDA_TREE_GET_CLASS(o)	 (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE, GdaTreeClass))
 
+G_DECLARE_DERIVABLE_TYPE(GdaTree, gda_tree, GDA, TREE, GObject)
 /* error reporting */
 extern GQuark gda_tree_error_quark (void);
 #define GDA_TREE_ERROR gda_tree_error_quark ()
@@ -41,10 +37,6 @@ typedef enum {
 	GDA_TREE_UNKNOWN_ERROR
 } GdaTreeError;
 
-struct _GdaTree {
-	GObject           object;
-	GdaTreePrivate   *priv;
-};
 
 struct _GdaTreeClass {
 	GObjectClass      object_class;
@@ -78,7 +70,6 @@ struct _GdaTreeClass {
  * or to dump the whole or part of a tree in an indented and easy to read fashion.
  */
 
-GType              gda_tree_get_type      (void) G_GNUC_CONST;
 GdaTree*           gda_tree_new           (void);
 void               gda_tree_add_manager   (GdaTree *tree, GdaTreeManager *manager);
 

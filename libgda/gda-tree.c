@@ -29,13 +29,14 @@
 #include "gda-tree-node.h"
 #include <libgda/gda-debug-macros.h>
 
-struct _GdaTreePrivate {
+typedef struct {
 	GSList      *managers; /* list of GdaTreeManager */
 	GdaTreeNode *root;
-};
+} GdaTreePrivate;
+#define gda_tree_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_TREE, GdaTreePrivate)
 
 static void gda_tree_class_init (GdaTreeClass *klass);
-static void gda_tree_init       (GdaTree *tree, GdaTreeClass *klass);
+static void gda_tree_init       (GdaTree *tree);
 static void gda_tree_dispose    (GObject *object);
 static void gda_tree_set_property (GObject *object,
 				   guint param_id,
@@ -179,12 +180,12 @@ gda_tree_class_init (GdaTreeClass *klass)
 }
 
 static void
-gda_tree_init (GdaTree *tree, G_GNUC_UNUSED GdaTreeClass *klass)
+gda_tree_init (GdaTree *tree)
 {
 	g_return_if_fail (GDA_IS_TREE (tree));
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
-	tree->priv = g_new0 (GdaTreePrivate, 1);
-	tree->priv->managers = NULL;
+	priv->managers = NULL;
 
 	take_root_node (tree, gda_tree_node_new (NULL));
 }
@@ -195,18 +196,14 @@ gda_tree_dispose (GObject *object)
 	GdaTree *tree = (GdaTree *) object;
 
 	g_return_if_fail (GDA_IS_TREE (tree));
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
-	if (tree->priv) {
-		if (tree->priv->root) 
-			unset_root_node (tree);
-		if (tree->priv->managers) {
-			g_slist_foreach (tree->priv->managers, (GFunc) g_object_unref, NULL);
-			g_slist_free (tree->priv->managers);
-		}
-		g_free (tree->priv);
-		tree->priv = NULL;
+	if (priv->root)
+		unset_root_node (tree);
+	if (priv->managers) {
+		g_slist_foreach (priv->managers, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->managers);
 	}
-
 	/* chain to parent class */
 	parent_class->dispose (object);
 }
@@ -247,7 +244,7 @@ gda_tree_get_type (void)
                         sizeof (GdaTree),
                         0,
                         (GInstanceInitFunc) gda_tree_init,
-			0
+                        0
                 };
 
                 g_mutex_lock (&registering);
@@ -266,13 +263,11 @@ gda_tree_set_property (GObject *object,
 {
 	GdaTree *tree;
 
-        tree = GDA_TREE (object);
-        if (tree->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}	
+	tree = GDA_TREE (object);
+	switch (param_id) {
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -285,25 +280,24 @@ gda_tree_get_property (GObject *object,
 	GdaTree *tree;
 	
 	tree = GDA_TREE (object);
-	if (tree->priv) {
-		switch (param_id) {
-		case PROP_IS_LIST: {
-			GSList *list;
-			gboolean is_list = TRUE;
-			for (list = tree->priv->managers; list; list = list->next) {
-				if (gda_tree_manager_get_managers ((GdaTreeManager*) list->data)) {
-					is_list = FALSE;
-					break;
-				}
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	switch (param_id) {
+	case PROP_IS_LIST: {
+		GSList *list;
+		gboolean is_list = TRUE;
+		for (list = priv->managers; list; list = list->next) {
+			if (gda_tree_manager_get_managers ((GdaTreeManager*) list->data)) {
+				is_list = FALSE;
+				break;
 			}
-			g_value_set_boolean (value, is_list);
-			break;
 		}
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-	}	
+		g_value_set_boolean (value, is_list);
+		break;
+	}
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
 }
 
 /**
@@ -336,8 +330,9 @@ gda_tree_add_manager (GdaTree *tree, GdaTreeManager *manager)
 {
 	g_return_if_fail (GDA_IS_TREE (tree));
 	g_return_if_fail (GDA_IS_TREE_MANAGER (manager));
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
-	tree->priv->managers = g_slist_append (tree->priv->managers, manager);
+	priv->managers = g_slist_append (priv->managers, manager);
 	g_object_ref (manager);
 }
 
@@ -371,10 +366,11 @@ gda_tree_clean (GdaTree *tree)
 
 	g_return_if_fail (GDA_IS_TREE (tree));
 	TO_IMPLEMENT; /* signal changes */
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	new_root = gda_tree_node_new (NULL);
 
-	gda_attributes_manager_copy (_gda_tree_node_attributes_manager, (gpointer) tree->priv->root,
+	gda_attributes_manager_copy (_gda_tree_node_attributes_manager, (gpointer) priv->root,
 				     _gda_tree_node_attributes_manager, (gpointer) new_root);
 
 	take_root_node (tree, new_root);
@@ -396,7 +392,8 @@ gboolean
 gda_tree_update_all (GdaTree *tree, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_TREE (tree), FALSE);
-	return create_or_update_children (tree->priv->managers, tree->priv->root, FALSE, error);	
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	return create_or_update_children (priv->managers, priv->root, FALSE, error);
 }
 
 /**
@@ -420,10 +417,11 @@ gda_tree_update_part (GdaTree *tree, GdaTreeNode *node, GError **error)
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), FALSE);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), FALSE);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	top = gda_tree_node_get_parent (node);
 	if (!top)
-		top = tree->priv->root;
+		top = priv->root;
 	mgr = _gda_tree_node_get_manager_for_child (top, node);
 	mgrlist = (GSList*) gda_tree_manager_get_managers (mgr);
 
@@ -457,11 +455,12 @@ gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error)
 
 	g_return_val_if_fail (GDA_IS_TREE (tree), FALSE);
 	g_return_val_if_fail (! node || GDA_IS_TREE_NODE (node), FALSE);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	if (node) {
 		top = gda_tree_node_get_parent (node);
 		if (!top)
-			top = tree->priv->root;
+			top = priv->root;
 		mgr = _gda_tree_node_get_manager_for_child (top, node);
 		mgrlist = (GSList*) gda_tree_manager_get_managers (mgr);
 
@@ -473,7 +472,7 @@ gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error)
 	}
 	else {
 		/* update top level nodes */
-		create_or_update_children (tree->priv->managers, tree->priv->root, TRUE, error);
+		create_or_update_children (priv->managers, priv->root, TRUE, error);
 	}
 
 	return TRUE;
@@ -496,9 +495,10 @@ gda_tree_dump (GdaTree *tree, GdaTreeNode *node, FILE *stream)
 	GString *string;
 
 	g_return_if_fail (GDA_IS_TREE (tree));
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	if (!node)
-		node = tree->priv->root;
+		node = priv->root;
 
 	string = g_string_new (".\n");
 	klass = (GdaTreeNodeClass*) G_OBJECT_GET_CLASS (node);
@@ -533,6 +533,7 @@ gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_
 	GSList *segments, *nodes;
 	
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	if (tree_path) {
 		segments = decompose_path_as_segments (tree_path, use_names);
@@ -543,7 +544,7 @@ gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_
 		}
 	}
 	else {
-		nodes = gda_tree_node_get_children (tree->priv->root);
+		nodes = gda_tree_node_get_children (priv->root);
 #ifdef GDA_DEBUG_NO
 		GSList *list;
 		g_print ("Top nodes:\n");
@@ -566,6 +567,7 @@ gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_
 static GSList *
 real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_names, GdaTreeNode **out_last_node)
 {
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 	if (out_last_node)
 		*out_last_node = NULL;
 
@@ -574,14 +576,14 @@ real_gda_tree_get_nodes_in_path (GdaTree *tree, GSList *segments, gboolean use_n
 		if (out_last_node)
 			return NULL;
 		else
-			return gda_tree_node_get_children (tree->priv->root);
+			return gda_tree_node_get_children (priv->root);
 	}
 
 	/* get the GdatreeNode for @tree_path */
 	GSList *seglist;
 	GdaTreeNode *node;
 	GdaTreeNode *parent;
-	for (seglist = segments, parent = tree->priv->root;
+	for (seglist = segments, parent = priv->root;
 	     seglist;
 	     seglist = seglist->next, parent = node) {
 		if (use_names)
@@ -620,8 +622,9 @@ gda_tree_get_node_path (GdaTree *tree, GdaTreeNode *node)
 	gchar *str = NULL;
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), NULL);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
-	if (!tree->priv->root)
+	if (!priv->root)
 		return NULL;
 
 	array = g_array_new (TRUE, FALSE, sizeof (gchar*));
@@ -641,11 +644,12 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
 	GdaTreeNode *parent;
 	GSList *list;
 	gint i;
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 	parent = gda_tree_node_get_parent (node);
 	if (parent)
 		list = gda_tree_node_get_children (parent);
 	else
-		list = gda_tree_node_get_children (tree->priv->root);
+		list = gda_tree_node_get_children (priv->root);
 
 	i = g_slist_index (list, node);
 	g_slist_free (list);
@@ -715,9 +719,10 @@ gda_tree_get_node_manager (GdaTree *tree, GdaTreeNode *node)
 	GdaTreeNode *parent;
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), NULL);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
 	parent = gda_tree_node_get_parent (node);
-	return _gda_tree_node_get_manager_for_child (parent ? parent : tree->priv->root, node);
+	return _gda_tree_node_get_manager_for_child (parent ? parent : priv->root, node);
 }
 
 static gboolean
@@ -898,22 +903,24 @@ gda_tree_set_attribute (GdaTree *tree, const gchar *attribute, const GValue *val
 			GDestroyNotify destroy)
 {
 	g_return_if_fail (GDA_IS_TREE (tree));
-	gda_tree_node_set_node_attribute (tree->priv->root, attribute, value, destroy);
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	gda_tree_node_set_node_attribute (priv->root, attribute, value, destroy);
 }
 
 static void
 take_root_node (GdaTree *tree, GdaTreeNode *root)
 {
-	if (tree->priv->root)
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	if (priv->root)
 		unset_root_node (tree);
-	tree->priv->root = root;
-	g_signal_connect (tree->priv->root, "node-changed",
+	priv->root = root;
+	g_signal_connect (priv->root, "node-changed",
 			  G_CALLBACK (node_changed_cb), tree);
-	g_signal_connect (tree->priv->root, "node-inserted",
+	g_signal_connect (priv->root, "node-inserted",
 			  G_CALLBACK (node_inserted_cb), tree);
-	g_signal_connect (tree->priv->root, "node-has-child-toggled",
+	g_signal_connect (priv->root, "node-has-child-toggled",
 			  G_CALLBACK (node_has_child_toggled_cb), tree);
-	g_signal_connect (tree->priv->root, "node-deleted",
+	g_signal_connect (priv->root, "node-deleted",
 			  G_CALLBACK (node_deleted_cb), tree);
 }
 
@@ -921,42 +928,46 @@ static void
 unset_root_node (GdaTree *tree)
 {
 	GSList *list;
-	for (list = tree->priv->managers; list; list = list->next) {
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	for (list = priv->managers; list; list = list->next) {
 		GdaTreeManager *manager = GDA_TREE_MANAGER (list->data);
 
-		_gda_tree_node_add_children (tree->priv->root, manager, NULL);
+		_gda_tree_node_add_children (priv->root, manager, NULL);
 	}
 
-	g_signal_handlers_disconnect_by_func (tree->priv->root,
+	g_signal_handlers_disconnect_by_func (priv->root,
 					      G_CALLBACK (node_changed_cb), tree);
-	g_signal_handlers_disconnect_by_func (tree->priv->root,
+	g_signal_handlers_disconnect_by_func (priv->root,
 					      G_CALLBACK (node_inserted_cb), tree);
-	g_signal_handlers_disconnect_by_func (tree->priv->root,
+	g_signal_handlers_disconnect_by_func (priv->root,
 					      G_CALLBACK (node_has_child_toggled_cb), tree);
-	g_signal_handlers_disconnect_by_func (tree->priv->root,
+	g_signal_handlers_disconnect_by_func (priv->root,
 					      G_CALLBACK (node_deleted_cb), tree);
 
-	g_object_unref (tree->priv->root);
+	g_object_unref (priv->root);
 }
 
 static void
 node_changed_cb (GdaTreeNode *reporting, GdaTreeNode *node, GdaTree *tree)
 {
-	if ((reporting != node) || (reporting != tree->priv->root))
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	if ((reporting != node) || (reporting != priv->root))
 		g_signal_emit (tree, gda_tree_signals [NODE_CHANGED], 0, node);
 }
 
 static void
 node_inserted_cb (GdaTreeNode *reporting, GdaTreeNode *node, GdaTree *tree)
 {
-	if ((reporting != node) || (reporting != tree->priv->root))
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	if ((reporting != node) || (reporting != priv->root))
 		g_signal_emit (tree, gda_tree_signals [NODE_INSERTED], 0, node);
 }
 
 static void
 node_has_child_toggled_cb (GdaTreeNode *reporting, GdaTreeNode *node, GdaTree *tree)
 {
-	if ((reporting != node) || (reporting != tree->priv->root))
+	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
+	if ((reporting != node) || (reporting != priv->root))
 		g_signal_emit (tree, gda_tree_signals [NODE_HAS_CHILD_TOGGLED], 0, node);
 }
 
