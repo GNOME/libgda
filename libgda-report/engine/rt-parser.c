@@ -1173,13 +1173,17 @@ rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtN
 		g_free (tmp);
 
 #ifdef HAVE_GDKPIXBUF
-		GdkPixdata pixdata;
-		if (gda_binary_get_data (rtnode->binary) &&
-		    gdk_pixdata_deserialize (&pixdata, gda_binary_get_size (rtnode->binary),
-					     (guint8*) gda_binary_get_data (rtnode->binary), NULL)) {
-                        GdkPixbuf *pixbuf;
-                        pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);
-                        if (pixbuf) {
+		GInputStream *istream;
+		gpointer data;
+		GError *error = NULL;
+		data = gda_binary_get_data (rtnode->binary);
+		if (data != NULL) {
+			istream = g_memory_input_stream_new_from_data (data,
+										   gda_binary_get_size (rtnode->binary),
+										   NULL);
+			GdkPixbuf *pixbuf = NULL;
+			pixbuf = gdk_pixbuf_new_from_stream (istream, NULL, &error );
+			if (pixbuf) {
 				/* write to file */
 				if (gdk_pixbuf_save (pixbuf, file, "jpeg", NULL,
 						     "quality", "100", NULL)) {
@@ -1187,10 +1191,14 @@ rich_text_node_to_docbook (RenderingContext *context, xmlNodePtr top_parent, RtN
 					saved = TRUE;
 					type = 0;
 				}
-				
 				g_object_unref (pixbuf);
-                        }
-                }
+			} else {
+				g_message ("Error reading binary data pixbuf: %s",
+						   error != NULL ? (error->message != NULL ? error->message : _("No detail"))
+						   : _("No detail"));
+			}
+			g_object_unref (istream);
+		}
 #endif
 
 		if (!saved) {
@@ -1385,13 +1393,17 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 		g_free (tmp);
 
 #ifdef HAVE_GDKPIXBUF
-		GdkPixdata pixdata;
-		if (gda_binary_get_data (rtnode->binary) &&
-		    gdk_pixdata_deserialize (&pixdata, gda_binary_get_size (rtnode->binary),
-					     (guint8*) gda_binary_get_data (rtnode->binary), NULL)) {
-                        GdkPixbuf *pixbuf;
-                        pixbuf = gdk_pixbuf_from_pixdata (&pixdata, TRUE, NULL);
-                        if (pixbuf) {
+		GInputStream *istream;
+		gpointer data;
+		GError *error = NULL;
+		data = gda_binary_get_data (rtnode->binary);
+		if (data != NULL) {
+			istream = g_memory_input_stream_new_from_data (data,
+										   gda_binary_get_size (rtnode->binary),
+										   NULL);
+			GdkPixbuf *pixbuf = NULL;
+			pixbuf = gdk_pixbuf_new_from_stream (istream, NULL, &error );
+			if (pixbuf) {
 				/* write to file */
 				if (gdk_pixbuf_save (pixbuf, file, "jpeg", NULL,
 						     "quality", "100", NULL)) {
@@ -1399,10 +1411,14 @@ rich_text_node_to_html (RenderingContext *context, xmlNodePtr top_parent, RtNode
 					saved = TRUE;
 					type = 0;
 				}
-				
 				g_object_unref (pixbuf);
-                        }
-                }
+			} else {
+				g_message ("Error reading binary data pixbuf: %s",
+						   error != NULL ? (error->message != NULL ? error->message : _("No detail"))
+						   : _("No detail"));
+			}
+			g_object_unref (istream);
+		}
 #endif
 
 		if (!saved) {
