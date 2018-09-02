@@ -40,7 +40,7 @@
 typedef struct {
 	GValue *value;
 	gint    column_fields_index;
-	gint    data_pos; /* index in pivot->priv->data_fields, or -1 if no index */
+	gint    data_pos; /* index in priv->data_fields, or -1 if no index */
 } ColumnData;
 static guint column_data_hash (gconstpointer key);
 static gboolean column_data_equal (gconstpointer a, gconstpointer b);
@@ -67,7 +67,7 @@ static GValue *aggregate_get_empty_value (GdaDataPivotAggregate aggregate);
 static gboolean aggregate_handle_new_value (CellData *cdata, const GValue *new_value);
 
 
-struct _GdaDataPivotPrivate {
+typedef struct {
 	GdaDataModel  *model; /* data to analyse */
 
 	GdaConnection *vcnc; /* to use data in @model for row and column fields */
@@ -80,7 +80,7 @@ struct _GdaDataPivotPrivate {
 	/* computed data */
 	GArray        *columns; /* Array of GdaColumn objects, for ALL columns! */
 	GdaDataModel  *results;
-};
+} GdaDataPivotPrivate;
 
 /* properties */
 enum
@@ -175,7 +175,7 @@ gda_data_pivot_class_init (GdaDataPivotClass *klass)
 
 	/* properties */
 	object_class->set_property = gda_data_pivot_set_property;
-        object_class->get_property = gda_data_pivot_get_property;
+	object_class->get_property = gda_data_pivot_get_property;
 	g_object_class_install_property (object_class, PROP_MODEL,
                                          g_param_spec_object ("model", NULL, "Data model from which data is analysed",
                                                               GDA_TYPE_DATA_MODEL,
@@ -183,8 +183,10 @@ gda_data_pivot_class_init (GdaDataPivotClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_pivot_dispose;
-	object_class->finalize = gda_data_pivot_finalize;
+	g_type_class_add_private(object_class, sizeof(GdaDataPivotPrivate));
 }
+
+#define gda_data_pivot_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_PIVOT, GdaDataPivotPrivate)
 
 static void
 gda_data_pivot_data_model_init (GdaDataModelIface *iface)
@@ -215,27 +217,28 @@ static void
 gda_data_pivot_init (GdaDataPivot *model, G_GNUC_UNUSED GdaDataPivotClass *klass)
 {
 	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
-	model->priv = g_new0 (GdaDataPivotPrivate, 1);
-	model->priv->model = NULL;
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
+	priv->model = NULL;
 }
 
 static void
 clean_previous_population (GdaDataPivot *pivot)
 {
-	if (pivot->priv->results) {
-		g_object_unref ((GObject*) pivot->priv->results);
-		pivot->priv->results = NULL;
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	if (priv->results) {
+		g_object_unref ((GObject*) priv->results);
+		priv->results = NULL;
 	}
 
-	if (pivot->priv->columns) {
+	if (priv->columns) {
 		guint i;
-		for (i = 0; i < pivot->priv->columns->len; i++) {
+		for (i = 0; i < priv->columns->len; i++) {
 			GObject *obj;
-			obj = g_array_index (pivot->priv->columns, GObject*, i);
+			obj = g_array_index (priv->columns, GObject*, i);
 			g_object_unref (obj);
 		}
-		g_array_free (pivot->priv->columns, TRUE);
-		pivot->priv->columns = NULL;
+		g_array_free (priv->columns, TRUE);
+		priv->columns = NULL;
 	}
 }
 
@@ -243,81 +246,63 @@ static void
 gda_data_pivot_dispose (GObject *object)
 {
 	GdaDataPivot *model = (GdaDataPivot *) object;
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
 
 	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
 
 	/* free memory */
-	if (model->priv) {
-		clean_previous_population (model);
+	clean_previous_population (model);
 
-		if (model->priv->row_fields) {
-			guint i;
-			for (i = 0; i < model->priv->row_fields->len; i++) {
-				gchar *tmp;
-				tmp = g_array_index (model->priv->row_fields, gchar*, i);
-				g_free (tmp);
-			}
-			g_array_free (model->priv->row_fields, TRUE);
-			model->priv->row_fields = NULL;
+	if (priv->row_fields) {
+		guint i;
+		for (i = 0; i < priv->row_fields->len; i++) {
+			gchar *tmp;
+			tmp = g_array_index (priv->row_fields, gchar*, i);
+			g_free (tmp);
 		}
+		g_array_free (priv->row_fields, TRUE);
+		priv->row_fields = NULL;
+	}
 
-		if (model->priv->column_fields) {
-			guint i;
-			for (i = 0; i < model->priv->column_fields->len; i++) {
-				gchar *tmp;
-				tmp = g_array_index (model->priv->column_fields, gchar*, i);
-				g_free (tmp);
-			}
-			g_array_free (model->priv->column_fields, TRUE);
-			model->priv->column_fields = NULL;
+	if (priv->column_fields) {
+		guint i;
+		for (i = 0; i < priv->column_fields->len; i++) {
+			gchar *tmp;
+			tmp = g_array_index (priv->column_fields, gchar*, i);
+			g_free (tmp);
 		}
+		g_array_free (priv->column_fields, TRUE);
+		priv->column_fields = NULL;
+	}
 
-		if (model->priv->data_fields) {
-			guint i;
-			for (i = 0; i < model->priv->data_fields->len; i++) {
-				gchar *tmp;
-				tmp = g_array_index (model->priv->data_fields, gchar*, i);
-				g_free (tmp);
-			}
-			g_array_free (model->priv->data_fields, TRUE);
-			model->priv->data_fields = NULL;
+	if (priv->data_fields) {
+		guint i;
+		for (i = 0; i < priv->data_fields->len; i++) {
+			gchar *tmp;
+			tmp = g_array_index (priv->data_fields, gchar*, i);
+			g_free (tmp);
 		}
+		g_array_free (priv->data_fields, TRUE);
+		priv->data_fields = NULL;
+	}
 
-		if (model->priv->data_aggregates) {
-			g_array_free (model->priv->data_aggregates, TRUE);
-			model->priv->data_aggregates = NULL;
-		}
+	if (priv->data_aggregates) {
+		g_array_free (priv->data_aggregates, TRUE);
+		priv->data_aggregates = NULL;
+	}
 
-		if (model->priv->vcnc) {
-			g_object_unref (model->priv->vcnc);
-			model->priv->vcnc = NULL;
-		}
+	if (priv->vcnc) {
+		g_object_unref (priv->vcnc);
+		priv->vcnc = NULL;
+	}
 
-		if (model->priv->model) {
-			g_object_unref (model->priv->model);
-			model->priv->model = NULL;
-		}
+	if (priv->model) {
+		g_object_unref (priv->model);
+		priv->model = NULL;
 	}
 
 	/* chain to parent class */
 	parent_class->dispose (object);
-}
-
-static void
-gda_data_pivot_finalize (GObject *object)
-{
-	GdaDataPivot *model = (GdaDataPivot *) object;
-
-	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
-
-	/* free memory */
-	if (model->priv) {
-		g_free (model->priv);
-		model->priv = NULL;
-	}
-
-	/* chain to parent class */
-	parent_class->finalize (object);
 }
 
 /* module error */
@@ -338,32 +323,31 @@ gda_data_pivot_set_property (GObject *object,
 	GdaDataPivot *model;
 
 	model = GDA_DATA_PIVOT (object);
-	if (model->priv) {
-		switch (param_id) {
-		case PROP_MODEL: {
-			GdaDataModel *mod = g_value_get_object (value);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
+	switch (param_id) {
+	case PROP_MODEL: {
+		GdaDataModel *mod = g_value_get_object (value);
 
-			clean_previous_population (model);
+		clean_previous_population (model);
 
-			if (mod) {
-				g_return_if_fail (GDA_IS_DATA_MODEL (mod));
-  
-                                if (model->priv->model) {
-					if (model->priv->vcnc)
-						gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (model->priv->vcnc),
-										   TABLE_NAME, NULL);
-					g_object_unref (model->priv->model);
-				}
+		if (mod) {
+			g_return_if_fail (GDA_IS_DATA_MODEL (mod));
 
-				model->priv->model = mod;
-				g_object_ref (mod);
+                              if (priv->model) {
+				if (priv->vcnc)
+					gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (priv->vcnc),
+									   TABLE_NAME, NULL);
+				g_object_unref (priv->model);
 			}
-			break;
+
+			priv->model = mod;
+			g_object_ref (mod);
 		}
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+		break;
+	}
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -376,15 +360,14 @@ gda_data_pivot_get_property (GObject *object,
 	GdaDataPivot *model;
 
 	model = GDA_DATA_PIVOT (object);
-	if (model->priv) {
-		switch (param_id) {
-		case PROP_MODEL:
-			g_value_set_object (value, G_OBJECT (model->priv->model));
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (object);
+	switch (param_id) {
+	case PROP_MODEL:
+		g_value_set_object (value, G_OBJECT (priv->model));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -418,12 +401,12 @@ gda_data_pivot_get_n_rows (GdaDataModel *model)
 	GdaDataPivot *pivot;
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (model), -1);
 	pivot = GDA_DATA_PIVOT (model);
-	g_return_val_if_fail (pivot->priv, -1);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	g_return_val_if_fail (priv, -1);
 
-	if (pivot->priv->results)
-		return gda_data_model_get_n_rows (pivot->priv->results);
-	else
-		return -1;
+	if (priv->results)
+		return gda_data_model_get_n_rows (priv->results);
+	return -1;
 }
 
 static gint
@@ -432,12 +415,12 @@ gda_data_pivot_get_n_columns (GdaDataModel *model)
 	GdaDataPivot *pivot;
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (model), 0);
 	pivot = GDA_DATA_PIVOT (model);
-	g_return_val_if_fail (pivot->priv, 0);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	g_return_val_if_fail (priv, 0);
 	
-	if (pivot->priv->columns)
-		return (gint) pivot->priv->columns->len;
-	else
-		return 0;
+	if (priv->columns)
+		return (gint) priv->columns->len;
+	return 0;
 }
 
 static GdaColumn *
@@ -447,14 +430,15 @@ gda_data_pivot_describe_column (GdaDataModel *model, gint col)
 	GdaColumn *column = NULL;
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (model), NULL);
 	pivot = GDA_DATA_PIVOT (model);
-	g_return_val_if_fail (pivot->priv, NULL);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	g_return_val_if_fail (priv, NULL);
 
-	if (pivot->priv->columns && (col < (gint) pivot->priv->columns->len))
-		column = g_array_index (pivot->priv->columns, GdaColumn*, col);
+	if (priv->columns && (col < (gint) priv->columns->len))
+		column = g_array_index (priv->columns, GdaColumn*, col);
 	else {
-		if (pivot->priv->columns->len > 0)
+		if (priv->columns->len > 0)
 			g_warning ("Column %d out of range (0-%d)", col,
-				   (gint) pivot->priv->columns->len);
+				   (gint) priv->columns->len);
 		else
 			g_warning ("No column defined");
 	}
@@ -469,7 +453,8 @@ gda_data_pivot_get_access_flags (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (model), 0);
 	pivot = GDA_DATA_PIVOT (model);
-	g_return_val_if_fail (pivot->priv, 0);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	g_return_val_if_fail (priv, 0);
 	
 	return GDA_DATA_MODEL_ACCESS_RANDOM;
 }
@@ -481,17 +466,18 @@ gda_data_pivot_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
 
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (model), NULL);
 	pivot = GDA_DATA_PIVOT (model);
-	g_return_val_if_fail (pivot->priv, NULL);
-	g_return_val_if_fail (pivot->priv->model, NULL);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	g_return_val_if_fail (priv, NULL);
+	g_return_val_if_fail (priv->model, NULL);
 	g_return_val_if_fail (row >= 0, NULL);
 	g_return_val_if_fail (col >= 0, NULL);
 
-	if (! pivot->priv->results) {
+	if (! priv->results) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_USAGE_ERROR,
 			     "%s", _("Pivot model not populated"));
 		return NULL;
 	}
-	return gda_data_model_get_value_at (pivot->priv->results, col, row, error);
+	return gda_data_model_get_value_at (priv->results, col, row, error);
 }
 
 static GValue *
@@ -1248,13 +1234,14 @@ parse_field_spec (GdaDataPivot *pivot, const gchar *field, const gchar *alias, G
 	GdaStatement *stmt;
 	const gchar *remain;
 	GError *lerror = NULL;
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
 
 	g_return_val_if_fail (field, FALSE);
 
 	if (! bind_source_model (pivot, error))
 		return NULL;
 
-	parser = gda_connection_create_parser (pivot->priv->vcnc);
+	parser = gda_connection_create_parser (priv->vcnc);
 	g_assert (parser);
 	if (alias && *alias) {
 		gchar *tmp, *ptr;
@@ -1303,7 +1290,7 @@ parse_field_spec (GdaDataPivot *pivot, const gchar *field, const gchar *alias, G
 
 	/* further tests */
 	GdaDataModel *model;
-	model = gda_connection_statement_execute_select (pivot->priv->vcnc, stmt, NULL, &lerror);
+	model = gda_connection_statement_execute_select (priv->vcnc, stmt, NULL, &lerror);
 	g_object_unref (stmt);
 	if (!model) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_FIELD_FORMAT_ERROR,
@@ -1356,6 +1343,9 @@ gda_data_pivot_add_field (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
 	GError *lerror = NULL;
 
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (pivot), FALSE);
+
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+
 	g_return_val_if_fail (field, FALSE);
 
 	GdaSqlStatement *sqlst;
@@ -1365,14 +1355,14 @@ gda_data_pivot_add_field (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
 	
 	GArray *array;
 	if (field_type == GDA_DATA_PIVOT_FIELD_ROW) {
-		if (! pivot->priv->row_fields)
-			pivot->priv->row_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
-		array = pivot->priv->row_fields;
+		if (! priv->row_fields)
+			priv->row_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
+		array = priv->row_fields;
 	}
 	else {
-		if (! pivot->priv->column_fields)
-			pivot->priv->column_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
-		array = pivot->priv->column_fields;
+		if (! priv->column_fields)
+			priv->column_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
+		array = priv->column_fields;
 	}
 
 	GdaSqlStatementSelect *sel;
@@ -1477,16 +1467,17 @@ gda_data_pivot_add_data (GdaDataPivot *pivot, GdaDataPivotAggregate aggregate_ty
 
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (pivot), FALSE);
 	g_return_val_if_fail (field, FALSE);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
 
 	GdaSqlStatement *sqlst;
 	sqlst = parse_field_spec (pivot, field, alias, error);
 	if (! sqlst)
 		return FALSE;
 	
-	if (! pivot->priv->data_fields)
-		pivot->priv->data_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
-	if (! pivot->priv->data_aggregates)
-		pivot->priv->data_aggregates = g_array_new (FALSE, FALSE, sizeof (GdaDataPivotAggregate));
+	if (! priv->data_fields)
+		priv->data_fields = g_array_new (FALSE, FALSE, sizeof (gchar*));
+	if (! priv->data_aggregates)
+		priv->data_aggregates = g_array_new (FALSE, FALSE, sizeof (GdaDataPivotAggregate));
 
 	GdaSqlStatementSelect *sel;
 	GSList *sf_list;
@@ -1538,13 +1529,13 @@ gda_data_pivot_add_data (GdaDataPivot *pivot, GdaDataPivotAggregate aggregate_ty
 		if (sf->as && *(sf->as)) {
 			gchar *tmp2;
 			tmp2 = g_strdup_printf ("%s AS %s", tmp, sf->as);
-			g_array_append_val (pivot->priv->data_fields, tmp2);
+			g_array_append_val (priv->data_fields, tmp2);
 		}
 		else {
 			tmp = g_strdup (tmp);
-			g_array_append_val (pivot->priv->data_fields, tmp);
+			g_array_append_val (priv->data_fields, tmp);
 		}
-		g_array_append_val (pivot->priv->data_aggregates, aggregate_type);
+		g_array_append_val (priv->data_aggregates, aggregate_type);
 		g_free (sql);
 	}
 	
@@ -1571,8 +1562,9 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 {
 	gboolean retval = FALSE;
 	g_return_val_if_fail (GDA_IS_DATA_PIVOT (pivot), FALSE);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
 
-	if (!pivot->priv->row_fields || (pivot->priv->row_fields->len == 0)) {
+	if (!priv->row_fields || (priv->row_fields->len == 0)) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_USAGE_ERROR,
 			     "%s", _("No row field defined"));
 		return FALSE;
@@ -1583,33 +1575,33 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	/*
 	 * create data model extracted using the virtual connection.
 	 * The resulting data model's columns are:
-	 *   - for pivot->priv->row_fields: 0 to pivot->priv->row_fields->len - 1
-	 *   - for pivot->priv->column_fields:
-	 *     pivot->priv->row_fields->len to pivot->priv->row_fields->len + pivot->priv->column_fields->len - 1
-	 *   - for pivot->priv->data_fields: pivot->priv->row_fields->len + pivot->priv->column_fields->len to pivot->priv->row_fields->len + pivot->priv->column_fields->len + pivot->priv->data_fields->len - 1
+	 *   - for priv->row_fields: 0 to priv->row_fields->len - 1
+	 *   - for priv->column_fields:
+	 *     priv->row_fields->len to priv->row_fields->len + priv->column_fields->len - 1
+	 *   - for priv->data_fields: priv->row_fields->len + priv->column_fields->len to priv->row_fields->len + priv->column_fields->len + priv->data_fields->len - 1
 	 */
 	GString *string;
 	guint i;
 	string = g_string_new ("SELECT ");
-	for (i = 0; i < pivot->priv->row_fields->len; i++) {
+	for (i = 0; i < priv->row_fields->len; i++) {
 		gchar *part;
-		part = g_array_index (pivot->priv->row_fields, gchar *, i);
+		part = g_array_index (priv->row_fields, gchar *, i);
 		if (i != 0)
 			g_string_append (string, ", ");
 		g_string_append (string, part);
 	}
-	if (pivot->priv->column_fields) {
-		for (i = 0; i < pivot->priv->column_fields->len; i++) {
+	if (priv->column_fields) {
+		for (i = 0; i < priv->column_fields->len; i++) {
 			gchar *part;
-			part = g_array_index (pivot->priv->column_fields, gchar *, i);
+			part = g_array_index (priv->column_fields, gchar *, i);
 			g_string_append (string, ", ");
 			g_string_append (string, part);
 		}
 	}
-	if (pivot->priv->data_fields) {
-		for (i = 0; i < pivot->priv->data_fields->len; i++) {
+	if (priv->data_fields) {
+		for (i = 0; i < priv->data_fields->len; i++) {
 			gchar *part;
-			part = g_array_index (pivot->priv->data_fields, gchar *, i);
+			part = g_array_index (priv->data_fields, gchar *, i);
 			g_string_append (string, ", ");
 			g_string_append (string, part);
 		}
@@ -1617,7 +1609,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	g_string_append (string, " FROM " TABLE_NAME);
 	
 	GdaStatement *stmt;
-	stmt = gda_connection_parse_sql_string (pivot->priv->vcnc, string->str, NULL, NULL);
+	stmt = gda_connection_parse_sql_string (priv->vcnc, string->str, NULL, NULL);
 	g_string_free (string, TRUE);
 	if (!stmt) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_INTERNAL_ERROR,
@@ -1626,7 +1618,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	}
 
 	GdaDataModel *model;
-	model = gda_connection_statement_execute_select_full (pivot->priv->vcnc, stmt, NULL,
+	model = gda_connection_statement_execute_select_full (priv->vcnc, stmt, NULL,
 							      GDA_STATEMENT_MODEL_CURSOR_FORWARD,
 							      //GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 							      NULL, NULL);
@@ -1653,8 +1645,8 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		return FALSE;
 	}
 
-	pivot->priv->columns = g_array_new (FALSE, FALSE, sizeof (GdaColumn*));
-	for (col = 0; col < (gint) pivot->priv->row_fields->len; col++) {
+	priv->columns = g_array_new (FALSE, FALSE, sizeof (GdaColumn*));
+	for (col = 0; col < (gint) priv->row_fields->len; col++) {
 		GdaColumn *column;
 		GdaHolder *holder;
 		column = gda_column_new ();
@@ -1664,7 +1656,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		gda_column_set_description (column, gda_holder_get_id (holder));
 		gda_column_set_g_type (column, gda_holder_get_g_type (holder));
 		gda_column_set_position (column, col);
-		g_array_append_val (pivot->priv->columns, column);
+		g_array_append_val (priv->columns, column);
 	}
 
 	/*
@@ -1697,8 +1689,8 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 #ifdef GDA_DEBUG_ROWS_HASH
 		g_print ("read from iter: ");
 #endif
-		nrow = gda_row_new ((gint) pivot->priv->row_fields->len);
-		for (col = 0; col < (gint) pivot->priv->row_fields->len; col++) {
+		nrow = gda_row_new ((gint) priv->row_fields->len);
+		for (col = 0; col < (gint) priv->row_fields->len; col++) {
 			const GValue *ivalue;
 			GValue *rvalue;
 			GError *lerror = NULL;
@@ -1739,16 +1731,16 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 		 * Column handling
 		 */
 		gint colsmax;
-		if (pivot->priv->column_fields)
-			colsmax = (gint) pivot->priv->column_fields->len;
+		if (priv->column_fields)
+			colsmax = (gint) priv->column_fields->len;
 		else
 			colsmax = 1;
 		for (col = 0; col < colsmax; col++) {
 			const GValue *ivalue = NULL;
 			GError *lerror = NULL;
-			if (pivot->priv->column_fields) {
+			if (priv->column_fields) {
 				ivalue = gda_data_model_iter_get_value_at_e (iter,
-									     col + pivot->priv->row_fields->len,
+									     col + priv->row_fields->len,
 									     &lerror);
 				if (!ivalue || lerror) {
 					clean_previous_population (pivot);
@@ -1758,9 +1750,9 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 			}
 
 			gint di, dimax;
-			if (pivot->priv->data_fields && pivot->priv->data_fields->len > 0) {
+			if (priv->data_fields && priv->data_fields->len > 0) {
 				di = 0;
-				dimax = pivot->priv->data_fields->len;
+				dimax = priv->data_fields->len;
 			}
 			else {
 				di = -1;
@@ -1775,7 +1767,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 				coldata.data_pos = di;
 				colindex = g_hash_table_lookup (column_values_index, &coldata);
 				if (di >= 0)
-					aggregate = g_array_index (pivot->priv->data_aggregates,
+					aggregate = g_array_index (priv->data_aggregates,
 								   GdaDataPivotAggregate, di);
 				else
 					aggregate = GDA_DATA_PIVOT_SUM;
@@ -1786,11 +1778,11 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					GString *name;
 
 					name = g_string_new ("");
-					if (pivot->priv->column_fields &&
-					    pivot->priv->column_fields->len > 1) {
+					if (priv->column_fields &&
+					    priv->column_fields->len > 1) {
 						GdaColumn *column;
 						column = gda_data_model_describe_column (model,
-											 pivot->priv->row_fields->len + col);
+											 priv->row_fields->len + col);
 						g_string_append_printf (name, "[%s]",
 									gda_column_get_name (column));
 					}
@@ -1803,11 +1795,11 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					if ((di >= 0) && (dimax > 0)) {
 						GdaColumn *column;
 						gint vcol;
-						vcol = pivot->priv->row_fields->len + di;
-						if (pivot->priv->column_fields)
-							vcol += pivot->priv->column_fields->len;
+						vcol = priv->row_fields->len + di;
+						if (priv->column_fields)
+							vcol += priv->column_fields->len;
 						column = gda_data_model_describe_column (model, vcol);
-						if (pivot->priv->column_fields)
+						if (priv->column_fields)
 							g_string_append_printf (name, "[%s]",
 										gda_column_get_name (column));
 						else
@@ -1820,10 +1812,10 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 							   GINT_TO_POINTER (aggregate));
 					gda_column_set_name (column, name->str);
 					gda_column_set_description (column, name->str);
-					g_array_append_val (pivot->priv->columns, column);
-					gda_column_set_position (column, pivot->priv->columns->len - 1);
+					g_array_append_val (priv->columns, column);
+					gda_column_set_position (column, priv->columns->len - 1);
 					/* don't set the column's type now */
-					/*g_print ("New column [%s] @real column %d, type %s\n", name->str, pivot->priv->columns->len - 1, gda_g_type_to_string (gda_column_get_g_type (column)));*/
+					/*g_print ("New column [%s] @real column %d, type %s\n", name->str, priv->columns->len - 1, gda_g_type_to_string (gda_column_get_g_type (column)));*/
 					g_string_free (name, TRUE);
 					
 					ColumnData *ncoldata;
@@ -1832,7 +1824,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					ncoldata->column_fields_index = col;
 					ncoldata->data_pos = di;
 					colindex = g_new (gint, 1);
-					*colindex = pivot->priv->columns->len - 1;
+					*colindex = priv->columns->len - 1;
 					g_hash_table_insert (column_values_index, ncoldata,
 							     colindex);
 				}
@@ -1843,9 +1835,9 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 					const GValue *cvalue;
 					GError *lerror = NULL;
 					gint vcol;
-					vcol = pivot->priv->row_fields->len + di;
-					if (pivot->priv->column_fields)
-						vcol += pivot->priv->column_fields->len;
+					vcol = priv->row_fields->len + di;
+					if (priv->column_fields)
+						vcol += priv->column_fields->len;
 					cvalue = gda_data_model_iter_get_value_at_e (iter, vcol, &lerror);
 					if (!cvalue || lerror) {
 						g_propagate_error (error, lerror);
@@ -1899,12 +1891,12 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	/* compute real data model's values from all the collected data */
 	GdaDataModel *results;
 	gint ncols, nrows;
-	ncols = pivot->priv->columns->len;
+	ncols = priv->columns->len;
 	nrows = first_rows->len;
 	results = gda_data_model_array_new (ncols);
-	for (i = 0; i < pivot->priv->row_fields->len; i++) {
+	for (i = 0; i < priv->row_fields->len; i++) {
 		GdaColumn *acolumn, *ecolumn;
-		ecolumn = g_array_index (pivot->priv->columns, GdaColumn*, i);
+		ecolumn = g_array_index (priv->columns, GdaColumn*, i);
 		acolumn = gda_data_model_describe_column (results, i);
 		gda_column_set_g_type (acolumn, gda_column_get_g_type (ecolumn));
 		
@@ -1928,7 +1920,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 	}
 	for (; i < (guint) ncols; i++) {
 		GdaColumn *ecolumn;
-		ecolumn = g_array_index (pivot->priv->columns, GdaColumn*, i);
+		ecolumn = g_array_index (priv->columns, GdaColumn*, i);
 
 		gint j;
 		for (j = 0; j < nrows; j++) {
@@ -1967,7 +1959,7 @@ gda_data_pivot_populate (GdaDataPivot *pivot, GError **error)
 				gda_column_set_g_type (ecolumn, coltype);
 		}
 	}
-	pivot->priv->results = results;
+	priv->results = results;
 
 	retval = TRUE;
 
@@ -2099,7 +2091,8 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 {
 	GdaConnection *vcnc;
 	GError *lerror = NULL;
-	if (pivot->priv->vcnc)
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	if (priv->vcnc)
 		return TRUE;
 
 	g_mutex_lock (&provider_mutex);
@@ -2117,17 +2110,18 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 		return FALSE;
 	}
 
-	pivot->priv->vcnc = vcnc;
+	priv->vcnc = vcnc;
 	return TRUE;
 }
 
 /*
- * Bind @pivot->priv->model as a table named TABLE_NAME in @pivot's virtual connection
+ * Bind @priv->model as a table named TABLE_NAME in @pivot's virtual connection
  */
 static gboolean
 bind_source_model (GdaDataPivot *pivot, GError **error)
-{	
-	if (! pivot->priv->model) {
+{
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
+	if (! priv->model) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_SOURCE_MODEL_ERROR,
 			     "%s", _("No source defined"));
 		return FALSE;
@@ -2135,15 +2129,15 @@ bind_source_model (GdaDataPivot *pivot, GError **error)
 	if (! create_vcnc (pivot, error))
 		return FALSE;
 
-	if (gda_vconnection_data_model_get_model (GDA_VCONNECTION_DATA_MODEL (pivot->priv->vcnc),
-						  TABLE_NAME) == pivot->priv->model) {
+	if (gda_vconnection_data_model_get_model (GDA_VCONNECTION_DATA_MODEL (priv->vcnc),
+						  TABLE_NAME) == priv->model) {
 		/* already bound */
 		return TRUE;
 	}
 
 	GError *lerror = NULL;
-	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (pivot->priv->vcnc),
-						   pivot->priv->model,
+	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (priv->vcnc),
+						   priv->model,
 						   TABLE_NAME, &lerror)) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_SOURCE_MODEL_ERROR,
 			     "%s",

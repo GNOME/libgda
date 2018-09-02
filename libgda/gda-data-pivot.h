@@ -25,20 +25,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_PIVOT            (gda_data_pivot_get_type())
-#define GDA_DATA_PIVOT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_PIVOT, GdaDataPivot))
-#define GDA_DATA_PIVOT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_PIVOT, GdaDataPivotClass))
-#define GDA_IS_DATA_PIVOT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_PIVOT))
-#define GDA_IS_DATA_PIVOT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_PIVOT))
-
-typedef struct _GdaDataPivot        GdaDataPivot;
-typedef struct _GdaDataPivotClass   GdaDataPivotClass;
-typedef struct _GdaDataPivotPrivate GdaDataPivotPrivate;
-
-
-struct _GdaDataPivot {
-	GObject                object;
-	GdaDataPivotPrivate   *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaDataPivot, gda_data_pivot, GDA, DATA_PIVOT, GObject)
 
 struct _GdaDataPivotClass {
 	GObjectClass           parent_class;
@@ -110,7 +97,6 @@ typedef enum {
 	GDA_DATA_PIVOT_FIELD_COLUMN
 } GdaDataPivotFieldType;
 
-GType         gda_data_pivot_get_type    (void) G_GNUC_CONST;
 GdaDataModel *gda_data_pivot_new         (GdaDataModel *model);
 
 gboolean      gda_data_pivot_add_field   (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
