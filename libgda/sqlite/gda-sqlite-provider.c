@@ -249,7 +249,10 @@ pending_blobs_free_list (GSList *blist)
 /*
  * GObject methods
  */
-G_DEFINE_TYPE(GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER)
+static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
+static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
+					    GdaSqliteProviderClass *klass);
+static GObjectClass *parent_class = NULL;
 
 /*
  * GdaServerProvider's virtual methods
@@ -547,6 +550,8 @@ GdaServerProviderMeta sqlite_meta_functions = {
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
+	parent_class = g_type_class_peek_parent (klass);
+
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
@@ -560,7 +565,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 }
 
 static void
-gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
+gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
 {
 	g_mutex_lock (&init_mutex);
 
@@ -585,6 +590,56 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
 
 	g_mutex_unlock (&init_mutex);
 }
+
+GType
+gda_sqlite_provider_get_type (void)
+{
+	static GType type = 0;
+
+	if (G_UNLIKELY (type == 0)) {
+		static GMutex registering;
+		static GTypeInfo info = {
+			sizeof (GdaSqliteProviderClass),
+			(GBaseInitFunc) NULL,
+			(GBaseFinalizeFunc) NULL,
+			(GClassInitFunc) gda_sqlite_provider_class_init,
+			NULL, NULL,
+			sizeof (GdaSqliteProvider),
+			0,
+			(GInstanceInitFunc) gda_sqlite_provider_init,
+			0
+		};
+		g_mutex_lock (&registering);
+		if (type == 0) {
+#ifdef WITH_BDBSQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+#else
+  #ifdef STATIC_SQLITE
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+  #else
+    #ifdef HAVE_SQLITE
+			GModule *module2;
+
+			module2 = find_sqlite_library ("libsqlite3");
+			if (module2)
+				load_symbols (module2);
+			if (s3r)
+				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+			else
+				g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
+    #else
+			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
+    #endif
+  #endif
+#endif
+		}
+		g_mutex_unlock (&registering);
+	}
+
+	return type;
+}
+
+
 
 static GdaWorker *
 gda_sqlite_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
